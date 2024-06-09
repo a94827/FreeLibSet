@@ -233,10 +233,12 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Результат сравнения</returns>
     public bool Equals(TreePath other)
     {
-      if (Object.ReferenceEquals(other, null))
-        return false;
-
-      if (Object.ReferenceEquals(other, this))
+      // Испр. 25.04.2024
+      //if (Object.ReferenceEquals(other, null))
+      //  return false;
+      //if (Object.ReferenceEquals(other, this))
+      //  return true;
+      if (Object.ReferenceEquals(other.FullPath, this.FullPath))
         return true;
 
       if (other.FullPath.Length != this.FullPath.Length)
@@ -272,9 +274,10 @@ namespace FreeLibSet.Models.Tree
     /// <returns>Результат сравнения</returns>
     public static bool operator ==(TreePath a, TreePath b)
     {
-      if (Object.ReferenceEquals(a, null))
-        return Object.ReferenceEquals(b, null);
-      else
+      // Испр. 25.04.2024
+      //if (Object.ReferenceEquals(a, null))
+      //  return Object.ReferenceEquals(b, null);
+      //else
         return a.Equals(b);
     }
 

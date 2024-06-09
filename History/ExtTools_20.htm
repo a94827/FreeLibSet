@@ -5,7 +5,7 @@
 	<TITLE>Изменения в модуле ExtTools.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20240329;144017117000000">
+	<META NAME="CHANGED" CONTENT="20240606;145826363000000">
 	<META NAME="created" CONTENT="00:00:00">
 	<META NAME="changed" CONTENT="2023-11-17T22:46:28.165000000">
 	<META NAME="created" CONTENT="00:00:00">
@@ -53,7 +53,7 @@
 			<P LANG="en-US" ALIGN=CENTER>351</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>29.02.2024-29.03.2024</P>
+			<P LANG="en-US" ALIGN=CENTER>29.02.2024-05.06.2024</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Общий интерфейс
@@ -89,12 +89,47 @@
 			&laquo;</SPAN><SPAN LANG="en-US">N12.0</SPAN><SPAN LANG="ru-RU">&raquo;,
 			а не локализованное описание. Свойство </SPAN><SPAN LANG="en-US">TypeText
 			</SPAN><SPAN LANG="ru-RU">убрано.</SPAN></P>
-			<P><SPAN LANG="en-US">8</SPAN><SPAN LANG="en-US">.
+			<P><SPAN LANG="en-US">8.
 			FormatStringTools.DecimalPlacesFromNumberFormat() (<A HREF="#v301p13">v.301
 			п.13</A>) </SPAN><SPAN LANG="ru-RU">использует первую секцию, если
 			строка содержит символ &laquo;;&raquo;</SPAN></P>
 			<P LANG="en-US">9. <SPAN LANG="ru-RU">Метод
 			</SPAN>FormatStringTools.GetEditableDateTimeFormatterKind()</P>
+			<P LANG="en-US">10. <SPAN LANG="ru-RU">Метод
+			</SPAN>FormatStringTools.RangeToString&lt;T&gt;() (<SPAN LANG="ru-RU">временная
+			реализация</SPAN>).</P>
+			<P LANG="en-US">11. <SPAN LANG="ru-RU">Метод
+			</SPAN>DataTools.<SPAN LANG="ru-RU">DateRangeCrossed</SPAN>()
+			<SPAN LANG="ru-RU">переименован в </SPAN>DateRange<FONT COLOR="#ff0000"><B>s</B></FONT>Crossed()</P>
+			<P>1<SPAN LANG="en-US">2</SPAN>. Новые методы
+			<SPAN LANG="en-US">DataTools.AreRangesCrossed&lt;T&gt;(),
+			GetRangeCross&lt;T&gt;() </SPAN>и <SPAN LANG="en-US">GetRangeUnion&lt;T&gt;().</SPAN></P>
+			<P><SPAN LANG="en-US">13. </SPAN><SPAN LANG="ru-RU">Методы
+			</SPAN><SPAN LANG="en-US">DataTools.SetBoundariesFlags()
+			</SPAN><SPAN LANG="ru-RU">поддерживают несколько имен сравниваемых
+			полей (через запятую), а не одно.</SPAN></P>
+			<P LANG="en-US">14. <SPAN LANG="ru-RU">Новые методы
+			</SPAN>DataTools.SetGroupSequenceNumber()</P>
+			<P LANG="en-US">15<SPAN LANG="ru-RU">. Новые методы
+			</SPAN>DataTools.LastIndexOfAny() <SPAN LANG="ru-RU">и
+			</SPAN>LastIndexOfAnyOther() (<A HREF="ExtTools_11.htm#v129p5">v.129
+			<SPAN LANG="ru-RU">п.5</SPAN></A>)</P>
+			<P><SPAN LANG="en-US">1</SPAN><SPAN LANG="en-US">6</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">Упрощена реализация
+			AutoDisposeReference</SPAN><SPAN LANG="en-US">&lt;T&gt; (<A HREF="ExtTools_11.htm#v044p1">v.44
+			</A></SPAN><A HREF="ExtTools_11.htm#v044p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">1</SPAN><SPAN LANG="en-US">7</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">Метод </SPAN><SPAN LANG="en-US">ErrorMessageList.LimitKind()
+			</SPAN><SPAN LANG="ru-RU">объявлен устаревшим. Вместо него новый
+			метод </SPAN><SPAN LANG="en-US">SetMaxSeverity()</SPAN></P>
+			<P><SPAN LANG="en-US">1</SPAN><SPAN LANG="en-US">8</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">Исправлено сравнение ссылок в </SPAN><SPAN LANG="en-US">TreePath.
+			</SPAN><SPAN LANG="ru-RU">Не учитывалось, что </SPAN><SPAN LANG="en-US">TreePath
+			&ndash; </SPAN><SPAN LANG="ru-RU">структура, а не класс.</SPAN></P>
+			<P LANG="en-US">19. <SPAN LANG="ru-RU">Метод
+			</SPAN>EnvironmentTools.GetAssemblyDescription<SPAN LANG="ru-RU">()
+			и свойство </SPAN>EntryAssemblyDescriptionAndVersion.</P>
+			<P LANG="en-US">20. <SPAN LANG="ru-RU">Класс </SPAN>NumericStringComparer</P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>

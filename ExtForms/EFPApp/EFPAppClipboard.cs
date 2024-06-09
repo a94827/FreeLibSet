@@ -15,8 +15,8 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Расширение работы с буфером обмена.
   /// Методы чтения/записи выполняют по несколько попыток обращения к буферу обмена, прежде чем выдать сообщение об ошибке.
-  /// В случае неустранимой ошибки выдается сообщение с помощью MessageBox().
-  /// Класс реализует свойство EFPApp.Clipboard
+  /// В случае неустранимой ошибки выдается сообщение с помощью <see cref="MessageBox"/>.
+  /// Класс реализует свойство <see cref="EFPApp.Clipboard"/>
   /// </summary>
   public sealed class EFPAppClipboard
   {
@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Количество попыток выполнить операцию с буфером обмена, прежде чем выдать сообщение об ошибке.
-    /// По умолчанию делается 10 попыток
+    /// По умолчанию делается 10 попыток.
     /// </summary>
     public int RepeatCount
     {
@@ -82,7 +82,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Интервал времени в миллисекундах между попытками выполнить операцию с буфером обмена.
     /// Значение по умолчанию - 100 мс. Минимальное значение 1.
-    /// Свойство имеет смысл при RepeatCount больше 1.
+    /// Свойство имеет смысл при <see cref="RepeatCount"/> больше 1.
     /// </summary>
     public int RepeatDelay
     {
@@ -103,7 +103,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// После вызовов GetXXX() и SetXXX() свойство возвращает true, если возникла ошибка при работе с буфером обмена и
     /// false, если операция выполнена успешно.
-    /// Признак ошибки не выставляется, если в буфере нет данных в подходящем формате
+    /// Признак ошибки не выставляется, если в буфере нет данных в подходящем формате.
     /// </summary>
     public bool HasError { get { return _HasError; } }
     private bool _HasError;
@@ -111,14 +111,15 @@ namespace FreeLibSet.Forms
     #region Text
 
     /// <summary>
-    /// Возвращает TextDataFormat.UnicodeText или TextDataFormat.Text, в зависимости от операционной системы
+    /// Возвращает <see cref="TextDataFormat.UnicodeText"/> или <see cref="TextDataFormat.Text"/>, в зависимости от операционной системы
     /// </summary>
     public TextDataFormat DefaultTextFormat { get { return _DefaultTextFormat; } }
-    private TextDataFormat _DefaultTextFormat;
+    private readonly TextDataFormat _DefaultTextFormat;
 
     /// <summary>
     /// Помещает текст в буфер обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов копирования в прикладном коде.
     /// </summary>
     /// <param name="s">Копируемый текст</param>
     public void SetText(string s)
@@ -158,8 +159,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает текст из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. 
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. 
     /// Если буфер обмена пуст или не содержит текста, сообщение об ошибке не выдается.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов извлечения текста в прикладном коде.
     /// </summary>
     /// <returns>Текст из буфера обмена или пустая строка</returns>
     public string GetText()
@@ -170,8 +172,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает текст из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelault между попытками. Потом выводится сообщение об ошибке,
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке,
     /// если <paramref name="messageIfEmpty"/>=true.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов извлечения текста в прикладном коде.
     /// </summary>
     /// <param name="messageIfEmpty">Если true, то будет выведено сообщение об отсутствии текста в буфере обмена</param>
     /// <returns>Текст из буфера обмена или пустая строка</returns>
@@ -182,8 +185,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает текст из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке,
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке,
     /// если <paramref name="messageIfEmpty"/>=true.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов извлечения текста в прикладном коде.
     /// </summary>
     /// <param name="format">Формат данных</param>
     /// <param name="messageIfEmpty">Если true, то будет выведено сообщение об отсутствии текста в буфере обмена</param>
@@ -229,13 +233,13 @@ namespace FreeLibSet.Forms
       return res;
     }
 
-
     /// <summary>
     /// Возвращает прямоугольный блок текста из формата CSV или тектового формата.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. 
-    /// Используются данные в формате TextDataFormat.CommaSeparatedValue, а при отсутствии - в TextDataFormat.Text.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. 
+    /// Используются данные в формате <see cref="TextDataFormat.CommaSeparatedValue"/>, а при отсутствии - в <see cref="TextDataFormat.Text"/>.
     /// При отсутствии текста в буфере обмена сообщение об ошибке не выводится.
-    /// Обычно следует использовать объект EFPPasteTextMatrixFormat для реализации вставки.
+    /// Обычно следует использовать объект <see cref="EFPPasteTextMatrixFormat"/> для реализации вставки.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов извлечения текста в прикладном коде.
     /// </summary>
     /// <returns>Матрица текста или null, если буфер обмена пуст, или возникла ошибка</returns>
     public string[,] GetTextMatrix()
@@ -245,10 +249,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает прямоугольный блок текста из формата CSV или текстового формата.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке,
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке,
     /// если <paramref name="messageIfEmpty"/>=true.
-    /// Используются данные в формате TextDataFormat.CommaSeparatedValue, а при отсутствии - в TextDataFormat.Text.
-    /// Обычно следует использовать объект EFPPasteTextMatrixFormat для реализации вставки.
+    /// Используются данные в формате <see cref="TextDataFormat.CommaSeparatedValue"/>, а при отсутствии - в <see cref="TextDataFormat.Text"/>.
+    /// Обычно следует использовать объект <see cref="EFPPasteTextMatrixFormat"/> для реализации вставки.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов извлечения текста в прикладном коде.
     /// </summary>
     /// <param name="messageIfEmpty">Если true, то будет выведено сообщение об отсутствии текста в буфере обмена</param>
     /// <returns>Матрица текста или null, если буфер обмена пуст, или возникла ошибка</returns>
@@ -263,7 +268,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Помещает в буфер обмена данные в форматах Text и CSV.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов копирования в прикладном коде.
     /// </summary>
     /// <param name="a">Двумерный массив строк</param>
     public void SetTextMatrix(string[,] a)
@@ -279,7 +285,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Помещает данные в буфер обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов копирования в прикладном коде.
     /// </summary>
     /// <param name="data">Данные</param>
     /// <param name="copy">Если нужно сделать данными сохраняющимися после завершения приложения</param>
@@ -317,7 +324,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает данные из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке.
     /// </summary>
     /// <returns>Данные из буфера обмена или null в случае ошибки</returns>
     public IDataObject GetDataObject()
@@ -360,7 +367,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Помещает данные в буфер обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов копирования в прикладном коде.
     /// </summary>
     /// <param name="format">Формат данных</param>
     /// <param name="data">Данные</param>
@@ -398,7 +406,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает данные из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов извлечения данных в прикладном коде.
     /// </summary>
     /// <param name="format">Требуемый формат данных</param>
     /// <returns>Данные из буфера обмена или null в случае ошибки или если нет данных в таком формате</returns>
@@ -442,7 +451,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Помещает изображение в буфер обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов копирования в прикладном коде.
     /// </summary>
     /// <param name="image">Изображение</param>
     public void SetImage(Image image)
@@ -479,7 +489,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Извлекает изображение из буфера обмена.
-    /// Выполняется RepeatCount попыток с задержкой RepeatDelay между попытками. Потом выводится сообщение об ошибке.
+    /// Выполняется <see cref="RepeatCount"/> попыток с задержкой <see cref="RepeatDelay"/> между попытками. Потом выводится сообщение об ошибке.
+    /// Свойство <see cref="HasError"/> может использоваться для проверки результатов извлечения данных в прикладном коде.
     /// </summary>
     /// <returns>Данные из буфера обмена или null в случае ошибки или если нет данных в таком формате</returns>
     public Image GetImage()

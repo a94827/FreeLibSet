@@ -16,10 +16,10 @@ namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>
-  /// Расширение DocProvider для использования в DBUI
+  /// Расширение <see cref="DBxDocProvider"/> для использования в DBUI
   /// Выполняет обновление табличных просмотров в ответ на ApplyChanges()
   /// </summary>
-  public sealed class DocProviderUI : DBxChainDocProvider
+  internal class DocProviderUI : DBxChainDocProvider
   {
     #region Защищенный конструктор
 

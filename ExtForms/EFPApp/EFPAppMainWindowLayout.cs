@@ -603,7 +603,7 @@ namespace FreeLibSet.Forms
         // Команда "Восстановить"
         EFPCommandItem ciRestore = new EFPCommandItem("View", "RestoreToolBars");
         ciRestore.MenuText = "Восстановить";
-        ciRestore.Click += new EventHandler(EFPAppCommandItemHelpers.RestoreToolBars_Click);
+        ciRestore.Click += new EventHandler(EFPAppCommandItemHelpers.ToolBarsRestore_Click);
         ciRestore.GroupBegin = true;
         _ToolBars.ContextMenu.Add(ciRestore);
 

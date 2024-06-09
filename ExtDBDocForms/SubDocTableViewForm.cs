@@ -20,7 +20,9 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Форма для просмотра или выбора поддокументов.
   /// Содержит табличный просмотр, иерархический просмотр (если поддерживается видом поддокументов)
-  /// и кнопки (в режиме выбора)
+  /// и кнопки (в режиме выбора).
+  /// Для выбора поддокументов в прикладном коде следует использовать диалог <see cref="SubDocSelectDialog"/> или комбоблоки <see cref="EFPSubDocComboBox"/>, <see cref="EFPMultiSubDocComboBox"/>, <see cref="EFPInsideSubDocComboBox"/>.
+  /// Если требуется разместить просмотр в собственной форме, следует использовать <see cref="EFPSubDocTableView"/>.
   /// </summary>
   public partial class SubDocTableViewForm : Form
   {
@@ -37,9 +39,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Создает форму
     /// </summary>
-    /// <param name="subDocTypeUI">Интерфейс пользователя для доступа к поддокументам</param>
+    /// <param name="subDocTypeUI">Интерфейс пользователя для доступа к поддокументам. Не может быть null.</param>
     /// <param name="mode">Режим просмотра или выбора</param>
-    /// <param name="subDocs">Список поддокументов</param>
+    /// <param name="subDocs">Список поддокументов. Не может быть null.</param>
     public SubDocTableViewForm(SubDocTypeUI subDocTypeUI, DocTableViewMode mode, DBxMultiSubDocs subDocs)
     {
       InitializeComponent();
@@ -80,17 +82,17 @@ namespace FreeLibSet.Forms.Docs
     /// Основной управляющий элемент
     /// </summary>
     public EFPSubDocTableView ViewProvider { get { return _ViewProvider; } }
-    private EFPSubDocTableView _ViewProvider;
+    private readonly EFPSubDocTableView _ViewProvider;
 
     /// <summary>
     /// Обработчик формы
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
 
     /// <summary>
-    /// Иерархический просмотр. Если для вида поддокумента не определено поле ParentId, 
-    /// содержит значение null
+    /// Иерархический просмотр. Если для вида поддокумента не определено поле "ParentId", 
+    /// содержит значение null.
     /// </summary>
     public EFPSubDocTreeView SubDocTreeView { get { return ViewProvider.SubDocTreeView; } }
 
@@ -100,7 +102,7 @@ namespace FreeLibSet.Forms.Docs
     public EFPSubDocGridView SubDocGridView { get { return ViewProvider.SubDocGridView; } }
 
     /// <summary>
-    /// Табличка фильтров (управляется основным просмотром DocView)
+    /// Табличка фильтров (управляется основным просмотром.
     /// </summary>
     public EFPGridFilterGridView FilterView { get { return ViewProvider.FilterView; } }
 
@@ -115,14 +117,14 @@ namespace FreeLibSet.Forms.Docs
     public string SubDocTypeName { get { return ViewProvider.SubDocTypeName; } }
 
     /// <summary>
-    /// Режим работы формы
-    /// Не все режимы реализованы
+    /// Режим работы формы.
+    /// Не все режимы реализованы.
     /// </summary>
     public DocTableViewMode Mode { get { return ViewProvider.Mode; } }
 
     /// <summary>
-    /// Действительно в режиме выбора 
-    /// Если установлено в true, то доступна кнопка "Нет"
+    /// Действительно в режиме выбора.
+    /// Если установлено в true, то доступна кнопка "Нет".
     /// </summary>
     public bool CanBeEmpty
     {
@@ -136,7 +138,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
-    /// будут использованы эти фильтры. Пользователь не может их редактировать
+    /// будут использованы эти фильтры. Пользователь не может их редактировать.
     /// </summary>
     public GridFilters ExternalFilters
     {
@@ -145,7 +147,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выбор активная вкладка формы, когда вид поддокумента поддерживает иерархический просмотр в дереве
+    /// Выбор активной вкладки формы, когда вид поддокумента поддерживает иерархический просмотр в дереве.
     /// </summary>
     public DocViewFormActiveTab ActiveTab
     {
@@ -155,7 +157,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Идентификатор текущего документа
+    /// Идентификатор текущего поддокумента
     /// </summary>
     public Int32 CurrentSubDocId
     {
@@ -165,7 +167,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Идентификаторы выбранных документов
+    /// Идентификаторы выбранных поддокументов
     /// </summary>
     public Int32[] SelectedSubDocIds
     {
@@ -293,6 +295,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Провайдер составного управляющего элемента для табличного просмотра или выбора поддокументов.
   /// Кроме основной таблицы, может содержать табличку фильтров и просмотр в виде дерева.
+  /// Реализует основную функциональность формы <see cref="SubDocTableViewForm"/>, но может использоваться и в формах, созданных в прикладном коде.
   /// </summary>
   public class EFPSubDocTableView : EFPControl<Control>
   {
@@ -444,20 +447,20 @@ namespace FreeLibSet.Forms.Docs
     private Panel _SubDocGridSpeedPanel;
 
     /// <summary>
-    /// Иерархический просмотр. Если для вида поддокумента не определено поле ParentId, 
-    /// содержит значение null
+    /// Иерархический просмотр. Если для вида поддокумента не определено поле "ParentId", 
+    /// содержит значение null.
     /// </summary>
     public EFPSubDocTreeView SubDocTreeView { get { return _SubDocTreeView; } }
     private EFPSubDocTreeView _SubDocTreeView;
 
     /// <summary>
-    /// Основной табличный просмотр документов
+    /// Основной табличный просмотр поддокументов
     /// </summary>
     public EFPSubDocGridView SubDocGridView { get { return _SubDocGridView; } }
     private EFPSubDocGridView _SubDocGridView;
 
     /// <summary>
-    /// Табличка фильтров (управляется основным просмотром DocView)
+    /// Табличка фильтров.
     /// </summary>
     public EFPGridFilterGridView FilterView { get { return _FilterView; } }
     private EFPGridFilterGridView _FilterView;
@@ -473,8 +476,8 @@ namespace FreeLibSet.Forms.Docs
     public string SubDocTypeName { get { return _SubDocGridView.SubDocType.Name; } }
 
     /// <summary>
-    /// Режим работы формы
-    /// Не все режимы реализованы
+    /// Режим работы формы.
+    /// Не все режимы реализованы.
     /// </summary>
     public DocTableViewMode Mode { get { return _Mode; } }
     private DocTableViewMode _Mode;
@@ -492,7 +495,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
-    /// будут использованы эти фильтры. Пользователь не может их редактировать
+    /// будут использованы эти фильтры. Пользователь не может их редактировать.
     /// </summary>
     public GridFilters ExternalFilters
     {
@@ -517,7 +520,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Выбор активной вкладка формы, когда вид поддокумента поддерживает иерархический просмотр в дереве
+    /// Выбор активной вкладки формы, когда вид поддокумента поддерживает иерархический просмотр в дереве
     /// </summary>
     public DocViewFormActiveTab ActiveTab
     {
@@ -555,7 +558,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Идентификатор текущего документа
+    /// Идентификатор текущего поддокумента
     /// </summary>
     public Int32 CurrentSubDocId
     {
@@ -580,7 +583,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Идентификаторы выбранных документов
+    /// Идентификаторы выбранных поддокументов
     /// </summary>
     public Int32[] SelectedSubDocIds
     {
@@ -666,7 +669,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Проверяет наличие выбранного поддокумента, если свойство CanBeEmpty=false.
+    /// Проверяет наличие выбранного поддокумента, если свойство <see cref="CanBeEmpty"/>=false.
     /// </summary>
     protected override void OnValidate()
     {
@@ -703,8 +706,8 @@ namespace FreeLibSet.Forms.Docs
     /// Записывается параметр "ActiveTab".
     /// Если свойство установлено в true (по умолчанию), то элемент будет сам сохранять свои данные.
     /// Если свойство сбосить в false, то предполагается, что параметры должны записываться на уровне формы.
-    /// В этом случае можно использовать методы WriteFormConfigPart() и ReadFormConfigPart().
-    /// Свойство может устанавливаться только до вывода элемента на экран
+    /// В этом случае можно использовать методы <see cref="WriteFormConfigPart(CfgPart)"/> и <see cref="ReadFormConfigPart(CfgPart)"/>.
+    /// Свойство может устанавливаться только до вывода элемента на экран.
     /// </summary>
     public bool SaveFormConfig
     {
@@ -731,8 +734,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполняет запись секции конфигурации "Form", если свойство SaveFormConfig=true.
-    /// Для этого вызывается метод WriteFormConfigPart().
+    /// Выполняет запись секции конфигурации "Form", если свойство <see cref="SaveFormConfig"/>=true.
+    /// Для этого вызывается метод <see cref="WriteFormConfigPart(CfgPart)"/>.
     /// </summary>
     /// <param name="category">Категория</param>
     /// <param name="cfg">Секция конфигурации</param>
@@ -750,8 +753,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполняет чтение секции конфигурации "Form", если свойство SaveFormConfig=true.
-    /// Для этого вызывается метод ReadFormConfigPart().
+    /// Выполняет чтение секции конфигурации "Form", если свойство <see cref="SaveFormConfig"/>=true.
+    /// Для этого вызывается метод <see cref="ReadFormConfigPart(CfgPart)"/>.
     /// </summary>
     /// <param name="category">Категория записываемой секции</param>
     /// <param name="cfg">Секция конфигурации</param>

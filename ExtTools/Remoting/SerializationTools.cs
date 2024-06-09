@@ -7,6 +7,12 @@ using System.Data;
 using System.IO;
 using System.Text;
 
+#if NET
+// Класс BinaryFormatter считается вредным https://aka.ms/binaryformatter
+#pragma warning disable SYSLIB0011 
+#endif
+
+
 namespace FreeLibSet.Remoting
 {
   /// <summary>

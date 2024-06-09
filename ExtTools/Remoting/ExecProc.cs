@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using FreeLibSet.Logging;
 using System.IO;
 using System.Diagnostics;
@@ -45,6 +44,14 @@ using FreeLibSet.Collections;
  *    с использованием семантики IAsyncResult
  * 3. Асинхронный без ожидания завершения
  */
+
+ // TODO: Возможно, есть классы, которые не нужны в .Net Core. (расширить определения "#if !NET")
+
+#if NET
+   // TODO: Заменить вызовы Thread.Abort() в .NET
+#pragma warning disable SYSLIB0006
+#endif
+
 
 namespace FreeLibSet.Remoting
 {
@@ -2156,6 +2163,7 @@ namespace FreeLibSet.Remoting
     #endregion
   }
 
+#if !NET
   /// <summary>
   /// Параметры, управляющие интервалами времени лицензии Net Remoting для ExecProcProxy и ExecProcProxy2
   /// </summary>
@@ -2320,9 +2328,10 @@ namespace FreeLibSet.Remoting
       lease.RenewOnCallTime = RenewOnCallTime;
       lease.SponsorshipTimeout = SponsorshipTimeout;
     }
-
     #endregion
   }
+
+  #endif
 
   /// <summary>
   /// Данные, передаваемые от сервера к клиенту для реализации "разделенного" вызова серверной процедуры
@@ -2481,6 +2490,7 @@ namespace FreeLibSet.Remoting
 
     #region Управление временем жизни
 
+#if !NET
     /// <summary>
     /// Настройки управления лицензией для Net Remoting.
     /// Значения по умолчанию берутся из ExecProcLeaseSettings.DefaultSettings
@@ -2513,6 +2523,8 @@ namespace FreeLibSet.Remoting
     [NonSerialized]
     private ExecProcLeaseSettings _LeaseSettings;
 
+#endif
+
     #endregion
 
     #region InternalHandler
@@ -2522,14 +2534,19 @@ namespace FreeLibSet.Remoting
     /// Пользовательский код не должен использовать методы этого интерфейса, но передавать ссылку через Net Remoting для создания объекта
     /// RemoteExecProc на стороне клиента
     /// </summary>
-    internal abstract class InternalHandler : MarshalByRefObject, System.Runtime.Remoting.Lifetime.ISponsor
+    internal abstract class InternalHandler : MarshalByRefObject
+#if !NET
+    , System.Runtime.Remoting.Lifetime.ISponsor
+#endif
     {
       #region Защищенный конструктор
 
       internal InternalHandler()
       {
+#if !NET
         ExecProcLeaseSettings.DefaultSettings.SetReadOnly();
         _LeaseSettings = ExecProcLeaseSettings.DefaultSettings.Clone();
+#endif        
       }
 
       #endregion
@@ -2584,11 +2601,12 @@ namespace FreeLibSet.Remoting
       /// <returns></returns>
       public abstract ExecProcInfo GetInfo();
 
+#if !NET
       /// <summary>
       /// Метод интерфейса не должен вызываться из пользовательского кода.
       /// </summary>
       public abstract bool WantsRenewal { get; }
-
+#endif
       /// <summary>
       /// Метод интерфейса не должен вызываться из пользовательского кода.
       /// </summary>
@@ -2615,6 +2633,7 @@ namespace FreeLibSet.Remoting
 
       #region Управлением временем жизни и ISponsor members
 
+#if !NET
       /// <summary>
       /// Настройки управления лицензией для Net Remoting.
       /// Значения по умолчанию берутся из ExecProcLeaseSettings.DefaultSettings
@@ -2647,7 +2666,7 @@ namespace FreeLibSet.Remoting
         else
           return TimeSpan.Zero;
       }
-
+#endif
       #endregion
     }
 
@@ -2694,6 +2713,7 @@ namespace FreeLibSet.Remoting
 
       #region Управление временем жизни
 
+#if !NET
       /// <summary>
       /// Не должно использоваться в пользовательском коде
       /// </summary>
@@ -2712,7 +2732,7 @@ namespace FreeLibSet.Remoting
             return ep.WantsRenewalProxy();
         }
       }
-
+#endif
       #endregion
 
       #region Свойства
@@ -3013,6 +3033,7 @@ namespace FreeLibSet.Remoting
 
       #region Управление временем жизни
 
+#if !NET
       /// <summary>
       /// Не должно использоваться в пользовательском коде
       /// </summary>
@@ -3026,7 +3047,7 @@ namespace FreeLibSet.Remoting
             return true; // дождемся обращения к свойству State
         }
       }
-
+#endif
       #endregion
 
       #region Свойства
@@ -3647,7 +3668,11 @@ namespace FreeLibSet.Remoting
         if (_Proxy == null)
           return null;
         else
+#if NET
+        return null;
+#else
           return LogoutTools.HidePasssword(System.Runtime.Remoting.Channels.ChannelServices.GetChannelSinkProperties(_Proxy.Handler));
+#endif
       }
     }
 
@@ -4709,7 +4734,9 @@ namespace FreeLibSet.Remoting
       if (creator != null)
       {
         this.DisplayName = creator.DisplayName;
+#if !NET
         this.ExternalSponsor = creator.Proxy.Handler;
+#endif
       }
     }
 

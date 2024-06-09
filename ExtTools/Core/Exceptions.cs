@@ -11,7 +11,7 @@ namespace FreeLibSet.Core
 {
   /// <summary>
   /// Специальный тип исключения, генерируемого, если пользователь прерывает
-  /// длительный процесс
+  /// длительный процесс.
   /// </summary>
   [Serializable]
   public class UserCancelException : ApplicationException
@@ -39,8 +39,8 @@ namespace FreeLibSet.Core
 
   /// <summary>
   /// Специальный тип исключения для указания ошибки в программе. 
-  /// В конструктор передается описание ошибки. В текст исключения Message добавляется
-  /// информация о необходимости обратиться к разработчику программы
+  /// В конструктор передается описание ошибки. В текст исключения <see cref="Exception.Message"/> добавляется
+  /// информация о необходимости обратиться к разработчику программы.
   /// </summary>
   [Serializable]
   public class BugException : ApplicationException
@@ -163,7 +163,7 @@ namespace FreeLibSet.Core
     /// Создает объект исключения с текстом сообщения по умолчанию
     /// </summary>
     public DifferentThreadException()
-      : base("Вызов из чужого потока "+ToString(Thread.CurrentThread))
+      : base("Вызов из чужого потока " + ToString(Thread.CurrentThread))
     {
     }
 
@@ -249,7 +249,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создать объект исключения
     /// </summary>
-    /// <param name="errors">Присоединяемый список сообщений. Список переводится в режим ReadOnly. Если null, то используется пустой список</param>
+    /// <param name="errors">Присоединяемый список сообщений. Список переводится в режим только для чтения. 
+    /// Если null, то используется пустой список <see cref="ErrorMessageList.Empty"/>.</param>
     /// <param name="message">Основной текст исключения</param>
     public ErrorMessageListException(ErrorMessageList errors, string message)
       : base(message)
@@ -266,7 +267,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создать объект исключения. Текст исключения генерируется автоматически
     /// </summary>
-    /// <param name="errors">Присоединяемый список сообщений. Список переводится в режим ReadOnly. Если null, то используется пустой список</param>
+    /// <param name="errors">Присоединяемый список сообщений. Список переводится в режим только для чтения. 
+    /// Если null, то используется пустой список <see cref="ErrorMessageList.Empty"/>.</param>
     public ErrorMessageListException(ErrorMessageList errors)
       : base(GetMessageText(errors))
     {
@@ -313,7 +315,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Список сообщений об ошибках. 
-    /// Задается в конструкторе и находится в режиме ReadOnly
+    /// Задается в конструкторе и находится в режиме только для чтения.
     /// </summary>
     public ErrorMessageList Errors { get { return _Errors; } }
     private ErrorMessageList _Errors;
@@ -403,7 +405,7 @@ namespace FreeLibSet.Core
     {
     }
 
-    #endregion
+  #endregion
   }
 #endif
 
@@ -447,7 +449,7 @@ namespace FreeLibSet.Core
 
   /// <summary>
   /// Исключение, выбрасываемое, когда не удалось выполнить разбор строки.
-  /// Кроме подсистемы Parsing, используется при разборе CSV-строк.
+  /// Кроме подсистемы парсинга, используется при разборе CSV-строк.
   /// </summary>
   [Serializable]
   public class ParsingException : ApplicationException

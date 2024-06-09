@@ -12,11 +12,11 @@ namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>
-  /// Представление текстового поля для хранения конфигурационных данных как XmlCfgPart.
+  /// Представление текстового поля для хранения конфигурационных данных как <see cref="XmlCfgPart"/>.
   /// Класс может использоваться в качестве базового для собственной реализации чтения/записи данных,
-  /// либо самостоятельно. В последнем случае создаются отдельные объекты, реализующие IDocEditItem
-  /// (например DocValueTextBox) и присоединяются как дочерние элементы. При их создании им передаются
-  /// DBxDocValues, полученные из свойства Values этого объекта
+  /// либо самостоятельно. В последнем случае создаются отдельные объекты, реализующие <see cref="IDocEditItem"/>
+  /// (например <see cref="DocValueTextBox"/>) и присоединяются как дочерние элементы. При их создании им передаются
+  /// <see cref="DBxDocValue"/>, полученные из свойства Values этого объекта.
   /// </summary>
   public class XmlCfgDocEditItem : DocEditItemWithChildren
   {
@@ -25,7 +25,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Создает объект, присоединенный к текстовому полю в формате XML
     /// </summary>
-    /// <param name="docValue">Объект для доступа к значению</param>
+    /// <param name="docValue">Объект для доступа к значению текстового поля</param>
     public XmlCfgDocEditItem(DBxDocValue docValue)
     {
       _DocValue = docValue;
@@ -55,17 +55,17 @@ namespace FreeLibSet.Forms.Docs
     /// Задается в конструкторе.
     /// </summary>
     public DBxDocValue DocValue { get { return _DocValue; } }
-    private DBxDocValue _DocValue;
+    private /* не может быть readonly */ DBxDocValue _DocValue; 
 
     /// <summary>
     /// Конфигурационные данные, которые должны читаться и записываться
     /// </summary>
     public TempCfg Data { get { return _Data; } }
-    private TempCfg _Data;
+    private readonly TempCfg _Data;
 
     private string _OrgValue;
 
-    private DepChangeInfoItem _DataChangeInfo;
+    private readonly DepChangeInfoItem _DataChangeInfo;
 
     #endregion
 
@@ -82,7 +82,7 @@ namespace FreeLibSet.Forms.Docs
     #region Чтение и запись
 
     /// <summary>
-    /// Загружает в объект Data значения из текстового поля DocValue
+    /// Загружает в объект Data значения из текстового поля <see cref="DocValue"/>.
     /// </summary>
     public override void ReadValues()
     {
@@ -99,7 +99,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Записывает из объекта Data значения в текстовое поля DocValue
+    /// Записывает из объекта Data значения в текстовое поля <see cref="DocValue"/>.
     /// </summary>
     public override void WriteValues()
     {

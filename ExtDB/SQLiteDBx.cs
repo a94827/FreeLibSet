@@ -33,8 +33,8 @@ namespace FreeLibSet.Data.SQLite
     private static int _FirstFlagValue = 0;
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionStringBuilder">Собранная строка подключения</param>
     public SQLiteDBx(SQLiteConnectionStringBuilder connectionStringBuilder)
@@ -75,8 +75,8 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionString">Строка подключения</param>
     public SQLiteDBx(string connectionString)

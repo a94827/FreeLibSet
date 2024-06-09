@@ -193,12 +193,12 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Режим редактирования ссылочного фильтра, когда он пустой.
-  /// Свойство RefDocGridFilter.EmptyEditMode
+  /// Свойство <see cref="RefDocGridFilter.EmptyEditMode"/>.
   /// </summary>
   public enum MultiSelectEmptyEditMode
   {
     /// <summary>
-    /// Показывается диалог выбора документов. Если пользователь нажимает "ОК", то фильтр устанавливается в режим Mode=RefDocFilterMode.Include. 
+    /// Показывается диалог выбора документов. Если пользователь нажимает "ОК", то фильтр устанавливается в режим <see cref="RefDocCommonFilter.Mode"/>=<see cref="RefDocFilterMode.Include"/>. 
     /// Если пользователь нажимает "Отмена", то показывается обычный диалог с возможностью выбора режима.
     /// </summary>
     Select,
@@ -216,9 +216,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Фильтр по значению ссылочного поля на документ
-  /// Возможен фильтр по нескольким идентификаторам и режим "Исключить"
-  /// Фильтр по пустому значению поля невозможен
+  /// Фильтр по значению ссылочного поля на документ.
+  /// Возможен фильтр по нескольким идентификаторам и режим "Исключить".
+  /// Для полей, поддерживающих пустое значение (<see cref="DBxColumnStruct.Nullable"/>=true), возможны фильтры на NULL и NOT NULL.
   /// </summary>
   public class RefDocGridFilter : RefDocCommonFilter, IEFPGridFilterWithImageKey, IDBxDocSelectionFilter
   {
@@ -258,7 +258,7 @@ namespace FreeLibSet.Forms.Docs
     /// Задается в конструкторе.
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Пользовательский интерфейс вида документов.
@@ -271,7 +271,7 @@ namespace FreeLibSet.Forms.Docs
     /// Пользователь не имеет возможности изменить эти фильтры.
     /// </summary>
     public GridFilters DocFilters { get { return _DocFilters; } }
-    private GridFilters _DocFilters;
+    private readonly GridFilters _DocFilters;
 
     /// <summary>
     /// Определяет возможность задания фильтров NotNull и Null.
@@ -282,9 +282,9 @@ namespace FreeLibSet.Forms.Docs
     private bool _Nullable;
 
     /// <summary>
-    /// Режим редактирования фильтра, когда Mode=NoFilter.
-    /// Инициализируется в конструкторе значением <see cref="DBUI.DefaultEmptyEditMode"/> (обычно это значение Select).
-    /// Если на момент вызова ShowFilterDialog() фильтр непустой, то свойство игнорируется.
+    /// Режим редактирования фильтра, когда <see cref="RefDocCommonFilter.Mode"/>=<see cref="RefDocFilterMode.NoFilter"/>.
+    /// Инициализируется в конструкторе значением <see cref="DBUI.DefaultEmptyEditMode"/> (обычно это значение <see cref="MultiSelectEmptyEditMode.Select"/>).
+    /// Если на момент вызова <see cref="ShowFilterDialog(EFPDialogPosition)"/> фильтр непустой, то свойство игнорируется.
     /// </summary>
     public MultiSelectEmptyEditMode EmptyEditMode { get { return _EmptyEditMode; } set { _EmptyEditMode = value; } }
     private MultiSelectEmptyEditMode _EmptyEditMode;
@@ -294,7 +294,7 @@ namespace FreeLibSet.Forms.Docs
     #region Переопределяемые методы и свойства
 
     /// <summary>
-    /// Вызов события Changed и уведомление объекта-владельца об изменении фильтра
+    /// Вызов события <see cref="DBxCommonFilter.Changed"/> и уведомление объекта-владельца об изменении фильтра
     /// </summary>
     protected override void OnChanged()
     {
@@ -305,7 +305,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
     /// </summary>
     public virtual string FilterText
     {
@@ -400,10 +400,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Возвращает имя значка изображения для фильтра.
     /// Может использоваться в прикладном коде, если диалог установки фильтра реализуется самостоятельно.
-    /// Для режима Include обычно используется значок вида документа
+    /// Для режима <see cref="RefDocFilterMode.Include"/> обычно следует использовать значок вида документа.
     /// </summary>
     /// <param name="mode">Режим фильтра</param>
-    /// <returns>Имя значка в EFPApp.MainImages</returns>
+    /// <returns>Имя значка в <see cref="EFPApp.MainImages"/></returns>
     public static string GetFilterImageKey(RefDocFilterMode mode)
     {
       switch (mode)
@@ -447,7 +447,7 @@ namespace FreeLibSet.Forms.Docs
     //    }
 
     /// <summary>
-    /// Вызывает DBxDocTextHandlers.GetTextValue() для получения текстового представления
+    /// Вызывает <see cref="DBxDocTextHandlers.GetTextValue(string, int)"/> для получения текстового представления
     /// </summary>
     /// <param name="columnValues">Значения полей</param>
     /// <returns>Текстовые представления значений</returns>
@@ -462,24 +462,24 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет в выборку ссылки на выбранные документы.
-    /// Действует и в режиме Mode=Include и Mode=Exclude.
-    /// Использует вызов DocTypeUI.PerformGetDocSel() в режиме EFPDBxGridViewDocSelReason.Copy.
+    /// Действует и в режимах <see cref="RefDocCommonFilter.Mode"/>=<see cref="RefDocFilterMode.Include"/> и <see cref="RefDocFilterMode.Exclude"/>.
+    /// Использует вызов <see cref="DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> в режиме <see cref="EFPDBxViewDocSelReason.Copy"/>.
     /// В выборку могут быть добавлены ссылки на связанные документы, если есть обработчик события
-    /// DocTypeUI.GetDocSel
+    /// <see cref="DocTypeUIBase.GetDocSel"/>
     /// </summary>
     /// <param name="docSel">Заполняемая выборка документов</param>
     public void GetDocSel(DBxDocSelection docSel)
     {
       if (Mode != RefDocFilterMode.NoFilter)
-        DocTypeUI.PerformGetDocSel(docSel, DocIds, EFPDBxGridViewDocSelReason.Copy);
+        DocTypeUI.PerformGetDocSel(docSel, DocIds, EFPDBxViewDocSelReason.Copy);
     }
 
     /// <summary>
     /// Устанавливает фильтр, если в выборке <paramref name="docSel"/> есть документы подходящего вида.
-    /// Если на момент вызова фильтр не установлен или находится в режиме Mode=Incude, то
+    /// Если на момент вызова фильтр не установлен или находится в режиме, отличном от <see cref="RefDocFilterMode.Exclude"/>, то
     /// устанавливается режим Mode=Include.
-    /// Если же на момент вызова фильтр находится в режиме Mode=Exclude, то этот режим сохраняется.
-    /// Если выборка не содержит документов нужного вида, никаких действий не выполнеятся.
+    /// Если же на момент вызова фильтр находится в режиме <see cref="RefDocFilterMode.Exclude"/>, то этот режим сохраняется.
+    /// Если выборка не содержит документов нужного вида, никаких действий не выполняется.
     /// </summary>
     /// <param name="docSel">Выборка документов, откуда берутся ссылки на документ</param>
     /// <returns>True, если была выполнена установка фильтра.
@@ -490,10 +490,17 @@ namespace FreeLibSet.Forms.Docs
       if (newIds.Length == 0)
         return false;
       RefDocFilterMode newMode;
-      if (Mode == RefDocFilterMode.NoFilter)
-        newMode = RefDocFilterMode.Include;
+      //if (Mode == RefDocFilterMode.NoFilter)
+      //  newMode = RefDocFilterMode.Include;
+      //else
+      //  newMode = Mode;
+
+      // 17.04.2024
+      if (Mode == RefDocFilterMode.Exclude)
+        newMode = RefDocFilterMode.Exclude;
       else
-        newMode = Mode;
+        newMode = RefDocFilterMode.Include;
+
       SetFilter(newMode, newIds);
       return true;
     }
@@ -550,7 +557,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Фильтр по группе документов.
-    /// Если вид документов, на которое ссылается поле, не использует группы, свойство возвращает null
+    /// Если вид документов, на которое ссылается поле, не использует группы, свойство возвращает null.
     /// </summary>
     public RefDocGridFilter GroupFilter { get { return _GroupFilter; } }
     private RefDocGridFilter _GroupFilter;
@@ -562,8 +569,8 @@ namespace FreeLibSet.Forms.Docs
     private RefDocGridFilter _DocFilter;
 
     /// <summary>
-    /// Дублирует свойство DocFilter.DisplayName.
-    /// При установке синхролнно устанавливается свойство GroupFilter.DisplayName
+    /// Дублирует свойство <see cref="DocFilter"/>.DisplayName.
+    /// При установке синхронно устанавливается свойство <see cref="GroupFilter"/>.DisplayName
     /// </summary>
     public string DisplayName
     {
@@ -578,8 +585,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Дублирует свойство DocFilter.Nullable.
-    /// GroupFilter.Nullable не используется и обычно равно true
+    /// Дублирует свойство <see cref="DocFilter"/>.Nullable.
+    /// <see cref="GroupFilter"/>.Nullable не используется и обычно равно true.
     /// </summary>
     public bool Nullable
     {
@@ -588,9 +595,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Установка единственного выбранного документа
-    /// Дублирует свойство DocFilter.SingleDocId.
-    /// Если есть GroupFilter, то он очищается
+    /// Установка единственного выбранного документа.
+    /// Дублирует свойство <see cref="DocFilter"/>.SingleDocId.
+    /// Если есть <see cref="GroupFilter"/>, то он очищается.
     /// </summary>
     public Int32 SingleDocId
     {

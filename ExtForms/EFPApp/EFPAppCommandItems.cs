@@ -14,7 +14,10 @@ namespace FreeLibSet.Forms
   #region Перечисление EFPAppStdCommandItems
 
   /// <summary>
-  /// Команды главного меню, которые самостоятельно умеет создавать
+  /// Стандартные команды меню.
+  /// Также перечисляются подменю верхнего уровня для главного меню программы (элементы перечисления MenuXXX).
+  /// Объекты <see cref="EFPCommandItem"/> можно создавать с помощью <see cref="EFPAppCommandItems.CreateStdCommand(EFPAppStdCommandItems)"/>.
+  /// Для главного меню программы рекомендуется создать объект <see cref="EFPAppCommandItemHelpers"/>.
   /// </summary>
   public enum EFPAppStdCommandItems
   {
@@ -268,7 +271,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Глобальный список элементов для главного меню и 
-  /// панелей инструментов
+  /// панелей инструментов.
+  /// Реализация свойства <see cref="EFPApp.CommandItems"/>.
   /// </summary>
   public sealed class EFPAppCommandItems : EFPCommandItems
   {
@@ -295,8 +299,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создать стандартную команду для локального меню.
-    /// Если команда в главном меню была добавлена, то создается CommandItem,
-    /// соединенная с мастер-командой в главном меню. Иначе создается независимая команда
+    /// Если команда в главном меню была добавлена, то создается <see cref="EFPCommandItem"/>,
+    /// соединенная с мастер-командой в главном меню (с установленным свойством <see cref="EFPCommandItem.Master"/>). 
+    /// Иначе создается независимая команда.
     /// </summary>
     /// <param name="stdItem">Идентификатор стандартной команды</param>
     /// <returns>Созданная команда меню</returns>
@@ -328,9 +333,20 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создание стандартной команды.
+    /// <para>
     /// Команда создается, но ни к чему не присоединяется.
-    /// Устанавливаются свойства Category, Name, MenuText, ToolTipText, ShortCut и ImageKey
-    /// Обработчик Click не устанавливается. Сепараторы и свойство Enabled не задаются
+    /// Устанавливаются свойства <see cref="EFPCommandItem.Category"/>, <see cref="EFPCommandItem.Name"/>, 
+    /// <see cref="EFPCommandItem.MenuText"/>, <see cref="EFPCommandItem.ToolTipText"/>, 
+    /// <see cref="EFPCommandItem.ShortCut"/> и <see cref="EFPCommandItem.ImageKey"/>
+    /// Обработчик <see cref="EFPCommandItem.Click"/> не устанавливается. Остальные свойства сохраняют значения по умолчанию. Сепараторы не добавляются.
+    /// </para>
+    /// <para>
+    /// Обычно для создания главного меню программы следует использовать объект <see cref="EFPAppCommandItemHelpers"/>,
+    /// который реализует необходимые обработчики.
+    /// Стандартные команды для локального меню обычно создавать не требуется, так как они уже реализованы. 
+    /// В редких случаях можно использовать метод <see cref="CreateContext(EFPAppStdCommandItems)"/>,
+    /// который устанавливает связь с командой главного меню (свойство <see cref="EFPCommandItem.Master"/>).
+    /// </para>
     /// </summary>
     /// <param name="stdItem">Перечислимое значение для стандартной команды</param>
     /// <returns>Созданная команда без обработчика</returns>
@@ -664,6 +680,8 @@ namespace FreeLibSet.Forms
 
     #region Обработчики для стандартных команд
 
+#if XXX
+
     #region Файл
 
     /// <summary>
@@ -682,7 +700,6 @@ namespace FreeLibSet.Forms
 
 #pragma warning disable 0618 // обход [Obsolete]
 
-#if XXX
     /// <summary>
     /// Обработка команды "Сверху вниз"
     /// </summary>
@@ -784,11 +801,11 @@ namespace FreeLibSet.Forms
       this[EFPAppStdCommandItems.ArrangeIcons].Enabled = HasWindows;
       this[EFPAppStdCommandItems.CloseAll].Enabled = HasWindows;
     }
-#endif
 
 #pragma warning restore 0618
 
     #endregion
+#endif
 
     #endregion
 
@@ -798,11 +815,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает для стандартной команды категорию и имя.
-    /// Этот метод не зависит от наличия реальных команд в меню
+    /// Этот метод не зависит от наличия реальных команд в меню. Объекты <see cref="EFPCommandItem"/> не создаются.
+    /// Для выполнения обратного преобразования используйте метод <see cref="FindStdCommand(string, string, out EFPAppStdCommandItems)"/>.
     /// </summary>
     /// <param name="stdItem">Стандартная команда</param>
-    /// <param name="category">Сюда записывается категория команды</param>
-    /// <param name="name">Сюда записывается имя команды</param>
+    /// <param name="category">Сюда записывается категория команды <see cref="EFPCommandItem.Category"/></param>
+    /// <param name="name">Сюда записывается имя команды <see cref="EFPCommandItem.Name"/></param>
     public static void GetStdCommandCategoryAndName(EFPAppStdCommandItems stdItem, out string category, out string name)
     {
       string s;
@@ -817,11 +835,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Найти значение перечисления для стандартной команды по категории и имени
+    /// Найти значение перечисления <see cref="EFPAppStdCommandItems"/> для стандартной команды по категории и имени.
+    /// Метод является обратным по отношению к <see cref="GetStdCommandCategoryAndName(EFPAppStdCommandItems, out string, out string)"/>.
+    /// Метод не зависит от наличия команды в главном меню и от существования объекта <see cref="EFPCommandItem"/>.
+    /// Если имеется объект <see cref="EFPCommandItem"/>, удобнее использовать метод <see cref="IsStdCommandItem(EFPCommandItem, out EFPAppStdCommandItems)"/>.
     /// </summary>
-    /// <param name="category">Категория команды</param>
-    /// <param name="name">Имя команды</param>
-    /// <param name="stdItem">Сюда записываектся перечислимое значение, если команда найдена</param>
+    /// <param name="category">Категория команды <see cref="EFPCommandItem.Category"/></param>
+    /// <param name="name">Имя команды <see cref="EFPCommandItem.Name"/></param>
+    /// <param name="stdItem">Сюда записывается перечислимое значение, если команда найдена</param>
     /// <returns>true, если команда найдена</returns>
     public static bool FindStdCommand(string category, string name, out EFPAppStdCommandItems stdItem)
     {
@@ -835,8 +856,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Найти значение перечисления для стандартной команды по категории и имени.
-    /// Если переданные аргументы не соответствуют стандартной команде, то генерируется исключение
+    /// Найти значение перечисления <see cref="EFPAppStdCommandItems"/> для стандартной команды по категории и имени.
+    /// Если переданные аргументы не соответствуют стандартной команде, то генерируется исключение.
+    /// Метод не зависит от наличия команды в главном меню и от существования объекта <see cref="EFPCommandItem"/>.
+    /// Если выброс исключения является нежелательным, используйте метод <see cref="FindStdCommand(string, string, out EFPAppStdCommandItems)"/>.
     /// </summary>
     /// <param name="category">Категория команды</param>
     /// <param name="name">Имя команды</param>
@@ -928,10 +951,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если данная команда является стандартной
+    /// Возвращает true, если данная команда является стандартной.
+    /// Метод не зависит от наличия команды в главном меню.
+    /// Если нет объекта <see cref="EFPCommandItem"/>, используйте <see cref="FindStdCommand(string, string, out EFPAppStdCommandItems)"/>.
     /// </summary>
-    /// <param name="commandItem">Проверяемая команда</param>
-    /// <param name="stdItem">Сюда записывается код стандартной команды</param>
+    /// <param name="commandItem">Проверяемая команда. Может быть null.</param>
+    /// <param name="stdItem">Сюда записывается код стандартной команды <see cref="EFPAppStdCommandItems"/></param>
     /// <returns>true, если команда является стандартной</returns>
     public static bool IsStdCommandItem(EFPCommandItem commandItem, out EFPAppStdCommandItems stdItem)
     {
@@ -945,6 +970,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если данная команда является стандартной.
+    /// Метод не зависит от наличия команды в главном меню.
     /// Вряд ли эта перегрузка метода является полезной.
     /// </summary>
     /// <param name="commandItem">Проверяемая команда</param>
@@ -961,8 +987,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сюда можно добавить команды, содержащие сочетания клавиш, которые будут
-    /// обработаны в любом окне программы, включая модальные
-    /// Например, для вызова окна калькулятора
+    /// обработаны в любом окне программы, включая модальные.
+    /// Например, можно добавить сочетание клавиш для вызова окна калькулятора.
     /// </summary>
     public List<EFPCommandItem> GlobalShortCuts { get { return _GlobalShortCuts; } }
     private List<EFPCommandItem> _GlobalShortCuts;
@@ -971,7 +997,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Задает список кнопок для одной панели инструментов
+  /// Задает список кнопок для одной панели инструментов в главном окне программы.
+  /// Команды <see cref="EFPCommandItem"/> должны быть добавлены в главное меню программы <see cref="EFPAppCommandItems"/>.
   /// </summary>
   public sealed class EFPAppToolBarCommandItems : List<EFPCommandItem>, IObjectWithCode
   {
@@ -1004,7 +1031,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Отображаемое имя панели для меню "Вид" - "Панели инструментов".
-    /// Если свойство не установлено в явном виде, используется значение свойства Name.
+    /// Если свойство не установлено в явном виде, используется значение свойства <see cref="Name"/>.
     /// </summary>
     public string DisplayName
     {
@@ -1021,14 +1048,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Должна ли быть по умолчанию панель видима в главном окне.
-    /// По умолчанию - true
+    /// По умолчанию - true.
     /// </summary>
     public bool DefaultVisible { get { return _DefaultVisible; } set { _DefaultVisible = value; } }
     private bool _DefaultVisible;
 
     /// <summary>
     /// С какой стороны (по умолчанию) располагается панель.
-    /// По умолчанию - DockStyle.Top
+    /// По умолчанию - <see cref="DockStyle.Top"/>.
     /// </summary>
     public DockStyle DefaultDock
     {
@@ -1051,7 +1078,7 @@ namespace FreeLibSet.Forms
     private DockStyle _DefaultDock;
 
     /// <summary>
-    /// Возвращает DisplayName
+    /// Возвращает <see cref="DisplayName"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -1069,7 +1096,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Список объектов для свойства EFPApp.ToolBars.
+  /// Список объектов для свойства <see cref="EFPApp.ToolBars"/>.
   /// </summary>
   public sealed class EFPAppToolBarList : NamedList<EFPAppToolBarCommandItems>
   {

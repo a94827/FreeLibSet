@@ -12,11 +12,10 @@ namespace FreeLibSet.Forms
 {
 
   /// <summary>
-  /// Обработчик событий AppDomain.UnhandledException и Application.ThreadException
-  /// Обработчик должен создаваться в using-блоке, внутри которого расположен
-  /// Application.Run()
+  /// Обработчик событий <see cref="AppDomain.UnhandledException"/> и <see cref="Application.ThreadException"/>.
+  /// Обработчик должен создаваться в using-блоке, внутри которого расположен <see cref="Application.Run()"/>.
   /// Это гарантирует отцепление обработчиков при завершении программы и должно
-  /// предотвратить утечку ресурсов
+  /// предотвратить утечку ресурсов.
   /// </summary>
   public class ApplicationExceptionHandler : IDisposable
   {
@@ -37,7 +36,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Эта версия позволяет подавлять логгинг известных ошидок
+    /// Эта версия позволяет подавлять логгинг известных ошибок
     /// </summary>
     /// <param name="logoutKnownBugExceptions">Если true, то известные исключения перехватываются и однократно регистрируются в log-файле.
     /// Если false, то исключения не будут записываться в log-файл</param>
@@ -75,7 +74,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Отключает обработчики событий
     /// </summary>
-    /// <param name="Dispose">true, если был вызван метод Dispose()</param>
+    /// <param name="Dispose">true, если был вызван метод <see cref="IDisposable.Dispose()"/></param>
     protected virtual void Dispose(bool Dispose)
     {
       AppDomain.CurrentDomain.UnhandledException -= new UnhandledExceptionEventHandler(AppDomain_UnhandledException);
@@ -88,7 +87,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// true, если метод Dispose() уже вызывался
+    /// true, если метод <see cref="IDisposable.Dispose()"/> уже вызывался
     /// </summary>
     public bool IsDisposed { get { return _IsDisposed; } }
     private readonly bool _IsDisposed;
@@ -106,10 +105,10 @@ namespace FreeLibSet.Forms
     #region Обработчики событий
 
     /// <summary>
-    /// Обработчик события AppDomain.UnhandledException
+    /// Обработчик события <see cref="AppDomain.UnhandledException"/>
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
+    /// <param name="sender">Не используется</param>
+    /// <param name="args">Аргументы события</param>
     protected virtual void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
     {
       // Выбрасываем свой тип исключения и ловим его в log-файл
@@ -136,10 +135,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Обработчик события Application.ThreadException
+    /// Обработчик события <see cref="Application.ThreadException"/>
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
+    /// <param name="sender">Не используется</param>
+    /// <param name="args">Аргументы события</param>
     protected virtual void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs args)
     {
       try
@@ -312,7 +311,7 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Создает объект исключения
       /// </summary>
-      /// <param name="args">Аргументы события AppDomain.UnhandledException</param>
+      /// <param name="args">Аргументы события <see cref="AppDomain.UnhandledException"/></param>
       public AppDomainUnhandledException(UnhandledExceptionEventArgs args)
         : base("Необрабатываемое исключение (событие AppDomain.UnhandledException)",
         args.ExceptionObject is Exception ? (Exception)(args.ExceptionObject) : null)
@@ -326,13 +325,13 @@ namespace FreeLibSet.Forms
       #region Свойства
 
       /// <summary>
-      /// Возвращает значение свойства UnhandledExceptionEventArgs.ExceptionObject 
+      /// Возвращает значение свойства <see cref="UnhandledExceptionEventArgs.ExceptionObject"/>
       /// </summary>
       public object ExceptionObject { get { return _ExceptionObject; } }
       private readonly object _ExceptionObject;
 
       /// <summary>
-      /// Возвращает значение свойства UnhandledExceptionEventArgs.IsTerminating
+      /// Возвращает значение свойства <see cref="UnhandledExceptionEventArgs.IsTerminating"/>
       /// </summary>
       public bool IsTerminating { get { return _IsTerminating; } }
       private readonly bool _IsTerminating;
@@ -343,7 +342,7 @@ namespace FreeLibSet.Forms
     #region Статическое свойство
 
     /// <summary>
-    /// Количество созданных объектов ApplicationExceptionHandler (для отладки)
+    /// Количество созданных объектов <see cref="ApplicationExceptionHandler"/> (для отладки)
     /// </summary>
     public static int HandlerCount { get { return _HandlerCount; } }
     private static int _HandlerCount = 0;

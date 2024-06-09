@@ -431,11 +431,12 @@ namespace ExtTools_tests.Core
       Assert.Catch(delegate() { sut.SetTag("Tag"); }, "SetTag()");
       Assert.Catch(delegate() { sut.SetPrefix("P"); }, "SetPrefix()");
       Assert.Catch(delegate() { sut.SetSuffix("S"); }, "SetSuffix()");
+      Assert.Catch(delegate () { sut.SetMaxSeverity(ErrorMessageKind.Warning); }, "SetMaxSeverity()");
 
       sut.SetReadOnly();
       Assert.IsTrue(sut.IsReadOnly, "IsReadOnly after SetReadOnly() again");
 
-      // Проверям, что ничего не испортилось
+      // Проверяем, что ничего не испортилось
       Assert.AreEqual(1, sut.Count, "Count");
 
       Assert.AreEqual(ErrorMessageKind.Error, sut[0].Kind, "Kind 1");
@@ -443,6 +444,42 @@ namespace ExtTools_tests.Core
       Assert.AreEqual("C1", sut[0].Code, "Code 1");
       Assert.AreEqual("Tag1", sut[0].Tag, "Tag 1");
     }
+
+    [TestCase(ErrorMessageKind.Error, ErrorMessageKind.Error, ErrorMessageKind.Warning, ErrorMessageKind.Info)]
+    [TestCase(ErrorMessageKind.Warning, ErrorMessageKind.Warning, ErrorMessageKind.Warning, ErrorMessageKind.Info)]
+    [TestCase(ErrorMessageKind.Info, ErrorMessageKind.Info, ErrorMessageKind.Info, ErrorMessageKind.Info)]
+    public void SetMaxSeverity(ErrorMessageKind maxKind, ErrorMessageKind wanted1, ErrorMessageKind wanted2, ErrorMessageKind wanted3)
+    {
+      ErrorMessageList sut = new ErrorMessageList();
+      sut.AddError("Text1", "C1", "Tag1");
+      sut.AddWarning("Text2", "C2", "Tag2");
+      sut.AddInfo("Text3", "C3", "Tag3");
+      string s1 = sut.AllText;
+
+      sut.SetMaxSeverity(maxKind);
+
+      Assert.AreEqual(s1, sut.AllText, "Original is not changed");
+
+      Assert.AreEqual(3, sut.Count, "Count");
+
+      Assert.AreEqual(wanted1, sut[0].Kind, "Kind 1");
+      Assert.AreEqual("Text1", sut[0].Text, "Text 1");
+      Assert.AreEqual("C1", sut[0].Code, "Code 1");
+      Assert.AreEqual("Tag1", sut[0].Tag, "Tag 1");
+
+      Assert.AreEqual(wanted2, sut[1].Kind, "Kind 2");
+      Assert.AreEqual("Text2", sut[1].Text, "Text 2");
+      Assert.AreEqual("C2", sut[1].Code, "Code 2");
+      Assert.AreEqual("Tag2", sut[1].Tag, "Tag 2");
+
+      Assert.AreEqual(wanted3, sut[2].Kind, "Kind 3");
+      Assert.AreEqual("Text3", sut[2].Text, "Text 3");
+      Assert.AreEqual("C3", sut[2].Code, "Code 3");
+      Assert.AreEqual("Tag3", sut[2].Tag, "Tag 3");
+    }
+
+
+#pragma warning disable 0618 // Obsolete
 
     [TestCase(ErrorMessageKind.Error, ErrorMessageKind.Error, ErrorMessageKind.Warning, ErrorMessageKind.Info)]
     [TestCase(ErrorMessageKind.Warning, ErrorMessageKind.Warning, ErrorMessageKind.Warning, ErrorMessageKind.Info)]
@@ -457,6 +494,7 @@ namespace ExtTools_tests.Core
       string s1 = list.AllText;
 
       ErrorMessageList sut = list.LimitKind(maxKind);
+      Assert.AreNotSame(list, sut, "Cloned");
       Assert.AreEqual(s1, list.AllText, "Original is not changed");
 
       Assert.AreEqual(3, sut.Count, "Count");
@@ -476,6 +514,8 @@ namespace ExtTools_tests.Core
       Assert.AreEqual("C3", sut[2].Code, "Code 3");
       Assert.AreEqual("Tag3", sut[2].Tag, "Tag 3");
     }
+
+#pragma warning restore 0618 
 
     #endregion
 

@@ -591,20 +591,19 @@ namespace FreeLibSet.Core
       }
     }
 
-
-
     /// <summary>
-    /// Пересекаются ли два интервала дат
-    /// Возвращается true, если есть хотя бы один общий день
-    /// Оба интервала равноправны
-    /// Время не учитывается
+    /// Пересекаются ли два интервала дат.
+    /// Возвращается true, если есть хотя бы один общий день.
+    /// Оба интервала равноправны.
+    /// Время не учитывается.
+    /// Интервалы могут быть открытыми или полуоткрытыми.
     /// </summary>
     /// <param name="firstDate1">Начало первого интервала</param>
     /// <param name="lastDate1">Окончание первого интервала</param>
     /// <param name="firstDate2">Начало второго интервала</param>
     /// <param name="lastDate2">Окончание второго интервала</param>
     /// <returns>true, если интервалы пересекаются</returns>
-    public static bool DateRangeCrossed(Nullable<DateTime> firstDate1, Nullable<DateTime> lastDate1,
+    public static bool DateRangesCrossed(Nullable<DateTime> firstDate1, Nullable<DateTime> lastDate1,
       Nullable<DateTime> firstDate2, Nullable<DateTime> lastDate2)
     {
       MakeDateOnly(ref firstDate1);
@@ -623,6 +622,7 @@ namespace FreeLibSet.Core
         if (firstDate2.Value > lastDate1.Value)
           return false;
       }
+
       return true;
     }
 
@@ -636,6 +636,17 @@ namespace FreeLibSet.Core
         dt = dt.Value.Date;
     }
 
+#pragma warning disable 1591
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Method renamed to DateRangesCrossed()")]
+    public static bool DateRangeCrossed(Nullable<DateTime> firstDate1, Nullable<DateTime> lastDate1,
+      Nullable<DateTime> firstDate2, Nullable<DateTime> lastDate2)
+    {
+      return DateRangesCrossed(firstDate1, lastDate1, firstDate2, lastDate2);
+    }
+
+#pragma warning restore 1591
 
     /// <summary>
     /// Возвращает true, если интервал дат {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} целиком

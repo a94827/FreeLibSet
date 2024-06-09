@@ -129,8 +129,10 @@ namespace FreeLibSet.Controls
       //TheMenu.Show(TheMenuButton, 0, TheMenuButton.Height);
       if (this.ContextMenuStrip != null)
         this.ContextMenuStrip.Show(TheMenuButton, 0, TheMenuButton.Height);
+#if !NET
       else if (this.ContextMenu != null)
         this.ContextMenu.Show(TheMenuButton, new Point(0, TheMenuButton.Height));
+#endif
     }
 
     #endregion

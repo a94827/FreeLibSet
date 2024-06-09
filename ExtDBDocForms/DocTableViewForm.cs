@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms.Docs
   #region Перечисление DocTableViewMode
 
   /// <summary>
-  /// Режим работы формы DocTableViewForm и SubDocTableViewForm
+  /// Режим работы формы <see cref="DocTableViewForm"/> и <see cref="SubDocTableViewForm"/>
   /// </summary>
   public enum DocTableViewMode
   {
@@ -40,13 +40,13 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Режим выбора одного или нескольких документов без использования флажков.
     /// При этом выбранные строки являются результатом. Нельзя задать выбранные
-    /// строки на входе
+    /// строки на входе.
     /// </summary>
     SelectMulti,
 
     /// <summary>
     /// Режим выбора нескольких документов из заданного массива идентификаторов
-    /// с использованием флажков для отметки выбранных документов
+    /// с использованием флажков для отметки выбранных документов.
     /// </summary>
     SelectMultiWithFlags
   }
@@ -75,8 +75,10 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Форма табличного просмотра или выбора документов.
-  /// Кроме основной таблицы, может содержать кнопки ОК/Отмена, табличку фильтров, и просмотр в виде дерева.
+  /// Кроме основной таблицы, может содержать кнопки ("ОК", "Отмена", "Нет") табличку фильтров, и просмотр в виде дерева.
   /// Поддерживается просмотр групп документов.
+  /// Для выбора документов в прикладном коде следует использовать диалог <see cref="DocSelectDialog"/> или комбоблоки <see cref="EFPDocComboBox"/>, <see cref="EFPMultiDocComboBox"/>.
+  /// Если требуется разместить просмотр в собственной форме, следует использовать <see cref="EFPDocTableView"/>.
   /// </summary>
   public partial class DocTableViewForm : Form
   {
@@ -93,10 +95,15 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Создает форму
     /// </summary>
-    /// <param name="docTypeUI">Интерфейс пользователя для просматриваемых документов</param>
+    /// <param name="docTypeUI">Интерфейс пользователя для просматриваемых документов. Не может быть null</param>
     /// <param name="mode">Режим просмотра или выбора документов</param>
     public DocTableViewForm(DocTypeUI docTypeUI, DocTableViewMode mode)
     {
+#if DEBUG
+      if (docTypeUI == null)
+        throw new ArgumentNullException("docTypeUI");
+#endif
+
       InitializeComponent();
 
       base.Text = docTypeUI.DocType.PluralTitle;
@@ -118,7 +125,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Вызывается при закрытии формы.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Аргументы события</param>
     protected override void OnFormClosing(FormClosingEventArgs args)
     {
       _FormProvider.ConfigHandler.Changed[EFPConfigCategories.Form] = true; // может быть, не всегда
@@ -134,17 +141,17 @@ namespace FreeLibSet.Forms.Docs
     /// Основной управляющий элемент
     /// </summary>
     public EFPDocTableView ViewProvider { get { return _ViewProvider; } }
-    private EFPDocTableView _ViewProvider;
+    private readonly EFPDocTableView _ViewProvider;
 
     /// <summary>
     /// Обработчик формы
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
 
     /// <summary>
     /// Иерархический просмотр. Если для вида документа не определено поле ParentId, 
-    /// содержит значение null
+    /// содержит значение null.
     /// </summary>
     public EFPDocTreeView DocTreeView { get { return ViewProvider.DocTreeView; } }
 
@@ -154,7 +161,7 @@ namespace FreeLibSet.Forms.Docs
     public EFPDocGridView DocGridView { get { return ViewProvider.DocGridView; } }
 
     /// <summary>
-    /// Табличка фильтров (управляется основным просмотром DocView)
+    /// Табличка фильтров (управляется основным просмотром <see cref="DocGridView"/>)
     /// </summary>
     public EFPGridFilterGridView FilterView { get { return ViewProvider.FilterView; } }
 
@@ -190,8 +197,8 @@ namespace FreeLibSet.Forms.Docs
     private string _FormSearchKey;
 
     /// <summary>
-    /// Действительно в режиме выбора 
-    /// Если установлено в true, то доступна кнопка "Нет"
+    /// Действительно в режиме выбора документа или нескольких документов. 
+    /// Если установлено в true, то доступна кнопка "Нет".
     /// </summary>
     public bool CanBeEmpty
     {
@@ -205,7 +212,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
-    /// будут использованы эти фильтры. Пользователь не может их редактировать
+    /// будут использованы эти фильтры. Пользователь не может их редактировать.
     /// </summary>
     public GridFilters ExternalFilters
     {
@@ -214,10 +221,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Внешний инициализатор для новых документов
+    /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове ClientDocType.PerformEdit()) 
-    /// будет использован этот инициализатор вместо текущих фильтров (DocGridHandler.DocFilters)
+    /// инициализатора значений полей (аргумент Caller при вызове <see cref="DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
+    /// будет использован этот инициализатор вместо текущих фильтров.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
     {
@@ -304,7 +311,7 @@ namespace FreeLibSet.Forms.Docs
       {
         // 19.05.2021, 17.02.2022
         // Еще бывает дерево и комбоблок выбора группы.
-        // Активировать надо таблицу
+        // Активировать надо таблицу.
         if (ActiveTab == DocViewFormActiveTab.Grid)
           ViewProvider.DocGridView.SetFocus();
         else
@@ -331,7 +338,7 @@ namespace FreeLibSet.Forms.Docs
         //
         // Так, конечно, коряво, но работает. Все равно из дерева и кнопок никаких 
         // других MDI-форм не появляется, поэтому лишней активации не происходит и
-        // фокус не прыгает
+        // фокус не прыгает.
 
         ViewProvider.ActiveTab = ViewProvider.ActiveTab;
 
@@ -402,6 +409,7 @@ namespace FreeLibSet.Forms.Docs
   /// Провайдер составного управляющего элемента для табличного просмотра или выбора документов.
   /// Кроме основной таблицы, может содержать табличку фильтров и просмотр в виде дерева.
   /// Поддерживается просмотр групп документов.
+  /// Реализует основную функциональность формы <see cref="DocTableViewForm"/>, но может использоваться и в формах, созданных в прикладном коде.
   /// </summary>
   public class EFPDocTableView : EFPControl<Control>
   {
@@ -616,7 +624,7 @@ namespace FreeLibSet.Forms.Docs
     private Panel _DocGridSpeedPanel;
 
     /// <summary>
-    /// Иерархический просмотр. Если для вида документа не определено поле ParentId, 
+    /// Иерархический просмотр. Если для вида документа не определено поле "ParentId", 
     /// содержит значение null
     /// </summary>
     public EFPDocTreeView DocTreeView { get { return _DocTreeView; } }
@@ -629,7 +637,7 @@ namespace FreeLibSet.Forms.Docs
     private EFPDocGridView _DocGridView;
 
     /// <summary>
-    /// Табличка фильтров (управляется основным просмотром DocView)
+    /// Табличка фильтров
     /// </summary>
     public EFPGridFilterGridView FilterView { get { return _FilterView; } }
     private EFPGridFilterGridView _FilterView;
@@ -652,8 +660,8 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Действительно в режиме выбора 
-    /// Если установлено в true, то доступна кнопка "Нет"
+    /// Действительно в режиме выбора.
+    /// Если установлено в true, то доступна кнопка "Нет".
     /// </summary>
     public bool CanBeEmpty
     {
@@ -664,7 +672,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
-    /// будут использованы эти фильтры. Пользователь не может их редактировать
+    /// будут использованы эти фильтры. Пользователь не может их редактировать.
     /// </summary>
     public GridFilters ExternalFilters
     {
@@ -686,10 +694,10 @@ namespace FreeLibSet.Forms.Docs
     private GridFilters _ExternalFilters;
 
     /// <summary>
-    /// Внешний инициализатор для новых документов
+    /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове ClientDocType.PerformEdit()) 
-    /// будет использован этот инициализатор вместо текущих фильтров (DocGridHandler.DocFilters)
+    /// инициализатора значений полей (аргумент Caller при вызове <see cref="DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
+    /// будет использован этот инициализатор вместо текущих фильтров.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
     {
@@ -759,7 +767,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Идентификатор текущего документа.
-    /// При установке свойства может измениться текущая выбранная группа (свойство CurrentGroupId),
+    /// При установке свойства может измениться текущая выбранная группа (свойство <see cref="CurrentGroupId"/>),
     /// если текущая группа не подходит.
     /// </summary>
     public Int32 CurrentDocId
@@ -941,14 +949,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Провайдер дерева групп.
-    /// Null, если GroupAllowed=false.
+    /// Null, если <see cref="GroupAllowed"/>=false.
     /// </summary>
     public EFPGroupDocTreeView GroupTreeView { get { return _GroupTreeView; } }
     private EFPGroupDocTreeView _GroupTreeView;
 
     /// <summary>
     /// Провайдер комбоблока выбора группы.
-    /// Null, если GroupAllowed=false.
+    /// Null, если <see cref="GroupAllowed"/>=false.
     /// </summary>
     public EFPGroupDocComboBox GroupComboBox { get { return _GroupComboBox; } }
     private EFPGroupDocComboBox _GroupComboBox;
@@ -990,7 +998,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если true, то показываются документы из вложенных групп.
-    /// Свойство возвращает true, если в данный момент работа с деревом не выполняется
+    /// Свойство возвращает true, если в данный момент работа с деревом не выполняется.
     /// </summary>
     public bool IncludeNestedGroups
     {
@@ -1059,7 +1067,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если выбраны "Все документы", возвращает null.
     /// Если выбраны "Документы без групп", возвращает массив нулевой длины.
     /// Если есть выбранная группа, возвращает массив из одного или нескольких элементов,
-    /// в зависимости от IncludeNested
+    /// в зависимости от <see cref="IncludeNestedGroups"/>.
     /// </summary>
     public Int32[] AuxFilterGroupIds
     {
@@ -1354,7 +1362,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается перед деактивацией, закрытием формы и в других случаях, когда нужно сохранить настройки
+    /// Вызывается перед деактивацией, закрытием формы и в других случаях, когда нужно сохранить настройки.
     /// </summary>
     protected override void OnSaveConfig()
     {
@@ -1364,7 +1372,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Проверка наличия выбранного документа при CanBeEmpty=false.
+    /// Проверка наличия выбранного документа при <see cref="CanBeEmpty"/>=false.
     /// </summary>
     protected override void OnValidate()
     {
@@ -1402,8 +1410,8 @@ namespace FreeLibSet.Forms.Docs
     /// "CurrentGroupId" и "HideNestedGroups".
     /// Если свойство установлено в true (по умолчанию), то элемент будет сам сохранять свои данные.
     /// Если свойство сбосить в false, то предполагается, что параметры должны записываться на уровне формы.
-    /// В этом случае можно использовать методы WriteFormConfigPart() и ReadFormConfigPart().
-    /// Свойство может устанавливаться только до вывода элемента на экран
+    /// В этом случае можно использовать методы <see cref="WriteFormConfigPart(CfgPart)"/> и <see cref="ReadFormConfigPart(CfgPart)"/>.
+    /// Свойство может устанавливаться только до вывода элемента на экран.
     /// </summary>
     public bool SaveFormConfig
     {
@@ -1431,7 +1439,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Запись категории "Form".
-    /// Вызывает WriteFormConfigPart(), если своство SaveFormConfig=true.
+    /// Вызывает <see cref="WriteFormConfigPart(CfgPart)"/>, если своство <see cref="SaveFormConfig"/>=true.
     /// </summary>
     /// <param name="category">Категория</param>
     /// <param name="cfg">Секция конфигурации</param>
@@ -1450,7 +1458,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Чтение категории "Form".
-    /// Вызывает ReadFormConfigPart(), если своство SaveFormConfig=true.
+    /// Вызывает <see cref="ReadFormConfigPart(CfgPart)"/>, если своство <see cref="SaveFormConfig"/>=true.
     /// </summary>
     /// <param name="category">Категория</param>
     /// <param name="cfg">Секция конфигурации</param>

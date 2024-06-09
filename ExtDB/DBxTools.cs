@@ -285,6 +285,9 @@ namespace FreeLibSet.Data
           case "Struct":
             args.Mode = LogoutPropMode.ToString;
             break;
+          case "Formatter":
+            args.Mode = LogoutPropMode.None;
+            break;
         }
         return;
       }

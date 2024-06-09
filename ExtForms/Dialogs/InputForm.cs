@@ -102,14 +102,14 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Базовый класс для диалогов ввода единственного значения, например TextInputDialog
+  /// Базовый класс для диалогов ввода единственного значения, например <see cref="TextInputDialog"/>.
   /// </summary>
   public abstract class BaseInputDialog
   {
     #region Конструктор
 
     /// <summary>
-    /// Защимщенный конструктор
+    /// Защищенный конструктор
     /// </summary>
     protected BaseInputDialog()
     {
@@ -127,7 +127,7 @@ namespace FreeLibSet.Forms
     private string _Title;
 
     /// <summary>
-    /// Значок формы в EFPApp.MainImages
+    /// Значок формы в <see cref="EFPApp.MainImages"/>.
     /// </summary>
     public string ImageKey { get { return _ImageKey; } set { _ImageKey = value; } }
     private string _ImageKey;
@@ -139,21 +139,24 @@ namespace FreeLibSet.Forms
     private string _Prompt;
 
     /// <summary>
-    /// Если свойства ConfigPart и ConfigName установлены, то значение извлекается перед выводом диалога и записывается обратно при нажатии ОК
+    /// Секция конфигурации для хранения значения.
+    /// Если свойства <see cref="ConfigPart "/> и <see cref="ConfigName"/> установлены, то значение извлекается перед выводом диалога и записывается обратно при нажатии ОК.
+    /// Секция должна допускать запись значений.
     /// </summary>
     public CfgPart ConfigPart { get { return _ConfigPart; } set { _ConfigPart = value; } }
     private CfgPart _ConfigPart;
 
     /// <summary>
-    /// Если свойства ConfigPart и ConfigName установлены, то значение извлекается перед выводом диалога и записывается обратно при нажатии ОК
+    /// Имя параметра в секции конфигурации <see cref="ConfigPart"/> для хранения значения.
+    /// Если свойства <see cref="ConfigPart "/> и <see cref="ConfigName"/> установлены, то значение извлекается перед выводом диалога и записывается обратно при нажатии ОК.
     /// </summary>
     public string ConfigName { get { return _ConfigName; } set { _ConfigName = value; } }
     private string _ConfigName;
 
     /// <summary>
     /// Позиция блока диалога на экране.
-    /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
-    /// Можно либо модифицировать свойства существующего объекта, либо присвоить свойству ссылку на новый объект EFPDialogPosition.
+    /// По умолчанию блок диалога центрируется относительно <see cref="EFPApp.DefaultScreen"/>.
+    /// Можно либо модифицировать свойства существующего объекта, либо присвоить свойству ссылку на новый объект <see cref="EFPDialogPosition"/>.
     /// </summary>
     public EFPDialogPosition DialogPosition
     {
@@ -195,7 +198,7 @@ namespace FreeLibSet.Forms
     private UIValidatorList _Valifators;
 
     /// <summary>
-    /// Возвращает true, если список Validators не пустой.
+    /// Возвращает true, если список <see cref="Validators"/> не пустой.
     /// </summary>
     public bool HasValidators
     {
@@ -215,7 +218,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показ блока диалога.
     /// </summary>
-    /// <returns>Ok, если пользователь ввел корректное значение</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь ввел корректное значение и нажал кнопку "ОК"</returns>
     public abstract DialogResult ShowDialog();
 
     #endregion
@@ -224,7 +227,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инциализация заголовка формы и значка.
-    /// Используется при реализации метода ShowDialog().
+    /// Используется при реализации метода <see cref="ShowDialog()"/>.
     /// </summary>
     /// <param name="form">Объект формы</param>
     protected void InitFormTitle(Form form)
@@ -234,7 +237,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если установлены свойства ConfigPart и ConfigName.
+    /// Возвращает true, если установлены свойства <see cref="ConfigPart"/> и <see cref="ConfigName"/>.
     /// </summary>
     protected bool HasConfig
     {
@@ -285,8 +288,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог для ввода строки текста.
-  /// Для ввода многострочного текста используйте MultiLineTextInputDialog
+  /// Диалог для ввода строки текста. Также может использоваться для ввода пароля.
+  /// Для ввода многострочного текста используйте <see cref="MultiLineTextInputDialog"/>.
   /// </summary>
   public class TextInputDialog : BaseInputDialog
   {
@@ -331,7 +334,7 @@ namespace FreeLibSet.Forms
     private string _Text;
 
     /// <summary>
-    /// Управляемое свойство для Text
+    /// Управляемое свойство для <see cref="Text"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<string> TextEx
@@ -354,7 +357,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Управляемое свойство, возвращающее true, если введен непустой текст.
-    /// Может использоваться в валидаторах.
+    /// Может использоваться в валидаторах (в предусловии).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -376,14 +379,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// Можно ли вводить пустое значение. Дублирует свойство <see cref="CanBeEmptyMode"/>.
+    /// По умолчанию - false.
+    /// Если <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/>, возвращается true.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -397,7 +401,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Максимальная длина текста.
-    /// По умолчанию: 0 - длина текста ограничена 32767 символами сим
+    /// По умолчанию: 0 - длина текста ограничена 32767 символами символами.
     /// </summary>
     public int MaxLength { get { return _MaxLength; } set { _MaxLength = value; } }
     private int _MaxLength;
@@ -408,13 +412,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим преобразования регистра.
-    /// По умолчанию регистр не преобразуется (CharacterCasing.Normal)
+    /// По умолчанию регистр не преобразуется (<see cref="CharacterCasing.Normal"/>).
     /// </summary>
     public CharacterCasing CharacterCasing { get { return _CharacterCasing; } set { _CharacterCasing = value; } }
     private CharacterCasing _CharacterCasing;
 
     /// <summary>
-    /// Если установлено в true, то поле предназначено для ввода пароля. Вводимые символы не отображаются
+    /// Если установлено в true, то поле предназначено для ввода пароля. Вводимые символы не отображаются.
     /// </summary>
     public bool IsPassword { get { return _IsPassword; } set { _IsPassword = value; } }
     private bool _IsPassword;
@@ -428,7 +432,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показ блока диалога.
     /// </summary>
-    /// <returns>Ok, если пользователь ввел текст</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь ввел текст</returns>
     public override DialogResult ShowDialog()
     {
       InputForm form = new InputForm();
@@ -461,7 +465,6 @@ namespace FreeLibSet.Forms
       }
       efpText.Text = Text;
 
-
       if (EFPApp.ShowDialog(form, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
@@ -485,7 +488,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог ввода текста с возможностью выбора из списка возможных значений
+  /// Диалог ввода текста с возможностью выбора из списка значений
   /// </summary>
   public class TextComboInputDialog : BaseInputDialog
   {
@@ -530,7 +533,7 @@ namespace FreeLibSet.Forms
     private string _Text;
 
     /// <summary>
-    /// Управляемое свойство для Text
+    /// Управляемое свойство для <see cref="Text"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<string> TextEx
@@ -553,7 +556,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Управляемое свойство, возвращающее true, если введен непустой текст.
-    /// Может использоваться в валидаторах.
+    /// Может использоваться в валидаторах (в предусловии).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -575,14 +578,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// Можно ли вводить пустое значение. Дублирует свойство <see cref="CanBeEmptyMode"/>.
+    /// По умолчанию - false.
+    /// Если <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/>, то свойство возвращает true.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -594,7 +598,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Максимальная длина текста.
-    /// По умолчанию: 0 - длина текста ограничена 32767 символами сим
+    /// По умолчанию: 0 - длина текста ограничена 32767 символами символами.
     /// </summary>
     public int MaxLength { get { return _MaxLength; } set { _MaxLength = value; } }
     private int _MaxLength;
@@ -624,7 +628,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показ блока диалога.
     /// </summary>
-    /// <returns>Ok, если пользователь ввел текст или выбрал его из списка</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь ввел текст или выбрал его из списка</returns>
     public override DialogResult ShowDialog()
     {
       InputForm form = new InputForm();
@@ -722,7 +726,7 @@ namespace FreeLibSet.Forms
     private string _Text;
 
     /// <summary>
-    /// Управляемое свойство для Text
+    /// Управляемое свойство для <see cref="Text"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<string> TextEx
@@ -745,7 +749,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Управляемое свойство, возвращающее true, если введен непустой текст.
-    /// Может использоваться в валидаторах.
+    /// Может использоваться в валидаторах (в предусловии).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -767,14 +771,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// Можно ли вводить пустое значение. Дублирует свойство <see cref="CanBeEmptyMode"/>.
+    /// По умолчанию - false.
+    /// Если <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/>, то свойство возвращает true.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -787,13 +792,15 @@ namespace FreeLibSet.Forms
     #region Mask и MaskProvider
 
     /// <summary>
-    /// Провайдер для обработки маски
+    /// Провайдер для обработки маски.
+    /// См. описание <see cref="EFPMaskedTextBox.MaskProvider"/>.
     /// </summary>
     public IMaskProvider MaskProvider { get { return _MaskProvider; } set { _MaskProvider = value; } }
     private IMaskProvider _MaskProvider;
 
     /// <summary>
-    /// Маска ввода для MaskedTextBox
+    /// Маска ввода для <see cref="MaskedTextBox"/>.
+    /// См. описание <see cref="EFPMaskedTextBox.Mask"/>.
     /// </summary>
     public string Mask { get { return _Mask; } set { _Mask = value; } }
     private string _Mask;
@@ -807,7 +814,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показ блока диалога.
     /// </summary>
-    /// <returns>Ok, если пользователь ввел текст</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь ввел текст</returns>
     public override DialogResult ShowDialog()
     {
       if ((!String.IsNullOrEmpty(Mask)) && MaskProvider != null)
@@ -867,7 +874,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Блок диалога для ввода одного числа.
-  /// Базовый класс для IntInputDialog, SingleInputDialog, DoubleInputDialog и DecimalInputDialog
+  /// Базовый класс для <see cref="IntInputDialog"/>, <see cref="SingleInputDialog"/>, <see cref="DoubleInputDialog"/> и <see cref="DecimalInputDialog"/>.
   /// </summary>
   public abstract class BaseNumInputDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
@@ -911,7 +918,7 @@ namespace FreeLibSet.Forms
     private T? _NValue;
 
     /// <summary>
-    /// Управляемое свойство для NValue
+    /// Управляемое свойство для <see cref="NValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<T?> NValueEx
@@ -930,6 +937,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вход и выход: редактируемое значение без null.
+    /// Если <see cref="NValue"/>=null, то возвращается 0.
     /// </summary>
     public T Value
     {
@@ -938,7 +946,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для Value
+    /// Управляемое свойство для <see cref="Value"/>
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<T> ValueEx
@@ -960,8 +968,8 @@ namespace FreeLibSet.Forms
     #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, возвращающее true, если введено значение (NValue.HasValue=true).
-    /// Может использоваться в валидаторах.
+    /// Управляемое свойство, возвращающее true, если введено значение (<see cref="NValue"/>.HasValue=true).
+    /// Может использоваться в валидаторах (в предусловии, когда ввод пустого значения является допустимым).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -983,14 +991,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// Можно ли вводить пустое значение. Дублирует свойство <see cref="CanBeEmptyMode"/>.
+    /// По умолчанию - false.
+    /// Если <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/>, свойство возвращает true.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -1039,8 +1048,8 @@ namespace FreeLibSet.Forms
     private IFormatProvider _FormatProvider;
 
     /// <summary>
-    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
-    /// Установка значения свойства создает формат.
+    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве <see cref="Format"/>.
+    /// Установка значения свойства создает формат с заданным количеством знаков после запятой.
     /// </summary>
     public virtual int DecimalPlaces
     {
@@ -1071,7 +1080,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
     /// Если null, то прокрутки нет.
-    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// Обычно следует использовать свойство <see cref="Increment"/>, если не требуется специальная реализация прокрутки.
     /// </summary>
     public IUpDownHandler<T?> UpDownHandler
     {
@@ -1084,7 +1093,7 @@ namespace FreeLibSet.Forms
     /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
     /// стрелочек вверх/вниз или колесиком мыши.
     /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
-    /// Это свойство дублирует UpDownHandler
+    /// Это свойство дублирует <see cref="UpDownHandler"/>.
     /// </summary>
     public T Increment
     {
@@ -1120,7 +1129,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показ блока диалога.
     /// </summary>
-    /// <returns>Ok, если пользователь ввел число</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь ввел число</returns>
     public override DialogResult ShowDialog()
     {
       InputForm form = new InputForm();
@@ -1161,7 +1170,6 @@ namespace FreeLibSet.Forms
 
       return DialogResult.OK;
     }
-
 
     void efpValue_Validating(object sender, UIValidatingEventArgs args)
     {
@@ -1362,7 +1370,7 @@ namespace FreeLibSet.Forms
 
 
   /// <summary>
-  /// Диалог ввода даты.
+  /// Диалог ввода даты и/или времени с помощью <see cref="DateTimeBox"/> или <see cref="MonthCalendar"/>.
   /// </summary>
   public class DateTimeInputDialog : BaseInputDialog
   {
@@ -1388,7 +1396,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Форматизатор для даты/времени.
-    /// По умолчанию - стандартный форматизатор для даты
+    /// По умолчанию - стандартный форматизатор для даты.
     /// </summary>
     public EditableDateTimeFormatter Formatter
     {
@@ -1403,7 +1411,7 @@ namespace FreeLibSet.Forms
     private EditableDateTimeFormatter _Formatter;
 
     /// <summary>
-    /// Альтернативный способ установки свойства Formatter
+    /// Альтернативный способ установки свойства <see cref="Formatter"/>
     /// </summary>
     public EditableDateTimeFormatterKind Kind
     {
@@ -1412,9 +1420,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если свойство установлено в true, то в диалоге будет не поле ввода даты (DateBox), а календарик (MonthCalendar).
+    /// Если свойство установлено в true, то в диалоге будет не поле ввода даты (<see cref="DateTimeBox"/>), а календарик (<see cref="MonthCalendar"/>).
     /// По умолчанию - false.
-    /// Свойство нельзя устанавливать, если Kind отличается от Date.
+    /// Свойство нельзя устанавливать, если <see cref="Kind"/> отличается от <see cref="EditableDateTimeFormatterKind.Date"/>", так как <see cref="MonthCalendar"/> не поддерживает компонент времени.
     /// </summary>
     public bool UseCalendar { get { return _UseCalendar; } set { _UseCalendar = value; } }
     private bool _UseCalendar;
@@ -1450,7 +1458,7 @@ namespace FreeLibSet.Forms
     private DateTime? _NValue;
 
     /// <summary>
-    /// Управляемое свойство для NValue.
+    /// Управляемое свойство для <see cref="NValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<DateTime?> NValueEx
@@ -1472,7 +1480,8 @@ namespace FreeLibSet.Forms
     #region Value
 
     /// <summary>
-    /// Вход и выход: редактируемое значение без null
+    /// Вход и выход: редактируемое значение без null.
+    /// Если <see cref="NValue"/>=null, то возвращается <see cref="DateTime.MinValue"/>.
     /// </summary>
     public DateTime Value
     {
@@ -1481,7 +1490,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для Value.
+    /// Управляемое свойство для <see cref="Value"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<DateTime> ValueEx
@@ -1503,8 +1512,8 @@ namespace FreeLibSet.Forms
     #region NTime
 
     /// <summary>
-    /// Доступ к компоненту времени.
-    /// Если нет введенного значения, свойство возвращает null
+    /// Доступ к компоненту времени (<see cref="DateTime.TimeOfDay"/>).
+    /// Если нет введенного значения (<see cref="NValue"/>=null, а не только не задано время), свойство возвращает null.
     /// </summary>
     public TimeSpan? NTime
     {
@@ -1525,7 +1534,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для NTime.
+    /// Управляемое свойство для <see cref="NTime"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<TimeSpan?> NTimeEx
@@ -1548,7 +1557,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Доступ к компоненту времени.
-    /// В отличие от NTime, это свойство не nullable
+    /// В отличие от <see cref="NTime"/>, это свойство не nullable.
+    /// Если <see cref="NTime"/>=null, то возвращается <see cref="TimeSpan.Zero"/>.
     /// </summary>
     public TimeSpan Time
     {
@@ -1556,9 +1566,8 @@ namespace FreeLibSet.Forms
       set { NTime = value; }
     }
 
-
     /// <summary>
-    /// Управляемое свойство для Time.
+    /// Управляемое свойство для <see cref="Time"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<TimeSpan> TimeEx
@@ -1580,8 +1589,8 @@ namespace FreeLibSet.Forms
     #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, возвращающее true, если введен непустой текст.
-    /// Может использоваться в валидаторах.
+    /// Управляемое свойство, возвращающее true, если введено непустое значение (<see cref="NValue"/>.HasValue=false).
+    /// Может использоваться в валидаторах (в предусловии).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -1605,14 +1614,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// Можно ли вводить пустое значение. Дублирует свойство <see cref="CanBeEmptyMode"/>.
+    /// По умолчанию - false.
+    /// Если <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/>, то свойство возвращает true.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -1625,13 +1635,13 @@ namespace FreeLibSet.Forms
     #region Диапазон значений
 
     /// <summary>
-    /// Минимальное значение. По умолчанию ограничение не задано
+    /// Минимальное значение. По умолчанию ограничение не задано.
     /// </summary>
     public DateTime? Minimum { get { return _Minimum; } set { _Minimum = value; } }
     private DateTime? _Minimum;
 
     /// <summary>
-    /// Максимальное значение. По умолчанию ограничение не задано
+    /// Максимальное значение. По умолчанию ограничение не задано.
     /// </summary>
     public DateTime? Maximum { get { return _Maximum; } set { _Maximum = value; } }
     private DateTime? _Maximum;
@@ -1645,7 +1655,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показ блока диалога.
     /// </summary>
-    /// <returns>Ok, если пользователь ввел дату</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь ввел дату</returns>
     public override DialogResult ShowDialog()
     {
       if (HasConfig)
@@ -1746,6 +1756,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Диалог ввода ввода многострочного текста.
+  /// В отличие от других диалогов ввода, поддерживается режим "Только для чтения".
   /// </summary>
   public class MultiLineTextInputDialog : BaseInputDialog
   {
@@ -1768,7 +1779,7 @@ namespace FreeLibSet.Forms
     #region Text
 
     /// <summary>
-    /// Вход и выход: редактируемый текст. Разделитель - Environment.NewLine
+    /// Вход и выход: редактируемый текст. Разделитель строк - <see cref="Environment.NewLine"/>.
     /// </summary>
     public string Text
     {
@@ -1789,7 +1800,7 @@ namespace FreeLibSet.Forms
     private string _Text;
 
     /// <summary>
-    /// Управляемое свойство для Text
+    /// Управляемое свойство для <see cref="Text"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<string> TextEx
@@ -1807,7 +1818,7 @@ namespace FreeLibSet.Forms
     private DepOutput<string> _TextEx;
 
     /// <summary>
-    /// Альтернативная установка текста
+    /// Альтернативная установка текста в виде массива строк.
     /// </summary>
     public string[] Lines
     {
@@ -1816,7 +1827,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для Lines
+    /// Управляемое свойство для <see cref="Lines"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<string[]> LinesEx
@@ -1839,7 +1850,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Управляемое свойство, возвращающее true, если введен непустой текст.
-    /// Может использоваться в валидаторах.
+    /// Может использоваться в валидаторах (в предусловии).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -1861,14 +1872,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// Можно ли вводить пустое значение. Дублирует свойство <see cref="CanBeEmptyMode"/>.
+    /// По умолчанию - false.
+    /// Если <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/>, то свойство возвращает true.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -1882,7 +1894,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если true, то форма будет предназначена только для просмотра текста, а не для редактирования.
-    /// По умолчанию - false - текст можно редактировать
+    /// По умолчанию - false - текст можно редактировать.
     /// </summary>
     public bool ReadOnly
     {
@@ -1892,8 +1904,8 @@ namespace FreeLibSet.Forms
     private bool _ReadOnly;
 
     /// <summary>
-    /// Если true, то форма будет выведена на весь экран
-    /// По умолчанию - false - форма имеет размер по умолчанию
+    /// Если true, то форма будет выведена на весь экран.
+    /// По умолчанию - false - форма имеет размер по умолчанию.
     /// </summary>
     public bool Maximized
     {
@@ -1911,7 +1923,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показывает блок диалога
     /// </summary>
-    /// <returns>Результат выполния диалога. Ok, если пользователь ввел значение</returns>
+    /// <returns>Результат выполния диалога. <see cref="DialogResult.OK"/>, если пользователь ввел текст и нажал "ОК".
+    /// Имеет смысл, если <see cref="ReadOnly"/>=false</returns>
     public override DialogResult ShowDialog()
     {
       OKCancelSimpleForm<TextBox> form = new OKCancelSimpleForm<TextBox>(!String.IsNullOrEmpty(Prompt));
@@ -1942,7 +1955,6 @@ namespace FreeLibSet.Forms
         efpText.DisplayName = Prompt; // ?
       efpText.CanBeEmptyMode = CanBeEmptyMode;
       efpText.Validating += new UIValidatingEventHandler(efpText_Validating);
-
 
       if (HasConfig)
       {

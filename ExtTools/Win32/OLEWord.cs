@@ -317,7 +317,7 @@ namespace FreeLibSet.OLE.Word
         if (MainObj != null)
         {
           if (ShowOnEnd)
-            SetProp(MainObj, "[DispID=23]", true); // VisibleEx
+            SetProp(MainObj, "[DispID=23]", true); // Visible
           else
             Call(MainObj, "[DispID=1105]"); // Quit
         }

@@ -44,13 +44,13 @@ namespace FreeLibSet.Forms.Docs
     /// Текстовые значения, соответствующие значениям перечисления
     /// </summary>
     public string[] TextValues { get { return _TextValues; } }
-    private string[] _TextValues;
+    private readonly string[] _TextValues;
 
     /// <summary>
     /// Значки, соответствующие значениям перечисления
     /// </summary>
     public string[] ImageKeys { get { return _ImageKeys; } }
-    private string[] _ImageKeys;
+    private readonly string[] _ImageKeys;
 
     #endregion
 
@@ -177,12 +177,12 @@ namespace FreeLibSet.Forms.Docs
     #region Статические списки
 
     /// <summary>
-    /// Имена изображений в EFPApp.MainImages, соответствующие перечислению DBxAccessMode
+    /// Имена изображений в <see cref="EFPApp.MainImages"/>, соответствующие перечислению <see cref="DBxAccessMode"/>
     /// </summary>
     public static readonly string[] ValueImageKeys = new string[] { "Edit", "View", "No" };
 
     /// <summary>
-    /// Возвращает имя изображения в EFPApp.MainImages, соответствующее перечислению DBxAccessMode
+    /// Возвращает имя изображения в <see cref="EFPApp.MainImages"/>, соответствующие перечислению <see cref="DBxAccessMode"/>
     /// </summary>
     /// <param name="mode">Режим доступа</param>
     /// <returns>Имя изображения</returns>
@@ -295,12 +295,12 @@ namespace FreeLibSet.Forms.Docs
     #region Статические списки
 
     /// <summary>
-    /// Имена изображений в EFPApp.MainImages, соответствующие перечислению RecalcColumnsPermissionMode
+    /// Имена изображений в <see cref="EFPApp.MainImages"/>, соответствующие перечислению <see cref="RecalcColumnsPermissionMode"/>
     /// </summary>
     public static readonly string[] ValueImageKeys = new string[] { "No", "CircleYellow", "Ok" };
 
     /// <summary>
-    /// Возвращает имя изображения в EFPApp.MainImages, соответствующие перечислению RecalcColumnsPermissionMode
+    /// Возвращает имя изображения в <see cref="EFPApp.MainImages"/>, соответствующие перечислению <see cref="RecalcColumnsPermissionMode"/>
     /// </summary>
     /// <param name="mode">Режим пересчета полей</param>
     /// <returns>Имя изображения</returns>

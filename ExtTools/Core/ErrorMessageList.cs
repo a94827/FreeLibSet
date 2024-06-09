@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using FreeLibSet.Collections;
+using System.ComponentModel;
 
 namespace FreeLibSet.Core
 {
@@ -35,7 +36,7 @@ namespace FreeLibSet.Core
   #endregion
 
   /// <summary>
-  /// Одно сообщение об ошибке, хранящееся в ErrorMessageList
+  /// Одно сообщение об ошибке, хранящееся в <see cref="ErrorMessageList"/>.
   /// </summary>
   [Serializable]
   public struct ErrorMessageItem
@@ -86,7 +87,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Создание копии сообщения с другим уровнем серьезности.
-    /// Сообщение не добавляется в список
+    /// Сообщение не добавляется в список.
     /// </summary>
     /// <param name="kind">Серьензноть</param>
     /// <param name="sourceItem">Копируемое сообщение</param>
@@ -118,9 +119,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Код ошибки
-    /// Свойство задается в конструкторе. Для списка ошибок можно использовать метод ErrorMessageList.SetCode()
+    /// Свойство задается в конструкторе. Для списка ошибок можно использовать метод <see cref="ErrorMessageList.SetCode(string)"/>.
     /// При использовании числовых кодов требуется выполнять преобразование
-    /// в строку или обратно
+    /// в строку или обратно.
     /// </summary>
     public string Code { get { return _Code; } }
     private readonly string _Code;
@@ -129,15 +130,16 @@ namespace FreeLibSet.Core
     /// Произвольные пользовательские данные.
     /// Поле может быть использовано для идентификации объекта, в котором
     /// произошла ошибка.
-    /// При копировании сообщения об ошибке значение свойства также копируется
+    /// При копировании сообщения об ошибке значение свойства также копируется.
     /// Свойство устанавливается в конструкторе.
-    /// Для списка ошибок можно использовать метод ErrorMessageList.SetTag()
+    /// Для списка ошибок можно использовать метод <see cref="ErrorMessageList.SetTag(object)"/>.
     /// </summary>
     public object Tag { get { return _Tag; } }
     private readonly object _Tag;
 
     /// <summary>
-    /// Возвращает true, если структура не была инициализирована с помощью конструктора
+    /// Возвращает true, если структура не была инициализирована с помощью конструктора.
+    /// Пустую структуру нельзя добавлять в <see cref="ErrorMessageList"/>.
     /// </summary>
     public bool IsEmpty { get { return Object.ReferenceEquals(_Text, null); } }
 
@@ -212,7 +214,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Общее количество сообщений.
     /// Допускается установка свойства, чтобы уменьшить количество сообщений.
-    /// Нельзя увеличивать значение свойства
+    /// Нельзя увеличивать значение свойства.
     /// </summary>
     public new int Count
     {
@@ -236,7 +238,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Максимальный уровень серьезности сообщений.
-    /// Если список пуст, то возвращается уровень "Info"
+    /// Если список пуст, то возвращается уровень <see cref="ErrorMessageKind.Info"/>.
     /// </summary>
     public ErrorMessageKind Severity
     {
@@ -264,7 +266,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Максимальный уровень серьезности сообщений.
-    /// Если список пуст, то возвращается null
+    /// Если список пуст, то возвращается null.
     /// </summary>
     public ErrorMessageKind? NullableSeverity
     {
@@ -278,10 +280,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить количество сообщений об ошибках (Kind=ErrorMessageKind.Error)
+    /// Получить количество сообщений об ошибках (<see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Error"/>).
     /// Если требуется общее количество сообщений всех видов, следует использовать
-    /// свойство Count, т.к. для него не требуется перебор записей.
-    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод GetCounts()
+    /// свойство <see cref="Count"/>, т.к. для него не требуется перебор записей.
+    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод <see cref="GetCounts(out int, out int, out int)"/>.
     /// </summary>
     public int ErrorCount
     {
@@ -298,10 +300,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить количество предупреждений (Kind=ErrorMessageKind.Warning)
+    /// Получить количество предупреждений (<see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Warning"/>).
     /// Если требуется общее количество сообщений всех видов, следует использовать
-    /// свойство Count, т.к. для него не требуется перебор записей
-    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод GetCounts()
+    /// свойство <see cref="Count"/>, т.к. для него не требуется перебор записей.
+    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод <see cref="GetCounts(out int, out int, out int)"/>.
     /// </summary>
     public int WarningCount
     {
@@ -318,10 +320,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить количество информационных сообщений об ошибках (Kind=ErrorMessageKind.Info)
+    /// Получить количество информационных сообщений об ошибках (<see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Info"/>).
     /// Если требуется общее количество сообщений всех видов, следует использовать
-    /// свойство Count, т.к. для него не требуется перебор записей
-    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод GetCounts()
+    /// свойство <see cref="Count"/>, т.к. для него не требуется перебор записей.
+    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод <see cref="GetCounts(out int, out int, out int)"/>.
     /// </summary>
     public int InfoCount
     {
@@ -339,8 +341,8 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Получить количество сообщений об ошибках (Kind=ErrorMessageKind.Error) для части списка.
-    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод GetCounts()
+    /// Получить количество сообщений об ошибках (<see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Error"/>) для части списка.
+    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод <see cref="GetCounts(out int, out int, out int, int)"/>.
     /// <param name="startIndex">Начальная позиция в списке, с которой нужно начать подсчет</param>
     /// </summary>
     /// <returns>Количество ошибок от <paramref name="startIndex"/> до конца списка</returns>
@@ -356,8 +358,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить количество предупреждений (Kind=ErrorMessageKind.Warning) для части списка.
-    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод GetCounts()
+    /// Получить количество предупреждений (<see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Warning"/>) для части списка.
+    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод <see cref="GetCounts(out int, out int, out int, int)"/>.
     /// <param name="startIndex">Начальная позиция в списке, с которой нужно начать подсчет</param>
     /// </summary>
     /// <returns>Количество ошибок от <paramref name="startIndex"/> до конца списка</returns>
@@ -373,8 +375,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить количество информационных сообщений об ошибках (Kind=ErrorMessageKind.Info) для части списка.
-    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод GetCounts()
+    /// Получить количество информационных сообщений (<see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Info"/>) для части списка.
+    /// Если требуется одновременное получение количества сообщений разных видов, используйте метод <see cref="GetCounts(out int, out int, out int, int)"/>.
     /// <param name="startIndex">Начальная позиция в списке, с которой нужно начать подсчет</param>
     /// </summary>
     /// <returns>Количество ошибок от <paramref name="startIndex"/> до конца списка</returns>
@@ -391,7 +393,7 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Возвращает свойства ErrorCount, WarningCount и InfoCount за один проход для части списка
+    /// Возвращает свойства <see cref="ErrorCount"/>, <see cref="WarningCount"/> и <see cref="InfoCount"/> за один проход для части списка
     /// </summary>
     /// <param name="errorCount">Сюда помещается количество сообщений об ошибках</param>
     /// <param name="warningCount">Сюда помещается количество предупреждений</param>
@@ -414,7 +416,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает свойства ErrorCount, WarningCount и InfoCount за один проход
+    /// Возвращает свойства <see cref="ErrorCount"/>, <see cref="WarningCount"/> и <see cref="InfoCount"/> за один проход
     /// </summary>
     /// <param name="errorCount">Сюда помещается количество сообщений об ошибках</param>
     /// <param name="warningCount">Сюда помещается количество предупреждений</param>
@@ -425,7 +427,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает свойства ErrorCount и WarningCount за один проход
+    /// Возвращает свойства <see cref="ErrorCount"/>, <see cref="WarningCount"/> за один проход.
+    /// Информационные сообщения не учитываются.
     /// </summary>
     /// <param name="errorCount">Сюда помещается количество сообщений об ошибках</param>
     /// <param name="warningCount">Сюда помещается количество предупреждений</param>
@@ -437,10 +440,10 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает первый элемент в списке, обладающий максимальным уровнем важности.
-    /// То есть, если в списке есть ошибки, то будет возвращен первый элемент с уровнем серьезности Error.
-    /// Иначе, если в списке есть предупреждения, то будет возвращен первый элемент с уровнем серьезности Warning.
-    /// Иначе будет возвращен первый элемент списка (с уровнем серьезности Info).
-    /// Если список пуст, возвращается null
+    /// То есть, если в списке есть ошибки, то будет возвращен первый элемент с уровнем серьезности <see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Error"/>.
+    /// Иначе, если в списке есть предупреждения, то будет возвращен первый элемент с уровнем серьезности <see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Warning"/>.
+    /// Иначе будет возвращен первый элемент списка (с уровнем серьезности <see cref="ErrorMessageItem.Kind"/>=<see cref="ErrorMessageKind.Info"/>).
+    /// Если список пуст, возвращается null.
     /// </summary>
     public ErrorMessageItem? FirstSevereItem
     {
@@ -473,10 +476,10 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region ReadOnly
+    #region IsReadOnly
 
     /// <summary>
-    /// Устанавливает свойство IsReadOnly в true, что блокирует дальнейшее добавление сообщений
+    /// Устанавливает свойство <see cref="ListWithReadOnly{ErrorMessageItem}.IsReadOnly"/> в true, что блокирует дальнейшее добавление сообщений.
     /// </summary>
     public new void SetReadOnly()
     {
@@ -606,10 +609,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Добавить копию сообщения (например, из другого списка) с возможностью задать
-    /// дополнительный текст перед и после существующего
+    /// дополнительный текст перед и после существующего.
     /// Дополнительные пробелы не добавляются. Они должны быть предусмотрены в
-    /// конце PrefixText и в начале PostfixText для отделения от основного текста
-    /// сообщения
+    /// конце <paramref name="prefixText"/> и в начале <paramref name="suffixText"/> для отделения от основного текста сообщения.
     /// </summary>
     /// <param name="sourceItem">Исходное сообщение</param>
     /// <param name="prefixText">Текст перед сообщением</param>
@@ -637,10 +639,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Добавить копии существующих сообщений из другого списка с возможностью
-    /// задать одинаковый текст перед и после каждого сообщения
+    /// задать одинаковый текст перед и после каждого сообщения.
     /// Дополнительные пробелы не добавляются. Они должны быть предусмотрены в
-    /// конце PrefixText и в начале PostfixText для отделения от основного текста
-    /// сообщения
+    /// конце <paramref name="prefixText"/> и в начале <paramref name="suffixText"/> для отделения от основного текста сообщения.
     /// </summary>
     /// <param name="source">Исходный список сообщений</param>
     /// <param name="prefixText">Текст перед каждым сообщением</param>
@@ -665,27 +666,46 @@ namespace FreeLibSet.Core
 
     #region Методы модификации списка
 
-    #region LimitKind()
+    #region SetMaxSeverity()
+
+    /// <summary>
+    /// Понижает уровень серьезности сообщений до <paramref name="maxKind"/>
+    /// То есть, если <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Warning"/>, то ошибки заменяются на предупреждения,
+    /// а предупреждения и информационные сообщения оставляются без изменений.
+    /// Если же <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Info"/>, то все сообщения копируются как информационные.
+    /// Если <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Error"/>, то никаких действий не выполняется.
+    /// </summary>
+    /// <param name="maxKind">Ограничитель уровня (<see cref="ErrorMessageKind.Warning"/> или <see cref="ErrorMessageKind.Info"/>)</param>
+    public void SetMaxSeverity(ErrorMessageKind maxKind)
+    {
+      CheckNotReadOnly();
+
+      for (int i = 0; i < base.Count; i++)
+      {
+        ErrorMessageKind thisKind = this[i].Kind;
+        if (Compare(thisKind, maxKind) > 0)
+          thisKind = maxKind;
+        this[i] = new ErrorMessageItem(thisKind, this[i]);
+      }
+    }
+
 
     /// <summary>
     /// Создает копию списка сообщений, в котором уровень серьезности сообщений
-    /// понижен до MaxKind.
-    /// То есть, если MaxKind=Warning, то ошибки заменяются на предупреждения,
-    /// а предупреждения и информационные сообщения оставляются без изменений
-    /// Если же MaxKind=Info, то все сообщения копируются как информационные
+    /// понижен до <paramref name="maxKind"/>.
+    /// То есть, если <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Warning"/>, то ошибки заменяются на предупреждения,
+    /// а предупреждения и информационные сообщения оставляются без изменений.
+    /// Если же <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Info"/>, то все сообщения копируются как информационные.
+    /// Если <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Error"/>, то возвращается немодифицированная копия списка, как в методе <see cref="Clone()"/>.
     /// </summary>
-    /// <param name="maxKind">Ограничитель уровня (Warning или Info)</param>
-    /// <returns></returns>
+    /// <param name="maxKind">Ограничитель уровня (<see cref="ErrorMessageKind.Warning"/> или <see cref="ErrorMessageKind.Info"/>)</param>
+    /// <returns>Копия списка</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Используйте Clone() и SetMaxSeverity()", false)]
     public ErrorMessageList LimitKind(ErrorMessageKind maxKind)
     {
-      ErrorMessageList list2 = new ErrorMessageList();
-      for (int i = 0; i < Count; i++)
-      {
-        ErrorMessageKind thisKind = this[i].Kind;
-        if (Compare(thisKind , maxKind) > 0)
-          thisKind = maxKind;
-        list2.Add(new ErrorMessageItem(thisKind, this[i]));
-      }
+      ErrorMessageList list2 = Clone();
+      list2.SetMaxSeverity(maxKind);
       return list2;
     }
 
@@ -694,7 +714,7 @@ namespace FreeLibSet.Core
     #region SetTag()
 
     /// <summary>
-    /// Установка свойства Tag для всех сообщений в списке
+    /// Установка свойства <see cref="ErrorMessageItem.Tag"/> для всех сообщений в списке.
     /// </summary>
     /// <param name="tag">Новое значение свойства</param>
     public void SetTag(object tag)
@@ -703,7 +723,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Установка свойства Tag для всех сообщений в списке, начиная с заданного
+    /// Установка свойства <see cref="ErrorMessageItem.Tag"/> для всех сообщений в списке, начиная с заданного.
     /// </summary>
     /// <param name="tag">Новое значение свойства</param>
     /// <param name="startIndex">Индекс сообщения в списке, с которого должна выполняться установка</param>
@@ -723,7 +743,7 @@ namespace FreeLibSet.Core
     #region SetCode()
 
     /// <summary>
-    /// Установка свойства Code для всех сообщений в списке
+    /// Установка свойства <see cref="ErrorMessageItem.Code"/> для всех сообщений в списке.
     /// </summary>
     /// <param name="code">Новое значение свойства</param>
     public void SetCode(string code)
@@ -732,7 +752,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Установка свойства Code для всех сообщений в списке
+    /// Установка свойства <see cref="ErrorMessageItem.Code"/> для всех сообщений в списке, начиная с заданного.
     /// </summary>
     /// <param name="code">Новое значение свойства</param>
     /// <param name="startIndex">Индекс сообщения в списке, с которого должна выполняться установка</param>
@@ -754,7 +774,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Добавление текста перед каждым сообщением в списке.
     /// Не забудьте пробел в конце текста префикса, чтобы отделить его от
-    /// существующего текста
+    /// существующего текста.
     /// </summary>
     /// <param name="prefix">Текст префикска</param>
     public void SetPrefix(string prefix)
@@ -765,7 +785,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Добавление текста перед каждым сообщением в списке.
     /// Не забудьте пробел в конце текста префикса, чтобы отделить его от
-    /// существующего текста
+    /// существующего текста.
     /// </summary>
     /// <param name="prefix">Текст префикска</param>
     /// <param name="startIndex">Индекс сообщения в списке, с которого должна выполняться установка</param>
@@ -786,7 +806,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Добавление текста после каждого сообщения в списке.
     /// Не забудьте пробел перед текстом суффикса, чтобы отделить его от
-    /// существующего текста
+    /// существующего текста.
     /// </summary>
     /// <param name="suffix">Текст суффикса</param>
     public void SetSuffix(string suffix)
@@ -797,7 +817,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Добавление текста после каждого сообщения в списке.
     /// Не забудьте пробел перед текстом суффикса, чтобы отделить его от
-    /// существующего текста
+    /// существующего текста.
     /// </summary>
     /// <param name="suffix">Текст суффикса</param>
     /// <param name="startIndex">Индекс сообщения в списке, с которого должна выполняться установка</param>
@@ -823,7 +843,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить список сообщений в виде массива строк.
-    /// Информация о серьезности сообщения не возвращается
+    /// Информация о серьезности сообщения не возвращается.
     /// </summary>
     public string[] AllLines
     {
@@ -838,8 +858,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить список сообщений в виде текста.
-    /// Строки разделяются Environment.NewLine
-    /// Информация о серьезности сообщения не возвращается
+    /// Строки разделяются <see cref="Environment.NewLine"/>.
+    /// Информация о серьезности сообщения не возвращается.
     /// </summary>
     public string AllText
     {
@@ -910,8 +930,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Максимальный уровень серьезности для двух списков
-    /// Один или оба списка могут быть null
+    /// Максимальный уровень серьезности для двух списков.
+    /// Один или оба списка могут быть null.
     /// </summary>
     /// <param name="list1">Первый список</param>
     /// <param name="list2">Второй список</param>
@@ -967,8 +987,8 @@ namespace FreeLibSet.Core
     #region Исключение ErrorMessageListException
 
     /// <summary>
-    /// Если в списке есть сообщения об ошибках, то генерируется исключение ErrorMessageListExcepion.
-    /// Независимо от этого список переводится в режим IsReadOnly=true
+    /// Если в списке есть сообщения об ошибках, то генерируется исключение <see cref="ErrorMessageListException"/>.
+    /// Независимо от этого список переводится в режим <see cref="ListWithReadOnly{ErrorMessageItem}.IsReadOnly"/>=true.
     /// </summary>
     public void ThrowIfErrors()
     {
@@ -979,10 +999,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Если в списке есть сообщения об ошибках, то генерируется исключение ErrorMessageListExcepion.
-    /// Независимо от этого список переводится в режим IsReadOnly=true
+    /// Если в списке есть сообщения об ошибках, то генерируется исключение <see cref="ErrorMessageListException"/>.
+    /// Независимо от этого список переводится в режим <see cref="ListWithReadOnly{ErrorMessageItem}.IsReadOnly"/>=true.
     /// </summary>
-    /// <param name="message">Текст для исключения (свойство Exception.Message)</param>
+    /// <param name="message">Текст для исключения (свойство <see cref="Exception.Message"/>)</param>
     public void ThrowIfErrors(string message)
     {
       SetReadOnly();
@@ -993,9 +1013,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Добавляет информацию об исключении как сообщение об ошибке.
-    /// Исключение ErrorMessageListException обрабатывается особым образом: добавляются все сообщения,
-    /// присоединенные к исключению, а свойство Exception.Message не используется.
-    /// Вложенные исключения (Exception.InnerException) не учитываются
+    /// Исключение <see cref="ErrorMessageListException"/> обрабатывается особым образом: добавляются все сообщения,
+    /// присоединенные к исключению, а свойство <see cref="Exception.Message"/> не используется.
+    /// Вложенные исключения (<see cref="Exception.InnerException"/>) не учитываются.
     /// </summary>
     /// <param name="e">Добавляемое исключение</param>
     public void Add(Exception e)
@@ -1005,9 +1025,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Добавляет информацию об исключении как сообщение об ошибке.
-    /// Исключение ErrorMessageListException обрабатывается особым образом: добавляются все сообщения,
-    /// присоединенные к исключению, а свойство Exception.Message не используется.
-    /// Вложенные исключения (Exception.InnerException) не учитываются
+    /// Исключение <see cref="ErrorMessageListException"/> обрабатывается особым образом: добавляются все сообщения,
+    /// присоединенные к исключению, а свойство <see cref="Exception.Message"/> не используется.
+    /// Вложенные исключения (<see cref="Exception.InnerException"/>) не учитываются.
     /// </summary>
     /// <param name="e">Добавляемое исключение</param>
     /// <param name="prefixText">Текст перед каждым сообщением</param>
@@ -1029,7 +1049,7 @@ namespace FreeLibSet.Core
     #region Статический экземпляр
 
     /// <summary>
-    /// Пустой список сообщений в режиме IsReadOnly=true
+    /// Пустой список сообщений в режиме <see cref="ListWithReadOnly{ErrorMessageItem}.IsReadOnly"/>=true.
     /// </summary>
     public static readonly ErrorMessageList Empty = new ErrorMessageList(true);
 
@@ -1039,7 +1059,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Создает копию списка сообщений.
-    /// У копии списка свойство IsReadOnly=false
+    /// У копии списка свойство <see cref="ListWithReadOnly{ErrorMessageItem}.IsReadOnly"/>=false.
     /// </summary>
     /// <returns>Копия списка</returns>
     public ErrorMessageList Clone()
@@ -1056,8 +1076,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает копию списка сообщений, если у текущего списка установлено свойство IsReadOnly=true.
-    /// Иначе никаких действий не выполняется и возвращается ссылка на текущий список
+    /// Создает копию списка сообщений, если у текущего списка установлено свойство <see cref="ListWithReadOnly{ErrorMessageItem}.IsReadOnly"/>=true.
+    /// Иначе никаких действий не выполняется и возвращается ссылка на текущий список.
     /// </summary>
     /// <returns>Копия списка</returns>
     public ErrorMessageList CloneIfReadOnly()
@@ -1090,7 +1110,7 @@ namespace FreeLibSet.Core
   #region Делегат
 
   /// <summary>
-  /// Аргументы события для делегата ErrorMessageItemEventHandler
+  /// Аргументы события для делегата <see cref="ErrorMessageItemEventHandler"/>.
   /// </summary>
   public class ErrorMessageItemEventArgs : EventArgs
   {
@@ -1109,8 +1129,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает объект аргументов события lдля выбранного сообщения.
-    /// Свойство List получает значение null, a ItemIndex получает значение (-1)
+    /// Создает объект аргументов события для выбранного сообщения.
+    /// Свойство <see cref="List"/> получает значение null, a <see cref="ItemIndex"/> получает значение (-1).
     /// </summary>
     /// <param name="item">Сообщение</param>
     public ErrorMessageItemEventArgs(ErrorMessageItem item)

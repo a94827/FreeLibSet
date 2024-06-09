@@ -5,16 +5,16 @@
 	<TITLE>Изменения в модуле ExtDBDocs.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20240405;155540319000000">
+	<META NAME="CHANGED" CONTENT="20240410;180228841000000">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 2cm }
-		P { margin-bottom: 0.25cm; background: transparent; line-height: x%; widows: 2; orphans: 2 }
-		TD P { margin-bottom: 0.25cm; background: transparent; line-height: x%; widows: 2; orphans: 2 }
+		TD P { margin-bottom: 0.25cm; background: transparent; widows: 2; orphans: 2 }
 		H1 { margin-bottom: 0.21cm; background: transparent; widows: 2; orphans: 2 }
 		H1.western { font-family: "Liberation Serif", serif }
 		H1.cjk { font-family: "SimSun"; font-size: 24pt }
 		H1.ctl { font-family: "Mangal"; font-size: 24pt }
+		P { margin-bottom: 0.25cm; background: transparent; widows: 2; orphans: 2 }
 		A:link { so-language: zxx }
 		A:visited { color: #800080 }
 	-->
@@ -51,18 +51,43 @@
 			<P LANG="en-US" ALIGN=CENTER>351</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>05.04.2024</P>
+			<P LANG="en-US" ALIGN=CENTER>05.04.2024-10.04.2024</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US">1. StringValueCommonFilter (<A HREF="ExtDBDocs_11.htm#v077p1">v.77
-			<SPAN LANG="ru-RU">п.1</SPAN></A>) <SPAN LANG="ru-RU">использует
-			</SPAN>SQL-<SPAN LANG="ru-RU">фильтр </SPAN>StringValueFilter
-			<SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDB_11.htm#v020p2">ExtDB,
-			v.20 <SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN>,
-			<SPAN LANG="ru-RU">а не </SPAN>ValueFilter. <SPAN LANG="ru-RU">Свойство
-			</SPAN>IgnoreCase (<SPAN LANG="ru-RU">действует также в
-			</SPAN>StartsWithCommonFilter)<SPAN LANG="ru-RU">. </SPAN>
+			<P><SPAN LANG="en-US">1. StringValueCommonFilter (<A HREF="ExtDBDocs_11.htm#v077p1">v.77
+			</A></SPAN><A HREF="ExtDBDocs_11.htm#v077p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">использует </SPAN><SPAN LANG="en-US">SQL-</SPAN><SPAN LANG="ru-RU">фильтр
+			</SPAN><SPAN LANG="en-US">StringValueFilter </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDB_11.htm#v020p2"><SPAN LANG="en-US">ExtDB,
+			v.20 </SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
+			</SPAN><SPAN LANG="ru-RU">а не </SPAN><SPAN LANG="en-US">ValueFilter.
+			</SPAN><SPAN LANG="ru-RU">Свойство </SPAN><SPAN LANG="en-US">IgnoreCase
+			(</SPAN><SPAN LANG="ru-RU">действует также в
+			</SPAN><SPAN LANG="en-US">StartsWithCommonFilter)</SPAN><SPAN LANG="ru-RU">.
+			</SPAN>
 			</P>
+			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Классы фильтров
+			</SPAN><SPAN LANG="en-US">Int</SPAN><SPAN LANG="ru-RU">RangeInclusionCommonFilter,
+			</SPAN><SPAN LANG="en-US">Single</SPAN><SPAN LANG="ru-RU">RangeInclusionCommonFilter,
+			DoubleRangeInclusionCommonFilter и
+			</SPAN><SPAN LANG="en-US">Decimal</SPAN><SPAN LANG="ru-RU">RangeInclusionCommonFilter.
+			Убран фильтр </SPAN><SPAN LANG="en-US">Year</SPAN><SPAN LANG="ru-RU">RangeInclusionCommonFilter
+			</SPAN><SPAN LANG="en-US">(<A HREF="ExtDBDocs_11.htm#v077p1">v.77
+			</A></SPAN><A HREF="ExtDBDocs_11.htm#v077p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">,
+			который не поддерживал </SPAN><SPAN LANG="en-US">SQL-</SPAN><SPAN LANG="ru-RU">фильтр.</SPAN></P>
+			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Классы фильтров
+			</SPAN><SPAN LANG="en-US">IntRangeCrossCommonFilter</SPAN><SPAN LANG="ru-RU">,
+			</SPAN><SPAN LANG="en-US">Single</SPAN><SPAN LANG="ru-RU">Range</SPAN><SPAN LANG="en-US">Cross</SPAN><SPAN LANG="ru-RU">CommonFilter,
+			DoubleRange</SPAN><SPAN LANG="en-US">Cross</SPAN><SPAN LANG="ru-RU">CommonFilter
+			и </SPAN><SPAN LANG="en-US">Decimal</SPAN><SPAN LANG="ru-RU">Range</SPAN><SPAN LANG="en-US">Cross</SPAN><SPAN LANG="ru-RU">CommonFilter.
+			Изменена реализация </SPAN><SPAN LANG="en-US">Date</SPAN><SPAN LANG="ru-RU">Range</SPAN><SPAN LANG="en-US">Cross</SPAN><SPAN LANG="ru-RU">CommonFilter
+			</SPAN><SPAN LANG="en-US">(<A HREF="ExtDBDocs_11.htm#v091p2">v.91
+			</A></SPAN><A HREF="ExtDBDocs_11.htm#v091p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
+			<P LANG="en-US">4. <SPAN LANG="ru-RU">Изменена реализация
+			DateRange</SPAN>CommonFilter</P>
+			<P LANG="en-US">5. <SPAN LANG="ru-RU">Класс
+			</SPAN>SingleColumnCommonFilter <SPAN LANG="ru-RU">переименован в
+			</SPAN>OneColumnCommonFilter, <SPAN LANG="ru-RU">чтобы не путалось
+			с типом данных &laquo;</SPAN>Single<SPAN LANG="ru-RU">&raquo;</SPAN>.</P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>

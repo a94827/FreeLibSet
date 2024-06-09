@@ -19,9 +19,9 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Расширенный класс продюсера табличного просмотра EFPDBxGridView и EFPDBxTreeView.
+  /// Расширенный класс продюсера табличного просмотра <see cref="EFPDBxGridView"/> и <see cref="EFPDBxTreeView"/>.
   /// Содержит расширенные коллекции Columns, ToolTips и Orders, поддерживающие методы для добавления 
-  /// вычисляемых ссылочных полей и подсказок, и порядков сортировки, основанных на вычисляемых выражениях.
+  /// вычисляемых ссылочных полей, подсказок и порядков сортировки, основанных на вычисляемых выражениях.
   /// </summary>
   public class EFPDBxGridProducer : EFPGridProducer
   {
@@ -30,7 +30,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Создает объект GridProducer
     /// </summary>
-    /// <param name="ui">Объект пользовательского интерфейса</param>
+    /// <param name="ui">Объект пользовательского интерфейса. Не может быть null</param>
     public EFPDBxGridProducer(DBUI ui)
     {
       if (ui == null)
@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms.Docs
     /// Объект пользовательского интерфейса
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     #endregion
 
@@ -373,8 +373,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Реализация свойства EFPDBxGridProducer.Columns.
-  /// Поддерживает методы добавления ссылочных столбцов
+  /// Реализация свойства <see cref="EFPDBxGridProducer.Columns"/>.
+  /// Поддерживает методы добавления ссылочных столбцов.
   /// </summary>
   public class EFPDBxGridProducerColumns : EFPGridProducerColumns
   {
@@ -406,7 +406,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавить текстовое поле для отображения ссылки на документ или поддокумент. Поле будет
-    /// содержать значение, возвращаемое DocTypeUI/SubDocTypeUI.GetTextValue(), если ссылочное поле непустое. 
+    /// содержать значение, возвращаемое <see cref="DocTypeUIBase.GetTextValue(int)"/>, если ссылочное поле непустое. 
     /// Столбец будет иметь имя "RefColumnName_Text"
     /// </summary>
     /// <param name="refColumnName">Имя ссылочного поля</param>
@@ -414,7 +414,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в символах</param>
     /// <param name="minTextWidth">Минимальная ширина столбца в символах</param>
-    /// <returns>Объект EFPGridProducerColumn</returns>
+    /// <returns>Объект <see cref="EFPGridProducerColumn"/></returns>
     public EFPGridProducerColumn AddRefDocText(string refColumnName, DocTypeUIBase masterUI,
       string headerText, int textWidth, int minTextWidth)
     {
@@ -427,8 +427,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить текстовое поле для отображения ссылки на документ произвольного типа,
     /// когда в таблице данных есть поле с кодом таблицы и поле с идентификатором документа. 
-    /// Текстовое поле будет содержать значение, возвращаемое DocTypeUI.GetTextValue(), если ссылочное поле непустое. 
-    /// Столбец будет иметь имя "RefColumnName_Text"
+    /// Текстовое поле будет содержать значение, возвращаемое <see cref="DBxDocTextHandlers.GetTextValue(int, int)"/>, если ссылочное поле непустое. 
+    /// Столбец будет иметь имя "RefColumnName_Text".
     /// </summary>
     /// <param name="tableIdColumnName">Имя числового столбца, содержащего идентификатор таблицы документа</param>
     /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа</param>
@@ -463,9 +463,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить изображение для отображения ссылочного поля. Поле будет
     /// содержать значок, если ссылочное поле непустое. Если связанный документ или поддокумент
-    /// имеет ошибки или предупреждение, то отображается соответстввующий значок
-    /// Столбец будет иметь имя "RefColumnName_Image"
-    /// Имя столбца может быть "Id" для отображения значка текущего документа
+    /// имеет ошибки или предупреждение, то отображается соответствующий значок.
+    /// Столбец будет иметь имя "RefColumnName_Image".
+    /// Имя столбца может быть "Id" для отображения значка текущего документа.
     /// </summary>
     /// <param name="refColumnName">Имя ссылочного поля или "Id"</param>
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
@@ -483,9 +483,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить изображение для отображения ссылочного поля. Поле будет
     /// содержать значок, если ссылочное поле непустое. Если связанный документ или поддокумент
-    /// имеет ошибки или предупреждение, то отображается соответстввующий значок
-    /// Столбец будет иметь имя "RefColumnName_Image"
-    /// Имя столбца может быть "Id" для отображения значка текущего документа
+    /// имеет ошибки или предупреждение, то отображается соответстввующий значок.
+    /// Столбец будет иметь имя "RefColumnName_Image".
+    /// Имя столбца может быть "Id" для отображения значка текущего документа.
     /// </summary>
     /// <param name="refColumnName">Имя ссылочного поля или "Id"</param>
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
@@ -497,8 +497,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавить два столбца: текст и изображение, для отображения ссылочного поля. 
-    /// Комбинация вызовов AddRefDocText() и AddRefDocImage().
-    /// Столбцы будут иметь имена "RefColumnName_Text" и "RefColumnName_Image"
+    /// Комбинация вызовов <see cref="AddRefDocText(string, DocTypeUIBase, string, int, int)"/> и <see cref="AddRefDocImage(string, DocTypeUIBase)"/>.
+    /// Столбцы будут иметь имена "RefColumnName_Text" и "RefColumnName_Image".
     /// </summary>
     /// <param name="refColumnName">Имя ссылочного поля или "Id"</param>
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
@@ -515,13 +515,13 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить поле значка для отображения ссылки на документ произвольного типа,
     /// когда в таблице данных есть поле с кодом таблицы и поле с идентификатором документа. 
-    /// Поле будет содержать изображение, возвращаемое DocTypeUI.ImageHandlers.GetImageValue(), если ссылочное поле непустое. 
-    /// Столбец будет иметь имя "RefColumnName_Image"
+    /// Поле будет содержать изображение, возвращаемое <see cref="DBxDocImageHandlers.GetImageKey(int, int)"/>, если ссылочное поле непустое. 
+    /// Столбец будет иметь имя "RefColumnName_Image".
     /// </summary>
     /// <param name="tableIdColumnName">Имя числового столбца, содержащего идентификатор таблицы документа</param>
     /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа</param>
     /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Объект EFPGridProducerColumn</returns>
+    /// <returns>Объект <see cref="EFPGridProducerColumn"/></returns>
     public EFPGridProducerImageColumn AddVTRefDocImage(string tableIdColumnName, string refColumnName,
       string headerText)
     {
@@ -539,12 +539,12 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить поле значка для отображения ссылки на документ произвольного типа,
     /// когда в таблице данных есть поле с кодом таблицы и поле с идентификатором документа. 
-    /// Поле будет содержать изображение, возвращаемое DocTypeUI.ImageHandlers.GetImageValue(), если ссылочное поле непустое. 
+    /// Поле будет содержать изображение, возвращаемое <see cref="DBxDocImageHandlers.GetImageKey(int, int)"/>, если ссылочное поле непустое. 
     /// Столбец будет иметь имя "RefColumnName_Image"
     /// </summary>
     /// <param name="tableIdColumnName">Имя числового столбца, содержащего идентификатор таблицы документа</param>
     /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа</param>
-    /// <returns>Объект EFPGridProducerColumn</returns>
+    /// <returns>Объект <see cref="EFPGridProducerColumn"/></returns>
     public EFPGridProducerImageColumn AddVTRefDocImage(string tableIdColumnName, string refColumnName)
     {
       return AddVTRefDocImage(tableIdColumnName, refColumnName, String.Empty);
@@ -577,7 +577,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавляет текстовый столбец для ссылочного поля.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -604,7 +604,7 @@ namespace FreeLibSet.Forms.Docs
     /// Значения должны быть целочисленными.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -628,7 +628,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить столбец для отображения дробных (или целых) чисел.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -654,7 +654,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить столбец для отображения даты (без компонента времени).
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -677,7 +677,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить столбец для отображения даты и времени.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -700,7 +700,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить столбец для отображения даты и/или времени.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -724,7 +724,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить столбец для отображения денежных сумм.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -746,7 +746,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить столбец для отображения денежных сумм.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -778,7 +778,7 @@ namespace FreeLibSet.Forms.Docs
     /// Перечислимые значения должны идти по порядку (0,1,2, ...).
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>_Text".
     /// </summary>
@@ -839,7 +839,7 @@ namespace FreeLibSet.Forms.Docs
     /// Перечислимые значения должны идти по порядку (0,1,2, ...).
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>_Image".
     /// </summary>
@@ -895,7 +895,7 @@ namespace FreeLibSet.Forms.Docs
     /// Перечислимые значения должны идти по порядку (0,1,2, ...).
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>_Image".
     /// </summary>
@@ -953,7 +953,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить вычисляемый текстовый столбец для отображения интервала дат на основании двух
     /// полей с датой.
-    /// Для отображения текста используется DateRangeFormatter.
+    /// Для отображения текста используется <see cref="DateRangeFormatter"/>.
     /// </summary>
     /// <param name="name">Условное имя вычисляемого столбца</param>
     /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа или поддокумента.
@@ -979,7 +979,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить вычисляемый текстовый столбец для отображения интервала дат на основании двух
     /// полей с датой.
-    /// Для отображения текста используется DateRangeFormatter.
+    /// Для отображения текста используется <see cref="DateRangeFormatter"/>.
     /// Эта версия вычисляет ширину столбца автоматически.
     /// </summary>
     /// <param name="name">Условное имя вычисляемого столбца</param>
@@ -1017,7 +1017,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создает текстовый столбец для отображения числового поля с номером дня в диапазоне от 1 до 365 как месяца и дня (структура MonthDay).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// Для текстового представления используется класс <see cref="DateRangeFormatter"/>.
     /// </summary>
     /// <param name="name">Имя вычисляемого столбца табличного просмотра</param>
     /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа или поддокумента.
@@ -1039,7 +1039,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создает текстовый столбец для отображения числового поля с номером дня в диапазоне от 1 до 365 как месяца и дня (структура MonthDay).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// Для текстового представления используется класс <see cref="DateRangeFormatter"/>.
     /// Эта версия вычисляет ширину столбца автоматически.
     /// </summary>
     /// <param name="name">Имя вычисляемого столбца табличного просмотра</param>
@@ -1072,7 +1072,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создает столбец для отображения двух столбоц, содержащих номер дня в диапазоне от 1 до 365 как диапазона дней в году (структура MonthDayRange).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// Для текстового представления используется класс <see cref="DateRangeFormatter"/>.
     /// </summary>
     /// <param name="name">Имя вычисляемого столбца табличного просмотра</param>
     /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа или поддокумента.
@@ -1095,7 +1095,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создает столбец для отображения двух столбоц, содержащих номер дня в диапазоне от 1 до 365 как диапазона дней в году (структура MonthDayRange).
-    /// Для текстового представления используется класс DateRangeFormatter.
+    /// Для текстового представления используется класс <see cref="DateRangeFormatter"/>.
     /// Эта версия вычисляет ширину столбца автоматически.
     /// </summary>
     /// <param name="name">Имя вычисляемого столбца табличного просмотра</param>
@@ -1134,7 +1134,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить столбец-флажок для логического поля.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -1157,7 +1157,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить столбец-флажок для логического поля.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
     /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод DBxTableCache.GetValue() для получения значения. Методу передается идентификатор
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
     /// и имя поля <paramref name="valueColumnName"/>.
     /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
     /// </summary>
@@ -1181,7 +1181,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Реализация свойства EFPDBxGridProducer.ToolTips.
+  /// Реализация свойства <see cref="EFPDBxGridProducer.ToolTips"/>.
   /// </summary>
   public class EFPDBxGridProducerToolTips : EFPGridProducerToolTips
   {
@@ -1206,7 +1206,7 @@ namespace FreeLibSet.Forms.Docs
     /// Объект-владелец
     /// </summary>
     public EFPDBxGridProducer GridProducer { get { return _GridProducer; } }
-    private EFPDBxGridProducer _GridProducer;
+    private readonly EFPDBxGridProducer _GridProducer;
 
     #endregion
 
@@ -1216,15 +1216,15 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавить подсказку для отображения ссылки на документ или поддокумент. Текст подсказки будет
-    /// содержать значение, возвращаемое DocTypeUI/SubDocTypeUI.GetTextValue(), если ссылочное поле непустое. 
+    /// содержать значение, возвращаемое <see cref="DocTypeUIBase.GetTextValue(int)"/>, если ссылочное поле непустое. 
     /// Подсказка будет иметь имя "RefColumnName_Text"
     /// </summary>
     /// <param name="refColumnName">Имя ссылочного поля</param>
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
-    /// <param name="prefixText">Текст, который будет выведен перед значением в виде "DisplayName : Значение".
+    /// <param name="prefixText">Текст, который будет выведен перед значением в виде "DisplayName: Значение".
     /// Если null, то будет выводиться имя поля. 
     /// Если пустая строка, то ничего выводится перед значением не будет</param>
-    /// <returns>Объект выдачи подсказки</returns>
+    /// <returns>Объект <see cref="EFPGridProducerToolTip"/></returns>
     public EFPGridProducerToolTip AddRefDocText(string refColumnName, DocTypeUIBase masterUI,
       string prefixText)
     {
@@ -1235,14 +1235,14 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить подсказку для отображения ссылки на документ произвольного типа,
     /// когда в таблице данных есть поле с кодом таблицы и поле с идентификатором документа. 
-    /// Подсказка будет содержать значение, возвращаемое DocTypeUI.GetTextValue(), если ссылочное поле непустое. 
+    /// Подсказка будет содержать значение, возвращаемое <see cref="DocTypeUIBase.GetTextValue(int)"/>, если ссылочное поле непустое. 
     /// Столбец будет иметь имя "RefColumnName_Text"
     /// </summary>
     /// <param name="tableIdColumnName">Имя числового столбца, содержащего идентификатор таблицы документа</param>
     /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа</param>
-    /// <param name="prefixText">Текст, который будет выведен перед значением в виде "DisplayName : Значение".
+    /// <param name="prefixText">Текст, который будет выведен перед значением в виде "DisplayName: Значение".
     /// Если пустая строка, то ничего выводится перед значением не будет</param>
-    /// <returns>Объект EFPGridProducerToolTip</returns>
+    /// <returns>Объект <see cref="EFPGridProducerToolTip"/></returns>
     public EFPGridProducerToolTip AddVTRefDocText(string tableIdColumnName, string refColumnName,
       string prefixText)
     {
@@ -1263,14 +1263,13 @@ namespace FreeLibSet.Forms.Docs
       args.Value = _GridProducer.UI.TextHandlers.GetTextValue(tableId, docId);
     }
 
-
     #endregion
 
     #endregion
   }
 
   /// <summary>
-  /// Получение значения с использованием поля таблицы или объекта DBxCache
+  /// Получение значения с использованием поля таблицы или объекта <see cref="DBxCache"/>
   /// </summary>
   public class TreeViewCachedValueAdapter
   {
@@ -1280,7 +1279,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает переходник
     /// </summary>
     /// <param name="controlProvider">Провайдер иерархического просмотра</param>
-    /// <param name="nodeControl">Элемент в TreeViewAdv, к которому присоединяется обработчик события ValueNeeded</param>
+    /// <param name="nodeControl">Элемент в <see cref="FreeLibSet.Controls.TreeViewAdv"/>, к которому присоединяется обработчик события ValueNeeded</param>
     /// <param name="cache">Система кэширования данных</param>
     /// <param name="column">Генератор столбца табличного просмотра</param>
     public TreeViewCachedValueAdapter(EFPDataTreeView controlProvider, BindableControl nodeControl, DBxCache cache, EFPGridProducerColumn column)
@@ -1304,13 +1303,13 @@ namespace FreeLibSet.Forms.Docs
 
     #region Свойство
 
-    private EFPDataTreeView _ControlProvider;
+    private readonly EFPDataTreeView _ControlProvider;
 
     /// <summary>
     /// Система кэширования данных
     /// </summary>
     public DBxCache Cache { get { return _Cache; } }
-    private DBxCache _Cache;
+    private readonly DBxCache _Cache;
 
     private string _TableName;
 
@@ -1318,7 +1317,7 @@ namespace FreeLibSet.Forms.Docs
 
     private bool _UseCache;
 
-    private EFPGridProducerColumn _UserColumn;
+    private readonly EFPGridProducerColumn _UserColumn;
 
     #endregion
 
@@ -1390,8 +1389,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Инициализация столбцов иерархического просмотра.
-    /// Находит все объекты BindableControl, созданные в <paramref name="controlProvider"/>.Control,
-    /// и создает для них экземпляры TreeViewCachedValueAdapter.
+    /// Находит все объекты <see cref="BindableControl"/>, созданные в <paramref name="controlProvider"/>.Control,
+    /// и создает для них экземпляры <see cref="TreeViewCachedValueAdapter"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер иерархического просмотра</param>
     /// <param name="cache">Система кэширования данных</param>
@@ -1415,7 +1414,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Базовый класс для EFPDocTypeGridProducer и EFPSubDocTypeGridProducer
+  /// Базовый класс для <see cref="EFPDocTypeGridProducer"/> и <see cref="EFPSubDocTypeGridProducer"/>
   /// </summary>
   public abstract class EFPDocTypeBaseGridProducer : EFPDBxGridProducer
   {
@@ -1468,7 +1467,7 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс вида документов, к которому относится GridProducer
     /// </summary>
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
-    private DocTypeUI _DocTypeUI;
+    private readonly DocTypeUI _DocTypeUI;
 
     #endregion
   }
@@ -1501,7 +1500,7 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс вида поддокументов, к которому относится GridProducer
     /// </summary>
     public SubDocTypeUI SubDocTypeUI { get { return _SubDocTypeUI; } }
-    private SubDocTypeUI _SubDocTypeUI;
+    private readonly SubDocTypeUI _SubDocTypeUI;
 
     #endregion
   }

@@ -1183,9 +1183,9 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Базовый класс для фильтров по одному полю (большинство фильтров).
-  /// Определяет свойство <see cref="SingleColumnCommonFilter.ColumnName"/>.
+  /// Определяет свойство <see cref="OneColumnCommonFilter.ColumnName"/>.
   /// </summary>
-  public abstract class SingleColumnCommonFilter : DBxCommonFilter
+  public abstract class OneColumnCommonFilter : DBxCommonFilter
   {
     #region Конструктор
 
@@ -1194,7 +1194,7 @@ namespace FreeLibSet.Data.Docs
     /// Устанавливает свойства <see cref="ColumnName"/>, <see cref="DBxCommonFilter.Code"/> и <see cref="DBxCommonFilter.DisplayName"/> равными <paramref name="columnName"/>.
     /// </summary>
     /// <param name="columnName">Имя поля. Должно быть задано</param>
-    public SingleColumnCommonFilter(string columnName)
+    public OneColumnCommonFilter(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
         throw new ArgumentNullException("columnName");
@@ -1260,7 +1260,7 @@ namespace FreeLibSet.Data.Docs
   /// определенному значению).
   /// Использует SQL-фильтр <see cref="StringValueFilter"/>.
   /// </summary>
-  public class StringValueCommonFilter : SingleColumnCommonFilter
+  public class StringValueCommonFilter : OneColumnCommonFilter
   {
     #region Конструкторы
 
@@ -1342,7 +1342,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -1441,14 +1441,14 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Доступ к значениям полей</param>
     /// <returns>True, если условие фильтра выполняется</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
       object v = rowValues.GetValue(ColumnName);
-      return DataTools.GetString(v).StartsWith(Value, IgnoreCase?StringComparison.OrdinalIgnoreCase: StringComparison.Ordinal);
+      return DataTools.GetString(v).StartsWith(Value, IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -1509,7 +1509,7 @@ namespace FreeLibSet.Data.Docs
   /// Поддерживает режим включения или исключения нескольких кодов. Возможна 
   /// поддержка пустых кодов. 
   /// </summary>
-  public class CodeCommonFilter : SingleColumnCommonFilter
+  public class CodeCommonFilter : OneColumnCommonFilter
   {
     #region Конструктор
 
@@ -1639,7 +1639,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Значения полей</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -1730,7 +1730,7 @@ namespace FreeLibSet.Data.Docs
   /// Поддерживается только проверка на равенство <see cref="CompareKind.Equal"/>.
   /// </summary>
   /// <typeparam name="T">Тип значения поля (должен быть структурой, а не классом)</typeparam>
-  public abstract class ValueCommonFilterBase<T> : SingleColumnCommonFilter
+  public abstract class ValueCommonFilterBase<T> : OneColumnCommonFilter
     where T : struct
   {
     #region Конструктор
@@ -1790,7 +1790,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -1826,7 +1826,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Вызывается при создании нового документа из просмотра.
-    /// Устанавливает начальное значение поля <see cref="SingleColumnCommonFilter.ColumnName"/>, если в фильтре выбрано единственное значение.
+    /// Устанавливает начальное значение поля <see cref="OneColumnCommonFilter.ColumnName"/>, если в фильтре выбрано единственное значение.
     /// </summary>
     /// <param name="docValue">Значение поля, которое можно установить</param>
     protected override void OnInitNewDocValue(DBxDocValue docValue)
@@ -2073,149 +2073,10 @@ namespace FreeLibSet.Data.Docs
   #region Фильтры по диапазонам значений
 
   /// <summary>
-  /// Фильтр по диапазону дат для одного поля (SQL-фильтр <see cref="DateRangeFilter"/>).
-  /// Поддерживаются полуоткрытые интервалы.
-  /// Если фильтр установлен, то пустые значения поля не проходят фильтр.
-  /// </summary>
-  public class DateRangeCommonFilter : SingleColumnCommonFilter
-  {
-    #region Конструктор
-
-    /// <summary>
-    /// Создает фильтр
-    /// </summary>
-    /// <param name="columnName">Имя столбца типа "Дата"</param>
-    public DateRangeCommonFilter(string columnName)
-      : base(columnName)
-    {
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Текущее значение фильтра - начальная дата или null
-    /// </summary>
-    public DateTime? FirstDate
-    {
-      get { return _FirstDate; }
-      set
-      {
-        if (value == _FirstDate)
-          return;
-        _FirstDate = value;
-        OnChanged();
-      }
-    }
-    private DateTime? _FirstDate;
-
-    /// <summary>
-    /// Текущее значение фильтра - конечная дата или null
-    /// </summary>
-    public DateTime? LastDate
-    {
-      get { return _LastDate; }
-      set
-      {
-        if (value == _LastDate)
-          return;
-        _LastDate = value;
-        OnChanged();
-      }
-    }
-    private DateTime? _LastDate;
-
-    #endregion
-
-    #region Переопределяемые методы
-
-    /// <summary>
-    /// Очистка фильтра
-    /// </summary>
-    public override void Clear()
-    {
-      FirstDate = null;
-      LastDate = null;
-    }
-
-    /// <summary>
-    /// Возвращает true, если фильтр не установлен
-    /// </summary>
-    public override bool IsEmpty
-    {
-      get
-      {
-        return !(FirstDate.HasValue || LastDate.HasValue);
-      }
-    }
-
-    /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
-    /// </summary>
-    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
-    /// <returns>True, если строка проходит условия фильтра</returns>
-    protected override bool OnTestValues(INamedValuesAccess rowValues)
-    {
-      object v = rowValues.GetValue(ColumnName);
-      if (v == null)
-        return false;
-      if (v is DBNull)
-        return false;
-
-      return DataTools.DateInRange((DateTime)v, FirstDate, LastDate);
-    }
-
-    /// <summary>
-    /// Получение фильтра для фильтрации строк таблицы данных
-    /// </summary>
-    public override DBxFilter GetSqlFilter()
-    {
-      return new DateRangeFilter(ColumnName, FirstDate, LastDate);
-
-    }
-
-    /// <summary>
-    /// Прочитать значение фильтра из секции конфигурации
-    /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart cfg)
-    {
-      FirstDate = cfg.GetNullableDate("FirstDate");
-      LastDate = cfg.GetNullableDate("LastDate");
-    }
-
-    /// <summary>
-    /// Записать параметры фильтра в секцию конфигурации.
-    /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
-    public override void WriteConfig(CfgPart cfg)
-    {
-      cfg.SetNullableDate("FirstDate", FirstDate);
-      cfg.SetNullableDate("LastDate", LastDate);
-    }
-
-    /// <summary>
-    /// Использует <see cref="DateRangeFormatter.Default"/> для преобразования в строку значения поля
-    /// </summary>
-    /// <param name="columnValues">Значения полей</param>
-    /// <returns>Текстовые представления значений</returns>
-    protected override string[] GetColumnStrValues(object[] columnValues)
-    {
-      return new string[] { DateRangeFormatter.Default.ToString(DataTools.GetNullableDateTime(columnValues[0]), true) };
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Фильтр табличного просмотра для одного поля, содержащего целочисленное значение (SQL-фильтр <see cref="NumRangeFilter"/>).
-  /// Можно задавать диапазон значений, которые должны проходить фильтр.
+  /// Базовый класс фильтра для одного поля, в котором можно задавать диапазон значений.
   /// Допускаются полуоткрытые интервалы.
-  /// Базовый класс для <see cref="IntRangeCommonFilter"/>, <see cref="SingleRangeCommonFilter"/>, <see cref="DoubleRangeCommonFilter"/> и <see cref="DecimalRangeCommonFilter"/>.
   /// </summary>
-  public abstract class NumRangeCommonFilter<T> : SingleColumnCommonFilter
+  public abstract class RangeCommonFilterBase<T> : OneColumnCommonFilter
     where T : struct
   {
     #region Конструктор
@@ -2224,7 +2085,7 @@ namespace FreeLibSet.Data.Docs
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя поля</param>
-    public NumRangeCommonFilter(string columnName)
+    public RangeCommonFilterBase(string columnName)
       : base(columnName)
     {
       _NullIsZero = true;
@@ -2319,7 +2180,7 @@ namespace FreeLibSet.Data.Docs
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
-  public class IntRangeCommonFilter : NumRangeCommonFilter<int>
+  public class IntRangeCommonFilter : RangeCommonFilterBase<int>
   {
     #region Конструктор
 
@@ -2338,7 +2199,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2399,7 +2260,7 @@ namespace FreeLibSet.Data.Docs
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
-  public class SingleRangeCommonFilter : NumRangeCommonFilter<float>
+  public class SingleRangeCommonFilter : RangeCommonFilterBase<float>
   {
     #region Конструктор
 
@@ -2418,7 +2279,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2479,7 +2340,7 @@ namespace FreeLibSet.Data.Docs
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
-  public class DoubleRangeCommonFilter : NumRangeCommonFilter<double>
+  public class DoubleRangeCommonFilter : RangeCommonFilterBase<double>
   {
     #region Конструктор
 
@@ -2498,7 +2359,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2559,7 +2420,7 @@ namespace FreeLibSet.Data.Docs
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
-  public class DecimalRangeCommonFilter : NumRangeCommonFilter<decimal>
+  public class DecimalRangeCommonFilter : RangeCommonFilterBase<decimal>
   {
     #region Конструктор
 
@@ -2578,7 +2439,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2634,6 +2495,86 @@ namespace FreeLibSet.Data.Docs
     #endregion
   }
 
+  /// <summary>
+  /// Фильтр по диапазону дат для одного поля (SQL-фильтр <see cref="DateRangeFilter"/>).
+  /// Поддерживаются полуоткрытые интервалы.
+  /// Если фильтр установлен, то пустые значения поля не проходят фильтр.
+  /// </summary>
+  public class DateRangeCommonFilter : RangeCommonFilterBase<DateTime>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="columnName">Имя столбца типа "Дата"</param>
+    public DateRangeCommonFilter(string columnName)
+      : base(columnName)
+    {
+    }
+
+    #endregion
+
+    #region Переопределяемые методы
+
+    
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      DateTime? v = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName));
+      if (v.HasValue)
+        return DataTools.DateInRange(v.Value, FirstValue, LastValue);
+      else
+        return false;
+    }
+
+    /// <summary>
+    /// Получение фильтра для фильтрации строк таблицы данных
+    /// </summary>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new DateRangeFilter(ColumnName, FirstValue, LastValue);
+
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart cfg)
+    {
+      FirstValue = cfg.GetNullableDate("FirstValue");
+      LastValue = cfg.GetNullableDate("LastValue");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации.
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart cfg)
+    {
+      cfg.SetNullableDate("FirstValue", FirstValue);
+      cfg.SetNullableDate("LastValue", LastValue);
+    }
+
+    /// <summary>
+    /// Использует <see cref="DateRangeFormatter.Default"/> для преобразования в строку значения поля
+    /// </summary>
+    /// <param name="columnValues">Значения полей</param>
+    /// <returns>Текстовые представления значений</returns>
+    protected override string[] GetColumnStrValues(object[] columnValues)
+    {
+      return new string[] { DateRangeFormatter.Default.ToString(DataTools.GetNullableDateTime(columnValues[0]), true) };
+    }
+
+    #endregion
+  }
+
   #endregion
 
   #region Прочие фильтры
@@ -2645,7 +2586,7 @@ namespace FreeLibSet.Data.Docs
   /// Каждое значение проходит или не проходит фильтр, что определяется массивом флагов <see cref="EnumCommonFilter.FilterFlags"/>.
   /// Если фильтр установлен, то значения поля, выходящие за диапазон значений, считаются не проходящими фильтр.
   /// </summary>
-  public class EnumCommonFilter : SingleColumnCommonFilter
+  public class EnumCommonFilter : OneColumnCommonFilter
   {
     #region Конструктор
 
@@ -2672,7 +2613,7 @@ namespace FreeLibSet.Data.Docs
     /// Задается в конструкторе.
     /// </summary>
     public int ItemCount { get { return _ItemCount; } }
-    private int _ItemCount;
+    private readonly int _ItemCount;
 
     /// <summary>
     /// Текущее значение фильтра. Содержит массив флагов, соответствующих числовым
@@ -2773,7 +2714,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -2828,7 +2769,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Вызывается при создании нового документа из просмотра.
-    /// Устанавливает начальное значение поля <see cref="SingleColumnCommonFilter.ColumnName"/>, если в фильтре выбрано единственное значение.
+    /// Устанавливает начальное значение поля <see cref="OneColumnCommonFilter.ColumnName"/>, если в фильтре выбрано единственное значение.
     /// </summary>
     /// <param name="docValue">Значение поля, которое можно установить поля</param>
     protected override void OnInitNewDocValue(DBxDocValue docValue)
@@ -2861,12 +2802,10 @@ namespace FreeLibSet.Data.Docs
     #endregion
   }
 
-  // !!!!!!!!!!!!!!
-
   #region Перечисление NullNotNullGridFilterValue
 
   /// <summary>
-  /// Возможные состояния фильтра NullNotNullCommonFilter
+  /// Возможные состояния фильтра <see cref="NullNotNullCommonFilter"/>
   /// </summary>
   public enum NullNotNullFilterValue
   {
@@ -2890,9 +2829,10 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Фильтр по наличию или отсутствию значения NULL/NOT NULL (обычно, для поля
-  /// типа "Дата")
+  /// типа "Дата". Для ссылочных полей чаще используется <see cref="RefDocCommonFilter"/>, который, в том числе, поддерживает и проверку на NULL/NOT NULL).
+  /// Создает SQL-фильтры <see cref="ValueFilter"/> или <see cref="NotNullFilter"/>.
   /// </summary>
-  public class NullNotNullCommonFilter : SingleColumnCommonFilter
+  public class NullNotNullCommonFilter : OneColumnCommonFilter
   {
     #region Конструктор
 
@@ -2934,10 +2874,10 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Тип значения, хранящегося в поле.
     /// Свойство задается в конструкторе фильтра.  
-    /// Требуется для создания объекта NotNullFilter
+    /// Требуется для создания объекта <see cref="NotNullFilter"/>
     /// </summary>
     public Type ColumnType { get { return _ColumnType; } }
-    private Type _ColumnType;
+    private readonly Type _ColumnType;
 
     #endregion
 
@@ -2977,7 +2917,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -3008,7 +2948,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
@@ -3029,7 +2969,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
+    /// Если фильтр не установлен (<see cref="IsEmpty"/>=true), возвращается true.
+    /// Под "NULL" понимаются значения null и <see cref="DBNull"/>. Остальные значения считаются "NOT NULL".
     /// </summary>
     /// <param name="rowValue">Проверяемое значение</param>
     /// <returns>true, если значение проходит условие фильтра</returns>
@@ -3055,8 +2996,8 @@ namespace FreeLibSet.Data.Docs
   #region Перечисление RefDocFilterMode
 
   /// <summary>
-  /// Режимы работы RefDocGridFilter.
-  /// Поддерживается режим фильтрации по выбранным записям и режим исключения выбранных записей
+  /// Режимы работы <see cref="RefDocCommonFilter"/>.
+  /// Поддерживается режим фильтрации по выбранным записям, режим исключения выбранных записей, проверки на "NULL" и "NOT NULL".
   /// </summary>
   public enum RefDocFilterMode
   {
@@ -3077,13 +3018,13 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Фильтр по любой ссылке.
-    /// Должно использоваться только для ссылочных полей, поддерживающих значение NULL.
+    /// Должно использоваться только для ссылочных полей, поддерживающих значение NULL (<see cref="DBxColumnStruct.Nullable"/>=true).
     /// </summary>
     NotNull,
 
     /// <summary>
     /// Фильтр по значению Null.
-    /// Должно использоваться только для ссылочных полей, поддерживающих значение NULL.
+    /// Должно использоваться только для ссылочных полей, поддерживающих значение NULL (<see cref="DBxColumnStruct.Nullable"/>=true).
     /// </summary>
     Null
   }
@@ -3091,11 +3032,11 @@ namespace FreeLibSet.Data.Docs
   #endregion
 
   /// <summary>
-  /// Фильтр по значению ссылочного поля на документ
-  /// Возможен фильтр по нескольким идентификаторам и режим "Исключить"
-  /// Фильтр по пустому значению поля невозможен
+  /// Фильтр по значению ссылочного поля на документ.
+  /// Возможен фильтр по нескольким идентификаторам и режим "Исключить".
+  /// Для полей, поддерживающих пустое значение (<see cref="DBxColumnStruct.Nullable"/>=true), возможны фильтры на NULL и NOT NULL.
   /// </summary>
-  public class RefDocCommonFilter : SingleColumnCommonFilter
+  public class RefDocCommonFilter : OneColumnCommonFilter
   {
     #region Конструкторы
 
@@ -3137,14 +3078,14 @@ namespace FreeLibSet.Data.Docs
     /// Провайдер для доступа к документам
     /// </summary>
     public DBxDocProvider DocProvider { get { return _DocProvider; } }
-    private DBxDocProvider _DocProvider;
+    private readonly DBxDocProvider _DocProvider;
 
     /// <summary>
     /// Описание вида документа, из которого осуществляется выбор.
     /// Задается в конструкторе объекта фильтра.
     /// </summary>
     public DBxDocType DocType { get { return _DocType; } }
-    private DBxDocType _DocType;
+    private readonly DBxDocType _DocType;
 
     /// <summary>
     /// Имя таблицы документа
@@ -3158,7 +3099,7 @@ namespace FreeLibSet.Data.Docs
     private RefDocFilterMode _Mode;
 
     /// <summary>
-    /// Идентификаторы документов, если фильтр установлен
+    /// Идентификаторы документов, если установлен фильтр <see cref="RefDocFilterMode.Include"/> или <see cref="RefDocFilterMode.Exclude"/>.
     /// </summary>
     public IdList DocIds { get { return _DocIds; } }
     private IdList _DocIds;
@@ -3227,11 +3168,10 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Упрощенная установка фильтра по единственному значению. 
     /// Свойство возвращает идентификатор документа или поддокумента для ссылочного поля, 
-    /// если установлен режим "включить" и задан один идентификатор в списке. Возвращает 0,
-    /// если а) фильтр не установлен или б) фильтр в режиме "кроме", или в) вывбрано 
-    /// несколько идентификаторов в списке.
+    /// если установлен режим "включить" (<see cref="Mode"/>=<see cref="RefDocFilterMode.Include"/>) и задан один идентификатор в списке <see cref="DocIds"/>. 
+    /// Возвращает 0 во всех остальных режимах.
     /// Установка значения свойства в ненулевое значение устанавливает фильтр по
-    /// одному документу, а в нулевое значение - очищает фильтр
+    /// одному документу (<see cref="Mode"/>=<see cref="RefDocFilterMode.Include"/>), а в нулевое значение - очищает фильтр ((<see cref="Mode"/>=<see cref="RefDocFilterMode.NoFilter"/>)).
     /// </summary>
     public Int32 SingleDocId
     {
@@ -3288,7 +3228,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -3338,7 +3278,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
@@ -3352,7 +3292,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Вызывается при создании нового документа из просмотра.
-    /// Устанавливает начальное значение поля ColumnName, если в фильтре выбрано единственное значение.
+    /// Устанавливает начальное значение поля <see cref="OneColumnCommonFilter.ColumnName"/>, если в фильтре выбрано единственное значение при <see cref="Mode"/>=<see cref="RefDocFilterMode.Include"/>.
     /// </summary>
     /// <param name="docValue">Значение поля, которое можно установить</param>
     protected override void OnInitNewDocValue(DBxDocValue docValue)
@@ -3490,21 +3430,29 @@ namespace FreeLibSet.Data.Docs
     /// Если вид документов, на которое ссылается поле, не использует группы, свойство возвращает null
     /// </summary>
     public RefDocCommonFilter GroupFilter { get { return _GroupFilter; } }
-    private RefDocCommonFilter _GroupFilter;
+    private readonly RefDocCommonFilter _GroupFilter;
 
     /// <summary>
     /// Основной фильтр
     /// </summary>
     public RefDocCommonFilter DocFilter { get { return _DocFilter; } }
-    private RefDocCommonFilter _DocFilter;
+    private readonly RefDocCommonFilter _DocFilter;
 
     #endregion
   }
 
   /// <summary>
-  /// Фильтр по полю GroupId
+  /// Фильтр по полю "GroupId" в таблице документов.
+  /// Возможные режимы фильтрации:
+  /// <list type="bullet">
+  /// <item><description>Для выбранной группы и вложенных групп</description></item>
+  /// <item><description>Для выбранной группы без вложенных групп</description></item>
+  /// <item><description>Для документов без группы</description></item>
+  /// Использует SQL-фильтр <see cref="IdsFilter"/> (по списку идентификаторов групп, если выбраны вложенные группы) или
+  /// <see cref="ValueFilter"/> (если фильтр по одной группе).
+  /// </list>
   /// </summary>
-  public class RefGroupDocCommonFilter : SingleColumnCommonFilter
+  public class RefGroupDocCommonFilter : OneColumnCommonFilter
   {
     #region Конструктор
 
@@ -3552,14 +3500,14 @@ namespace FreeLibSet.Data.Docs
     /// Провайдер для доступа к документам
     /// </summary>
     public DBxDocProvider DocProvider { get { return _DocProvider; } }
-    private DBxDocProvider _DocProvider;
+    private readonly DBxDocProvider _DocProvider;
 
     /// <summary>
     /// Описание вида документа групп.
     /// Задается в конструкторе объекта фильтра.
     /// </summary>
     public DBxDocType GroupDocType { get { return _GroupDocType; } }
-    private DBxDocType _GroupDocType;
+    private readonly DBxDocType _GroupDocType;
 
     /// <summary>
     /// Имя таблицы документа групп.
@@ -3571,7 +3519,8 @@ namespace FreeLibSet.Data.Docs
     #region Текущие установки фильтра
 
     /// <summary>
-    /// Идентификатор выбранной группы
+    /// Идентификатор выбранной группы.
+    /// Фильтр считается не установленным при <see cref="GroupId"/>=0 и <see cref="IncludeNestedGroups"/>=true.
     /// </summary>
     public Int32 GroupId
     {
@@ -3587,7 +3536,8 @@ namespace FreeLibSet.Data.Docs
     private Int32 _GroupId;
 
     /// <summary>
-    /// Если true, то включаются также вложенные группы
+    /// Если true, то включаются также вложенные группы.
+    /// Фильтр считается не установленным при <see cref="GroupId"/>=0 и <see cref="IncludeNestedGroups"/>=true.
     /// </summary>
     public bool IncludeNestedGroups
     {
@@ -3602,10 +3552,9 @@ namespace FreeLibSet.Data.Docs
     }
     private bool _IncludeNestedGroups;
 
-
     /// <summary>
     /// Идентификатор базы данных.
-    /// Используется в операциях с буфером обмена
+    /// Используется в операциях с буфером обмена.
     /// </summary>
     public override string DBIdentity
     {
@@ -3622,7 +3571,7 @@ namespace FreeLibSet.Data.Docs
     /// Если выбраны "Все документы", возвращает null.
     /// Если выбраны "Документы без групп", возвращает массив нулевой длины.
     /// Если есть выбранная группа, возвращает массив из одного или нескольких элементов,
-    /// в зависимости от IncludeNested
+    /// в зависимости от <see cref="IncludeNestedGroups"/>.
     /// </summary>
     public IdList AuxFilterGroupIdList
     {
@@ -3640,7 +3589,7 @@ namespace FreeLibSet.Data.Docs
     private IdList _AuxFilterGroupIdList;
 
     /// <summary>
-    /// Флажок устанавливается в true, если FAuxFilterGroupIdList содержит корректное значение
+    /// Флажок устанавливается в true, если <see cref="AuxFilterGroupIdList"/> содержит корректное значение
     /// </summary>
     private bool _AuxFilterGroupIdsReady;
 
@@ -3682,7 +3631,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Очистить фильтр
+    /// Очистить фильтр.
+    /// Устанавливает <see cref="GroupId"/>=0 и <see cref="IncludeNestedGroups"/>=true.
     /// </summary>
     public override void Clear()
     {
@@ -3695,7 +3645,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает true, если фильтр не установлен:
-    /// GroupId=0 и IncludeNestedGroups=true.
+    /// <see cref="GroupId"/>=0 и <see cref="IncludeNestedGroups"/>=true.
     /// </summary>
     public override bool IsEmpty
     {
@@ -3704,7 +3654,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -3785,17 +3735,19 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Фильтр по виду документа
-  /// Текущим значением числового поля является идентификатор таблицы документа DocType.TableId
+  /// Фильтр по виду документа.
+  /// Текущим значением числового поля является идентификатор таблицы документа <see cref="DBxDocType.TableId"/>.
   /// </summary>
-  public class DocTableIdCommonFilter : SingleColumnCommonFilter
+  public class DocTableIdCommonFilter : OneColumnCommonFilter
   {
+    // TODO: Подумать, может класс DocTableIdCommonFilter не нужен, а использовать RefDocCommonFilter?
+
     #region Конструктор
 
     /// <summary>
     /// Создает фильтр
     /// </summary>
-    /// <param name="columnName">Столбец типа Int32, хранящий идентификатор вида документа из таблицы DocTables</param>
+    /// <param name="columnName">Столбец типа <see cref="Int32"/>, хранящий идентификатор вида документа из служебной таблицы "DocTables"</param>
     public DocTableIdCommonFilter(string columnName)
       : base(columnName)
     {
@@ -3807,8 +3759,7 @@ namespace FreeLibSet.Data.Docs
     #region Текущее состояние
 
     /// <summary>
-    /// Выбранный тип документа (значение DocType.TableId) или 0, если фильтр не установлен.
-    /// Свойства CurrentDocTypeName, CurrentDocTypeUI и CurrentTableId синхронизированы.
+    /// Выбранный тип документа (значение <see cref="DBxDocType.TableId"/>) или 0, если фильтр не установлен.
     /// </summary>
     public Int32 CurrentTableId
     {
@@ -3858,7 +3809,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="SingleColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
     /// </summary>
     /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
@@ -3878,7 +3829,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
@@ -3937,8 +3888,7 @@ namespace FreeLibSet.Data.Docs
   #region Фильтры для двух полей
 
   /// <summary>
-  /// Базовый класс для фильтров по одному полю.
-  /// Определяет свойство ColumnName
+  /// Базовый класс для фильтров по двум полям полю.
   /// </summary>
   public abstract class TwoColumnsCommonFilter : DBxCommonFilter
   {
@@ -3946,8 +3896,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Создает объект фильтра.
-    /// Устанавливает свойства DBxCommonFilter.Code равным "ColumnName1_ColumnName2".
-    /// Свойство DisplayName остается не инициализированным. Без дополнительной инициализации оно будет равно свойству Code.
+    /// Устанавливает свойство <see cref="DBxCommonFilter.Code"/> равным "ColumnName1_ColumnName2".
+    /// Свойство <see cref="DBxCommonFilter.DisplayName"/> остается не инициализированным. Без дополнительной инициализации оно будет равно свойству <see cref="DBxCommonFilter.Code"/>.
     /// </summary>
     /// <param name="columnName1">Имя первого поля. Должно быть задано</param>
     /// <param name="columnName2">Имя второго поля. Должно быть задано</param>
@@ -3972,22 +3922,22 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Имя первого фильтруемого поля.
-    /// Задается в конструкторе и не может быть изменено
+    /// Задается в конструкторе и не может быть изменено.
     /// </summary>
     public string ColumnName1 { get { return _ColumnName1; } }
-    private string _ColumnName1;
+    private readonly string _ColumnName1;
 
     /// <summary>
     /// Имя второго фильтруемого поля.
-    /// Задается в конструкторе и не может быть изменено
+    /// Задается в конструкторе и не может быть изменено.
     /// </summary>
     public string ColumnName2 { get { return _ColumnName2; } }
-    private string _ColumnName2;
+    private readonly string _ColumnName2;
 
     /// <summary>
     /// Получить список имен полей, которые необходимы для вычисления фильтра.
     /// Поля добавляются в список независимо от того, активен сейчас фильтр или нет.
-    /// Добавляет в список поле ColumnName.
+    /// Добавляет в список поля <see cref="ColumnName1"/> и <see cref="ColumnName2"/>.
     /// </summary>
     /// <param name="list">Список для добавления полей</param>
     public override /*sealed*/ void GetColumnNames(DBxColumnList list)
@@ -3998,7 +3948,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Вызывается при создании нового документа из просмотра.
-    /// Проверяет наличие в документе поля ColumnName и вызывает метод OnInitNewDocValue() для значения поля
+    /// Проверяет наличие в документе полей <see cref="ColumnName1"/> и <see cref="ColumnName2"/> и вызывает метод <see cref="OnInitNewDocValues(DBxDocValue, DBxDocValue)"/> для значений полей.
     /// </summary>
     /// <param name="newDoc">Созданный документ, в котором можно установить поля</param>
     protected override /*sealed*/ void OnInitNewDocValues(DBxSingleDoc newDoc)
@@ -4013,7 +3963,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Инициализация значения поля при создании нового документа.
-    /// Метод вызывается, только когда фильтр установлен
+    /// Метод вызывается, только когда фильтр установлен.
     /// </summary>
     /// <param name="docValue1">Значение первого поля, которое можно установить</param>
     /// <param name="docValue2">Значение второго поля, которое можно установить</param>
@@ -4024,318 +3974,350 @@ namespace FreeLibSet.Data.Docs
     #endregion
   }
 
+  #region Фильтры по охвату значения диапазоном
+
   /// <summary>
-  /// Фильтр по интервалу дат
-  /// В таблице должно быть два поля типа даты, которые составляют интервал дат.
-  /// В фильтре задается дата. В просмотр попадают строки, в которых интервал дат
-  /// включает в себя эту дату. Обрабатываются открытые и полуоткрытые интервалы,
-  /// когда одно или оба поля содержат NULL
-  /// Поддерживает специальный режим фильтра "Рабочая дата".
+  /// Базовый класс для фильтров по двум полям, задающих диапазон числовых значений.
+  /// Управляющим является свойство <see cref="RangeInclusionCommonFilterBase{T}.Value"/>. Если фильтр установлен, то проверяется, что диапазон, который образуют значения полей,
+  /// охватывает <see cref="RangeInclusionCommonFilterBase{T}.Value"/>.
+  /// Поддерживаются полуоткрытые интервалы.
   /// </summary>
-  public class DateRangeInclusionCommonFilter : TwoColumnsCommonFilter
+  /// <typeparam name="T"></typeparam>
+  public abstract class RangeInclusionCommonFilterBase<T> : TwoColumnsCommonFilter
+    where T : struct
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает фильтр
+    /// Создает объект фильтра.
     /// </summary>
-    /// <param name="firstDateColumnName">Имя поля типа "Дата", задающего начало диапазона</param>
-    /// <param name="lastDateColumnName">Имя поля типа "Дата", задающего конец диапазона</param>
-    public DateRangeInclusionCommonFilter(string firstDateColumnName, string lastDateColumnName)
-      : base(firstDateColumnName, lastDateColumnName)
+    /// <param name="columnName1">Имя первого поля. Должно быть задано</param>
+    /// <param name="columnName2">Имя второго поля. Должно быть задано</param>
+    public RangeInclusionCommonFilterBase(string columnName1, string columnName2)
+      : base(columnName1, columnName2)
     {
-      DisplayName = "Период";
+      _Value = null;
     }
 
     #endregion
 
-    #region Текущее состояние
+    #region Свойства
 
     /// <summary>
-    /// Текущее значение фильтра. Дата или null, если фильтра нет
+    /// Значение фильтра.
+    /// Заданное значение должно попадать в диапазон значений, образованный полями <see cref="TwoColumnsCommonFilter"/>.
+    /// Содержит null, если фильтр не установлен.
     /// </summary>
-    public DateTime? Date
+    public T? Value
     {
-      get { return _Date; }
+      get { return _Value; }
       set
       {
-        if (value == _Date)
+        if (Object.Equals(value, _Value))
           return;
-        _Date = value;
-        if (_Date.HasValue)
-        {
-          if (_Date.Value != WorkDate)
-            _UseWorkDate = false;
-        }
-        else
-          _UseWorkDate = false;
+        _Value = value;
         OnChanged();
       }
     }
-    private DateTime? _Date;
-
-    /// <summary>
-    /// Использовать ли рабочую дату?
-    /// </summary>
-    public bool UseWorkDate
-    {
-      get { return _UseWorkDate; }
-      set
-      {
-        if (value == _UseWorkDate)
-          return;
-        _UseWorkDate = value;
-        if (_UseWorkDate && _Date.HasValue)
-          _Date = WorkDate;
-        OnChanged();
-      }
-    }
-    private bool _UseWorkDate;
+    private T? _Value;
 
     #endregion
 
-    #region Свойства, которые можно переопределить для использования рабочей даты
+    #region Переопределяемые методы
 
     /// <summary>
-    /// Если переопределено, то может возвращать рабочую дату вместо текущей
-    /// </summary>
-    public virtual DateTime WorkDate { get { return DateTime.Today; } }
-
-    #endregion
-
-    #region Переопределенные методы и свойства
-
-    /// <summary>
-    /// Очистка фильтра
+    /// Устанавливает <see cref="Value"/> = null
     /// </summary>
     public override void Clear()
     {
-      Date = null;
+      Value = null;
     }
 
     /// <summary>
-    /// Возвращает true, если фильтр не установлен
+    /// Возвращает true, если <see cref="Value"/> не содержит значения
     /// </summary>
     public override bool IsEmpty
     {
-      get
-      {
-        return !Date.HasValue;
-      }
-    }
-
-    /// <summary>
-    /// Получение фильтра для фильтрации строк таблицы данных
-    /// </summary>
-    public override DBxFilter GetSqlFilter()
-    {
-      return new DateRangeInclusionFilter(ColumnName1, ColumnName2, Date.Value);
-    }
-
-    /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
-    /// </summary>
-    /// <param name="rowValues">Значения полей</param>
-    /// <returns>True, если строка проходит условия фильтра</returns>
-    protected override bool OnTestValues(INamedValuesAccess rowValues)
-    {
-      Nullable<DateTime> dt1 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName1));
-      Nullable<DateTime> dt2 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName2));
-      return DataTools.DateInRange(Date.Value, dt1, dt2);
-    }
-
-    /// <summary>
-    /// Прочитать значение фильтра из секции конфигурации
-    /// </summary>
-    /// <param name="config">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart config)
-    {
-      Date = config.GetNullableDate("Date");
-      UseWorkDate = config.GetBool("UseWorkDate");
-    }
-
-    /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
-    /// </summary>
-    /// <param name="config">Секция конфигурации</param>
-    public override void WriteConfig(CfgPart config)
-    {
-      config.SetNullableDate("Date", Date);
-      config.SetBool("UseWorkDate", UseWorkDate);
-    }
-
-    #endregion
-
-    #region Проверка значения
-
-    /// <summary>
-    /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
-    /// </summary>
-    /// <param name="rowValue1">Проверяемое значение первого поля</param>
-    /// <param name="rowValue2">Проверяемое значение второго поля</param>
-    /// <returns>true, если значение проходит условие фильтра</returns>
-    public bool TestValue(DateTime? rowValue1, DateTime? rowValue2)
-    {
-      if (IsEmpty)
-        return true;
-      return DataTools.DateInRange(Date.Value, rowValue1, rowValue2);
+      get { return !Value.HasValue; }
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Фильтр по двум полям, содержащим диапазон дат.
-  /// В фильтр входят строки, в диапазон дат которых попадает любая из дат в указанном диапазоне.
-  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
-  /// Компоненты времени не поддерживаются.
+  /// Фильтр по двум полям, задающих диапазон числовых значений.
+  /// Поддерживаются полуоткрытые интервалы.
+  /// Используется SQL-фильтр <see cref="NumRangeInclusionFilter"/>.
   /// </summary>
-  public class DateRangeCrossCommonFilter : TwoColumnsCommonFilter
+  public class IntRangeInclusionCommonFilter : RangeInclusionCommonFilterBase<Int32>
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает фильтр
+    /// Создает объект фильтра.
     /// </summary>
-    /// <param name="firstDateColumnName">Имя поля типа "Дата", задающего начало диапазона</param>
-    /// <param name="lastDateColumnName">Имя поля типа "Дата", задающего конец диапазона</param>
-    public DateRangeCrossCommonFilter(string firstDateColumnName, string lastDateColumnName)
-      : base(firstDateColumnName, lastDateColumnName)
+    /// <param name="columnName1">Имя первого поля. Должно быть задано</param>
+    /// <param name="columnName2">Имя второго поля. Должно быть задано</param>
+    public IntRangeInclusionCommonFilter(string columnName1, string columnName2)
+      : base(columnName1, columnName2)
     {
-      DisplayName = "Период";
     }
 
     #endregion
 
-    #region Текущее состояние
-
-    /// <summary>
-    /// Текущее значение фильтра. Начальная дата диапазона или null, если фильтр не установлен или задан полуоткрытый интервал
-    /// </summary>
-    public DateTime? FirstDate
-    {
-      get { return _FirstDate; }
-      set
-      {
-        if (value == _FirstDate)
-          return;
-        _FirstDate = value;
-        OnChanged();
-      }
-    }
-    private DateTime? _FirstDate;
-
-    /// <summary>
-    /// Текущее значение фильтра. Конечная дата диапазона или null, если фильтр не установлен или задан полуоткрытый интервал
-    /// </summary>
-    public DateTime? LastDate
-    {
-      get { return _LastDate; }
-      set
-      {
-        if (value == _LastDate)
-          return;
-        _LastDate = value;
-        OnChanged();
-      }
-    }
-    private DateTime? _LastDate;
-
-    #endregion
-
-    #region Переопределенные методы и свойства
-
-    /// <summary>
-    /// Очистка фильтра
-    /// </summary>
-    public override void Clear()
-    {
-      FirstDate = null;
-      LastDate = null;
-    }
-
-    /// <summary>
-    /// Возвращает true, если фильтр не установлен
-    /// </summary>
-    public override bool IsEmpty
-    {
-      get
-      {
-        return !(_FirstDate.HasValue || _LastDate.HasValue);
-      }
-    }
-
-    /// <summary>
-    /// Получение фильтра для фильтрации строк таблицы данных
-    /// </summary>
-    public override DBxFilter GetSqlFilter()
-    {
-      return new DateRangeCrossFilter(ColumnName1, ColumnName2, FirstDate, LastDate);
-    }
+    #region Переопределяемые методы
 
     /// <summary>
     /// Непосредственное тестирование фильтра исходя из переданных значений.
     /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
     /// </summary>
-    /// <param name="rowValues">Значения полей</param>
+    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      Nullable<DateTime> dt1 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName1));
-      Nullable<DateTime> dt2 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName2));
-      return DataTools.DateRangeCrossed(FirstDate, LastDate, dt1, dt2);
+      int? v1 = DataTools.GetNullableInt(rowValues.GetValue(ColumnName1));
+      int? v2 = DataTools.GetNullableInt(rowValues.GetValue(ColumnName1));
+      return DataTools.IsInRange<Int32>(Value.Value, v1, v2);
+    }
+
+    /// <summary>
+    /// Создает <see cref="NumRangeInclusionFilter"/>.
+    /// </summary>
+    /// <returns>Новый объект фильтра</returns>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new NumRangeInclusionFilter(ColumnName1, ColumnName2, Value.Value);
     }
 
     /// <summary>
     /// Прочитать значение фильтра из секции конфигурации
     /// </summary>
-    /// <param name="config">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart config)
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart cfg)
     {
-      FirstDate = config.GetNullableDate("FirstDate");
-      LastDate = config.GetNullableDate("LastDate");
+      Value = cfg.GetNullableInt("Value");
     }
 
     /// <summary>
-    /// Записать параметры фильтра в XML-конфигурацию
+    /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
-    /// <param name="config">Секция конфигурации</param>
-    public override void WriteConfig(CfgPart config)
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart cfg)
     {
-      config.SetNullableDate("FirstDate", FirstDate);
-      config.SetNullableDate("LastDate", LastDate);
-    }
-
-    #endregion
-
-    #region Проверка значения
-
-    /// <summary>
-    /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
-    /// </summary>
-    /// <param name="rowValue1">Проверяемое значение первого поля</param>
-    /// <param name="rowValue2">Проверяемое значение второго поля</param>
-    /// <returns>true, если значение проходит условие фильтра</returns>
-    public bool TestValue(DateTime? rowValue1, DateTime? rowValue2)
-    {
-      return DataTools.DateRangeCrossed(FirstDate, LastDate, rowValue1, rowValue2);
+      cfg.SetNullableInt("Value", Value);
     }
 
     #endregion
   }
 
+  /// <summary>
+  /// Фильтр по двум полям, задающих диапазон числовых значений.
+  /// Поддерживаются полуоткрытые интервалы.
+  /// Используется SQL-фильтр <see cref="NumRangeInclusionFilter"/>.
+  /// </summary>
+  public class SingleRangeInclusionCommonFilter : RangeInclusionCommonFilterBase<Single>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект фильтра.
+    /// </summary>
+    /// <param name="columnName1">Имя первого поля. Должно быть задано</param>
+    /// <param name="columnName2">Имя второго поля. Должно быть задано</param>
+    public SingleRangeInclusionCommonFilter(string columnName1, string columnName2)
+      : base(columnName1, columnName2)
+    {
+    }
+
+    #endregion
+
+    #region Переопределяемые методы
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      float? v1 = DataTools.GetNullableSingle(rowValues.GetValue(ColumnName1));
+      float? v2 = DataTools.GetNullableSingle(rowValues.GetValue(ColumnName1));
+      return DataTools.IsInRange<Single>(Value.Value, v1, v2);
+    }
+
+    /// <summary>
+    /// Создает <see cref="NumRangeInclusionFilter"/>.
+    /// </summary>
+    /// <returns>Новый объект фильтра</returns>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new NumRangeInclusionFilter(ColumnName1, ColumnName2, Value.Value);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart cfg)
+    {
+      Value = cfg.GetNullableSingle("Value");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart cfg)
+    {
+      cfg.SetNullableSingle("Value", Value);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по двум полям, задающих диапазон числовых значений.
+  /// Поддерживаются полуоткрытые интервалы.
+  /// Используется SQL-фильтр <see cref="NumRangeInclusionFilter"/>.
+  /// </summary>
+  public class DoubleRangeInclusionCommonFilter : RangeInclusionCommonFilterBase<Double>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект фильтра.
+    /// </summary>
+    /// <param name="columnName1">Имя первого поля. Должно быть задано</param>
+    /// <param name="columnName2">Имя второго поля. Должно быть задано</param>
+    public DoubleRangeInclusionCommonFilter(string columnName1, string columnName2)
+      : base(columnName1, columnName2)
+    {
+    }
+
+    #endregion
+
+    #region Переопределяемые методы
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      double? v1 = DataTools.GetNullableDouble(rowValues.GetValue(ColumnName1));
+      double? v2 = DataTools.GetNullableDouble(rowValues.GetValue(ColumnName1));
+      return DataTools.IsInRange<Double>(Value.Value, v1, v2);
+    }
+
+    /// <summary>
+    /// Создает <see cref="NumRangeInclusionFilter"/>.
+    /// </summary>
+    /// <returns>Новый объект фильтра</returns>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new NumRangeInclusionFilter(ColumnName1, ColumnName2, Value.Value);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart cfg)
+    {
+      Value = cfg.GetNullableDouble("Value");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart cfg)
+    {
+      cfg.SetNullableDouble("Value", Value);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по двум полям, задающих диапазон числовых значений.
+  /// Поддерживаются полуоткрытые интервалы.
+  /// Используется SQL-фильтр <see cref="NumRangeInclusionFilter"/>.
+  /// </summary>
+  public class DecimalRangeInclusionCommonFilter : RangeInclusionCommonFilterBase<Decimal>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект фильтра.
+    /// </summary>
+    /// <param name="columnName1">Имя первого поля. Должно быть задано</param>
+    /// <param name="columnName2">Имя второго поля. Должно быть задано</param>
+    public DecimalRangeInclusionCommonFilter(string columnName1, string columnName2)
+      : base(columnName1, columnName2)
+    {
+    }
+
+    #endregion
+
+    #region Переопределяемые методы
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      decimal? v1 = DataTools.GetNullableDecimal(rowValues.GetValue(ColumnName1));
+      decimal? v2 = DataTools.GetNullableDecimal(rowValues.GetValue(ColumnName1));
+      return DataTools.IsInRange<Decimal>(Value.Value, v1, v2);
+    }
+
+    /// <summary>
+    /// Создает <see cref="NumRangeInclusionFilter"/>.
+    /// </summary>
+    /// <returns>Новый объект фильтра</returns>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new NumRangeInclusionFilter(ColumnName1, ColumnName2, Value.Value);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart cfg)
+    {
+      Value = cfg.GetNullableDecimal("Value");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart cfg)
+    {
+      cfg.SetNullableDecimal("Value", Value);
+    }
+
+    #endregion
+  }
+
+#if XXX
   /// <summary>
   /// Фильтр на попадание года в интервал.
   /// В таблице должно быть два числовых поля, задающих первый и последний год.
-  /// Строка проходит фильтр, если заданный в фильтре год (Value) попадает в диапазон.
-  /// Обрабатываются значения типа NULL, задающие открытые интервалы
+  /// Строка проходит фильтр, если заданный в фильтре год (<see cref="Value"/>) попадает в диапазон.
+  /// Обрабатываются значения типа NULL, задающие открытые интервалы.
   /// </summary>
   public class YearRangeInclusionCommonFilter : TwoColumnsCommonFilter
   {
-    #region Конструкторы
+  #region Конструкторы
 
     /// <summary>
     /// Конструктор для числовых полей
@@ -4348,9 +4330,9 @@ namespace FreeLibSet.Data.Docs
       DisplayName = "Период";
     }
 
-    #endregion
+  #endregion
 
-    #region Текущее состояние
+  #region Текущее состояние
 
     /// <summary>
     /// Выбранный год, если фильтр установлен. 0, если фильтр не задан
@@ -4368,9 +4350,9 @@ namespace FreeLibSet.Data.Docs
     }
     private int _Value;
 
-    #endregion
+  #endregion
 
-    #region Переопределенные методы и свойства
+  #region Переопределенные методы и свойства
 
     /// <summary>
     /// Очистка фильтра
@@ -4439,9 +4421,9 @@ namespace FreeLibSet.Data.Docs
       config.SetInt("Value", Value);
     }
 
-    #endregion
+  #endregion
 
-    #region Проверка значения
+  #region Проверка значения
 
     /// <summary>
     /// Проверка значения для фильтра отчета.
@@ -4461,8 +4443,624 @@ namespace FreeLibSet.Data.Docs
       return true;
     }
 
+  #endregion
+  }
+#endif
+
+  /// <summary>
+  /// Фильтр по интервалу дат.
+  /// В таблице должно быть два поля типа даты, которые составляют интервал дат.
+  /// В фильтре задается одна дата. В просмотр попадают строки, в которых интервал дат
+  /// включает в себя эту дату. Обрабатываются открытые и полуоткрытые интервалы,
+  /// когда одно или оба поля содержат NULL.
+  /// Поддерживает специальный режим фильтра "Рабочая дата".
+  /// </summary>
+  public class DateRangeInclusionCommonFilter : TwoColumnsCommonFilter
+  {
+    // Используем отдельную реализацию, так как используется рабочая дата
+
+    #region Конструктор
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstDateColumnName">Имя поля типа "Дата", задающего начало диапазона</param>
+    /// <param name="lastDateColumnName">Имя поля типа "Дата", задающего конец диапазона</param>
+    public DateRangeInclusionCommonFilter(string firstDateColumnName, string lastDateColumnName)
+      : base(firstDateColumnName, lastDateColumnName)
+    {
+      DisplayName = "Период";
+    }
+
+    #endregion
+
+    #region Текущее состояние
+
+    /// <summary>
+    /// Текущее значение фильтра. Дата или null, если фильтра нет.
+    /// </summary>
+    public DateTime? Value
+    {
+      get { return _Value; }
+      set
+      {
+        if (value == _Value)
+          return;
+        _Value = value;
+        if (_Value.HasValue)
+        {
+          if (_Value.Value != WorkDate)
+            _UseWorkDate = false;
+        }
+        else
+          _UseWorkDate = false;
+        OnChanged();
+      }
+    }
+    private DateTime? _Value;
+
+    /// <summary>
+    /// Использовать ли рабочую дату?
+    /// </summary>
+    public bool UseWorkDate
+    {
+      get { return _UseWorkDate; }
+      set
+      {
+        if (value == _UseWorkDate)
+          return;
+        _UseWorkDate = value;
+        if (_UseWorkDate && _Value.HasValue)
+          _Value = WorkDate;
+        OnChanged();
+      }
+    }
+    private bool _UseWorkDate;
+
+    #endregion
+
+    #region Свойства, которые можно переопределить для использования рабочей даты
+
+    /// <summary>
+    /// Если переопределено, то может возвращать рабочую дату вместо текущей.
+    /// </summary>
+    public virtual DateTime WorkDate { get { return DateTime.Today; } }
+
+    #endregion
+
+    #region Переопределенные методы и свойства
+
+    /// <summary>
+    /// Очистка фильтра
+    /// </summary>
+    public override void Clear()
+    {
+      Value = null;
+    }
+
+    /// <summary>
+    /// Возвращает true, если фильтр не установлен
+    /// </summary>
+    public override bool IsEmpty
+    {
+      get
+      {
+        return !Value.HasValue;
+      }
+    }
+
+    /// <summary>
+    /// Получение фильтра для фильтрации строк таблицы данных
+    /// </summary>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new DateRangeInclusionFilter(ColumnName1, ColumnName2, Value.Value);
+    }
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Значения полей</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      Nullable<DateTime> dt1 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName1));
+      Nullable<DateTime> dt2 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName2));
+      return DataTools.DateInRange(Value.Value, dt1, dt2);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart config)
+    {
+      Value = config.GetNullableDate("Date");
+      UseWorkDate = config.GetBool("UseWorkDate");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart config)
+    {
+      config.SetNullableDate("Date", Value);
+      config.SetBool("UseWorkDate", UseWorkDate);
+    }
+
+    #endregion
+
+    #region Проверка значения
+
+    /// <summary>
+    /// Проверка значения для фильтра отчета.
+    /// Если фильтр не установлен (<see cref="IsEmpty"/>=true), возвращается true.
+    /// </summary>
+    /// <param name="rowValue1">Проверяемое значение первого поля</param>
+    /// <param name="rowValue2">Проверяемое значение второго поля</param>
+    /// <returns>true, если значение проходит условие фильтра</returns>
+    public bool TestValue(DateTime? rowValue1, DateTime? rowValue2)
+    {
+      if (IsEmpty)
+        return true;
+      return DataTools.DateInRange(Value.Value, rowValue1, rowValue2);
+    }
+
     #endregion
   }
+
+  #endregion
+
+  #region Фильтры по охвату значения диапазоном
+
+  /// <summary>
+  /// Базовый класс для фильтров по двум полям, задающих диапазон числовых значений.
+  /// Управляющими является является пара свойств, задающих начальный и конечный интервалы.
+  /// Поддерживаются полуоткрытые интервалы.
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  public abstract class RangeCrossCommonFilterBase<T> : TwoColumnsCommonFilter
+    where T : struct
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект фильтра.
+    /// </summary>
+    /// <param name="columnName1">Имя первого поля. Должно быть задано</param>
+    /// <param name="columnName2">Имя второго поля. Должно быть задано</param>
+    public RangeCrossCommonFilterBase(string columnName1, string columnName2)
+      : base(columnName1, columnName2)
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Текущее значение фильтра - начальное значение диапазона или null
+    /// </summary>
+    public T? FirstValue
+    {
+      get { return _FirstValue; }
+      set
+      {
+        if (Object.Equals(value, _FirstValue))
+          return;
+        _FirstValue = value;
+        OnChanged();
+      }
+    }
+    private T? _FirstValue;
+
+    /// <summary>
+    /// Текущее значение фильтра - конечное значение диапазона или null
+    /// </summary>
+    public T? LastValue
+    {
+      get { return _LastValue; }
+      set
+      {
+        if (Object.Equals(value, _LastValue))
+          return;
+        _LastValue = value;
+        OnChanged();
+      }
+    }
+    private T? _LastValue;
+
+    #endregion
+
+    #region Переопределяемые методы
+
+    /// <summary>
+    /// Очистка фильтра
+    /// </summary>
+    public override void Clear()
+    {
+      FirstValue = null;
+      LastValue = null;
+    }
+
+    /// <summary>
+    /// Возвращает true, если фильтр не установлен (свойства <see cref="FirstValue"/> и <see cref="LastValue"/> вместе равны null).
+    /// </summary>
+    public override bool IsEmpty
+    {
+      get
+      {
+        return !(FirstValue.HasValue || LastValue.HasValue);
+      }
+    }
+
+    /// <summary>
+    /// Если <see cref="FirstValue"/> или <see cref="LastValue"/> установлены, то значения копируются в поля документа.
+    /// </summary>
+    /// <param name="docValue1">Первое поле</param>
+    /// <param name="docValue2">Второе поле</param>
+    protected override void OnInitNewDocValues(DBxDocValue docValue1, DBxDocValue docValue2)
+    {
+      docValue1.SetValue(FirstValue);
+      docValue1.SetValue(LastValue);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по двум полям, содержащим диапазон чисел.
+  /// В фильтр входят строки, диапазон значений полей которых пересекается с заданным диапазоном.
+  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
+  /// Компоненты времени не поддерживаются.
+  /// Используется SQL-фильтр <see cref="NumRangeCrossFilter"/>.
+  /// </summary>
+  public class IntRangeCrossCommonFilter : RangeCrossCommonFilterBase<Int32>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя числового поля , задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя числового поля, задающего конец диапазона</param>
+    public IntRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
+      : base(firstColumnName, lastColumnName)
+    {
+      DisplayName = "Диапазон";
+    }
+
+    #endregion
+
+    #region Переопределенные методы и свойства
+
+    /// <summary>
+    /// Получение фильтра для фильтрации строк таблицы данных
+    /// </summary>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new NumRangeCrossFilter(ColumnName1, ColumnName2, FirstValue, LastValue);
+    }
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Значения полей</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      Nullable<Int32> v1 = DataTools.GetNullableInt(rowValues.GetValue(ColumnName1));
+      Nullable<Int32> v2 = DataTools.GetNullableInt(rowValues.GetValue(ColumnName2));
+      return DataTools.AreRangesCrossed<Int32>(FirstValue, LastValue, v1, v2);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart config)
+    {
+      FirstValue = config.GetNullableInt("FirstValue");
+      LastValue = config.GetNullableInt("LastValue");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart config)
+    {
+      config.SetNullableInt("FirstValue", FirstValue);
+      config.SetNullableInt("LastValue", LastValue);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по двум полям, содержащим диапазон чисел.
+  /// В фильтр входят строки, диапазон значений полей которых пересекается с заданным диапазоном.
+  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
+  /// Компоненты времени не поддерживаются.
+  /// Используется SQL-фильтр <see cref="NumRangeCrossFilter"/>.
+  /// </summary>
+  public class SingleRangeCrossCommonFilter : RangeCrossCommonFilterBase<Single>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя числового поля , задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя числового поля, задающего конец диапазона</param>
+    public SingleRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
+      : base(firstColumnName, lastColumnName)
+    {
+      DisplayName = "Диапазон";
+    }
+
+    #endregion
+
+    #region Переопределенные методы и свойства
+
+    /// <summary>
+    /// Получение фильтра для фильтрации строк таблицы данных
+    /// </summary>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new NumRangeCrossFilter(ColumnName1, ColumnName2, FirstValue, LastValue);
+    }
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Значения полей</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      Nullable<Single> v1 = DataTools.GetNullableSingle(rowValues.GetValue(ColumnName1));
+      Nullable<Single> v2 = DataTools.GetNullableSingle(rowValues.GetValue(ColumnName2));
+      return DataTools.AreRangesCrossed<Single>(FirstValue, LastValue, v1, v2);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart config)
+    {
+      FirstValue = config.GetNullableSingle("FirstValue");
+      LastValue = config.GetNullableSingle("LastValue");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart config)
+    {
+      config.SetNullableSingle("FirstValue", FirstValue);
+      config.SetNullableSingle("LastValue", LastValue);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по двум полям, содержащим диапазон чисел.
+  /// В фильтр входят строки, диапазон значений полей которых пересекается с заданным диапазоном.
+  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
+  /// Компоненты времени не поддерживаются.
+  /// Используется SQL-фильтр <see cref="NumRangeCrossFilter"/>.
+  /// </summary>
+  public class DoubleRangeCrossCommonFilter : RangeCrossCommonFilterBase<Double>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя числового поля , задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя числового поля, задающего конец диапазона</param>
+    public DoubleRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
+      : base(firstColumnName, lastColumnName)
+    {
+      DisplayName = "Диапазон";
+    }
+
+    #endregion
+
+    #region Переопределенные методы и свойства
+
+    /// <summary>
+    /// Получение фильтра для фильтрации строк таблицы данных
+    /// </summary>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new NumRangeCrossFilter(ColumnName1, ColumnName2, FirstValue, LastValue);
+    }
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Значения полей</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      Nullable<Double> v1 = DataTools.GetNullableDouble(rowValues.GetValue(ColumnName1));
+      Nullable<Double> v2 = DataTools.GetNullableDouble(rowValues.GetValue(ColumnName2));
+      return DataTools.AreRangesCrossed<Double>(FirstValue, LastValue, v1, v2);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart config)
+    {
+      FirstValue = config.GetNullableDouble("FirstValue");
+      LastValue = config.GetNullableDouble("LastValue");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart config)
+    {
+      config.SetNullableDouble("FirstValue", FirstValue);
+      config.SetNullableDouble("LastValue", LastValue);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по двум полям, содержащим диапазон чисел.
+  /// В фильтр входят строки, диапазон значений полей которых пересекается с заданным диапазоном.
+  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
+  /// Компоненты времени не поддерживаются.
+  /// Используется SQL-фильтр <see cref="NumRangeCrossFilter"/>.
+  /// </summary>
+  public class DecimalRangeCrossCommonFilter : RangeCrossCommonFilterBase<Decimal>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя числового поля , задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя числового поля, задающего конец диапазона</param>
+    public DecimalRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
+      : base(firstColumnName, lastColumnName)
+    {
+      DisplayName = "Диапазон";
+    }
+
+    #endregion
+
+    #region Переопределенные методы и свойства
+
+    /// <summary>
+    /// Получение фильтра для фильтрации строк таблицы данных
+    /// </summary>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new NumRangeCrossFilter(ColumnName1, ColumnName2, FirstValue, LastValue);
+    }
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Значения полей</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      Nullable<Decimal> v1 = DataTools.GetNullableDecimal(rowValues.GetValue(ColumnName1));
+      Nullable<Decimal> v2 = DataTools.GetNullableDecimal(rowValues.GetValue(ColumnName2));
+      return DataTools.AreRangesCrossed<Decimal>(FirstValue, LastValue, v1, v2);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart config)
+    {
+      FirstValue = config.GetNullableDecimal("FirstValue");
+      LastValue = config.GetNullableDecimal("LastValue");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart config)
+    {
+      config.SetNullableDecimal("FirstValue", FirstValue);
+      config.SetNullableDecimal("LastValue", LastValue);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по двум полям, содержащим диапазон дат.
+  /// В фильтр входят строки, диапазон значений полей которых пересекается с заданным диапазоном.
+  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
+  /// Компоненты времени не поддерживаются.
+  /// Используется SQL-фильтр <see cref="DateRangeCrossFilter"/>.
+  /// </summary>
+  public class DateRangeCrossCommonFilter : RangeCrossCommonFilterBase<DateTime>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя поля типа "Дата", задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя поля типа "Дата", задающего конец диапазона</param>
+    public DateRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
+      : base(firstColumnName, lastColumnName)
+    {
+      DisplayName = "Период";
+    }
+
+    #endregion
+
+    #region Переопределенные методы и свойства
+
+    /// <summary>
+    /// Получение фильтра для фильтрации строк таблицы данных
+    /// </summary>
+    public override DBxFilter GetSqlFilter()
+    {
+      return new DateRangeCrossFilter(ColumnName1, ColumnName2, FirstValue, LastValue);
+    }
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поля <see cref="TwoColumnsCommonFilter.ColumnName1"/> и <see cref="TwoColumnsCommonFilter.ColumnName2"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Значения полей</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      Nullable<DateTime> dt1 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName1));
+      Nullable<DateTime> dt2 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName2));
+      return DataTools.DateRangesCrossed(FirstValue, LastValue, dt1, dt2);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart config)
+    {
+      FirstValue = config.GetNullableDate("FirstValue");
+      LastValue = config.GetNullableDate("LastValue");
+    }
+
+    /// <summary>
+    /// Записать параметры фильтра в секцию конфигурации
+    /// </summary>
+    /// <param name="config">Секция конфигурации</param>
+    public override void WriteConfig(CfgPart config)
+    {
+      config.SetNullableDate("FirstValue", FirstValue);
+      config.SetNullableDate("LastValue", LastValue);
+    }
+
+    #endregion
+  }
+
+  #endregion
 
   #endregion
 
@@ -4475,7 +5073,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Создает фильтр.
-    /// Свойство IsTrue имеет значение true
+    /// Свойство <see cref="IsTrue"/> имеет значение true.
     /// </summary>
     /// <param name="code">Код для фильтра</param>
     public DummyCommonFilter(string code)
@@ -4511,7 +5109,7 @@ namespace FreeLibSet.Data.Docs
     #region Переопределяемые методы и свойства
 
     /// <summary>
-    /// Устанавливает IsTrue=true
+    /// Устанавливает <see cref="IsTrue"/>=true
     /// </summary>
     public override void Clear()
     {
@@ -4519,7 +5117,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает IsTrue
+    /// Возвращает <see cref="IsTrue"/>
     /// </summary>
     public override bool IsEmpty
     {
@@ -4535,7 +5133,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает DummyFilter.AlwaysFalse, если фильтр установлен
+    /// Возвращает <see cref="DummyFilter.AlwaysFalse"/>, если фильтр установлен
     /// </summary>
     /// <returns>Фиктивный фильтр или null</returns>
     public override DBxFilter GetSqlFilter()
@@ -4547,10 +5145,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает IsTrue
+    /// Возвращает <see cref="IsTrue"/>
     /// </summary>
     /// <param name="RowValues">Игнорируется</param>
-    /// <returns>Значение свойства IsTrue</returns>
+    /// <returns>Значение свойства <see cref="IsTrue"/></returns>
     protected override bool OnTestValues(INamedValuesAccess RowValues)
     {
       return IsTrue;
@@ -4568,10 +5166,10 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Чтение значения
     /// </summary>
-    /// <param name="Config">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart Config)
+    /// <param name="config">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart config)
     {
-      IsTrue = Config.GetBool("Value");
+      IsTrue = config.GetBool("Value");
     }
 
     #endregion
@@ -4579,7 +5177,7 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Фильтр с фиксированным SQL-запросом.
-  /// С этим фильтром нельзя выполнить никаких действий, в том числе, очистить
+  /// С этим фильтром нельзя выполнить никаких действий, в том числе, очистить.
   /// </summary>
   public class FixedSqlCommonFilter : DBxCommonFilter
   {
@@ -4587,7 +5185,6 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Создает фильтр.
-    /// Свойство IsTrue имеет значение true
     /// </summary>
     /// <param name="code">Код для фильтра</param>
     /// <param name="filter">SQL-фильтр. Обязательно должен быть задан</param>
@@ -4637,9 +5234,9 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает Filter.
+    /// Возвращает <see cref="Filter"/>.
     /// </summary>
-    /// <returns>Фиктивный фильтр или null</returns>
+    /// <returns>Фильтр</returns>
     public override DBxFilter GetSqlFilter()
     {
       return _Filter;
@@ -4648,11 +5245,11 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Проверяет значения на соответствие фильтру
     /// </summary>
-    /// <param name="RowValues">Доступ к значениям полей</param>
+    /// <param name="rowValues">Доступ к значениям полей</param>
     /// <returns>Прохождение фильтра</returns>
-    protected override bool OnTestValues(INamedValuesAccess RowValues)
+    protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      return _Filter.TestFilter(RowValues);
+      return _Filter.TestFilter(rowValues);
     }
 
     /// <summary>
@@ -4666,8 +5263,8 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Ничего не делает
     /// </summary>
-    /// <param name="Config">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart Config)
+    /// <param name="config">Секция конфигурации</param>
+    public override void ReadConfig(CfgPart config)
     {
     }
 

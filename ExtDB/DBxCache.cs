@@ -17,6 +17,10 @@ using FreeLibSet.Collections;
 using FreeLibSet.Data;
 using System.ComponentModel;
 
+#if NET
+#pragma warning disable SYSLIB0011 // двоичная сериализация DataTable
+#endif
+
 namespace FreeLibSet.Data
 {
   /// <summary>

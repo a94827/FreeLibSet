@@ -9,15 +9,15 @@ using System.Collections;
 namespace FreeLibSet.Core
 {
   /// <summary>
-  /// Реализует интерфейс IEnumerable для коллекции, не содержащей элементов
+  /// Реализует интерфейс <see cref="IEnumerable{T}"/> для коллекции, не содержащей элементов.
   /// </summary>
-  /// <typeparam name="T"></typeparam>
+  /// <typeparam name="T">Тип элементов, которые могли бы быть в коллекции</typeparam>
   [Serializable]
   public sealed class DummyEnumerable<T> : IEnumerable<T>
   {
     /// <summary>
     /// Пустой перечислитель.
-    /// Реализует интерфейс IEnumerator для коллекции, не содержащей элементов
+    /// Реализует интерфейс <see cref="IEnumerator{T}"/> для коллекции, не содержащей элементов.
     /// </summary>
     [Serializable]
     public struct Enumerator : IEnumerator<T>
@@ -45,9 +45,9 @@ namespace FreeLibSet.Core
       }
 
       /// <summary>
-      /// Всегда возвращает false
+      /// Всегда возвращает false, так как коллекция пуста.
       /// </summary>
-      /// <returns></returns>
+      /// <returns>false</returns>
       public bool MoveNext()
       {
         return false;
@@ -65,7 +65,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает фиктивный перечислитель
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
     {
       return new Enumerator();
@@ -76,7 +76,6 @@ namespace FreeLibSet.Core
       return new Enumerator();
     }
 
-
     IEnumerator IEnumerable.GetEnumerator()
     {
       return new Enumerator();
@@ -85,11 +84,10 @@ namespace FreeLibSet.Core
     #endregion
   }
 
-
   /// <summary>
   /// "Перечислимый объект" для одного элемента.
   /// Не учитывает равенство объекта null, то есть, если объект равен null, то он все равно будет перечислен.
-  /// Если требуется пустой перечислитель, используйте DummyEnumerable.
+  /// Если требуется пустой перечислитель, используйте <see cref="DummyEnumerable{T}"/>.
   /// </summary>
   /// <typeparam name="T">Тип перечислимого объекта</typeparam>
   [Serializable]
@@ -132,7 +130,7 @@ namespace FreeLibSet.Core
 
       #region IEnumerator<T> Members
 
-      private T _Object;
+      private readonly T _Object;
       private bool _Flag;
 
       /// <summary>
@@ -181,7 +179,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создает новый перечислитель по объекту
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
     {
       return new Enumerator(_Object);
@@ -201,8 +199,8 @@ namespace FreeLibSet.Core
   }
 
   /// <summary>
-  /// Простейшая обертка над объектом, реализующим интерфейс IEnumerator.
-  /// Реализует интерфейс IEnumerable, чтобы можно было применять оператор foreach.
+  /// Простейшая обертка над объектом, реализующим интерфейс <see cref="IEnumerator"/>.
+  /// Реализует интерфейс <see cref="IEnumerable{T}"/>, чтобы можно было применять оператор foreach.
   /// Структура является "одноразовой", так как повторный оператор foreach получил бы тот же экземпляр перечислителя.
   /// </summary>
   /// <typeparam name="T">Тип перечислителя</typeparam>
@@ -251,7 +249,7 @@ namespace FreeLibSet.Core
   }
 
   /// <summary>
-  /// Рекурсивный перечислитель, который вызывает другие перечислители
+  /// Рекурсивный перечислитель, который вызывает другие перечислители.
   /// Базовый класс.
   /// </summary>
   /// <typeparam name="T">Тип перечислимых объектов</typeparam>
@@ -295,7 +293,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Вызывает Reset()
+    /// Вызывает <see cref="Reset()"/>.
     /// </summary>
     public virtual void Dispose()
     {
@@ -358,7 +356,7 @@ namespace FreeLibSet.Core
 
   /// <summary>
   /// Рекурсивный перечислитель, который по очереди вызывает другие перечислители, заданные в массиве.
-  /// Этот класс является менее полезным, чем GroupEnumerator, т.к. требует, чтобы дочерние перечислители
+  /// Этот класс является менее полезным, чем <see cref="GroupEnumerator{T}"/>, т.к. требует, чтобы дочерние перечислители.
   /// были созданы заранее.
   /// </summary>
   /// <typeparam name="T">Тип перечислимых объектов</typeparam>
@@ -386,14 +384,12 @@ namespace FreeLibSet.Core
     /// Массив групп
     /// </summary>
     public IEnumerable<T>[] Groups { get { return _Groups; } }
-    private IEnumerable<T>[] _Groups;
+    private readonly IEnumerable<T>[] _Groups;
 
     #endregion
 
     /// <summary>
     /// Рекурсивный перечислитель, который по очереди вызывает другие перечислители, заданные в массиве.
-    /// Этот класс является менее полезным, чем GroupEnumerator, т.к. требует, чтобы дочерние перечислители
-    /// были созданы заранее.
     /// </summary>
     [Serializable]
     public sealed class Enumerator : GroupEnumerator<T>
@@ -432,7 +428,7 @@ namespace FreeLibSet.Core
       }
 
       /// <summary>
-      /// Вызывает Dispose() для всех перечислителей
+      /// Вызывает <see cref="IDisposable.Dispose()"/> для всех перечислителей.
       /// </summary>
       public override void Dispose()
       {
@@ -500,13 +496,13 @@ namespace FreeLibSet.Core
     /// Массив, по которому будет выполняться перечисление
     /// </summary>
     public T[] Array { get { return _Array; } }
-    private T[] _Array;
+    private readonly T[] _Array;
 
     #endregion
 
     /// <summary>
     /// Типизированный перечислитель по массиву.
-    /// Метод Array.GetEnumerator() возвращает нетипизированный перечислитель
+    /// Метод <see cref="Array.GetEnumerator()"/> возвращает нетипизированный перечислитель.
     /// </summary>
     [Serializable]
     public struct Enumerator : IEnumerator<T>
@@ -525,7 +521,7 @@ namespace FreeLibSet.Core
         _Index = -1;
       }
 
-      private T[] _Array;
+      private readonly T[] _Array;
       private int _Index;
 
       #endregion
@@ -594,11 +590,11 @@ namespace FreeLibSet.Core
   /// <summary>
   /// Объект, для которого можно вызвать оператор foreach.
   /// Возвращает перечислитель для перебора сегментов массива, каждый из которых имеет размер, не превышающий заданный.
-  /// Элементами перечисления являются структуры ArraySegment.
+  /// Элементами перечисления являются структуры <see cref="ArraySegment{T}"/>.
   /// При переборе все сегменты, кроме последнего, имеют заданный размер.
   /// Если задан массив нулевой длины, перечислитель не будет вызван ни разу.
   /// В теле цикла перебора можно менять элементы перебираемого массива.
-  /// Если при переборе требуется создавать подмассив для каждого сегмента, используйте ArrayBlockEnumerable.
+  /// Если при переборе требуется создавать подмассив для каждого сегмента, используйте <see cref="ArrayBlockEnumerable{T}"/>.
   /// </summary>
   /// <typeparam name="T">Тип данных, хранящихся в массиве</typeparam>
   [Serializable]
@@ -609,7 +605,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создает перечислитель для массива
     /// </summary>
-    /// <param name="array">Перебираемый массив</param>
+    /// <param name="array">Перебираемый массив. Не может быть null, но может быть пустым массивом.</param>
     /// <param name="segmentSize">Размер сегмента. Не может быть меньше 1</param>
     public ArraySegmentEnumerable(T[] array, int segmentSize)
     {
@@ -635,11 +631,10 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Перечислитель для перебора сегментов массива, каждый из которых имеет размер, не превышающий заданный.
-    /// Элементами перечисления являются структуры ArraySegment.
+    /// Элементами перечисления являются структуры <see cref="ArraySegment{T}"/>.
     /// При переборе все сегменты, кроме последнего, имеют заданный размер.
     /// Если задан массив нулевой длины, перечислитель не будет вызван ни разу.
     /// В теле цикла перебора можно менять элементы перебираемого массива.
-    /// Если при переборе требуется создавать подмассив для каждого сегмента, используйте ArrayBlockEnumerator.
     /// </summary>
     [Serializable]
     public struct Enumerator : IEnumerator<ArraySegment<T>>
@@ -695,7 +690,7 @@ namespace FreeLibSet.Core
       /// <summary>
       /// Переход к очередному сегменту
       /// </summary>
-      /// <returns>Есть сегмент Current</returns>
+      /// <returns>Есть очередной сегмент <see cref="Current"/></returns>
       public bool MoveNext()
       {
         if (_CurrentOffset < 0)
@@ -718,9 +713,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает перечислитель ArraySegmentEnumerator
+    /// Создает перечислитель <see>Enumerator</see>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
     {
       return new Enumerator(_Array, _SegmentSize);
@@ -742,11 +737,11 @@ namespace FreeLibSet.Core
   /// <summary>
   /// Объект, для которого можно вызвать оператор foreach.
   /// Возвращает перечислитель для перебора частей массива, каждая из которых имеет размер, не превышающий заданный.
-  /// Элементами перечисления являются одномерные массивы меньшей длины.
+  /// Элементами перечисления являются одномерные массивы указанной длины.
   /// При переборе все сегменты, кроме последнего, имеют заданный размер.
   /// Если задан массив нулевой длины, перечислитель не будет вызван ни разу.
   /// В теле цикла перебора нельзя менять элементы перебираемого подмассива.
-  /// Если при переборе не нужны помассивы как самостоятельные объекты, может быть выгоднее использовать ArraySegmentEnumerator.
+  /// Если при переборе не нужны помассивы как самостоятельные объекты, может быть выгоднее использовать <see cref="ArraySegmentEnumerable{T}"/>.
   /// </summary>
   /// <typeparam name="T">Тип данных, хранящихся в массиве</typeparam>
   [Serializable]
@@ -757,7 +752,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создает перечислитель для массива
     /// </summary>
-    /// <param name="array">Перебираемый массив</param>
+    /// <param name="array">Перебираемый массив. Не может быть null, но может быть пустым массивом.</param>
     /// <param name="segmentSize">Размер сегмента. Не может быть меньше 1</param>
     public ArrayBlockEnumerable(T[] array, int segmentSize)
     {
@@ -787,7 +782,6 @@ namespace FreeLibSet.Core
     /// При переборе все сегменты, кроме последнего, имеют заданный размер.
     /// Если задан массив нулевой длины, перечислитель не будет вызван ни разу.
     /// В теле цикла перебора нельзя менять элементы перебираемого подмассива.
-    /// Если при переборе не нужны помассивы как самостоятельные объекты, может быть выгоднее использовать ArraySegmentEnumerator.
     /// </summary>
     [Serializable]
     public struct Enumerator : IEnumerator<T[]>
@@ -850,7 +844,7 @@ namespace FreeLibSet.Core
       /// <summary>
       /// Переход к очередному сегменту
       /// </summary>
-      /// <returns>Есть сегмент Current</returns>
+      /// <returns>Есть очередной сегмент <see cref="Current"/></returns>
       public bool MoveNext()
       {
         if (_CurrentOffset < 0)
@@ -875,7 +869,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создает перечислитель по блокам
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Перечислитель</returns>
     public Enumerator GetEnumerator()
     {
       return new Enumerator(_Array, _SegmentSize);
@@ -898,9 +892,9 @@ namespace FreeLibSet.Core
   /// Перечислитель, выполняющий преобразование типа данных.
   /// Получает на входе нетипизированный перечислитель и использует его для перебора элементов.
   /// При запросе очередного элемента выполняется его преобразование в тип <typeparamref name="T"/>
-  /// с помощью оператора "as". Если преобразование невозможно, элемент перечисления пропускается
+  /// с помощью оператора "as". Если преобразование невозможно, элемент перечисления пропускается.
   /// </summary>
-  /// <typeparam name="T">Тип данных, которые перечисляются. Должно быть классом, а не структурой</typeparam>
+  /// <typeparam name="T">Тип данных, которые перечисляются. Должен быть классом, а не структурой</typeparam>
   [Serializable]
   public struct ConvertEnumerable<T> : IEnumerable<T>
     where T : class
@@ -930,7 +924,7 @@ namespace FreeLibSet.Core
     /// Перечислитель, выполняющий преобразование типа данных.
     /// Получает на входе нетипизированный перечислитель и использует его для перебора элементов.
     /// При запросе очередного элемента выполняется его преобразование в тип <typeparamref name="T"/>
-    /// с помощью оператора "as". Если преобразование невозможно, элемент перечисления пропускается
+    /// с помощью оператора "as". Если преобразование невозможно, элемент перечисления пропускается.
     /// </summary>
     [Serializable]
     public struct Enumerator : IEnumerator<T>
@@ -940,7 +934,7 @@ namespace FreeLibSet.Core
       /// <summary>
       /// Создает перечислитель
       /// </summary>
-      /// <param name="enumerator">Нетипизированный перечислитель</param>
+      /// <param name="enumerator">Нетипизированный перечислитель. Не может быть null, но может быть пустым перечислителем.</param>
       public Enumerator(System.Collections.IEnumerator enumerator)
       {
         if (enumerator == null)
@@ -973,13 +967,14 @@ namespace FreeLibSet.Core
       public T Current { get { return _Current; } }
 
       /// <summary>
-      /// Уничтожает перечислитель
+      /// Уничтожает перечислитель.
+      /// Вызывает для исходного перечислителя метод <see cref="IDisposable.Dispose()"/>.
       /// </summary>
       public void Dispose()
       {
-        IDisposable Disp = _Enumerator as IDisposable;
-        if (Disp != null)
-          Disp.Dispose();
+        IDisposable srcDisposable = _Enumerator as IDisposable;
+        if (srcDisposable != null)
+          srcDisposable.Dispose();
         _Enumerator = null;
         _Current = null;
       }

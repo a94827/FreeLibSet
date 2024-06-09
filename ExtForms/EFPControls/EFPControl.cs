@@ -1806,8 +1806,10 @@ namespace FreeLibSet.Forms
 
       if (Control.ContextMenuStrip != null)
         Control.ContextMenuStrip.Show(Control, Control.Width, Control.Height);
+#if !NET
       else if (Control.ContextMenu != null)
         Control.ContextMenu.Show(Control, new Point(Control.Width, Control.Height));
+#endif
     }
 
     #endregion

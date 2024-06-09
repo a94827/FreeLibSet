@@ -4,7 +4,8 @@
 // 06.07.2022
 // В Mono почему-то нет класса OleDbConnectionStringBuilder.
 // Это не имеет практического значения, так как OleDbConnection - это просто заглушка в Mono.
-#if !MONO 
+// 08.05.2024: и в Net6 тоже нет
+#if (!MONO) && (!NET)
 
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,8 @@ namespace FreeLibSet.Data.OleDb
     #region Конструктор
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionStringBuilder">Собранная строка подключения</param>
     public OleDbDBx(OleDbConnectionStringBuilder connectionStringBuilder)
@@ -51,8 +52,8 @@ namespace FreeLibSet.Data.OleDb
     }
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionString">Строка подключения</param>
     public OleDbDBx(string connectionString)

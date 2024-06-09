@@ -12,19 +12,20 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Базовый класс для EFPAppToolBar и EFPPanelToolBar
+  /// Базовый класс для <see cref="EFPAppToolBar"/> и <see cref="EFPPanelToolBar"/>
   /// </summary>
   public abstract class EFPToolBarBase : EFPUIObjs
   {
     #region Конструктор и Dispose()
 
     /// <summary>
-    /// Создает внутренний объект ToolStrip
+    /// Создает внутренний объект <see cref="ToolStrip"/>.
     /// </summary>
     protected EFPToolBarBase()
     {
       _Bar = new ToolStrip();
-      _Bar.ImageList = EFPApp.MainImages.ImageList;
+      // 20.05.2024 ImageList больше не используется
+      // _Bar.ImageList = EFPApp.MainImages.ImageList;
 #if DEBUG
       _Bar.Disposed += new EventHandler(Bar_Disposed);
       DisposableObject.RegisterDisposableObject(_Bar);
@@ -39,9 +40,9 @@ namespace FreeLibSet.Forms
 #endif
 
     /// <summary>
-    /// Удаляет врутренний объект ToolStrip
+    /// Удаляет внутренний объект <see cref="ToolStrip"/>
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose"/>Dispose() (всегда), а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -57,7 +58,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Свойство ToolStrip.Name
+    /// Свойство <see cref="Control.Name"/> для панели <see cref="ToolStrip"/> 
     /// </summary>
     public string Name
     {
@@ -77,8 +78,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет кнопку для команды. 
-    /// Свойство EFPCommandItem.Usage проверяется на наличие флага ToolBarDropDown, но не наличие флага ToolBar.
-    /// Таким образом, кнопка создается в любом случае
+    /// Свойство <see cref="EFPCommandItem.Usage"/> проверяется на наличие флага <see cref="EFPCommandItemUsage.ToolBarDropDown"/>, но не наличие флага <see cref="ToolBar"/>.
+    /// Таким образом, кнопка создается в любом случае.
     /// </summary>
     /// <param name="item">Команда</param>
     public void Add(EFPCommandItem item)
@@ -116,8 +117,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет все команды из списка, для которых в EFPCommandItem.Usage задан флаг ToolBar или
-    /// ToolBarDropDown. См. свойство EFPCommandItem.ToolBarUsage.
+    /// Добавляет все команды из списка, для которых в <see cref="EFPCommandItem.Usage"/> задан флаг <see cref="EFPCommandItemUsage.ToolBar"/> или
+    /// <see cref="EFPCommandItemUsage.ToolBarDropDown"/>. См. свойство <see cref="EFPCommandItem.ToolBarUsage"/>.
     /// </summary>
     /// <param name="items">Список команд</param>
     public void Add(EFPCommandItems items)
@@ -152,8 +153,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет все команды из списка, для которых в EFPCommandItem.Usage задан флаг ToolBar или
-    /// ToolBarDropDown. См. свойство EFPCommandItem.ToolBarUsage.
+    /// Добавляет все команды из списка, для которых в в <see cref="EFPCommandItem.Usage"/> задан флаг <see cref="EFPCommandItemUsage.ToolBar"/> или
+    /// <see cref="EFPCommandItemUsage.ToolBarDropDown"/>. См. свойство <see cref="EFPCommandItem.ToolBarUsage"/>.
     /// </summary>
     /// <param name="items">Список команд</param>
     public void Add(List<EFPCommandItem> items)
@@ -303,7 +304,16 @@ namespace FreeLibSet.Forms
           return;
 
         if (Item.Image == null)
-          _Button.ImageKey = Item.ImageKey;
+        {
+          // _Button.ImageKey = Item.ImageKey;
+
+          // 20.05.2024.
+          // В Net6 свойство ImageKey не работает, если панель расположена в модальном окне
+          if (String.IsNullOrEmpty(Item.ImageKey))
+            _Button.Image = null;
+          else
+            _Button.Image = EFPApp.MainImages.Images[Item.ImageKey];
+        }
         else
           _Button.Image = Item.Image;
       }
@@ -660,8 +670,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Свойство EFPAppMainWindowLayout.ToolBars.
-  /// Также устаревшее свойство EFPApp.AppToolBars.
+  /// Свойство <see cref="EFPAppMainWindowLayout.ToolBars"/>.
+  /// Также устаревшее свойство <see cref="EFPApp.AppToolBars"/>.
   /// </summary>
   public class EFPAppToolBars : NamedList<EFPAppToolBar>
   {
@@ -693,8 +703,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Присоединение всех панелей к главному окну программы.
     /// 
-    /// Этот метод является устаревшим. Следует использовать свойство EFPApp.Interface, где главное меню,
-    /// панели инструментов и статусная строка присоединяется автоматически
+    /// Этот метод является устаревшим. Следует использовать свойство <see cref="EFPApp.Interface"/>, где главное меню,
+    /// панели инструментов и статусная строка присоединяется автоматически.
     /// </summary>
     public void Attach()
     {
@@ -851,7 +861,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает локальную панель инструментов.
-    /// Созданный объект ToolStrip пока никуда не присоединен
+    /// Созданный объект <see cref="ToolStrip"/> пока никуда не присоединен.
     /// </summary>
     public EFPPanelToolBar()
     {
@@ -866,9 +876,9 @@ namespace FreeLibSet.Forms
     #region Присоединение к панели
 
     /// <summary>
-    /// Присоединяет ToolStrip к заданной панели
+    /// Присоединяет <see cref="ToolStrip"/> к заданной панели
     /// </summary>
-    /// <param name="userPanel">Панель для добавления ToolStrip</param>
+    /// <param name="userPanel">Панель для добавления <see cref="ToolStrip"/></param>
     public void Attach(Panel userPanel)
     {
       //Bar.AutoSize = true;
@@ -967,7 +977,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Управляет расположением панели относительно основного элемента.
-    /// Это свойство можно устанавливать, только если ToolBarControllable возвращает true.
+    /// Это свойство можно устанавливать, только если <see cref="ToolBarControllable"/> возвращает true.
     /// </summary>
     public TabAlignment ToolBarAlignment
     {
@@ -1061,7 +1071,7 @@ namespace FreeLibSet.Forms
       /// Управляемая панель инструментов
       /// </summary>
       public EFPPanelToolBar Owner { get { return _Owner; } }
-      private EFPPanelToolBar _Owner;
+      private readonly EFPPanelToolBar _Owner;
 
       private Control UserPanel
       {
@@ -1075,7 +1085,7 @@ namespace FreeLibSet.Forms
 
       #region Команды управления панелью
 
-      private EFPCommandItem ciVisible, ciTop, ciBottom, ciLeft, ciRight;
+      private readonly EFPCommandItem ciVisible, ciTop, ciBottom, ciLeft, ciRight;
 
       void ciVisible_Click(object sender, EventArgs args)
       {
@@ -1117,12 +1127,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливается методом Attach(), если управление
-    /// панелью инструментов допустимо
+    /// Устанавливается методом <see cref="Attach(Panel)"/>, если управление
+    /// панелью инструментов допустимо.
     /// </summary>
     public DockCommandItems PanelCommandItems { get { return _PanelCommandItems; } }
     private DockCommandItems _PanelCommandItems;
-
 
     #endregion
   }

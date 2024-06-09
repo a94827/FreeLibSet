@@ -20,10 +20,10 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Причина создания выборки документов для выбранных строк табличного просмотра
-  /// (пользователь выбрал команду "Отправить" или копирование ячеек в буфер)
-  /// Свойство GridHandlerDocSelEventArgs.Reason
+  /// (пользователь выбрал команду "Отправить" или копирование ячеек в буфер).
+  /// Свойство <see cref="EFPDBxViewDocSelEventArgs.Reason"/>.
   /// </summary>
-  public enum EFPDBxGridViewDocSelReason
+  public enum EFPDBxViewDocSelReason
   {
     /// <summary>
     /// Пользователь выполнил команду "Отправить"
@@ -33,8 +33,8 @@ namespace FreeLibSet.Forms.Docs
     SendTo,
 
     /// <summary>
-    /// Выполняется копирование ячеек в буфер обмена
-    /// Обработчик не должен взаимодействовать с пользователем
+    /// Выполняется копирование ячеек в буфер обмена.
+    /// Обработчик не должен взаимодействовать с пользователем.
     /// </summary>
     Copy,
   }
@@ -42,24 +42,23 @@ namespace FreeLibSet.Forms.Docs
   #endregion
 
   /// <summary>
-  /// Аргументы события EFPDBxTreeView.GetDocSel
+  /// Базовый класс аргументов события для <see cref="EFPDBxGridViewDocSelEventArgs"/> и <see cref="EFPDBxTreeViewDocSelEventArgs"/>
   /// </summary>
-  public class EFPDBxGridViewDocSelEventArgs : EventArgs
+  public abstract class EFPDBxViewDocSelEventArgs : EventArgs
   {
     #region Конструктор
 
     /// <summary>
-    /// Создается
+    /// Создается провайдером управляющего элемента, для которого генерируется событие.
+    /// Не используется в прикладном коде.
     /// </summary>
     /// <param name="controlProvider"></param>
     /// <param name="reason"></param>
-    /// <param name="rowIndices"></param>
-    public EFPDBxGridViewDocSelEventArgs(EFPDBxGridView controlProvider, EFPDBxGridViewDocSelReason reason, int[] rowIndices)
+    public EFPDBxViewDocSelEventArgs(IEFPDBxView controlProvider, EFPDBxViewDocSelReason reason)
     {
       _ControlProvider = controlProvider;
       _DocSel = new DBxDocSelection(controlProvider.UI.DocProvider.DBIdentity);
       _Reason = reason;
-      _RowIndices = rowIndices;
     }
 
     #endregion
@@ -69,86 +68,55 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Доступ к табличному просмотру
     /// </summary>
-    public EFPDBxGridView ControlProvider { get { return _ControlProvider; } }
-    private EFPDBxGridView _ControlProvider;
-
-    /// <summary>
-    /// Индексы строк, для которых требуется создать выборку документов
-    /// </summary>
-    public Int32[] RowIndices
-    {
-      get
-      {
-        if (_RowIndices == null)
-          _RowIndices = _ControlProvider.SelectedRowIndices;
-        return _RowIndices;
-      }
-    }
-    private Int32[] _RowIndices;
+    public IEFPDBxView ControlProvider { get { return _ControlProvider; } }
+    private readonly IEFPDBxView _ControlProvider;
 
     /// <summary>
     /// Строки таблицы данных, для которых должна быть получена выборка.
     /// Если табличный просмотр не привязан к таблице данных, то массив содержит
-    /// значения null. Для таких просмотров следует использовать RowIndices или
-    /// GridRows
+    /// значения null. 
     /// </summary>
     public DataRow[] DataRows
     {
       get
       {
         if (_DataRows == null)
-        {
-          _DataRows = new DataRow[RowIndices.Length];
-          for (int i = 0; i < _DataRows.Length; i++)
-            _DataRows[i] = _ControlProvider.GetDataRow(RowIndices[i]);
-        }
+          _DataRows = CreateDataRows();
         return _DataRows;
       }
     }
     private DataRow[] _DataRows;
 
     /// <summary>
-    /// Строки табличного просмотра, для которых должна быть получена выборка
+    /// Создает массив строк
     /// </summary>
-    public DataGridViewRow[] GridRows
-    {
-      get
-      {
-        if (_GridRows == null)
-        {
-          _GridRows = new DataGridViewRow[RowIndices.Length];
-          for (int i = 0; i < _GridRows.Length; i++)
-            _GridRows[i] = _ControlProvider.Control.Rows[RowIndices[i]];
-        }
-        return _GridRows;
-      }
-    }
-    private DataGridViewRow[] _GridRows;
+    /// <returns></returns>
+    protected abstract DataRow[] CreateDataRows();
 
     /// <summary>
     /// Причина, по которой требуется создать выборку
     /// </summary>
-    public EFPDBxGridViewDocSelReason Reason { get { return _Reason; } }
-    private EFPDBxGridViewDocSelReason _Reason;
+    public EFPDBxViewDocSelReason Reason { get { return _Reason; } }
+    private readonly EFPDBxViewDocSelReason _Reason;
 
     /// <summary>
     /// Сюда должны быть добавлены ссылки на документы
     /// </summary>
     public DBxDocSelection DocSel { get { return _DocSel; } }
-    private DBxDocSelection _DocSel;
+    private readonly DBxDocSelection _DocSel;
 
     #endregion
 
     #region Методы
 
     /// <summary>
-    /// Добавить ссылки из поля таблицы
-    /// Проверяется наличие в таблице Rows[0].Table поля ColumnName; если поля
+    /// Добавить ссылки из поля таблицы.
+    /// Проверяется наличие в таблице <see cref="DataRows"/>[0].Table поля <paramref name="columnName"/>; если поля
     /// нет, то ничего не выполняется.
-    /// Для извлечения идентификаторов используется DataTools.GetIdsFromField()
-    /// Добавляется только ссылка на документ, без вызова обработчика ClientDocType.GetDocSel
+    /// Для извлечения идентификаторов используется <see cref="DataTools.GetIdsFromColumn(ICollection{DataRow}, string)"/>.
+    /// Добавляется только ссылка на документ, без вызова обработчика <see cref="DocTypeUIBase.GetDocSel"/>.
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа ClientDocType</param>
+    /// <param name="tableName">Имя таблицы документа <see cref="DocTypeUI"/></param>
     /// <param name="columnName">Имя ссылочного поля в таблице просмотра</param>
     public void AddFromColumn(string tableName, string columnName)
     {
@@ -156,16 +124,16 @@ namespace FreeLibSet.Forms.Docs
     }
     /// <summary>
     /// Добавить ссылки из поля таблицы
-    /// Проверяется наличие в таблице Rows[0].Table поля ColumnName; если поля
+    /// Проверяется наличие в таблице <see cref="DataRows"/>[0].Table поля <paramref name="columnName"/>; если поля
     /// нет, то ничего не выполняется.
-    /// Для извлечения идентификаторов используется DataTools.GetIdsFromField()
-    /// Если UseHandler=true, то используется обработчик ClientDocType.GetDocSel,
-    /// при этом могут быть добавлены дополнительные ссылки. Если UseHandler=false,
-    /// то добавляется только ссылка на документ
+    /// Для извлечения идентификаторов используется <see cref="DataTools.GetIdsFromColumn(ICollection{DataRow}, string)"/>.
+    /// Если UseHandler=true, то используется обработчик <see cref="DocTypeUIBase.GetDocSel"/>,
+    /// при этом могут быть добавлены дополнительные ссылки. Если <paramref name="useHandler"/>=false,
+    /// то добавляется только ссылка на документ.
     /// </summary>
-    /// <param name="tableName">Имя таблицы документа ClientDocType</param>
+    /// <param name="tableName">Имя таблицы документа <see cref="DocTypeUI"/></param>
     /// <param name="columnName">Имя ссылочного поля в таблице просмотра</param>
-    /// <param name="useHandler">Если true, то используется обработчик GetDocSel</param>
+    /// <param name="useHandler">Если true, то используется обработчик <see cref="DocTypeUIBase.GetDocSel"/></param>
     public void AddFromColumn(string tableName, string columnName, bool useHandler)
     {
       if (DataRows.Length == 0)
@@ -187,12 +155,11 @@ namespace FreeLibSet.Forms.Docs
         DocSel.Add(tableName, ids);
     }
 
-
     /// <summary>
-    /// Загрузить из полей переменной ссылки "TableId" и "DocId"
-    /// Добавляется только ссылка на документ, без вызова обработчика ClientDocType.GetDocSel
+    /// Загрузить из полей переменной ссылки "TableId" и "DocId" (имена полей задаются).
+    /// Добавляется только ссылка на документ, без вызова обработчика <see cref="DocTypeUIBase.GetDocSel"/>
     /// </summary>
-    /// <param name="tableIdColumnName">Имя поля, содержащего идентификатор таблицы документов (свойство DBxDocType.TableId)</param>
+    /// <param name="tableIdColumnName">Имя поля, содержащего идентификатор таблицы документов (свойство <see cref="DBxDocType.TableId"/>)</param>
     /// <param name="docIdColumnName">Имя поля, содержащего идентификатор документа</param>
     public void AddFromVTReference(string tableIdColumnName, string docIdColumnName)
     {
@@ -200,14 +167,14 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Загрузить из полей переменной ссылки "TableId" и "DocId"
-    /// Если UseHandler=true, то используется обработчик ClientDocType.GetDocSel,
-    /// при этом могут быть добавлены дополнительные ссылки. Если UseHandler=false,
-    /// то добавляется только ссылка на документ
+    /// Загрузить из полей переменной ссылки "TableId" и "DocId" (имена полей задаются).
+    /// Если UseHandler=true, то используется обработчик <see cref="DocTypeUIBase.GetDocSel"/>,
+    /// при этом могут быть добавлены дополнительные ссылки. Если <paramref name="useHandler"/>=false,
+    /// то добавляется только ссылка на документ.
     /// </summary>
-    /// <param name="tableIdColumnName">Имя поля, содержащего идентификатор таблицы документов (свойство DBxDocType.TableId)</param>
+    /// <param name="tableIdColumnName">Имя поля, содержащего идентификатор таблицы документов (свойство <see cref="DBxDocType.TableId"/>)</param>
     /// <param name="docIdColumnName">Имя поля, содержащего идентификатор документа</param>
-    /// <param name="useHandler">Если true, то используется обработчик GetDocSel</param>
+    /// <param name="useHandler">Если true, то используется обработчик <see cref="DocTypeUIBase.GetDocSel"/></param>
     public void AddFromVTReference(string tableIdColumnName, string docIdColumnName, bool useHandler)
     {
       if (DataRows.Length == 0)
@@ -238,10 +205,93 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
+  ///// <summary>
+  ///// Делегат события <see cref="IEFPDBxView.GetDocSel"/>
+  ///// </summary>
+  ///// <param name="sender">Провайдер управляющего элемента</param>
+  ///// <param name="args">Аргументы события</param>
+  //public delegate void EFPDBxViewDocSelEventHandler(object sender, EFPDBxViewDocSelEventArgs args);
+
   /// <summary>
-  /// Делегат события EFPDBxTreeView.GetDocSel
+  /// Аргументы события <see cref="EFPDBxGridView.GetDocSel"/>
   /// </summary>
-  /// <param name="sender">Провайдер EFPDBxTreeView или производного класса</param>
+  public class EFPDBxGridViewDocSelEventArgs : EFPDBxViewDocSelEventArgs
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создается провайдером управляющего элемента, для которого генерируется событие.
+    /// Не используется в прикладном коде.
+    /// </summary>
+    /// <param name="controlProvider"></param>
+    /// <param name="reason"></param>
+    /// <param name="rowIndices"></param>
+    public EFPDBxGridViewDocSelEventArgs(EFPDBxGridView controlProvider, EFPDBxViewDocSelReason reason, int[] rowIndices)
+      :base(controlProvider, reason)
+    {
+      _RowIndices = rowIndices;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Доступ к табличному просмотру
+    /// </summary>
+    public new EFPDBxGridView ControlProvider { get { return (EFPDBxGridView)(base.ControlProvider); } }
+
+    /// <summary>
+    /// Индексы строк, для которых требуется создать выборку документов
+    /// </summary>
+    public Int32[] RowIndices
+    {
+      get
+      {
+        if (_RowIndices == null)
+          _RowIndices = ControlProvider.SelectedRowIndices;
+        return _RowIndices;
+      }
+    }
+    private Int32[] _RowIndices;
+
+    /// <summary>
+    /// Создание списка строк таблицы <see cref="DataTable"/>, соответствующий <see cref="RowIndices"/> 
+    /// </summary>
+    /// <returns>Массив строк</returns>
+    protected override DataRow[] CreateDataRows()
+    {
+      DataRow[] rows = new DataRow[RowIndices.Length];
+      for (int i = 0; i < rows.Length; i++)
+        rows[i] = ControlProvider.GetDataRow(RowIndices[i]);
+      return rows;
+    }
+
+    /// <summary>
+    /// Строки табличного просмотра, для которых должна быть получена выборка
+    /// </summary>
+    public DataGridViewRow[] GridRows
+    {
+      get
+      {
+        if (_GridRows == null)
+        {
+          _GridRows = new DataGridViewRow[RowIndices.Length];
+          for (int i = 0; i < _GridRows.Length; i++)
+            _GridRows[i] = ControlProvider.Control.Rows[RowIndices[i]];
+        }
+        return _GridRows;
+      }
+    }
+    private DataGridViewRow[] _GridRows;
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Делегат события <see cref="EFPDBxGridView.GetDocSel"/>
+  /// </summary>
+  /// <param name="sender">Провайдер <see cref="EFPDBxGridView"/> или производного класса</param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPDBxGridViewDocSelEventHandler(object sender,
     EFPDBxGridViewDocSelEventArgs args);
@@ -251,9 +301,9 @@ namespace FreeLibSet.Forms.Docs
   #region Интерфейс IEFPDBxView
 
   /// <summary>
-  /// Общая часть для просмотров EFPDBxGridView и EFPDBxTreeView.
+  /// Общая часть для просмотров <see cref="EFPDBxGridView"/> и <see cref="EFPDBxTreeView"/>.
   /// Интерфейс используется для синхронизации нескольких просмотров одного вида документов или поддокументов,
-  /// расположенных в одном окне, с помощью EFPDBxViewSync
+  /// расположенных в одном окне, с помощью <see cref="EFPDBxViewSync"/>.
   /// </summary>
   public interface IEFPDBxView : IEFPDataView, IEFPControlWithFilters
   {
@@ -277,9 +327,16 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     event EventHandler SelectionChanged;
 
+    // Можно сделать событие, но невозможно сделать один event.
+    // Не особенно нужно.
+    ///// <summary>
+    ///// Событие для создания выборки документов
+    ///// </summary>
+    //event EFPDBxViewDocSelEventHandler GetDocSel;
+
     /// <summary>
     /// Возвращает true, если в провайдере установлен обработчик события GetDocSel или
-    /// есть другой способ создания выборки документов
+    /// есть другой способ создания выборки документов.
     /// </summary>
     bool HasGetDocSelHandler { get; }
 
@@ -288,7 +345,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="reason">Причина необходимости построения выборки</param>
     /// <returns>Созданная выборка документов</returns>
-    DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason);
+    DBxDocSelection CreateDocSel(EFPDBxViewDocSelReason reason);
 
     /// <summary>
     /// Пометить на обновление строки с заданными идентификаторами
@@ -301,16 +358,21 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="ids">Список идентификаторов документов</param>
     void UpdateRowsForIds(IdList ids);
+
+    /// <summary>
+    /// Возвращает фильтры табличного просмотра
+    /// </summary>
+    new GridFilters Filters { get; set; }
   }
 
   #endregion
 
   /// <summary>
-  /// Расширение класса EFPDataGridView для работы с таблицами базы данных.
-  /// Источником данных DataGridView.DataSource должна быть таблица DataTable или просмотр DataView
-  /// Поддерживает идентификатор строки - поле Id. В DataTable могуть быть строки с незаданным или
-  /// нулевым идентификатором
-  /// Поддерживает объекты GridProducer и GridFilters, связанные с объектом DBUI 
+  /// Расширение класса <see cref="EFPDataGridView"/> для работы с таблицами базы данных.
+  /// Источником данных <see cref="DataGridView.DataSource"/> должна быть таблица <see cref="DataTable"/> или просмотр <see cref="DataView"/>.
+  /// Поддерживает идентификатор строки - поле Id. В <see cref="DataTable"/> могут быть строки с незаданным или
+  /// нулевым идентификатором. В частности, это может быть табличный просмотр в отчете.
+  /// Поддерживает объекты GridProducer и GridFilters, связанные с объектом <see cref="DBUI"/>.
   /// </summary>
   public class EFPDBxGridView : EFPStdConfigurableDataGridView, IEFPDBxView
   {
@@ -403,7 +465,7 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс доступа к документам
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private /*readonly*/ DBUI _UI; // инициализируется в Init(), а не в конструкторе
 
     #endregion
 
@@ -426,7 +488,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет в список категорию "GridView", если свойство SaveCurrentId установлено в true.
+    /// Добавляет в список категорию "GridView", если свойство <see cref="SaveCurrentId"/> установлено в true.
     /// </summary>
     /// <param name="categories">Список категорий для заполнения</param>
     /// <param name="rwMode">Режим чтения или записи</param>
@@ -485,8 +547,8 @@ namespace FreeLibSet.Forms.Docs
     #region Текущая позиция
 
     /// <summary>
-    /// Идентификатор в текущей строке (поле Id). Используется отложенная
-    /// установка свойства, если форма еще не выведена на экран
+    /// Идентификатор в текущей строке (поле "Id"). Используется отложенная
+    /// установка свойства, если форма еще не выведена на экран.
     /// </summary>
     public virtual Int32 CurrentId
     {
@@ -505,7 +567,6 @@ namespace FreeLibSet.Forms.Docs
     }
 
     private Int32 _DelayedCurrentId;
-
 
     /// <summary>
     /// Установка свойства CurrentId.
@@ -574,7 +635,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить идентификатор Id по номеру строки в табличном просмотре
+    /// Получить идентификатор "Id" по номеру строки в табличном просмотре.
     /// Предпочтительный метод, т.к. не делает строку Unshared
     /// </summary>
     /// <param name="rowIndex">Номер строки</param>
@@ -596,8 +657,8 @@ namespace FreeLibSet.Forms.Docs
     #region Доступ к выбранным строкам
 
     /// <summary>
-    /// Расширение свойства SelectedRows для представления выбранных строк в виде
-    /// массива идентификаторов Id
+    /// Расширение свойства <see cref="EFPDataGridView.SelectedDataRows"/> для представления выбранных строк в виде
+    /// массива идентификаторов "Id".
     /// </summary>
     public virtual Int32[] SelectedIds
     {
@@ -621,10 +682,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Управляющее свойство.
     /// Если установлено в true (по умолчанию), то при выводе элемента на экран устанавливается значение
-    /// CurrentId, сохраненное в конфигурационных данных. Установка не выполняется, если свойство CurrentId
-    /// предварительно было установлено в явном виде. При закрытии просмотра выполняется сохранение значения
-    /// Игнорируется, если свойство ConfigSectionName не установлено
-    /// Свойство SaveCurrentId можно устанавливать только до вывода элемента на экран
+    /// <see cref="CurrentId"/>, сохраненное в конфигурационных данных. Установка не выполняется, если свойство <see cref="CurrentId"/>
+    /// предварительно было установлено в явном виде. При закрытии просмотра выполняется сохранение значения.
+    /// Игнорируется, если свойство <see cref="EFPControlBase.ConfigSectionName"/> не установлено.
+    /// Свойство <see cref="SaveCurrentId"/> можно устанавливать только до вывода элемента на экран.
     /// Данные хранятся в секции конфигурации с категорией "GridView" в числовом поле "CurrentId"
     /// </summary>
     public bool SaveCurrentId
@@ -640,7 +701,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается при показе элемента.
-    /// Выполняет отложенную установку свойства CurrentId.
+    /// Выполняет отложенную установку свойства <see cref="CurrentId"/>.
     /// </summary>
     protected override void OnAttached()
     {
@@ -691,7 +752,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Очистка кэша для выбранных идентификаторов.
-    /// Вызывается однократно перед вызовами LoadDataRowForUpdate()
+    /// Вызывается однократно перед вызовами <see cref="LoadDataRowForUpdate(DataRow)"/>.
     /// </summary>
     /// <param name="ids">Массив идентификаторов. Длина массива больше 0</param>
     protected virtual void ClearCacheForUpdate(Int32[] ids)
@@ -700,7 +761,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Обновление строки табличного просмотра из кэша.
-    /// Если метод не переопределен, никаких действий не выполняется
+    /// Если метод не переопределен, никаких действий не выполняется.
     /// </summary>
     /// <param name="row">Строка данных. Не может быть null</param>
     protected virtual void LoadDataRowForUpdate(DataRow row)
@@ -767,7 +828,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Свойство возвращает true, если табличный просмотр присоединен к таблицы с первичным ключом
-    /// по полю "Id"
+    /// по полю "Id".
     /// </summary>
     public bool IsPrimaryKeyById
     {
@@ -816,9 +877,9 @@ namespace FreeLibSet.Forms.Docs
     /// Коллекция фильтров для табличного просмотра. Если есть хотя бы один фильтр,
     /// то в локальном меню появляется команда "Фильтр". После установки пользователем
     /// фильтра вызывается обновление просмотра. Ответственность за обработку
-    /// фильтров лежит на вызывающей программе
+    /// фильтров лежит на вызывающей программе.
     /// Чтобы проверить наличие возможных фильтров, следует использовать свойство
-    /// HasFilters, которое позволяет избежать создания лишних объектов
+    /// <see cref="EFPConfigurableDataGridView.HasFilters"/>, которое позволяет избежать создания лишних объектов
     /// </summary>
     public new GridFilters Filters
     {
@@ -827,7 +888,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает GridFilters
+    /// Создает <see cref="GridFilters"/>.
     /// </summary>
     /// <returns>Фильтры табличного просмотра</returns>
     protected override IEFPGridFilters CreateGridFilters()
@@ -836,8 +897,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров
-    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню
+    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров.
+    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню.
     /// </summary>
     /// <param name="filterGridProvider">Обработчик таблицы фильтров</param>
     public override void InitGridFilterEditorGridView(EFPGridFilterEditorGridView filterGridProvider)
@@ -905,7 +966,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получить список полей, которые используются табличным просмотром.
-    /// Собирает значения свойств DataGridViewColumn.DataPropertyName
+    /// Собирает значения свойств <see cref="DataGridViewColumn.DataPropertyName"/>
     /// </summary>
     /// <param name="columnNames">Коллекция имен полей, куда добавляются значения</param>
     public void GetUsedColumns(DBxColumnList columnNames)
@@ -927,7 +988,7 @@ namespace FreeLibSet.Forms.Docs
     #region Расширение GridProducer
 
     /***************************************************************************************
-     * Команда лоокального меню "Настройка просмотра" доступна при установке свойств
+     * Команда локального меню "Настройка просмотра" доступна при установке свойств
      * GridProducer и ConfigSectionName
      * 
      * Способы инициализации столбцов для табличного просмотра EFPDBxGridView
@@ -1076,7 +1137,7 @@ namespace FreeLibSet.Forms.Docs
     public new EFPDBxViewOrders Orders { get { return (EFPDBxViewOrders)(base.Orders); } }
 
     /// <summary>
-    /// Создает объект EFPDBxGridViewOrders
+    /// Создает объект <see cref="EFPDBxViewOrders"/>
     /// </summary>
     /// <returns>Список порядков сортировки строк табличного просмотра</returns>
     protected override EFPDataViewOrders CreateOrders()
@@ -1094,7 +1155,7 @@ namespace FreeLibSet.Forms.Docs
     public new EFPDBxGridViewCommandItems CommandItems { get { return (EFPDBxGridViewCommandItems)(base.CommandItems); } }
 
     /// <summary>
-    /// Создает EFPDBxGridViewCommandItems
+    /// Создает <see cref="EFPDBxGridViewCommandItems"/>
     /// </summary>
     /// <returns>Команды локального меню</returns>
     protected override EFPControlCommandItems CreateCommandItems()
@@ -1108,14 +1169,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если обработчик установлен, то при копировании ячеек в буфер обмена будет
-    /// помещена выборка документоа (объект DBxDocSelection).
-    /// Также будет добавлена команда "Отправить" -> "Выборка"
+    /// помещена выборка документов (объект <see cref="DBxDocSelection"/>).
+    /// Также будет добавлена команда "Отправить" -> "Выборка".
     /// </summary>
     public event EFPDBxGridViewDocSelEventHandler GetDocSel;
 
     /// <summary>
-    /// Вызывает обработчик события GetDocSel, если он установлен.
-    /// В случае переопределения метода также должно быть переопределено свойство HasGetDocSelHandler
+    /// Вызывает обработчик события <see cref="GetDocSel"/>, если он установлен.
+    /// В случае переопределения метода также должно быть переопределено свойство <see cref="HasGetDocSelHandler"/>.
     /// </summary>
     /// <param name="args">Аргументы события GetDocSel</param>
     protected virtual void OnGetDocSel(EFPDBxGridViewDocSelEventArgs args)
@@ -1125,7 +1186,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если есть установленный обработчик GetDocSel
+    /// Возвращает true, если есть установленный обработчик <see cref="GetDocSel"/>.
     /// </summary>
     public virtual bool HasGetDocSelHandler { get { return GetDocSel != null; } }
 
@@ -1134,7 +1195,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="reason">Причина создания выборки (для команды "Отправить" или копирования в буфер обмена)</param>
     /// <returns>Выборка документов</returns>
-    public DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason)
+    public DBxDocSelection CreateDocSel(EFPDBxViewDocSelReason reason)
     {
       return CreateDocSel(reason, null);
     }
@@ -1144,9 +1205,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="reason">Причина создания выборки (для команды "Отправить" или копирования в буфер обмена)</param>
     /// <param name="rowIndices">Массив индексов строк просмотра.
-    /// Если null, то будут использованы выбранные строки просмотра (свойство SelectedRowIndices)</param>
+    /// Если null, то будут использованы выбранные строки просмотра (свойство <see cref="EFPDataGridView.SelectedRowIndices"/>).</param>
     /// <returns>Выборка документов</returns>
-    public DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason, int[] rowIndices)
+    public DBxDocSelection CreateDocSel(EFPDBxViewDocSelReason reason, int[] rowIndices)
     {
       //if (GetDocSel == null)
       if (!HasGetDocSelHandler) // 22.02.2018
@@ -1181,8 +1242,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Список для отметки строк по идентификаторам.
-    /// В DBxDocGridView и DBxSubDocGridView установите свойство и столбец будет добавлен в просмотр автоматически.
-    /// Для собственной реализации класса вызывайте AddMarkRowsColumn() для добавления столбца с флажками.
+    /// В <see cref="EFPDocGridView"/> и <see cref="EFPSubDocGridView"/> установите свойство и столбец будет добавлен в просмотр автоматически.
+    /// Для собственной реализации класса вызывайте <see cref="AddMarkRowsColumn()"/> для добавления столбца с флажками.
     /// Установка свойства в процессе показа, приводит к обновлению столбца просмотра.
     /// </summary>
     public IdList MarkRowIds
@@ -1207,20 +1268,20 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавить столбец с флажками для отметки строк.
-    /// В просмотрах DBxDocGridView и DBxSubDocGridView этот метод вызывать не следует, т.к.
-    /// столбец добавляется автоматически, если установлено свойство MarkRowIds.
-    /// Вызов этого метода инициализирует свойство MarkRowIds, если это не было сделано ранее.
-    /// Для доступа к столбцу можно использовать свойства MarkRowsColumn или MarkRowsGridColumn.
+    /// В просмотрах <see cref="EFPDocGridView"/> и <see cref="EFPSubDocGridView"/> этот метод вызывать не следует, т.к.
+    /// столбец добавляется автоматически, если установлено свойство <see cref="MarkRowIds"/>.
+    /// Вызов этого метода инициализирует свойство <see cref="MarkRowIds"/>, если это не было сделано ранее.
+    /// Для доступа к столбцу можно использовать свойства <see cref="EFPDataGridView.MarkRowsColumn"/> или <see cref="EFPDataGridView.MarkRowsGridColumn"/>.
     /// </summary>
     public void AddMarkRowsColumn()
     {
       if (MarkRowIds == null)
         MarkRowIds = new IdList();
 
-      bool FirstCall = base.MarkRowsGridColumn == null;
+      bool isFirstCall = base.MarkRowsGridColumn == null;
       base.MarkRowsGridColumn = base.Columns.AddBool("_MarkRows", false, String.Empty);
       base.MarkRowsGridColumn.ReadOnly = MarkRowIds.IsReadOnly;
-      if (FirstCall)
+      if (isFirstCall)
       {
         Control.VirtualMode = true;
         Control.CellValueNeeded += new DataGridViewCellValueEventHandler(Control_CellValueNeeded);
@@ -1285,7 +1346,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет кнопку "Выборка документов" в диалог поиска текста
     /// </summary>
-    /// <returns>Объект EFPDBxGridViewSearchContext</returns>
+    /// <returns>Объект <see cref="EFPDBxGridViewSearchContext"/></returns>
     protected override IEFPTextSearchContext CreateTextSearchContext()
     {
       return new EFPDBxGridViewSearchContext(this);
@@ -1295,15 +1356,15 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Команды локального меню для EFPDBxGridView.
-  /// Добавляет команды "Отправить" - "Выборка документов"
+  /// Команды локального меню для <see cref="EFPDBxGridView"/>.
+  /// Добавляет команды "Отправить" - "Выборка документов".
   /// </summary>
   public class EFPDBxGridViewCommandItems : EFPConfigurableDataGridViewCommandItems
   {
     #region Конструктор
 
     /// <summary>
-    /// Вызывается из EFPDBxGridView
+    /// Вызывается из <see cref="EFPDBxGridView"/>
     /// </summary>
     /// <param name="controlProvider">Провайдер табличного просмотра</param>
     public EFPDBxGridViewCommandItems(EFPDBxGridView controlProvider)
@@ -1393,7 +1454,7 @@ namespace FreeLibSet.Forms.Docs
     public new EFPDBxGridView ControlProvider { get { return (EFPDBxGridView)(base.ControlProvider); } }
 
     /// <summary>
-    /// Установка свойств EFPCommandItem.Usage
+    /// Установка свойств <see cref="EFPCommandItem.Usage"/>.
     /// </summary>
     protected override void OnPrepare()
     {
@@ -1408,12 +1469,12 @@ namespace FreeLibSet.Forms.Docs
     #region Буфер обмена
 
     /// <summary>
-    /// Добавляет выборку DBxDocSelection в список форматов для буфера обмена.
+    /// Добавляет выборку <see cref="DBxDocSelection"/> в список форматов для буфера обмена.
     /// </summary>
     /// <param name="args">Аргументы для добавления форматоы</param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
-      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.Copy);
       if (docSel != null)
       {
         args.DataObject.SetData(docSel);
@@ -1431,7 +1492,7 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
-      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Выборка не содержит документов");
@@ -1445,7 +1506,7 @@ namespace FreeLibSet.Forms.Docs
 
 
   /// <summary>
-  /// Страница отчета, содержащая таблицу EFPDBxGridView
+  /// Страница отчета, содержащая таблицу <see cref="EFPDBxGridView"/>
   /// </summary>
   public class EFPReportDBxGridPage : EFPReportStdConfigurableGridPage
   {
@@ -1454,7 +1515,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Создает страницу отчета
     /// </summary>
-    /// <param name="ui">Интерфейс для доступа к документам</param>
+    /// <param name="ui">Интерфейс для доступа к документам. Не может быть null</param>
     public EFPReportDBxGridPage(DBUI ui)
     {
       if (ui == null)
@@ -1472,7 +1533,7 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс доступа к документам
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     #endregion
 
@@ -1487,7 +1548,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает EFPDBxGridView
+    /// Создает <see cref="EFPDBxGridView"/>
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
     /// <returns>Провайдер табличного просмотра</returns>

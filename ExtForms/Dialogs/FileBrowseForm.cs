@@ -93,14 +93,14 @@ namespace FreeLibSet.Forms
     private string _Description;
 
     /// <summary>
-    /// Значок формы (изображение в EFPApp.MainImages)
+    /// Значок формы (изображение в <see cref="EFPApp.MainImages"/>)
     /// </summary>
     public string ImageKey { get { return _ImageKey; } set { _ImageKey = value; } }
     private string _ImageKey;
 
     /// <summary>
     /// Режим: открытие или запись.
-    /// По умолчанию - Read
+    /// По умолчанию - <see cref="FileDialogMode.Read"/>.
     /// </summary>
     public FileDialogMode Mode { get { return _Mode; } set { _Mode = value; } }
     private FileDialogMode _Mode;
@@ -114,7 +114,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Основное свойство - список истории. Строка с нулевым индексом соответствует
-    /// выбранному значению
+    /// выбранному значению.
     /// </summary>
     public HistoryList HistList { get { return _HistList; } set { _HistList = value; } }
     private HistoryList _HistList;
@@ -122,7 +122,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Упрощенный доступ к каталогу.
     /// Установка свойства добавляет каталог к списку.
-    /// Текущий каталог (если не пустая строка) всегда заканчивается символом "\"
+    /// Текущий каталог (если не пустая строка) всегда заканчивается символом "\".
     /// </summary>
     public string SelectedPath
     {
@@ -137,8 +137,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Каталог по умолчанию (по умолчанию - не задано).
     /// Если свойство установлено, а список истории пустой, то при открытии диалога
-    /// выбирается каталог по умолчанию. Каталог по умолчанию присутсвует в 
-    /// выпадающем списке, но не сохраняется в истории, если он был выбран в явном виде
+    /// выбирается каталог по умолчанию. Каталог по умолчанию присутствует в 
+    /// выпадающем списке, но не сохраняется в истории, если он был выбран в явном виде.
     /// </summary>
     public string DefaultPath
     {
@@ -161,7 +161,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Значение переключателя "Включая подкаталоги".
     /// Чтобы переключатель был выведен на экран, должно быть установлено
-    /// свойство ShowSubFoldersButton
+    /// свойство <see cref="ShowSubFoldersButton"/>=true.
     /// </summary>
     public bool SubFolders { get { return _SubFolders; } set { _SubFolders = value; } }
     private bool _SubFolders;
@@ -172,8 +172,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки введенного пути.
-    /// Значение по умолчанию зависит от свойства Mode. При Mode=Write возвращает RootExists,
-    /// а при false - DirectoryExists
+    /// Значение по умолчанию зависит от свойства <see cref="Mode"/>. При <see cref="Mode"/>=<see cref="FileDialogMode.Write"/> возвращает <see cref="TestPathMode.RootExists"/>,
+    /// а при false - <see cref="TestPathMode.DirectoryExists"/>.
     /// </summary>
     public TestPathMode PathValidateMode
     {
@@ -189,7 +189,7 @@ namespace FreeLibSet.Forms
     private TestPathMode? _PathValidateMode;
 
     /// <summary>
-    /// Сбрасывает свойство PathValidateMode в значение по умолчанию
+    /// Сбрасывает свойство <see cref="PathValidateMode"/> в значение по умолчанию.
     /// </summary>
     public void ResetPathValidateMode()
     {
@@ -331,27 +331,27 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Описание в нижней части диалога.
-    /// По умолчанию - пусто
+    /// По умолчанию - пусто.
     /// </summary>
     public string Description { get { return _Description; } set { _Description = value; } }
     private string _Description;
 
     /// <summary>
-    /// Значок формы (изображение в EFPApp.MainImages)
+    /// Значок формы (изображение в <see cref="EFPApp.MainImages"/>)
     /// </summary>
     public string ImageKey { get { return _ImageKey; } set { _ImageKey = value; } }
     private string _ImageKey;
 
     /// <summary>
     /// Предполагаемый режим открытия файла - на чтение или на запись.
-    /// По умолчанию - Read
+    /// По умолчанию - <see cref="FileDialogMode.Read"/>.
     /// </summary>
     public FileDialogMode Mode { get { return _Mode; } set { _Mode = value; } }
     private FileDialogMode _Mode;
 
     /// <summary>
     /// Фильтр для файлов в формате "Описание|Маска|...".
-    /// См описание стандартных блоков диалога System.Windows.Forms.OpenFileDialog
+    /// См описание фильтра стандартных блоков диалога <see cref="System.Windows.Forms.FileDialog.Filter"/>.
     /// </summary>
     public string Filter { get { return _Filter; } set { _Filter = value; } }
     private string _Filter;
@@ -370,8 +370,8 @@ namespace FreeLibSet.Forms
     private HistoryList _HistList;
 
     /// <summary>
-    /// Упрощенный доступ к имени выбранного файла (включая путь)
-    /// Установка свойства добавляет список к истории
+    /// Упрощенный доступ к имени выбранного файла (включая путь).
+    /// Установка свойства добавляет список к истории.
     /// </summary>
     public string FileName
     {
@@ -384,9 +384,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Путь к файлу по умолчанию.
-    /// Если свойство установлено, и HistList не содержит ни одной строки, то
+    /// Если свойство установлено, и <see cref="HistList"/> не содержит ни одной строки, то
     /// при открытии диалога в поле будет введен этот путь. Также он будет присутствовать в списке
-    /// истории
+    /// истории.
     /// </summary>
     public string DefaultFileName { get { return _DefaultFileName; } set { _DefaultFileName = value; } }
     private string _DefaultFileName;
@@ -397,8 +397,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки введенного пути.
-    /// Значение по умолчанию зависит от свойства Mode. При Mode=Write возвращает RootExists,
-    /// а при false - DirectoryExists
+    /// Значение по умолчанию зависит от свойства <see cref="Mode"/>. При <see cref="Mode"/>=<see cref="FileDialogMode.Write"/> возвращает <see cref="TestPathMode.RootExists"/>,
+    /// а при <see cref="FileDialogMode.Read"/> - <see cref="TestPathMode.FileExists"/>.
     /// </summary>
     public TestPathMode PathValidateMode
     {
@@ -414,7 +414,7 @@ namespace FreeLibSet.Forms
     private TestPathMode? _PathValidateMode;
 
     /// <summary>
-    /// Сбрасывает свойство PathValidateMode в значение по умолчанию
+    /// Сбрасывает свойство <see cref="PathValidateMode"/> в значение по умолчанию.
     /// </summary>
     public void ResetPathValidateMode()
     {

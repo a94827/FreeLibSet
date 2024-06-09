@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtTools.Net", "ExtTools\ExtTools.Net.csproj", "{56C29879-7DC2-4FF2-AF6C-01AA2C3CE7BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtForms.Net", "ExtForms\ExtForms.Net.csproj", "{3B5B89DF-CB2E-49E2-8564-72C6366F5B8A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtDB.Net", "ExtDB\ExtDB.Net.csproj", "{32F107C0-F9F6-426E-B9B7-FF2128E18F58}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56C29879-7DC2-4FF2-AF6C-01AA2C3CE7BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C29879-7DC2-4FF2-AF6C-01AA2C3CE7BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C29879-7DC2-4FF2-AF6C-01AA2C3CE7BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C29879-7DC2-4FF2-AF6C-01AA2C3CE7BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B5B89DF-CB2E-49E2-8564-72C6366F5B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5B89DF-CB2E-49E2-8564-72C6366F5B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B5B89DF-CB2E-49E2-8564-72C6366F5B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B5B89DF-CB2E-49E2-8564-72C6366F5B8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32F107C0-F9F6-426E-B9B7-FF2128E18F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32F107C0-F9F6-426E-B9B7-FF2128E18F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32F107C0-F9F6-426E-B9B7-FF2128E18F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32F107C0-F9F6-426E-B9B7-FF2128E18F58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30616494-6DE2-4A5F-B785-320C3B539723}
+	EndGlobalSection
+EndGlobal

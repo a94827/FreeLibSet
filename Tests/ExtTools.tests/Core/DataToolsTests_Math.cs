@@ -882,7 +882,7 @@ namespace ExtTools_tests.Core
 
     #endregion
 
-    #region IsInRange
+    #region Числовые диапазоны
 
     [TestCase(1, 2, 4, false)]
     [TestCase(2, 2, 4, true)]
@@ -896,10 +896,88 @@ namespace ExtTools_tests.Core
     [TestCase(2, 2, null, true)]
     [TestCase(3, 2, null, true)]
     [TestCase(1, null, null, true)]
-    public void IsInRange(int testValue, int? firstValue, int? lastValue, bool wanted)
+    public void IsInRange_Int32(int testValue, int? firstValue, int? lastValue, bool wanted)
     {
       bool res = DataTools.IsInRange<int>(testValue, firstValue, lastValue);
       Assert.AreEqual(wanted, res);
+    }
+
+    [TestCase(1f, 2f, 4f, false)]
+    [TestCase(2f, 2f, 4f, true)]
+    [TestCase(4f, 2f, 4f, true)]
+    [TestCase(1.9f, 2f, 4f, false)]
+    [TestCase(4.1f, 2f, 4f, false)]
+    [TestCase(4f, null, 4f, true)]
+    [TestCase(4.1f, null, 4f, false)]
+    [TestCase(1.9f, 2f, null, false)]
+    [TestCase(2f, 2f, null, true)]
+    [TestCase(1f, null, null, true)]
+    public void IsInRange_Single(float testValue, float? firstValue, float? lastValue, bool wanted)
+    {
+      bool res = DataTools.IsInRange<float>(testValue, firstValue, lastValue);
+      Assert.AreEqual(wanted, res);
+    }
+
+    [TestCase(1f, 2f, 2.0f, 3f, true, 2f, 2f)]
+    [TestCase(1f, 2f, 2.1f, 3f, false, null, null)]
+    [TestCase(1f, 2f, null, 1.0f, true, 1f, 1f)]
+    [TestCase(1f, 2f, null, 0.9f, false, null, null)]
+    [TestCase(1f, 2f, 2.0f, null, true, 2f, 2f)]
+    [TestCase(1f, 2f, 2.1f, null, false, null, null)]
+    [TestCase(null, 2f, 2f, null, true, 2f, 2f)]
+    [TestCase(null, 2f, 2.1f, null, false, null, null)]
+    [TestCase(null, null, null, null, true, null, null)]
+    [TestCase(1f, 4f, 2f, 3f, true, 2f, 3f)]
+    [TestCase(1f, 3f, 2f, 4f, true, 2f, 3f)]
+    public void AreRangesCrossed_GetRangeCross_Single(float? firstValue1, float? lastValue1,
+      float? firstValue2, float? lastValue2,
+      bool wantedRes, float? wantedFirstCross, float? wantedLastCross)
+    {
+      bool res1 = DataTools.AreRangesCrossed<float>(firstValue1, lastValue1, firstValue2, lastValue2);
+      Assert.AreEqual(wantedRes, res1, "AreRangesCrossed() #1 result");
+
+      bool res2 = DataTools.AreRangesCrossed<float>(firstValue2, lastValue2, firstValue1, lastValue1);
+      Assert.AreEqual(wantedRes, res2, "AreRangesCrossed() #2 result");
+
+      float? firstCross3 = firstValue1;
+      float? lastCross3 = lastValue1;
+      bool res3 = DataTools.GetRangeCross<float>(ref firstCross3, ref lastCross3, firstValue2, lastValue2);
+      Assert.AreEqual(wantedRes, res3, "GetRangeCross() #3 result");
+      Assert.AreEqual(wantedFirstCross, firstCross3, "GetRangeCross() #3 firstValue");
+      Assert.AreEqual(wantedLastCross, lastCross3, "GetRangeCross() #3 lastValue");
+
+      float? firstCross4 = firstValue2;
+      float? lastCross4 = lastValue2;
+      bool res4 = DataTools.GetRangeCross<float>(ref firstCross4, ref lastCross4, firstValue1, lastValue1);
+      Assert.AreEqual(wantedRes, res4, "GetRangeCross() #4 result");
+      Assert.AreEqual(wantedFirstCross, firstCross4, "GetRangeCross() #4 firstValue");
+      Assert.AreEqual(wantedLastCross, lastCross4, "GetRangeCross() #4 lastValue");
+    }
+
+    [TestCase(1f, 2f, 3f, 4f, 1f, 4f)]
+    [TestCase(1f, 4f, 2f, 3f, 1f, 4f)]
+    [TestCase(1f, 3f, 2f, 4f, 1f, 4f)]
+    [TestCase(1f, 2f, 3f, null, 1f, null)]
+    [TestCase(1f, 2f, null, 4f, null, 4f)]
+    [TestCase(1f, 2f, null, 0f, null, 2f)]
+    [TestCase(1f, 2f, 3f, null, 1f, null)]
+    [TestCase(null, 2f, 3f, null, null, null)]
+    [TestCase(null, null, null, null, null, null)]
+    public void GetRangeUnion_Single(float? firstValue1, float? lastValue1,
+      float? firstValue2, float? lastValue2,
+      float? wantedFirstUnion, float? wantedLastUnion)
+    {
+      float? firstUnion1 = firstValue1;
+      float? lastUnion1 = lastValue1;
+      DataTools.GetRangeUnion<float>(ref firstUnion1, ref lastUnion1, firstValue2, lastValue2);
+      Assert.AreEqual(wantedFirstUnion, firstUnion1, "#1 firstValue");
+      Assert.AreEqual(wantedLastUnion, lastUnion1, "#1 lastValue");
+
+      float? firstUnion2 = firstValue2;
+      float? lastUnion2 = lastValue2;
+      DataTools.GetRangeUnion<float>(ref firstUnion2, ref lastUnion2, firstValue1, lastValue1);
+      Assert.AreEqual(wantedFirstUnion, firstUnion2, "#2 firstValue");
+      Assert.AreEqual(wantedLastUnion, lastUnion2, "#2 lastValue");
     }
 
     #endregion

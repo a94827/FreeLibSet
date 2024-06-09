@@ -11,11 +11,13 @@ using System.Windows.Forms;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Менеджер фоновой печати. Реализация свойства EFPApp.BackgroundPrinting
-  /// 1. При построении меню должна быть добавлена VisibleClientItem для статусной строки
-  /// 2. Должно быть установлено свойство Enabled=true
-  /// 3. Вместо обычной печати вызовом PrintDocument.Print() в основном потоке
-  ///    должен вызываться метод Add()
+  /// Менеджер фоновой печати. Реализация свойства <see cref="EFPApp.BackgroundPrinting"/>.
+  /// <list type="bullet">
+  /// <item><description>1. При построении меню должна быть добавлена <see cref="EFPCommandItem"/> для статусной строки</description></item>
+  /// <item><description>2. Должно быть установлено свойство <see cref="Enabled"/>=true</description></item>
+  /// <item><description>3. Вместо обычной печати вызовом <see cref="PrintDocument.Print()"/> в основном потоке
+  /// должен вызываться метод <see cref="Add(PrintDocument)"/></description></item>
+  /// </list>
   /// </summary>
   public class BackgroundPrinting
   {
@@ -143,7 +145,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Очередь заданий на печать.
-    /// При обращении должна выполняться блокировка
+    /// При обращении должна выполняться блокировка.
     /// </summary>
     private readonly Queue<PrintDocument> _TheQueue;
 
@@ -292,7 +294,6 @@ namespace FreeLibSet.Forms
       _StatusItem.StatusBarText = EFPCommandItem.EmptyStatusBarText;
       _StatusItem.ToolTipText = DefaultStatusToolTipText;
     }
-
 
     #endregion
   }

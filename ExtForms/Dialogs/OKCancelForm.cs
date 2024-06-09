@@ -522,6 +522,7 @@ namespace FreeLibSet.Forms
   }
 
 
+#if XXX // Не используется
   /// <summary>
   /// Форма со списком ListView, кнопками "ОК" и "Отмена"
   /// Объект ListView имеет стиль списка и единственную колонку без заголовка,
@@ -529,7 +530,7 @@ namespace FreeLibSet.Forms
   /// </summary>
   public class ListViewOKCancelForm : OKCancelForm
   {
-    #region Конструктор
+#region Конструктор
 
     /// <summary>
     /// Создает форму
@@ -556,9 +557,9 @@ namespace FreeLibSet.Forms
       _TheListView.Columns[0].Width = -2;
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Управляющий элемент списка
@@ -577,6 +578,8 @@ namespace FreeLibSet.Forms
       set { _TheGroupBox.Text = value; }
     }
 
-    #endregion
+#endregion
   }
+
+#endif
 }

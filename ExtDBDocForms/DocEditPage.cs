@@ -49,7 +49,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Была ли страница предъявлена пользователю, то есть, был ли вызов
-    /// события FirstShow ?
+    /// события <see cref="FirstShow"/>.
     /// </summary>
     public bool HasBeenShown { get { return _HasBeenShown; } }
     private bool _HasBeenShown;
@@ -80,12 +80,13 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Заголовок закладки
+    /// Заголовок вкладки окна редактора. Допускается динамическая установка текста.
     /// </summary>
     public string Title { get { return _TabPage.Text; } set { _TabPage.Text = value; } }
 
     /// <summary>
-    /// Значок закладки. Допускается динамическая установка значка
+    /// Значок вкладки окна редактора. Допускается динамическая установка значка.
+    /// Задается имя изображения из <see cref="EFPApp.MainImages"/>.
     /// </summary>
     public string ImageKey
     {
@@ -94,7 +95,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Всплывающая подсказка
+    /// Всплывающая подсказка вкладки окна редактора. Допускается динамическая установка текста.
     /// </summary>
     public string ToolTipText
     {
@@ -103,7 +104,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Базовый провайдер, необходимый при инициализации провайдеров управляющих элементов на странице
+    /// Базовый провайдер, необходимый при инициализации провайдеров управляющих элементов на странице.
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _TabPage.BaseProvider; } }
 
@@ -113,14 +114,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается перед первым предъявлением закладки окна редактирования
-    /// пользователю. Используется для загрузки дополнительных данных
-    /// документа. Вызывается до PageShow
+    /// пользователю. Используется для загрузки дополнительных данных документа. 
+    /// Вызывается до события <see cref="PageShow"/>.
     /// </summary>
     public event DocEditPageEventHandler FirstShow;
 
     /// <summary>
     /// Вызывается перед каждым выводом закладки пользователю. Используется для
-    /// обновления синхронизированных между закладками данных
+    /// обновления синхронизированных между закладками данных.
     /// </summary>
     public event DocEditPageEventHandler PageShow;
 
@@ -129,7 +130,7 @@ namespace FreeLibSet.Forms.Docs
     #region Методы
 
     /// <summary>
-    /// Сделать эту страницу в редакторе текущей
+    /// Сделать эту страницу в редакторе текущей.
     /// </summary>
     public void SelectPage()
     {
@@ -137,7 +138,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если эта вкладка редактора является активной
+    /// Возвращает true, если эта вкладка редактора является активной.
     /// </summary>
     public bool IsSelectedPage
     {
@@ -149,7 +150,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вывод посередине панели сообщения (например, что групповое
-    /// редактирование для этой страницы невозможно)
+    /// редактирование для этой страницы невозможно).
     /// </summary>
     /// <param name="message">Текст сообщения</param>
     /// <param name="panel">Пустая панель для размещения сообщения</param>
@@ -163,7 +164,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает Title
+    /// Возвращает <see cref="Title"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -241,7 +242,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Коллекция объектов DocEditPage (свойство DocumentEditor.TheTabControl)
+  /// Коллекция объектов <see cref="DocEditPage"/> (свойство DocumentEditor.TheTabControl)
   /// </summary>
   public class DocEditPages : IEnumerable<DocEditPage>
   {
@@ -308,9 +309,9 @@ namespace FreeLibSet.Forms.Docs
     #region События
 
     /// <summary>
-    /// Событие вызывается при активации страницы редактора
-    /// Событие вызывается после DocEditPage.FirstPageShow и DocEditPage.PageShow, 
-    /// поэтому страница уже создана на момент вызова
+    /// Событие вызывается при активации страницы редактора.
+    /// Событие вызывается после событий <see cref="DocEditPage.FirstShow"/> и <see cref="DocEditPage.PageShow"/>, 
+    /// поэтому страница уже создана на момент вызова.
     /// </summary>
     public event DocEditPageEventHandler PageShow;
 
@@ -359,12 +360,11 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-
   #region Делегаты, связанные со страницей документа
 
   /// <summary>
   /// Аргументы событий, связанных со страницей редактора.
-  /// Объекты создаются редактором документа
+  /// Объекты создаются редактором документа.
   /// </summary>
   public class DocEditPageEventArgs : EventArgs
   {
@@ -377,7 +377,7 @@ namespace FreeLibSet.Forms.Docs
     /// Ссылка на объект страницы редактируемого документа
     /// </summary>
     public DocEditPage Page { get { return _Page; } }
-    private DocEditPage _Page;
+    private readonly DocEditPage _Page;
 
     //public MultiDocs MultiDocs { get { return FPage.MultiDocs; } }
   }

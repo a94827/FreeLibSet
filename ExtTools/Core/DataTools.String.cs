@@ -630,7 +630,7 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region IndexOfAny
+    #region Last/IndexOfAny/Other
 
     /// <summary>
     /// Возвращает true, если метод поиска символов выгодно реализовать с использованием <see cref="CharArrayIndexer"/>.
@@ -706,11 +706,11 @@ namespace FreeLibSet.Core
     /// Функция, обратная к <see cref="IndexOfAny(string, string)"/>.
     /// Функция возвращает индекс первого символа из строки <paramref name="str"/>, который отсутствует
     /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
-    /// которых входящих в строку <paramref name="searchChars"/>, то возвращается (-1).
+    /// входящих в строку <paramref name="searchChars"/>, то возвращается (-1).
     /// Поиск является культуро-независимым, все символы сравниваются по их кодам
     /// отдельно друг от друга.
     /// Если строка <paramref name="str"/> непустая, а <paramref name="searchChars"/> - пустая, то возвращается значение 0, т.к.
-    /// первый жн символ не входит в список
+    /// первый же символ не входит в список
     /// Функция полезна для проверки правильности имен и других подобных случаев. 
     /// В качестве строки <paramref name="searchChars"/> следует передавать список всех допустимых символов и
     /// сообщать об ошибке, если функция вернула значение, большее или равное 0.
@@ -740,14 +740,14 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Функция, обратная к <see cref="IndexOfAnyOther(string, CharArrayIndexer)"/>.
+    /// Функция, обратная к <see cref="IndexOfAny(string, CharArrayIndexer)"/>.
     /// Функция возвращает индекс первого символа из строки <paramref name="str"/>, который отсутствует
     /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
     /// которых входящих в строку <paramref name="searchChars"/>, то возвращается (-1)
     /// Поиск является культуро-независимым, все символы сравниваются по их кодам
     /// отдельно друг от друга.
     /// Если строка <paramref name="str"/> непустая, а <paramref name="searchChars"/> - пустая, то возвращается значение 0, т.к.
-    /// первый жн символ не входит в список
+    /// первый же символ не входит в список
     /// Функция полезна для проверки правильности имен и других подобных случаев. 
     /// В качестве строки <paramref name="searchChars"/> следует передавать список всех допустимых символов и
     /// сообщать об ошибке, если функция вернула значение, большее или равное 0.
@@ -770,9 +770,130 @@ namespace FreeLibSet.Core
       return -1;
     }
 
+
+    /// <summary>
+    /// Версия стандартого метода <see cref="String.LastIndexOfAny(char[])"/>, которая, в отличие от оригинала,
+    /// проверяемые символы берет из строки, а не из массива.
+    /// Функция возвращает индекс последнего символа из строки <paramref name="str"/>, который присутствует
+    /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
+    /// которых нет в строке <paramref name="searchChars"/>, то возвращается (-1).
+    /// Поиск является культуро-независимым, все символы сравниваются по их кодам
+    /// отдельно друг от друга.
+    /// Если требуется многократный вызов с одним и тем же набором символов <paramref name="searchChars"/>,
+    /// создайте <see cref="CharArrayIndexer"/> и используйте другую перегрузку метода.
+    /// </summary>
+    /// <param name="str">Проверяемая строка</param>
+    /// <param name="searchChars">Искомые символы</param>
+    /// <returns>Индекс в строке <paramref name="str"/></returns>
+    public static int LastIndexOfAny(string str, string searchChars)
+    {
+      if (String.IsNullOrEmpty(str) || String.IsNullOrEmpty(searchChars))
+        return -1;
+
+      if (PreferCharArrayIndexer(str, searchChars))
+        return LastIndexOfAny(str, new CharArrayIndexer(searchChars));
+
+      for (int i = str.Length - 1; i >= 0; i--)
+      {
+        if (searchChars.IndexOf(str[i]) >= 0)
+          return i;
+      }
+      return -1;
+    }
+
+
+    /// <summary>
+    /// Версия стандартого метода <see cref="String.LastIndexOfAny(char[])"/>, которая, в отличие от оригинала,
+    /// проверяемые символы берет из строки, а не из массива.
+    /// Функция возвращает индекс последнего символа из строки <paramref name="str"/>, который присутствует
+    /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
+    /// которых нет в строке <paramref name="searchChars"/>, то возвращается (-1).
+    /// Поиск является культуро-независимым, все символы сравниваются по их кодам
+    /// отдельно друг от друга.
+    /// </summary>
+    /// <param name="str">Проверяемая строка</param>
+    /// <param name="searchChars">Искомые символы</param>
+    /// <returns>Индекс в строке <paramref name="str"/></returns>
+    public static int LastIndexOfAny(string str, CharArrayIndexer searchChars)
+    {
+      if (String.IsNullOrEmpty(str) || searchChars.Count == 0)
+        return -1;
+      for (int i = str.Length - 1; i >= 0; i--)
+      {
+        if (searchChars.IndexOf(str[i]) >= 0)
+          return i;
+      }
+      return -1;
+    }
+
+
+    /// <summary>
+    /// Функция, обратная к <see cref="LastIndexOfAny(string, string)"/>.
+    /// Функция возвращает индекс последнего символа из строки <paramref name="str"/>, который отсутствует
+    /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
+    /// входящих в строку <paramref name="searchChars"/>, то возвращается (-1).
+    /// Поиск является культуро-независимым, все символы сравниваются по их кодам
+    /// отдельно друг от друга.
+    /// Если строка <paramref name="str"/> непустая, а <paramref name="searchChars"/> - пустая, то возвращается значение (<paramref name="str"/>.Length-1), т.к.
+    /// первый же символ не входит в список.
+    /// В качестве строки <paramref name="searchChars"/> следует передавать список всех допустимых символов и
+    /// сообщать об ошибке, если функция вернула значение, большее или равное 0.
+    /// Если требуется многократный вызов с одним и тем же набором символов <paramref name="searchChars"/>,
+    /// создайте <see cref="CharArrayIndexer"/> и используйте другую перегрузку метода.
+    /// </summary>
+    /// <param name="str">Проверяемая строка</param>
+    /// <param name="searchChars">Искомые символы</param>
+    /// <returns>Индекс в строке <paramref name="str"/></returns>
+    public static int LastIndexOfAnyOther(string str, string searchChars)
+    {
+      if (String.IsNullOrEmpty(str))
+        return -1;
+      if (String.IsNullOrEmpty(searchChars))
+        return str.Length - 1; // любой символ подходит
+
+      if (PreferCharArrayIndexer(str, searchChars))
+        return LastIndexOfAnyOther(str, new CharArrayIndexer(searchChars));
+
+      for (int i = str.Length - 1; i >= 0; i--)
+      {
+        if (searchChars.IndexOf(str[i]) < 0)
+          return i;
+      }
+      return -1;
+    }
+
+    /// <summary>
+    /// Функция, обратная к <see cref="LastIndexOfAny(string, CharArrayIndexer)"/>.
+    /// Функция возвращает индекс первого символа из строки <paramref name="str"/>, который отсутствует
+    /// в строке <paramref name="searchChars"/>. Если строка <paramref name="str"/> пустая или состоит исключительно из символов,
+    /// которых входящих в строку <paramref name="searchChars"/>, то возвращается (-1).
+    /// Поиск является культуро-независимым, все символы сравниваются по их кодам
+    /// отдельно друг от друга.
+    /// Если строка <paramref name="str"/> непустая, а <paramref name="searchChars"/> - пустая, то возвращается значение (<paramref name="str"/>.Length-1), т.к.
+    /// первый же символ не входит в список.
+    /// В качестве строки <paramref name="searchChars"/> следует передавать список всех допустимых символов и
+    /// сообщать об ошибке, если функция вернула значение, большее или равное 0.
+    /// </summary>
+    /// <param name="str">Проверяемая строка</param>
+    /// <param name="searchChars">Искомые символы</param>
+    /// <returns>Индекс в строке <paramref name="str"/></returns>
+    public static int LastIndexOfAnyOther(string str, CharArrayIndexer searchChars)
+    {
+      if (String.IsNullOrEmpty(str))
+        return -1;
+      if (searchChars.Count == 0)
+        return str.Length - 1; // любой символ подходит
+      for (int i = str.Length - 1; i >= 0; i--)
+      {
+        if (searchChars.IndexOf(str[i]) < 0)
+          return i;
+      }
+      return -1;
+    }
+
     #endregion
 
-    #region IndexOfOccuirence, LastIndexOfOccuirence
+    #region IndexOfOccurence, LastIndexOfOccurence
 
     /// <summary>
     /// Найти позицию заданного вхождения подстроки <paramref name="value"/> в строку <paramref name="str"/>.

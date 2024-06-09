@@ -18,19 +18,19 @@ namespace FreeLibSet.Collections
   /// (используется двусвязный список объектов. При каждом обращении к элементу, он перемещается к голове списка)
   /// При обращению по ключу к элементу коллекции, если элемента с таким ключом не существует, то вызывается
   /// метод CreateItem() для создания элемента. Производный класс должен реализовать действия по созданию объекта. 
-  /// Также он может переопределить метод, DestroyItem() (например, для сбоса данных в файл на диске)
-  /// Коллекция реализует интерфейс IDisposable. При удалении объекта выполняется очиска списка с вызовом методов
+  /// Также он может переопределить метод, DestroyItem() (например, для сброса данных в файл на диске)
+  /// Коллекция реализует интерфейс <see cref="IDisposable"/>. При удалении объекта выполняется очиска списка с вызовом методов
   /// DestroyItem() для каждого элемента.
   ///                                                                        
-  /// Следует рассмотреть возможность использования системы кэширования (класс Cache) вместо этой коллекции,
+  /// Следует рассмотреть возможность использования системы кэширования (класс <see cref="FreeLibSet.Caching.Cache"/>) вместо этой коллекции,
   /// если требуется хранить данные, которые занимают много памяти. Данная коллекция не реализует автоматической
-  /// очистки элементов в случае нехватки памяти
+  /// очистки элементов в случае нехватки памяти.
   /// 
   /// Класс не является потокобезопасным, но является реентрабельным.
   /// 
-  /// Используйте класс DictionaryWithMRU, если хранимые значения <typeparamref name="TValue"/> являются простыми.
+  /// Используйте класс <see cref="DictionaryWithMRU{TKey, TValue}"/>, если хранимые значения <typeparamref name="TValue"/> являются простыми.
   /// </summary>
-  /// <typeparam name="TKey">Тип ключа для доступа к элементам. Чаще всего, String</typeparam>
+  /// <typeparam name="TKey">Тип ключа для доступа к элементам. Чаще всего, <see cref="System.String"/>.</typeparam>
   /// <typeparam name="TValue">Тип хранящихся значений</typeparam>
   [Serializable]
   public abstract class MRUObjectDictionary<TKey, TValue> : SimpleDisposableObject, IDictionary<TKey, TValue>, IDictionary
@@ -76,7 +76,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Очищает коллекцию
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/></param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -102,10 +102,10 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Получение объекта по ключу.
-    /// Если объекта с таким ключом еще нет в списке, он создается с помощью CreateItem().
-    /// Если число элементов превышает Capacity, то самый старый элемент удаляется с помощью DestroyItem.
+    /// Если объекта с таким ключом еще нет в списке, он создается с помощью <see cref="CreateItem(TKey)"/>.
+    /// Если число элементов превышает <see cref="MaxCapacity"/>, то самый старый элемент удаляется с помощью <see cref="DestroyItem(TKey, TValue)"/>.
     /// 
-    /// При установке значения свойства вызов CreateItem не используется. Значение помещается в начало MRU-списка
+    /// При установке значения свойства вызов <see cref="CreateItem(TKey)"/> не используется. Значение помещается в начало MRU-списка.
     /// </summary>
     /// <param name="key">Ключ</param>
     /// <returns>Значение</returns>
@@ -162,7 +162,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Этот метод вызывается при удалении элемента.
-    /// Вызывает Value.Dispose(), если <typeparamref name="TValue"/> реализует интерефейс IDisposaable.
+    /// Вызывает <paramref name="value"/>.Dispose(), если <typeparamref name="TValue"/> реализует интерефейс <see cref="IDisposable"/>.
     /// Переопределенный метод может выполнить действия, связанные  с удалением элемента,
     /// а затем вызвать базовый метод.
     /// </summary>
@@ -205,7 +205,7 @@ namespace FreeLibSet.Collections
     #region Вспомогательные методы
 
     /// <summary>
-    /// Очистка списка. Для каждого элемента вызывается DestroyItem()
+    /// Очистка списка. Для каждого элемента вызывается <see cref="DestroyItem(TKey, TValue)"/>.
     /// </summary>
     public void Clear()
     {
@@ -252,10 +252,10 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Удаляет элемент с заданным ключом.
-    /// Вызывает DestroyItem() перед удалением.
+    /// Вызывает <see cref="DestroyItem(TKey, TValue)"/> перед удалением.
     /// </summary>
     /// <param name="key">Ключ</param>
-    /// <returns>true, если запись была в коллекйии</returns>
+    /// <returns>true, если запись была в коллекции и удалена</returns>
     public bool Remove(TKey key)
     {
       LinkedListNode<KeyValuePair<TKey, TValue>> node;
@@ -596,7 +596,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Емкость списка.
-    /// Значением по умолчанию - Int32.MaxValue, то есть емкость не ограничена
+    /// Значением по умолчанию - <see cref="Int32.MaxValue"/>, то есть емкость не ограничена
     /// и автоматическое удаление не выполняется.
     /// Установка свойства может привести к удалению части элементов списка.
     /// </summary>
@@ -628,7 +628,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает индекс элемента в основном списке.
-    /// Возвращает (-1), если элемента нет в списке
+    /// Возвращает (-1), если элемента нет в списке.
     /// </summary>
     /// <param name="item">Искомый элемент</param>
     /// <returns>Индекс элемента</returns>
@@ -639,7 +639,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Вставляет элемент в указанную позицию основного списка.
-    /// Элемент попадает в начало MRU-списка
+    /// Элемент попадает в начало MRU-списка.
     /// </summary>
     /// <param name="index">Индекс для вставки элемента</param>
     /// <param name="item">Элемент</param>
@@ -652,7 +652,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Удаляет элемент в заданной позиции основного списка.
-    /// Элемент также удаляется из списка MRU
+    /// Элемент также удаляется из списка MRU.
     /// </summary>
     /// <param name="index">Индекс элемента</param>
     public void RemoveAt(int index)
@@ -665,8 +665,8 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Получить или установить элемент в заданной позиции.
     /// Получение элемента не влияет на его положение в MRU-списке.
-    /// Используйте метод Touch() для перемещения в начало списка.
-    /// Установка элемента, напротив, помещает новый элемент в начало MRU-списка.
+    /// Используйте метод <see cref="Touch(T)"/> для перемещения в начало списка.
+    /// Установка элемента помещает новый элемент в начало MRU-списка.
     /// </summary>
     /// <param name="index">Индекс элемента в основном списке</param>
     /// <returns>Элемент списка</returns>
@@ -723,7 +723,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Копирует все элементы из основного списка.
-    /// Порядок элементов соответствует основному списку, а не MRU
+    /// Порядок элементов соответствует основному списку, а не MRU.
     /// </summary>
     /// <param name="array">Массив для заполнения</param>
     public void CopyTo(T[] array)
@@ -733,7 +733,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Копирует все элементы из основного списка.
-    /// Порядок элементов соответствует основному списку, а не MRU
+    /// Порядок элементов соответствует основному списку, а не MRU.
     /// </summary>
     /// <param name="array">Массив для заполнения</param>
     /// <param name="arrayIndex">Начальная позиция</param>
@@ -744,7 +744,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Копирует все элементы из основного списка.
-    /// Порядок элементов соответствует основному списку, а не MRU
+    /// Порядок элементов соответствует основному списку, а не MRU.
     /// </summary>
     /// <param name="index">Индекс первого элемента в текущем списке, с которого начинать копирование</param>
     /// <param name="array">Заполняемый массив</param>
@@ -835,7 +835,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Перемещает заданный элемент в начало списке MRU.
     /// Позиция элемента в основном списке не меняется.
-    /// Если элемента нет в списке, никаких действий не выполняется
+    /// Если элемента нет в списке, никаких действий не выполняется.
     /// </summary>
     /// <param name="item">Элемент, который переносится в начало списка</param>
     /// <returns>true, если элемент был найден в списке.
@@ -855,7 +855,7 @@ namespace FreeLibSet.Collections
     /// Перемещает элемент в указанной позиции основного списка в начало списка MRU.
     /// Позиция элемента в основном списке не меняется.
     /// </summary>
-    /// <param name="index">Индекс элемента в основном списке</param>
+    /// <param name="index">Индекс элемента в основном списке от 0 до (<see cref="Count"/>-1)</param>
     public void TouchAt(int index)
     {
       _LinkedList.Remove(_List[index]);
@@ -966,7 +966,6 @@ namespace FreeLibSet.Collections
     /// Возвращает псевдообъект для доступа к списку MRU
     /// </summary>
     public MRUCollection MRU { get { return new MRUCollection(this); } }
-
 
     private void CheckCount()
     {
@@ -1568,7 +1567,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Основная коллекция.
-    /// Используется для поиска значений по ключу
+    /// Используется для поиска значений по ключу.
     /// </summary>
     private Dictionary<TKey, NodeAndValue> _Dict;
 
@@ -1585,7 +1584,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Емкость списка.
-    /// Значением по умолчанию - Int32.MaxValue, то есть емкость не ограничена
+    /// Значением по умолчанию - <see cref="Int32.MaxValue"/>, то есть емкость не ограничена
     /// и автоматическое удаление не выполняется.
     /// Установка свойства может привести к удалению части элементов списка.
     /// </summary>
@@ -1621,7 +1620,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет пару "Код-Значение" в словарь.
-    /// Ключ добавляется в начало MRU-списка
+    /// Ключ добавляется в начало MRU-списка.
     /// </summary>
     /// <param name="key">Ключ</param>
     /// <param name="value">Значение</param>
@@ -1684,7 +1683,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Получение значения для заданного ключа.
     /// Доступ не вызывает перемещение элемента к началу MRU-списка. 
-    /// Используйте метод Touch() в явном виде.
+    /// Используйте метод <see cref="Touch(TKey)"/> в явном виде.
     /// </summary>
     /// <param name="key">Ключ</param>
     /// <param name="value">Сюда записывается значение</param>
@@ -1701,7 +1700,7 @@ namespace FreeLibSet.Collections
     /// Доступ к значению по ключу.
     /// При чтении свойства, если заданного ключа нет в словаре, генерируется исключение.
     /// Доступ не вызывает перемещение элемента к началу MRU-списка. 
-    /// Используйте метод Touch() в явном виде.
+    /// Используйте метод <see cref="Touch(TKey)"/> в явном виде.
     /// При записи выполняется замена значения или добавление записи в словарь.
     /// Ключ перемещается в начало MRU-списка.
     /// </summary>
@@ -1758,7 +1757,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Перечислитель ключей словаря.
-    /// Дублирует структуру LinkedList.Enumerator.
+    /// Дублирует структуру <see cref="LinkedList{TKey}.Enumerator"/>.
     /// </summary>
     public struct KeyEnumerator : IEnumerator<TKey>
     {
@@ -1812,7 +1811,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Реализация свойства Keys.
+    /// Реализация свойства <see cref="Keys"/>.
     /// Коллекция ключей словаря. Коллекция доступна в режиме только для чтения.
     /// Порядок элементов коллекции при перечислении соответствует MRU-списку.
     /// </summary>
@@ -1857,7 +1856,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Копирует все ключи словаря в массив.
-      /// Порядок элементов соответствует MRU--списку
+      /// Порядок элементов соответствует MRU-списку.
       /// </summary>
       /// <param name="array">Заполняемый массив</param>
       /// <param name="arrayIndex">Первый индекс в массиве</param>
@@ -1889,7 +1888,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Создает перечислитель по ключам.
-      /// Порядок перебора ключей соответствует MRU-списку
+      /// Порядок перебора ключей соответствует MRU-списку.
       /// </summary>
       /// <returns>Перечислитель</returns>
       public KeyEnumerator GetEnumerator()
@@ -1913,7 +1912,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Возвращает массив всех ключей.
-      /// Порядок элементов массива соответствует MRU-списку
+      /// Порядок элементов массива соответствует MRU-списку.
       /// </summary>
       /// <returns>Массив ключей</returns>
       public TKey[] ToArray()
@@ -1951,7 +1950,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Перечислитель по значениям словаря.
-    /// Порядок перечисления совпадает со списком MRU
+    /// Порядок перечисления совпадает со списком MRU.
     /// </summary>
     public struct ValueEnumerator : IEnumerator<TValue>
     {
@@ -2012,7 +2011,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Реализация свойства Values.
+    /// Реализация свойства <see cref="Values"/>.
     /// Коллекция значений словаря. Коллекция доступна в режиме только для чтения.
     /// Порядок элементов коллекции при перечислении соответствует MRU-списку.
     /// </summary>
@@ -2047,7 +2046,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Возвращает true, если значение есть в MRU-списке.
-      /// Этот метод выполняется медленно, т.к. требует перебора всех элементов (O(n))
+      /// Этот метод выполняется медленно, т.к. требует перебора всех элементов (O(n)).
       /// </summary>
       /// <param name="item">Значение</param>
       /// <returns>Наличие в коллекции</returns>
@@ -2063,7 +2062,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Копирует значения в массив.
-      /// Порядок значений соответствует MRU-списку
+      /// Порядок значений соответствует MRU-списку.
       /// </summary>
       /// <param name="array">Заполняемый массив</param>
       /// <param name="arrayIndex">Первый индекс в массиве</param>
@@ -2095,9 +2094,9 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Создает перечислитель по значениям словаря.
-      /// Порядок перечисления соответствует MRU-списку
+      /// Порядок перечисления соответствует MRU-списку.
       /// </summary>
-      /// <returns></returns>
+      /// <returns>Перечислитель</returns>
       public ValueEnumerator GetEnumerator()
       {
         return new ValueEnumerator(_Owner);
@@ -2119,7 +2118,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Возвращает массив всех значений.
-      /// Порядок элементов массива соответствует MRU-списку
+      /// Порядок элементов массива соответствует MRU-списку.
       /// </summary>
       /// <returns>Массив значений</returns>
       public TValue[] ToArray()
@@ -2157,7 +2156,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Коллекция ключей.
-    /// Порядок перебора соответствует MRU-списку
+    /// Порядок перебора соответствует MRU-списку.
     /// </summary>
     public KeyCollection Keys { get { return new KeyCollection(this); } }
 
@@ -2165,12 +2164,11 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Коллекция значений.
-    /// Порядок перебора соответствует MRU-списку
+    /// Порядок перебора соответствует MRU-списку.
     /// </summary>
     public ValueCollection Values { get { return new ValueCollection(this); } }
 
     ICollection<TValue> IDictionary<TKey, TValue>.Values { get { return new ValueCollection(this); } }
-
 
     #endregion
 
@@ -2236,7 +2234,7 @@ namespace FreeLibSet.Collections
     #region IEnumerable<KeyValuePair<TKey,TValue>> Members
 
     /// <summary>
-    /// Перечислитель, расширяющий LinkedList.GetEnumerator().
+    /// Перечислитель, расширяющий <see cref="LinkedList{TKey}.GetEnumerator()"/>.
     /// Перечислимым элементом является пара "Код-Значение", а не один только код
     /// </summary>
     public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
@@ -2278,7 +2276,7 @@ namespace FreeLibSet.Collections
       }
 
       /// <summary>
-      /// Закрывает связанный перечислитель LinkedList.Enumerator
+      /// Закрывает связанный перечислитель <see cref="LinkedList{TKey}.Enumerator"/>
       /// </summary>
       public void Dispose()
       {
@@ -2338,8 +2336,8 @@ namespace FreeLibSet.Collections
 
 
     /// <summary>
-    /// Перечислитель, расширяющий LinkedList.GetEnumerator().
-    /// Перечислимым элементом является пара "Код-Значение", а не один только код
+    /// Перечислитель, расширяющий <see cref="LinkedList{TKey}.GetEnumerator()"/>.
+    /// Перечислимым элементом является пара "Код-Значение", а не один только код.
     /// </summary>
     [Serializable]
     private class DictionaryEnumerator : IDictionaryEnumerator
@@ -2375,7 +2373,7 @@ namespace FreeLibSet.Collections
       /// <summary>
       /// Переход к следующему элементу
       /// </summary>
-      /// <returns></returns>
+      /// <returns>true, если есть элемент</returns>
       public bool MoveNext()
       {
         return _En.MoveNext();
@@ -2425,7 +2423,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает перечислитель по парам "Код-Значение".
     /// Элементы словаря перебираются в порядке MRU-списка. 
-    /// Сначала перечисляются, начиная с самых новых, или для которых был вызван Touch().
+    /// Сначала перечисляются, начиная с самых новых, или для которых был вызван <see cref="Touch(TKey)"/>.
     /// В последнюю очередь возвращаются самые старые элементы.
     /// </summary>
     /// <returns></returns>
@@ -2451,7 +2449,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Перемещает элемент с заданным ключом в начало списке MRU.
     /// Позиция элемента в основном списке не меняется.
-    /// Если элемента нет в словаре, никаких действий не выполняется
+    /// Если элемента нет в словаре, никаких действий не выполняется.
     /// </summary>
     /// <param name="key">Ключ элемента, который переносится в начало списка</param>
     /// <returns>true, если ключ был найден в списке.
@@ -2483,7 +2481,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает первый объект в списке MRU.
-    /// Если список пуст, возвращает default(TKey)
+    /// Если список пуст, возвращает default(<typeparamref name="TKey"/>).
     /// </summary>
     public TKey MRUFirstKey
     {
@@ -2503,7 +2501,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает последний объект в списке MRU.
-    /// Если список пуст, возвращает default(T)
+    /// Если список пуст, возвращает default(<typeparamref name="TKey"/>).
     /// </summary>
     public TKey MRULastKey
     {

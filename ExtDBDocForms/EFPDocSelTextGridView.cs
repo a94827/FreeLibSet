@@ -13,7 +13,7 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Возможные значения свойства OrderMode в EFPDocSelGridView и EFPDocSelTextGridView
+  /// Возможные значения свойства <see cref="EFPDocSelTextGridView.OrderMode"/>
   /// </summary>
   public enum EFPDocSelGridViewOrderMode
   {
@@ -25,14 +25,15 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Порядок строк имеет значение.
-    /// Пользователь может менять порядок строк (ручная сортировка)
+    /// Пользователь может менять порядок строк (ручная сортировка).
     /// </summary>
     Manual,
 
+    // Не реализовано. Пользователь может выбирать порядок сортировки (только для EFPDocSelGridView).
+
     /// <summary>
     /// Порядок строк определяется текущей выбранной сортировкой. 
-    /// Пользователь может выбирать порядок сортировки (только для EFPDocSelGridView).
-    /// Для EFPDocSelTextGridView используется сортировка по текстовому представлению
+    /// Для <see cref="EFPDocSelTextGridView"/> используется сортировка по текстовому представлению.
     /// </summary>
     Natural,
   }
@@ -40,7 +41,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Интерфейс просмотра выборки документов.
   /// Дополняет просмотр командами добавления элементов.
-  /// Пока что интерфейс реализуется только EFPDocSelTextGridView.
+  /// Пока что интерфейс реализуется только <see cref="EFPDocSelTextGridView"/>.
   /// </summary>
   public interface IEFPDocSelView : IEFPDBxView
   {
@@ -67,7 +68,7 @@ namespace FreeLibSet.Forms.Docs
     /// Для идентификаторов, которые уже есть в выборке, никаких действий не выполняется.
     /// </summary>
     /// <param name="ids">Идентификаторы добавляемых документов</param>
-    /// <returns>Количество учреждений, которые добавлены</returns>
+    /// <returns>Количество документов, которые добавлены</returns>
     int AddIds(Int32[] ids);
 
     /// <summary>
@@ -80,8 +81,8 @@ namespace FreeLibSet.Forms.Docs
   /// Провайдер табличного просмотра выборки документа.
   /// Отображаются документы только одного вида.
   /// Для документа отображается только значок и текстовое представление.
-  /// Свойство Ids используется для получения и установки списка строк.
-  /// Порядок строк может иметь или не иметь значение, в зависимости от свойства OrderMode.
+  /// Свойство <see cref="EFPDocSelTextGridView.Ids"/> используется для получения и установки списка строк.
+  /// Порядок строк может иметь или не иметь значение, в зависимости от свойства <see cref="EFPDocSelTextGridView.OrderMode"/>.
   /// </summary>
   public class EFPDocSelTextGridView : EFPDBxGridView, IEFPDocSelView
   {
@@ -249,7 +250,7 @@ namespace FreeLibSet.Forms.Docs
     /// Для идентификаторов, которые уже есть в выборке, никаких действий не выполняется.
     /// </summary>
     /// <param name="ids">Идентификаторы добавляемых документов</param>
-    /// <returns>Количество учреждений, которые добавлены</returns>
+    /// <returns>Количество документов, которые добавлены</returns>
     public int AddIds(Int32[] ids)
     {
       int cnt = 0;
@@ -287,25 +288,28 @@ namespace FreeLibSet.Forms.Docs
     #region Прочие свойства
 
     /// <summary>
-    /// Интерфейс для работы с документами заданного вида
+    /// Интерфейс для работы с документами заданного вида.
+    /// Свойства <see cref="DocTypeUI"/>, <see cref="DocTypeName"/> и <see cref="DocType"/> возвращают связанные значения.
     /// </summary>
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
     private DocTypeUI _DocTypeUI;
 
     /// <summary>
-    /// Имя вида документа
+    /// Имя вида документа.
+    /// Свойства <see cref="DocTypeUI"/>, <see cref="DocTypeName"/> и <see cref="DocType"/> возвращают связанные значения.
     /// </summary>
     public string DocTypeName { get { return _DocTypeUI.DocType.Name; } }
 
     /// <summary>
-    /// Описание документа в базе данных
+    /// Описание документа в базе данных.
+    /// Свойства <see cref="DocTypeUI"/>, <see cref="DocTypeName"/> и <see cref="DocType"/> возвращают связанные значения.
     /// </summary>
     public DBxDocType DocType { get { return _DocTypeUI.DocType; } }
 
     /// <summary>
     /// Порядок сортировки строки.
-    /// По умолчанию используется режим Fixed.
-    /// Свойство может устанавливаться только до вывода просмотра на экран
+    /// По умолчанию используется режим <see cref="EFPDocSelGridViewOrderMode.Fixed"/>.
+    /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
     public EFPDocSelGridViewOrderMode OrderMode
     {
@@ -330,8 +334,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Фильтры не влияют непосредственно на строки, существующие в просмотре.
     /// Фильтры используются при добавлении новых строк.
-    /// Также выполняется проверка прохождения строк просмотра в методе OnValidate() при закрытии просмотра.
-    /// При установке свойства обычно следует запретить редактирование фильтров пользователем, установив свойство CommandItems.CanEditFilters=false
+    /// Также выполняется проверка прохождения строк просмотра в методе <see cref="OnValidate()"/> при закрытии просмотра.
+    /// При установке свойства обычно следует запретить редактирование фильтров пользователем, установив свойство <see cref="EFPDBxGridView.CommandItems"/>.CanEditFilters=false.
     /// </summary>
     public new GridFilters Filters
     {
@@ -348,7 +352,8 @@ namespace FreeLibSet.Forms.Docs
     #region OnShown и OnHidden
 
     /// <summary>
-    /// Вызывается при первом показе формы на экране
+    /// Вызывается при первом показе формы на экране.
+    /// Обрабатывает свойство <see cref="OrderMode"/>.
     /// </summary>
     protected override void OnCreated()
     {
@@ -376,7 +381,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается при показе таблицы.
-    /// Создает объект DocumentViewhandler
+    /// Создает объект, производный от <see cref="DocumentViewHandler"/>.
     /// </summary>
     protected override void OnAttached()
     {
@@ -466,11 +471,11 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Внешний инициализатор для новых документов
+    /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове ClientDocType.PerformEdit()) 
-    /// будет использован этот инициализатор вместо текущих фильтров (DocGridHandler.DocFilters)
-    /// Свойство может устанавливаться только до вывода просмотра на экран
+    /// инициализатора значений полей (аргумент caller при вызове <see cref="DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
+    /// будет использован этот инициализатор вместо текущих фильтров (<see cref="EFPDBxGridView.Filters"/>.
+    /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
     {
@@ -493,10 +498,10 @@ namespace FreeLibSet.Forms.Docs
     public override bool HasGetDocSelHandler { get { return true; } }
 
     /// <summary>
-    /// Вызывает DocTypeUI.PerformgetDocSel() для идентификаторов документов в просмотре.
-    /// Затем вызывает обработчик события GetDocSel, если он установлен.
+    /// Вызывает <see cref="DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> для идентификаторов документов в просмотре.
+    /// Затем вызывает обработчик события <see cref="EFPDBxGridView.GetDocSel"/>, если он установлен.
     /// </summary>
-    /// <param name="args">Аргументы события GetDocSel</param>
+    /// <param name="args">Аргументы события <see cref="EFPDBxGridView.GetDocSel"/></param>
     protected override void OnGetDocSel(EFPDBxGridViewDocSelEventArgs args)
     {
       Int32[] ids = DataTools.GetIds(args.DataRows);
@@ -669,14 +674,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Обработчик просмотра документов, связанный с текущим просмотром.
-    /// Свойство имеет значение не null, когда просмотр выведен на экран
+    /// Свойство имеет значение не null, когда просмотр выведен на экран.
     /// </summary>
     public DocumentViewHandler ViewHandler { get { return _ViewHandler; } }
     private IntDocumentViewHandler _ViewHandler;
 
     /// <summary>
     /// Идентификатор просмотра.
-    /// Используется DocumentViewHandler
+    /// Используется <see cref="DocumentViewHandler"/>.
     /// </summary>
     public Guid BrowserGuid
     {
@@ -691,7 +696,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Проверяет корректность данных.
-    /// Если выполняется закрытие формы, свойство CanBeEmpty=false и нет ни одного документа в просмотре, устанавливается признак ошибки
+    /// Если выполняется закрытие формы, свойство <see cref="CanBeEmpty"/>=false и нет ни одного документа в просмотре, устанавливается признак ошибки.
     /// </summary>
     protected override void OnValidate()
     {

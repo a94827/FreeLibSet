@@ -1189,6 +1189,55 @@ namespace FreeLibSet.Data
     /// </summary>
     protected virtual bool BetweenInstructionSupported { get { return true; } }
 
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Непереопределенная реализация заменяет фильтр на два <see cref="CompareFilter"/>, объединенных <see cref="AndFilter"/> и функции COALESCE для учета значения NULL
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatNumRangeInclusionFilter(DBxSqlBuffer buffer, NumRangeInclusionFilter filter)
+    {
+      DBxFunction expr1 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.Value));
+      CompareFilter filter1 = new CompareFilter(expr1, new DBxConst(filter.Value), CompareKind.LessOrEqualThan, false);
+
+      DBxFunction expr2 = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.Value));
+      CompareFilter filter2 = new CompareFilter(expr2, new DBxConst(filter.Value), CompareKind.GreaterOrEqualThan, false);
+
+      DBxFilter filter3 = new AndFilter(filter1, filter2);
+      buffer.FormatFilter(filter3);
+    }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Непереопределенная реализация использует один или два <see cref="CompareFilter"/>.
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatNumRangeCrossFilter(DBxSqlBuffer buffer, NumRangeCrossFilter filter)
+    {
+      List<DBxFilter> filters = new List<DBxFilter>();
+
+      if (filter.MinValue.HasValue)
+      {
+        // Не путать. Первое поле (начальное значение) сравнивается с конечным значением фильтра и наоборот.
+        DBxFunction expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression2, new DBxConst(filter.MinValue.Value));
+        CompareFilter filter2 = new CompareFilter(expr, new DBxConst(filter.MinValue.Value), CompareKind.GreaterOrEqualThan, false);
+        filters.Add(filter2);
+      }
+      if (filter.MaxValue.HasValue)
+      {
+        DBxFunction expr = new DBxFunction(DBxFunctionKind.Coalesce, filter.Expression1, new DBxConst(filter.MaxValue.Value));
+        CompareFilter filter2 = new CompareFilter(expr, new DBxConst(filter.MaxValue.Value), CompareKind.LessOrEqualThan, false);
+        filters.Add(filter2);
+      }
+      DBxFilter resFilter = AndFilter.FromList(filters);
+      if (resFilter == null)
+        resFilter = DummyFilter.AlwaysTrue;
+
+      buffer.FormatFilter(resFilter);
+    }
+
     /// <summary>
     /// Форматирование фильтра.
     /// </summary>

@@ -136,7 +136,7 @@ namespace ExtDB_tests.Data
 
     [TestCase("", "", "2", true)]
 
-    // Значение поля NULL интерапетируется как 0
+    // Значение поля NULL интерпретируется как 0
     [TestCase("-2.5", "4.5", "", true)]
     [TestCase("2.5", "4.5", "", false)]
     [TestCase("-2.5", "", "", true)]

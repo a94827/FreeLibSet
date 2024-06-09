@@ -304,8 +304,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Выводит диалог загрузки сохраненной композиции рабочего стола.
-  /// Если пользователь нажал [OK], автоматически вызывается EFPApp.LoadComposition().
-  /// Свойство EFPApp.CompositionHistoryCount должно быть установлено в значение, отличное от 0
+  /// Если пользователь нажал [OK], автоматически вызывается <see cref="EFPApp.LoadComposition()"/>.
+  /// Свойство <see cref="EFPApp.CompositionHistoryCount"/> должно быть установлено в значение, отличное от 0.
   /// </summary>
   public sealed class SelectCompositionDialog
   {
@@ -335,7 +335,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Основной метод - вывод формы диалога
     /// </summary>
-    /// <returns>true, если пользователь выполнил загрузку композиции рабочего стола</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь выполнил загрузку композиции рабочего стола</returns>
     public DialogResult ShowDialog()
     {
       SelectCompositionForm frm = new SelectCompositionForm();

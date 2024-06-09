@@ -10,8 +10,10 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализации стандартных команд главного меню.
-  /// Класс содержит методы для добавления команд и методы выполнения команд
+  /// Реализации стандартных команд главного меню <see cref="EFPApp.CommandItems"/>.
+  /// Класс содержит методы для добавления команд AddXxx(), свойства Xxx типа <see cref="EFPCommandItem"/> и методы выполнения команд Xxx_Click(Object, EventArgs).
+  /// Например, для команды "Выход" есть метод <see cref="AddExit(EFPCommandItem)"/>, свойство <see cref="Exit"/> и метод <see cref="Exit_Click(object, EventArgs)"/>.
+  /// Имеются команды для стандартных меню "Файл", "Вид", "Окно" и "Справка".
   /// </summary>
   public class EFPAppCommandItemHelpers
   {
@@ -45,10 +47,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует свойство EFPApp.CommandItems
+    /// Дублирует свойство <see cref="EFPApp.CommandItems"/>
     /// </summary>
     public EFPAppCommandItems CommandItems { get { return _CommandItems; } }
-    private EFPAppCommandItems _CommandItems;
+    private readonly EFPAppCommandItems _CommandItems;
 
     #endregion
 
@@ -56,13 +58,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда "Файл"-"Выход".
-    /// Свойство задано, если был вызван метод AddExit()
+    /// Свойство задано, если был вызван метод <see cref="AddExit(EFPCommandItem)"/>
     /// </summary>
     public EFPCommandItem Exit { get { return _Exit; } }
     private EFPCommandItem _Exit;
 
     /// <summary>
-    /// Добавление команды "Файл"-"Выход"
+    /// Добавление команды "Файл"-"Выход".
+    /// Устанавливает свойство <see cref="Exit"/>.
     /// </summary>
     /// <param name="menuFile">Меню "Файл"</param>
     public void AddExit(EFPCommandItem menuFile)
@@ -72,13 +75,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Завершение работы приложения вызовом EFPApp.Exit()
+    /// Завершение работы приложения вызовом <see cref="EFPApp.Exit()"/>
     /// </summary>
     /// <param name="sender">Игнорируется</param>
     /// <param name="args">Игнорируется</param>
     public static void Exit_Click(object sender, EventArgs args)
     {
-      Application.Exit();
+      //Application.Exit();
+      EFPApp.Exit(); // 24.05.2024
     }
 
     #endregion
@@ -102,7 +106,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Добавляет подменю "Панели инструментов".
     /// В подменю создается по одной команде на каждую панель инструментов.
-    /// Также добавляется команда "Восстановить"
+    /// Также добавляется команда "Восстановить".
     /// </summary>
     /// <param name="menuView">Созданное меню "Вид" в главном меню</param>
     /// <returns>Подменю "Панели инструментов"</returns>
@@ -127,7 +131,8 @@ namespace FreeLibSet.Forms
     #region Видимость панели инструментов
 
     /// <summary>
-    /// Добавляет команду управления видимостью одной панелью инструментов
+    /// Добавляет команду управления видимостью одной панелью инструментов.
+    /// Команда добавляется в список <see cref="ToolBarVisibleItems"/>.
     /// </summary>
     /// <param name="menuViewToolBars">Созданное меню "Панели инструментов"</param>
     /// <param name="toolBar">Панель инструментов, которая будет скрываться / показываться командой</param>
@@ -147,8 +152,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавленные команды видимости панелей инструментов.
-    /// Ключ - свойство EFPAppToolBarCommandItems.Name, 
-    /// Значение - команда управления видимостью
+    /// Ключ - свойство <see cref="EFPAppToolBarCommandItems.Name"/>, 
+    /// Значение - команда управления видимостью.
     /// </summary>
     public IDictionary<string, EFPCommandItem> ToolBarVisibleItems
     {
@@ -177,28 +182,34 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда "Вид - Панели инструментов - Восстановить".
-    /// Свойство инициализируется методом AddRestoreToolBars()
+    /// Свойство инициализируется методом <see cref="AddToolBarsRestore(EFPCommandItem)"/>()
     /// </summary>
-    public EFPCommandItem RestoreToolBars { get { return _RestoreToolBars; } }
-    private EFPCommandItem _RestoreToolBars;
+    public EFPCommandItem ToolBarsRestore { get { return _ToolBarsRestore; } }
+    private EFPCommandItem _ToolBarsRestore;
 
     /// <summary>
-    /// Создает команду "Вид - Панели инструментов - Восстановить"
+    /// Создает команду "Вид - Панели инструментов - Восстановить".
+    /// Устанавливает свойство <see cref="ToolBarsRestore"/>.
     /// </summary>
     /// <param name="menuViewToolBars">Подменю "Вид - Панели инструментов" для
     /// добавления команды</param>
     public void AddToolBarsRestore(EFPCommandItem menuViewToolBars)
     {
-      _RestoreToolBars = new EFPCommandItem("View", "RestoreToolBars");
-      _RestoreToolBars.Parent = menuViewToolBars;
-      _RestoreToolBars.MenuText = "Восстановить";
-      _RestoreToolBars.Click += new EventHandler(RestoreToolBars_Click);
-      CommandItems.Add(_RestoreToolBars);
+      _ToolBarsRestore = new EFPCommandItem("View", "RestoreToolBars");
+      _ToolBarsRestore.Parent = menuViewToolBars;
+      _ToolBarsRestore.MenuText = "Восстановить";
+      _ToolBarsRestore.Click += new EventHandler(ToolBarsRestore_Click);
+      CommandItems.Add(_ToolBarsRestore);
     }
 
-    private static int _RestoreToolBarsAllWindowsMode = 0;
+    private static int _ToolBarsRestoreAllWindowsMode = 0;
 
-    internal static void RestoreToolBars_Click(object sender, EventArgs args)
+    /// <summary>
+    /// Выполняет команду "Восстановить панео инструментов"
+    /// </summary>
+    /// <param name="sender">Не используется</param>
+    /// <param name="args">Не используется</param>
+    public static void ToolBarsRestore_Click(object sender, EventArgs args)
     {
       if (!MainWindowActive)
         return;
@@ -209,10 +220,10 @@ namespace FreeLibSet.Forms
         RadioSelectDialog dlg = new RadioSelectDialog();
         dlg.Title = "Восстановление панелей инструментов";
         dlg.Items = new string[] { "Только для текущего окна", "Для всех открытых окон" };
-        dlg.SelectedIndex = _RestoreToolBarsAllWindowsMode;
+        dlg.SelectedIndex = _ToolBarsRestoreAllWindowsMode;
         if (dlg.ShowDialog() != DialogResult.OK)
           return;
-        _RestoreToolBarsAllWindowsMode = dlg.SelectedIndex;
+        _ToolBarsRestoreAllWindowsMode = dlg.SelectedIndex;
         all = (dlg.SelectedIndex == 1);
       }
       if (all)
@@ -237,7 +248,8 @@ namespace FreeLibSet.Forms
     private EFPCommandItem _StatusBarVisible;
 
     /// <summary>
-    /// Создает команду "Вид - Статусная строка"
+    /// Создает команду "Вид - Статусная строка".
+    /// Устанавливает свойство <see cref="StatusBarVisible"/>.
     /// </summary>
     /// <param name="menuView">Созданное меню "Вид"</param>
     public void AddStatusBarVisible(EFPCommandItem menuView)
@@ -252,8 +264,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Переключение видимости статусной строки
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
+    /// <param name="sender">Не используется</param>
+    /// <param name="args">Не используется</param>
     private static void StatusBarVisible_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
@@ -320,8 +332,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет команды "Сверху вниз", "Слева направо", "Каскадом", "Упорядочить значки", 
-    /// "Новое главное окно", "Сохраненные положения окон" и список для переключения окон в меню "Окно"
-    /// Наличие и видимость команд определяется используемым интерфейсом
+    /// "Новое главное окно", "Сохраненные положения окон" и список для переключения окон в меню "Окно".
+    /// Наличие и видимость команд определяется используемым интерфейсом.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляются команды</param>
     public void AddWindowMenuCommands(EFPCommandItem menuWindow)
@@ -356,13 +368,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда "Сверху вниз".
-    /// Свойство задано, если был вызван метод AddTileHorizontal()
+    /// Свойство задано, если был вызван метод <see cref="AddTileHorizontal(EFPCommandItem)"/>.
     /// </summary>
     public EFPCommandItem TileHorizontal { get { return _TileHorizontal; } }
     private EFPCommandItem _TileHorizontal;
 
     /// <summary>
-    /// Создать команду "Сверху вниз"
+    /// Создать команду "Сверху вниз".
+    /// Устанавливает свойство <see cref="TileHorizontal"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddTileHorizontal(EFPCommandItem menuWindow)
@@ -388,13 +401,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда "Слева направо".
-    /// Свойство задано, если был вызван метод AddTileVertical()
+    /// Свойство задано, если был вызван метод <see cref="AddTileVertical(EFPCommandItem)"/>.
     /// </summary>
     public EFPCommandItem TileVertical { get { return _TileVertical; } }
     private EFPCommandItem _TileVertical;
 
     /// <summary>
-    /// Создать команду "Слева направо"
+    /// Создать команду "Слева направо".
+    /// Устанавливает свойство <see cref="TileVertical"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddTileVertical(EFPCommandItem menuWindow)
@@ -420,13 +434,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда "Каскадом".
-    /// Свойство задано, если был вызван метод AddCascade()
+    /// Свойство задано, если был вызван метод <see cref="AddCascade(EFPCommandItem)"/>
     /// </summary>
     public EFPCommandItem Cascade { get { return _Cascade; } }
     private EFPCommandItem _Cascade;
 
     /// <summary>
-    /// Создать команду "Каскадом"
+    /// Создать команду "Каскадом".
+    /// Устанавливает свойство <see cref="Cascade"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddCascade(EFPCommandItem menuWindow)
@@ -451,14 +466,15 @@ namespace FreeLibSet.Forms
     #region "Упорядочить значки"
 
     /// <summary>
-    /// Команда "Упорядочить значки"
-    /// Свойство задано, если был вызван метод AddArrangeIcons()
+    /// Команда "Упорядочить значки".
+    /// Свойство задано, если был вызван метод <see cref="AddArrangeIcons(EFPCommandItem)"/>.
     /// </summary>
     public EFPCommandItem ArrangeIcons { get { return _ArrangeIcons; } }
     private EFPCommandItem _ArrangeIcons;
 
     /// <summary>
-    /// Добавление команды "Упорядочить значки"
+    /// Добавление команды "Упорядочить значки".
+    /// Устанавливает свойство <see cref="ArrangeIcons"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddArrangeIcons(EFPCommandItem menuWindow)
@@ -484,13 +500,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда "Закрыть все".
-    /// Свойство задано, если был вызван метод AddCloseAll()
+    /// Свойство задано, если был вызван метод <see cref="AddCloseAll(EFPCommandItem)"/>.
     /// </summary>
     public EFPCommandItem CloseAll { get { return _CloseAll; } }
     private EFPCommandItem _CloseAll;
 
     /// <summary>
-    /// Добавить команду "Закрыть все"
+    /// Добавить команду "Закрыть все".
+    /// Устанавливает свойство <see cref="CloseAll"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddCloseAll(EFPCommandItem menuWindow)
@@ -500,7 +517,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Закрытие дочерних окон MDI
+    /// Закрытие дочерних окон MDI.
     /// </summary>
     /// <param name="sender">Игнорируется</param>
     /// <param name="args">Игнорируется</param>
@@ -516,13 +533,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда "Закрыть все кроме текущего окна".
-    /// Свойство задано, если был вызван метод AddCloseAllButThis()
+    /// Свойство задано, если был вызван метод <see cref="AddCloseAllButThis(EFPCommandItem)"/>.
     /// </summary>
     public EFPCommandItem CloseAllButThis { get { return _CloseAllButThis; } }
     private EFPCommandItem _CloseAllButThis;
 
     /// <summary>
-    /// Добавить команду "Закрыть все кроме текущего окна"
+    /// Добавить команду "Закрыть все кроме текущего окна".
+    /// Устанавливает свойство <see cref="CloseAllButThis"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddCloseAllButThis(EFPCommandItem menuWindow)
@@ -579,13 +597,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда "Новое главное окно".
-    /// Свойство задано, если был вызван метод AddNewMainWindow()
+    /// Свойство задано, если был вызван метод <see cref="AddNewMainWindow(EFPCommandItem)"/>.
     /// </summary>
     public EFPCommandItem NewMainWindow { get { return _NewMainWindow; } }
     private EFPCommandItem _NewMainWindow;
 
     /// <summary>
-    /// Добавить команду "Новое главное окно"
+    /// Добавить команду "Новое главное окно".
+    /// Устанавливает свойство <see cref="NewMainWindow"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddNewMainWindow(EFPCommandItem menuWindow)
@@ -595,7 +614,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Обработчик команды "Новое главное окно.
+    /// Обработчик команды "Новое главное окно".
     /// </summary>
     /// <param name="sender">Не используется</param>
     /// <param name="args">Не используется</param>
@@ -610,14 +629,15 @@ namespace FreeLibSet.Forms
     #region "Сохраненные положения окон"
 
     /// <summary>
-    /// Команда "Сохраненные положения оконвниз".
-    /// Свойство задано, если был вызван метод AddSavedCompositions()
+    /// Команда "Сохраненные положения окон".
+    /// Свойство задано, если был вызван метод <see cref="AddSavedCompositions(EFPCommandItem)"/>.
     /// </summary>
     public EFPCommandItem SavedCompositions { get { return _SavedCompositions; } }
     private EFPCommandItem _SavedCompositions;
 
     /// <summary>
-    /// Добавить команду "Сохраненные положения окон"
+    /// Добавить команду "Сохраненные положения окон".
+    /// Устанавливает свойство <see cref="SavedCompositions"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddSavedCompositions(EFPCommandItem menuWindow)
@@ -627,14 +647,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Контекст справки для диалога "Композиции рабочего стола" 
+    /// Контекст справки для диалога "Композиции рабочего стола". 
     /// </summary>
     public string SelectCompositionDialogHelpContext { get { return _SelectCompositionDialogHelpContext; } set { _SelectCompositionDialogHelpContext = value; } }
     private string _SelectCompositionDialogHelpContext;
 
     /// <summary>
-    /// Вывод диалога "Композиции рабочего стола" с помощью SelectCompositionDialog.
-    /// Устанавливается свойство HelpContext = SelectCompositionDialogHelpContext
+    /// Вывод диалога "Композиции рабочего стола" с помощью <see cref="SelectCompositionDialog"/>.
+    /// Устанавливается свойство <see cref="SelectCompositionDialog.HelpContext"/>  равным <see cref="SelectCompositionDialogHelpContext"/>.
     /// </summary>
     /// <param name="sender">Игнорируется</param>
     /// <param name="args">Игнорируется</param>
@@ -651,7 +671,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Количество команд для переключения между окнами в меню "Окно".
-    /// По умолчанию - 9 команд. Менять это значение не следует, т.к. оно принято для интерфейса MDI
+    /// По умолчанию - 9 команд. Менять это значение не следует, т.к. оно принято для интерфейса MDI.
     /// </summary>
     public int WindowListCount
     {
@@ -668,15 +688,16 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команды для переключения между окнами для меню "Окно".
-    /// После создания команд длина массива будет равна WindowListCount
+    /// После создания команд длина массива будет равна <see cref="WindowListCount"/>.
     /// </summary>
     public EFPCommandItem[] WindowListItems { get { return _WindowListItems; } }
     private EFPCommandItem[] _WindowListItems;
 
     /// <summary>
     /// Добавить команды переключания между окнами.
-    /// Количество команд определяется свойством WindowListCount.
-    /// Если WindowListCount=0, то метод ничего не делает.
+    /// Количество команд определяется свойством <see cref="WindowListCount"/>.
+    /// Если <see cref="WindowListCount"/>=0, то метод ничего не делает.
+    /// Заполняет список <see cref="WindowListItems"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddWindowList(EFPCommandItem menuWindow)
@@ -706,7 +727,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Отладочный режим для показа идентификаторов окон в списке.
-    /// По умолчанию - false - выключен
+    /// По умолчанию - false - выключен.
     /// </summary>
     public bool DebugShowHWND
     {
@@ -745,7 +766,6 @@ namespace FreeLibSet.Forms
         throw new BugException("Несанкционированное изменение текста команды меню");
 #endif
 
-
       Form frm = ci.Tag as Form;
       if (frm == null)
       {
@@ -774,13 +794,14 @@ namespace FreeLibSet.Forms
     #region "Другие окна"
 
     /// <summary>
-    /// Команда "Другие окна"
+    /// Команда "Другие окна".
     /// </summary>
     public EFPCommandItem OtherWindows { get { return _OtherWindows; } }
     private EFPCommandItem _OtherWindows;
 
     /// <summary>
-    /// Добавить команду "Другие окна"
+    /// Добавить команду "Другие окна".
+    /// Устанавливает свойство <see cref="OtherWindows"/>.
     /// </summary>
     /// <param name="menuWindow">Меню "Окно", в которое добавляется команда</param>
     public void AddOtherWindows(EFPCommandItem menuWindow)
@@ -791,7 +812,12 @@ namespace FreeLibSet.Forms
       _OtherWindows.Click += new EventHandler(OtherWindows_Click);
     }
 
-    private void OtherWindows_Click(object sender, EventArgs args)
+    /// <summary>
+    /// Показывает диалог "Другие окна" с помощью <see cref="EFPApp.ShowChildFormListDialog(bool)"/>
+    /// </summary>
+    /// <param name="sender">Игнорируется</param>
+    /// <param name="args">Игнорируется</param>
+    public void OtherWindows_Click(object sender, EventArgs args)
     {
       EFPApp.ShowChildFormListDialog(DebugShowHWND);
     }
@@ -967,14 +993,15 @@ namespace FreeLibSet.Forms
     #region Меню "Справка"
 
     /// <summary>
-    /// Команда "Справка"-"О программе".
-    /// Свойство задано, если был вызван метод AddAbout()
+    /// Команда "Справка" - "О программе".
+    /// Свойство задано, если был вызван метод <see cref="AddAbout(EFPCommandItem)"/>.
     /// </summary>
     public EFPCommandItem About { get { return _About; } }
     private EFPCommandItem _About;
 
     /// <summary>
-    /// Добавление команды "Справка"-"О программе"
+    /// Добавление команды "Справка" - "О программе".
+    /// Устанавливает свойство <see cref="About"/>.
     /// </summary>
     /// <param name="menuHelp">Меню "Справка"</param>
     public void AddAbout(EFPCommandItem menuHelp)
@@ -984,7 +1011,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Показ диалога "О программе" с помошью EFPApp.ShowAboutDialog()
+    /// Показ диалога "О программе" с помошью <see cref="EFPApp.ShowAboutDialog()"/>.
     /// </summary>
     /// <param name="sender">Игнорируется</param>
     /// <param name="args">Игнорируется</param>

@@ -31,11 +31,18 @@ namespace FreeLibSet.Forms.Diagnostics
       InitializeComponent();
       try
       {
+        this.cbInner.Image = MainImagesResource.View;
+        this.btnClose.Image = MainImagesResource.Cancel;
+        this.btnOpenWith.Image = MainImagesResource.MenuButton;
+        this.btnDirExplorer.Image = MainImagesResource.WindowsExplorer;
+        this.btnEdit.Image = MainImagesResource.Notepad;
+      }
+      catch { } // 26.04.2024. На случай проблем с загрузкой значков
+      try
+      {
         EFPApp.InitShowInTaskBar(this);
       }
-      catch
-      {
-      }
+      catch { }
 
       btnDirExplorer.Visible = EFPApp.IsWindowsExplorerSupported; // 12.05.2016
       // пусть будет обычный значок
@@ -88,7 +95,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
         if (faItems.Count > 1)
         {
-          for (int i=1; i<faItems.Count;i++)
+          for (int i = 1; i < faItems.Count; i++)
           {
             FileAssociationItem faItem = faItems[i];
             ToolStripMenuItem faMenuItem = new ToolStripMenuItem();
@@ -110,13 +117,13 @@ namespace FreeLibSet.Forms.Diagnostics
         // Команда для показа в окне
         ToolStripMenuItem viewMenuItem = new ToolStripMenuItem();
         viewMenuItem.Text = "Встроенный просмотр";
-        viewMenuItem.Image = btnEdit.Image;
+        try { viewMenuItem.Image = btnEdit.Image; } catch { }
         viewMenuItem.Click += new EventHandler(ViewMenuItem_Click);
         OpenWithMenu.Items.Add(viewMenuItem);
 
         ToolStripMenuItem copyMenuItem = new ToolStripMenuItem();
         copyMenuItem.Text = "Копировать";
-        copyMenuItem.Image = MainImagesResource.Copy;
+        try { copyMenuItem.Image = MainImagesResource.Copy; } catch { }
         copyMenuItem.Click += new EventHandler(CopyMenuItem_Click);
         OpenWithMenu.Items.Add(copyMenuItem);
 

@@ -15,7 +15,7 @@ namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Редактор группы.
-  /// Возможно, будет убрано
+  /// Возможно, будет убрано.
   /// </summary>
   internal partial class EditGroupDoc : Form
   {

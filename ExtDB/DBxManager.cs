@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Text;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
@@ -57,7 +58,9 @@ namespace FreeLibSet.Data
     #region Виртуальные методы
 
     /// <summary>
-    /// Создать объект базы данных, используя строку подключения
+    /// Создать объект базы данных, используя строку подключения.
+    /// Если строка подключения хранится в конфигурационном файле приложения, используйте статический метод
+    /// <see cref="CreateDBObjectFromSettingsName(string)"/>, который выбирает подходящий провайдер базы данных.
     /// </summary>
     /// <param name="connectionString">Строка подключения</param>
     /// <returns>Созданный объект <see cref="DBx"/></returns>
@@ -180,9 +183,9 @@ namespace FreeLibSet.Data
     /// См. константы в <see cref="DBxProviderNames"/>.
     /// Можно добавить менеджеры, реализованные в приложении
     /// </summary>
-    public static SyncNamedCollection<DBxManager> Managers 
-    { 
-      get 
+    public static SyncNamedCollection<DBxManager> Managers
+    {
+      get
       {
         lock (_SyncRoot)
         {
@@ -200,6 +203,68 @@ namespace FreeLibSet.Data
     private static SyncNamedCollection<DBxManager> _Managers = null;
 
     private static object _SyncRoot = new object();
+
+    #endregion
+
+    #region Создание БД из ConnectionStringSettings
+
+    // Если методы, принимающие string и ConnectionStringSettings будут иметь одинаковое имя,
+    // то при компиляции приложения возникнет ошибка, если в нем не задана ссылка на System.Configuration.dll.
+    // Также это относится и к нестатическому методу CreateDBObject().
+
+
+    /// <summary>
+    /// Создать объект базы данных, используя строку подключения, хранящуюся в конфигурационном файле приложения.
+    /// Если недоступен провайдер базы данных <see cref="System.Configuration.ConnectionStringSettings.ProviderName"/>,
+    /// выбрасывается исключение.
+    /// Обычно в прикладном коде удобнее использовать метод <see cref="CreateDBObjectFromSettingsName(string)"/>,
+    /// который принимает имя строки подключения.
+    /// </summary>
+    /// <param name="settings">Настройка строки подключения из конфигурационного файла</param>
+    /// <returns>Новый объект базы данных</returns>
+    public static DBx CreateDBObjectFromSettings(System.Configuration.ConnectionStringSettings settings)
+    {
+      if (settings == null)
+        throw new ArgumentNullException("settings");
+
+      DBxManager manager = Managers[settings.ProviderName];
+      if (manager == null)
+        throw new InvalidOperationException("Неизвестный провайдер базы данных \"" + settings.ProviderName + "\" для сохраненной строки подключения \"" + settings.Name + "\"");
+      return manager.CreateDBObject(settings.ConnectionString);
+    }
+
+    /// <summary>
+    /// Создать объект базы данных, используя строку подключения, хранящуюся в конфигурационном файле приложения.
+    /// См. описание свойства <see cref="System.Configuration.ConfigurationManager.ConnectionStrings"/>.
+    /// Если в конфигурационном файле нет строки подключения с указанным именем, или недоступен провайдер базы данных,
+    /// выбрасывается исключение.
+    /// </summary>
+    /// <param name="settingsName">Имя (атрибут "name") строки подключения в файле конфигурации</param>
+    /// <returns>Новый объект базы данных</returns>
+    public static DBx CreateDBObjectFromSettingsName(string settingsName)
+    {
+      if (String.IsNullOrEmpty(settingsName))
+        throw new ArgumentNullException("settingsName");
+
+      System.Configuration.ConnectionStringSettings settings = System.Configuration.ConfigurationManager.ConnectionStrings[settingsName];
+      if (settings == null)
+      {
+        string s = "В конфигурационном файле не задана строка подключения с именем \"" + settingsName + "\"";
+#if DEBUG
+        if (System.Configuration.ConfigurationManager.ConnectionStrings.Count == 0)
+          s += ". В файле не найдено ни одной строки подключения";
+        else
+        {
+          List<string> lstNames = new List<string>();
+          foreach (System.Configuration.ConnectionStringSettings cs2 in System.Configuration.ConfigurationManager.ConnectionStrings)
+            lstNames.Add(cs2.Name);
+          s += ". В файле заданы следующие имена (" + System.Configuration.ConfigurationManager.ConnectionStrings.Count.ToString() + "): " + String.Join(", ", lstNames.ToArray());
+        }
+#endif
+        throw new InvalidOperationException(s);
+      }
+      return CreateDBObjectFromSettings(settings);
+    }
 
     #endregion
   }

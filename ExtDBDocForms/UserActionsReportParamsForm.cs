@@ -125,7 +125,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Параметры отчета для просмотра действий пользователя.
-  /// Заполненные параметры должны быть переданы в метод DBUI.ShowUserActions()
+  /// Заполненные параметры должны быть переданы в метод <see cref="DBUI.ShowUserActions(UserActionsReportParams)"/>.
   /// </summary>
   public class UserActionsReportParams : EFPReportParams
   {
@@ -133,11 +133,11 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создает параметры со значениями по умолчанию:
-    /// - период (FirstDate:LastDate) равен одному дню - текущей дате;
-    /// - пользователь UserId=DBxDocProvider.UserId;
-    /// - SingleDocTypeName равен пустой строке
+    /// - период (<see cref="FirstDate"/>:<see cref="LastDate"/>) равен одному дню - текущей дате;
+    /// - пользователь <see cref="UserId"/>=<see cref="DBxDocProvider.UserId"/>;
+    /// - <see cref="SingleDocTypeName"/> равен пустой строке.
     /// </summary>
-    /// <param name="ui">Интерфейс для доступа к документам</param>
+    /// <param name="ui">Интерфейс для доступа к документам. Не может быть null</param>
     public UserActionsReportParams(DBUI ui)
     {
       if (ui == null)
@@ -159,7 +159,7 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс для доступа к документам
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     #endregion
 
@@ -182,7 +182,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификатор пользователя.
     /// Значение 0 означает "Все пользователи".
-    /// Если DBxDocTypes.UseUsers=false, свойство игнорируется.
+    /// Если <see cref="DBxDocTypes.UseUsers"/>=false, свойство игнорируется.
     /// </summary>
     public Int32 UserId { get { return _UserId; } set { _UserId = value; } }
     private Int32 _UserId;

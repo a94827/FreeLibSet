@@ -6,9 +6,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
+#if NET
+using Microsoft.Data.SqlClient;
+#else
+using System.Data.SqlClient;
+#endif
 using FreeLibSet.IO;
 using FreeLibSet.Core;
 using FreeLibSet.Logging;
@@ -68,8 +72,8 @@ namespace FreeLibSet.Data.SqlClient
     #region Конструктор
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionStringBuilder">Собранная строка подключения</param>
     public SqlDBx(SqlConnectionStringBuilder connectionStringBuilder)
@@ -96,8 +100,8 @@ namespace FreeLibSet.Data.SqlClient
     }
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionString">Строка подключения</param>
     public SqlDBx(string connectionString)
@@ -121,13 +125,13 @@ namespace FreeLibSet.Data.SqlClient
 
     /// <summary>
     /// Имя базы данных.
-    /// Определяется в конструкторе из строки подключения
+    /// Определяется в конструкторе из строки подключения.
     /// </summary>
     public override string DatabaseName { get { return _DatabaseName; } }
     private readonly string _DatabaseName;
 
     /// <summary>
-    /// Возвращает ссылку на SqlClientFactory
+    /// Возвращает ссылку на <see cref="SqlClientFactory"/>
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {

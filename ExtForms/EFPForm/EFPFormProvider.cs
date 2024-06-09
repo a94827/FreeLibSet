@@ -1356,8 +1356,10 @@ namespace FreeLibSet.Forms
 
     private static void InitControl(Control control)
     {
+#if !NET
       if (control is DataGrid)
         return; // Там бяка - есть вложенный текстбокс, который мне не нужен
+#endif
       // Рекурсивная функция
 
 
@@ -1827,7 +1829,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Обработчик конфигурации. Существует всегда.
     /// Чтобы зарегистрировать категорию, для которой будут записываться данные секции конфигурации, конструктор производного класса вызывает ConfigHandler.Categories.Add(“Filters”). Методы коллекции могут вызываться только до OnShown().
-    /// Если нужно записать конфигурацию, то должен быть установлен флаг для категории вызовом ConfigHandler.Changed[“Filters”]=true.
+    /// Если нужно записать конфигурацию, то должен быть установлен флаг для категории вызовом ConfigHandler.Changed["Filters"]=true.
     /// </summary>
     public EFPConfigHandler ConfigHandler { get { return _ConfigHandler; } }
     private EFPConfigHandler _ConfigHandler;

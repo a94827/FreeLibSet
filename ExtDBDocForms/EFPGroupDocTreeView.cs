@@ -17,8 +17,10 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Иерархический просмотр дерева групп.
-  /// Расширяет обычный просмотр документов узлом "Все документы"
+  /// Расширяет обычный просмотр документов узлом "Все документы".
+  /// Дерево может отображаться в левой части формы <see cref="DocTableViewForm"/>. 
   /// </summary>
+  /// <seealso cref="EFPGroupDocComboBox"/>
   public class EFPGroupDocTreeView : EFPDocTreeView, IEFPDBxView
   {
     #region Конструкторы
@@ -144,7 +146,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Возвращает имя изображения для документа, к которому относится узел.
-    /// Изображение находится в списке EFPApp.MainImages
+    /// Изображение находится в списке <seealso cref="EFPApp.MainImages"/>.
     /// </summary>
     /// <param name="node">Узел</param>
     /// <returns>Имя изображения</returns>
@@ -190,7 +192,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает DocTypeUI.PerformEditing() для выбранных узлов
+    /// Вызывает <seealso cref="DocTypeUI.PerformEditing(int, bool)"/> для выбранного узла
     /// </summary>
     /// <param name="args">Не используется</param>
     /// <returns>Игнорируется</returns>
@@ -214,10 +216,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Признак "Включая вложенные папки".
     /// Это свойство влияет на отображение корневого узла,
-    /// если свойства RootNodeTextValue и RootNodeImageKey не установлены в явном виде.
+    /// если свойства <seealso cref="RootNodeTextValue"/> и <seealso cref="RootNodeImageKey"/> не установлены в явном виде.
     /// Если true (по умолчанию), то отображается строка "Все документы",
     /// иначе отображается "Документы без иерархии".
-    /// Также свойство влияет на значение, возвращаемое AuxFilterGroupIds.
     /// </summary>
     public bool IncludeNested
     {
@@ -244,8 +245,8 @@ namespace FreeLibSet.Forms.Docs
     private bool _IncludeNested;
 
     /// <summary>
-    /// Управляемое свойство IncludeNested.
-    /// Обычно его делают равным свойству EFPCheckBox.CheckedEx для флажка "Включая вложенные группы"
+    /// Управляемое свойство для <seealso cref="IncludeNested"/>.
+    /// Обычно его делают равным свойству <seealso cref="EFPCheckBox.CheckedEx"/> для флажка "Включая вложенные группы" или для аналогичной команды локального меню.
     /// </summary>
     public DepValue<bool> IncludeNestedEx
     {
@@ -390,7 +391,7 @@ namespace FreeLibSet.Forms.Docs
       #endregion
 
       /// <summary>
-      /// Заполнение строки DataRow <paramref name="resRow"/>, используемой моделью иерархического просмотра.
+      /// Заполнение строки <seealso cref="DataRow"/> <paramref name="resRow"/>, используемой моделью иерархического просмотра.
       /// Для групп верхнего уровня заменяет значение поля "ParentId" фиктивным значением.
       /// </summary>
       /// <param name="srcRow">Строка в обновленном наборе данных</param>
@@ -427,9 +428,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает объект DocumentViewHandler для просмотра.
+    /// Создает объект <seealso cref="DocumentViewHandler"/> для просмотра.
     /// </summary>
-    /// <returns>Объект класса, производного от DocumentViewHandler</returns>
+    /// <returns>Объект класса <seealso cref="IntDocumentViewHandler"/></returns>
     protected override EFPDocTreeView.IntDocumentViewHandler CreateDocumentViewHandler()
     {
       return new IntDocumentViewHandler(this); // // 10.06.2019 Переопределенный класс

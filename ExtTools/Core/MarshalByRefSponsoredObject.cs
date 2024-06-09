@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if !NET
 using System.Runtime.Remoting.Lifetime;
+#endif
 
 namespace FreeLibSet.Core
 {
@@ -16,39 +18,42 @@ namespace FreeLibSet.Core
   /// </summary>
   public class MarshalByRefSponsoredObject : MarshalByRefObject
   {
+#if !NET
+
     #region Управление временем жизни
 
     /// <summary>
     /// Если свойство установлено, то объект для удаленного интерфейса будет жить вечно.
     /// Свойство следует использовать для "гостевого" провайдера, предоставляемого всем пользователям,
-    /// который существует все время работы сервера
+    /// который существует все время работы сервера.
+    /// По умолчанию - false.
     /// </summary>
     public bool EternalLife { get { return _EternalLife; } set { _EternalLife = value; } }
     private bool _EternalLife;
 
     /// <summary>
-    /// Если свойство установлено, то при созданиии объекта лицензии удаленного доступа в InitializeLifetimeService(),
+    /// Если свойство установлено, то при созданиии объекта лицензии удаленного доступа в <see cref="InitializeLifetimeService()"/>,
     /// к лицензии присоединяется указанный спонсор.
     /// Свойство должно устанавливаться сразу после создания объекта, до того, как он окажется во власти
     /// Net Remoting.
-    /// Свойство не имеет смысла, если EternalLife=true
+    /// Свойство не имеет смысла, если <see cref="EternalLife"/>=true.
     /// </summary>
     /// <remarks>
-    /// Присоединенный спонсор не имеет возможности отключения, поэтому сервер, при реализации ISponsor
+    /// Присоединенный спонсор не имеет возможности отключения, поэтому сервер, при реализации <see cref="ISponsor"/>
     /// должен продлять лицензию только, если подключение клиента к серверу еще живо.
     /// Для сервера рекомендуется создать по одному спонсору на каждое подключение клиента. Спонсор связан
     /// с некими данными сервера, относящегося к подключению. Когда сервер отключает клиента (нормальным способом
     /// или по тайм-ауту), в объекте спонсора очищается внутренняя ссылка. После этого спонсор не должен
-    /// продлять лицензию
+    /// продлять лицензию.
     /// </remarks>
     public System.Runtime.Remoting.Lifetime.ISponsor ExternalSponsor { get { return _ExternalSponsor; } set { _ExternalSponsor = value; } }
     private System.Runtime.Remoting.Lifetime.ISponsor _ExternalSponsor;
 
     /// <summary>
-    /// Инициализирует объект ILease, регистрируя в нем спонсора ExternalSponsor.
-    /// Если установлено свойство EternalLife, возвращается null
+    /// Инициализирует объект <see cref="ILease"/>, регистрируя в нем спонсора <see cref="ExternalSponsor"/>.
+    /// Если установлено свойство <see cref="EternalLife"/>, возвращается null.
     /// </summary>
-    /// <returns>Объект, реализующий ILease или null</returns>
+    /// <returns>Объект, реализующий <see cref="ILease"/>, или null</returns>
     public override object InitializeLifetimeService()
     {
       if (EternalLife)
@@ -80,6 +85,7 @@ namespace FreeLibSet.Core
     // А наш объект отправится в мусорку.
 
 #if XXX
+
 #if DEBUG
 
     /// <summary>
@@ -176,5 +182,6 @@ namespace FreeLibSet.Core
 #endif
 
     #endregion
+    #endif
   }
 }

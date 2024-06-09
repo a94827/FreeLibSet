@@ -24,7 +24,7 @@ namespace FreeLibSet.Forms.Docs
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события DBUI.AddCopyFormats
+  /// Аргументы события <see cref="DBUI.AddCopyFormats"/>
   /// </summary>
   public class DBUIAddCopyFormatsEventArgs : DataObjectEventArgs
   {
@@ -54,20 +54,19 @@ namespace FreeLibSet.Forms.Docs
     /// Выборка документов, которая копируется в буфер обмена.
     /// </summary>
     public DBxDocSelection DocSel { get { return _DocSel; } }
-    private DBxDocSelection _DocSel;
+    private readonly DBxDocSelection _DocSel;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события DBUI.AddCopyFormats
+  /// Делегат события <see cref="DBUI.AddCopyFormats"/>
   /// </summary>
-  /// <param name="sender">Объект DBUI</param>
+  /// <param name="sender">Объект <see cref="DBUI"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void DBUIAddCopyFormatsEventHandler(object sender, DBUIAddCopyFormatsEventArgs args);
 
   #endregion
-
 
 #if XXX // пока не вижу смысла в таких настройках
   /// <summary>
@@ -104,8 +103,8 @@ namespace FreeLibSet.Forms.Docs
   /// Класс не является потокобезопасным.
   /// 
   /// Если используется сохранение композиции рабочего стола
-  /// (EFPApp.LoadComposition()), то созданный объект DBUI
-  /// должен быть добавлен в список EFPApp.FormCreators
+  /// (<see cref="EFPApp.LoadComposition()"/>), то созданный объект <see cref="DBUI"/>
+  /// должен быть добавлен в список <see cref="EFPApp.FormCreators"/>.
   /// </summary>
   public class DBUI : IEFPFormCreator
   {
@@ -125,9 +124,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="sourceProxy">Прокси провайдера доступа к документам (полученный от сервера).
     /// Не может быть null.
-    /// Вызывайте DBxDocProvider.CreateProxy() на стороне сервера и передавайте DBxDcoProviderProxy клиенту,
-    /// а не вызывайте CreateProxy() на стороне клиента
-    /// Если требуется заменять провайдер в процессе работы, используйте метод SetDocProvider()</param>
+    /// Вызывайте <see cref="DBxDocProvider.CreateProxy()"/> на стороне сервера и передавайте <see cref="DBxDocProviderProxy"/> клиенту,
+    /// а не вызывайте <see cref="DBxDocProvider.CreateProxy()"/> на стороне клиента.
+    /// Если требуется заменять провайдер в процессе работы, используйте метод <see cref="SetDocProvider(DBxDocProviderProxy)"/>.</param>
     public DBUI(DBxDocProviderProxy sourceProxy)
     {
       if (sourceProxy == null)
@@ -162,7 +161,6 @@ namespace FreeLibSet.Forms.Docs
       UserPermissionsUI.Add(new ViewOtherUsersActionPermissionUI());
       UserPermissionsUI.Add(new RecalcColumnsPermissionUI());
     }
-
 
     private void InitGroupDocDict()
     {
@@ -213,16 +211,16 @@ namespace FreeLibSet.Forms.Docs
     /// Свойство возвращает не тот провайдер, который был передан конструктору,
     /// а собственный экземпляр, создающий цепочку провадйеров.
     /// Базовый провайдер может быть заменен в процессе работы 
-    /// вызовом метода SetDocProvider(). При этом будет создан и новый провайдер,
-    /// возвращаемый этим свойством
+    /// вызовом метода <see cref="SetDocProvider(DBxDocProviderProxy)"/>. При этом будет создан и новый провайдер,
+    /// возвращаемый этим свойством.
     /// </summary>
-    public DocProviderUI DocProvider { get { return _DocProvider; } }
+    public DBxDocProvider DocProvider { get { return _DocProvider; } }
     private DocProviderUI _DocProvider;
 
     /// <summary>
     /// Замена провайдера документов в процессе работы.
     /// Метод может использоваться при динамическом изменении прав пользователя.
-    /// Предполагается, что <paramref name="sourceProxy"/> получен с сервера
+    /// Предполагается, что <paramref name="sourceProxy"/> получен с сервера.
     /// </summary>
     /// <param name="sourceProxy">Прокси нового провайдера (полученный от сервера)</param>
     public void SetDocProvider(DBxDocProviderProxy sourceProxy)
@@ -243,7 +241,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Этот метод вызывается после вызова SetDocProvider()
+    /// Этот метод вызывается после вызова <see cref="SetDocProvider(DBxDocProviderProxy)"/>
     /// </summary>
     protected virtual void OnDocProviderChanged()
     {
@@ -262,14 +260,14 @@ namespace FreeLibSet.Forms.Docs
 
     #region Прочие свойства
 
-    #region Статические свойства
+    #region Управляющие свойства
 
     /// <summary>
-    /// Начальное значение свойств <see cref="EFPMultiDocComboBox"/>.EmptyEditMode и <see cref="RefDocGridFilter"/>.EmptyEditMode.
-    /// Позволяет не задавать значение для каждого комбоблока и фильтра отдельно
-    /// По умолчанию - Select.
+    /// Начальное значение свойств <see cref="EFPMultiDocComboBox.EmptyEditMode"/> и <see cref="RefDocGridFilter.EmptyEditMode"/>.
+    /// Позволяет не задавать значение для каждого комбоблока и фильтра отдельно.
+    /// По умолчанию - <see cref="MultiSelectEmptyEditMode.Select"/>.
     /// </summary>
-    public  MultiSelectEmptyEditMode DefaultEmptyEditMode { get { return _DefaultEmptyEditMode; } set { _DefaultEmptyEditMode = value; } }
+    public MultiSelectEmptyEditMode DefaultEmptyEditMode { get { return _DefaultEmptyEditMode; } set { _DefaultEmptyEditMode = value; } }
     private MultiSelectEmptyEditMode _DefaultEmptyEditMode;
 
     #endregion
@@ -282,17 +280,17 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Сюда могут быть добавлены классы разрешений.
-    /// По умолчанию в списке присутствуют стандартные классы разрешений
+    /// По умолчанию в списке присутствуют стандартные классы разрешений.
     /// </summary>
     public UserPermissionsUI UserPermissionsUI { get { return _UserPermissionsUI; } }
     private UserPermissionsUI _UserPermissionsUI;
 
 
     /// <summary>
-    /// Словарь групп для документов
+    /// Словарь групп для документов.
     /// ключ - тип документа, который имеет GroupRefColumnName
     /// значение - тип документа группы (дерево).
-    /// Теоретически, один вид документа групп может относиться к нескольким видам документв
+    /// Теоретически, один вид документа групп может относиться к нескольким видам документов.
     /// </summary>
     private Dictionary<string, string> _GroupDocDict;
 
@@ -303,7 +301,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если true (по умолчанию), то при выполнении обращений к базе данных
-    /// будут выводиться временные сообщения с помощью EFPApp.BeginWait()/EndWait()
+    /// будут выводиться временные сообщения с помощью <see cref="EFPApp.BeginWait(string)"/> / <see cref="EFPApp.EndWait()"/>.
     /// </summary>
     public bool ShowWaitMessages
     {
@@ -317,7 +315,7 @@ namespace FreeLibSet.Forms.Docs
     #region Список видов документов
 
     /// <summary>
-    /// Список для свойства DBUI.DocTypes
+    /// Список для свойства <see cref="DocTypes"/>.
     /// </summary>
     public class DocTypeList : IEnumerable<DocTypeUI>
     {
@@ -340,10 +338,10 @@ namespace FreeLibSet.Forms.Docs
 
       /// <summary>
       /// Возвращает интерфейс вида документа по имени таблицы.
-      /// Если в DBxDocTypes нет описания такого вида документов, генерируется исключение
+      /// Если в <see cref="DBxDocTypes"/> нет описания такого вида документов, генерируется исключение.
       /// </summary>
       /// <param name="docTypeName">Имя вида документа</param>
-      /// <returns></returns>
+      /// <returns>Описание вида документов</returns>
       public DocTypeUI this[string docTypeName]
       {
         get
@@ -379,7 +377,7 @@ namespace FreeLibSet.Forms.Docs
 
       /// <summary>
       /// Поиск интерфейса документа или поддокумента по имени таблицы.
-      /// Если в DBxDocTypes нет описания с заданным именем таблицы, возвращается false.
+      /// Если в <see cref="DBxDocTypes"/> нет описания с заданным именем таблицы, возвращается false.
       /// </summary>
       /// <param name="tableName">Имя таблицы</param>
       /// <param name="docTypeUI">Если найден документ или поддокумент, то сюда записывается ссылка на интерфейс документа</param>
@@ -411,7 +409,7 @@ namespace FreeLibSet.Forms.Docs
 
       /// <summary>
       /// Поиск интерфейса документа или поддокумента по имени таблицы.
-      /// Если в DBxDocTypes нет описания с заданным именем таблицы, возвращается null
+      /// Если в <see cref="DBxDocTypes"/> нет описания с заданным именем таблицы, возвращается null.
       /// </summary>
       /// <param name="tableName">Имя таблицы</param>
       /// <returns>Интерфейс или null</returns>
@@ -433,10 +431,10 @@ namespace FreeLibSet.Forms.Docs
 
       /// <summary>
       /// Поиск интерфейса документа по идентификатору таблицы.
-      /// Если в DBxDocTypes нет описания вида документа с заданным идентификатором таблицы,
-      /// возвращается null
+      /// Если в <see cref="DBxDocTypes"/> нет описания вида документа с заданным идентификатором таблицы,
+      /// возвращается null.
       /// </summary>
-      /// <param name="tableId">Свойство DBxDocType.TableId</param>
+      /// <param name="tableId">Свойство <see cref="DBxDocType.TableId"/></param>
       /// <returns>Интерфейс вида документа или null</returns>
       public DocTypeUI FindByTableId(Int32 tableId)
       {
@@ -472,7 +470,7 @@ namespace FreeLibSet.Forms.Docs
     /// Список интерфейсов для отдельных видов документов
     /// </summary>
     public DocTypeList DocTypes { get { return _DocTypes; } }
-    private DocTypeList _DocTypes;
+    private readonly DocTypeList _DocTypes;
 
     #endregion
 
@@ -482,11 +480,12 @@ namespace FreeLibSet.Forms.Docs
     /// Получение текстового представления
     /// </summary>
     public DBxDocTextHandlers TextHandlers { get { return _TextHandlers; } }
-    private DBxDocTextHandlers _TextHandlers;
+    private readonly DBxDocTextHandlers _TextHandlers;
 
     /// <summary>
     /// Возвращает имя пользователя.
-    /// Если <paramref name="userId"/>=0, возвращается пустая строка
+    /// Если <paramref name="userId"/>=0, возвращается пустая строка.
+    /// Используется таблица пользователей, заданная в <see cref="DBxDocTypes.UsersTableName"/>.
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns>Имя пользователя</returns>
@@ -502,16 +501,13 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Получение значков
     /// </summary>
-    public DBxDocImageHandlers ImageHandlers
-    {
-      get { return _ImageHandlers; }
-    }
-    private DBxDocImageHandlers _ImageHandlers;
+    public DBxDocImageHandlers ImageHandlers { get { return _ImageHandlers; } }
+    private readonly DBxDocImageHandlers _ImageHandlers;
 
     /// <summary>
     /// Закончить инициализацию интерфейсов документов.
-    /// Для каждого вида документов в GridProducer будут добавлены столбцы с датой/пользователем, который
-    /// изменил документ, и номером версии. Столбцы доступны, если у пользователя есть разрешение на просмотр истории
+    /// Для каждого вида документов в <see cref="DocTypeUI.GridProducer"/> будут добавлены столбцы с датой/пользователем, который
+    /// изменил документ, и номером версии. Столбцы доступны, если у пользователя есть разрешение на просмотр истории.
     /// </summary>
     public void EndInit()
     {
@@ -522,7 +518,7 @@ namespace FreeLibSet.Forms.Docs
     /// Закончить инициализацию интерфейсов документов.
     /// </summary>
     /// <param name="addDefaultColumns">
-    /// Если true, то для каждого вида документов в GridProducer будут добавлены столбцы с датой/пользователем, который
+    /// Если true, то для каждого вида документов в <see cref="DocTypeUI.GridProducer"/> будут добавлены столбцы с датой/пользователем, который
     /// изменил документ, и номером версии. Столбцы доступны, если у пользователя есть разрешение на просмотр истории
     /// </param>
     public void EndInit(bool addDefaultColumns)
@@ -563,8 +559,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает имя значка в списке EFPApp.MainImages для пользователя.
-    /// Если <paramref name="userId"/>=0, возвращается "EmptyImage"
+    /// Возвращает имя значка в списке <see cref="EFPApp.MainImages"/> для пользователя.
+    /// Если <paramref name="userId"/>=0, возвращается "EmptyImage".
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns>Значок для пользователя</returns>
@@ -824,13 +820,13 @@ namespace FreeLibSet.Forms.Docs
     public event DBUIAddCopyFormatsEventHandler AddCopyFormats;
 
     /// <summary>
-    /// Вызывает событие AddCopyFormats, если установлен обрабоботчик события.
+    /// Вызывает событие <see cref="AddCopyFormats"/>, если установлен обрабоботчик события.
     /// Сама выборка не добавляется в список копируемых форматов, это должен сделать вызывающий код.
     /// Этот метод обычно не вызывается из прикладного кода, за исключением собственных управляющих элементов.
-    /// В прикладном коде, для копирования выборки документов используйте метод CopyDocSel.
+    /// В прикладном коде, для копирования выборки документов используйте метод <see cref="CopyDocSel(DBxDocSelection)"/>.
     /// </summary>
-    /// <param name="dataObject"></param>
-    /// <param name="docSel"></param>
+    /// <param name="dataObject">Собираемый объект для помещения в буфер обмена</param>
+    /// <param name="docSel">Выборка документов</param>
     public void OnAddCopyFormats(IDataObject dataObject, DBxDocSelection docSel)
     {
 #if DEBUG
@@ -856,7 +852,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Копирование выборки в буфер обмена.
-    /// Вызывается событие AddCopyFormats
+    /// Вызывается событие <see cref="AddCopyFormats"/>.
     /// </summary>
     /// <param name="docSel">Копируемая выборка. Не может быть null</param>
     public void CopyDocSel(DBxDocSelection docSel)
@@ -879,7 +875,7 @@ namespace FreeLibSet.Forms.Docs
     /// Вставка выборки документов из буфера обмена.
     /// Если буфер обмена не содержит выборки, возвращается null, при этом выводится всплывающее сообщение.
     /// Выборка не нормализуется.
-    /// Проверяется, что выборка в буфере относится к той же базе данных, что и DocProvider
+    /// Проверяется, что выборка в буфере относится к той же базе данных, что и <see cref="DocProvider"/>.
     /// </summary>
     /// <returns>Выборка документов</returns>
     public DBxDocSelection PasteDocSel()
@@ -1007,7 +1003,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создать выборку для заданных документов.
-    /// Массив идентификаторов может содержать нулевые и фиктивные идентификаторы, которые пропускаются 
+    /// Массив идентификаторов может содержать нулевые и фиктивные идентификаторы, которые пропускаются.
     /// </summary>
     /// <param name="docTypeName">Вид документов. Если заданое неправильное значение, генерируется исключение</param>
     /// <param name="docIds">Массив идентификаторов документов. Фиктивные и нулевые идентификаторы игнорируются</param>
@@ -1039,10 +1035,10 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Получить имя изображения в EFPApp.MainImages для перечисления DBxDocState
+    /// Получить имя изображения в <see cref="EFPApp.MainImages"/> для перечисления <see cref="DBxDocState"/>
     /// </summary>
     /// <param name="state">Состояние документа</param>
-    /// <returns>Имя изображения в EFPApp.MainImages</returns>
+    /// <returns>Имя изображения в <see cref="EFPApp.MainImages"/></returns>
     public static string GetDocStateImageKey(DBxDocState state)
     {
       switch (state)
@@ -1119,7 +1115,7 @@ namespace FreeLibSet.Forms.Docs
     #region Изображения для UndoAction
 
     /// <summary>
-    /// Получить текстовое обозначение для перечисления UndoAction
+    /// Получить текстовое обозначение для перечисления <see cref="UndoAction"/>
     /// </summary>
     /// <param name="action">Действие</param>
     /// <returns>Текстовое представление</returns>
@@ -1138,10 +1134,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить имя изображения в EFPApp.MainImages для перечисления UndoAction
+    /// Получить имя изображения в <see cref="EFPApp.MainImages"/> для перечисления <see cref="UndoAction"/>
     /// </summary>
     /// <param name="action">Действие</param>
-    /// <returns>Имя изображения в EFPApp.MainImages</returns>
+    /// <returns>Имя изображения в <see cref="EFPApp.MainImages"/></returns>
     public static string GetUndoActionImageKey(UndoAction action)
     {
       switch ((UndoAction)action)
@@ -1273,26 +1269,25 @@ namespace FreeLibSet.Forms.Docs
       }
     }
 
-
     /// <summary>
     /// Событие вызывается при возникновении исключения при вызове метода на стороне сервера через
-    /// DBxChainDocProvider.
+    /// <see cref="DBxChainDocProvider"/>.
     /// Пользовательский обработчик может проверить исключение и, если оно связано с сетью, попробовать
-    /// восстановить соединение с сервером. После этого следует установить свойство Retry в аргументе события.
+    /// восстановить соединение с сервером. После этого следует установить свойство <see cref="DBxRetriableExceptionEventArgs.Retry"/> в аргументе события.
     /// Обработчику следует вывести экранную заставку на время восстановления и обеспечить пользователю
     /// возможность прервать ожидание.
-    /// Рекомендуемой альтернативой присоединения обработчика является переопределение метода OnExceptionCaught()
+    /// Рекомендуемой альтернативой присоединения обработчика является переопределение метода <see cref="OnExceptionCaught(DBxRetriableExceptionEventArgs)"/>.
     /// </summary>
     public event DBxRetriableExceptionEventHandler ExceptionCaught;
 
     /// <summary>
     /// Метод вызывается при возникновении исключения при вызове метода на стороне сервера через
-    /// DBxChainDocProvider.
+    /// <see cref="DBxChainDocProvider"/>.
     /// Переопределенный метод может проверить исключение и, если оно связано с сетью, попробовать
-    /// восстановить соединение с сервером. После этого следует установить свойство Retry в аргументе события.
+    /// восстановить соединение с сервером. После этого следует установить свойство <see cref="DBxRetriableExceptionEventArgs.Retry"/> в аргументе события.
     /// Обработчику следует вывести экранную заставку на время восстановления и обеспечить пользователю
     /// возможность прервать ожидание.
-    /// Непереопределенный метод вызывает событие ExceptionCaught
+    /// Непереопределенный метод вызывает событие <see cref="ExceptionCaught"/>.
     /// </summary>
     internal protected virtual void OnExceptionCaught(DBxRetriableExceptionEventArgs args)
     {

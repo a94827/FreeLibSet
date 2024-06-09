@@ -291,7 +291,7 @@ namespace FreeLibSet.Data
   /// Базовый класс фильтра, который использует одно поле или выражение
   /// </summary>
   [Serializable]
-  public abstract class DBxSingleExpressionFilter : DBxFilter
+  public abstract class DBxOneExpressionFilter : DBxFilter
   {
     #region Конструктор
 
@@ -299,7 +299,7 @@ namespace FreeLibSet.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="expression">Выражение. Не может быть null. Не может быть константой</param>
-    protected DBxSingleExpressionFilter(DBxExpression expression)
+    protected DBxOneExpressionFilter(DBxExpression expression)
     {
       if (expression == null)
         throw new ArgumentNullException("expression");
@@ -1070,7 +1070,7 @@ namespace FreeLibSet.Data
   /// Нулевой идентификатор не может быть включен в список.
   /// </summary>
   [Serializable]
-  public class IdsFilter : DBxSingleExpressionFilter
+  public class IdsFilter : DBxOneExpressionFilter
   {
     #region Конструкторы
 
@@ -1284,7 +1284,7 @@ namespace FreeLibSet.Data
   /// При сравнении считается, что значение поля NULL эквивалентно нулевому значению, если оно присутствует в списке значений.
   /// </summary>
   [Serializable]
-  public class ValuesFilter : DBxSingleExpressionFilter
+  public class ValuesFilter : DBxOneExpressionFilter
   {
     #region Конструкторы
 
@@ -1449,7 +1449,7 @@ namespace FreeLibSet.Data
   /// </summary>
   [Serializable]
   [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-  public class InSelectFilter : DBxSingleExpressionFilter // TODO: Пока не работает, т.к. не знаю, как форматировать подзапросы
+  public class InSelectFilter : DBxOneExpressionFilter // TODO: Пока не работает, т.к. не знаю, как форматировать подзапросы
   {
     #region Конструктор
 
@@ -1545,6 +1545,7 @@ namespace FreeLibSet.Data
 
     #endregion
   }
+
 
   /// <summary>
   /// Комбинация из нескольких условий, объединенных условием "И"
@@ -2166,7 +2167,7 @@ namespace FreeLibSet.Data
   /// Если значение поля равно NULL, то оно считается равным 0.
   /// </summary>
   [Serializable]
-  public class NumRangeFilter : DBxSingleExpressionFilter
+  public class NumRangeFilter : DBxOneExpressionFilter
   {
     #region Конструкторы
 
@@ -2300,13 +2301,351 @@ namespace FreeLibSet.Data
     #endregion
   }
 
+
+  /// <summary>
+  /// Фильтр по двум полям, содержащим диапазон чисел.
+  /// В фильтр входят строки, в диапазон дат которых попадает указанное число.
+  /// Поддерживаются полуоткрытые интервалы.
+  /// </summary>
+  [Serializable]
+  public class NumRangeInclusionFilter : DBxTwoExpressionsFilter
+  {
+    #region Конструкторы
+
+    #region Decimal
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="expression1">Выражение, возвращающее числовое значение, задающее начало диапазона</param>
+    /// <param name="expression2">Выражение, возвращающее числовое значение, задающее задающего конец диапазона</param>
+    /// <param name="value">Число, попадание которого в диапазон проверяется</param>
+    public NumRangeInclusionFilter(DBxExpression expression1, DBxExpression expression2, decimal value)
+      : base(expression1, expression2)
+    {
+      _Value = value;
+    }
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя первого числового столбца, задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя второго числового столбца, задающего конец диапазона</param>
+    /// <param name="value">Число, попадание которого в диапазон проверяется</param>
+    public NumRangeInclusionFilter(string firstColumnName, string lastColumnName, decimal value)
+      : this(new DBxColumn(firstColumnName), new DBxColumn(lastColumnName), value)
+    {
+    }
+
+    #endregion
+
+    #region Double
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="expression1">Выражение, возвращающее числовое значение, задающее начало диапазона</param>
+    /// <param name="expression2">Выражение, возвращающее числовое значение, задающее задающего конец диапазона</param>
+    /// <param name="value">Число, попадание которого в диапазон проверяется</param>
+    public NumRangeInclusionFilter(DBxExpression expression1, DBxExpression expression2, double value)
+      : base(expression1, expression2)
+    {
+      _Value = (decimal)value;
+    }
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя первого числового столбца, задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя второго числового столбца, задающего конец диапазона</param>
+    /// <param name="value">Число, попадание которого в диапазон проверяется</param>
+    public NumRangeInclusionFilter(string firstColumnName, string lastColumnName, double value)
+      : this(new DBxColumn(firstColumnName), new DBxColumn(lastColumnName), value)
+    {
+    }
+
+    #endregion
+
+    #region Single
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="expression1">Выражение, возвращающее числовое значение, задающее начало диапазона</param>
+    /// <param name="expression2">Выражение, возвращающее числовое значение, задающее задающего конец диапазона</param>
+    /// <param name="value">Число, попадание которого в диапазон проверяется</param>
+    public NumRangeInclusionFilter(DBxExpression expression1, DBxExpression expression2, float value)
+      : base(expression1, expression2)
+    {
+      _Value = (decimal)value;
+    }
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя первого числового столбца, задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя второго числового столбца, задающего конец диапазона</param>
+    /// <param name="value">Число, попадание которого в диапазон проверяется</param>
+    public NumRangeInclusionFilter(string firstColumnName, string lastColumnName, float value)
+      : this(new DBxColumn(firstColumnName), new DBxColumn(lastColumnName), value)
+    {
+    }
+
+    #endregion
+
+    #region Int32
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="expression1">Выражение, возвращающее числовое значение, задающее начало диапазона</param>
+    /// <param name="expression2">Выражение, возвращающее числовое значение, задающее задающего конец диапазона</param>
+    /// <param name="value">Число, попадание которого в диапазон проверяется</param>
+    public NumRangeInclusionFilter(DBxExpression expression1, DBxExpression expression2, int value)
+      : base(expression1, expression2)
+    {
+      _Value = (decimal)value;
+    }
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="firstColumnName">Имя первого числового столбца, задающего начало диапазона</param>
+    /// <param name="lastColumnName">Имя второго числового столбца, задающего конец диапазона</param>
+    /// <param name="value">Число, попадание которого в диапазон проверяется</param>
+    public NumRangeInclusionFilter(string firstColumnName, string lastColumnName, int value)
+      : this(new DBxColumn(firstColumnName), new DBxColumn(lastColumnName), value)
+    {
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Число, попадание которого в диапазон проверяется
+    /// </summary>
+    public decimal Value { get { return _Value; } }
+    private readonly decimal _Value;
+
+    #endregion
+
+    #region Переопределяемые методы
+
+    /// <summary>
+    /// Проверка условия фильтра для строки данных.
+    /// Вызывает метод <see cref="DataTools.IsInRange{Decimal}(Decimal, Decimal?, Decimal?)"/>.
+    /// </summary>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
+    /// <returns>true, если условие фильтра выполняется</returns>
+    public override bool TestFilter(INamedValuesAccess rowValues)
+    {
+      decimal? v1 = DataTools.GetNullableDecimal(Expression1.GetValue(rowValues));
+      decimal? v2 = DataTools.GetNullableDecimal(Expression2.GetValue(rowValues));
+
+      return DataTools.IsInRange<decimal>(Value, v1, v2);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по двум числовым полям, содержащим диапазон.
+  /// В фильтр входят строки, в диапазон полей которых попадает любое из значений в указанном диапазоне.
+  /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
+  /// </summary>
+  [Serializable]
+  public class NumRangeCrossFilter : DBxTwoExpressionsFilter
+  {
+    #region Конструкторы
+
+    #region Decimal
+
+    /// <summary>
+    /// Создает фильтр.
+    /// </summary>
+    /// <param name="expression1">Выражение, возвращающее числовое значение для начала диапазона</param>
+    /// <param name="expression2">Выражение, возвращающее числовое значение для окончания диапазона</param>
+    /// <param name="minValue">Проверяемый диапазон - начальное значение</param>
+    /// <param name="maxValue">Проверяемый диапазон - конечное значение</param>
+    public NumRangeCrossFilter(DBxExpression expression1, DBxExpression expression2, decimal? minValue, decimal? maxValue)
+      : base(expression1, expression2)
+    {
+      _MinValue = minValue;
+      _MaxValue = maxValue;
+    }
+
+    /// <summary>
+    /// Создает фильтр.
+    /// </summary>
+    /// <param name="firstColumnName">Имя первого поля</param>
+    /// <param name="lastColumnName">Имя второго поля</param>
+    /// <param name="minValue">Проверяемый диапазон - начальное значение</param>
+    /// <param name="maxValue">Проверяемый диапазон - конечное значение</param>
+    public NumRangeCrossFilter(string firstColumnName, string lastColumnName, decimal? minValue, decimal? maxValue)
+      : this(new DBxColumn(firstColumnName), new DBxColumn(lastColumnName), minValue, maxValue)
+    {
+    }
+
+    #endregion
+
+    #region Double
+
+    /// <summary>
+    /// Создает фильтр.
+    /// </summary>
+    /// <param name="expression1">Выражение, возвращающее числовое значение для начала диапазона</param>
+    /// <param name="expression2">Выражение, возвращающее числовое значение для окончания диапазона</param>
+    /// <param name="minValue">Проверяемый диапазон - начальное значение</param>
+    /// <param name="maxValue">Проверяемый диапазон - конечное значение</param>
+    public NumRangeCrossFilter(DBxExpression expression1, DBxExpression expression2, double? minValue, double? maxValue)
+      : base(expression1, expression2)
+    {
+      _MinValue = (decimal?)minValue;
+      _MaxValue = (decimal?)maxValue;
+    }
+
+    /// <summary>
+    /// Создает фильтр.
+    /// </summary>
+    /// <param name="firstColumnName">Имя первого поля</param>
+    /// <param name="lastColumnName">Имя второго поля</param>
+    /// <param name="minValue">Проверяемый диапазон - начальное значение</param>
+    /// <param name="maxValue">Проверяемый диапазон - конечное значение</param>
+    public NumRangeCrossFilter(string firstColumnName, string lastColumnName, double? minValue, double? maxValue)
+      : this(new DBxColumn(firstColumnName), new DBxColumn(lastColumnName), minValue, maxValue)
+    {
+    }
+
+    #endregion
+
+    #region Single
+
+    /// <summary>
+    /// Создает фильтр.
+    /// </summary>
+    /// <param name="expression1">Выражение, возвращающее числовое значение для начала диапазона</param>
+    /// <param name="expression2">Выражение, возвращающее числовое значение для окончания диапазона</param>
+    /// <param name="minValue">Проверяемый диапазон - начальное значение</param>
+    /// <param name="maxValue">Проверяемый диапазон - конечное значение</param>
+    public NumRangeCrossFilter(DBxExpression expression1, DBxExpression expression2, float? minValue, float? maxValue)
+      : base(expression1, expression2)
+    {
+      _MinValue = (decimal?)minValue;
+      _MaxValue = (decimal?)maxValue;
+    }
+
+    /// <summary>
+    /// Создает фильтр.
+    /// </summary>
+    /// <param name="firstColumnName">Имя первого поля</param>
+    /// <param name="lastColumnName">Имя второго поля</param>
+    /// <param name="minValue">Проверяемый диапазон - начальное значение</param>
+    /// <param name="maxValue">Проверяемый диапазон - конечное значение</param>
+    public NumRangeCrossFilter(string firstColumnName, string lastColumnName, float? minValue, float? maxValue)
+      : this(new DBxColumn(firstColumnName), new DBxColumn(lastColumnName), minValue, maxValue)
+    {
+    }
+
+    #endregion
+
+    #region Int32
+
+    /// <summary>
+    /// Создает фильтр.
+    /// </summary>
+    /// <param name="expression1">Выражение, возвращающее числовое значение для начала диапазона</param>
+    /// <param name="expression2">Выражение, возвращающее числовое значение для окончания диапазона</param>
+    /// <param name="minValue">Проверяемый диапазон - начальное значение</param>
+    /// <param name="maxValue">Проверяемый диапазон - конечное значение</param>
+    public NumRangeCrossFilter(DBxExpression expression1, DBxExpression expression2, int? minValue, int? maxValue)
+      : base(expression1, expression2)
+    {
+      _MinValue = (decimal?)minValue;
+      _MaxValue = (decimal?)maxValue;
+    }
+
+    /// <summary>
+    /// Создает фильтр.
+    /// </summary>
+    /// <param name="firstColumnName">Имя первого поля</param>
+    /// <param name="lastColumnName">Имя второго поля</param>
+    /// <param name="minValue">Проверяемый диапазон - начальное значение</param>
+    /// <param name="maxValue">Проверяемый диапазон - конечное значение</param>
+    public NumRangeCrossFilter(string firstColumnName, string lastColumnName, int? minValue, int? maxValue)
+      : this(new DBxColumn(firstColumnName), new DBxColumn(lastColumnName), minValue, maxValue)
+    {
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Проверяемый диапазон - начальное значение
+    /// </summary>
+    public decimal? MinValue { get { return _MinValue; } }
+    private readonly decimal? _MinValue;
+
+    /// <summary>
+    /// Проверяемый диапазон - конечное значение
+    /// </summary>
+    public decimal? MaxValue { get { return _MaxValue; } }
+    private readonly decimal? _MaxValue;
+
+    #endregion
+
+    #region Переопределяемые методы
+
+    /// <summary>
+    /// Проверка условия фильтра для строки данных.
+    /// Вызывает метод <see cref="DataTools.AreRangesCrossed{Decimal}(Decimal?, Decimal?, Decimal?, Decimal?)"/>.
+    /// </summary>
+    /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
+    /// <returns>true, если условие фильтра выполняется</returns>
+    public override bool TestFilter(INamedValuesAccess rowValues)
+    {
+      decimal? v1 = DataTools.GetNullableDecimal(Expression1.GetValue(rowValues));
+      decimal? v2 = DataTools.GetNullableDecimal(Expression2.GetValue(rowValues));
+
+      return DataTools.AreRangesCrossed<decimal>(v1, v2, MinValue, MaxValue);
+    }
+
+
+    /// <summary>
+    /// Возвращает <see cref="DBxFilterDegeneration.AlwaysTrue"/>, если и <see cref="MinValue"/> и <see cref="MaxValue"/>=null.
+    /// </summary>
+    public override DBxFilterDegeneration Degeneration
+    {
+      get
+      {
+        if (MinValue.HasValue || MaxValue.HasValue)
+        {
+          if (MinValue.HasValue && MaxValue.HasValue && MinValue.Value>MaxValue.Value)
+            return DBxFilterDegeneration.AlwaysFalse;
+          else
+            return DBxFilterDegeneration.None;
+        }
+        else
+          return DBxFilterDegeneration.AlwaysTrue; 
+      }
+    }
+
+    #endregion
+  }
+
+
   /// <summary>
   /// Фильтр по полю, содержащему дату, по диапазону дат.
   /// Поле может содержать компонент времени (<see cref="DateTime"/>).
   /// Поддерживаются полуоткрытые интервалы.
   /// </summary>
   [Serializable]
-  public class DateRangeFilter : DBxSingleExpressionFilter
+  public class DateRangeFilter : DBxOneExpressionFilter
   {
     #region Конструкторы
 
@@ -2526,7 +2865,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод DataTools.DateInRange().
+    /// Вызывает метод <see cref="DataTools.DateInRange(DateTime, DateTime?, DateTime?)"/>.
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
@@ -2653,7 +2992,7 @@ namespace FreeLibSet.Data
       DateTime? v1 = DataTools.GetNullableDateTime(Expression1.GetValue(rowValues));
       DateTime? v2 = DataTools.GetNullableDateTime(Expression2.GetValue(rowValues));
 
-      return DataTools.DateRangeCrossed(v1, v2, FirstDate, LastDate);
+      return DataTools.DateRangesCrossed(v1, v2, FirstDate, LastDate);
     }
 
 
@@ -2771,7 +3110,7 @@ namespace FreeLibSet.Data
   /// Если поле имеет значение NULL, то оно считается равным пустой строке.
   /// </summary>
   [Serializable]
-  public class StringValueFilter : DBxSingleExpressionFilter
+  public class StringValueFilter : DBxOneExpressionFilter
   {
     #region Конструктор
 
@@ -2860,7 +3199,7 @@ namespace FreeLibSet.Data
   /// Если поле имеет значение NULL, то оно считается равным пустой строке.
   /// </summary>
   [Serializable]
-  public class StartsWithFilter : DBxSingleExpressionFilter
+  public class StartsWithFilter : DBxOneExpressionFilter
   {
     #region Конструктор
 
@@ -2960,7 +3299,7 @@ namespace FreeLibSet.Data
   /// Если длина значения поля меньше, чем длина подстроки плюс начальная позиция, строка не проходит фильтр без выбрасывания исключений.
   /// </summary>
   [Serializable]
-  public class SubstringFilter : DBxSingleExpressionFilter
+  public class SubstringFilter : DBxOneExpressionFilter
   {
     #region Конструкторы
 
@@ -3143,11 +3482,10 @@ namespace FreeLibSet.Data
   /// Существует некоторое оптимальное количество идентификаторов в предложении IN.
   /// Если исходный массив идентификаторов не длинный, выгодно выполнить один запрос.
   /// Иначе лучше выполнить два или более запросов с подмассивами идентификаторов.
-  /// Для разбиения массивов применяется IdsFilterGenerator.
-  /// Конструктор IdsFilterGenerator получает исходный массив идентификаторов и описатель
-  /// формата базы данных для определения оптимальной длины массива. Конструктор
-  /// делит исходный массив идентификаторов на подмассивы и запоминает их.
-  /// Затем вызывается метод CreateFilters(), которому передается имя ссылочного поля
+  /// Для разбиения массивов применяется <see cref="IdsFilterGenerator"/>.
+  /// Конструктор получает исходный массив идентификаторов. 
+  /// Он делит исходный массив идентификаторов на подмассивы и запоминает их.
+  /// Затем вызывается метод <see cref="IdsFilterGenerator.CreateFilters(string)"/>, которому передается имя ссылочного поля
   /// или "Id". Метод создает один или несколько объектов <see cref="IdsFilter"/>, которые доступны
   /// через индексированное свойство.
   /// </summary>
@@ -3318,10 +3656,10 @@ namespace FreeLibSet.Data
     /// <returns>Список идентификаторов</returns>
     public IdList GetWholeIdList()
     {
-      IdList List = new IdList();
+      IdList list = new IdList();
       for (int i = 0; i < _IdArrays.Length; i++)
-        List.Add(GetIds(i));
-      return List;
+        list.Add(GetIds(i));
+      return list;
     }
 
     /// <summary>

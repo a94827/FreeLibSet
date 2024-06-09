@@ -1024,9 +1024,9 @@ namespace FreeLibSet.Forms
         {
           for (int i = 0; i < ControlProvider.Filters.Count; i++)
           {
-            if (ControlProvider.Filters[i] is IEFPScrollableGridFilter)
+            IEFPScrollableGridFilter f = ControlProvider.Filters[i] as IEFPScrollableGridFilter;
+            if (f != null)
             {
-              IEFPScrollableGridFilter f = (IEFPScrollableGridFilter)(ControlProvider.Filters[i]);
               if (f.CanScrollUp || f.CanScrollDown)
                 return f;
             }
@@ -1036,9 +1036,10 @@ namespace FreeLibSet.Forms
       }
     }
 
+#if XXX
     /// <summary>
     /// Фильтр по дате. Если свойство установлено, то в подменю "Фильтр"
-    /// обрабатываются клавиши Ctrl-СтрелкаВверх и Ctrl-СтрелкаВниз для переключаения
+    /// обрабатываются клавиши Ctrl-СтрелкаВверх и Ctrl-СтрелкаВниз для переключения
     /// между периодами дат
     /// </summary>
     public IEFPScrollableGridFilter ScrollableFilter
@@ -1047,6 +1048,7 @@ namespace FreeLibSet.Forms
       set { _ScrollableFilter = value; }
     }
     private IEFPScrollableGridFilter _ScrollableFilter;
+#endif
 
     #endregion
 

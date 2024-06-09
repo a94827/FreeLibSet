@@ -9,8 +9,8 @@ using System.Threading;
 namespace FreeLibSet.Core
 {
   /// <summary>
-  /// Интерфейс для простого процентного индикатора
-  /// Поддерживает установку значения индикатора и возможность прерывания процесса
+  /// Интерфейс для простого процентного индикатора.
+  /// Поддерживает установку значения индикатора и возможность прерывания процесса.
   /// </summary>
   public interface ISimpleSplash
   {
@@ -19,28 +19,28 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Установка диапазона для процентного индикатора. Нулевое значение означает
     /// отстутствие индикатора.
-    /// При установке значения PercentMax, свойство Percent сбрасывается в 0.
-    /// CheckCancelled() не вызывается.
+    /// При установке значения <see cref="PercentMax"/>, свойство <see cref="Percent"/> сбрасывается в 0.
+    /// Проверка <see cref="CheckCancelled()"/> не вызывается.
     /// </summary>
     int PercentMax { get; set; }
 
     /// <summary>
-    /// Текущее значение процентного индикатора в диапазоне от 0 до PercentMax
-    /// Если AllowCancel=true, то вызывается CheckCancelled() 
+    /// Текущее значение процентного индикатора в диапазоне от 0 до <see cref="PercentMax"/> включительно.
+    /// Если <see cref="AllowCancel"/>=true, то вызывается <see cref="CheckCancelled()"/>.
     /// </summary>
     int Percent { get; set; }
 
     /// <summary>
-    /// Одновременная установка свойств Percent и PercentMax
-    /// CheckCancelled() не вызывается
+    /// Одновременная установка свойств <see cref="Percent"/> и <see cref="PercentMax"/>.
+    /// Проверка <see cref="CheckCancelled()"/> не вызывается.
     /// </summary>
     /// <param name="percent">Значение процентного индикатора</param>
     /// <param name="percentMax">Максимальное значение процентного индикатора</param>
     void SetPercent(int percent, int percentMax);
 
     /// <summary>
-    /// Увеличить значение свойства Percent на единицу
-    /// Если AllowCancel=true, то вызывается CheckCancelled() 
+    /// Увеличить значение свойства <see cref="Percent"/> на единицу.
+    /// Если <see cref="AllowCancel"/>=true, то вызывается <see cref="CheckCancelled()"/>.
     /// </summary>
     void IncPercent();
 
@@ -51,26 +51,28 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Управление возможностью прерывания процесса пользователем (наличия доступной
     /// кнопки "Отмена").
-    /// При переходе к следующей фазе свойство автотически сбрасывается в false.
-    /// Установка свойства в false не отменяет установку свойства Cancelled в false, если кнопка "Отмена" была нажата асинхронно.
-    /// При последующей установке свойства в true проверяется свойство Cancelled. Если оно было установлено в true, генерируется исключение UserCancelException
+    /// При переходе к следующей фазе свойство автоматически сбрасывается в false.
+    /// Установка свойства в false не отменяет установку свойства <see cref="Cancelled"/> в false, если кнопка "Отмена" была нажата асинхронно.
+    /// При последующей установке свойства в true проверяется свойство <see cref="Cancelled"/>. Если оно было установлено в true, генерируется исключение <see cref="UserCancelException"/>.
     /// </summary>
     bool AllowCancel { get; set; }
 
     /// <summary>
     /// Свойство возвращает true, если пользователь нажал кнопку "Отмена" и требуется
-    /// прервать процесс
+    /// прервать процесс.
+    /// Обычно в прикладном коде следует вызывать метод <see cref="CheckCancelled()"/> а не проверять свойство.
     /// </summary>
     bool Cancelled { get; set; }
 
     /// <summary>
-    /// Метод проверяет установку свойств  AllowCancel и Cancelled и генерирует исключение
-    /// UserCancelException, если пользователь прервал процесс
+    /// Метод проверяет установку свойств <see cref="AllowCancel"/> и <see cref="Cancelled"/> и генерирует исключение
+    /// <see cref="UserCancelException"/>, если пользователь прервал процесс.
+    /// Метод автоматически вызывается при установке свойства <see cref="Percent"/> или вызове метода <see cref="IncPercent()"/>.
     /// </summary>
     void CheckCancelled();
 
     /// <summary>
-    /// "Усыпление" потока на заданное время. Если интерфейс относится к основному потоку приложения, вызывается Application.DoEvents().
+    /// "Усыпление" потока на заданное время. Если интерфейс относится к основному потоку приложения Windows Forms, вызывается System.Windows.Forms.Application.DoEvents().
     /// Бесконечное время не допускается.
     /// </summary>
     /// <param name="milliseconds">Время в миллисекундах</param>
@@ -112,11 +114,12 @@ namespace FreeLibSet.Core
   /// <summary>
   /// Интерфейс splash-заставками, содержащей одну или несколько позиций
   /// Позволяет управлять уже существующей заставкой:
-  /// - задание наличия и положения процентного индикатора
-  /// - текущая фаза процесса
-  /// - прерывание процесса
-  /// Не дает возможности создавать и закрывать заставку или открывать дочернюю
-  /// заставку
+  /// <list type="bullet">
+  /// <item><description>задание наличия и положения процентного индикатора;</description></item>
+  /// <item><description>текущая фаза процесса;</description></item>
+  /// <item><description>прерывание процесса.</description></item>
+  /// </list>
+  /// Не дает возможности создавать и закрывать заставку или открывать дочернюю заставку.
   /// </summary>
   public interface ISplash : ISimpleSplash
   {
@@ -141,7 +144,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает состояния сразу для всех фаз в виде массива значений.
-    /// Длина массива равна PhaseCount
+    /// Длина массива равна <see cref="PhaseCount"/>.
     /// </summary>
     /// <returns>Массив состояний</returns>
     SplashPhaseState[] GetPhaseStates();
@@ -152,8 +155,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Номер текущей фазы.
-    /// При открытии заставки возвращает значение 0. Методы Complete() и Skip() увеличивают значение на 1.
-    /// Может вернуть значение, на 1 большее, чем количество строк в заставке, если Complete() и Skip() вызваны для последней фазы
+    /// При открытии заставки возвращает значение 0. Методы <see cref="Complete()"/> и <see cref="Skip()"/> увеличивают значение на 1.
+    /// Может вернуть значение, равное количеству строк в заставке, если <see cref="Complete()"/> или <see cref="Skip()"/> вызваны для последней фазы.
     /// </summary>
     int Phase { get; }
 
@@ -163,16 +166,16 @@ namespace FreeLibSet.Core
     string PhaseText { get; set; }
 
     /// <summary>
-    /// Пометить текущую фазу как завершеннук и перейти к следующей фазе.
+    /// Пометить текущую фазу как завершенную и перейти к следующей фазе.
     /// Процентный индикатор и возможность прерывания процесса при переходе к следующей фазе отключаются
-    /// (устанавливаются свойства PercentMax=0, Percent=0, AllowCancel=false).
+    /// (устанавливаются свойства <see cref="ISimpleSplash.PercentMax"/>=0, <see cref="ISimpleSplash.Percent"/>=0, <see cref="ISimpleSplash.AllowCancel"/>=false).
     /// </summary>
     void Complete();
 
     /// <summary>
     /// Пометить текущую фазу как пропущенную и перейти к следующей фазе.
     /// Процентный индикатор и возможность прерывания процесса при переходе к следующей фазе отключаются
-    /// (устанавливаются свойства PercentMax=0, Percent=0, AllowCancel=false).
+    /// (устанавливаются свойства <see cref="ISimpleSplash.PercentMax"/>=0, <see cref="ISimpleSplash.Percent"/>=0, <see cref="ISimpleSplash.AllowCancel"/>=false).
     /// </summary>
     void Skip();
 
@@ -182,7 +185,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Служебное поле, заполняемое, если заставки образуют стек.
-    /// Пользовательский код не должен использовать это свойство
+    /// Пользовательский код не должен использовать это свойство.
     /// </summary>
     int StackSerialId { get; set; }
 
@@ -191,8 +194,7 @@ namespace FreeLibSet.Core
 
   /// <summary>
   /// Интерфейс для создания и удаления заставок с процентым индикатором.
-  /// Предполагается парный вызов методов BeginSplash() и EndSplash().
-  /// Вызов метода Dispose() закрывает все заставки
+  /// Предполагается парный вызов методов <see cref="BeginSplash()"/> и <see cref="EndSplash()"/>.
   /// </summary>
   public interface ISplashStack
   {
@@ -219,8 +221,8 @@ namespace FreeLibSet.Core
     ISplash BeginSplash();
 
     /// <summary>
-    /// Закрыть текущую заставку. Количество вызовов EndSplash() должно
-    /// соответствовать количеству BeginSplash()
+    /// Закрыть текущую заставку. Количество вызовов <see cref="EndSplash()"/> должно
+    /// соответствовать количеству <see cref="BeginSplash()"/>.
     /// </summary>
     void EndSplash();
 
@@ -230,35 +232,36 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает интерфейс управления текущей заставкой или null, если нет
-    /// непарных вызовов BeginSplash().
-    /// Возвращаемое значение соответствует GetSplashStack()[0] или null
+    /// непарных вызовов <see cref="BeginSplash()"/>.
+    /// Возвращаемое значение соответствует <see cref="GetSplashStack()"/>[0] или null.
     /// </summary>
     ISplash Splash { get; }
 
     /// <summary>
     /// Возвращает стек заставок. 
-    /// Текущая заставка, возвращаемая Splash, находится в начале массива (индекс 0).
-    /// Если заставок нет, возрващается пустой массив
+    /// Текущая заставка, возвращаемая <see cref="Splash"/>, находится в начале массива (индекс 0).
+    /// Если заставок нет, возрващается пустой массив.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив заставок</returns>
     ISplash[] GetSplashStack();
 
     /// <summary>
     /// Возвращает стек заставок или null, если изменений не было.
-    /// Эта версия используется объектом MemorySplashStack.
+    /// Эта версия используется объектом <see cref="MemorySplashStack"/>.
+    /// Не предеазначено для использования в прикладном коде.
     /// </summary>
     /// <param name="stackVersion">Вход и выход.
     /// Если на входе задано значение 0 или оно не совпадает с внутренним состоянием стека, список заставок будет возвращен. Иначе возвращается null.
     /// На выходе по ссылке помещается текущее значение состояния стека, отличное от 0.
-    /// Текущее состояние стека меняется при каждом вызове методов BeginSplash() и EndSplash(). Первоначально имеет значение 1</param>
-    /// <returns></returns>
+    /// Текущее состояние стека меняется при каждом вызове методов <see cref="BeginSplash()"/> и <see cref="EndSplash()"/>. Первоначально имеет значение 1</param>
+    /// <returns>Массив заставок</returns>
     ISplash[] GetSplashStack(ref int stackVersion);
 
     #endregion
   }
 
   /// <summary>
-  /// Заглушка для реализации интерфейса ISimpleSplash
+  /// Заглушка для реализации интерфейса <see cref="ISimpleSplash"/>
   /// </summary>
   public class DummySimpleSplash : ISimpleSplash
   {
@@ -302,7 +305,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Это свойство ни на что не влияет. Всегда возвращает false
+    /// Это свойство ни на что не влияет. Всегда возвращает false.
     /// </summary>
     public bool AllowCancel
     {
@@ -324,9 +327,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Вызывает Thread.Sleep()
+    /// Вызывает <see cref="Thread.Sleep(int)"/>
     /// </summary>
-    /// <param name="milliseconds">Интервал задержки в миллиесекундах</param>
+    /// <param name="milliseconds">Интервал задержки в миллисекундах</param>
     public void Sleep(int milliseconds)
     {
       Thread.Sleep(milliseconds);
@@ -336,7 +339,7 @@ namespace FreeLibSet.Core
   }
 
   /// <summary>
-  /// Заглушка для реализации интерфейса ISplash
+  /// Заглушка для реализации интерфейса <see cref="ISplash"/>
   /// </summary>
   public class DummySplash : DummySimpleSplash, ISplash
   {
@@ -378,10 +381,10 @@ namespace FreeLibSet.Core
     public int PhaseCount { get { return 1; } }
 
     /// <summary>
-    /// Возвращает Current
+    /// Возвращает <see cref="SplashPhaseState.Current"/>.
     /// </summary>
-    /// <param name="phase"></param>
-    /// <returns></returns>
+    /// <param name="phase">Не используется</param>
+    /// <returns><see cref="SplashPhaseState.Current"/></returns>
     public SplashPhaseState GetPhaseState(int phase)
     {
       return SplashPhaseState.Current;
@@ -390,7 +393,7 @@ namespace FreeLibSet.Core
     private static readonly SplashPhaseState[] _PhaseStates = new SplashPhaseState[1] { SplashPhaseState.Current };
 
     /// <summary>
-    /// Возвращает 1 элемент Current
+    /// Возвращает 1 элемент <see cref="SplashPhaseState.Current"/>.
     /// </summary>
     public SplashPhaseState[] GetPhaseStates()
     {
@@ -403,7 +406,7 @@ namespace FreeLibSet.Core
     public int Phase { get { return 0; } }
 
     /// <summary>
-    /// Свойство интерфейса ISplash
+    /// Свойство интерфейса <see cref="ISplash"/>.
     /// </summary>
     public int StackSerialId { get { return _StackSerialId; } set { _StackSerialId = value; } }
     private int _StackSerialId;
@@ -415,7 +418,7 @@ namespace FreeLibSet.Core
   /// Реализация заставки, используемой на стороне сервера.
   /// Сохраняет устанавливаемые значения.
   /// Значения затем могут быть прочитаны и переданы клиенту.
-  /// Этот класс является потокобезопасным в режиме "несколько смотрят, один пишет"
+  /// Этот класс является потокобезопасным в режиме "несколько смотрят, один пишет".
   /// </summary>
   public sealed class MemorySplash : ISplash
   {
@@ -424,9 +427,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создает объект заставки на сервере.
     /// Объекты не должны напрямую создаваться в пользовательском коде.
-    /// Используйте методы BeginExecute()
     /// </summary>
-    /// <param name="phases"></param>
+    /// <param name="phases">Список фаз</param>
     public MemorySplash(string[] phases)
     {
       if (phases == null)
@@ -447,12 +449,11 @@ namespace FreeLibSet.Core
 
     #region ISplash Members
 
-
     /// <summary>
     /// Названия позиций
     /// </summary>
     public string[] Phases { get { return _Phases; } }
-    private string[] _Phases;
+    private readonly string[] _Phases;
 
 
     /// <summary>
@@ -463,7 +464,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает состояние заданной фазы
     /// </summary>
-    /// <param name="phase">Номер фазы от 0 до PhaseCount-1</param>
+    /// <param name="phase">Номер фазы от 0 до (<see cref="PhaseCount"/>-1)</param>
     /// <returns>Состояние фазы</returns>
     public SplashPhaseState GetPhaseState(int phase)
     {
@@ -490,7 +491,7 @@ namespace FreeLibSet.Core
     private SplashPhaseState[] _PhaseStates;
 
     /// <summary>
-    /// Индекс текущей фазы в диапазоне от 0 до Items.Length
+    /// Индекс текущей фазы в диапазоне от 0 до <see cref="Phases"/>.Length включительно.
     /// </summary>
     public int Phase { get { return _Phase; } }
     private int _Phase;
@@ -520,7 +521,7 @@ namespace FreeLibSet.Core
     private string _PhaseText;
 
     /// <summary>
-    /// Установка состояния "Выполнено" для текущей фазы и переход к следующей фазе
+    /// Установка состояния "Выполнено" для текущей фазы и переход к следующей фазе.
     /// </summary>
     public void Complete()
     {
@@ -540,7 +541,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Установка состояния "Пропуск" для текущей фазы и переход к следующей фазе
+    /// Установка состояния "Пропуск" для текущей фазы и переход к следующей фазе.
     /// </summary>
     public void Skip()
     {
@@ -564,7 +565,7 @@ namespace FreeLibSet.Core
     #region ISimpleSplash Members
 
     /// <summary>
-    /// Свойство интерфейса ISimpleSplash
+    /// Свойство интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public int PercentMax
     {
@@ -578,7 +579,7 @@ namespace FreeLibSet.Core
     private int _PercentMax;
 
     /// <summary>
-    /// Свойство интерфейса ISimpleSplash
+    /// Свойство интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public int Percent
     {
@@ -592,10 +593,10 @@ namespace FreeLibSet.Core
     private int _Percent;
 
     /// <summary>
-    /// Метод интерфейса ISimpleSplash
+    /// Метод интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
-    /// <param name="percent"></param>
-    /// <param name="percentMax"></param>
+    /// <param name="percent">Текущее значение</param>
+    /// <param name="percentMax">Максимальное значение</param>
     public void SetPercent(int percent, int percentMax)
     {
       _Percent = percent;
@@ -604,7 +605,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Метод интерфейса ISimpleSplash
+    /// Метод интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public void IncPercent()
     {
@@ -613,7 +614,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Свойство интерфейса ISimpleSplash
+    /// Свойство интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public bool AllowCancel
     {
@@ -630,7 +631,7 @@ namespace FreeLibSet.Core
     private bool _AllowCancel;
 
     /// <summary>
-    /// Свойство интерфейса ISimpleSplash
+    /// Свойство интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public bool Cancelled
     {
@@ -640,7 +641,7 @@ namespace FreeLibSet.Core
     private bool _Cancelled;
 
     /// <summary>
-    /// Метод интерфейса ISimpleSplash
+    /// Метод интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public void CheckCancelled()
     {
@@ -649,9 +650,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Метод интерфейса ISimpleSplash
+    /// Метод интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
-    /// <param name="milliseconds"></param>
+    /// <param name="milliseconds">Интервал в миллисекундах</param>
     public void Sleep(int milliseconds)
     {
       if (milliseconds < 0)
@@ -660,7 +661,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Используется объектом MemorySplashStack
+    /// Используется объектом <see cref="MemorySplashStack"/>
     /// </summary>
     public int StackSerialId { get { return _StackSerialId; } set { _StackSerialId = value; } }
     private int _StackSerialId;
@@ -671,7 +672,7 @@ namespace FreeLibSet.Core
 
   /// <summary>
   /// Стек заставок на стороне сервера.
-  /// Этот класс является потокобезопасным
+  /// Этот класс является потокобезопасным.
   /// </summary>
   public sealed class MemorySplashStack : ISplashStack
   {
@@ -699,7 +700,7 @@ namespace FreeLibSet.Core
     #region ISplashStack Members
 
     /// <summary>
-    /// Создает новую заставку MemorySplash и добавляет ее в стек
+    /// Создает новую заставку <see cref="MemorySplash"/> и добавляет ее в стек.
     /// </summary>
     /// <param name="phases">Названия фаз. Список не может быть пустым</param>
     /// <returns>Интерфейс управления заставкой</returns>
@@ -721,7 +722,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает новую заставку MemorySplash с одной фазой и добавляет ее в стек
+    /// Создает новую заставку <see cref="MemorySplash"/> с одной фазой и добавляет ее в стек
     /// </summary>
     /// <param name="phaseText">Название фазы</param>
     /// <returns>Интерфейс управления заставкой</returns>
@@ -731,7 +732,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает новую заставку MemorySplash с одной фазой "Идет процесс" и добавляет ее в стек
+    /// Создает новую заставку <see cref="MemorySplash"/> с одной фазой "Идет процесс" и добавляет ее в стек
     /// </summary>
     /// <returns>Интерфейс управления заставкой</returns>
     public ISplash BeginSplash()
@@ -740,7 +741,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Удаляет из стека заставку, созданную вызовом BeginSplash()
+    /// Удаляет из стека заставку, созданную вызовом <see cref="BeginSplash()"/>.
     /// </summary>
     public void EndSplash()
     {
@@ -757,7 +758,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает интерфейс управления теущей заставкой.
-    /// Если стек заставок пустой, возвращает null
+    /// Если стек заставок пустой, возвращает null.
     /// </summary>
     public ISplash Splash
     {
@@ -776,7 +777,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает массив заставок в стеке.
     /// Текущая (активная) заставка находится в позиции 0.
-    /// Если стек заставок пустой, возвращается пустой массив
+    /// Если стек заставок пустой, возвращается пустой массив.
     /// </summary>
     /// <returns>Массив интерфейсов управления закладками</returns>
     public ISplash[] GetSplashStack()
@@ -788,10 +789,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Этот метод используется в ServerSplashWatcher
+    /// Этот метод используется в <see cref="FreeLibSet.Remoting.ServerSplashWatcher"/>
     /// </summary>
-    /// <param name="stackVersion"></param>
-    /// <returns></returns>
+    /// <param name="stackVersion">Версия стека</param>
+    /// <returns>Массив заставок</returns>
     public ISplash[] GetSplashStack(ref int stackVersion)
     {
       ISplash[] a = null;
@@ -829,8 +830,8 @@ namespace FreeLibSet.Core
     #region DefaultSplashText и DefaultSplashItems
 
     /// <summary>
-    /// Текст заставки, используемый при вызове метода ISplash.BeginSplash() без параметров.
-    /// По умолчанию используется текст "Идет процесс"
+    /// Текст заставки, используемый при вызове метода <see cref="ISplashStack.BeginSplash()"/> без параметров.
+    /// По умолчанию используется текст "Идет процесс".
     /// </summary>
     public static string DefaultSplashText
     {
@@ -847,7 +848,8 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Возвращает массив названий фаз из одного элемента, равного DefaultSplashText
+    /// Возвращает массив названий фаз из одного элемента, равного <see cref="DefaultSplashText"/>.
+    /// Не предназначено для использования в прикладном коде.
     /// </summary>
     public static string[] DefaultSplashItems { get { return _DefaultSplashItems; } }
     private static string[] _DefaultSplashItems;
@@ -858,11 +860,11 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Стек заставок, используемый в текущем потоке.
-    /// Свойство устанавливается на время работы ExecProc.OnExecute().
-    /// Если свойство не было установлено, возвращается ссылка на внутренний объект ServerSplashStack,
-    /// таким образом, свойство никогда не возвращает null.
-    /// Вызовы BeginExecute()/EndExecute() должны обязательно выполнятся в блоке try/finally, чтобы исключить
-    /// засорение стека в случае ошибок (в отличие от использования ExecProc.Begin/EndSplash()).
+    /// Если заставки не использовались в текущем потоке, возвращает пустой стек.
+    /// Вызовы <see cref="FreeLibSet.Remoting.ExecProc.BeginExecute(Remoting.NamedValues, AsyncCallback, object)"/> /
+    /// <see cref="FreeLibSet.Remoting.ExecProc.EndExecute(IAsyncResult)"/> должны обязательно выполнятся в блоке try/finally, чтобы исключить
+    /// засорение стека в случае ошибок (в отличие от использования <see cref="FreeLibSet.Remoting.ExecProc.BeginSplash()"/>
+    /// / <see cref="FreeLibSet.Remoting.ExecProc.EndSplash()"/>).
     /// </summary>
     public static ISplashStack ThreadSplashStack
     {
@@ -879,7 +881,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Начать в текущем потоке работу с новым стеком заставок.
-    /// Существующий стек запоминается до вызова PopThreadSplashStack()
+    /// Существующий стек запоминается до вызова <see cref="PopThreadSplashStack()"/>.
     /// </summary>
     /// <param name="splashStack">Новый стек заставок. Не может быть null.</param>
     public static void PushThreadSplashStack(ISplashStack splashStack)
@@ -896,7 +898,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Начать в текущем потоке работу со стеком заставок - заглушкой.
     /// Этот метод используется, когда надо подавить вывод "мельтешащих" заставок.
-    /// Существующий стек запоминается до вызова PopThreadSplashStack()
+    /// Существующий стек запоминается до вызова <see cref="PopThreadSplashStack()"/>.
     /// </summary>
     public static void PushThreadSplashStack()
     {
@@ -904,9 +906,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Закончить в текущем потоке работу со стеком заставок, начатую PushThreadSplashStack().
-    /// Если стек заставок, добавленный ранее вызовом PushThreadSplashStack(), реализует IDisposable,
-    /// то обязанность по вызову метода Dispose() лежит на вызывающем коде.
+    /// Закончить в текущем потоке работу со стеком заставок, начатую <see cref="PushThreadSplashStack()"/>.
+    /// Если стек заставок, добавленный ранее вызовом <see cref="PushThreadSplashStack()"/>, реализует интерфейс <see cref="IDisposable"/>,
+    /// то обязанность по вызову метода <see cref="IDisposable.Dispose()"/> лежит на вызывающем коде.
     /// </summary>
     public static void PopThreadSplashStack()
     {
@@ -926,15 +928,15 @@ namespace FreeLibSet.Core
 
   /// <summary>
   /// Класс для временной замены заставки для фазы выполнения процедуры.
-  /// Используется в пользовательском коде, который, возможно, выполняется внутри ExecProc.OnExecute().
-  /// Если есть текущая заставка (был вызов BeginSplash() и есть текущая фаза),
+  /// Используется в пользовательском коде, который, возможно, выполняется внутри <see cref="FreeLibSet.Remoting.ExecProc.OnExecute(Remoting.NamedValues)"/>.
+  /// Если есть текущая заставка (был вызов <see cref="FreeLibSet.Remoting.ExecProc.BeginSplash()"/> и есть текущая фаза),
   /// то меняется текст текущей фазы, очищается процентный индикатор и отключается кнопка "Отмена".
-  /// Если процедура выполняется, но нет заставки, которой можно управлять, вызывается BeginSplash().
+  /// Если процедура выполняется, но нет заставки, которой можно управлять, вызывается <see cref="FreeLibSet.Remoting.ExecProc.BeginSplash()"/>.
   /// Если процедура не выполняется, то объект использует фиктивную заставку.
   /// В любом случае, пользовательский код может управлять процентным индикатором, текстом заставки и кнопкой "Отменить".
-  /// Используется текущий стек вызовов SplashTools.ThreadSplashStack(), поэтому вызовы всех методов и Dispose()
-  /// должны выполняться в одном потоке
-  /// После вызова Dispose() восстанавливается предыдущее состояние заставки
+  /// Используется текущий стек вызовов <see cref="SplashTools.ThreadSplashStack"/>, поэтому вызовы всех методов и <see cref="IDisposable.Dispose()"/>
+  /// должны выполняться в одном потоке.
+  /// После вызова <see cref="IDisposable.Dispose()"/> восстанавливается предыдущее состояние заставки.
   /// </summary>
   public sealed class TempSplashPhaseHandler : SimpleDisposableObject, ISimpleSplash
   {
@@ -944,7 +946,7 @@ namespace FreeLibSet.Core
     /// Создает объект, встраивая его в существующую заставку или создавая новую
     /// </summary>
     /// <param name="phaseText">Текст для фазы. Не может быть пустой строкой.
-    /// В дальнейшем может быть изменен установкой свойства PhaseText</param>
+    /// В дальнейшем может быть изменен установкой свойства <see cref="PhaseText"/>.</param>
     public TempSplashPhaseHandler(string phaseText)
     {
       if (String.IsNullOrEmpty(phaseText))
@@ -1032,7 +1034,7 @@ namespace FreeLibSet.Core
     #region ISimpleSplash
 
     /// <summary>
-    /// Реализация метода интерфейса ISimpleSplash
+    /// Реализация метода интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public int PercentMax
     {
@@ -1041,7 +1043,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интерфейса ISimpleSplash
+    /// Реализация метода интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public int Percent
     {
@@ -1050,7 +1052,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интерфейса ISimpleSplash
+    /// Реализация метода интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     /// <param name="percent"></param>
     /// <param name="percentMax"></param>
@@ -1060,7 +1062,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интерфейса ISimpleSplash
+    /// Реализация метода интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public void IncPercent()
     {
@@ -1068,7 +1070,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интерфейса ISimpleSplash
+    /// Реализация метода интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public bool AllowCancel
     {
@@ -1077,7 +1079,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интерфейса ISimpleSplash
+    /// Реализация метода интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public bool Cancelled
     {
@@ -1086,7 +1088,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интерфейса ISimpleSplash
+    /// Реализация метода интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
     public void CheckCancelled()
     {
@@ -1094,9 +1096,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Реализация метода интерфейса ISimpleSplash
+    /// Реализация метода интерфейса <see cref="ISimpleSplash"/>
     /// </summary>
-    /// <param name="milliseconds"></param>
+    /// <param name="milliseconds">Интервал в миллисекундах</param>
     public void Sleep(int milliseconds)
     {
       _Splash.Sleep(milliseconds);
@@ -1140,16 +1142,16 @@ namespace FreeLibSet.Remoting
   #region Интерфейс IAsyncResultWithSplash
 
   /// <summary>
-  /// Расширение интерфейса асинхронного управления IAsyncResult возможностями работы с процентным индикатором
+  /// Расширение интерфейса асинхронного управления <see cref="IAsyncResult"/> возможностями работы с процентным индикатором.
   /// </summary>
   public interface IAsyncResultWithSplash : IAsyncResult
   {
     /// <summary>
-    /// Получить информацию о готовности задания (свойство IAsyncResult.IsCompleted) 
-    /// вместе с обновлением заставок процентных индикаторов (метод IServerSplashWatcher.GetSplashInfoPack()) за одно обращение к серверу.
+    /// Получить информацию о готовности задания (свойство <see cref="IAsyncResult.IsCompleted"/>)
+    /// вместе с обновлением заставок процентных индикаторов (метод <see cref="IServerSplashWatcher.GetSplashInfoPack()"/>) за одно обращение к серверу.
     /// </summary>
     /// <param name="splashInfoPack">Порция обновления для экранной заставки</param>
-    /// <returns>Свойство IsCompleted</returns>
+    /// <returns>Свойство <see cref="IAsyncResult.IsCompleted"/></returns>
     bool GetIsCompleted(out SplashInfoPack splashInfoPack);
 
     // Нельзя передавать интерфейс от сервера к клиенту для RemoteExecProc, возникает исключение RemotingException
@@ -1163,16 +1165,16 @@ namespace FreeLibSet.Remoting
 
     /// <summary>
     /// Сброс данных.
-    /// После вызова этого метода, при следующем вызове GetIsCompleted() будет возвращена полная информация о стеке заставок.
+    /// После вызова этого метода, при следующем вызове <see cref="GetIsCompleted(out SplashInfoPack)"/> будет возвращена полная информация о стеке заставок.
     /// Используется для исправления ошибок после разрыва соединения.
-    /// Дублирует метод интерфейса IServerSplashWatcher
+    /// Дублирует метод интерфейса <see cref="IServerSplashWatcher"/>.
     /// </summary>
     void ResetSplashInfo();
 
     /// <summary>
     /// Прервать выполнение процесса.
-    /// Метод устанавливает свойство ISplash.Cancelled=true, если в стеке есть текущая заставка
-    /// Дублирует метод интерфейса IServerSplashWatcher
+    /// Метод устанавливает свойство <see cref="FreeLibSet.Core.ISimpleSplash.Cancelled"/>=true, если в стеке есть текущая заставка.
+    /// Дублирует метод интерфейса <see cref="IServerSplashWatcher"/>.
     /// </summary>
     void Cancel();
   }
@@ -1180,11 +1182,11 @@ namespace FreeLibSet.Remoting
   #endregion
 
   /// <summary>
-  /// Содержит ссылки на интерфейсы IAsyncResultWithSplash и IServerSplashWatcher.
-  /// Метод GetIsCompledted() вызывает метод интерфейса IAsyncResultWithSplash и сохраняет во внутреннем поле объект SplashInfoPack.
-  /// Реализует метод интерфейса IServerSplashWatcher.GetSplashInfoPack(). При этом возвращается сохраненный SplashInfoPack.
-  /// Остальная реализация интерфейса IServerSplashWatcher переадресуется по существующей ссылке
-  /// Используется ExecProcCallItem.
+  /// Содержит ссылки на интерфейсы <see cref="IAsyncResultWithSplash"/> и <see cref="IServerSplashWatcher"/>.
+  /// Метод <see cref="AsyncResultWithSplashHandler.GetIsCompleted()"/> вызывает метод интерфейса <see cref="IAsyncResultWithSplash"/> и сохраняет во внутреннем поле объект <see cref="SplashInfoPack"/>.
+  /// Реализует метод интерфейса <see cref="IServerSplashWatcher.GetSplashInfoPack()"/>. При этом возвращается сохраненный <see cref="SplashInfoPack"/>.
+  /// Остальная реализация интерфейса <see cref="IServerSplashWatcher"/> переадресуется по существующей ссылке.
+  /// Используется в <see cref="ExecProcCallItem"/>.
   /// </summary>
   public sealed class AsyncResultWithSplashHandler : IServerSplashWatcher
   {
@@ -1193,7 +1195,7 @@ namespace FreeLibSet.Remoting
     /// <summary>
     /// Создает объект. Обращается к свойству <paramref name="asyncResult"/>.ServerSplashWatcher для получения ссылки на интерфейс IServerSplashWatcher
     /// </summary>
-    /// <param name="asyncResult">Интерфейс IAsyncResultWithSplash </param>
+    /// <param name="asyncResult">Интерфейс <see cref="IAsyncResultWithSplash"/>. Не может быть null.</param>
     public AsyncResultWithSplashHandler(IAsyncResultWithSplash asyncResult)
     {
       if (asyncResult == null)
@@ -1207,7 +1209,7 @@ namespace FreeLibSet.Remoting
     #region Свойства
 
     //public IAsyncResultWithSplash AsyncResult { get { return _AsyncResult; } }
-    private IAsyncResultWithSplash _AsyncResult;
+    private readonly IAsyncResultWithSplash _AsyncResult;
 
     /// <summary>
     /// Запоминаем между GetIsCompleted() и IServerSplashWatcher.GetSplashInfoPack()
@@ -1223,8 +1225,8 @@ namespace FreeLibSet.Remoting
     #region Основной метод
 
     /// <summary>
-    /// Вызывает IAsyncResultWithSplash.GetIsCompleted() и запоминает пакет до вызова IServerSplashWatcher.GetSplashInfoPack().
-    /// Методы GetIsCompleted() и GetSplashInfoPack() должны вызываться поочередно.
+    /// Вызывает <see cref="IAsyncResultWithSplash.GetIsCompleted(out SplashInfoPack)"/> и запоминает пакет до вызова <see cref="IServerSplashWatcher.GetSplashInfoPack()"/>.
+    /// Методы <see cref="GetIsCompleted()"/> и <see cref="GetSplashInfoPack()"/> должны вызываться поочередно.
     /// </summary>
     /// <returns>True, если выполнение асинхронного действия завершено</returns>
     public bool GetIsCompleted()
@@ -1253,10 +1255,10 @@ namespace FreeLibSet.Remoting
     #region IServerSplashWatcher Members
 
     /// <summary>
-    /// Возвращает SplashInfoPack, сохраненный при предыдущем вызове GetIsCompleted().
-    /// Методы GetIsCompleted() и GetSplashInfoPack() должны вызываться поочередно.
+    /// Возвращает <see cref="SplashInfoPack"/>, сохраненный при предыдущем вызове <see cref="GetIsCompleted()"/>.
+    /// Методы <see cref="GetIsCompleted()"/> и <see cref="GetSplashInfoPack()"/> должны вызываться поочередно.
     /// </summary>
-    /// <returns>Информация об изменениях процентного индикатора, которая нужна объекту ClientSplashWatcher</returns>
+    /// <returns>Информация об изменениях процентного индикатора, которая нужна объекту <see cref="ClientSplashWatcher"/>.</returns>
     public SplashInfoPack GetSplashInfoPack()
     {
 #if DEBUG
@@ -1269,7 +1271,7 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Вызывает соответствующий метод по ссылке на интерфейс IAsyncResultWithSplash
+    /// Вызывает соответствующий метод по ссылке на интерфейс <see cref="IAsyncResultWithSplash"/>.
     /// </summary>
     public void ResetSplashInfo()
     {
@@ -1277,7 +1279,7 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Вызывает соответствующий метод по ссылке на интерфейс IAsyncResultWithSplash
+    /// Вызывает соответствующий метод по ссылке на интерфейс <see cref="IAsyncResultWithSplash"/>.
     /// </summary>
     public void Cancel()
     {

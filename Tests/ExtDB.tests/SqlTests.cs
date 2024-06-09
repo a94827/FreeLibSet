@@ -40,6 +40,7 @@ namespace ExtDB_tests.Data
       ts.Columns.AddString("ColS2", 10, true);
       ts.Columns.AddInt("ColI", true);
       ts.Columns.AddDouble("ColF", true);
+      ts.Columns.AddDouble("ColF2", true);
       ts.Columns.AddBoolean("ColL");
       ts.Columns.AddDate("ColD", true);
       ts.Columns.AddDate("ColD2", true);
@@ -52,12 +53,12 @@ namespace ExtDB_tests.Data
 
       tbl = ts.CreateDataTable();
       _TestData.Tables.Add(tbl);
-      //          Id  ColS          ColS2   ColI  ColF  ColL   ColD                      ColD2                     ColDT                                 ColT                    ColG           
-      tbl.Rows.Add(1, "AAA", "***", 10, 5.0, true, new DateTime(2023, 1, 1), new DateTime(2023, 1, 5), new DateTime(2023, 1, 1, 0, 0, 1), new TimeSpan(12, 34, 56), new Guid(Guid1));
-      tbl.Rows.Add(2, "BcDe", "###", 20, NULL, false, NULL, new DateTime(2023, 1, 5), new DateTime(2023, 1, 1, 0, 0, 0), TimeSpan.Zero, Guid.Empty);
-      tbl.Rows.Add(3, NULL, "???", NULL, NULL, false, NULL, NULL, NULL, NULL, NULL);
-      tbl.Rows.Add(4, "", "%%%", 0, 0.0, false, new DateTime(2001, 1, 1), NULL, new DateTime(2023, 1, 1, 23, 59, 59), new TimeSpan(12, 34, 56), new Guid(Guid2));
-      tbl.Rows.Add(5, "abcdefghij", "*#?%", -10, -5.0, true, new DateTime(2023, 1, 2), new DateTime(2023, 1, 2), new DateTime(2023, 1, 2, 12, 34, 56), new TimeSpan(12, 34, 57), new Guid(Guid1));
+      //          Id  ColS          ColS2   ColI  ColF ColF2 ColL   ColD                      ColD2                     ColDT                                 ColT                    ColG           
+      tbl.Rows.Add(1, "AAA", "***", 10, 5.0, NULL, true, new DateTime(2023, 1, 1), new DateTime(2023, 1, 5), new DateTime(2023, 1, 1, 0, 0, 1), new TimeSpan(12, 34, 56), new Guid(Guid1));
+      tbl.Rows.Add(2, "BcDe", "###", 20, NULL, -1.0, false, NULL, new DateTime(2023, 1, 5), new DateTime(2023, 1, 1, 0, 0, 0), TimeSpan.Zero, Guid.Empty);
+      tbl.Rows.Add(3, NULL, "???", NULL, NULL, 2.0, false, NULL, NULL, NULL, NULL, NULL);
+      tbl.Rows.Add(4, "", "%%%", 0, 0.0, 3.0, false, new DateTime(2001, 1, 1), NULL, new DateTime(2023, 1, 1, 23, 59, 59), new TimeSpan(12, 34, 56), new Guid(Guid2));
+      tbl.Rows.Add(5, "abcdefghij", "*#?%", -10, -5.0, -3.0, true, new DateTime(2023, 1, 2), new DateTime(2023, 1, 2), new DateTime(2023, 1, 2, 12, 34, 56), new TimeSpan(12, 34, 57), new Guid(Guid1));
       tbl.AcceptChanges();
 
       #endregion
@@ -259,6 +260,32 @@ namespace ExtDB_tests.Data
 
       filters.Add(new FilterTestInfo(new NumRangeFilter("ColF", 0.0, 5.0), 1, 2, 3, 4));
       filters.Add(new FilterTestInfo(new NumRangeFilter("ColF", -5.0, 0.0), 2, 3, 4, 5));
+
+      #endregion
+
+      #region NumRangeInclusionFilter
+
+      filters.Add(new FilterTestInfo(new NumRangeInclusionFilter("ColF", "ColF2", 5.0), 1));
+      filters.Add(new FilterTestInfo(new NumRangeInclusionFilter("ColF", "ColF2", 4.0)));
+      filters.Add(new FilterTestInfo(new NumRangeInclusionFilter("ColF", "ColF2", 2.0), 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeInclusionFilter("ColF", "ColF2", 0.0), 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeInclusionFilter("ColF", "ColF2", -2.0), 2, 3));
+      filters.Add(new FilterTestInfo(new NumRangeInclusionFilter("ColF", "ColF2", -3.0), 2, 3, 5));
+      filters.Add(new FilterTestInfo(new NumRangeInclusionFilter("ColF", "ColF2", -5.0), 2, 3, 5));
+      filters.Add(new FilterTestInfo(new NumRangeInclusionFilter("ColF", "ColF2", -5.1), 2, 3));
+
+      #endregion
+
+      #region NumRangeCrossFilter
+
+      filters.Add(new FilterTestInfo(new NumRangeCrossFilter("ColF", "ColF2", 1.0, 2.0), 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeCrossFilter("ColF", "ColF2", 6.0, 7.0), 1));
+      filters.Add(new FilterTestInfo(new NumRangeCrossFilter("ColF", "ColF2", 0.0, 0.0), 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeCrossFilter("ColF", "ColF2", -1.0, 0.0), 2, 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeCrossFilter("ColF", "ColF2", null, 0.0), 2, 3, 4, 5));
+      filters.Add(new FilterTestInfo(new NumRangeCrossFilter("ColF", "ColF2", null, -2.0), 2, 3, 5));
+      filters.Add(new FilterTestInfo(new NumRangeCrossFilter("ColF", "ColF2", 0, null), 1, 3, 4));
+      filters.Add(new FilterTestInfo(new NumRangeCrossFilter("ColF", "ColF2", (double?)null, (double?)null), 1, 2, 3, 4, 5));
 
       #endregion
 

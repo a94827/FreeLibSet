@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>library</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>ExtDB</AssemblyName>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>CA1416;</NoWarn>
+    <RootNamespace>FreeLibSet.Data</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtTools\ExtTools.Net.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Data.SqlClient">
+      <HintPath>..\Others\Net\Microsoft.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\Others\Net\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.ConfigurationManager">
+      <HintPath>..\Others\Net\System.Configuration.ConfigurationManager.dll</HintPath>
+      <Private></Private>
+      <SpecificVersion></SpecificVersion>
+    </Reference>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\Others\System.Data.SQLite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

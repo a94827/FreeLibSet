@@ -16,15 +16,16 @@ namespace FreeLibSet.Forms.Docs
   // Классы для реализации форматов вставки из буфера обмена
 
   /// <summary>
-  /// Формат вставки из буфера обмена выборки документов.
-  /// Возможность указания конкретного вида документов
+  /// Формат вставки из буфера обмена выборки документов <see cref="DBxDocSelection"/>.
+  /// Возможность указания конкретного вида документов.
   /// </summary>
   public class DBxDocSelectionPasteFormat : EFPPasteFormat
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает формат, который позволяет вставлять выборки документов любых видов
+    /// Создает формат, который позволяет вставлять выборки документов любых видов.
+    /// Используйте событие <see cref="EFPPasteFormat.TestFormat"/> для фильтрации.
     /// </summary>
     /// <param name="ui">Интерфейс пользователя для доступа к документам</param>
     public DBxDocSelectionPasteFormat(DBUI ui)
@@ -38,7 +39,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает формат, который позволяет вставлять выборки документов заданного вида
+    /// Создает формат, который позволяет вставлять выборки документов заданного вида.
     /// </summary>
     /// <param name="ui">Интерфейс пользователя для доступа к документам</param>
     /// <param name="docTypeName">Имя таблицы вида документа. 
@@ -52,7 +53,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает формат, который позволяет вставлять выборки документов заданного вида
+    /// Создает формат, который позволяет вставлять выборки документов заданного вида.
     /// </summary>
     /// <param name="docTypeUI">Интерфейс вида документов. Должен быть задан</param>
     public DBxDocSelectionPasteFormat(DocTypeUI docTypeUI)
@@ -69,14 +70,14 @@ namespace FreeLibSet.Forms.Docs
     /// Задается в конструкторе. Не может быть null.
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Если свойство установлено, то при проверке будет определяться наличие
     /// в выборке документов заданного вида.
     /// </summary>
     public string DocTypeName { get { return _DocTypeName; } }
-    private string _DocTypeName;
+    private readonly string _DocTypeName;
 
     /// <summary>
     /// Интерфейс доступа к документам выбранного вида, если свойство DocTypeName установлено.
@@ -111,16 +112,16 @@ namespace FreeLibSet.Forms.Docs
     private Int32 _DocId;
 
     /// <summary>
-    /// Проверяет наличие в буфере обмена выборки документов (объекта DBxDocSelection).
-    /// Проверяет совпадение свойства DBxDocProvider.DBIdentity.
-    /// Если свойство DocTypeName установлено, проверяет наличие в выборке документов требуемого вида.
-    /// Если все в порядке, вызывает метод OnTestFormatEvent() для выполнения окончательной проверки
+    /// Проверяет наличие в буфере обмена выборки документов (объекта <see cref="DBxDocSelection"/>).
+    /// Проверяет совпадение свойства <see cref="DBxDocProvider.DBIdentity"/>.
+    /// Если свойство <see cref="DocTypeName"/> установлено, проверяет наличие в выборке документов требуемого вида.
+    /// Если все в порядке, вызывает событие <see cref="EFPPasteFormat.TestFormat"/> для выполнения окончательной проверки.
     /// </summary>
     /// <param name="data">Данные буфера обмена</param>
     /// <param name="reason">Вставка или специальная вставка</param>
     /// <param name="dataInfoText">Сюда записывается текстовое описание данных в буфере обмена или
     /// сообщение об ошибке, если нет подходящих данных</param>
-    /// <param name="dataImageKey">Сюда записывается имя изображения из списка EFPApp.MainImages,
+    /// <param name="dataImageKey">Сюда записывается имя изображения из списка <see cref="EFPApp.MainImages"/>,
     /// которое будет использовано в качестве значка в списке "Специальная вставка".
     /// В случае ошибки сюда записывается "No" или другой подходящий значок</param>
     /// <returns>True, если данные из буфера могут быть вставлены</returns>
@@ -195,8 +196,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Формат вставки из буфера обмена набора таблиц DataSet.
-  /// Возможность указания имени таблицы документа или поддокумента
+  /// Формат вставки из буфера обмена набора таблиц <see cref="DataSet"/>.
+  /// Возможность указания имени таблицы документа или поддокумента.
   /// </summary>
   public class DBxDataSetPasteFormat : EFPPasteFormat
   {
@@ -242,20 +243,20 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс доступа к документам
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Если свойство установлено, то при проверке будет определяться наличие
     /// в выборке документов заданного вида
     /// </summary>
     public string TableName { get { return _TableName; } }
-    private string _TableName;
+    private readonly string _TableName;
 
     /// <summary>
-    /// Ссылка на описание документа или поддокумента, если свойство TableName было установлено в конструкторе
+    /// Ссылка на описание документа или поддокумента, если свойство <see cref="TableName"/> было установлено в конструкторе
     /// </summary>
     public DocTypeUIBase UIBase { get { return _UIBase; } }
-    private DocTypeUIBase _UIBase;
+    private readonly DocTypeUIBase _UIBase;
 
     #endregion
 
@@ -268,25 +269,25 @@ namespace FreeLibSet.Forms.Docs
     private DataSet _DataSet;
 
     /// <summary>
-    /// Таблица данных с именем TableName, извлеченная из буфера обмена при проверке формата.
-    /// Если TableName не задано, то возвращает null
+    /// Таблица данных с именем <see cref="TableName"/>, извлеченная из буфера обмена при проверке формата.
+    /// Если <see cref="TableName"/> не задано, то возвращает null.
     /// </summary>
     public DataTable Table { get { return _Table; } }
     private DataTable _Table;
 
 
     /// <summary>
-    /// Проверяет наличие в буфере обмена объекта DataSet с подходящей таблицей.
-    /// Вызывает метод OnTestFormatEvent(), если данные присутствуют, для выполнения окончательной проверки
+    /// Проверяет наличие в буфере обмена объекта <see cref="DataSet"/> с подходящей таблицей.
+    /// Если данные присутствуют, вызывает событие <see cref="EFPPasteFormat.TestFormat"/> для выполнения окончательной проверки.
     /// </summary>
     /// <param name="data">Данные буфера обмена</param>
     /// <param name="reason">Вставка или специальная вставка</param>
     /// <param name="dataInfoText">Сюда записывается текстовое описание данных в буфере обмена или
     /// сообщение об ошибке, если нет подходящих данных</param>
-    /// <param name="dataImageKey">Сюда записывается имя изображения из списка EFPApp.MainImages,
+    /// <param name="dataImageKey">Сюда записывается имя изображения из списка <see cref="EFPApp.MainImages"/>,
     /// которое будет использовано в качестве значка в списке "Специальная вставка".
     /// В случае ошибки сюда записывается "No" или другой подходящий значок</param>
-    /// <returns>True, если данные из буфера могуь быть вставлены</returns>
+    /// <returns>True, если данные из буфера могут быть вставлены</returns>
     protected override bool OnTestFormat(IDataObject data, EFPPasteReason reason, out string dataInfoText, out string dataImageKey)
     {
       _Table = null;
@@ -351,9 +352,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Проверка наличия заполненного столбца с заданным именем.
-    /// Может использоваться в обработчике TestFormat, в режиме заданной таблицы.
-    /// Возвращает true, если таблица Table содержит столбец и хотя бы в одной строке
-    /// он содержит значение, отличное от NULL
+    /// Может использоваться в обработчике события <see cref="EFPPasteFormat.TestFormat"/>, в режиме заданной таблицы.
+    /// Возвращает true, если таблица <see cref="Table"/> содержит столбец и хотя бы в одной строке
+    /// он содержит значение, отличное от NULL.
     /// </summary>
     /// <param name="columnName">Имя столюца</param>
     /// <returns>Наличие значения</returns>
@@ -380,12 +381,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выполнить предварительный просмотр данных, которые будут вставлены.
-    /// Переопределенный метод разрешает просмотр даже при отсутствии обработчика события Preview
+    /// Переопределенный метод разрешает просмотр даже при отсутствии обработчика события <see cref="EFPPasteFormat.Preview"/>.
     /// </summary>
     /// <param name="data">Вставляет данные</param>
     /// <param name="reason">Вставка или специальная вставка</param>
     /// <returns>True, если просмотр выполнен.
-    /// False, если обработчик события Preview установил Cancel=true</returns>
+    /// False, если обработчик события <see cref="EFPPasteFormat.Preview"/> установил <see cref="EFPPreviewDataObjectEventArgs.Cancel"/>=true.</returns>
     protected override bool OnPreview(IDataObject data, EFPPasteReason reason)
     {
       if (HasPreviewHandler)

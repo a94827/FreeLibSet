@@ -17,29 +17,32 @@ namespace FreeLibSet.Forms.Docs
   public interface IDocEditItem
   {
     /// <summary>
-    /// Вызывается перед вызовами ReadValues() для всех элементов. Метод может 
-    /// временно отключать инициализацию зависимых полей
+    /// Вызывается перед вызовом <see cref="ReadValues()"/> для всех элементов. Метод может 
+    /// временно отключать инициализацию зависимых полей.
     /// </summary>
     void BeforeReadValues();
 
     /// <summary>
-    /// Вызывается при инициализации просмотра
+    /// Вызывается при инициализации просмотра.
+    /// Должен перенести данные из полей набора данных (обычно объекта <see cref="FreeLibSet.Data.Docs.DBxDocValue"/>)
+    /// в управляющий элемент.
     /// </summary>
     void ReadValues();
 
     /// <summary>
-    /// Вызывается после того, как метод ReadValues() был вызыван для всех объектов
-    /// в группе. Должен отменить действия, выполненные BeforeReadValues()
+    /// Вызывается после того, как метод <see cref="ReadValues()"/> был вызыван для всех объектов
+    /// в группе. Должен отменить действия, выполненные <see cref="BeforeReadValues()"/>.
     /// </summary>
     void AfterReadValues();
 
     /// <summary>
-    /// Вызывается при записи значений
+    /// Вызывается при записи значений.
+    /// Должен перенести данные из управляющего элемента в набор данных (обычно объект <see cref="FreeLibSet.Data.Docs.DBxDocValue"/>).
     /// </summary>
     void WriteValues();
 
     /// <summary>
-    /// Объект, с помощью которого DocEditItem может оповещать редактор об изменениях
+    /// Объект, с помощью которого реализация <see cref="IDocEditItem"/> может оповещать редактор документа / поддокумента об изменениях в данных, которые сделал пользователь в процессе редактирования.
     /// </summary>
     DepChangeInfo ChangeInfo { get; }
   }
@@ -47,14 +50,14 @@ namespace FreeLibSet.Forms.Docs
   #endregion
 
   /// <summary>
-  /// Список объектов IDocEditItem с дополнительными методами чтения и записи значений
+  /// Список объектов <see cref="IDocEditItem"/> с дополнительными методами чтения и записи значений.
   /// </summary>
   public class DocEditItemList : List<IDocEditItem>
   {
     #region Чтение и запись значений
 
     /// <summary>
-    /// Вызов методов IDocEditItem.BeforeReadValues(), ReadValues() и AfterReadValues() с перехватом ошибок
+    /// Вызов методов <see cref="IDocEditItem.BeforeReadValues()"/>, <see cref="IDocEditItem.ReadValues()"/> и <see cref="IDocEditItem.AfterReadValues()"/> с перехватом ошибок.
     /// </summary>
     public void ReadValues()
     {
@@ -86,7 +89,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызов метода WriteValues() для всех объектов в списке
+    /// Вызов метода <see cref="IDocEditItem.WriteValues()"/> для всех объектов в списке.
     /// </summary>
     public void WriteValues()
     {
@@ -98,16 +101,16 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Базовый класс, реализующий интерфейс IDocEditItem
+  /// Базовый класс, реализующий интерфейс <see cref="IDocEditItem"/>.
   /// Если пользовательский код должен реализовывать собственный переходник данных
-  /// и не требуется наследование от другого класса, можно наследовать этот класс
+  /// и не требуется наследование от другого класса, можно наследовать этот класс.
   /// </summary>
   public abstract class DocEditItem : IDocEditItem
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает объект и DepChangeInfoItem
+    /// Создает объект и <see cref="DepChangeInfoItem"/> для свойства <see cref="ChangeInfo"/>.
     /// </summary>
     public DocEditItem()
     {
@@ -119,7 +122,7 @@ namespace FreeLibSet.Forms.Docs
     #region IDocEditItem Members
 
     /// <summary>
-    /// Вызывается перед вызовами ReadValues() для всех элементов. Метод может 
+    /// Вызывается перед вызовами <see cref="ReadValues()"/> для всех элементов. Метод может 
     /// временно отключать инициализацию зависимых полей.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
@@ -133,8 +136,8 @@ namespace FreeLibSet.Forms.Docs
     public abstract void ReadValues();
 
     /// <summary>
-    /// Вызывается после того, как метод ReadValues() был вызыван для всех объектов
-    /// в группе. Должен отменить действия, выполненные BeforeReadValues()
+    /// Вызывается после того, как метод <see cref="ReadValues()"/> был вызыван для всех объектов
+    /// в редакторе. Должен отменить действия, выполненные <see cref="BeforeReadValues()"/>.
     /// Непереопределенный метод ничего не делает.
     /// </summary>
     public virtual void AfterReadValues()
@@ -142,7 +145,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается при записи значений
+    /// Вызывается при записи значений.
     /// </summary>
     public abstract void WriteValues();
 
@@ -151,7 +154,7 @@ namespace FreeLibSet.Forms.Docs
     /// Объект, с помощью которого производный класс может оповещать редактор об изменениях.
     /// </summary>
     protected DepChangeInfoItem ChangeInfo { get { return _ChangeInfo; } }
-    private DepChangeInfoItem _ChangeInfo;
+    private readonly DepChangeInfoItem _ChangeInfo;
 
     DepChangeInfo IDocEditItem.ChangeInfo { get { return _ChangeInfo; } }
 
@@ -160,7 +163,7 @@ namespace FreeLibSet.Forms.Docs
     #region Дополнительно
 
     /// <summary>
-    /// Возвращает DisplayName
+    /// Возвращает свойство <see cref="DepChangeInfo.DisplayName"/> из объекта <see cref="ChangeInfo"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -172,16 +175,16 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Базовый класс, реализующий интерфейс IDocEditItem и содержащий дочерние элементы
+  /// Базовый класс, реализующий интерфейс <see cref="IDocEditItem"/> и содержащий дочерние элементы.
   /// Если пользовательский код должен реализовывать собственный переходник данных
-  /// и не требуется наследование от другого класса, можно наследовать этот класс
+  /// и не требуется наследование от другого класса, можно наследовать этот класс.
   /// </summary>
   public abstract class DocEditItemWithChildren : IDocEditItem
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает объект
+    /// Создает объект и <see cref="DepChangeInfoItem"/> для свойства <see cref="ChangeInfo"/>.
     /// </summary>
     public DocEditItemWithChildren()
     {
@@ -279,10 +282,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Дочерние управляющие элементы, обращаюшиеся к значениям.
     /// Они должны обязательно подключаться к этому списку а не к редактору непосредственно,
-    /// иначе будет неправильный порядок вызовов методов чтения/записи и они не будут сохранятся
+    /// иначе будет неправильный порядок вызовов методов чтения/записи и они не будут сохранятся.
     /// </summary>
     public ICollection<IDocEditItem> Children { get { return _Children; } }
-    private ChildList _Children;
+    private readonly ChildList _Children;
 
     #endregion
 
@@ -297,7 +300,7 @@ namespace FreeLibSet.Forms.Docs
     /// Доступ к ChangeInfo как к списку
     /// </summary>
     protected DepChangeInfoList ChangeInfoList { get { return _ChangeInfo; } }
-    private DepChangeInfoList _ChangeInfo;
+    private readonly DepChangeInfoList _ChangeInfo;
 
     #endregion
 
@@ -337,20 +340,20 @@ namespace FreeLibSet.Forms.Docs
     /// Запись значений.
     /// Метод должен быть переопределен. 
     /// Вызывать базовый метод следует перед выполнением своих действий, чтобы дочерние элементы
-    /// использовать значения, записанные дочерними элементами
+    /// использовать значения, записанные дочерними элементами.
     /// </summary>
     public virtual void WriteValues()
     {
       for (int i = 0; i < _Children.Items.Count; i++)
         _Children.Items[i].WriteValues();
     }
-                                                         
+
     #endregion
 
     #region Дополнительно
 
     /// <summary>
-    /// Возвращает DisplayName
+    /// Возвращает свойство <see cref="DepChangeInfo.DisplayName"/> из объекта <see cref="ChangeInfo"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()

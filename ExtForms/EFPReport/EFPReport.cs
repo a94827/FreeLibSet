@@ -2647,10 +2647,14 @@ namespace FreeLibSet.Forms
         outItem.Title += " - " + this.Title;
 
       outItem.FilterInfo.Clear();
+      /*
       foreach (EFPReportFilterItem filter in OwnerReport.ReportParams.FilterInfo)
         outItem.FilterInfo.Add(filter.DisplayName, filter.Value);
       foreach (EFPReportFilterItem filter in this.FilterInfo)
         outItem.FilterInfo.Add(filter.DisplayName, filter.Value);
+      */ 
+      outItem.FilterInfo.AddRange(OwnerReport.ReportParams.FilterInfo);
+      outItem.FilterInfo.AddRange(this.FilterInfo);
     }
 
     #endregion

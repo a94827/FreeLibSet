@@ -31,7 +31,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог редактирования интервала дат
+  /// Диалог редактирования интервала дат с помощью элемента <see cref="EFPDateRangeBox"/>.
   /// </summary>
   public class DateRangeDialog: BaseInputDialog
   {
@@ -59,7 +59,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вход и выход: Начальная дата диапазона.
-    /// Значение null после завершения диалога может быть только при CanBeEmpty=true.
+    /// Значение null после завершения диалога может быть только при <see cref="CanBeEmpty"/>=true.
     /// </summary>
     public DateTime? NFirstDate
     {
@@ -79,7 +79,7 @@ namespace FreeLibSet.Forms
     private DateTime? _NFirstDate;
 
     /// <summary>
-    /// Управляемое свойство для NFirstDate
+    /// Управляемое свойство для <see cref="NFirstDate"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<DateTime?> NFirstDateEx
@@ -102,7 +102,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вход и выход: Конечная дата диапазона.
-    /// Значение null после завершения диалога может быть только при CanBeEmpty=true.
+    /// Значение null после завершения диалога может быть только при <see cref="CanBeEmpty"/>=true.
     /// </summary>
     public DateTime? NLastDate
     {
@@ -123,7 +123,7 @@ namespace FreeLibSet.Forms
     private DateTime? _NLastDate;
 
     /// <summary>
-    /// Управляемое свойство для NLastDate
+    /// Управляемое свойство для <see cref="NLastDate"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<DateTime?> NLastDateEx
@@ -145,7 +145,7 @@ namespace FreeLibSet.Forms
     #region FirstDate
 
     /// <summary>
-    /// Первое редактируемое значение. Пустое значение заменяется на минимально возможную дату
+    /// Первое редактируемое значение. Пустое значение заменяется на минимально возможную дату.
     /// </summary>
     public DateTime FirstDate
     {
@@ -154,7 +154,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для FirstDate
+    /// Управляемое свойство для <see cref="FirstDate"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<DateTime> FirstDateEx
@@ -176,7 +176,7 @@ namespace FreeLibSet.Forms
     #region LastDate
 
     /// <summary>
-    /// Второе редактируемое значение. Пустое значение заменяется на максимально возможную дату
+    /// Второе редактируемое значение. Пустое значение заменяется на максимально возможную дату.
     /// </summary>
     public DateTime LastDate
     {
@@ -185,7 +185,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для LastDate
+    /// Управляемое свойство для <see cref="LastDate"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<DateTime> LastDateEx
@@ -207,7 +207,7 @@ namespace FreeLibSet.Forms
     #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (<see cref="NFirstDate"/>.HasValue=true и <see cref="NLastDate"/>.HasValue=true).
     /// Может использоваться в валидаторах.
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
@@ -237,14 +237,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// Можно ли вводить пустое значение. Дублирует свойство <see cref="CanBeEmptyMode"/>.
+    /// По умолчанию - false.
+    /// Если <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/>, то возвращается true.
     /// </summary>
     public bool CanBeEmpty
     {

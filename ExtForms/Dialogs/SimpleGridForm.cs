@@ -11,7 +11,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Форма, содержащая табличный просмотр и дополнительную табличку фильтров.
-  /// Объект содержит FormProvider, но не провайдеры табличных просмотров.
+  /// Объект содержит <see cref="EFPFormProvider"/>, но не провайдеры табличных просмотров.
   /// </summary>
   public class SimpleGridForm : SimpleForm<DataGridView>
   {
@@ -41,17 +41,17 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Табличка фильтров, располагающаяся над основным табличным просмотром и его 
     /// кнопками. По умолчанию - невидима. Для включения таблички должен быть 
-    /// создан обработчик таблички фильтров
+    /// создан обработчик таблички фильтров <see cref="EFPGridFilterGridView"/> или <see cref="EFPReportFilterGridView"/>.
     /// </summary>
     public DataGridView FilterGrid { get { return _FilterGrid; } }
-    private DataGridView _FilterGrid;
+    private readonly DataGridView _FilterGrid;
 
     #endregion
   }
 
   /// <summary>
   /// Форма, содержащая кнопки "ОК" и "Отмена", табличный просмотр и дополнительную табличку фильтров
-  /// Объект содержит FormProvider, но не провайдеры табличных просмотров.
+  /// Объект содержит <see cref="EFPFormProvider"/>, но не провайдеры табличных просмотров.
   /// </summary>
   public class OKCancelGridForm : OKCancelSimpleForm<DataGridView>
   {
@@ -91,11 +91,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Табличка фильтров, располагающаяся над основным табличным просмотром и его 
-    /// кнопками. По умолчанию - неивидима. Для включения таблички должен быть 
-    /// создан обработчик таблички фильтров
+    /// кнопками. По умолчанию - невидима. Для включения таблички должен быть 
+    /// создан обработчик таблички фильтров <see cref="EFPGridFilterGridView"/> или <see cref="EFPReportFilterGridView"/>.
     /// </summary>
     public DataGridView FilterGrid { get { return _FilterGrid; } }
-    private DataGridView _FilterGrid;
+    private readonly DataGridView _FilterGrid;
 
     #endregion
 

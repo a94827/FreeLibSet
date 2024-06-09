@@ -21,7 +21,7 @@ namespace FreeLibSet.Drawing
     /// <summary>
     /// Найти индекс ближайшего цвета в массиве цветов (палитре)
     /// </summary>
-    /// <param name="array">Массив цветов, в котором выполлняется поиск (обычно свойство ColorPalette.Entries)</param>
+    /// <param name="array">Массив цветов, в котором выполняется поиск (обычно свойство <see cref="ColorPalette.Entries"/>)</param>
     /// <param name="color">Цвет, который нужно найти</param>
     /// <returns></returns>
     public static int GetNearestColorIndex(Color[] array, Color color)
@@ -55,17 +55,14 @@ namespace FreeLibSet.Drawing
 
     #region Преобразование формата Bitmap
 
-    /*
-     */
-
     /// <summary>
     /// Преобразование цветного 24-битного изображения в монохромное, 4-цветное
-    /// или 256-цветное изображение, использущее палитру
-    /// Метод Bitmap.Clone() может принимать аргумент PixelFormat и менять формат 
-    /// хранения изображения. К сожалению, это не работает (всегда?) под Windows-XP
+    /// или 256-цветное изображение, использущее палитру.
+    /// Метод <see cref="Bitmap.Clone(Rectangle, PixelFormat)"/> может принимать аргумент <see cref="PixelFormat"/> и менять формат 
+    /// хранения изображения. К сожалению, это не работает (всегда?) под Windows-XP.
     /// </summary>
-    /// <param name="source">Исходное изображение с PixelFormat=Format24bppRgb</param>
-    /// <param name="resFormat">Требуемый формат (Format1bppIndexed, Format4bppIndexed или Format8bppIndexed)</param>
+    /// <param name="source">Исходное изображение с <see cref="PixelFormat.Format24bppRgb"/></param>
+    /// <param name="resFormat">Требуемый формат (<see cref="PixelFormat.Format1bppIndexed"/>, <see cref="PixelFormat.Format4bppIndexed"/> или <see cref="PixelFormat.Format8bppIndexed"/>)</param>
     /// <returns>Преобразованное изображение</returns>
     public static Bitmap ConvertToIndexed(Bitmap source, PixelFormat resFormat)
     {
@@ -274,8 +271,8 @@ namespace FreeLibSet.Drawing
     /// <summary>
     /// Получить кодек, отвечающий за выбранный формат
     /// </summary>
-    /// <param name="format"></param>
-    /// <returns></returns>
+    /// <param name="format">Формат изображения</param>
+    /// <returns>Информация о кодеке</returns>
     public static ImageCodecInfo GetImageCodecInfo(ImageFormat format)
     {
       ImageCodecInfo ici;

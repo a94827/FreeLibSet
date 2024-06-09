@@ -2000,50 +2000,132 @@ namespace ExtTools_tests.Core
 
     #endregion
 
+    #region SetBoundariesFlags(), SetGroupSequenceNumber()
+
     #region SetBoundariesFlags()
 
     [Test]
-    public void SetBoundariesFlags_DataTable()
+    public void SetBoundariesFlags_DataTable_1col()
     {
       DataTable tbl = SetBoundariesFlags_CreateTestTable();
-      DataTools.SetBoundariesFlags(tbl, "F1", "F2", "F3");
-      SetBoundariesFlags_CheckResult(tbl);
+      DataTools.SetBoundariesFlags(tbl, "F1", "FLAG1", "FLAG2");
+      SetBoundariesFlags_CheckResult_1col(tbl);
     }
 
     [Test]
-    public void SetBoundariesFlags_DataView()
+    public void SetBoundariesFlags_DataView_1col()
     {
       DataTable tbl = SetBoundariesFlags_CreateTestTable();
-      DataTools.SetBoundariesFlags(tbl.DefaultView, "F1", "F2", "F3");
-      SetBoundariesFlags_CheckResult(tbl);
+      DataTools.SetBoundariesFlags(tbl.DefaultView, "F1", "FLAG1", "FLAG2");
+      SetBoundariesFlags_CheckResult_1col(tbl);
     }
+    [Test]
+    public void SetBoundariesFlags_DataTable_2cols()
+    {
+      DataTable tbl = SetBoundariesFlags_CreateTestTable();
+      DataTools.SetBoundariesFlags(tbl, "F1,F2", "FLAG1", "FLAG2");
+      SetBoundariesFlags_CheckResult_2cols(tbl);
+    }
+
+    [Test]
+    public void SetBoundariesFlags_DataView_2cols()
+    {
+      DataTable tbl = SetBoundariesFlags_CreateTestTable();
+      DataTools.SetBoundariesFlags(tbl.DefaultView, "F1,F2", "FLAG1", "FLAG2");
+      SetBoundariesFlags_CheckResult_2cols(tbl);
+    }
+
+
+    private void SetBoundariesFlags_CheckResult_1col(DataTable tbl)
+    {
+      bool[] res1 = DataTools.GetValuesFromColumn<bool>(tbl, "FLAG1");
+      Assert.AreEqual(new bool[] { true, true, false, true, false, false }, res1, "Begin flags");
+
+      bool[] res2 = DataTools.GetValuesFromColumn<bool>(tbl, "FLAG2");
+      Assert.AreEqual(new bool[] { true, false, true, false, false, true }, res2, "End flags");
+    }
+
+    private void SetBoundariesFlags_CheckResult_2cols(DataTable tbl)
+    {
+      bool[] res1 = DataTools.GetValuesFromColumn<bool>(tbl, "FLAG1");
+      Assert.AreEqual(new bool[] { true, true, true, true, false, true }, res1, "Begin flags");
+
+      bool[] res2 = DataTools.GetValuesFromColumn<bool>(tbl, "FLAG2");
+      Assert.AreEqual(new bool[] { true, true, true, false, true, true }, res2, "End flags");
+    }
+
+    #endregion
+
+    #region SetGroupSequenceNumber()
+
+    [Test]
+    public void SetGroupSequenceNumber_DataTable_1col()
+    {
+      DataTable tbl = SetBoundariesFlags_CreateTestTable();
+      DataTools.SetGroupSequenceNumber(tbl, "F1", "ORDER");
+      SetGroupSequenceNumber_CheckResult_1col(tbl);
+    }
+
+    [Test]
+    public void SetGroupSequenceNumber_DataView_1col()
+    {
+      DataTable tbl = SetBoundariesFlags_CreateTestTable();
+      DataTools.SetGroupSequenceNumber(tbl.DefaultView, "F1", "ORDER");
+      SetGroupSequenceNumber_CheckResult_1col(tbl);
+    }
+    [Test]
+    public void SetGroupSequenceNumber_DataTable_2cols()
+    {
+      DataTable tbl = SetBoundariesFlags_CreateTestTable();
+      DataTools.SetGroupSequenceNumber(tbl, "F1,F2", "ORDER");
+      SetGroupSequenceNumber_CheckResult_2cols(tbl);
+    }
+
+    [Test]
+    public void SetGroupSequenceNumber_DataView_2cols()
+    {
+      DataTable tbl = SetBoundariesFlags_CreateTestTable();
+      DataTools.SetGroupSequenceNumber(tbl.DefaultView, "F1,F2", "ORDER");
+      SetGroupSequenceNumber_CheckResult_2cols(tbl);
+    }
+
+
+    private void SetGroupSequenceNumber_CheckResult_1col(DataTable tbl)
+    {
+      int[] res = DataTools.GetValuesFromColumn<int>(tbl, "ORDER");
+      Assert.AreEqual(new int[] { 1, 2, 2, 3, 3, 3 }, res, "Order");
+    }
+
+    private void SetGroupSequenceNumber_CheckResult_2cols(DataTable tbl)
+    {
+      int[] res = DataTools.GetValuesFromColumn<int>(tbl, "ORDER");
+      Assert.AreEqual(new int[] { 1, 2, 3, 4, 4, 5 }, res, "Order");
+    }
+
+    #endregion
+
+    #region Тестовая таблица
 
     private static DataTable SetBoundariesFlags_CreateTestTable()
     {
       DataTable tbl = new DataTable();
       tbl.Columns.Add("F1", typeof(int));
-      tbl.Columns.Add("F2", typeof(bool));
-      tbl.Columns.Add("F3", typeof(bool));
+      tbl.Columns.Add("F2", typeof(string));
+      tbl.Columns.Add("FLAG1", typeof(bool));
+      tbl.Columns.Add("FLAG2", typeof(bool));
+      tbl.Columns.Add("ORDER", typeof(int));
 
-      tbl.Rows.Add(1);
-      tbl.Rows.Add(2);
-      tbl.Rows.Add(2);
-      tbl.Rows.Add(3);
-      tbl.Rows.Add(3);
-      tbl.Rows.Add(3);
+      tbl.Rows.Add(1, "AAA");
+      tbl.Rows.Add(2, "AAA");
+      tbl.Rows.Add(2, "BBB");
+      tbl.Rows.Add(3, "AAA");
+      tbl.Rows.Add(3, "AAA");
+      tbl.Rows.Add(3, "BBB");
 
       return tbl;
     }
 
-
-    private void SetBoundariesFlags_CheckResult(DataTable tbl)
-    {
-      bool[] res1 = DataTools.GetValuesFromColumn<bool>(tbl, "F2");
-      Assert.AreEqual(new bool[] { true, true, false, true, false, false }, res1, "Begin flags");
-
-      bool[] res2 = DataTools.GetValuesFromColumn<bool>(tbl, "F3");
-      Assert.AreEqual(new bool[] { true, false, true, false, false, true }, res2, "End flags");
-    }
+    #endregion
 
     #endregion
 

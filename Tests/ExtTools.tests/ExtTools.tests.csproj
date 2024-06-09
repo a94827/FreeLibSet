@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\DisposableDictionaryTests.cs" />
+    <Compile Include="Collections\NumericStringComparerTests.cs" />
     <Compile Include="DBF\DbfFieldTypeDetectorTests.cs" />
     <Compile Include="DBF\DbfFieldTypePreliminaryInfoTests.cs" />
     <Compile Include="Formatting\EditableDateTimeFormattersTests.cs" />

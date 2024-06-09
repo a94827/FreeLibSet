@@ -21,8 +21,8 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Переходник для TextBox или любого другого провайдера управляющего элемента,
-  /// поддерживающего ITextBox
+  /// Переходник для <see cref="TextBox"/> или любого другого провайдера управляющего элемента,
+  /// поддерживающего <see cref="IEFPTextBox"/>.
   /// </summary>
   public class DocValueTextBox : DocValueControlBase2<string>
   {
@@ -108,7 +108,6 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-
 #if XXXX
   /// <summary>
   /// Способ хранения даты в поле (свойство DocValueDateBox.Mode)
@@ -133,7 +132,8 @@ namespace FreeLibSet.Forms.Docs
 #endif
 
   /// <summary>
-  /// Переходник для DateBox
+  /// Переходник для <see cref="FreeLibSet.Controls.DateTimeBox"/>.
+  /// Поддерживается редактирование даты и/или времени, в зависимости от установленного свойства <see cref="FreeLibSet.Controls.DateTimeBox.Kind"/>.
   /// </summary>
   public class DocValueDateBox : DocValueControl<Nullable<DateTime>, EFPDateTimeBox>
   {
@@ -243,7 +243,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для DateRangeBox
+  /// Переходник для <see cref="FreeLibSet.Controls.DateRangeBox"/>.
+  /// Предполагается, что в документе есть два поля, задающие начало и конец диапазона.
   /// </summary>
   public class DocValueDateRangeBox : TwoDocValueControl<DateTime?, DateTime?, EFPDateRangeBox>
   {
@@ -302,7 +303,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для DateOrRangeBox
+  /// Переходник для <see cref="EFPDateOrRangeBox"/>.
+  /// Предполагается, что в документе есть два поля, задающие начало и конец диапазона.
   /// </summary>
   public class DocValueDateOrRangeBox : TwoDocValueControl<DateTime?, DateTime?, EFPDateOrRangeBox>
   {
@@ -359,7 +361,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для MonthDayBox для числового значения, которое хранит номер дня как число в диапазоне от 1 до 365
+  /// Переходник для <see cref="FreeLibSet.Controls.MonthDayBox"/> для числового значения, которое хранит номер дня как число в диапазоне от 1 до 365.
   /// </summary>
   public class DocValueIntMonthDayBox : DocValueControl<int, EFPMonthDayBox>/*, IDocValueNullableControl*/
   {
@@ -404,8 +406,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для MaskedTextBox для числового значения, которое хранит номер дня как число в диапазоне от 1 до 365.
-  /// 0 задает пустое значение
+  /// Переходник для <see cref="MaskedTextBox"/> и числового значения, которое хранит номер дня как число в диапазоне от 1 до 365.
+  /// 0 задает пустое значение.
   /// </summary>
   public class DocValueIntMonthDayTextBox : DocValueControl<int, EFPMonthDayTextBox>/*, IDocValueNullableControl*/
   {
@@ -450,7 +452,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для DateTimePicker для поля данных типа DateTime
+  /// Переходник для <see cref="DateTimePicker"/> для поля данных типа <see cref="DateTime"/>.
+  /// Поддерживается редактирование даты и/или времени, в зависимости от настроек <see cref="DateTimePicker"/>.
   /// </summary>
   public class DocValueDateTimePicker : DocValueControl<DateTime?, EFPDateTimePicker>
   {
@@ -494,7 +497,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для DateTimePicker для поля данных типа TimeSpan
+  /// Переходник для <see cref="DateTimePicker"/> для поля данных типа <see cref="TimeSpan"/>.
   /// </summary>
   public class DocValueTimeSpanPicker : DocValueControl<TimeSpan, EFPDateTimePicker>
   {
@@ -537,9 +540,9 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-
   /// <summary>
-  /// Переходник для ComboBox со стилем DropDownList для числового значения
+  /// Переходник для <see cref="ComboBox"/> со стилем <see cref="ComboBoxStyle.DropDownList"/> для числового поля,
+  /// которое хранит индекс выбранной позиции в выпадающем списке.
   /// </summary>
   public class DocValueIntListControl : DocValueControl<int, IEFPListControl>
   {
@@ -583,8 +586,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для ComboBox со стилем DropDownList для строкового значения
-  /// Текущее значение устанавливается свойством EFPListControl.SelectedCode
+  /// Переходник для <see cref="ComboBox"/> со стилем <see cref="ComboBoxStyle.DropDownList"/> для строкового поля.
+  /// Текущее значение устанавливается свойством <see cref="EFPListControl.SelectedCode"/>.
   /// </summary>
   public class DocValueTextListControl : DocValueControl<string, IEFPListControl>
   {
@@ -629,9 +632,8 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-
   /// <summary>
-  /// Переходник для IntEditComboBox, предназначенного для ввода целых чисел
+  /// Переходник для <see cref="EFPIntEditComboBox"/>, предназначенного для ввода целых чисел.
   /// </summary>
   public class DocValueIntEditComboBox : DocValueControl<int, EFPIntEditComboBox>
   {
@@ -768,9 +770,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для редактирования числового поля с помощью ListBox илм ComboBox.
+  /// Переходник для редактирования числового поля с помощью <see cref="ListBox"/> или <see cref="ComboBox"/>.
   /// Числовое поле содержит перечислимое значение, но значения не обязаны следовать по порядку.
-  /// Значение поля связывается со свойством SelectedCode, в котором хранится текстовое значение для enum.
+  /// Значение поля связывается со свойством <see cref="IEFPListControl.SelectedCode"/>, в котором хранится текстовое значение для <see cref="Enum"/>.
   /// </summary>
   /// <typeparam name="T"></typeparam>
   public class DocValueIntEnumCodeListControl<T> : DocValueControl<int, IEFPListControl>
@@ -816,7 +818,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Перечислимое значение по умолчанию.
-    /// Если свойство не установлено в явном виде, используется первое значение в выпадающем списке
+    /// Если свойство не установлено в явном виде, используется первое значение в выпадающем списке.
     /// </summary>
     public T DefaultValue
     {
@@ -1120,7 +1122,7 @@ namespace FreeLibSet.Forms.Docs
 #endif
 
   /// <summary>
-  /// Переходник для Radio Buttons для логического значения
+  /// Переходник для Radio Buttons для логического значения.
   /// Предполагается, что есть две радиокнопки в группе. Первая из них - для
   /// значения false, вторая - для true
   /// </summary>
@@ -1212,10 +1214,10 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для Combobox'а со стилем DropDownList или ListBox'а для логического 
-  /// значения
-  /// Предполагается, что в выпадющем списке есть две позиции. Первая из них - для
-  /// значения false, вторая - для true
+  /// Переходник для <see cref="ComboBox"/> со стилем <see cref="ComboBoxStyle.DropDownList"/> или <see cref="ListBox"/> для логического 
+  /// значения.
+  /// Предполагается, что в списке есть две позиции. Первая из них - для
+  /// значения false, вторая - для true.
   /// </summary>
   public class DocValueBoolListControl : DocValueControl<bool, EFPListControl>
   {
@@ -1469,11 +1471,11 @@ namespace FreeLibSet.Forms.Docs
   // Переходники для управляющих элементов, объявленных в EFPDocComboBox
 
   /// <summary>
-  /// Базовый класс переходника для управляющего элемента, производного от EFPDocComboBoxBase.
-  /// Управляет очисткой свойства EmptyText, если в элементе выведены "серые" значения
+  /// Базовый класс переходника для управляющего элемента, производного от <see cref="EFPDocComboBoxBase"/>.
+  /// Управляет очисткой свойства <see cref="EFPAnyDocComboBoxBase.EmptyText"/>, если в элементе выведены "серые" значения.
   /// </summary>
   /// <typeparam name="TValue">Тип редактируемого значения (Int32)</typeparam>
-  /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента, производный от EFPAnyDocComboBoxBase</typeparam>
+  /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента, производный от <see cref="EFPAnyDocComboBoxBase"/></typeparam>
   public abstract class DocValueAnyDocComboBoxBase<TValue, TControlProvider> : DocValueControl<TValue, TControlProvider>
     where TControlProvider : EFPAnyDocComboBoxBase
   {
@@ -1548,7 +1550,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для EFPDocComboBox
+  /// Переходник для <see cref="EFPDocComboBox"/>
   /// </summary>
   public class DocValueDocComboBox : DocValueAnyDocComboBoxBase<Int32, EFPDocComboBox>
   {
@@ -1594,7 +1596,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для EFPSubDocComboBox
+  /// Переходник для <see cref="EFPSubDocComboBox"/>
   /// </summary>
   public class DocValueSubDocComboBox : DocValueAnyDocComboBoxBase<Int32, EFPSubDocComboBox>
   {
@@ -1770,7 +1772,7 @@ namespace FreeLibSet.Forms.Docs
 #endif
 
   /// <summary>
-  /// Переходник для EFPInsideSubDocComboBox
+  /// Переходник для <see cref="EFPInsideSubDocComboBox"/>
   /// </summary>
   public class DocValueInsideSubDocComboBox : DocValueAnyDocComboBoxBase<Int32, EFPInsideSubDocComboBox>
   {
@@ -1819,7 +1821,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для EFPDocTypeComboBox с использованием в качестве значения идентификатора таблицы
+  /// Переходник для <see cref="EFPDocTypeComboBox"/> с использованием в качестве значения идентификатора таблицы
   /// </summary>
   public class DocValueDocTypeComboBoxByTableId : DocValueControl<int, EFPDocTypeComboBox>
   {
@@ -1863,7 +1865,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для EFPDocTypeComboBox с использованием в качестве значения имени таблицы
+  /// Переходник для <see cref="EFPDocTypeComboBox"/> с использованием в качестве значения имени таблицы
   /// </summary>
   public class DocValueDocTypeComboBoxByName : DocValueControl<string, EFPDocTypeComboBox>
   {
@@ -1911,7 +1913,7 @@ namespace FreeLibSet.Forms.Docs
 
   // **********************************************************************
   /// <summary>
-  /// Переходник для XmlViewBox, хранящий данные в XML поле (как текст)
+  /// Переходник для <see cref="EFPXmlViewBox"/>, хранящий данные в XML поле (как текст)
   /// </summary>
   public class DocValueXmlViewBox : DocValueControl<string, EFPXmlViewBox>
   {
@@ -1950,5 +1952,4 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
   }
-
 }

@@ -19,14 +19,14 @@ namespace FreeLibSet.Forms.Docs
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события EFPDocComboBoxBase.TextValueNeeded
+  /// Аргументы события <see cref="EFPDocComboBoxBase.TextValueNeeded"/>
   /// </summary>
   public class EFPDocComboBoxTextValueNeededEventArgs : EFPComboBoxTextValueNeededEventArgs
   {
     #region Конструктор
 
     /// <summary>
-    /// Создается в EFPDocComboBoxBase.
+    /// Создается в <see cref="EFPDocComboBoxBase"/>.
     /// </summary>
     /// <param name="owner"></param>
     public EFPDocComboBoxTextValueNeededEventArgs(EFPDocComboBoxBase owner)
@@ -43,15 +43,15 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public Int32 Id { get { return _Owner.Id; } }
 
-    private EFPDocComboBoxBase _Owner;
+    private readonly EFPDocComboBoxBase _Owner;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события EFPDocComboBoxBase.TextValueNeeded
+  /// Делегат события <see cref="EFPDocComboBoxBase.TextValueNeeded"/>
   /// </summary>
-  /// <param name="sender">Провайдер комбоблока, производный от EFPDocComboBoxBase</param>
+  /// <param name="sender">Провайдер комбоблока, производный от <see cref="EFPDocComboBoxBase"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPDocComboBoxTextValueNeededEventHandler(object sender,
     EFPDocComboBoxTextValueNeededEventArgs args);
@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Базовый класс обработчиков для комбоблока, предназначенного для выбора одного документа или 
-  /// поддокумента. Для выбора нескольких ссылок используйте EFPMultiDocComboBoxBase 
+  /// поддокумента. Для выбора нескольких ссылок используйте <see cref="EFPMultiDocComboBoxBase"/>.
   /// </summary>
   public abstract class EFPDocComboBoxBase : EFPAnyDocComboBoxBase, IDepSyncObject
   {
@@ -83,7 +83,7 @@ namespace FreeLibSet.Forms.Docs
     #region Свойство Id - идентификатор строки
 
     /// <summary>
-    /// Идентификатор документа или поддокумента
+    /// Идентификатор выбранного документа или поддокумента
     /// </summary>
     internal protected virtual Int32 Id
     {
@@ -111,8 +111,8 @@ namespace FreeLibSet.Forms.Docs
     private Int32 _Id;
 
     /// <summary>
-    /// Идентификатор строки. выбранного документа. В классах-наследниках свойство
-    /// переименовывается
+    /// Идентификатор строки выбранного документа. В классах-наследниках свойство
+    /// переименовывается.
     /// </summary>
     internal protected DepValue<Int32> IdEx
     {
@@ -152,13 +152,13 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает true при Id не равном 0.
+    /// Возвращает true при <see cref="Id"/> не равном 0.
     /// </summary>
     public override bool IsNotEmpty { get { return Id != 0; } }
 
     /// <summary>
     /// Объект-функция возвращает true, если идентификатор не равен 0.
-    /// Управляемое свойство для IsNotEmpty.
+    /// Управляемое свойство для <see cref="IsNotEmpty"/>.
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -182,18 +182,18 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Это событие вызывается после выбора значения из списка или установки свойства
-    /// Id и позволяет переопределить текст в комбоблоке, текст всплываюующей подсказки
-    /// и изображение. Событие вызывается в том числе и при Id=0
-    /// Также вызывается при обращении к свойству TextValue
+    /// <see cref="Id"/> и позволяет переопределить текст в комбоблоке, текст всплываюующей подсказки
+    /// и изображение. Событие вызывается в том числе и при <see cref="Id"/>=0.
+    /// Также вызывается при обращении к свойству <see cref="Text"/>.
     /// </summary>
     public event EFPDocComboBoxTextValueNeededEventHandler TextValueNeeded
     {
       // 18.03.2016
       // После установки обработчика требуется обновить текст, т.к. обработчик может изменить текст для Id=0
-      // или свойство Id могло быть уже установлено до присоединения обработчика
+      // или свойство Id могло быть уже установлено до присоединения обработчика.
       // Альтернатива:
       // Вызвать InitTextAndImage() из OnShown(), но тогда свойства TextValue и прочие будут иметь
-      // некорректное значение до вывода на экран
+      // некорректное значение до вывода на экран.
       add
       {
         _TextValueNeeded += value;
@@ -220,7 +220,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Установка текста элемента
-    /// EFPDocComboBox доопределяет метод для установки доступности кнопки Edit
+    /// EFPDocComboBox доопределяет метод для установки доступности кнопки "Edit".
     /// </summary>
     protected override void InitTextAndImage()
     {
@@ -275,13 +275,13 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получение текста для текущего значения, если Id!=0
+    /// Получение текста для текущего значения, если <see cref="Id"/>!=0.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     protected abstract string DoGetText();
 
     /// <summary>
-    /// Получение изображения для текущего значения, если Id!=0
+    /// Получение изображения для текущего значения, если <see cref="Id"/>!=0.
     /// </summary>
     /// <returns>Имя изображения в EFPApp.MainImages</returns>
     protected virtual string DoGetImageKey()
@@ -302,7 +302,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получение подсказки для текущего значения, если Id!=0
+    /// Получение подсказки для текущего значения, если <see cref="Id"/>!=0.
     /// </summary>
     /// <returns>Подсказка по значению</returns>
     protected virtual string DoGetValueToolTipText()
@@ -315,8 +315,8 @@ namespace FreeLibSet.Forms.Docs
     #region Свойство Deleted
 
     /// <summary>
-    /// Возвращает true, если выбранный документ или поддокумент удален
-    /// Если документ не выбран, то возвращается false
+    /// Возвращает true, если выбранный документ или поддокумент удален.
+    /// Если документ не выбран, то возвращается false.
     /// </summary>
     public bool Deleted
     {
@@ -333,9 +333,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если выбранный документ или поддокумент удален
+    /// Возвращает true, если выбранный документ или поддокумент удален.
     /// Если документ не выбран, то возвращается false.
-    /// Управляемое свойство для Deleted
+    /// Управляемое свойство для <see cref="Deleted"/>.
     /// </summary>
     public DepValue<bool> DeletedEx
     {
@@ -377,8 +377,8 @@ namespace FreeLibSet.Forms.Docs
     #region Переопределенные методы
 
     /// <summary>
-    /// Проверка наличия выбранного значения при CanBeEmpty=false.
-    /// Также проверяется, не помечен ли документ или поддокумент на удаление (используется метод GetDeletedValue())
+    /// Проверка наличия выбранного значения при <see cref="EFPAnyDocComboBoxBase.CanBeEmpty"/>=false.
+    /// Также проверяется, не помечен ли документ или поддокумент на удаление (используется метод <see cref="GetDeletedValue(out string)"/>).
     /// </summary>
     protected override void OnValidate()
     {
@@ -409,7 +409,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает или устанавливает синхронизированное значение свойства Id для реализации интерфейса IDepSyncObject.
+    /// Возвращает или устанавливает синхронизированное значение свойства <see cref="Id"/> для реализации интерфейса <see cref="IDepSyncObject"/>.
     /// </summary>
     public override object SyncValue
     {
@@ -418,7 +418,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Устанавливает Id=0
+    /// Устанавливает <see cref="Id"/>=0
     /// </summary>
     public override void Clear()
     {
@@ -440,7 +440,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Расширяет EFPDocComboBoxBase свойством Filters
+  /// Расширяет EFPDocComboBoxBase свойством Filters.
   /// </summary>
   public abstract class EFPDocComboBoxBaseWithFilters : EFPDocComboBoxBase
   {
@@ -480,7 +480,7 @@ namespace FreeLibSet.Forms.Docs
     private GridFilters _Filters;
 
     /// <summary>
-    /// Возвращает число фильтров (свойство DocFilters.Count, включая пустые фильтры)
+    /// Возвращает число фильтров (свойство <see cref="Filters"/>.Count, включая пустые фильтры)
     /// </summary>
     public int FilterCount
     {
@@ -502,7 +502,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается при изменении фильтров (событии GridFilters.Changed)
+    /// Вызывается при изменении фильтров (событии <see cref="Filters"/>.Changed)
     /// </summary>
     protected virtual void OnFiltersChanged()
     {
@@ -517,9 +517,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Проверка соответствия текущего документа DocId фильтру DocFilters
+    /// Проверка соответствия текущего документа или поддокумента <see cref="EFPDocComboBoxBase.Id"/> фильтрам <see cref="Filters"/>.
     /// </summary>
-    /// <returns>True, если документ соответствует, или DocId=0 или DocFilters неактивны</returns>
+    /// <returns>True, если документ соответствует, или <see cref="EFPDocComboBoxBase.Id"/>=0 или <see cref="Filters"/> неактивны</returns>
     public bool TestFilter()
     {
       DBxCommonFilter badFilter;
@@ -527,10 +527,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Проверка соответствия текущего документа или поддокумента (свойство Id) фильтру DocFilters
+    /// Проверка соответствия текущего документа или поддокумента <see cref="EFPDocComboBoxBase.Id"/> фильтрам <see cref="Filters"/>.
     /// </summary>
-    /// <param name="badFilter">Сюда записывается ссылка на первый фильтр в списке Filters, который не соответствует выбранному документу</param>
-    /// <returns>True, если документ соответствует фильтру, или Id=0 или DocFilters неактивны</returns>
+    /// <param name="badFilter">Сюда записывается ссылка на первый фильтр в списке <see cref="Filters"/>, который не соответствует выбранному документу</param>
+    /// <returns>True, если документ соответствует, или <see cref="EFPDocComboBoxBase.Id"/>=0 или <see cref="Filters"/> неактивны</returns>
     public bool TestFilter(out DBxCommonFilter badFilter)
     {
       badFilter = null;
@@ -545,16 +545,16 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Проверка соответствия текущего документа или поддокумента (свойство Id) фильтру DocFilters.
-    /// Этот абстрактный метод вызывается из TestFilter(), если предварительные проверки выполнены
+    /// Проверка соответствия текущего документа или поддокумента <see cref="EFPDocComboBoxBase.Id"/> фильтрам <see cref="Filters"/>.
+    /// Этот абстрактный метод вызывается из <see cref="TestFilter(out DBxCommonFilter)"/>, если предварительные проверки выполнены.
     /// </summary>
-    /// <param name="badFilter">Сюда записывается ссылка на первый фильтр в списке Filters, который не соответствует выбранному документу</param>
-    /// <returns>True, если документ соответствует фильтру, или Id=0 или DocFilters неактивны</returns>
+    /// <param name="badFilter">Сюда записывается ссылка на первый фильтр в списке <see cref="Filters"/>, который не соответствует выбранному документу</param>
+    /// <returns>True, если документ соответствует, или <see cref="EFPDocComboBoxBase.Id"/>=0 или <see cref="Filters"/> неактивны</returns>
     protected abstract bool DoTestFilter(out DBxCommonFilter badFilter);
 
     /// <summary>
     /// Доопределяет проверку корректности значения.
-    /// Вызывает TestFilter().
+    /// Вызывает <see cref="TestFilter(out DBxCommonFilter)"/>.
     /// </summary>
     protected override void OnValidate()
     {
@@ -564,9 +564,9 @@ namespace FreeLibSet.Forms.Docs
 
       try
       {
-        DBxCommonFilter BadFilter;
-        if (!TestFilter(out BadFilter))
-          SetError("Выбраное значение не проходит фильтр \"" + BadFilter.DisplayName + "\" (" + ((IEFPGridFilter)(BadFilter)).FilterText + ")");
+        DBxCommonFilter badFilter;
+        if (!TestFilter(out badFilter))
+          SetError("Выбраное значение не проходит фильтр \"" + badFilter.DisplayName + "\" (" + ((IEFPGridFilter)(badFilter)).FilterText + ")");
       }
       catch (Exception e)
       {
@@ -581,10 +581,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выполнять ли очистку текущего значения при смене фильтра, если значение не
-    /// проходит условие для нового фильтра
+    /// проходит условие для нового фильтра.
     /// Значение по умолчанию - true (очищать)
     /// Если установит в false, то "неподходящее" значение останется выбранным, но
-    /// при проверке Validate() будет выдаваться ошибка
+    /// при проверке <see cref="EFPControlBase.Validate()"/> будет выдаваться ошибка.
     /// </summary>
     public bool ClearByFilter
     {
@@ -604,12 +604,7 @@ namespace FreeLibSet.Forms.Docs
     private bool _ClearByFilter;
 
     /// <summary>
-    /// Действие, выполняемое при изменении фильтра, когда текущее значение DocId
-    /// не соответствует новому фильтру
-    /// True (по умолчанию) - сбросить DocId в 0
-    /// False - оставить текущее значение, но показать ошибку.
-    /// Значение свойства не влияет на действия, выполняемые при установке недопустимого
-    /// значения DocId. В этом случае всегда показывается ошибка
+    /// Управляемое свойство для <see cref="ClearByFilter"/>.
     /// </summary>
     public DepValue<Boolean> ClearByFilterEx
     {
@@ -645,9 +640,9 @@ namespace FreeLibSet.Forms.Docs
     #region Свойство FilterPassed
 
     /// <summary>
-    /// Свойство возвращает true, если текущий выбранный документ (Id) проходит условие фильтра.
-    /// Если свойство ClearByFilter имеет значение true (по умолчанию), то FilterPassed всегда
-    /// возвращает true, т.к. неподходящие значения обнуляются автоматически
+    /// Свойство возвращает true, если текущий выбранный документ (<see cref="EFPDocComboBoxBase.Id"/>) проходит условие фильтра.
+    /// Если свойство <see cref="ClearByFilter"/> имеет значение true (по умолчанию), то <see cref="FilterPassed"/> всегда
+    /// возвращает true, т.к. неподходящие значения обнуляются автоматически.
     /// </summary>
     public bool FilterPassed
     {
@@ -662,7 +657,7 @@ namespace FreeLibSet.Forms.Docs
     private bool _FilterPassed;
 
     /// <summary>
-    /// Версия свойства FilterPassed, с помощью которой можно управлять зависимыми значениями
+    /// Управляемое свойство для <see cref="FilterPassed"/>.
     /// </summary>
     public DepValue<bool> FilterPassedEx
     {
@@ -709,7 +704,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Объект пользовательского интерфейса для вида документов.
-    /// Свойства DocType, DocTypoeUI, DocTypeName и DocTableId являются синхронизированными
+    /// Свойства <see cref="DocType"/>, <see cref="DocTypeUI"/>, <see cref="DocTypeName"/> и <see cref="DocTableId"/> являются синхронизированными.
     /// </summary>
     public DocTypeUI DocTypeUI
     {
@@ -731,7 +726,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Описание вида документов.
-    /// Свойства DocType, DocTypoeUI, DocTypeName и DocTableId являются синхронизированными
+    /// Свойства <see cref="DocType"/>, <see cref="DocTypeUI"/>, <see cref="DocTypeName"/> и <see cref="DocTableId"/> являются синхронизированными.
     /// </summary>
     public DBxDocType DocType
     {
@@ -769,7 +764,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Имя вида документов.
-    /// Свойства DocType, DocTypoeUI, DocTypeName и DocTableId являются синхронизированными
+    /// Свойства <see cref="DocType"/>, <see cref="DocTypeUI"/>, <see cref="DocTypeName"/> и <see cref="DocTableId"/> являются синхронизированными.
     /// </summary>
     public string DocTypeName
     {
@@ -790,7 +785,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Имя типа как EFPValue
+    /// Управляемое свойство для <see cref="DocTypeName"/>
     /// </summary>
     public DepValue<string> DocTypeNameEx
     {
@@ -828,7 +823,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Идентификатор таблицы вида документов (свойство DBxDocType.TableId).
-    /// Свойства DocType, DocTypoeUI, DocTypeName и DocTableId являются синхронизированными
+    /// Свойства <see cref="DocType"/>, <see cref="DocTypeUI"/>, <see cref="DocTypeName"/> и <see cref="DocTableId"/> являются синхронизированными.
     /// </summary>
     public Int32 DocTableId
     {
@@ -849,7 +844,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Управляемое свойство для DocTableId. 
+    /// Управляемое свойство для <see cref="DocTableId"/>. 
     /// </summary>
     public DepValue<Int32> DocTableIdEx
     {
@@ -888,7 +883,7 @@ namespace FreeLibSet.Forms.Docs
     #region Выбранный идентификатор документа
 
     /// <summary>
-    /// Идентификатор документа DocId.ValueEx без создания дополнительного объекта
+    /// Идентификатор выбрааного документа или 0.
     /// </summary>
     public virtual Int32 DocId
     {
@@ -897,7 +892,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Идентификатор выбранного документа
+    /// Управляемое свойство для <see cref="DocId"/>
     /// </summary>
     public DepValue<Int32> DocIdEx
     {
@@ -909,7 +904,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Свойство FixedDocIds
 
-    // TODO: Черновая реализация FixedDocIds. Не взаимодейтсвует с Filters!
+    // TODO: Черновая реализация FixedDocIds. Не взаимодействует с Filters!
 
     /// <summary>
     /// Фиксированный список идентификаторов
@@ -926,8 +921,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Возможность задавать начальные значения при создании документа в выпадающем списке
     /// Если свойство не установлено (по умолчанию), то начальные значения определяются
-    /// фильтрами (свойством GridFilters, если задано, или текущими установленными
-    /// фильтрами в табличном просмотре справочника)
+    /// фильтрами (свойством <see cref="EFPDocComboBoxBaseWithFilters.Filters"/>, если задано, или текущими установленными
+    /// фильтрами в табличном просмотре справочника).
     /// </summary>
     public DocumentViewHandler EditorCaller
     {
@@ -941,8 +936,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Если установлено в true, то при изменении фильтров проверяется число подходящих
     /// записей. Если ровно одна запись проходит условие фильтра, то устанавливается
-    /// значение DocId.
-    /// По умолчанию - false
+    /// значение <see cref="DocId"/>.
+    /// По умолчанию - false.
     /// </summary>
     public bool AutoSelectByFilter
     {
@@ -971,7 +966,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Установить значение DocId, проходящее условия фильтра, если имеется только один
+    /// Установить значение <see cref="DocId"/>, проходящее условия фильтра, если имеется только один
     /// такой документ.
     /// </summary>
     /// <returns>true, если есть единственный документ, false, если обнаружено больше
@@ -994,7 +989,7 @@ namespace FreeLibSet.Forms.Docs
     #region Внутренняя реализация
 
     /// <summary>
-    /// Возвращает DBxDocType.SingularTitle вместо "Без названия"
+    /// Возвращает <see cref="DocType"/>.SingularTitle вместо "Без названия"
     /// </summary>
     protected override string DefaultDisplayName
     {
@@ -1002,7 +997,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает DocTypeUI.GetTextValue()
+    /// Вызывает <see cref="DocTypeUIBase.GetTextValue(int)"/>
     /// </summary>
     /// <returns>Текстовое представление документа</returns>
     protected override string DoGetText()
@@ -1011,7 +1006,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает DocTypeUI.GetImageKey()
+    /// Вызывает <see cref="DocTypeUIBase.GetImageKey(int)"/>
     /// </summary>
     /// <returns>Имя изображения для документа</returns>
     protected override string DoGetImageKey()
@@ -1020,7 +1015,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает DocTypeUI.GetRowColor()
+    /// Вызывает <see cref="DocTypeUIBase.GetRowColor(EFPDataGridViewRowAttributesEventArgs)"/>.
     /// </summary>
     /// <param name="colorType">Сюда помещается цвет строки в справочнике</param>
     /// <param name="grayed">Сюда помещается true, если запись должна быть отмечена серым цветом</param>
@@ -1030,7 +1025,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает DocTypeUI.GetToolTipText()
+    /// Вызывает <see cref="DocTypeUIBase.GetToolTipText(int)"/>
     /// </summary>
     /// <returns>Текст всплывающей подсказки для документа</returns>
     protected override string DoGetValueToolTipText()
@@ -1039,7 +1034,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Показывает диалог выбора документа с помощью одной из перегрузок метода DocTypeUI.SelectDoc()
+    /// Показывает диалог выбора документа с помощью <see cref="DocSelectDialog"/>
     /// </summary>
     protected override void DoPopup()
     {
@@ -1077,7 +1072,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получить значение поля для выбранного документа. Возвращает null, если
-    /// DocIdValue=0
+    /// <see cref="DocId"/>=0.
     /// </summary>
     /// <param name="columnName">Имя поля, значение которого нужно получить</param>
     /// <returns>Значение поля</returns>
@@ -1217,7 +1212,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Доопределяет проверку корректности выбранного документа.
-    /// Проверяет при установленном свойстве FixedDocIds, что документ есть в списке допустимых для выбора.
+    /// Проверяет при установленном свойстве <see cref="FixedDocIds"/>, что документ есть в списке допустимых для выбора.
     /// </summary>
     protected override void OnValidate()
     {
@@ -1248,11 +1243,11 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Возвращает выборку, состоящую из единственного выбранного документа.
-    /// В выборке могут быть дополнительные документы, добавляемые DocTypeUI.PerformGetDocSel()
+    /// В выборке могут быть дополнительные документы, добавляемые <see cref="DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/>.
     /// </summary>
     /// <param name="reason">Причина построения выборки</param>
     /// <returns>Выборка документов</returns>
-    protected override DBxDocSelection OnGetDocSel(EFPDBxGridViewDocSelReason reason)
+    protected override DBxDocSelection OnGetDocSel(EFPDBxViewDocSelReason reason)
     {
       DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
       if (DocType != null && DocId != 0)
@@ -1261,9 +1256,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Установка свойства DocId на основании выборки документов.
-    /// Проверяет наличие документов вида DocTypeName в выборке <paramref name="docSel"/>.
-    /// Если выборка содержит подходящие документы, свойство DocId устанавливается.
+    /// Установка свойства <see cref="DocId"/> на основании выборки документов.
+    /// Проверяет наличие документов вида <see cref="DocTypeName "/> в выборке <paramref name="docSel"/>.
+    /// Если выборка содержит подходящие документы, свойство <see cref="DocId"/> устанавливается.
     /// Если в выборке есть несколько подходящих документов, то какой из них будет использован,
     /// не определено.
     /// </summary>
@@ -1290,10 +1285,10 @@ namespace FreeLibSet.Forms.Docs
     #region Проверка идентификатора документа
 
     /// <summary>
-    /// Проверяет возможность присвоения заданного идентификатора документа без реальной установки фильтра
-    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false 
+    /// Проверяет возможность присвоения заданного идентификатора документа без реальной установки фильтра.
+    /// Возвращает false, если документ удален, а свойство <see cref="EFPAnyDocComboBoxBase.CanBeDeleted"/>=false 
     /// (значение по умолчанию). Также возвращает false, если документ не проходит условие фильтра.
-    /// Если <paramref name="docId"/>=0, то проверяется свойство CanBeEmpty.
+    /// Если <paramref name="docId"/>=0, то проверяется свойство <see cref="EFPAnyDocComboBoxBase.CanBeEmpty"/>.
     /// </summary>
     /// <param name="docId">Идентификатор проверяемого документа</param>
     /// <returns>True, если документ является подходящим</returns>
@@ -1304,10 +1299,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Проверяет возможность присвоения заданного идентификатора документа без реальной установки фильтра
-    /// Возвращает false, если документ удален, а свойство CanBeDeleted=false.
+    /// Проверяет возможность присвоения заданного идентификатора документа без реальной установки фильтра.
+    /// Возвращает false, если документ удален, а свойство <see cref="EFPAnyDocComboBoxBase.CanBeDeleted"/>=false 
     /// (значение по умолчанию). Также возвращает false, если документ не проходит условие фильтра.
-    /// Если <paramref name="docId"/>=0, то проверяется свойство CanBeEmpty.
+    /// Если <paramref name="docId"/>=0, то проверяется свойство <see cref="EFPAnyDocComboBoxBase.CanBeEmpty"/>.
     /// </summary>
     /// <param name="docId">Идентификатор проверяемого документа</param>
     /// <param name="message">Сюда помещается сообщение, почему документ является непродходящим</param>
@@ -1326,7 +1321,6 @@ namespace FreeLibSet.Forms.Docs
         return false;
       }
       UI.DocProvider.CheckIsRealDocId(docId);
-
 
       if (UI.DocProvider.DocTypes.UseDeleted)
       {
@@ -1365,7 +1359,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Создание провайдера.
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер для EFPControl</param>
+    /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляюший элемент комбоблока</param>
     /// <param name="ui">Пользовательский интерфейс для работы с документами</param>
     /// <param name="docTypeNames">Список типов документов, из которого можно выбирать. Если задано null, 
@@ -1401,9 +1395,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создание провайдера.
-    /// Выбор производится из всех существующих видов документов
+    /// Выбор производится из всех существующих видов документов.
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер для EFPControl</param>
+    /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляюший элемент комбоблока</param>
     /// <param name="ui">Пользовательский интерфейс для работы с документами</param>
     public EFPDocTypeComboBox(EFPBaseProvider baseProvider, ComboBox control, DBUI ui)
@@ -1460,7 +1454,8 @@ namespace FreeLibSet.Forms.Docs
     private string _EmptyText;
 
     /// <summary>
-    /// Имя изображения из списка EFPApp.MainImages, которое используется при отсутствии выбранного вида документов. По умолчанию - "No"
+    /// Имя изображения из списка <see cref="EFPApp.MainImages"/>, которое используется при отсутствии выбранного вида документов. 
+    /// По умолчанию - "No".
     /// </summary>
     public string EmptyImageKey { get { return _EmptyImageKey; } set { _EmptyImageKey = value; } }
     private string _EmptyImageKey;
@@ -1493,7 +1488,8 @@ namespace FreeLibSet.Forms.Docs
     #region Как ссылка на объявление типа
 
     /// <summary>
-    /// Выбранный тип документа
+    /// Выбранный тип документа.
+    /// Свойства <see cref="DocType"/>, <see cref="DocTypeName"/> и <see cref="DocTableId"/> являются взаимозависимыми.
     /// </summary>
     public DBxDocType DocType
     {
@@ -1518,7 +1514,8 @@ namespace FreeLibSet.Forms.Docs
     #region Как идентификатор таблицы
 
     /// <summary>
-    /// Идентификатор таблицы для выбранного типа документа
+    /// Идентификатор таблицы для выбранного типа документа.
+    /// Свойства <see cref="DocType"/>, <see cref="DocTypeName"/> и <see cref="DocTableId"/> являются взаимозависимыми.
     /// </summary>
     public Int32 DocTableId
     {
@@ -1536,8 +1533,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Идентификатор строки. выбранного документа. В классах-наследниках свойство
-    /// переименовывается
+    /// Управляемое свойство для <see cref="DocTableId"/>.
     /// </summary>
     public DepValue<Int32> DocTableIdEx
     {
@@ -1579,7 +1575,8 @@ namespace FreeLibSet.Forms.Docs
     #region Как имя таблицы
 
     /// <summary>
-    /// Выьранный в данный момент вид документов
+    /// Выбранный в данный момент вид документов.
+    /// Свойства <see cref="DocType"/>, <see cref="DocTypeName"/> и <see cref="DocTableId"/> являются взаимозависимыми.
     /// </summary>
     public string DocTypeName
     {
@@ -1588,7 +1585,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Управляемое свойство для DocTypeName
+    /// Управляемое свойство для <see cref="DocTypeName"/>.
     /// </summary>
     public DepValue<string> DocTypeNameEx
     {
@@ -1602,8 +1599,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Обработчик для комбоблока, предназначенного для выбора поддокумента
-  /// Поддокументы должны быть сохранены в базе данных, а не относиться к текущему редактируемому документу
+  /// Обработчик для комбоблока, предназначенного для выбора поддокумента.
+  /// Поддокументы должны быть сохранены в базе данных, а не относиться к текущему редактируемому документу.
+  /// Для выбора поддокумента из списка редактируемых используйте <see cref="EFPInsideSubDocComboBox"/>.
   /// </summary>
   public class EFPSubDocComboBox : EFPDocComboBoxBase
   {
@@ -1614,7 +1612,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="subDocTypeUI">Интерфейс доствпа к поддокументам</param>
+    /// <param name="subDocTypeUI">Интерфейс доступа к поддокументам</param>
     public EFPSubDocComboBox(EFPBaseProvider baseProvider, UserSelComboBox control, SubDocTypeUI subDocTypeUI)
       : base(baseProvider, control, subDocTypeUI.UI)
     {
@@ -1636,9 +1634,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создает провайдер, связанный с уже добавленным провайдером комбоблока выбора документа.
-    /// Кроме обычной инициализации, устанавливает связь для свойства DocIdEx
+    /// Кроме обычной инициализации, устанавливает связь для свойства <see cref="DocIdEx"/>.
     /// </summary>
-    /// <param name="docComboBoxProvider">Провайдер комбоблока выбора документа</param>
+    /// <param name="docComboBoxProvider">Провайдер комбоблока выбора документа. Не может быть null</param>
     /// <param name="control">Управляющий элемент</param>
     /// <param name="subDocTypeName">Имя вида поддокументов в <paramref name="docComboBoxProvider"/>.DocType.subDocs.</param>
     public EFPSubDocComboBox(EFPDocComboBox docComboBoxProvider, UserSelComboBox control, string subDocTypeName)
@@ -1660,7 +1658,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Объект пользовательского интерфейса для вида поддокументов.
-    /// Свойства SubDocTypeUI, SubDocType и SubDocTypeName являются синхронизированными.
+    /// Свойства <see cref="SubDocTypeUI"/>, <see cref="SubDocType"/> и <see cref="SubDocTypeName"/> являются синхронизированными.
     /// </summary>
     public SubDocTypeUI SubDocTypeUI
     {
@@ -1679,7 +1677,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Имя таблицы поддокументов.
-    /// Свойства SubDocTypeUI, SubDocType и SubDocTypeName являются синхронизированными.
+    /// Свойства <see cref="SubDocTypeUI"/>, <see cref="SubDocType"/> и <see cref="SubDocTypeName"/> являются синхронизированными.
     /// </summary>
     public string SubDocTypeName
     {
@@ -1693,7 +1691,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Описание вида документов, к которому относятся поддокументы
+    /// Описание основного вида документов, к которому относятся поддокументы.
     /// </summary>
     public DBxDocType DocType
     {
@@ -1708,7 +1706,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Описание вида поддокументов.
-    /// Свойства SubDocTypeUI, SubDocType и SubDocTypeName являются синхронизированными.
+    /// Свойства <see cref="SubDocTypeUI"/>, <see cref="SubDocType"/> и <see cref="SubDocTypeName"/> являются синхронизированными.
     /// </summary>
     public DBxSubDocType SubDocType
     {
@@ -1730,7 +1728,8 @@ namespace FreeLibSet.Forms.Docs
     /// Если свойство установлено в явном виде, то попытка выбрать "чужой" поддокумент
     /// приводит к индикации ошибки.
     /// Если свойство не установлено в явном виде, то разрешается установка произвольного значения
-    /// свойства SubDocId, при этом возвращаемое значение будет меняться
+    /// свойства <see cref="SubDocId"/>, при этом возвращаемое значение <see cref="DocId"/> будет меняться в зависимости от того,
+    /// к какому документу относится выбранный поддокумент.
     /// </summary>
     public virtual Int32 DocId
     {
@@ -1795,9 +1794,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация свойства SubDocId.
-    /// Устанавливает значение равным 0. Затем, если есть DocId!=0, AutoSetIfSingle=true и документ содержит ровно один
-    /// поддокумент, выбирается он. Иначе, если документ выбран и есть обработчик события InitDefSubDoc, вызывается это событие.
+    /// Инициализация свойства <see cref="SubDocId"/>.
+    /// Устанавливает значение равным 0. Затем, если есть <see cref="DocId"/>!=0, <see cref="AutoSetIfSingle"/>=true и документ содержит ровно один
+    /// поддокумент, выбирается он. Иначе, если документ выбран и есть обработчик события <see cref="InitDefSubDoc"/>, вызывается это событие.
     /// </summary>
     public void PerformInitDefSubDoc()
     {
@@ -1820,7 +1819,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Управляемое свойство для DocId.
+    /// Управляемое свойство для <see cref="DocId"/>.
+    /// Если в диалоге требуется выбирать документ и поддокумент, относящийся к этому документу, это свойство присоединяют как зависимое свойство
+    /// к <see cref="EFPDocComboBox.DocIdEx"/>, или используют специальную перегрузку конструктора.
     /// </summary>
     public DepValue<Int32> DocIdEx
     {
@@ -1866,7 +1867,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Свойство возвращает источник, управляющий текущим основным документом 
     /// (то есть значение, которое было присвоено свойству DocIdEx)
-    /// или null, если внешнего управления нет
+    /// или null, если внешнего управления нет.
     /// 
     /// Пилотное свойство. Возможно, такие конструкции надо приделать всем 
     /// управляемым свойствам всех провайдеров
@@ -1884,10 +1885,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается после установки ненулевого значения свойства
-    /// DocId (при этом SubDocId сбрасывается). Обработчик может
-    /// установить желаемый SubDocId. 
-    /// Событие не вызывается, если установлено свойство AutoSetIfSingle и есть ровно
-    /// один поддокумент
+    /// <see cref="DocId"/> (при этом <see cref="SubDocId"/> сбрасывается). Обработчик может
+    /// установить желаемый идентификатор <see cref="SubDocId"/>. 
+    /// Событие не вызывается, если установлено свойство <see cref="AutoSetIfSingle"/>=true и в документе есть ровно
+    /// один поддокумент.
     /// </summary>
     public event EventHandler InitDefSubDoc;
 
@@ -1939,7 +1940,8 @@ namespace FreeLibSet.Forms.Docs
     private bool _InsideSetSubDocId = false;
 
     /// <summary>
-    /// Идентификатор выбранного поддокумента
+    /// Идентификатор выбранного поддокумента.
+    /// Управляемое свойство для <see cref="SubDocId"/>.
     /// </summary>
     public DepValue<Int32> SubDocIdEx
     {
@@ -1952,11 +1954,11 @@ namespace FreeLibSet.Forms.Docs
     #region Свойство AutoSetIfSingle
 
     /// <summary>
-    /// Если установать в true, то при установке значения DocId перед вызовом 
-    /// события InitDefSubSoc будет загружен список поддокументов (кроме удаленных).
+    /// Если установать в true, то при установке ненулевого значения <see cref="DocId"/> перед вызовом 
+    /// события <see cref="InitDefSubDoc"/> будет загружен список поддокументов (кроме удаленных).
     /// Если в списке есть ровно один поддокумент, то его идентификатор присваивается
-    /// свойство SubDocId и событие InitDefSubSoc не вызывается.
-    /// Значение по умолчанию - false
+    /// свойству <see cref="SubDocId"/> и событие <see cref="InitDefSubDoc"/> не вызывается.
+    /// Значение по умолчанию - false.
     /// </summary>
     public bool AutoSetIfSingle
     {
@@ -1984,11 +1986,7 @@ namespace FreeLibSet.Forms.Docs
     private bool _AutoSetIfSingle;
 
     /// <summary>
-    /// Если установать в true, то при установке значения DocId перед вызовом 
-    /// события InitDefSubSoc будет загружен список поддокументов (кроме удаленных).
-    /// Если в списке есть ровно один поддокумент, то его идентификатор присваивается
-    /// свойство SubDocId и событие InitDefSubSoc не вызывается.
-    /// Управляемое свойство для AutoSetIfSingle.
+    /// Управляемое свойство для <see cref="AutoSetIfSingle"/>.
     /// </summary>
     public DepValue<Boolean> AutoSetIfSingleEx
     {
@@ -2025,7 +2023,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Проверка корректности выбранного значения.
-    /// Проверяет, что поддокумент относится к документу, если свойство DocId установлено.
+    /// Проверяет, что поддокумент относится к документу, если свойство <see cref="DocId"/> установлено.
     /// </summary>
     protected override void OnValidate()
     {
@@ -2049,7 +2047,7 @@ namespace FreeLibSet.Forms.Docs
     #region Внутренняя реализация
 
     /// <summary>
-    /// Возвращает DBxSubDocType.SingularTitle вместо "Без названия"
+    /// Возвращает <see cref="SubDocType"/>.SingularTitle вместо "Без названия".
     /// </summary>
     protected override string DefaultDisplayName
     {
@@ -2057,7 +2055,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает SubDocTypeUI.GetTextValue()
+    /// Возвращает <see cref="SubDocTypeUI"/>.GetTextValue(<see cref="SubDocId"/>).
     /// </summary>
     /// <returns>Текстовое представление для поддокумента</returns>
     protected override string DoGetText()
@@ -2066,7 +2064,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает SubDocTypeUI.GetImageKey()
+    /// Возвращает <see cref="SubDocTypeUI"/>.GetImageKey(<see cref="SubDocId"/>).
     /// </summary>
     /// <returns>Имя изображения для поддокумента</returns>
     protected override string DoGetImageKey()
@@ -2075,7 +2073,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает SubDocTypeUI.GetToolTipText()
+    /// Возвращает <see cref="SubDocTypeUI"/>.GetToolTipText(<see cref="SubDocId"/>).
     /// </summary>
     /// <returns>Всплывающая подсказка для поддокумента</returns>
     protected override string DoGetValueToolTipText()
@@ -2084,7 +2082,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает SubDocTypeUI.GetRowColor()
+    /// Возвращает <see cref="SubDocTypeUI"/>.GetRowColor(<see cref="SubDocId"/>).
     /// </summary>
     /// <param name="colorType">Сюда помещается цвет строки в справочнике</param>
     /// <param name="grayed">Сюда помещается true, если запись должна быть отмечена серым цветом</param>
@@ -2094,8 +2092,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Показывает диалог выбора поддокумента вызовом SubDocTypeUI.SelectSubDoc().
-    /// Если свойство DocId=0, то выдается сообщение об ошибке.
+    /// Показывает диалог выбора поддокумента с помощью <see cref="SubDocSelectDialog"/>.
+    /// Если свойство <see cref="DocId"/>=0, то выдается сообщение об ошибке.
     /// </summary>
     protected override void DoPopup()
     {
@@ -2161,7 +2159,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает значение поля с помощью вызова SubDocTypeUI.GetValue().
+    /// Возвращает значение поля с помощью вызова <see cref="SubDocTypeUI"/>.GetValue(<see cref="SubDocId"/>, <paramref name="columnName"/>).
     /// Если нет выбранного поддокумента, возвращает null.
     /// </summary>
     /// <param name="columnName">Имя поля поддокумента. Допускаются ссылочные поля с точками</param>
@@ -2176,7 +2174,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Возвращает true, если поддокумент или документ, к которому он относится, удалены.
-    /// Если DBxDocType.UseDeleted=false, всегода возвращается false.
+    /// Если <see cref="DBxDocTypes.UseDeleted"/>=false, всегда возвращается false.
     /// </summary>
     /// <param name="message">Сюда записывается сообщение, что именно удалено.</param>
     /// <returns>True для удаленного (под)документа</returns>
@@ -2237,18 +2235,18 @@ namespace FreeLibSet.Forms.Docs
     #region Выборка документов
 
     /// <summary>
-    /// Возвращает true, если есть обработчик события SubDocTypeUI.GetDocSel
+    /// Возвращает true, если есть обработчик события <see cref="SubDocTypeUI"/>.GetDocSel.
     /// </summary>
     public override bool GetDocSelSupported { get { return SubDocTypeUI.HasGetDocSel; } } // 31.10.2016
 
     /// <summary>
-    /// Вызывает обработчик события SubDocTypeUI.GetDocSel для получения ссылок на документы,
-    /// если это предусмотрена.
+    /// Вызывает обработчик события <see cref="SubDocTypeUI"/>.GetDocSel для получения ссылок на документы,
+    /// если это предусмотрено.
     /// Ссылка на документ, к которому относится выбранный поддокумент, НЕ ДОБАВЛЯЕТСЯ в выборку.
     /// </summary>
     /// <param name="Reason">Причина создания выборки</param>
     /// <returns>Выборка документов</returns>
-    protected override DBxDocSelection OnGetDocSel(EFPDBxGridViewDocSelReason Reason)
+    protected override DBxDocSelection OnGetDocSel(EFPDBxViewDocSelReason Reason)
     {
       DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
       if (SubDocId != 0)
@@ -2263,8 +2261,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Обработчик для комбоблока, предназначенного для выбора поддокумента в редакторе документа
-  /// Поддокументы относят к текущему редактируемому документу
+  /// Обработчик для комбоблока, предназначенного для выбора поддокумента в редакторе документа.
+  /// Поддокументы относятся к текущему редактируемому документу.
+  /// Для выбора поддокументов, относящихся к другим документам в базе данных, а не в текущем редактируемом документе, используйте <see cref="EFPSubDocComboBox"/>.
   /// </summary>
   public class EFPInsideSubDocComboBox : EFPDocComboBoxBase
   {
@@ -2311,17 +2310,20 @@ namespace FreeLibSet.Forms.Docs
     public DBxDocType DocType { get { return _SubDocs.Owner.DocType; } }
 
     /// <summary>
-    /// Описание вида поддокументов
+    /// Описание вида поддокументов.
+    /// Свойства <see cref="SubDocType"/>, <see cref="SubDocTypeName"/> и <see cref="SubDocTypeUI"/> возвращают связанные значения.
     /// </summary>
     public DBxSubDocType SubDocType { get { return _SubDocs.SubDocType; } }
 
     /// <summary>
-    /// Имя таблицы поддокументов
+    /// Имя таблицы поддокументов.
+    /// Свойства <see cref="SubDocType"/>, <see cref="SubDocTypeName"/> и <see cref="SubDocTypeUI"/> возвращают связанные значения.
     /// </summary>
     public string SubDocTypeName { get { return SubDocType.Name; } }
 
     /// <summary>
-    /// Интерфейс для доступа к поддокументам
+    /// Интерфейс для доступа к поддокументам.
+    /// Свойства <see cref="SubDocType"/>, <see cref="SubDocTypeName"/> и <see cref="SubDocTypeUI"/> возвращают связанные значения.
     /// </summary>
     public SubDocTypeUI SubDocTypeUI
     {
@@ -2370,7 +2372,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификатор выбранного поддокумента.
     /// Может быть фиктивным идентификатором, если поддокумент был добавлен, но не было еще
-    /// вызова DBxDocSet.ApplyChanges().
+    /// вызова <see cref="DBxDocSet.ApplyChanges(bool)"/>.
     /// </summary>
     public Int32 SubDocId
     {
@@ -2380,7 +2382,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Идентификатор выбранного поддокумента.
-    /// Управляемое свойство для SubDocId.
+    /// Управляемое свойство для <see cref="SubDocId"/>.
     /// </summary>
     public DepValue<Int32> SubDocIdEx
     {
@@ -2393,7 +2395,7 @@ namespace FreeLibSet.Forms.Docs
     #region Внутренняя реализация
 
     /// <summary>
-    /// Возвращает DBxSubDocType.SingularTitle вместо "Без названия"
+    /// Возвращает <see cref="SubDocType"/>.SingularTitle вместо "Без названия"
     /// </summary>
     protected override string DefaultDisplayName
     {
@@ -2401,13 +2403,13 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает текст поддокумента вызовом DBxDocTextHandlers.GetTextValue()
+    /// Возвращает текст поддокумента вызовом <see cref="DBxDocTextHandlers.GetTextValue(DBxSubDoc)"/>.
     /// </summary>
     /// <returns>Текстовое представление поддокумента</returns>
     protected override string DoGetText()
     {
-      DBxSubDoc SubDoc = SubDocs.GetSubDocById(SubDocId);
-      return UI.TextHandlers.GetTextValue(SubDoc);
+      DBxSubDoc subDoc = SubDocs.GetSubDocById(SubDocId);
+      return UI.TextHandlers.GetTextValue(subDoc);
       /*
       DataRow Row = CurrentRow;
       if (Row == null)
@@ -2417,7 +2419,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает DBxDocImageHandlers.GetImageKey()
+    /// Вызывает <see cref="DBxDocImageHandlers.GetImageKey(DBxSubDoc)"/>.
     /// </summary>
     /// <returns>Имя изображения для поддокумента</returns>
     protected override string DoGetImageKey()
@@ -2427,7 +2429,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает DBxDocImageHandlers.GetRowColor()
+    /// Вызывает <see cref="DBxDocImageHandlers.GetRowColor(DBxSubDoc, out EFPDataGridViewColorType, out bool)"/>.
     /// </summary>
     /// <param name="colorType">Сюда записывается цветовое оформление строки</param>
     /// <param name="grayed">Сюда записывается true, если строка должна быть выделена серым цветом</param>
@@ -2451,7 +2453,7 @@ namespace FreeLibSet.Forms.Docs
      * */
 
     /// <summary>
-    /// Показывает диалог выбора поддокумента вызовом SubDocTypeUI.SelectSubDoc()
+    /// Показывает диалог выбора поддокумента с помощью <see cref="SubDocSelectDialog"/>.
     /// </summary>
     protected override void DoPopup()
     {
@@ -2487,7 +2489,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Возвращает true, если поддокумент помечен на удаление или
     /// помечен на удаление документ, к которому относится поддокумент.
-    /// Если DBxDocTypes.UseDeleted=false, то возвращается false.
+    /// Если <see cref="DBxDocTypes.UseDeleted"/>=false, то возвращается false.
     /// </summary>
     /// <param name="message">Сюда записывается сообщение</param>
     /// <returns>True, если (под)документ удален</returns>

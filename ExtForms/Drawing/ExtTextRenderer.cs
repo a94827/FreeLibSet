@@ -100,7 +100,7 @@ namespace FreeLibSet.Drawing
     /// <summary>
     /// Освобождает занятые объекты GDI-plus, если <paramref name="disposing"/>=true.
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose()</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/></param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)

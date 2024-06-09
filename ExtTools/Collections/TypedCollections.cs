@@ -16,7 +16,7 @@ namespace FreeLibSet.Core
   #region Интерфейс IReadOnlyObject
 
   /// <summary>
-  /// Интерфейс объекта, имеющего свойство IsReadOnly, которое может быть однократно установлено в true
+  /// Интерфейс объекта, имеющего свойство IsReadOnly.
   /// </summary>
   public interface IReadOnlyObject
   {
@@ -34,7 +34,7 @@ namespace FreeLibSet.Core
      * */
 
     /// <summary>
-    /// Этот метод должен выбрасывать ObjectReadOnlyException, если IsReadOnly=true
+    /// Этот метод должен выбрасывать <see cref="ObjectReadOnlyException"/>, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     void CheckNotReadOnly();
   }
@@ -202,7 +202,7 @@ namespace FreeLibSet.Collections
     #region Коллекция ключей
 
     /// <summary>
-    /// Реализация свойства Keys
+    /// Реализация свойства <see cref="Keys"/>
     /// </summary>
     public sealed class KeyCollection : IList<TKey>, ICollection
     {
@@ -427,7 +427,7 @@ namespace FreeLibSet.Collections
     #region Коллекция значений
 
     /// <summary>
-    /// Реализация свойства Values
+    /// Реализация свойства <see cref="Values"/>
     /// </summary>
     public sealed class ValueCollection : IList<TValue>, ICollection
     {
@@ -472,7 +472,7 @@ namespace FreeLibSet.Collections
       /// <summary>
       /// Получить значение по индексу.
       /// Порядок элементов соответствует порядку добавления элементов в список.
-      /// Установка свойства не поддерживается
+      /// Установка свойства не поддерживается.
       /// </summary>
       /// <param name="index">Индекс элемента от 0 до Count-1</param>
       /// <returns>Значение</returns>
@@ -520,7 +520,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Копирует все значения в массив.
-      /// Порядок элементов соответствует порядку добавления элементов в список
+      /// Порядок элементов соответствует порядку добавления элементов в список.
       /// </summary>
       /// <param name="array">Заполняемый массив</param>
       public void CopyTo(TValue[] array)
@@ -531,7 +531,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Копирует все значения в массив.
-      /// Порядок элементов соответствует порядку добавления элементов в список
+      /// Порядок элементов соответствует порядку добавления элементов в список.
       /// </summary>
       /// <param name="array">Заполняемый массив</param>
       /// <param name="arrayIndex">Начальный индекс в заполняемом массиве</param>
@@ -543,7 +543,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Копирует часть значений в массив.
-      /// Порядок элементов соответствует порядку добавления элементов в список
+      /// Порядок элементов соответствует порядку добавления элементов в список.
       /// </summary>
       /// <param name="index">Индекс первого элемента в текущем списке, с которого начинать копирование</param>
       /// <param name="array">Заполняемый массив</param>
@@ -571,7 +571,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Реализация перечислителя по значениям.
-      /// Порядок перебора соответствует порядку добавления элементов в список
+      /// Порядок перебора соответствует порядку добавления элементов в список.
       /// </summary>
       [Serializable]
       public struct Enumerator : IEnumerator<TValue>
@@ -669,7 +669,7 @@ namespace FreeLibSet.Collections
 
       /// <summary>
       /// Возвращает массив значений.
-      /// Порядок элементов соответствует порядку добавления элементов в список
+      /// Порядок элементов соответствует порядку добавления элементов в список.
       /// </summary>
       /// <returns>Массив значений</returns>
       public TValue[] ToArray()
@@ -750,7 +750,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Доступ по ключу
     /// Если запрошен несуществуюший код, генерируется исключение.
-    /// Установка значения с несуществующим кодом выполняет добавление элемента
+    /// Установка значения с несуществующим кодом выполняет добавление элемента.
     /// </summary>
     /// <param name="key">Ключ</param>
     /// <returns>Значение</returns>
@@ -816,7 +816,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1374,7 +1374,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Доступ к значению по ключу.
     /// При установке значения свойства проверяется, не было ли значения с таким ключом.
-    /// Если значение было и значения не совпадают, вызывается <see cref="IDisposable.Dispose()"/> для старого значения
+    /// Если значение было и значения не совпадают, вызывается <see cref="IDisposable.Dispose()"/> для старого значения.
     /// </summary>
     /// <param name="key">Ключ</param>
     /// <returns>Значение</returns>
@@ -1637,7 +1637,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создание потокобезопасного списка на основе List
+    /// Создание потокобезопасного списка на основе <see cref="List{T}"/> 
     /// </summary>
     public SyncCollection()
       : this(new List<T>())
@@ -1645,7 +1645,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создание потокобезопасного списка на основе List с заданной начальной емкостью
+    /// Создание потокобезопасного списка на основе <see cref="List{T}"/>  с заданной начальной емкостью
     /// </summary>
     /// <param name="capacity">Начальная емкость списка</param>
     public SyncCollection(int capacity)
@@ -1662,7 +1662,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     // ReSharper disable once InconsistentlySynchronizedField
     protected ICollection<T> Source { get { return _Source; } }
-    private ICollection<T> _Source;
+    private readonly ICollection<T> _Source;
 
     /// <summary>
     /// Возвращает копию массива элементов.
@@ -1733,10 +1733,10 @@ namespace FreeLibSet.Collections
     private T[] _CopyArray;
 
     /// <summary>
-    /// Получение копии массива значений
-    /// На момент вызова SyncRoot должен быть заблокирован
+    /// Получение копии массива значений.
+    /// На момент вызова <see cref="SyncRoot"/> должен быть заблокирован.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив значений</returns>
     protected T[] GetCopyArray()
     {
       if (Object.ReferenceEquals(_CopyArray, null))
@@ -1751,8 +1751,8 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Сброс внутренней копии массива.
-    /// Должен вызываться при внесении любых изменений в исходную коллекцию
-    /// На момент вызова SyncRoot должен быть заблокирован
+    /// Должен вызываться при внесении любых изменений в исходную коллекцию.
+    /// На момент вызова <see cref="SyncRoot"/> должен быть заблокирован.
     /// </summary>
     protected void ResetCopyArray()
     {
@@ -1890,7 +1890,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает перечислитель по копии списка.
     /// 
-    /// Тип возвращаемого значения (ArrayEnumerator) может измениться в будущем, 
+    /// Тип возвращаемого значения может измениться в будущем, 
     /// гарантируется только реализация интерфейса перечислителя.
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
@@ -1932,7 +1932,7 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Потокобезопасный словарь объектов, реализующая перечислитель по копии словаря
+  /// Потокобезопасный словарь объектов, реализующая перечислитель по копии словаря.
   /// Этот класс не является сериализуемым.
   /// </summary>
   /// <typeparam name="TKey">Тип ключа</typeparam>
@@ -1953,7 +1953,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создание потокобезопасного списка на основе Dictionary
+    /// Создание потокобезопасного списка на основе <see cref="Dictionary{TKey, TValue}"/>
     /// </summary>
     public SyncDictionary()
       : this(new Dictionary<TKey, TValue>())
@@ -1961,7 +1961,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Создание потокобезопасного списка на основе Dictionary
+    /// Создание потокобезопасного списка на основе <see cref="Dictionary{TKey, TValue}"/> заданной начальной емкости
     /// </summary>
     /// <param name="capacity">Начальная емкость коллекции</param>
     public SyncDictionary(int capacity)
@@ -1983,7 +1983,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает "Count=XXX"
     /// </summary>
-    /// <returns>ЯТекстовое представление</returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       lock (SyncRoot)
@@ -2007,7 +2007,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Получить массив ключей
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив ключей</returns>
     public TKey[] KeysToArray()
     {
       lock (SyncRoot)
@@ -2021,7 +2021,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Получить массив значений
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив значений</returns>
     public TValue[] ValuesToArray()
     {
       lock (SyncRoot)
@@ -2033,9 +2033,9 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Получить массив значений
+    /// Получить массив ключей и значений.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив пар Ключ-Значение</returns>
     public KeyValuePair<TKey, TValue>[] ToArray()
     {
       lock (SyncRoot)
@@ -2056,10 +2056,10 @@ namespace FreeLibSet.Collections
     private Dictionary<TKey, TValue> _CopyDict;
 
     /// <summary>
-    /// Получение копии коллекции
-    /// На момент вызова SyncRoot должен быть заблокирован
+    /// Получение копии словаря.
+    /// На момент вызова <see cref="SyncRoot"/> должен быть заблокирован.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Словарь</returns>
     protected Dictionary<TKey, TValue> GetCopyDictionary()
     {
       if (Object.ReferenceEquals(_CopyDict, null))
@@ -2075,8 +2075,8 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Сброс внутренней копии коллекции.
-    /// Должен вызываться при внесении любых изменений в исходную коллекцию
-    /// На момент вызова SyncRoot должен быть заблокирован
+    /// Должен вызываться при внесении любых изменений в исходную коллекцию.
+    /// На момент вызова <see cref="SyncRoot"/> должен быть заблокирован.
     /// </summary>
     protected void ResetCopyDictionary()
     {
@@ -2120,7 +2120,7 @@ namespace FreeLibSet.Collections
     /// работы с полученной коллекцией выполняется модификация основного словаря. 
     /// Также свойство может возвращать разные коллекции при последовательных обращениях. Поэтому следует
     /// сохранять полученную ссылку, если она используется несколько раз.
-    /// Можно использовать метод KeysToArray()
+    /// Можно использовать метод <see cref="KeysToArray()"/>.
     /// </summary>
     public ICollection<TKey> Keys
     {
@@ -2167,7 +2167,7 @@ namespace FreeLibSet.Collections
     /// работы с полученной коллекцией выполняется модификация основного словаря. 
     /// Также свойство может возвращать разные коллекции при последовательных обращениях. Поэтому следует
     /// сохранять полученную ссылку, если она используется несколько раз.
-    /// Можно использовать метод ValuesToArray()
+    /// Можно использовать метод <see cref="ValuesToArray()"/>.
     /// </summary>
     public ICollection<TValue> Values
     {
@@ -2416,7 +2416,7 @@ namespace FreeLibSet.Collections
 
   /// <summary>
   /// Потокобезопасная очередь.
-  /// В отличие от основного класса System.Queue, не реализует интерфейс ICollection.
+  /// В отличие от основного класса <see cref="System.Collections.Generic.Queue{T}"/>, не реализует интерфейс <see cref="ICollection{T}"/>.
   /// Этот класс не является сериализуемым.
   /// </summary>
   /// <typeparam name="T">Тип хранимых значений</typeparam>
@@ -2595,7 +2595,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Выполняет попытку извлечь значение из очереди.
-    /// Этого метода нет в основном объекте Queue
+    /// Этого метода нет в основном объекте <see cref="Queue{T}"/>.
     /// </summary>
     /// <param name="item">Сюда помещается элемент, если его удалось извлечь</param>
     /// <returns>true, если очередь не была пуста</returns>
@@ -2618,7 +2618,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Получить элемент из головы очереди без удаления.
-    /// Возникает исключение, если очередь пуста
+    /// Возникает исключение, если очередь пуста.
     /// </summary>
     /// <returns>Первый элемент в очереди</returns>
     public T Peek()
@@ -2631,8 +2631,8 @@ namespace FreeLibSet.Collections
 
 
     /// <summary>
-    /// Выполняет попытку получить значение из головы очереди без его извлечения
-    /// Этого метода нет в основном объекте Queue
+    /// Выполняет попытку получить значение из головы очереди без его извлечения.
+    /// Этого метода нет в основном объекте <see cref="Queue"/>.
     /// </summary>
     /// <param name="item">Сюда помещается элемент, если его удалось извлечь</param>
     /// <returns>true, если очередь не была пуста</returns>
@@ -2655,7 +2655,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает массив всех элементов в очереди.
-    /// Нулевым элементом массива будет голова очереди, а последним - хвост
+    /// Нулевым элементом массива будет голова очереди, а последним - хвост.
     /// </summary>
     /// <returns>Массив элементов</returns>
     public T[] ToArray()
@@ -2695,7 +2695,7 @@ namespace FreeLibSet.Collections
 
   /// <summary>
   /// Потокобезопасный стек.
-  /// В отличие от основного класса System.Stack, не реализует интерфейс ICollection.
+  /// В отличие от основного класса <see cref="System.Collections.Generic.Stack{T}"/>, не реализует интерфейс <see cref="ICollection{T}"/>.
   /// Этот класс не является сериализуемым.
   /// </summary>
   /// <typeparam name="T">Тип хранимых значений</typeparam>
@@ -7320,7 +7320,7 @@ namespace FreeLibSet.Collections
   /// <summary>
   /// Фиктивная реализация типизированного списка, не содержащего элементов.
   /// Класс предназначен только для реализации интерфейса IList, ICollection, IEnumerable.
-  /// При попытке добавления элементов генерируется исключение
+  /// При попытке добавления элементов генерируется исключение.
   /// </summary>
   /// <typeparam name="T">Произвольный тип элементов списка</typeparam>
   public class DummyList<T> : IList<T>, IList, IReadOnlyObject
@@ -7431,7 +7431,7 @@ namespace FreeLibSet.Collections
     #region IEnumerable<T> Members
 
     /// <summary>
-    /// Возвращает фиктивный перечислитель DummyEnumerator
+    /// Возвращает фиктивный перечислитель.
     /// </summary>
     /// <returns>DummyEnumerator</returns>
     public DummyEnumerable<T>.Enumerator GetEnumerator()

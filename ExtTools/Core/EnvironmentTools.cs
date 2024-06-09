@@ -107,6 +107,7 @@ namespace FreeLibSet.Core
       _Is64BitOperatingSystem = GetIs64BitOperatingSystem();
       _WineVersion = GetWineVersion();
       _MonoVersion = GetMonoVersion();
+      _NetVersionText = GetNetVersionText();
 
       _WinNTProductType = GetWinNTProductType();
       _OSVersionText = GetOSVersionText();
@@ -150,8 +151,10 @@ namespace FreeLibSet.Core
         Assembly firstAsm = null;
         for (int i = 0; i < asms.Length; i++)
         {
+#if !NET          
           if (asms[i].GlobalAssemblyCache)
             continue;
+#endif            
 
           if (firstAsm == null)
             firstAsm = asms[i];
@@ -166,6 +169,62 @@ namespace FreeLibSet.Core
         }
 
         return firstAsm;
+      }
+    }
+
+    /// <summary>
+    /// Возращает описание сборки.
+    /// Возвращает атрибут <see cref="AssemblyDescriptionAttribute"/> для переданной сборки.
+    /// Если атрибут не задан, возвращает атрибут <see cref="AssemblyProductAttribute"/>.
+    /// Если и он не задан, возвращается короткое имя сборки <see cref="AssemblyName.Name"/>.
+    /// Версия сборки не возвращается.
+    /// Если <paramref name="assembly"/>=null, возвращается пустая строка.
+    /// </summary>
+    /// <param name="assembly">Загруженная сборка</param>
+    /// <returns>Описание сборки</returns>
+    public static string GetAssemblyDescription(Assembly assembly)
+    {
+      if (assembly == null)
+        return String.Empty;
+
+      AssemblyDescriptionAttribute attrDescr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute));
+      if (attrDescr != null)
+      {
+        if (!String.IsNullOrEmpty(attrDescr.Description))
+          return attrDescr.Description;
+      }
+
+      AssemblyProductAttribute attrProduct = (AssemblyProductAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyProductAttribute));
+      if (attrProduct != null)
+      {
+        if (!String.IsNullOrEmpty(attrProduct.Product))
+          return attrProduct.Product;
+      }
+
+      // если ничего не нашли
+      return assembly.GetName().Name;
+    }
+
+    /// <summary>
+    /// Возвращает описание сборки <see cref="EntryAssembly"/> и номер ее версии.
+    /// Свойство может использоваться для диалога "О программе" или для вывода заголовка программы.
+    /// </summary>
+    public static string EntryAssemblyDescriptionAndVersion
+    {
+      get
+      {
+        try
+        {
+          Assembly asm = EntryAssembly;
+          if (asm == null)
+            return String.Empty;
+          else
+            return GetAssemblyDescription(asm) + ", " + asm.GetName().Version.ToString();
+        }
+        catch
+        {
+          return String.Empty;
+        }
       }
     }
 
@@ -219,16 +278,33 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает читаемое название версии .NET Framework/Mono с указанием разрядности.
-    /// Для моно возвращается версия mono и версия Common Language Runtime.
+    /// Для Mono возвращается версия mono и версия Common Language Runtime.
     /// </summary>
-    public static string NetVersionText
+    public static string NetVersionText { get { return _NetVersionText; } }
+    private static readonly string _NetVersionText;
+
+    private static string GetNetVersionText()
     {
-      get
+      if (IsMono)
+        return "Mono " + MonoVersion.ToString() + ", CLR " + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
+      else
       {
-        if (IsMono)
-          return "Mono " + MonoVersion.ToString() + ", CLR " + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
-        else
-          return ".NET Framework " + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
+        // Класс RuntimeInformation появился в Net Framework 4.7.1
+
+        // Так почему-то не работает в .Net, Type.GetType() возвращает null.
+        //Type t= Type.GetType("System.Runtime.InteropServices.RuntimeInformation");
+        //if (t != null)
+        //{
+        //  PropertyInfo prop= t.GetProperty("FrameworkDescription");
+        //  string descr = (string)prop.GetValue(null, null);
+        //  return descr + " " + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
+        //}
+
+#if NET
+        return System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
+#else
+        return ".NET Framework " + Environment.Version.ToString() + (IntPtr.Size == 8 ? " (64 bit)" : " (32 bit)");
+#endif
       }
     }
 
@@ -572,8 +648,8 @@ namespace FreeLibSet.Core
             string value = s.Substring(p + 1).Trim();
             if (value.Length >= 2)
             {
-              if (value [0] == '"' && value [value.Length - 1] == '"')
-                value = value.Substring (1, value.Length - 2);
+              if (value[0] == '"' && value[value.Length - 1] == '"')
+                value = value.Substring(1, value.Length - 2);
             }
             return value;
           }

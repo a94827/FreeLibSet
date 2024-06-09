@@ -95,7 +95,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Фильтр табличного просмотра или фильтр отчета по группе документов.
-  /// Обычно используется только в отчетах, так как табличные просмотры с группами реализуются в DocTableViewForm без необходимости ручного создания фильтра по группе
+  /// Обычно используется только в отчетах, так как табличные просмотры с группами реализуются в <see cref="DocTableViewForm"/> без необходимости ручного создания фильтра по группе
   /// </summary>
   public class RefGroupDocGridFilter : RefGroupDocCommonFilter, IEFPGridFilterWithImageKey
   {
@@ -134,7 +134,7 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс вида документов групп
     /// </summary>
     public GroupDocTypeUI GroupDocTypeUI { get { return _GroupDocTypeUI; } }
-    private GroupDocTypeUI _GroupDocTypeUI;
+    private readonly GroupDocTypeUI _GroupDocTypeUI;
 
     #endregion
 
@@ -196,7 +196,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Показывает диалог установки фильтра
     /// </summary>
-    /// <returns></returns>
+    /// <param name="dialogPosition">Передается блоку диалога</param>
+    /// <returns>true, если пользователь нажал "ОК" в блоке диалога</returns>
     public bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
       Int32 groupId2 = GroupId;

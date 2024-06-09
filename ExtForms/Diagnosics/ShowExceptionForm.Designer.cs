@@ -108,7 +108,6 @@
       // cbInner
       // 
       this.cbInner.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.cbInner.Image =MainImagesResource.View;
       this.cbInner.Location = new System.Drawing.Point(8, 81);
       this.cbInner.Name = "cbInner";
       this.cbInner.Size = new System.Drawing.Size(112, 47);
@@ -194,7 +193,6 @@
       // 
       this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnClose.Image = MainImagesResource.Cancel;
       this.btnClose.Location = new System.Drawing.Point(8, 13);
       this.btnClose.Name = "btnClose";
       this.btnClose.Size = new System.Drawing.Size(112, 24);
@@ -217,7 +215,6 @@
       // btnOpenWith
       // 
       this.btnOpenWith.ContextMenuStrip = this.OpenWithMenu;
-      this.btnOpenWith.Image = MainImagesResource.MenuButton;
       this.btnOpenWith.Location = new System.Drawing.Point(116, 4);
       this.btnOpenWith.Name = "btnOpenWith";
       this.btnOpenWith.Size = new System.Drawing.Size(32, 24);
@@ -232,7 +229,6 @@
       // btnDirExplorer
       // 
       this.btnDirExplorer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnDirExplorer.Image = MainImagesResource.WindowsExplorer;
       this.btnDirExplorer.Location = new System.Drawing.Point(593, 4);
       this.btnDirExplorer.Name = "btnDirExplorer";
       this.btnDirExplorer.Size = new System.Drawing.Size(32, 24);
@@ -243,7 +239,6 @@
       // btnEdit
       // 
       this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnEdit.Image = MainImagesResource.Notepad;
       this.btnEdit.Location = new System.Drawing.Point(8, 4);
       this.btnEdit.Name = "btnEdit";
       this.btnEdit.Size = new System.Drawing.Size(112, 24);

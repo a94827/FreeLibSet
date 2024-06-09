@@ -197,6 +197,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Строка в виде "Иванов И.И."
+    /// Фамилия отделяется от иницалов неразрывным пробелом
     /// </summary>
     public string NameWithInitials
     {
@@ -210,7 +211,8 @@ namespace FreeLibSet.Russian
 
         if (Name.Length > 0)
         {
-          sb.Append(" ");
+          //sb.Append(" ");
+          sb.Append(DataTools.NonBreakSpaceChar); // 06.06.2024
           sb.Append(Name, 0, 1);
           sb.Append(".");
 
@@ -225,7 +227,7 @@ namespace FreeLibSet.Russian
     }
 
     /// <summary>
-    /// Строка в обратном порядке "И.И.Иванов"
+    /// Строка в обратном порядке "И.И. Иванов"
     /// </summary>
     public string InvNameWithInitials
     {
@@ -245,6 +247,7 @@ namespace FreeLibSet.Russian
             sb.Append(Patronymic, 0, 1);
             sb.Append(".");
           }
+          sb.Append(DataTools.NonBreakSpaceChar); // 06.06.2024
         }
         sb.Append(Surname);
         return sb.ToString();

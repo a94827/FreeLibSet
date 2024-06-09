@@ -27,7 +27,7 @@ namespace FreeLibSet.Collections
   {
     /// <summary>
     /// Возвращает код объекта.
-    /// Коллекции могут учитывать или игнорировать рнгистр символов кода
+    /// Коллекции могут учитывать или игнорировать регистр символов кода.
     /// </summary>
     string Code { get; }
   }
@@ -35,7 +35,7 @@ namespace FreeLibSet.Collections
   #endregion
 
   /// <summary>
-  /// Простая реализация для интерфейса IObjectWithCode
+  /// Простая реализация для интерфейса <see cref="IObjectWithCode"/>.
   /// </summary>
   [Serializable]
   public class ObjectWithCode : IObjectWithCode
@@ -82,7 +82,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Хэш-значение для коллекции. Возвращает Code.GetHashCode()
+    /// Хэш-значение для коллекции. Возвращает <see cref="Code"/>.GetHashCode().
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()
@@ -94,7 +94,7 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Объект для сортировки объектов, реализующих интерфейс IObjectWithCode.
+  /// Класс для сортировки объектов, реализующих интерфейс <see cref="IObjectWithCode"/>.
   /// Используйте статические экземпляры объектов Ordinal или OrdinalIgnoreCase.
   /// </summary>
   public sealed class ObjectWithCodeComparer<T> : IComparer<T>
@@ -119,7 +119,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Сравнение двух объектов.
-    /// Использует String.Compare(x.Code, y.Code, ComparisonType)
+    /// Использует <see cref="String"/>.Compare(x.Code, y.Code, ComparisonType).
     /// </summary>
     /// <param name="x">Первый сравниваемый объект</param>
     /// <param name="y">Второй сравниваемый объект</param>
@@ -761,16 +761,16 @@ namespace FreeLibSet.Collections
 #else
   /// <summary>
   /// Список объектов произвольного типа, доступ к которым может осуществляться как по
-  /// индексу (как в обычном списке List), так и по коду, как в Dictionary с ключом String.
+  /// индексу (как в обычном списке <see cref="System.Collections.Generic.List{String}"/>), так и по коду, как в <see cref="Dictionary{String, T}"/> с ключом <see cref="String"/>.
   /// Список не может содержать значения null.
   /// Коллекция может быть чувствительной или нечувствительной к регистру кода (задается в конструкторе).
-  /// Этот класс является потокобезопасным после установки свойства ReadOnly.
+  /// Этот класс является потокобезопасным после установки свойства IsReadOnly.
   /// Пока список заполняется, объект не является потокобезопасным.
   /// </summary>
-  /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс IObjectWithCode</typeparam>
+  /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс <see cref="IObjectWithCode"/></typeparam>
   /// <remarks>
-  /// Если значение не реализует интерфейс IObjectWithCode, используйте OrderSortedList.
-  /// Если не требуется доступ к объектам по индексу, используйте более "легкий" класс NamedCollection.
+  /// Если значение не реализует интерфейс <see cref="IObjectWithCode"/>, используйте <see cref="OrderSortedList{String, T}"/>.
+  /// Если не требуется доступ к объектам по индексу, используйте более "легкий" класс <see cref="NamedCollection{T}"/>.
   /// Элементы в списке хранятся в порядке добавления. При необходимости, используйте метод Sort().
   /// </remarks>
   [Serializable]
@@ -781,7 +781,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Создает пустой список.
-    /// Регистр кода учитывается
+    /// Регистр кода учитывается.
     /// </summary>
     public NamedList()
       : this(false)
@@ -879,7 +879,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Создает список, заполняя его значениями из коллекции.
     /// Регистр кода учитывается.
-    /// Если список <paramref name="srcCollection"/> содержит объекты с повторяющимися кодами, повторы отбрасываются
+    /// Если список <paramref name="srcCollection"/> содержит объекты с повторяющимися кодами, повторы отбрасываются.
     /// </summary>
     /// <param name="srcCollection">Исходный список объектов</param>
     public NamedList(IEnumerable<T> srcCollection)
@@ -889,7 +889,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Создает список, заполняя его значениями из коллекции.
-    /// Если список <paramref name="srcCollection"/> содержит объекты с повторяющимися кодами (с учетом <paramref name="ignoreCase"/>), повторы отбрасываются
+    /// Если список <paramref name="srcCollection"/> содержит объекты с повторяющимися кодами (с учетом <paramref name="ignoreCase"/>), повторы отбрасываются.
     /// </summary>
     /// <param name="srcCollection">Исходный список объектов</param>
     /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
@@ -900,7 +900,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Создает список, заполняя его значениями из коллекции.
-    /// Если список <paramref name="srcCollection"/> содержит объекты с повторяющимися кодами (с учетом <paramref name="ignoreCase"/>), повторы отбрасываются
+    /// Если список <paramref name="srcCollection"/> содержит объекты с повторяющимися кодами (с учетом <paramref name="ignoreCase"/>), повторы отбрасываются.
     /// </summary>
     /// <param name="srcCollection">Исходный список объектов</param>
     /// <param name="ignoreCase">Надо ли игнорировать регистр кода</param>
@@ -925,9 +925,9 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Коллекция по кодам.
-    /// Если IgnoreCase=true, то ключ преобразован к верхнему регистру
-    /// Значением является индекс элемента в списке FList.
-    /// Когда FDictIsValid=false, значения в FDict недействительны. Ключи действительны всегда
+    /// Если IgnoreCase=true, то ключ преобразован к верхнему регистру.
+    /// Значением является индекс элемента в списке _List.
+    /// Когда _DictIsValid=false, значения в _Dict недействительны. Ключи действительны всегда.
     /// </summary>
     [NonSerialized]
     private Dictionary<string, int> _Dict;
@@ -980,7 +980,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Доступ по индексу
     /// </summary>
-    /// <param name="index">Индекс элемента в массиве. Должен быть в диапазоне от 0 до Count-1</param>
+    /// <param name="index">Индекс элемента в массиве. Должен быть в диапазоне от 0 до (<see cref="Count"/>-1)</param>
     /// <returns>Элемент</returns>
     public T this[int index]
     {
@@ -1020,7 +1020,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Доступ по коду.
-    /// Если запрошен несуществуюший код, возвращается пустой элемент
+    /// Если запрошен несуществуюший код, возвращается null.
     /// </summary>
     /// <param name="code">Код объекта</param>
     /// <returns>Объект или null, если в списке нет объекта с таким кодом</returns>
@@ -1038,7 +1038,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает элемент с заданным кодом.
-    /// В отличие от индексированного доступа по коду, если не найден объект с заданным кодом, генерируется исключение
+    /// В отличие от индексированного доступа по коду, если не найден объект с заданным кодом, генерируется исключение.
     /// </summary>
     /// <param name="code">Код объекта</param>
     /// <returns>Объект</returns>
@@ -1074,8 +1074,8 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Если установлено в true, то при поиске элементов будет игнорироваться регистр.
-    /// Если свойство установлено в false (по умолчанию), то регистр символов отличается
-    /// Свойство устанавливается в конструкторе
+    /// Если свойство установлено в false (по умолчанию), то регистр символов отличается.
+    /// Свойство устанавливается в конструкторе.
     /// </summary>
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private readonly bool _IgnoreCase;
@@ -1103,7 +1103,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1145,8 +1145,8 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает индекс объекта в списке или (-1), если объект не найден.
     /// Если требуется только проверить наличие элемента с таким кодом, рекомендуется использовать
-    /// метод Contains(), принимающий строковый код.
-    /// Также рекомендуется использовать перегрузку метода IndexOf(), принимающую код, чтобы избежать лишнего сравнения объектов, которое обычно не нужно.
+    /// метод <see cref="Contains(string)"/>, принимающий строковый код.
+    /// Также рекомендуется использовать перегрузку метода <see cref="IndexOf(string)"/>, принимающую код, чтобы избежать лишнего сравнения объектов, которое обычно не нужно.
     /// </summary>
     /// <param name="item">Объект для поиска</param>
     /// <returns>Индекс объекта.</returns>
@@ -1167,7 +1167,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет элемент в заданную позицию списка.
-    /// Если в списке уже есть элемент с таким кодом (с учетом IgnoreCase), генерируется исключение
+    /// Если в списке уже есть элемент с таким кодом (с учетом <see cref="IgnoreCase"/>), генерируется исключение.
     /// </summary>
     /// <param name="index">Позиция для добавления</param>
     /// <param name="item">Добавляемый объект</param>
@@ -1230,7 +1230,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет элемент в конец списка.
-    /// Если в списке уже есть элемент с таким кодом (с учетом IgnoreCase), генерируется исключение
+    /// Если в списке уже есть элемент с таким кодом (с учетом <see cref="IgnoreCase"/>), генерируется исключение.
     /// </summary>
     /// <param name="item">Добавляемый элемент</param>
     public void Add(T item)
@@ -1351,10 +1351,10 @@ namespace FreeLibSet.Collections
     #region Дополнительные методы
 
     /// <summary>
-    /// Поиск по коду (с учетом IgnoreCase).
+    /// Поиск по коду (с учетом <see cref="IgnoreCase"/>).
     /// Возвращает индекс найденного элемента или (-1).
     /// Если требуется только определить существование элемента с заданным кодом, используйте
-    /// Contains(), принимающий строковый аргумент.
+    /// <see cref="Contains(string)"/>, принимающий строковый аргумент.
     /// </summary>
     /// <param name="code">Искомый код</param>
     /// <returns>Индекс объекта</returns>
@@ -1375,10 +1375,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Медленный поиск по коду (с учетом IgnoreCase).
-    /// Возвращает индекс найденного элемента или (-1)
+    /// Медленный поиск по коду (с учетом <see cref="IgnoreCase"/>).
+    /// Возвращает индекс найденного элемента или (-1).
     /// Если требуется только определить существование элемента с заданным кодом, используйте
-    /// Contains(), принимающий строковый аргумент.
+    /// <see cref="Contains(string)"/>, принимающий строковый аргумент.
     /// </summary>
     /// <param name="code">Искомый код</param>
     /// <returns>Индекс объекта</returns>
@@ -1404,8 +1404,8 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Быстрый поиск кода (с учетом IgnoreCase).
-    /// Возвращает true, если в списке есть элемент с заданным кодом
+    /// Быстрый поиск кода (с учетом <see cref="IgnoreCase"/>).
+    /// Возвращает true, если в списке есть элемент с заданным кодом.
     /// </summary>
     /// <param name="code">Искомый код</param>
     /// <returns>Наличие элемента в списке</returns>
@@ -1423,11 +1423,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Быстрый поиск кода (с учетом IgnoreCase).
+    /// Быстрый поиск кода (с учетом <see cref="IgnoreCase"/>).
     /// Возвращает true, если в списке есть элемент с заданным кодом.
     /// При этом сразу возвращается и элемент.
     /// Если в списке нет элемента с таким кодом, возвращается false, 
-    /// а Value получает пустое значение.
+    /// а <paramref name="value"/> получает пустое значение.
     /// 
     /// Метод не имеет ценности, так как свойство Item[<paramref name="code"/>] также возвращает null, если код не найден.
     /// </summary>
@@ -1470,7 +1470,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет несколько элементов в список.
-    /// Эквивалентно последовательному вызову метода Add()
+    /// Эквивалентно последовательному вызову метода <see cref="Add(T)"/> для всех элементов в <paramref name="collection"/>.
     /// </summary>
     /// <param name="collection">Список добавляемых элементов</param>
     public void AddRange(IEnumerable<T> collection)
@@ -1488,7 +1488,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Удаляет элемент с заданным кодом (с учетом IgnoreCase)
+    /// Удаляет элемент с заданным кодом (с учетом <see cref="IgnoreCase"/>)
     /// </summary>
     /// <param name="code">Код удаляемого элемента</param>
     /// <returns>true, если объект был найден и удален</returns>
@@ -1513,7 +1513,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает строковый массив с кодами элементов.
     /// Порядок соответствует расположению элементов в списке.
-    /// Регистр символов не меняется, даже если IgnoreCase=true.
+    /// Регистр символов не меняется, даже если <see cref="IgnoreCase"/>=true.
     /// </summary>
     /// <returns></returns>
     public string[] GetCodes()
@@ -1528,7 +1528,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Сортировка списка строк.
-    /// При сортировке регистр символов учитывается или игнорируется, в зависимости от свойства IgnoreCase
+    /// При сортировке регистр символов учитывается или игнорируется, в зависимости от свойства <see cref="IgnoreCase"/>.
     /// </summary>
     public void Sort()
     {
@@ -1657,9 +1657,12 @@ namespace FreeLibSet.Collections
 #endif
 
   /// <summary>
-  /// Аргументы событий NamedListWithNotifications.BeforeAdd, AfterAdd, BeforeRemove и AfterRemove
+  /// Аргументы событий <see cref="NamedListWithNotifications{T}.BeforeAdd"/>, 
+  /// <see cref="NamedListWithNotifications{T}.AfterAdd"/>,
+  /// <see cref="NamedListWithNotifications{T}.BeforeRemove"/> и 
+  /// <see cref="NamedListWithNotifications{T}.AfterRemove"/>.
   /// </summary>
-  /// <typeparam name="T">Тип элементов, хранящихся в списке NamedListWithNotifications</typeparam>
+  /// <typeparam name="T">Тип элементов, хранящихся в списке <see cref="NamedListWithNotifications{T}"/></typeparam>
   public sealed class NamedListItemEventArgs<T> : EventArgs
     where T : IObjectWithCode
   {
@@ -1688,9 +1691,12 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Делегат событий NamedListWithNotifications.ItemAdded и ItemRemoved
+  /// Делегат событий <see cref="NamedListWithNotifications{T}.BeforeAdd"/>, 
+  /// <see cref="NamedListWithNotifications{T}.AfterAdd"/>,
+  /// <see cref="NamedListWithNotifications{T}.BeforeRemove"/> и 
+  /// <see cref="NamedListWithNotifications{T}.AfterRemove"/>.
   /// </summary>
-  /// <typeparam name="T">Тип элементов, хранящихся в списке NamedListWithNotifications</typeparam>
+  /// <typeparam name="T">Тип элементов, хранящихся в списке <see cref="NamedListWithNotifications{T}"/></typeparam>
   /// <param name="sender">Объект списка</param>
   /// <param name="args">Аргументы события</param>
   public delegate void NamedListItemEventHandler<T>(object sender, NamedListItemEventArgs<T> args)
@@ -2472,13 +2478,13 @@ namespace FreeLibSet.Collections
 
   /// <summary>
   /// Список объектов произвольного типа, доступ к которым может осуществляться как по
-  /// индексу (как в обычном списке List), так и по коду, как в Dictionary с ключом String.
+  /// индексу (как в обычном списке <see cref="System.Collections.Generic.List{T}"/>), так и по коду, как в <see cref="Dictionary{String, T}"/> с ключом <see cref="String"/>.
   /// Список не может содержать значения null.
-  /// В отличие от NamedList, при добавлении и удалении элементов списка вызываются виртуальные методы и события,
+  /// В отличие от <see cref="NamedList{T}"/>, при добавлении и удалении элементов списка вызываются виртуальные методы и события,
   /// поэтому этот список работает медленнее.
   /// Этот класс не является потокобезопасным.
   /// </summary>
-  /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс IObjectWithCode</typeparam>
+  /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс <see cref="IObjectWithCode"/></typeparam>
   [Serializable]
   public class NamedListWithNotifications<T> : IEnumerable<T>, IList<T>, IList, IReadOnlyObject, INamedValuesAccess
     where T : class, IObjectWithCode
@@ -2490,7 +2496,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Создает пустой список.
-    /// Регистр кода учитывается
+    /// Регистр кода учитывается.
     /// </summary>
     public NamedListWithNotifications()
       : this(false)
@@ -2557,7 +2563,7 @@ namespace FreeLibSet.Collections
     private bool _DictIsValid;
 
     /// <summary>
-    /// Переводит словарь FDict в корректное состояние.
+    /// Переводит словарь _Dict в корректное состояние.
     /// Пересчитывает значения, предполагая, что ключи - верные.
     /// </summary>
     /// <returns></returns>
@@ -2599,7 +2605,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Доступ по индексу
     /// </summary>
-    /// <param name="index">Индекс элемента в массиве. Должен быть в диапазоне от 0 до Count-1</param>
+    /// <param name="index">Индекс элемента в массиве. Должен быть в диапазоне от 0 до (<see cref="Count"/>-1)</param>
     /// <returns>Элемент</returns>
     public T this[int index]
     {
@@ -2732,7 +2738,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -2774,8 +2780,8 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает индекс объекта в списке или (-1), если объект не найден.
     /// Если требуется только проверить наличие элемента с таким кодом, рекомендуется использовать
-    /// метод Contains(), принимающий строковый код.
-    /// Также рекомендуется использовать перегрузку метода IndexOf(), принимающую код, чтобы избежать лишнего сравнения объектов, которое обычно не нужно.
+    /// метод <see cref="Contains(string)"/>(), принимающий строковый код.
+    /// Также рекомендуется использовать перегрузку метода <see cref="IndexOf(string)"/>(), принимающую код, чтобы избежать лишнего сравнения объектов, которое обычно не нужно.
     /// </summary>
     /// <param name="item">Объект для поиска</param>
     /// <returns>Индекс объекта</returns>
@@ -2796,7 +2802,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет элемент в заданную позицию списка.
-    /// Если в списке уже есть элемент с таким кодом (с учетом IgnoreCase), генерируется исключение
+    /// Если в списке уже есть элемент с таким кодом (с учетом <see cref="IgnoreCase"/>), генерируется исключение.
     /// </summary>
     /// <param name="index">Позиция для добавления</param>
     /// <param name="item">Добавляемый объект. Не может быть null</param>
@@ -2871,7 +2877,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет элемент в конец списка.
-    /// Если в списке уже есть элемент с таким кодом (с учетом IgnoreCase), генерируется исключение
+    /// Если в списке уже есть элемент с таким кодом (с учетом <see cref="IgnoreCase"/>), генерируется исключение.
     /// </summary>
     /// <param name="item">Добавляемый элемент. Не может быть null</param>
     public void Add(T item)
@@ -3008,10 +3014,10 @@ namespace FreeLibSet.Collections
     #region Дополнительные методы
 
     /// <summary>
-    /// Поиск по коду (с учетом IgnoreCase).
+    /// Поиск по коду (с учетом <see cref="IgnoreCase"/>).
     /// Возвращает индекс найденного элемента или (-1).
     /// Если требуется только определить существование элемента с заданным кодом, используйте
-    /// Contains(), принимающий строковый аргумент.
+    /// <see cref="Contains(string)"/>, принимающий строковый аргумент.
     /// </summary>
     /// <param name="code">Искомый код</param>
     /// <returns>Индекс объекта</returns>
@@ -3032,10 +3038,10 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Медленный поиск по коду (с учетом IgnoreCase).
+    /// Медленный поиск по коду (с учетом <see cref="IgnoreCase"/>).
     /// Возвращает индекс найденного элемента или (-1)
     /// Если требуется только определить существование элемента с заданным кодом, используйте
-    /// Contains(), принимающий строковый аргумент.
+    /// <see cref="Contains(string)"/>, принимающий строковый аргумент.
     /// </summary>
     /// <param name="code">Искомый код</param>
     /// <returns>Индекс объекта</returns>
@@ -3061,8 +3067,8 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Быстрый поиск кода (с учетом IgnoreCase).
-    /// Возвращает true, если в списке есть элемент с заданным кодом
+    /// Быстрый поиск кода (с учетом <see cref="IgnoreCase"/>).
+    /// Возвращает true, если в списке есть элемент с заданным кодом.
     /// </summary>
     /// <param name="code">Искомый код</param>
     /// <returns>Наличие элемента в списке</returns>
@@ -3080,11 +3086,11 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Быстрый поиск кода (с учетом IgnoreCase).
+    /// Быстрый поиск кода (с учетом <see cref="IgnoreCase"/>).
     /// Возвращает true, если в списке есть элемент с заданным кодом.
     /// При этом сразу возвращается и элемент.
     /// Если в списке нет элемента с таким кодом, возвращается false, 
-    /// а Value получает пустое значение
+    /// а <paramref name="value"/> получает значение null.
     /// </summary>
     /// <param name="code">Искомый код</param>
     /// <param name="value">Сюда помещается найденное значение</param>
@@ -3125,7 +3131,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет несколько элементов в список.
-    /// Эквивалентно последовательному вызову метода Add()
+    /// Эквивалентно последовательному вызову метода <see cref="Add(T)"/>.
     /// </summary>
     /// <param name="collection">Список добавляемых элементов</param>
     public void AddRange(IEnumerable<T> collection)
@@ -3151,7 +3157,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Удаляет элемент с заданным кодом (с учетом IgnoreCase)
+    /// Удаляет элемент с заданным кодом (с учетом <see cref="IgnoreCase"/>).
     /// </summary>
     /// <param name="code">Код удаляемого элемента</param>
     /// <returns>true, если объект был найден и удален</returns>
@@ -3176,9 +3182,9 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Возвращает строковый массив с кодами элементов.
     /// Порядок соответствует расположению элементов в списке.
-    /// Регистр символов не меняется, даже если IgnoreCase=true.
+    /// Регистр символов не меняется, даже если <see cref="IgnoreCase"/>=true.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив кодов</returns>
     public string[] GetCodes()
     {
       string[] a = new string[_List.Count];
@@ -3190,8 +3196,8 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Сортировка списка строк.
-    /// При сортировке регистр символов учитывается или игнорируется, в зависимости от свойства IgnoreCase.
-    /// После сортировки вызывается событие ListChanged в режиме Reset.
+    /// При сортировке регистр символов учитывается или игнорируется, в зависимости от свойства <see cref="IgnoreCase"/>.
+    /// После сортировки вызывается событие <see cref="ListChanged"/> в режиме <see cref="ListChangedType.Reset"/>.
     /// </summary>
     public void Sort()
     {
@@ -3209,7 +3215,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Заменяет порядок элементов на обратный.
-    /// После сортировки вызывается событие ListChanged в режиме Reset.
+    /// После изменения порядка вызывается событие <see cref="ListChanged"/> в режиме <see cref="ListChangedType.Reset"/>.
     /// </summary>
     public void Reverse()
     {
@@ -3229,12 +3235,12 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Событие вызывается перед добавлением элемента.
     /// Если обработчик события выбросит исключение, список останется в неизменном и согласованном состоянии.
-    /// Событие не вызывается, если есть непарный вызов BeginUpdate().
+    /// Событие не вызывается, если есть непарный вызов <see cref="BeginUpdate()"/>.
     /// </summary>
     public event NamedListItemEventHandler<T> BeforeAdd;
 
     /// <summary>
-    /// Вызывает событие BeforeAdd, если нет непарного BeginUpdate().
+    /// Вызывает событие BeforeAdd, если нет непарного <see cref="BeginUpdate()"/>.
     /// </summary>
     /// <param name="item">Добавляемый элемент</param>
     protected virtual void OnBeforeAdd(T item)
@@ -3249,12 +3255,12 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Событие вызывается после добавления элемента.
     /// Если обработчик события выбросит исключение, список окажется в несогласованном состоянии и не может использоваться дальше.
-    /// Событие не вызывается, если есть непарный вызов BeginUpdate().
+    /// Событие не вызывается, если есть непарный вызов <see cref="BeginUpdate()"/>.
     /// </summary>
     public event NamedListItemEventHandler<T> AfterAdd;
 
     /// <summary>
-    /// Вызывает событие AfterAdd, если нет непарного BeginUpdate().
+    /// Вызывает событие <see cref="AfterAdd"/>, если нет непарного <see cref="BeginUpdate()"/>.
     /// </summary>
     /// <param name="item">Добавленный элемент</param>
     protected virtual void OnAfterAdd(T item)
@@ -3269,12 +3275,12 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Событие вызывается перед удалением элемента.
     /// Если обработчик события выбросит исключение, список останется в неизменном и согласованном состоянии.
-    /// Событие не вызывается, если есть непарный вызов BeginUpdate().
+    /// Событие не вызывается, если есть непарный вызов <see cref="BeginUpdate()"/>.
     /// </summary>
     public event NamedListItemEventHandler<T> BeforeRemove;
 
     /// <summary>
-    /// Вызывает событие BeforeRemove, если нет непарного BeginUpdate().
+    /// Вызывает событие <see cref="BeforeRemove"/>, если нет непарного <see cref="BeginUpdate()"/>.
     /// </summary>
     /// <param name="item">Удаляемый элемент</param>
     protected virtual void OnBeforeRemove(T item)
@@ -3289,12 +3295,12 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Событие вызывается после удаления элемента.
     /// Если обработчик события выбросит исключение, список окажется в несогласованном состоянии и не может использоваться дальше.
-    /// Событие не вызывается, если есть непарный вызов BeginUpdate().
+    /// Событие не вызывается, если есть непарный вызов <see cref="BeginUpdate()"/>.
     /// </summary>
     public event NamedListItemEventHandler<T> AfterRemove;
 
     /// <summary>
-    /// Вызывает событие AfterRemove, если нет непарного BeginUpdate().
+    /// Вызывает событие AfterRemove, если нет непарного <see cref="BeginUpdate()"/>.
     /// </summary>
     /// <param name="item">Добавленный элемент</param>
     protected virtual void OnAfterRemove(T item)
@@ -3312,7 +3318,7 @@ namespace FreeLibSet.Collections
     public event ListChangedEventHandler ListChanged;
 
     /// <summary>
-    /// Вызывает событие ListChanged, если нет непарного вызова BeginUpdate().
+    /// Вызывает событие ListChanged, если нет непарного вызова <see cref="BeginUpdate()"/>.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected void OnListChanged(ListChangedEventArgs args)
@@ -3350,9 +3356,9 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Вызывает событие ListChanged с ListChangedType=ItemChanged
+    /// Вызывает событие <see cref="ListChanged"/> с <see cref="ListChangedType.ItemChanged"/>.
     /// </summary>
-    /// <param name="index">Индекс элемента. Должен быть в диапазоне от 0 до (Count-1)</param>
+    /// <param name="index">Индекс элемента. Должен быть в диапазоне от 0 до (<see cref="Count"/>-1)</param>
     public void NotifyItemChanged(int index)
     {
       if (index < 0 || index >= Count)
@@ -3366,8 +3372,9 @@ namespace FreeLibSet.Collections
     #region Приостановка отправки извещений
 
     /// <summary>
-    /// После вызова метода перестают посылаться извещения BeforeAdd, AfterAdd, BeforeRemove и AfterRemove.
-    /// Должен обязательно завершаться парным вызовом EndUpdate().
+    /// После вызова метода перестают посылаться извещения <see cref="BeforeAdd"/>, <see cref="AfterAdd"/>, <see cref="BeforeRemove"/>
+    /// и <see cref="AfterRemove"/>.
+    /// Должен обязательно завершаться парным вызовом <see cref="EndUpdate()"/>.
     /// </summary>
     public virtual void BeginUpdate()
     {
@@ -3378,7 +3385,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Окончание обновления списка.
-    /// Вызов должен быть парным, по отношению к BeginUpdate()
+    /// Вызов должен быть парным по отношению к <see cref="BeginUpdate()"/>.
     /// </summary>
     public virtual void EndUpdate()
     {
@@ -3394,14 +3401,14 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает true, если был непарный вызов метода BeginUpdate
+    /// Возвращает true, если был непарный вызов метода <see cref="BeginUpdate()"/>.
     /// </summary>
     public bool IsUpdating { get { return _UpdateCount > 0; } }
     private int _UpdateCount;
 
     /// <summary>
     /// Устанавливается в true при любых изменениях в списке, если был непарный вызов BeginUpdate().
-    /// В этом случае, метод EndUpdate() отправляет сигнал о полном обновлении списка
+    /// В этом случае, метод EndUpdate() отправляет сигнал о полном обновлении списка.
     /// </summary>
     private bool _DelayedListChanged;
 
@@ -3509,13 +3516,13 @@ namespace FreeLibSet.Collections
 #endif
 
   /// <summary>
-  /// Коллекция объектов, поддерживающих интерфейс IObjectWithCode.
-  /// В отличие от NamedList, порядок элементов является неопределенным.
+  /// Коллекция объектов, поддерживающих интерфейс <see cref="IObjectWithCode"/>.
+  /// В отличие от <see cref="NamedList{T}"/>, порядок элементов является неопределенным.
   /// Существует доступ только по коду, но не по индексу.
-  /// В отличие от стандартной коллекции Dictionary, перебор выполняется не по KeyValuePair,
+  /// В отличие от стандартной коллекции <see cref="Dictionary{String, T}"/>, перебор выполняется не по <see cref="KeyValuePair{String, T}"/>,
   /// а непосредственно по объектам.
   /// </summary>
-  /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс IObjectWithCode</typeparam>
+  /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс <see cref="IObjectWithCode"/></typeparam>
   [Serializable]
   public class NamedCollection<T> : IEnumerable<T>, ICollection<T>, ICollection, IReadOnlyObject, INamedValuesAccess
     where T : class, IObjectWithCode
@@ -3524,7 +3531,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Создает пустую коллекцию.
-    /// Регистр ключа учитывается
+    /// Регистр ключа учитывается.
     /// </summary>
     public NamedCollection()
       : this(false)
@@ -3543,7 +3550,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Создает пустую коллекцию.
-    /// Регистр ключа учитывается
+    /// Регистр ключа учитывается.
     /// </summary>
     /// <param name="capacity">Начальная емкость коллекции</param>
     public NamedCollection(int capacity)
@@ -3578,7 +3585,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Создает коллекцию и заполняет ее значениями из списка.
-    /// Регистр ключа учитывается
+    /// Регистр ключа учитывается.
     /// </summary>
     /// <param name="srcCollection">Исходная коллекция</param>
     public NamedCollection(ICollection<T> srcCollection)
@@ -3659,7 +3666,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Доступ по коду.
-    /// Если запрошен несуществуюший код, возвращается пустой элемент
+    /// Если запрошен несуществуюший код, возвращается пустой элемент.
     /// </summary>
     /// <param name="code">Код элемента</param>
     /// <returns>Найденный элемент или пустое значение</returns>
@@ -3683,7 +3690,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Доступ по коду.
-    /// В отличие от доступа по индексированному свойству, если запрошен несуществуюший код, генерируется исключение
+    /// В отличие от доступа по индексированному свойству, если запрошен несуществуюший код, генерируется исключение.
     /// </summary>
     /// <param name="code">Код элемента</param>
     /// <returns>Найденный элемент или пустое значение</returns>
@@ -3748,7 +3755,7 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Генерирует исключение ObjectReadOnlyException, если коллекция не может быть модифицирована
+    /// Генерирует исключение <see cref="ObjectReadOnlyException"/>, если коллекция не может быть модифицирована.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -3789,7 +3796,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет элемент в коллекцию.
-    /// Если в коллекции уже есть элемент с таким кодом (с учетом IgnoreCase), генерируется исключение.
+    /// Если в коллекции уже есть элемент с таким кодом (с учетом <see cref="IgnoreCase"/>), генерируется исключение.
     /// </summary>
     /// <param name="item">Добавляемый элемент</param>
     public void Add(T item)
@@ -3821,10 +3828,10 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает true, если элемент есть в коллекции.
-    /// Рекомендуется использовать метод, принимающий строковый код
+    /// Рекомендуется использовать метод, принимающий строковый код.
     /// </summary>
     /// <param name="item">Элемент, наличие которого проверяется</param>
-    /// <returns></returns>
+    /// <returns>Наличие элемента</returns>
     public bool Contains(T item)
     {
       if (Object.ReferenceEquals(item, null))
@@ -3897,7 +3904,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Быстрый поиск.
-    /// Возвращает true, если элемент с заданным кодом (с учетом IgnoreCase) есть в коллекции.
+    /// Возвращает true, если элемент с заданным кодом (с учетом <see cref="IgnoreCase"/>) есть в коллекции.
     /// Это - рекомендуемый метод поиска.
     /// </summary>
     /// <param name="code">Проверяемый код</param>
@@ -3915,7 +3922,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Быстрый поиск.
-    /// Возвращает true, если элемент с заданным кодом (с учетом IgnoreCase) есть в коллекции.
+    /// Возвращает true, если элемент с заданным кодом (с учетом <see cref="IgnoreCase"/>) есть в коллекции.
     /// Идентичен обращению к свойству this, но позволяет отличать ситуацию наличия или отсутствия элемента.
     /// </summary>
     /// <param name="code">Проверяемый код</param>
@@ -3948,7 +3955,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет элементы из списка.
-    /// Эквивалентно поштучному вызову метода Add()
+    /// Эквивалентно поштучному вызову метода <see cref="Add(T)"/>.
     /// </summary>
     /// <param name="collection">Исходный список элементов</param>
     public void AddRange(IEnumerable<T> collection)
@@ -3983,8 +3990,8 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Возвращает строковый массив с кодами элементов
-    /// Регистр символов не меняется, даже если IgnoreCase=true
+    /// Возвращает строковый массив с кодами элементов.
+    /// Регистр символов не меняется, даже если <see cref="IgnoreCase"/>=true.
     /// </summary>
     /// <returns>Массив кодов</returns>
     public string[] GetCodes()
@@ -4037,13 +4044,13 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Потокобезопасная реализация NamedCollection, включая методы записи. 
-  /// Если объект NamedCollection уже переведен в режим ReadOnly, можно использовать оригинальный класс, т.к. в этом случае он
+  /// Потокобезопасная реализация <see cref="NamedCollection{T}"/>, включая методы записи. 
+  /// Если объект <see cref="NamedCollection{T}"/> уже переведен в режим только чтения, можно использовать оригинальный класс, т.к. в этом случае он
   /// сам является потокобезопасным.
-  /// Список объектов произвольного типа, доступ к которым может осуществляться по имени, как в Dictionary с 
-  /// ключом String
+  /// Список объектов произвольного типа, доступ к которым может осуществляться по имени, как в <see cref="Dictionary{String, T}"/> с 
+  /// ключом <see cref="String"/>.
   /// </summary>
-  /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс IObjectWithCode</typeparam>
+  /// <typeparam name="T">Тип объектов, хранящихся в списке, поддерживающих интерфейс <see cref="IObjectWithCode"/></typeparam>
   public class SyncNamedCollection<T> : SyncCollection<T>, IReadOnlyObject, INamedValuesAccess
     where T : class, IObjectWithCode
   {
@@ -4162,10 +4169,10 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Доступ по коду.
-    /// Если запрошен несуществуюший код, возвращается пустой элемент
+    /// Если запрошен несуществуюший код, возвращается null.
     /// </summary>
     /// <param name="code">Код элемента</param>
-    /// <returns>Найденный элемент или пустое значение</returns>
+    /// <returns>Найденный элемент или null</returns>
     public T this[string code]
     {
       get
@@ -4179,7 +4186,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Доступ по коду.
-    /// В отличие от доступа по индексированному свойству, если запрошен несуществуюший код, генерируется исключение
+    /// В отличие от доступа по индексированному свойству, если запрошен несуществуюший код, генерируется исключение.
     /// </summary>
     /// <param name="code">Код элемента</param>
     /// <returns>Найденный элемент</returns>
@@ -4198,7 +4205,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает true, если регистр символов игнорируется при поиске по имени.
-    /// False, если учитывается. Задается в конструкторе
+    /// False, если учитывается. Определяется в конструкторе.
     /// </summary>
     public bool IgnoreCase { get { return Source.IgnoreCase; } }
 
@@ -4246,7 +4253,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Быстрый поиск.
-    /// Возвращает true, если коллекция содержит элемент с таким кодом (с учетом IgnoreCase).
+    /// Возвращает true, если коллекция содержит элемент с таким кодом (с учетом <see cref="IgnoreCase"/>).
     /// Рекомендуемый метод поиска.
     /// </summary>
     /// <param name="code">Проверяемый код</param>
@@ -4261,7 +4268,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Быстрый поиск.
-    /// Возвращает true, если коллекция содержит элемент с таким кодом (с учетом IgnoreCase).
+    /// Возвращает true, если коллекция содержит элемент с таким кодом (с учетом <see cref="IgnoreCase"/>).
     /// Рекомендуемый метод поиска.
     /// </summary>
     /// <param name="code">Проверяемый код</param>

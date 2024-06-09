@@ -46,7 +46,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Фильтр по году для числового поля или поля типа "Дата"
+  /// Фильтр по году для числового поля или поля типа "Дата".
+  /// Поддерживает "прокрутку" фильтра.
   /// </summary>
   public class YearGridFilter : YearCommonFilter, IEFPGridFilter, IEFPScrollableGridFilter
   {
@@ -78,7 +79,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
     /// </summary>
     public virtual string FilterText
     {
@@ -99,6 +100,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Показывает блок диалога для редактирования фильтра
     /// </summary>
+    /// <param name="dialogPosition">Передается в блок диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
@@ -173,7 +175,7 @@ namespace FreeLibSet.Forms.Docs
   /// Строка проходит фильтр, если заданный в фильтре год (Value) попадает в диапазон.
   /// Обрабатываются значения типа NULL, задающие открытые интервалы
   /// </summary>
-  public class YearRangeInclusionGridFilter : YearRangeInclusionCommonFilter, IEFPGridFilter, IEFPScrollableGridFilter
+  public class YearRangeInclusionGridFilter : IntRangeInclusionCommonFilter, IEFPGridFilter, IEFPScrollableGridFilter
   {
     #region Конструкторы
 
@@ -193,16 +195,16 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
     /// </summary>
     public virtual string FilterText
     {
       get
       {
-        if (Value == 0)
-          return string.Empty;
+        if (Value.HasValue)
+          return Value.Value.ToString();
         else
-          return Value.ToString();
+          return string.Empty;
       }
     }
 
@@ -214,6 +216,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Показывает блок диалога для редактирования фильтра
     /// </summary>
+    /// <param name="dialogPosition">Передается в блок диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
@@ -221,19 +224,19 @@ namespace FreeLibSet.Forms.Docs
       form.Text = DisplayName;
       form.efpYear.Value = _PrevYear;
 
-      if (Value == 0)
-        form.efpMode.SelectedIndex = 0;
-      else
+      if (Value.HasValue)
       {
         form.efpMode.SelectedIndex = 1;
-        form.efpYear.Value = Value;
+        form.efpYear.Value = Value.Value;
       }
+      else
+        form.efpMode.SelectedIndex = 0;
 
       if (EFPApp.ShowDialog(form, true, dialogPosition) != DialogResult.OK)
         return false;
 
       if (form.efpMode.SelectedIndex == 0)
-        Value = 0;
+        Value = null;
       else
         Value = form.efpYear.Value;
       _PrevYear = form.efpYear.Value;
@@ -249,7 +252,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public bool CanScrollUp
     {
-      get { return Value != 0 && Value > 1; }
+      get { return Value.HasValue && Value.Value > 1; }
     }
 
     /// <summary>
@@ -257,7 +260,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public bool CanScrollDown
     {
-      get { return Value != 0 && Value < 9999; }
+      get { return Value.HasValue && Value.Value < 9999; }
     }
 
     /// <summary>

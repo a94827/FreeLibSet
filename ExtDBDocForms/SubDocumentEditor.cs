@@ -19,19 +19,18 @@ namespace FreeLibSet.Forms.Docs
   #region Интерфейс ISubDocumentEditorCaller
 
   /// <summary>
-  /// Интерфейс для инициализации значений нового поддокумента (метод InitNewSubDocValues)
-  /// и проверки нового или отредактированного поддокумента перед записью (метод ValidateSubDocValues)
+  /// Интерфейс для инициализации значений нового поддокумента (метод <see cref="ISubDocumentEditorCaller.InitNewSubDocValues"/>)
+  /// и проверки нового или отредактированного поддокумента перед записью (метод <see cref="ISubDocumentEditorCaller.ValidateSubDocValues"/>).
   /// Интерфейс реализуется фильтрами табличного просмотра или пользовательским
-  /// кодом при наличии специальных требований к редактируемым поддокументам
-  /// Методы интерфейса вызываются редактором поддокумента SubDocumentEditor
+  /// кодом при наличии специальных требований к редактируемым поддокументам.
+  /// Методы интерфейса вызываются редактором поддокумента <see cref="SubDocumentEditor"/>.
   /// </summary>
   public interface ISubDocumentEditorCaller
   {
     /// <summary>
     /// Инициализировать значения нового поддокумента.
-    /// На момент вызова документ находится в режиме Insert
-    /// Реализация интерфейса может устанавливать значения NewDoc.Values или 
-    /// добавлять поддокументы
+    /// На момент вызова документ находится в режиме <see cref="EFPDataGridViewState.Insert"/>
+    /// Реализация интерфейса может устанавливать значения <paramref name="newSubDoc"/>.Values или добавлять поддокументы.
     /// </summary>
     /// <param name="newSubDoc">Создаваемый поддокумент</param>
     void InitNewSubDocValues(DBxSubDoc newSubDoc);
@@ -39,11 +38,11 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Проверить поддокумент перед записью на соответствие внешним требованием
     /// (например, условиям фильтра).
-    /// Реализация интерфейса не должна изменять значения полей в SavingSubDoc
+    /// Реализация интерфейса не должна изменять значения полей в <paramref name="savingSubDoc"/>.
     /// </summary>
     /// <param name="savingSubDoc">Записываемый поддокумент</param>
     /// <param name="errorMessages">Сюда можно добавить предупреждения о
-    /// несоответствии фильтра с помощью ErrorMessages.AddWarning(). Может быть
+    /// несоответствии фильтра с помощью <paramref name="errorMessages"/>.AddWarning(). Может быть
     /// добавлено несколько предупреждений</param>
     void ValidateSubDocValues(DBxSubDoc savingSubDoc, ErrorMessageList errorMessages);
   }
@@ -51,8 +50,8 @@ namespace FreeLibSet.Forms.Docs
   #endregion
 
   /// <summary>
-  /// Редактор строки в таблице поддокументов в редакторе документа
-  /// Одновременно могут редактироваться несколько поддокументов, в том числе и относящиеся к разным документам
+  /// Редактор строки в таблице поддокументов в редакторе документа.
+  /// Одновременно могут редактироваться несколько поддокументов, в том числе и относящиеся к разным документам.
   /// </summary>
   public class SubDocumentEditor : IReadOnlyObject
   {
@@ -85,20 +84,20 @@ namespace FreeLibSet.Forms.Docs
     /// Основной редактор документа
     /// </summary>
     public DocumentEditor MainEditor { get { return _MainEditor; } }
-    private DocumentEditor _MainEditor;
+    private readonly DocumentEditor _MainEditor;
 
     /// <summary>
     /// Описание вида поддокумента
     /// </summary>
     public SubDocTypeUI SubDocTypeUI { get { return _SubDocTypeUI; } }
-    private SubDocTypeUI _SubDocTypeUI;
+    private readonly SubDocTypeUI _SubDocTypeUI;
 
     /// <summary>
     /// Редактируемые поддокументы
     /// Обычно является подмножеством поддокументов, выбранных пользователем, а не основным набором 
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
-    private DBxMultiSubDocs _SubDocs;
+    private readonly DBxMultiSubDocs _SubDocs;
 
     /// <summary>
     /// Провайдер для доступа к документам
@@ -111,7 +110,7 @@ namespace FreeLibSet.Forms.Docs
     public DBUI UI { get { return _SubDocTypeUI.UI; } }
 
     /// <summary>
-    /// Текущие режим редактирования поддокумента
+    /// Текущие режим редактирования поддокумента.
     /// Он может не совпадать с режимом основного редактора.
     /// </summary>
     public EFPDataGridViewState State { get { return _State; } }
@@ -120,7 +119,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// True, если редактируется, просматривается или удаляется сразу
     /// несколько поддокументов. 
-    /// Это свойство не совпадает с DocumentEditor.MultiDocMode
+    /// Это свойство не совпадает с <see cref="DocumentEditor.MultiDocMode"/>.
     /// </summary>
     public bool MultiDocMode
     {
@@ -136,7 +135,7 @@ namespace FreeLibSet.Forms.Docs
     internal DocEditItemList DocEditItems { get { return _Form.DocEditItems; } }
 
     /// <summary>
-    /// Отслеживание изменений для рисования звездочки в заголовке формы
+    /// Отслеживание изменений для рисования звездочки в заголовке формы.
     /// Объект существует только в процессе работы редактора.
     /// </summary>
     public DepChangeInfoList ChangeInfo { get { return _Form.ChangeInfoList; } }
@@ -154,8 +153,8 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Внешний инициализатор полей для нового поддокумента
-    /// Вызывается после обработки значений в ClientFields
+    /// Внешний инициализатор полей для нового поддокумента.
+    /// Вызывается после обработки значений в <see cref="ColumnUIList"/>.
     /// </summary>
     public ISubDocumentEditorCaller Caller { get { return _Caller; } set { _Caller = value; } }
     private ISubDocumentEditorCaller _Caller;
@@ -163,8 +162,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если свойство не установлено, то в режиме создания или создания копии
-    /// поддокумента выполняется инициализация начальных значений полей
-    /// Свойство устанавливается в true в режиме вставки одной строки из буфера обмена
+    /// поддокумента выполняется инициализация начальных значений полей.
+    /// Свойство устанавливается в true в режиме вставки одной строки из буфера обмена.
     /// </summary>
     public bool SuppressInsertColumnValues { get { return _SuppressInsertColumnValues; } set { _SuppressInsertColumnValues = value; } }
     private bool _SuppressInsertColumnValues;
@@ -180,14 +179,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается после того, как были установлены значения всех полей перед началом
-    /// редактирования. На момент вызова форма еще не выведена на экран 
+    /// редактирования. На момент вызова форма еще не выведена на экран. 
     /// </summary>
     public event SubDocEditEventHandler AfterReadValues;
 
     /// <summary>
     /// Вызывается при нажатии кнопок "ОК" перед тем, как данные записаны в строку поддокумента
-    /// Вызывается в режимах Edit, Insert и InsertCopy
-    /// Установка Args.Cancel=true предотвращает запись данных и закрытие редактора
+    /// Вызывается в режимах <see cref="State"/>=<see cref="EFPDataGridViewState.Edit"/>, <see cref="EFPDataGridViewState.Insert"/> и <see cref="EFPDataGridViewState.InsertCopy"/>
+    /// Установка <see cref="SubDocEditCancelEventArgs.Cancel"/>=true предотвращает запись данных и закрытие редактора.
     /// Программа должна вывести сообщение пользователю о причинах отмены.
     /// На момент вызова данные формы еще не перенесены в строку.
     /// </summary>
@@ -203,8 +202,8 @@ namespace FreeLibSet.Forms.Docs
     #region Методы
 
     /// <summary>
-    /// Открывает окно редактора в модальном режиме, если обработчик события SubDocTypeUI.BeforeEdit 
-    /// не снял флаг ShowEditor и не выставил признак Cancel.
+    /// Открывает окно редактора в модальном режиме, если обработчик события <see cref="SubDocTypeUI.BeforeEdit"/> 
+    /// не снял флаг <see cref="BeforeSubDocEditEventArgs.ShowEditor"/> и не выставил признак <see cref="BeforeSubDocEditEventArgs.Cancel"/>.
     /// </summary>
     /// <returns>True, если редактирование выполнено</returns>
     public bool Run()
@@ -260,7 +259,6 @@ namespace FreeLibSet.Forms.Docs
             SubDocEditEventArgs args = new SubDocEditEventArgs(this);
             AfterReadValues(this, args);
           }
-
 
           _Form.CorrectSize();
           InitFormTitle();
@@ -334,9 +332,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Закрыть окно редактора.
-    /// На момент вызова окно редактора должно быть открыто
+    /// На момент вызова окно редактора должно быть открыто.
     /// Возвращает true, если форма успешно закрыта.
-    /// Возвращает false, если окно закрыть не удалось (например, не выполнены условия корректности введенных данных)
+    /// Возвращает false, если окно закрыть не удалось (например, не выполнены условия корректности введенных данных).
     /// </summary>
     /// <param name="isOk">true - выполнить запись поддокумента (симуляция нажатия кнопки "ОК"),
     /// false - выйти без записи (симуляция нажатия кнопки "Отмена")</param>
@@ -475,7 +473,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выполняем запись полей в датасет и возвращаем true, если значения
-    /// полей корректные
+    /// полей корректные.
     /// </summary>
     /// <returns></returns>
     private bool DoWrite()
@@ -610,7 +608,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// true, если пользователь не может изменять поля документа. 
-    /// Это свойство не обязано совпадать с DocumentEditor.DataReadOnly
+    /// Это свойство не обязано совпадать с <see cref="MainEditor"/>.IsReadOnly.
+    /// Основной редактор может находиться в режиме редактирования, а редактор документа - в режиме просмотра записей.
     /// </summary>
     public bool IsReadOnly
     {
@@ -621,7 +620,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {

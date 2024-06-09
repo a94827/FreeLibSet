@@ -176,7 +176,11 @@ namespace FreeLibSet.Reporting
         bool areAllBordersSame = band.AreAllBordersSame;
         if (areAllBordersSame && sel1.CellStyle.LeftBorder != BRLine.None)
         {
-          Range rBand = sheet.GetRange(firstBandRow, leftCols[0], firstBandRow + band.RowCount - 1, rightCols[band.ColumnCount - 1]);
+          // 25.04.2024
+          // В .NET появился класс System.Range, что вызывает неоднозначность при компиляции.
+          // Придется упоминать класс Range вместе с пространством имен.
+
+          FreeLibSet.OLE.Excel.Range rBand = sheet.GetRange(firstBandRow, leftCols[0], firstBandRow + band.RowCount - 1, rightCols[band.ColumnCount - 1]);
           SetBorders(rBand.Borders, sel1.CellStyle.LeftBorder);
         }
 
@@ -241,7 +245,7 @@ namespace FreeLibSet.Reporting
 
           #region Запись блока
 
-          Range r = sheet.GetRange(firstBlockRow, leftCols[0], firstBlockRow + blockRowCount - 1, rightCols[band.ColumnCount - 1]);
+          FreeLibSet.OLE.Excel.Range r = sheet.GetRange(firstBlockRow, leftCols[0], firstBlockRow + blockRowCount - 1, rightCols[band.ColumnCount - 1]);
           try
           {
             r.Formula = values;
@@ -257,7 +261,7 @@ namespace FreeLibSet.Reporting
                 int xlsRow = firstBlockRow + j;
                 int xlsColumn = leftCols[k];
 
-                Range rSingle = sheet.Cells[xlsRow, xlsColumn];
+                FreeLibSet.OLE.Excel.Range rSingle = sheet.Cells[xlsRow, xlsColumn];
                 rSingle.Value = values[j, k];
               }
             }
@@ -271,7 +275,7 @@ namespace FreeLibSet.Reporting
           {
             for (int j = 0; j < dcvs.Count; i++)
             {
-              Range rSingle = sheet.Cells[dcvs[i].Row, dcvs[i].Column];
+              FreeLibSet.OLE.Excel.Range  rSingle = sheet.Cells[dcvs[i].Row, dcvs[i].Column];
               //rSingle.Formula = DCVs[i].Value;
               rSingle.Value = dcvs[i].Value.Replace(Environment.NewLine, "\r");
             }
@@ -297,7 +301,7 @@ namespace FreeLibSet.Reporting
               int xlsColumn2 = rightCols[merge.LastColumnIndex];
               if (xlsRow2 > xlsRow1 || xlsColumn2 > xlsColumn1)
               {
-                Range rMerge = sheet.GetRange(xlsRow1, xlsColumn1, xlsRow2, xlsColumn2);
+                FreeLibSet.OLE.Excel.Range rMerge = sheet.GetRange(xlsRow1, xlsColumn1, xlsRow2, xlsColumn2);
                 rMerge.Merge();
               }
             }
@@ -321,7 +325,7 @@ namespace FreeLibSet.Reporting
 
           #region 1. Форматирование столбца в-целом
 
-          Range rCol = sheet.GetRange(firstBandRow, leftCols[k], firstBandRow + band.RowCount - 1, rightCols[k]);
+          FreeLibSet.OLE.Excel.Range rCol = sheet.GetRange(firstBandRow, leftCols[k], firstBandRow + band.RowCount - 1, rightCols[k]);
           if (sel1.CellStyle.FontName != section.Report.DefaultCellStyle.FontName)
             rCol.Font.SetName(sel1.CellStyle.FontName);
           if (sel1.CellStyle.FontHeightPt != section.Report.DefaultCellStyle.FontHeightPt)
@@ -358,7 +362,7 @@ namespace FreeLibSet.Reporting
             if (flagFontName || flagFontSize || flagFontAttrs || flagBorders || flagDiagonalUp || flagDiagonalDown ||
               flagHAlign || flagVAlign || flagWrapMode || flagIndent || flagBackColor || flagForeColor)
             {
-              Range rSingle = sheet.GetRange(firstBandRow + j, leftCols[k], firstBandRow + j, rightCols[k]);
+              FreeLibSet.OLE.Excel.Range rSingle = sheet.GetRange(firstBandRow + j, leftCols[k], firstBandRow + j, rightCols[k]);
               if (flagFontName)
                 rSingle.Font.SetName(sel2.CellStyle.FontName);
               if (flagFontSize)

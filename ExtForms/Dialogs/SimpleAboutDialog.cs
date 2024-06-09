@@ -84,10 +84,16 @@ namespace FreeLibSet.Forms
           DataView dvMain = new DataView(table);
           dvMain.RowFilter = "GAC=FALSE";
           ghMain.Control.DataSource = dvMain;
+          ghMain.TopLeftCellToolTipText ="Всего загружено сборок: "+dvMain.Count.ToString();
 
           DataView dvGAC = new DataView(table);
           dvGAC.RowFilter = "GAC=TRUE";
           ghGAC.Control.DataSource = dvGAC;
+#if NET
+          ghGAC.TopLeftCellToolTipText = ".Net не поддерживает глобальный кэш сборок";
+#else
+          ghGAC.TopLeftCellToolTipText = "Всего загружено сборок: " + dvGAC.Count.ToString();
+#endif
         }
         finally
         {
@@ -112,25 +118,62 @@ namespace FreeLibSet.Forms
       grid.AllowUserToAddRows = false;
       grid.AllowUserToDeleteRows = false;
       grid.AutoGenerateColumns = false;
-      EFPDataGridView Handler = new EFPDataGridView(baseProvider, grid);
-      Handler.Columns.AddText("Name", true, "Имя сборки", 20);
-      Handler.Columns.LastAdded.CanIncSearch = true;
-      Handler.Columns.AddText("Version", true, "Версия", 12);
-      Handler.Columns.AddDateTime("CreationTime", true, "Создан");
-      Handler.Columns.AddBool("Debug", true, "Отладка");
-      Handler.Columns.LastAdded.GridColumn.ToolTipText = "Флажок установлен, если сборка скомпилирована в отладочном режиме." +Environment.NewLine+
+      EFPDataGridView gh = new EFPDataGridView(baseProvider, grid);
+      gh.Columns.AddInt("Order2", false, "№ п/п", 3);
+      gh.Columns.LastAdded.PrintWidth = 100;
+      gh.Columns.LastAdded.Printed = false;
+      gh.Columns.AddText("Name", true, "Имя сборки", 20);
+      gh.Columns.LastAdded.CanIncSearch = true;
+      gh.Columns.LastAdded.PrintWidth = 500;
+      gh.Columns.AddText("Version", true, "Версия", 12);
+      gh.Columns.LastAdded.PrintWidth = 250;
+      gh.Columns.AddDateTime("CreationTime", true, "Файл создан");
+      gh.Columns.LastAdded.PrintWidth = 300;
+      gh.Columns.LastAdded.Printed = false;
+      gh.Columns.AddBool("Debug", true, "Отладка");
+      gh.Columns.LastAdded.GridColumn.ToolTipText = "Флажок установлен, если сборка скомпилирована в отладочном режиме." +Environment.NewLine+
         "Если флажка нет, сборка скомпилирована с оптимизацией кода";
-      Handler.Columns.AddText("Description", true, "Описание", 40);
-      Handler.Columns.AddText("Copyright", true, "Авторские права", 40);
-      Handler.Columns.AddText("ProcessorArchitecture", true, "Архитектура", 7);
-      Handler.Columns.LastAdded.GridColumn.ToolTipText = "Поддерживаемая архитектура процессора";
-      Handler.Columns.AddText("Location", true, "Путь к сборке", 40);
-      Handler.DisableOrdering();
-      Handler.FrozenColumns = 1;
-      Handler.ReadOnly = true;
-      Handler.CanView = false;
+      gh.Columns.LastAdded.PrintWidth = 100;
+      gh.Columns.LastAdded.Printed = false;
+      gh.Columns.AddText("Description", true, "Описание", 40);
+      gh.Columns.LastAdded.PrintWidth = 1050;
+      gh.Columns.AddText("Copyright", true, "Авторские права", 40);
+      gh.Columns.LastAdded.PrintWidth = 500;
+      gh.Columns.LastAdded.Printed = false;
+      gh.Columns.AddText("ProcessorArchitecture", true, "Архитектура", 7);
+      gh.Columns.LastAdded.GridColumn.ToolTipText = "Поддерживаемая архитектура процессора";
+      gh.Columns.LastAdded.PrintWidth = 200;
+      gh.Columns.LastAdded.Printed = false;
+      gh.Columns.AddText("Location", true, "Путь к сборке", 40);
+      gh.Columns.LastAdded.PrintWidth = 500;
+      gh.Columns.LastAdded.Printed = false;
+      gh.DisableOrdering();
+      gh.FrozenColumns = 1;
+      gh.GetCellAttributes += ghModules_GetCellAttributes;
 
-      return Handler;
+      gh.Orders.Add("Order", "В порядке загрузки", new EFPDataGridViewSortInfo("Order2", ListSortDirection.Ascending)); // сортировка выполняется по DataColumn, а не по виртуальному столбцу
+      gh.Orders.Add("Name", "Имя сборки");
+      gh.Orders.Add("CreationTime DESC,Name", "Файл создан (новые вверху)", new EFPDataGridViewSortInfo("CreationTime", ListSortDirection.Descending));
+      gh.Orders.Add("CreationTime ASC,Name", "Файл создан (старые вверху)", new EFPDataGridViewSortInfo("CreationTime", ListSortDirection.Ascending));
+      gh.Orders.Add("Copyright,Name", "Авторские права");
+      gh.Orders.Add("ProcessorArchitecture", "Архитектура");
+      gh.Orders.Add("Location", "Путь к сборке");
+      gh.AutoSort = true;
+
+      gh.ReadOnly = true;
+      gh.CanView = false;
+
+      return gh;
+    }
+
+    private static void ghModules_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    {
+      switch (args.ColumnName)
+      {
+        case "Order2":
+          args.Value = args.RowIndex + 1; 
+          break;  
+      }
     }
 
     #endregion
@@ -145,7 +188,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализирует диалог значениями по умолчанию.
-    /// Свойства заполняются из основной сборки приложения
+    /// Свойства заполняются из основной сборки приложения.
     /// </summary>
     public AboutDialog()
     {
@@ -166,7 +209,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализирует диалог значениями из указанной сборки.
-    /// Значок все равно берется из основной сборки приложения
+    /// Значок все равно берется из основной сборки приложения.
     /// </summary>
     /// <param name="assembly">Сборка для извлечения значений</param>
     public AboutDialog(Assembly assembly)
@@ -191,7 +234,7 @@ namespace FreeLibSet.Forms
         string progName = assembly.FullName;
         AssemblyName an = new AssemblyName(progName);
 
-        AppName = GetAppName(assembly);
+        AppName = EnvironmentTools.GetAssemblyDescription(assembly);
         Version = an.Version.ToString();
 
         AssemblyCopyrightAttribute attrCopyright = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
@@ -207,27 +250,6 @@ namespace FreeLibSet.Forms
       {
         Copyright = "Ошибка получения атрибутов. " + e.Message;
       }
-
-    }
-
-    private static string GetAppName(Assembly assembly)
-    {
-      AssemblyDescriptionAttribute attrDescr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute));
-      if (attrDescr != null)
-      {
-        if (!String.IsNullOrEmpty(attrDescr.Description))
-          return attrDescr.Description;
-      }
-
-      AssemblyProductAttribute attrProduct = (AssemblyProductAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyProductAttribute));
-      if (attrProduct != null)
-      {
-        if (!String.IsNullOrEmpty(attrProduct.Product))
-          return attrProduct.Product;
-      }
-
-      // если ничего не нашли
-      return assembly.ToString();
     }
 
     #endregion
@@ -247,7 +269,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Название программного продукта.
-    /// Выводится в верхней части диалога
+    /// Выводится в верхней части диалога.
     /// </summary>
     public string AppName
     {

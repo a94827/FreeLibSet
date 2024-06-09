@@ -205,7 +205,7 @@ namespace FreeLibSet.Models.Tree
         if (model != null && Parent != null)
         {
           TreePath path = model.GetPath(Parent);
-          if (path != null)
+          if (!path.IsEmpty)
           {
             TreeModelEventArgs args = new TreeModelEventArgs(path, new int[] { Index }, new object[] { this });
             model.OnNodesChanged(args);

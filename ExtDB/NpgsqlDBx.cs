@@ -22,8 +22,8 @@ namespace FreeLibSet.Data.Npgsql
     #region Конструктор
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionStringBuilder">Собранная строка подключения</param>
     public NpgsqlDBx(NpgsqlConnectionStringBuilder connectionStringBuilder)
@@ -41,8 +41,8 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionString">Строка подключения</param>
     public NpgsqlDBx(string connectionString)
@@ -341,7 +341,15 @@ namespace FreeLibSet.Data.Npgsql
       try
       {
         NpgsqlConnectionStringBuilder csb = new NpgsqlConnectionStringBuilder(cs);
-        if (!String.IsNullOrEmpty(csb.Password))
+        bool hasPassword = !String.IsNullOrEmpty(csb.Password);
+#if !NET
+        if (csb.PasswordAsByteArray != null)
+        {
+          if (csb.PasswordAsByteArray.Length > 0)
+            hasPassword = true; // 06.05.2024
+        }
+#endif
+        if (hasPassword)
         {
           csb.Password = "***";
           cs = csb.ToString();
@@ -354,7 +362,7 @@ namespace FreeLibSet.Data.Npgsql
       }
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -412,7 +420,7 @@ namespace FreeLibSet.Data.Npgsql
 
     /// <summary>
     /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Объект создается при первом обращении к свойству.
     /// </summary>
     public NpgsqlConnection Connection
     {
@@ -454,7 +462,7 @@ namespace FreeLibSet.Data.Npgsql
 
     /// <summary>
     /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Объект создается при первом обращении к свойству.
     /// </summary>
     protected override DbConnection DbConnection { get { return Connection; } }
 
@@ -686,6 +694,10 @@ namespace FreeLibSet.Data.Npgsql
     /// <param name="table">Исходная таблица</param>
     protected override void DoAddRecords(string tableName, DataTable table)
     {
+#if NET
+      // TODO: Использовать новые возможности Npgsql
+      base.DoAddRecords(tableName, table);
+#else
       if (table.Rows.Count <= 1)
       {
         base.DoAddRecords(tableName, table);
@@ -793,6 +805,7 @@ namespace FreeLibSet.Data.Npgsql
       int seqColumnIndex = Validator.GetPrimaryKeyInt32ColumnIndex(tableName, columnNames);
       if (seqColumnIndex >= 0)
         CorrectPrimaryKeySequence(tableName, DataTools.MaxInt(table, columnNames[seqColumnIndex], true) ?? 0);
+#endif // !NET
     }
 
     #region Корректировка последовательности
@@ -865,7 +878,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #endregion
+#endregion
 
     #region Удаление записей
 
@@ -885,7 +898,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-    #endregion
+#endregion
 
     #region Транзакция
 

@@ -10,11 +10,10 @@ using System.Runtime.InteropServices;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Синхронизация между EFPDBxTreeView и EFPDBxGridView или любыми другимм просмотрами, реализующими IEFPDBxView,
-  /// выбранных строк документов.
+  /// Синхронизация выбранных строк документов между <see cref="EFPDBxTreeView"/> и <see cref="EFPDBxGridView"/> (просмотрами, реализующими <see cref="IEFPDBxView"/>).
   /// Синхронизация наборов данных не выполняется.
   /// Просмотры должны относиться к одному виду документа / поддокумента.
-  /// Используется в формах просмотра документов DocTableViewForm и поддокументов SubDocTableViewForm
+  /// Используется в формах просмотра документов <see cref="DocTableViewForm"/> и поддокументов <see cref="SubDocTableViewForm"/>.
   /// </summary>
   public class EFPDBxViewSync
   {
@@ -122,16 +121,18 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Синхронизация фильтров документов в просмотрах EFPDocGridView и EFPDocTreeView
+  /// Синхронизация фильтров документов в просмотрах <see cref="EFPDocGridView"/> и <see cref="EFPDocTreeView"/>
   /// </summary>
   public class EFPDocViewFilterSync
   {
+    // Требуется интерфейс IEFPDocView, а не IEFPDBxView, так как используется событие ShowDeletedChanged
+
     #region Конструкторы
 
     /// <summary>
     /// Создает синхронизатор для двух просмотров документов.
     /// 
-    /// Для первого провайдера устанавливается свойство IEFPDocView.SaveFiltersAllowed=true,
+    /// Для первого провайдера устанавливается свойство <see cref="IEFPControlWithFilters.SaveFiltersAllowed"/>=true,
     /// для второго - false.
     /// </summary>
     /// <param name="efp1">Провайдер первого просмотра</param>
@@ -144,7 +145,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Создает синхронизатор для произвольного числа просмотров документов.
     /// 
-    /// Для первого провайдера в списке устанавливается свойство IEFPDocView.SaveFiltersAllowed=true,
+    /// Для первого провайдера в списке устанавливается свойство <see cref="IEFPControlWithFilters.SaveFiltersAllowed"/>=true,
     /// для остальных - false.
     /// </summary>
     /// <param name="controlProviders">Список провайдеров</param>
@@ -158,8 +159,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProviders">Список провайдеров</param>
     /// <param name="initSaveFiltersAllowed">Если true, то будет устанавливаться свойство
-    /// IEFPDocView.SaveFiltersAllowed (для первого провайдера в true, для отальных в false).
-    /// Если False, то предполагается, что свойство SaveFiltersAllowed устанавливается в 
+    /// <see cref="IEFPControlWithFilters.SaveFiltersAllowed"/> (для первого провайдера в true, для отальных в false).
+    /// Если False, то предполагается, что свойство <see cref="IEFPControlWithFilters.SaveFiltersAllowed"/> устанавливается в 
     /// пользовательском коде</param>
     public EFPDocViewFilterSync(IEFPDocView[] controlProviders, bool initSaveFiltersAllowed)
     {
@@ -232,7 +233,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Список провайдеров синхронизируемых просмотров
     /// </summary>
-    private IEFPDocView[] _ControlProviders;
+    private readonly IEFPDocView[] _ControlProviders;
 
     #endregion
   }

@@ -49,7 +49,7 @@ namespace FreeLibSet.Forms
     Insert,
 
     /// <summary>
-    /// Выбранная команда "Копия записи"
+    /// Выбрана команда "Копия записи"
     /// </summary>
     InsertCopy,
 
@@ -1334,7 +1334,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Класс для сохранения текущей позиции и выбранных строк/столбцов в табличном просмотре
   /// (свойство <see cref="EFPDataGridView.Selection"/>).
-  /// Не содержит открытых полей
+  /// Не содержит открытых полей.
   /// </summary>
   public class EFPDataGridViewSelection
   {
@@ -1567,6 +1567,18 @@ namespace FreeLibSet.Forms
     /// Управляемое свойство для <see cref="ReadOnly"/>
     /// </summary>
     DepValue<bool> ReadOnlyEx { get; set; }
+
+    /// <summary>
+    /// true, если можно редактировать строки (при <see cref="ReadOnly"/>=false).
+    /// Значение по умолчанию: true (редактирование разрешено).
+    /// Возможность группового редактирования зависит от <see cref="CanMultiEdit"/>.
+    /// </summary>
+    bool CanEdit { get; set; }
+
+    /// <summary>
+    /// Управляемое свойство для <see cref="CanEdit"/>
+    /// </summary>
+    DepValue<bool> CanEditEx { get; set; }
 
     /// <summary>
     /// true, если допускается создание новых записей.
@@ -1863,6 +1875,7 @@ namespace FreeLibSet.Forms
       // так не помогает. Control.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft; // 27.07.2022. Исправление для Mono.
       _State = EFPDataGridViewState.View;
       _ReadOnly = false;
+      _CanEdit = true;
       _CanInsert = true;
       _CanInsertCopy = false;
       _CanDelete = true;
@@ -2502,7 +2515,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// true, если поддерживается только просмотр данных, а не редактирование.
     /// Установка свойства отключает видимость всех команд редактирования. 
-    /// Свойства <see cref="CanInsert"/>, <see cref="CanDelete"/> и <see cref="CanInsertCopy"/> перестают действовать.
+    /// Свойства <see cref="CanEdit"/>, <see cref="CanInsert"/>, <see cref="CanDelete"/> и <see cref="CanInsertCopy"/> перестают действовать.
     /// Значение по умолчанию: false (редактирование разрешено).
     /// Не влияет на возможность inline-редактирования. Возможно любое сочетание
     /// свойств <see cref="ReadOnly"/> и <see cref="DataGridView.ReadOnly"/>.
@@ -2556,6 +2569,64 @@ namespace FreeLibSet.Forms
     void ReadOnlyEx_ValueChanged(object Sender, EventArgs Args)
     {
       ReadOnly = _ReadOnlyEx.Value;
+    }
+
+    #endregion
+
+    #region CanEdit
+
+    /// <summary>
+    /// true, если можно редактировать строки (при <see cref="ReadOnly"/>=false).
+    /// Значение по умолчанию: true (редактирование разрешено).
+    /// Возможность группового редактирования зависит от <see cref="CanMultiEdit"/>.
+    /// </summary>
+    [DefaultValue(true)]
+    public bool CanEdit
+    {
+      get { return _CanEdit; }
+      set
+      {
+        if (value == _CanEdit)
+          return;
+        _CanEdit = value;
+        if (_CanEditEx != null)
+          _CanEditEx.Value = value;
+        if (CommandItems != null)
+          CommandItems.PerformRefreshItems();
+      }
+    }
+    private bool _CanEdit;
+
+    /// <summary>
+    /// Управляемое свойство для <see cref="CanEdit"/>
+    /// </summary>
+    public DepValue<bool> CanEditEx
+    {
+      get
+      {
+        InitCanEditEx();
+        return _CanEditEx;
+      }
+      set
+      {
+        InitCanEditEx();
+        _CanEditEx.Source = value;
+      }
+    }
+    private DepInput<bool> _CanEditEx;
+
+    private void InitCanEditEx()
+    {
+      if (_CanEditEx == null)
+      {
+        _CanEditEx = new DepInput<bool>(CanInsert, CanEditEx_ValueChanged);
+        _CanEditEx.OwnerInfo = new DepOwnerInfo(this, "CanEditEx");
+      }
+    }
+
+    void CanEditEx_ValueChanged(object Sender, EventArgs Args)
+    {
+      CanEdit = _CanEditEx.Value;
     }
 
     #endregion

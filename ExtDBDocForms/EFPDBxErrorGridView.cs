@@ -13,19 +13,19 @@ namespace FreeLibSet.Forms.Docs
   #region EFPDBxErrorGridViewDocSelEventArgs
 
   /// <summary>
-  /// Аргументы события EFPDBxErrorGridView.GetDocSel
+  /// Аргументы события <see cref="EFPDBxErrorGridView.GetDocSel"/>
   /// </summary>
   public class EFPDBxErrorGridViewDocSelEventArgs : EventArgs
   {
     #region Конструктор
 
     /// <summary>
-    /// Создается в EFPDBxErrorGridView
+    /// Создается в <see cref="EFPDBxErrorGridView"/>
     /// </summary>
     /// <param name="items"></param>
     /// <param name="ui"></param>
     /// <param name="reason"></param>
-    public EFPDBxErrorGridViewDocSelEventArgs(ErrorMessageItem[] items, DBUI ui, EFPDBxGridViewDocSelReason reason)
+    public EFPDBxErrorGridViewDocSelEventArgs(ErrorMessageItem[] items, DBUI ui, EFPDBxViewDocSelReason reason)
     {
       _Items = items;
       _UI = ui;
@@ -41,25 +41,25 @@ namespace FreeLibSet.Forms.Docs
     /// Сообщения об ошибках, для которых требуется создать выборку документов
     /// </summary>
     public ErrorMessageItem[] Items { get { return _Items; } }
-    private ErrorMessageItem[] _Items;
+    private readonly ErrorMessageItem[] _Items;
 
     /// <summary>
     /// Доступ к интерфейсу документов
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Причина, по которой требуется создать выборку
     /// </summary>
-    public EFPDBxGridViewDocSelReason Reason { get { return _Reason; } }
-    private EFPDBxGridViewDocSelReason _Reason;
+    public EFPDBxViewDocSelReason Reason { get { return _Reason; } }
+    private readonly EFPDBxViewDocSelReason _Reason;
 
     /// <summary>
     /// Сюда должны быть добавлены ссылки на документы
     /// </summary>
     public DBxDocSelection DocSel { get { return _DocSel; } }
-    private DBxDocSelection _DocSel;
+    private readonly DBxDocSelection _DocSel;
 
     #endregion
 
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавить ссылку на документ в выборку.
-    /// Также добавляются все связанные документы
+    /// Также добавляются все связанные документы.
     /// </summary>
     /// <param name="docTypeName">Вид документа</param>
     /// <param name="docId">Идентификатор документа</param>
@@ -80,9 +80,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события EFPDBxErrorGridView.GetDocSel
+  /// Делегат события <see cref="EFPDBxErrorGridView.GetDocSel"/>
   /// </summary>
-  /// <param name="sender">Объект EFPDBxErrorGridView</param>
+  /// <param name="sender">Объект <see cref="EFPDBxErrorGridView"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPDBxErrorGridViewDocSelEventHandler(object sender,
     EFPDBxErrorGridViewDocSelEventArgs args);
@@ -90,8 +90,8 @@ namespace FreeLibSet.Forms.Docs
   #endregion
 
   /// <summary>
-  /// Расширение табличного просмотра со списком ошибок для работы со ссылками на документы.
-  /// Добавляется событие GetDocSel.
+  /// Расширение табличного просмотра со списком ошибок <see cref="EFPErrorDataGridView"/> для работы со ссылками на документы.
+  /// Добавляется событие <see cref="EFPDBxErrorGridView.GetDocSel"/>.
   /// Поддерживает просмотр и редактирование документов, на которые есть ссылки в сообщениях в списке.
   /// </summary>
   public class EFPDBxErrorGridView : EFPErrorDataGridView
@@ -136,7 +136,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Система работы с документами на стороне клиента.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public DBUI UI { get { return _UI; } }
     private DBUI _UI;
@@ -146,7 +146,7 @@ namespace FreeLibSet.Forms.Docs
     #region Переопределенные методы
 
     /// <summary>
-    /// Вызывает обработчик события ErrorMessagesChanged, если он присоединен.
+    /// Вызывает обработчик события <see cref="EFPErrorDataGridView.ErrorMessagesChanged"/>, если он присоединен.
     /// </summary>
     protected override void OnErrorMessagesChanged()
     {
@@ -155,8 +155,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация свойства ReadOnly после изменения списка сообщений и присоединения обработчика.
-    /// Учитывается наличие обработчика события GetDocSel
+    /// Инициализация свойства <see cref="EFPDataGridView.ReadOnly"/> и <see cref="EFPDataGridView.CanView"/> после изменения списка сообщений и присоединения обработчика.
+    /// Учитывается наличие обработчика события <see cref="GetDocSel"/>.
     /// </summary>
     protected override void InitEditCommandItems()
     {
@@ -180,8 +180,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Редактирование или просмотр документов.
-    /// Вызывает обработчик события GetDocSel для получения выборки документов.
+    /// Вызывает обработчик события <see cref="GetDocSel"/> для получения выборки документов, связанных с выбранными пользователем сообщениями.
     /// Затем, если получена непустая выборка, документы открываются на просмотр или редактирование.
+    /// Если разрешено групповое редактирование (<see cref="DocTypeUI.CanMultiEdit"/>=true, вызывается <see cref="DocTypeUI.PerformEditing(int, bool)"/> .
+    /// Если выбрано несколько документов, а групповое редактирование запрещено, показывается окно выборки документов.
     /// </summary>
     /// <param name="args">Не используется</param>
     /// <returns>Возвращает true, если событие было обработано</returns>
@@ -194,7 +196,7 @@ namespace FreeLibSet.Forms.Docs
       {
         case EFPDataGridViewState.Edit:
         case EFPDataGridViewState.View:
-          DBxDocSelection docSel = CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+          DBxDocSelection docSel = CreateDocSel(EFPDBxViewDocSelReason.Copy);
           if (docSel != null)
           {
             if (!docSel.IsEmpty)
@@ -241,8 +243,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если обработчик установлен, то при копировании ячеек в буфер обмена будет
-    /// помещена выборка документов (объект DBxDocSelection).
-    /// Также будет добавлена команда "Отправить" -> "Выборка"
+    /// помещена выборка документов (объект <see cref="DBxDocSelection"/>).
+    /// Также будет добавлена команда "Отправить" -> "Выборка".
     /// </summary>
     public event EFPDBxErrorGridViewDocSelEventHandler GetDocSel
     {
@@ -260,7 +262,7 @@ namespace FreeLibSet.Forms.Docs
     private EFPDBxErrorGridViewDocSelEventHandler _GetDocSel;
 
     /// <summary>
-    /// В случае пеоеопределения метода также должно быть переопределено свойство HasGetDocSelHandler
+    /// В случае переопределения метода также должно быть переопределено свойство <see cref="HasGetDocSelHandler"/>.
     /// </summary>
     /// <param name="args"></param>
     protected virtual void OnGetDocSel(EFPDBxErrorGridViewDocSelEventArgs args)
@@ -270,7 +272,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если есть установленный обработчик GetDocSel
+    /// Возвращает true, если есть установленный обработчик <see cref="GetDocSel"/>.
     /// </summary>
     public virtual bool HasGetDocSelHandler { get { return _GetDocSel != null; } }
 
@@ -279,7 +281,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="reason">Причина создания выборки</param>
     /// <returns>Выборка документов или null</returns>
-    public DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason)
+    public DBxDocSelection CreateDocSel(EFPDBxViewDocSelReason reason)
     {
       return CreateDocSel(reason, null);
     }
@@ -290,7 +292,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="reason">Причина создания выборки</param>
     /// <param name="rowIndices">Индексы строк</param>
     /// <returns>Выборка документов или null</returns>
-    public DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason, int[] rowIndices)
+    public DBxDocSelection CreateDocSel(EFPDBxViewDocSelReason reason, int[] rowIndices)
     {
       if (!HasGetDocSelHandler)
         return null;
@@ -335,16 +337,16 @@ namespace FreeLibSet.Forms.Docs
 
 
   /// <summary>
-  /// Команды локального меню для EFPDBxErrorGridView.
+  /// Команды локального меню для <see cref="EFPDBxErrorGridView"/>.
   /// Добавляет команду "Отправить" - "Выборка документов".
-  /// Поддерживает копирование выборки документов в буфер обмена
+  /// Поддерживает копирование выборки документов в буфер обмена.
   /// </summary>
   public class EFPDBxErrorGridViewCommandItems : EFPDataGridViewCommandItems
   {
     #region Конструктор
 
     /// <summary>
-    /// Используется EFPDBxErrorGridView
+    /// Используется <see cref="EFPDBxErrorGridView"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер табличного просмотра</param>
     public EFPDBxErrorGridViewCommandItems(EFPDBxErrorGridView controlProvider)
@@ -368,7 +370,6 @@ namespace FreeLibSet.Forms.Docs
     {
       base.OnPrepare();
 
-
       if (ControlProvider.HasGetDocSelHandler) // Есть обработчик
       {
         EFPCommandItem ci = new EFPCommandItem("Send", "DocSel");
@@ -386,12 +387,12 @@ namespace FreeLibSet.Forms.Docs
     #region Буфер обмена
 
     /// <summary>
-    /// Добавляет выборку документов (объект DBxDocSelection) в набор форматов для буфера обмена
+    /// Добавляет выборку документов (объект <see cref="DBxDocSelection"/>) в набор форматов для буфера обмена
     /// </summary>
     /// <param name="args"></param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
-      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.Copy);
       if (docSel != null)
         args.DataObject.SetData(docSel);
 
@@ -404,7 +405,7 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
-      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Выборка не содержит документов");
@@ -417,7 +418,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Страница отчета со списком ошибок
+  /// Страница отчета со списком ошибок <see cref="EFPDBxErrorGridView"/>
   /// </summary>
   public class EFPReportDBxErrorMessageListPage : EFPReportErrorMessageListPage
   {
@@ -442,14 +443,14 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс доступа к документам
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     #endregion
 
     #region Табличный просмотр
 
     /// <summary>
-    /// Создает EFPDBxErrorGridView 
+    /// Создает <see cref="EFPDBxErrorGridView"/>
     /// </summary>
     /// <param name="control">Табличный просмотр</param>
     /// <returns>Провайдер управляющего элемента</returns>

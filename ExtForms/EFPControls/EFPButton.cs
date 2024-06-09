@@ -211,8 +211,10 @@ namespace FreeLibSet.Forms
       Point startPos = new Point(Control.Width, Control.Height);
       if (Control.ContextMenuStrip != null)
         Control.ContextMenuStrip.Show(Control, startPos);
+#if !NET
       else if (Control.ContextMenu != null)
         Control.ContextMenu.Show(Control, startPos);
+#endif        
       else
         base.OnClick();
     }

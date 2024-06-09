@@ -139,7 +139,7 @@ namespace ExtTools_tests.Core
 
     #endregion
 
-    #region IndexOfAny() / IndexOfAnyOther()
+    #region Last/IndexOfAny() / IndexOfAnyOther()
 
     [TestCase("ABCD", "DB", 1)]
     [TestCase("ABCD", "YZ", -1)]
@@ -177,6 +177,46 @@ namespace ExtTools_tests.Core
       {
         CharArrayIndexer ix = new CharArrayIndexer(searchChars);
         int res2 = DataTools.IndexOfAnyOther(str, ix);
+        Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
+      }
+    }
+
+    [TestCase("ABCD", "DB", 3)]
+    [TestCase("ABCD", "YZ", -1)]
+    [TestCase("ABCD", "", -1)]
+    [TestCase("ABCD", null, -1)]
+    [TestCase("", "ABC", -1)]
+    [TestCase(null, "ABC", -1)]
+    [TestCase("ABCDEFGHIJ", "1234567890", -1)] // используется CharArrayIndexer
+    [TestCase("ABCDEFGHIJ6", "1234567890", 10)] // используется CharArrayIndexer
+    public void LastIndexOfAny(string str, string searchChars, int wanted)
+    {
+      int res1 = DataTools.LastIndexOfAny(str, searchChars);
+      Assert.AreEqual(wanted, res1, "String overload");
+
+      if (searchChars != null)
+      {
+        CharArrayIndexer ix = new CharArrayIndexer(searchChars);
+        int res2 = DataTools.LastIndexOfAny(str, ix);
+        Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
+      }
+    }
+
+    [TestCase("ABCD", "DB", 2)]
+    [TestCase("ABCD", "AC", 3)]
+    [TestCase("ABCD", "", 3)]
+    [TestCase("ABCD", null, 3)]
+    [TestCase("", "ABC", -1)]
+    [TestCase(null, "ABC", -1)]
+    public void LastIndexOfAnyOther(string str, string searchChars, int wanted)
+    {
+      int res1 = DataTools.LastIndexOfAnyOther(str, searchChars);
+      Assert.AreEqual(wanted, res1, "String overload");
+
+      if (searchChars != null)
+      {
+        CharArrayIndexer ix = new CharArrayIndexer(searchChars);
+        int res2 = DataTools.LastIndexOfAnyOther(str, ix);
         Assert.AreEqual(wanted, res2, "CharArrayIndexer overload");
       }
     }

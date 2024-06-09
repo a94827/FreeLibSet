@@ -259,8 +259,8 @@ namespace FreeLibSet.Data
   /// <summary>
   /// Делегат события <see cref="DBx.LogoutException"/>
   /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
+  /// <param name="sender">Ссылка на <see cref="DBx"/></param>
+  /// <param name="args">Аргументы события</param>
   public delegate void DBxLogoutExceptionEventHandler(object sender, DBxLogoutExceptionEventArgs args);
 
   #endregion
@@ -275,12 +275,12 @@ namespace FreeLibSet.Data
   {
     /// <summary>
     /// Нет ограничений.
-    /// Одновременно может выполняться множество операторов записи
+    /// Одновременно может выполняться множество операторов записи.
     /// </summary>
     None,
 
     /// <summary>
-    /// Одновременно может выполняться только одна запись и сколько угодно операторов чтения
+    /// Одновременно может выполняться только одна запись и сколько угодно операторов чтения.
     /// </summary>
     SingleWrite
   }
@@ -289,7 +289,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Параметры обновления структуры базы данных.
-  /// Передается в качестве аргумента методу DBx.UpdateStruct()
+  /// Передается в качестве аргумента методу <see cref="DBx.UpdateStruct(ISplash, ErrorMessageList, DBxUpdateStructOptions)"/>.
   /// </summary>
   public sealed class DBxUpdateStructOptions
   {
@@ -332,7 +332,8 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// База данных.
-  /// Абстрактный класс
+  /// Абстрактный класс.
+  /// Прикладной код может либо создавать объекты производных классов, либо использовать <see cref="DBxManager.CreateDBObject(string)"/>.
   /// </summary>
   public abstract class DBx : DisposableObject
   {
@@ -416,7 +417,7 @@ namespace FreeLibSet.Data
     #region Список соединений
 
     /// <summary>
-    /// Список всех открытых соединений
+    /// Список всех открытых соединений для этой базы данных
     /// </summary>
     public ICollection<DBxConBase> Cons { get { return _Cons; } }
     internal readonly SyncCollection<DBxConBase> _Cons;
@@ -868,8 +869,8 @@ namespace FreeLibSet.Data
     #region Регистрация ошибок
 
     /// <summary>
-    /// Обработчик может создавать собственное исключение
-    /// Событие может вызываться асинхронно
+    /// Обработчик может создавать собственное исключение.
+    /// Событие может вызываться асинхронно.
     /// </summary>
     public event DBxCreateSqlExceptionEventHandler CreateSqlException;
 
@@ -902,7 +903,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Обработчик для регистрации внутренних ошибок.
-    /// Событие может вызываться асинхронно
+    /// Событие может вызываться асинхронно.
     /// Если обработчик события не установлен приложением, вызывается метод <see cref="LogoutTools.LogoutException(Exception, string)"/>.
     /// </summary>
     public event DBxLogoutExceptionEventHandler LogoutException;
@@ -977,7 +978,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Способ установки блокировок.
-    /// Непереопределенное свойство возвращает None, так как большинство баз данных способны выполнять запросы параллельно
+    /// Непереопределенное свойство возвращает <see cref="DBxLockMode.None"/>, так как большинство баз данных способны выполнять запросы параллельно.
     /// </summary>
     public virtual DBxLockMode LockMode
     {
@@ -987,7 +988,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Время выполнения команд в секундах по умолчанию. 
     /// Начальное значение для свойства <see cref="CommandTimeout"/>.
-    /// Равно 30 секундам (в соответствии с принятым стандартным значением в IDbCommand)
+    /// Равно 30 секундам (в соответствии с принятым стандартным значением в <see cref="System.Data.IDbCommand"/>)
     /// </summary>
     public const int DefaultCommandTimeout = 30;
 
@@ -1011,10 +1012,11 @@ namespace FreeLibSet.Data
     private int _CommandTimeout;
 
     /// <summary>
-    /// Метод должен вернуть true, если данное исключение означает, что превышен лимит на размер базы данных
+    /// Метод должен вернуть true, если данное исключение означает, что превышен лимит на размер базы данных.
+    /// Используется в MS SQL Server Express Edition, где есть ограничение в 10ГБ.
     /// </summary>
-    /// <param name="e"></param>
-    /// <returns></returns>
+    /// <param name="e">Объект исключения</param>
+    /// <returns>Признак превышения лимита</returns>
     public virtual bool IsDBSizeLimitExceededException(Exception e)
     {
       return false;

@@ -561,7 +561,9 @@ namespace FreeLibSet.Controls
 
     protected override CreateParams CreateParams
     {
+#if !NET
       [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+#endif
       get
       {
         CreateParams res = base.CreateParams;

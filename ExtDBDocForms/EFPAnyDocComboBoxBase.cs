@@ -14,7 +14,7 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Базовый класс для EFPDocComboBoxBase и EFPMultiDocComboBoxBase.
+  /// Базовый класс для <see cref="EFPDocComboBoxBase"/> и <see cref="EFPMultiDocComboBoxBase"/>.
   /// Не содержит ссылок на идентификаторы Id или Ids
   /// </summary>
   public abstract class EFPAnyDocComboBoxBase : EFPUserSelComboBox
@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms.Docs
     /// Доступ к интерфейсу пользователя
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     #endregion
 
@@ -80,9 +80,8 @@ namespace FreeLibSet.Forms.Docs
       InitTextAndImage();
     }
 
-
     /// <summary>
-    /// Инициализирует текстовое представление (свойство TextValue) и значок
+    /// Инициализирует текстовое представление и значок
     /// </summary>
     protected abstract void InitTextAndImage();
 
@@ -131,7 +130,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Если обработчик события установлен, то он вызывается вместо вывода
     /// стандартного диалога. Обработчик должен вывести пользователю собственный
-    /// диалог выбора документа и установить требуемые свойства после выбора
+    /// диалог выбора документа и установить требуемые свойства после выбора.
     /// </summary>
     public event EventHandler Popup;
 
@@ -189,7 +188,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текст, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Управляемое свойство для EmptyText.
+    /// Управляемое свойство для <see cref="EmptyText"/>.
     /// </summary>
     public DepValue<String> EmptyTextEx
     {
@@ -227,7 +226,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Значок, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Изображение должно быть в коллекции EFPApp.MainImages.
+    /// Изображение должно быть в коллекции <see cref="EFPApp.MainImages"/>.
     /// По умолчанию "" - нет значка.
     /// </summary>
     public string EmptyImageKey
@@ -247,7 +246,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Значок, выводимый в комбоблоке, когда нет выбранного значения.
-    /// Управляемое свойство для EmptyImageKey.
+    /// Управляемое свойство для <see cref="EmptyImageKey"/>.
     /// </summary>
     public DepValue<String> EmptyImageKeyEx
     {
@@ -285,9 +284,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error.
+    /// По умолчанию - <see cref="UIValidateState.Error"/> (пустое значение не разрешается.
     /// Это свойство переопределяется для нестандартных элементов, содержащих
-    /// кнопку очистки справа от элемента
+    /// кнопку очистки справа от элемента.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -305,7 +304,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// True, если ли элемент содержать пустое значение (нулевой идентификатор для элементов выбора единственного значения, или список нулевой длины для элементов выбора нескольких значений).
-    /// Дублирует CanBeEmptyMode
+    /// Дублирует <see cref="CanBeEmptyMode"/>.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -319,8 +318,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Используется при проверке корректности введенного значения.
-    /// Если установлено в Ok, то разрешается выбирать удаленные документы или
-    /// поддокументы. По умолчанию (Error), если выбранный документ/поддокумент
+    /// Если установлено в <see cref="UIValidateState.Ok"/>, то разрешается выбирать удаленные документы или
+    /// поддокументы. По умолчанию (<see cref="UIValidateState.Error"/>), если выбранный документ/поддокумент
     /// удален, то выдается ошибка.
     /// Также может выдаваться предупреждение.
     /// </summary>
@@ -342,7 +341,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если установлено в true, то разрешается выбирать удаленные документы или
     /// поддокументы. По умолчанию (false), если выбранный документ/поддокумент
     /// удален, то выдается ошибка.
-    /// Дубирует свойство CanBeDeletedMode.
+    /// Дубирует свойство <see cref="CanBeDeletedMode"/>.
     /// </summary>
     public bool CanBeDeleted
     {
@@ -361,14 +360,14 @@ namespace FreeLibSet.Forms.Docs
     public virtual bool GetDocSelSupported { get { return false; } }
 
     /// <summary>
-    /// Свойство возвращает true, если объект поддерживает присвоение выборки документов
+    /// Свойство возвращает true, если объект поддерживает присвоение выборки документов.
     /// Это - константное свойство. Возвращаемое значение не зависит от текущего выбранного значения.
     /// </summary>
     public virtual bool SetDocSelSupported { get { return false; } }
 
     /// <summary>
     /// Общедоступный метод для получения выборки документов.
-    /// Вызывает виртуальный метод OnGetDocSel().
+    /// Вызывает виртуальный метод <see cref="OnGetDocSel(EFPDBxViewDocSelReason)"/>.
     /// Для комбоблоков выбора документов возвращает выборку, содержащую выбранный документ
     /// (или документы) и, возможно, связанные документы.
     /// Для комбоблоков выбора поддокументов возвращает документ-владелец и, возможно, связанные документы.
@@ -376,7 +375,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="reason">Причина получения выборки</param>
     /// <returns>Выборка документов</returns>
-    public DBxDocSelection PerformGetDocSel(EFPDBxGridViewDocSelReason reason)
+    public DBxDocSelection PerformGetDocSel(EFPDBxViewDocSelReason reason)
     {
       return OnGetDocSel(reason);
     }
@@ -387,14 +386,14 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="reason">Причина получения выборки</param>
     /// <returns>Выборка документов</returns>
-    protected virtual DBxDocSelection OnGetDocSel(EFPDBxGridViewDocSelReason reason)
+    protected virtual DBxDocSelection OnGetDocSel(EFPDBxViewDocSelReason reason)
     {
       return null;
     }
 
     /// <summary>
     /// Общедоступный метод присвоения выборки документов.
-    /// Вызывает виртуальный метод OnSetDocSel().
+    /// Вызывает виртуальный метод <see cref="OnSetDocSel(DBxDocSelection)"/>.
     /// </summary>
     /// <param name="docSel">Выборка документов</param>
     public void PerformSetDocSel(DBxDocSelection docSel)
@@ -404,7 +403,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Присвоение выборки документов.
-    /// Непереопределенный метод вызывает исключение
+    /// Непереопределенный метод вызывает исключение.
     /// </summary>
     /// <param name="docSel">Выборка документов</param>
     protected virtual void OnSetDocSel(DBxDocSelection docSel)
@@ -414,7 +413,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Возвращает true, если получение информации о документе должно быть доступно.
-    /// Используется EFPDocComboBox.
+    /// Используется <see cref="EFPDocComboBox"/>.
     /// Это - константное свойство. Возвращаемое значение не зависит от текущего выбранного значения.
     /// </summary>
     public virtual bool DocInfoSupported { get { return false; } }
@@ -424,7 +423,7 @@ namespace FreeLibSet.Forms.Docs
     #region Локальное меню
 
     /// <summary>
-    /// Возвращает набор команд EFPAnyDocComboBoxBaseControlItems.
+    /// Возвращает набор команд <see cref="EFPAnyDocComboBoxBaseCommandItems"/>.
     /// </summary>
     /// <returns></returns>
     protected override EFPControlCommandItems CreateCommandItems()
@@ -454,7 +453,7 @@ namespace FreeLibSet.Forms.Docs
 
 
   /// <summary>
-  /// Команды локального меню
+  /// Команды локального меню для <see cref="EFPAnyDocComboBoxBase"/>
   /// </summary>
   public class EFPAnyDocComboBoxBaseCommandItems : EFPControlCommandItems
   {
@@ -475,9 +474,12 @@ namespace FreeLibSet.Forms.Docs
         Add(ciCut);
       }
 
-      ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
-      ciCopy.Click += new EventHandler(ciCopy_Click);
-      Add(ciCopy);
+      if (controlProvider.GetDocSelSupported)
+      {
+        ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
+        ciCopy.Click += new EventHandler(ciCopy_Click);
+        Add(ciCopy);
+      }
 
       if (controlProvider.SetDocSelSupported)
       {
@@ -531,7 +533,7 @@ namespace FreeLibSet.Forms.Docs
         DBxDocSelection docSel;
         try
         {
-          docSel = ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+          docSel = ControlProvider.PerformGetDocSel(EFPDBxViewDocSelReason.Copy);
           UserPermissions ups = ControlProvider.UI.DocProvider.UserPermissions;
           if (docSel.IsEmpty || ups == null)
             ciShowDocInfo.Enabled = false;
@@ -567,7 +569,7 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowTempMessage("Значение не выбрано");
         return;
       }
-      DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxViewDocSelReason.Copy);
       DataObject dObj = new DataObject();
       dObj.SetData(docSel);
       ControlProvider.UI.OnAddCopyFormats(dObj, docSel); // 06.02.2021
@@ -601,7 +603,7 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowTempMessage("Значение не выбрано");
         return;
       }
-      DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxViewDocSelReason.Copy);
       if (docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Нет выбранного документа");

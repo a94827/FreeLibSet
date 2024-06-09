@@ -855,10 +855,10 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region IsInRange
+    #region Диапазоны чисел
 
     /// <summary>
-    /// Возвращает true, если целое число находится в диапазоне значений.
+    /// Возвращает true, если число находится в диапазоне значений.
     /// Поддерживаются полуоткрытые диапазоны
     /// </summary>
     /// <param name="testValue">Проверяемое значение</param>
@@ -877,6 +877,123 @@ namespace FreeLibSet.Core
       {
         if (testValue.CompareTo(lastValue.Value) > 0)
           return false;
+      }
+      return true;
+    }
+
+    /// <summary>
+    /// Пересекаются ли два числовых интервала.
+    /// Возвращается true, если есть хотя бы одно общее значение.
+    /// Интервалы могут быть открытыми или полуоткрытыми.
+    /// Оба интервала равноправны.
+    /// </summary>
+    /// <param name="firstValue1">Начало первого интервала</param>
+    /// <param name="lastValue1">Окончание первого интервала</param>
+    /// <param name="firstValue2">Начало второго интервала</param>
+    /// <param name="lastValue2">Окончание второго интервала</param>
+    /// <returns>true, если интервалы пересекаются</returns>
+    public static bool AreRangesCrossed<T>(T? firstValue1, T? lastValue1,
+      T? firstValue2, T? lastValue2)
+      where T : struct, IComparable<T>
+    {
+
+      if (firstValue1.HasValue && lastValue2.HasValue)
+      {
+        if (firstValue1.Value.CompareTo(lastValue2.Value) > 0)
+          return false;
+      }
+
+      if (firstValue2.HasValue && lastValue1.HasValue)
+      {
+        if (firstValue2.Value.CompareTo(lastValue1.Value) > 0)
+          return false;
+      }
+
+      return true;
+    }
+
+    /// <summary>
+    /// Расширение интервала чисел {<paramref name="firstValue1"/>, <paramref name="lastValue1"/>} так, чтобы в него целиком
+    /// помещался интервал {<paramref name="firstValue2"/>, <paramref name="lastValue2"/>}.
+    /// </summary>
+    /// <param name="firstValue1">Начало первого интервала</param>
+    /// <param name="lastValue1">Окончание первого интервала</param>
+    /// <param name="firstValue2">Начало второго интервала</param>
+    /// <param name="lastValue2">Окончание второго интервала</param>
+    public static void GetRangeUnion<T>(ref T? firstValue1, ref T? lastValue1,
+      T? firstValue2, T? lastValue2)
+      where T : struct, IComparable<T>
+    {
+      if (firstValue1.HasValue)
+      {
+        if (firstValue2.HasValue)
+        {
+          if (firstValue2.Value.CompareTo(firstValue1.Value) < 0)
+            firstValue1 = firstValue2.Value;
+        }
+        else
+          firstValue1 = null;
+      }
+
+      if (lastValue1.HasValue)
+      {
+        if (lastValue2.HasValue)
+        {
+          if (lastValue2.Value.CompareTo(lastValue1.Value) > 0)
+            lastValue1 = lastValue2.Value;
+        }
+        else
+          lastValue1 = null;
+      }
+    }
+
+    /// <summary>
+    /// Сужение интервала чисел {<paramref name="firstValue1"/>, <paramref name="lastValue1"/>} так, чтобы он не выходил
+    /// за пределы интервала {<paramref name="firstValue2"/>, <paramref name="lastValue2"/>}
+    /// Если интервалы не
+    /// пересекаются (AreRangeCrossed(<paramref name="firstValue1"/>, <paramref name="lastValue1"/>, <paramref name="firstValue2"/>, <paramref name="lastValue2"/>)=false),
+    /// то возвращается значение false, а <paramref name="firstValue1"/> и <paramref name="lastValue1"/> приобретают значение null.
+    /// </summary>
+    /// <param name="firstValue1">Начало первого интервала</param>
+    /// <param name="lastValue1">Окончание первого интервала</param>
+    /// <param name="firstValue2">Начало второго интервала</param>
+    /// <param name="lastValue2">Окончание второго интервала</param>
+    /// <returns>true, если пересечение интервалов выполнено и false, если интервалы
+    /// не пересекаются</returns>
+    public static bool GetRangeCross<T>(ref T? firstValue1, ref T? lastValue1,
+      T? firstValue2, T? lastValue2)
+      where T : struct, IComparable<T>
+    {
+      if (firstValue1.HasValue)
+      {
+        if (firstValue2.HasValue)
+        {
+          if (firstValue2.Value.CompareTo(firstValue1.Value) > 0)
+            firstValue1 = firstValue2.Value;
+        }
+      }
+      else
+        firstValue1 = firstValue2;
+
+      if (lastValue1.HasValue)
+      {
+        if (lastValue2.HasValue)
+        {
+          if (lastValue2.Value.CompareTo(lastValue1.Value) < 0)
+            lastValue1 = lastValue2.Value;
+        }
+      }
+      else
+        lastValue1 = lastValue2;
+
+      if (firstValue1.HasValue && lastValue1.HasValue)
+      {
+        if (firstValue1.Value.CompareTo(lastValue1.Value) > 0)
+        {
+          firstValue1 = null;
+          lastValue1 = null;
+          return false;
+        }
       }
       return true;
     }

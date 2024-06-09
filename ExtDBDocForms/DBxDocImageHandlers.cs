@@ -14,28 +14,28 @@ namespace FreeLibSet.Forms.Docs
   #region DocTypeGetImageEventHandler
 
   /// <summary>
-  /// Причина вызова события Doc/SubDocTypeUI.GetImage
+  /// Причина вызова события получения изображения для документа или поддокумента (свойство <see cref="DBxImageValueNeededEventArgs.Reason"/>).
   /// </summary>
   public enum DBxImageValueNeededReason
   {
     /// <summary>
-    /// Получить изображение для документа или поддокумента
+    /// Получить изображение для документа или поддокумента (вызван <see cref="DocTypeUIBase.GetImageKey(int)"/>)
     /// </summary>
     Image,
 
     /// <summary>
-    /// Получить всплывающую подсказку для ячейки со значком
+    /// Получить всплывающую подсказку для ячейки со значком (вызван <see cref="DocTypeUIBase.GetToolTipText(int)"/>)
     /// </summary>
     ToolTipText,
 
     /// <summary>
-    /// Определить цвет строки
+    /// Определить цвет строки (вызван <see cref="DocTypeUIBase.GetRowColor(int, EFPDataGridViewRowAttributesEventArgs)"/>)
     /// </summary>
     RowColor,
   }
 
   /// <summary>
-  /// Аргументы для события получения изображения документа или поддокумента
+  /// Аргументы для события <see cref="DBxDocImageHandlers.TableHandler.ImageValueNeeded"/> получения изображения документа или поддокумента
   /// </summary>
   public class DBxImageValueNeededEventArgs : DBxValueNeededEventArgsBase
   {
@@ -68,14 +68,14 @@ namespace FreeLibSet.Forms.Docs
     #region Свойства
 
     /// <summary>
-    /// Причина вызова события (изображение или всплывающая подсказка)
+    /// Причина вызова события (изображение, всплывающая подсказка или цветовое оформление)
     /// </summary>
     public DBxImageValueNeededReason Reason { get { return _Reason; } }
     private DBxImageValueNeededReason _Reason;
 
     /// <summary>
-    /// Сюда должно быть помещено имя изображения из EFPApp.MainImages
-    /// в режиме Reason=Image
+    /// Сюда должно быть помещено имя изображения из <see cref="EFPApp.MainImages"/>
+    /// в режиме <see cref="Reason"/>=<see cref="DBxImageValueNeededReason.Image"/>
     /// </summary>
     public string ImageKey
     {
@@ -86,10 +86,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Сюда должен быть помещен текст всплывающей подсказкм для ячейки изображения
-    /// в режиме Reason=ToolTipText
+    /// в режиме <see cref="Reason"/>=<see cref="DBxImageValueNeededReason.ToolTipText"/>.
     /// Если свойство не будет установлено обработчиком, используется стандартный
     /// текст подсказки, содержащий описание документа / поддокумента, получаемый
-    /// GetTextValue()
+    /// <see cref="DocTypeUIBase.GetTextValue(int)"/>.
     /// </summary>
     public string ToolTipText
     {
@@ -99,7 +99,8 @@ namespace FreeLibSet.Forms.Docs
     private string _ToolTipText;
 
     /// <summary>
-    /// Сюда должен может быть помещен цвет строки в режиме Reason=RowColor
+    /// Сюда должен может быть помещен цвет строки в режиме 
+    /// <see cref="Reason"/>=<see cref="DBxImageValueNeededReason.RowColor"/>.
     /// </summary>
     public EFPDataGridViewColorType ColorType
     {
@@ -109,7 +110,8 @@ namespace FreeLibSet.Forms.Docs
     private EFPDataGridViewColorType _ColorType;
 
     /// <summary>
-    /// Может быть установлено значение true, если требуется пометить строку сервм цветом
+    /// Может быть установлено значение true, если требуется пометить строку серым цветом.
+    /// Используется в режиме <see cref="Reason"/>=<see cref="DBxImageValueNeededReason.RowColor"/>.
     /// </summary>
     public bool Grayed
     {
@@ -122,7 +124,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат для обработчика DBxDocImageHandlers.TableHandler.ImageValueNeeded
+  /// Делегат для обработчика <see cref="DBxDocImageHandlers.TableHandler.ImageValueNeeded"/> 
   /// </summary>
   /// <param name="sender">Не используется</param>
   /// <param name="args">Аргументы события</param>
@@ -133,8 +135,8 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Система получения значков и подсказок документов и поддокументов.
   /// Также позволяет получить раскраску строк табличного просмотра и комбоблоков выбора.
-  /// Объект DBxDocImageHandlers может использоваться только на стороне клиента.
-  /// В части извлечения значений объекты являются потокобезопасными, если используемый DBxCache 
+  /// Объект <see cref="DBxDocImageHandlers"/> может использоваться только на стороне клиента.
+  /// В части извлечения значений объекты являются потокобезопасными, если используемый <see cref="DBxCache"/>
   /// является потокобезопасным. В процессе установки обработчиков и заполнения полей, 
   /// объект не является безопасным.
   /// </summary>
@@ -196,15 +198,15 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Описание видов документов.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public DBxDocTypes DocTypes { get { return _DocTypes; } }
-    private DBxDocTypes _DocTypes;
+    private readonly DBxDocTypes _DocTypes;
 
     /// <summary>
     /// Источник для получения значений полей.
     /// Задается в конструкторе.
-    /// Свойство может быть изменено в процессе работы
+    /// Свойство может быть изменено в процессе работы.
     /// </summary>
     public DBxCache DBCache
     {
@@ -241,20 +243,22 @@ namespace FreeLibSet.Forms.Docs
     #region Инициализация обработчиков
 
     /// <summary>
-    /// Задать фиксированное изображение для документа или поддокумента
+    /// Задать фиксированное изображение для документа или поддокумента без использования события <see cref="TableHandler.ImageValueNeeded"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="imageKey">Имя изображения в списке EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя изображения в списке <see cref="EFPApp.MainImages"/></param>
     public void Add(string tableName, string imageKey)
     {
       Add(tableName, imageKey, (DBxColumns)null, null);
     }
 
     /// <summary>
-    /// Задать обработчник получения изображения для документа или поддокумента
+    /// Задать обработчник получения изображения для документа или поддокумента с возможностью задать обработчик события <see cref="TableHandler.ImageValueNeeded"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="imageKey">Имя основного изображения в списке EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя основного изображения в списке <see cref="EFPApp.MainImages"/>.
+    /// Свойство следует задавать, даже если обработчик <paramref name="imageValueNeeded"/> переопределяет изображение для всех документов.
+    /// Основное изображение может использоваться в командах меню и в окне просмотра ссылок для обозначения вида документа в-целом.</param>
     /// <param name="columnNames">Список столбцов (через запятую), которые использует обработчик</param>
     /// <param name="imageValueNeeded">Обработчик, который позволяет получить изображение, раскраску и всплывающую подсказку 
     /// для конкретного документа и поддокумента.
@@ -268,15 +272,17 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Задать обработчник получения изображения для документа или поддокумента
+    /// Задать обработчник получения изображения для документа или поддокумента с возможностью задать обработчик события <see cref="TableHandler.ImageValueNeeded"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="ImageKey">Имя основного изображения в списке EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя основного изображения в списке <see cref="EFPApp.MainImages"/>.
+    /// Свойство следует задавать, даже если обработчик <paramref name="imageValueNeeded"/> переопределяет изображение для всех документов.
+    /// Основное изображение может использоваться в командах меню и в окне просмотра ссылок для обозначения вида документа в-целом.</param>
     /// <param name="columnNames">Список столбцов, которые использует обработчик</param>
     /// <param name="imageValueNeeded">Обработчик, который позволяет получить изображение, раскраску и всплывающую подсказку 
     /// для конкретного документа и поддокумента.
     /// Обработчик должен выполняться быстро, так как вызывается при прорисовке кажой строки табличного просмотра</param>
-    public void Add(string tableName, string ImageKey, DBxColumns columnNames, DBxImageValueNeededEventHandler imageValueNeeded)
+    public void Add(string tableName, string imageKey, DBxColumns columnNames, DBxImageValueNeededEventHandler imageValueNeeded)
     {
       if (String.IsNullOrEmpty(tableName))
         throw new ArgumentNullException("tableName");
@@ -319,7 +325,7 @@ namespace FreeLibSet.Forms.Docs
         //  }
         //}
 
-        TableHandler handler = new TableHandler(this, tableName, ImageKey, columnNames, imageValueNeeded);
+        TableHandler handler = new TableHandler(this, tableName, imageKey, columnNames, imageValueNeeded);
         _TableItems.Add(tableName, handler);
       }
     }
@@ -334,7 +340,7 @@ namespace FreeLibSet.Forms.Docs
     private DBxImageValueNeededEventArgs _Args;
 
     /// <summary>
-    /// Получить имя изображения для документа или поддокумента в списке EFPApp.MainImages.
+    /// Получить имя изображения для документа или поддокумента в списке <see cref="EFPApp.MainImages"/>.
     /// Если <paramref name="id"/>=0, то возвращается "EmptyImage".
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
@@ -353,12 +359,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить имя изображения для документа или поддокумента в списке EFPApp.MainImages.
+    /// Получить имя изображения для документа или поддокумента в списке <see cref="EFPApp.MainImages"/>.
     /// Если поле "Id" равно 0, то возвращается "EmptyImage".
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
     /// <param name="row">Строка в табличном просмотре. При поиске значений полей она обладает приоритетом,
-    /// по сравнению с DBCache</param>
+    /// по сравнению с данными в <see cref="DBxCache"/>.</param>
     /// <returns>Имя изображения</returns>
     public string GetImageKey(string tableName, DataRow row)
     {
@@ -478,7 +484,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Извлечение значений из набора <paramref name="primaryDS"/> для строки,
-    /// когда нельзя обращаться к DBxCache (фиктивный Id)
+    /// когда нельзя обращаться к <see cref="DBxCache"/> (фиктивный Id)
     /// </summary>
     /// <param name="tableName"></param>
     /// <param name="id"></param>
@@ -555,9 +561,9 @@ namespace FreeLibSet.Forms.Docs
     #region Получение значка для объекта документа / поддокумента
 
     /// <summary>
-    /// Получить имя изображения для документа в списке EFPApp.MainImages.
+    /// Получить имя изображения для документа в списке <see cref="EFPApp.MainImages"/>.
     /// Поля документа используются для определения изображения. 
-    /// Весь набор данных, к которому относится <paramref name="doc"/>, имеет приоритет над DBCache.
+    /// Весь набор данных, к которому относится <paramref name="doc"/>, имеет приоритет над данными из <see cref="DBxCache"/>.
     /// </summary>
     /// <param name="doc">Загруженный документ</param>
     /// <returns>Имя изображения</returns>
@@ -574,9 +580,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить имя изображения для поддокумента в списке EFPApp.MainImages.
+    /// Получить имя изображения для поддокумента в списке <see cref="EFPApp.MainImages"/>.
     /// Поля поддокумента используются для определения изображения. 
-    /// Весь набор данных, к которому относится <paramref name="subDoc"/>, имеет приоритет над DBCache.
+    /// Весь набор данных, к которому относится <paramref name="subDoc"/>, имеет приоритет над данными из <see cref="DBxCache"/>.
     /// </summary>
     /// <param name="subDoc">Загруженный поддокумент</param>
     /// <returns>Имя изображения</returns>
@@ -597,7 +603,7 @@ namespace FreeLibSet.Forms.Docs
     #region Получение значка по идентификатору таблицы документа
 
     /// <summary>
-    /// Получить имя изображения для документа или поддокумента в списке EFPApp.MainImages.
+    /// Получить имя изображения для документа или поддокумента в списке <see cref="EFPApp.MainImages"/>.
     /// Если <paramref name="tableId"/>=0 или <paramref name="docId"/>=0, то возвращается "EmptyImage".
     /// </summary>
     /// <param name="tableId">Идентификатор таблицы документа</param>
@@ -626,10 +632,11 @@ namespace FreeLibSet.Forms.Docs
     private enum ImageKind { AsIs, SingleDoc, Table }
 
     /// <summary>
-    /// Получить имя изображения из списка EFPApp.MainImages для таблицы документов или поддокументов в целом,
+    /// Получить имя изображения из списка <see cref="EFPApp.MainImages"/> для таблицы документов или поддокументов в целом,
     /// а не для конкретной записи в таблице.
-    /// Возвращает свойство DBxDocImageHandlers.TableHandler.ImageKey, если оно установлено.
-    /// Если изображение не задано, то возвращается пустая строка
+    /// Возвращает свойство <see cref="DBxDocImageHandlers.TableHandler.ImageKey"/>, если оно установлено.
+    /// Если изображение не задано, то возвращается пустая строка. В этом случае вызывающий код должен показать какой-нибудь стандартный значок.
+    /// Обычно используются методы <see cref="GetSingleDocImageKey(string)"/> или <see cref="GetTableImageKey(string)"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
     /// <returns>Имя изображения</returns>
@@ -639,10 +646,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить имя изображения из списка EFPApp.MainImages для таблицы документов или поддокументов в целом,
-    /// а не для конкретной записи в таблице.
-    /// Возвращает свойство DBxDocImageHandlers.TableHandler.ImageKey, если оно установлено.
+    /// Получить имя изображения из списка <see cref="EFPApp.MainImages"/> для таблицы документов или поддокументов в целом,
+    /// а не для конкретной записи в таблице. 
+    /// Возвращает свойство <see cref="DBxDocImageHandlers.TableHandler.ImageKey"/>, если оно установлено.
+    /// Событие <see cref="DBxDocImageHandlers.TableHandler.ImageValueNeeded"/> не вызывается.
     /// Если изображение не задано, то возвращается "Item".
+    /// Этот метод используется при прорисовке таблицы документов/поддокументов или выбранного элемента в комбоблоке.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
     /// <returns>Имя изображения</returns>
@@ -652,12 +661,13 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить имя изображения из списка EFPApp.MainImages для таблицы документов или поддокументов в целом,
+    /// Получить имя изображения из списка <see cref="EFPApp.MainImages"/> для таблицы документов или поддокументов в целом,
     /// а не для конкретной записи в таблице.
-    /// Возвращает свойство DBxDocImageHandlers.TableHandler.ImageKey, если оно установлено.
+    /// Возвращает свойство <see cref="DBxDocImageHandlers.TableHandler.ImageKey"/>, если оно установлено.
+    /// Событие <see cref="DBxDocImageHandlers.TableHandler.ImageValueNeeded"/> не вызывается.
     /// Если изображение не задано, то возвращается "Table".
     /// Этот метод используется для получения значка для окна справочника а также для команд меню,
-    /// которые открывают справочник
+    /// которые открывают справочник.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
     /// <returns>Имя изображения</returns>
@@ -693,7 +703,6 @@ namespace FreeLibSet.Forms.Docs
         return "Error";
       }
     }
-
     private static string GetDummyImageKey(ImageKind kind)
     {
       switch (kind)
@@ -710,7 +719,9 @@ namespace FreeLibSet.Forms.Docs
     #region Получение цвета строки документа / поддокумента
 
     /// <summary>
-    /// Получить раскраску строки для документа или поддокумента
+    /// Получить раскраску строки для документа или поддокумента.
+    /// Для удаленных документов или поддокументов устанавливается признак <paramref name="grayed"/>=true.
+    /// После этого вызывается обработчик <see cref="TableHandler.ImageValueNeeded"/>, если он установлен.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
     /// <param name="id">Идентификатор</param>
@@ -820,7 +831,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить раскраску строки для документа или поддокумента
+    /// Получить раскраску строки для документа или поддокумента.
+    /// Для удаленных документов или поддокументов устанавливается признак <paramref name="grayed"/>=true.
+    /// После этого вызывается обработчик <see cref="TableHandler.ImageValueNeeded"/>, если он установлен.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
     /// <param name="row">Строка в табличном просмотре. При поиске значений полей она обладает приоритетом,
@@ -851,7 +864,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Получить раскраску строки для документа.
     /// Поля документа используются для определения раскраски. 
-    /// Весь набор данных, к которому относится <paramref name="doc"/>, имеет приоритет над DBCache.
+    /// Весь набор данных <see cref="DBxDocSet"/>, к которому относится <paramref name="doc"/>, имеет приоритет над данными из <see cref="DBxCache"/>.
+    /// Для удаленных документов устанавливается признак <paramref name="grayed"/>=true.
+    /// После этого вызывается обработчик <see cref="TableHandler.ImageValueNeeded"/>, если он установлен.
     /// </summary>
     /// <param name="doc">Загруженный документ</param>
     /// <param name="colorType">Сюда записывается цветовое оформление строки</param>
@@ -872,7 +887,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Получить раскраску строки для поддокумента.
     /// Поля поддокумента используются для определения раскраски. 
-    /// Весь набор данных, к которому относится <paramref name="subDoc"/>, имеет приоритет над DBCache.
+    /// Весь набор данных <see cref="DBxDocSet"/>, к которому относится <paramref name="subDoc"/>, имеет приоритет над данными из <see cref="DBxCache"/>.
+    /// Для удаленных поддокументов устанавливается признак <paramref name="grayed"/>=true.
+    /// После этого вызывается обработчик <see cref="TableHandler.ImageValueNeeded"/>, если он установлен.
     /// </summary>
     /// <param name="subDoc">Загруженный поддокумент</param>
     /// <param name="colorType">Сюда записывается цветовое оформление строки</param>
@@ -916,8 +933,7 @@ namespace FreeLibSet.Forms.Docs
     /// Получить всплывающую подсказку для документа или поддокумента.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
-    /// <param name="row">Строка в табличном просмотре. При поиске значений полей она обладает приоритетом,
-    /// по сравнению с DBCache</param>
+    /// <param name="row">Строка в табличном просмотре. При поиске значений полей она обладает приоритетом над данными из <see cref="DBxCache"/>.</param>
     /// <returns>Текст всплывающей подсказки</returns>
     public string GetToolTipText(string tableName, DataRow row)
     {
@@ -1026,10 +1042,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Получить всплывающую подсказку для документа.
     /// Поля документа используются для определения подсказки. 
-    /// Весь набор данных, к которому относится <paramref name="doc"/>, имеет приоритет над DBCache.
+    /// Весь набор данных <see cref="DBxDocSet"/>, к которому относится <paramref name="doc"/>, имеет приоритет над над данными из <see cref="DBxCache"/>.
     /// </summary>
     /// <param name="doc">Загруженный документ</param>
-    /// <returns>Имя изображения</returns>
+    /// <returns>Текст всплывающей подсказки</returns>
     public string GetToolTipText(DBxSingleDoc doc)
     {
       try
@@ -1045,10 +1061,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Получить всплывающую подсказку для поддокумента.
     /// Поля поддокумента используются для определения подсказки. 
-    /// Весь набор данных, к которому относится <paramref name="subDoc"/>, имеет приоритет над DBCache.
+    /// Весь набор данных <see cref="DBxDocSet"/> , к которому относится <paramref name="subDoc"/>, имеет приоритет над данными из <see cref="DBxCache"/>.
     /// </summary>
     /// <param name="subDoc">Загруженный поддокумент</param>
-    /// <returns>Имя изображения</returns>
+    /// <returns>Текст всплывающей подсказки</returns>
     public string GetToolTipText(DBxSubDoc subDoc)
     {
       try
@@ -1064,7 +1080,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Получить всплывающую подсказку для документа.
     /// </summary>
-    /// <param name="tableId">Идентификатор таблицы документа</param>
+    /// <param name="tableId">Идентификатор таблицы документа <see cref="DBxDocType.TableId"/></param>
     /// <param name="docId">Идентификатор документа</param>
     /// <returns>Текст всплывающей подсказки</returns>
     public string GetToolTipText(Int32 tableId, Int32 docId)
@@ -1081,7 +1097,6 @@ namespace FreeLibSet.Forms.Docs
         return "Ошибка при получении всплывающей подсказки. " + e.Message;
       }
     }
-
 
     #endregion
 
@@ -1184,7 +1199,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
     /// <param name="forQuery">Если true, то возвращается расширенный список, который используется в запросах.
-    /// Если false - то только те поля, которые были заданы пользователем в методе Add</param>
+    /// Если false - то только те поля, которые были заданы пользователем в методе <see cref="Add(string, string, DBxColumns, DBxImageValueNeededEventHandler)"/></param>
     /// <returns>Список полей</returns>
     public DBxColumns GetColumnNames(string tableName, bool forQuery)
     {
@@ -1228,12 +1243,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Возвращает true, если список обработчиков документов был переведен в режим "только чтение".
+    /// Не имеет отношения к правам пользователя на доступ к базе данных.
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение при IsReadOnly=true.
+    /// Генерирует исключение при <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {

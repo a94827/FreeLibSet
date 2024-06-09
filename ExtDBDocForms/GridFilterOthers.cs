@@ -40,17 +40,17 @@ namespace FreeLibSet.Forms.Docs
     /// По умолчанию - null - выбор осуществлятся путем ручного ввода значения.
     /// Если список задан, то значение выбирается из списка.
     /// Порядок строк в списке соответствует порядку строк при просмотре, поэтому
-    /// сортирока строк, если необходима, должна выполняться до установки свойства
+    /// сортирока строк, если необходима, должна выполняться до установки свойства.
     /// Свойство используется только при показе диалога фильтра. Перед этим 
-    /// вызывается событие ValueListNeeded, которое может использоваться для
-    /// динамической установки списка
+    /// вызывается событие <see cref="ValueListNeeded"/>, которое может использоваться для
+    /// динамической установки списка.
     /// </summary>
     public string[] ValueList { get { return _ValueList; } set { _ValueList = value; } }
     private string[] _ValueList;
 
     /// <summary>
-    /// Событие вызывается перед показом диалога фильтра в ShowFilterDialog()
-    /// Обработчик может установить свойство ValueNeeded
+    /// Событие вызывается перед показом диалога фильтра в <see cref="ShowFilterDialog(EFPDialogPosition)"/>.
+    /// Обработчик может установить свойство <see cref="ValueList"/>.
     /// </summary>
     public event EventHandler ValueListNeeded;
 
@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
     /// </summary>
     public virtual string FilterText
     {
@@ -76,6 +76,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Показывает блок диалога для редактирования фильтра
     /// </summary>
+    /// <param name="dialogPosition">Передается блоку диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
@@ -150,6 +151,7 @@ namespace FreeLibSet.Forms.Docs
       dlg2.Prompt = "Значение фильтра (пусто-нет фильтра)";
       dlg2.CanBeEmpty = true;
       dlg2.Text = Value;
+      dlg2.DialogPosition = dialogPosition;
 
       if (dlg2.ShowDialog() != DialogResult.OK)
         return false;
@@ -169,7 +171,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Фильтр табличного просмотра для StartsWithFilter
+  /// Фильтр табличного просмотра для <see cref="StartsWithFilter"/>
   /// </summary>
   public class StartsWithGridFilter : StringValueGridFilter // проще переопределить методы базового класса
   {
@@ -189,9 +191,9 @@ namespace FreeLibSet.Forms.Docs
     #region Повтор из StartsWithCommonFilter
 
     /// <summary>
-    /// Создает StartsWithFilter
+    /// Создает <see cref="StartsWithFilter"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Объект фильтра</returns>
     public override DBxFilter GetSqlFilter()
     {
       return new StartsWithFilter(ColumnName, Value, IgnoreCase);
@@ -219,11 +221,10 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-
-
   /// <summary>
   /// Фильтр по одному или нескольким значениям числового поля, каждому из
-  /// которых соответствует текстовое представление
+  /// которых соответствует текстовое представление.
+  /// Поддерживаются только простые перечисления со значениями 0,1,2,...
   /// </summary>
   public class EnumGridFilter : EnumCommonFilter, IEFPGridFilterWithImageKey
   {
@@ -248,10 +249,12 @@ namespace FreeLibSet.Forms.Docs
     /// Список текстовых строк, соответствующих перечислению
     /// </summary>
     public string[] TextValues { get { return _TextValues; } }
-    private string[] _TextValues;
+    private readonly string[] _TextValues;
 
     /// <summary>
-    /// Изображения, соответствующие перечислимым значениям
+    /// Изображения, соответствующие перечислимым значениям.
+    /// Длина массива должна соответствовать <see cref="TextValues"/>.
+    /// По умолчанию null - отдельные изображения не используются.
     /// </summary>
     public string[] ImageKeys
     {
@@ -276,7 +279,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
+    /// Если выбрано несколько значений, возвращаются элементы <see cref="TextValues"/>, разделенные запятыми.
     /// </summary>
     public virtual string FilterText
     {
@@ -299,8 +303,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Если в списке выбрано ровно одно значение, то возвращается значок из ImageKeys.
-    /// Иначе возвращается стандартное изображение фильтра
+    /// Если в списке выбрано ровно одно значение, то возвращается значок из <see cref="ImageKeys"/>, если свойство установлено.
+    /// Иначе возвращается стандартное изображение фильтра.
     /// </summary>
     public string FilterImageKey
     {
@@ -332,8 +336,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Показывает блок диалога для редактирования фильтра
+    /// Показывает блок диалога для редактирования фильтра.
     /// </summary>
+    /// <param name="dialogPosition">Передается блоку диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
@@ -362,7 +367,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает одно из значений в массиве TextValues
+    /// Возвращает одно из значений в массиве <see cref="TextValues"/>
     /// </summary>
     /// <param name="columnValues">Значения полей</param>
     /// <returns>Текстовые представления значений</returns>
@@ -594,8 +599,8 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Простой фильтр по логическому полю.
   /// В обычном режиме возможен выбор из 3 вариантов: "Нет фильтра", "Значение установлено" и "Значение сброшено".
-  /// Очистив одно из свойств FilterTextTrue или FilterTextFalse, можно использовать фильтр в упрощенном режиме на 2 положения,
-  /// что может бытиь полезно в отчетах
+  /// Очистив одно из свойств <see cref="BoolValueGridFilter.FilterTextTrue"/> или <see cref="BoolValueGridFilter.FilterTextFalse"/>, можно использовать фильтр в упрощенном режиме на 2 положения,
+  /// что может быть полезно в отчетах.
   /// </summary>
   public class BoolValueGridFilter : BoolValueCommonFilter, IEFPGridFilterWithImageKey
   {
@@ -620,7 +625,7 @@ namespace FreeLibSet.Forms.Docs
     /// Текстовое описание фильтра по значению "True".
     /// По умолчанию - "Значение установлено".
     /// Установка свойства равным пустой строке переводит фильтр в упрощенный режим работы: возможен выбор из 2 вариантов "Нет фильтра" и "Значение сброшено".
-    /// Одновременная очистка свойств FilterTextTrue и FilterTextFalse не допускается.
+    /// Одновременная очистка свойств <see cref="FilterTextTrue"/> и <see cref="FilterTextFalse"/> не допускается.
     /// </summary>
     public string FilterTextTrue
     {
@@ -639,7 +644,7 @@ namespace FreeLibSet.Forms.Docs
     /// Текстовое описание фильтра по значению "False".
     /// По умолчанию - "Значение сброшено"
     /// Установка свойства равным пустой строке переводит фильтр в упрощенный режим работы: возможен выбор из 2 вариантов "Нет фильтра" и "Значение установлено".
-    /// Одновременная очистка свойств FilterTextTrue и FilterTextFalse не допускается.
+    /// Одновременная очистка свойств <see cref="FilterTextTrue"/> и <see cref="FilterTextFalse"/> не допускается.
     /// </summary>
     public string FilterTextFalse
     {
@@ -656,7 +661,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Значок для значения фильтра "True".
-    /// Если свойство не установлено, используется стандартный значок фильтра
+    /// Если свойство не установлено, используется стандартный значок фильтра.
     /// </summary>
     public string FilterImageKeyTrue
     {
@@ -673,7 +678,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Значок для значения фильтра "False".
-    /// Если свойство не установлено, используется стандартный значок фильтра
+    /// Если свойство не установлено, используется стандартный значок фильтра.
     /// </summary>
     public string FilterImageKeyFalse
     {
@@ -695,6 +700,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Показывает блок диалога для редактирования фильтра
     /// </summary>
+    /// <param name="dialogPosition">Передается блоку диалогу</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
@@ -773,7 +779,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
     /// </summary>
     public virtual string FilterText
     {
@@ -819,7 +825,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает FilterTextTrue или FilterTextFales, если фильтр установлен
+    /// Возвращает <see cref="FilterTextTrue"/> или <see cref="FilterTextFalse"/>, если фильтр установлен.
     /// </summary>
     /// <param name="columnValues">Значения полей</param>
     /// <returns>Текстовые представления значений</returns>
@@ -833,9 +839,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Простой фильтр по полю типа Integer с фильтрацией по единственному значению
+  /// Простой фильтр по полю типа Integer с фильтрацией по единственному значению.
   /// Если поле может принимать фиксированный набор значений, то следует использовать
-  /// фильтр EnumGridFilter
+  /// фильтр <see cref="EnumGridFilter"/>.
   /// </summary>
   public class IntValueGridFilter : IntValueCommonFilter, IEFPGridFilter
   {
@@ -855,7 +861,7 @@ namespace FreeLibSet.Forms.Docs
     #region Переопределяемые свойства
 
     /// <summary>
-    /// Вызывает CfgPart.GetInt()
+    /// Чтение настройки фильтра из секции конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <returns>Значение</returns>
@@ -865,7 +871,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает CfgPart.SetBool()
+    /// Запись настройки фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <param name="value">Значение</param>
@@ -877,6 +883,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Показывает блок диалога для редактирования фильтра
     /// </summary>
+    /// <param name="dialogPosition">Передается блоку диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
@@ -897,7 +904,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
     /// </summary>
     public virtual string FilterText
     {
@@ -947,8 +954,8 @@ namespace FreeLibSet.Forms.Docs
     #region Свойства
 
     /// <summary>
-    /// Текстовое описание фильтра для значения Value=NotNull
-    /// По умолчанию - "Значение задано"
+    /// Текстовое описание фильтра для значения <see cref="NullNotNullCommonFilter.Value"/>=<see cref="NullNotNullFilterValue.NotNull"/>.
+    /// По умолчанию - "Значение установлено".
     /// </summary>
     public string FilterTextNotNull
     {
@@ -964,8 +971,8 @@ namespace FreeLibSet.Forms.Docs
     private string _FilterTextNotNull;
 
     /// <summary>
-    /// Текстовое описание фильтра для значения Value=Null
-    /// По умолчанию - "Значение не задано"
+    /// Текстовое описание фильтра для значения <see cref="NullNotNullCommonFilter.Value"/>=<see cref="NullNotNullFilterValue.Null"/>.
+    /// По умолчанию - "Значение не установлено".
     /// </summary>
     public string FilterTextNull
     {
@@ -981,7 +988,7 @@ namespace FreeLibSet.Forms.Docs
     private string _FilterTextNull;
 
     /// <summary>
-    /// Значок для значения фильтра Value=NotNull.
+    /// Значок для значения фильтра <see cref="NullNotNullCommonFilter.Value"/>=<see cref="NullNotNullFilterValue.NotNull"/>.
     /// Если свойство не установлено, используется стандартный значок фильтра
     /// </summary>
     public string FilterImageKeyNotNull
@@ -998,7 +1005,7 @@ namespace FreeLibSet.Forms.Docs
     private string _FilterImageKeyNotNull;
 
     /// <summary>
-    /// Значок для значения фильтра Value=Null.
+    /// Значок для значения фильтра <see cref="NullNotNullCommonFilter.Value"/>=<see cref="NullNotNullFilterValue.Null"/>.
     /// Если свойство не установлено, используется стандартный значок фильтра
     /// </summary>
     public string FilterImageKeyNull
@@ -1020,7 +1027,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
     /// </summary>
     public virtual string FilterText
     {
@@ -1083,10 +1090,9 @@ namespace FreeLibSet.Forms.Docs
     #endregion
   }
 
-
   /// <summary>
-  /// Фильтр по виду документа
-  /// Текущим значением числового поля является идентификатор таблицы документа DocType.TableId
+  /// Фильтр по виду документа.
+  /// Текущим значением числового поля является идентификатор таблицы документа <see cref="DBxDocType.TableId"/>.
   /// </summary>
   public class DocTableIdGridFilter : DocTableIdCommonFilter, IEFPGridFilterWithImageKey
   {
@@ -1096,7 +1102,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает фильтр
     /// </summary>
     /// <param name="ui">Интерфейс пользователя для доступа к документам</param>
-    /// <param name="columnName">Столбец типа Int32, хранящий идентификатор вида документа из таблицы DocTables</param>
+    /// <param name="columnName">Столбец типа <see cref="Int32"/>, хранящий идентификатор вида документа из таблицы "DocTables"</param>
     public DocTableIdGridFilter(DBUI ui, string columnName)
       : base(columnName)
     {
@@ -1114,12 +1120,12 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс пользователя для доступа к документам
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Список типов документов, из которых осуществляется выбор.
-    /// Если свойство не было установлено явно, то можно выбрать любой существующий тип документа
-    /// Установка свойства никак не влияет на текущее значение
+    /// Если свойство не было установлено явно, то можно выбрать любой существующий тип документа.
+    /// Установка свойства никак не влияет на текущее значение.
     /// </summary>
     public DocTypeUI[] DocTypeUIs
     {
@@ -1153,8 +1159,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Список видов типов документов, из которых осуществляется выбор.
-    /// Если свойство не было установлено явно, то можно выбрать любой существующий тип документа
-    /// Установка свойства никак не влияет на текущее значение
+    /// Если свойство не было установлено явно, то можно выбрать любой существующий тип документа.
+    /// Установка свойства никак не влияет на текущее значение.
     /// </summary>
     public string[] DocTypeNames
     {
@@ -1209,7 +1215,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Имя вида документа
+    /// Имя вида документа.
     /// Альтернативное свойство для установки фильтра.
     /// </summary>
     public string CurrentDocTypeName
@@ -1236,7 +1242,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Текстовое представление фильтра в правой части таблички фильтров. 
-    /// Пустая строка означает отсутствие фильтра (IsEmpty=true).
+    /// Пустая строка означает отсутствие фильтра.
     /// </summary>
     public string FilterText
     {
@@ -1308,7 +1314,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает свойство DBxDocType.PluralTitle, если задан фильтр по виду документов.
+    /// Возвращает свойство <see cref="DBxDocTypeBase.PluralTitle"/>, если задан фильтр по виду документов.
     /// </summary>
     /// <param name="columnValues">Значения полей</param>
     /// <returns>Текстовые представления значений</returns>
@@ -1395,7 +1401,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Диалог для установки фильтра
     /// </summary>
-    /// <returns></returns>
+    /// <param name="dialogPosition">Передается в блок диалога</param>
+    /// <returns>true, если установка фильтра выполнена</returns>
     public bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
       RadioSelectDialog dlg = new RadioSelectDialog();
@@ -1455,7 +1462,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выводит сообщение о невозможности редактирования
     /// </summary>
-    /// <returns></returns>
+    /// <param name="dialogPosition">Не используется</param>
+    /// <returns>false</returns>
     public bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
       EFPApp.ErrorMessageBox("Редактирование этого фильтра невозможно", DisplayName);
@@ -1464,5 +1472,4 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
   }
-
 }

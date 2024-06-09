@@ -22,7 +22,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Интерфейс для просмотра документов.
-  /// Реализуется EFPDocGridView и EFPDocTreeView
+  /// Реализуется <see cref="EFPDocGridView"/> и <see cref="EFPDocTreeView"/>
   /// </summary>
   public interface IEFPDocView : IEFPDBxView
   {
@@ -37,19 +37,14 @@ namespace FreeLibSet.Forms.Docs
     DBxDocType DocType { get; }
 
     /// <summary>
-    /// Возвращает фильтры табличного просмотра
-    /// </summary>
-    new GridFilters Filters { get; set; }
-
-    /// <summary>
     /// true, если в просмотре показываются документы, помеченные на удаление.
-    /// Если DBxDocTypes.UseDeleted=false, свойство всегда равно false и не может быть установлено в true.
+    /// Если <see cref="DBxDocTypes.UseDeleted"/>=false, свойство всегда равно false и не может быть установлено в true.
     /// </summary>
     bool ShowDeleted { get; set; }
 
     /// Это свойство управляет наличием команды "Фильтр" - "Показывать удаленные записи".
     /// Значение по умолчанию - true (команда присутствует).
-    /// Если DBxDocTypes.UseDeleted=false, свойство всегда равно false и не может быть установлено в true.
+    /// Если <see cref="DBxDocTypes.UseDeleted"/>=false, свойство всегда равно false и не может быть установлено в true.
     bool UseShowDeleted { get; set; }
 
     /// <summary>
@@ -58,22 +53,29 @@ namespace FreeLibSet.Forms.Docs
     event EventHandler ShowDeletedChanged;
 
     /// <summary>
-    /// Произвольные пользовательские данные, переданные конструктору EFPDocGridView / EFPDocTreeView. 
+    /// Произвольные пользовательские данные, относящиеся к просмотру, которые требуются для его инициализации.
     /// </summary>
     object UserInitData { get; }
 
     /// <summary>
-    /// Внешний инициализатор для новых документов
+    /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове ClientDocType.PerformEdit()) 
-    /// будет использован этот инициализатор вместо текущих фильтров (DocGridHandler.DocFilters)
-    /// Свойство может устанавливаться только до вывода просмотра на экран
+    /// инициализатора значений полей (аргумент caller при вызове <see cref="DocTypeUI.PerformEditing(int, bool, DocumentViewHandler)"/>).
+    /// будет использован этот инициализатор вместо текущих фильтров (<see cref="IEFPDBxView.Filters"/>).
+    /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
     DocumentViewHandler ExternalEditorCaller { get; }
 
     /// <summary>
+    /// Обработчик просмотра документов, связанный с текущим просмотром.
+    /// Свойство имеет значение не null, когда просмотр выведен на экран.
+    /// Используется для поиска открытых просмотров документов <see cref="DocTypeUI"/> на уровне приложения.
+    /// </summary>
+    DocumentViewHandler ViewHandler { get; }
+
+    /// <summary>
     /// Идентификатор просмотра.
-    /// Используется ViewHandler
+    /// Используется <see cref="ViewHandler"/>.
     /// </summary>
     Guid BrowserGuid { get; }
 
@@ -82,9 +84,9 @@ namespace FreeLibSet.Forms.Docs
     /// Значение null означает отсутствие фильтра ("Все документы").
     /// Массив нулевой длины означает фильтр "Документы без группы".
     /// Свойство можно устанавливать только для документов, у которых используются группы.
-    /// Этот фильтр не входит в собычный список фильтров Filters. Событие FilterChanged не вызывается.
+    /// Этот фильтр не входит в обычный список фильтров <see cref="IEFPDBxView.Filters"/>. 
     /// Запрос на обновление данных просмотра не посылается, вместо этого накладывается дополнительный
-    /// фильтр на уже существующий DataView.
+    /// фильтр на уже существующий <see cref="System.Data.DataView"/>.
     /// </summary>
     Int32[] AuxFilterGroupIds { get; set; }
   }
@@ -214,7 +216,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Эти данные передаются обработчику инициализации просмотра.
-    /// Свойство может устанавливаться только до вызова события Created, то есть сразу после вызова конструктора
+    /// Свойство может устанавливаться только до вызова события <see cref="EFPControlBase.Created"/>, то есть сразу после вызова конструктора.
     /// </summary>
     public object UserInitData
     {
@@ -229,8 +231,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Имена столбцов, необходимых для просмотра.
-    /// Список заполняется после инициализации просмотра с помощью EFPGridProducer.
-    /// Чтобы гарантировать заполнение свойства, можно использовать метод PerformInitGrid().
+    /// Список заполняется после инициализации просмотра с помощью <see cref="EFPGridProducer"/>.
+    /// Чтобы гарантировать заполнение свойства, можно использовать метод <see cref="PerformInitGrid(bool)"/>.
     /// </summary>
     public DBxColumns UsedColumnNames { get { return _UsedColumnNames; } }
     private DBxColumns _UsedColumnNames;
@@ -238,7 +240,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Ограничение на максимальное число строк в просмотре.
     /// Если установленные фильтры дают в результате количество строк, превышающее ограничение,
-    /// при загрузке данных выдается предупреждение
+    /// при загрузке данных выдается предупреждение.
     /// </summary>
     public int MaxRecordCount
     {
@@ -260,11 +262,10 @@ namespace FreeLibSet.Forms.Docs
     #region Показывать удаленные записи
 
     /// <summary>
-    /// Это свойство позволяет динамически управлять показом удаленных записей
-    /// В основном требуется для реализации интерфейса IDocTableBrowser
-    /// Значение по умолчанию - false (удаленные строки не показываются)
+    /// Это свойство позволяет динамически управлять показом удаленных записей.
+    /// Значение по умолчанию - false (удаленные строки не показываются).
     /// Для управления наличием команды локального меню "Показывать удаленные записи"
-    /// используется свойство UseShowDeleted
+    /// используется свойство <see cref="UseShowDeleted"/>
     /// </summary>
     public bool ShowDeleted
     {
@@ -284,12 +285,12 @@ namespace FreeLibSet.Forms.Docs
     private bool _ShowDeleted;
 
     /// <summary>
-    /// Это событие вызывается при изменении свойства ShowDeleted
+    /// Это событие вызывается при изменении свойства <see cref="ShowDeleted"/>
     /// </summary>
     public event EventHandler ShowDeletedChanged;
 
     /// <summary>
-    /// Вызывает событие ShowDeletedChanged
+    /// Вызывает событие <see cref="ShowDeletedChanged"/>
     /// </summary>
     /// <param name="args">Фиктивный аргумент</param>
     protected virtual void OnShowDeletedChanged(EventArgs args)
@@ -300,7 +301,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Это свойство управляет наличием команды "Фильтр" - "Показывать удаленные записи".
-    /// Значение по умолчанию - true (команда присутствует)
+    /// Значение по умолчанию - true (команда присутствует).
     /// </summary>
     public bool UseShowDeleted
     {
@@ -336,7 +337,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Первоначальная загрузка или обновление данных по запросу
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Не используется</param>
     protected override void OnRefreshData(EventArgs args)
     {
       if (SourceAsDataTable == null)
@@ -364,8 +365,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается из OnRefreshData(), чтобы присвоить значение Control.DataSource.
-    /// Переопределяется редактором выборки документов
+    /// Вызывается из <see cref="OnRefreshData(EventArgs)"/>, чтобы присвоить значение <see cref="DataGridView.DataSource"/>.
+    /// Переопределяется редактором выборки документов.
     /// </summary>
     protected virtual void OnInitSourceDataView()
     {
@@ -489,7 +490,7 @@ namespace FreeLibSet.Forms.Docs
     #endregion
 
     /// <summary>
-    /// Возвращает true
+    /// Возвращает true.
     /// </summary>
     public override bool HasRefreshDataHandler { get { return true; } }
 
@@ -510,7 +511,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Значения для полей
 
-    // 02.06.2015
+    // 02.06.2015.
     // Табличный просмотр может использоваться не для нормального просмотра документов, когда все столбцы,
     // включая ссылочные, присутствуют в таблице данных.
     // Просмотр может быть использован, например в отчете, когда есть только столбец Id
@@ -552,7 +553,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает объект DBxDataRowValueArrayWithCache()
+    /// Создает объект <see cref="DBxDataRowValueArrayWithCache"/>.
     /// </summary>
     /// <returns>Новый объект для доступа к данным</returns>
     protected override IDataRowNamedValuesAccess CreateRowValueAccessObject()
@@ -569,9 +570,9 @@ namespace FreeLibSet.Forms.Docs
     /// Значение null означает отсутствие фильтра ("Все документы").
     /// Массив нулевой длины означает фильтр "Документы без группы".
     /// Свойство можно устанавливать только для документов, у которых используются группы.
-    /// Этот фильтр не входит в собычный список фильтров Filters. Событие FilterChanged не вызывается.
+    /// Этот фильтр не входит в собычный список фильтров <see cref="EFPDBxGridView.Filters"/>. Событие <see cref="DBxCommonFilters.Changed"/> не вызывается.
     /// Запрос на обновление данных просмотра не посылается, вместо этого накладывается дополнительный
-    /// фильтр на уже существующий DataView.
+    /// фильтр на уже существующий <see cref="DataView"/>.
     /// </summary>
     public Int32[] AuxFilterGroupIds
     {
@@ -631,7 +632,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Фиксированный набор идентификаторов.
     /// Если свойство устанавливается первый раз, то блокируется список фильтров, команды добавления и удаления строк.
-    /// Порядок строк в списке не имеет значения, т.к. сортировка выполняется в соответствии с настройками просмотра
+    /// Порядок строк в списке не имеет значения, т.к. сортировка выполняется в соответствии с настройками просмотра.
     /// </summary>
     public IdList FixedDocIds
     {
@@ -658,11 +659,11 @@ namespace FreeLibSet.Forms.Docs
     #region Редактирование документов
 
     /// <summary>
-    /// Внешний инициализатор для новых документов
+    /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове ClientDocType.PerformEdit()) 
-    /// будет использован этот инициализатор вместо текущих фильтров (DocGridHandler.DocFilters)
-    /// Свойство может устанавливаться только до вывода просмотра на экран
+    /// инициализатора значений полей (аргумент caller при вызове <see cref="DocTypeUI.PerformEditing(int, bool, DocumentViewHandler)"/>) 
+    /// будет использован этот инициализатор вместо текущих фильтров (<see cref="EFPDBxGridView.Filters"/>).
+    /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
     {
@@ -687,10 +688,10 @@ namespace FreeLibSet.Forms.Docs
     #region Инициализация просмотра
 
     /// <summary>
-    /// Вызывается из OnShown(), если предполагается загрузка последней пользовательской конфигурации просмотра,
+    /// Вызывается из <see cref="EFPControlBase.OnAttached()"/>, если предполагается загрузка последней пользовательской конфигурации просмотра,
     /// но просмотр открывается впервые и нет сохраненной конфигурации.
     /// Также метод вызывается в случае ошибки загрузки.
-    /// Метод должен установить свойство CurrentConfig
+    /// Метод должен установить свойство <see cref="EFPDataGridView.CurrentConfig"/>.
     /// </summary>
     protected override void OnInitDefaultGridConfig()
     {
@@ -707,12 +708,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Инициализация колонок табличного просмотра.
-    /// После вызова становится доступным свойство UsedColumnNames.
+    /// После вызова становится доступным свойство <see cref="UsedColumnNames"/>.
     /// Предотвращается реентрантный вызов.
-    /// Вызов DocTypeUI.PerformInitGrid() выполняется виртуальным методом OnInitGrid().
-    /// При первом вызове, в частности, вызывается обработчик события DocTypeUI.InitView, отвечающий за добавление фильтров.
-    /// <param name="forced">Если true, то инициализация будет выполнена обязательно. Используется при обработке события OnCurrentConfigChanged.
-    /// Если false, то инициализация выполняется только, если она еще не была выполнена ранее.</param>
+    /// Вызов <see cref="DocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object)"/> выполняется виртуальным методом <see cref="OnInitGrid(bool, DBxColumnList)"/>.
+    /// При первом вызове, в частности, вызывается обработчик события <see cref="DocTypeUI.InitView"/>, отвечающий за добавление фильтров.
+    /// <param name="forced">Если true, то инициализация будет выполнена обязательно. Используется при обработке события <see cref="EFPDataGridView.CurrentConfigChanged"/>.
+    /// Если false, то инициализация выполняется только если она еще не была выполнена ранее.</param>
     /// </summary>
     public void PerformInitGrid(bool forced)
     {
@@ -735,8 +736,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация табличного просмотра документов с помощью DocTypeUI.PerformInitGrid().
-    /// Переопределенный метод может, например, добавить порядки сортировки в список Orders.
+    /// Инициализация табличного просмотра документов с помощью <see cref="DocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object)"/>.
+    /// Переопределенный метод может, например, добавить порядки сортировки в список <see cref="EFPDataGridView.Orders"/>.
     /// </summary>
     /// <param name="reInit">true при повторном вызове метода (после изменения конфигурации просмотра)
     /// и false при первом вызове</param>
@@ -789,7 +790,7 @@ namespace FreeLibSet.Forms.Docs
     #region Реализация DocumentViewHandler
 
     /// <summary>
-    /// Реализация DocumentViewHandler для EFPDocGridView
+    /// Реализация <see cref="DocumentViewHandler"/> для <see cref="EFPDocGridView"/>.
     /// </summary>
     protected class IntDocumentViewHandler : DocumentViewHandler
     {
@@ -813,7 +814,7 @@ namespace FreeLibSet.Forms.Docs
       /// <summary>
       /// Уничтожает объект при закрытии формы
       /// </summary>
-      /// <param name="disposing">True, если вызван метод Dispose()</param>
+      /// <param name="disposing">True, если вызван метод <see cref="IDisposable.Dispose()"/></param>
       protected override void Dispose(bool disposing)
       {
         base.Dispose(disposing);
@@ -829,13 +830,13 @@ namespace FreeLibSet.Forms.Docs
       /// Провайдер табличного просмотра - владелец
       /// </summary>
       public EFPDocGridView Owner { get { return _Owner; } }
-      private EFPDocGridView _Owner;
+      private /*readonly*/ EFPDocGridView _Owner;
 
       /// <summary>
       /// Используется при инициализации полей нового документа
       /// </summary>
       public DocumentViewHandler ExternalEditorCaller { get { return _ExternalEditorCaller; } }
-      private DocumentViewHandler _ExternalEditorCaller;
+      private /*readonly*/ DocumentViewHandler _ExternalEditorCaller;
 
       #endregion
 
@@ -856,7 +857,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Возвращает EFPDocGridView.BrowserGuid
+      /// Возвращает <see cref="EFPDocGridView.BrowserGuid"/>
       /// </summary>
       public override Guid BrowserGuid
       {
@@ -870,7 +871,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Возвращает EFPDocGridView.CurrentColumnName
+      /// Возвращает <see cref="EFPDataGridView.CurrentColumnName"/>
       /// </summary>
       public override string CurrentColumnName
       {
@@ -1143,7 +1144,7 @@ namespace FreeLibSet.Forms.Docs
       #region Прочие переопределенные методы
 
       /// <summary>
-      /// Возвращает Owner.ToString(), если объект присоединен к просмотру
+      /// Возвращает <see cref="Owner"/>.ToString(), если объект присоединен к просмотру
       /// </summary>
       /// <returns>Текстовое представление для табличного просмотра</returns>
       public override string ToString()
@@ -1155,7 +1156,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Вызывает EFPDocGridView.UpdateRowsForIds()
+      /// Вызывает <see cref="EFPDBxGridView.UpdateRowsForIds(int[])"/>
       /// </summary>
       /// <param name="docIds">Идентификаторы обновляемых документов</param>
       public override void UpdateRowsForIds(Int32[] docIds)
@@ -1167,7 +1168,7 @@ namespace FreeLibSet.Forms.Docs
       /// <summary>
       /// Инициализация полей нового документа
       /// </summary>
-      /// <param name="newDoc"></param>
+      /// <param name="newDoc">Заготовка для нового документа</param>
       public override void InitNewDocValues(DBxSingleDoc newDoc)
       {
         if (ExternalEditorCaller == null)
@@ -1187,10 +1188,12 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// 
+      /// Проверка документа на соответствие фильтрам.
+      /// Вызывает <see cref="DocumentViewHandler.ValidateDocValues(DBxSingleDoc, ErrorMessageList)"/>, если используется <see cref="ExternalEditorCaller"/>.
+      /// Иначе вызывает <see cref="DBxCommonFilters.ValidateDocValues(DBxSingleDoc, ErrorMessageList)"/> для проверки по фильтрам, установленных в просмотре.
       /// </summary>
-      /// <param name="savingDoc"></param>
-      /// <param name="errorMessages"></param>
+      /// <param name="savingDoc">Сохраняемый документ</param>
+      /// <param name="errorMessages">Сюда добавляются сообщения об ошибках</param>
       public override void ValidateDocValues(DBxSingleDoc savingDoc, ErrorMessageList errorMessages)
       {
         if (ExternalEditorCaller == null)
@@ -1206,7 +1209,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Вызывает DataGridView.Invalidate()
+      /// Вызывает <see cref="Control.Invalidate()"/> для табличного просмотра
       /// </summary>
       public override void InvalidateControl()
       {
@@ -1218,12 +1221,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает объект DocumentViewHandler для просмотра.
-    /// Вызывается из OnShown(). Полученное значение присваивается свойству ViewHandler
+    /// Создает объект, производный от <see cref="DocumentViewHandler"/> для просмотра.
+    /// Вызывается из <see cref="EFPControlBase.OnAttached()"/>. Полученное значение затем присваивается свойству <see cref="ViewHandler"/>.
     /// Методы может быть переопределен в производном классе (в том числе возвращать null),
     /// если требуется нестандартная обработка.
     /// </summary>
-    /// <returns>Объект класса, производного от DocumentViewHandler</returns>
+    /// <returns>Объект класса, производного от <see cref="DocumentViewHandler"/></returns>
     protected virtual DocumentViewHandler CreateDocumentViewHandler()
     {
       return new IntDocumentViewHandler(this);
@@ -1238,7 +1241,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Идентификатор просмотра.
-    /// Используется ViewHandler
+    /// Используется <see cref="ViewHandler"/>.
     /// </summary>
     public Guid BrowserGuid
     {
@@ -1272,7 +1275,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Загружает таблицу документов, если это не было сделано в явном виде.
-    /// Инициализирует свойство ViewHandler
+    /// Инициализирует свойство <see cref="ViewHandler"/>.
     /// </summary>
     protected override void OnAttached()
     {
@@ -1300,7 +1303,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Обнуляет свойство ViewHandler
+    /// Обнуляет свойство <see cref="ViewHandler"/>
     /// </summary>
     protected override void OnDetached()
     {
@@ -1319,7 +1322,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Очистка кэша для выбранных идентификаторов.
-    /// Вызывается однократно перед вызовами LoadDataRowForUpdate()
+    /// Вызывается однократно перед вызовами <see cref="EFPDataGridView.UpdateDataRows(DataRow[])"/>
     /// </summary>
     /// <param name="docIds">Массив идентификаторов. Длина массива больше 0</param>
     protected override void ClearCacheForUpdate(Int32[] docIds)

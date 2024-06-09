@@ -329,18 +329,19 @@ namespace FreeLibSet.Data
       }
     }
 
-    /// <summary>
-    /// Форматирование оператора SELECT.
-    /// Этот метод не предназначен для использования в пользовательском коде.
-    /// Имена и типы столбцов в создаваемой таблице могут не совпадать с запрошенными.
-    /// </summary>
-    /// <param name="info">Заполненные параметры оператора SELECT</param>
-    /// <param name="validator">Объект для проверки имен (свойство <see cref="DBxConBase.Validator"/>)</param>
-    public void FormatSelect(DBxSelectInfo info, DBxNameValidator validator)
-    {
-      DBxSelectFormatter fsf = new DBxSelectFormatter(info, validator);
-      fsf.Format(this);
-    }
+    // Убрано 07.06.2024
+    ///// <summary>
+    ///// Форматирование оператора SELECT.
+    ///// Этот метод не предназначен для использования в пользовательском коде.
+    ///// Имена и типы столбцов в создаваемой таблице могут не совпадать с запрошенными.
+    ///// </summary>
+    ///// <param name="info">Заполненные параметры оператора SELECT</param>
+    ///// <param name="validator">Объект для проверки имен (свойство <see cref="DBxConBase.Validator"/>)</param>
+    //public void FormatSelect(DBxSelectInfo info, DBxNameValidator validator)
+    //{
+    //  DBxSelectFormatter fsf = new DBxSelectFormatter(info, validator);
+    //  fsf.Format(this);
+    //}
 
     //public object Tag;
 
@@ -594,6 +595,10 @@ namespace FreeLibSet.Data
         OnFormatNotFilter(buffer, (NotFilter)filter);
       else if (filter is NumRangeFilter)
         OnFormatNumRangeFilter(buffer, (NumRangeFilter)filter);
+      else if (filter is NumRangeInclusionFilter)
+        OnFormatNumRangeInclusionFilter(buffer, (NumRangeInclusionFilter)filter);
+      else if (filter is NumRangeCrossFilter)
+        OnFormatNumRangeCrossFilter(buffer, (NumRangeCrossFilter)filter);
       else if (filter is DateRangeFilter)
         OnFormatDateRangeFilter(buffer, (DateRangeFilter)filter);
       else if (filter is DateRangeInclusionFilter)
@@ -667,6 +672,22 @@ namespace FreeLibSet.Data
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
     protected abstract void OnFormatNumRangeFilter(DBxSqlBuffer buffer, NumRangeFilter filter);
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Записывает в <paramref name="buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected abstract void OnFormatNumRangeInclusionFilter(DBxSqlBuffer buffer, NumRangeInclusionFilter filter);
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Записывает в <paramref name="buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected abstract void OnFormatNumRangeCrossFilter(DBxSqlBuffer buffer, NumRangeCrossFilter filter);
 
     /// <summary>
     /// Форматирование фильтра.
@@ -808,7 +829,7 @@ namespace FreeLibSet.Data
       else if (expression is DBxAggregateFunction)
         OnFormatAggregateFunction(buffer, (DBxAggregateFunction)expression, formatInfo);
       else
-        throw new ArgumentException("Неподдерживаемый тип поля сортировки: " + expression.GetType().ToString());
+        throw new ArgumentException("Неподдерживаемый тип выражения: " + expression.GetType().ToString());
     }
 
     /// <summary>
@@ -1026,22 +1047,22 @@ namespace FreeLibSet.Data
     /// Добавляется только тип данных, например, "CHAR(20)".
     /// Имя столбца и выражение NULL/NOT NULL не добавляется.
     /// </summary>
-    /// <param name="Buffer">Буфер для создания SQL-запроса</param>
-    /// <param name="Column">Описание столбца</param>
-    protected override void OnFormatValueType(DBxSqlBuffer Buffer, DBxColumnStruct Column)
+    /// <param name="buffer">Буфер для создания SQL-запроса</param>
+    /// <param name="column">Описание столбца</param>
+    protected override void OnFormatValueType(DBxSqlBuffer buffer, DBxColumnStruct column)
     {
-      _Source.FormatValueType(Buffer, Column);
+      _Source.FormatValueType(buffer, column);
     }
 
     /// <summary>
     /// Форматирование значения поля
     /// </summary>
-    /// <param name="Buffer">Буфер для записи</param>
+    /// <param name="buffer">Буфер для записи</param>
     /// <param name="Value">Записываемое значение</param>
-    /// <param name="ColumnType">Тип значения</param>
-    protected override void OnFormatValue(DBxSqlBuffer Buffer, object Value, DBxColumnType ColumnType)
+    /// <param name="columnType">Тип значения</param>
+    protected override void OnFormatValue(DBxSqlBuffer buffer, object Value, DBxColumnType columnType)
     {
-      _Source.FormatValue(Buffer, Value, ColumnType);
+      _Source.FormatValue(buffer, Value, columnType);
     }
 
     /// <summary>
@@ -1117,6 +1138,28 @@ namespace FreeLibSet.Data
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
     protected override void OnFormatNumRangeFilter(DBxSqlBuffer buffer, NumRangeFilter filter)
+    {
+      _Source.FormatFilter(buffer, filter);
+    }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Записывает в <paramref name="buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatNumRangeInclusionFilter(DBxSqlBuffer buffer, NumRangeInclusionFilter filter)
+    {
+      _Source.FormatFilter(buffer, filter);
+    }
+
+    /// <summary>
+    /// Форматирование фильтра.
+    /// Записывает в <paramref name="buffer"/>.SB фрагмент SQL-запроса для фильтра (без слова "WHERE")
+    /// </summary>
+    /// <param name="buffer">Буфер для записи</param>
+    /// <param name="filter">Фильтр</param>
+    protected override void OnFormatNumRangeCrossFilter(DBxSqlBuffer buffer, NumRangeCrossFilter filter)
     {
       _Source.FormatFilter(buffer, filter);
     }

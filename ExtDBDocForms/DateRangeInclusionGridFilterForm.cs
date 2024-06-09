@@ -93,9 +93,9 @@ namespace FreeLibSet.Forms.Docs
     {
       get
       {
-        if (Date.HasValue)
+        if (Value.HasValue)
         {
-          string s = DateRangeFormatter.Default.ToString(Date.Value, true);
+          string s = DateRangeFormatter.Default.ToString(Value.Value, true);
           if (UseWorkDate)
             s += " (" + WorkDateText + ")";
           return s;
@@ -117,14 +117,14 @@ namespace FreeLibSet.Forms.Docs
       form.efpDate.DisabledValue = WorkDate;
 
 
-      if (Date.HasValue)
+      if (Value.HasValue)
       {
         if (UseWorkDate)
           form.efpMode.SelectedIndex = 1;
         else
         {
           form.efpMode.SelectedIndex = 2;
-          form.efpDate.NValue = Date;
+          form.efpDate.NValue = Value;
         }
       }
       else
@@ -135,15 +135,15 @@ namespace FreeLibSet.Forms.Docs
       switch (form.efpMode.SelectedIndex)
       {
         case 0:
-          Date = null;
+          Value = null;
           break;
         case 1:
           UseWorkDate = true;
-          Date = WorkDate;
+          Value = WorkDate;
           break;
         case 2:
           UseWorkDate = false;
-          Date = form.efpDate.NValue;
+          Value = form.efpDate.NValue;
           break;
       }
       return true;

@@ -12,7 +12,7 @@ using FreeLibSet.Data.Docs;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Переходник для CheckBox для логического поля
+  /// Переходник для <see cref="CheckBox"/> для логического поля
   /// </summary>
   public class DocValueCheckBox : DocValueControl<bool, EFPCheckBox>
   {
@@ -128,7 +128,7 @@ namespace FreeLibSet.Forms.Docs
 
 
   /// <summary>
-  /// Базовый класс переходника для комбинации управляющих элементов вида CheckBox+Управляющий элемент.
+  /// Базовый класс переходника для комбинации управляющих элементов вида <see cref="CheckBox"/>+Управляющий элемент.
   /// Когда флажок включен, пользователь может редактировать значение в основном управляющем элементе.
   /// Выключенное состояние флажка означает пустое значение.
   /// При редактировании "серых" значений флажок переводится в "промежуточное" состояние.
@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает переходник
     /// </summary>
     /// <param name="docValue">Редактируемое значение</param>
-    /// <param name="controlProvider1">Провайдер переключателя CheckBox</param>
+    /// <param name="controlProvider1">Провайдер переключателя <see cref="CheckBox"/></param>
     /// <param name="controlProvider2">Провайдер основного управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирование (разрешаются "серые" значения)</param>
     public DocValueCheckBoxWithControl(DBxDocValue docValue, EFPCheckBox controlProvider1, TControlProvider controlProvider2, bool canMultiEdit)
@@ -231,13 +231,13 @@ namespace FreeLibSet.Forms.Docs
     protected virtual TValue ZeroValue { get { return default(TValue); } }
 
     /// <summary>
-    /// Метод должен записать (непустое) значение в основной управляющий элемент ControlProvider2.
+    /// Метод должен записать (непустое) значение в основной управляющий элемент <see cref="ControlProvider2"/>.
     /// </summary>
     /// <param name="value">Записываемое значение</param>
     protected abstract void SetControlValue2(TValue value);
 
     /// <summary>
-    /// Метод должен вернуть (непустое) значение из основного управляющего элемента ControlProvider2.
+    /// Метод должен вернуть (непустое) значение из основного управляющего элемента <see cref="ControlProvider2"/>.
     /// </summary>
     /// <returns></returns>
     protected abstract TValue GetControlValue2();
@@ -247,7 +247,7 @@ namespace FreeLibSet.Forms.Docs
     #region Дополнительные свойства
 
     /// <summary>
-    /// Провайдер переключателя CheckBox
+    /// Провайдер переключателя <see cref="CheckBox"/>
     /// </summary>
     public EFPCheckBox ControlProvider1 { get { return (EFPCheckBox)(base.ControlProvider); } }
 
@@ -255,12 +255,11 @@ namespace FreeLibSet.Forms.Docs
     /// Провайдер основного управляющего элемента
     /// </summary>
     public TControlProvider ControlProvider2 { get { return _ControlProvider2; } }
-    private TControlProvider _ControlProvider2;
+    private readonly TControlProvider _ControlProvider2;
 
     /// <summary>
     /// Вызывается производным классом при изменении значения в основном управляющем
     /// элементе.
-    /// Обновляет CurrentValue и вызывает базовый метод ControlChanged
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -287,8 +286,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Переходник для флажка CheckBox и поля выбора месяца и дня MonthDayBox.
-  /// В отличие от DocValueIntMonthDayBox, разрешает запись нулевого значения.
+  /// Переходник для флажка <see cref="CheckBox"/> и поля выбора месяца и дня <see cref="FreeLibSet.Controls.MonthDayBox"/>.
+  /// В отличие от <see cref="DocValueIntMonthDayBox"/>, разрешает запись нулевого значения.
   /// </summary>
   public class DocValueIntCheckBoxWithMonthDayBox : DocValueCheckBoxWithControl<int, EFPMonthDayBox>
   {

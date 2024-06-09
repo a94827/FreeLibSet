@@ -23,6 +23,11 @@ using FreeLibSet.UICore;
 using FreeLibSet.Models.Tree;
 using FreeLibSet.Controls;
 
+#if NET
+#pragma warning disable SYSLIB0005 // Assembly.GlobalAssemblyCache is obsolete
+#endif
+
+
 namespace FreeLibSet.Forms.Diagnostics
 {
   /// <summary>
@@ -190,6 +195,7 @@ namespace FreeLibSet.Forms.Diagnostics
     public static DataTable GetAssembliesInfo(bool includeGAC)
     {
       DataTable res = new DataTable("AssembliesInfo");
+      res.Columns.Add("Order", typeof(int));
       res.Columns.Add("Name", typeof(string));
       res.Columns.Add("Version", typeof(string));
       res.Columns.Add("CreationTime", typeof(DateTime));
@@ -207,56 +213,58 @@ namespace FreeLibSet.Forms.Diagnostics
           if (asms[i].GlobalAssemblyCache)
             continue; // не мое
         }
-        AddAssemblyInfo(res, asms[i]);
+        AddAssemblyInfo(res, asms[i], i+1);
       }
       return res;
     }
 
-    private static void AddAssemblyInfo(DataTable table, Assembly assm)
+    private static void AddAssemblyInfo(DataTable table, Assembly asm, int order)
     {
       DataRow row = table.NewRow();
 
-      string name = assm.FullName;
+      row["Order"] = order;
+
+      string name = asm.FullName;
       int p = name.IndexOf(',');
       if (p >= 0)
         name = name.Substring(0, p);
       row["Name"] = name;
 
-      row["Version"] = assm.GetName().Version.ToString();
+      row["Version"] = asm.GetName().Version.ToString();
       //AssemblyVersionAttribute attrVersion = (AssemblyVersionAttribute)Attribute.GetCustomAttribute(a, typeof(AssemblyVersionAttribute));
       //if (attrVersion != null)
       //  Row["Version"] = attrVersion.Version;
 
       //Attribute[] aa = Attribute.GetCustomAttributes(a);
 
-      ProcessorArchitecture pa = assm.GetName().ProcessorArchitecture;
+      ProcessorArchitecture pa = asm.GetName().ProcessorArchitecture;
       if (pa == ProcessorArchitecture.MSIL)
         row["ProcessorArchitecture"] = "Any CPU";
       else
         row["ProcessorArchitecture"] = pa.ToString();
 
-      string fileName = assm.ManifestModule.FullyQualifiedName;
+      string fileName = asm.ManifestModule.FullyQualifiedName;
       if (File.Exists(fileName))
         row["CreationTime"] = File.GetLastWriteTime(fileName);
 
-      DebuggableAttribute attrDebug = (DebuggableAttribute)Attribute.GetCustomAttribute(assm, typeof(DebuggableAttribute));
+      DebuggableAttribute attrDebug = (DebuggableAttribute)Attribute.GetCustomAttribute(asm, typeof(DebuggableAttribute));
       if (attrDebug != null)
       {
         if (attrDebug.IsJITTrackingEnabled)
           row["Debug"] = true; // не очень хорошо, но ладно
       }
 
-      AssemblyDescriptionAttribute attrDescr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assm, typeof(AssemblyDescriptionAttribute));
+      AssemblyDescriptionAttribute attrDescr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyDescriptionAttribute));
       if (attrDescr != null)
         row["Description"] = attrDescr.Description;
 
-      AssemblyCopyrightAttribute attrCopyright = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assm, typeof(AssemblyCopyrightAttribute));
+      AssemblyCopyrightAttribute attrCopyright = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyCopyrightAttribute));
       if (attrCopyright != null)
         row["Copyright"] = attrCopyright.Copyright;
 
-      DataTools.SetString(row, "Location", assm.Location);
+      DataTools.SetString(row, "Location", asm.Location);
 
-      row["GAC"] = assm.GlobalAssemblyCache;
+      row["GAC"] = asm.GlobalAssemblyCache;
 
       table.Rows.Add(row);
     }
@@ -1724,7 +1732,7 @@ namespace FreeLibSet.Forms.Diagnostics
             // Нельзя вызывать свойство Form.Text из не того потока, в котором создана форма
             string title;
             if (frm.InvokeRequired)
-              title = "[* форма создана в другом потоке *]";
+              title = "[* form created in differnet thread *]";
             else
               title = frm.Text;
             args.WritePair(frm.GetType().ToString(), title);
@@ -1768,7 +1776,7 @@ namespace FreeLibSet.Forms.Diagnostics
       }
       catch (Exception e)
       {
-        args.WriteLine("*** Ошибка получения информации из PowerStatus *** " + e.Message);
+        args.WriteLine("*** Error PowerStatus information *** " + e.Message);
       }
       args.IndentLevel--;
 
@@ -1821,7 +1829,7 @@ namespace FreeLibSet.Forms.Diagnostics
           // Нельзя вызывать свойство Form.Text из не того потока, в котором создана форма
           string title;
           if (dlgs[i].InvokeRequired)
-            title = "[* форма создана в другом потоке *]";
+            title = "[* form created in different thread *]";
           else
             title = dlgs[i].Text;
           args.WriteLine("[" + i.ToString() + "] " + title + " [" + dlgs[i].GetType().ToString() + "]");
@@ -1829,7 +1837,12 @@ namespace FreeLibSet.Forms.Diagnostics
         args.IndentLevel = CurrIndentLevel;
 
         if (EFPApp.IsMainThread) // 21.01.2021
-          args.WritePair("MainImages", EFPApp.MainImages.Images.Count.ToString());
+        {
+          if (EFPApp.MainImages.Images==null)
+            args.WritePair("MainImages", "null"); // 26.04.2024
+          else
+            args.WritePair("MainImages", EFPApp.MainImages.Images.Count.ToString());
+        }
       }
 
       args.WritePair("Interface", EFPApp.InterfaceName);
@@ -1862,7 +1875,7 @@ namespace FreeLibSet.Forms.Diagnostics
         LogoutTools.LogoutObject(args, EFPApp.ConfigManager);
         args.IndentLevel--;
       }
-      args.WriteLine("Упрощение интерфейса");
+      args.WriteLine("UI simplicity");
       args.IndentLevel++;
       args.WritePair("EasyInterface", EFPApp.EasyInterface.ToString());
       args.WritePair("ShowControlToolBars", EFPApp.ShowControlToolBars.ToString());
@@ -1902,7 +1915,7 @@ namespace FreeLibSet.Forms.Diagnostics
           }
           catch (Exception e)
           {
-            args.WriteLine("Ошибка. " + e.Message);
+            args.WriteLine("Error. " + e.Message);
           }
           args.IndentLevel--;
         }
@@ -1926,7 +1939,7 @@ namespace FreeLibSet.Forms.Diagnostics
         }
       }
       else
-        args.WriteLine("Информация по процедурам обратного вызова доступна только из основного потока приложения");
+        args.WriteLine("AsyncProcList information is available from the main thread olny");
 
       #endregion
 
@@ -1939,7 +1952,7 @@ namespace FreeLibSet.Forms.Diagnostics
       #region EFPFormProvider' s
 
       EFPFormProvider[] formProviders = EFPFormProvider.GetAllFormProviders();
-      args.WriteLine("Объекты EFPFormProvider (" + formProviders.Length.ToString() + ")");
+      args.WriteLine("EFPFormProvider objects (" + formProviders.Length.ToString() + ")");
       args.IndentLevel++;
       for (int i = 0; i < formProviders.Length; i++)
       {
@@ -1975,24 +1988,24 @@ namespace FreeLibSet.Forms.Diagnostics
 
       #region Офисные приложения
 
-      args.WriteHeader("Офисные приложения");
+      args.WriteHeader("Office applications");
 
       if (MicrosoftOfficeTools.WordVersion == null)
-        args.WritePair("Microsoft Word", "Не установлен");
+        args.WritePair("Microsoft Word", "Not installed");
       else
       {
         args.WritePair("Microsoft Word", MicrosoftOfficeTools.WordVersionString);
         args.IndentLevel++;
-        args.WritePair("Путь к приложению Word", MicrosoftOfficeTools.WordPath.Path);
+        args.WritePair("Word executable path", MicrosoftOfficeTools.WordPath.Path);
         args.IndentLevel--;
       }
       if (MicrosoftOfficeTools.ExcelVersion == null)
-        args.WritePair("Microsoft Excel", "Не установлен");
+        args.WritePair("Microsoft Excel", "Not installed");
       else
       {
         args.WritePair("Microsoft Excel", MicrosoftOfficeTools.ExcelVersionString);
         args.IndentLevel++;
-        args.WritePair("Путь к приложению Excel", MicrosoftOfficeTools.ExcelPath.Path);
+        args.WritePair("Excel executable path", MicrosoftOfficeTools.ExcelPath.Path);
         args.IndentLevel--;
       }
 
@@ -2000,7 +2013,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
       args.WritePair(EFPApp.OpenOfficeKindName + " Writer", GetVersionStr(EFPApp.OpenOfficeWriterVersion));
       args.WritePair(EFPApp.OpenOfficeKindName + " Calc", GetVersionStr(EFPApp.OpenOfficeCalcVersion));
-      args.WriteLine("Все установленные версии OpenOffice / LibreOffice (" + OpenOfficeTools.Installations.Length.ToString() + ")");
+      args.WriteLine("All installed OpenOffice / LibreOffice applications (" + OpenOfficeTools.Installations.Length.ToString() + ")");
       for (int i = 0; i < OpenOfficeTools.Installations.Length; i++)
       {
         OpenOfficeInfo inf = OpenOfficeTools.Installations[i];
@@ -2022,7 +2035,7 @@ namespace FreeLibSet.Forms.Diagnostics
     private static string GetVersionStr(Version version)
     {
       if (version.Major == 0 && version.Minor == 0)
-        return "Не установлено";
+        return "Not installed";
       else
         return version.ToString();
     }

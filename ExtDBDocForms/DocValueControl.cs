@@ -14,27 +14,27 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Какие действия следует предпринимать при записи значения, когда DocValueControlBase.UserEnabled=false.
-  /// Используется свойством DocValueControlBase.UserDisabledMode
+  /// Какие действия следует предпринимать при записи значения, когда <see cref="DocValueControlBase.UserEnabled"/>=false.
+  /// Используется свойством <see cref="DocValueControlBase.UserDisabledMode"/>
   /// </summary>
   public enum DocValueUserDisabledMode
   {
     /// <summary>
     /// Никаких действий не предпринимать.
-    /// Сохраняется значение или значения, которые были на момент открытия редактора
-    /// Предполагается, что значение корректируется, например, в обработчике Editor.Closing.
+    /// Сохраняется значение или значения, которые были на момент открытия редактора.
+    /// Предполагается, что значение корректируется, например, в обработчике <see cref="DocumentEditor.BeforeWrite"/>.
     /// </summary>
     KeepOriginal,
 
     /// <summary>
     /// Если редактор находится в режиме редактирования "серого" значения, то сохраняются значения, которые
     /// были на момент открытия редактора.
-    /// Если редактируется обычное значение, то оно заменяется на UserDisabledValue
+    /// Если редактируется обычное значение, то берется значение из управляющего элемента, в предположении, что оно является вычисленным на основании других полей.
     /// </summary>
     KeepOriginalIfGrayed,
 
     /// <summary>
-    /// Значение заменяется на UserDisabledValue
+    /// Значение берется из управляющего элемента, в предположении, что оно является вычисленным на основании других полей.
     /// </summary>
     AlwaysReplace,
   }
@@ -94,7 +94,7 @@ namespace FreeLibSet.Forms.Docs
     private IEFPControl _ControlProvider;
 
     /// <summary>
-    /// Значение EnabledEx, зависящее от DocValue и от UserEnabledEx
+    /// Значение EnabledEx, зависящее от DocValue и от <see cref="UserEnabledEx"/>.
     /// </summary>
     public DepValue<Boolean> EnabledEx { get { return _EnabledEx; } }
     private DepOutput<Boolean> _EnabledEx;
@@ -102,7 +102,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Блокировка редактирования поля прикладным модулем.
     /// Установка свойства в false делает связанное поле ввода недоступным.
-    /// Для условной блокировки можно использовать свойство UserEnabledEx, что обычно требуется чаще, чем перманентная блокировка поля.
+    /// Для условной блокировки можно использовать свойство <see cref="UserEnabledEx"/>, что обычно требуется чаще, чем перманентная блокировка поля.
     /// </summary>
     public bool UserEnabled
     {
@@ -124,8 +124,8 @@ namespace FreeLibSet.Forms.Docs
     /// Установка свойства в false делает связанное поле ввода недоступным.
     /// Условная блокировка, которой можно управлять в зависимости от состояния
     /// других элементов редактирования.
-    /// Чтобы заблокированное поле очищалось при записи документа, используйте свойство UserDisabledMode или
-    /// реализуйте обработчик DocumentEditor.BeforeWrite, DocTypeUI.Writing или (на сервере) DBxDocType.BeforeWrite.
+    /// Чтобы заблокированное поле очищалось при записи документа, используйте свойство <see cref="UserDisabledMode"/> или
+    /// реализуйте обработчик <see cref="DocumentEditor.BeforeWrite"/>, <see cref="DocTypeUI.Writing"/> или (на сервере) <see cref="DBxDocType.BeforeWrite"/>.
     /// </summary>
     public DepValue<bool> UserEnabledEx
     {
@@ -158,8 +158,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Какие действия предпринять при записи документа, если UserEnabled=false.
-    /// По умолчанию используется режим KeepOriginal: существующие значения не заменяются.
+    /// Какие действия предпринять при записи документа, если <see cref="UserEnabled"/>=false.
+    /// По умолчанию используется режим <see cref="DocValueUserDisabledMode.KeepOriginal"/>: существующие значения не заменяются.
     /// </summary>
     public DocValueUserDisabledMode UserDisabledMode
     {
@@ -169,7 +169,7 @@ namespace FreeLibSet.Forms.Docs
     private DocValueUserDisabledMode _UserDisabledMode;
 
     /// <summary>
-    /// Значение Grayed для DocValue
+    /// Значение <see cref="Grayed"/> для DocValue
     /// </summary>
     public DepValue<Boolean> GrayedEx
     {
@@ -190,7 +190,7 @@ namespace FreeLibSet.Forms.Docs
     private DepValue<Boolean> _GrayedEx;
 
     /// <summary>
-    /// Свойство GrayedEx.Value
+    /// Свойство <see cref="GrayedEx"/>.Value
     /// </summary>
     protected bool Grayed
     {
@@ -217,7 +217,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Установка значения свойства EnabledEx.Value
+    /// Установка значения свойства <see cref="EnabledEx"/>.Value
     /// </summary>
     protected virtual void InitEnabled()
     {
@@ -225,15 +225,15 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Метод должен возвращать !DBxDocValue.IsReadOnly или аналогичное значение.
-    /// Используется методом InitEnabled()
+    /// Метод должен возвращать !<see cref="DBxDocValue.IsReadOnly"/> или аналогичное значение.
+    /// Используется методом <see cref="InitEnabled()"/>.
     /// </summary>
     /// <returns>true, если значение поля можно редактировать</returns>
     protected abstract bool GetEnabledState();
 
     /// <summary>
-    /// Если в режиме группового редактирования при Grayed=true используется 
-    /// отдельный CheckBox, то поле содержит провайдер для него
+    /// Если в режиме группового редактирования при <see cref="Grayed"/>=true используется 
+    /// отдельный <see cref="CheckBox"/>, то поле содержит провайдер для него.
     /// </summary>
     EFPCheckBox efpGrayCheckBox;
 
@@ -344,7 +344,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docValue">Доступ к значению поля</param>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="useGrayCheckBox">Если true, то, если <paramref name="docValue"/> содержит "серое" значение,
-    /// то будет создан дополнительный управляющий элемент CheckBox</param>
+    /// то будет создан дополнительный управляющий элемент <see cref="CheckBox"/></param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирование (разрешаются "серые" значения)</param>
     public DocValueControlBase2(DBxDocValue docValue, IEFPControl controlProvider, bool useGrayCheckBox, bool canMultiEdit)
       : base(controlProvider, docValue.IsReadOnly,
@@ -372,7 +372,7 @@ namespace FreeLibSet.Forms.Docs
     /// Редактируемое значение в наборе исходных данных
     /// </summary>
     public DBxDocValue DocValue { get { return _DocValue; } }
-    private DBxDocValue _DocValue;
+    private /*readonly - это структура, нельзя ее блокировать*/ DBxDocValue _DocValue;
 
     /// <summary>
     /// Текущее редактируемое значение
@@ -381,7 +381,7 @@ namespace FreeLibSet.Forms.Docs
     private DepInput<TValue> _CurrentValueEx;
 
     /// <summary>
-    /// Устанавливает свойство CurrentValueEx и присоединяет к нему обработчик на метод ControlChanged.
+    /// Устанавливает свойство <see cref="CurrentValueEx"/> и присоединяет к нему обработчик, который вызывает метод <see cref="ControlChanged(object, EventArgs)"/>.
     /// </summary>
     /// <param name="value">Устанавливаемое управляемое свойство</param>
     protected void SetCurrentValueEx(DepValue<TValue> value)
@@ -407,7 +407,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Исходное значение в режиме "Grayed".
-    /// Если исходное состостояние Grayed=false, то не используем это поле, чтобы не хранить бесполезный массив одинаковых значений.
+    /// Если исходное состояние Grayed=false, то не используем это поле, чтобы не хранить бесполезный массив одинаковых значений.
     /// Вместо этого можно использовать поле _StartValue
     /// </summary>
     private object[] _StartValueArray;
@@ -418,7 +418,7 @@ namespace FreeLibSet.Forms.Docs
     private bool _StartGrayed;
 
     /// <summary>
-    /// Значение, записываемое при UserEnabled=false, если задан подходящий режим UserDisabledMode.
+    /// Значение, записываемое при <see cref="DocValueControlBase.UserEnabled"/>=false, если задан подходящий режим <see cref="DocValueControlBase.UserDisabledMode"/>.
     /// </summary>
     public TValue UserDisabledValue { get { return _UserDisabledValue; } set { _UserDisabledValue = value; } }
     private TValue _UserDisabledValue;
@@ -427,14 +427,14 @@ namespace FreeLibSet.Forms.Docs
     /// True, если редактирование запрещено из-за наличия нескольких документов
     /// </summary>
     public bool MultiEditDisabled { get { return _MultiEditDisabled; } }
-    private bool _MultiEditDisabled;
+    private readonly bool _MultiEditDisabled;
 
     #endregion
 
     #region IDocEditItem Members
 
     /// <summary>
-    /// Перенос значения из DocValue в управляющий элемент
+    /// Перенос значения из <see cref="DocValue"/> в управляющий элемент
     /// </summary>
     public void ReadValues()
     {
@@ -457,16 +457,16 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Метод интерфейса IDocEditItem.
-    /// Непереопределенный метод ничего не делает
+    /// Метод интерфейса <see cref="IDocEditItem"/>.
+    /// Непереопределенный метод ничего не делает.
     /// </summary>
     public virtual void BeforeReadValues()
     {
     }
 
     /// <summary>
-    /// Метод интерфейса IDocEditItem.
-    /// Непереопределенный метод ничего не делает
+    /// Метод интерфейса <see cref="IDocEditItem"/>.
+    /// Непереопределенный метод ничего не делает.
     /// </summary>
     public virtual void AfterReadValues()
     {
@@ -474,8 +474,8 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Перенос значения из управляющего элемента в DocValue при нажатии кнопки "OK".
-    /// Учитываются свойства UserEnabled и UserDisabledMode
+    /// Перенос значения из управляющего элемента в <see cref="DocValue"/> при нажатии кнопки "OK".
+    /// Учитываются свойства <see cref="DocValueControlBase.UserEnabled"/> и <see cref="DocValueControlBase.UserDisabledMode"/>.
     /// </summary>
     public void WriteValues()
     {
@@ -515,11 +515,11 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Объект для отслеживания изменений в поле.
-    /// В отличие от свойства интерфейса IDocEditItem имеет тип DepChangeInfoValueItem,
-    /// что позволяет устанавливать признак изменений
+    /// В отличие от свойства интерфейса <see cref="IDocEditItem"/> имеет тип <see cref="DepChangeInfoValueItem"/>,
+    /// что позволяет устанавливать признак изменений.
     /// </summary>
     public DepChangeInfoValueItem ChangeInfo { get { return _ChangeInfo; } }
-    private DepChangeInfoValueItem _ChangeInfo;
+    private readonly DepChangeInfoValueItem _ChangeInfo;
 
     #endregion
 
@@ -549,8 +549,8 @@ namespace FreeLibSet.Forms.Docs
     #region События
 
     /// <summary>
-    /// Ecли обработчик установлен, то он вызывается вместо ValueToControl для
-    /// инициализации значения управляющего элемента из DocValue в Control
+    /// Ecли обработчик установлен, то он вызывается вместо <see cref="ValueToControl"/> для
+    /// инициализации значения управляющего элемента из <see cref="DocValue"/> в Control.
     /// </summary>
     public event EventHandler WantedValueToControl;
 
@@ -567,14 +567,14 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Ecли обработчик установлен, то он вызывается вместо ValueFromControl для
-    /// сохранения значения управляющего элемента из Control в DocValue 
+    /// Ecли обработчик установлен, то он вызывается вместо <see cref="ValueFromControl"/> для
+    /// сохранения значения управляющего элемента из Control в <see cref="DocValue"/>.
     /// </summary>
     public event EventHandler WantedValueFromControl;
 
     /// <summary>
-    /// Если установлен обработчик события WantedValueFromControl, то он вызывается.
-    /// Иначе вызывается метод ValueFromControl()
+    /// Если установлен обработчик события <see cref="WantedValueFromControl"/>, то он вызывается.
+    /// Иначе вызывается метод <see cref="ValueFromControl()"/>.
     /// </summary>
     protected void OnValueFromControl()
     {
@@ -603,7 +603,7 @@ namespace FreeLibSet.Forms.Docs
     #region Переопределенные методы
 
     /// <summary>
-    /// Метод возвращает !DBxDocValue.IsReadOnly, если в данный момент не активно "серое" значение поля.
+    /// Метод возвращает инвертированное значение <see cref="DBxDocValue.IsReadOnly"/>, если в данный момент не активно "серое" значение поля.
     /// </summary>
     /// <returns>true, если значение поля можно редактировать</returns>
     protected override bool GetEnabledState()
@@ -616,7 +616,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Шаблон заготовки для конкретных управляющих элементов
-  /// Доопределяет свойство Control
+  /// Доопределяет свойство Control.
   /// </summary>
   /// <typeparam name="TValue">Тип редактируемого значения</typeparam>
   /// <typeparam name="TControlProvider">Тип провайдера управляющего элемента</typeparam>
@@ -631,9 +631,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docValue">Доступ к значению поля</param>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="useGrayCheckBox">Если true, то, если <paramref name="docValue"/> содержит "серое" значение,
-    /// то будет создан дополнительный управляющий элемент CheckBox</param>
+    /// то будет создан дополнительный управляющий элемент <see cref="CheckBox"/>.</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
-    /// Если false, то при групповом редактировании поле скрывается</param>
+    /// Если false, то при групповом редактировании поле скрывается.</param>
     public DocValueControl(DBxDocValue docValue, TControlProvider controlProvider, bool useGrayCheckBox, bool canMultiEdit)
       : base(docValue, controlProvider, useGrayCheckBox , canMultiEdit)
     {
@@ -655,7 +655,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Шаблон заготовки для управляющего элемента, редактирующего сразу 2 поля
+  /// Шаблон заготовки для управляющего элемента, редактирующего сразу два поля.
   /// Не определяет свойство Control нужного типа.
   /// Второе значение может не редактироваться (DocValue2=null)
   /// </summary>
@@ -672,7 +672,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docValue2">Доступ к значению поля (второму)</param>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="useGrayCheckBox">Если true, то, если <paramref name="docValue1"/> или <paramref name="docValue2"/> содержит "серое" значение,
-    /// то будет создан дополнительный управляющий элемент CheckBox</param>
+    /// то будет создан дополнительный управляющий элемент <see cref="CheckBox"/></param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
     public TwoDocValueControlBase2(DBxDocValue docValue1, DBxDocValue docValue2, EFPControlBase controlProvider, bool useGrayCheckBox, bool canMultiEdit)
@@ -731,7 +731,7 @@ namespace FreeLibSet.Forms.Docs
     private DepInput<TValue2> _CurrentValue2Ex;
 
     /// <summary>
-    /// Устанавливает свойства CurrentValue1Ex и CurrentValue2Ex и присоединяет к ним обработчики на метод ControlChanged.
+    /// Устанавливает свойства <see cref="CurrentValue1Ex"/> и <see cref="CurrentValue2Ex"/> и присоединяет к ним обработчики на метод <see cref="ControlChanged(object, EventArgs)"/>.
     /// </summary>
     /// <param name="value1">Устанавливаемое управляемое свойство (первое)</param>
     /// <param name="value2">Устанавливаемое управляемое свойство (второе)</param>
@@ -781,13 +781,13 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Первое значение, записываемое при UserEnabled=false, если задан подходящий режим UserDisabledMode.
+    /// Первое значение, записываемое при <see cref="DocValueControlBase.UserEnabled"/>=false, если задан подходящий режим <see cref="DocValueControlBase.UserDisabledMode"/>.
     /// </summary>
     public TValue1 UserDisabledValue1 { get { return _UserDisabledValue1; } set { _UserDisabledValue1 = value; } }
     private TValue1 _UserDisabledValue1;
 
     /// <summary>
-    /// Второе значение, записываемое при UserEnabled=false, если задан подходящий режим UserDisabledMode.
+    /// Второе значение, записываемое при <see cref="DocValueControlBase.UserEnabled"/>=false, если задан подходящий режим <see cref="DocValueControlBase.UserDisabledMode"/>.
     /// </summary>
     public TValue2 UserDisabledValue2 { get { return _UserDisabledValue2; } set { _UserDisabledValue2 = value; } }
     private TValue2 _UserDisabledValue2;
@@ -796,14 +796,14 @@ namespace FreeLibSet.Forms.Docs
     /// True, если редактирование запрещено из-за наличия нескольких документов
     /// </summary>
     public bool MultiEditDisabled { get { return _MultiEditDisabled; } }
-    private bool _MultiEditDisabled;
+    private readonly bool _MultiEditDisabled;
 
     #endregion
 
     #region IDocEditItem Members
 
     /// <summary>
-    /// Перенос значения из DocValue в управляющий элемент
+    /// Перенос значений из <see cref="DocValue1"/> и <see cref="DocValue2"/> в управляющий элемент
     /// </summary>
     public void ReadValues()
     {
@@ -850,23 +850,23 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Метод интерфейса IDocEditItem.
-    /// Непереопределенный метод ничего не делает
+    /// Метод интерфейса <see cref="IDocEditItem"/>.
+    /// Непереопределенный метод ничего не делает.
     /// </summary>
     public void BeforeReadValues()
     {
     }
 
     /// <summary>
-    /// Метод интерфейса IDocEditItem.
-    /// Непереопределенный метод ничего не делает
+    /// Метод интерфейса <see cref="IDocEditItem"/>.
+    /// Непереопределенный метод ничего не делает.
     /// </summary>
     public void AfterReadValues()
     {
     }
 
     /// <summary>
-    /// Перенос значения из управляющего элемента в DocValue при нажатии кнопки "OK"
+    /// Перенос значения из управляющего элемента в <see cref="DocValue1"/> и <see cref="DocValue2"/> при нажатии кнопки "OK".
     /// </summary>
     public void WriteValues()
     {
@@ -914,11 +914,11 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Объект для отслеживания изменений в поле.
-    /// В отличие от свойства интерфейса IDocEditItem имеет тип DepChangeInfoValueItem,
-    /// что позволяет устанавливать признак изменений
+    /// В отличие от свойства интерфейса <see cref="IDocEditItem"/> имеет тип <see cref="DepChangeInfoValueItem"/>,
+    /// что позволяет устанавливать признак изменений.
     /// </summary>
     public DepChangeInfoValueItem ChangeInfo { get { return _ChangeInfo; } }
-    private DepChangeInfoValueItem _ChangeInfo;
+    private readonly DepChangeInfoValueItem _ChangeInfo;
 
 
     #endregion
@@ -953,14 +953,14 @@ namespace FreeLibSet.Forms.Docs
     #region События
 
     /// <summary>
-    /// Ecли обработчик установлен, то он вызывается вместо ValueToControl для
-    /// инициализации значения управляющего элемента из DocValue в Control
+    /// Ecли обработчик установлен, то он вызывается вместо <see cref="ValueToControl()"/> для
+    /// инициализации значения управляющего элемента из <see cref="DocValue1"/>, <see cref="DocValue2"/> в Control.
     /// </summary>
     public event EventHandler WantedValueToControl;
 
     /// <summary>
-    /// Если установлен обработчик события WantedValueToControl, то он вызывается.
-    /// Иначе вызывается метод ValueToControl()
+    /// Если установлен обработчик события <see cref="WantedValueToControl"/>, то он вызывается.
+    /// Иначе вызывается метод <see cref="ValueToControl()"/>.
     /// </summary>
     protected void OnValueToControl()
     {
@@ -971,14 +971,14 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Ecли обработчик установлен, то он вызывается вместо ValueFromControl для
-    /// сохранения значения управляющего элемента из Control в DocValue 
+    /// Ecли обработчик установлен, то он вызывается вместо <see cref="ValueFromControl"/> для
+    /// сохранения значения управляющего элемента из Control в <see cref="DocValue1"/>, <see cref="DocValue2"/>
     /// </summary>
     public event EventHandler WantedValueFromControl;
 
     /// <summary>
-    /// Если установлен обработчик события WantedValueFromControl, то он вызывается.
-    /// Иначе вызывается метод ValueFromControl()
+    /// Если установлен обработчик события <see cref="WantedValueFromControl"/>, то он вызывается.
+    /// Иначе вызывается метод <see cref="ValueFromControl()"/>.
     /// </summary>
     protected void OnValueFromControl()
     {
@@ -1005,10 +1005,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Этот метод вызывается для установки значения в основном управляющем элементе,
     /// когда данные находятся в режиме Grayed.
-    /// Метод должен установить CurrentValue1.Value и CurrentValue2.Value 
-    /// Реализация по умолчанию записывет нулевые значения
+    /// Метод должен установить <see cref="CurrentValue1Ex"/>.Value и <see cref="CurrentValue2Ex"/>.Value.
+    /// Реализация по умолчанию записывет нулевые значения.
     /// Переопределение метода необходимо, если управляюший элемент не может получать
-    /// нулевые значения, например MonthDayBox
+    /// нулевые значения, например <see cref="FreeLibSet.Controls.MonthDayBox"/>.
     /// </summary>
     protected virtual void WriteToControlWhenGrayed()
     {
@@ -1021,7 +1021,7 @@ namespace FreeLibSet.Forms.Docs
     #region Переопределенные методы
 
     /// <summary>
-    /// Метод возвращает !DBxDocValue.IsReadOnly, если в данный момент не активно "серое" значение поля.
+    /// Метод возвращает инвертированное значение <see cref="DBxDocValue.IsReadOnly"/>, если в данный момент не активно "серое" значение поля.
     /// </summary>
     /// <returns>true, если значение поля можно редактировать</returns>
     protected override bool GetEnabledState()
@@ -1034,7 +1034,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Шаблон заготовки для конкретных управляющих элементов для редактирования двух полей
-  /// Доопределяет свойство Control
+  /// Доопределяет свойство Control.
   /// </summary>
   /// <typeparam name="TValue1">Тип первого редактируемого значения</typeparam>
   /// <typeparam name="TValue2">Тип второго редактируемого значения</typeparam>
@@ -1051,7 +1051,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docValue2">Доступ к значению поля (второму)</param>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="useGrayCheckBox">Если true, то, если <paramref name="docValue1"/> или <paramref name="docValue2"/> содержит "серое" значение,
-    /// то будет создан дополнительный управляющий элемент CheckBox</param>
+    /// то будет создан дополнительный управляющий элемент <see cref="CheckBox"/></param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
     public TwoDocValueControl(DBxDocValue docValue1, DBxDocValue docValue2, TControlProvider controlProvider, bool useGrayCheckBox, bool canMultiEdit)

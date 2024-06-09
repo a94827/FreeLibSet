@@ -42,7 +42,7 @@ namespace FreeLibSet.Core
   }
 
   /// <summary>
-  /// Пустая реализация интерфейса INamedValuesAccess
+  /// Пустая реализация интерфейса <see cref="INamedValuesAccess"/>
   /// </summary>
   public sealed class DummyNamedValues:INamedValuesAccess
   {
@@ -84,8 +84,8 @@ namespace FreeLibSet.Core
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Расширение интерфейса INamedValuesAccess для доступа к значениям строки DataRow.
-  /// Реализуется классами DataTableValueArray и
+  /// Расширение интерфейса <see cref="INamedValuesAccess"/> для доступа к значениям строки <see cref="DataRow"/>.
+  /// Реализуется классами <see cref="DataTableValueArray"/> и <see cref="DataRowValueArray"/>.
   /// </summary>
   public interface IDataRowNamedValuesAccess : INamedValuesAccess
   {
@@ -97,10 +97,10 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Реализация интерфейса INamedValuesAccess для строк в таблице DataTable.
-  /// После создания объектов должно устанавливаться свойство CurrentRow, после чего можно получать доступ к значениям полей.
+  /// Реализация интерфейса <see cref="INamedValuesAccess"/> для строк в таблице <see cref="DataTable"/>.
+  /// После создания объектов должно устанавливаться свойство <see cref="CurrentRow"/>, после чего можно получать доступ к значениям полей.
   /// Класс не является потокобезопасным.
-  /// Если нет уверенности, что строки относятся к одной таблице, используйте класс DataRowValueArray
+  /// Если нет уверенности, что строки относятся к одной таблице, используйте класс <see cref="DataRowValueArray"/>.
   /// </summary>
   public class DataTableValueArray : IDataRowNamedValuesAccess
   {
@@ -126,12 +126,12 @@ namespace FreeLibSet.Data
     /// Таблица данных, заданная в конструкторе
     /// </summary>
     public DataTable Table { get { return _Table; } }
-    private DataTable _Table;
+    private readonly DataTable _Table;
 
     /// <summary>
     /// Текущая строка.
     /// Свойство должно быть установлено перед доступом к значениям.
-    /// Разрешается присваивать ссылки только на строки, относящиеся к таблице Table.
+    /// Разрешается присваивать ссылки только на строки, относящиеся к таблице <see cref="Table"/>.
     /// </summary>
     public DataRow CurrentRow
     {
@@ -178,7 +178,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить значение поля из текущей строки.
-    /// Свойство CurrentRow должно быть предварительно установлено.
+    /// Свойство <see cref="CurrentRow"/> должно быть предварительно установлено.
     /// </summary>
     /// <param name="name">Имя поля. Чувствительно к регистру</param>
     /// <returns>Значение поля</returns>
@@ -210,7 +210,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Возвращает список имен всех столбцов
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив имен</returns>
     public string[] GetNames()
     {
       string[] colNames = new string[Table.Columns.Count];
@@ -223,10 +223,11 @@ namespace FreeLibSet.Data
   }
 
   /// <summary>
-  /// Реализация интерфейса INamedValuesAccess для строк в таблице DataTable.
-  /// После создания объектов должно устанавливаться свойство CurrentRow, после чего можно получать доступ к значениям полей.
-  /// Если строка не установлена, считается, что массив значений пустой
+  /// Реализация интерфейса <see cref="INamedValuesAccess"/> для строк <see cref="DataRow"/>.
+  /// После создания объектов должно устанавливаться свойство <see cref="CurrentRow"/>, после чего можно получать доступ к значениям полей.
+  /// Если строка не установлена, считается, что массив значений пустой.
   /// Класс не является потокобезопасным.
+  /// Если требуется перебор строк в одной таблице <see cref="DataTable"/>, используйте <see cref="DataTableValueArray"/>.
   /// </summary>
   public class DataRowValueArray : IDataRowNamedValuesAccess
   {
@@ -249,7 +250,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Текущая строка.
     /// Свойство должно быть установлено перед доступом к значениям.
-    /// Разрешается присваивать ссылки на строки, относящиеся к разным таблицам
+    /// Разрешается присваивать ссылки на строки, относящиеся к разным таблицам.
     /// </summary>
     public DataRow CurrentRow
     {
@@ -271,7 +272,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Индексатор имен столбцов в таблице.
-    /// Может меняться при установке свойства CurrentRow
+    /// Может меняться при установке свойства <see cref="CurrentRow"/>.
     /// </summary>
     protected StringArrayIndexer ColumnNameIndexer
     {
@@ -303,7 +304,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить значение поля из текущей строки.
-    /// Свойство CurrentRow должно быть предварительно установлено.
+    /// Свойство <see cref="CurrentRow"/> должно быть предварительно установлено.
     /// </summary>
     /// <param name="name">Имя поля. Чувствительно к регистру</param>
     /// <returns>Значение поля</returns>
@@ -324,7 +325,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает true, если таблица содержит столбец с заданным именем
+    /// Возвращает true, если таблица содержит столбец с заданным именем.
+    /// Если свойство <see cref="CurrentRow"/>==null, возвращается false.
     /// </summary>
     /// <param name="name">Имя поля</param>
     /// <returns>Наличие поля</returns>

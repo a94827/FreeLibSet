@@ -902,7 +902,9 @@ namespace FreeLibSet.Forms
     /// <param name="currControl"></param>
     private void DoAttach(Control currControl)
     {
+#if !NET
       currControl.ContextMenu = null; // 11.07.2022. В Mono для TextBox назначается свое меню, которое "перевешивает" наше меню в ContextMenuStrip
+#endif
       currControl.ContextMenuStrip = Menu;
 
       if (currControl is UserControl)

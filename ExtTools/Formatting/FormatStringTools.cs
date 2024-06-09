@@ -114,6 +114,62 @@ namespace FreeLibSet.Formatting
 
     #endregion
 
+    #region Числовые диапазоны
+
+    // TODO: Может быть, стоит поместить в DateRangeFormatter, переименовав класс
+
+    /// <summary>
+    /// Временная реализация.
+    /// Возвращает текстовое представление для диапазона (числовых) значений.
+    /// Поддерживаются полуоткрытые интервалы.
+    /// Если <paramref name="minValue"/> и <paramref name="maxValue"/> вместе равны null, возвращается пустая строка.
+    /// Если тип <typeparamref name="T"/> реализует интерфейс <see cref="IFormattable"/>, то выполняется форматирование значения
+    /// с помощью заданных <paramref name="format"/> и <paramref name="formatProvider"/>. В противном случае выполняется преобразование в строку без форматирования.
+    /// </summary>
+    /// <typeparam name="T">Тип значения. Должен быть структурой</typeparam>
+    /// <param name="minValue">Минимальное значение или null</param>
+    /// <param name="maxValue">Максимальное значение или null</param>
+    /// <param name="format">Строка форматирования</param>
+    /// <param name="formatProvider">Провайдер форматирования</param>
+    /// <returns>Текстовое представление</returns>
+    public static string RangeToString<T>(T? minValue, T? maxValue, string format, IFormatProvider formatProvider)
+      where T : struct
+    {
+      string s1 = DoGetString<T>(minValue, format, formatProvider);
+      string s2 = DoGetString<T>(maxValue, format, formatProvider);
+      if (s1 != null && s2 != null)
+      {
+        if (minValue.Value.Equals(maxValue.Value))
+          return s1;
+        else
+          return s1 + " - " + s2;
+      }
+      else if (s1 != null)
+        return "От " + s1;
+      else if (s2 != null)
+        return "До " + s2;
+      else
+        return String.Empty;
+    }
+
+    private static string DoGetString<T>(T? value, string format, IFormatProvider formatProvider)
+      where T : struct
+    {
+      if (value.HasValue)
+      {
+        IFormattable v2 = value as IFormattable;
+        if (v2 == null)
+          return value.ToString();
+        else
+          return v2.ToString(format, formatProvider);
+      }
+      else
+        return null;
+    }
+
+
+    #endregion
+
     #region DateTime
 
     /// <summary>

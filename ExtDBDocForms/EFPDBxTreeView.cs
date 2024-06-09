@@ -23,24 +23,22 @@ namespace FreeLibSet.Forms.Docs
   #region EFPDBxTreeViewDocSelEventArgs
 
   /// <summary>
-  /// Аргументы события EFPDBxTreeView.GetDocSel
+  /// Аргументы события <see cref="EFPDBxTreeView.GetDocSel"/>
   /// </summary>
-  public class EFPDBxTreeViewDocSelEventArgs : EventArgs
+  public class EFPDBxTreeViewDocSelEventArgs : EFPDBxViewDocSelEventArgs
   {
     #region Конструктор
 
     /// <summary>
-    /// Конструктор вызывается из EFPDBxTreeView 
+    /// Конструктор вызывается из <see cref="EFPDBxTreeView"/> 
     /// </summary>
     /// <param name="controlProvider">Доступ провайдеру управляющего элемента</param>
     /// <param name="reason">Причина, по которой требуется создать выборку</param>
     /// <param name="nodes">Узлы, для которых требуется создать выборку документов.
     /// Если null, то берутся выбранные узлы TreeViewAdv.SelectedNodes</param>
-    public EFPDBxTreeViewDocSelEventArgs(EFPDBxTreeView controlProvider, EFPDBxGridViewDocSelReason reason, FreeLibSet.Controls.TreeNodeAdv[] nodes)
+    public EFPDBxTreeViewDocSelEventArgs(EFPDBxTreeView controlProvider, EFPDBxViewDocSelReason reason, FreeLibSet.Controls.TreeNodeAdv[] nodes)
+      :base(controlProvider, reason)
     {
-      _ControlProvider = controlProvider;
-      _DocSel = new DBxDocSelection(controlProvider.UI.DocProvider.DBIdentity);
-      _Reason = reason;
       _Nodes = nodes;
     }
 
@@ -51,8 +49,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Доступ провайдеру управляющего элемента
     /// </summary>
-    public EFPDBxTreeView ControlProvider { get { return _ControlProvider; } }
-    private EFPDBxTreeView _ControlProvider;
+    public new EFPDBxTreeView ControlProvider { get { return (EFPDBxTreeView)(base.ControlProvider); } }
 
     /// <summary>
     /// Узлы, для которых требуется создать выборку документов
@@ -63,8 +60,8 @@ namespace FreeLibSet.Forms.Docs
       {
         if (_Nodes == null)
         {
-          _Nodes = new TreeNodeAdv[_ControlProvider.Control.SelectedNodes.Count];
-          _ControlProvider.Control.SelectedNodes.CopyTo(_Nodes, 0);
+          _Nodes = new TreeNodeAdv[ControlProvider.Control.SelectedNodes.Count];
+          ControlProvider.Control.SelectedNodes.CopyTo(_Nodes, 0);
         }
         return _Nodes;
       }
@@ -72,136 +69,22 @@ namespace FreeLibSet.Forms.Docs
     private TreeNodeAdv[] _Nodes;
 
     /// <summary>
-    /// Строки таблицы данных, для которых должна быть получена выборка.
-    /// Если табличный просмотр не привязан к таблице данных, то массив содержит
-    /// значения null. Для таких просмотров следует использовать RowIndices или
-    /// GridRows
+    /// Создание списка строк таблицы <see cref="DataTable"/>, соответствующий <see cref="Nodes"/> 
     /// </summary>
-    public DataRow[] DataRows
+    /// <returns>Массив строк</returns>
+    protected override DataRow[] CreateDataRows()
     {
-      get
-      {
-        if (_DataRows == null)
-        {
-          _DataRows = new DataRow[Nodes.Length];
-          for (int i = 0; i < _DataRows.Length; i++)
-            _DataRows[i] = Nodes[i].Tag as DataRow;
-        }
-        return _DataRows;
-      }
-    }
-    private DataRow[] _DataRows;
-
-    /// <summary>
-    /// Причина, по которой требуется создать выборку
-    /// </summary>
-    public EFPDBxGridViewDocSelReason Reason { get { return _Reason; } }
-    private EFPDBxGridViewDocSelReason _Reason;
-
-    /// <summary>
-    /// Сюда должны быть добавлены ссылки на документы
-    /// </summary>
-    public DBxDocSelection DocSel { get { return _DocSel; } }
-    private DBxDocSelection _DocSel;
-
-    #endregion
-
-    #region Методы
-
-    /// <summary>
-    /// Добавить ссылки из поля таблицы
-    /// Проверяется наличие в таблице Rows[0].Table поля ColumnName; если поля
-    /// нет, то ничего не выполняется.
-    /// Для извлечения идентификаторов используется DataTools.GetIdsFromField()
-    /// Добавляется только ссылка на документ, без вызова обработчика ClientDocType.GetDocSel
-    /// </summary>
-    /// <param name="tableName">Имя таблицы документа ClientDocType</param>
-    /// <param name="columnName">Имя ссылочного поля в таблице просмотра</param>
-    public void AddFromColumn(string tableName, string columnName)
-    {
-      AddFromColumn(tableName, columnName, false);
-    }
-    /// <summary>
-    /// Добавить ссылки из поля таблицы
-    /// Проверяется наличие в таблице Rows[0].Table поля ColumnName; если поля
-    /// нет, то ничего не выполняется.
-    /// Для извлечения идентификаторов используется DataTools.GetIdsFromField()
-    /// Если UseHandler=true, то используется обработчик ClientDocType.GetDocSel,
-    /// при этом могут быть добавлены дополнительные ссылки. Если UseHandler=false,
-    /// то добавляется только ссылка на документ
-    /// </summary>
-    /// <param name="tableName">Имя таблицы документа ClientDocType</param>
-    /// <param name="columnName">Имя ссылочного поля в таблице просмотра</param>
-    /// <param name="useHandler">Если true, то используется обработчик GetDocSel</param>
-    public void AddFromColumn(string tableName, string columnName, bool useHandler)
-    {
-      if (!DataRows[0].Table.Columns.Contains(columnName))
-        return;
-
-      Int32[] ids = DataTools.GetIdsFromColumn(DataRows, columnName);
-      if (useHandler)
-      {
-        DocTypeUIBase dtb = ControlProvider.UI.DocTypes.FindByTableName(tableName);
-        if (dtb == null)
-          throw new ArgumentException("Неизвестный вид документа или поддокумента \"" + tableName + "\"", "tableName");
-
-        dtb.PerformGetDocSel(DocSel, ids, Reason);
-      }
-      else
-        DocSel.Add(tableName, ids);
-    }
-
-
-    /// <summary>
-    /// Загрузить из полей переменной ссылки "TableId" и "DocId"
-    /// Добавляется только ссылка на документ, без вызова обработчика ClientDocType.GetDocSel
-    /// </summary>
-    /// <param name="tableIdColumnName">Имя поля, содержащего идентификатор таблицы документов (свойство DBxDocType.TableId)</param>
-    /// <param name="docIdColumnName">Имя поля, содержащего идентификатор документа</param>
-    public void AddFromVTReference(string tableIdColumnName, string docIdColumnName)
-    {
-      AddFromVTReference(tableIdColumnName, docIdColumnName, false);
-    }
-
-    /// <summary>
-    /// Загрузить из полей переменной ссылки "TableId" и "DocId"
-    /// Если UseHandler=true, то используется обработчик ClientDocType.GetDocSel,
-    /// при этом могут быть добавлены дополнительные ссылки. Если UseHandler=false,
-    /// то добавляется только ссылка на документ
-    /// </summary>
-    /// <param name="tableIdColumnName">Имя поля, содержащего идентификатор таблицы документов (свойство DBxDocType.TableId)</param>
-    /// <param name="docIdColumnName">Имя поля, содержащего идентификатор документа</param>
-    /// <param name="useHandler">Если true, то используется обработчик GetDocSel</param>
-    public void AddFromVTReference(string tableIdColumnName, string docIdColumnName, bool useHandler)
-    {
-      int pTable = DataRows[0].Table.Columns.IndexOf(tableIdColumnName);
-      int pId = DataRows[0].Table.Columns.IndexOf(docIdColumnName);
-      if (pTable < 0 || pId < 0)
-        return;
-
-      for (int i = 0; i < DataRows.Length; i++)
-      {
-        Int32 tableId = DataTools.GetInt(DataRows[i][pTable]);
-        Int32 docId = DataTools.GetInt(DataRows[i][pId]);
-        if (tableId != 0 && docId != 0)
-        {
-          DocTypeUI dtui = ControlProvider.UI.DocTypes.FindByTableId(tableId);
-          if (dtui != null)
-          {
-            if (useHandler)
-              dtui.PerformGetDocSel(DocSel, docId, Reason);
-            else
-              DocSel.Add(dtui.DocType.Name, docId);
-          }
-        }
-      }
+      DataRow[] rows = new DataRow[Nodes.Length];
+      for (int i = 0; i < rows.Length; i++)
+        rows[i] = Nodes[i].Tag as DataRow;
+      return rows;
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события EFPDBxTreeView.GetDocSel
+  /// Делегат события <see cref="EFPDBxTreeView.GetDocSel"/>
   /// </summary>
   /// <param name="sender">Провайдер иерархического просмотра</param>
   /// <param name="args">Аргументы события</param>
@@ -264,7 +147,7 @@ namespace FreeLibSet.Forms.Docs
     #region SelectedIds
 
     /// <summary>
-    /// Возвращает ITreeModelWithIds  или выбрасывает исключение
+    /// Возвращает <see cref="ITreeModelWithIds{Int32}"/> или выбрасывает исключение
     /// </summary>
     /// <returns>Модель</returns>
     protected ITreeModelWithIds<Int32> GetModelWithIdsWithCheck()
@@ -334,7 +217,6 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-
     private Int32[] _DelayedSelectedIds;
 
     /// <summary>
@@ -380,7 +262,6 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-
     private Int32 _DelayedCurrentId;
 
     /// <summary>
@@ -408,12 +289,10 @@ namespace FreeLibSet.Forms.Docs
 
     private bool _SelectionChangedFlag;
 
-
     void Control_SelectionChanged(object sender, EventArgs args)
     {
       _SelectionChangedFlag = true;
     }
-
 
     /// <summary>
     /// Помечает категорию "TreeView" для сохранения текущей позиции
@@ -431,7 +310,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет в список категорию "TreeView", если свойство SaveCurrentId установлено в true.
+    /// Добавляет в список категорию "TreeView", если свойство <see cref="SaveCurrentId"/> установлено в true.
     /// </summary>
     /// <param name="categories">Список категорий для заполнения</param>
     /// <param name="rwMode">Режим чтения или записи</param>
@@ -490,11 +369,11 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Управляющее свойство.
     /// Если установлено в true (по умолчанию), то при выводе элемента на экран устанавливается значение
-    /// CurrentId, сохраненное в конфигурационных данных. Установка не выполняется, если свойство CurrentId
-    /// предварительно было установлено в явном виде. При закрытии просмотра выполняется сохранение значения
-    /// Игнорируется, если свойство ConfigSectionName не установлено
-    /// Свойство SaveCurrentId можно устанавливать только до вывода элемента на экран
-    /// Данные хранятся в секции конфигурации с категорией "GridView" в числовом поле "CurrentId"
+    /// <see cref="CurrentId"/>, сохраненное в конфигурационных данных. Установка не выполняется, если свойство <see cref="CurrentId"/>
+    /// предварительно было установлено в явном виде. При закрытии просмотра выполняется сохранение значения.
+    /// Игнорируется, если свойство <see cref="EFPControlBase.ConfigSectionName"/> не установлено.
+    /// Свойство <see cref="SaveCurrentId"/> можно устанавливать только до вывода элемента на экран.
+    /// Данные хранятся в секции конфигурации с категорией "GridView" в числовом поле "CurrentId".
     /// </summary>
     public bool SaveCurrentId
     {
@@ -530,7 +409,6 @@ namespace FreeLibSet.Forms.Docs
       }
     }
 
-
     #endregion
 
     #region UI
@@ -549,9 +427,9 @@ namespace FreeLibSet.Forms.Docs
     /// Коллекция фильтров для табличного просмотра. Если есть хотя бы один фильтр,
     /// то в локальном меню появляется команда "Фильтр". После установки пользователем
     /// фильтра вызывается обновление просмотра. Ответственность за обработку
-    /// фильтров лежит на вызывающей программе
+    /// фильтров лежит на вызывающей программе.
     /// Чтобы проверить наличие возможных фильтров, следует использовать свойство
-    /// HasFilters, которое позволяет избежать создания лишних объектов
+    /// <see cref="EFPConfigurableDataTreeView.HasFilters"/>, которое позволяет избежать создания лишних объектов.
     /// </summary>
     public new GridFilters Filters
     {
@@ -560,17 +438,17 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает объект GridFilters
+    /// Создает объект <see cref="GridFilters"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Список фильтров</returns>
     protected override IEFPGridFilters CreateGridFilters()
     {
       return new GridFilters();
     }
 
     /// <summary>
-    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров
-    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню
+    /// Вызывается для дополнительной инициализации табличного просмотра в редакторе фильтров.
+    /// Переопределеннный метод может, например, инициализировать дополнительные команды меню.
     /// </summary>
     /// <param name="filterGridProvider">Обработчик таблицы фильтров</param>
     public override void InitGridFilterEditorGridView(EFPGridFilterEditorGridView filterGridProvider)
@@ -638,7 +516,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Генератор столбцов таблицы. Если задан, то в локальном меню доступны
-    /// команды настройки столбцов таблицы
+    /// команды настройки столбцов таблицы.
     /// </summary>
     public new EFPGridProducer GridProducer
     {
@@ -949,7 +827,7 @@ namespace FreeLibSet.Forms.Docs
     public new EFPDBxTreeViewCommandItems CommandItems { get { return (EFPDBxTreeViewCommandItems)(base.CommandItems); } }
 
     /// <summary>
-    /// Создает объект EFPDBxTreeViewCommandItems
+    /// Создает объект <see cref="EFPDBxTreeViewCommandItems"/>
     /// </summary>
     /// <returns>Список команд</returns>
     protected override EFPControlCommandItems CreateCommandItems()
@@ -963,15 +841,15 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если обработчик установлен, то при копировании ячеек в буфер обмена будет
-    /// помещена выборка документоа (объект DBxDocSelection).
+    /// помещена выборка документов (объект <see cref="DBxDocSelection"/>).
     /// Также будет добавлена команда "Отправить" -> "Выборка"
     /// </summary>
     public event EFPDBxTreeViewDocSelEventHandler GetDocSel;
 
     /// <summary>
-    /// В случае пеоеопределения метода также должно быть переопределено свойство HasGetDocSelHandler
+    /// В случае пеоеопределения метода также должно быть переопределено свойство <see cref="HasGetDocSelHandler"/>
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Аргументы события</param>
     protected virtual void OnGetDocSel(EFPDBxTreeViewDocSelEventArgs args)
     {
       if (GetDocSel != null)
@@ -979,16 +857,16 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если есть установленный обработчик GetDocSel
+    /// Возвращает true, если есть установленный обработчик <see cref="GetDocSel"/>
     /// </summary>
     public virtual bool HasGetDocSelHandler { get { return GetDocSel != null; } }
 
     /// <summary>
-    /// Создание выборки документов для выбранных узлов TreeViewAdv.SelectedNodes
+    /// Создание выборки документов для выбранных узлов <see cref="TreeViewAdv.SelectedNodes"/>
     /// </summary>
     /// <param name="reason">Причина создания выборки</param>
     /// <returns>Выборка документов</returns>
-    public DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason)
+    public DBxDocSelection CreateDocSel(EFPDBxViewDocSelReason reason)
     {
       return CreateDocSel(reason, null);
     }
@@ -998,9 +876,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="reason">Причина создания выборки</param>
     /// <param name="nodes">Список узлов.
-    /// Если null, то используются выбранные узлы TreeViewAdv.SelectedNodes</param>
+    /// Если null, то используются выбранные узлы <see cref="TreeViewAdv.SelectedNodes"/></param>
     /// <returns>Выборка документов</returns>
-    public DBxDocSelection CreateDocSel(EFPDBxGridViewDocSelReason reason, TreeNodeAdv[] nodes)
+    public DBxDocSelection CreateDocSel(EFPDBxViewDocSelReason reason, TreeNodeAdv[] nodes)
     {
       //if (GetDocSel == null)
       if (!HasGetDocSelHandler) // 22.02.2018
@@ -1076,7 +954,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет кнопку "Выборка документов" в диалог поиска текста
     /// </summary>
-    /// <returns>Объект EFPDBxGridViewSearchContext</returns>
+    /// <returns>Объект <see cref="EFPDBxTreeViewSearchContext"/></returns>
     protected override IEFPTextSearchContext CreateTextSearchContext()
     {
       return new EFPDBxTreeViewSearchContext(this);
@@ -1089,9 +967,9 @@ namespace FreeLibSet.Forms.Docs
     // TODO: Возможно, есть смысл перенести в EFPTreeViewAdv
 
     /// <summary>
-    /// Обработчик события NodeStateIcon.ValueNeeded.
-    /// Вызывает виртуальный метод GetNodeImageKey(). Если метод вернул непустую строку,
-    /// используется изображение из EFPApp.Images. Иначе будет использовано изображение по умолчанию 
+    /// Обработчик события <see cref="BindableControl.ValueNeeded"/> для <see cref="NodeStateIcon"/>.
+    /// Вызывает виртуальный метод <see cref="GetNodeImageKey(TreeNodeAdv)"/>. Если метод вернул непустую строку,
+    /// используется изображение из <see cref="EFPApp.MainImages"/>. Иначе будет использовано изображение по умолчанию.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -1104,7 +982,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Переопределенный метод может возвращать изображение для узла.
-    /// Изображение должно быть в списке EFPApp.MainImages.
+    /// Изображение должно быть в списке <see cref="EFPApp.MainImages"/>.
     /// Базовый метод возвращает пустую строку. В этом случае используется стандартное изображение для узла.
     /// </summary>
     /// <param name="node">Узел, для которого требуется изображение</param>
@@ -1118,7 +996,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Команды локального меню для иерархического просмотра EFPDBxTreeView
+  /// Команды локального меню для иерархического просмотра <see cref="EFPDBxTreeView"/>
   /// </summary>
   public class EFPDBxTreeViewCommandItems : EFPConfigurableDataTreeViewCommandItems
   {
@@ -1160,7 +1038,7 @@ namespace FreeLibSet.Forms.Docs
     public new EFPDBxTreeView ControlProvider { get { return (EFPDBxTreeView)(base.ControlProvider); } }
 
     /// <summary>
-    /// Установка свойств EFPCommandItem.Usage
+    /// Установка свойств <see cref="EFPCommandItem.Usage"/>
     /// </summary>
     protected override void OnPrepare()
     {
@@ -1175,13 +1053,13 @@ namespace FreeLibSet.Forms.Docs
     #region Буфер обмена
 
     /// <summary>
-    /// Добавляет к буферу обмена формат выборки документов DBxDocSelection, если
-    /// метод EFPDBxTreeView.CreateDocSel() возвращает значение, отличное от null.
+    /// Добавляет к буферу обмена формат выборки документов <see cref="DBxDocSelection"/>, если
+    /// метод <see cref="EFPDBxTreeView.CreateDocSel(EFPDBxViewDocSelReason)"/> возвращает значение, отличное от null.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected override void OnAddCopyFormats(DataObjectEventArgs args)
     {
-      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.Copy);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.Copy);
       if (docSel != null)
       {
         args.DataObject.SetData(docSel);
@@ -1199,7 +1077,7 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {
-      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo);
+      DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
         EFPApp.ShowTempMessage("Выборка не содержит документов");

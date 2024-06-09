@@ -11,7 +11,7 @@ namespace FreeLibSet.Core
   /// <summary>
   /// Структура для подсчета минимального и максимального значений целого числа.
   /// Используйте оператор "+" для добавления значений.
-  /// Используйте методы DataTools.MinMaxInt() для получения диапазонов значений из поля таблицы и массивов.
+  /// Используйте методы <see cref="o:DataTools.MinMaxInt()"/> для получения диапазонов значений из поля таблицы и массивов.
   /// </summary>
   [Serializable]
   public struct MinMax<T>
@@ -20,7 +20,7 @@ namespace FreeLibSet.Core
     #region Конструкторы
 
     /// <summary>
-    /// Устанавливает MinValue и MaxValue равными заданному значению
+    /// Устанавливает <see cref="MinValue"/> и <see cref="MaxValue"/> равными заданному значению
     /// </summary>
     /// <param name="value">Значение</param>
     public MinMax(T value)
@@ -31,7 +31,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Устанавливает значения свойств MinValue и MaxValue.
+    /// Устанавливает значения свойств <see cref="MinValue"/> и <see cref="MaxValue"/>.
     /// </summary>
     /// <param name="minValue">Минимальное значение диапазона</param>
     /// <param name="maxValue">Максимальное значение диапазона</param>
@@ -47,7 +47,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Если задана непустая коллекция значений, то устанавливает минимальное и максимальное значения.
-    /// Иначе структура будет пустой
+    /// Иначе структура будет пустой.
     /// </summary>
     /// <param name="items"></param>
     public MinMax(IEnumerable<T> items)
@@ -87,25 +87,25 @@ namespace FreeLibSet.Core
     /// Возвращает false, если для структуры использовался конструктор по умолчанию.
     /// </summary>
     public bool HasValue { get { return _HasValue; } }
-    private bool _HasValue;
+    private readonly bool _HasValue;
 
     /// <summary>
     /// Возвращает минимальное значение диапазона.
-    /// Свойство имеет смысл, только если HasValue=true.
+    /// Свойство имеет смысл, только если <see cref="HasValue"/>=true.
     /// </summary>
     public T MinValue { get { return _MinValue; } }
-    private T _MinValue;
+    private readonly T _MinValue;
 
     /// <summary>
     /// Возвращает максимальное значение диапазона.
-    /// Свойство имеет смысл, только если HasValue=true.
+    /// Свойство имеет смысл, только если <see cref="HasValue"/>=true.
     /// </summary>
     public T MaxValue { get { return _MaxValue; } }
-    private T _MaxValue;
+    private readonly T _MaxValue;
 
     /// <summary>
-    /// Возвращает строку вида "(MinValue:MaxValue)".
-    /// Возвращает "()", если HasValue=false.
+    /// Возвращает строку вида "(<see cref="MinValue"/>:<see cref="MaxValue"/>)".
+    /// Возвращает "()", если <see cref="HasValue"/>=false.
     /// </summary>
     /// <returns>Текстовое представление диапазона</returns>
     public override string ToString()
@@ -196,7 +196,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразует в диапазон другого типа.
-    /// Преобразование выполняется методом Convert.ChangheType().
+    /// Преобразование выполняется методом <see cref="System.Convert.ChangeType(object, Type)"/>.
     /// </summary>
     /// <typeparam name="TRes">Тип данных для нового диапазона</typeparam>
     /// <returns>Новый диапазон</returns>
@@ -216,7 +216,7 @@ namespace FreeLibSet.Core
     #region Дополнительные свойства
 
     /// <summary>
-    /// Возвращает MinValue или null, если диапазон пустой
+    /// Возвращает <see cref="MinValue"/> или null, если диапазон пустой
     /// </summary>
     public T? NullableMinValue
     {
@@ -230,7 +230,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает MaxValue или null, если диапазон пустой
+    /// Возвращает <see cref="MaxValue"/> или null, если диапазон пустой
     /// </summary>
     public T? NullableMaxValue
     {

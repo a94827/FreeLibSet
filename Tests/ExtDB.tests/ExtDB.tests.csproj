@@ -72,6 +72,8 @@
     <Compile Include="DBxTableStructTests.cs" />
     <Compile Include="IdsFilterGeneratorTests.cs" />
     <Compile Include="NotNullFilterTests.cs" />
+    <Compile Include="NumRangeCrossFilterTests.cs" />
+    <Compile Include="NumRangeInclusionFilterTests.cs" />
     <Compile Include="NumRangeFilterTests.cs" />
     <Compile Include="OrFilterTests.cs" />
     <Compile Include="AndFilterTests.cs" />

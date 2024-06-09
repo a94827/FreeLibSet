@@ -15,7 +15,7 @@ namespace FreeLibSet.Forms.Docs
   #region SubDocEditEventHandler
 
   /// <summary>
-  /// Аргументы событий, связанных с редактированием поддкокументы
+  /// Аргументы событий, связанных с редактированием поддкокументов
   /// </summary>
   public class SubDocEditEventArgs : EventArgs
   {
@@ -25,7 +25,7 @@ namespace FreeLibSet.Forms.Docs
     /// Не создается в пользовательском коде
     /// </summary>
     /// <param name="editor">Редактор поддокумента</param>
-    public SubDocEditEventArgs(SubDocumentEditor editor)
+    internal SubDocEditEventArgs(SubDocumentEditor editor)
     {
       _Editor = editor;
     }
@@ -38,7 +38,7 @@ namespace FreeLibSet.Forms.Docs
     /// Редактор поддокумента
     /// </summary>
     public SubDocumentEditor Editor { get { return _Editor; } }
-    private SubDocumentEditor _Editor;
+    private readonly SubDocumentEditor _Editor;
 
     /// <summary>
     /// Редактор основного документа
@@ -49,14 +49,14 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегаты событий, связанных с редактированием поддкокументы
+  /// Делегаты событий, связанных с редактированием поддкокументов
   /// </summary>
   /// <param name="sender">Вызывающий объект</param>
   /// <param name="args">Аргументы события</param>
   public delegate void SubDocEditEventHandler(object sender, SubDocEditEventArgs args);
 
   /// <summary>
-  /// Аргументы события SubDocumentEditor.BeforeWrite
+  /// Аргументы события <see cref="SubDocumentEditor.BeforeWrite"/>
   /// </summary>
   public class SubDocEditCancelEventArgs : SubDocEditEventArgs
   {
@@ -66,7 +66,7 @@ namespace FreeLibSet.Forms.Docs
     /// Не создается в пользовательском коде.
     /// </summary>
     /// <param name="editor">Редактор поддокумента</param>
-    public SubDocEditCancelEventArgs(SubDocumentEditor editor)
+    internal SubDocEditCancelEventArgs(SubDocumentEditor editor)
       : base(editor)
     {
       _Cancel = false;
@@ -86,7 +86,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события SubDocumentEditor.BeforeWrite
+  /// Делегат события <see cref="SubDocumentEditor.BeforeWrite"/>
   /// </summary>
   /// <param name="sender">Редактор поддокумента</param>
   /// <param name="args">Аргументы события</param>
@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms.Docs
   #region BeforeSubDocEditEventHandler
 
   /// <summary>
-  /// Аргументы события SubDocTypeUI.BeforeEdit
+  /// Аргументы события <see cref="SubDocTypeUI.BeforeEdit"/>
   /// </summary>
   public class BeforeSubDocEditEventArgs : SubDocEditEventArgs
   {
@@ -122,8 +122,8 @@ namespace FreeLibSet.Forms.Docs
     private bool _Cancel;
 
     /// <summary>
-    /// Установка этого поля в false приводит к пропуску работы редактора
-    /// Сразу выполняется запись значений полей, установленных в Editor.Values
+    /// Установка этого поля в false приводит к пропуску работы редактора.
+    /// Сразу выполняется запись значений полей.
     /// </summary>
     public bool ShowEditor { get { return _ShowEditor; } set { _ShowEditor = value; } }
     private bool _ShowEditor;
@@ -132,9 +132,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события SubDocTypeUI.BeforeEdit
+  /// Делегат события <see cref="SubDocTypeUI.BeforeEdit"/>
   /// </summary>
-  /// <param name="sender">Интерфейс поддокументов SubDicTypeUI</param>
+  /// <param name="sender">Интерфейс поддокументов <see cref="SubDocTypeUI"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void BeforeSubDocEditEventHandler(object sender, BeforeSubDocEditEventArgs args);
 
@@ -143,7 +143,7 @@ namespace FreeLibSet.Forms.Docs
   #region PasteSubDocRowsEventHandler
 
   /// <summary>
-  /// Аргументы события SubDocTypeUI.AdjustPastedRow
+  /// Аргументы события <see cref="SubDocTypeUI.AdjustPastedRow"/>
   /// </summary>
   public class PasteSubDocRowsEventArgs : EventArgs
   {
@@ -167,39 +167,39 @@ namespace FreeLibSet.Forms.Docs
     public DBxSingleDoc MainDoc { get { return _SubDocs.Doc; } }
 
     /// <summary>
-    /// Список поддокументов, для которого нужно вызывать метод Insert()
+    /// Список поддокументов, для которых нужно вызывать метод <see cref="DBxSingleSubDocs.Insert()"/>.
     /// </summary>
     public DBxSingleSubDocs SubDocs { get { return _SubDocs; } }
-    private DBxSingleSubDocs _SubDocs;
+    private readonly DBxSingleSubDocs _SubDocs;
 
     /// <summary>
     /// Исходные строки (которые могут содержать посторонние поля или не содержать нужные поля),
     /// откуда взяты значения. Нельзя изменять.
     /// </summary>
     public DataRow[] SourceRows { get { return _SourceRows; } }
-    private DataRow[] _SourceRows;
+    private readonly DataRow[] _SourceRows;
 
     /// <summary>
     /// Имя исходной таблицы документа или поддокумента поддокумента, откуда вставляются строки
     /// </summary>
     public string SourceTableName { get { return _SourceTableName; } }
-    private string _SourceTableName;
+    private readonly string _SourceTableName;
 
     /// <summary>
-    /// Исходный вставляемый набор данных. Нельзя изменять
+    /// Исходный вставляемый набор данных. Нельзя изменять.
     /// </summary>
     public DataSet SourceDataSet { get { return _SourceRows[0].Table.DataSet; } }
 
     /// <summary>
     /// Провайдер табличного или иерархического просмотра, для которого выполняется вставка.
-    /// Может быть null, если метод SubDocTypeUI.PerformPasteRows() вызывается из прикладного кода.
+    /// Может быть null, если метод <see cref="SubDocTypeUI.PerformPasteRows(DBxSingleSubDocs, DataRow[], DocTypeUIBase, IEFPSubDocView)"/> вызывается из прикладного кода.
     /// </summary>
     public IEFPSubDocView ControlProvider { get { return _ControlProvider; } }
-    private IEFPSubDocView _ControlProvider;
+    private readonly IEFPSubDocView _ControlProvider;
 
     /// <summary>
     /// Свойство должно быть установлено в true по окончании добавления строк.
-    /// В противном случае будет использован стандартный механизм вставки с использованием события SubDocTypeUI.AdjustPastedSubDocRow
+    /// В противном случае будет использован стандартный механизм вставки с использованием события <see cref="SubDocTypeUI.AdjustPastedRow"/>.
     /// </summary>
     public bool Handled { get { return _Handled; } set { _Handled = value; } }
     private bool _Handled;
@@ -208,9 +208,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события SubDocTypeUI.PasteSubDocRows
+  /// Делегат события <see cref="SubDocTypeUI.PasteRows"/>
   /// </summary>
-  /// <param name="sender">Интерфейс поддокументов SubDocTypeUI</param>
+  /// <param name="sender">Интерфейс поддокументов <see cref="SubDocTypeUI"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void PasteSubDocRowsEventHandler(object sender, PasteSubDocRowsEventArgs args);
 
@@ -219,7 +219,7 @@ namespace FreeLibSet.Forms.Docs
   #region AdjustPastedSubDocRowEventHandler
 
   /// <summary>
-  /// Аргументы события SubDocTypeUI.AdjustPastedRow
+  /// Аргументы события <see cref="SubDocTypeUI.AdjustPastedRow"/>
   /// </summary>
   public class AdjustPastedSubDocRowEventArgs : CancelEventArgs
   {
@@ -248,19 +248,19 @@ namespace FreeLibSet.Forms.Docs
     /// Основной документ, куда будет добавлена строка поддокумента
     /// </summary>
     public DBxSingleDoc MainDoc { get { return _MainDoc; } }
-    private DBxSingleDoc _MainDoc;
+    private readonly DBxSingleDoc _MainDoc;
 
     /// <summary>
     /// Поддокумент, куда можно внести изменения, установив или очистив неподходящие
     /// значения
     /// </summary>
     public DBxSubDoc SubDoc { get { return _SubDoc; } }
-    private DBxSubDoc _SubDoc;
+    private readonly DBxSubDoc _SubDoc;
 
     /// <summary>
     /// Свойство возвращает true, если в исходной таблице находится только одна строка,
     /// поэтому после вставки будет открыт редактор, а не выполнена прямая запись поддокументов.
-    /// Это позволяет оставить строку, даже если в ней не заполнены какие-либо важные поля
+    /// Это позволяет оставить строку, даже если в ней не заполнены какие-либо важные поля.
     /// </summary>
     public bool EditorWillBeOpen
     {
@@ -272,40 +272,40 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Исходная строка (которая может содержать посторонние поля или не содержать нужные поля),
-    /// откуда взяты значения. Нельзя изменять
+    /// откуда взяты значения. Нельзя изменять.
     /// </summary>
     public DataRow SourceRow { get { return _SourceRow; } }
-    private DataRow _SourceRow;
+    private readonly DataRow _SourceRow;
 
     /// <summary>
     /// Возвращает true для первой строки в операции вставки. Если требуется
     /// запрашивать у пользователя дополнительные данные, то это следует делать
-    /// при обработке первой строки, затем использовать сохраненные значения
+    /// при обработке первой строки, затем использовать сохраненные значения.
     /// </summary>
     public bool IsFirstRow { get { return _IsFirstRow; } }
-    private bool _IsFirstRow;
+    private readonly bool _IsFirstRow;
 
     /// <summary>
-    /// Исходный вставляемый набор данных. Нельзя изменять
+    /// Исходный вставляемый набор данных. Нельзя изменять.
     /// </summary>
     public DataSet SourceDataSet { get { return _SourceRow.Table.DataSet; } }
 
     /// <summary>
-    /// Имя исходной таблицы документа или поддокумента поддокумента, откуда вставляются строки
+    /// Имя исходной таблицы документа или поддокумента поддокумента, откуда вставляются строки.
     /// </summary>
     public string SourceTableName { get { return _SourceTableName; } }
-    private string _SourceTableName;
+    private readonly string _SourceTableName;
 
     /// <summary>
     /// Провайдер табличного или иерархического просмотра, для которого выполняется вставка.
-    /// Может быть null, если метод SubDocTypeUI.PerformPasteRows() вызывается из прикладного кода.
+    /// Может быть null, если метод <see cref="SubDocTypeUI.PerformPasteRows(DBxSingleSubDocs, DataRow[], DocTypeUIBase, IEFPSubDocView)"/> вызывается из прикладного кода.
     /// </summary>
     public IEFPSubDocView ControlProvider { get { return _ControlProvider; } }
-    private IEFPSubDocView _ControlProvider;
+    private readonly IEFPSubDocView _ControlProvider;
 
     /// <summary>
     /// Сюда может быть помещено сообщение, почему нельзя вставить строку
-    /// (при установке свойства Cancel=true)
+    /// (при установке свойства <see cref="CancelEventArgs.Cancel"/>=true)
     /// </summary>
     public string ErrorMessage { get { return _ErrorMessage; } set { _ErrorMessage = value; } }
     private string _ErrorMessage;
@@ -314,9 +314,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события SubDocTypeUI.AdjustPastedRow
+  /// Делегат события <see cref="SubDocTypeUI.AdjustPastedRow"/>
   /// </summary>
-  /// <param name="sender">Интерфейс поддокументов SubDocTypeUI</param>
+  /// <param name="sender">Интерфейс поддокументов <see cref="SubDocTypeUI"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void AdjustPastedSubDocRowEventHandler(object sender, AdjustPastedSubDocRowEventArgs args);
 
@@ -401,13 +401,13 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс документов, к которому относятся поддокументы
     /// </summary>
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
-    private DocTypeUI _DocTypeUI;
+    private /*readonly*/ DocTypeUI _DocTypeUI;
 
     /// <summary>
     /// Описание вида поддокументов
     /// </summary>
     public DBxSubDocType SubDocType { get { return _SubDocType; } }
-    private DBxSubDocType _SubDocType;
+    private /*readonly*/ DBxSubDocType _SubDocType;
 
     /// <summary>
     /// Описание вида документов, к которым относятся поддокументы
@@ -434,7 +434,7 @@ namespace FreeLibSet.Forms.Docs
     /// Обычно в прикладном коде сюда следует добавить описания столбцов
     /// </summary>
     public EFPSubDocTypeGridProducer GridProducer { get { return _GridProducer; } }
-    private EFPSubDocTypeGridProducer _GridProducer;
+    private readonly EFPSubDocTypeGridProducer _GridProducer;
 
     #endregion
 
@@ -456,13 +456,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Инициализация табличного просмотра поддокументов, не связанного с просмотром поддокументов
-    /// на странице редактора основного документа
+    /// на странице редактора основного документа.
     /// </summary>
     /// <param name="controlProvider">Провайдер табличного просмотра, для которого выполняется инициализация</param>
     /// <param name="reInit">False - первоначальная инициализация при выводе просмотра на экран.
     /// True - повторная инициализация после настройки табличного просмотра пользователем</param>
     /// <param name="columns">Сюда добавляются имена столбцов, которые должны присутствовать в таблице данных</param>
-    /// <param name="userInitData">Пользовательские даннные, передаваемые обработчику события SubDocTypeUI.InitView</param>
+    /// <param name="userInitData">Пользовательские даннные, передаваемые обработчику события <see cref="SubDocTypeUI.InitView"/></param>
     public void PerformInitGrid(EFPDBxGridView controlProvider, bool reInit, DBxColumnList columns, object userInitData)
     {
       PerformInitGrid(controlProvider, reInit, columns, userInitData, false, false);
@@ -475,11 +475,11 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="reInit">False - первоначальная инициализация при выводе просмотра на экран.
     /// True - повторная инициализация после настройки табличного просмотра пользователем</param>
     /// <param name="columns">Сюда добавляются имена столбцов, которые должны присутствовать в таблице данных</param>
-    /// <param name="userInitData">Пользовательские даннные, передаваемые обработчику события SubDocTypeUI.InitView</param>
+    /// <param name="userInitData">Пользовательские даннные, передаваемые обработчику события <see cref="SubDocTypeUI.InitView"/></param>
     /// <param name="showDocId">Если true, то будет добавлен столбец "DocId", независимо от установленного
-    /// свойства DBUI.DebugShowIds. Используется EFPSubDocGridView, когда отображаются поддокументы
+    /// свойства <see cref="DBUI.DebugShowIds"/>. Используется <see cref="EFPSubDocGridView"/>, когда отображаются поддокументы
     /// при групповом редактировании документов</param>
-    /// <param name="isSubDocsGrid">True. если инициализация выполняется для EFPSubDocGridView.
+    /// <param name="isSubDocsGrid">True. если инициализация выполняется для <see cref="EFPSubDocGridView"/>.
     /// False, если инициализация выполняется для просмотра, не связанного с 
     /// поддокументами на странице редактора основного документа</param>
     public void PerformInitGrid(EFPDBxGridView controlProvider, bool reInit, DBxColumnList columns, object userInitData, bool showDocId, bool isSubDocsGrid)
@@ -601,7 +601,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Вызывается при инициализации таблицы просмотра поддокументов
     /// для добавления столбцов. Если обработчик не установлен, выполняется
-    /// инициализация по умолчанию
+    /// инициализация по умолчанию.
     /// </summary>
     public event InitEFPDBxViewEventHandler InitView;
 
@@ -724,7 +724,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получить список столбцов, необходимых для табличного просмотра с заданной конфигурации
-    /// Заполняется такой же список столбов, как и в методе DoInitGrid(), но без создания самого просмотра
+    /// Заполняется такой же список столбов, как и в методе <see cref="PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object, bool, bool)"/>, но без создания самого просмотра
     /// </summary>
     /// <param name="columns">Заполняемый список столбцов</param>
     /// <param name="config">Конфигурация табличного просмотра. Если null, то используется конфигурация по умолчанию</param>
@@ -753,13 +753,13 @@ namespace FreeLibSet.Forms.Docs
     #region Основной метод
 
     /// <summary>
-    /// Инициализация иерархического просмотра поддокументов EFPSubDocTreeView
+    /// Инициализация иерархического просмотра поддокументов <see cref="EFPSubDocTreeView"/>.
     /// </summary>
     /// <param name="controlProvider">Инициализируемый провайдер просмотра</param>
     /// <param name="reInit">False - первоначальная инициализация при выводе просмотра на экран.
     /// True - повторная инициализация после настройки табличного просмотра пользователем</param>
     /// <param name="columns">Сюда добавляются имена столбцов, которые должны присутствовать в таблице данных</param>
-    /// <param name="userInitData">Пользовательские даннные, передаваемые обработчику события SubDocTypeUI.InitView</param>
+    /// <param name="userInitData">Пользовательские даннные, передаваемые обработчику события <see cref="SubDocTypeUI.InitView"/></param>
     public void PerformInitTree(EFPSubDocTreeView controlProvider, bool reInit, DBxColumnList columns, object userInitData)
     {
       if (!reInit)
@@ -904,7 +904,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получить идентификаторы всех поддокументов, кроме удаленных, для документа
-    /// с заданным идентифкатором
+    /// с заданным идентификатором.
     /// </summary>
     /// <param name="docId">Идентификатор основного документа. Не может быть 0</param>
     /// <returns>Массив идентификаторов поддокументов</returns>
@@ -937,8 +937,9 @@ namespace FreeLibSet.Forms.Docs
     #region Выбор поддокумента
 
     /// <summary>
-    /// Выбор поддокумента в процессе редактирования документа
-    /// Позволяет выбирать поддокумент из загруженного в память набора DBxDocSet
+    /// Выбор поддокумента в процессе редактирования документа.
+    /// Позволяет выбирать поддокумент из загруженного в память набора <see cref="DBxDocSet"/>.
+    /// Используйте класс <see cref="SubDocSelectDialog"/> для задания дополнительных параметров.
     /// </summary>
     /// <param name="subDocs">Список поддокументов, из которых можно выбирать</param>
     /// <param name="subDocId">Вход и выход: Идентификатор выбраного поддокумента.
@@ -1010,7 +1011,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выбор поддокумента в процессе редактирования документа
-    /// Позволяет выбирать поддокументы из загруженного в память набора DBxDocSet
+    /// Позволяет выбирать поддокументы из загруженного в память набора <see cref="DBxDocSet"/>.
+    /// Используйте класс <see cref="SubDocSelectDialog"/> для задания дополнительных параметров.
     /// </summary>
     /// <param name="subDocs">Список поддокументов, из которых можно выбирать</param>
     /// <param name="subDocIds">Вход и выход: Массив идентификаторов выбранных поддокументов.
@@ -1047,7 +1049,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выбор одного документа для режима добавления поддокумента.
     /// Возможно выбрать режим "Для всех документов".
-    /// Используется EFPSubDocGridView и EFPSubDocTreeView.
+    /// Используется <see cref="EFPSubDocGridView"/> и <see cref="EFPSubDocTreeView"/>.
     /// </summary>
     /// <param name="controlProvider">Просмотр, в котором выполняется редактирование</param>
     /// <param name="docId">Идентификатор выбранного документа</param>
@@ -1108,9 +1110,8 @@ namespace FreeLibSet.Forms.Docs
     #region Редактирование
 
     /// <summary>
-    /// Возвращает true, если есть хотя бы один установвленный обработчик
-    /// BeforeEdit или InitEditForm, то есть возможность редактирования 
-    /// была инициализирована.
+    /// Возвращает true, если есть хотя бы один установленный обработчик
+    /// <see cref="BeforeEdit"/> или <see cref="InitEditForm"/>, то есть возможность редактирования  была инициализирована.
     /// </summary>
     public bool HasEditorHandlers
     {
@@ -1121,16 +1122,15 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается при попытке вставить, отредактировать или просмотреть поддокумент
-    /// Обработчик может установить свойство Cancel для предотвращения вывода на
-    /// экран формы редактора
+    /// Вызывается при попытке вставить, отредактировать или просмотреть поддокумент.
+    /// Обработчик может установить свойство <see cref="BeforeSubDocEditEventArgs.Cancel"/> для предотвращения вывода на
+    /// экран формы редактора.
     /// </summary>
     public event BeforeSubDocEditEventHandler BeforeEdit;
 
     /// <summary>
-    /// Вызывает событие BeforeEdit и возвращает признак Cancel
+    /// Вызывает событие <see cref="BeforeEdit"/>
     /// </summary>
-    /// <returns></returns>
     internal void DoBeforeEdit(SubDocumentEditor editor, out bool cancel, out bool showEditor)
     {
       if (BeforeEdit == null)
@@ -1148,8 +1148,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается при инициализации окна редактирования строки в. 
-    /// таблице поддокументов SubDocsGrid.
+    /// Вызывается при инициализации окна редактирования поддокументов.
+    /// Обработчик события должен добавить вкладки в редактор.
     /// </summary>
     public event InitSubDocEditFormEventHandler InitEditForm;
 
@@ -1161,10 +1161,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывается при нажатии кнопки "ОК" в редакторе поддокумента
-    /// Значения из полей редактирования уже перенесены в Editor.Values и их
+    /// Вызывается при нажатии кнопки "ОК" в редакторе поддокумента.
+    /// Значения из полей редактирования уже перенесены в <see cref="SubDocumentEditor.SubDocs"/> и их
     /// можно там подкорректировать.
-    /// Установка свойства Cancel предотвращает закрытие редактора поддокумента
+    /// Установка свойства <see cref="SubDocEditCancelEventArgs.Cancel"/> предотвращает закрытие редактора поддокумента.
     /// </summary>
     public event SubDocEditCancelEventHandler Writing;
 
@@ -1179,7 +1179,6 @@ namespace FreeLibSet.Forms.Docs
       }
       return true;
     }
-
 
     /// <summary>
     /// Вызывется после нажатия кнопки "ОК" в редакторе поддокумента в режиме
@@ -1203,13 +1202,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получение выборки документов, связанных с заданными поддокументами.
-    /// Вызывает обработчик событие GetDocSel, если он установлен. 
+    /// Вызывает обработчик событие <see cref="DocTypeUIBase.GetDocSel"/>, если он установлен. 
     /// Иначе не выполняется никаких действий.
     /// </summary>
     /// <param name="docSel">Выборка, в которую выполняется добавление документов</param>
     /// <param name="subDocIds">Идентификаторы поддокументов</param>
     /// <param name="reason">Причина создания выборки</param>
-    public override void PerformGetDocSel(DBxDocSelection docSel, Int32[] subDocIds, EFPDBxGridViewDocSelReason reason)
+    public override void PerformGetDocSel(DBxDocSelection docSel, Int32[] subDocIds, EFPDBxViewDocSelReason reason)
     {
       if (subDocIds == null || subDocIds.Length == 0)
         return;
@@ -1219,16 +1218,16 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Создать выборку связанных документов если задан обработчик события GetDocSel
+    /// Создать выборку связанных документов если задан обработчик события <see cref="DocTypeUIBase.GetDocSel"/>.
     /// Если обработчик не задан, то возвращается пустая выборка документов
-    /// Эта версия метода используется в SubDocsGrid, когда некоторые поддокументы
-    /// могут быть еще не записаны
+    /// Эта версия метода используется в <see cref="EFPSubDocGridView"/>, когда некоторые поддокументы
+    /// могут быть еще не записаны.
     /// </summary>
     /// <param name="docSel">Заполняемая выборка документов</param>
     /// <param name="rows">Выбранные строки таблицы поддокументов</param>
     /// <param name="reason">Причина построения выборки</param>
     /// <returns>Выборка</returns>
-    public void PerformGetDocSel(DBxDocSelection docSel, DataRow[] rows, EFPDBxGridViewDocSelReason reason)
+    public void PerformGetDocSel(DBxDocSelection docSel, DataRow[] rows, EFPDBxViewDocSelReason reason)
     {
       if (rows == null || rows.Length == 0)
         return;
@@ -1245,7 +1244,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Имя столбца, предназначенного для ручной сортировки строк или пустая строка, если
-    /// порядок строк определяется в GridProducer или DBxSubDocType.DefaultOrder.
+    /// порядок строк определяется в <see cref="GridProducer"/> или <see cref="DBxDocTypeBase.DefaultOrder"/>.
     /// </summary>
     public string ManualOrderColumn
     {
@@ -1264,14 +1263,14 @@ namespace FreeLibSet.Forms.Docs
     private string _ManualOrderColumn;
 
     /// <summary>
-    /// Заполнение поля ManualOrderColumn
+    /// Заполнение поля <see cref="ManualOrderColumn"/>.
     /// Обнаруживает среди всех поддокументов, те в которых значение поля для ручной сортировки равно 0.
     /// Для них устанавливается значение этого поля так, чтобы поддокументы оказались в конце списка.
-    /// Если используется иерархия поддокументов, то она учитывается, при этом может поменяться значение поля ManualOrderColumn у других поддокументов.
-    /// Если свойство ManualOrderColumn не установлено, никаких действий не выполняется.
+    /// Если используется иерархия поддокументов, то она учитывается, при этом может поменяться значение поля <see cref="ManualOrderColumn"/> у других поддокументов.
+    /// Если свойство <see cref="ManualOrderColumn"/> не установлено, никаких действий не выполняется.
     /// </summary>
     /// <param name="subDocs">Поддокументы</param>
-    /// <returns>true, если был найден хотя бы один поддокумент, у которого ManualOrderColumn равно 0</returns>
+    /// <returns>true, если был найден хотя бы один поддокумент, у которого <see cref="ManualOrderColumn"/> равно 0</returns>
     public bool InitManualOrderColumnValue(DBxMultiSubDocs subDocs)
     {
       if (String.IsNullOrEmpty(ManualOrderColumn))
@@ -1325,7 +1324,6 @@ namespace FreeLibSet.Forms.Docs
       return true;
     }
 
-
     internal bool InitManualOrderColumnValueAfterEdit(DBxMultiSubDocs mainSubDocs, DBxMultiSubDocs subDocs2)
     {
       if (String.IsNullOrEmpty(ManualOrderColumn))
@@ -1373,29 +1371,29 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Список имен документов и поддокументов, из которых возможна вставка табличных
-    /// данных. Вставка выполняется в редакторе основного документа (в SubDocsGrid).
+    /// данных. Вставка выполняется в редакторе основного документа (в <see cref="EFPSubDocGridView"/>).
     /// По умолчанию в списке находится имя текущего поддокумента, то есть
-    /// вставлять можно только аналогичные поддокументы
+    /// вставлять можно только аналогичные поддокументы.
     /// </summary>
     public List<string> PasteTableNames { get { return _PasteTableNames; } }
-    private List<string> _PasteTableNames;
+    private readonly List<string> _PasteTableNames;
 
 
     /// <summary>
     /// Событие вызывается при вставке строк поддокументов из буфера обмена.
-    /// Обработчик может выполнить добавление поддокументов самостоятельно и установить свойство Handled=true.
-    /// При этом событие AdjustPastedRow не вызывается.
+    /// Обработчик может выполнить добавление поддокументов самостоятельно и установить свойство <see cref="PasteSubDocRowsEventArgs.Handled"/>=true.
+    /// При этом событие <see cref="AdjustPastedRow"/> не вызывается.
     /// </summary>
     public event PasteSubDocRowsEventHandler PasteRows;
 
     /// <summary>
     /// Событие вызывается при вставке копии строки поддокумента из буфера
-    /// обмена. Обработчик может изменить значения полей в строке
+    /// обмена. Обработчик может изменить значения полей в строке.
     /// </summary>
     public event AdjustPastedSubDocRowEventHandler AdjustPastedRow;
 
     /// <summary>
-    /// Вызывает обработчик события AdjustPastedRow, если обработчик установлен
+    /// Вызывает обработчик события <see cref="AdjustPastedRow"/>, если обработчик установлен.
     /// </summary> 
     /// <param name="args">Аргументы события</param>
     private void PerformAdjustPastedRow(AdjustPastedSubDocRowEventArgs args)
@@ -1406,14 +1404,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выполнить вставку поддокументов и строк таблицы данных.
-    /// Вызывается обработчик события PasteRows. Если обработчик не задан или не свойство PasteSubDocRowsEventArgs.Handler не установлено,
-    /// то для каждой строки выполняется копирование полей в новый поддокумент и вызывается событие AdjustPastedRow.
+    /// Вызывается обработчик события <see cref="PasteRows"/>. Если обработчик не задан или свойство <see cref="PasteSubDocRowsEventArgs.Handled"/> не установлено,
+    /// то для каждой строки выполняется копирование полей в новый поддокумент и вызывается событие <see cref="AdjustPastedRow"/>.
     /// </summary>
     /// <param name="subDocs">Поддокументы для документа, в который выполняется добавление</param>
     /// <param name="srcRows">Массив исходных строк для добавления.</param>
     /// <param name="srcDocTypeBase">Описание документа или поддокумента, к которому относятся исходные строки</param>
     /// <param name="controlProvider">Табличный или иерархический просмотр, для которого выполняется вставка.
-    /// Ссылка передается обработчикам событий (свойство ControlProvider). Может быть null.</param>
+    /// Ссылка передается обработчикам событий. Может быть null.</param>
     /// <returns>Массив созданных документов или null, если вставка не выполнена</returns>
     public DBxSubDoc[] PerformPasteRows(DBxSingleSubDocs subDocs, DataRow[] srcRows, DocTypeUIBase srcDocTypeBase, IEFPSubDocView controlProvider)
     {

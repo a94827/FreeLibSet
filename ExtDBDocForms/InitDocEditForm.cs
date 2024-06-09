@@ -17,7 +17,7 @@ namespace FreeLibSet.Forms.Docs
   #region Абстрактный базовый класс инициализации формы
 
   /// <summary>
-  /// Базовый класс для InitDocEditFormEventArgs и InitSubDocEditFormEventArgs
+  /// Базовый класс для <see cref="InitDocEditFormEventArgs"/> и <see cref="InitSubDocEditFormEventArgs"/>
   /// </summary>
   public abstract class InitDocEditFormEventArgsBase : IReadOnlyObject
   {
@@ -27,7 +27,6 @@ namespace FreeLibSet.Forms.Docs
     {
       _EditorForm = editorForm;
       _Values = values;
-
     }
 
     #endregion
@@ -35,17 +34,17 @@ namespace FreeLibSet.Forms.Docs
     #region Свойства
 
     internal DocEditForm EditorForm { get { return _EditorForm; } }
-    private DocEditForm _EditorForm;
+    private readonly DocEditForm _EditorForm;
 
     /// <summary>
     /// "Серые" значения редактируемых документов или поддокументов (поля)
     /// </summary>
     public IDBxDocValues Values { get { return _Values; } }
-    private IDBxDocValues _Values;
+    private readonly IDBxDocValues _Values;
 
     /// <summary>
-    /// Значок, который по умолчанию задается для первой добавляемой вкладки (DocEditPage.ImageKey).
-    /// Возвращает значение DocTypeUIBase.SingleDocImageKey.
+    /// Значок, который по умолчанию задается для первой добавляемой вкладки (<see cref="DocEditPage.ImageKey"/>).
+    /// Возвращает значение <see cref="DocTypeUIBase.SingleDocImageKey"/>.
     /// </summary>
     public abstract string MainImageKey { get; }
 
@@ -56,11 +55,11 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить вкладку в редактор документа или поддокумента.
     /// После вызова метода можно создавать провайдеры управляющих элементов, используя свойство
-    /// DocEditPage.BaseProvider.
+    /// <see cref="DocEditPage.BaseProvider"/>.
     /// </summary>
     /// <param name="title">Заголовок вкладки</param>
     /// <param name="mainControl">Управляющий элемент (обычно, панель), на котором располагаются другие элементы</param>
-    /// <returns>Объект для управления вкладкой.</returns>
+    /// <returns>Объект для управления вкладкой</returns>
     public DocEditPage AddPage(string title, Control mainControl)
     {
       if (mainControl == null)
@@ -107,11 +106,11 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить в редактор вкладку, содержащую единственный управляющий элемент и панель инструментов.
     /// Метод создает вкладку, управляющий элемент и панель инструментов.
     /// </summary>
-    /// <typeparam name="T">Класс управляющего элемента, производного от Control. У элемента должен
+    /// <typeparam name="T">Класс управляющего элемента, производного от <see cref="Control"/>. У элемента должен
     /// быть конструктор по умолчанию.</typeparam>
     /// <param name="title">Заголовок вкладки</param>
     /// <param name="controlWithToolBar">Сюда помещается объект с элементом управления и панелью инструментов</param>
-    /// <returns>Объект для управления вкладкой.</returns>
+    /// <returns>Объект для управления вкладкой</returns>
     public DocEditPage AddSimplePage<T>(string title, out EFPControlWithToolBar<T> controlWithToolBar)
       where T : Control, new()
     {
@@ -127,7 +126,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Список с объектами, отслеживающими изменения в элементах, расположенных на текущей вкладке
-    /// (свойство IDocEditItem.ChangeInfo)
+    /// (свойство <see cref="IDocEditItem.ChangeInfo"/>)
     /// </summary>
     protected DepChangeInfoList CurrChangeInfoList
     {
@@ -142,9 +141,9 @@ namespace FreeLibSet.Forms.Docs
     private DepChangeInfoList _CurrChangeInfoList;
 
     /// <summary>
-    /// Инициализация списка CurrChangeInfoList
+    /// Инициализация списка <see cref="CurrChangeInfoList"/>
     /// </summary>
-    /// <param name="displayName">Значение свойства DepChangeInfo.DisplayName</param>
+    /// <param name="displayName">Значение свойства <see cref="DepChangeInfo.DisplayName"/></param>
     protected void InitPageChangeInfoList(string displayName)
     {
       _CurrChangeInfoList = new DepChangeInfoList();
@@ -160,7 +159,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Обобщенный метод добавления объекта редактирования поля документа или поддокумента
-    /// (или нескольких полей)
+    /// (или нескольких полей).
     /// </summary>
     /// <param name="item">Интерфейс, с помощью которого выполняется чтение и запись значений при работе редактора</param>
     public void AddDocEditItem(IDocEditItem item)
@@ -195,11 +194,11 @@ namespace FreeLibSet.Forms.Docs
     /// Добавляет связку для редактирования текстового поля
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента, в котором можно вводить текст,
-    /// например EFPTextBox или EFPTextComboBox</param>
+    /// например <see cref="EFPTextBox"/> или <see cref="EFPTextComboBox"/></param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueTextBox AddText(IEFPTextBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueTextBox dvc = new DocValueTextBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -214,9 +213,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueTextListControl AddText(IEFPListControl controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueTextListControl dvc = new DocValueTextListControl(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -250,9 +249,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDateBox AddDate(EFPDateTimeBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueDateBox dvc = new DocValueDateBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -267,9 +266,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="firstColumnName">Имя первого поля</param>
     /// <param name="lastColumnName">Имя второго поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDateRangeBox AddDate(EFPDateRangeBox controlProvider, string firstColumnName, string lastColumnName, bool canMultiEdit)
     {
       DocValueDateRangeBox dvc = new DocValueDateRangeBox(GetDocValue(firstColumnName), GetDocValue(lastColumnName), controlProvider, canMultiEdit);
@@ -283,9 +282,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="firstColumnName">Имя первого поля</param>
     /// <param name="lastColumnName">Имя второго поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDateOrRangeBox AddDate(EFPDateOrRangeBox controlProvider, string firstColumnName, string lastColumnName, bool canMultiEdit)
     {
       DocValueDateOrRangeBox dvc = new DocValueDateOrRangeBox(GetDocValue(firstColumnName), GetDocValue(lastColumnName), controlProvider, canMultiEdit);
@@ -299,9 +298,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueIntMonthDayBox AddInt(EFPMonthDayBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueIntMonthDayBox dvc = new DocValueIntMonthDayBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -315,9 +314,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueIntMonthDayTextBox AddInt(EFPMonthDayTextBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueIntMonthDayTextBox dvc = new DocValueIntMonthDayTextBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -332,9 +331,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider1">Провайдер управляющего элемента CheckBox</param>
     /// <param name="controlProvider2">Провайдер управляющего элемента MonthDayBox</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueIntCheckBoxWithMonthDayBox AddInt(EFPCheckBox controlProvider1, EFPMonthDayBox controlProvider2, string columnName, bool canMultiEdit)
     {
       DocValueIntCheckBoxWithMonthDayBox dvc = new DocValueIntCheckBoxWithMonthDayBox(GetDocValue(columnName), controlProvider1, controlProvider2, canMultiEdit);
@@ -378,9 +377,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDateTimePicker AddDateTime(EFPDateTimePicker controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueDateTimePicker dvc = new DocValueDateTimePicker(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -393,9 +392,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueTimeSpanPicker AddTime(EFPDateTimePicker controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueTimeSpanPicker dvc = new DocValueTimeSpanPicker(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -416,9 +415,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента, реализующий интерфейс IEFPNumEditBox</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDecimalEditBox AddDecimal(EFPDecimalEditBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueDecimalEditBox dvc = new DocValueDecimalEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -443,9 +442,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента, реализующий интерфейс IEFPNumEditBox</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueIntEditBox AddInt(EFPIntEditBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueIntEditBox dvc = new DocValueIntEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -470,9 +469,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента, реализующий интерфейс IEFPNumEditBox</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueSingleEditBox AddSingle(EFPSingleEditBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueSingleEditBox dvc = new DocValueSingleEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -497,9 +496,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента, реализующий интерфейс IEFPNumEditBox</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDoubleEditBox AddDouble(EFPDoubleEditBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueDoubleEditBox dvc = new DocValueDoubleEditBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -527,9 +526,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента EFPListBox, EFPListComboBox или EFPRadioButtons</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueIntListControl AddInt(IEFPListControl controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueIntListControl dvc = new DocValueIntListControl(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -544,9 +543,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента EFPListBox или EFPListComboBox</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueIntEditComboBox AddInt(EFPIntEditComboBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueIntEditComboBox dvc = new DocValueIntEditComboBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -562,9 +561,9 @@ namespace FreeLibSet.Forms.Docs
     /// <typeparam name="T">Тип перечислимого значения</typeparam>
     /// <param name="controlProvider">Провайдер управляющего элемента EFPListBox или EFPListComboBox</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueIntEnumCodeListControl<T> AddIntEnumCode<T>(EFPListControl controlProvider, string columnName, bool canMultiEdit)
       where T : struct
     {
@@ -625,8 +624,8 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае CheckBox.ThreeState устанавливается в true и ThreeState.Intermediate используется для отображения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// В этом случае <see cref="CheckBox.ThreeState"/> устанавливается в true и значение <see cref="System.Windows.Forms.CheckState.Indeterminate"/> используется для отображения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueCheckBox AddBool(EFPCheckBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueCheckBox dvc = new DocValueCheckBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -637,13 +636,13 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет связку для редактирования логического поля с помощью группы из двух радиокнопок.
     /// Первая кпопка в группе - для значения false, вторая - для true.
-    /// Значение поля связывается со значением свойства (SelectedIndex=1?true:false).
+    /// Значение поля связывается со значением свойства (<see cref="EFPRadioButtons.SelectedIndex"/>=1?true:false).
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В текущей реализации использовать не рекомендуется</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueBoolRadioButtons AddBool(EFPRadioButtons controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueBoolRadioButtons dvc = new DocValueBoolRadioButtons(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -652,17 +651,17 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет связку для редактирования числового поля с помощью ListBox или ComboBox, в котором можно
+    /// Добавляет связку для редактирования числового поля с помощью <see cref="ListBox"/> или <see cref="ComboBox"/>, в котором можно
     /// выбрать одно из двух позиций в списке.
     /// Первая позиция в списке - для значения false, вторая - для true.
-    /// Значение поля связывается со значением свойства (SelectedIndex=1?true:false).
-    /// Такой вариант редактирование логического поля, особенно с помощью ListBox, используется редко.
+    /// Значение поля связывается со значением свойства (<see cref="EFPListControl.SelectedIndex"/>=1?true:false).
+    /// Такой вариант редактирование логического поля, особенно с помощью <see cref="ListBox"/>, используется редко.
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента EFPListBox или EFPListComboBox</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента <see cref="EFPListBox"/> или <see cref="EFPListComboBox"/></param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueBoolListControl AddBool(EFPListControl controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueBoolListControl dvc = new DocValueBoolListControl(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -676,13 +675,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет связку для редактирования ссылочного поля на документ с помощью комбоблока.
-    /// Значение поля связывается со свойством DocId.
+    /// Значение поля связывается со свойством <see cref="EFPDocComboBox.DocId"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDocComboBox AddRef(EFPDocComboBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueDocComboBox dvc = new DocValueDocComboBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -692,14 +691,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет связку для редактирования ссылочного поля на поддокумент с помощью комбоблока.
-    /// Поддокумент не должен относиться к документу, открытому в текущем редакторе.
-    /// Значение поля связывается со свойством SubDocId.
+    /// Значение поля связывается со свойством <see cref="EFPSubDocComboBox.SubDocId"/>.
+    /// Поддокумент не должен относиться к документу, открытому в текущем редакторе. См. перегрузку <see cref="AddRef(EFPInsideSubDocComboBox, string, bool)"/> .
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueSubDocComboBox AddRef(EFPSubDocComboBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueSubDocComboBox dvc = new DocValueSubDocComboBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -709,15 +708,15 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет связку для редактирования ссылочного поля на поддокументы с помощью комбоблока.
-    /// Значение поля связывается со свойством SubDocId.
+    /// Значение поля связывается со свойством <see cref="EFPInsideSubDocComboBox.SubDocId"/>.
     /// Предполагается, что поддокумент относится к тому документу, который в настоящее время
-    /// открыт в редакторе документа
+    /// открыт в редакторе документа.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueInsideSubDocComboBox AddRef(EFPInsideSubDocComboBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueInsideSubDocComboBox dvc = new DocValueInsideSubDocComboBox(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -731,13 +730,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет связку для редактирования ссылочного поля на таблицу документов.
-    /// Числовое поле содержит идентификатор таблицы документов DBxDocType.Tableid.
+    /// Числовое поле содержит идентификатор таблицы документов <see cref="DBxDocType.TableId"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDocTypeComboBoxByTableId AddTableId(EFPDocTypeComboBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueDocTypeComboBoxByTableId dvc = new DocValueDocTypeComboBoxByTableId(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -761,13 +760,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет связку для редактирования ссылочного поля на таблицу документов.
-    /// Строкое поле содержит имя таблицы документов DBxDocType.Name.
+    /// Строкое поле содержит имя таблицы документов <see cref="DBxDocTypeBase.Name"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDocTypeComboBoxByName AddTableName(EFPDocTypeComboBox controlProvider, string columnName, bool canMultiEdit)
     {
       DocValueDocTypeComboBoxByName dvc = new DocValueDocTypeComboBoxByName(GetDocValue(columnName), controlProvider, canMultiEdit);
@@ -780,14 +779,14 @@ namespace FreeLibSet.Forms.Docs
     #region Прочие поля
 
     /// <summary>
-    /// Добавляет связку для редактирования XML-данных с помощью XmlViewBox.
+    /// Добавляет связку для редактирования XML-данных с помощью <see cref="XmlViewBox"/>.
     /// Текстовое (обычно, MEMO) поле содержит XML-данные.
     /// Редко используемый вариант пользовательского интерфейса.
     /// Групповое редактирование документов не поддерживается.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueXmlViewBox AddXml(EFPXmlViewBox controlProvider, string columnName)
     {
       DocValueXmlViewBox dvc = new DocValueXmlViewBox(GetDocValue(columnName), controlProvider);
@@ -804,7 +803,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавить форму для последующего разрушения.
     /// Метод должен вызываться до того, как управляющий элемент переприсоединяется
-    /// к форме редактора
+    /// к форме редактора.
     /// </summary>
     /// <param name="form"></param>
     public void AddFormToDispose(Form form)
@@ -832,12 +831,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Свойство возвращает true, если редактор документа или поддокумента
-    /// находится в режиме просмотра данных
+    /// находится в режиме просмотра данных.
     /// </summary>
     public abstract bool IsReadOnly { get; }
 
     /// <summary>
-    /// Генерирует ObjectReadOnlyException, если IsReadOnly=true
+    /// Генерирует <see cref="ObjectReadOnlyException"/>, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -853,14 +852,14 @@ namespace FreeLibSet.Forms.Docs
   #region Инициализация основной формы документа
 
   /// <summary>
-  /// Аргументы события DocTypeUI.InitEditForm
+  /// Аргументы события <see cref="DocTypeUI.InitEditForm"/>
   /// </summary>
   public class InitDocEditFormEventArgs : InitDocEditFormEventArgsBase
   {
     #region Конструктор
 
     /// <summary>
-    /// Создается в DocTypeUI
+    /// Создается в <see cref="DocTypeUI"/>
     /// </summary>
     /// <param name="editor">Открываемый редактор документов</param>
     /// <param name="multiDocs">Редактируемые документы</param>
@@ -879,14 +878,14 @@ namespace FreeLibSet.Forms.Docs
     /// Открываемый редактор документов
     /// </summary>
     public DocumentEditor Editor { get { return _Editor; } }
-    private DocumentEditor _Editor;
+    private readonly DocumentEditor _Editor;
 
     /// <summary>                              
     /// Редактируемые документы, для которых открыт редактор.
-    /// Для доступа к документов других видов используйте объект DBxDocSet, который доступен через свойство Editor.Documents.
+    /// Для доступа к документов других видов используйте объект <see cref="DBxDocSet"/>, который доступен через свойство <see cref="Editor"/>.Documents.
     /// </summary>
     public DBxMultiDocs MultiDocs { get { return _MultiDocs; } }
-    private DBxMultiDocs _MultiDocs;
+    private readonly DBxMultiDocs _MultiDocs;
 
     private DocTypeUI DocTypeUI { get { return _Editor.UI.DocTypes[_MultiDocs.DocType.Name]; } }
 
@@ -902,12 +901,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает свойство DocumentEditor.IsReadOnly
+    /// Возвращает свойство <see cref="DocumentEditor.IsReadOnly"/>
     /// </summary>
     public override bool IsReadOnly { get { return Editor.IsReadOnly; } }
 
     /// <summary>
-    /// Возвращает свойство DocTypeUI.SingleDocImageKey
+    /// Возвращает свойство <see cref="DocTypeUIBase.SingleDocImageKey"/>
     /// </summary>
     public override string MainImageKey
     {
@@ -922,7 +921,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет вкладку с таблицей поддокументов.
-    /// Эта перегрузка метода не дает доступа к созданному провайдеру просмотра EFPSubDocGridView
+    /// Эта перегрузка метода не дает доступа к созданному провайдеру просмотра <see cref="EFPSubDocGridView"/>,
+    /// поэтому может использоваться только в простейших случаях.
     /// </summary>
     /// <param name="subDocTableName">Имя таблицы поддокументов</param>
     /// <returns>Объект для управления вкладкой</returns>
@@ -937,7 +937,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавляет вкладку с таблицей поддокументов.
     /// </summary>
     /// <param name="subDocTableName">Имя таблицы поддокументов</param>
-    /// <param name="controlProvider">Сюда записывается ссылка на созданный провайдер просмотра EFPSubDocGridView</param>
+    /// <param name="controlProvider">Сюда записывается ссылка на созданный провайдер просмотра <see cref="EFPSubDocGridView"/></param>
     /// <returns>Объект для управления вкладкой</returns>
     public DocEditPage AddSubDocsPage(string subDocTableName, out EFPSubDocGridView controlProvider)
     {
@@ -953,8 +953,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет вкладку с таблицей поддокументов.
-    /// Эта перегрузка метода не дает доступа к созданному провайдеру просмотра EFPSubDocTreeView
+    /// Добавляет вкладку с иерархическим просмотром поддокументов.
+    /// Эта перегрузка метода не дает доступа к созданному провайдеру просмотра <see cref="EFPSubDocTreeView"/>,
+    /// поэтому может использоваться только в простейших случаях.
     /// </summary>
     /// <param name="subDocTableName">Имя таблицы поддокументов</param>
     /// <returns>Объект для управления вкладкой</returns>
@@ -966,10 +967,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет вкладку с таблицей поддокументов.
+    /// Добавляет вкладку с иерархическим просмотром поддокументов.
     /// </summary>
     /// <param name="subDocTableName">Имя таблицы поддокументов</param>
-    /// <param name="controlProvider">Сюда записывается ссылка на созданный провайдер просмотра EFPSubDocTreeView</param>
+    /// <param name="controlProvider">Сюда записывается ссылка на созданный провайдер просмотра <see cref="EFPSubDocTreeView"/></param>
     /// <returns>Объект для управления вкладкой</returns>
     public DocEditPage AddSubDocsTreePage(string subDocTableName, out EFPSubDocTreeView controlProvider)
     {
@@ -1272,15 +1273,16 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет связку для редактирования ссылочного поля, которое используется для построения дерева, с помощью комбоблока.
-    /// Вызывает основной метод AddRef() и добавляет к <paramref name="controlProvider"/> валидатор, который не позволяет
+    /// Вызывает основной метод <see cref="InitDocEditFormEventArgsBase.AddRef(EFPDocComboBox, string, bool)"/> 
+    /// и добавляет к <paramref name="controlProvider"/> валидатор, который не позволяет
     /// задавать ссылку, которая приведет к зацикливанию дерева.
     /// Если одновременно редактируется несколько документов, то проверяются все они.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
-    /// В этом случае может быть добавлен CheckBox для изменения "серых" значений.</param>
-    /// <returns>Переходник, реализующий интерфейс IDocEditItem</returns>
+    /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
+    /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
+    /// <returns>Переходник, реализующий интерфейс <see cref="IDocEditItem"/></returns>
     public DocValueDocComboBox AddRefToParent(EFPDocComboBox controlProvider, string columnName, bool canMultiEdit)
     {
       //DBxColumnStruct cs = this.DocTypeUI.DocType.Struct.Columns[columnName];
@@ -1301,9 +1303,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события DocTypeUI.InitEditForm
+  /// Делегат события <see cref="DocTypeUI.InitEditForm"/>
   /// </summary>
-  /// <param name="sender">Объект DocTypeUI</param>
+  /// <param name="sender">Объект <see cref="DocTypeUI"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void InitDocEditFormEventHandler(object sender, InitDocEditFormEventArgs args);
 
@@ -1312,14 +1314,14 @@ namespace FreeLibSet.Forms.Docs
   #region Инициализация формы поддокумента
 
   /// <summary>
-  /// Аргументы события SubDocTypeUI.InitEditForm
+  /// Аргументы события <see cref="SubDocTypeUI.InitEditForm"/>
   /// </summary>
   public class InitSubDocEditFormEventArgs : InitDocEditFormEventArgsBase
   {
     #region Конструктор
 
     /// <summary>
-    /// Создается в SubDocTypeUI
+    /// Создается в <see cref="SubDocTypeUI"/>
     /// </summary>
     /// <param name="editor">Редактор поддокумента</param>
     public InitSubDocEditFormEventArgs(SubDocumentEditor editor)
@@ -1336,10 +1338,10 @@ namespace FreeLibSet.Forms.Docs
     /// Редактор поддокумента, инициализация которого выполняется
     /// </summary>
     public SubDocumentEditor Editor { get { return _Editor; } }
-    private SubDocumentEditor _Editor;
+    private readonly SubDocumentEditor _Editor;
 
     /// <summary>
-    /// Редактор документа, для которого открывается редактор поддокумента
+    /// Редактор основного документа, для которого открывается редактор поддокумента
     /// </summary>
     public DocumentEditor MainEditor { get { return Editor.MainEditor; } }
 
@@ -1349,12 +1351,12 @@ namespace FreeLibSet.Forms.Docs
     public DepSyncCollection Syncs { get { return MainEditor.Form.FormProvider.Syncs; } }
 
     /// <summary>
-    /// Возвращает значение свойства SubDocumentEditor.IsReadOnly
+    /// Возвращает значение свойства <see cref="SubDocumentEditor.IsReadOnly"/>
     /// </summary>
     public override bool IsReadOnly { get { return Editor.IsReadOnly; } }
 
     /// <summary>
-    /// Возвращает свойство SubDocTypeUI.SingleDocImageKey
+    /// Возвращает свойство <see cref="DocTypeUIBase.SingleDocImageKey"/>
     /// </summary>
     public override string MainImageKey
     {
@@ -1365,9 +1367,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события SubDocTypeUI.InitEditForm
+  /// Делегат события <see cref="SubDocTypeUI.InitEditForm"/>
   /// </summary>
-  /// <param name="sender">Объект SubDocTypeUI</param>
+  /// <param name="sender">Объект <see cref="SubDocTypeUI"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void InitSubDocEditFormEventHandler(object sender, InitSubDocEditFormEventArgs args);
 

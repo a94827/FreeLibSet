@@ -757,7 +757,7 @@ namespace FreeLibSet.Forms
           ciView.Enabled = false;
 #else
         // 21.08.2019
-        ciEdit.Visible = !ControlProvider.ReadOnly;
+        ciEdit.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanEdit;
         ciInsert.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanInsert;
         ciInsertCopy.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanInsertCopy;
         ciDelete.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanDelete;

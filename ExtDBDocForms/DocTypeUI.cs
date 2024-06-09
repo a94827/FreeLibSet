@@ -16,17 +16,17 @@ namespace FreeLibSet.Forms.Docs
   #region Делегат для работы с просмотром
 
   /// <summary>
-  /// Аргументы событий DocTypeUI.InitView и SubDocTypeUI.InitView
+  /// Аргументы событий <see cref="DocTypeUI.InitView"/> и <see cref="SubDocTypeUI.InitView"/>.
   /// </summary>
   public class InitEFPDBxViewEventArgs : EventArgs
   {
     #region Конструктор
 
     /// <summary>
-    /// Создается объектами DocTypeUI и SubDocTypeUI
+    /// Создается объектами <see cref="DocTypeUI"/> и <see cref="SubDocTypeUI"/>.
     /// </summary>
     /// <param name="controlProvider">Инициализируемый просмотр</param>
-    public InitEFPDBxViewEventArgs(IEFPDBxView controlProvider)
+    internal InitEFPDBxViewEventArgs(IEFPDBxView controlProvider)
     {
       _ControlProvider = controlProvider;
     }
@@ -39,7 +39,7 @@ namespace FreeLibSet.Forms.Docs
     /// Инициализируемый табличный просмотр
     /// </summary>
     public IEFPDBxView ControlProvider { get { return _ControlProvider; } }
-    private IEFPDBxView _ControlProvider;
+    private readonly IEFPDBxView _ControlProvider;
 
     /// <summary>
     /// Пользовательские данные
@@ -51,24 +51,24 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат событий DocTypeUI.InitView и SubDocTypeUI.InitView
+  /// Делегат событий  <see cref="DocTypeUI.InitView"/> и <see cref="SubDocTypeUI.InitView"/>.
   /// </summary>
   /// <param name="sender">Интерфейс доступа к документам или поддокументам</param>
   /// <param name="args">Аргументы события</param>
   public delegate void InitEFPDBxViewEventHandler(object sender, InitEFPDBxViewEventArgs args);
 
   /// <summary>
-  /// Аргументы события DocTypeUI.InitDocGridView 
+  /// Аргументы события <see cref="DocTypeUI.InitDocSelView"/>.
   /// </summary>
   public class InitEFPDocSelViewEventArgs : EventArgs
   {
     #region Конструктор
 
     /// <summary>
-    /// Создается объектами DocTypeUI 
+    /// Создается объектами <see cref="DocTypeUI "/>
     /// </summary>
     /// <param name="controlProvider">Инициализируемый просмотр</param>
-    public InitEFPDocSelViewEventArgs(IEFPDocSelView controlProvider)
+    internal InitEFPDocSelViewEventArgs(IEFPDocSelView controlProvider)
     {
       _ControlProvider = controlProvider;
     }
@@ -81,13 +81,13 @@ namespace FreeLibSet.Forms.Docs
     /// Инициализируемый табличный просмотр выборки документов
     /// </summary>
     public IEFPDocSelView ControlProvider { get { return _ControlProvider; } }
-    private IEFPDocSelView _ControlProvider;
+    private readonly IEFPDocSelView _ControlProvider;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события DocTypeUI.InitDocSelView
+  /// Делегат события <see cref="DocTypeUI.InitDocSelView"/>
   /// </summary>
   /// <param name="sender">Интерфейс доступа к документам</param>
   /// <param name="args">Аргументы события</param>
@@ -98,7 +98,7 @@ namespace FreeLibSet.Forms.Docs
   #region DocTypeEditingEventHandler
 
   /// <summary>
-  /// Аргументы события DocTypeUI.Editing
+  /// Аргументы события <see cref="DocTypeUI.Editing"/>.
   /// </summary>
   public class DocTypeEditingEventArgs : EventArgs
   {
@@ -112,7 +112,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="editIds"></param>
     /// <param name="modal"></param>
     /// <param name="caller"></param>
-    public DocTypeEditingEventArgs(DocTypeUI docType, EFPDataGridViewState state, Int32[] editIds, bool modal, DocumentViewHandler caller)
+    internal DocTypeEditingEventArgs(DocTypeUI docType, EFPDataGridViewState state, Int32[] editIds, bool modal, DocumentViewHandler caller)
     {
       _DocType = docType;
       _State = state;
@@ -130,35 +130,35 @@ namespace FreeLibSet.Forms.Docs
     /// Инициализатор нового документа
     /// </summary>
     public DocumentViewHandler Caller { get { return _Caller; } }
-    private DocumentViewHandler _Caller;
+    private readonly DocumentViewHandler _Caller;
 
     /// <summary>
     /// Тип документа
     /// </summary>
     public DocTypeUI DocType { get { return _DocType; } }
-    private DocTypeUI _DocType;
+    private readonly DocTypeUI _DocType;
 
     /// <summary>
     /// Режим работы
     /// </summary>
     public EFPDataGridViewState State { get { return _State; } }
-    private EFPDataGridViewState _State;
+    private readonly EFPDataGridViewState _State;
 
     /// <summary>
     /// Список идентификаторов редактируемых, просматриваемых или
     /// удаляемых документов
     /// </summary>
     public Int32[] EditIds { get { return _EditIds; } }
-    private Int32[] _EditIds;
+    private readonly Int32[] _EditIds;
 
     /// <summary>
     /// True, если окно редактирования следует показать в модальном
-    /// режиме и false, если оно должно быть встроено в интерфейс MDI
+    /// режиме и false, если оно должно быть встроено в интерфейс MDI.
     /// Поле может быть проигнорировано, если окно всегда выводится
-    /// в модальном режиме
+    /// в модальном режиме.
     /// </summary>
     public bool Modal { get { return _Modal; } }
-    private bool _Modal;
+    private readonly bool _Modal;
 
     /// <summary>
     /// Должен быть установлен в true, чтобы предотвратить стандартный вызов редактора документа
@@ -168,12 +168,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Сюда может быть помещено значение, возвращаемое функкцией 
-    /// ClientDocType.PerformEditing(), когда обработчик события Editing устанавливает
-    /// Handled=true. Если обработчик оставляет Handled=false для показа формы, то он
-    /// может установить HandledResult=true. В этом случае, метод PerformEditing()
-    /// вернет true, даже если пользователь не будет редактировать документ
+    /// <see cref="DocTypeUI.PerformEditing(int, bool)"/>, когда обработчик события <see cref="DocTypeUI.Editing"/> устанавливает
+    /// <see cref="Handled"/>=true. Если обработчик оставляет <see cref="Handled"/>=false для показа формы, то он
+    /// может установить <see cref="HandledResult"/>=true. В этом случае, метод <see cref="DocTypeUI.PerformEditing(int, bool)"/>
+    /// вернет true, даже если пользователь не будет редактировать документ.
     /// До установки свойства в явном виде, оно имеет значение, совпадающее со
-    /// свойством Handled
+    /// свойством <see cref="Handled"/>.
     /// </summary>
     public bool HandledResult
     {
@@ -189,8 +189,8 @@ namespace FreeLibSet.Forms.Docs
     #region Методы
 
     /// <summary>
-    /// Возвращает объект MultiDocs, загруженный данными или инициализированный
-    /// начальными значениями (в режиме Insert).
+    /// Возвращает объект <see cref="DBxDocSet"/> с единственным <see cref="DBxMultiDocs"/>, загруженный данными или инициализированный
+    /// начальными значениями (в режиме <see cref="EFPDataGridViewState.Insert"/>).
     /// </summary>
     /// <returns></returns>
     public DBxDocSet CreateDocs()
@@ -226,7 +226,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события DocTypeUI.Editing
+  /// Делегат события <see cref="DocTypeUI.Editing"/>.
   /// </summary>
   /// <param name="sender">Интерфейс пользователя для вида документов</param>
   /// <param name="args">Аргумент события</param>
@@ -237,7 +237,7 @@ namespace FreeLibSet.Forms.Docs
   #region DocEditEventHandler
 
   /// <summary>
-  /// Аргументы для нескольких событий класса DocumentEditor
+  /// Аргументы для нескольких событий класса <see cref="DocumentEditor"/>
   /// </summary>
   public class DocEditEventArgs : EventArgs
   {
@@ -247,7 +247,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создание не должно выполняться в пользовательском коде
     /// </summary>
     /// <param name="editor">Редактор документов</param>
-    public DocEditEventArgs(DocumentEditor editor)
+    internal DocEditEventArgs(DocumentEditor editor)
     {
       _Editor = editor;
     }
@@ -260,20 +260,20 @@ namespace FreeLibSet.Forms.Docs
     /// Редактор основного документа
     /// </summary>
     public DocumentEditor Editor { get { return _Editor; } }
-    private DocumentEditor _Editor;
+    private readonly DocumentEditor _Editor;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат для нескольких событий класса DocumentEditor
+  /// Делегат для нескольких событий класса <see cref="DocumentEditor"/>.
   /// </summary>
   /// <param name="sender">Объект - источник события</param>
   /// <param name="args">Аргументы события</param>
   public delegate void DocEditEventHandler(object sender, DocEditEventArgs args);
 
   /// <summary>
-  /// Аргументы событий DocTypeUI.Writing и DocumentEditor.BeforeWrite.
+  /// Аргументы событий <see cref="DocTypeUI.Writing"/> и <see cref="DocumentEditor.BeforeWrite"/>.
   /// </summary>
   public class DocEditCancelEventArgs : DocEditEventArgs
   {
@@ -283,7 +283,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создание аргументов события не должно выполняться в пользовательском коде
     /// </summary>
     /// <param name="editor">Редактор документа</param>
-    public DocEditCancelEventArgs(DocumentEditor editor)
+    internal DocEditCancelEventArgs(DocumentEditor editor)
       : base(editor)
     {
       _Cancel = false;
@@ -303,7 +303,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат событий DocTypeUI.Writing и DocumentEditor.BeforeWrite.
+  /// Делегат событий <see cref="DocTypeUI.Writing"/> и <see cref="DocumentEditor.BeforeWrite"/>.
   /// </summary>
   /// <param name="sender">Объект - источник события</param>
   /// <param name="args">Аргументы события</param>
@@ -314,7 +314,7 @@ namespace FreeLibSet.Forms.Docs
   #region BeforeDocEditEventHandler
 
   /// <summary>
-  /// Аргументы события DocTypeUI.BeforeEdit
+  /// Аргументы события <see cref="DocTypeUI.BeforeEdit"/>.
   /// </summary>
   public class BeforeDocEditEventArgs : DocEditEventArgs
   {
@@ -332,22 +332,22 @@ namespace FreeLibSet.Forms.Docs
     #region Свойства
 
     /// <summary>
-    /// Установка этого поля в true приводит к отказу от работы редактора 
-    /// Запись результатов выполняться не будет
+    /// Установка этого поля в true приводит к отказу от работы редактора.
+    /// Запись результатов выполняться не будет.
     /// </summary>
     public bool Cancel { get { return _Cancel; } set { _Cancel = value; } }
     private bool _Cancel;
 
     /// <summary>
-    /// Установка этого поля в false приводит к пропуску работы редактора
-    /// Сразу выполняется запись результатов
+    /// Установка этого поля в false приводит к пропуску работы редактора.
+    /// Сразу выполняется запись результатов.
     /// </summary>
     public bool ShowEditor { get { return _ShowEditor; } set { _ShowEditor = value; } }
     private bool _ShowEditor;
 
     /// <summary>
     /// Возвращает имя столбца, активного в табличном просмотре, из которого документ открыт на редактирование.
-    /// Если редактор запускается не из просмотра, или информация о текущем столбце недоступна, возвращается пустая строка
+    /// Если редактор запускается не из просмотра, или информация о текущем столбце недоступна, возвращается пустая строка.
     /// </summary>
     public string CurrentColumnName
     {
@@ -364,9 +364,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события DocTypeUI.BeforeEdit
+  /// Делегат события <see cref="DocTypeUI.BeforeEdit"/>
   /// </summary>
-  /// <param name="sender">Интерфейс документов DocTypeUI</param>
+  /// <param name="sender">Интерфейс документов <see cref="DocTypeUI"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void BeforeDocEditEventHandler(object sender, BeforeDocEditEventArgs args);
 
@@ -375,7 +375,7 @@ namespace FreeLibSet.Forms.Docs
   #region DocTypeDocSelEventHandler
 
   /// <summary>
-  /// Аргументы события DocTypeUIBase.GetDocSel
+  /// Аргументы события <see cref="DocTypeUIBase.GetDocSel"/>
   /// </summary>
   public class DocTypeDocSelEventArgs : EventArgs
   {
@@ -389,7 +389,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="tableName"></param>
     /// <param name="ids"></param>
     /// <param name="reason"></param>
-    public DocTypeDocSelEventArgs(DBUI ui, DBxDocSelection docSel, string tableName, Int32[] ids, EFPDBxGridViewDocSelReason reason)
+    internal DocTypeDocSelEventArgs(DBUI ui, DBxDocSelection docSel, string tableName, Int32[] ids, EFPDBxViewDocSelReason reason)
     {
       _UI = ui;
       _DocSel = docSel;
@@ -406,7 +406,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="tableName"></param>
     /// <param name="rows"></param>
     /// <param name="reason"></param>
-    public DocTypeDocSelEventArgs(DBUI ui, DBxDocSelection docSel, string tableName, DataRow[] rows, EFPDBxGridViewDocSelReason reason)
+    internal DocTypeDocSelEventArgs(DBUI ui, DBxDocSelection docSel, string tableName, DataRow[] rows, EFPDBxViewDocSelReason reason)
     {
       _UI = ui;
       _DocSel = docSel;
@@ -424,43 +424,43 @@ namespace FreeLibSet.Forms.Docs
     /// Основной объект пользовательского интерфейса
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Имя таблицы документа или поддокумента (к которому присоединен обработчик
     /// события)
     /// </summary>
     public string TableName { get { return _TableName; } }
-    private string _TableName;
+    private readonly string _TableName;
 
     /// <summary>
     /// Массив идентификаторов выбранных документов или поддокументов, для которых
     /// требуется построить выборку документов
     /// </summary>
     public Int32[] Ids { get { return _Ids; } }
-    private Int32[] _Ids;
+    private readonly Int32[] _Ids;
 
     /// <summary>
     /// Массив строк выбранных поддокументов, для которых требуется построить
     /// выборку документов.
     /// Используется только для поддокументов в редакторе документа, когда некоторые
-    /// поддокументы еще не записаны
+    /// поддокументы еще не записаны.
     /// </summary>
     public DataRow[] Rows { get { return _Rows; } }
-    private DataRow[] _Rows;
+    private readonly DataRow[] _Rows;
 
     /// <summary>
     /// Причина, по которой требуется создать выборку
     /// </summary>
-    public EFPDBxGridViewDocSelReason Reason { get { return _Reason; } }
-    private EFPDBxGridViewDocSelReason _Reason;
+    public EFPDBxViewDocSelReason Reason { get { return _Reason; } }
+    private readonly EFPDBxViewDocSelReason _Reason;
 
     /// <summary>
     /// Сюда должны быть добавлены ссылки на документы
     /// Добавлять ссылки на сами документы (AllIds) не требуется
     /// </summary>
     public DBxDocSelection DocSel { get { return _DocSel; } }
-    private DBxDocSelection _DocSel;
+    private readonly DBxDocSelection _DocSel;
 
     #endregion
 
@@ -481,14 +481,14 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Возвращает значение для поля ColumnName для идентификатора из массива Ids
-    /// с индексом RowIndex. Если вызов выполнен из SubDocsGrid и установлено свойство
+    /// Возвращает значение для поля <paramref name="columnName"/> для идентификатора из массива Ids
+    /// с индексом <paramref name="rowIndex"/>. Если вызов выполнен из <see cref="EFPSubDocGridView "/> и установлено свойство
     /// Rows, то значение извлекается из строки данных с указанным индексом. Иначе
-    /// значение извлекается с использованием системы буферизации
+    /// значение извлекается с использованием системы буферизации.
     /// </summary>
-    /// <param name="rowIndex"></param>
-    /// <param name="columnName"></param>
-    /// <returns></returns>
+    /// <param name="rowIndex">Индекс строки</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля <paramref name="columnName"/></returns>
     public object GetRowValue(int rowIndex, string columnName)
     {
       if (Rows != null)
@@ -555,9 +555,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события DocTypeUIBase.GetDocSel
+  /// Делегат события <see cref="DocTypeUIBase.GetDocSel"/>
   /// </summary>
-  /// <param name="sender">Объект DocTypeUI или SubDocTypeUI</param>
+  /// <param name="sender">Объект <see cref="DocTypeUI"/> или <see cref="SubDocTypeUI"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void DocTypeDocSelEventHandler(object sender, DocTypeDocSelEventArgs args);
 
@@ -608,7 +608,7 @@ namespace FreeLibSet.Forms.Docs
 #endif
 
   /// <summary>
-  /// Базовый класс для DocTypeUI и SubDocTypeUI
+  /// Базовый класс для <see cref="DocTypeUI"/> и <see cref="SubDocTypeUI"/>
   /// </summary>
   public abstract class DocTypeUIBase
   {
@@ -647,22 +647,21 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс доступа к документам
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Описание вида документа или поддокумента
     /// </summary>
     public DBxDocTypeBase DocTypeBase { get { return _DocTypeBase; } }
-    private DBxDocTypeBase _DocTypeBase;
+    private readonly DBxDocTypeBase _DocTypeBase;
 
     /// <summary>
     /// Разрешение пользователя на доступ к таблице документа или поддокумента.
-    /// Для документов в DocTypeUI есть свойство DocTypePermissonMode
     /// </summary>
     public DBxAccessMode TableMode { get { return _UI.DocProvider.DBPermissions.TableModes[_DocTypeBase.Name]; } }
 
     /// <summary>
-    /// Возвращает DocTypeName или SubDocTypeName
+    /// Возвращает <see cref="DBxDocTypeBase.Name"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -740,7 +739,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Основной значок вида документа или поддокумента.
     /// Установка свойства предполагает, что обработчик не будет использоваться для определения значка.
-    /// Используйте метод AddImageHandler(), если требуется обработчик
+    /// Используйте метод <see cref="AddImageHandler(string, DBxColumns, DBxImageValueNeededEventHandler)"/>, если требуется обработчик
     /// </summary>
     public string ImageKey
     {
@@ -757,7 +756,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Задать обработчик получения изображения для документа или поддокумента
     /// </summary>
-    /// <param name="imageKey">Имя основного изображения в списке EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя основного изображения в списке <see cref="EFPApp.MainImages"/></param>
     /// <param name="columnNames">Список столбцов (через запятую), которые использует обработчик</param>
     /// <param name="imageValueNeeded">Обработчик, который позволяет получить изображение, раскраску и всплывающую подсказку 
     /// для конкретного документа и поддокумента.
@@ -770,7 +769,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Задать обработчник получения изображения для документа или поддокумента
     /// </summary>
-    /// <param name="imageKey">Имя основного изображения в списке EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя основного изображения в списке <see cref="EFPApp.MainImages"/></param>
     /// <param name="columnNames">Список столбцов, которые использует обработчик</param>
     /// <param name="imageValueNeeded">Обработчик, который позволяет получить изображение, раскраску и всплывающую подсказку 
     /// для конкретного документа и поддокумента.
@@ -782,8 +781,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Значок для одного документа.
-    /// Возвращает имя изображения из EFPApp.MainImages.
-    /// Если значок не был задан в DBxDocImageHandlers в явном виде, возвращает "Item".
+    /// Возвращает имя изображения из <see cref="EFPApp.MainImages"/>.
+    /// Если значок не был задан в <see cref="DBxDocImageHandlers"/> в явном виде, возвращает "Item".
     /// </summary>
     public string SingleDocImageKey
     {
@@ -795,8 +794,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Значок для таблицы документов.
-    /// Возвращает имя изображения из EFPApp.MainImages.
-    /// Если значок не был задан в DBxDocImageHandlers в явном виде, возвращает "Table".
+    /// Возвращает имя изображения из <see cref="EFPApp.MainImages"/>.
+    /// Если значок не был задан в <see cref="DBxDocImageHandlers"/> в явном виде, возвращает "Table".
     /// </summary>
     public string TableImageKey
     {
@@ -811,7 +810,7 @@ namespace FreeLibSet.Forms.Docs
     /// Получить изображение для заданного идентификатора
     /// </summary>
     /// <param name="id">Идентификатор документа или поддокумента</param>
-    /// <returns>Изображение в списке EFPApp.MainImages</returns>
+    /// <returns>Изображение в списке <see cref="EFPApp.MainImages"/></returns>
     public Image GetImageValue(Int32 id)
     {
       return EFPApp.MainImages.Images[GetImageKey(id)];
@@ -821,7 +820,7 @@ namespace FreeLibSet.Forms.Docs
     /// Получить изображение для заданного идентификатора
     /// </summary>
     /// <param name="id">Идентификатор документа или поддокумента</param>
-    /// <returns>Имя изображения в списке EFPApp.MainImages</returns>
+    /// <returns>Имя изображения в списке <see cref="EFPApp.MainImages"/></returns>
     public string GetImageKey(Int32 id)
     {
       return _UI.ImageHandlers.GetImageKey(_DocTypeBase.Name, id);
@@ -831,7 +830,7 @@ namespace FreeLibSet.Forms.Docs
     /// Получить изображение для заданного идентификатора документа
     /// </summary>
     /// <param name="row">Строка с частью заполненных полей документа или поддокумента</param>
-    /// <returns>Изображение в списке EFPApp.MainImages</returns>
+    /// <returns>Изображение в списке <see cref="EFPApp.MainImages"/></returns>
     public Image GetImageValue(DataRow row)
     {
       return EFPApp.MainImages.Images[GetImageKey(row)];
@@ -841,7 +840,7 @@ namespace FreeLibSet.Forms.Docs
     /// Получить изображение для заданного идентификатора документа, извлекаемого из строки данных
     /// </summary>
     /// <param name="row">Строка с частью заполненных полей документа или поддокумента</param>
-    /// <returns>Имя изображения в списке EFPApp.MainImages</returns>
+    /// <returns>Имя изображения в списке <see cref="EFPApp.MainImages"/></returns>
     public string GetImageKey(DataRow row)
     {
       return _UI.ImageHandlers.GetImageKey(_DocTypeBase.Name, row);
@@ -886,7 +885,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает EFPReportFilterItem для добавления в табличку фильтра.
+    /// Создает <see cref="EFPReportFilterItem"/> для добавления в табличку фильтра.
     /// </summary>
     /// <param name="displayName">Заголовок фильтра (обычно, имя поля)</param>
     /// <param name="id">Идентификатор документа или поддокумента</param>
@@ -943,37 +942,37 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Это событие вызывается при запросе копирования строк табличного просмотра
     /// документа в буфер обмена или выполнении команды "Отправить - выборка документов".
-    /// Также используется при копировании ссылки в EFPDocComboBox
-    /// Используйте это событие вместо установки обработчика EFPDataGridView.CommandItems.GetDocSel
-    /// при инициализации табличного просмотра в InitGrid
+    /// Также используется при копировании ссылки в <see cref="EFPDocComboBox"/>.
+    /// Используйте это событие вместо установки обработчика <see cref="EFPDBxGridView.GetDocSel"/>
+    /// при инициализации табличного просмотра в обработчике <see cref="DocTypeUI.InitView"/>.
     /// Ссылки на непосредственно выбранные документы добавляются автоматически
     /// </summary>
     public event DocTypeDocSelEventHandler GetDocSel;
 
     /// <summary>
-    /// Возвращает true, если обработчик события GetDocSel установлен
+    /// Возвращает true, если обработчик события <see cref="GetDocSel"/> установлен.
     /// </summary>
     public bool HasGetDocSel { get { return GetDocSel != null; } }
 
     /// <summary>
     /// Создать выборку документов.
-    /// В выборку попадают выбранные документы с идентификаторами AllIds.
-    /// Если задан обработчик события GetDocSel, то будут добавлены связанные
-    /// документы, на которые есть ссылочные поля
+    /// В выборку попадают выбранные документы.
+    /// Если задан обработчик события <see cref="GetDocSel"/>, то будут добавлены связанные
+    /// документы, на которые есть ссылочные поля.
     /// </summary>
     /// <param name="docSel">Заполняемая выборка документов</param>
     /// <param name="ids">Идентификаторы выбранных документов или поддокументов</param>
     /// <param name="reason">Причина построения выборки</param>
     /// <returns>Выборка</returns>
-    public abstract void PerformGetDocSel(DBxDocSelection docSel, Int32[] ids, EFPDBxGridViewDocSelReason reason);
+    public abstract void PerformGetDocSel(DBxDocSelection docSel, Int32[] ids, EFPDBxViewDocSelReason reason);
 
     /// <summary>
-    /// Вызывает обработчик события GetDocSel, если он установлен.
+    /// Вызывает обработчик события <see cref="GetDocSel"/>, если он установлен.
     /// </summary>
     /// <param name="docSel">Заполняемая выборка документов</param>
     /// <param name="ids">Идентификаторы выбранных документов или поддокументов</param>
     /// <param name="reason">Причина построения выборки</param>
-    protected void OnGetDocSel(DBxDocSelection docSel, Int32[] ids, EFPDBxGridViewDocSelReason reason)
+    protected void OnGetDocSel(DBxDocSelection docSel, Int32[] ids, EFPDBxViewDocSelReason reason)
     {
       if (GetDocSel != null)
       {
@@ -991,12 +990,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает обработчик события GetDocSel, если он установлен.
+    /// Вызывает обработчик события <see cref="GetDocSel"/>, если он установлен.
     /// </summary>
     /// <param name="docSel">Заполняемая выборка документов</param>
     /// <param name="rows">Строки таблицы документов или поддокументов, откуда извлекаются идентификаторы</param>
     /// <param name="reason">Причина построения выборки</param>
-    protected void OnGetDocSel(DBxDocSelection docSel, DataRow[] rows, EFPDBxGridViewDocSelReason reason)
+    protected void OnGetDocSel(DBxDocSelection docSel, DataRow[] rows, EFPDBxViewDocSelReason reason)
     {
       if (GetDocSel != null)
       {
@@ -1015,12 +1014,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получить выборку документов.
-    /// Вызывает обработчик события GetDocSel, если он установлен.
+    /// Вызывает обработчик события <see cref="GetDocSel"/>, если он установлен.
     /// </summary>
     /// <param name="docSel">Заполняемая выборка документов</param>
     /// <param name="id">Идентификатор документа или поддокумента</param>
     /// <param name="reason">Причина построения выборки</param>
-    public void PerformGetDocSel(DBxDocSelection docSel, Int32 id, EFPDBxGridViewDocSelReason reason)
+    public void PerformGetDocSel(DBxDocSelection docSel, Int32 id, EFPDBxViewDocSelReason reason)
     {
       if (id != 0)
         PerformGetDocSel(docSel, new Int32[1] { id }, reason);
@@ -1028,12 +1027,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получить выборку документов.
-    /// Вызывает обработчик события GetDocSel, если он установлен.
+    /// Вызывает обработчик события <see cref="GetDocSel"/>, если он установлен.
     /// </summary>
     /// <param name="docSel">Заполняемая выборка документов</param>
     /// <param name="ids">Список идентификаторов документа или поддокумента</param>
     /// <param name="reason">Причина построения выборки</param>
-    public void PerformGetDocSel(DBxDocSelection docSel, IdList ids, EFPDBxGridViewDocSelReason reason)
+    public void PerformGetDocSel(DBxDocSelection docSel, IdList ids, EFPDBxViewDocSelReason reason)
     {
       if (ids != null)
         PerformGetDocSel(docSel, ids.ToArray(), reason);
@@ -1079,19 +1078,16 @@ namespace FreeLibSet.Forms.Docs
     /// Описание вида документов
     /// </summary>
     public DBxDocType DocType { get { return _DocType; } }
-    private DBxDocType _DocType;
+    private /*readonly меняется при смене DocProvider */ DBxDocType _DocType;
 
     /// <summary>
     /// True, если допускается одновременное редактирование или
     /// просмотр нескольких выбранных документов. По умолчанию -
-    /// false (нельзя)
+    /// false (нельзя).
     /// </summary>
     public bool CanMultiEdit { get { return _CanMultiEdit; } set { _CanMultiEdit = value; } }
     private bool _CanMultiEdit;
 
-    /// <summary>
-    /// Изображение, асоциированное с документом данного вида
-    /// </summary>
     /// <summary>
     /// true, если разрешено создание нового документа на основании существующего
     /// </summary>
@@ -1099,11 +1095,11 @@ namespace FreeLibSet.Forms.Docs
     private bool _CanInsertCopy;
 
     /// <summary>
-    /// Разрешение на вид документов, заданное с помощью DBxDocTypePermission.
-    /// Возвращаемое значение может отличаться от свойства TableMode.
+    /// Разрешение на вид документов, заданное с помощью <see cref="DocTypePermission"/>.
+    /// Возвращаемое значение может отличаться от свойства <see cref="DocTypeUIBase.TableMode"/>.
     /// У пользователя может не быть разрешения на вид документа, но быть разрешение на таблицу.
-    /// В большинстве случаев следует использовать свойство TableMode.
-    /// Вызывает метод DocTypePermission.GetAccessMode().
+    /// В большинстве случаев следует использовать свойство <see cref="DocTypeUIBase.TableMode"/>.
+    /// Вызывает метод <see cref="DocTypePermission.GetAccessMode(UserPermissions, string)"/>.
     /// </summary>
     public DBxAccessMode DocTypePermissionMode
     {
@@ -1115,10 +1111,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Генератор табличного просмотра.
-    /// Обычно в прикладном коде сюда следует добавить описания столбцов
+    /// Обычно в прикладном коде сюда следует добавить описания столбцов.
     /// </summary>
     public EFPDocTypeGridProducer GridProducer { get { return _GridProducer; } }
-    private EFPDocTypeGridProducer _GridProducer;
+    private readonly EFPDocTypeGridProducer _GridProducer;
 
     #endregion
 
@@ -1199,7 +1195,7 @@ namespace FreeLibSet.Forms.Docs
     #region Список видов поддокументов
 
     /// <summary>
-    /// Список для реализации свойства DocTypeUI.SubDocTypes
+    /// Список для реализации свойства <see cref="SubDocTypes"/>.
     /// </summary>
     public class SubDocTypeList : IEnumerable<SubDocTypeUI>
     {
@@ -1215,14 +1211,14 @@ namespace FreeLibSet.Forms.Docs
 
       #region Свойства
 
-      private DocTypeUI _Owner;
+      private readonly DocTypeUI _Owner;
 
       internal Dictionary<string, SubDocTypeUI> Items { get { return _Items; } }
-      private Dictionary<string, SubDocTypeUI> _Items;
+      private readonly Dictionary<string, SubDocTypeUI> _Items;
 
       /// <summary>
       /// Доступ к интерфейса поддокумента по имени таблицы поддокумента.
-      /// Если запрошен несуществующий вид поддокумента, которого нет в списке DBxDocType.SubDocs
+      /// Если запрошен несуществующий вид поддокумента, которого нет в списке <see cref="DBxDocType.SubDocs"/>
       /// (или поддокумент относится к другому документу), генерируется исключение.
       /// </summary>
       /// <param name="subDocTypeName">Имя таблицы поддокумента</param>
@@ -1276,7 +1272,7 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейсы пользователя для видов поддокументов
     /// </summary>
     public SubDocTypeList SubDocTypes { get { return _SubDocTypes; } }
-    private SubDocTypeList _SubDocTypes;
+    private readonly SubDocTypeList _SubDocTypes;
 
     #endregion
 
@@ -1302,9 +1298,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Обобщенный метод получения буферизованных или небуферизованных данных.
-    /// Буферизация используется, если свойство DataBuffering установлено в true.
-    /// Всегда создает новый объект DataView, DataTable.DefaultView не используется.
-    /// Рекомендуется вызывать DataView.Dispose() сразу по окончании использования.
+    /// Буферизация используется, если свойство <see cref="DataBuffering"/> установлено в true.
+    /// Всегда создает новый объект <see cref="System.Data.DataView"/>, <see cref="DataTable.DefaultView"/> не используется.
+    /// Следует вызывать <see cref="DataView"/>.Dispose() по окончании использования.
     /// </summary>
     /// <param name="columns">Требуемые поля</param>
     /// <param name="filter">Условия фильтрации строк или null</param>
@@ -1318,11 +1314,11 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Обобщенный метод получения буферизованных или небуферизованных данных.
-    /// Буферизация используется, если свойство DataBuffering установлено в true.
-    /// Можно задать ограничение на максимальное число записей (игнорируется при DataBuffering=true).
-    /// Если ограничение сработало, то у таблицы DataView.Table выставляется свойство ExtendedProperties "Limited"
-    /// Всегда создает новый объект DataView, DataTable.DefaultView не используется.
-    /// Рекомендуется вызывать DataView.Dispose() сразу по окончании использования.
+    /// Буферизация используется, если свойство <see cref="DataBuffering"/> установлено в true.
+    /// Можно задать ограничение на максимальное число записей (игнорируется при <see cref="DataBuffering"/>=true).
+    /// Если ограничение сработало, то у таблицы <see cref="DataView.Table"/> выставляется свойство <see cref="DataTable.ExtendedProperties"/> "Limited".
+    /// Всегда создает новый объект <see cref="System.Data.DataView"/>, <see cref="DataTable.DefaultView"/> не используется.
+    /// Следует вызывать <see cref="DataView"/>.Dispose() по окончании использования.
     /// </summary>
     /// <param name="columns">Требуемые поля</param>
     /// <param name="filter">Условия фильтрации строк или null</param>
@@ -1382,10 +1378,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Обобщенный метод получения буферизованных или небуферизованных данных.
-    /// Буферизация используется, если свойство DataBuffering установлено в true.
+    /// Буферизация используется, если свойство <see cref="DataBuffering"/> установлено в true.
     /// Эта версия загружает все документы, кроме удаленных. 
-    /// Всегда создает новый объект DataView, DataTable.DefaultView не используется.
-    /// Рекомендуется вызывать DataView.Dispose() сразу по окончании использования.
+    /// Всегда создает новый объект <see cref="System.Data.DataView"/>, <see cref="DataTable.DefaultView"/> не используется.
+    /// Следует вызывать <see cref="DataView"/>.Dispose() по окончании использования.
     /// </summary>
     /// <param name="columns">Требуемые поля</param>
     /// <returns>Объект DataView, который можно использовать для табличного просмотра или перебора строк</returns>
@@ -1437,17 +1433,17 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получение документов с сервера без использования буферизации, независимо от
-    /// свойства DataBuffering. Выполняет непосредственное обращение к серверу.
+    /// свойства <see cref="DataBuffering"/>. Выполняет непосредственное обращение к серверу.
     /// Добавляет к списку полей <paramref name="columns"/>, если он задан, поле "Id".
-    /// Если <paramref name="showDeleted"/>=false, то добавляется фильт по полю "Deleted" (если DBxDocTypes.UseDeleted=true).
+    /// Если <paramref name="showDeleted"/>=false, то добавляется фильтр по полю "Deleted" (если <see cref="DBxDocTypes.UseDeleted"/>=true).
     /// Этот метод, в основном, предназначен для внутреннего использования.
-    /// В прикладном коде обычно следует использовать вызовы DBxDocProvider.FillSelect(), которые не выполняют дополнительных действий с запросом.
+    /// В прикладном коде обычно следует использовать вызовы <see cref="DBxDocProvider.FillSelect(DBxSelectInfo)"/>, которые не выполняют дополнительных действий с запросом.
     /// </summary>
     /// <param name="columns">Требуемые поля</param>
     /// <param name="filter">Условия фильтрации строк или null</param>
     /// <param name="showDeleted">true, если надо показать удаленные строки</param>
     /// <param name="orderBy">Порядок сортировки строк</param>
-    /// <returns>Таблица DataTable</returns>
+    /// <returns>Таблица <see cref="DataTable"/></returns>
     public DataTable GetUnbufferedData(DBxColumns columns, DBxFilter filter, bool showDeleted, DBxOrder orderBy)
     {
       return GetUnbufferedData(columns, filter, showDeleted, orderBy, 0);
@@ -1455,13 +1451,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получение документов с сервера без использования буферизации, независимо от
-    /// свойства DataBuffering. Выполняет непосредственное обращение к серверу.
+    /// свойства <see cref="DataBuffering"/>. Выполняет непосредственное обращение к серверу.
     /// Добавляет к списку полей <paramref name="columns"/>, если он задан, поле "Id".
-    /// Если <paramref name="showDeleted"/>=false, то добавляется фильт по полю "Deleted" (если DBxDocTypes.UseDeleted=true).
-    /// Если задано ограничение на число записей <paramref name="maxRecordCount"/>, то через дополнительное свойство DataTable.ExtendeedProperties с
+    /// Если <paramref name="showDeleted"/>=false, то добавляется фильтр по полю "Deleted" (если <see cref="DBxDocTypes.UseDeleted"/>=true).
+    /// Если задано ограничение на число записей <paramref name="maxRecordCount"/>, то через дополнительное свойство <see cref="DataTable.ExtendedProperties"/> с
     /// именем "Limited" возвращается true, если лимит был превышен.
     /// Этот метод, в основном, предназначен для внутреннего использования.
-    /// В прикладном коде обычно следует использовать вызовы DBxDocProvider.FillSelect(), которые не выполняют дополнительных действий с запросом.
+    /// В прикладном коде обычно следует использовать вызовы <see cref="DBxDocProvider.FillSelect(DBxSelectInfo)"/>, которые не выполняют дополнительных действий с запросом.
     /// </summary>
     /// <param name="columns">Требуемые поля</param>
     /// <param name="filter">Условия фильтрации строк или null</param>
@@ -1559,7 +1555,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Очистка буферизованных данных. При следующем обращении к
-    /// BufferedData данные будут снова загружены с сервера
+    /// <see cref="GetBufferedData(DBxColumns)"/> данные будут снова загружены с сервера.
     /// </summary>
     public void RefreshBufferedData()
     {
@@ -1590,7 +1586,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="reInit">true при повторном вызове метода (после изменения конфигурации просмотра)
     /// и false при первом вызове</param>
     /// <param name="columns">Сюда помещается список имен полей, которые требуются для текущей конфигурации просмотра</param>
-    /// <param name="userInitData">Свойство Args.Tag, передаваемое обработчику InitGrid (если он установлен)</param>
+    /// <param name="userInitData">Свойство <see cref="InitEFPDBxViewEventArgs.UserInitData"/>, передаваемое обработчику <see cref="InitView"/> (если он установлен)</param>
     public void PerformInitGrid(EFPDBxGridView controlProvider, bool reInit, DBxColumnList columns, object userInitData)
     {
       if (reInit)
@@ -1723,8 +1719,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается при инициализации таблицы просмотра документов
-    /// для добавления столбцов. Если обработчик не установлен, выполняется
-    /// инициализация по умолчанию.
+    /// для добавления столбцов. Если обработчик не установлен, выполняется инициализация по умолчанию.
     /// Событие вызывается однократно. При изменении настроек просмотра не вызывается.
     /// </summary>
     public event InitEFPDBxViewEventHandler InitView;
@@ -1748,13 +1743,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается при инициализации таблицы просмотра выборки документов.
-    /// В отличие от основного события InitView, обработчик этого события не должен добавлять фильтры в просмотр.
+    /// В отличие от основного события <see cref="InitView"/>, обработчик этого события не должен добавлять фильтры в просмотр.
     /// Обработчик может добавить команды локального меню, например, для группового добавления ссылок на документы в выборку из других документов.
     /// </summary>
     public event InitEFPDocSelViewEventHandler InitDocSelView;
 
     /// <summary>
-    /// Вызывает обработчик события InitDocSelView, если он установлен, с перехватом ошибок
+    /// Вызывает обработчик события <see cref="InitDocSelView"/>, если он установлен, с перехватом ошибок.
     /// </summary>
     /// <param name="controlProvider">Провайдер просмотра выборки документов</param>
     public void CallInitDocSelView(IEFPDocSelView controlProvider)
@@ -2023,8 +2018,8 @@ namespace FreeLibSet.Forms.Docs
     #region Список столбцов для табличного просмотра
 
     /// <summary>
-    /// Получить список столбцов, необходимых для табличного просмотра с заданной конфигурации
-    /// Заполняется такой же список столбов, как и в методе DoInitGrid(), но без создания самого просмотра
+    /// Получить список столбцов, необходимых для табличного просмотра с заданной конфигурации.
+    /// Заполняется такой же список столбов, как и в методе <see cref="PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object)"/>, но без создания самого просмотра.
     /// </summary>
     /// <param name="columns">Заполняемый список столбцов</param>
     /// <param name="config">Конфигурация табличного просмотра. Если null, то используется конфигурация по умолчанию</param>
@@ -2058,7 +2053,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="reInit">True, если выполняется повторная инициализации после настройки просмотра.
     /// False - первичная инициализация при выводе формы на экран</param>
     /// <param name="columns">Сюда добавляются имена полей, которые должны быть в наборе данных</param>
-    /// <param name="userInitData"></param>
+    /// <param name="userInitData">Свойство <see cref="InitEFPDBxViewEventArgs.UserInitData"/>, передаваемое обработчику <see cref="InitView"/> (если он установлен)</param>
     public void PerformInitTree(EFPDocTreeView controlProvider, bool reInit, DBxColumnList columns, object userInitData)
     {
       if (reInit)
@@ -2402,7 +2397,7 @@ namespace FreeLibSet.Forms.Docs
     /// Список открытых табличных просмотров для данного типа документов
     /// </summary>
     public DocumentViewHandlerList Browsers { get { return _Browsers; } }
-    private DocumentViewHandlerList _Browsers;
+    private readonly DocumentViewHandlerList _Browsers;
 
     #endregion
 
@@ -2410,14 +2405,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Команда главного меню "Журналы" или "Справочники".
-    /// Свойство устанавливается вызовом CreateMainMenuItem(), а до этого содержит null
+    /// Свойство устанавливается вызовом <see cref="CreateMainMenuItem(EFPCommandItem)"/>, а до этого содержит null.
     /// </summary>
     public EFPCommandItem MainMenuCommandItem { get { return _MainMenuCommandItem; } set { _MainMenuCommandItem = value; } }
     private EFPCommandItem _MainMenuCommandItem;
 
     /// <summary>
     /// Создает команду главного меню для просмотра справочника или другого вида документа.
-    /// Команда сохраняется в свойстве MainMenuCommandItem. После этого происходит автоматическое
+    /// Команда сохраняется в свойстве <see cref="MainMenuCommandItem"/>. После этого происходит автоматическое
     /// управление видимостью команды.
     /// Нельзя использовать метод для создания команд локального меню.
     /// </summary>
@@ -2442,9 +2437,9 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Если была создана команда главного меню (свойство MainMenuCommandItem), то метод
-    /// инициализирует видимость команды в зависимости от разрений текущего пользователя.
-    /// Этот метод вызывается из DBUI.EndInit() и OnDocProviderChanged()
+    /// Если была создана команда главного меню (свойство <see cref="MainMenuCommandItem"/>), то метод
+    /// инициализирует видимость команды в зависимости от разрешений текущего пользователя.
+    /// Этот метод вызывается из <see cref="DBUI.EndInit()"/> и <see cref="DBUI.OnDocProviderChanged()"/>.
     /// </summary>
     public void InitMainMenuCommandItemVisible()
     {
@@ -2485,7 +2480,7 @@ namespace FreeLibSet.Forms.Docs
     #region Окно просмотра списка документов
 
     /// <summary>
-    /// Открытие новой или активация существующей формы просмотра документов с заданными фильтрами
+    /// Открытие новой или активация существующей формы просмотра документов с заданными фильтрами.
     /// </summary>
     /// <param name="externalFilters">Фильтры, которые должны быть установлены в просмотре. Ксли null,
     /// то используется последняя сохраненная конфигурация фильтров, как если бы просмотр был открыт командой меню.
@@ -2542,7 +2537,7 @@ namespace FreeLibSet.Forms.Docs
     /// Открытие новой или активация существующей формы просмотра документов с заданными фильтрами.
     /// Эта версия метода использует ключ для поиска, создаваемый из <paramref name="externalFilters"/>
     /// </summary>
-    /// <param name="externalFilters">Фильтры, которые должны быть установлены в просмотре. Ксли null,
+    /// <param name="externalFilters">Фильтры, которые должны быть установлены в просмотре. Если null,
     /// то используется последняя сохраненная конфигурация фильтров, как если бы просмотр был открыт командой меню.
     /// Аргумент используется только при создании новой формы</param>
     /// <param name="currentDocId">Идентификатор документа, строка которого должна быть выбрана. Если 0, то выбор не
@@ -2558,7 +2553,7 @@ namespace FreeLibSet.Forms.Docs
     /// Эта версия метода использует ключ для поиска, создаваемый из <paramref name="externalFilters"/>.
     /// Выбор документа не выполняется
     /// </summary>
-    /// <param name="externalFilters">Фильтры, которые должны быть установлены в просмотре. Ксли null,
+    /// <param name="externalFilters">Фильтры, которые должны быть установлены в просмотре. Если null,
     /// то используется последняя сохраненная конфигурация фильтров, как если бы просмотр был открыт командой меню.
     /// Аргумент используется только при создании новой формы</param>
     /// <returns>Объект формы</returns>
@@ -2615,6 +2610,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выбор одного документа.
     /// Возвращает идентификатор документа или 0, если выбор не сделан.
+    /// Используется диалог <see cref="DocSelectDialog"/>.
     /// </summary>
     /// <returns>Идентификатор документа или 0</returns>
     public Int32 SelectDoc()
@@ -2625,6 +2621,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выбор одного документа.
     /// Возвращает идентификатор документа или 0, если выбор не сделан.
+    /// Используется диалог <see cref="DocSelectDialog"/>.
     /// </summary>
     /// <param name="title">Заголовок блока диалога</param>
     /// <returns>Идентификатор документа или 0</returns>
@@ -2640,6 +2637,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выбор документа из справочника.
     /// Пользователь должен выбрать документ или нажать кнопку "Отмена".
+    /// Используется диалог <see cref="DocSelectDialog"/>.
     /// </summary>
     /// <param name="docId">Вход-выход идентификатор выбранного документа.
     /// На выходе не может быть 0</param>
@@ -2651,6 +2649,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выбор документа из справочника.
+    /// Используется диалог <see cref="DocSelectDialog"/>.
     /// </summary>
     /// <param name="docId">Вход-выход идентификатор выбранного документа</param>
     /// <param name="title">Заголовок формы выбора документа</param>
@@ -2665,7 +2664,7 @@ namespace FreeLibSet.Forms.Docs
     /// Выбор документа из справочника документов с использованием заданного набора фильтров просмотра,
     /// переопределяющего текущие установки пользователя. Пользователь может выбирать только подходящие
     /// документы, проходящие фильтр, т.к. не может его редактировать.
-    /// Используйте класс DocSelectDialog для задания большего количества параметров
+    /// Используйте класс <see cref="DocSelectDialog"/> для задания большего количества параметров.
     /// </summary>
     /// <param name="docId">Вход-выход идентификатор выбранного документа</param>
     /// <param name="title">Заголовок формы выбора документа</param>
@@ -2697,7 +2696,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выбор документа из заданного множества документов.
-    /// Испольщуйте класс DocSelectDialog для задания дополнительных параметров
+    /// Испольщуйте класс <see cref="DocSelectDialog"/> для задания дополнительных параметров.
     /// </summary>
     /// <param name="docId">Вход-выход идентификатор выбранного документа</param>
     /// <param name="title">Заголовок формы выбора документа</param>
@@ -2725,7 +2724,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выбор одного или нескольких документов из справочника документов.
-    /// Используются текущие настройки фильтров, которые пользователь может менять
+    /// Используются текущие настройки фильтров, которые пользователь может менять.
     /// </summary>
     /// <returns>Массив идентификаторов выбранных документов или пустой массив, если выбор не сделан</returns>
     public Int32[] SelectDocs()
@@ -2735,7 +2734,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выбор одного или нескольких документов из справочника документов.
-    /// Используются текущие настройки фильтров, которые пользователь может менять
+    /// Используются текущие настройки фильтров, которые пользователь может менять.
     /// </summary>
     /// <param name="title">Заголовок формы выбора документа</param>
     /// <returns>Массив идентификаторов выбранных документов или пустой массив, если выбор не сделан</returns>
@@ -2748,6 +2747,7 @@ namespace FreeLibSet.Forms.Docs
     /// Выбор одного или нескольких документов из справочника документов с использованием заданного набора фильтров просмотра,
     /// переопределяющего текущие установки пользователя. Пользователь может выбирать только подходящие
     /// документы, проходящие фильтр, т.к. не может его редактировать.
+    /// Испольщуйте класс <see cref="DocSelectDialog"/> для задания дополнительных параметров.
     /// </summary>
     /// <param name="title">Заголовок формы выбора документа</param>
     /// <param name="filters">Фиксированный набор фильтров. Значение null приводит к использованию текущего набора
@@ -2776,7 +2776,7 @@ namespace FreeLibSet.Forms.Docs
     #region Редактирование документов
 
     /// <summary>                                            
-    /// Выполнение создания, редактирования, удаления или просмотра документа 
+    /// Выполнение создания, редактирования, удаления или просмотра документа.
     /// </summary>
     /// <param name="editIds">Идентификаторы документов в режиме просмотра, редактирования или удаления</param>
     /// <param name="state">Требуемый режим</param>
@@ -2784,7 +2784,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="caller">Обработчик, связанный с табличным просмотром.
     /// Если он задан, то в режиме создания документа будут использованы установленные в просмотре
     /// фильтры для инициализации полей документа.</param>
-    /// <returns>True, если выполнялось редактирование и документ был сохранен (DocumentEditor.DataChanged)</returns>
+    /// <returns>True, если выполнялось редактирование и документ был сохранен (свойство <see cref="DocumentEditor.DataChanged"/>)</returns>
     public bool PerformEditing(Int32[] editIds, EFPDataGridViewState state, bool modal, DocumentViewHandler caller)
     {
       switch (state)
@@ -2878,12 +2878,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполнение создания, редактирования, удаления или просмотра документа 
+    /// Выполнение создания, редактирования, удаления или просмотра документа.
     /// </summary>
     /// <param name="editIds">Идентификаторы документов в режиме просмотра, редактирования или удаления</param>
     /// <param name="state">Требуемый режим</param>
     /// <param name="modal">True для запуска в модальном режиме</param>
-    /// <returns>True, если выполнялось редактирование и документ был сохранен (DocumentEditor.DataChanged)</returns>
+    /// <returns>True, если выполнялось редактирование и документ был сохранен (свойство <see cref="DocumentEditor.DataChanged"/>)</returns>
     public bool PerformEditing(Int32[] editIds, EFPDataGridViewState state, bool modal)
     {
       return PerformEditing(editIds, state, modal, null);
@@ -2894,7 +2894,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="editId">Идентификатор редактируемого документа</param>
     /// <param name="readOnly">True, если требуется просмотр, false-редактирование</param>
-    /// <returns>True, если выполнялось редактирование и документ был сохранен</returns>
+    /// <returns>True, если выполнялось редактирование и документ был сохранен (свойство <see cref="DocumentEditor.DataChanged"/>)</returns>
     public bool PerformEditing(Int32 editId, bool readOnly)
     {
       return PerformEditing(editId, readOnly, (DocumentViewHandler)null);
@@ -2906,7 +2906,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="editId">Идентификатор редактируемого документа</param>
     /// <param name="readOnly">True, если требуется просмотр, false-редактирование</param>
     /// <param name="caller"></param>
-    /// <returns>True, если выполнялось редактирование и документ был сохранен</returns>
+    /// <returns>True, если выполнялось редактирование и документ был сохранен (свойство <see cref="DocumentEditor.DataChanged"/>)</returns>
     public bool PerformEditing(Int32 editId, bool readOnly, DocumentViewHandler caller)
     {
       if (editId == 0)
@@ -2926,7 +2926,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выполнение редактирования или просмотра одиночного документа.
     /// Если выборка содержит несколько документов данного типа, то показывается выборка с этими документами.
-    /// Групповое редактирование, как в PerformEditing(), не применяется
+    /// Групповое редактирование, как в <see cref="PerformEditing(int, bool)"/> не применяется.
     /// Документы других типов, которые могут присутствовать в исходной выборке, не показываются.
     /// </summary>
     /// <param name="docSel">Выборка документов</param>
@@ -2940,7 +2940,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выполнение редактирования или просмотра одиночного документа.
     /// Если выборка содержит несколько документов данного типа, то показывается выборка с этими документами.
-    /// Групповое редактирование, как в PerformEditing(), не применяется
+    /// Групповое редактирование, как в <see cref="PerformEditing(int, bool)"/> не применяется.
     /// Документы других типов, которые могут присутствовать в исходной выборке, не показываются.
     /// </summary>
     /// <param name="docSel">Выборка документов</param>
@@ -2957,7 +2957,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выполнение редактирования или просмотра одиночного документа.
     /// Если массив содержит несколько идентификаторов документов, то показывается выборка с этими документами.
-    /// Групповое редактирование, как в PerformEditing(), не применяется
+    /// Групповое редактирование, как в <see cref="PerformEditing(int, bool)"/> не применяется.
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов</param>
     /// <param name="readOnly">true - режим просмотра, а не редактирования.
@@ -2970,7 +2970,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выполнение редактирования или просмотра одиночного документа.
     /// Если массив содержит несколько идентификаторов документов, то показывается выборка с этими документами.
-    /// Групповое редактирование, как в PerformEditing(), не применяется
+    /// Групповое редактирование, как в <see cref="PerformEditing(int, bool)"/> не применяется.
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов</param>
     /// <param name="readOnly">true - режим просмотра, а не редактирования.
@@ -2997,11 +2997,10 @@ namespace FreeLibSet.Forms.Docs
       }
     }
 
-
     /// <summary>
     /// Открывает окно информации о документе
     /// </summary>
-    /// <param name="docId"></param>
+    /// <param name="docId">Идентификатор документа</param>
     public void ShowDocInfo(Int32 docId)
     {
       if (docId == 0)
@@ -3021,7 +3020,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Инициализация начального значения поля "GroupId" для нового документа.
-    /// Вызывается реализациями DocumentViewHandler для просмотров документов.
+    /// Вызывается реализациями <see cref="DocumentViewHandler"/> для просмотров документов.
     /// Если текущий вид документов не имеет связанного дерева групп, метод не выполняет никаких действий.
     /// </summary>
     /// <param name="newDoc">Создаваемый документ до вывода на экран</param>
@@ -3068,19 +3067,19 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается при запуске редактирования до вывода окна релактора на экран
-    /// и до создание объекта DocumentEditor.
+    /// и до создание объекта <see cref="DocumentEditor"/>.
     /// Обработчик может выполнить собственные действия, вместо редактирования
-    /// с помощью стандартного редактора, установив свойство Args.Handled=true
-    /// Обработчик не вызывается, если объект DocumentEditor создается и 
-    /// запускается не с помощью метода ClientDocType.PerformEditing()
+    /// с помощью стандартного редактора, установив свойство <see cref="DocTypeEditingEventArgs.Handled"/>=true.
+    /// Обработчик не вызывается, если объект <see cref="DocumentEditor"/> создается и 
+    /// запускается не с помощью метода <see cref="DocTypeUI.PerformEditing(int, bool)"/>
     /// </summary>
     public event DocTypeEditingEventHandler Editing;
 
     /// <summary>
-    /// Возвращает true, если есть хотя бы один установвленный обработчик
-    /// Editing, BeforeEdit или InitEditForm, то есть возможность редактирования 
+    /// Возвращает true, если есть хотя бы один установленный обработчик
+    /// <see cref="Editing"/>, <see cref="BeforeEdit"/> или <see cref="InitEditForm"/>, то есть возможность редактирования 
     /// была инициализирована.
-    /// Если свойство возвращает false, то вызов PerformEditing() бесполезен 
+    /// Если свойство возвращает false, то вызов <see cref="PerformEditing(int, bool)"/>.
     /// </summary>
     public bool HasEditorHandlers
     {
@@ -3092,7 +3091,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается до создания окна редактирования. Может потребовать
-    /// отказаться от редактирования, установив Cancel.
+    /// отказаться от редактирования, установив <see cref="BeforeDocEditEventArgs.Cancel"/>.
     /// </summary>
     public event BeforeDocEditEventHandler BeforeEdit;
 
@@ -3105,7 +3104,6 @@ namespace FreeLibSet.Forms.Docs
       cancel = args.Cancel;
       showEditor = args.ShowEditor;
     }
-
 
     /// <summary>
     /// Вызывается при инициализации окна редактирования документа. 
@@ -3131,11 +3129,11 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Вызывается из редактора документа перед записью значений в режимах
     /// Edit, Insert и InsertCopy. На момент вызова значения полей формы переписаны
-    /// в поля DocumentEditor.Documents. Обработчик может скорректировать эти значения
+    /// в поля <see cref="DocumentEditor.Documents"/>. Обработчик может скорректировать эти значения
     /// (например, не заданные поля).
     /// Также обработчик может отменить запись документов на сервере, установив
-    /// Args.Cancel=true. При этом следует вывести сообщение об ошибке. Этот обработчик не может
-    /// установить фокус ввода на "плохое" поле в редакторе, как обработчик DocumentEditor.BeforeWrite
+    /// <see cref="DocEditCancelEventArgs.Cancel"/>=true. При этом следует вывести сообщение об ошибке. Этот обработчик не может
+    /// установить фокус ввода на "плохое" поле в редакторе, как обработчик <see cref="DocumentEditor.BeforeWrite"/>.
     /// </summary>
     public event DocEditCancelEventHandler Writing;
 
@@ -3181,7 +3179,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Пересчет вычисляемых полей документов и поддокументов.
     /// Пересчет выполняется асинхронно.
-    /// После пересчета полей никаких действий не выполняется. Испольщуйте перегрузки с аргументом "AfterRecalc"
+    /// После пересчета полей никаких действий не выполняется. Используйте перегрузки с аргументом "AfterRecalc"
     /// </summary>
     /// <param name="docIds">Идентификаторы документов для пересчета.</param>
     public void RecalcColumns(Int32[] docIds)
@@ -3192,7 +3190,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Пересчет вычисляемых полей документов и поддокументов.
     /// Пересчет выполняется асинхронно.
-    /// Эта версия предполагает, что пользовательский обработчик <paramref name="afterRecalc"/> не получает параметров
+    /// Эта версия предполагает, что пользовательский обработчик <paramref name="afterRecalc"/> не получает параметров.
     /// </summary>
     /// <param name="docIds">Идентификаторы документов для пересчета.</param>
     /// <param name="afterRecalc">Пользовательский метод вызывается, когда пересчет полей выполнен.
@@ -3208,9 +3206,9 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="docIds">Идентификаторы документов для пересчета.</param>
     /// <param name="afterRecalc">Пользовательский метод вызывается, когда пересчет полей выполнен.
-    /// Метод вызывается в основном потоке приложения</param>
+    /// Метод вызывается в основном потоке приложения.</param>
     /// <param name="afterRecalcParams">Параметры, которые передаются пользовательскому методу <paramref name="afterRecalc"/>.
-    /// Значение null задает пересчет всех существующих документов</param>
+    /// Значение null задает пересчет всех существующих документов.</param>
     public void RecalcColumns(Int32[] docIds, Delegate afterRecalc, params object[] afterRecalcParams)
     {
       NamedValues dispArgs = new NamedValues();
@@ -3242,14 +3240,14 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Получение выборки документов текущего вида.
     /// В выборку сразу добавляются все переданные идентификаторы <paramref name="docIds"/>.
-    /// Затем вызывается метод OnGetDocSel() для вызова обработчика события.
-    /// Если для документа используются группы, то добавляются ссылки на документы вида GroupDocType.
+    /// Затем вызывается метод <see cref="DocTypeUIBase.OnGetDocSel(DBxDocSelection, DataRow[], EFPDBxViewDocSelReason)"/>для вызова обработчика события.
+    /// Если для документа используются группы, то добавляются ссылки на документы вида <see cref="GroupDocType"/>.
     /// </summary>
     /// <param name="docSel">Выборка документов, обычно пустая, куда добавляются ссылки на документы</param>
     /// <param name="docIds">Массив идентификаторов документов. 
     /// Если null или пустой массив, никаких действий не выполняется</param>
     /// <param name="reason">Причина создания выборки</param>
-    public override void PerformGetDocSel(DBxDocSelection docSel, Int32[] docIds, EFPDBxGridViewDocSelReason reason)
+    public override void PerformGetDocSel(DBxDocSelection docSel, Int32[] docIds, EFPDBxViewDocSelReason reason)
     {
       if (docIds == null || docIds.Length == 0)
         return;
@@ -3271,7 +3269,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создать выборку для заданных документов.
-    /// Массив идентификаторов может содержать нулевые и фиктивные идентификаторы, которые пропускаются 
+    /// Массив идентификаторов может содержать нулевые и фиктивные идентификаторы, которые пропускаются.
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов. Фиктивные и нулевые идентификаторы игнорируются</param>
     /// <returns>Выборка документов одного вида</returns>

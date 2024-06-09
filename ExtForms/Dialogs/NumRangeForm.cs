@@ -61,7 +61,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Диалог для ввода диапазона целых чисел.
-  /// Базовый класс для IntRangeDialog, SingleRangeDialog, DoubleRangeDialog и DecimalRangeDialog.
+  /// Базовый класс для <see cref="IntRangeDialog"/>, <see cref="SingleRangeDialog"/>, <see cref="DoubleRangeDialog"/> и <see cref="DecimalRangeDialog"/>.
   /// </summary>
   public abstract class BaseNumRangeDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
@@ -100,7 +100,7 @@ namespace FreeLibSet.Forms
     private T? _NFirstValue;
 
     /// <summary>
-    /// Управляемое свойство для NFirstValue
+    /// Управляемое свойство для <see cref="NFirstValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<T?> NFirstValueEx
@@ -118,7 +118,8 @@ namespace FreeLibSet.Forms
     private DepOutput<T?> _NFirstValueEx;
 
     /// <summary>
-    /// Вход и выход: Первое значение диапазона для закрытого интервала
+    /// Вход и выход: Первое значение диапазона для закрытого интервала.
+    /// Если <see cref="NFirstValue"/>=null, то возвращается значение 0.
     /// </summary>
     public T FirstValue
     {
@@ -127,7 +128,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для FirstValue
+    /// Управляемое свойство для <see cref="FirstValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<T> FirstValueEx
@@ -146,7 +147,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вход и выход: Последнее значение диапазона с поддержкой полуоткрытых диапазонов
+    /// Вход и выход: Последнее значение диапазона с поддержкой полуоткрытых диапазонов.
     /// </summary>
     public T? NLastValue
     {
@@ -163,7 +164,7 @@ namespace FreeLibSet.Forms
     private T? _NLastValue;
 
     /// <summary>
-    /// Управляемое свойство для NLastValue
+    /// Управляемое свойство для <see cref="NLastValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<T?> NLastValueEx
@@ -181,7 +182,8 @@ namespace FreeLibSet.Forms
     private DepOutput<T?> _NLastValueEx;
 
     /// <summary>
-    /// Вход и выход: Последнее значение диапазона для закрытого интервала
+    /// Вход и выход: Последнее значение диапазона для закрытого интервала.
+    /// Если <see cref="NLastValue"/>=null, возвращается нулевое значение.
     /// </summary>
     public T LastValue
     {
@@ -190,7 +192,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для NLastValue
+    /// Управляемое свойство для <see cref="NLastValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
     public DepValue<T> LastValueEx
@@ -212,7 +214,7 @@ namespace FreeLibSet.Forms
     #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (NFirstDate.HasValue=true и NLastDate.HasValue=true).
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (<see cref="NFirstValue"/>.HasValue=true и <see cref="NLastValue"/>.HasValue=true).
     /// Может использоваться в валидаторах.
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
@@ -240,14 +242,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error
+    /// По умолчанию - <see cref="UIValidateState.Error"/>, при этом полуоткрытые интервалы также запрещены.
     /// </summary>
     public UIValidateState CanBeEmptyMode { get { return _CanBeEmptyMode; } set { _CanBeEmptyMode = value; } }
     private UIValidateState _CanBeEmptyMode;
 
     /// <summary>
-    /// Можно ли вводить пустое значение. Дублирует свойство CanBeEmptyMode.
-    /// По умолчанию - false
+    /// Можно ли вводить пустое значение. Дублирует свойство <see cref="CanBeEmptyMode"/>.
+    /// По умолчанию - false.
+    /// Если <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/>, свойство возвращает true.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -296,8 +299,8 @@ namespace FreeLibSet.Forms
     private IFormatProvider _FormatProvider;
 
     /// <summary>
-    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format.
-    /// Установка значения свойства создает формат.
+    /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве <see cref="Format"/>.
+    /// Установка значения свойства создает формат с заданным количеством знаков после запятой.
     /// </summary>
     public virtual int DecimalPlaces
     {
@@ -328,7 +331,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Специальная реализация прокрутки значения стрелочками вверх и вниз.
     /// Если null, то прокрутки нет.
-    /// Обычно следует использовать свойство Increment, если не требуется специальная реализация прокрутки
+    /// Обычно следует использовать свойство <see cref="Increment"/>, если не требуется специальная реализация прокрутки.
     /// </summary>
     public IUpDownHandler<T?> UpDownHandler
     {
@@ -341,7 +344,7 @@ namespace FreeLibSet.Forms
     /// Если задано положительное значение (обычно, 1), то значение в поле можно прокручивать с помощью
     /// стрелочек вверх/вниз или колесиком мыши.
     /// Если свойство равно 0 (по умолчанию), то число можно вводить только вручную.
-    /// Это свойство дублирует UpDownHandler
+    /// Это свойство дублирует <see cref="UpDownHandler"/>.
     /// </summary>
     public T Increment
     {
@@ -377,7 +380,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показ блока диалога.
     /// </summary>
-    /// <returns>Ok, если пользователь ввел корректные значения</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь ввел корректные значения</returns>
     public override DialogResult ShowDialog()
     {
       NumRangeForm form = new NumRangeForm();
@@ -466,7 +469,6 @@ namespace FreeLibSet.Forms
       return DialogResult.OK;
     }
 
-
     private class EFPPack/*<T>
         where T : struct, IFormattable, IComparable<T>*/
     {
@@ -519,17 +521,8 @@ namespace FreeLibSet.Forms
         {
           T? v1 = efpFirstValue.NValue;
           T? v2 = efpLastValue.NValue;
-          if (v1.HasValue && v2.HasValue)
-          {
-            if (v1.Value.Equals(v2.Value))
-              lblRange.Text = v1.Value.ToString(efpFirstValue.Control.Format, efpFirstValue.Control.FormatProvider);
-            else
-              lblRange.Text = v1.Value.ToString(efpFirstValue.Control.Format, efpFirstValue.Control.FormatProvider) + " - " + v2.Value.ToString(efpLastValue.Control.Format, efpLastValue.Control.FormatProvider);
-          }
-          else if (v1.HasValue)
-            lblRange.Text = "От " + v1.Value.ToString(efpFirstValue.Control.Format, efpFirstValue.Control.FormatProvider);
-          else if (v2.HasValue)
-            lblRange.Text = "До " + v2.Value.ToString(efpLastValue.Control.Format, efpLastValue.Control.FormatProvider);
+          if (v1.HasValue || v2.HasValue)
+            lblRange.Text = FormatStringTools.RangeToString<T>(v1, v2, efpFirstValue.Control.Format, efpFirstValue.Control.FormatProvider);
           else
             lblRange.Text = "Диапазон не задан";
         }

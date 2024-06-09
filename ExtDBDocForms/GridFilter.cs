@@ -19,7 +19,7 @@ namespace FreeLibSet.Forms.Docs
   #region Интерфейс IDBxDocSelFilter
 
   /// <summary>
-  /// Интерфейс фильтра, поддерживающего работу с выборкамии документов
+  /// Интерфейс фильтра, поддерживающего работу с выборками документов <see cref="DBxDocSelection"/> 
   /// </summary>
   public interface IDBxDocSelectionFilter
   {
@@ -30,9 +30,9 @@ namespace FreeLibSet.Forms.Docs
     void GetDocSel(DBxDocSelection docSel);
 
     /// <summary>
-    /// Заменить документы в фильтре документами в выборке
+    /// Заменить документы в фильтре документами в выборке.
     /// Если выборка не содержит подходящих значений, то фильтр не изменяется и
-    /// возвращается false
+    /// возвращается false.
     /// </summary>
     /// <param name="docSel">Выборка из буфера обмена</param>
     /// <returns>trye, если удалось что-нибудь использовать</returns>
@@ -359,7 +359,7 @@ namespace FreeLibSet.Forms.Docs
 #endif
 
   /// <summary>
-  /// Расширение DBxCommonFilterSet интерфейсом IEFPGridFilterSet
+  /// Расширение <see cref="DBxCommonFilterSet"/> интерфейсом <see cref="IEFPGridFilterSet"/>
   /// </summary>
   public class DBxClientFilterSet : DBxCommonFilterSet, IEFPGridFilterSet
   {
@@ -374,8 +374,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Базовый класс для DBxClientFilters и GridFilters.
-  /// Реализует интерфейс IEFPGridFilters, нужный для редактирования списка фильтров.
+  /// Базовый класс для <see cref="DBxClientFilters"/> и <see cref="GridFilters"/>.
+  /// Реализует интерфейс <see cref="IEFPGridFilters"/>, нужный для редактирования списка фильтров.
   /// Выполняет перехват некоторых исключений и выводит сообщения об ошибке.
   /// </summary>
   public abstract class DBxClientFiltersBase : DBxCommonFilters, IEFPGridFilters
@@ -383,8 +383,8 @@ namespace FreeLibSet.Forms.Docs
     #region Переопределенные методы
 
     /// <summary>
-    /// Вызывается при возникновении ошибки чтении конфигурации в DBxCommonFilter.ReadConfig().
-    /// Выводит сообщение с помощью EFPApp.ShowException() и очищает фильтр
+    /// Вызывается при возникновении ошибки чтении конфигурации в <see cref="DBxCommonFilter.ReadConfig(CfgPart)"/>.
+    /// Выводит сообщение с помощью <see cref="EFPApp.ShowException(Exception, string)"/> и очищает фильтр.
     /// </summary>
     /// <param name="exception">Возникшее исключение</param>
     /// <param name="filter">Фильтр, для которого возникло исключение</param>
@@ -396,8 +396,8 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Внутренний метод для вызова события Changed.
-    /// Перехватывает исключение, которое может возникнуть в методе базового класса, и выводит сообщение с помощью EFPApp.ShowException().
+    /// Внутренний метод для вызова события <see cref="DBxCommonFilter.Changed"/>.
+    /// Перехватывает исключение, которое может возникнуть в методе базового класса, и выводит сообщение с помощью <see cref="EFPApp.ShowException(Exception, string)"/>.
     /// </summary>
     /// <param name="filter">Фильтр, который вызвал событие</param>
     protected override void OnChanged(DBxCommonFilter filter)
@@ -417,22 +417,20 @@ namespace FreeLibSet.Forms.Docs
     #region Методы добавления / удаления фильтров
 
     /// <summary>
-    /// Выполняет дополнительную проверку, что добавляемый фильтр реализует интерфейс IEFPGridFilter и в фильтре установлено свойство UseSqlFilter.
+    /// Выполняет дополнительную проверку, что добавляемый фильтр реализует интерфейс <see cref="IEFPGridFilter"/>.
     /// </summary>
     /// <param name="item">Добавляемый фильтр</param>
     protected override void OnBeforeAdd(DBxCommonFilter item)
     {
-      base.OnBeforeAdd(item);
+      base.OnBeforeAdd(item); // Этот метод только выполняет проверки. Наши проверки выполняем после
+      // item!=null - проверено
 
       if (!(item is IEFPGridFilter))
       {
         Exception e = new ArgumentException("Фильтр должен реализовывать интерфейс IEFPGridFilter", "item");
-        if (item != null)
-        {
-          e.Data["Item.GetType()"] = item.GetType().ToString();
-          e.Data["Item.DisplayName"] = item.DisplayName;
-          e.Data["Item.Code"] = item.Code;
-        }
+        e.Data["Item.GetType()"] = item.GetType().ToString();
+        e.Data["Item.DisplayName"] = item.DisplayName;
+        e.Data["Item.Code"] = item.Code;
         throw e;
       }
     }
@@ -441,7 +439,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region IEFPGridFilters Members
 
-    IEFPGridFilter IEFPGridFilters.this[string Name] { get { return (IEFPGridFilter)(base[Name]); } }
+    IEFPGridFilter IEFPGridFilters.this[string code] { get { return (IEFPGridFilter)(base[code]); } }
 
     /// <summary>
     /// Добавляет набор фильтров
@@ -518,7 +516,6 @@ namespace FreeLibSet.Forms.Docs
 
     #region IEnumerable<IEFPGridFilter> Members
 
-
     private class Enumerator2 : IEnumerator<IEFPGridFilter>
     {
       #region Конструктор
@@ -573,7 +570,6 @@ namespace FreeLibSet.Forms.Docs
       return new Enumerator2(this);
     }
 
-
     #endregion
   }
 
@@ -619,7 +615,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Коллекция фильтров табличного просмотра.
-  /// В отличие от DBxClientFilters, требует, чтобы все элементы создавали фильтры для Sql-запросов, то есть, чтобы DBxCommonFilter.UseSqlFilter=true.
+  /// В отличие от <see cref="DBxClientFilters"/>, требует, чтобы все элементы создавали фильтры для Sql-запросов, то есть, чтобы <see cref="DBxCommonFilter.UseSqlFilter"/>=true.
   /// </summary>
   public class GridFilters : DBxClientFiltersBase
   {
@@ -637,7 +633,7 @@ namespace FreeLibSet.Forms.Docs
     #region Методы добавления / удаления фильтров
 
     /// <summary>
-    /// Выполняет дополнительную проверку, что добавляемый фильтр реализует интерфейс IEFPGridFilter и в фильтре установлено свойство UseSqlFilter.
+    /// Выполняет дополнительную проверку, что добавляемый фильтр реализует интерфейс <see cref="IEFPGridFilter"/> и в фильтре установлено свойство <see cref="DBxCommonFilter.UseSqlFilter"/>.
     /// </summary>
     /// <param name="item">Добавляемый фильтр</param>
     protected override void OnBeforeAdd(DBxCommonFilter item)
@@ -683,8 +679,6 @@ namespace FreeLibSet.Forms.Docs
       return res2;
     }
 #endif
-
-
 
     #endregion
   }

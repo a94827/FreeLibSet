@@ -15,8 +15,16 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Провайдер комбоблока выбора группы документов
+  /// Провайдер комбоблока выбора группы документов.
+  /// Группы являются отдельным видом документов, которые на стороне клиента представлены описываются <see cref="GroupDocTypeUI"/>.
+  /// Документы группы образуют иерархическую структуру.
+  /// Комбоблок может отображаться в верхней части формы <see cref="DocTableViewForm"/>. Первоначально позволяет выбрать только группы верхнего уровня.
+  /// После того, как выбрана группа верхнего уровня, в выпадающем списке отображаются группы второго уровня, относящиеся к этой группе, и т.д.
+  /// В дереве отображается корневой узел "Все документы" / "Документы без групп". Дополнительно имеется свойство <see cref="EFPGroupDocComboBox.IncludeNested"/>, которое не влияет непосредственно на работу комбоблока,
+  /// но нужно для правильного отображения корневого узла.
+  /// Для прорисовки выпадающего списка используется <see cref="ListControlImagePainter"/>.
   /// </summary>
+  /// <seealso cref="EFPGroupDocTreeView"/>
   public class EFPGroupDocComboBox : EFPControl<ComboBox>
   {
     // Класс нельзя выводить ни из EFPDocComboBox, ни из EFPListComboBox
@@ -87,8 +95,8 @@ namespace FreeLibSet.Forms.Docs
 
         if (CommandItemsAssigned)
         {
-          if (CommandItems is ControlItems)
-            ((ControlItems)CommandItems).InitEnabled();
+          if (CommandItems is EFPGroupDocComboBoxCommandItems)
+            ((EFPGroupDocComboBoxCommandItems)CommandItems).InitEnabled();
         }
       }
     }
@@ -132,9 +140,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Признак "Включая вложенные папки".
-    /// Это свойство влияет только на отображение элемента при DocId=DocTypeUI.RootNodeDocId.
+    /// Это свойство влияет только на отображение элемента при <see cref="DocId"/>=0.
     /// Если true (по умолчанию), то отображается строка "Все документы",
-    /// иначе отображается "Документы без иерархии"
+    /// иначе отображается "Документы без иерархии".
     /// </summary>
     public bool IncludeNested
     {
@@ -152,8 +160,8 @@ namespace FreeLibSet.Forms.Docs
     private bool _IncludeNested;
 
     /// <summary>
-    /// Управляемое свойство IncludeNested.
-    /// Обычно его делают равным свойству EFPCheckBox.CheckedEx для флажка "Включая вложенные группы"
+    /// Управляемое свойство для <see cref="IncludeNested"/>.
+    /// Обычно его делают равным свойству <see cref="EFPCheckBox.CheckedEx"/> для флажка "Включая вложенные группы" или для аналогичной команды локального меню.
     /// </summary>
     public DepValue<bool> IncludeNestedEx
     {
@@ -190,7 +198,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Модель дерева.
-    /// При первом обращении к свойству создает DBxDocTreeModel.
+    /// При первом обращении к свойству создает <see cref="DBxDocTreeModel"/>.
     /// </summary>
     public DBxDocTreeModel Model
     {
@@ -224,8 +232,8 @@ namespace FreeLibSet.Forms.Docs
     /// Возвращает массив идентификаторов отфильтрованных групп документов.
     /// Если выбраны "Все документы", возвращает null.
     /// Если выбраны "Документы без групп", возвращает массив нулевой длины.
-    /// Если есть выбранная группа, возвращает массив из одного или нескольких элементов,
-    /// в зависимости от IncludeNested
+    /// Если есть выбранная группа <see cref="DocId"/>, возвращает массив из одного или нескольких элементов,
+    /// в зависимости от <see cref="IncludeNested"/>.
     /// </summary>
     public Int32[] AuxFilterGroupIds
     {
@@ -434,7 +442,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Метод обработки события Idle().
+    /// Метод обработки события Idle.
     /// Вызывается периодически, когда приложение ничем не занято.
     /// </summary>
     public override void HandleIdle()
@@ -637,14 +645,14 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Обработчик просмотра документов, связанный с текущим просмотром.
-    /// Свойство имеет значение не null, когда просмотр выведен на экран
+    /// Свойство имеет значение не null, когда просмотр выведен на экран.
     /// </summary>
     public DocumentViewHandler ViewHandler { get { return _ViewHandler; } }
     private IntDocumentViewHandler _ViewHandler;
 
     /// <summary>
     /// Уникальный идентификатор табличного просмотра.
-    /// Используется DocumentViewHandler.
+    /// Используется <see cref="DocumentViewHandler"/>.
     /// </summary>
     public Guid BrowserGuid
     {
@@ -655,7 +663,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Метод вызывается при первом появлении элемента на экране.
-    /// Инициализирует свойство ViewHandler
+    /// Инициализирует свойство <see cref="ViewHandler"/>.
     /// </summary>
     protected override void OnCreated()
     {
@@ -669,7 +677,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается, когда форма с управляющим элементом закрывается.
-    /// Удаляет свойство ViewHandler.
+    /// Удаляет свойство <see cref="ViewHandler"/>.
     /// </summary>
     protected override void OnDetached()
     {
@@ -687,132 +695,148 @@ namespace FreeLibSet.Forms.Docs
     #region Локальное меню
 
     /// <summary>
-    /// Вложенный класс команд локального меню
+    /// Команды локального меню.
     /// </summary>
-    private class ControlItems : EFPControlCommandItems
-    {
-      #region Конструктор
-
-      public ControlItems(EFPGroupDocComboBox controlProvider)
-        :base(controlProvider)
-      {
-        ciCut = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Cut);
-        ciCut.GroupBegin = true;
-        ciCut.Click += new EventHandler(ciCut_Click);
-        Add(ciCut);
-
-        ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
-        ciCopy.Click += new EventHandler(ciCopy_Click);
-        Add(ciCopy);
-
-        ciPaste = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Paste);
-        ciPaste.GroupEnd = true;
-        ciPaste.Click += new EventHandler(ciPaste_Click);
-        Add(ciPaste);
-
-        ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
-        ciShowDocInfo.MenuText = "Информация о документе";
-        ciShowDocInfo.ShortCut = Keys.F12;
-        ciShowDocInfo.ImageKey = "Information";
-        ciShowDocInfo.Click += new EventHandler(ciShowDocInfo_Click);
-        ciShowDocInfo.GroupBegin = true;
-        ciShowDocInfo.GroupEnd = true;
-        Add(ciShowDocInfo);
-      }
-
-      #endregion
-
-      #region Свойства
-
-      public new EFPGroupDocComboBox ControlProvider { get { return (EFPGroupDocComboBox)(base.ControlProvider); } }
-
-      #endregion
-
-      #region Инициализация доступности команд
-
-      public void InitEnabled()
-      {
-        ciCut.Enabled = ControlProvider.DocId != 0;
-        ciCopy.Enabled = ControlProvider.DocId != 0;
-        ciPaste.Enabled = true;
-        ciShowDocInfo.Enabled = ControlProvider.DocId != 0;
-      }
-
-      #endregion
-
-      #region Команды буфера обмена
-
-      private EFPCommandItem ciCut, ciCopy, ciPaste;
-
-      void ciCut_Click(object sender, EventArgs args)
-      {
-        ciCopy_Click(null, null);
-        ControlProvider.DocId = 0;
-      }
-
-      void ciCopy_Click(object sender, EventArgs args)
-      {
-        if (ControlProvider.DocId == 0)
-        {
-          EFPApp.ShowTempMessage("Документ группы не выбран");
-          return;
-        }
-        DBxDocSelection docSel = new DBxDocSelection(ControlProvider.DocTypeUI.UI.DocProvider.DBIdentity);
-        docSel.Add(ControlProvider.DocTypeUI.DocType.Name, ControlProvider.DocId);
-        DataObject dObj = new DataObject();
-        dObj.SetData(docSel);
-        ControlProvider.DocTypeUI.UI.OnAddCopyFormats(dObj, docSel);
-        dObj.SetText(ControlProvider.DocTypeUI.GetTextValue(ControlProvider.DocId));
-        EFPApp.Clipboard.SetDataObject(dObj, true);
-      }
-
-      void ciPaste_Click(object sender, EventArgs args)
-      {
-        DBxDocSelection docSel = ControlProvider.DocTypeUI.UI.PasteDocSel();
-        if (docSel == null)
-        {
-          EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
-          return;
-        }
-
-        Int32[] ids = docSel[ControlProvider.DocTypeUI.DocType.Name];
-        if (ids.Length == 0)
-        {
-          EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы \"" + ControlProvider.DocTypeUI.DocType.PluralTitle + "\"");
-          return;
-        }
-        ControlProvider.DocId = ids[0];
-      }
-
-      #endregion
-
-      #region Информация о документе
-
-      EFPCommandItem ciShowDocInfo;
-
-      void ciShowDocInfo_Click(object sender, EventArgs args)
-      {
-        if (ControlProvider.DocId == 0)
-        {
-          EFPApp.ShowTempMessage("Группа не выбрана");
-          return;
-        }
-
-        ControlProvider.DocTypeUI.ShowDocInfo(ControlProvider.DocId);
-      }
-
-      #endregion
-    }
+    public new EFPGroupDocComboBoxCommandItems CommandItems { get { return (EFPGroupDocComboBoxCommandItems)(base.CommandItems); } }
 
     /// <summary>
-    /// Создает команды локального меню
+    /// Создает команды локального меню <see cref="EFPGroupDocComboBoxCommandItems"/>.
     /// </summary>
-    /// <returns>Созданный объект EFPControlCommandItems</returns>
+    /// <returns>Созданный объект</returns>
     protected override EFPControlCommandItems CreateCommandItems()
     {
-      ControlItems items = new ControlItems(this);
+      EFPGroupDocComboBoxCommandItems items = new EFPGroupDocComboBoxCommandItems(this);
       items.InitEnabled();
       return items;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Команды локального меню для комбоблока <see cref="EFPGroupDocComboBox"/>.
+  /// Поддерживает команды буфера обмена для <see cref="DBxDocSelection"/> и команду "Информация о документе" (группе).
+  /// </summary>
+  public class EFPGroupDocComboBoxCommandItems : EFPControlCommandItems
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает список команд
+    /// </summary>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
+    public EFPGroupDocComboBoxCommandItems(EFPGroupDocComboBox controlProvider)
+      : base(controlProvider)
+    {
+      ciCut = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Cut);
+      ciCut.GroupBegin = true;
+      ciCut.Click += new EventHandler(ciCut_Click);
+      Add(ciCut);
+
+      ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
+      ciCopy.Click += new EventHandler(ciCopy_Click);
+      Add(ciCopy);
+
+      ciPaste = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Paste);
+      ciPaste.GroupEnd = true;
+      ciPaste.Click += new EventHandler(ciPaste_Click);
+      Add(ciPaste);
+
+      ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
+      ciShowDocInfo.MenuText = "Информация о документе";
+      ciShowDocInfo.ShortCut = Keys.F12;
+      ciShowDocInfo.ImageKey = "Information";
+      ciShowDocInfo.Click += new EventHandler(ciShowDocInfo_Click);
+      ciShowDocInfo.GroupBegin = true;
+      ciShowDocInfo.GroupEnd = true;
+      Add(ciShowDocInfo);
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Провайдер управляющего элемента
+    /// </summary>
+    public new EFPGroupDocComboBox ControlProvider { get { return (EFPGroupDocComboBox)(base.ControlProvider); } }
+
+    #endregion
+
+    #region Инициализация доступности команд
+
+    /// <summary>
+    /// Инициализация доступности команд.
+    /// </summary>
+    public void InitEnabled()
+    {
+      ciCut.Enabled = ControlProvider.DocId != 0;
+      ciCopy.Enabled = ControlProvider.DocId != 0;
+      ciPaste.Enabled = true;
+      ciShowDocInfo.Enabled = ControlProvider.DocId != 0;
+    }
+
+    #endregion
+
+    #region Команды буфера обмена
+
+    private EFPCommandItem ciCut, ciCopy, ciPaste;
+
+    void ciCut_Click(object sender, EventArgs args)
+    {
+      ciCopy_Click(null, null);
+      ControlProvider.DocId = 0;
+    }
+
+    void ciCopy_Click(object sender, EventArgs args)
+    {
+      if (ControlProvider.DocId == 0)
+      {
+        EFPApp.ShowTempMessage("Документ группы не выбран");
+        return;
+      }
+      DBxDocSelection docSel = new DBxDocSelection(ControlProvider.DocTypeUI.UI.DocProvider.DBIdentity);
+      docSel.Add(ControlProvider.DocTypeUI.DocType.Name, ControlProvider.DocId);
+      DataObject dObj = new DataObject();
+      dObj.SetData(docSel);
+      ControlProvider.DocTypeUI.UI.OnAddCopyFormats(dObj, docSel);
+      dObj.SetText(ControlProvider.DocTypeUI.GetTextValue(ControlProvider.DocId));
+      EFPApp.Clipboard.SetDataObject(dObj, true);
+    }
+
+    void ciPaste_Click(object sender, EventArgs args)
+    {
+      DBxDocSelection docSel = ControlProvider.DocTypeUI.UI.PasteDocSel();
+      if (docSel == null)
+      {
+        EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
+        return;
+      }
+
+      Int32[] ids = docSel[ControlProvider.DocTypeUI.DocType.Name];
+      if (ids.Length == 0)
+      {
+        EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы \"" + ControlProvider.DocTypeUI.DocType.PluralTitle + "\"");
+        return;
+      }
+      ControlProvider.DocId = ids[0];
+    }
+
+    #endregion
+
+    #region Информация о документе
+
+    EFPCommandItem ciShowDocInfo;
+
+    void ciShowDocInfo_Click(object sender, EventArgs args)
+    {
+      if (ControlProvider.DocId == 0)
+      {
+        EFPApp.ShowTempMessage("Группа не выбрана");
+        return;
+      }
+
+      ControlProvider.DocTypeUI.ShowDocInfo(ControlProvider.DocId);
     }
 
     #endregion

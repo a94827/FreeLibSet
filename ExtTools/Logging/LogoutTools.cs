@@ -19,7 +19,9 @@ using FreeLibSet.Caching;
 using System.Runtime.Remoting;
 using System.Threading;
 using System.Xml;
+#if !NET
 using System.Runtime.Remoting.Proxies;
+#endif
 using System.Runtime.InteropServices;
 using FreeLibSet.Diagnostics;
 using FreeLibSet.Win32;
@@ -844,6 +846,7 @@ namespace FreeLibSet.Logging
         }
       }
 
+#if !NET
       // Добавлено 20.08.2015
       // Что-то не работает
       if (args.Object is System.Security.Policy.Hash)
@@ -851,6 +854,7 @@ namespace FreeLibSet.Logging
         args.Mode = LogoutPropMode.None; // выводится бескончная куча цифр
         return;
       }
+#endif
 
       if (args.Object is AppDomain)
       {
@@ -1032,7 +1036,7 @@ namespace FreeLibSet.Logging
     #endregion
 
     #region EventLogException
-
+#if !NET
     /// <summary>
     /// Записывает исключение в журнал EventLog
     /// </summary>
@@ -1073,11 +1077,11 @@ namespace FreeLibSet.Logging
 
       StringBuilder sb = new StringBuilder();
       sb.Append("Ошибка ");
-      Assembly ass = Assembly.GetEntryAssembly();
-      if (ass == null)
+      Assembly asm = Assembly.GetEntryAssembly();
+      if (asm == null)
         sb.Append("[Нет GetEntryAssembly]");
       else
-        sb.Append(ass.ToString());
+        sb.Append(asm.ToString());
       sb.Append(" (");
       sb.Append(Environment.CommandLine);
       sb.Append("). ");
@@ -1094,6 +1098,7 @@ namespace FreeLibSet.Logging
       evLog.Source = "Application";
       evLog.WriteEntry(sb.ToString(), entryType);
     }
+#endif
 
     #endregion
 
@@ -1157,13 +1162,19 @@ namespace FreeLibSet.Logging
             try { Trace.WriteLine(DateTime.Now.ToString("G") + ". Exception log file \"" + filePath.Path + "\" created."); }
             catch { }
 
+#if !NET
             EventLogException(e, title, EventLogEntryType.Warning, filePath);
+#endif
           }
+#if !NET
           catch (Exception e2)
           {
             // В случае ошибки помещаем запись в журнал событий Windows
             EventLogException(e2, "Ошибка при записи LOG-файла ошибки");
           }
+#else
+          catch {} 
+#endif
           _InsideLogoutException = false;
         }
       }
@@ -1430,9 +1441,9 @@ namespace FreeLibSet.Logging
       if (StackContainsElement(objStack, obj))
       {
         if (Object.ReferenceEquals(objStack.Peek(), obj))
-          args.WriteLine("Обратная ссылка равна текущему объекту [" + obj.GetType().ToString() + "]");
+          args.WriteLine("Back ref is same as current object [" + obj.GetType().ToString() + "]");
         else
-          args.WriteLine("Обратная ссылка. Объект [" + obj.GetType().ToString() + "] уже был выведен ранее");
+          args.WriteLine("Back ref. Object [" + obj.GetType().ToString() + "] has been displayed");
         return;
       }
 
@@ -1536,7 +1547,7 @@ namespace FreeLibSet.Logging
       // Класс может иметь несколько одноименных свойств, как это не странно.
       // Это происходит, когда в производном классе есть свойство с модификатором "new".
       // Если оба свойства возвращают один и тот же объект, то второй раз выводить свойство явно не надо
-      Dictionary<string, object> PropValDict = new Dictionary<string, object>();
+      Dictionary<string, object> propValDict = new Dictionary<string, object>();
 
       for (int i = 0; i < aProps.Length; i++)
       {
@@ -1564,12 +1575,12 @@ namespace FreeLibSet.Logging
             object x;
             if (DoGetPropValue(aProps[i], obj, out x))
             {
-              if (PropValDict.ContainsKey(aProps[i].Name))
+              if (propValDict.ContainsKey(aProps[i].Name))
               {
-                if (Object.ReferenceEquals(PropValDict[aProps[i].Name], x))
+                if (Object.ReferenceEquals(propValDict[aProps[i].Name], x))
                   continue;
               }
-              PropValDict[aProps[i].Name] = x;
+              propValDict[aProps[i].Name] = x;
 
               args.WritePair(aProps[i].Name, GetObjString(x));
               if (x != null && args2.Mode == LogoutPropMode.Default)
@@ -1590,13 +1601,13 @@ namespace FreeLibSet.Logging
               Exception e = (Exception)x;
               if (e is TargetInvocationException && e.InnerException != null)
                 e = e.InnerException; // 19.10.2018
-              args.WritePair(aProps[i].Name, "*** Ошибка получения свойства. " + e.GetType().ToString() + " ***: " + e.Message);
+              args.WritePair(aProps[i].Name, "*** Property getting error. " + e.GetType().ToString() + " ***: " + e.Message);
             }
           }
         }
         catch (Exception e2)
         {
-          args.WritePair(aProps[i].Name, " *** Ошибка получения свойства. " + e2.GetType().ToString() + " ***:" + e2.Message);
+          args.WritePair(aProps[i].Name, " *** Property getting error. " + e2.GetType().ToString() + " ***:" + e2.Message);
         }
       }
 
@@ -1604,6 +1615,7 @@ namespace FreeLibSet.Logging
 
       #region Marshal-by-ref info
 
+#if !NET
       if (obj is MarshalByRefObject)
       {
         int oldIndentLevel = args.IndentLevel;
@@ -1617,6 +1629,7 @@ namespace FreeLibSet.Logging
         }
         args.IndentLevel = oldIndentLevel;
       }
+#endif
 
       #endregion
     }
@@ -1816,6 +1829,8 @@ namespace FreeLibSet.Logging
 
     #region MarshalByRefObject
 
+
+#if !NET
     [DebuggerStepThrough]
     private static void DoLogoutMarshalByRefObjectInfo(LogoutInfoNeededEventArgs args, MarshalByRefObject obj)
     {
@@ -1950,6 +1965,8 @@ namespace FreeLibSet.Logging
       args.IndentLevel--;
     }
 
+#endif
+
     /// <summary>
     /// Прячет пароль, если в коллекции задан ключ "password"
     /// </summary>
@@ -1991,7 +2008,7 @@ namespace FreeLibSet.Logging
 
       #region Системная информация
 
-      args.WriteHeader("Системная информация");
+      args.WriteHeader("System information");
       args.WritePair("Computer Name", Environment.MachineName);
       args.WritePair("OS Version", EnvironmentTools.OSVersionText);
       args.WritePair(".NET Version", EnvironmentTools.NetVersionText);
@@ -2036,17 +2053,18 @@ namespace FreeLibSet.Logging
             args.IndentLevel--;
           }
           else
-            args.WriteLine("*** Исполняемый файл не найден ***");
+            args.WriteLine("*** Executable file not found ***");
         }
         catch (Exception e)
         {
-          args.WriteLine("*** Ошибка получения информации о выполняемом файле ***. " + e.Message);
+          args.WriteLine("*** Error getting information about executing file ***. " + e.Message);
         }
         args.IndentLevel = currIndentLevel;
       }
 
-      args.WritePair("App. base dir", FileTools.ApplicationBaseDir.Path);
-      args.WritePair("App. name", EnvironmentTools.ApplicationName);
+      args.WritePair("ApplicationBaseDir", FileTools.ApplicationBaseDir.Path);
+      args.WritePair("ApplicationName", EnvironmentTools.ApplicationName);
+      args.WritePair("EntryAssemblyDescriptionAndVersion", EnvironmentTools.EntryAssemblyDescriptionAndVersion);
       args.WritePair("Environment.NewLine", DataTools.StrToCSharpString(Environment.NewLine));
       try
       {
@@ -2122,6 +2140,7 @@ namespace FreeLibSet.Logging
 
       #region Remoting
 
+#if !NET
       args.WriteLine("LifetimeServices");
       args.IndentLevel++;
       args.WritePair("LeaseManagerPollTime", System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime.ToString());
@@ -2129,6 +2148,7 @@ namespace FreeLibSet.Logging
       args.WritePair("RenewOnCallTime", System.Runtime.Remoting.Lifetime.LifetimeServices.RenewOnCallTime.ToString());
       args.WritePair("SponsorshipTimeout", System.Runtime.Remoting.Lifetime.LifetimeServices.SponsorshipTimeout.ToString());
       args.IndentLevel--;
+#endif
 
       #endregion
 
@@ -2202,18 +2222,23 @@ namespace FreeLibSet.Logging
       args.IndentLevel++;
       try
       {
+#if NET
+        args.WritePair("StandardName", TimeZoneInfo.Local.StandardName);
+        args.WritePair("DaylightName", TimeZoneInfo.Local.DaylightName);
+#else
         args.WritePair("StandardName", TimeZone.CurrentTimeZone.StandardName);
         args.WritePair("DaylightName", TimeZone.CurrentTimeZone.DaylightName);
+#endif        
         DateTime dt1 = DateTime.Now;
         DateTime dt2 = dt1.ToUniversalTime();
         dt1 = DateTime.SpecifyKind(dt1, DateTimeKind.Unspecified);
         dt2 = DateTime.SpecifyKind(dt2, DateTimeKind.Unspecified);
         TimeSpan ts = dt1 - dt2;
-        args.WritePair("Часовой пояс", "GMT " + (ts.Ticks < 0 ? "" : "+") + ts.TotalHours.ToString("0.#"));
+        args.WritePair("Time zone", "GMT " + (ts.Ticks < 0 ? "" : "+") + ts.TotalHours.ToString("0.#"));
       }
       catch (Exception e2)
       {
-        args.WriteLine("Ошибка доступа к TimeZone. " + e2.Message);
+        args.WriteLine("TimeZone access error. " + e2.Message);
       }
       args.IndentLevel--;
       args.WriteLine();
@@ -2286,7 +2311,7 @@ namespace FreeLibSet.Logging
       }
       catch (Exception e)
       {
-        args.WriteLine("Ошибка получения информации о DNS. " + e.Message);
+        args.WriteLine("DNS information error. " + e.Message);
       }
 
       args.WriteLine();
@@ -2295,6 +2320,7 @@ namespace FreeLibSet.Logging
 
       #region RemotingConfiguration
 
+#if !NET
       try
       {
         args.WriteHeader("RemotingConfiguration");
@@ -2340,17 +2366,21 @@ namespace FreeLibSet.Logging
       catch (Exception e)
       {
         args.IndentLevel++;
-        args.WriteLine("*** Ошибка получения информации из RemotingConfiguration *** " + e.Message);
+        args.WriteLine("*** RemotingConfiguration information error *** " + e.Message);
         args.IndentLevel = currIndentLevel;
       }
+
+#endif
 
       #endregion
 
       #region ChannelServices
 
+#if !NET
       args.WriteLine("ChannelServices.RegisteredChannels");
       LogoutObject(args, System.Runtime.Remoting.Channels.ChannelServices.RegisteredChannels);
       args.WriteLine();
+#endif
 
       #endregion
 
@@ -2367,7 +2397,7 @@ namespace FreeLibSet.Logging
       }
       catch (Exception e2)
       {
-        args.WriteLine("Нельзя получить CurrentProcess. " + e2.Message);
+        args.WriteLine("CurrentProcess error. " + e2.Message);
       }
       args.WriteLine();
 
@@ -2382,7 +2412,7 @@ namespace FreeLibSet.Logging
       }
       catch (Exception e2)
       {
-        args.WriteLine("Ошибка получения свойств Thread.CurrentThread. " + e2.Message);
+        args.WriteLine("Thread.CurrentThread error. " + e2.Message);
       }
       args.WriteLine();
 
@@ -2485,7 +2515,7 @@ namespace FreeLibSet.Logging
     private static void LogoutDriveInfo(LogoutInfoNeededEventArgs args)
     {
       DriveInfo[] dis = DriveInfo.GetDrives();
-      args.WriteLine("Дисковые устройства");
+      args.WriteLine("Disk devices");
       args.IndentLevel++;
       for (int i = 0; i < dis.Length; i++)
       {
@@ -2506,7 +2536,7 @@ namespace FreeLibSet.Logging
         }
         catch (Exception e)
         {
-          args.WriteLine("Ошибка при получении информации об устройстве. " + e.Message);
+          args.WriteLine("Device information error. " + e.Message);
           args.IndentLevel = indentLevel;
         }
       }
@@ -2521,16 +2551,16 @@ namespace FreeLibSet.Logging
       {
         args.WriteLine("ThreadPool");
         args.IndentLevel++;
-        int Min1, Min2, Max1, Max2, Avail1, Avail2;
-        ThreadPool.GetMinThreads(out Min1, out Min2);
-        ThreadPool.GetMaxThreads(out Max1, out Max2);
-        ThreadPool.GetAvailableThreads(out Avail1, out Avail2);
-        args.WritePair("Рабочие потоки", "Min=" + Min1.ToString() + ", Max=" + Max1.ToString() + ", Available=" + Avail1.ToString());
-        args.WritePair("Потоки ввода-вывода", "Min=" + Min2.ToString() + ", Max=" + Max2.ToString() + ", Available=" + Avail2.ToString());
+        int min1, min2, max1, max2, avail1, avail2;
+        ThreadPool.GetMinThreads(out min1, out min2);
+        ThreadPool.GetMaxThreads(out max1, out max2);
+        ThreadPool.GetAvailableThreads(out avail1, out avail2);
+        args.WritePair("Worker threads", "Min=" + min1.ToString() + ", Max=" + max1.ToString() + ", Available=" + avail1.ToString());
+        args.WritePair("Completion port threads", "Min=" + min2.ToString() + ", Max=" + max2.ToString() + ", Available=" + avail2.ToString());
       }
       catch (Exception e)
       {
-        args.WriteLine("Ошибка получения информации о ThreadPool. " + e.Message);
+        args.WriteLine("ThreadPool information error. " + e.Message);
       }
       args.IndentLevel = indentLevel;
     }
@@ -2582,6 +2612,7 @@ namespace FreeLibSet.Logging
 
     private static void LogoutAssemblies(LogoutInfoNeededEventArgs args)
     {
+#if !NET
       args.WriteHeader("Current AppDomain");
       args.IndentLevel++;
       try
@@ -2594,6 +2625,7 @@ namespace FreeLibSet.Logging
         Args.WritePair("DynamicDirectory", AppDomain.CurrentDomain.DynamicDirectory);
         Args.WritePair("ShadowCopyFiles", AppDomain.CurrentDomain.ShadowCopyFiles.ToString());
 #endif
+
         LogoutObject(args, AppDomain.CurrentDomain);
         args.WritePair("IsDefaultAppDomain()", AppDomain.CurrentDomain.IsDefaultAppDomain().ToString());
         args.WritePair("IsFinalizingForUnload()", AppDomain.CurrentDomain.IsFinalizingForUnload().ToString());
@@ -2606,7 +2638,7 @@ namespace FreeLibSet.Logging
             if (File.Exists(configPath.Path))
             {
               args.WriteLine();
-              args.WriteLine("Конфигурационный файл \"" + configPath.Path + "\"");
+              args.WriteLine("Configuration file \"" + configPath.Path + "\"");
               try
               {
                 string s = File.ReadAllText(configPath.Path);
@@ -2614,17 +2646,17 @@ namespace FreeLibSet.Logging
               }
               catch
               {
-                args.WriteLine("** Не удалось получить содержимое файла **");
+                args.WriteLine("** Configuration file is not accesible **");
               }
             }
             else
-              args.WriteLine("Конфигурационный файл \"" + configPath.Path + "\" не найден");
+              args.WriteLine("Configuration file \"" + configPath.Path + "\" not found");
           }
         }
       }
       catch (Exception e)
       {
-        args.WriteLine("Ошибка получения сведений о текущем домене. " + e.Message);
+        args.WriteLine("Current domain information error. " + e.Message);
       }
       args.IndentLevel--;
 
@@ -2651,19 +2683,20 @@ namespace FreeLibSet.Logging
         args.IndentLevel--;
       }
 
+#endif
 
       args.WriteLine();
 
-      args.WriteHeader("Загруженные сборки");
+      args.WriteHeader("Loaded assemblies");
       if (!IsAssemblyEntryPointAvailable)
-        args.WriteLine("[ Информация Assembly.EntryPoint недоступна ]");
+        args.WriteLine("[ Assembly.EntryPoint is not available]");
       Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
       int cnt = 0;
-      args.WriteLine("Приватные");
+      args.WriteLine("Private assemblies");
       args.IndentLevel++;
       DoLogoutAssemblies1(args, ref cnt, asms, false);
       args.IndentLevel--;
-      args.WriteLine("Из глобального кэша сборок");
+      args.WriteLine("GAC assemblies");
       args.IndentLevel++;
       DoLogoutAssemblies1(args, ref cnt, asms, true);
       args.IndentLevel--;
@@ -2696,8 +2729,15 @@ namespace FreeLibSet.Logging
     {
       for (int i = 0; i < asms.Length; i++)
       {
+#if NET // свойство GlobalAssemblyCache устарело
+#pragma warning disable SYSLIB0005 
+#endif
         if (asms[i].GlobalAssemblyCache != isGAC)
           continue;
+#if NET
+#pragma warning restore SYSLIB0005
+#endif
+
         cnt++;
 
         bool debugMode = false;
@@ -2722,11 +2762,19 @@ namespace FreeLibSet.Logging
 
         args.IndentLevel++;
         args.WriteLine("Build: " + (debugMode ? " (Debug)" : " (Release)") + " (" + asms[i].GetName().ProcessorArchitecture.ToString() + ")" + (isPIA ? " [PrimaryInteropAssembly]" : String.Empty));
+        #if NET
+        args.WriteLine(asms[i].Location);
+        #else
         args.WriteLine(asms[i].CodeBase);
+        #endif
         int indentLevel = args.IndentLevel;
         try
         {
+#if NET
+          AbsPath filePath = new AbsPath(asms[i].Location);
+#else
           AbsPath filePath = new AbsPath(asms[i].CodeBase);
+#endif
           if (File.Exists(filePath.Path))
           {
             args.IndentLevel++;
@@ -2765,7 +2813,7 @@ namespace FreeLibSet.Logging
     {
       if (prc == null)
       {
-        args.WriteLine("********* Процесс для вывода информации не указан *********");
+        args.WriteLine("********* No process *********");
         return;
       }
 
@@ -2817,7 +2865,7 @@ namespace FreeLibSet.Logging
       }
       catch (Exception e)
       {
-        args.WriteLine("********* Ошибка получения информации о процессе. " + e.Message);
+        args.WriteLine("********* Process information error. " + e.Message);
       }
     }
 
@@ -2884,7 +2932,7 @@ namespace FreeLibSet.Logging
     {
       if (!RegistryKey2.IsSupported)
       {
-        args.WriteLine("Реестр не поддерживается операционной системой");
+        args.WriteLine("Registry is not supported by OS");
         return false;
       }
 
@@ -2922,13 +2970,13 @@ namespace FreeLibSet.Logging
         }
 
         if (cnt == 0)
-          args.WriteLine("Нет раздела реестра " + keyName);
+          args.WriteLine("No registry key " + keyName);
         else
           res = true;
       }
       catch (Exception e)
       {
-        args.WriteLine("*** Ошибка. " + e.Message + " ***");
+        args.WriteLine("*** Error. " + e.Message + " ***");
       }
       args.IndentLevel = indentLevel;
       return res;
@@ -3244,7 +3292,7 @@ namespace FreeLibSet.Logging
         }
         catch (Exception e)
         {
-          args.WriteLine("** Ошибка ** " + e.Message);
+          args.WriteLine("** Error ** " + e.Message);
         }
         args.IndentLevel = indentLevel;
         args.WriteLine();
@@ -3359,7 +3407,7 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// Извлекает информацию из файла на диске.
     /// Если файл имеет неподходящий формат, возвращается null.
-    /// При возникновении других ошибок генерируется исключение
+    /// При возникновении других ошибок генерируется исключение.
     /// </summary>
     /// <param name="filePath">Путь к файлу</param>
     /// <returns>Извлеченная информация или null</returns>
@@ -3377,7 +3425,7 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// Извлекает информацию из файлового потока
     /// Если файл имеет неподходящий формат, возвращается null.
-    /// При возникновении других ошибок генерируется исключение
+    /// При возникновении других ошибок генерируется исключение.
     /// </summary>
     /// <param name="stream">Открытый поток. Не может быть null.</param>
     /// <returns>Извлеченная информация или null</returns>

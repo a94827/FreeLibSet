@@ -13,7 +13,7 @@ namespace FreeLibSet.Forms.Docs
 {
 
   /// <summary>
-  /// Расширенная сортировка табличного просмотра, основанного на наборе данных
+  /// Расширенная сортировка табличного просмотра, основанного на наборе данных.
   /// Поддерживает задание полей с помощью выражений <see cref="DBxOrder"/>, в том числе, содержащих функции.
   /// Для этого в набор данных добавляются виртуальные вычисляемые столбцы.
   /// </summary>
@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms.Docs
     /// Порядок сортировки для SQL-запроса SELECT .. ORDER BY
     /// </summary>
     public DBxOrder Order { get { return _Order; } }
-    private DBxOrder _Order;
+    private readonly DBxOrder _Order;
 
     /// <summary>
     /// Для отладки

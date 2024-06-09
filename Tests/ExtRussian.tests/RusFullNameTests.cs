@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Russian;
 using FreeLibSet.Tests;
+using FreeLibSet.Core;
 
 namespace ExtRussian_tests
 {
@@ -42,14 +43,16 @@ namespace ExtRussian_tests
       Assert.AreEqual(wantedRes, sut.FullName);
     }
 
-    [TestCase("Петров-Водкин", "Кузьма", "Сергеевич", "Петров-Водкин К.С.")]
-    [TestCase("Иванов", "И", "И", "Иванов И.И.")]
-    [TestCase("Иванов", "Иван", "", "Иванов И.")]
-    [TestCase("Иванов", "И", "", "Иванов И.")]
+    [TestCase("Петров-Водкин", "Кузьма", "Сергеевич", "Петров-Водкин_К.С.")]
+    [TestCase("Иванов", "И", "И", "Иванов_И.И.")]
+    [TestCase("Иванов", "Иван", "", "Иванов_И.")]
+    [TestCase("Иванов", "И", "", "Иванов_И.")]
     [TestCase("Иванов", "", "", "Иванов")]
     [TestCase("", "", "", "")]
     public void NameWithInitials(string surname, string name, string patronymic, string wantedRes)
     {
+      wantedRes = wantedRes.Replace('_', DataTools.NonBreakSpaceChar);
+
       RusFullName sut = new RusFullName(surname, name, patronymic);
       Assert.AreEqual(wantedRes, sut.NameWithInitials);
     }
@@ -79,14 +82,16 @@ namespace ExtRussian_tests
       Assert.AreEqual(wantedPatronymic, res.Patronymic, messagePrefix + "Patronymic");
     }
 
-    [TestCase("Петров-Водкин", "Кузьма", "Сергеевич", "К.С.Петров-Водкин")]
-    [TestCase("Иванов", "И", "И", "И.И.Иванов")]
-    [TestCase("Иванов", "Иван", "", "И.Иванов")]
-    [TestCase("Иванов", "И", "", "И.Иванов")]
+    [TestCase("Петров-Водкин", "Кузьма", "Сергеевич", "К.С._Петров-Водкин")]
+    [TestCase("Иванов", "И", "И", "И.И._Иванов")]
+    [TestCase("Иванов", "Иван", "", "И._Иванов")]
+    [TestCase("Иванов", "И", "", "И._Иванов")]
     [TestCase("Иванов", "", "", "Иванов")]
     [TestCase("", "", "", "")]
     public void InvNameWithInitials(string surname, string name, string patronymic, string wantedRes)
     {
+      wantedRes = wantedRes.Replace('_', DataTools.NonBreakSpaceChar);
+
       RusFullName sut = new RusFullName(surname, name, patronymic);
       Assert.AreEqual(wantedRes, sut.InvNameWithInitials);
     }

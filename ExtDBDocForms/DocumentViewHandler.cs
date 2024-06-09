@@ -14,10 +14,13 @@ namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
   /// Обработчик просмотра документов. Базовый класс.
-  /// Производные классы реализуются в EFPDocGridView и других объектах пользовательского интефейса.
+  /// Производные классы реализуются в <see cref="EFPDocGridView"/> и других объектах пользовательского интефейса.
   /// Реализует:
-  /// 1. Обновление просмотра после сохранения документов в базе данных. Коллекция действующих объектов, требующих обновления, хранится в массиве DocTypeUI.Browsers
-  /// 2. Инициализацию начальных значений в редакторе при создании нового документа
+  /// <list type="bullet">
+  /// <item><description></description>Обновление просмотра после сохранения документов в базе данных. 
+  /// Коллекция действующих объектов, требующих обновления, хранится в массиве <see cref="DocTypeUI.Browsers"/>.</item>
+  /// <item><description>Инициализацию начальных значений в редакторе при создании нового документа</description></item>
+  /// </list>
   /// </summary>
   public abstract class DocumentViewHandler : SimpleDisposableObject
   {
@@ -33,13 +36,13 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Идентификикатор табличного просмотра.
-    /// На основании идентификатора определеяется аргумент IsCaller в методе ApplyChanges()
+    /// На основании идентификатора определяется аргумент isCaller в методе <see cref="ApplyChanges(DataSet, bool)"/>.
     /// </summary>
     public virtual Guid BrowserGuid { get { return Guid.Empty; } }
 
     /// <summary>
     /// Возвращает имя текущего столбца табличного просмотра или пустую строку, если выбрано несколько столбцов,
-    /// или информация недоступна
+    /// или информация недоступна.
     /// </summary>
     public virtual string CurrentColumnName { get { return String.Empty; } }
 
@@ -49,10 +52,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Обновить просмотр после записи документов.
-    /// Метод вызывается DocProviderUI.ApplyChanges(), после того, как сервер выполнил запись документов
+    /// Метод вызывается <see cref="DBxDocProvider.ApplyChanges(DataSet, bool)"/>, после того, как сервер выполнил запись документов.
     /// </summary>
     /// <param name="dataSet">Набор таблиц документов, полученный от сервера, с учетом изменений, внесенных сервером</param>
-    /// <param name="isCaller">true, если идентификатор BrowserGuid совпадает с объектом, переданным в DocumentEditor,
+    /// <param name="isCaller">true, если идентификатор <see cref="BrowserGuid"/> совпадает с объектом, переданным в <see cref="DocumentEditor"/>,
     /// то есть если редактор был открыт из этого просмотра. В этом случае в просмотр должны быть добавлены новые строки, 
     /// даже если они не проходят условия фильтра</param>
     public virtual void ApplyChanges(DataSet dataSet, bool isCaller)
@@ -62,7 +65,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Обновить документы с заданными идентификаторами.
     /// Перед вызовом этого метода из пользовательского кода, должен быть очищен кэш таблицы документа
-    /// в DocTypeUI.TableCache.Clear(DocIds)
+    /// в <see cref="DocTypeUIBase.TableCache"/>.Clear(<paramref name="docIds"/>).
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов</param>
     public virtual void UpdateRowsForIds(Int32[] docIds)
@@ -79,10 +82,10 @@ namespace FreeLibSet.Forms.Docs
     #region Инициализация полей редактора
 
     /// <summary>
-    /// Инициализировать значения нового документа).
+    /// Инициализировать значения нового документа.
     /// На момент вызова документ находится в режиме Insert
-    /// Реализация интерфейса может устанавливать значения NewDoc.Values или 
-    /// добавлять поддокументы
+    /// Реализация класса может устанавливать значения <paramref name="newDoc"/>.Values или 
+    /// добавлять поддокументы.
     /// </summary>
     /// <param name="newDoc">Создаваемый документ</param>
     public virtual void InitNewDocValues(DBxSingleDoc newDoc)
@@ -92,11 +95,11 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Проверить документ перед записью на соответствие внешним требованием
     /// (например, условиям фильтра).
-    /// Реализация интерфейса не должна изменять значения полей в SavingDoc
+    /// Реализация класса не должна изменять значения полей в <paramref name="savingDoc"/>.
     /// </summary>
     /// <param name="savingDoc">Записываемый документ</param>
     /// <param name="errorMessages">Сюда можно добавить предупреждения о
-    /// несоответствии фильтра с помощью ErrorMessages.AddWarning(). Может быть
+    /// несоответствии фильтра с помощью <see cref="ErrorMessageList.AddWarning(string)"/>. Может быть
     /// добавлено несколько предупреждений</param>
     public virtual void ValidateDocValues(DBxSingleDoc savingDoc, ErrorMessageList errorMessages)
     {
@@ -122,7 +125,7 @@ namespace FreeLibSet.Forms.Docs
     #region Прочие методы
 
     /// <summary>
-    /// Обновляет табличный просмотр, вызывая Control.Invalidate()
+    /// Обновляет табличный просмотр, вызывая <see cref="System.Windows.Forms.Control.Invalidate()"/>
     /// </summary>
     public abstract void InvalidateControl();
 
@@ -130,7 +133,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Список объектов DocumentViewHandler, реализуемый свойством DocTypeUI.Browsers
+  /// Список объектов <see cref="DocumentViewHandler"/>, реализуемый свойством <see cref="DocTypeUI.Browsers"/>.
   /// </summary>
   public sealed class DocumentViewHandlerList : List<DocumentViewHandler>
   {
@@ -150,7 +153,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Обновить документы с заданными идентификаторами.
     /// Перед вызовом этого метода из пользовательского кода, должен быть очищен кэш таблицы документа
-    /// в DocTypeUI.TableCache.Clear(<paramref name="docIds"/>)
+    /// в <see cref="DocTypeUIBase.TableCache"/>.Clear(<paramref name="docIds"/>)
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов</param>
     public void UpdateRowsForIds(Int32[] docIds)
@@ -206,8 +209,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Реализация DocumentViewHandler для EFPDocGridView.
-  /// Объект также может быть соединен с пользовательским просмотром, реализующим IEFPDBxGridView
+  /// Стандартная реализация <see cref="DocumentViewHandler"/> для <see cref="EFPDocGridView"/>.
+  /// Объект также может быть соединен с пользовательским просмотром, реализующим <see cref="IEFPDocView"/>.
   /// </summary>
   public class StdDocumentViewHandler : DocumentViewHandler
   {
@@ -280,7 +283,7 @@ namespace FreeLibSet.Forms.Docs
     /// Провайдер табличного просмотра - владелец
     /// </summary>
     public IEFPDBxView Owner { get { return _Owner; } }
-    private IEFPDBxView _Owner;
+    private /*readonly*/ IEFPDBxView _Owner;
 
     private IEFPDocView Owner2 { get { return _Owner as IEFPDocView; } }
 
@@ -288,20 +291,20 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс вида документов
     /// </summary>
     public override DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
-    private DocTypeUI _DocTypeUI;
+    private readonly DocTypeUI _DocTypeUI;
 
 
     /// <summary>
     /// Используется при инициализации полей нового документа
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller { get { return _ExternalEditorCaller; } }
-    private DocumentViewHandler _ExternalEditorCaller;
+    private /*readonly*/ DocumentViewHandler _ExternalEditorCaller;
 
     /// <summary>
     /// Возвращает EFPDocGridView.BrowserGuid
     /// </summary>
     public override Guid BrowserGuid { get { return _BrowserGuid; } }
-    private Guid _BrowserGuid;
+    private readonly Guid _BrowserGuid;
 
 
     #endregion
@@ -309,7 +312,7 @@ namespace FreeLibSet.Forms.Docs
     #region Переопределенные свойства
 
     /// <summary>
-    /// Возвращает EFPDocGridView.CurrentColumnName
+    /// Возвращает <see cref="IEFPDataView.CurrentColumnName"/>
     /// </summary>
     public override string CurrentColumnName
     {
@@ -329,8 +332,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Обновление табличного просмотра
     /// </summary>
-    /// <param name="dataSet"></param>
-    /// <param name="isCaller"></param>
+    /// <param name="dataSet">Набор данных после отправки на сервер</param>
+    /// <param name="isCaller">True, если инициатором записи документов был редактор, открытый из текущего просмотра.</param>
     public override void ApplyChanges(DataSet dataSet, bool isCaller)
     {
       if (Owner == null)
@@ -564,7 +567,7 @@ namespace FreeLibSet.Forms.Docs
     #region Прочие переопределенные методы
 
     /// <summary>
-    /// Возвращает Owner.ToString(), если объект присоединен к просмотру
+    /// Возвращает <see cref="Owner"/>.ToString(), если объект присоединен к просмотру
     /// </summary>
     /// <returns>Текстовое представление для табличного просмотра</returns>
     public override string ToString()
@@ -577,7 +580,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Вызывает EFPDocGridView.UpdateRowsForIds()
+    /// Вызывает <see cref="IEFPDBxView.UpdateRowsForIds(int[])"/>
     /// </summary>
     /// <param name="docIds">Идентификаторы обновляемых документов</param>
     public override void UpdateRowsForIds(Int32[] docIds)
@@ -589,7 +592,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Инициализация полей нового документа
     /// </summary>
-    /// <param name="newDoc"></param>
+    /// <param name="newDoc">Новый документ</param>
     public override void InitNewDocValues(DBxSingleDoc newDoc)
     {
       if (ExternalEditorCaller == null)
@@ -609,10 +612,10 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// 
+    /// Проверка полей документа на соответствие установленным фильтрам.
     /// </summary>
-    /// <param name="savingDoc"></param>
-    /// <param name="errorMessages"></param>
+    /// <param name="savingDoc">Проверяемый документ</param>
+    /// <param name="errorMessages">Заполняемый список сообщений</param>
     public override void ValidateDocValues(DBxSingleDoc savingDoc, ErrorMessageList errorMessages)
     {
       if (ExternalEditorCaller == null)
@@ -628,7 +631,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает DataGridView.Invalidate()
+    /// Вызывает <see cref="System.Windows.Forms.Control.Invalidate()"/>.
     /// </summary>
     public override void InvalidateControl()
     {

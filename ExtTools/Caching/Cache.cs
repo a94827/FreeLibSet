@@ -97,6 +97,11 @@ using System.Runtime.CompilerServices;
  * необходимости просмотра всех файлов ветви кэша.
  */
 
+#if NET
+// Класс BinaryFormatter считается вредным https://aka.ms/binaryformatter, но он самый подходящий для кэширования
+#pragma warning disable SYSLIB0011 
+#endif
+
 #if OLD_CACHE
 
 namespace FreeLibSet.Caching

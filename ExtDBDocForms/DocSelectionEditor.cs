@@ -485,7 +485,7 @@ namespace FreeLibSet.Forms.Docs
         }
 
         RadioSelectDialog dlg = new RadioSelectDialog();
-        dlg.Title = "Удаление строк документов \""+DocTypeUI.DocType.PluralTitle+"\" (" + rows.Length + ")";
+        dlg.Title = "Удаление строк документов \"" + DocTypeUI.DocType.PluralTitle + "\" (" + rows.Length + ")";
         dlg.ImageKey = "Delete";
         dlg.GroupTitle = "Что требуется удалить";
         dlg.Items = new string[]{
@@ -625,9 +625,9 @@ namespace FreeLibSet.Forms.Docs
       }
 #endif
 
-#endregion
+      #endregion
 
-#region Буфер обмена
+      #region Буфер обмена
 
       public void GridHandler_Cut(object sender, EventArgs args)
       {
@@ -659,8 +659,8 @@ namespace FreeLibSet.Forms.Docs
         RadioSelectDialog dlg = new RadioSelectDialog();
         dlg.Title = "Вставка выборки документов";
         dlg.ImageKey = "Paste";
-        dlg.Items = new string[] { 
-          "Добавить ссылки (объединение выборок)", 
+        dlg.Items = new string[] {
+          "Добавить ссылки (объединение выборок)",
           "Удалить ссылки (разность выборок)",
           "Оставить общие (пересечение выборок)"};
         dlg.ImageKeys = new string[] { "Insert", "Delete", "SignMultiply" };
@@ -705,9 +705,9 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.Clipboard.SetDataObject(Editor.DocSel, true);
       }
 
-#endregion
+      #endregion
 
-#region Другие методы
+      #region Другие методы
 
       void ciCloneView_Click(object sender, EventArgs args)
       {
@@ -726,11 +726,11 @@ namespace FreeLibSet.Forms.Docs
         // TODO:?? Owner.Page2.Title = "Ссылки (" + cnt.ToString() + ")";
       }
 
-#endregion
+      #endregion
     }
 
     private Dictionary<string, EFPPageGridView> _TableHandlers;
 
-#endregion
+    #endregion
   }
 }

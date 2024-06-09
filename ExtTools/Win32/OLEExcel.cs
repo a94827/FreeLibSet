@@ -237,13 +237,13 @@ namespace FreeLibSet.OLE.Excel
     /// Максимальное количество строк на листе, поддерживаемое этой версией Excel
     /// </summary>
     public int MaxRowCount { get { return _MaxRowCount; } }
-    private int _MaxRowCount;
+    private readonly int _MaxRowCount;
 
     /// <summary>
     /// Максимальное количество столбцов на листе, поддерживаемое этой версией Excel
     /// </summary>
     public int MaxColumnCount { get { return _MaxColumnCount; } }
-    private int _MaxColumnCount;
+    private readonly int _MaxColumnCount;
 
     #endregion
   }

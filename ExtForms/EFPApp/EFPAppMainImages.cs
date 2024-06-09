@@ -7,14 +7,16 @@ using System.Text;
 using System.Drawing;
 using System.Resources;
 using System.Threading;
+using FreeLibSet.Logging;
+using System.Reflection;
 
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализация свойства EFPApp.MainImages.
-  /// Хранит коллекцию Bitmap размером 16x16 пикселей для использования в элементах пользовательского интерфейса.
-  /// Основное свойство Images предоставляет доступ к объектам Bitmap по строковому ключу.
-  /// Свойство ImageList можно использовать в управляющих элементах TabControl, ListView и TreeView.
+  /// Реализация свойства <see cref="EFPApp.MainImages"/>.
+  /// Хранит коллекцию <see cref="Bitmap"/> размером 16x16 пикселей для использования в элементах пользовательского интерфейса.
+  /// Основное свойство Images предоставляет доступ к объектам <see cref="Bitmap"/> по строковому ключу.
+  /// Свойство ImageList можно использовать в управляющих элементах <see cref="System.Windows.Forms.TabControl"/>, <see cref="System.Windows.Forms.ListView"/> и <see cref="System.Windows.Forms.TreeView"/>.
   /// Свойство Icons используется для получения значков для форм. 
   /// Коллекции ImageList и Icons являются вторичными и заполняются автоматическими.
   /// Класс является потокобезопасным.
@@ -46,10 +48,13 @@ namespace FreeLibSet.Forms
     /// Добавляет изображения из ресурсов.
     /// </summary>
     /// <param name="resourceManager">Менеджер ресурсов</param>
-    /// <param name="transparentColor">Если задано значение, отличное от Color.Transparent, будет вызван метод Bitmap.</param>
+    /// <param name="transparentColor">Если задано значение, отличное от <see cref="Color.Transparent"/>, будет вызван метод <see cref="Bitmap.MakeTransparent(Color)"/>.</param>
     public void Add(ResourceManager resourceManager, Color transparentColor)
     {
-      DoAdd(resourceManager, transparentColor, Images.Items);
+      Dictionary<string, Bitmap> oldDict = null;
+      if (Images != null)
+        oldDict = Images.Items;
+      DoAdd(resourceManager, transparentColor, oldDict);
     }
 
     private void DoAdd(ResourceManager resourceManager, Color transparentColor, Dictionary<string, Bitmap> oldDict)
@@ -59,27 +64,45 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("resourceManager");
 #endif
 
-      Dictionary<string, Bitmap> newDict;
-      if (oldDict == null)
-        newDict = new Dictionary<string, Bitmap>();
-      else
-        newDict = new Dictionary<string, Bitmap>(oldDict);
-
-      ResourceSet rs = resourceManager.GetResourceSet(System.Globalization.CultureInfo.InvariantCulture, true, true);
-      foreach (System.Collections.DictionaryEntry de in rs)
+      try
       {
-        Bitmap bmp = de.Value as Bitmap;
-        if (bmp != null)
+        Dictionary<string, Bitmap> newDict;
+        if (oldDict == null)
+          newDict = new Dictionary<string, Bitmap>();
+        else
+          newDict = new Dictionary<string, Bitmap>(oldDict);
+
+        ResourceSet rs = resourceManager.GetResourceSet(System.Globalization.CultureInfo.InvariantCulture, true, true);
+        foreach (System.Collections.DictionaryEntry de in rs)
         {
-          if (transparentColor != Color.Transparent)
-            bmp.MakeTransparent(transparentColor);
+          Bitmap bmp = de.Value as Bitmap;
+          if (bmp != null)
+          {
+            if (transparentColor != Color.Transparent)
+              bmp.MakeTransparent(transparentColor);
 
-          newDict[(String)de.Key] = bmp;
+            newDict[(String)de.Key] = bmp;
+          }
         }
-      }
 
-      // Замена ссылки является безопасной атомартной операцией
-      _Images = new ImageCollection(newDict);
+        // Замена ссылки является безопасной атомартной операцией
+        _Images = new ImageCollection(newDict);
+      }
+      catch (Exception e)
+      {
+        try
+        {
+          e.Data["ResoureManager"]= resourceManager.ToString();
+          try
+          {
+            Assembly ca = Assembly.GetCallingAssembly();
+            e.Data["ManifestResourceNames (" + ca.GetName().Name + ")"] = ca.GetManifestResourceNames();
+          }
+          catch { }
+        }
+        catch { }
+        LogoutTools.LogoutException(e, "Ошибка загрузки значков");
+      }
     }
 
     #endregion
@@ -87,7 +110,7 @@ namespace FreeLibSet.Forms
     #region Основной список изображений
 
     /// <summary>                                                    +
-    /// Реализация свойства Images.
+    /// Реализация свойства <see cref="EFPAppMainImages.Images"/>.
     /// Предусмотрена возможность добавления пользовательских изображений.
     /// Удаление элементов не предусмотрено.
     /// </summary>
@@ -113,13 +136,13 @@ namespace FreeLibSet.Forms
 
       /// <summary>
       /// Основное свойство для получения изображения по ключу.
-      /// При чтении свойства возвращается ссылка на хранимое изображение, а не копия, как при обращении к ImageList.Items.
-      /// Для полученного объекта нельзя вызывать метод Dispose(). Если требуется передать изображение во владение другому элементу,
-      /// используйте метод Clone().
-      /// Если <paramref name="imageKey"/> - пустая строка или null, возвращается пустое изображение EmptyImage.
-      /// Если передан ключ, для которого нет изображения в словаре, возвращается изображение "?".
+      /// При чтении свойства возвращается ссылка на хранимое изображение, а не копия, как при обращении к <see cref="System.Windows.Forms.ImageList.Images"/>.
+      /// Для полученного объекта нельзя вызывать метод <see cref="Image.Dispose()"/>. Если требуется передать изображение во владение другому элементу,
+      /// используйте метод <see cref="Image.Clone()"/>.
+      /// Если <paramref name="imageKey"/> - пустая строка или null, возвращается пустое изображение <see cref="Empty"/>.
+      /// Если передан ключ, для которого нет изображения в словаре, возвращается изображение "?" <see cref="UnknownState"/>.
       ///
-      /// Установка свойства запрещена. Для добавления значков используйте метод Add() основного класса EFPAppMainImages, который создаст новый экземпляр коллекции
+      /// Установка свойства запрещена. Для добавления значков используйте метод <see cref="EFPAppMainImages.Add(ResourceManager)"/>, который создаст новый экземпляр коллекции.
       /// </summary>
       /// <param name="imageKey">Ключ для доступа к изображению</param>
       /// <returns>Изображение</returns>
@@ -197,7 +220,7 @@ namespace FreeLibSet.Forms
 
       /// <summary>
       /// Возвращает изображение, если оно есть в словаре.
-      /// В отличие от основного свойства, которое возвращает "?" для неправильного ключа, метод TryGetValue() не выполняет замену.
+      /// В отличие от основного свойства, которое возвращает <see cref="UnknownState"/> для неправильного ключа, метод <see cref="TryGetValue(string, out Bitmap)"/> не выполняет замену и возвращает null.
       /// </summary>
       /// <param name="imageKey">Ключ для доступа к изображению</param>
       /// <param name="value">Сюда помещается ссылка на изображение или null</param>
@@ -239,8 +262,8 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Копирует пары "Ключ-изображение" в пользовательский массив
       /// </summary>
-      /// <param name="array"></param>
-      /// <param name="arrayIndex"></param>
+      /// <param name="array">Заполняемый массив</param>
+      /// <param name="arrayIndex">Начальная позиция в массиве <paramref name="arrayIndex"/></param>
       public void CopyTo(KeyValuePair<string, Bitmap>[] array, int arrayIndex)
       {
         ((ICollection<KeyValuePair<string, Bitmap>>)(_Items)).CopyTo(array, arrayIndex);
@@ -265,7 +288,7 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Возвращает перечислитель по парам "ключ-изображение"
       /// </summary>
-      /// <returns></returns>
+      /// <returns>Перечислитель</returns>
       public Dictionary<string, Bitmap>.Enumerator GetEnumerator()
       {
         return _Items.GetEnumerator();
@@ -348,9 +371,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Доступ к изображениям в формате Bitmap.
+    /// Доступ к изображениям в формате <see cref="Bitmap"/>.
     /// Изображения в словаре являются собственностью этой коллекции и не должны удаляться в прикладном коде.
-    /// При добавлении ресурсов изображений методом Add() это свойство заменяется на новое.
+    /// При добавлении ресурсов изображений методом <see cref="Add(ResourceManager)"/> это свойство заменяется на новое.
     /// </summary>
     public ImageCollection Images { get { return _Images; } }
     private ImageCollection _Images;
@@ -360,10 +383,10 @@ namespace FreeLibSet.Forms
     #region Список ImageList
 
     /// <summary>
-    /// Возвращает объект ImageList, который можно использовать с управляющими элементами TabControl, ListView и TreeView.
-    /// Прикладной код не должен модифицировать этот список, так как он автоматически синхронизируется с основной коллекцией Images.
-    /// При доступе из разных потоков возвращаются разные экземпляры объектов ImageList, так как этот класс не является потокобезопасным.
-    /// При добавлении изображений методом Add() возвращется новый ImageList.
+    /// Возвращает объект <see cref="System.Windows.Forms.ImageList"/>, который можно использовать с управляющими элементами <see cref="System.Windows.Forms.TabControl"/>, <see cref="System.Windows.Forms.ListView"/> и <see cref="System.Windows.Forms.TreeView"/>.
+    /// Прикладной код не должен модифицировать этот список, так как он автоматически синхронизируется с основной коллекцией <see cref="Images"/>.
+    /// При доступе из разных потоков возвращаются разные экземпляры объектов <see cref="System.Windows.Forms.ImageList"/>, так как этот класс не является потокобезопасным.
+    /// При добавлении изображений методом <see cref="Add(ResourceManager)"/> возвращется новый <see cref="System.Windows.Forms.ImageList"/>.
     /// </summary>
     public System.Windows.Forms.ImageList ImageList
     {
@@ -380,7 +403,7 @@ namespace FreeLibSet.Forms
     #region Список Icons
 
     /// <summary>
-    /// Реализация свойства Icons
+    /// Реализация свойства <see cref="Icons"/>.
     /// </summary>
     public sealed class IconCollection
     {
@@ -391,7 +414,7 @@ namespace FreeLibSet.Forms
         _Owner = owner;
       }
 
-      private EFPAppMainImages _Owner;
+      private readonly EFPAppMainImages _Owner;
 
       #endregion
 
@@ -400,11 +423,11 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Получить значок, соответствующий изображению.
       /// Если <paramref name="imageKey"/> - пустая строка, возращается null, а не пустой значок.
-      /// Если нет такого изображения в коллекции Images, возвращается значок "?".
-      /// Иконки являются собственностью этой коллекции. Для них не должен вызываться метод Dispose().
+      /// Если нет такого изображения в коллекции <see cref="EFPAppMainImages.Images"/>, возвращается значок "?".
+      /// Иконки являются собственностью этой коллекции. Для них не должен вызываться метод <see cref="Icon.Dispose()"/>.
       /// </summary>
-      /// <param name="imageKey"></param>
-      /// <returns></returns>
+      /// <param name="imageKey">Имя изображения</param>
+      /// <returns>Значок или null</returns>
       public Icon this[string imageKey]
       {
         get
@@ -420,13 +443,13 @@ namespace FreeLibSet.Forms
       #region Иницализация формы
 
       /// <summary>
-      /// Установка значка формы (свойства Form.Icon и Form.ShowIcon)
+      /// Установка значка формы (свойства <see cref="System.Windows.Forms.Form.Icon"/> и <see cref="System.Windows.Forms.Form.ShowIcon"/>).
       /// Если задано имя изображения, то форма будет иметь значок.
-      /// Иначе свойство ShowIcon сбрасывается в false, но форме присваивается иконка приложения, чтобы форма
+      /// Иначе свойство <see cref="System.Windows.Forms.Form.ShowIcon"/> сбрасывается в false, но форме присваивается иконка приложения, чтобы форма
       /// правильно отображалась в панели задач.
       /// </summary>
       /// <param name="form">Инициализируемая форма</param>
-      /// <param name="imageKey">Имя изображения из списка EFPApp.MainImages</param>
+      /// <param name="imageKey">Имя изображения из списка <see cref="EFPApp.MainImages"/></param>
       /// <param name="isModal">True, если форма будет показана в модальном режиме, false - если в немодальном</param>
       public void InitForm(System.Windows.Forms.Form form, string imageKey, bool isModal)
       {

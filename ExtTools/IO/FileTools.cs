@@ -15,6 +15,12 @@ using System.Reflection;
 using FreeLibSet.Core;
 using System.Runtime.CompilerServices;
 
+#if NET
+// Класс BinaryFormatter считается вредным https://aka.ms/binaryformatter
+#pragma warning disable SYSLIB0011 
+#endif
+
+
 namespace FreeLibSet.IO
 {
   #region Перечисление TestPathMode
@@ -2178,9 +2184,9 @@ namespace FreeLibSet.IO
       {
         if (path.FileNameWithoutExtension.EndsWith(".vshost", StringComparison.OrdinalIgnoreCase))
         {
-          string Name = path.FileNameWithoutExtension;
-          Name = Name.Substring(0, Name.Length - 7);
-          path = new AbsPath(path.ParentDir, (Name + path.Extension));
+          string name = path.FileNameWithoutExtension;
+          name = name.Substring(0, name.Length - 7);
+          path = new AbsPath(path.ParentDir, (name + path.Extension));
         }
       }
       return path;

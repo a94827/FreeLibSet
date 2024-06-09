@@ -9,8 +9,8 @@ namespace FreeLibSet.Collections
 {
   /// <summary>
   /// Массив флажков для выбора.
-  /// Содержит виртуальный метод OnChanged() и событие Changed.
-  /// Этот класс не является потокобезопасным
+  /// Содержит виртуальный метод <see cref="OnChanged()"/> и событие <see cref="Changed"/>.
+  /// Этот класс не является потокобезопасным.
   /// </summary>
   [Serializable]
   public class SelectionFlagList
@@ -21,7 +21,7 @@ namespace FreeLibSet.Collections
     /// Создает массив с заданным числом элементов.
     /// В исходном состоянии флажки не установлены.
     /// </summary>
-    /// <param name="count">Количество флажков</param>
+    /// <param name="count">Количество флажков. Должно быть больше или равно 0.</param>
     public SelectionFlagList(int count)
     {
       _Flags = new bool[count];
@@ -31,7 +31,7 @@ namespace FreeLibSet.Collections
     /// Создает массив флажков, копируя флажки из коллекции.
     /// После выполнения конструктора связь с исходной коллекцией не сохряняется.
     /// </summary>
-    /// <param name="source">Образцовая коллекция флажков</param>
+    /// <param name="source">Образцовая коллекция флажков. Не может быть null, но может быть пустой коллекцией.</param>
     public SelectionFlagList(ICollection<bool> source)
     {
 #if DEBUG
@@ -89,7 +89,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Текстовое представление для отладки.
-    /// Возвращает строку длиной Count символов "0" и "1". Для установленных флажков содержит "1", для не установленных - "0"
+    /// Возвращает строку длиной <see cref="Count"/> символов "0" и "1". Для установленных флажков содержит "1", для не установленных - "0"
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -111,8 +111,8 @@ namespace FreeLibSet.Collections
     public event EventHandler Changed;
 
     /// <summary>
-    /// Вызывается при изменении люого флажка.
-    /// Вызывает событие Changed.
+    /// Вызывается при изменении любого флажка.
+    /// Вызывает событие <see cref="Changed"/>.
     /// </summary>
     protected virtual void OnChanged()
     {
@@ -135,8 +135,8 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Групповая установлка всех флажков.
-    /// Длина массива <paramref name="value"/> должна совпадать с числом флажков Count.
-    /// Событие Changed вызывается один раз в конце, только если значение какого-либо флажка изменилось.
+    /// Длина массива <paramref name="value"/> должна совпадать с числом флажков <see cref="Count"/>.
+    /// Событие <see cref="Changed"/> вызывается один раз в конце, только если значение какого-либо флажка изменилось.
     /// </summary>
     /// <param name="value">Массив новых значений</param>
     public void FromArray(bool[] value)
@@ -165,7 +165,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Устанавливает все флажки в значение true.
-    /// Событие Changed вызывается один раз в конце, только если значение какого-либо флажка изменилось
+    /// Событие <see cref="Changed"/> вызывается один раз в конце, только если значение какого-либо флажка изменилось.
     /// </summary>
     public void SelectAll()
     {
@@ -184,7 +184,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Устанавливает все флажки в значение false.
-    /// Событие Changed вызывается один раз в конце, только если значение какого-либо флажка изменилось
+    /// Событие <see cref="Changed"/> вызывается один раз в конце, только если значение какого-либо флажка изменилось.
     /// </summary>
     public void UnselectAll()
     {
@@ -203,7 +203,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Устанавливает все флажки в противоположное значение.
-    /// Событие Changed вызывается один раз в конце, если число флажков больше 0.
+    /// Событие <see cref="Changed"/> вызывается один раз в конце, если число флажков больше 0.
     /// </summary>
     public void InvertAll()
     {
@@ -215,7 +215,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает true, если все флажки имеют значение true.
-    /// Если Count=0, возвращается true.
+    /// Если <see cref="Count"/>=0, возвращается true.
     /// </summary>
     public bool AreAllSelected
     {
@@ -232,7 +232,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Возвращает true, если все флажки имеют значение false.
-    /// Если Count=0, возвращается true.
+    /// Если <see cref="Count"/>=0, возвращается true.
     /// </summary>
     public bool AreAllUnselected
     {
@@ -255,7 +255,7 @@ namespace FreeLibSet.Collections
     /// Выбранные элементы в виде массива индексов элементов.
     /// Чтение и запись свойства являются относительно медленными, поэтому следует избегать обращения
     /// к свойству в цикле.
-    /// При записи в массиве могут быть значения (-1), которые игнорируются
+    /// При записи в массиве могут быть значения (-1), которые игнорируются.
     /// </summary>
     public int[] SelectedIndices
     {

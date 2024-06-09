@@ -20,7 +20,7 @@ namespace FreeLibSet.Forms.Docs
   {
     /// <summary>
     /// Конструктор формы.
-    /// Дополнительно инициализирует кнопку "Выборка документов"
+    /// Дополнительно инициализирует кнопку "Выборка документов".
     /// </summary>
     public EFPDBxTextSearchForm()
     {
@@ -115,7 +115,7 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo, rowIndices);
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxViewDocSelReason.SendTo, rowIndices);
       Owner.UI.ShowDocSel(docSel, "Результаты поиска");
     }
 
@@ -185,7 +185,7 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxGridViewDocSelReason.SendTo, nodes);
+      DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxViewDocSelReason.SendTo, nodes);
       Owner.UI.ShowDocSel(docSel, "Результаты поиска");
     }
 

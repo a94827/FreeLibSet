@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using FreeLibSet.Config;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -277,16 +278,16 @@ namespace FreeLibSet.Forms
   /// Используется командой "Установить фильтр" в настраиваемых табличных и иерарахических просмотрах.
   /// Также может использоваться в диалогов параметров отчетов для редактирования пользовательских фильтров.
   /// Для работы требуется установить свойство Filters.
-  /// Если в процессе показа окна фильтры обновляются снаружи провайдера EFPGridFilterEditorGridView,
-  /// то должен быть вызван метод EFPGridFilterEditorGridView.PerformRefresh() для обновления.
-  /// Редактирование фильтров возможно независимо от наличия вызовов IEFPGridFilters.BeginUpdate()/EndUpdate() и свойства IsReadOnly.
+  /// Если в процессе показа окна фильтры обновляются снаружи провайдера <see cref="EFPGridFilterEditorGridView"/>,
+  /// то должен быть вызван метод этого объекта <see cref="EFPDataGridView.PerformRefresh()"/> для обновления.
+  /// Редактирование фильтров возможно независимо от наличия вызовов <see cref="IEFPGridFilters.BeginUpdate()"/> / <see cref="IEFPGridFilters.EndUpdate()"/> и свойства <see cref="IReadOnlyObject.IsReadOnly"/>.
   /// </summary>
   public class EFPGridFilterEditorGridView : EFPDataGridView
   {
     #region Конструкторы
 
     /// <summary>
-    /// Создает объект, привязанный к DataGridView
+    /// Создает объект, привязанный к <see cref="DataGridView"/>.
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент Windows Forms</param>
@@ -297,7 +298,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает объект, привязанный к ControlWithToolBar
+    /// Создает объект, привязанный к <see cref="IEFPControlWithToolBar{DataGridView}"/>.
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элемент и панель инструментов</param>
     public EFPGridFilterEditorGridView(IEFPControlWithToolBar<DataGridView> controlWithToolBar)
@@ -360,7 +361,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Основное свойство - список редактируемых фильтров.
     /// Установка нового значения свойства приводит к обновлению списка строк.
-    /// Повторная установка ссылки на тот же набор фильтров приводит к обновлению значений фильтра
+    /// Повторная установка ссылки на тот же набор фильтров приводит к обновлению значений фильтра.
     /// </summary>
     public IEFPGridFilters Filters
     {

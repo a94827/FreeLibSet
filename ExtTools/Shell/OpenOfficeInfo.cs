@@ -425,7 +425,7 @@ namespace FreeLibSet.Shell
     /// <summary>
     /// Реализация свойства <see cref="OpenOfficeInfo.Parts"/>
     /// </summary>
-    public struct PartCollection:IEnumerable<OpenOfficePartInfo>
+    public struct PartCollection : IEnumerable<OpenOfficePartInfo>
     {
       #region Конструктор
 
@@ -501,9 +501,9 @@ namespace FreeLibSet.Shell
         /// <summary>
         /// Текущий перебираемый компонент
         /// </summary>
-        public OpenOfficePartInfo Current        {          get          {            return _Office._Parts[_Index];          }        }
+        public OpenOfficePartInfo Current { get { return _Office._Parts[_Index]; } }
 
-        object IEnumerator.Current        {          get          {            return Current;          }        }
+        object IEnumerator.Current { get { return Current; } }
 
         /// <summary>
         /// Ничего не делает
@@ -518,7 +518,7 @@ namespace FreeLibSet.Shell
         /// <returns>Есть очередной компонент</returns>
         public bool MoveNext()
         {
-          while(true)
+          while (true)
           {
             _Index++;
             if (_Index >= OpenOfficeInfo.PartCount)
@@ -612,7 +612,7 @@ namespace FreeLibSet.Shell
       return KindName + " " + Version.ToString() + PlatformSuffix;
     }
 
-    private string PlatformSuffix
+    internal string PlatformSuffix
     {
       get
       {
@@ -691,6 +691,15 @@ namespace FreeLibSet.Shell
       }
     }
 
+    /// <summary>
+    /// Возвращает текстовое представление компонента, например, "LibrweOffice Calc 5.4.7.2 (32-bit)"
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return DisplayName + " "+ _Office.Version.ToString() + _Office.PlatformSuffix;
+    }
+
     #endregion
 
     #region Открытие файла
@@ -757,7 +766,7 @@ namespace FreeLibSet.Shell
       if (fa != null)
         return fa;
 
-      return new FileAssociationItem(Office.Kind.ToString()+"."+Part.ToString(), Path, "%1", DisplayName);
+      return new FileAssociationItem(Office.Kind.ToString() + "." + Part.ToString(), Path, "%1", DisplayName);
     }
 
     private FileAssociationItem SelectFileAssociation(FileAssociations fas)

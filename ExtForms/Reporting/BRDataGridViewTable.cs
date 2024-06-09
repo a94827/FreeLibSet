@@ -96,9 +96,9 @@ namespace FreeLibSet.Forms.Reporting
     private bool _TitleHasBeenSet;
 
     /// <summary>
-    /// Фильтры отчета
+    /// Фильтры отчета.
     /// Список может заполняться из прикладного кода или обработчика события <see cref="TitleNeeded"/>. 
-    /// Заполлнение из прикладного кода отключает вызов события <see cref="TitleNeeded"/>.
+    /// Заполнение из прикладного кода отключает вызов события <see cref="TitleNeeded"/>.
     /// </summary>
     public EFPReportFilterItems FilterInfo
     {
@@ -114,7 +114,7 @@ namespace FreeLibSet.Forms.Reporting
     /// <summary>
     /// Событие вызывается при формировании отчета в <see cref="BRMenuOutItem.OnCreateReport(BRMenuOutItemCreateReportEventArgs)"/>.
     /// Обработчик события может установить свойство <see cref="Title"/> и заполнить табличку фильтров <see cref="FilterInfo"/>.
-    /// Установка этих свойств из прикладного кода предотвращает вызов обработчика события
+    /// Установка этих свойств из прикладного кода предотвращает вызов обработчика события.
     /// </summary>
     public event EventHandler TitleNeeded;
 

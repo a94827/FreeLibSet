@@ -372,7 +372,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Форматировщик, используемый по умолчанию.
-    /// Если свойство не устанавлено в явном виде, возвращает экземпляр непереопределенного класса <see cref="DateRangeFormatter"/>
+    /// Если свойство не установлено в явном виде, возвращает экземпляр непереопределенного класса <see cref="DateRangeFormatter"/>
     /// </summary>
     public static DateRangeFormatter Default
     {

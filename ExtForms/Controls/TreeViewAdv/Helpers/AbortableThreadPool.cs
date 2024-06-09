@@ -143,6 +143,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
         }
         else if (_threads.ContainsKey(item))
         {
+#if !NET
           if (allowAbort)
           {
             _threads[item].Abort();
@@ -150,6 +151,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
             return WorkItemStatus.Aborted;
           }
           else
+#endif
             return WorkItemStatus.Executing;
         }
         else
@@ -162,11 +164,13 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
       lock (_callbacks)
       {
         _callbacks.Clear();
+#if !NET
         if (allowAbort)
         {
           foreach (Thread t in _threads.Values)
             t.Abort();
         }
+#endif
       }
     }
   }

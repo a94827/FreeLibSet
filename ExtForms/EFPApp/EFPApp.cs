@@ -4808,6 +4808,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Выводит простое диалоговое окно "О программе".
     /// Если требуется настроить вид диалога, используйте класс <see cref="AboutDialog"/>.
+    /// Для реализации кнопок "Модули" и "Инфо" в собственном блоке диалога, используйте методы
+    /// <see cref="ShowAssembliesDialog()"/> и <see cref="DebugTools.ShowDebugInfo()"/> соответственно.
     /// </summary>
     public static void ShowAboutDialog()
     {
@@ -4847,13 +4849,15 @@ namespace FreeLibSet.Forms
      *     EFPApp.EndWait()
      *   }
      * 
-     * Вызов BeginWait() устанавлиает индиатор - песочные часы и
+     * Вызов BeginWait() устанавливает индиатор - песочные часы и
      * (опционально) - тест в статусной строке и картинку. Вывод
      * процентного индикатора и возможность прервать процесс не
      * предусмотрены - следует использовать Splash()
      * 
      * Пары вызовов BeginWait() / EndWait() могут быть вложенными
      */
+
+    #region Основные методы
 
     /// <summary>
     /// Начало индикации ожидания только с выводом песочных часов -
@@ -4938,6 +4942,73 @@ namespace FreeLibSet.Forms
 
       TempWaitForm.EndWait();
     }
+
+    #endregion
+
+    #region Упрощение синтаксиса
+
+    /// <summary>
+    /// Результат, возвращаемый методами <see cref="EFPApp.Wait()"/>
+    /// </summary>
+    public struct WaitHandler : IDisposable
+    {
+      /// <summary>
+      /// Вызывает <see cref="EFPApp.EndWait()"/>
+      /// </summary>
+      public void Dispose()
+      {
+        EFPApp.EndWait();
+      }
+    }
+
+    /// <summary>
+    /// Индикация ожидания с использованием директивы using -
+    /// без сообщений в статусной строке
+    /// </summary>
+    /// <returns><see cref="IDisposable"/>-объект для использования в директиве using</returns>
+    public static WaitHandler Wait()
+    {
+      return Wait(String.Empty, String.Empty, false);
+    }
+
+    /// <summary>
+    /// Индикация ожидания с использованием директивы using -
+    /// с выводом текстового сообщения в статусной строке.
+    /// </summary>
+    /// <param name="message">Строка сообщения</param>
+    /// <returns><see cref="IDisposable"/>-объект для использования в директиве using</returns>
+    public static WaitHandler Wait(string message)
+    {
+      return Wait(message, String.Empty, false);
+    }
+
+    /// <summary>
+    /// Индикация ожидания с использованием директивы using с выводом текстового сообщения в
+    /// статусной строке и значком
+    /// </summary>
+    /// <param name="message">Строка сообщения</param>
+    /// <param name="imageKey">Строковый идентификатор изображения в <see cref="MainImages"/></param>
+    /// <returns><see cref="IDisposable"/>-объект для использования в директиве using</returns>
+    public static WaitHandler Wait(string message, string imageKey)
+    {
+      return Wait(message, imageKey, false);
+    }
+
+    /// <summary>
+    /// Индикация ожидания с использованием директивы using с выводом текстового сообщения в
+    /// статусной строке и значком
+    /// </summary>
+    /// <param name="message">Строка сообщения</param>
+    /// <param name="imageKey">Строковый идентификатор изображения в <see cref="MainImages"/></param>
+    /// <param name="updateImmediately">true, если нужно немедленно нарисовать текст и значок</param>
+    /// <returns><see cref="IDisposable"/>-объект для использования в директиве using</returns>
+    public static WaitHandler Wait(string message, string imageKey, bool updateImmediately)
+    {
+      BeginWait(message, imageKey, updateImmediately);
+      return new WaitHandler();
+    }
+
+    #endregion
 
     #endregion
 

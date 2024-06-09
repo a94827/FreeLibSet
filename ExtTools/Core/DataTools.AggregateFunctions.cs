@@ -745,7 +745,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает индекс столбца в таблице.
-    /// Если столбца нет, генерируется исключение
+    /// Если столбца нет, генерируется исключение.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
@@ -769,6 +769,24 @@ namespace FreeLibSet.Core
       return p;
     }
 
+    /// <summary>
+    /// Возвращает индексы заданных столбцов в таблице.
+    /// Если какого-либо столбца нет, генерируется исключение.
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnNames">Список имен полей, разделенных запятыми</param>
+    /// <returns></returns>
+    private static int[] GetColumnPosArrayWithCheck(DataTable table, string columnNames)
+    {
+      if (String.IsNullOrEmpty(columnNames))
+        return DataTools.EmptyInts;
+
+      string[] aColumnNames = columnNames.Split(',');
+      int[] aPos = new int[aColumnNames.Length];
+      for (int i = 0; i < aColumnNames.Length; i++)
+        aPos[i] = GetColumnPosWithCheck(table, aColumnNames[i]);
+      return aPos;
+    }
 
     /// <summary>
     /// Добавляет в исключение данные об имеющихся полях таблицы.

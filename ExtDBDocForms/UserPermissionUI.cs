@@ -74,7 +74,7 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Интерфейс для одного вида разрешений.
-  /// Хранится в коллекции UserPermissionsUI
+  /// Хранится в коллекции <see cref="UserPermissionsUI"/>.
   /// </summary>
   public abstract class UserPermissionUI : ObjectWithCode
   {
@@ -101,9 +101,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то разрешения данного типа можно хранить в справочнике
-    /// "Пользователи" (и других, если используется)
+    /// "Пользователи" (и других, если используется).
     /// Свойство должно быть сброшено в false, если данный вид разрешения может устанавливаться только программным
-    /// способом
+    /// способом.
     /// </summary>
     public bool UseInRB
     {
@@ -113,8 +113,8 @@ namespace FreeLibSet.Forms.Docs
     private bool _UseInRB;
 
     /// <summary>
-    /// Отображаемое имя, используемое при выборе разрешения для добавления в справочник
-    /// Если свойство не установлено явно, возвращается ClassCode
+    /// Отображаемое имя, используемое при выборе разрешения для добавления в справочник.
+    /// Если свойство не установлено явно, возвращается <see cref="ClassCode"/>.
     /// </summary>
     public string DisplayName
     {
@@ -166,10 +166,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Метод должен:
-    /// 1. Присоединить к Editor.ParentControl управляющий элемент (панель) для редактирования формы.
-    /// 2. Создать объекты EFPControl. 
-    /// 3. Учесть свойство Editor.ReadOnly
-    /// 4. Добавить обработчики событий Editor.ReadValues и WriteValues
+    /// <list type="bullet">
+    /// <item><description>1. Присоединить к <paramref name="editor"/>.ParentControl управляющий элемент (панель) для редактирования формы</description></item>
+    /// <item><description>2. Создать объекты <see cref="EFPControlBase"/></description></item>
+    /// <item><description>3. Учесть свойство <paramref name="editor"/>.IsReadOnly</description></item>
+    /// <item><description>4. Добавить обработчики событий <paramref name="editor"/>.ReadValues и WriteValues</description></item>
+    /// </list>
     /// </summary>
     /// <param name="editor">Объект редактора</param>
     public virtual void CreateEditor(UserPermissionEditor editor)
@@ -184,7 +186,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Показывает окно просмотра разрешения
     /// </summary>
-    /// <param name="permission"></param>
+    /// <param name="permission">Разрешение</param>
     public void View(UserPermission permission)
     {
       if (permission == null)
@@ -252,7 +254,7 @@ namespace FreeLibSet.Forms.Docs
     /// Список генераторов разрешений
     /// </summary>
     public UserPermissionCreators Creators { get { return _Creators; } }
-    private UserPermissionCreators _Creators;
+    private readonly UserPermissionCreators _Creators;
 
     #endregion
 
@@ -274,7 +276,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Установка состояния IsReadOnly=true.
-    /// Также переводит в состояние IsReadOnly список Creators
+    /// Также переводит в состояние IsReadOnly список <see cref="Creators"/>.
     /// </summary>
     public new void SetReadOnly()
     {
@@ -333,7 +335,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Кэшированная коллекция разрешений, в которой ключом являются код класса разрешения плюс
-    /// XML-значение разрешения (как текст), а значением - объекты UserPermission
+    /// XML-значение разрешения (как текст), а значением - объекты <see cref="UserPermission"/>.
     /// </summary>
     public class UserPermissionInfoCache
     {
@@ -349,15 +351,15 @@ namespace FreeLibSet.Forms.Docs
 
       #region Свойства
 
-      private UserPermissionsUI _Owner;
+      private readonly UserPermissionsUI _Owner;
 
-      private Dictionary<string, UserPermission> _Dict;
+      private readonly Dictionary<string, UserPermission> _Dict;
 
       /// <summary>
       /// Получить кэшированное значение.
       /// Если в кэше еще нет подходящего объекта разрешение, он создается.
       /// Если <paramref name="classCode"/> задает разрешение, которое не зарегистрировано в 
-      /// списке UserPermissionsUI, то создается и сохраняется объект UnknownUserPermission.
+      /// списке <see cref="UserPermissionsUI"/>, то создается и сохраняется объект <see cref="UnknownUserPermission"/>.
       /// </summary>
       /// <param name="classCode">код класса разрешения</param>
       /// <param name="xmlText">XML-значение разрешения (как текст)</param>
@@ -391,7 +393,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Кэшированная коллекция разрешений, в которой ключом являются код класса разрешения плюс
-    /// XML-значение разрешения (как текст), а значением - объекты UserPermission.
+    /// XML-значение разрешения (как текст), а значением - объекты <see cref="UserPermission"/>.
     /// </summary>
     public UserPermissionInfoCache InfoCache { get { return _InfoCache; } }
     private UserPermissionInfoCache _InfoCache;
@@ -401,8 +403,8 @@ namespace FreeLibSet.Forms.Docs
     #region Значок поддокументов
 
     /// <summary>
-    /// Добавляет в DBUIImageHandlers обработчик, возвращающий значок для класса разрешений,
-    /// который будет выводится в просмотре поддокументов с разрешениями
+    /// Добавляет в <see cref="DBxDocImageHandlers"/> обработчик, возвращающий значок для класса разрешений,
+    /// который будет выводится в просмотре поддокументов с разрешениями.
     /// </summary>
     /// <param name="subDocTypeUI">Интерфейс доступа к поддокументам</param>
     /// <param name="classCodeColumnName">Имя текстового столбца с классом разрешения</param>
@@ -495,7 +497,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет в генератор табличного просмотра поддокументов разрешений вычисляемый столбец-значок с 
-    /// именем "ValueImage", в котором выводится значок для состояния разрешения
+    /// именем "ValueImage", в котором выводится значок для состояния разрешения.
     /// </summary>
     /// <param name="producer">Генератор просмотра поддокументов, куда добавляется столбец</param>
     /// <param name="classCodeColumnName">Имя текстового столбца с классом разрешения</param>
@@ -532,12 +534,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Показывает диалог выбора класса разрешения из текущего списка.
-    /// В списке показываются только классы разрешений, у которых свойство UserPermission.UseInRB=true
+    /// В списке показываются только классы разрешений, у которых свойство <see cref="UserPermissionUI.UseInRB"/>=true.
     /// </summary>
     /// <param name="classCode">Вход и выход: Выбранный класс разрешения</param>
     /// <param name="title">Заголовок блока диалога. Если не задан, то "Выбор класса разрешения"</param>
-    /// <param name="imageKey">Имя изображения в EFPApp.MainImages для значка диалога.
-    /// Если не задано, то используется UserPermission</param>
+    /// <param name="imageKey">Имя изображения в <see cref="EFPApp.MainImages"/> для значка диалога.
+    /// Если не задано, то используется "UserPermission".</param>
     /// <returns>True, если пользователь выбрал класс разрешения и нажал "OK"</returns>
     public bool SelectClass(ref string classCode, string title, string imageKey)
     {
@@ -673,7 +675,7 @@ namespace FreeLibSet.Forms.Docs
     #region Просмотр разрешений
 
     /// <summary>
-    /// Открывает окно просмотра разрешения (без возможности редактирования)
+    /// Открывает окно просмотра разрешения (без возможности редактирования).
     /// </summary>
     /// <param name="permission">Просматриваемое разрешение</param>
     public void View(UserPermission permission)
@@ -743,7 +745,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Аргументы событий UserPermissionEditor.ReadValues и WriteValues
+  /// Аргументы событий <see cref="UserPermissionEditor.ReadValues"/> и <see cref="UserPermissionEditor.WriteValues"/>.
   /// </summary>
   public class UserPermissionEditorRWEventArgs : EventArgs
   {
@@ -776,9 +778,9 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат событий UserPermissionEditor.ReadValues и WriteValues
+  /// Делегат событий <see cref="UserPermissionEditor.ReadValues"/> и <see cref="UserPermissionEditor.WriteValues"/>.
   /// </summary>
-  /// <param name="sender">Объект UserPermissionEditor</param>
+  /// <param name="sender">Объект <see cref="UserPermissionEditor"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void UserPermissionEditorRWEventHandler(object sender,
     UserPermissionEditorRWEventArgs args);
@@ -792,7 +794,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Создает редактор разрешения.
-    /// Не используется в пользовательском коде
+    /// Не используется в пользовательском коде.
     /// </summary>
     /// <param name="ui">Интерфейс для редактируемого разрешения</param>
     /// <param name="isReadOnly">True, если выполняется только просмотр разрешения,
@@ -816,21 +818,21 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Интерфейс разрешения, к которому относится редактор.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public UserPermissionUI UI { get { return _UI; } }
-    private UserPermissionUI _UI;
+    private readonly UserPermissionUI _UI;
 
 
     /// <summary>
     /// Возвращает true, если редактор открывается для просмотра разрешения, а не для редактирования
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
+    private readonly bool _IsReadOnly;
 
     /// <summary>
     /// Управляющий элемент для редактирования разрешения.
-    /// Свойство должно быть инициализировано в методе UserPermissionUI.CreateEditor()
+    /// Свойство должно быть инициализировано в методе <see cref="UserPermissionUI.CreateEditor(UserPermissionEditor)"/>.
     /// </summary>
     public Control Control
     {
@@ -840,16 +842,15 @@ namespace FreeLibSet.Forms.Docs
     private Control _Control;
 
     /// <summary>
-    /// Сюда должны присоединяться провайдер(ы) управляющих элементов в методе UserPermissionUI.CreateEditor().
-    /// Свойство инциализируется в конструкторе
+    /// Сюда должны присоединяться провайдер(ы) управляющих элементов в методе <see cref="UserPermissionUI.CreateEditor(UserPermissionEditor)"/>.
+    /// Свойство инциализируется в конструкторе.
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private EFPBaseProvider _BaseProvider;
+    private readonly EFPBaseProvider _BaseProvider;
 
     /// <summary>
-    /// Произвольные пользовательские данные, которые модгут быть установлены методом,
-    /// производным от UserPermissionUI.InitEditor. Затем эти данные могут быть использованы
-    /// обработчиками ReadValues и WriteValues 
+    /// Произвольные пользовательские данные, которые могут быть установлены реализацией абстрактного метода <see cref="UserPermissionUI.CreateEditor(UserPermissionEditor)"/>. 
+    /// Затем эти данные могут быть использованы обработчиками <see cref="ReadValues"/> и <see cref="WriteValues"/>.
     /// </summary>
     public object UserData { get { return _UserData; } set { _UserData = value; } }
     private object _UserData;
@@ -859,19 +860,19 @@ namespace FreeLibSet.Forms.Docs
     #region События
 
     /// <summary>
-    /// Событие вызывается при открытии редактора
-    /// Обработчик события должен извлечь данные из Args.Permission и поместить их в поля формы
+    /// Событие вызывается при открытии редактора.
+    /// Обработчик события должен извлечь данные из <see cref="UserPermissionEditorRWEventArgs.Permission"/> и поместить их в поля формы.
     /// </summary>
     public event UserPermissionEditorRWEventHandler ReadValues;
 
     /// <summary>
     /// Событие вызывается при окончании редактирования фориы
-    /// Обработчик события должен извлечь данные из полей формы и установить свойства реазрешения в Args.Permission
+    /// Обработчик события должен извлечь данные из полей формы и установить свойства реазрешения в <see cref="UserPermissionEditorRWEventArgs.Permission"/>.
     /// </summary>
     public event UserPermissionEditorRWEventHandler WriteValues;
 
     /// <summary>
-    /// Вызывает событие ReadValues для заданного разрешения
+    /// Вызывает событие <see cref="ReadValues"/> для заданного разрешения.
     /// </summary>
     /// <param name="permission">Разрешение</param>
     public void PerformReadValues(UserPermission permission)
@@ -883,7 +884,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает событие WriteValues для заданного разрешения
+    /// Вызывает событие <see cref="WriteValues"/> для заданного разрешения.
     /// </summary>
     /// <param name="permission">Разрешение</param>
     public void PerformWrtiteValues(UserPermission permission)

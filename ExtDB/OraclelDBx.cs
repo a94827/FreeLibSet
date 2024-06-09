@@ -1,6 +1,8 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+#if !NET // неохота искать пакет
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +25,7 @@ namespace FreeLibSet.Data.OracleClient
 
     /// <summary>
     /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionStringBuilder">Собранная строка подключения</param>
     public OracleDBx(OracleConnectionStringBuilder connectionStringBuilder)
@@ -40,8 +42,8 @@ namespace FreeLibSet.Data.OracleClient
     }
 
     /// <summary>
-    /// Создание подключение к базе данных.
-    /// Автоматически создается основная точка подключения
+    /// Создание подключения к базе данных.
+    /// Автоматически создается основная точка подключения.
     /// </summary>
     /// <param name="connectionString">Строка подключения</param>
     public OracleDBx(string connectionString)
@@ -1566,3 +1568,5 @@ namespace FreeLibSet.Data.OracleClient
     #endregion
   }
 }
+
+#endif

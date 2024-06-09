@@ -23,14 +23,37 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
     public EFPReportFilterItem(string displayName)
+      :this(displayName, String.Empty, null)
+    {
+    }
+
+    /// <summary>
+    /// Создает строку фильтра.
+    /// Создаваемая строка должна быть добавлена в коллекцию <see cref="EFPReportFilterItems"/>.
+    /// <param name="value">Значение фильтра. Свойство <see cref="Value"/> может также устанавливаться в любое время</param>
+    /// </summary>
+    /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
+    public EFPReportFilterItem(string displayName, string value)
+      : this(displayName, value, null)
+    {
+    }
+
+    /// <summary>
+    /// Создает строку фильтра.
+    /// Создаваемая строка должна быть добавлена в коллекцию <see cref="EFPReportFilterItems"/>.
+    /// </summary>
+    /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
+    /// <param name="value">Значение фильтра. Свойство <see cref="Value"/> может также устанавливаться в любое время</param>
+    /// <param name="imageKey">Значок фильтра. Свойство <see cref="ImageKey"/> может также устанавливаться в любое время</param>
+    public EFPReportFilterItem(string displayName, string value, string imageKey)
     {
 #if DEBUG
       if (String.IsNullOrEmpty(displayName))
         throw new ArgumentNullException("displayName");
 #endif
       _DisplayName = displayName;
-      _Value = String.Empty;
-      _ImageKey = null;
+      _Value = value;
+      _ImageKey = imageKey;
     }
 
     #endregion

@@ -120,15 +120,17 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Диалог выбора позиции с помощью группы радиокнопок
+  /// Диалог выбора позиции с помощью группы радиокнопок.
+  /// Слева от кнопок могут располагаться значки.
+  /// Если список может содержать большое количество элементов, или быть пустым, используйте <see cref="ListSelectDialog"/>.
   /// </summary>
   public class RadioSelectDialog
   {
+    #region Конструктор
+
     /// <summary>
     /// Создает объект диалога
     /// </summary>
-    #region Конструктор
-
     public RadioSelectDialog()
     {
       _Title = "Выбор из списка";
@@ -163,7 +165,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Установка и получение выбранной позиции как строки.
-    /// Выполняет поиск в списке Items
+    /// Выполняет поиск в списке <see cref="Items"/>.
     /// </summary>
     public string SelectedItem
     {
@@ -193,7 +195,7 @@ namespace FreeLibSet.Forms
     private string _Title;
 
     /// <summary>
-    /// Заголовок над кнопками
+    /// Заголовок над кнопками (<see cref="GroupBox.Text"/>).
     /// </summary>
     public string GroupTitle
     {
@@ -203,8 +205,9 @@ namespace FreeLibSet.Forms
     private string _GroupTitle;
 
     /// <summary>
-    /// Изображение для значка формы, извлекаемое из коллекции EFPApp.MainImages.
-    /// По умолчанию - нет значка
+    /// Изображение для значка формы, извлекаемое из коллекции <see cref="EFPApp.MainImages"/>.
+    /// По умолчанию - нет значка.
+    /// В отличие от <see cref="ListSelectDialog.ImageKey"/>, свойство задает только значок формы, но не изображения рядом с кнопками.
     /// </summary>
     public string ImageKey
     {
@@ -216,7 +219,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Массив флажков доступных позиций.
     /// По умолчанию, все позиции доступны.
-    /// Свойство доступно после установки свойства Items
+    /// Свойство доступно после установки свойства <see cref="Items"/>.
     /// </summary>
     public bool[] EnabledItemFlags
     {
@@ -233,6 +236,13 @@ namespace FreeLibSet.Forms
       }
       set
       {
+        if (value != null)
+        {
+          if (_Items == null)
+            throw new NullReferenceException("Сначала должно быть установлено свойство Items");
+          if (value.Length != _Items.Length)
+            throw new ArgumentException("Длина массива должна быть равна "+_Items.Length.ToString());
+        }
         _EnabledItemFlags = value;
       }
     }
@@ -257,6 +267,13 @@ namespace FreeLibSet.Forms
       }
       set
       {
+        if (value != null)
+        {
+          if (_Items == null)
+            throw new NullReferenceException("Сначала должно быть установлено свойство Items");
+          if (value.Length != _Items.Length)
+            throw new ArgumentException("Длина массива должна быть равна " + _Items.Length.ToString());
+        }
         _ImageKeys = value;
       }
     }
@@ -270,7 +287,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Позиция блока диалога на экране.
-    /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
+    /// По умолчанию блок диалога центрируется относительно <see cref="EFPApp.DefaultScreen"/>.
     /// </summary>
     public EFPDialogPosition DialogPosition 
     { 
@@ -292,11 +309,17 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Запуск диалога
     /// </summary>
-    /// <returns>OK, если пользователь сделал выбор</returns>
+    /// <returns><see cref="DialogResult.OK"/>, если пользователь сделал выбор</returns>
     public DialogResult ShowDialog()
     {
       if (Items == null)
         throw new NullReferenceException("Свойство Items не было установлено");
+
+      if (Items.Length == 0)
+      {
+        EFPApp.MessageBox("Нет элементов для выбора", Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        return DialogResult.Cancel;
+      }
 
       #region Нужны ли картинки у кнопок?
 
@@ -346,8 +369,6 @@ namespace FreeLibSet.Forms
       return DialogResult.OK;
     }
 
-
     #endregion
   }
-
 }

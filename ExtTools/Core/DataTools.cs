@@ -14,6 +14,7 @@ using System.Collections;
 using FreeLibSet.Data;
 using FreeLibSet.Collections;
 using FreeLibSet.Calendar;
+using System.Globalization;
 
 namespace FreeLibSet.Core
 {
@@ -30,7 +31,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение поля как число.
-    /// Если поле содержит DBNull, возвращается 0.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -113,11 +114,12 @@ namespace FreeLibSet.Core
 #endif
 
     /// <summary>
-    /// Тоже, что и Convert.ToInt32(), но DBNull и пустая строка преобразуются в 0, а не выбрасывают исключение
-    /// Тип Boolean преобразуется в значение 0 или 1.
+    /// Тоже, что и <see cref="Convert.ToInt32(object)"/>, но <see cref="DBNull"/> и пустая строка преобразуются в 0, а не выбрасывают исключение.
+    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
+    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToInt32(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа Int32</returns>
+    /// <returns>Значение типа <see cref="Int32"/></returns>
     public static int GetInt(object value)
     {
       if (value is DBNull)
@@ -142,8 +144,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение числового значения из ExtendedProperties
-    /// Если коллекция не содержит свойства с именем Name, то значение Value не изменяется
+    /// Получение числового значения из <see cref="PropertyCollection"/>.
+    /// Если коллекция не содержит свойства с именем <paramref name="propName"/>, то значение <paramref name="value"/> не изменяется.
     /// </summary>
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
@@ -159,8 +161,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение числового значения из ExtendedProperties
-    /// Если коллекция не содержит свойства с именем Name, то возвращается 0
+    /// Получение числового значения из <see cref="PropertyCollection"/>.
+    /// Если коллекция не содержит свойства с именем <paramref name="propName"/>, то возвращается 0.
     /// </summary>
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
@@ -172,7 +174,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразование значения в число или null.
-    /// Для значений null, DBNull и пустой строки возвращается null. 
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
     /// Для других значений выполняется попытка преобразования
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
@@ -208,7 +210,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение поля как число.
-    /// Если поле содержит DBNull, возвращается 0.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -237,11 +239,12 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Тоже, что и Convert.ToInt32(), но DBNull и пустая строка преобразуются в 0, а не выбрасывают исключение
-    /// Тип Boolean преобразуется в значение 0 или 1.
+    /// Тоже, что и <see cref="Convert.ToInt64(object)"/>, но <see cref="DBNull"/> и пустая строка преобразуются в 0, а не выбрасывают исключение.
+    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
+    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToInt64(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа Int64</returns>
+    /// <returns>Значение типа <see cref="Int64"/></returns>
     public static long GetInt64(object value)
     {
       if (value is DBNull)
@@ -266,8 +269,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение числового значения из ExtendedProperties
-    /// Если коллекция не содержит свойства с именем Name, то значение Value не изменяется
+    /// Получение числового значения из <see cref="PropertyCollection"/>.
+    /// Если коллекция не содержит свойства с именем <paramref name="propName"/>, то значение <paramref name="value"/> не изменяется.
     /// </summary>
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
@@ -283,8 +286,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение числового значения из ExtendedProperties
-    /// Если коллекция не содержит свойства с именем Name, то возвращается 0
+    /// Получение числового значения из <see cref="PropertyCollection"/>.
+    /// Если коллекция не содержит свойства с именем <paramref name="propName"/>, то возвращается 0.
     /// </summary>
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
@@ -296,8 +299,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразование значения в число или null.
-    /// Для значений null, DBNull и пустой строки возвращается null. 
-    /// Для других значений выполняется попытка преобразования
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
+    /// Для других значений выполняется попытка преобразования.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Число или null</returns>
@@ -332,7 +335,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение поля как число.
-    /// Если поле содержит DBNull, возвращается 0.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -360,12 +363,12 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Тоже, что и Convert.ToDecimal(), но пустая строка и DBNull преобразуются в 0m, а не выбрасывают исключение
-    /// Тип Boolean преобразуется в значение 0 или 1.
-    /// Строковый тип преобразуется с использованием CultureInfo.CurrentCulture (вызов Decimal.Parse() без дополнительных аргументов)
+    /// Тоже, что и <see cref="Convert.ToDecimal(object)"/>, но пустая строка и <see cref="DBNull"/> преобразуются в 0m, а не выбрасывают исключение.
+    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
+    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToDecimal(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа Decimal</returns>
+    /// <returns>Значение типа <see cref="Decimal"/></returns>
     public static decimal GetDecimal(object value)
     {
       if (value is Boolean)
@@ -391,8 +394,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразование значения в число или null.
-    /// Для значений null, DBNull и пустой строки возвращается null. 
-    /// Для других значений выполняется попытка преобразования
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
+    /// Для других значений выполняется попытка преобразования.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Число или null</returns>
@@ -427,7 +430,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение поля как число.
-    /// Если поле содержит DBNull, возвращается 0.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -456,12 +459,12 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Тоже, что и Convert.ToDouble(), но пустая строка и DBNull преобразуются в 0, а не выбрасывают исключение
-    /// Тип Boolean преобразуется в значение 0 или 1.
-    /// Строковый тип преобразуется с использованием CultureInfo.CurrentCulture (вызов Double.Parse() без дополнительных аргументов)
+    /// Тоже, что и <see cref="Convert.ToDouble(object)"/>, но пустая строка и <see cref="DBNull"/> преобразуются в 0, а не выбрасывают исключение.
+    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
+    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToDouble(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа Double</returns>
+    /// <returns>Значение типа <see cref="Double"/></returns>
     public static double GetDouble(object value)
     {
       if (value is Boolean)
@@ -487,8 +490,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразование значения в число или null.
-    /// Для значений null, DBNull и пустой строки возвращается null. 
-    /// Для других значений выполняется попытка преобразования
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
+    /// Для других значений выполняется попытка преобразования.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Число или null</returns>
@@ -523,7 +526,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение поля как число.
-    /// Если поле содержит DBNull, возвращается 0.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -552,12 +555,12 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Тоже, что и Convert.ToSingle(), но пустая строка и DBNull преобразуются в 0, а не выбрасывают исключение
-    /// Тип Boolean преобразуется в значение 0 или 1.
-    /// Строковый тип преобразуется с использованием CultureInfo.CurrentCulture (вызов Single.Parse() без дополнительных аргументов)
+    /// Тоже, что и <see cref="Convert.ToSingle(object)"/>, но пустая строка и <see cref="DBNull"/> преобразуются в 0, а не выбрасывают исключение.
+    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
+    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToSingle(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа Single</returns>
+    /// <returns>Значение типа <see cref="Single"/></returns>
     public static float GetSingle(object value)
     {
       if (value is Boolean)
@@ -583,7 +586,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразование значения в число или null.
-    /// Для значений null, DBNull и пустой строки возвращается null. 
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
     /// Для других значений выполняется попытка преобразования
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
@@ -618,8 +621,8 @@ namespace FreeLibSet.Core
     #region GetBool()
 
     /// <summary>
-    /// Возвращает значение поля как значение Boolean.
-    /// Если поле содержит DBNull, возвращается false.
+    /// Возвращает значение поля как значение <see cref="Boolean"/>.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается false.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -648,11 +651,11 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Тоже, что и Convert.ToSingle(), но пустая строка и DBNull преобразуются в false, а не выбрасывают исключение
-    /// Для типа String воспринимаются значения "0" и "1".
+    /// Тоже, что и <see cref="Convert.ToBoolean(object)"/>, но пустая строка и <see cref="DBNull"/> преобразуются в false, а не выбрасывают исключение.
+    /// Для типа <see cref="String"/> воспринимаются значения "0" и "1".
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа Double</returns>
+    /// <returns>Значение типа <see cref="Boolean"/></returns>
     public static bool GetBool(object value)
     {
       if (value is DBNull)
@@ -768,7 +771,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получает объект <see cref="DateTime"/> в пределах суток указанной даты <paramref name="date"/>.
     /// Если <paramref name="value"/> превышает 86400 секунд, берется значение по модулю.
-    /// Отрицательных значения заменяются, например, если <paramref name="value"/> равно минус 15 минут, то возвращается 23:45
+    /// Отрицательных значения заменяются, например, если <paramref name="value"/> равно минус 15 минут, то возвращается 23:45.
     /// </summary>
     /// <param name="value">Произвольный интервал времени</param>
     /// <param name="date">Базовая дата. Берется только дата, компонент времени игнорируется</param>
@@ -783,9 +786,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Преобразование значения в тип DateTime без значения null.
-    /// Значения null и DBNull преобразуется в DateTime.MinValue.
-    /// Пустая строка также преобразуется в DateTime.MinValue, для непустой строки выполняется попытка преобразования с помощью Convert.ToDateTime().
+    /// Преобразование значения в тип <see cref="DateTime"/> без значения null.
+    /// Значения null и <see cref="DBNull"/> преобразуется в <see cref="DateTime.MinValue"/>.
+    /// Пустая строка также преобразуется в <see cref="DateTime.MinValue"/>, для непустой строки выполняется попытка преобразования с помощью <see cref="StdConvert.ToDateTime(string, bool)"/>.
     /// Для остальных типов будет выброшено исключение. 
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
@@ -810,8 +813,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает значение поля как DateTime.
-    /// Если поле содержит DBNull, возвращается неинициализированная дата.
+    /// Возвращает значение поля как <see cref="DateTime"/>.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается неинициализированная дата.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -839,10 +842,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Преобразование значения в тип Nullable DateTime.
-    /// Значения null и DBNull преобразуется в null.
-    /// Пустая строка преобразуется в null, иначе выполняется попытка преобразования.
-    /// Для остальных типов будет выброшено исключение. Для преобразования используется Convert.ToDateTime()
+    /// Преобразование значения в тип <see cref="Nullable{DateTime}"/>.
+    /// Значения null и <see cref="DBNull"/> преобразуется в null.
+    /// Пустая строка преобразуется в null, иначе выполняется попытка преобразования с помощью <see cref="StdConvert.ToDateTime(string, bool)"/>.
+    /// Для остальных типов будет выброшено исключение. 
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Результат преобразования</returns>
@@ -866,8 +869,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает значение поля как DateTime.
-    /// Если поле содержит DBNull, возвращается null.
+    /// Возвращает значение поля как <see cref="Nullable{DateTime}"/>.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается null.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -899,10 +902,12 @@ namespace FreeLibSet.Core
     #region GetTimeSpan()
 
     /// <summary>
-    /// Преобразование значения в тип TimeSpan.
-    /// Значения null и DBNull преобразуется в TimeSpan.Zero. 
-    /// TimeSpan возвращается без преобразования.
-    /// Для остальных типов будет выброшено исключение InvalidCastException
+    /// Преобразование значения в тип <see cref="TimeSpan"/>.
+    /// Значения null, <see cref="DBNull"/> и пустая строка преобразуется в <see cref="TimeSpan.Zero"/>. 
+    /// Для непустой строки возвращается <see cref="StdConvert.ToTimeSpan(string)"/>.
+    /// <see cref="TimeSpan"/> возвращается без преобразования.
+    /// Для <see cref="DateTime"/> извлекается компонент времени <see cref="DateTime.TimeOfDay"/>.
+    /// Для остальных типов будет выброшено исключение <see cref="InvalidCastException"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Результат преобразования</returns>
@@ -929,7 +934,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение поля как интервал времени.
-    /// Если поле содержит DBNull, возвращается TimeSpan.Zero.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается <see cref="TimeSpan.Zero"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -961,9 +966,9 @@ namespace FreeLibSet.Core
     #region GetGuid()
 
     /// <summary>
-    /// Возвращает значение поля как GUID.
-    /// Если поле содержит DBNull, возвращается Guid.Empty.
-    /// Поле может содержать Guid, строку или массив байт
+    /// Возвращает значение поля как <see cref="Guid"/>.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается <see cref="Guid.Empty"/>.
+    /// Поле может содержать <see cref="Guid"/>, строку или массив байт.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -993,11 +998,11 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразование значения в Guid.
-    /// Допускаются значения Guid, String и Byte[16].
-    /// Для значений null и DBNull пустой строки возвращается Guid.Empty.
+    /// Допускаются значения <see cref="Guid"/>, <see cref="String"/> и <see cref="Byte"/>[16].
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается <see cref="Guid.Empty"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа Guid</returns>
+    /// <returns>Значение типа <see cref="Guid"/></returns>
     public static Guid GetGuid(object value)
     {
       if (value == null || value is DBNull)
@@ -1022,8 +1027,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение  значения Guid из ExtendedProperties
-    /// Если коллекция не содержит свойства с именем Name, то значение Value не изменяется
+    /// Получение  значения <see cref="Guid"/> из <see cref="PropertyCollection"/>.
+    /// Если коллекция не содержит свойства с именем <paramref name="propName"/>, то значение <paramref name="value"/> не изменяется.
     /// </summary>
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
@@ -1039,8 +1044,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение числового значения из ExtendedProperties
-    /// Если коллекция не содержит свойства с именем Name, то возвращается Guid.Empty
+    /// Получение числового значения из <see cref="PropertyCollection"/>.
+    /// Если коллекция не содержит свойства с именем <paramref name="propName"/>, то возвращается <see cref="Guid.Empty"/>.
     /// </summary>
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
@@ -1056,7 +1061,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение поля как значение перечисления.
-    /// Если поле содержит DBNull, возвращается нулевое значение для перечисления (default).
+    /// Если поле содержит <see cref="DBNull"/>, возвращается нулевое значение для перечисления (default).
     /// Поле может содержать целочисленное значение или строку
     /// </summary>
     /// <typeparam name="T">Тип перечисления</typeparam>
@@ -1085,8 +1090,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразование значения в перечисление.
-    /// Допускаются значения типа <typeparamref name="T"/>, Int32 или String.
-    /// Для значений null, DBNull и пустой строки возвращается нулевое значение для перечисления (default).
+    /// Допускаются значения типа <typeparamref name="T"/>, <see cref="Int32"/> или <see cref="String"/>.
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается нулевое значение для перечисления (default).
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Значение перечислимого типа</returns>
@@ -1113,8 +1118,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение перечислимого значения из ExtendedProperties
-    /// Если коллекция не содержит свойства с именем Name, то значение Value не изменяется
+    /// Получение перечислимого значения из <see cref="PropertyCollection"/>.
+    /// Если коллекция не содержит свойства с именем <paramref name="propName"/>, то значение <paramref name="value"/> не изменяется.
     /// </summary>
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
@@ -1131,8 +1136,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение числового значения из ExtendedProperties
-    /// Если коллекция не содержит свойства с именем Name, то возвращается Guid.Empty
+    /// Получение числового значения из <see cref="PropertyCollection"/>.
+    /// Если коллекция не содержит свойства с именем <paramref name="propName"/>, то возвращается <see cref="Guid.Empty"/>.
     /// </summary>
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
@@ -1153,8 +1158,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Установка строки в поле. При этом выполняется обрезка строки
-    /// до длины MaxLength. Также выполняется преобразование в DBNull для пустой
-    /// строки, если Column.AllowDBNull установлено
+    /// до длины <see cref="DataColumn.MaxLength"/>. Также выполняется преобразование в <see cref="DBNull"/> для пустой
+    /// строки, если <see cref="DataColumn.AllowDBNull"/>=true.
     /// </summary>
     /// <param name="row">Строка данных, куда выполняется запись</param>
     /// <param name="columnName">Имя столбца</param>
@@ -1195,8 +1200,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Установка числового значения поля. Выполняет преобразование значения в
-    /// конкретный тип поля. Для нулевого значения выполняет преобразование в DBNull,
-    /// если Column.AllowDBNull поддерживается
+    /// конкретный тип поля. Для нулевого значения выполняет преобразование в <see cref="DBNull"/>,
+    /// если <see cref="DataColumn.AllowDBNull"/>=true.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
@@ -1245,8 +1250,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Установка числового значения поля. Выполняет преобразование значения в
-    /// конкретный тип поля. Для нулевого значения выполняет преобразование в DBNull,
-    /// если Column.AllowDBNull поддерживается
+    /// конкретный тип поля. Для нулевого значения выполняет преобразование в <see cref="DBNull"/>,
+    /// если <see cref="DataColumn.AllowDBNull"/>=true.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
@@ -1295,8 +1300,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Установка числового значения поля. Выполняет преобразование значения в
-    /// конкретный тип поля. Для нулевого значения выполняет преобразование в DBNull,
-    /// если Column.AllowDBNull поддерживается
+    /// конкретный тип поля. Для нулевого значения выполняет преобразование в <see cref="DBNull"/>,
+    /// если <see cref="DataColumn.AllowDBNull"/>=true.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
@@ -1358,8 +1363,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Установка числового значения поля. Выполняет преобразование значения в
-    /// конкретный тип поля. Для нулевого значения выполняет преобразование в DBNull,
-    /// если Column.AllowDBNull поддерживается
+    /// конкретный тип поля. Для нулевого значения выполняет преобразование в <see cref="DBNull"/>,
+    /// если <see cref="DataColumn.AllowDBNull"/>=true.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
@@ -1421,8 +1426,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Установка числового значения поля. Выполняет преобразование значения в
-    /// конкретный тип поля. Для нулевого значения выполняет преобразование в DBNull,
-    /// если Column.AllowDBNull поддерживается
+    /// конкретный тип поля. Для нулевого значения выполняет преобразование в <see cref="DBNull"/>,
+    /// если <see cref="DataColumn.AllowDBNull"/>=true.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
@@ -1484,7 +1489,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Установка значения поля типа Дата/Время. 
-    /// Для значения null выполняет преобразование в DBNull,
+    /// Для значения null выполняет преобразование в <see cref="DBNull"/>,
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
@@ -1528,8 +1533,8 @@ namespace FreeLibSet.Core
     #region SetTimeSpan()
 
     /// <summary>
-    /// Установка значения поля типа TimeSpan. 
-    /// Для нулевого значения выполняет преобразование в DBNull,
+    /// Установка значения поля типа <see cref="TimeSpan"/> или <see cref="String"/>. 
+    /// Для нулевого значения выполняет преобразование в <see cref="DBNull"/>,
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
@@ -1573,8 +1578,8 @@ namespace FreeLibSet.Core
     #region SetGuid()
 
     /// <summary>
-    /// Установка значения поля типа Guid, String или byte[], в зависимости от типа поля 
-    /// Для значения Guid.Empty записывается значение DBNull
+    /// Установка значения поля типа <see cref="Guid"/>, <see cref="String"/> или <see cref="Byte"/>[], в зависимости от типа поля.
+    /// Для значения <see cref="Guid.Empty"/> записывается значение <see cref="DBNull"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
@@ -1621,9 +1626,9 @@ namespace FreeLibSet.Core
     #region IncInt
 
     /// <summary>
-    /// Увеличение значения поля типа Int32
+    /// Увеличение значения поля типа <see cref="Int32"/>
     /// </summary>
-    /// <param name="row">Изменяемая строка (объект DataRow)</param>
+    /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncInt(DataRow row, string columnName, int delta)
@@ -1636,8 +1641,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Int32 на значение того же поля в другой 
-    /// строке. Применяется для расчета итоговых строк
+    /// Увеличение значения поля типа <see cref="Int32"/> на значение того же поля в другой 
+    /// строке. Применяется для расчета итоговых строк.
     /// </summary>
     /// <param name="srcRow">Строка, содержащее прибавляемое значение</param>
     /// <param name="dstRow">Изменяемая (итоговая) строка</param>
@@ -1649,9 +1654,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Int32
+    /// Увеличение значения поля типа <see cref="Int32"/>
     /// </summary>
-    /// <param name="drv">Изменяемая строка (объект DataRowView)</param>
+    /// <param name="drv">Изменяемая строка (объект <see cref="DataRowView"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncInt(DataRowView drv, string columnName, int delta)
@@ -1668,9 +1673,9 @@ namespace FreeLibSet.Core
     #region IncInt64
 
     /// <summary>
-    /// Увеличение значения поля типа Int64
+    /// Увеличение значения поля типа <see cref="Int64"/>
     /// </summary>
-    /// <param name="row">Изменяемая строка (объект DataRow)</param>
+    /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncInt64(DataRow row, string columnName, long delta)
@@ -1683,8 +1688,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Int64 на значение того же поля в другой 
-    /// строке. Применяется для расчета итоговых строк
+    /// Увеличение значения поля типа <see cref="Int64"/> на значение того же поля в другой 
+    /// строке. Применяется для расчета итоговых строк.
     /// </summary>
     /// <param name="srcRow">Строка, содержащее прибавляемое значение</param>
     /// <param name="dstRow">Изменяемая (итоговая) строка</param>
@@ -1696,9 +1701,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Int64
+    /// Увеличение значения поля типа <see cref="Int64"/>
     /// </summary>
-    /// <param name="drv">Изменяемая строка (объект DataRowView)</param>
+    /// <param name="drv">Изменяемая строка (объект <see cref="DataRowView"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncInt64(DataRowView drv, string columnName, long delta)
@@ -1715,9 +1720,9 @@ namespace FreeLibSet.Core
     #region IncSingle
 
     /// <summary>
-    /// Увеличение значения поля типа Single
+    /// Увеличение значения поля типа <see cref="Single"/>
     /// </summary>
-    /// <param name="row">Изменяемая строка</param>
+    /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncSingle(DataRow row, string columnName, float delta)
@@ -1730,8 +1735,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Single на значение того же поля в другой 
-    /// строке. Применяется для расчета итоговых строк
+    /// Увеличение значения поля типа <see cref="Single"/> на значение того же поля в другой 
+    /// строке. Применяется для расчета итоговых строк.
     /// </summary>
     /// <param name="srcRow">Строка, содержащее прибавляемое значение</param>
     /// <param name="dstRow">Изменяемая (итоговая) строка</param>
@@ -1743,9 +1748,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Single
+    /// Увеличение значения поля типа <see cref="Single"/>
     /// </summary>
-    /// <param name="drv">Изменяемая строка (объект DataRowView)</param>
+    /// <param name="drv">Изменяемая строка (объект <see cref="DataRowView"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncSingle(DataRowView drv, string columnName, float delta)
@@ -1762,9 +1767,9 @@ namespace FreeLibSet.Core
     #region IncDouble
 
     /// <summary>
-    /// Увеличение значения поля типа Double
+    /// Увеличение значения поля типа <see cref="Double"/>
     /// </summary>
-    /// <param name="row">Изменяемая строка</param>
+    /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncDouble(DataRow row, string columnName, double delta)
@@ -1777,8 +1782,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Double на значение того же поля в другой 
-    /// строке. Применяется для расчета итоговых строк
+    /// Увеличение значения поля типа <see cref="Double"/> на значение того же поля в другой 
+    /// строке. Применяется для расчета итоговых строк.
     /// </summary>
     /// <param name="srcRow">Строка, содержащее прибавляемое значение</param>
     /// <param name="dstRow">Изменяемая (итоговая) строка</param>
@@ -1790,9 +1795,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Double
+    /// Увеличение значения поля типа <see cref="Double"/>
     /// </summary>
-    /// <param name="drv">Изменяемая строка (объект DataRowView)</param>
+    /// <param name="drv">Изменяемая строка (объект <see cref="DataRowView"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncDouble(DataRowView drv, string columnName, double delta)
@@ -1809,9 +1814,9 @@ namespace FreeLibSet.Core
     #region IncDecimal
 
     /// <summary>
-    /// Увеличение значения поля типа Decimal
+    /// Увеличение значения поля типа <see cref="Decimal"/>
     /// </summary>
-    /// <param name="row">Изменяемая строка</param>
+    /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncDecimal(DataRow row, string columnName, decimal delta)
@@ -1824,7 +1829,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Decimal на значение того же поля в другой 
+    /// Увеличение значения поля типа <see cref="Decimal"/> на значение того же поля в другой 
     /// строке. Применяется для расчета итоговых строк
     /// </summary>
     /// <param name="srcRow">Строка, содержащее прибавляемое значение</param>
@@ -1837,9 +1842,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа Decimal
+    /// Увеличение значения поля типа <see cref="Decimal"/>
     /// </summary>
-    /// <param name="drv">Изменяемая строка (объект DataRowView)</param>
+    /// <param name="drv">Изменяемая строка (объект <see cref="DataRowView"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncDecimal(DataRowView drv, string columnName, decimal delta)
@@ -1856,9 +1861,9 @@ namespace FreeLibSet.Core
     #region IncTimeSpan
 
     /// <summary>
-    /// Увеличение значения поля типа TimeSpan
+    /// Увеличение значения поля типа <see cref="TimeSpan"/>
     /// </summary>
-    /// <param name="row">Изменяемая строка</param>
+    /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncTimeSpan(DataRow row, string columnName, TimeSpan delta)
@@ -1871,8 +1876,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа TimeSpan на значение того же поля в другой 
-    /// строке. Применяется для расчета итоговых строк
+    /// Увеличение значения поля типа <see cref="TimeSpan"/> на значение того же поля в другой 
+    /// строке. Применяется для расчета итоговых строк.
     /// </summary>
     /// <param name="srcRow">Строка, содержащее прибавляемое значение</param>
     /// <param name="dstRow">Изменяемая (итоговая) строка</param>
@@ -1884,9 +1889,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля типа TimeSpan
+    /// Увеличение значения поля типа <see cref="TimeSpan"/>
     /// </summary>
-    /// <param name="drv">Изменяемая строка (объект DataRowView)</param>
+    /// <param name="drv">Изменяемая строка (объект <see cref="DataRowView"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncTimeSpan(DataRowView drv, string columnName, TimeSpan delta)
@@ -1903,9 +1908,9 @@ namespace FreeLibSet.Core
     #region IncValue
 
     /// <summary>
-    /// Увеличение значения поля произвольного числового типа или TimeSpan
+    /// Увеличение значения поля произвольного числового типа или <see cref="TimeSpan"/>
     /// </summary>
-    /// <param name="drv">Изменяемая строка (объект DataRowView)</param>
+    /// <param name="drv">Изменяемая строка (объект <see cref="DataRowView"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncValue(DataRowView drv, string columnName, object delta)
@@ -1914,9 +1919,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Увеличение значения поля произвольного числового типа или TimeSpan
+    /// Увеличение значения поля произвольного числового типа или <see cref="TimeSpan"/>
     /// </summary>
-    /// <param name="row">Изменяемая строка</param>
+    /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
     public static void IncValue(DataRow row, string columnName, object delta)
@@ -1951,11 +1956,11 @@ namespace FreeLibSet.Core
     /// Вызывает соответствующую типу поля функцию IncXXX. Используется, когда
     /// конкретный тип числового поля заранее неизвестен.
     /// Если тип поля известен, то рекомендуется вызывать конкретную функцию, т.к.
-    /// она работает бьстрее
+    /// она работает быстрее.
     /// </summary>
-    /// <param name="srcRow"></param>
-    /// <param name="dstRow"></param>
-    /// <param name="columnName"></param>
+    /// <param name="srcRow">Строка, содержащее прибавляемое значение</param>
+    /// <param name="dstRow">Изменяемая (итоговая) строка</param>
+    /// <param name="columnName">Имя поля</param>
     public static void IncValue(DataRow srcRow, DataRow dstRow, string columnName)
     {
 #if DEBUG
@@ -2013,7 +2018,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Преобразование хэш-таблицы, содержащей значения полей с ключами
-    /// по их именам в отдельные массивы имен полей и значений
+    /// по их именам в отдельные массивы имен полей и значений.
     /// </summary>
     /// <param name="columnNamesAndValues">Исходные поля и значения</param>
     /// <param name="columnNames">Результирующий массив имен полей</param>
@@ -2041,10 +2046,10 @@ namespace FreeLibSet.Core
     #region Коллекции
 
     /// <summary>
-    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс IEnumerable
-    /// Возвращает true, если оба перечислителя содержат одинаковое число элементов и элементы попанрно совпадают.
-    /// Порядок элементов в перечислители имеет значение
-    /// Для сравнение элементов используется Object.Equals()
+    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс <see cref="IEnumerable{T}"/>
+    /// Возвращает true, если оба перечислителя содержат одинаковое число элементов и элементы попарно совпадают.
+    /// Порядок элементов в перечислители имеет значение.
+    /// Для сравнение элементов используется <see cref="Object.Equals(object, object)"/>.
     /// </summary>
     /// <typeparam name="T">Тип объектов</typeparam>
     /// <param name="list1">Первый сравниваемый объек</param>
@@ -2084,10 +2089,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс IEnumerable
+    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс <see cref="IEnumerable{T}"/>.
     /// Возвращает true, если оба перечислителя содержат одинаковое число элементов и элементы попанрно совпадают.
     /// Порядок элементов в перечислители имеет значение
-    /// Для сравнение элементов используется интерфейс IEquatable
+    /// Для сравнение элементов используется интерфейс <see cref="IEqualityComparer{T}"/>.
     /// </summary>
     /// <typeparam name="T">Тип объектов</typeparam>
     /// <param name="list1">Первый сравниваемый объек</param>
@@ -2129,10 +2134,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс IEnumerable
-    /// Возвращает true, если оба перечислителя содержат одинаковое число элементов и элементы попанрно совпадают.
+    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс <see cref="IEnumerable{T}"/>
+    /// Возвращает true, если оба перечислителя содержат одинаковое число элементов и элементы попарно совпадают.
     /// Порядок элементов в перечислители имеет значение
-    /// Для сравнение элементов используется Object.Equals()
+    /// Для сравнение элементов используется <see cref="object.Equals(object, object)"/>.
     /// </summary>
     /// <param name="list1">Первый сравниваемый объек</param>
     /// <param name="list2">Второй сравниваемый объек</param>
@@ -2160,8 +2165,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс IEnumerable для строк
-    /// Возвращает true, если оба перечислителя содержат одинаковое число элементов и элементы попанрно совпадают.
+    /// Выполняет сравнение двух перечисляемых объектов, реализующих интерфейс <see cref="IEnumerable{String}"/> для строк.
+    /// Возвращает true, если оба перечислителя содержат одинаковое число элементов и элементы попарно совпадают.
     /// Порядок элементов в перечислители имеет значение.
     /// </summary>
     /// <param name="list1">Первый сравниваемый объек</param>
@@ -2206,9 +2211,9 @@ namespace FreeLibSet.Core
     #region Словари
 
     /// <summary>
-    /// Сравнение двух типизированных словарей
+    /// Сравнение двух типизированных словарей.
     /// Возвращает true, если совпадает количество элементов в словарях, ключи и соответствующие значения
-    /// Для сравнения используется Object.Equals()
+    /// Для сравнения используется <see cref="Object.Equals(object, object)"/>.
     /// </summary>
     /// <typeparam name="TKey">Тип ключа в коллекциях</typeparam>
     /// <typeparam name="TValue">Тип значения в коллекциях</typeparam>
@@ -2233,13 +2238,13 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Сравнение двух нетипизированных словарей
+    /// Сравнение двух нетипизированных словарей.
     /// Возвращает true, если совпадает количество элементов в словарях, ключи и соответствующие значения
-    /// Для сравнения используется Object.Equals()
+    /// Для сравнения используется <see cref="Object.Equals(object, object)"/>.
     /// </summary>
     /// <param name="dict1">Первая коллекция</param>
     /// <param name="dict2">Вторая коллекция</param>
-    /// <returns>true, если к</returns>
+    /// <returns>true, если словари совпадают</returns>
     public static bool AreDictionariesEqual(IDictionary dict1, IDictionary dict2)
     {
       if (dict1.Count != dict2.Count)
@@ -2263,7 +2268,7 @@ namespace FreeLibSet.Core
     #region Первичный ключ в DataTable
 
     /// <summary>
-    /// Установка первичного ключа таблицы (свойство DataTable.PrimaryKey).
+    /// Установка первичного ключа таблицы (свойство <see cref="DataTable.PrimaryKey"/>).
     /// Если <paramref name="columnNames"/> - пустая строка, первичный ключ удаляется из таблицы.
     /// </summary>
     /// <param name="table">Таблица</param>
@@ -2304,7 +2309,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Установка первичного ключа таблицы (свойство DataTable.PrimaryKey)
+    /// Установка первичного ключа таблицы (свойство <see cref="DataTable.PrimaryKey"/>)
     /// Если <paramref name="columnNames"/> - пустой массив или null, первичный ключ удаляется из таблицы.
     /// </summary>
     /// <param name="table">Таблица</param>
@@ -2372,9 +2377,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить значения полей первичного ключа для массива строк для таблицы данных
+    /// Получить значения полей первичного ключа для массива строк для таблицы данных.
     /// Возвращается двумерный массив, первая размерность которого соответствует
-    /// количеству полей первичного ключа (обычна равна 1), а вторая - количеству
+    /// количеству полей первичного ключа (обычна равна 1), а вторая - количеству.
     /// строк
     /// </summary>
     /// <param name="table">Таблица, в которой находятся строки</param>
@@ -2409,7 +2414,7 @@ namespace FreeLibSet.Core
     /// Получение массива значений ключевых полей для одной строки.
     /// Возвращает null, если таблица не имеет первичного ключа или строка не задана.
     /// </summary>
-    /// <param name="row">Строка DataRow</param>
+    /// <param name="row">Строка <see cref="DataRow"/></param>
     /// <returns>Значения ключевых полей</returns>
     public static object[] GetPrimaryKeyValues(DataRow row)
     {
@@ -2420,11 +2425,11 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получение массива значений ключевых полей для одной строки.
-    /// Возвращает null, если таблица не имеет первичного ключа или строка не задана
-    /// Строка Row может принадлежать другой таблице, чем та, в которой определяется ключ
+    /// Возвращает null, если таблица не имеет первичного ключа или строка не задана.
+    /// Строка <paramref name="row"/> может принадлежать другой таблице, чем та, в которой определяется ключ.
     /// </summary>
     /// <param name="row">Строка DataRow</param>
-    /// <param name="table">Таблица, в которой определен PrimaryKey</param>
+    /// <param name="table">Таблица, в которой определен <see cref="DataTable.PrimaryKey"/></param>
     /// <returns>Значения ключевых полей</returns>
     public static object[] GetPrimaryKeyValues(DataRow row, DataTable table)
     {
@@ -2442,7 +2447,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает массив строк DataRow, в которых значения первичного ключа равны значениям
+    /// Возвращает массив строк <see cref="DataRow"/>, в которых значения первичного ключа равны значениям
     /// в соответствующей строке двумерного массива.
     /// Если для очередной строки со значениями нет строки в таблице, соответствующий элемент в
     /// результирующем массиве равен null.
@@ -2510,8 +2515,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Найти строку в таблице с заданным значением ключевого поля. Если таблица
-    /// не содержит строки с заданным ключом, то строка добавляется
-    /// Возвращает true, если была создана новая строка
+    /// не содержит строки с заданным ключом, то строка добавляется.
+    /// Возвращает true, если была создана новая строка.
     /// </summary>
     /// <param name="table">Таблица, содержащая первичный ключ для одного поля</param>
     /// <param name="keyValue">Значение ключевого поля</param>
@@ -2543,7 +2548,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Найти строку в таблице с заданными значениями ключевых полей. Если таблица
-    /// не содержит строки с заданным ключом, то строка добавляется
+    /// не содержит строки с заданным ключом, то строка добавляется.
     /// </summary>
     /// <param name="table">Таблица, содержащая первичный ключ для одного или нескольких полей</param>
     /// <param name="keyValues">Значения ключевых полей</param>
@@ -2557,7 +2562,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Найти строку в таблице с заданными значениями ключевых полей. Если таблица
-    /// не содержит строки с заданным ключом, то строка добавляется
+    /// не содержит строки с заданным ключом, то строка добавляется.
     /// Возвращает true, если была создана новая строка
     /// </summary>
     /// <param name="table">Таблица, содержащая первичный ключ для одного или нескольких полей</param>
@@ -2598,14 +2603,14 @@ namespace FreeLibSet.Core
     #region Отношения "Мастер-детали" между DataTable
 
     /// <summary>
-    /// Создание объекта DataRelation для отношения "Мастер-детали" между двумя
+    /// Создание объекта <see cref="DataRelation"/> для отношения "Мастер-детали" между двумя
     /// таблицами. Мастер-таблица должна иметь первичный ключ
     /// </summary>
     /// <param name="masterTable">Главная таблица ("Customers")</param>
     /// <param name="detailsTable">Подчиненная таблица ("Orders")</param>
     /// <param name="referenceColumn">Имя столбца ("CustomerId") в подчиненной таблице, которое
     /// будет связано с ключевым полем в <paramref name="masterTable"/>.</param>
-    /// <param name="relationName">Имя связи (свойство DataRelation.RelationName.
+    /// <param name="relationName">Имя связи (свойство <see cref="DataRelation.RelationName"/>.
     /// Если не задано, то будет сгенерировано автоматически</param>
     public static void AddRelation(DataTable masterTable,
       DataTable detailsTable, string referenceColumn, string relationName)
@@ -2644,7 +2649,6 @@ namespace FreeLibSet.Core
       detailsTable.DataSet.Relations.Add(Rel);
     }
 
-
     #endregion
 
     #region Клонирование таблиц с выборочными строками
@@ -2676,7 +2680,7 @@ namespace FreeLibSet.Core
     /// Клонирование таблицы и ее строк, для которых выставлены флаги. Строки,
     /// для которых флаг не установлен, не добавляются в новую таблицу.
     /// Если флаги выставлены для всех строк, то клонирование не выполняется, а
-    /// возвращается оригинальная таблица Table
+    /// возвращается оригинальная таблица <paramref name="table"/>.
     /// </summary>
     /// <param name="table">Исходная таблица</param>
     /// <param name="flags">Массив флагов, по одному для каждой строки</param>
@@ -2691,12 +2695,12 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создать копию таблицы Table, содержащую строки с идентификаторами <paramref name="ids"/>.
+    /// Создать копию таблицы <paramref name="table"/>, содержащую строки с идентификаторами <paramref name="ids"/>.
     /// Создается копия таблицы, даже если исходная таблица уже содержит все строки
     /// в нужном порядке.
     /// Исходная таблица должна быть проиндексирована по числовому полю.
     /// если какой-либо ключ из массива <paramref name="ids"/> не будет найден в таблице, то будет 
-    /// сгенерировано исключение
+    /// сгенерировано исключение.
     /// </summary>
     /// <param name="table">Исходная таблица</param>
     /// <param name="ids">Массив значений ключаевого поля. Не должен содержать
@@ -2731,10 +2735,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создать копию таблицы <paramref name="table"/>, содержащую строки с идентификаторами <paramref name="ids"/>.
     /// Если исходная таблица уже содержит все строки в нужном порядке, то копирование
-    /// не выполняется, а возвращается исходная таблица
+    /// не выполняется, а возвращается исходная таблица.
     /// Исходная таблица должна быть проиндексирована по числовому полю.
     /// если какой-либо ключ из массива <paramref name="ids"/> не будет найден в таблице, то будет 
-    /// сгенерировано исключение
+    /// сгенерировано исключение.
     /// </summary>
     /// <param name="table">Исходная таблица</param>
     /// <param name="ids">Массив значений ключаевого поля. Не должен содержать
@@ -2855,7 +2859,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Извлечение массива значений полей из строки.
     /// Для не существующих имен полей возвращается null.
-    /// DBNull также заменяется на null
+    /// <see cref="DBNull"/> также заменяется на null.
     /// </summary>
     /// <param name="row">Строка данных (иожет быть null)</param>
     /// <param name="columnNames">Массив имен полей, разделенных запятыми</param>
@@ -2885,7 +2889,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получение списка числовых значений поля (идентификаторов), 
     /// которые принимает ссылочное поле в таблице. 
-    /// Нулевые значение отбрасывается и повторы отбрасываются
+    /// Нулевые значение отбрасывается и повторы отбрасываются.
     /// </summary>
     /// <param name="table">Таблица данных</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
@@ -2934,7 +2938,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получение списка числовых значений поля (идентификаторов), 
     /// которые принимает ссылочное поле в таблице для строк, относящихся к 
-    /// объекту DataView.
+    /// объекту <see cref="DataView"/>.
     /// Нулевые значение отбрасывается и повторы отбрасываются
     /// </summary>
     /// <param name="dv">Коллекция строк таблицы данных</param>
@@ -2986,9 +2990,9 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получение списка числовых значений поля (идентификаторов), 
     /// которые принимает ссылочное поле для строк таблицы в массиве. 
-    /// Нулевые значение отбрасывается и повторы отбрасываются
+    /// Нулевые значение отбрасывается и повторы отбрасываются.
     /// Строки в массиве должны относиться либо к одной таблице, либо к таблицам,
-    /// имеющим одинаковую структуру
+    /// имеющим одинаковую структуру.
     /// </summary>
     /// <param name="rows">Массив однотипных строк</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
@@ -3041,14 +3045,15 @@ namespace FreeLibSet.Core
       else
         return ids.ToArray();
     }
+
     /// <summary>
     /// Получение списка числовых значений поля (идентификаторов), 
     /// которые принимает ссылочное поле для строк таблицы в массиве. 
-    /// Нулевые значение отбрасывается и повторы отбрасываются
+    /// Нулевые значение отбрасывается и повторы отбрасываются.
     /// Строки в массиве должны относиться либо к одной таблице, либо к таблицам,
     /// имеющим одинаковую структуру
     /// </summary>
-    /// <param name="rows">Массив однотипных строк как коллекция DataRowView</param>
+    /// <param name="rows">Массив однотипных строк как коллекция <see cref="DataRowView"/></param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
     public static Int32[] GetIdsFromColumn(ICollection<DataRowView> rows, string columnName)
@@ -3105,7 +3110,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить массив идентификаторов для ключевого поля "Id" в таблице.
-    /// Обрабатываются все строки, включая удаленные
+    /// Обрабатываются все строки, включая удаленные.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <returns>Массив числовых идентификаторов</returns>
@@ -3134,11 +3139,11 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить массив идентификаторов для ключевого поля "Id" в таблице для 
-    /// строк, входящих в просмотр DataView
+    /// строк, входящих в просмотр <see cref="DataView"/>.
     /// Порядок полученных идентификаторов соответствует порядку строк в просмотре.
-    /// Обрабатываются все строки, включая удаленные
+    /// Обрабатываются все строки, включая удаленные, если они входят в просмотр.
     /// </summary>
-    /// <param name="dv">Просмотр DataView</param>
+    /// <param name="dv">Просмотр <see cref="DataView"/></param>
     /// <returns>Массив числовых идентификаторов</returns>
     public static Int32[] GetIds(DataView dv)
     {
@@ -3165,9 +3170,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение значений поля "Id" из массива строк. В отличие от GetIdsFromColumn()
+    /// Получение значений поля "Id" из массива строк. В отличие от <see cref="GetIdsFromColumn(ICollection{DataRow}, string)"/>
     /// не проверяет нулевые значения и не проверяет повторы.
-    /// Обрабатываются все строки, включая удаленные
+    /// Обрабатываются все строки, включая удаленные.
     /// </summary>
     /// <param name="rows">Массив строк</param>
     /// <returns>Массив идентификаторов</returns>
@@ -3199,11 +3204,11 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение значений поля "Id" из массива строк DataRowView. В отличие от GetIdsFromColumn()
+    /// Получение значений поля "Id" из коллекции строк <see cref="DataRowView"/>. В отличие от <see cref="GetIdsFromColumn(ICollection{DataRowView}, string)"/>,
     /// не проверяет нулевые значения и не проверяет повторы.
-    /// Обрабатываются все строки, включая удаленные
+    /// Обрабатываются все строки, включая удаленные.
     /// </summary>
-    /// <param name="rows">Массив строк типа DataRowView</param>
+    /// <param name="rows">Коллекция строк типа <see cref="DataRowView"/></param>
     /// <returns>Массив идентификаторов</returns>
     public static Int32[] GetIds(ICollection<DataRowView> rows)
     {
@@ -3237,8 +3242,8 @@ namespace FreeLibSet.Core
     #region GetFirstId, GetLastId
 
     /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из первой строки таблицы
-    /// Возвращает 0, если таблица не содержит строк
+    /// Получить идентификатор для ключевого поля "Id" из первой строки таблицы.
+    /// Возвращает 0, если таблица не содержит строк.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <returns>Идентификатор строки или 0</returns>
@@ -3257,8 +3262,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из последней строки таблицы
-    /// Возвращает 0, если таблица не содержит строк
+    /// Получить идентификатор для ключевого поля "Id" из последней строки таблицы.
+    /// Возвращает 0, если таблица не содержит строк.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <returns>Идентификатор строки или 0</returns>
@@ -3277,10 +3282,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из первой строки просмотра таблицы
-    /// Возвращает 0, если DataView не содержит строк
+    /// Получить идентификатор для ключевого поля "Id" из первой строки просмотра таблицы.
+    /// Возвращает 0, если <see cref="DataView"/> не содержит строк.
     /// </summary>
-    /// <param name="dv">Просмотр DataView</param>
+    /// <param name="dv">Просмотр <see cref="DataView"/></param>
     /// <returns>Идентификатор строки или 0</returns>
     public static Int32 GetFirstId(DataView dv)
     {
@@ -3298,9 +3303,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить идентификатор для ключевого поля "Id" из последней строки просмотра таблицы
-    /// Возвращает 0, если DataView не содержит строк
+    /// Возвращает 0, если <see cref="DataView"/> не содержит строк
     /// </summary>
-    /// <param name="dv">Просмотр DataView</param>
+    /// <param name="dv">Просмотр <see cref="DataView"/></param>
     /// <returns>Идентификатор строки или 0</returns>
     public static Int32 GetLastId(DataView dv)
     {
@@ -3317,8 +3322,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из первой строки в массиве строк
-    /// Возвращает 0, если массив пустой
+    /// Получить идентификатор для ключевого поля "Id" из первой строки в массиве строк.
+    /// Возвращает 0, если массив пустой.
     /// </summary>
     /// <param name="rows">Массив строк</param>
     /// <returns>Идентификатор строки или 0</returns>
@@ -3337,8 +3342,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из последней строки в массиве строк
-    /// Возвращает 0, если массив пустой
+    /// Получить идентификатор для ключевого поля "Id" из последней строки в массиве строк.
+    /// Возвращает 0, если массив пустой.
     /// </summary>
     /// <param name="rows">Массив строк</param>
     /// <returns>Идентификатор строки или 0</returns>
@@ -3361,7 +3366,7 @@ namespace FreeLibSet.Core
     #region GetBlockedIds
 
     /// <summary>
-    /// Получить массив идентификаторов для ключевого поля "Id" в таблице
+    /// Получить массив идентификаторов для ключевого поля "Id" в таблице.
     /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
     /// не больше <paramref name="n"/> элементов.
     /// </summary>
@@ -3406,13 +3411,13 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить массив идентификаторов для ключевого поля "Id" в таблице для 
-    /// строк, входящих в просмотр DataView
-    /// Порядок полученных идентификаторов соответствует порядку строк в просмотре
+    /// строк, входящих в просмотр <see cref="DataView"/>.
+    /// Порядок полученных идентификаторов соответствует порядку строк в просмотре.
     /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
     /// не больше <paramref name="n"/> элементов.
     /// </summary>
-    /// <param name="dv">Просмотр DataView</param>
-    /// <param name="n"></param>
+    /// <param name="dv">Просмотр <see cref="DataView"/></param>
+    /// <param name="n">Количество строк в блоке</param>
     /// <returns>Массив числовых идентификаторов</returns>
     public static Int32[][] GetBlockedIds(DataView dv, int n)
     {
@@ -3504,9 +3509,9 @@ namespace FreeLibSet.Core
     #region GetRowsFromIds
 
     /// <summary>
-    /// Получить массив строк DataRow из таблицы для массива идентификаторов Id
+    /// Получить массив строк <see cref="DataRow"/> из таблицы для массива идентификаторов Id.
     /// Результирующий массив будет содержать значения null для ненайденных или
-    /// нулевых идентификаторов
+    /// нулевых идентификаторов.
     /// </summary>
     /// <param name="table">Таблица, содержащая поле "Id"</param>
     /// <param name="ids">Массив идентификаторов</param>
@@ -3631,7 +3636,7 @@ namespace FreeLibSet.Core
     #region GetDataTableRows
 
     /// <summary>
-    /// Копирование строк таблицы DataTable в массив
+    /// Копирование строк таблицы <see cref="DataTable"/> в массив
     /// </summary>
     /// <param name="table">Таблица, откуда берутся строки.
     /// Если null, то будет возвращен пустой массив.</param>
@@ -3647,9 +3652,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Копирование строк таблицы DataTable в массив.
+    /// Копирование строк таблицы <see cref="DataTable"/> в массив.
     /// Копируются строки из выбранного диапазона.
-    /// Параметры диапазона Start и Count должны находится в пределах Table.RowList.Count
+    /// Параметры диапазона <paramref name="startIndex"/> и <paramref name="count"/> должны находится в пределах <paramref name="table"/>.Rows.Count.
     /// </summary>
     /// <param name="table">Таблица, откуда берутся строки</param>
     /// <param name="startIndex">Начальный индекс</param>
@@ -3717,24 +3722,24 @@ namespace FreeLibSet.Core
 #endif
 
     /// <summary>
-    /// Получение объекта для перебора строк DataRow.
-    /// В качестве источника строк могут выступать: DataTable, DataView, массивы любой размерности, 
-    /// включая jagged, коллекции, реализующие IEnumerable, одиночные DataRow и DataRowView.
+    /// Получение объекта для перебора строк <see cref="DataRow"/>.
+    /// В качестве источника строк могут выступать: <see cref="DataTable"/>, <see cref="DataView"/>, массивы любой размерности, 
+    /// включая jagged, коллекции, реализующие <see cref="IEnumerable"/>, одиночные <see cref="DataRow"/> и <see cref="DataRowView"/>.
     /// Значения null пропускаются.
     /// Для массивов используется рекурсивное перечисление элементов.
     /// Если источник данных содержит ссылку на объект неподдерживаемого типа, генерируется исключение.
     /// </summary>
     /// <param name="source">Источник данных</param>
-    /// <returns>Объект, реализующий интерфейс IEnumerable для строк DataRow</returns>
+    /// <returns>Объект, реализующий интерфейс <see cref="IEnumerable{DataRow}"/></returns>
     public static IEnumerable<DataRow> GetDataRowEnumerable(object source)
     {
       return GetDataRowEnumerable(source, false);
     }
 
     /// <summary>
-    /// Получение объекта для перебора строк DataRow.
-    /// В качестве источника строк могут выступать: DataTable, DataView, массивы любой размерности, 
-    /// включая jagged, коллекции, реализующие IEnumerable, одиночные DataRow и DataRowView.
+    /// Получение объекта для перебора строк <see cref="DataRow"/>.
+    /// В качестве источника строк могут выступать: <see cref="DataTable"/>, <see cref="DataView"/>, массивы любой размерности, 
+    /// включая jagged, коллекции, реализующие <see cref="IEnumerable"/>, одиночные <see cref="DataRow"/> и <see cref="DataRowView"/>.
     /// Значения null пропускаются.
     /// Для массивов используется рекурсивное перечисление элементов.
     /// </summary>
@@ -3742,7 +3747,7 @@ namespace FreeLibSet.Core
     /// <param name="skipBadSource">Определяет действие, когда в источнике данных обнаружен 
     /// элемент неизвестного типа.
     /// Если true, то элемент пропускается. Если false, то будет сгенерировано исключение</param>
-    /// <returns>Объект, реализующий интерфейс IEnumerable для строк DataRow</returns>
+    /// <returns>Объект, реализующий интерфейс <see cref="IEnumerable{DataRow}"/></returns>
     public static IEnumerable<DataRow> GetDataRowEnumerable(object source, bool skipBadSource)
     {
       // Используем готовые перечислители
@@ -3818,13 +3823,13 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получение списка строковых значений поля. 
+    /// Поле может быть не-строковым, используется <see cref="GetString(DataRow, string)"/>.
     /// Пустые строки и повторы отбрасываются.
     /// Регистр символов учитывается.
     /// Возвращаемый массив сортируется.
     /// </summary>
     /// <param name="table">Таблица данных</param>
-    /// <param name="columnName">Имя поля типа String или другого типа,
-    /// обрабатываемого функцией GetString()</param>
+    /// <param name="columnName">Имя поля</param>
     /// <returns>Массив идентификаторов</returns>
     public static string[] GetStringsFromColumn(DataTable table, string columnName)
     {
@@ -3862,14 +3867,14 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получение списка строковых значений поля для строк, относящихся к 
-    /// объекту DataView.
-    /// Пустые строки и повторы отбрасываются
+    /// объекту <see cref="DataView"/>.
+    /// Поле может быть не-строковым, используется <see cref="GetString(DataRow, string)"/>.
+    /// Пустые строки и повторы отбрасываются.
     /// Регистр символов учитывается.
     /// Возвращаемый массив сортируется.
     /// </summary>
     /// <param name="dv">Коллекция строк таблицы данных</param>
-    /// <param name="columnName">Имя поля типа String или другого типа,
-    /// обрабатывемого функцией GetString()</param>
+    /// <param name="columnName">Имя поля</param>
     /// <returns>Массив идентификаторов</returns>
     public static string[] GetStringsFromColumn(DataView dv, string columnName)
     {
@@ -3907,15 +3912,14 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получение списка строковых значений поля для строк таблицы в массиве. 
-    /// Пустые строки и повторы отбрасываются
+    /// Пустые строки и повторы отбрасываются.
     /// Строки в массиве должны относиться либо к одной таблице, либо к таблицам,
     /// имеющим одинаковую структуру.
     /// Регистр символов учитывается.
     /// Возвращаемый массив сортируется.
     /// </summary>
     /// <param name="rows">Массив однотипных строк</param>
-    /// <param name="columnName">Имя поля типа String или другого типа,
-    /// обрабатывемого функцией GetString()</param>
+    /// <param name="columnName">Имя поля</param>
     /// <returns>Массив идентификаторов</returns>
     public static string[] GetStringsFromColumn(ICollection<DataRow> rows, string columnName)
     {
@@ -3957,17 +3961,17 @@ namespace FreeLibSet.Core
     #region GetValuesFromColumn()
 
     /// <summary>
-    /// Получить значения поля для всех строк таблицы в виде массива
+    /// Получить значения поля для всех строк таблицы в виде массива.
     /// Повторы и пустые значения не отбрасываются. Количество и порядок элементов в массиве соответствуют строкам в таблице
-    /// Хранящиеся в таблице значения DBNull заменяются на default/null.
-    /// Если тип массива T не совпадает с типом данных в столбце таблицы, используется метод Convert.ChangeType(). Методы типа GetInt() не применяются
+    /// Хранящиеся в таблице значения <see cref="DBNull"/> заменяются на default/null.
+    /// Если тип массива <typeparamref name="T"/> не совпадает с типом данных в столбце таблицы, используется метод <see cref="Convert.ChangeType(object, Type)"/>(). Методы типа GetInt() не применяются
     /// 
     /// Замечания для строковых полей:
-    /// - Не выполняется обрезка концевых пробелов, как для DataTools.GetString().
-    /// - Для значения DBNull возвращается null, а не пустая строка.
-    /// - Может быть удобнее использовать метод GetStringsFromColumn(), но он убирает повторы и пустые строки.
+    /// - Не выполняется обрезка концевых пробелов, как для <see cref="DataTools.GetString(DataRow, string)"/>.
+    /// - Для значения <see cref="DBNull"/> возвращается null, а не пустая строка.
+    /// - Может быть удобнее использовать метод <see cref="GetStringsFromColumn(DataTable, string)"/>, но он убирает повторы и пустые строки.
     /// </summary>
-    /// <typeparam name="T">Тип поля данных (один из поддерживаемых типов DataColumn.DataType)</typeparam>
+    /// <typeparam name="T">Тип поля данных (один из поддерживаемых типов <see cref="DataColumn.DataType"/>)</typeparam>
     /// <param name="table">Таблица исходных данных</param>
     /// <param name="columnName">Имя столбца, из которого извлекаются значения</param>
     /// <returns>Массив значений поля</returns>
@@ -3998,11 +4002,11 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить значения поля для всех строк DataView в виде массива
+    /// Получить значения поля для всех строк <see cref="DataView"/> в виде массива.
     /// Повторы и пустые значения не отбрасываются. Количество и порядок элементов в массиве соответствуют строкам в просмотре
-    /// Хранящиеся в таблице значения DBNull заменяются на default
+    /// Хранящиеся в таблице значения <see cref="DBNull"/> заменяются на default.
     /// </summary>
-    /// <typeparam name="T">Тип поля данных (один из поддерживаемых типов DataColumn.DataType)</typeparam>
+    /// <typeparam name="T">Тип поля данных (один из поддерживаемых типов <see cref="DataColumn.DataType"/>)</typeparam>
     /// <param name="dv">Просмотр для таблицы исходных данных</param>
     /// <param name="columnName">Имя столбца, из которого извлекаются значения</param>
     /// <returns>Массив значений поля</returns>
@@ -4037,13 +4041,12 @@ namespace FreeLibSet.Core
       return res;
     }
 
-
     /// <summary>
     /// Получить значения поля для строк таблицы в массиве. 
     /// Повторы и пустые значения не отбрасываются. Количество и порядок элементов в результируюшем массиве соответствуют <paramref name="rows"/>.
-    /// Хранящиеся в таблице значения DBNull заменяются на default
+    /// Хранящиеся в таблице значения <see cref="DBNull"/> заменяются на default.
     /// </summary>
-    /// <typeparam name="T">Тип поля данных (один из поддерживаемых типов DataColumn.DataType)</typeparam>
+    /// <typeparam name="T">Тип поля данных (один из поддерживаемых типов <see cref="DataColumn.DataType"/>)</typeparam>
     /// <param name="rows">Массив однотипных строк</param>
     /// <param name="columnName">Имя столбца, из которого извлекаются значения</param>
     /// <returns>Массив значений поля</returns>
@@ -4076,7 +4079,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static int[] GetUniqueInts(DataView dv, string columnName, bool skipNulls)
     {
@@ -4104,7 +4107,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static int[] GetUniqueInts(DataTable table, string columnName, bool skipNulls)
     {
@@ -4136,7 +4139,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static int[] GetUniqueInts(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
@@ -4173,7 +4176,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static long[] GetUniqueInt64s(DataView dv, string columnName, bool skipNulls)
     {
@@ -4202,7 +4205,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static long[] GetUniqueInt64s(DataTable table, string columnName, bool skipNulls)
     {
@@ -4234,7 +4237,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static long[] GetUniqueInt64s(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
@@ -4271,7 +4274,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static float[] GetUniqueSingles(DataView dv, string columnName, bool skipNulls)
     {
@@ -4299,7 +4302,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static float[] GetUniqueSingles(DataTable table, string columnName, bool skipNulls)
     {
@@ -4330,7 +4333,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static float[] GetUniqueSingles(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
@@ -4367,7 +4370,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static double[] GetUniqueDoubles(DataView dv, string columnName, bool skipNulls)
     {
@@ -4395,7 +4398,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static double[] GetUniqueDoubles(DataTable table, string columnName, bool skipNulls)
     {
@@ -4426,7 +4429,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static double[] GetUniqueDoubles(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
@@ -4463,7 +4466,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static decimal[] GetUniqueDecimals(DataView dv, string columnName, bool skipNulls)
     {
@@ -4492,7 +4495,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static decimal[] GetUniqueDecimals(DataTable table, string columnName, bool skipNulls)
     {
@@ -4524,7 +4527,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static decimal[] GetUniqueDecimals(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
@@ -4558,7 +4561,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
-    /// Значения DBNull пропускаются.
+    /// Значения <see cref="DBNull"/> пропускаются.
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
@@ -4583,7 +4586,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
-    /// Значения DBNull пропускаются.
+    /// Значения <see cref="DBNull"/> пропускаются.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
@@ -4612,7 +4615,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получить все уникальные значения для одного поля таблицы.
     /// Возвращаемый массив не является отсортированным.
-    /// Значения DBNull пропускаются.
+    /// Значения <see cref="DBNull"/> пропускаются.
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
@@ -4648,7 +4651,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static TimeSpan[] GetUniqueTimeSpans(DataView dv, string columnName, bool skipNulls)
     {
@@ -4677,7 +4680,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static TimeSpan[] GetUniqueTimeSpans(DataTable table, string columnName, bool skipNulls)
     {
@@ -4709,7 +4712,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static TimeSpan[] GetUniqueTimeSpans(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
@@ -4746,7 +4749,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как Guid.Empty</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как <see cref="Guid.Empty"/></param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static Guid[] GetUniqueGuids(DataView dv, string columnName, bool skipNulls)
     {
@@ -4775,7 +4778,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как Guid.Empty</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как Guid.Empty</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static Guid[] GetUniqueGuids(DataTable table, string columnName, bool skipNulls)
     {
@@ -4807,7 +4810,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как Guid.Empty</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как <see cref="Guid.Empty"/></param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static Guid[] GetUniqueGuids(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
@@ -4845,7 +4848,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как значение default</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как значение default</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static T[] GetUniqueEnums<T>(DataView dv, string columnName, bool skipNulls)
       where T : struct
@@ -4875,7 +4878,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как значение default</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как значение default</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static T[] GetUniqueEnums<T>(DataTable table, string columnName, bool skipNulls)
       where T : struct
@@ -4908,7 +4911,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
-    /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как значение default</param>
+    /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как значение default</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
     public static T[] GetUniqueEnums<T>(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
       where T : struct
@@ -4957,7 +4960,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получить список имен таблиц в наборе DataSet
+    /// Получить список имен таблиц в наборе <see cref="DataSet"/>
     /// </summary>
     /// <param name="ds">Набор данных</param>
     /// <returns>Массив имен таблиц</returns>
@@ -4974,30 +4977,31 @@ namespace FreeLibSet.Core
     #region SetBoundariesFlags
 
     /// <summary>
-    /// Установка логических полей для обозначения начала и конца групп в таблице
-    /// Группа - это последовательность строк в таблице, содержащая одинаковое 
-    /// значение поля MainColumnName. Перебираются все строки таблицы по порядку.
-    /// Начало и окончание каждой группы отмечается установкой в true значений полей
-    /// BeginFlagColumnName и EndFlagColumnName соответственно
+    /// Установка логических полей для обозначения начала и конца групп в таблице.
+    /// Группа - это последовательность строк в таблице, содержащая одинаковые 
+    /// значения поля <paramref name="keyColumnNames"/>. Перебираются все строки таблицы по порядку.
+    /// Начало и окончание каждой группы отмечается установкой в true значений полей.
+    /// <paramref name="beginFlagColumnName"/> и <paramref name="endFlagColumnName"/> соответственно.
+    /// Для "полосатой" раскраски табличного просмотра используйте метод <see cref="SetGroupSequenceNumber(DataTable, string, string)"/>.
     /// </summary>
     /// <param name="table">Таблица</param>
-    /// <param name="mainColumnName">Имя поля, которое содержит одинаковые значения
-    /// для выделения групп. Может быть любого типа</param>
+    /// <param name="keyColumnNames">Имена полей (одного или нескольких), которые содержит одинаковые значения
+    /// для выделения групп. Имена разделяется запятыми. Поля могут быть любого типа</param>
     /// <param name="beginFlagColumnName">Имя логического поля, в котором устанавливается значение
     /// true для первой строки в группе. Может быть не задано, если установка флага начала группы не требуется</param>
     /// <param name="endFlagColumnName">Имя логического поля, в котором устанавливается значение
     /// true для последней строки в группе. Может быть не задано, если установка флага конца группы не требуется</param>
-    public static void SetBoundariesFlags(DataTable table, string mainColumnName, string beginFlagColumnName, string endFlagColumnName)
+    public static void SetBoundariesFlags(DataTable table, string keyColumnNames, string beginFlagColumnName, string endFlagColumnName)
     {
       // Проверка аргуементов и получение позиций столбцов для ускорения доступа
 #if DEBUG
       if (table == null)
-        throw new ArgumentNullException("Table");
-      if (String.IsNullOrEmpty(mainColumnName))
-        throw new ArgumentNullException("MainColumnName");
+        throw new ArgumentNullException("table");
+      if (String.IsNullOrEmpty(keyColumnNames))
+        throw new ArgumentNullException("keyColumnNames");
 #endif
 
-      int mainColumnPos = GetColumnPosWithCheck(table, mainColumnName);
+      int[] aKeyColumnPos = GetColumnPosArrayWithCheck(table, keyColumnNames);
 
       int beginFlagColumnPos, endFlagColumnPos;
 
@@ -5031,7 +5035,7 @@ namespace FreeLibSet.Core
       {
         DataRow prevRow = table.Rows[i - 1];
         DataRow thisRow = table.Rows[i];
-        bool flag = !AreValuesEqual(prevRow, thisRow, mainColumnPos);
+        bool flag = !AreValuesArrayEqual(prevRow, thisRow, aKeyColumnPos);
         if (beginFlagColumnPos >= 0)
           thisRow[beginFlagColumnPos] = flag;
         if (endFlagColumnPos >= 0)
@@ -5049,21 +5053,22 @@ namespace FreeLibSet.Core
     // Не проверял. М.Б. нужны DataRowView.Begin/EndEdit()
 
     /// <summary>
-    /// Установка логических полей для обозначения начала и конца групп в таблице
-    /// Группа - это последовательность строк в таблице, содержащая одинаковое 
-    /// значение поля MainColumnName. Перебираются все строки таблицы по порядку.
+    /// Установка логических полей для обозначения начала и конца групп в таблице.
+    /// Группа - это последовательность строк в таблице, содержащая одинаковые 
+    /// значения полей <paramref name="keyColumnNames"/>. Перебираются все строки таблицы по порядку.
     /// Начало и окончание каждой группы отмечается установкой в true значений полей
-    /// BeginFlagColumnName и EndFlagColumnName соответственно
-    /// Перебор строк осуществляется для заданного просмотра DataView
+    /// <paramref name="beginFlagColumnName"/> и <paramref name="endFlagColumnName"/> соответственно.
+    /// Перебор строк осуществляется для заданного просмотра <see cref="DataView"/>.
+    /// Для "полосатой" раскраски табличного просмотра используйте метод <see cref="SetGroupSequenceNumber(DataView, string, string)"/>.
     /// </summary>
-    /// <param name="dv">Просмотр DataView</param>
-    /// <param name="mainColumnName">Имя поля, которое содержит одинаковые значения
-    /// для выделения групп. Может быть любого типа</param>
+    /// <param name="dv">Просмотр <see cref="DataView"/></param>
+    /// <param name="keyColumnNames">Имена полей (одного или нескольких), которые содержит одинаковые значения
+    /// для выделения групп. Имена разделяется запятыми. Поля могут быть любого типа</param>
     /// <param name="beginFlagColumnName">Имя логического поля, в котором устанавливается значение
     /// true для первой строки в группе. Может быть не задано, если установка флага начала группы не требуется</param>
     /// <param name="endFlagColumnName">Имя логического поля, в котором устанавливается значение
     /// true для последней строки в группе. Может быть не задано, если установка флага конца группы не требуется</param>
-    public static void SetBoundariesFlags(DataView dv, string mainColumnName, string beginFlagColumnName, string endFlagColumnName)
+    public static void SetBoundariesFlags(DataView dv, string keyColumnNames, string beginFlagColumnName, string endFlagColumnName)
     {
       // Проверка аргуементов и получение позиций столбцов для ускорения доступа
 #if DEBUG
@@ -5071,7 +5076,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("dv");
 #endif
 
-      int mainColumnPos = GetColumnPosWithCheck(dv.Table, mainColumnName);
+      int[] aKeyColumnPos = GetColumnPosArrayWithCheck(dv.Table, keyColumnNames);
 
       int beginFlagColumnPos, endFlagColumnPos;
 
@@ -5105,7 +5110,7 @@ namespace FreeLibSet.Core
       {
         DataRowView prevRow = dv[i - 1];
         DataRowView thisRow = dv[i];
-        bool flag = !AreValuesEqual(prevRow, thisRow, mainColumnPos);
+        bool flag = !AreValuesArrayEqual(prevRow.Row, thisRow.Row, aKeyColumnPos);
         if (beginFlagColumnPos >= 0)
           thisRow[beginFlagColumnPos] = flag;
         if (endFlagColumnPos >= 0)
@@ -5120,13 +5125,109 @@ namespace FreeLibSet.Core
 
     #endregion
 
+    #region SetGroupSequenceNumber
+
+    /// <summary>
+    /// Установка числового поля для нумерации групп в таблице.
+    /// Группа - это последовательность строк в таблице, содержащая одинаковые 
+    /// значения полей <paramref name="keyColumnNames"/>. Перебираются все строки таблицы по порядку.
+    /// Для каждой группы задается порядковый номер 1,2,3,... в поле <paramref name="orderColumnName"/>.
+    /// Такое поле может использоваться для организации "полосатой" раскраски в табличном просмотре.
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="keyColumnNames">Имена полей (одного или нескольких), которые содержит одинаковые значения
+    /// для выделения групп. Имена разделяется запятыми. Поля могут быть любого типа</param>
+    /// <param name="orderColumnName">Имя числового поля, в котором устанавливается номер группы</param>
+    public static void SetGroupSequenceNumber(DataTable table, string keyColumnNames, string orderColumnName)
+    {
+      // Проверка аргуементов и получение позиций столбцов для ускорения доступа
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+      if (String.IsNullOrEmpty(keyColumnNames))
+        throw new ArgumentNullException("keyColumnNames");
+      if (String.IsNullOrEmpty(orderColumnName))
+        throw new ArgumentNullException("orderColumnName");
+#endif
+
+      int[] aKeyColumnPos = GetColumnPosArrayWithCheck(table, keyColumnNames);
+      int orderColumnPos = GetColumnPosWithCheck(table, orderColumnName);
+
+#if DEBUG
+      if (!IsIntegerType(table.Columns[orderColumnPos].DataType))
+        throw new ArgumentException("Столбец \"" + orderColumnName + "\" таблицы \"" + table.TableName + "\" имеет тип \"" + table.Columns[orderColumnPos].DataType.ToString() + "\", а не целочисленный", "orderColumnName");
+#endif
+
+      if (table.Rows.Count == 0)
+        return;
+
+      // Перебор строк
+      int order = 1;
+      table.Rows[0][orderColumnPos] = order;
+      for (int i = 1; i < table.Rows.Count; i++)
+      {
+        DataRow prevRow = table.Rows[i - 1];
+        DataRow thisRow = table.Rows[i];
+        if (!AreValuesArrayEqual(prevRow, thisRow, aKeyColumnPos))
+          order++;
+        thisRow[orderColumnPos] = order;
+      }
+    }
+
+
+    /// <summary>
+    /// Установка числового поля для нумерации групп в таблице.
+    /// Группа - это последовательность строк в таблице, содержащая одинаковые 
+    /// значения полей <paramref name="keyColumnNames"/>. Перебираются все строки таблицы по порядку.
+    /// Для каждой группы задается порядковый номер 1,2,3,... в поле <paramref name="orderColumnName"/>.
+    /// Такое поле может использоваться для организации "полосатой" раскраски в табличном просмотре.
+    /// Перебор строк осуществляется для заданного просмотра <see cref="DataView"/>.
+    /// </summary>
+    /// <param name="dv">Просмотр <see cref="DataView"/></param>
+    /// <param name="keyColumnNames">Имена полей (одного или нескольких), которые содержит одинаковые значения
+    /// для выделения групп. Имена разделяется запятыми. Поля могут быть любого типа</param>
+    /// <param name="orderColumnName">Имя числового поля, в котором устанавливается номер группы</param>
+    public static void SetGroupSequenceNumber(DataView dv, string keyColumnNames, string orderColumnName)
+    {
+      // Проверка аргуементов и получение позиций столбцов для ускорения доступа
+#if DEBUG
+      if (dv == null)
+        throw new ArgumentNullException("dv");
+#endif
+
+      int[] aKeyColumnPos = GetColumnPosArrayWithCheck(dv.Table, keyColumnNames);
+      int orderColumnPos = GetColumnPosWithCheck(dv.Table, orderColumnName);
+
+#if DEBUG
+      if (!IsIntegerType(dv.Table.Columns[orderColumnPos].DataType))
+        throw new ArgumentException("Столбец \"" + orderColumnName + "\" таблицы \"" + dv.Table.TableName + "\" имеет тип \"" + dv.Table.Columns[orderColumnPos].DataType.ToString() + "\", а не целочисленный", "orderColumnName");
+#endif
+
+      if (dv.Count == 0)
+        return;
+
+      // Перебор строк
+      int order = 1;
+      dv[0].Row[orderColumnPos] = order;
+      for (int i = 1; i < dv.Count; i++)
+      {
+        DataRowView prevRow = dv[i - 1];
+        DataRowView thisRow = dv[i];
+        if (!AreValuesArrayEqual(prevRow.Row, thisRow.Row, aKeyColumnPos))
+          order++;
+        thisRow[orderColumnPos] = order;
+      }
+    }
+
+    #endregion
+
     #region AreValuesEqual
 
     /// <summary>
     /// Сравнение значений одного поля для двух строк.
     /// Возвращает значение true, если значения одинаковы. Если есть пустые
-    /// значения DBNull, то строки считаются одинаковыми, если обе строки содержат
-    /// DBNull
+    /// значения <see cref="DBNull"/>, то строки считаются одинаковыми, если обе строки содержат
+    /// <see cref="DBNull"/>.
     /// </summary>
     /// <param name="row1">Первая сравниваемая строка</param>
     /// <param name="row2">Вторая сравниваемая строка</param>
@@ -5141,11 +5242,22 @@ namespace FreeLibSet.Core
       return row1[columnPos].Equals(row2[columnPos]);
     }
 
+    private static bool AreValuesArrayEqual(DataRow row1, DataRow row2, int[] aColumnPos)
+    {
+      for (int i = 0; i < aColumnPos.Length; i++)
+      {
+        if (!AreValuesEqual(row1, row2, aColumnPos[i]))
+          return false;
+      }
+      return true;
+    }
+
+
     /// <summary>
     /// Сравнение значений одного поля для двух строк.
     /// Возвращает значение true, если значения одинаковы. Если есть пустые
-    /// значения DBNull, то строки считаются одинаковыми, если обе строки содержат
-    /// DBNull
+    /// значения <see cref="DBNull"/>, то строки считаются одинаковыми, если обе строки содержат
+    /// <see cref="DBNull"/>.
     /// Предполагается, что строки имеют одинаковую струтуру
     /// </summary>
     /// <param name="row1">Первая сравниваемая строка</param>
@@ -5160,8 +5272,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Сравнение значений одного поля для двух строк.
     /// Возвращает значение true, если значения одинаковы. Если есть пустые
-    /// значения DBNull, то строки считаются одинаковыми, если обе строки содержат
-    /// DBNull
+    /// значения <see cref="DBNull"/>, то строки считаются одинаковыми, если обе строки содержат
+    /// <see cref="DBNull"/>.
     /// </summary>
     /// <param name="row1">Первая сравниваемая строка</param>
     /// <param name="row2">Вторая сравниваемая строка</param>
@@ -5181,8 +5293,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Сравнение значений одного поля для двух строк.
     /// Возвращает значение true, если значения одинаковы. Если есть пустые
-    /// значения DBNull, то строки считаются одинаковыми, если обе строки содержат
-    /// DBNull
+    /// значения <see cref="DBNull"/>, то строки считаются одинаковыми, если обе строки содержат
+    /// <see cref="DBNull"/>.
     /// </summary>
     /// <param name="row1">Первая сравниваемая строка</param>
     /// <param name="row2">Вторая сравниваемая строка</param>
@@ -5200,9 +5312,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Расширенное сравнение двух значений на равенство. Значения null и DBNull
-    /// считаются одинаковыми. Для сравнения используется метод Object.Equals().
-    /// Если одно значение содержит null или DBNull, а второе - нет, то возвращается
+    /// Расширенное сравнение двух значений на равенство. Значения null и <see cref="DBNull"/>
+    /// считаются одинаковыми. Для сравнения используется метод <see cref="Object.Equals(object, object)"/>.
+    /// Если одно значение содержит null или <see cref="DBNull"/>, а второе - нет, то возвращается
     /// false.
     /// </summary>
     /// <param name="value1">Первое сравниваемое значение</param>
@@ -5377,9 +5489,9 @@ namespace FreeLibSet.Core
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
     /// <param name="keyTable">Сюда записывается вспомогательная таблица значений полей</param>
     /// <param name="rows">Сюда записывается двумерный массив ссылок на строки таблицы
-    /// SrcTable. Первая размерность совпадает со строками в KeyTable и соответствует
+    /// <paramref name="srcTable"/>. Первая размерность совпадает со строками в <paramref name="keyTable"/> и соответствует
     /// уникальным комбинациям значений полей</param>
-    /// <param name="dbNullAsZero">Если true, то значения DBNull полей <paramref name="keyColumnNames"/>
+    /// <param name="dbNullAsZero">Если true, то значения <see cref="DBNull"/> полей <paramref name="keyColumnNames"/>
     /// в исходной таблице трактоваться как 0 (или пустая строка)</param>
     public static void GroupRows(DataTable srcTable, string keyColumnNames, out DataTable keyTable, out DataRow[][] rows, bool dbNullAsZero)
     {
@@ -5450,10 +5562,10 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Распределение строк таблицы по группам с одинаковыми значениями ключевых
-    /// полей. На входе задается таблица <paramref name="srcTable "/> с произвольным набором строк.
+    /// полей. На входе задается таблица <paramref name="srcTable"/> с произвольным набором строк.
     /// Возвращаются массивы ссылок на строки этой таблицы, каждый массив содержит
     /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>.
-    /// Значения DBNull и нулевые значения/пустые строки различаются
+    /// Значения <see cref="DBNull"/> и нулевые значения/пустые строки различаются.
     /// </summary>
     /// <param name="srcTable">Исходная таблица, из которой берутся строки.
     /// Таблица должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
@@ -5479,11 +5591,11 @@ namespace FreeLibSet.Core
     /// <param name="srcTable">Исходная таблица, из которой берутся строки.
     /// Таблица должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
-    /// Эта версия позволяет выполнить замену значений DBNull на 0 или пустую строку, в зависимости от типа данных
-    /// <param name="dbNullAsZero">Если true, то значения DBNull полей <paramref name="keyColumnNames"/>
+    /// Эта версия позволяет выполнить замену значений <see cref="DBNull"/> на 0 или пустую строку, в зависимости от типа данных
+    /// <param name="dbNullAsZero">Если true, то значения <see cref="DBNull"/> полей <paramref name="keyColumnNames"/>
     /// в исходной таблице трактоваться как 0 (или пустая строка)</param>
     /// <returns>Сюда записывается двумерный массив ссылок на строки таблицы
-    /// SrcTable. Первая размерность соответствует
+    /// <paramref name="srcTable"/>. Первая размерность соответствует
     /// уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataTable srcTable, string keyColumnNames, bool dbNullAsZero)
     {
@@ -5499,14 +5611,14 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Распределение строк таблицы, выбранных в DataView  по группам с одинаковыми значениями ключевых
+    /// Распределение строк таблицы, выбранных в <see cref="DataView"/> по группам с одинаковыми значениями ключевых
     /// полей. На входе задается список <paramref name="srcDataView"/> с произвольным набором строк.
-    /// Создаются массивы <paramref name="rows"/> ссылок на строки таблицы, базовой для <paramref name="srcDataView"/> , каждый массив содержит
+    /// Создаются массивы <paramref name="rows"/> ссылок на строки таблицы, базовой для <paramref name="srcDataView"/>, каждый массив содержит
     /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>.
     /// Во вспомогательную таблицу <paramref name="keyTable"/> помещаются строки с уникальными 
     /// комбинациями значений полей <paramref name="keyColumnNames "/> (других полей в таблице нет).
     /// Число строк в <paramref name="keyTable"/> совпадает с числом массивов <paramref name="rows"/>.
-    /// Значения DBNull и нулевые значения/пустые строки различаются
+    /// Значения <see cref="DBNull"/> и нулевые значения/пустые строки различаются.
     /// </summary>
     /// <param name="srcDataView">Исходная просмотр таблицы , из которого берутся строки.
     /// Таблица, на основе которой построен <paramref name="srcDataView"/>, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
@@ -5521,23 +5633,23 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Распределение строк таблицы, выбранных в DataView  по группам с одинаковыми значениями ключевых
+    /// Распределение строк таблицы, выбранных в <see cref="DataView"/> по группам с одинаковыми значениями ключевых
     /// полей. На входе задается список <paramref name="srcDataView"/> с произвольным набором строк.
-    /// Создаются массивы <paramref name="rows"/> ссылок на строки таблицы, базовой для <paramref name="srcDataView"/> , каждый массив содержит
+    /// Создаются массивы <paramref name="rows"/> ссылок на строки таблицы, базовой для <paramref name="srcDataView"/>, каждый массив содержит
     /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>.
     /// Во вспомогательную таблицу <paramref name="keyTable"/> помещаются строки с уникальными 
     /// комбинациями значений полей <paramref name="keyColumnNames "/> (других полей в таблице нет).
     /// Число строк в <paramref name="keyTable"/> совпадает с числом массивов <paramref name="rows"/>.
-    /// Эта версия позволяет выполнить замену значений DBNull на 0 или пустую строку, в зависимости от типа данных
+    /// Эта версия позволяет выполнить замену значений <see cref="DBNull"/> на 0 или пустую строку, в зависимости от типа данных
     /// </summary>
-    /// <param name="srcDataView">Исходная DataView, из которого берутся строки.
+    /// <param name="srcDataView">Исходный <see cref="DataView"/>, из которого берутся строки.
     /// Таблица, на основе которой построен <paramref name="srcDataView"/>, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
     /// <param name="keyTable">Сюда записывается вспомогательная таблица значений полей</param>
     /// <param name="rows">Сюда записывается двумерный массив ссылок на строки таблицы
     /// <paramref name="srcDataView"/>.Table. Первая размерность совпадает со строками в <paramref name="keyTable"/> и соответствует
     /// уникальным комбинациям значений полей</param>
-    /// <param name="dbNullAsZero">Если true, то значения DBNull полей <paramref name="keyColumnNames"/>
+    /// <param name="dbNullAsZero">Если true, то значения <see cref="DBNull"/> полей <paramref name="keyColumnNames"/>
     /// в исходной таблице трактоваться как 0 (или пустая строка)</param>
     public static void GroupRows(DataView srcDataView, string keyColumnNames, out DataTable keyTable, out DataRow[][] rows, bool dbNullAsZero)
     {
@@ -5595,17 +5707,17 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Распределение строк таблицы, выбранных в DataView  по группам с одинаковыми значениями ключевых
+    /// Распределение строк таблицы, выбранных в <see cref="DataView"/> по группам с одинаковыми значениями ключевых
     /// полей. На входе задается список <paramref name="srcDataView"/> с произвольным набором строк.
-    /// Создаются массивы Rows ссылок на строки таблицы, базовой для SrcDataView, каждый массив содержит
+    /// Создаются массивы ссылок на строки таблицы, базовой для <paramref name="srcDataView"/>, каждый массив содержит
     /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>.
-    /// Значения DBNull и нулевые значения/пустые строки различаются.
+    /// Значения <see cref="DBNull"/> и нулевые значения/пустые строки различаются.
     /// </summary>
-    /// <param name="srcDataView">Исходная DataView, из которого берутся строки.
+    /// <param name="srcDataView">Исходный <see cref="DataView"/>, из которого берутся строки.
     /// Таблица, на основе которой построен <paramref name="srcDataView"/>, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
     /// <returns>Возвращается двумерный массив ссылок на строки таблицы
-    /// SrcDataView.Table. Первая размерность совпадает со строками в KeyTable и соответствует
+    /// <paramref name="srcDataView"/>.Table. Первая размерность соответствует
     /// уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataView srcDataView, string keyColumnNames)
     {
@@ -5616,19 +5728,19 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Распределение строк таблицы, выбранных в DataView по группам с одинаковыми значениями ключевых
+    /// Распределение строк таблицы, выбранных в <see cref="DataView"/> по группам с одинаковыми значениями ключевых
     /// полей. На входе задается список <paramref name="srcDataView"/> с произвольным набором строк.
     /// Создаются массивы Rows ссылок на строки таблицы, базовой для <paramref name="srcDataView"/>, каждый массив содержит
     /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>/
-    /// Эта версия позволяет выполнить замену значений DBNull на 0 или пустую строку, в зависимости от типа данных
+    /// Эта версия позволяет выполнить замену значений <see cref="DBNull"/> на 0 или пустую строку, в зависимости от типа данных
     /// </summary>
-    /// <param name="srcDataView">Исходная DataView, из которого берутся строки.
+    /// <param name="srcDataView">Исходная <see cref="DataView"/>, из которого берутся строки.
     /// Таблица, на основе которой построен <paramref name="srcDataView"/>, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
-    /// <param name="dbNullAsZero">Если true, то значения DBNull полей <paramref name="keyColumnNames"/>
+    /// <param name="dbNullAsZero">Если true, то значения <see cref="DBNull"/> полей <paramref name="keyColumnNames"/>
     /// в исходной таблице трактоваться как 0 (или пустая строка)</param>
     /// <returns>Возвращается двумерный массив ссылок на строки таблицы
-    /// SrcDataView.Table. Первая размерность соответствует уникальным комбинациям значений полей</returns>
+    /// <paramref name="srcDataView"/>.Table. Первая размерность соответствует уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataView srcDataView, string keyColumnNames, bool dbNullAsZero)
     {
       DataTable keyTable;
@@ -5644,14 +5756,14 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Распределение строк таблицы по группам с одинаковыми значениями ключевых
     /// полей. На входе задается произвольный массив строк. Строки должны относится
-    /// к одной таблице или однотипным таблицам
+    /// к одной таблице или однотипным таблицам.
     /// Создаются массивы <paramref name="rows"/> ссылок на строки исходного массива, каждый массив содержит
     /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>.
     /// Во вспомогательную таблицу <paramref name="keyTable"/> помещаются строки с уникальными 
     /// комбинациями значений полей <paramref name="keyColumnNames"/> (других полей в таблице нет).
     /// Число строк в <paramref name="keyTable"/> совпадает с числом массивов <paramref name="rows"/>.
     /// В этой версии, если исходный массив строк пустой, то <paramref name="keyTable"/> не будет содержать ни одного поля
-    /// Значения DBNull и нулевые значения/пустые строки различаются
+    /// Значения <see cref="DBNull"/> и нулевые значения/пустые строки различаются.
     /// </summary>
     /// <param name="srcRows">Исходные строки.
     /// Таблица, к которой относятся строки, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
@@ -5675,16 +5787,16 @@ namespace FreeLibSet.Core
     /// комбинациями значений полей <paramref name="keyColumnNames"/> (других полей в таблице нет).
     /// Число строк в <paramref name="keyTable"/> совпадает с числом массивов <paramref name="rows"/>.
     /// В этой версии, если исходный массив строк пустой, то <paramref name="keyTable"/> не будет содержать ни одного поля
-    /// Эта версия позволяет выполнить замену значений DBNull на 0 или пустую строку, в зависимости от типа данных
+    /// Эта версия позволяет выполнить замену значений <see cref="DBNull"/> на 0 или пустую строку, в зависимости от типа данных
     /// </summary>
     /// <param name="srcRows">Исходные строки.
     /// Таблица, к которой относятся строки, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
     /// <param name="keyTable">Сюда записывается вспомогательная таблица значений полей</param>
-    /// <param name="rows">Сюда записывается двумерный массив ссылок на строки таблицы
-    /// SrcTable. Первая размерность совпадает со строками в <paramref name="keyTable"/> и соответствует
+    /// <param name="rows">Сюда записывается двумерный массив ссылок на строки из массива <paramref name="srcRows"/>.
+    /// Первая размерность совпадает со строками в <paramref name="keyTable"/> и соответствует
     /// уникальным комбинациям значений полей</param>
-    /// <param name="dbNullAsZero">Если true, то значения DBNull полей <paramref name="keyColumnNames"/>
+    /// <param name="dbNullAsZero">Если true, то значения <see cref="DBNull"/> полей <paramref name="keyColumnNames"/>
     /// в исходной таблице трактоваться как 0 (или пустая строка)</param>
     public static void GroupRows(DataRow[] srcRows, string keyColumnNames, out DataTable keyTable, out DataRow[][] rows, bool dbNullAsZero)
     {
@@ -5754,7 +5866,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Распределение строк таблицы по группам с одинаковыми значениями ключевых
     /// полей. На входе задается произвольный массив строк. Строки должны относится
-    /// к одной таблице или однотипным таблицам
+    /// к одной таблице или однотипным таблицам.
     /// Возвращаются массивы ссылок на строки исходного массива, каждый массив содержит
     /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>.
     /// </summary>
@@ -5762,7 +5874,7 @@ namespace FreeLibSet.Core
     /// Таблица, к которой относятся строки, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
     /// <returns>Возвращается двумерный массив ссылок на строки масива
-    /// SrcRows. Первая размерность соответствует уникальным комбинациям значений полей</returns>
+    /// <paramref name="srcRows"/>. Первая размерность соответствует уникальным комбинациям значений полей.</returns>
     public static DataRow[][] GroupRows(DataRow[] srcRows, string keyColumnNames)
     {
       DataTable keyTable;
@@ -5774,17 +5886,17 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Распределение строк таблицы по группам с одинаковыми значениями ключевых
     /// полей. На входе задается произвольный массив строк. Строки должны относится
-    /// к одной таблице или однотипным таблицам
+    /// к одной таблице или однотипным таблицам.
     /// Возвращаются массивы ссылок на строки исходного массива, каждый массив содержит
     /// строки с одинаковыми значеними полей в списке <paramref name="keyColumnNames"/>.
     /// </summary>
     /// <param name="srcRows">Исходные строки.
     /// Таблица, к которой относятся строки, должна содержать все поля, перечисленные в <paramref name="keyColumnNames"/></param>
     /// <param name="keyColumnNames">Список имен полей, разделенных запятыми</param>
-    /// <param name="dbNullAsZero">Если true, то значения DBNull полей <paramref name="keyColumnNames"/>
+    /// <param name="dbNullAsZero">Если true, то значения <see cref="DBNull"/> полей <paramref name="keyColumnNames"/>
     /// в исходной таблице трактоваться как 0 (или пустая строка)</param>
     /// <returns>Возвращается двумерный массив ссылок на строки масива
-    /// SrcRows. Первая размерность соответствует уникальным комбинациям значений полей</returns>
+    /// <paramref name="srcRows"/>. Первая размерность соответствует уникальным комбинациям значений полей</returns>
     public static DataRow[][] GroupRows(DataRow[] srcRows, string keyColumnNames, bool dbNullAsZero)
     {
       DataTable keyTable;
@@ -5800,11 +5912,11 @@ namespace FreeLibSet.Core
     #region SetRowState
 
     /// <summary>
-    /// Установка требуемого состояния строки DataRow.
-    /// Свойство DataRow.RowState доступно только для чтения
-    /// Вызывает методы DataRow.SetAdded(), SetModified(), AcceptChanges() или Delete()
+    /// Установка требуемого состояния строки <see cref="DataRow"/>.
+    /// Свойство <see cref="DataRow.RowState"/> доступно только для чтения.
+    /// Вызывает методы <see cref="DataRow.SetAdded()"/>, <see cref="DataRow.SetModified()"/>, <see cref="DataRow.AcceptChanges()"/> или <see cref="DataRow.Delete()"/>.
     /// </summary>
-    /// <param name="row">Строка, свойство RowState требуется установить</param>
+    /// <param name="row">Строка, свойство <see cref="DataRow.RowState"/> которой требуется установить</param>
     /// <param name="newState">Требуемое значение свойства</param>
     public static void SetRowState(DataRow row, DataRowState newState)
     {
@@ -5914,9 +6026,9 @@ namespace FreeLibSet.Core
     #region CloneDataColumn
 
     /// <summary>
-    /// Создание копии столбца DataColumn.
-    /// Функция полезна когда требуется выполнить DataTable.Clone(), но не для всех столбцов таблицы
-    /// Возвращаемый объект DataColumn не присоединен ни к какой коллекции
+    /// Создание копии столбца <see cref="DataColumn"/>.
+    /// Функция полезна когда требуется выполнить <see cref="DataTable.Clone()"/>, но не для всех столбцов таблицы.
+    /// Возвращаемый объект <see cref="DataColumn"/> не присоединен ни к какой коллекции.
     /// </summary>
     /// <param name="srcColumn">Исходный столбец</param>
     /// <returns>Копия столбца</returns>
@@ -5955,9 +6067,9 @@ namespace FreeLibSet.Core
     #region GetRowValues
 
     /// <summary>
-    /// Возвращает массив значений полей строки (аналогичный свойству DataRow.ItemArray),
+    /// Возвращает массив значений полей строки (аналогичный свойству <see cref="DataRow.ItemArray"/>),
     /// но для заданной версии значений строки.
-    /// Позволяет, в частности, получить значения для удаленной строки
+    /// Позволяет, в частности, получить значения для удаленной строки.
     /// </summary>
     /// <param name="row">Строка, откуда извлекаются данные</param>
     /// <param name="rowVersion">Требуемая версия значений</param>
@@ -5976,7 +6088,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значения полей строки в виде коллекции Имя-Значение для заданной версии значений строки.
-    /// В основном, предназначено для отладочных целей
+    /// В основном, предназначено для отладочных целей.
     /// </summary>
     /// <param name="row">Строка, откуда извлекаются данные</param>
     /// <param name="rowVersion">Требуемая версия значений</param>
@@ -6010,10 +6122,10 @@ namespace FreeLibSet.Core
     #region TrimEnd
 
     /// <summary>
-    /// Во всех строках таблицы для всех строковых полей (DataColumn.DataType==typeof(string)) выполняется удаление
-    /// конечных пробелов с помощью String.TrimEnd().
+    /// Во всех строках таблицы для всех строковых полей (<see cref="DataColumn.DataType"/>==typeof(<see cref="string"/>)) выполняется удаление
+    /// конечных пробелов с помощью <see cref="String.TrimEnd(char[])"/>.
     /// В таблице не должно быть удаленных строк, иначе возникнет исключение при чтении значений.
-    /// После вызова метода рекомендуется вызвать DataTable.AcceptChanges()
+    /// После вызова метода рекомендуется вызвать <see cref="DataTable.AcceptChanges()"/>.
     /// </summary>
     /// <param name="table">Обрабатываемая таблица данных</param>
     public static void TrimEnd(DataTable table)
@@ -6076,10 +6188,10 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Во всех строках таблиц набора, для всех строковых полей (DataColumn.DataType==typeof(string)) выполняется удаление
-    /// конечных пробелов с помощью String.TrimEnd().
+    /// Во всех строках таблиц набора, для всех строковых полей (<see cref="DataColumn.DataType"/>==typeof(<see cref="string"/>)) выполняется удаление
+    /// конечных пробелов с помощью <see cref="String.TrimEnd(char[])"/>.
     /// В таблицах не должно быть удаленных строк, иначе возникнет исключение при чтении значений.
-    /// После вызова метода рекомендуется вызвать DataSet.AcceptChanges()
+    /// После вызова метода рекомендуется вызвать <see cref="DataSet.AcceptChanges()"/>.
     /// </summary>
     /// <param name="ds">Обрабатываемые таблицы данных</param>
     public static void TrimEnd(DataSet ds)
@@ -6100,7 +6212,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Сортировка массива строк в соответствии с заданным выражением.
     /// Строки могут относится к разным таблицам, но таблицы должны иметь одинаковую структуру.
-    /// Создает временный объект DataTable/DataView для выполнения сортировки.
+    /// Создает временный объект <see cref="DataTable"/>/<see cref="DataView"/> для выполнения сортировки.
     /// </summary>
     /// <param name="rows">Массив строк, которые требуется сортировать. Если в массиве меньше 2 строк, то никаких действий не выполняется</param>
     /// <param name="sort">Выражение для сортировки. Если пустая строка или null, то никаких действий не выполняется</param>
@@ -6143,8 +6255,8 @@ namespace FreeLibSet.Core
     #region FormatDataValue()
 
     /// <summary>
-    /// Форматирование константного значения для DataColumn.Expression, метода DataTable.Select().
-    /// Строки заключаются в апострофы и т.п. См. справку по свойству DataColumn.Expression.
+    /// Форматирование константного значения для <see cref="DataColumn.Expression"/>, метода <see cref="DataTable.Select(string)"/>.
+    /// Строки заключаются в апострофы и т.п. См. справку по свойству <see cref="DataColumn.Expression"/>.
     /// Идентичные действия выполняются методом BaseDBxSqlFormatter.OnFormatValue() в ExtDB.dll.
     /// </summary>
     /// <param name="value">Значение</param>
@@ -6245,7 +6357,7 @@ namespace FreeLibSet.Core
     /// Копируются только таблицы, существующие в обоих наборах. Они должны иметь одинаковую структуру.
     /// Строки заменяются, а не добавляются, то есть при копировании таблицы используются аргументы useColumnNames=false
     /// и addRows=false.
-    /// Копируются ExtendedProperties как для DataSet, так и для копируемых таблиц.
+    /// Копируются ExtendedProperties как для <see cref="DataSet"/>, так и для копируемых таблиц.
     /// </summary>
     /// <param name="srcDS">Исходный набор данных</param>
     /// <param name="dstDS">Заполняемый набор данным</param>
@@ -6382,13 +6494,13 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Копирование одной строки в другую.
-    /// При UseColumnNames=false копируются все поля по номерам. Предполагается, что таблицы,
+    /// При <paramref name="useColumnNames"/>=false копируются все поля по номерам. Предполагается, что таблицы,
     /// к которым относятся строки, имеют идентичный список полей.
     /// При <paramref name="useColumnNames"/>=true копируются только одноименные поля. Таблицы могут 
     /// иметь несовпадающую структуру полей (медленнее, т.к. требуется выполнять
     /// поиск для каждого поля).
-    /// Если исходная строка помечена на удаление (RowState=Deleted), то используются значения полей в
-    /// <paramref name="srcRow"/> версии RowVersion=Deleted, чтобы не возникало исключение System.Data.DeletedRowInaccessibleException.
+    /// Если исходная строка помечена на удаление (<see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>), то используются значения полей в
+    /// <paramref name="srcRow"/> версии <see cref="DataRowVersion.Original"/>, чтобы не возникало исключение <see cref="System.Data.DeletedRowInaccessibleException"/>.
     /// </summary>
     /// <param name="srcRow">Исходная строка</param>
     /// <param name="dstRow">Строка, принимающая значения</param>
@@ -6440,8 +6552,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Копирование значений полей из одной строки в другую для заданных имен полей.
-    /// Если исходная строка помечена на удаление (RowState=Deleted), то используются значения полей в
-    /// <paramref name="srcRow"/> версии RowVersion=Deleted, чтобы не возникало исключение System.Data.DeletedRowInaccessibleException.
+    /// Если исходная строка помечена на удаление (<see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>), то используются значения полей в
+    /// <paramref name="srcRow"/> версии <see cref="DataRowVersion.Original"/>, чтобы не возникало исключение <see cref="System.Data.DeletedRowInaccessibleException"/>.
     /// </summary>
     /// <param name="srcRow">Исходная строка</param>
     /// <param name="dstRow">Конечная строка</param>
@@ -6453,8 +6565,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Копирование значений полей из одной строки в другую для заданных имен полей.
-    /// Если исходная строка помечена на удаление (RowState=Deleted), то используются значения полей в
-    /// <paramref name="srcRow"/> версии RowVersion=Deleted, чтобы не возникало исключение System.Data.DeletedRowInaccessibleException.
+    /// Если исходная строка помечена на удаление (<see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>), то используются значения полей в
+    /// <paramref name="srcRow"/> версии <see cref="DataRowVersion.Original"/>, чтобы не возникало исключение <see cref="System.Data.DeletedRowInaccessibleException"/>.
     /// </summary>
     /// <param name="srcRow">Исходная строка</param>
     /// <param name="dstRow">Конечная строка</param>
@@ -6483,8 +6595,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Копирует все поля, имена которых начинаются с префикса <paramref name="srcColumnPrefix"/>, из строки <paramref name="srcRow"/> в
     /// строку <paramref name="dstRow"/> в поле, имя которого начинается с <paramref name="dstColumnPrefix"/>.
-    /// Если исходная строка помечена на удаление (RowState=Deleted), то используются значения полей в
-    /// <paramref name="srcRow"/> версии RowVersion=Deleted, чтобы не возникало исключение System.Data.DeletedRowInaccessibleException.
+    /// Если исходная строка помечена на удаление (<see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>), то используются значения полей в
+    /// <paramref name="srcRow"/> версии <see cref="DataRowVersion.Original"/>, чтобы не возникало исключение <see cref="System.Data.DeletedRowInaccessibleException"/>.
     /// </summary>
     /// <param name="srcRow">Исходная строка</param>
     /// <param name="dstRow">Конечная строка</param>
@@ -6530,7 +6642,7 @@ namespace FreeLibSet.Core
     #region Замена значений
 
     /// <summary>
-    /// Заменяет значения поля <paramref name="columnName"/>, содержащие DBNull на значение <paramref name="newValue"/>
+    /// Заменяет значения поля <paramref name="columnName"/>, содержащие <see cref="DBNull"/> на значение <paramref name="newValue"/>
     /// </summary>
     /// <param name="table">Таблица, в которой выполняется замена</param>
     /// <param name="columnName">Имя поля</param>
@@ -6552,9 +6664,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Заменяет значения поля <paramref name="columnName"/>, содержащие DBNull на значение <paramref name="newValue"/>.
-    /// Т.к. замена значения может привести к перестроению DataView, собираем
-    /// сначала массив строк, в котором выполняем замену
+    /// Заменяет значения поля <paramref name="columnName"/>, содержащие <see cref="DBNull"/> на значение <paramref name="newValue"/>.
+    /// Т.к. замена значения может привести к перестроению <see cref="DataView"/>, собираем
+    /// сначала массив строк, в котором выполняем замену.
     /// </summary>
     /// <param name="dv">Просмотр для таблицы, в которой выполняется замена</param>
     /// <param name="columnName">Имя поля</param>
@@ -6566,9 +6678,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Заменяет значения поля <paramref name="columnName"/>, содержащие DBNull на значение <paramref name="newValue"/>
+    /// Заменяет значения поля <paramref name="columnName"/>, содержащие <see cref="DBNull"/> на значение <paramref name="newValue"/>
     /// Строки должны относиться к одной таблице или нескольким таблицам, чтобы
-    /// позиция поля была одинаковой для всех строк
+    /// позиция поля была одинаковой для всех строк.
     /// </summary>
     /// <param name="rows">Массив строк, в которых выполняется замена</param>
     /// <param name="columnName">Имя поля</param>
@@ -6600,10 +6712,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Обрезать строки значений заданного текстового поля в таблице.
     /// Необходимость в обрезке может появится, если таблица загружена из базы данныз,
-    /// но для доступа не используются метод GetString(), который выполняет обрезку
+    /// но для доступа не используются метод <see cref="GetString(DataRow, string)"/>, который выполняет обрезку
     /// при извлечении строки.
-    /// Если для столбца разрешен признак DataColumn.AllowDBNull, то пустые строки,
-    /// а также строки, содержащие только пробелы, будут заменены на DBNull
+    /// Если для столбца <see cref="DataColumn.AllowDBNull"/>, то пустые строки,
+    /// а также строки, содержащие только пробелы, будут заменены на <see cref="DBNull"/>.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя текстового поля</param>
@@ -6615,10 +6727,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Обрезать строки значений заданного текстового поля в таблице.
     /// Необходимость в обрезке может появится, если таблица загружена из базы данныз,
-    /// но для доступа не используются метод GetString(), который выполняет обрезку
+    /// но для доступа не используются метод <see cref="GetString(DataRow, string)"/>, который выполняет обрезку
     /// при извлечении строки.
-    /// Если для столбца разрешен признак DataColumn.AllowDBNull, то пустые строки,
-    /// а также строки, содержащие только пробелы, будут заменены на DBNull
+    /// Если для столбца <see cref="DataColumn.AllowDBNull"/>, то пустые строки,
+    /// а также строки, содержащие только пробелы, будут заменены на <see cref="DBNull"/>.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <param name="columnIndex">Индекс текстового поля</param>
@@ -6653,10 +6765,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Обрезать строки значений всех текстовых полей в таблице.
     /// Необходимость в обрезке может появится, если таблица загружена из базы данныз,
-    /// но для доступа не используются метод GetString(), который выполняет обрезку
+    /// но для доступа не используются метод <see cref="GetString(DataRow, string)"/>, который выполняет обрезку
     /// при извлечении строки.
-    /// Если для столбца разрешен признак DataColumn.AllowDBNull, то пустые строки,
-    /// а также строки, содержащие только пробелы, будут заменены на DBNull
+    /// Если для столбца <see cref="DataColumn.AllowDBNull"/>, то пустые строки,
+    /// а также строки, содержащие только пробелы, будут заменены на <see cref="DBNull"/>.
     /// </summary>
     /// <param name="table">Таблица</param>
     public static void StrTrim(DataTable table)
@@ -6678,10 +6790,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Обрезать строки значений всех текстовых полей в таблицах набора DataSet.
     /// Необходимость в обрезке может появится, если таблица загружена из базы данныз,
-    /// но для доступа не используются метод GetString(), который выполняет обрезку
+    /// но для доступа не используются метод <see cref="GetString(DataRow, string)"/>, который выполняет обрезку
     /// при извлечении строки.
-    /// Если для столбца разрешен признак DataColumn.AllowDBNull, то пустые строки,
-    /// а также строки, содержащие только пробелы, будут заменены на DBNull
+    /// Если для столбца <see cref="DataColumn.AllowDBNull"/>, то пустые строки,
+    /// а также строки, содержащие только пробелы, будут заменены на <see cref="DBNull"/>.
     /// </summary>
     /// <param name="ds">Набор данных</param>
     public static void StrTrim(DataSet ds)
@@ -6702,13 +6814,13 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Обновление строк таблицы приемника строками из таблицы-источника по значению первичного ключа
     /// Таблица-приемник должна иметь первичный ключ. Строки в исходной таблице
-    /// должны иметь поля для вычисления первичного ключа во второй таблице
+    /// должны иметь поля для вычисления первичного ключа во второй таблице.
     /// Копирование значений полей может выполняться либо по номерам столбцов 
-    /// (<paramref name="useColumnNames"/>=false), либо по именам столбцов
+    /// (<paramref name="useColumnNames"/>=false), либо по именам столбцов.
     /// Cвойства ExtendedProperties не копируются.
     /// Если таблица-приемник не имеет строки, соответствуюшей какой-либо строке в исходной таблице, такая строка пропускается.
     /// Количество строк в таблице-приемнике не меняется.
-    /// Для полного обновления таблицы используйте метод UpdataTableByPrimaryKey().
+    /// Для полного обновления таблицы используйте метод <see cref="UpdateTableByPrimaryKey(DataTable, DataTable, bool)"/>.
     /// </summary>
     /// <param name="srcTable">Таблица-источник строк</param>
     /// <param name="dstTable">Таблица-приемник строк (обновляемая таблица)</param>
@@ -6765,12 +6877,12 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Обновление таблицы строками из другой таблицы по первичному ключу.
     /// Таблица-приемник должна иметь первичный ключ. Строки в исходной таблице
-    /// должны иметь поля для вычисления первичного ключа во второй таблице
+    /// должны иметь поля для вычисления первичного ключа во второй таблице.
     /// После выполнения действия конечная таблица будет иметь столько же строк (кроме
     /// удаленных), сколько и исходная таблица. В конечной таблице строки могут
     /// добавляться, удаляться, изменяться или оставаться неизменными.
     /// Копирование значений полей может выполняться либо по номерам столбцов 
-    /// (<paramref name="useColumnNames"/>=false), либо по именам столбцов
+    /// (<paramref name="useColumnNames"/>=false), либо по именам столбцов.
     /// Cвойства ExtendedProperties не копируются.
     /// В <paramref name="dstTable"/> могут оставаться удаленные строки. 
     /// После выполнения обновления рекомендуется вызвать <paramref name="dstTable"/>.AcceptChanges(), чтобы полностью убрать удаленные строки.
@@ -6844,11 +6956,11 @@ namespace FreeLibSet.Core
     #region Функции для работы с DataView
 
     /// <summary>
-    /// Поиск строки DataRowView, соответствующей исходной строке DataRow в объекте DataView
+    /// Поиск строки <see cref="DataRowView"/>, соответствующей исходной строке <see cref="DataRow"/> в объекте <see cref="DataView"/>.
     /// </summary>
-    /// <param name="dv">Объект DataView</param>
-    /// <param name="row">Строка DataRow</param>
-    /// <returns>Найденный объект DataRowView или null</returns>
+    /// <param name="dv">Объект <see cref="DataView"/></param>
+    /// <param name="row">Строка <see cref="DataRow"/></param>
+    /// <returns>Найденный объект <see cref="DataRowView "/> или null</returns>
     public static DataRowView FindDataRowView(DataView dv, DataRow row)
     {
       int idx = FindDataRowViewIndex(dv, row);
@@ -6859,12 +6971,12 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Поиск индекса исходной строки DataRow в объекте DataView
+    /// Поиск индекса исходной строки <see cref="DataRow"/> в объекте <see cref="DataView"/>.
     /// </summary>
-    /// <param name="dv">Объект DataView</param>
-    /// <param name="row">Строка DataRow</param>
-    /// <returns>Индекс соответствующего объекта DataRowView в DataView или
-    /// (-1), если строка не входит в DataView (например, отфильтрована)</returns>
+    /// <param name="dv">Объект <see cref="DataView"/></param>
+    /// <param name="row">Строка <see cref="DataRow"/></param>
+    /// <returns>Индекс соответствующего объекта <see cref="DataRowView"/> в <see cref="DataView"/> или
+    /// (-1), если строка не входит в <see cref="DataView"/> (например, отфильтрована)</returns>
     public static int FindDataRowViewIndex(DataView dv, DataRow row)
     {
 #if DEBUG
@@ -6950,9 +7062,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение массива строк DataRow соответствующих объекту DataView
+    /// Получение массива строк <see cref="DataRow"/> соответствующих объекту <see cref="DataView"/>
     /// </summary>
-    /// <param name="dv">Объект DataView. Если null, то будет возвращен пустой массив строк</param>
+    /// <param name="dv">Объект <see cref="DataView"/>. Если null, то будет возвращен пустой массив строк</param>
     /// <returns>Массив строк</returns>
     public static DataRow[] GetDataViewRows(DataView dv)
     {
@@ -6990,12 +7102,12 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Создает словарь пар "Значение поле Id" - "Индекс строки в просмотре" для
-    /// набора данных DataView.
-    /// Предупреждение: после изменения параметров DataView или данных в таблице,
-    /// полученный словарь становится недействительным
+    /// набора данных <see cref="DataView"/>.
+    /// Предупреждение: после изменения параметров <see cref="DataView"/> или данных в таблице,
+    /// полученный словарь становится недействительным.
     /// </summary>
     /// <param name="dv">Объект DataView</param>
-    /// <returns></returns>
+    /// <returns>Словарь</returns>
     public static Dictionary<Int32, int> GetDataViewIdIndexDictionary(DataView dv)
     {
       Dictionary<Int32, int> res = new Dictionary<Int32, int>(dv.Count);
@@ -7010,16 +7122,16 @@ namespace FreeLibSet.Core
     #region GetDataViewSortColumnNames
 
     /// <summary>
-    /// Извлечь имена столбцов из свойства DataView.Sort.
-    /// Строка может содержать пробелы и суффиксы ASC и DESC (игнорируются)
+    /// Извлечь имена столбцов из свойства <see cref="DataView.Sort"/>.
+    /// Строка может содержать пробелы и суффиксы "ASC" и "DESC" (игнорируются)
     /// Если строка <paramref name="sort"/> пустая, возвращается пустой массив.
     /// В этой версии информация о порядке сортировки теряется.
     /// Имя столбца может быть заключено в квадратные скобки, которые удаляются.
     /// </summary>
-    /// <param name="sort">Свойство DataView.Sort</param>
+    /// <param name="sort">Значение свойства <see cref="DataView.Sort"/></param>
     /// <returns>Массис имен полей или null</returns>
     /// <remarks>
-    /// DataView.Sort не может содержать функции и математические операции, а только имена полей и порядок сортировки.
+    /// <see cref="DataView.Sort"/> не может содержать функции и математические операции, а только имена полей и порядок сортировки.
     /// </remarks>
     public static string[] GetDataViewSortColumnNames(string sort)
     {
@@ -7030,18 +7142,18 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Извлечь имена столбцов из свойства DataView.Sort.
-    /// Строка может содержать пробелы и суффиксы ASC и DESC (игнорируются)
+    /// Извлечь имена столбцов из свойства <see cref="DataView.Sort"/>.
+    /// Строка может содержать пробелы и суффиксы "ASC" и "DESC" (игнорируются)
     /// Расширенная версия. Возвращается массив значений порядка сортировки.
     /// Имя столбца может быть заключено в квадратные скобки, которые удаляются.
     /// Если строка <paramref name="sort"/> пустая, возвращаются пустые массивы.
     /// </summary>
-    /// <param name="sort">Свойство DataView.Sort</param>
+    /// <param name="sort">Значение свойства <see cref="DataView.Sort"/></param>
     /// <param name="columnNames">Сюда записывается массив имен столбцов</param>
     /// <param name="directions">Сюда записывается массив признаков сортировки</param>
     /// <returns>Массис имен полей или null</returns>
     /// <remarks>
-    /// DataView.Sort не может содержать функции и математические операции, а только имена полей и порядок сортировки.
+    /// <see cref="DataView.Sort"/> не может содержать функции и математические операции, а только имена полей и порядок сортировки.
     /// </remarks>
     public static void GetDataViewSortColumnNames(string sort, out string[] columnNames, out ListSortDirection[] directions)
     {
@@ -7079,17 +7191,17 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Извлечь имя столбца из свойства DataView.Sort.
-    /// Строка может содержать пробелы и суффикс ASC и DESC (игнорируются)
+    /// Извлечь имя столбца из свойства <see cref="DataView.Sort"/>.
+    /// Строка может содержать пробелы и суффикс "ASC" и "DESC" (игнорируются).
     /// Если строка <paramref name="sort"/> пустая, возвращается пустая строка.
     /// Имя столбца может быть заключено в квадратные скобки, которые удаляются.
     /// В этой версии информация о порядке сортировки теряется.
     /// Если задан порядок сортировки по нескольким полям, генерируется исключение.
     /// </summary>
-    /// <param name="sort">Свойство DataView.Sort</param>
+    /// <param name="sort">Значение свойства <see cref="DataView.Sort"/></param>
     /// <returns>Имя поля или пустая строка</returns>                          
     /// <remarks>
-    /// DataView.Sort не может содержать функции и математические операции, а только имена полей и порядок сортировки.
+    /// <see cref="DataView.Sort"/> не может содержать функции и математические операции, а только имена полей и порядок сортировки.
     /// </remarks>
     public static string GetDataViewSortSingleColumnName(string sort)
     {
@@ -7100,7 +7212,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Извлечь имя столбца из свойства DataView.Sort.
+    /// Извлечь имя столбца из свойства <see cref="DataView.Sort"/>.
     /// Строка может содержать пробелы и суффикс ASC и DESC.
     /// Если строка <paramref name="sort"/> пустая, возвращается пустая строка и порядок сортировки по возрастанию.
     /// Имя столбца может быть заключено в квадратные скобки, которые удаляются.
@@ -7110,7 +7222,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Сюда записывается имя поля</param>
     /// <param name="direction">Сюда записывается направление сортировки</param>
     /// <remarks>
-    /// DataView.Sort не может содержать функции и математические операции, а только имена полей и порядок сортировки.
+    /// <see cref="DataView.Sort"/> не может содержать функции и математические операции, а только имена полей и порядок сортировки.
     /// </remarks>
     public static void GetDataViewSortSingleColumnName(string sort, out string columnName, out ListSortDirection direction)
     {
@@ -7142,11 +7254,11 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение выражения для сортировки DataView.Sort.
+    /// Получение выражения для сортировки <see cref="DataView.Sort"/>.
     /// Длина массивов <paramref name="columnNames"/> и <paramref name="directions"/> должна быть одинаковой.
     /// Если длина массивов равна 0, возвращается пустая строка.
     /// В текущей реализации квадратные скобки вокруг имен полей не добавляются.
-    /// Функция является обратной по отношению к GetDataViewSortColumnNames.
+    /// Функция является обратной по отношению к <see cref="GetDataViewSortColumnNames(string, out string[], out ListSortDirection[])"/>.
     /// </summary>
     /// <param name="columnNames">Массив имен столбцов</param>
     /// <param name="directions">Массив направлений</param>
@@ -7189,8 +7301,8 @@ namespace FreeLibSet.Core
     #endregion
 
     /// <summary>
-    /// Получение выражения LIKE для DataView.RowFilter.
-    /// Возвращает строку LIKE '<paramref name="str"/>*' с экранированием некоторых символов
+    /// Получение выражения LIKE для <see cref="DataView.RowFilter"/>.
+    /// Возвращает строку LIKE '<paramref name="str"/>*' с экранированием некоторых символов.
     /// </summary>
     /// <param name="str">Начало шаблона поиска</param>
     /// <returns>Строка для фильтра</returns>
@@ -7242,10 +7354,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Найти строку в таблице с заданным значением поля для поиска. Если таблица
     /// не содержит такой строки, то строка добавляется.
-    /// Для поиска используется объект DataView, в котором задано свойство Sort.
-    /// Эта перегрузка не позволяет определить, была найдена существующая строка или добавлена новая
+    /// Для поиска используется объект <see cref="DataView"/>, в котором задано свойство <see cref="DataView.Sort"/>.
+    /// Эта перегрузка не позволяет определить, была найдена существующая строка или добавлена новая.
     /// </summary>
-    /// <param name="dv">Просмотр таблицы, в котором свойство Sort задает одно поле для поиска</param>
+    /// <param name="dv">Просмотр таблицы, в котором свойство <see cref="DataView.Sort"/> задает одно поле для поиска</param>
     /// <param name="searchValue">Значение поля для поиска</param>
     /// <returns>Найденная или созданная строка</returns>
     public static DataRow FindOrAddDataRow(DataView dv, object searchValue)
@@ -7258,10 +7370,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Найти строку в таблице с заданным значением поля для поиска. Если таблица
     /// не содержит такой строки, то строка добавляется.
-    /// Для поиска используется объект DataView, в котором задано свойство Sort.
-    /// Возвращает true, если была создана новая строка
+    /// Для поиска используется объект <see cref="DataView"/>, в котором задано свойство <see cref="DataView.Sort"/>.
+    /// Возвращает true, если была создана новая строка.
     /// </summary>
-    /// <param name="dv">Просмотр таблицы, в котором свойство Sort задает одно поле для поиска</param>
+    /// <param name="dv">Просмотр таблицы, в котором свойство <see cref="DataView.Sort"/> задает одно поле для поиска</param>
     /// <param name="searchValue">Значение поля для поиска</param>
     /// <param name="row">Найденная или созданная строка</param>
     /// <returns>Признак добавления строки</returns>
@@ -7295,10 +7407,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Найти строку в таблице с заданными значениями полей для поиска. Если таблица
     /// не содержит такой строки, то строка добавляется.
-    /// Для поиска используется объект DataView, в котором задано свойство Sort.
-    /// Эта перегрузка не позволяет определить, была найдена существующая строка или добавлена новая
+    /// Для поиска используется объект <see cref="DataView"/>, в котором задано свойство <see cref="DataView.Sort"/>.
+    /// Эта перегрузка не позволяет определить, была найдена существующая строка или добавлена новая.
     /// </summary>
-    /// <param name="dv">Просмотр таблицы, в котором свойство Sort задает поля для поиска</param>
+    /// <param name="dv">Просмотр таблицы, в котором свойство <see cref="DataView.Sort"/> задает поля для поиска</param>
     /// <param name="searchValues">Значения полей для поиска</param>
     /// <returns>Найденная или созданная строка</returns>
     public static DataRow FindOrAddDataRow(DataView dv, object[] searchValues)
@@ -7311,10 +7423,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Найти строку в таблице с заданными значениями полей для поиска. Если таблица
     /// не содержит такой строки, то строка добавляется.
-    /// Для поиска используется объект DataView, в котором задано свойство Sort.
-    /// Возвращает true, если была создана новая строка
+    /// Для поиска используется объект <see cref="DataView"/>, в котором задано свойство <see cref="DataView.Sort"/>.
+    /// Возвращает true, если была создана новая строка.
     /// </summary>
-    /// <param name="dv">Просмотр таблицы, в котором свойство Sort задает поля для поиска</param>
+    /// <param name="dv">Просмотр таблицы, в котором свойство <see cref="DataView.Sort"/> задает поля для поиска</param>
     /// <param name="searchValues">Значения полей для поиска</param>
     /// <param name="row">Найденная или созданная строка</param>
     /// <returns>Признак добавления строки</returns>
@@ -7425,7 +7537,7 @@ namespace FreeLibSet.Core
     /// содержащие уникальные значения полей, заданных <paramref name="uniqueColumnNames"/>.
     /// Результирующая таблица имеет такую же структуру, как и исходная.
     /// Порядок строк в <paramref name="srcDV"/> определяет, какая именно строка будет добавлена в 
-    /// результирующую таблицу. Добавляется первая строка, содержащая уникальные значения полей
+    /// результирующую таблицу. Добавляется первая строка, содержащая уникальные значения полей.
     /// </summary>
     /// <param name="srcDV">Просмотр для исходной таблицы данных</param>
     /// <param name="uniqueColumnNames">Массив имен полей, которые должны содержать исходные значения</param>
@@ -7471,7 +7583,7 @@ namespace FreeLibSet.Core
     /// содержащие уникальные значения полей, заданных <paramref name="uniqueColumnNames"/>.
     /// Результирующая таблица имеет такую же структуру, как и исходная.
     /// Порядок строк в <paramref name="srcDV"/> определяет, какая именно строка будет добавлена в 
-    /// результирующую таблицу. Добавляется первая строка, содержащая уникальные значения полей
+    /// результирующую таблицу. Добавляется первая строка, содержащая уникальные значения полей.
     /// </summary>
     /// <param name="srcDV">Просмотр для исходной таблицы данных</param>
     /// <param name="uniqueColumnNames">Список имен полей, разделенных запятыми, которые должны содержать исходные значения</param>
@@ -7634,9 +7746,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить пустое значение указанного типа.
-    /// Для строк возвращается пустая строка, для числовых значений возвращается 0
+    /// Для строк возвращается пустая строка, для числовых значений возвращается 0.
     /// </summary>
-    /// <param name="typ"></param>
+    /// <param name="typ">Тип данных</param>
     /// <returns>Пустое значение</returns>
     public static object GetEmptyValue(Type typ)
     {
@@ -7659,11 +7771,11 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Возвращает true, если все указанные поля (типа Decimal) имеют значение 0
+    /// Возвращает true, если все указанные поля (типа <see cref="Decimal"/>) имеют значение 0.
     /// </summary>
     /// <param name="row">Строка таблицы</param>
     /// <param name="columnNames">Список имен полей, разделенных запятыми</param>
-    /// <returns>true, если все указанные поля имеют значение 0m или DBNull</returns>
+    /// <returns>true, если все указанные поля имеют значение 0m или <see cref="DBNull"/></returns>
     public static bool AreAllDecimalZeros(DataRow row, string columnNames)
     {
       string[] aNames = columnNames.Split(',');
@@ -7676,11 +7788,11 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает true, если все поля типа Decimal в строке имеют значение 0 или DBNull.Value
-    /// Перебираются все поля в таблице, имеющие тип decimal
+    /// Возвращает true, если все поля типа <see cref="Decimal"/> в строке имеют значение 0 или <see cref="DBNull"/>.
+    /// Перебираются все поля в таблице, имеющие тип <see cref="Decimal"/>.
     /// </summary>
     /// <param name="row">Строка таблицы</param>
-    /// <returns>true, если все указанные поля имеют значение 0m или DBNull</returns>
+    /// <returns>true, если все указанные поля имеют значение 0m или <see cref="DBNull"/></returns>
     public static bool AreAllDecimalZeros(DataRow row)
     {
       for (int i = 0; i < row.Table.Columns.Count; i++)
@@ -7697,7 +7809,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает true, если значения заданных полей типа Decimal во всех строках содержат DBNull или 0.
+    /// Возвращает true, если значения заданных полей типа <see cref="Decimal"/> во всех строках содержат <see cref="DBNull"/> или 0.
     /// </summary>
     /// <param name="table">Таблица данных</param>
     /// <param name="columnNames">Имена полей, разделенных запятыми</param>
@@ -7715,7 +7827,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает true, если значения полей типа Decimal во всех строках содержат DBNull или 0.
+    /// Возвращает true, если значения полей типа <see cref="Decimal"/> во всех строках содержат <see cref="DBNull"/> или 0.
     /// </summary>
     /// <param name="table">Таблица данных</param>
     /// <returns>true, если все нули</returns>
@@ -7732,7 +7844,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает true, если значения заданных полей типа Decimal во всех строках содержат DBNull или 0.
+    /// Возвращает true, если значения заданных полей типа <see cref="Decimal"/> во всех строках содержат <see cref="DBNull"/> или 0.
     /// </summary>
     /// <param name="dv">Объект DataView</param>
     /// <param name="columnNames">Имена полей, разделенных запятыми</param>
@@ -7748,7 +7860,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возвращает true, если значения полей типа Decimal во всех строках содержат DBNull или 0.
+    /// Возвращает true, если значения полей типа <see cref="Decimal"/> во всех строках содержат <see cref="DBNull"/> или 0.
     /// </summary>
     /// <param name="dv">Объект DataView</param>
     /// <returns>true, если все нули</returns>
@@ -7765,8 +7877,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает минимальное и максимальное значение для заданного перечисления.
-    /// Возвращаемое значение может не иметь смысла, если у перечисления задан атрибут FlagsAtribute.
-    /// Используется вызов Enum.GetValues()
+    /// Возвращаемое значение может не иметь смысла, если у перечисления задан атрибут <see cref="FlagsAttribute"/>.
+    /// Используется вызов <see cref="Enum.GetValues(Type)"/>.
     /// </summary>
     /// <param name="enumTyp">Тип перечисления</param>
     /// <returns>Минимальное и максимальное значения</returns>
@@ -7796,13 +7908,13 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Вызывает для переданной ссылки метод <see cref="IDisposable.Dispose()"/>, а затем присваивает ссылке значение null.
     /// Если <paramref name="refValue"/> равно null, никаких действий не выполняется.
-    /// Используется для упрощения кода в реализациях метода Dispose() для очистки вложенных объектов.
+    /// Используется для упрощения кода в реализациях метода <see cref="IDisposable.Dispose()"/> для очистки вложенных объектов.
     /// </summary>
     /// <typeparam name="T">Тип объекта, реализующего интерфейс <see cref="IDisposable"/>.
     /// Не может быть типом значения, даже если он реализует интерфейс</typeparam>
     /// <param name="refValue">Ссылка на поле, содержащее ссылку на объект с интерфейсом <see cref="IDisposable"/></param>
     public static void Dispose<T>(ref T refValue)
-      where T:class, IDisposable
+      where T : class, IDisposable
     {
       if (refValue != null)
       {

@@ -5,14 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Дополнительные цвета для раскрашивания табличных просмотров и других
   /// управляющих элементов.
-  /// Цвета, которых не хватает в SystemColors
-  /// Реализация свойства EFPApp.Colors
+  /// Цвета, которых не хватает в <see cref="SystemColors"/>.
+  /// Реализация свойства <see cref="EFPApp.Colors"/>.
   /// 
   /// В текущей реализации не предусмотрена настройка цветов
   /// </summary>
@@ -260,23 +261,26 @@ namespace FreeLibSet.Forms
     #region Цвета для элементов списка
 
     /// <summary>
-    /// Использовать стандартные цвета для UIValidateState.Ok.
-    /// Отличается от Empty, т.к. игнорирует цвета Control.ForeColor и Control.BackColor
+    /// Стандартные цвета элемента списка для <see cref="UIValidateState.Ok"/>.
+    /// Используется <see cref="ListControlImagePainter"/>.
     /// </summary>
     public readonly ListItemColors ListStateOk;
 
     /// <summary>
-    /// Элемент с ошибкой UIValidateState.Error
+    /// Элемент списка с ошибкой <see cref="UIValidateState.Error"/>.
+    /// Используется <see cref="ListControlImagePainter"/>.
     /// </summary>
     public readonly ListItemColors ListStateError;
 
     /// <summary>
-    /// Элемент с предупреждением UIValidateState.Warning
+    /// Элемент списка с предупреждением <see cref="UIValidateState.Warning"/>.
+    /// Используется <see cref="ListControlImagePainter"/>.
     /// </summary>
     public readonly ListItemColors ListStateWarning;
 
     /// <summary>
-    /// Элемент альтернативного цвета
+    /// Элемент списка альтернативного цвета.
+    /// Используется <see cref="ListControlImagePainter"/>.
     /// </summary>
     public readonly ListItemColors ListAlter;
 

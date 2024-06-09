@@ -1095,7 +1095,7 @@ namespace FreeLibSet.Data
     /// Проверяет корректность описаний таблицы.
     /// Обычно следует проверять структуру базы данных в-целом, а не отдельной таблицы,
     /// так как там проверяется корректность ссылочных полей.
-    /// Эта версия не проверяет корректность имен обычных полей
+    /// Эта версия не проверяет корректность имен обычных полей.
     /// </summary>
     public void CheckStruct()
     {
@@ -1106,7 +1106,7 @@ namespace FreeLibSet.Data
     /// Проверяет корректность описаний таблицы.
     /// Обычно следует проверять структуру базы данных в-целом, а не отдельной таблицы,
     /// так как там проверяется корректность ссылочных полей.
-    /// Эта версия может проверять корректность имен обычных полей
+    /// Эта версия может проверять корректность имен обычных полей.
     /// </summary>
     /// <param name="db">База данных для проверки корректности имен полей или null</param>
     public void CheckStruct(DBx db)
@@ -1605,7 +1605,12 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Создает объект <see cref="DataColumn"/> с возможностью переопределить имя столбца
+    /// Создает объект <see cref="DataColumn"/> с возможностью переопределить имя столбца.
+    /// Устанавливает свойства 
+    /// <see cref="DataColumn.ColumnName"/>,
+    /// <see cref="DataColumn.DataType"/>, 
+    /// <see cref="DataColumn.AllowDBNull"/>,
+    /// <see cref="DataColumn.MaxLength"/>
     /// </summary>
     /// <returns>Столбец для таблицы <see cref="DataTable"/></returns>
     public DataColumn CreateDataColumn(string columnName)
@@ -1618,6 +1623,8 @@ namespace FreeLibSet.Data
         throw new InvalidOperationException("Не удалось определить тип данных для столбца " + ToString());
       DataColumn column = new DataColumn(columnName, t);
       column.AllowDBNull = Nullable;
+      if (DefaultValue != null)
+        column.DefaultValue = DefaultValue; // 07.06.2024
       if (MaxLength > 0)
         column.MaxLength = MaxLength;
       return column;

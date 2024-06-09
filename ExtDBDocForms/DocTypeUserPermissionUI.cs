@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Базовый класс для DocTypePermissionUI и DocTypeViewHistoryPermissionUI
+  /// Базовый класс для <see cref="DocTypePermissionUI"/> и <see cref="DocTypeViewHistoryPermissionUI"/>.
   /// Поддерживается установка разрешения только для одного вида документов
   /// </summary>
   public abstract class DocTypePermissionBaseUI : EnumUserPermissionUI
@@ -141,20 +141,20 @@ efpMode.Enabled = false;
     /// Интерфейс доступа к документам
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
     /// Список видов документов, из которых можно выбирать.
-    /// Значение null (по умолчанию) задает возможность выбора из всех видов документов, заданных в Ui.DocProvider.DocTypes
+    /// Значение null (по умолчанию) задает возможность выбора из всех видов документов, заданных в <see cref="DBxDocProvider.DocTypes"/>.
     /// </summary>
     public string[] DocTypeNames { get { return _DocTypeNames; } set { _DocTypeNames = value; } }
     private string[] _DocTypeNames;
 
     /// <summary>
     /// Список видов документов, которые должны быть исключены из выбора.
-    /// Используйте это свойство вместо DocTypeNames, если надо давать выбор из большинства видов документов,
-    /// за исключением немногих
-    /// Значение null (по умолчанию) - нет исключаемых видов
+    /// Используйте это свойство вместо <see cref="DocTypeNames"/>, если надо давать выбор из большинства видов документов,
+    /// за исключением немногих.
+    /// Значение null (по умолчанию) - нет исключаемых видов.
     /// </summary>
     public string[] ExcludedDocTypeNames { get { return _ExcludedDocTypeNames; } set { _ExcludedDocTypeNames = value; } }
     private string[] _ExcludedDocTypeNames;
@@ -221,7 +221,7 @@ efpMode.Enabled = false;
       EditDocTypePermissionForm form = new EditDocTypePermissionForm(editor.BaseProvider, UI, DocTypeNames, ExcludedDocTypeNames, base.TextValues, base.ImageKeys, editor.IsReadOnly);
       form.efpSelMode[0].Enabled = CanBeEmpty;
       if (CanBeEmpty)
-      { 
+      {
         form.efpDocType.EmptyText = "[ Все типы документов ]";
         form.efpDocType.EmptyImageKey = "Table";
       }
@@ -293,9 +293,9 @@ efpMode.Enabled = false;
   }
 
   /// <summary>
-      /// Редактор разрешения DocTypePermission
-      /// Поддерживается установка разрешения только для одного вида документов
-      /// </summary>
+  /// Редактор разрешения <see cref="DocTypePermission"/>.
+  /// Поддерживается установка разрешения только для одного вида документов.
+  /// </summary>
   public class DocTypePermissionUI : DocTypePermissionBaseUI
   {
     #region Конструктор
@@ -365,16 +365,16 @@ efpMode.Enabled = false;
   }
 
   /// <summary>
-  /// Редактор разрешения DocTypeViewHistoryPermission
+  /// Редактор разрешения <see cref="DocTypeViewHistoryPermission"/>
   /// </summary>
   public class DocTypeViewHistoryPermissionUI : DocTypePermissionBaseUI
   {
     #region Конструктор
 
-      /// <summary>
-      /// Создает интерфейс разрешения
-      /// </summary>
-      /// <param name="ui">Интерфейс для документов</param>
+    /// <summary>
+    /// Создает интерфейс разрешения
+    /// </summary>
+    /// <param name="ui">Интерфейс для документов</param>
     public DocTypeViewHistoryPermissionUI(DBUI ui)
       : base("History", new string[] { "Разрешено", "Запрещено" }, new string[] { "Ok", "No" }, ui)
     {
@@ -437,7 +437,7 @@ efpMode.Enabled = false;
   }
 
   /// <summary>
-  /// Интерфейс разрешения на просмотр действий других пользователей
+  /// Интерфейс разрешения на просмотр действий других пользователей <see cref="ViewOtherUsersActionPermission"/>.
   /// </summary>
   public class ViewOtherUsersActionPermissionUI : EnumUserPermissionUI
   {

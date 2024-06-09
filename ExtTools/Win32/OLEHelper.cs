@@ -80,6 +80,65 @@ namespace FreeLibSet.OLE
       _MainObj = Activator.CreateInstance(mainObjType);
     }
 
+#if NET
+    // Нет метода Marshal.GetActiveObject(String)
+    // https://stackoverflow.com/questions/58010510/no-definition-found-for-getactiveobject-from-system-runtime-interopservices-mars
+
+    private static class Marshal2
+    {
+      #region Native Methods
+
+      internal const string OLEAUT32 = "oleaut32.dll";
+      internal const string OLE32 = "ole32.dll";
+
+      [DllImport(OLE32, PreserveSig = false)]
+      [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+      [System.Security.SuppressUnmanagedCodeSecurity]
+      [System.Security.SecurityCritical]  // auto-generated
+      private static extern void CLSIDFromProgIDEx([MarshalAs(UnmanagedType.LPWStr)] string progId, out Guid clsid);
+
+      [DllImport(OLE32, PreserveSig = false)]
+      [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+      [System.Security.SuppressUnmanagedCodeSecurity]
+      [System.Security.SecurityCritical]  // auto-generated
+      private static extern void CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] string progId, out Guid clsid);
+
+      [DllImport(OLEAUT32, PreserveSig = false)]
+      [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+      [System.Security.SuppressUnmanagedCodeSecurity]
+      [System.Security.SecurityCritical]  // auto-generated
+      private static extern void GetActiveObject(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out object ppunk);
+
+      #endregion
+
+      #region GetActiveObject()
+
+      [System.Security.SecurityCritical]  // auto-generated_required
+      public static object GetActiveObject(string progID)
+      {
+        object obj;
+        Guid clsid;
+
+        // Call CLSIDFromProgIDEx first then fall back on CLSIDFromProgID if
+        // CLSIDFromProgIDEx doesn't exist.
+        try
+        {
+          CLSIDFromProgIDEx(progID, out clsid);
+        }
+        catch (Exception)
+        {
+          CLSIDFromProgID(progID, out clsid);
+        }
+
+        GetActiveObject(ref clsid, IntPtr.Zero, out obj);
+        return obj;
+      }
+
+      #endregion
+    }
+
+#endif
+
     /// <summary>
     /// Получение активного объекта и сохранение ссылки на него в MainObj
     /// </summary>
@@ -90,7 +149,11 @@ namespace FreeLibSet.OLE
       if (_MainObj != null)
         throw new InvalidOperationException("Повторная активация объекта");
 
+#if NET
+      _MainObj = Marshal2.GetActiveObject(progId);
+#else
       _MainObj = Marshal.GetActiveObject(progId);
+#endif
     }
 
     #endregion

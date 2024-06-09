@@ -27,7 +27,7 @@ namespace FreeLibSet.Shell
     /// Однако, могут быть установлено несколько различных копий офиса.
     /// В этом случае обычно следует использовать метод GetPartInstallations(), который возвращает список офисов в порядке предпочтения пользователя.
     /// Если нет установленного офиса, возвращается пустой массив.
-    /// Если приложение использует ExtForms.dll, для определения "действуюшей" копии следует использовать свойство EFPApp.UsedOpenOffice
+    /// Если приложение использует ExtForms.dll, для определения "действующей" копии следует использовать свойство EFPApp.UsedOpenOffice
     /// </summary>
     public static OpenOfficeInfo[] Installations { get { return _Installations; } }
     private static OpenOfficeInfo[] _Installations = InitInstallations();

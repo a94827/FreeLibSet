@@ -516,7 +516,9 @@ namespace FreeLibSet.Controls
 
     }
 
+#if !NET
     [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+#endif
     public void GetObjectData(SerializationInfo info, StreamingContext context)
     {
       info.AddValue("IsExpanded", IsExpanded);
@@ -529,6 +531,6 @@ namespace FreeLibSet.Controls
 
     }
 
-    #endregion
+#endregion
   }
 }

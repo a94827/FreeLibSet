@@ -110,9 +110,9 @@ namespace ExtTools_tests.Core
     [TestCase("20210714", "", "", "20210714", Result = true)]
     [TestCase("20210715", "", "", "20210714", Result = false)]
     [TestCase("", "", "", "", Result = true)]
-    public bool DateRangeCrossed(string firstDate1, string lastDate1, string firstDate2, string lastDate2)
+    public bool DateRangesCrossed(string firstDate1, string lastDate1, string firstDate2, string lastDate2)
     {
-      return DataTools.DateRangeCrossed(Creators.NDateTime(firstDate1), Creators.NDateTime(lastDate1),
+      return DataTools.DateRangesCrossed(Creators.NDateTime(firstDate1), Creators.NDateTime(lastDate1),
         Creators.NDateTime(firstDate2), Creators.NDateTime(lastDate2));
     }
 

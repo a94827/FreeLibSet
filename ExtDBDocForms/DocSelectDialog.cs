@@ -18,13 +18,13 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Режимы выбора документов и поддокументов в диалогах DocSelectDialog и SubDocSelectDialog 
+  /// Режимы выбора документов и поддокументов в диалогах <see cref="DocSelectDialog"/> и <see cref="SubDocSelectDialog"/>.
   /// </summary>
   public enum DocSelectionMode
   {
     /// <summary>
     /// Разрешается выбор только одного документа или поддокумента.
-    /// Этот режим задан по умолчанию
+    /// Этот режим задан по умолчанию.
     /// </summary>
     Single,
 
@@ -35,7 +35,7 @@ namespace FreeLibSet.Forms.Docs
     MultiSelect,
 
     /// <summary>
-    /// Выбор с помощью флажков
+    /// Выбор с помощью флажков.
     /// </summary>
     MultiCheckBoxes,
 
@@ -77,14 +77,20 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Интерфейс для доступа к документам.
     /// Задается в конструкторе.
-    /// Не может быть null
+    /// Не может быть null.
     /// </summary>
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
-    private DocTypeUI _DocTypeUI;
+    private readonly DocTypeUI _DocTypeUI;
 
     /// <summary>
-    /// Режим выбора документа Single, MultiSelect, MultiCheckBoxes, MultiList.
-    /// По умолчанию - Single
+    /// Режим выбора документа:
+    /// <list type="bullet">
+    /// <item><description><see cref="DocSelectionMode.Single"/></description></item>
+    /// <item><description><see cref="DocSelectionMode.MultiSelect"/></description></item>
+    /// <item><description><see cref="DocSelectionMode.MultiCheckBoxes"/></description></item>
+    /// <item><description><see cref="DocSelectionMode.MultiList"/></description></item>
+    /// </list>
+    /// По умолчанию - <see cref="DocSelectionMode.Single"/>
     /// </summary>
     public DocSelectionMode SelectionMode
     {
@@ -107,8 +113,8 @@ namespace FreeLibSet.Forms.Docs
     private DocSelectionMode _SelectionMode;
 
     /// <summary>
-    /// Альтернативное значение для свойства SelectionMode.
-    /// Содержит true, если разрешен выбор нескольких документов
+    /// Альтернативное значение для свойства <see cref="SelectionMode"/>.
+    /// Содержит true, если разрешен выбор нескольких документов.
     /// </summary>
     public bool MultiSelect
     {
@@ -117,7 +123,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вход-выход. Идентификатор выбранного документа при MultiSelect=false
+    /// Вход-выход. Идентификатор выбранного документа при <see cref="MultiSelect"/>=false
     /// </summary>
     public Int32 DocId
     {
@@ -138,7 +144,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вход-выход. Идентификаторы выбранных документов при MultiSelect=true.
+    /// Вход-выход. Идентификаторы выбранных документов при <see cref="MultiSelect"/>=true.
     /// </summary>
     public Int32[] DocIds
     {
@@ -155,7 +161,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Заголовок блока диалога.
-    /// По умолчанию: "Выбор документа XXX" или "Выбор документов XXX" при MultiSelect=true
+    /// По умолчанию: "Выбор документа XXX" или "Выбор документов XXX" (при <see cref="MultiSelect"/>=true)
     /// </summary>
     public string Title
     {
@@ -176,7 +182,7 @@ namespace FreeLibSet.Forms.Docs
     private string _Title;
 
     /// <summary>
-    /// Определяет наличие в диалоге кнопки "Нет", чтобы можно было установить DocId=0.
+    /// Определяет наличие в диалоге кнопки "Нет", чтобы можно было установить <see cref="DocId"/>=0.
     /// По умолчанию - false;
     /// </summary>
     public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
@@ -186,15 +192,15 @@ namespace FreeLibSet.Forms.Docs
     /// Набор фиксированных фильтров табличного просмотра.
     /// Значение null (по умолчанию) приводит к использованию текущего набора
     /// установленных пользователем фильтров.
-    /// Действует только при FixedDocIds=null.
+    /// Действует только при <see cref="FixedDocIds"/>=null.
     /// </summary>
     public GridFilters Filters { get { return _Filters; } set { _Filters = value; } }
     private GridFilters _Filters;
 
     /// <summary>
     /// Массив фиксированных идентификаторов для выбора.
-    /// Если null (по умолчанию), то выбор осуществляется с помощью формы DocTableViewForm, включая табличку фильтров.
-    /// Если свойство установлено, то выбор осуществляется с помощью упрощенной формы
+    /// Если null (по умолчанию), то выбор осуществляется с помощью формы <see cref="DocTableViewForm"/>, включая табличку фильтров.
+    /// Если свойство установлено, то выбор осуществляется с помощью упрощенной формы.
     /// </summary>
     public IdList FixedDocIds
     {
@@ -205,18 +211,18 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Внешний объект, определяющий начальные значения при создании документа внутри этого диалога.
-    /// Если задан, то должен определять все значения, чтобы документ прошел условия фильтров, если заданы фильтры в свойстве Filters,
+    /// Если задан, то должен определять все значения, чтобы документ прошел условия фильтров, если заданы фильтры в свойстве <see cref="Filters"/>,
     /// т.к. сами фильтры не используются для установки значений.
     /// По умолчанию - null.
-    /// Действует только при FixedDocIds=null.
+    /// Действует только при <see cref="FixedDocIds"/>=null.
     /// </summary>
     public DocumentViewHandler EditorCaller { get { return _EditorCaller; } set { _EditorCaller = value; } }
     private DocumentViewHandler _EditorCaller;
 
     /// <summary>
     /// Позиция вывода блока диалога.
-    /// Может либо меняться существующий объект, либо быть передана ссылка на новый объкт EFPDialogPosition.
-    /// Используется в комбоблоках
+    /// Может либо меняться существующий объект, либо быть передана ссылка на новый объект <see cref="EFPDialogPosition"/>.
+    /// Используется в комбоблоках.
     /// </summary>
     public EFPDialogPosition DialogPosition
     {
@@ -254,9 +260,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выводит блок диалога.
-    /// Возвращает Ok, если пользователь сделал выбор, в том числе нажал кнопку "Нет"
+    /// Возвращает <see cref="DialogResult.OK"/>, если пользователь сделал выбор, в том числе нажал кнопку "Нет".
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Результат выполнения</returns>
     public DialogResult ShowDialog()
     {
       if (FixedDocIds == null)
@@ -519,10 +525,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Интерфейс для доступа к документам.
     /// Задается в конструкторе.
-    /// Не может быть null
+    /// Не может быть null.
     /// </summary>
     public SubDocTypeUI SubDocTypeUI { get { return _SubDocTypeUI; } }
-    private SubDocTypeUI _SubDocTypeUI;
+    private readonly SubDocTypeUI _SubDocTypeUI;
 
     /// <summary>
     /// Список поддокументов, из которых можно выбирать.
@@ -530,12 +536,18 @@ namespace FreeLibSet.Forms.Docs
     /// Не может быть null
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
-    private DBxMultiSubDocs _SubDocs;
+    private readonly DBxMultiSubDocs _SubDocs;
 
     /// <summary>
     /// Режим выбора документа Single, MultiSelect или MultiCheckBoxes.
-    /// Режим MultiList не поддерживается
-    /// По умолчанию - Single.
+    /// <list type="bullet">
+    /// <item><description><see cref="DocSelectionMode.Single"/></description></item>
+    /// <item><description><see cref="DocSelectionMode.MultiSelect"/></description></item>
+    /// <item><description><see cref="DocSelectionMode.MultiCheckBoxes"/></description></item>
+    /// <item><description></description></item>
+    /// </list>
+    /// По умолчанию - <see cref="DocSelectionMode.Single"/>.
+    /// Режим <see cref="DocSelectionMode.MultiList"/> не поддерживается.
     /// </summary>
     public DocSelectionMode SelectionMode
     {
@@ -557,8 +569,8 @@ namespace FreeLibSet.Forms.Docs
     private DocSelectionMode _SelectionMode;
 
     /// <summary>
-    /// Альтернативное значение для свойства SelectionMode.
-    /// Содержит true, если разрешен выбор нескольких документов
+    /// Альтернативное значение для свойства <see cref="SelectionMode"/>.
+    /// Содержит true, если разрешен выбор нескольких документов.
     /// </summary>
     public bool MultiSelect
     {
@@ -567,7 +579,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вход-выход. Идентификатор выбранного поддокумента при MultiSelect=false
+    /// Вход-выход. Идентификатор выбранного поддокумента при <see cref="MultiSelect"/>=false.
     /// </summary>
     public Int32 SubDocId
     {
@@ -588,7 +600,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вход-выход. Идентификаторы выбранных документов при MultiSelect=true.
+    /// Вход-выход. Идентификаторы выбранных документов при <see cref="MultiSelect"/>=true.
     /// </summary>
     public Int32[] SubDocIds
     {
@@ -605,7 +617,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Заголовок блока диалога.
-    /// По умолчанию: "Выбор поддокумента XXX" или "Выбор поддокументов XXX" при MultiSelect=true
+    /// По умолчанию: "Выбор поддокумента XXX" или "Выбор поддокументов XXX" (при <see cref="MultiSelect"/>=true).
     /// </summary>
     public string Title
     {
@@ -626,7 +638,7 @@ namespace FreeLibSet.Forms.Docs
     private string _Title;
 
     /// <summary>
-    /// Определяет наличие в диалоге кнопки "Нет", чтобы можно было установить SubDocId=0.
+    /// Определяет наличие в диалоге кнопки "Нет", чтобы можно было установить <see cref="SubDocId"/>=0.
     /// По умолчанию - false;
     /// </summary>
     public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
@@ -655,7 +667,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Позиция вывода блока диалога.
-    /// Может либо меняться существующий объект, либо быть передана ссылка на новый объкт EFPDialogPosition.
+    /// Может либо меняться существующий объект, либо быть передана ссылка на новый объект <see cref="EFPDialogPosition"/>.
     /// Используется в комбоблоках
     /// </summary>
     public EFPDialogPosition DialogPosition
@@ -677,9 +689,9 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выводит блок диалога.
-    /// Возвращает Ok, если пользователь сделал выбор, в том числе нажал кнопку "Нет"
+    /// Возвращает <see cref="DialogResult.OK"/>, если пользователь сделал выбор, в том числе нажал кнопку "Нет".
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Результат выполнения</returns>
     public DialogResult ShowDialog()
     {
       DialogResult res = DialogResult.Cancel;

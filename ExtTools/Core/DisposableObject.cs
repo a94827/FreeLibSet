@@ -11,27 +11,30 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Core
 {
   /// <summary>
-  /// Расширение интерфейса IDisposable свойством IsDisposed для проверки разрушения объекта.
-  /// Реализуется классами DisposableObject, SimpleDisposableObject и MarshalByRefDisposableObject
+  /// Расширение интерфейса <see cref="IDisposable"/> свойством <see cref="IsDisposed"/> для проверки разрушения объекта.
+  /// Реализуется классами <see cref="DisposableObject"/>, <see cref="SimpleDisposableObject"/> и <see cref="MarshalByRefDisposableObject"/>.
   /// </summary>
   public interface IDisposableObject : IDisposable
   {
     /// <summary>
-    /// true, если метод Dispose() уже вызывался
+    /// true, если метод <see cref="IDisposable.Dispose()"/> уже вызывался
     /// </summary>
     bool IsDisposed { get; }
 
     /// <summary>
-    /// Проверить, что объект не был разрушен. Иначе выкинуть исключение
+    /// Проверить, что объект не был разрушен. Иначе выбросить исключение
     /// </summary>
+    /// <exception cref="ObjectDisposedException"/>
     void CheckNotDisposed();
   }
 
   /// <summary>
-  /// Реализация интерфейса IDisposable. Используйте этот класс в качестве
+  /// Реализация интерфейса <see cref="IDisposable"/>. Используйте этот класс в качестве
   /// предка, если не требуется другой базовый класс.
-  /// В противном случае используйте собственную реализацию IDisposable и 
-  /// вызывайте статические методы для отладки объектов
+  /// В противном случае используйте собственную реализацию <see cref="IDisposable"/> и 
+  /// вызывайте статические методы для отладки объектов.
+  /// Eсли в классе нет unmanaged-ресурсов, то не требуется выполнять удаление из деструктора. 
+  /// В этом случае следует использовать <see cref="SimpleDisposableObject"/> вместо этого класса.
   /// </summary>
   public class DisposableObject : IDisposableObject
   {
@@ -39,7 +42,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Создает новый объект.
-    /// В отладочном режиме регистрирует объект в списке
+    /// В отладочном режиме регистрирует объект в списке.
     /// </summary>
     public DisposableObject()
     {
@@ -50,9 +53,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Деструктор все равно нужен, даже если для объекта всегда используется явное завершение с помощью Dispose().
+    /// Деструктор все равно нужен, даже если для объекта всегда используется явное завершение с помощью <see cref="Dispose()"/>.
     /// Если в конструкторе производного объекта возникает исключение, деструктор будет вызван.
-    /// Если был правильный вызов метода Dispose(), то вызов деструктора подавляется с помощью GC.SuppressFinalize()
+    /// Если был успешный вызов метода <see cref="Dispose()"/>, то вызов деструктора подавляется с помощью <see cref="GC.SuppressFinalize(object)"/>.
     /// </summary>
     ~DisposableObject()
     {
@@ -65,7 +68,7 @@ namespace FreeLibSet.Core
     #region IDisposable Members
 
     /// <summary>
-    /// Этот метод должен быть вызван по окончании использования объекта, как положено при использовании IDisposable-объекта.
+    /// Этот метод должен быть вызван по окончании использования объекта, как положено при использовании <see cref="IDisposable"/>-объекта.
     /// Вызывает виртуальный метод Dispose() с аргументом true и предотвращает вызов деструктора.
     /// Повторный вызов метода не выполняет никиких действий.
     /// </summary>
@@ -84,7 +87,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Этот метод должен быть переопределен.
     /// Базовый метод обязательно должен быть вызван, обычно после выполнения собственных действий.
-    /// Устанавливает свойство IsDisposed равным true. В отладочном режиме убирает объект из списка.
+    /// Устанавливает свойство <see cref="IsDisposed"/> равным true. В отладочном режиме убирает объект из списка.
     /// </summary>
     /// <param name="disposing">true, если метод вызван в явном виде из public-версии Dispose().
     /// false, если метод вызван из деструктора</param>
@@ -100,7 +103,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// true, если метод Dispose() уже вызывался
+    /// true, если метод <see cref="Dispose()"/> уже вызывался.
     /// </summary>
     public bool IsDisposed { get { return _IsDisposed; } }
     private bool _IsDisposed;
@@ -182,7 +185,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Зарегистрировать объект в списке для отладочных целей.
-    /// Вызывается из конструктора DisposableObject и других классов, желающих отслеживать использование
+    /// Вызывается из конструктора <see cref="DisposableObject"/> и других классов, желающих отслеживать использование
     /// объектов.
     /// В конфигурации RELEASE никаких действий не выполняется.
     /// </summary>
@@ -202,10 +205,10 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Отменить регистрирацию объекта в списке для отладочных целей.
-    /// Вызывается из метода DisposableObject.Dispooe() и методов Dispose() других классов, 
+    /// Вызывается из метода <see cref="DisposableObject.Dispose()"/> и методов <see cref="IDisposable.Dispose()"/> других классов, 
     /// желающих отслеживать использование объектов.
     /// В конфигурации RELEASE никаких действий не выполняется.
-    /// Обычно следкет использовать перегрузку, принимающую дополнительный аргумент Disposing
+    /// Обычно следует использовать перегрузку, принимающую дополнительный аргумент disposing.
     /// </summary>
     /// <param name="obj">Зарегистрированный объект</param>
     public static void UnregisterDisposableObject(object obj)
@@ -222,7 +225,7 @@ namespace FreeLibSet.Core
     /// В конфигурации RELEASE никаких действий не выполняется.
     /// </summary>
     /// <param name="obj">Зарегистрированный объект</param>
-    /// <param name="disposing">Значение аргумента disposing, полученное методом Dispose()</param>
+    /// <param name="disposing">Значение аргумента disposing, полученное методом <see cref="Dispose(bool)"/></param>
     public static void UnregisterDisposableObject(object obj, bool disposing)
     {
 #if DEBUG
@@ -242,8 +245,8 @@ namespace FreeLibSet.Core
 
 #if DEBUG
     /// <summary>
-    /// Получить массив объектов, где хранятся объекты нужного типа
-    /// На момент вызова коллекция должна быть заблокирована
+    /// Получить массив объектов, где хранятся объекты нужного типа.
+    /// На момент вызова коллекция должна быть заблокирована.
     /// </summary>
     /// <param name="obj">Объект, который будет добавляться или удаляться</param>
     /// <returns>Массив объектов</returns>
@@ -267,12 +270,13 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить статистику по объектам.
-    /// Эта версия возвращает количество существующих объектов и количество удаленных объектов
+    /// Эта версия возвращает количество существующих объектов и количество удаленных объектов.
+    /// В конфигурации Release возвращает пустые массивы.
     /// </summary>
     /// <param name="objTypes">Сюда записываются типы объектов</param>
     /// <param name="counts">Сюда записываются количества объектов для каждого типа</param>
-    /// <param name="disposeCounts">Сюда записываются количества объектов для каждого типа, которые были удалены вызовом Dispose()</param>
-    /// <param name="finalizeCounts">Сюда записываются количества объектов для каждого типа, которые были удалены вызовом Finalize()</param>
+    /// <param name="disposeCounts">Сюда записываются количества объектов для каждого типа, которые были удалены вызовом <see cref="Dispose()"/></param>
+    /// <param name="finalizeCounts">Сюда записываются количества объектов для каждого типа, которые были удалены вызовом <see cref="Finalize()"/></param>
     public static void GetRegisteredObjectCounts(out string[] objTypes, out int[] counts, out long[] disposeCounts, out long[] finalizeCounts)
     {
 #if DEBUG
@@ -302,7 +306,8 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Получить статистику по объектам.
-    /// Упрощенная версия, которая возвращает только действующие объекты
+    /// Упрощенная версия, которая возвращает только действующие объекты.
+    /// В конфигурации Release возвращает пустые массивы.
     /// </summary>
     /// <param name="objTypes">Сюда записываются типы объектов</param>
     /// <param name="counts">Сюда записываются количества объектов для каждого типа</param>
@@ -327,11 +332,11 @@ namespace FreeLibSet.Core
 #endif
     }
 
-
     /// <summary>
-    /// Получить массив зарегистрированных объектов
+    /// Получить массив зарегистрированных объектов заданного типа.
+    /// В конфигурации Release возвращает пустой массив.
     /// </summary>
-    /// <param name="typeName"></param>
+    /// <param name="typeName">Имя типа объекта <see cref="Type.ToString()"/></param>
     /// <returns>Объекты</returns>
     public static object[] GetRegisteredObjects(string typeName)
     {
@@ -351,7 +356,6 @@ namespace FreeLibSet.Core
 #endif
     }
 
-
     /// <summary>
     /// true, если доступна отладочная информация об объектах
     /// </summary>
@@ -368,8 +372,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Получение таблицы данных, содержащей статистику по объектам
-    /// Возвращает пустую таблицу, если информация об объектах недоступна (DEBUG не определено)
+    /// Получение таблицы данных, содержащей статистику по объектам.
+    /// Возвращает пустую таблицу, если информация об объектах недоступна (в конфигурации Release).
     /// </summary>
     /// <param name="includeZeros">Если true, то в таблицу включаются пустые строки для типов объектов, которые
     /// создавались, но были все разрущены</param>
@@ -415,9 +419,10 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Регистрирует тип объекта для вывода отладочной информации по каждому объекту.
-    /// Этот метод ничего не делает в режиме Release.
+    /// Этот метод ничего не делает в конфигурации Release.
     /// </summary>
-    /// <param name="type">Класс, производный от DisposableObject</param>
+    /// <param name="type">Класс, производный от <see cref="DisposableObject"/> или <see cref="SimpleDisposableObject"/>.
+    /// Также можно использовать другие классы, реализующие <see cref="IDisposable"/>, если они вызывают <see cref="RegisterDisposableObject(object)"/> и <see cref="UnregisterDisposableObject(object, bool)"/>.</param>
     public static void RegisterLogoutType(Type type)
     {
 #if DEBUG
@@ -433,7 +438,6 @@ namespace FreeLibSet.Core
       }
 #endif
     }
-
 
 #if DEBUG
 
@@ -551,15 +555,14 @@ namespace FreeLibSet.Core
 
 #endif
 
-
     #endregion
   }
 
   /// <summary>
-  /// Реализация интерфейса IDisposable. 
-  /// Версия DisposableObject без деструктора. 
+  /// Реализация интерфейса <see cref="IDisposable"/>. 
+  /// Версия <see cref="DisposableObject"/> без деструктора. 
   /// Этот класс следует использовать в качестве базового, если в классе нет unmanaged-ресурсов,
-  /// но требуется единообразная поддержка паттерна IDisposable
+  /// но требуется единообразная поддержка паттерна <see cref="IDisposable"/>.
   /// </summary>
   public class SimpleDisposableObject : IDisposableObject
   {
@@ -567,7 +570,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Создает новый объект.
-    /// В отладочном режиме регистрирует объект в списке
+    /// В отладочном режиме регистрирует объект в списке.
     /// </summary>
     public SimpleDisposableObject()
     {
@@ -582,8 +585,8 @@ namespace FreeLibSet.Core
     #region IDisposable Members
 
     /// <summary>
-    /// Этот метод должен быть вызван по окончании использования объекта, как положено при использовании IDisposable-объекта.
-    /// Вызывает виртуальный метод Dispose() с аргументом true.
+    /// Этот метод должен быть вызван по окончании использования объекта, как положено при использовании <see cref="IDisposable"/>-объекта.
+    /// Вызывает виртуальный метод <see cref="Dispose(bool)"/> с аргументом true.
     /// Повторный вызов метода не выполняет никиких действий.
     /// </summary>
     public void Dispose()
@@ -600,10 +603,9 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Этот метод должен быть переопределен.
     /// Базовый метод обязательно должен быть вызван, обычно после выполнения собственных действий.
-    /// Устанавливает свойство IsDisposed равным true. В отладочном режиме убирает объект из списка.
+    /// Устанавливает свойство <see cref="IsDisposed"/> равным true. В отладочном режиме убирает объект из списка.
     /// </summary>
-    /// <param name="disposing">true, если метод вызван в явном виде из public-версии Dispose().
-    /// false, если метод вызван из деструктора</param>
+    /// <param name="disposing">Всегда true</param>
     protected virtual void Dispose(bool disposing)
     {
       if (!_IsDisposed)
@@ -616,13 +618,13 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// true, если метод Dispose() уже вызывался
+    /// true, если метод <see cref="Dispose()"/> уже вызывался.
     /// </summary>
     public bool IsDisposed { get { return _IsDisposed; } }
     private bool _IsDisposed;
 
     /// <summary>
-    /// Проверить, что объект не был разрушен. Иначе выкинуть исключение
+    /// Проверить, что объект не был разрушен. Иначе выбросить исключение <see cref="ObjectDisposedException"/>.
     /// </summary>
     public void CheckNotDisposed()
     {
@@ -649,9 +651,8 @@ namespace FreeLibSet.Core
   }
 
   /// <summary>
-  /// Счетчик блокировок для объекта, поддерживающего интерфейс IDisposable.
-  /// Когда счетчик становится равным нулю, вызывается метод Dispose() основного
-  /// объекта
+  /// Счетчик блокировок для объекта, поддерживающего интерфейс <see cref="IDisposable"/>.
+  /// Когда счетчик становится равным нулю, вызывается метод <see cref="IDisposable.Dispose()"/> основного объекта.
   /// </summary>
   /// <typeparam name="T">Тип объекта</typeparam>
   public class DisposableRefCounter<T>
@@ -678,7 +679,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Объект, для которого подсчитываются ссылки.
     /// Задается в конструкторе.
-    /// Если для объекта был вызван Dispose(), свойство возвращает null.
+    /// Если для объекта был вызван <see cref="IDisposable.Dispose()"/>, свойство возвращает null.
     /// Если бы ссылка на объект удерживалась после разрушения, это бы не дало освободить память сборщиком мусора.
     /// </summary>
     public T Target { get { return _Target; } }
@@ -687,7 +688,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Текстовое представление для отладки
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       if (_Target == null)
@@ -697,7 +698,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Выбрасывает исключение, если для объекта уже был вызван метод Dispose().
+    /// Выбрасывает исключение <see cref="ObjectDisposedException"/>, если для объекта уже был вызван метод <see cref="IDisposable.Dispose()"/>.
     /// </summary>
     public void CheckNotDisposed()
     {
@@ -751,7 +752,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Уменьшает счетчик ссылок.
-    /// Если он достигает 0, для Target вызывается Dispose().
+    /// Если он достигает 0, для <see cref="Target"/> вызывается <see cref="IDisposable.Dispose()"/>.
     /// </summary>
     public void Release()
     {
@@ -768,11 +769,14 @@ namespace FreeLibSet.Core
   }
 
   /// <summary>
-  /// Реализация интерфейса IDisposable для объектов, которые требуется передавать по ссылке через границы
+  /// Реализация интерфейса <see cref="IDisposable"/> для объектов, которые требуется передавать по ссылке через границы
   /// домена приложения.
-  /// Реализует "самоспонсирование" для Net Remoting. Эту возможность можно отключить
+  /// Реализует "самоспонсирование" для Net Remoting. Эту возможность можно отключить.
   /// </summary>
-  public class MarshalByRefDisposableObject : MarshalByRefObject, IDisposableObject, System.Runtime.Remoting.Lifetime.ISponsor
+  public class MarshalByRefDisposableObject : MarshalByRefObject, IDisposableObject
+#if !NET
+  , System.Runtime.Remoting.Lifetime.ISponsor
+  #endif
   {
     #region Конструктор и деструктор
 
@@ -786,11 +790,13 @@ namespace FreeLibSet.Core
       DisposableObject.RegisterDisposableObject(this);
 #endif
 
+#if !NET
       _RenewOnSponsorTime = System.Runtime.Remoting.Lifetime.LifetimeServices.RenewOnCallTime;
+#endif
     }
 
     /// <summary>
-    /// Вызывает Dispose(false), если не было вызова Dispose()
+    /// Вызывает <see cref="Dispose(bool)"/> c аргументом false, если не было вызова <see cref="Dispose()"/>.
     /// </summary>
     ~MarshalByRefDisposableObject()
     {
@@ -803,8 +809,8 @@ namespace FreeLibSet.Core
     #region IDisposable Members
 
     /// <summary>
-    /// Реализация интерфейса IDisposable.
-    /// Вызывает Dispose(true) и подавляет вызов деструктора.
+    /// Реализация интерфейса <see cref="IDisposable"/>.
+    /// Вызывает <see cref="Dispose(bool)"/> с аргументом true и подавляет вызов деструктора.
     /// Повторные вызовы отбрасываются.
     /// </summary>
     public void Dispose()
@@ -822,7 +828,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Вызывается при завершении объекта.
     /// </summary>
-    /// <param name="disposing">true, если вызван метод Dispose(), false, если вызван деструктор.</param>
+    /// <param name="disposing">true, если вызван метод <see cref="Dispose()"/>, false, если вызван деструктор.</param>
     protected virtual void Dispose(bool disposing)
     {
       if (!_IsDisposed)
@@ -835,13 +841,13 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// true, если метод Dispose() уже вызывался
+    /// true, если метод <see cref="Dispose()"/> уже вызывался.
     /// </summary>
     public bool IsDisposed { get { return _IsDisposed; } }
     private bool _IsDisposed;
 
     /// <summary>
-    /// Проверить, что объект не был разрушен. Иначе выкинуть исключение
+    /// Проверить, что объект не был разрушен. Иначе выкинуть исключение.
     /// </summary>
     public void CheckNotDisposed()
     {
@@ -854,7 +860,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Малоинформативное текстовое представление в виде "GetType() (Disposed)"
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       string s = base.ToString();
@@ -867,18 +873,19 @@ namespace FreeLibSet.Core
 
     #region Самоспонсирование
 
+#if !NET
     /// <summary>
     /// Если свойство установить в true, то объект удаленного доступа будет жить вечно.
-    /// Свойство следует использовать в исключительных случаях
+    /// Свойство следует использовать в исключительных случаях.
     /// </summary>
     public bool EternalLife { get { return _EternalLife; } set { _EternalLife = value; } }
     private bool _EternalLife;
 
     /// <summary>
     /// Присоединяет к лицензии текущий объект в качестве спонсора, чтобы объект мог заниматься "самоспонированием".
-    /// Если свойство EternalLife=true, то возвращается null
+    /// Если свойство <see cref="EternalLife"/>=true, то возвращается null
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Объект, реализующий <see cref="System.Runtime.Remoting.Lifetime.ILease"/></returns>
     public override object InitializeLifetimeService()
     {
       if (EternalLife)
@@ -901,19 +908,19 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Время, на которотое продляется лицензия при спонсировании в методе OnRenewal.
-    /// По умолчанию равно значению LifetimeServices.RenewOnCallTime, действующиему в момент создания объекта.
-    /// Если установить свойство в TimeSpan.Zero, то лицензия продляться не будет.
-    /// Для динамического управления продлением лицензии следует переопределить метод OnRenewal()
+    /// Время, на которое продляется лицензия при спонсировании в методе <see cref="OnRenewal(System.Runtime.Remoting.Lifetime.ILease)"/>.
+    /// По умолчанию равно значению <see cref="System.Runtime.Remoting.Lifetime.LifetimeServices.RenewOnCallTime"/>, действующиему в момент создания объекта.
+    /// Если установить свойство в <see cref="TimeSpan.Zero"/>, то лицензия продляться не будет.
+    /// Для динамического управления продлением лицензии следует переопределить метод <see cref="OnRenewal(System.Runtime.Remoting.Lifetime.ILease)"/>.
     /// </summary>
     public TimeSpan RenewOnSponsorTime { get { return _RenewOnSponsorTime; } set { _RenewOnSponsorTime = value; } }
     private TimeSpan _RenewOnSponsorTime;
 
     /// <summary>
-    /// Продление лицензии объекта. Возвращает значение RenewOnSponsorTime.
+    /// Продление лицензии объекта. Возвращает значение <see cref="RenewOnSponsorTime"/>.
     /// Переопределенный метод может вернуть другой интервал времени или отказаться от продления лицензии,
-    /// вернув TimeSpan.Zero.
-    /// Метод вызывается, если IsDisposed=false, а SelfSponsoring=true
+    /// вернув <see cref="TimeSpan.Zero"/>.
+    /// Метод вызывается, если <see cref="IsDisposed"/>=false.
     /// </summary>
     /// <param name="lease">Лицензия, которую нужно продлить</param>
     /// <returns>Время, на которое надо продлить лицензию</returns>
@@ -921,13 +928,13 @@ namespace FreeLibSet.Core
     {
       return RenewOnSponsorTime;
     }
-
+#endif
     #endregion
   }
 
   /// <summary>
-  /// Реализация статических ссылок на Disposable-объект, который должен быть разрушен при завершении работы 
-  /// приложения или выгрузки домена
+  /// Реализация статических ссылок на <see cref="IDisposable"/>-объект, который должен быть разрушен при завершении работы 
+  /// приложения или выгрузки домена.
   /// </summary>
   /// <typeparam name="T"></typeparam>
   public struct AutoDisposeReference<T> : IDisposable
@@ -943,7 +950,6 @@ namespace FreeLibSet.Core
     // Статическая ссылка на объект
     // public static readonly AutoDisposeReference<MyClass> TheObj=new AutoDisposeReference<MyClass>(new MyClass());
 
-
     #region Конструктор
 
     /// <summary>
@@ -955,29 +961,20 @@ namespace FreeLibSet.Core
       if (target == null)
         throw new ArgumentNullException("target");
       _Target = target;
-      EHDomainUnload = null;
-      EHProcessExit = null;
 
-      EHDomainUnload = new EventHandler(CurrentDomain_DomainUnload);
-      EHProcessExit = new EventHandler(CurrentDomain_ProcessExit);
-
-      AppDomain.CurrentDomain.DomainUnload += EHDomainUnload;
-      AppDomain.CurrentDomain.ProcessExit += EHProcessExit;
+      AppDomain.CurrentDomain.DomainUnload += new EventHandler(CurrentDomain_DomainUnload);
+      AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
     }
 
     #endregion
 
     #region Обработчики
 
-    private readonly EventHandler EHDomainUnload;
-
     void CurrentDomain_DomainUnload(object Sender, EventArgs Args)
     {
       FreeTarget();
     }
 
-
-    private readonly EventHandler EHProcessExit;
 
     void CurrentDomain_ProcessExit(object sender, EventArgs args)
     {
@@ -992,8 +989,8 @@ namespace FreeLibSet.Core
         _Target.Dispose();
         _Target = default(T); // null
 
-        AppDomain.CurrentDomain.DomainUnload -= EHDomainUnload;
-        AppDomain.CurrentDomain.ProcessExit -= EHProcessExit;
+        AppDomain.CurrentDomain.DomainUnload -= new EventHandler(CurrentDomain_DomainUnload);
+        AppDomain.CurrentDomain.ProcessExit -= new EventHandler(CurrentDomain_ProcessExit);
       }
     }
 
@@ -1003,7 +1000,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Ссылка на объект, переданный в конструкторе.
-    /// После разрушения объекта получает значение null
+    /// После разрушения объекта получает значение null.
     /// </summary>
     public T Target { get { return _Target; } }
     private T _Target;
@@ -1013,7 +1010,7 @@ namespace FreeLibSet.Core
     #region IDisposable Members
 
     /// <summary>
-    /// Вызов Dispose вызывает Dispose() для основного объекта, если он еще не был разрушен
+    /// Вызывает <see cref="IDisposable.Dispose()"/> для основного объекта, если он еще не был разрушен.
     /// </summary>
     public void Dispose()
     {
@@ -1023,9 +1020,10 @@ namespace FreeLibSet.Core
     #endregion
   }
 
+#if !NET
   /// <summary>
-  /// Объект, реализующий интерфейс ISponsor.
-  /// Продляет лицензию пока существует объект DisposableObject
+  /// Объект, реализующий интерфейс <see cref="System.Runtime.Remoting.Lifetime.ISponsor"/>.
+  /// Продляет лицензию пока существует основной объект <see cref="DisposableObject"/> (или другого класса, реализующего <see cref="IDisposableObject"/>).
   /// </summary>
   public class DisposableObjectSponsor : MarshalByRefObject, System.Runtime.Remoting.Lifetime.ISponsor
   {
@@ -1033,9 +1031,9 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Создает объект-спонсор, отслеживающий заданный объект.
-    /// Лицензия продляется на заданное время
+    /// Лицензия продляется на заданное время.
     /// </summary>
-    /// <param name="mainObject">Основной объект, за которым выполняется слежение</param>
+    /// <param name="mainObject">Основной объект, за которым выполняется слежение. Не может быть null.</param>
     /// <param name="renewalTime">Время, на которое продляется лицензия</param>
     public DisposableObjectSponsor(IDisposableObject mainObject, TimeSpan renewalTime)
     {
@@ -1048,7 +1046,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Создает объект-спонсор, отслеживающий заданный объект.
-    /// Лицензия продляется на 2 минуты
+    /// Лицензия продляется на 2 минуты (значение по умолчанию для <see cref="System.Runtime.Remoting.Lifetime.ClientSponsor.RenewalTime"/>).
     /// </summary>
     /// <param name="mainObject">Основной объект, за которым выполняется слежение</param>
     public DisposableObjectSponsor(DisposableObject mainObject)
@@ -1081,8 +1079,8 @@ namespace FreeLibSet.Core
     #region ISponsor Members
 
     /// <summary>
-    /// Реализация интерфейса ISponsor.
-    /// Возвращает RenewalTime или 0, если MainObject.IsDisposed=true.
+    /// Реализация интерфейса <see cref="System.Runtime.Remoting.Lifetime.ISponsor"/>.
+    /// Возвращает <see cref="RenewalTime"/> или 0, если <see cref="MainObject"/>.IsDisposed=true.
     /// </summary>
     /// <param name="lease">Лицензия объекта</param>
     /// <returns>Время, на которое продляется лицензия</returns>
@@ -1096,4 +1094,5 @@ namespace FreeLibSet.Core
 
     #endregion
   }
+  #endif
 }
