@@ -6,11 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
-using System.IO;
-using FreeLibSet.Logging;
 using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
@@ -67,6 +64,13 @@ namespace FreeLibSet.Forms
           frm.WindowState = FormWindowState.Maximized;
           EFPFormProvider efpForm = new EFPFormProvider(frm);
 
+          DataTable table = FreeLibSet.Forms.Diagnostics.DebugTools.GetAssembliesInfo(true);
+
+#if NET
+          EFPDataGridView ghMain = InitModulesPage(efpForm, frm);
+          ghMain.Control.DataSource = table.DefaultView;
+          ghMain.TopLeftCellToolTipText = "Всего загружено сборок: " + table.DefaultView.Count.ToString();
+#else // Net Framework
           TabControl theTabControl = new TabControl();
           theTabControl.Dock = DockStyle.Fill;
           frm.Controls.Add(theTabControl);
@@ -79,8 +83,6 @@ namespace FreeLibSet.Forms
           theTabControl.TabPages.Add(tpGAC);
           EFPDataGridView ghGAC = InitModulesPage(efpForm, tpGAC);
 
-          DataTable table = FreeLibSet.Forms.Diagnostics.DebugTools.GetAssembliesInfo(true);
-
           DataView dvMain = new DataView(table);
           dvMain.RowFilter = "GAC=FALSE";
           ghMain.Control.DataSource = dvMain;
@@ -89,9 +91,6 @@ namespace FreeLibSet.Forms
           DataView dvGAC = new DataView(table);
           dvGAC.RowFilter = "GAC=TRUE";
           ghGAC.Control.DataSource = dvGAC;
-#if NET
-          ghGAC.TopLeftCellToolTipText = ".Net не поддерживает глобальный кэш сборок";
-#else
           ghGAC.TopLeftCellToolTipText = "Всего загружено сборок: " + dvGAC.Count.ToString();
 #endif
         }
@@ -109,11 +108,11 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private static EFPDataGridView InitModulesPage(EFPBaseProvider baseProvider, TabPage tp)
+    private static EFPDataGridView InitModulesPage(EFPBaseProvider baseProvider, Control parent)
     {
       DataGridView grid = new DataGridView();
       grid.Dock = DockStyle.Fill;
-      tp.Controls.Add(grid);
+      parent.Controls.Add(grid);
       grid.ReadOnly = true;
       grid.AllowUserToAddRows = false;
       grid.AllowUserToDeleteRows = false;
@@ -176,7 +175,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>

@@ -659,8 +659,12 @@ namespace FreeLibSet.Forms
         else
           dlg.Description = Description;
         dlg.ShowNewFolderButton = ShowNewFolderButton;
-        AbsPath dir = new AbsPath(MainProvider.Text);
-        dlg.SelectedPath = dir.Path;
+        try
+        {
+          AbsPath dir = new AbsPath(MainProvider.Text);
+          dlg.SelectedPath = dir.Path;
+        }
+        catch { } // 26.06.2024
         if (EFPApp.ShowDialog(dlg) == DialogResult.OK)
         {
           AbsPath path = new AbsPath(dlg.SelectedPath);
@@ -1129,12 +1133,12 @@ namespace FreeLibSet.Forms
       {
         EnabledEx = new DepExpr2<bool, bool, string>(mainProvider.EnabledEx, mainProvider.TextEx,
           new DepFunction2<bool, bool, string>(CalcEnabled));
-        base.ToolTipText = "Открытие выбранной папки с помощью Проводника Windows";
+        base.ToolTipText = "Открытие выбранной папки с помощью " + EFPApp.WindowsExplorerDisplayName;
       }
       else
       {
         Enabled = false;
-        base.ToolTipText = "Открытие выбранной папки не поддерживается операционной системой";
+        base.ToolTipText = "Открытие папок на просмотр не поддерживается операционной системой";
       }
     }
 

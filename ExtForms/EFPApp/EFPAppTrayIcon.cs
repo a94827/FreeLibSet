@@ -343,7 +343,7 @@ namespace FreeLibSet.Forms
         _TheHiddenForm = new HiddenForm();
         // Если форму показать, а затем спрятать, то она будет получать сообщения.
         // А если просто вызвать CreateHandle(), то не будет
-        _TheHiddenForm.Show();
+        EFPApp.SystemMethods.Show(_TheHiddenForm, null);
         _TheHiddenForm.Hide();
       }
 

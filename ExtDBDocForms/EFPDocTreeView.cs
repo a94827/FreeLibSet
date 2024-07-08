@@ -367,7 +367,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент caller при вызове <see cref="DocTypeUI.PerformEditing(int, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров (DocGridHandler.DocFilters)
     /// Свойство может устанавливаться только до вывода просмотра на экран
     /// </summary>

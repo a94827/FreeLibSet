@@ -213,7 +213,7 @@ namespace FreeLibSet.Forms.Diagnostics
           if (asms[i].GlobalAssemblyCache)
             continue; // не мое
         }
-        AddAssemblyInfo(res, asms[i], i+1);
+        AddAssemblyInfo(res, asms[i], i + 1);
       }
       return res;
     }
@@ -395,7 +395,7 @@ namespace FreeLibSet.Forms.Diagnostics
         lblStr.UseMnemonic = false;
         panStr.Controls.Add(lblStr);
 
-        frm.ShowDialog();
+        EFPApp.SystemMethods.ShowDialog(frm, null);
       }
       finally
       {
@@ -430,7 +430,7 @@ namespace FreeLibSet.Forms.Diagnostics
         lblLen.Dock = DockStyle.Bottom;
         frm.Controls.Add(lblLen);
 
-        frm.ShowDialog();
+        EFPApp.SystemMethods.ShowDialog(frm, null);
       }
       finally
       {
@@ -491,7 +491,7 @@ namespace FreeLibSet.Forms.Diagnostics
         dictGrid.AllowUserToOrderColumns = false;
         dictGrid.CellDoubleClick += new DataGridViewCellEventHandler(DictGrid_CellDoubleClick);
 
-        frm.ShowDialog();
+        EFPApp.SystemMethods.ShowDialog(frm, null);
       }
       finally
       {
@@ -567,30 +567,30 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
       }
 
-      Form frm = new Form();
-      frm.ShowIcon = false;
-      frm.Text = "Отладка Control";
-      SplitContainer splControl = new SplitContainer();
-      splControl.Dock = DockStyle.Fill;
-      frm.Controls.Add(splControl);
+      using (Form frm = new Form())
+      {
+        frm.ShowIcon = false;
+        frm.Text = "Отладка Control";
+        SplitContainer splControl = new SplitContainer();
+        splControl.Dock = DockStyle.Fill;
+        frm.Controls.Add(splControl);
 
-      TreeView theTV = new TreeView();
-      theTV.Dock = DockStyle.Fill;
-      splControl.Panel1.Controls.Add(theTV);
+        TreeView theTV = new TreeView();
+        theTV.Dock = DockStyle.Fill;
+        splControl.Panel1.Controls.Add(theTV);
 
-      PropertyGrid theGrid = new PropertyGrid();
-      theGrid.Dock = DockStyle.Fill;
-      splControl.Panel2.Controls.Add(theGrid);
+        PropertyGrid theGrid = new PropertyGrid();
+        theGrid.Dock = DockStyle.Fill;
+        splControl.Panel2.Controls.Add(theGrid);
 
-      // Заполняем дерево
-      AddControlToTV(/*TheTV, */rootControl, theTV.Nodes);
-      theTV.Tag = theGrid;
-      theTV.AfterSelect += new TreeViewEventHandler(TheTV_AfterSelect);
+        // Заполняем дерево
+        AddControlToTV(/*TheTV, */rootControl, theTV.Nodes);
+        theTV.Tag = theGrid;
+        theTV.AfterSelect += new TreeViewEventHandler(TheTV_AfterSelect);
 
-      frm.WindowState = FormWindowState.Maximized;
-      frm.ShowDialog();
-      frm.Dispose();
-
+        frm.WindowState = FormWindowState.Maximized;
+        EFPApp.SystemMethods.ShowDialog(frm, null);
+      }
     }
 
     private static void AddControlToTV(/*TreeView theTV, */Control control, TreeNodeCollection nodes)
@@ -782,34 +782,35 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
       }
 
-      Form frm = new Form();
-      //AccDepClientExec.InitForm(TheForm);
-      //TheForm.Icon = EFPApp.MainImageIcon("Debug");
-      frm.ShowIcon = false;
-      frm.Text = title;
-      frm.WindowState = FormWindowState.Maximized;
-      frm.MinimizeBox = false;
-
-      TabControl theTabControl = new TabControl();
-      theTabControl.Dock = DockStyle.Fill;
-      frm.Controls.Add(theTabControl);
-      for (int i = 0; i < ds.Tables.Count; i++)
+      using (Form frm = new Form())
       {
-        TabPage page = new TabPage(ds.Tables[i].TableName);
-        theTabControl.Controls.Add(page);
-        AddDebugDataTable(ds.Tables[i], page);
+        //AccDepClientExec.InitForm(TheForm);
+        //TheForm.Icon = EFPApp.MainImageIcon("Debug");
+        frm.ShowIcon = false;
+        frm.Text = title;
+        frm.WindowState = FormWindowState.Maximized;
+        frm.MinimizeBox = false;
+
+        TabControl theTabControl = new TabControl();
+        theTabControl.Dock = DockStyle.Fill;
+        frm.Controls.Add(theTabControl);
+        for (int i = 0; i < ds.Tables.Count; i++)
+        {
+          TabPage page = new TabPage(ds.Tables[i].TableName);
+          theTabControl.Controls.Add(page);
+          AddDebugDataTable(ds.Tables[i], page);
+        }
+
+        TabPage tpProps = new TabPage("Свойства DataSet");
+        theTabControl.TabPages.Add(tpProps);
+
+        PropertyGrid pg = new PropertyGrid();
+        pg.Dock = DockStyle.Fill;
+        tpProps.Controls.Add(pg);
+        pg.SelectedObject = ds;
+
+        EFPApp.SystemMethods.ShowDialog(frm, null);
       }
-
-      TabPage tpProps = new TabPage("Свойства DataSet");
-      theTabControl.TabPages.Add(tpProps);
-
-      PropertyGrid pg = new PropertyGrid();
-      pg.Dock = DockStyle.Fill;
-      tpProps.Controls.Add(pg);
-      pg.SelectedObject = ds;
-
-      frm.ShowDialog();
-      frm.Dispose();
     }
 
     /// <summary>
@@ -828,16 +829,17 @@ namespace FreeLibSet.Forms.Diagnostics
       if (title == null)
         title = table.TableName;
 
-      Form frm = new Form();
-      frm.ShowIcon = false;
-      //TheForm.Icon = EFPApp.MainImageIcon("Debug");
-      //AccDepClientExec.InitForm(TheForm);
-      AddDebugDataTable(table, frm);
-      frm.Text = title;
-      frm.WindowState = FormWindowState.Maximized;
-      frm.MinimizeBox = false;
-      frm.ShowDialog();
-      frm.Close();
+      using (Form frm = new Form())
+      {
+        frm.ShowIcon = false;
+        //TheForm.Icon = EFPApp.MainImageIcon("Debug");
+        //AccDepClientExec.InitForm(TheForm);
+        AddDebugDataTable(table, frm);
+        frm.Text = title;
+        frm.WindowState = FormWindowState.Maximized;
+        frm.MinimizeBox = false;
+        EFPApp.SystemMethods.ShowDialog(frm, null);
+      }
     }
 
     private static void AddDebugDataTable(DataTable table, Control parent)
@@ -1048,67 +1050,68 @@ namespace FreeLibSet.Forms.Diagnostics
           title += " (Не присоединена)";
       }
 
-      Form frm = new Form();
-      frm.ShowIcon = false;
-      //TheForm.Icon = EFPApp.MainImageIcon("Debug");
-      //AccDepClientExec.InitForm(TheForm);
-      Screen scr = Screen.FromControl(frm);
-      frm.Size = new System.Drawing.Size(scr.Bounds.Width / 2, scr.Bounds.Height - 100);
-      frm.MinimizeBox = false;
-      frm.Text = title;
-      //TheForm.WindowState = FormWindowState.Maximized;
-
-
-      TabControl theTabControl = new TabControl();
-      theTabControl.Dock = DockStyle.Fill;
-      theTabControl.Alignment = TabAlignment.Bottom;
-      frm.Controls.Add(theTabControl);
-
-      TabPage tpData = new TabPage("Данные");
-      theTabControl.TabPages.Add(tpData);
-
-      DataGridView grid = new DataGridView();
-      grid.Dock = DockStyle.Fill;
-      grid.ReadOnly = true;
-      grid.AllowUserToAddRows = false;
-      grid.AllowUserToDeleteRows = true;
-
-      DataGridViewTextBoxColumn col;
-      col = new DataGridViewTextBoxColumn();
-      col.HeaderText = "Index";
-      col.Width = 50;
-      grid.Columns.Add(col);
-
-      col = new DataGridViewTextBoxColumn();
-      col.HeaderText = "Column Name";
-      col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      col.FillWeight = 40;
-      grid.Columns.Add(col);
-
-      col = new DataGridViewTextBoxColumn();
-      col.HeaderText = "Value";
-      col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      col.FillWeight = 60;
-      grid.Columns.Add(col);
-
-      for (int i = 0; i < row.Table.Columns.Count; i++)
+      using (Form frm = new Form())
       {
-        grid.Rows.Add(i, row.Table.Columns[i].ColumnName,
-          row[i]);
+        frm.ShowIcon = false;
+        //TheForm.Icon = EFPApp.MainImageIcon("Debug");
+        //AccDepClientExec.InitForm(TheForm);
+        Screen scr = Screen.FromControl(frm);
+        frm.Size = new System.Drawing.Size(scr.Bounds.Width / 2, scr.Bounds.Height - 100);
+        frm.MinimizeBox = false;
+        frm.Text = title;
+        //TheForm.WindowState = FormWindowState.Maximized;
+
+
+        TabControl theTabControl = new TabControl();
+        theTabControl.Dock = DockStyle.Fill;
+        theTabControl.Alignment = TabAlignment.Bottom;
+        frm.Controls.Add(theTabControl);
+
+        TabPage tpData = new TabPage("Данные");
+        theTabControl.TabPages.Add(tpData);
+
+        DataGridView grid = new DataGridView();
+        grid.Dock = DockStyle.Fill;
+        grid.ReadOnly = true;
+        grid.AllowUserToAddRows = false;
+        grid.AllowUserToDeleteRows = true;
+
+        DataGridViewTextBoxColumn col;
+        col = new DataGridViewTextBoxColumn();
+        col.HeaderText = "Index";
+        col.Width = 50;
+        grid.Columns.Add(col);
+
+        col = new DataGridViewTextBoxColumn();
+        col.HeaderText = "Column Name";
+        col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        col.FillWeight = 40;
+        grid.Columns.Add(col);
+
+        col = new DataGridViewTextBoxColumn();
+        col.HeaderText = "Value";
+        col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        col.FillWeight = 60;
+        grid.Columns.Add(col);
+
+        for (int i = 0; i < row.Table.Columns.Count; i++)
+        {
+          grid.Rows.Add(i, row.Table.Columns[i].ColumnName,
+            row[i]);
+        }
+
+        tpData.Controls.Add(grid);
+
+        TabPage tpProps = new TabPage("Свойства DataRow");
+        theTabControl.TabPages.Add(tpProps);
+
+        PropertyGrid pg = new PropertyGrid();
+        pg.Dock = DockStyle.Fill;
+        tpProps.Controls.Add(pg);
+        pg.SelectedObject = row;
+
+        EFPApp.SystemMethods.ShowDialog(frm, null);
       }
-
-      tpData.Controls.Add(grid);
-
-      TabPage tpProps = new TabPage("Свойства DataRow");
-      theTabControl.TabPages.Add(tpProps);
-
-      PropertyGrid pg = new PropertyGrid();
-      pg.Dock = DockStyle.Fill;
-      tpProps.Controls.Add(pg);
-      pg.SelectedObject = row;
-
-      frm.ShowDialog();
-      frm.Dispose();
     }
 
     /// <summary>
@@ -1128,42 +1131,43 @@ namespace FreeLibSet.Forms.Diagnostics
         title = "DataView для " + dv.Table.TableName;
 
 
-      Form frm = new Form();
-      frm.ShowIcon = false;
-      //TheForm.Icon = EFPApp.MainImageIcon("Debug");
-      //AccDepClientExec.InitForm(TheForm);
-      frm.Text = title;
-      frm.WindowState = FormWindowState.Maximized;
-      frm.MinimizeBox = false;
+      using (Form frm = new Form())
+      {
+        frm.ShowIcon = false;
+        //TheForm.Icon = EFPApp.MainImageIcon("Debug");
+        //AccDepClientExec.InitForm(TheForm);
+        frm.Text = title;
+        frm.WindowState = FormWindowState.Maximized;
+        frm.MinimizeBox = false;
 
-      TabControl theTabControl = new TabControl();
-      theTabControl.Dock = DockStyle.Fill;
-      theTabControl.Alignment = TabAlignment.Bottom;
-      frm.Controls.Add(theTabControl);
+        TabControl theTabControl = new TabControl();
+        theTabControl.Dock = DockStyle.Fill;
+        theTabControl.Alignment = TabAlignment.Bottom;
+        frm.Controls.Add(theTabControl);
 
-      TabPage tpData = new TabPage("Данные");
-      theTabControl.TabPages.Add(tpData);
+        TabPage tpData = new TabPage("Данные");
+        theTabControl.TabPages.Add(tpData);
 
-      DataGridView grid = new DataGridView();
-      grid.Dock = DockStyle.Fill;
-      grid.ReadOnly = true;
-      grid.AllowUserToAddRows = false;
-      grid.AllowUserToDeleteRows = true;
-      grid.AutoGenerateColumns = true;
-      grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-      tpData.Controls.Add(grid);
-      grid.DataSource = dv;
+        DataGridView grid = new DataGridView();
+        grid.Dock = DockStyle.Fill;
+        grid.ReadOnly = true;
+        grid.AllowUserToAddRows = false;
+        grid.AllowUserToDeleteRows = true;
+        grid.AutoGenerateColumns = true;
+        grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+        tpData.Controls.Add(grid);
+        grid.DataSource = dv;
 
-      TabPage tpProps = new TabPage("Свойства DataView");
-      theTabControl.TabPages.Add(tpProps);
+        TabPage tpProps = new TabPage("Свойства DataView");
+        theTabControl.TabPages.Add(tpProps);
 
-      PropertyGrid pg = new PropertyGrid();
-      pg.Dock = DockStyle.Fill;
-      tpProps.Controls.Add(pg);
-      pg.SelectedObject = dv;
+        PropertyGrid pg = new PropertyGrid();
+        pg.Dock = DockStyle.Fill;
+        tpProps.Controls.Add(pg);
+        pg.SelectedObject = dv;
 
-      frm.ShowDialog();
-      frm.Close();
+        EFPApp.SystemMethods.ShowDialog(frm, null);
+      }
     }
 
     #endregion
@@ -1601,28 +1605,29 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <param name="title">Заголовок окна</param>
     public static void ShowText(string text, string title)
     {
-      Form frm = new Form();
-      if (String.IsNullOrEmpty(text))
-        frm.Text = "Отладочная информация";
-      else
-        frm.Text = title;
-      frm.ShowIcon = false;
-      frm.WindowState = FormWindowState.Maximized;
+      using (Form frm = new Form())
+      {
+        if (String.IsNullOrEmpty(text))
+          frm.Text = "Отладочная информация";
+        else
+          frm.Text = title;
+        frm.ShowIcon = false;
+        frm.WindowState = FormWindowState.Maximized;
 
-      TextBox edText = new TextBox();
-      edText.Multiline = true;
-      edText.ReadOnly = true;
-      edText.Dock = DockStyle.Fill;
-      edText.Font = EFPApp.CreateMonospaceFont();
-      edText.ScrollBars = ScrollBars.Both;
-      frm.Controls.Add(edText);
-      if (!String.IsNullOrEmpty(text))
-        edText.Text = text;
-      edText.WordWrap = false;
-      edText.Select(0, 0);
+        TextBox edText = new TextBox();
+        edText.Multiline = true;
+        edText.ReadOnly = true;
+        edText.Dock = DockStyle.Fill;
+        edText.Font = EFPApp.CreateMonospaceFont();
+        edText.ScrollBars = ScrollBars.Both;
+        frm.Controls.Add(edText);
+        if (!String.IsNullOrEmpty(text))
+          edText.Text = text;
+        edText.WordWrap = false;
+        edText.Select(0, 0);
 
-      frm.ShowDialog();
-      frm.Close();
+        EFPApp.SystemMethods.ShowDialog(frm, null);
+      }
     }
 
     #endregion
@@ -1702,9 +1707,118 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       int CurrIndentLevel = args.IndentLevel;
 
+      #region Windows Forms
+      args.WriteHeader("Windows Forms");
+      args.WriteLine("SystemInformation");
+      args.IndentLevel++;
+      try
+      {
+        foreach (PropertyInfo pi in typeof(SystemInformation).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        {
+          object obj = pi.GetValue(null, null);
+          try
+          {
+            switch (pi.Name)
+            {
+
+              case "PowerStatus":
+                if (SystemInformation.PowerStatus != null)
+                {
+                  args.WritePair("PowerLineStatus", SystemInformation.PowerStatus.PowerLineStatus.ToString());
+                  int prc = (int)(Math.Round(SystemInformation.PowerStatus.BatteryLifePercent * 100.0));
+                  if (prc >= 0 && prc <= 100)
+                    args.WritePair("Battery charge", prc.ToString() + "%");
+                  else
+                    args.WritePair("Battery charge", "Unknown");
+                }
+                else
+                  args.WriteLine("PowerStatus=null");
+                break;
+              default:
+                args.WritePair(pi.Name, DataTools.GetString(obj));
+                break;
+            }
+          }
+          catch (Exception e)
+          {
+            args.WritePair(pi.Name, "*** " + e.Message + " ***");
+          }
+        }
+      }
+      catch { }
+      args.IndentLevel--;
+
+      if (Screen.AllScreens != null)
+      {
+        args.WritePair("Screens", Screen.AllScreens.Length.ToString());
+        args.IndentLevel++;
+        for (int i = 0; i < Screen.AllScreens.Length; i++)
+        {
+          Screen scr = Screen.AllScreens[i];
+          string DevName = scr.DeviceName;
+          int p = DevName.IndexOf('\0');
+          if (p >= 0) // 19.02.2016. Имя устройства может содержать символы CHR(0), которые явно не нужны
+            DevName = DevName.Substring(0, p);
+          args.WritePair((i + 1).ToString() + (scr.Primary ? " (primary)" : ""), DevName);
+          args.IndentLevel++;
+          args.WritePair("Bounds", scr.Bounds.ToString());
+          args.WritePair("WorkingArea", scr.WorkingArea.ToString());
+          args.WritePair("BitsPerPixel", scr.BitsPerPixel.ToString());
+          args.IndentLevel--;
+        }
+        args.IndentLevel--;
+      }
+      else
+        args.WritePair("Screens", "null");
+
+      args.WritePair("Control.DefaultFont", DataTools.GetString(Control.DefaultFont));
+      args.WriteLine("SystemFonts");
+      args.IndentLevel++;
+      try
+      {
+        foreach (PropertyInfo pi in typeof(SystemFonts).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        {
+          object obj = pi.GetValue(null, null);
+          args.WritePair(pi.Name, DataTools.GetString(obj));
+        }
+      }
+      catch { }
+      args.IndentLevel--;
+
+      args.WriteLine("Screen Graphics");
+      args.IndentLevel++;
+      try
+      {
+        using (Graphics gr = Graphics.FromHwnd(IntPtr.Zero))
+        {
+          gr.PageUnit = GraphicsUnit.Pixel;
+          args.WritePair("DPI", "X=" + gr.DpiX.ToString() + ", Y=" + gr.DpiY.ToString());
+          args.WritePair("VisibleClipBounds", DataTools.GetString(gr.VisibleClipBounds));
+        }
+      }
+      catch { }
+      args.IndentLevel--;
+
+      try
+      {
+        using (Form form = new Form())
+        {
+          form.AutoScaleMode = AutoScaleMode.Font;
+          SizeF currDim = form.CurrentAutoScaleDimensions;
+          args.WritePair("CurrentAutoScaleDimensions", currDim.ToString());
+          SizeF baseDim = new SizeF(6F, 13F); // Стандартные значения при разработке форм с нормальным размером шрифта
+          float scaleX = currDim.Width / baseDim.Width * 100f;
+          float scaleY = currDim.Height / baseDim.Height * 100f;
+          args.WritePair("AutoScaleFactor", "Width=" + scaleX.ToString("0") + "%, Height=" + scaleY.ToString("0") + "%");
+        }
+      }
+      catch { }
+
+      #endregion
+
       #region Application
 
-      args.WriteHeader("Application");
+      args.WriteHeader("Windows Forms Application");
       args.WritePair("AllowQuit", Application.AllowQuit.ToString());
       //Args.WritePair("CommonAppDataPath", Application.CommonAppDataPath);
       //Args.WritePair("CommonAppDataRegistry", Application.CommonAppDataRegistry);
@@ -1749,67 +1863,6 @@ namespace FreeLibSet.Forms.Diagnostics
 
       #endregion
 
-      #region SystemInformation
-
-      args.WriteLine("SystemInformation");
-      args.IndentLevel++;
-      args.WritePair("BootMode", SystemInformation.BootMode.ToString());
-      // уже выведено в LogoutTools Args.WritePair("ComputerName", SystemInformation.ComputerName);
-      args.WritePair("DebugOS", SystemInformation.DebugOS.ToString());
-      args.WritePair("Network", SystemInformation.Network.ToString());
-
-      args.WriteLine("PowerStatus");
-      args.IndentLevel++;
-      try
-      {
-        if (SystemInformation.PowerStatus != null)
-        {
-          args.WritePair("PowerLineStatus", SystemInformation.PowerStatus.PowerLineStatus.ToString());
-          int prc = (int)(Math.Round(SystemInformation.PowerStatus.BatteryLifePercent * 100.0));
-          if (prc >= 0 && prc <= 100)
-            args.WritePair("Battery charge", prc.ToString() + "%");
-          else
-            args.WritePair("Battery charge", "Unknown");
-        }
-        else
-          args.WriteLine("PowerStatus=null");
-      }
-      catch (Exception e)
-      {
-        args.WriteLine("*** Error PowerStatus information *** " + e.Message);
-      }
-      args.IndentLevel--;
-
-      args.WritePair("UserInteractive", SystemInformation.UserInteractive.ToString());
-      args.WritePair("TerminalServerSession", SystemInformation.TerminalServerSession.ToString());
-      args.WritePair("Secure", SystemInformation.Secure.ToString());
-      args.WritePair("VirtualScreen", SystemInformation.VirtualScreen.ToString());
-      args.WritePair("WorkingArea", SystemInformation.WorkingArea.ToString());
-
-      if (Screen.AllScreens != null)
-      {
-        args.WritePair("Screens", Screen.AllScreens.Length.ToString());
-        args.IndentLevel++;
-        for (int i = 0; i < Screen.AllScreens.Length; i++)
-        {
-          Screen scr = Screen.AllScreens[i];
-          string DevName = scr.DeviceName;
-          int p = DevName.IndexOf('\0');
-          if (p >= 0) // 19.02.2016. Имя устройства может содержать символы CHR(0), которые явно не нужны
-            DevName = DevName.Substring(0, p);
-          args.WritePair((i + 1).ToString() + (scr.Primary ? " (primary)" : ""), DevName);
-          args.IndentLevel++;
-          args.WritePair("Bounds", scr.Bounds.ToString());
-          args.WritePair("WorkingArea", scr.WorkingArea.ToString());
-          args.WritePair("BitsPerPixel", scr.BitsPerPixel.ToString());
-          args.IndentLevel--;
-        }
-        args.IndentLevel--;
-      }
-      args.IndentLevel--;
-
-      #endregion
-
       #region EFPApp
 
       args.WriteHeader("EFPApp");
@@ -1838,7 +1891,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
         if (EFPApp.IsMainThread) // 21.01.2021
         {
-          if (EFPApp.MainImages.Images==null)
+          if (EFPApp.MainImages.Images == null)
             args.WritePair("MainImages", "null"); // 26.04.2024
           else
             args.WritePair("MainImages", EFPApp.MainImages.Images.Count.ToString());
@@ -1890,7 +1943,7 @@ namespace FreeLibSet.Forms.Diagnostics
       // LogoutTools.LogoutObject(Args, TimeHandlers);
       // 31.10.2018 Подробные сведения излишни
       for (int i = 0; i < timeHandlers.Length; i++)
-        args.WritePair("[" + i.ToString() + "]", timeHandlers[i].GetType().ToString());
+        args.WritePair("[" + i.ToString() + "]", timeHandlers[i].GetType().Name + ": " + timeHandlers[i].ToString());
       args.IndentLevel--;
 
       IEFPAppIdleHandler[] idleHandlers = EFPApp.IdleHandlers.ToArray();
@@ -1899,7 +1952,7 @@ namespace FreeLibSet.Forms.Diagnostics
       //LogoutTools.LogoutObject(Args, IdleHandlers);
       // 31.10.2018 Подробные сведения излишни
       for (int i = 0; i < idleHandlers.Length; i++)
-        args.WritePair("[" + i.ToString() + "]", idleHandlers[i].GetType().ToString());
+        args.WritePair("[" + i.ToString() + "]", idleHandlers[i].GetType().Name + ": " + idleHandlers[i].ToString());
       args.IndentLevel--;
 
       if (EFPApp.IsMainThread)

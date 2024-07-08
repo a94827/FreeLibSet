@@ -8,7 +8,7 @@ using FreeLibSet.Config;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
 
-#pragma warning disable 0414
+#pragma warning disable 0414 // field never used
 
 namespace FreeLibSet.Forms
 {

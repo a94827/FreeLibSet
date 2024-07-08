@@ -18,7 +18,7 @@ namespace FreeLibSet.Forms
 
     public EFPDataGridViewRowsResizer(EFPDataGridView controlProvider)
     {
-      Control = controlProvider.Control;
+      _Control = controlProvider.Control;
       controlProvider.Idle += new EventHandler(ControlProvider_Idle);
       controlProvider.Control.SizeChanged += new EventHandler(Control_SizeChanged);
       controlProvider.Control.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(Control_ColumnWidthChanged);
@@ -30,7 +30,7 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private DataGridView Control;
+    private DataGridView _Control;
 
     /// <summary>
     /// Индекс первой отображаемой строки просмотра, который был при последнем вызове CalcRowHeights().
@@ -73,7 +73,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     private void CalcRowHeights()
     {
-      if (Control.FirstDisplayedScrollingRowIndex == _FirstDisplayedRowIndex)
+      if (_Control.FirstDisplayedScrollingRowIndex == _FirstDisplayedRowIndex)
         return; // ничего не изменилось
 
       EFPApp.BeginWait("Вычисление высоты строк");
@@ -81,12 +81,12 @@ namespace FreeLibSet.Forms
       {
         // Нельзя использовать цикл for, так как в процессе расчета может меняться высота строк и,
         // соответственно, число отображаемых строк.
-        int rowIndex = Control.FirstDisplayedScrollingRowIndex;
+        int rowIndex = _Control.FirstDisplayedScrollingRowIndex;
         if (rowIndex < 0)
           rowIndex = 0;
-        while (rowIndex < Control.RowCount)
+        while (rowIndex < _Control.RowCount)
         {
-          DataGridViewRow row = Control.Rows[rowIndex];
+          DataGridViewRow row = _Control.Rows[rowIndex];
           if ((row.State & DataGridViewElementStates.Displayed) == 0)
             break;
 
@@ -106,7 +106,7 @@ namespace FreeLibSet.Forms
       }
       EFPApp.EndWait();
 
-      _FirstDisplayedRowIndex = Control.FirstDisplayedScrollingRowIndex;
+      _FirstDisplayedRowIndex = _Control.FirstDisplayedScrollingRowIndex;
     }
 
     #endregion

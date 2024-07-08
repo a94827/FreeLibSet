@@ -10,7 +10,7 @@ using FreeLibSet.Config;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Параметры для вызова метода интерфейса IEFPCormCreator.CreateForm()
+  /// Параметры для вызова метода интерфейса <see cref="IEFPFormCreator.CreateForm(EFPFormCreatorParams)"/>.
   /// </summary>
   public sealed class EFPFormCreatorParams
   {
@@ -34,28 +34,28 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Значение тега Class
+    /// Значение тега "Class"
     /// </summary>
     public string ClassName { get { return _ClassName; } }
-    private string _ClassName;
+    private readonly string _ClassName;
 
     /// <summary>
-    /// Значение тега ConfigName
+    /// Значение тега "ConfigName"
     /// </summary>
     public string ConfigSectionName { get { return _ConfigSectionName; } }
-    private string _ConfigSectionName;
+    private readonly string _ConfigSectionName;
 
     /// <summary>
-    /// Все данные для создаваемой формы из секции конефигурации "Composition"-"UI"
+    /// Все данные для создаваемой формы из секции конфигурации "Composition"-"UI"
     /// </summary>
     public CfgPart Config { get { return _Config; } }
-    private CfgPart _Config;
+    private readonly CfgPart _Config;
 
     /// <summary>
     /// Заголовок формы
     /// </summary>
     public string Title { get { return _Title; } }
-    private string _Title;
+    private readonly string _Title;
 
     /// <summary>
     /// Текстовое представление возвращает заголовок окна
@@ -74,14 +74,14 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Объекты, реализующие интерфейс, должны быть добавлены в список EFPApp.FormCreators
+  /// Объекты, реализующие интерфейс, должны быть добавлены в список <see cref="EFPApp.FormCreators"/>
   /// </summary>
   public interface IEFPFormCreator
   {
     /// <summary>
     /// Создать форму по заданным параметрам.
-    /// Метод возвращает созданную форму или null, если переданный ClassName не обрабатывается этим объектом.
-    /// Если форма не может быть создана по другим причинам, наприимер, из-за отсутствия у пользователя прав,
+    /// Метод возвращает созданную форму или null, если переданный <paramref name="creatorParams"/>.ClassName не обрабатывается этим объектом.
+    /// Если форма не может быть создана по другим причинам, например, из-за отсутствия у пользователя прав,
     /// должно быть выброшено осмысленное исключение.
     /// </summary>
     /// <param name="creatorParams">Список параметров для создания формы</param>

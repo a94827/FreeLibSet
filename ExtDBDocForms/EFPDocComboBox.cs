@@ -1243,7 +1243,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Возвращает выборку, состоящую из единственного выбранного документа.
-    /// В выборке могут быть дополнительные документы, добавляемые <see cref="DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/>.
+    /// В выборке могут быть дополнительные документы, добавляемые <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/>.
     /// </summary>
     /// <param name="reason">Причина построения выборки</param>
     /// <returns>Выборка документов</returns>

@@ -15,8 +15,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Аргументы события рисования элемента списка.
-  /// Обработчик события не выполняет рисование самостоятельно, вместо этого он устанавливает
-  /// свойства Text, ValidateState (определяет цвет текста) и ImageKey.
+  /// Элемент списка содержит текст и изображение.
+  /// Обработчик события не выполняет рисование самостоятельно, вместо этого он устанавливает свойства.
   /// </summary>
   public class ListControlImageEventArgs : EventArgs
   {
@@ -31,7 +31,7 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private ListControl _Control;
+    private readonly ListControl _Control;
 
     /// <summary>
     /// Возвращает индекс позиции, которую требуется нарисовать. 
@@ -42,8 +42,8 @@ namespace FreeLibSet.Forms
     internal int _ItemIndex;
 
     /// <summary>
-    /// Доступ к текущей позиции как к объекту (обычно строке)
-    /// Может быть null
+    /// Доступ к текущей позиции как к объекту (обычно строке).
+    /// Может быть null.
     /// </summary>
     public object Item
     {
@@ -78,7 +78,8 @@ namespace FreeLibSet.Forms
     private string _Text;
 
     /// <summary>
-    /// Сюда может быть помещено имя изображения из EFPApp.MainImages
+    /// Сюда может быть помещено имя изображения из <see cref="EFPApp.MainImages"/>.
+    /// Свойства <see cref="ImageKey"/> и <see cref="Image"/> являются взаимоисключающими.
     /// </summary>
     public string ImageKey
     {
@@ -92,7 +93,8 @@ namespace FreeLibSet.Forms
     private string _ImageKey;
 
     /// <summary>
-    /// Альтернативная установка изображения
+    /// Альтернативная установка изображения.
+    /// Свойства <see cref="ImageKey"/> и <see cref="Image"/> являются взаимоисключающими.
     /// </summary>
     public Image Image
     {
@@ -107,8 +109,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Здесь можно задать произвольные цвета для элемента.
-    /// Установка свойств Colors и ValidateState является взаимоисключающей. Если одно свойство устанавливается, то второе сбрасывается в null.
-    /// Если оба свойства равны null, используются цвета Control.BackColor и ForeColor.
+    /// Установка свойств <see cref="Colors"/> и <see cref="ValidateState"/> является взаимоисключающей. Если одно свойство устанавливается, то второе сбрасывается в null.
+    /// Если оба свойства равны null, используются цвета <see cref="System.Windows.Forms.Control.BackColor"/> и <see cref="System.Windows.Forms.Control.ForeColor"/>.
     /// </summary>
     public ListItemColors Colors
     {
@@ -123,8 +125,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Здесь можно задать цвет текста (обычный черный, красный (при ошибке) или сиреневый (предупреждение).
-    /// Установка свойств Colors и ValidateState является взаимоисключающей. Если одно свойство устанавливается, то второе сбрасывается в null.
-    /// Если оба свойства равны null, используются цвета Control.BackColor и ForeColor.
+    /// Установка свойств <see cref="Colors"/> и <see cref="ValidateState"/> является взаимоисключающей. Если одно свойство устанавливается, то второе сбрасывается в null.
+    /// Если оба свойства равны null, используются цвета <see cref="System.Windows.Forms.Control.BackColor"/> и <see cref="System.Windows.Forms.Control.ForeColor"/>.
     /// </summary>
     public UIValidateState? ValidateState
     {
@@ -158,7 +160,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Цвета для рисования элемента списка.
   /// Позволяет задавать цвет фона и цвет текста для обычого элемента и для элемента в состоянии Selected.
-  /// Если какой-либо цвет не задан (Color.Empty), при рисовании используется соответствующий системный цвет.
+  /// Если какой-либо цвет не задан (<see cref="System.Drawing.Color.Empty"/>), при рисовании используется соответствующий системный цвет.
   /// Класс однократной записи.
   /// </summary>
   public sealed class ListItemColors
@@ -185,25 +187,25 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Цвет фона невыделенного элемента. Например, SystemColors.Window
+    /// Цвет фона невыделенного элемента. Например, <see cref="SystemColors.Window"/>.
     /// </summary>
     public Color BackColor { get { return _BackColor; } }
     private readonly Color _BackColor;
 
     /// <summary>
-    /// Цвет текста невыделенного элемента. Например, SystemColors.WindowText
+    /// Цвет текста невыделенного элемента. Например, <see cref="SystemColors.WindowText"/>.
     /// </summary>
     public Color ForeColor { get { return _ForeColor; } }
     private readonly Color _ForeColor;
 
     /// <summary>
-    /// Цвет фона выделенного элемента. Например, SystemColors.Highlight
+    /// Цвет фона выделенного элемента. Например, <see cref="SystemColors.Highlight"/>.
     /// </summary>
     public Color SelectedBackColor { get { return _SelectedBackColor; } }
     private readonly Color _SelectedBackColor;
 
     /// <summary>
-    /// Цвет текста выделенного элемента. Например, SystemColors.HighliteText
+    /// Цвет текста выделенного элемента. Например, <see cref="SystemColors.HighlightText"/>.
     /// </summary>
     public Color SelectedForeColor { get { return _SelectedForeColor; } }
     private readonly Color _SelectedForeColor;
@@ -214,22 +216,22 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Использовать цвета, определенные для элемента.
-    /// Все цвета заданы как Color.Empty
+    /// Все цвета заданы как <see cref="System.Drawing.Color.Empty"/>
     /// </summary>
     public static readonly ListItemColors ControlDefault = new ListItemColors(Color.Empty, Color.Empty, Color.Empty, Color.Empty);
 
 
     /// <summary>
     /// Использовать цвета, определенные для элемента.
-    /// Цвета заданы из SystemColors.Window, WindowText, Highlight, HighlightText
+    /// Цвета заданы из <see cref="SystemColors.Window"/>, <see cref="SystemColors.WindowText"/>, <see cref="SystemColors.Highlight"/>, <see cref="SystemColors.HighlightText"/>
     /// </summary>
     public static readonly ListItemColors SystemDefault = new ListItemColors(SystemColors.Window, SystemColors.WindowText, SystemColors.Highlight, SystemColors.HighlightText);
 
     /// <summary>
     /// Возвращает цвета для заданного состояния проверки
     /// </summary>
-    /// <param name="state"></param>
-    /// <returns></returns>
+    /// <param name="state">Состояние (нет ошибок, предупреждение или ошибка)</param>
+    /// <returns>Объект из 4 цветов</returns>
     public static ListItemColors FromValidateState(UIValidateState state)
     {
       switch (state)
@@ -246,7 +248,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Рисование значков из EFPApp.MainImages в комбоблоке (ComboBox) или списке (ListBox)
+  /// Рисование элементов, содержащих значок и текст, в комбоблоке (<see cref="System.Windows.Forms.ComboBox"/>) или списке (<see cref="System.Windows.Forms.ListBox"/>)
   /// </summary>
   public class ListControlImagePainter
   {
@@ -254,10 +256,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создать рисователь изображений в комбоблоке.
-    /// Эта версия позволяет задать массив изображений для элементов списка и пользовательский обработчик
+    /// Эта версия позволяет задать массив изображений для элементов списка и пользовательский обработчик.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="itemImageKeys">Массив имен изображений в EFPApp.MainImages.</param>
+    /// <param name="itemImageKeys">Массив имен изображений в <see cref="EFPApp.MainImages"/></param>
     /// <param name="handler">Пользовательский обработчик</param>
     public ListControlImagePainter(ComboBox control, string[] itemImageKeys, ListControlImageEventHandler handler)
     {
@@ -280,10 +282,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создать рисователь изображений в списке.
-    /// Эта версия позволяет задать массив изображений для элементов списка и пользовательский обработчик
+    /// Эта версия позволяет задать массив изображений для элементов списка и пользовательский обработчик.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="itemImageKeys">Массив имен изображений в EFPApp.MainImages.</param>
+    /// <param name="itemImageKeys">Массив имен изображений в <see cref="EFPApp.MainImages"/></param>
     /// <param name="handler">Пользовательский обработчик</param>
     public ListControlImagePainter(ListBox control, string[] itemImageKeys, ListControlImageEventHandler handler)
     {
@@ -306,7 +308,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создать рисователь изображений в комбоблоке.
-    /// Эта версия предполагает использование пользовательского обработчика
+    /// Эта версия предполагает использование пользовательского обработчика.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
     /// <param name="handler">Пользовательский обработчик</param>
@@ -317,7 +319,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создать рисователь изображений в списке.
-    /// Эта версия предполагает использование пользовательского обработчика
+    /// Эта версия предполагает использование пользовательского обработчика.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
     /// <param name="handler">Пользовательский обработчик</param>
@@ -331,7 +333,7 @@ namespace FreeLibSet.Forms
     /// Эта версия не позволяет задать пользовательский обработчик
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="itemImageKeys">Массив имен изображений в EFPApp.MainImages.</param>
+    /// <param name="itemImageKeys">Массив имен изображений в <see cref="EFPApp.MainImages"/></param>
     public ListControlImagePainter(ComboBox control, string[] itemImageKeys)
       : this(control, itemImageKeys, null)
     {
@@ -339,10 +341,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создать рисователь изображений в списке.
-    /// Эта версия не позволяет задать пользовательский обработчик
+    /// Эта версия не позволяет задать пользовательский обработчик.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="itemImageKeys">Массив имен изображений в EFPApp.MainImages.</param>
+    /// <param name="itemImageKeys">Массив имен изображений в <see cref="EFPApp.MainImages"/></param>
     public ListControlImagePainter(ListBox control, string[] itemImageKeys)
       : this(control, itemImageKeys, null)
     {
@@ -352,7 +354,7 @@ namespace FreeLibSet.Forms
     /// Создать рисователь одинаковых изображений в комбоблоке.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="imageKey">Имя изображения в EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя изображения в <see cref="EFPApp.MainImages"/></param>
     public ListControlImagePainter(ComboBox control, string imageKey)
       : this(control, DataTools.EmptyStrings, null)
     {
@@ -367,7 +369,7 @@ namespace FreeLibSet.Forms
     /// Создать рисователь одинаковых изображений в списке.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="imageKey">Имя изображения в EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя изображения в <see cref="EFPApp.MainImages"/></param>
     public ListControlImagePainter(ListBox control, string imageKey)
       : this(control, DataTools.EmptyStrings, null)
     {
@@ -386,26 +388,26 @@ namespace FreeLibSet.Forms
     /// Управляющий элемент (задается в конструкторе)
     /// </summary>
     public ListControl Control { get { return _Control; } }
-    private ListControl _Control;
+    private readonly ListControl _Control;
 
-    private ListControlImageEventHandler _Handler;
+    private readonly ListControlImageEventHandler _Handler;
 
     /// <summary>
     /// Чтобы каждый раз не создавать
     /// </summary>
-    private ListControlImageEventArgs _PainterArgs;
+    private readonly ListControlImageEventArgs _PainterArgs;
 
     /// <summary>
     /// Список имен изображений, соответствующих ItemIndex
     /// (задается в конструкторе).
-    /// Если в списке больше элементов, чем в этом массиве, используется изображенин с именем OutOfRangeImageKey.
+    /// Если в списке больше элементов, чем в этом массиве, используется изображение с именем <see cref="OutOfRangeImageKey"/>.
     /// </summary>
     public string[] ItemImageKeys { get { return _ItemImageKeys; } }
-    private string[] _ItemImageKeys;
+    private readonly string[] _ItemImageKeys;
 
     /// <summary>
-    /// Имя изображения, соответствующее значению ItemIndex=-1
-    /// По умолчанию - пустая строка
+    /// Имя изображения, соответствующее значению ItemIndex=-1.
+    /// По умолчанию - пустая строка.
     /// </summary>
     public string NoSelImageKey { get { return _NoSelImageKey; } set { _NoSelImageKey = value; } }
     private string _NoSelImageKey;
@@ -419,7 +421,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если установить в true, то при значении <see cref="System.Windows.Forms.Control.Enabled"/>=false, рисование будет выполняться в полноцветном режиме.
-    /// По умолчанию - false - картинка делается серой
+    /// По умолчанию - false - картинка делается серой.
     /// </summary>
     public bool IgnoreDisabledState
     {

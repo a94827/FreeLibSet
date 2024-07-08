@@ -29,13 +29,13 @@
     private void InitializeComponent()
     {
       this.panel1 = new System.Windows.Forms.Panel();
-      this.panel2 = new System.Windows.Forms.Panel();
-      this.btnOk = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.rbMDI = new System.Windows.Forms.RadioButton();
-      this.rbSDI = new System.Windows.Forms.RadioButton();
+      this.btnOk = new System.Windows.Forms.Button();
+      this.panel2 = new System.Windows.Forms.Panel();
       this.cbDebugWindow = new System.Windows.Forms.CheckBox();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.rbSDI = new System.Windows.Forms.RadioButton();
+      this.rbMDI = new System.Windows.Forms.RadioButton();
       this.panel1.SuspendLayout();
       this.panel2.SuspendLayout();
       this.groupBox1.SuspendLayout();
@@ -51,6 +51,26 @@
       this.panel1.Size = new System.Drawing.Size(229, 40);
       this.panel1.TabIndex = 1;
       // 
+      // btnCancel
+      // 
+      this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnCancel.Location = new System.Drawing.Point(102, 8);
+      this.btnCancel.Name = "btnCancel";
+      this.btnCancel.Size = new System.Drawing.Size(88, 24);
+      this.btnCancel.TabIndex = 1;
+      this.btnCancel.Text = "Отмена";
+      this.btnCancel.UseVisualStyleBackColor = true;
+      // 
+      // btnOk
+      // 
+      this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOk.Location = new System.Drawing.Point(8, 8);
+      this.btnOk.Name = "btnOk";
+      this.btnOk.Size = new System.Drawing.Size(88, 24);
+      this.btnOk.TabIndex = 0;
+      this.btnOk.Text = "О&К";
+      this.btnOk.UseVisualStyleBackColor = true;
+      // 
       // panel2
       // 
       this.panel2.Controls.Add(this.cbDebugWindow);
@@ -61,25 +81,15 @@
       this.panel2.Size = new System.Drawing.Size(229, 133);
       this.panel2.TabIndex = 0;
       // 
-      // btnOk
+      // cbDebugWindow
       // 
-      this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOk.Location = new System.Drawing.Point(8, 8);
-      this.btnOk.Name = "btnOk";
-      this.btnOk.Size = new System.Drawing.Size(80, 24);
-      this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
-      this.btnOk.UseVisualStyleBackColor = true;
-      // 
-      // btnCancel
-      // 
-      this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(94, 8);
-      this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(80, 24);
-      this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
-      this.btnCancel.UseVisualStyleBackColor = true;
+      this.cbDebugWindow.AutoSize = true;
+      this.cbDebugWindow.Location = new System.Drawing.Point(28, 99);
+      this.cbDebugWindow.Name = "cbDebugWindow";
+      this.cbDebugWindow.Size = new System.Drawing.Size(113, 17);
+      this.cbDebugWindow.TabIndex = 1;
+      this.cbDebugWindow.Text = "Отладочное окно";
+      this.cbDebugWindow.UseVisualStyleBackColor = true;
       // 
       // groupBox1
       // 
@@ -92,17 +102,6 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Интерфейс";
       // 
-      // rbMDI
-      // 
-      this.rbMDI.AutoSize = true;
-      this.rbMDI.Location = new System.Drawing.Point(16, 26);
-      this.rbMDI.Name = "rbMDI";
-      this.rbMDI.Size = new System.Drawing.Size(45, 17);
-      this.rbMDI.TabIndex = 0;
-      this.rbMDI.TabStop = true;
-      this.rbMDI.Text = "MDI";
-      this.rbMDI.UseVisualStyleBackColor = true;
-      // 
       // rbSDI
       // 
       this.rbSDI.AutoSize = true;
@@ -114,15 +113,16 @@
       this.rbSDI.Text = "SDI";
       this.rbSDI.UseVisualStyleBackColor = true;
       // 
-      // cbDebugWindow
+      // rbMDI
       // 
-      this.cbDebugWindow.AutoSize = true;
-      this.cbDebugWindow.Location = new System.Drawing.Point(28, 99);
-      this.cbDebugWindow.Name = "cbDebugWindow";
-      this.cbDebugWindow.Size = new System.Drawing.Size(113, 17);
-      this.cbDebugWindow.TabIndex = 1;
-      this.cbDebugWindow.Text = "Отладочное окно";
-      this.cbDebugWindow.UseVisualStyleBackColor = true;
+      this.rbMDI.AutoSize = true;
+      this.rbMDI.Location = new System.Drawing.Point(16, 26);
+      this.rbMDI.Name = "rbMDI";
+      this.rbMDI.Size = new System.Drawing.Size(45, 17);
+      this.rbMDI.TabIndex = 0;
+      this.rbMDI.TabStop = true;
+      this.rbMDI.Text = "MDI";
+      this.rbMDI.UseVisualStyleBackColor = true;
       // 
       // StartParamsForm
       // 

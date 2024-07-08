@@ -205,7 +205,7 @@ namespace FreeLibSet.Forms
     private static int _ToolBarsRestoreAllWindowsMode = 0;
 
     /// <summary>
-    /// Выполняет команду "Восстановить панео инструментов"
+    /// Выполняет команду "Восстановить панели инструментов"
     /// </summary>
     /// <param name="sender">Не используется</param>
     /// <param name="args">Не используется</param>

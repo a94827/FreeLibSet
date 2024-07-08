@@ -93,7 +93,8 @@ namespace FreeLibSet.Forms
 
       //EFPApp.PlaceFormInScreenCenter(this);
       //this.MaximumSize = new Size(Screen.FromControl(this).WorkingArea.Width, this.Size.Height); // 17.03.2016
-      WinFormsTools.PlaceFormInScreenCenter(this, true); // 17.01.2019
+      if (FormProvider.DialogPosition == null) // 08.07.2024
+        WinFormsTools.PlaceFormInScreenCenter(this, true); // 17.01.2019
 
       MainPanel.SelectNextControl(null, true, true, true, true);
     }

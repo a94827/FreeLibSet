@@ -466,7 +466,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e)
           {
-            throw new Exception("Ошибка при проверке файла \"" + _CopiedFiles[i] + "\". " + e.Message, e);
+            throw new IOException("Ошибка при проверке файла \"" + _CopiedFiles[i] + "\". " + e.Message, e);
           }
         }
       }
@@ -495,12 +495,12 @@ namespace FreeLibSet.Forms
         try
         {
           if (fsDst.Length != fsSrc.Length)
-            throw new Exception("Исходный файл имеет длину " + fsSrc.Length.ToString() +
+            throw new IOException("Исходный файл имеет длину " + fsSrc.Length.ToString() +
               ", а записанный - " + fsDst.Length.ToString());
           for (int i = 0; i < fsSrc.Length; i++)
           {
             if (fsDst.ReadByte() != fsSrc.ReadByte())
-              throw new Exception("Ошибка при копировании файла. Файл записался неправильно");
+              throw new IOException("Ошибка при копировании файла. Файл записался неправильно");
           }
           _Form.ExtPBCheck.Inc(fsDst.Length);
         }

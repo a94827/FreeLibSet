@@ -67,7 +67,7 @@ namespace FreeLibSet.Diagnostics
       catch /*(Exception e)*/
       {
         // 20.06.2017
-        // В mono MemoryFailPoint не работает и выбрасывает NotImplementedException
+        // В Mono MemoryFailPoint не работает и выбрасывает NotImplementedException
         // TODO: Надо проверять свободную память как-то по-другому
         if (!_CheckSufficientMemoryExceptionLogged)
         {

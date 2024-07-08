@@ -1428,7 +1428,7 @@ namespace FreeLibSet.Data.SqlClient
         // TODO: Нужно сделать метод SQLExecuteScalarSingle(), который будет работать как ExecuteScalar(), но с проверкой количества данных в DataReader'е
         DataTable tbl2 = SQLExecuteDataTable(Buffer.SB.ToString(), "sys.foreign_key_columns");
         if (tbl2.Rows.Count == 0)
-          throw new BugException("Не найдено ни одно столбца для ограничения с constraint_object_id=" + fkObjId.ToString());
+          throw new BugException("Не найдено ни одного столбца для ограничения с constraint_object_id=" + fkObjId.ToString());
         if (tbl2.Rows.Count > 1)
           throw new BugException("Ограничение с constraint_object_id=" + fkObjId.ToString() + " содержит несколько столбцов (" + tbl2.Rows.Count.ToString() + ")");
         int ParentColumnId = DataTools.GetInt(tbl2.Rows[0], "parent_column_id");
@@ -2021,7 +2021,7 @@ namespace FreeLibSet.Data.SqlClient
 
     /// <summary>
     /// Проверяет наличие первичного ключа. Неправильное ограничение первичного ключа удаляется,
-    /// новое ограничение создается
+    /// новое ограничение создается.
     /// </summary>
     /// <param name="table"></param>
     /// <param name="dvIndexColumns"></param>

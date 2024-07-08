@@ -21,6 +21,7 @@ namespace FreeLibSet.Forms.Reporting
 
       SettingsDialogPage page = dialog.Pages.Add(MainPanel);
 
+      efpExpArea = new EFPRadioButtons(page.BaseProvider, rbAll);
       if (controlProvider is EFPDataTreeView)
       {
         TreeViewAdv control = controlProvider.Control as TreeViewAdv;
@@ -29,6 +30,9 @@ namespace FreeLibSet.Forms.Reporting
           rbSelected.Text = "Выбранные строки";
         else
           rbSelected.Text = "Выбранная строка";
+
+        if (control.Root.Nodes.Count == 0)
+          efpExpArea[1].Enabled = false; // 17.06.2024
 
         if (control.UseColumns)
           lblInfo.Text = "Печатаются столбцы, отмеченные в диалоге \"Параметры страницы\"";
@@ -52,11 +56,13 @@ namespace FreeLibSet.Forms.Reporting
           else
             rbSelected.Text = "Выбранная ячейка";
         }
+        if (control.RowCount == 0)
+          efpExpArea[1].Enabled = false; // 17.06.2024
+
         lblInfo.Text = "В режиме \"" + rbAll.Text + "\" печатаются столбцы, отмеченные в диалоге \"Параметры страницы\"." + Environment.NewLine +
           "В режиме \"" + rbSelected.Text + "\" выбранные столбцы не учитываются.";
       }
 
-      efpExpArea = new EFPRadioButtons(page.BaseProvider, rbAll);
       efpExpHeaders = new EFPCheckBox(page.BaseProvider, cbExpHeaders);
       efpExpHeaders.Enabled = _ViewData.UseExpColumnHeaders;
 
@@ -84,7 +90,10 @@ namespace FreeLibSet.Forms.Reporting
 
     private void Page_DataToControls(object sender, EventArgs args)
     {
-      efpExpArea.SelectedIndex = _ViewData.ExpRange == EFPDataViewExpRange.Selected ? 1 : 0;
+      if (efpExpArea[1].Enabled)
+        efpExpArea.SelectedIndex = _ViewData.ExpRange == EFPDataViewExpRange.Selected ? 1 : 0;
+      else
+        efpExpArea.SelectedIndex = 0; // вся таблица
       if (_ViewData.UseExpColumnHeaders)
         efpExpHeaders.Checked = _ViewData.ExpColumnHeaders;
     }

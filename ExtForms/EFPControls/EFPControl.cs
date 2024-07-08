@@ -22,35 +22,37 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Возможные состояния провайдера управляющего элемента.
-  /// Свойство EFPControlBase.ProviderState
+  /// Свойство <see cref="EFPControlBase.ProviderState"/>.
   /// </summary>
   public enum EFPControlProviderState
   {
     /// <summary>
-    /// Исходное состояние. Вызван конструктор класса, но не вызывалось событие Created
+    /// Исходное состояние. Вызван конструктор класса, но не вызывалось событие <see cref="EFPControlBase.Created"/>
     /// </summary>
     Initialization,
 
     /// <summary>
-    /// Вызвано событие Created, но еще не вызывалось событие Attached
+    /// Вызвано событие <see cref="EFPControlBase.Created"/>, но еще не вызывалось событие <see cref="EFPControlBase.Attached"/>.
     /// </summary>
     Created,
 
     /// <summary>
-    /// Вызвано событие Attached. Элемент присоединен к форме, которая сейчас находится на экране
-    /// (при этом свойство Control.Visible может быть false, если элемент был временно или постоянно скрыт)
+    /// Вызвано событие <see cref="EFPControlBase.Attached"/>. Элемент присоединен к форме, которая сейчас находится на экране
+    /// (при этом свойство <see cref="Control.Visible"/> может быть false, если элемент был временно или постоянно скрыт).
+    /// В это состояние элемент может перейти повторно из <see cref="Detached"/>.
     /// </summary>
     Attached,
 
     /// <summary>
-    /// Вызвано событие Detached. Обычно вызывается скрытием формы с экрана, но может быть из-за отсоединения EFPBaseProvider
-    /// от родительского провайдера. После этого провайдер может снова перейти в состояние Attached, если блок диалога
-    /// повторно выводится на экран, или устанавливается свойство EFPBaseProvider.Parent.
+    /// Вызвано событие <see cref="EFPControlBase.Detached"/>. Обычно вызывается скрытием формы с экрана, но может быть из-за отсоединения <see cref="EFPBaseProvider"/>
+    /// от родительского провайдера. После этого провайдер может снова перейти в состояние <see cref="Attached"/>, если блок диалога
+    /// повторно выводится на экран, или устанавливается свойство <see cref="EFPBaseProvider.Parent"/>.
     /// </summary>
     Detached,
 
     /// <summary>
-    /// Финальное состояние. Вызвано событие Disposed
+    /// Финальное состояние. Вызвано событие <see cref="EFPControlBase.Disposed"/>.
+    /// Элемент больше не может быть выведен на экран.
     /// </summary>
     Disposed,
   }
@@ -61,7 +63,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Интерфейс провайдера управляющего элемента.
-  /// Реализуется EFPControlBase.
+  /// Реализуется <see cref="EFPControlBase"/>.
   /// </summary>
   public interface IEFPControl : IUIValidableObject, IEFPAppIdleHandler
   {
@@ -81,7 +83,7 @@ namespace FreeLibSet.Forms
     bool Visible { get; set; }
 
     /// <summary>
-    /// Связываемое свойство видимости элемента.
+    /// Связываемое свойство видимости элемента <see cref="Visible"/>.
     /// </summary>
     DepValue<Boolean> VisibleEx { get; set; }
 
@@ -91,19 +93,19 @@ namespace FreeLibSet.Forms
     bool Enabled { get; set; }
 
     /// <summary>
-    /// Связываемое свойство блокировки элемента.
+    /// Связываемое свойство блокировки элемента <see cref="Enabled"/>.
     /// </summary>
     DepValue<Boolean> EnabledEx { get; set; }
 
     /// <summary>
     /// Возвращает true, если элемент доступен для воздействия пользователя.
-    /// Для обычных элементо возвращает true, если и Visible и Enabled установлены в true.
-    /// Для TextBox и других полей ввода, также проверяется, что ReadOnly=false.
+    /// Для обычных элементов возвращает true, если и <see cref="Visible"/> и <see cref="Enabled"/> установлены в true.
+    /// Для <see cref="EFPTextBox"/> и других полей ввода, также проверяется, что ReadOnly=false.
     /// </summary>
     bool Editable { get; }
 
     /// <summary>
-    /// Связыываемое свойство Editable
+    /// Связываемое свойство Editable
     /// </summary>
     DepValue<Boolean> EditableEx { get; }
 
@@ -118,9 +120,9 @@ namespace FreeLibSet.Forms
     event EventHandler Detached;
 
     /// <summary>
-    /// Свойство возвращает true, если управляющий элемент был выведен на экран
-    /// Свойство однократно переходит из false в true. Перед этим вызывается событие Shown
-    /// Свойство Control.Visible может многократно изменяться еще до вывода элемента на экран
+    /// Свойство возвращает true, если управляющий элемент был выведен на экран или сейчас будет выведен.
+    /// Свойство однократно переходит из false в true. Перед этим вызывается событие <see cref="Created"/>.
+    /// Свойство <see cref="Control.Visible "/> может многократно изменяться еще до вывода элемента на экран.
     /// </summary>
     bool HasBeenCreated { get; }
 
@@ -131,7 +133,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает и позволяет установить метку для управляющего элемента.
-    /// Меткой может быть Label или GroupBox.
+    /// Меткой может быть <see cref="Label"/> или <see cref="GroupBox"/>.
     /// </summary>
     Control Label { get; set; }
 
@@ -147,7 +149,7 @@ namespace FreeLibSet.Forms
     EFPControlCommandItems CommandItems { get; }
 
     /// <summary>
-    /// Событие вызывается из PrepareCommandItems(), перед тем, как он выполнит инициализацию локального меню,
+    /// Событие вызывается из <see cref="EFPControlBase.PrepareCommandItems()"/>, перед тем, как он выполнит инициализацию локального меню,
     /// панелей инструментов и статусной строки.
     /// Пользовательский обработчик может, например, выполнить окончательную настройку команд.
     /// </summary>
@@ -155,14 +157,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Панель инструментов для локального меню.
-    /// Если управляющий элемент создан без использования ControlWithToolBar, но ему требуется
+    /// Если управляющий элемент создан без использования <see cref="EFPControlWithToolBar{Control}"/>, но ему требуется
     /// панель инструментов, то следует установить это свойство.
     /// </summary>
     Panel ToolBarPanel { get; set; }
 
     /// <summary>
     /// Провайдер панели инструментов.
-    /// Создается при установке свойства ToolBarPanel.
+    /// Создается при установке свойства <see cref="ToolBarPanel"/>.
     /// </summary>
     EFPPanelToolBar ToolBar { get; }
 
@@ -195,16 +197,16 @@ namespace FreeLibSet.Forms
     string ToolTipText { get; set; }
 
     /// <summary>
-    /// Подсказка по текущему значению
+    /// Подсказка по текущему значению.
     /// Если используется, то свойство должно устанавливаться при изменении 
-    /// пользователем введенного значения
+    /// пользователем введенного значения.
     /// </summary>
     string ValueToolTipText { get; set; }
 
     /// <summary>
     /// Выполнить проверку значений.
     /// Проверка не выполняется, пока форма не выведена на экран. При выводе формы
-    /// проверка выполняется для всех управляющих элементов
+    /// проверка выполняется для всех управляющих элементов.
     /// </summary>
     void Validate();
 
@@ -212,7 +214,7 @@ namespace FreeLibSet.Forms
     /// Специальная версия выполнения проверки для управляющего элемента, которую
     /// можно использовать в обработчике изменения значения в другом элементе в виде
     /// efp1.Value.ValueChanged+=new EventHandler(efp2.Validate);
-    /// Аргументы игнорируются, вызывается обычная версия Validate() без аргументов
+    /// Аргументы игнорируются, вызывается обычная версия <see cref="Validate()"/> без аргументов
     /// </summary>
     /// <param name="sender">Источник события - игнорируется</param>
     /// <param name="args">Аргументы события - игнорируются</param>
@@ -224,9 +226,9 @@ namespace FreeLibSet.Forms
     event UIValidatingEventHandler Validating;
 
     /// <summary>
-    /// Если свойство установлено в true, то метод Validate() будет дополнительно вызываться после получения и
+    /// Если свойство установлено в true, то метод <see cref="Validate()"/> будет дополнительно вызываться после получения и
     /// потери элементом фокуса ввода.
-    /// Вызов метода Validate() выполняется не сразу в обработчике событий Control.Enter и Control.Leave,
+    /// Вызов метода <see cref="Validate()"/> выполняется не сразу в обработчике событий <see cref="Control.Enter"/> и <see cref="Control.Leave"/>,
     /// а с небольшой задержкой, в обработчике Idle. Соответственно, свойство UseIdle принимает значение true.
     /// По умолчанию свойство имеет значение false и проверка не выполняется.
     /// Установка свойства возможна только до вывода элемента на экран.
@@ -239,28 +241,28 @@ namespace FreeLibSet.Forms
     UIValidatorList Validators { get; }
 
     /// <summary>
-    /// Возвращает true, если список Validators содержит элементы
+    /// Возвращает true, если список <see cref="Validators"/> содержит элементы
     /// </summary>
     bool HasValidators { get; }
 
     /// <summary>
     /// Передать фокус ввода управляющему элементу.
-    /// Если управляющий элемент находится на вкладке TabPage, которая не активна,
-    /// то она активируется
+    /// Если управляющий элемент находится на вкладке <see cref="TabPage"/>, которая не активна,
+    /// то она активируется.
     /// </summary>
     void SetFocus();
 
     /// <summary>
     /// Передать фокус ввода управляющему элементу и выдать сообщение об ошибке
-    /// Если управляющий элемент находится на вкладке TabPage, которая не активна,
-    /// то она активируется
+    /// Если управляющий элемент находится на вкладке <see cref="TabPage"/>, которая не активна,
+    /// то она активируется.
     /// </summary>
     /// <param name="errorMessage">Строка сообщения</param>
     void SetFocus(string errorMessage);
 
     /// <summary>
     /// Сюда можно добавить обработчик для обновления данных по таймеру.
-    /// Добавление обработчика возможно только до вывода формы на экран или показа элемента (до вызова OnShown)
+    /// Добавление обработчика возможно только до вывода формы на экран или показа элемента (до вызова <see cref="Created"/>)
     /// </summary>
     ICollection<EFPUpdateByTimeHandler> UpdateByTimeHandlers { get; }
 
@@ -287,8 +289,8 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Абстрактный базовый класс для шаблонного класса EFPControl.
-  /// Реализует свойство Control
+  /// Абстрактный базовый класс для шаблонного класса <see cref="EFPControl{T}"/>.
+  /// Реализует свойства, общие для всех провайдеров управляющих элементов.
   /// </summary>
   public abstract class EFPControlBase : IEFPControl, IUIValidableObject, IEFPStatusBarControl, IEFPAppIdleHandler, IEFPConfigurable
   {
@@ -299,8 +301,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер. Должен быть задан</param>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="labelNeeded">Если true, то элементу, например, TextBox, обычно нужна метка.
-    /// Если false, то метка не нужна (например, CheckBox)</param>
+    /// <param name="labelNeeded">Если true, то элементу, например, <see cref="TextBox"/>, обычно нужна метка.
+    /// Если false, то метка не нужна (например, <see cref="CheckBox"/>)</param>
     public EFPControlBase(EFPBaseProvider baseProvider, Control control, bool labelNeeded)
     {
 #if DEBUG
@@ -311,7 +313,6 @@ namespace FreeLibSet.Forms
       if (control.IsDisposed)
         throw new ObjectDisposedException("control");
 #endif
-
 
       _Control = control;
       _ValidateState = UIValidateState.Ok;
@@ -379,18 +380,18 @@ namespace FreeLibSet.Forms
     #region Простые свойства
 
     /// <summary>
-    /// Список, в который будет добавляться сообщения об ошибке
+    /// Базовый провайдер.
     /// Задается в конструкторе. Не может быть null.
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private EFPBaseProvider _BaseProvider;
+    private readonly EFPBaseProvider _BaseProvider;
 
     /// <summary>
     /// Управляющий элемент, к которому относится провайдер.
     /// Задается в конструкторе. Не может быть null.
     /// </summary>
     public Control Control { get { return _Control; } }
-    private Control _Control;
+    private readonly Control _Control;
 
     /// <summary>
     /// Не должно использоваться в прикладном коде.
@@ -409,13 +410,30 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если управляющему элементу полагается метка.
     /// Значение false означает, что состояние проверки отображается только в данном
-    /// элементе
-    /// Например, для поля TextBox (и большинства других элементов) возвращается true,
-    /// а для CheckBox - false.
-    /// Задается в конструкторе
+    /// элементе.
+    /// Например, для поля <see cref="TextBox"/> (и большинства других элементов) возвращается true,
+    /// а для <see cref="CheckBox"/> - false.
+    /// Задается в конструкторе.
     /// </summary>
     public bool LabelNeeded { get { return _LabelNeeded; } }
-    private bool _LabelNeeded;
+    private readonly bool _LabelNeeded;
+
+    /// <summary>
+    /// Если свойство установлено, то у управляющего элемента будет собственная кнопка по умолчанию.
+    /// Когда элемент получает фокус ввода, то свойство <see cref="System.Windows.Forms.Form.AcceptButton"/> временно переключается
+    /// на указанную кнопку, а после утери фокуса восстанавливается на предыдущее значение (кнопку "ОК" в диалоге).
+    /// Свойство можно устанавливать только до вывода формы на экран
+    /// </summary>
+    public IButtonControl DefaultButton
+    { 
+      get { return _DefaultButton; }
+      set 
+      {
+        CheckHasNotBeenCreated();
+        _DefaultButton = value; 
+      } 
+    }
+    private IButtonControl _DefaultButton;
 
     /// <summary>
     /// Произвольные пользовательские данные
@@ -424,7 +442,7 @@ namespace FreeLibSet.Forms
     private object _Tag;
 
     /// <summary>
-    /// Свойство возвращает true, если компонент Control находится в режиме разработки
+    /// Свойство возвращает true, если компонент <see cref="Control"/> находится в режиме разработки
     /// </summary>
     public bool DesignMode
     {
@@ -526,8 +544,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если в данный момент выполняется установка состояния ProviderState и вызывается один из обработчиков.
-    /// При этом свойство ProviderState возврашает новое значение
+    /// Возвращает true, если в данный момент выполняется установка состояния <see cref="ProviderState"/> и вызывается один из обработчиков.
+    /// При этом свойство <see cref="ProviderState"/> возврашает новое значение.
     /// </summary>
     public bool InsideSetProviderState { get { return _InsideSetProviderStateReason != EFPControlSetProviderStateReason.None; } }
     private EFPControlSetProviderStateReason _InsideSetProviderStateReason;
@@ -667,12 +685,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается при окончании инициализации элемента.
-    /// Это событие вызывается однократно
+    /// Это событие вызывается однократно.
     /// </summary>
     public event EventHandler Created;
 
     /// <summary>
-    /// Вызывает событие Created. См. описание события.
+    /// Вызывает событие <see cref="Created"/>. См. описание события.
     /// Переопределенный метод должен обязательно вызывать метод базового класса, иначе работа будет нарушена.
     /// </summary>
     protected virtual void OnCreated()
@@ -688,8 +706,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Свойство возвращает true, если управляющий элемент был инициализирован
-    /// Свойство однократно переходит из false в true. Перед этим вызывается событие Created
-    /// Свойство Control.Visible может многократно изменяться еще до вывода элемента на экран
+    /// Свойство однократно переходит из false в true. Перед этим вызывается событие <see cref="Created"/>.
+    /// Свойство <see cref="Control.Visible"/> может многократно изменяться еще до вывода элемента на экран.
     /// </summary>
     public bool HasBeenCreated
     {
@@ -705,7 +723,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если для элемента свойство HasBeenCreated установлено в true, генерирует исключение InvalidOperationException
+    /// Если для элемента свойство <see cref="HasBeenCreated"/> установлено в true, генерирует исключение <see cref="InvalidOperationException"/>.
     /// </summary>
     public void CheckHasNotBeenCreated()
     {
@@ -719,14 +737,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается, когда форма выводится на экран или когда элемент присоединяется к видимой форме.
-    /// Событие не вызывается, если на момент присоединения к форме, свойство Control.Visible=false. 
+    /// Событие не вызывается, если на момент присоединения к форме, свойство <see cref="Control.Visible"/>=false. 
     /// Событие будет вызвано позже, когда элемент управления станет видимым. 
     /// Это событие может вызываться многократно, чередуясь с событием Detached.
     /// </summary>
     public event EventHandler Attached;
 
     /// <summary>
-    /// Вызывает событие Attached. См. описание события.
+    /// Вызывает событие <see cref="Attached"/>. См. описание события.
     /// Переопределенный метод должен обязательно вызывать метод базового класса, иначе работа будет нарушена.
     /// </summary>
     protected virtual void OnAttached()
@@ -784,15 +802,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается при закрытии формы с элементом или при отсоединении элемента от формы.
-    /// Событие не вызывается, если управляющий элемент становится невидимым (Control.Visible=false),
+    /// Событие не вызывается, если управляющий элемент становится невидимым (<see cref="Control.Visible"/>=false),
     /// но продолжает оставаться присоединенным к форме. 
-    /// Событие не вызывается, как и событие Attached, если форма была выведена на экран, но свойство Control.Visible все время оставалось равным false.
-    /// Это событие может вызываться многократно, чередуясь с событием Attached.
+    /// Событие не вызывается, как и событие <see cref="Attached"/>, если форма была выведена на экран, но свойство <see cref="Control.Visible"/> все время оставалось равным false.
+    /// Это событие может вызываться многократно, чередуясь с событием <see cref="Attached"/>.
     /// </summary>
     public event EventHandler Detached;
 
     /// <summary>
-    /// Вызывает событие Detached. См. описание события.
+    /// Вызывает событие <see cref="Detached"/>. См. описание события.
     /// Переопределенный метод должен обязательно вызывать метод базового класса, иначе работа будет нарушена.
     /// </summary>
     protected virtual void OnDetached()
@@ -808,7 +826,6 @@ namespace FreeLibSet.Forms
             BaseProvider.FormProvider.UpdateByTimeHandlers.Remove(_UpdateByTimeHandlers[i]);
         }
       }
-
 
       if (Detached != null)
         Detached(this, EventArgs.Empty);
@@ -837,13 +854,13 @@ namespace FreeLibSet.Forms
     #region 4. Событие Disposed
 
     /// <summary>
-    /// Событие вызывается в ответ на Control.Disposed.
-    /// Событие вызывается однократно
+    /// Событие вызывается в ответ на установку <see cref="Control.IsDisposed"/>.
+    /// Событие вызывается однократно.
     /// </summary>
     public event EventHandler Disposed;
 
     /// <summary>
-    /// Вызывает событие Disposed. См. описание события.
+    /// Вызывает событие <see cref="Disposed"/>. См. описание события.
     /// Переопределенный метод должен обязательно вызывать метод базового класса, иначе работа будет нарушена.
     /// </summary>
     protected virtual void OnDisposed()
@@ -891,9 +908,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Видимость управляющего элемента
-    /// Возвращает и устанавливает свойство Visible управляющего элемента
+    /// Возвращает и устанавливает свойство <see cref="Control.Visible"/> управляющего элемента.
     /// Установка значения true может оказаться отложенной, если в момент вызова
-    /// один из родительских элементов не является видимым
+    /// один из родительских элементов не является видимым.
     /// </summary>
     public bool Visible
     {
@@ -909,11 +926,11 @@ namespace FreeLibSet.Forms
     private bool _Visible;
 
     /// <summary>
-    /// Расширенное свойство Visible.
-    /// В .Net Framework свойство Control.Visible изменяется, когда изменяется
-    /// видимость одного из родительских элементов (например, саиой формы).
-    /// При этом, когда свойство переключается в false, событие VisibleChanged
-    /// не посылается, поэтому в VisibleEx может оказаться неактуальное значение
+    /// Расширенное свойство <see cref="Visible"/>.
+    /// В .Net Framework свойство <see cref="Control.Visible"/> изменяется, когда изменяется
+    /// видимость одного из родительских элементов (например, самой формы).
+    /// При этом, когда свойство переключается в false, событие <see cref="Control.VisibleChanged"/>
+    /// не посылается, поэтому в <see cref="Visible"/> может оказаться неактуальное значение.
     /// </summary>
     public DepValue<Boolean> VisibleEx
     {
@@ -1030,17 +1047,17 @@ namespace FreeLibSet.Forms
     #region Свойство VisibleState
 
     /// <summary>
-    /// Свойство возвращает true, когда ProviderState=Attached и Visible=true.
-    /// В отличие от основного свойства Visible, это свойство имеет одинаковый "жизненный цикл",
+    /// Свойство возвращает true, когда <see cref="ProviderState"/>=Attached и <see cref="Visible"/>=true.
+    /// В отличие от основного свойства <see cref="Visible"/>, это свойство имеет одинаковый "жизненный цикл",
     /// независимо от способа показа формы и прикрепления к ней управляющего элемента.
     /// Сначала свойство имеет значение false. Затем, при показе формы, оно приобретает значение true,
-    /// если элемент является видимым. Если свойство Visiblу меняется в процессе показа формы, то VisibleState
+    /// если элемент является видимым. Если свойство <see cref="Visible"/> меняется в процессе показа формы, то <see cref="VisibleState"/>
     /// также меняется. Затем, при скрытии элемента или его отключении, свойство переходит в false.
     /// </summary>
     public bool VisibleState { get { return ProviderState == EFPControlProviderState.Attached && Visible; } }
 
     /// <summary>
-    /// Этот метод вызывается при изменении значения свойства VisibleState
+    /// Этот метод вызывается при изменении значения свойства <see cref="VisibleState"/>
     /// </summary>
     protected virtual void OnVisibleStateChanged()
     {
@@ -1070,9 +1087,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Доступность управляющего элемента
-    /// Возвращает и устанавливает свойство Enabled управляющего элемента
+    /// Возвращает и устанавливает свойство <see cref="Control.Enabled"/> управляющего элемента.
     /// Установка значения true может оказаться отложенной, если в момент вызова
-    /// один из родительских элементов не является доступным
+    /// один из родительских элементов не является доступным.
     /// </summary>
     public bool Enabled
     {
@@ -1089,11 +1106,11 @@ namespace FreeLibSet.Forms
     private bool _Enabled;
 
     /// <summary>
-    /// Расширенное свойство Enabled.
-    /// В .Net Framework свойство Control.Enabled изменяется, когда изменяется
+    /// Расширенное свойство <see cref="Enabled"/>.
+    /// В .Net Framework свойство <see cref="Control.Enabled "/> изменяется, когда изменяется
     /// доступность одного из родительских элементов (например, GroupBox).
-    /// В отличие от Control.VisibleChanged, событие Control.EnabledChanged посылается
-    /// при любом перключении, поэтому свойство EnabledEx содержит актуальное значение
+    /// В отличие от <see cref="Control.VisibleChanged"/>, событие <see cref="Control.EnabledChanged"/> посылается
+    /// при любом перключении, поэтому свойство <see cref="Enabled"/> содержит актуальное значение.
     /// </summary>
     public DepValue<Boolean> EnabledEx
     {
@@ -1146,12 +1163,12 @@ namespace FreeLibSet.Forms
     private DepInput<Boolean> _EnabledSync;
 
     /// <summary>
-    /// Свойство Control.Enabled
+    /// Свойство <see cref="Control.Enabled"/>
     /// </summary>
     protected abstract bool ControlEnabled { get; set; }
 
     /// <summary>
-    /// Сюда должен быть присоединен обработчик события Control.EnabledChanged
+    /// Сюда должен быть присоединен обработчик события <see cref="Control.EnabledChanged"/>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -1176,13 +1193,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// "Доступное" состояние.
-    /// Для большинства управляющих элементов свойство дублирует Enabled.
-    /// Для EFPTextBox и некоторых других возвращает комбинацию Enabled and not ReadOnly.
+    /// Для большинства управляющих элементов свойство дублирует <see cref="System.Windows.Forms.Control.Enabled"/>.
+    /// Для <see cref="EFPTextBox"/> и некоторых других возвращает комбинацию <see cref="Enabled"/> and not ReadOnly.
+    /// Свойство <see cref="System.Windows.Forms.Control.Visible"/> не учитывается
     /// </summary>
     public virtual bool EnabledState { get { return Enabled; } }
 
     /// <summary>
-    /// Этот метод вызывается при изменении значении свойства EnabledState.
+    /// Этот метод вызывается при изменении значении свойства <see cref="EnabledState"/>.
     /// Переопределенный метод должен обязательно вызывать метод базового класса.
     /// </summary>
     protected virtual void OnEnabledStateChanged()
@@ -1191,8 +1209,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Проверяет, не изменилось ли значение свойства EnabledState, и вызывает метод OnEnabledStateChanged() при необходимости.
-    /// Этот метод должен вызываться из установщика свойства ReadOnly, если свойство есть в производном классе
+    /// Проверяет, не изменилось ли значение свойства <see cref="EnabledState"/>, и вызывает метод OnEnabledStateChanged() при необходимости.
+    /// Этот метод должен вызываться из установщика свойства ReadOnly, если свойство есть в производном классе.
     /// </summary>
     protected void UpdateEnabledState()
     {
@@ -1212,15 +1230,15 @@ namespace FreeLibSet.Forms
     #region Свойство Editable
 
     /// <summary>
-    /// Свойство возвращает true, если свойства Visible и EnabledState установлены в true.
+    /// Свойство возвращает true, если свойства <see cref="Visible"/> и <see cref="EnabledState"/> установлены в true.
     /// </summary>
     public bool Editable { get { return Visible && EnabledState; } }
 
     /// <summary>
-    /// Управляемое свойство, возвращающее установку свойств Visible и Enabled
-    /// (и сброс ReadOnly, если оно есть)
+    /// Управляемое свойство, возвращающее установку свойств <see cref="Visible"/> и <see cref="Enabled"/>
+    /// (и сброс ReadOnly, если оно есть).
     /// Свойство может быть использовано для упрощения организации блокировок в
-    /// качестве входа для свойства Enabled другого элемента
+    /// качестве входа для свойства <see cref="EnabledEx"/> другого элемента.
     /// </summary>
     public DepValue<bool> EditableEx
     {
@@ -1242,11 +1260,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метка для управляющего элемента.
-    /// По умолчанию свойство устанавливается на предыдущий управляющий элемент (вызовом Control.GetNextControl() для родительского элемента),
-    /// если он является меткой или GroupBox.
-    /// Свойство не имеет значения, если в конструкторе задана аргумент LabelNeeded=false (зависит от типа управляющего элемента).
-    /// Свойству может быть присвоено значение null, Label, GroupBox или CheckBox. Использование других
-    /// типов управляющих элементов не допускается
+    /// По умолчанию свойство устанавливается на предыдущий управляющий элемент (вызовом <see cref="Control.GetNextControl(Control, bool)"/> для родительского элемента),
+    /// если он является <see cref="Label"/> или <see cref="GroupBox"/>.
+    /// Свойство не имеет значения, если в конструкторе задана аргумент <see cref="LabelNeeded"/>=false (зависит от типа управляющего элемента).
+    /// Свойству может быть присвоено значение null, <see cref="System.Windows.Forms.Label"/>, <see cref="System.Windows.Forms.GroupBox"/>, <see cref="System.Windows.Forms.CheckBox"/> или <see cref="System.Windows.Forms.RadioButton"/>. Использование других
+    /// типов управляющих элементов не допускается.
     /// </summary>
     public virtual Control Label
     {
@@ -1370,11 +1388,18 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Название элемента управления по умолчанию.
-    /// Используется в качестве возвращаемого значения свойства DisplayName, если свойство не установлено явно и у элемента нет метки.
+    /// Используется в качестве возвращаемого значения свойства <see cref="DisplayName"/>, если свойство не установлено явно и у элемента нет метки.
     /// Непереопределенное свойство возвращает "Без названия".
     /// Для некоторых специализированных элементов может быть переопределено.
     /// </summary>
-    protected virtual string DefaultDisplayName { get { return "Без названия"; } }
+    protected virtual string DefaultDisplayName
+    {
+      get
+      {
+        //return "Без названия";
+        return Control.GetType().Name; // 18.06.2024
+      }
+    }
 
     /// <summary>
     /// Удаление амперсанда
@@ -1392,7 +1417,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает DisplayName плюс вспомогательную информацию (Disposes, Hidden, Disabled)
+    /// Возвращает <see cref="DisplayName"/> плюс вспомогательную информацию (Disposes, Hidden, Disabled)
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -1439,9 +1464,9 @@ namespace FreeLibSet.Forms
     private string _ToolTipText;
 
     /// <summary>
-    /// Подсказка по текущему значению
+    /// Подсказка по текущему значению.
     /// Если используется, то свойство должно устанавливаться при изменении 
-    /// пользователем введенного значения
+    /// пользователем введенного значения.
     /// </summary>
     public string ValueToolTipText
     {
@@ -1456,8 +1481,6 @@ namespace FreeLibSet.Forms
       }
     }
     private string _ValueToolTipText;
-
-
 
     /// <summary>
     /// Добавление дочерних управляющих элементов для дублирования всплывающих подсказок
@@ -1484,7 +1507,6 @@ namespace FreeLibSet.Forms
           return;
       }
 
-
       if (includeThisControl)
         BaseProvider.FormProvider.SetNestedToolTipControl(testedControl, this.Control);
 
@@ -1497,8 +1519,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализация всплывающих подсказок.
-    /// Непереопределенный метод вызывает InitToolTips для Control и его рекурсивно дочерних управляющих элементов,
-    /// если для них нет собственных объектов EFPControlBase
+    /// Непереопределенный метод вызывает <see cref="InitToolTips(Control)"/> для <see cref="Control"/> и его рекурсивно дочерних управляющих элементов,
+    /// если для них нет собственных объектов <see cref="EFPControlBase"/>.
     /// </summary>
     protected virtual void InitToolTips()
     {
@@ -1529,8 +1551,12 @@ namespace FreeLibSet.Forms
     // добавления команд к определенным типам управляющих элементов
 
     /// <summary>
+    /// Список команд локального меню.
     /// Доступ к свойству создает предопределенный или пустой список команд локального меню, к которому можно добавить собственные команды.
     /// Допускается установка списка команд "снаружи". Она должна выполняться до любого обращения к свойству.
+    /// Для использования локальной панели инструментов следует установить свойство <see cref="ToolBarPanel"/> или
+    /// использовать конструктор (производного класса), принимающий <see cref="IEFPControlWithToolBar"/>.
+    /// Чтобы получить список без его принудительного создания, используйте свойство <see cref="CommandItemsIfAssigned"/>.
     /// </summary>
     public EFPControlCommandItems CommandItems
     {
@@ -1567,7 +1593,7 @@ namespace FreeLibSet.Forms
     private EFPControlCommandItems _CommandItems;
 
     /// <summary>
-    /// Возвращает CommandItems, только если команды уже были инициализированы
+    /// Возвращает <see cref="CommandItems"/>, только если команды уже были инициализированы
     /// </summary>
     protected EFPControlCommandItems CommandItemsIfAssigned
     {
@@ -1577,10 +1603,10 @@ namespace FreeLibSet.Forms
     private bool _InsideInitCommandItems;
 
     /// <summary>
-    /// Метод должен создать объект EFPControlCommandItems.
+    /// Метод должен создать объект <see cref="EFPControlCommandItems"/>.
     /// Если производный класс использует собственный список команд, он должен 
     /// переопределить этот метод.
-    /// При этом вызывать иетод EFPControlBase.GetCommandItems() не нужно
+    /// При этом вызывать метод базового класса <see cref="EFPControlBase.CreateCommandItems()"/> не нужно.
     /// </summary>
     /// <returns></returns>
     protected virtual EFPControlCommandItems CreateCommandItems()
@@ -1596,10 +1622,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если было обращение к свойству CommandItems и ему присвоено значение
+    /// Возвращает true, если было обращение к свойству <see cref="CommandItems"/> и ему присвоено значение.
     /// Используется в командах обновления, когда нежелательно "случайно" создать
-    /// CommandItems.
-    /// Обычно удобнее использовать свойство CommandItemsIfAssigned
+    /// <see cref="CommandItems"/>.
+    /// Обычно удобнее использовать свойство <see cref="CommandItemsIfAssigned"/>.
     /// </summary>
     protected bool CommandItemsAssigned
     {
@@ -1673,7 +1699,6 @@ namespace FreeLibSet.Forms
       }
     }
 
-
     private bool _ControlHasFocus;
 
     private void Control_Enter(object sender, EventArgs args)
@@ -1690,6 +1715,8 @@ namespace FreeLibSet.Forms
         UpdateFormProviderState();
 
         PrepareContextMenu();
+
+        BaseProvider.FormProvider.TempDefaultButton = DefaultButton;
       }
       catch (Exception e)
       {
@@ -1718,7 +1745,14 @@ namespace FreeLibSet.Forms
 
       if (ValidateWhenFocusChanged)
         _IdleValidationRequired = true;
-      UpdateCommandItemsActive();
+
+      try
+      {
+        UpdateCommandItemsActive();
+
+        BaseProvider.FormProvider.TempDefaultButton = null;
+      }
+      catch { } 
     }
 
     /// <summary>
@@ -1733,7 +1767,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Обеспечивает готовность локального меню.
     /// После вызова метода устанавливается свойство <see cref="System.Windows.Forms.Control.ContextMenuStrip"/>, если оно не было установлено ранее.
-    /// Перед присоединеием вызывается PrepareCommandItems().
+    /// Перед присоединеием вызывается <see cref="PrepareCommandItems()"/>.
     /// Повторные вызовы метода игнорируются.
     /// </summary>
     protected void PrepareContextMenu()
@@ -1798,7 +1832,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Показ локального меню управляющего элемента (как при нажатии правой кнопки мыши).
-    /// Переопределяется EFPButtonWithMenu, чтобы в меню были только явно заданные команды
+    /// Переопределяется <see cref="EFPButtonWithMenu"/>, чтобы в меню были только явно заданные команды.
     /// </summary>
     public void ShowLocalMenu()
     {
@@ -1818,7 +1852,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Панель инструментов для локального меню.
-    /// Если управляющий элемент создан без использования ControlWithToolBar, но ему требуется
+    /// Если провайдер управляющего элемента создан без использования <see cref="IEFPControlWithToolBar"/>, но ему требуется
     /// панель инструментов, то следует установить это свойство.
     /// </summary>
     public Panel ToolBarPanel
@@ -1828,7 +1862,7 @@ namespace FreeLibSet.Forms
         if (_ToolBar == null)
           return null;
         else
-          return (Panel)(_ToolBar.Bar.Parent);
+          return _ToolBar.Bar.Parent as Panel;
       }
       set
       {
@@ -1856,7 +1890,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Провайдер панели инструментов.
-    /// Создается при установке свойства ToolBarPanel.
+    /// Создается при установке свойства <see cref="ToolBarPanel"/>.
     /// </summary>
     public EFPPanelToolBar ToolBar { get { return _ToolBar; } }
     private EFPPanelToolBar _ToolBar;
@@ -1865,6 +1899,8 @@ namespace FreeLibSet.Forms
     /// Инициализация команд локального меню, панели инструментов и статусной строки.
     /// Этот метод не используется в прикладном коде.
     /// Повторные вызовы метода игнорируются.
+    /// В классах-наследниках можно переопределить методы <see cref="OnBeforePrepareCommandItems()"/> или <see cref="OnAfterPrepareCommandItems()"/>,
+    /// а в прикладном коде добавить обработчик события <see cref="BeforePrepareCommandItems"/>.
     /// </summary>
     public void PrepareCommandItems()
     {
@@ -1890,14 +1926,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Событие вызывается из метода PrepareCommandItems(), перед тем, как он выполнит инициализацию локального меню,
+    /// Событие вызывается из метода <see cref="PrepareCommandItems()"/>, перед тем, как он выполнит инициализацию локального меню,
     /// панелей инструментов и статусной строки.
     /// Пользовательский обработчик может, например, выполнить окончательную настройку команд.
     /// </summary>
     public event EventHandler BeforePrepareCommandItems;
 
     /// <summary>
-    /// Вызывает событие BeforePrepareCommandItems, если обработчик установлен
+    /// Вызывает событие <see cref="BeforePrepareCommandItems"/>, если обработчик установлен
     /// </summary>
     protected virtual void OnBeforePrepareCommandItems()
     {
@@ -1908,7 +1944,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызывается из метода <see cref="PrepareCommandItems"/>() после того, как команды меню будут инициализированы.
     /// На момент вызова свойство <see cref="EFPContextCommandItems"/>.IsReadOnly уже установлено в true и изменения в списке команд меню не допускаются.
-    /// Переопределяется в табличном просмотре EFPDataGridView для добавления обработчиков.
+    /// Переопределяется в табличном просмотре <see cref="EFPDataGridView"/> для добавления обработчиков.
     /// </summary>
     protected virtual void OnAfterPrepareCommandItems()
     {
@@ -2006,7 +2042,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список валидаторов элемента, основанных на управляемых значениях
+    /// Список валидаторов <see cref="UIValidator"/> элемента, основанных на управляемых значениях
     /// </summary>
     public UIValidatorList Validators
     {
@@ -2070,10 +2106,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если свойство установлено в true, то метод Validate() будет дополнительно вызываться после получения и
+    /// Если свойство установлено в true, то метод <see cref="Validate()"/> будет дополнительно вызываться после получения и
     /// потери элементом фокуса ввода.
-    /// Вызов метода Validate() выполняется не сразу в обработчике событий Control.Enter и Control.Leave,
-    /// а с небольшой задержкой, в обработчике Idle. Соответственно, свойство UseIdle принимает значение true.
+    /// Вызов метода <see cref="Validate()"/> выполняется не сразу в обработчике событий <see cref="System.Windows.Forms.Control.Enter"/> и <see cref="System.Windows.Forms.Control.Leave"/>,
+    /// а с небольшой задержкой, в обработчике Idle. Соответственно, свойство <see cref="UseIdle"/> принимает значение true.
     /// По умолчанию свойство имеет значение false и проверка не выполняется.
     /// Установка свойства возможна только до вывода элемента на экран.
     /// </summary>
@@ -2098,7 +2134,7 @@ namespace FreeLibSet.Forms
     #region IEFPValidator Members
 
     /// <summary>
-    /// Этот метод может вызываться из OnValidate для указания наличия ошибки
+    /// Этот метод может вызываться из <see cref="OnValidate()"/> для указания наличия ошибки
     /// </summary>
     /// <param name="message"></param>
     void IUIValidableObject.SetError(string message)
@@ -2107,7 +2143,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Этот метод может вызываться из OnValidate для указания наличия прежупреждения
+    /// Этот метод может вызываться из <see cref="OnValidate()"/> для указания наличия предупреждения
     /// </summary>
     /// <param name="message"></param>
     void IUIValidableObject.SetWarning(string message)
@@ -2116,9 +2152,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Этот метод может вызываться из OnValidate() для указания наличия ошибки
+    /// Этот метод может вызываться из <see cref="OnValidate()"/> для указания наличия ошибки
     /// </summary>
-    /// <param name="message"></param>
+    /// <param name="message">Сообщение об ошибке</param>
     protected void SetError(string message)
     {
 #if DEBUG
@@ -2133,9 +2169,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Этот метод может вызываться из OnValidate() для указания наличия прежупреждения
+    /// Этот метод может вызываться из <see cref="OnValidate()"/> для указания наличия прежупреждения
     /// </summary>
-    /// <param name="message"></param>
+    /// <param name="message">Предупреждение</param>
     protected void SetWarning(string message)
     {
 #if DEBUG
@@ -2150,7 +2186,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Текущее состояние проверки ошибок
+    /// Текущее состояние проверки ошибок <see cref="OnValidate()"/>.
     /// </summary>
     public UIValidateState ValidateState { get { return _ValidateState; } }
     private UIValidateState _ValidateState;
@@ -2213,8 +2249,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Установить цвет текста метки в соответствии с состоянием проверки
-    /// Используется свойство Control.ForeColor.
-    /// Эта версия задает цвет SystemColors.ControlText для состояния без ошибок
+    /// Используется свойство <see cref="System.Windows.Forms.Control.ForeColor"/>.
+    /// Эта версия задает цвет <see cref="SystemColors.ControlText"/> для состояния без ошибок.
     /// </summary>
     /// <param name="label">Управляющий элемент</param>
     /// <param name="state">Цвет текста</param>
@@ -2224,13 +2260,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установить цвет текста метки в соответствии с состоянием проверки
-    /// Используется свойство Control.ForeColor
+    /// Установить цвет текста метки в соответствии с состоянием проверки.
+    /// Используется свойство <see cref="System.Windows.Forms.Control.ForeColor"/>.
     /// </summary>
     /// <param name="label">Управляющий элемент</param>
     /// <param name="state">Цвет текста</param>
-    /// <param name="defaultForeColor">Основной цвет метки. Обычно равно SystemColors.ControlText.
-    /// Если задано Color.Transparent, вызывается метод Control.ResetForeColor()</param>
+    /// <param name="defaultForeColor">Основной цвет метки. Обычно равно <see cref="SystemColors.ControlText"/>.
+    /// Если задано <see cref="Color.Transparent"/>, вызывается метод <see cref="System.Windows.Forms.Control.ResetForeColor()"/></param>
     public static void SetLabelForeColor(Control label, UIValidateState state, Color defaultForeColor)
     {
 #if DEBUG
@@ -2274,7 +2310,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Частные проверки для конкретных управляющих элементов.
-    /// Этот метод сам не вызывает обработчик события Validating. Событие всегда вызывается после вызова OnValidate()
+    /// Этот метод сам не вызывает обработчик события <see cref="Validating"/>. 
+    /// Событие всегда вызывается после вызова <see cref="OnValidate()"/>.
     /// </summary>
     protected virtual void OnValidate()
     {
@@ -2283,9 +2320,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Пользовательский обработчик для проверки ошибок.
-    /// Обработчик всегда вызывается после защищенного метода OnValidate().
+    /// Обработчик всегда вызывается после защищенного метода <see cref="OnValidate()"/>.
     /// Обработчик не может "понизить" состояние проверки, например, убрать предупреждение.
-    /// Событие не вызывается, если OnValidate() установил состояние ошибки.
+    /// Событие не вызывается, если <see cref="OnValidate()"/> установил состояние ошибки.
     /// </summary>
     public event UIValidatingEventHandler Validating;
 
@@ -2295,8 +2332,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Передать фокус ввода управляющему элементу.
-    /// Если управляющий элемент находится на вкладке TabPage, которая не активна,
-    /// то она активируется
+    /// Если управляющий элемент находится на вкладке <see cref="System.Windows.Forms.TabPage"/>, которая не активна,
+    /// то она активируется.
     /// </summary>
     public void SetFocus()
     {
@@ -2305,8 +2342,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Передать фокус ввода управляющему элементу и выдать сообщение об ошибке
-    /// Если управляющий элемент находится на вкладке TabPage, которая не активна,
-    /// то она активируется
+    /// Если управляющий элемент находится на вкладке <see cref="System.Windows.Forms.TabPage"/>, которая не активна,
+    /// то она активируется.
     /// </summary>
     /// <param name="errorMessage">Строка сообщения</param>
     public void SetFocus(string errorMessage)
@@ -2334,10 +2371,10 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства и методы для IEFPSyncObject
+    #region Свойства и методы для IDepSyncObject
 
     /// <summary>
-    /// Этот метод реализует часть интерфейса IEFPSyncObject и не должен 
+    /// Этот метод реализует часть интерфейса <see cref="IDepSyncObject"/> и не должен 
     /// вызываться из прикладной программы
     /// </summary>
     /// <param name="value"></param>
@@ -2352,16 +2389,16 @@ namespace FreeLibSet.Forms
     #region IEFPAppIdleHandler Members
 
     /// <summary>
-    /// Метод обработки события Idle().
+    /// Метод обработки события <see cref="Idle"/>.
     /// Вызывается периодически, когда приложение ничем не занято.
-    /// Чтобы метод вызывался, свойство UseIdle должно быть установлено в true
+    /// Чтобы метод вызывался, свойство <see cref="UseIdle"/> должно быть установлено в true.
     /// </summary>
     public virtual void HandleIdle()
     {
       SaveConfig();
 
-      if (Idle != null)
-        Idle(this, EventArgs.Empty);
+      if (_Idle != null)
+        _Idle(this, EventArgs.Empty);
 
       if (_CommandItems != null)
         _CommandItems.HandleIdle(); // 28.01.2021
@@ -2374,18 +2411,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если свойство установлено в true, то будет периодически вызываться событие HandleIdle.
+    /// Если свойство установлено в true, то будет периодически вызываться метод <see cref="HandleIdle"/>.
     /// По умолчанию свойство не установлено.
     /// Свойство может устанавливаться производным классом только до вывода управляющего элемента на экран.
-    /// Если установлен обработчик Idle, то свойство всегда возвращает true.
-    /// Может вернуть true, если требуется вызвать метод OnShown().
-    /// Также вызывает true, если список команд присоединен и содержит обработчики Idle.
+    /// Если установлен обработчик <see cref="Idle"/>, то свойство всегда возвращает true.
     /// </summary>
     public bool UseIdle
     {
       get
       {
-        if (_UseIdle || Idle != null)
+        if (_UseIdle || _Idle != null)
           return true;
 
         if (_CommandItems != null)
@@ -2404,11 +2439,24 @@ namespace FreeLibSet.Forms
     private bool _UseIdle;
 
     /// <summary>
+    /// Событие вызывается для выполнения ленивой инициализации.
     /// Событие вызывается 1 раз в секунду или после обработки других сообщений.
-    /// Обработчик должен присоединяться до вывода элемента на экран
+    /// Обработчик должен присоединяться до вывода элемента на экран.
     /// </summary>
-    public event EventHandler Idle;
-
+    public event EventHandler Idle
+    {
+      add
+      {
+        CheckHasNotBeenCreated();
+        _Idle += value;
+      }
+      remove
+      {
+        _Idle -= value;
+      }
+    }
+    private EventHandler _Idle;
+   
     #endregion
 
     #region Обновление по времени
@@ -2432,13 +2480,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Используется при обращении к свойству UpdateByTimeHandlers после вызова OnShown()
+    /// Используется при обращении к свойству UpdateByTimeHandlers после вызова Created
     /// </summary>
     private static readonly UpdateByTimeHandlerList _EmptyUpdateByTimeHandlers = new UpdateByTimeHandlerList(true);
 
     /// <summary>
     /// Сюда можно добавить обработчик для обновления данных по таймеру.
-    /// Добавление обработчика возможно только до вывода формы на экран или показа элемента (до вызова OnShown)
+    /// Добавление обработчика возможно только до вывода формы на экран или показа элемента (до события <see cref="Created"/>)
     /// </summary>
     public ICollection<EFPUpdateByTimeHandler> UpdateByTimeHandlers
     {
@@ -2463,9 +2511,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Менеджер чтения и записи конфигурации.
     /// Если не определен специально для этого управляющего элемента, берется из
-    /// EFPBaseProvider. Если он не определен явно в цепочке провайдеров до EFPFormProvider,
-    /// берется EFPApp.ConfigManager.
-    /// Свойство не может возвращать null, т.к. в EFPApp.ConfigManager всегда есть заглушка
+    /// <see cref="EFPBaseProvider"/>. Если он не определен явно в цепочке провайдеров до <see cref="EFPFormProvider"/>,
+    /// берется <see cref="EFPApp.ConfigManager"/>.
+    /// Свойство не может возвращать null, т.к. в <see cref="EFPApp.ConfigManager"/> всегда есть заглушка.
     /// </summary>
     public IEFPConfigManager ConfigManager
     {
@@ -2486,7 +2534,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство возвращает непустую строку, то элемент умеет сохранять собственные
     /// данные в секциях конфигурации.
-    /// Реализуется через ConfigHandler
+    /// Реализуется через <see cref="ConfigHandler"/>.
     /// </summary>
     public string ConfigSectionName
     {
@@ -2510,7 +2558,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Этот метод вызывается в конструкторе производного класса, если управляющий
     /// элемент может сохранять свои настройки.
-    /// Повторные вызовы игнорируются 
+    /// Повторные вызовы игнорируются.
     /// </summary>
     protected void InitConfigHandler()
     {
@@ -2524,23 +2572,23 @@ namespace FreeLibSet.Forms
       }
     }
 
-
     /// <summary>
-    /// Обработчик конфигурации. Равен null до вызова InitConfigHandler()
-    /// Чтобы зарегистрировать категорию, для которой будут записываться данные секции конфигурации, конструктор производного класса вызывает ConfigHandler.Categories.Add(“Filters”). Методы коллекции могут вызываться только до OnShown().
-    /// Если нужно записать конфигурацию, то должен быть установлен флаг для категории вызовом ConfigHandler.Changed[“Filters”]=true.
+    /// Обработчик конфигурации. Равен null до вызова <see cref="InitConfigHandler()"/>.
+    /// Чтобы зарегистрировать категорию, для которой будут записываться данные секции конфигурации, 
+    /// конструктор производного класса вызывает <see cref="ConfigHandler"/>.Categories.Add("Категория"). Методы коллекции могут вызываться только до события <see cref="Created"/>.
+    /// Если нужно записать конфигурацию, то должен быть установлен флаг для категории вызовом <see cref="ConfigHandler"/>.Changed["Категория"]=true.
     /// </summary>
     public EFPConfigHandler ConfigHandler { get { return _ConfigHandler; } }
     private EFPConfigHandler _ConfigHandler;
 
     /// <summary>
-    /// Вызывает ConfigHandler.ReadConfig() для чтения значений.
-    /// Ничего не делает, если ConfigHandler не инициализирован или свойство ConfigSectionName не установлено.
-    /// Повторные вызовы метода игнорируются
     /// Первоначальное чтение конфигурации элемента.
-    /// Как правило, этот метод вызывается из OnShown(), но может быть вызван досрочно внешним кодом.
+    /// Вызывает <see cref="EFPConfigHandler.ReadConfig(IEFPConfigManager)"/> для чтения значений.
+    /// Ничего не делает, если <see cref="ConfigHandler"/> еще не инициализирован или свойство <see cref="ConfigSectionName"/> не установлено.
+    /// Повторные вызовы метода игнорируются.
+    /// Как правило, этот метод вызывается из <see cref="OnCreated"/>, но может быть вызван досрочно внешним кодом.
     /// Не вызывайте этот метод из конструктора производного класса, так как конструктор класса-наследника
-    /// (если он есть) может вызвать ошибку. К тому же, внешний код может, например, изменить ConfigManager.
+    /// (если он есть) может вызвать ошибку. К тому же, внешний код может, например, изменить Свойство <see cref="ConfigManager"/>.
     /// Не рекомендуется использовать этот метод без крайней необходимости.
     /// </summary>
     public void LoadConfig()
@@ -2565,14 +2613,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Метод возвращает true, если LoadConfig() был вызван.
-    /// Свойство действительно, дажн если ConfigManager=null
+    /// Метод возвращает true, если <see cref="LoadConfig()"/> был вызван.
+    /// Свойство действительно, дажн если свойство <see cref="ConfigManager"/>=null.
     /// </summary>
     public bool LoadConfigCalled { get { return _LoadConfigCalled; } }
     private bool _LoadConfigCalled;
 
     /// <summary>
-    /// Генерирует исключение, если LoadConfig() был вызван
+    /// Генерирует исключение, если <see cref="LoadConfig()"/> был вызван
     /// </summary>
     public void CheckLoadConfigHasNotBeenCalled()
     {
@@ -2582,11 +2630,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается при первой загрузке конфигурации элемента.
-    /// Непереопределенный метод вызывает ConfigHandler.ReadConfig().
-    /// Если свойство ConfigHandler=null, метод не вызывается.
-    /// Следовательно, управляющий элемент, в котором определен данный класс, должен в конструкторе вызывать InitConfigHandler().
-    /// Метод вызывается, даже если свойство ConfigSectionName не установлено.
-    /// Обычно метод косвенно вызывается из OnShown(), но может быть вызван и раньше.
+    /// Непереопределенный метод вызывает <see cref="EFPConfigHandler.ReadConfig(IEFPConfigManager)"/>.
+    /// Если свойство <see cref="ConfigHandler"/>=null, метод не вызывается.
+    /// Следовательно, управляющий элемент, в котором определен данный класс, должен в конструкторе вызывать <see cref="InitConfigHandler()"/>.
+    /// Метод вызывается, даже если свойство <see cref="ConfigSectionName "/>не установлено.
+    /// Обычно метод косвенно вызывается из <see cref="OnCreated"/>, но может быть вызван и раньше.
     /// </summary>
     protected virtual void OnLoadConfig()
     {
@@ -2594,19 +2642,18 @@ namespace FreeLibSet.Forms
         ConfigHandler.ReadConfig(this.ConfigManager);
     }
 
-
     /// <summary>
-    /// Вызывается при первой загрузке конфигурации элемента перед вызовом LoadConfig().
-    /// Метод вызывается независимо от установки свойства ConfigHandler.
-    /// Переопределенный метод может, например, сохранить значения свойств, установленных на момент загрузки конфигурации
+    /// Вызывается при первой загрузке конфигурации элемента перед вызовом <see cref="LoadConfig()"/>.
+    /// Метод вызывается независимо от установки свойства <see cref="ConfigHandler"/>.
+    /// Переопределенный метод может, например, сохранить значения свойств, установленных на момент загрузки конфигурации.
     /// </summary>
     protected virtual void OnBeforeLoadConfig()
     {
     }
 
     /// <summary>
-    /// Вызывается при первой загрузке конфигурации элемента после вызова LoadConfig().
-    /// Метод вызывается независимо от установки свойства ConfigHandler.
+    /// Вызывается при первой загрузке конфигурации элемента после вызова <see cref="LoadConfig()"/>.
+    /// Метод вызывается независимо от установки свойства <see cref="ConfigHandler"/>.
     /// </summary>
     protected virtual void OnAfterLoadConfig()
     {
@@ -2616,7 +2663,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Сохраняет все несохраненные изменения для элемента.
     /// Этот метод вызывается по таймеру и при закрытии формы.
-    /// Если ConfigHandler=null, метод ничего не делает
+    /// Если <see cref="ConfigHandler"/>=null, метод ничего не делает.
     /// </summary>
     public void SaveConfig()
     {
@@ -2626,10 +2673,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод сохраняет все несохраненные настройки для элемента.
-    /// Вызывается, только если ConfigHandler!=null.
-    /// Непереопределенный метод вызывает ConfigHandler.WriteConfigChanges().
-    /// Переопреденный метод может сначала установить признаки ConfigHandler.Changed, чтобы учесть изменения, которые нужно сохранить,
-    /// например, текущую позицию в просмотре
+    /// Вызывается, только если <see cref="ConfigHandler"/>!=null.
+    /// Непереопределенный метод вызывает <see cref="EFPConfigHandler.WriteConfigChanges(IEFPConfigManager)"/>.
+    /// Переопреденный метод может сначала установить признаки <see cref="EFPConfigHandler.Changed"/>, чтобы учесть изменения, которые нужно сохранить,
+    /// например, текущую позицию в просмотре.
     /// </summary>
     protected virtual void OnSaveConfig()
     {
@@ -2677,8 +2724,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает список провайдеров управляющих элементов, дочерних по отношению к текущему провайдеру.
-    /// Для этого перебираются все элементы EFPControlBase в EFPBaseProvider, включая рекурсивно вложенные EFPBaseProvider.
-    /// Если элемент EFPControlBase.Control является вложенным (метод WinFormsTools.ContainsControl()).
+    /// Для этого перебираются все элементы <see cref="EFPControlBase"/> в <see cref="EFPBaseProvider"/>, включая рекурсивно вложенные <see cref="EFPBaseProvider"/>.
+    /// Если элемент <see cref="EFPControlBase.Control"/> является вложенным (метод <see cref="WinFormsTools.ContainsControl(Control, Control)"/>), то он добавляется в список.
     /// </summary>
     /// <returns>Массив найденных вложенных провайдеров</returns>
     public EFPControlBase[] GetNestedControlProviders()
@@ -2759,8 +2806,8 @@ namespace FreeLibSet.Forms
     #region Отладка
 
     /// <summary>
-    /// Добавляет в объект Exception информацию об управляющем элементе.
-    /// Вызывается в блоке catch при перехвате исключения
+    /// Добавляет в список <see cref="System.Exception.Data"/> информацию об управляющем элементе.
+    /// Вызывается в блоке catch при перехвате исключения.
     /// </summary>
     /// <param name="e">Заполняемое исключение</param>
     protected virtual void AddExceptionInfo(Exception e)
@@ -2804,9 +2851,9 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Абстрактный базовый класс для реализации провайдеров для нескольких управляющих
-  /// элементов. Реализует свойство "EnabledEx"
+  /// элементов. Реализует типизированное свойство <see cref="Control"/>.
   /// </summary>
-  /// <typeparam name="T">Класс управляющего элемента, производного от Control</typeparam>
+  /// <typeparam name="T">Класс управляющего элемента, производного от <see cref="System.Windows.Forms.Control"/></typeparam>
   public class EFPControl<T> : EFPControlBase, IEFPControl
     where T : Control
   {
@@ -2817,8 +2864,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер. Должен быть задан</param>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="labelNeeded">Если true, то элементу, например, TextBox, обычно нужна метка.
-    /// Если false, то метка не нужна (например, CheckBox)</param>
+    /// <param name="labelNeeded">Если true, то элементу, например, <typeparamref name="T"/>=<see cref="TextBox"/>, обычно нужна метка.
+    /// Если false, то метка не нужна (например, <see cref="CheckBox"/>)</param>
     public EFPControl(EFPBaseProvider baseProvider, T control, bool labelNeeded)
       : base(baseProvider, control, labelNeeded)
     {
@@ -2830,11 +2877,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает провайдер для управляющего элемента с использование ControlWithToolBar
+    /// Создает провайдер для управляющего элемента с использованием <see cref="IEFPControlWithToolBar{T}"/>.
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элемент с панелью инструментов</param>
-    /// <param name="labelNeeded">Если true, то элементу, например, TextBox, обычно нужна метка.
-    /// Если false, то метка не нужна (например, CheckBox)</param>
+    /// <param name="labelNeeded">Если true, то элементу, например, <typeparamref name="T"/>=<see cref="TextBox"/>, обычно нужна метка.
+    /// Если false, то метка не нужна (например, <see cref="CheckBox"/>)</param>
     public EFPControl(IEFPControlWithToolBar<T> controlWithToolBar, bool labelNeeded)
       : this(controlWithToolBar.BaseProvider, controlWithToolBar.Control, labelNeeded)
     {
@@ -2850,7 +2897,7 @@ namespace FreeLibSet.Forms
     public new T Control { get { return (T)(base.Control); } }
 
     /// <summary>
-    /// Свойство Control.Visible
+    /// Свойство <see cref="System.Windows.Forms.Control.Visible"/>
     /// </summary>
     protected override bool ControlVisible
     {
@@ -2859,7 +2906,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство Control.Enabled
+    /// Свойство <see cref="System.Windows.Forms.Control.Enabled"/>
     /// </summary>
     protected override bool ControlEnabled
     {
@@ -2871,9 +2918,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Расширение класса EFPControl для реализации методов интерфейса IEFPSyncObject
+  /// Расширение класса <see cref="EFPControl{T}"/> для реализации методов интерфейса <see cref="IDepSyncObject"/>
   /// </summary>
-  /// <typeparam name="T">Класс управляющего элемента Control</typeparam>
+  /// <typeparam name="T">Класс управляющего элемента <see cref="System.Windows.Forms.Control"/></typeparam>
   public abstract class EFPSyncControl<T> : EFPControl<T>, IDepSyncObject
     where T : Control
   {
@@ -2884,8 +2931,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер. Должен быть задан</param>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="labelNeeded">Если true, то элементу, например, TextBox, обычно нужна метка.
-    /// Если false, то метка не нужна (например, CheckBox)</param>
+    /// <param name="labelNeeded">Если true, то элементу, например, <typeparamref name="T"/>=<see cref="TextBox"/>, обычно нужна метка.
+    /// Если false, то метка не нужна (например, <see cref="CheckBox"/>)</param>
     public EFPSyncControl(EFPBaseProvider baseProvider, T control, bool labelNeeded)
       : base(baseProvider, control, labelNeeded)
     {
@@ -2894,11 +2941,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает провайдер для управляющего элемента с использование ControlWithToolBar
+    /// Создает провайдер для управляющего элемента с использованием <see cref="IEFPControlWithToolBar{T}"/>.
     /// </summary>
     /// <param name="controlWithToolBar">Управляющий элемент с панелью инструментов</param>
-    /// <param name="labelNeeded">Если true, то элементу, например, TextBox, обычно нужна метка.
-    /// Если false, то метка не нужна (например, CheckBox)</param>
+    /// <param name="labelNeeded">Если true, то элементу, например, <typeparamref name="T"/>=<see cref="TextBox"/>, обычно нужна метка.
+    /// Если false, то метка не нужна (например, <see cref="CheckBox"/>)</param>
     public EFPSyncControl(IEFPControlWithToolBar<T> controlWithToolBar, bool labelNeeded)
       : base(controlWithToolBar, labelNeeded)
     {
@@ -2934,7 +2981,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Группа синхронизации, к которой в настоящий момент подключен управляющий
     /// элемент.
-    /// Это свойство реализует часть интерфейса IEFPSyncObject и не должно 
+    /// Это свойство реализует часть интерфейса <see cref="IDepSyncObject"/> и не должно 
     /// устанавливаться из прикладной программы.
     /// </summary>
     public DepSyncGroup SyncGroup
@@ -2955,9 +3002,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается в обработчиках изменения редактируемого значения для передачи
-    /// значения в группу синхронизации в режиме SyncMaster=true
+    /// значения в группу синхронизации в режиме <see cref="SyncMaster"/>=true.
     /// </summary>
-    protected void DoSyncValueChanged()
+    protected void OnSyncValueChanged()
     {
       if (SyncMaster && (SyncGroup != null))
       {

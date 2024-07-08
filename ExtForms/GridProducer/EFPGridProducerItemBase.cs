@@ -11,8 +11,11 @@ namespace FreeLibSet.Forms
 {
 
   /// <summary>
-  /// Структура, содержащая информацию о строке EFPDataGridView или EFPDataTreeView,
-  /// которая используется для вызова событий объектов EFPGridProducer
+  /// Структура, содержащая информацию о строке <see cref="EFPDataGridView"/> или <see cref="EFPDataTreeView"/>,
+  /// которая используется для вызова событий объектов <see cref="EFPGridProducer"/>.
+  /// Для получения заполненной структуры используйте методы <see cref="EFPDataGridView.GetRowInfo(int)"/> и
+  /// <see cref="EFPDataTreeView.GetRowInfo(FreeLibSet.Controls.TreeNodeAdv)"/>.
+  /// Структура однократной записи.
   /// </summary>
   public struct EFPDataViewRowInfo
   {
@@ -21,10 +24,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Заполняет структуру
     /// </summary>
-    /// <param name="controlProvider"></param>
-    /// <param name="dataBoundItem"></param>
-    /// <param name="values"></param>
-    /// <param name="rowIndex"></param>
+    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    /// <param name="dataBoundItem">Ссылка на строку данных</param>
+    /// <param name="values">Интерфейс доступа к значениям</param>
+    /// <param name="rowIndex">Индекс строки</param>
     public EFPDataViewRowInfo(IEFPDataView controlProvider, object dataBoundItem, INamedValuesAccess values, int rowIndex)
     {
       _ControlProvider = controlProvider;
@@ -41,29 +44,29 @@ namespace FreeLibSet.Forms
     /// Провайдер табличного или иерархического просмотра
     /// </summary>
     public IEFPDataView ControlProvider { get { return _ControlProvider; } }
-    private IEFPDataView _ControlProvider;
+    private readonly IEFPDataView _ControlProvider;
 
 
     /// <summary>
     /// Объект, связанный с текущей строкой просмотра.
-    /// Обычно, это строка данных DataRow.
-    /// Используйте свойство Values или типизированные методы для извлечения данных
+    /// Обычно, это строка данных <see cref="System.Data.DataRow"/>.
+    /// Используйте свойство <see cref="Values"/> или типизированные методы для извлечения данных.
     /// </summary>
     public object DataBoundItem { get { return _DataBoundItem; } }
-    private object _DataBoundItem;
+    private readonly object _DataBoundItem;
 
     /// <summary>
     /// Интерфейс для извлечения значений полей из строки данных
     /// </summary>
     public INamedValuesAccess Values { get { return _Values; } }
-    private INamedValuesAccess _Values;
+    private readonly INamedValuesAccess _Values;
 
     /// <summary>
-    /// Индекс строки табличного просмотра
-    /// Для иерархического просмотра возвращает свойство TreeNodeAdv.Row
+    /// Индекс строки табличного просмотра <see cref="System.Windows.Forms.DataGridViewBand.Index"/>.
+    /// Для иерархического просмотра возвращает свойство <see cref="FreeLibSet.Controls.TreeNodeAdv.Row"/>.
     /// </summary>
     public int RowIndex { get { return _RowIndex; } }
-    private int _RowIndex;
+    private readonly int _RowIndex;
 
     #endregion
 
@@ -84,7 +87,7 @@ namespace FreeLibSet.Forms
   #region Делегат
 
   /// <summary>
-  /// Базовый класс для аргументов событий, связанных с EFPGridProducer.
+  /// Базовый класс для аргументов событий, связанных с <see cref="EFPGridProducer"/>.
   /// </summary>
   public class EFPGridProducerBaseEventArgs : EventArgs
   {
@@ -103,14 +106,14 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private EFPGridProducerItemBase _Owner;
+    private readonly EFPGridProducerItemBase _Owner;
 
     /// <summary>
     /// Список имен исходных столбцов.
-    /// Если столбец не является вычисляемым, то возвращает массив из одного элемента, содержащего условное имя столбца или всплывающей подсказки
+    /// Если столбец не является вычисляемым, то возвращает массив из одного элемента, содержащего условное имя столбца или всплывающей подсказки.
     /// </summary>
     public string[] SourceColumnNames { get { return _SourceColumnNames; } }
-    private string[] _SourceColumnNames;
+    private readonly string[] _SourceColumnNames;
 
     internal EFPDataViewRowInfo RowInfo { get { return _RowInfo; } set { _RowInfo = value; } }
     private EFPDataViewRowInfo _RowInfo;
@@ -122,8 +125,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Объект, связанный с текущей строкой просмотра.
-    /// Обычно, это строка данных DataRow.
-    /// Используйте свойство Values или типизированные методы для извлечения данных
+    /// Обычно, это строка данных <see cref="System.Data.DataRow"/>.
+    /// Используйте свойство <see cref="Values"/> или типизированные методы для извлечения данных.
     /// </summary>
     public object DataBoundItem { get { return _RowInfo.DataBoundItem; } }
 
@@ -133,8 +136,8 @@ namespace FreeLibSet.Forms
     public INamedValuesAccess Values { get { return _RowInfo.Values; } }
 
     /// <summary>
-    /// Индекс строки табличного просмотра
-    /// Для иерархического просмотра возвращает свойство TreeNodeAdv.Row
+    /// Индекс строки табличного просмотра.
+    /// Для иерархического просмотра возвращает свойство <see cref="FreeLibSet.Controls.TreeNodeAdv.Row"/>.
     /// </summary>
     public int RowIndex { get { return _RowInfo.RowIndex; } }
 
@@ -149,7 +152,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить строковое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -160,7 +163,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -171,7 +174,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -182,7 +185,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -193,7 +196,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -204,7 +207,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить числовое значение поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -215,7 +218,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значение логического поля.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -226,8 +229,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значение поля, содержащего дату и/или время.
-    /// Если поле содержит DBNull, возвращается неинициализированная дата.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается неинициализированная дата.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -238,8 +241,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значение поля, содержащего дату и/или время.
-    /// Если поле содержит DBNull, возвращается null.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается null.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -250,8 +253,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значение поля, содержащего интервал времени.
-    /// Если поле содержит DBNull, возвращается TimeSpan.Zero.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается <see cref="TimeSpan.Zero"/>.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -261,9 +264,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить значение поля типа Guid.
-    /// Если поле содержит DBNull, возвращается Guid.Empty.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Получить значение поля типа <see cref="Guid"/>.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается <see cref="Guid.Empty"/>.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -273,8 +276,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если поле содержит значение null или DBNull.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Возвращает true, если поле содержит значение null или <see cref="DBNull"/>.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Признак пустого значения</returns>
@@ -286,7 +289,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значение перечислимого типа.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="columnName">Имя поля</param>
@@ -304,7 +307,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить строковое значение поля.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public string GetString(int sourceColumnIndex)
@@ -315,7 +318,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить числовое значение поля.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public int GetInt(int sourceColumnIndex)
@@ -326,7 +329,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить числовое значение поля.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public long GetInt64(int sourceColumnIndex)
@@ -337,7 +340,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить числовое значение поля.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public float GetSingle(int sourceColumnIndex)
@@ -348,7 +351,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить числовое значение поля.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public double GetDouble(int sourceColumnIndex)
@@ -359,7 +362,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить числовое значение поля.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public decimal GetDecimal(int sourceColumnIndex)
@@ -370,7 +373,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить значение логического поля.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public bool GetBool(int sourceColumnIndex)
@@ -380,9 +383,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значение поля, содержащего дату и/или время.
-    /// Если поле содержит DBNull, возвращается неинициализированная дата.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается неинициализированная дата.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public DateTime GetDateTime(int sourceColumnIndex)
@@ -392,9 +395,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значение поля, содержащего дату и/или время.
-    /// Если поле содержит DBNull, возвращается null.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается null.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public DateTime? GetNullableDateTime(int sourceColumnIndex)
@@ -404,9 +407,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значение поля, содержащего интервал времени.
-    /// Если поле содержит DBNull, возвращается TimeSpan.Zero.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается <see cref="TimeSpan.Zero"/>.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public TimeSpan GetTimeSpan(int sourceColumnIndex)
@@ -415,10 +418,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить значение поля типа Guid.
-    /// Если поле содержит DBNull, возвращается Guid.Empty.
+    /// Получить значение поля типа <see cref="Guid"/>.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается <see cref="Guid.Empty"/>.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public Guid GetGuid(int sourceColumnIndex)
@@ -427,10 +430,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если поле содержит значение null или DBNull.
-    /// Имя поля должно быть в списке исходных столбцов SourceColumnNames, заданных при объявлении вычисляемого столбца.
+    /// Возвращает true, если поле содержит значение null или <see cref="DBNull"/>.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Признак пустого значения</returns>
     public bool IsNull(int sourceColumnIndex)
@@ -443,7 +446,7 @@ namespace FreeLibSet.Forms
     /// Получить значение перечислимого типа.
     /// </summary>
     /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве SourceColumnNames.
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
     public T GetEnum<T>(int sourceColumnIndex)
@@ -458,7 +461,7 @@ namespace FreeLibSet.Forms
   #region Перечисление EFPGridProducerValueReason
 
   /// <summary>
-  /// Причина вызова события EFPGridProducerColumn.ValueNeeded
+  /// Причина вызова события <see cref="EFPGridProducerItemBase.ValueNeeded"/>
   /// </summary>
   public enum EFPGridProducerValueReason
   {
@@ -476,7 +479,7 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Аргументы событий EFPGridProducerColumn и EFPGridProducerToolTip.ValueNeeded
+  /// Аргументы события <see cref="EFPGridProducerItemBase.ValueNeeded"/>
   /// </summary>
   public class EFPGridProducerValueNeededEventArgs : EFPGridProducerBaseEventArgs
   {
@@ -492,8 +495,8 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Причина вызова события EFPGridProducerColumn.ValueNeeded.
-    /// Для события EFPGridProducerToolTip.ValueNeeded всегда возвращает ToolTipText
+    /// Причина вызова события <see cref="EFPGridProducerItemBase.ValueNeeded"/>.
+    /// Для события в <see cref="EFPGridProducerToolTip"/> всегда возвращает <see cref="EFPGridProducerValueReason.ToolTipText"/>.
     /// </summary>
     public EFPGridProducerValueReason Reason
     {
@@ -526,9 +529,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события GridProducerUserColumn.ValueNeeded
+  /// Делегат события <see cref="EFPGridProducerItemBase.ValueNeeded"/>
   /// </summary>
-  /// <param name="sender">Описатель столбца GridProducerColumn</param>
+  /// <param name="sender">Описатель столбца <see cref="EFPGridProducerColumn"/> или всплывающей подсказки <see cref="EFPGridProducerToolTip"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPGridProducerValueNeededEventHandler(object sender,
     EFPGridProducerValueNeededEventArgs args);
@@ -536,7 +539,7 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Базовый класс для EFPGridProducerColumn и EFPGridProducerToolTip
+  /// Базовый класс для <see cref="EFPGridProducerColumn"/> и <see cref="EFPGridProducerToolTip"/>
   /// </summary>
   public abstract class EFPGridProducerItemBase : IObjectWithCode
   {
@@ -587,18 +590,18 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Условное имя.
-    /// Для простого, невычисляемого столбца/подсказки равно имени поля
+    /// Для простого, невычисляемого столбца/подсказки равно имени поля.
     /// Задается в конструкторе.
     /// </summary>
     public string Name { get { return _Name; } }
-    private string _Name;
+    private readonly string _Name;
 
     string IObjectWithCode.Code { get { return _Name; } }
 
     /// <summary>
-    /// Возвращает свойство Name
+    /// Возвращает свойство <see cref="Name"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return _Name;
@@ -606,9 +609,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя для отображения в настройке просмотра. Если не задано в явном
-    /// виде, то возвращает свойство HeaderText или ColumnName (если HeaderText пустой).
+    /// виде, то возвращает свойство <see cref="Name"/>.
     /// Также свойство используется для отображения всплывающей подсказки при 
-    /// наведении курсора на заголовок столбца, если явно не определено свойство HeaderToolTipText
+    /// наведении курсора на заголовок столбца.
     /// </summary>
     public virtual string DisplayName
     {
@@ -627,9 +630,9 @@ namespace FreeLibSet.Forms
     private string _DisplayName;
 
     /// <summary>
-    /// Переопределяется для EFPGridProducerColumn
+    /// Переопределяется для <see cref="EFPGridProducerColumn"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Свойство <see cref="Name"/></returns>
     protected virtual string GetDefaultDisplayName()
     {
       return _Name;
@@ -656,12 +659,13 @@ namespace FreeLibSet.Forms
     /// Если столбец не нуждается в данных исходных столбцов, то свойство равно пустому массиву строк.
     /// </summary>
     public string[] SourceColumnNames { get { return _SourceColumnNames; } }
-    private string[] _SourceColumnNames;
+    private readonly string[] _SourceColumnNames;
 
     /// <summary>
     /// Получить имена полей, которые должны быть в наборе данных.
-    /// Если столбец является вычисляемым, в список добавляются имена исходных столбцов SourceColumnNames.
-    /// Иначе добавляется имя Name для невычисляемого столбца/подсказки
+    /// Если столбец является вычисляемым, в список добавляются имена исходных столбцов <see cref="SourceColumnNames"/>.
+    /// Иначе добавляется имя <see cref="Name"/> для невычисляемого столбца/подсказки.
+    /// Если столбец является вычисляемым, но не использует исходные столбцы, то ничего не добавляется в список.
     /// </summary>
     /// <param name="columns">Список для добавления имен полей</param>
     public virtual void GetColumnNames(IList<string> columns)
@@ -686,15 +690,16 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Обработчик вызывается для вычисляемого столбца каждый раз, когда требуется получить значение.
-    /// Для невычисляемого столбца не вызывается
+    /// Для невычисляемого столбца не вызывается.
     /// </summary>
     public event EFPGridProducerValueNeededEventHandler ValueNeeded;
 
     /// <summary>
     /// Получение значения вычисляемого столбца/подсказки.
-    /// Если столбец/подсказка не является вычисляемым, метод не вызывается
+    /// Если столбец/подсказка не является вычисляемым, метод не вызывается.
+    /// Непереопределенный метод вызывает обработчик события <see cref="ValueNeeded"/>, если он установлен.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Аргументы события</param>
     protected virtual void OnValueNeeded(EFPGridProducerValueNeededEventArgs args)
     {
       if (ValueNeeded != null)
@@ -704,7 +709,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Чтобы каждый раз не создавать новый объект аргументов
     /// </summary>
-    private EFPGridProducerValueNeededEventArgs _ValueNeededArgs;
+    private readonly EFPGridProducerValueNeededEventArgs _ValueNeededArgs;
 
 
     internal void DoGetValue(EFPGridProducerValueReason reason, EFPDataViewRowInfo rowInfo, out object value, out string toolTipText)
@@ -737,8 +742,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Пустое значение.
-    /// Используется методом GetValue(), когда значение поля или значение, вычисленное обработчиком события ValueNeeded,
-    /// равно null или DBNull.
+    /// Используется при получении значения, когда значение поля или значение, вычисленное обработчиком события <see cref="ValueNeeded"/>,
+    /// равно null или <see cref="DBNull"/>.
     /// По умолчанию - null.
     /// </summary>
     public object EmptyValue

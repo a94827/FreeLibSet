@@ -1676,18 +1676,19 @@ namespace FreeLibSet.Remoting
 
       int oldLevel = args.IndentLevel;
 
-      // TODO: ExecProc Ex2 = ExternalSplashOwner;
-      // TODO: for (int i = 0; i < 100; i++)
-      // TODO: {
-      // TODO: if (Ex2 == null)
-      // TODO:     break;
+      // TODO: Информация о стеке вызово процедур
+      // ExecProc Ex2 = ExternalSplashOwner;
+      // for (int i = 0; i < 100; i++)
+      // {
+      // if (Ex2 == null)
+      //     break;
 
-      // TODO:   Args.IndentLevel++;
-      // TODO:   Args.WriteHeader("Вложенная процедура №" + (i + 1).ToString());
-      // TODO:   AddProcDetails(Args);
-      // TODO:   Args.IndentLevel--;
-      // TODO:   Ex2 = Ex2.ExternalSplashOwner;
-      // TODO: }
+      //   Args.IndentLevel++;
+      //   Args.WriteHeader("Вложенная процедура №" + (i + 1).ToString());
+      //   AddProcDetails(Args);
+      //   Args.IndentLevel--;
+      //   Ex2 = Ex2.ExternalSplashOwner;
+      // }
 
       args.IndentLevel = oldLevel;
     }

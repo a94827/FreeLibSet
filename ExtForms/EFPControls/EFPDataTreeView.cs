@@ -1273,12 +1273,6 @@ namespace FreeLibSet.Forms
       }
     }
 
-    void Control_ReadOnlyChanged(object sender, EventArgs args)
-    {
-      if (CommandItems != null)
-        CommandItems.PerformRefreshItems();
-    }
-
     bool IEFPDataView.MultiSelect
     {
       get { return Control.SelectionMode != TreeViewAdvSelectionMode.Single; }
@@ -1951,7 +1945,7 @@ namespace FreeLibSet.Forms
           {
             TreePath treePath = model.TreePathFromDataRow(value[i]);
 
-            TreeNodeAdv node = Control.FindNode(treePath);
+            TreeNodeAdv node = Control.FindNode(treePath, true);
             if (node != null)
               node.IsSelected = true;
           }
@@ -2006,7 +2000,7 @@ namespace FreeLibSet.Forms
 
         IDataTableTreeModel model = GetDataTableModelWithCheck();
         TreePath treePath = model.TreePathFromDataRow(value);
-        TreeNodeAdv node = Control.FindNode(treePath);
+        TreeNodeAdv node = Control.FindNode(treePath, true);
         if (node != null)
           Control.SelectedNode = node;
 
@@ -2356,8 +2350,6 @@ namespace FreeLibSet.Forms
       {
         Control.EndUpdate();
       }
-
-      CommandItems.PerformRefreshItems();
     }
 
     #endregion
@@ -2372,22 +2364,6 @@ namespace FreeLibSet.Forms
     string IEFPDataView.CurrentColumnName { get { return String.Empty; } }
 
     #endregion
-
-
-    /// <summary>
-    /// Возвращает позицию для будущего выпадающего блока диалога, который будет показан для редактирования ячейки.
-    /// В возвращаемом объекте устанавливается свойство <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
-    /// Если нет текущей ячейки (просмотр пустой) или текущая ячейка прокручены мышью за пределы видимой области просмотра,
-    /// возвращается неинициализированный <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
-    /// </summary>
-    public EFPDialogPosition CurrentPopupPosition
-    {
-      get
-      {
-        // TODO: Не реализовано
-        return new EFPDialogPosition();
-      }
-    }
 
     #region Видимые столбцы
 

@@ -6,18 +6,18 @@ using System.Drawing;
 namespace FreeLibSet.OLE.Word
 {
   /// <summary>
-  /// Статические методы преобразования данных WinForms/Graphics в Excel
+  /// Статические методы преобразования данных WinForms/Graphics в Word
   /// </summary>
   public static class WordWinFormsTools
   {
     #region Преобразование цвета
 
     /// <summary>
-    /// Преобразование объекта ColorEx в RGB-представление
-    /// Для ColorEx.Empty возвращает автоматический цвет
+    /// Преобразование объекта <see cref="System.Drawing.Color"/> в RGB-представление.
+    /// Для <see cref="Color.Empty"/> возвращает автоматический цвет wdColorAutomatic.
     /// </summary>
     /// <param name="value">Цвет в .Net framework</param>
-    /// <returns>Цвет в Microsoft Excel</returns>
+    /// <returns>Цвет в Microsoft Word</returns>
     public static Int32 ColorToRgb(Color value)
     {
       if (value.IsEmpty)
@@ -30,9 +30,9 @@ namespace FreeLibSet.OLE.Word
     }
 
     /// <summary>
-    /// Преобразование RGB-цвета в обычный ColorEx
+    /// Преобразование RGB-цвета Word в <see cref="System.Drawing.Color"/>
     /// </summary>
-    /// <param name="value">Цвет в Microsoft Excel</param>
+    /// <param name="value">Цвет в Microsoft Word</param>
     /// <returns>Цвет в .Net framework</returns>
     public static Color RgbToColor(Int32 value)
     {

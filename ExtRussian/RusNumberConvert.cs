@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Russian
 {
@@ -382,11 +383,11 @@ namespace FreeLibSet.Russian
       }
     }
 
-    private static string[] _RoublesForms = new string[]{
+    private static readonly string[] _RoublesForms = new string[]{
       "рубль","руб-ля", "руб-лю","рубль","руб-лем","руб-ле",
       "руб-ли","руб-лей","руб-лям","руб-ли","руб-ля-ми","руб-лях"};
 
-    private static string[] _CopecksForms = new string[]{
+    private static readonly string[] _CopecksForms = new string[]{
       "ко-пей-ка", "ко-пей-ки", "ко-пей-ке", "ко-пей-ку", "ко-пей-кой", "ко-пей-ке",
       "ко-пей-ки", "ко-пе-ек", "ко-пей-кам", "ко-пей-ки", "ко-пей-ка-ми", "ко-пей-ках"};
 
@@ -611,10 +612,10 @@ namespace FreeLibSet.Russian
         sb.Append(s.Replace("-", ""));
     }
 
-    private static string[] _ZeroForms = new string[]{
+    private static readonly string[] _ZeroForms = new string[]{
       "ноль","но-ля","но-лю","ноль","но-лем","но-ле" };
 
-    private static string[] _GreatestForms = new string[]{
+    private static readonly string[] _GreatestForms = new string[]{
       "ты-ся-ча", "ты-ся-чи","ты-ся-че","ты-ся-чу","ты-ся-чей","ты-ся-че" /* исп. 21.02.2024 */,
       "ты-ся-чи","ты-сяч","ты-ся-чам","ты-ся-чи","ты-ся-ча-ми","ты-ся-чах",
 
@@ -821,7 +822,7 @@ namespace FreeLibSet.Russian
       return;
     }
 
-    private static string[] _Forms100s = new string[]{
+    private static readonly string[] _Forms100s = new string[]{
       "сто","ста","ста","сто","ста","ста",
       "две-сти","двух-сот","двум-стам","две-сти","дву-мя-ста-ми","двух-стах",
       "три-ста","трех-сот","трем-стам","три-ста","тре-мя-ста-ми","трех-стах",
@@ -832,7 +833,7 @@ namespace FreeLibSet.Russian
       "во-семь-сот","вось-ми-сот","вось-ми-стам","во-семь-сот","во-семью-ста-ми","вось-ми-стах",
       "де-вять-сот","де-вя-ти-сот","де-вя-ти-стам","дев-ять-сот","де-вятью-стами","де-вя-ти-стах" };
 
-    private static string[] _Forms2090s = new string[]{
+    private static readonly string[] _Forms2090s = new string[]{
       "двад-цать","двад-ца-ти","двад-ца-ти","двад-цать","двад-цатью","двад-ца-ти",
       "трид-цать","трид-ца-ти","трид-ца-ти","трид-цать","трид-цатью","трид-ца-ти",
       "со-рок","со-ро-ка","со-ро-ка","со-рок","со-ро-ка","со-ро-ка",
@@ -842,7 +843,7 @@ namespace FreeLibSet.Russian
       "во-семь-де-сят","восьми-де-ся-ти","восьми-де-ся-ти","во-семь-де-сят","во-семьюде-сятью","вось-ми-де-ся-ти",
       "де-вя-но-сто","де-вя-но-ста","де-вя-но-ста","де-вя-но-сто","де-вя-но-ста","де-вя-но-ста"};
 
-    private static string[] _Forms1019s = new string[]{
+    private static readonly string[] _Forms1019s = new string[]{
       "де-сять","де-ся-ти","де-ся-ти","де-сять","де-сятью","де-ся-ти",
       "один-на-дцать","один-на-дца-ти","один-на-дца-ти","один-на-дцать","один-на-дцатью","один-на-дца-ти",
       "две-на-дцать","две-на-дца-ти","две-на-дца-ти","две-на-дцать","две-на-дцатью","две-на-дца-ти",
@@ -854,16 +855,16 @@ namespace FreeLibSet.Russian
       "во-сем-на-дцать","во-сем-на-дца-ти","во-сем-на-дца-ти","во-сем-на-дцать","во-сем-на-дцатью","во-сем-на-дца-ти",
       "де-вят-на-дцать","де-вят-на-дца-ти","де-вят-на-дца-ти","де-вят-на-дцать","де-вят-на-дцатью","де-вят-на-дца-ти" };
 
-    private static string[] _Forms1Feminine = new string[]{
+    private static readonly string[] _Forms1Feminine = new string[]{
       "од-на","од-ной","од-ной","од-ну","од-ной","од-ной" };
 
-    private static string[] _Forms1Newter = new string[] {
+    private static readonly string[] _Forms1Newter = new string[] {
       "од-но", "од-но-го", "од-но-му", "од-но", "од-ним", "од-ном" };
 
-    private static string[] _Forms2Feminine = new string[]{
+    private static readonly string[] _Forms2Feminine = new string[]{
       "две", "двух", "двум", "две", "дву-мя", "двух" };
 
-    private static string[] _Forms19s = new string[]{
+    private static readonly string[] _Forms19s = new string[]{
       "один","од-но-го","од-но-му","один","од-ним","од-ном",
       "два","двух","двум","два","дву-мя","двух",
       "три","трех","трем","три","тре-мя","трех",
@@ -1008,14 +1009,14 @@ namespace FreeLibSet.Russian
     }
 
 
-    private static string[] _IntegerWordForm = new string[]{
+    private static readonly string[] _IntegerWordForm = new string[]{
       "це-лая", "це-лой" ,"це-лой" ,"це-лую","це-лой" ,"це-лой",
       "це-лые","це-лых" ,"це-лым" ,"це-лые","це-лы-ми","це-лых"};
 
-    private static int[] _FraqFormIndices0 = new int[]
+    private static readonly int[] _FraqFormIndices0 = new int[]
       //Р Р Д Р Т П  - реально используемые падежи
       { 0, 0, 1, 0, 2, 3 };
-    private static string[,] _FraqForms0 = new string[11, 4]
+    private static readonly string[,] _FraqForms0 = new string[11, 4]
         //      Р.П.                Д.П.                      Т.П.                         П.П
        {{"де-ся-тых"              ,"де-ся-тым"              ,"де-ся-ты-ми"              ,"де-ся-тых"              },
         {"со-тых"                 ,"со-тым"                 ,"со-ты-ми"                 ,"со-тых"                 },
@@ -1029,10 +1030,10 @@ namespace FreeLibSet.Russian
         {"де-ся-ти-мил-ли-ард-ных","де-ся-ти-мил-ли-ард-ным","де-ся-ти-мил-ли-ард-ны-ми","де-ся-ти-мил-ли-ард-ных"},
         {"сто-мил-ли-ард-ных"     ,"сто-мил-ли-ард-ным"     ,"сто-мил-ли-ард-ны-ми"     ,"сто-мил-ли-ард-ных"     } };
 
-    private static int[] _FraqFormIndices1 = new int[]
+    private static readonly int[] _FraqFormIndices1 = new int[]
       //И Р Р В Р Р  - реально используемые падежи
       { 0, 1, 1, 2, 1, 1 };
-    private static string[,] _FraqForms1 = new string[11, 3]
+    private static readonly string[,] _FraqForms1 = new string[11, 3]
        //      И.П.                  Р.П.                     В.П.     
        {{"де-ся-тая"              ,"де-ся-той"              ,"де-ся-тую"              },
         {"со-тая"                 ,"со-той"                 ,"со-тую"                 },
@@ -1150,7 +1151,7 @@ namespace FreeLibSet.Russian
       s2 = s2.Substring(p + 1); // Оставили только дробную часть
 
       if (s2.Length < 1 || s2.Length > 11)
-        throw new Exception("Ошибка в программе. Неправильная дробная часть при преобразовании числа");
+        throw new BugException("Неправильная дробная часть при преобразовании числа");
 
       sb.Append(' ');
       ToString(sb, long.Parse(s2), RusGender.Feminine, theCase, specChars);
@@ -1289,8 +1290,9 @@ namespace FreeLibSet.Russian
           return genitiveSingular;
         case CountForm.Count0:
           return genitivePlural;
+        default:
+          throw new BugException("Неправильная форма числа");
       }
-      throw new Exception("Неправильная форма числа");
     }
 
     #endregion

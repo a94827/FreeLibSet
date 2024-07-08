@@ -78,6 +78,8 @@ namespace FreeLibSet.Controls
       else
         _columnHeaderHeight = 17;
 
+      _loadOnDemand = true; // 28.06.2024
+
       //BorderStyle = BorderStyle.Fixed3D;
       _hScrollBar.Height = SystemInformation.HorizontalScrollBarHeight;
       _vScrollBar.Width = SystemInformation.VerticalScrollBarWidth;

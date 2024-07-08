@@ -549,6 +549,20 @@ namespace FreeLibSet.Core
     /// <returns>Строка 16-ричных символов</returns>
     public static string BytesToHex(byte[] bytes, bool upperCase)
     {
+      return BytesToHex(bytes, upperCase, String.Empty);
+    }
+
+    /// <summary>
+    /// Преобразование массива байтов в сплошную строку (без пробелов) в
+    /// шестнадцатиричном формате. 
+    /// </summary>
+    /// <param name="bytes">Массив байт произвольной длины</param>
+    /// <param name="upperCase">Если true, то используются буквы "A"-"F",
+    /// если false, то "a"-"f"</param>
+    /// <param name="separator">Разделитель между байтами (например, пробел)</param>
+    /// <returns>Строка 16-ричных символов</returns>
+    public static string BytesToHex(byte[] bytes, bool upperCase, string separator)
+    {
       if (bytes == null)
         return String.Empty;
       if (bytes.Length == 0)
@@ -558,7 +572,7 @@ namespace FreeLibSet.Core
 
       //for (int i = 0; i < bytes.Length; i++)
       //  sb.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
-      BytesToHex(sb, bytes, upperCase); // 28.01.2020
+      BytesToHex(sb, bytes, upperCase, separator); // 28.01.2020
 
       return sb.ToString();
     }
@@ -577,6 +591,21 @@ namespace FreeLibSet.Core
     /// если false, то "a"-"f"</param>
     public static void BytesToHex(StringBuilder sb, byte[] bytes, bool upperCase)
     {
+      BytesToHex(sb, bytes, upperCase, String.Empty);
+    }
+
+    /// <summary>
+    /// Преобразование массива байтов в сплошную строку (без пробелов) в
+    /// шестнадцатиричном формате. 
+    /// Если <paramref name="bytes"/>=null, то возвращается пустая строка.
+    /// </summary>
+    /// <param name="sb">Буфер для записи</param>
+    /// <param name="bytes">Массив байт произвольной длины</param>
+    /// <param name="upperCase">Если true, то используются буквы "A"-"F",
+    /// <param name="separator">Разделитель между байтами (например, пробел)</param>
+    /// если false, то "a"-"f"</param>
+    public static void BytesToHex(StringBuilder sb, byte[] bytes, bool upperCase, string separator)
+    {
 #if DEBUG
       if (sb == null)
         throw new ArgumentNullException("sb");
@@ -589,6 +618,8 @@ namespace FreeLibSet.Core
 
       for (int i = 0; i < bytes.Length; i++)
       {
+        if (i > 0 && !String.IsNullOrEmpty(separator))
+          sb.Append(separator);
         //sb.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
         // 28.01.2020
         sb.Append(s16[bytes[i] >> 4]);

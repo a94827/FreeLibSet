@@ -203,7 +203,7 @@ namespace FreeLibSet.Forms.Docs
             for (int i = 0; i < value.Length; i++)
             {
               TreePath path = model.TreePathFromId(value[i]);
-              TreeNodeAdv node = Control.FindNode(path);
+              TreeNodeAdv node = Control.FindNode(path, true);
               if (node != null)
                 node.IsSelected = true;
             }
@@ -255,7 +255,7 @@ namespace FreeLibSet.Forms.Docs
           ITreeModelWithIds<Int32> model = GetModelWithIdsWithCheck();
 
           TreePath path = model.TreePathFromId(value);
-          TreeNodeAdv node = Control.FindNode(path);
+          TreeNodeAdv node = Control.FindNode(path, true);
           Control.SelectedNode = node;
 
           EnsureSelectionVisible();

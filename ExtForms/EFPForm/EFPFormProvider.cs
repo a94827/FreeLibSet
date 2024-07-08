@@ -2590,6 +2590,33 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Временная установка кнопки по умолчанию
+
+    internal IButtonControl TempDefaultButton
+    {
+      get { return _TempDefaultButton; }
+      set
+      {
+        if (Object.ReferenceEquals(value, _TempDefaultButton))
+          return;
+        if (_TempDefaultButton == null)
+          _SavedDefaultButton = Form.AcceptButton;
+        _TempDefaultButton = value;
+        if (value == null)
+        {
+          Form.AcceptButton = _SavedDefaultButton;
+          _SavedDefaultButton = null;
+        }
+        else
+          Form.AcceptButton = value;
+      }
+    }
+    private IButtonControl _TempDefaultButton;
+
+    private IButtonControl _SavedDefaultButton;
+
+    #endregion
+
     #region Закрытие формы по нажатию клавиши Cancel
 
     /// <summary>

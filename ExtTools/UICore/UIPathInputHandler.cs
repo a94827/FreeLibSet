@@ -244,7 +244,7 @@ namespace FreeLibSet.UICore
     /// Путь может быть задан в относительном формате (с использованием <see cref="BasePath"/>) или в абсолютном.
     /// Установка свойства устанавливает текст в поле ввода с учетом свойства <see cref="UseSlashedPath"/>. 
     /// Путь выводится как есть. Если необходимо преобразовать его в относительный или абсолютный формат, используйте методы
-    /// <see cref="RelPath.ToRelative(AbsPath)"/> или <see cref="RelPath.ToAbsolute(AbsPath)"/> соответственно перед присвоением значения свойству.
+    /// <see cref="FreeLibSet.IO.RelPath.ToRelative(AbsPath)"/> или <see cref="FreeLibSet.IO.RelPath.ToAbsolute(AbsPath)"/> соответственно перед присвоением значения свойству.
     /// </summary>
     public RelPath RelPath
     {

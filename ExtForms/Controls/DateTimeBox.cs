@@ -225,7 +225,7 @@ namespace FreeLibSet.Controls
           case EditableDateTimeFormatterKind.ShortDateTime:
             return new Size(200, sz.Height); 
           default:
-            return new Size(120, sz.Height); // TODO: Определение оптимальной ширины
+            return new Size(120, sz.Height); 
         }
 
       }
@@ -503,7 +503,7 @@ namespace FreeLibSet.Controls
           _CalendarForm.Calendar.SelectionStart = DateTime.Today;
         _CalendarForm.Calendar.SelectionEnd = _CalendarForm.Calendar.SelectionStart;
 
-        _CalendarForm.Show();
+        EFPApp.SystemMethods.Show(_CalendarForm, null);
       }
       catch (Exception e)
       {

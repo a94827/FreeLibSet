@@ -2436,7 +2436,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод <see cref="DataTools.IsInRange{Decimal}(Decimal, Decimal?, Decimal?)"/>.
+    /// Вызывает метод <see cref="DataTools.IsInRange{Decimal}(Decimal, Nullable{Decimal}, Nullable{Decimal})"/>.
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
@@ -2603,7 +2603,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод <see cref="DataTools.AreRangesCrossed{Decimal}(Decimal?, Decimal?, Decimal?, Decimal?)"/>.
+    /// Вызывает метод <see cref="DataTools.AreRangesCrossed{Decimal}(Nullable{Decimal}, Nullable{Decimal}, Nullable{Decimal}, Nullable{Decimal})"/>.
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>

@@ -498,7 +498,7 @@ namespace FreeLibSet.Forms.Docs
     public override bool HasGetDocSelHandler { get { return true; } }
 
     /// <summary>
-    /// Вызывает <see cref="DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> для идентификаторов документов в просмотре.
+    /// Вызывает <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> для идентификаторов документов в просмотре.
     /// Затем вызывает обработчик события <see cref="EFPDBxGridView.GetDocSel"/>, если он установлен.
     /// </summary>
     /// <param name="args">Аргументы события <see cref="EFPDBxGridView.GetDocSel"/></param>

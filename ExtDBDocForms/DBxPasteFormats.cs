@@ -117,45 +117,41 @@ namespace FreeLibSet.Forms.Docs
     /// Если свойство <see cref="DocTypeName"/> установлено, проверяет наличие в выборке документов требуемого вида.
     /// Если все в порядке, вызывает событие <see cref="EFPPasteFormat.TestFormat"/> для выполнения окончательной проверки.
     /// </summary>
-    /// <param name="data">Данные буфера обмена</param>
-    /// <param name="reason">Вставка или специальная вставка</param>
-    /// <param name="dataInfoText">Сюда записывается текстовое описание данных в буфере обмена или
-    /// сообщение об ошибке, если нет подходящих данных</param>
-    /// <param name="dataImageKey">Сюда записывается имя изображения из списка <see cref="EFPApp.MainImages"/>,
-    /// которое будет использовано в качестве значка в списке "Специальная вставка".
-    /// В случае ошибки сюда записывается "No" или другой подходящий значок</param>
-    /// <returns>True, если данные из буфера могут быть вставлены</returns>
-    protected override bool OnTestFormat(IDataObject data, EFPPasteReason reason, out string dataInfoText, out string dataImageKey)
+    /// <param name="args">Аргументы события</param>
+    protected override void OnTestFormat(EFPTestDataObjectEventArgs args)
     {
       _DocId = 0;
-      _DocSel = (DBxDocSelection)(data.GetData(typeof(DBxDocSelection)));
+      _DocSel = (DBxDocSelection)(args.Data.GetData(typeof(DBxDocSelection)));
       if (_DocSel == null)
       {
-        dataInfoText = "Буфер обмена не содержит выборки документов";
-        dataImageKey = "No";
-        return false;
+        args.DataInfoText = "Буфер обмена не содержит выборки документов";
+        args.DataImageKey = "No";
+        args.Appliable=false;
+        return;
       }
 
       if (_DocSel.DBIdentity != _UI.DocProvider.DBIdentity)
       {
-        dataInfoText = "Выборка документов относится к другой базе данных";
-        dataImageKey = "DifferentDatabase";
+        args.DataInfoText = "Выборка документов относится к другой базе данных";
+        args.DataImageKey = "DifferentDatabase";
         //DataImageKey = "Error";
-        return false;
+        args.Appliable = false;
+        return;
       }
 
       if (String.IsNullOrEmpty(_DocTypeName))
       {
-        dataInfoText = DisplayName;
-        dataImageKey = "DBxDocSelection";
+        args.DataInfoText = DisplayName;
+        args.DataImageKey = "DBxDocSelection";
       }
       else
       {
         if (_DocSel.GetCount(_DocTypeName) == 0)
         {
-          dataInfoText = "Буфер обмена не содержит выборки документов \"" + DocType.DocType.PluralTitle + "\"";
-          dataImageKey = "No";
-          return false;
+          args.DataInfoText = "Буфер обмена не содержит выборки документов \"" + DocType.DocType.PluralTitle + "\"";
+          args.DataImageKey = "No";
+          args.Appliable = false;
+          return;
         }
 
         _DocId = _DocSel.GetSingleId(_DocTypeName);
@@ -163,19 +159,18 @@ namespace FreeLibSet.Forms.Docs
         int cnt = _DocSel.GetCount(DocTypeName);
         if (cnt == 1)
         {
-          dataInfoText = "Документ \"" + DocType.DocType.SingularTitle + "\"";
-          dataImageKey = DocType.GetImageKey(_DocId);
+          args.DataInfoText = "Документ \"" + DocType.DocType.SingularTitle + "\"";
+          args.DataImageKey = DocType.GetImageKey(_DocId);
         }
         else
         {
-          dataInfoText = "Документы \"" + DocType.DocType.PluralTitle + "\"";
-          dataImageKey = DocType.TableImageKey;
+          args.DataInfoText = "Документы \"" + DocType.DocType.PluralTitle + "\"";
+          args.DataImageKey = DocType.TableImageKey;
         }
       }
 
-      bool Appliable = true;
-      base.OnTestFormatEvent(data, reason, ref Appliable, ref dataInfoText, ref dataImageKey);
-      return Appliable;
+      args.Appliable = true;
+      base.OnTestFormatEvent(args);
     }
 
     #endregion
@@ -280,23 +275,17 @@ namespace FreeLibSet.Forms.Docs
     /// Проверяет наличие в буфере обмена объекта <see cref="DataSet"/> с подходящей таблицей.
     /// Если данные присутствуют, вызывает событие <see cref="EFPPasteFormat.TestFormat"/> для выполнения окончательной проверки.
     /// </summary>
-    /// <param name="data">Данные буфера обмена</param>
-    /// <param name="reason">Вставка или специальная вставка</param>
-    /// <param name="dataInfoText">Сюда записывается текстовое описание данных в буфере обмена или
-    /// сообщение об ошибке, если нет подходящих данных</param>
-    /// <param name="dataImageKey">Сюда записывается имя изображения из списка <see cref="EFPApp.MainImages"/>,
-    /// которое будет использовано в качестве значка в списке "Специальная вставка".
-    /// В случае ошибки сюда записывается "No" или другой подходящий значок</param>
-    /// <returns>True, если данные из буфера могут быть вставлены</returns>
-    protected override bool OnTestFormat(IDataObject data, EFPPasteReason reason, out string dataInfoText, out string dataImageKey)
+    /// <param name="args">Аргументы события</param>
+    protected override void OnTestFormat(EFPTestDataObjectEventArgs args)
     {
       _Table = null;
-      _DataSet = (DataSet)(data.GetData(typeof(DataSet)));
+      _DataSet = (DataSet)(args.Data.GetData(typeof(DataSet)));
       if (_DataSet == null)
       {
-        dataInfoText = "Буфер обмена не содержит набора данных DataSet";
-        dataImageKey = "No";
-        return false;
+        args.DataInfoText = "Буфер обмена не содержит набора данных DataSet";
+        args.DataImageKey = "No";
+        args.Appliable = false;
+        return;
       }
 
       string dbIdentity = DataTools.GetString(_DataSet.ExtendedProperties["DBIdentity"]);
@@ -310,44 +299,46 @@ namespace FreeLibSet.Forms.Docs
         if (dbIdentity != _UI.DocProvider.DBIdentity)
         {
           _DataSet = null;
-          dataInfoText = "Таблица в буфере обмена относится к другой базе данных";
-          dataImageKey = "DifferentDatabase";
-          return false;
+          args.DataInfoText = "Таблица в буфере обмена относится к другой базе данных";
+          args.DataImageKey = "DifferentDatabase";
+          args.Appliable = false;
+          return;
         }
       }
 
       if (String.IsNullOrEmpty(_TableName))
       {
-        dataInfoText = DisplayName;
-        dataImageKey = "DataSet";
+        args.DataInfoText = DisplayName;
+        args.DataImageKey = "DataSet";
       }
       else
       {
         if (!_DataSet.Tables.Contains(_TableName))
         {
-          dataInfoText = "Буфер обмена не содержит таблицы \"" + UIBase.DocTypeBase.PluralTitle + "\"";
-          dataImageKey = "No";
-          return false;
+          args.DataInfoText = "Буфер обмена не содержит таблицы \"" + UIBase.DocTypeBase.PluralTitle + "\"";
+          args.DataImageKey = "No";
+          args.Appliable = false;
+          return;
         }
 
         _Table = _DataSet.Tables[TableName];
 
         if (_Table.Rows.Count == 0)
         {
-          dataInfoText = (UIBase.DocTypeBase.IsSubDoc ? "Таблица поддокументов \"" : "Таблица документов \"") + UIBase.DocTypeBase.PluralTitle + "\" не содержит строк";
-          dataImageKey = "No";
-          return false;
+          args.DataInfoText = (UIBase.DocTypeBase.IsSubDoc ? "Таблица поддокументов \"" : "Таблица документов \"") + UIBase.DocTypeBase.PluralTitle + "\" не содержит строк";
+          args.DataImageKey = "No";
+          args.Appliable = false;
+          return;
         }
 
-        dataInfoText = (UIBase.DocTypeBase.IsSubDoc ? "Таблица поддокументов \"" : "Таблица документов \"") + UIBase.DocTypeBase.PluralTitle + "\" (" +
+        args.DataInfoText = (UIBase.DocTypeBase.IsSubDoc ? "Таблица поддокументов \"" : "Таблица документов \"") + UIBase.DocTypeBase.PluralTitle + "\" (" +
           " строк(и))";
 
-        dataImageKey = UI.ImageHandlers.GetImageKey(UIBase.DocTypeBase.Name);
+        args.DataImageKey = UI.ImageHandlers.GetImageKey(UIBase.DocTypeBase.Name);
       }
 
-      bool Appliable = true;
-      base.OnTestFormatEvent(data, reason, ref Appliable, ref dataInfoText, ref dataImageKey);
-      return Appliable;
+      args.Appliable = true;
+      base.OnTestFormatEvent(args);
     }
 
     /// <summary>
@@ -383,17 +374,16 @@ namespace FreeLibSet.Forms.Docs
     /// Выполнить предварительный просмотр данных, которые будут вставлены.
     /// Переопределенный метод разрешает просмотр даже при отсутствии обработчика события <see cref="EFPPasteFormat.Preview"/>.
     /// </summary>
-    /// <param name="data">Вставляет данные</param>
-    /// <param name="reason">Вставка или специальная вставка</param>
-    /// <returns>True, если просмотр выполнен.
-    /// False, если обработчик события <see cref="EFPPasteFormat.Preview"/> установил <see cref="EFPPreviewDataObjectEventArgs.Cancel"/>=true.</returns>
-    protected override bool OnPreview(IDataObject data, EFPPasteReason reason)
+    /// <param name="args">Аргументы события</param>
+    protected override void OnPreview(EFPPreviewDataObjectEventArgs args)
     {
       if (HasPreviewHandler)
-        return base.OnPreview(data, reason);
-
-      DebugTools.DebugDataSet(DataSet, PreviewTitle);
-      return true;
+        base.OnPreview(args);
+      else
+      {
+        DebugTools.DebugDataSet(DataSet, PreviewTitle);
+        args.Cancel = false;
+      }
     }
 
     #endregion

@@ -198,8 +198,8 @@ namespace FreeLibSet.Forms
         case EFPConfigCategories.GridConfig:
           if (WantsGridConfig(EFPConfigMode.Write, actionInfo) && CurrentConfig != null)
           {
-            EFPDataGridViewConfig GridConfig2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
-            GridConfig2.WriteConfig(cfg);
+            EFPDataGridViewConfig gridConfig2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
+            gridConfig2.WriteConfig(cfg);
           }
           break;
 
@@ -1089,9 +1089,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Установка свойств <see cref="EFPCommandItem.Enabled"/>
     /// </summary>
-    protected override void DoRefreshItems()
+    protected override void OnRefreshItems()
     {
-      base.DoRefreshItems();
+      base.OnRefreshItems();
 
       IEFPScrollableGridFilter sf = ActiveScrollableFilter; // чтобы меньше поиска
       if (sf != null)

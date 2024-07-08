@@ -848,7 +848,7 @@ namespace FreeLibSet.Win32
           case PEOptionalHeaderKind.PE32Plus:
             break;
           default:
-            throw new Exception("Неправильная сигнатура дополнительного заголовка");
+            throw new InvalidOperationException("Неправильная сигнатура дополнительного заголовка");
         }
         int lvMajor = _Reader.ReadByte();
         int lvMinor = _Reader.ReadByte();

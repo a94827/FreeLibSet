@@ -20,7 +20,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Проверка правильности интервала дат для двух управляющих элементов
   /// </summary>
-  public class EFPDateBoxRangeCheck
+  public sealed class EFPDateBoxRangeCheck
   {
     #region Конструктор
 
@@ -1104,7 +1104,7 @@ namespace FreeLibSet.Forms
           _CalendarForm.Calendar.SelectionStart = DateTime.Today;
         _CalendarForm.Calendar.SelectionEnd = _CalendarForm.Calendar.SelectionStart;
 
-        _CalendarForm.Show();
+        EFPApp.SystemMethods.Show(_CalendarForm, null);
       }
       catch (Exception e)
       {
@@ -1572,7 +1572,7 @@ namespace FreeLibSet.Forms
         commandItems2.InitCommandItemsState(); // 03.06.2019
 
       Validate();
-      DoSyncValueChanged();
+      OnSyncValueChanged();
     }
 
     #endregion

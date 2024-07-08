@@ -980,7 +980,7 @@ namespace FreeLibSet.Data
       //DBxSelectFormatter formatter2=new DBxSelectFormatter(filter.selectInfo, DBxNameValidator.
 
       buffer.SB.Append(')');
-      throw new NotImplementedException(); // TODO: 04.12.2020
+      throw new NotImplementedException(); // TODO: InSelectFilter (04.12.2020)
     }
 
     #endregion
@@ -1402,7 +1402,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Метод возвращает true, если вокруг дочернего фильтра <paramref name="filter"/> должны быть скобки
+    /// Метод возвращает true, если вокруг дочернего фильтра <paramref name="filter"/> должны быть скобки.
     /// Для большинства фильтров возвращается true
     /// </summary>
     /// <param name="filter">Фильтр, для которого определяется необходимость окружить его скобками</param>

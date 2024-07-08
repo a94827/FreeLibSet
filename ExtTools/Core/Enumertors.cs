@@ -502,7 +502,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Типизированный перечислитель по массиву.
-    /// Метод <see cref="Array.GetEnumerator()"/> возвращает нетипизированный перечислитель.
+    /// Метод <see cref="System.Array.GetEnumerator()"/> возвращает нетипизированный перечислитель.
     /// </summary>
     [Serializable]
     public struct Enumerator : IEnumerator<T>

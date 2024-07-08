@@ -11,7 +11,11 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Обработчик для Button
+  /// Обработчик для нажимаемой кнопки <see cref="Button"/>.
+  /// Позволяет использовать событие <see cref="Click"/>, для которого перехватываются исключения
+  /// с выдачей окна <see cref="EFPApp.ShowException(Exception, string)"/>.
+  /// Также позволяет декларативно управлять видимостью/доступностью кнопки на уровне <see cref="EFPControlBase"/>.
+  /// Для маленьких кнопок со значком вместо текста выводится всплывающая подсказка (свойство <see cref="EFPControlBase.DisplayName"/>.
   /// </summary>
   public class EFPButton : EFPTextViewControl<Button>
   {
@@ -62,7 +66,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Присваивает кнопке изображение из списка <see cref="EFPApp.MainImages"/>.
     /// Устанавливает свойство <see cref="ButtonBase.ImageAlign"/> для выравнивания по левому краю, если у кнопки есть текст
-    /// и по центру, если кнопка содержит только значок без текста
+    /// и по центру, если кнопка содержит только значок без текста.
     /// </summary>
     /// <param name="imageKey">Имя изображения из списка <see cref="EFPApp.MainImages"/></param>
     public void SetMainImageKey(string imageKey)

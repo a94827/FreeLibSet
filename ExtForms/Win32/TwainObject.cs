@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Collections.Generic;
 using FreeLibSet.Core;
+using System.Runtime.Serialization;
 
 /*
  * Класс Twain сделан наследником DisposableObject и объявлен internal
@@ -42,11 +43,19 @@ namespace FreeLibSet.Win32.Twain
 
   #endregion
 
+  /// <summary>
+  /// Исключение, выбрасыываемое при возникновении исключения в библиотеке twain.
+  /// </summary>
   [Serializable]
   public class TwainException : Exception
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает объект исключения
+    /// </summary>
+    /// <param name="message">Основной текст сообщения</param>
+    /// <param name="rc">Код ошибки</param>
     public TwainException(string message, TwRC rc)
       : base("TWAIN: " + message + " (" + GetRCText(rc) + ")")
     {
@@ -71,12 +80,36 @@ namespace FreeLibSet.Win32.Twain
       }
     }
 
+
+    /// <summary>
+    /// Эта версия конструктора нужна для правильной десериализации
+    /// </summary>
+    protected TwainException(SerializationInfo info, StreamingContext context)
+      : base(info, context)
+    {
+      _RC = (TwRC)(info.GetValue("RC", typeof(TwRC)));
+    }
+
+    /// <summary>
+    /// Используется при сериализации исключения
+    /// </summary>
+    /// <param name="info"></param>
+    /// <param name="context"></param>
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+      base.GetObjectData(info, context);
+      info.AddValue("RC", _RC);
+    }
+
     #endregion
 
     #region Свойства
 
+    /// <summary>
+    /// Код ошибки
+    /// </summary>
     public TwRC RC { get { return _RC; } }
-    private TwRC _RC;
+    private readonly TwRC _RC;
 
     #endregion
   }
@@ -437,5 +470,5 @@ namespace FreeLibSet.Win32.Twain
 
 #endif
 
-  } // class Twain
+  } 
 }

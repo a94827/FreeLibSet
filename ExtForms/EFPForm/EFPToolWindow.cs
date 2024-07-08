@@ -64,7 +64,7 @@ namespace FreeLibSet.Forms
       //if (EFPApp.ActiveDialog != null)
       //  Owner = EFPApp.ActiveDialog;
 
-      Show();
+      EFPApp.SystemMethods.Show(this, null);
       Activate();
 
       if (!oldVisible)

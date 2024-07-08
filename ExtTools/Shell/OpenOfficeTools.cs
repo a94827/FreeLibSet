@@ -365,9 +365,9 @@ namespace FreeLibSet.Shell
     }
 
     /// <summary>
-    /// Обновляет массив Installations.
+    /// Обновляет массив <see cref="Installations"/>.
     /// </summary>
-    public static void RefreshInstalls()
+    public static void RefreshInstallations()
     {
       _Installations = InitInstallations();
 
@@ -495,7 +495,7 @@ namespace FreeLibSet.Shell
     /// <summary>
     /// В Open Document Format, в отличие от файлов Microsoft Office, форматы чисел
     /// и дат задаются не в виде одной строки, например, "0.00", а в виде множества
-    /// отдельных стилей
+    /// отдельных стилей.
     /// Реализация не полная!
     /// </summary>
     /// <param name="elStyles">Узел "office:automatic-styles" для добавления форматов</param>

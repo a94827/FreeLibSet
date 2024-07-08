@@ -89,7 +89,7 @@ namespace FreeLibSet.IO
     /// Шаблоны могут задавать подкаталоги.
     /// </summary>
     public FileTemplateList FileTemplates { get { return _FileTemplates; } }
-    private FileTemplateList _FileTemplates;
+    private readonly FileTemplateList _FileTemplates;
 
     /// <summary>
     /// Тип архива. Используется только при создании архива.
@@ -721,7 +721,7 @@ namespace FreeLibSet.IO
       {
         _ExeFileName = exeFileName;
       }
-      private string _ExeFileName;
+      private readonly string _ExeFileName;
 
       #endregion
 

@@ -12,8 +12,10 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Конфигурация табличного просмотра с возможностью записи в CfgPart
-  /// Хранит порядок и размеры столбцов, всплывающие подсказки
+  /// Конфигурация табличного просмотра с возможностью записи в <see cref="CfgPart"/>
+  /// Хранит признак видимости, порядок и размеры столбцов, флажки отображения всплывающих подсказок.
+  /// Обычно используется совместно с <see cref="EFPGridProducer"/> и <see cref="EFPStdConfigurableDataGridView"/>, но может быть и собственная реализация
+  /// выбора столбцов в прикладном коде на уровне <see cref="EFPDataGridView"/>.
   /// </summary>
   [Serializable]
   public sealed class EFPDataGridViewConfig : IReadOnlyObject, ICloneable
@@ -25,25 +27,107 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPDataGridViewConfig()
     {
-      _Columns = new EFPDataGridViewConfigColumns(this);
+      _Columns = new ColumnCollection(this);
       _FrozenColumns = 0;
       _StartColumnName = String.Empty;
       _CurrentCellToolTip = true;
-      _ToolTips = new EFPDataGridViewConfigToolTips(this);
+      _ToolTips = new ToolTipCollection(this);
     }
 
     #endregion
 
-    #region Свойства
+    #region Столбцы
+
+    /// <summary>
+    /// Реализация свойства <see cref="Columns"/>
+    /// </summary>
+    [Serializable]
+    public sealed class ColumnCollection : NamedList<EFPDataGridViewConfigColumn>
+    {
+      #region Конструктор
+
+      internal ColumnCollection(EFPDataGridViewConfig owner)
+      {
+        _Owner = owner;
+      }
+
+      private EFPDataGridViewConfig _Owner;
+
+      #endregion
+
+      #region Методы
+
+      /// <summary>
+      /// Добавить столбец
+      /// </summary>
+      /// <param name="columnName">Имя столбца</param>
+      /// <returns>Объект <see cref="EFPDataGridViewConfigColumn"/></returns>
+      public EFPDataGridViewConfigColumn Add(string columnName)
+      {
+        CheckNotReadOnly();
+
+        EFPDataGridViewConfigColumn item = new EFPDataGridViewConfigColumn(columnName);
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить столбец, который будет занимать определенную часть табличного просмотра
+      /// </summary>
+      /// <param name="columnName">Имя столбца</param>
+      /// <param name="fillWeight">Процент табличного просмотра для столбца</param>
+      /// <returns>Объект <see cref="EFPDataGridViewConfigColumn"/></returns>
+      public EFPDataGridViewConfigColumn AddFill(string columnName, int fillWeight)
+      {
+        CheckNotReadOnly();
+
+        EFPDataGridViewConfigColumn item = new EFPDataGridViewConfigColumn(columnName);
+        item.FillMode = true;
+        item.FillWeight = fillWeight;
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Добавить столбец, который будет 100% табличного просмотра
+      /// </summary>
+      /// <param name="columnName">Имя столбца</param>
+      /// <returns>Объект <see cref="EFPDataGridViewConfigColumn"/></returns>
+      public EFPDataGridViewConfigColumn AddFill(string columnName)
+      {
+        return AddFill(columnName, 100);
+      }
+
+      /// <summary>
+      /// Копирование списка настроек столбцов в другую конфигурацию
+      /// Создаются копии объектов ColumnConfig
+      /// </summary>
+      /// <param name="other">Заполняемый список</param>
+      internal void CopyTo(ColumnCollection other)
+      {
+        for (int i = 0; i < Count; i++)
+          other.Add(this[i].Clone());
+      }
+
+      internal new void SetReadOnly()
+      {
+        base.SetReadOnly();
+        for (int i = 0; i < Count; i++)
+          this[i].SetReadOnly();
+      }
+
+      #endregion
+    }
+
 
     /// <summary>
     /// Столбцы, входящие в просмотр
     /// </summary>
-    public EFPDataGridViewConfigColumns Columns { get { return _Columns; } }
-    private EFPDataGridViewConfigColumns _Columns;
+    public ColumnCollection Columns { get { return _Columns; } }
+    private readonly ColumnCollection _Columns;
 
     /// <summary>
-    /// Количество замороженных столбцов в левой части просмотра
+    /// Количество замороженных столбцов в левой части просмотра (из списка <see cref="Columns"/>)
     /// </summary>
     public int FrozenColumns
     {
@@ -57,8 +141,8 @@ namespace FreeLibSet.Forms
     private int _FrozenColumns;
 
     /// <summary>
-    /// Имя столбца, который становится активным при открытии просмотра
-    /// Пустая строка - текущий столбец сохраняется в секции конфигурации категории "GridView" между сеансами работы программы
+    /// Имя столбца, который становится активным при открытии просмотра.
+    /// Пустая строка - текущий столбец сохраняется в секции конфигурации категории <see cref="EFPConfigCategories.GridView"/> между сеансами работы программы
     /// или выбирается просмотром автоматически.
     /// </summary>
     public string StartColumnName
@@ -73,6 +157,10 @@ namespace FreeLibSet.Forms
       }
     }
     private string _StartColumnName;
+
+    #endregion
+
+    #region Всплывающие подсказки
 
     /// <summary>
     /// Надо ли выводить в подсказке содержимое текущей ячейки?
@@ -89,16 +177,75 @@ namespace FreeLibSet.Forms
     }
     private bool _CurrentCellToolTip;
 
+
+    /// <summary>
+    /// Реализация свойства <see cref="ToolTips"/>
+    /// </summary>
+    [Serializable]
+    public sealed class ToolTipCollection : NamedList<EFPDataGridViewConfigToolTip>
+    {
+      #region Конструктор
+
+      internal ToolTipCollection(EFPDataGridViewConfig owner)
+      {
+        _Owner = owner;
+      }
+
+      private EFPDataGridViewConfig _Owner;
+
+      #endregion
+
+      #region Методы
+
+      /// <summary>
+      /// Добавляет подсказку в список.
+      /// </summary>
+      /// <param name="toolTipName">Имя подсказки для хранения в секции конфигурации.</param>
+      /// <returns>Созданный объект <see cref="EFPDataGridViewConfigToolTip"/></returns>
+      public EFPDataGridViewConfigToolTip Add(string toolTipName)
+      {
+        CheckNotReadOnly();
+
+        EFPDataGridViewConfigToolTip item = new EFPDataGridViewConfigToolTip(toolTipName);
+        Add(item);
+        return item;
+      }
+
+      /// <summary>
+      /// Копирование списка настроек столбцов в другую конфигурацию
+      /// Создаются копии объектов
+      /// </summary>
+      /// <param name="other"></param>
+      internal void CopyTo(ToolTipCollection other)
+      {
+        for (int i = 0; i < Count; i++)
+          other.Add(this[i].Clone());
+      }
+
+      internal new void SetReadOnly()
+      {
+        base.SetReadOnly();
+        for (int i = 0; i < Count; i++)
+          this[i].SetReadOnly();
+      }
+
+      #endregion
+    }
+
     /// <summary>
     /// Имена частей всплывающих подсказок для строки
     /// </summary>
-    public EFPDataGridViewConfigToolTips ToolTips { get { return _ToolTips; } }
-    private EFPDataGridViewConfigToolTips _ToolTips;
+    public ToolTipCollection ToolTips { get { return _ToolTips; } }
+    private readonly ToolTipCollection _ToolTips;
+
+    #endregion
+
+    #region Прочие свойства
 
     /// <summary>
     /// Значок настройки, используемый в диалоге настройки табличного просмотра.
-    /// Используется только для настройки по умолчанию и именных настройках, заданных в GridProducer.
-    /// Если свойство не установлено (по умолчанию), используется значок "No"
+    /// Используется при выборе готовых настроек из выпадающего списка (для настройки по умолчанию и именных настроек, заданных в <see cref="EFPGridProducer"/>).
+    /// Если свойство не установлено (по умолчанию), используется значок "No".
     /// </summary>
     public string ImageKey
     {
@@ -106,45 +253,6 @@ namespace FreeLibSet.Forms
       set { _ImageKey = value; }
     }
     private string _ImageKey;
-
-    #endregion
-
-    #region Методы
-
-    /// <summary>
-    /// Создание копии конфигурации с учетом реального расположения столбцов в просмотре
-    /// </summary>
-    /// <param name="controlProvider"></param>
-    /// <returns></returns>
-    public EFPDataGridViewConfig Clone(IEFPDataView controlProvider)
-    {
-      EFPDataGridViewConfig res = new EFPDataGridViewConfig();
-
-      IEFPDataViewColumn[] realColInfos = ((IEFPDataView)controlProvider).VisibleColumns;
-
-      for (int i = 0; i < realColInfos.Length; i++)
-      {
-        if (realColInfos[i].ColumnProducer == null) // чужой столбец
-          continue;
-        EFPDataGridViewConfigColumn col2 = new EFPDataGridViewConfigColumn(realColInfos[i].Name); // ??
-        controlProvider.InitColumnConfig(col2);
-
-        if (res.Columns.Contains(col2.ColumnName))
-          continue; // бяка - два одинаковых столбца
-        res.Columns.Add(col2);
-      }
-      // Не учитываем количество замороженных столбцов в просмотре. Там могут быть
-      // лишние столбцы. Берем количество из текущей настройки
-      //Res.FrozenColumns = DocGridHandler.FrozenColumns;
-      res.FrozenColumns = FrozenColumns;
-      res.StartColumnName = StartColumnName;
-
-      // Всплывающие подсказки просто копируются
-      res.CurrentCellToolTip = CurrentCellToolTip;
-      for (int i = 0; i < ToolTips.Count; i++)
-        res.ToolTips.Add(ToolTips[i]);
-      return res;
-    }
 
     #endregion
 
@@ -280,7 +388,7 @@ namespace FreeLibSet.Forms
     public bool IsReadOnly { get { return _Columns.IsReadOnly; } }
 
     /// <summary>
-    /// Генерирует исключение при IsReadOnly=true.
+    /// Генерирует исключение при <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -305,7 +413,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает копию конфигурации
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект конфигурации</returns>
     public EFPDataGridViewConfig Clone()
     {
       EFPDataGridViewConfig res = new EFPDataGridViewConfig();
@@ -322,100 +430,47 @@ namespace FreeLibSet.Forms
       return Clone();
     }
 
-    #endregion
-  }
-
-  /// <summary>
-  /// Реализация свойства EFPDataGridViewConfig.Columns
-  /// </summary>
-  [Serializable]
-  public sealed class EFPDataGridViewConfigColumns : NamedList<EFPDataGridViewConfigColumn>
-  {
-    #region Конструктор
-
-    internal EFPDataGridViewConfigColumns(EFPDataGridViewConfig owner)
-    {
-      _Owner = owner;
-    }
-
-    #endregion
-
-    #region Свойства
-
     /// <summary>
-    /// Объект-владелец
+    /// Создание копии конфигурации с учетом реального расположения столбцов в просмотре.
+    /// Для создания точной копии объекта используйте перегрузку <see cref="Clone()"/> без аргументов.
     /// </summary>
-    public EFPDataGridViewConfig Owner { get { return _Owner; } }
-    private EFPDataGridViewConfig _Owner;
-
-    #endregion
-
-    #region Методы
-
-    /// <summary>
-    /// Добавить столбец
-    /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <returns>Объект EFPDataGridViewConfigColumn</returns>
-    public EFPDataGridViewConfigColumn Add(string columnName)
+    /// <param name="controlProvider">Провайдер табличного просмотра с добавленными столбцами. Не может быть null</param>
+    /// <returns>Новый объект конфигурации</returns>
+    public EFPDataGridViewConfig Clone(IEFPDataView controlProvider)
     {
-      CheckNotReadOnly();
+      EFPDataGridViewConfig res = new EFPDataGridViewConfig();
 
-      EFPDataGridViewConfigColumn item = new EFPDataGridViewConfigColumn(columnName);
-      Add(item);
-      return item;
-    }
+      IEFPDataViewColumn[] realColInfos = ((IEFPDataView)controlProvider).VisibleColumns;
 
-    /// <summary>
-    /// Добавить столбец, который будет занимать определенную часть табличного просмотра
-    /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="fillWeight">Процент табличного просмотра для столбца</param>
-    /// <returns>Объект EFPDataGridViewConfigColumn</returns>
-    public EFPDataGridViewConfigColumn AddFill(string columnName, int fillWeight)
-    {
-      CheckNotReadOnly();
+      for (int i = 0; i < realColInfos.Length; i++)
+      {
+        if (realColInfos[i].ColumnProducer == null) // чужой столбец
+          continue;
+        EFPDataGridViewConfigColumn col2 = new EFPDataGridViewConfigColumn(realColInfos[i].Name); // ??
+        controlProvider.InitColumnConfig(col2);
 
-      EFPDataGridViewConfigColumn item = new EFPDataGridViewConfigColumn(columnName);
-      item.FillMode = true;
-      item.FillWeight = fillWeight;
-      Add(item);
-      return item;
-    }
+        if (res.Columns.Contains(col2.ColumnName))
+          continue; // бяка - два одинаковых столбца
+        res.Columns.Add(col2);
+      }
+      // Не учитываем количество замороженных столбцов в просмотре. Там могут быть
+      // лишние столбцы. Берем количество из текущей настройки
+      //Res.FrozenColumns = DocGridHandler.FrozenColumns;
+      res.FrozenColumns = FrozenColumns;
+      res.StartColumnName = StartColumnName;
 
-    /// <summary>
-    /// Добавить столбец, который будет 100% табличного просмотра
-    /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <returns>Объект EFPDataGridViewConfigColumn</returns>
-    public EFPDataGridViewConfigColumn AddFill(string columnName)
-    {
-      return AddFill(columnName, 100);
-    }
-
-    /// <summary>
-    /// Копирование списка настроек столбцов в другую конфигурацию
-    /// Создаются копии объектов ColumnConfig
-    /// </summary>
-    /// <param name="other">Заполняемый список</param>
-    public void CopyTo(EFPDataGridViewConfigColumns other)
-    {
-      for (int i = 0; i < Count; i++)
-        other.Add(this[i].Clone());
-    }
-
-    internal new void SetReadOnly()
-    {
-      base.SetReadOnly();
-      for (int i = 0; i < Count; i++)
-        this[i].SetReadOnly();
+      // Всплывающие подсказки просто копируются
+      res.CurrentCellToolTip = CurrentCellToolTip;
+      for (int i = 0; i < ToolTips.Count; i++)
+        res.ToolTips.Add(ToolTips[i]);
+      return res;
     }
 
     #endregion
   }
 
   /// <summary>
-  /// Параметры ширины табличного просмотра
+  /// Параметры ширины табличного просмотра в настройке <see cref="EFPDataGridViewConfig"/>
   /// </summary>
   [Serializable]
   public sealed class EFPDataGridViewConfigColumn : ObjectWithCode, IReadOnlyObject, ICloneable
@@ -439,7 +494,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Имя столбца (свойство EFPDataGridViewColumn.Name)
+    /// Имя столбца (свойство <see cref="EFPDataGridViewColumn.Name"/>)
     /// </summary>
     public string ColumnName { get { return base.Code; } }
 
@@ -458,7 +513,7 @@ namespace FreeLibSet.Forms
     private int _Width;
 
     /// <summary>
-    /// Режим изменения размера столбца по размеру табличного просмотра на основании свойства FillWeight
+    /// Режим изменения размера столбца по размеру табличного просмотра на основании свойства <see cref="FillWeight"/>.
     /// </summary>
     public bool FillMode
     {
@@ -473,7 +528,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Процент ширины столбца относительно ширины табличного просмотра.
-    /// Свойство используется при FillMode=true
+    /// Свойство используется при <see cref="FillMode"/>=true.
     /// </summary>
     public int FillWeight
     {
@@ -493,7 +548,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает копию объекта
     /// </summary>
-    /// <returns>Новый объект EFPDataGridViewConfigColumn</returns>
+    /// <returns>Новый объект <see cref="EFPDataGridViewConfigColumn"/></returns>
     public EFPDataGridViewConfigColumn Clone()
     {
       EFPDataGridViewConfigColumn newCol = new EFPDataGridViewConfigColumn(ColumnName);
@@ -513,13 +568,13 @@ namespace FreeLibSet.Forms
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если объект-владелец EFPDataGridViewConfig переведен в режим "Только чтение"
+    /// Возвращает true, если объект-владелец <see cref="EFPDataGridViewConfig"/> переведен в режим "Только чтение"
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Ненерирует исключение при IsReadOnly=true
+    /// Генерирует исключение при <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -536,69 +591,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Реализация свойства EFPDataGridViewConfig.ToolTips
-  /// </summary>
-  [Serializable]
-  public sealed class EFPDataGridViewConfigToolTips : NamedList<EFPDataGridViewConfigToolTip>
-  {
-    #region Конструктор
-
-    internal EFPDataGridViewConfigToolTips(EFPDataGridViewConfig owner)
-    {
-      _Owner = owner;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Объект-владелец
-    /// </summary>
-    public EFPDataGridViewConfig Owner { get { return _Owner; } }
-    private EFPDataGridViewConfig _Owner;
-
-    #endregion
-
-    #region Методы
-
-    /// <summary>
-    /// Добавляет подсказку в список.
-    /// </summary>
-    /// <param name="toolTipName">Имя подсказки для хранения в секции конфигурации.</param>
-    /// <returns>Созданный объект EFPDataGridViewConfigToolTip</returns>
-    public EFPDataGridViewConfigToolTip Add(string toolTipName)
-    {
-      CheckNotReadOnly();
-
-      EFPDataGridViewConfigToolTip Item = new EFPDataGridViewConfigToolTip(toolTipName);
-      Add(Item);
-      return Item;
-    }
-
-    /// <summary>
-    /// Копирование списка настроек столбцов в другую конфигурацию
-    /// Создаются копии объектов ColumnConfig
-    /// </summary>
-    /// <param name="other"></param>
-    public void CopyTo(EFPDataGridViewConfigToolTips other)
-    {
-      for (int i = 0; i < Count; i++)
-        other.Add(this[i].Clone());
-    }
-
-    internal new void SetReadOnly()
-    {
-      base.SetReadOnly();
-      for (int i = 0; i < Count; i++)
-        this[i].SetReadOnly();
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Настройка для одной всплывающей подсказки
+  /// Настройка для одной всплывающей подсказки в <see cref="EFPDataGridViewConfig"/>.
   /// В текущей реализации не содержит никаких настраиваемых параметров
   /// </summary>
   [Serializable]
@@ -629,7 +622,7 @@ namespace FreeLibSet.Forms
     #region ICloneable Members
 
     /// <summary>
-    /// Создает копию объекта EFPDataGridViewConfigToolTip.
+    /// Создает копию объекта <see cref="EFPDataGridViewConfigToolTip"/>.
     /// </summary>
     /// <returns>Новый объект</returns>
     public EFPDataGridViewConfigToolTip Clone()
@@ -653,7 +646,7 @@ namespace FreeLibSet.Forms
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true.
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -692,8 +685,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Провайдер табличного просмотра, который настраивается.
-    /// Используются свойство ConfigManager и ConfigHandler.
-    /// Свойство должно быть установлено до вызова ShowDialog()
+    /// Используются свойство <see cref="IEFPControl.ConfigManager"/> и <see cref="IEFPControl.ConfigHandler"/>.
+    /// Свойство должно быть установлено до вызова <see cref="ShowDialog()"/>.
     /// </summary>
     public IEFPDataView CallerControlProvider
     {
@@ -704,7 +697,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Источник настроек.
-    /// Свойство должно быть установлено до вызова ShowDialog()
+    /// Свойство должно быть установлено до вызова <see cref="ShowDialog()"/>.
     /// </summary>
     public IEFPConfigurableGridProducer GridProducer
     {
@@ -725,7 +718,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Категория, используемая для хранения настроек и пользовательских настроек.
-    /// По умолчанию EFPConfigCategories.GridConfig
+    /// По умолчанию <see cref="EFPConfigCategories.GridConfig"/>.
     /// </summary>
     public string ConfigCategory
     {
@@ -741,7 +734,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Категория, используемая для хранения списка пользовательских настроек.
-    /// По умолчанию EFPConfigCategories.GridConfigHistory
+    /// По умолчанию <see cref="EFPConfigCategories.GridConfigHistory"/>.
     /// </summary>
     public string HistoryCategory
     {

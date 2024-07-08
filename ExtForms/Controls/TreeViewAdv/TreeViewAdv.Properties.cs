@@ -521,7 +521,9 @@ namespace FreeLibSet.Controls
     }
 
     private bool _loadOnDemand;
-    [DefaultValue(false), Category("Behavior")]
+    //[DefaultValue(false)]
+    [DefaultValue(true)] // 28.06.2024
+    [Category("Behavior")]
     public bool LoadOnDemand
     {
       get { return _loadOnDemand; }
@@ -670,12 +672,12 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Корневой узел. Имеет путь ""
     /// </summary>
-    private TreeNodeAdv _root;
     [Browsable(false)]
     public TreeNodeAdv Root
     {
       get { return _root; }
     }
+    private TreeNodeAdv _root;
 
     private ReadOnlyCollection<TreeNodeAdv> _readonlySelection;
     [Browsable(false)]

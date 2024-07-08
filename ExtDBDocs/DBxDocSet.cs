@@ -120,9 +120,11 @@ namespace FreeLibSet.Data.Docs
     {
       if (docProvider == null)
         throw new ArgumentNullException("docProvider");
+#if !NET
       if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(docProvider))
         throw new ArgumentException("Провайдер DocProvider является удаленным объектом (TransparentProxy). " +
           "Для правильной работы требуется, чтобы он был в текущем контексте. Используйте переходник DBxChainDocProvider", "docProvider");
+#endif
 
       _DocProvider = docProvider;
 
@@ -179,7 +181,7 @@ namespace FreeLibSet.Data.Docs
           base.Dispose(Disposing);
         }
       */
-    #endregion
+#endregion
 
     #region Доступ к типам документов
 

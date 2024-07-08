@@ -84,7 +84,6 @@ CommandItems.PerformRefreshItems();
       if (Orders.Count > 1)
         categories.Add(EFPConfigCategories.TreeView); // для записи Order
     }
-
     
     private bool WantsTreeConfig(EFPConfigMode rwMode, EFPConfigActionInfo actionInfo)
     {
@@ -910,9 +909,9 @@ CommandItems.PerformRefreshItems();
     /// <summary>
     /// Обновление доступности команд
     /// </summary>
-    protected override void DoRefreshItems()
+    protected override void OnRefreshItems()
     {
-      base.DoRefreshItems();
+      base.OnRefreshItems();
 
       IEFPScrollableGridFilter sf = ActiveScrollableFilter; // чтобы меньше поиска
       if (sf != null)

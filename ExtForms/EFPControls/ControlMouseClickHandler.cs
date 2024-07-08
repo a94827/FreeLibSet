@@ -11,14 +11,14 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Обработчик событий от мыши для управляющего элемента, в котором не установлены
-  /// биты StandardClick и/или StandardDoubleClick, например RadioButton. Такой
-  /// Control не посылает события MouseDoubleClick, а в событиях MouseUp и MouseDown
-  /// свойство Clicks всегда равно 1.
-  /// Объект ControlMouseClickHandler создается для управляющего элемента и 
+  /// биты StandardClick и/или StandardDoubleClick, например <see cref="RadioButton"/>. Такой
+  /// <see cref="Control"/> не посылает события <see cref="Control.MouseDoubleClick"/>, а в событиях <see cref="Control.MouseUp"/> и <see cref="Control.MouseDown"/>
+  /// свойство <see cref="MouseEventArgs.Clicks"/> всегда равно 1.
+  /// Объект <see cref="ControlMouseClickHandler"/> создается для управляющего элемента и 
   /// обрабатывает события мыши, вычисляя условия для двойного щелчка мыши.
-  /// Генерируются собственные событий MouseDown, MouseClick, MouseDoubleClick и
-  /// MouseUp
-  /// Также позволяет отслеживать тройные щелчки, используя свойство Clicks
+  /// Генерируются собственные события <see cref="MouseDown"/>, <see cref="MouseClick"/>, <see cref="MouseDoubleClick"/> и
+  /// <see cref="MouseUp"/>, так как события класса <see cref="Control"/> не могут быть вызваны.
+  /// Также позволяет отслеживать тройные щелчки, используя свойство <see cref="MouseEventArgs.Clicks"/> в обработчике событий.
   /// </summary>
   public class ControlMouseClickHandler
   {
@@ -54,8 +54,8 @@ namespace FreeLibSet.Forms
     private readonly Control _Control;
 
     /// <summary>
-    /// Вызов этого метода предотвращает вызов следующего события MouseDoubleClick,
-    /// заменяя его на обычный MouseClick
+    /// Вызов этого метода предотвращает вызов следующего события <see cref="MouseDoubleClick"/>,
+    /// заменяя его на обычный <see cref="MouseClick"/>.
     /// </summary>
     public void ResetClicks()
     {
@@ -91,7 +91,7 @@ namespace FreeLibSet.Forms
     #region Виртуальные методы
 
     /// <summary>
-    /// Вызывает событие
+    /// Вызывает событие <see cref="MouseDown"/>
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnMouseDown(MouseEventArgs args)
@@ -101,7 +101,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает событие
+    /// Вызывает событие <see cref="MouseClick"/>
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnMouseClick(MouseEventArgs args)
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает событие
+    /// Вызывает событие <see cref="MouseDoubleClick"/>
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnMouseDoubleClick(MouseEventArgs args)
@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает событие
+    /// Вызывает событие <see cref="MouseUp"/>
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnMouseUp(MouseEventArgs args)
@@ -208,9 +208,9 @@ namespace FreeLibSet.Forms
     #region Текстовое представление
 
     /// <summary>
-    /// Возвращает Control.ToString()
+    /// Возвращает <see cref="Control"/>.ToString()
     /// </summary>
-    /// <returns>Текстовое представдение</returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return _Control.ToString();

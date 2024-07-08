@@ -26,6 +26,13 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     {
     }
 
+    /// <summary>
+    /// Специальное значение для свойства <see cref="BindableControl.DataPropertyName"/>, чтобы узел отображал значение <see cref="Object.ToString()"/>
+    /// для <see cref="TreeNodeAdv.Tag"/>.
+    /// </summary>
+    public const string ToStringDataPropertyName = "*";
+
+
     protected override Size CalculateEditorSize(TreeViewAdvEditorContext context)
     {
       if (Parent.UseColumns)

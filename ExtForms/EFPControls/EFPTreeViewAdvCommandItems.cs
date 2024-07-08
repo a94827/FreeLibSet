@@ -258,20 +258,14 @@ namespace FreeLibSet.Forms
       ControlProvider.Control.MouseDown += new MouseEventHandler(Control_MouseDown);
       ControlProvider.Control.MouseUp += new MouseEventHandler(Control_MouseUp);
       //Owner.Grid_VisibleChanged(null, null);
-
-
-      PerformRefreshItems();
-
-      // 14.08.2012 Добавляем обработчики
-      //Owner.AfterControlAssigned();
     }
 
     /// <summary>
     /// Обновление доступности команд
     /// </summary>
-    protected override void DoRefreshItems()
+    protected override void OnRefreshItems()
     {
-      base.DoRefreshItems();
+      base.OnRefreshItems();
 
       EFPDataGridViewSelectedRowsState selState = ControlProvider.SelectedRowsState;
 
@@ -337,16 +331,18 @@ namespace FreeLibSet.Forms
             ciView.MenuText = "Просмотреть запись";
         }
 
+      } // UseEditView
         // 16.01.2023
-        if (this[EFPAppStdCommandItems.Cut].Usage != EFPCommandItemUsage.None)
-          this[EFPAppStdCommandItems.Cut].Enabled = !(ControlProvider.ReadOnly /*&& ControlProvider.Control.ReadOnly*/);
-        if (!PasteHandler.AlwaysEnabled) // 27.11.2017
-        {
-          //if (HasTextPasteFormats)
-          //  PasteHandler.Enabled = !ControlProvider.Control.ReadOnly; // 24.04.2019
-          //else
-          PasteHandler.Enabled = !(ControlProvider.ReadOnly /*&& ControlProvider.Control.ReadOnly*/);
-        }
+        //if (this[EFPAppStdCommandItems.Cut].Usage != EFPCommandItemUsage.None)
+      this[EFPAppStdCommandItems.Cut].Enabled = selState != EFPDataGridViewSelectedRowsState.NoSelection &&
+        (!ControlProvider.ReadOnly);
+      this[EFPAppStdCommandItems.Copy].Enabled = selState != EFPDataGridViewSelectedRowsState.NoSelection; // 17.06.2024
+      if (!PasteHandler.AlwaysEnabled) // 27.11.2017
+      {
+        //if (HasTextPasteFormats)
+        //  PasteHandler.Enabled = !ControlProvider.Control.ReadOnly; // 24.04.2019
+        //else
+        PasteHandler.Enabled = !(ControlProvider.ReadOnly /*&& ControlProvider.Control.ReadOnly*/);
       }
 
       if (ciInlineEditStatus != null)
@@ -600,7 +596,6 @@ namespace FreeLibSet.Forms
     {
       ControlProvider.Control.ExpandAll();
       ControlProvider.Control.SelectAllNodes();
-      PerformRefreshItems();
     }
 
     #endregion

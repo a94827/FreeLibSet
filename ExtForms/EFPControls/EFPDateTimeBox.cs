@@ -17,8 +17,7 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Провайдер поля ввода даты.
-  /// Время не используется.
+  /// Провайдер поля ввода даты и/или времени.
   /// </summary>
   public abstract class EFPDateTimeControl<T> : EFPSyncControl<T>
     where T : Control
@@ -66,7 +65,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
-    /// Вызывается при изменении значения свойства EnabledState.
+    /// Вызывается при изменении значения свойства <see cref="EFPControlBase.EnabledState"/>.
     /// Инициализация "серого" значения.
     /// </summary>
     protected override void OnEnabledStateChanged()
@@ -106,7 +105,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство NValue.
+    /// Управляемое свойство для <see cref="NValue"/>.
     /// </summary>
     public DepValue<DateTime?> NValueEx
     {
@@ -180,7 +179,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство Value.
+    /// Управляемое свойство для <see cref="Value"/>.
     /// </summary>
     public DepValue<DateTime> ValueEx
     {
@@ -233,7 +232,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Доступ к компоненту времени.
-    /// Если нет введенного значения, свойство возвращает null
+    /// Если нет введенного значения, свойство возвращает null.
     /// </summary>
     public TimeSpan? NTime
     {
@@ -254,7 +253,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для NTime
+    /// Управляемое свойство для <see cref="NTime"/>
     /// </summary>
     public DepValue<TimeSpan?> NTimeEx
     {
@@ -293,7 +292,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Доступ к компоненту времени.
-    /// В отличие от NTime, это свойство не nullable
+    /// В отличие от <see cref="NTime"/>, это свойство не nullable.
     /// </summary>
     public TimeSpan Time
     {
@@ -302,7 +301,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство ValueEx
+    /// Управляемое свойство для <see cref="Time"/>
     /// </summary>
     public DepValue<TimeSpan> TimeEx
     {
@@ -347,7 +346,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сохраняемое значение после установки свойства "Value".
-    /// Используется, если в данный момент используется DisabledValue.
+    /// Используется, если в данный момент используется DisabledNValue.
     /// </summary>
     private DateTime? _SavedNValue;
 
@@ -358,7 +357,7 @@ namespace FreeLibSet.Forms
     private bool _HasSavedNValue;
 
     /// <summary>
-    /// Инициализация DateBox.Value.
+    /// Инициализация <see cref="DateTimeBox.NValue"/>.
     /// </summary>
     protected void InitControlValue()
     {
@@ -379,9 +378,9 @@ namespace FreeLibSet.Forms
     #region OnValueChanged()
 
     /// <summary>
-    /// Обработчик события DateBox.ValueChanged
+    /// Обработчик события <see cref="DateTimeBox.ValueChanged"/>
     /// </summary>
-    /// <param name="sender">Ссылка на DateBox. Игнорируется</param>
+    /// <param name="sender">Ссылка на управляющий элемент. Игнорируется</param>
     /// <param name="args">Игнорируется</param>
     protected void Control_ValueChanged(object sender, EventArgs args)
     {
@@ -432,7 +431,7 @@ namespace FreeLibSet.Forms
         _SavedNValue = NValue;
 
       Validate();
-      DoSyncValueChanged();
+      OnSyncValueChanged();
     }
 
     #endregion
@@ -442,7 +441,7 @@ namespace FreeLibSet.Forms
     #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство, которое возвращает true, если есть введенная дата (NValue.HasValue=true).
+    /// Управляемое свойство, которое возвращает true, если есть введенная дата (<see cref="NValue"/>.HasValue=true).
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
     {
@@ -467,7 +466,7 @@ namespace FreeLibSet.Forms
     #region AllowDisabledValue
 
     /// <summary>
-    /// Разрешает использование свойства DisabledValue или DisabledNValue.
+    /// Разрешает использование свойства <see cref="DisabledValue"/> или <see cref="DisabledNValue"/>.
     /// По умолчанию - false
     /// </summary>
     public bool AllowDisabledValue
@@ -488,7 +487,7 @@ namespace FreeLibSet.Forms
     #region DisabledNValue
 
     /// <summary>
-    /// Значение, которое показывается в управляющем элементе при EnabledState=false и AllowDisabledValue=true.
+    /// Значение, которое показывается в управляющем элементе при <see cref="EFPControlBase.EnabledState"/>=false и <see cref="AllowDisabledValue"/>=true.
     /// Если это значение равно null, то поле ввода будет показано пустым.
     /// </summary>
     public DateTime? DisabledNValue
@@ -517,8 +516,8 @@ namespace FreeLibSet.Forms
     private DateTime? _DisabledNValue;
 
     /// <summary>
-    /// Управляемое свойство DisabledNValue.
-    /// Свойство действует при установленном свойстве AllowDisabledValue
+    /// Управляемое свойство для <see cref="DisabledNValue"/>.
+    /// Свойство действует при установленном свойстве <see cref="AllowDisabledValue"/>.
     /// </summary>
     public DepValue<DateTime?> DisabledNValueEx
     {
@@ -554,8 +553,9 @@ namespace FreeLibSet.Forms
     #region DisabledValue
 
     /// <summary>
-    /// Значение, которое показывается при EnabledState=false и AllowDisabledValue=true.
-    /// Это свойство дублирует DisabledNValue. Если DisabledNValue=null, то возвращает DateTime.MinValue.
+    /// Значение, которое показывается при <see cref="EFPControlBase.EnabledState"/>=false и <see cref="AllowDisabledValue"/>=true.
+    /// Это свойство дублирует <see cref="DisabledNValue"/>. Если <see cref="DisabledNValue"/>=null, 
+    /// то возвращает <see cref="DateTime.MinValue"/>.
     /// </summary>
     public DateTime DisabledValue
     {
@@ -564,8 +564,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство DisabledValue.
-    /// Свойство действует при установленном свойстве AllowDisabledValue.
+    /// Управляемое свойство для <see cref="DisabledValue"/>.
+    /// Свойство действует при установленном свойстве <see cref="AllowDisabledValue"/>.
     /// </summary>
     public DepValue<DateTime> DisabledValueEx
     {
@@ -601,8 +601,8 @@ namespace FreeLibSet.Forms
     #region DisabledNTime
 
     /// <summary>
-    /// Значение, которое показывается при EnabledState=false и AllowDisabledValue=true.
-    /// Это свойство возвращает DisabledNValue.TimeOfDay. Если DisabledNValue=null, то возвращает null.
+    /// Значение, которое показывается при <see cref="EFPControlBase.EnabledState"/>=false и <see cref="AllowDisabledValue"/>=true.
+    /// Это свойство возвращает <see cref="DisabledNValue"/>.TimeOfDay. Если <see cref="DisabledNValue"/>=null, то возвращает null.
     /// </summary>
     public TimeSpan? DisabledNTime
     {
@@ -623,8 +623,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство DisabledNTime.
-    /// Свойство действует при установленном свойстве AllowDisabledValue.
+    /// Управляемое свойство для <see cref="DisabledNTime"/>.
+    /// Свойство действует при установленном свойстве <see cref="AllowDisabledValue"/>.
     /// </summary>
     public DepValue<TimeSpan?> DisabledNTimeEx
     {
@@ -660,8 +660,9 @@ namespace FreeLibSet.Forms
     #region DisabledTime
 
     /// <summary>
-    /// Значение, которое показывается при EnabledState=false и AllowDisabledValue=true.
-    /// Это свойство возвращает DisabledNValue.TimeOfDay. Если DisabledNValue=null, то возвращает TimeSpan.Zero.
+    /// Значение, которое показывается при <see cref="EFPControlBase.EnabledState"/>=false и <see cref="AllowDisabledValue"/>=true.
+    /// Это свойство возвращает <see cref="DisabledNValue"/>.TimeOfDay. 
+    /// Если <see cref="DisabledNValue"/>=null, то возвращает <see cref="TimeSpan.Zero"/>.
     /// </summary>
     public TimeSpan DisabledTime
     {
@@ -670,8 +671,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство DisabledTime.
-    /// Свойство действует при установленном свойстве AllowDisabledValue.
+    /// Управляемое свойство для <see cref="DisabledTime"/>.
+    /// Свойство действует при установленном свойстве <see cref="AllowDisabledValue"/>.
     /// </summary>
     public DepValue<TimeSpan> DisabledTimeEx
     {
@@ -860,7 +861,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы и свойства
 
     /// <summary>
-    /// Возвращает true, если установлены свойства Enabled=true и ReadOnly=false.
+    /// Возвращает true, если установлены свойства <see cref="EFPControlBase.Enabled"/>=true и <see cref="ReadOnly"/>=false.
     /// </summary>
     public override bool EnabledState
     {
@@ -868,9 +869,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает EFPTextBoxCommandItems()
+    /// Создает <see cref="EFPTextBoxCommandItems"/>
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Команды локального меню</returns>
     protected override EFPControlCommandItems CreateCommandItems()
     {
       if (EFPApp.EasyInterface)
@@ -880,8 +881,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Блокировка при синхронизации выполняется не через свойство EnabledEx, как
-    /// у других управляющих элементов, а через свойство ReadOnly
+    /// Блокировка при синхронизации выполняется не через свойство <see cref="EFPControlBase.Enabled"/>, как
+    /// у других управляющих элементов, а через свойство <see cref="ReadOnly"/>.
     /// </summary>
     /// <param name="value">True-выключить блокировку, false-включить</param>
     public override void SyncMasterState(bool value)
@@ -891,7 +892,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство DateTimeBox.NValue
+    /// Свойство <see cref="DateTimeBox.NValue"/>
     /// </summary>
     public override DateTime? ControlNValue
     {
@@ -900,7 +901,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка свойства DateTimeBox/ClearButton
+    /// Установка свойства <see cref="UserComboBoxBase.ClearButton"/>
     /// </summary>
     public override bool ControlCanBeEmpty
     {
@@ -908,7 +909,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возврашает свойство объекта EditableDateTimeFormatter 
+    /// Возврашает свойство объекта <see cref="EditableDateTimeFormatter.ContainsDate"/>
     /// </summary>
     public override bool FormatContainsDate
     {
@@ -916,7 +917,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возврашает свойство объекта EditableDateTimeFormatter 
+    /// Возврашает свойство объекта <see cref="EditableDateTimeFormatter.ContainsTime"/>
     /// </summary>
     public override bool FormatContainsTime
     {
@@ -928,9 +929,10 @@ namespace FreeLibSet.Forms
     #region Свойство DefaultYear
 
     /// <summary>
-    /// Год по умолчанию
+    /// Год по умолчанию.
     /// Если задано ненулевое значение и пользователь ввел только 4 цифры дня и месяца,
-    /// дата будет считаться корректной и использовать выбранный год
+    /// дата будет считаться корректной и использовать выбранный год.
+    /// По умолчанию - 0 - ввод года является обязательным.
     /// </summary>
     public int DefaultYear
     {
@@ -939,7 +941,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для DefaultYear
+    /// Управляемое свойство для <see cref="DefaultYear"/>
     /// </summary>
     public DepValue<int> DefaultYearEx
     {
@@ -999,7 +1001,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство для ReadOnly.
+    /// Управляемое свойство для <see cref="ReadOnly"/>.
     /// </summary>
     public DepValue<Boolean> ReadOnlyEx
     {
@@ -1094,9 +1096,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер для стандартного управляющего элемента - DateTimePicker
-  /// Для ввода даты лучше использовать компонент DateBox.
-  /// Разрешает использовать значение null с помощью свойство DateTimePicker.ShowCheckBox.
+  /// Провайдер для стандартного управляющего элемента - <see cref="System.Windows.Forms.DateTimePicker"/>.
+  /// Для ввода даты лучше использовать компонент <see cref="FreeLibSet.Controls.DateTimeBox"/>.
+  /// Разрешает использовать значение null с помощью свойства <see cref="DateTimePicker.ShowCheckBox"/>.
   /// </summary>
   public class EFPDateTimePicker : EFPDateTimeControl<DateTimePicker>
   {
@@ -1119,7 +1121,7 @@ namespace FreeLibSet.Forms
     #region Свойства управляющего элемента
 
     /// <summary>
-    /// Обработка свойств DateTimePicker.Checked и Value.
+    /// Обработка свойств <see cref="DateTimePicker.Checked"/> и <see cref="DateTimePicker.Value"/>.
     /// </summary>
     public override DateTime? ControlNValue
     {
@@ -1148,7 +1150,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка свойства DateTimePicker.ShowCheckBox
+    /// Установка свойства <see cref="DateTimePicker.ShowCheckBox"/>
     /// </summary>
     public override bool ControlCanBeEmpty
     {
@@ -1160,7 +1162,7 @@ namespace FreeLibSet.Forms
     #region Свойства FormatContainsDate и FormatContainsTime
 
     /// <summary>
-    /// Возвращает true, если свойства DateTimePicker.Format и CustomFormat определяют формат, содержащий компонент даты
+    /// Возвращает true, если свойства <see cref="DateTimePicker.Format"/> и <see cref="DateTimePicker.CustomFormat"/> определяют формат, содержащий компонент даты
     /// </summary>
     public override bool FormatContainsDate
     {
@@ -1180,7 +1182,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если свойства DateTimePicker.Format и CustomFormat определяют формат, содержащий компонент времени
+    /// Возвращает true, если свойства <see cref="DateTimePicker.Format"/> и <see cref="DateTimePicker.CustomFormat"/> определяют формат, содержащий компонент времени
     /// </summary>
     public override bool FormatContainsTime
     {
@@ -1203,7 +1205,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер для стандартного управляющего элемента - календаря
+  /// Провайдер для стандартного управляющего элемента - календаря <see cref="System.Windows.Forms.MonthCalendar"/>.
   /// Позволяет выбирать единственную дату, а не диапазон дат.
   /// Пустое значение null не поддерживается.
   /// </summary>
@@ -1237,7 +1239,7 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
-    /// Проверяет попадание даты в диапазон {Minimum, Maximum}
+    /// Проверяет попадание даты в диапазон {<see cref="Minimum"/>, <see cref="Maximum"/>}
     /// </summary>
     protected override void OnValidate()
     {
@@ -1255,7 +1257,7 @@ namespace FreeLibSet.Forms
     #region Свойство Value
 
     /// <summary>
-    /// Свойство MonthCalendar.SelectionStart = MonthCalendar.SelectionStart
+    /// Свойство <see cref="MonthCalendar.SelectionStart"/>
     /// </summary>
     public DateTime Value
     {
@@ -1267,7 +1269,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Управляемое свойство Value
+    /// Управляемое свойство для <see cref="Value"/>
     /// </summary>
     public DepValue<DateTime> ValueEx
     {
@@ -1322,14 +1324,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метод вызывается при изменении выбранного значения в управляющем элементе.
-    /// При переопределении обязательно должен вызываться базовый метод
+    /// При переопределении обязательно должен вызываться базовый метод.
     /// </summary>
     protected virtual void OnValueChanged()
     {
       if (_ValueEx != null)
         _ValueEx.OwnerSetValue(Value);
       Validate();
-      DoSyncValueChanged();
+      OnSyncValueChanged();
     }
 
     #endregion
@@ -1338,7 +1340,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Минимальная дата, которую можно ввести.
-    /// Если значение свойства установлено и свойство Value меньше заданной даты, будет выдана ошибка
+    /// Если значение свойства установлено и свойство <see cref="Value"/> меньше заданной даты, будет выдана ошибка
     /// при проверке контроля.
     /// По умолчанию - null - ограничение не установлено.
     /// </summary>
@@ -1351,7 +1353,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Максимальная дата, которую можно ввести.
-    /// Если значение свойства установлено и свойство Value больше заданной даты, будет выдана ошибка
+    /// Если значение свойства установлено и свойство <see cref="Value"/> больше заданной даты, будет выдана ошибка
     /// при проверке контроля.
     /// По умолчанию - null - ограничение не установлено.
     /// </summary>
@@ -1367,9 +1369,9 @@ namespace FreeLibSet.Forms
     #region Синхронизация
 
     /// <summary>
-    /// Свойство Value для реализации интерфейса IDepSyncObject.
-    /// Для совместимости с EFPDateBox, поддерживается "присвоение" значения null.
-    /// В этом случае никаких действий не выполняется, значение остается неизменным
+    /// Свойство <see cref="Value"/> для реализации интерфейса <see cref="IDepSyncObject"/>.
+    /// Для совместимости с <see cref="EFPDateTimeBox"/>, поддерживается "присвоение" значения null.
+    /// В этом случае никаких действий не выполняется, значение остается неизменным.
     /// </summary>
     public override object SyncValue
     {

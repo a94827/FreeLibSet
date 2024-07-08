@@ -21,7 +21,7 @@ namespace FreeLibSet.Forms
   #region DataObjectEventHandler
 
   /// <summary>
-  /// Аргументы события AddCopyFormat
+  /// Аргументы события <see cref="EFPDataGridViewCommandItems.AddCopyFormats"/>
   /// </summary>
   public class DataObjectEventArgs : EventArgs
   {
@@ -44,24 +44,24 @@ namespace FreeLibSet.Forms
     /// Интерфейс для работы со списком форматов данных
     /// </summary>
     public IDataObject DataObject { get { return _DataObject; } }
-    private IDataObject _DataObject;
+    private readonly IDataObject _DataObject;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события AddCopyFormat
+  /// Аргументы события <see cref="EFPDataGridViewCommandItems.AddCopyFormats"/>
   /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
+  /// <param name="sender">Ссылка на объект, содержащий событие</param>
+  /// <param name="args">Аргументы события</param>
   public delegate void DataObjectEventHandler(object sender, DataObjectEventArgs args);
 
   #endregion
 
-  #region Перечисление EFPDataGridViewCopyFormats
+  #region Перечисление EFPDataViewCopyFormats
 
   /// <summary>
-  /// Стандартные форматы копирования табличного просмотра в буфер обмена
+  /// Стандартные форматы копирования табличного просмотра в буфер обмена (Text, CSV и HTML)
   /// </summary>
   [Flags]
   public enum EFPDataViewCopyFormats
@@ -99,16 +99,16 @@ namespace FreeLibSet.Forms
   #region DataReorderHelperNeededEventHandler
 
   /// <summary>
-  /// Аргументы события EFPDataGridViewCommandItems.DataReorderHelperNeeded
+  /// Аргументы события <see cref="EFPDataGridView.DataReorderHelperNeeded"/> и <see cref="EFPDataTreeView.DataReorderHelperNeeded"/>
   /// </summary>
   public class DataReorderHelperNeededEventArgs : EventArgs
   {
     #region Свойства
 
     /// <summary>
-    /// Сюда обработчик события может поместить новый экземпляр класса, реализующего интерфейс IDataReorderHelper,
-    /// например, DataTableTreeReorderHelper.
-    /// Если останется значение по умолчанию null, то будет создан стандартный объект, обычно DataTableReorderHelper
+    /// Сюда обработчик события может поместить новый экземпляр класса, реализующего интерфейс <see cref="IDataReorderHelper"/>,
+    /// например, <see cref="DataTableTreeReorderHelper"/>.
+    /// Если останется значение по умолчанию null, то будет создан стандартный объект, обычно <see cref="DataTableReorderHelper"/>.
     /// </summary>
     public IDataReorderHelper Helper { get { return _Helper; } set { _Helper = value; } }
     private IDataReorderHelper _Helper;
@@ -117,9 +117,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Делегат события EFPDataGridViewCommandItems.DataReorderHelperNeeded
+  /// Делегат события события <see cref="EFPDataGridView.DataReorderHelperNeeded"/> и <see cref="EFPDataTreeView.DataReorderHelperNeeded"/>
   /// </summary>
-  /// <param name="sender">Ссылка на EFPDataGridViewCommandItems</param>
+  /// <param name="sender">Провайдер управляющего элемента просмотра</param>
   /// <param name="args">Аргументы события</param>
   public delegate void DataReorderHelperNeededEventHandler(object sender, DataReorderHelperNeededEventArgs args);
 
@@ -146,6 +146,7 @@ namespace FreeLibSet.Forms
       _UseRefresh = true;
       _UseSelectAll = true;
       _UseRowErrors = true;
+      _GotoErrorEnabled = true;
       _UseRowErrorsListView = true;
       _CopyFormats = EFPDataViewCopyFormats.All;
 
@@ -238,6 +239,7 @@ namespace FreeLibSet.Forms
       AddSeparator();
 
       _PasteHandler = new EFPPasteHandler(this);
+      _PasteHandler.UseToolBar = false; // по умолчанию кнопок нет в буфере обмена
 
       #endregion
 
@@ -481,6 +483,8 @@ namespace FreeLibSet.Forms
       #endregion
 
       #endregion
+
+      Idle += CommandItems_Idle;
     }
 
     /// <summary>
@@ -497,18 +501,18 @@ namespace FreeLibSet.Forms
       base.Dispose(disposing);
     }
 
-    #endregion
-
-    #region Общие свойства
-
     /// <summary>
     /// Провайдер табличного просмотра.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public new EFPDataGridView ControlProvider { get { return (EFPDataGridView)(base.ControlProvider); } }
 
+    #endregion
+
+    #region OnPrepare()
+
     /// <summary>
-    /// Инициализация EFPCommandItem.Usage перед инициализацией меню.
+    /// Инициализация <see cref="EFPCommandItem.Usage"/> перед инициализацией меню.
     /// </summary>
     protected override void OnPrepare()
     {
@@ -530,9 +534,9 @@ namespace FreeLibSet.Forms
       else
         ciRefresh.Usage = EFPCommandItemUsage.None;
 
-      EFPCommandItemUsage ClipboardUsage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
+      EFPCommandItemUsage clipboardUsage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
       if (ClipboardInToolBar)
-        ClipboardUsage |= EFPCommandItemUsage.ToolBar;
+        clipboardUsage |= EFPCommandItemUsage.ToolBar;
 
       if (Cut == null && ControlProvider.Control.ReadOnly)
       {
@@ -540,19 +544,16 @@ namespace FreeLibSet.Forms
         ciCut.Usage = EFPCommandItemUsage.None;
       }
       else
-        ciCut.Usage = ClipboardUsage;
+        ciCut.Usage = clipboardUsage;
 
-      ciCopy.Usage = ClipboardUsage;
+      ciCopy.Usage = clipboardUsage;
 
 
       // Добавляем форматы вставки текста после пользовательских форматов
       // (если уже не были добавлены явно)
       AddTextPasteFormats();
 
-      _PasteHandler.InitCommandUsage(ClipboardInToolBar);
       _PasteHandler.PasteApplied += new EventHandler(PasteHandler_PasteApplied);
-
-      ControlProvider.Control.ReadOnlyChanged += new EventHandler(Control_ReadOnlyChanged); // 24.04.2019 - может переключаться динамически
 
       if (!UseSelectAll)
         ciSelectAll.Usage = EFPCommandItemUsage.None;
@@ -637,7 +638,6 @@ namespace FreeLibSet.Forms
           ciShowRowErrorMessages.Usage = EFPCommandItemUsage.None;
       }
 
-
       if (ControlProvider.MarkRowsGridColumn == null)
       {
         MenuCheck.Usage = EFPCommandItemUsage.None;
@@ -697,39 +697,22 @@ namespace FreeLibSet.Forms
       ControlProvider.Control.MouseDown += new MouseEventHandler(Grid_MouseDown);
       ControlProvider.Control.MouseUp += new MouseEventHandler(Grid_MouseUp);
       ControlProvider.Control_VisibleChanged(null, null);
-
-      PerformRefreshItems();
     }
 
     #endregion
 
     #region Обновление состояния команд
 
-    /// <summary>
-    /// Вызывается при изменении текущей позиции в управляющем элементе или
-    /// при вызове PerformRefreshItems()
-    /// </summary>
-    public event EventHandler RefreshItems;
-
-    /// <summary>
-    /// Обновление доступности команд локального меню после внешнего изменения
-    /// выбранных ячеек просмотра
-    /// </summary>
-    public void PerformRefreshItems()
+    private void CommandItems_Idle(object sender, EventArgs args)
     {
-      // Вызываем виртуальный метод
-      DoRefreshItems();
-      // Посылаем извещения
-      if (RefreshItems != null)
-        RefreshItems(this, EventArgs.Empty);
+      OnRefreshItems();
     }
 
-
     /// <summary>
     /// Обновление доступности команд локального меню после внешнего изменения
     /// выбранных ячеек просмотра
     /// </summary>
-    protected virtual void DoRefreshItems()
+    protected virtual void OnRefreshItems()
     {
       EFPDataGridViewSelectedRowsState selState = ControlProvider.SelectedRowsState;
 
@@ -795,8 +778,12 @@ namespace FreeLibSet.Forms
             ciView.MenuText = "Просмотреть запись";
         }
 
-        if (ciCut.Usage != EFPCommandItemUsage.None)
-          ciCut.Enabled = !(ControlProvider.ReadOnly && ControlProvider.Control.ReadOnly);
+        //if (ciCut.Usage != EFPCommandItemUsage.None)
+        ciCut.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) &&
+          (!(ControlProvider.ReadOnly && ControlProvider.Control.ReadOnly));
+        ciCopy.Enabled = selState != EFPDataGridViewSelectedRowsState.NoSelection; // 17.06.2024
+        if (ciCopyToolTip != null)
+          ciCopyToolTip.Enabled = selState != EFPDataGridViewSelectedRowsState.NoSelection;
         if (!PasteHandler.AlwaysEnabled) // 27.11.2017
         {
           if (HasTextPasteFormats)
@@ -844,9 +831,9 @@ namespace FreeLibSet.Forms
         ciSelectAll.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) && ControlProvider.Control.MultiSelect;
       }
 
+      ciFind.Enabled = ControlProvider.Control.RowCount > 0 && ControlProvider.Control.ColumnCount > 0; // 17.06.2024
       RefreshIncSearchItems();
-
-
+      RefreshRowErrorsItems();
       RefreshStatItems();
     }
 
@@ -935,8 +922,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// true, если нажатие клавиши Enter не обрабатывается, а передается
     /// форме для нажатия кнопки по умолчанию.
-    /// false, если нажатие Enter выполняет редактирование ячейки таблицы
-    /// По умолчанию - false
+    /// false, если нажатие Enter выполняет редактирование ячейки таблицы.
+    /// По умолчанию - false.
     /// </summary>
     public bool EnterAsOk
     {
@@ -953,10 +940,9 @@ namespace FreeLibSet.Forms
     private bool _EnterAsOk;
 
 
-
     /// <summary>
     /// True, если есть команды "Редактировать", "Создать", "Удалить", "Просмотр"
-    /// По умолчанию - true
+    /// По умолчанию - true.
     /// </summary>
     public bool UseEditView
     {
@@ -1009,11 +995,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Двойной щелчок мыши на ячейке
-    /// Если обрабатывать только это событие, а редактор запусакется медленно, то
+    /// Двойной щелчок мыши на ячейке.
+    /// Если обрабатывать только это событие, а редактор запускается медленно, то
     /// сетка переходит в режим выделения строк. Пользователь успевает нечаянно
     /// выделить несколько строк, пока открывается редактор. Это некрасиво.
-    /// Поэтому откладываем запуск редактора до события MouseUp
+    /// Поэтому откладываем запуск редактора до события MouseUp.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -1139,28 +1125,23 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Нужно ли показывать кнопки "Вырезать", "Копировать" и "Вставить" в панели
     /// инструментов (если она есть).
-    /// По умолчанию - false (только в меню и горячие клавиши)
+    /// По умолчанию - false (только в меню и горячие клавиши).
     /// </summary>
     public bool ClipboardInToolBar
     {
-      get { return _ClipboardInToolBar; }
-      set
-      {
-        CheckNotReadOnly();
-        _ClipboardInToolBar = value;
-      }
+      get { return _PasteHandler.UseToolBar; }
+      set { _PasteHandler.UseToolBar = value; }
     }
-    private bool _ClipboardInToolBar;
 
     #region Вырезать
 
     private EFPCommandItem ciCut;
 
     /// <summary>
-    /// Если обработчик установлен, то в локальное меню добавляется команда "Вырезать"
+    /// Если обработчик установлен, то в локальное меню добавляется команда "Вырезать".
     /// Если обработчик не установлен, то поддерживается вырезка текста ячеек.
-    /// При необходимости обработчик Cut может вызывать метод PerformCutText() или
-    /// TryPerformCutText()
+    /// При необходимости обработчик Cut может вызывать метод <see cref="PerformCutText()"/> или
+    /// <see cref="TryPerformCutText(out string)"/>.
     /// </summary>
     public event EventHandler Cut;
 
@@ -1172,13 +1153,11 @@ namespace FreeLibSet.Forms
         Cut(this, EventArgs.Empty);
       else
         PerformCutText();
-
-      PerformRefreshItems();
     }
 
     /// <summary>
     /// Вырезать текст из выбранных ячеек таблицы в буфер обмена.
-    /// Вызывает метод TryPerformCutText() и, в случае ошибки, выводит сообщение
+    /// Вызывает метод <see cref="TryPerformCutText(out string)"/> и, в случае ошибки, выводит сообщение.
     /// </summary>
     public void PerformCutText()
     {
@@ -1200,7 +1179,7 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      EFPDataGridViewRectArea selArea = new EFPDataGridViewRectArea(ControlProvider.Control);
+      EFPDataGridViewRectArea selArea = new EFPDataGridViewRectArea(ControlProvider.Control, EFPDataViewExpRange.Selected);
       if (selArea.IsEmpty)
       {
         errorText = "Нет выбранных ячеек";
@@ -1261,10 +1240,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Стандартные форматы копирования в буфер обмена
+    /// Стандартные форматы копирования в буфер обмена.
     /// По умолчанию: Text, CSV и HTML
     /// Можно отключить стандартные форматы копирования, если необходимо копировать данные в нестандартном формате.
-    /// Тогда эти форматы можно добавить в обработчике AddCopyFormats
+    /// Тогда эти форматы можно добавить в обработчике <see cref="AddCopyFormats"/>.
     /// </summary>
     public EFPDataViewCopyFormats CopyFormats
     {
@@ -1284,11 +1263,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается при выполнении команды "Копировать".
-    /// Непереопределенный метод вызывает событие AddCopyFormats.
+    /// Непереопределенный метод вызывает событие <see cref="AddCopyFormats"/>.
     /// Переопределенный метод может добавить дополнительные форматы.
     /// Стандартные форматы (TEXT, CSV, HTML) уже добавлены на момент вызова, в зависимости от свойства CopyFormats.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Аргументы события</param>
     protected virtual void OnAddCopyFormats(DataObjectEventArgs args)
     {
       if (AddCopyFormats != null)
@@ -1297,8 +1276,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Выполнить копирование выделенных ячеек табличного просмотра в буфер обмена.
-    /// В случае ошибки выдает сообщение на экран и возвращает false
-    /// Метод может использоваться внутри реализации обработчика Cut
+    /// В случае ошибки выдает сообщение на экран и возвращает false.
+    /// Метод может использоваться внутри реализации обработчика Cut.
     /// </summary>
     /// <returns>true, если копирование успешно выполнено. false - в случае ошибки</returns>
     public bool PerformCopy()
@@ -1451,16 +1430,15 @@ namespace FreeLibSet.Forms
     void PasteHandler_PasteApplied(object sender, EventArgs args)
     {
       //*** Owner.CurrentIncSearchColumn = null;
-      PerformRefreshItems();
     }
 
     /// <summary>
     /// Добавить форматы вставки текста из буфера обмена.
     /// Если метод не вызван явно при инициализации просмотра, он вызывается
     /// автоматически перед показом. Допускается многократный вызов, повторные
-    /// вызовы игнорируются. Возвращается массив объектов EFPPasteTextMatrixFormat.
+    /// вызовы игнорируются. Возвращается массив из двух объектов <see cref="EFPPasteTextMatrixFormat"/> (Text и CSV).
     /// Команды не добавляется и возвращается пустой массив, если просмотр не
-    /// поддерживает inline-редактирование
+    /// поддерживает inline-редактирование.
     /// </summary>
     /// <returns>Массив описателей форматов</returns>
     public EFPPasteTextMatrixFormat[] AddTextPasteFormats()
@@ -1490,6 +1468,7 @@ namespace FreeLibSet.Forms
     }
 
     private EFPPasteTextMatrixFormat[] _TextPasteFormats;
+
     private bool HasTextPasteFormats
     {
       get
@@ -1539,11 +1518,6 @@ namespace FreeLibSet.Forms
       EFPPasteTextMatrixFormat fmt = (EFPPasteTextMatrixFormat)sender;
 
       ControlProvider.PerformPasteText(fmt.TextMatrix);
-    }
-
-    void Control_ReadOnlyChanged(object sender, EventArgs args)
-    {
-      PerformRefreshItems();
     }
 
     #endregion
@@ -1649,7 +1623,7 @@ namespace FreeLibSet.Forms
     private EFPCommandItem ciOrderCustom;
 
     /// <summary>
-    /// Команда "Еще" для дополнительных порядков сортировки (больше 9)
+    /// Команда "Еще" для дополнительных порядков сортировки (больше 9) или настройки пользовательской сортировки при <see cref="EFPDataGridView.CustomOrderAllowed"/>=true.
     /// </summary>
     private EFPCommandItem ciOrderMore;
 
@@ -1785,13 +1759,12 @@ namespace FreeLibSet.Forms
 
     #region Команды перехода между ошибками
 
-
     /// <summary>
-    /// True (по умолчанию), если при установленном свойстве UseRowImages
+    /// True (по умолчанию), если при установленном свойстве <see cref="EFPDataGridView.UseRowImages"/>
     /// нужно выводит команды "Перейти к следующей / предыдущей строке с ошибками".
     /// Установите свойство в false, если картинки в заголовках строк используются
     /// для других целей, а не для показа ошибок.
-    /// Свойство игнорируется, если UseRowImages=false
+    /// Свойство игнорируется, если <see cref="EFPDataGridView.UseRowImages"/>=false.
     /// </summary>
     public bool UseRowErrors
     {
@@ -1851,15 +1824,19 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Доступность команд перехода к следующей / предыдущей строке с ошибкой
-    /// или предупреждением. Наличие команд определяется свойством DocGridHandler.UserRowImages.
+    /// или предупреждением. Наличие команд определяется свойством <see cref="EFPDataGridView.UseRowImages"/>.
     /// Это свойство позволяет временно блокировать команды (установкой в false),
-    /// например, на время заполнения просмотра в фоновом режиме, пока значения не определены
+    /// например, на время заполнения просмотра в фоновом режиме, пока значения не определены.
     /// </summary>
     public virtual bool GotoErrorEnabled
     {
-      get { return ciGotoNextErrorWarning.Enabled; }
+      get { return _GotoErrorEnabled; }
       set
       {
+        if (value == _GotoErrorEnabled)
+          return;
+
+        _GotoErrorEnabled = value;
         ciGotoNextErrorWarning.Enabled = value;
         ciGotoPrevErrorWarning.Enabled = value;
         ciGotoNextErrorOnly.Enabled = value;
@@ -1870,17 +1847,35 @@ namespace FreeLibSet.Forms
           ciShowRowErrorMessages.Enabled = value;
       }
     }
+    private bool _GotoErrorEnabled;
+
+    private void RefreshRowErrorsItems()
+    {
+      if (_MenuRowErrors.Usage == EFPCommandItemUsage.None)
+        return;
+
+      EFPDataGridViewSelectedRowsState selState = ControlProvider.SelectedRowsState;
+
+      ciGotoNextErrorWarning.Enabled =
+      ciGotoPrevErrorWarning.Enabled =
+      ciGotoNextErrorOnly.Enabled =
+      ciGotoPrevErrorOnly.Enabled = _GotoErrorEnabled && selState != EFPDataGridViewSelectedRowsState.NoSelection;
+      if (ciCopyRowErrorMessages != null)
+        ciCopyRowErrorMessages.Enabled = _GotoErrorEnabled && selState != EFPDataGridViewSelectedRowsState.NoSelection;
+      if (ciShowRowErrorMessages != null)
+        ciShowRowErrorMessages.Enabled = _GotoErrorEnabled && selState != EFPDataGridViewSelectedRowsState.NoSelection;
+    }
 
     #endregion
 
     #region Построение списка сообщений об ошибках
 
     /// <summary>
-    /// Если установлено (по умолчанию), а также установлены свойства UseRowErrors
-    /// и UseRowImages, то в подменю "Строки с ошибками" есть команда
+    /// Если установлено (по умолчанию), а также установлены свойства <see cref="UseRowErrors"/>
+    /// и <see cref="EFPDataGridView.UseRowImages"/>, то в подменю "Строки с ошибками" есть команда
     /// "Показать список".
-    /// Это свойство сбрасывается в false в самом просмотре списка ошибок EFPErrorDataGridView, т.к.
-    /// рекурсивный вызов не имеет смысла
+    /// Это свойство сбрасывается в false в самом просмотре списка ошибок <see cref="EFPErrorDataGridView"/>, т.к.
+    /// рекурсивный вызов не имеет смысла.
     /// </summary>
     public bool UseRowErrorsListView
     {
@@ -1938,8 +1933,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вывод списка сообщений об ошибках
     /// </summary>
-    /// <param name="errorMessages"></param>
-    /// <param name="title"></param>
+    /// <param name="errorMessages">Список сообщений</param>
+    /// <param name="title">Заголовок окна</param>
     protected virtual void ShowErrorMessageListDialog(ErrorMessageList errorMessages, string title)
     {
       EFPApp.ShowErrorMessageListDialog(errorMessages, title, 0,
@@ -1949,8 +1944,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Обработка команды просмотра сообщения об ошибках
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
+    /// <param name="sender">Не используется</param>
+    /// <param name="args">Аргументы события</param>
     protected void EditRowForErrorMessage(object sender, ErrorMessageItemEventArgs args)
     {
       int rowIndex = DataTools.GetInt(args.Item.Tag);
@@ -2256,7 +2251,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// True, если есть команда "Обновить" (F5)
-    /// По умолчанию - true
+    /// По умолчанию - true.
     /// </summary>
     public bool UseRefresh
     {
@@ -2288,7 +2283,6 @@ namespace FreeLibSet.Forms
     private void SelectAll(object sender, EventArgs args)
     {
       ControlProvider.Control.SelectAll();
-      PerformRefreshItems();
     }
 
     private void Refresh(object sender, EventArgs args)

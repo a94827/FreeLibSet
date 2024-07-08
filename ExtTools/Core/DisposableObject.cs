@@ -504,7 +504,7 @@ namespace FreeLibSet.Core
       lst1.Sort();
       lst2.Sort();
 
-      args.WriteLine("Type".PadRight(54) + ": Count Disposed Finalized");
+      args.WriteLine("Type".PadRight(maxObjTypeLen) + ": Count Disposed Finalized");
       args.WriteLine();
       DoLogoutList(args, lst1, maxObjTypeLen);
       if (lst2.Count > 0)

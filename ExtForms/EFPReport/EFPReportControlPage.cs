@@ -17,21 +17,21 @@ namespace FreeLibSet.Forms
   /// Закладка с произвольным управляющим элементом.
   /// Обычно используется для создания сложных страниц с несколькими элементами управления.
   /// Для страниц с единственным элементом управления лучше использовать специализированные классы,
-  /// например, EFPReportGridPage.
+  /// например, <see cref="EFPReportGridPage"/>.
   /// </summary>
   /// <remarks>
-  /// Часто в качестве управляющего элемента используется Panel или другой контейнерный элемент,
-  /// который берется из другого объекта Form. 
-  /// Панель содержит несколько других элементов, для которых нужны провайдеры, производные от EFPControl/
-  /// Для создания провайдеров управляющих элементов нельзя создавать провайдер формы EFPFormProvider, 
+  /// Часто в качестве управляющего элемента используется <see cref="Panel"/> или другой контейнерный элемент,
+  /// который берется из другого объекта <see cref="Form"/>. 
+  /// Панель содержит несколько других элементов, для которых нужны провайдеры, производные от <see cref="EFPControlBase"/>.
+  /// Для создания провайдеров управляющих элементов нельзя создавать провайдер формы <see cref="EFPFormProvider"/>, 
   /// т.к. сама форма, на которой расположены элементы, не используется и провайдер работать не будет. 
-  /// Вместо этого следует использовать свойство EFPReportPage.BaseProvider этого объекта. 
-  /// Форма-заготовка обычно должна иметь конструктор с аргументом EFPBaseProvider.
+  /// Вместо этого следует использовать свойство <see cref="EFPReportPage.BaseProvider"/> этого объекта. 
+  /// Форма-заготовка обычно должна иметь конструктор с аргументом <see cref="EFPBaseProvider"/>.
   /// Если форма-заготовка используется не только в данном отчете, но и самостоятельно, у нее должен быть также
-  /// конструктор, создающий свой EFPFormProvider.
+  /// конструктор, создающий свой <see cref="EFPFormProvider"/>.
   /// 
   /// При добавлении табличных просмотров, устанавливайте свойство 
-  /// EFPDataGridView.CommandItems.UseRefresh = false, чтобы работала команда "Обновить отчет"
+  /// <see cref="EFPDataGridViewCommandItems.UseRefresh"/> = false, чтобы работала команда "Обновить отчет".
   /// </remarks>
   public class EFPReportControlPage : EFPReportPage
   {
@@ -64,9 +64,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает страницу.
-    /// Если свойству Control не было присвоено значение, то создается метка с текстом "Нет данных".
+    /// Если свойству <see cref="Control"/> не было присвоено значение, то создается метка с текстом "Нет данных".
     /// </summary>
-    /// <param name="parent"></param>
+    /// <param name="parent">Панель, на которой размещается страница</param>
     protected override void CreatePage(Panel parent)
     {
       if (_Control == null)
@@ -310,7 +310,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Путь к внешнему XML-файлу для просмотра
-    /// Свойство можно установить до создания самого просмотра (вызова SetPageCreated)
+    /// Свойство можно установить до создания самого просмотра (вызова <see cref="EFPReportPage.SetPageCreated()"/>)
     /// </summary>
     public string XmlFilePath
     {
@@ -336,7 +336,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Загрузка документа XML из памяти
-    /// Свойство можно установить до создания самого просмотра (вызова SetPageCreated)
+    /// Свойство можно установить до создания самого просмотра (вызова <see cref="EFPReportPage.SetPageCreated()"/>)
     /// </summary>
     public byte[] XmlBytes
     {
@@ -362,7 +362,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Загрузка данных как XML-документа
-    /// Свойство можно установить до создания самого просмотра (вызова SetPageCreated)
+    /// Свойство можно установить до создания самого просмотра (вызова <see cref="EFPReportPage.SetPageCreated()"/>)
     /// </summary>
     public XmlDocument XmlDocument
     {
@@ -426,7 +426,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Провайдер основного управляющего элемента.
     /// Он появляется только после создания страницы.
-    /// Для форсированного создания страницы используйте SetPageCreated()
+    /// Для форсированного создания страницы используйте <see cref="EFPReportPage.SetPageCreated()"/>.
     /// </summary>
     public EFPXmlViewBox XmlView { get { return _XmlView; } }
     private EFPXmlViewBox _XmlView;
@@ -438,7 +438,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создание страницы
     /// </summary>
-    /// <param name="parent"></param>
+    /// <param name="parent">Панель отчета, куда добавляется просмотр</param>
     protected override void CreatePage(Panel parent)
     {
       bool isEmpty2 = IsEmpty;

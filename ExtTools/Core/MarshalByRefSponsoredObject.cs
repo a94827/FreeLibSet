@@ -182,6 +182,6 @@ namespace FreeLibSet.Core
 #endif
 
     #endregion
-    #endif
+#endif
   }
 }

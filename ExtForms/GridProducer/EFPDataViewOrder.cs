@@ -15,8 +15,8 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Описание порядка сортировки для табличного просмотра
-  /// Структура содержит имя основного столбца сортировки и порядок сортировки
+  /// Описание порядка сортировки для табличного просмотра.
+  /// Структура содержит имя основного столбца сортировки и порядок сортировки.
   /// </summary>
   public struct EFPDataGridViewSortInfo
   {
@@ -25,8 +25,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация структуры
     /// </summary>
-    /// <param name="clickableColumnNames">Имена столбцов EFPDataGridViewColumn.Name. Если задать несколько столбцов, 
-    /// тогда будет использоваться тот столбец, который расположен ближе к левому краю просмотра</param>
+    /// <param name="clickableColumnNames">Имена столбцов <see cref="EFPDataGridViewColumn.Name"/> по которым можно щелкать мышью для сортировки. 
+    /// Если задать несколько столбцов, тогда будет использоваться тот столбец, который расположен ближе к левому краю просмотра</param>
     /// <param name="direction">Направление отображаемого порядка сортировки: по возрастанию или по убыванию</param>
     public EFPDataGridViewSortInfo(string[] clickableColumnNames, ListSortDirection direction)
     {
@@ -45,8 +45,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация структуры
     /// </summary>
-    /// <param name="clickableColumnNames">Имена столбцов EFPDataGridViewColumn.Name. Можно задать несколько столбцов, разделенных запятыми,
-    /// тогда будет использоваться тот столбец, который расположен ближе к левому краю просмотра</param>
+    /// <param name="clickableColumnNames">Имя столбца <see cref="EFPDataGridViewColumn.Name"/> по которому можно щелкать мышью для сортировки. 
+    /// Можно задать несколько столбцов, разделенных запятыми, тогда будет использоваться тот столбец, который расположен ближе к левому краю просмотра</param>
     /// <param name="direction">Направление отображаемого порядка сортировки: по возрастанию или по убыванию</param>
     public EFPDataGridViewSortInfo(string clickableColumnNames, ListSortDirection direction)
     {
@@ -61,9 +61,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализация структуры.
-    /// Используется сортировка по возрастанию
+    /// Используется сортировка по возрастанию.
     /// </summary>
-    /// <param name="clickableColumnNames">Имена столбцов EFPDataGridViewColumn.Name, разделенные запятыми, по которым можно щелкать для выбора порядка сортировки</param>
+    /// <param name="clickableColumnNames">Имя столбца <see cref="EFPDataGridViewColumn.Name"/> по которому можно щелкать мышью для сортировки. 
+    /// Можно задать несколько столбцов, разделенных запятыми, тогда будет использоваться тот столбец, который расположен ближе к левому краю просмотра</param>
     public EFPDataGridViewSortInfo(string clickableColumnNames)
       : this(clickableColumnNames, ListSortDirection.Ascending)
     {
@@ -74,10 +75,10 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Имена столбцов EFPDataGridViewColumn.Name, однин из которых можно использовать для сортировки.
+    /// Имена столбцов <see cref="EFPDataGridViewColumn.Name"/>, однин из которых можно использовать для сортировки.
     /// Если в просмотре есть несколько столбцов из списка, то выбирается тот, который виден ближе к левому краю просмотра.
     /// Если в просмотре нет ни одного видимого столбца, который можно использовать, то порядок сортировки нельзя задать
-    /// щелчком мыши по заголовку, но можно выбрать с помощью локального меню
+    /// щелчком мыши по заголовку, но можно выбрать с помощью локального меню.
     /// </summary>
     public string[] ClickableColumnNames
     {
@@ -137,16 +138,17 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Класс для задания порядка сортировки строк в табличном просмотре.
-  /// Свойство Sort соответствует сортировке с помощью DataView.Sort.
-  /// Эти же объекты используются в коллекции EFPGridProducer.Orders.
-  /// В ExtDBDocForms.dll определен класс-наследник, реализующий расширенную сортировку
+  /// Свойство <see cref="Sort"/> соответствует сортировке с помощью <see cref="DataView.Sort"/>.
+  /// Эти же объекты используются в коллекции <see cref="EFPGridProducer.Orders"/>.
+  /// В ExtDBDocForms.dll определен класс-наследник, реализующий расширенную сортировку.
   /// </summary>
   public class EFPDataViewOrder : IObjectWithCode
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает порядок сортировки. Устанавливает свойство Name и Sort одинаковыми
+    /// Создает порядок сортировки по одному полю. 
+    /// Устанавливает свойства <see cref="Name"/> и <see cref="Sort"/> одинаковыми.
     /// </summary>
     /// <param name="sort">Имя и порядок сортировки. Не может быть пустой строкой</param>
     public EFPDataViewOrder(string sort)
@@ -158,12 +160,18 @@ namespace FreeLibSet.Forms
     /// Создает порядок сортировки
     /// </summary>
     /// <param name="name">Имя порядка сортировки, используемый для сохранения в секции конфигурации.
-    /// Не может быть пустой строкой. Должен быть уникальным в пределах коллекции EFPDataViewOrders</param>
-    /// <param name="sort"></param>
+    /// Не может быть пустой строкой. Должен быть уникальным в пределах коллекции <see cref="EFPDataViewOrders"/></param>
+    /// <param name="sort">Порядок сортировки в формате <see cref="DataView.Sort"/>. 
+    /// Может быть пустой строкой.</param>
     public EFPDataViewOrder(string name, string sort)
     {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentNullException("name");
+
+      // 08.07.2024 Эта проверка неправильная. Запятая может использоваться
+      //if (name.IndexOf(',') >= 0)
+      //  throw new ArgumentException("Недопустимый символ \",\" в имени \"" + name + "\"", "name");
+
       //if (String.IsNullOrEmpty(sort))
       //  throw new ArgumentNullException("sort");
       if (!String.IsNullOrEmpty(sort))
@@ -185,7 +193,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Строка, используемое для идентификации текущего порядка в секции конфигурации.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public string Name { get { return _Name; } }
     private readonly string _Name;
@@ -193,9 +201,9 @@ namespace FreeLibSet.Forms
     string IObjectWithCode.Code { get { return _Name; } }
 
     /// <summary>
-    /// Порядок сортировки для DataView.Sort.
+    /// Порядок сортировки для <see cref="DataView.Sort"/>.
     /// Может быть пустой строкой.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public string Sort { get { return _Sort; } }
     private readonly string _Sort;
@@ -203,7 +211,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Название для позиции меню.
     /// Наличие символа "амперсанд" не допускается.
-    /// Если не задано в явном виде, свойство возвращает свойство Sort.
+    /// Если не задано в явном виде, свойство возвращает свойство <see cref="Sort"/>.
     /// </summary>
     public string DisplayName
     {
@@ -228,7 +236,7 @@ namespace FreeLibSet.Forms
     private EFPDataGridViewSortInfo _SortInfo;
 
     /// <summary>
-    /// Возвращает свойство DisplayName
+    /// Возвращает свойство <see cref="DisplayName"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -253,7 +261,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Применение порядка сортировки к табличного просмотру.
-    /// Непереопределенный метод устанавливает свойство DataView.Sort
+    /// Непереопределенный метод устанавливает свойство <see cref="DataView.Sort"/>. 
+    /// Для доступа к набору данных используется свойство <see cref="IEFPDataView.SourceAsDataView"/>.
     /// </summary>
     /// <param name="controlProvider"></param>
     public virtual void PerformSort(IEFPDataView controlProvider)
@@ -267,7 +276,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет в список <paramref name="columnNames"/> имена полей, используемых для сортировки.
-    /// Извлекает их из свойства Sort.
+    /// Извлекает их из свойства <see cref="Sort"/>.
     /// Не путать со столбцами табличного просмотра, используемыми для переключения сортировки.
     /// </summary>
     /// <param name="columnNames">Заполняемый список</param>
@@ -285,10 +294,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если <paramref name="columnNames"/> содержит все столбцы, которые нужны для сортировки.
-    /// Сначала вызывает метод GetColumnNames() для получения списка требуемых столбцов
+    /// Сначала вызывает метод <see cref="GetColumnNames(IList{string})"/> для получения списка требуемых столбцов.
     /// </summary>
-    /// <param name="columnNames"></param>
-    /// <returns></returns>
+    /// <param name="columnNames">Проверяемая коллекция со списком столбцов</param>
+    /// <returns>Результат проверки коллекции</returns>
     public bool AreAllColumnsPresented(ICollection<string> columnNames)
     {
       List<string> required = new List<string>(); // можно не заморачиваться с SingleScopeList. Наплевать, если будут повторы
@@ -305,21 +314,23 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Реализация свойства EFPDataGridView.Orders.
-  /// Эта же коллекция используется в EFPGridProducer.Orders.
+  /// Реализация свойства <see cref="EFPDataGridView.Orders"/>.
+  /// Эта же коллекция используется в <see cref="EFPGridProducer.Orders"/>.
   /// </summary>
   public class EFPDataViewOrders : NamedList<EFPDataViewOrder>
   {
     #region Методы добавления
 
     /// <summary>
-    /// Добавляет новый порядок сортировки.
-    /// Свойство EFPDataViewOrder.Name будет равно <paramref name="sort"/>.
+    /// Добавляет новый порядок сортировки из одного поля.
+    /// Свойство <see cref="EFPDataViewOrder.Name"/> будет равно <paramref name="sort"/>.
     /// </summary>
-    /// <param name="sort">Порядок сортировки в формате DataView.Sort. Не может быть пустой строкой.</param>
+    /// <param name="sort">Порядок сортировки в формате <see cref="DataView.Sort"/>. 
+    /// Может быть пустой строкой, в этом случае <see cref="EFPDataViewOrder.Name"/> будет равно "*".</param>
     /// <param name="displayName">Отображаемое название для меню</param>
     /// <param name="sortInfo">Описатель столбца(ов) табличного просмотра для выбора этого порядка сортировки мышью.
-    /// Если задано пустое значение EFPDataGridViewSortInfo, то будет назначен первое используемое поле из <paramref name="sort"/>.</param>
+    /// Если задано пустое значение <see cref="EFPDataGridViewSortInfo.Empty"/>, 
+    /// то будет назначен первое используемое поле из <paramref name="sort"/>.</param>
     /// <returns>Объект сортировки</returns>
     public EFPDataViewOrder Add(string sort, string displayName, EFPDataGridViewSortInfo sortInfo)
     {
@@ -347,7 +358,8 @@ namespace FreeLibSet.Forms
     /// Добавляет новый порядок сортировки.
     /// Описатель столбца табличного просмотра, используемого для щелчка мышью, создается автоматически.
     /// </summary>
-    /// <param name="sort">Порядок сортировки в формате DataView.Sort. Не может быть пустой строкой.</param>
+    /// <param name="sort">Порядок сортировки в формате <see cref="DataView.Sort"/>. 
+    /// Может быть пустой строкой, в этом случае <see cref="EFPDataViewOrder.Name"/> будет равно "*".</param>
     /// <param name="displayName">Отображаемое название для меню</param>
     /// <returns>Объект сортировки</returns>
     public EFPDataViewOrder Add(string sort, string displayName)
@@ -356,11 +368,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет новый порядок сортировки.
+    /// Добавляет новый порядок сортировки из одного поля.
     /// Отображаемое название для меню равно имени первого столбца в <paramref name="sort"/>.
     /// Описатель столбца табличного просмотра, используемого для щелчка мышью, создается автоматически.
     /// </summary>
-    /// <param name="sort">Порядок сортировки в формате DataView.Sort. Не может быть пустой строкой.</param>
+    /// <param name="sort">Порядок сортировки в формате <see cref="DataView.Sort"/>. 
+    /// Может быть пустой строкой, в этом случае <see cref="EFPDataViewOrder.Name"/> будет равно "*".</param>
     /// <returns>Объект сортировки</returns>
     public EFPDataViewOrder Add(string sort)
     {
@@ -383,7 +396,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает ссылку на последний добавленный в список порядок сортировки.
+    /// Возвращает ссылку на последний добавленный в список порядок сортировки <see cref="EFPDataViewOrder"/>.
     /// Возвращает null, если список пуст.
     /// </summary>
     public EFPDataViewOrder LastAdded
@@ -398,14 +411,16 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет новый порядок сортировки, используя DataViewSortBuilder.
-    /// Свойство EFPDataViewOrder.Name будет равно <paramref name="sortBuilder"/>.ToString().
-    /// После добавления будет вызван метод DataViewSortBuilder.Clear(), чтобы построитель можно было сразу использовать повторно.
+    /// Добавляет новый порядок сортировки, используя <see cref="DataViewSortBuilder"/>.
+    /// Свойство <see cref="EFPDataViewOrder.Name"/> будет равно <paramref name="sortBuilder"/>.ToString().
+    /// После добавления будет вызван метод <see cref="DataViewSortBuilder.Clear()"/>, 
+    /// чтобы построитель можно было сразу использовать повторно.
     /// </summary>
-    /// <param name="sortBuilder">Заполненный объект DataViewSortBuilder</param>
+    /// <param name="sortBuilder">Заполненный объект <see cref="DataViewSortBuilder"/></param>
     /// <param name="displayName">Отображаемое название для меню</param>
     /// <param name="sortInfo">Описатель столбца(ов) табличного просмотра для выбора этого порядка сортировки мышью.
-    /// Если задано пустое значение EFPDataGridViewSortInfo, то будет назначен первое используемое поле из <paramref name="sortInfo"/>.</param>
+    /// Если задано пустое значение <see cref="EFPDataGridViewSortInfo.Empty"/>, 
+    /// то будет назначен первое используемое поле из <paramref name="sortInfo"/>.</param>
     /// <returns>Объект сортировки</returns>
     public EFPDataViewOrder Add(DataViewSortBuilder sortBuilder, string displayName, EFPDataGridViewSortInfo sortInfo)
     {
@@ -420,11 +435,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет новый порядок сортировки, используя DataViewSortBuilder.
+    /// Добавляет новый порядок сортировки, используя <see cref="DataViewSortBuilder"/>.
     /// Описатель столбца табличного просмотра, используемого для щелчка мышью, создается автоматически.
-    /// После добавления будет вызван метод DataViewSortBuilder.Clear(), чтобы построитель можно было сразу использовать повторно.
+    /// После добавления будет вызван метод <see cref="DataViewSortBuilder.Clear()"/>, чтобы построитель можно было сразу использовать повторно.
     /// </summary>
-    /// <param name="sortBuilder">Заполненный объект DataViewSortBuilder</param>
+    /// <param name="sortBuilder">Заполненный объект <see cref="DataViewSortBuilder"/></param>
     /// <param name="displayName">Отображаемое название для меню</param>
     /// <returns>Объект сортировки</returns>
     public EFPDataViewOrder Add(DataViewSortBuilder sortBuilder, string displayName)
@@ -433,12 +448,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет новый порядок сортировки, используя DataViewSortBuilder.
+    /// Добавляет новый порядок сортировки, используя <see cref="DataViewSortBuilder"/>.
     /// Отображаемое название для меню равно имени первого столбца в <paramref name="sortBuilder"/>.
     /// Описатель столбца табличного просмотра, используемого для щелчка мышью, создается автоматически.
-    /// После добавления будет вызван метод DataViewSortBuilder.Clear(), чтобы построитель можно было сразу использовать повторно.
+    /// После добавления будет вызван метод <see cref="DataViewSortBuilder.Clear()"/>, чтобы построитель можно было сразу использовать повторно.
     /// </summary>
-    /// <param name="sortBuilder">Заполненный объект DataViewSortBuilder</param>
+    /// <param name="sortBuilder">Заполненный объект <see cref="DataViewSortBuilder"/></param>
     /// <returns>Объект сортировки</returns>
     public EFPDataViewOrder Add(DataViewSortBuilder sortBuilder)
     {
@@ -447,18 +462,17 @@ namespace FreeLibSet.Forms
       return order;
     }
 
-
     #endregion
 
     #region Другие методы
 
     /// <summary>
-    /// Возвращает первый подходящий объект EFPDataViewOrder, который выбирается при щелчке мыши
-    /// на заголовке столбца с заданным именем. См. метод IndexOfItemForGridColumn().
+    /// Возвращает первый подходящий объект <see cref="EFPDataViewOrder"/>, который выбирается при щелчке мыши
+    /// на заголовке столбца с заданным именем. См. метод <see cref="IndexOfItemForGridColumn(string)"/>.
     /// Возвращает null, если столбец не предназначен для щелкания.
     /// </summary>
-    /// <param name="columnName">Имя столбца (EFPDataGridViewColumn.Name)</param>
-    /// <returns>EFPDataViewOrder или null</returns>
+    /// <param name="columnName">Имя столбца (<see cref="EFPDataGridViewColumn.Name"/>)</param>
+    /// <returns><see cref="EFPDataViewOrder "/> или null</returns>
     public EFPDataViewOrder FindForGridColumn(string columnName)
     {
       int p = IndexOfItemForGridColumn(columnName);
@@ -470,13 +484,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Выполняет поиск по имени столбца табличного просмотра, щелчок мыши на котором выполняет сортировку.
-    /// Используется свойство EFPDataGridViewSortInfo.ColumnName.
+    /// Используется свойство <see cref="EFPDataGridViewSortInfo.ClickableColumnNames"/>.
     /// Возвращается индекс первого подходящего порядка сортировки. В списке может быть несколько
     /// порядков сортировки, переключаемых щелчком на этом столбце.
     /// Возвращает (-1), если столбец не предназначен для щелкания.
     /// </summary>
-    /// <param name="columnName">Имя столбца (EFPDataGridViewColumn.Name)</param>
-    /// <returns>Индекс первого подходящего EFPDataGridViewOrder или (-1)</returns>
+    /// <param name="columnName">Имя столбца (<see cref="EFPDataGridViewColumn.Name"/>)</param>
+    /// <returns>Индекс первого подходящего <see cref="EFPDataViewOrder"/> или (-1)</returns>
     public int IndexOfItemForGridColumn(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))

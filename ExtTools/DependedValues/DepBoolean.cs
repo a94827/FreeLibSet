@@ -28,7 +28,7 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Создает объект, реализующий функцию AND для произвольного числав aргументов
+    /// Создает объект, реализующий функцию AND для произвольного числа aргументов
     /// </summary>
     /// <param name="args">Массив аргументов</param>
     public DepAnd(params DepValue<Boolean>[] args)
@@ -44,7 +44,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Вычисление значения
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Вычисленное значение</returns>
     protected override bool Calculate()
     {
       for (int i = 0; i < Args.Length; i++)
@@ -60,7 +60,7 @@ namespace FreeLibSet.DependedValues
     #region ToString()
 
     /// <summary>
-    /// Возвращает "AND", если свойство OwnerInfo не установлено
+    /// Возвращает "AND", если свойство <see cref="DepValue{Boolean}.OwnerInfo"/> не установлено
     /// </summary>
     /// <returns>Текстовое представление для отладки</returns>
     public override string ToString()
@@ -78,7 +78,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Присоединение ко входу с логикой "И" к существующим источникам.
     /// Если <paramref name="resValue"/> не имеет источника, то <paramref name="srcValue"/> присоединяется в качестве источника
-    /// непосредственно. Если источник есть, то создается новый объект DepAnd.
+    /// непосредственно. Если источник есть, то создается новый объект <see cref="DepAnd"/>.
     /// </summary>
     /// <param name="resValue">Зависимое значение</param>
     /// <param name="srcValue">Исходное значение</param>
@@ -128,7 +128,7 @@ namespace FreeLibSet.DependedValues
     }
 
     /// <summary>
-    /// Создает объект, реализующий функцию OR для произвольного числав aргументов
+    /// Создает объект, реализующий функцию OR для произвольного числа aргументов
     /// </summary>
     /// <param name="args">Массив аргументов</param>
     public DepOr(params DepValue<Boolean>[] args)
@@ -144,7 +144,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Вычисление значения
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Вычисленное значение OR</returns>
     protected override bool Calculate()
     {
       for (int i = 0; i < Args.Length; i++)
@@ -160,7 +160,7 @@ namespace FreeLibSet.DependedValues
     #region ToString()
 
     /// <summary>
-    /// Возвращает "OR", если свойство OwnerInfo не установлено
+    /// Возвращает "OR", если свойство <see cref="DepValue{Boolean}.OwnerInfo"/> не установлено
     /// </summary>
     /// <returns>Текстовое представление для отладки</returns>
     public override string ToString()
@@ -178,7 +178,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Присоединение ко входу с логикой "ИЛИ" к существующим источникам.
     /// Если <paramref name="resValue"/> не имеет источника, то <paramref name="srcValue"/> присоединяется в качестве источника
-    /// непосредственно. Если источник есть, то создается новый объект DepOr.
+    /// непосредственно. Если источник есть, то создается новый объект <see cref="DepOr"/>.
     /// </summary>
     /// <param name="resValue">Зависимое значение</param>
     /// <param name="srcValue">Исходное значение</param>
@@ -291,8 +291,8 @@ namespace FreeLibSet.DependedValues
   }
 
   /// <summary>
-  /// Сравнение двух значений 
-  /// Содержит значение true, когда аргументы Arg1 и Arg2 равны друг другу
+  /// Сравнение двух значений .
+  /// Содержит значение true, когда аргументы <see cref="DepExpr2{Boolean, T, T}.Arg1"/> и <see cref="DepExpr2{Boolean, T, T}.Arg2"/> равны друг другу.
   /// </summary>
   /// <typeparam name="T">Тип сравниваемых значений.</typeparam>
   [Serializable]
@@ -398,8 +398,8 @@ namespace FreeLibSet.DependedValues
 
   /// <summary>
   /// Сравнение двух значений, с поддержкой шести операций сравнения.
-  /// Содержит результат сравнения аргументов Arg1 и Arg2.
-  /// В отличие от шаблонного класса DepEqual, для DepCompare требуется, чтобы тип <typeparamref name="T"/> поддерживал сравнение на "больше/меньше".
+  /// Содержит результат сравнения аргументов <see cref="DepExpr2{Boolean, T, T}.Arg1"/> и <see cref="DepExpr2{Boolean, T, T}.Arg2"/>.
+  /// В отличие от шаблонного класса <see cref="DepEqual{T}"/>, для <see cref="DepComparer{T}"/> требуется, чтобы тип <typeparamref name="T"/> поддерживал сравнение на "больше/меньше".
   /// Для этого, либо класс должен реализовывать интерфейс IComparable of T, либо должно быть задано свойство Comparer.
   /// </summary>
   /// <typeparam name="T">Тип сравниваемых значений</typeparam>
@@ -472,7 +472,7 @@ namespace FreeLibSet.DependedValues
     #region ToString()
 
     /// <summary>
-    /// Возвращает "OPERATOR xxx", если свойство OwnerInfo не установлено
+    /// Возвращает "OPERATOR xxx", если свойство <see cref="DepValue{Boolean}"/>.OwnerInfo не установлено
     /// </summary>
     /// <returns>Текстовое представление для отладки</returns>
     public override string ToString()
@@ -490,7 +490,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Выполняет расчет
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Результат сравнения</returns>
     protected override bool Calculate()
     {
       return Compare(Arg1.Value, Arg2.Value, Kind, Comparer);
@@ -516,8 +516,8 @@ namespace FreeLibSet.DependedValues
 
   /// <summary>
   /// Проверка попадания значения в диапазон.
-  /// Тип <typeparamref name="T"/> должен реализовывать интерфейс IComparable of T, либо должно быть задано свойство Comparer.
-  /// Полуоткрытые интервалы не поддерживаются. Используйте класс DepComparer.
+  /// Тип <typeparamref name="T"/> должен реализовывать интерфейс <see cref="IComparable{T}.CompareTo(T)"/>, либо должно быть задано свойство <see cref="Comparer"/>.
+  /// Полуоткрытые интервалы не поддерживаются. Используйте класс <see cref="DepComparer{T}"/>.
   /// </summary>
   /// <typeparam name="T">Тип сравниваемых значений</typeparam>
   [Serializable]
@@ -571,7 +571,7 @@ namespace FreeLibSet.DependedValues
 
     /// <summary>
     /// Сравниватель для значений.
-    /// Если свойство не было установлено в явном виде, возвращается Comparer of T.Default
+    /// Если свойство не было установлено в явном виде, возвращается <see cref="System.Collections.Generic.Comparer{T}.Default"/>  of T.Default
     /// </summary>
     public IComparer<T> Comparer { get { return _Comparer; } }
     private readonly IComparer<T> _Comparer;
@@ -581,7 +581,7 @@ namespace FreeLibSet.DependedValues
     #region ToString()
 
     /// <summary>
-    /// Возвращает "INRANGE", если свойство OwnerInfo не установлено
+    /// Возвращает "INRANGE", если свойство <see cref="DepValue{T}.OwnerInfo"/> не установлено
     /// </summary>
     /// <returns>Текстовое представление для отладки</returns>
     public override string ToString()
@@ -599,7 +599,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Выполняет расчет
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Результат сравнения</returns>
     protected override bool Calculate()
     {
       return Comparer.Compare(Arg1.Value, Arg2.Value) >= 0 &&

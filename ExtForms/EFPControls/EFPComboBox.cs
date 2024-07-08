@@ -259,6 +259,25 @@ namespace FreeLibSet.Forms
   /// </summary>
   public class EFPHistComboBox : EFPTextComboBox
   {
+    #region Константы
+
+    /// <summary>
+    /// Значение по умолчанию для <see cref="MaxHistLength"/>
+    /// </summary>
+    public const int DefaultMaxHistLength = HistoryList.DefaultMaxHistLength;
+
+    /// <summary>
+    /// Минимальное значение для <see cref="MaxHistLength"/>
+    /// </summary>
+    public const int MinimumMaxHistLength = 2;
+
+    /// <summary>
+    /// Максимальное значение для <see cref="MaxHistLength"/>
+    /// </summary>
+    public const int MaximumMaxHistLength = 100;
+
+    #endregion
+
     #region Конструктор
 
     /// <summary>
@@ -269,7 +288,7 @@ namespace FreeLibSet.Forms
     public EFPHistComboBox(EFPBaseProvider baseProvider, ComboBox control)
       : base(baseProvider, control)
     {
-      _MaxHistLength = HistoryList.DefaultMaxHistLength;
+      _MaxHistLength = DefaultMaxHistLength;
       _DefaultItems = DataTools.EmptyStrings;
     }
 
@@ -279,7 +298,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Максимальная длина списка истории.
-    /// Возможные значения: от 2 до 100. По умолчанию: 10.
+    /// Возможные значения: от <see cref="MinimumMaxHistLength"/> до <see cref="MaximumMaxHistLength"/>. По умолчанию: <see cref="DefaultMaxHistLength"/>.
     /// Свойство должно устанавливаться до записи/чтения свойства <see cref="HistList"/>.
     /// </summary>
     public int MaxHistLength
@@ -287,9 +306,9 @@ namespace FreeLibSet.Forms
       get { return _MaxHistLength; }
       set
       {
-        if (value < 2 || value > 100)
+        if (value < MinimumMaxHistLength || value > MaximumMaxHistLength)
           throw new ArgumentOutOfRangeException("value", value,
-            "Максимальное число строк истории может быть в диапазоне от 2 до 100");
+            "Максимальное число строк истории может быть в диапазоне от "+MinimumMaxHistLength.ToString()+" до "+MaximumMaxHistLength.ToString());
         _MaxHistLength = value;
       }
     }
@@ -906,7 +925,7 @@ namespace FreeLibSet.Forms
   /// Комбоблок с редактированием для ввода целых чисел. Также поддерживаются 
   /// специальные текстовые значения, которые могут быть выбраны из выпадающего
   /// списка или введены вручную. Каждому такому значению соответствует числовой код.
-  /// Текущим значением является целочисленное свойство Value.
+  /// Текущим значением является целочисленное свойство <see cref="Value"/>.
   /// </summary>
   public class EFPIntEditComboBox : EFPControl<ComboBox>
   {

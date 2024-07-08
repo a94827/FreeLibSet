@@ -18,25 +18,35 @@ namespace TestTreeViews
 {
   public partial class TestCheckBoxesForm : Form
   {
-    public TestCheckBoxesForm(bool showCheckBoxes)
+    public TestCheckBoxesForm(ITreeModel model, bool showCheckBoxes)
     {
       InitializeComponent();
 
-      SimpleFileModel model = new SimpleFileModel(FileTools.ApplicationBaseDir);
-
       EFPFormProvider efpForm = new EFPFormProvider(this);
+
+      #region TreeView
 
       EFPControlWithToolBar<TreeView> cwt1 = new EFPControlWithToolBar<TreeView>(efpForm, panel1);
       efp1 = new EFPTreeView(cwt1);
       efp1.Control.ImageList = EFPApp.MainImages.ImageList;
+      InitLocalMenu(efp1);
       CreateTreeNodesFromModel(efp1.Control.Nodes, model);
+
+      #endregion
+
+      #region TreeViewAdv без столбцов
 
       EFPControlWithToolBar<TreeViewAdv> cwt2 = new EFPControlWithToolBar<TreeViewAdv>(efpForm, panel2);
       efp2 = new EFPTreeViewAdv(cwt2);
       efp2.Control.UseColumns = false;
       efp2.CheckBoxStorage = new EFPTreeViewAdvCheckBoxStorage();
+      InitLocalMenu(efp2);
       // Инициализация NodeStateIcon и NodeTextBox будет выполнена автоматически
       efp2.Control.Model = model;
+
+      #endregion
+
+      #region TreeViewAdv со столбцами
 
       EFPControlWithToolBar<TreeViewAdv> cwt3 = new EFPControlWithToolBar<TreeViewAdv>(efpForm, panel3);
       efp3 = new EFPTreeViewAdv(cwt3);
@@ -77,12 +87,14 @@ namespace TestTreeViews
       efp3.Control.NodeControls.Add(cbHidden);
                       
       efp3.CheckBoxStorage = new EFPTreeViewAdvCheckBoxStorage();
+      InitLocalMenu(efp3);
       efp3.Control.Model = model;
 
       efp1.CheckBoxes = showCheckBoxes;
       efp2.CheckBoxes = showCheckBoxes;
       efp3.CheckBoxes = showCheckBoxes;
 
+      #endregion
 
       EFPCheckBox efpCheckBoxes = new EFPCheckBox(efpForm, cbCheckBoxes);
       efpCheckBoxes.Checked = showCheckBoxes;
@@ -126,115 +138,28 @@ namespace TestTreeViews
           DoAddNodesFromModel(node.Nodes, model, path2);
       }
     }
-  }
 
-  class SimpleFileModel : ITreeModel
-  {
-    public SimpleFileModel(AbsPath dir)
+
+    private static void InitLocalMenu(IEFPTreeView efp)
     {
-      _Root = new FileItem(dir.FileName, 0, true);
-      AddOneDir(dir, _Root);
+      EFPCommandItem ci = new EFPCommandItem("Service", "CurrentPopupPosition");
+      ci.MenuText = "CurrentPopupPosition";
+      ci.Tag = efp;
+      ci.Click += CiCurrentPopupPosition_Click;
+      ci.GroupBegin = true;
+      efp.CommandItems.Add(ci);
     }
 
-    private static void AddOneDir(AbsPath dir, FileItem parent)
+    private static void CiCurrentPopupPosition_Click(object sender, EventArgs args)
     {
-      string[] a1 = System.IO.Directory.GetDirectories(dir.Path);
-      for (int i = 0; i < a1.Length; i++)
-      {
-        AbsPath childDir = new AbsPath(a1[i]);
-        System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(childDir.Path);
-        FileItem item = new FileItem(childDir.FileName, 0, true);
-        item.Hidden = (di.Attributes & System.IO.FileAttributes.Hidden) != 0;
-        parent.Children.Add(item);
-        AddOneDir(childDir, item); // рекурсивный вызов
-      }
-
-      string[] a2 = System.IO.Directory.GetFiles(dir.Path);
-      for (int i = 0; i < a2.Length; i++)
-      {
-        AbsPath filePath = new AbsPath(a2[i]);
-        System.IO.FileInfo fi = new System.IO.FileInfo(filePath.Path);
-        FileItem item = new FileItem(filePath.FileName, fi.Length, false);
-        item.ReadOnly = (fi.Attributes & System.IO.FileAttributes.ReadOnly) != 0;
-        item.Hidden = (fi.Attributes & System.IO.FileAttributes.Hidden)!=0;
-        parent.Children.Add(item);
-      }
+      EFPCommandItem ci = (EFPCommandItem)sender;
+      IEFPTreeView efp = (EFPTreeView)(ci.Tag);
+      TextInputDialog dlg = new TextInputDialog();
+      dlg.Title = "CurrentPopupPosition";
+      dlg.Text = "Тест";
+      dlg.Prompt = "Фиктивный диалог";
+      dlg.DialogPosition = efp.CurrentPopupPosition;
+      dlg.ShowDialog();
     }
-
-    private class FileItem
-    {
-      public FileItem(string fileName, long length, bool isDir)
-      {
-        _FileName = fileName;
-        _Length = length;
-        if (isDir)
-          _Children = new List<FileItem>();
-        else
-          _Children = null;
-      }
-
-      public string FileName { get { return _FileName; } }
-      private string _FileName;
-
-      public long Length { get { return _Length; } }
-      private long _Length;
-
-      public List<FileItem> Children { get { return _Children; } }
-      private List<FileItem> _Children;
-
-      public bool ReadOnly { get { return _ReadOnly; } set { _ReadOnly = value; } }
-      private bool _ReadOnly;
-
-      public bool Hidden { get { return _Hidden; } set { _Hidden = value; } }
-      private bool _Hidden;
-
-      public override string ToString()
-      {
-        return FileName;
-      }
-    }
-
-    private FileItem _Root;
-
-    #region ITreeModel Members
-
-    public System.Collections.IEnumerable GetChildren(TreePath treePath)
-    {
-      if (treePath.IsEmpty)
-        return _Root.Children;
-
-      FileItem item = treePath.LastNode as FileItem;
-      if (item != null)
-      {
-        if (item.Children == null)
-          return new DummyEnumerable<object>();
-        else
-          return item.Children;
-      }
-      else
-        return new DummyEnumerable<object>();
-    }
-
-    public bool IsLeaf(TreePath treePath)
-    {
-      if (treePath.IsEmpty)
-        return false;
-
-      FileItem item = treePath.LastNode as FileItem;
-      if (item == null)
-        return true;
-      else
-        return item.Children == null;
-    }
-
-    public event EventHandler<TreeModelEventArgs> NodesChanged;
-
-    public event EventHandler<TreeModelEventArgs> NodesInserted;
-
-    public event EventHandler<TreeModelEventArgs> NodesRemoved;
-
-    public event EventHandler<TreePathEventArgs> StructureChanged;
-
-    #endregion
   }
 }

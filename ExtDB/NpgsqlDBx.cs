@@ -986,19 +986,19 @@ namespace FreeLibSet.Data.Npgsql
             colDef.MaxValue = 255;
             break;
 
-          case "float":
           case "float4":
-            colDef.ColumnType = DBxColumnType.Float;
-            // TODO: Использовать длину поля для разделения float/double
-            colDef.MinValue = Double.MinValue;
-            colDef.MaxValue = Double.MaxValue;
-            break;
-          case "real":
-          case "float8":
             colDef.ColumnType = DBxColumnType.Float;
             // TODO: Использовать длину поля для разделения float/double
             colDef.MinValue = Single.MinValue;
             colDef.MaxValue = Single.MaxValue;
+            break;
+          case "float":
+          case "real":
+          case "float8":
+            colDef.ColumnType = DBxColumnType.Float;
+            // TODO: Использовать длину поля для разделения float/double
+            colDef.MinValue = Double.MinValue;
+            colDef.MaxValue = Double.MaxValue;
             break;
 
           case "money":

@@ -375,6 +375,12 @@ namespace FreeLibSet.Forms
     public const string UserParams = "UserParams";
 
     /// <summary>
+    /// Хранение произвольных пользовательских параметров, относящихся к конкретному компьютеру.
+    /// Используется в <see cref="HistFileBrowserDialog"/> и <see cref="HistFolderBrowserDialog"/>
+    /// </summary>
+    public const string UserFiles = "UserFiles";
+
+    /// <summary>
     /// Хранение истории произвольных пользовательских параметров.
     /// Используется по умолчанию в <see cref="EFPConfigParamSetComboBox"/>
     /// </summary>
@@ -480,6 +486,7 @@ namespace FreeLibSet.Forms
       switch (category)
       {
         case ReportFiles:
+        case UserFiles:
         case UI:
         case UIHistory:
         case UISnapshot:

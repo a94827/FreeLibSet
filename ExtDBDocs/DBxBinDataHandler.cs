@@ -308,7 +308,7 @@ namespace FreeLibSet.Data.Docs
       }
 
       if (maxSection > SectionEntryCount)
-        throw new Exception("Недостаточное количество точек входа во фрагментированные базы данных (" + SectionEntryCount.ToString() + ")." +
+        throw new InvalidOperationException("Недостаточное количество точек входа во фрагментированные базы данных (" + SectionEntryCount.ToString() + ")." +
           "В таблице BinData используется секция с номером " + maxSection.ToString());
 
       // "Лишние" секции могут быть, это не ошибка

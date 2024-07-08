@@ -10,11 +10,12 @@ using FreeLibSet.Collections;
 using FreeLibSet.Formatting;
 using FreeLibSet.Data;
 using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализация свойства EFPGridProducer.ToolTips
+  /// Реализация свойства <see cref="EFPGridProducer.ToolTips"/>
   /// </summary>
   public class EFPGridProducerToolTips : NamedList<EFPGridProducerToolTip>
   {
@@ -144,7 +145,7 @@ namespace FreeLibSet.Forms
     /// вычисляется на основании числового поля.
     /// Перечислимые значения должны идти по порядку (0,1,2, ...).
     /// Добавляемая подсказка имеет имя "<paramref name="sourceColumnName"/>_Text".
-    /// Для показа текста "нерегулярных" перечислений используйте AddUserItem().
+    /// Для показа текста "нерегулярных" перечислений используйте <see cref="AddUserItem(string, string, EFPGridProducerValueNeededEventHandler)"/>.
     /// </summary>
     /// <param name="sourceColumnName">Имя целочисленного столбца, содержащего исходное значение</param>
     /// <param name="prefixText">Текст, который будет выведен перед значением в виде "DisplayName : Значение".
@@ -198,7 +199,11 @@ namespace FreeLibSet.Forms
     public EFPGridProducerToolTip AddUserItem(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler handler)
     {
-      string[] aNames = sourceColumnNames.Split(',');
+      string[] aNames;
+      if (String.IsNullOrEmpty(sourceColumnNames))
+        aNames = DataTools.EmptyStrings; // 14.06.2024
+      else
+        aNames = sourceColumnNames.Split(',');
       EFPGridProducerToolTip item = new EFPGridProducerToolTip(name, aNames);
       item.ValueNeeded += handler;
       Add(item);
@@ -226,7 +231,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Последняя добавленная подсказка.
-    /// Вспомогательное свойство, которое можно использовать в процессе добавления подсказок
+    /// Вспомогательное свойство, которое можно использовать в процессе добавления подсказок.
     /// </summary>
     public EFPGridProducerToolTip LastAdded
     {
@@ -245,7 +250,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Разделитель, который следует выводить между всплывающей подсказкой по ячейке и всплывающей подсказкой по строке таблицы.
-    /// Содержит перевод строки, символы "---" и еще один перевод строки
+    /// Содержит перевод строки, символы "---" и еще один перевод строки.
     /// </summary>
     public static readonly string ToolTipTextSeparator = Environment.NewLine + new string('-', 32) + Environment.NewLine;
 
@@ -329,6 +334,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Описание одного возможного элемента ToolTip.
+  /// Подсказки добавляются в коллекцию <see cref="EFPGridProducer.ToolTips"/>.
   /// </summary>
   public class EFPGridProducerToolTip : EFPGridProducerItemBase
   {
@@ -379,7 +385,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Форматирование данных при отображении.
-    /// Используется, если значение, возвращаемое методом GetValue(), реализует интерфейс IFormattable
+    /// Используется, если значение поля реализует интерфейс <see cref="IFormattable"/>.
     /// </summary>
     public string Format
     {
@@ -396,18 +402,18 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Форматирование данных при отображении.
-    /// Используется, если значение, возвращаемое методом GetValue(), реализует интерфейс IFormattable
+    /// Используется, если значение поля реализует интерфейс <see cref="IFormattable"/>.
     /// </summary>
     public IFormatProvider FormatProvider { get { return _FormatProvider; } set { _FormatProvider = value; } }
     private IFormatProvider _FormatProvider;
 
     /// <summary>
     /// Основной метод - получение текста всплывающей подсказки для строки табличного просмотра.
-    /// Вызывается событие ValueNeeded.
-    /// Если обработчик установил свойство ToolTipText, то возвращается этот текст.
-    /// Иначе проверяется свойство Value. Если значение свойства реализует интерфейс IFormattable, вызывается метод
-    /// ToString(), с использование свойств Format и FormatProvider.
-    /// К полученному тексту слева добавляется PrefixText.
+    /// Вызывается событие <see cref="EFPGridProducerItemBase.ValueNeeded"/>.
+    /// Если обработчик установил свойство <see cref="EFPGridProducerValueNeededEventArgs.ToolTipText"/>, то возвращается этот текст.
+    /// Иначе проверяется свойство <see cref="EFPGridProducerValueNeededEventArgs.Value"/>. Если значение свойства реализует интерфейс <see cref="IFormattable"/>, вызывается метод
+    /// <see cref="IFormattable.ToString(string, IFormatProvider)"/>, с использование свойств <see cref="Format"/> и <see cref="FormatProvider"/>.
+    /// К полученному тексту слева добавляется <see cref="PrefixText"/>.
     /// </summary>
     /// <param name="rowInfo">Информация о строке</param>
     /// <returns>Текст всплывающей подсказки</returns>
@@ -433,8 +439,7 @@ namespace FreeLibSet.Forms
     #endregion
   }
   /// <summary>
-  /// Объект для извлечения всплывающих подсказок для строки, 
-  /// отдельно от табличного просмотра
+  /// Объект для извлечения всплывающих подсказок для строки отдельно от табличного просмотра
   /// </summary>
   public class GridProducerToolTipExtractor
   {
@@ -484,12 +489,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает GridProducer.LoadConfig() и создает объект
+    /// Вызывает <see cref="EFPGridProducer.LoadConfig(string, string, string)"/> и создает объект
     /// </summary>
     /// <param name="producer">Генератор табличного просмотра</param>
     /// <param name="configSectionName">Имя секции конфигурации, используемое табличным просмотром</param>
     /// <param name="defaultConfigName">Имя фиксированной настройки, используемой табличным просмотром.
-    /// Пустая строка (обычно), если используется настройка просмота GridProducer.DefaultConfig</param>
+    /// Пустая строка (обычно), если используется настройка просмотра <see cref="EFPGridProducer.DefaultConfig"/></param>
     /// <param name="cfgName">Имя сохраненной секции. В текущей реализации должно быть пустой строкой</param>
     public GridProducerToolTipExtractor(EFPGridProducer producer, string configSectionName, string defaultConfigName, string cfgName)
       : this(producer, producer.LoadConfig(configSectionName, defaultConfigName, cfgName))
@@ -497,12 +502,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает GridProducer.LoadConfig() и создает объект
+    /// Вызывает <see cref="EFPGridProducer.LoadConfig(string, string)"/> и создает объект
     /// </summary>
     /// <param name="producer">Генератор табличного просмотра</param>
     /// <param name="configSectionName">Имя секции конфигурации, используемое табличным просмотром</param>
     /// <param name="defaultConfigName">Имя фиксированной настройки, используемой табличным просмотром.
-    /// Пустая строка (обычно), если используется настройка просмота GridProducer.DefaultConfig</param>
+    /// Пустая строка (обычно), если используется настройка просмотра <see cref="EFPGridProducer.DefaultConfig"/></param>
     public GridProducerToolTipExtractor(EFPGridProducer producer, string configSectionName, string defaultConfigName)
       : this(producer, producer.LoadConfig(configSectionName, defaultConfigName))
     {
@@ -516,14 +521,14 @@ namespace FreeLibSet.Forms
     /// Объект-источник
     /// </summary>
     public EFPGridProducer Producer { get { return _Producer; } }
-    private EFPGridProducer _Producer;
+    private readonly EFPGridProducer _Producer;
 
     /// <summary>
-    /// Список используемых компонентов всплывающих подсказок
-    /// Задается в конструкторе
+    /// Список используемых компонентов всплывающих подсказок.
+    /// Задается в конструкторе.
     /// </summary>
     public IEnumerable<EFPGridProducerToolTip> ToolTips { get { return _ToolTips; } }
-    private IEnumerable<EFPGridProducerToolTip> _ToolTips;
+    private readonly IEnumerable<EFPGridProducerToolTip> _ToolTips;
 
     /// <summary>
     /// Возвращает true, если список подсказок пустой
@@ -534,14 +539,14 @@ namespace FreeLibSet.Forms
 
     #region Получение подсказки
 
-    private DataRowValueArray _RVA;
-    private StringBuilder _SB;
+    private readonly DataRowValueArray _RVA;
+    private readonly StringBuilder _SB;
 
     /// <summary>
     /// Основной метод получения подсказки.
-    /// Возвращает строку, содержащую тексты подсказок, разделенные символами CR+LF
-    /// Исходные данные должны быть переданы в виде строки данных Row. Строка должна
-    /// содержать все поля, необходимые для создания подсказки
+    /// Возвращает строку, содержащую тексты подсказок, разделенные символами CR+LF.
+    /// Исходные данные должны быть переданы в виде строки данных <see cref="System.Data.DataRow"/>. 
+    /// Строка должна содержать все поля, необходимые для создания подсказки.
     /// </summary>
     /// <param name="row">Строка исходных данных</param>
     /// <returns>Текст подсказки</returns>

@@ -12,6 +12,7 @@ using System.IO;
 using FreeLibSet.IO;
 using FreeLibSet.Collections;
 using FreeLibSet.UICore;
+using FreeLibSet.Config;
 
 namespace FreeLibSet.Forms
 {
@@ -56,22 +57,17 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Диалог выбора каталога. Диалог содержит поле ввода пути и кнопку "Обзор".
-  /// Имеет выпадающий список с ранее выбранными каталогами (история).
-  /// Также может быть выведена кнопка "Включая подкаталоги".
+  /// Базовый класс для <see cref="HistFolderBrowserDialog"/> и <see cref="HistFileBrowserDialog"/>
   /// </summary>
-  public class HistFolderBrowserDialog
+  public abstract class HistFileSystemBrowserDialogBase
   {
     #region Конструктор
 
     /// <summary>
-    /// Инициализация диалога параметрами по умолчанию
+    /// Инициализация значениями по умолчанию
     /// </summary>
-    public HistFolderBrowserDialog()
+    protected HistFileSystemBrowserDialogBase()
     {
-      _Title = "Выбор папки";
-      _ImageKey = "Open";
-      _Description = String.Empty;
       _MaxHistLength = HistoryList.DefaultMaxHistLength;
       _Mode = FileDialogMode.Read;
     }
@@ -83,13 +79,13 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Заголовок блока диалога
     /// </summary>
-    public string Title { get { return _Title; } set { _Title = value; } }
+    public string Title { get { return _Title ?? String.Empty; } set { _Title = value; } }
     private string _Title;
 
     /// <summary>
     /// Описание в нижней части диалога
     /// </summary>
-    public string Description { get { return _Description; } set { _Description = value; } }
+    public string Description { get { return _Description ?? String.Empty; } set { _Description = value; } }
     private string _Description;
 
     /// <summary>
@@ -99,37 +95,142 @@ namespace FreeLibSet.Forms
     private string _ImageKey;
 
     /// <summary>
-    /// Режим: открытие или запись.
+    /// Максимальное количество элементов в списке истории.
+    /// По умолчанию: 10.
+    /// </summary>
+    public int MaxHistLength { get { return _MaxHistLength; } set { _MaxHistLength = value; } }
+    private int _MaxHistLength;
+
+    /// <summary>
+    /// Основное свойство - список истории. 
+    /// </summary>
+    public HistoryList HistList { get { return _HistList; } set { _HistList = value; } }
+    private HistoryList _HistList;
+
+    /// <summary>
+    /// Упрощенный доступ к выбранному файлу/каталогу.
+    /// Установка свойства добавляет путь к списку.
+    /// </summary>
+    public abstract string SelectedPath { get; set; }
+
+    /// <summary>
+    /// Путь по умолчанию (по умолчанию - значение не задано).
+    /// </summary>
+    public abstract string DefaultPath { get; set; }
+
+
+    /// <summary>
+    /// <para>Имя секции конфигурации.</para> 
+    /// <para>Если свойство установлено, то список <see cref="HistList"/> будет сохраняться в секции конфигурации
+    /// категории <see cref="EFPConfigCategories.UserFiles"/> и восстанавливаться при следующем запуске.
+    /// Для хранения настроек используется <see cref="EFPApp.ConfigManager"/>.
+    /// По умолчанию - пустая строка - настройки не сохраняются.</para>
+    /// </summary>
+    public string ConfigSectionName
+    {
+      get { return _ConfigSectionName ?? String.Empty; }
+      set { _ConfigSectionName = value; }
+    }
+    private string _ConfigSectionName;
+
+    /// <summary>
+    /// Предполагаемый режим открытия файла - на чтение или на запись.
     /// По умолчанию - <see cref="FileDialogMode.Read"/>.
     /// </summary>
     public FileDialogMode Mode { get { return _Mode; } set { _Mode = value; } }
     private FileDialogMode _Mode;
 
     /// <summary>
-    /// Максимальная длина списка истории
-    /// По умолчанию - 10 значений
+    /// Режим проверки введенного пути.
     /// </summary>
-    public int MaxHistLength { get { return _MaxHistLength; } set { _MaxHistLength = value; } }
-    private int _MaxHistLength;
+    public TestPathMode PathValidateMode
+    {
+      get
+      {
+        if (_PathValidateMode.HasValue)
+          return _PathValidateMode.Value;
+        else
+          return DefaultPathValidateMode;
+      }
+      set { _PathValidateMode = value; }
+    }
+    private TestPathMode? _PathValidateMode;
 
     /// <summary>
-    /// Основное свойство - список истории. Строка с нулевым индексом соответствует
-    /// выбранному значению.
+    /// Значение свойства <see cref="PathValidateMode"/> по умолчанию
     /// </summary>
-    public HistoryList HistList { get { return _HistList; } set { _HistList = value; } }
-    private HistoryList _HistList;
+    protected abstract TestPathMode DefaultPathValidateMode { get; }
+
+    /// <summary>
+    /// Сбрасывает свойство <see cref="PathValidateMode"/> в значение по умолчанию.
+    /// </summary>
+    public void ResetPathValidateMode()
+    {
+      _PathValidateMode = null;
+    }
+
+    #endregion
+
+    #region Показ диалога
+
+    /// <summary>
+    /// Показывает блок диалога.
+    /// </summary>
+    /// <returns>Результат работы</returns>
+    public abstract DialogResult ShowDialog();
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Диалог выбора каталога. Диалог содержит поле ввода пути и кнопку "Обзор".
+  /// Имеет выпадающий список с ранее выбранными каталогами (история).
+  /// Также может быть выведена кнопка "Включая подкаталоги".
+  /// </summary>
+  public sealed class HistFolderBrowserDialog : HistFileSystemBrowserDialogBase
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализация диалога параметрами по умолчанию
+    /// </summary>
+    public HistFolderBrowserDialog()
+    {
+      Title = "Выбор папки";
+      ImageKey = "Open";
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// <para>Имя секции конфигурации.</para> 
+    /// <para>Если свойство установлено, то список <see cref="HistFileSystemBrowserDialogBase.HistList"/> будет сохраняться в секции конфигурации
+    /// категории <see cref="EFPConfigCategories.UserFiles"/> и восстанавливаться при следующем запуске.
+    /// Для хранения настроек используется <see cref="EFPApp.ConfigManager"/>.
+    /// По умолчанию - пустая строка - настройки не сохраняются.</para>
+    /// <para>Используется строкое значение "Directory".
+    /// Также может сохраняться флажок <see cref="SubFolders"/> в поле "SubDirs" при <see cref="ShowSubFoldersButton"/>=true.</para>
+    /// </summary>
+    public new string ConfigSectionName
+    {
+      get { return base.ConfigSectionName; }
+      set { base.ConfigSectionName = value; }
+    }
 
     /// <summary>
     /// Упрощенный доступ к каталогу.
     /// Установка свойства добавляет каталог к списку.
     /// Текущий каталог (если не пустая строка) всегда заканчивается символом "\".
     /// </summary>
-    public string SelectedPath
+    public override string SelectedPath
     {
       get { return HistList.Top; }
       set
       {
-        AbsPath path = new AbsPath(value);
+        //AbsPath path = new AbsPath(value);
+        RelPath path = new RelPath(value); // 26.06.2024
         HistList = HistList.Add(path.SlashedPath, MaxHistLength);
       }
     }
@@ -140,13 +241,14 @@ namespace FreeLibSet.Forms
     /// выбирается каталог по умолчанию. Каталог по умолчанию присутствует в 
     /// выпадающем списке, но не сохраняется в истории, если он был выбран в явном виде.
     /// </summary>
-    public string DefaultPath
+    public override string DefaultPath
     {
       get { return _DefaultPath; }
       set
       {
-        AbsPath Path = new AbsPath(value);
-        _DefaultPath = Path.SlashedPath;
+        //AbsPath path = new AbsPath(value);
+        RelPath path = new RelPath(value); // 26.06.2024
+        _DefaultPath = path.SlashedPath;
       }
     }
     private string _DefaultPath;
@@ -166,34 +268,24 @@ namespace FreeLibSet.Forms
     public bool SubFolders { get { return _SubFolders; } set { _SubFolders = value; } }
     private bool _SubFolders;
 
-    #endregion
-
-    #region Проверка введенного пути
 
     /// <summary>
     /// Режим проверки введенного пути.
-    /// Значение по умолчанию зависит от свойства <see cref="Mode"/>. При <see cref="Mode"/>=<see cref="FileDialogMode.Write"/> возвращает <see cref="TestPathMode.RootExists"/>,
+    /// Значение по умолчанию зависит от свойства <see cref="HistFileSystemBrowserDialogBase.Mode"/>. При <see cref="HistFileSystemBrowserDialogBase.Mode"/>=<see cref="FileDialogMode.Write"/> возвращает <see cref="TestPathMode.RootExists"/>,
     /// а при false - <see cref="TestPathMode.DirectoryExists"/>.
     /// </summary>
-    public TestPathMode PathValidateMode
+    public new TestPathMode PathValidateMode
     {
-      get
-      {
-        if (_PathValidateMode.HasValue)
-          return _PathValidateMode.Value;
-        else
-          return (Mode == FileDialogMode.Write) ? TestPathMode.RootExists : TestPathMode.DirectoryExists;
-      }
-      set { _PathValidateMode = value; }
+      get { return base.PathValidateMode; }
+      set { base.PathValidateMode = value; }
     }
-    private TestPathMode? _PathValidateMode;
 
     /// <summary>
-    /// Сбрасывает свойство <see cref="PathValidateMode"/> в значение по умолчанию.
+    /// Значение по умолчанию
     /// </summary>
-    public void ResetPathValidateMode()
+    protected override TestPathMode DefaultPathValidateMode
     {
-      _PathValidateMode = null;
+      get { return (Mode == FileDialogMode.Write) ? TestPathMode.RootExists : TestPathMode.DirectoryExists; }
     }
 
     #endregion
@@ -206,8 +298,22 @@ namespace FreeLibSet.Forms
     /// Показывает блок диалога.
     /// </summary>
     /// <returns>Результат работы</returns>
-    public DialogResult ShowDialog()
+    public override DialogResult ShowDialog()
     {
+      if (!String.IsNullOrEmpty(ConfigSectionName))
+      {
+        EFPConfigSectionInfo sectInfo = new EFPConfigSectionInfo(ConfigSectionName, EFPConfigCategories.UserFiles);
+        CfgPart cfg;
+        using (EFPApp.ConfigManager.GetConfig(sectInfo, EFPConfigMode.Read, out cfg))
+        {
+          HistoryList histList2 = cfg.GetHist("Directory");
+          if (histList2.Count > 0)
+            HistList = histList2;
+          if (ShowSubFoldersButton)
+            SubFolders = cfg.GetBoolDef("SubDirs", SubFolders);
+        }
+      }
+
       DialogResult res;
       _TheForm = new FileBrowseForm();
       try
@@ -226,7 +332,7 @@ namespace FreeLibSet.Forms
           _TheForm.efpMainCB.DefaultItems = new string[1] { DefaultPath };
         _TheForm.efpMainCB.ToolTipText = "Поле ввода каталога." + Environment.NewLine +
           "Чтобы выбрать ранее использованный путь, используйте выпадающий список." + Environment.NewLine +
-          "Чтобы выбрать каталог с помощью стандартного диалога Windows, нажмите кнопку \"Обзор\"";
+          "Чтобы выбрать каталог с помощью стандартного диалога, нажмите кнопку \"Обзор\"";
 
         EFPFolderBrowserButton efpBrowse = new EFPFolderBrowserButton(_TheForm.efpMainCB, _TheForm.btnBrowse);
         efpBrowse.ShowNewFolderButton = (Mode == FileDialogMode.Write);
@@ -254,6 +360,18 @@ namespace FreeLibSet.Forms
             SubFolders = _TheForm.efpSubFolders.Checked;
 
           EFPApp.CurrentDirectory = new AbsPath(_TheForm.efpMainCB.Text);
+
+          if (!String.IsNullOrEmpty(ConfigSectionName))
+          {
+            EFPConfigSectionInfo sectInfo = new EFPConfigSectionInfo(ConfigSectionName, EFPConfigCategories.UserFiles);
+            CfgPart cfg;
+            using (EFPApp.ConfigManager.GetConfig(sectInfo, EFPConfigMode.Write, out cfg))
+            {
+              cfg.SetHist("Directory", HistList);
+              if (ShowSubFoldersButton)
+                cfg.SetBool("SubDirs", SubFolders);
+            }
+          }
         }
       }
       finally
@@ -284,15 +402,16 @@ namespace FreeLibSet.Forms
           args.Cancel = true;
         }
       }
-      else
-      {
-        if (!Directory.Exists(path.Path))
-        {
-          EFPApp.ShowTempMessage("Каталог не существует");
-          _TheForm.DialogResult = DialogResult.Cancel;
-          args.Cancel = true;
-        }
-      }
+      // Убрано 25.06.2024
+      //else
+      //{
+      //  if (!Directory.Exists(path.Path))
+      //  {
+      //    EFPApp.ShowTempMessage("Каталог не существует");
+      //    _TheForm.DialogResult = DialogResult.Cancel;
+      //    args.Cancel = true;
+      //  }
+      //}
     }
 
     #endregion
@@ -302,7 +421,7 @@ namespace FreeLibSet.Forms
   /// Диалог выбора файла. Диалог содержит поле ввода пути и кнопку "Обзор".
   /// Имеет выпадающий список с ранее выбранными файлами (история).
   /// </summary>
-  public class HistFileBrowserDialog
+  public class HistFileBrowserDialog : HistFileSystemBrowserDialogBase
   {
     #region Конструктор
 
@@ -311,11 +430,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public HistFileBrowserDialog()
     {
-      _Title = "Выбор файла";
-      _ImageKey = "Open";
-      _Description = String.Empty;
-      _MaxHistLength = 10;
-      _Mode = FileDialogMode.Read;
+      Title = "Выбор файла";
+      ImageKey = "Open";
     }
 
     #endregion
@@ -323,31 +439,18 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Заголовок блока диалога.
-    /// По умолчанию - "Выбор файла"
+    /// <para>Имя секции конфигурации.</para> 
+    /// <para>Если свойство установлено, то список <see cref="HistFileSystemBrowserDialogBase.HistList"/> будет сохраняться в секции конфигурации
+    /// категории <see cref="EFPConfigCategories.UserFiles"/> и восстанавливаться при следующем запуске.
+    /// Для хранения настроек используется <see cref="EFPApp.ConfigManager"/>.
+    /// По умолчанию - пустая строка - настройки не сохраняются.</para>
+    /// <para> Используется строковое значение "File"</para> 
     /// </summary>
-    public string Title { get { return _Title; } set { _Title = value; } }
-    private string _Title;
-
-    /// <summary>
-    /// Описание в нижней части диалога.
-    /// По умолчанию - пусто.
-    /// </summary>
-    public string Description { get { return _Description; } set { _Description = value; } }
-    private string _Description;
-
-    /// <summary>
-    /// Значок формы (изображение в <see cref="EFPApp.MainImages"/>)
-    /// </summary>
-    public string ImageKey { get { return _ImageKey; } set { _ImageKey = value; } }
-    private string _ImageKey;
-
-    /// <summary>
-    /// Предполагаемый режим открытия файла - на чтение или на запись.
-    /// По умолчанию - <see cref="FileDialogMode.Read"/>.
-    /// </summary>
-    public FileDialogMode Mode { get { return _Mode; } set { _Mode = value; } }
-    private FileDialogMode _Mode;
+    public new string ConfigSectionName
+    {
+      get { return base.ConfigSectionName; }
+      set { base.ConfigSectionName = value; }
+    }
 
     /// <summary>
     /// Фильтр для файлов в формате "Описание|Маска|...".
@@ -357,68 +460,66 @@ namespace FreeLibSet.Forms
     private string _Filter;
 
     /// <summary>
-    /// Максимальное количество элементов в списке истории.
-    /// По умолчанию: 10.
-    /// </summary>
-    public int MaxHistLength { get { return _MaxHistLength; } set { _MaxHistLength = value; } }
-    private int _MaxHistLength;
-
-    /// <summary>
-    /// Основное свойство - список истории. 
-    /// </summary>
-    public HistoryList HistList { get { return _HistList; } set { _HistList = value; } }
-    private HistoryList _HistList;
-
-    /// <summary>
     /// Упрощенный доступ к имени выбранного файла (включая путь).
     /// Установка свойства добавляет список к истории.
     /// </summary>
-    public string FileName
+    public override string SelectedPath
     {
       get { return HistList.Top; }
       set
       {
-        HistList = HistList.Add(value);
+        //AbsPath path = new AbsPath(value);
+        RelPath path = new RelPath(value); // 26.06.2024
+        HistList = HistList.Add(path.Path, MaxHistLength);
       }
     }
+
+    /// <summary>
+    /// Дублирует свойство SelectedPath
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public string FileName { get { return SelectedPath; } set { SelectedPath = value; } }
 
     /// <summary>
     /// Путь к файлу по умолчанию.
-    /// Если свойство установлено, и <see cref="HistList"/> не содержит ни одной строки, то
+    /// Если свойство установлено, и <see cref="HistFileSystemBrowserDialogBase.HistList"/> не содержит ни одной строки, то
     /// при открытии диалога в поле будет введен этот путь. Также он будет присутствовать в списке
     /// истории.
     /// </summary>
-    public string DefaultFileName { get { return _DefaultFileName; } set { _DefaultFileName = value; } }
-    private string _DefaultFileName;
+    public override string DefaultPath
+    {
+      get { return _DefaultPath; }
+      set
+      {
+        RelPath path = new RelPath(value); 
+        _DefaultPath = path.Path;
+      }
+    }
+    private string _DefaultPath;
 
-    #endregion
-
-    #region Проверка введенного пути
+    /// <summary>
+    /// Дублирует свойство DefaultPath
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public string DefaultFileName { get { return DefaultPath; } set { DefaultPath = value; } }
 
     /// <summary>
     /// Режим проверки введенного пути.
-    /// Значение по умолчанию зависит от свойства <see cref="Mode"/>. При <see cref="Mode"/>=<see cref="FileDialogMode.Write"/> возвращает <see cref="TestPathMode.RootExists"/>,
+    /// Значение по умолчанию зависит от свойства <see cref="HistFileSystemBrowserDialogBase.Mode"/>. При <see cref="HistFileSystemBrowserDialogBase.Mode"/>=<see cref="FileDialogMode.Write"/> возвращает <see cref="TestPathMode.RootExists"/>,
     /// а при <see cref="FileDialogMode.Read"/> - <see cref="TestPathMode.FileExists"/>.
     /// </summary>
-    public TestPathMode PathValidateMode
+    public new TestPathMode PathValidateMode
     {
-      get
-      {
-        if (_PathValidateMode.HasValue)
-          return _PathValidateMode.Value;
-        else
-          return (Mode == FileDialogMode.Write) ? TestPathMode.RootExists : TestPathMode.FileExists;
-      }
-      set { _PathValidateMode = value; }
+      get { return base.PathValidateMode; }
+      set { base.PathValidateMode = value; }
     }
-    private TestPathMode? _PathValidateMode;
 
     /// <summary>
-    /// Сбрасывает свойство <see cref="PathValidateMode"/> в значение по умолчанию.
+    /// Значение по умолчанию
     /// </summary>
-    public void ResetPathValidateMode()
+    protected override TestPathMode DefaultPathValidateMode
     {
-      _PathValidateMode = null;
+      get { return (Mode == FileDialogMode.Write) ? TestPathMode.RootExists : TestPathMode.FileExists; }
     }
 
     #endregion
@@ -431,8 +532,20 @@ namespace FreeLibSet.Forms
     /// Показывает блок диалога
     /// </summary>
     /// <returns>Результат выполнения</returns>
-    public DialogResult ShowDialog()
+    public override DialogResult ShowDialog()
     {
+      if (!String.IsNullOrEmpty(ConfigSectionName))
+      {
+        EFPConfigSectionInfo sectInfo = new EFPConfigSectionInfo(ConfigSectionName, EFPConfigCategories.UserFiles);
+        CfgPart cfg;
+        using (EFPApp.ConfigManager.GetConfig(sectInfo, EFPConfigMode.Read, out cfg))
+        {
+          HistoryList histList2 = cfg.GetHist("File");
+          if (histList2.Count > 0)
+            HistList = histList2;
+        }
+      }
+
       DialogResult res;
       _TheForm = new FileBrowseForm();
       try
@@ -478,6 +591,16 @@ namespace FreeLibSet.Forms
               EFPApp.CurrentDirectory = new AbsPath(_TheForm.efpMainCB.Text).ParentDir;
           }
           HistList = _TheForm.efpMainCB.HistList;
+
+          if (!String.IsNullOrEmpty(ConfigSectionName))
+          {
+            EFPConfigSectionInfo sectInfo = new EFPConfigSectionInfo(ConfigSectionName, EFPConfigCategories.UserFiles);
+            CfgPart cfg;
+            using (EFPApp.ConfigManager.GetConfig(sectInfo, EFPConfigMode.Write, out cfg))
+            {
+              cfg.SetHist("File", HistList);
+            }
+          }
         }
       }
       finally
@@ -494,15 +617,17 @@ namespace FreeLibSet.Forms
       _TheForm.efpMainCB.Validate();
       if (_TheForm.efpMainCB.ValidateState == UIValidateState.Error)
         return;
-      if (Mode == FileDialogMode.Read)
-      {
-        if (!File.Exists(_TheForm.efpMainCB.Text))
-        {
-          EFPApp.ShowTempMessage("Файл не найден");
-          _TheForm.DialogResult = DialogResult.Cancel;
-          args.Cancel = true;
-        }
-      }
+
+      // Убрано 25.06.2024
+      //if (Mode == FileDialogMode.Read)
+      //{
+      //  if (!File.Exists(_TheForm.efpMainCB.Text))
+      //  {
+      //    EFPApp.ShowTempMessage("Файл не найден");
+      //    _TheForm.DialogResult = DialogResult.Cancel;
+      //    args.Cancel = true;
+      //  }
+      //}
     }
 
     #endregion

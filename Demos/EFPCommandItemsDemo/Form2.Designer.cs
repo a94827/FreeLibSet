@@ -91,9 +91,9 @@
       // btnCancel
       // 
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(98, 127);
+      this.btnCancel.Location = new System.Drawing.Point(102, 127);
       this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(80, 24);
+      this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 7;
       this.btnCancel.Text = "Отмена";
       this.btnCancel.UseVisualStyleBackColor = true;
@@ -101,18 +101,18 @@
       // btnOk
       // 
       this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOk.Location = new System.Drawing.Point(12, 127);
+      this.btnOk.Location = new System.Drawing.Point(8, 127);
       this.btnOk.Name = "btnOk";
-      this.btnOk.Size = new System.Drawing.Size(80, 24);
+      this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 6;
       this.btnOk.Text = "О&К";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnShowDialog
       // 
-      this.btnShowDialog.Location = new System.Drawing.Point(184, 128);
+      this.btnShowDialog.Location = new System.Drawing.Point(196, 128);
       this.btnShowDialog.Name = "btnShowDialog";
-      this.btnShowDialog.Size = new System.Drawing.Size(177, 23);
+      this.btnShowDialog.Size = new System.Drawing.Size(178, 24);
       this.btnShowDialog.TabIndex = 8;
       this.btnShowDialog.Text = "Показать диалог";
       this.btnShowDialog.UseVisualStyleBackColor = true;
@@ -123,7 +123,7 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(396, 167);
+      this.ClientSize = new System.Drawing.Size(396, 160);
       this.Controls.Add(this.btnShowDialog);
       this.Controls.Add(this.btnCancel);
       this.Controls.Add(this.btnOk);

@@ -34,7 +34,7 @@ namespace FreeLibSet.Forms
    */
 
   /// <summary>
-  /// Части в EFPFormBounds
+  /// Части, используемые в EFPFormBounds
   /// </summary>
   [Flags]
   public enum EFPFormBoundsPart
@@ -45,17 +45,17 @@ namespace FreeLibSet.Forms
     None = 0,
 
     /// <summary>
-    /// Положение формы
+    /// Положение формы <seealso cref="System.Windows.Forms.Form.Location"/>
     /// </summary>
     Location = 1,
 
     /// <summary>
-    /// Размер формы
+    /// Размер формы <seealso cref="System.Windows.Forms.Form.Size"/>
     /// </summary>
     Size = 2,
 
     /// <summary>
-    /// Состояние Normal/Maximized/Minimized
+    /// Состояние Normal/Maximized/Minimized <seealso cref="System.Windows.Forms.Form.WindowState"/>
     /// </summary>
     WindowState = 4,
 
@@ -86,8 +86,8 @@ namespace FreeLibSet.Forms
     #region Свойства формы
 
     /// <summary>
-    /// Сохраненные размеры формы в состоянии Normal.
-    /// Если форма находится в максимизированном состоянии или свернута, свойство содержит RestoreBounds
+    /// Сохраненные размеры формы в состоянии <see cref="System.Windows.Forms.FormWindowState.Normal"/>.
+    /// Если форма находится в максимизированном состоянии или свернута, свойство содержит <see cref="System.Windows.Forms.Form.RestoreBounds"/>
     /// </summary>
     public Rectangle Bounds
     {
@@ -160,7 +160,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="form">Форма, положение которой устанавливается</param>
     /// <param name="parts">Флажки применения положения, размеров и состояния формы.
-    /// Некоторые флажки могут быть проигнорированы, например, Size, если форма не является Sizeable</param>
+    /// Некоторые флажки могут быть проигнорированы, например, <see cref="EFPFormBoundsPart.Size"/>, если форма не является sizeable</param>
     /// <returns>Подмножество флажков из <paramref name="parts"/>, которые были применены к форме</returns>
     public EFPFormBoundsPart ToControl(Form form, EFPFormBoundsPart parts)
     {

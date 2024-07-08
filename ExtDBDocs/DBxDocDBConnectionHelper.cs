@@ -258,7 +258,11 @@ namespace FreeLibSet.Data.Docs
             throw new NullReferenceException("Не установлено свойство DBDir");
 
           // Строка подключения не задана
+#if NET
+          Microsoft.Data.SqlClient.SqlConnectionStringBuilder csb = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder();
+#else
           System.Data.SqlClient.SqlConnectionStringBuilder csb = new System.Data.SqlClient.SqlConnectionStringBuilder();
+#endif
           csb.DataSource = @".\SQLEXPRESS";
           csb.AttachDBFilename = DBDir.SlashedPath + dbName + ".mdf";
           csb.IntegratedSecurity = true;
@@ -331,7 +335,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-    #endregion
+#endregion
 
     #region Создание DBxRealDocProviderGlobal
 

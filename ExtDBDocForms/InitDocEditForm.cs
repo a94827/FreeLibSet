@@ -852,7 +852,7 @@ namespace FreeLibSet.Forms.Docs
   #region Инициализация основной формы документа
 
   /// <summary>
-  /// Аргументы события <see cref="DocTypeUI.InitEditForm"/>
+  /// Аргументы события <see cref="FreeLibSet.Forms.Docs.DocTypeUI.InitEditForm"/>
   /// </summary>
   public class InitDocEditFormEventArgs : InitDocEditFormEventArgsBase
   {

@@ -5292,7 +5292,7 @@ namespace FreeLibSet.Collections
 
     void IList.Insert(int index, object value)
     {
-      throw new Exception("The method or operation is not implemented.");
+      throw new NotImplementedException();
     }
 
     bool IList.IsFixedSize
@@ -5314,7 +5314,7 @@ namespace FreeLibSet.Collections
       }
       set
       {
-        throw new Exception("The method or operation is not implemented.");
+        throw new NotImplementedException();
       }
     }
 

@@ -33,10 +33,10 @@
       this.grid1 = new System.Windows.Forms.DataGridView();
       this.panSpb1 = new System.Windows.Forms.Panel();
       this.tabPage2 = new System.Windows.Forms.TabPage();
-      this.panel1 = new System.Windows.Forms.Panel();
       this.panel2 = new System.Windows.Forms.Panel();
-      this.panSpb2 = new System.Windows.Forms.Panel();
       this.tb2 = new System.Windows.Forms.TextBox();
+      this.panSpb2 = new System.Windows.Forms.Panel();
+      this.panel1 = new System.Windows.Forms.Panel();
       this.TheTabControl.SuspendLayout();
       this.tabPage1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.grid1)).BeginInit();
@@ -50,21 +50,19 @@
       this.TheTabControl.Controls.Add(this.tabPage2);
       this.TheTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
       this.TheTabControl.Location = new System.Drawing.Point(0, 0);
-      this.TheTabControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.TheTabControl.Name = "TheTabControl";
       this.TheTabControl.SelectedIndex = 0;
-      this.TheTabControl.Size = new System.Drawing.Size(389, 332);
+      this.TheTabControl.Size = new System.Drawing.Size(316, 286);
       this.TheTabControl.TabIndex = 0;
       // 
       // tabPage1
       // 
       this.tabPage1.Controls.Add(this.grid1);
       this.tabPage1.Controls.Add(this.panSpb1);
-      this.tabPage1.Location = new System.Drawing.Point(4, 25);
-      this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tabPage1.Location = new System.Drawing.Point(4, 22);
       this.tabPage1.Name = "tabPage1";
-      this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-      this.tabPage1.Size = new System.Drawing.Size(381, 303);
+      this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabPage1.Size = new System.Drawing.Size(308, 260);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "tabPage1";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -73,78 +71,74 @@
       // 
       this.grid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.grid1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.grid1.Location = new System.Drawing.Point(4, 53);
-      this.grid1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.grid1.Location = new System.Drawing.Point(3, 43);
       this.grid1.Name = "grid1";
-      this.grid1.Size = new System.Drawing.Size(373, 246);
+      this.grid1.Size = new System.Drawing.Size(302, 214);
       this.grid1.TabIndex = 1;
       // 
       // panSpb1
       // 
       this.panSpb1.Dock = System.Windows.Forms.DockStyle.Top;
-      this.panSpb1.Location = new System.Drawing.Point(4, 4);
-      this.panSpb1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.panSpb1.Location = new System.Drawing.Point(3, 3);
       this.panSpb1.Name = "panSpb1";
-      this.panSpb1.Size = new System.Drawing.Size(373, 49);
+      this.panSpb1.Size = new System.Drawing.Size(302, 40);
       this.panSpb1.TabIndex = 0;
       // 
       // tabPage2
       // 
       this.tabPage2.Controls.Add(this.panel2);
       this.tabPage2.Controls.Add(this.panel1);
-      this.tabPage2.Location = new System.Drawing.Point(4, 25);
-      this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
-      this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-      this.tabPage2.Size = new System.Drawing.Size(381, 303);
+      this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabPage2.Size = new System.Drawing.Size(284, 244);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "tabPage2";
       this.tabPage2.UseVisualStyleBackColor = true;
-      // 
-      // panel1
-      // 
-      this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel1.Location = new System.Drawing.Point(4, 265);
-      this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-      this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(373, 34);
-      this.panel1.TabIndex = 0;
       // 
       // panel2
       // 
       this.panel2.Controls.Add(this.tb2);
       this.panel2.Controls.Add(this.panSpb2);
       this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel2.Location = new System.Drawing.Point(4, 4);
+      this.panel2.Location = new System.Drawing.Point(3, 3);
+      this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(373, 261);
+      this.panel2.Size = new System.Drawing.Size(278, 210);
       this.panel2.TabIndex = 1;
+      // 
+      // tb2
+      // 
+      this.tb2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.tb2.Location = new System.Drawing.Point(0, 28);
+      this.tb2.Multiline = true;
+      this.tb2.Name = "tb2";
+      this.tb2.Size = new System.Drawing.Size(278, 182);
+      this.tb2.TabIndex = 2;
       // 
       // panSpb2
       // 
       this.panSpb2.Dock = System.Windows.Forms.DockStyle.Top;
       this.panSpb2.Location = new System.Drawing.Point(0, 0);
+      this.panSpb2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.panSpb2.Name = "panSpb2";
-      this.panSpb2.Size = new System.Drawing.Size(373, 34);
+      this.panSpb2.Size = new System.Drawing.Size(278, 28);
       this.panSpb2.TabIndex = 0;
       // 
-      // tb2
+      // panel1
       // 
-      this.tb2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tb2.Location = new System.Drawing.Point(0, 34);
-      this.tb2.Margin = new System.Windows.Forms.Padding(4);
-      this.tb2.Multiline = true;
-      this.tb2.Name = "tb2";
-      this.tb2.Size = new System.Drawing.Size(373, 227);
-      this.tb2.TabIndex = 2;
+      this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.panel1.Location = new System.Drawing.Point(3, 213);
+      this.panel1.Name = "panel1";
+      this.panel1.Size = new System.Drawing.Size(278, 28);
+      this.panel1.TabIndex = 0;
       // 
       // Form1
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(389, 332);
+      this.ClientSize = new System.Drawing.Size(316, 286);
       this.Controls.Add(this.TheTabControl);
-      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.Name = "Form1";
       this.Text = "Form1";
       this.TheTabControl.ResumeLayout(false);

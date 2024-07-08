@@ -14,7 +14,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Интерфейс управляющего элемента с панелью инструментов.
   /// Обычно используется шаблонный класс <see cref="EFPControlWithToolBar{T}"/>.
-  /// Нетипизированная версия интерфейса
+  /// Нетипизированная версия интерфейса.
   /// </summary>
   public interface IEFPControlWithToolBar
   {
@@ -37,7 +37,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Интерфейс управляющего элемента с панелью инструментов.
-  /// Обычно используется шаблонный класс <see cref="EFPControlWithToolBar{T}"/> 
+  /// Обычно используется шаблонный класс <see cref="EFPControlWithToolBar{T}"/>.
+  /// Переопределяет свойство <see cref="Control"/>.
   /// </summary>
   /// <typeparam name="T">Тип управляющего элемента</typeparam>
   public interface IEFPControlWithToolBar<T> : IEFPControlWithToolBar

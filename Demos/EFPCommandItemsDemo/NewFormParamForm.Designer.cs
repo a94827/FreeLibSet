@@ -33,12 +33,12 @@
       this.rbDialog = new System.Windows.Forms.RadioButton();
       this.rbChild = new System.Windows.Forms.RadioButton();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.rb3 = new System.Windows.Forms.RadioButton();
       this.rb2 = new System.Windows.Forms.RadioButton();
       this.rb1 = new System.Windows.Forms.RadioButton();
       this.panel1 = new System.Windows.Forms.Panel();
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnOk = new System.Windows.Forms.Button();
-      this.rb3 = new System.Windows.Forms.RadioButton();
       this.panel2.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox1.SuspendLayout();
@@ -100,6 +100,17 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Форма";
       // 
+      // rb3
+      // 
+      this.rb3.AutoSize = true;
+      this.rb3.Location = new System.Drawing.Point(16, 72);
+      this.rb3.Name = "rb3";
+      this.rb3.Size = new System.Drawing.Size(141, 17);
+      this.rb3.TabIndex = 2;
+      this.rb3.TabStop = true;
+      this.rb3.Text = "Форма с одним полем";
+      this.rb3.UseVisualStyleBackColor = true;
+      // 
       // rb2
       // 
       this.rb2.AutoSize = true;
@@ -135,9 +146,9 @@
       // btnCancel
       // 
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(94, 8);
+      this.btnCancel.Location = new System.Drawing.Point(102, 8);
       this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(80, 24);
+      this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
       this.btnCancel.Text = "Отмена";
       this.btnCancel.UseVisualStyleBackColor = true;
@@ -147,21 +158,10 @@
       this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnOk.Location = new System.Drawing.Point(8, 8);
       this.btnOk.Name = "btnOk";
-      this.btnOk.Size = new System.Drawing.Size(80, 24);
+      this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
       this.btnOk.Text = "О&К";
       this.btnOk.UseVisualStyleBackColor = true;
-      // 
-      // rb3
-      // 
-      this.rb3.AutoSize = true;
-      this.rb3.Location = new System.Drawing.Point(16, 72);
-      this.rb3.Name = "rb3";
-      this.rb3.Size = new System.Drawing.Size(141, 17);
-      this.rb3.TabIndex = 2;
-      this.rb3.TabStop = true;
-      this.rb3.Text = "Форма с одним полем";
-      this.rb3.UseVisualStyleBackColor = true;
       // 
       // NewFormParamForm
       // 

@@ -392,7 +392,7 @@ namespace FreeLibSet.Controls
       get
       {
         // Метод может вызываться до вызова конструктора
-        return new Size(120, 24);
+        return new Size(120, AutoSize ? PreferredSize.Height : 24);
       }
     }
 

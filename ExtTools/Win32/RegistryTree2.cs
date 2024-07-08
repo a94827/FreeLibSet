@@ -70,7 +70,7 @@ namespace FreeLibSet.Win32
   /// Хранение коллекции объектов <see cref="RegistryKey2"/>.
   /// В отличие от <see cref="RegistryTree"/>, который использует стандартные объекты NetFramework (<see cref="Microsoft.Win32.RegistryKey"/>),
   /// эта коллекция позволяет получить доступ к реестру с правильной "визуализацией",
-  /// когда 32-битное приложение работает в Windows-64
+  /// когда 32-битное приложение работает в Windows-64.
   /// </summary>
   public class RegistryTree2 : DisposableObject, IReadOnlyObject
   {

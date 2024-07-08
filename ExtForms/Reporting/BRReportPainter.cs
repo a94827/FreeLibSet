@@ -767,7 +767,7 @@ namespace FreeLibSet.Drawing.Reporting
           _BorderPen.DashStyle = DashStyle.DashDotDot;
           break;
         default:
-          throw new Exception("Неправильная толщина линии");
+          throw new ArgumentException("Неправильная толщина линии");
       }
       _BorderPen.Width = (float)BRLine.GetLineWidthPt01mm(line.Style) * _Scale;
       if (line.Color == BRColor.Auto)

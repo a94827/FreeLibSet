@@ -176,7 +176,7 @@ namespace FreeLibSet.Forms
     public EFPCommandItem MenuSendTo { get { return _OutHandler.MenuSendTo; } }
 
     /// <summary>
-    /// Установка свойств EFPCommandItem.Usage
+    /// Установка свойств <see cref="EFPCommandItem.Usage"/>
     /// </summary>
     protected override void OnPrepare()
     {
@@ -242,24 +242,7 @@ namespace FreeLibSet.Forms
         */
       //ciSendToMicrosoftExcel.Visible = false;
       //ciSendToOpenOfficeCalc.Visible = false;
-
-      PerformRefreshItems();
     }
-
-    #endregion
-
-    #region Обновление состояния команд
-
-    ///// <summary>
-    ///// Обновление состояния команд
-    ///// </summary>
-    //protected override void DoRefreshItems()
-    //{
-    //  base.DoRefreshItems();
-
-    //  EFPDataGridViewSelectedRowsState SelState = Owner.SelectedRowsState;
-    //}
-
 
     #endregion
 

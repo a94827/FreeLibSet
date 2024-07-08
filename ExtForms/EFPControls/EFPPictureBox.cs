@@ -623,7 +623,7 @@ namespace FreeLibSet.Forms
       EFPTwainHandler handler = new EFPTwainHandler();
       try
       {
-        Bitmap[] bmps = handler.Acqiire();
+        Bitmap[] bmps = handler.Acquire();
         if (bmps.Length > 0)
           ControlProvider.SetMainImage(bmps[0]);
         // Уничтожением Bitmap занимается EFPTwainHandler 

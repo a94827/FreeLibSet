@@ -32,7 +32,6 @@ using FreeLibSet.Logging;
  *   соответствующей закладке
  * 
  * Класс EFPReport является абстрактным. Конкретные отчеты наследуются из него. 
- * Им все равно нужны отдельные классы для работы с сервером
  */
 
 namespace FreeLibSet.Forms
@@ -1667,8 +1666,8 @@ namespace FreeLibSet.Forms
     Form IEFPFormCreator.CreateForm(EFPFormCreatorParams creatorParams)
     {
       // На момент вызова создан объект класса, производного от EFPReport.
-      // Конструктор EFPReport вызван, но параметры еще не созданы
-      // Форма тоже еше не создана
+      // Конструктор EFPReport вызван, но параметры еще не созданы.
+      // Форма тоже еще не создана.
       try
       {
         ReportParams = CreateParams();

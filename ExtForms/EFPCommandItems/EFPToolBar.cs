@@ -22,14 +22,26 @@ namespace FreeLibSet.Forms
     /// Создает внутренний объект <see cref="ToolStrip"/>.
     /// </summary>
     protected EFPToolBarBase()
+      : this(new ToolStrip())
     {
-      _Bar = new ToolStrip();
       // 20.05.2024 ImageList больше не используется
       // _Bar.ImageList = EFPApp.MainImages.ImageList;
 #if DEBUG
       _Bar.Disposed += new EventHandler(Bar_Disposed);
       DisposableObject.RegisterDisposableObject(_Bar);
 #endif
+    }
+
+    /// <summary>
+    /// Дополнительный конструктор, использующий готовую панель
+    /// </summary>
+    protected EFPToolBarBase(ToolStrip bar)
+    {
+#if DEBUG
+      if (bar == null)
+        throw new ArgumentNullException("bar");
+#endif
+      _Bar = bar;
     }
 
 #if DEBUG
@@ -375,6 +387,25 @@ namespace FreeLibSet.Forms
       _Location = new Point(0, 0);
     }
 
+    /// <summary>
+    /// Создает панель инструментов
+    /// </summary>
+    /// <param name="name">Имя для сохранения параметров в секции конфигурации</param>
+    /// <param name="bar">Готовая панель инструментов</param>
+    internal EFPAppToolBar(string name, ToolStrip bar)
+      : base(bar)
+    {
+      if (String.IsNullOrEmpty(name))
+        throw new ArgumentNullException("name");
+
+      base.Name = name;
+      _DisplayName = null;
+      _Dock = DockStyle.Top;
+      _UseLocation = false;
+      _RowIndex = 0;
+      _Location = new Point(0, 0);
+    }
+
     #endregion
 
     #region Свойства
@@ -558,30 +589,22 @@ namespace FreeLibSet.Forms
 
     internal void DoJoin()
     {
+      ToolStripPanel panel;
+      switch (_Dock)
+      {
+        case DockStyle.Top: panel = Info.StripPanelTop; break;
+        case DockStyle.Left: panel = Info.StripPanelLeft; break;
+        case DockStyle.Right: panel = Info.StripPanelRight; break;
+        case DockStyle.Bottom: panel = Info.StripPanelBottom; break;
+        default:
+          throw new BugException("Неизвестное размещение ToolBar: " + _Dock.ToString());
+      }
+
       if (_UseLocation)
-      {
-        switch (_Dock)
-        {
-          case DockStyle.Top: Info.StripPanelTop.Join(Bar, _Location); break;
-          case DockStyle.Left: Info.StripPanelLeft.Join(Bar, _Location); break;
-          case DockStyle.Right: Info.StripPanelRight.Join(Bar, _Location); break;
-          case DockStyle.Bottom: Info.StripPanelBottom.Join(Bar, _Location); break;
-          default:
-            throw new BugException("Неизвестное размещение ToolBar: " + _Dock.ToString());
-        }
-      }
+        panel.Join(Bar, _Location);
       else
-      {
-        switch (_Dock)
-        {
-          case DockStyle.Top: Info.StripPanelTop.Join(Bar, _RowIndex); break;
-          case DockStyle.Left: Info.StripPanelLeft.Join(Bar, _RowIndex); break;
-          case DockStyle.Right: Info.StripPanelRight.Join(Bar, _RowIndex); break;
-          case DockStyle.Bottom: Info.StripPanelBottom.Join(Bar, _RowIndex); break;
-          default:
-            throw new BugException("Неизвестное размещение ToolBar: " + _Dock.ToString());
-        }
-      }
+        panel.Join(Bar, _RowIndex);
+
       if (!EFPApp.InsideLoadComposition)
         EFPApp.SetInterfaceChanged(); // 11.12.2018
     }

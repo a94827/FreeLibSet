@@ -16,11 +16,13 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Реализация сканирования через интерфейс TWAIN.
   /// Порядок работы:
-  /// 1. Создать EFPTwainHandler
-  /// 2. Вызвать Acquire().
-  /// 3. Сохранить полученные изображения (результат Acquire()) на диске или создать копии объктов Bitmap
-  /// для дальнейшего использования.
-  /// 4. Вызвать Dispose()
+  /// <list type="number">
+  /// <item><description>Создать EFPTwainHandler</description></item>
+  /// <item><description>Вызвать Acquire().</description></item>
+  /// <item><description>Сохранить полученные изображения (результат Acquire()) на диске или создать копии объктов Bitmap
+  /// для дальнейшего использования.</description></item>
+  /// <item><description>Вызвать Dispose()</description></item>
+  /// </list>
   /// </summary>
   public class EFPTwainHandler : DisposableObject, IMessageFilter
   {
@@ -46,7 +48,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Удаляет изображения
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а не дейструктор</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       try
@@ -96,18 +98,20 @@ namespace FreeLibSet.Forms
     private bool _InsideAcquire;
 
     /// <summary>
-    /// Получить изображения.
-    /// Возвращает массив из 0 или более изображений.
+    /// <para>Получить изображения.</para>
+    /// <para>Возвращает массив из 0 или более изображений.</para>
+    /// <para>
     /// Внимание! 
-    /// Объект EFPTwainHandler является единоличным владельцем своих изображений и удалит
-    /// их при вызове Dispose() или повторном вызове Acquire().
+    /// Объект <see cref="EFPTwainHandler"/> является единоличным владельцем своих изображений и удалит
+    /// их при вызове <see cref="IDisposable.Dispose()"/> или повторном вызове <see cref="Acquire()"/>.
     /// Если требуется использование изображений, отличное от их немедленного сохранения на диске,
     /// всегда создавайте копии, перед тем как присвоить ссылки на них другим объектам (при условии,
-    /// что эти объекты, например, при вызове EFPThumbnailPictureBox.SetMainImage() сами не выполняют
+    /// что эти объекты, например, при вызове <see cref="EFPThumbnailPictureButton.SetMainImage(Image)"/> сами не выполняют
     /// создание копии.
+    /// </para>
     /// </summary>
     /// <returns>Массив изображений</returns>
-    public Bitmap[] Acqiire()
+    public Bitmap[] Acquire()
     {
       if (_InsideAcquire)
         throw new InvalidOperationException("Предыдущий вызов еще не выполнен");

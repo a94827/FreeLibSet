@@ -535,7 +535,7 @@ namespace FreeLibSet.Data.OracleClient
     {
       throw new NotImplementedException();
 
-      // TODO:
+      // TODO: AddRecordWithIdResult()
 #if XXX
       CheckTableName(TableName, DBxAccessMode.Full);
       DBxColumnType[] ColumnTypes = CheckTableColumnNames(TableName, ColumnNames, false, DBxAccessMode.Full);
@@ -577,7 +577,7 @@ namespace FreeLibSet.Data.OracleClient
     protected override void DoAddRecords(string tableName, DataTable table)
     {
       // TODO: Не реализовано
-      base.AddRecords(tableName, table);
+      base.DoAddRecords(tableName, table);
     }
 
     #endregion

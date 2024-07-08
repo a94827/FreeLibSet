@@ -235,15 +235,41 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       public static readonly EmptyMemberAdapter Empty = new EmptyMemberAdapter();
     }
 
+
+    private class ToStringMemberAdapter : IMemberAdapter
+    {
+      public Type GetMemberType(object obj)
+      {
+        return typeof(String);
+      }
+
+      public object GetValue(object obj)
+      {
+        if (Object.ReferenceEquals(obj, null))
+          return String.Empty;
+        else
+          return obj.ToString();
+      }
+
+      public void SetValue(object obj, object value)
+      {
+        throw new NotImplementedException();
+      }
+
+      public static readonly ToStringMemberAdapter Default = new ToStringMemberAdapter();
+    }
+
+
     private Dictionary<Type, IMemberAdapter> _AdapterDict;
 
     private IMemberAdapter GetMemberAdapter(TreeNodeAdv node)
     {
       if (node.Tag != null && !string.IsNullOrEmpty(DataPropertyName))
       {
-        Type type = node.Tag.GetType();
         if (_AdapterDict == null)
           _AdapterDict = new Dictionary<Type, IMemberAdapter>();
+
+        Type type = node.Tag.GetType();
         IMemberAdapter res;
         if (!_AdapterDict.TryGetValue(type, out res))
         {
@@ -257,6 +283,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     private IMemberAdapter DoCreateMemberAdapter(Type type)
     {
+      if (DataPropertyName == NodeTextBox.ToStringDataPropertyName)
+        return ToStringMemberAdapter.Default;
+
       if (type == typeof(DataRow)) // но не "is DataRow", т.к. могут быть проиводные классы типизированных строк
         return new DataRowMemberAdapter(DataPropertyName);
       if (type==typeof(DataRowView))
@@ -294,12 +323,14 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     }
     private bool _virtualMode = false;
 
+
     /// <summary>
     /// Привязка к полям модели в режиме <see cref="VirtualMode"/>=false.
     /// Данные извлекаются из объектов строки модели <see cref="TreeNodeAdv.Tag"/>.
-    /// Свойство Может задавать: 
+    /// Свойство может задавать: 
     /// - Имя свойства или имя поля в объекта. Свойство/поле должно быть нестатическим и иметь модификатор public.
     /// - Имя поля таблицы данных, если объект узла является <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// - Значение <see cref="NodeTextBox.ToStringDataPropertyName"/> для отображения <see cref="Object.ToString()"/>
     /// В модели могут быть узлы, содержащие объекты разных типов. Данные элемента отображаются при наличии свойства/поля/столбца таблицы 
     /// в объекте конкретного узла. При отстутствии привязки значение считается равным null.
     /// </summary>

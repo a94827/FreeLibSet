@@ -11,7 +11,8 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Расширение класса табличного просмотра для просмотра списка ошибок
-  /// ErrorMessageList
+  /// <see cref="ErrorMessageList"/>. Поддерживается "редактирование" сообщения с помощью пользовательского обработчика.
+  /// Поддерживается управление закладкой <see cref="TabPage"/> для показа значка, соответствующего серьезности сообщений в списке.
   /// </summary>
   public class EFPErrorDataGridView : EFPDataGridView
   {
@@ -102,7 +103,8 @@ namespace FreeLibSet.Forms
     private bool _FirstFlag;
 
     /// <summary>
-    /// Текущий присоединенный список ошибок
+    /// Текущий присоединенный список ошибок.
+    /// Допускается присвоение значения null.
     /// </summary>
     public ErrorMessageList ErrorMessages
     {
@@ -193,12 +195,12 @@ namespace FreeLibSet.Forms
     private ErrorMessageList _ErrorMessages;
 
     /// <summary>
-    /// Событие вызывается при установке свойства ErrorMessages
+    /// Событие вызывается при установке свойства <see cref="ErrorMessages"/>.
     /// </summary>
     public event EventHandler ErrorMessagesChanged;
 
     /// <summary>
-    /// Вызывает обработчик события ErrorMessagesChanged, если он присоединен
+    /// Вызывает обработчик события <see cref="ErrorMessagesChanged"/>, если он присоединен
     /// </summary>
     protected virtual void OnErrorMessagesChanged()
     {
@@ -208,7 +210,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Инициализация свойства ReadOnly после изменения списка сообщений и присоединения обработчика
+    /// Инициализация свойства <see cref="EFPDataGridView.ReadOnly"/> после изменения списка сообщений и присоединения обработчика.
     /// </summary>
     protected virtual void InitEditCommandItems()
     {
@@ -223,7 +225,7 @@ namespace FreeLibSet.Forms
     #region Свойство CodeWidth
 
     /// <summary>
-    /// Задает ширину столбца "Код" в символах. См.свойство EFPDataGridViewColumn.TextWidth.
+    /// Задает ширину столбца "Код" в символах. См.свойство <see cref="EFPDataGridViewColumn.TextWidth"/>.
     /// Нулевое значение (по умолчанию) задает скрытый столбец.
     /// </summary>
     public int CodeWidth
@@ -253,12 +255,12 @@ namespace FreeLibSet.Forms
     /// Событие обработчика редактирования строки с ошибкой.
     /// Вызывается, когда пользователь выполняет команду "Редактировать" для строки таблицы.
     /// Групповое редактирование нескольких строк не поддерживается.
-    /// Обработчик получает одно сообщение из списка ErrorMessages, к которому относится текущая
+    /// Обработчик получает одно сообщение <see cref="ErrorMessageItem"/> из списка <see cref="ErrorMessages"/>, к которому относится текущая
     /// строка табличного просмотра.
     /// Обработчик может показать детальное сообщение об ошибке, либо перейти к объекту, к которому
     /// относится сообщение.
     /// Обработчик события не должен устанавливаться, если "редактирование" не имеет смысла. При этом
-    /// команды редактирования не будут доступны, если не установлен обработчик события EditData.
+    /// команды редактирования не будут доступны, если не установлен обработчик события <see cref="EFPDataGridView.EditData"/>.
     /// 
     /// Если "редактирование" имеет смысл только для некоторых сообщений об ошибке (может быть 
     /// выполнен переход к ошибочному объекту), а для остальных - нет, то присоединяемый обработчик
@@ -267,7 +269,7 @@ namespace FreeLibSet.Forms
     public event ErrorMessageItemEventHandler EditMessage;
 
     /// <summary>
-    /// Возвращает true, если установлен обработчик события EditMessage
+    /// Возвращает true, если установлен обработчик события <see cref="EditMessage"/>.
     /// </summary>
     public bool HasEditMessageHandler { get { return EditMessage != null; } }
 
@@ -278,7 +280,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Добавляет значки в заголовок строки
     /// </summary>
-    /// <param name="args">Аргументы события GetRowAttributes</param>
+    /// <param name="args">Аргументы события <see cref="EFPDataGridView.GetRowAttributes"/></param>
     protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
     {
       DataGridViewRow row = args.Control.Rows[args.RowIndex];
@@ -303,8 +305,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается обработчик события EditData базового класса, если он установлен.
-    /// Иначе вызывается делегат EditHandler, если свойство было установлено
+    /// Вызывается обработчик события <see cref="EFPDataGridView.EditData"/> базового класса, если он установлен.
+    /// Иначе вызывается обработчик события <see cref="EditMessage"/>, если он установлен.
     /// </summary>
     /// <param name="args">Не используется</param>
     /// <returns>Возвращает true, если событие было обработано</returns>
@@ -346,9 +348,9 @@ namespace FreeLibSet.Forms
     #region Размещение на закладке
 
     /// <summary>
-    /// Сюда может быть помещена ссылка на закладку TabPage, на которой размещается
+    /// Сюда может быть помещена ссылка на закладку <see cref="System.Windows.Forms.TabPage"/>, на которой размещается
     /// просмотр ошибок. Если свойство задано, то у закладки меняется заголовок,
-    /// всплывающая подсказка и значок
+    /// всплывающая подсказка и значок, в зависимости от свойства <see cref="TabPageControlOptions"/>.
     /// </summary>
     public TabPage ControlledTabPage
     {
@@ -364,7 +366,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Сюда может быть помещена ссылка на интерфейс управления закладкой, на которой размещается
     /// просмотр ошибок. Если свойство задано, то у закладки меняется заголовок,
-    /// всплывающая подсказка и значок
+    /// всплывающая подсказка и значок, в зависимости от свойства <see cref="TabPageControlOptions"/>.
     /// </summary>
     public IEFPTabPageControl ControlledTabPageControl
     {
@@ -401,8 +403,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Какими свойствами закладки следует управлять.
-    /// Это свойство должно устанавливаться до присвоения свойств ControlledTabPage и ControlledTabPageControl.
-    /// По умолчанию имеет значение All
+    /// Это свойство должно устанавливаться до присвоения свойств <see cref="ControlledTabPage"/> и <see cref="ControlledTabPageControl"/>.
+    /// По умолчанию имеет значение <see cref="EFPTabPageControlOptions.All"/>.
     /// </summary>
     public EFPTabPageControlOptions TabPageControlOptions
     {

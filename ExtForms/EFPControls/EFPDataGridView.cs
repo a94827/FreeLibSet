@@ -1929,7 +1929,6 @@ namespace FreeLibSet.Forms
           //Control.VirtualMode = true; // Так нельзя. Перестает работать EFPErrorDataGridView и множество других просмотров без источников данных
           Control.CellToolTipTextNeeded += new DataGridViewCellToolTipTextNeededEventHandler(Control_CellToolTipTextNeeded);
         }
-        Control.ReadOnlyChanged += Control_ReadOnlyChanged;
       }
 
       base.UseIdle = true;
@@ -2111,9 +2110,6 @@ namespace FreeLibSet.Forms
         if (CurrentIncSearchColumn.GridColumn.Index != Control.CurrentCellAddress.X)
           CurrentIncSearchColumn = null;
       }
-
-      // Обработка перемещений для установки видимости команд локального меню
-      CommandItems.PerformRefreshItems();
     }
 
     #endregion
@@ -2505,6 +2501,11 @@ namespace FreeLibSet.Forms
       }
     }
 
+    /// <summary>
+    /// Значение свойства <see cref="EFPControlBase.DisplayName"/>, если оно не задано в явном виде
+    /// </summary>
+    protected override string DefaultDisplayName { get { return "Табличный просмотр"; } }
+
     #endregion
 
     #region Управление поведением просмотра
@@ -2532,9 +2533,6 @@ namespace FreeLibSet.Forms
 
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
-
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _ReadOnly;
@@ -2591,8 +2589,6 @@ namespace FreeLibSet.Forms
         _CanEdit = value;
         if (_CanEditEx != null)
           _CanEditEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanEdit;
@@ -2648,8 +2644,6 @@ namespace FreeLibSet.Forms
         _CanInsert = value;
         if (_CanInsertEx != null)
           _CanInsertEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanInsert;
@@ -2706,8 +2700,6 @@ namespace FreeLibSet.Forms
         _CanInsertCopy = value;
         if (_CanInsertCopyEx != null)
           _CanInsertCopyEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanInsertCopy;
@@ -2763,8 +2755,6 @@ namespace FreeLibSet.Forms
         _CanDelete = value;
         if (_CanDeleteEx != null)
           _CanDeleteEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanDelete;
@@ -2820,8 +2810,6 @@ namespace FreeLibSet.Forms
         _CanView = value;
         if (_CanViewEx != null)
           _CanViewEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanView;
@@ -2965,12 +2953,6 @@ namespace FreeLibSet.Forms
         if (сol != null)
           сol.GridColumn.ReadOnly = value;
       }
-    }
-
-    void Control_ReadOnlyChanged(object sender, EventArgs args)
-    {
-      if (CommandItems != null)
-        CommandItems.PerformRefreshItems();
     }
 
     #endregion
@@ -6790,7 +6772,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void ClearSelectedCells()
     {
-      EFPDataGridViewRectArea area = new EFPDataGridViewRectArea(Control, EFPDataGridViewRectAreaCreation.Selected);
+      EFPDataGridViewRectArea area = new EFPDataGridViewRectArea(Control, EFPDataViewExpRange.Selected);
       ClearCells(area);
     }
 
@@ -7659,8 +7641,6 @@ namespace FreeLibSet.Forms
             e.Message, "Ошибка табличного просмотра", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
       }
-
-      CommandItems.PerformRefreshItems();
     }
 
     /// <summary>
@@ -7719,8 +7699,6 @@ namespace FreeLibSet.Forms
       try
       {
         res = OnEditData(EventArgs.Empty);
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
       finally
       {
@@ -7993,7 +7971,6 @@ namespace FreeLibSet.Forms
     void DoControl_CellClick(DataGridViewCellEventArgs args)
     {
       EFPApp.ShowTempMessage(null);
-      CommandItems.PerformRefreshItems();
       if (args.ColumnIndex < 0 || args.RowIndex < 0)
         return;
       EFPDataGridViewColumn Column = Columns[args.ColumnIndex];
@@ -9939,7 +9916,7 @@ namespace FreeLibSet.Forms
             if (CheckMarkRow(i, columnIndex, action))
               cnt++;
           }
-          if (cnt>0)
+          if (cnt > 0)
             Control.InvalidateColumn(columnIndex);
 
           break;
@@ -10069,15 +10046,7 @@ namespace FreeLibSet.Forms
     /// <returns>Массив строк и столбцов</returns>
     public EFPDataGridViewRectArea GetRectArea(EFPDataViewExpRange rangeMode)
     {
-      switch (rangeMode)
-      {
-        case EFPDataViewExpRange.All:
-          return new EFPDataGridViewRectArea(Control, EFPDataGridViewRectAreaCreation.Visible);
-        case EFPDataViewExpRange.Selected:
-          return new EFPDataGridViewRectArea(Control, EFPDataGridViewRectAreaCreation.Selected);
-        default:
-          throw new ArgumentException("Неизвестный режим выделения: " + rangeMode.ToString(), "rangeMode");
-      }
+      return new EFPDataGridViewRectArea(Control, rangeMode);
     }
 
     /// <summary>

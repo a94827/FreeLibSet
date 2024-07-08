@@ -181,7 +181,7 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Если <see cref="Handle"/> не относится к локальному серверу, вызывает функцию WTSCloseServer()
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing && Object.ReferenceEquals(this, _CurrentServer))
@@ -221,7 +221,7 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Текущий сервер для дескриптора WTS_CURRENT_SERVER_HANDLE.
     /// Не вызывайте Dispose() для этого объекта.
-    /// Содержит null, если не операционная система не поддерживает Remote Desktop Services
+    /// Содержит null, если операционная система не поддерживает Remote Desktop Services
     /// </summary>
     public static WTSServer CurrentServer
     {
@@ -269,9 +269,9 @@ namespace FreeLibSet.Win32
       #region IEnumerable<WTSSession>
 
       /// <summary>
-      /// Создает перечислитель
+      /// Создает перечислитель сессий
       /// </summary>
-      /// <returns></returns>
+      /// <returns>Перечислитель</returns>
       public SessionEnumerator GetEnumerator()
       {
         _Server.CheckNotDisposed();
@@ -286,6 +286,42 @@ namespace FreeLibSet.Win32
       IEnumerator IEnumerable.GetEnumerator()
       {
         return GetEnumerator();
+      }
+
+      #endregion
+
+      #region Свойства
+
+      /// <summary>
+      /// Возвращает количество сессий.
+      /// Это свойство может динамически менять значение и предназначено исключительно для информационных целей.
+      /// Может быть выброшено исключение при чтении значения.
+      /// </summary>
+      public int Count
+      {
+        get
+        {
+          using (SessionEnumerator en = new SessionEnumerator(_Server))
+          {
+            return en.Count;
+          }
+        }
+      }
+
+      /// <summary>
+      /// Возвращает текст "Count=XXX" или сообщение об ошибке
+      /// </summary>
+      /// <returns>Текстовое представление</returns>
+      public override string ToString()
+      {
+        try
+        {
+          return Count.ToString();
+        }
+        catch (Exception e)
+        {
+          return e.ToString();
+        }
       }
 
       #endregion
@@ -312,6 +348,7 @@ namespace FreeLibSet.Win32
 
       private readonly WTSServer _Server;
       private readonly IntPtr _ppSessionInfo;
+      internal Int32 Count { get { return _Count; } }
       private readonly Int32 _Count;
       private int _Index;
 
@@ -420,7 +457,7 @@ namespace FreeLibSet.Win32
     /// </summary>
     /// <param name="sessionId">Идентификатор сессии</param>
     public WTSSession(int sessionId)
-      :this(WTSServer.CurrentServer, sessionId)
+      : this(WTSServer.CurrentServer, sessionId)
     {
     }
 
@@ -499,7 +536,8 @@ namespace FreeLibSet.Win32
     {
       [DebuggerStepThrough]
       get
-      { return (string)GetInfoValue(WTSNativeMethods.WtsInfoClass.WTSApplicationName);
+      {
+        return (string)GetInfoValue(WTSNativeMethods.WtsInfoClass.WTSApplicationName);
       }
     }
 
@@ -519,7 +557,7 @@ namespace FreeLibSet.Win32
 
     /// <summary>
     /// Name of the Remote Desktop Services session. 
-    /// Note  
+    /// Note: 
     /// Despite its name, specifying this type does not return the window station name. 
     /// Rather, it returns the name of the Remote Desktop Services session. 
     /// Each Remote Desktop Services session is associated with an interactive window station. 

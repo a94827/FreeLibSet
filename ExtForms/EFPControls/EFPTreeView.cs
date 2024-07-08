@@ -32,6 +32,19 @@ namespace FreeLibSet.Forms
     /// Контекст для поиска текста
     /// </summary>
     IEFPTextSearchContext TextSearchContext { get; }
+
+    /// <summary>
+    /// Возвращает true, если дерево содержит узлы
+    /// </summary>
+    bool HasNodes { get; }
+
+    /// <summary>
+    /// Возвращает позицию для будущего выпадающего блока диалога, который будет показан для редактирования ячейки.
+    /// В возвращаемом объекте устанавливается свойство <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// Если нет текущей ячейки (просмотр пустой) или текущая ячейка прокручены мышью за пределы видимой области просмотра,
+    /// возвращается неинициализированный <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// </summary>
+    EFPDialogPosition CurrentPopupPosition { get; }
   }
 
   #endregion
@@ -350,6 +363,8 @@ namespace FreeLibSet.Forms
 
     #region IEFPTreeView Members
 
+    bool IEFPTreeView.HasNodes { get { return Control.GetNodeCount(false) > 0; } }
+
     /// <summary>
     /// Дублирует свойство TreeView.CheckBoxes.
     /// </summary>
@@ -359,8 +374,6 @@ namespace FreeLibSet.Forms
       set 
       { 
         Control.CheckBoxes = value;
-        if (HasBeenCreated)
-          CommandItems.PerformRefreshItems();
       }
     }
 
@@ -449,6 +462,34 @@ namespace FreeLibSet.Forms
         }
         else
           return null;
+      }
+    }
+
+    #endregion
+
+    #region Прочее
+
+    /// <summary>
+    /// Возвращает позицию для будущего выпадающего блока диалога, который будет показан для редактирования ячейки.
+    /// В возвращаемом объекте устанавливается свойство <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// Если нет текущей ячейки (просмотр пустой) или текущая ячейка прокручены мышью за пределы видимой области просмотра,
+    /// возвращается неинициализированный <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// </summary>
+    public EFPDialogPosition CurrentPopupPosition
+    {
+      get
+      {
+        EFPDialogPosition pos = new EFPDialogPosition();
+        if (Control.SelectedNode != null)
+        {
+          System.Drawing.Rectangle rect = Control.SelectedNode.Bounds;
+          if (!rect.IsEmpty)
+          {
+            rect = Control.RectangleToScreen(rect);
+            pos.PopupOwnerBounds = rect;
+          }
+        }
+        return pos;
       }
     }
 

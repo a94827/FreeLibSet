@@ -18,7 +18,7 @@ using FreeLibSet.Text;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Набор статических методов для работы с классами System.Windows.Forms и System.Drawing.
+  /// Набор статических методов для работы с классами пространства имен System.Windows.Forms и System.Drawing.
   /// Методы не связаны с EFPApp, EFPFormProvider и другими классами библиотеки ExtForms.
   /// Все методы класса являются потокобезопасными.
   /// </summary>
@@ -32,10 +32,10 @@ namespace FreeLibSet.Forms
     #region Картинки
 
     /// <summary>
-    /// Возвращает один из объектов SystemIcons.
-    /// Для None возвращает null
+    /// Возвращает один из объектов <see cref="SystemIcons"/>.
+    /// Для <see cref="MessageBoxIcon.None"/> возвращает null.
     /// </summary>
-    /// <param name="icon">Перечисление MessageBoxIcon</param>
+    /// <param name="icon">Перечисление <see cref="MessageBoxIcon"/></param>
     /// <returns>Иконка</returns>
     public static Icon GetSystemIcon(MessageBoxIcon icon)
     {
@@ -53,12 +53,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает миниатюру для заданного изображения.
-    /// Всегда создается новый объект Bitmap, даже если исходное изображение не требуется масштабировать.
+    /// Всегда создается новый объект <see cref="Bitmap"/>, даже если исходное изображение не требуется масштабировать.
     /// Если <paramref name="mainImage"/>=null, возвращается пустое изображение
     /// </summary>
     /// <param name="mainImage">Исходное изображенние</param>
     /// <param name="maxThumbnailSize">Максимальный размер миниатюры</param>
-    /// <returns>Новый объект Bitmap</returns>
+    /// <returns>Новый объект <see cref="Bitmap"/></returns>
     public static Bitmap CreateThumbnailImage(Image mainImage, Size maxThumbnailSize)
     {
       if (mainImage == null)
@@ -203,7 +203,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает размер, в котором и для длины и для ширины содержатся максимальные значения
-    /// исходных размеров
+    /// исходных размеров.
     /// </summary>
     /// <param name="a">Первый размер</param>
     /// <param name="b">Второй размер</param>
@@ -255,7 +255,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Размещение управляющего элемента в центре родительского элемента
-    /// Этот метод может вызываться из события Resize.
+    /// Этот метод может вызываться из события <see cref="Control.Resize"/>.
     /// </summary>
     /// <param name="control">Управляющий элемент, который нужно центрировать 
     /// в его родительском элементе</param>
@@ -269,10 +269,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Замена одного управляющего элемента на другой с сохранением
     /// текущего положения и порядка обхода элементов. Тип элементов совпадать
-    /// не обязан
+    /// не обязан.
     /// </summary>
     /// <param name="oldControl">Существующий управляющий элемент, который имеет родителя</param>
-    /// <param name="newControl">Новый неприсоединенный управляющий элемент с Parent=null</param>
+    /// <param name="newControl">Новый неприсоединенный управляющий элемент с <see cref="Control.Parent"/>=null</param>
     public static void ReplaceControl(Control oldControl, Control newControl)
     {
       if (oldControl == null)
@@ -314,7 +314,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Отсоединяет от управляющего элемента все дочерние элементы и вызывает для
-    /// них Dispose()
+    /// них <see cref="System.ComponentModel.Component.Dispose()"/>.
     /// </summary>
     /// <param name="control">Родительский элемент</param>
     public static void DisposeChildren(Control control)
@@ -352,7 +352,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Установка фокуса ввода на управляющий элемент с обработкой закладок TabControl
+    /// Установка фокуса ввода на управляющий элемент с обработкой закладок <see cref="TabControl"/>
     /// </summary>
     /// <param name="control">Элемент, который получит фокус</param>
     /// <returns>Возвращает управляющий элемент, которому передан фокус ввода (это может быть <paramref name="control"/> или один из его вложенных элементов).
@@ -413,9 +413,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает <paramref name="control"/>, если для переданного элемента установлено свойство CanSelect.
+    /// Возвращает <paramref name="control"/>, если для переданного элемента установлено свойство <see cref="Control.CanSelect"/>.
     /// Иначе берется родительский элемент, и.т.д.
-    /// Если очередной Control.Parent вернул null, а свойство CanSelect не было 
+    /// Если очередной <see cref="Control.Parent"/> вернул null, а свойство <see cref="Control.CanSelect"/> не было 
     /// установлено (куча вложенных Panel без формы), возвращается null
     /// </summary>
     /// <param name="control">Проверяемый управляющий элемент. Может быть null</param>
@@ -434,8 +434,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если управляющий элемент расположен на форме и вся цепочка
-    /// родителей имеет свойство Visible=true.
-    /// Возвращает false, если для одного из элементов в цепочке IsDisposed=true.
+    /// родителей имеет свойство <see cref="Control.Visible"/>=true.
+    /// Возвращает false, если для одного из элементов в цепочке <see cref="Control.IsDisposed"/>=true.
     /// Если <paramref name="control"/>=null, возвращает false/
     /// </summary>
     /// <param name="control">Проверяемый управляющий элемент</param>
@@ -459,19 +459,19 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширенная функция добавления управляющего элемента в коллекцию
+    /// Расширенная функция добавления управляющего элемента в коллекцию.
     /// Используется, когда форма уже выведена на экран и требуется добавить
     /// элемент из другой формы-"заготовки", которая сама на экран никогда
     /// не выводится (например, при переходе к очередному шагу мастера).
     /// В этом случае стандартные механизмы Windows не могут выполнить 
     /// масштабирование, если текущее разрешение экрана не совпадает с тем,
-    /// что использовалось при разработке формы-заготовки
+    /// что использовалось при разработке формы-заготовки.
     /// 
     /// Метод отсоединяет добавляемый элемент от родителя (формы-заготовки или ее
     /// дочернего элемента), если он есть. Затем проверяется, что раньше элемент
     /// располагался на форме-"заготовке" (а не создан динамически) и выполняется
-    /// масштабирование с помощью Control.Scale(). Затем, отмасщтабированный
-    /// элемент добавляется в коллекцию Controls нового хозяина
+    /// масштабирование с помощью <see cref="Control.Scale(SizeF)"/>. Затем, отмасщтабированный
+    /// элемент добавляется в коллекцию <see cref="Control.Controls"/> нового хозяина.
     /// </summary>
     /// <param name="newParent">Новая панель-хозяин, куда будет добавлен элемент</param>
     /// <param name="child">Добавляемый управляющий элемент</param>
@@ -494,20 +494,20 @@ namespace FreeLibSet.Forms
         SizeF sz2 = newForm.CurrentAutoScaleDimensions;
         if (sz1.Width > 0 && sz1.Height > 0 && sz2.Width > 0 && sz2.Height > 0) // перестраховка
         {
-          SizeF Factor = new SizeF(sz2.Width / sz1.Width, sz2.Height / sz1.Height);
-          child.Scale(Factor);
+          SizeF factor = new SizeF(sz2.Width / sz1.Width, sz2.Height / sz1.Height);
+          child.Scale(factor);
         }
       }
       newParent.Controls.Add(child);
     }
 
     /// <summary>
-    /// Возвращает текст в управляющем элементе (свойство Control.Text). 
+    /// Возвращает текст в управляющем элементе (свойство <see cref="Control.Text"/>). 
     /// Если элемент не содержит текста, возвращает рекурсивно текст родительского
-    /// элемента
+    /// элемента.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <returns>Свойство Control.Text</returns>
+    /// <returns>Свойство <see cref="Control.Text"/></returns>
     public static string GetControlText(Control control)
     {
       while (control != null)
@@ -520,9 +520,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Удаление мнемонических символов из текста команд меню, меток, кнопок
-    /// Одиночные символы "амперсанд" удаляются
-    /// Два идущих подряд символа "амперсанд" заменяются на один
+    /// Удаление мнемонических символов из текста команд меню, меток, кнопок.
+    /// Одиночные символы "амперсанд" удаляются.
+    /// Два идущих подряд символа "амперсанд" заменяются на один.
     /// </summary>
     /// <param name="s">Строка, возможно содержащая мнемонический символ "амперсанд"</param>
     /// <returns>Строка без мнемонических символов</returns>
@@ -555,13 +555,13 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Возвращает часть области Control.ClientArea, из которой исключены части, занятые
-    /// дочерними управляющими элементами с установленным свойством Doc=Top, Left, Right и Bottom.
-    /// Дочерние управляющие элементы с Dock=None и Fill не учитываются.
+    /// Возвращает часть области <see cref="Control.ClientRectangle"/>, из которой исключены части, занятые
+    /// дочерними управляющими элементами с установленным свойством <see cref="Control.Dock"/>=Top, Left, Right и Bottom.
+    /// Дочерние управляющие элементы с <see cref="Control.Dock"/>=None и Fill не учитываются.
     /// Скрытые элементы не учитываются.
-    /// Для определения области в MDI-контейнере используйте метод GetMdiContainerArea()
+    /// Для определения области в MDI-контейнере используйте метод <see cref="GetMdiContainerArea(Form)"/>.
     /// </summary>
-    /// <param name="control">Управляющий элемент или форма MDI Container</param>
+    /// <param name="control">Управляющий элемент</param>
     /// <returns>"Свободная" область</returns>
     public static Rectangle GetControlDockFillArea(Control control)
     {
@@ -598,8 +598,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если управляющий элемент <paramref name="parent"/> прямо или косвенно является родителем для 
     /// <paramref name="child"/>.
-    /// Метод рекурсивно просматривает свойство Control.Parent для дочернего элемента.
-    /// Если один из аргументов равен null, возвращает false
+    /// Метод рекурсивно просматривает свойство <see cref="Control.Parent"/> для дочернего элемента.
+    /// Если один из аргументов равен null, возвращает false.
     /// </summary>
     /// <param name="parent">Родительский элемент</param>
     /// <param name="child">Дочерний элемент</param>
@@ -626,9 +626,9 @@ namespace FreeLibSet.Forms
     /// <typeparam name="T">Тип управляющего элемента, который требуется найти.
     /// Будет также найден элемент производного класса</typeparam>
     /// <param name="control">Управляющий элемент, с которого требуется начать поиск.
-    /// Может быть формой Form.
-    /// Будет проверен сам этот элемент, его дочерние элементы Controls и рекурсивно все вложенные элементы.</param>
-    /// <returns>Первый найденный элемент. Если не найдено ни одного управляющего элемента, возвращается null</returns>
+    /// Может быть формой <see cref="Form"/>.
+    /// Будет проверен сам этот элемент, его дочерние элементы <see cref="Control.Controls"/> и рекурсивно все вложенные элементы.</param>
+    /// <returns>Первый найденный элемент. Если не найдено ни одного управляющего элемента, возвращается null.</returns>
     public static T FindControl<T>(Control control)
       where T : Control
     {
@@ -641,10 +641,10 @@ namespace FreeLibSet.Forms
     /// <typeparam name="T">Тип управляющего элемента, который требуется найти.
     /// Будет также найден элемент производного класса</typeparam>
     /// <param name="control">Управляющий элемент, с которого требуется начать поиск.
-    /// Может быть формой Form.
-    /// Если <paramref name="recurse"/> равен true, будут проверены рекурсивно все элементы</param>
+    /// Может быть формой <see cref="Form"/>.
+    /// Если <paramref name="recurse"/> равен true, будут проверены рекурсивно все элементы.</param>
     /// <param name="recurse">true, если требуется рекурсивный просмотр элементов.
-    /// Если false, то будет просмотрен только Control и, его непосредственные дочерние элементы</param>
+    /// Если false, то будет просмотрен только <paramref name="control"/> и, его непосредственные дочерние элементы</param>
     /// <returns>Первый найденный элемент. Если не найдено ни одного управляющего элемента, возвращается null</returns>
     public static T FindControl<T>(Control control, bool recurse)
       where T : Control
@@ -689,11 +689,11 @@ namespace FreeLibSet.Forms
     /// Можно использовать, например, для поиска всех кнопок на форме.
     /// </summary>
     /// <typeparam name="T">Тип управляющих элементов, которые требуется найти.
-    /// Используйте тип Control, чтобы найти все элементы.
+    /// Используйте тип <see cref="Control"/>, чтобы найти все элементы.
     /// Будут также найдены все элементы производных классов</typeparam>
     /// <param name="control">Управляющий элемент, с которого требуется начать поиск.
-    /// Может быть формой Form.
-    /// Будет проверен сам этот элемент, его дочерние элементы Controls и рекурсивно все вложенные элементы.</param>
+    /// Может быть формой <see cref="Form"/>.
+    /// Будет проверен сам этот элемент, его дочерние элементы <see cref="Control.Controls"/> и рекурсивно все вложенные элементы.</param>
     /// <returns>Массив найденных элементов. Если не найдено ни одного управляющего элемента, возвращается пустой массив</returns>
     public static T[] GetControls<T>(Control control)
       where T : Control
@@ -706,14 +706,14 @@ namespace FreeLibSet.Forms
     /// Можно использовать, например, для поиска всех кнопок на форме.
     /// </summary>
     /// <typeparam name="T">Тип управляющих элементов, которые требуется найти.
-    /// Используйте тип Control, чтобы найти все элементы.
+    /// Используйте тип <see cref="Control"/>, чтобы найти все элементы.
     /// Будут также найдены все элементы производных классов</typeparam>
     /// <param name="control">Управляющий элемент, с которого требуется начать поиск.
-    /// Может быть формой Form.
-    /// Будет проверен сам этот элемент и его дочерние элементы Controls.
+    /// Может быть формой <see cref="Form"/>.
+    /// Будет проверен сам этот элемент и его дочерние элементы <see cref="Control.Controls"/>.
     /// Если <paramref name="recurse"/> равен true, будут проверены рекурсивно все элементы</param>
     /// <param name="recurse">true, если требуется рекурсивный просмотр элементов.
-    /// Если false, то будет просмотрен только Control и, его непосредственные дочерние элементы</param>
+    /// Если false, то будет просмотрен только <paramref name="control"/> и его непосредственные дочерние элементы</param>
     /// <returns>Массив найденных элементов. Если не найдено ни одного управляющего элемента, возвращается пустой массив</returns>
     public static T[] GetControls<T>(Control control, bool recurse)
       where T : Control
@@ -761,11 +761,11 @@ namespace FreeLibSet.Forms
     #region FindButton()
 
     /// <summary>
-    /// Поиск в форме закрывающей кнопки с заданным кодом DialogResult.
-    /// Если кнопка не найдена, возвращает null
+    /// Поиск в форме закрывающей кнопки с заданным кодом <paramref name="dialogResult"/>.
+    /// Если кнопка не найдена, возвращает null.
     /// </summary>
     /// <param name="control">Управляющий элемент, с которого начинается поиск. Обычно это форма</param>
-    /// <param name="dialogResult">Значение свойства Button.DialogResult</param>
+    /// <param name="dialogResult">Значение свойства <see cref="Button.DialogResult"/></param>
     /// <returns>Объект кнопки или null</returns>
     public static Button FindButton(Control control, DialogResult dialogResult)
     {
@@ -799,13 +799,13 @@ namespace FreeLibSet.Forms
     /// Проверяет, что дочерние управляющие элементы помещаются в пределах клиентской области
     /// родительского управляющего элемента.
     /// Для каждого элемента проверяется только правая и нижняя граница. Верхняя и левая не проверяются.
-    /// Свойства Dock и Anchor дочерних элементов не учитываются, предполагается, что элементы
+    /// Свойства <see cref="Control.Dock"/> и <see cref="Control.Anchor"/> дочерних элементов не учитываются, предполагается, что элементы
     /// располагаются от верхнего левого угла родительского элемента.
-    /// Допустимой считается область ClientRectangle за вычетом полей Padding.
+    /// Допустимой считается область <see cref="Control.ClientRectangle"/> за вычетом полей <see cref="Control.Padding"/>.
     /// Проверяются только непосредственные дочерние элементы, рекурсивный обход элементов не выполняется.
     /// Возвращается размер, на который следует увеличить родительский элемент, чтобы в него
     /// поместились дочерние элементы.
-    /// Возвращается Size.Empty, если все элементы поместились.
+    /// Возвращается <see cref="Size.Empty"/>, если все элементы поместились.
     /// </summary>
     /// <param name="parent">Родителский элемент</param>
     /// <returns>Недостающий размер, на который надо увеличить родительский элемент</returns>
@@ -854,7 +854,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Поиск дочернего управляющего элемента в заданной позиции.
-    /// Расширяет стандартный метод Control.GetChildAtPoint() рекурсивным вызовом.
+    /// Расширяет стандартный метод <see cref="Control.GetChildAtPoint(Point)"/> рекурсивным вызовом.
     /// Сначала вызывается <paramref name="parentControl"/>.GetChildAtPoint(). Если он возвращает
     /// дочерний элемент, вызов повторяется для него (с преобразованием координат).
     /// Таким образом, будет найден элемент самого вложенного уровня.
@@ -871,7 +871,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Поиск дочернего управляющего элемента в заданной позиции.
-    /// Расширяет стандартный метод Control.GetChildAtPoint() рекурсивным вызовом.
+    /// Расширяет стандартный метод <see cref="Control.GetChildAtPoint(Point, GetChildAtPointSkip)"/> рекурсивным вызовом.
     /// Сначала вызывается <paramref name="parentControl"/>.GetChildAtPoint(). Если он возвращает
     /// дочерний элемент, вызов повторяется для него (с преобразованием координат).
     /// Таким образом, будет найден элемент самого вложенного уровня.
@@ -879,7 +879,7 @@ namespace FreeLibSet.Forms
     /// <param name="parentControl">Управляющий элемент, в котором выполняется поиск, например, форма. Не может быть null</param>
     /// <param name="pt">Координаты, в которых ищется элемент. Задаются относительно клиентской области <paramref name="parentControl"/>.</param>
     /// <param name="skipValue">Определяет, какие элементы следует игнорировать. 
-    /// Обычно следует задавать значение GetChildAtPointSkip.Invisible.</param>
+    /// Обычно следует задавать значение <see cref="GetChildAtPointSkip.Invisible"/>.</param>
     /// <returns>Найденный дочерний, внучатый, ... элемент или null, если нет элементов в указанной позиции</returns>
     public static Control GetChildAtPointRecursive(Control parentControl, Point pt, GetChildAtPointSkip skipValue)
     {
@@ -914,13 +914,13 @@ namespace FreeLibSet.Forms
     #region Для SplitContainer
 
     /// <summary>
-    /// Установка положения разделителя в SplitContainer (свойство Distance) с
+    /// Установка положения разделителя <see cref="SplitContainer.SplitterDistance"/>
     /// выполнением проверки допустимости значения.
     /// Обычная установка свойства может привести в вызову исключения, если
     /// установлены ограничения на минимальные размеры панелей
     /// </summary>
     /// <param name="control">Контейнер с двумя панелями</param>
-    /// <param name="value">Желаемое значение для свойства Distance</param>
+    /// <param name="value">Желаемое значение для свойства <see cref="SplitContainer.SplitterDistance"/></param>
     public static void SetSplitContainerDistance(SplitContainer control, int value)
     {
       int sz;
@@ -947,9 +947,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка положения разделителя в SplitContainer в процентном соотношении
-    /// к размерам объекта. На момент вызова должно быть установлено свойство
-    /// Orientation
+    /// Установка положения разделителя в <see cref="SplitContainer"/> в процентном соотношении
+    /// к размерам объекта. На момент вызова должно быть установлено свойство <see cref="SplitContainer.Orientation"/>.
     /// </summary>
     /// <param name="control">Контейнер с двумя панелями</param>
     /// <param name="percent">Процентное значение размера верхней или левой панели (от 1 до 99,
@@ -975,9 +974,9 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Определение положения разделителя в SplitContainer в процентном соотношении
+    /// Определение положения разделителя в <see cref="SplitContainer"/> в процентном соотношении
     /// к размерам объекта. На момент вызова должно быть установлено свойство
-    /// Orientation
+    /// <see cref="SplitContainer.Orientation"/>.
     /// </summary>
     /// <param name="control">Контейнер с двумя панелями</param>
     /// <returns>Процентное значение размера верхней или левой панели (от 0 до 100)</returns>
@@ -998,9 +997,9 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Установка положения разделителя в SplitContainer точно посередине
+    /// Установка положения разделителя в <see cref="SplitContainer"/> точно посередине
     /// объекта. На момент вызова должно быть установлено свойство
-    /// Orientation
+    /// <see cref="SplitContainer.Orientation"/>.
     /// </summary>
     /// <param name="control">Контейнер с двумя панелями</param>
     public static void SetSplitContainerDistance(SplitContainer control)
@@ -1045,8 +1044,8 @@ namespace FreeLibSet.Forms
     #region Для DataGridView
 
     /// <summary>
-    /// Если просмотр присоединен к DataSet'у DataView или DataTable,
-    /// возвращаем DataTable, иначе возвращаем null
+    /// Если просмотр присоединен к DataSet'у <see cref="DataView"/> или <see cref="DataTable"/>,
+    /// возвращаем <see cref="DataTable"/>, иначе возвращаем null
     /// </summary>
     /// <param name="control">Табличный просмотр</param>
     public static DataTable GetTableDataSource(DataGridView control)
@@ -1066,8 +1065,8 @@ namespace FreeLibSet.Forms
     /// Возвращает источник данных табличного просмотра или другого управляющего элемента, если он является объектом <see cref="System.Data.DataView"/>.
     /// Если источником является промежуточный объект <see cref="System.Windows.Forms.BindingSource"/>, то выполняется рекурсивный поиск его источника.
     /// </summary>
-    /// <param name="dataSource">Свойство DataSource</param>
-    /// <param name="dataMember">Свойство DataMember</param>
+    /// <param name="dataSource">Свойство <see cref="DataGridView.DataSource"/></param>
+    /// <param name="dataMember">Свойство <see cref="DataGridView.DataMember"/></param>
     /// <returns>Найденный источник табличных данных или null</returns>
     public static DataView GetSourceAsDataView(object dataSource, string dataMember)
     {
@@ -1087,11 +1086,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить строку DataRow таблицы, связанную с заданным объектом строки.
+    /// Получить строку <see cref="DataRow"/> таблицы, связанную с заданным объектом строки.
     /// Строка <paramref name="gridRow"/> должна быть Unshared
     /// </summary>
     /// <param name="gridRow">Объект строки табличного просмотра</param>
-    /// <returns>Строка в таблице DataTable</returns>
+    /// <returns>Строка в таблице <see cref="DataTable"/></returns>
     public static DataRow GetDataRow(DataGridViewRow gridRow)
     {
       if (gridRow == null)
@@ -1121,9 +1120,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Более предпочтительный способ получения строки DataRow по номеру строки в
+    /// Более предпочтительный способ получения строки <see cref="DataRow"/> по номеру строки в
     /// табличном просмотре. Не делает строку Unshared, т.к. не обращается к
-    /// объекту DataGridViewRow
+    /// объекту <see cref="DataGridViewRow"/>
     /// Статический вариант метода
     /// </summary>
     /// <param name="control">Табличный просмотр, не обязательно имеющий DocGridHandler</param>
@@ -1177,7 +1176,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить горизонтальное выравнивание текста ячейки 
-    /// (преобразование из DataGridViewContentAlignment в HorizontalAlignment )
+    /// (преобразование из <see cref="DataGridViewContentAlignment"/> в <see cref="HorizontalAlignment"/>
     /// </summary>
     /// <param name="cellAlign">Выравнивание ячейки</param>
     /// <returns>Горизонтальное выравнивание текста</returns>
@@ -1207,7 +1206,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить выравнивание ячейки исходя из существующего выравнивания и 
-    /// желательного выравнивая текста
+    /// желательного выравнивая текста.
     /// </summary>
     /// <param name="textAlign">Желаемое выравнивание текста</param>
     /// <param name="cellAlign">Существующее выравнивание ячейки</param>
@@ -1292,8 +1291,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить выравнивание ячейки исходя из горизонтального выравнивания текста
-    /// (преобразование из HorizontalAlignment в DataGridViewContentAlignment)
-    /// Вертикальное выравнивание ячейки предполагается по центру
+    /// (преобразование из <see cref="HorizontalAlignment"/> в <see cref="DataGridViewContentAlignment"/>).
+    /// Вертикальное выравнивание ячейки предполагается по центру.
     /// </summary>
     /// <param name="textAlign">Горизонтальное выравнивание текста</param>
     /// <returns>Выравнивание ячейки</returns>
@@ -1316,9 +1315,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает отсортированный в порядке размещения массив объектов DataGridViewColumn
+    /// Возвращает отсортированный в порядке размещения массив объектов <see cref="DataGridViewColumn"/>
     /// </summary>
-    /// <param name="control">Управляющий элемент DataGridView</param>
+    /// <param name="control">Управляющий элемент <see cref="DataGridView"/></param>
     /// <returns>Массив столбцов</returns>
     public static DataGridViewColumn[] GetOrderedAllColumns(DataGridView control)
     {
@@ -1339,10 +1338,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает отсортированный в порядке размещения массив объектов DataGridViewColumn, 
-    /// у которых свойство Visible=true
+    /// Возвращает отсортированный в порядке размещения массив объектов <see cref="DataGridViewColumn"/>, 
+    /// у которых свойство <see cref="DataGridViewBand.Visible"/>=true.
     /// </summary>
-    /// <param name="control">Управляющий элемент DataGridView</param>
+    /// <param name="control">Управляющий элемент <see cref="DataGridView"/></param>
     /// <returns>Массив столбцов</returns>
     public static DataGridViewColumn[] GetOrderedVisibleColumns(DataGridView control)
     {
@@ -1366,10 +1365,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает отсортированный в порядке размещения массив объектов DataGridViewColumn, 
-    /// у которых свойство Visible=true и Selected=true
+    /// Возвращает отсортированный в порядке размещения массив объектов <see cref="DataGridViewColumn"/>, 
+    /// у которых свойства <see cref="DataGridViewBand.Visible"/>=true и <see cref="DataGridViewBand.Selected"/>.
     /// </summary>
-    /// <param name="control">Управляющий элемент DataGridView</param>
+    /// <param name="control">Управляющий элемент <see cref="DataGridView"/></param>
     /// <returns>Массив столбцов</returns>
     public static DataGridViewColumn[] GetOrderedSelectedColumns(DataGridView control)
     {
@@ -1393,7 +1392,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Преобразует массив столбцов DataGridViewColumn в массив индексов столбцов
+    /// Преобразует массив столбцов <see cref="DataGridViewColumn"/> в массив индексов столбцов
     /// </summary>
     /// <param name="columns">Массив столбцов</param>
     /// <returns>Массив индексов</returns>
@@ -1410,7 +1409,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Преобразует массив индексов столбцов в массив объектов DataGridViewColumn
+    /// Преобразует массив индексов столбцов в массив объектов <see cref="DataGridViewColumn"/>
     /// </summary>
     /// <param name="control">Табличный просмотр</param>
     /// <param name="columnIndices">Массив индексов столбцов</param>
@@ -1434,7 +1433,7 @@ namespace FreeLibSet.Forms
     #region Для ComboBox
 
     /// <summary>
-    /// Устанавливает свойство ComboBox.Size в соответствии с самой длинной строкой в списке Items.
+    /// Устанавливает свойство <see cref="Control.Size"/> в соответствии с самой длинной строкой в списке Items.
     /// </summary>
     /// <param name="control">Комбоблок</param>
     internal static void SetComboBoxWidth(ComboBox control)
@@ -1474,7 +1473,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Размещение формы в указанной прямоугольной области.
     /// Если форма имеет изменяемые размеры, то она может быть уменьшена, чтобы поместиться в <paramref name="area"/>.
-    /// Этот метод не меняет и не учитывает состояние формы WindowState.
+    /// Этот метод не меняет и не учитывает состояние формы <see cref="Form.WindowState"/>.
     /// </summary>
     /// <param name="form">Разменщаемая форма</param>
     /// <param name="area">Область для размещения формы</param>
@@ -1594,7 +1593,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Установка формы по центру заданного экрана. Меняется свойство Location.
+    /// Установка формы по центру заданного экрана. Меняется свойство <see cref="Control.Location"/>.
     /// Размер формы не изменяется
     /// </summary>
     /// <param name="form">Форма, положение которой устанавливается</param>
@@ -1605,7 +1604,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка формы по центру заданного экрана. Меняется свойство Location.
+    /// Установка формы по центру заданного экрана. Меняется свойство <see cref="Control.Location"/>.
     /// Размеры формы могут быть уменьшены, если <paramref name="limitSize"/>=true
     /// </summary>
     /// <param name="form">Форма, положение которой устанавливается</param>
@@ -1661,7 +1660,7 @@ namespace FreeLibSet.Forms
     /// Если форма не может быть размещена под основным элементом, то выполняется попытка
     /// разместить ее над элементом.
     /// Размеры формы не меняются.
-    /// Если форма не помещается не над, не под элементом, то она может перекрыть элемент.
+    /// Если форма не помещается ни над, ни под элементом, то она может перекрыть элемент.
     /// </summary>
     /// <param name="form">Созданная всплывающая форма, которую требуется разместить</param>
     /// <param name="ownerRect">Область, занимаемая основным элементом (полем ввода комблока
@@ -1721,12 +1720,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Попытка закрытия формы с требуемым результатом.
-    /// Если обработчик TheForm.Closing не разрешает закрыть форму, то восстанавливается
-    /// исходное состояние TheForm.DialogResult
+    /// Если обработчик <see cref="Form.Closing"/> не разрешает закрыть форму, то восстанавливается
+    /// исходное состояние <see cref="Form.DialogResult"/>.
     /// Применяется внутри обработчиков управляющих элементов формы (например, DoubleClick)
     /// </summary>
     /// <param name="form">Форма, которую надо закрыть</param>
-    /// <param name="dialogResult">Значение TheForm.DialogResult, которое будет установлено</param>
+    /// <param name="dialogResult">Значение <see cref="Form.DialogResult"/>, которое будет установлено</param>
     /// <returns>true, если форму удалось закрыть, и false, если Closing запретил закрытие</returns>
     public static bool TryCloseForm(Form form, DialogResult dialogResult)
     {
@@ -1751,7 +1750,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить доступную область для размещения форм в MDI-контейнере
     /// </summary>
-    /// <param name="mdiContainer">Форма с установленным свойством IsMdiContainer=true</param>
+    /// <param name="mdiContainer">Форма с установленным свойством <see cref="Form.IsMdiContainer"/>=true</param>
     /// <returns>Область для размещения дочерних окон</returns>
     public static Rectangle GetMdiContainerArea(Form mdiContainer)
     {
@@ -1781,7 +1780,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить значение свойства <paramref name="form"/>.MiminumSize в координатах клиентной области
+    /// Получить значение свойства <see cref="Form.MinimumSize"/> в координатах клиентной области
     /// </summary>
     /// <param name="form">Форма для извлечения свойства</param>
     /// <returns>Минимальный размер формы в координатах клиентной области</returns>
@@ -1801,7 +1800,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка свойства <paramref name="form"/>.MinimumSize в координатах клиентной области
+    /// Установка свойства <see cref="Form.MinimumSize"/> в координатах клиентной области
     /// </summary>
     /// <param name="form">Форма для установки свойства</param>
     /// <param name="value">Минимальный размер формы в координатах клиентной области</param>
@@ -2544,7 +2543,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализирует значок формы равным значку приложения.
-    /// Если свойство AppIcon возвращает null, устанавливается свойство <paramref name="form"/>.ShowIcon=false
+    /// Если свойство <see cref="AppIcon"/> возвращает null, устанавливается свойство <paramref name="form"/>.ShowIcon=false
     /// для скрытия значка.
     /// </summary>
     /// <param name="form">Форма, для которой устанавливается значок</param>
@@ -2572,16 +2571,19 @@ namespace FreeLibSet.Forms
     /// <param name="filePath">Путь к файлу</param>
     /// <param name="iconIndex">Индекс значка в файле. 
     /// См. описание функции Windows ExtractIcon или ExtractIconEx()</param>
-    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - больщой (32x32)</param>
+    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - большой (32x32)</param>
     /// <returns>Значок или null</returns>
     public static Icon ExtractIcon(AbsPath filePath, int iconIndex, bool smallIcon)
     {
       if (!System.IO.File.Exists(filePath.Path))
         return null;
 
-      if (EnvironmentTools.IsMono && Win32.ExeFileInfo.IsExeExtension(filePath.Extension))
+      if (EnvironmentTools.IsMono &&
+        FreeLibSet.Win32.ExeFileInfo.IsExeExtension(filePath.Extension))
       {
-        using (Win32.ExeFileInfo fi = new Win32.ExeFileInfo(filePath))
+        #region Используем ExeFileInfo
+
+        using (FreeLibSet.Win32.ExeFileInfo fi = new FreeLibSet.Win32.ExeFileInfo(filePath))
         {
           if (fi.Resources != null)
           {
@@ -2597,45 +2599,53 @@ namespace FreeLibSet.Forms
           else
             return null;
         }
-      }
 
-      switch (Environment.OSVersion.Platform)
-      {
-        case PlatformID.Win32NT:
-        case PlatformID.Win32Windows:
-          break;
-        default:
-          return null;
-      }
-
-      IntPtr hIcon;
-      if (smallIcon)
-      {
-        hIcon = DoExtractSmallIcon(filePath, iconIndex);
-        if (hIcon == IntPtr.Zero)
-          hIcon = DoExtractLargeIcon(filePath, iconIndex);
+        #endregion
       }
       else
       {
-        hIcon = DoExtractLargeIcon(filePath, iconIndex);
-        if (hIcon == IntPtr.Zero)
+        #region Используем функции Windows
+
+        switch (Environment.OSVersion.Platform)
+        {
+          case PlatformID.Win32NT:
+          case PlatformID.Win32Windows:
+            break;
+          default:
+            return null;
+        }
+
+        IntPtr hIcon;
+        if (smallIcon)
+        {
           hIcon = DoExtractSmallIcon(filePath, iconIndex);
-      }
-      if (hIcon == IntPtr.Zero)
-      {
-        //EFPApp.MessageBox("Для значка " + filePath + ", IconIndex=" + iconIndex + " ExtractIcon/Ex() вернули IntPtr.Zero ");
-        return null;
-      }
+          if (hIcon == IntPtr.Zero)
+            hIcon = DoExtractLargeIcon(filePath, iconIndex);
+        }
+        else
+        {
+          hIcon = DoExtractLargeIcon(filePath, iconIndex);
+          if (hIcon == IntPtr.Zero)
+            hIcon = DoExtractSmallIcon(filePath, iconIndex);
+        }
+        if (hIcon == IntPtr.Zero)
+        {
+          //EFPApp.MessageBox("Для значка " + filePath + ", IconIndex=" + iconIndex + " ExtractIcon/Ex() вернули IntPtr.Zero ");
+          return null;
+        }
 
-      // К сожалению, нельзя вернуть значок, чтобы Net Framework отвечал за вызов DestroyIcon,
-      // т.к. соответствующий конструктор защищенный.
-      // Надо клонировать
+        // К сожалению, нельзя вернуть значок, чтобы Net Framework отвечал за вызов DestroyIcon,
+        // т.к. соответствующий конструктор защищенный.
+        // Надо клонировать
 
-      Icon icon1 = Icon.FromHandle(hIcon);
-      Icon icon2 = icon1.Clone() as Icon;
-      icon1.Dispose();
-      NativeMethods.DestroyIcon(hIcon);
-      return icon2;
+        Icon icon1 = Icon.FromHandle(hIcon);
+        Icon icon2 = icon1.Clone() as Icon;
+        icon1.Dispose();
+        NativeMethods.DestroyIcon(hIcon);
+        return icon2;
+
+        #endregion
+      }
     }
 
     private static IntPtr DoExtractLargeIcon(AbsPath filePath, int iconIndex)
@@ -2666,14 +2676,14 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Получить значок требуемого размера из ресурсов файла для объекта FileAssociationItem.
+    /// Получить значок требуемого размера из ресурсов файла для объекта <see cref="FreeLibSet.Shell.FileAssociationItem"/>.
     /// Если файл не найден или в файле нет значка с заданным индексом, возвращается null.
-    /// В отличие от ExtractIcon(), выполняет также загрузку значков из файлов изображений,
-    /// и выполняет уменьшение размера
+    /// В отличие от <see cref="ExtractIcon(AbsPath, int, bool)"/>, выполняет также загрузку значков из файлов изображений,
+    /// и выполняет уменьшение размера.
     /// Если для значка нет требуемого размера, возвращается значок меньшего размера.
     /// </summary>
     /// <param name="faItem">Ассоциация файла</param>
-    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - больщой (32x32)</param>
+    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - большой (32x32)</param>
     /// <returns>Значок или null</returns>
     public static Image ExtractIconImage(FreeLibSet.Shell.FileAssociationItem faItem, bool smallIcon)
     {
@@ -2685,14 +2695,14 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить значок требуемого размера из ресурсов файла.
     /// Если файл не найден или в файле нет значка с заданным индексом, возвращается null.
-    /// В отличие от ExtractIcon(), выполняет также загрузку значков из файлов изображений,
-    /// и выполняет уменьшение размера
+    /// В отличие от <see cref="ExtractIcon(AbsPath, int, bool)"/>, выполняет также загрузку значков из файлов изображений,
+    /// и выполняет уменьшение размера.
     /// Если для значка нет требуемого размера, возвращается значок меньшего размера.
     /// </summary>
     /// <param name="filePath">Путь к файлу</param>
     /// <param name="iconIndex">Индекс значка в файле. 
     /// См. описание функции Windows ExtractIcon или ExtractIconEx()</param>
-    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - больщой (32x32)</param>
+    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - большой (32x32)</param>
     /// <returns>Значок или null</returns>
     public static Image ExtractIconImage(AbsPath filePath, int iconIndex, bool smallIcon)
     {
@@ -2731,9 +2741,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализирует свойства <see cref="Form.Icon"/> и <see cref="Form.ShowIcon"/> с помощью изображения <paramref name="image"/>
     /// </summary>
-    /// <param name="form"></param>
-    /// <param name="image"></param>
-    /// <returns></returns>
+    /// <param name="form">Форма, для которой выполняется инициализация значка</param>
+    /// <param name="image">Изображение, которое будет преобразовано в <see cref="Icon"/>. Может быть null</param>
     public static void InitIcon(Form form, Image image)
     {
       Icon ico = GetIcon(image);
@@ -2747,10 +2756,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает з
+    /// Возвращает объект <see cref="Icon"/> из <see cref="Bitmap"/>.
     /// </summary>
-    /// <param name="image"></param>
-    /// <returns></returns>
+    /// <param name="image">Изображение, которое будет преобразовано в <see cref="Icon"/>. Может быть null</param>
+    /// <returns>Объект <see cref="Icon"/> или null</returns>
     public static Icon GetIcon(Image image)
     {
       Bitmap bmp = image as Bitmap;
@@ -2765,7 +2774,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Добавляет данные в форматах Text и CSV в заданный объект DataObject.
+    /// Добавляет данные в форматах Text и CSV в заданный объект <see cref="DataObject"/>.
     /// Сам буфер обмена не участвует в операции.
     /// </summary>
     /// <param name="dobj">Заполняемый объект</param>
@@ -2786,10 +2795,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает текстовые данные из объекта DataObject, который получен из буфера обмена.
-    /// Проверяются форматы CSV и Text
+    /// Возвращает текстовые данные из объекта <see cref="DataObject"/>, который получен из буфера обмена.
+    /// Проверяются форматы CSV и Text.
     /// В случае отсутствия данных возвращается null.
-    /// Если данные имеют некорректный формат, выбрасывается исключение.
+    /// Если текстовые данные имеют некорректный формат, выбрасывается исключение.
     /// </summary>
     /// <param name="dobj">Объект, полученный из буфера обмена</param>
     /// <returns>Матрица текста или null, если нет данных в подходящем формате</returns>
@@ -2802,7 +2811,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает текстовые данные из объекта DataObject, который получен из буфера обмена.
+    /// Возвращает текстовые данные из объекта <see cref="DataObject"/>, который получен из буфера обмена.
     /// Проверяется только формат данных CSV.
     /// В случае отсутствия данных возвращается null.
     /// Если данные имеют некорректный формат, выбрасывается исключение.
@@ -2860,7 +2869,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Возвращает текстовые данные из объекта DataObject, который получен из буфера обмена.
+    /// Возвращает текстовые данные из объекта <see cref="DataObject"/>, который получен из буфера обмена.
     /// Проверяется только формат данных Text.
     /// В случае отсутствия данных возвращается null.
     /// Если данные имеют некорректный формат, выбрасывается исключение.
@@ -2944,12 +2953,12 @@ namespace FreeLibSet.Forms
     #region Поддержка Windows-98
 
     /// <summary>
-    /// Корректировка кода символа, полученного в событии KeyPress.
+    /// Корректировка кода символа, полученного в событии <see cref="Control.KeyPress"/>.
     /// Под Windows-98 возвращаются неправильные коды для русских букв
-    /// (используется ANSI-кодировка, а не UNICODE)
+    /// (используется ANSI-кодировка, а не UNICODE).
     /// </summary>
-    /// <param name="c"></param>
-    /// <returns></returns>
+    /// <param name="c">Значение свойства <see cref="KeyPressEventArgs.KeyChar"/></param>
+    /// <returns>Исправленное значение</returns>
     internal static char CorrectCharWin98(char c)
     {
       int n = (int)c;

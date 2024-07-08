@@ -26,8 +26,6 @@ namespace FreeLibSet.Controls
 
     public MessageBoxIconBox()
     {
-      InitializeComponent();
-
       SetStyle(ControlStyles.UserPaint, true);
       SetStyle(ControlStyles.SupportsTransparentBackColor, true);
       SetStyle(ControlStyles.Selectable, false);
@@ -36,14 +34,6 @@ namespace FreeLibSet.Controls
       _IconSize = MessageBoxIconSize.Small;
       base.BackColor = Color.Transparent;
       base.SetAutoSizeMode(AutoSizeMode.GrowAndShrink);
-    }
-
-    #endregion
-
-    #region Дизайнер
-
-    private void InitializeComponent()
-    {
     }
 
     #endregion
@@ -164,6 +154,8 @@ namespace FreeLibSet.Controls
     #endregion
 
     #region Ограничение размеров
+
+    //protected override Padding DefaultPadding { get { return new Padding(3); } }
 
     private Size GetImageSize()
     {

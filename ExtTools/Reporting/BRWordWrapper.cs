@@ -390,7 +390,7 @@ namespace FreeLibSet.Reporting
     private void CheckIndexRange(int firstIndex, int lastIndex)
     {
       if (_Items.Length == 0)
-        throw new Exception("Никакой диапазон символов не может быть правильным, т.к. строка пустая");
+        throw new InvalidOperationException("Никакой диапазон символов не может быть правильным, т.к. строка пустая");
       if (firstIndex < 0 || firstIndex >= _Items.Length)
         throw new ArgumentOutOfRangeException("firstIndex", firstIndex,
           "Начальный индекс должен быть в диапазоне от 0 до " + (_Items.Length - 1).ToString());

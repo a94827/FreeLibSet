@@ -11,7 +11,6 @@ namespace FreeLibSet.OLE.Excel
   /// </summary>
   public static class ExcelWinFormsTools
   {
-
     #region Цветовая палитра Microsoft Excel
 
     // Реализация (с изменениями) взята из
@@ -108,7 +107,7 @@ namespace FreeLibSet.OLE.Excel
     /// Возвращаемое значение лежит в диапазоне от 0 до 55
     /// </summary>
     /// <param name="color">Исходный цвет</param>
-    /// <returns>Индекс ближайшего цвета в палитре ExcelColorPalette</returns>
+    /// <returns>Индекс ближайшего цвета в палитре <see cref="ExcelColorPalette"/></returns>
     public static int FindExcelClosestColorIndex(Color color)
     {
       int minDistance = int.MaxValue;
@@ -134,7 +133,7 @@ namespace FreeLibSet.OLE.Excel
     /// Возвращает ближайший цвет из 56-цветной палитры Excel
     /// </summary>
     /// <param name="color">Исходный цвет</param>
-    /// <returns>Цвет из палитры ExcelColorPalette</returns>
+    /// <returns>Цвет из палитры <see cref="ExcelColorPalette"/></returns>
     public static Color FindExcelClosestColor(Color color)
     {
       return ExcelColorPalette[FindExcelClosestColorIndex(color)];
@@ -145,7 +144,7 @@ namespace FreeLibSet.OLE.Excel
     #region Преобразование цвета
 
     /// <summary>
-    /// Преобразование объекта Color в RGB-представление
+    /// Преобразование объекта <see cref="System.Drawing.Color"/> в RGB-представление
     /// </summary>
     /// <param name="value">Цвет в .Net framework</param>
     /// <returns>Цвет в Microsoft Excel</returns>
@@ -159,7 +158,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     /// <summary>
-    /// Преобразование RGB-цвета в обычный Color
+    /// Преобразование RGB-цвета Excel в <see cref="System.Drawing.Color"/>
     /// </summary>
     /// <param name="Value">Цвет в Microsoft Excel</param>
     /// <returns>Цвет в .Net framework</returns>
@@ -176,10 +175,10 @@ namespace FreeLibSet.OLE.Excel
     #region Преобразование выравнивания
 
     /// <summary>
-    /// 
+    /// Преобразование выравнивания ячейки таблицы <see cref="DataGridView"/> в горизонтальное выравнивание Excel
     /// </summary>
-    /// <param name="align"></param>
-    /// <returns></returns>
+    /// <param name="align">Выравнивание <see cref="DataGridView"/></param>
+    /// <returns>Выравнивание Excel</returns>
     public static XlHAlign GridToHAlign(DataGridViewContentAlignment align)
     {
       switch (align)
@@ -199,10 +198,10 @@ namespace FreeLibSet.OLE.Excel
     }
 
     /// <summary>
-    /// 
+    /// Преобразование выравнивания ячейки таблицы <see cref="DataGridView"/> в вертикальное выравнивание Excel
     /// </summary>
-    /// <param name="align"></param>
-    /// <returns></returns>
+    /// <param name="align">Выравнивание <see cref="DataGridView"/></param>
+    /// <returns>Выравнивание Excel</returns>
     public static XlVAlign GridToVAlign(DataGridViewContentAlignment align)
     {
       switch (align)

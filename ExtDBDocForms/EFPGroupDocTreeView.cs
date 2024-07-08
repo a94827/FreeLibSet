@@ -192,7 +192,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает <seealso cref="DocTypeUI.PerformEditing(int, bool)"/> для выбранного узла
+    /// Вызывает <seealso cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int, bool)"/> для выбранного узла
     /// </summary>
     /// <param name="args">Не используется</param>
     /// <returns>Игнорируется</returns>

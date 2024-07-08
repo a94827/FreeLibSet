@@ -54,28 +54,31 @@
       this.tableLayoutPanel1.Controls.Add(this.cbCheckBoxes, 0, 2);
       this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+      this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.tableLayoutPanel1.Name = "tableLayoutPanel1";
       this.tableLayoutPanel1.RowCount = 3;
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(632, 367);
+      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this.tableLayoutPanel1.Size = new System.Drawing.Size(474, 298);
       this.tableLayoutPanel1.TabIndex = 0;
       // 
       // panel3
       // 
       this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel3.Location = new System.Drawing.Point(423, 43);
+      this.panel3.Location = new System.Drawing.Point(316, 34);
+      this.panel3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.panel3.Name = "panel3";
-      this.panel3.Size = new System.Drawing.Size(206, 296);
+      this.panel3.Size = new System.Drawing.Size(156, 241);
       this.panel3.TabIndex = 5;
       // 
       // panel2
       // 
       this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel2.Location = new System.Drawing.Point(213, 43);
+      this.panel2.Location = new System.Drawing.Point(159, 34);
+      this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(204, 296);
+      this.panel2.Size = new System.Drawing.Size(153, 241);
       this.panel2.TabIndex = 4;
       // 
       // label3
@@ -83,9 +86,10 @@
       this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.label3.Location = new System.Drawing.Point(423, 0);
+      this.label3.Location = new System.Drawing.Point(316, 0);
+      this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(206, 40);
+      this.label3.Size = new System.Drawing.Size(156, 32);
       this.label3.TabIndex = 2;
       this.label3.Text = "TreeViewAdv UseColumns=true";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -95,9 +99,10 @@
       this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.label2.Location = new System.Drawing.Point(213, 0);
+      this.label2.Location = new System.Drawing.Point(159, 0);
+      this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(204, 40);
+      this.label2.Size = new System.Drawing.Size(153, 32);
       this.label2.TabIndex = 1;
       this.label2.Text = "TreeViewAdv UseColumns=false";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -107,9 +112,10 @@
       this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.label1.Location = new System.Drawing.Point(3, 0);
+      this.label1.Location = new System.Drawing.Point(2, 0);
+      this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(204, 40);
+      this.label1.Size = new System.Drawing.Size(153, 32);
       this.label1.TabIndex = 0;
       this.label1.Text = "TreeView";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -117,27 +123,32 @@
       // panel1
       // 
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel1.Location = new System.Drawing.Point(3, 43);
+      this.panel1.Location = new System.Drawing.Point(2, 34);
+      this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(204, 296);
+      this.panel1.Size = new System.Drawing.Size(153, 241);
       this.panel1.TabIndex = 3;
       // 
       // cbCheckBoxes
       // 
+      this.cbCheckBoxes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
       this.cbCheckBoxes.AutoSize = true;
-      this.cbCheckBoxes.Location = new System.Drawing.Point(3, 345);
+      this.cbCheckBoxes.Location = new System.Drawing.Point(2, 279);
+      this.cbCheckBoxes.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.cbCheckBoxes.Name = "cbCheckBoxes";
-      this.cbCheckBoxes.Size = new System.Drawing.Size(107, 19);
+      this.cbCheckBoxes.Size = new System.Drawing.Size(86, 17);
       this.cbCheckBoxes.TabIndex = 6;
       this.cbCheckBoxes.Text = "CheckBoxes";
       this.cbCheckBoxes.UseVisualStyleBackColor = true;
       // 
       // TestCheckBoxesForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(632, 367);
+      this.ClientSize = new System.Drawing.Size(474, 298);
       this.Controls.Add(this.tableLayoutPanel1);
+      this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.Name = "TestCheckBoxesForm";
       this.Text = "TestCheckBoxesForm";
       this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

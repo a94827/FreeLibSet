@@ -805,7 +805,7 @@ namespace FreeLibSet.Drawing.Reporting
           BorderPen.DashStyle = XDashStyle.DashDotDot;
           break;
         default:
-          throw new Exception("Неправильная толщина линии");
+          throw new ArgumentException("Неправильная толщина линии");
       }
       BorderPen.Width = BRLine.GetLineWidthPt01mm(line.Style) * Scale;
       if (line.Color == BRColor.Auto)

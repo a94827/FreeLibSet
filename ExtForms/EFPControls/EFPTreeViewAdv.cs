@@ -149,30 +149,12 @@ namespace FreeLibSet.Forms
       //FCurrentIncSearchMask = null;
       _TextSearchContext = null;
       _TextSearchEnabled = true;
-      if (!DesignMode)
-        Control.SelectionChanged += new EventHandler(Control_SelectionChanged);
     }
 
     #endregion
 
     #region Обработчики событий управляющего элемента
 
-    void Control_SelectionChanged(object sender, EventArgs args)
-    {
-      if (HasBeenCreated)
-        CommandItems.PerformRefreshItems();
-    }
-
-
-    /// <summary>
-    /// Обновляет команды локального меню
-    /// </summary>
-    protected override void OnCreated()
-    {
-      base.OnCreated();
-
-      CommandItems.PerformRefreshItems();
-    }
 
     /// <summary>
     /// Если для управляющего элемента не было установлено свойство <see cref="TreeViewAdv.UseColumns"/> и
@@ -268,9 +250,6 @@ namespace FreeLibSet.Forms
         _ReadOnly = value;
         if (_ReadOnlyEx != null)
           _ReadOnlyEx.Value = value;
-
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _ReadOnly;
@@ -327,8 +306,6 @@ namespace FreeLibSet.Forms
         _CanEdit = value;
         if (_CanEditEx != null)
           _CanEditEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanEdit;
@@ -383,8 +360,6 @@ namespace FreeLibSet.Forms
         _CanInsert = value;
         if (_CanInsertEx != null)
           _CanInsertEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanInsert;
@@ -440,8 +415,6 @@ namespace FreeLibSet.Forms
         _CanInsertCopy = value;
         if (_CanInsertCopyEx != null)
           _CanInsertCopyEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanInsertCopy;
@@ -496,8 +469,6 @@ namespace FreeLibSet.Forms
         _CanDelete = value;
         if (_CanDeleteEx != null)
           _CanDeleteEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanDelete;
@@ -552,8 +523,6 @@ namespace FreeLibSet.Forms
         _CanView = value;
         if (_CanViewEx != null)
           _CanViewEx.Value = value;
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
     }
     private bool _CanView;
@@ -661,8 +630,6 @@ namespace FreeLibSet.Forms
       try
       {
         OnEditData(EventArgs.Empty);
-        if (CommandItems != null)
-          CommandItems.PerformRefreshItems();
       }
       finally
       {
@@ -751,8 +718,6 @@ namespace FreeLibSet.Forms
       {
         Control.EndUpdate();
       }
-
-      CommandItems.PerformRefreshItems();
     }
 
     /// <summary>
@@ -884,9 +849,6 @@ namespace FreeLibSet.Forms
           Control.NodeControls.Remove(_CheckBoxControl);
           _CheckBoxControl = null;
         }
-
-        if (HasBeenCreated)
-          CommandItems.PerformRefreshItems();
       }
     }
 
@@ -1198,6 +1160,14 @@ namespace FreeLibSet.Forms
         return lst.ToArray();
     }
 
+    // Бесполезное свойство, так как оно устанавливается обычно только при показе формы
+    ///// <summary>
+    ///// Возвращает объект для управления значками дерева.
+    ///// Если в дереве значки не отображаются, возвращается null.
+    ///// </summary>
+    //public NodeStateIcon NodeStateIcon { get { return GetFirstNodeControl<NodeStateIcon>(); } }
+
+
     #endregion
 
     #region Извлечение текста
@@ -1507,6 +1477,44 @@ namespace FreeLibSet.Forms
         AddAllInheritedPaths(lst, childPath); // рекурсивный вызов
       }
     }
+
+    bool IEFPTreeView.HasNodes
+    {
+      get
+      {
+        return Control.Root.Nodes.Count > 0;
+      }
+    }
+
+    /// <summary>
+    /// Значение свойства <see cref="EFPControlBase.DisplayName"/>, если оно не задано в явном виде
+    /// </summary>
+    protected override string DefaultDisplayName { get { return "Иерархический просмотр"; } }
+
+    /// <summary>
+    /// Возвращает позицию для будущего выпадающего блока диалога, который будет показан для редактирования ячейки.
+    /// В возвращаемом объекте устанавливается свойство <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// Если нет текущей ячейки (просмотр пустой) или текущая ячейка прокручены мышью за пределы видимой области просмотра,
+    /// возвращается неинициализированный <see cref="EFPDialogPosition.PopupOwnerBounds"/>.
+    /// </summary>
+    public EFPDialogPosition CurrentPopupPosition
+    {
+      get
+      {
+        EFPDialogPosition pos = new EFPDialogPosition();
+        if (Control.SelectedNode != null)
+        {
+          System.Drawing.Rectangle rect = Control.GetNodeBounds(Control.SelectedNode);
+          if (!rect.IsEmpty)
+          {
+            rect = Control.RectangleToScreen(rect);
+            pos.PopupOwnerBounds = rect;
+          }
+        }
+        return pos;
+      }
+    }
+
     #endregion
 
     #region Использование EFPTreeNodePosition

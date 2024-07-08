@@ -39,33 +39,37 @@
       this.MainPanel2.Controls.Add(this.edText);
       this.MainPanel2.Controls.Add(this.label1);
       this.MainPanel2.Location = new System.Drawing.Point(0, 0);
+      this.MainPanel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.MainPanel2.Name = "MainPanel2";
-      this.MainPanel2.Size = new System.Drawing.Size(445, 58);
+      this.MainPanel2.Size = new System.Drawing.Size(334, 47);
       this.MainPanel2.TabIndex = 2;
       // 
       // edText
       // 
       this.edText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.edText.Location = new System.Drawing.Point(104, 14);
+      this.edText.Location = new System.Drawing.Point(78, 11);
+      this.edText.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.edText.Name = "edText";
-      this.edText.Size = new System.Drawing.Size(329, 22);
+      this.edText.Size = new System.Drawing.Size(248, 20);
       this.edText.TabIndex = 1;
       // 
       // label1
       // 
-      this.label1.Location = new System.Drawing.Point(24, 17);
+      this.label1.Location = new System.Drawing.Point(18, 14);
+      this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(74, 19);
+      this.label1.Size = new System.Drawing.Size(56, 15);
       this.label1.TabIndex = 0;
       this.label1.Text = "Текст";
       // 
       // SettingsTemplateForm2
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(658, 358);
+      this.ClientSize = new System.Drawing.Size(367, 91);
       this.Controls.Add(this.MainPanel2);
+      this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
       this.Name = "SettingsTemplateForm2";
       this.Text = "SettingsTemplateForm2";
       this.MainPanel2.ResumeLayout(false);

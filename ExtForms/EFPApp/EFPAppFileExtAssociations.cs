@@ -12,10 +12,10 @@ using FreeLibSet.Logging;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Реализация свойства EFPApp.FileExtAssociations.
+  /// Реализация свойства <see cref="EFPApp.FileExtAssociations"/>.
   /// Поддерживает буферизацию списков ассоциаций по расширению файлов.
   /// Также реализует буферизацию значков приложений.
-  /// Используется EFPFileAssociationsCommandItemsHandler.
+  /// Используется в <see cref="EFPFileAssociationsCommandItemsHandler"/>.
   /// </summary>
   public sealed class EFPAppFileExtAssociations : IDisposable
   {
@@ -47,13 +47,13 @@ namespace FreeLibSet.Forms
     // Неохота использовать систему Cache, т.к. обычно будет немного расширений файлов:
     // только ".txt", ".html" и ".xml"
 
-    private Dictionary<string, FileAssociations> _FADict;
+    private readonly Dictionary<string, FileAssociations> _FADict;
 
     /// <summary>
     /// Возвращает буферизованные данные файловых ассоциаций.
-    /// Не может возвращать null
+    /// Не может возвращать null. Если для расширения нет зарегистрированных приложений, возвращается пустой список <see cref="FileAssociations"/>.
     /// </summary>
-    /// <param name="fileExt">Расширение файла, например, ".txt"</param>
+    /// <param name="fileExt">Расширение файла с ведущей начальной точкой, например, ".txt"</param>
     /// <returns>Файловые ассоциации</returns>
     public FileAssociations this[string fileExt]
     {
@@ -70,7 +70,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает буферизованный объект файловых ассоциация для просмотра каталога.
+    /// Возвращает буферизованный объект файловых ассоциаций <see cref="FileAssociations"/> для просмотра каталога.
     /// Для Windows возвращает единственную ассоциацию для запуска Windows Explorer.
     /// </summary>
     public FileAssociations ShowDirectory
@@ -113,7 +113,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить значок из ресурсов файла требуемого размера.
-    /// Буферизация вызовов WinFormsTools.ExtractIcon()
+    /// Буферизация вызовов <see cref="WinFormsTools.ExtractIcon(AbsPath, int, bool)"/>.
     /// Если для значка нет требуемого размера, возвращается значок другого размера.
     /// Если файл не найден или в файле нет значка с заданным индексом, возвращается null.
     /// Для платформ, отличных от Windows, всегда возвращает null.
@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms
     /// <param name="filePath">Путь к файлу</param>
     /// <param name="iconIndex">Индекс значка в файле. 
     /// См. описание функции Windows ExtractIcon или ExtractIconEx()</param>
-    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - больщой (32x32)</param>
+    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - большой (32x32)</param>
     /// <returns>Значок или null</returns>
     public Image GetIconImage(AbsPath filePath, int iconIndex, bool smallIcon)
     {
@@ -144,6 +144,26 @@ namespace FreeLibSet.Forms
         _IconImageDict.Add(key, image);
       }
       return image;
+    }
+
+    /// <summary>
+    /// Получить значок из ресурсов файла требуемого размера.
+    /// Буферизация вызовов <see cref="WinFormsTools.ExtractIcon(AbsPath, int, bool)"/>.
+    /// Если для значка нет требуемого размера, возвращается значок другого размера.
+    /// Если файл не найден или в файле нет значка с заданным индексом, возвращается null.
+    /// Для платформ, отличных от Windows, всегда возвращает null.
+    /// </summary>
+    /// <param name="fa">Файловая ассоциация. Используются свойства <see cref="FileAssociationItem.IconPath"/> и <see cref="FileAssociationItem.IconIndex"/></param>
+    /// <param name="smallIcon">true - извлечь маленький значок (16x16), false - большой (32x32)</param>
+    /// <returns>Значок или null</returns>
+    public Image GetIconImage(FileAssociationItem fa, bool smallIcon)
+    {
+      if (fa == null)
+        return null;
+      else if (fa.IconPath.IsEmpty)
+        return null;
+      else
+        return GetIconImage(fa.IconPath, fa.IconIndex, smallIcon);
     }
 
     #endregion

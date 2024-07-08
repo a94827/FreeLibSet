@@ -18,7 +18,9 @@ namespace FreeLibSet.Forms
   #region Перечисление EFPDataViewExpRange
 
   /// <summary>
-  /// Диапазон ячеек табличного просмотра для экспорта
+  /// Диапазон ячеек табличного просмотра для экспорта.
+  /// Задает значения свойства <see cref="FreeLibSet.Forms.Reporting.BRDataViewSettingsDataItem.ExpRange"/>.
+  /// Используется как аргумент при вызове метода <see cref="EFPDataGridView.GetRectArea(EFPDataViewExpRange)"/>.
   /// </summary>
   public enum EFPDataViewExpRange
   {
@@ -38,30 +40,10 @@ namespace FreeLibSet.Forms
 
   #endregion
 
-  #region Перечисление EFPDataGridViewRectAreaCreation
-
   /// <summary>
-  /// Используется конструктором класса EFPDataGridViewRectArea
-  /// </summary>
-  public enum EFPDataGridViewRectAreaCreation
-  {
-    /// <summary>
-    /// В область должны войти видимые ячейки просмотра
-    /// </summary>
-    Visible,
-
-    /// <summary>
-    /// В область должны войти выбранные ячейки просмотра
-    /// </summary>
-    Selected
-  }
-
-  #endregion
-
-  /// <summary>
-  /// Прямоугольная область ячеек, связанная с табличным просмотром
-  /// Некоторые строки и столбцы могут быть пропущены (скрытые)
-  /// Используется видимый порядок столбцов
+  /// Прямоугольная область ячеек, связанная с табличным просмотром.
+  /// Некоторые строки и столбцы могут быть пропущены (скрытые).
+  /// Используется видимый порядок столбцов.
   /// </summary>
   public class EFPDataGridViewRectArea
   {
@@ -91,37 +73,37 @@ namespace FreeLibSet.Forms
       InitAuxProps();
     }
 
-    /// <summary>
-    /// Создает объект, содержащий только выбранные ячейки
-    /// </summary>
-    /// <param name="control">Управляющий элемент</param>
-    public EFPDataGridViewRectArea(DataGridView control)
-      : this(control, EFPDataGridViewRectAreaCreation.Selected)
-    {
-    }
+    ///// <summary>
+    ///// Создает объект, содержащий только выбранные ячейки
+    ///// </summary>
+    ///// <param name="control">Управляющий элемент</param>
+    //public EFPDataGridViewRectArea(DataGridView control)
+    //  : this(control, EFPDataViewExpRange.Selected)
+    //{
+    //}
 
     /// <summary>
     /// Создает объект, содержащий все видимые строки/столбцы или выбранные ячейки
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="mode">Режим выбора ячеек</param>
-    public EFPDataGridViewRectArea(DataGridView control, EFPDataGridViewRectAreaCreation mode)
+    /// <param name="rangeMode">Режим выбора ячеек</param>
+    public EFPDataGridViewRectArea(DataGridView control, EFPDataViewExpRange rangeMode)
     {
 #if DEBUG
       if (control == null)
         throw new ArgumentNullException("control");
 #endif
       _Control = control;
-      switch (mode)
+      switch (rangeMode)
       {
-        case EFPDataGridViewRectAreaCreation.Selected:
+        case EFPDataViewExpRange.Selected:
           InitSelected();
           break;
-        case EFPDataGridViewRectAreaCreation.Visible:
+        case EFPDataViewExpRange.All:
           InitVisible();
           break;
         default:
-          throw new ArgumentException("Неизвестный режим: " + mode.ToString(), "mode");
+          throw new ArgumentException("Неизвестный режим: " + rangeMode.ToString(), "rangeMode");
       }
       InitAuxProps();
     }
@@ -268,8 +250,8 @@ namespace FreeLibSet.Forms
 
     private void InitAuxProps()
     {
-      _Rows = new GridRowArray(this);
-      _Columns = new GridColumnArray(this);
+      _Rows = new RowCollection(this);
+      _Columns = new ColumnCollection(this);
     }
 
     #endregion
@@ -280,7 +262,7 @@ namespace FreeLibSet.Forms
     /// Табличный просмотр.
     /// </summary>
     public DataGridView Control { get { return _Control; } }
-    private DataGridView _Control;
+    private readonly DataGridView _Control;
 
     /// <summary>
     /// Индексы строк.
@@ -289,7 +271,7 @@ namespace FreeLibSet.Forms
     private int[] _RowIndices;
 
     /// <summary>
-    /// Индексы столбцов (по свойству Column.Index)
+    /// Индексы столбцов (по свойству <see cref="DataGridViewBand.Index"/>)
     /// Так как столбцы могут быть переставлены пользователем, элементы в массиве
     /// могут идти не по порядку.
     /// </summary>
@@ -297,7 +279,7 @@ namespace FreeLibSet.Forms
     private int[] _ColumnIndices;
 
     /// <summary>
-    /// Возвращает true, если область не содержит ни одной ячейки (RowCount и ColumnCount=0).
+    /// Возвращает true, если область не содержит ни одной ячейки (<see cref="RowCount"/> и <see cref="ColumnCount"/>=0).
     /// </summary>
     public bool IsEmpty
     {
@@ -329,13 +311,13 @@ namespace FreeLibSet.Forms
     #region Доступ к объектам DataGridView
 
     /// <summary>
-    /// Коллекция для реализация свойства EFPDataGridViewRectArea.Rows.
+    /// Коллекция для реализация свойства <see cref="Rows"/>.
     /// </summary>
-    public class GridRowArray:IEnumerable<DataGridViewRow>
+    public sealed class RowCollection:IEnumerable<DataGridViewRow>
     {
       #region Конструктор
 
-      internal GridRowArray(EFPDataGridViewRectArea owner)
+      internal RowCollection(EFPDataGridViewRectArea owner)
       {
         _Owner = owner;
       }
@@ -352,10 +334,10 @@ namespace FreeLibSet.Forms
       public int Count { get { return _Owner.RowIndices.Length; } }
 
       /// <summary>
-      /// Доступ к выбранной строке просмотра по индексу в EFPDataGridViewRectArea (а не DataGridView) 
+      /// Доступ к выбранной строке просмотра по индексу в <see cref="EFPDataGridViewRectArea"/> (а не <see cref="DataGridView.Rows"/>) 
       /// </summary>
-      /// <param name="rowOffset">Смещение в коллекции строк от 0 до (Count-1)</param>
-      /// <returns>Объект строки DataGridViewRow</returns>
+      /// <param name="rowOffset">Смещение в коллекции строк от 0 до (<see cref="Count"/>-1)</param>
+      /// <returns>Объект строки <see cref="DataGridViewRow"/></returns>
       public DataGridViewRow this[int rowOffset]
       {
         get
@@ -370,7 +352,7 @@ namespace FreeLibSet.Forms
       #region IEnumerable
 
       /// <summary>
-      /// Возвращает перечислитель по строкам табличного просмотра DataGridViewRow, входящим в выборку
+      /// Возвращает перечислитель по строкам табличного просмотра <see cref="DataGridViewRow"/>, входящим в выборку.
       /// </summary>
       /// <returns>Перечислитель</returns>
       public IEnumerator<DataGridViewRow> GetEnumerator()
@@ -441,17 +423,17 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Коллекция строк, входящих в выборку
     /// </summary>
-    public GridRowArray Rows { get { return _Rows; } }
-    private GridRowArray _Rows;
+    public RowCollection Rows { get { return _Rows; } }
+    private RowCollection _Rows;
 
     /// <summary>
-    /// Коллекция для реализация свойства EFPDataGridViewRectArea.Columns.
+    /// Коллекция для реализация свойства <see cref="Columns"/>.
     /// </summary>
-    public class GridColumnArray : IEnumerable<DataGridViewColumn>
+    public sealed class ColumnCollection : IEnumerable<DataGridViewColumn>
     {
       #region Конструктор
 
-      internal GridColumnArray(EFPDataGridViewRectArea owner)
+      internal ColumnCollection(EFPDataGridViewRectArea owner)
       {
         _Owner = owner;
       }
@@ -468,10 +450,10 @@ namespace FreeLibSet.Forms
       public int Count { get { return _Owner.ColumnIndices.Length; } }
 
       /// <summary>
-      /// Доступ к выбранному столбцу просмотра по индексу в EFPDataGridViewRectArea (а не DataGridView) 
+      /// Доступ к выбранному столбцу просмотра по индексу в <see cref="EFPDataGridViewRectArea"/> (а не <see cref="DataGridView.Columns"/>) 
       /// </summary>
       /// <param name="columnOffset">Смещение в коллекции столбцов от 0 до (Count-1)</param>
-      /// <returns>Объект строки DataGridViewColumn</returns>
+      /// <returns>Объект строки <see cref="DataGridViewColumn"/></returns>
       public DataGridViewColumn this[int columnOffset]
       {
         get
@@ -486,7 +468,7 @@ namespace FreeLibSet.Forms
       #region IEnumerator
 
       /// <summary>
-      /// Возвращает перечислитель по столбцам табличного просмотра DataGridViewColumn (не EFPDataGridViewColumn!), входящим в выборку
+      /// Возвращает перечислитель по столбцам табличного просмотра <see cref="DataGridViewColumn"/> (не <see cref="EFPDataGridViewColumn"/>!), входящим в выборку
       /// </summary>
       /// <returns>Перечислитель</returns>
       public IEnumerator<DataGridViewColumn> GetEnumerator()
@@ -557,15 +539,15 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Коллекция столбцов, входящих в выборку
     /// </summary>
-    public GridColumnArray Columns { get { return _Columns; } }
-    private GridColumnArray _Columns;
+    public ColumnCollection Columns { get { return _Columns; } }
+    private ColumnCollection _Columns;
 
     /// <summary>
     /// Доступ к ячейке таблицы
     /// </summary>
-    /// <param name="columnOffset">Смещение в коллекции столбцов выборки (а не в DataGridView.Columns)</param>
-    /// <param name="rowOffset">Смещение в коллекции строк выборки (а не в DataGridView.Rows)</param>
-    /// <returns>Объект DataGridViewCell </returns>
+    /// <param name="columnOffset">Смещение в коллекции столбцов выборки (а не в <see cref="DataGridView.Columns"/>)</param>
+    /// <param name="rowOffset">Смещение в коллекции строк выборки (а не в <see cref="DataGridView.Rows"/>)</param>
+    /// <returns>Объект <see cref="DataGridViewCell"/></returns>
     public DataGridViewCell this[int columnOffset, int rowOffset]
     {
       get

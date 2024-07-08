@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент caller при вызове <see cref="DocTypeUI.PerformEditing(int, bool, DocumentViewHandler)"/>).
+    /// инициализатора значений полей (аргумент caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int, bool, DocumentViewHandler)"/>).
     /// будет использован этот инициализатор вместо текущих фильтров (<see cref="IEFPDBxView.Filters"/>).
     /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
@@ -661,7 +661,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент caller при вызове <see cref="DocTypeUI.PerformEditing(int, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров (<see cref="EFPDBxGridView.Filters"/>).
     /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
@@ -710,8 +710,8 @@ namespace FreeLibSet.Forms.Docs
     /// Инициализация колонок табличного просмотра.
     /// После вызова становится доступным свойство <see cref="UsedColumnNames"/>.
     /// Предотвращается реентрантный вызов.
-    /// Вызов <see cref="DocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object)"/> выполняется виртуальным методом <see cref="OnInitGrid(bool, DBxColumnList)"/>.
-    /// При первом вызове, в частности, вызывается обработчик события <see cref="DocTypeUI.InitView"/>, отвечающий за добавление фильтров.
+    /// Вызов <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object)"/> выполняется виртуальным методом <see cref="OnInitGrid(bool, DBxColumnList)"/>.
+    /// При первом вызове, в частности, вызывается обработчик события <see cref="FreeLibSet.Forms.Docs.DocTypeUI.InitView"/>, отвечающий за добавление фильтров.
     /// <param name="forced">Если true, то инициализация будет выполнена обязательно. Используется при обработке события <see cref="EFPDataGridView.CurrentConfigChanged"/>.
     /// Если false, то инициализация выполняется только если она еще не была выполнена ранее.</param>
     /// </summary>
@@ -736,7 +736,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация табличного просмотра документов с помощью <see cref="DocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object)"/>.
+    /// Инициализация табличного просмотра документов с помощью <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object)"/>.
     /// Переопределенный метод может, например, добавить порядки сортировки в список <see cref="EFPDataGridView.Orders"/>.
     /// </summary>
     /// <param name="reInit">true при повторном вызове метода (после изменения конфигурации просмотра)

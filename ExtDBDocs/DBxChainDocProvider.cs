@@ -127,12 +127,16 @@ namespace FreeLibSet.Data.Docs
       : base(sourceProxy.FixedInfo, currentThreadOnly)
     {
       _Source = sourceProxy.Source;
+#if NET
+      _SourceIsRemote = false;
+#else
       _SourceIsRemote = System.Runtime.Remoting.RemotingServices.IsTransparentProxy(sourceProxy.Source);
+#endif
 
       //ServerTimeDiff = Source.ServerTime - DateTime.Now;
     }
 
-    #endregion
+#endregion
 
     #region Основные свойства
 
@@ -1573,6 +1577,6 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     private TimeSpan ServerTimeDiff;
 #endif
-    #endregion
+#endregion
   }
 }

@@ -27,7 +27,7 @@ namespace FreeLibSet.Forms
     #region Конструктор и реализация IDispose
 
     /// <summary>
-    /// Конструктор добавляет текущий объект в списки Owner и в Item.UIObjs
+    /// Конструктор добавляет текущий объект в списоки <see cref="Owner"/> и во внутренний список <see cref="EFPCommandItem"/>
     /// </summary>
     /// <param name="owner">Список-владелец</param>
     /// <param name="item">Команда</param>
@@ -50,9 +50,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    ///  Удаляет текущий объект из EFPCommandItem
+    ///  Удаляет текущий объект из <see cref="EFPCommandItem"/>.
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -71,7 +71,7 @@ namespace FreeLibSet.Forms
     #region Общие свойства
 
     /// <summary>
-    /// Элемент EFPCommandItem, к которому привязан данный объект
+    /// Элемент <see cref="EFPCommandItem"/>, к которому привязан данный объект
     /// </summary>
     public EFPCommandItem Item { get { return _Item; } }
     private EFPCommandItem _Item;
@@ -80,7 +80,7 @@ namespace FreeLibSet.Forms
     /// Коллекция - владелец
     /// </summary>
     public EFPUIObjs Owner { get { return _Owner; } }
-    private EFPUIObjs _Owner;
+    private readonly EFPUIObjs _Owner;
 
     /// <summary>
     /// Для отладки
@@ -181,9 +181,9 @@ namespace FreeLibSet.Forms
 
     string IObjectWithCode.Code { get { return _Code; } }
     /// <summary>
-    /// Свойство Item очищается при вызове Dispose(), поэтому надо запоминать код независимо.
+    /// Свойство <see cref="Item"/> очищается при вызове <see cref="IDisposable.Dispose()"/>, поэтому надо запоминать код независимо.
     /// </summary>
-    private string _Code;
+    private readonly string _Code;
 
     #endregion
   }
@@ -191,35 +191,36 @@ namespace FreeLibSet.Forms
   #region Перечисление EFPCommandItemUsage
 
   /// <summary>
-  /// Где применить команду (свойство EFPCommandItem.Usage)
+  /// Где применить команду (свойство <see cref="EFPCommandItem.Usage"/>)
+  /// Задается комбинация флагов
   /// </summary>
   [FlagsAttribute]
   public enum EFPCommandItemUsage
   {
     /// <summary>
-    /// Добавить команду меню, если свойство MenuText установлен
+    /// Добавить команду меню, если свойство <see cref="EFPCommandItem.MenuText"/> установлено
     /// </summary>
     Menu = 0x0001,
 
     /// <summary>
-    /// Добавить кнопку в панель инструментов, если свойство ImageKey установлено
+    /// Добавить кнопку в панель инструментов, если свойство <see cref="EFPCommandItem.ImageKey"/> или <see cref="EFPCommandItem.Image"/> установлено
     /// </summary>
     ToolBar = 0x0002,
 
     /// <summary>
-    /// Обрабатывать комбинацию клавиш, если она задана
+    /// Обрабатывать комбинацию клавиш, если задано свойство <see cref="EFPCommandItem.ShortCut"/>
     /// </summary>
     ShortCut = 0x0004,
 
     /// <summary>
-    /// Добавить окно в статусной панели, если свойство StatusText установлено
+    /// Добавить окно в статусной панели, если свойство <see cref="EFPCommandItem.StatusBarText"/> установлено
     /// </summary>
     StatusBar = 0x0008,
 
     /// <summary>
     /// Не применять команду. Установите это значение, чтобы отменить действие уже
-    /// добавленной команды. Для команд, имеющих свойство Master, присоединение к
-    /// родительской команде не выполняется
+    /// добавленной команды. Для команд, имеющих свойство <see cref="EFPCommandItem.Master"/>, присоединение к
+    /// родительской команде не выполняется.
     /// </summary>
     None = 0x0000,
 
@@ -229,14 +230,14 @@ namespace FreeLibSet.Forms
     Everywhere = 0x000F,
 
     /// <summary>
-    /// Запретить вывод подсказки о горячей клавише или MenuRightText во всплывающей
-    /// подсказке к кнопке или панели статусной строки
+    /// Запретить вывод подсказки о горячей клавише или <see cref="EFPCommandItem.MenuRightText"/> во всплывающей
+    /// подсказке к кнопке или панели статусной строки.
     /// </summary>
     DisableRightTextInToolTip = 0x0010,
 
     /// <summary>
     /// Если команда является подменю, то она добавляется как "уголочек" в панель инструментов.
-    /// Это не зависит от наличия или отсутствия изображения (свойства Image и ImageKey)
+    /// Это не зависит от наличия или отсутствия изображения (свойства <see cref="EFPCommandItem.Image"/> и <see cref="EFPCommandItem.ImageKey"/>)
     /// </summary>
     ToolBarDropDown = 0x0020,
   }
@@ -246,7 +247,7 @@ namespace FreeLibSet.Forms
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события EFPCommandItems.BeforeClick
+  /// Аргументы события <see cref="EFPCommandItems.BeforeClick"/>
   /// </summary>
   public class EFPCommandItemBeforeClickEventArgs : CancelEventArgs
   {
@@ -269,20 +270,20 @@ namespace FreeLibSet.Forms
     /// Выполняющаяся команда меню
     /// </summary>
     public EFPCommandItem Item { get { return _Item; } }
-    private EFPCommandItem _Item;
+    private readonly EFPCommandItem _Item;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события EFPCommandItems.BeforeClick
+  /// Делегат события <see cref="EFPCommandItems.BeforeClick"/>
   /// </summary>
   /// <param name="sender">Список, к которому принадлежит команда</param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPCommandItemBeforeClickEventHandler(object sender, EFPCommandItemBeforeClickEventArgs args);
 
   /// <summary>
-  /// Аргументы события EFPCommandItems.AfterClick
+  /// Аргументы события <see cref="EFPCommandItems.AfterClick"/>
   /// </summary>
   public class EFPCommandItemAfterClickEventArgs : EventArgs
   {
@@ -305,13 +306,13 @@ namespace FreeLibSet.Forms
     /// Выполняющаяся команда меню
     /// </summary>
     public EFPCommandItem Item { get { return _Item; } }
-    private EFPCommandItem _Item;
+    private readonly EFPCommandItem _Item;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события EFPCommandItems.AfterClick
+  /// Делегат события <see cref="EFPCommandItems.AfterClick"/>
   /// </summary>
   /// <param name="sender">Список, к которому принадлежит команда</param>
   /// <param name="args">Аргументы события</param>
@@ -337,7 +338,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Описание позиции меню, кнопки панели инструментов или ячейки статусной строки.
-  /// Если создается производный класс, то он должен переопределять метод Clone() и защищенный конструктор копирования
+  /// Если создается производный класс, то он должен переопределять метод <see cref="Clone()"/> и защищенный конструктор копирования.
   /// </summary>
   public class EFPCommandItem : IObjectWithCode, ICloneable
   {
@@ -425,9 +426,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает копию команды, не присоединенную к какому-либо набору EFPCommandItems.
+    /// Создает копию команды, не присоединенную к какому-либо набору <see cref="EFPCommandItems"/>.
     /// Дочерние команды не копируются. Ссылка на родительскую команду не копируется.
-    /// Не устанавливается свойство Parent. Свойство Master устанавливается.
+    /// Не устанавливается свойство <see cref="Parent"/>. Свойство <see cref="Master"/> устанавливается.
     /// </summary>
     /// <returns>Новая команда, идентичная текущей</returns>
     public virtual EFPCommandItem Clone()
@@ -486,13 +487,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Пользовательские данные.
-    /// Их можно использовать внутри события Click
+    /// Их можно использовать внутри события <see cref="Click"/>
     /// </summary>
     public object Tag { get { return _Tag; } set { _Tag = value; } }
     private object _Tag;
 
     /// <summary>
-    /// Возвращает true, если тема была присоединена к основному набору команд
+    /// Возвращает true, если тема была присоединена к основному набору команд <see cref="EFPApp.CommandItems"/>
     /// </summary>
     public bool IsGlobalItem
     {
@@ -508,11 +509,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Набор флагов, определяющих, где может применяться данная команда (в меню, панели инструментов, как горячая клавиша и/или в статусной строке).
-    /// По умолчанию - Everywhere (везде).
-    /// Заданное разрешение не означат автоматическое наличие команды в соответствующем месте. Для наличия
-    /// команды меню требуется непустая строка MenuText, кнопки панели инструментов - ImageKey, 
-    /// горячей клавиши - свойство ShortCut, панели статусной строки - StatusBarText.
-    /// Для проверки применимости команды используйте свойства MenuUsage, ToolBarUsage, StatusBarUsage и ShortCutUsage
+    /// По умолчанию - <see cref="EFPCommandItemUsage.Everywhere"/> (везде).
+    /// Заданное значение не означат автоматическое наличие команды в соответствующем месте. Для наличия
+    /// команды меню требуется непустая строка <see cref="MenuText"/>, кнопки панели инструментов - <see cref="ImageKey"/> или <see cref="Image"/>, 
+    /// горячей клавиши - свойство <see cref="ShortCut"/>, панели статусной строки - <see cref="StatusBarText"/>.
+    /// Свойство обычно устанавливается при создании списка команд или при подготовке к первому показу в методе <see cref="EFPCommandItems.OnPrepare"/> (или обработчике события <see cref="EFPCommandItems.Prepare"/>).
+    /// Нельзя установливать свойство динамически. Когда владелец меню выведен на экран, можно только
+    /// управлять видимостью (<see cref="Visible"/>) и доступностью (<see cref="Enabled"/>) команд, но не их наличием.
+    /// Для проверки применимости команды используйте свойства <see cref="MenuUsage"/>, <see cref="ToolBarUsage"/>, <see cref="StatusBarUsage "/> и <see cref="ShortCutUsage"/>.
     /// </summary>
     public EFPCommandItemUsage Usage
     {
@@ -527,8 +531,8 @@ namespace FreeLibSet.Forms
     private EFPCommandItemUsage _Usage;
 
     /// <summary>
-    /// Возвращает true, если данная команда может быть добавлена в меню (установлен флаг Usage.Menu и задана непустая
-    /// строка в свойстве MenuText)
+    /// Возвращает true, если данная команда может быть добавлена в меню (установлен флаг <see cref="Usage"/>.Menu и задана непустая
+    /// строка в свойстве <see cref="MenuText"/>)
     /// </summary>
     public bool MenuUsage
     {
@@ -540,8 +544,12 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если данная команда может быть добавлена в панель инструментов (установлен флаг Usage.ToolBar и
-    /// задана непустая строка в свойстве ImageKey)
+    /// Возвращает true, если данная команда может быть добавлена в панель инструментов (установлен флаг <see cref="Usage"/>.ToolBar и
+    /// задана непустая строка в свойстве <see cref="ImageKey"/> или изображение <see cref="Image"/>).
+    /// Также возвращает true, если установлен флаг <see cref="EFPCommandItemUsage.ToolBarDropDown"/>,
+    /// в этом случае у предыдущей кнопки панели инструментов отображается "уголок", который
+    /// открывает выпадающее меню. В этом случае этот <see cref="EFPCommandItem"/> должен быть подменю
+    /// со своим списком команд.
     /// </summary>
     public bool ToolBarUsage
     {
@@ -572,8 +580,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если данная команда может быть добавлена в статусную строку (установлен флаг Usage.StatusBar и
-    /// задана непустая строка в свойстве StatusBarText)
+    /// Возвращает true, если данная команда может быть добавлена в статусную строку (установлен флаг <see cref="Usage"/>.StatusBar и
+    /// задана непустая строка в свойстве <see cref="StatusBarText"/>)
     /// </summary>
     public bool StatusBarUsage
     {
@@ -585,8 +593,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если данная команда имеет назначенную комбинацию клавиш (установлен флаг Usage.ShortCut и
-    /// свойство ShortCut отлично от None)
+    /// Возвращает true, если данная команда имеет назначенную комбинацию клавиш (установлен флаг <see cref="Usage"/>.ShortCut и
+    /// свойство <see cref="ShortCut"/> отлично от <see cref="Keys.None"/>)
     /// </summary>
     public bool ShortCutUsage
     {
@@ -603,7 +611,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Список, содержащий все команды меню, независимо от иерархии.
-    /// Свойство инициализируется при вызове EFPCommandItems.Add()
+    /// Свойство инициализируется при вызове <see cref="EFPCommandItems.Add(EFPCommandItem)"/>
     /// </summary>
     public EFPCommandItems Owner
     {
@@ -614,7 +622,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает список команд одного уровня, к которому добавлена команда.
-    /// Возвращает null, если оба свойства Parent и Owner равны null
+    /// Возвращает null, если оба свойства <see cref="Parent"/> и <see cref="Owner"/> равны null.
     /// </summary>
     public EFPOneLevelCommandItems OneLevelItems
     {
@@ -635,7 +643,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Родительский элемент для получения иерархии меню. Задает подменю, в котором расположена команда,
-    /// если она не является командой верхнего уровня
+    /// если она не является командой верхнего уровня.
     /// </summary>
     public EFPCommandItem Parent
     {
@@ -661,8 +669,8 @@ namespace FreeLibSet.Forms
     private EFPCommandItem _Parent;
 
     /// <summary>
-    /// Возвращает корневой элемент, путем рекурсивного опроса свойства Parent.
-    /// Если команда является элементом верхнего уровня (Parent=null), возвращает null
+    /// Возвращает корневой элемент, путем рекурсивного опроса свойства <see cref="Parent"/>.
+    /// Если команда является элементом верхнего уровня (<see cref="Parent"/>=null), возвращает null.
     /// </summary>
     public EFPCommandItem Root
     {
@@ -684,8 +692,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команды, дочерние по отношению к данной (то есть команды подменю).
-    /// Для определения, является ли данный объект подменю, используйте свойство HasChildren,
-    /// чтобы избежать создания лишнего внутреннего списка
+    /// Для определения, является ли данный объект подменю, используйте свойство <see cref="HasChildren"/>,
+    /// чтобы избежать создания лишнего внутреннего списка.
     /// </summary>
     public EFPOneLevelCommandItems Children
     {
@@ -701,7 +709,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если есть дочерние команды меню (даже со сброшенным свойством
-    /// MenuUsage). Совпадает с (Children.Count!=0), но не требует создания дополнительного объекта
+    /// <see cref="MenuUsage"/>). Совпадает с (<see cref="Children"/>.Count!=0), но не требует создания дополнительного объекта.
     /// </summary>
     public bool HasChildren
     {
@@ -715,7 +723,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает свойство Children.Count без создания дополнительного объекта
+    /// Возвращает свойство <see cref="Children"/>.Count без создания дополнительного объекта
     /// </summary>
     public int ChildCount
     {
@@ -729,10 +737,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает количество действующих тем подменю. Учитывает свойство MenuUsage
-    /// для дочерних команд
-    /// Свойство может быть использовано для установки свойства Usage этой команды,
-    /// если подменю не содержит ни одной команды
+    /// Возвращает количество действующих тем подменю. Учитывает свойство <see cref="MenuUsage"/>
+    /// для дочерних команд.
+    /// Свойство может быть использовано для установки свойства <see cref="Usage"/> этой команды,
+    /// если подменю не содержит ни одной команды.
     /// </summary>
     public int MenuChildrenCount
     {
@@ -809,8 +817,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текст команды меню.
-    /// Свойство должно быть установлено, чтобы команда появилась в меню (вместе с флагом Usage.Menu).
-    /// Может содержать символ "амперсанд" для подчеркивания буквы
+    /// Свойство должно быть установлено, чтобы команда появилась в меню (вместе с флагом <see cref="Usage"/>.Menu).
+    /// Может содержать символ "амперсанд" для подчеркивания буквы.
     /// </summary>
     public string MenuText
     {
@@ -833,7 +841,7 @@ namespace FreeLibSet.Forms
     private string _MenuText;
 
     /// <summary>
-    /// Возвращает текст команды меню (свойство MenuText) без символа "амперсанд" для 
+    /// Возвращает текст команды меню (свойство <see cref="MenuText"/>) без символа "амперсанд" для 
     /// подчеркивания буквы.
     /// Также удаляются "..." в конце текста
     /// </summary>
@@ -841,16 +849,27 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        string s = WinFormsTools.RemoveMnemonic(MenuText);
-        if (s.EndsWith("...", StringComparison.Ordinal))
-          s = s.Substring(0, s.Length - 3).Trim(); // 14.01.2023
-        return s;
+        return RemoveMnemonic(MenuText);
       }
     }
 
     /// <summary>
+    /// Удаляет амперсанд из текста команды меню.
+    /// Также удаляются "..." в конце текста.
+    /// </summary>
+    /// <param name="menuText">Текст команды меню</param>
+    /// <returns>Текст, пригодный, например, для добавления в список</returns>
+    public static string RemoveMnemonic(string menuText)
+    {
+      string s = WinFormsTools.RemoveMnemonic(menuText);
+      if (s.EndsWith("...", StringComparison.Ordinal))
+        s = s.Substring(0, s.Length - 3).Trim(); // 14.01.2023
+      return s;
+    }
+
+    /// <summary>
     /// Текст всплывающей подсказки, используемый при наведении мыши на кнопку панели инструментов или
-    /// панель статусной строки
+    /// панель статусной строки.
     /// </summary>
     public string ToolTipText
     {
@@ -873,14 +892,15 @@ namespace FreeLibSet.Forms
     private string _ToolTipText;
 
     /// <summary>
-    /// Специальное значение для StatusBarText, задающее панель без текста
+    /// Специальное значение для <see cref="StatusBarText"/>, задающее панель без текста.
     /// </summary>
     public const string EmptyStatusBarText = " ";
 
     /// <summary>
-    /// Текст для панели в статусной строке
-    /// Используйте специальное значение EmptyStatusBarText, чтобы создать панель,
-    /// содержащую только значок
+    /// Текст для панели в статусной строке.
+    /// Используйте специальное значение <see cref="EmptyStatusBarText"/>, чтобы создать панель,
+    /// если сам текст на момент создания списка команд неизвестен, а определяется динамически,
+    /// как это обычно и бывает.
     /// </summary>
     public string StatusBarText
     {
@@ -959,7 +979,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Видимость команды (по умолчанию true).
     /// Если сброшено в false, то скрываются соответствующие элементы интерфейса и перестает действовать
-    /// комбинация клавиш, заданная свойством ShortCut
+    /// комбинация клавиш, заданная свойством <see cref="ShortCut"/>.
     /// </summary>
     public bool Visible
     {
@@ -1013,7 +1033,7 @@ namespace FreeLibSet.Forms
     private bool _Visible;
 
     /// <summary>
-    /// Управляемое свойство для Visible.
+    /// Управляемое свойство для <see cref="Visible"/>.
     /// </summary>
     public DepValue<bool> VisibleEx
     {
@@ -1051,8 +1071,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Доступность команды (по умолчанию - true).
     /// Если сброшено в false, то команда и кнопка панели инструментов делается неактивной.
-    /// Комбинация клавиш, заданная свойством ShortCut перестает действовать. Перестает действовать
-    /// двойной щелчок на панели статусной строки
+    /// Комбинация клавиш, заданная свойством <see cref="ShortCut"/> перестает действовать. Перестает действовать
+    /// двойной щелчок на панели статусной строки.
     /// </summary>
     public bool Enabled
     {
@@ -1078,7 +1098,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Управляемое свойство для Enabled.
+    /// Управляемое свойство для <see cref="Enabled"/>.
     /// </summary>
     public DepValue<bool> EnabledEx
     {
@@ -1114,7 +1134,8 @@ namespace FreeLibSet.Forms
     #region Checked
 
     /// <summary>
-    /// Отметка команды. Команда меню отмечается "галочкой", кнопка панели инструментов становится "нажатой"
+    /// Отметка команды. Команда меню отмечается "галочкой", кнопка панели инструментов становится "нажатой".
+    /// По умолчанию - false.
     /// </summary>
     public bool Checked
     {
@@ -1139,7 +1160,7 @@ namespace FreeLibSet.Forms
     private bool _Checked;
 
     /// <summary>
-    /// Управляемое свойство для Checked.
+    /// Управляемое свойство для <see cref="Checked"/>.
     /// </summary>
     public DepValue<bool> CheckedEx
     {
@@ -1178,9 +1199,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Значок кнопки панели инструментов, около команды меню и в панели статусной строки.
-    /// Изображение выбирается из списка EFPApp.MainImages. Для локальтного меню, установка непустого значения 
-    /// свойства приводит к появлению кнопки в панели инструментов. Чтобы недопустить появления кнопки, а использовать
-    /// изображение только для меню и/или панели статусной строки, следует использовать свойство Usage
+    /// Изображение выбирается из списка <see cref="EFPApp.MainImages"/>. Для локального меню, установка непустого значения 
+    /// свойства приводит к появлению кнопки в панели инструментов. Чтобы не допустить появления кнопки, а использовать
+    /// изображение только для меню и/или панели статусной строки, следует использовать свойство <see cref="Usage"/>.
+    /// Свойства <see cref="ImageKey"/> и <see cref="Image"/> являются взаимоисключающими.
     /// </summary>
     public string ImageKey
     {
@@ -1205,11 +1227,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Значок кнопки панели инструментов, около команды меню и в панели статусной строки.
-    /// Это позволяет задавать произвольное изображение, не обязательно из списка EFPApp.MainImages. 
+    /// Это позволяет задавать произвольное изображение, не из списка <see cref="EFPApp.MainImages"/>. 
     /// Для локального меню, установка непустого значения свойства приводит к появлению кнопки в 
-    /// панели инструментов. Чтобы недопустить появления кнопки, а использовать
-    /// изображение только для меню и/или панели статусной строки, следует использовать свойство Usage.
-    /// Обычно рекомендуется использовать свойство ImageKey
+    /// панели инструментов. Чтобы не допустить появления кнопки, а использовать
+    /// изображение только для меню и/или панели статусной строки, следует использовать свойство <see cref="Usage"/>.
+    /// Обычно рекомендуется использовать свойство <see cref="ImageKey"/>.
+    /// Свойства <see cref="ImageKey"/> и <see cref="Image"/> являются взаимоисключающими.
     /// </summary>
     public Image Image
     {
@@ -1233,7 +1256,7 @@ namespace FreeLibSet.Forms
     private Image _Image;
 
     /// <summary>
-    /// Возвращает true, если установлено свойство ImageKey или Image.
+    /// Возвращает true, если установлено свойство <see cref="ImageKey"/> или <see cref="Image"/>.
     /// </summary>
     public bool HasImage
     {
@@ -1250,7 +1273,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сочетание клавиш, нажатие которых приводит к выполнению команды.
-    /// По умолчанию содержит значение None
+    /// По умолчанию содержит значение <see cref="Keys.None"/>.
     /// </summary>
     public Keys ShortCut
     {
@@ -1269,11 +1292,43 @@ namespace FreeLibSet.Forms
     }
     private Keys _ShortCut;
 
+
+    internal Keys AlternativeShortCut
+    {
+      get
+      {
+        // 10.11.2012 Альтернативные комбинации для меню "Правка"
+        switch (ShortCut)
+        {
+          case Keys.Control | Keys.Z:
+            return Keys.Alt | Keys.Back;
+          case Keys.Control | Keys.Y:
+            return Keys.Alt | Keys.Shift | Keys.Back;
+          case Keys.Control | Keys.C:
+            return Keys.Control | Keys.Insert;
+          case Keys.Control | Keys.V:
+            return Keys.Shift | Keys.Insert;
+          case Keys.Control | Keys.X:
+            return Keys.Shift | Keys.Delete;
+          default:
+            return Keys.None;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Маска, используемая при сравнении нажатой комбинации клавиш с ShortCut'ом
+    /// </summary>
+    internal const Keys KeyCompareMask = Keys.Alt | Keys.Control | Keys.Shift | Keys.KeyCode;
+
     /// <summary>
     /// Проверить комбинацию клавиш.
-    /// Проверяются свойства ShortCut и Usage. Свойства Visible и Enabled не проверяются в этом методе
-    /// Возвращает true для альтернативных команд. Если ShortCut задает Ctrl-Z, а проверяемое 
-    /// значение value=Alt-Backspace, то возвращается true. Аналогично проверяются ShortCut=Ctrl-Y, Ctrl-C, Ctrl-V и Ctrl-X
+    /// Проверяются свойства <see cref="ShortCut"/> и <see cref="Usage"/>. 
+    /// Свойства <see cref="Visible"/> и <see cref="Enabled"/> не проверяются в этом методе.
+    /// Возвращает true для альтернативных команд. 
+    /// Если <see cref="ShortCut"/> задает Ctrl+Z, а проверяемое 
+    /// значение <paramref name="value"/>=Alt+Backspace, то возвращается true. 
+    /// Аналогично проверяются <see cref="ShortCut"/>=Ctrl+Y, Ctrl+C, Ctrl+V и Ctrl+X.
     /// </summary>
     /// <param name="value">Проверяемая комбинация</param>
     /// <returns>true, если комбинация совпадает</returns>
@@ -1282,35 +1337,44 @@ namespace FreeLibSet.Forms
       if ((Usage & EFPCommandItemUsage.ShortCut) == EFPCommandItemUsage.None)
         return false; // заблокирована
 
-      Keys myKey = ShortCut;
-      if (myKey == Keys.None)
+      if (ShortCut == Keys.None)
         return false;
 
+      // 17.06.2024
+      // Еще оптимизация
+      value &= KeyCompareMask;
+      if (value == ShortCut || value == AlternativeShortCut)
+        return true;
+
+      return false;
+
+#if XXX
       // 10.11.2012 Альтернативные комбинации для меню "Правка"
       switch (value)
       {
         case Keys.Alt | Keys.Back:
-          if (myKey == (Keys.Control | Keys.Z))
+          if (ShortCut == (Keys.Control | Keys.Z))
             return true;
           break;
         case Keys.Alt | Keys.Shift | Keys.Back:
-          if (myKey == (Keys.Control | Keys.Y))
+          if (ShortCut == (Keys.Control | Keys.Y))
             return true;
           break;
         case Keys.Control | Keys.Insert:
-          if (myKey == (Keys.Control | Keys.C))
+          if (ShortCut == (Keys.Control | Keys.C))
             return true;
           break;
         case Keys.Shift | Keys.Insert:
-          if (myKey == (Keys.Control | Keys.V))
+          if (ShortCut == (Keys.Control | Keys.V))
             return true;
           break;
         case Keys.Shift | Keys.Delete:
-          if (myKey == (Keys.Control | Keys.X))
+          if (ShortCut == (Keys.Control | Keys.X))
             return true;
           break;
       }
 
+#endif
       // Сравниваем Ctrl, Alt и Shift
 #if XXX
       bool hasAlt1 = (value & Keys.Alt) != Keys.None;
@@ -1325,22 +1389,28 @@ namespace FreeLibSet.Forms
       if (!(hasAlt1 == hasAlt2 && hasCtrl1 == hasCtrl2 && hasShift1 == hasShift2))
         return false;
 #endif
+
+#if XXX
       // 17.03.2022. Оптимизация
       Keys modifiers1 = value & (Keys.Alt | Keys.Control | Keys.Shift);
-      Keys modifiers2 = myKey & (Keys.Alt | Keys.Control | Keys.Shift);
+      Keys modifiers2 = ShortCut & (Keys.Alt | Keys.Control | Keys.Shift);
       if (modifiers1 != modifiers2)
         return false;
 
 
       // Сравниваем код клавиши
       Keys code1 = value & Keys.KeyCode;
-      Keys code2 = myKey & Keys.KeyCode;
+      Keys code2 = ShortCut & Keys.KeyCode;
       return code1 == code2;
+
+#endif
+
     }
 
+
     /// <summary>
-    /// Текстовое представление для свойства ShortCut.
-    /// Свойство MenuRightText сюда не включается
+    /// Текстовое представление для свойства <see cref="ShortCut"/>.
+    /// Свойство <see cref="MenuRightText"/> сюда не включается.
     /// </summary>
     public string ShortCutText
     {
@@ -1436,10 +1506,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Текст в правой части строки меню, где обычно находится описание ShortCut.
+    /// Текст в правой части строки меню, где обычно находится описание <see cref="ShortCutText"/>.
     /// Можно задать альтернативный текст.
-    /// Если свойство не установлено явно, а ShortCut установлен, то свойство возвращает пустую строку,
-    /// то есть подстановка не выполняется
+    /// Если свойство не установлено явно, а <see cref="ShortCut"/> установлен, то свойство возвращает пустую строку,
+    /// то есть подстановка не выполняется.
     /// </summary>
     public string MenuRightText
     {
@@ -1463,7 +1533,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Заменяет комбинацию клавиш на эквивалентное ему текстовое представление.
-    /// Свойство ShortCut очищается, а MenuRightText - устанавливается
+    /// Свойство <see cref="ShortCut"/> очищается, а <see cref="MenuRightText"/> - устанавливается.
     /// </summary>
     public void ShortCutToRightText()
     {
@@ -1484,12 +1554,17 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается при нажатии кнопки или выборе команды меню.
-    /// Возникшее исключение перехватывается и выдается отладочное окно
+    /// Возникшее исключение перехватывается и выдается отладочное окно с помощью <see cref="EFPApp.ShowException(Exception, string)"/>.
     /// </summary>
     public event EventHandler Click;
 
     /// <summary>
-    /// Генерация события Click
+    /// Генерация события <see cref="Click"/>.
+    /// Перед вызовом события вызывается <see cref="EFPCommandItems.HandleIdle()"/>, затем проверяются
+    /// свойства <see cref="Visible"/> и <see cref="Enabled"/> с выдачей сообщения, если они возвращают false.
+    /// Возникшее в обработчике события <see cref="Click"/> исключение перехватывается и выдается отладочное окно с помощью <see cref="EFPApp.ShowException(Exception, string)"/>.
+    /// Также вызываются события <see cref="EFPCommandItems.BeforeClick"/> и <see cref="EFPCommandItems.AfterClick"/>.
+    /// Предотвращается реентрантный вызов события путем временного блокирования команды.
     /// </summary>
     public void PerformClick()
     {
@@ -1515,6 +1590,13 @@ namespace FreeLibSet.Forms
 
     private void DoPerformClick()
     {
+      // 17.06.2024
+      //HandleIdle(); 
+      if (Owner == null)
+        HandleIdle();
+      else
+        Owner.HandleIdle(); // может быть общий обработчик для списка команд
+
       if (Servant == null)
       {
         if (!Visible)
@@ -1541,7 +1623,7 @@ namespace FreeLibSet.Forms
               try
               {
                 if (InsideClick)
-                  throw new InvalidOperationException("Попытка повторного выполнения команды \"" +
+                  throw new ReenteranceException("Попытка повторного выполнения команды \"" +
                     DisplayName + "\" до завершения предыдущего запуска");
                 _InsideClick = true;
                 SetEnabled(); // блокирует команды на время выполнения
@@ -1587,13 +1669,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если в данный момент выполняется PerformClick для этой команды
+    /// Возвращает true, если в данный момент выполняется <see cref="PerformClick()"/> для этой команды
     /// </summary>
     public bool InsideClick { get { return _InsideClick; } }
     private bool _InsideClick = false;
 
     /// <summary>
-    /// Есть ли добавленные обработчики события Click
+    /// Есть ли добавленный обработчик события <see cref="Click"/>.
     /// </summary>
     public bool HasClick
     {
@@ -1604,7 +1686,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Метод не выполняет никаких действий
+    /// Обработчик команды - заглушка.
+    /// Метод не выполняет никаких действий.
     /// </summary>
     /// <param name="sender">Игнорируется</param>
     /// <param name="args">Игнорируется</param>
@@ -1656,8 +1739,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить количество присоединенных интерфейсных элементов.
-    /// Чтение этого свойства выполняется медленно, поэтому не следует использовать
-    /// в цикле
+    /// Чтение этого свойства выполняется медленно, поэтому не следует использовать в цикле.
     /// </summary>
     public int UIObjectCount
     {
@@ -1677,7 +1759,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает список элементов интерфейса (команд меню, кнопок панелей инструментов,
     /// панелей статусной строки), связанных с данной командой.
-    /// При каждом обращении к свойству создается новый массив.
+    /// При каждом обращении к методу создается новый массив.
     /// </summary>
     /// <returns>Массив</returns>
     public EFPUIObjBase[] GetUIObjects()
@@ -1699,12 +1781,12 @@ namespace FreeLibSet.Forms
     #region Отношение хозяин - дочерняя команда
 
     /// <summary>
-    /// Родительская команда при организации цепочек управления
-    /// Свойство устанавливается только в конструкторе
-    /// Let'VersionStr play Master and Servant ... (DM)
+    /// Родительская команда при организации цепочек управления.
+    /// Свойство устанавливается только в конструкторе.
+    /// Let's play Master and Servant ... (DM)
     /// </summary>
     public EFPCommandItem Master { get { return _Master; } }
-    private EFPCommandItem _Master;
+    private readonly EFPCommandItem _Master;
 
     /// <summary>
     /// Активная подчиненная команда.
@@ -1722,8 +1804,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Подключение данной команды к Master'у и ее отключение.
-    /// Команды с Usage=None не подключаются
+    /// Подключение данной команды к <see cref="Master"/>'у и ее отключение.
+    /// Команды с <see cref="Usage"/>=<see cref="EFPCommandItemUsage.None"/> не подключаются.
     /// </summary>
     public bool MasterActive
     {
@@ -1783,10 +1865,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализация видимости подменю на основании видимости вложенных команд меню.
-    /// Предполагается, что видимость всех "конечных" команд меню определена, а видимость подменю требуется определить
+    /// Предполагается, что видимость всех "конечных" команд меню определена, а видимость подменю требуется определить.
     /// Если текущая команда не является подменю, никаких действий не выполняется.
     /// Если команда - подменю, то выполняется рекурсивный вызов функции для определения видимости всех дочерних
-    /// команд. После этого устанавливается свойство Visible этого объекта
+    /// команд. После этого устанавливается свойство <see cref="Visible"/> этого объекта.
     /// </summary>
     public void InitMenuVisible()
     {
@@ -1817,15 +1899,16 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается, когда система свободна, с неопределенной периодичностью.
-    /// См. описание события System.Windows.Forms.Application.Idle.
-    /// Обработчик может инициализировать доступность команды меню
+    /// См. описание события <see cref="System.Windows.Forms.Application.Idle"/>.
+    /// Также событие вызывается непосредственно перед выполнением команды.
+    /// Обработчик может инициализировать доступность (<see cref="Enabled"/>) команды меню.
     /// </summary>
     public event EventHandler Idle;
 
     /// <summary>
     /// Вызывает событие Idle
     /// </summary>
-    public void HandleIdle()
+    internal void HandleIdle()
     {
       if (Idle != null)
         Idle(this, EventArgs.Empty);
@@ -1834,7 +1917,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если есть обработчик события Idle
     /// </summary>
-    public bool HasIdle { get { return Idle != null; } }
+    internal bool HasIdle { get { return Idle != null; } }
 
     #endregion
 
@@ -1843,8 +1926,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Событие вызывается при открытии команды меню (главного или выпадающего).
     /// Обработчик события можно использовать для инициализации команды, которая присоединяется только к команде меню,
-    /// но не к панели инструментов или статусной строке (Usage=Menu).
-    /// В остальных случаях можно использовать событие Idle
+    /// но не к панели инструментов или статусной строке (<see cref="Usage"/>=<see cref="EFPCommandItemUsage.Menu"/>).
+    /// В остальных случаях можно использовать событие <see cref="Idle"/>.
     /// </summary>
     public event EventHandler MenuOpening;
 
@@ -2010,7 +2093,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Для реализации коллекций
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Хэш-код</returns>
     public override int GetHashCode()
     {
       return _Name.GetHashCode();
@@ -2034,11 +2117,11 @@ namespace FreeLibSet.Forms
     #region IObjectWithCode Members
 
     /// <summary>
-    /// Строка в виде "Category|Name".
-    /// Используется при добавлении в NamedList.
+    /// Строка в виде "<see cref="Category"/>|<see cref="Name"/>".
+    /// Используется при добавлении в <see cref="NamedList{EFPCommandItem}"/>.
     /// </summary>
     public string CategoryAndName { get { return _CategoryAndName; } }
-    private string _CategoryAndName; // 28.01.2021. Пусть будет лишнее поле, чтобы каждый раз не создавать 
+    private readonly string _CategoryAndName; // 28.01.2021. Пусть будет лишнее поле, чтобы каждый раз не создавать 
 
     string IObjectWithCode.Code { get { return _CategoryAndName; } }
 
@@ -2081,7 +2164,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Добавление сепаратора.
     /// Если в списке уже есть команды, то для последней из них устанавливается
-    /// свойство GroupEnd=true
+    /// свойство <see cref="EFPCommandItem.GroupEnd"/>=true.
     /// </summary>
     public void AddSeparator()
     {
@@ -2091,7 +2174,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализация видимости всех команд данного уровная на основании видимости вложенных команд меню.
-    /// Предполагается, что видимость всех "конечных" команд меню определена, а видимость подменю требуется определить
+    /// Предполагается, что видимость всех "конечных" команд меню определена, а видимость подменю требуется определить.
     /// </summary>
     public void InitMenuVisible()
     {
@@ -2196,9 +2279,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Список элементов для главного или локального меню в-целом.
-  /// Реализуемый интерфейс IEnumerable позволяет перебирать все элементы в порядке их расположения в иерархии.
-  /// Для доступа к к элементам верхнего меню используйте свойство TopLevelItems.
+  /// Список элементов для главного (<see cref="EFPApp.CommandItems"/>) или локального (<see cref="EFPControlBase.CommandItems"/>, <see cref="EFPFormProvider.CommandItems"/>) меню в-целом.
+  /// Реализуемый интерфейс <see cref="IEnumerable"/> позволяет перебирать все элементы <see cref="EFPCommandItem"/>в порядке их расположения в иерархии.
+  /// Для доступа к элементам верхнего меню используйте свойство <see cref="TopLevelItems"/>.
   /// </summary>
   public class EFPCommandItems : SimpleDisposableObject, IEnumerable<EFPCommandItem>, IReadOnlyObject
   {
@@ -2214,9 +2297,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Очищает список команд при вызове Dispose()
+    /// Очищает список команд при вызове <see cref="IDisposable.Dispose()"/>
     /// </summary>
-    /// <param name="disposing">True, если был вызван метод Dispose(). False, если вызван деструктор</param>
+    /// <param name="disposing">True, если был вызван метод <see cref="IDisposable.Dispose()"/>. False, если вызван деструктор</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -2263,8 +2346,8 @@ namespace FreeLibSet.Forms
     {
       if (value == null)
         return false;
-      EFPCommandItem ci = this[value.Category, value.Name];
-      return ci != null;
+      EFPCommandItem ci = _AllItems[value.CategoryAndName];
+      return Object.ReferenceEquals(ci, value);
     }
 
 
@@ -2319,12 +2402,12 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает индекс команды в текущем наборе
     /// </summary>
-    /// <param name="Category">Категория</param>
-    /// <param name="Name">Имя</param>
+    /// <param name="category">Категория</param>
+    /// <param name="name">Имя</param>
     /// <returns>Индекс команды</returns>
-    public int IndexOf(string Category, string Name)
+    public int IndexOf(string category, string name)
     {
-      return _AllItems.IndexOf(Category + "|" + Name);
+      return _AllItems.IndexOf(category + "|" + name);
     }
 
     /// <summary>
@@ -2408,16 +2491,16 @@ namespace FreeLibSet.Forms
     #region Список команд верхнего уровня
 
     /// <summary>
-    /// Содержит команды верхнего уровня, то есть имеющие свойство Parent=null
+    /// Содержит команды верхнего уровня, то есть имеющие свойство <see cref="EFPCommandItem.Parent"/>=null
     /// </summary>
     public EFPOneLevelCommandItems TopLevelItems { get { return _TopLevelItems; } }
-    private EFPOneLevelCommandItems _TopLevelItems;
+    private readonly EFPOneLevelCommandItems _TopLevelItems;
 
     /// <summary>
     /// Добавление сепаратора.
     /// Если в списке уже есть команды, то для последней из них устанавливается
-    /// свойство GroupEnd=true.
-    /// Эквивалентно вызову TopLevelItems.AddSeparator()
+    /// свойство <see cref="EFPCommandItem.GroupEnd"/>=true.
+    /// Эквивалентно вызову <see cref="TopLevelItems"/>.AddSeparator().
     /// </summary>
     public void AddSeparator()
     {
@@ -2526,7 +2609,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает перечислитель, который рекурсивно обходит все элементы, с учетом иерархии
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Перечислитель команд</returns>
     public IEnumerator<EFPCommandItem> GetEnumerator()
     {
 #if DEBUG
@@ -2547,18 +2630,25 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если свойство возвращает true, то добавлять команды запрещено
-    /// (свойства самих команд устанавливать можно)
+    /// (свойства самих команд устанавливать можно).
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
     internal /*protected */void SetReadOnly()
     {
+      if (_IsReadOnly)
+        return;
+
+      OnPrepare();
+
       _IsReadOnly = true;
+
+      OnAfterSetReadOnly();
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -2568,11 +2658,40 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Подготовка набора команд
+
+    /// <summary>
+    /// Событие вызывается при подготовке списка команд к использованию.
+    /// На момент вызова свойство <see cref="EFPCommandItems.IsReadOnly"/>=false.
+    /// Классы-наследники, вместо обработчика события, обычно переопределяют метод <see cref="OnPrepare()"/>.
+    /// Прикладной код обычно использует событие <see cref="EFPControlBase.BeforePrepareCommandItems"/>.
+    /// </summary>
+    public event EventHandler Prepare;
+
+    /// <summary>
+    /// Этот метод вызывается однократно перед началом использования списка команд.
+    /// После вызова список переводится в режим "только для чтения".
+    /// </summary>
+    protected virtual void OnPrepare()
+    {
+      if (Prepare != null)
+        Prepare(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Вызывается после перевода списка в режим "Только чтение"
+    /// </summary>
+    protected virtual void OnAfterSetReadOnly()
+    {
+    }
+
+    #endregion
+
     #region Блокировка подменю
 
     /// <summary>
     /// Инициализация видимости подменю на основании видимости вложенных команд меню.
-    /// Предполагается, что видимость всех "конечных" команд меню определена, а видимость подменю требуется определить
+    /// Предполагается, что видимость всех "конечных" команд меню определена, а видимость подменю требуется определить.
     /// </summary>
     public void InitMenuVisible()
     {
@@ -2585,12 +2704,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается перед выполнением команды меню.
-    /// Обработчик может прервать выполнение команды, установив свойство Cancel=true
+    /// Обработчик может прервать выполнение команды, установив свойство <see cref="CancelEventArgs.Cancel"/>=true.
     /// </summary>
     public event EFPCommandItemBeforeClickEventHandler BeforeClick;
 
     /// <summary>
-    /// Вызывает событие BeforeClick
+    /// Вызывает событие <see cref="BeforeClick"/>
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnBeforeClick(EFPCommandItemBeforeClickEventArgs args)
@@ -2617,7 +2736,7 @@ namespace FreeLibSet.Forms
     public event EFPCommandItemAfterClickEventHandler AfterClick;
 
     /// <summary>
-    /// Вызывает событие AfterClick
+    /// Вызывает событие <see cref="AfterClick"/>
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnAfterClick(EFPCommandItemAfterClickEventArgs args)
@@ -2643,8 +2762,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается, когда система свободна, с неопределенной периодичностью.
-    /// См. описание события System.Windows.Forms.Application.Idle.
-    /// Обработчик может инициализировать доступность некоторых команд меню
+    /// См. описание события <see cref="System.Windows.Forms.Application.Idle"/>.
+    /// Обработчик может инициализировать доступность некоторых команд меню.
+    /// Событие вызывается также непосредственно перед выполнением какой-либо команды меню,
+    /// чтобы получить актуальные значения доступности.
     /// </summary>
     public event EventHandler Idle;
 
@@ -2655,7 +2776,7 @@ namespace FreeLibSet.Forms
     private List<EFPCommandItem> _ItemsWithIdle;
 
     /// <summary>
-    /// Вызывает событие Idle для EFPCommandItems и команд, в которых задан свой обработчик
+    /// Вызывает событие <see cref="Idle"/> для списка и для всех команд <see cref="EFPCommandItem.Idle"/>, у которых задан свой обработчик.
     /// </summary>
     public void HandleIdle()
     {
@@ -2670,7 +2791,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если есть обработчик события Idle у EFPCommandItems, или была добавлена хотя бы одна команда с обработчиком
+    /// Возвращает true, если есть обработчик события <see cref="Idle"/> у <see cref="EFPCommandItems"/>, 
+    /// или была добавлена хотя бы одна команда с обработчиком <see cref="EFPCommandItem.Idle"/>.
     /// </summary>
     public bool HasIdle
     {
@@ -2686,7 +2808,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Выполнить команду, связанную с комбинацией клавиш.
-    /// Если команда найдена, но скрыта или заблокирована, выдается сообщение в статусной строке
+    /// Если команда найдена, но скрыта, возвращается false.
+    /// Если команда заблокирована, выдается сообщение в статусной строке.
     /// </summary>
     /// <param name="shortCut">Комбинация клавиш</param>
     /// <returns>true, если команда найдена</returns>
@@ -2695,34 +2818,67 @@ namespace FreeLibSet.Forms
       EFPCommandItem ci = FindShortCut(shortCut);
       if (ci == null)
         return false;
+
       if (ci.InsideClick)
       {
         EFPApp.ShowTempMessage("Команда " + ci.DisplayName + " в настоящий момент выполняется");
         return true;
       }
+
+      // 17.06.2024. Перенесено из FindShortCut
+      if (ci.Servant != null) // 14.09.2015. Иначе Ctrl-V обнаруживается на уровне главного меню, даже если в локальном меню ShortCut убран
+        return false;
+      if (!ci.Visible)
+        return false;
+
       ci.PerformClick();
       return true;
     }
 
+
+    private Dictionary<Keys, EFPCommandItem> _ShortCutDict;
+
     /// <summary>
-    /// Выполнить команду, связанную с комбинацией клавиш.
-    /// Если команда не найдена, возвращается null
+    /// Находим команду, связанную с комбинацией клавиш.
+    /// Если команда не найдена, возвращается null.
     /// </summary>
     /// <param name="shortCut">Комбинация клавиш</param>
     /// <returns>Найденная команда</returns>
     public EFPCommandItem FindShortCut(Keys shortCut)
     {
+      /*
       foreach (EFPCommandItem item in this)
       {
-        if (item.Visible && item.Enabled &&
-          item.Servant == null) // 14.09.2015. Иначе Ctrl-V обнаруживается на уровне главного меню, даже если в локальном меню ShortCut убран
-        {
-          if (item.IsShortCut(shortCut))
-            return item;
-        }
+        if (item.IsShortCut(shortCut))
+          return item;
       }
 
       return null;
+      */
+
+      // 17.06.2024
+      // Используем словарь
+
+      if (_ShortCutDict == null)
+      {
+        _ShortCutDict = new Dictionary<Keys, EFPCommandItem>();
+        foreach (EFPCommandItem ci in this)
+        {
+          if ((ci.Usage & EFPCommandItemUsage.ShortCut) == EFPCommandItemUsage.None)
+            continue;
+          if (ci.ShortCut != Keys.None)
+          {
+            _ShortCutDict[ci.ShortCut] = ci;
+            Keys altShortCut = ci.AlternativeShortCut;
+            if (altShortCut!=Keys.None)
+              _ShortCutDict[altShortCut] = ci;
+          }
+        }
+      }
+
+      EFPCommandItem res;
+      _ShortCutDict.TryGetValue(shortCut & EFPCommandItem.KeyCompareMask, out res);
+      return res;
     }
 
     /// <summary>
@@ -2760,7 +2916,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Добавляет одинаковый обработчик для всех команд меню
     /// </summary>
-    /// <param name="handler"></param>
+    /// <param name="handler">Добавляемый обработчик</param>
     internal void AddClickHandler(EventHandler handler)
     {
       for (int i = 0; i < _AllItems.Count; i++)
@@ -2793,7 +2949,7 @@ namespace FreeLibSet.Forms
     private static List<EFPCommandItems> _FocusedObjects = new List<EFPCommandItems>(); // Нельзя использовать Stack<EFPCommandItems>, т.к. у него нет метода Remove()
 
     /// <summary>
-    /// Используется свойством EFPControlCommandItems.Active.
+    /// Используется <see cref="EFPContextCommandItems.SetHasFocus(bool)"/>.
     /// </summary>
     protected void AddFocus()
     {
@@ -2802,7 +2958,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Используется свойством EFPControlCommandItems.Active.
+    /// Используется <see cref="EFPContextCommandItems.SetHasFocus(bool)"/>.
     /// </summary>
     protected void RemoveFocus()
     {
@@ -2810,8 +2966,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Получить массив всех наборов команд, которые сейчас действуют (находятся в фокусе)
-    /// Первым элементов в массиве является элемент, содержащий фокус ввода (если он содержит меню)
+    /// Получить массив всех наборов команд, которые сейчас действуют (находятся в фокусе).
+    /// Первым элементов в массиве является элемент, содержащий фокус ввода (если он содержит меню).
     /// </summary>
     /// <returns></returns>
     public static EFPCommandItems[] GetFocusedObjects()
@@ -2824,7 +2980,7 @@ namespace FreeLibSet.Forms
     /// для всех наборов элементов, входящих в фокус.
     /// </summary>
     /// <param name="sender">Источник события. Игнорируется</param>
-    /// <param name="args">Аргументы события. Если нажатие клавиши обработано, устанавливается свойство Handled</param>
+    /// <param name="args">Аргументы события. Если нажатие клавиши обработано, устанавливается свойство <see cref="KeyEventArgs.Handled"/></param>
     public static void PerformKeyDown(object sender, KeyEventArgs args)
     {
       // Этот метод не может возвращать значение
@@ -2839,7 +2995,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Обработка события Control.KeyDown.
+    /// Обработка события <see cref="System.Windows.Forms.Control.KeyDown"/>.
     /// Метод не должен использоваться в пользовательском коде
     /// </summary>
     /// <param name="keyData">Аргументы события</param>
@@ -2921,7 +3077,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Альтернативный метод, который может вызваться, например из
-    /// ProcessDialogKey()
+    /// <see cref="System.Windows.Forms.Control.ProcessDialogKey(Keys)"/> пользовательского элемента.
     /// </summary>
     /// <param name="keyData">Код комбинации клавиш</param>
     /// <returns>true, если комбинация найдена</returns>
@@ -3068,7 +3224,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создание и добавление стандартной команды.
-    /// Обычно используется в главном меню
+    /// Обычно используется в главном меню.
     /// </summary>
     /// <param name="stdItem">Идентификатор стандартной команды</param>
     /// <param name="parent">Родительская команда</param>
@@ -3088,7 +3244,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создание и добавление стандартной команды.
-    /// Обычно используется в главном меню
+    /// Обычно используется в главном меню.
     /// </summary>
     /// <param name="stdItem">Идентификатор стандартной команды</param>
     public EFPCommandItem Add(EFPAppStdCommandItems stdItem)
@@ -3122,7 +3278,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызывает Dispose() для всех элементов в списке
     /// </summary>
-    /// <param name="disposing">true, если вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">Всегда true</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -3170,7 +3326,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает объект интерфейса по индексу
     /// </summary>
-    /// <param name="index">Индекс в диапазоне от 0 до Count-1</param>
+    /// <param name="index">Индекс в диапазоне от 0 до (<see cref="Count"/>-1)</param>
     /// <returns>Объект интерефйса</returns>
     public EFPUIObjBase this[int index]
     {
@@ -3179,7 +3335,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает элемент для заданной команды.
-    /// Если нет такой команды, возвращает null
+    /// Если нет такой команды, возвращает null.
     /// </summary>
     /// <param name="category">Категория</param>
     /// <param name="name">Имя</param>
@@ -3191,7 +3347,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает элемент для заданной команды.
-    /// Если нет такой команды, возвращает null
+    /// Если нет такой команды, возвращает null.
     /// </summary>
     /// <param name="commandItem">Команда</param>
     /// <returns>Элемент интерфейса или null</returns>
@@ -3230,7 +3386,7 @@ namespace FreeLibSet.Forms
     #region IEnumerable<EFPUIObjBase> Members
 
     /// <summary>
-    /// Возвращает перечислитель по объектам EFPUIObjBase
+    /// Возвращает перечислитель по объектам <see cref="EFPUIObjBase"/>
     /// </summary>
     /// <returns>Перечислитель</returns>
     public IEnumerator<EFPUIObjBase> GetEnumerator()

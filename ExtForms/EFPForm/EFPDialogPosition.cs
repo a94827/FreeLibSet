@@ -12,9 +12,9 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Позволяет задавать позицию блока диалога на экране при использовании соответствующей
-  /// перегрузки EFPApp.ShowDialog().
+  /// перегрузки <see cref="EFPApp.ShowDialog(Form, bool, EFPDialogPosition)"/>.
   /// Экземпляр класса существует в некоторых стандартных блоках диалога ExtForms, например,
-  /// RadioSelectDialog, что позволяет выводить их в нужной позиции.
+  /// <see cref="RadioSelectDialog"/>, что позволяет выводить их в нужной позиции.
   /// </summary>
   public class EFPDialogPosition : ICloneable
   {
@@ -22,7 +22,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// По умолчанию блок диалога позиционируется по центру экрана, на котором находится главное
-    /// окно приложения или активный блок диалога (см. свойство EFPApp.DefaultScreen).
+    /// окно приложения или активный блок диалога (см. свойство <see cref="EFPApp.DefaultScreen"/>).
     /// </summary>
     public EFPDialogPosition()
     {
@@ -45,7 +45,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено, то диалог будет выводится как выпадающее окно для заданного элемента
     /// (снизу или сверху, в зависимости от наличия свободного места).
-    /// Для позиционирования диалога будет использован метод WinFormsTools.PlacePopupForm().
+    /// Для позиционирования диалога будет использован метод <see cref="WinFormsTools.PlacePopupForm(Form, Control)"/>.
     /// </summary>
     public Control PopupOwnerControl
     {
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms
     /// Если свойство установлено, то диалог будет выводится как выпадающее окно,
     /// снизу или сверху от заданной области, в зависимости от наличия свободного места).
     /// Область должна задаваться в экранных координатах.
-    /// Для позиционирования диалога будет использован метод WinFormsTools.PlacePopupForm().
+    /// Для позиционирования диалога будет использован метод <see cref="WinFormsTools.PlacePopupForm(Form, Rectangle)"/>.
     /// </summary>
     public Rectangle PopupOwnerBounds
     {

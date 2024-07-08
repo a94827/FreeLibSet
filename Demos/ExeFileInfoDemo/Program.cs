@@ -168,7 +168,7 @@ namespace ExeFileInfoDemo
       efpIcons.DisableOrdering();
       efpIcons.Control.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
       efpIcons.Control.ReadOnly = true;
-      efpIcons.ReadOnly = false;
+      efpIcons.ReadOnly = true;
       efpIcons.CanView = false;
 
       #endregion
@@ -182,7 +182,7 @@ namespace ExeFileInfoDemo
       efpExtIcons.DisableOrdering();
       efpExtIcons.Control.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
       efpExtIcons.Control.ReadOnly = true;
-      efpExtIcons.ReadOnly = false;
+      efpExtIcons.ReadOnly = true;
       efpExtIcons.CanView = false;
 
 
@@ -289,8 +289,8 @@ namespace ExeFileInfoDemo
         {
           sb.Append(b[i + j].ToString("X2"));
           if (j == 7)
-            sb.Append(" ");
-          sb.Append(" ");
+            sb.Append(' ');
+          sb.Append(' ');
         }
         sb.Append(Environment.NewLine);
       }

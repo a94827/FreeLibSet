@@ -10,11 +10,11 @@ using System.Runtime.InteropServices;
 namespace FreeLibSet.Win32
 {
   /// <summary>
-  /// Объект для предотвращения перехода системы в спящий режим
+  /// Объект для предотвращения перехода системы в спящий режим.
   /// Для ОС, начиная с Windows Vista, используется функция SetThreadExecutionState().
   /// Для ОС до Windows-XP используется сообщение WM_POWERBROADCAST.
-  /// Для включения блокировки необходимо установить свойство Active в true.
-  /// Также необходимо обрабатывать сообщения для главного окна программы
+  /// Для включения блокировки необходимо установить свойство <see cref="Active"/> в true.
+  /// Также необходимо обрабатывать сообщения для главного окна программы.
   /// </summary>
   public static class PowerSuspendLocker
   {
@@ -73,7 +73,7 @@ namespace FreeLibSet.Win32
 
     /// <summary>
     /// Обработка сообщения WM_POWERBROADCAST.
-    /// Выполняется, если Active=true.
+    /// Выполняется, если <see cref="Active"/>=true.
     /// </summary>
     /// <param name="m">Оконное сообщение</param>
     public static void WndProc(ref Message m)
@@ -90,7 +90,7 @@ namespace FreeLibSet.Win32
 
     /// <summary>
     /// Включает дисплей, если он находится в выключенном режиме.
-    /// Работает не на всех версиях Windows
+    /// Работает не на всех версиях Windows.
     /// </summary>
     public static void TurnDisplayOn()
     {

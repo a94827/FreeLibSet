@@ -11,7 +11,7 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Интерфейс сохранения изображений предварительного просмотра композиций интерфейса.
-  /// Используется свойством EFPApp.SnapshotManager
+  /// Используется свойством <see cref="EFPApp.SnapshotManager"/>
   /// </summary>
   public interface IEFPSnapshotManager
   {
@@ -24,7 +24,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Загружает изображение.
-    /// Если изображение не было сохранено, метод должен вернуть null
+    /// Если изображение не было сохранено, метод должен вернуть null.
     /// </summary>
     /// <param name="configInfo">Идентификация изображения</param>
     /// <returns>Изображение или null</returns>
@@ -53,7 +53,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Формат сжатия изображения перед преобразованием в Base64.
-    /// По умолчанию - GIF
+    /// По умолчанию - <see cref="System.Drawing.Imaging.ImageFormat.Gif"/>.
     /// </summary>
     public System.Drawing.Imaging.ImageFormat ImageFormat
     {
@@ -68,7 +68,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Сохраняет изображение.
-    /// Непереопределенный метод получает секцию конфигурации вызовом EFPApp.ConfigManager.GetConfig().
+    /// Непереопределенный метод получает секцию конфигурации вызовом <see cref="EFPApp.ConfigManager"/>.GetConfig().
     /// Изображение преобразуется в строку в кодировке Base64.
     /// Строка записывается в секцию конфигурации как строковое значение "Snapshot".
     /// Если <paramref name="snapshot"/>=null, то значение "Snapshot" удаляется из секции конфигурации.
@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Загружает изображение.
-    /// Непереопределенный метод получает секцию конфигурации вызовом EFPApp.ConfigManager.GetConfig().
+    /// Непереопределенный метод получает секцию конфигурации вызовом <see cref="EFPApp.ConfigManager"/>.GetConfig().
     /// Из секции читается строковое значение "Snapshot".
     /// Если значения нет или оно является пустой строкой, возвращается null.
     /// Иначе строка преобразуется в изображение, предполагая, что оно хранится в кодировке Base64.

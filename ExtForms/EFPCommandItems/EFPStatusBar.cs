@@ -24,7 +24,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="statusBarControl">Интерфейс управляющего элемента статусной строки. Не может быть null</param>
     /// <param name="ownerControl">Если не null, то к этому элементу будет присоединен
-    /// обработчик Disposed, чтобы выполнить Dispose() для коллекции</param>
+    /// обработчик события <see cref="System.ComponentModel.Component.Disposed"/>, чтобы выполнить Dispose() для коллекции</param>
     public EFPStatusBarPanels(IEFPStatusBarControl statusBarControl, Control ownerControl)
     {
       if (statusBarControl == null)
@@ -36,9 +36,10 @@ namespace FreeLibSet.Forms
         ownerControl.Disposed += new EventHandler(OwnerControl_Disposed);
     }
 
+#if XXX
+
 #pragma warning disable 0618 // обход [Obsolete]
 
-#if XXX
     /// <summary>
     /// Эта версия конструктора предназначена для создания панелей на уровне приложения
     /// </summary>
@@ -47,14 +48,15 @@ namespace FreeLibSet.Forms
       : this(EFPApp.StatusBar, null)
     {
     }
+
+#pragma warning restore 0618
+
 #endif
 
-#pragma warning restore 0618 
-
     /// <summary>
-    /// Вызывает метод Detach()
+    /// Вызывает метод <see cref="Detach()"/>
     /// </summary>
-    /// <param name="disposing">true, если вызван метод Dispose()</param>
+    /// <param name="disposing">true, если вызван метод <see cref="IDisposable.Dispose()"/></param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -90,7 +92,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает панели статусной строки для команд и добавляет их в список панелей.
-    /// Используются только команды с установленным свойством EFPCommandItem.StatusBarUsage
+    /// Используются только команды с установленным свойством <see cref="EFPCommandItem.StatusBarUsage"/>.
     /// </summary>
     /// <param name="items">Список команд</param>
     public void Add(EFPCommandItems items)
@@ -112,7 +114,7 @@ namespace FreeLibSet.Forms
     private EFPStatusBarHandler _UsedStatusBarHandler;
 
     /// <summary>
-    /// Присоединяет панели в коллеции к StatusBarControl.StatusBarHandler
+    /// Присоединяет панели в коллекции к <see cref="StatusBarControl"/>.StatusBarHandler
     /// </summary>
     public void Attach()
     {
@@ -125,7 +127,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Отсоединяет панели в коллеции к StatusBarControl.StatusBarHandler
+    /// Отсоединяет панели в коллеции <see cref="StatusBarControl"/>.StatusBarHandler
     /// </summary>
     public void Detach()
     {
@@ -140,15 +142,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Интерфейс элемента управления статусной строки.
-    /// Используется в методах Attach() и Detach().
+    /// Используется в методах <see cref="Attach()"/> и <see cref="Detach()"/>.
     /// Свойство задается в конструкторе и не может быть null. Однако, интерфейс может возвращать 
     /// null, если статусной строки нет.
     /// </summary>
     public IEFPStatusBarControl StatusBarControl { get { return _StatusBarControl; } }
-    private IEFPStatusBarControl _StatusBarControl;
+    private readonly IEFPStatusBarControl _StatusBarControl;
 
     internal List<EFPUIStatusPanelObj> Items { get { return _Items; } }
-    private List<EFPUIStatusPanelObj> _Items;
+    private readonly List<EFPUIStatusPanelObj> _Items;
 
     /// <summary>
     /// Для отладки
@@ -249,8 +251,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Интерфейс для доступа к управляющему элементу статусной строки.
-  /// Реализуется EFPAppStatusBar (статусная строка главного окна программы) и 
-  /// EFPFormProvider (собственная статусная строка формы)
+  /// Реализуется <see cref="EFPAppStatusBar"/> (статусная строка главного окна программы) и 
+  /// <see cref="EFPFormProvider"/> (собственная статусная строка формы).
   /// </summary>
   public interface IEFPStatusBarControl
   {
@@ -263,10 +265,10 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Обработчик статусной строки в главном окне программы или статусной строки окна.
-  /// Хранит коллекцию объектов EFPStatusBarPanels, элементы которой меняются при смене фокуса ввода (или активного окна).
+  /// Хранит коллекцию объектов <see cref="EFPStatusBarPanels"/>, элементы которой меняются при смене фокуса ввода (или активного окна).
   /// Обработчик выполняет отложенное обновление панелек статусной строки по таймеру, так как из некоторых событий формы
   /// нельзя выполнять обновление. К тому же, изменение фокуса ввода может выполняться несколько раз подряд.
-  /// Объект реализует Disposable-интерфейс. Уничтожение объекта очищает список панелек, но не удаляет управляющий элемент
+  /// Объект реализует интерфейс <see cref="IDisposable"/>. Уничтожение объекта очищает список панелек, но не удаляет управляющий элемент
   /// </summary>
   public sealed class EFPStatusBarHandler : DisposableObject, ICollection<EFPStatusBarPanels>, IEFPAppIdleHandler
   {
@@ -278,7 +280,7 @@ namespace FreeLibSet.Forms
     /// Создает новый обработчик для управляющего элемента статусной строки
     /// </summary>
     /// <param name="statusStripControl">Управляющий элемент</param>
-    /// <param name="isFormOwned"></param>
+    /// <param name="isFormOwned">true, если обработчик относится к конкретной форме</param>
     public EFPStatusBarHandler(StatusStrip statusStripControl, bool isFormOwned)
     {
       if (statusStripControl == null)
@@ -307,7 +309,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Отсоединяет текущий объект от EFPApp.IdleHandlers.
+    /// Отсоединяет текущий объект от <see cref="EFPApp.IdleHandlers"/>.
     /// Выполняет дополнительные действия по очистке.
     /// </summary>
     /// <param name="disposing">true, если вызван метод Dispose()</param>
@@ -338,7 +340,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если обработчик относится к конкретной форме
+    /// Возвращает true, если обработчик относится к конкретной форме.
+    /// False, если статусная строка для приложения в-целом
     /// </summary>
     public bool IsFormOwned { get { return _IsFormOwned; } }
     private readonly bool _IsFormOwned;
@@ -351,7 +354,31 @@ namespace FreeLibSet.Forms
     /// Управляемая статусная строка
     /// </summary>
     public StatusStrip StatusStripControl { get { return _StatusStripControl; } }
-    private StatusStrip _StatusStripControl;
+    private readonly StatusStrip _StatusStripControl;
+
+    #endregion
+
+    #region Текстовое представление
+
+    /// <summary>
+    /// Отладочная информация
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      StringBuilder sb=new StringBuilder();
+      sb.Append("IsFormOwned=");
+      sb.Append(IsFormOwned);
+      if (IsDisposed)
+        sb.Append(" (disposed)");
+      Form frm = _StatusStripControl.FindForm();
+      if (frm != null)
+      {
+        sb.Append(", Form=");
+        sb.Append(frm.ToString());
+      }
+      return sb.ToString();
+    }
 
     #endregion
 
@@ -388,7 +415,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Реализация ICollection
+    /// Реализация <see cref="ICollection"/>
     /// </summary>
     /// <param name="item">Объект коллекции для поиска</param>
     /// <returns>Результат поиска</returns>
@@ -398,7 +425,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Реализация ICollection
+    /// Реализация <see cref="ICollection"/>
     /// </summary>
     /// <param name="array"></param>
     /// <param name="arrayIndex"></param>
@@ -408,7 +435,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает количество объектов EFPStatusBarPanels в коллекции, а не количество панелек статусной строки.
+    /// Возвращает количество объектов <see cref="EFPStatusBarPanels"/> в коллекции, а не количество панелек статусной строки.
     /// Это количество может не совпадать с актульным количеством, если отложенное обновление еще не выполнено.
     /// </summary>
     public int Count { get { return _Panels.Count; } }
@@ -594,7 +621,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Класс для управления статусной строкой приложения в целом.
-  /// Реализует свойство EFPApp.StatusBar
+  /// Реализует свойство <see cref="EFPApp.StatusBar"/>.
   /// </summary>
   public sealed class EFPAppStatusBar : IEFPStatusBarControl
   {
@@ -610,8 +637,8 @@ namespace FreeLibSet.Forms
     #region Свойство StatusStripControl
 
     /// <summary>
-    /// Управляющий элемент статусной строки
-    /// Свойство может быть установлено для отображения статусной строки не в главном окне программы
+    /// Управляющий элемент статусной строки.
+    /// Свойство может быть установлено для отображения статусной строки не в главном окне программы.
     /// </summary>
     public StatusStrip StatusStripControl
     {
@@ -644,8 +671,8 @@ namespace FreeLibSet.Forms
     #region Свойство Visible
 
     /// <summary>
-    /// Управляет видимостью статусной строки, например, для реализации команды главного меню "Вид - Статусная строка"
-    /// По умолчанию строка видна
+    /// Управляет видимостью статусной строки, например, для реализации команды главного меню "Вид - Статусная строка".
+    /// По умолчанию строка видна.
     /// </summary>
     public bool Visible
     {
@@ -666,8 +693,8 @@ namespace FreeLibSet.Forms
     private bool _Visible;
 
     /// <summary>
-    /// Вызывается при изменении видимости статусной строки с помощью свойства Visible.
-    /// Установка свойства Control не вызывает появление события
+    /// Вызывается при изменении видимости статусной строки с помощью свойства <see cref="Visible"/>.
+    /// Установка свойства <see cref="Control"/> не вызывает появление события.
     /// </summary>
     public event EventHandler VisibleChanged;
 

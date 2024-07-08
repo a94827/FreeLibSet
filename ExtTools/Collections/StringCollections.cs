@@ -714,7 +714,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Положение ненайденных элементов при сортировке с помощью метода <see cref="Compare(char, char)"/>.
-    /// По умолчанию - <see cref="UnknownItemPosition.First"/> - ненайденные элементы располагаются в начале списка.
+    /// По умолчанию - <see cref="FreeLibSet.Collections.UnknownItemPosition.First"/> - ненайденные элементы располагаются в начале списка.
     /// </summary>
     public UnknownItemPosition UnknownItemPosition
     {

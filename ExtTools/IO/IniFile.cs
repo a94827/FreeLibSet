@@ -16,7 +16,7 @@ namespace FreeLibSet.IO
   /// <summary>
   /// Пара "Ключ-Значение" для извлечения из Ini-файла
   /// </summary>
-  public class IniKeyValue : IObjectWithCode
+  public sealed class IniKeyValue : IObjectWithCode
   {
     // Не может быть структурой, так как используется в качестве элемента хранения внутри IniFile
 
@@ -41,13 +41,13 @@ namespace FreeLibSet.IO
     /// Ключ
     /// </summary>
     public string Key { get { return _Key; } }
-    private string _Key;
+    private readonly string _Key;
 
     /// <summary>
     /// Значение
     /// </summary>
     public string Value { get { return _Value; } }
-    private string _Value;
+    private readonly string _Value;
 
     /// <summary>
     /// Возвращает пару "Ключ=Значение"
@@ -416,7 +416,7 @@ namespace FreeLibSet.IO
 
     #region Список секций
 
-    private IniSectionList _Sections;
+    private readonly IniSectionList _Sections;
 
     #endregion
 
@@ -572,7 +572,7 @@ namespace FreeLibSet.IO
     /// Задается в конструкторе
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
+    private readonly bool _IsReadOnly;
 
     /// <summary>
     /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.

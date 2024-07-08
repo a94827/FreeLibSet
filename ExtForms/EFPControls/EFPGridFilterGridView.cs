@@ -10,9 +10,9 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Маленькая табличка фильтров
+  /// Маленькая табличка фильтров.
   /// Содержит три колонки без заголовков: значок, название фильтра и значение.
-  /// Не получает фокуса ввода, но может обрабатывать двойное нажатие мыши
+  /// Не получает фокуса ввода, но может обрабатывать двойное нажатие мыши.
   /// </summary>
   public class EFPBaseFilterGridView : EFPControl<DataGridView>
   {
@@ -22,7 +22,7 @@ namespace FreeLibSet.Forms
     /// Создает провайдер таблички фильтров
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент DataGridView</param>
+    /// <param name="control">Управляющий элемент <see cref="DataGridView"/></param>
     public EFPBaseFilterGridView(EFPBaseProvider baseProvider, DataGridView control)
       : base(baseProvider, control, false)
     {
@@ -149,7 +149,9 @@ namespace FreeLibSet.Forms
     #region RowCount и установка значений
 
     /// <summary>
-    /// Установка свойства RowCount управляет видимостью таблички и ее высотой
+    /// Установка свойства <see cref="DataGridView.RowCount"/>.
+    /// Управляет видимостью таблички и ее высотой.
+    /// Задание нулевого значения скрывает табличку (когда нет фильтров).
     /// </summary>
     public int RowCount
     {
@@ -178,8 +180,8 @@ namespace FreeLibSet.Forms
     //}
 
     /// <summary>
-    /// Вызывает событие Attached. См. описание события.
-    /// Устанавливает свойство Control.Visible, в зависимости от количества строк фильтров.
+    /// Вызывает событие <see cref="EFPControlBase.Attached"/>. См. описание события.
+    /// Устанавливает свойство <see cref="System.Windows.Forms.Control"/>.Visible, в зависимости от количества строк фильтров.
     /// </summary>
     protected override void OnAttached()
     {
@@ -202,12 +204,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Ручная установка строки таблички фильтров.
-    /// Метод должен вызываться после установки свойства RowCount
+    /// Метод должен вызываться после установки свойства <see cref="RowCount"/>.
     /// </summary>
-    /// <param name="rowIndex">Индекс строки фильтра. Должен быть в диапазоне от 0 до RowCount-1</param>
+    /// <param name="rowIndex">Индекс строки фильтра. Должен быть в диапазоне от 0 до (<see cref="RowCount"/>-1)</param>
     /// <param name="filterName">Название фильтра</param>
     /// <param name="filterValue">Текстовое представление значения фильтра</param>
-    /// <param name="imageKey">Имя изображения из списка EFPApp.MainImages.
+    /// <param name="imageKey">Имя изображения из списка <see cref="EFPApp.MainImages"/>.
     /// Если нужно задать пустое изображение, передавайте "EmptyImage"</param>
     public void SetRow(int rowIndex, string filterName, string filterValue, string imageKey)
     {
@@ -226,7 +228,7 @@ namespace FreeLibSet.Forms
     /// Получение строки таблички фильтров.
     /// Метод может вызываться после установки свойства RowCount
     /// </summary>
-    /// <param name="rowIndex">Индекс строки фильтра. Должен быть в диапазоне от 0 до RowCount-1</param>
+    /// <param name="rowIndex">Индекс строки фильтра. Должен быть в диапазоне от 0 до (<see cref="RowCount"/>-1)</param>
     /// <param name="filterName">Сюда помещается название фильтра</param>
     /// <param name="filterValue">Сюда помещается текстовое представление значения фильтра</param>
     public void GetRow(int rowIndex, out string filterName, out string filterValue)
@@ -242,10 +244,10 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Маленькая табличка фильтров для EFPConfigurableDataGridView
+  /// Маленькая табличка фильтров для <see cref="EFPConfigurableDataGridView"/>.
   /// Содержит три колонки без заголовков: значок, название фильтра и значение.
   /// Не получает фокуса ввода, но может обрабатывать двойное нажатие мыши.
-  /// Не путать с таблицей для редактирования списка фильтров EFPGridFilterEditorGridView
+  /// Не путать с таблицей для редактирования списка фильтров <see cref="EFPGridFilterEditorGridView"/>.
   /// </summary>
   public class EFPGridFilterGridView : EFPBaseFilterGridView
   {
@@ -282,7 +284,7 @@ namespace FreeLibSet.Forms
     /// Основной табличный просмотр, содержащий настраиваемые фильтры
     /// </summary>
     public EFPConfigurableDataGridView MainControlProvider { get { return _MainControlProvider; } }
-    private EFPConfigurableDataGridView _MainControlProvider;
+    private readonly EFPConfigurableDataGridView _MainControlProvider;
 
     #endregion
 
@@ -349,7 +351,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Выполнен двойной щелчок по строке фильтра.
-    /// Вызывает метод EFPConfigurableDataGridView.ShowFilterDialog()
+    /// Вызывает метод <see cref="EFPConfigurableDataGridView.ShowFilterDialog(string)"/>
     /// </summary>
     /// <param name="FilterIndex">Индекс строки фильтра</param>
     protected override void OnDoubleClick(int FilterIndex)
@@ -368,8 +370,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Маленькая табличка фильтров для EFPReport. Также может использоваться в прикладном коде.
-  /// Свойство Filters является массивом элементов EFPReportFilterItem и управляет отображаемыми фильтрами
+  /// Маленькая табличка фильтров для <see cref="EFPReport"/>. Также может использоваться в прикладном коде.
+  /// Свойство <see cref="Filters"/> является массивом элементов <see cref="EFPReportFilterItem"/> и управляет отображаемыми фильтрами.
   /// Содержит три колонки без заголовков: значок, название фильтра и значение.
   /// Не получает фокуса ввода и не реагирует на сообщения мыши.
   /// </summary>
@@ -381,7 +383,7 @@ namespace FreeLibSet.Forms
     /// Создает провайдер таблички фильтров
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
-    /// <param name="control">Управляющий элемент DataGridView</param>
+    /// <param name="control">Управляющий элемент <see cref="DataGridView"/></param>
     public EFPReportFilterGridView(EFPBaseProvider baseProvider, DataGridView control)
       : base(baseProvider, control)
     {

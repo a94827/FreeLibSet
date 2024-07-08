@@ -1314,7 +1314,8 @@ namespace FreeLibSet.Parsing
         return false; // не помещается
 
       string s2 = Text.Text.Substring(_CurrPos, s.Length);
-      return String.Compare(s, s2, ignoreCase) == 0; // TODO: Equals()
+      //return String.Compare(s, s2, ignoreCase) == 0; 
+      return String.Equals(s, s2, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal); // 08.07.2024
     }
 
     /// <summary>
@@ -1332,7 +1333,8 @@ namespace FreeLibSet.Parsing
         return false; // не помещается
 
       string s2 = Text.Text.Substring(startPos, s.Length);
-      return String.Compare(s, s2, ignoreCase) == 0; // TODO: Equals()
+      //return String.Compare(s, s2, ignoreCase) == 0; 
+      return String.Equals(s, s2, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal); // 08.07.2024
     }
 
     /// <summary>

@@ -18,7 +18,7 @@ namespace FreeLibSet.Forms.Docs
   /// Реализует:
   /// <list type="bullet">
   /// <item><description></description>Обновление просмотра после сохранения документов в базе данных. 
-  /// Коллекция действующих объектов, требующих обновления, хранится в массиве <see cref="DocTypeUI.Browsers"/>.</item>
+  /// Коллекция действующих объектов, требующих обновления, хранится в массиве <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Browsers"/>.</item>
   /// <item><description>Инициализацию начальных значений в редакторе при создании нового документа</description></item>
   /// </list>
   /// </summary>

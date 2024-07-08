@@ -58,6 +58,12 @@
     <Compile Include="Form3.Designer.cs">
       <DependentUpon>Form3.cs</DependentUpon>
     </Compile>
+    <Compile Include="HistDialogParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HistDialogParamsForm.Designer.cs">
+      <DependentUpon>HistDialogParamsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="NewFormParamForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +83,9 @@
     <EmbeddedResource Include="Form3.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Form3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HistDialogParamsForm.resx">
+      <DependentUpon>HistDialogParamsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NewFormParamForm.resx">
       <SubType>Designer</SubType>

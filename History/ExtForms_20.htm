@@ -5,7 +5,7 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20240607;162813971000000">
+	<META NAME="CHANGED" CONTENT="20240708;181201810000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2023-11-17T22:37:54.315000000">
 	<STYLE TYPE="text/css">
@@ -51,7 +51,7 @@
 			<P LANG="en-US" ALIGN=CENTER>351</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>29.02.2024-24.05.2024</P>
+			<P LANG="en-US" ALIGN=CENTER>29.02.2024-08.07.2024</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Экспорт
@@ -154,7 +154,9 @@
 			категории секции конфигурации </SPAN><SPAN LANG="en-US">EFPConfigCategories.TreeConfig
 			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">TreeConfigHistory,
 			</SPAN><SPAN LANG="ru-RU">вместо </SPAN><SPAN LANG="en-US">GridConfig
-			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">GridConfigHistory.</SPAN></P>
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">GridConfigHistory
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v099p3"><SPAN LANG="en-US">v.99
+			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">.</SPAN></P>
 			<P><SPAN LANG="en-US">15. </SPAN><SPAN LANG="ru-RU">Свойства
 			</SPAN><SPAN LANG="en-US">EFPConfigurableDataGridView,
 			EFPConfigurableDataTreeView.HasConfigureViewHandler </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v130p1"><SPAN LANG="en-US">v.130
@@ -202,17 +204,190 @@
 			</SPAN><SPAN LANG="en-US">EFPGridFilters </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v089p3"><SPAN LANG="en-US">v.89
 			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">) для
 			работы с пользовательскими фильтрами.</SPAN></P>
-			<P><SPAN LANG="en-US">2</SPAN><SPAN LANG="en-US">4</SPAN><SPAN LANG="en-US">.
-			</SPAN><SPAN LANG="ru-RU">В
+			<P><SPAN LANG="en-US">24. </SPAN><SPAN LANG="ru-RU">В
 			</SPAN><SPAN LANG="en-US">SimpleAboutDialog.ShowAssembliesDialog()
 			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v067p4"><SPAN LANG="en-US">v.67
 			</SPAN><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="ru-RU">) в
 			табличных просмотрах можно выполнять сортировку</SPAN></P>
-			<P><SPAN LANG="en-US">2</SPAN><SPAN LANG="en-US">5</SPAN><SPAN LANG="en-US">.
-			EFPAppCommandItemHelpers.Exit_Click() (<A HREF="ExtForms_11.htm#v296p1">v.296
-			</A></SPAN><A HREF="ExtForms_11.htm#v296p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)
+			<P><SPAN LANG="en-US">25. EFPAppCommandItemHelpers.Exit_Click()
+			(<A HREF="ExtForms_11.htm#v296p1">v.296 </A></SPAN><A HREF="ExtForms_11.htm#v296p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)
 			</SPAN><SPAN LANG="ru-RU">вызывает </SPAN><SPAN LANG="en-US">EFPApp.Exit(),
 			</SPAN><SPAN LANG="ru-RU">а не </SPAN><SPAN LANG="en-US">Application.Exit()</SPAN></P>
+			<P><SPAN LANG="en-US">26. </SPAN><SPAN LANG="ru-RU">Изменения в
+			</SPAN><SPAN LANG="en-US">EFPCommandItems (<A HREF="ExtForms_11.htm#v017p6">v.17
+			</A></SPAN><A HREF="ExtForms_11.htm#v017p6"><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="en-US">):</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Событие</SPAN>
+			<SPAN LANG="en-US">Idle </SPAN><SPAN LANG="ru-RU">вызывается для
+			динамической блокировки команды вначале выполнения
+			</SPAN><SPAN LANG="en-US">EFPCommandItem.PerformClick()</SPAN></P>
+			<P><SPAN LANG="en-US">- PerformShortCut() </SPAN><SPAN LANG="ru-RU">выполняет
+			поиск команды с помощью внутреннего словаря без оглядки на
+			состояние </SPAN><SPAN LANG="en-US">Visible/Enabled. </SPAN>
+			</P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Метод
+			</SPAN><SPAN LANG="en-US">OnPrepare() </SPAN><SPAN LANG="ru-RU">и
+			событие </SPAN><SPAN LANG="en-US">Prepare </SPAN><SPAN LANG="ru-RU">перенесены
+			в </SPAN><SPAN LANG="en-US">EFPCommandItems </SPAN><SPAN LANG="ru-RU">из
+			</SPAN><SPAN LANG="en-US">EFPContextCommandItems. </SPAN><SPAN LANG="ru-RU">Новый
+			виртуальный метод </SPAN><SPAN LANG="en-US">OnAfterSetReadOnly().</SPAN></P>
+			<P><SPAN LANG="en-US">27. </SPAN><SPAN LANG="ru-RU">Изменения в
+			</SPAN><SPAN LANG="en-US">EFPPasteHandler </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v020p5"><SPAN LANG="en-US">v.20
+			</SPAN><SPAN LANG="ru-RU">п.5</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">:</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Поддержка
+			действий (подменю &laquo;Дополнительные варианты вставки&raquo;).
+			Класс </SPAN><SPAN LANG="en-US">EFPPasteAction</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Изменены
+			виртуальные</SPAN> <SPAN LANG="ru-RU">методы</SPAN> <SPAN LANG="en-US">OnXXX().
+			</SPAN><SPAN LANG="ru-RU">Теперь используется единственный
+			аргумент </SPAN><SPAN LANG="en-US">EFPxxxEventArgs.</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Если при
+			специальной вставке в </SPAN><SPAN LANG="en-US">PerformPaste() </SPAN><SPAN LANG="ru-RU">нет
+			подходящих форматов, в тексте сообщения выдается ошибка для
+			первого формата.</SPAN></P>
+			<P><SPAN LANG="ru-RU">- Динамическая блокировка команды
+			&laquo;Вставить&raquo;, если в буфере обмена нет данных в
+			подходящем формате. Используется </SPAN><SPAN LANG="en-US">IDataObject.GetDataPresent(),
+			</SPAN><SPAN LANG="ru-RU">сами данные не анализируются и
+			пользовательский обработчик </SPAN><SPAN LANG="en-US">EFPPasteHandler.TestFormat
+			</SPAN><SPAN LANG="ru-RU">не вызывается.</SPAN></P>
+			<P><SPAN LANG="ru-RU">- Событие </SPAN><SPAN LANG="en-US">EFPPasteFormat.Idle
+			(<A HREF="ExtForms_11.htm#v269p2">v.269 </A></SPAN><A HREF="ExtForms_11.htm#v269p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">UseToolBar</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Нет отдельных
+			методов для подготовки команд, обработчик события </SPAN><SPAN LANG="en-US">Prepare
+			</SPAN><SPAN LANG="ru-RU">присоединяется автоматически.</SPAN></P>
+			<P><SPAN LANG="en-US">28. </SPAN><SPAN LANG="ru-RU">Изменено</SPAN>
+			<SPAN LANG="ru-RU">динамическое управление видимостью команд в
+			</SPAN><SPAN LANG="en-US">EFPDataGridViewCommandItems </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v054p1"><SPAN LANG="en-US">v.54
+			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
+			EFPTreeViewAdvCommandItems (<A HREF="ExtForms_11.htm#v092p3">v.92
+			</A></SPAN><A HREF="ExtForms_11.htm#v092p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">),
+			EFPTreeViewCommandItems:</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Добавлено
+			управление видимостью для некоторых команд, в частности,
+			&laquo;Копировать&raquo;</SPAN></P>
+			<P><SPAN LANG="ru-RU">- Убрано событие </SPAN><SPAN LANG="en-US">RefreshItems
+			</SPAN><SPAN LANG="ru-RU">и метод </SPAN><SPAN LANG="en-US">PerformRefreshItems()</SPAN></P>
+			<P><SPAN LANG="en-US">29. </SPAN><SPAN LANG="ru-RU">Классы
+			</SPAN><SPAN LANG="en-US">EFPDataGridViewConfig.ColumnCollection </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">ToolTipCollection </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v086p5"><SPAN LANG="en-US">v.86
+			</SPAN><SPAN LANG="ru-RU">п.5</SPAN></A><SPAN LANG="ru-RU">)</SPAN>
+			<SPAN LANG="ru-RU">сделаны внутренними</SPAN></P>
+			<P><SPAN LANG="en-US">30. </SPAN><SPAN LANG="ru-RU">Убрано
+			перечисление EFPDataGridViewRectAreaCreation (</SPAN><A HREF="ExtForms_11.htm#v029p3"><SPAN LANG="en-US">v.29
+			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">).
+			Вместо него используется EFPDataViewExpRange</SPAN></P>
+			<P><SPAN LANG="en-US">31. </SPAN><SPAN LANG="ru-RU">Методы
+			</SPAN><SPAN LANG="en-US">EFPGridProducerColumns.AddUserXXX() </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">EFPGridProducerToolTips.AddUserItem()
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v276p9"><SPAN LANG="en-US">v.276
+			</SPAN><SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="ru-RU">)
+			разрешают использовать пустую строку в качестве аргумента
+			</SPAN><SPAN LANG="en-US">sourceColumnNames, </SPAN><SPAN LANG="ru-RU">например,</SPAN>
+			<SPAN LANG="ru-RU">для создания столбца &laquo;№ п/п&raquo;.</SPAN></P>
+			<P><SPAN LANG="en-US">32. </SPAN><SPAN LANG="ru-RU">В диалоге
+			&laquo;Отправить&raquo; (BRDataViewPageSetupSendTo, </SPAN><A HREF="#v348p31"><SPAN LANG="en-US">v.348
+			</SPAN><SPAN LANG="ru-RU">п.31</SPAN></A><SPAN LANG="ru-RU">)
+			радиокнопка &laquo;Выбранные ячейки&raquo; блокируется, если в
+			просмотре нет строк.</SPAN></P>
+			<P><SPAN LANG="en-US">33. </SPAN><SPAN LANG="ru-RU">При открытии
+			простого окна в интерфейсе </SPAN><SPAN LANG="en-US">SDI </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v199p6"><SPAN LANG="en-US">v.199
+			</SPAN><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="ru-RU">)
+			выполняется объединение локальной панели инструментов с панелями
+			приложения:</SPAN></P>
+			<P>- Добавляемая форма должна реализовывать интерфейс
+			IControlWithToolBar</P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">Внутренний метод
+			</SPAN>EFPAppInterfaceSDI.MoveSingleToolBar()</P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">Изменена реализация метода
+			</SPAN>EFPAppMainWindowLayout.RestoreToolBars(), <SPAN LANG="ru-RU">чтобы
+			восстанавливалась панель &laquo;Локальная панель формы&raquo;, для
+			которой нет объекта в списке </SPAN>EFPApp.ToolBars.</P>
+			<P><SPAN LANG="en-US">34. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">EFPControlBase.DefaultDisplayName (<A HREF="ExtForms_11.htm#v253p2">v.253
+			</A></SPAN><A HREF="ExtForms_11.htm#v253p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">определено для некоторых производных
+			классов<BR></SPAN><SPAN LANG="en-US">35. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">EFPApp.SystemMethods </SPAN><SPAN LANG="ru-RU">и
+			класс </SPAN><SPAN LANG="en-US">EFPAppSystemMethods. </SPAN><SPAN LANG="ru-RU">Возможность
+			глобального переопределения методов </SPAN><SPAN LANG="en-US">Form.Show()
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">Form.ShowModal()
+			</SPAN><SPAN LANG="ru-RU">(для интеграции с </SPAN><SPAN LANG="en-US">NanoCad)</SPAN></P>
+			<P><SPAN LANG="en-US">36. </SPAN><SPAN LANG="ru-RU">Вспомогательная
+			перегрузка метода </SPAN><SPAN LANG="en-US">EFPAppFileExtAssociations.GetIconImage()
+			(<A HREF="ExtForms_11.htm#v207p3">v.207 </A></SPAN><A HREF="ExtForms_11.htm#v207p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">),
+			</SPAN><SPAN LANG="ru-RU">принимающая аргумент
+			</SPAN><SPAN LANG="en-US">FileAssociationItem.</SPAN></P>
+			<P><SPAN LANG="en-US">37. </SPAN><SPAN LANG="ru-RU">Изменена
+			реализация </SPAN><SPAN LANG="en-US">EFPApp.DialogOwnerWindow
+			(<A HREF="ExtForms_11.htm#v216p1">v.216 </A></SPAN><A HREF="ExtForms_11.htm#v216p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">).
+			З</SPAN><SPAN LANG="ru-RU">начение </SPAN><SPAN LANG="en-US">ActiveDialog
+			</SPAN><SPAN LANG="ru-RU">является приоритетным</SPAN></P>
+			<P><SPAN LANG="en-US">38. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">EFPTextBoxCommandItems.UseStatusBarRC
+			(<A HREF="ExtForms_11.htm#v099p5">v.99 </A></SPAN><A HREF="ExtForms_11.htm#v099p5"><SPAN LANG="ru-RU">п.5</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">устанавливается по умолчанию в </SPAN><SPAN LANG="en-US">true
+			</SPAN><SPAN LANG="ru-RU">только для многострочного текста. Для
+			однострочного </SPAN><SPAN LANG="en-US">TextBox </SPAN><SPAN LANG="ru-RU">по
+			умолчанию равно </SPAN><SPAN LANG="en-US">false.</SPAN></P>
+			<P><SPAN LANG="en-US">39. </SPAN><SPAN LANG="ru-RU">Новое значение
+			</SPAN><SPAN LANG="en-US">EFPConfigCategories.UserFiles </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v099p3"><SPAN LANG="en-US">v.99
+			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
+			<P><SPAN LANG="ru-RU">40. Изменения в </SPAN><SPAN LANG="en-US">HistFileBrowserDialog
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">HistFolderBrowserDialog
+			(<A HREF="ExtForms_11.htm#v021p4">v.21 </A></SPAN><SPAN LANG="ru-RU"><A HREF="ExtForms_11.htm#v021p4">п.4</A>):</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Выведен базовый
+			класс </SPAN><SPAN LANG="en-US">HistFileSystemBrowserDialogBase. </SPAN>
+			</P>
+			<P><SPAN LANG="ru-RU">-</SPAN> <SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">ConfigSectionName. </SPAN>
+			</P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Свойства
+			</SPAN><SPAN LANG="en-US">HistFileBrowserDialog</SPAN><SPAN LANG="ru-RU">.</SPAN><SPAN LANG="en-US">FileName
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">DefaultFileName
+			</SPAN><SPAN LANG="ru-RU">заменены на </SPAN><SPAN LANG="en-US">SelectedPath
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">DefaultPath,
+			</SPAN><SPAN LANG="ru-RU">как в </SPAN><SPAN LANG="en-US">HistFolderBrowserDialog.
+			</SPAN><SPAN LANG="ru-RU">Старые свойства сохранены для
+			совместимости. При установке свойств используется промежуточный
+			объект </SPAN><SPAN LANG="en-US">RelPath, </SPAN><SPAN LANG="ru-RU">а
+			не </SPAN><SPAN LANG="en-US">AbsPath.</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Убраны лишние
+			проверки из обработчика закрытия формы. </SPAN>
+			</P>
+			<P><SPAN LANG="ru-RU">- Кнопка &laquo;Проводник </SPAN><SPAN LANG="en-US">Windows</SPAN><SPAN LANG="ru-RU">&raquo;
+			переименована в &laquo;Открыть папку&raquo;</SPAN></P>
+			<P><SPAN LANG="en-US">41. EFPFolderBrowserButton.OnClick() </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v247p4"><SPAN LANG="en-US">v.247
+			</SPAN><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="ru-RU">)
+			перехватывает исключение, если поле ввода содержит некорректный
+			путь к каталогу.</SPAN></P>
+			<P><SPAN LANG="ru-RU">42. Вспомогательное свойство
+			</SPAN><SPAN LANG="en-US">EFPApp.WindowsExplorerDisplayName (<A HREF="ExtForms_11.htm#v210p7">v.210
+			</A></SPAN><A HREF="ExtForms_11.htm#v210p7"><SPAN LANG="ru-RU">п.7</SPAN></A><SPAN LANG="en-US">).
+			</SPAN><SPAN LANG="ru-RU">Используется </SPAN><SPAN LANG="en-US">EFPWindowsExplorerButton.</SPAN></P>
+			<P><SPAN LANG="en-US">4</SPAN><SPAN LANG="ru-RU">3</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">Исправлена сериализация для
+			</SPAN><SPAN LANG="en-US">TwainException </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v041p1"><SPAN LANG="en-US">v.41
+			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
+			<P><SPAN LANG="en-US">44. </SPAN><SPAN LANG="ru-RU">Изменения в
+			</SPAN><SPAN LANG="en-US">TreeViewAdv </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v092p2"><SPAN LANG="en-US">v.92
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">):</SPAN></P>
+			<P><SPAN LANG="ru-RU">- Свойство </SPAN><SPAN LANG="en-US">LoadOnDemand
+			</SPAN><SPAN LANG="ru-RU">имеет по умолчанию значение </SPAN><SPAN LANG="en-US">true,
+			</SPAN><SPAN LANG="ru-RU">а не </SPAN><SPAN LANG="en-US">false.</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Новое свойство
+			</SPAN><SPAN LANG="en-US">NodeStateIcon.UseLeafIcon</SPAN></P>
+			<P><SPAN LANG="ru-RU">4</SPAN><SPAN LANG="en-US">5</SPAN><SPAN LANG="ru-RU">.
+			Свойства </SPAN><SPAN LANG="en-US">IEFPTreeView, EFPTreeView,
+			EFPTreeViewAdv.CurrentPopupPosition (<A HREF="ExtForms_11.htm#v092p3">v.92
+			</A></SPAN><A HREF="ExtForms_11.htm#v092p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">4</SPAN><SPAN LANG="en-US">6</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">Свойство </SPAN><SPAN LANG="en-US">EFPControlBase.DefaultButton</SPAN></P>
+			<P><SPAN LANG="en-US">4</SPAN><SPAN LANG="en-US">7</SPAN><SPAN LANG="en-US">.
+			InputForm.OnLoad() </SPAN><SPAN LANG="ru-RU">учитывает свойство
+			</SPAN><SPAN LANG="en-US">TextInputDialog.DialogPosition, </SPAN><SPAN LANG="ru-RU">а
+			не всегда центрирует диалог.</SPAN></P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>

@@ -48,7 +48,7 @@ namespace FreeLibSet.Forms
 
       base.AddMainWindow(layout);
 
-      layout.MainWindow.Show();
+      EFPApp.SystemMethods.Show(layout.MainWindow, null);
 
       return layout;
     }
@@ -307,7 +307,7 @@ namespace FreeLibSet.Forms
       Rectangle area = WinFormsTools.GetMdiContainerArea(MainWindow); // доступная область. Левый верхний угол имеет координаты (0,0)
       _CascadeHelper.SetStartPosition(form, area);
 
-      form.Show();
+      EFPApp.SystemMethods.Show(form, null);
 
       if (setMaximized)
         form.FormBorderStyle = FormBorderStyle.Sizable; // восстанавливаем рамку обратно после вызова Show()

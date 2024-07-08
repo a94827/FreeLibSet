@@ -202,7 +202,7 @@ namespace FreeLibSet.Forms.Docs
     #region Методы
 
     /// <summary>
-    /// Открывает окно редактора в модальном режиме, если обработчик события <see cref="SubDocTypeUI.BeforeEdit"/> 
+    /// Открывает окно редактора в модальном режиме, если обработчик события <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.BeforeEdit"/> 
     /// не снял флаг <see cref="BeforeSubDocEditEventArgs.ShowEditor"/> и не выставил признак <see cref="BeforeSubDocEditEventArgs.Cancel"/>.
     /// </summary>
     /// <returns>True, если редактирование выполнено</returns>

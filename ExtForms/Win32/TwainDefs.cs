@@ -400,4 +400,4 @@ namespace FreeLibSet.Win32.Twain
   #endregion
 
   #endregion
-} // namespace TwainLib
+} 

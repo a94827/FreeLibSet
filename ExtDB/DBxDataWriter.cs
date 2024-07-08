@@ -990,7 +990,7 @@ namespace FreeLibSet.Data
 
     private Exception CreateColumnTypeException(int columnIndex, Type type)
     {
-      return new Exception("Столбец \"" + _ColumnDefs[columnIndex] + "\" таблицы \"" + _TableStruct.TableName + "\" имеет тип " +
+      return new ArgumentException("Столбец \"" + _ColumnDefs[columnIndex] + "\" таблицы \"" + _TableStruct.TableName + "\" имеет тип " +
         _ColumnDefs[columnIndex].ColumnType.ToString() + " и не может принимать значения типа " + type.ToString());
     }
 

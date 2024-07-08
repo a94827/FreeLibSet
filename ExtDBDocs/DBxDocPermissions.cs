@@ -276,8 +276,10 @@ namespace FreeLibSet.Data.Docs
     {
       if (docProvider == null)
         throw new ArgumentNullException("docProvider");
+#if !NET
       if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(docProvider))
         throw new ArgumentException("docProvider не может быть удаленным объектом (transparent proxy), т.к. объект UserPermissions не является сериализуемым", "docProvider");
+#endif
       if (docProvider.UserPermissions == null)
         throw new NullReferenceException("docProvider не возвращает свойство UserPermissions, вероятно, из-за того, что выполняется переход между контекстами, а объект UserPermissions не является сериализуемым. " +
           "Следует использовать DBxDocProvider, хранящий собственную копию разрешений");
@@ -320,7 +322,7 @@ namespace FreeLibSet.Data.Docs
       list.Add(item);
     }
 
-    #endregion
+#endregion
 
     #region Общие свойства
 

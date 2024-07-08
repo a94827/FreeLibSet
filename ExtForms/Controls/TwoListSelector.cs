@@ -217,7 +217,7 @@ namespace FreeLibSet.Forms
       _SelectedGridViewProvider.DisableOrdering();
       _SelectedGridViewProvider.Control.RowHeadersVisible = false;
       _SelectedGridViewProvider.Control.ColumnHeadersVisible = false;
-      _SelectedGridViewProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(_SelectedGridViewProvider_GetCellAttributes);
+      _SelectedGridViewProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(SelectedGridViewProvider_GetCellAttributes);
       _SelectedGridViewProvider.ReadOnly = true;
       _SelectedGridViewProvider.CanInsert = false;
       _SelectedGridViewProvider.CanDelete = false;
@@ -263,10 +263,10 @@ namespace FreeLibSet.Forms
 
     #region Провайдеры дочерних элементов
 
-    private EFPDataGridView _AvailableGridViewProvider;
-    private EFPButton _AddButtonProvider;
-    private EFPButton _RemoveButtonProvider;
-    private EFPDataGridView _SelectedGridViewProvider;
+    private readonly EFPDataGridView _AvailableGridViewProvider;
+    private readonly EFPButton _AddButtonProvider;
+    private readonly EFPButton _RemoveButtonProvider;
+    private readonly EFPDataGridView _SelectedGridViewProvider;
 
     #endregion
 
@@ -542,7 +542,7 @@ namespace FreeLibSet.Forms
       SelectedItems = SelectedItems;
     }
 
-    void _SelectedGridViewProvider_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void SelectedGridViewProvider_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
       if (args.RowIndex < 0 || args.RowIndex >= _SelectedGridViewProvider.Control.Rows.Count)
         return;

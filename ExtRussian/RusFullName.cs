@@ -73,8 +73,8 @@ namespace FreeLibSet.Russian
   public enum RusFullNameValidateOptions
   {
     /// <summary>
-    /// Режим проверки по умолчанию/
-    /// Имя и отчество должны быть заданы полностью, а не инициалами
+    /// Режим проверки по умолчанию.
+    /// Имя и отчество должны быть заданы полностью, а не инициалами.
     /// </summary>
     Default = 0,
 
@@ -102,6 +102,7 @@ namespace FreeLibSet.Russian
   /// Поддерживаются компоненты с дефисом, а также с окончаниями "ОГЛЫ", "КЫЗЫ" через пробел.
   /// Позволяет определить пол по отчеству (и по имени, если есть окончание "ОГЛЫ", "КЫЗЫ").
   /// Умеет склонять Ф.И.О. по падежам.
+  /// Структура однократной записи.
   /// </summary>
   [Serializable]
   public struct RusFullName : IEquatable<RusFullName>
@@ -110,7 +111,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Инициализирует структуры заданными Ф.И.О.
-    /// Компоненты не проверяются и не модифицируются
+    /// Компоненты не проверяются и не модифицируются.
     /// </summary>
     /// <param name="surname">Фамилия</param>
     /// <param name="name">Имя</param>
@@ -197,7 +198,7 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Строка в виде "Иванов И.И."
-    /// Фамилия отделяется от иницалов неразрывным пробелом
+    /// Фамилия отделяется от иницалов неразрывным пробелом.
     /// </summary>
     public string NameWithInitials
     {
@@ -227,7 +228,8 @@ namespace FreeLibSet.Russian
     }
 
     /// <summary>
-    /// Строка в обратном порядке "И.И. Иванов"
+    /// Строка в обратном порядке "И.И. Иванов".
+    /// Инициалы от фамилии отделяются неразрывным пробелом.
     /// </summary>
     public string InvNameWithInitials
     {
@@ -255,7 +257,7 @@ namespace FreeLibSet.Russian
     }
 
     /// <summary>
-    /// Возвращает свойство FullName или NameWithInitials
+    /// Возвращает свойство <see cref="FullName"/> или <see cref="NameWithInitials"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -350,10 +352,11 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Извлечение компонентов Ф.И.О. из строки в максимально возможной степени.
-    /// Если <paramref name="s"/> -пустая строка, возвращается RusFullName.Empty.
+    /// Если <paramref name="s"/> - пустая строка, возвращается <see cref="RusFullName.Empty"/>.
     /// </summary>
     /// <param name="s">Строка для преобразования</param>
-    /// <returns>Заполненная структура RusFullName</returns>
+    /// <returns>Заполненная структура <see cref="RusFullName"/></returns>
+    /// <exception cref="InvalidCastException">Если не удалось распознать Ф.И.О.</exception>
     public static RusFullName Parse(string s)
     {
       return Parse(s, true);
@@ -361,11 +364,12 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Извлечение компонентов Ф.И.О. из строки.
-    /// Если <paramref name="s"/> -пустая строка, возвращается RusFullName.Empty.
+    /// Если <paramref name="s"/> -пустая строка, возвращается <see cref="RusFullName.Empty"/>.
     /// </summary>
     /// <param name="s">Строка для преобразования</param>
     /// <param name="autoCorrect">Если true, то будет выполнена попытка автокоррекции строки</param>
-    /// <returns>Заполненная структура RusFullName</returns>
+    /// <returns>Заполненная структура <see cref="RusFullName"/></returns>
+    /// <exception cref="InvalidCastException">Если не удалось распознать Ф.И.О.</exception>
     public static RusFullName Parse(string s, bool autoCorrect)
     {
       RusFullName res;
@@ -378,13 +382,13 @@ namespace FreeLibSet.Russian
 
     /// <summary>
     /// Выполняет попытку извлечения компонентов Ф.И.О. из строки.
-    /// Если <paramref name="s"/> -пустая строка, возвращается RusFullName.Empty и значение true.
+    /// Если <paramref name="s"/> -пустая строка, возвращается <paramref name="res"/>=<see cref="RusFullName.Empty"/> и значение true.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="res">Сюда записывается преобразованное значение</param>
     /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
     /// <param name="autoCorrect">Если true, то будет выполнена попытка автокоррекции строки</param>
-    /// <returns>true, если преобразование успешно выполнена</returns>
+    /// <returns>true, если преобразование успешно выполнено</returns>
     public static bool TryParse(string s, out RusFullName res, out string errorText, bool autoCorrect)
     {
       errorText = null;
@@ -397,11 +401,19 @@ namespace FreeLibSet.Russian
       if (autoCorrect)
         s = CorrectText(s);
 
-      string surname = GetNextPart(ref s);
-      string name = GetNextPart(ref s);
-      string patronymic = GetNextPart(ref s);
+      string part1 = GetNextPart(ref s);
+      string part2 = GetNextPart(ref s);
+      string part3 = GetNextPart(ref s);
 
-      res = new RusFullName(surname, name, patronymic);
+      // 10.06.2024
+      // Если строка задана в формате "И И Иванов" или "И Иванов", требуется переставить части местами
+
+      if (part1.Length == 1 && part2.Length == 1 && part3.Length > 1) // "И И Иванов"
+        res = new RusFullName(part3, part1, part2);
+      else if (part1.Length == 1 && part2.Length > 1 && part3.Length == 0) // "И Иванов"
+        res = new RusFullName(part2, part1, String.Empty);
+      else
+        res = new RusFullName(part1, part2, part3); // "Иванов Иван Иванович", "Иванов Иван", "Иванов И И" или "Иванов И"
       if (autoCorrect)
         res = res.Normalized;
 
@@ -467,6 +479,34 @@ namespace FreeLibSet.Russian
         s = s.Substring(p1 + 1);
         return s1;
       }
+    }
+
+    /// <summary>
+    /// Выполняет попытку извлечения компонентов Ф.И.О. из строки.
+    /// Выполняется попытка автокоррекции строки.
+    /// Если <paramref name="s"/> -пустая строка, возвращается <paramref name="res"/>=<see cref="RusFullName.Empty"/> и значение true.
+    /// </summary>
+    /// <param name="s">Преобразуемая строка</param>
+    /// <param name="res">Сюда записывается преобразованное значение</param>
+    /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
+    /// <returns>true, если преобразование успешно выполнено</returns>
+    public static bool TryParse(string s, out RusFullName res, out string errorText)
+    {
+      return TryParse(s, out res, out errorText, true);
+    }
+
+    /// <summary>
+    /// Выполняет попытку извлечения компонентов Ф.И.О. из строки.
+    /// Выполняется попытка автокоррекции строки.
+    /// Если <paramref name="s"/> -пустая строка, возвращается <paramref name="res"/>=<see cref="RusFullName.Empty"/> и значение true.
+    /// </summary>
+    /// <param name="s">Преобразуемая строка</param>
+    /// <param name="res">Сюда записывается преобразованное значение</param>
+    /// <returns>true, если преобразование успешно выполнено</returns>
+    public static bool TryParse(string s, out RusFullName res)
+    {
+      string errorText;
+      return TryParse(s, out res, out errorText, true);
     }
 
     #endregion
@@ -539,6 +579,8 @@ namespace FreeLibSet.Russian
     /// <returns>Исправленная строка</returns>
     private static string CorrectText(string s)
     {
+      // Заменяем неразрывные пробелы (10.06.2024)
+      s = s.Replace(DataTools.NonBreakSpaceChar, ' ');
       // Убираем точки
       s = s.Replace(".", " ");
       // Убираем пробелы вокруг дефиса
@@ -687,10 +729,10 @@ namespace FreeLibSet.Russian
       if (noCasesSurname)
         surnames.Fill(Surname);
       else
-        surnames.GetCases(Surname, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Which);
+        surnames.Fill(Surname, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Which);
 
-      names.GetCases(Name, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Name);
-      patronymics.GetCases(Patronymic, gender, RusFormArrayGetCasesOptions.NoPlural);
+      names.Fill(Name, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Name);
+      patronymics.Fill(Patronymic, gender, RusFormArrayGetCasesOptions.NoPlural);
 
       string[] surnameItems = surnames.Items;
       string[] nameItems = names.Items;
@@ -934,6 +976,18 @@ namespace FreeLibSet.Russian
       return true;
     }
 
+    /// <summary>
+    /// Выполнить проверку фамилии, имени и отчества.
+    /// Требуется, чтобы фамилия и имя были заданы. Пустой объект (<see cref="IsEmpty"/>=true) считается неправильным.
+    /// </summary>
+    /// <param name="options">Опции проверки</param>
+    /// <returns>true, если все компоненты корректны</returns>
+    public bool IsValid(RusFullNameValidateOptions options)
+    {
+      string errorText;
+      return IsValid(options, out errorText);
+    }
+
     private bool IsValidComplex(RusFullNameValidateOptions options, out string errorText)
     {
       if ((options & RusFullNameValidateOptions.InitialsAllowed) == RusFullNameValidateOptions.InitialsAllowed &&
@@ -979,6 +1033,20 @@ namespace FreeLibSet.Russian
       if (!rfn.IsValidComplex(options, out errorText))
         return false;
       return true;
+    }
+
+    /// <summary>
+    /// Проверка корректности строки, содержащей фамилию, имени и отчество, или содержащей фамилию с инициалами
+    /// (в зависимости от параметра <paramref name="options"/>).
+    /// Требуется, чтобы фамилия и имя были заданы. Пустая строка считается неправильной.
+    /// </summary>
+    /// <param name="s">Проверяемая строка</param>
+    /// <param name="options">Режимы проверки</param>
+    /// <returns>True, если проверка выполнена успешно</returns>
+    public static bool IsValid(string s, RusFullNameValidateOptions options)
+    {
+      string errorText;
+      return IsValid(s, options, out errorText);
     }
 
     #endregion
@@ -1081,6 +1149,18 @@ namespace FreeLibSet.Russian
       return DoIsValidSurname(surname, options, out errorText, 0);
     }
 
+    /// <summary>
+    /// Выполнить проверку фамилии
+    /// </summary>
+    /// <param name="surname">Проверяемое значение</param>
+    /// <param name="options">Опции проверки</param>
+    /// <returns>true, если значение корректно</returns>
+    public static bool IsValidSurname(string surname, RusFullNameValidateOptions options)
+    {
+      string errorText;
+      return IsValidSurname(surname, options, out errorText);
+    }
+
     private static bool DoIsValidSurname(string surname, RusFullNameValidateOptions options, out string errorText, int charOff)
     {
       if (String.IsNullOrEmpty(surname))
@@ -1104,6 +1184,18 @@ namespace FreeLibSet.Russian
       if (!IsValidGeneral(name, out errorText))
         return false;
       return DoIsValidName(name, options, out errorText, 0);
+    }
+
+    /// <summary>
+    /// Выполнить проверку имени
+    /// </summary>
+    /// <param name="name">Проверяемое значение</param>
+    /// <param name="options">Опции проверки</param>
+    /// <returns>true, если значение корректно</returns>
+    public static bool IsValidName(string name, RusFullNameValidateOptions options)
+    {
+      string errorText;
+      return IsValidName(name, options, out errorText);
     }
 
     private static bool DoIsValidName(string name, RusFullNameValidateOptions options, out string errorText, int charOff)
@@ -1152,6 +1244,20 @@ namespace FreeLibSet.Russian
         return false;
       return DoIsValidPatronymic(patronymic, options, out errorText, 0);
     }
+
+    /// <summary>
+    /// Выполнить проверку отчества.
+    /// Пустое отчество считается корректным значением
+    /// </summary>
+    /// <param name="patronymic">Проверяемое значение</param>
+    /// <param name="options">Опции проверки</param>
+    /// <returns>true, если значение корректно</returns>
+    public static bool IsValidPatronymic(string patronymic, RusFullNameValidateOptions options)
+    {
+      string errorText;
+      return IsValidPatronymic(patronymic, options, out errorText);
+    }
+
     private static bool DoIsValidPatronymic(string patronymic, RusFullNameValidateOptions options, out string errorText, int charOff)
     {
       if (String.IsNullOrEmpty(patronymic))

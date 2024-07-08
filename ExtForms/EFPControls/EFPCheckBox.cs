@@ -12,7 +12,7 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Провайдер для <see cref="CheckBox"/>.
-  /// Поддерживаются переключатели на два положения и на три положения (при CanBeEmpty=true)
+  /// Поддерживаются переключатели на два положения и на три положения (при <see cref="CanBeEmpty"/>=true)
   /// </summary>
   public class EFPCheckBox : EFPControl<CheckBox>
   {

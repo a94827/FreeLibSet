@@ -286,7 +286,7 @@ namespace FreeLibSet.Forms
         _SavedNValue = NValue;
 
       Validate();
-      DoSyncValueChanged();
+      OnSyncValueChanged();
     }
 
     #endregion
@@ -665,7 +665,8 @@ namespace FreeLibSet.Forms
         if (value == null)
           NValue = null;
         else
-          NValue = (T)value; // TODO: Преобразования между разными типами
+          //NValue = (T)value; 
+          NValue = (T)(Convert.ChangeType(value, typeof(T)));
       }
     }
 

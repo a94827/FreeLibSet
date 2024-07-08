@@ -238,7 +238,7 @@ namespace FreeLibSet.Forms
         _SavedSelectedIndex = SelectedIndex;
 
       Validate();
-      DoSyncValueChanged();
+      OnSyncValueChanged();
     }
 
     /// <summary>

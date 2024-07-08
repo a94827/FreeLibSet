@@ -2236,7 +2236,7 @@ namespace FreeLibSet.Forms.Docs
     public override bool GetDocSelSupported { get { return SubDocTypeUI.HasGetDocSel; } }
 
     /// <summary>
-    /// Вызывает <see cref="SubDocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> для всех выбранных поддокументов.
+    /// Вызывает <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> для всех выбранных поддокументов.
     /// </summary>
     /// <param name="reason">Причина создания выборки</param>
     /// <returns>Выборка документов</returns>

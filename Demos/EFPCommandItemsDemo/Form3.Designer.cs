@@ -37,14 +37,14 @@
       this.edText1.Location = new System.Drawing.Point(0, 0);
       this.edText1.Multiline = true;
       this.edText1.Name = "edText1";
-      this.edText1.Size = new System.Drawing.Size(313, 165);
+      this.edText1.Size = new System.Drawing.Size(315, 176);
       this.edText1.TabIndex = 0;
       // 
       // Form3
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(313, 165);
+      this.ClientSize = new System.Drawing.Size(315, 176);
       this.Controls.Add(this.edText1);
       this.Name = "Form3";
       this.Text = "Form3";

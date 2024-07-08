@@ -3,11 +3,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Russian.PhoneticAlgorithms
 {
   /// <summary>
-  /// Daitch–Mokotoff Soundex
+  /// Daitch–Mokotoff Soundex.
+  /// Используйте метод <see cref="Calculate(string)"/> для получения кодов.
   /// </summary>
   public static class DMSoundex
   {
@@ -258,7 +260,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         for (int j = 0; j < key.Length; j++)
         {
           if (!_ValidChars.ContainsKey(key[j]))
-            throw new Exception("Ключ \"" + key + "\" содержит недопустимый символ \"" + key[j] + "\"");
+            throw new BugException("Ключ \"" + key + "\" содержит недопустимый символ \"" + key[j] + "\"");
         }
 #endif
 
@@ -296,16 +298,16 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
           aValues = xValue.Split('/');
 #if DEBUG
           if (aValues.Length == 0)
-            throw new Exception("Нет кодов для ключа \"" + key + "\"");
+            throw new BugException("Нет кодов для ключа \"" + key + "\"");
           for (int i = 0; i < aValues.Length; i++)
           {
             if (String.IsNullOrEmpty(aValues[i]))
-              throw new Exception("Пустое значение при разбиении \"" + xValue + "\"");
+              throw new BugException("Пустое значение при разбиении \"" + xValue + "\"");
             for (int j = 0; j < aValues[i].Length; j++)
             {
               char ch = aValues[i][j];
               if (ch < '0' || ch > '9')
-                throw new Exception("Недопустимый символ \"" + ch + "\" в значении \"" + xValue + "\"");
+                throw new BugException("Недопустимый символ \"" + ch + "\" в значении \"" + xValue + "\"");
             }
           }
 #endif
@@ -329,7 +331,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         for (int i = 0; i < s.Length; i++)
         {
           if (!_ValidChars.ContainsKey(s[i]))
-            throw new Exception("Последовательность \"" + s + "\" содержит недопустимый символ \"" + s[i] + "\"");
+            throw new BugException("Последовательность \"" + s + "\" содержит недопустимый символ \"" + s[i] + "\"");
         }
       }
 
@@ -341,7 +343,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
       {
         string s = new string(pair.Key, 1);
         if (!dict.ContainsKey(s))
-          throw new Exception("Словарь не содержит одиночного символа \"" + s + "\" (0x" + ((int)pair.Key).ToString("x") + ")");
+          throw new BugException("Словарь не содержит одиночного символа \"" + s + "\" (0x" + ((int)pair.Key).ToString("x") + ")");
       }
 
       #endregion
@@ -446,7 +448,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     /// Вычисляет функцию Daitch–Mokotoff Soundex.
     /// Возвращает список 6-символьных кодов, представляемых в текстовом формате.
     /// Обычно возвращается единственный код, но некоторые комбинации символов могут
-    /// порождать несколько вариантов
+    /// порождать несколько вариантов.
     /// </summary>
     /// <param name="s">Преобразуемая строка </param>
     /// <returns>Массив кодов DM-Soundex</returns>
@@ -467,7 +469,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     /// Возвращает список 6-символьных кодов, представляемых в текстовом формате.
     /// Обычно возвращается единственный код, но некоторые комбинации символов могут
     /// порождать несколько вариантов.
-    /// Версия, выдающая отладочную информацию
+    /// Версия, выдающая отладочную информацию.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="debugInfo">Сюда помещается отладочная информация</param>
@@ -489,9 +491,9 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
     /// <summary>
     /// Вычисляет функцию Daitch–Mokotoff Soundex.
-    /// Возвращает список числовых кодов в диапазоне от 0 до 999999
+    /// Возвращает список числовых кодов в диапазоне от 0 до 999999.
     /// Обычно возвращается единственный код, но некоторые комбинации символов могут
-    /// порождать несколько вариантов
+    /// порождать несколько вариантов.
     /// </summary>
     /// <param name="s">Преобразуемая строка </param>
     /// <returns>Массив кодов DM-Soundex</returns>
@@ -506,7 +508,6 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         a2[i] = a[i].Value;
       return a2;
     }
-
 
     #endregion
 
@@ -564,9 +565,9 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
 #if DEBUG
         if (codes == null)
-          throw new Exception("Внутрення ошибка. Не найдена последовательность");
+          throw new BugException("Внутренняя ошибка. Не найдена последовательность");
         if (codes.Length == 0)
-          throw new Exception("Внутрення ошибка. Найдены пустые коды для последовательности \"" + seq + "\"");
+          throw new BugException("Внутренняя ошибка. Найдены пустые коды для последовательности \"" + seq + "\"");
 #endif
 
         if (debugList != null)
@@ -683,7 +684,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
   /// <summary>
   /// Отладочная информация о разбиении строки на коды DM-Soundex.
-  /// Для строки может быть получен массив таких структур
+  /// Для строки может быть получен массив таких структур.
   /// </summary>
   [Serializable]
   public struct DMSoundexCodingPart
@@ -695,7 +696,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     /// </summary>
     /// <param name="sequence">Последовательность символов в исходной строке</param>
     /// <param name="codes">Примененные коды</param>
-    public DMSoundexCodingPart(string sequence, string[] codes)
+    internal DMSoundexCodingPart(string sequence, string[] codes)
     {
       _Sequence = sequence;
       _Codes = codes;
@@ -709,13 +710,13 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     /// Последовательность символов в исходной строке
     /// </summary>
     public string Sequence { get { return _Sequence; } }
-    private string _Sequence;
+    private readonly string _Sequence;
 
     /// <summary>
     /// Примененные коды.
     /// </summary>
     public string[] Codes { get { return _Codes; } }
-    private string[] _Codes;
+    private readonly string[] _Codes;
 
     #endregion
 

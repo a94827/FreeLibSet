@@ -9,7 +9,7 @@ using System.Security;
 using System.IO;
 using FreeLibSet.Core;
 
-// Работа с Реестром Windows с управлением способром виртулиазации для 64-битных версий Windows
+// Работа с Реестром Windows с управлением способом виртулиазации для 64-битных версий Windows
 // В Net Framework 4 это реализовано классом RegistryKey, но в Net Framework 2 такой возможности нет
 
 namespace FreeLibSet.Win32
@@ -183,7 +183,7 @@ namespace FreeLibSet.Win32
     #region Свойства
 
     /// <summary>
-    /// Полный путь к узлу реестра, напаример "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows"
+    /// Полный путь к узлу реестра, например "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows"
     /// </summary>
     public string Name { get { return _Name; } }
     private string _Name;
@@ -203,7 +203,8 @@ namespace FreeLibSet.Win32
     #region Доступ к дочерним узлам
 
     /// <summary>
-    /// Возвращает список имен дочерних узлов
+    /// Возвращает список имен дочерних узлов.
+    /// Список не отсортирован.
     /// </summary>
     /// <returns>Список имен</returns>
     public string[] GetSubKeyNames()
@@ -511,7 +512,8 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Возвращает список значений
+    /// Возвращает список значений.
+    /// Список не отсортирован.
     /// </summary>
     /// <returns>Массив имен</returns>
     public string[] GetValueNames()
@@ -545,7 +547,7 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Возвращает значение
     /// </summary>
-    /// <param name="name">Имя</param>
+    /// <param name="name">Имя. Может быть пустой строкой для получения значения "(По умолчанию)"</param>
     /// <returns>Значение</returns>
     public object GetValue(string name)
     {
@@ -553,12 +555,27 @@ namespace FreeLibSet.Win32
     }
 
     /// <summary>
-    /// Acctually read a registry value. Requires knowledge of the
-    /// value's type and size.
+    /// Возвращает значение
     /// </summary>
+    /// <param name="name">Имя. Может быть пустой строкой для получения значения "(По умолчанию)"</param>
+    /// <param name="defaultValue">Если узел дерева не содержит поля <paramref name="name"/>, то будет возвращено это значение</param>
+    /// <returns>Значение</returns>
     public object GetValue(string name, object defaultValue)
     {
-      Microsoft.Win32.RegistryValueKind type = 0;
+      Microsoft.Win32.RegistryValueKind type;
+      return GetValue(name,defaultValue, out type);
+    }
+
+    /// <summary>
+    /// Возвращает значение
+    /// </summary>
+    /// <param name="name">Имя. Может быть пустой строкой для получения значения "(По умолчанию)"</param>
+    /// <param name="defaultValue">Если узел дерева не содержит поля <paramref name="name"/>, то будет возвращено это значение</param>
+    /// <param name="type">Сюда записывается тип хранимого значения</param>
+    /// <returns>Значение</returns>
+    public object GetValue(string name, object defaultValue, out Microsoft.Win32.RegistryValueKind type)
+    {
+      type = Microsoft.Win32.RegistryValueKind.Unknown;
       int size = 0;
       object obj = null;
       int result = NativeMethods.RegQueryValueEx(_Handle, name, IntPtr.Zero, ref type, IntPtr.Zero, ref size);

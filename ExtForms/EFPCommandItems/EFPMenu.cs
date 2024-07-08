@@ -10,7 +10,8 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Базовый класс для главного меню программы и контекстных меню
+  /// Базовый класс для главного меню программы <see cref="EFPMainMenu"/>, контекстных меню <see cref="EFPContextMenu"/>
+  /// и выпадающего меню панели инструментов <see cref="EFPDropDownMenu"/>.
   /// </summary>
   public abstract class EFPMenuBase : EFPUIObjs
   {
@@ -44,9 +45,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает ToolStrip.Dispose()
+    /// Вызывает <see cref="ToolStrip"/>.Dispose()
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose(), а е не деструктор</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -69,7 +70,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Имя для меню. Дублирует свойство ToolsTrip.Name
+    /// Имя для меню. Дублирует свойство <see cref="ToolStrip"/>.Name
     /// </summary>
     public string Name
     {
@@ -85,9 +86,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если true, то реально команды в объект меню будут добавлены при выборе
-    /// меню, а не при вызове команды Add
+    /// меню, а не при вызове команды Add()
     /// </summary>
-    private bool _DelayedAdd;
+    private readonly bool _DelayedAdd;
 
     private List<EFPCommandItems> _DelayedItems;
 
@@ -97,7 +98,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет команду в меню.
-    /// Создает ToolStripMenuItem.
+    /// Создает <see cref="ToolStripMenuItem"/>.
     /// Повторный вызов метода для той же самой команды игнорируется.
     /// Эта версия используется при создании выпадающего меню для кнопки на панели инструментов.
     /// </summary>
@@ -134,7 +135,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет команду в меню.
-    /// Создает ToolStripMenuItem.
+    /// Создает <see cref="ToolStripMenuItem"/>.
     /// Если родительская команда <paramref name="item"/>.Parent еще не была добавлена,
     /// то она добавляется в первую очередь.
     /// Повторный вызов метода для той же самой команды игнорируется.
@@ -152,9 +153,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет из списка все команды, которые имеют установленное свойство EFPCommandItem.MenuUsage=true.
-    /// Если в конструкторе был задан параметр DelayedAdd=true, то команды добавляются во внутренний список,
-    /// а создание объектов ToolStripMenuItem откладывается до реального открытия меню пользователем.
+    /// Добавляет из списка все команды, которые имеют установленное свойство <see cref="EFPCommandItem.MenuUsage"/>=true.
+    /// Если в конструкторе был задан параметр delayedAdd=true, то команды добавляются во внутренний список,
+    /// а создание объектов <see cref="ToolStripMenuItem"/> откладывается до реального открытия меню пользователем.
     /// </summary>
     /// <param name="items">Заполненный список команд</param>
     public void Add(EFPCommandItems items)
@@ -282,18 +283,18 @@ namespace FreeLibSet.Forms
     #region Внутренняя реализация
 
     /// <summary>
-    /// Объект ToolStrip.
-    /// Задается в конструкторе
+    /// Объект <see cref="ToolStrip"/>.
+    /// Задается в конструкторе.
     /// </summary>
     protected ToolStrip Menu { get { return _Menu; } }
-    private ToolStrip _Menu;
+    private /*readonly*/ ToolStrip _Menu;
 
     /// <summary>
     /// Словарь команд меню:
-    /// Ключ - объект EFPCommandItem.CaregoryAndName, значение - управляющий элемент команды меню
+    /// Ключ - объект <see cref="EFPCommandItem.CategoryAndName"/>, значение - управляющий элемент команды меню.
     /// </summary>
     protected IDictionary<string, ToolStripMenuItem> ItemDict { get { return _ItemDict; } }
-    private Dictionary<string, ToolStripMenuItem> _ItemDict;
+    private readonly Dictionary<string, ToolStripMenuItem> _ItemDict;
 
 
     /// <summary>
@@ -388,9 +389,9 @@ namespace FreeLibSet.Forms
     //}
 
     /// <summary>
-    /// Установка видимости разделителей в меню и всех подменю
+    /// Установка видимости разделителей в меню и всех подменю.
     /// Этот метод должен быть вызван после обновления команд меню, если оно выполняется нестандартым
-    /// способом, а прямым вызовом методов Add() или Insert()
+    /// способом, а прямым вызовом методов <see cref="Add(EFPCommandItem)"/> или <see cref="Insert(EFPCommandItem, EFPCommandItem)"/>
     /// </summary>
     public void InitSeparatorVisiblity()
     {
@@ -614,7 +615,7 @@ namespace FreeLibSet.Forms
     #region Доступ к командам меню
 
     /// <summary>
-    /// Структура для реализации свойства EFPMenuBase.ToolStripMenuItems 
+    /// Структура для реализации свойства <see cref="EFPMenuBase.ToolStripMenuItems"/> 
     /// </summary>
     public struct ToolStripMenuItemList
     {
@@ -632,8 +633,8 @@ namespace FreeLibSet.Forms
       private EFPMenuBase _Owner;
 
       /// <summary>
-      /// Возвращает ToolStripMenuItem для заданной команды.
-      /// Если для такой команды нет позиции меню, возвращает null
+      /// Возвращает <see cref="ToolStripMenuItem"/> для заданной команды.
+      /// Если для такой команды нет позиции меню, возвращает null.
       /// </summary>
       /// <param name="commandItem">Команда</param>
       /// <returns>Позиция меню или null</returns>
@@ -650,8 +651,8 @@ namespace FreeLibSet.Forms
       }
 
       /// <summary>
-      /// Возвращает ToolStripMenuItem для заданной команды.
-      /// Если для такой команды нет позиции меню, возвращает null
+      /// Возвращает <see cref="ToolStripMenuItem"/> для заданной команды.
+      /// Если для такой команды нет позиции меню, возвращает null.
       /// </summary>
       /// <param name="category">Категория</param>
       /// <param name="name">Код команды</param>
@@ -718,7 +719,7 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     /// <summary>
-    /// Создает меню с объектом MenuStrip.
+    /// Создает меню с объектом <see cref="MenuStrip"/>.
     /// </summary>
     public EFPMainMenu()
       : base(new MenuStrip(), false)
@@ -735,8 +736,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Присоединение команд обработки списка окон. Должна вызываться
-    /// после того, как добавлены все команды меню с помощью Add(), но
-    /// перед вызовом Attach()
+    /// после того, как добавлены все команды меню с помощью <see cref="EFPMenuBase.Add(EFPCommandItem)"/>, но
+    /// перед вызовом <see cref="Attach()"/>.
     /// </summary>
     /// <param name="windowCommandItem">Команда "Окно"</param>
     public void InitWindowMenu(EFPCommandItem windowCommandItem)
@@ -761,7 +762,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Этот метод является устаревшим.
     /// В новых программах следует использовать свойство EFPApp.Interface, 
-    /// где меню, панели инструментов и статусная строка присоединяется автоматически
+    /// где меню, панели инструментов и статусная строка присоединяется автоматически.
     /// </summary>
     public void Attach()
     {
@@ -865,7 +866,7 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     /// <summary>
-    /// Создает меню, используя элемент ContextMenuStrip.
+    /// Создает меню, используя элемент <see cref="ContextMenuStrip"/>.
     /// </summary>
     public EFPContextMenu()
       : base(new ContextMenuStrip(), true)
@@ -973,7 +974,7 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     /// <summary>
-    /// Создает объект и ToolStripDropDownMenu
+    /// Создает объект и <see cref="ToolStripDropDownMenu"/>
     /// </summary>
     public EFPDropDownMenu()
       : base(new ToolStripDropDownMenu(), true)

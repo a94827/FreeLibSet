@@ -143,7 +143,7 @@ namespace FreeLibSet.Core
         if (asm != null)
           return asm;
 
-        string AppName = ApplicationName;
+        string appName = ApplicationName;
         //if (String.IsNullOrEmpty(ApplicationName))
         //  return null;
 
@@ -164,7 +164,7 @@ namespace FreeLibSet.Core
           if (p >= 0)
             name = name.Substring(0, p);
           name = name.Trim();
-          if (String.Equals(name, AppName, StringComparison.OrdinalIgnoreCase))
+          if (String.Equals(name, appName, StringComparison.OrdinalIgnoreCase))
             return asms[i];
         }
 

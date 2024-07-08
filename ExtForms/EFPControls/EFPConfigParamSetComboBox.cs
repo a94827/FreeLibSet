@@ -15,8 +15,8 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Интерфейс, реализующий чтение и запись значений полей формы в данные конфигурации.
-  /// Используется провайдером EFPConfigParamSetComboBox.
-  /// Интерфейс, как правило, реализуется непосредственно формой, в которой расположен ParamSetComboBox.
+  /// Используется провайдером <see cref="EFPConfigParamSetComboBox"/>.
+  /// Интерфейс, как правило, реализуется непосредственно формой, в которой расположен элемент <see cref="ParamSetComboBox"/>.
   /// </summary>
   public interface IEFPConfigParamSetHandler
   {
@@ -35,13 +35,13 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Интерфейс, реализующий получение поясняющего текста AuxText для выпадающего списка "Готовые наборы".
-  /// Используется провайдером EFPConfigParamSetComboBox.
-  /// Интерфейс, как правило, реализуется непосредственно формой, в которой расположен ParamSetComboBox.
+  /// Используется провайдером <see cref="EFPConfigParamSetComboBox"/>.
+  /// Интерфейс, как правило, реализуется непосредственно формой, в которой расположен элемент <see cref="ParamSetComboBox"/>.
   /// </summary>
   public interface IEFPConfigParamSetAuxTextHandler
   {
     /// <summary>
-    /// Этот метод вызывается однократно перед последовательностью вызовов GetAuxText()
+    /// Этот метод вызывается однократно перед последовательностью вызовов <see cref="GetAuxText(CfgPart)"/>
     /// </summary>
     void BeginGetAuxText();
 
@@ -52,7 +52,7 @@ namespace FreeLibSet.Forms
     string GetAuxText(CfgPart cfg);
 
     /// <summary>
-    /// Этот метод вызывается однократно после последовательности вызовов GetAuxText()
+    /// Этот метод вызывается однократно после последовательности вызовов <see cref="GetAuxText(CfgPart)"/>
     /// </summary>
     void EndGetAuxText();
   }
@@ -70,7 +70,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="config">Набор параметров для значения "по умолчанию"</param>
     /// <param name="displayName">Отображаемое имя (без скобок)</param>
-    /// <param name="imageKey">Значок в списке EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя значка в списке <see cref="EFPApp.MainImages"/></param>
     public EFPConfigParamDefaultSet(TempCfg config, string displayName, string imageKey)
     {
       if (config == null)
@@ -147,14 +147,15 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер управляющего элемента "Набор параметров", состоящего из
+  /// Провайдер управляющего элемента "Набор параметров" (<see cref="ParamSetComboBox"/>), состоящего из
   /// комбоблока, кнопок "+" и "-".
   /// Предназначен для хранения "истории" введенных значений в форме, а
   /// также пользовательских "именных" наборов.
-  /// Для хранения используется система, реализующая IEFPConfigManager.
+  /// Для хранения используется система, реализующая <see cref="IEFPConfigManager"/>.
   /// Вызывающий код должен предоставить интерфейс, выполняющий чтение и запись значений в поля формы.
-  /// Должно быть обязательно установлено свойство ConfigSectionName (и, при необходимости, ParamsCategory и HistoryCategory). 
-  /// Используйте список DefaultSets для задания набора(ов) по умолчанию.
+  /// Должно быть обязательно установлено свойство <see cref="EFPControlBase.ConfigSectionName"/> 
+  /// (и, при необходимости, <see cref="ParamsCategory"/> и <see cref="HistoryCategory"/>). 
+  /// Используйте список <see cref="DefaultSets"/> для задания набора(ов) по умолчанию.
   /// </summary>
   public class EFPConfigParamSetComboBox : EFPControl<ParamSetComboBox>
   {
@@ -228,7 +229,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя категории секций конфигурации, используемых для хранения текущих значений.
-    /// По умолчанию равно EFPConfigCategories.UserParams
+    /// По умолчанию равно <see cref="EFPConfigCategories.UserParams"/>.
     /// Свойство должно быть установлено до вывода формы на экран.
     /// </summary>
     public string ParamsCategory
@@ -247,7 +248,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя категории секций конфигурации, используемых для хранения истории.
-    /// По умолчанию равно EFPConfigCategories.UserHistory
+    /// По умолчанию равно <see cref="EFPConfigCategories.UserHistory"/>
     /// Свойство должно быть установлено до вывода формы на экран.
     /// </summary>
     public string HistoryCategory
@@ -268,7 +269,7 @@ namespace FreeLibSet.Forms
     #region Стандартные наборы
 
     /// <summary>
-    /// Реализация свойства DefaultSets
+    /// Реализация свойства <see cref="DefaultSets"/>
     /// </summary>
     public sealed class DefaultSetCollection : ListWithReadOnly<EFPConfigParamDefaultSet>
     {
@@ -336,7 +337,7 @@ namespace FreeLibSet.Forms
     /// Список может заполняться только до вывода формы на экран
     /// </summary>
     public DefaultSetCollection DefaultSets { get { return _DefaultSets; } }
-    private DefaultSetCollection _DefaultSets;
+    private readonly DefaultSetCollection _DefaultSets;
 
     #endregion
 
@@ -347,7 +348,7 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе. Не может быть null
     /// </summary>
     public IEFPConfigParamSetHandler FormHandler { get { return _FormHandler; } }
-    private IEFPConfigParamSetHandler _FormHandler;
+    private readonly IEFPConfigParamSetHandler _FormHandler;
 
     private void ConfigToControls(CfgPart cfg)
     {

@@ -187,6 +187,21 @@ namespace FreeLibSet.Forms
         }
       }
 
+      /// <summary>
+      /// Доступ к дочернему провайдеру по индексу
+      /// </summary>
+      /// <param name="index">Индекс</param>
+      /// <returns>Провайдер</returns>
+      public EFPBaseProvider this[int index]
+      {
+        get
+        {
+          if (index < 0 || index >= Count)
+            throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + (index - 1).ToString());
+          return _Owner._Children[index];
+        }
+      }
+
       #endregion
 
       #region Перечислитель
@@ -311,6 +326,21 @@ namespace FreeLibSet.Forms
             return 0;
           else
             return _Owner._ControlProviders.Count;
+        }
+      }
+
+      /// <summary>
+      /// Доступ к провайдеру по индексу
+      /// </summary>
+      /// <param name="index">Индекс</param>
+      /// <returns>Провайдер</returns>
+      public EFPControlBase this[int index]
+      {
+        get
+        {
+          if (index < 0 || index >= Count)
+            throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + (index - 1).ToString());
+          return _Owner._ControlProviders[index];
         }
       }
 

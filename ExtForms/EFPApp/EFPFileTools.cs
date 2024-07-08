@@ -14,7 +14,7 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Функции работы с файлами и каталогами.
-  /// Расширяет методы класса FileTools выводом заставок
+  /// Расширяет методы класса <see cref="FileTools"/> выводом заставок
   /// </summary>
   public static class EFPFileTools
   {
@@ -96,10 +96,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Проверка имени каталога, завершающегося обратной чертой.
     /// Может проверять реальное существование каталога, в зависимости от режима.
-    /// В режиме <paramref name="mode"/>=None всегда возвращает true.
+    /// В режиме <paramref name="mode"/>=<see cref="TestPathMode.None"/> всегда возвращает true.
     /// </summary>
     /// <param name="dirName">Имя каталога, выбранное пользователем</param>
-    /// <param name="mode">Режим проверки. Значение FileExists не допускается</param>
+    /// <param name="mode">Режим проверки. Значение <see cref="TestPathMode.FileExists"/> не допускается</param>
     /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
     /// <returns>true - имя каталога правильное</returns>
     public static bool TestDirSlashedPath(string dirName, TestPathMode mode, out string errorText)
@@ -139,7 +139,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Проверка имени файла
     /// Может проверять реальное существование каталога и файла, в зависимости от режима.
-    /// В режиме <paramref name="mode"/>=None всегда возвращает true.
+    /// В режиме <paramref name="mode"/>=<see cref="TestPathMode.None"/> всегда возвращает true.
     /// </summary>
     /// <param name="fileName">Имя файла, выбранное пользователем</param>
     /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
@@ -177,8 +177,6 @@ namespace FreeLibSet.Forms
       dispres["ErrorText"] = errorText;
       return dispres;
     }
-
-
 
     #endregion
   }

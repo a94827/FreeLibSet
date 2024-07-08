@@ -30,7 +30,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Основной вариант конструктора.
-    /// Используется <see cref="DocTypeUI.PerformEditing(int, bool)"/>.
+    /// Используется <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int, bool)"/>.
     /// Не создается напрямую в прикладном коде.
     /// </summary>
     /// <param name="ui">Доступ к пользовательскому интерфейсу</param>
@@ -498,8 +498,8 @@ namespace FreeLibSet.Forms.Docs
     /// Установка Args.Cancel=true предотвращает запись данных и закрытие редактора.
     /// Программа должна вывести сообщение пользователю о причинах отмены.
     /// На момент вызова данные формы еще не перенесены в документы.
-    /// Если требуется обработка значений в <see cref="DocumentEditor.Documents"/>, используйте
-    /// событие <see cref="DocTypeUI.Writing"/>.
+    /// Если требуется обработка значений в <see cref="FreeLibSet.Forms.Docs.DocumentEditor.Documents"/>, используйте
+    /// событие <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/>.
     /// </summary>
     public event DocEditCancelEventHandler BeforeWrite;
 
@@ -1287,17 +1287,17 @@ namespace FreeLibSet.Forms.Docs
     /// редактора в редактируемый документ (<see cref="Documents"/>)
     /// Выполняемые действия:
     /// <list type="bullet">
-    /// <item><description>1. Событие <see cref="DocumentEditor.BeforeWrite"/></description></item>
+    /// <item><description>1. Событие <see cref="FreeLibSet.Forms.Docs.DocumentEditor.BeforeWrite"/></description></item>
     /// <item><description>2. Проверка корректности значений полей <see cref="EFPFormProvider.ValidateForm()"/></description></item>
-    /// <item><description>3. Запись полей в документ <see cref="IDocEditItem.WriteValues()"/></description></item>
-    /// <item><description>4. Событие <see cref="DocTypeUI.Writing"/></description></item>
+    /// <item><description>3. Запись полей в документ <see cref="FreeLibSet.Forms.Docs.IDocEditItem.WriteValues()"/></description></item>
+    /// <item><description>4. Событие <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/></description></item>
     /// </list>
     /// На шаге 1, 2 и 4 могут быть обнаружены ошибки. В этом случае дальнейшие
     /// действия не выполняются и возвращается false
-    /// Обработчики событий <see cref="DocumentEditor.BeforeWrite"/> и <see cref="DocTypeUI.Writing"/> не
+    /// Обработчики событий <see cref="FreeLibSet.Forms.Docs.DocumentEditor.BeforeWrite"/> и <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/> не
     /// должны вызывать метод <see cref="ValidateData()"/>.
     /// Если редактор документа находится в режиме просмотра или удаления
-    /// (<see cref="DocumentEditor.IsReadOnly"/>=true), то никакие действия не выполняются и
+    /// (<see cref="FreeLibSet.Forms.Docs.DocumentEditor.IsReadOnly"/>=true), то никакие действия не выполняются и
     /// возвращается true.
     /// </summary>
     /// <returns>true, если форма содержит корректные значения и обработчики не
@@ -1311,9 +1311,9 @@ namespace FreeLibSet.Forms.Docs
     /// Копирование данных из полей ввода в редактируемый документ (<see cref="Documents"/>)
     /// без проверки корректности данных.
     /// Выполняет те же действия, что и <see cref="ValidateData()"/>:
-    /// 1. Событие <see cref="DocumentEditor.BeforeWrite"/>
-    /// 2. Запись полей в документ <see cref="IDocEditItem.WriteValues()"/>
-    /// 3. Событие <see cref="DocTypeUI.Writing"/>
+    /// 1. Событие <see cref="FreeLibSet.Forms.Docs.DocumentEditor.BeforeWrite"/>
+    /// 2. Запись полей в документ <see cref="FreeLibSet.Forms.Docs.IDocEditItem.WriteValues()"/>
+    /// 3. Событие <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/>
     /// Проверка значений полей не выполняется, ошибки, возникающие на шаге 1 и 3
     /// игнорируются
     /// </summary>

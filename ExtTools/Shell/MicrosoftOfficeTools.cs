@@ -71,7 +71,7 @@ namespace FreeLibSet.Shell
 
     /// <summary>
     /// Старший номер версии для Microsoft Office 2019.
-    /// Совпадает с Microsoft Office 2016
+    /// Совпадает с Microsoft Office 2016.
     /// </summary>
     public const int MicrosoftOffice_2019 = 16;
 
@@ -99,11 +99,11 @@ namespace FreeLibSet.Shell
 
     /*
      * Возможности различных версий Microsoft Office:
-     * - Начиная с Word/Excel-97 открываются HTML-файлы, но OLE глючит
-     * - Начиная с Word/Excel-2000 работает передача через OLE (объекты WordHelper и ExcelHelper)
-     * - Начиная с Excel-XP читаются XML-файлы "Книга Microsoft Excel XP-2003"
-     * - Начиная с Word-2003 читаются XML-файлы "Документ Microsoft Word 2003"
-     * - Начиная с Word/Excel-2007 читаются сжатые файлы docx/xlsx
+     * - Начиная с Word/Excel-97 открываются HTML-файлы, но OLE глючит.
+     * - Начиная с Word/Excel-2000 работает передача через OLE (объекты WordHelper и ExcelHelper).
+     * - Начиная с Excel-XP читаются XML-файлы "Книга Microsoft Excel XP-2003".
+     * - Начиная с Word-2003 читаются XML-файлы "Документ Microsoft Word 2003".
+     * - Начиная с Word/Excel-2007 читаются сжатые файлы docx/xlsx.
      */
 
     /// <summary>
@@ -1287,7 +1287,7 @@ namespace FreeLibSet.Shell
 
     /// <summary>
     /// Формат даты в Excel по умолчанию.
-    /// Возвращаемое значение зависит от CultureInfo.CurrentCulture
+    /// Возвращаемое значение зависит от <see cref="CultureInfo.CurrentCulture"/>
     /// Для русской Windows возвращает "dd/MM/yyyy"
     /// </summary>
     public static string DefaultShortDateFormat
@@ -1318,7 +1318,7 @@ namespace FreeLibSet.Shell
 
     /// <summary>
     /// Формат времени в Excel по умолчанию.
-    /// Возвращаемое значение зависит от CultureInfo.CurrentCulture
+    /// Возвращаемое значение зависит от <see cref="CultureInfo.CurrentCulture"/>.
     /// Для русской Windows возвращает "чч:мм:cc"
     /// </summary>
     public static string DefaultShortTimeFormat
@@ -1349,8 +1349,8 @@ namespace FreeLibSet.Shell
 
     /// <summary>
     /// Формат даты и времени в Excel по умолчанию.
-    /// Возвращаемое значение зависит от CultureInfo.CurrentCulture
-    /// Для русской Windows возвращает "dd/MM/yyyy"
+    /// Возвращаемое значение зависит от <see cref="CultureInfo.CurrentCulture"/>.
+    /// Для русской Windows возвращает "dd/MM/yyyy".
     /// </summary>
     public static string DefaultShortDateTimeFormat
     {
@@ -1372,7 +1372,7 @@ namespace FreeLibSet.Shell
 
     /// <summary>
     /// Длинный формат даты в Excel по умолчанию.
-    /// Возвращаемое значение зависит от CultureInfo.CurrentCulture
+    /// Возвращаемое значение зависит от <see cref="CultureInfo.CurrentCulture"/>.
     /// </summary>
     public static string DefaultLongDateFormat
     {
@@ -1394,7 +1394,7 @@ namespace FreeLibSet.Shell
 
     /// <summary>
     /// Длинный формат даты и времени в Excel по умолчанию.
-    /// Возвращаемое значение зависит от CultureInfo.CurrentCulture
+    /// Возвращаемое значение зависит от <see cref="CultureInfo.CurrentCulture"/>.
     /// </summary>
     public static string DefaultLongDateTimeFormat
     {
@@ -1413,7 +1413,6 @@ namespace FreeLibSet.Shell
     {
       return GetDefaultLongDateFormat(culture) + " " + GetDefaultShortDateFormat(culture);
     }
-
 
     #endregion
   }

@@ -253,10 +253,10 @@ namespace FreeLibSet.Remoting
                 waitSPH.AllowCancel = true;
                 InitWaitSPH(waitSPH, caller, lockedObj, lockedObjOwnCaller);
                 // TODO: OldOwner = Caller.ExternalSplashOwner;
-                // TODO: if (FOwnCaller == Caller)
-                // TODO:   Caller.ExternalSplashOwner = null;
-                // TODO: else
-                // TODO:   Caller.ExternalSplashOwner = FOwnCaller;
+                // if (FOwnCaller == Caller)
+                //   Caller.ExternalSplashOwner = null;
+                // else
+                //   Caller.ExternalSplashOwner = FOwnCaller;
 
                 logger = new ExecProcLockLogger(this, caller, lockedObj, lockedObjOwnCaller);
                 Waiters.Add(logger);

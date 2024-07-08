@@ -15,7 +15,7 @@ using FreeLibSet.Core;
 using FreeLibSet.UICore;
 
 /*
- * Расширенные параметры отчеты, использующие историю использования параметров
+ * Расширенные параметры отчеты, использующие историю использования параметров.
  * Хранение именных пользовательских наборов параметров и истории.
  * Поддерживаются три типа параметров (перечисление EFPReportExtParamsPart):
  * - обычные параметры (User).
@@ -79,14 +79,14 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Базовый класс формы для параметров отчета с использованимем расширенных
-  /// возможностей
-  /// Форма содержит пустую панель MainPanel, которая должна быть заполнена
-  /// (полями ввода или элементом TabControl) в производной реализации формы
+  /// возможностей.
+  /// Форма содержит пустую панель <see cref="MainPanel"/>, которая должна быть заполнена
+  /// (полями ввода или элементом <see cref="System.Windows.Forms.TabControl"/>) в производной реализации формы.
   /// Внизу формы есть панель с кнопками "ОК" и "Отмена", а также список с кнопками
   /// для выбора готовых наборов параметров.
   ///
   /// Если параметры отчета содержат только фильтры DBxClientFilters, используйте форму EFPReportFilterExtParamsForm.
-  /// Также можно использовать форму с двумя вкладками EFPReportExtParamsTwoPageForm.
+  /// Также можно использовать форму с двумя вкладками <see cref="EFPReportExtParamsTwoPageForm"/>.
   /// </summary>
   public partial class EFPReportExtParamsForm : Form
   {
@@ -142,7 +142,7 @@ namespace FreeLibSet.Forms
     /// Провайдер формы
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
 
     /// <summary>
     /// Комбоблок выбора готового набора параметров
@@ -156,7 +156,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Эту функцию следует вызывать из обработчика ValueChanged, чтобы оповестить
     /// о вводе пользователем параметров даты, которые не являются частью 
-    /// именных пользовательских настроек
+    /// именных пользовательских настроек.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -167,7 +167,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Свойство возвращает true, если в данный момент переносятся данные из параметров в текущую форму, то есть работает метод EFPReportExtParams.WriteFormValues().
+    /// Свойство возвращает true, если в данный момент переносятся данные из параметров в текущую форму, то есть работает метод <see cref="EFPReportExtParams.WriteFormValues(EFPReportExtParamsForm, SettingsPart)"/>.
     /// Это свойство можно использовать в обработчиках, отслеживающих изменение значений в управляющих эленментах формы.
     /// </summary>
     public bool InsideWriteFormValues { get { return _InsideWriteFormValues; } }
@@ -175,7 +175,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Свойство возвращает true, если в данный момент переносятся данные из текущей формы в параметры отчета, то есть работает метод 
-    /// EFPReportExtParams.ReadFormValues() или ValidateReadFormValues().
+    /// <see cref="EFPReportExtParams.ReadFormValues(EFPReportExtParamsForm, SettingsPart)"/> или <see cref="EFPReportExtParams.ValidateReadFormValues(EFPReportExtParamsForm)"/>.
     /// </summary>
     public bool InsideReadFormValues { get { return _InsideReadFormValues; } }
     internal bool _InsideReadFormValues;
@@ -188,8 +188,8 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Класс формы для параметров отчета, в котором есть только фильтры DBxClientFilters.
   /// возможностей
-  /// Форма содержит только табличку фильтров EFPGridFilterEditorGridView. 
-  /// Этот класс формы нельзя наследовать. Используйте для этого EFPReportExtParamsForm.
+  /// Форма содержит только табличку фильтров <see cref="EFPGridFilterEditorGridView"/>. 
+  /// Этот класс формы нельзя наследовать. Используйте для этого <see cref="EFPReportExtParamsForm"/>.
   /// </summary>
   public sealed class EFPReportFilterExtParamsForm : EFPReportExtParamsForm
   {
@@ -213,16 +213,16 @@ namespace FreeLibSet.Forms
     /// Провайдер табличного просмотра для таблицы редактирования фильтров.
     /// </summary>
     public EFPGridFilterEditorGridView FiltersControlProvider { get { return _FiltersControlProvider; } }
-    private EFPGridFilterEditorGridView _FiltersControlProvider;
+    private readonly EFPGridFilterEditorGridView _FiltersControlProvider;
 
     #endregion
   }
 
 
   /// <summary>
-  /// Расширенные параметры отчета
+  /// Расширенные параметры отчета.
   /// Дополнительные виртуальные методы позволяют работать с формой ввода
-  /// параметров, которая поддерживает список готовых наборов
+  /// параметров, которая поддерживает список готовых наборов.
   /// </summary>
   public abstract class EFPReportExtParams : EFPReportParams
   {
@@ -242,7 +242,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Используемые части для хранения параметров. 
     /// Может задаваться несколько секций.
-    /// Непереопределенное свойство возвращает EFPReportExtParamsPart.User - все данные хранятся в одной секции, привязанной к пользователю.
+    /// Непереопределенное свойство возвращает <see cref="SettingsPart.User"/> - все данные хранятся в одной секции, привязанной к пользователю.
     /// </summary>
     public virtual SettingsPart UsedParts { get { return SettingsPart.User; } }
 
@@ -252,7 +252,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Переопределенный метод должен возвращать новый объект формы параметров отчета, производной
-    /// от EFPReportExtParamsForm 
+    /// от <see cref="EFPReportExtParamsForm"/>
     /// </summary>
     /// <returns>Объект формы</returns>
     public abstract EFPReportExtParamsForm CreateForm();
@@ -260,9 +260,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Переопределенный метод должен записать данные из текущих параметров отчета (этого объекта)
     /// в поля формы.
-    /// Свойство Part всегда содержит единственное значение. Если UsedParts содержит комбинацию значений,
-    /// метод вызывается несколько раз. В реализации метода должен быть блок switch(Part).
-    /// Получаемый тип формы должен быть приведен к типу формы, которая была создана в CreateForm
+    /// Аргумент <paramref name="part"/> всегда содержит единственное значение. Если <see cref="UsedParts"/> содержит комбинацию значений,
+    /// метод вызывается несколько раз. В реализации метода должен быть блок switch(<paramref name="part"/>).
+    /// Получаемый тип формы должен быть приведен к типу формы, которая была создана в методе <see cref="CreateForm()"/>.
     /// </summary>
     /// <param name="form">Форма для редактирования параметров</param>
     /// <param name="part">Какую часть параметров нужно записать</param>
@@ -270,9 +270,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Переопределенный метод должен прочитать данные из полей формы и сохранить их в этом объекте
-    /// Свойство Part всегда содержит единственное значение. Если UsedParts содержит комбинацию значений,
-    /// метод вызывается несколько раз. В реализации метода должен быть блок switch(Part).
-    /// Получаемый тип формы должен быть приведен к типу формы, которая была создана в CreateForm
+    /// Аргумент <paramref name="part"/> всегда содержит единственное значение. Если <see cref="UsedParts"/> содержит комбинацию значений,
+    /// метод вызывается несколько раз. В реализации метода должен быть блок switch(<paramref name="part"/>).
+    /// Получаемый тип формы должен быть приведен к типу формы, которая была создана в <see cref="CreateForm()"/>
     /// </summary>
     /// <param name="form">Форма для редактирования параметров</param>
     /// <param name="part">Какую часть параметров нужно прочитать</param>
@@ -280,17 +280,17 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод вызывается после того, как текущие значения загружены из формы с помощью одного
-    /// или нескольких вызовов ReadFormValues().
+    /// или нескольких вызовов <see cref="ReadFormValues(EFPReportExtParamsForm, SettingsPart)"/>.
     /// Метод может проверить корректность значений и, при наличии ошибок, выдать соответствуюшее сообщение
     /// (обязательно) и установить фокус ввода на подходящий управляющий элемент.
     /// Метод вызывается при нажатии кнопки ОК и перед сохранением пользовательского набора параметров из
-    /// EFPFormProvider.ValidateForm().
+    /// <see cref="EFPFormProvider.ValidateForm()"/>.
     /// </summary>
     /// <remarks>
     /// Переопределите метод, если недостаточно возможностей проверки управляюших элементов формы,
     /// а требуется комплексная проверка введенных значений, уже после считывания параметров отчета.
-    /// Повторная проверка того, что проверяется внутри EFPControl.Validate(), не требуется.
-    /// При переопределении, вызывать этот базовый метод не требуется.
+    /// Повторная проверка того, что проверяется внутри <see cref="EFPControlBase.Validate()"/>, не требуется.
+    /// При переопределении, вызывать этот базовый метод не нужно.
     /// </remarks>
     /// <param name="form">Форма для редактирования параметров</param>
     /// <returns>true, если введенные значения корректны</returns>
@@ -304,8 +304,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Переопределенный метод должен записать данные из текущих параметров отчета (этого объекта)
     /// в указанную секцию конфигурации.
-    /// Свойство Part всегда содержит единственное значение. Если UsedParts содержит комбинацию значений,
-    /// метод вызывается несколько раз. В реализации метода должен быть блок switch(Part).
+    /// Аргумент <paramref name="part"/> всегда содержит единственное значение. Если <see cref="UsedParts"/> содержит комбинацию значений,
+    /// метод вызывается несколько раз. В реализации метода должен быть блок switch(<paramref name="part"/>).
     /// </summary>
     /// <param name="cfg">Секция конфигурации, открытая в режиме записи, куда должны быть помещены значения</param>
     /// <param name="part">Какую часть параметров нужно записать</param>
@@ -314,8 +314,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Переопределенный метод должен прочитать данные из указанной секции конфигурации и поместить их
     /// в текущие параметры отчета (этот объекта)
-    /// Свойство Part всегда содержит единственное значение. Если UsedParts содержит комбинацию значений,
-    /// метод вызывается несколько раз. В реализации метода должен быть блок switch(Part).
+    /// Аргумент <paramref name="part"/> всегда содержит единственное значение. Если <see cref="UsedParts"/> содержит комбинацию значений,
+    /// метод вызывается несколько раз. В реализации метода должен быть блок switch(<paramref name="part"/>).
     /// </summary>
     /// <param name="cfg">Секция конфигурации, открытая в режиме чтения, откуда должны быть извлечены значения</param>
     /// <param name="part">Какую часть параметров нужно прочитать</param>
@@ -323,9 +323,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод вызывается перед выводом формы параметров. Значения загружены
-    /// в набор этот параметров (ReadConfig() вызван), но еще не переданы форме
-    /// (WriteFormValues() не вызывался)
-    /// Метод не вызывается в процессе показа формы при выборе готового набора
+    /// в набор этот параметров (<see cref="ReadConfig(CfgPart)"/>, но еще не переданы форме
+    /// (<see cref="WriteFormValues(EFPReportExtParamsForm, SettingsPart)"/> не вызывался).
+    /// Метод не вызывается в процессе показа формы при выборе готового набора.
     /// </summary>
     public virtual void BeforeQueryParams()
     {
@@ -333,8 +333,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод вызывается после того, как в форме нажата кнопка "ОК" и значения
-    /// из формы прочитаны (ReadFormValues() вызван), но данные еще не сохранены
-    /// (перед вызовом WriteConfig()). 
+    /// из формы прочитаны (<see cref="ReadFormValues(EFPReportExtParamsForm, SettingsPart)"/> вызван), но данные еще не сохранены
+    /// (перед вызовом <see cref="WriteConfig(CfgPart)"/>). 
     /// Метод не вызывается в процессе показа формы при сохранении пользовательского
     /// набора
     /// </summary>
@@ -352,7 +352,7 @@ namespace FreeLibSet.Forms
     /// Сначала метод вызывается до показа диалога параметров и до чтения секций конфигурации. Если он возвращает значение, отличное от null
     /// (в том числе, пустую строку), то в выпадающем списке "Готовые наборы" будет место для дополнительного текста и полосатая раскраска.
     /// Также, при открытии списка, будет выполняться последовательное чтение секций конфигурации для каждого набора, в том числе истории, и
-    /// вызываться метод GetAuxText(). Если первый вызов вернул null, то повторные вызовы не выполняются.
+    /// вызываться метод <see cref="GetAuxText()"/>. Если первый вызов вернул null, то повторные вызовы не выполняются.
     /// </summary>
     /// <returns>Текст дополнительной строки для списка "Готовые наборы" или null</returns>
     public virtual string GetAuxText()
@@ -367,7 +367,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Заглушка для абстрактного метода базового класса.
     /// Этот метод вызывается только при записи композиции открытых окон.
-    /// Он помещает отдельные части конфигурации в одну секцию
+    /// Он помещает отдельные части конфигурации в одну секцию.
     /// </summary>
     /// <param name="cfg">Не используется</param>
     public sealed override void WriteConfig(CfgPart cfg)
@@ -386,7 +386,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Заглушка для абстрактного метода базового класса.
     /// Этот метод вызывается только при чтении композиции открытых окон.
-    /// Он считывает отдельные части конфигурации из одной секции
+    /// Он считывает отдельные части конфигурации из одной секции.
     /// </summary>
     /// <param name="cfg">Не используется</param>
     public sealed override void ReadConfig(CfgPart cfg)
@@ -432,9 +432,9 @@ namespace FreeLibSet.Forms
 
 
   /// <summary>
-  /// Вспомогательный класс, используемый в EFPReport.PerformQueryExtParams(),
+  /// Вспомогательный класс, используемый в <see cref="EFPReport.PerformQueryExtParams()"/>,
   /// который осуществляет взаимодействие между объектом параметров и формой для
-  /// их ввода
+  /// их ввода.
   /// </summary>
   internal class EFPReportExtParamsHelper
   {
@@ -1180,16 +1180,15 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Реализация класса параметров отчета, который содержит только фильтры DBxGridFilters.
   /// Список фильтров нужно передать конструктору объекта.
-  /// Для редактирования параметров используется форма EFPReportFilterExtParamsForm.
+  /// Для редактирования параметров используется форма <see cref="EFPReportFilterExtParamsForm"/>.
   /// Этот класс нельзя переопределять.
-  /// Свойство Title следует либо задать после создания объекта, либо добавить обработчик события TitleNeeded.
   /// </summary>
   public sealed class EFPReportFilterExtParams : EFPReportExtParams
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает параметры отчета с заданным списком фильтров. Вызывает IEFPGridFilters.SetReadOnly()
+    /// Создает параметры отчета с заданным списком фильтров. Вызывает <see cref="IEFPGridFilters.SetReadOnly"/>.
     /// </summary>
     /// <param name="filters">Заполненный список фильтров. Не может быть null.</param>
     public EFPReportFilterExtParams(IEFPGridFilters filters)
@@ -1201,7 +1200,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дополнительная перегрузка конструктора, которая позволяет сразу установить свойство Title.
+    /// Дополнительная перегрузка конструктора, которая позволяет сразу установить свойство <see cref="EFPReportParams.Title"/>.
     /// </summary>
     /// <param name="filters">Заполненный список фильтров. Не может быть null.</param>
     /// <param name="title">Заголовок для отчета и диалога параметров отчета</param>
@@ -1219,11 +1218,11 @@ namespace FreeLibSet.Forms
     /// Список фильтров. Задается в конструкторе
     /// </summary>
     public IEFPGridFilters Filters { get { return _Filters; } }
-    private IEFPGridFilters _Filters;
+    private readonly IEFPGridFilters _Filters;
 
     /// <summary>
     /// Заголовок для формы запроса параметров.
-    /// Если свойство не установлено в явном виде, используется свойство Title
+    /// Если свойство не установлено в явном виде, используется свойство <see cref="EFPReportParams.Title"/>.
     /// </summary>
     public string FormTitle
     {
@@ -1265,9 +1264,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает EFPReportFilterExtParamsForm.
+    /// Создает <see cref="EFPReportFilterExtParamsForm"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Объект формы параметров отчета</returns>
     public override EFPReportExtParamsForm CreateForm()
     {
       EFPReportFilterExtParamsForm form = new EFPReportFilterExtParamsForm();
@@ -1279,36 +1278,36 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Инициализирует свойство EFPReportFilterExtParamsForm.Filters
+    /// Инициализирует список фильтров
     /// </summary>
-    /// <param name="Form"></param>
-    /// <param name="Part"></param>
-    public override void WriteFormValues(EFPReportExtParamsForm Form, SettingsPart Part)
+    /// <param name="form"><see cref="EFPReportFilterExtParamsForm"/></param>
+    /// <param name="part">Часть</param>
+    public override void WriteFormValues(EFPReportExtParamsForm form, SettingsPart part)
     {
-      EFPReportFilterExtParamsForm form2 = (EFPReportFilterExtParamsForm)Form;
+      EFPReportFilterExtParamsForm form2 = (EFPReportFilterExtParamsForm)form;
       form2.FiltersControlProvider.Filters = Filters;
     }
 
     /// <summary>
     /// Ничего не делает
     /// </summary>
-    /// <param name="Form"></param>
-    /// <param name="Part"></param>
-    public override void ReadFormValues(EFPReportExtParamsForm Form, SettingsPart Part)
+    /// <param name="form"></param>
+    /// <param name="part"></param>
+    public override void ReadFormValues(EFPReportExtParamsForm form, SettingsPart part)
     {
     }
 
     /// <summary>
     /// Записывает параметры отчета в секцию User
     /// </summary>
-    /// <param name="Config"></param>
-    /// <param name="Part"></param>
-    public override void WriteConfig(FreeLibSet.Config.CfgPart Config, SettingsPart Part)
+    /// <param name="cfg"></param>
+    /// <param name="part"></param>
+    public override void WriteConfig(FreeLibSet.Config.CfgPart cfg, SettingsPart part)
     {
-      switch (Part)
+      switch (part)
       {
         case SettingsPart.User:
-          Filters.WriteConfig(Config);
+          Filters.WriteConfig(cfg);
           break;
       }
     }
@@ -1316,19 +1315,18 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Считывает параметры отчета
     /// </summary>
-    /// <param name="Config"></param>
-    /// <param name="Part"></param>
-    public override void ReadConfig(FreeLibSet.Config.CfgPart Config, SettingsPart Part)
+    /// <param name="cfg"></param>
+    /// <param name="part"></param>
+    public override void ReadConfig(FreeLibSet.Config.CfgPart cfg, SettingsPart part)
     {
-      switch (Part)
+      switch (part)
       {
         case SettingsPart.User:
-          Filters.ReadConfig(Config);
+          Filters.ReadConfig(cfg);
           break;
       }
     }
 
     #endregion
   }
-
 }

@@ -180,7 +180,9 @@ namespace FreeLibSet.Russian
   #endregion
 
   /// <summary>
-  /// Массив для хранения 12 форм имени существительного
+  /// Массив для хранения 12 форм имени существительного (6 падежей для единственного и множественного чисел).
+  /// Используйте метод <see cref="Fill(string, RusGender, RusFormArrayGetCasesOptions)"/> для заполнения массива. 
+  /// Допускается изменение элементов после заполнения.
   /// </summary>
   public class RusNounFormArray
   {
@@ -195,7 +197,8 @@ namespace FreeLibSet.Russian
     }
 
     /// <summary>
-    /// Создает объект. Все элементы получают одинаковые значения
+    /// Создает объект. Все элементы получают одинаковые значения.
+    /// Аналогично вызову метода <see cref="Fill(string)"/>.
     /// </summary>
     /// <param name="mainForm">Используемое значение</param>
     public RusNounFormArray(string mainForm)
@@ -281,7 +284,7 @@ namespace FreeLibSet.Russian
     /// <param name="gender">Род слова</param>
     /// <param name="options">Параметры</param>
     /// <returns>True, если склонение слова выполнено успешно</returns>
-    public bool GetCases(string baseForm, RusGender gender, RusFormArrayGetCasesOptions options)
+    public bool Fill(string baseForm, RusGender gender, RusFormArrayGetCasesOptions options)
     {
       // Разбиваем на части
       List<String> aParts;

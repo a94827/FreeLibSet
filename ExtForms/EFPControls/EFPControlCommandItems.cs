@@ -8,7 +8,7 @@ using System.Text;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Базовый класс для EFPControlCommandItems и EFPFormCommandItems 
+  /// Базовый класс для <see cref="EFPControlCommandItems"/> и <see cref="EFPFormCommandItems"/>
   /// </summary>
   public abstract class EFPContextCommandItems : EFPCommandItems
   {
@@ -105,14 +105,12 @@ namespace FreeLibSet.Forms
 
     #region Подготовка
 
-    internal new void SetReadOnly()
+    /// <summary>
+    /// Создает панели статусной строки
+    /// </summary>
+    protected override void OnAfterSetReadOnly()
     {
-      if (IsReadOnly)
-        return; // повторный вызов
-
-      OnPrepare();
-
-      base.SetReadOnly();
+      base.OnAfterSetReadOnly();
 
       bool sbFlag = false;
       foreach (EFPCommandItem item in this)
@@ -133,42 +131,22 @@ namespace FreeLibSet.Forms
 
     internal abstract EFPStatusBarPanels CreateStatusBarPanels();
 
-
-    /// <summary>
-    /// Событие вызывается при подготовке списка команд к использованию.
-    /// На момент вызова свойство IsReadOnly=false.
-    /// Событие используется, в основном, в отладочных целях.
-    /// Классы-наследники, вместо обработчика события, переопределяют метод OnPrepare().
-    /// Прикладной код обычно использует событие EFPControlBase.BeforePrepareCommandItems.
-    /// </summary>
-    public event EventHandler Prepare;
-
-    /// <summary>
-    /// Этот метод вызывается однократно перед началом использования списка команд.
-    /// После вызова список переводится в режим "только для чтения".
-    /// </summary>
-    protected virtual void OnPrepare()
-    {
-      if (Prepare != null)
-        Prepare(this, EventArgs.Empty);
-    }
-
     #endregion
   }
 
   #region Делегат для события EFPApp.ControlCommandItemsNeeded
 
   /// <summary>
-  /// Аргументы события EFPApp.ControlCommandItemsNeeded
+  /// Аргументы события <see cref="EFPApp.ControlCommandItemsNeeded"/>
   /// </summary>
   public class EFPControlCommandItemsNeededEventArgs : EventArgs
   {
     #region Конструктор
 
     /// <summary>
-    /// Вызывается из EFPApp
+    /// Вызывается из <see cref="EFPApp"/>
     /// </summary>
-    /// <param name="controlProvider"></param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
     public EFPControlCommandItemsNeededEventArgs(EFPControlBase controlProvider)
     {
       _ControlProvider = controlProvider;
@@ -179,27 +157,27 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Обработчик события ControlCommandItemsNeeded может установить свойство
-    /// ControlProvider.CommandItems
+    /// Обработчик события может установить свойство
+    /// <see cref="ControlProvider"/>.CommandItems.
     /// </summary>
     public EFPControlBase ControlProvider { get { return _ControlProvider; } }
-    private EFPControlBase _ControlProvider;
+    private readonly EFPControlBase _ControlProvider;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат для события EFPApp.ControlCommandItemsNeeded
+  /// Делегат для события <see cref="EFPApp.ControlCommandItemsNeeded"/>
   /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
+  /// <param name="sender">Не используется</param>
+  /// <param name="args">Аргументы события</param>
   public delegate void EFPControlCommandItemsNeededEventHandler(object sender,
     EFPControlCommandItemsNeededEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Команды, относящиеся к управляющему элементу или форме. Объект
+  /// Команды, относящиеся к управляющему элементу. Объект
   /// осуществляет подключение и отключение отношений Master - Servant
   /// при изменении фокуса ввода
   /// </summary>
@@ -210,6 +188,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает пустой список команд
     /// </summary>
+    /// <param name="controlProvider">Провайдер управляющего элемента. Должен быть задан</param>
     public EFPControlCommandItems(EFPControlBase controlProvider)
     {
       if (controlProvider == null)
@@ -231,7 +210,7 @@ namespace FreeLibSet.Forms
     /// Возвращает провайдер управляющего элемента, к которому относится список команд.
     /// </summary>
     public EFPControlBase ControlProvider { get { return _ControlProvider; } }
-    private EFPControlBase _ControlProvider;
+    private readonly EFPControlBase _ControlProvider;
 
     /// <summary>
     /// Возвращает отладочную информацию
@@ -253,7 +232,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Команда, выделенная жирным шрифтом.
-    /// Обычно, это команда должна обрабатываться по двойному щелчку мыши. Это должно быть реализовано отдельно
+    /// Обычно, это команда должна обрабатываться по двойному щелчку мыши. 
+    /// Обработка события мыши должна быть реализована отдельно.
     /// </summary>
     public EFPCommandItem DefaultCommandItem
     {
@@ -292,7 +272,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает список команд
     /// </summary>
-    /// <param name="formProvider"></param>
+    /// <param name="formProvider">Провайдер формы. Должен быть задан</param>
     public EFPFormCommandItems(EFPFormProvider formProvider)
     {
       if (formProvider == null)
@@ -308,16 +288,16 @@ namespace FreeLibSet.Forms
     /// Провайдер формы, для которой задаются команды
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
+
+    #endregion
+
+    #region Методы
 
     internal override bool GetIsModalForm()
     {
       return _FormProvider.Modal;
     }
-
-    #endregion
-
-    #region Методы
 
     internal override EFPStatusBarPanels CreateStatusBarPanels()
     {

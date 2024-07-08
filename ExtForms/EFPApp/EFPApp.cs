@@ -152,7 +152,8 @@ namespace FreeLibSet.Forms
     #region Инициализация
 
     /// <summary>
-    /// Этот метод должен вызываться до всех других методов работы
+    /// Этот метод должен вызываться до всех других методов работы.
+    /// Повторный вызов метода не допускается. Используйте свойство <see cref="AppWasInit"/> для проверки.
     /// </summary>
     public static void InitApp()
     {
@@ -272,7 +273,6 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Приложение в-целом
-
 
     /// <summary>
     /// Это событие вызывается при завершении приложения перед тем, как послать открытым окнам
@@ -696,6 +696,9 @@ namespace FreeLibSet.Forms
           return ValidateWindow(_ExternalDialogOwnerWindow);
         else
         {
+          if (ActiveDialog != null)
+            return ActiveDialog; // 14.03.2017. Перенесено наверх 20.06.2024
+
           if (MainWindow == null)
           {
 
@@ -723,8 +726,6 @@ namespace FreeLibSet.Forms
           }
           else
           {
-            if (ActiveDialog != null)
-              return ActiveDialog; // 14.03.2017
             return MainWindow;
           }
         }
@@ -746,12 +747,12 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          form.Show(dow);
+          SystemMethods.Show(form, dow);
           return;
         }
         catch { }
       }
-      form.Show();
+      SystemMethods.Show(form, null);
     }
 
     /// <summary>
@@ -927,6 +928,23 @@ namespace FreeLibSet.Forms
     /// </summary>
     public static EFPAppClipboard Clipboard { get { return _Clipboard; } }
     private static readonly EFPAppClipboard _Clipboard = new EFPAppClipboard();
+
+    /// <summary>
+    /// Набор виртуальных методов для системных вызовов.
+    /// В прикладном коде может быть определен класс-наследник <see cref="EFPAppSystemMethods"/>,
+    /// который реализует методы по-своему. 
+    /// </summary>
+    public static EFPAppSystemMethods SystemMethods
+    { 
+      get { return _SystemMethods; }
+      set 
+      {
+        if (value == null)  
+         throw new ArgumentNullException();
+        _SystemMethods = value; 
+      }
+    }
+    private static EFPAppSystemMethods _SystemMethods = new EFPAppSystemMethods();
 
     #endregion
 
@@ -2514,7 +2532,7 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        form.Show();
+        SystemMethods.Show(form, null);
       }
     }
 
@@ -2908,13 +2926,13 @@ namespace FreeLibSet.Forms
         //Form.ShowDialog();
         try
         {
-          form.ShowDialog(currDialogOwnerWindow); // 05.04.2014
+          SystemMethods.ShowDialog(form, currDialogOwnerWindow); // 05.04.2014
         }
         catch (Exception e)
         {
           if (CanRepeatShowDialogAfterError(e))
           {
-            form.ShowDialog(); // 12.03.2018
+            SystemMethods.ShowDialog(form, null); // 12.03.2018
             runner.PrevExternalDialogOwnerWindowSetFlag = false; // чтобы ExternalDialogOwnerWindow не восстанавливалось
           }
           else
@@ -3801,8 +3819,7 @@ namespace FreeLibSet.Forms
 
         // 28.11.2018
 
-        MessageBoxBaseForm baseForm = new MessageBoxBaseForm();
-        try
+        using (MessageBoxBaseForm baseForm = new MessageBoxBaseForm())
         {
           baseForm.Text = String.Empty;
           baseForm.FormBorderStyle = FormBorderStyle.None;
@@ -3813,10 +3830,6 @@ namespace FreeLibSet.Forms
           res = System.Windows.Forms.MessageBox.Show(baseForm,
             text, caption, buttons, icon, defaultButton, (MessageBoxOptions)0, helpContext);
           baseForm.Hide();
-        }
-        finally
-        {
-          baseForm.Dispose();
         }
       }
       return res;
@@ -4459,7 +4472,7 @@ namespace FreeLibSet.Forms
         }
         else // 12.05.2016
         {
-          frm.ShowDialog();
+          EFPApp.SystemMethods.ShowDialog(frm, null);
           frm.Dispose();
         }
       }
@@ -5224,7 +5237,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Открывает окно проводника Windows для заданной папки.
-    /// Если папка не существует, выдается соответствуюшее сообщение
+    /// Если папка не существует, выдается соответствующее сообщение.
+    /// В других операционных системах используется собственные программы для просмотра папок.
+    /// Если такой программы нет, показывается сообщение об ошибке.
+    /// Наличие установленной программы возвращается свойством <see cref="IsWindowsExplorerSupported"/>,
+    /// а ее условное имя - <see cref="WindowsExplorerDisplayName"/>.
     /// </summary>
     /// <param name="dir">Имя просматриваемой папки</param>
     /// <returns>true, если Проводник Windows успешно запущен</returns>
@@ -5232,7 +5249,7 @@ namespace FreeLibSet.Forms
     {
       if (_InsideShowWindowsExplorer)
       {
-        EFPApp.ShowTempMessage("Предыдущая команда открывтия Проводника еще не выполнена");
+        EFPApp.ShowTempMessage("Предыдущая команда открытия Проводника еще не выполнена");
         return false;
       }
 
@@ -5346,7 +5363,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если команда просмотра каталога поддерживается ОС и 
-    /// метод <see cref="ShowWindowsExplorer(AbsPath)"/> может быть вызван
+    /// метод <see cref="ShowWindowsExplorer(AbsPath)"/> может быть вызван.
     /// </summary>
     public static bool IsWindowsExplorerSupported
     {
@@ -5364,6 +5381,21 @@ namespace FreeLibSet.Forms
 #endif
 
         return EFPApp.FileExtAssociations.ShowDirectory.FirstItem != null;
+      }
+    }
+
+    /// <summary>
+    /// Наименование программы, которая используется для просмотра папок методом <see cref="ShowWindowsExplorer(AbsPath)"/>.
+    /// Если <see cref="IsWindowsExplorerSupported"/>=false, возвращается пустая строка
+    /// </summary>
+    public static string WindowsExplorerDisplayName
+    {
+      get
+      {
+        if (EFPApp.FileExtAssociations.ShowDirectory.FirstItem == null)
+          return String.Empty;
+        else
+          return EFPApp.FileExtAssociations.ShowDirectory.FirstItem.DisplayName;
       }
     }
 
@@ -5700,7 +5732,7 @@ namespace FreeLibSet.Forms
       _MicrosoftWordVersion = null;
       _MicrosoftExcelVersion = null;
 
-      OpenOfficeTools.RefreshInstalls();
+      OpenOfficeTools.RefreshInstallations();
       _UsedOpenOffice = null;
       _UsedOpenOfficeDefined = false;
     }
@@ -6341,5 +6373,42 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+  }
+
+  /// <summary>
+  /// Содержит виртуальные методы, которые выполняют системные вызовы.
+  /// В прикладном коде может быть определен класс-наследник и установлено свойство <see cref="EFPApp.SystemMethods"/>.
+  /// Используется для интеграции с Nanocad, где требуется вызывать особые методы для показа формы
+  /// </summary>
+  public class EFPAppSystemMethods
+  {
+    /// <summary>
+    /// Вызов <see cref="Form.ShowDialog(IWin32Window)"/>
+    /// </summary>
+    /// <param name="form">Форма</param>
+    /// <param name="owner">Владелец</param>
+    /// <returns>Результат выполнения диалога</returns>
+    public virtual DialogResult ShowDialog(Form form, IWin32Window owner)
+    {
+      if (owner == null)
+        return form.ShowDialog();
+      else
+        return form.ShowDialog(owner);
+    }
+
+    /// <summary>
+    /// Вызов <see cref="Form.Show(IWin32Window)"/>
+    /// </summary>
+    /// <param name="form">Форма</param>
+    /// <param name="owner">Владелец</param>
+    public virtual void Show(Form form, IWin32Window owner)
+    {
+      // Вызовы form.Show() и form.Show(null) не идентичны, если форма является mdi child
+
+      if (owner == null)
+        form.Show();
+      else
+        form.Show(owner);
+    }
   }
 }

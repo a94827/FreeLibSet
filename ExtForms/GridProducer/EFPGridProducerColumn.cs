@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, GetSourceColumnNameArray(sourceColumnNames));
       item.HeaderText = headerText;
       item.TextAlign = HorizontalAlignment.Left;
       item.TextWidth = textWidth;
@@ -160,6 +160,14 @@ namespace FreeLibSet.Forms
 
       Add(item);
       return item;
+    }
+
+    private static string[] GetSourceColumnNameArray(string sourceColumnNames)
+    {
+      if (String.IsNullOrEmpty(sourceColumnNames))
+        return DataTools.EmptyStrings; // 14.06.2024
+      else
+        return sourceColumnNames.Split(',');
     }
 
     /// <summary>
@@ -206,7 +214,7 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, GetSourceColumnNameArray(sourceColumnNames));
       item.HeaderText = headerText;
       item.ValueNeeded += valueNeeded;
 
@@ -284,7 +292,7 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, GetSourceColumnNameArray(sourceColumnNames));
       item.HeaderText = headerText;
       item.ValueNeeded += valueNeeded;
 
@@ -442,7 +450,7 @@ namespace FreeLibSet.Forms
 
       EditableDateTimeFormatter formatter = EditableDateTimeFormatters.Get(kind);
 
-      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, GetSourceColumnNameArray(sourceColumnNames));
       item.HeaderText = headerText;
       item.ValueNeeded += valueNeeded;
 
@@ -557,7 +565,7 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn item = new EFPGridProducerColumn(name, sourceColumnNames.Split(','));
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, GetSourceColumnNameArray(sourceColumnNames));
       item.HeaderText = headerText;
       item.TextAlign = HorizontalAlignment.Right;
       item.TextWidth = 12;
@@ -591,7 +599,7 @@ namespace FreeLibSet.Forms
     public EFPGridProducerSumColumn AddSumMoney(string name, string sourceColumnNames,
       string headerText)
     {
-      EFPGridProducerSumColumn item = new EFPGridProducerSumColumn(name, sourceColumnNames.Split(','));
+      EFPGridProducerSumColumn item = new EFPGridProducerSumColumn(name, GetSourceColumnNameArray(sourceColumnNames));
       item.HeaderText = headerText;
       item.TextAlign = HorizontalAlignment.Right;
       item.TextWidth = 12;
@@ -994,7 +1002,7 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerCheckBoxColumn item = new EFPGridProducerCheckBoxColumn(name, sourceColumnNames.Split(','));
+      EFPGridProducerCheckBoxColumn item = new EFPGridProducerCheckBoxColumn(name, GetSourceColumnNameArray(sourceColumnNames));
       item.HeaderText = headerText;
       item.ValueNeeded += valueNeeded;
       item.DataType = typeof(bool);
@@ -1024,7 +1032,7 @@ namespace FreeLibSet.Forms
       if (valueNeeded == null)
         throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerImageColumn item = new EFPGridProducerImageColumn(name, sourceColumnNames.Split(','));
+      EFPGridProducerImageColumn item = new EFPGridProducerImageColumn(name, GetSourceColumnNameArray(sourceColumnNames));
       item.HeaderText = headerText;
       item.ValueNeeded += valueNeeded;
 

@@ -17,7 +17,8 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.Shell
 {
   /// <summary>
-  /// Описание команды "Открыть" или "Открыть с помощью"
+  /// Описание команды "Открыть" или "Открыть с помощью".
+  /// Содержит данные, необходимые для открытия файла и необязательное описание значка.
   /// </summary>
   [Serializable]
   public sealed class FileAssociationItem : IObjectWithCode
@@ -25,26 +26,26 @@ namespace FreeLibSet.Shell
     #region Конструкторы
 
     /// <summary>
-    /// 
+    /// Создает описатель без указания значка
     /// </summary>
-    /// <param name="progId"></param>
-    /// <param name="programPath"></param>
-    /// <param name="arguments"></param>
-    /// <param name="displayName"></param>
+    /// <param name="progId">Идентификатор приложения, например, "PBrush"</param>
+    /// <param name="programPath">Путь к выполняемому файлу приложения</param>
+    /// <param name="arguments">Аргументы командной строки, например, "%1"</param>
+    /// <param name="displayName">Отображаемое имя приложения, например, "Paint"</param>
     public FileAssociationItem(string progId, AbsPath programPath, string arguments, string displayName)
       : this(progId, programPath, arguments, displayName, AbsPath.Empty, -1, false, String.Empty)
     {
     }
 
     /// <summary>
-    /// 
+    /// Создает описатель
     /// </summary>
-    /// <param name="progId"></param>
-    /// <param name="programPath"></param>
-    /// <param name="arguments"></param>
-    /// <param name="displayName"></param>
-    /// <param name="iconPath"></param>
-    /// <param name="iconIndex"></param>
+    /// <param name="progId">Идентификатор приложения, например, "PBrush"</param>
+    /// <param name="programPath">Путь к выполняемому файлу приложения</param>
+    /// <param name="arguments">Аргументы командной строки, например, "%1"</param>
+    /// <param name="displayName">Отображаемое имя приложения, например, "Paint"</param>
+    /// <param name="iconPath">Путь к файлу, содержащему значок. Часто совпадает с <paramref name="programPath"/>.</param>
+    /// <param name="iconIndex">Индекс значка в файле <paramref name="iconPath"/></param>
     public FileAssociationItem(string progId, AbsPath programPath, string arguments, string displayName, AbsPath iconPath, int iconIndex)
       : this(progId, programPath, arguments, displayName, iconPath, iconIndex, false, String.Empty)
     {
@@ -134,12 +135,10 @@ namespace FreeLibSet.Shell
 
     /// <summary>
     /// Аргументы командной строки для запуска приложения.
-    /// Аргумент "%1" заменяется на путь к файлу
+    /// Аргумент "%1" заменяется на путь к файлу.
     /// </summary>
     public string Arguments { get { return _Arguments; } }
     private readonly string _Arguments;
-
-    //public string CommandLine { get { return FCommandLine; } set { FCommandLine = value; } }
 
     /// <summary>
     /// Отображаемое имя программы для команд "Открыть с помощью"
@@ -149,14 +148,14 @@ namespace FreeLibSet.Shell
 
     /// <summary>
     /// Путь к файлу в котором содержится значок.
-    /// Может быть не задан
+    /// Может быть не задан.
     /// </summary>
     public AbsPath IconPath { get { return _IconPath; } }
     private readonly AbsPath _IconPath;
 
     /// <summary>
     /// Индекс значка в файле.
-    /// См. описание функции Windows ExtractIcon()
+    /// См. описание функции Windows ExtractIcon().
     /// </summary>
     public int IconIndex { get { return _IconIndex; } }
     private readonly int _IconIndex;
@@ -178,7 +177,7 @@ namespace FreeLibSet.Shell
 #endif
 
     /// <summary>
-    /// Возвращает DisplayName
+    /// Возвращает <see cref="DisplayName"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -274,7 +273,7 @@ namespace FreeLibSet.Shell
 
   /// <summary>
   /// Ассоциации для заданного типа файлов.
-  /// Для получения ассоциаций используйте статический метод FromFileExtension()
+  /// Для получения ассоциаций используйте статический метод <see cref="FromFileExtension(string)"/>.
   /// </summary>
   [Serializable]
   public class FileAssociations : NamedList<FileAssociationItem>
@@ -426,7 +425,7 @@ namespace FreeLibSet.Shell
     /// Возвращаемый список ассоциаций переведен в режим "Только чтение".
     /// 
     /// Этот метод выполняет опрос системы при каждом вызове.
-    /// Используйте свойство EFPApp.FileExtAssociations, которое поддерживает буферизацию
+    /// Используйте свойство EFPApp.FileExtAssociations (ExtForms.dll), которое поддерживает буферизацию.
     /// </summary>
     /// <param name="fileExt">Расширение файла, включая точку</param>
     /// <returns>Список ассоциаций</returns>
@@ -542,7 +541,7 @@ namespace FreeLibSet.Shell
     /// Создает список файловых ассоциаций для просмотра каталогов.
     /// Для Windows обычно возвращает единственный вариант - explorer.exe.
     /// 
-    /// Используйте свойство EFPApp.FileAssociations.ShowDirectory
+    /// Используйте свойство EFPApp.FileAssociations.ShowDirectory (ExtForms.dll).
     /// </summary>
     /// <returns></returns>
     public static FileAssociations FromDirectory()
@@ -624,7 +623,7 @@ namespace FreeLibSet.Shell
         RegistryKey2 key1 = tree[@"HKEY_CLASSES_ROOT\" + fileExt];
         if (key1 != null)
         {
-          if (IsWindowsXP)
+          if (IsWindowsXP_or_Newer)
           {
             RegistryKey2 keyOWPI = tree[@"HKEY_CLASSES_ROOT\" + fileExt + @"\OpenWithProgIds"];
             if (keyOWPI != null)
@@ -652,7 +651,8 @@ namespace FreeLibSet.Shell
             }
           }
 
-          FileAssociationItem item0 = GetProgIdItem(fileExt, tree, DataTools.GetString(key1.GetValue(String.Empty)), key1.Name);
+          string progId = DataTools.GetString(key1.GetValue(String.Empty)); // Например, для ".txt" это "txtFile"
+          FileAssociationItem item0 = GetProgIdItem(fileExt, tree, progId, key1.Name);
           faItems.ExtAdd(item0, true);
         }
       }
@@ -679,10 +679,6 @@ namespace FreeLibSet.Shell
             return null;
         }
 
-        if (cmd.IndexOf(@"%1", StringComparison.Ordinal) < 0)
-          // Обмен с помощью DDE не реализован
-          return null;
-
         string fileName, arguments;
         if (!SplitFileNameAndArgs(cmd, out fileName, out arguments))
           return null;
@@ -697,6 +693,13 @@ namespace FreeLibSet.Shell
           return null; // 25.01.2019
         if (!System.IO.File.Exists(path.Path))
           return null;
+
+        if (!IsWineBrowser(path)) // 21.06.2024
+        {
+          if (arguments.IndexOf(@"%1", StringComparison.Ordinal) < 0)
+            // Обмен с помощью DDE не реализован
+            return null;
+        }
 
         string displayName = String.Empty;
 
@@ -734,8 +737,7 @@ namespace FreeLibSet.Shell
 
 
         // Специальная реализация для Mono+Wine
-        if (EnvironmentTools.IsMono &&
-          String.Equals(path.FileName, "winebrowser.exe", StringComparison.OrdinalIgnoreCase) &&
+        if (IsWineBrowser(path) &&
           (!String.IsNullOrEmpty(fileExt)))
         {
           //Console.WriteLine("winebrowser.exe. fileExt=" + fileExt);
@@ -757,6 +759,12 @@ namespace FreeLibSet.Shell
 
         return new FileAssociationItem(progId, path, arguments, displayName, iconPath, iconIndex, false,
           infoSourceString + Environment.NewLine + keyProgId.Name + @"\shell\open\command");
+      }
+
+      private static bool IsWineBrowser(AbsPath path)
+      {
+        return EnvironmentTools.IsMono &&
+         String.Equals(path.FileName, "winebrowser.exe", StringComparison.OrdinalIgnoreCase);
       }
 
       /// <summary>
@@ -1026,7 +1034,7 @@ namespace FreeLibSet.Shell
         }
       }
 
-      public static bool IsWindowsXP
+      public static bool IsWindowsXP_or_Newer
       {
         get
         {

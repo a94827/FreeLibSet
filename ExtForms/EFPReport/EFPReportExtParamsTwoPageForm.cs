@@ -14,12 +14,12 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Базовый класс Формы для параметров отчета с использованимем расширенных
   /// возможностей
-  /// Форма содержит TabControl с двумя вкладками: "Общие" и "Фильтры".
+  /// Форма содержит <see cref="TabControl"/> с двумя вкладками: "Общие" и "Фильтры".
   /// Внизу формы есть панель с кнопками "ОК" и "Отмена", а также список с кнопками
   /// для выбора готовых наборов параметров.
-  /// Производный класс должен добавить управляющие элементы на вкладку MainTabPage.
-  /// При передаче параметров отчета в форму в переопределенном методе EFPReportExtParams.WriteFormValues() должно быть присвоение
-  /// EFPReportExtParamsTwoPageForm.FiltersControlProvider.Filters = Filters.
+  /// Производный класс должен добавить управляющие элементы на вкладку <see cref="MainTabPage"/>.
+  /// При передаче параметров отчета в форму в переопределенном методе <see cref="EFPReportExtParams.WriteFormValues(EFPReportExtParamsForm, Config.SettingsPart)"/> должно быть присвоение
+  /// <see cref="EFPReportExtParamsTwoPageForm.FiltersControlProvider"/>.Filters = filters.
   /// </summary>
   public partial class EFPReportExtParamsTwoPageForm : EFPReportExtParamsForm
   {
@@ -52,10 +52,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Провайдер табличного просмотра для таблицы редактирования фильтров.
-    /// Пользовательский код должен устанавливать свойство Filters этого объекта в переопределенном методе EFPReportExtParams.WriteFormValues().
+    /// Пользовательский код должен устанавливать свойство Filters этого объекта в переопределенном методе <see cref="EFPReportExtParams.WriteFormValues(EFPReportExtParamsForm, Config.SettingsPart)"/>.
     /// </summary>
     public EFPGridFilterEditorGridView FiltersControlProvider { get { return _FiltersControlProvider; } }
-    private EFPGridFilterEditorGridView _FiltersControlProvider;
+    private readonly EFPGridFilterEditorGridView _FiltersControlProvider;
 
     #endregion
 
@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms
     /// Ключ - класс формы
     /// Значение - Последняя выбранная вкладка
     /// </summary>
-    private static Dictionary<Type, int> _LastSelectedPageIndices = new Dictionary<Type, int>();
+    private static readonly Dictionary<Type, int> _LastSelectedPageIndices = new Dictionary<Type, int>();
 
     void FormProvider_Shown(object sender, EventArgs args)
     {

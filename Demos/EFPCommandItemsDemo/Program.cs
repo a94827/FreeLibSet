@@ -66,7 +66,7 @@ namespace EFPCommandItemsDemo
       menuDialogs.MenuText = "Диалоги";
       h.CommandItems.Add(menuDialogs);
 
-      EFPCommandItem ciWizard = new EFPCommandItem("File", "WizardTest");
+      EFPCommandItem ciWizard = new EFPCommandItem("Dialogs", "WizardTest");
       ciWizard.MenuText = "Тест запуска Wizard";
       ciWizard.ImageKey = "ArrowRight";
       ciWizard.ShortCut = Keys.F4;
@@ -80,6 +80,12 @@ namespace EFPCommandItemsDemo
       ciSettingsDialog.Click += new EventHandler(ciSettings_Click);
       ciSettingsDialog.Parent = menuDialogs;
       h.CommandItems.Add(ciSettingsDialog);
+
+      EFPCommandItem ciHistDialog = new EFPCommandItem("Dialogs", "HistFileBrowserDialog");
+      ciHistDialog.MenuText = "HistFileBrowserDialog и HistFolderBrowserDialog";
+      ciHistDialog.Click += new EventHandler(ciHistDialog_Click);
+      ciHistDialog.Parent = menuDialogs;
+      h.CommandItems.Add(ciHistDialog);
 
 
       EFPCommandItem menuWindow = h.CommandItems.Add(EFPAppStdCommandItems.MenuWindow);
@@ -132,6 +138,11 @@ namespace EFPCommandItemsDemo
       new SettingsTemplateForm1(dlg);
       new SettingsTemplateForm2(dlg);
       dlg.ShowDialog();
+    }
+
+    private static void ciHistDialog_Click(object sender, EventArgs args)
+    {
+      EFPApp.ShowDialog(new HistDialogParamsForm(), true);
     }
 
 

@@ -488,7 +488,7 @@ namespace FreeLibSet.Forms
         _SavedText = Text;
 
       Validate();
-      DoSyncValueChanged();
+      OnSyncValueChanged();
     }
 
     /// <summary>
@@ -1038,6 +1038,26 @@ namespace FreeLibSet.Forms
       get
       {
         return Control.UseSystemPasswordChar || (Control.PasswordChar != 0);
+      }
+    }
+
+    /// <summary>
+    /// Значение свойства <see cref="EFPControlBase.DisplayName"/>, если оно не задано в явном виде
+    /// </summary>
+    protected override string DefaultDisplayName
+    {
+      get
+      {
+        if (IsPasswordInput)
+          return "Поле ввода пароля";
+        else if (IsMultiLine)
+        {
+          if (ReadOnly)
+            return "Просмотр текста";
+          else
+            return "Текстовый редактор";
+        }
+        else return "Поле ввода текста";
       }
     }
 
@@ -2225,7 +2245,8 @@ namespace FreeLibSet.Forms
 
       if (controlProvider is IEFPTextBoxWithStatusBar)
       {
-        UseStatusBarRC = true;
+        //UseStatusBarRC = true;
+        _UseStatusBarRC = ((IEFPTextBox)controlProvider).IsMultiLine; // 20.06.2024
 
         ciStatusRow = new EFPCommandItem("View", "StatusRow");
         ciStatusRow.Usage = EFPCommandItemUsage.StatusBar;

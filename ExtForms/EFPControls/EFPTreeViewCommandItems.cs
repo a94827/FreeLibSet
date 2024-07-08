@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace FreeLibSet.Forms
 {
-                             
+
   /// <summary>
   /// Команды локального меню для TreeView и TreeViewAdv.
   /// Базовый класс для EFPTreeViewCommandItems и EFPTreeViewAdvCommandItemsBase
@@ -22,11 +22,13 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     protected EFPTreeViewCommandItemsBase(IEFPTreeView controlProvider)
-      :base((EFPControlBase)controlProvider)
+      : base((EFPControlBase)controlProvider)
     {
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
       _Owner = controlProvider;
+
+      Idle += CommandItems_Idle;
     }
 
     /// <summary>
@@ -59,6 +61,7 @@ namespace FreeLibSet.Forms
       AddSeparator();
 
       _PasteHandler = new EFPPasteHandler(this);
+      _PasteHandler.UseToolBar = false; // по умолчанию - кнопки не нужны
 
       #endregion
 
@@ -119,7 +122,7 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Переопределенные методы
+    #region OnPrepare()
 
     /// <summary>
     /// Инициализация свойств EFPCommandItem.Usage
@@ -147,18 +150,12 @@ namespace FreeLibSet.Forms
       // (если уже не были добавлены явно)
       //AddTextPasteFormats();
 
-      _PasteHandler.InitCommandUsage(ClipboardInToolBar);
-      _PasteHandler.PasteApplied += new EventHandler(FPasteHandler_PasteApplied);
-
-
       ciIncSearch.Usage = EFPCommandItemUsage.None; // TODO: Команды поиска по первым буквам
       if (Owner.TextSearchContext == null)
       {
         ciFind.Usage = EFPCommandItemUsage.None;
         ciFindNext.Usage = EFPCommandItemUsage.None;
       }
-
-      PerformRefreshItems();
     }
 
     #endregion
@@ -170,16 +167,11 @@ namespace FreeLibSet.Forms
     /// инструментов (если она есть).
     /// По умолчанию - false (только в меню и горячие клавиши)
     /// </summary>
-    public bool ClipboardInToolBar 
-    { 
-      get { return _ClipboardInToolBar; } 
-      set 
-      {
-        CheckNotReadOnly();
-        _ClipboardInToolBar = value; 
-      } 
+    public bool ClipboardInToolBar
+    {
+      get { return _PasteHandler.UseToolBar; }
+      set { _PasteHandler.UseToolBar = value; }
     }
-    private bool _ClipboardInToolBar;
 
     #region Вырезать
 
@@ -196,11 +188,7 @@ namespace FreeLibSet.Forms
     private void DoCut(object sender, EventArgs args)
     {
       if (Cut != null)
-      {
         Cut(this, EventArgs.Empty);
-
-        PerformRefreshItems();
-      }
     }
 
     #endregion
@@ -323,12 +311,6 @@ namespace FreeLibSet.Forms
     public EFPPasteHandler PasteHandler { get { return _PasteHandler; } }
     private EFPPasteHandler _PasteHandler;
 
-    void FPasteHandler_PasteApplied(object sender, EventArgs args)
-    {
-      //Owner.CurrentIncSearchColumn = null;
-      PerformRefreshItems();
-    }
-
     #endregion
 
     #endregion
@@ -373,8 +355,8 @@ namespace FreeLibSet.Forms
 
       //if (Owner.CurrentIncSearchColumn == null)
       //{
-        if (Owner.TextSearchContext != null)
-          Owner.TextSearchContext.ContinueSearch();
+      if (Owner.TextSearchContext != null)
+        Owner.TextSearchContext.ContinueSearch();
       //}
       //else
       //  if (!Owner.CurrentIncSearchColumn.PerformIncSearch(Owner.CurrentIncSearchChars.ToUpper(), true))
@@ -385,9 +367,11 @@ namespace FreeLibSet.Forms
 
     internal void RefreshSearchItems()
     {
-      if (Owner.TextSearchContext!=null)
-        ciFindNext.Enabled = Owner.TextSearchContext.ContinueEnabled;
-
+      if (Owner.TextSearchContext != null)
+      {
+        ciFind.Enabled = Owner.HasNodes; // 17.06.2024
+        ciFindNext.Enabled = Owner.HasNodes && Owner.TextSearchContext.ContinueEnabled;
+      }
       /*
       if (ciIncSearch == null)
         return;
@@ -467,40 +451,23 @@ namespace FreeLibSet.Forms
 
     private void RefreshCheckItems()
     {
-      ciCheckAll.Visible = _Owner.CheckBoxes;
-      ciUncheckAll.Visible = _Owner.CheckBoxes;
+      ciCheckAll.Visible = ciUncheckAll.Visible = _Owner.CheckBoxes;
+      ciCheckAll.Enabled = ciUncheckAll.Enabled = _Owner.HasNodes; // 17.06.2024
     }
 
     #endregion
 
     #region Обновление состояния команд
 
-    /// <summary>
-    /// Вызывается при изменении текущей позиции в управляющем элементе или
-    /// при вызове PerformRefreshItems()
-    /// </summary>
-    public event EventHandler RefreshItems;
-
-    /// <summary>
-    /// Обновление доступности команд локального меню после внешнего изменения
-    /// выбранных ячеек просмотра
-    /// </summary>
-    public void PerformRefreshItems()
+    private void CommandItems_Idle(object sender, EventArgs args)
     {
-      if (Owner == null)
-        return;
-
-      // Вызываем виртуальный метод
-      DoRefreshItems();
-      // Посылаем извещения
-      if (RefreshItems != null)
-        RefreshItems(this, EventArgs.Empty);
+      OnRefreshItems();
     }
 
     /// <summary>
     /// Обновление видимости и доступности команд
     /// </summary>
-    protected virtual void DoRefreshItems()
+    protected virtual void OnRefreshItems()
     {
       RefreshSearchItems();
       RefreshCheckItems();
@@ -552,6 +519,19 @@ namespace FreeLibSet.Forms
         a[0, 0] = Owner.Control.SelectedNode.Text;
         AddDefaultCopyFormats(args.DataObject, a, CopyFormats);
       }
+    }
+
+    #endregion
+
+    #region Обновление команд
+
+    /// <summary>
+    /// Установка доступности команд
+    /// </summary>
+    protected override void OnRefreshItems()
+    {
+      base.OnRefreshItems();
+      this[EFPAppStdCommandItems.Copy].Enabled = Owner.Control.SelectedNode != null; // 17.06.2024
     }
 
     #endregion

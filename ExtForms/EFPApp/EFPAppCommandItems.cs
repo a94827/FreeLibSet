@@ -503,6 +503,7 @@ namespace FreeLibSet.Forms
 
         case EFPAppStdCommandItems.PasteSpecial:
           ci.MenuText = "Сп&ециальная вставка ...";
+          ci.ShortCut= Keys.Control | Keys.Shift | Keys.V;
           break;
 
         case EFPAppStdCommandItems.Find:

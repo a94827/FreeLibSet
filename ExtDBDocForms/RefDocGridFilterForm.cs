@@ -463,7 +463,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет в выборку ссылки на выбранные документы.
     /// Действует и в режимах <see cref="RefDocCommonFilter.Mode"/>=<see cref="RefDocFilterMode.Include"/> и <see cref="RefDocFilterMode.Exclude"/>.
-    /// Использует вызов <see cref="DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> в режиме <see cref="EFPDBxViewDocSelReason.Copy"/>.
+    /// Использует вызов <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> в режиме <see cref="EFPDBxViewDocSelReason.Copy"/>.
     /// В выборку могут быть добавлены ссылки на связанные документы, если есть обработчик события
     /// <see cref="DocTypeUIBase.GetDocSel"/>
     /// </summary>

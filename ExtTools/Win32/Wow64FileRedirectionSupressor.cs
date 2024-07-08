@@ -8,15 +8,15 @@ namespace FreeLibSet.Win32
 {
 
   /// <summary>
-  /// Подавление подстановки каталогов (Redirection) в 64-разрядных версиях windows.
+  /// Подавление подстановки каталогов (Redirection) в 64-разрядных версиях Windows.
   /// Использование:
   /// using(new FileRedirectionSupressor() )
   /// { 
   ///   // Код, в котором используются истинные имена без подстановок
   /// }
-  /// Используются функции Wow64DisableWow64FsRedirection() и Wow64RevertWow64FsRedirection
+  /// Используются функции Windows Wow64DisableWow64FsRedirection() и Wow64RevertWow64FsRedirection().
   /// Если операционная система не поддерживает redirection (например, является 32-разрядной), код в блоке using выполняется без дополнительных действий.
-  /// Также действия не выполняются, если приложение является 64-разрядным
+  /// Также действия не выполняются, если приложение является 64-разрядным.
   /// </summary>
   public sealed class Wow64FileRedirectionSupressor : SimpleDisposableObject
   {

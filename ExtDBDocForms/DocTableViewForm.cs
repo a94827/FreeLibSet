@@ -223,7 +223,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове <see cref="DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
@@ -696,7 +696,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове <see cref="DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller

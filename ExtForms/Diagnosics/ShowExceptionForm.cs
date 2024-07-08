@@ -426,9 +426,9 @@ namespace FreeLibSet.Forms.Diagnostics
           #endregion
 
           if (useDialogOwnerWindow && EFPApp.DialogOwnerWindow != null)
-            frm1.ShowDialog(EFPApp.DialogOwnerWindow);
+            EFPApp.SystemMethods.ShowDialog(frm1, EFPApp.DialogOwnerWindow);
           else
-            frm1.ShowDialog();
+            EFPApp.SystemMethods.ShowDialog(frm1, null);
 
           if (frm1.cbStopShow.Checked)
           {

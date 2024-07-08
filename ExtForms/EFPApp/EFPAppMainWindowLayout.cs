@@ -67,8 +67,8 @@ namespace FreeLibSet.Forms
     public Form MainWindow
     {
       get { return _MainWindow; }
-      protected set 
-      { 
+      protected set
+      {
 #if DEBUG
         if (value == null)
           throw new ArgumentNullException();
@@ -468,8 +468,8 @@ namespace FreeLibSet.Forms
           _InsideCloseMainWindow = true;
           try
           {
-            if(!EFPApp.Exit())
-              args.Cancel=true;
+            if (!EFPApp.Exit())
+              args.Cancel = true;
           }
           finally
           {
@@ -535,6 +535,16 @@ namespace FreeLibSet.Forms
     private EFPAppToolBars _ToolBars;
 
     /// <summary>
+    /// Локальная панель инструментов формы
+    /// </summary>
+    internal EFPAppToolBar LocalToolBar
+    {
+      get { return _LocalToolBar; }
+      set { _LocalToolBar = value; }
+    }
+    private EFPAppToolBar _LocalToolBar;
+
+    /// <summary>
     /// Статусная строка, которой можно управлять
     /// </summary>
     public EFPAppStatusBar StatusBar
@@ -575,20 +585,20 @@ namespace FreeLibSet.Forms
         _ToolBars = new EFPAppToolBars();
         for (int i = 0; i < EFPApp.ToolBars.Count; i++)
         {
-          EFPAppToolBarCommandItems Src = EFPApp.ToolBars[i];
+          EFPAppToolBarCommandItems src = EFPApp.ToolBars[i];
 
-          EFPAppToolBar res = new EFPAppToolBar(Src.Name);
+          EFPAppToolBar res = new EFPAppToolBar(src.Name);
           res.Info = new FormToolStripInfo(MainWindow);
-          res.DisplayName = Src.DisplayName;
-          res.Add(Src);
+          res.DisplayName = src.DisplayName;
+          res.Add(src);
 
           EFPAppToolBar currTB = null;
           if (Interface.CurrentMainWindowLayout != null)
-            currTB = Interface.CurrentMainWindowLayout.ToolBars[Src.Name];
+            currTB = Interface.CurrentMainWindowLayout.ToolBars[src.Name];
           if (currTB == null)
           {
-            res.Visible = Src.DefaultVisible;
-            res.Dock = Src.DefaultDock;
+            res.Visible = src.DefaultVisible;
+            res.Dock = src.DefaultDock;
           }
           else
           {
@@ -597,6 +607,12 @@ namespace FreeLibSet.Forms
           }
 
           _ToolBars.Add(res);
+        }
+
+        if (LocalToolBar != null)
+        {
+          LocalToolBar.Info = new FormToolStripInfo(MainWindow);
+          _ToolBars.Add(LocalToolBar);
         }
 
         // 22.11.2018
@@ -637,6 +653,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void RestoreToolBars()
     {
+      /*
       for (int i = 0; i < EFPApp.ToolBars.Count; i++)
       {
         EFPAppToolBarCommandItems src = EFPApp.ToolBars[i];
@@ -644,6 +661,34 @@ namespace FreeLibSet.Forms
         EFPAppToolBar res = ToolBars[src.Name];
         res.Visible = src.DefaultVisible;
         res.Dock = src.DefaultDock;
+      }
+      */
+
+      // 18.06.2024
+      // Могут быть локальные панели инструментов, которых нет в списке EFPApp.ToolBars
+
+      foreach (EFPAppToolBar res in ToolBars)
+      {
+        res.Reset(); // сбрасываем позиционирование по координатам
+        res.Bar.Parent = null; // отсоединяем
+      }
+
+      // Вызывать ToolBarPanel.Join() надо в обратном порядке, так как ToolStrip вставляется в начало панели, а не в конец
+      for (int i = ToolBars.Count - 1; i >= 0; i--)
+      {
+        EFPAppToolBar res = ToolBars[i];
+        EFPAppToolBarCommandItems src = EFPApp.ToolBars[res.Name];
+        if (src == null)
+        {
+          res.Visible = true;
+          res.Dock = DockStyle.Top;
+        }
+        else
+        {
+          res.Visible = src.DefaultVisible;
+          res.Dock = src.DefaultDock;
+        }
+        res.DoJoin();
       }
     }
 

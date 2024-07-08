@@ -70,15 +70,15 @@ namespace FreeLibSet.Forms
       stripContainer.Dock = DockStyle.Fill;
       stripContainer.ContentPanel.BackColor = SystemColors.AppWorkspace;
 
-      StatusStrip TheStatusBar = new System.Windows.Forms.StatusStrip();
-      stripContainer.BottomToolStripPanel.Controls.Add(TheStatusBar);
+      StatusStrip theStatusBar = new System.Windows.Forms.StatusStrip();
+      stripContainer.BottomToolStripPanel.Controls.Add(theStatusBar);
 
       _CascadeHelper.SetStartPosition(dummyForm, EFPApp.DefaultScreen.WorkingArea);  // обязательно до AddMainWindow()
 
       EFPAppMainWindowLayoutSDI layout = new EFPAppMainWindowLayoutSDI(dummyForm, false);
       base.AddMainWindow(layout);
 
-      layout.MainWindow.Show();
+      EFPApp.SystemMethods.Show(layout.MainWindow, null);
 
       // Пустышка не попадает в список дочерних окон
 
@@ -125,20 +125,62 @@ namespace FreeLibSet.Forms
 
       //base.PrepareChildForm(Form);
 
-      StatusStrip TheStatusBar = new System.Windows.Forms.StatusStrip();
-      EFPApp.SetStatusStripHeight(TheStatusBar, form); // 16.06.2021
-      pd.StripContainer.BottomToolStripPanel.Controls.Add(TheStatusBar);
-      form.Controls.Add(TheStatusBar);
+      StatusStrip theStatusBar = new System.Windows.Forms.StatusStrip();
+      EFPApp.SetStatusStripHeight(theStatusBar, form); // 16.06.2021
+      pd.StripContainer.BottomToolStripPanel.Controls.Add(theStatusBar);
+      form.Controls.Add(theStatusBar);
 
       //TheStatusBar.Items.Add("Статусная строка SDI");
+
+      string displayName;
+      ToolStrip localToolStrip = MoveSingleToolBar(form, pd.StripContainer.TopToolStripPanel, out displayName);
 
       // Умещаем на экран
       _CascadeHelper.SetStartPosition(form, EFPApp.DefaultScreen.WorkingArea); // обязательно до AddMainWindow()
 
       pd.Layout = new EFPAppMainWindowLayoutSDI(form, true);
+      if (localToolStrip != null)
+      {
+        pd.Layout.LocalToolBar = new EFPAppToolBar("CurrentForm", localToolStrip);
+        pd.Layout.LocalToolBar.DisplayName = displayName;
+      }
       base.AddMainWindow(pd.Layout);
 
+
       return pd;
+    }
+
+    /// <summary>
+    /// Перенос единственной панели инструментов
+    /// </summary>
+    private static ToolStrip MoveSingleToolBar(Form form, ToolStripPanel stripPanel, out string displayName)
+    {
+      displayName = null;
+      IEFPControlWithToolBar formCWT = form as IEFPControlWithToolBar; // SimpleForm, например
+      if (formCWT == null)
+        return null;
+      if (formCWT.ToolBarPanel == null)
+        return null;
+      Control[] a = WinFormsTools.GetControls<Control>(formCWT.ToolBarPanel, false);
+      if (a.Length != 2) // ToolBarPanel и ToolStrip в нем
+        return null;
+      ToolStrip strip = a[1] as ToolStrip;
+      if (strip == null)
+        return null;
+      //if (!strip.Visible)
+      //  return;
+
+      strip.GripStyle = ToolStripGripStyle.Visible;
+      //strip.Parent = stripPanel;
+      strip.Parent = null;
+      stripPanel.Controls.Add(strip);
+      formCWT.ToolBarPanel.Visible = false;
+
+      displayName = "Панель инструментов окна";
+      if (formCWT.BaseProvider.ControlProviders.Count > 0)
+        displayName = formCWT.BaseProvider.ControlProviders[0].DisplayName;
+
+      return strip;
     }
 
     /// <summary>
@@ -152,16 +194,16 @@ namespace FreeLibSet.Forms
     {
       PreparationData pd = (PreparationData)preparationData;
 
-      pd.Layout.MainWindow.Show();
+      EFPApp.SystemMethods.Show(pd.Layout.MainWindow, null);
 
       // Делаем, чтобы размеры сохранились
       EFPFormProvider formProvider = EFPFormProvider.FindFormProviderRequired(form);
       if ((!pd.SrcSize.IsEmpty) && (formProvider.ReadConfigFormBoundsParts & EFPFormBoundsPart.Size) == 0)
       {
         // Должно быть после вызова AddMainWindow(), т.к. там добавляется статусная строка и панели
-        Size NewSize = pd.StripContainer.ContentPanel.ClientSize;
-        int dx = pd.SrcSize.Width - NewSize.Width;
-        int dy = pd.SrcSize.Height - NewSize.Height;
+        Size newSize = pd.StripContainer.ContentPanel.ClientSize;
+        int dx = pd.SrcSize.Width - newSize.Width;
+        int dy = pd.SrcSize.Height - newSize.Height;
         form.Size = new Size(form.Size.Width + dx,
           form.Size.Height + dy);
       }
