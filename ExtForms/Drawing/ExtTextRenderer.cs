@@ -873,7 +873,7 @@ namespace FreeLibSet.Drawing
     /// Разбиение на строки должно быть выполнено заранее с разделителем <see cref="Environment.NewLine"/>
     /// </summary>
     /// <param name="lines">Строки</param>
-    /// <param name="rc">Прямоугольник в координатах <see cref="Graphics.PageUnit"/></param>
+    /// <param name="rc">Прямоугольник в координатах <see cref="System.Drawing.Graphics.PageUnit"/></param>
     public void DrawLines(string lines, RectangleF rc)
     {
       if (String.IsNullOrEmpty(lines))

@@ -63,7 +63,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Интерфейс провайдера управляющего элемента.
-  /// Реализуется <see cref="EFPControlBase"/>.
+  /// Реализуется только классом <see cref="EFPControlBase"/>.
+  /// Используется в качестве базового для специализированных интерфейсов, например, <see cref="IEFPDataView"/>.
   /// </summary>
   public interface IEFPControl : IUIValidableObject, IEFPAppIdleHandler
   {
@@ -78,7 +79,7 @@ namespace FreeLibSet.Forms
     Control Control { get; }
 
     /// <summary>
-    /// Управляет видимомостью элемента. 
+    /// Управляет видимостью элемента. 
     /// </summary>
     bool Visible { get; set; }
 
@@ -100,12 +101,12 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если элемент доступен для воздействия пользователя.
     /// Для обычных элементов возвращает true, если и <see cref="Visible"/> и <see cref="Enabled"/> установлены в true.
-    /// Для <see cref="EFPTextBox"/> и других полей ввода, также проверяется, что ReadOnly=false.
+    /// Для <see cref="EFPTextBox"/> и других полей ввода, также проверяется, что <see cref="EFPTextBoxControlWithReadOnly{TextBox}.ReadOnly"/>=false.
     /// </summary>
     bool Editable { get; }
 
     /// <summary>
-    /// Связываемое свойство Editable
+    /// Связываемое свойство <see cref="Editable"/>.
     /// </summary>
     DepValue<Boolean> EditableEx { get; }
 
@@ -122,7 +123,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство возвращает true, если управляющий элемент был выведен на экран или сейчас будет выведен.
     /// Свойство однократно переходит из false в true. Перед этим вызывается событие <see cref="Created"/>.
-    /// Свойство <see cref="Control.Visible "/> может многократно изменяться еще до вывода элемента на экран.
+    /// Свойство <see cref="System.Windows.Forms.Control.Visible "/> может многократно изменяться еще до вывода элемента на экран.
     /// </summary>
     bool HasBeenCreated { get; }
 
@@ -228,7 +229,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство установлено в true, то метод <see cref="Validate()"/> будет дополнительно вызываться после получения и
     /// потери элементом фокуса ввода.
-    /// Вызов метода <see cref="Validate()"/> выполняется не сразу в обработчике событий <see cref="Control.Enter"/> и <see cref="Control.Leave"/>,
+    /// Вызов метода <see cref="Validate()"/> выполняется не сразу в обработчике событий <see cref="System.Windows.Forms.Control.Enter"/> и <see cref="System.Windows.Forms.Control.Leave"/>,
     /// а с небольшой задержкой, в обработчике Idle. Соответственно, свойство UseIdle принимает значение true.
     /// По умолчанию свойство имеет значение false и проверка не выполняется.
     /// Установка свойства возможна только до вывода элемента на экран.
@@ -707,7 +708,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство возвращает true, если управляющий элемент был инициализирован
     /// Свойство однократно переходит из false в true. Перед этим вызывается событие <see cref="Created"/>.
-    /// Свойство <see cref="Control.Visible"/> может многократно изменяться еще до вывода элемента на экран.
+    /// Свойство <see cref="System.Windows.Forms.Control.Visible"/> может многократно изменяться еще до вывода элемента на экран.
     /// </summary>
     public bool HasBeenCreated
     {
@@ -737,9 +738,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается, когда форма выводится на экран или когда элемент присоединяется к видимой форме.
-    /// Событие не вызывается, если на момент присоединения к форме, свойство <see cref="Control.Visible"/>=false. 
+    /// Событие не вызывается, если на момент присоединения к форме, свойство <see cref="System.Windows.Forms.Control.Visible"/>=false. 
     /// Событие будет вызвано позже, когда элемент управления станет видимым. 
-    /// Это событие может вызываться многократно, чередуясь с событием Detached.
+    /// Это событие может вызываться многократно, чередуясь с событием <see cref="Detached"/>.
     /// </summary>
     public event EventHandler Attached;
 
@@ -802,9 +803,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Событие вызывается при закрытии формы с элементом или при отсоединении элемента от формы.
-    /// Событие не вызывается, если управляющий элемент становится невидимым (<see cref="Control.Visible"/>=false),
+    /// Событие не вызывается, если управляющий элемент становится невидимым (<see cref="System.Windows.Forms.Control.Visible"/>=false),
     /// но продолжает оставаться присоединенным к форме. 
-    /// Событие не вызывается, как и событие <see cref="Attached"/>, если форма была выведена на экран, но свойство <see cref="Control.Visible"/> все время оставалось равным false.
+    /// Событие не вызывается, как и событие <see cref="Attached"/>, если форма была выведена на экран, но свойство <see cref="System.Windows.Forms.Control.Visible"/> все время оставалось равным false.
     /// Это событие может вызываться многократно, чередуясь с событием <see cref="Attached"/>.
     /// </summary>
     public event EventHandler Detached;
@@ -854,7 +855,7 @@ namespace FreeLibSet.Forms
     #region 4. Событие Disposed
 
     /// <summary>
-    /// Событие вызывается в ответ на установку <see cref="Control.IsDisposed"/>.
+    /// Событие вызывается в ответ на установку <see cref="System.Windows.Forms.Control.IsDisposed"/>.
     /// Событие вызывается однократно.
     /// </summary>
     public event EventHandler Disposed;
@@ -908,7 +909,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Видимость управляющего элемента
-    /// Возвращает и устанавливает свойство <see cref="Control.Visible"/> управляющего элемента.
+    /// Возвращает и устанавливает свойство <see cref="System.Windows.Forms.Control.Visible"/> управляющего элемента.
     /// Установка значения true может оказаться отложенной, если в момент вызова
     /// один из родительских элементов не является видимым.
     /// </summary>
@@ -927,9 +928,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Расширенное свойство <see cref="Visible"/>.
-    /// В .Net Framework свойство <see cref="Control.Visible"/> изменяется, когда изменяется
+    /// В .Net Framework свойство <see cref="System.Windows.Forms.Control.Visible"/> изменяется, когда изменяется
     /// видимость одного из родительских элементов (например, самой формы).
-    /// При этом, когда свойство переключается в false, событие <see cref="Control.VisibleChanged"/>
+    /// При этом, когда свойство переключается в false, событие <see cref="System.Windows.Forms.Control.VisibleChanged"/>
     /// не посылается, поэтому в <see cref="Visible"/> может оказаться неактуальное значение.
     /// </summary>
     public DepValue<Boolean> VisibleEx
@@ -1087,7 +1088,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Доступность управляющего элемента
-    /// Возвращает и устанавливает свойство <see cref="Control.Enabled"/> управляющего элемента.
+    /// Возвращает и устанавливает свойство <see cref="System.Windows.Forms.Control.Enabled"/> управляющего элемента.
     /// Установка значения true может оказаться отложенной, если в момент вызова
     /// один из родительских элементов не является доступным.
     /// </summary>
@@ -1107,9 +1108,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Расширенное свойство <see cref="Enabled"/>.
-    /// В .Net Framework свойство <see cref="Control.Enabled "/> изменяется, когда изменяется
+    /// В .Net Framework свойство <see cref="System.Windows.Forms.Control.Enabled "/> изменяется, когда изменяется
     /// доступность одного из родительских элементов (например, GroupBox).
-    /// В отличие от <see cref="Control.VisibleChanged"/>, событие <see cref="Control.EnabledChanged"/> посылается
+    /// В отличие от <see cref="System.Windows.Forms.Control.VisibleChanged"/>, событие <see cref="System.Windows.Forms.Control.EnabledChanged"/> посылается
     /// при любом перключении, поэтому свойство <see cref="Enabled"/> содержит актуальное значение.
     /// </summary>
     public DepValue<Boolean> EnabledEx
@@ -1163,12 +1164,12 @@ namespace FreeLibSet.Forms
     private DepInput<Boolean> _EnabledSync;
 
     /// <summary>
-    /// Свойство <see cref="Control.Enabled"/>
+    /// Свойство <see cref="System.Windows.Forms.Control.Enabled"/>
     /// </summary>
     protected abstract bool ControlEnabled { get; set; }
 
     /// <summary>
-    /// Сюда должен быть присоединен обработчик события <see cref="Control.EnabledChanged"/>
+    /// Сюда должен быть присоединен обработчик события <see cref="System.Windows.Forms.Control.EnabledChanged"/>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -1260,7 +1261,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метка для управляющего элемента.
-    /// По умолчанию свойство устанавливается на предыдущий управляющий элемент (вызовом <see cref="Control.GetNextControl(Control, bool)"/> для родительского элемента),
+    /// По умолчанию свойство устанавливается на предыдущий управляющий элемент (вызовом <see cref="System.Windows.Forms.Control.GetNextControl(System.Windows.Forms.Control, bool)"/> для родительского элемента),
     /// если он является <see cref="Label"/> или <see cref="GroupBox"/>.
     /// Свойство не имеет значения, если в конструкторе задана аргумент <see cref="LabelNeeded"/>=false (зависит от типа управляющего элемента).
     /// Свойству может быть присвоено значение null, <see cref="System.Windows.Forms.Label"/>, <see cref="System.Windows.Forms.GroupBox"/>, <see cref="System.Windows.Forms.CheckBox"/> или <see cref="System.Windows.Forms.RadioButton"/>. Использование других

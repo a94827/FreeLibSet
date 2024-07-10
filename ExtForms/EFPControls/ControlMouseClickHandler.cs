@@ -12,12 +12,12 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Обработчик событий от мыши для управляющего элемента, в котором не установлены
   /// биты StandardClick и/или StandardDoubleClick, например <see cref="RadioButton"/>. Такой
-  /// <see cref="Control"/> не посылает события <see cref="Control.MouseDoubleClick"/>, а в событиях <see cref="Control.MouseUp"/> и <see cref="Control.MouseDown"/>
+  /// <see cref="System.Windows.Forms.Control"/> не посылает события <see cref="System.Windows.Forms.Control.MouseDoubleClick"/>, а в событиях <see cref="System.Windows.Forms.Control.MouseUp"/> и <see cref="System.Windows.Forms.Control.MouseDown"/>
   /// свойство <see cref="MouseEventArgs.Clicks"/> всегда равно 1.
   /// Объект <see cref="ControlMouseClickHandler"/> создается для управляющего элемента и 
   /// обрабатывает события мыши, вычисляя условия для двойного щелчка мыши.
   /// Генерируются собственные события <see cref="MouseDown"/>, <see cref="MouseClick"/>, <see cref="MouseDoubleClick"/> и
-  /// <see cref="MouseUp"/>, так как события класса <see cref="Control"/> не могут быть вызваны.
+  /// <see cref="MouseUp"/>, так как события класса <see cref="System.Windows.Forms.Control"/> не могут быть вызваны.
   /// Также позволяет отслеживать тройные щелчки, используя свойство <see cref="MouseEventArgs.Clicks"/> в обработчике событий.
   /// </summary>
   public class ControlMouseClickHandler

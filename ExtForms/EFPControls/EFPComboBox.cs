@@ -99,7 +99,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Автоматическое преобразование регистра символов к верхнему или нижнему регистру.
-    /// По умолчанию преобразование не выполняется (<see cref="CharacterCasing.Normal"/>).
+    /// По умолчанию преобразование не выполняется (<see cref="System.Windows.Forms.CharacterCasing.Normal"/>).
     /// </summary>
     public CharacterCasing CharacterCasing
     {

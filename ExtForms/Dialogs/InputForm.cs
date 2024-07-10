@@ -413,7 +413,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим преобразования регистра.
-    /// По умолчанию регистр не преобразуется (<see cref="CharacterCasing.Normal"/>).
+    /// По умолчанию регистр не преобразуется (<see cref="System.Windows.Forms.CharacterCasing.Normal"/>).
     /// </summary>
     public CharacterCasing CharacterCasing { get { return _CharacterCasing; } set { _CharacterCasing = value; } }
     private CharacterCasing _CharacterCasing;

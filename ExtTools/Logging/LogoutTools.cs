@@ -603,14 +603,14 @@ namespace FreeLibSet.Logging
             outOfMemory = true;
 
           args.IndentLevel++;
-          DoLogoutException2(args, e, "*** Ошибка при добавлении системной информации ***", false);
+          DoLogoutException2(args, e, "*** Error when system information adding ***", false);
         }
         args.IndentLevel = indentLevel; // восстанавливаем уровень отступов на случай сбоя
       }
 
       if (outOfMemory)
       {
-        args.WriteLine("*** Вывод отладочной информации отменен из-за OutOfMemoryException ***");
+        args.WriteLine("*** Logging cancelled because of OutOfMemoryException ***");
         return;
       }
 
@@ -651,7 +651,7 @@ namespace FreeLibSet.Logging
               catch { }
             }
             args.IndentLevel++;
-            DoLogoutException2(args, e, "*** Ошибка при добавлении информации обработчиком logout ***", false);
+            DoLogoutException2(args, e, "*** LogoutInfoNeededEventHandler error ***", false);
           }
           args.IndentLevel = indentLevel; // восстанавливаем уровень отступов на случай сбоя
         }
@@ -659,7 +659,7 @@ namespace FreeLibSet.Logging
 
       if (outOfMemory)
       {
-        args.WriteLine("*** Вывод отладочной информации прекращен из-за OutOfMemoryException ***");
+        args.WriteLine("*** Logging cancelled because of OutOfMemoryException ***");
         return;
       }
 
@@ -1076,10 +1076,10 @@ namespace FreeLibSet.Logging
         return;
 
       StringBuilder sb = new StringBuilder();
-      sb.Append("Ошибка ");
+      sb.Append("Error ");
       Assembly asm = Assembly.GetEntryAssembly();
       if (asm == null)
-        sb.Append("[Нет GetEntryAssembly]");
+        sb.Append("[There is no GetEntryAssembly]");
       else
         sb.Append(asm.ToString());
       sb.Append(" (");
@@ -1090,7 +1090,7 @@ namespace FreeLibSet.Logging
       sb.Append(e.Message);
       if (!textFileName.IsEmpty)
       {
-        sb.Append(". LOG-файл: ");
+        sb.Append(". LOG-file: ");
         sb.Append(textFileName.Path);
       }
 
@@ -1170,7 +1170,7 @@ namespace FreeLibSet.Logging
           catch (Exception e2)
           {
             // В случае ошибки помещаем запись в журнал событий Windows
-            EventLogException(e2, "Ошибка при записи LOG-файла ошибки");
+            EventLogException(e2, "Log file creation error");
           }
 #else
           catch {} 
@@ -1308,7 +1308,7 @@ namespace FreeLibSet.Logging
       }
       catch (Exception e2)
       {
-        args.WriteLine("Ошибка при записи свойств: " + e2.Message);
+        args.WriteLine("Error when write properties: " + e2.Message);
       }
       args.IndentLevel--;
       args.WriteLine();
@@ -1465,7 +1465,7 @@ namespace FreeLibSet.Logging
 
       if (objStack.Count == 0 && args2.Mode != LogoutPropMode.Default && args2.Handler == null)
       {
-        args.WriteLine("Вывод объекта отменен");
+        args.WriteLine("Object logging skipped");
         return;
       }
 
@@ -1625,7 +1625,7 @@ namespace FreeLibSet.Logging
         }
         catch (Exception e)
         {
-          args.WriteLine("** Ошибка вывода информации MarshalByRefObject **. " + e.Message);
+          args.WriteLine("*** MarshalByRefObject logging error ***: " + e.Message);
         }
         args.IndentLevel = oldIndentLevel;
       }
@@ -1717,7 +1717,7 @@ namespace FreeLibSet.Logging
       }
       catch (Exception e)
       {
-        return "*** Ошибка " + e.GetType().ToString() + " ***. " + e.Message;
+        return "*** Error " + e.GetType().ToString() + " ***. " + e.Message;
       }
     }
 
@@ -1760,7 +1760,7 @@ namespace FreeLibSet.Logging
             }
             catch (Exception e)
             {
-              args.WriteLine("** Ошибка вывода элемента **. " + e.Message);
+              args.WriteLine("*** Item logging error *** " + e.Message);
             }
             cnt++;
             args.IndentLevel = IndentLevel;
@@ -1812,7 +1812,7 @@ namespace FreeLibSet.Logging
             }
             catch (Exception e)
             {
-              args.WriteLine("** Ошибка вывода элемента **. " + e.Message);
+              args.WriteLine("*** Item logging error ***: " + e.Message);
             }
             args.IndentLevel = IndentLevel;
           }
@@ -1943,7 +1943,7 @@ namespace FreeLibSet.Logging
       }
       catch (Exception e)
       {
-        args.WriteLine("** Ошибка вызова MarshalByRefObject.CreateObjRef(" + typ.ToString() + ") **. " + e.Message);
+        args.WriteLine("*** MarshalByRefObject.CreateObjRef(" + typ.ToString() + ") calling error ***: " + e.Message);
         return;
       }
 
@@ -2366,7 +2366,7 @@ namespace FreeLibSet.Logging
       catch (Exception e)
       {
         args.IndentLevel++;
-        args.WriteLine("*** RemotingConfiguration information error *** " + e.Message);
+        args.WriteLine("*** RemotingConfiguration information error ***: " + e.Message);
         args.IndentLevel = currIndentLevel;
       }
 
