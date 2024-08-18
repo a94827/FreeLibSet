@@ -316,6 +316,7 @@ namespace FreeLibSet.Data.SqlClient
           break;
         case DBxColumnType.DateTime:
           p.SqlDbType = SqlDbType.DateTime2;
+          p.Size = 7; // 23.07.2024
           break;
         case DBxColumnType.Time:
           p.SqlDbType = SqlDbType.Time;

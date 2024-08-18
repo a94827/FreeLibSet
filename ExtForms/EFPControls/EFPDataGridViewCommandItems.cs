@@ -693,9 +693,9 @@ namespace FreeLibSet.Forms
         }
       }
 
-      ControlProvider.Control.CellDoubleClick += new DataGridViewCellEventHandler(Grid_CellDoubleClick);
-      ControlProvider.Control.MouseDown += new MouseEventHandler(Grid_MouseDown);
-      ControlProvider.Control.MouseUp += new MouseEventHandler(Grid_MouseUp);
+      ControlProvider.Control.CellDoubleClick += new DataGridViewCellEventHandler(Control_CellDoubleClick);
+      ControlProvider.Control.MouseDown += new MouseEventHandler(Control_MouseDown);
+      ControlProvider.Control.MouseUp += new MouseEventHandler(Control_MouseUp);
       ControlProvider.Control_VisibleChanged(null, null);
     }
 
@@ -1003,7 +1003,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
-    void Grid_CellDoubleClick(object sender, DataGridViewCellEventArgs args)
+    void Control_CellDoubleClick(object sender, DataGridViewCellEventArgs args)
     {
       if (args.RowIndex < 0)
         return;
@@ -1014,7 +1014,7 @@ namespace FreeLibSet.Forms
 
     private bool _CellDoubleClicked = false;
 
-    void Grid_MouseUp(object sender, MouseEventArgs args)
+    void Control_MouseUp(object sender, MouseEventArgs args)
     {
       if (_CellDoubleClicked)
       {
@@ -1036,7 +1036,9 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if ((!ControlProvider.ReadOnly) || ControlProvider.CanView /*|| (!Handler.MainGrid.ReadOnly)*/)
+          if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) || 
+            ControlProvider.CanView 
+            /*|| (!Handler.MainGrid.ReadOnly)*/)
           {
             ciEdit_Click(null, null);
           }
@@ -1044,7 +1046,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    void Grid_MouseDown(object sender, MouseEventArgs args)
+    void Control_MouseDown(object sender, MouseEventArgs args)
     {
       _CellDoubleClicked = false;
     }

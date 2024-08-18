@@ -418,7 +418,6 @@ namespace FreeLibSet.Data
 #endif
     #endregion
 
-
     /// <summary>
     /// Инициализация HasDotColumns, NameConvPairs и JoinInfoList
     /// </summary>

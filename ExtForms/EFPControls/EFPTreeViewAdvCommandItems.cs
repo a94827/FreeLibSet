@@ -491,7 +491,9 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if ((!ControlProvider.ReadOnly) || ControlProvider.CanView /*|| (!Handler.MainGrid.ReadOnly)*/)
+          if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) || 
+            ControlProvider.CanView 
+            /*|| (!Handler.MainGrid.ReadOnly)*/)
             ciEdit_Click(null, null);
         }
       }

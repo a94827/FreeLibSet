@@ -38,13 +38,13 @@ namespace FreeLibSet.Data
     /// Обслуживаемое соединение
     /// </summary>
     public DBxConBase Con { get { return _Con; } }
-    private DBxConBase _Con;
+    private readonly DBxConBase _Con;
 
     /// <summary>
     /// Если свойство установлено (по умолчанию), то выполняется проверка существования
     /// описаний таблиц и полей в реальной структуре таблицы.
     /// Если свойство сброшено в false, проверяется только общая корректность имен (на наличие недопустимых символов)
-    /// Это свойство не дублируется в основном соединении DBxCon. Следовательно, проверка может быть отключена
+    /// Это свойство не дублируется в основном соединении <see cref="DBxCon"/>. Следовательно, проверка может быть отключена
     /// только на стороне сервера (безопасность)
     /// </summary>
     public bool NameCheckingEnabled
@@ -59,8 +59,8 @@ namespace FreeLibSet.Data
     #region Методы проверки
 
     /// <summary>
-    /// Проверка имени таблицы на допустимость и прав на чтение/запись в таблицу
-    /// Если свойство NameCheckingEnabled установлено, проверяется также наличие описания таблицы в реальной структуре базы данных
+    /// Проверка имени таблицы на допустимость и прав на чтение/запись в таблицу.
+    /// Если свойство <see cref="NameCheckingEnabled"/> установлено, проверяется также наличие описания таблицы в реальной структуре базы данных.
     /// </summary>
     /// <param name="tableName">Проверяемое имя</param>
     /// <param name="mode">Предстоящий режим использования таблицы (Full - изменение, ReadOnly - чтение)</param>
@@ -72,7 +72,7 @@ namespace FreeLibSet.Data
 
       if (NameCheckingEnabled)
       {
-        if (Con.GetTableStruct(tableName)==null)
+        if (Con.GetTableStruct(tableName) == null)
           throw new ArgumentException("Определения для таблицы \"" + tableName + "\" не существует для БД \"" + Con.DB.ToString() + "\"", "tableName");
       }
 
@@ -91,7 +91,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка имени столбца, включая наличие его в таблице данных и доступа к нему.
-    /// Если имя столбца неправильное или столбец недоступен, то выбрасывается исключение
+    /// Если имя столбца неправильное или столбец недоступен, то выбрасывается исключение.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя столбца</param>
@@ -181,7 +181,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка имен списка столбцов, включая наличие их в таблице данных и доступа к ним.
-    /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение
+    /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список проверяемых имен столбцов</param>
@@ -204,7 +204,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка имен списка столбцов, включая наличие их в таблице данных и доступа к ним.
-    /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение
+    /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список проверяемых имен столбцов</param>
@@ -225,17 +225,14 @@ namespace FreeLibSet.Data
       return columnTypes;
     }
 
-
-
     /// <summary>
     /// Внутренний объект, используемый при проверке фильтров и порядка сортировки
     /// </summary>
     private DBxColumnList _CheckColumnList;
 
-
     /// <summary>
     /// Проверка имен списка столбцов, включая наличие их в таблице данных и доступа к ним.
-    /// Имена полей извлекаются из DBxNamedExpressionList.
+    /// Имена полей извлекаются из <see cref="DBxNamedExpressionList"/>.
     /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
@@ -250,7 +247,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверка имен списка столбцов, включая наличие их в таблице данных и доступа к ним.
-    /// Имена полей извлекаются из DBxNamedExpressionList.
+    /// Имена полей извлекаются из <see cref="DBxNamedExpressionList"/>.
     /// Если имя какого-либо столбца в списке неправильное или столбец недоступен, то выбрасывается исключение.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
@@ -258,7 +255,7 @@ namespace FreeLibSet.Data
     public void CheckExpressionColumnNames(string tableName, IList<DBxExpression> expressions)
     {
       DBxColumnList list = new DBxColumnList();
-      for (int i = 0; i < expressions.Count;i++ )
+      for (int i = 0; i < expressions.Count; i++)
         expressions[i].GetColumnNames(list);
       for (int i = 0; i < list.Count; i++)
         CheckTableColumnName(tableName, list[i], true, DBxAccessMode.ReadOnly);
@@ -266,8 +263,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Выполнить проверку имен столбцов в фильтрах.
-    /// Метод собирает список имен в фильтре вызовом DBxFilter.GetColumnNames(),
-    /// а затем вызывает CheckTableColumnName() для всех имен полей
+    /// Метод собирает список имен в фильтре вызовом <see cref="DBxFilter.GetColumnNames(DBxColumnList)"/>,
+    /// а затем вызывает <see cref="CheckTableColumnName(string, string, bool, DBxAccessMode)"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="filter">Фильтр. Не может быть null</param>
@@ -308,8 +305,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверяет, что первичным ключом таблицы является единственное целочисленное поле.
-    /// Если это не так, генерируется DBxPrimaryKeyException.
-    /// Предполагается, что проверка CheckTableName уже выполнена
+    /// Если это не так, генерируется <see cref="DBxPrimaryKeyException"/>.
+    /// Предполагается, что проверка <see cref="CheckTableName"/> уже выполнена.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Имя поля первичного ключа</returns>

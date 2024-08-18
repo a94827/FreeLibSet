@@ -546,6 +546,8 @@ namespace FreeLibSet.Data.Docs
         return _Owner.MainDBEntry.DB.Struct.Tables[tableName];
       }
 
+      public bool IsRealStruct { get { return _Owner.MainDBEntry.DB.Struct.IsRealStruct; } }
+
       #endregion
     }
 

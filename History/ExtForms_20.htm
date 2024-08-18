@@ -5,18 +5,18 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20240708;181201810000000">
+	<META NAME="CHANGED" CONTENT="20240719;122427386000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2023-11-17T22:37:54.315000000">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 2cm }
+		P { margin-bottom: 0.25cm; background: transparent }
 		TD P { margin-bottom: 0.25cm; background: transparent; widows: 0; orphans: 0 }
 		H1 { margin-bottom: 0.21cm; background: transparent }
 		H1.western { font-family: "Liberation Serif", serif }
 		H1.cjk { font-family: "SimSun"; font-size: 24pt }
 		H1.ctl { font-family: "Mangal"; font-size: 24pt }
-		P { margin-bottom: 0.25cm; background: transparent }
 		A:link { so-language: zxx }
 		A:visited { color: #800080 }
 	-->
@@ -44,6 +44,22 @@
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P ALIGN=CENTER>Что сделано</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>352</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>19.07.2024</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US">1. <SPAN LANG="ru-RU">Обработка двойного щелчка
+			мыши в просмотрах </SPAN>EFPDataGridViewCommandItems <SPAN LANG="ru-RU">и
+			</SPAN>EFPTreeViewAdvCommandItems.Control_MouseUp() <SPAN LANG="ru-RU">при
+			</SPAN>EnterAsOk=false <SPAN LANG="ru-RU">вызывала команду
+			&laquo;Редактировать&raquo; даже при </SPAN>CanEdit=false (<A HREF="#v351p12">v.351
+			<SPAN LANG="ru-RU">п.12</SPAN></A>)</P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>
@@ -137,8 +153,8 @@
 			</SPAN><SPAN LANG="ru-RU">так как </SPAN><SPAN LANG="en-US">TreeViewAdv
 			</SPAN><SPAN LANG="ru-RU">не поддерживает понятия &laquo;текущий
 			столбец&raquo;.</SPAN></P>
-			<P LANG="en-US">12. <SPAN LANG="ru-RU">Свойства </SPAN>IEFPDataView,
-			EFPDataGridView, EFPTreeViewAdv.CanEdit <SPAN LANG="ru-RU">и
+			<P LANG="en-US"><A NAME="v351p12"></A>12. <SPAN LANG="ru-RU">Свойства
+			</SPAN>IEFPDataView, EFPDataGridView, EFPTreeViewAdv.CanEdit <SPAN LANG="ru-RU">и
 			</SPAN>CanEditEx <SPAN LANG="ru-RU">для запрета редактирования
 			записи при сохранении возможности добавления/удаления.</SPAN></P>
 			<P><SPAN LANG="en-US">13. EFPTreeViewAdv.EnsureSelectionVisible()
@@ -382,12 +398,11 @@
 			Свойства </SPAN><SPAN LANG="en-US">IEFPTreeView, EFPTreeView,
 			EFPTreeViewAdv.CurrentPopupPosition (<A HREF="ExtForms_11.htm#v092p3">v.92
 			</A></SPAN><A HREF="ExtForms_11.htm#v092p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
-			<P><SPAN LANG="en-US">4</SPAN><SPAN LANG="en-US">6</SPAN><SPAN LANG="en-US">.
-			</SPAN><SPAN LANG="ru-RU">Свойство </SPAN><SPAN LANG="en-US">EFPControlBase.DefaultButton</SPAN></P>
-			<P><SPAN LANG="en-US">4</SPAN><SPAN LANG="en-US">7</SPAN><SPAN LANG="en-US">.
-			InputForm.OnLoad() </SPAN><SPAN LANG="ru-RU">учитывает свойство
-			</SPAN><SPAN LANG="en-US">TextInputDialog.DialogPosition, </SPAN><SPAN LANG="ru-RU">а
-			не всегда центрирует диалог.</SPAN></P>
+			<P><SPAN LANG="en-US">46. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">EFPControlBase.DefaultButton</SPAN></P>
+			<P><SPAN LANG="en-US">47. InputForm.OnLoad() </SPAN><SPAN LANG="ru-RU">учитывает
+			свойство </SPAN><SPAN LANG="en-US">TextInputDialog.DialogPosition,
+			</SPAN><SPAN LANG="ru-RU">а не всегда центрирует диалог.</SPAN></P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>

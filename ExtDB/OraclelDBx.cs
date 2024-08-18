@@ -33,6 +33,7 @@ namespace FreeLibSet.Data.OracleClient
       _SyncRoot = new object();
 
       _DatabaseName = GetDataBaseName(connectionStringBuilder);
+      _UserId = connectionStringBuilder.UserID;
       if (!String.IsNullOrEmpty(_DatabaseName))
         base.DisplayName = _DatabaseName;
 
@@ -53,7 +54,14 @@ namespace FreeLibSet.Data.OracleClient
 
     internal static string GetDataBaseName(OracleConnectionStringBuilder connectionStringBuilder)
     {
-      return connectionStringBuilder.UserID.ToUpperInvariant(); // !!!! ерунда
+      // 25.07.2024
+      // DataSource имеет формат "Сервер:Порт/БД"
+      string s = connectionStringBuilder.DataSource;
+      int p = s.LastIndexOf('/');
+      if (p >= 0)
+        return s.Substring(p + 1);
+      else
+        return "Unknown";
     }
 
     #endregion
@@ -64,7 +72,10 @@ namespace FreeLibSet.Data.OracleClient
     /// Возвращает имя базы данных
     /// </summary>
     public override string DatabaseName { get { return _DatabaseName; } }
-    private string _DatabaseName;
+    private readonly string _DatabaseName;
+
+    internal string UserId { get { return _UserId; } }
+    private readonly string _UserId;
 
     private readonly object _SyncRoot;
 
@@ -123,6 +134,7 @@ namespace FreeLibSet.Data.OracleClient
     {
       get
       {
+        /*
         using (OracleDBxCon con = new OracleDBxCon(MainEntry, true))
         {
           DataTable table = con.Connection.GetSchema("Databases");
@@ -132,6 +144,8 @@ namespace FreeLibSet.Data.OracleClient
             return dv.Find(this.DatabaseName) >= 0;
           }
         }
+        */
+        return true; 
       }
     }
 
@@ -153,7 +167,7 @@ namespace FreeLibSet.Data.OracleClient
     protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
-      using (OracleDBxCon con = new OracleDBxCon(MainEntry, false))
+      using (OracleDBxCon con = new OracleDBxCon(MainEntry))
       {
         con.CommandTimeout = 0; // Бесконечное время выполнения
         return con.UpdateDBStruct(splash, errors, options);
@@ -174,6 +188,46 @@ namespace FreeLibSet.Data.OracleClient
     public override bool DropDatabaseIfExists()
     {
       throw new NotSupportedException();
+    }
+
+
+    /*
+     * Таблицы и просмотры в Oracle имеют формат "Owner.ИмяТаблицы".
+     * Чаще используется обращение к "своим" таблицам без указания owner. 
+     * Но иногда требуется в запросах указывать owner
+     */
+
+      /// <summary>
+      /// Проверка корректности имени таблицы.
+      /// Разрешаются имена в формате 
+      /// </summary>
+      /// <param name="tableName"></param>
+      /// <param name="errorText"></param>
+      /// <returns></returns>
+    public override bool IsValidTableName(string tableName, out string errorText)
+    {
+      if (String.IsNullOrEmpty(tableName))
+      {
+        errorText = "Имя таблицы не задано";
+        return false;
+      }
+
+      int p = tableName.IndexOf('.');
+      if (p >= 0)
+      {
+        string user = tableName.Substring(0, p);
+        tableName = tableName.Substring(p + 1);
+        if (!CheckInvalidChars(tableName, out errorText))
+          return false;
+        if (!CheckInvalidChars(user, out errorText))
+        {
+          errorText = "Префикс OWNER. " + errorText;
+          return false;
+        }
+        return true;
+      }
+      else
+        return CheckInvalidChars(tableName, out errorText);
     }
 
     #endregion
@@ -244,7 +298,7 @@ namespace FreeLibSet.Data.OracleClient
     /// <returns>Соединение с базовй данных</returns>
     public override DBxConBase CreateCon()
     {
-      return new OracleDBxCon(this, false);
+      return new OracleDBxCon(this);
     }
 
     /// <summary>
@@ -259,7 +313,7 @@ namespace FreeLibSet.Data.OracleClient
 
     #endregion
 
-    #region Строка подкючения без пароля
+    #region Строка подключения без пароля
 
     /// <summary>
     /// Возвращает строку подключения, не содержащую пароль.
@@ -302,10 +356,9 @@ namespace FreeLibSet.Data.OracleClient
   {
     #region Конструктор и Dispose()
 
-    internal OracleDBxCon(OracleDBxEntry entry, bool serverWide)
+    internal OracleDBxCon(OracleDBxEntry entry)
       : base(entry)
     {
-      _ServerWide = serverWide;
     }
 
     /// <summary>
@@ -333,11 +386,6 @@ namespace FreeLibSet.Data.OracleClient
 
     public new OracleDBx DB { get { return (OracleDBx)(base.DB); } }
 
-    /// <summary>
-    /// В текущей реализации не используется 
-    /// </summary>
-    private bool _ServerWide;
-
     #endregion
 
     #region Соединение
@@ -357,26 +405,9 @@ namespace FreeLibSet.Data.OracleClient
 #endif
           try
           {
-            if (_ServerWide)
-            {
-              OracleConnectionStringBuilder csb2 = new OracleConnectionStringBuilder();
-              csb2.ConnectionString = Entry.ConnectionStringBuilder.ConnectionString;
-              throw new NotImplementedException();
-              //csb2.InitialCatalog = String.Empty;
-              //csb2.AttachDBFilename = String.Empty;
-
-              // TODO:
-              /*
-            FConnection = new OracleConnection(csb2.ConnectionString);
-            DoOpenConnection();
-               * */
-            }
-            else
-            {
-              _Connection = new OracleConnection(Entry.ConnectionString);
+               _Connection = new OracleConnection(Entry.ConnectionString);
               DoOpenConnection();
               // SQLExecuteNonQuery("USE [" + DB.DatabaseName + "]");
-            }
           }
           catch
           {
@@ -405,7 +436,6 @@ namespace FreeLibSet.Data.OracleClient
       catch (Exception e)
       {
         e.Data["OracleDBx.DatabaseName"] = DB.DatabaseName;
-        e.Data["OracleDBxCon.ServerWide"] = _ServerWide.ToString();
         e.Data["OracleDBxCon.ConnectionString"] = OracleDBxEntry.GetUnpasswordedConnectionString(_Connection.ConnectionString);
         throw;
       }
@@ -597,19 +627,49 @@ namespace FreeLibSet.Data.OracleClient
     #endregion
 
     #region Извлечение схемы данных
-
     /// <summary>
     /// Получить полный список таблиц
     /// </summary>
     /// <returns></returns>
     internal protected override string[] GetAllTableNamesFromSchema()
     {
-      DataTable table = Connection.GetSchema("Tables", new string[] { DB.DatabaseName });
-      string[] a = new string[table.Rows.Count];
-      for (int i = 0; i < table.Rows.Count; i++)
-        a[i] = DataTools.GetString(table.Rows[i], "TABLE_NAME");
+      // Схема Tables содержит 3 столбца:
+      // OWNER
+      // TABLE_NAME
+      // TYPE: "System" или "User"
 
-      return a;
+      // TODO: Надо хранить в OracleDBx список интересующих значений поля "Owner"
+      const string filterText = "OWNER NOT LIKE \'SYS%\' AND OWNER<>\'WMSYS\' AND OWNER<>\'MDSYS\' AND OWNER<>\'CTXSYS\'";
+
+      DataTable table1 = SQLExecuteDataTable("SELECT OWNER,TABLE_NAME FROM ALL_TABLES WHERE " + filterText); // так быстрее
+      string[] a1 = new string[table1.Rows.Count];
+      for (int i = 0; i < table1.Rows.Count; i++)
+      {
+        DataRow row = table1.Rows[i];
+        a1[i] = MakeObjName(DataTools.GetString(row, "OWNER"), DataTools.GetString(row, "TABLE_NAME"));
+      }
+
+      // 25.07.2024
+      //DataTable table2 = Connection.GetSchema("Views", new string[] { /*DB.DatabaseName*/ });
+      DataTable table2 = SQLExecuteDataTable("SELECT OWNER,VIEW_NAME FROM ALL_VIEWS WHERE "+filterText); // так быстрее
+      string[] a2 = new string[table2.Rows.Count];
+      for (int i = 0; i < table2.Rows.Count; i++)
+      {
+        DataRow row = table2.Rows[i];
+        a2[i] = MakeObjName(DataTools.GetString(row, "OWNER"), DataTools.GetString(row, "VIEW_NAME"));
+      }
+
+      return DataTools.MergeArrays<string>(a1, a2);
+    }
+
+    private string MakeObjName(string owner, string name)
+    {
+      if (String.Equals(owner, this.DB.UserId, StringComparison.OrdinalIgnoreCase))
+        owner = String.Empty;
+      if (String.IsNullOrEmpty(owner))
+        return name;
+      else
+        return owner + "." + name;
     }
 
     /// <summary>
@@ -623,7 +683,20 @@ namespace FreeLibSet.Data.OracleClient
 
       #region Список столбцов, тип, MaxLen, Nullable
 
-      DataTable table = Connection.GetSchema("Columns", new string[] { DB.DatabaseName, tableName.ToUpperInvariant() });
+      string owner;
+      int p = tableName.IndexOf('.');
+      if (p >= 0)
+      {
+        owner = tableName.Substring(0, p);
+        tableName = tableName.Substring(p + 1);
+      }
+      else
+        owner = DB.UserId;
+      owner = owner.ToUpperInvariant();
+      tableName = tableName.ToUpperInvariant();
+      DataTable table = Connection.GetSchema("Columns", new string[] { owner, tableName });
+      if (table.Rows.Count == 0)
+        throw new ArgumentException("Не найден список столбцов для таблицы \"" + owner + "." + tableName + "\"");
 
       foreach (DataRowView drv in table.DefaultView)
       {
@@ -631,7 +704,11 @@ namespace FreeLibSet.Data.OracleClient
         DBxColumnStruct colDef = new DBxColumnStruct(columnName);
 
         string colTypeString = DataTools.GetString(drv.Row, "DATATYPE");
-        //int Prec = DataTools.GetInt(drv.Row, "PRECISION"); // на самом деле имеет тип decimal
+        p = colTypeString.IndexOf('(');
+        if (p >= 0)
+          colTypeString = colTypeString.Substring(0, p); // Может быть "TIMESTAMP(6)"
+        int len = DataTools.GetInt(drv.Row, "LENGTH"); // это в байтах
+        int prec = DataTools.GetInt(drv.Row, "PRECISION"); // на самом деле имеет тип decimal
         int scale = DataTools.GetInt(drv.Row, "SCALE"); // на самом деле имеет тип decimal
 
         switch (colTypeString.ToUpperInvariant())
@@ -645,14 +722,25 @@ namespace FreeLibSet.Data.OracleClient
             colDef.ColumnType = DBxColumnType.String;
             break;
           case "NUMBER":
-            if (scale == 0)
+            if (prec == 0)
+            {
+              // Тип NUMBER - хранение числа с максимальной точностью
+              colDef.ColumnType = DBxColumnType.Float;
+            }
+            else if (scale == 0) // Тип NUMBER(p)
             {
               colDef.ColumnType = DBxColumnType.Int;
-              colDef.MinValue = Int64.MinValue; // !!!!! Думать лень
-              colDef.MaxValue = Int64.MaxValue;
+              if (prec > 0 && prec<=18)
+              {
+                colDef.MaxValue = Math.Pow(10.0, prec) - 1;
+                colDef.MinValue = -colDef.MaxValue; // на знак числа не нужен отдельный разряд
+              }
             }
-            else
-              colDef.ColumnType = DBxColumnType.Float;
+            else // Тип NUMBER(p,s)
+            {
+              colDef.ColumnType = DBxColumnType.Float; // TODO: При некоторых значениях может быть и Int
+              // TODO: 
+            }
             break;
 
           case "FLOAT":
@@ -679,6 +767,10 @@ namespace FreeLibSet.Data.OracleClient
             colDef.ColumnType = DBxColumnType.DateTime;
             break;
 
+          case "BOOLEAN":
+            colDef.ColumnType = DBxColumnType.Boolean;
+            break;
+
           case "LONG":
           case "CLOB":
           case "NCLOB":
@@ -692,7 +784,7 @@ namespace FreeLibSet.Data.OracleClient
             break;
         }
 
-        colDef.MaxLength = DataTools.GetInt(drv.Row, "LENGTH"); // это в байтах
+        colDef.MaxLength = len;
 
         string nullableStr = DataTools.GetString(drv.Row, "NULLABLE").ToUpperInvariant();
         if (nullableStr == "N")

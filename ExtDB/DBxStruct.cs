@@ -69,7 +69,13 @@ namespace FreeLibSet.Data
   /// </summary>
   public interface IDBxStructSource
   {
-    #region Методы
+    #region Методы и свойства
+
+    /// <summary>
+    /// Возвращает true, если объект описывает реальную структуру базы данных.
+    /// Возвращает false, если структура задана в коде приложения.
+    /// </summary>
+    bool IsRealStruct { get; }
 
     /// <summary>
     /// Получить полный список имен таблиц в виде массива (без структуры)
@@ -118,6 +124,8 @@ namespace FreeLibSet.Data
     /// </summary>
     public DBxEntry Entry { get { return _Entry; } }
     private readonly DBxEntry _Entry;
+
+    bool IDBxStructSource.IsRealStruct { get { return true; } }
 
     #endregion
 
@@ -177,6 +185,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("source");
 
       _Source = source;
+      _IsRealStruct = source.IsRealStruct;
     }
 
     #endregion
@@ -187,6 +196,15 @@ namespace FreeLibSet.Data
     /// Эта ссылка напрямую клиенту не видна
     /// </summary>
     private readonly DBxStruct _Source;
+
+
+    /// <summary>
+    /// Возвращает true, если объект описывает реальную структуру базы данных.
+    /// Возвращает false, если структура задана в коде приложения.
+    /// </summary>
+    public bool IsRealStruct { get { return _IsRealStruct; } }
+    private readonly bool _IsRealStruct;
+
 
     #endregion
 
@@ -575,7 +593,9 @@ namespace FreeLibSet.Data
       }
 
       /// <summary>
-      /// Реализация интерфейса ICollection
+      /// Возвращает количество описаний таблиц, добавленных в структуру при <see cref="DBxStruct.IsRealStruct"/>=false.
+      /// Возвращает количество таблиц в базе данных при <see cref="DBxStruct.IsRealStruct"/>=true.
+      /// Реализация интерфейса <see cref="ICollection"/>
       /// </summary>
       public int Count
       {
@@ -755,6 +775,14 @@ namespace FreeLibSet.Data
           ts.SetReadOnly();
       }
 
+      /// <summary>
+      /// Возвращает свойство <see cref="Count"/>
+      /// </summary>
+      /// <returns>Текстовое представление</returns>
+      public override string ToString()
+      {
+        return "Count=" + Count.ToString();
+      }
 
       #endregion
     }
@@ -828,6 +856,22 @@ namespace FreeLibSet.Data
     /// </summary>
     public TableCollection Tables { get { return _Tables; } }
     private readonly TableCollection _Tables;
+
+
+    /// <summary>
+    /// Возвращает true, если объект описывает реальную структуру базы данных.
+    /// Возвращает false, если структура задана в коде приложения.
+    /// </summary>
+    public bool IsRealStruct
+    {
+      get
+      {
+        if (_Source == null)
+          return false;
+        else
+          return _Source.IsRealStruct;
+      }
+    }
 
     #endregion
 

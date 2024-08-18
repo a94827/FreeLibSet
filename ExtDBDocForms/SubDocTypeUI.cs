@@ -417,21 +417,21 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// True, если допускается одновременное редактирование или
     /// просмотр нескольких выбранных документов. По умолчанию -
-    /// false (нельзя)
+    /// false (нельзя).
     /// </summary>
     public bool CanMultiEdit { get { return _CanMultiEdit; } set { _CanMultiEdit = value; } }
     private bool _CanMultiEdit;
 
     /// <summary>
     /// True, если допускается создание поддокумента на основании существующего
-    /// (копирование). По умолчанию - false (нельзя)
+    /// (копирование). По умолчанию - false (нельзя).
     /// </summary>
     public bool CanInsertCopy { get { return _CanInsertCopy; } set { _CanInsertCopy = value; } }
     private bool _CanInsertCopy;
 
     /// <summary>
     /// Генератор табличного просмотра.
-    /// Обычно в прикладном коде сюда следует добавить описания столбцов
+    /// Обычно в прикладном коде сюда следует добавить описания столбцов.
     /// </summary>
     public EFPSubDocTypeGridProducer GridProducer { get { return _GridProducer; } }
     private readonly EFPSubDocTypeGridProducer _GridProducer;
@@ -1080,9 +1080,10 @@ namespace FreeLibSet.Forms.Docs
       dlg.SelectedIndex = 0;
       for (int i = 0; i < controlProvider.SubDocs.Owner.DocCount; i++)
       {
-        dlg.Items[i + 1] = (i + 1).ToString() + ". DocId=" + controlProvider.SubDocs.Owner[i].DocId.ToString(); // !!! Названия для документов
-        DBxSingleDoc Doc = controlProvider.SubDocs.Owner[i];
-        dlg.ImageKeys[i + 1] = UI.ImageHandlers.GetImageKey(Doc);
+        //dlg.Items[i + 1] = (i + 1).ToString() + ". DocId=" + controlProvider.SubDocs.Owner[i].DocId.ToString(); // !!! Названия для документов
+        DBxSingleDoc doc = controlProvider.SubDocs.Owner[i];
+        dlg.Items[i + 1] = UI.TextHandlers.GetTextValue(doc);
+        dlg.ImageKeys[i + 1] = UI.ImageHandlers.GetImageKey(doc);
         if (controlProvider.SubDocs.Owner[i].DocId == currDocId)
           dlg.SelectedIndex = i + 1;
       }

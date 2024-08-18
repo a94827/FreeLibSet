@@ -653,6 +653,8 @@ namespace FreeLibSet.Data.Docs
 
     private volatile string[] _AllTableNames;
 
+    public bool IsRealStruct { get { return MainDBstruct.IsRealStruct; } }
+
     #endregion
 
     #region Урезанные структуры

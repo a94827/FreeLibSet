@@ -847,7 +847,7 @@ namespace FreeLibSet.Forms.Docs
           return true;
         }
 
-        docId = DataTools.GetInt(rows[0], "DocId");
+        docId = DataTools.GetInt(rows[0], "DocId"); // TODO: Не обязательно. Документы могут быть разными
       }
 
       // TODO: Не должно ли быть это внутри SubDocumentEditor.Run()?
