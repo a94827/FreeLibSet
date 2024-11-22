@@ -281,7 +281,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Значения полей одиночного документа
     /// </summary>
-    public IDBxDocValues Values
+    public IDBxExtValues Values
     {
       get
       {
@@ -293,7 +293,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Доступ к оригинальным значениям в режиме Edit
     /// </summary>
-    public IDBxDocValues OriginalValues
+    public IDBxExtValues OriginalValues
     {
       get
       {
@@ -530,7 +530,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="resDoc">Заполняемый документ</param>
     public void CopyTo(DBxSingleDoc resDoc)
     {
-      DBxDocValue.CopyValues(Values, resDoc.Values);
+      DBxExtValue.CopyValues(Values, resDoc.Values);
       for (int i = 0; i < SubDocs.Count; i++)
       {
         DBxSingleSubDocs sds1 = SubDocs[i];
@@ -551,11 +551,11 @@ namespace FreeLibSet.Data.Docs
             {
               case DBxDocState.Insert:
                 sd2 = sds2.Insert();
-                DBxDocValue.CopyValues(sd1.Values, sd2.Values);
+                DBxExtValue.CopyValues(sd1.Values, sd2.Values);
                 break;
               case DBxDocState.Edit:
                 sd2 = sds2.GetSubDocById(sd1.SubDocId);
-                DBxDocValue.CopyValues(sd1.Values, sd2.Values);
+                DBxExtValue.CopyValues(sd1.Values, sd2.Values);
                 break;
               case DBxDocState.Delete:
                 sd2 = sds2.GetSubDocById(sd1.SubDocId);
@@ -573,7 +573,7 @@ namespace FreeLibSet.Data.Docs
           foreach (DBxSubDoc sd1 in sds1)
           {
             DBxSubDoc sd2 = sds2.Insert();
-            DBxDocValue.CopyValues(sd1.Values, sd2.Values);
+            DBxExtValue.CopyValues(sd1.Values, sd2.Values);
           }
         }
       }

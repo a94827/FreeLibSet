@@ -7,6 +7,8 @@ using System.Text;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Config;
 using FreeLibSet.DependedValues;
+using FreeLibSet.Data;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -14,11 +16,11 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Представление текстового поля для хранения конфигурационных данных как <see cref="XmlCfgPart"/>.
   /// Класс может использоваться в качестве базового для собственной реализации чтения/записи данных,
-  /// либо самостоятельно. В последнем случае создаются отдельные объекты, реализующие <see cref="IDocEditItem"/>
+  /// либо самостоятельно. В последнем случае создаются отдельные объекты, реализующие <see cref="IUIExtEditItem"/>
   /// (например <see cref="DocValueTextBox"/>) и присоединяются как дочерние элементы. При их создании им передаются
-  /// <see cref="DBxDocValue"/>, полученные из свойства Values этого объекта.
+  /// <see cref="DBxExtValue"/>, полученные из свойства Values этого объекта.
   /// </summary>
-  public class XmlCfgDocEditItem : DocEditItemWithChildren
+  public class XmlCfgDocEditItem : UIExtEditItemWithChildren
   {
     #region Конструктор
 
@@ -26,7 +28,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает объект, присоединенный к текстовому полю в формате XML
     /// </summary>
     /// <param name="docValue">Объект для доступа к значению текстового поля</param>
-    public XmlCfgDocEditItem(DBxDocValue docValue)
+    public XmlCfgDocEditItem(DBxExtValue docValue)
     {
       _DocValue = docValue;
 
@@ -38,7 +40,7 @@ namespace FreeLibSet.Forms.Docs
       _Data = new TempCfg();
       //FData.Changed += new EventHandler(Data_Changed);
 
-      _Values = new XmlCfgDocValues(_Data, docValue.IsReadOnly);
+      _Values = new DBxCfgExtValues(_Data, docValue.IsReadOnly);
     }
 
     //void Data_Changed(object Sender, EventArgs Args)
@@ -54,8 +56,8 @@ namespace FreeLibSet.Forms.Docs
     /// Значение XML-поля, хранящегося в базе данных.
     /// Задается в конструкторе.
     /// </summary>
-    public DBxDocValue DocValue { get { return _DocValue; } }
-    private /* не может быть readonly */ DBxDocValue _DocValue; 
+    public DBxExtValue DocValue { get { return _DocValue; } }
+    private /* не может быть readonly */ DBxExtValue _DocValue; 
 
     /// <summary>
     /// Конфигурационные данные, которые должны читаться и записываться
@@ -74,8 +76,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Подключение к значениям
     /// </summary>
-    public XmlCfgDocValues Values { get { return _Values; } }
-    private XmlCfgDocValues _Values;
+    public DBxCfgExtValues Values { get { return _Values; } }
+    private DBxCfgExtValues _Values;
 
     #endregion
 

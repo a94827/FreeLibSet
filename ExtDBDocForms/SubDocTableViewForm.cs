@@ -14,6 +14,7 @@ using FreeLibSet.Logging;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Forms.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -140,7 +141,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
     /// будут использованы эти фильтры. Пользователь не может их редактировать.
     /// </summary>
-    public GridFilters ExternalFilters
+    public EFPDBxGridFilters ExternalFilters
     {
       get { return ViewProvider.ExternalFilters; }
       set { ViewProvider.ExternalFilters = value; }
@@ -497,7 +498,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
     /// будут использованы эти фильтры. Пользователь не может их редактировать.
     /// </summary>
-    public GridFilters ExternalFilters
+    public EFPDBxGridFilters ExternalFilters
     {
       get { return _ExternalFilters; }
       set
@@ -510,7 +511,7 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-    private GridFilters _ExternalFilters;
+    private EFPDBxGridFilters _ExternalFilters;
 
     ///// <summary>
     ///// Если это событие установлено, то оно будет вызвано после того, как будут

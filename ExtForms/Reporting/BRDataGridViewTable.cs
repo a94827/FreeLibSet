@@ -8,6 +8,7 @@ using FreeLibSet.Core;
 using FreeLibSet.Forms;
 using FreeLibSet.IO;
 using FreeLibSet.Reporting;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Reporting
 {
@@ -123,7 +124,7 @@ namespace FreeLibSet.Forms.Reporting
     /// вызывает обработчик события <see cref="TitleNeeded"/>. 
     /// В противном случае никаких действий не выполняется.
     /// </summary>
-    private void InitTitle()
+    protected void InitTitle()
     {
       if (!_InitTitleCalled)
       {
@@ -168,13 +169,20 @@ namespace FreeLibSet.Forms.Reporting
     }
 
 
-    internal void AddTitleAndFilterBands(BRSection sect)
+    private bool _ForceTableTitleAndFilterBands;
+
+    internal void AddTitleAndFilterBands(BRSection sect, BRMenuOutItemCreateReportEventArgs args)
     {
       InitTitle();
 
+      BRDataViewSettingsDataItem viewSettings = SettingsData.GetRequired<BRDataViewSettingsDataItem>();
+
+
       #region Заголовок
 
-      if (!String.IsNullOrEmpty(Title))
+      bool expTableHeader = _ForceTableTitleAndFilterBands ? true: viewSettings.ExpTableHeader;
+
+      if (expTableHeader && (!String.IsNullOrEmpty(Title)))
       {
         BRTable table = sect.Bands.Add(1, 1);
         table.Cells.Value = Title;
@@ -187,7 +195,8 @@ namespace FreeLibSet.Forms.Reporting
 
       #region Табличка фильтров
 
-      if (FilterInfo.Count > 0)
+      bool expTableFilters = _ForceTableTitleAndFilterBands ? true: viewSettings.ExpTableFilters;
+      if ( expTableFilters && FilterInfo.Count > 0)
       {
         int wantedW = 0;
         for (int i = 0; i < FilterInfo.Count; i++)
@@ -257,6 +266,20 @@ namespace FreeLibSet.Forms.Reporting
         base.ExportFileItems.Add(new EFPExportFileItem("DBF3", "Файлы dBase III", "*.dbf"));
     }
 
+
+    /// <summary>
+    /// Многократно вызывается при подготовке списка команд меню к использованию
+    /// </summary>
+    /// <param name="args"></param>
+    protected override void OnPrepareAction(EventArgs args)
+    {
+      InitTitle();
+      _ForceTableTitleAndFilterBands = true;
+      SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseExpTableHeader = !String.IsNullOrEmpty(Title);
+      SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseExpTableFilters = FilterInfo.Count > 0;
+      base.OnPrepareAction(args);
+    }
+
     /// <summary>
     /// Инициализация блока диалога параметров
     /// </summary>
@@ -271,7 +294,20 @@ namespace FreeLibSet.Forms.Reporting
           new BRDataViewPageSetupAppearance(args.Dialog, ControlProvider, false);
           break;
         case BRDialogKind.ControlSendTo:
-          new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider);
+          if (BRSendToItemCodes.IsTextApp(args.ActionInfo.SendToItem.MainCode) ||
+            BRSendToItemCodes.IsWorksheetApp(args.ActionInfo.SendToItem.MainCode))
+          {
+            _ForceTableTitleAndFilterBands = false;
+            new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider, args.DialogKind);
+          }
+          break;
+        case BRDialogKind.ControlExportFile:
+          if (BRExportFileItemCodes.IsTextDocument(args.ActionInfo.ExportFileItem.Code) ||
+            BRExportFileItemCodes.IsWorksheet(args.ActionInfo.ExportFileItem.Code))
+          {
+            _ForceTableTitleAndFilterBands = false;
+            new BRDataViewPageSetupSendTo(args.Dialog, ControlProvider, args.DialogKind);
+          }
           break;
       }
       base.OnInitDialog(args);
@@ -401,7 +437,7 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     protected override void OnPrepareAction(EventArgs args)
     {
-      SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseExpColumnHeaders = true;
+      SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseExpColumnHeaders = ControlProvider.Control.ColumnHeadersVisible;
       SettingsData.GetRequired<BRDataViewSettingsDataItem>().UseColorStyle = true;
 
       bool hasBoolColumns = false;
@@ -429,7 +465,7 @@ namespace FreeLibSet.Forms.Reporting
       args.Report.DocumentProperties = ControlProvider.DocumentProperties.Clone();
       BRSection sect = args.Report.Sections.Add();
       sect.PageSetup = SettingsData.GetItem<BRPageSettingsDataItem>().PageSetup;
-      AddTitleAndFilterBands(sect);
+      AddTitleAndFilterBands(sect, args);
       if (ControlProvider.Columns.Count > 0)
         sect.Bands.Add(new BRDataGridViewTable(sect, ControlProvider, SettingsData, args.ActionInfo.Action == BRAction.SendTo));
 
@@ -785,9 +821,9 @@ namespace FreeLibSet.Forms.Reporting
           style.RightBorder = GetBorder(_CellArgs.RightBorder);
         }
 
-        if (_CellArgs.DiagonalUpBorder != EFPDataGridViewBorderStyle.Default)
+        if (_CellArgs.DiagonalUpBorder != UIDataViewBorderStyle.Default)
           style.DiagonalUp = GetBorder(_CellArgs.DiagonalUpBorder);
-        if (_CellArgs.DiagonalDownBorder != EFPDataGridViewBorderStyle.Default)
+        if (_CellArgs.DiagonalDownBorder != UIDataViewBorderStyle.Default)
           style.DiagonalDown = GetBorder(_CellArgs.DiagonalDownBorder);
 
 
@@ -869,15 +905,15 @@ namespace FreeLibSet.Forms.Reporting
         throw new BugException();
     }
 
-    private BRLine GetBorder(EFPDataGridViewBorderStyle borderStyle)
+    private static BRLine GetBorder(UIDataViewBorderStyle borderStyle)
     {
       switch (borderStyle)
       {
-        case EFPDataGridViewBorderStyle.Default:
+        case UIDataViewBorderStyle.Default:
           return BRLine.Thin;
-        case EFPDataGridViewBorderStyle.Thin:
+        case UIDataViewBorderStyle.Thin:
           return BRLine.Medium;
-        case EFPDataGridViewBorderStyle.Thick:
+        case UIDataViewBorderStyle.Thick:
           return BRLine.Thick;
         default:
           return BRLine.None;

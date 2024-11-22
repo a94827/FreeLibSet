@@ -71,12 +71,25 @@ namespace FreeLibSet.Controls
   }
 #endif
 
+  #region UserComboBoxEditButtonKind
 
+  /// <summary>
+  /// Вариант кнопки комбоблока: "Редактирование" или "Просмотр".
+  /// </summary>
   public enum UserComboBoxEditButtonKind
   {
+    /// <summary>
+    /// Значок "Редактировать"
+    /// </summary>
     Edit,
+
+    /// <summary>
+    /// Значок "Просмотр"
+    /// </summary>
     View
   }
+
+  #endregion
 
   /// <summary>
   /// Базовый класс для комбоблоков с произвольной реакцией на нажатие кнопки
@@ -90,6 +103,10 @@ namespace FreeLibSet.Controls
   {
     #region Конструктор
 
+    /// <summary>
+    /// Конструктор комбоблока
+    /// </summary>
+    /// <param name="mainControl">Основной управляющий элемент, например <see cref="TextBox"/>. Он присоединяется в качестве дочернего к создаваемому комбоблоку.</param>
     public UserComboBoxBase(Control mainControl)
     {
       SetStyle(ControlStyles.FixedHeight, true);
@@ -195,33 +212,36 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Метка слева для показа изображения
     /// </summary>
-    private Label _ImageLabel;
+    private readonly Label _ImageLabel;
 
     /// <summary>
     /// Основной управляющий элемент TextBox или MaskedTextBox
     /// </summary>
     internal protected Control MainControl { get { return _MainControl; } }
-    private Control _MainControl;
+    private readonly Control _MainControl;
 
     /// <summary>
     /// Кнопка "V" для выпадающего списка
     /// </summary>
-    private ControlRightButton _ThePopupButton;
+    private readonly ControlRightButton _ThePopupButton;
 
     /// <summary>
     /// Кнопка "X" очистки значения
     /// </summary>
-    private ControlRightButton _TheClearButton;
+    private readonly ControlRightButton _TheClearButton;
 
     /// <summary>
     /// Кнопка "^" для редактирования значения
     /// </summary>
-    private ControlRightButton _TheEditButton;
+    private readonly ControlRightButton _TheEditButton;
 
     #endregion
 
     #region Изображение
 
+    /// <summary>
+    /// Изображение слева от текста
+    /// </summary>
     [Description("Изображение слева от текста")]
     [Category("Appearance")]
     [DefaultValue(null)]
@@ -236,6 +256,9 @@ namespace FreeLibSet.Controls
       }
     }
 
+    /// <summary>
+    /// Список, из которого выбирается изображение слева от текста
+    /// </summary>
     [Description("Список, из которого выбирается изображение слева от текста")]
     [Category("Appearance")]
     [DefaultValue(null)]
@@ -250,6 +273,9 @@ namespace FreeLibSet.Controls
       }
     }
 
+    /// <summary>
+    /// Позиция в списке для изображения слева от текста
+    /// </summary>
     [Description("Позиция в списке для изображения слева от текста")]
     [Category("Appearance")]
     [DefaultValue(-1)]
@@ -1003,6 +1029,9 @@ namespace FreeLibSet.Controls
   {
     #region Конструктор
 
+    /// <summary>
+    /// Создает комбоблок
+    /// </summary>
     public UserSelComboBox()
       : base(CreateMainControl())
     {

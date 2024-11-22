@@ -479,4 +479,188 @@ namespace FreeLibSet.UICore
 
     #endregion
   }
+
+  #region Перечисления
+
+  #region UIDataState
+
+  /// <summary>
+  /// Режим редактирования данных в табличном просмотре
+  /// </summary>
+  public enum UIDataState
+  {
+    /// <summary>
+    /// Режим просмотра.
+    /// В этом режиме табличный просмотр находится постоянно, пока не выбрана одна из команд редактирования.
+    /// Также используется, если выбрана команда "Просмотреть запись".
+    /// </summary>
+    View,
+
+    /// <summary>
+    /// Выбрана команда "Редактировать запись".
+    /// </summary>
+    Edit,
+
+    /// <summary>
+    /// Выбрана команда "Новая запись"
+    /// </summary>
+    Insert,
+
+    /// <summary>
+    /// Выбрана команда "Копия записи"
+    /// </summary>
+    InsertCopy,
+
+    /// <summary>
+    /// Выбрана команда "Удалить запись"
+    /// </summary>
+    Delete,
+  };
+
+  #endregion
+
+  #region UISelectedRowsState
+
+  /// <summary>
+  /// Сколько строк сейчас выбрано в просмотре: Одна, несколько или ни одной
+  /// </summary>
+  public enum UISelectedRowsState
+  {
+    /// <summary>
+    /// Выбрана одна ячейка или одна строка целиком или несколько ячеек в одной строке
+    /// </summary>
+    SingleRow,
+
+    /// <summary>
+    /// Выбрано несколько строк или ячейки, расположенные на разных строках
+    /// </summary>
+    MultiRows,
+
+    /// <summary>
+    /// Нет ни одной выбранной ячейки (просмотр пуст)
+    /// </summary>
+    NoSelection
+  }
+
+  #endregion
+
+  #region UIDataViewColorType
+
+  /// <summary>
+  /// Тип стандартизированного цветового оформления ячеек табличного просмотра
+  /// </summary>
+  public enum UIDataViewColorType
+  {
+    /// <summary>
+    /// Обычная ячейка. Для невыделенной ячейки используется цвет фона и цвет текста по умолчанию.
+    /// </summary>
+    Normal,
+
+    /// <summary>
+    /// Альтернативный цвет для создания "полосатых" просмотров, когда строки
+    /// (обычно, через одну) имеют немного отличающийся цвет
+    /// </summary>
+    Alter,
+
+    /// <summary>
+    /// Выделение бледно-желтым цветом
+    /// </summary>
+    Special,
+
+    /// <summary>
+    /// Итог 1 (зеленые строки)
+    /// </summary>
+    Total1,
+
+    /// <summary>
+    /// Подытог 2 (сиреневые строки)
+    /// </summary>
+    Total2,
+
+    /// <summary>
+    /// Итоговая строка по всей таблице
+    /// </summary>
+    TotalRow,
+
+    /// <summary>
+    /// Заголовок
+    /// </summary>
+    Header,
+
+    /// <summary>
+    /// Ячейка с ошибкой (красный фон).
+    /// </summary>
+    Error,
+
+    /// <summary>
+    /// Ячейка с предупреждением (ярко-желтый фон, красные буквы)
+    /// </summary>
+    Warning,
+  }
+
+  #endregion
+
+  #region UIDataViewBorderStyle
+
+  /// <summary>
+  /// Типы границы ячейки при экспорте табличного просмотра в различные печатные форматы
+  /// </summary>
+  public enum UIDataViewBorderStyle
+  {
+    /// <summary>
+    /// Граница по умолчанию (в зависимости от оформления границ таблицы)
+    /// </summary>
+    Default,
+
+    /// <summary>
+    /// Отключить границу
+    /// (требуется, чтобы граница была отключена и у соседней ячейки)
+    /// </summary>
+    None,
+
+    /// <summary>
+    /// Тонкая линия
+    /// </summary>
+    Thin,
+
+    /// <summary>
+    /// Толстая линия
+    /// </summary>
+    Thick
+  }
+
+  #endregion
+
+  #region UIDataViewImageKind
+
+  /// <summary>
+  /// Изображения, которые можно выводить в заголовке строк.
+  /// </summary>
+  public enum UIDataViewImageKind
+  {
+    /// <summary>
+    /// Нет изображения или используется пользовательское изображение
+    /// </summary>
+    None,
+
+    /// <summary>
+    /// Значок "i"
+    /// </summary>
+    Information,
+
+    /// <summary>
+    /// Восклицательный знак
+    /// </summary>
+    Warning,
+
+    /// <summary>
+    /// Ошибка (красный крест)
+    /// </summary>
+    Error,
+  }
+
+  #endregion
+
+  #endregion
+
 }

@@ -17,6 +17,7 @@ using FreeLibSet.Controls;
 using FreeLibSet.Core;
 using FreeLibSet.Collections;
 using FreeLibSet.UICore;
+using FreeLibSet.Forms.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -214,7 +215,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
     /// будут использованы эти фильтры. Пользователь не может их редактировать.
     /// </summary>
-    public GridFilters ExternalFilters
+    public EFPDBxGridFilters ExternalFilters
     {
       get { return ViewProvider.ExternalFilters; }
       set { ViewProvider.ExternalFilters = value; }
@@ -223,7 +224,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], UIDataState, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
@@ -674,7 +675,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если это свойство установлено, то вместо фильтров, выбираемых пользователем,
     /// будут использованы эти фильтры. Пользователь не может их редактировать.
     /// </summary>
-    public GridFilters ExternalFilters
+    public EFPDBxGridFilters ExternalFilters
     {
       get { return _ExternalFilters; }
       set
@@ -682,6 +683,7 @@ namespace FreeLibSet.Forms.Docs
         _ExternalFilters = value;
         if (value != null)
         {
+          value.SqlFilterRequired = true;
           _DocGridView.CommandItems.CanEditFilters = false; // до установки фильтра
           if (_DocTreeView != null)
             _DocTreeView.CommandItems.CanEditFilters = false;
@@ -691,12 +693,12 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-    private GridFilters _ExternalFilters;
+    private EFPDBxGridFilters _ExternalFilters;
 
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], UIDataState, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller

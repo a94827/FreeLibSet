@@ -1711,7 +1711,8 @@ namespace ExtDB_tests.Data_OleDB
   //[Platform("Windows,X86")]
   public class SqlTest_OleDB : ExtDB_tests.Data.SqlTestBaseDB
   {
-    // OleDbDBx пока не поддерживает программное создание структуры БД
+    // OleDbDBx пока не поддерживает программное создание структуры БД.
+    // В случае расширения тестовых таблиц в конструкторе SqlTestBase, не забыть обновить структуру в SqlTestOleDB.mdb.
 
     #region База данных в памяти
 

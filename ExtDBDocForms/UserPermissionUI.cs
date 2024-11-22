@@ -586,7 +586,7 @@ namespace FreeLibSet.Forms.Docs
     {
       #region Конструктор
 
-      public DataEditItem(DBxDocValue docValue, UserPermissionEditor editor, IUserPermissionCreator creator)
+      public DataEditItem(DBxExtValue docValue, UserPermissionEditor editor, IUserPermissionCreator creator)
         : base(docValue)
       {
         _Editor = editor;
@@ -658,7 +658,7 @@ namespace FreeLibSet.Forms.Docs
       UserPermissionEditor editor = new UserPermissionEditor(ui, args.Editor.IsReadOnly, baseProvider);
       ui.CreateEditor(editor);
 
-      DocEditPage page = args.AddPage(ui.DisplayName, editor.Control);
+      ExtEditPage page = args.AddPage(ui.DisplayName, editor.Control);
       baseProvider.Parent = page.BaseProvider;
       page.ImageKey = ui.ImageKey;
 
@@ -667,7 +667,7 @@ namespace FreeLibSet.Forms.Docs
         throw new NullReferenceException("В списке Creators нет генератора разрешений \"" + classCode + "\"");
 
       DataEditItem editItem = new DataEditItem(args.Editor.SubDocs.Values[dataColumnName], editor, creator);
-      args.AddDocEditItem(editItem);
+      args.AddEditItem(editItem);
     }
 
     #endregion

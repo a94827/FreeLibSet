@@ -424,7 +424,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     }
 
     /// <summary>
-    /// Возращает тип данных свойства/поля/столбца таблицы, к которому выполнена привязка с помощью <see cref="DataPropertyName"/>.
+    /// Возвращает тип данных свойства/поля/столбца таблицы, к которому выполнена привязка с помощью <see cref="DataPropertyName"/>.
     /// В режиме <see cref="VirtualMode"/>=true не используется, возвращает null.
     /// </summary>
     /// <param name="node">Узел дерева</param>

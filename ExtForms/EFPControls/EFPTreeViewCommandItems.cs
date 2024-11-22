@@ -13,7 +13,7 @@ namespace FreeLibSet.Forms
   /// Команды локального меню для TreeView и TreeViewAdv.
   /// Базовый класс для EFPTreeViewCommandItems и EFPTreeViewAdvCommandItemsBase
   /// </summary>
-  public abstract class EFPTreeViewCommandItemsBase : EFPControlCommandItems, IEFPClipboardCommandItems
+  public abstract class EFPTreeViewCommandItemsBase : EFPControlCommandItems, IEFPClipboardCommandItems, IEFPDataViewClipboardCommandItems
   {
     #region Конструктор
 
@@ -49,6 +49,8 @@ namespace FreeLibSet.Forms
       ciCopy.Enabled = true;
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
+
+      EFPDataViewCopyFormatsForm.AddCommandItem(this);
 
       /*
       if (EFPApp.ShowToolTips)
@@ -221,6 +223,11 @@ namespace FreeLibSet.Forms
     }
     private EFPDataViewCopyFormats _CopyFormats;
 
+    /// <summary>
+    /// Стандартные форматы с учетом выбранных пользователем
+    /// </summary>
+    public EFPDataViewCopyFormats SelectedCopyFormats { get { return CopyFormats & EFPDataViewCopyFormatsForm.UserSelectedFormats; } }
+
 
     /// <summary>
     /// Добавляет в буфер обмена текстовый формат для выбранных узлов
@@ -238,16 +245,10 @@ namespace FreeLibSet.Forms
     protected static void AddDefaultCopyFormats(IDataObject dobj, string[,] a, EFPDataViewCopyFormats copyFormats)
     {
       if ((copyFormats & EFPDataViewCopyFormats.Text) == EFPDataViewCopyFormats.Text)
-      {
-        string txt = new FreeLibSet.Text.TabTextConvert().ToString(a);
-        dobj.SetData(DataFormats.Text, true, txt);
-      }
+        WinFormsTools.SetTextMatrixText(dobj, a);
 
       if ((copyFormats & EFPDataViewCopyFormats.CSV) == EFPDataViewCopyFormats.CSV)
-      {
-        string txt = new FreeLibSet.Text.CsvTextConvert().ToString(a);
-        dobj.SetData(DataFormats.CommaSeparatedValue, txt);
-      }
+        WinFormsTools.SetTextMatrixCsv(dobj, a);
     }
 
 
@@ -517,7 +518,7 @@ namespace FreeLibSet.Forms
       {
         string[,] a = new string[1, 1];
         a[0, 0] = Owner.Control.SelectedNode.Text;
-        AddDefaultCopyFormats(args.DataObject, a, CopyFormats);
+        AddDefaultCopyFormats(args.DataObject, a, SelectedCopyFormats);
       }
     }
 

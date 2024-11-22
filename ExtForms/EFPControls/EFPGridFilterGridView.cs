@@ -96,9 +96,9 @@ namespace FreeLibSet.Forms
 
     private void SelectMainControl()
     {
-      Control NextCtrl = Control.GetNextControl(Control, true);
-      if (NextCtrl != null)
-        NextCtrl.Select();
+      Control nextCtrl = Control.GetNextControl(Control, true);
+      if (nextCtrl != null)
+        nextCtrl.Select();
     }
 
     /// <summary>
@@ -263,7 +263,7 @@ namespace FreeLibSet.Forms
       : base(mainControlProvider.BaseProvider, filterGridControl) // 09.06.2021. Почему нельзя? Вроде бы, можно
     {
       _MainControlProvider = mainControlProvider;
-      _MainControlProvider.RefreshData += new EventHandler(MainControlProvider_RefreshData);
+      _MainControlProvider.AfterRefreshData += new EventHandler(MainControlProvider_RefreshData);
       _MainControlProvider.AfterSetFilter += new EventHandler(Filters_Changed);
       RefreshFilterGrid();
     }
@@ -353,8 +353,8 @@ namespace FreeLibSet.Forms
     /// Выполнен двойной щелчок по строке фильтра.
     /// Вызывает метод <see cref="EFPConfigurableDataGridView.ShowFilterDialog(string)"/>
     /// </summary>
-    /// <param name="FilterIndex">Индекс строки фильтра</param>
-    protected override void OnDoubleClick(int FilterIndex)
+    /// <param name="filterIndex">Индекс строки фильтра</param>
+    protected override void OnDoubleClick(int filterIndex)
     {
       if (!MainControlProvider.CommandItems.CanEditFilters)
       {
@@ -362,7 +362,7 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      IEFPGridFilter gridFilter = (IEFPGridFilter)(Control.Rows[FilterIndex].Tag);
+      IEFPGridFilter gridFilter = (IEFPGridFilter)(Control.Rows[filterIndex].Tag);
       MainControlProvider.ShowFilterDialog(gridFilter.Code);
     }
 

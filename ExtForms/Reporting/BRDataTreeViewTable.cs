@@ -77,7 +77,7 @@ namespace FreeLibSet.Forms.Reporting
       args.Report.DocumentProperties = ControlProvider.DocumentProperties.Clone();
       BRSection sect = args.Report.Sections.Add();
       sect.PageSetup = SettingsData.GetItem<BRPageSettingsDataItem>().PageSetup;
-      AddTitleAndFilterBands(sect);
+      AddTitleAndFilterBands(sect, args);
       sect.Bands.Add(new BRDataTreeViewTable(sect, ControlProvider, SettingsData, args.ActionInfo.Action == BRAction.SendTo));
 
       base.OnCreateReport(args);

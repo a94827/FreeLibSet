@@ -11,6 +11,7 @@ using System.Windows.Forms;
 
 using FreeLibSet.Config;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -34,7 +35,18 @@ namespace FreeLibSet.Forms
       #region Таблица фильтров
 
       FilterGridProvider = new EFPGridFilterEditorGridView(_FormProvider, FilterGrid);
-
+      string baseTitle = callerControlProvider.DisplayName;
+      IEFPDataView callerControlProvider2 = callerControlProvider as IEFPDataView;
+      if (callerControlProvider2 != null)
+      {
+        if (callerControlProvider2.DefaultOutItem != null)
+        {
+          if (!String.IsNullOrEmpty(callerControlProvider2.DefaultOutItem.Title))
+            baseTitle = callerControlProvider2.DefaultOutItem.Title;
+        }
+      }
+        //if (callerControlProvider.out)
+      FilterGridProvider.DefaultOutItem.Title = baseTitle + " - Установка фильтров";
       FilterGridProvider.CommandItems.ClipboardInToolBar = true;
 
 
@@ -314,6 +326,7 @@ namespace FreeLibSet.Forms
       Columns.AddImage(); // 0
       Columns.AddText("DisplayName", false, "Фильтр", 20, 10); // 1
       Columns.LastAdded.CanIncSearch = true;
+      Columns.LastAdded.PrintWidth = 500;
       Columns.AddTextFill("FilterText", false, "Значение", 100, 10); // 2
       DisableOrdering();
 
@@ -445,7 +458,7 @@ namespace FreeLibSet.Forms
       IEFPGridFilter filter;
       switch (State)
       {
-        case EFPDataGridViewState.Edit:
+        case UIDataState.Edit:
           EFPDialogPosition dialogPosition = new EFPDialogPosition();
           Rectangle rc = Control.GetCellDisplayRectangle(2, CurrentRowIndex, false);
           dialogPosition.PopupOwnerBounds = Control.RectangleToScreen(rc);
@@ -460,7 +473,7 @@ namespace FreeLibSet.Forms
           }
           break;
 
-        case EFPDataGridViewState.Delete:
+        case UIDataState.Delete:
           int[] filterIndices = this.SelectedRowIndices;
           for (int i = 0; i < filterIndices.Length; i++)
           {
@@ -596,7 +609,8 @@ namespace FreeLibSet.Forms
     {
       TempCfg sect = new TempCfg();
       Filters.WriteConfig(sect);
-      FreeLibSet.Forms.Diagnostics.DebugTools.DebugXml(sect.Document, "Текущие фильтры");
+      //FreeLibSet.Forms.Diagnostics.DebugTools.DebugXml(sect.Document, "Текущие фильтры");
+      EFPApp.ShowXmlView(sect.Document, "Текущие фильтры");
     }
 
     #endregion

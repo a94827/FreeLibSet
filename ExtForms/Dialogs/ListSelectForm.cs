@@ -39,7 +39,7 @@ namespace FreeLibSet.Forms
       _CanBeEmpty = canBeEmpty;
 
       efpForm = new EFPFormProvider(this);
-      efpForm.AddFormCheck(new UIValidatingEventHandler(ValidateForm));
+      efpForm.FormChecks.Add(new UIValidatingEventHandler(ValidateForm));
 
       btnCheckAll.Image = EFPApp.MainImages.Images["CheckListAll"];
       btnCheckAll.ImageAlign = ContentAlignment.MiddleLeft;

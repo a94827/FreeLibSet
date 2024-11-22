@@ -12,6 +12,7 @@ using FreeLibSet.Data;
 using System.ComponentModel;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -401,8 +402,8 @@ namespace FreeLibSet.Forms.Docs
         Int32[] docIds;
         switch (base.State)
         {
-          case EFPDataGridViewState.Edit:
-          case EFPDataGridViewState.View:
+          case UIDataState.Edit:
+          case UIDataState.View:
 
             docIds = base.SelectedIds;
             if (docIds.Length == 0)
@@ -425,7 +426,7 @@ namespace FreeLibSet.Forms.Docs
           //  DoInsert();
           //  break;
 
-          case EFPDataGridViewState.Delete:
+          case UIDataState.Delete:
             DoDelete();
             return true;
           default:
@@ -536,7 +537,7 @@ namespace FreeLibSet.Forms.Docs
 
         if (Editor._DeleteRowsMode == 1)
         {
-          if (!DocTypeUI.PerformEditing(this.SelectedIds, EFPDataGridViewState.Delete, true))
+          if (!DocTypeUI.PerformEditing(this.SelectedIds, UIDataState.Delete, true))
             return;
           InvalidateDataRows(rows); // 16.02.2018. Не удаляем строки из таблицы
         }
@@ -633,7 +634,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (!base.CommandItems.PerformCopy())
           return;
-        base.InlineEditData(EFPDataGridViewState.Delete);
+        base.InlineEditData(UIDataState.Delete);
         if (Editor._ChangeInfo != null)
           Editor._ChangeInfo.Changed = true;
         InitTitle();

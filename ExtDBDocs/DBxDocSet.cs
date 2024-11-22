@@ -1066,6 +1066,8 @@ namespace FreeLibSet.Data.Docs
       Dictionary<string, DataTable> queryTables = new Dictionary<string, DataTable>(queryIds.Count);
       foreach (KeyValuePair<string, IdList> pair in queryIds)
       {
+        if (!IsValidableTable(pair.Key))
+          continue;
         DBxDocTypeBase dtb;
         if (!DocProvider.DocTypes.FindByTableName(pair.Key, out dtb))
           throw new BugException("Не найден документ или поддокумент с именем \"" + pair.Key + "\"");
@@ -1111,6 +1113,20 @@ namespace FreeLibSet.Data.Docs
       #endregion
 
       return errors.Count == errorCount;
+    }
+
+    private bool IsValidableTable(string tableName) // 30.10.2024
+    {
+      if (DocProvider.UseBinDataRefs || DocProvider.UseFileRefs)
+      {
+        switch (tableName)
+        {
+          case "BinData":
+          case "FileNames":
+            return false;
+        }
+      }
+      return true;
     }
 
     private void ValidateTable1(ErrorMessageList errors, DataTable table, DBxDocTypeBase docType, string prefix,
@@ -1208,6 +1224,9 @@ namespace FreeLibSet.Data.Docs
           string refTableName = ts.Columns[i].MasterTableName;
           if (!String.IsNullOrEmpty(refTableName))
           {
+            if (!IsValidableTable(refTableName))
+              continue;
+
             switch (ts.Columns[i].ColumnName)
             {
               case "CreateUserId":

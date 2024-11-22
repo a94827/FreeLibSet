@@ -84,7 +84,7 @@ namespace FreeLibSet.Forms
   {
     /// <summary>
     /// Получить только непосредственно выбранные узлы.
-    /// Соответствует свойству TreeViewAdv.SelectedNodes.
+    /// Соответствует свойству <see cref="TreeViewAdv.SelectedNodes"/>.
     /// </summary>
     NoChildren,
 
@@ -97,15 +97,15 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Для выбранных узлов вернуть дочерние узлы любого уровня вложенности, если выбранный узел свернут.
     /// Предполагается, что если дочерние узлы показаны на экране, то они должны быть выбраны в явном виде.
-    /// Этот режим действует только для TreeViewAdv.SelectionMode=TreeViewAdvSelectionMode.Multi.
-    /// Для режимов выбора узлов Single и MultiSameParent идентичен AllInherited, т.к. у пользователя нет возможности 
+    /// Этот режим действует только для <see cref="TreeViewAdv.SelectionMode"/>=<see cref="TreeViewAdvSelectionMode.Multi"/>.
+    /// Для режимов выбора узлов <see cref="TreeViewAdvSelectionMode.Single"/> и <see cref="TreeViewAdvSelectionMode.MultiSameParent"/> идентичен <see cref="AllInherited"/>, т.к. у пользователя нет возможности 
     /// выбирать дочерние узлы.
     /// </summary>
     CollapseInherited,
   }
 
   /// <summary>
-  /// Провайдер для расширенного древовидного просмотра TreeViewAdv 
+  /// Провайдер для расширенного древовидного просмотра <see cref="TreeViewAdv"/> 
   /// </summary>
   public class EFPTreeViewAdv : EFPControl<TreeViewAdv>, IEFPTreeView
   {
@@ -134,7 +134,7 @@ namespace FreeLibSet.Forms
 
     private void Init()
     {
-      _State = EFPDataGridViewState.View;
+      _State = UIDataState.View;
       _ReadOnly = false;
       _CanEdit = true;
       _CanInsert = true;
@@ -235,10 +235,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// true, если поддерживается только просмотр данных, а не редактирование.
     /// Установка свойства отключает видимость всех команд редактирования. 
-    /// Свойства CanInsert, CanDelete и CanInsertCopy перестают действовать
-    /// Значение по умолчанию: false (редактирование разрешено)
-    /// Не влияет на возможность inline-редактирования. Возможно любое сочетание
-    /// свойств ReadOnly и Control.ReadOnly
+    /// Свойства <see cref="CanInsert"/>, <see cref="CanDelete"/> и <see cref="CanInsertCopy"/> перестают действовать.
+    /// Значение по умолчанию: false (редактирование разрешено).
     /// </summary>
     public bool ReadOnly
     {
@@ -255,7 +253,7 @@ namespace FreeLibSet.Forms
     private bool _ReadOnly;
 
     /// <summary>
-    /// Управляемое свойство для ReadOnly.
+    /// Управляемое свойство для <see cref="ReadOnly"/>.
     /// </summary>
     public DepValue<bool> ReadOnlyEx
     {
@@ -347,8 +345,8 @@ namespace FreeLibSet.Forms
     #region CanInsert
 
     /// <summary>
-    /// true, если можно добаввлять строки (при DataReadOnly=false)
-    /// Значение по умолчанию: true (добавление строк разрешено)
+    /// true, если можно добавлять строки (при <see cref="ReadOnly"/>=false).
+    /// Значение по умолчанию: true (добавление строк разрешено).
     /// </summary>
     public bool CanInsert
     {
@@ -365,7 +363,7 @@ namespace FreeLibSet.Forms
     private bool _CanInsert;
 
     /// <summary>
-    /// Управляемое свойство для CanInsert
+    /// Управляемое свойство для <see cref="CanInsert"/>
     /// </summary>
     public DepValue<bool> CanInsertEx
     {
@@ -402,8 +400,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// true, если разрешено добавлять строку по образцу существующей
-    /// (при DataReadOnly=false и CanInsert=true)
-    /// Значение по умолчанию: false (копирование запрещено)
+    /// (при <see cref="ReadOnly"/>=false и <see cref="CanInsert"/>=true).
+    /// Значение по умолчанию: false (копирование запрещено).
     /// </summary>
     public bool CanInsertCopy
     {
@@ -420,7 +418,7 @@ namespace FreeLibSet.Forms
     private bool _CanInsertCopy;
 
     /// <summary>
-    /// Управляемое свойство для Checked.
+    /// Управляемое свойство для <see cref="CanInsertCopy"/>.
     /// </summary>
     public DepValue<bool> CanInsertCopyEx
     {
@@ -456,8 +454,8 @@ namespace FreeLibSet.Forms
     #region CanDelete
 
     /// <summary>
-    /// true, если можно удалять строки (при DataReadOnly=false)
-    /// Значение по умолчанию: true (удаление разрешено)
+    /// true, если можно удалять строки (при <see cref="ReadOnly"/>=false).
+    /// Значение по умолчанию: true (удаление разрешено).
     /// </summary>
     public bool CanDelete
     {
@@ -474,7 +472,7 @@ namespace FreeLibSet.Forms
     private bool _CanDelete;
 
     /// <summary>
-    /// Управляемое свойство для CanDelete.
+    /// Управляемое свойство для <see cref="CanDelete"/>.
     /// </summary>
     public DepValue<bool> CanDeleteEx
     {
@@ -510,8 +508,8 @@ namespace FreeLibSet.Forms
     #region CanView
 
     /// <summary>
-    /// true, если можно просмотреть выбранные строки в отдельном окне
-    /// По умолчанию: true
+    /// true, если можно просмотреть выбранные строки в отдельном окне.
+    /// По умолчанию: true.
     /// </summary>
     public bool CanView
     {
@@ -528,7 +526,7 @@ namespace FreeLibSet.Forms
     private bool _CanView;
 
     /// <summary>
-    /// Управляемое свойство для CanView.
+    /// Управляемое свойство для <see cref="CanView"/>.
     /// </summary>
     public DepValue<bool> CanViewEx
     {
@@ -563,8 +561,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// true, если разрешено редактирование и просмотр одновременно 
-    /// нескольких выбранных строк
-    /// По умолчанию - false
+    /// нескольких выбранных строк.
+    /// По умолчанию - false.
     /// </summary>
     public bool CanMultiEdit
     {
@@ -582,10 +580,10 @@ namespace FreeLibSet.Forms
     private bool _CanMultiEdit;
 
     /// <summary>
-    /// Текущий режим, для которого вызвано событие EditData
+    /// Текущий режим, для которого вызвано событие <see cref="EditData"/>.
     /// </summary>
-    public EFPDataGridViewState State { get { return _State; } }
-    private EFPDataGridViewState _State;
+    public UIDataState State { get { return _State; } }
+    private UIDataState _State;
 
     /// <summary>
     /// Вызывается для редактирования данных, просмотра, вставки, копирования
@@ -594,11 +592,10 @@ namespace FreeLibSet.Forms
     public event EventHandler EditData;
 
     /// <summary>
-    /// Вызывает обработчик события EditData и возвращает true, если он установлен
-    /// Если метод возвращает false, выполняется редактирование "по месту"
+    /// Вызывает обработчик события <see cref="EditData"/> и возвращает true, если он установлен.
     /// </summary>
-    /// <param name="args"></param>
-    /// <returns></returns>
+    /// <param name="args">Фиктивный аргумент</param>
+    /// <returns>Признак наличия обработчика <see cref="EditData"/></returns>
     protected virtual bool OnEditData(EventArgs args)
     {
       if (EditData != null)
@@ -611,9 +608,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Перевод просмотра в один из режимов
+    /// Перевод просмотра в один из режимов <see cref="State"/> и вызов <see cref="OnEditData(EventArgs)"/>.
     /// </summary>
-    public void PerformEditData(EFPDataGridViewState state)
+    public void PerformEditData(UIDataState state)
     {
       if (_InsideEditData)
       {
@@ -633,7 +630,7 @@ namespace FreeLibSet.Forms
       }
       finally
       {
-        _State = EFPDataGridViewState.View;
+        _State = UIDataState.View;
         _InsideEditData = false;
       }
 
@@ -645,8 +642,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если управляющий элемент не содержит столбцов, которые можно было бы редактировать.
-    /// Перебирает коллекцию TreeViewAdv.NodeControls в поисках InteractiveControl с EditEnabled=false.
-    /// Если есть хотя бы один такой элемент, свойство возвращает false
+    /// Перебирает коллекцию <see cref="TreeViewAdv.NodeControls"/> в поисках <see cref="InteractiveControl"/> с <see cref="InteractiveControl.EditEnabled"/>=false.
+    /// Если есть хотя бы один такой элемент, свойство возвращает false.
     /// </summary>
     public bool ControlIsReadOnly
     {
@@ -676,7 +673,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывает событие RefreshData.
-    /// Вызывайте этот метод из OnRefreshData(), если Вы полностью переопределяете его, не вызывая
+    /// Вызывайте этот метод из <see cref="OnRefreshData(EventArgs)"/>, если Вы полностью переопределяете его, не вызывая
     /// метод базового класса.
     /// </summary>
     protected void CallRefreshDataEventHandler(EventArgs args)
@@ -686,10 +683,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Непереопределенный метод вызывает событие RefreshData.
-    /// Если метод переопределен, также должно быть переопределено свойство HasRefreshDataHandler.
+    /// Непереопределенный метод вызывает событие <see cref="RefreshData"/> с помощью метода <see cref="CallRefreshDataEventHandler(EventArgs)"/>.
+    /// Если метод переопределен, также должно быть переопределено свойство <see cref="HasRefreshDataHandler"/>.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Фиктивные аргументы события</param>
     protected virtual void OnRefreshData(EventArgs args)
     {
       CallRefreshDataEventHandler(args);
@@ -699,6 +696,22 @@ namespace FreeLibSet.Forms
     /// Возвращает true, если есть установленный обработчик события RefreshData
     /// </summary>
     public virtual bool HasRefreshDataHandler { get { return RefreshData != null; } }
+
+    /// <summary>
+    /// Событие вызывается при выполнении метода <see cref="PerformRefresh()"/> после отработки основного события.
+    /// В отличие от события <see cref="RefreshData"/>, наличие обработчика этого события не влияет на <see cref="HasRefreshDataHandler"/> и на наличие команды "Обновить".
+    /// </summary>
+    public event EventHandler AfterRefreshData;
+
+    /// <summary>
+    /// Вызывает обработчик события AfterRefreshData
+    /// </summary>
+    /// <param name="args">Фиктивные аргументы события</param>
+    protected virtual void OnAfterRefreshData(EventArgs args)
+    {
+      if (AfterRefreshData != null)
+        AfterRefreshData(this, args);
+    }
 
     /// <summary>
     /// Принудительное обновление просмотра
@@ -718,10 +731,12 @@ namespace FreeLibSet.Forms
       {
         Control.EndUpdate();
       }
+
+      OnAfterRefreshData(EventArgs.Empty);
     }
 
     /// <summary>
-    /// Вызов метода PerformRefresh(), который можно выполнять из обработчика события
+    /// Вызов метода <see cref="PerformRefresh()"/>, который можно выполнять из обработчика события
     /// </summary>
     /// <param name="sender">Игнорируется</param>
     /// <param name="args">Игнорируется</param>
@@ -1329,15 +1344,15 @@ namespace FreeLibSet.Forms
     /// Сколько строк выбрано в дереве: одна, несколько или ни одной.
     /// Определяется из TreeViewAdv.SelectedNodes.Count
     /// </summary>
-    public EFPDataGridViewSelectedRowsState SelectedRowsState
+    public UISelectedRowsState SelectedRowsState
     {
       get
       {
         switch (Control.SelectedNodes.Count)
         {
-          case 0: return EFPDataGridViewSelectedRowsState.NoSelection;
-          case 1: return EFPDataGridViewSelectedRowsState.SingleRow;
-          default: return EFPDataGridViewSelectedRowsState.MultiRows;
+          case 0: return UISelectedRowsState.NoSelection;
+          case 1: return UISelectedRowsState.SingleRow;
+          default: return UISelectedRowsState.MultiRows;
         }
       }
     }

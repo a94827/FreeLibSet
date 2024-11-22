@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -315,7 +316,7 @@ namespace FreeLibSet.Forms
       if (base.OnEditData(args))
         return true;
 
-      if (State != EFPDataGridViewState.Edit)
+      if (State != UIDataState.Edit)
       {
         EFPApp.ShowTempMessage("Режим " + State.ToString() + " не поддерживается");
         return true;

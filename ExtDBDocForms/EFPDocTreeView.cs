@@ -15,6 +15,7 @@ using FreeLibSet.Remoting;
 using FreeLibSet.Core;
 using FreeLibSet.Controls;
 using System.ComponentModel;
+using FreeLibSet.UICore;
 
 #pragma warning disable 0219 // TODO: Убрать лишние переменные
 
@@ -389,7 +390,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Игнорируется</returns>
     protected override bool OnEditData(EventArgs args)
     {
-      Int32[] ids = (State == EFPDataGridViewState.Delete) ? SelectedIdsWithChildren : SelectedIds; // 17.02.2022
+      Int32[] ids = (State == UIDataState.Delete) ? SelectedIdsWithChildren : SelectedIds; // 17.02.2022
       DocTypeUI.PerformEditing(ids, State, Control.FindForm().Modal, ViewHandler);
       return true;
     }
@@ -885,7 +886,7 @@ namespace FreeLibSet.Forms.Docs
           if (Owner != null)
           {
             if (Owner.Filters != null)
-              Owner.Filters.InitNewDocValues(newDoc);
+              Owner.Filters.InitNewValues(newDoc.Values);
 
             if (Owner.CurrentId != 0)
             {

@@ -13,8 +13,8 @@ namespace FreeLibSet.Data.Docs
 {
   /// <summary>
   /// Класс для замены фиктивных идентификаторов, используемых для созданных
-  /// документов / поддокументов на реальные 
-  /// Используется в DBxDocProvider.ApplyChanges()
+  /// документов / поддокументов на реальные.
+  /// Используется в <see cref="DBxRealDocProvider.ApplyChangesInternal(DataSet, bool)"/>.
   /// </summary>
   internal class DBxDocProviderIdReplacer
   {
@@ -32,11 +32,11 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Владелец
     /// </summary>
-    private DBxRealDocProvider _Caller;
+    private readonly DBxRealDocProvider _Caller;
 
     /// <summary>
-    /// Пары "СтарыйId:НовыйId" для одной таблицы документа или поддокумента
-    /// Реализует двустороннюю коллекцию
+    /// Пары "СтарыйId:НовыйId" для одной таблицы документа или поддокумента.
+    /// Реализует двустороннюю коллекцию.
     /// </summary>
     private class TableIdPairs : BidirectionalDictionary<Int32, Int32>
     {
@@ -388,11 +388,12 @@ namespace FreeLibSet.Data.Docs
     #region Дополнительные методы
 
     /// <summary>
-    /// Метод возвращает true, если идентификатор <paramref name="id"/> является замененяющим для 
+    /// Метод возвращает true, если идентификатор <paramref name="id"/> является замененяющим для некоторого фиктивного идентификатора
     /// </summary>
-    /// <param name="tableName"></param>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="tableName">Имя таблицы поддокумента</param>
+    /// <param name="id">Реальный идентификатор, используемый в базе данных</param>
+    /// <returns>True, если этот идентификатор был создан для нового поддокумента.
+    /// False, если идентификатор относится к существующему поддокументу в базе данных.</returns>
     public bool IsAdded(string tableName, Int32 id)
     {
       _Caller.CheckIsRealDocId(id);

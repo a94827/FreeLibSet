@@ -41,7 +41,6 @@
     </Compile>
     <Compile Include="DBxBinDataHandler.cs" />
     <Compile Include="DBxChainDocProvider.cs" />
-    <Compile Include="DBxCommonFilter.cs" />
     <Compile Include="DBxDocDBConnectionHelper.cs" />
     <Compile Include="DBxDocsLock.cs" />
     <Compile Include="DBxDocTypeRefInfo.cs" />
@@ -52,14 +51,12 @@
     <Compile Include="DBxSingleDocSubDocs.cs" />
     <Compile Include="DBxSingleSubDocs.cs" />
     <Compile Include="DBxSubDoc.cs" />
-    <Compile Include="DataRowDocValues.cs" />
     <Compile Include="DBxDocSelection.cs" />
     <Compile Include="DBxDocProvider.cs" />
     <Compile Include="DBxDocSet.cs" />
     <Compile Include="DBxDocTextHandlers.cs" />
     <Compile Include="DBxDocType.cs" />
     <Compile Include="DBxDocTypeFileRefs.cs" />
-    <Compile Include="DBxDocValue.cs" />
     <Compile Include="DBxMultiDocs.cs" />
     <Compile Include="DBxRealDocProvider.cs" />
     <Compile Include="DBxSingleDoc.cs" />
@@ -71,7 +68,7 @@
     <Compile Include="DBxDocProviderIdReplacer.cs" />
     <Compile Include="DBxExtRefs.cs" />
     <Compile Include="DBxDocPermissions.cs" />
-    <Compile Include="XmlCfgDocValues.cs" />
+    <Compile Include="RefDocCommonFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExtTools\ExtTools.csproj">

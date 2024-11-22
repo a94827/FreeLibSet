@@ -183,6 +183,10 @@ namespace FreeLibSet.Forms.Reporting
       #region Отправить
 
       _ExpRange = EFPDataViewExpRange.All;
+      _UseExpTableHeader = true;
+      _ExpTableHeader = true;
+      _UseExpTableFilters = true;
+      _ExpTableFilters = true;
       _UseExpColumnHeaders = true;
       _ExpColumnHeaders = true;
 
@@ -598,6 +602,20 @@ namespace FreeLibSet.Forms.Reporting
     #region Управляющие свойства
 
     /// <summary>
+    /// Наличие свойства <see cref="ExpTableHeader"/>.
+    /// Устанавливается в true, если просмотр содержит заголовок таблицы
+    /// </summary>
+    public bool UseExpTableHeader { get { return _UseExpTableHeader; } set { _UseExpTableHeader = value; } }
+    private bool _UseExpTableHeader;
+
+    /// <summary>
+    /// Наличие свойства <see cref="ExpTableFilters"/>.
+    /// Устанавливается в true, если просмотр содержит табличку фильтров
+    /// </summary>
+    public bool UseExpTableFilters { get { return _UseExpTableFilters; } set { _UseExpTableFilters = value; } }
+    private bool _UseExpTableFilters;
+
+    /// <summary>
     /// Наличие свойства <see cref="ExpColumnHeaders"/>.
     /// Устанавливается в true, если просмотр содержит заголовки столбцов
     /// </summary>
@@ -611,6 +629,18 @@ namespace FreeLibSet.Forms.Reporting
     /// </summary>
     public EFPDataViewExpRange ExpRange { get { return _ExpRange; } set { _ExpRange = value; } }
     private EFPDataViewExpRange _ExpRange;
+
+    /// <summary>
+    /// При выполнении команды "Отправить": true (по умолчанию) - выводить заголовок таблицы, если он есть.
+    /// </summary>
+    public bool ExpTableHeader { get { return _ExpTableHeader; } set { _ExpTableHeader = value; } }
+    private bool _ExpTableHeader;
+
+    /// <summary>
+    /// При выполнении команды "Отправить": true (по умолчанию) - выводить табличку фильтров, если она есть.
+    /// </summary>
+    public bool ExpTableFilters { get { return _ExpTableFilters; } set { _ExpTableFilters = value; } }
+    private bool _ExpTableFilters;
 
     /// <summary>
     /// При выполнении команды "Отправить": true (по умолчанию) - выводить заголовки столбцов.
@@ -744,7 +774,7 @@ namespace FreeLibSet.Forms.Reporting
     }
 
     /// <summary>
-    /// Возращает имя поля для экспорта в DBF-формат.
+    /// Возвращает имя поля для экспорта в DBF-формат.
     /// Возвращается значение, установленное пользователем, или пустая строка.
     /// Следует использовать метод <see cref="GetRealDbfFieldNames(IEFPDataViewColumn[])"/>, который также возвращает имена из свойств столбца и автоматически генерирует недостающие.
     /// </summary>
@@ -813,7 +843,7 @@ namespace FreeLibSet.Forms.Reporting
       {
         if (aNames[i] == null)
         {
-          string nm = "F_0" + (i+1).ToString("0000000", StdConvert.NumberFormat);
+          string nm = "F_0" + (i + 1).ToString("0000000", StdConvert.NumberFormat);
           while (lstNames.Contains(nm))
           {
             cntRnd++;
@@ -937,6 +967,9 @@ namespace FreeLibSet.Forms.Reporting
         #region Отправить
 
         cfg.SetEnum<EFPDataViewExpRange>("ExpRange", ExpRange);
+        // Не используем свойства UseXXX
+        cfg.SetBool("ExpTableHeader", ExpTableHeader);
+        cfg.SetBool("ExpTableFilters", ExpTableFilters);
         cfg.SetBool("ExpColumnHeaders", ExpColumnHeaders);
 
         #endregion
@@ -1037,6 +1070,9 @@ namespace FreeLibSet.Forms.Reporting
         #region Отправить
 
         ExpRange = cfg.GetEnumDef<EFPDataViewExpRange>("ExpRange", EFPDataViewExpRange.All);
+        // Не используем свойства UseXXX
+        ExpTableHeader = cfg.GetBoolDef("ExpTableHeader", true);
+        ExpTableFilters = cfg.GetBoolDef("ExpTableFilters", true);
         ExpColumnHeaders = cfg.GetBoolDef("ExpColumnHeaders", true);
 
         #endregion

@@ -740,7 +740,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Реализация интерфейса <see cref="IEFPTextBox"/>.
-    /// Для однострочных управляющих элементов возращает false.
+    /// Для однострочных управляющих элементов возвращает false.
     /// Свойство должно быть переопределено.
     /// </summary>
     public virtual bool IsMultiLine { get { return false; } }

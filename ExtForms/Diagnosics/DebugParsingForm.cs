@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Parsing;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Diagnostics
 {
@@ -158,7 +159,7 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
 
       if ((args.RowIndex % 2) == 1)
-        args.ColorType = EFPDataGridViewColorType.Alter;
+        args.ColorType = UIDataViewColorType.Alter;
 
       if (_CurrToken.ErrorMessage.HasValue)
         args.AddRowErrorMessage(_CurrToken.ErrorMessage.Value);

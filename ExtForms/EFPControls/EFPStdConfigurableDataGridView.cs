@@ -56,7 +56,8 @@ namespace FreeLibSet.Forms
       set
       {
         base.GridProducer = value;
-        if (value != null)
+        if (value != null &&
+          value.OrderCount > 0 /* 08.11.2024. Порядок сортировки может быть предопределен в программе и недоступен для изменения пользователем */)
           base.AutoSort = true; // 16.07.2021
       }
     }

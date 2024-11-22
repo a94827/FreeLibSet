@@ -11,6 +11,7 @@ using FreeLibSet.Forms.Diagnostics;
 using FreeLibSet.Forms.Reporting;
 using FreeLibSet.Models.Tree;
 using FreeLibSet.Reporting;
+using FreeLibSet.UICore;
 
 namespace BRReportDemo
 {
@@ -62,7 +63,7 @@ namespace BRReportDemo
         {
           efpTree.Columns["Id"].SizeGroup = "Id";
           efpTree.Columns["ParentId"].SizeGroup = "Id";
-          efpTree.Columns["Id"].ColorType = EFPDataGridViewColorType.Total1;
+          efpTree.Columns["Id"].ColorType = UIDataViewColorType.Total1;
 
           efpTree.Columns["Date1"].PrintHeadersSpec = "Период|Начало";
           efpTree.Columns["Date2"].PrintHeadersSpec = "Период|Окончание";
@@ -118,6 +119,7 @@ namespace BRReportDemo
         efpTree.CommandItems.OutHandler.Items.Clear();
       if (addOutItem)
         InitAuxReports(efpTree);
+      efpTree.CommandItems.ClipboardInToolBar = true;
 
       //efpTree.Attached += EfpTree_Attached;
       EFPApp.ShowFormOrDialog(form);
@@ -185,7 +187,7 @@ namespace BRReportDemo
         efpGrid.Columns.LastAdded.SizeGroup = "Id";
         efpGrid.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
         efpGrid.Columns["Id"].DisplayName = "Идентификатор узла";
-        efpGrid.Columns.LastAdded.ColorType = EFPDataGridViewColorType.Total1;
+        efpGrid.Columns.LastAdded.ColorType = UIDataViewColorType.Total1;
         efpGrid.Columns.AddBool("Flag", true, "Flag");
 
         if (!removeOutItem)
@@ -229,6 +231,8 @@ namespace BRReportDemo
       if (addOutItem)
         InitAuxReports(efpGrid);
 
+      efpGrid.CommandItems.ClipboardInToolBar = true;
+
       //efpTree.Attached += EfpTree_Attached;
       EFPApp.ShowFormOrDialog(form);
     }
@@ -238,27 +242,27 @@ namespace BRReportDemo
       int id = DataTools.GetInt(args.DataRow, "Id");
       if (id == 201)
       {
-        args.ColorType = EFPDataGridViewColorType.TotalRow;
+        args.ColorType = UIDataViewColorType.TotalRow;
         args.ControlContentVisible = false;
         args.PrintWithPrevious = true;
         return;
       }
 
       if ((id % 2) == 0)
-        args.ColorType = EFPDataGridViewColorType.Alter;
+        args.ColorType = UIDataViewColorType.Alter;
 
       switch (id % 10)
       {
         case 1:
-          args.ColorType = EFPDataGridViewColorType.Header;
+          args.ColorType = UIDataViewColorType.Header;
           args.PrintWithNext = true;
           break;
         case 5:
-          args.ColorType = EFPDataGridViewColorType.Total2;
+          args.ColorType = UIDataViewColorType.Total2;
           args.PrintWithPrevious = true;
           break;
         case 0:
-          args.ColorType = EFPDataGridViewColorType.Total1;
+          args.ColorType = UIDataViewColorType.Total1;
           args.PrintWithPrevious = true;
           break;
       }
@@ -283,10 +287,10 @@ namespace BRReportDemo
               switch (dt.DayOfWeek)
               {
                 case DayOfWeek.Sunday:
-                  args.ColorType = EFPDataGridViewColorType.Error;
+                  args.ColorType = UIDataViewColorType.Error;
                   break;
                 case DayOfWeek.Saturday:
-                  args.ColorType = EFPDataGridViewColorType.Warning;
+                  args.ColorType = UIDataViewColorType.Warning;
                   break;
               }
               break;
@@ -341,7 +345,7 @@ namespace BRReportDemo
       producer.Columns.AddDate("Date2", "Окончание");
       producer.Columns.AddInt("Id", "Id", 3);
       producer.Columns.LastAdded.SizeGroup = "Id";
-      producer.Columns.LastAdded.ColorType = EFPDataGridViewColorType.Total1;
+      producer.Columns.LastAdded.ColorType = UIDataViewColorType.Total1;
       producer.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
       producer.Columns["Id"].DisplayName = "Идентификатор узла";
       if (isTree)

@@ -189,7 +189,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если установлено в true, то перед добавлением и редактированием записей
-    /// вызывается <see cref="DocumentEditor.ValidateData()"/>. В этом случае редактор поддокумента
+    /// вызывается <see cref="DocumentEditor.WriteData()"/>. В этом случае редактор поддокумента
     /// может использовать актуальные значения полей основного документа.
     /// По умолчанию (false) проверка не выполняется. Допускается редактирование
     /// поддокументов, даже если на какой-либо вкладке редактора основного документа
@@ -549,7 +549,7 @@ namespace FreeLibSet.Forms.Docs
       try
       {
         ConfirmDeletion = false;
-        PerformEditData(EFPDataGridViewState.Delete);
+        PerformEditData(UIDataState.Delete);
       }
       finally
       {
@@ -566,14 +566,14 @@ namespace FreeLibSet.Forms.Docs
     {
       if (ValidateBeforeEdit)
       {
-        if (!MainEditor.ValidateData())
+        if (!MainEditor.WriteData())
           return true;
       }
 
       // TODO: Не должно ли быть это внутри SubDocumentEditor.Run()?
       DBxMultiSubDocs subDocs2;
       DataRow[] rows = null;
-      if (this.State == EFPDataGridViewState.Insert)
+      if (this.State == UIDataState.Insert)
       {
         Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
         if (docIds == null)
@@ -594,7 +594,7 @@ namespace FreeLibSet.Forms.Docs
           return true;
         }
         subDocs2 = new DBxMultiSubDocs(SubDocs, rows);
-        if (this.State == EFPDataGridViewState.Delete)
+        if (this.State == UIDataState.Delete)
         {
           if (ConfirmDeletion)
           {
@@ -628,10 +628,10 @@ namespace FreeLibSet.Forms.Docs
         }
         switch (this.State)
         {
-          case EFPDataGridViewState.Edit:
+          case UIDataState.Edit:
             subDocs2.Edit();
             break;
-          case EFPDataGridViewState.InsertCopy:
+          case UIDataState.InsertCopy:
             subDocs2.InsertCopy();
             break;
         }
@@ -644,14 +644,14 @@ namespace FreeLibSet.Forms.Docs
 
         SubDocTypeUI.InitManualOrderColumnValueAfterEdit(this.SubDocs, subDocs2);
 
-        if (this.State == EFPDataGridViewState.Insert || this.State == EFPDataGridViewState.InsertCopy)
+        if (this.State == UIDataState.Insert || this.State == UIDataState.InsertCopy)
         {
           DataRow lastRow = _SubDocs.SubDocsView.Table.Rows[_SubDocs.SubDocsView.Table.Rows.Count - 1];
           try { this.CurrentDataRow = lastRow; }
           catch { } // 28.04.2022
         }
         MainEditor.SubDocsChangeInfo.Changed = true;
-        if (this.State == EFPDataGridViewState.Edit)
+        if (this.State == UIDataState.Edit)
         {
           try
           {
@@ -857,7 +857,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (ValidateBeforeEdit)
       {
-        if (!MainEditor.ValidateData())
+        if (!MainEditor.WriteData())
           return;
       }
 

@@ -731,6 +731,24 @@ namespace FreeLibSet.Calendar
       }
     }
 
+    /// <summary>
+    /// Возвращает количество месяцев и дней в интервале. Предполагается, что год не високосный.
+    /// Дни считаются включительно, то есть для периода {01.02-28.02} возвращается ровно 1 месяц
+    /// Если <see cref="IsWholeYear"/>=true, то возвращается 1 год. 
+    /// Если <see cref="IsEmpty"/>=true, возвращается <see cref="YearMonthDayAge.Zero"/>
+    /// </summary>
+    public YearMonthDayAge Age
+    {
+      get
+      {
+        //if (IsEmpty)
+        //  return YearMonthDayAge.Zero;
+        //if (IsWholeYear)
+        //  return new YearMonthDayAge(1, 0, 0);
+        return GetDateRange(2022).Age;
+      }
+    }
+
     #endregion
 
     #region Попадание в интервал

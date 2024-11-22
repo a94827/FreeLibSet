@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -189,13 +190,13 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Возвращает true, если событие было обработано</returns>
     protected override bool OnEditData(EventArgs args)
     {
-      if (State == EFPDataGridViewState.Edit && base.HasEditMessageHandler)
+      if (State == UIDataState.Edit && base.HasEditMessageHandler)
         return base.OnEditData(args);
 
       switch (State)
       {
-        case EFPDataGridViewState.Edit:
-        case EFPDataGridViewState.View:
+        case UIDataState.Edit:
+        case UIDataState.View:
           DBxDocSelection docSel = CreateDocSel(EFPDBxViewDocSelReason.Copy);
           if (docSel != null)
           {

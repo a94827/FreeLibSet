@@ -9,6 +9,8 @@ using System.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using FreeLibSet.Forms.Data;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -337,7 +339,7 @@ namespace FreeLibSet.Forms.Docs
     /// Также выполняется проверка прохождения строк просмотра в методе <see cref="OnValidate()"/> при закрытии просмотра.
     /// При установке свойства обычно следует запретить редактирование фильтров пользователем, установив свойство <see cref="EFPDBxGridView.CommandItems"/>.CanEditFilters=false.
     /// </summary>
-    public new GridFilters Filters
+    public new EFPDBxGridFilters Filters
     {
       get { return base.Filters; }
       set
@@ -436,7 +438,7 @@ namespace FreeLibSet.Forms.Docs
       Int32 id;
       switch (State)
       {
-        case EFPDataGridViewState.Insert:
+        case UIDataState.Insert:
           Int32[] selIds = DocTypeUI.SelectDocs("Добавление документов \"" + DocType.PluralTitle + "\" в просмотр", this.Filters);
           if (selIds.Length == 0)
             return true;
@@ -444,16 +446,16 @@ namespace FreeLibSet.Forms.Docs
             AddId(selIds[i]);
           SelectedIds = selIds;
           break;
-        case EFPDataGridViewState.Delete:
+        case UIDataState.Delete:
           DataRow[] selRows = SelectedDataRows;
           for (int i = 0; i < selRows.Length; i++)
             selRows[i].Delete();
           Validate(); // 08.07.2019
           break;
-        case EFPDataGridViewState.View:
+        case UIDataState.View:
           DocTypeUI.PerformEditing(CurrentId, true);
           break;
-        case EFPDataGridViewState.Edit:
+        case UIDataState.Edit:
           id = CurrentId;
           if (DocTypeUI.SelectDoc(ref id, "Изменение ссылки на документ", false, this.Filters))
           {
@@ -473,7 +475,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], EFPDataGridViewState, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], UIDataState, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров (<see cref="EFPDBxGridView.Filters"/>.
     /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
@@ -630,7 +632,7 @@ namespace FreeLibSet.Forms.Docs
           if (Owner != null)
           {
             if (Owner.Filters != null)
-              Owner.Filters.InitNewDocValues(newDoc);
+              Owner.Filters.InitNewValues(newDoc.Values);
           }
         }
         else
@@ -644,7 +646,7 @@ namespace FreeLibSet.Forms.Docs
           if (Owner != null)
           {
             if (Owner.Filters != null)
-              Owner.Filters.ValidateDocValues(savingDoc, errorMessages);
+              Owner.Filters.ValidateValues(savingDoc.Values, errorMessages);
           }
         }
         else

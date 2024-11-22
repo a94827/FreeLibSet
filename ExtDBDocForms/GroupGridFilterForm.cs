@@ -63,7 +63,7 @@ namespace FreeLibSet.Forms.Docs
         if (!canBeRoot)
         {
           dlg.NoButtonProvider.Visible = false; // 18.06.2021
-          dlg.FormProvider.AddFormCheck(new UIValidatingEventHandler(dlg.efpForm_ValidatingNoRoot));
+          dlg.FormProvider.FormChecks.Add(new UIValidatingEventHandler(dlg.efpForm_ValidatingNoRoot));
         }
 
         switch (EFPApp.ShowDialog(dlg, false, dialogPosition))

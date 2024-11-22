@@ -13,6 +13,8 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
+using FreeLibSet.Forms.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -29,7 +31,7 @@ namespace FreeLibSet.Forms.Docs
   {
     /// <summary>
     /// Инициализировать значения нового поддокумента.
-    /// На момент вызова документ находится в режиме <see cref="EFPDataGridViewState.Insert"/>
+    /// На момент вызова документ находится в режиме <see cref="UIDataState.Insert"/>
     /// Реализация интерфейса может устанавливать значения <paramref name="newSubDoc"/>.Values или добавлять поддокументы.
     /// </summary>
     /// <param name="newSubDoc">Создаваемый поддокумент</param>
@@ -63,7 +65,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="mainEditor">Редактор документа</param>
     /// <param name="subDocs">Список поддокументов</param>
     /// <param name="state">Режим просмотра/создания/редактирования</param>
-    public SubDocumentEditor(DocumentEditor mainEditor, DBxMultiSubDocs subDocs, EFPDataGridViewState state)
+    public SubDocumentEditor(DocumentEditor mainEditor, DBxMultiSubDocs subDocs, UIDataState state)
     {
       if (mainEditor == null)
         throw new ArgumentNullException("mainEditor");
@@ -113,8 +115,8 @@ namespace FreeLibSet.Forms.Docs
     /// Текущие режим редактирования поддокумента.
     /// Он может не совпадать с режимом основного редактора.
     /// </summary>
-    public EFPDataGridViewState State { get { return _State; } }
-    private EFPDataGridViewState _State;
+    public UIDataState State { get { return _State; } }
+    private UIDataState _State;
 
     /// <summary>
     /// True, если редактируется, просматривается или удаляется сразу
@@ -132,25 +134,24 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Список переходников для полей
     /// </summary>
-    internal DocEditItemList DocEditItems { get { return _Form.DocEditItems; } }
+    internal UIExtEditItemList EditItems { get { return _Dialog.EditItems; } }
 
     /// <summary>
     /// Отслеживание изменений для рисования звездочки в заголовке формы.
     /// Объект существует только в процессе работы редактора.
     /// </summary>
-    public DepChangeInfoList ChangeInfo { get { return _Form.ChangeInfoList; } }
+    public DepChangeInfoList ChangeInfo { get { return _Dialog.ChangeInfoList; } }
 
     /// <summary>
     /// Контекст справки
     /// </summary>
     public string HelpContext
     {
-      get { return _Form.FormProvider.HelpContext; }
-      set { _Form.FormProvider.HelpContext = value; }
+      get { return _Dialog.HelpContext; }
+      set { _Dialog.HelpContext = value; }
     }
 
-    private DBxMemoryDocValues _OrgVals;
-
+    private DBxArrayExtValues _OrgVals;
 
     /// <summary>
     /// Внешний инициализатор полей для нового поддокумента.
@@ -185,7 +186,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Вызывается при нажатии кнопок "ОК" перед тем, как данные записаны в строку поддокумента.
-    /// Вызывается в режимах <see cref="State"/>=<see cref="EFPDataGridViewState.Edit"/>, <see cref="EFPDataGridViewState.Insert"/> и <see cref="EFPDataGridViewState.InsertCopy"/>
+    /// Вызывается в режимах <see cref="State"/>=<see cref="UIDataState.Edit"/>, <see cref="UIDataState.Insert"/> и <see cref="UIDataState.InsertCopy"/>
     /// Установка <see cref="SubDocEditCancelEventArgs.Cancel"/>=true предотвращает запись данных и закрытие редактора.
     /// Программа должна вывести сообщение пользователю о причинах отмены.
     /// На момент вызова данные формы еще не перенесены в строку.
@@ -209,11 +210,11 @@ namespace FreeLibSet.Forms.Docs
     public bool Run()
     {
       // Используем сохраненные значения по умолчанию
-      if ((State == EFPDataGridViewState.Insert || State == EFPDataGridViewState.InsertCopy) && (!SuppressInsertColumnValues))
+      if ((State == UIDataState.Insert || State == UIDataState.InsertCopy) && (!SuppressInsertColumnValues))
       {
         try
         {
-          SubDocTypeUI.Columns.PerformInsert(SubDocs.Values, State == EFPDataGridViewState.InsertCopy);
+          SubDocTypeUI.Columns.PerformInsert(SubDocs.Values, State == UIDataState.InsertCopy);
         }
         catch (Exception e)
         {
@@ -235,20 +236,19 @@ namespace FreeLibSet.Forms.Docs
 
       if (showEditor)
       {
-        _Form = new DocEditForm(null, this.State);
-        try
-        {
-          _Form.FormProvider.ConfigSectionName = "Ed_" + _SubDocTypeUI.SubDocType.Name; // 09.06.2021
+        _Dialog = new DataEditDialog();
+          _Dialog.DataState = this.State;
+          _Dialog.ConfigSectionName = "Ed_" + _SubDocTypeUI.SubDocType.Name; // 09.06.2021
           // Переключаем синхронизацию на основную форму редактирования
-          _Form.FormProvider.SyncProvider = MainEditor.Form.FormProvider.SyncProvider;
+          _Dialog.SyncProvider = MainEditor.Dialog.SyncProvider;
 
           SubDocTypeUI.PerformInitEditForm(this);
 
           // Только после инициализации диалога можно запомнить исходные значения
-          _OrgVals = new DBxMemoryDocValues(SubDocs.Values);
+          _OrgVals = new DBxArrayExtValues(SubDocs.Values);
 
           // Инициализируем значения
-          DocEditItems.ReadValues();
+          EditItems.ReadValues();
 
           // Не уверен, что хочу звездочку
           // Тогда нужно будет добавить предупреждение при нажатии "Отмена"
@@ -260,62 +260,40 @@ namespace FreeLibSet.Forms.Docs
             AfterReadValues(this, args);
           }
 
-          _Form.CorrectSize();
           InitFormTitle();
-          _Form.Icon = DocumentEditor.GetEditorStateIcon(State);
-          if (State == EFPDataGridViewState.View)
-          {
-            _Form.CancelButtonProvider.Visible = false;
-            _Form.CancelButton = _Form.OKButtonProvider.Control;
-          }
 
           // Кнопка "Еще"
           InitMoreClientItems();
-          _Form.MoreButtonProvider.Visible = (MoreCommandItems.Count > 0);
-          if (MoreCommandItems.Count > 0)
-          {
-            EFPContextMenu ccm = new EFPContextMenu();
-            ccm.Add(MoreCommandItems);
-            ccm.Attach(_Form.MoreButtonProvider.Control);
-            _Form.MoreButtonProvider.Control.Click += new EventHandler(MoreButton_Click);
-          }
 
           switch (State)
           {
-            case EFPDataGridViewState.Edit:
-              _Form.OKButtonProvider.ToolTipText = "Закончить редактирование, сохранив внесенные изменения." + Environment.NewLine +
+            case UIDataState.Edit:
+              _Dialog.OKButtonToolTipText = "Закончить редактирование, сохранив внесенные изменения." + Environment.NewLine +
                 "Для реальной записи изменений нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
-              _Form.CancelButtonProvider.ToolTipText = "Закончить редактирование без сохранения внесенных изменений";
+              _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения внесенных изменений";
               break;
-            case EFPDataGridViewState.Insert:
-            case EFPDataGridViewState.InsertCopy:
-              _Form.OKButtonProvider.ToolTipText = "Создать новую запись и закончить редактирование." + Environment.NewLine +
+            case UIDataState.Insert:
+            case UIDataState.InsertCopy:
+              _Dialog.OKButtonToolTipText = "Создать новую запись и закончить редактирование." + Environment.NewLine +
                 "Для сохранения записи нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
-              _Form.CancelButtonProvider.ToolTipText = "Закончить редактирование без сохранения введенных значений";
+              _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения введенных значений";
               break;
-            case EFPDataGridViewState.Delete:
-              _Form.OKButtonProvider.ToolTipText = "Удалить просматриваемую запись";
-              _Form.CancelButtonProvider.ToolTipText = "Закрыть окно, не удаляя запись";
+            case UIDataState.Delete:
+              _Dialog.OKButtonToolTipText = "Удалить просматриваемую запись";
+              _Dialog.CancelButtonToolTipText = "Закрыть окно, не удаляя запись";
               break;
-            case EFPDataGridViewState.View:
-              _Form.OKButtonProvider.ToolTipText = "Закрыть окно";
+            case UIDataState.View:
+              _Dialog.OKButtonToolTipText = "Закрыть окно";
               break;
           }
-          _Form.ApplyButtonProvider.Visible = false;
-          _Form.MoreButtonProvider.ToolTipText = "Дополнительные команды редактора";
+          _Dialog.ShowApplyButton= false;
+          _Dialog.MoreButtonToolTipText = "Дополнительные команды редактора";
 
-          _Form.FormProvider.FormClosing += new FormClosingEventHandler(Form_FormClosing);
-          _Form.FormProvider.FormClosed += new FormClosedEventHandler(Form_FormClosed);
-        }
-        catch
-        {
-          _Form.Dispose();
-          _Form = null;
-          throw;
-        }
-        if (EFPApp.ShowDialog(_Form, true) != DialogResult.OK)
+        _Dialog.Writing += Dialog_Writing;
+          _Dialog.FormClosed += new EventHandler(Dialog_FormClosed);
+        if (_Dialog.ShowDialog() != DialogResult.OK)
           return false;
-        if (State == EFPDataGridViewState.View)
+        if (State == UIDataState.View)
           return false; // 11.11.2021
         //DoWrite();
       }
@@ -341,15 +319,15 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Было ли закрыто окно редактора</returns>
     public bool CloseForm(bool isOk)
     {
-      return _Form.FormProvider.CloseForm(isOk ? DialogResult.OK : DialogResult.Cancel);
+      return _Dialog.CloseForm(isOk);
     }
 
     #endregion
 
     #region Внутренняя реализация
 
-    internal DocEditForm Form { get { return _Form; } }
-    private DocEditForm _Form;
+    internal DataEditDialog Dialog { get { return _Dialog; } }
+    private DataEditDialog _Dialog;
 
     /// <summary>
     /// Инициализация заголовка формы
@@ -358,67 +336,35 @@ namespace FreeLibSet.Forms.Docs
     {
       switch (State)
       {
-        case EFPDataGridViewState.Edit:
+        case UIDataState.Edit:
           if (MultiDocMode)
-            _Form.Text = SubDocTypeUI.SubDocType.PluralTitle + " (Редактирование записей (" + SubDocs.SubDocCount.ToString() + "))";
+            _Dialog.Title = SubDocTypeUI.SubDocType.PluralTitle + " (Редактирование записей (" + SubDocs.SubDocCount.ToString() + "))";
           else
-            _Form.Text = SubDocTypeUI.SubDocType.SingularTitle + " (Редактирование)";
+            _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Редактирование)";
           break;
-        case EFPDataGridViewState.Insert:
-          _Form.Text = SubDocTypeUI.SubDocType.SingularTitle + " (Создание)";
+        case UIDataState.Insert:
+          _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Создание)";
           break;
-        case EFPDataGridViewState.InsertCopy:
-          _Form.Text = SubDocTypeUI.SubDocType.SingularTitle + " (Создание копии)";
+        case UIDataState.InsertCopy:
+          _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Создание копии)";
           break;
-        case EFPDataGridViewState.Delete:
+        case UIDataState.Delete:
           if (MultiDocMode)
-            _Form.Text = SubDocTypeUI.SubDocType.PluralTitle + " (Удаление записей (" + SubDocs.SubDocCount.ToString() + "))";
+            _Dialog.Title = SubDocTypeUI.SubDocType.PluralTitle + " (Удаление записей (" + SubDocs.SubDocCount.ToString() + "))";
           else
-            _Form.Text = SubDocTypeUI.SubDocType.SingularTitle + " (Удаление)";
+            _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Удаление)";
           break;
-        case EFPDataGridViewState.View:
+        case UIDataState.View:
           if (MultiDocMode)
-            _Form.Text = SubDocTypeUI.SubDocType.PluralTitle + " (Просмотр записей (" + SubDocs.SubDocCount.ToString() + "))";
+            _Dialog.Title = SubDocTypeUI.SubDocType.PluralTitle + " (Просмотр записей (" + SubDocs.SubDocCount.ToString() + "))";
           else
-            _Form.Text = SubDocTypeUI.SubDocType.SingularTitle + " (Просмотр)";
+            _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Просмотр)";
           break;
       }
 
-      if (SubDocTypeUI.UI.DebugShowIds && State != EFPDataGridViewState.Insert && (!MultiDocMode))
-        _Form.Text += " Id=" + SubDocs.Values["Id"].AsString;
+      if (SubDocTypeUI.UI.DebugShowIds && State != UIDataState.Insert && (!MultiDocMode))
+        _Dialog.Title += " Id=" + SubDocs.Values["Id"].AsString;
     }
-
-    /// <summary>
-    /// Обработчик пере закрытием формы
-    /// </summary>
-    private void Form_FormClosing(object sender, FormClosingEventArgs args)
-    {
-      if (args.Cancel)
-        return;
-
-      if (_Form.DialogResult != DialogResult.OK)
-        return;
-
-      _Form.DialogResult = DialogResult.None;
-      // Иначе, если при записи произойдет ошибка, нельзя будет закрыть
-      // форму крестиком (можно только кнопкой "отмена")
-
-      if (!ValidateData())
-      {
-        args.Cancel = true;
-        return;
-      }
-
-      if (!DoWrite())
-        args.Cancel = true;
-      _Form.DialogResult = DialogResult.OK; // иначе будет закрываться только со второго раза
-    }
-
-    /// <summary>
-    /// Возвращает true во время работы метода ValidateData
-    /// </summary>
-    public bool InsideValidateData { get { return _InsideValidateData; } }
-    private bool _InsideValidateData = false;
 
     /// <summary>
     /// Проверка корректности значений в полях редактирования поддокумента и
@@ -431,44 +377,34 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>true, если значения корректные</returns>
     public bool ValidateData()
     {
-      if (_InsideValidateData)
-        throw new BugException("Рекурсивный вызов DocumentEditor.ValidateData()");
-
-      bool Res;
-      _InsideValidateData = true;
-      try
-      {
-        Res = ValidateData2();
-      }
-      finally
-      {
-        _InsideValidateData = false;
-      }
-      return Res;
+      return _Dialog.WriteData();
     }
 
-    private bool ValidateData2()
+
+    private void Dialog_Writing(object sender, CancelEventArgs args)
     {
       if (IsReadOnly)
-        return true;
+        return;
 
       // Посылаем сообщение
       if (BeforeWrite != null)
       {
-        SubDocEditCancelEventArgs args = new SubDocEditCancelEventArgs(this);
-        BeforeWrite(this, args);
+        SubDocEditCancelEventArgs args2 = new SubDocEditCancelEventArgs(this);
+        BeforeWrite(this, args2);
+        args.Cancel = args2.Cancel;
         if (args.Cancel)
-          return false;
+          return;
       }
 
       // Записываем редактируемые значения в однострочный dataset
-      DocEditItems.WriteValues();
+      EditItems.WriteValues();
 
       // Пользовательская коррекция данных перед записью
       if (!SubDocTypeUI.DoWriting(this))
-        return false;
-
-      return true;
+      {
+        args.Cancel = true;
+        return;
+      }
     }
 
     /// <summary>
@@ -479,10 +415,10 @@ namespace FreeLibSet.Forms.Docs
     private bool DoWrite()
     {
       // TODO:
-      if (State == EFPDataGridViewState.View)
+      if (State == UIDataState.View)
         return true;
 
-      if (State == EFPDataGridViewState.Delete)
+      if (State == UIDataState.Delete)
       {
         for (int i = 0; i < SubDocs.SubDocCount; i++)
           SubDocs[i].Delete();
@@ -551,7 +487,7 @@ namespace FreeLibSet.Forms.Docs
       return true;
     }
 
-    void Form_FormClosed(object sender, EventArgs args)
+    void Dialog_FormClosed(object sender, EventArgs args)
     {
       if (Executed != null)
         Executed(this, null);
@@ -564,7 +500,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Сюда можно добавить команды меню, которые будут доступны при нажатии кнопки "Еще"
     /// </summary>
-    public EFPCommandItems MoreCommandItems { get { return Form.MoreButtonProvider.CommandItems; } }
+    public EFPCommandItems MoreCommandItems { get { return Dialog.MoreCommandItems; } }
 
     /// <summary>
     /// Нажатие кнопки "Еще" открывает локальное меню
@@ -614,7 +550,7 @@ namespace FreeLibSet.Forms.Docs
     {
       get
       {
-        return _State == EFPDataGridViewState.View || _State == EFPDataGridViewState.Delete;
+        return _State == UIDataState.View || _State == UIDataState.Delete;
       }
     }
 

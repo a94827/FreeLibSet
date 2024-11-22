@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Calendar;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Tests
 {
@@ -68,7 +69,7 @@ namespace FreeLibSet.Tests
     /// Создает массив объектов DateRange из строки в формате "ГГГГММДД-ГГГГММДД,ГГГГММДД-ГГГГММДД,...".
     /// Возвращает пустой массив для пустой строки.
     /// </summary>
-    public static DateRange[] DateRangeArray(string s )
+    public static DateRange[] DateRangeArray(string s)
     {
       if (String.IsNullOrEmpty(s))
         return new DateRange[0];
@@ -205,6 +206,34 @@ namespace FreeLibSet.Tests
       for (int i = 0; i < a1.Length; i++)
         a2[i] = MonthDayRange(a1[i]);
       return a2;
+    }
+
+    #endregion
+
+    #region YearMonthDayAge
+
+    /// <summary>
+    /// Получает объект YearMonthDayAge из строки в формате "Г:М:Д"
+    /// </summary>
+    /// <param name="s">Строка</param>
+    /// <returns></returns>
+    public static YearMonthDayAge YearMonthDayAge(string s)
+    {
+      string[] a = s.Split(':');
+      if (a.Length != 3)
+        throw new ArgumentException();
+      int years = StdConvert.ToInt32(a[0]);
+      int months = StdConvert.ToInt32(a[1]);
+      int days = StdConvert.ToInt32(a[2]);
+      return new Calendar.YearMonthDayAge(years, months, days);
+    }
+
+    public static YearMonthDayAge? NYearMonthDayAge(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return null;
+      else
+        return YearMonthDayAge(s);
     }
 
     #endregion

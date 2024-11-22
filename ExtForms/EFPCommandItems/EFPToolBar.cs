@@ -98,7 +98,38 @@ namespace FreeLibSet.Forms
     {
       if (item.GroupBegin)
         AddSeparator();
-      if (item.HasChildren || (item.Usage & EFPCommandItemUsage.ToolBarDropDown) == EFPCommandItemUsage.ToolBarDropDown)
+      if ((item.Usage & EFPCommandItemUsage.ToolBarAux) == EFPCommandItemUsage.ToolBarAux)
+      {
+        ToolStripDropDownButton tdd = null;
+        EFPDropDownMenu cddm = null;
+        if (Bar.Items.Count > 0)
+          tdd = Bar.Items[Bar.Items.Count - 1] as ToolStripDropDownButton;
+        if (tdd == null)
+        {
+          tdd = new ToolStripDropDownButton();
+          cddm = new EFPDropDownMenu();
+          cddm.Name = "DropDownAux_" + item.Name;
+          Bar.Items.Add(tdd);
+          cddm.Attach(tdd);
+        }
+        else
+          cddm = tdd.DropDown.Tag as EFPDropDownMenu;
+
+        EFPUIObjBase uiObj = cddm.Add(item);
+        //if (cddm.Count == 0)
+        //  uiObj.DropDownMenu = cddm; // чтобы было разрушено
+        uiObj.SetAll();
+        if (item.HasChildren)
+        {
+          for (int i = 0; i < item.Children.Count; i++)
+          {
+            if (item.Children[i].MenuUsage)
+              (uiObj.Owner as EFPMenuBase).Add(item.Children[i], null);
+          }
+        }
+        cddm.Attach(tdd);
+      }
+      else if (item.HasChildren || (item.Usage & EFPCommandItemUsage.ToolBarDropDown) == EFPCommandItemUsage.ToolBarDropDown)
       {
         ToolStripDropDownButton tdd = new ToolStripDropDownButton();
         tdd.Tag = item;
@@ -109,8 +140,8 @@ namespace FreeLibSet.Forms
         {
           if (item.Children[i].MenuUsage)
             cddm.Add(item.Children[i], null);
-          cddm.Attach(tdd);
         }
+        cddm.Attach(tdd);
         Bar.Items.Add(tdd);
         EFPUIToolBarButtonObj uiObj = new EFPUIToolBarButtonObj(this, item, tdd);
         uiObj.DropDownMenu = cddm; // чтобы было разрушено

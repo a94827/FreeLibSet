@@ -13,6 +13,7 @@ using FreeLibSet.Collections;
 using FreeLibSet.Config;
 using FreeLibSet.Core;
 using FreeLibSet.Logging;
+using FreeLibSet.UICore;
 
 /*
  * Построение табличных отчетов
@@ -2079,7 +2080,7 @@ namespace FreeLibSet.Forms
     /// Установка свойства <see cref="ImageKey"/>
     /// </summary>
     /// <param name="kind">Перечислимое состояние</param>
-    public void InitStateImageKey(EFPDataGridViewImageKind kind)
+    public void InitStateImageKey(UIDataViewImageKind kind)
     {
       ImageKey = EFPDataGridView.GetImageKey(kind, "Ok");
     }
@@ -3103,16 +3104,16 @@ namespace FreeLibSet.Forms
     {
       if (_AutoInitStateImageKey)
       {
-        EFPDataGridViewImageKind kind2 = EFPDataGridViewImageKind.None;
+        UIDataViewImageKind kind2 = UIDataViewImageKind.None;
         bool hasUnknownState = false;
         for (int i = 0; i < Pages.Count; i++)
         {
-          EFPDataGridViewImageKind Kind1;
+          UIDataViewImageKind Kind1;
           switch (Pages[i].ImageKey)
           {
-            case "Error": Kind1 = EFPDataGridViewImageKind.Error; break;
-            case "Warning": Kind1 = EFPDataGridViewImageKind.Warning; break;
-            case "Information": Kind1 = EFPDataGridViewImageKind.Information; break;
+            case "Error": Kind1 = UIDataViewImageKind.Error; break;
+            case "Warning": Kind1 = UIDataViewImageKind.Warning; break;
+            case "Information": Kind1 = UIDataViewImageKind.Information; break;
             case "UnknownState":
               hasUnknownState = true;
               continue;
@@ -3123,7 +3124,7 @@ namespace FreeLibSet.Forms
             kind2 = Kind1;
         }
 
-        if (kind2 == EFPDataGridViewImageKind.None && hasUnknownState)
+        if (kind2 == UIDataViewImageKind.None && hasUnknownState)
           base.ImageKey = "UnknownState";
         else
           base.InitStateImageKey(kind2);

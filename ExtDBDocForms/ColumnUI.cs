@@ -8,6 +8,7 @@ using System.Text;
 using FreeLibSet.Config;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
+using FreeLibSet.Data;
 
 // Сохранение значений редактируемых полей документов и поддокументов на стороне клиента
 
@@ -525,11 +526,11 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="values">Значения</param>
     /// <param name="insertCopy">true для режима InsertCopy, false для Insert</param>
-    public void PerformInsert(IDBxDocValues values, bool insertCopy)
+    public void PerformInsert(IDBxExtValues values, bool insertCopy)
     {
       //AccDepClientExec.DocTypes.LoadSavedColumnValues();
 
-      foreach (DBxDocValue value in values)
+      foreach (DBxExtValue value in values)
       {
         if (value.IsReadOnly)
           continue;
@@ -577,7 +578,7 @@ namespace FreeLibSet.Forms.Docs
       }
     }
 
-    private static void SetIfNotNull(DBxDocValue docValue, object v)
+    private static void SetIfNotNull(DBxExtValue docValue, object v)
     {
       if (v == null)
         return;
@@ -586,9 +587,9 @@ namespace FreeLibSet.Forms.Docs
       docValue.SetValue(v);
     }
 
-    internal void PerformPost(IDBxDocValues values, IDBxDocValues orgValues)
+    internal void PerformPost(IDBxExtValues values, IDBxExtValues orgValues)
     {
-      foreach (DBxDocValue value in values)
+      foreach (DBxExtValue value in values)
       {
         if (value.IsReadOnly)
           continue;
@@ -612,7 +613,7 @@ namespace FreeLibSet.Forms.Docs
               saveFlag = true;
             else
             {
-              DBxDocValue orgValue = orgValues[value.Name];
+              DBxExtValue orgValue = orgValues[value.Name];
               saveFlag = !Object.Equals(value.Value, orgValue.Value);
             }
             if (saveFlag)

@@ -42,7 +42,7 @@ namespace FreeLibSet.Forms
 
       FormProvider = new EFPFormProvider(this);
       FormProvider.ConfigSectionName = "GridConfigForm";
-      FormProvider.AddFormCheck(new UIValidatingEventHandler(FormCheck));
+      FormProvider.FormChecks.Add(new UIValidatingEventHandler(FormCheck));
 
       #region Готовые наборы
 

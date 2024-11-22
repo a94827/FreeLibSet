@@ -661,7 +661,7 @@ namespace FreeLibSet.Forms.Docs
       //  Args.Grayed = true;
       //else
       //{
-      EFPDataGridViewColorType colorType;
+      UIDataViewColorType colorType;
       bool grayed;
       UI.ImageHandlers.GetRowColor(SubDocType.Name, row, out colorType, out grayed);
       args.ColorType = colorType;
@@ -1457,7 +1457,7 @@ namespace FreeLibSet.Forms.Docs
         for (int i = 0; i < srcRows.Length; i++)
         {
           DBxSubDoc subDoc2 = subDocs2.Insert();
-          DBxDocValue.CopyValues(srcRows[i], subDoc2.Values);
+          DBxExtValue.CopyValues(srcRows[i], subDoc2.Values);
           if (!String.IsNullOrEmpty(ManualOrderColumn))
             subDoc2.Values[ManualOrderColumn].SetNull(); // до пользовательского обработчика
 
@@ -1497,7 +1497,7 @@ namespace FreeLibSet.Forms.Docs
         {
           // Открытие редактора поддокумента
           // Режим должен быть обязательно InsertCopy, иначе значения не прочитаются
-          SubDocumentEditor sde = new SubDocumentEditor(mainEditor, subDocs2, EFPDataGridViewState.InsertCopy);
+          SubDocumentEditor sde = new SubDocumentEditor(mainEditor, subDocs2, UIDataState.InsertCopy);
           sde.SuppressInsertColumnValues = true; // не нужна инициализация, иначе некоторые поля с режимом NewMode=AlwaysDefaultValue очистятся
           if (!sde.Run())
             return null;
@@ -1563,7 +1563,7 @@ namespace FreeLibSet.Forms.Docs
           for (int i = 0; i < srcRows.Length; i++)
           {
             DBxSubDoc subDoc2 = subDocs2.Insert(doc);
-            DBxDocValue.CopyValues(srcRows[i], subDoc2.Values);
+            DBxExtValue.CopyValues(srcRows[i], subDoc2.Values);
             if (!String.IsNullOrEmpty(ManualOrderColumn))
               subDoc2.Values[ManualOrderColumn].SetNull(); // до пользовательского обработчика
 
@@ -1614,7 +1614,7 @@ namespace FreeLibSet.Forms.Docs
         {
           // Открытие редактора поддокумента
           // Режим должен быть обязательно InsertCopy, иначе значения не прочитаются
-          SubDocumentEditor sde = new SubDocumentEditor(mainEditor, subDocs2, EFPDataGridViewState.InsertCopy);
+          SubDocumentEditor sde = new SubDocumentEditor(mainEditor, subDocs2, UIDataState.InsertCopy);
           sde.SuppressInsertColumnValues = true; // не нужна инициализация, иначе некоторые поля с режимом NewMode=AlwaysDefaultValue очистятся
           if (!sde.Run())
             return null;

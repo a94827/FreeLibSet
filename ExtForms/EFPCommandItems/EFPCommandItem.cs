@@ -240,6 +240,15 @@ namespace FreeLibSet.Forms
     /// Это не зависит от наличия или отсутствия изображения (свойства <see cref="EFPCommandItem.Image"/> и <see cref="EFPCommandItem.ImageKey"/>)
     /// </summary>
     ToolBarDropDown = 0x0020,
+
+    /// <summary>
+    /// К предыдущей команде, которая отображается в панели инструментов, добавляется "уголочек" с выпадающим меню.
+    /// В это меню добавляется текущая команда (или подменю). Если есть последовательность команд с установленным флагом,
+    /// то все они добавляются в общее выпадающее меню.
+    /// Если команда является подменю, то команды-элементы этого подменю не должны устанавливать этот флаг.
+    /// Наличие или отсутствие значка у команды не имеет значения.
+    /// </summary>
+    ToolBarAux = 0x0040,
   }
 
   #endregion
@@ -550,12 +559,15 @@ namespace FreeLibSet.Forms
     /// в этом случае у предыдущей кнопки панели инструментов отображается "уголок", который
     /// открывает выпадающее меню. В этом случае этот <see cref="EFPCommandItem"/> должен быть подменю
     /// со своим списком команд.
+    /// Также возвращает true, если установлен флаг <see cref="EFPCommandItemUsage.ToolBarAux"/>.
     /// </summary>
     public bool ToolBarUsage
     {
       get
       {
         if ((Usage & EFPCommandItemUsage.ToolBarDropDown) == EFPCommandItemUsage.ToolBarDropDown)
+          return true;
+        if ((Usage & EFPCommandItemUsage.ToolBarAux) == EFPCommandItemUsage.ToolBarAux)
           return true;
         return ((Usage & EFPCommandItemUsage.ToolBar) == EFPCommandItemUsage.ToolBar) &&
           ((!String.IsNullOrEmpty(ImageKey)) || Image != null);
@@ -2904,7 +2916,7 @@ namespace FreeLibSet.Forms
           {
             _ShortCutDict[ci.ShortCut] = ci;
             Keys altShortCut = ci.AlternativeShortCut;
-            if (altShortCut!=Keys.None)
+            if (altShortCut != Keys.None)
               _ShortCutDict[altShortCut] = ci;
           }
         }

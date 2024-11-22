@@ -2350,6 +2350,8 @@ namespace FreeLibSet.Forms
       {
         Control.EndUpdate();
       }
+
+      OnAfterRefreshData(EventArgs.Empty);
     }
 
     #endregion
@@ -3404,7 +3406,9 @@ return true;                          */
     }
 
     /// <summary>
-    /// Возвращает список для добавления пользовательских вариантов печати/экспорта
+    /// Возвращает список для добавления пользовательских вариантов печати/экспорта.
+    /// Обычно список содержит единственный объект с именем "Control" для стандартной печати табличного просмотра, 
+    /// доступ к которому удобнее получать с помощью свойства <see cref="DefaultOutItem"/>.
     /// </summary>
     public NamedList<EFPMenuOutItem> MenuOutItems
     {
@@ -3421,6 +3425,8 @@ return true;                          */
     {
       get { return MenuOutItems["Control"] as Reporting.BRDataTreeViewMenuOutItem; }
     }
+
+    Reporting.BRDataViewMenuOutItemBase IEFPDataView.DefaultOutItem { get { return DefaultOutItem; } }
 
     #endregion
 

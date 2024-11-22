@@ -2776,22 +2776,65 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Добавляет данные в форматах Text и CSV в заданный объект <see cref="DataObject"/>.
     /// Сам буфер обмена не участвует в операции.
+    /// Вызывает <see cref="SetTextMatrixText(IDataObject, string[,])"/> и <see cref="SetTextMatrixCsv(IDataObject, string[,])"/>.
     /// </summary>
     /// <param name="dobj">Заполняемый объект</param>
     /// <param name="a">Двумерный массив строк</param>
     public static void SetTextMatrix(IDataObject dobj, string[,] a)
+    {
+      SetTextMatrixText(dobj, a);
+      SetTextMatrixCsv(dobj, a);
+    }
+
+    /// <summary>
+    /// Добавляет данные в формате Text в заданный объект <see cref="DataObject"/>.
+    /// Сам буфер обмена не участвует в операции.
+    /// </summary>
+    /// <param name="dobj">Заполняемый объект</param>
+    /// <param name="a">Двумерный массив строк</param>
+    public static void SetTextMatrixText(IDataObject dobj, string[,] a)
     {
 #if DEBUG
       if (dobj == null)
         throw new ArgumentNullException("dobj");
 #endif
 
-      string txt;
-      txt = new TabTextConvert().ToString(a);
+      string txt = new TabTextConvert().ToString(a);
       dobj.SetData(DataFormats.Text, true, txt);
+    }
 
-      txt = new CsvTextConvert().ToString(a);
-      dobj.SetData(DataFormats.CommaSeparatedValue, txt);
+    /// <summary>
+    /// Добавляет данные в формате CSV в заданный объект <see cref="DataObject"/>.
+    /// Сам буфер обмена не участвует в операции.
+    /// </summary>
+    /// <param name="dobj">Заполняемый объект</param>
+    /// <param name="a">Двумерный массив строк</param>
+    public static void SetTextMatrixCsv(IDataObject dobj, string[,] a)
+    {
+#if DEBUG
+      if (dobj == null)
+        throw new ArgumentNullException("dobj");
+#endif
+
+      //string txt = new CsvTextConvert().ToString(a);
+
+      // 18.11.2024
+      CsvTextConvert conv = new CsvTextConvert();
+      string ls = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+      if (ls.Length == 1)
+        conv.FieldDelimiter = ls[0];
+      string txt = conv.ToString(a);
+      if (!String.IsNullOrEmpty(txt))
+      {
+        MemoryStream ms = new MemoryStream();
+        StreamWriter wrt = new StreamWriter(ms, Encoding.Default);
+        wrt.Write(txt);
+        wrt.Flush();
+        dobj.SetData(DataFormats.CommaSeparatedValue, false, ms);
+      }
+
+
+      //dobj.SetData(DataFormats.CommaSeparatedValue, txt);
     }
 
     /// <summary>

@@ -1524,4 +1524,11 @@ namespace FreeLibSet.Forms
     /// </summary>
     bool ClipboardInToolBar { get; set; }
   }
+
+  internal interface IEFPDataViewClipboardCommandItems
+  {
+    EFPDataViewCopyFormats CopyFormats { get; set; }
+
+    EFPDataViewCopyFormats SelectedCopyFormats { get; }
+  }
 }

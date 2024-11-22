@@ -59,10 +59,26 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Calendar\YearMonthDayAge.cs" />
     <Compile Include="Collections\NumericStringComparer.cs" />
     <Compile Include="Core\DataTools.Arrays.cs" />
     <Compile Include="Core\DataTools.Math.cs" />
+    <Compile Include="Data\CoreDBxSqlFormatter.cs" />
     <Compile Include="Data\DataEnumerators.cs" />
+    <Compile Include="Data\DBxCommonFilter.cs" />
+    <Compile Include="Data\DBxDataRowExtValues.cs" />
+    <Compile Include="Data\DataViewDBxSqlFormatter.cs" />
+    <Compile Include="Data\DBxColumns.cs" />
+    <Compile Include="Data\DBxColumnStruct.cs" />
+    <Compile Include="Data\DBxExpression.cs" />
+    <Compile Include="Data\DBxExtValue.cs" />
+    <Compile Include="Data\DBxFilter.cs" />
+    <Compile Include="Data\DBxOrder.cs" />
+    <Compile Include="Data\DBxSqlFormatter.cs" />
+    <Compile Include="Data\DBxStruct.cs" />
+    <Compile Include="Data\DBxTableStruct.cs" />
+    <Compile Include="Data\DBxTools.cs" />
+    <Compile Include="Data\DBxCfgExtValues.cs" />
     <Compile Include="DBF\DbfFieldTypeDetector.cs" />
     <Compile Include="DependedValues\DepFromArray.cs" />
     <Compile Include="IO\AbsPath.cs" />
@@ -95,6 +111,7 @@
     <Compile Include="Reporting\BRFileTools.cs" />
     <Compile Include="Shell\OpenOfficeInfo.cs" />
     <Compile Include="Text\SingleByteTranscoder.cs" />
+    <Compile Include="UICore\UIExtEditItem.cs" />
     <Compile Include="UICore\UIPathInputHandler.cs" />
     <Compile Include="Win32\ExeFileInfo.cs" />
     <Compile Include="Models\Tree\DataTableTreeModel.cs" />

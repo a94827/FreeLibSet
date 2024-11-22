@@ -128,7 +128,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Список команд локального меню табличного просмотра
   /// </summary>
-  public class EFPDataGridViewCommandItems : EFPControlCommandItems, IEFPClipboardCommandItems
+  public class EFPDataGridViewCommandItems : EFPControlCommandItems, IEFPClipboardCommandItems, IEFPDataViewClipboardCommandItems
   {
     #region Конструктор и Dispose
 
@@ -229,11 +229,15 @@ namespace FreeLibSet.Forms
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
 
+      EFPDataViewCopyFormatsForm.AddCommandItem(this);
+
       if (EFPApp.ShowToolTips)
       {
         ciCopyToolTip = new EFPCommandItem("Edit", "CopyToolTip");
         ciCopyToolTip.MenuText = "Копировать всплывающую подсказку";
+        ciCopyToolTip.ImageKey = "CopyToolTip";
         ciCopyToolTip.Click += new EventHandler(DoCopyToolTip);
+        ciCopyToolTip.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
         Add(ciCopyToolTip);
       }
       AddSeparator();
@@ -714,7 +718,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected virtual void OnRefreshItems()
     {
-      EFPDataGridViewSelectedRowsState selState = ControlProvider.SelectedRowsState;
+      UISelectedRowsState selState = ControlProvider.SelectedRowsState;
 
       if (UseEditView)
       {
@@ -748,16 +752,16 @@ namespace FreeLibSet.Forms
 
 
         if (ControlProvider.CanMultiEdit)
-          ciEdit.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection);
+          ciEdit.Enabled = (selState != UISelectedRowsState.NoSelection);
         else
-          ciEdit.Enabled = (selState == EFPDataGridViewSelectedRowsState.SingleRow);
-        ciInsertCopy.Enabled = (selState == EFPDataGridViewSelectedRowsState.SingleRow);
-        ciDelete.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection);
+          ciEdit.Enabled = (selState == UISelectedRowsState.SingleRow);
+        ciInsertCopy.Enabled = (selState == UISelectedRowsState.SingleRow);
+        ciDelete.Enabled = (selState != UISelectedRowsState.NoSelection);
 
         ciView.Enabled = ciEdit.Enabled;
 #endif
 
-        if (selState == EFPDataGridViewSelectedRowsState.MultiRows)
+        if (selState == UISelectedRowsState.MultiRows)
         {
           if (!ControlProvider.ReadOnly)
           {
@@ -779,11 +783,11 @@ namespace FreeLibSet.Forms
         }
 
         //if (ciCut.Usage != EFPCommandItemUsage.None)
-        ciCut.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) &&
+        ciCut.Enabled = (selState != UISelectedRowsState.NoSelection) &&
           (!(ControlProvider.ReadOnly && ControlProvider.Control.ReadOnly));
-        ciCopy.Enabled = selState != EFPDataGridViewSelectedRowsState.NoSelection; // 17.06.2024
+        ciCopy.Enabled = selState != UISelectedRowsState.NoSelection; // 17.06.2024
         if (ciCopyToolTip != null)
-          ciCopyToolTip.Enabled = selState != EFPDataGridViewSelectedRowsState.NoSelection;
+          ciCopyToolTip.Enabled = selState != UISelectedRowsState.NoSelection;
         if (!PasteHandler.AlwaysEnabled) // 27.11.2017
         {
           if (HasTextPasteFormats)
@@ -828,7 +832,7 @@ namespace FreeLibSet.Forms
 
       if (ciSelectAll != null)
       {
-        ciSelectAll.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) && ControlProvider.Control.MultiSelect;
+        ciSelectAll.Enabled = (selState != UISelectedRowsState.NoSelection) && ControlProvider.Control.MultiSelect;
       }
 
       ciFind.Enabled = ControlProvider.Control.RowCount > 0 && ControlProvider.Control.ColumnCount > 0; // 17.06.2024
@@ -963,17 +967,17 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="state">Состояние, инициируемое командой меню</param>
     /// <returns>Команда меню</returns>
-    public EFPCommandItem this[EFPDataGridViewState state]
+    public EFPCommandItem this[UIDataState state]
     {
       get
       {
         switch (state)
         {
-          case EFPDataGridViewState.Edit: return ciEdit;
-          case EFPDataGridViewState.Insert: return ciInsert;
-          case EFPDataGridViewState.InsertCopy: return ciInsertCopy;
-          case EFPDataGridViewState.Delete: return ciDelete;
-          case EFPDataGridViewState.View: return ciView;
+          case UIDataState.Edit: return ciEdit;
+          case UIDataState.Insert: return ciInsert;
+          case UIDataState.InsertCopy: return ciInsertCopy;
+          case UIDataState.Delete: return ciDelete;
+          case UIDataState.View: return ciView;
           default:
             throw new ArgumentException();
         }
@@ -1055,7 +1059,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(ControlProvider.ReadOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit);
+        ControlProvider.PerformEditData(ControlProvider.ReadOnly ? UIDataState.View : UIDataState.Edit);
       }
       catch (Exception e)
       {
@@ -1067,7 +1071,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(EFPDataGridViewState.Insert);
+        ControlProvider.PerformEditData(UIDataState.Insert);
       }
       catch (Exception e)
       {
@@ -1079,7 +1083,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(EFPDataGridViewState.InsertCopy);
+        ControlProvider.PerformEditData(UIDataState.InsertCopy);
       }
       catch (Exception e)
       {
@@ -1092,7 +1096,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(EFPDataGridViewState.Delete);
+        ControlProvider.PerformEditData(UIDataState.Delete);
       }
       catch (Exception e)
       {
@@ -1104,7 +1108,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(EFPDataGridViewState.View);
+        ControlProvider.PerformEditData(UIDataState.View);
       }
       catch (Exception e)
       {
@@ -1259,22 +1263,9 @@ namespace FreeLibSet.Forms
     private EFPDataViewCopyFormats _CopyFormats;
 
     /// <summary>
-    /// Обработчик может добавить при копировании в буфер обмена дополнительные форматы
+    /// Стандартные форматы с учетом выбранных пользователем
     /// </summary>
-    public event DataObjectEventHandler AddCopyFormats;
-
-    /// <summary>
-    /// Вызывается при выполнении команды "Копировать".
-    /// Непереопределенный метод вызывает событие <see cref="AddCopyFormats"/>.
-    /// Переопределенный метод может добавить дополнительные форматы.
-    /// Стандартные форматы (TEXT, CSV, HTML) уже добавлены на момент вызова, в зависимости от свойства CopyFormats.
-    /// </summary>
-    /// <param name="args">Аргументы события</param>
-    protected virtual void OnAddCopyFormats(DataObjectEventArgs args)
-    {
-      if (AddCopyFormats != null)
-        AddCopyFormats(this, args);
-    }
+    public EFPDataViewCopyFormats SelectedCopyFormats { get { return CopyFormats & EFPDataViewCopyFormatsForm.UserSelectedFormats; } }
 
     /// <summary>
     /// Выполнить копирование выделенных ячеек табличного просмотра в буфер обмена.
@@ -1308,48 +1299,10 @@ namespace FreeLibSet.Forms
           // 3. Unicode Text
           // 4. Text
 
-          string txt;
           DataObject dobj2 = new DataObject();
-          //dobj2.SetText(txt, TextDataFormat.UnicodeText);
-
-          if ((CopyFormats & (EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV)) != 0)
-          {
-            EFPDataGridViewRectArea area = ControlProvider.GetRectArea(EFPDataViewExpRange.Selected);
-            string[,] a = ControlProvider.GetCellTextValues(area);
-
-            if ((CopyFormats & EFPDataViewCopyFormats.Text) == EFPDataViewCopyFormats.Text)
-            {
-              txt = new TabTextConvert().ToString(a);
-              dobj2.SetData(DataFormats.Text, true, txt);
-            }
-
-            if ((CopyFormats & EFPDataViewCopyFormats.CSV) == EFPDataViewCopyFormats.CSV)
-            {
-              txt = new CsvTextConvert().ToString(a);
-              if (!String.IsNullOrEmpty(txt))
-                dobj2.SetText(txt, TextDataFormat.CommaSeparatedValue);
-            }
-          }
-
-          if ((CopyFormats & EFPDataViewCopyFormats.HTML) == EFPDataViewCopyFormats.HTML)
-          {
-            // HTML-формат собираем сами
-            EFPDataGridViewExpHtmlSettings settings = new EFPDataGridViewExpHtmlSettings();
-            settings.RangeMode = EFPDataViewExpRange.Selected;
-            //if (Owner.Control.SelectionMode == DataGridViewSelectionMode.FullColumnSelect ||
-            //  Owner.Control.SelectionMode == DataGridViewSelectionMode.ColumnHeaderSelect)
-            //  Settings.ShowColumnHeaders = true;
-            //else
-            //  Settings.ShowColumnHeaders = Owner.Control.AreAllCellsSelected(false);
-            settings.ShowColumnHeaders = false; // 01.10.2020
-            settings.Encoding = Encoding.UTF8;
-            byte[] buffer = EFPDataGridViewExpHtml.GetHtmlBytes(ControlProvider, settings, true);
-            //System.IO.File.WriteAllBytes(@"d:\temp\table1.html", Buffer);
-            MemoryStream strm = new MemoryStream(buffer);
-            dobj2.SetData(DataFormats.Html, false, strm);
-          }
-
           DataObjectEventArgs args = new DataObjectEventArgs(dobj2);
+
+          OnAddDefaultCopyFormats(args);
           OnAddCopyFormats(args);
 
           EFPApp.Clipboard.SetDataObject(dobj2, true);
@@ -1366,6 +1319,57 @@ namespace FreeLibSet.Forms
           MessageBoxButtons.OK, MessageBoxIcon.Error);
         return false;
       }
+    }
+
+    private void OnAddDefaultCopyFormats(DataObjectEventArgs args)
+    {
+      if ((SelectedCopyFormats & (EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV)) != 0)
+      {
+        EFPDataGridViewRectArea area = ControlProvider.GetRectArea(EFPDataViewExpRange.Selected);
+        string[,] a = ControlProvider.GetCellTextValues(area);
+
+        if ((SelectedCopyFormats & EFPDataViewCopyFormats.Text) == EFPDataViewCopyFormats.Text)
+          WinFormsTools.SetTextMatrixText(args.DataObject, a);
+
+        if ((SelectedCopyFormats & EFPDataViewCopyFormats.CSV) == EFPDataViewCopyFormats.CSV)
+          WinFormsTools.SetTextMatrixCsv(args.DataObject, a);
+      }
+
+      if ((SelectedCopyFormats & EFPDataViewCopyFormats.HTML) == EFPDataViewCopyFormats.HTML)
+      {
+        // HTML-формат собираем сами
+        EFPDataGridViewExpHtmlSettings settings = new EFPDataGridViewExpHtmlSettings();
+        settings.RangeMode = EFPDataViewExpRange.Selected;
+        //if (Owner.Control.SelectionMode == DataGridViewSelectionMode.FullColumnSelect ||
+        //  Owner.Control.SelectionMode == DataGridViewSelectionMode.ColumnHeaderSelect)
+        //  Settings.ShowColumnHeaders = true;
+        //else
+        //  Settings.ShowColumnHeaders = Owner.Control.AreAllCellsSelected(false);
+        settings.ShowColumnHeaders = false; // 01.10.2020
+        settings.Encoding = Encoding.UTF8;
+        byte[] buffer = EFPDataGridViewExpHtml.GetHtmlBytes(ControlProvider, settings, true);
+        //System.IO.File.WriteAllBytes(@"d:\temp\table1.html", Buffer);
+        MemoryStream strm = new MemoryStream(buffer);
+        args.DataObject.SetData(DataFormats.Html, false, strm);
+      }
+    }
+
+    /// <summary>
+    /// Обработчик может добавить при копировании в буфер обмена дополнительные форматы
+    /// </summary>
+    public event DataObjectEventHandler AddCopyFormats;
+
+    /// <summary>
+    /// Вызывается при выполнении команды "Копировать".
+    /// Непереопределенный метод вызывает событие <see cref="AddCopyFormats"/>.
+    /// Переопределенный метод может добавить дополнительные форматы.
+    /// Стандартные форматы (TEXT, CSV, HTML) уже добавлены на момент вызова, в зависимости от свойства CopyFormats.
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnAddCopyFormats(DataObjectEventArgs args)
+    {
+      if (AddCopyFormats != null)
+        AddCopyFormats(this, args);
     }
 
     #endregion
@@ -1785,22 +1789,22 @@ namespace FreeLibSet.Forms
 
     void ciGotoNextErrorWarning_Click(object sender, EventArgs args)
     {
-      ControlProvider.GotoNextErrorRow(false, true, EFPDataGridViewImageKind.Warning);
+      ControlProvider.GotoNextErrorRow(false, true, UIDataViewImageKind.Warning);
     }
 
     void ciGotoPrevErrorWarning_Click(object sender, EventArgs args)
     {
-      ControlProvider.GotoNextErrorRow(false, false, EFPDataGridViewImageKind.Warning);
+      ControlProvider.GotoNextErrorRow(false, false, UIDataViewImageKind.Warning);
     }
 
     void ciGotoNextErrorOnly_Click(object sender, EventArgs args)
     {
-      ControlProvider.GotoNextErrorRow(false, true, EFPDataGridViewImageKind.Error);
+      ControlProvider.GotoNextErrorRow(false, true, UIDataViewImageKind.Error);
     }
 
     void ciGotoPrevErrorOnly_Click(object sender, EventArgs args)
     {
-      ControlProvider.GotoNextErrorRow(false, false, EFPDataGridViewImageKind.Error);
+      ControlProvider.GotoNextErrorRow(false, false, UIDataViewImageKind.Error);
     }
 
     void ciCopyRowErrorMessages_Click(object sender, EventArgs args)
@@ -1856,16 +1860,16 @@ namespace FreeLibSet.Forms
       if (_MenuRowErrors.Usage == EFPCommandItemUsage.None)
         return;
 
-      EFPDataGridViewSelectedRowsState selState = ControlProvider.SelectedRowsState;
+      UISelectedRowsState selState = ControlProvider.SelectedRowsState;
 
       ciGotoNextErrorWarning.Enabled =
       ciGotoPrevErrorWarning.Enabled =
       ciGotoNextErrorOnly.Enabled =
-      ciGotoPrevErrorOnly.Enabled = _GotoErrorEnabled && selState != EFPDataGridViewSelectedRowsState.NoSelection;
+      ciGotoPrevErrorOnly.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection;
       if (ciCopyRowErrorMessages != null)
-        ciCopyRowErrorMessages.Enabled = _GotoErrorEnabled && selState != EFPDataGridViewSelectedRowsState.NoSelection;
+        ciCopyRowErrorMessages.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection;
       if (ciShowRowErrorMessages != null)
-        ciShowRowErrorMessages.Enabled = _GotoErrorEnabled && selState != EFPDataGridViewSelectedRowsState.NoSelection;
+        ciShowRowErrorMessages.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection;
     }
 
     #endregion

@@ -10,6 +10,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Forms.Data;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -112,7 +114,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="editIds"></param>
     /// <param name="modal"></param>
     /// <param name="caller"></param>
-    internal DocTypeEditingEventArgs(DocTypeUI docType, EFPDataGridViewState state, Int32[] editIds, bool modal, DocumentViewHandler caller)
+    internal DocTypeEditingEventArgs(DocTypeUI docType, UIDataState state, Int32[] editIds, bool modal, DocumentViewHandler caller)
     {
       _DocType = docType;
       _State = state;
@@ -141,8 +143,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Режим работы
     /// </summary>
-    public EFPDataGridViewState State { get { return _State; } }
-    private readonly EFPDataGridViewState _State;
+    public UIDataState State { get { return _State; } }
+    private readonly UIDataState _State;
 
     /// <summary>
     /// Список идентификаторов редактируемых, просматриваемых или
@@ -190,7 +192,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Возвращает объект <see cref="DBxDocSet"/> с единственным <see cref="DBxMultiDocs"/>, загруженный данными или инициализированный
-    /// начальными значениями (в режиме <see cref="EFPDataGridViewState.Insert"/>).
+    /// начальными значениями (в режиме <see cref="UIDataState.Insert"/>).
     /// </summary>
     /// <returns></returns>
     public DBxDocSet CreateDocs()
@@ -200,15 +202,15 @@ namespace FreeLibSet.Forms.Docs
 
       switch (State)
       {
-        case EFPDataGridViewState.Edit:
+        case UIDataState.Edit:
           mDocs.Edit(EditIds);
           break;
-        case EFPDataGridViewState.Insert:
+        case UIDataState.Insert:
           mDocs.Insert();
           if (Caller != null)
             Caller.InitNewDocValues(mDocs[0]);
           break;
-        case EFPDataGridViewState.InsertCopy:
+        case UIDataState.InsertCopy:
           if (EditIds.Length != 1)
             throw new InvalidOperationException("Должен быть задан единственный идентификатор документа");
           mDocs.InsertCopy(EditIds[0]);
@@ -852,7 +854,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="id">Идентификатор документа или поддокумента</param>
     /// <param name="colorType">Сюда помещается цвет строки в справочнике</param>
     /// <param name="grayed">Сюда помещается true, если запись должна быть отмечена серым цветом</param>
-    public void GetRowColor(Int32 id, out EFPDataGridViewColorType colorType, out bool grayed)
+    public void GetRowColor(Int32 id, out UIDataViewColorType colorType, out bool grayed)
     {
       _UI.ImageHandlers.GetRowColor(_DocTypeBase.Name, id, out colorType, out grayed);
     }
@@ -865,7 +867,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="args">Аргументы события, в которых заполняются поля</param>
     public void GetRowColor(Int32 id, EFPDataGridViewRowAttributesEventArgs args)
     {
-      EFPDataGridViewColorType colorType;
+      UIDataViewColorType colorType;
       bool grayed;
       GetRowColor(id, out colorType, out grayed);
       args.ColorType = colorType;
@@ -1787,7 +1789,7 @@ namespace FreeLibSet.Forms.Docs
       //  Args.Grayed = true;
       //else
       //{
-      EFPDataGridViewColorType colorType;
+      UIDataViewColorType colorType;
       bool grayed;
       UI.ImageHandlers.GetRowColor(DocType.Name, row, out colorType, out grayed);
       args.ColorType = colorType;
@@ -2492,11 +2494,14 @@ namespace FreeLibSet.Forms.Docs
     /// <paramref name="externalFilters"/> задан, то ключ создается из настроек фильтров.
     /// Иначе используется пустая строка в качестве ключа</param>
     /// <returns>Объект формы</returns>
-    public DocTableViewForm ShowOrOpen(GridFilters externalFilters, Int32 currentDocId, string formSearchKey)
+    public DocTableViewForm ShowOrOpen(EFPDBxGridFilters externalFilters, Int32 currentDocId, string formSearchKey)
     {
       bool hasExternalFilters = false;
       if (externalFilters != null)
+      {
+        externalFilters.SqlFilterRequired = true;
         hasExternalFilters = externalFilters.Count > 0;
+      }
 
       if (formSearchKey == null)
       {
@@ -2543,7 +2548,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="currentDocId">Идентификатор документа, строка которого должна быть выбрана. Если 0, то выбор не
     /// осуществляется. Если документ не проходит условия фильтра, выбор также не осуществляется.</param>
     /// <returns>Объект формы</returns>
-    public DocTableViewForm ShowOrOpen(GridFilters externalFilters, Int32 currentDocId)
+    public DocTableViewForm ShowOrOpen(EFPDBxGridFilters externalFilters, Int32 currentDocId)
     {
       return ShowOrOpen(externalFilters, currentDocId, null);
     }
@@ -2557,7 +2562,7 @@ namespace FreeLibSet.Forms.Docs
     /// то используется последняя сохраненная конфигурация фильтров, как если бы просмотр был открыт командой меню.
     /// Аргумент используется только при создании новой формы</param>
     /// <returns>Объект формы</returns>
-    public DocTableViewForm ShowOrOpen(GridFilters externalFilters)
+    public DocTableViewForm ShowOrOpen(EFPDBxGridFilters externalFilters)
     {
       return ShowOrOpen(externalFilters, 0, null);
     }
@@ -2657,7 +2662,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>true, если пользователь сделал выбор</returns>
     public bool SelectDoc(ref Int32 docId, string title, bool canBeEmpty)
     {
-      return SelectDoc(ref docId, title, canBeEmpty, (GridFilters)null);
+      return SelectDoc(ref docId, title, canBeEmpty, (EFPDBxGridFilters)null);
     }
 
     /// <summary>
@@ -2672,7 +2677,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="filters">Фиксированный набор фильтров. Значение null приводит к использованию текущего набора
     /// установленных пользователем фильтров</param>
     /// <returns>true, если пользователь сделал выбор</returns>
-    public bool SelectDoc(ref Int32 docId, string title, bool canBeEmpty, GridFilters filters)
+    public bool SelectDoc(ref Int32 docId, string title, bool canBeEmpty, EFPDBxGridFilters filters)
     {
       DocSelectDialog dlg = new DocSelectDialog(this);
       dlg.DocId = docId;
@@ -2729,7 +2734,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Массив идентификаторов выбранных документов или пустой массив, если выбор не сделан</returns>
     public Int32[] SelectDocs()
     {
-      return SelectDocs(null, (GridFilters)null);
+      return SelectDocs(null, (EFPDBxGridFilters)null);
     }
 
     /// <summary>
@@ -2740,7 +2745,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Массив идентификаторов выбранных документов или пустой массив, если выбор не сделан</returns>
     public Int32[] SelectDocs(string title)
     {
-      return SelectDocs(title, (GridFilters)null);
+      return SelectDocs(title, (EFPDBxGridFilters)null);
     }
 
     /// <summary>
@@ -2753,7 +2758,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="filters">Фиксированный набор фильтров. Значение null приводит к использованию текущего набора
     /// установленных пользователем фильтров</param>
     /// <returns>Массив идентификаторов выбранных документов или пустой массив, если выбор не сделан</returns>
-    public Int32[] SelectDocs(string title, GridFilters filters)
+    public Int32[] SelectDocs(string title, EFPDBxGridFilters filters)
     {
       // Переопределяется в GroupDocTypeUI
 
@@ -2785,13 +2790,13 @@ namespace FreeLibSet.Forms.Docs
     /// Если он задан, то в режиме создания документа будут использованы установленные в просмотре
     /// фильтры для инициализации полей документа.</param>
     /// <returns>True, если выполнялось редактирование и документ был сохранен (свойство <see cref="DocumentEditor.DataChanged"/>)</returns>
-    public bool PerformEditing(Int32[] editIds, EFPDataGridViewState state, bool modal, DocumentViewHandler caller)
+    public bool PerformEditing(Int32[] editIds, UIDataState state, bool modal, DocumentViewHandler caller)
     {
       switch (state)
       {
-        case EFPDataGridViewState.Insert:
+        case UIDataState.Insert:
           break;
-        case EFPDataGridViewState.InsertCopy:
+        case UIDataState.InsertCopy:
           if (editIds.Length != 1)
           {
             EFPApp.ShowTempMessage("Должен быть выбран один документ");
@@ -2799,7 +2804,7 @@ namespace FreeLibSet.Forms.Docs
           }
           break;
 
-        case EFPDataGridViewState.Delete: // 19.08.2016
+        case UIDataState.Delete: // 19.08.2016
           if (editIds.Length < 1)
           {
             EFPApp.ShowTempMessage("Не выбрано ни одного документа");
@@ -2834,7 +2839,7 @@ namespace FreeLibSet.Forms.Docs
 
       // 21.11.2018
       // Активируем уже открытый редактор документов
-      if (state != EFPDataGridViewState.Insert && state != EFPDataGridViewState.InsertCopy)
+      if (state != UIDataState.Insert && state != UIDataState.InsertCopy)
       {
         DBxDocSelection docSel = UI.CreateDocSelection(DocType.Name, editIds);
         DocumentEditor oldDE = DocumentEditor.FindEditor(docSel);
@@ -2856,12 +2861,12 @@ namespace FreeLibSet.Forms.Docs
           }
 
           if (EFPApp.ActiveDialog == null)
-            EFPApp.Interface.CurrentChildForm = oldDE.Form;
+            EFPApp.Interface.CurrentChildForm = oldDE.Dialog.Form;
           else
           {
             sb.Append(Environment.NewLine);
             sb.Append(Environment.NewLine);
-            sb.Append("Так как есть открытые диалогове окна, нельзя активировать окно редактора.");
+            sb.Append("Так как есть открытые диалоговые окна, нельзя активировать окно редактора.");
           }
 
           EFPApp.MessageBox(sb.ToString(), "Повторное открытие редактора");
@@ -2884,7 +2889,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="state">Требуемый режим</param>
     /// <param name="modal">True для запуска в модальном режиме</param>
     /// <returns>True, если выполнялось редактирование и документ был сохранен (свойство <see cref="DocumentEditor.DataChanged"/>)</returns>
-    public bool PerformEditing(Int32[] editIds, EFPDataGridViewState state, bool modal)
+    public bool PerformEditing(Int32[] editIds, UIDataState state, bool modal)
     {
       return PerformEditing(editIds, state, modal, null);
     }
@@ -2918,7 +2923,7 @@ namespace FreeLibSet.Forms.Docs
       Int32[] editIds = new int[1];
       editIds[0] = editId;
 
-      EFPDataGridViewState state = readOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit;
+      UIDataState state = readOnly ? UIDataState.View : UIDataState.Edit;
       return PerformEditing(editIds, state, true, caller);
     }
 
@@ -3041,7 +3046,7 @@ namespace FreeLibSet.Forms.Docs
       if (p < 0)
         return; // вообще-то это ошибка
 
-      DBxDocValue value = newDoc.Values[p];
+      DBxExtValue value = newDoc.Values[p];
 
       if (auxFilterGroupIds.Length == 1)
       {

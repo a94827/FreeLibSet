@@ -449,6 +449,25 @@ namespace ExtTools_tests.Calendar
 
     #endregion
 
+    #region Age
+
+    [TestCase("", "0:0:0")]
+    [TestCase("20241105-20241204", "0:1:0")]
+    [TestCase("20240201-20240229", "0:1:0")]
+    [TestCase("20240201-20240228", "0:0:28")]
+    [TestCase("20240229-20240229", "0:0:1")]
+    [TestCase("00010101-99991231", "9999:0:0")]
+    public void Age(string sSUT, string sWanted)
+    {
+      DateRange sut = Creators.DateRange(sSUT);
+      YearMonthDayAge wanted = Creators.YearMonthDayAge(sWanted);
+
+      YearMonthDayAge res = sut.Age;
+      Assert.AreEqual(wanted, res);
+    }
+
+    #endregion
+
     #region GetEnumerator()
 
     [Test]

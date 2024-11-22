@@ -267,7 +267,7 @@ namespace FreeLibSet.Calendar
       get
       {
         if (IsEmpty)
-          return 0; 
+          return 0;
         else
         {
           DateTime dt2 = LastDate.AddDays(1);
@@ -351,8 +351,31 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
+    /// Возвращает количество лет, месяцев и дней, которые содержатся в интервале.
+    /// Например, для периода 05.11.2024-04.12.2024 возвращается ровно 1 месяц.
+    /// Возвращается положительное значение, если интервал задан и нулевое значение при <see cref="IsEmpty"/>=true.
+    /// </summary>
+    public YearMonthDayAge Age
+    {
+      get
+      {
+        if (IsEmpty)
+          return new YearMonthDayAge();
+        else if (LastDate == Whole.LastDate)
+        {
+          if (FirstDate == Whole.FirstDate)
+            return YearMonthDayAge.MaxValue;
+          else
+            return YearMonthDayAge.FromDates(FirstDate.AddDays(-1), LastDate);
+        }
+        else
+          return YearMonthDayAge.FromDates(FirstDate, LastDate.AddDays(1));
+      }
+    }
+
+    /// <summary>
     /// Пустой интервал дат.
-    /// В этот интервал не входит ни одна дата, то есть <see cref="Contains(DateTime)"/> всегда возвращает false
+    /// В этот интервал не входит ни одна дата, то есть <see cref="Contains(DateTime)"/> всегда возвращает false.
     /// </summary>
     public static readonly DateRange Empty = new DateRange();
 
@@ -1567,5 +1590,4 @@ namespace FreeLibSet.Calendar
 
     #endregion
   }
-
 }

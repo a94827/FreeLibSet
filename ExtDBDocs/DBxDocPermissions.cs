@@ -149,12 +149,12 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Значения, которые надо проверить
     /// </summary>
-    public IDBxDocValues Values
+    public IDBxExtValues Values
     {
       get { return _Values; }
       internal set { _Values = value; }
     }
-    private IDBxDocValues _Values;
+    private IDBxExtValues _Values;
 
     /// <summary>
     ///  Документ

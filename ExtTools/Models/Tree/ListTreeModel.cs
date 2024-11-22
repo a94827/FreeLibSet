@@ -162,7 +162,7 @@ namespace FreeLibSet.Models.Tree
     #region ITreeModel Members
 
     /// <summary>
-    /// Возращает список для <see cref="TreePath.Empty"/> и фиктивный перечислитель для непустого пути
+    /// Возвращает список для <see cref="TreePath.Empty"/> и фиктивный перечислитель для непустого пути
     /// </summary>
     /// <param name="treePath">Путь к корневому узлу</param>
     /// <returns>Перечислитель</returns>

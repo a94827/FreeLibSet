@@ -27,6 +27,7 @@ using FreeLibSet.Shell;
 using FreeLibSet.Forms.Diagnostics;
 using FreeLibSet.Controls;
 using FreeLibSet.Drawing;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -2389,7 +2390,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает изображение значка для формы как объект <see cref="Image"/>.
-    /// Если значка нет, возращается пустое "изображение".
+    /// Если значка нет, возвращается пустое "изображение".
     /// Используется в диспетчере окон.
     /// В интерфейсе SDI для всех форм может использоваться один значок приложения.
     /// Этот метод возвращает изображение, предусмотренное в пользовательском коде, а не изображение стандартного значка.
@@ -4832,6 +4833,29 @@ namespace FreeLibSet.Forms
       if (n3 > 0)
         lst.Add("Инф. сообщений: " + n3.ToString());
       return String.Join(", ", lst.ToArray());
+    }
+
+    #endregion
+
+    #region Изображения для UIDataState
+
+
+    /// <summary>
+    /// Получить значок для режима редактирования
+    /// </summary>
+    /// <param name="state">Режим:Редактирование,вставка,копирование,удаление или просмотр</param>
+    /// <returns>Иконка для формы</returns>
+    public static string GetDataStateImageKey(UIDataState state)
+    {
+      switch (state)
+      {
+        case UIDataState.Edit: return "Edit"; 
+        case UIDataState.Insert: return "Insert"; 
+        case UIDataState.InsertCopy: return "InsertCopy";
+        case UIDataState.Delete: return "Delete";
+        case UIDataState.View: return "View";
+        default: return "UnknownState";
+      }
     }
 
     #endregion

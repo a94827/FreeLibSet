@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms.Docs
 
     private void AddPage1(InitDocEditFormEventArgs args)
     {
-      DocEditPage page = args.AddPage("Группа", MainPanel1);
+      ExtEditPage page = args.AddPage("Группа", MainPanel1);
       page.ImageKey = args.Editor.DocTypeUI.ImageKey;
 
       //Page.HelpContext = "BuxBase.chm::CompanyEdit.htm#Общие";

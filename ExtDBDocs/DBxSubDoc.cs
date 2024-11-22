@@ -163,7 +163,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Интерфейс доступа к значениям поддокумента
     /// </summary>
-    public IDBxDocValues Values
+    public IDBxExtValues Values
     {
       get { return _MultiSubDocs.GetSingleSubDocValues(_RowIndex); }
     }
@@ -171,7 +171,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Доступ к оригинальным значениям в режиме Edit
     /// </summary>
-    public IDBxDocValues OriginalValues
+    public IDBxExtValues OriginalValues
     {
       get
       {

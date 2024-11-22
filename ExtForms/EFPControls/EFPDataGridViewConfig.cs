@@ -303,7 +303,7 @@ namespace FreeLibSet.Forms
       {
         CfgPart cfg3 = cfg2.GetChild(Columns[i].ColumnName, true);
         cfg3.SetInt("Width", Columns[i].Width);
-        cfg3.SetBool("FillMode", Columns[i].FillMode);
+        cfg3.SetBool("FillMode", Columns[i].FillMode, true);
         if (Columns[i].FillMode)
           cfg3.SetInt("FillWeight", Columns[i].FillWeight);
       }

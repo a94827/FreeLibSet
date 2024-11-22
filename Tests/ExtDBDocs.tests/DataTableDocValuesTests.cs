@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using NUnit.Framework;
-using FreeLibSet.Data.Docs;
+using FreeLibSet.Data;
 using FreeLibSet.Core;
 
 namespace ExtDBDocs_tests.Data_Docs
 {
   [TestFixture]
-  public class DataTableDocValuesTests
+  public class DBxDataTableExtValuesTests
   {
     #region Тестирование конструктора
 
@@ -17,7 +17,7 @@ namespace ExtDBDocs_tests.Data_Docs
     public void Constructor()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
 
       Assert.AreSame(table, sut.Table, "Table");
       Assert.AreEqual(table.Columns.Count, sut.Count, "Count");
@@ -32,36 +32,36 @@ namespace ExtDBDocs_tests.Data_Docs
     [Test]
     public void ResetBuffer_all()
     {
-      DataTableDocValues sut = CreateTestValuesForResetBuffer();
+      DBxDataTableExtValues sut = CreateTestValuesForResetBuffer();
       sut.ResetBuffer();
-      Assert.IsNull(sut.GetValue(2, DBxDocValuePreferredType.Unknown));
+      Assert.IsNull(sut.GetValue(2, DBxExtValuePreferredType.Unknown));
     }
 
     [Test]
     public void ResetBuffer_index()
     {
-      DataTableDocValues sut = CreateTestValuesForResetBuffer();
+      DBxDataTableExtValues sut = CreateTestValuesForResetBuffer();
       sut.ResetBuffer(2);
-      Assert.IsNull(sut.GetValue(2, DBxDocValuePreferredType.Unknown));
+      Assert.IsNull(sut.GetValue(2, DBxExtValuePreferredType.Unknown));
     }
 
     [Test]
     public void ResetBuffer_name()
     {
-      DataTableDocValues sut = CreateTestValuesForResetBuffer();
+      DBxDataTableExtValues sut = CreateTestValuesForResetBuffer();
       sut.ResetBuffer("F3");
-      Assert.IsNull(sut.GetValue(2, DBxDocValuePreferredType.Unknown));
+      Assert.IsNull(sut.GetValue(2, DBxExtValuePreferredType.Unknown));
     }
 
     // Не тестируем, что будет без вызова ResetBuffer() или вызове для другого поля.
     // Возможно, при изменении реализации метод ResetBuffer() станет фиктивным, и изменения в таблице
     // будут отслеживаться автоматически.
 
-    private static DataTableDocValues CreateTestValuesForResetBuffer()
+    private static DBxDataTableExtValues CreateTestValuesForResetBuffer()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
-      object v1 = sut.GetValue(2, DBxDocValuePreferredType.Unknown);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
+      object v1 = sut.GetValue(2, DBxExtValuePreferredType.Unknown);
       Assert.AreEqual(1, v1, "original");
       table.Rows.Add("", 0, 2);
       return sut;
@@ -74,14 +74,14 @@ namespace ExtDBDocs_tests.Data_Docs
     [Test]
     public void Item()
     {
-      DataTableDocValues sut = new DataTableDocValues(CreateTestTable());
-      DBxDocValue item1 = sut["F2"];
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(CreateTestTable());
+      DBxExtValue item1 = sut["F2"];
       Assert.AreEqual("F2", item1.Name, "#1");
 
-      DBxDocValue item2 = sut[2];
+      DBxExtValue item2 = sut[2];
       Assert.AreEqual("F3", item2.Name, "#2");
 
-      DBxDocValue dummy;
+      DBxExtValue dummy;
       Assert.Catch<ArgumentOutOfRangeException>(delegate() { dummy = sut[-1]; }, "#3");
       Assert.Catch<ArgumentOutOfRangeException>(delegate() { dummy = sut[sut.Table.Columns.Count]; }, "#4");
       Assert.Catch<ArgumentException>(delegate() { dummy = sut["XXX"]; }, "#5");
@@ -91,7 +91,7 @@ namespace ExtDBDocs_tests.Data_Docs
     [Test]
     public void GetName()
     {
-      DataTableDocValues sut = new DataTableDocValues(CreateTestTable());
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(CreateTestTable());
       Assert.AreEqual("F2", sut.GetName(1));
     }
 
@@ -101,7 +101,7 @@ namespace ExtDBDocs_tests.Data_Docs
     {
       DataTable table = CreateTestTable();
       table.Columns[1].Caption = "XXX";
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
       Assert.AreEqual("XXX", sut.GetDisplayName(1));
     }
 
@@ -109,7 +109,7 @@ namespace ExtDBDocs_tests.Data_Docs
     [Test]
     public void IndexOf()
     {
-      DataTableDocValues sut = new DataTableDocValues(CreateTestTable());
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(CreateTestTable());
       Assert.AreEqual(1, sut.IndexOf("F2"), "#1");
       Assert.AreEqual(-1, sut.IndexOf("XXX"), "#2");
       Assert.AreEqual(-1, sut.IndexOf(""), "#3");
@@ -118,7 +118,7 @@ namespace ExtDBDocs_tests.Data_Docs
     [Test]
     public void IsReadOnly()
     {
-      DataTableDocValues sut = new DataTableDocValues(CreateTestTable());
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(CreateTestTable());
       Assert.IsFalse(sut.IsReadOnly, "#1");
       sut.SetValue(1, 123);
       object[] a = sut.GetValueArray(1);
@@ -144,10 +144,10 @@ namespace ExtDBDocs_tests.Data_Docs
     [Test]
     public void GetValue()
     {
-      DataTableDocValues sut = new DataTableDocValues(CreateTestTable());
-      Assert.IsNull(sut.GetValue(0, DBxDocValuePreferredType.Unknown), "#1");
-      Assert.IsNull(sut.GetValue(1, DBxDocValuePreferredType.Unknown), "#2");
-      Assert.AreEqual(1, sut.GetValue(2, DBxDocValuePreferredType.Unknown), "#3");
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(CreateTestTable());
+      Assert.IsNull(sut.GetValue(0, DBxExtValuePreferredType.Unknown), "#1");
+      Assert.IsNull(sut.GetValue(1, DBxExtValuePreferredType.Unknown), "#2");
+      Assert.AreEqual(1, sut.GetValue(2, DBxExtValuePreferredType.Unknown), "#3");
 
       sut.SetRowValue(1, 0, 2);
       sut.SetRowValue(1, 2, 2);
@@ -155,26 +155,26 @@ namespace ExtDBDocs_tests.Data_Docs
       // проверка
       for (int i = 0; i < sut.RowCount; i++)
         Assert.AreEqual(2, sut.GetRowValue(1, i), "GetRowValue(" + i.ToString() + ")");
-      Assert.AreEqual(2, sut.GetValue(1, DBxDocValuePreferredType.Unknown), "#4");
+      Assert.AreEqual(2, sut.GetValue(1, DBxExtValuePreferredType.Unknown), "#4");
 
       sut.Table.Rows.Clear();
       sut.Table.AcceptChanges();
       sut.ResetBuffer();
       Assert.AreEqual(0, sut.RowCount, "RowCount #5");
-      Assert.AreEqual(DBNull.Value, sut.GetValue(1, DBxDocValuePreferredType.Unknown), "#5");
+      Assert.AreEqual(DBNull.Value, sut.GetValue(1, DBxExtValuePreferredType.Unknown), "#5");
     }
 
     [Test]
     public void SetValue()
     {
-      DataTableDocValues sut = new DataTableDocValues(CreateTestTable());
-      Assert.IsNull(sut.GetValue(0, DBxDocValuePreferredType.Unknown), "#1");
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(CreateTestTable());
+      Assert.IsNull(sut.GetValue(0, DBxExtValuePreferredType.Unknown), "#1");
 
       sut.SetValue(0, "XXX");
-      Assert.AreEqual("XXX", sut.GetValue(0, DBxDocValuePreferredType.Unknown), "#2");
+      Assert.AreEqual("XXX", sut.GetValue(0, DBxExtValuePreferredType.Unknown), "#2");
 
       sut.SetValue(0, null);
-      Assert.AreEqual(DBNull.Value, sut.GetValue(0, DBxDocValuePreferredType.Unknown), "#3");
+      Assert.AreEqual(DBNull.Value, sut.GetValue(0, DBxExtValuePreferredType.Unknown), "#3");
     }
 
     #endregion
@@ -185,7 +185,7 @@ namespace ExtDBDocs_tests.Data_Docs
     public void IsNull()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
 
       Assert.IsTrue(sut.IsNull(0), "#1 (grayed)");
       Assert.IsFalse(sut.IsNull(2), "#2 (not grayed)");
@@ -204,7 +204,7 @@ namespace ExtDBDocs_tests.Data_Docs
     public void GetGrayed()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
       Assert.IsTrue(sut.GetGrayed(0), "#1 F1");
       Assert.IsTrue(sut.GetGrayed(1), "#1 F2");
       Assert.IsFalse(sut.GetGrayed(2), "#1 F3");
@@ -236,7 +236,7 @@ namespace ExtDBDocs_tests.Data_Docs
     public void GetValueArray()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
       Assert.AreEqual(new object[] { "ABC", "DEF", "GHI" }, sut.GetValueArray(0), "F1");
       Assert.AreEqual(new object[] { 1, 2, 3 }, sut.GetValueArray(1), "F2");
       Assert.AreEqual(new object[] { 1, 1, 1 }, sut.GetValueArray(2), "F3");
@@ -255,7 +255,7 @@ namespace ExtDBDocs_tests.Data_Docs
     public void SetValueArray()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
 
       sut.SetValueArray(1, new object[] { 111, 222, DBNull.Value });
       Assert.AreEqual(111, sut.GetRowValue(1, 0), "#1 F1");
@@ -275,7 +275,7 @@ namespace ExtDBDocs_tests.Data_Docs
     public void GetRowValue()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
 
       Assert.AreEqual(1, sut.GetRowValue(1, 0), "#1 F1");
       Assert.AreEqual(2, sut.GetRowValue(1, 1), "#1 F2");
@@ -295,7 +295,7 @@ namespace ExtDBDocs_tests.Data_Docs
     public void SetRowValue()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
       sut.SetRowValue(1, 0, 111);
 
       Assert.AreEqual(111, sut.GetRowValue(1,0), "#1");
@@ -314,7 +314,7 @@ namespace ExtDBDocs_tests.Data_Docs
       table.Columns.Add("F1", typeof(string)).AllowDBNull = false;
       table.Columns.Add("F2", typeof(int)).AllowDBNull = true;
 
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
       Assert.IsFalse(sut.AllowDBNull(0), "F1");
       Assert.IsTrue(sut.AllowDBNull(1), "F2");
     }
@@ -326,7 +326,7 @@ namespace ExtDBDocs_tests.Data_Docs
       table.Columns.Add("F1", typeof(string));
       table.Columns.Add("F2", typeof(string)).MaxLength = 100;
 
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
       Assert.AreEqual(-1, sut.MaxLength(0), "F1");
       Assert.AreEqual(100, sut.MaxLength(1), "F2");
     }
@@ -340,7 +340,7 @@ namespace ExtDBDocs_tests.Data_Docs
       table.Columns.Add("F2", typeof(int)).ReadOnly = true;
       table.Columns.Add("F3", typeof(int)).Expression = "F1*2";
 
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
       Assert.IsFalse(sut.GetValueReadOnly(0), "F1");
       Assert.IsTrue(sut.GetValueReadOnly(1), "F2");
       Assert.IsTrue(sut.GetValueReadOnly(2), "F3");
@@ -354,10 +354,10 @@ namespace ExtDBDocs_tests.Data_Docs
     public void GetEnumerator()
     {
       DataTable table = CreateTestTable();
-      DataTableDocValues sut = new DataTableDocValues(table);
+      DBxDataTableExtValues sut = new DBxDataTableExtValues(table);
 
       List<string> lst = new List<string>();
-      foreach (DBxDocValue item in sut)
+      foreach (DBxExtValue item in sut)
         lst.Add(item.Name);
 
       Assert.AreEqual(new string[] { "F1", "F2", "F3" }, lst.ToArray());

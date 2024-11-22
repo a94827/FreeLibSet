@@ -12,6 +12,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Forms.Data;
 
 // Блоки диалога для выбора документов и поддокументов
 
@@ -194,8 +195,17 @@ namespace FreeLibSet.Forms.Docs
     /// установленных пользователем фильтров.
     /// Действует только при <see cref="FixedDocIds"/>=null.
     /// </summary>
-    public GridFilters Filters { get { return _Filters; } set { _Filters = value; } }
-    private GridFilters _Filters;
+    public EFPDBxGridFilters Filters
+    {
+      get { return _Filters; }
+      set
+      {
+        if (value != null)
+          value.SqlFilterRequired = true;
+        _Filters = value;
+      }
+    }
+    private EFPDBxGridFilters _Filters;
 
     /// <summary>
     /// Массив фиксированных идентификаторов для выбора.

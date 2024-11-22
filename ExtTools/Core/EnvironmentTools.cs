@@ -173,7 +173,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Возращает описание сборки.
+    /// Возвращает описание сборки.
     /// Возвращает атрибут <see cref="AssemblyDescriptionAttribute"/> для переданной сборки.
     /// Если атрибут не задан, возвращает атрибут <see cref="AssemblyProductAttribute"/>.
     /// Если и он не задан, возвращается короткое имя сборки <see cref="AssemblyName.Name"/>.

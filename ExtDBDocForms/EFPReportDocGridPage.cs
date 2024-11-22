@@ -7,11 +7,13 @@ using System.Text;
 using FreeLibSet.Data;
 using System.Data;
 using System.Windows.Forms;
+using FreeLibSet.Forms.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Страница отчета, содержащая таблицу со списком документов одного вида
+  /// Страница отчета, содержащая таблицу со списком документов одного вида.
+  /// Содержит табличный просмотр <see cref="EFPDocGridView"/>.
   /// </summary>
   public class EFPReportDocGridPage : EFPReportDBxGridPage /* 06.07.2021 */
   {
@@ -41,10 +43,12 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс для вида документа
     /// </summary>
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
-    private DocTypeUI _DocTypeUI;
+    private readonly DocTypeUI _DocTypeUI;
 
     /// <summary>
     /// Альтернативный метод присоединения источника данных.
+    /// Задает фиксированный список идентификаторов документов, которые можно просматривать.
+    /// Свойство <see cref="EFPDocGridView.FixedDocIds"/>.
     /// </summary>
     public IdList FixedDocIds
     {
@@ -74,14 +78,14 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает EFPDocGridView                 
+    /// Создает <see cref="EFPDocGridView"/>
     /// </summary>
     /// <param name="control">Табличный просмотр Windows Forms</param>
     /// <returns>Провайдер управляющего элемента</returns>
     protected override EFPDataGridView DoCreateControlProvider(DataGridView control)
     {
-      EFPDocGridView res = new EFPDocGridView(BaseProvider, control, _DocTypeUI);
-      res.Filters = new GridFilters();
+      EFPDocGridView res = new EFPDocGridView(BaseProvider, control, DocTypeUI);
+      res.Filters = new EFPDBxGridFilters();
       res.CommandItems.CanEditFilters = false; // 19.10.2015
       // 06.07.2021
       // Можно задавать порядок сортировки
@@ -91,7 +95,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Устанавливает свойство EFPDocGridView.FixedDocIds
+    /// Устанавливает свойство <see cref="EFPDocGridView.FixedDocIds"/>
     /// </summary>
     protected override void InitData()
     {

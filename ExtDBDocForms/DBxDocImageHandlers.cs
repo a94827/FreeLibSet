@@ -8,6 +8,7 @@ using System.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -102,12 +103,12 @@ namespace FreeLibSet.Forms.Docs
     /// Сюда должен может быть помещен цвет строки в режиме 
     /// <see cref="Reason"/>=<see cref="DBxImageValueNeededReason.RowColor"/>.
     /// </summary>
-    public EFPDataGridViewColorType ColorType
+    public UIDataViewColorType ColorType
     {
       get { return _ColorType; }
       set { _ColorType = value; }
     }
-    private EFPDataGridViewColorType _ColorType;
+    private UIDataViewColorType _ColorType;
 
     /// <summary>
     /// Может быть установлено значение true, если требуется пометить строку серым цветом.
@@ -727,7 +728,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="id">Идентификатор</param>
     /// <param name="colorType">Сюда записывается цветовое оформление строки</param>
     /// <param name="grayed">Сюда записывается true, если строка должна быть выделена серым цветом</param>
-    public void GetRowColor(string tableName, Int32 id, out EFPDataGridViewColorType colorType, out bool grayed)
+    public void GetRowColor(string tableName, Int32 id, out UIDataViewColorType colorType, out bool grayed)
     {
       try
       {
@@ -735,14 +736,14 @@ namespace FreeLibSet.Forms.Docs
       }
       catch
       {
-        colorType = EFPDataGridViewColorType.Error;
+        colorType = UIDataViewColorType.Error;
         grayed = true;
       }
     }
 
-    private void DoGetRowColor(string tableName, Int32 id, DataSet primaryDS, DataRow row, out EFPDataGridViewColorType colorType, out bool grayed)
+    private void DoGetRowColor(string tableName, Int32 id, DataSet primaryDS, DataRow row, out UIDataViewColorType colorType, out bool grayed)
     {
-      colorType = EFPDataGridViewColorType.Normal;
+      colorType = UIDataViewColorType.Normal;
       grayed = false;
 
       if (id == 0)
@@ -821,7 +822,7 @@ namespace FreeLibSet.Forms.Docs
           }
           catch
           {
-            _Args.ColorType = EFPDataGridViewColorType.Error;
+            _Args.ColorType = UIDataViewColorType.Error;
           }
         }
 
@@ -840,13 +841,13 @@ namespace FreeLibSet.Forms.Docs
     /// по сравнению с DBCache</param>
     /// <param name="colorType">Сюда записывается цветовое оформление строки</param>
     /// <param name="grayed">Сюда записывается true, если строка должна быть выделена серым цветом</param>
-    public void GetRowColor(string tableName, DataRow row, out EFPDataGridViewColorType colorType, out bool grayed)
+    public void GetRowColor(string tableName, DataRow row, out UIDataViewColorType colorType, out bool grayed)
     {
       try
       {
         if (row.RowState == DataRowState.Deleted)
         {
-          colorType = EFPDataGridViewColorType.Normal;
+          colorType = UIDataViewColorType.Normal;
           grayed = true;
           return;
         }
@@ -856,7 +857,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch
       {
-        colorType = EFPDataGridViewColorType.Error;
+        colorType = UIDataViewColorType.Error;
         grayed = true;
       }
     }
@@ -871,7 +872,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="doc">Загруженный документ</param>
     /// <param name="colorType">Сюда записывается цветовое оформление строки</param>
     /// <param name="grayed">Сюда записывается true, если строка должна быть выделена серым цветом</param>
-    public void GetRowColor(DBxSingleDoc doc, out EFPDataGridViewColorType colorType, out bool grayed)
+    public void GetRowColor(DBxSingleDoc doc, out UIDataViewColorType colorType, out bool grayed)
     {
       try
       {
@@ -879,7 +880,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch
       {
-        colorType = EFPDataGridViewColorType.Error;
+        colorType = UIDataViewColorType.Error;
         grayed = false;
       }
     }
@@ -894,7 +895,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="subDoc">Загруженный поддокумент</param>
     /// <param name="colorType">Сюда записывается цветовое оформление строки</param>
     /// <param name="grayed">Сюда записывается true, если строка должна быть выделена серым цветом</param>
-    public void GetRowColor(DBxSubDoc subDoc, out EFPDataGridViewColorType colorType, out bool grayed)
+    public void GetRowColor(DBxSubDoc subDoc, out UIDataViewColorType colorType, out bool grayed)
     {
       try
       {
@@ -902,7 +903,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch
       {
-        colorType = EFPDataGridViewColorType.Error;
+        colorType = UIDataViewColorType.Error;
         grayed = false;
       }
     }

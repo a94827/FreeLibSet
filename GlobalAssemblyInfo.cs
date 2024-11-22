@@ -12,4 +12,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("2.0.0.354")]
+[assembly: AssemblyVersion("3.0.0.355")]

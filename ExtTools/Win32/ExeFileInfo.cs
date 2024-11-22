@@ -1207,7 +1207,7 @@ namespace FreeLibSet.Win32
       internal PEResourceEntry[] _Entries;
 
       /// <summary>
-      /// Возращает перечислитель
+      /// Возвращает перечислитель
       /// </summary>
       /// <returns></returns>
       public ArrayEnumerable<PEResourceEntry>.Enumerator GetEnumerator()

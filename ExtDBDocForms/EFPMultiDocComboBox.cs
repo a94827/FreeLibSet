@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using System.ComponentModel;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -337,7 +338,7 @@ namespace FreeLibSet.Forms.Docs
           {
             _TextValueNeededArgs.ImageKey = DoGetImageKey();
 
-            EFPDataGridViewColorType colorType;
+            UIDataViewColorType colorType;
             bool grayed;
             DoGetValueColor(out colorType, out grayed);
             _TextValueNeededArgs.Grayed = grayed;
@@ -398,9 +399,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="colorType">Сюда помещается цвет строки.
     /// Это значение не используется</param>
     /// <param name="grayed">Сюда должно быть записано true, если документ должен быть помечен серым цветом</param>
-    protected virtual void DoGetValueColor(out EFPDataGridViewColorType colorType, out bool grayed)
+    protected virtual void DoGetValueColor(out UIDataViewColorType colorType, out bool grayed)
     {
-      colorType = EFPDataGridViewColorType.Normal;
+      colorType = UIDataViewColorType.Normal;
       grayed = false;
     }
 
@@ -594,19 +595,19 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Дополнительные фильтры для выбора документов из справочника
     /// </summary>
-    public GridFilters Filters
+    public FreeLibSet.Forms.Data.EFPDBxGridFilters Filters
     {
       get
       {
         if (_Filters == null)
         {
-          _Filters = new GridFilters();
-          _Filters.Changed += new EventHandler(HandleFiltersChanged);
+          _Filters = new FreeLibSet.Forms.Data.EFPDBxGridFilters();
+          _Filters.ListChanged += new ListChangedEventHandler(HandleFiltersChanged);
         }
         return _Filters;
       }
     }
-    private GridFilters _Filters;
+    private FreeLibSet.Forms.Data.EFPDBxGridFilters _Filters;
 
     /// <summary>
     /// Возвращает число фильтров (свойство <see cref="Filters"/>.Count, включая пустые фильтры)
@@ -626,7 +627,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Вызывается при изменении фильтров
     /// </summary>
-    private void HandleFiltersChanged(object sender, EventArgs args)
+    private void HandleFiltersChanged(object sender, ListChangedEventArgs args)
     {
       OnFiltersChanged();
     }
@@ -1201,7 +1202,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="colorType">Сюда помещается цвет для строки документа</param>
     /// <param name="grayed">Сюда записывается true, если документ выделяется серым цветом</param>
-    protected override void DoGetValueColor(out EFPDataGridViewColorType colorType, out bool grayed)
+    protected override void DoGetValueColor(out UIDataViewColorType colorType, out bool grayed)
     {
       if (DocIds.Length == 1)
         UI.DocTypes[DocTypeName].GetRowColor(DocIds[0], out colorType, out grayed);
@@ -2086,7 +2087,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="colorType">Сюда записывается цвет, определенный для документа</param>
     /// <param name="grayed">Получает значение True, если поддокумент выделяется серым цветом</param>
-    protected override void DoGetValueColor(out EFPDataGridViewColorType colorType, out bool grayed)
+    protected override void DoGetValueColor(out UIDataViewColorType colorType, out bool grayed)
     {
       if (SubDocIds.Length == 1)
         SubDocTypeUI.GetRowColor(SubDocIds[0], out colorType, out grayed);

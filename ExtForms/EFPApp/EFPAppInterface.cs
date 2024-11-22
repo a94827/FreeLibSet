@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если используется нумерация главных окон (свойство EFPAppMainWindowLayout.MainWindowNumberText возвращает непустую строку).
-    /// Для интерфейса MDI возращает true, если открыто больше одного главного окна.
+    /// Для интерфейса MDI возвращает true, если открыто больше одного главного окна.
     /// Для интерфейса SDI всегда возвращает false
     /// </summary>
     public virtual bool MainWindowNumberUsed

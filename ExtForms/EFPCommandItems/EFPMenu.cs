@@ -24,6 +24,7 @@ namespace FreeLibSet.Forms
     /// <param name="delayedAdd">Если true, то список команд будет инициализирован только при открытии меню</param>
     protected EFPMenuBase(ToolStrip menu, bool delayedAdd)
     {
+      menu.Tag = this;
       _Menu = menu;
       // почему-то не работает
       //FMenu.ImageList = ClientImages.Main.ImageList; 
@@ -104,13 +105,13 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="item">Добавляемая команда меню</param>
     /// <param name="parent">Родительская команда меню</param>
-    public void Add(EFPCommandItem item, EFPCommandItem parent)
+    public EFPUIObjBase Add(EFPCommandItem item, EFPCommandItem parent)
     {
       if (item == null)
-        return;
+        return null;
 
       if (ItemDict.ContainsKey(item.CategoryAndName))
-        return; // повторное добавление темы
+        return this[item.Category, item.Name]; // повторное добавление темы
 
       ToolStripItemCollection parentItems; // куда будем добавлять
       if (parent == null)
@@ -131,6 +132,7 @@ namespace FreeLibSet.Forms
       parentItems.Add(thisMenuItem);
       if (item.GroupEnd)
         AddSeparator(parentItems);
+      return uiObj;
     }
 
     /// <summary>
@@ -141,7 +143,7 @@ namespace FreeLibSet.Forms
     /// Повторный вызов метода для той же самой команды игнорируется.
     /// </summary>
     /// <param name="item">Добавляемая команда меню</param>
-    public void Add(EFPCommandItem item)
+    public EFPUIObjBase Add(EFPCommandItem item)
     {
       EFPCommandItem parent = item.Parent;
       if (parent != null)
@@ -149,7 +151,7 @@ namespace FreeLibSet.Forms
         if (!ItemDict.ContainsKey(parent.CategoryAndName))
           Add(parent);
       }
-      Add(item, parent);
+      return Add(item, parent);
     }
 
     /// <summary>

@@ -56,58 +56,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DateRangeCrossFilterTests.cs" />
-    <Compile Include="DateRangeFilterTests.cs" />
-    <Compile Include="DateRangeInclusionFilterTests.cs" />
     <Compile Include="DBxIndexStructTests.cs" />
-    <Compile Include="DBxColumnStructTests.cs" />
     <Compile Include="DBxDataWriterInfoTests.cs" />
     <Compile Include="DBxDataWriterTests.cs" />
     <Compile Include="DBxManagerTests.cs" />
-    <Compile Include="DBxOrderTests.cs" />
     <Compile Include="DBxPermissionsTests.cs" />
     <Compile Include="DBxRealStructSourceTests.cs" />
     <Compile Include="DBxSelectInfoTests.cs" />
-    <Compile Include="DBxStructTests.cs" />
-    <Compile Include="DBxTableStructTests.cs" />
-    <Compile Include="IdsFilterGeneratorTests.cs" />
-    <Compile Include="NotNullFilterTests.cs" />
-    <Compile Include="NumRangeCrossFilterTests.cs" />
-    <Compile Include="NumRangeInclusionFilterTests.cs" />
-    <Compile Include="NumRangeFilterTests.cs" />
-    <Compile Include="OrFilterTests.cs" />
-    <Compile Include="AndFilterTests.cs" />
-    <Compile Include="DBxAggregateFunctionTests.cs" />
-    <Compile Include="DBxColumnListTests.cs" />
-    <Compile Include="DBxColumnsTests.cs" />
-    <Compile Include="DBxColumnTests.cs" />
-    <Compile Include="DBxColumnValueArrayTests.cs" />
-    <Compile Include="DBxConstTests.cs" />
-    <Compile Include="CompareFilterTests.cs" />
-    <Compile Include="DBxFilterTests.cs" />
-    <Compile Include="DummyFilterTests.cs" />
-    <Compile Include="DBxFunctionTests.cs" />
+    <Compile Include="DBxStructCheckerTests.cs" />
     <Compile Include="DBxSqlBufferTests.cs" />
-    <Compile Include="DBxTableColumnListTests.cs" />
-    <Compile Include="DBxTableColumnNameTests.cs" />
     <Compile Include="DBxTestHelpers.cs" />
-    <Compile Include="DBxToolsTests.cs" />
-    <Compile Include="IdsFilterTests.cs" />
-    <Compile Include="NotFilterTests.cs" />
     <Compile Include="SQLiteDBxTests.cs" />
     <Compile Include="SQLiteDBxTests_InMemory.cs" />
     <Compile Include="SQLiteDBxTests_StringFilters.cs" />
     <Compile Include="SqlTests.cs" />
-    <Compile Include="StartsWithFilterTests.cs" />
-    <Compile Include="SubstringFilterTests.cs" />
-    <Compile Include="StringValueFilterTests.cs" />
     <Compile Include="TestTablesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TestTablesResource.resx</DependentUpon>
     </Compile>
-    <Compile Include="ValueFilterTests.cs" />
-    <Compile Include="ValuesFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ExtDB\ExtDB.csproj">
@@ -121,6 +88,10 @@
     <ProjectReference Include="..\ExtTestHelpers\ExtTestHelpers.csproj">
       <Project>{A9F0BA9D-6B87-4B3D-808B-91C0DE371480}</Project>
       <Name>ExtTestHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtTools.tests\ExtTools.tests.csproj">
+      <Project>{29BBC4D8-4BE0-43E1-931F-E0C2B7D13D04}</Project>
+      <Name>ExtTools.tests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1445,7 +1445,7 @@ namespace FreeLibSet.Reporting
     /// Ориентация - книжная или альбомная.
     /// Установка свойства не меняет размер бумаги и полей.
     /// Используйте методы <see cref="InvertOrientation()"/> или <see cref="SetOrientation(BROrientation, bool)"/>, чтобы переключить поля.
-    /// По умолчанию - книжная
+    /// По умолчанию - книжная ориентация.
     /// </summary>
     public BROrientation Orientation
     {

@@ -48,7 +48,7 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Создает объект, извлекая год и месяц из объекта DateTime
+    /// Создает объект, извлекая год и месяц из объекта <see cref="DateTime"/>
     /// </summary>
     /// <param name="date">Дата</param>
     public YearMonth(DateTime date)
@@ -66,14 +66,14 @@ namespace FreeLibSet.Calendar
     #region Свойства
 
     /// <summary>
-    /// Год в диапазоне MinYear-MaxYear.
-    /// Yckb IsEmpty=true, возвращает 0.
+    /// Год в диапазоне <see cref="MinYear"/>-<see cref="MaxYear"/>.
+    /// Если <see cref="IsEmpty"/>=true, возвращает 0.
     /// </summary>
     public int Year { get { return _Value / 12; } }
 
     /// <summary>
-    /// Месяц (1-12)
-    /// Если IsEmpty=true, значение не определено
+    /// Месяц (1-12).
+    /// Если <see cref="IsEmpty"/>=true, значение не определено
     /// </summary>
     public int Month { get { return _Value % 12 + 1; } }
 
@@ -118,7 +118,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает интервал дат, содержащий месяц.
-    /// Если текущий объект не инициализирован, возвращается DateRange.Empty
+    /// Если текущий объект не инициализирован, возвращается <see cref="DateRange.Empty"/>.
     /// </summary>
     public DateRange DateRange
     {
@@ -354,10 +354,10 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Сравнивает два объекта YearMonth 
+    /// Сравнивает два объекта <see cref="YearMonth"/>
     /// </summary>
-    /// <param name="value1">Первый объект YearMonth</param>
-    /// <param name="value2">Второй объект YearMonth</param>
+    /// <param name="value1">Первый объект <see cref="YearMonth"/></param>
+    /// <param name="value2">Второй объект <see cref="YearMonth"/></param>
     /// <returns>true, первый объект меньше или равен второму</returns>
     public static bool operator <=(YearMonth value1, YearMonth value2)
     {
@@ -493,7 +493,7 @@ namespace FreeLibSet.Calendar
     #region Свойства
 
     /// <summary>
-    /// Первый месяць диапазона
+    /// Первый месяц диапазона
     /// </summary>
     public YearMonth FirstYM { get { return _FirstYM; } }
     private readonly YearMonth _FirstYM;
@@ -552,6 +552,16 @@ namespace FreeLibSet.Calendar
         else
           return new DateRange(FirstYM.BottomOfMonth, LastYM.EndOfMonth);
       }
+    }
+
+    /// <summary>
+    /// Возвращает количество лет и месяцев в интервале.
+    /// Так как интервал содержит полные месяцы, возвращаемое <see cref="YearMonthDayAge.Days"/> всегда равно 0.
+    /// Возвращается положительное значение, если интервал задан и нулевое значение при <see cref="IsEmpty"/>=true.
+    /// </summary>
+    public YearMonthDayAge Age
+    {
+      get { return DateRange.Age; }
     }
 
     #endregion

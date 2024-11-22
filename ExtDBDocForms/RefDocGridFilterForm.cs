@@ -12,6 +12,7 @@ using FreeLibSet.Forms;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
+using FreeLibSet.Forms.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -121,7 +122,10 @@ namespace FreeLibSet.Forms.Docs
     //  return PerformEdit(title, docTypeUI, nullable, ref mode, ref ids, null, null);
     //}
 
-    public static bool PerformEdit(string title, DocTypeUI docTypeUI, bool nullable, ref RefDocFilterMode mode, ref Int32[] ids, GridFilters docFilters, EFPDialogPosition dialogPosition, MultiSelectEmptyEditMode emptyEditMode)
+    public static bool PerformEdit(string title, DocTypeUI docTypeUI, bool nullable, 
+      ref RefDocFilterMode mode, ref Int32[] ids,
+      EFPDBxGridFilters docFilters, 
+      EFPDialogPosition dialogPosition, MultiSelectEmptyEditMode emptyEditMode)
     {
 #if DEBUG
       if (docTypeUI == null)
@@ -215,6 +219,32 @@ namespace FreeLibSet.Forms.Docs
     SelectThenShowList,
   }
 
+  #region Интерфейс IDBxDocSelFilter
+
+  /// <summary>
+  /// Интерфейс фильтра, поддерживающего работу с выборками документов <see cref="DBxDocSelection"/> 
+  /// </summary>
+  public interface IDBxDocSelectionFilter
+  {
+    /// <summary>
+    /// Добавить документы, соответствующие фильтру, в выборку
+    /// </summary>
+    /// <param name="docSel">Заполняемая выборка документов</param>
+    void GetDocSel(DBxDocSelection docSel);
+
+    /// <summary>
+    /// Заменить документы в фильтре документами в выборке.
+    /// Если выборка не содержит подходящих значений, то фильтр не изменяется и
+    /// возвращается false.
+    /// </summary>
+    /// <param name="docSel">Выборка из буфера обмена</param>
+    /// <returns>trye, если удалось что-нибудь использовать</returns>
+    bool ApplyDocSel(DBxDocSelection docSel);
+  }
+
+  #endregion
+
+
   /// <summary>
   /// Фильтр по значению ссылочного поля на документ.
   /// Возможен фильтр по нескольким идентификаторам и режим "Исключить".
@@ -233,7 +263,8 @@ namespace FreeLibSet.Forms.Docs
       : base(docTypeUI.UI.DocProvider, docTypeUI.DocType, columnName)
     {
       _UI = docTypeUI.UI;
-      _DocFilters = new GridFilters();
+      _DocFilters = new EFPDBxGridFilters();
+      _DocFilters.SqlFilterRequired = true;
       _Nullable = false;
       _EmptyEditMode = _UI.DefaultEmptyEditMode;
     }
@@ -270,8 +301,8 @@ namespace FreeLibSet.Forms.Docs
     /// По умолчанию список фильтров пустой.
     /// Пользователь не имеет возможности изменить эти фильтры.
     /// </summary>
-    public GridFilters DocFilters { get { return _DocFilters; } }
-    private readonly GridFilters _DocFilters;
+    public EFPDBxGridFilters DocFilters { get { return _DocFilters; } }
+    private readonly EFPDBxGridFilters _DocFilters;
 
     /// <summary>
     /// Определяет возможность задания фильтров NotNull и Null.
@@ -511,7 +542,7 @@ namespace FreeLibSet.Forms.Docs
   /// <summary>
   /// Набор из фильтра по группе и фильтра по документам
   /// </summary>
-  public class RefDocGridFilterSet : DBxClientFilterSet
+  public class RefDocGridFilterSet : EFPDBxGridFilterSet
   {
     #region Конструкторы
 
@@ -616,6 +647,258 @@ namespace FreeLibSet.Forms.Docs
           GroupFilter.Clear();
         DocFilter.SingleDocId = value;
       }
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Фильтр по виду документа.
+  /// Текущим значением числового поля является идентификатор таблицы документа <see cref="DBxDocType.TableId"/>.
+  /// </summary>
+  public class DocTableIdGridFilter : DocTableIdCommonFilter, IEFPGridFilterWithImageKey
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="ui">Интерфейс пользователя для доступа к документам</param>
+    /// <param name="columnName">Столбец типа <see cref="Int32"/>, хранящий идентификатор вида документа из таблицы "DocTables"</param>
+    public DocTableIdGridFilter(DBUI ui, string columnName)
+      : base(columnName)
+    {
+      if (ui == null)
+        throw new ArgumentNullException("ui");
+
+      _UI = ui;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Интерфейс пользователя для доступа к документам
+    /// </summary>
+    public DBUI UI { get { return _UI; } }
+    private readonly DBUI _UI;
+
+    /// <summary>
+    /// Список типов документов, из которых осуществляется выбор.
+    /// Если свойство не было установлено явно, то можно выбрать любой существующий тип документа.
+    /// Установка свойства никак не влияет на текущее значение.
+    /// </summary>
+    public DocTypeUI[] DocTypeUIs
+    {
+      get
+      {
+        if (_DocTypeUIs == null)
+        {
+          string[] allNames = UI.DocProvider.DocTypes.GetDocTypeNames();
+          _DocTypeUIs = new DocTypeUI[allNames.Length];
+          for (int i = 0; i < allNames.Length; i++)
+            _DocTypeUIs[i] = UI.DocTypes[allNames[i]];
+        }
+        return _DocTypeUIs;
+      }
+      set
+      {
+        if (value != null)
+        {
+          for (int i = 0; i < value.Length; i++)
+          {
+            if (value[i] == null)
+              throw new ArgumentException("Элемент с индексом " + i.ToString() + " имеет значение null");
+            if (value[i].UI != _UI)
+              throw new ArgumentException("Элемент с индексом " + i.ToString() + " относится к другому объекту DBUI");
+          }
+        }
+        _DocTypeUIs = value;
+      }
+    }
+    private DocTypeUI[] _DocTypeUIs;
+
+    /// <summary>
+    /// Список видов типов документов, из которых осуществляется выбор.
+    /// Если свойство не было установлено явно, то можно выбрать любой существующий тип документа.
+    /// Установка свойства никак не влияет на текущее значение.
+    /// </summary>
+    public string[] DocTypeNames
+    {
+      get
+      {
+        string[] a = new string[DocTypeUIs.Length];
+        for (int i = 0; i < DocTypeUIs.Length; i++)
+          a[i] = DocTypeUIs[i].DocType.Name;
+        return a;
+      }
+      set
+      {
+        if (value == null)
+          DocTypeUIs = null;
+        else
+        {
+          DocTypeUI[] a = new DocTypeUI[value.Length];
+          for (int i = 0; i < value.Length; i++)
+          {
+            a[i] = UI.DocTypes[value[i]];
+            if (a[i] == null)
+              throw new ArgumentException("Неизвестный вид документа \"" + value[i] + "\"");
+          }
+          DocTypeUIs = a;
+        }
+      }
+    }
+
+    #endregion
+
+    #region Текущий выбор - расширенные свойства
+
+    /// <summary>
+    /// Интерфейс текущего выбранного вида документов
+    /// </summary>
+    public DocTypeUI CurrentDocTypeUI
+    {
+      get
+      {
+        if (CurrentTableId == 0)
+          return null;
+        else
+          return UI.DocTypes.FindByTableId(CurrentTableId);
+      }
+      set
+      {
+        if (value == null)
+          CurrentTableId = 0;
+        else
+          CurrentTableId = value.DocType.TableId;
+      }
+    }
+
+    /// <summary>
+    /// Имя вида документа.
+    /// Альтернативное свойство для установки фильтра.
+    /// </summary>
+    public string CurrentDocTypeName
+    {
+      get
+      {
+        if (CurrentTableId == 0)
+          return String.Empty;
+        else
+          return CurrentDocTypeUI.DocType.Name;
+      }
+      set
+      {
+        if (String.IsNullOrEmpty(value))
+          CurrentTableId = 0;
+        else
+          CurrentDocTypeUI = UI.DocTypes[value];
+      }
+    }
+
+    #endregion
+
+    #region Переопределенные методы и свойства
+
+    /// <summary>
+    /// Текстовое представление фильтра в правой части таблички фильтров. 
+    /// Пустая строка означает отсутствие фильтра.
+    /// </summary>
+    public string FilterText
+    {
+      get
+      {
+        if (CurrentTableId == 0)
+          return string.Empty;
+        else
+        {
+          if (CurrentDocTypeUI == null)
+            return "Неизвестный тип документа TableId=" + CurrentTableId.ToString();
+          else
+          {
+            string s = CurrentDocTypeUI.DocType.PluralTitle;
+            if (UI.DebugShowIds)
+              s += " (TableId=" + CurrentTableId.ToString() + ")";
+            return s;
+          }
+        }
+      }
+    }
+
+    /// <summary>
+    /// Возвращает значок вида документов
+    /// </summary>
+    public string FilterImageKey
+    {
+      get
+      {
+        if (CurrentDocTypeUI != null)
+          return CurrentDocTypeUI.ImageKey;
+        else
+          return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Показывает блок диалога для редактирования фильтра
+    /// </summary>
+    /// <returns>True, если пользователь установил фильтр</returns>
+    public bool ShowFilterDialog(EFPDialogPosition dialogPosition)
+    {
+      ListSelectDialog dlg = new ListSelectDialog();
+      dlg.Title = DisplayName;
+      dlg.ImageKey = "Filter";
+      dlg.Items = new string[DocTypeUIs.Length + 1];
+      dlg.Items[0] = "Нет фильтра";
+      dlg.ImageKeys[0] = EFPGridFilterTools.NoFilterImageKey;
+      if (CurrentTableId == 0)
+        dlg.SelectedIndex = 0;
+      for (int i = 0; i < DocTypeUIs.Length; i++)
+      {
+        dlg.Items[i + 1] = DocTypeUIs[i].DocType.PluralTitle;
+        if (UI.DebugShowIds)
+          dlg.Items[i + 1] += " (TableId=" + DocTypeUIs[i].DocType.TableId.ToString() + ")";
+        dlg.ImageKeys[i + 1] = DocTypeUIs[i].ImageKey;
+        if (CurrentTableId == DocTypeUIs[i].DocType.TableId)
+          dlg.SelectedIndex = i + 1;
+      }
+      dlg.ConfigSectionName = "GridFilter." + this.Code;
+      dlg.DialogPosition = dialogPosition;
+      if (dlg.ShowDialog() != DialogResult.OK)
+        return false;
+      if (dlg.SelectedIndex == 0)
+        CurrentTableId = 0;
+      else
+        CurrentTableId = DocTypeUIs[dlg.SelectedIndex - 1].DocType.TableId; // 22.12.2020
+      return true;
+    }
+
+    /// <summary>
+    /// Возвращает свойство <see cref="DBxDocTypeBase.PluralTitle"/>, если задан фильтр по виду документов.
+    /// </summary>
+    /// <param name="columnValues">Значения полей</param>
+    /// <returns>Текстовые представления значений</returns>
+    protected override string[] GetColumnStrValues(object[] columnValues)
+    {
+      string s;
+      Int32 thisTableId = DataTools.GetInt(columnValues[0]);
+      if (thisTableId == 0)
+        s = "Нет";
+      else
+      {
+        DBxDocType docType = UI.DocProvider.DocTypes.FindByTableId(thisTableId);
+        if (docType == null)
+          s = "Неизвестный тип документа с TableId=" + thisTableId.ToString();
+        else
+        {
+          s = docType.PluralTitle;
+          if (UI.DebugShowIds)
+            s += " (TableId=" + docType.TableId.ToString() + ")";
+        }
+      }
+      return new string[] { s };
     }
 
     #endregion

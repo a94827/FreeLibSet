@@ -70,49 +70,42 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BaseDBxSqlFormatter.cs" />
-    <Compile Include="DBxConBase.cs" />
-    <Compile Include="DBxDataWriter.cs" />
-    <Compile Include="DBxExceptions.cs" />
-    <Compile Include="DBxExpression.cs" />
-    <Compile Include="DBxSelectInfo.cs" />
-    <Compile Include="DBxNameValidator.cs" />
-    <Compile Include="DBxTools.cs" />
-    <Compile Include="SqlDBxDataWriter.cs" />
-    <Compile Include="SQLiteDBxDataWriter.cs" />
-    <Compile Include="SQLiteDBxSqlFormatter.cs" />
-    <Compile Include="DBUserPermission.cs" />
-    <Compile Include="DBxManager.cs" />
-    <Compile Include="OleDbDBx.cs" />
-    <Compile Include="DBxClearCacheData.cs" />
-    <Compile Include="OracleDBxSqlFormatter.cs" />
-    <Compile Include="OraclelDBx.cs" />
-    <Compile Include="NpgqlDBxSqlFormatter.cs" />
-    <Compile Include="DataViewDBxSqlFormatter.cs" />
-    <Compile Include="DBxCache.cs" />
-    <Compile Include="DBxColumns.cs" />
-    <Compile Include="DBxEntry.cs" />
-    <Compile Include="DBxFilter.cs" />
-    <Compile Include="DBxOrder.cs" />
-    <Compile Include="DBxPermissions.cs" />
-    <Compile Include="DBxTableStruct.cs" />
-    <Compile Include="DBxSqlFormatter.cs" />
-    <Compile Include="DBx.cs" />
-    <Compile Include="DBxCon.cs" />
-    <Compile Include="DBxStruct.cs" />
-    <Compile Include="NpgsqlDBx.cs" />
-    <Compile Include="SQLiteDBx.cs" />
-    <Compile Include="TemplateFilesResource.Designer.cs">
+    <Compile Include="Data\BaseDBxSqlFormatter.cs" />
+    <Compile Include="Data\DBxConBase.cs" />
+    <Compile Include="Data\DBxDataWriter.cs" />
+    <Compile Include="Data\DBxExceptions.cs" />
+    <Compile Include="Data\DBxSelectInfo.cs" />
+    <Compile Include="Data\DBxNameValidator.cs" />
+    <Compile Include="Data\DBxStructChecker.cs" />
+    <Compile Include="DBxRealStructSource.cs" />
+    <Compile Include="MSSqlServer\SqlDBxDataWriter.cs" />
+    <Compile Include="OleDbTemplateFilesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>TemplateFilesResource.resx</DependentUpon>
+      <DependentUpon>OleDbTemplateFilesResource.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserPermissions.cs" />
-    <Compile Include="DBxSelectFormatter.cs" />
-    <Compile Include="OleDbDBxSqlFormatter.cs" />
-    <Compile Include="SqlDBx.cs" />
+    <Compile Include="SQLite\SQLiteDBxDataWriter.cs" />
+    <Compile Include="SQLite\SQLiteDBxSqlFormatter.cs" />
+    <Compile Include="Data\DBUserPermission.cs" />
+    <Compile Include="Data\DBxManager.cs" />
+    <Compile Include="OleDB\OleDbDBx.cs" />
+    <Compile Include="Data\DBxClearCacheData.cs" />
+    <Compile Include="Oracle\OracleDBxSqlFormatter.cs" />
+    <Compile Include="Oracle\OraclelDBx.cs" />
+    <Compile Include="PostgreSQL\NpgqlDBxSqlFormatter.cs" />
+    <Compile Include="Data\DBxCache.cs" />
+    <Compile Include="Data\DBxEntry.cs" />
+    <Compile Include="Data\DBxPermissions.cs" />
+    <Compile Include="Data\DBx.cs" />
+    <Compile Include="Data\DBxCon.cs" />
+    <Compile Include="PostgreSQL\NpgsqlDBx.cs" />
+    <Compile Include="SQLite\SQLiteDBx.cs" />
+    <Compile Include="Data\UserPermissions.cs" />
+    <Compile Include="Data\DBxSelectFormatter.cs" />
+    <Compile Include="OleDB\OleDbDBxSqlFormatter.cs" />
+    <Compile Include="MSSqlServer\SqlDBx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlDBxSqlFormatter.cs" />
+    <Compile Include="MSSqlServer\SqlDBxSqlFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExtTools\ExtTools.csproj">
@@ -121,15 +114,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TemplateFilesResource.resx">
+    <EmbeddedResource Include="OleDbTemplateFilesResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TemplateFilesResource.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>OleDbTemplateFilesResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="TemplateFiles\Access2000.zip" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

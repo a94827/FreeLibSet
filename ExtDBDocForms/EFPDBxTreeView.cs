@@ -14,6 +14,7 @@ using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Controls;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using FreeLibSet.Forms.Data;
 
 #pragma warning disable 0169 // TODO: Убрать лишние переменные
 
@@ -431,19 +432,26 @@ namespace FreeLibSet.Forms.Docs
     /// Чтобы проверить наличие возможных фильтров, следует использовать свойство
     /// <see cref="EFPConfigurableDataTreeView.HasFilters"/>, которое позволяет избежать создания лишних объектов.
     /// </summary>
-    public new GridFilters Filters
+    public new EFPDBxGridFilters Filters
     {
-      get { return (GridFilters)(base.Filters); }
-      set { base.Filters = value; }
+      get { return (EFPDBxGridFilters)(base.Filters); }
+      set
+      {
+        if (value != null)
+          value.SqlFilterRequired = true;
+        base.Filters = value;
+      }
     }
 
     /// <summary>
-    /// Создает объект <see cref="GridFilters"/>
+    /// Создает объект <see cref="EFPDBxGridFilters"/>
     /// </summary>
     /// <returns>Список фильтров</returns>
     protected override IEFPGridFilters CreateGridFilters()
     {
-      return new GridFilters();
+      EFPDBxGridFilters filters = new EFPDBxGridFilters();
+      filters.SqlFilterRequired = true;
+      return filters;
     }
 
     /// <summary>

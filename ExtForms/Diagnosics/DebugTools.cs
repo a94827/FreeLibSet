@@ -1788,6 +1788,24 @@ namespace FreeLibSet.Forms.Diagnostics
       catch { }
       args.IndentLevel--;
 
+      args.WriteLine("SystemColors");
+      args.IndentLevel++;
+      try
+      {
+        foreach (PropertyInfo pi in typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        {
+          object obj = pi.GetValue(null, null);
+          if (obj is System.Drawing.Color)
+          {
+            System.Drawing.Color clr = (System.Drawing.Color)obj;
+            args.WritePair(pi.Name, "R=" + clr.R.ToString() + ", G=" + clr.G.ToString() + ", B=" + clr.B.ToString());
+          }
+        }
+      }
+      catch { }
+      args.IndentLevel--;
+
+
       args.WriteLine("Screen Graphics");
       args.IndentLevel++;
       try

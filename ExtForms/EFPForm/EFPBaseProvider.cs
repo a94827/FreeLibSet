@@ -496,29 +496,9 @@ namespace FreeLibSet.Forms
     private List<EFPFormCheck> _FormChecks;
 
     /// <summary>
-    /// Вызывается из конструктора EFPFormCheck
-    /// </summary>
-    internal void AddFormCheck(EFPFormCheck formCheck)
-    {
-      if (_FormChecks == null)
-        _FormChecks = new List<EFPFormCheck>();
-      _FormChecks.Add(formCheck);
-      OnFormCheckAdded(formCheck);
-    }
-
-    /// <summary>
-    /// Вызывается после добавления объекта проверки формы.
-    /// Этот метод вызывается из конструктора <see cref="EFPFormCheck"/>, поэтому конструирование объекта еще не завершено!
-    /// </summary>
-    /// <param name="formCheck">Объект проверки</param>
-    protected virtual void OnFormCheckAdded(EFPFormCheck formCheck)
-    {
-    }
-
-    /// <summary>
     /// Коллекция для свойства <see cref="FormChecks"/>
     /// </summary>
-    public struct FormCheckCollection : IEnumerable<EFPFormCheck>
+    public struct FormCheckCollection : ICollection<EFPFormCheck>
     {
       #region Конструктор
 
@@ -531,7 +511,7 @@ namespace FreeLibSet.Forms
 
       #region Коллекция
 
-      private EFPBaseProvider _Owner;
+      private readonly EFPBaseProvider _Owner;
 
       /// <summary>
       /// Возвращает количество подключенных проверяющих объектов
@@ -546,6 +526,110 @@ namespace FreeLibSet.Forms
             return _Owner._FormChecks.Count;
         }
       }
+
+      /// <summary>
+      /// Добавляет объект проверки
+      /// </summary>
+      /// <param name="item">Объект проверки</param>
+      public void Add(EFPFormCheck item)
+      {
+#if DEBUG
+        if (item == null)
+          throw new ArgumentNullException("item");
+#endif
+        if (item.BaseProvider != null)
+          throw new InvalidOperationException("Объект уже был добавлен");
+        if (_Owner._FormChecks == null)
+          _Owner._FormChecks = new List<EFPFormCheck>();
+        item.BaseProvider = _Owner;
+        _Owner._FormChecks.Add(item);
+      }
+
+      /// <summary>
+      /// Упрощенный способ добавления проверки ошибки в форме
+      /// </summary>
+      /// <param name="validating">Обработчик, выполняющий проверку</param>
+      /// <param name="focusControl">Управляющий элемент, который получит фокус ввода в случае ошибки</param>
+      public void Add(UIValidatingEventHandler validating, Control focusControl)
+      {
+#if DEBUG
+        if (validating == null)
+          throw new ArgumentNullException("validating");
+#endif
+        EFPFormCheck chk = new EFPFormCheck();
+        chk.Validating += validating;
+        chk.FocusControl = focusControl;
+        Add(chk);
+      }
+
+      /// <summary>
+      /// Упрощенный способ добавления проверки ошибки в форме
+      /// </summary>
+      /// <param name="validating">Обработчик, выполняющий проверку</param>
+      public void Add(UIValidatingEventHandler validating)
+      {
+        Add(validating, (Control)null);
+      }
+
+      /// <summary>
+      /// Удаляет объект проверки из списка
+      /// </summary>
+      /// <param name="item">Удаляемый объект</param>
+      /// <returns>true, если объект удален</returns>
+      public bool Remove(EFPFormCheck item)
+      {
+        if (_Owner._FormChecks == null)
+          return false;
+        else
+          return _Owner._FormChecks.Remove(item);
+      }
+
+      /// <summary>
+      /// Очищает список проверок
+      /// </summary>
+      public void Clear()
+      {
+        _Owner._FormChecks = null;
+      }
+
+      /// <summary>
+      /// Возвращает true, если объект проверки непосредственно принадлежит данному провайдеру.
+      /// Если объект присоединен к дочернему провайдеру, то возвращается false.
+      /// </summary>
+      /// <param name="item"></param>
+      /// <returns></returns>
+      public bool Contains(EFPFormCheck item)
+      {
+        if (_Owner._FormChecks == null)
+          return false;
+        else
+          return _Owner._FormChecks.Contains(item);
+      }
+
+      /// <summary>
+      /// Копирует все объекты проверки в массив
+      /// </summary>
+      /// <param name="a">Заполняемый массив</param>
+      /// <param name="arrayIndex">Первый индекс в массиве</param>
+      public void CopyTo(EFPFormCheck []a, int arrayIndex)
+      {
+        if (_Owner._FormChecks != null)
+          _Owner._FormChecks.CopyTo(a, arrayIndex);
+      }
+
+      /// <summary>
+      /// Возвращает массив со всеми объектами проверки
+      /// </summary>
+      /// <returns>Массив объектов проверки</returns>
+      public EFPFormCheck[] ToArray()
+      {
+        if (_Owner._FormChecks == null)
+          return new EFPFormCheck[0];
+        else
+          return _Owner._FormChecks.ToArray();
+      }
+
+      bool ICollection<EFPFormCheck>.IsReadOnly { get { return false; } }
 
       #endregion
 
@@ -576,6 +660,21 @@ namespace FreeLibSet.Forms
       }
 
       #endregion
+
+      #region Прочие методы
+
+      /// <summary>
+      /// Возвращает массив всех объектов проверки формы <see cref="EFPFormCheck"/>, прямо или косвенно присоединенных к текущему базовому провайдеру
+      /// </summary>
+      /// <returns></returns>
+      public EFPFormCheck[] GetAll()
+      {
+        List<EFPFormCheck> list = new List<EFPFormCheck>();
+        _Owner.DoGetAllFormChecks(list);
+        return list.ToArray();
+      }
+
+      #endregion
     }
 
     /// <summary>
@@ -584,25 +683,15 @@ namespace FreeLibSet.Forms
     /// </summary>
     public FormCheckCollection FormChecks { get { return new FormCheckCollection(this); } }
 
-    /// <summary>
-    /// Возвращает массив всех объектов проверки формы <see cref="EFPFormCheck"/>, прямо или косвенно присоединенных к текущему базовому провайдеру
-    /// </summary>
-    /// <returns></returns>
-    public EFPFormCheck[] GetAllFormChecks()
-    {
-      List<EFPFormCheck> list = new List<EFPFormCheck>();
-      DoAddFormChecks(list);
-      return list.ToArray();
-    }
 
-    private void DoAddFormChecks(List<EFPFormCheck> list)
+    private void DoGetAllFormChecks(List<EFPFormCheck> list)
     {
       if (_FormChecks != null)
         list.AddRange(_FormChecks);
       if (_Children != null)
       {
         for (int i = 0; i < _Children.Count; i++)
-          _Children[i].DoAddFormChecks(list); // рекурсивный вызов
+          _Children[i].DoGetAllFormChecks(list); // рекурсивный вызов
       }
     }
 
@@ -1025,28 +1114,26 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Класс для проверки ошибок формы, не связанных с конкретным управляющим элементом
   /// </summary>
-  public class EFPFormCheck : IUIValidableObject
+  public sealed class EFPFormCheck : IUIValidableObject
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает пустой объект и добавляет его в переданный базовый провайдер
+    /// Создает пустой объект проверки
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер. Обычно проверка присоединяется непосредственно к форме <see cref="EFPFormProvider"/>.
-    /// Не может быть null.</param>
-    public EFPFormCheck(EFPBaseProvider baseProvider)
+    public EFPFormCheck()
     {
-      if (baseProvider == null)
-        throw new ArgumentNullException("baseProvider");
-      _BaseProvider = baseProvider;
-      baseProvider.AddFormCheck(this);
     }
 
     /// <summary>
     /// Базовый провайдер, к которому присоединен объект. Задается в конструкторе.
     /// </summary>
-    public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private readonly EFPBaseProvider _BaseProvider;
+    public EFPBaseProvider BaseProvider
+    {
+      get { return _BaseProvider; }
+      internal set { _BaseProvider = value; }
+    }
+    private EFPBaseProvider _BaseProvider;
 
     #endregion
 

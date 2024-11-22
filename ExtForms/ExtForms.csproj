@@ -15,8 +15,6 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <TargetFrameworkProfile />
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,6 +76,27 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
+    <Compile Include="Data\DBxExtValuesDialogInitEventArgs.cs" />
+    <Compile Include="Data\EFPDBxGridFilters.cs" />
+    <Compile Include="Data\ExtValueCheckBox.cs" />
+    <Compile Include="Data\ExtValueControl.cs" />
+    <Compile Include="Data\ExtValueControl2.cs" />
+    <Compile Include="Data\ExtValueNumEdit.cs" />
+    <Compile Include="Data\OtherGridFilters.cs" />
+    <Compile Include="Data\RangeGridFilters.cs" />
+    <Compile Include="Dialogs\DataEditDialog.cs" />
+    <Compile Include="Dialogs\EFPDataViewCopyFormatsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\EFPDataViewCopyFormatsForm.Designer.cs">
+      <DependentUpon>EFPDataViewCopyFormatsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ExtEditDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ExtEditDialogForm.Designer.cs">
+      <DependentUpon>ExtEditDialogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SettingsDialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,16 +190,16 @@
     <Compile Include="EFPForm\EFPFormBounds.cs" />
     <Compile Include="EFPForm\EFPFormCreator.cs" />
     <Compile Include="EFPControls\EFPGridFilterGridView.cs" />
-    <Compile Include="GridProducer\EFPGridProducer.cs" />
-    <Compile Include="GridProducer\EFPGridProducerColumn.cs" />
-    <Compile Include="GridProducer\EFPGridProducerEditor.cs">
+    <Compile Include="EFPGridProducer\EFPGridProducer.cs" />
+    <Compile Include="EFPGridProducer\EFPGridProducerColumn.cs" />
+    <Compile Include="EFPGridProducer\EFPGridProducerEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GridProducer\EFPGridProducerEditor.designer.cs">
+    <Compile Include="EFPGridProducer\EFPGridProducerEditor.designer.cs">
       <DependentUpon>EFPGridProducerEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GridProducer\EFPGridProducerItemBase.cs" />
-    <Compile Include="GridProducer\EFPGridProducerToolTip.cs" />
+    <Compile Include="EFPGridProducer\EFPGridProducerItemBase.cs" />
+    <Compile Include="EFPGridProducer\EFPGridProducerToolTip.cs" />
     <Compile Include="EFPReport\EFPHieView.cs" />
     <Compile Include="EFPReport\EFPHieViewConfig.cs" />
     <Compile Include="EFPReport\EFPHieViewLevel.cs" />
@@ -262,7 +281,7 @@
     </Compile>
     <Compile Include="EFPApp\FileEditorFormHandler.cs" />
     <Compile Include="EFPControls\EFPDataGridViewMeasures.cs" />
-    <Compile Include="GridProducer\EFPDataViewOrder.cs" />
+    <Compile Include="EFPGridProducer\EFPDataViewOrder.cs" />
     <Compile Include="EFPControls\EFPDataGridViewConfig.cs" />
     <Compile Include="Dialogs\GridConfigForm.cs">
       <SubType>Form</SubType>
@@ -286,7 +305,7 @@
     </Compile>
     <Compile Include="EFPReport\EFPReportGridPage.cs" />
     <Compile Include="EFPReport\EFPReportControlPage.cs" />
-    <Compile Include="EFPControls\IEFPGridFilter.cs" />
+    <Compile Include="EFPControls\EFPGridFilters.cs" />
     <Compile Include="Drawing\ImagingTools.cs" />
     <Compile Include="Controls\InfoLabel.cs">
       <SubType>Component</SubType>
@@ -614,6 +633,9 @@
       <DependentUpon>DateRangeForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\EFPDataViewCopyFormatsForm.resx">
+      <DependentUpon>EFPDataViewCopyFormatsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRDataViewPageSetupDbf.resx">
       <DependentUpon>BRDataViewPageSetupDbf.cs</DependentUpon>
     </EmbeddedResource>
@@ -829,7 +851,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>EFPDataGridViewOrderForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GridProducer\EFPGridProducerEditor.resx">
+    <EmbeddedResource Include="EFPGridProducer\EFPGridProducerEditor.resx">
       <DependentUpon>EFPGridProducerEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1111,9 +1133,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Main\Menu\Computer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Images\Main\Menu\Copy.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Main\Menu\Cut.png" />
@@ -1589,7 +1608,12 @@
   <ItemGroup>
     <None Include="Images\Main\Menu\Count.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CopyToolTip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CopySettings.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

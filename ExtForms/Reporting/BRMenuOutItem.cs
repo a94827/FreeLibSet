@@ -69,6 +69,20 @@ namespace FreeLibSet.Forms.Reporting
     public BRSendToItem SendToItem { get { return _SendToItem; } internal set { _SendToItem = value; } }
     private BRSendToItem _SendToItem;
 
+    ///// <summary>
+    ///// Возвращает <see cref="ExportFileItem"/> или <see cref="SendToItem"/> в режимах <see cref="Action"/>=<see cref="BRAction.ExportFile"/> и <see cref="BRAction.SendTo"/>.
+    ///// </summary>
+    //internal IBRActionItem ActionItem
+    //{
+    //  get
+    //  {
+    //    if (ExportFileItem == null)
+    //      return SendToItem;
+    //    else
+    //      return ExportFileItem;
+    //  }
+    //}
+
     #endregion
   }
 
@@ -528,6 +542,48 @@ namespace FreeLibSet.Forms.Reporting
     public const string ODT = "ODT";
 
     #endregion
+
+    #region Методы
+
+    /// <summary>
+    /// Возвращает true для текстовых документов Word и Writer
+    /// </summary>
+    /// <param name="code">Проверяемый код</param>
+    /// <returns>Принадлежность формата</returns>
+    public static bool IsTextDocument(string code)
+    {
+      switch (code)
+      {
+        case DOCX:
+        case WordXML:
+        case ODT:
+          return true;
+        default:
+          return false;
+      }
+    }
+
+
+    /// <summary>
+    /// Возвращает true для электронных таблиц Excel и Calc
+    /// </summary>
+    /// <param name="code">Проверяемый код</param>
+    /// <returns>Принадлежность формата</returns>
+    public static bool IsWorksheet(string code)
+    {
+      switch (code)
+      {
+        case XLSX:
+        case ExcelXML:
+        case ODS:
+          return true;
+        default:
+          return false;
+      }
+    }
+
+
+    #endregion
   }
 
   /// <summary>
@@ -581,6 +637,44 @@ namespace FreeLibSet.Forms.Reporting
     public const string HTML = "HTML";
 
     #endregion
+
+    #endregion
+
+    #region Методы
+
+    /// <summary>
+    /// Возвращает true для приложений MS Word и Open/LibreOffice Writer
+    /// </summary>
+    /// <param name="mainCode">Основной код команды меню</param>
+    /// <returns>Соответствие приложения</returns>
+    public static bool IsTextApp(string mainCode)
+    {
+      switch (mainCode)
+      {
+        case Word:
+        case Writer:
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает true для приложений MS Excel и Open/LibreOffice Calc
+    /// </summary>
+    /// <param name="mainCode">Основной код команды меню</param>
+    /// <returns>Соответствие приложения</returns>
+    public static bool IsWorksheetApp(string mainCode)
+    {
+      switch (mainCode)
+      {
+        case Excel:
+        case Calc:
+          return true;
+        default:
+          return false;
+      }
+    }
 
     #endregion
   }
@@ -1392,10 +1486,12 @@ namespace FreeLibSet.Forms.Reporting
       actionInfo.ExportFileItem = item2;
       actionInfo.FilePath = filePath;
 
-      BRReport report = PerformCreateReport(actionInfo);
+      //BRReport report = PerformCreateReport(actionInfo);
 
       if (!ShowDialog(BRDialogKind.ControlExportFile, actionInfo, item2, true))
         return;
+
+      BRReport report = PerformCreateReport(actionInfo); // 15.11.2024. Должно быть после показа диалога.
 
       EFPApp.BeginWait("Сохранение файла " + filePath.FileName, "Save");
       try

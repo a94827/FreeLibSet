@@ -721,13 +721,19 @@ namespace FreeLibSet.Forms
 
     void Form_Activated(object sender, EventArgs args)
     {
-      // Перенесено сюда 21.05.2021
-      CallUpdateByTime(); // сразу выполняем обновление
+      try
+      {
+        // Перенесено сюда 21.05.2021
+        CallUpdateByTime(); // сразу выполняем обновление
 
-      _ActiveInternal = true;
-      if (Visible)
-        OnSetFormActive();
-
+        _ActiveInternal = true;
+        if (Visible)
+          OnSetFormActive();
+      }
+      catch (Exception e)
+      {
+        LogoutTools.LogoutException(e, "Ошибка обработки события Form.Activated");
+      }
     }
 
     void Form_Deactivate(object sender, EventArgs args)
@@ -738,11 +744,18 @@ namespace FreeLibSet.Forms
       if (Form.IsDisposed)
         return;
 
-      // Записываем положение и размеры формы, параметры для всех управляющих элементов
-      SaveFormConfig();
+      try
+      {
+        // Записываем положение и размеры формы, параметры для всех управляющих элементов
+        SaveFormConfig();
 
-      _ActiveInternal = false;
-      OnSetFormInactive();
+        _ActiveInternal = false;
+        OnSetFormInactive();
+      }
+      catch (Exception e)
+      {
+        LogoutTools.LogoutException(e, "Ошибка обработки события Form.Deactivate");
+      }
     }
 
     /// <summary>
@@ -885,32 +898,6 @@ namespace FreeLibSet.Forms
           return errorList[i];
       }
       return null;
-    }
-
-
-    /// <summary>
-    /// Упрощенный способ добавления проверки ошибки в форме
-    /// </summary>
-    /// <param name="validating">Обработчик, выполняющий проверку</param>
-    /// <param name="focusControl">Управляющий элемент, который получит фокус ввода в случае ошибки</param>
-    public void AddFormCheck(UIValidatingEventHandler validating, Control focusControl)
-    {
-#if DEBUG
-      if (validating == null)
-        throw new ArgumentNullException("validating");
-#endif
-      EFPFormCheck chk = new EFPFormCheck(this);
-      chk.Validating += validating;
-      chk.FocusControl = focusControl;
-    }
-
-    /// <summary>
-    /// Упрощенный способ добавления проверки ошибки в форме
-    /// </summary>
-    /// <param name="validating">Обработчик, выполняющий проверку</param>
-    public void AddFormCheck(UIValidatingEventHandler validating)
-    {
-      AddFormCheck(validating, null);
     }
 
     #endregion

@@ -1177,7 +1177,7 @@ namespace FreeLibSet.Forms.Docs
           if (Owner != null)
           {
             if (Owner.Filters != null)
-              Owner.Filters.InitNewDocValues(newDoc);
+              Owner.Filters.InitNewValues(newDoc.Values);
 
 
             // 10.06.2019
@@ -1191,7 +1191,7 @@ namespace FreeLibSet.Forms.Docs
       /// <summary>
       /// Проверка документа на соответствие фильтрам.
       /// Вызывает <see cref="DocumentViewHandler.ValidateDocValues(DBxSingleDoc, ErrorMessageList)"/>, если используется <see cref="ExternalEditorCaller"/>.
-      /// Иначе вызывает <see cref="DBxCommonFilters.ValidateDocValues(DBxSingleDoc, ErrorMessageList)"/> для проверки по фильтрам, установленных в просмотре.
+      /// Иначе вызывает <see cref="DBxCommonFilters.ValidateValues(IDBxExtValues, ErrorMessageList)"/> для проверки по фильтрам, установленных в просмотре.
       /// </summary>
       /// <param name="savingDoc">Сохраняемый документ</param>
       /// <param name="errorMessages">Сюда добавляются сообщения об ошибках</param>
@@ -1202,7 +1202,7 @@ namespace FreeLibSet.Forms.Docs
           if (Owner != null)
           {
             if (Owner.Filters != null)
-              Owner.Filters.ValidateDocValues(savingDoc, errorMessages);
+              Owner.Filters.ValidateValues(savingDoc.Values, errorMessages);
           }
         }
         else

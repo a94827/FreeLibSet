@@ -11,6 +11,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.Config;
 using FreeLibSet.Logging;
 using FreeLibSet.Core;
+using FreeLibSet.Forms.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -362,7 +363,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Возвращает фильтры табличного просмотра
     /// </summary>
-    new GridFilters Filters { get; set; }
+    new EFPDBxGridFilters Filters { get; set; }
   }
 
   #endregion
@@ -881,19 +882,26 @@ namespace FreeLibSet.Forms.Docs
     /// Чтобы проверить наличие возможных фильтров, следует использовать свойство
     /// <see cref="EFPConfigurableDataGridView.HasFilters"/>, которое позволяет избежать создания лишних объектов
     /// </summary>
-    public new GridFilters Filters
+    public new EFPDBxGridFilters Filters
     {
-      get { return (GridFilters)(base.Filters); }
-      set { base.Filters = value; }
+      get { return (EFPDBxGridFilters)(base.Filters); }
+      set
+      {
+        if (value != null)
+          value.SqlFilterRequired = true;
+        base.Filters = value;
+      }
     }
 
     /// <summary>
-    /// Создает <see cref="GridFilters"/>.
+    /// Создает <see cref="EFPDBxGridFilters"/>.
     /// </summary>
     /// <returns>Фильтры табличного просмотра</returns>
     protected override IEFPGridFilters CreateGridFilters()
     {
-      return new GridFilters();
+      EFPDBxGridFilters filters = new EFPDBxGridFilters();
+      filters.SqlFilterRequired = true;
+      return filters;
     }
 
     /// <summary>

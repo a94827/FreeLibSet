@@ -21,7 +21,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Команды древовидного просмотра с поддержкой столбцов
   /// </summary>
-  public class EFPDataTreeViewCommandItems : EFPTreeViewAdvCommandItems, IEFPClipboardCommandItems
+  public class EFPDataTreeViewCommandItems : EFPTreeViewAdvCommandItems
   {
     #region Конструктор
 

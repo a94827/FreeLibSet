@@ -85,6 +85,26 @@ namespace ExtTools_tests.Calendar
 
     #endregion
 
+    #region Age
+
+    [TestCase("", "0:0:0")]
+    [TestCase("0101-1231", "1:0:0")]
+    [TestCase("0401-1230", "0:8:30")]
+    [TestCase("0402-1231", "0:8:29")]
+    [TestCase("0301-0331", "0:1:0")]
+    [TestCase("0220-0319", "0:1:0")]
+    [TestCase("0220-0320", "0:1:1")]
+    [TestCase("0220-0318", "0:0:27")]
+    [TestCase("1231-0105", "0:0:6")]
+    public void Age(string sSut, string sWanted)
+    {
+      MonthDayRange sut = Creators.MonthDayRange(sSut);
+      YearMonthDayAge wanted = Creators.YearMonthDayAge(sWanted);
+      Assert.AreEqual(wanted, sut.Age);
+    }
+
+    #endregion
+
     #region Contains()
 
     [TestCase("0305-0701", "0410", true)]

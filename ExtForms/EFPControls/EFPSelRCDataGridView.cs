@@ -351,7 +351,7 @@ namespace FreeLibSet.Forms
         {
           // Так странно себя ведет
           if (Data.SelColumns.IsRepeated(args.ColumnIndex - 1))
-            args.ColorType = EFPDataGridViewColorType.Error;
+            args.ColorType = UIDataViewColorType.Error;
           else if (Data.SelColumns[args.ColumnIndex - 1] == null)
             args.Grayed = true;
         }

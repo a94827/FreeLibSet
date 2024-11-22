@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Controls;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -267,7 +268,7 @@ namespace FreeLibSet.Forms
     {
       base.OnRefreshItems();
 
-      EFPDataGridViewSelectedRowsState selState = ControlProvider.SelectedRowsState;
+      UISelectedRowsState selState = ControlProvider.SelectedRowsState;
 
       if (UseEditView)
       {
@@ -301,16 +302,16 @@ namespace FreeLibSet.Forms
 
 
         if (ControlProvider.CanMultiEdit)
-          ciEdit.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection);
+          ciEdit.Enabled = (selState != UISelectedRowsState.NoSelection);
         else
-          ciEdit.Enabled = (selState == EFPDataGridViewSelectedRowsState.SingleRow);
-        ciInsertCopy.Enabled = (selState == EFPDataGridViewSelectedRowsState.SingleRow);
-        ciDelete.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection);
+          ciEdit.Enabled = (selState == UISelectedRowsState.SingleRow);
+        ciInsertCopy.Enabled = (selState == UISelectedRowsState.SingleRow);
+        ciDelete.Enabled = (selState != UISelectedRowsState.NoSelection);
 
         ciView.Enabled = ciEdit.Enabled;
 #endif
 
-        if (selState == EFPDataGridViewSelectedRowsState.MultiRows)
+        if (selState == UISelectedRowsState.MultiRows)
         {
           if (!ControlProvider.ReadOnly)
           {
@@ -334,9 +335,9 @@ namespace FreeLibSet.Forms
       } // UseEditView
         // 16.01.2023
         //if (this[EFPAppStdCommandItems.Cut].Usage != EFPCommandItemUsage.None)
-      this[EFPAppStdCommandItems.Cut].Enabled = selState != EFPDataGridViewSelectedRowsState.NoSelection &&
+      this[EFPAppStdCommandItems.Cut].Enabled = selState != UISelectedRowsState.NoSelection &&
         (!ControlProvider.ReadOnly);
-      this[EFPAppStdCommandItems.Copy].Enabled = selState != EFPDataGridViewSelectedRowsState.NoSelection; // 17.06.2024
+      this[EFPAppStdCommandItems.Copy].Enabled = selState != UISelectedRowsState.NoSelection; // 17.06.2024
       if (!PasteHandler.AlwaysEnabled) // 27.11.2017
       {
         //if (HasTextPasteFormats)
@@ -378,7 +379,7 @@ namespace FreeLibSet.Forms
 
       if (ciSelectAll != null)
       {
-        ciSelectAll.Enabled = (selState != EFPDataGridViewSelectedRowsState.NoSelection) &&
+        ciSelectAll.Enabled = (selState != UISelectedRowsState.NoSelection) &&
           ControlProvider.Control.SelectionMode == TreeViewAdvSelectionMode.Multi;
       }
 
@@ -394,7 +395,7 @@ namespace FreeLibSet.Forms
     /// <param name="args">Ссылка на DataObject</param>
     protected override void OnAddDefaultCopyFormats(DataObjectEventArgs args)
     {
-      EFPDataViewCopyFormats copyFormats2 = CopyFormats & (EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV);
+      EFPDataViewCopyFormats copyFormats2 = SelectedCopyFormats & (EFPDataViewCopyFormats.Text | EFPDataViewCopyFormats.CSV);
       if (copyFormats2 != EFPDataViewCopyFormats.None)
       {
         string[,] a = ControlProvider.GetSelectedNodesTextMatrix();
@@ -415,17 +416,17 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="state">Состояние, инициируемое командой меню</param>
     /// <returns>Команда меню</returns>
-    public EFPCommandItem this[EFPDataGridViewState state]
+    public EFPCommandItem this[UIDataState state]
     {
       get
       {
         switch (state)
         {
-          case EFPDataGridViewState.Edit: return ciEdit;
-          case EFPDataGridViewState.Insert: return ciInsert;
-          case EFPDataGridViewState.InsertCopy: return ciInsertCopy;
-          case EFPDataGridViewState.Delete: return ciDelete;
-          case EFPDataGridViewState.View: return ciView;
+          case UIDataState.Edit: return ciEdit;
+          case UIDataState.Insert: return ciInsert;
+          case UIDataState.InsertCopy: return ciInsertCopy;
+          case UIDataState.Delete: return ciDelete;
+          case UIDataState.View: return ciView;
           default:
             throw new ArgumentException();
         }
@@ -509,7 +510,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(ControlProvider.ReadOnly ? EFPDataGridViewState.View : EFPDataGridViewState.Edit);
+        ControlProvider.PerformEditData(ControlProvider.ReadOnly ? UIDataState.View : UIDataState.Edit);
       }
       catch (Exception e)
       {
@@ -521,7 +522,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(EFPDataGridViewState.Insert);
+        ControlProvider.PerformEditData(UIDataState.Insert);
       }
       catch (Exception e)
       {
@@ -534,7 +535,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(EFPDataGridViewState.InsertCopy);
+        ControlProvider.PerformEditData(UIDataState.InsertCopy);
       }
       catch (Exception e)
       {
@@ -547,7 +548,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(EFPDataGridViewState.Delete);
+        ControlProvider.PerformEditData(UIDataState.Delete);
       }
       catch (Exception e)
       {
@@ -559,7 +560,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        ControlProvider.PerformEditData(EFPDataGridViewState.View);
+        ControlProvider.PerformEditData(UIDataState.View);
       }
       catch (Exception e)
       {

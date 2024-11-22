@@ -28,7 +28,7 @@ namespace FreeLibSet.Forms
       else
         WinFormsTools.InitIcon(this, owner.Image);
       efpForm = new EFPFormProvider(this);
-      efpForm.AddFormCheck(FormValidating);
+      efpForm.FormChecks.Add(FormValidating);
 
       #region Просмотр с вкладками
 
@@ -332,7 +332,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Позиция блока диалога на экране.
-    /// По умолчанию блок диалога центрируется относительно EFPApp.DefaultScreen.
+    /// По умолчанию блок диалога центрируется относительно <see cref="EFPApp.DefaultScreen"/>.
     /// </summary>
     public EFPDialogPosition DialogPosition
     {
@@ -450,7 +450,7 @@ namespace FreeLibSet.Forms
         _Owner = owner;
       }
 
-      private SettingsDialog _Owner;
+      private readonly SettingsDialog _Owner;
 
       /// <summary>
       /// Добавляет страницу к диалогу
@@ -514,7 +514,7 @@ namespace FreeLibSet.Forms
   /// </summary>
   public sealed class SettingsDialogPage : IEFPTabPageControl
   {
-    #region Конструктор
+    #region Защищенный конструктор
 
     /// <summary>
     /// </summary>

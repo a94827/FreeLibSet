@@ -729,10 +729,10 @@ namespace FreeLibSet.Russian
       if (noCasesSurname)
         surnames.Fill(Surname);
       else
-        surnames.Fill(Surname, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Which);
+        surnames.Fill(Surname, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Which| RusFormArrayGetCasesOptions.Animacy);
 
-      names.Fill(Name, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Name);
-      patronymics.Fill(Patronymic, gender, RusFormArrayGetCasesOptions.NoPlural);
+      names.Fill(Name, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Name | RusFormArrayGetCasesOptions.Animacy);
+      patronymics.Fill(Patronymic, gender, RusFormArrayGetCasesOptions.NoPlural | RusFormArrayGetCasesOptions.Animacy);
 
       string[] surnameItems = surnames.Items;
       string[] nameItems = names.Items;

@@ -182,7 +182,7 @@ namespace FreeLibSet.Forms
 
       switch (State)
       {
-        case EFPDataGridViewState.Insert:
+        case UIDataState.Insert:
           if (ReadOnly || FixedRows)
             return true;
           // Добавляем перед текущей строкой столько строк, сколько выбрано
@@ -201,7 +201,7 @@ namespace FreeLibSet.Forms
           SelectedRowIndices = rowIndices;
           return true;
 
-        case EFPDataGridViewState.Delete:
+        case UIDataState.Delete:
           if (ReadOnly || FixedRows)
             return true;
           rowIndices = SelectedRowIndices;

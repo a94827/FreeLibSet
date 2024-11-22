@@ -11,6 +11,7 @@ using FreeLibSet.Diagnostics;
 using FreeLibSet.Forms;
 using FreeLibSet.Forms.Diagnostics;
 using FreeLibSet.IO;
+using FreeLibSet.UICore;
 
 namespace TestCache
 {
@@ -90,7 +91,7 @@ namespace TestCache
     void efpStat_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
       if (args.RowIndex == grStat.RowCount - 1)
-        args.ColorType = EFPDataGridViewColorType.TotalRow;
+        args.ColorType = UIDataViewColorType.TotalRow;
     }
 
     //void efpStat_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)

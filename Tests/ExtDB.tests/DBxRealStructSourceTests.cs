@@ -118,7 +118,7 @@ namespace ExtDB_tests.Data_SQLite
       ts.Columns.AddInt16("F4", true);
       ts.Columns.AddInt("F5", 0, 255, true);
       ts.Columns.AddDouble("F6", true);
-      ts.Columns.AddMoney("F7", true);
+      ts.Columns.AddDecimal("F7", true);
       //ts.Columns.AddBoolean("F8");
       cs = ts.Columns.AddBoolean("F9");
       cs.Nullable = true;

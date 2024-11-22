@@ -55,8 +55,8 @@ namespace FreeLibSet.Forms.Reporting
 
       efpSingleLineField = new EFPCheckBox(page.BaseProvider, cbSingleLineField);
       efpRemoveDoubleSpaces = new EFPCheckBox(page.BaseProvider, cbRemoveDoubleSpaces);
-      efpExpHeaders = new EFPCheckBox(page.BaseProvider, cbExpHeaders);
-      efpExpHeaders.Enabled = _ViewData.UseExpColumnHeaders;
+      efpExpColumnHeaders = new EFPCheckBox(page.BaseProvider, cbExpColumnHeaders);
+      efpExpColumnHeaders.Enabled = _ViewData.UseExpColumnHeaders;
 
       if (!_IsCsv)
       {
@@ -92,7 +92,7 @@ namespace FreeLibSet.Forms.Reporting
 
     private EFPListComboBox efpCodePage;
     private EFPTextComboBox efpFieldDelimiter, efpQuote;
-    private EFPCheckBox efpSingleLineField, efpRemoveDoubleSpaces, efpExpHeaders;
+    private EFPCheckBox efpSingleLineField, efpRemoveDoubleSpaces, efpExpColumnHeaders;
 
     private void EfpFieldDelimiter_Validating(object sender, UICore.UIValidatingEventArgs args)
     {
@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms.Reporting
       }
       efpRemoveDoubleSpaces.Checked = _ViewData.RemoveDoubleSpaces;
       if (_ViewData.UseExpColumnHeaders)
-        efpExpHeaders.Checked = _ViewData.ExpColumnHeaders;
+        efpExpColumnHeaders.Checked = _ViewData.ExpColumnHeaders;
     }
 
     private void Page_DataFromControls(object sender, EventArgs args)
@@ -135,7 +135,7 @@ namespace FreeLibSet.Forms.Reporting
       }
       _ViewData.RemoveDoubleSpaces = efpRemoveDoubleSpaces.Checked;
       if (_ViewData.UseExpColumnHeaders)
-        _ViewData.ExpColumnHeaders = efpExpHeaders.Checked;
+        _ViewData.ExpColumnHeaders = efpExpColumnHeaders.Checked;
     }
 
     #endregion

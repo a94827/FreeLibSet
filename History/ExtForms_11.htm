@@ -5,7 +5,7 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20240919;123900213000000">
+	<META NAME="CHANGED" CONTENT="20241118;121223939000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2023-11-17T22:33:48.590000000">
 	<STYLE TYPE="text/css">
@@ -347,7 +347,7 @@
 			<P>4. Свойство <SPAN LANG="en-US">EFPDataGridView.UseGridProducerOrders
 			</SPAN>перенесено из <SPAN LANG="en-US">EFPConfigurableDataGridView</SPAN>
 			(<A HREF="#v100p2"><SPAN LANG="en-US">v.100 </SPAN>п.2</A>)</P>
-			<P>5. При присвоении ссылки
+			<P><A NAME="v291p5"></A>5. При присвоении ссылки
 			<SPAN LANG="en-US">EFPStdConfigurableDataGridView.GridProducer</SPAN>
 			(<A HREF="#v286p10"><SPAN LANG="en-US">v.286 </SPAN>п.10</A>)
 			устанавливает <SPAN LANG="en-US">AuoSort=</SPAN>true.</P>
@@ -1041,8 +1041,9 @@
 			</A></SPAN><A HREF="#v089p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">.
 			Статический класс EFPGridFilterTools с константами
 			DefaultFilterImageKey и NoFilterImageKey.
-			</SPAN><SPAN LANG="en-US">EFPGridFilterEditorGridView </SPAN><SPAN LANG="ru-RU">выводит
-			пустые значки для не установленных фильтров, вместо значка
+			</SPAN><SPAN LANG="en-US">EFPGridFilterEditorGridView </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="#v231p2"><SPAN LANG="en-US">v.231
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)
+			выводит пустые значки для не установленных фильтров, вместо значка
 			&quot;</SPAN><SPAN LANG="en-US">Cancel</SPAN><SPAN LANG="ru-RU">&quot;</SPAN><SPAN LANG="en-US">.</SPAN></P>
 		</TD>
 	</TR>
@@ -2604,7 +2605,7 @@
 			</SPAN><SPAN LANG="ru-RU">Из интерфейса </SPAN><SPAN LANG="en-US">IEFPGridFilter
 			</SPAN><SPAN LANG="ru-RU">исключено событие </SPAN><SPAN LANG="en-US">Changed,
 			</SPAN><SPAN LANG="ru-RU">которое не использовалось.</SPAN></P>
-			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Выделен
+			<P><A NAME="v231p2"></A><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Выделен
 			общедоступный провайдер табличного просмотра списка фильтров
 			EFPGridFilterEditorGridVie</SPAN><SPAN LANG="en-US">w,
 			</SPAN><SPAN LANG="ru-RU">используемый </SPAN><SPAN LANG="en-US">GridFilterForm
@@ -3493,7 +3494,7 @@
 			&laquo;Отправить&raquo; - &laquo;</SPAN>Microsoft Word<SPAN LANG="ru-RU">&raquo;
 			и &laquo;</SPAN>Open/LibreOffice Writer<SPAN LANG="ru-RU">&raquo;
 			оставлены, т.к. они работают немного по-другому</SPAN></P>
-			<P STYLE="margin-bottom: 0.5cm"><SPAN LANG="ru-RU">5</SPAN><SPAN LANG="en-US">.
+			<P STYLE="margin-bottom: 0.5cm"><A NAME="v207p5"></A><SPAN LANG="ru-RU">5</SPAN><SPAN LANG="en-US">.
 			</SPAN><SPAN LANG="ru-RU">Свойство </SPAN><SPAN LANG="en-US">EFPCommandItem.ToolBarUsage
 			</SPAN><SPAN LANG="ru-RU">учитывает свойство </SPAN><SPAN LANG="en-US">Image
 			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="#v199p15"><SPAN LANG="en-US">v.199
@@ -5252,7 +5253,7 @@
 			<SPAN LANG="en-US">ApplicationExceptionHandler.HandlerCount (<A HREF="#v017p22">v.17
 			</A></SPAN><A HREF="#v017p22"><SPAN LANG="ru-RU">п</SPAN><SPAN LANG="en-US">.22</SPAN></A><SPAN LANG="en-US">).
 			</SPAN>Выводится в отладочную информацию</P>
-			<P STYLE="margin-bottom: 0.5cm">4. Затычка.
+			<P STYLE="margin-bottom: 0.5cm"><A NAME="v152p4"></A>4. Затычка.
 			<SPAN LANG="en-US">ApplicationExceptionHandler </SPAN>перехватывает
 			исключение <SPAN LANG="en-US">NotSupportedException</SPAN>
 			&laquo;<SPAN LANG="en-US">ToolStrip </SPAN>не может определить
@@ -5340,7 +5341,7 @@
 			<P STYLE="margin-bottom: 0.5cm">1. Методы
 			<SPAN LANG="en-US">EFPDataGridViewColumns</SPAN>.<SPAN LANG="en-US">AddXXX</SPAN>(),
 			кроме <SPAN LANG="en-US">AddTextFill</SPAN>() (<A HREF="#v017p24"><SPAN LANG="en-US">v</SPAN><SPAN LANG="ru-RU">.17
-			п.24</SPAN></A>), устанавливаю неиспользуемое свойство
+			п.24</SPAN></A>), устанавливают неиспользуемое свойство
 			<SPAN LANG="en-US">DataGridViewColumn</SPAN>.<SPAN LANG="en-US">FillWeight
 			</SPAN>равным 1. Это позволяет снять ограничение на максимальное
 			число столбцов (320) в просмотре.</P>
@@ -5562,7 +5563,8 @@
 			<P LANG="en-US" ALIGN=CENTER>20.10.2016-21.10.2016</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">1. </SPAN>Затычка<SPAN LANG="en-US">.
+			<P STYLE="margin-bottom: 0.5cm"><A NAME="v137p1"></A><SPAN LANG="en-US">1.
+			</SPAN>Затычка<SPAN LANG="en-US">.
 			ApplicationExceptionHander.Application_ThreadException()
 			</SPAN>перехватывает <SPAN LANG="en-US">ObjectDisposedException
 			</SPAN>для объекта <SPAN LANG="en-US">Icon. </SPAN>Это исключение
@@ -5714,7 +5716,7 @@
 			<P ALIGN=CENTER>07.09.2016</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P STYLE="margin-bottom: 0.5cm">1. Свойство
+			<P STYLE="margin-bottom: 0.5cm"><A NAME="v131p1"></A>1. Свойство
 			<SPAN LANG="en-US">EFPUserSelComboBox</SPAN>.<SPAN LANG="en-US">Selectable
 			</SPAN>(<A HREF="#v046p4"><SPAN LANG="en-US">v</SPAN><SPAN LANG="ru-RU">.46
 			п.4</SPAN></A>) теперь не связано однозначно с

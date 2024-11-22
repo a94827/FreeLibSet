@@ -1275,8 +1275,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Сначала вызывается обработчик события EFPButton.Click, если он установлен.
-    /// Затем вызывается метод EFPApp.ShowWindowsExplorer() для открытия окна проводника
+    /// Сначала вызывается обработчик события <see cref="EFPButton.Click"/>, если он установлен.
+    /// Затем вызывается метод <see cref="EFPApp.ShowWindowsExplorer(AbsPath)"/> для открытия окна проводника
     /// </summary>
     protected override void OnClick()
     {

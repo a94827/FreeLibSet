@@ -28,6 +28,7 @@ using FreeLibSet.Win32;
 using FreeLibSet.Core;
 using FreeLibSet.Calendar;
 using FreeLibSet.Data;
+using System.Collections.Specialized;
 
 namespace FreeLibSet.Logging
 {
@@ -1021,6 +1022,23 @@ namespace FreeLibSet.Logging
             break;
         }
       }
+
+      if (args.Object is DBxColumns || args.Object is DBxColumnList)
+      {
+        args.Mode = LogoutPropMode.ToString; // 14.11.2019, 26.09.2024
+        return;
+      }
+
+      if (args.Object is System.Collections.Specialized.NameValueCollection) // есть специальный вывод коллекции
+      {
+        switch (args.PropertyName)
+        {
+          case "Keys":
+          case "AllKeys":
+            args.Mode = LogoutPropMode.None; // 18.11.2024
+            break;
+        }
+      }
     }
 
 
@@ -1531,6 +1549,10 @@ namespace FreeLibSet.Logging
         if (typ.IsArray)
           return; // остальные свойства не нужны
       }
+      else if (obj is System.Collections.Specialized.NameValueCollection)
+      {
+        DoLogoutNameValueCollection(args, (System.Collections.Specialized.NameValueCollection)obj, objStack);
+      }
       else if (typ.GetInterface(typeof(IEnumerable).ToString()) != null)
         //else if (Object is IEnumerable)
         DoLogoutEnumerable(args, (IEnumerable)obj, objStack);
@@ -1824,6 +1846,25 @@ namespace FreeLibSet.Logging
         //Args.IndentLevel--;
       }
     }
+
+    private static void DoLogoutNameValueCollection(LogoutInfoNeededEventArgs args, NameValueCollection obj, Stack objStack)
+    {
+      for (int i = 0; i < obj.Count; i++)
+      {
+        string key = obj.GetKey(i);
+        string value = obj.Get(i);
+        string[] values = obj.GetValues(i);
+        args.WritePair("[" + key + "]", value);
+        if (values.Length > 1)
+        {
+          int IndentLevel = args.IndentLevel;
+          args.IndentLevel++;
+          DoLogoutObject(args, values, objStack);
+          args.IndentLevel = IndentLevel;
+        }
+      }
+    }
+
 
     #endregion
 
@@ -2527,7 +2568,7 @@ namespace FreeLibSet.Logging
           {
             args.IndentLevel++;
             args.WritePair("Label", dis[i].VolumeLabel);
-            args.WritePair("DriveFormat", dis[i].DriveFormat.ToString());
+            args.WritePair("DriveFormat", dis[i].DriveFormat);
             args.WritePair("TotalSize", MBText(dis[i].TotalSize));
             args.WritePair("TotalFreeSpace ", MBText(dis[i].TotalFreeSpace));
             args.WritePair("AvailableFreeSpace", MBText(dis[i].AvailableFreeSpace));
@@ -2762,11 +2803,11 @@ namespace FreeLibSet.Logging
 
         args.IndentLevel++;
         args.WriteLine("Build: " + (debugMode ? " (Debug)" : " (Release)") + " (" + asms[i].GetName().ProcessorArchitecture.ToString() + ")" + (isPIA ? " [PrimaryInteropAssembly]" : String.Empty));
-        #if NET
+#if NET
         args.WriteLine(asms[i].Location);
-        #else
+#else
         args.WriteLine(asms[i].CodeBase);
-        #endif
+#endif
         int indentLevel = args.IndentLevel;
         try
         {

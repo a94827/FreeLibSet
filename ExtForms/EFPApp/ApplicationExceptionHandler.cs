@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 using FreeLibSet.Logging;
 
 namespace FreeLibSet.Forms
@@ -220,6 +221,32 @@ namespace FreeLibSet.Forms
             return;
         }
 
+        ArgumentException exArg = args.Exception as ArgumentException;
+        if (exArg != null)
+        {
+          // 13.11.2024
+          // В Wine+Mono может возникать ошибка при перемещении мышью над кнопкой панели инструментов при показе всплывающей подсказки
+          // at System.Drawing.GDIPlus.CheckStatus(System.Drawing.Status status)[0x00098] in < b58d88bd041145279c2003cf306f84d5 >:0
+          // at System.Drawing.Bitmap.FromHicon(System.IntPtr hicon)[0x00008] in < b58d88bd041145279c2003cf306f84d5 >:0
+          // at System.Drawing.Icon..ctor(System.IntPtr handle)[0x00018] in < b58d88bd041145279c2003cf306f84d5 >:0
+          // at(wrapper remoting - invoke - with - check) System.Drawing.Icon..ctor(intptr)
+          // at System.Drawing.Icon.FromHandle(System.IntPtr handle)[0x00018] in < b58d88bd041145279c2003cf306f84d5 >:0
+          // at System.Windows.Forms.Cursor.get_HotSpot()[0x00015] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at System.Windows.Forms.ToolStrip.UpdateToolTip(System.Windows.Forms.ToolStripItem item)[0x0009b] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at(wrapper remoting - invoke - with - check) System.Windows.Forms.ToolStrip.UpdateToolTip(System.Windows.Forms.ToolStripItem)
+          // at System.Windows.Forms.ToolStripItem.OnMouseHover(System.EventArgs e)[0x00025] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at System.Windows.Forms.ToolStripItem.HandleMouseHover(System.EventArgs e)[0x00001] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at System.Windows.Forms.ToolStripItem.FireEventInteractive(System.EventArgs e, System.Windows.Forms.ToolStripItemEventType met)[0x00049] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at System.Windows.Forms.ToolStripItem.FireEvent(System.EventArgs e, System.Windows.Forms.ToolStripItemEventType met)[0x00086] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at(wrapper remoting - invoke - with - check) System.Windows.Forms.ToolStripItem.FireEvent(System.EventArgs, System.Windows.Forms.ToolStripItemEventType)
+          // at System.Windows.Forms.MouseHoverTimer.OnTick(System.Object sender, System.EventArgs e)[0x0002c] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at System.Windows.Forms.Timer.OnTick(System.EventArgs e)[0x0000a] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at System.Windows.Forms.Timer + TimerNativeWindow.WndProc(System.Windows.Forms.Message & m)[0x0002c] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          // at System.Windows.Forms.NativeWindow.Callback(System.Windows.Forms.Message & m)[0x00025] in < ef3dd1b1af11490e89408e0d9c28d1f0 >:0
+          if (ProcessArgumentExceptionInDrawingToolTipIcon(exArg))
+            return;
+        }
+
         FreeLibSet.Forms.Diagnostics.DebugTools.ShowException(args.Exception, "Перехват Application.ThreadException"); // Не используем EFPApp.ShowException(), ибо сюда попадать не должно
       }
       catch
@@ -227,18 +254,36 @@ namespace FreeLibSet.Forms
       }
     }
 
+    private bool ProcessArgumentExceptionInDrawingToolTipIcon(ArgumentException ex)
+    {
+      if (!EnvironmentTools.IsWine)
+        return false;
+      if (!EnvironmentTools.IsMono)
+        return false;
+      if (ex.StackTrace == null)
+        return false; // на всякий случай
+      if (ex.Source != "System.Drawing")
+        return false;
+      if (!ex.StackTrace.Contains("System.Drawing.Bitmap.FromHicon"))
+        return false;
+      if (!ex.StackTrace.Contains("System.Windows.Forms.ToolStripItem.")) // там могут вызываться разные методы
+        return false;
+
+      return true;
+    }
+
     private bool _IconDisposedExceptionFlag = false;
 
-    private bool ProcessIconDisposedException(ObjectDisposedException exOD)
+    private bool ProcessIconDisposedException(ObjectDisposedException ex)
     {
-      if (exOD.ObjectName == "Icon" && exOD.Source == "System.Drawing")
+      if (ex.ObjectName == "Icon" && ex.Source == "System.Drawing")
       {
         if (_IconDisposedExceptionFlag)
           return true;
         _IconDisposedExceptionFlag = true;
 
         if (LogoutKnownBugExceptions)
-          LogoutTools.LogoutException(exOD, "Перехват Application.ThreadException. Ошибка доступа к удаленному значку. Исключение регистрируется однократно");
+          LogoutTools.LogoutException(ex, "Перехват Application.ThreadException. Ошибка доступа к удаленному значку. Исключение регистрируется однократно");
 
         return true;
       }
@@ -248,18 +293,18 @@ namespace FreeLibSet.Forms
 
     private bool _ToolStripSetItemLocationExceptionFlag = false;
 
-    private bool ProcessToolStripSetItemLocationException(NotSupportedException exNS)
+    private bool ProcessToolStripSetItemLocationException(NotSupportedException ex)
     {
-      if (exNS.StackTrace==null)
+      if (ex.StackTrace==null)
         return false; // на всякий случай
 
-      if (exNS.StackTrace.Contains("System.Windows.Forms.ToolStrip.SetItemLocation"))
+      if (ex.StackTrace.Contains("System.Windows.Forms.ToolStrip.SetItemLocation"))
       {
         if (_ToolStripSetItemLocationExceptionFlag)
           return true;
         _ToolStripSetItemLocationExceptionFlag = true;
         if (LogoutKnownBugExceptions)
-          LogoutTools.LogoutException(exNS, "Перехват Application.ThreadException. Ошибка позицонирования ToolStrip. Исключение регистрируется однократно");
+          LogoutTools.LogoutException(ex, "Перехват Application.ThreadException. Ошибка позицонирования ToolStrip. Исключение регистрируется однократно");
 
         return true;
       }
@@ -272,27 +317,27 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Проверка исключения "Недопустимая операция: приводит к повторному вызову функции SetCurrentCellAddressCore."
     /// </summary>
-    /// <param name="exInvOp">Исключение InvalidOperationException</param>
+    /// <param name="ex">Исключение InvalidOperationException</param>
     /// <returns>true, если это нужное исключение</returns>
-    private bool ProcessDataGridViewSetCurrentCellAddressCoreException(InvalidOperationException exInvOp)
+    private bool ProcessDataGridViewSetCurrentCellAddressCoreException(InvalidOperationException ex)
     {
       // не регистрируем исключение даже в первый раз
-      if (exInvOp.Source != "System.Windows.Forms")
+      if (ex.Source != "System.Windows.Forms")
         return false;
-      if (!exInvOp.Message.Contains("SetCurrentCellAddressCore"))
+      if (!ex.Message.Contains("SetCurrentCellAddressCore"))
         return false;
-      if (exInvOp.StackTrace==null)
+      if (ex.StackTrace==null)
         return false; // на всякий случай
-      if (!exInvOp.StackTrace.Contains("System.Windows.Forms.DataGridView.SetCurrentCellAddressCore"))
+      if (!ex.StackTrace.Contains("System.Windows.Forms.DataGridView.SetCurrentCellAddressCore"))
         return false;
-      if (!exInvOp.StackTrace.Contains("System.Windows.Forms.DataGridView.OnCellMouseDown")) // только от мыши
+      if (!ex.StackTrace.Contains("System.Windows.Forms.DataGridView.OnCellMouseDown")) // только от мыши
         return false;
 
       if (!_DataGridViewSetCurrentCellAddressCoreExceptionFlag)
       {
         _DataGridViewSetCurrentCellAddressCoreExceptionFlag = true;
         if (LogoutKnownBugExceptions)
-          LogoutTools.LogoutException(exInvOp, "Перехват Application.ThreadException. " + exInvOp.Message + ". Исключение регистрируется однократно");
+          LogoutTools.LogoutException(ex, "Перехват Application.ThreadException. " + ex.Message + ". Исключение регистрируется однократно");
       }
 
       return true;

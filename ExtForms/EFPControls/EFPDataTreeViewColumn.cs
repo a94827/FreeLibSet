@@ -17,6 +17,7 @@ using System.Collections;
 using FreeLibSet.Forms.Diagnostics;
 using FreeLibSet.Forms.Reporting;
 using FreeLibSet.Models.Tree;
+using FreeLibSet.UICore;
 
 /*
  * Дополнительные описания для стоблцов TreeViewAdv
@@ -89,9 +90,9 @@ namespace FreeLibSet.Forms
 
       _CanIncSearch = false;
 
-      _ColorType = EFPDataGridViewColorType.Normal;
-      _LeftBorder = EFPDataGridViewBorderStyle.Default;
-      _RightBorder = EFPDataGridViewBorderStyle.Default;
+      _ColorType = UIDataViewColorType.Normal;
+      _LeftBorder = UIDataViewBorderStyle.Default;
+      _RightBorder = UIDataViewBorderStyle.Default;
 
       if (nodeControl is InteractiveControl)
         _DbfPreliminaryInfo = new DbfFieldTypePreliminaryInfo();
@@ -479,8 +480,8 @@ namespace FreeLibSet.Forms
     /// На момент вызова обработчика EFPDataGridView.GetCellAttributres, если он задан,
     /// цвет уже применен
     /// </summary>
-    public EFPDataGridViewColorType ColorType { get { return _ColorType; } set { _ColorType = value; } }
-    private EFPDataGridViewColorType _ColorType;
+    public UIDataViewColorType ColorType { get { return _ColorType; } set { _ColorType = value; } }
+    private UIDataViewColorType _ColorType;
 
     /// <summary>
     /// Окрашивание всех значений в столбце "серым" цветом
@@ -493,16 +494,16 @@ namespace FreeLibSet.Forms
     /// На момент вызова обработчика EFPDataGridView.GetCellAttributres, если он задан,
     /// стиль рамки уже применен
     /// </summary>
-    public EFPDataGridViewBorderStyle LeftBorder { get { return _LeftBorder; } set { _LeftBorder = value; } }
-    private EFPDataGridViewBorderStyle _LeftBorder;
+    public UIDataViewBorderStyle LeftBorder { get { return _LeftBorder; } set { _LeftBorder = value; } }
+    private UIDataViewBorderStyle _LeftBorder;
 
     /// <summary>
     /// Рамка для правой границы столбца
     /// На момент вызова обработчика EFPDataGridView.GetCellAttributres, если он задан,
     /// стиль рамки уже применен
     /// </summary>
-    public EFPDataGridViewBorderStyle RightBorder { get { return _RightBorder; } set { _RightBorder = value; } }
-    private EFPDataGridViewBorderStyle _RightBorder;
+    public UIDataViewBorderStyle RightBorder { get { return _RightBorder; } set { _RightBorder = value; } }
+    private UIDataViewBorderStyle _RightBorder;
 
     #endregion
 

@@ -697,7 +697,7 @@ namespace FreeLibSet.Data.Docs
 
     public static void InitLogout()
     {
-      DBxTools.InitLogout();
+      DBx.InitLogout();
 
       lock (typeof(DBxDocDebugTools))
       {

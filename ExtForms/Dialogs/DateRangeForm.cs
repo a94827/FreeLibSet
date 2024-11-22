@@ -302,7 +302,8 @@ namespace FreeLibSet.Forms
       frm.TheDateRangeBox.First.NValue = _NFirstDate;
       frm.TheDateRangeBox.Last.NValue = _NLastDate;
 
-      EFPFormCheck fc = new EFPFormCheck(frm.FormProvider);
+      EFPFormCheck fc = new EFPFormCheck();
+      frm.FormProvider.FormChecks.Add(fc);
       fc.Validating += FormCheck;
       fc.Tag = frm;
 

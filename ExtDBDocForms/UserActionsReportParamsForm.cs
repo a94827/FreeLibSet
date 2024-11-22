@@ -15,6 +15,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -404,7 +405,7 @@ namespace FreeLibSet.Forms.Docs
     {
       // Открытие дополнительной закладки для редактирования
       EFPDBxGridView controlProvider = (EFPDBxGridView)sender;
-      if (controlProvider.State != EFPDataGridViewState.View)
+      if (controlProvider.State != UIDataState.View)
       {
         EFPApp.ShowTempMessage("Неизвестный режим редактирования");
         return;

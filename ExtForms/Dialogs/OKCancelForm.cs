@@ -56,7 +56,7 @@ namespace FreeLibSet.Forms
       _OKButtonProvider = new EFPButton(FormProvider, btnOk);
       _CancelButtonProvider = new EFPButton(FormProvider, btnCancel);
       _NoButtonProvider = new EFPButton(FormProvider, btnNo);
-      FormProvider.AddFormCheck(new UIValidatingEventHandler(DoFormValidating));
+      FormProvider.FormChecks.Add(new UIValidatingEventHandler(DoFormValidating));
 
       //BottomPanel.BackColor = Color.Red;
       //this.panel1.BackColor = Color.Yellow;

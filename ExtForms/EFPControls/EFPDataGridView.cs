@@ -24,155 +24,9 @@ using FreeLibSet.Collections;
 
 namespace FreeLibSet.Forms
 {
-  #region Перечисления
-
-  /// <summary>
-  /// Значения свойства <see cref="EFPDataGridView.State"/>
-  /// </summary>
-  public enum EFPDataGridViewState
-  {
-    /// <summary>
-    /// Режим просмотра.
-    /// В этом режиме табличный просмотр находится постоянно, пока не выбрана одна из команд редактирования.
-    /// Также используется, если выбрана команда "Просмотреть запись".
-    /// </summary>
-    View,
-
-    /// <summary>
-    /// Выбрана команда "Редактировать запись".
-    /// </summary>
-    Edit,
-
-    /// <summary>
-    /// Выбрана команда "Новая запись"
-    /// </summary>
-    Insert,
-
-    /// <summary>
-    /// Выбрана команда "Копия записи"
-    /// </summary>
-    InsertCopy,
-
-    /// <summary>
-    /// Выбрана команда "Удалить запись"
-    /// </summary>
-    Delete,
-  };
-
-  /// <summary>
-  /// Сколько строк сейчас выбрано в просмотре: Одна, ни одной или несколько
-  /// (свойство <see cref="EFPDataGridView.SelectedRowsState"/>)
-  /// </summary>
-  public enum EFPDataGridViewSelectedRowsState
-  {
-    /// <summary>
-    /// Выбрана одна ячейка или одна строка целиком или несколько ячеек в одной строке
-    /// </summary>
-    SingleRow,
-
-    /// <summary>
-    /// Выбрано несколько строк или ячейки, расположенные на разных строках
-    /// </summary>
-    MultiRows,
-
-    /// <summary>
-    /// Нет ни одной выбранной ячейки (просмотр пуст)
-    /// </summary>
-    NoSelection
-  }
-
-  #endregion
-
   #region Цветовые атрибуты ячейки
 
   #region Перечисления
-
-  #region EFPDataGridViewColorType
-
-  /// <summary>
-  /// Тип стандартизированного цветового оформления ячеек табличного просмотра
-  /// </summary>
-  public enum EFPDataGridViewColorType
-  {
-    /// <summary>
-    /// Обычная ячейка. Для невыделенной ячейки используется цвет фона <see cref="SystemColors.Window"/> и цвет текста <see cref="SystemColors.WindowText"/>.
-    /// </summary>
-    Normal,
-
-    /// <summary>
-    /// Альтернативный цвет для создания "полосатых" просмотров, когда строки
-    /// (обычно, через одну) имеют немного отличающийся цвет
-    /// </summary>
-    Alter,
-
-    /// <summary>
-    /// Выделение бледно-желтым цветом
-    /// </summary>
-    Special,
-
-    /// <summary>
-    /// Итог 1 (зеленые строки)
-    /// </summary>
-    Total1,
-
-    /// <summary>
-    /// Подытог 2 (сиреневые строки)
-    /// </summary>
-    Total2,
-
-    /// <summary>
-    /// Итоговая строка по всей таблице
-    /// </summary>
-    TotalRow,
-
-    /// <summary>
-    /// Заголовок
-    /// </summary>
-    Header,
-
-    /// <summary>
-    /// Ячейка с ошибкой (красный фон).
-    /// </summary>
-    Error,
-
-    /// <summary>
-    /// Ячейка с предупреждением (ярко-желтый фон, красные буквы)
-    /// </summary>
-    Warning,
-  }
-
-  #endregion
-
-  #region EFPDataGridViewBorderStyle
-
-  /// <summary>
-  /// Типы границы ячейки при экспорте табличного просмотра в различные печатные форматы
-  /// </summary>
-  public enum EFPDataGridViewBorderStyle
-  {
-    /// <summary>
-    /// Граница по умолчанию (в зависимости от оформления границ таблицы)
-    /// </summary>
-    Default,
-
-    /// <summary>
-    /// Отключить границу
-    /// (требуется, чтобы граница была отключена и у соседней ячейки)
-    /// </summary>
-    None,
-
-    /// <summary>
-    /// Тонкая линия
-    /// </summary>
-    Thin,
-
-    /// <summary>
-    /// Толстая линия
-    /// </summary>
-    Thick
-  }
-
-  #endregion
 
   #region EFPDataGridViewAttributesReason
 
@@ -201,38 +55,6 @@ namespace FreeLibSet.Forms
     /// <see cref="DataGridView.CellBeginEdit"/> или вызван метод <see cref="EFPDataGridView.GetCellReadOnly(DataGridViewCell, out string)"/>.
     /// </summary>
     ReadOnly,
-  }
-
-  #endregion
-
-  #region EFPDataGridViewImageKind
-
-  /// <summary>
-  /// Изображения, которые можно выводить в заголовке строк с помощью обработчика события <see cref="EFPDataGridView.GetRowAttributes"/>.
-  /// Значение для свойства <see cref="EFPDataGridViewRowAttributesEventArgs.ImageKind"/>. 
-  /// С помощью свойства <see cref="EFPDataGridViewRowAttributesEventArgs.UserImage"/> можно задавать произвольные изображения.
-  /// </summary>
-  public enum EFPDataGridViewImageKind
-  {
-    /// <summary>
-    /// Нет изображения или изображение задается свойством <see cref="EFPDataGridViewRowAttributesEventArgs.UserImage"/>
-    /// </summary>
-    None,
-
-    /// <summary>
-    /// Значок "i"
-    /// </summary>
-    Information,
-
-    /// <summary>
-    /// Восклицательный знак
-    /// </summary>
-    Warning,
-
-    /// <summary>
-    /// Ошибка (красный крест)
-    /// </summary>
-    Error,
   }
 
   #endregion
@@ -333,38 +155,38 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Цветовое оформление строки или ячейки.
-    /// Установка значения в <see cref="EFPDataGridViewColorType.TotalRow"/> для объекта <see cref="EFPDataGridViewRowAttributesEventArgs"/> приводит дополнительно
-    /// к установке свойств <see cref="TopBorder"/> и <see cref="BottomBorder"/> в значение <see cref="EFPDataGridViewBorderStyle.Thick"/>, что удобно для оформления таблиц отчетов.
-    /// Чтобы посторониие свойства не устанавливались, используйте метод <see cref="SetColorTypeOnly(EFPDataGridViewColorType)"/>.
+    /// Установка значения в <see cref="UIDataViewColorType.TotalRow"/> для объекта <see cref="EFPDataGridViewRowAttributesEventArgs"/> приводит дополнительно
+    /// к установке свойств <see cref="TopBorder"/> и <see cref="BottomBorder"/> в значение <see cref="UIDataViewBorderStyle.Thick"/>, что удобно для оформления таблиц отчетов.
+    /// Чтобы посторониие свойства не устанавливались, используйте метод <see cref="SetColorTypeOnly(UIDataViewColorType)"/>.
     /// 
     /// Используется при вызове в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
-    public EFPDataGridViewColorType ColorType
+    public UIDataViewColorType ColorType
     {
       get { return _ColorType; }
       set
       {
         _ColorType = value;
-        if (value == EFPDataGridViewColorType.TotalRow)
+        if (value == UIDataViewColorType.TotalRow)
         {
           if (!_IsCellAttributes) // 17.07.2019
           {
             //LeftBorder = EFPDataGridViewBorderStyle.Thick;
-            TopBorder = EFPDataGridViewBorderStyle.Thick;
+            TopBorder = UIDataViewBorderStyle.Thick;
             //RightBorder = EFPDataGridViewBorderStyle.Thick;
-            BottomBorder = EFPDataGridViewBorderStyle.Thick;
+            BottomBorder = UIDataViewBorderStyle.Thick;
           }
         }
       }
     }
-    private EFPDataGridViewColorType _ColorType;
+    private UIDataViewColorType _ColorType;
 
     /// <summary>
     /// Установка свойства <see cref="ColorType"/> без неявной установки других свойств.
     /// Используется при вызове в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     /// <param name="value">Значение свойства</param>
-    public void SetColorTypeOnly(EFPDataGridViewColorType value)
+    public void SetColorTypeOnly(UIDataViewColorType value)
     {
       _ColorType = value;
     }
@@ -394,49 +216,49 @@ namespace FreeLibSet.Forms
     /// Левая граница ячейки, используемая при печати.
     /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
-    public EFPDataGridViewBorderStyle LeftBorder { get { return _LeftBorder; } set { _LeftBorder = value; } }
-    private EFPDataGridViewBorderStyle _LeftBorder;
+    public UIDataViewBorderStyle LeftBorder { get { return _LeftBorder; } set { _LeftBorder = value; } }
+    private UIDataViewBorderStyle _LeftBorder;
 
     /// <summary>
     /// Верняя граница ячейки, используемая при печати.
     /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
-    public EFPDataGridViewBorderStyle TopBorder { get { return _TopBorder; } set { _TopBorder = value; } }
-    private EFPDataGridViewBorderStyle _TopBorder;
+    public UIDataViewBorderStyle TopBorder { get { return _TopBorder; } set { _TopBorder = value; } }
+    private UIDataViewBorderStyle _TopBorder;
 
     /// <summary>
     /// Правая граница ячейки, используемая при печати.
     /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
-    public EFPDataGridViewBorderStyle RightBorder { get { return _RightBorder; } set { _RightBorder = value; } }
-    private EFPDataGridViewBorderStyle _RightBorder;
+    public UIDataViewBorderStyle RightBorder { get { return _RightBorder; } set { _RightBorder = value; } }
+    private UIDataViewBorderStyle _RightBorder;
 
     /// <summary>
     /// Нижняя граница ячейки, используемая при печати.
     /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
-    public EFPDataGridViewBorderStyle BottomBorder { get { return _BottomBorder; } set { _BottomBorder = value; } }
-    private EFPDataGridViewBorderStyle _BottomBorder;
+    public UIDataViewBorderStyle BottomBorder { get { return _BottomBorder; } set { _BottomBorder = value; } }
+    private UIDataViewBorderStyle _BottomBorder;
 
     /// <summary>
     /// Перечеркивание ячейки от левого нижнего угла к правому верхнему.
     /// В отличие от других границ, работает в режиме просмотра (в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>).
-    /// Значение <see cref="EFPDataGridViewBorderStyle.Default"/> идентично <see cref="EFPDataGridViewBorderStyle.None"/>.
+    /// Значение <see cref="UIDataViewBorderStyle.Default"/> идентично <see cref="UIDataViewBorderStyle.None"/>.
     /// </summary>
-    public EFPDataGridViewBorderStyle DiagonalUpBorder { get { return _DiagonalUpBorder; } set { _DiagonalUpBorder = value; } }
-    private EFPDataGridViewBorderStyle _DiagonalUpBorder;
+    public UIDataViewBorderStyle DiagonalUpBorder { get { return _DiagonalUpBorder; } set { _DiagonalUpBorder = value; } }
+    private UIDataViewBorderStyle _DiagonalUpBorder;
 
     /// <summary>
     /// Перечеркивание ячейки от левого верхнего угла к правому нижнему.
     /// В отличие от других границ, работает в режиме просмотра (в режимах <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.Print"/>).
-    /// Значение <see cref="EFPDataGridViewBorderStyle.Default"/> идентично <see cref="EFPDataGridViewBorderStyle.None"/>.
+    /// Значение <see cref="UIDataViewBorderStyle.Default"/> идентично <see cref="UIDataViewBorderStyle.None"/>.
     /// </summary>
-    public EFPDataGridViewBorderStyle DiagonalDownBorder { get { return _DiagonalDownBorder; } set { _DiagonalDownBorder = value; } }
-    private EFPDataGridViewBorderStyle _DiagonalDownBorder;
+    public UIDataViewBorderStyle DiagonalDownBorder { get { return _DiagonalDownBorder; } set { _DiagonalDownBorder = value; } }
+    private UIDataViewBorderStyle _DiagonalDownBorder;
 
     /// <summary>
     /// Если установить в true, то ячейка будет недоступна для редактирования по месту.
-    /// Событие не вызывается из <see cref="EFPDataGridView.PerformEditData(EFPDataGridViewState)"/>, если редактирование выполняется
+    /// Событие не вызывается из <see cref="EFPDataGridView.PerformEditData(UIDataState)"/>, если редактирование выполняется
     /// в пользовательском обработчике <see cref="EFPDataGridView.EditData"/>.
     /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.ReadOnly"/>.
     /// Можно задать более информативное сообщение для вывода пользователю, если установить свойство <see cref="ReadOnlyMessage"/>.
@@ -464,7 +286,7 @@ namespace FreeLibSet.Forms
     /// Используется при вызове в режиме <see cref="Reason"/>=<see cref="EFPDataGridViewAttributesReason.Print"/>.
     /// </summary>
     /// <param name="style">Вид границы</param>
-    public void SetAllBorders(EFPDataGridViewBorderStyle style)
+    public void SetAllBorders(UIDataViewBorderStyle style)
     {
       SetAllBorders(style, false);
     }
@@ -476,7 +298,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="style">Вид границы</param>
     /// <param name="diagonals">Если true, то дополнительно будет установлены свойства <see cref="DiagonalUpBorder"/> и <see cref="DiagonalDownBorder"/></param>
-    public void SetAllBorders(EFPDataGridViewBorderStyle style, bool diagonals)
+    public void SetAllBorders(UIDataViewBorderStyle style, bool diagonals)
     {
       LeftBorder = style;
       TopBorder = style;
@@ -502,14 +324,14 @@ namespace FreeLibSet.Forms
     {
       _RowIndex = rowIndex;
       _Reason = reason;
-      ColorType = EFPDataGridViewColorType.Normal;
+      ColorType = UIDataViewColorType.Normal;
       _Grayed = null;
-      LeftBorder = EFPDataGridViewBorderStyle.Default;
-      TopBorder = EFPDataGridViewBorderStyle.Default;
-      RightBorder = EFPDataGridViewBorderStyle.Default;
-      BottomBorder = EFPDataGridViewBorderStyle.Default;
-      DiagonalUpBorder = EFPDataGridViewBorderStyle.Default;
-      DiagonalDownBorder = EFPDataGridViewBorderStyle.Default;
+      LeftBorder = UIDataViewBorderStyle.Default;
+      TopBorder = UIDataViewBorderStyle.Default;
+      RightBorder = UIDataViewBorderStyle.Default;
+      BottomBorder = UIDataViewBorderStyle.Default;
+      DiagonalUpBorder = UIDataViewBorderStyle.Default;
+      DiagonalDownBorder = UIDataViewBorderStyle.Default;
     }
 
     #endregion
@@ -560,8 +382,8 @@ namespace FreeLibSet.Forms
     /// Вместо прямой установки свойств <see cref="ImageKind"/> и <see cref="ToolTipText"/> обычно удобнее использовать
     /// методы <see cref="AddRowErrorMessage(ErrorMessageItem, string)"/> и производные от него.
     /// </summary>
-    public EFPDataGridViewImageKind ImageKind { get { return _ImageKind; } set { _ImageKind = value; } }
-    private EFPDataGridViewImageKind _ImageKind;
+    public UIDataViewImageKind ImageKind { get { return _ImageKind; } set { _ImageKind = value; } }
+    private UIDataViewImageKind _ImageKind;
 
     /// <summary>
     /// Переопределение изображения, которое будет выведено в заголовке строки 
@@ -719,12 +541,12 @@ namespace FreeLibSet.Forms
     /// <param name="columnNames">Список имен столбцов (через запятую), для которых задается подсветка ошибки</param>
     public void AddRowErrorMessage(ErrorMessageItem item, string columnNames)
     {
-      EFPDataGridViewImageKind newImageKind;
+      UIDataViewImageKind newImageKind;
       switch (item.Kind)
       {
-        case ErrorMessageKind.Error: newImageKind = EFPDataGridViewImageKind.Error; break;
-        case ErrorMessageKind.Warning: newImageKind = EFPDataGridViewImageKind.Warning; break;
-        case ErrorMessageKind.Info: newImageKind = EFPDataGridViewImageKind.Information; break;
+        case ErrorMessageKind.Error: newImageKind = UIDataViewImageKind.Error; break;
+        case ErrorMessageKind.Warning: newImageKind = UIDataViewImageKind.Warning; break;
+        case ErrorMessageKind.Info: newImageKind = UIDataViewImageKind.Information; break;
         default:
           throw new ArgumentException("Неправильное значение Error.Kind=" + item.Kind.ToString());
       }
@@ -785,7 +607,7 @@ namespace FreeLibSet.Forms
     #region Дополнительные методы
 
     /// <summary>
-    /// Устанавливает для строки изображение ошибки <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Error"/> 
+    /// Устанавливает для строки изображение ошибки <see cref="ImageKind"/>=<see cref="UIDataViewImageKind.Error"/> 
     /// и добавляет сообщение к свойству <see cref="ToolTipText"/>.
     /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
     /// </summary>
@@ -796,7 +618,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение ошибки <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Error"/> 
+    /// Устанавливает для строки изображение ошибки <see cref="ImageKind"/>=<see cref="UIDataViewImageKind.Error"/> 
     /// и добавляет сообщение к свойству <see cref="ToolTipText"/>.
     /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
     /// Позволяет привязать сообщение об ошибке и задать подсветку для выбранных ячеек строки.
@@ -810,7 +632,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Warning"/>,
+    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="UIDataViewImageKind.Warning"/>,
     /// если оно не установлено уже в ошибку.
     /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
     /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
@@ -822,7 +644,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Warning"/>,
+    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="UIDataViewImageKind.Warning"/>,
     /// если оно не установлено уже в ошибку.
     /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
     /// Позволяет привязать предупреждение и задать подсветку для выбранных ячеек строки.
@@ -836,7 +658,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Information"/>,
+    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="UIDataViewImageKind.Information"/>,
     /// если оно не установлено уже в ошибку или предупреждение.
     /// Сообщение добавляется в конец <see cref="ToolTipText"/> и отделяется от существующего текста символом новой строки <see cref="Environment.NewLine"/>.
     /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
@@ -848,7 +670,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="EFPDataGridViewImageKind.Information"/>,
+    /// Устанавливает для строки изображение предупреждения <see cref="ImageKind"/>=<see cref="UIDataViewImageKind.Information"/>,
     /// если оно не установлено уже в ошибку или предупреждение.
     /// Позволяет привязать сообщение для выбранных ячеек строки.
     /// Используется при вызове в режимах <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.View"/> и <see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
@@ -876,7 +698,7 @@ namespace FreeLibSet.Forms
       base.InitRow(rowIndex, reason);
       PrintWithPrevious = false;
       PrintWithNext = false;
-      ImageKind = EFPDataGridViewImageKind.None;
+      ImageKind = UIDataViewImageKind.None;
       UserImage = null;
       ToolTipText = String.Empty;
 
@@ -888,7 +710,7 @@ namespace FreeLibSet.Forms
         {
           ToolTipText = row.RowError;
           if (!String.IsNullOrEmpty(ToolTipText))
-            ImageKind = EFPDataGridViewImageKind.Error;
+            ImageKind = UIDataViewImageKind.Error;
         }
       }
 
@@ -1130,11 +952,11 @@ namespace FreeLibSet.Forms
       TopBorder = rowArgs.TopBorder;
       BottomBorder = rowArgs.BottomBorder;
 
-      if (Column.LeftBorder == EFPDataGridViewBorderStyle.Default)
+      if (Column.LeftBorder == UIDataViewBorderStyle.Default)
         LeftBorder = rowArgs.LeftBorder;
       else
         LeftBorder = Column.LeftBorder;
-      if (Column.RightBorder == EFPDataGridViewBorderStyle.Default)
+      if (Column.RightBorder == UIDataViewBorderStyle.Default)
         RightBorder = rowArgs.RightBorder;
       else
         RightBorder = Column.RightBorder;
@@ -1181,11 +1003,11 @@ namespace FreeLibSet.Forms
         switch (cellErrors.Severity)
         {
           case ErrorMessageKind.Error:
-            ColorType = EFPDataGridViewColorType.Error;
+            ColorType = UIDataViewColorType.Error;
             break;
           case ErrorMessageKind.Warning:
-            if (ColorType != EFPDataGridViewColorType.Error)
-              ColorType = EFPDataGridViewColorType.Warning;
+            if (ColorType != UIDataViewColorType.Error)
+              ColorType = UIDataViewColorType.Warning;
             break;
             // Для Info цвет не меняем
         }
@@ -1827,21 +1649,29 @@ namespace FreeLibSet.Forms
     NamedList<EFPMenuOutItem> MenuOutItems { get; }
 
     /// <summary>
+    /// Параметры печати/экспорта табличного просмотра.
+    /// Может возвращать null, если в <see cref="EFPDataGridViewCommandItems.OutHandler"/> был удален вариант "Control"
+    /// </summary>
+    Reporting.BRDataViewMenuOutItemBase DefaultOutItem { get;}
+
+    /// <summary>
     /// Вызывается для редактирования записей
     /// </summary>
     event EventHandler EditData;
 
     /// <summary>
     /// Текущее состояние просмотра.
-    /// Если в данный момент не обрабатывается событие <see cref="EditData"/>, возвращается <see cref="EFPDataGridViewState.View"/>.
+    /// Если в данный момент не обрабатывается событие <see cref="EditData"/>, возвращается <see cref="UIDataState.View"/>.
     /// </summary>
-    EFPDataGridViewState State { get; }
+    UIDataState State { get; }
   }
 
   #endregion
 
   /// <summary>
-  /// Провайдер табличного просмотра
+  /// Провайдер табличного просмотра.
+  /// Если требуются управляемые пользователем фильтры и/или управление столбцами с помощью <see cref="EFPGridProducer"/>,
+  /// используйте расширенный класс <see cref="EFPConfigurableDataGridView"/> (или его производные).
   /// </summary>
   public class EFPDataGridView : EFPControl<DataGridView>, IEFPDataView
   {
@@ -1883,7 +1713,7 @@ namespace FreeLibSet.Forms
       _GetCellAttributesArgs = new EFPDataGridViewCellAttributesEventArgs(this);
       Control_Leave(null, null);
       // так не помогает. Control.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft; // 27.07.2022. Исправление для Mono.
-      _State = EFPDataGridViewState.View;
+      _State = UIDataState.View;
       _ReadOnly = false;
       _CanEdit = true;
       _CanInsert = true;
@@ -2494,10 +2324,10 @@ namespace FreeLibSet.Forms
     /// Текущее состояние просмотра.
     /// Используется в событии <see cref="EditData"/>.
     /// Свойство кратковременно устанавливается во время наступления события редактирования.
-    /// В остальное время имеет значение <see cref="EFPDataGridViewState.View"/>.
+    /// В остальное время имеет значение <see cref="UIDataState.View"/>.
     /// </summary>
-    public EFPDataGridViewState State { get { return _State; } }
-    private EFPDataGridViewState _State;
+    public UIDataState State { get { return _State; } }
+    private UIDataState _State;
 
     /// <summary>
     /// Размеры и масштабные коэффициенты для табличного просмотра
@@ -2917,7 +2747,7 @@ namespace FreeLibSet.Forms
       {
         for (int i = 0; i < Orders.Count; i++)
         {
-          int сolumnIndex = IndexOfUsedColumnName(Orders[i]);
+          int сolumnIndex = IndexOfUsedColumn(Orders[i]);
           if (сolumnIndex >= 0)
             Control.Columns[сolumnIndex].SortMode = DataGridViewColumnSortMode.Programmatic;
         }
@@ -3052,7 +2882,7 @@ namespace FreeLibSet.Forms
     /// Для точного определения используйте свойство <see cref="SelectedGridRows"/>.
     /// В отличие от обращения к свойству <see cref="SelectedGridRows"/>, это свойство вычисляется всегда быстро
     /// </summary>
-    public EFPDataGridViewSelectedRowsState SelectedRowsState
+    public UISelectedRowsState SelectedRowsState
     {
       get
       {
@@ -3061,8 +2891,8 @@ namespace FreeLibSet.Forms
         {
           if (Control.SelectedRows.Count > 0)
           {
-            return Control.SelectedRows.Count > 1 ? EFPDataGridViewSelectedRowsState.MultiRows :
-              EFPDataGridViewSelectedRowsState.SingleRow;
+            return Control.SelectedRows.Count > 1 ? UISelectedRowsState.MultiRows :
+              UISelectedRowsState.SingleRow;
           }
           // Иначе придется определять с помощью SelectedCells
           if (Control.SelectedCells.Count > 0)
@@ -3071,15 +2901,15 @@ namespace FreeLibSet.Forms
             for (int i = 1; i < Control.SelectedCells.Count; i++)
             {
               if (Control.SelectedCells[i].RowIndex != firstIndex)
-                return EFPDataGridViewSelectedRowsState.MultiRows;
+                return UISelectedRowsState.MultiRows;
             }
-            return EFPDataGridViewSelectedRowsState.SingleRow;
+            return UISelectedRowsState.SingleRow;
           }
         }
         if (Control.CurrentRow == null)
-          return EFPDataGridViewSelectedRowsState.NoSelection;
+          return UISelectedRowsState.NoSelection;
 
-        return EFPDataGridViewSelectedRowsState.SingleRow;
+        return UISelectedRowsState.SingleRow;
       }
     }
 
@@ -5181,7 +5011,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Текущий порядок предопределенной сортировки (индекс в списке <see cref="Orders"/>).
-    /// Если используется произвольная сортировка сортировка, свойство возращает (-1).
+    /// Если используется произвольная сортировка сортировка, свойство возвращает (-1).
     /// Для инициализации произвольной сортировки устанавливайте свойство <see cref="CustomOrderActive"/>.
     /// </summary>
     public int CurrentOrderIndex
@@ -6100,12 +5930,13 @@ namespace FreeLibSet.Forms
     #region Индекс используемого столбца для порядка сортировки
 
     /// <summary>
-    /// Возвращает индекс столбца табличного просмотра (DataGridViewColumn.Index), который будет использоваться для щелчка мыши для заданного порядка сортировки.
-    /// Если в просмотре нет ни одного подходящего столбца, возвращается (-1)
+    /// Возвращает индекс столбца табличного просмотра (DataGridViewColumn.Index), 
+    /// который будет использоваться для щелчка мыши для заданного порядка сортировки.
+    /// Если в просмотре нет ни одного подходящего столбца, возвращается (-1).
     /// </summary>
     /// <param name="item">Порядок сортировки</param>
     /// <returns>Индекс столбца</returns>
-    public int IndexOfUsedColumnName(EFPDataViewOrder item)
+    public int IndexOfUsedColumn(EFPDataViewOrder item)
     {
       if (item == null)
         return (-1);
@@ -6113,8 +5944,8 @@ namespace FreeLibSet.Forms
       if (item.SortInfo.IsEmpty)
         return -1;
 
-      int bestColumnIndex = -1;
-      int bestDisplayIndex = -1;
+      // int bestColumnIndex = -1;
+      // int bestDisplayIndex = -1;
       for (int i = 0; i < item.SortInfo.ClickableColumnNames.Length; i++)
       {
         int columnIndex = Columns.IndexOf(item.SortInfo.ClickableColumnNames[i]);
@@ -6124,26 +5955,32 @@ namespace FreeLibSet.Forms
         if (!col.Visible)
           continue; // скрытые столбцы не считаются
 
-        int displayIndex = col.DisplayIndex;
-        if (bestColumnIndex < 0 || displayIndex < bestDisplayIndex)
-        {
-          bestColumnIndex = columnIndex;
-          bestDisplayIndex = displayIndex;
-        }
+        // 05.11.2024
+        // Приоритет столбцов, заданный в ClickableColumnNames важнее порядка столбцов в просмотре
+        return columnIndex;
+
+        //int displayIndex = col.DisplayIndex;
+        //if (bestColumnIndex < 0 || displayIndex < bestDisplayIndex)
+        //{
+        //  bestColumnIndex = columnIndex;
+        //  bestDisplayIndex = displayIndex;
+        //}
       }
 
-      return bestColumnIndex;
+      //return bestColumnIndex;
+      return -1;
     }
 
     /// <summary>
-    /// Возвращает имя столбца табличного просмотра (<see cref="EFPDataGridViewColumn.Name"/>), который будет использоваться для щелчка мыши для заданного порядка сортировки.
+    /// Возвращает имя столбца табличного просмотра (<see cref="EFPDataGridViewColumn.Name"/>), 
+    /// который будет использоваться для щелчка мыши для заданного порядка сортировки.
     /// Если в просмотре нет ни одного подходящего столбца, возвращается пустая строка.
     /// </summary>
     /// <param name="item">Порядок сортировки</param>
     /// <returns>Имя столбца</returns>
     public string GetUsedColumnName(EFPDataViewOrder item)
     {
-      int p = IndexOfUsedColumnName(item);
+      int p = IndexOfUsedColumn(item);
       if (p < 0)
         return String.Empty;
       else
@@ -6151,14 +5988,15 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает столбец <see cref="EFPDataGridViewColumn"/>, который будет использоваться для щелчка мыши для заданного порядка сортировки.
+    /// Возвращает столбец <see cref="EFPDataGridViewColumn"/>, 
+    /// который будет использоваться для щелчка мыши для заданного порядка сортировки.
     /// Если в просмотре нет ни одного подходящего столбца, возвращается null.
     /// </summary>
     /// <param name="item">Порядок сортировки</param>
     /// <returns>Объект столбца</returns>
     public EFPDataGridViewColumn GetUsedColumn(EFPDataViewOrder item)
     {
-      int p = IndexOfUsedColumnName(item);
+      int p = IndexOfUsedColumn(item);
       if (p < 0)
         return null;
       else
@@ -6725,7 +6563,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает список для добавления пользовательских вариантов печати/экспорта
+    /// Возвращает список для добавления пользовательских вариантов печати/экспорта.
+    /// Обычно список содержит единственный объект с именем "Control" для стандартной печати табличного просмотра, 
+    /// доступ к которому удобнее получать с помощью свойства <see cref="DefaultOutItem"/>.
     /// </summary>
     public NamedList<EFPMenuOutItem> MenuOutItems { get { return CommandItems.OutHandler.Items; } }
 
@@ -6738,6 +6578,8 @@ namespace FreeLibSet.Forms
       get { return MenuOutItems["Control"] as Reporting.BRDataGridViewMenuOutItem; }
     }
 
+    Reporting.BRDataViewMenuOutItemBase IEFPDataView.DefaultOutItem { get { return DefaultOutItem;} }
+
     #endregion
 
     #region Поддержка Inline-редактирования
@@ -6749,11 +6591,11 @@ namespace FreeLibSet.Forms
     /// В режиме <paramref name="state"/>=Edit вызывается <see cref="DataGridView.BeginEdit(bool)"/>, при этом проверяются свойства ReadOnly
     /// </summary>
     /// <param name="state">Edit или Delete</param>
-    public void InlineEditData(EFPDataGridViewState state)
+    public void InlineEditData(UIDataState state)
     {
       switch (state)
       {
-        case EFPDataGridViewState.Edit:
+        case UIDataState.Edit:
           // 09.01.2013
           // Лучше лишний раз проверить режим ReadOnly и выдать ShowTempMessage(),
           // т.к. обычный BeginEdit() не будет выдавать сообщение, если для столбца
@@ -6773,7 +6615,7 @@ namespace FreeLibSet.Forms
 
           Control.BeginEdit(true);
           break;
-        case EFPDataGridViewState.Delete:
+        case UIDataState.Delete:
           if (WholeRowsSelected && Control.AllowUserToDeleteRows)
           {
             DataGridViewRow[] rows = SelectedGridRows;
@@ -7632,6 +7474,22 @@ namespace FreeLibSet.Forms
     bool IEFPDataView.UseRefresh { get { return CommandItems.UseRefresh; } }
 
     /// <summary>
+    /// Событие вызывается при выполнении метода <see cref="PerformRefresh()"/> после отработки основного события.
+    /// В отличие от события <see cref="RefreshData"/>, наличие обработчика этого события не влияет на <see cref="HasRefreshDataHandler"/> и на наличие команды "Обновить".
+    /// </summary>
+    public event EventHandler AfterRefreshData;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="AfterRefreshData"/>
+    /// </summary>
+    /// <param name="args">Фиктивные аргументы события</param>
+    protected virtual void OnAfterRefreshData(EventArgs args)
+    {
+      if (AfterRefreshData != null)
+        AfterRefreshData(this, args);
+    }
+
+    /// <summary>
     /// Принудительное обновление просмотра.
     /// Обновление выполняется, даже если <see cref="EFPDataGridViewCommandItems.UseRefresh"/>=false.
     /// Сохраняется и восстанавливается, если возможно, текущее выделение в просмотре с помощью свойства <see cref="Selection"/>
@@ -7671,6 +7529,8 @@ namespace FreeLibSet.Forms
             e.Message, "Ошибка табличного просмотра", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
       }
+
+      OnAfterRefreshData(EventArgs.Empty);
     }
 
     /// <summary>
@@ -7690,7 +7550,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Перевод просмотра в один из режимов
     /// </summary>
-    public void PerformEditData(EFPDataGridViewState state)
+    public void PerformEditData(UIDataState state)
     {
       if (_InsideEditData)
       {
@@ -7716,7 +7576,7 @@ namespace FreeLibSet.Forms
           }
           finally
           {
-            _State = EFPDataGridViewState.View;
+            _State = UIDataState.View;
             _InsideEditData = false;
           }
           if (res)
@@ -7732,7 +7592,7 @@ namespace FreeLibSet.Forms
       }
       finally
       {
-        _State = EFPDataGridViewState.View;
+        _State = UIDataState.View;
         _InsideEditData = false;
       }
 
@@ -8270,10 +8130,10 @@ namespace FreeLibSet.Forms
             pp &= ~(DataGridViewPaintParts.ContentForeground | DataGridViewPaintParts.ContentBackground);
           args.Paint(args.ClipBounds, pp);
 
-          if (_GetCellAttributesArgs.DiagonalUpBorder >= EFPDataGridViewBorderStyle.Thin)
+          if (_GetCellAttributesArgs.DiagonalUpBorder >= UIDataViewBorderStyle.Thin)
             args.Graphics.DrawLine(CreateBorderPen(args.CellStyle.ForeColor, _GetCellAttributesArgs.DiagonalUpBorder),
               args.CellBounds.Left, args.CellBounds.Bottom - 1, args.CellBounds.Right - 1, args.CellBounds.Top);
-          if (_GetCellAttributesArgs.DiagonalDownBorder >= EFPDataGridViewBorderStyle.Thin)
+          if (_GetCellAttributesArgs.DiagonalDownBorder >= UIDataViewBorderStyle.Thin)
             args.Graphics.DrawLine(CreateBorderPen(args.CellStyle.ForeColor, _GetCellAttributesArgs.DiagonalDownBorder),
               args.CellBounds.Left, args.CellBounds.Top, args.CellBounds.Right - 1, args.CellBounds.Bottom - 1);
 
@@ -8290,10 +8150,10 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private static Pen CreateBorderPen(Color color, EFPDataGridViewBorderStyle borderStyle)
+    private static Pen CreateBorderPen(Color color, UIDataViewBorderStyle borderStyle)
     {
       float w;
-      if (borderStyle == EFPDataGridViewBorderStyle.Thick)
+      if (borderStyle == UIDataViewBorderStyle.Thick)
         w = 2;
       else
         w = 1;
@@ -8380,7 +8240,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="cellStyle">Заполняемый объект</param>
     /// <param name="colorType">Вариант цветного оформления ячейки</param>
-    public static void SetCellAttr(DataGridViewCellStyle cellStyle, EFPDataGridViewColorType colorType)
+    public static void SetCellAttr(DataGridViewCellStyle cellStyle, UIDataViewColorType colorType)
     {
       SetCellAttr(cellStyle, colorType, false, true);
     }
@@ -8392,7 +8252,7 @@ namespace FreeLibSet.Forms
     /// <param name="cellStyle">Заполняемый объект</param>
     /// <param name="colorType">Вариант цветного оформления ячейки</param>
     /// <param name="grayed">true -Выделение серым цветом</param>
-    public static void SetCellAttr(DataGridViewCellStyle cellStyle, EFPDataGridViewColorType colorType, bool grayed)
+    public static void SetCellAttr(DataGridViewCellStyle cellStyle, UIDataViewColorType colorType, bool grayed)
     {
       SetCellAttr(cellStyle, colorType, grayed, true);
     }
@@ -8406,7 +8266,7 @@ namespace FreeLibSet.Forms
     /// <param name="grayed">true -Выделение серым цветом</param>
     /// <param name="contentVisible">true - должно ли быть видно содержимое ячейки.
     /// Если false, то в <paramref name="cellStyle"/>.ForeColor помещается <see cref="Color.Transparent"/></param>
-    public static void SetCellAttr(DataGridViewCellStyle cellStyle, EFPDataGridViewColorType colorType, bool grayed, bool contentVisible)
+    public static void SetCellAttr(DataGridViewCellStyle cellStyle, UIDataViewColorType colorType, bool grayed, bool contentVisible)
     {
       //if (ColorType == EFPDataGridViewColorType.Alter)
       //{
@@ -8433,38 +8293,38 @@ namespace FreeLibSet.Forms
     /// Для <paramref name="colorType"/>=Normal записывается <see cref="Color.Empty"/></param>
     /// <param name="foreColor">Сюда помещается цвет текста, зависящий от <paramref name="colorType"/>,
     /// <paramref name="grayed"/> и <paramref name="contentVisible"/>.</param>
-    public static void SetCellAttr(EFPDataGridViewColorType colorType, bool grayed, bool contentVisible, out Color backColor, out Color foreColor)
+    public static void SetCellAttr(UIDataViewColorType colorType, bool grayed, bool contentVisible, out Color backColor, out Color foreColor)
     {
       backColor = Color.Empty;
       foreColor = Color.Empty;
       switch (colorType)
       {
-        case EFPDataGridViewColorType.Header:
+        case UIDataViewColorType.Header:
           backColor = EFPApp.Colors.GridHeaderBackColor;
           foreColor = EFPApp.Colors.GridHeaderForeColor;
           //CellStyle.Font.Style =FontStyle.Bold | FontStyle.Underline;
           break;
-        case EFPDataGridViewColorType.Alter:
+        case UIDataViewColorType.Alter:
           backColor = EFPApp.Colors.GridAlterBackColor;
           break;
-        case EFPDataGridViewColorType.Special:
+        case UIDataViewColorType.Special:
           backColor = EFPApp.Colors.GridSpecialBackColor;
           break;
-        case EFPDataGridViewColorType.Total1:
+        case UIDataViewColorType.Total1:
           backColor = EFPApp.Colors.GridTotal1BackColor;
           break;
-        case EFPDataGridViewColorType.Total2:
+        case UIDataViewColorType.Total2:
           backColor = EFPApp.Colors.GridTotal2BackColor;
           break;
-        case EFPDataGridViewColorType.TotalRow:
+        case UIDataViewColorType.TotalRow:
           backColor = EFPApp.Colors.GridTotalRowBackColor;
           foreColor = EFPApp.Colors.GridTotalRowForeColor;
           break;
-        case EFPDataGridViewColorType.Error:
+        case UIDataViewColorType.Error:
           backColor = EFPApp.Colors.GridErrorBackColor;
           foreColor = EFPApp.Colors.GridErrorForeColor;
           break;
-        case EFPDataGridViewColorType.Warning:
+        case UIDataViewColorType.Warning:
           backColor = EFPApp.Colors.GridWarningBackColor;
           foreColor = EFPApp.Colors.GridWarningForeColor;
           break;
@@ -8495,47 +8355,47 @@ namespace FreeLibSet.Forms
     /// <param name="colorType">Цвет ячейки</param>
     /// <param name="grayed">true, если текст выделяется серым цветом</param>
     /// <returns>Атрибуты ячейки для передачи в Excel</returns>
-    public static EFPDataGridViewExcelCellAttributes GetExcelCellAttr(EFPDataGridViewColorType colorType, bool grayed)
+    public static EFPDataGridViewExcelCellAttributes GetExcelCellAttr(UIDataViewColorType colorType, bool grayed)
     {
       EFPDataGridViewExcelCellAttributes attr = new EFPDataGridViewExcelCellAttributes();
       attr.BackColor = Color.Empty;
       attr.ForeColor = Color.Empty;
       switch (colorType)
       {
-        case EFPDataGridViewColorType.Header:
+        case UIDataViewColorType.Header:
           attr.ForeColor = Color.Navy;
           attr.BackColor = Color.White;
           attr.Bold = true;
           //Attr.Underline = true;
           attr.Italic = true;
           break;
-        case EFPDataGridViewColorType.Special:
+        case UIDataViewColorType.Special:
           attr.BackColor = Color.FromArgb(255, 255, 204);
           break;
-        case EFPDataGridViewColorType.Total1:
+        case UIDataViewColorType.Total1:
           attr.BackColor = Color.FromArgb(204, 255, 204);
           attr.Bold = true;
           break;
-        case EFPDataGridViewColorType.Total2:
+        case UIDataViewColorType.Total2:
           //Attr.BackColor = Color.FromArgb(255, 0, 255); // менее яркого нет
           // 22.06.2016
           attr.BackColor = Color.FromArgb(0xFF, 0x99, 0xCC); // ColorIndex=38
           attr.Bold = true;
           break;
-        case EFPDataGridViewColorType.TotalRow:
+        case UIDataViewColorType.TotalRow:
           attr.BackColor = Color.FromArgb(204, 204, 204);
           attr.Bold = true;
           break;
-        case EFPDataGridViewColorType.Error:
+        case UIDataViewColorType.Error:
           attr.BackColor = Color.Red;
           attr.Bold = true;
           break;
-        case EFPDataGridViewColorType.Warning:
+        case UIDataViewColorType.Warning:
           attr.BackColor = Color.Yellow;
           attr.ForeColor = Color.Red;
           attr.Bold = true;
           break;
-        case EFPDataGridViewColorType.Alter:
+        case UIDataViewColorType.Alter:
           attr.BackColor = Color.FromArgb(0xCC, 0xFF, 0xFF); // ColorIndex=34
           break;
       }
@@ -8612,30 +8472,30 @@ namespace FreeLibSet.Forms
     #region Картинки в заголовках строк и всплывающие подсказки
 
     /// <summary>
-    /// Возвращает имя изображения в списке <see cref="EFPApp.MainImages"/>, соответствующее <see cref="EFPDataGridViewImageKind"/>.
+    /// Возвращает имя изображения в списке <see cref="EFPApp.MainImages"/>, соответствующее <see cref="UIDataViewImageKind"/>.
     /// Для <paramref name="imageKind"/>=None возвращает "EmptyImage".
     /// </summary>
     /// <param name="imageKind">Вариант изображения</param>
     /// <returns>Имя изображения</returns>
-    public static string GetImageKey(EFPDataGridViewImageKind imageKind)
+    public static string GetImageKey(UIDataViewImageKind imageKind)
     {
       return GetImageKey(imageKind, "EmptyImage");
     }
 
     /// <summary>
-    /// Возвращает имя изображения в списке <see cref="EFPApp.MainImages"/>, соответствующее <see cref="EFPDataGridViewImageKind"/>.
+    /// Возвращает имя изображения в списке <see cref="EFPApp.MainImages"/>, соответствующее <see cref="UIDataViewImageKind"/>.
     /// </summary>
     /// <param name="imageKind">Вариант изображения</param>
     /// <param name="noneImageKey">Имя изображения для <paramref name="imageKind"/>=None</param>
     /// <returns>Имя изображения</returns>
-    public static string GetImageKey(EFPDataGridViewImageKind imageKind, string noneImageKey)
+    public static string GetImageKey(UIDataViewImageKind imageKind, string noneImageKey)
     {
       switch (imageKind)
       {
-        case EFPDataGridViewImageKind.Error: return "Error";
-        case EFPDataGridViewImageKind.Warning: return "Warning";
-        case EFPDataGridViewImageKind.Information: return "Information";
-        case EFPDataGridViewImageKind.None: return noneImageKey;
+        case UIDataViewImageKind.Error: return "Error";
+        case UIDataViewImageKind.Warning: return "Warning";
+        case UIDataViewImageKind.Information: return "Information";
+        case UIDataViewImageKind.None: return noneImageKey;
         default: return "UnknownState";
       }
     }
@@ -8695,11 +8555,11 @@ namespace FreeLibSet.Forms
     /// Свойство <see cref="UseRowImages"/> должно быть установлено.
     /// Свойство можно устанавливать из прикладного кода только при <see cref="ShowErrorCountInTopLeftCell"/>=false,
     /// в противном случае оно устанавливается автоматически.
-    /// Если одновременно заданы свойства <see cref="TopLeftCellUserImage"/> и <see cref="TopLeftCellImageKind"/>!=<see cref="EFPDataGridViewImageKind.None"/>,
+    /// Если одновременно заданы свойства <see cref="TopLeftCellUserImage"/> и <see cref="TopLeftCellImageKind"/>!=<see cref="UIDataViewImageKind.None"/>,
     /// то приоритет имеет <see cref="TopLeftCellUserImage"/>.
     /// </summary>
-    [DefaultValue(EFPDataGridViewImageKind.None)]
-    public EFPDataGridViewImageKind TopLeftCellImageKind
+    [DefaultValue(UIDataViewImageKind.None)]
+    public UIDataViewImageKind TopLeftCellImageKind
     {
       get { return _TopLeftCellImageKind; }
       set
@@ -8712,12 +8572,12 @@ namespace FreeLibSet.Forms
           Control.InvalidateCell(-1, -1);
       }
     }
-    private EFPDataGridViewImageKind _TopLeftCellImageKind;
+    private UIDataViewImageKind _TopLeftCellImageKind;
 
     /// <summary>
     /// Произвольное изображение, которое следует вывести в верхней левой ячейке просмотра.
     /// Свойство <see cref="UseRowImages"/> должно быть установлено.
-    /// Если одновременно заданы свойства <see cref="TopLeftCellUserImage"/> и <see cref="TopLeftCellImageKind"/>!=<see cref="EFPDataGridViewImageKind.None"/>,
+    /// Если одновременно заданы свойства <see cref="TopLeftCellUserImage"/> и <see cref="TopLeftCellImageKind"/>!=<see cref="UIDataViewImageKind.None"/>,
     /// то приоритет имеет <see cref="TopLeftCellUserImage"/>.
     /// </summary>
     [DefaultValue(null)]
@@ -8839,16 +8699,16 @@ namespace FreeLibSet.Forms
       }
       catch
       {
-        DoControl_RowHeaderCellPainting(args, EFPDataGridViewImageKind.Error, null);
+        DoControl_RowHeaderCellPainting(args, UIDataViewImageKind.Error, null);
       }
     }
 
-    private void DoControl_RowHeaderCellPainting(DataGridViewCellPaintingEventArgs args, EFPDataGridViewImageKind imageKind, Image userImage)
+    private void DoControl_RowHeaderCellPainting(DataGridViewCellPaintingEventArgs args, UIDataViewImageKind imageKind, Image userImage)
     {
       args.PaintBackground(args.ClipBounds, false);
       args.PaintContent(args.ClipBounds);
 
-      if (userImage == null && imageKind != EFPDataGridViewImageKind.None)
+      if (userImage == null && imageKind != UIDataViewImageKind.None)
         userImage = EFPApp.MainImages.Images[GetImageKey(imageKind, String.Empty)];
       if (userImage != null)
       {
@@ -8979,7 +8839,7 @@ namespace FreeLibSet.Forms
     /// false - перейти к следующей или предыдущей относительно текущей строки</param>
     /// <param name="forward">true - перейти вперед (в сторону конца таблицы), false - назад (к началу)</param>
     /// <param name="imageKind">Какую строку найти (условие поиска)</param>
-    public void GotoNextErrorRow(bool fromTableBegin, bool forward, EFPDataGridViewImageKind imageKind)
+    public void GotoNextErrorRow(bool fromTableBegin, bool forward, UIDataViewImageKind imageKind)
     {
       if (!UseRowImages)
       {
@@ -9002,16 +8862,16 @@ namespace FreeLibSet.Forms
         string msg;
         switch (imageKind)
         {
-          case EFPDataGridViewImageKind.Error:
+          case UIDataViewImageKind.Error:
             msg = " с ошибкой";
             break;
-          case EFPDataGridViewImageKind.Warning:
+          case UIDataViewImageKind.Warning:
             msg = " с ошибкой или предупреждением";
             break;
-          case EFPDataGridViewImageKind.Information:
+          case UIDataViewImageKind.Information:
             msg = " с сообщением";
             break;
-          case EFPDataGridViewImageKind.None:
+          case UIDataViewImageKind.None:
             msg = " без ошибок";
             break;
           default:
@@ -9032,7 +8892,7 @@ namespace FreeLibSet.Forms
     /// <param name="forward">true-искать вперед к концу таблицы, false - искать назад к началу таблицы</param>
     /// <param name="imageKind">Какую строку найти (условие поиска)</param>
     /// <returns>Индекс найденной строки или (-1), если строка не найдена</returns>
-    public int FindErrorRow(int startRowIndex, bool forward, EFPDataGridViewImageKind imageKind)
+    public int FindErrorRow(int startRowIndex, bool forward, UIDataViewImageKind imageKind)
     {
       if (forward)
       {
@@ -9076,19 +8936,19 @@ namespace FreeLibSet.Forms
       return -1;
     }
 
-    private bool TestRowImageKind(int rowIndex, EFPDataGridViewImageKind imageKind)
+    private bool TestRowImageKind(int rowIndex, UIDataViewImageKind imageKind)
     {
-      EFPDataGridViewImageKind thisKind = GetRowImageKind(rowIndex);
+      UIDataViewImageKind thisKind = GetRowImageKind(rowIndex);
       switch (imageKind)
       {
-        case EFPDataGridViewImageKind.None:
-          return thisKind == EFPDataGridViewImageKind.None;
-        case EFPDataGridViewImageKind.Information:
-          return thisKind != EFPDataGridViewImageKind.None;
-        case EFPDataGridViewImageKind.Warning:
-          return thisKind == EFPDataGridViewImageKind.Warning || thisKind == EFPDataGridViewImageKind.Error;
-        case EFPDataGridViewImageKind.Error:
-          return thisKind == EFPDataGridViewImageKind.Error;
+        case UIDataViewImageKind.None:
+          return thisKind == UIDataViewImageKind.None;
+        case UIDataViewImageKind.Information:
+          return thisKind != UIDataViewImageKind.None;
+        case UIDataViewImageKind.Warning:
+          return thisKind == UIDataViewImageKind.Warning || thisKind == UIDataViewImageKind.Error;
+        case UIDataViewImageKind.Error:
+          return thisKind == UIDataViewImageKind.Error;
         default:
           throw new ArgumentException("Недопустимый тип изображения строки для поиска:" + imageKind.ToString(), "imageKind");
       }
@@ -9101,7 +8961,7 @@ namespace FreeLibSet.Forms
     /// Если равно (-1), возвращается значение свойства <see cref="TopLeftCellImageKind"/>.
     /// Иначе генерируется событие <see cref="GetRowAttributes"/> для получения значка строки</param>
     /// <returns>Тип изображения</returns>
-    public EFPDataGridViewImageKind GetRowImageKind(int rowIndex)
+    public UIDataViewImageKind GetRowImageKind(int rowIndex)
     {
       if (rowIndex < 0)
         return TopLeftCellImageKind;
@@ -9163,7 +9023,7 @@ namespace FreeLibSet.Forms
     {
       int cnt = _GetRowAttributesArgs.RowErrorMessages.Count;
       DoGetRowAttributes(rowIndex, EFPDataGridViewAttributesReason.ToolTip);
-      if (_GetRowAttributesArgs.ImageKind != EFPDataGridViewImageKind.None &&
+      if (_GetRowAttributesArgs.ImageKind != UIDataViewImageKind.None &&
         cnt == _GetRowAttributesArgs.RowErrorMessages.Count)
       {
         // Признак ошибки установлен, но сообщение не добавлено
@@ -9176,8 +9036,8 @@ namespace FreeLibSet.Forms
         ErrorMessageKind kind2;
         switch (_GetRowAttributesArgs.ImageKind)
         {
-          case EFPDataGridViewImageKind.Error: kind2 = ErrorMessageKind.Error; break;
-          case EFPDataGridViewImageKind.Warning: kind2 = ErrorMessageKind.Warning; break;
+          case UIDataViewImageKind.Error: kind2 = ErrorMessageKind.Error; break;
+          case UIDataViewImageKind.Warning: kind2 = ErrorMessageKind.Warning; break;
           default: kind2 = ErrorMessageKind.Info; break;
         }
         _GetRowAttributesArgs.RowErrorMessages.Add(new ErrorMessageItem(kind2, msg, null, rowIndex));
@@ -9262,7 +9122,7 @@ namespace FreeLibSet.Forms
     /// Перебирает все строки просмотра и возвращает максимальное значение типа ошибки для строки
     /// </summary>
     /// <returns>Тип значка</returns>
-    public EFPDataGridViewImageKind GetAllRowsImageKind()
+    public UIDataViewImageKind GetAllRowsImageKind()
     {
       int n = Control.RowCount;
       if (n == 0)
@@ -9271,16 +9131,16 @@ namespace FreeLibSet.Forms
           n = SourceAsDataView.Count;
       }
 
-      EFPDataGridViewImageKind maxLevel = EFPDataGridViewImageKind.None;
+      UIDataViewImageKind maxLevel = UIDataViewImageKind.None;
 
       for (int i = 0; i < n; i++)
       {
-        EFPDataGridViewImageKind thisLevel = GetRowImageKind(i);
+        UIDataViewImageKind thisLevel = GetRowImageKind(i);
 
         if (thisLevel > maxLevel)
         {
           maxLevel = thisLevel;
-          if (maxLevel == EFPDataGridViewImageKind.Error)
+          if (maxLevel == UIDataViewImageKind.Error)
             break;
         }
       }
@@ -9317,10 +9177,10 @@ namespace FreeLibSet.Forms
           {
             switch (GetRowImageKind(i))
             {
-              case EFPDataGridViewImageKind.Error:
+              case UIDataViewImageKind.Error:
                 errorCount++;
                 break;
-              case EFPDataGridViewImageKind.Warning:
+              case UIDataViewImageKind.Warning:
                 warningCount++;
                 break;
             }
@@ -9352,13 +9212,13 @@ namespace FreeLibSet.Forms
           }
 
           if (errorCount > 0)
-            TopLeftCellImageKind = EFPDataGridViewImageKind.Error;
+            TopLeftCellImageKind = UIDataViewImageKind.Error;
           else
           {
             if (warningCount > 0)
-              TopLeftCellImageKind = EFPDataGridViewImageKind.Warning;
+              TopLeftCellImageKind = UIDataViewImageKind.Warning;
             else
-              TopLeftCellImageKind = EFPDataGridViewImageKind.None;
+              TopLeftCellImageKind = UIDataViewImageKind.None;
           }
         }
         else
@@ -10108,10 +9968,24 @@ namespace FreeLibSet.Forms
 
     private string DoGetCellTextValue(EFPDataGridViewCellAttributesEventArgs cellArgs)
     {
-      if (cellArgs.FormattedValue == null)
-        return String.Empty;
+      object v = cellArgs.FormattedValue;
+      if (cellArgs.FormattingApplied)
+      {
+        if (v == null)
+          return String.Empty;
+        else
+          return v.ToString();
+      }
       else
-        return cellArgs.FormattedValue.ToString();
+      {
+        IFormattable fv = v as IFormattable;
+        if (cellArgs.CellStyle.Format != null && fv != null)
+          return fv.ToString(cellArgs.CellStyle.Format, cellArgs.CellStyle.FormatProvider); // 18.11.2024
+        else if (v == null)
+          return String.Empty;
+        else
+          return v.ToString();
+      }
     }
 
     /// <summary>

@@ -334,6 +334,20 @@ namespace ExtRussian_tests
       "Бойко,А,Н|" +
       "Бойко,А,Н|" +
       "Бойко,А,Н", SexOfPerson.Female, true)]
+    [TestCase(
+      "Дубогрий,,|" +
+      "Дубогрия,,|" +
+      "Дубогрию,,|" +
+      "Дубогрия,,|" +
+      "Дубогрием,,|" +
+      "Дубогрии,,", SexOfPerson.Male, true)]
+    [TestCase(
+      "Дубогрий,,|" +
+      "Дубогрий,,|" +
+      "Дубогрий,,|" +
+      "Дубогрий,,|" +
+      "Дубогрий,,|" +
+      "Дубогрий,,", SexOfPerson.Female, true)]
     public void GetCases(string sForms, SexOfPerson sex, bool wantedRes)
     {
       RusFullName[] wantedCases = GetTestCases(sForms);

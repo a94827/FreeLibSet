@@ -7,6 +7,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using FreeLibSet.Drawing;
+using System.Diagnostics;
 
 namespace FreeLibSet.Forms
 {
@@ -66,6 +67,12 @@ namespace FreeLibSet.Forms
       {
         gr.Dispose();
       }
+
+#if DEBUG
+      Debug.Assert(_DpiX > 0.0);
+      Debug.Assert(_DpiY > 0.0);
+      Debug.Assert(_CharWidthPixel > 0.0);
+#endif
     }
 
     #endregion
@@ -76,21 +83,21 @@ namespace FreeLibSet.Forms
     /// Объект-владелец
     /// </summary>
     public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
-    private EFPDataGridView _ControlProvider;
+    private readonly EFPDataGridView _ControlProvider;
 
     /// <summary>
     /// Горизонтальное разрешение экрана, точек на дюйм
     /// (нормальное: 96)
     /// </summary>
     public float DpiX { get { return _DpiX; } }
-    private float _DpiX;
+    private readonly float _DpiX;
 
     /// <summary>
     /// Вертикальное разрешение экрана, точек на дюйм
     /// (нормальное: 96)
     /// </summary>
     public float DpiY { get { return _DpiY; } }
-    private float _DpiY;
+    private readonly float _DpiY;
 
     #endregion
 
@@ -211,7 +218,7 @@ namespace FreeLibSet.Forms
     /// соответствующая текущему разрешению экрана
     /// </summary>
     public double CharWidthPixel { get { return _CharWidthPixel; } }
-    private double _CharWidthPixel;
+    private readonly double _CharWidthPixel;
 
     #endregion
   }
@@ -250,21 +257,21 @@ namespace FreeLibSet.Forms
     /// Объект-владелец
     /// </summary>
     public EFPDataTreeView ControlProvider { get { return _ControlProvider; } }
-    private EFPDataTreeView _ControlProvider;
+    private readonly EFPDataTreeView _ControlProvider;
 
     /// <summary>
     /// Горизонтальное разрешение экрана, точек на дюйм
     /// (нормальное: 96)
     /// </summary>
     public float DpiX { get { return _DpiX; } }
-    private float _DpiX;
+    private readonly float _DpiX;
 
     /// <summary>
     /// Вертикальное разрешение экрана, точек на дюйм
     /// (нормальное: 96)
     /// </summary>
     public float DpiY { get { return _DpiY; } }
-    private float _DpiY;
+    private readonly float _DpiY;
 
     #endregion
 
@@ -366,7 +373,7 @@ namespace FreeLibSet.Forms
     /// соответствующая текущему разрешению экрана
     /// </summary>
     public double CharWidthPixel { get { return _CharWidthPixel; } }
-    private double _CharWidthPixel;
+    private readonly double _CharWidthPixel;
 
     #endregion
   }

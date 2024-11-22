@@ -289,7 +289,7 @@ namespace FreeLibSet.Forms
     /// Свойство <see cref="HasError"/> может использоваться для проверки результатов копирования в прикладном коде.
     /// </summary>
     /// <param name="data">Данные</param>
-    /// <param name="copy">Если нужно сделать данными сохраняющимися после завершения приложения</param>
+    /// <param name="copy">Если нужно сделать данные сохраняющимися в буфере обмена после завершения приложения</param>
     public void SetDataObject(object data, bool copy)
     {
       EFPApp.BeginWait("Копирование данных в буфер обмена", "Copy");

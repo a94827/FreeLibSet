@@ -555,7 +555,7 @@ namespace FreeLibSet.Forms
         SafeWriteConfigParts(srchSect, SettingsPart.User | SettingsPart.Machine);
         _Form.SetComboBox.SelectedMD5Sum = srchSect.MD5Sum();
 
-        _Form.FormProvider.AddFormCheck(new UIValidatingEventHandler(CheckForm));
+        _Form.FormProvider.FormChecks.Add(new UIValidatingEventHandler(CheckForm));
 
         res = EFPApp.ShowDialog(_Form, false) == DialogResult.OK;
 

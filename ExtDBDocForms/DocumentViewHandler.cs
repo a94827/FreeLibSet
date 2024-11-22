@@ -600,7 +600,7 @@ namespace FreeLibSet.Forms.Docs
         if (Owner2 != null)
         {
           if (Owner2.Filters != null)
-            Owner2.Filters.InitNewDocValues(newDoc);
+            Owner2.Filters.InitNewValues(newDoc.Values);
 
 
           // 10.06.2019
@@ -623,7 +623,7 @@ namespace FreeLibSet.Forms.Docs
         if (Owner2 != null)
         {
           if (Owner2.Filters != null)
-            Owner2.Filters.ValidateDocValues(savingDoc, errorMessages);
+            Owner2.Filters.ValidateValues(savingDoc.Values, errorMessages);
         }
       }
       else

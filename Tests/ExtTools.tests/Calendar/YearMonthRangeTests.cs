@@ -129,6 +129,21 @@ namespace ExtTools_tests.Calendar
 
     #endregion
 
+    #region Age
+
+    [TestCase("202401-202601", "2:1:0")]
+    [TestCase("202403-202501", "0:11:0")]
+    [TestCase("000101-546012", "5460:0:0")] // максимально допустимый год
+    [TestCase("", "0:0:0")]
+    public void Age(string sSut, string sWanted)
+    {
+      YearMonthRange sut = Creators.YearMonthRange(sSut);
+      YearMonthDayAge wanted = Creators.YearMonthDayAge(sWanted);
+      Assert.AreEqual(wanted, sut.Age);
+    }
+
+    #endregion
+
     #region ToArray()
 
     [Test]

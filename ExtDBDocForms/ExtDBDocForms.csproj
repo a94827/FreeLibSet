@@ -45,7 +45,7 @@
     <Compile Include="DocTypeUI.cs" />
     <Compile Include="EFPDBxViewOrder.cs" />
     <Compile Include="EFPAllSubDocComboBox.cs" />
-    <Compile Include="GridFilterRange.cs" />
+    <Compile Include="ExtValueControl3.cs" />
     <Compile Include="GroupGridFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -65,10 +65,8 @@
       <DependentUpon>SubDocTableViewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DBxDocImageHandlers.cs" />
-    <Compile Include="DocEditItem.cs" />
     <Compile Include="DocSelectionEditor.cs" />
     <Compile Include="DocumentViewHandler.cs" />
-    <Compile Include="DocValueCheckBox.cs" />
     <Compile Include="DocTypeUserPermissionUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,12 +104,6 @@
     </Compile>
     <Compile Include="DBxPasteFormats.cs" />
     <Compile Include="ColumnUI.cs" />
-    <Compile Include="DocEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DocEditForm.Designer.cs">
-      <DependentUpon>DocEditForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="DocEditPage.cs" />
     <Compile Include="RefDocGridFilterForm.cs">
       <SubType>Form</SubType>
@@ -128,20 +120,15 @@
     <Compile Include="DocumentEditor.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DocValueControl.cs" />
-    <Compile Include="DocValueControl2.cs" />
-    <Compile Include="DocValueNumEdit.cs" />
     <Compile Include="EFPDBxGridView.cs" />
     <Compile Include="EFPDocComboBox.cs" />
     <Compile Include="EFPDocGridView.cs" />
-    <Compile Include="GridFilter.cs" />
     <Compile Include="DateRangeInclusionGridFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DateRangeInclusionGridFilterForm.designer.cs">
       <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GridFilterOthers.cs" />
     <Compile Include="SubDocTypeUI.cs" />
     <Compile Include="YearGridFilterForm.cs">
       <SubType>Form</SubType>

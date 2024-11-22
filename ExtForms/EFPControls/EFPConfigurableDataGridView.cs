@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Расширение табличного просмотра, поддерживающего индивидуальную настройку столбцови возможностью настройки столбцов с помощью <see cref="EFPGridProducer"/> и фильтры
+  /// Расширение табличного просмотра, поддерживающего индивидуальную настройку столбцов с помощью <see cref="EFPGridProducer"/> и фильтры
   /// </summary>
   public class EFPConfigurableDataGridView : EFPDataGridView, IEFPControlWithFilters
   {
@@ -776,7 +776,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается при изменении фильтров.
-    /// Непереопределенный метод вызывает событие <see cref="AfterSetFilter"/> и выполняет обновление данных просмотра.
+    /// Непереопределенный метод вызывает событие <see cref="AfterSetFilter"/> и выполняет обновление данных просмотра вызовом метода <see cref="EFPDataGridView.PerformRefresh()"/>.
     /// </summary>
     protected virtual void OnFilterChanged()
     {

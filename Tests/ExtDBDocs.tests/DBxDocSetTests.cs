@@ -646,7 +646,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.AreEqual(docId1, ds["D1"][0].DocId, "DocId #1");
       Assert.AreEqual(docId2, ds["D1"][1].DocId, "DocId #2");
 
-      IDBxDocValues grpVals = ds["D1"].Values;
+      IDBxExtValues grpVals = ds["D1"].Values;
       Assert.AreEqual(2, grpVals.RowCount, "RowCount #1,2");
       Assert.IsTrue(grpVals.IsReadOnly, "IsReadOnly #1,2");
       Assert.IsFalse(grpVals["F101"].Grayed, "Grayed[F101] #1,2");
@@ -676,7 +676,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId2 = CreateTestDoc(info, false, 2, "DEF");
       DBxDocSet ds = new DBxDocSet(info.Provider);
       ds["D1"].Edit(new Int32[] { docId1, docId2 });
-      IDBxDocValues grpVals = ds["D1"].Values;
+      IDBxExtValues grpVals = ds["D1"].Values;
       Assert.AreEqual(2, grpVals.RowCount, "RowCount #1,2");
       Assert.IsFalse(grpVals.IsReadOnly, "IsReadOnly #1,2");
 
@@ -813,7 +813,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc1 = ds["D1"].View(docId1);
       Assert.AreEqual(2, doc1.SubDocs["SD11"].SubDocCount, "SubDocCount #1");
-      IDBxDocValues grpVals = ds["D1"].SubDocs["SD11"].Values;
+      IDBxExtValues grpVals = ds["D1"].SubDocs["SD11"].Values;
       Assert.AreEqual(2, grpVals.RowCount, "Values.RowCount #1");
       Assert.IsTrue(grpVals["F111"].Grayed, "Grayed #1");
 
@@ -835,7 +835,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc1 = ds["D1"].Edit(docId1);
       DBxSingleDoc doc2 = ds["D1"].Edit(docId2);
-      IDBxDocValues grpVals = ds["D1"].SubDocs["SD11"].Values;
+      IDBxExtValues grpVals = ds["D1"].SubDocs["SD11"].Values;
       grpVals["F111"].SetString("XXX");
       Assert.IsFalse(grpVals["F111"].Grayed, "Grayed #1");
 
@@ -1019,10 +1019,10 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
 
       // В DBxDocSet имеется 4 класса реализующих доступ к значениям
-      IDBxDocValues docVals1 = ds["D1"].Values;
-      IDBxDocValues docVals2 = doc.Values;
-      IDBxDocValues sdVals1 = ds["D1"].SubDocs["SD11"].Values;
-      IDBxDocValues sdVals2 = sd.Values;
+      IDBxExtValues docVals1 = ds["D1"].Values;
+      IDBxExtValues docVals2 = doc.Values;
+      IDBxExtValues sdVals1 = ds["D1"].SubDocs["SD11"].Values;
+      IDBxExtValues sdVals2 = sd.Values;
 
       Assert.IsFalse(docVals1["F102"].AllowDBNull, "F102 AllowDBNull #1");
       Assert.IsFalse(docVals2["F102"].AllowDBNull, "F102 AllowDBNull #2");
@@ -1043,8 +1043,8 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxSingleDoc doc = ds["D1"].Insert();
       DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
 
-      IDBxDocValues sdVals1 = ds["D1"].SubDocs["SD11"].Values;
-      IDBxDocValues sdVals2 = sd.Values;
+      IDBxExtValues sdVals1 = ds["D1"].SubDocs["SD11"].Values;
+      IDBxExtValues sdVals2 = sd.Values;
 
 
       Assert.AreEqual(3, sdVals1["F111"].MaxLength, "F111 MaxLength #1");

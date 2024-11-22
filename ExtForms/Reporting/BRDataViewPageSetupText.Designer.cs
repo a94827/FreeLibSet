@@ -30,7 +30,7 @@
     {
       this.MainPanel = new System.Windows.Forms.Panel();
       this.grpMain = new System.Windows.Forms.GroupBox();
-      this.cbExpHeaders = new System.Windows.Forms.CheckBox();
+      this.cbExpColumnHeaders = new System.Windows.Forms.CheckBox();
       this.cbRemoveDoubleSpaces = new System.Windows.Forms.CheckBox();
       this.cbSingleLineField = new System.Windows.Forms.CheckBox();
       this.cbQuote = new System.Windows.Forms.ComboBox();
@@ -46,15 +46,15 @@
       // MainPanel
       // 
       this.MainPanel.Controls.Add(this.grpMain);
-      this.MainPanel.Location = new System.Drawing.Point(9, 10);
-      this.MainPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.MainPanel.Location = new System.Drawing.Point(12, 12);
+      this.MainPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.MainPanel.Name = "MainPanel";
-      this.MainPanel.Size = new System.Drawing.Size(436, 196);
+      this.MainPanel.Size = new System.Drawing.Size(581, 241);
       this.MainPanel.TabIndex = 0;
       // 
       // grpMain
       // 
-      this.grpMain.Controls.Add(this.cbExpHeaders);
+      this.grpMain.Controls.Add(this.cbExpColumnHeaders);
       this.grpMain.Controls.Add(this.cbRemoveDoubleSpaces);
       this.grpMain.Controls.Add(this.cbSingleLineField);
       this.grpMain.Controls.Add(this.cbQuote);
@@ -65,31 +65,32 @@
       this.grpMain.Controls.Add(this.label1);
       this.grpMain.Dock = System.Windows.Forms.DockStyle.Fill;
       this.grpMain.Location = new System.Drawing.Point(0, 0);
-      this.grpMain.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.grpMain.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.grpMain.Name = "grpMain";
-      this.grpMain.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-      this.grpMain.Size = new System.Drawing.Size(436, 196);
+      this.grpMain.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.grpMain.Size = new System.Drawing.Size(581, 241);
       this.grpMain.TabIndex = 0;
       this.grpMain.TabStop = false;
       this.grpMain.Text = "Параметры текстового файла";
       // 
-      // cbExpHeaders
+      // cbExpColumnHeaders
       // 
-      this.cbExpHeaders.AutoSize = true;
-      this.cbExpHeaders.Location = new System.Drawing.Point(15, 166);
-      this.cbExpHeaders.Name = "cbExpHeaders";
-      this.cbExpHeaders.Size = new System.Drawing.Size(130, 17);
-      this.cbExpHeaders.TabIndex = 8;
-      this.cbExpHeaders.Text = "Заголовки столбцов";
-      this.cbExpHeaders.UseVisualStyleBackColor = true;
+      this.cbExpColumnHeaders.AutoSize = true;
+      this.cbExpColumnHeaders.Location = new System.Drawing.Point(20, 204);
+      this.cbExpColumnHeaders.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbExpColumnHeaders.Name = "cbExpColumnHeaders";
+      this.cbExpColumnHeaders.Size = new System.Drawing.Size(163, 21);
+      this.cbExpColumnHeaders.TabIndex = 8;
+      this.cbExpColumnHeaders.Text = "Заголовки столбцов";
+      this.cbExpColumnHeaders.UseVisualStyleBackColor = true;
       // 
       // cbRemoveDoubleSpaces
       // 
       this.cbRemoveDoubleSpaces.AutoSize = true;
-      this.cbRemoveDoubleSpaces.Location = new System.Drawing.Point(14, 144);
-      this.cbRemoveDoubleSpaces.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.cbRemoveDoubleSpaces.Location = new System.Drawing.Point(19, 177);
+      this.cbRemoveDoubleSpaces.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.cbRemoveDoubleSpaces.Name = "cbRemoveDoubleSpaces";
-      this.cbRemoveDoubleSpaces.Size = new System.Drawing.Size(225, 17);
+      this.cbRemoveDoubleSpaces.Size = new System.Drawing.Size(288, 21);
       this.cbRemoveDoubleSpaces.TabIndex = 7;
       this.cbRemoveDoubleSpaces.Text = "Убирать двойные и концевые пробелы";
       this.cbRemoveDoubleSpaces.UseVisualStyleBackColor = true;
@@ -97,10 +98,10 @@
       // cbSingleLineField
       // 
       this.cbSingleLineField.AutoSize = true;
-      this.cbSingleLineField.Location = new System.Drawing.Point(14, 123);
-      this.cbSingleLineField.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.cbSingleLineField.Location = new System.Drawing.Point(19, 151);
+      this.cbSingleLineField.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.cbSingleLineField.Name = "cbSingleLineField";
-      this.cbSingleLineField.Size = new System.Drawing.Size(223, 17);
+      this.cbSingleLineField.Size = new System.Drawing.Size(286, 21);
       this.cbSingleLineField.TabIndex = 6;
       this.cbSingleLineField.Text = "Заменять переносы строк на пробелы";
       this.cbSingleLineField.UseVisualStyleBackColor = true;
@@ -113,18 +114,17 @@
       this.cbQuote.Items.AddRange(new object[] {
             "\"",
             "\'"});
-      this.cbQuote.Location = new System.Drawing.Point(166, 89);
-      this.cbQuote.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.cbQuote.Location = new System.Drawing.Point(221, 110);
+      this.cbQuote.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.cbQuote.Name = "cbQuote";
-      this.cbQuote.Size = new System.Drawing.Size(254, 21);
+      this.cbQuote.Size = new System.Drawing.Size(337, 24);
       this.cbQuote.TabIndex = 5;
       // 
       // label3
       // 
-      this.label3.Location = new System.Drawing.Point(12, 89);
-      this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+      this.label3.Location = new System.Drawing.Point(16, 110);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(149, 20);
+      this.label3.Size = new System.Drawing.Size(199, 25);
       this.label3.TabIndex = 4;
       this.label3.Text = "Кавычки для строк";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -137,18 +137,17 @@
       this.cbFieldDelimiter.Items.AddRange(new object[] {
             ",",
             ";"});
-      this.cbFieldDelimiter.Location = new System.Drawing.Point(166, 58);
-      this.cbFieldDelimiter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.cbFieldDelimiter.Location = new System.Drawing.Point(221, 71);
+      this.cbFieldDelimiter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.cbFieldDelimiter.Name = "cbFieldDelimiter";
-      this.cbFieldDelimiter.Size = new System.Drawing.Size(254, 21);
+      this.cbFieldDelimiter.Size = new System.Drawing.Size(337, 24);
       this.cbFieldDelimiter.TabIndex = 3;
       // 
       // label2
       // 
-      this.label2.Location = new System.Drawing.Point(12, 58);
-      this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+      this.label2.Location = new System.Drawing.Point(16, 71);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(149, 20);
+      this.label2.Size = new System.Drawing.Size(199, 25);
       this.label2.TabIndex = 2;
       this.label2.Text = "Разделитель полей";
       this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -159,29 +158,28 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.cbCodePage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.cbCodePage.FormattingEnabled = true;
-      this.cbCodePage.Location = new System.Drawing.Point(166, 24);
-      this.cbCodePage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.cbCodePage.Location = new System.Drawing.Point(221, 30);
+      this.cbCodePage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.cbCodePage.Name = "cbCodePage";
-      this.cbCodePage.Size = new System.Drawing.Size(254, 21);
+      this.cbCodePage.Size = new System.Drawing.Size(337, 24);
       this.cbCodePage.TabIndex = 1;
       // 
       // label1
       // 
-      this.label1.Location = new System.Drawing.Point(12, 24);
-      this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+      this.label1.Location = new System.Drawing.Point(16, 30);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(149, 20);
+      this.label1.Size = new System.Drawing.Size(199, 25);
       this.label1.TabIndex = 0;
       this.label1.Text = "Кодировка";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // BRDataViewPageSetupText
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(458, 218);
+      this.ClientSize = new System.Drawing.Size(611, 268);
       this.Controls.Add(this.MainPanel);
-      this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.Name = "BRDataViewPageSetupText";
       this.Text = "EFPDataViewExportTextForm";
       this.MainPanel.ResumeLayout(false);
@@ -203,6 +201,6 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.CheckBox cbRemoveDoubleSpaces;
     private System.Windows.Forms.CheckBox cbSingleLineField;
-    private System.Windows.Forms.CheckBox cbExpHeaders;
+    private System.Windows.Forms.CheckBox cbExpColumnHeaders;
   }
 }

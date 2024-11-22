@@ -733,6 +733,26 @@ namespace FreeLibSet {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap CopySettings {
+            get {
+                object obj = ResourceManager.GetObject("CopySettings", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CopyToolTip {
+            get {
+                object obj = ResourceManager.GetObject("CopyToolTip", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Count {
             get {
                 object obj = ResourceManager.GetObject("Count", resourceCulture);

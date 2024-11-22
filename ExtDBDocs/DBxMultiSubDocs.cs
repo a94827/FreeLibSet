@@ -526,7 +526,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Групповой доступ к поддокументам
 
-    private class MultiSubDocValues : DataTableDocValues, IDBxDocValues, IDBxBinDataDocValues
+    private class MultiSubDocValues : DBxDataTableExtValues, IDBxExtValues, IDBxBinDataExtValues
     {
       #region Конструктор
 
@@ -544,9 +544,9 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      #region IDBxDocValues Members
+      #region IDBxExtValues Members
 
-      public new DBxDocValue this[string name]
+      public new DBxExtValue this[string name]
       {
         get
         {
@@ -556,7 +556,7 @@ namespace FreeLibSet.Data.Docs
           int index = _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
           if (index < 0)
             throw new ArgumentException("Таблица \"" + _MultiSubDocs._Table.TableName + "\" не содержит столбца \"" + name + "\"", "name");
-          return new DBxDocValue(this, index);
+          return new DBxExtValue(this, index);
         }
       }
 
@@ -626,7 +626,7 @@ namespace FreeLibSet.Data.Docs
 
       public byte[] GetBinData(int index)
       {
-        return _MultiSubDocs.DocSet.InternalGetBinData(GetValue(index, DBxDocValuePreferredType.Int32),
+        return _MultiSubDocs.DocSet.InternalGetBinData(GetValue(index, DBxExtValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetFirstDocId(), 
           _MultiSubDocs.SubDocType.Name, GetFirstId(),
           GetName(index));
@@ -639,7 +639,7 @@ namespace FreeLibSet.Data.Docs
 
       public FreeLibSet.IO.FileContainer GetDBFile(int index)
       {
-        return _MultiSubDocs.DocSet.InternalGetDBFile(GetValue(index, DBxDocValuePreferredType.Int32),
+        return _MultiSubDocs.DocSet.InternalGetDBFile(GetValue(index, DBxExtValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetFirstDocId(), 
           _MultiSubDocs.SubDocType.Name, GetFirstId(),
           GetName(index));
@@ -647,7 +647,7 @@ namespace FreeLibSet.Data.Docs
 
       public FreeLibSet.IO.StoredFileInfo GetDBFileInfo(int index)
       {
-        return _MultiSubDocs.DocSet.InternalGetDBFileInfo(GetValue(index, DBxDocValuePreferredType.Int32),
+        return _MultiSubDocs.DocSet.InternalGetDBFileInfo(GetValue(index, DBxExtValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetFirstDocId(), 
           _MultiSubDocs.SubDocType.Name, GetFirstId(),
           GetName(index));
@@ -681,7 +681,7 @@ namespace FreeLibSet.Data.Docs
     /// Реализация доступа к "серым" значениям полей в таблице
     /// Инициализируется при изменении FTable
     /// </summary>
-    public IDBxDocValues Values
+    public IDBxExtValues Values
     {
       get
       {
@@ -946,7 +946,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Реализация свойства DBxSubDoc.Values
     /// </summary>
-    private class SingleSubDocValues : IDBxDocValues, IDBxBinDataDocValues
+    private class SingleSubDocValues : IDBxExtValues, IDBxBinDataExtValues
     {
       #region Защищенный конструктор
 
@@ -974,16 +974,16 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      #region IDBxDocValues Members
+      #region IDBxExtValues Members
 
-      public DBxDocValue this[string name]
+      public DBxExtValue this[string name]
       {
         get
         {
           int index = _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
           if (index < 0)
             throw new ArgumentException("Поле \"" + name + "\" не принадлежит поддокументу \""+_MultiSubDocs.SubDocType.SingularTitle+"\"", "name");
-          return new DBxDocValue(this, index);
+          return new DBxExtValue(this, index);
         }
       }
 
@@ -1006,9 +1006,9 @@ namespace FreeLibSet.Data.Docs
         return _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
       }
 
-      public DBxDocValue this[int index]
+      public DBxExtValue this[int index]
       {
-        get { return new DBxDocValue(this, index); }
+        get { return new DBxExtValue(this, index); }
       }
 
       public int Count
@@ -1016,7 +1016,7 @@ namespace FreeLibSet.Data.Docs
         get { return _MultiSubDocs.Table.Columns.Count; }
       }
 
-      int IDBxDocValues.RowCount { get { return 1; } }
+      int IDBxExtValues.RowCount { get { return 1; } }
 
       public bool IsReadOnly
       {
@@ -1037,7 +1037,7 @@ namespace FreeLibSet.Data.Docs
         }
       }
 
-      public object GetValue(int index, DBxDocValuePreferredType preferredType)
+      public object GetValue(int index, DBxExtValuePreferredType preferredType)
       {
         if (_RowVersion == DataRowVersion.Original)
           return Row[index, DataRowVersion.Original];
@@ -1096,7 +1096,7 @@ namespace FreeLibSet.Data.Docs
 
       public object[] GetValueArray(int index)
       {
-        return new object[1] { GetValue(index, DBxDocValuePreferredType.Unknown) };
+        return new object[1] { GetValue(index, DBxExtValuePreferredType.Unknown) };
       }
 
       public void SetValueArray(int index, object[] values)
@@ -1110,7 +1110,7 @@ namespace FreeLibSet.Data.Docs
       {
         if (rowIndex != 0)
           throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
-        return GetValue(valueIndex, DBxDocValuePreferredType.Unknown);
+        return GetValue(valueIndex, DBxExtValuePreferredType.Unknown);
       }
 
       public void SetRowValue(int valueIndex, int rowIndex, object value)
@@ -1122,21 +1122,21 @@ namespace FreeLibSet.Data.Docs
 
       #endregion
 
-      #region IEnumerable<DBxDocValue> Members
+      #region IEnumerable<DBxExtValue> Members
 
-      public IEnumerator<DBxDocValue> GetEnumerator()
+      public IEnumerator<DBxExtValue> GetEnumerator()
       {
-        return new DBxDocValueEnumerator(this);
+        return new DBxExtValueEnumerator(this);
       }
 
-      IEnumerator<DBxDocValue> IEnumerable<DBxDocValue>.GetEnumerator()
+      IEnumerator<DBxExtValue> IEnumerable<DBxExtValue>.GetEnumerator()
       {
-        return new DBxDocValueEnumerator(this);
+        return new DBxExtValueEnumerator(this);
       }
 
       System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
       {
-        return new DBxDocValueEnumerator(this);
+        return new DBxExtValueEnumerator(this);
       }
 
       #endregion
@@ -1155,7 +1155,7 @@ namespace FreeLibSet.Data.Docs
 
       public byte[] GetBinData(int index)
       {
-        return _MultiSubDocs.DocSet.InternalGetBinData(GetValue(index, DBxDocValuePreferredType.Int32),
+        return _MultiSubDocs.DocSet.InternalGetBinData(GetValue(index, DBxExtValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetDocId(), 
           _MultiSubDocs.SubDocType.Name, GetId(), 
           GetName(index));
@@ -1168,7 +1168,7 @@ namespace FreeLibSet.Data.Docs
 
       public FreeLibSet.IO.FileContainer GetDBFile(int index)
       {
-        return _MultiSubDocs.DocSet.InternalGetDBFile(GetValue(index, DBxDocValuePreferredType.Int32),
+        return _MultiSubDocs.DocSet.InternalGetDBFile(GetValue(index, DBxExtValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetDocId(),
           _MultiSubDocs.SubDocType.Name, GetId(),
           GetName(index));
@@ -1176,7 +1176,7 @@ namespace FreeLibSet.Data.Docs
 
       public FreeLibSet.IO.StoredFileInfo GetDBFileInfo(int index)
       {
-        return _MultiSubDocs.DocSet.InternalGetDBFileInfo(GetValue(index, DBxDocValuePreferredType.Int32),
+        return _MultiSubDocs.DocSet.InternalGetDBFileInfo(GetValue(index, DBxExtValuePreferredType.Int32),
           _MultiSubDocs.Owner.DocType.Name, GetDocId(),
           _MultiSubDocs.SubDocType.Name, GetId(),
           GetName(index));
@@ -1207,7 +1207,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     private Dictionary<int, SingleSubDocValues> _SingleSubDocValues;
 
-    internal IDBxDocValues GetSingleSubDocValues(int rowIndex)
+    internal IDBxExtValues GetSingleSubDocValues(int rowIndex)
     {
       if (_SingleSubDocValues == null)
         _SingleSubDocValues = new Dictionary<int, SingleSubDocValues>();
@@ -1225,7 +1225,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="rowIndex"></param>
     /// <returns></returns>
-    internal IDBxDocValues GetSingleSubDocOriginalValues(int rowIndex)
+    internal IDBxExtValues GetSingleSubDocOriginalValues(int rowIndex)
     {
       if (_SingleSubDocOriginalValues == null)
         _SingleSubDocOriginalValues = new Dictionary<int, SingleSubDocValues>();
@@ -1828,7 +1828,7 @@ namespace FreeLibSet.Data.Docs
           resSubDoc = Insert();
         }
 
-        DBxDocValue.CopyValues(subSet[i].Values, resSubDoc.Values);
+        DBxExtValue.CopyValues(subSet[i].Values, resSubDoc.Values);
       }
 
       // Удаляем лишние поддокументы

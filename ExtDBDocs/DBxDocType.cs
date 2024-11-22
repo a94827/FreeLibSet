@@ -1288,7 +1288,7 @@ namespace FreeLibSet.Data.Docs
     {
       // Проверяем структуру объявления таблицы
       // Вызывается в DBxDocTypes Struct.CheckStruct();
-      string pk = realStruct.CheckTablePrimaryKeyInt32();
+      string pk = DBxStructChecker.CheckTablePrimaryKeyInt32(realStruct);
       if (pk != "Id")
         throw new DBxDocTypeStructException("Описание таблицы \"" + realStruct.TableName + "\" имеет неправильный первичный ключ по полю \"" + pk + "\", а не \"Id\"");
 
@@ -2541,7 +2541,7 @@ namespace FreeLibSet.Data.Docs
       DBxStruct dbs = this.GetMainDBStruct();
       if (binDataHandler != null)
         binDataHandler.AddMainTableStructs(dbs); // 19.07.2021
-      dbs.CheckStruct();
+      DBxStructChecker.CheckStruct(dbs);
 
       foreach (DBxDocType dt in this)
       {
