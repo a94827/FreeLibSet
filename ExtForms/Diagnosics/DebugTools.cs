@@ -94,6 +94,8 @@ namespace FreeLibSet.Forms.Diagnostics
       ShowException(e, title, true);
     }
 
+    private static readonly object _SyncRoot = new object();
+
     /// <summary>
     /// Вывод на экран окна с сообщением об исключении.
     /// Этот метод может вызываться из любого потока.
@@ -109,7 +111,8 @@ namespace FreeLibSet.Forms.Diagnostics
           return; // 18.09.2009. Прерывание пользователем операции не должно выдавать окно
       }
 
-      lock (WinFormsTools.InternalSyncRoot)
+      //lock (WinFormsTools.InternalSyncRoot)
+      lock (_SyncRoot) // 03.10.2024
       {
         if (ShowExceptionEnabled)
         {

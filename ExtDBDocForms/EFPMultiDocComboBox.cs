@@ -642,8 +642,6 @@ namespace FreeLibSet.Forms.Docs
         if (!FilterPassed)
           Ids = DataTools.EmptyIds;
       }
-      else
-        Validate();
     }
 
     /// <summary>
@@ -795,9 +793,12 @@ namespace FreeLibSet.Forms.Docs
       get { return _FilterPassed; }
       private set
       {
+        if (value == _FilterPassed)
+          return;
         _FilterPassed = value;
         if (_FilterPassedEx != null)
           _FilterPassedEx.OwnerSetValue(value);
+        Validate(); // 08.10.2024
       }
     }
     private bool _FilterPassed;

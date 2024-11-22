@@ -426,13 +426,13 @@ namespace FreeLibSet.Forms
     /// Свойство можно устанавливать только до вывода формы на экран
     /// </summary>
     public IButtonControl DefaultButton
-    { 
+    {
       get { return _DefaultButton; }
-      set 
+      set
       {
         CheckHasNotBeenCreated();
-        _DefaultButton = value; 
-      } 
+        _DefaultButton = value;
+      }
     }
     private IButtonControl _DefaultButton;
 
@@ -1751,9 +1751,10 @@ namespace FreeLibSet.Forms
       {
         UpdateCommandItemsActive();
 
-        BaseProvider.FormProvider.TempDefaultButton = null;
+        if (BaseProvider.FormProvider != null)
+          BaseProvider.FormProvider.TempDefaultButton = null;
       }
-      catch { } 
+      catch { }
     }
 
     /// <summary>
@@ -2457,7 +2458,7 @@ namespace FreeLibSet.Forms
       }
     }
     private EventHandler _Idle;
-   
+
     #endregion
 
     #region Обновление по времени
