@@ -1087,7 +1087,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить строку <see cref="DataRow"/> таблицы, связанную с заданным объектом строки.
-    /// Строка <paramref name="gridRow"/> должна быть Unshared
+    /// Строка <paramref name="gridRow"/> должна быть Unshared.
     /// </summary>
     /// <param name="gridRow">Объект строки табличного просмотра</param>
     /// <returns>Строка в таблице <see cref="DataTable"/></returns>
@@ -1122,10 +1122,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Более предпочтительный способ получения строки <see cref="DataRow"/> по номеру строки в
     /// табличном просмотре. Не делает строку Unshared, т.к. не обращается к
-    /// объекту <see cref="DataGridViewRow"/>
-    /// Статический вариант метода
+    /// объекту <see cref="DataGridViewRow"/>.
+    /// Статический вариант метода.
     /// </summary>
-    /// <param name="control">Табличный просмотр, не обязательно имеющий DocGridHandler</param>
+    /// <param name="control">Табличный просмотр</param>
     /// <param name="rowIndex">Номер строки</param>
     /// <returns>Объект DataRow или null при любой ошибке</returns>
     public static DataRow GetDataRow(DataGridView control, int rowIndex)
@@ -1176,7 +1176,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить горизонтальное выравнивание текста ячейки 
-    /// (преобразование из <see cref="DataGridViewContentAlignment"/> в <see cref="HorizontalAlignment"/>
+    /// (преобразование из <see cref="DataGridViewContentAlignment"/> в <see cref="HorizontalAlignment"/>).
     /// </summary>
     /// <param name="cellAlign">Выравнивание ячейки</param>
     /// <returns>Горизонтальное выравнивание текста</returns>
@@ -1433,7 +1433,7 @@ namespace FreeLibSet.Forms
     #region Для ComboBox
 
     /// <summary>
-    /// Устанавливает свойство <see cref="Control.Size"/> в соответствии с самой длинной строкой в списке Items.
+    /// Устанавливает свойство <see cref="Control.Size"/> в соответствии с самой длинной строкой в списке <see cref="ComboBox.Items"/>.
     /// </summary>
     /// <param name="control">Комбоблок</param>
     internal static void SetComboBoxWidth(ComboBox control)
@@ -1475,7 +1475,7 @@ namespace FreeLibSet.Forms
     /// Если форма имеет изменяемые размеры, то она может быть уменьшена, чтобы поместиться в <paramref name="area"/>.
     /// Этот метод не меняет и не учитывает состояние формы <see cref="Form.WindowState"/>.
     /// </summary>
-    /// <param name="form">Разменщаемая форма</param>
+    /// <param name="form">Размещаемая форма</param>
     /// <param name="area">Область для размещения формы</param>
     public static void PlaceFormInRectangle(Form form, Rectangle area)
     {
@@ -1500,9 +1500,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если форма выходит за пределы экрана, выполняется ее перемещение так, чтобы она помещалась
-    /// Размеры формы не меняются
-    /// Только для форм верхнего уровня
+    /// Если форма выходит за пределы экрана, выполняется ее перемещение так, чтобы она помещалась.
+    /// Размеры формы не меняются.
+    /// Только для форм верхнего уровня.
     /// </summary>
     /// <param name="form"></param>
     public static void PlaceFormInScreen(Form form)
@@ -1519,7 +1519,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Установка формы по центру экрана, в котором расположена форма <paramref name="parentForm"/>. Меняется свойство Location
+    /// Установка формы по центру экрана, в котором расположена форма <paramref name="parentForm"/>. Меняется свойство <see cref="Form.Location"/>.
     /// Размер формы не изменяется.
     /// </summary>
     /// <param name="form">Форма, положение которой устанавливается</param>
@@ -1530,7 +1530,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка формы по центру экрана, в котором расположена форма <paramref name="parentForm"/>. Меняется свойство Location
+    /// Установка формы по центру экрана, в котором расположена форма <paramref name="parentForm"/>. Меняется свойство <see cref="Form.Location"/>.
     /// </summary>
     /// <param name="form">Форма, положение которой устанавливается</param>
     /// <param name="parentForm">Форма, экран которой используется для размещения формы. Может быть null. Если форма не задана, используется первичный дисплей</param>
@@ -1554,7 +1554,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка формы по центру экрана, в котором расположена форма <paramref name="parentForm"/>. Меняется свойство Location.
+    /// Установка формы по центру экрана, в котором расположена форма <paramref name="parentForm"/>. Меняется свойство  <see cref="Form.Location"/>.
     /// Размер формы не изменяется.
     /// </summary>
     /// <param name="form">Форма, положение которой устанавливается</param>
@@ -1572,7 +1572,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Разместить форму в центре экрана, на котором она располагается сейчас.
-    /// Размеры формы не меняются
+    /// Размеры формы не меняются.
     /// </summary>
     /// <param name="form">Форма, положение которой задается</param>
     public static void PlaceFormInScreenCenter(Form form)
@@ -1711,8 +1711,8 @@ namespace FreeLibSet.Forms
       if (form.CancelButton == null)
         throw new ArgumentException("У формы не установлено свойство CancelButton", "form");
 #endif
-      Button btnOk = form.AcceptButton as Button;
-      Button btnCancel = form.CancelButton as Button;
+      Button btnOk = (Button)(form.AcceptButton); // пусть будет исключение, если присоединены не кнопки
+      Button btnCancel = (Button)(form.CancelButton);
       btnOk.DialogResult = DialogResult.Cancel;
       form.CancelButton = btnOk;
       btnCancel.Visible = false;
@@ -2491,7 +2491,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает значок текущего приложения.
-    /// Использует Icon.ExtractAssociatedIcon() для извлечения значка exe-файла.
+    /// Использует <see cref="FreeLibSet.Win32.ExeFileInfo"/> для извлечения значка exe-файла.
     /// Путь к приложению возвращается свойством FileTools.ApplicationPath.
     /// Загруженный значок буферизуется.
     /// При отсутствии значка приложения или в случае ошибки загрузки, свойство возвращает null.
@@ -2758,7 +2758,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает объект <see cref="Icon"/> из <see cref="Bitmap"/>.
     /// </summary>
-    /// <param name="image">Изображение, которое будет преобразовано в <see cref="Icon"/>. Может быть null</param>
+    /// <param name="image">Изображение, которое будет преобразовано в <see cref="Icon"/>. Может быть null.</param>
     /// <returns>Объект <see cref="Icon"/> или null</returns>
     public static Icon GetIcon(Image image)
     {
@@ -2867,10 +2867,9 @@ namespace FreeLibSet.Forms
       }
     }
 
-
     /// <summary>
     /// Возвращает текстовые данные из объекта <see cref="DataObject"/>, который получен из буфера обмена.
-    /// Проверяется только формат данных Text.
+    /// Проверяется только формат данных <see cref="DataFormats.Text"/>.
     /// В случае отсутствия данных возвращается null.
     /// Если данные имеют некорректный формат, выбрасывается исключение.
     /// </summary>

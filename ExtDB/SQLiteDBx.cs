@@ -119,7 +119,7 @@ namespace FreeLibSet.Data.SQLite
     /// <summary>
     /// Если InMemory=true, то закрывает соединение с базой данных, что приводит к ее удалению.
     /// </summary>
-    /// <param name="disposing">true, если вызван метод Dispose()</param>
+    /// <param name="disposing">true, если вызван метод <see cref="IDisposable.Dispose()"/></param>
     protected override void Dispose(bool disposing)
     {
       if (disposing)
@@ -159,7 +159,7 @@ namespace FreeLibSet.Data.SQLite
     /// Имя файла
     /// </summary>
     public AbsPath FileName { get { return _FileName; } }
-    private AbsPath _FileName;
+    private readonly AbsPath _FileName;
 
     /// <summary>
     /// Главная точка входа в базу данных.
@@ -177,7 +177,7 @@ namespace FreeLibSet.Data.SQLite
       return new SQLiteDBxEntry(this, MainEntry.ConnectionStringBuilder, permissions);
     }
 
-    private object _SyncRoot;
+    private readonly object _SyncRoot;
 
     /// <summary>
     /// Текстовое представление версии сервера
@@ -207,15 +207,12 @@ namespace FreeLibSet.Data.SQLite
     /// <returns>Размер базы данных в байтах</returns>
     public override long GetDBSize()
     {
-      throw new NotImplementedException();
-      //using (SQLiteDBxCon Con = new SQLiteDBxCon(MainEntry, false))
-      //{
-      //  return DataTools.GetInt64(Con.SQLExecuteScalar("SELECT pg_database_size( \'" + DatabaseName + "\' )"));
-      //}
+      System.IO.FileInfo fi = new System.IO.FileInfo(FileName.Path);
+      return fi.Length;
     }
 
     /// <summary>
-    /// Возвращает статический экзеипляр менеджера баз данных PostgreSQL
+    /// Возвращает статический экземпляр менеджера <see cref="SQLiteDBxManager"/>.
     /// </summary>
     public override DBxManager Manager { get { return SQLiteDBxManager.TheManager; } }
 
@@ -273,7 +270,7 @@ namespace FreeLibSet.Data.SQLite
     #region Обновление структуры
 
     /// <summary>
-    /// Возвращает признак существования файла FileName
+    /// Возвращает признак существования файла <see cref="FileName"/>
     /// </summary>
     public override bool DatabaseExists
     {
@@ -307,7 +304,7 @@ namespace FreeLibSet.Data.SQLite
     /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполняемых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
@@ -324,9 +321,9 @@ namespace FreeLibSet.Data.SQLite
 
     /// <summary>
     /// Удаляет таблицу данных, если она существует.
-    /// Этот метод должен вызываться до установки свойства DBx.Struct и вызова UpdateStruct().
+    /// Этот метод должен вызываться до установки свойства <see cref="DBx.Struct"/> и вызова <see cref="DBx.UpdateStruct()"/>.
     /// Если обновление структуры не предполагается, после последовательности вызовов этого метода,
-    /// должна быть выполнена установка DB.Struct=null, чтобы обновить список таблиц
+    /// должна быть выполнена установка <see cref="DB"/>.Struct=null, чтобы обновить список таблиц.
     /// </summary>
     /// <param name="tableName">Имя удаляемой таблицы</param>
     public override void DropTableIfExists(string tableName)
@@ -356,14 +353,17 @@ namespace FreeLibSet.Data.SQLite
       if (!DatabaseExists)
         return false;
 
-      SQLiteConnection.ClearAllPools();
-      System.IO.File.Delete(FileName.Path);
+      if (!InMemory)
+      {
+        SQLiteConnection.ClearAllPools();
+        System.IO.File.Delete(FileName.Path);
+      }
 
       return true;
     }
 
     /// <summary>
-    /// Возвращает ссылку на SQLiteFactory
+    /// Возвращает ссылку на <see cref="SQLiteFactory"/>
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {
@@ -381,8 +381,8 @@ namespace FreeLibSet.Data.SQLite
 
     /// <summary>
     /// Если true (по умолчанию), то будут заменены функции UPPER(s) и LOWER().
-    /// Они будут вызывать методы String.ToUpperInvariant() и ToLowerInvariant() соответственно.
-    /// Свойство можно устанавливать только до первого вызова конструктора SQLiteDBx.
+    /// Они будут вызывать методы <see cref="String.ToUpperInvariant()"/> и <see cref="String.ToLowerInvariant()"/> соответственно.
+    /// Свойство можно устанавливать только до первого вызова конструктора <see cref="SQLiteDBx"/>.
     /// </summary>
     public static bool UseInvariantStringFunctions
     {
@@ -546,7 +546,7 @@ namespace FreeLibSet.Data.SQLite
     #region Переопределенные методы
 
     /// <summary>
-    /// Создает объект SQLiteDBxCon
+    /// Создает объект <see cref="SQLiteDBxCon"/>
     /// </summary>
     /// <returns>Соединение</returns>
     public override DBxConBase CreateCon()
@@ -607,7 +607,7 @@ namespace FreeLibSet.Data.SQLite
 
   /// <summary>
   /// Соедиенение с базой данных SQLite.
-  /// Для создания объекта используйте SQLiteDBxEntry
+  /// Для создания объекта используйте <see cref="SQLiteDBxEntry.CreateCon()"/>.
   /// </summary>
   public class SQLiteDBxCon : DBxConBase
   {
@@ -622,7 +622,7 @@ namespace FreeLibSet.Data.SQLite
     /// Закрывает соедиенение ADO.NET, если оно было открыто, и возвращает его в пул.
     /// Удаляет соединение из точки входа.
     /// </summary>
-    /// <param name="disposing">True, если был вызван метод Dispose().
+    /// <param name="disposing">True, если был вызван метод <see cref="IDisposable.Dispose()"/>.
     /// False, если вызван деструктор</param>
     protected override void Dispose(bool disposing)
     {
@@ -662,7 +662,7 @@ namespace FreeLibSet.Data.SQLite
 
     /// <summary>
     /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Объект создается при первом обращении к свойству.
     /// </summary>
     public SQLiteConnection Connection
     {
@@ -706,7 +706,7 @@ namespace FreeLibSet.Data.SQLite
 
     /// <summary>
     /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Объект создается при первом обращении к свойству.
     /// </summary>
     protected override DbConnection DbConnection { get { return Connection; } }
 
@@ -725,7 +725,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Вызывает SQLiteConnection.ClearPool()
+    /// Вызывает <see cref="SQLiteConnection.ClearPool(SQLiteConnection)"/>
     /// </summary>
     public override void ClearPool()
     {
@@ -738,7 +738,7 @@ namespace FreeLibSet.Data.SQLite
     #region Выполнение SQL-запросов
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего единственное значение
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего единственное значение
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -770,7 +770,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего таблицу данных
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего таблицу данных
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="tableName">Имя таблицы для возвращаемого DataTable</param>
@@ -792,7 +792,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего DbDataReader
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего <see cref="DbDataReader"/>
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -837,8 +837,8 @@ namespace FreeLibSet.Data.SQLite
     /// <summary>
     /// Возвращает оптимизированную реализацию писателя
     /// </summary>
-    /// <param name="writerInfo"></param>
-    /// <returns></returns>
+    /// <param name="writerInfo">Параметры писателя</param>
+    /// <returns>Писатель</returns>
     protected override DBxDataWriter OnCreateWriter(DBxDataWriterInfo writerInfo)
     {
       return new SQLiteDBxDataWriter(this, writerInfo);
@@ -904,7 +904,7 @@ namespace FreeLibSet.Data.SQLite
 
     /// <summary>
     /// Добавить строку с автоматическим присвоением идентификатора.
-    /// Полученный идентификатор возвращается и может быть использован для ссылок на строку
+    /// Полученный идентификатор возвращается и может быть использован для ссылок на строку.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
@@ -951,7 +951,7 @@ namespace FreeLibSet.Data.SQLite
     #region Транзакция
 
     /// <summary>
-    /// Текущая транзакция, если был вызов метода TransactionBegin(), или null, если нет активной транзакции
+    /// Текущая транзакция, если был вызов метода <see cref="DBxConBase.TransactionBegin()"/>, или null, если нет активной транзакции
     /// </summary>
     public new SQLiteTransaction CurrentTransaction
     {
@@ -2067,7 +2067,7 @@ namespace FreeLibSet.Data.SQLite
     }
 
     /// <summary>
-    /// Возвращает ссылку на SQLiteFactory
+    /// Возвращает ссылку на <see cref="SQLiteFactory"/>
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {

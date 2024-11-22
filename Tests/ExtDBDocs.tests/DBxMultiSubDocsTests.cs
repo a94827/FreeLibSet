@@ -232,5 +232,37 @@ namespace ExtDBDocs_tests.Data_Docs
     }
 
     #endregion
+
+    #region InsertForDocIds()
+
+
+    [Test]
+    public void InsertForDocIds([Values(false, true)] bool useDeleted, [Values(false, true)] bool useVersions, [Values(false, true)] bool useTime)
+    {
+      TestDBInfo info = this[useDeleted, useVersions, useTime];
+      Int32 docId1 = CreateTestDoc(info);
+      Int32 docId2 = CreateTestDoc(info);
+
+      DBxDocSet ds = new DBxDocSet(info.Provider);
+      DBxMultiSubDocs sut = ds["D1"].SubDocs["SD11"];
+      DBxSingleDoc doc1 = ds["D1"].Edit(docId1);
+      DBxSingleDoc doc2 = ds["D1"].View(docId2);
+      DBxSingleDoc doc3 = ds["D1"].Insert();
+
+      int nSubDocs = sut.SubDocCount;
+      Assert.Catch<InvalidOperationException>(delegate () { sut.InsertForDocIds(new Int32[] { docId1, docId2 }); }, "Try for doc in view state");
+      Assert.AreEqual(nSubDocs, sut.SubDocCount, "No subdocs created");
+
+      DBxSubDoc[] subDocs2 = null;
+      Assert.DoesNotThrow(delegate () { subDocs2 = sut.InsertForDocIds(new Int32[] { docId1, doc3.DocId }); }, "Insert and edit mode");
+      Assert.AreEqual(nSubDocs + 2, sut.SubDocCount, "2 subdocs created");
+      Assert.AreEqual(2, subDocs2.Length, "Length #2");
+      Assert.AreEqual(docId1, subDocs2[0].DocId, "DocId1");
+      Assert.AreEqual(doc3.DocId, subDocs2[1].DocId, "DocId2");
+      Assert.AreEqual(DBxDocState.Insert, subDocs2[0].SubDocState, "State 1");
+      Assert.AreEqual(DBxDocState.Insert, subDocs2[1].SubDocState, "State 2");
+    }
+
+    #endregion
   }
 }

@@ -12,7 +12,7 @@ using System.Data.Common;
 using FreeLibSet.IO;
 using FreeLibSet.Core;
 
-#pragma warning disable 1591
+//#pragma warning disable 1591
 
 namespace FreeLibSet.Data.OracleClient
 {
@@ -85,6 +85,11 @@ namespace FreeLibSet.Data.OracleClient
     /// </summary>
     public new OracleDBxEntry MainEntry { get { return (OracleDBxEntry)(base.MainEntry); } }
 
+    /// <summary>
+    /// Создает новое подключение <see cref="OracleDBxEntry"/> с заданными правами
+    /// </summary>
+    /// <param name="permissions">Права на доступ к таблицам</param>
+    /// <returns>Объект для подключения</returns>
     public override DBxEntry CreateEntry(DBxPermissions permissions)
     {
       return new OracleDBxEntry(this, MainEntry.ConnectionStringBuilder, permissions);
@@ -113,13 +118,17 @@ namespace FreeLibSet.Data.OracleClient
     }
     private string _ServerVersionText;
 
+    /// <summary>
+    /// Не реализовано
+    /// </summary>
+    /// <returns></returns>
     public override long GetDBSize()
     {
       throw new NotImplementedException();
     }
 
     /// <summary>
-    /// Возвращает ссылку на OracleClientFactory
+    /// Возвращает ссылку на <see cref="OracleClientFactory"/>
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {
@@ -130,6 +139,10 @@ namespace FreeLibSet.Data.OracleClient
 
     #region Структура базы данных
 
+    /// <summary>
+    /// Проверка не реализована.
+    /// Всегда возвращает true.
+    /// </summary>
     public override bool DatabaseExists
     {
       get
@@ -149,6 +162,9 @@ namespace FreeLibSet.Data.OracleClient
       }
     }
 
+    /// <summary>
+    /// Не реализовано
+    /// </summary>
     public override void CreateIfRequired()
     {
       throw new NotSupportedException();
@@ -159,7 +175,7 @@ namespace FreeLibSet.Data.OracleClient
     /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполняемых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
@@ -203,7 +219,7 @@ namespace FreeLibSet.Data.OracleClient
       /// </summary>
       /// <param name="tableName"></param>
       /// <param name="errorText"></param>
-      /// <returns></returns>
+      /// <returns>Правильность имени</returns>
     public override bool IsValidTableName(string tableName, out string errorText)
     {
       if (String.IsNullOrEmpty(tableName))
@@ -233,6 +249,9 @@ namespace FreeLibSet.Data.OracleClient
     #endregion
   }
 
+  /// <summary>
+  /// Точка подключения к базе данных Oracle с заданными правами доступа к таблицам
+  /// </summary>
   public class OracleDBxEntry : DBxEntry
   {
     #region Конструкторы
@@ -277,6 +296,9 @@ namespace FreeLibSet.Data.OracleClient
 
     #region Свойства
 
+    /// <summary>
+    /// Ссылка на объект базы данных
+    /// </summary>
     public new OracleDBx DB { get { return (OracleDBx)(base.DB); } }
 
     // Свойство ConnectionString не стоит делать public. Там может быть пароль
@@ -292,8 +314,8 @@ namespace FreeLibSet.Data.OracleClient
     #region Переопределенные методы
 
     /// <summary>
-    /// Создать новое соединение
-    /// Этот метод может вызываться асинхронно
+    /// Создать новое соединение.
+    /// Этот метод может вызываться асинхронно.
     /// </summary>
     /// <returns>Соединение с базовй данных</returns>
     public override DBxConBase CreateCon()
@@ -329,8 +351,8 @@ namespace FreeLibSet.Data.OracleClient
     /// <summary>
     /// Удаление пароля из строки соединения, если он есть
     /// </summary>
-    /// <param name="cs"></param>
-    /// <returns></returns>
+    /// <param name="cs">Строка подключения с паролем</param>
+    /// <returns>Строка подключения без пароля</returns>
     internal static string GetUnpasswordedConnectionString(string cs)
     {
       try
@@ -352,6 +374,11 @@ namespace FreeLibSet.Data.OracleClient
     #endregion
   }
 
+  /// <summary>
+  /// Соединение с базой данных Oracle для выполнения запросов.
+  /// Используйте <see cref="OracleDBxEntry.CreateCon()"/> для получения соединения.
+  /// Используйте блок using для гарантированного закрытия соединения.
+  /// </summary>
   public class OracleDBxCon : DBxConBase
   {
     #region Конструктор и Dispose()
@@ -365,7 +392,7 @@ namespace FreeLibSet.Data.OracleClient
     /// Закрывает соедиенение ADO.NET, если оно было открыто, и возвращает его в пул.
     /// Удаляет соединение из точки входа.
     /// </summary>
-    /// <param name="disposing">True, если был вызван метод Dispose().
+    /// <param name="disposing">True, если был вызван метод <see cref="IDisposable.Dispose()"/>.
     /// False, если вызван деструктор</param>
     protected override void Dispose(bool disposing)
     {
@@ -382,8 +409,14 @@ namespace FreeLibSet.Data.OracleClient
 
     #region Свойства
 
+    /// <summary>
+    /// Ссылка на точку подключения
+    /// </summary>
     public new OracleDBxEntry Entry { get { return (OracleDBxEntry)(base.Entry); } }
 
+    /// <summary>
+    /// Ссылка на базу данных
+    /// </summary>
     public new OracleDBx DB { get { return (OracleDBx)(base.DB); } }
 
     #endregion
@@ -392,7 +425,7 @@ namespace FreeLibSet.Data.OracleClient
 
     /// <summary>
     /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Объект создается при первом обращении к свойству.
     /// </summary>
     public OracleConnection Connection
     {
@@ -423,7 +456,7 @@ namespace FreeLibSet.Data.OracleClient
 
     /// <summary>
     /// Возвращает соединение ADO.NET.
-    /// Объект создается при первом обращении к свойству
+    /// Объект создается при первом обращении к свойству.
     /// </summary>
     protected override DbConnection DbConnection { get { return Connection; } }
 
@@ -442,7 +475,7 @@ namespace FreeLibSet.Data.OracleClient
     }
 
     /// <summary>
-    /// Вызывает OracleConnection.ClearPool()
+    /// Вызывает <see cref="OracleConnection.ClearPool(OracleConnection)"/>
     /// </summary>
     public override void ClearPool()
     {
@@ -457,7 +490,7 @@ namespace FreeLibSet.Data.OracleClient
     #region Выполнение SQL-запросов
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего единственное значение
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего единственное значение
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -488,7 +521,7 @@ namespace FreeLibSet.Data.OracleClient
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего таблицу данных
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего таблицу данных
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="tableName">Имя таблицы для возвращаемого DataTable</param>
@@ -509,7 +542,7 @@ namespace FreeLibSet.Data.OracleClient
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего DbDataReader
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего DbDataReader
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -555,7 +588,7 @@ namespace FreeLibSet.Data.OracleClient
     /// <summary>
     /// Не реализовано.
     /// Добавить строку с автоматическим присвоением идентификатора.
-    /// Полученный идентификатор возвращается и может быть использован для ссылок на строку
+    /// Полученный идентификатор возвращается и может быть использован для ссылок на строку.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
@@ -600,7 +633,7 @@ namespace FreeLibSet.Data.OracleClient
     }
 
     /// <summary>
-    /// Реализация группового добавления строк с помощью <see cref="System.Data.SqlClient.SqlBulkCopy"/> 
+    /// Реализация группового добавления строк
     /// </summary>
     /// <param name="tableName">Имя таблицы, в которую выполняется запись</param>
     /// <param name="table">Таблица исходных данных</param>

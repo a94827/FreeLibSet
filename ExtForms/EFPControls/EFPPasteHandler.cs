@@ -457,19 +457,35 @@ namespace FreeLibSet.Forms
       }
     }
 
+    [DebuggerStepThrough]
+    private static IDataObject ClipboardGetDataObject()
+    {
+      try
+      {
+        return Clipboard.GetDataObject();
+      }
+      catch
+      {
+        return null;
+      }
+    }
+
     [DebuggerStepThrough] // Clipboard.GetDataObject() часто выбрасывает исключение
     private void SetRealEnabled()
     {
       try
       {
         bool hasAnyFormat = false;
-        IDataObject dataObj = Clipboard.GetDataObject();
-        for (int j = 0; j < Count; j++)
+        IDataObject dataObj = ClipboardGetDataObject();
+        if (dataObj != null)
         {
-          if (dataObj.GetDataPresent(this[j].DataFormat, this[j].AutoConvert))
+          for (int j = 0; j < Count; j++)
           {
-            hasAnyFormat = true;
-            break;
+            if (dataObj.GetDataPresent(this[j].DataFormat, this[j].AutoConvert))
+            {
+              hasAnyFormat = true;
+              break;
+            }
           }
         }
         ciPaste.Enabled = hasAnyFormat;

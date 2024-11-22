@@ -30,9 +30,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPReportGridPage()
     {
-      AutoInitTopLeftCellInfo = true;
       _AutoInitStateImageKey = false;
-      AutoSaveOrder = true;
+      _AutoSaveOrder = true;
     }
 
     #endregion
@@ -40,7 +39,8 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
-    /// Дополниельно устанавливает свойство <see cref="EFPControlBase.DisplayName"/>
+    /// Заголовок вкладки.
+    /// Дополнительно устанавливает свойство <see cref="EFPControlBase.DisplayName"/>
     /// </summary>
     public override string Title
     {
@@ -56,7 +56,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Дополнительно выполняет инициализацию свойства <see cref="EFPReportPage.ImageKey"/>
     /// </summary>
-    /// <param name="parentControl"></param>
+    /// <param name="parentControl">Пустая панель, на которой будет расположена страница</param>
     public override void AssignParentControl(Panel parentControl)
     {
       base.AssignParentControl(parentControl);
@@ -99,25 +99,28 @@ namespace FreeLibSet.Forms
         if (hasData && DataSource != null)
           _ControlProvider.Selection = oldSel;
       }
-      InitStateImageKey();
     }
 
     /// <summary>
     /// Устанавливает свойство <see cref="DataGridView.DataSource"/> равным <see cref="DataSource"/>.
-    /// Переопределяется в EFPReportStdConfigurableGridPage
+    /// Переопределяется в <see cref="EFPReportStdConfigurableGridPage"/>.
     /// </summary>
     protected virtual void OnInitControlDataSource()
     {
       _ControlProvider.Control.DataSource = DataSource;
     }
 
-    private void InitStateImageKey()
+    private void ControlProvider_Validating(object sender, UICore.UIValidatingEventArgs args)
     {
-      if (AutoInitTopLeftCellInfo)
-        _ControlProvider.InitTopLeftCellTotalInfo();
       if (AutoInitStateImageKey)
-        base.InitStateImageKey(_ControlProvider.GetAllRowsImageKind());
+      {
+        if (_ControlProvider.UseRowImages && _ControlProvider.ShowRowCountInTopLeftCell)
+          base.InitStateImageKey(_ControlProvider.TopLeftCellImageKind);
+        else
+          base.InitStateImageKey(_ControlProvider.GetAllRowsImageKind());
+      }
     }
+
 
     /// <summary>
     /// Запомнить информацию табличного просмотра
@@ -144,8 +147,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Этот метод вызывается при обновлении отчета нажатием клавиши F5 при сбросе
-    /// свойства DataReady в false
+    /// Этот метод вызывается при обновлении отчета нажатием клавиши [F5] при сбросе
+    /// свойства <see cref="EFPReportPage.DataReady"/> в false
     /// </summary>
     protected override void InvalidateData()
     {
@@ -184,7 +187,6 @@ namespace FreeLibSet.Forms
             bool hasData = _ControlProvider.Control.DataSource != null;
 
             OnInitControlDataSource();
-            InitStateImageKey();
 
             if (hasData && value != null)
               _ControlProvider.Selection = oldSel;
@@ -196,7 +198,6 @@ namespace FreeLibSet.Forms
           {
             CreateControlProvider();
             OnInitControlDataSource();
-            InitStateImageKey();
           }
         }
       }
@@ -205,7 +206,7 @@ namespace FreeLibSet.Forms
     private DataView _DataSource;
 
     /// <summary>
-    /// Солбытие вызывается при установке свойства <see cref="DataSource"/>
+    /// Событие вызывается при установке свойства <see cref="DataSource"/>
     /// </summary>
     public event EventHandler DataSourceChanged;
 
@@ -233,7 +234,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если установить в true, то будет видна панель кнопок.
-    /// По умолчанию - false - без кнопок
+    /// По умолчанию - false - без кнопок.
+    /// Свойство можно устанавливать только до присоединения страницы к отчету.
     /// </summary>
     public bool ShowToolBar
     {
@@ -247,18 +249,6 @@ namespace FreeLibSet.Forms
     private bool _ShowToolBar;
 
     /// <summary>
-    /// Если свойство установлено (по умолчанию), а при инициализации просмотра
-    /// было установлено свойство <see cref="EFPDataGridView.UseRowImages"/>, то в верехней левой
-    /// ячейке просмотра будет выводиться подсказка о количестве ошибок и 
-    /// предупреждений. Информация обновляется при присоединении источника данных
-    /// с помощью свойства <see cref="DataSource"/>.
-    /// Чтобы вручную устанавливать значение ячейки или вообще не выводить статистику,
-    /// свойство должно быть сброшено в false.
-    /// </summary>
-    public bool AutoInitTopLeftCellInfo { get { return _AutoInitTopLeftCellInfo; } set { _AutoInitTopLeftCellInfo = value; } }
-    private bool _AutoInitTopLeftCellInfo;
-
-    /// <summary>
     /// Если свойство установлено, то выполняется автоматическое управление значком
     /// вкладки (свойство <see cref="EFPReportPage.ImageKey"/>), в зависимости от наличия в табличном просмотре
     /// строк с ошибками и предупреждениями.
@@ -267,12 +257,14 @@ namespace FreeLibSet.Forms
     /// к странице, что может привести к замедлению построения.
     /// По умолчанию свойство не установлено.
     /// Если свойство установлено, то ручное задание свойства <see cref="EFPReportPage.ImageKey"/> не требуется.
+    /// Свойство можно устанавливать только до присоединения страницы к отчету.
     /// </summary>
     public bool AutoInitStateImageKey
     {
       get { return _AutoInitStateImageKey; }
       set
       {
+        CheckPageNotCreated();
         _AutoInitStateImageKey = value;
         if (value)
           ImageKey = "UnknownState";
@@ -281,22 +273,19 @@ namespace FreeLibSet.Forms
     private bool _AutoInitStateImageKey;
 
     /// <summary>
-    /// По умолчанию (false) табличный просмотр создается один раз при инициализации
-    /// страницы отчета. Событие <see cref="InitGrid"/> также вызывается один раз. Повторное
-    /// построение отчета не приводит к замене табличного просмотра.
+    /// По умолчанию (false) табличный просмотр создается один раз при инициализации страницы отчета.
+    /// Событие <see cref="InitGrid"/> также вызывается один раз. 
+    /// Повторное построение отчета не приводит к замене табличного просмотра.
     /// Установка свойства в true делает построение табличного просмотра многократным.
     /// Табличный просмотр заново создается при каждом перестроении отчета.
-    /// Свойство можно устанавливать только до присоединения к отчету.
+    /// Свойство можно устанавливать только до присоединения страницы к отчету.
     /// </summary>
     public bool AutoRecreateGrid
     {
       get { return _AutoRecreateGrid; }
       set
       {
-#if DEBUG
-        if (_ParentControl != null)
-          throw new InvalidOperationException("Нельзя устанавливать свойство AutoRecreateGrid после добавления страницы к отчету");
-#endif
+        CheckPageNotCreated();
         _AutoRecreateGrid = value;
       }
     }
@@ -305,7 +294,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Автоматическая загрузка и сохранение порядка сортировки строк в секции 
     /// конфигурации (по умолчанию - true), если есть установленные 
-    /// порядки сортировки <see cref="EFPDataGridView.Orders"/> или <see cref="EFPDataGridView.CustomOrderAllowed"/>=true. Если требуется, чтобы страница отчета при каждом
+    /// порядки сортировки <see cref="EFPDataGridView.Orders"/> или <see cref="EFPDataGridView.CustomOrderAllowed"/>=true. 
+    /// Если требуется, чтобы страница отчета при каждом
     /// построении имела определенный порядок строк, а не запомненный ранее,
     /// следует установить значение false до присоединения страницы к отчету.
     /// </summary>
@@ -350,6 +340,7 @@ namespace FreeLibSet.Forms
       //GridPageSetup PageSetup = FControlProvider.AddGridPrint();
       //PageSetup.DocumentName = Title;
       _ControlProvider.DisplayName = Title;
+      _ControlProvider.ShowRowCountInTopLeftCell = true; 
 
       if (_ControlProvider.DefaultOutItem!=null)
         _ControlProvider.DefaultOutItem.TitleNeeded += DefaultOutItem_TitleNeeded;
@@ -362,11 +353,13 @@ namespace FreeLibSet.Forms
         if (ShowToolBar)
           ControlProvider.ToolBarPanel = _MainPanel.ToolBarPanel;
       }
-      // Убрано 21.05.2022
+      // Убрано 21.05.2022.
       // Пусть пока команды меню останутся доступными для изменения.
       // Событие DocTypeUI.InitView будет вызвано позднее, в ответ на событие EFPControlBase.Created.
       // Пользовательский обработчик InitView может добавить еще команды меню
       // ControlProvider.PrepareCommandItems();
+
+      ControlProvider.Validating += ControlProvider_Validating;
     }
 
     /// <summary>
@@ -384,7 +377,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Повторное создание табличного просмотра. Если на момент вызова просмотр
     /// еще не был создан, никаких действий не выполняется.
-    /// Если просмотр существует, то он будет удален и создан заново (с повторынм
+    /// Если просмотр существует, то он будет удален и создан заново (с повторным
     /// вызовом события <see cref="InitGrid"/>). Текущая позиция сохраняется, если источник
     /// данных был присоединен.
     /// </summary>
@@ -403,7 +396,6 @@ namespace FreeLibSet.Forms
 
       // Восстанавливаем источник данных
       OnInitControlDataSource();
-      InitStateImageKey();
 
       if (hasData && _DataSource != null)
         _ControlProvider.Selection = oldSel;
@@ -666,7 +658,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPReportVarGridPage()
     {
-      _AutoInitTopLeftCellInfo = true;
     }
 
     #endregion
@@ -806,7 +797,7 @@ namespace FreeLibSet.Forms
 
         if (_ControlProvider != null)
         {
-          _ControlProvider.Control.DataBindingComplete -= new DataGridViewBindingCompleteEventHandler(Grid_DataBindingComplete);
+          _ControlProvider.Validating -= ControlProvider_Validating;
           _ControlProvider.BaseProvider.Parent = null;
 
           if (_ControlProvider.DefaultOutItem != null)
@@ -818,8 +809,7 @@ namespace FreeLibSet.Forms
 
         if (_ControlProvider != null)
         {
-          InitStateImageKey();
-          _ControlProvider.Control.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(Grid_DataBindingComplete);
+          _ControlProvider.Validating += ControlProvider_Validating;
 
           _ControlProvider.DisplayName = Title;
           _ControlProvider.CommandItems.UseRefresh = false; // обрабатывается на уровне отчета в целом
@@ -841,7 +831,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если установить в true, то будет видна панель кнопок.
-    /// По умолчанию - false - без кнопок
+    /// По умолчанию - false - без кнопок.
     /// </summary>
     public bool ShowToolBar
     {
@@ -853,26 +843,6 @@ namespace FreeLibSet.Forms
       }
     }
     private bool _ShowToolBar;
-
-    /// <summary>
-    /// Если свойство установлено (по умолчанию), а при инициализации просмотра
-    /// было установлено свойство <see cref="EFPDataGridView.UseRowImages"/>, то в верехней левой
-    /// ячейке просмотра будет выводиться подсказка о количестве ошибок и 
-    /// предупреждений. Информация обновляется при присоединении источника данных
-    /// с помощью свойства <see cref="EFPReportGridPage.DataSource"/>.
-    /// Чтобы вручную устанавливать значение ячейки или вообще не выводить статистику,
-    /// свойство должно быть сброшено в false
-    /// </summary>
-    public bool AutoInitTopLeftCellInfo
-    {
-      get { return _AutoInitTopLeftCellInfo; }
-      set
-      {
-        CheckPageNotCreated();
-        _AutoInitTopLeftCellInfo = value;
-      }
-    }
-    private bool _AutoInitTopLeftCellInfo;
 
     /// <summary>
     /// Если свойство установлено, то выполняется автоматическое управление значком
@@ -897,29 +867,18 @@ namespace FreeLibSet.Forms
     }
     private bool _AutoInitStateImageKey;
 
-    // Обработчик события DataGridView.DataBindingComplete обновляет значок в
-    // верхней левой ячейке таблицы при подключении источника данных к табличному
-    // просмотру. Обработки только установки свойства ControlProvider недостаточно,
-    // т.к. набор данных DataView присоединяется позднее.
-    // Т.к. свойство ControlProvider может устанавливаться несколько раз с одним и тем же
-    // значением, обработчик нужно отсоединять от старого просмотра.
-   
-    
-    void Grid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs args)
+
+    private void ControlProvider_Validating(object sender, UICore.UIValidatingEventArgs args)
     {
-      if (args.ListChangedType == ListChangedType.Reset)
+      if (AutoInitStateImageKey)
       {
-        InitStateImageKey();
+        if (_ControlProvider.UseRowImages && _ControlProvider.ShowRowCountInTopLeftCell)
+          base.InitStateImageKey(_ControlProvider.TopLeftCellImageKind);
+        else
+          base.InitStateImageKey(_ControlProvider.GetAllRowsImageKind());
       }
     }
 
-    private void InitStateImageKey()
-    {
-      if (AutoInitTopLeftCellInfo)
-        _ControlProvider.InitTopLeftCellTotalInfo();
-      if (AutoInitStateImageKey)
-        base.InitStateImageKey(_ControlProvider.GetAllRowsImageKind());
-    }
 
     #endregion
 
@@ -1429,7 +1388,9 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     /// <summary>
-    /// Основное свойство - присоединенный список сообщений
+    /// Основное свойство - присоединенный список сообщений.
+    /// Установка свойства задает заголовок, значок и всплывающую подсказку вкладки, если установлены соответствующие свойства <see cref="AutoTitle"/>, <see cref="AutoImageKey"/> и <see cref="AutoToolTipText"/>.
+    /// Допускается установка значения null в начале построения / перестроения отчета, чтобы показать пользователю сообщение, что список ошибок еще не присоединен.
     /// </summary>
     public ErrorMessageList ErrorMessages
     {
@@ -1453,34 +1414,68 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Ширина области для вывода кодов ошибок в текстовых единицах.
     /// По умолчанию - 0 - коды не выводятся.
-    /// Свойство должно устанавливаться после вызова конструктора до добавления
-    /// страницы к отчету.
+    /// Свойство должно устанавливаться после вызова конструктора до добавления страницы к отчету.
     /// </summary>
-    public int CodeWidth { get { return _CodeWidth; } set { _CodeWidth = value; } }
+    public int CodeWidth
+    {
+      get { return _CodeWidth; }
+      set
+      {
+        CheckPageNotCreated();
+        _CodeWidth = value;
+      }
+    }
     private int _CodeWidth;
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то значок закладки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство <see cref="EFPReportPage.ImageKey"/> вручную, сначала следует задать AutoImageKey=false
+    /// свойство <see cref="EFPReportPage.ImageKey"/> вручную, сначала следует задать <see cref="AutoImageKey"/>=false.
+    /// Свойство должно устанавливаться после вызова конструктора до добавления страницы к отчету.
     /// </summary>
-    public bool AutoImageKey { get { return _AutoImageKey; } set { _AutoImageKey = value; } }
+    public bool AutoImageKey
+    {
+      get { return _AutoImageKey; }
+      set
+      {
+        CheckPageNotCreated();
+        _AutoImageKey = value;
+      }
+    }
     private bool _AutoImageKey;
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то заголовок закладки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство <see cref="EFPReportPage.Title"/> вручную, сначала следует задать AutoTitle=false
+    /// свойство <see cref="EFPReportPage.Title"/> вручную, сначала следует задать <see cref="AutoTitle"/>=false.
+    /// Свойство должно устанавливаться после вызова конструктора до добавления страницы к отчету.
     /// </summary>
-    public bool AutoTitle { get { return _AutoTitle; } set { _AutoTitle = value; } }
+    public bool AutoTitle
+    {
+      get { return _AutoTitle; }
+      set
+      {
+        CheckPageNotCreated();
+        _AutoTitle = value;
+      }
+    }
     private bool _AutoTitle;
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то всплывающие подсказки заголовка закладки
     /// устанавливается автоматически при присоединении списка. Чтобы установить
-    /// свойство <see cref="EFPReportPage.ToolTipText"/> вручную, сначала следует задать AutoToolTipText=false
+    /// свойство <see cref="EFPReportPage.ToolTipText"/> вручную, сначала следует задать <see cref="AutoToolTipText"/>=false
+    /// Свойство должно устанавливаться после вызова конструктора до добавления страницы к отчету.
     /// </summary>
-    public bool AutoToolTipText { get { return _AutoToolTipText; } set { _AutoToolTipText = value; } }
+    public bool AutoToolTipText
+    {
+      get { return _AutoToolTipText; }
+      set
+      {
+        CheckPageNotCreated();
+        _AutoToolTipText = value;
+      }
+    }
     private bool _AutoToolTipText;
 
     #endregion
@@ -1492,11 +1487,25 @@ namespace FreeLibSet.Forms
     /// Если обработчик не присоединен, то пользователь не может "войти" в сообщение.
     /// Обработчик должен быть установлен до присоединения страницы к отчету.
     /// </summary>
-    public event ErrorMessageItemEventHandler EditMessage;
-
-    private void OnEdiMessage(object sender, ErrorMessageItemEventArgs args)
+    public event ErrorMessageItemEventHandler EditMessage
     {
-      EditMessage(this, args);
+      add
+      {
+        CheckPageNotCreated();
+        _EditMessage += value;
+      }
+      remove
+      {
+        CheckPageNotCreated();
+        _EditMessage -= value;
+      }
+    }
+    private ErrorMessageItemEventHandler _EditMessage;
+
+    private void OnEditMessage(object sender, ErrorMessageItemEventArgs args)
+    {
+      if (_EditMessage!=null)
+        _EditMessage(this, args);
     }
 
     ///// <summary>
@@ -1529,8 +1538,8 @@ namespace FreeLibSet.Forms
       _ControlProvider = CreateControlProvider(control);
       _ControlProvider.CodeWidth = CodeWidth;
 
-      if (EditMessage != null)
-        _ControlProvider.EditMessage += new ErrorMessageItemEventHandler(OnEdiMessage);
+      if (_EditMessage != null)
+        _ControlProvider.EditMessage += new ErrorMessageItemEventHandler(OnEditMessage);
 
       //if (GetDocSel != null)
       //  FControlProvider.GetDocSel += OnGetDocSel;

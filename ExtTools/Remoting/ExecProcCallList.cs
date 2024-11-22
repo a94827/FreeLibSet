@@ -696,7 +696,7 @@ namespace FreeLibSet.Remoting
 
     /// <summary>
     /// Список просматриваемых объектов.
-    /// При обращении к списку он блокируется
+    /// При обращении к списку он блокируется.
     /// </summary>
     private readonly List<ExecProcCallItemBase> _Items;
 

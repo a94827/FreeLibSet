@@ -49,13 +49,13 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public object GetValue(int columnIndex) { return _Values[columnIndex]; }
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -99,7 +99,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -111,7 +111,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public string GetString(int columnIndex)
     {
@@ -121,7 +121,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -133,7 +133,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public int GetInt(int columnIndex)
     {
@@ -143,7 +143,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -155,7 +155,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public float GetSingle(int columnIndex)
     {
@@ -165,7 +165,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -177,7 +177,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public double GetDouble(int columnIndex)
     {
@@ -187,7 +187,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -199,7 +199,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public decimal GetDecimal(int columnIndex)
     {
@@ -209,7 +209,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -221,7 +221,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public bool GetBool(int columnIndex)
     {
@@ -231,7 +231,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -243,7 +243,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public DateTime GetDateTime(int columnIndex)
     {
@@ -253,7 +253,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -265,7 +265,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public Nullable<DateTime> GetNullableDateTime(int columnIndex)
     {
@@ -274,7 +274,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -286,7 +286,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public TimeSpan GetTimeSpan(int columnIndex)
     {
@@ -295,7 +295,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение поля по имени.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
@@ -307,7 +307,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Получить значение по индексу поля
     /// </summary>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public Guid GetGuid(int columnIndex)
     {
@@ -317,7 +317,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить значение перечислимого типа по имени поля.
-    /// Если в списке ColumnNames нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="columnName">Имя поля</param>
@@ -333,7 +333,7 @@ namespace FreeLibSet.Data.Docs
     /// Получить значение перечислимого типа по индексу поля
     /// </summary>
     /// <typeparam name="T">Тип перечисления</typeparam>
-    /// <param name="columnIndex">Индекс поля от 0 до (ColumnNames.Count-1)</param>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
     public T GetEnum<T>(int columnIndex)
       where T : struct
@@ -381,7 +381,7 @@ namespace FreeLibSet.Data.Docs
     /// Сюда должно быть помещено текстовое значение
     /// </summary>
     public StringBuilder Text { get { return _Text; } }
-    private StringBuilder _Text;
+    private readonly StringBuilder _Text;
 
     #endregion
   }
@@ -418,9 +418,9 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Система получения текстового представления полей документов и поддокументов.
-  /// Объект DBxDocTextHandlers может использоваться и на стороне клиента, и на стороне сервера.
+  /// Объект <see cref="DBxDocTextHandlers"/> может использоваться и на стороне клиента, и на стороне сервера.
   /// При этом требуется независимая инициализация объекта.
-  /// В части извлечения значений объекты являются потокобезопасными, если используемый DBxCache является потокобезопасным. 
+  /// В части извлечения значений объекты являются потокобезопасными, если используемый <see cref="DBxCache"/> является потокобезопасным. 
   /// В процессе установки обработчиков и заполнения полей, объект не является безопасным.
   /// </summary>
   /// <remarks>

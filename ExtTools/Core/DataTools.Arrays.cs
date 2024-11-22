@@ -21,7 +21,7 @@ namespace FreeLibSet.Core
     public static readonly object[] EmptyObjects = new object[0];
 
     /// <summary>
-    /// Массив идентификаторов нулевой длины (Int32[0])
+    /// Массив идентификаторов нулевой длины (<see cref="System.Int32"/>[0])
     /// </summary>
     public static readonly Int32[] EmptyIds = new Int32[0];
 
@@ -31,47 +31,47 @@ namespace FreeLibSet.Core
     public static readonly string[] EmptyStrings = new string[0];
 
     /// <summary>
-    /// Пустой массив Int32
+    /// Пустой массив <see cref="System.Int32"/>
     /// </summary>
     public static readonly int[] EmptyInts = new int[0];
 
     /// <summary>
-    /// Пустой массив Int64
+    /// Пустой массив <see cref="System.Int64"/>
     /// </summary>
     public static readonly long[] EmptyInt64s = new long[0];
 
     /// <summary>
-    /// Пустой массив Boolean
+    /// Пустой массив <see cref="System.Boolean"/>
     /// </summary>
     public static readonly bool[] EmptyBools = new bool[0];
 
     /// <summary>
-    /// Пустой массив Single
+    /// Пустой массив <see cref="System.Single"/>
     /// </summary>
     public static readonly float[] EmptySingles = new float[0];
 
     /// <summary>
-    /// Пустой массив Double
+    /// Пустой массив <see cref="System.Double"/>
     /// </summary>
     public static readonly double[] EmptyDoubles = new double[0];
 
     /// <summary>
-    /// Пустой массив Decimal
+    /// Пустой массив <see cref="System.Decimal"/>
     /// </summary>
     public static readonly decimal[] EmptyDecimals = new decimal[0];
 
     /// <summary>
-    /// Пустой массив объектов DateTime
+    /// Пустой массив объектов <see cref="System.DateTime"/>
     /// </summary>
     public static readonly DateTime[] EmptyDateTimes = new DateTime[0];
 
     /// <summary>
-    /// Пустой массив объектов TimeSpan
+    /// Пустой массив объектов <see cref="System.TimeSpan"/>
     /// </summary>
     public static readonly TimeSpan[] EmptyTimeSpans = new TimeSpan[0];
 
     /// <summary>
-    /// Пустой массив объектов Guid
+    /// Пустой массив объектов <see cref="System.Guid"/>
     /// </summary>
     public static readonly Guid[] EmptyGuids = new Guid[0];
 
@@ -152,7 +152,7 @@ namespace FreeLibSet.Core
     //}
 
     /// <summary>
-    /// Создание массива произвольного типа из интерфейса IEnumerable
+    /// Создание массива произвольного типа из интерфейса <see cref="IEnumerable{T}"/>
     /// </summary>
     /// <typeparam name="T">Тип данных</typeparam>
     /// <returns>Созданный массив</returns>
@@ -190,10 +190,11 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает массив Object из нетипизированного перечислителя
+    /// Создает массив <see cref="System.Object"/> из нетипизированного перечислителя
+    /// <see cref="System.Collections.IEnumerable"/>
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
+    /// <param name="source">Перечислимый объект</param>
+    /// <returns>Массив</returns>
     public static object[] CreateObjectArray(System.Collections.IEnumerable source)
     {
       List<object> lst = null;
@@ -212,7 +213,7 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
-    /// Получение массива, заполненного значенияи DBNull
+    /// Получение массива, заполненного значенияи <see cref="DBNull"/>
     /// </summary>
     /// <param name="n">Требуемая длина массива</param>
     /// <returns>Массив объектов</returns>
@@ -375,12 +376,12 @@ namespace FreeLibSet.Core
     #region Объединение массивов
 
     /// <summary>
-    /// Объединение нескольких одномерных массивов произвольного типа в один
+    /// Объединение нескольких одномерных массивов произвольного типа в один.
     /// Значения никак не обрабатываются. Получается одномерный массив с длиной,
     /// равной суммарной длине исходных массивов.
     /// Этот метод также может преобразовать jagged-массив в одномерный, если проигнорировать слово params.
     /// Некоторые аргументы (элементы jagged-массива) могут иметь значение null. Они игнорируются.
-    /// Если же в самих массивах есть элементы, равные null, то они добавляются в конечный массив
+    /// Если же в самих массивах есть элементы, равные null, то они добавляются в конечный массив.
     /// </summary>
     /// <param name="arrays">Массивы, подлежащие объединению в один</param>
     /// <returns>Одномерный массив</returns>
@@ -519,7 +520,7 @@ namespace FreeLibSet.Core
     /// <typeparam name="T">Тип элементов</typeparam>
     /// <param name="a">Массив (по ссылке) из которого удаляются элементы. Не может быть null</param>
     /// <param name="removingArray">Массив элементов, которые надо удалить</param>
-    /// <returns>Массив, меньший или равный SrcArray</returns>
+    /// <returns>Массив, меньший или равный <paramref name="a"/></returns>
     public static void RemoveFromArray<T>(ref T[] a, T[] removingArray)
     {
       if (a == null)

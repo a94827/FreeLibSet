@@ -164,7 +164,7 @@ namespace FreeLibSet.Forms
     /// Список названий фаз
     /// </summary>
     public string[] Phases { get { return _Phases; } }
-    private string[] _Phases;
+    private readonly string[] _Phases;
 
     /// <summary>
     /// Возвращает количество фаз в заставке

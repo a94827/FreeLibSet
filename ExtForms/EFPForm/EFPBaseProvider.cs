@@ -15,7 +15,8 @@ namespace FreeLibSet.Forms
   #region EFPErrorInfo
 
   /// <summary>
-  /// Информация об одной ошибке или предупреждении
+  /// Информация об одной ошибке или предупреждении.
+  /// Класс однократной записи.
   /// </summary>
   public class EFPErrorInfo
   {
@@ -47,22 +48,23 @@ namespace FreeLibSet.Forms
     /// Текст сообщения об ошибке
     /// </summary>
     public string Message { get { return _Message; } }
-    private string _Message;
+    private readonly string _Message;
 
     /// <summary>
     /// True, если сообщение об ошибке, False - если предупрежедение
     /// </summary>
     public bool IsError { get { return _IsError; } }
-    private bool _IsError;
+    private readonly bool _IsError;
 
     /// <summary>
-    /// Управляющий элемент, которому надо передать фокус ввода
+    /// Управляющий элемент, которому надо передать фокус ввода.
+    /// Может быть null.
     /// </summary>
     public Control FocusedControl { get { return _FocusedControl; } }
-    private Control _FocusedControl;
+    private readonly Control _FocusedControl;
 
     /// <summary>
-    /// Возвращает свойство Message
+    /// Возвращает свойство <see cref="Message"/>
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -77,19 +79,19 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// "Базовый" провайдер, к которому можно присоединять управляющие элементы.
-  /// Базовые провайдеры могут образовывать иерархию. С помощью свойства Parent можно присоединять и отсоединять
+  /// Базовые провайдеры могут образовывать иерархию. С помощью свойства <see cref="EFPBaseProvider.Parent"/> можно присоединять и отсоединять
   /// провайдеры в иерархии.
-  /// Корнем иерархии для формы является EFPFormProvider, который наследует EFPBaseProvider.
-  /// Управляющие элементы и объекты EFPFormCheck присоединяются к EFPBaseProvider в конструкторе и не могут
-  /// быть отсоединены. Для отключения управляющих элементов следует отключить от формы соответствующий EFPBaseProvider
+  /// Корнем иерархии для формы является <see cref="EFPFormProvider"/>, который наследует <see cref="EFPBaseProvider"/>.
+  /// Провайдеры управляющих элементов, производные от <see cref="EFPControlBase"/> и объекты <see cref="EFPFormCheck"/> присоединяются к <see cref="EFPBaseProvider "/> в конструкторе и не могут
+  /// быть отсоединены. Для отключения управляющих элементов следует отключить от формы соответствующий <see cref="EFPBaseProvider"/>.
   /// </summary>
   public class EFPBaseProvider
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает базовый провайдер, не прекрепленный ни к чему и не имеющи дочерних элементов.
-    /// Для присоединения к родительскому провайдеру или к EFPFormProvider должно быть установлено свойство Parent.
+    /// Создает базовый провайдер, не прекрепленный ни к чему, и не имеющий дочерних элементов.
+    /// Для присоединения к родительскому провайдеру или к <see cref="EFPFormProvider"/> должно быть установлено свойство <see cref="Parent"/>.
     /// </summary>
     public EFPBaseProvider()
     {
@@ -140,7 +142,7 @@ namespace FreeLibSet.Forms
     private List<EFPBaseProvider> _Children;
 
     /// <summary>
-    /// Вызывается после того, как к текущему провайдеру был добавлен дочерний EFPBaseProvider
+    /// Вызывается после того, как к текущему провайдеру был добавлен дочерний <see cref="EFPBaseProvider"/>
     /// </summary>
     /// <param name="child">Добавленный дочерний провайдер</param>
     protected virtual void OnChildAdded(EFPBaseProvider child)
@@ -148,7 +150,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывается после того, как от текущего провайдера был отсоединен дочерний EFPBaseProvider
+    /// Вызывается после того, как от текущего провайдера был отсоединен дочерний <see cref="EFPBaseProvider"/>
     /// </summary>
     /// <param name="child">Отсоединенный дочерний провайдер</param>
     protected virtual void OnChildRemoved(EFPBaseProvider child)
@@ -156,7 +158,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Коллекция для свойства Children
+    /// Коллекция для свойства <see cref="Children"/>
     /// </summary>
     public struct ChildCollection : IEnumerable<EFPBaseProvider>
     {
@@ -174,7 +176,7 @@ namespace FreeLibSet.Forms
       private EFPBaseProvider _Owner;
 
       /// <summary>
-      /// Возвращает количество дочерних провайдеров EFPBaseProvider
+      /// Возвращает количество дочерних провайдеров <see cref="EFPBaseProvider"/>
       /// </summary>
       public int Count
       {
@@ -234,7 +236,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Коллекция дочерних EFPBaseProvider.
+    /// Коллекция дочерних <see cref="EFPBaseProvider"/>.
     /// В коллекцию входят только непосредственные дочерние объекты, без рекурсии
     /// </summary>
     public ChildCollection Children { get { return new ChildCollection(this); } }
@@ -249,8 +251,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает массив из всех объектов EFPBaseProvider, входящих в иерархию.
-    /// Нулевым элементом массива будет текущий объект
+    /// Рекурсивно создает массив из всех объектов <see cref="EFPBaseProvider"/>, входящих в иерархию.
+    /// Нулевым элементом массива будет текущий объект.
     /// </summary>
     /// <returns></returns>
     public EFPBaseProvider[] GetAllBaseProviders()
@@ -289,7 +291,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается после добавления провайдера управляющего элемента.
-    /// Этот метод вызывается из конструктора EFPControlBase, поэтому конструирование провайдера еще не завершено!
+    /// Этот метод вызывается из конструктора <see cref="EFPControlBase"/>, поэтому конструирование провайдера еще не завершено!
     /// </summary>
     /// <param name="controlBase">Провайдер управляющего элемента</param>
     protected virtual void OnControlProviderAdded(EFPControlBase controlBase)
@@ -298,7 +300,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Коллекция для свойства ControlProviders
+    /// Коллекция для свойства <see cref="ControlProviders"/>
     /// </summary>
     public struct ControlProviderCollection : IEnumerable<EFPControlBase>
     {
@@ -377,7 +379,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Коллекция подключенных управляющих элементов.
-    /// В коллекцию входят только провайдеры, подключенные к этому EFPBaseProvider, но не к его дочерним элементам
+    /// В коллекцию входят только провайдеры, подключенные к этому <see cref="EFPBaseProvider"/>, но не к его дочерним элементам.
     /// </summary>
     public ControlProviderCollection ControlProviders { get { return new ControlProviderCollection(this); } }
 
@@ -386,9 +388,9 @@ namespace FreeLibSet.Forms
     #region FindControlProvider
 
     /// <summary>
-    /// Выполняет рекурсивный поиск провайдера для управляющего элемента, начиная с текущего EFPBaseProvider.
+    /// Выполняет рекурсивный поиск провайдера для управляющего элемента, начиная с текущего <see cref="EFPBaseProvider"/>.
     /// Если нет провайдера для этого элемента, возвращает null.
-    /// Поиск в родительском провайдере, если он задан, не выполняется
+    /// Поиск в родительском провайдере, если он задан, не выполняется.
     /// </summary>
     /// <param name="control">Управляющий элемент, для которого выполняется поиск</param>
     /// <returns>Найденный провайдер или null</returns>
@@ -424,7 +426,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Рекурсивный поиск всех провайдеров управляющих элементов заданного вида.
     /// </summary>
-    /// <typeparam name="T">Тип элементов. Для поиска всех провайдеров управляющих элементов используйте тип EFPControlBase</typeparam>
+    /// <typeparam name="T">Тип элементов. Для поиска всех провайдеров управляющих элементов используйте тип <see cref="EFPControlBase"/></typeparam>
     /// <param name="list">Заполняемый список</param>
     public void GetControlProviders<T>(ICollection<T> list)
       where T : EFPControlBase
@@ -450,7 +452,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Рекурсивный поиск первого элемента заданного вида
     /// </summary>
-    /// <typeparam name="T">Тип элемента. Для поиска провайдера управляющего элемента используйте тип EFPControlBase</typeparam>
+    /// <typeparam name="T">Тип элемента. Для поиска провайдера управляющего элемента используйте тип <see cref="EFPControlBase"/></typeparam>
     /// <returns>Первый найденный элемент или null</returns>
     public T GetFirstControlProvider<T>()
       where T : EFPControlBase
@@ -479,7 +481,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает массив всех провайдеров управляющих элементов, прямо или косвенно подключенных к текущему базовому провайдеру
     /// </summary>
-    /// <returns>Массив объектов EFPControlBase</returns>
+    /// <returns>Массив объектов <see cref="EFPControlBase"/></returns>
     public EFPControlBase[] GetAllControlProviders()
     {
       List<EFPControlBase> list = new List<EFPControlBase>();
@@ -506,7 +508,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается после добавления объекта проверки формы.
-    /// Этот метод вызывается из конструктора EFPFormCheck, поэтому конструирование объекта еще не завершено!
+    /// Этот метод вызывается из конструктора <see cref="EFPFormCheck"/>, поэтому конструирование объекта еще не завершено!
     /// </summary>
     /// <param name="formCheck">Объект проверки</param>
     protected virtual void OnFormCheckAdded(EFPFormCheck formCheck)
@@ -514,7 +516,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Коллекция для свойства FormChecks
+    /// Коллекция для свойства <see cref="FormChecks"/>
     /// </summary>
     public struct FormCheckCollection : IEnumerable<EFPFormCheck>
     {
@@ -577,13 +579,13 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Коллекция подключенных проверяющих объектов.
-    /// В коллекцию входят только объекты, подключенные к этому EFPBaseProvider, но не к его дочерним элементам
+    /// Коллекция подключенных проверяющих объектов формы.
+    /// В коллекцию входят только объекты, подключенные к этому <see cref="EFPBaseProvider"/>, но не к его дочерним элементам.
     /// </summary>
     public FormCheckCollection FormChecks { get { return new FormCheckCollection(this); } }
 
     /// <summary>
-    /// Возвращает массив всех объектов проверки формы, прямо или косвенно присоединенных к текущему базовому провайдеру
+    /// Возвращает массив всех объектов проверки формы <see cref="EFPFormCheck"/>, прямо или косвенно присоединенных к текущему базовому провайдеру
     /// </summary>
     /// <returns></returns>
     public EFPFormCheck[] GetAllFormChecks()
@@ -638,7 +640,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Используемый блокировкщик
+    /// Используемый блокировщик вложенных вызовов методовю
     /// </summary>
     public virtual IEFPReentranceLocker ReentranceLocker
     {
@@ -742,8 +744,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Менеджер конфигурации.
     /// Если свойство не было установлено явно, возвращается свойство родительского элемента. 
-    /// Если родительского элемента нет (EFPFFormProvider), возвращается значение EFPApp.ConfigManager
-    /// Свойство никогда не возвращает null
+    /// Если родительского элемента нет (<see cref="EFPFormProvider"/>), возвращается значение <see cref="EFPApp.ConfigManager"/>.
+    /// Свойство никогда не возвращает null.
     /// </summary>
     public IEFPConfigManager ConfigManager
     {
@@ -772,7 +774,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверка корректости.
-    /// Вызывает IEFPCheckItem.Validate() для всех дочерних элементов.
+    /// Рекурсивно вызывает <see cref="EFPControlBase.Validate()"/> для всех дочерних элементов и 
+    /// <see cref="EFPFormCheck.Validate()"/> для всех проверяющих объектов.
     /// </summary>
     public void Validate()
     {
@@ -794,7 +797,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает значение EFPFormProvider.ValidateReason или Unknown, если текущий провайдер не присоединен к форме.
+    /// Возвращает значение <see cref="EFPFormProvider.ValidateReason"/> или <see cref="EFPFormValidateReason.Unknown"/>, если текущий провайдер не присоединен к форме.
     /// </summary>
     public EFPFormValidateReason ValidateReason
     {
@@ -809,8 +812,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает количество дочерних элементов с ошибками.
-    /// Получает сумму свойств IEFPCheckItem.ErrorCount.
-    /// Вызов является рекурсивным
+    /// Получает количество управляющих элементов с ошибками <see cref="EFPControlBase.ValidateState"/>=<see cref="UIValidateState.Error"/> плюс
+    /// количество проверяющих объектов с <see cref="EFPFormCheck.ValidateState"/>=<see cref="UIValidateState.Error"/>.
+    /// Вызов является рекурсивным.
     /// </summary>
     public int ErrorCount
     {
@@ -838,7 +842,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает количество дочерних элементов с предупреждениями.
-    /// Поучает сумму свойств IEFPCheckItem.WarningCount.
+    /// Получает количество управляющих элементов с предупреждениями <see cref="EFPControlBase.ValidateState"/>=<see cref="UIValidateState.Warning"/> плюс
+    /// количество проверяющих объектов с <see cref="EFPFormCheck.ValidateState"/>=<see cref="UIValidateState.Warning"/>.
+    /// Вызов является рекурсивным.
     /// </summary>
     public int WarningCount
     {
@@ -912,7 +918,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Отображаемое имя.
-    /// Если свойство не задано в явном виде, возвращает Type.ToString()
+    /// Если свойство не задано в явном виде, возвращает <see cref="System.Type.ToString()"/>.
     /// </summary>
     public virtual string DisplayName
     {
@@ -957,9 +963,9 @@ namespace FreeLibSet.Forms
     #region Список команд меню
 
     /// <summary>
-    /// Этот метод вызывается в EFPControlBase.InitLocalMenu(), чтобы добавить в контекстное меню команды, относящиеся к родительским элементам.
+    /// Этот метод вызывается в <see cref="EFPControlBase.PrepareContextMenu()"/>, чтобы добавить в контекстное меню команды, относящиеся к родительским элементам.
     /// Если производный класс переопределяет метод, он должен вызвать базовый метод в конце, чтобы команды располагались в правильном порядке.
-    /// Непереопределенный метод вызывает метод родительского объекта Parent.
+    /// Непереопределенный метод вызывает метод родительского объекта <see cref="Parent"/>.
     /// </summary>
     /// <param name="list">Заполняемый список команд</param>
     public virtual void InitCommandItemList(List<EFPCommandItems> list)
@@ -1017,16 +1023,16 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Класс для проверки ошибок формы, не связанных с управляющими элементами
+  /// Класс для проверки ошибок формы, не связанных с конкретным управляющим элементом
   /// </summary>
   public class EFPFormCheck : IUIValidableObject
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает пустой объект
+    /// Создает пустой объект и добавляет его в переданный базовый провайдер
     /// </summary>
-    /// <param name="baseProvider">Базовый провайдер. Обычно проверка присоединяется непосредственно к форме EFPFormProvider.
+    /// <param name="baseProvider">Базовый провайдер. Обычно проверка присоединяется непосредственно к форме <see cref="EFPFormProvider"/>.
     /// Не может быть null.</param>
     public EFPFormCheck(EFPBaseProvider baseProvider)
     {
@@ -1037,10 +1043,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Базовый провайдер. Задается в конструкторе.
+    /// Базовый провайдер, к которому присоединен объект. Задается в конструкторе.
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private EFPBaseProvider _BaseProvider;
+    private readonly EFPBaseProvider _BaseProvider;
 
     #endregion
 
@@ -1087,7 +1093,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет в список единственное сообшение об ошибке или предупреждение.
-    /// Для состояния OK не выполняет никаких действий
+    /// Для состояния OK не выполняет никаких действий.
     /// </summary>
     /// <param name="errorList">Заполняемый список</param>
     internal void GetErrorMessages(List<EFPErrorInfo> errorList)
@@ -1157,7 +1163,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Необязательный управляющий элемент, куда будет передаваться фокус ввода
-    /// при выводе сообщения об ошибке
+    /// при выводе сообщения об ошибке.
     /// </summary>
     public Control FocusControl
     {
@@ -1177,7 +1183,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Интерфейс объекта, выполняющего блокировку реентрантного вызова.
-  /// Реализуется EFPReentranceLocker
+  /// Реализуется <see cref="EFPReentranceLocker"/>.
   /// </summary>
   public interface IEFPReentranceLocker
   {
@@ -1196,18 +1202,18 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Блокировщик вложенного выполнения команд.
-  /// В отличие от System.Monitor и других блокирующих классов Net Framework, этот класс предназначен
+  /// В отличие от <see cref="System.Threading.Monitor"/> и других блокирующих классов Net Framework, этот класс предназначен
   /// для работы с одним потоком (основным потоком приложения).
-  /// Используется EFPFormProvider, чтобы предотвратить закрытие формы, пока выполняется обработки нажатия
-  /// кнопки, или предотвратить нажатие другой кнопки, если предыдущая обработка еще не выполнена
+  /// Используется <see cref="EFPFormProvider"/>, чтобы предотвратить закрытие формы, пока выполняется обработки нажатия
+  /// кнопки, или предотвратить нажатие другой кнопки, если предыдущая обработка еще не выполнена.
   /// </summary>
   /// <remarks>
   /// Обработчик нажатия кнопки или другого события должен выполнить следующие действия:
-  /// 1. Получить доступ к EFPReentranceLocker.
-  /// 2. Вызвать EFPReentranceLocker.TryLock(). Если метод вернул false, обработчик завершается без выполнения действий
+  /// 1. Получить доступ к <see cref="EFPReentranceLocker"/>.
+  /// 2. Вызвать <see cref="EFPReentranceLocker.TryLock(string)"/>. Если метод вернул false, обработчик завершается без выполнения действий.
   /// 3. Выполнить основное действие.
-  /// 4. Вызвать EFPReentranceLocker.Unlock(). 
-  /// Должен использоваться try-finally блок
+  /// 4. Вызвать <see cref="EFPReentranceLocker.Unlock()"/>. 
+  /// Должен использоваться try-finally блок.
   /// </remarks>
   public class EFPReentranceLocker : IEFPReentranceLocker
   {
@@ -1240,7 +1246,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Выполнить попытку блокировки. Возвращает true, если блокировщик не занят.
-    /// Иначе пользователю выводится сообщение с помощью EFPApp.ShowTempMessage() и возвращается false.
+    /// Иначе пользователю выводится сообщение с помощью <see cref="EFPApp.ShowTempMessage(string)"/> и возвращается false.
     /// </summary>
     /// <param name="displayName">Наименование действия, которое предполагается выполнить</param>
     /// <returns>true в случае успеха</returns>
@@ -1278,7 +1284,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Наименование действия, которое удерживает блокировку.
-    /// Это поле используется как флан блокировки
+    /// Это поле используется как флаг блокировки.
     /// </summary>
     private string _LockedDisplayName;
 

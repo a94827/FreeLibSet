@@ -397,7 +397,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Устанавливается после закрытия редактора в true, если данные
-    /// были изменены (форма закрыта нажатием "ОК" или было нажатие "Apply")
+    /// были изменены (форма закрыта нажатием "ОК" или было нажатие "Apply").
     /// В режиме <see cref="State"/>=<see cref="EFPDataGridViewState.Delete"/> показывает, что данные были удалены.
     /// </summary>
     public bool DataChanged { get { return _DataChanged; } }
@@ -924,7 +924,6 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public void ReloadData()
     {
-
       foreach (IDocEditItem item in DocEditItems)
         item.BeforeReadValues();
       foreach (IDocEditItem item in DocEditItems)
@@ -1315,7 +1314,7 @@ namespace FreeLibSet.Forms.Docs
     /// 2. Запись полей в документ <see cref="FreeLibSet.Forms.Docs.IDocEditItem.WriteValues()"/>
     /// 3. Событие <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/>
     /// Проверка значений полей не выполняется, ошибки, возникающие на шаге 1 и 3
-    /// игнорируются
+    /// игнорируются.
     /// </summary>
     public void NoValidateData()
     {
@@ -1459,7 +1458,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Выполняем запись значений из управляющих элементов в документ,
-    /// проверяем корректность данных и выполняем запись документа
+    /// проверяем корректность данных и выполняем запись документа.
     /// Возвращаем true, если значения полей корректные и запись успешно
     /// выполнена.
     /// applyClicked=true при нажатии кнопки "Apply" и false при нажатии "ОК"
@@ -1757,10 +1756,10 @@ namespace FreeLibSet.Forms.Docs
     /// Закрыть окно редактора.
     /// На момент вызова окно редактора должно быть открыто.
     /// Возвращает true, если форма успешно закрыта.
-    /// Возврает false, если окно закрыть не удалось (например, не выполнены условия корректности введенных данных)
+    /// Возврает false, если окно закрыть не удалось (например, не выполнены условия корректности введенных данных).
     /// </summary>
     /// <param name="isOk">true - выполнить запись ддокумента (симуляция нажатия кнопки "ОК"),
-    /// false - выйти без записи. Проверка наличия несохраненных изменений не выполняется</param>
+    /// false - выйти без записи. Проверка наличия несохраненных изменений не выполняется.</param>
     /// <returns>Было ли закрыто окно редактора</returns>
     public bool CloseForm(bool isOk)
     {
@@ -2160,10 +2159,10 @@ namespace FreeLibSet.Forms.Docs
         if (frm.Editor == null)
           continue; // редактор поддокумента
 
-        DBxDocSelection ThisDocSel = frm.Editor.Documents.DocSelection;
-        if (ThisDocSel.DBIdentity != docSel.DBIdentity)
+        DBxDocSelection thisDocSel = frm.Editor.Documents.DocSelection;
+        if (thisDocSel.DBIdentity != docSel.DBIdentity)
           continue; // другой набор данных
-        if (ThisDocSel.ContainsAny(docSel))
+        if (thisDocSel.ContainsAny(docSel))
           return frm.Editor;
       }
       return null;

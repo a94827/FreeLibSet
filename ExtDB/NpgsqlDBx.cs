@@ -70,7 +70,7 @@ namespace FreeLibSet.Data.Npgsql
 
     /// <summary>
     /// Главная точка входа в базу данных.
-    /// Не содержит явно назначенных прав пользователя
+    /// Не содержит явно назначенных прав пользователя.
     /// </summary>
     public new NpgsqlDBxEntry MainEntry { get { return (NpgsqlDBxEntry)(base.MainEntry); } }
 
@@ -78,7 +78,7 @@ namespace FreeLibSet.Data.Npgsql
     /// Создает точку входа
     /// </summary>
     /// <param name="permissions">Разрешения на доступ к базе данных</param>
-    /// <returns></returns>
+    /// <returns>Новый объект <see cref="NpgsqlDBxEntry"/></returns>
     public override DBxEntry CreateEntry(DBxPermissions permissions)
     {
       return new NpgsqlDBxEntry(this, MainEntry.ConnectionStringBuilder, permissions);
@@ -122,7 +122,7 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Возвращает ссылку на NpgsqlFactory
+    /// Возвращает ссылку на <see cref="NpgsqlFactory"/>
     /// </summary>
     public override DbProviderFactory ProviderFactory
     {
@@ -156,6 +156,7 @@ namespace FreeLibSet.Data.Npgsql
         }
       }
     }
+
     /// <summary>
     /// Создает базу данных, если ее не существует
     /// </summary>
@@ -175,7 +176,7 @@ namespace FreeLibSet.Data.Npgsql
     /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполняемых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
@@ -189,7 +190,6 @@ namespace FreeLibSet.Data.Npgsql
         return con.UpdateDBStruct(splash, errors, options);
       }
     }
-
 
     /// <summary>
     /// Удаление базы данных, если она существует
@@ -211,9 +211,9 @@ namespace FreeLibSet.Data.Npgsql
 
     /// <summary>
     /// Удаляет таблицу данных, если она существует.
-    /// Этот метод должен вызываться до установки свойства DBx.Struct и вызова UpdateStruct().
+    /// Этот метод должен вызываться до установки свойства <see cref="DBx.Struct"/> и вызова <see cref="DBx.UpdateStruct()"/>.
     /// Если обновление структуры не предполагается, после последовательности вызовов этого метода,
-    /// должна быть выполнена установка DB.Struct=null, чтобы обновить список таблиц
+    /// должна быть выполнена установка <see cref="DBx.Struct"/>=null, чтобы обновить список таблиц.
     /// </summary>
     /// <param name="tableName">Имя удаляемой таблицы</param>
     public override void DropTableIfExists(string tableName)
@@ -488,7 +488,7 @@ namespace FreeLibSet.Data.Npgsql
     #region Выполнение SQL-запросов
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего единственное значение
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего единственное значение
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -519,10 +519,10 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего таблицу данных
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего таблицу данных
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
-    /// <param name="tableName">Имя таблицы для возвращаемого DataTable</param>
+    /// <param name="tableName">Имя таблицы для возвращаемого <see cref="DataTable"/></param>
     /// <param name="paramValues">Параметры запроса</param>
     /// <returns>Заполненная таблица</returns>
     protected override DataTable DoSQLExecuteDataTable(string cmdText, string tableName, object[] paramValues)
@@ -540,7 +540,7 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего DbDataReader
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего <see cref="DbDataReader"/>
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -650,7 +650,7 @@ namespace FreeLibSet.Data.Npgsql
 
     /// <summary>
     /// Добавление строки в таблицу.
-    /// Значения могут содержать, а могут и не содержать первичный ключ
+    /// Значения могут содержать, а могут и не содержать первичный ключ.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена столбцов</param>
@@ -666,29 +666,29 @@ namespace FreeLibSet.Data.Npgsql
     }
 
     /// <summary>
-    /// Режимы форматирования значения поля при групповом добавлении записей в AddRecords
+    /// Режимы форматирования значения поля при групповом добавлении записей в AddRecords()
     /// </summary>
     private enum CopyFormattingMode
     {
       /// <summary>
-      /// Форматирование значение выполняется методом NpgsqlDBxSqlFormatter.FormatValue()
+      /// Форматирование значение выполняется методом <see cref="DBxSqlFormatter.FormatValue(DBxSqlBuffer, object, DBxColumnType)"/>()
       /// </summary>
       FormatValue,
 
       /// <summary>
-      /// Форматирование выполняется с помощью NpgsqlCopySerializer.AddString()
+      /// Форматирование выполняется с помощью <see cref="NpgsqlCopySerializer.AddString(string)"/>
       /// </summary>
       String,
 
       /// <summary>
-      /// Форматирование выполняется с помощью NpgsqlCopySerializer.AddString(), но сначала строка преобразуется
-      /// в Guid, а затем обратно в строку, чтобы убрать возможное форматирование
+      /// Форматирование выполняется с помощью <see cref="NpgsqlCopySerializer.AddString(string)"/>, но сначала строка преобразуется
+      /// в <see cref="Guid"/>, а затем обратно в строку, чтобы убрать возможное форматирование.
       /// </summary>
       Guid,
     }
 
     /// <summary>
-    /// Групповое добавление записей с использованием NpgsqlCopyIn и NpgsqlCopySerializer
+    /// Групповое добавление записей с использованием <see cref="NpgsqlCopyIn"/> и <see cref="NpgsqlCopySerializer"/>
     /// </summary>
     /// <param name="tableName">Имя таблицы, в которую добавляются строки</param>
     /// <param name="table">Исходная таблица</param>
@@ -1671,7 +1671,7 @@ namespace FreeLibSet.Data.Npgsql
 
     /// <summary>
     /// Проверяет наличие первичного ключа. Неправильное ограничение первичного ключа удаляется,
-    /// новое ограничение создается
+    /// новое ограничение создается.
     /// </summary>
     /// <param name="table"></param>
     /// <param name="dvIndexColumns"></param>

@@ -3733,7 +3733,7 @@ namespace FreeLibSet.Data
     protected abstract DbConnection DbConnection { get; }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего таблицу данных
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего таблицу данных
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="tableName">Имя таблицы для возвращаемого <see cref="DataTable"/></param>
@@ -3742,7 +3742,7 @@ namespace FreeLibSet.Data
     protected abstract DataTable DoSQLExecuteDataTable(string cmdText, string tableName, object[] paramValues);
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего <see cref="DbDataReader"/>
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего <see cref="DbDataReader"/>
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -3750,7 +3750,7 @@ namespace FreeLibSet.Data
     protected abstract DbDataReader DoSQLExecuteReader(string cmdText, object[] paramValues);
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего единственное значение
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего единственное значение
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>

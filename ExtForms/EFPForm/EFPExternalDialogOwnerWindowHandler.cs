@@ -10,13 +10,13 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// на текущее активное окно в Windows.
+  /// Ссылка на текущее активное окно в Windows.
   /// Disposable-объект следует создавать на время выполнения обработчика события от внешнего приложения,
   /// например, Excel, чтобы блоки диалога выводились над внешним приложением, а не над основным.
   /// 
   /// Разрешено использовать только в основном потоке приложения, поэтому обычно требуется синхронизация
   /// потоков.
-  /// Реализовано только для Windows, в других ОС никаких действий пока не выполняется
+  /// Реализовано только для Windows, в других ОС никаких действий пока не выполняется.
   /// </summary>
   public class EFPExternalDialogOwnerWindowHandler : SimpleDisposableObject
   {
@@ -54,8 +54,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Восстанавливает значение свойства <see cref="EFPApp.ExternalDialogOwnerWindow"/>, как оно было
-    /// на момент вызова конструктора
+    /// Восстанавливает значение свойства <see cref="EFPApp.ExternalDialogOwnerWindow"/>, 
+    /// как оно было на момент вызова конструктора
     /// </summary>
     /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)

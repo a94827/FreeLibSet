@@ -161,26 +161,26 @@ namespace FreeLibSet.Forms
   {
     /// <summary>
     /// Начать поиск.
-    /// Метод вызывается при нажатии Ctrl-F
+    /// Метод вызывается при нажатии Ctrl-F.
     /// </summary>
     void StartSearch();
 
     /// <summary>
     /// Продолжить поиск.
-    /// Метод вызывается при нажатии F3
+    /// Метод вызывается при нажатии F3.
     /// </summary>
     void ContinueSearch();
 
     /// <summary>
     /// Можно ли продолжить поиск.
-    /// Используется для определения видимости команды меню "Продолжить поиск"
+    /// Используется для определения видимости команды меню "Продолжить поиск".
     /// </summary>
     bool ContinueEnabled { get;}
 
     /// <summary>
     /// Запретить продолжение поиска.
     /// Метод вызывается табличным просмотром при выполнении поиска по первым буквам.
-    /// Сбрасывает свойство ContinueEnabled в false
+    /// Сбрасывает свойство <see cref="ContinueEnabled"/> в false.
     /// </summary>
     void ResetContinueEnabled();
   }
@@ -320,7 +320,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Базовый класс для EFPDataGridViewSearchContext и EFPTreeViewAdvSearchContext 
+  /// Базовый класс для <see cref="EFPDataGridViewSearchContext"/> и <see cref="EFPTreeViewAdvSearchContext"/> 
   /// </summary>
   public class EFPTextSearchContextBase
   {
@@ -356,7 +356,7 @@ namespace FreeLibSet.Forms
     private bool _ContinueEnabled;
 
     /// <summary>
-    /// Очистка флага ContinueEnabled
+    /// Очистка флага <see cref="ContinueEnabled"/>
     /// </summary>
     public void ResetContinueEnabled()
     {
@@ -364,7 +364,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установка флага ContinueEnabled.
+    /// Установка флага <see cref="ContinueEnabled"/>.
     /// Выполняется при запросе параметров поиска
     /// </summary>
     protected void SetContinueEnabled()
@@ -406,7 +406,7 @@ namespace FreeLibSet.Forms
     /// Объект - владелец
     /// </summary>
     public IEFPTextBox Owner { get { return _Owner; } }
-    private IEFPTextBox _Owner;
+    private readonly IEFPTextBox _Owner;
 
     /// <summary>
     /// Копия текста в управляющем элементе с учетом игнорирования регистра и похожих символов
@@ -928,7 +928,7 @@ namespace FreeLibSet.Forms
     /// Провайдер иерархического просмотра
     /// </summary>
     public EFPTreeView Owner { get { return _Owner; } }
-    private EFPTreeView _Owner;
+    private readonly EFPTreeView _Owner;
 
     #endregion
 
@@ -1114,9 +1114,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Контекст для поиска текста в древовидном просмотре TreeViewAdv.
-  /// В отличие от EFPDataGridViewSearchContext, поиск по отдельным столбцам не поддерживается,
-  /// то есть режима "Во всех столбцах / в текущем столбце" нет
+  /// Контекст для поиска текста в древовидном просмотре <see cref="FreeLibSet.Controls.TreeViewAdv"/>.
+  /// В отличие от <see cref="EFPDataGridViewSearchContext"/>, поиск по отдельным столбцам не поддерживается,
+  /// то есть режима "Во всех столбцах / в текущем столбце" нет.
   /// </summary>
   public class EFPTreeViewAdvSearchContext : EFPTextSearchContextBase, IEFPTextSearchContext
   {
@@ -1139,7 +1139,7 @@ namespace FreeLibSet.Forms
     /// Объект - владелец
     /// </summary>
     public EFPTreeViewAdv Owner { get { return _Owner; } }
-    private EFPTreeViewAdv _Owner;
+    private readonly EFPTreeViewAdv _Owner;
 
     #endregion
 
@@ -1259,7 +1259,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Проверяем, подходит ли очередная строка под условие
+    /// Проверяем, подходит ли очередная строка под условие.
     /// Перед вызовом метода должен быть вызов DoGetRowAttributes
     /// </summary>
     /// <param name="node"></param>
@@ -1310,7 +1310,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает список всех узлов, удовлетворяющих параметрам поиска
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Массив узлов</returns>
     protected TreeNodeAdv[] FindAllNodes()
     {
       List<TreeNodeAdv> lst = new List<TreeNodeAdv>();

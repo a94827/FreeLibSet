@@ -10,8 +10,7 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Объект, желающий получать сигналы от таймера, должен реализовывать этот
-  /// интерфейс.
+  /// Объект, желающий получать сигналы от таймера, должен реализовывать этот интерфейс.
   /// </summary>
   public interface IEFPAppTimeHandler
   {
@@ -22,11 +21,11 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Поддержка таймеров в приложении
-  /// Реализация свойства EFPApp.Timers
+  /// Поддержка таймеров в приложении.
+  /// Реализация свойства <see cref="EFPApp.Timers"/>.
   /// Части программы, которым нужная обработка сигналов 1 раз в секунду или реже,
   /// могут добавить себя в список. При выходе из области действия они должны удалить
-  /// себя из списка
+  /// себя из списка.
   /// </summary>
   public sealed class EFPAppTimers : DisposableObject/*, ICollection<IEFPAppTimeHandler>*/
   {
@@ -67,13 +66,13 @@ namespace FreeLibSet.Forms
 
     #region Список объектов
 
-    private List<IEFPAppTimeHandler> _List;
+    private readonly List<IEFPAppTimeHandler> _List;
 
     private IEFPAppTimeHandler[] _Array;
 
     /// <summary>
     /// Добавить получатель сигналов.
-    /// Этот метод является асинхронным
+    /// Этот метод является асинхронным.
     /// </summary>
     /// <param name="handler">Добавляемый объект-обработчик сигнала</param>
     public void Add(IEFPAppTimeHandler handler)
@@ -91,9 +90,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Удалить получатель сигналов
+    /// Удалить получатель сигналов.
     /// Этот метод является асинхронным, может вызываться из любого потока или
-    /// из обработчика сигнала таймера
+    /// из обработчика сигнала таймера.
     /// </summary>
     /// <param name="handler">Удаляемый объект-обработчик сигнала</param>
     public bool Remove(IEFPAppTimeHandler handler)
@@ -129,9 +128,9 @@ namespace FreeLibSet.Forms
     #region Таймер
 
     /// <summary>
-    /// Счетчик тиков таймера
+    /// Счетчик тиков таймера.
     /// Его можно используя для получения делителей, если обработка нужна реже, чем
-    /// 1 раз в секунду. Счетчик меняется 0 до Int32.MaxValue
+    /// 1 раз в секунду. Счетчик меняется 0 до <see cref="Int32.MaxValue"/>.
     /// </summary>
     public int TickCount { get { return _TickCount; } }
     private int _TickCount;
@@ -223,7 +222,7 @@ namespace FreeLibSet.Forms
 
     private void ProcessIdle()
     {
-      if (TickCount%3!=0) // делитель
+      if (TickCount % 3 != 0) // делитель
         return;
 
       if (EFPApp.IdleHandlers.IsDisposed)
@@ -235,7 +234,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Предотвращение повторного вызова "долгого" обработчика, если пришел повторный сигнал таймера.
-    /// Список содержит элементы, которые сейчас обрабатываются
+    /// Список содержит элементы, которые сейчас обрабатываются.
     /// </summary>
     private List<IEFPAppTimeHandler> _ExecutingHandlers;
 
@@ -248,7 +247,7 @@ namespace FreeLibSet.Forms
   /// Требуется однократная обработка события, например сохранение данных в файле, но нет событий BeginUpdate/EndUpdate.
   /// Использование:
   /// 1. Создать EFPDelayedTrigger.
-  /// 2. Присоединить обработчик события Tick, который будет обрабатывать событие (сохранять файл)
+  /// 2. Присоединить обработчик события Tick, который будет обрабатывать событие (сохранять файл).
   /// 3. При получении внешнего события устанавливать свойство Active=true.
   /// Не надо присоединять этот объект к EFPApp.Timers. Это выполняется автоматически.
   /// </summary>
@@ -411,8 +410,7 @@ namespace FreeLibSet.Forms
    */
 
   /// <summary>
-  /// Объект, желающий получать сигналы от таймера, должен реализовывать этот
-  /// интерфейс.
+  /// Объект, желающий получать сигналы от таймера, должен реализовывать этот интерфейс.
   /// </summary>
   public interface IEFPAppIdleHandler
   {
@@ -423,11 +421,11 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Поддержка таймеров в приложении
-  /// Реализация свойства EFPApp.IdleHandlers
+  /// Поддержка таймеров в приложении.
+  /// Реализация свойства <see cref="EFPApp.IdleHandlers"/>.
   /// Части программы, которым нужная обработка события Idle,
   /// могут добавить себя в список. При выходе из области действия они должны удалить
-  /// себя из списка
+  /// себя из списка.
   /// </summary>
   public sealed class EFPAppIdleHandlers : DisposableObject/*, ICollection<IEFPAppTimeHandler>*/
   {
@@ -444,7 +442,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Отключает обработчик события Application.Idle
+    /// Отключает обработчик события <see cref="System.Windows.Forms.Application.Idle"/>
     /// </summary>
     /// <param name="disposing">True, если вызван метод Dispose(), а не деструктор</param>
     protected override void Dispose(bool disposing)
@@ -467,7 +465,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавить получатель сигналов.
-    /// Этот метод является асинхронным
+    /// Этот метод является асинхронным.
     /// </summary>
     /// <param name="handler">Добавляемый объект-обработчик сигнала</param>
     public void Add(IEFPAppIdleHandler handler)

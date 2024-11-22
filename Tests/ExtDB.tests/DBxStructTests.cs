@@ -12,7 +12,7 @@ using FreeLibSet.Tests;
 namespace ExtDB_tests.Data
 {
   [TestFixture]
-  public class DBxStructTests:FixtureWithSetUp
+  public class DBxStructTests : FixtureWithSetUp
   {
     #region Тестовые объекты
 
@@ -40,6 +40,8 @@ namespace ExtDB_tests.Data
             throw new ArgumentException("Invalid table name");
         }
       }
+
+      public bool IsRealStruct { get { return false; } }
     }
 
     private static DBxStruct CreateTestObject(bool useSource)
@@ -82,8 +84,8 @@ namespace ExtDB_tests.Data
       CollectionAssert.AreEqual(new string[] { "Test1", "Test2" }, sut.AllTableNames, "AllTableNames");
       Assert.IsFalse(sut.HasComments, "HasComments");
       Assert.IsTrue(sut.IsReadOnly, "IsReadOnly");
-      Assert.Catch<ObjectReadOnlyException>(delegate() { sut.CheckNotReadOnly(); }, "CheckNotReadOnly()");
-      Assert.DoesNotThrow(delegate() { sut.CheckStruct(); }, "CheckStruct()");
+      Assert.Catch<ObjectReadOnlyException>(delegate () { sut.CheckNotReadOnly(); }, "CheckNotReadOnly()");
+      Assert.DoesNotThrow(delegate () { sut.CheckStruct(); }, "CheckStruct()");
     }
 
     [Test]
@@ -440,7 +442,7 @@ namespace ExtDB_tests.Data
       DBxTableStruct ts3 = new DBxTableStruct("Test3");
       ts3.Columns.AddId();
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Add(ts3); }, "Tables.Add(DBxTableStruct)");
-      Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Insert(0,ts3); }, "Tables.Insert()");
+      Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Insert(0, ts3); }, "Tables.Insert()");
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Remove(ts1); }, "Tables.Remove(DBxTableStruct)");
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Remove("Test1"); }, "Tables.Remove(tableName)");
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.RemoveAt(0); }, "Tables.RemoveAt()");

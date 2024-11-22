@@ -118,7 +118,7 @@ namespace FreeLibSet.UICore
     /// При <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Warning"/> это свойство возвращает true.
     /// Установка значения true эквивалентна установке <see cref="CanBeEmptyMode"/>=<see cref="UIValidateState.Ok"/>, 
     /// а false - <see cref="UIValidateState.Error"/>.
-    /// Установка свойства применяется ко всем полям таблицы. Для задания проверки для отдельныз столбцов используйте свойство <see cref="ColumnInfo.CanBeEmpty"/>.
+    /// Установка свойства применяется ко всем полям таблицы. Для задания проверки отдельных столбцов используйте свойство <see cref="ColumnInfo.CanBeEmpty"/>.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -309,13 +309,13 @@ namespace FreeLibSet.UICore
 
       #region Основные свойства
 
-      private UIInputGridData _Owner;
+      private readonly UIInputGridData _Owner;
 
       /// <summary>
       /// Имя столбца <see cref="DataColumn.ColumnName"/>.
       /// </summary>
       public string ColumnName { get { return _ColumnName; } }
-      private string _ColumnName;
+      private readonly string _ColumnName;
 
       /// <summary>
       /// Столбец таблицы данных.

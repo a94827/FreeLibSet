@@ -153,6 +153,7 @@ namespace FreeLibSet.Forms.Docs
 
       _DocTypeUI = docTypeUI;
 
+      base.UseRowImages = true; // 06.09.2024
       base.GridProducer = docTypeUI.GridProducer; // 25.03.2021
       base.ConfigSectionName = DocType.Name;
       base.ReadOnly = docTypeUI.UI.DocProvider.DBPermissions.TableModes[DocType.Name] != DBxAccessMode.Full;
@@ -194,7 +195,7 @@ namespace FreeLibSet.Forms.Docs
       //ci.Click += new EventHandler(RowMerge_Click);
       //CommandItems.Add(ci);
 
-      base.ShowRowCountInTopLeftCellToolTipText = true; // 15.12.2017
+      base.ShowRowCountInTopLeftCell = true; // 15.12.2017
 
       CustomOrderAllowed = true;
     }

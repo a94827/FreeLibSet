@@ -468,17 +468,31 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Найти дочернюю форму заданного класса.
-    /// Возвращает первую найденную форму или null
+    /// Возвращает первую найденную форму или null.
     /// </summary>
-    /// <typeparam name="T">Класс формы</typeparam>
+    /// <typeparam name="TForm">Класс формы</typeparam>
     /// <returns>Найденная форма или null</returns>
-    public T FindChildForm<T>()
-      where T : Form
+    public TForm FindChildForm<TForm>()
+      where TForm : Form
+    {
+      return FindChildForm<TForm>(null);
+    }
+
+    /// <summary>
+    /// Найти дочернюю форму заданного класса.
+    /// Дополнительно задается критерий для выбора формы, если есть несколько однотипных форм.
+    /// Возвращает первую найденную форму или null.
+    /// </summary>
+    /// <typeparam name="TForm">Класс формы</typeparam>
+    /// <param name="match">Критерий для выбора формы. Если null, то возвращается первая форма подходящего типа</param>
+    /// <returns>Найденная форма или null</returns>
+    public TForm FindChildForm<TForm>(Predicate<TForm> match)
+      where TForm : Form
     {
       EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(false);
       for (int i = 0; i < layouts.Length; i++)
       {
-        T form = layouts[i].FindChildForm<T>();
+        TForm form = layouts[i].FindChildForm<TForm>(match);
         if (form != null)
           return form;
       }
@@ -507,19 +521,19 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Найти все дочерние формы заданного класса
     /// </summary>
-    /// <typeparam name="T">Класс формы</typeparam>
+    /// <typeparam name="TForm">Класс формы</typeparam>
     /// <returns>Массив форм</returns>
-    public T[] FindChildForms<T>()
-      where T : Form
+    public TForm[] FindChildForms<TForm>()
+      where TForm : Form
     {
       EFPAppMainWindowLayout[] layouts = GetMainWindowLayouts(false);
       if (layouts.Length == 1)
-        return layouts[0].FindChildForms<T>();
+        return layouts[0].FindChildForms<TForm>();
       else
       {
-        List<T> lst = new List<T>();
+        List<TForm> lst = new List<TForm>();
         for (int i = 0; i < layouts.Length; i++)
-          layouts[i].FindChildFormsInternal<T>(lst);
+          layouts[i].FindChildFormsInternal<TForm>(lst);
         return lst.ToArray();
       }
     }
@@ -547,16 +561,30 @@ namespace FreeLibSet.Forms
     /// Найти и активировать форму заданного класса.
     /// Возвращает true в случае успеха
     /// </summary>
-    /// <typeparam name="T">Класс формы</typeparam>
+    /// <typeparam name="TForm">Класс формы</typeparam>
     /// <returns>true, если форма найдена и активирована. false, если форма не найдена</returns>
-    public bool FindAndActivateChildForm<T>()
-      where T : Form
+    public bool FindAndActivateChildForm<TForm>()
+      where TForm : Form
+    {
+      return FindAndActivateChildForm<TForm>(null);
+    }
+
+
+    /// <summary>
+    /// Найти и активировать форму заданного класса.
+    /// Дополнительно задается критерий для выбора формы, если есть несколько однотипных форм.
+    /// Возвращает true в случае успеха.
+    /// </summary>
+    /// <typeparam name="TForm">Класс формы</typeparam>
+    /// <returns>true, если форма найдена и активирована. false, если форма не найдена</returns>
+    public bool FindAndActivateChildForm<TForm>(Predicate<TForm> match)
+      where TForm : Form
     {
 #if DEBUG
       EFPApp.CheckMainThread();
 #endif
 
-      T frm = FindChildForm<T>();
+      TForm frm = FindChildForm<TForm>(match);
       if (frm == null)
         return false;
       EFPApp.Activate(frm); // 07.06.2021

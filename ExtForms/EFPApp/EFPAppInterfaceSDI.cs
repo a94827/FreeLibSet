@@ -106,8 +106,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Подготовка к просмотру
     /// </summary>
-    /// <param name="form"></param>
-    /// <returns></returns>
+    /// <param name="form">Форма, которая будет показана</param>
+    /// <returns>Внутренние данные</returns>
     protected override object OnPrepareChildForm(Form form)
     {
       PreparationData pd = new PreparationData();
@@ -185,7 +185,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Показ дочернего окна.
-    /// Создает ToolStripContainer, в центральную панель которого переносит все существующие
+    /// Создает <see cref="ToolStripContainer"/>, в центральную панель которого переносит все существующие
     /// дочерние элементы формы
     /// </summary>
     /// <param name="form">Созданная в пользовательском коде форма</param>
@@ -226,7 +226,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Расширение EFPAppMainWindowLayout для интерфейса SDI.
+  /// Расширение <see cref="EFPAppMainWindowLayout"/> для интерфейса SDI.
   /// </summary>
   public sealed class EFPAppMainWindowLayoutSDI : EFPAppMainWindowLayout
   {

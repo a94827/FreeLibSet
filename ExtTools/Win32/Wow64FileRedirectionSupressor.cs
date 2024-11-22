@@ -79,7 +79,8 @@ namespace FreeLibSet.Win32
     #region Статическое свойство и метод
 
     /// <summary>
-    /// Свойство возвращает true, если операционная система имеет функции для redirection
+    /// Свойство возвращает true, если операционная система имеет функции для redirection.
+    /// Разрядность приложения не учитывается.
     /// </summary>
     public static bool OSSupported
     {

@@ -931,7 +931,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Индекс столбца в табличном просмотре (независимо от текущего порядка столбцов).
-    /// Совпадает с DataGridViewColumn.Index.
+    /// Совпадает с <see cref="DataGridViewBand.Index"/> для столбца.
     /// </summary>
     public int ColumnIndex { get { return _ColumnIndex; } }
     private int _ColumnIndex;
@@ -1058,8 +1058,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Всплывающая подсказка, которая будет выведена при наведении курсора на 
-    /// ячейку. 
+    /// Всплывающая подсказка, которая будет выведена при наведении курсора на ячейку. 
     /// Перед вызовом события <see cref="EFPDataGridView.GetCellAttributes"/>
     /// вызывается событие <see cref="DataGridView.CellToolTipTextNeeded"/>, таким образом, поле уже может содержать значение.
     /// Используется при вызове в режиме <see cref="EFPDataGridViewCellAttributesEventArgsBase.Reason"/>=<see cref="EFPDataGridViewAttributesReason.ToolTip"/>.
@@ -1092,8 +1091,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если установить в false, то содержимое ячейки не будет выводиться совсем.
-    /// Полезно для CheckBox'ов и кнопок, если для какой-то строки ячеек они не нужны
-    /// Скрытие работает для всех типов столбцов, включая DataGridViewTextBoxCell
+    /// Полезно для CheckBox'ов и кнопок, если для какой-то строки ячеек они не нужны.
+    /// Скрытие работает для всех типов столбцов, включая <see cref="DataGridViewTextBoxCell"/>.
     /// </summary>
     public bool ContentVisible { get { return _ContentVisible; } set { _ContentVisible = value; } }
     private bool _ContentVisible;
@@ -1826,6 +1825,17 @@ namespace FreeLibSet.Forms
     /// По умолчанию список содержит единственный элемент с кодом "Control"
     /// </summary>
     NamedList<EFPMenuOutItem> MenuOutItems { get; }
+
+    /// <summary>
+    /// Вызывается для редактирования записей
+    /// </summary>
+    event EventHandler EditData;
+
+    /// <summary>
+    /// Текущее состояние просмотра.
+    /// Если в данный момент не обрабатывается событие <see cref="EditData"/>, возвращается <see cref="EFPDataGridViewState.View"/>.
+    /// </summary>
+    EFPDataGridViewState State { get; }
   }
 
   #endregion
@@ -1899,6 +1909,10 @@ namespace FreeLibSet.Forms
       _UseDefaultDataError = true;
       _DocumentProperties = BRReport.AppDefaultDocumentProperties.Clone();
 
+      _TopLeftCellToolTipText = String.Empty;
+      _RowCountTopLeftCellToolTipText = String.Empty;
+      _ErrorCountTopLeftCellToolTipText = String.Empty;
+
       if (!DesignMode)
       {
         Control.CurrentCellChanged += new EventHandler(Control_CurrentCellChanged);
@@ -1906,6 +1920,8 @@ namespace FreeLibSet.Forms
         Control.DataSourceChanged += new EventHandler(Control_DataBindingChanged);
         Control.DataMemberChanged += new EventHandler(Control_DataBindingChanged);
         Control.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(Control_DataBindingComplete);
+        Control.RowsAdded += Control_RowsAdded;
+        Control.RowsRemoved += Control_RowsRemoved;
         Control.RowPrePaint += new DataGridViewRowPrePaintEventHandler(Control_RowPrePaint);
         Control.CellPainting += new DataGridViewCellPaintingEventHandler(Control_CellPainting);
         Control.RowPostPaint += new DataGridViewRowPostPaintEventHandler(Control_RowPostPaint);
@@ -1968,6 +1984,8 @@ namespace FreeLibSet.Forms
 
       if (String.IsNullOrEmpty(_DocumentProperties.Title))
         _DocumentProperties.Title = WinFormsTools.GetControlText(Control);
+
+      _ValidateRequiredFlag = true; // требуется обновление верхней левой ячейки
     }
 
     /// <summary>
@@ -2081,18 +2099,14 @@ namespace FreeLibSet.Forms
         OnCurrentCellChanged();
       }
 
-      if (_TopLeftCellToolTipTextUpdateFlag)
-      {
-        // Обновляем подсказку по числу строк
-        _TopLeftCellToolTipTextUpdateFlag = false;
-        TopLeftCellToolTipText = _TopLeftCellToolTipText;
-      }
+      if (_ValidateRequiredFlag)
+        Validate();
     }
 
     /// <summary>
     /// Вызывается при изменении текущей выбранной ячейки.
     /// Вызывает обновление команд локального меню.
-    /// Предотвращается вложенный вызов метода
+    /// Предотвращается вложенный вызов метода.
     /// </summary>
     protected virtual void OnCurrentCellChanged()
     {
@@ -2207,6 +2221,7 @@ namespace FreeLibSet.Forms
 
       InitColumnSortMode();
       ResetDataReorderHelper();
+      _ValidateRequiredFlag = true;
     }
 
     #endregion
@@ -2214,16 +2229,15 @@ namespace FreeLibSet.Forms
     #region DataBindingComplete
 
     /// <summary>
-    /// Событие DataBindingComplete может вызызываться вложенно из PerformAutoSort()
+    /// Событие DataBindingComplete может вызываться вложенно из PerformAutoSort()
     /// </summary>
     private bool _Inside_Control_DataBindingComplete = false;
 
     void Control_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs args)
     {
-      _TopLeftCellToolTipTextUpdateFlag = true; // число строк могло поменяться
-
-      if (args.ListChangedType != ListChangedType.Reset)
-        return;
+      // 06.09.2024 - вызывается всегда
+      //if (args.ListChangedType != ListChangedType.Reset)
+      //  return;
 
       if (_Inside_Control_DataBindingComplete)
         return;
@@ -2260,11 +2274,27 @@ namespace FreeLibSet.Forms
       _CurrentCellChangedFlag = true;
 
       // После присоединения источника часто теряются треугольнички
-      // в заголовках строк
+      // в заголовках строк.
       // 17.07.2021. Подтверждено.
-      // Если используется произвольная сортировка по двум столбцам, то первый треугольник рисуется, а второй - нет
+      // Если используется произвольная сортировка по двум столбцам, то первый треугольник рисуется, а второй - нет.
       if (args.ListChangedType == ListChangedType.Reset)
         InitColumnHeaderTriangles();
+
+      _ValidateRequiredFlag = true;
+    }
+
+    #endregion
+
+    #region RowsAdded/Removed
+
+    private void Control_RowsAdded(object sender, DataGridViewRowsAddedEventArgs args)
+    {
+      _ValidateRequiredFlag = true;
+    }
+
+    private void Control_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs args)
+    {
+      _ValidateRequiredFlag = true;
     }
 
     #endregion
@@ -2392,7 +2422,7 @@ namespace FreeLibSet.Forms
     /// Создает объект <see cref="EFPDataGridViewSearchContext"/>.
     /// Переопределенный метод может создать расширенный объект для поиска текста.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Объект поиска</returns>
     protected virtual IEFPTextSearchContext CreateTextSearchContext()
     {
       return new EFPDataGridViewSearchContext(this);
@@ -7184,7 +7214,7 @@ namespace FreeLibSet.Forms
         }
       }
 
-      Validate();
+      _ValidateRequiredFlag = true;
     }
 
 
@@ -8176,6 +8206,9 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    /// <summary>
+    /// Устанавливается в true в событии DataGridView.RowPrePaint и сбрасывается в RowPostPaint
+    /// </summary>
     private bool _InsideRowPaint = false;
 
     private bool _RowPrePaintErrorMessageWasShown = false;
@@ -8638,7 +8671,7 @@ namespace FreeLibSet.Forms
     /// заголовке строки и подсказки, как это по умолчанию делает <see cref="DataGridView"/>.
     /// Свойство имеет значение при установленном <see cref="UseRowImages"/>=true.
     /// По умолчанию - false (предполагается, что признак ошибки строки 
-    /// устанавливается обработчиком события <see cref="GetRowAttributes"/>)
+    /// устанавливается обработчиком события <see cref="GetRowAttributes"/>).
     /// Установка свойства не препятствует реализации <see cref="GetRowAttributes"/>
     /// </summary>
     [DefaultValue(false)]
@@ -8660,6 +8693,10 @@ namespace FreeLibSet.Forms
     /// Изображение, которое следует вывести в верхней левой ячейке просмотра.
     /// Произвольное изображение может быть задано с помощью свойства <see cref="TopLeftCellUserImage"/>.
     /// Свойство <see cref="UseRowImages"/> должно быть установлено.
+    /// Свойство можно устанавливать из прикладного кода только при <see cref="ShowErrorCountInTopLeftCell"/>=false,
+    /// в противном случае оно устанавливается автоматически.
+    /// Если одновременно заданы свойства <see cref="TopLeftCellUserImage"/> и <see cref="TopLeftCellImageKind"/>!=<see cref="EFPDataGridViewImageKind.None"/>,
+    /// то приоритет имеет <see cref="TopLeftCellUserImage"/>.
     /// </summary>
     [DefaultValue(EFPDataGridViewImageKind.None)]
     public EFPDataGridViewImageKind TopLeftCellImageKind
@@ -8678,9 +8715,10 @@ namespace FreeLibSet.Forms
     private EFPDataGridViewImageKind _TopLeftCellImageKind;
 
     /// <summary>
-    /// Произвольное изображение, которое следует вывести в верхней левой ячейке 
-    /// просмотра.
+    /// Произвольное изображение, которое следует вывести в верхней левой ячейке просмотра.
     /// Свойство <see cref="UseRowImages"/> должно быть установлено.
+    /// Если одновременно заданы свойства <see cref="TopLeftCellUserImage"/> и <see cref="TopLeftCellImageKind"/>!=<see cref="EFPDataGridViewImageKind.None"/>,
+    /// то приоритет имеет <see cref="TopLeftCellUserImage"/>.
     /// </summary>
     [DefaultValue(null)]
     public Image TopLeftCellUserImage
@@ -8702,55 +8740,91 @@ namespace FreeLibSet.Forms
     /// Текст всплывающей подсказки, выводимой при наведении курсора мыши на
     /// верхнюю левую ячейку просмотра.
     /// Свойство инициализируется автоматически, если <see cref="UseRowImages"/> установлено в true.
-    /// Свойство не включает в себя текст, генерируемый <see cref="ShowRowCountInTopLeftCellToolTipText"/>
+    /// Свойство не включает в себя текст, генерируемый <see cref="ShowRowCountInTopLeftCell"/>
     /// </summary>
     public string TopLeftCellToolTipText
     {
       get { return Control.TopLeftHeaderCell.ToolTipText; }
       set
       {
+        if (value == null)
+          value = String.Empty;
+        if (_TopLeftCellToolTipText == value)
+          return;
         _TopLeftCellToolTipText = value;
 
-        // Обновляем, даже если подсказка не изменилась
-        string s = String.Empty;
-        if (value != null)
-          s = value;
-        if (ShowRowCountInTopLeftCellToolTipText && Control.DataSource != null)
-        {
-          if (s.Length > 0)
-            s += Environment.NewLine;
-          s += "Строк в просмотре: " + Control.RowCount.ToString();
-        }
-        Control.TopLeftHeaderCell.ToolTipText = s;
+        InitTopLeftHeaderCellToolTipText();
       }
     }
     private string _TopLeftCellToolTipText;
 
-    /// <summary>
-    /// Необходимость обновить подсказку по таймеру
-    /// </summary>
-    private bool _TopLeftCellToolTipTextUpdateFlag = false;
+    private string _RowCountTopLeftCellToolTipText;
+    private string _ErrorCountTopLeftCellToolTipText;
+
+    private void InitTopLeftHeaderCellToolTipText()
+    {
+      string[] a = new string[3]
+      {
+        _TopLeftCellToolTipText,
+        _RowCountTopLeftCellToolTipText,
+        _ErrorCountTopLeftCellToolTipText
+      };
+      Control.TopLeftHeaderCell.ToolTipText = DataTools.JoinNotEmptyStrings(Environment.NewLine, a);
+
+    }
 
     /// <summary>
     /// Если свойство установить в true, то в верхней левой ячейке будет отображаться всплывающая
-    /// подсказка "Записей в просмотре: XXX". 
-    /// Свойство подключает обработку события <see cref="DataGridView.DataBindingComplete"/>. Не работает, если табличный
-    /// просмотр не присоединен к источнику данных.
+    /// подсказка "Строк в просмотре: XXX". 
     /// По умолчанию - false - свойство отключено.
     /// </summary>
-    public bool ShowRowCountInTopLeftCellToolTipText
+    public bool ShowRowCountInTopLeftCell
     {
-      get { return _ShowRowCountInTopLeftCellToolTipText; }
+      get { return _ShowRowCountInTopLeftCell; }
       set
       {
-        if (value == _ShowRowCountInTopLeftCellToolTipText)
+        if (value == _ShowRowCountInTopLeftCell)
           return;
-        _ShowRowCountInTopLeftCellToolTipText = value;
+        _ShowRowCountInTopLeftCell = value;
 
-        TopLeftCellToolTipText = _TopLeftCellToolTipText; // обновляем подсказку
+        _ValidateRequiredFlag = true; // обновляем подсказку
       }
     }
-    private bool _ShowRowCountInTopLeftCellToolTipText;
+    private bool _ShowRowCountInTopLeftCell;
+
+    /// <summary>
+    /// Дублирует ShowRowCountInTopLeftCell
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Используйте ShowRowCountInTopLeftCell")]
+    public bool ShowRowCountInTopLeftCellToolTipText
+    {
+      get { return ShowRowCountInTopLeftCell; }
+      set { ShowRowCountInTopLeftCell = value; }
+    }
+
+
+    /// <summary>
+    /// Если свойство установить в true, то в верхней левой ячейке будет отображаться всплывающая
+    /// подсказка "Строк с ошибками: XXX, предупрежденями YYY". 
+    /// Также будет выводиться значок установкой свойства <see cref="TopLeftCellImageKind"/>.
+    /// Свойство действует только при <see cref="UseRowImages"/>=true.
+    /// По умолчанию - false - свойство отключено.
+    /// </summary>
+    public bool ShowErrorCountInTopLeftCell
+    {
+      get { return _ShowErrorCountInTopLeftCell; }
+      set
+      {
+        if (value == _ShowErrorCountInTopLeftCell)
+          return;
+        _ShowErrorCountInTopLeftCell = value;
+
+        _ValidateRequiredFlag = true; // обновляем подсказку
+      }
+    }
+    private bool _ShowErrorCountInTopLeftCell;
+
 
     private void DoControl_RowHeaderCellPainting(DataGridViewCellPaintingEventArgs args)
     {
@@ -9185,76 +9259,6 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Инициализировать значок и всплывающую подсказку для верхней левой ячейки 
-    /// табличного просмотра, где будет выведено количество ошибок и предупреждений
-    /// Устанавливает свойства <see cref="TopLeftCellImageKind"/> и <see cref="TopLeftCellToolTipText"/>.
-    /// При вызове метода перебираются все строки табличного просмотра. Для каждой
-    /// строки вызывается метод <see cref="GetRowImageKind(int)"/>, который, в свою очередь, вызывает
-    /// для строки событие <see cref="GetRowAttributes"/>.
-    /// Строки с состоянием Information не учитываются и значок (i) в верхней левой
-    /// ячейке не выводится.
-    /// Метод ничего не делает при <see cref="UseRowImages"/>=false.
-    /// </summary>
-    public void InitTopLeftCellTotalInfo()
-    {
-      if (!UseRowImages)
-        return;
-
-      int errorCount = 0;
-      int warningCount = 0;
-      int n = Control.RowCount;
-      if (n == 0)
-      {
-        if (SourceAsDataView != null)
-          n = SourceAsDataView.Count;
-      }
-      for (int i = 0; i < n; i++)
-      {
-        switch (GetRowImageKind(i))
-        {
-          case EFPDataGridViewImageKind.Error:
-            errorCount++;
-            break;
-          case EFPDataGridViewImageKind.Warning:
-            warningCount++;
-            break;
-        }
-      }
-
-      if (errorCount == 0 && warningCount == 0)
-        TopLeftCellToolTipText = "Нет строк с ошибками или предупреждениями";
-      else
-      {
-        StringBuilder sb = new StringBuilder();
-        if (errorCount > 0)
-        {
-          sb.Append("Есть строки с ошибками (");
-          sb.Append(errorCount);
-          sb.Append(")");
-          sb.Append(Environment.NewLine);
-        }
-        if (warningCount > 0)
-        {
-          sb.Append("Есть строки с предупреждениями (");
-          sb.Append(warningCount);
-          sb.Append(")");
-          sb.Append(Environment.NewLine);
-        }
-        sb.Append("Используйте Ctrl+] и Ctrl+[ для перехода к этим строкам");
-        TopLeftCellToolTipText = sb.ToString();
-      }
-      if (errorCount > 0)
-        TopLeftCellImageKind = EFPDataGridViewImageKind.Error;
-      else
-      {
-        if (warningCount > 0)
-          TopLeftCellImageKind = EFPDataGridViewImageKind.Warning;
-        else
-          TopLeftCellImageKind = EFPDataGridViewImageKind.None;
-      }
-    }
-
-    /// <summary>
     /// Перебирает все строки просмотра и возвращает максимальное значение типа ошибки для строки
     /// </summary>
     /// <returns>Тип значка</returns>
@@ -9281,6 +9285,90 @@ namespace FreeLibSet.Forms
         }
       }
       return maxLevel;
+    }
+
+    #endregion
+
+    #region Проверка управляющего элемента
+
+    private bool _ValidateRequiredFlag;
+
+    /// <summary>
+    /// Выполняет инициализацию значка и подсказки для верхней левой ячейки таблицы
+    /// </summary>
+    protected override void OnValidate()
+    {
+      base.OnValidate();
+      _ValidateRequiredFlag = false;
+
+      if (ProviderState == EFPControlProviderState.Attached)
+      {
+        if (ShowRowCountInTopLeftCell)
+          _RowCountTopLeftCellToolTipText = "Строк в просмотре: " + Control.RowCount.ToString();
+        else
+          _RowCountTopLeftCellToolTipText = String.Empty;
+
+        if (UseRowImages && ShowErrorCountInTopLeftCell)
+        {
+          int errorCount = 0;
+          int warningCount = 0;
+          int n = Control.RowCount;
+          for (int i = 0; i < n; i++)
+          {
+            switch (GetRowImageKind(i))
+            {
+              case EFPDataGridViewImageKind.Error:
+                errorCount++;
+                break;
+              case EFPDataGridViewImageKind.Warning:
+                warningCount++;
+                break;
+            }
+          }
+
+          if (errorCount == 0 && warningCount == 0)
+            _ErrorCountTopLeftCellToolTipText = "Нет строк с ошибками или предупреждениями";
+          else
+          {
+            StringBuilder sb = new StringBuilder();
+            if (errorCount > 0)
+            {
+              sb.Append("Есть строки с ошибками (");
+              sb.Append(errorCount);
+              sb.Append(")");
+              sb.Append(Environment.NewLine);
+            }
+            if (warningCount > 0)
+            {
+              sb.Append("Есть строки с предупреждениями (");
+              sb.Append(warningCount);
+              sb.Append(")");
+              sb.Append(Environment.NewLine);
+            }
+
+            if (CommandItems.UseRowErrors)
+              sb.Append("Используйте Ctrl+] и Ctrl+[ для перехода к этим строкам");
+            _ErrorCountTopLeftCellToolTipText = sb.ToString();
+          }
+
+          if (errorCount > 0)
+            TopLeftCellImageKind = EFPDataGridViewImageKind.Error;
+          else
+          {
+            if (warningCount > 0)
+              TopLeftCellImageKind = EFPDataGridViewImageKind.Warning;
+            else
+              TopLeftCellImageKind = EFPDataGridViewImageKind.None;
+          }
+        }
+        else
+        {
+          _ErrorCountTopLeftCellToolTipText = String.Empty;
+          // TopLeftCellImageKind не устанавливаем, его может устанавливать прикладной код
+        }
+
+        InitTopLeftHeaderCellToolTipText();
+      }
     }
 
     #endregion

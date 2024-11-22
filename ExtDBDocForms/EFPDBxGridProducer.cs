@@ -451,9 +451,9 @@ namespace FreeLibSet.Forms.Docs
 
     private void VTRefDocTextColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 yableId = args.GetInt(0);
+      Int32 tableId = args.GetInt(0);
       Int32 docId = args.GetInt(1);
-      args.Value = GridProducer.UI.TextHandlers.GetTextValue(yableId, docId);
+      args.Value = GridProducer.UI.TextHandlers.GetTextValue(tableId, docId);
     }
 
     #endregion
@@ -586,7 +586,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина в текстовых единицах</param>
     /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
@@ -613,7 +613,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
     /// <returns>Описание столбца</returns>
@@ -637,7 +637,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
     /// <param name="decimalPlaces">Количество знаков после десятичной точки. 0 - для отображения целых чисел</param>
@@ -663,7 +663,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddRefDate(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
@@ -686,7 +686,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddRefDateTime(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
@@ -709,7 +709,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="kind">Тип даты/времени</param>
     /// <returns>Описание столбца</returns>
@@ -733,7 +733,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Описание столбца</returns>
     public EFPGridProducerColumn AddRefMoney(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
@@ -755,7 +755,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="showPlusSign">Если true, то для положительных числовых значений будет
     /// отображаться знак "+". 
@@ -787,7 +787,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="textValues">Список текстовых значений, которые показываются в создаваемом
     /// столбце</param>
     /// <param name="headerText">Заголовок столбца</param>
@@ -848,7 +848,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="imageKeys">Список тегов в EFPApp.MainImages, которые показываются в создаваемом
     /// столбце</param>
     /// <param name="headerText">Заголовок столбца</param>
@@ -904,7 +904,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="imageKeys">Список тегов в EFPApp.MainImages, которые показываются в создаваемом
     /// столбце</param>
     /// <returns>Описание столбца</returns>
@@ -1143,7 +1143,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Описание столбца</returns>
     public EFPGridProducerCheckBoxColumn AddRefBool(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
@@ -1166,7 +1166,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
     /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
     /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу DBxTableCache.GetValue().</param>
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <returns>Описание столбца</returns>
     public EFPGridProducerCheckBoxColumn AddRefBool(string refColumnName, DocTypeUIBase masterUI, string valueColumnName)
     {
@@ -1281,8 +1281,8 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Провайдер иерархического просмотра</param>
     /// <param name="nodeControl">Элемент в <see cref="FreeLibSet.Controls.TreeViewAdv"/>, к которому присоединяется обработчик события ValueNeeded</param>
     /// <param name="cache">Система кэширования данных</param>
-    /// <param name="column">Генератор столбца табличного просмотра</param>
-    public TreeViewCachedValueAdapter(EFPDataTreeView controlProvider, BindableControl nodeControl, DBxCache cache, EFPGridProducerColumn column)
+    /// <param name="columnProducer">Генератор столбца просмотра. Может быть null</param>
+    public TreeViewCachedValueAdapter(EFPDataTreeView controlProvider, BindableControl nodeControl, DBxCache cache, EFPGridProducerColumn columnProducer)
     {
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
@@ -1291,11 +1291,11 @@ namespace FreeLibSet.Forms.Docs
 
 
       _ControlProvider = controlProvider;
-      _UserColumn = column;
-      if (_UserColumn != null)
-        nodeControl.ValueNeeded += new EventHandler<NodeControlValueEventArgs>(NodeControl_UserValueNeeded);
+      _ColumnProducer = columnProducer;
+      if (_ColumnProducer != null)
+        nodeControl.ValueNeeded += new EventHandler<NodeControlValueEventArgs>(NodeControl_ValueNeeded_WithProducer);
       else
-        nodeControl.ValueNeeded += new EventHandler<NodeControlValueEventArgs>(NodeControl_ValueNeeded);
+        nodeControl.ValueNeeded += new EventHandler<NodeControlValueEventArgs>(NodeControl_ValueNeeded_WithDataRow);
       _Cache = cache;
     }
 
@@ -1317,13 +1317,13 @@ namespace FreeLibSet.Forms.Docs
 
     private bool _UseCache;
 
-    private readonly EFPGridProducerColumn _UserColumn;
+    private readonly EFPGridProducerColumn _ColumnProducer;
 
     #endregion
 
     #region Получение значения
 
-    private void NodeControl_ValueNeeded(object sender, NodeControlValueEventArgs args)
+    private void NodeControl_ValueNeeded_WithDataRow(object sender, NodeControlValueEventArgs args)
     {
       BindableControl nodeControl = (BindableControl)sender;
       DataRow row = args.Node.Tag as DataRow;
@@ -1355,8 +1355,8 @@ namespace FreeLibSet.Forms.Docs
         {
           if (_UseCache)
           {
-            Int32 RefId = DataTools.GetInt(row, _ColumnName);
-            args.Value = Cache[_TableName].GetRefValue(nodeControl.DataPropertyName, RefId, row.Table.DataSet);
+            Int32 refId = DataTools.GetInt(row, _ColumnName);
+            args.Value = Cache[_TableName].GetRefValue(nodeControl.DataPropertyName, refId, row.Table.DataSet);
           }
           else
             args.Value = DataTools.GetString(row, nodeControl.DataPropertyName);
@@ -1366,7 +1366,7 @@ namespace FreeLibSet.Forms.Docs
         args.Value = null;
     }
 
-    private void NodeControl_UserValueNeeded(object sender, NodeControlValueEventArgs args)
+    private void NodeControl_ValueNeeded_WithProducer(object sender, NodeControlValueEventArgs args)
     {
       //BindableControl NodeControl = (BindableControl)sender;
       EFPDataViewRowInfo rowInfo = _ControlProvider.GetRowInfo(args.Node);
@@ -1376,7 +1376,7 @@ namespace FreeLibSet.Forms.Docs
         //  args.Value = "Строка удалена";
         //else
         //{
-        args.Value = _UserColumn.GetValue(rowInfo);
+        args.Value = _ColumnProducer.GetValue(rowInfo);
         //}
       }
       else
@@ -1433,7 +1433,7 @@ namespace FreeLibSet.Forms.Docs
     #region Свойства
 
     internal DBxDocTypeBase DocTypeBase { get { return _DocTypeBase; } }
-    private DBxDocTypeBase _DocTypeBase;
+    private readonly DBxDocTypeBase _DocTypeBase;
 
     #endregion
   }

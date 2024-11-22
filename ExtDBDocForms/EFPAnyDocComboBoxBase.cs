@@ -284,7 +284,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - <see cref="UIValidateState.Error"/> (пустое значение не разрешается.
+    /// По умолчанию - <see cref="UIValidateState.Error"/> (пустое значение не разрешается).
     /// Это свойство переопределяется для нестандартных элементов, содержащих
     /// кнопку очистки справа от элемента.
     /// </summary>
@@ -431,9 +431,9 @@ namespace FreeLibSet.Forms.Docs
       if (!GetDocSelSupported)
         return base.CreateCommandItems();
 
-      EFPAnyDocComboBoxBaseCommandItems Items = new EFPAnyDocComboBoxBaseCommandItems(this);
-      Items.InitEnabled();
-      return Items;
+      EFPAnyDocComboBoxBaseCommandItems items = new EFPAnyDocComboBoxBaseCommandItems(this);
+      items.InitEnabled();
+      return items;
     }
 
 
@@ -539,8 +539,8 @@ namespace FreeLibSet.Forms.Docs
             ciShowDocInfo.Enabled = false;
           else
           {
-            string DocTypeName = docSel.TableNames[0];
-            ciShowDocInfo.Enabled = DocTypeViewHistoryPermission.GetAllowed(ups, DocTypeName);
+            string docTypeName = docSel.TableNames[0];
+            ciShowDocInfo.Enabled = DocTypeViewHistoryPermission.GetAllowed(ups, docTypeName);
           }
         }
         catch

@@ -18,7 +18,7 @@ using FreeLibSet.Remoting;
 namespace FreeLibSet.Forms.Docs
 {
   /// <summary>
-  /// Провайдер иерархического просмотра подддокументов
+  /// Провайдер иерархического просмотра поддокументов
   /// </summary>
   public class EFPSubDocTreeView : EFPDBxTreeView, IEFPSubDocView
   {
@@ -125,8 +125,7 @@ namespace FreeLibSet.Forms.Docs
         this.CanView = false;
       }
 
-      CanInlineEdit = true;
-
+      // _CanInlineEdit = true;
       _ConfirmDeletion = true;
     }
 
@@ -135,21 +134,21 @@ namespace FreeLibSet.Forms.Docs
     #region Общие свойства
 
     /// <summary>
-    /// Основной редактор документа, использующий данный просмотр
+    /// Основной редактор документа, использующий данный просмотр.
     /// Задается в конструкторе.
-    /// Может быть null, если просмотр используется для выбора поддокумента вне редактора
+    /// Может быть null, если просмотр используется для выбора поддокумента вне редактора.
     /// </summary>
     public DocumentEditor MainEditor { get { return _MainEditor; } }
     private DocumentEditor _MainEditor;
 
     /// <summary>
-    /// Тип редактируемых поддокументов. Задается в конструкторе
+    /// Тип редактируемых поддокументов. Задается в конструкторе.
     /// </summary>
     public DBxSubDocType SubDocType { get { return _SubDocTypeUI.SubDocType; } }
 
     /// <summary>
     /// Редактируемые поддокументы (объект доступа). Ссылка извлекается из
-    /// MainEditor.Documents в конструкторе
+    /// <see cref="MainEditor"/>.Documents в конструкторе.
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
     private DBxMultiSubDocs _SubDocs;
@@ -174,7 +173,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Эти данные передаются обработчику инициализации просмотра.
-    /// Свойство может устанавливаться только до вызова события Created, то есть сразу после вызова конструктора
+    /// Свойство может устанавливаться только до вызова события <see cref="EFPControlBase.Created"/>, то есть сразу после вызова конструктора.
     /// </summary>
     public object UserInitData
     {
@@ -190,11 +189,12 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если установлено в true, то перед добавлением и редактированием записей
-    /// вызывается MainEditor.ValidateDate(). В этом случае редактор поддокумента
-    /// может использовать актуальные значения полей основного документа
+    /// вызывается <see cref="DocumentEditor.ValidateData()"/>. В этом случае редактор поддокумента
+    /// может использовать актуальные значения полей основного документа.
     /// По умолчанию (false) проверка не выполняется. Допускается редактирование
     /// поддокументов, даже если на какой-либо вкладке редактора основного документа
-    /// есть некорректно заполненные поля
+    /// есть некорректно заполненные поля.
+    /// Нельзя устанавливать в true, если <see cref="MainEditor"/>==null.
     /// </summary>
     public bool ValidateBeforeEdit
     {
@@ -214,17 +214,17 @@ namespace FreeLibSet.Forms.Docs
     internal DBxColumns UsedColumnNames { get { return _UsedColumnNames; } }
     private DBxColumns _UsedColumnNames;
 
-    /// <summary>
-    /// Если true (по умолчанию), то допускается редактирование "по месту".
-    /// Для запрета редактирования нужно устанавливить в false.
-    /// Простая установка свойства GridHandler.Control.ReadOnly=true не даст эффекта,
-    /// т.к. свойство переустанавливается, если пользователь изменит настройку
-    /// просмотра
-    /// Для выборочного запрета редактирования ячеек используйте, вместо этого свойства,
-    /// свойство GridProducerColumn.ReadOnly при объявлении поддокумента
-    /// </summary>
-    public bool CanInlineEdit { get { return _CanInlineEdit; } set { _CanInlineEdit = value; } }
-    private bool _CanInlineEdit;
+    ///// <summary>
+    ///// Если true (по умолчанию), то допускается редактирование "по месту".
+    ///// Для запрета редактирования нужно устанавливить в false.
+    ///// Простая установка свойства GridHandler.Control.ReadOnly=true не даст эффекта,
+    ///// т.к. свойство переустанавливается, если пользователь изменит настройку
+    ///// просмотра
+    ///// Для выборочного запрета редактирования ячеек используйте, вместо этого свойства,
+    ///// свойство GridProducerColumn.ReadOnly при объявлении поддокумента
+    ///// </summary>
+    //public bool CanInlineEdit { get { return _CanInlineEdit; } set { _CanInlineEdit = value; } }
+    //private bool _CanInlineEdit;
 
     #endregion
 
@@ -232,7 +232,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Закончить инициализацию просмотра. 
-    /// Добавление команд локального меню должно быть закончено до вызова метода
+    /// Добавление команд локального меню должно быть закончено до вызова метода.
     /// </summary>
     protected override void OnCreated()
     {
@@ -347,13 +347,12 @@ namespace FreeLibSet.Forms.Docs
       // Локальное меню, панель и статусная строка
       //ControlProvider.ToolBarPanel = SpeedPanel;
 
-
       base.OnCreated();
     }
 
 
     /// <summary>
-    /// Присоединяет обработчик в DocumentEditor
+    /// Присоединяет обработчик в <see cref="DocumentEditor"/>
     /// </summary>
     protected override void OnAttached()
     {
@@ -364,7 +363,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Отсоединяет обработчик от DocumentEditor
+    /// Отсоединяет обработчик от <see cref="DocumentEditor"/>
     /// </summary>
     protected override void OnDetached()
     {
@@ -375,7 +374,6 @@ namespace FreeLibSet.Forms.Docs
     }
 
 #if XXX
-
 
     /// <summary>
     /// Пользователь изменил настройку табличного просмотра
@@ -498,7 +496,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Создает объект DBxDataRowValueArrayWithCache()
+    /// Создает объект <see cref="DBxDataRowValueArrayWithCache"/>
     /// </summary>
     /// <returns>Новый объект для доступа к данным</returns>
     protected override IDataRowNamedValuesAccess CreateRowValueAccessObject()
@@ -511,9 +509,9 @@ namespace FreeLibSet.Forms.Docs
     #region Команды локального меню
 
     /// <summary>
-    /// Устанавливает SubDocsChangeInfo.Changed=true.
+    /// Устанавливает MainEditor.SubDocsChangeInfo.Changed=true.
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Не используется</param>
     protected override void OnManualOrderChanged(EventArgs args)
     {
       base.OnManualOrderChanged(args);
@@ -542,7 +540,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Удаляет текущие выбранные поддокументы без выдачи дополнительных запросов.
-    /// Свойство ConfirmDeletion игнорируется.
+    /// Свойство <see cref="ConfirmDeletion"/> игнорируется.
     /// Этот метод может использоваться в обработчике команды Cut.
     /// </summary>
     public void PerformDeleteDataQuiet()
@@ -572,12 +570,20 @@ namespace FreeLibSet.Forms.Docs
           return true;
       }
 
+      // TODO: Не должно ли быть это внутри SubDocumentEditor.Run()?
+      DBxMultiSubDocs subDocs2;
       DataRow[] rows = null;
-      Int32 docId;
       if (this.State == EFPDataGridViewState.Insert)
       {
-        if (!SubDocTypeUI.SelectOneDoc(this, out docId))
+        Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
+        if (docIds == null)
           return true;
+        subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
+        foreach (Int32 docId in docIds)
+        {
+          DBxSingleDoc doc = SubDocs.Owner.GetDocById(docId);
+          subDocs2.Insert(doc);
+        }
       }
       else
       {
@@ -587,18 +593,6 @@ namespace FreeLibSet.Forms.Docs
           EFPApp.MessageBox("Нет выбранных поддокументов \"" + SubDocType.PluralTitle + "\"");
           return true;
         }
-        docId = DataTools.GetInt(rows[0], "DocId");
-      }
-
-      // TODO: Не должно ли быть это внутри SubDocumentEditor.Run()?
-      DBxMultiSubDocs subDocs2;
-      if (this.State == EFPDataGridViewState.Insert)
-      {
-        subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
-        subDocs2.Insert();
-      }
-      else
-      {
         subDocs2 = new DBxMultiSubDocs(SubDocs, rows);
         if (this.State == EFPDataGridViewState.Delete)
         {
@@ -699,7 +693,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Обновление или первичная инициализация просмотра
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Не используется</param>
     protected override void OnRefreshData(EventArgs args)
     {
       if (Control.Model != null) // 02.05.2022 - реальная перезагрузка.
@@ -867,13 +861,13 @@ namespace FreeLibSet.Forms.Docs
           return;
       }
 
-      Int32 docId;
-      if (!SubDocTypeUI.SelectOneDoc(this, out docId))
+      Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
+      if (docIds == null)
         return;
 
-      DBxSingleDoc mainDoc = MainEditor.Documents[SubDocType.DocType.Name].GetDocById(docId);
+      //DBxSingleDoc mainDoc = MainEditor.Documents[SubDocType.DocType.Name].GetDocById(docId);
 
-      DBxSubDoc[] newSubDocs = SubDocTypeUI.PerformPasteRows(mainDoc.SubDocs[SubDocType.Name], srcRows, docTypeBase, this);
+      DBxSubDoc[] newSubDocs = SubDocTypeUI.PerformPasteRows(MainEditor.Documents[SubDocType.DocType.Name].SubDocs[SubDocType.Name], docIds, srcRows, docTypeBase, this);
       if (newSubDocs == null)
         return;
 
@@ -890,12 +884,12 @@ namespace FreeLibSet.Forms.Docs
     #region Ручная сортировка строк
 
     /// <summary>
-    /// Если для поддокумента задан иерархический порядок (свойство DBxSubDocType.TreeParentColumnName),
+    /// Если для поддокумента задан иерархический порядок (свойство <see cref="DBxDocTypeBase.TreeParentColumnName"/>),
     /// то возвращается сортировщий для иерархической модели, а не обычный DataTableReorderHelper.
     /// 
     /// Если в редакторе документа есть и иерархический просмотр и плоская таблица, то в них будут одинаково переставляться строки.
     /// </summary>
-    /// <returns>Объект, реализующий IDataReorderHelper</returns>
+    /// <returns>Объект, реализующий <see cref="IDataReorderHelper"/></returns>
     protected override IDataReorderHelper CreateDefaultDataReorderHelper()
     {
       if (SubDocs.Owner.DocCount != 1)
@@ -905,7 +899,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство SubDocTypeUI)
+    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="SubDocTypeUI.ManualOrderColumn"/>)
     /// </summary>
     public void InitManualOrderColumnValue()
     {
@@ -918,7 +912,7 @@ namespace FreeLibSet.Forms.Docs
     #region Оформление просмотра
 
     /// <summary>
-    /// Вызывает SubDocTypeUI.GetImageKey()
+    /// Вызывает <see cref="DocTypeUIBase.GetImageKey(DataRow)"/>
     /// </summary>
     /// <param name="node">Узел дерева</param>
     /// <returns>Имя изображения для поддокумента</returns>

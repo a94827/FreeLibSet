@@ -20,14 +20,13 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Интерфейс для просмотра поддокументов.
-  /// Реализуется EFPSubDocGridView и EFPSubDocTreeView
+  /// Реализуется <see cref="EFPSubDocGridView"/> и <see cref="EFPSubDocTreeView"/>
   /// </summary>
   public interface IEFPSubDocView : IEFPDBxView
   {
     /// <summary>
-    /// Основной редактор документа, использующий данный просмотр
-    /// Задается в конструкторе.
-    /// Может быть null, если просмотр используется для выбора поддокумента вне редактора
+    /// Основной редактор документа, использующий данный просмотр.
+    /// Может быть null, если просмотр используется для выбора поддокумента вне редактора.
     /// </summary>
     DocumentEditor MainEditor { get; }
 
@@ -37,7 +36,7 @@ namespace FreeLibSet.Forms.Docs
     SubDocTypeUI SubDocTypeUI { get; }
 
     /// <summary>
-    /// Описание вида поддокументов (экивавалентно SubDocTypeUI.SubDocType)
+    /// Описание вида поддокументов (экивавалентно <see cref="SubDocTypeUI.SubDocType"/>)
     /// </summary>
     DBxSubDocType SubDocType { get; }
 
@@ -47,17 +46,18 @@ namespace FreeLibSet.Forms.Docs
     DBxMultiSubDocs SubDocs { get; }
 
     /// <summary>
-    /// Провайдер для доступа к документам (SubDocTypeUI.UI.DocProvider)
+    /// Провайдер для доступа к документам (<see cref="FreeLibSet.Forms.Docs.DBUI.DocProvider"/>)
     /// </summary>
     DBxDocProvider DocProvider { get; }
 
     /// <summary>
     /// Если установлено в true, то перед добавлением и редактированием записей
-    /// вызывается MainEditor.ValidateDate(). В этом случае редактор поддокумента
-    /// может использовать актуальные значения полей основного документа
+    /// вызывается <see cref="DocumentEditor.ValidateData()"/>. В этом случае редактор поддокумента
+    /// может использовать актуальные значения полей основного документа.
     /// По умолчанию (false) проверка не выполняется. Допускается редактирование
     /// поддокументов, даже если на какой-либо вкладке редактора основного документа
-    /// есть некорректно заполненные поля
+    /// есть некорректно заполненные поля.
+    /// Нельзя устанавливать в true, если <see cref="MainEditor"/>==null.
     /// </summary>
     bool ValidateBeforeEdit { get; set; }
 
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms.Docs
     object UserInitData { get; }
 
     /// <summary>
-    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство SubDocTypeUI)
+    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="SubDocTypeUI.ManualOrderColumn"/>)
     /// </summary>
     void InitManualOrderColumnValue();
   }
@@ -76,7 +76,9 @@ namespace FreeLibSet.Forms.Docs
 
   /// <summary>
   /// Табличный просмотр для редактирования поддокументов (вложенных
-  /// таблиц) внутри страницы редактора основного документа
+  /// таблиц) внутри страницы редактора основного документа <see cref="DocumentEditor"/>.
+  /// Также просмотр может использоваться для показа списка поддокументов без встраивания в редактор документа.
+  /// При этом нет возможности открытия поддокументов на просмотр и редактирование.
   /// </summary>
   public class EFPSubDocGridView : EFPDBxGridView, IEFPSubDocView
   {
@@ -161,6 +163,7 @@ namespace FreeLibSet.Forms.Docs
       Control.VirtualMode = true;
       Control.AutoGenerateColumns = false;
 
+      base.UseRowImages = true; // 06.09.2024
       base.GridProducer = _SubDocTypeUI.GridProducer;
       base.ConfigSectionName = subDocs.SubDocType.Name;
       CommandItems.EnterAsOk = false;
@@ -191,20 +194,19 @@ namespace FreeLibSet.Forms.Docs
       //  // DebugTools.DebugDataTable(SourceAsDataTable, SubDocType.Name);
       //}
 
-      bool showDocId;
-      if (mainEditor == null)
-        showDocId = subDocs.Owner.DocCount > 1; // ???
-      else
-        showDocId = mainEditor.MultiDocMode;
+      //bool showDocId;
+      //if (mainEditor == null)
+      //  showDocId = subDocs.Owner.DocCount > 1; // ???
+      //else
+      //  showDocId = mainEditor.MultiDocMode;
       //SubDocTypeUI.DoInitGrid(this, false, UsedColumnNames, null, ShowDocId, true);
       //base.CurrentConfigChanged += new CancelEventHandler(GridHandler_CurrentGridConfigChanged);
 
       base.DisableOrdering();
 
-      CanInlineEdit = true;
+      base.ShowRowCountInTopLeftCell = true; // 15.12.2017
 
-      base.ShowRowCountInTopLeftCellToolTipText = true; // 15.12.2017
-
+      _CanInlineEdit = true;
       _ConfirmDeletion = true;
     }
 
@@ -213,12 +215,12 @@ namespace FreeLibSet.Forms.Docs
     #region Общие свойства
 
     /// <summary>
-    /// Основной редактор документа, использующий данный просмотр
+    /// Основной редактор документа, использующий данный просмотр.
     /// Задается в конструкторе.
     /// Может быть null, если просмотр используется для выбора поддокумента вне редактора
     /// </summary>
     public DocumentEditor MainEditor { get { return _MainEditor; } }
-    private DocumentEditor _MainEditor;
+    private /* readonly */ DocumentEditor _MainEditor;
 
     /// <summary>
     /// Тип редактируемых поддокументов. Задается в конструкторе
@@ -227,7 +229,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Редактируемые поддокументы (объект доступа). Ссылка извлекается из
-    /// MainEditor.Documents в конструкторе
+    /// <see cref="DocumentEditor.Documents"/> в конструкторе.
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
     private DBxMultiSubDocs _SubDocs;
@@ -253,8 +255,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Если установлено в true, то перед добавлением и редактированием записей
-    /// вызывается MainEditor.ValidateDate(). В этом случае редактор поддокумента
-    /// может использовать актуальные значения полей основного документа
+    /// вызывается <see cref="DocumentEditor.ValidateData()"/>. В этом случае редактор поддокумента
+    /// может использовать актуальные значения полей основного документа.
     /// По умолчанию (false) проверка не выполняется. Допускается редактирование
     /// поддокументов, даже если на какой-либо вкладке редактора основного документа
     /// есть некорректно заполненные поля.
@@ -274,11 +276,10 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Если true (по умолчанию), то допускается редактирование "по месту".
     /// Для запрета редактирования нужно устанавливить в false.
-    /// Простая установка свойства Control.ReadOnly=true не даст эффекта,
-    /// т.к. свойство переустанавливается, если пользователь изменит настройку
-    /// просмотра
+    /// Простая установка свойства <see cref="DataGridView.ReadOnly"/>=true не даст эффекта,
+    /// т.к. свойство переустанавливается, если пользователь изменит настройку просмотра.
     /// Для выборочного запрета редактирования ячеек используйте, вместо этого свойства,
-    /// свойство GridProducerColumn.ReadOnly при объявлении поддокумента
+    /// свойство <see cref="EFPGridProducerColumn.ReadOnly"/> при объявлении поддокумента.
     /// </summary>
     public bool CanInlineEdit { get { return _CanInlineEdit; } set { _CanInlineEdit = value; } }
     private bool _CanInlineEdit;
@@ -286,7 +287,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Эти данные передаются обработчику инициализации просмотра.
-    /// Свойство может устанавливаться только до вызова события Created, то есть сразу после вызова конструктора
+    /// Свойство может устанавливаться только до вызова события <see cref="EFPControlBase.Created"/>, то есть сразу после вызова конструктора.
     /// </summary>
     public object UserInitData
     {
@@ -301,8 +302,8 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Имена столбцов, необходимых для просмотра.
-    /// Список заполняется после инициализации просмотра с помощью EFPGridProducer.
-    /// Чтобы гарантировать заполнение свойства, можно использовать метод PerdormInitGrid().
+    /// Список заполняется после инициализации просмотра с помощью <see cref="EFPGridProducer"/>.
+    /// Чтобы гарантировать заполнение свойства, можно использовать метод <see cref="PerformInitGrid(bool)"/>.
     /// </summary>
     public DBxColumns UsedColumnNames { get { return _UsedColumnNames; } }
     private DBxColumns _UsedColumnNames; // для обновления строк
@@ -314,7 +315,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Закончить инициализацию табличного просмотра. Присоединяет табличный просмотр
     /// и панель кнопок к форме.
-    /// Добавление команд локального меню должно быть закончено до вызова метода
+    /// Добавление команд локального меню должно быть закончено до вызова метода.
     /// </summary>
     protected override void OnCreated()
     {
@@ -417,7 +418,7 @@ namespace FreeLibSet.Forms.Docs
     #region Команды локального меню
 
     /// <summary>
-    /// Устанавливает SubDocsChangeInfo.Changed=true.
+    /// Устанавливает <see cref="DocumentEditor.SubDocsChangeInfo"/>.Changed=true.
     /// </summary>
     protected override void OnManualOrderChanged(EventArgs args)
     {
@@ -452,7 +453,7 @@ namespace FreeLibSet.Forms.Docs
     #region Методы
 
     /// <summary>
-    /// Вызывает SubDocTypeUI.PerformInitGrid()
+    /// Вызывает <see cref="PerformInitGrid(bool)"/>
     /// </summary>
     protected override void OnInitDefaultGridConfig()
     {
@@ -466,10 +467,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Инициализация колонок табличного просмотра.
-    /// После вызова становится доступным свойство UsedColumnNames.
+    /// После вызова становится доступным свойство <see cref="UsedColumnNames"/>.
     /// Предотвращается реентрантный вызов.
-    /// Вызов DocTypeUI.PerformInitGrid() выполняется виртуальным методом OnInitGrid().
-    /// <param name="forced">Если true, то инициализация будет выполнена обязательно. Используется при обработке события OnCurrentConfigChanged.
+    /// Вызов <see cref="DocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object)"/> выполняется виртуальным методом <see cref="OnInitGrid(bool, DBxColumnList)"/>.
+    /// <param name="forced">Если true, то инициализация будет выполнена обязательно. Используется при обработке события <see cref="EFPDataGridView.CurrentConfigChanged"/>.
     /// Если false, то инициализация выполняется только, если она еще не была выполнена ранее.</param>
     /// </summary>
     public void PerformInitGrid(bool forced)
@@ -493,7 +494,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация табличного просмотра документов с помощью SubDocTypeUI.PerformInitGrid().
+    /// Инициализация табличного просмотра документов с помощью <see cref="SubDocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object, bool, bool)"/>.
     /// Переопределенный метод может, например, добавить порядки сортировки в список Orders.
     /// </summary>
     /// <param name="reInit">true при повторном вызове метода (после изменения конфигурации просмотра)
@@ -511,11 +512,18 @@ namespace FreeLibSet.Forms.Docs
         columns.Add(DefaultManualOrderColumn);
       DBxColumns imgCols = UI.ImageHandlers.GetColumnNames(SubDocTypeUI.SubDocType.Name, true);
       columns.AddRange(imgCols); // Может быть, это нужно делать в SubDocTypeUI
+
+      if (_SubDocs.Owner.DocCount > 1)
+      {
+        // 16.09.2024
+        base.Columns.AddImage("DocId_Image");
+        base.Columns.AddText("DocId_Text", false, SubDocTypeUI.DocTypeUI.DocType.SingularTitle, 30, 10);
+      }
     }
 
 
     /// <summary>
-    /// Вызывает событие CurrentConfigChanged.
+    /// Вызывает событие <see cref="EFPDataGridView.CurrentConfigChanged"/>.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected override void OnCurrentConfigChanged(CancelEventArgs args)
@@ -656,12 +664,49 @@ namespace FreeLibSet.Forms.Docs
     #region Значения для ссылочных полей
 
     /// <summary>
-    /// Создает объект DBxDataRowValueArrayWithCache()
+    /// Создает объект <see cref="DBxDataRowValueArrayWithCache"/>
     /// </summary>
     /// <returns>Новый объект для доступа к данным</returns>
     protected override IDataRowNamedValuesAccess CreateRowValueAccessObject()
     {
       return new DBxDataRowValueArrayWithCache(SubDocTypeUI.TableCache);
+    }
+
+    /// <summary>
+    /// Текстовое представление для документа
+    /// </summary>
+    /// <param name="args">Аргументы события ячейки</param>
+    protected override void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
+    {
+      base.OnGetCellAttributes(args);
+      if (args.ColumnName == "DocId_Text")
+      {
+        Int32 docId = DataTools.GetInt(args.DataRow, "DocId");
+        int pDoc = _SubDocs.Owner.IndexOfDocId(docId);
+        if (pDoc >= 0)
+        {
+          DBxSingleDoc doc = _SubDocs.Owner[pDoc];
+          args.Value = UI.TextHandlers.GetTextValue(doc);
+        }
+      }
+      else if (args.ColumnName == "DocId_Image")
+      {
+        Int32 docId = DataTools.GetInt(args.DataRow, "DocId");
+        int pDoc = _SubDocs.Owner.IndexOfDocId(docId);
+        if (pDoc >= 0)
+        {
+          DBxSingleDoc doc = _SubDocs.Owner[pDoc];
+          switch (args.Reason)
+          {
+            case EFPDataGridViewAttributesReason.View:
+              args.Value = EFPApp.MainImages.Images[UI.ImageHandlers.GetImageKey(doc)];
+              break;
+            case EFPDataGridViewAttributesReason.ToolTip:
+              args.ToolTipText = UI.ImageHandlers.GetToolTipText(doc);
+              break;
+          }
+        }
+      }
     }
 
     #endregion
@@ -671,7 +716,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Обновление или первичная инициализация таблицы данных
     /// </summary>
-    /// <param name="args"></param>
+    /// <param name="args">Не используется</param>
     protected override void OnRefreshData(EventArgs args)
     {
       if (SourceAsDataView != null)
@@ -717,15 +762,12 @@ namespace FreeLibSet.Forms.Docs
             dvSort = SubDocType.DefaultOrder.ToString(); // 02.05.2022
           else
             dvSort = SubDocTypeUI.ManualOrderColumn; // испр. 26.05.2022
-          if (MainEditor != null)
+          if (_SubDocs.Owner.DocCount > 1)
           {
-            if (MainEditor.MultiDocMode)
-            {
-              if (String.IsNullOrEmpty(dv.Sort))
-                dvSort = "DocId";
-              else
-                dvSort += ",DocId";
-            }
+            if (String.IsNullOrEmpty(dvSort)) // испр. 19.09.2024
+              dvSort = "DocId";
+            else
+              dvSort += ",DocId";
           }
         }
         else
@@ -752,7 +794,7 @@ namespace FreeLibSet.Forms.Docs
     #region Редактирование поддокумента
 
     /// <summary>
-    /// Присоединяет обработчик в DocumentEditor
+    /// Присоединяет обработчик в <see cref="DocumentEditor"/>
     /// </summary>
     protected override void OnAttached()
     {
@@ -763,7 +805,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Отсоединяет обработчик от DocumentEditor
+    /// Отсоединяет обработчик от <see cref="DocumentEditor"/>
     /// </summary>
     protected override void OnDetached()
     {
@@ -801,7 +843,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Удаляет текущие выбранные поддокументы без выдачи дополнительных запросов.
-    /// Свойство ConfirmDeletion игнорируется.
+    /// Свойство <see cref="ConfirmDeletion"/> игнорируется.
     /// Этот метод может использоваться в обработчике команды Cut.
     /// </summary>
     public void PerformDeleteDataQuiet()
@@ -831,34 +873,30 @@ namespace FreeLibSet.Forms.Docs
           return true;
       }
 
-      DataRow[] rows = null;
-      Int32 docId;
+      // TODO: Не должно ли быть это внутри SubDocumentEditor.Run()?
+      DBxMultiSubDocs subDocs2;
       if (this.State == EFPDataGridViewState.Insert)
       {
-        if (!SubDocTypeUI.SelectOneDoc(this, out docId))
+        Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
+        if (docIds == null)
           return true;
+        subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
+        foreach (Int32 docId in docIds)
+        {
+          DBxSingleDoc doc = SubDocs.Owner.GetDocById(docId);
+          subDocs2.Insert(doc);
+        }
       }
       else
       {
-        rows = GetMasterRows(this.SelectedDataRows);
+        DataRow[] rows = GetMasterRows(this.SelectedDataRows);
         if (rows.Length == 0)
         {
           EFPApp.MessageBox("Нет выбранных поддокументов \"" + SubDocType.PluralTitle + "\"");
           return true;
         }
 
-        docId = DataTools.GetInt(rows[0], "DocId"); // TODO: Не обязательно. Документы могут быть разными
-      }
-
-      // TODO: Не должно ли быть это внутри SubDocumentEditor.Run()?
-      DBxMultiSubDocs subDocs2;
-      if (this.State == EFPDataGridViewState.Insert)
-      {
-        subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
-        subDocs2.Insert();
-      }
-      else
-      {
+        //docId = DataTools.GetInt(rows[0], "DocId"); // TODO: Не обязательно. Документы могут быть разными
         subDocs2 = new DBxMultiSubDocs(SubDocs, rows);
         if (this.State == EFPDataGridViewState.Delete)
         {
@@ -920,8 +958,10 @@ namespace FreeLibSet.Forms.Docs
 
         if (this.State == EFPDataGridViewState.Insert || this.State == EFPDataGridViewState.InsertCopy)
         {
-          DataRow lastRow = _SubDocs.SubDocsView.Table.Rows[_SubDocs.SubDocsView.Table.Rows.Count - 1];
-          try { this.CurrentDataRow = GetSlaveRow(lastRow); }
+          DataRow[] aMasterRows = new DataRow[subDocs2.SubDocCount];
+          for (int i = 0; i < aMasterRows.Length; i++)
+            aMasterRows[i] = _SubDocs.SubDocsView.Table.Rows[_SubDocs.SubDocsView.Table.Rows.Count - aMasterRows.Length + i];
+          try { this.SelectedDataRows = GetSlaveRows(aMasterRows); }
           catch { } // 28.04.2022
         }
         MainEditor.SubDocsChangeInfo.Changed = true;
@@ -1108,13 +1148,13 @@ namespace FreeLibSet.Forms.Docs
           return;
       }
 
-      Int32 docId;
-      if (!SubDocTypeUI.SelectOneDoc(this, out docId))
+      Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
+      if (docIds == null)
         return;
 
-      DBxSingleDoc mainDoc = MainEditor.Documents[SubDocType.DocType.Name].GetDocById(docId);
+      //DBxSingleDoc mainDoc = MainEditor.Documents[SubDocType.DocType.Name].GetDocById(docId);
 
-      DBxSubDoc[] newSubDocs = SubDocTypeUI.PerformPasteRows(mainDoc.SubDocs[SubDocType.Name], srcRows, docTypeBase, this);
+      DBxSubDoc[] newSubDocs = SubDocTypeUI.PerformPasteRows(MainEditor.Documents[SubDocType.DocType.Name].SubDocs[SubDocType.Name], docIds, srcRows, docTypeBase, this);
       if (newSubDocs == null)
         return;
 
@@ -1126,8 +1166,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       this.SelectedDataRows = slaveRows;
-      if (MainEditor != null)
-        MainEditor.SubDocsChangeInfo.Changed = true;
+      MainEditor.SubDocsChangeInfo.Changed = true;
     }
 
     #endregion
@@ -1159,7 +1198,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство SubDocTypeUI)
+    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="SubDocTypeUI.ManualOrderColumn"/>)
     /// </summary>
     public void InitManualOrderColumnValue()
     {

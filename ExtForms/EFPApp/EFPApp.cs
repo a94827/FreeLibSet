@@ -462,7 +462,7 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вызывает событие <see cref="Closing"/>, затем Application.Exit
+    /// Вызывает событие <see cref="Closing"/>, затем <see cref="Application.Exit()"/>.
     /// Возвращает true, если вызов <see cref="Application.Exit()"/> закрыл приложение.
     /// </summary>
     /// <returns>true, если удалось закрыть все дочерние формы и обарботчик события <see cref="Closing"/> не установил значение <see cref="CancelEventArgs.Cancel"/>=true</returns>
@@ -641,7 +641,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Устанавливает для формы свойство <see cref="Form.ShowInTaskbar"/>=true, если нет ни одной
-    /// видимой формы на экране. Иначе свойство устанавливается в false
+    /// видимой формы на экране. Иначе свойство устанавливается в false.
     /// </summary>
     /// <param name="form">Форма, которую предполагается выводить</param>
     public static void InitShowInTaskBar(Form form)
@@ -654,7 +654,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Какое окно использовать как базовое для вывода процентного индикатора
-    /// и блоков диалога
+    /// и блоков диалога.
     /// Возвращает <see cref="MainWindow"/>, если оно задано.
     /// Иначе возвращается первое открытое окно.
     /// Если установлено свойство <see cref="ExternalDialogOwnerWindow"/>, то оно возвращается.
@@ -1058,31 +1058,34 @@ namespace FreeLibSet.Forms
     private static bool _EasyInterface = false;
 
     /// <summary>
-    /// Глобальный флаг, управляющий наличием локальных панелей инструментов
-    /// По умолчанию - true. Установка в false подавляет создание панелей для EFPControl
+    /// Глобальный флаг, управляющий наличием локальных панелей инструментов.
+    /// По умолчанию - true. Установка в false подавляет создание панелей для провайдеров <see cref="EFPControlBase"/> 
+    /// (например, <see cref="EFPDataGridView"/>).
     /// </summary>
     public static bool ShowControlToolBars { get { return _ShowControlToolBars; } set { _ShowControlToolBars = value; } }
     private static bool _ShowControlToolBars = true;
 
     /// <summary>
-    /// Глобальный флаг, управляющий наличием всплывающих подсказок
-    /// По умолчанию (true) подсказки выводятся
+    /// Глобальный флаг, управляющий наличием всплывающих подсказок.
+    /// По умолчанию (true) подсказки выводятся.
     /// </summary>
     public static bool ShowToolTips { get { return _ShowToolTips; } set { _ShowToolTips = value; } }
     private static bool _ShowToolTips = true;
 
     /// <summary>
     /// Глобальный флаг, управляющий наличием изображений в списках и комбоблоках
-    /// (кроме случаев, когда такое изображение является абсолютно необходимым)
-    /// По умолчанию - true
+    /// (кроме случаев, когда такое изображение является абсолютно необходимым).
+    /// По умолчанию - true.
     /// </summary>
     public static bool ShowListImages { get { return _ShowListImages; } set { _ShowListImages = value; } }
     private static bool _ShowListImages = true;
 
     /// <summary>
     /// Глобальный флаг, управляющий наличием в статусной строке для табличного 
-    /// просмотра панелей подсчета сумм (как в Excel)
-    /// По умолчанию - true
+    /// просмотра <see cref="EFPDataGridView"/> панелей подсчета сумм (как в Excel).
+    /// По умолчанию - true.
+    /// Чтобы автоматическое суммирование выполнялось, требуется также установка свойств <see cref="EFPDataGridViewColumn.Summable"/> для столбцов
+    /// (или <see cref="EFPGridProducerColumn.Summable"/>).
     /// </summary>
     public static bool ShowAutoCalcSums { get { return _ShowAutoCalcSums; } set { _ShowAutoCalcSums = value; } }
     private static bool _ShowAutoCalcSums = true;
@@ -1215,7 +1218,7 @@ namespace FreeLibSet.Forms
     /// После установки интерфейса создает одно пустое главное окно. Для интерфейса SDI, если задан аргумент
     /// <paramref name="sdiFormType"/>, вместо пустого окна создает окно формы указанного класса.
     /// Если на момент вызова свойство <see cref="EFPApp.Interface"/> уже установлено (переключение в процессе работы),
-    /// то выполняется попытка восстановления рабочего стола
+    /// то выполняется попытка восстановления рабочего стола.
     /// </summary>
     /// <param name="name">Тип интерейса: "MDI", "SDI", ...</param>
     /// <param name="sdiFormType">Класс формы, отображаемой по умолчанию в интерфейсе SDI</param>
@@ -1254,7 +1257,7 @@ namespace FreeLibSet.Forms
     /// После установки интерфейса создает одно пустое главное окно. Для интерфейса SDI, если задан аргумент
     /// <paramref name="sdiFormCreator"/>, вместо пустого окна создает окно формы, которое создаст пользовательский объект.
     /// Если на момент вызова свойство <see cref="EFPApp.Interface"/> уже установлено (переключение в процессе работы),
-    /// то выполняется попытка восстановления рабочего стола
+    /// то выполняется попытка восстановления рабочего стола.
     /// </summary>
     /// <param name="name">Тип интерейса: "MDI", "SDI", ...</param>
     /// <param name="sdiFormCreator">Генератор формы, отображаемой по умолчанию в интерфейсе SDI.
@@ -1486,7 +1489,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает номер главного окна ("#1", "#2", ...) для заданного дочернего окна.
-    /// Если свойство <see cref="MainWindowNumberUsed"/> возвращает false, возвращается пустая строка
+    /// Если свойство <see cref="MainWindowNumberUsed"/> возвращает false, возвращается пустая строка.
     /// </summary>
     /// <param name="form">Дочернее окно</param>
     /// <returns>Строка с номером или пустая строка</returns>
@@ -1527,7 +1530,7 @@ namespace FreeLibSet.Forms
     /// Загружает интерфейс из произвольной секции конфигурации.
     /// Устанавливает свойство <see cref="Interface"/> и вызывает <see cref="EFPAppInterface.LoadComposition(CfgPart)"/>,
     /// Используется окном <see cref="SelectCompositionDialog"/>.
-    /// Также может использоваться пользовательским кодом 
+    /// Также может использоваться пользовательским кодом. 
     /// На момент вызова должно быть либо установлено свойство <see cref="Interface"/>, либо <see cref="AvailableInterfaces"/>.
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
@@ -1591,7 +1594,7 @@ namespace FreeLibSet.Forms
     private static bool _InsideLoadComposition;
 
     /// <summary>
-    /// Сохраняет интерфейс в секцию «Composition» - «UI»
+    /// Сохраняет интерфейс в секцию «Composition» - «UI».
     /// Если <see cref="CompositionHistoryCount"/> > 0, запоминает несколько последних вариантов настроек.
     /// </summary>
     public static void SaveComposition()
@@ -1638,7 +1641,6 @@ namespace FreeLibSet.Forms
         InsideSaveComposition = false;
       }
     }
-
 
     /// <summary>
     /// Сохраняет интерфейс в выбранную секцию конфигурации.
@@ -1689,7 +1691,7 @@ namespace FreeLibSet.Forms
     /// Создает форму с помощью одного из объектов в списке <see cref="FormCreators"/> или с помощью Reflection.
     /// Если нет создателя формы или подходящего конструктора, возвращается null.
     /// Форма не выводится на экран.
-    /// Если при создании формы возникло исключение, оно не перехватывается
+    /// Если при создании формы возникло исключение, оно не перехватывается.
     /// </summary>
     /// <param name="creatorParams">Параметры для создания формы</param>
     /// <returns>Форма или null</returns>
@@ -1960,14 +1962,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Дескриптор основного окна программы, если оно открыто или <see cref="IntPtr.Zero"/>, если окно не открыто.
-    /// Доступ к окну по дескриптору является потокобезопасным, поэтому свойство доступно всегда
+    /// Доступ к окну по дескриптору является потокобезопасным, поэтому свойство доступно всегда.
     /// </summary>
     public static IntPtr MainWindowHandle { get { return _MainWindowHandle; } }
     private static IntPtr _MainWindowHandle;
 
     /// <summary>
-    /// Возвращает true, если главное окно открыто
-    /// Можно обращаться к свойству из любого потока
+    /// Возвращает true, если главное окно открыто.
+    /// Можно обращаться к свойству из любого потока.
     /// </summary>
     public static bool MainWindowVisible
     {
@@ -2068,7 +2070,7 @@ namespace FreeLibSet.Forms
     /// Если <see cref="ShowDialog(Form, bool, EFPDialogPosition)"/> не разу не вызывался, возвращается <see cref="StartupScreen"/>.
     /// Свойство никогда не возвращает null.
     /// Свойство является потокобезопасным.
-    /// Установка свойства не имеет значения, пока не выведено главное окно программы
+    /// Установка свойства не имеет значения, пока не выведено главное окно программы.
     /// </summary>
     public static Screen DefaultScreen
     {
@@ -2103,7 +2105,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Экран, с которого приложение было запущено.
     /// В течение сеанса работы свойство возвращает одно и то же значение.
-    /// Свойство доступно из любого потока
+    /// Свойство доступно из любого потока.
     /// </summary>
     public static Screen StartupScreen { get { return _StartupScreen; } }
     private static readonly Screen _StartupScreen = GetStartupScreen();
@@ -2161,7 +2163,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Список основых панелей инструментов с кнопками, дублирующими команды главного меню.
-    /// Если <see cref="EFPApp.Interface"/> установлено, возвращает панели инструментов для текущего главного окна
+    /// Если <see cref="EFPApp.Interface"/> установлено, возвращает панели инструментов для текущего главного окна.
     /// </summary>
     //[Obsolete("В новых программах следует использовать EFPApp.Interface и EFPApp.ToolBars")]
     public static EFPAppToolBars AppToolBars
@@ -2200,14 +2202,14 @@ namespace FreeLibSet.Forms
     /// Для "вездесущих" панелей требуется специальная обработка, поэтому такие
     /// формы должны быть зарегистрированы.
     /// Когда форма панели скрывается, но не удаляется, она должна удалить себя из этого списка
-    /// Также форма панели должна определять свойство ShowWithoutActivation
+    /// Также форма панели должна определять свойство <see cref="Form.ShowWithoutActivation"/>.
     /// </summary>
     internal static List<Form> ToolFormsForDialogs { get { return _ToolFormsForDialogs; } }
     private static readonly List<Form> _ToolFormsForDialogs = new List<Form>();
 
     /// <summary>
     /// Доступ к статусной строке текущего окна.
-    /// Если <see cref="EFPApp.Interface"/> = null, возвращает временный объект
+    /// Если <see cref="EFPApp.Interface"/> = null, возвращает временный объект.
     /// </summary>
     //[Obsolete("В новых программах следует использовать EFPApp.Interface")]
     public static EFPAppStatusBar StatusBar
@@ -2236,8 +2238,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Использовать ли для форм собственные статусные строки, если это необходимо.
     /// По умолчанию свойство имеет значение true.
-    /// Если свойство сброшено в false, то свойство EFPFormProvider.OwnStatusBar возвращает
-    /// false, если оно не установлено в явном виде
+    /// Если свойство сброшено в false, то свойство <see cref="EFPFormProvider.OwnStatusBar"/> возвращает
+    /// false, если оно не установлено в явном виде.
     /// </summary>
     public static bool OwnStatusBarsIfNeeded
     {
@@ -2257,7 +2259,7 @@ namespace FreeLibSet.Forms
     public static event EFPCommandItemBeforeClickEventHandler BeforeCommandItemClick;
 
     /// <summary>
-    /// Вызов обработчика события BeforeCommandItemClick
+    /// Вызов обработчика события <see cref="BeforeCommandItemClick"/>
     /// </summary>
     /// <param name="commandItem">Вызываемая команда</param>
     /// <returns>Инвентированное значение свойства Cancel</returns>
@@ -2278,10 +2280,9 @@ namespace FreeLibSet.Forms
     public static event EFPCommandItemAfterClickEventHandler AfterCommandItemClick;
 
     /// <summary>
-    /// Вызов обработчика события AfterCommandItemClick
+    /// Вызов обработчика события <see cref="AfterCommandItemClick"/>
     /// </summary>
     /// <param name="commandItem">Вызываемая команда</param>
-    /// <returns>Инвентированное значение свойства Cancel</returns>
     internal static void OnAfterCommandItemClick(EFPCommandItem commandItem)
     {
       if (AfterCommandItemClick != null)
@@ -2468,7 +2469,7 @@ namespace FreeLibSet.Forms
     /// false - создается форма без управляющих элементов</param>
     /// <param name="formProvider">Сюда помещается ссылка на провайдер формы</param>
     /// <param name="theTabControl">Сюда помещается ссылка на созданный элемент <see cref="TabControl"/></param>
-    /// <returns>Созданный объект Form</returns>
+    /// <returns>Созданный объект <see cref="Form"/></returns>
     public static Form CreateTabControlForm(bool isOKCancelForm, out EFPFormProvider formProvider, out TabControl theTabControl)
     {
       Control mainPanel;
@@ -2751,7 +2752,7 @@ namespace FreeLibSet.Forms
     /// флага.
     /// Размеры диалога могут быть уменьшены, если они превышают размеры экрана.
     /// Выполняется центирование диалога. Используйте перегрузку с дополнительным аргументом,
-    /// если размеры и положение формы диалога были установлены до вызова ShowDialog().
+    /// если размеры и положение формы диалога были установлены в прикладном коде.
     /// </summary>
     /// <param name="form">Форма для показа</param>
     /// <param name="dispose">При значении true форма будет разрушена</param>
@@ -3175,11 +3176,25 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Найти и активировать форму для заданного класса формы.
-    /// Если есть активный блок диалога, то он возвращается, если имеет соответствующий тип
+    /// Если есть активный блок диалога, то он возвращается, если имеет соответствующий тип.
     /// </summary>
     /// <typeparam name="TForm">Класс формы</typeparam>
     /// <returns>Найденная форма или null</returns>
     public static TForm FindAndActivate<TForm>()
+      where TForm : Form
+    {
+      return FindAndActivate<TForm>(null);
+    }
+
+    /// <summary>
+    /// Найти и активировать форму для заданного класса формы.
+    /// Дополнительно задается критерий для выбора формы, если есть несколько однотипных форм.
+    /// Если есть активный блок диалога, то он возвращается, если имеет соответствующий тип.
+    /// </summary>
+    /// <typeparam name="TForm">Класс формы</typeparam>
+    /// <param name="match">Критерий для поиска формы. Если null, то будет возвращена первая форма подходящего типа</param>
+    /// <returns>Найденная форма или null</returns>
+    public static TForm FindAndActivate<TForm>(Predicate<TForm> match)
       where TForm : Form
     {
 #if DEBUG
@@ -3190,6 +3205,11 @@ namespace FreeLibSet.Forms
       {
         if (ActiveDialog is TForm)
         {
+          if (match != null)
+          {
+            if (!match((TForm)ActiveDialog))
+              return null;
+          }
           Activate();
           return (TForm)ActiveDialog;
         }
@@ -3199,7 +3219,7 @@ namespace FreeLibSet.Forms
 
       if (EFPApp.Interface != null)
       {
-        TForm form = EFPApp.Interface.FindChildForm<TForm>();
+        TForm form = EFPApp.Interface.FindChildForm<TForm>(match);
         if (form != null)
         {
           Activate(form); // 07.06.2021
@@ -3267,7 +3287,7 @@ namespace FreeLibSet.Forms
     /// Делает активной указанную форму.
     /// Если она свернута, то она разворачивается.
     /// Если есть несколько главных MDI-окон, активируется нужное.
-    /// Если форма не выведена на экран, никаких действий не выполняется
+    /// Если форма не выведена на экран, никаких действий не выполняется.
     /// </summary>
     /// <param name="form">Форма, которую требуется активировать.</param>
     public static void Activate(Form form)
@@ -3339,9 +3359,9 @@ namespace FreeLibSet.Forms
     /// Добавление кнопки к панели
     /// Кнопки добавляются вертикально или горизонтально, в зависимости от свойства
     /// Parent.Dock. При горизонтальном размещении кнопки могут быть разной ширины
-    /// (равной 88, 132 или 176 символов, в зависимости от длины текста)
+    /// (равной 88, 132 или 176 символов, в зависимости от длины текста).
     /// Предполагается, что на панели, кроме кнопок, ничего не будет.
-    /// При первом вызове устанавливается высота или ширина панели
+    /// При первом вызове устанавливается высота или ширина панели.
     /// </summary>
     /// <param name="parentPanel">Панель для размещения кнопок</param>
     /// <param name="text">Заголовок</param>
@@ -3395,7 +3415,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавление стандартной кнопки.
-    /// У кнопки устанавливается свойство <see cref="Button.DialogResult"/>
+    /// У кнопки устанавливается свойство <see cref="Button.DialogResult"/>.
     /// </summary>
     /// <param name="parentPanel">Панель для добавления кнопки</param>
     /// <param name="buttonKind">Какая кнопка добавляется</param>
@@ -3438,8 +3458,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавление стандартных кнопок к панели
-    /// У кнопок устанавливается свойство <see cref="Button.DialogResult"/>
+    /// Добавление стандартных кнопок к панели.
+    /// У кнопок устанавливается свойство <see cref="Button.DialogResult"/>.
     /// </summary>
     /// <param name="parentPanel">Панель для добавления кнопок</param>
     /// <param name="buttons">Добавляемые кнопки</param>
@@ -4618,8 +4638,8 @@ namespace FreeLibSet.Forms
     #region Вывод диалога со списком ошибок
 
     /// <summary>
-    /// Показать диалог со списком ошибок
-    /// Коды ошибок не показываются
+    /// Показать диалог со списком ошибок.
+    /// Коды ошибок не показываются.
     /// </summary>
     /// <param name="errorMessages">Заполненный список ошибок</param>
     /// <param name="title">Заголовок формы</param>
@@ -4709,7 +4729,7 @@ namespace FreeLibSet.Forms
     /// Возвращает тег изображения в списке <see cref="EFPApp.MainImages"/>, соответствующего
     /// значению перечисления.
     /// Эта перегрузка поддерживает значение null, соответствующее пустому списку
-    /// сообщений. Для null возвращается "Ok"
+    /// сообщений. Для null возвращается "Ok".
     /// </summary>
     /// <param name="kind">Элемент перечисления или null</param>
     /// <returns>Тег изображения</returns>
@@ -5151,9 +5171,9 @@ namespace FreeLibSet.Forms
      */
 
     /// <summary>
-    /// Текущий каталог, используемый блоками диалога
+    /// Текущий каталог, используемый блоками диалога.
     /// Каталог не блокируется Windows, поэтому не препятствует безопасному
-    /// извлечению устройства, если путь указывает на флэш
+    /// извлечению устройства, если путь указывает на флэш.
     /// Свойство является потокобезопасным.
     /// При установке свойства значение отбрасывается, если оно пустое или каталога не существует
     /// </summary>
@@ -5187,7 +5207,7 @@ namespace FreeLibSet.Forms
     private static AbsPath? _CurrentDirectory = null;
 
     /// <summary>
-    /// Используйте этот метод вместо Open/SaveFileDialog.ShowDialog().
+    /// Используйте этот метод вместо <see cref="OpenFileDialog"/>/<see cref="SaveFileDialog"/>.ShowDialog().
     /// Устанавливает <see cref="FileDialog.InitialDirectory"/>, если оно не установлено и не задан путь к файлу.
     /// Устанавливает свойство <see cref="EFPApp.CurrentDirectory"/>, если пользователь выбрал путь к файлу.
     /// </summary>
@@ -5212,7 +5232,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Выводит блок диалога выбора каталога.
-    /// Используйте этот метод вместо FolderBrowserDialog.ShowDialog().
+    /// Используйте этот метод вместо <see cref="FolderBrowserDialog"/>.ShowDialog().
     /// Устанавливает <see cref="FolderBrowserDialog.SelectedPath"/>, если оно не задано в явном виде.
     /// Устанавливает свойство CurrentDirectory, если пользователь выбрал каталог.
     /// </summary>
@@ -5386,7 +5406,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Наименование программы, которая используется для просмотра папок методом <see cref="ShowWindowsExplorer(AbsPath)"/>.
-    /// Если <see cref="IsWindowsExplorerSupported"/>=false, возвращается пустая строка
+    /// Если <see cref="IsWindowsExplorerSupported"/>=false, возвращается пустая строка.
     /// </summary>
     public static string WindowsExplorerDisplayName
     {
@@ -5401,9 +5421,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Открывает произвольный файл с использованием файловой ассоциации "Открыть".
-    /// Использует <see cref="Process.Start()"/> с UseShellExecute=true.
+    /// Использует <see cref="Process.Start()"/> с <see cref="ProcessStartInfo.UseShellExecute"/>=true.
     /// В случае отсутствия файла или невозможности его открытия выдается сообщение об ошибке,
-    /// а исключение не выбрасывается
+    /// а исключение не выбрасывается.
     /// </summary>
     /// <param name="filePath">Путь к существующему файлу</param>
     /// <returns>true, если запуск был выполнен</returns>
@@ -5483,8 +5503,8 @@ namespace FreeLibSet.Forms
     #region Поддержка экспорта
 
     /// <summary>
-    /// Временный каталог для хранения файлов, создаваемых командами "Файл-Передать"
-    /// Приложение может использовать каталог, отличный от каталога по умолчанию, установив значение свойства
+    /// Временный каталог для хранения файлов, создаваемых командами "Файл-Передать".
+    /// Приложение может использовать каталог, отличный от каталога по умолчанию, установив значение свойства.
     /// </summary>
     public static SharedTempDirectory SharedTempDir
     {
@@ -5512,13 +5532,13 @@ namespace FreeLibSet.Forms
      * свойства версий в этом классе возвращают пустую версию (0.0.0.0),
      * если приложение не установлена.
      * Также выполняется буферизация данных, а реальное определение выполняется
-     * только один раз
+     * только один раз.
      */
 
     #region Microsoft Office
 
     /// <summary>
-    /// Установленная версия Microsoft Word
+    /// Установленная версия Microsoft Word.
     /// Если Word не установлен, возвращается (0.0.0.0)
     /// </summary>
     public static Version MicrosoftWordVersion
@@ -5541,7 +5561,7 @@ namespace FreeLibSet.Forms
     private static Version _MicrosoftWordVersion;
 
     /// <summary>
-    /// Установленная версия Microsoft Excel
+    /// Установленная версия Microsoft Excel.
     /// Если Excel не установлен, возвращается (0.0.0.0)
     /// </summary>
     public static Version MicrosoftExcelVersion
@@ -5687,10 +5707,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установленная версия Open Office Writer
-    /// Если редактор не установлен, возвращается (0.0.0.0)
+    /// Установленная версия Open Office Writer.
+    /// Если редактор не установлен, возвращается (0.0.0.0).
     /// Предупреждение. Версия файла soffice.exe может не соответствовать реальной
-    /// версии OpenOffice. Например, для Open Office 2.2.0 номер версии будет 1.9
+    /// версии OpenOffice. Например, для Open Office 2.2.0 номер версии будет 1.9.
     /// </summary>
     public static Version OpenOfficeWriterVersion
     {
@@ -5705,10 +5725,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Установленная версия Open Office Calc
+    /// Установленная версия Open Office Calc.
     /// Если редактор не установлен, возвращается (0.0.0.0)
     /// Предупреждение. Версия файла soffice.exe может не соответствовать реальной
-    /// версии OpenOffice. Например, для Open Office 2.2.0 номер версии будет 1.9
+    /// версии OpenOffice. Например, для Open Office 2.2.0 номер версии будет 1.9.
     /// </summary>
     public static Version OpenOfficeCalcVersion
     {
@@ -5742,7 +5762,7 @@ namespace FreeLibSet.Forms
     #region Менеджер конфигурации
 
     /// <summary>
-    /// Менеджер конфигураций по умолчанию, используемый формами и управляющими элементами, если им не назначен собственный менеджер
+    /// Менеджер конфигураций по умолчанию, используемый формами и управляющими элементами, если им не назначен собственный менеджер.
     /// По умолчанию используется менеджер-пустышка <see cref="EFPDummyConfigManager"/>, которая ничего не сохраняет, даже в пределах сеанса работы.
     /// Если приложению требуется сохранять пользовательские настройки, свойству следует присвоить значение, 
     /// например, создав объект <see cref="EFPRegistryConfigManager"/>.
@@ -5769,8 +5789,8 @@ namespace FreeLibSet.Forms
     #region Асинхронные вызовы процедур
 
     /// <summary>
-    /// Список ожидающих завершения асинхронных процедур.
-    /// Свойство доступно только из основного потока приложения
+    /// Список ожидающих завершения асинхронных процедур (объекты <see cref="ExecProc"/> и <see cref="ExecProcProxy"/>.
+    /// Свойство доступно только из основного потока приложения. Для других потоков возвращается null.
     /// </summary>
     public static EFPAppExecProcCallList ExecProcList
     {
@@ -5791,7 +5811,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Количество ожидающих завершения асинхронных процедур.
-    /// Свойство доступно только из основного потока приложения
+    /// Свойство доступно только из основного потока приложения.
+    /// Этот метод следует использовать только в информационных целях, так как список <see cref="ExecProcList"/> является асинхронным.
     /// </summary>
     public static int ExecProcCallCount
     {
@@ -5847,7 +5868,7 @@ namespace FreeLibSet.Forms
 
     #region Удаленный интерфейс пользователя
 
-    // 27.01.2021
+    // 27.01.2021.
     // Вместо единственного экземпляра RIExecProc, создаем процедуру каждый раз, когда выполняется удаленный вызов.
     // Это позволяет выполнять реентрантный показ блоков диалога.
 
@@ -5920,11 +5941,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Список процедур обратного вызова, которые могут получать сигналы для интерфейса пользователя
+    /// Список процедур обратного вызова, которые могут получать сигналы для интерфейса пользователя.
     /// Используется в модели клиент-сервер, при этом в список добавляется единственный объект, получаемый
-    /// от сервера
+    /// от сервера.
     /// Доступ к списку возможен только из основного потока приложения.
-    /// Опрос выполняется, если AsyncProcList содержит выполняющиеся процедуры
+    /// Опрос выполняется, если AsyncProcList содержит выполняющиеся процедуры.
     /// </summary>
     public static ICollection<IExecProcCallBack> RemoteUICallBacks
     {
@@ -6013,12 +6034,12 @@ namespace FreeLibSet.Forms
     internal static bool _InsideProcessUICallBack = false;
 
     /// <summary>
-    /// Список генераторов управляющих элементов удаленного интерфейса
-    /// По умолчанию поддерживает создание всех удаленных элементов, реализованных в ExtTools.
+    /// Список генераторов управляющих элементов удаленного интерфейса.
+    /// По умолчанию поддерживает создание всех удаленных элементов, реализованных в модуле ExtTools.
     /// Если требуется реализовать собственные удаленные управляющие элементы, то следует создать
     /// классы, производные от <see cref="FreeLibSet.RI.RIItem"/>, затем создать собственный генератор, реализующий интерфейс <see cref="FreeLibSet.Forms.RI.IEFPAppRICreator"/>,
     /// и добавить его в список. Если используется расширение существующего класса, то генератор должен быть
-    /// добавлен в начало списка методом Insert()
+    /// добавлен в начало списка методом Insert().
     /// </summary>
     public static FreeLibSet.Forms.RI.EFPAppRICreators RICreators
     {
@@ -6157,7 +6178,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Менеджер хранения изображений предварительного просмотра конфигураций интерфейса.
     /// По умолчанию используется <see cref="EFPSnapshotConfigManager"/>, сохраняющий изображения с помощью ConfigManager в виде строки
-    /// в кодировке Base64
+    /// в кодировке Base64.
     /// </summary>
     public static IEFPSnapshotManager SnapshotManager
     {
@@ -6195,7 +6216,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Файловые ассоциации для расширений файлов.
-    /// Обеспечивает буферизацию данных
+    /// Обеспечивает буферизацию данных.
     /// </summary>
     public static EFPAppFileExtAssociations FileExtAssociations { get { return _FileExtAssociations; } }
     private static readonly EFPAppFileExtAssociations _FileExtAssociations = new EFPAppFileExtAssociations();
@@ -6226,7 +6247,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка вызова EFPA");
+        EFPApp.ShowException(e, "Ошибка вызова ExecProcCallList.Process()");
       }
 
       // не нужно UpdateSplash();
@@ -6270,12 +6291,12 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Асинхронный вызов с ожиданием.
-    /// В отличие от метода ExecuteAsync(), который сразу возвращает управление,
+    /// В отличие от метода <see cref="ExecProcCallList.ExecuteAsync(ExecProcCallItem, NamedValues)"/>, который сразу возвращает управление,
     /// вызов этого метода не завершается, пока выполнение не будет завершено.
     /// Метод должен использоваться с удаленной процедурой, которая выполняется долго и может вызвать ошибку тайм-аута при использовании ExecuteSync(),
     /// а использовать ExecuteAsync() нельзя, так как требуется получить результаты в текущем потоке.
     /// Использование с <see cref="ExecProc"/> также допускается, хотя в некоторых случаях может быть выгоднее использовать ExecuteSync().
-    /// Фактически, этот метод вызывает ExecuteAsync() и дожидается завершения процедуры. Затем результаты возвращаются в основном потоке.
+    /// Фактически, этот метод вызывает <see cref="ExecProcCallList.ExecuteAsync(ExecProcCallItem, NamedValues)"/> и дожидается завершения процедуры. Затем результаты возвращаются в основном потоке.
     /// Если при выполнении процедуры возникло исключение, то оно перевыбрасывается в основном потоке. Предполагается, что в <paramref name="item"/>
     /// нет своей обработки ошибок.
     /// На время выполнения выводится дополнительная заставка в статусной строке.
@@ -6301,10 +6322,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Асинхронный вызов с ожиданием.
-    /// В отличие от метода ExecuteAsync(), который сразу возвращает управление,
+    /// В отличие от метода <see cref="ExecProcCallList.ExecuteAsyncAndWait(IExecProc, NamedValues)"/>, который сразу возвращает управление,
     /// вызов этого метода не завершается, пока выполнение не будет завершено.
     /// Метод должен использоваться с удаленной процедурой, которая выполняется долго и может вызвать ошибку тайм-аута при использовании ExecuteSync(),
-    /// а использовать ExecuteAsync() нельзя, так как требуется получить результаты в текущем потоке.
+    /// а использовать <see cref="ExecProcCallList.ExecuteAsyncAndWait(IExecProc, NamedValues)"/> нельзя, так как требуется получить результаты в текущем потоке.
     /// Использование с <see cref="ExecProc"/> также допускается.
     /// На время выполнения выводится дополнительная заставка в статусной строке.
     /// </summary>
@@ -6378,7 +6399,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Содержит виртуальные методы, которые выполняют системные вызовы.
   /// В прикладном коде может быть определен класс-наследник и установлено свойство <see cref="EFPApp.SystemMethods"/>.
-  /// Используется для интеграции с Nanocad, где требуется вызывать особые методы для показа формы
+  /// Используется для интеграции с Nanocad, где требуется вызывать особые методы для показа формы.
   /// </summary>
   public class EFPAppSystemMethods
   {

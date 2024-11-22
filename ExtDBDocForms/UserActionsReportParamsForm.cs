@@ -161,10 +161,6 @@ namespace FreeLibSet.Forms.Docs
     public DBUI UI { get { return _UI; } }
     private readonly DBUI _UI;
 
-    #endregion
-
-    #region Поля
-
     /// <summary>
     /// Начальная дата периода, за который просматривается история.
     /// Допускаются открытые и полуоткрытые интервалы.
@@ -520,7 +516,7 @@ namespace FreeLibSet.Forms.Docs
 
       actionPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ActionGridHandler_GetRowAttributes);
       actionPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ActionGridHandler_GetCellAttributes);
-      actionPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
+      actionPage.ControlProvider.ShowRowCountInTopLeftCell = true;
 
 
       actionPage.ControlProvider.CanMultiEdit = false;

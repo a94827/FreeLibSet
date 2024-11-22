@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region AddPage
+    #region AddPage()
 
     /// <summary>
     /// Добавить вкладку в редактор документа или поддокумента.
@@ -208,7 +208,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Добавляет связку для редактирования текстового поля с помощью комбоблока без возможности редактирования.
-    /// У EFPListComboBox используется свойство SelectedCode для редактируемого значения.
+    /// У <see cref="EFPListComboBox"/> используется свойство SelectedCode для редактируемого значения.
     /// Должен быть задан массив Codes для элементов списка.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
@@ -245,7 +245,7 @@ namespace FreeLibSet.Forms.Docs
     #region Поля даты и времени
 
     /// <summary>
-    /// Добавляет связку для редактирования поля типа "Дата" с помощью DateBox.
+    /// Добавляет связку для редактирования поля типа "Дата" с помощью <see cref="DateTimeBox"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
@@ -261,7 +261,7 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Добавляет связку для редактирования двух полей типа "Дата" с помощью DateRangeBox.
+    /// Добавляет связку для редактирования двух полей типа "Дата" с помощью <see cref="DateRangeBox"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="firstColumnName">Имя первого поля</param>
@@ -277,7 +277,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет связку для редактирования двух полей типа "Дата" с помощью DateOrRangeBox.
+    /// Добавляет связку для редактирования двух полей типа "Дата" с помощью <see cref="EFPDateOrRangeBox"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="firstColumnName">Имя первого поля</param>
@@ -293,7 +293,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет связку для редактирования целочисленного поля с помощью MonthDayBox.
+    /// Добавляет связку для редактирования целочисленного поля с помощью <see cref="MonthDayBox"/>.
     /// Предполагается, что поле не может иметь пустого значения, так как при сохранении документа не может быть значения 0.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
@@ -309,7 +309,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет связку для редактирования месяца и дня в целочисленном поле с помощью MaskedTextBox.
+    /// Добавляет связку для редактирования месяца и дня в целочисленном поле с помощью <see cref="MaskedTextBox"/>.
     /// Значение лежит в диапазоне от 1 до 365. Значение 0 соответствует пустому полю.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
@@ -325,11 +325,11 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет связку для редактирования целочисленного поля с помощью MonthDayBox.
+    /// Добавляет связку для редактирования целочисленного поля с помощью <see cref="MonthDayBox"/>.
     /// Предполагается, что поле не может иметь пустого значения, так как при сохранении документа не может быть значения 0.
     /// </summary>
-    /// <param name="controlProvider1">Провайдер управляющего элемента CheckBox</param>
-    /// <param name="controlProvider2">Провайдер управляющего элемента MonthDayBox</param>
+    /// <param name="controlProvider1">Провайдер управляющего элемента <see cref="CheckBox"/></param>
+    /// <param name="controlProvider2">Провайдер управляющего элемента <see cref="MonthDayBox"/></param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
@@ -373,7 +373,7 @@ namespace FreeLibSet.Forms.Docs
 #endif
 
     /// <summary>
-    /// Добавляет связку для редактирования полей типа DateTime с помощью DateTimePicker.
+    /// Добавляет связку для редактирования полей типа <see cref="DateTime"/> с помощью <see cref="DateTimePicker"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
@@ -388,7 +388,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет связку для редактирования полей типа TimeSpan с помощью DateTimePicker.
+    /// Добавляет связку для редактирования полей типа <see cref="TimeSpan"/> с помощью <see cref="DateTimePicker"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
@@ -413,7 +413,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет связку для редактирования числового поля.
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента, реализующий интерфейс IEFPNumEditBox</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
@@ -440,7 +440,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет связку для редактирования числового поля.
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента, реализующий интерфейс IEFPNumEditBox</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
@@ -467,7 +467,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет связку для редактирования числового поля.
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента, реализующий интерфейс IEFPNumEditBox</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
@@ -494,7 +494,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет связку для редактирования числового поля.
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента, реализующий интерфейс IEFPNumEditBox</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
@@ -521,10 +521,10 @@ namespace FreeLibSet.Forms.Docs
     #region ComboBox, ListBox и RadioButtons
 
     /// <summary>
-    /// Добавляет связку для редактирования числового поля с помощью ListBox, ComboBox или группы радиокнопок.
-    /// Значение поля связывается со свойством SelectedIndex.
+    /// Добавляет связку для редактирования числового поля с помощью <see cref="ListBox"/>, <see cref="ComboBox"/> или группы радиокнопок.
+    /// Значение поля связывается со свойством <see cref="IEFPListControl.SelectedIndex"/>.
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента EFPListBox, EFPListComboBox или EFPRadioButtons</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента <see cref="EFPListBox"/>, <see cref="EFPListComboBox"/> или <see cref="EFPRadioButtons"/></param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
@@ -537,11 +537,11 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет связку для редактирования числового поля с помощью ComboBox, в котором можно
+    /// Добавляет связку для редактирования числового поля с помощью <see cref="ComboBox"/>, в котором можно
     /// ввести числовое значение напрямую или выбрать одно из предопределенных значений.
-    /// Значение поля связывается со свойством Value.
+    /// Значение поля связывается со свойством <see cref="EFPIntEditComboBox.Value"/>.
     /// </summary>
-    /// <param name="controlProvider">Провайдер управляющего элемента EFPListBox или EFPListComboBox</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
@@ -554,12 +554,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Добавляет связку для редактирования числового поля с помощью ListBox илм ComboBox.
+    /// Добавляет связку для редактирования числового поля с помощью <see cref="ListBox"/> или <see cref="ComboBox"/>.
     /// Числовое поле содержит перечислимое значение, но значения не обязаны следовать по порядку.
-    /// Значение поля связывается со свойством SelectedCode, в котором хранится текстовое значение для enum.
+    /// Значение поля связывается со свойством <see cref="EFPListControl.SelectedCode"/>, в котором хранится текстовое значение для enum.
     /// </summary>
     /// <typeparam name="T">Тип перечислимого значения</typeparam>
-    /// <param name="controlProvider">Провайдер управляющего элемента EFPListBox или EFPListComboBox</param>
+    /// <param name="controlProvider">Провайдер управляющего элемента <see cref="EFPListBox"/> или <see cref="EFPListComboBox"/></param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
@@ -618,8 +618,8 @@ namespace FreeLibSet.Forms.Docs
     #region Логические поля
 
     /// <summary>
-    /// Добавляет связку для редактирования логического поля с помощью CheckBox.
-    /// Значение поля связывается со свойством Checked.
+    /// Добавляет связку для редактирования логического поля с помощью <see cref="CheckBox"/>.
+    /// Значение поля связывается со свойством <see cref="EFPCheckBox.Checked"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>

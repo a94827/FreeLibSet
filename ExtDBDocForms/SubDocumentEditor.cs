@@ -184,7 +184,7 @@ namespace FreeLibSet.Forms.Docs
     public event SubDocEditEventHandler AfterReadValues;
 
     /// <summary>
-    /// Вызывается при нажатии кнопок "ОК" перед тем, как данные записаны в строку поддокумента
+    /// Вызывается при нажатии кнопок "ОК" перед тем, как данные записаны в строку поддокумента.
     /// Вызывается в режимах <see cref="State"/>=<see cref="EFPDataGridViewState.Edit"/>, <see cref="EFPDataGridViewState.Insert"/> и <see cref="EFPDataGridViewState.InsertCopy"/>
     /// Установка <see cref="SubDocEditCancelEventArgs.Cancel"/>=true предотвращает запись данных и закрытие редактора.
     /// Программа должна вывести сообщение пользователю о причинах отмены.
@@ -604,7 +604,6 @@ namespace FreeLibSet.Forms.Docs
     #endregion
 
     #region IReadOnlyObject Members
-
 
     /// <summary>
     /// true, если пользователь не может изменять поля документа. 

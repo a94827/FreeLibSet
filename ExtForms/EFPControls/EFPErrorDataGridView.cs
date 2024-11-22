@@ -64,6 +64,7 @@ namespace FreeLibSet.Forms
       col = Columns.AddTextFill("Text", false, "Сообщение", 100, 20);
       col.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
       UseRowImages = true;
+      ShowErrorCountInTopLeftCell = true;
       CommandItems.UseRowErrorsListView = false;
       DisableOrdering();
 
@@ -185,7 +186,6 @@ namespace FreeLibSet.Forms
           }
 
           Control.Invalidate(); // иначе не обновится столбец значков
-          InitTopLeftCellTotalInfo();
         }
         InitControlledObject();
         OnErrorMessagesChanged();

@@ -60,11 +60,11 @@ namespace FreeLibSet.Forms.Docs
 
       #region Свойства
 
-      private EFPDBxViewSync _Owner;
+      private readonly EFPDBxViewSync _Owner;
 
-      private IEFPDBxView _ControlProvider;
+      private readonly IEFPDBxView _ControlProvider;
 
-      private int _ChangedIndex;
+      private readonly int _ChangedIndex;
 
       #endregion
     }
@@ -109,7 +109,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Список провайдеров синхронизируемых просмотров
     /// </summary>
-    private Info[] _InfoList;
+    private readonly Info[] _InfoList;
 
     /// <summary>
     /// Если в элементе, имеющем фокус ввода, изменяется текущая позиция, то свойство содержит индекс

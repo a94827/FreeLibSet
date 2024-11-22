@@ -1873,7 +1873,7 @@ namespace FreeLibSet.Forms
     #region Построение списка сообщений об ошибках
 
     /// <summary>
-    /// Если установлено (по умолчанию), а также установлены свойства <see cref="UseRowErrors"/>
+    /// Если установлено в true(по умолчанию), а также установлены свойства <see cref="UseRowErrors"/>
     /// и <see cref="EFPDataGridView.UseRowImages"/>, то в подменю "Строки с ошибками" есть команда
     /// "Показать список".
     /// Это свойство сбрасывается в false в самом просмотре списка ошибок <see cref="EFPErrorDataGridView"/>, т.к.

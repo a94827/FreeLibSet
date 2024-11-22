@@ -92,8 +92,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Расширение класса <see cref="WizardStep"/>. Основную часть занимает панель MainPanel, в которую следует добавлять элементы.
-  /// Если установить свойство GroupTitle, то будет добавлен контейнер <see cref="GroupBox"/>, а панель перемещена внутрь элемента
+  /// Расширение класса <see cref="WizardStep"/>. Основную часть занимает панель <see cref="ExtWizardStep.MainPanel"/>, в которую следует добавлять элементы.
+  /// Если установить свойство <see cref="ExtWizardStep.GroupTitle"/>, то будет добавлен контейнер <see cref="GroupBox"/>, а панель перемещена внутрь элемента.
   /// В нижней части может находиться информационная панель <see cref="InfoLabel"/>, в которой выводятся пояснения.
   /// Видимость информационной панели определяется наличием текста в ней.
   /// </summary>
@@ -118,7 +118,7 @@ namespace FreeLibSet.Forms
     /// Основной контейнер для добавления управляющих элементов
     /// </summary>
     public Panel MainPanel { get { return _MainPanel; } }
-    private Panel _MainPanel;
+    private readonly Panel _MainPanel;
 
     private GroupBox _GroupBox;
 
@@ -413,10 +413,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Провайдер для управления кнопками. Используйте его свойства для
-    /// определения выбранной позиции или для блокировки отдельных кнопок
+    /// определения выбранной позиции или для блокировки отдельных кнопок.
     /// </summary>
     public EFPRadioButtons TheButtons { get { return _TheButtons; } }
-    private EFPRadioButtons _TheButtons;
+    private readonly EFPRadioButtons _TheButtons;
 
     /// <summary>
     /// Поясняющий текст для каждой кнопки.
@@ -555,14 +555,14 @@ namespace FreeLibSet.Forms
     /// Задаются в конструкторе
     /// </summary>
     public string[] Items { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
     /// <summary>
     /// Провайдер для управления списком. Используйте его свойства для
     /// определения выбранной позиции 
     /// </summary>
     public EFPListView TheListView { get { return _TheListView; } }
-    private EFPListView _TheListView;
+    private readonly EFPListView _TheListView;
 
     /// <summary>
     /// Общий значок для всех строк списка.
@@ -687,10 +687,11 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     /// <summary>
-    /// 
+    /// Делегат метода для создания провайдера табличного просмотра
     /// </summary>
-    /// <param name="cwt"></param>
-    /// <returns></returns>
+    /// <param name="cwt">Базовый провайдер плюс управляющий элемент. 
+    /// Обеспечивается <see cref="WizardStepWithDataGridView"/>.</param>
+    /// <returns>Провайдер, созданный прикладным кодом</returns>
     public delegate EFPDataGridView ProviderCreator(EFPControlWithToolBar<DataGridView> cwt);
 
     /// <summary>
@@ -709,7 +710,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Создает шаг мастера с провайдером EFPDataGridView.
+    /// Создает шаг мастера с провайдером <see cref="EFPDataGridView"/>.
     /// </summary>
     public WizardStepWithDataGridView()
       : this(delegate(EFPControlWithToolBar<DataGridView> cwt) { return new EFPDataGridView(cwt); })
@@ -725,7 +726,7 @@ namespace FreeLibSet.Forms
     /// Инициализируется в конструкторе.
     /// </summary>
     public EFPDataGridView TheControlProvider { get { return _TheControlProvider; } }
-    private EFPDataGridView _TheControlProvider;
+    private readonly EFPDataGridView _TheControlProvider;
 
     #endregion
 
@@ -733,7 +734,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Переход к шагу мастера.
-    /// Выполняет необходимую инциализацию EFPDataGridView.
+    /// Выполняет необходимую инциализацию <see cref="EFPDataGridView"/>.
     /// </summary>
     /// <param name="action">Действие</param>
     internal protected override void OnBeginStep(WizardAction action)
@@ -742,11 +743,11 @@ namespace FreeLibSet.Forms
       // Обработчик события BeginStep может присоединить таблицу к просмотру
       base.OnBeginStep(action); 
 
-      if (_TheControlProvider.UseRowImages &&
-        (!_TheControlProvider.UseRowImagesDataError) &&
-        _TheControlProvider.TopLeftCellUserImage == null)
+      //if (_TheControlProvider.UseRowImages &&
+      //  (!_TheControlProvider.UseRowImagesDataError) &&
+      //  _TheControlProvider.TopLeftCellUserImage == null)
 
-        _TheControlProvider.InitTopLeftCellTotalInfo();
+      //  _TheControlProvider.InitTopLeftCellTotalInfo();
 
       // Убрано 07.05.2022
       //_TheControlProvider.PrepareCommandItems();
@@ -792,7 +793,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализация шага мастера.
-    /// Эта версия позволяет выводить код ошибок в просмотре
+    /// Эта версия позволяет выводить код ошибок в просмотре.
     /// </summary>
     /// <param name="codeWidth">Ширина столба для вывода кода ошибки в символах. 0-нет столбца</param>
     public WizardStepWithErrorDataGridView(int codeWidth)
@@ -835,8 +836,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Шаг мастера для привязки строк и столбцов
-  /// Используется в мастерах вставки в справочники из буфера обмена
+  /// Шаг мастера для привязки строк и столбцов.
+  /// Используется в мастерах вставки в справочники из буфера обмена.
   /// </summary>
   public class WizardStepSelRC : WizardStepWithDataGridView
   {
@@ -920,10 +921,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Провайдер для <see cref="TabControl"/>.
-    /// Используйте его для добавление вкладок
+    /// Используйте его для добавление вкладок.
     /// </summary>
     public EFPTabControl TheTabControl { get { return _TheTabControl; } }
-    private EFPTabControl _TheTabControl;
+    private readonly EFPTabControl _TheTabControl;
 
     /// <summary>
     /// Использовать рамку вокруг TabControl не следует

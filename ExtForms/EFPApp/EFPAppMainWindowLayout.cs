@@ -219,16 +219,38 @@ namespace FreeLibSet.Forms
     /// Найти дочернюю форму заданного класса.
     /// Возвращает первую найденную форму или null
     /// </summary>
-    /// <typeparam name="T">Класс формы</typeparam>
+    /// <typeparam name="TForm">Класс формы</typeparam>
     /// <returns>Найденная форма или null</returns>
-    public T FindChildForm<T>()
-      where T : Form
+    public TForm FindChildForm<TForm>()
+      where TForm : Form
+    {
+      return FindChildForm<TForm>(null);
+    }
+
+    /// <summary>
+    /// Найти дочернюю форму заданного класса.
+    /// Дополнительно задается критерий для выбора формы, если есть несколько однотипных форм.
+    /// Возвращает первую найденную форму или null.
+    /// </summary>
+    /// <typeparam name="TForm">Класс формы</typeparam>
+    /// <param name="match">Критерий для поиска формы. Если null, то будет возвращена первая форма подходящего типа</param>
+    /// <returns>Найденная форма или null</returns>
+    public TForm FindChildForm<TForm>(Predicate<TForm> match)
+      where TForm : Form
     {
       Form[] forms = GetChildForms(false);
       for (int i = 0; i < forms.Length; i++)
       {
-        if (forms[i] is T)
-          return (T)(forms[i]);
+        TForm frm = forms[i] as TForm;
+        if (frm != null)
+        {
+          if (match != null)
+          {
+            if (!match(frm))
+              continue;
+          }
+          return frm;
+        }
       }
       return null;
     }
@@ -258,24 +280,24 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Найти все дочерние формы заданного класса
     /// </summary>
-    /// <typeparam name="T">Класс формы</typeparam>
+    /// <typeparam name="TForm">Класс формы</typeparam>
     /// <returns>Массив форм</returns>
-    public T[] FindChildForms<T>()
-      where T : Form
+    public TForm[] FindChildForms<TForm>()
+      where TForm : Form
     {
-      List<T> list = new List<T>();
-      FindChildFormsInternal<T>(list);
+      List<TForm> list = new List<TForm>();
+      FindChildFormsInternal<TForm>(list);
       return list.ToArray();
     }
 
-    internal void FindChildFormsInternal<T>(List<T> list)
-      where T : Form
+    internal void FindChildFormsInternal<TForm>(List<TForm> list)
+      where TForm : Form
     {
       Form[] forms = GetChildForms(false);
       for (int i = 0; i < forms.Length; i++)
       {
-        if (forms[i] is T)
-          list.Add((T)(forms[i]));
+        if (forms[i] is TForm)
+          list.Add((TForm)(forms[i]));
       }
     }
 
@@ -572,11 +594,14 @@ namespace FreeLibSet.Forms
 
         #region Главное меню
 
-        _MainMenu = new EFPMainMenu();
-        _MainMenu.Name = "TheMainMenu";
-        _MainMenu.Add(EFPApp.CommandItems);
-        // ???? cmm.InitWindowMenu(MenuWindow);
-        _MainMenu.Attach(MainWindow);
+        if (EFPApp.CommandItems.Count > 0) // 19.09.2024
+        {
+          _MainMenu = new EFPMainMenu();
+          _MainMenu.Name = "TheMainMenu";
+          _MainMenu.Add(EFPApp.CommandItems);
+          // ???? cmm.InitWindowMenu(MenuWindow);
+          _MainMenu.Attach(MainWindow);
+        }
 
         #endregion
 

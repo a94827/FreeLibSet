@@ -29,7 +29,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создается в <see cref="EFPDocComboBoxBase"/>.
     /// </summary>
     /// <param name="owner"></param>
-    public EFPDocComboBoxTextValueNeededEventArgs(EFPDocComboBoxBase owner)
+    internal EFPDocComboBoxTextValueNeededEventArgs(EFPDocComboBoxBase owner)
     {
       _Owner = owner;
     }
@@ -183,7 +183,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Это событие вызывается после выбора значения из списка или установки свойства
     /// <see cref="Id"/> и позволяет переопределить текст в комбоблоке, текст всплываюующей подсказки
-    /// и изображение. Событие вызывается в том числе и при <see cref="Id"/>=0.
+    /// и изображение. Событие вызывается, в том числе, и при <see cref="Id"/>=0.
     /// Также вызывается при обращении к свойству <see cref="Text"/>.
     /// </summary>
     public event EFPDocComboBoxTextValueNeededEventHandler TextValueNeeded
@@ -216,11 +216,11 @@ namespace FreeLibSet.Forms.Docs
     /// Также используем для хранения изображения между вызовом InitText() и
     /// его выводом в комбоблоке
     /// </summary>
-    private EFPDocComboBoxTextValueNeededEventArgs _TextValueNeededArgs;
+    private readonly EFPDocComboBoxTextValueNeededEventArgs _TextValueNeededArgs;
 
     /// <summary>
-    /// Установка текста элемента
-    /// EFPDocComboBox доопределяет метод для установки доступности кнопки "Edit".
+    /// Установка текста элемента.
+    /// <see cref="EFPDocComboBox"/> доопределяет метод для установки доступности кнопки "Edit".
     /// </summary>
     protected override void InitTextAndImage()
     {
@@ -240,10 +240,10 @@ namespace FreeLibSet.Forms.Docs
           {
             _TextValueNeededArgs.ImageKey = DoGetImageKey();
 
-            EFPDataGridViewColorType ColorType;
-            bool Grayed;
-            DoGetValueColor(out ColorType, out Grayed);
-            _TextValueNeededArgs.Grayed = Grayed;
+            EFPDataGridViewColorType colorType;
+            bool grayed;
+            DoGetValueColor(out colorType, out grayed);
+            _TextValueNeededArgs.Grayed = grayed;
           }
           else
             _TextValueNeededArgs.ImageKey = String.Empty;
@@ -283,7 +283,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Получение изображения для текущего значения, если <see cref="Id"/>!=0.
     /// </summary>
-    /// <returns>Имя изображения в EFPApp.MainImages</returns>
+    /// <returns>Имя изображения в <see cref="EFPApp.MainImages"/></returns>
     protected virtual string DoGetImageKey()
     {
       return String.Empty;
@@ -364,7 +364,7 @@ namespace FreeLibSet.Forms.Docs
     protected abstract bool GetDeletedValue(out string message);
 
     /// <summary>
-    /// Извещает, что свойство Deleted, возможно, изменилось
+    /// Извещает, что свойство <see cref="Deleted"/>, возможно, изменилось
     /// </summary>
     public void SetDeletedChanged()
     {
@@ -397,13 +397,13 @@ namespace FreeLibSet.Forms.Docs
 
       if (Id != 0 && (!CanBeDeleted))
       {
-        string Message;
-        if (GetDeletedValue(out Message))
+        string message;
+        if (GetDeletedValue(out message))
         {
           if (CanBeDeletedMode == UIValidateState.Warning)
-            SetWarning(Message);
+            SetWarning(message);
           else
-            SetError(Message);
+            SetError(message);
         }
       }
     }
@@ -440,7 +440,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Расширяет EFPDocComboBoxBase свойством Filters.
+  /// Расширяет <see cref="EFPDocComboBoxBase"/> списком фильтров, которые применяются при выборе из списка.
   /// </summary>
   public abstract class EFPDocComboBoxBaseWithFilters : EFPDocComboBoxBase
   {
@@ -582,7 +582,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выполнять ли очистку текущего значения при смене фильтра, если значение не
     /// проходит условие для нового фильтра.
-    /// Значение по умолчанию - true (очищать)
+    /// Значение по умолчанию - true (очищать).
     /// Если установит в false, то "неподходящее" значение останется выбранным, но
     /// при проверке <see cref="EFPControlBase.Validate()"/> будет выдаваться ошибка.
     /// </summary>
@@ -822,7 +822,7 @@ namespace FreeLibSet.Forms.Docs
     #region DocTableId
 
     /// <summary>
-    /// Идентификатор таблицы вида документов (свойство DBxDocType.TableId).
+    /// Идентификатор таблицы вида документов (свойство <see cref="DBxDocType.TableId"/>).
     /// Свойства <see cref="DocType"/>, <see cref="DocTypeUI"/>, <see cref="DocTypeName"/> и <see cref="DocTableId"/> являются синхронизированными.
     /// </summary>
     public Int32 DocTableId
@@ -907,7 +907,12 @@ namespace FreeLibSet.Forms.Docs
     // TODO: Черновая реализация FixedDocIds. Не взаимодействует с Filters!
 
     /// <summary>
-    /// Фиксированный список идентификаторов
+    /// Фиксированный список идентификаторов.
+    /// Если свойство установлено, то выбор документа осуществляется с помощью упрощенной формы.
+    /// См. свойство <see cref="DocSelectDialog.FixedDocIds"/>.
+    /// Если идентификатор <see cref="DocId"/> не входит в список, то при проверке корректности введенного значения в <see cref="OnValidate()"/> будет показана ошибка.
+    /// По умолчанию - null - выбор осуществляется из обычной формы с использованием таблички фильтров.
+    /// В текущей реализации можно использовать только одно из свойств <see cref="EFPDocComboBoxBaseWithFilters.Filters"/> или <see cref="FixedDocIds"/>.
     /// </summary>
     public IdList FixedDocIds
     {
@@ -1435,17 +1440,18 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Интерфейс работы с базами данных.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     /// <summary>
-    /// Список типов документов, из которого можно выбирать
-    /// Задается в конструкторе
+    /// Список типов документов, из которого можно выбирать.
+    /// Задается в конструкторе.
+    /// Если список для выбора не был задан, то выбор возможен из всех видов документов.
     /// </summary>
     public DocTypeUI[] DocTypeUIs { get { return _DocTypeUIs; } }
-    private DocTypeUI[] _DocTypeUIs;
+    private readonly DocTypeUI[] _DocTypeUIs;
 
     /// <summary>
     /// Текст, который выводится при отсутствии выбранного вида документов. По умолчанию - "[ Нет ]"
@@ -1636,7 +1642,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создает провайдер, связанный с уже добавленным провайдером комбоблока выбора документа.
     /// Кроме обычной инициализации, устанавливает связь для свойства <see cref="DocIdEx"/>.
     /// </summary>
-    /// <param name="docComboBoxProvider">Провайдер комбоблока выбора документа. Не может быть null</param>
+    /// <param name="docComboBoxProvider">Провайдер комбоблока выбора документа. Не может быть null.</param>
     /// <param name="control">Управляющий элемент</param>
     /// <param name="subDocTypeName">Имя вида поддокументов в <paramref name="docComboBoxProvider"/>.DocType.subDocs.</param>
     public EFPSubDocComboBox(EFPDocComboBox docComboBoxProvider, UserSelComboBox control, string subDocTypeName)
@@ -1866,7 +1872,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Свойство возвращает источник, управляющий текущим основным документом 
-    /// (то есть значение, которое было присвоено свойству DocIdEx)
+    /// (то есть значение, которое было присвоено свойству <see cref="DocIdEx"/>)
     /// или null, если внешнего управления нет.
     /// 
     /// Пилотное свойство. Возможно, такие конструкции надо приделать всем 
@@ -2302,7 +2308,7 @@ namespace FreeLibSet.Forms.Docs
     /// Поддокументы, из которых можно выбирать
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
-    private DBxMultiSubDocs _SubDocs;
+    private readonly DBxMultiSubDocs _SubDocs;
 
     /// <summary>
     /// Описание вида документов

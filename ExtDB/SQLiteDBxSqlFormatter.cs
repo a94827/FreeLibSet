@@ -113,8 +113,7 @@ namespace FreeLibSet.Data.SQLite
 
     /// <summary>
     /// Преобразование значения даты и/или времени.
-    /// Форматы даты и времени хранятся как свойства SQLiteDbx.DateFormat и TimeFormat.
-    /// Этот метод вызывается из OnFormatValue().
+    /// Форматы даты и времени хранятся как свойства <see cref="SQLiteDBx.DateFormat"/> и <see cref="SQLiteDBx.TimeFormat"/>.
     /// </summary>
     /// <param name="buffer">Буфер для записи значения</param>
     /// <param name="value">Записываемое значение</param>
@@ -216,7 +215,7 @@ namespace FreeLibSet.Data.SQLite
     #region FormatFilter
 
     /// <summary>
-    /// Заменяет фильтр StartsWithFilter на SubstringFilter и использует его для форматирования
+    /// Заменяет фильтр <see cref="StartsWithFilter"/> на <see cref="SubstringFilter"/> и использует его для форматирования
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>

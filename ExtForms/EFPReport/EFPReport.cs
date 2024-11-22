@@ -102,7 +102,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Параметры отчета (создаются перед вызовом <see cref="BuildReport()"/> с помощью метода <see cref="CreateParams()"/>).
     /// Также параметры могут быть созданы и присвоены свойству до вызова <see cref="Run()"/>,
-    /// в этом случае запрос параметров не выполняется, если <see cref="AlwaysQueryParams"/>=false
+    /// в этом случае запрос параметров не выполняется, если <see cref="AlwaysQueryParams"/>=false.
     /// </summary>
     public EFPReportParams ReportParams
     {
@@ -120,6 +120,7 @@ namespace FreeLibSet.Forms
     /// Если true, то вывод диалога параметров перед построением отчета выполняется,
     /// даже если свойство <see cref="ReportParams"/> было установлено до запуска отчета. При этом
     /// методы <see cref="ReadConfigPart(string, CfgPart, EFPConfigActionInfo)"/>/<see cref="WriteConfigPart(string, CfgPart, EFPConfigActionInfo)"/> также вызываются.
+    /// По умолчанию - false.
     /// </summary>
     public bool AlwaysQueryParams { get { return _AlwaysQueryParams; } set { _AlwaysQueryParams = value; } }
     private bool _AlwaysQueryParams;
@@ -128,10 +129,11 @@ namespace FreeLibSet.Forms
     /// Сюда могут быть добавлены команды локального меню, действующие для всей формы отчета.
     /// </summary>
     public EFPReportCommandItems ReportCommandItems { get { return _ReportCommandItems; } }
-    private EFPReportCommandItems _ReportCommandItems;
+    private readonly EFPReportCommandItems _ReportCommandItems;
 
     /// <summary>
-    /// Имя изображения в <see cref="EFPApp.MainImages"/>, которое будт использовано в качестве значка формы
+    /// Имя изображения в <see cref="EFPApp.MainImages"/>, которое будт использовано в качестве значка формы.
+    /// Допускается динамическая установка свойства.
     /// </summary>
     public string MainImageKey
     {
@@ -146,8 +148,8 @@ namespace FreeLibSet.Forms
     private string _MainImageKey;
 
     /// <summary>
-    /// Режим вывода отчета. По умолчанию используется автоматический режим:
-    /// модальный, если есть открытые блоки диалога и немодальный в противном случае
+    /// Режим вывода отчета. По умолчанию используется автоматический режим <see cref="EFPReportShowMode.Auto"/>:
+    /// модальный, если есть открытые блоки диалога и немодальный в противном случае.
     /// </summary>
     public EFPReportShowMode ShowMode
     {
@@ -173,7 +175,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство возвращает true, если отчет был построен. Свойство может использоваться
     /// внутри реализации <see cref="BuildReport()"/> для определения факта вызова из <see cref="RefreshReport()"/>
-    /// (ReportCreated=true) или первичного построения отчета (ReportCreated=false)
+    /// (<see cref="ReportCreated"/>=true) или первичного построения отчета (<see cref="ReportCreated"/>=false).
     /// </summary>
     public bool ReportCreated { get { return _ReportCreated; } }
     private bool _ReportCreated;
@@ -220,10 +222,10 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Доступ к странице по индексу
       /// </summary>
-      /// <param name="index">Индекс страницы в диапазоне от 0 до Count-1</param>
+      /// <param name="index">Индекс страницы в диапазоне от 0 до (<see cref="Count"/>-1)</param>
       /// <returns>Основная или дополнительная страница</returns>
       public EFPReportPage this[int index] { get { return _Items[index]; } }
-      private List<EFPReportPage> _Items;
+      private readonly List<EFPReportPage> _Items;
 
       /// <summary>
       /// Возвращает количество страниц
@@ -253,14 +255,14 @@ namespace FreeLibSet.Forms
 
       /// <summary>
       /// Добавление основной или дополнительной страницы отчета.
-      /// Дополнительные страницы отличаются установленным свойством ExtraPageKey
+      /// Дополнительные страницы отличаются установленным свойством <see cref="EFPReportPage.ExtraPageKey"/>.
       /// Метод может вызываться из команд локального меню для создания дополнительных
-      /// страниц отчета. Также метод может вызываться в переопределенном BuildReport(),
+      /// страниц отчета. Также метод может вызываться в переопределенном <see cref="BuildReport()"/>,
       /// чтобы добавить страницы, наличие/отсутствие которых зависит от параметров
       /// отчета и не может быть определено в конструкторе.
       /// Дополнительные страницы, в отличие от основных, закрываются при повторном построении отчета и могут закрываться 
       /// программным способом.
-      /// Эта версия метода делает страницу активной, если добавление выполняется не из BuildReport.
+      /// Эта версия метода делает страницу активной, если добавление выполняется не из <see cref="BuildReport()"/>.
       /// </summary>
       /// <param name="page">Добавляемая страница</param>
       public void Add(EFPReportPage page)
@@ -270,9 +272,9 @@ namespace FreeLibSet.Forms
 
       /// <summary>
       /// Добавление основной или дополнительной страницы отчета.
-      /// Дополнительные страницы отличаются установленным свойством ExtraPageKey
+      /// Дополнительные страницы отличаются установленным свойством <see cref="EFPReportPage.ExtraPageKey"/>
       /// Метод может вызываться из команд локального меню для создания дополнительных
-      /// страниц отчета. Также метод может вызываться в переопределенном BuildReport(),
+      /// страниц отчета. Также метод может вызываться в переопределенном <see cref="BuildReport()"/>,
       /// чтобы добавить страницы, наличие/отсутствие которых зависит от параметров
       /// отчета и не может быть определено в конструкторе.
       /// Дополнительные страницы, в отличие от основных, закрываются при повторном построении отчета и могут закрываться 
@@ -374,7 +376,7 @@ namespace FreeLibSet.Forms
       /// <summary>
       /// Удалить страницу с заданным индексом
       /// </summary>
-      /// <param name="pageIndex">Индекс страницы в диапазоне от 0 до Count-1</param>
+      /// <param name="pageIndex">Индекс страницы в диапазоне от 0 до (<see cref="Count"/>-1)</param>
       public void RemoveAt(int pageIndex)
       {
         //if (!Page.IsExtraPage)
@@ -447,7 +449,7 @@ namespace FreeLibSet.Forms
 
       #region Прочее
 
-      private EFPReport _Owner;
+      private readonly EFPReport _Owner;
 
       #endregion
 
@@ -548,10 +550,10 @@ namespace FreeLibSet.Forms
         }
       }
 
-      /// <summary>
-      /// Добавлялись ли когда-нибудь доп. страницы?
-      /// </summary>
-      internal bool ExtraPagesHappened { get { return _ExtraPages != null; } }
+      ///// <summary>
+      ///// Добавлялись ли когда-нибудь доп. страницы?
+      ///// </summary>
+      //internal bool ExtraPagesHappened { get { return _ExtraPages != null; } }
 
       /// <summary>
       /// Возвращает все дополнительные страницы отчета.
@@ -572,7 +574,7 @@ namespace FreeLibSet.Forms
       #region IEnumerable<EFPReportPage> Members
 
       /// <summary>
-      /// Возвращает перечислитель по объектам EFPReportPage основных и дополнительных страниц
+      /// Возвращает перечислитель по объектам <see cref="EFPReportPage"/> основных и дополнительных страниц
       /// </summary>
       /// <returns>Перечислитель</returns>
       public IEnumerator<EFPReportPage> GetEnumerator()
@@ -607,9 +609,8 @@ namespace FreeLibSet.Forms
     private readonly PageCollection _Pages;
 
     /// <summary>
-    /// Индекс текущей страницы отчета
-    /// Свойство можно устанавливать как после добавления страниц отчета, так
-    /// и динамически
+    /// Индекс текущей страницы отчета.
+    /// Свойство можно устанавливать как после добавления страниц отчета, так и динамически.
     /// </summary>
     public int SelectedPageIndex
     {
@@ -720,7 +721,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Этот метод не должен вызываться напрямую.
     /// Для запуска отчета используйте метод <see cref="Run()"/>. 
-    /// Для перестроение уже открытого отчета используйте <see cref="RefreshReport()"/>.
+    /// Для перестроения уже открытого отчета используйте <see cref="RefreshReport()"/>.
     /// </summary>
     protected void OnExecute()
     {
@@ -1296,7 +1297,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает форму, содержащую отчет (это может быть, в частности, форма мастера)
     /// в процессе работы отчета.
-    /// Если отчет еще не запущен или уже закрыт, возвращается null
+    /// Если отчет еще не запущен или уже закрыт, возвращается null.
     /// </summary>
     public Form ReportForm
     {
@@ -1589,10 +1590,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Шаблонный статический метод, который можно вызывать из главного меню.
-    /// Позволяет не реализовывать отдельные обработчики для запуска отчетов
+    /// Позволяет не реализовывать отдельные обработчики для запуска отчетов.
     /// Создает объект отчета <see cref="EFPReport"/> и вызывает его метод <see cref="Run()"/>.
     /// </summary>
-    /// <typeparam name="T">Класс отчета, производного от <see cref="EFPReport"/>. Класс должен реализовывать конструктор по умолчанию</typeparam>
+    /// <typeparam name="T">Класс отчета, производного от <see cref="EFPReport"/>.
+    /// Класс должен реализовывать конструктор по умолчанию</typeparam>
     /// <param name="sender">Не используется</param>
     /// <param name="args">Не используется</param>
     /// <remarks>
@@ -1783,7 +1785,7 @@ namespace FreeLibSet.Forms
 
       #region Свойства
 
-      private EFPReportParams _Owner;
+      private readonly EFPReportParams _Owner;
 
       #endregion
 
@@ -1907,7 +1909,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Страничка отчета. Базовый класс
+  /// Страничка отчета. Базовый класс.
   /// </summary>
   public abstract class EFPReportPage : IEFPTabPageControl
   {
@@ -1955,7 +1957,7 @@ namespace FreeLibSet.Forms
     /// для создания провайдеров элементов управления на странице отчета.
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private EFPReportPageBaseProvider _BaseProvider;
+    private readonly EFPReportPageBaseProvider _BaseProvider;
 
     private class EFPReportPageCommandItems : EFPCommandItems
     {
@@ -2013,7 +2015,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Команды локального меню для дополнительных вкладок
     /// </summary>
-    private EFPReportPageCommandItems _CommandItems;
+    private /*readonly*/ EFPReportPageCommandItems _CommandItems;
 
     #endregion
 
@@ -2049,7 +2051,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Имя изображения для закладки (необязательное)
+    /// Имя изображения для закладки (необязательное) из списка <see cref="EFPApp.MainImages"/>
     /// </summary>
     public virtual string ImageKey
     {
@@ -2316,7 +2318,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверяет, что страница еще не присоединена к отчету.
-    /// В противном случае выбрасывается исключение InvalidOperationException
+    /// В противном случае выбрасывается исключение <see cref="InvalidOperationException"/>.
     /// </summary>
     internal protected void CheckNotAdded()
     {
@@ -2585,14 +2587,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создание управляющих элементов. Этот метод вызывается однократно при первом
-    /// обращении к странице
+    /// обращении к странице.
     /// </summary>
     /// <param name="parent">Родительский элемент, куда добавляются элементы</param>
     protected abstract void CreatePage(Panel parent);
 
     /// <summary>
     /// Инициализировать страницу после построения отчета. Этот метод может вызываться
-    /// несколько раз при выполнении Refresh
+    /// несколько раз при выполнении Refresh.
     /// </summary>
     protected virtual void InitData()
     {
@@ -2635,8 +2637,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Инициализация заголовка и таблички фильтров для печати страницы отчета
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
+    /// <param name="sender">Ссылка на <see cref="FreeLibSet.Forms.Reporting.BRDataViewMenuOutItemBase"/></param>
+    /// <param name="args">Не используется</param>
     protected void DefaultOutItem_TitleNeeded(object sender, EventArgs args)
     {
       Reporting.BRDataViewMenuOutItemBase outItem = (Reporting.BRDataViewMenuOutItemBase)sender;
@@ -2694,8 +2696,7 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Закладка, содержащая вложенный объект с закладками, куда могут добавляться
-  /// другие страницы
+  /// Закладка, содержащая вложенный объект с закладками, куда могут добавляться другие страницы
   /// </summary>
   public class EFPReportTabControlPage : EFPReportPage
   {
@@ -2895,7 +2896,7 @@ namespace FreeLibSet.Forms
       #region IEnumerable<EFPReportPage> Members
 
       /// <summary>
-      /// Возвращает нерекурсивный перечислитель по дочерним страницам.
+      /// Возвращает нерекурсивный перечислитель по дочерним страницам <see cref="EFPReportPage"/> на текущей вкладке.
       /// </summary>
       /// <returns>Перечислитель</returns>
       public IEnumerator<EFPReportPage> GetEnumerator()
@@ -2988,7 +2989,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создает элемент <see cref="System.Windows.Forms.TabControl"/> и добавляет ранее созданные вложенные страницы
     /// </summary>
-    /// <param name="parent">Панель для добавления TabControl</param>
+    /// <param name="parent">Панель для добавления <see cref="System.Windows.Forms.TabControl"/></param>
     protected override void CreatePage(Panel parent)
     {
       _TheTabControl = new TabControl();
@@ -3199,7 +3200,7 @@ namespace FreeLibSet.Forms
 #endif
 
   /// <summary>
-  /// Команды меню, относящиеся к отчету в целом
+  /// Команды меню, относящиеся к отчету в-целом
   /// </summary>
   public class EFPReportCommandItems : EFPCommandItems
   {
@@ -3236,7 +3237,7 @@ namespace FreeLibSet.Forms
     /// Отчет, к которому относятся команды
     /// </summary>
     public EFPReport Owner { get { return _Owner; } }
-    private EFPReport _Owner;
+    private readonly EFPReport _Owner;
 
     #endregion
 

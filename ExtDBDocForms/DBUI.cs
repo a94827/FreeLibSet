@@ -546,7 +546,11 @@ namespace FreeLibSet.Forms.Docs
       {
         dtui.GridProducer.SetReadOnly();
         foreach (SubDocTypeUI sdtui in dtui.SubDocTypes)
+        {
+          if (sdtui.CanMultiInsert && (!sdtui.CanMultiEdit))
+            throw new BugException("Для поддокументов "+sdtui.ToString()+" установлено свойство CanMultiInsert, но не установлено CanMultiEdit");
           sdtui.GridProducer.SetReadOnly();
+        }
       }
 
       InitMainMenuCommandItemsVisible();

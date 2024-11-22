@@ -5,7 +5,7 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20240626;122335379000000">
+	<META NAME="CHANGED" CONTENT="20240919;123900213000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2023-11-17T22:33:48.590000000">
 	<STYLE TYPE="text/css">
@@ -4670,14 +4670,15 @@
 			текст ячеек не становится красным. Предполагается, что признаки
 			ошибки подсвечиваются в определенных ячейках, а не для таблицы в
 			целом.</P>
-			<P>3. В верхней левой ячейке табличного просмотра, во всплывающей
-			подсказке может отображаться число строк в просмотре (<A HREF="#v017p24">v.17
-			п.24</A>). Управляющее свойство EFPDataGridView.
-			ShowRowCountInTopLeftCellToolTipText (по умолчанию выключено).
-			Изменена реализация свойства TopLeftCellToolTipText, чтобы
-			отображалась дополнительная строка подсказки. В методе
-			HandleIdle() (<A HREF="#v162p5">v.162 п.5</A>) обновляется
-			подсказка, если было событие DataGridView.DataBindingComplete</P>
+			<P><A NAME="v173p3"></A>3. В верхней левой ячейке табличного
+			просмотра, во всплывающей подсказке может отображаться число строк
+			в просмотре (<A HREF="#v017p24">v.17 п.24</A>). Управляющее
+			свойство EFPDataGridView. ShowRowCountInTopLeftCellToolTipText (по
+			умолчанию выключено). Изменена реализация свойства
+			TopLeftCellToolTipText, чтобы отображалась дополнительная строка
+			подсказки. В методе HandleIdle() (<A HREF="#v162p5">v.162 п.5</A>)
+			обновляется подсказка, если было событие
+			DataGridView.DataBindingComplete</P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>
@@ -4996,9 +4997,9 @@
 			GetStdCommand()</P>
 			<P STYLE="margin-bottom: 0.5cm">4. В EFPTextBoxCommandItems (<A HREF="#v017p17">v.17
 			п.17</A>) не работала комбинация клавиш Ctrl-A</P>
-			<P STYLE="margin-bottom: 0.5cm">5. Метод EFPApp.FindAndActivate().
-			Везде, где вызывается Form.Acticate(), сначала форма
-			восстанавливается, если она минимизирована. Метод
+			<P STYLE="margin-bottom: 0.5cm"><A NAME="v161p5"></A>5. Метод
+			EFPApp.FindAndActivate(). Везде, где вызывается Form.Acticate(),
+			сначала форма восстанавливается, если она минимизирована. Метод
 			ShowSingleInstanceForm() (<A HREF="#v132p8">v.132 п.8</A>)
 			возвращает найденную/созданную форму</P>
 			<P STYLE="margin-bottom: 0.5cm">6. Свойство

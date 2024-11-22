@@ -462,7 +462,7 @@ namespace FreeLibSet.Data.SqlClient
     /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство PhaseText для отображения выполненямых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполняемых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
@@ -861,7 +861,7 @@ namespace FreeLibSet.Data.SqlClient
     #region Выполнение SQL-запросов
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего единственное значение
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего единственное значение
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>
@@ -892,7 +892,7 @@ namespace FreeLibSet.Data.SqlClient
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего таблицу данных
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего таблицу данных
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="tableName">Имя таблицы для возвращаемого DataTable</param>
@@ -917,7 +917,7 @@ namespace FreeLibSet.Data.SqlClient
     }
 
     /// <summary>
-    /// Абстрактный метод выполнения SLQ-запроса, возвращающего DbDataReader
+    /// Абстрактный метод выполнения SQL-запроса, возвращающего DbDataReader
     /// </summary>
     /// <param name="cmdText">Текст SQL-запроса</param>
     /// <param name="paramValues">Параметры запроса</param>

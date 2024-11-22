@@ -45,6 +45,7 @@ namespace FreeLibSet.Forms.Diagnostics
       efpTokens.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(efpTokens_GetRowAttributes);
       efpTokens.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpTokens_GetCellAttributes);
       efpTokens.UseRowImages = true;
+      efpTokens.ShowErrorCountInTopLeftCell = true;
 
       efpTokens.ReadOnly = true;
       efpTokens.Control.ReadOnly = true;
@@ -132,7 +133,6 @@ namespace FreeLibSet.Forms.Diagnostics
           }
         }
       }
-      efpTokens.InitTopLeftCellTotalInfo();
 
       efpErrors.ErrorMessages = _ParsingData.GetErrorMessages(true);
       efpErrors.EditMessage += new ErrorMessageItemEventHandler(EditError);

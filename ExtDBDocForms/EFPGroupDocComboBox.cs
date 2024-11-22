@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms.Docs
     /// Вид документа групп
     /// </summary>
     public GroupDocTypeUI DocTypeUI { get { return _DocTypeUI; } }
-    private GroupDocTypeUI _DocTypeUI;
+    private readonly GroupDocTypeUI _DocTypeUI;
 
     #endregion
 
@@ -430,9 +430,9 @@ namespace FreeLibSet.Forms.Docs
       {
         if (!_InsideInitList)
         {
-          ItemObject Item = (ItemObject)(Control.SelectedItem);
-          if (Item != null)
-            DocId = Item.DocId;
+          ItemObject item = (ItemObject)(Control.SelectedItem);
+          if (item != null)
+            DocId = item.DocId;
         }
       }
       catch (Exception e)

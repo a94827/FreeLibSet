@@ -29,8 +29,8 @@ namespace FreeLibSet.Forms.Docs
       efpMode = new EFPRadioButtons(efpForm, rbNoFilter);
       efpYear = new EFPIntEditBox(efpForm, edYear);
       efpYear.Control.Increment = 1;
-      efpYear.Minimum = 1900;
-      efpYear.Maximum = 2099;
+      efpYear.Minimum = DateTime.MinValue.Year;
+      efpYear.Maximum = DateTime.MaxValue.Year;
       efpYear.EnabledEx = efpMode[1].CheckedEx;
     }
 
@@ -139,7 +139,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public bool CanScrollUp
     {
-      get { return Value != 0 && Value > 1; }
+      get { return Value != 0 && Value > DateTime.MinValue.Year; }
     }
 
     /// <summary>
@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public bool CanScrollDown
     {
-      get { return Value != 0 && Value < 9999; }
+      get { return Value != 0 && Value < DateTime.MaxValue.Year; }
     }
 
     /// <summary>
@@ -173,17 +173,17 @@ namespace FreeLibSet.Forms.Docs
   /// Фильтр на попадание года в интервал.
   /// В таблице должно быть два числовых поля, задающих первый и последний год.
   /// Строка проходит фильтр, если заданный в фильтре год (Value) попадает в диапазон.
-  /// Обрабатываются значения типа NULL, задающие открытые интервалы
+  /// Обрабатываются значения типа NULL, задающие открытые интервалы.
   /// </summary>
   public class YearRangeInclusionGridFilter : IntRangeInclusionCommonFilter, IEFPGridFilter, IEFPScrollableGridFilter
   {
     #region Конструкторы
 
     /// <summary>
-    /// Конструктор для числового поля
+    /// Конструктор для двух числовых полей
     /// </summary>
-    /// <param name="firstYearFieldName"></param>
-    /// <param name="lastYearFieldName"></param>
+    /// <param name="firstYearFieldName">Поле, в котором задается начальный год диапазона</param>
+    /// <param name="lastYearFieldName">Поле, в котором задается конечный год диапазона</param>
     public YearRangeInclusionGridFilter(string firstYearFieldName, string lastYearFieldName)
       : base(firstYearFieldName, lastYearFieldName)
     {
@@ -252,7 +252,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public bool CanScrollUp
     {
-      get { return Value.HasValue && Value.Value > 1; }
+      get { return Value.HasValue && Value.Value > DateTime.MinValue.Year; }
     }
 
     /// <summary>
@@ -260,7 +260,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public bool CanScrollDown
     {
-      get { return Value.HasValue && Value.Value < 9999; }
+      get { return Value.HasValue && Value.Value < DateTime.MaxValue.Year; }
     }
 
     /// <summary>

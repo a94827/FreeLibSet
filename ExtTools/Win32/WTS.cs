@@ -78,7 +78,7 @@ namespace FreeLibSet.Win32
   #region Перечисление WTSColorDepth
 
   /// <summary>
-  /// Значения свойства WTSSession.ClientDisplayColorDepth
+  /// Значения свойства <see cref="WTSSession.ClientDisplayColorDepth"/>
   /// </summary>
   public enum WTSColorDepth
   {
@@ -123,7 +123,7 @@ namespace FreeLibSet.Win32
   #region Перечисление WTSClientProtocolType
 
   /// <summary>
-  /// Значения свойства WTSSession.ClientProtocolType
+  /// Значения свойства <see cref="WTSSession.ClientProtocolType"/>
   /// </summary>
   public enum WTSClientProtocolType
   {

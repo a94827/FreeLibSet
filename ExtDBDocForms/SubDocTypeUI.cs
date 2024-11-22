@@ -430,6 +430,19 @@ namespace FreeLibSet.Forms.Docs
     private bool _CanInsertCopy;
 
     /// <summary>
+    /// Возможность создания поддокументов для нескольких документов при групповом редактировании.
+    /// Если false (по умолчанию), то можно выбрать только один документ.
+    /// Установка в true может требовать дополнительных усилий со стороны прикладного кода, чтобы все необходимые поля 
+    /// поддокумента редактировались при <see cref="SubDocumentEditor.MultiDocMode"/>=true. Если при групповом редактировании
+    /// обязательные поля будут пропущены, будут созданы некорректные поддокументы.
+    /// Установка в true также разрешает вставку поддокументов из буфера обмена в несколько целевых документов.
+    /// Свойство имеет смысл только при <see cref="DocTypeUI.CanMultiEdit"/>=true.
+    /// Свойство <see cref="CanMultiEdit"/> должно быть установлено, иначе будет выброшено исключение в <see cref="DBUI.EndInit()"/>.
+    /// </summary>
+    public bool CanMultiInsert { get { return _CanMultiInsert; } set { _CanMultiInsert = value; } }
+    private bool _CanMultiInsert;
+
+    /// <summary>
     /// Генератор табличного просмотра.
     /// Обычно в прикладном коде сюда следует добавить описания столбцов.
     /// </summary>
@@ -506,11 +519,11 @@ namespace FreeLibSet.Forms.Docs
       if (controlProvider.MarkRowIds != null)
         controlProvider.AddMarkRowsColumn();
 
-      if (showDocId)
-      {
-        controlProvider.Columns.AddInt("DocId", true, "DocId", 5);
-        controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-      }
+      //if (showDocId)
+      //{
+      //  controlProvider.Columns.AddInt("DocId", true, "DocId", 5);
+      //  controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+      //}
 
 
       //GridProducer.InitGrid(controlProvider, reInit, controlProvider.CurrentConfig, columns);
@@ -521,7 +534,8 @@ namespace FreeLibSet.Forms.Docs
       if (!reInit)
       {
         // Обработчик для печати (д.б. до вызова пользовательского блока инициализации)
-        // TODO: ControlProvider.AddGridPrint().DocumentName = PluralTitle;
+        if (controlProvider.DefaultOutItem != null)
+          controlProvider.DefaultOutItem.DisplayName = SubDocType.PluralTitle;
 
         CallInitView(controlProvider, userInitData);
       }
@@ -530,6 +544,15 @@ namespace FreeLibSet.Forms.Docs
       columns.Add("DocId");
       if (UI.DocProvider.DocTypes.UseDeleted) // 16.05.2018
         columns.Add("Deleted");
+
+      // Так не получается. Обработчик GetCellAttributes не имеет доступа к 
+      //if (showDocId)
+      //{
+      //  controlProvider.Columns.AddText("DocId.DocumentText", false, DocType.SingularTitle, 20);
+      //  controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+      //  if(!reInit)
+      //    controlProvider.GetCellAttributes += Grid_GetCellAttributes;
+      //}
 
       if (UI.DebugShowIds)
       {
@@ -794,10 +817,10 @@ namespace FreeLibSet.Forms.Docs
 
       if (!reInit)
       {
+        if (controlProvider.DefaultOutItem != null)
+          controlProvider.DefaultOutItem.DisplayName = SubDocType.PluralTitle;
 
 #if XXX
-        // Обработчик для печати (д.б. до вызова пользовательского блока инициализации)
-        ControlProvider.AddGridPrint().DocumentName = DocType.PluralTitle;
         for (int i = 0; i < PrintTypes.Count; i++)
         {
           AccDepGridPrintDoc pd;
@@ -1044,66 +1067,66 @@ namespace FreeLibSet.Forms.Docs
 
     #region Выбор документа
 
-    private static bool _LastSelectOneDocAll = false;
-
     /// <summary>
-    /// Выбор одного документа для режима добавления поддокумента.
-    /// Возможно выбрать режим "Для всех документов".
+    /// Выбор документов для добавления поддокумента.
+    /// Возможность выбора нескольких документов определяется свойством <see cref="SubDocTypeUI.CanMultiInsert"/>.
+    /// Если редактируется единственный документ, то возвращается его идентификатор без показа диалога выбора.
     /// Используется <see cref="EFPSubDocGridView"/> и <see cref="EFPSubDocTreeView"/>.
     /// </summary>
     /// <param name="controlProvider">Просмотр, в котором выполняется редактирование</param>
-    /// <param name="docId">Идентификатор выбранного документа</param>
-    /// <returns>true, если выбор сделан</returns>
-    internal bool SelectOneDoc(IEFPSubDocView controlProvider, out Int32 docId)
+    /// <returns>Массив идентификаторов <see cref="DBxSingleDoc.DocId"/>, если выбор сделан или null, если пользователь нажал "Отмена" в блоке диалога</returns>
+    internal Int32[] SelectDocsForInsert(IEFPSubDocView controlProvider)
     {
       if (controlProvider.SubDocs.Owner.DocCount == 1)
       {
-        docId = controlProvider.SubDocs.Owner[0].DocId;
-        return true;
+        Int32 docId = controlProvider.SubDocs.Owner[0].DocId;
+        return new Int32[1] { docId };
       }
 
       Int32 currDocId = 0;
-      if (!_LastSelectOneDocAll)
-      {
-        if (controlProvider.CurrentDataRow != null)
-          currDocId = DataTools.GetInt(controlProvider.CurrentDataRow, "DocId");
-      }
+      if (controlProvider.CurrentDataRow != null)
+        currDocId = DataTools.GetInt(controlProvider.CurrentDataRow, "DocId");
 
       ListSelectDialog dlg = new ListSelectDialog();
       dlg.Title = SubDocType.SingularTitle + " (Создание)";
       dlg.ImageKey = "Insert";
       dlg.ListTitle = SubDocType.DocType.SingularTitle;
-      dlg.Items = new string[controlProvider.SubDocs.Owner.DocCount + 1];
-      dlg.ImageKeys = new string[controlProvider.SubDocs.Owner.DocCount + 1];
-      dlg.Items[0] = "[ Для всех документов ]";
-      dlg.ImageKeys[0] = "Table";
-      dlg.SelectedIndex = 0;
+      dlg.Items = new string[controlProvider.SubDocs.Owner.DocCount];
+      dlg.ImageKeys = new string[controlProvider.SubDocs.Owner.DocCount];
+      dlg.MultiSelect = controlProvider.SubDocTypeUI.CanMultiInsert;
+      dlg.CanBeEmpty = false;
       for (int i = 0; i < controlProvider.SubDocs.Owner.DocCount; i++)
       {
         //dlg.Items[i + 1] = (i + 1).ToString() + ". DocId=" + controlProvider.SubDocs.Owner[i].DocId.ToString(); // !!! Названия для документов
         DBxSingleDoc doc = controlProvider.SubDocs.Owner[i];
-        dlg.Items[i + 1] = UI.TextHandlers.GetTextValue(doc);
-        dlg.ImageKeys[i + 1] = UI.ImageHandlers.GetImageKey(doc);
+        dlg.Items[i] = UI.TextHandlers.GetTextValue(doc);
+        dlg.ImageKeys[i] = UI.ImageHandlers.GetImageKey(doc);
         if (controlProvider.SubDocs.Owner[i].DocId == currDocId)
-          dlg.SelectedIndex = i + 1;
+        {
+          dlg.SelectedIndex = i;
+          if (dlg.MultiSelect)
+            dlg.Selections[i] = true;
+        }
       }
 
       if (dlg.ShowDialog() != DialogResult.OK)
+        return null;
+
+      if (dlg.MultiSelect)
       {
-        docId = 0;
-        return false;
-      }
-      if (dlg.SelectedIndex == 0)
-      {
-        docId = 0;
-        _LastSelectOneDocAll = true;
+        List<Int32> docIds = new List<int>();
+        for (int i = 0; i < controlProvider.SubDocs.Owner.DocCount; i++)
+        {
+          if (dlg.Selections[i])
+            docIds.Add(controlProvider.SubDocs.Owner[i].DocId);
+        }
+        return docIds.ToArray();
       }
       else
       {
-        docId = controlProvider.SubDocs.Owner[dlg.SelectedIndex - 1].DocId;
-        _LastSelectOneDocAll = false;
+        Int32 docId = controlProvider.SubDocs.Owner[dlg.SelectedIndex].DocId;
+        return new Int32[1] { docId };
       }
-      return true;
     }
 
     #endregion
@@ -1404,7 +1427,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Выполнить вставку поддокументов и строк таблицы данных.
+    /// Выполнить вставку поддокументов в один документ из строк таблицы данных.
     /// Вызывается обработчик события <see cref="PasteRows"/>. Если обработчик не задан или свойство <see cref="PasteSubDocRowsEventArgs.Handled"/> не установлено,
     /// то для каждой строки выполняется копирование полей в новый поддокумент и вызывается событие <see cref="AdjustPastedRow"/>.
     /// </summary>
@@ -1496,6 +1519,123 @@ namespace FreeLibSet.Forms.Docs
       List<DataRow> resRows = new List<DataRow>();
       for (int i = 0; i < a.Length; i++)
         a[i] = subDocs.SubDocs[orgSubDocCount + i];
+      return a;
+    }
+
+    /// <summary>
+    /// Выполнить вставку поддокументов в несколько документов из строк таблицы данных.
+    /// Если задано несколько документов <paramref name="docIds"/>, то для каждого из них вставляется полный набор поддокументов из строк <paramref name="srcRows"/>.
+    /// Вызывается обработчик события <see cref="PasteRows"/>. Если обработчик не задан или свойство <see cref="PasteSubDocRowsEventArgs.Handled"/> не установлено,
+    /// то для каждой строки выполняется копирование полей в новый поддокумент и вызывается событие <see cref="AdjustPastedRow"/>.
+    /// </summary>
+    /// <param name="mSubDocs">Поддокументы</param>
+    /// <param name="docIds">Идентификаторы документов, в которые добавляются документы. Идентификаторы должны принадлежать
+    /// набору <see cref="DBxMultiSubDocs.Owner"/>. Могут быть фиктивные идентификаторы для новых документов.
+    /// Документы должны находиться в состоянии создания или редактирования. В наборе могут быть и другие документы, кроме <paramref name="docIds"/>, их состояние не имеет значения.</param>
+    /// <param name="srcRows">Массив исходных строк для добавления.</param>
+    /// <param name="srcDocTypeBase">Описание документа или поддокумента, к которому относятся исходные строки</param>
+    /// <param name="controlProvider">Табличный или иерархический просмотр, для которого выполняется вставка.
+    /// Ссылка передается обработчикам событий. Может быть null.</param>
+    /// <returns>Массив созданных документов или null, если вставка не выполнена</returns>
+    public DBxSubDoc[] PerformPasteRows(DBxMultiSubDocs mSubDocs, Int32[] docIds, DataRow[] srcRows, DocTypeUIBase srcDocTypeBase, IEFPSubDocView controlProvider)
+    {
+      if (srcRows.Length == 0)
+        return null;
+      if (docIds == null)
+        docIds = mSubDocs.Owner.DocIds;
+
+      // Нельзя использовать в качестве оригинала полученную строку, т.к. таблица в буфере обмена может быть неполной
+      DBxMultiSubDocs subDocs2 = new DBxMultiSubDocs(mSubDocs, DataTools.EmptyIds);
+
+      int orgSubDocCount = mSubDocs.SubDocCount;
+      int cntCancelled = 0;
+      bool allPasteHandled = true;
+      ErrorMessageList errors = new ErrorMessageList();
+      for (int j = 0; j < docIds.Length; j++)
+      {
+        DBxSingleDoc doc = mSubDocs.Owner.GetDocById(docIds[j]);
+        PasteSubDocRowsEventArgs args1 = new PasteSubDocRowsEventArgs(doc.SubDocs[mSubDocs.SubDocType.Name], srcRows, srcDocTypeBase.DocTypeBase.Name, controlProvider);
+        if (PasteRows != null)
+          PasteRows(this, args1);
+        if (!args1.Handled)
+        { 
+          allPasteHandled = false;
+          for (int i = 0; i < srcRows.Length; i++)
+          {
+            DBxSubDoc subDoc2 = subDocs2.Insert(doc);
+            DBxDocValue.CopyValues(srcRows[i], subDoc2.Values);
+            if (!String.IsNullOrEmpty(ManualOrderColumn))
+              subDoc2.Values[ManualOrderColumn].SetNull(); // до пользовательского обработчика
+
+            // Вызываем пользовательский обработчик
+            AdjustPastedSubDocRowEventArgs args2 = new AdjustPastedSubDocRowEventArgs(doc, subDoc2, srcRows[i], srcDocTypeBase.DocTypeBase.Name, i == 0 && j == 0, controlProvider);
+            if (AdjustPastedRow != null)
+              AdjustPastedRow(this, args2);
+
+            if (args2.Cancel)
+            {
+              cntCancelled++;
+              if (String.IsNullOrEmpty(args2.ErrorMessage))
+                args2.ErrorMessage = "Нельзя добавить строку";
+              errors.AddWarning("Строка " + (i + 1).ToString() + " пропускается. " + args2.ErrorMessage);
+              subDoc2.Delete();
+            }
+          }
+        }
+      } // цикл по документам
+
+      if (!allPasteHandled)
+      {
+        // Убираем отмененные строки и возвращаем состояние Insert на место
+        subDocs2.SubDocsView.Table.AcceptChanges();
+        foreach (DataRow row in subDocs2.SubDocsView.Table.Rows)
+          DataTools.SetRowState(row, DataRowState.Added);
+
+        if (cntCancelled > 0)
+        {
+          if (subDocs2.SubDocCount == 0)
+            errors.AddError("Ни одна из строк (" + srcRows.Length.ToString() + " шт.) не может быть добавлена");
+          EFPApp.ShowErrorMessageListDialog(errors, "Вставка");
+          if (subDocs2.SubDocCount == 0)
+            return null;
+        }
+
+        DocumentEditor mainEditor = null;
+        if (controlProvider != null)
+          mainEditor = controlProvider.MainEditor;
+
+        bool canUseEditor;
+        if (subDocs2.SubDocCount == 1)
+          canUseEditor = true;
+        else
+          canUseEditor = CanMultiInsert;
+
+        if (HasEditorHandlers && canUseEditor && mainEditor != null)
+        {
+          // Открытие редактора поддокумента
+          // Режим должен быть обязательно InsertCopy, иначе значения не прочитаются
+          SubDocumentEditor sde = new SubDocumentEditor(mainEditor, subDocs2, EFPDataGridViewState.InsertCopy);
+          sde.SuppressInsertColumnValues = true; // не нужна инициализация, иначе некоторые поля с режимом NewMode=AlwaysDefaultValue очистятся
+          if (!sde.Run())
+            return null;
+        }
+        else
+        {
+          if (EFPApp.MessageBox("Вставить " + (srcDocTypeBase.DocTypeBase.IsSubDoc ?
+            "копии поддокументов" : "копии документов") + " (" + subDocs2.SubDocCount.ToString() + " шт.)?",
+            "Подтверждение вставки поддокументов \"" + SubDocType.PluralTitle + "\"",
+            MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+
+            return null;
+        }
+      }
+      orgSubDocCount = mSubDocs.SubDocCount; // перечитываем еще раз на случай посторонних действий пользователя
+      mSubDocs.MergeSubSet(subDocs2);
+      InitManualOrderColumnValueAfterEdit(mSubDocs, subDocs2);
+      DBxSubDoc[] a = new DBxSubDoc[mSubDocs.SubDocCount - orgSubDocCount];
+      List<DataRow> resRows = new List<DataRow>();
+      for (int i = 0; i < a.Length; i++)
+        a[i] = mSubDocs[orgSubDocCount + i];
       return a;
     }
 

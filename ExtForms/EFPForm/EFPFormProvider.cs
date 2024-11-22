@@ -471,7 +471,7 @@ namespace FreeLibSet.Forms
         // 12.10.2023. Вынесено из условия HasBeenShown.
         // Не работало, если форма показывается повторно, например, если форма сворачивается в tray.
         if (_StatusStripControl != null && _StatusBarHandler == null)
-        _StatusBarHandler = new EFPStatusBarHandler(_StatusStripControl, true);
+          _StatusBarHandler = new EFPStatusBarHandler(_StatusStripControl, true);
       }
       catch (Exception e)
       {
@@ -479,7 +479,7 @@ namespace FreeLibSet.Forms
       }
 
       if (!HasBeenShown) // 24.09.2018
-      { 
+      {
         OnShown();
 
         if (!Modal)
@@ -650,7 +650,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Свойство возвращает true, если форма был выведена на экран.
     /// Свойство однократно переходит из false в true. Перед этим вызывается событие Shown
-    /// Свойство Form.Visible может многократно изменяться еще до вывода формы на экран.
+    /// Свойство <see cref="System.Windows.Forms.Control.Visible"/> может многократно изменяться еще до вывода формы на экран.
     /// </summary>
     public bool HasBeenShown { get { return _HasBeenShown; } }
     private bool _HasBeenShown;
@@ -662,9 +662,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Метод вызывается при первом появлении формы на экране.
-    /// Вызывает событие Shown и подготавливает команды локального меню.
+    /// Вызывает событие <see cref="Shown"/> и подготавливает команды локального меню.
     /// Переопределенный метод обязательно должен вызывать базовый метод.
-    /// На момент вызова свойство HasBeenShown еще не установлено.
+    /// На момент вызова свойство <see cref="HasBeenShown"/> еще не установлено.
     /// </summary>
     protected virtual void OnShown()
     {
@@ -680,7 +680,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Если свойство HasBeenShown установлено в true, генерирует исключение InvalidOperationException
+    /// Если свойство <see cref="HasBeenShown"/> установлено в true, генерирует исключение <see cref="InvalidOperationException"/>
     /// </summary>
     public void CheckHasNotBeenShown()
     {
@@ -693,7 +693,7 @@ namespace FreeLibSet.Forms
     #region Событие Hidden
 
     /// <summary>
-    /// Событие вызывается при закрытии формы с элементом при условии, что событие Shown было вызвано
+    /// Событие вызывается при закрытии формы условии, что событие <see cref="Shown"/> было вызвано
     /// </summary>
     public event EventHandler Hidden;
 
@@ -781,18 +781,18 @@ namespace FreeLibSet.Forms
     #region Проверка ошибок в форме
 
     /// <summary>
-    /// True, если нужно использовать объект ErrorProvider для форм
+    /// True, если нужно использовать объект <see cref="ErrorProvider"/> для всех форм.
     /// По умолчанию - false - выполняется только раскраска элементов с ошибками/предупреждениями, без использования
-    /// стандартного ErrorProvider.
+    /// стандартного <see cref="ErrorProvider"/>.
     /// </summary>
     public static bool UseErrorProvider { get { return _UseErrorProvider; } set { _UseErrorProvider = value; } }
     private static bool _UseErrorProvider = false; // 07.05.2022
 
     /// <summary>
-    /// Текущая причина вызова метода ValidateForm.
-    /// Свойство может использоваться в обработчике события Validating, если требуется различная реакция
+    /// Текущая причина вызова метода <see cref="ValidateForm(EFPFormValidateReason)"/>.
+    /// Свойство может использоваться в обработчике события <see cref="EFPControlBase.Validating"/>, если требуется различная реакция
     /// при проверке формы.
-    /// Например, может потребоваться пропускать проверку при открытии формы
+    /// Например, может потребоваться пропускать проверку при открытии формы.
     /// </summary>
     public new EFPFormValidateReason ValidateReason { get { return _ValidateReason; } }
     private EFPFormValidateReason _ValidateReason;
@@ -802,7 +802,7 @@ namespace FreeLibSet.Forms
     /// них и позиционируемся на управляющий элемент с ошибкой.
     /// Метод может вызываться, например, при обработке нажатия кнопки, при которой
     /// нужны корректные введенные значения.
-    /// На время работы метода свойство ValidateReason принимает значение ValidateForm.
+    /// На время работы метода свойство <see cref="ValidateReason"/> принимает значение <see cref="EFPFormValidateReason.ValidateForm"/>.
     /// </summary>
     /// <returns>True, если нет ошибок (возможно, есть предупреждение).
     /// False, если есть ошибка</returns>
@@ -874,7 +874,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Поиск первого сообщения об ошибке
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Описание сообщения с <see cref="EFPErrorInfo.IsError"/>=true</returns>
     public EFPErrorInfo GetFirstError()
     {
       List<EFPErrorInfo> errorList = new List<EFPErrorInfo>();
@@ -919,16 +919,18 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если флаг установлен, то в локальное меню формы добавляется команда
-    /// отладки объект EFPFormProvider
+    /// отладки объекта <see cref="EFPFormProvider"/>
     /// </summary>
     public static bool DebugFormProvider { get { return _DebugFormProvider; } set { _DebugFormProvider = value; } }
     private static bool _DebugFormProvider = false;
 
     /// <summary>
-    /// Создание команды в главном меню, которая будет переключать наличие подсказок
+    /// Создание команды в главном меню, которая будет переключать наличие подсказок.
+    /// Команда переключает свойство <see cref="EFPApp.ShowToolTips"/>.
+    /// Команда создается, но не подключается к меню.
     /// </summary>
     /// <param name="parentMenu"></param>
-    /// <returns></returns>
+    /// <returns>Объект команды</returns>
     public static EFPCommandItem CreateToolTipsVisibleCommandItem(EFPCommandItem parentMenu)
     {
       EFPCommandItem ci = new EFPCommandItem("View", "ShowToolTips");
@@ -955,8 +957,8 @@ namespace FreeLibSet.Forms
     /// Инициализация всплывающей подсказки для управляющего элемента
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
-    /// <param name="title">Заголовок подсказки (EFPControlBase.DisplayName)</param>
-    /// <param name="mainInfo">Основной текст всплывающей подсказки (EFPControlBase.ToolTipText)</param>
+    /// <param name="title">Заголовок подсказки (<see cref="EFPControlBase.DisplayName"/>)</param>
+    /// <param name="mainInfo">Основной текст всплывающей подсказки (<see cref="EFPControlBase.ToolTipText"/>)</param>
     /// <param name="valueInfo">Информация о текущем введенном значении (обычно, пустая строка)</param>
     /// <param name="state">Наличие ошибки или предупреждения</param>
     /// <param name="errorMessage">Текст ошибки или предупреждения</param>
@@ -1063,10 +1065,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет вложенный элемент, для которого надо показывать всплывающую подсказку как для основного элемента.
-    /// Вызывается из EFPControlBase.InitToolTipNestedControls() (или переопределенного метода).
+    /// Вызывается из <see cref="EFPControlBase.InitToolTipNestedControls()"/> (или переопределенного метода).
     /// </summary>
     /// <param name="childControl">Вложенный управляющий элемент</param>
-    /// <param name="mainControl">Основной управляющий элемент EFPControlBase.Control</param>
+    /// <param name="mainControl">Основной управляющий элемент <see cref="EFPControlBase.Control"/></param>
     public void SetNestedToolTipControl(Control childControl, Control mainControl)
     {
 #if DEBUG
@@ -1263,7 +1265,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получение контекста справки для управляющего элемента. Сначала извлекается
     /// контекст для самого элемента. Если его нет, то берется контекст родительского
-    /// элемента и т.д. до контекста формы в-целом
+    /// элемента и т.д. до контекста формы в-целом.
     /// </summary>
     /// <param name="control">Управляющий элемент</param>
     /// <returns>Контекст справки</returns>
@@ -1286,7 +1288,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод при первом вызове инициализирует подсистему обработки клавиши
-    /// F1 для формы и наличие "?" в заголовке.
+    /// F1 для формы и наличие кнопки "?" в заголовке.
     /// Вызывается при установке контекста справки
     /// </summary>
     private void InitFormHelp()
@@ -1388,10 +1390,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Закрыть форму, открытую в модальном или немодальном редиме.
     /// Выполняются все обычные действия по закрытию формы, в частности, вызывается
-    /// обработчик Form.Closing.
+    /// обработчик <see cref="System.Windows.Forms.Form.Closing"/>.
     /// Метод возвращает true, если форма успешноь закрыта. Возвращается false,
-    /// если обработчик отверг закрытие формы, при этом свойство Form.DialogResult
-    /// сбрасывается в None
+    /// если обработчик отверг закрытие формы, при этом свойство <see cref="System.Windows.Forms.Form.DialogResult"/>
+    /// сбрасывается в <see cref="DialogResult.None"/>.
     /// </summary>
     /// <param name="dialogResult">Код закрытия формы</param>
     /// <returns>true, если форма была успешно закрыта</returns>
@@ -1473,9 +1475,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Есть два события: Form.Closing (старое) и Form.FormClosing (новое в Net Framework 2).
-    /// Closing вызывается до FormClosing
+    /// Closing вызывается до FormClosing.
     /// Проверка корректности полей формы должна выполняться ДО выполнения других
-    /// действий пользователя, поэтому ее надо поместить в обработчик Closing
+    /// действий пользователя, поэтому ее надо поместить в обработчик Closing.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -1527,7 +1529,7 @@ namespace FreeLibSet.Forms
     private bool _InsideFormClosing1;
 
     /// <summary>
-    /// Обработчик события Form.Closing
+    /// Обработчик события <see cref="System.Windows.Forms.Form.Closing"/>
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnClosing(CancelEventArgs args)
@@ -1599,13 +1601,13 @@ namespace FreeLibSet.Forms
     private bool _InsideFormClosing2;
 
     /// <summary>
-    /// Дублирует событие Form.FormClosing с перехватом исключений и блокировкой вложенного вызова,
-    /// если обработка события выполняется долго
+    /// Дублирует событие <see cref="System.Windows.Forms.Form.FormClosing"/> с перехватом исключений и блокировкой вложенного вызова,
+    /// если обработка события выполняется долго.
     /// </summary>
     public event FormClosingEventHandler FormClosing;
 
     /// <summary>
-    /// Вызывает обработчик события FormClosing, если он присоединен
+    /// Вызывает обработчик события <see cref="FormClosing"/>, если он присоединен.
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected virtual void OnFormClosing(FormClosingEventArgs args)
@@ -1652,7 +1654,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Дублирует событие Form.FormClosed с перехватом исключений
+    /// Дублирует событие <see cref="System.Windows.Forms.Form.FormClosed"/> с перехватом исключений.
     /// </summary>
     public event FormClosedEventHandler FormClosed;
 
@@ -1701,8 +1703,8 @@ namespace FreeLibSet.Forms
     #region ChangeInfo
 
     /// <summary>
-    /// Присоединение списка изменений
-    /// Когда есть изменения, в заголовке рисуется звездочка
+    /// Присоединение списка изменений.
+    /// Когда есть изменения, в заголовке рисуется звездочка "(*)" слева от текста заголовка
     /// </summary>
     public DepChangeInfo ChangeInfo
     {
@@ -1756,7 +1758,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализируется соответствующей перегрузкой метода EFPApp.ShowDialog(), если объект непустой.
-    /// Иначе - null
+    /// Иначе - null.
     /// </summary>
     internal EFPDialogPosition DialogPosition { get { return _DialogPosition; } set { _DialogPosition = value; } }
     private EFPDialogPosition _DialogPosition;
@@ -1804,8 +1806,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Возвращает состояние формы (Normal или Maximized), которое было до минимизации.
-    /// Если в текущий момент окно не свернуто, возвращает Form.WindowState.
+    /// Возвращает состояние формы (<see cref="FormWindowState.Normal"/> или <see cref="FormWindowState.Maximized"/>), которое было до минимизации.
+    /// Если в текущий момент окно не свернуто, возвращает <see cref="System.Windows.Forms.Form.WindowState"/>.
     /// </summary>
     public FormWindowState WindowStateBeforeMinimized { get { return _WindowStateBeforeMinimized; } }
     private FormWindowState _WindowStateBeforeMinimized;
@@ -1817,7 +1819,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если свойство возвращает непустую строку, то форма умеет сохранять собственные
     /// данные в секциях конфигурации.
-    /// Дублирует свойство ConfigHandler.ConfigSectionName
+    /// Дублирует свойство <see cref="EFPConfigHandler.ConfigSectionName"/>.
     /// </summary>
     public string ConfigSectionName
     {
@@ -1828,20 +1830,21 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Обработчик конфигурации. Существует всегда.
-    /// Чтобы зарегистрировать категорию, для которой будут записываться данные секции конфигурации, конструктор производного класса вызывает ConfigHandler.Categories.Add(“Filters”). Методы коллекции могут вызываться только до OnShown().
-    /// Если нужно записать конфигурацию, то должен быть установлен флаг для категории вызовом ConfigHandler.Changed["Filters"]=true.
+    /// Чтобы зарегистрировать категорию, для которой будут записываться данные секции конфигурации, конструктор производного класса вызывает ConfigHandler.Categories.Add("Filters"). 
+    /// Методы коллекции могут вызываться только до <see cref="OnShown()"/>.
+    /// Если нужно записать конфигурацию, то должен быть установлен флаг для категории вызовом <see cref="ConfigHandler"/>.Changed["Filters"]=true.
     /// </summary>
     public EFPConfigHandler ConfigHandler { get { return _ConfigHandler; } }
     private EFPConfigHandler _ConfigHandler;
 
     /// <summary>
-    /// Вызывает ConfigHandler.ReadConfig() для чтения значений.
-    /// Ничего не делает, если свойство ConfigSectionName не установлено.
+    /// Вызывает <see cref="ConfigHandler"/>.ReadConfig() для чтения значений.
+    /// Ничего не делает, если свойство <see cref="ConfigSectionName"/> не установлено.
     /// Повторные вызовы метода игнорируются
     /// Первоначальное чтение конфигурации формы.
-    /// Как правило, этот метод вызывается из OnShown(), но может быть вызван досрочно внешним кодом.
+    /// Как правило, этот метод вызывается из <see cref="OnShown()"/>, но может быть вызван досрочно внешним кодом.
     /// Не вызывайте этот метод из конструктора производного класса, так как конструктор класса-наследника
-    /// (если он есть) может вызвать ошибку. К тому же, внешний код может, например, изменить ConfigManager.
+    /// (если он есть) может вызвать ошибку. К тому же, внешний код может, например, изменить <see cref="ConfigHandler"/>.
     /// Не рекомендуется использовать этот метод без крайней необходимости.
     /// </summary>
     public void FirstReadConfig()
@@ -1933,7 +1936,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет в список <paramref name="categories"/> категории, для которых будут создаваться секции конфигурации.
-    /// Непереопределенный метод добавляет только категорию "FormBounds".
+    /// Непереопределенный метод добавляет только категорию <see cref="EFPConfigCategories.FormBounds"/>.
     /// Не следует добавлять категории, которые записываются самими управляющими элементами.
     /// </summary>
     /// <param name="categories">Список для добавления категорий</param>
@@ -1992,7 +1995,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает, какие части координат формы должны быть прочитаны или записаны.
-    /// Не используется при сохранении композиции рабочего стола
+    /// Не используется при сохранении композиции рабочего стола.
     /// </summary>
     /// <param name="rwMode">Запись или чтение?</param>
     /// <returns></returns>
@@ -2038,7 +2041,6 @@ namespace FreeLibSet.Forms
 
       return parts;
     }
-
 
     /// <summary>
     /// Записывает секцию конфигурации
@@ -2194,8 +2196,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя класс для записи композиции окон.
-    /// По умолчанию возвращает имя класса формы (если это не базовый класс System.Windows.Forms.Form).
-    /// Если свойство установлено как пустая строка, то окно не будет сохранять композицию
+    /// По умолчанию возвращает имя класса формы (если это не базовый класс <see cref="System.Windows.Forms.Form"/>).
+    /// Если свойство установлено как пустая строка, то окно не будет сохранять композицию.
     /// </summary>
     public string ConfigClassName
     {
@@ -2219,7 +2221,7 @@ namespace FreeLibSet.Forms
     /// Записывает композицию рабочего стола.
     /// Записываются как параметры самой формы, так и управляющих элементов,
     /// для которых это предусмотрено.
-    /// Этот метод вызывается классом EFPAppInterface.
+    /// Этот метод вызывается классом <see cref="EFPAppInterface"/>.
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public void WriteComposition(CfgPart cfg)
@@ -2252,7 +2254,7 @@ namespace FreeLibSet.Forms
     /// Восстанавливает композицию рабочего стола.
     /// Читаются как параметры самой формы, так и управляющих элементов,
     /// для которых это предусмотрено.
-    /// Этот метод вызывается классом EFPAppInterface.
+    /// Этот метод вызывается классом <see cref="EFPAppInterface"/>.
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     public void ReadComposition(CfgPart cfg)
@@ -2333,8 +2335,8 @@ namespace FreeLibSet.Forms
     /// События могут не вызываться, если окно свернуто или закрыто другими окнами.
     /// 
     /// Если требуется обработка по таймеру, независимая от видимости формы на экране, то следует:
-    /// 1. Реализовать интерфейс IEFPAppTimeHandler в программе
-    /// 2. Переопределить OnVisibleChanged() и присоединить/отсоединить в нем форму к EFPApp.Timers
+    /// 1. Реализовать интерфейс <see cref="IEFPAppTimeHandler"/> в программе.
+    /// 2. Переопределить <see cref="System.Windows.Forms.Control.OnVisibleChanged(EventArgs)"/> и присоединить/отсоединить в нем форму к <see cref="EFPApp.Timers"/>
     /// </summary>
     public ICollection<EFPUpdateByTimeHandler> UpdateByTimeHandlers
     {
@@ -2353,8 +2355,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Вызывает событие UpdateByTime для всех присоединенных обработчиков, независимо от того, вышло требуемое время или нет.
-    /// Значения свойств EFPUpdateByTimeHandler.Enabled игнорируется.
+    /// Вызывает событие <see cref="EFPUpdateByTimeHandler.Tick"/> для всех присоединенных обработчиков в списке <see cref="UpdateByTimeHandlers"/>, независимо от того, вышло требуемое время или нет.
+    /// Значения свойств <see cref="EFPUpdateByTimeHandler.Enabled"/> игнорируется.
     /// </summary>
     public void CallUpdateByTime()
     {
@@ -2399,7 +2401,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Использовать собственную статусную строку для формы.
     /// Это - Ambient-свойство.
-    /// Свойство может устанавливаться только до вывода формы на экран
+    /// Свойство может устанавливаться только до вывода формы на экран.
     /// </summary>
     public bool OwnStatusBar
     {
@@ -2420,7 +2422,7 @@ namespace FreeLibSet.Forms
     private bool? _OwnStatusBar;
 
     /// <summary>
-    /// Сброс ambient-свойства OwnStatusBar в значение по умолчанию
+    /// Сброс ambient-свойства <see cref="OwnStatusBar"/> в значение по умолчанию
     /// </summary>
     public void ResetOwnStatusBar()
     {
@@ -2514,9 +2516,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Управляющий элемент статусной строки для добавления панелек.
     /// Если для формы не предусмотрена собственная статусная строка, возвращается 
-    /// EFPApp.StatusBar.Control.
+    /// <see cref="EFPApp.StatusBar"/>.Control.
     /// Свойство может быть установлено вручную (до вывода формы на экран) или статусная строка
-    /// может быть создана автоматически, установкой свойства OwnStatusBar
+    /// может быть создана автоматически, установкой свойства <see cref="OwnStatusBar"/>.
     /// </summary>
     public StatusStrip StatusStripControl
     {
@@ -2559,7 +2561,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Обработчик статусной строки формы.
-    /// Может быть либо собственной статусной строкой, либо статусной строкой главного окна
+    /// Может быть либо собственной статусной строкой, либо статусной строкой главного окна.
     /// </summary>
     public EFPStatusBarHandler StatusBarHandler
     {
@@ -2586,7 +2588,6 @@ namespace FreeLibSet.Forms
       }
     }
     private EFPStatusBarHandler _StatusBarHandler;
-
 
     #endregion
 
@@ -2620,9 +2621,9 @@ namespace FreeLibSet.Forms
     #region Закрытие формы по нажатию клавиши Cancel
 
     /// <summary>
-    /// Если свойство установлено в true (по умолчанию), свойство Form.CancelButton не установлено 
+    /// Если свойство установлено в true (по умолчанию), свойство <see cref="System.Windows.Forms.Form.CancelButton"/> не установлено 
     /// (нет кнопки "Отмена") в блоке диалога) и форма выводится в модальном режиме, 
-    /// то форма будет закрываться нажатием кнопки "Отмена"
+    /// то форма будет закрываться нажатием кнопки "Отмена".
     /// </summary>
     public bool CloseModalFormByEscape
     {
@@ -2700,9 +2701,9 @@ namespace FreeLibSet.Forms
     private Image _FormIconImage;
 
     /// <summary>
-    /// Создает изображения из текущего значка формы
+    /// Создает изображения из текущего значка формы.
     /// Если значка нет, используется стандартное пустое "изображение".
-    /// Используется в EFPAppInterface
+    /// Используется в <see cref="EFPAppInterface"/>.
     /// </summary>
     internal void InitFormIconImage()
     {
@@ -2755,7 +2756,7 @@ namespace FreeLibSet.Forms
     /// Если провайдер не найден, возвращает null.
     /// Этот метод является потокобезопасным
     /// </summary>
-    /// <param name="form">Форма, для которой нужно найти провайдер. Может быть null</param>
+    /// <param name="form">Форма, для которой нужно найти провайдер. Может быть null.</param>
     /// <returns>Найденный провайдер или null</returns>
     public static EFPFormProvider FindFormProvider(Form form)
     {
@@ -2770,9 +2771,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Поиск объекта EFPFormProvider, созданного для указанной формы.
+    /// Поиск объекта <see cref="EFPFormProvider"/>, созданного для указанной формы.
     /// Если провайдер не найден, генерирует исключение.
-    /// Этот метод является потокобезопасным
+    /// Этот метод является потокобезопасным.
     /// </summary>
     /// <param name="form">Форма, для которой нужно найти провайдер. Не может быть null</param>
     /// <returns>Найденный провайдер</returns>
@@ -2793,7 +2794,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает полный список созданных объектов EFPFormProvider
+    /// Возвращает полный список созданных объектов <see cref="EFPFormProvider"/>
     /// </summary>
     /// <returns>Массив объектов</returns>
     public static EFPFormProvider[] GetAllFormProviders()
@@ -2895,9 +2896,9 @@ namespace FreeLibSet.Forms
   /// Обработчик обновления формы по времени.
   /// Вызывает пользовательское событие с заданным интервалом времени для обновления формы.
   /// Событие не вызывается, если форма свернута или закрыта другими окнами.
-  /// Пользовательский код может создать объект класса EFPFormUpdateByTimeHandler или производного от него и присоединить к
-  /// списку EFPFormProvider.UpdateByTimeHandlers.
-  /// Также обработчик можно присоединить к провайдеру любого управляющего элемента, используя EFPControlBase.UpdateByTimeHandlers
+  /// Пользовательский код может создать объект класса <see cref="EFPUpdateByTimeHandler"/> или производного от него и присоединить к
+  /// списку <see cref="EFPFormProvider.UpdateByTimeHandlers"/>.
+  /// Также обработчик можно присоединить к провайдеру любого управляющего элемента, используя <see cref="EFPControlBase.UpdateByTimeHandlers"/>.
   /// </summary>
   public class EFPUpdateByTimeHandler
   {
@@ -2905,7 +2906,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Создает объект без присоединенного обработчика события.
-    /// Обновление будет вызываться 1 раз в секунду
+    /// Обновление будет вызываться 1 раз в секунду.
     /// </summary>
     public EFPUpdateByTimeHandler()
     {
@@ -2916,7 +2917,7 @@ namespace FreeLibSet.Forms
     /// Создает объет с заданным интервалом обновления и присоединяет к нему пользовательский обработчик события
     /// </summary>
     /// <param name="tick">Пользовательский обработчик</param>
-    /// <param name="interval">Период вызова обработчика события Tick. См. примечания к свойству Interval.</param>
+    /// <param name="interval">Период вызова обработчика события <see cref="Tick"/>. См. примечания к свойству <see cref="Interval"/>.</param>
     public EFPUpdateByTimeHandler(EventHandler tick, int interval)
       : this()
     {
@@ -2942,16 +2943,16 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Обработчик для обновления формы по таймеру.
-    /// Вызывается с интервалом, заданным свойством Interval
-    /// Ошибки перехватываются. При первой ошибке выдается окно ShowException, далее выдается сообщение
-    /// в статусной строке
+    /// Вызывается с интервалом, заданным свойством <see cref="Interval"/>.
+    /// Ошибки перехватываются. При первой ошибке выдается окно <see cref="EFPApp.ShowException(Exception, string)"/>, далее выдается сообщение
+    /// в статусной строке.
     /// Предотвращается вложенный вызов события.
-    /// Событие может не вызываться, если окно свернуто или закрыто другими окнами
+    /// Событие может не вызываться, если окно свернуто или закрыто другими окнами.
     /// </summary>
     public event EventHandler Tick;
 
     /// <summary>
-    /// Вызывает обработчик события Tick.
+    /// Вызывает обработчик события <see cref="Tick"/>.
     /// </summary>
     /// <param name="args">Фиктивный объект. Передается обработчику события</param>
     protected virtual void OnTick(EventArgs args)
@@ -2961,9 +2962,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает событие Tick, не взирая, прошло ли требуемое время.
+    /// Вызывает событие <see cref="Tick"/>, не взирая, прошло ли требуемое время.
     /// Исключения перехватываются.
-    /// Свойство Enabled не учитывается. Событие вызывается, даже если обновление по таймеру отключено.
+    /// Свойство <see cref="Enabled"/> не учитывается. Событие вызывается, даже если обновление по таймеру отключено.
     /// </summary>
     public void CallTick()
     {
@@ -3000,10 +3001,10 @@ namespace FreeLibSet.Forms
     private bool _ErrorWasShown;
 
     /// <summary>
-    /// Если сбросить в false, событие Tick вызываться не будет.
+    /// Если сбросить в false, событие <see cref="Tick"/> вызываться не будет.
     /// Позволяет выполнять временное отключение обновления формы.
     /// По умолчанию свойство установлено в true.
-    /// Событие Tick может быть вызвано при Enabled=false, если вызов выполняется программным способом, а не по таймеру.
+    /// Событие <see cref="Tick"/> может быть вызвано при <see cref="Enabled"/>=false, если вызов выполняется программным способом, а не по таймеру.
     /// </summary>
     public bool Enabled
     {
@@ -3021,12 +3022,12 @@ namespace FreeLibSet.Forms
     private bool _Enabled;
 
     /// <summary>
-    /// Событие вызывается после изменения свойства Enabled
+    /// Событие вызывается после изменения свойства <see cref="Enabled"/>
     /// </summary>
     public event EventHandler EnabledChanged;
 
     /// <summary>
-    /// Вызывает обработчик события EnabledChanged
+    /// Вызывает обработчик события <see cref="EnabledChanged"/>
     /// </summary>
     /// <param name="args">Фиктивные аргументы</param>
     protected virtual void OnEnabledChanged(EventArgs args)
@@ -3036,7 +3037,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Период обновления формы в миллисекундах с помощью события UpdateByTime.
+    /// Период вызова события <see cref="Tick"/> в .
     /// В текущей реализация периодичность задается с точностью до одной секунды.
     /// Свойство может динамически меняться в процессе работы.
     /// </summary>
@@ -3045,6 +3046,9 @@ namespace FreeLibSet.Forms
       get { return (_PeriodDivider + 1) * 1000; }
       set
       {
+        if (value < 1)
+          throw new ArgumentOutOfRangeException();
+
         int newPeriodDivider = value / 1000 - 1;
         if (newPeriodDivider < 0)
           newPeriodDivider = 0;
@@ -3057,12 +3061,12 @@ namespace FreeLibSet.Forms
     private int _PeriodDivider;
 
     /// <summary>
-    /// Событие вызыается при изменении значения свойства Interval
+    /// Событие вызывается при изменении значения свойства <see cref="Interval"/>
     /// </summary>
     public event EventHandler IntervalChanged;
 
     /// <summary>
-    /// Вызывает обработчик события IntervalChanged
+    /// Вызывает обработчик события <see cref="IntervalChanged"/>
     /// </summary>
     /// <param name="args">Фиктивные аргументы</param>
     protected virtual void OnIntervalChanged(EventArgs args)

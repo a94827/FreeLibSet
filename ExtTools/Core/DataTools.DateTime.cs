@@ -121,7 +121,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает первое января заданного года.
-    /// Год должен быть в диапазоне, который поддерживается DateTime
+    /// Год должен быть в диапазоне, который поддерживается <see cref="DateTime"/>
     /// </summary>
     /// <param name="year">Год</param>
     /// <returns>Начало года</returns>
@@ -320,7 +320,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Минимальное значение из двух дат. Если одна из дат не задана, то возвращается
-    /// другая дата
+    /// другая дата.
     /// </summary>
     /// <param name="dt1">Первая сравниваемая дата</param>
     /// <param name="dt2">Вторая сравниваемая дата</param>
@@ -371,7 +371,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает дату, у которой год и месяц берутся из указанной даты <paramref name="dt"/>,
     /// а день задается отдельно.
-    /// Если в месяце нет столько дней, то возвращается последний день месяца
+    /// Если в месяце нет столько дней, то возвращается последний день месяца.
     /// </summary>
     /// <param name="dt">Дата, из которой берутся год и месяц</param>
     /// <param name="day">День</param>
@@ -385,7 +385,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Создает дату из компонентов.
     /// Если в месяце нет столько дней, то возвращается последний день месяца.
-    /// Если год вне диапазона, разрешенного для DateTime, выбрасывается ArgumentOutOfRangeException
+    /// Если год вне диапазона, разрешенного для <see cref="DateTime"/>, выбрасывается <see cref="ArgumentOutOfRangeException"/>
     /// </summary>
     /// <param name="year">Год</param>
     /// <param name="month">Месяц</param>
@@ -414,13 +414,13 @@ namespace FreeLibSet.Core
     #region GetNullableDateTime()
 
     /// <summary>
-    /// Создает новый объект DateTime, если день, месяц и год содержат допустимое значение.
-    /// Иначе возвращается null
+    /// Создает новый объект <see cref="DateTime"/>, если день, месяц и год содержат допустимое значение.
+    /// Иначе возвращается null.
     /// </summary>
     /// <param name="year">Год</param>
     /// <param name="month">Месяц</param>
     /// <param name="day">День</param>
-    /// <returns>Объект DateTime или null</returns>
+    /// <returns>Объект <see cref="DateTime"/> или null</returns>
     public static DateTime? CreateDateTimeIfValid(int year, int month, int day)
     {
       if (IsValidYMD(year, month, day))
@@ -430,8 +430,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает новый объект DateTime, если компоненты даты и времени содержат допустимые значение.
-    /// Иначе возвращается null
+    /// Создает новый объект <see cref="DateTime"/>, если компоненты даты и времени содержат допустимые значение.
+    /// Иначе возвращается null.
     /// </summary>
     /// <param name="year">Год</param>
     /// <param name="month">Месяц</param>
@@ -449,8 +449,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Создает новый объект DateTime, если компоненты даты и времени содержат допустимые значение.
-    /// Иначе возвращается null
+    /// Создает новый объект <see cref="DateTime"/>, если компоненты даты и времени содержат допустимые значение.
+    /// Иначе возвращается null.
     /// </summary>
     /// <param name="year">Год</param>
     /// <param name="month">Месяц</param>
@@ -459,7 +459,7 @@ namespace FreeLibSet.Core
     /// <param name="minute">Минуты</param>
     /// <param name="second">Секунды</param>
     /// <param name="millisecond">Миллисекунды</param>
-    /// <returns>Объект DateTime или null</returns>
+    /// <returns>Объект <see cref="DateTime"/> или null</returns>
     public static DateTime? CreateDateTimeIfValid(int year, int month, int day, int hour, int minute, int second, int millisecond)
     {
       if (IsValidYMD(year, month, day) && IsValidHMS(hour, minute, second) && IsValidMS(millisecond))
@@ -502,9 +502,9 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="testDate">Проверяемая дата</param>
     /// <param name="hasFirstDate">Есть начальная дата диапазона</param>
-    /// <param name="firstDate">Начальная дата диапазона при HasFirstDate=True</param>
+    /// <param name="firstDate">Начальная дата диапазона при <paramref name="hasFirstDate"/>=True</param>
     /// <param name="hasLastDate">Есть конечная дата диапазона</param>
-    /// <param name="lastDate">Конечная дата диапазона при HasLastDate=True</param>
+    /// <param name="lastDate">Конечная дата диапазона при <paramref name="hasLastDate"/>=True</param>
     /// <returns>True, если дата лежит внутри диапазона, false, если она не входит в интервал</returns>
     public static bool DateInRange(DateTime testDate, bool hasFirstDate, DateTime firstDate, bool hasLastDate, DateTime lastDate)
     {
@@ -518,8 +518,8 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Проверка попадания даты в интервал
-    /// Берутся только даты, время отбрасывается
+    /// Проверка попадания даты в интервал.
+    /// Берутся только даты, время отбрасывается.
     /// </summary>
     /// <param name="testDate">Проверяемая дата</param>
     /// <param name="firstDate">Начальная дата диапазона</param>
@@ -543,7 +543,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращет true, если указанный год попадает в интервал дат.
-    /// Год считается попавшим в диапазон, если попал хотz бы один день из года.
+    /// Год считается попавшим в диапазон, если попал хотя бы один день из года.
     /// </summary>
     /// <param name="testYear">Проверяемый год</param>
     /// <param name="firstDate">Начальная дата диапазона</param>
@@ -571,7 +571,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Помещает дату в диапазон.
     /// Если задана начальная дата диапазона <paramref name="firstDate"/> и заданная дата <paramref name="dt"/> меньшее ее, дата <paramref name="dt"/>
-    /// делается равной начальной дате. Аналогично учитывается конечная дата диапазона <paramref name="lastDate"/>
+    /// делается равной начальной дате. Аналогично учитывается конечная дата диапазона <paramref name="lastDate"/>.
     /// </summary>
     /// <param name="dt">Проверяемая и корректируемая дата</param>
     /// <param name="firstDate">Начальная дата диапазона</param>
@@ -651,7 +651,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает true, если интервал дат {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} целиком
     /// помещается в интервале дат {<paramref name="firstDate2"/>, <paramref name="lastDate2"/>}
-    /// Интервалы не являются равноправными
+    /// Интервалы не являются равноправными.
     /// Время не учитывается.
     /// </summary>
     /// <param name="firstDate1">Начало первого интервала</param>
@@ -798,7 +798,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="ts1">Первый сравниваемый интервал</param>
     /// <param name="ts2">Второй сравниваемый интервал</param>
-    /// <returns>ts1 или ts2</returns>
+    /// <returns><paramref name="ts1"/> или <paramref name="ts2"/></returns>
     public static Nullable<TimeSpan> Max(Nullable<TimeSpan> ts1, Nullable<TimeSpan> ts2)
     {
       if (ts1.HasValue)
@@ -830,7 +830,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="ts1">Первый сравниваемый интервал</param>
     /// <param name="ts2">Второй сравниваемый интервал</param>
-    /// <returns>ts1 или ts22</returns>
+    /// <returns><paramref name="ts1"/> или <paramref name="ts2"/></returns>
     public static Nullable<TimeSpan> Min(Nullable<TimeSpan> ts1, Nullable<TimeSpan> ts2)
     {
       if (ts1.HasValue)

@@ -32,7 +32,7 @@ namespace FreeLibSet.Data.Docs
    * При создании копии документа должны быть загружены и скопированы поддокументы всех видов
    * 
    * При сохранении данных на сервере нет необходимости учитывать незагруженные поддокументы, таким образом
-   * серверу нет необходимости знать, какие подддокументы были загружены
+   * серверу нет необходимости знать, какие поддокументы были загружены.
    * 
    * Для отслеживания загрузки поддокументов, объект DBxMultiSubDocs содержит внутренний словарь DocRowDict с 
    * ключом по строкам документа. 
@@ -1482,6 +1482,8 @@ namespace FreeLibSet.Data.Docs
     /// <returns></returns>
     public DBxSubDoc Insert(DBxSingleDoc doc)
     {
+      // При внесении изменений не забыть про InsertForDocIds()
+
       GetTableReady(); // 09.02.2017
       CheckCanModify();
 
@@ -1489,6 +1491,7 @@ namespace FreeLibSet.Data.Docs
       {
         case DBxDocState.Insert:
         case DBxDocState.Edit:
+          // 
           DataRow row = _Table.NewRow();
           row["Id"] = NextFictiveId();
           row["DocId"] = doc.DocId;
@@ -1518,6 +1521,57 @@ namespace FreeLibSet.Data.Docs
 
       CheckCanModify();
       return Insert(Owner[0]);
+    }
+
+    /// <summary>
+    /// Групповая вставка поддокументов для указанных идентификаторов документов.
+    /// Документы должны быть в состоянии <see cref="DBxDocState.Insert"/> или <see cref="DBxDocState.Edit"/>.
+    /// Также выбрасывается исключение, если задан идентификатор документа, которого нет в списке.
+    /// </summary>
+    /// <param name="docIds">Идентификаторы документов. Могут быть фиктивные идентификаторы для новых документов, но не может быть нулевого значения</param>
+    /// <returns>Новые поддокументы в состоянии <see cref="DBxDocState.Insert"/></returns>
+    public DBxSubDoc[] InsertForDocIds(Int32[] docIds)
+    {
+#if DEBUG
+      if (docIds == null)
+        throw new ArgumentNullException("docIds");
+#endif
+      GetTableReady();
+      CheckCanModify();
+
+      // На первом проходе проверяем права доступа, а на втором - добавляем строки в таблицу
+      DBxSingleDoc[] docs = new DBxSingleDoc[docIds.Length];
+      for (int i = 0; i < docIds.Length; i++)
+      {
+        docs[i] = Owner.GetDocById(docIds[i]);
+
+        switch (docs[i].DocState)
+        {
+          case DBxDocState.Insert:
+          case DBxDocState.Edit:
+            break;
+          default:
+            throw new InvalidOperationException("Нельзя добавить поддокумент, т.к. документ \"" + docs[i].DocType.SingularTitle + "\" с DocId=" + docs[i].DocId.ToString() + " находится в состоянии " + docs[i].DocState.ToString());
+        }
+      }
+
+      DBxSubDoc[] subDocs = new DBxSubDoc[docIds.Length];
+      for (int i = 0; i < docIds.Length; i++)
+      {
+        DataRow row = _Table.NewRow();
+        row["Id"] = NextFictiveId();
+        row["DocId"] = docs[i].DocId;
+        _Table.Rows.Add(row);
+        ResetRowsForDocRow(docs[i].Row);
+
+        subDocs[i] = new DBxSubDoc(this, _Table.Rows.Count - 1);
+      }
+
+#if DEBUG_DICT
+          DebugDocRowDict();
+#endif
+
+      return subDocs;
     }
 
     /// <summary>

@@ -2486,6 +2486,40 @@ namespace FreeLibSet.Forms
       }
     }
 
+    /// <summary>
+    /// Возвращает true, если в данный момент выполняется команда с заданной категорией и именем.
+    /// Если такая команда отсутствует в списке, возвращает false.
+    /// См. свойство <see cref="EFPCommandItem.InsideClick"/>.
+    /// </summary>
+    /// <param name="category">Категория</param>
+    /// <param name="name">Имя</param>
+    /// <returns>Признак выполнения команды</returns>
+    public bool IsInsideClick(string category, string name)
+    {
+      EFPCommandItem ci = this[category, name];
+      if (ci == null)
+        return false;
+      else
+        return ci.InsideClick;
+    }
+
+    /// <summary>
+    /// Возвращает true, если в данный момент выполняется команда.
+    /// Если такая команда отсутствует в списке, возвращает false.
+    /// См. свойство <see cref="EFPCommandItem.InsideClick"/>.
+    /// </summary>
+    /// <param name="stdItem">Идентификатор стандартной команды</param>
+    /// <returns>Признак выполнения команды</returns>
+    public bool IsInsideClick(EFPAppStdCommandItems stdItem)
+    {
+      EFPCommandItem ci = this[stdItem];
+      if (ci == null)
+        return false;
+      else
+        return ci.InsideClick;
+    }
+
+
     #endregion
 
     #region Список команд верхнего уровня
