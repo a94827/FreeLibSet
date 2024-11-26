@@ -2439,7 +2439,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает <see cref="DBxDocImageHandlers.GetRowColor(DBxSubDoc, out EFPDataGridViewColorType, out bool)"/>.
+    /// Вызывает <see cref="DBxDocImageHandlers.GetRowColor(DBxSubDoc, out UIDataViewColorType, out bool)"/>.
     /// </summary>
     /// <param name="colorType">Сюда записывается цветовое оформление строки</param>
     /// <param name="grayed">Сюда записывается true, если строка должна быть выделена серым цветом</param>

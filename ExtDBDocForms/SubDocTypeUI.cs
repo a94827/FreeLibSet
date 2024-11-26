@@ -436,7 +436,7 @@ namespace FreeLibSet.Forms.Docs
     /// поддокумента редактировались при <see cref="SubDocumentEditor.MultiDocMode"/>=true. Если при групповом редактировании
     /// обязательные поля будут пропущены, будут созданы некорректные поддокументы.
     /// Установка в true также разрешает вставку поддокументов из буфера обмена в несколько целевых документов.
-    /// Свойство имеет смысл только при <see cref="DocTypeUI.CanMultiEdit"/>=true.
+    /// Свойство имеет смысл только при <see cref="FreeLibSet.Forms.Docs.DocTypeUI.CanMultiEdit"/>=true.
     /// Свойство <see cref="CanMultiEdit"/> должно быть установлено, иначе будет выброшено исключение в <see cref="DBUI.EndInit()"/>.
     /// </summary>
     public bool CanMultiInsert { get { return _CanMultiInsert; } set { _CanMultiInsert = value; } }

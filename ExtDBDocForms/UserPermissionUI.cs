@@ -9,6 +9,7 @@ using FreeLibSet.Data.Docs;
 using System.Windows.Forms;
 using FreeLibSet.Config;
 using FreeLibSet.Collections;
+using FreeLibSet.Forms.Data;
 
 /*
  * Пользовательский интерфейс для разрешений.
@@ -582,7 +583,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Редактирование поддокумента
 
-    private class DataEditItem : XmlCfgDocEditItem
+    private class DataEditItem : XmlCfgExtEditItem
     {
       #region Конструктор
 

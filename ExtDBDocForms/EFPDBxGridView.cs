@@ -1136,25 +1136,6 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Порядок строк
-
-    /// <summary>
-    /// Описатели команд меню "Порядок строк" - массив объектов, задающих режимы
-    /// сортировки
-    /// </summary>
-    public new EFPDBxViewOrders Orders { get { return (EFPDBxViewOrders)(base.Orders); } }
-
-    /// <summary>
-    /// Создает объект <see cref="EFPDBxViewOrders"/>
-    /// </summary>
-    /// <returns>Список порядков сортировки строк табличного просмотра</returns>
-    protected override EFPDataViewOrders CreateOrders()
-    {
-      return new EFPDBxViewOrders();
-    }
-
-    #endregion
-
     #region Команды локального меню
 
     /// <summary>

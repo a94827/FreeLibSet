@@ -229,7 +229,7 @@ namespace FreeLibSet.Forms
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
 
-      EFPDataViewCopyFormatsForm.AddCommandItem(this);
+      ciCopySettings = EFPDataViewCopyFormatsForm.AddCommandItem(this);
 
       if (EFPApp.ShowToolTips)
       {
@@ -551,6 +551,11 @@ namespace FreeLibSet.Forms
         ciCut.Usage = clipboardUsage;
 
       ciCopy.Usage = clipboardUsage;
+      if (!ClipboardInToolBar)
+      {
+        ciCopySettings.Usage = EFPCommandItemUsage.Menu;
+        ciCopyToolTip.Usage = EFPCommandItemUsage.Menu;
+      }
 
 
       // Добавляем форматы вставки текста после пользовательских форматов
@@ -701,6 +706,8 @@ namespace FreeLibSet.Forms
       ControlProvider.Control.MouseDown += new MouseEventHandler(Control_MouseDown);
       ControlProvider.Control.MouseUp += new MouseEventHandler(Control_MouseUp);
       ControlProvider.Control_VisibleChanged(null, null);
+
+      RefreshStatItems();
     }
 
     #endregion
@@ -838,7 +845,6 @@ namespace FreeLibSet.Forms
       ciFind.Enabled = ControlProvider.Control.RowCount > 0 && ControlProvider.Control.ColumnCount > 0; // 17.06.2024
       RefreshIncSearchItems();
       RefreshRowErrorsItems();
-      RefreshStatItems();
     }
 
     internal void RefreshIncSearchItems()
@@ -1040,8 +1046,8 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) || 
-            ControlProvider.CanView 
+          if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
+            ControlProvider.CanView
             /*|| (!Handler.MainGrid.ReadOnly)*/)
           {
             ciEdit_Click(null, null);
@@ -1237,7 +1243,7 @@ namespace FreeLibSet.Forms
 
     #region Копировать
 
-    private EFPCommandItem ciCopy;
+    private EFPCommandItem ciCopy, ciCopySettings;
 
     private void DoCopy(object sender, EventArgs args)
     {

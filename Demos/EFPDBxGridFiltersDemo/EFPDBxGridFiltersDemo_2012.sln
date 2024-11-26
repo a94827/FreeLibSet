@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBxGridFiltersDemo", "DBxGridFiltersDemo.csproj", "{691EB5E3-C5DD-478F-928A-A41353E3F269}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFPDBxGridFiltersDemo", "EFPDBxGridFiltersDemo.csproj", "{691EB5E3-C5DD-478F-928A-A41353E3F269}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtTools", "..\..\ExtTools\ExtTools.csproj", "{E61B6CF2-A434-46F2-AF4A-DB5E4851D170}"
 EndProject

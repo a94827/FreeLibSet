@@ -1149,7 +1149,7 @@ namespace FreeLibSet.Forms
       }
 
       DelayedSetFocus(); // 17.02.2022
-
+      InitLastFocusedControl();
       _VisibleCompleted = true;
     }
 
@@ -2575,6 +2575,46 @@ namespace FreeLibSet.Forms
       }
     }
     private EFPStatusBarHandler _StatusBarHandler;
+
+    /// <summary>
+    /// Ссылка на управляющий элемент, который последним получил фокус ввода.
+    /// Может быть null.
+    /// </summary>
+    internal Control LastFocusedControl // TODO: не оптимизировано, надо использовать Idle
+    {
+      get
+      {
+        InitLastFocusedControl();
+        return _LastFocusedControl;
+      }
+    }
+
+    private Control _LastFocusedControl;
+
+    private void InitLastFocusedControl()
+    {
+      Control focusedControl = WinFormsTools.GetFocusedControl(Form);
+      if (focusedControl != null)
+        _LastFocusedControl = focusedControl;
+      else
+      {
+        if (_LastFocusedControl.IsDisposed || (!_LastFocusedControl.Visible) || (!_LastFocusedControl.Enabled))
+          _LastFocusedControl = null;
+      }
+    }
+
+    internal bool StatusBarPanelsShouldBeDetached()
+    {
+      if (EFPApp.ActiveDialog != null && EFPApp.ActiveDialog != this.Form)
+        return true;
+
+      if (StatusBarHandler == null)
+        return true;
+      if (StatusBarHandler.IsFormOwned)
+        return false;
+      else
+        return !Active;
+    }
 
     #endregion
 

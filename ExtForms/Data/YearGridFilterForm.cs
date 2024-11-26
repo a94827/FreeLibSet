@@ -3,18 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using FreeLibSet.Forms;
 using FreeLibSet.Data;
 
-using FreeLibSet.Data.Docs;
-using FreeLibSet.Config;
-
-namespace FreeLibSet.Forms.Docs
+namespace FreeLibSet.Forms.Data
 {
   internal partial class YearGridFilterForm : Form
   {

@@ -899,7 +899,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="SubDocTypeUI.ManualOrderColumn"/>)
+    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.ManualOrderColumn"/>)
     /// </summary>
     public void InitManualOrderColumnValue()
     {

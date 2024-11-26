@@ -12,10 +12,9 @@ using FreeLibSet.Forms;
 using FreeLibSet.Data;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Config;
-using FreeLibSet.Data.Docs;
 using FreeLibSet.Calendar;
 
-namespace FreeLibSet.Forms.Docs
+namespace FreeLibSet.Forms.Data
 {
   internal partial class DateRangeInclusionGridFilterForm : Form
   {

@@ -77,7 +77,8 @@ namespace FreeLibSet.Forms
         if (value)
           StatusBarPanels.Attach();
         else
-          StatusBarPanels.Detach();
+          //StatusBarPanels.Detach();
+          StatusBarPanels.DetachDelayed(this);
       }
     }
 
@@ -100,6 +101,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     internal EFPStatusBarPanels StatusBarPanels { get { return _StatusBarPanels; } }
     private EFPStatusBarPanels _StatusBarPanels;
+
+    internal abstract bool StatusBarPanelsShouldBeDetached();
 
     #endregion
 
@@ -259,6 +262,11 @@ namespace FreeLibSet.Forms
       return new EFPStatusBarPanels(ControlProvider, ControlProvider.Control);
     }
 
+    internal override bool StatusBarPanelsShouldBeDetached()
+    {
+      return ControlProvider.StatusBarPanelsShouldBeDetached();
+    }
+
     #endregion
   }
 
@@ -302,6 +310,11 @@ namespace FreeLibSet.Forms
     internal override EFPStatusBarPanels CreateStatusBarPanels()
     {
       return new EFPStatusBarPanels(FormProvider, FormProvider.Form);
+    }
+
+    internal override bool StatusBarPanelsShouldBeDetached()
+    {
+      return FormProvider.StatusBarPanelsShouldBeDetached();
     }
 
     /// <summary>

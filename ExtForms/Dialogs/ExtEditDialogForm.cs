@@ -214,6 +214,8 @@ namespace FreeLibSet.Forms
     #endregion
   }
 
+  #region Перечисления
+
   /// <summary>
   /// Текущее состояние диалога <see cref="ExtEditDialog.FormState"/>
   /// </summary>
@@ -249,6 +251,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     Closed,
   }
+
+  #endregion
 
   /// <summary>
   /// Диалог редактирования значений с использованием интерфейса <see cref="IUIExtEditItem"/>.
@@ -360,14 +364,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     public string ConfigSectionName
     {
-      get { return _ConfigSectionName ?? String.Empty; }
-      set
-      {
-        _Form.FormProvider.CheckHasNotBeenShown();
-        _ConfigSectionName = value;
-      }
+      get { return _Form.FormProvider.ConfigSectionName; }
+      set { _Form.FormProvider.ConfigSectionName = value; }
     }
-    private string _ConfigSectionName;
 
     /// <summary>
     /// Если true (по умолчанию), то будет запоминаться текущая выбранная вкладка между показами диалога.
@@ -476,7 +475,7 @@ namespace FreeLibSet.Forms
         //if (_Form == null)
         //  return null;
         //else
-          return _Form.FormProvider;
+        return _Form.FormProvider;
       }
     }
 
@@ -750,13 +749,13 @@ namespace FreeLibSet.Forms
     /// Событие вызывается после событий <see cref="ExtEditPage.FirstShow"/> и <see cref="ExtEditPage.PageShow"/>, 
     /// поэтому страница уже создана на момент вызова.
     /// </summary>
-    public event ExtEditDialogPageEventHandler PageShow;
+    public event ExtEditPageEventHandler PageShow;
 
     internal void OnPageShow(ExtEditPage page)
     {
       if (PageShow == null)
         return;
-      ExtEditPageDialogEventArgs args = new ExtEditPageDialogEventArgs(page);
+      ExtEditPageEventArgs args = new ExtEditPageEventArgs(page);
       try
       {
         PageShow(this, args);
@@ -943,7 +942,7 @@ namespace FreeLibSet.Forms
             _Form.CancelButtonProvider.Control.PerformClick();
           return FormState == ExtEditDialogState.Closed;
         default:
-          throw new InvalidOperationException("Неподходящее состояние формы: "+FormState.ToString());
+          throw new InvalidOperationException("Неподходящее состояние формы: " + FormState.ToString());
       }
     }
 
@@ -1076,9 +1075,9 @@ namespace FreeLibSet.Forms
   /// Аргументы событий, связанных со страницей редактора.
   /// Объекты создаются редактором документа.
   /// </summary>
-  public sealed class ExtEditPageDialogEventArgs : EventArgs
+  public sealed class ExtEditPageEventArgs : EventArgs
   {
-    internal ExtEditPageDialogEventArgs(ExtEditPage page)
+    internal ExtEditPageEventArgs(ExtEditPage page)
     {
       _Page = page;
     }
@@ -1095,7 +1094,7 @@ namespace FreeLibSet.Forms
   /// </summary>
   /// <param name="sender">Источник события</param>
   /// <param name="args">Аргументы события</param>
-  public delegate void ExtEditDialogPageEventHandler(object sender, ExtEditPageDialogEventArgs args);
+  public delegate void ExtEditPageEventHandler(object sender, ExtEditPageEventArgs args);
 
   #endregion
 
@@ -1203,13 +1202,13 @@ namespace FreeLibSet.Forms
     /// пользователю. Используется для загрузки дополнительных данных документа. 
     /// Вызывается до события <see cref="PageShow"/>.
     /// </summary>
-    public event ExtEditDialogPageEventHandler FirstShow;
+    public event ExtEditPageEventHandler FirstShow;
 
     /// <summary>
     /// Вызывается перед каждым выводом закладки пользователю. Используется для
     /// обновления синхронизированных между закладками данных.
     /// </summary>
-    public event ExtEditDialogPageEventHandler PageShow;
+    public event ExtEditPageEventHandler PageShow;
 
     #endregion
 
@@ -1273,7 +1272,7 @@ namespace FreeLibSet.Forms
       {
         if (FirstShow != null)
         {
-          ExtEditPageDialogEventArgs ea = new ExtEditPageDialogEventArgs(this);
+          ExtEditPageEventArgs ea = new ExtEditPageEventArgs(this);
           try
           {
             FirstShow(this, ea);
@@ -1300,7 +1299,7 @@ namespace FreeLibSet.Forms
       }
       if (PageShow != null)
       {
-        ExtEditPageDialogEventArgs ea = new ExtEditPageDialogEventArgs(this);
+        ExtEditPageEventArgs ea = new ExtEditPageEventArgs(this);
         try
         {
           PageShow(this, ea);

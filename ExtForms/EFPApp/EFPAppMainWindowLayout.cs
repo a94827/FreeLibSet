@@ -654,7 +654,7 @@ namespace FreeLibSet.Forms
 
         #region Статусная строка
 
-        _StatusBar = new EFPAppStatusBar();
+        _StatusBar = new EFPAppStatusBar(Interface.IsSDI);
 
         FormToolStripInfo info = new FormToolStripInfo(MainWindow);
 

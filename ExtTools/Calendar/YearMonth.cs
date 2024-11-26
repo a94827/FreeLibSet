@@ -118,7 +118,7 @@ namespace FreeLibSet.Calendar
 
     /// <summary>
     /// Возвращает интервал дат, содержащий месяц.
-    /// Если текущий объект не инициализирован, возвращается <see cref="DateRange.Empty"/>.
+    /// Если текущий объект не инициализирован, возвращается <see cref="FreeLibSet.Calendar.DateRange.Empty"/>.
     /// </summary>
     public DateRange DateRange
     {

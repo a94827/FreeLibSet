@@ -1,179 +1,225 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1251">
-	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
-	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
-	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20241118;121340686000000">
-	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
-	<META NAME="changed" CONTENT="2023-11-17T22:37:54.315000000">
-	<STYLE TYPE="text/css">
-	<!--
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
+	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
+	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
+	<meta name="changed" content="2024-11-26T22:34:42.881000000"/>
+	<style type="text/css">
 		@page { margin: 2cm }
-		TD P { margin-bottom: 0.25cm; background: transparent; widows: 0; orphans: 0 }
-		H1 { margin-bottom: 0.21cm; background: transparent }
-		H1.western { font-family: "Liberation Serif", serif }
-		H1.cjk { font-family: "SimSun"; font-size: 24pt }
-		H1.ctl { font-family: "Mangal"; font-size: 24pt }
-		P { margin-bottom: 0.25cm; background: transparent }
-		A:link { so-language: zxx }
-		A:visited { color: #800080 }
-	-->
-	</STYLE>
-</HEAD>
-<BODY LANG="ru-RU" VLINK="#800080" DIR="LTR">
-<H1 CLASS="western">История изменений в программе<BR>Модуль
-<SPAN LANG="en-US">ExtForms</SPAN>.<SPAN LANG="en-US">dll </SPAN>(Расширение
-пользовательского интерфейса)</H1>
-<H1 CLASS="western">Версия <SPAN LANG="ru-RU">3</SPAN>.<SPAN LANG="en-US">0</SPAN></H1>
-<P>Полный номер версии файла, который можно узнать, посмотрев
+		td p { margin-bottom: 0.25cm; background: transparent; orphans: 0; widows: 0 }
+		h1 { margin-bottom: 0.21cm; background: transparent }
+		h1.western { font-family: "Liberation Serif", serif }
+		h1.cjk { font-family: "SimSun"; font-size: 24pt }
+		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		p { margin-bottom: 0.25cm; background: transparent }
+		a:link { so-language: zxx }
+		a:visited { color: #800080 }
+	</style>
+</head>
+<body lang="ru-RU" vlink="#800080" dir="ltr">
+<h1 class="western">История изменений в программе<br/>
+Модуль
+<span lang="en-US">ExtForms</span>.<span lang="en-US">dll </span>(Расширение
+пользовательского интерфейса)</h1>
+<h1 class="western">Версия <span lang="ru-RU">3</span>.<span lang="en-US">0</span></h1>
+<p>Полный номер версии файла, который можно узнать, посмотрев
 свойства файла или в меню &laquo;О программе&raquo;, состоит из
-четырех чисел и имеет вид &laquo;<SPAN LANG="ru-RU">3</SPAN>.<SPAN LANG="en-US">0</SPAN>.0.<SPAN LANG="en-US">X</SPAN>&raquo;.
-В таблице указано только последнее число &laquo;<SPAN LANG="en-US">X</SPAN>&raquo;</P>
-<TABLE WIDTH=100% CELLPADDING=2 CELLSPACING=0 STYLE="page-break-before: always">
-	<COL WIDTH=25*>
-	<COL WIDTH=35*>
-	<COL WIDTH=196*>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border: 1.00pt solid #000000; padding: 0.05cm">
-			<P ALIGN=CENTER>Версия</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>Дата</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>Что сделано</P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>354</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>27.09.2024-18.11.2024</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P>1. Перенесено из <SPAN LANG="en-US">ExtDBDocsForms:</SPAN></P>
-			<P><SPAN LANG="en-US">- EFPDBxGridFilterSet (</SPAN><SPAN LANG="ru-RU">был
-			</SPAN><SPAN LANG="en-US">EFPClientFilterSet, <A HREF="ExtDBDocForms_11.htm#v102p7">ExtDBDocsForms,
-			v.102 </A></SPAN><SPAN LANG="ru-RU"><A HREF="ExtDBDocForms_11.htm#v102p7">п.7</A>)</SPAN></P>
-			<P><SPAN LANG="en-US">- EFPDBxGridFilters (</SPAN>объединяет в
-			себя все из <SPAN LANG="en-US">DBxClientFilters </SPAN>и
-			<SPAN LANG="en-US">GridFilters, <A HREF="ExtDBDocForms_11.htm#v101p1">ExtDBDocsForms,
-			</A><A HREF="ExtDBDocForms_11.htm#v101p1">v.101 </A></SPAN><A HREF="ExtDBDocForms_11.htm#v101p1"><SPAN LANG="ru-RU">п.1</SPAN></A>
-			больше нет разбиения на отдельные классы<SPAN LANG="en-US">)</SPAN></P>
-			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Классы фильтров
-			</SPAN><SPAN LANG="en-US">StringValueGridFilter,
+четырех чисел и имеет вид &laquo;<span lang="ru-RU">3</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
+В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
+<table width="100%" cellpadding="2" cellspacing="0" style="page-break-before: always">
+	<col width="25*">
+	<col width="35*">
+	<col width="196*">
+	<tr valign="top">
+		<td width="10%" style="border: 1.00pt solid #000000; padding: 0.05cm">
+			<p align="center">Версия</p>
+		</td>
+		<td width="14%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Дата</p>
+		</td>
+		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">356</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center"><span lang="ru-RU">20.11.2024-</span>26.11.2024</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Перенесено из
+			</span><span lang="en-US">ExtDBDocsForms </span><span lang="ru-RU">(</span><a href="#v355p1"><span lang="en-US">v.355
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">:</span></p>
+			<p lang="en-US">- XmlCfgExtEditItem (<span lang="ru-RU">был
+			</span>XmlCfgDocEditItem)</p>
+			<p lang="en-US">- DateRangeInclusionGridFilter</p>
+			<p lang="en-US">- YearGridFilter <span lang="ru-RU">и
+			</span>YearRangeInclusionGridFilter</p>
+			<p lang="en-US">- CodeGridFilter</p>
+			<p lang="en-US">- <span lang="ru-RU">Методы
+			</span>EFPDataViewOrders.Add(), <span lang="ru-RU">принимающие
+			</span>DBxOrder (<span lang="ru-RU">был отдельный класс
+			</span>EFPDBxViewOrders. <span lang="ru-RU">Класс </span>EFPDBxViewOrder;
+			<span lang="ru-RU">объявлен </span>internal.</p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">При создании
+			</span><span lang="en-US">EFPStatusBarHandler </span><span lang="ru-RU">для
+			формы интерфейса </span><span lang="en-US">SDI </span><span lang="ru-RU">устанавливается
+			свойство </span><span lang="en-US">IsFormOwned=true </span><span lang="ru-RU">(</span><a href="ExtForms_20.htm#v348p49"><span lang="en-US">v.348
+			</span><span lang="ru-RU">п.49</span></a><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Исправлена
+			реализация свойства </span><span lang="en-US">ExtEditDialog.ConfigSectionName
+			(<a href="#v355p21">v.355 </a></span><a href="#v355p21"><span lang="ru-RU">п.21</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">Метод
+			</span><span lang="en-US">EFPReportFilterItem.Clone().
+			</span><span lang="ru-RU">Используется в
+			</span><span lang="en-US">EFPReportFilterItems.AddRange(). </span><span lang="ru-RU">При
+			отправке таблицы отчета </span><span lang="en-US">EFPReportPage </span><span lang="ru-RU">на
+			печать возникала ошибка, так как </span><span lang="en-US">EFPReportFilterItem
+			</span><span lang="ru-RU">уже имеет владельца </span><span lang="en-US">(<a href="ExtForms_11.htm#v298p3">v.298
+			</a></span><a href="ExtForms_11.htm#v298p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span><span lang="ru-RU">.</span></p>
+			<p lang="en-US">5. <span lang="ru-RU">Зацикливался расчет суммы по
+			выбранным ячейкам в табличном просмотре после изменения</span>
+			(<a href="ExtForms_20.htm#v353p1">v.353 <span lang="ru-RU">п.1</span></a>)</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">355</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">27.09.2024-18.11.2024</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><a name="v355p1"></a>1. Перенесено из <span lang="en-US">ExtDBDocsForms:</span></p>
+			<p><span lang="en-US">- EFPDBxGridFilterSet (</span><span lang="ru-RU">был
+			</span><span lang="en-US">EFPClientFilterSet, <a href="ExtDBDocForms_11.htm#v102p7">ExtDBDocsForms,
+			v.102 </a></span><span lang="ru-RU"><a href="ExtDBDocForms_11.htm#v102p7">п.7</a>)</span></p>
+			<p><span lang="en-US">- EFPDBxGridFilters (</span>объединяет в
+			себя все из <span lang="en-US">DBxClientFilters </span>и
+			<span lang="en-US">GridFilters, <a href="ExtDBDocForms_11.htm#v101p1">ExtDBDocsForms,
+			</a><a href="ExtDBDocForms_11.htm#v101p1">v.101 </a></span><a href="ExtDBDocForms_11.htm#v101p1"><span lang="ru-RU">п.1</span></a>
+			больше нет разбиения на отдельные классы<span lang="en-US">)</span></p>
+			<p><span lang="en-US">- </span><span lang="ru-RU">Классы фильтров
+			</span><span lang="en-US">StringValueGridFilter,
 			StartsWithGridFilter, EnumGridFilter, BoolValueGridFilter,
 			IntValueGridFilter, NullNotNullGridFilter, DummyGridFilter,
 			FixedSqlGridFilter,
 			Int/Single/Double/Decimal/DateRangeRangeGridFilter/InclusionGridFilter/RangeCrossGridFilter
-			(<A HREF="ExtDBDocForms_11.htm#v001p6">ExtDBDocsForms, v.1 </A></SPAN><SPAN LANG="ru-RU"><A HREF="ExtDBDocForms_11.htm#v001p6">п.6</A>,
-			</SPAN><A HREF="ExtDBDocForms_11.htm#v101p2"><SPAN LANG="en-US">v.101
-			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
-			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Свойство
-			</SPAN><SPAN LANG="en-US">StringValueGridFilter.UseManualInput
-			(<A HREF="ExtDBDocForms_11.htm#v001p6">ExtDBDocsForms, v.1 </A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p6"><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="en-US">).
-			</SPAN><SPAN LANG="ru-RU">Свойство </SPAN><SPAN LANG="en-US">ValueList
-			</SPAN><SPAN LANG="ru-RU">переименовано в </SPAN><SPAN LANG="en-US">AllValue.
-			</SPAN><SPAN LANG="ru-RU">Событие </SPAN><SPAN LANG="en-US">ValueListNeeded
-			&ndash; </SPAN><SPAN LANG="ru-RU">в </SPAN><SPAN LANG="en-US">AllValuesNeeded.</SPAN></P>
-			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Свойство
-			</SPAN><SPAN LANG="en-US">EFPGridFilters.DataViewRowFilter (<A HREF="ExtForms_20.htm#v351p23">v.351
-			</A></SPAN><A HREF="ExtForms_20.htm#v351p23"><SPAN LANG="ru-RU">п.23</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
-			<P LANG="en-US">4. <SPAN LANG="ru-RU">Класс </SPAN>StringValuesGridFilter</P>
-			<P><SPAN LANG="en-US">5. </SPAN><SPAN LANG="ru-RU">Событие
-			</SPAN><SPAN LANG="en-US">EFPDataGridView,
-			EFPTreeViewAdv.AfterRefreshData. </SPAN><SPAN LANG="ru-RU">Используется
-			в </SPAN><SPAN LANG="en-US">EFPGridFilterGridView</SPAN> (<A HREF="ExtForms_11.htm#v089p3"><SPAN LANG="en-US">v.89
-			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A>) <SPAN LANG="ru-RU">вместо
-			события </SPAN><SPAN LANG="en-US">RefreshData, </SPAN><SPAN LANG="ru-RU">чтобы
-			не появлялась команда &laquo;Обновить данные&raquo;</SPAN></P>
-			<P><SPAN LANG="en-US">6. </SPAN><SPAN LANG="ru-RU">Изменена
-			реализация </SPAN><SPAN LANG="en-US">EFPFormChecks </SPAN><SPAN LANG="ru-RU">и
-			свойства </SPAN><SPAN LANG="en-US">EFPBaseProvider.FormChecks
-			(<A HREF="ExtForms_11.htm#v289p1">v.289 </A></SPAN><A HREF="ExtForms_11.htm#v289p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">для совметимости </SPAN><SPAN LANG="en-US">c</SPAN><SPAN LANG="ru-RU">о
-			стандартным</SPAN> <SPAN LANG="ru-RU">интерфейсом </SPAN><SPAN LANG="en-US">ICollection.
-			</SPAN><SPAN LANG="ru-RU">Методы </SPAN><SPAN LANG="en-US">EFPFormProvider.AddFormCheck()
-			</SPAN><SPAN LANG="ru-RU">заменены на перегрузки
-			</SPAN><SPAN LANG="en-US">EFPBaseProvider.FormCheckCollection.Add().</SPAN></P>
-			<P><SPAN LANG="en-US">7. </SPAN><SPAN LANG="ru-RU">Метод
-			</SPAN><SPAN LANG="en-US">EFPDataGridView.IndexOfUsedColumnName()
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v276p8"><SPAN LANG="en-US">v.276
-			</SPAN><SPAN LANG="ru-RU">п.8</SPAN></A><SPAN LANG="ru-RU">)
-			переименован в </SPAN><SPAN LANG="en-US">IndexOfUsedColumn</SPAN><SPAN LANG="ru-RU">().
+			(<a href="ExtDBDocForms_11.htm#v001p6">ExtDBDocsForms, v.1 </a></span><span lang="ru-RU"><a href="ExtDBDocForms_11.htm#v001p6">п.6</a>,
+			</span><a href="ExtDBDocForms_11.htm#v101p2"><span lang="en-US">v.101
+			</span><span lang="ru-RU">п.2</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Свойство
+			</span><span lang="en-US">StringValueGridFilter.UseManualInput
+			(<a href="ExtDBDocForms_11.htm#v001p6">ExtDBDocsForms, v.1 </a></span><a href="ExtDBDocForms_11.htm#v001p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Свойство </span><span lang="en-US">ValueList
+			</span><span lang="ru-RU">переименовано в </span><span lang="en-US">AllValue.
+			</span><span lang="ru-RU">Событие </span><span lang="en-US">ValueListNeeded
+			&ndash; </span><span lang="ru-RU">в </span><span lang="en-US">AllValuesNeeded.</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Свойство
+			</span><span lang="en-US">EFPGridFilters.DataViewRowFilter (<a href="ExtForms_20.htm#v351p23">v.351
+			</a></span><a href="ExtForms_20.htm#v351p23"><span lang="ru-RU">п.23</span></a><span lang="en-US">)</span></p>
+			<p lang="en-US">4. <span lang="ru-RU">Класс </span>StringValuesGridFilter</p>
+			<p><span lang="en-US">5. </span><span lang="ru-RU">Событие
+			</span><span lang="en-US">EFPDataGridView,
+			EFPTreeViewAdv.AfterRefreshData. </span><span lang="ru-RU">Используется
+			в </span><span lang="en-US">EFPGridFilterGridView</span> (<a href="ExtForms_11.htm#v089p3"><span lang="en-US">v.89
+			</span><span lang="ru-RU">п.3</span></a>) <span lang="ru-RU">вместо
+			события </span><span lang="en-US">RefreshData, </span><span lang="ru-RU">чтобы
+			не появлялась команда &laquo;Обновить данные&raquo;</span></p>
+			<p><span lang="en-US">6. </span><span lang="ru-RU">Изменена
+			реализация </span><span lang="en-US">EFPFormChecks </span><span lang="ru-RU">и
+			свойства </span><span lang="en-US">EFPBaseProvider.FormChecks
+			(<a href="ExtForms_11.htm#v289p1">v.289 </a></span><a href="ExtForms_11.htm#v289p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">для совметимости </span><span lang="en-US">c</span><span lang="ru-RU">о
+			стандартным</span> <span lang="ru-RU">интерфейсом </span><span lang="en-US">ICollection.
+			</span><span lang="ru-RU">Методы </span><span lang="en-US">EFPFormProvider.AddFormCheck()
+			</span><span lang="ru-RU">заменены на перегрузки
+			</span><span lang="en-US">EFPBaseProvider.FormCheckCollection.Add().</span></p>
+			<p><span lang="en-US">7. </span><span lang="ru-RU">Метод
+			</span><span lang="en-US">EFPDataGridView.IndexOfUsedColumnName()
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v276p8"><span lang="en-US">v.276
+			</span><span lang="ru-RU">п.8</span></a><span lang="ru-RU">)
+			переименован в </span><span lang="en-US">IndexOfUsedColumn</span><span lang="ru-RU">().
 			Возвращается первый видимый столбец из
-			</SPAN><SPAN LANG="en-US">EFPDataGridViewSortInfo.ClickableColumnNames,
-			</SPAN><SPAN LANG="ru-RU">а не столбец, находящийся первым слева.</SPAN></P>
-			<P><SPAN LANG="en-US">8. </SPAN><SPAN LANG="ru-RU">Установка
-			свойства </SPAN><SPAN LANG="en-US">EFPStdConfigurableDataGridView.GridProducer
-			</SPAN><SPAN LANG="ru-RU">не устанавливает </SPAN><SPAN LANG="en-US">AutoSort=true
-			(<A HREF="ExtForms_11.htm#v291p5">v.291 </A></SPAN><A HREF="ExtForms_11.htm#v291p5"><SPAN LANG="ru-RU">п.</SPAN><SPAN LANG="en-US">5</SPAN></A><SPAN LANG="en-US">),
-			</SPAN><SPAN LANG="ru-RU">если </SPAN><SPAN LANG="en-US">EPGridProducer.OrderCount=0.</SPAN></P>
-			<P><SPAN LANG="en-US">9. </SPAN><SPAN LANG="ru-RU">В методах
-			</SPAN><SPAN LANG="en-US">EFPGridProducerColumn.ApplyConfig()
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v276p9"><SPAN LANG="en-US">v.276
-			</SPAN><SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="ru-RU">)
+			</span><span lang="en-US">EFPDataGridViewSortInfo.ClickableColumnNames,
+			</span><span lang="ru-RU">а не столбец, находящийся первым слева.</span></p>
+			<p><span lang="en-US">8. </span><span lang="ru-RU">Установка
+			свойства </span><span lang="en-US">EFPStdConfigurableDataGridView.GridProducer
+			</span><span lang="ru-RU">не устанавливает </span><span lang="en-US">AutoSort=true
+			(<a href="ExtForms_11.htm#v291p5">v.291 </a></span><a href="ExtForms_11.htm#v291p5"><span lang="ru-RU">п.</span><span lang="en-US">5</span></a><span lang="en-US">),
+			</span><span lang="ru-RU">если </span><span lang="en-US">EPGridProducer.OrderCount=0.</span></p>
+			<p><span lang="en-US">9. </span><span lang="ru-RU">В методах
+			</span><span lang="en-US">EFPGridProducerColumn.ApplyConfig()
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v276p9"><span lang="en-US">v.276
+			</span><span lang="ru-RU">п.9</span></a><span lang="ru-RU">)
 			предотвращается возникновение исключения при установке свойства
-			</SPAN><SPAN LANG="en-US">Width, </SPAN><SPAN LANG="ru-RU">если
-			оно меньше текущего значения </SPAN><SPAN LANG="en-US">MinimumWidth</SPAN></P>
-			<P><SPAN LANG="en-US">10. ApplicationExceptionHandler (<A HREF="ExtForms_11.htm#v137p1">v.137
-			</A></SPAN><A HREF="ExtForms_11.htm#v137p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">перехватывает исключение
-			</SPAN><SPAN LANG="en-US">ArgumentException </SPAN><SPAN LANG="ru-RU">в
-			конфигурации </SPAN><SPAN LANG="en-US">Wine+Mono, </SPAN><SPAN LANG="ru-RU">которые
+			</span><span lang="en-US">Width, </span><span lang="ru-RU">если
+			оно меньше текущего значения </span><span lang="en-US">MinimumWidth</span></p>
+			<p><span lang="en-US">10. ApplicationExceptionHandler (<a href="ExtForms_11.htm#v137p1">v.137
+			</a></span><a href="ExtForms_11.htm#v137p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">перехватывает исключение
+			</span><span lang="en-US">ArgumentException </span><span lang="ru-RU">в
+			конфигурации </span><span lang="en-US">Wine+Mono, </span><span lang="ru-RU">которые
 			выбрасывается при прорисовке всплывающей подсказки для кнопки
-			панели инструментов.</SPAN></P>
-			<P><SPAN LANG="en-US">11. </SPAN><SPAN LANG="ru-RU">При отправке
-			табличного / иерархического просмотра в </SPAN><SPAN LANG="en-US">Excel
-			/ Calc (<A HREF="ExtForms_20.htm#v348p33">v.348 </A></SPAN><SPAN LANG="ru-RU"><A HREF="ExtForms_20.htm#v348p33">п.33</A>,
-			<A HREF="ExtForms_20.htm#v348p34">34</A></SPAN><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">показываются флажки &laquo;Заголовок
+			панели инструментов.</span></p>
+			<p><span lang="en-US">11. </span><span lang="ru-RU">При отправке
+			табличного / иерархического просмотра в </span><span lang="en-US">Excel
+			/ Calc (<a href="ExtForms_20.htm#v348p33">v.348 </a></span><span lang="ru-RU"><a href="ExtForms_20.htm#v348p33">п.33</a>,
+			<a href="ExtForms_20.htm#v348p34">34</a></span><span lang="en-US">)
+			</span><span lang="ru-RU">показываются флажки &laquo;Заголовок
 			таблицы&raquo; и &laquo;Фильтры&raquo; в блоке &laquo;Что
 			выводить&raquo;. Свойства
-			</SPAN><SPAN LANG="en-US">BRDataViewSettingsDataItem.ExpTableHeader,
-			UseExpTableHeader, UseExpTableFilters, ExpTableFilters. </SPAN><SPAN LANG="ru-RU">Такой
-			же диалог показывается при сохранении просмотра в форматах </SPAN><SPAN LANG="en-US">Excel,
-			Word, ODS </SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">ODT.</SPAN></P>
-			<P><SPAN LANG="en-US">12. </SPAN><SPAN LANG="ru-RU">Для таблицы
-			редактирования фильтров </SPAN><SPAN LANG="en-US">EFPGridFilterEditorGridView
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v231p2"><SPAN LANG="en-US">v.231
-			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)
-			настроены параметры печати по умолчанию</SPAN></P>
-			<P><SPAN LANG="en-US">13. </SPAN><SPAN LANG="ru-RU">Для табличных
+			</span><span lang="en-US">BRDataViewSettingsDataItem.ExpTableHeader,
+			UseExpTableHeader, UseExpTableFilters, ExpTableFilters. </span><span lang="ru-RU">Такой
+			же диалог показывается при сохранении просмотра в форматах </span><span lang="en-US">Excel,
+			Word, ODS </span><span lang="ru-RU">и </span><span lang="en-US">ODT.</span></p>
+			<p><span lang="en-US">12. </span><span lang="ru-RU">Для таблицы
+			редактирования фильтров </span><span lang="en-US">EFPGridFilterEditorGridView
+			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v231p2"><span lang="en-US">v.231
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
+			настроены параметры печати по умолчанию</span></p>
+			<p><span lang="en-US">13. </span><span lang="ru-RU">Для табличных
 			и иерархических просмотров &mdash; команда локального меню
 			&laquo;Настройка форматов копирования&raquo;. Свойства
-			</SPAN><SPAN LANG="en-US">EFPDataGridViewCommandItems,
-			EFPTreeViewCommandItemsBase.SelectedCopyFormats (<A HREF="ExtForms_11.htm#v079p2">v.79
-			</A></SPAN><A HREF="ExtForms_11.htm#v079p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">).</SPAN></P>
-			<P><SPAN LANG="en-US">18. </SPAN><SPAN LANG="ru-RU">Исправлена
-			реализация копирования данных в буфер обмена в формате </SPAN><SPAN LANG="en-US">CSV.
-			</SPAN><SPAN LANG="ru-RU">Метод </SPAN><SPAN LANG="en-US">WinFormsTools.SetTextMatrix()
-			(</SPAN><A HREF="ExtForms_20.htm#v301p23"><SPAN LANG="ru-RU">v.301
-			п.23</SPAN></A><SPAN LANG="en-US">) </SPAN><SPAN LANG="ru-RU">разделен
-			на два: </SPAN><SPAN LANG="en-US">SetTextMatrixText() </SPAN><SPAN LANG="ru-RU">и
-			</SPAN><SPAN LANG="en-US">SetTextMatrixCsv()</SPAN></P>
-			<P><SPAN LANG="en-US">19. </SPAN><SPAN LANG="ru-RU">Исправлена
+			</span><span lang="en-US">EFPDataGridViewCommandItems,
+			EFPTreeViewCommandItemsBase.SelectedCopyFormats (<a href="ExtForms_11.htm#v079p2">v.79
+			</a></span><a href="ExtForms_11.htm#v079p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).</span></p>
+			<p><span lang="en-US">18. </span><span lang="ru-RU">Исправлена
+			реализация копирования данных в буфер обмена в формате </span><span lang="en-US">CSV.
+			</span><span lang="ru-RU">Метод </span><span lang="en-US">WinFormsTools.SetTextMatrix()
+			(</span><a href="ExtForms_20.htm#v301p23"><span lang="ru-RU">v.301
+			п.23</span></a><span lang="en-US">) </span><span lang="ru-RU">разделен
+			на два: </span><span lang="en-US">SetTextMatrixText() </span><span lang="ru-RU">и
+			</span><span lang="en-US">SetTextMatrixCsv()</span></p>
+			<p><span lang="en-US">19. </span><span lang="ru-RU">Исправлена
 			реализация получения текстового значения ячейки табличного
-			просмотра (внутренний метод </SPAN><SPAN LANG="en-US">EFPDataGridView.DoGetCellTextValue()).
-			</SPAN><SPAN LANG="ru-RU">Если
-			</SPAN><SPAN LANG="en-US">EFPDataGridViewCellAttributesEventArgs.FormattingApplied=false,
-			</SPAN><SPAN LANG="ru-RU">а значение ячейки является </SPAN><SPAN LANG="en-US">IFormattible,
-			</SPAN><SPAN LANG="ru-RU">то используется
-			</SPAN><SPAN LANG="en-US">DataGridViewCellStyle.Format </SPAN><SPAN LANG="ru-RU">и
-			</SPAN><SPAN LANG="en-US">FormatProvider.</SPAN></P>
-			<P><SPAN LANG="en-US">20. </SPAN><SPAN LANG="ru-RU">Альтернативная
+			просмотра (внутренний метод </span><span lang="en-US">EFPDataGridView.DoGetCellTextValue()).
+			</span><span lang="ru-RU">Если
+			</span><span lang="en-US">EFPDataGridViewCellAttributesEventArgs.FormattingApplied=false,
+			</span><span lang="ru-RU">а значение ячейки является </span><span lang="en-US">IFormattible,
+			</span><span lang="ru-RU">то используется
+			</span><span lang="en-US">DataGridViewCellStyle.Format </span><span lang="ru-RU">и
+			</span><span lang="en-US">FormatProvider.</span></p>
+			<p><span lang="en-US">20. </span><span lang="ru-RU">Альтернативная
 			возможность добавление команд меню в &laquo;уголочек&raquo; панели
-			инструментов </SPAN><SPAN LANG="en-US">(<A HREF="ExtForms_11.htm#v207p5">v.207
-			</A></SPAN><A HREF="ExtForms_11.htm#v207p5"><SPAN LANG="ru-RU">п.5</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">без объявления подменю. Флаг
-			</SPAN><SPAN LANG="en-US">EFPCommandItemUsage.ToolBarAux.</SPAN></P>
-		</TD>
-	</TR>
-</TABLE>
-<P><BR><BR>
-</P>
-</BODY>
-</HTML>
+			инструментов </span><span lang="en-US">(<a href="ExtForms_11.htm#v207p5">v.207
+			</a></span><a href="ExtForms_11.htm#v207p5"><span lang="ru-RU">п.5</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">без объявления подменю. Флаг
+			</span><span lang="en-US">EFPCommandItemUsage.ToolBarAux.</span></p>
+			<p><a name="v355p21"></a><span lang="en-US">21. </span><span lang="ru-RU">Класс
+			</span><span lang="en-US">ExtEditDialog</span></p>
+			<p><a name="v355p22"></a><span lang="en-US">22. </span><span lang="ru-RU">Класс
+			</span><span lang="en-US">DataEditDialog.</span></p>
+		</td>
+	</tr>
+</table>
+<p><br/>
+<br/>
+
+</p>
+</body>
+</html>

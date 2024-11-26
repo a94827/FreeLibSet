@@ -373,7 +373,7 @@ namespace FreeLibSet.Forms.Data
     /// Редактируемое значение в наборе исходных данных
     /// </summary>
     public DBxExtValue ExtValue { get { return _ExtValue; } }
-    private /*readonly - это структура, нельзя ее блокировать*/ DBxExtValue _ExtValue;
+    private /*readonly - это структура, нельзя ее сделать readonly */ DBxExtValue _ExtValue;
 
     /// <summary>
     /// Текущее редактируемое значение

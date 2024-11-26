@@ -1,4 +1,4 @@
-﻿namespace FreeLibSet.Forms.Docs
+﻿namespace FreeLibSet.Forms.Data
 {
   partial class DateRangeInclusionGridFilterForm
   {

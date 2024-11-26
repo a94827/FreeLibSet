@@ -13,7 +13,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Описание одной строки фильтра отчета.
   /// </summary>
-  public sealed class EFPReportFilterItem
+  public sealed class EFPReportFilterItem : ICloneable
   {
     #region Конструктор
 
@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="displayName">Заголовок фильтра. Не может быть пустой строкой</param>
     public EFPReportFilterItem(string displayName)
-      :this(displayName, String.Empty, null)
+      : this(displayName, String.Empty, null)
     {
     }
 
@@ -79,8 +79,8 @@ namespace FreeLibSet.Forms
     /// Значение фильтра.
     /// Устанавливается динамически.
     /// </summary>
-    public string Value 
-    { 
+    public string Value
+    {
       get { return _Value; }
       set
       {
@@ -104,8 +104,8 @@ namespace FreeLibSet.Forms
         else
           return _ImageKey;
       }
-      set 
-      { 
+      set
+      {
         _ImageKey = value;
         if (_Owner != null)
           _Owner.OnChanged();
@@ -120,6 +120,24 @@ namespace FreeLibSet.Forms
     public override string ToString()
     {
       return DisplayName + "=" + Value;
+    }
+
+    #endregion
+
+    #region ICloneable Members
+
+    /// <summary>
+    /// Создает копию объекта, не привязанную к владельцу (<see cref="Owner"/>==null)
+    /// </summary>
+    /// <returns></returns>
+    public EFPReportFilterItem Clone()
+    {
+      return new EFPReportFilterItem(DisplayName, Value, ImageKey);
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
     }
 
     #endregion
@@ -178,7 +196,7 @@ namespace FreeLibSet.Forms
         return DocType.SingularTitle;
     }
 
-    #endregion
+  #endregion
 
   #region Свойства
 
@@ -188,7 +206,7 @@ namespace FreeLibSet.Forms
     public Int32 DocId { get { return FDocId; } }
     private Int32 FDocId;
 
-    #endregion
+  #endregion
   }
 #endif
 
@@ -286,7 +304,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавление строк фильтра из другого списка
+    /// Добавление строк фильтра из другого списка.
+    /// Добавляются копии элементов, созданные методом <see cref="EFPReportFilterItem.Clone()"/>,
+    /// так как оригиналы обычно уже привязаны к другому <see cref="EFPReportFilterItems"/>.
     /// </summary>
     /// <param name="items">Перечислимый список фильтров. Не может быть null</param>
     public void AddRange(IEnumerable<EFPReportFilterItem> items)
@@ -301,10 +321,10 @@ namespace FreeLibSet.Forms
         if (item == null)
           throw new ArgumentException("Один из элементов равен null", "items");
 #endif
-        item.CheckNotAdded();
-        item.Owner = this;
+        EFPReportFilterItem item2 = item.Clone();
+        item2.Owner = this;
+        _Items.Add(item2);
       }
-      _Items.AddRange(items);
       OnChanged();
     }
 

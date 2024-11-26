@@ -7,7 +7,7 @@ using FreeLibSet.Data;
 using FreeLibSet.Forms;
 using FreeLibSet.Forms.Data;
 
-namespace DBxGridFiltersDemo
+namespace EFPDBxGridFiltersDemo
 {
   static class Program
   {
@@ -88,7 +88,9 @@ namespace DBxGridFiltersDemo
       SimpleGridForm form = new SimpleGridForm();
       EFPConfigurableDataGridView efpGrid = new EFPConfigurableDataGridView(form.ControlWithToolBar);
 
-      DBxGridFilters filters = new DBxGridFilters();
+      #region Фильтры
+
+      EFPDBxGridFilters filters = new EFPDBxGridFilters();
       filters.SqlFilterRequired = true;
 
       StringValueGridFilter filtS1 = new StringValueGridFilter("S1");
@@ -113,20 +115,46 @@ namespace DBxGridFiltersDemo
       efpGrid.Filters = filters;
       efpGrid.AfterSetFilter += EfpGrid_AfterSetFilter;
 
+      #endregion
+
+      #region Сортировка
+
+      efpGrid.Orders.Add("", "Нет сортировки");
+      efpGrid.Orders.Add("I1", "I1 (простая сортировка)");
+      efpGrid.Orders.Add("S1 DESC,I1", "S1 DESC,I1");
+      DBxExpression filtExpr1 = new DBxFunction(DBxFunctionKind.IIf, new DBxColumn("L1"), new DBxColumn("I1"), new DBxColumn("I2"));
+      efpGrid.Orders.Add(new DBxOrder(filtExpr1), "IIF(L1, I1, I2)");
+      DBxExpression filtExpr2 = new DBxFunction(DBxFunctionKind.Coalesce, new DBxColumn("D1"), new DBxColumn("D2"));
+      efpGrid.Orders.Add(new DBxOrder(filtExpr2), "COALESCE(D1, D2)");
+      efpGrid.AutoSort = true;
+
+      #endregion
+
+      efpGrid.GetCellAttributes += EfpGrid_GetCellAttributes;
+      efpGrid.Control.ReadOnly = true;
+      efpGrid.CanView = false;
+
       EFPGridFilterGridView efpFilt = new EFPGridFilterGridView(efpGrid, form.FilterGrid);
 
       efpGrid.ReadOnly = true;
-      efpGrid.Control.ReadOnly = true;
-      efpGrid.CanView = false;
 
       efpGrid.Control.DataSource = table.DefaultView;
       return form;
     }
 
+    private static void EfpGrid_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    {
+      if (args.ColumnName == "L1")
+      {
+        if (args.DataRow.IsNull("L1"))
+          args.ContentVisible = false;
+      }
+    }
+
     private static void EfpGrid_AfterSetFilter(object sender, EventArgs args)
     {
       EFPConfigurableDataGridView efpGrid = (EFPConfigurableDataGridView)sender;
-      DBxGridFilters filters = (DBxGridFilters)(efpGrid.Filters);
+      EFPDBxGridFilters filters = (EFPDBxGridFilters)(efpGrid.Filters);
       efpGrid.SourceAsDataView.RowFilter = filters.DataViewRowFilter;
     }
 

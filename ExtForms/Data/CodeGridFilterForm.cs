@@ -4,20 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using FreeLibSet.Forms;
 
-using FreeLibSet.Config;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Data;
-using FreeLibSet.Data.Docs;
-using FreeLibSet.Core;
 using FreeLibSet.UICore;
 
-namespace FreeLibSet.Forms.Docs
+namespace FreeLibSet.Forms.Data
 {
   /// <summary>
   /// Форма для фильтра по кодам

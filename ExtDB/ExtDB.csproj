@@ -77,7 +77,7 @@
     <Compile Include="Data\DBxSelectInfo.cs" />
     <Compile Include="Data\DBxNameValidator.cs" />
     <Compile Include="Data\DBxStructChecker.cs" />
-    <Compile Include="DBxRealStructSource.cs" />
+    <Compile Include="Data\DBxRealStructSource.cs" />
     <Compile Include="MSSqlServer\SqlDBxDataWriter.cs" />
     <Compile Include="OleDbTemplateFilesResource.Designer.cs">
       <AutoGen>True</AutoGen>

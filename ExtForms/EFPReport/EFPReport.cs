@@ -342,14 +342,14 @@ namespace FreeLibSet.Forms
           // и до пользователя не доходит
           _Owner._TheTabControl.Size = _Owner._TheMainPanel.Size;
 
-          if (_Owner._TheMainPanel2 != null)
+          if (_Owner._TheFirstPagePanel != null)
           {
             TabPage firstPage = new TabPage();
             _Items[0].TabPage = firstPage;
             _Owner._TheTabControl.TabPages.Add(firstPage);
 
             // Переносим существующую панель на закладку
-            firstPage.Controls.Add(_Owner._TheMainPanel2);
+            firstPage.Controls.Add(_Owner._TheFirstPagePanel);
           }
           // Присоединяем TabControl
           _Owner._TheMainPanel.Controls.Add(_Owner._TheTabControl);
@@ -398,15 +398,15 @@ namespace FreeLibSet.Forms
           _Owner._TheTabControl.TabPages.Remove(thePage);
           thePage.Dispose();
         }
-        else if (_Owner._TheMainPanel2 != null)
+        else if (_Owner._TheFirstPagePanel != null)
         {
 #if DEBUG
           if (Count != 1)
             throw new BugException("Неправильное число страниц: " + Count.ToString());
 #endif
 
-          _Owner._TheMainPanel2.Dispose();
-          _Owner._TheMainPanel2 = null;
+          _Owner._TheFirstPagePanel.Dispose();
+          _Owner._TheFirstPagePanel = null;
         }
 
 
@@ -882,10 +882,10 @@ namespace FreeLibSet.Forms
         {
           if (Pages.Count > 0)
           {
-            _TheMainPanel2 = new Panel();
-            _TheMainPanel2.Dock = DockStyle.Fill;
-            _TheMainPanel.Controls.Add(_TheMainPanel2);
-            Pages[0].AssignParentControl(_TheMainPanel2);
+            _TheFirstPagePanel = new Panel();
+            _TheFirstPagePanel.Dock = DockStyle.Fill;
+            _TheMainPanel.Controls.Add(_TheFirstPagePanel);
+            Pages[0].AssignParentControl(_TheFirstPagePanel);
             if (_TheForm != null)
             {
               if (!String.IsNullOrEmpty(Pages[0].HelpContext))
@@ -1381,14 +1381,14 @@ namespace FreeLibSet.Forms
       #endregion
 
       public EFPReport Report { get { return _Report; } }
-      private EFPReport _Report;
+      private readonly EFPReport _Report;
 
       /// <summary>
-      /// Провайдер формы для поддержки справочной системы
-      /// Может быть null, если отчет запускается встроенным в окно
+      /// Провайдер формы для поддержки справочной системы.
+      /// Может быть null, если отчет запускается встроенным в окно.
       /// </summary>
       public EFPFormProvider FormProvider { get { return _FormProvider; } }
-      private EFPFormProvider _FormProvider;
+      private readonly EFPFormProvider _FormProvider;
 
 
 #if DEBUG
@@ -1412,8 +1412,7 @@ namespace FreeLibSet.Forms
     private InternalReportForm _TheForm;
 
     /// <summary>
-    /// Панель, куда встроен отчет или совпадает с TheForm, если отчет запущен
-    /// в собственном окне
+    /// Панель, куда встроен отчет, или совпадает с _TheForm, если отчет запущен в собственном окне.
     /// </summary>
     private Control _TheOwnerControl;
 
@@ -1431,7 +1430,7 @@ namespace FreeLibSet.Forms
       #region Свойства
 
       public EFPReport OwnerReport { get { return _OwnerReport; } }
-      private EFPReport _OwnerReport;
+      private readonly EFPReport _OwnerReport;
 
       #endregion
     }
@@ -1459,7 +1458,7 @@ namespace FreeLibSet.Forms
     /// занимает TheMainPanel, чтобы потом можно было сделать перенос в
     /// TabControl. Без нее пришлось бы переносить дочерние элементы по одному
     /// </summary>
-    private Panel _TheMainPanel2;
+    private Panel _TheFirstPagePanel;
 
     private EFPReportFilterGridView _TheFilterGridProvider;
 

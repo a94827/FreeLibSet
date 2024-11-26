@@ -2220,7 +2220,7 @@ namespace FreeLibSet.Forms
         ciLowerCase.Click += new EventHandler(LowerCase);
         Add(ciLowerCase);
 
-        ciChangeCase = new EFPCommandItem("Edit", "InverCase");
+        ciChangeCase = new EFPCommandItem("Edit", "InvertCase");
         ciChangeCase.Parent = ciCase;
         ciChangeCase.MenuText = "&иЗМЕНИТЬ рЕГИСТР";
         ciChangeCase.ShortCut = Keys.Control | Keys.R;

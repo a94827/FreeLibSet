@@ -319,7 +319,7 @@ namespace FreeLibSet.Forms
   /// </summary>
   public class EFPDataViewOrders : NamedList<EFPDataViewOrder>
   {
-    #region Методы добавления
+    #region Методы добавления для EFPDataViewOrder
 
     /// <summary>
     /// Добавляет новый порядок сортировки из одного поля.
@@ -464,6 +464,54 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Методы добавления для EFPDBxViewOrder
+
+    /// <summary>
+    /// Создает порядок сортировки, производный от <see cref="EFPDataViewOrder"/> для заданного <see cref="DBxOrder"/> и добавляет его в список.
+    /// Для выполнения сортировки по выражениям в таблицу могут динамически добавляться вычисляемые столбцы (с установленным свойством <see cref="DataColumn.Expression"/>).
+    /// У возвращаемого объекта не устанавливается свойство <see cref="EFPDataViewOrder.Sort"/>.
+    /// Этот метод нельзя использовать, если исходная таблица данных <see cref="DataTable"/> разделяется между потоками.
+    /// </summary>
+    /// <param name="order">Порядок сортировки для SELECT .. ORDER BY</param>
+    /// <param name="displayName">Отображаемое имя для меню</param>
+    /// <param name="sortInfo">Столбец табличного просмотра для нажатия мышью</param>
+    /// <returns>Созданный порядок сортировки</returns>
+    public EFPDataViewOrder Add(DBxOrder order, string displayName, EFPDataGridViewSortInfo sortInfo)
+    {
+#if DEBUG
+      if (order == null)
+        throw new ArgumentNullException("order");
+#endif     
+      string name = order.ToString();
+      FreeLibSet.Forms.Data.EFPDBxViewOrder item = new FreeLibSet.Forms.Data.EFPDBxViewOrder(order.ToString(), order);
+      item.DisplayName = displayName;
+      if (!sortInfo.IsEmpty)
+        item.SortInfo = sortInfo;
+      base.Add(item);
+      //// Если первое поле в порядке сортировки присутствует в просмотре, то столбец
+      //// можно щелкать по заголовку
+      //EFPDataGridViewColumn Column = GetUsedColumn(Item); // 19.06.2019
+      //if (Column != null)
+      //  Column.GridColumn.SortMode = DataGridViewColumnSortMode.Programmatic;
+      return item;
+    }
+
+    /// <summary>
+    /// Создает порядок сортировки, производный от <see cref="EFPDataViewOrder"/> для заданного <see cref="DBxOrder"/> и добавляет его в список.
+    /// Для выполнения сортировки по выражениям в таблицу могут динамически добавляться вычисляемые столбцы (с установленным свойством <see cref="DataColumn.Expression"/>).
+    /// У возвращаемого объекта не устанавливается свойство <see cref="EFPDataViewOrder.Sort"/>.
+    /// Этот метод нельзя использовать, если исходная таблица данных <see cref="DataTable"/> разделяется между потоками.
+    /// </summary>
+    /// <param name="order">Порядок сортировки для SELECT .. ORDER BY</param>
+    /// <param name="displayName">Отображаемое имя для меню</param>
+    /// <returns>Созданный порядок сортировки</returns>
+    public EFPDataViewOrder Add(DBxOrder order, string displayName)
+    {
+      return Add(order, displayName, EFPDataGridViewSortInfo.Empty);
+    }
+
+    #endregion
+
     #region Другие методы
 
     /// <summary>
@@ -544,3 +592,177 @@ namespace FreeLibSet.Forms
     #endregion
   }
 }
+
+namespace FreeLibSet.Forms.Data
+{
+  /// <summary>
+  /// Расширенная сортировка табличного просмотра, основанного на наборе данных.
+  /// Поддерживает задание полей с помощью выражений <see cref="DBxOrder"/>, в том числе, содержащих функции.
+  /// Для этого в набор данных добавляются виртуальные вычисляемые столбцы.
+  /// </summary>
+  internal class EFPDBxViewOrder : EFPDataViewOrder
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект сортировки
+    /// </summary>
+    /// <param name="name">Условное имя для порядка сортировки</param>
+    /// <param name="order">Порядок сортировки для ORDER BY</param>
+    public EFPDBxViewOrder(string name, DBxOrder order)
+      : base(name, String.Empty)
+    {
+      if (order == null)
+        throw new ArgumentNullException("order");
+      _Order = order;
+
+      string columnName;
+      ListSortDirection sortOrder;
+      _Order.GetFirstColumnInfo(out columnName, out sortOrder);
+      SortInfo = new EFPDataGridViewSortInfo(columnName, sortOrder);
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Порядок сортировки для SQL-запроса SELECT .. ORDER BY
+    /// </summary>
+    public DBxOrder Order { get { return _Order; } }
+    private readonly DBxOrder _Order;
+
+    /// <summary>
+    /// Для отладки
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return DisplayName + " (" + Order.ToString() + ")";
+    }
+
+    #endregion
+
+    #region Выполнение сортировки
+
+    /// <summary>
+    /// Реализация интерфейса <see cref="INamedValuesAccess"/>.
+    /// Возвращает значения по умолчанию для всех столбцов данных таблицы.
+    /// Используется для определения типа данных вычисляемого столбца.
+    /// </summary>
+    private class DefValAccess : INamedValuesAccess
+    {
+      #region Конструктор
+
+      public DefValAccess(DataTable table)
+      {
+        _Table = table;
+      }
+
+      private DataTable _Table;
+
+      #endregion
+
+      #region INamedValuesAccess Members
+
+      public object GetValue(string name)
+      {
+        int p = _Table.Columns.IndexOf(name);
+        if (p < 0)
+          throw new ArgumentException("Неизвестный столбец \"" + name + "\"");
+
+        return DataTools.GetEmptyValue(_Table.Columns[p].DataType);
+      }
+
+      public bool Contains(string name)
+      {
+        return _Table.Columns.Contains(name);
+      }
+
+      public string[] GetNames()
+      {
+        string[] names = new string[_Table.Columns.Count];
+        for (int i = 0; i < names.Length; i++)
+          names[i] = _Table.Columns[i].ColumnName;
+        return names;
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Выполняет сортировку в табличного просмотре.
+    /// Источником данных должен быть объект <see cref="DataView"/> (свойство <see cref="EFPDataGridView.SourceAsDataView"/> должно возвращать непустое значение).
+    /// Устанавливает свойство <see cref="DataView.Sort"/>.
+    /// Если среди компонентов сортировки есть объекты, отличные от <see cref="DBxColumn"/>,
+    /// то в таблицу добавляются вычисляемые столбцы "$$Sort_XXX", для которых устанавливается свойство <see cref="DataColumn.Expression"/>.
+    /// </summary>     
+    /// <param name="controlProvider">Провайдер табличного просмотра, для которого нужно установить порядок сортировки.</param>
+    public override void PerformSort(IEFPDataView controlProvider)
+    {
+      //if (!(controlProvider is EFPDBxGridView))
+      //  throw new InvalidOperationException("Неправильный тип ControlProvider: " + controlProvider.GetType().ToString());
+
+      DataView dv = controlProvider.SourceAsDataView;
+      if (dv == null)
+        throw new InvalidDataSourceException("Источником данных просмотра не является DataView");
+
+      // Обычно, порядок сортировки задается нормальными полями и вычисляемые столбцы
+      // не нужны. При наличии выражения, например, DBxOrderColumnIfNull, его нельзя
+      // задавать в DataView.Sort. Вместо этого создается вычисляемый столбец,
+      // который содержит установленное свойство Expression. По нему выполняется
+      // сортировка.
+      // В одном DataOrder может быть несколько выражений, через запятую, а, также,
+      // обычные поля. Вычисляемые столбцы используются только для вычисляемых
+      // DataOrderItem, а для простых полей не используются.
+
+      DBxSqlBuffer buf = new DBxSqlBuffer();
+      buf.Clear();
+      for (int i = 0; i < Order.Parts.Length; i++)
+      {
+        if (i > 0)
+          buf.SB.Append(',');
+        if ((Order.Parts[i].Expression) is DBxColumn)
+          // Простое поле
+          buf.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
+        else
+        {
+          // Вычисляемое поле
+          DBxSqlBuffer buf2 = new DBxSqlBuffer();
+          buf2.Clear();
+          buf2.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
+          string expr = buf2.SB.ToString();
+          // Имя столбца
+          string exprColName = "$$Sort_" + DataTools.MD5SumFromString(expr);
+
+          // 16.10.2019
+          // Тип данных для столбца проверяем по другому
+          DefValAccess dva = new DefValAccess(dv.Table);
+          object defVal = Order.Parts[i].Expression.GetValue(dva);
+          if (defVal == null)
+            throw new NullReferenceException("Для выражения \"" + expr + "\" порядка сортировки \"" + DisplayName + "\" не удалось вычислить значение по умолчанию, чтобы определить тип данных");
+          Type dataType = defVal.GetType();
+
+
+          // Столбец добавляется только при необходимости, чтобы исключить размножение
+          // столбцов при каждом переключении сортировки
+          if (!dv.Table.Columns.Contains(exprColName))
+          {
+            DataColumn col = new DataColumn(exprColName, dataType, expr);
+            dv.Table.Columns.Add(col);
+          }
+
+          // В Sort добавляется имя вычисляемого столбца
+          buf.SB.Append(exprColName);
+        }
+
+        // Признак обратной сортировки
+        if (Order.Parts[i].SortOrder == ListSortDirection.Descending)
+          buf.SB.Append(" DESC");
+      }
+      dv.Sort = buf.SB.ToString();
+    }
+    #endregion
+  }
+}
+

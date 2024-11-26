@@ -81,20 +81,6 @@ namespace FreeLibSet.Forms.Docs
       return new EFPDBxGridProducerToolTips(this);
     }
 
-    /// <summary>
-    /// Список возможных порядков сортировки табличного просмотра
-    /// </summary>
-    public new EFPDBxViewOrders Orders { get { return (EFPDBxViewOrders)(base.Orders); } }
-
-    /// <summary>
-    /// Создает объект коллекции
-    /// </summary>
-    /// <returns>Новый объект</returns>
-    protected override EFPDataViewOrders CreateOrders()
-    {
-      return new EFPDBxViewOrders();
-    }
-
     #endregion
 
     #region Получение значений полей

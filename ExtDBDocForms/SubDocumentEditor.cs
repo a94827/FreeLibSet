@@ -174,13 +174,15 @@ namespace FreeLibSet.Forms.Docs
     #region События
 
     /// <summary>
-    /// Вызывается при завершении работы редактора
+    /// Вызывается при завершении работы редактора.
+    /// Событие не вызывается, если <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.BeforeEdit"/> установил свойство <see cref="BeforeSubDocEditEventArgs.ShowEditor"/>=false.
     /// </summary>
     public event EventHandler Executed;
 
     /// <summary>
     /// Вызывается после того, как были установлены значения всех полей перед началом
     /// редактирования. На момент вызова форма еще не выведена на экран. 
+    /// Событие не вызывается, если <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.BeforeEdit"/> установил свойство <see cref="BeforeSubDocEditEventArgs.ShowEditor"/>=false.
     /// </summary>
     public event SubDocEditEventHandler AfterReadValues;
 
@@ -190,17 +192,38 @@ namespace FreeLibSet.Forms.Docs
     /// Установка <see cref="SubDocEditCancelEventArgs.Cancel"/>=true предотвращает запись данных и закрытие редактора.
     /// Программа должна вывести сообщение пользователю о причинах отмены.
     /// На момент вызова данные формы еще не перенесены в строку.
+    /// Событие не вызывается, если <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.BeforeEdit"/> установил свойство <see cref="BeforeSubDocEditEventArgs.ShowEditor"/>=false.
     /// </summary>
     public event SubDocEditCancelEventHandler BeforeWrite;
 
     /// <summary>
-    /// Вызывается после того, как данные записаны в строку поддокумента
+    /// Вызывается после того, как данные записаны в строку поддокумента.
+    /// Событие не вызывается, если <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.BeforeEdit"/> установил свойство <see cref="BeforeSubDocEditEventArgs.ShowEditor"/>=false.
     /// </summary>
     public event SubDocEditEventHandler AfterWrite;
 
     #endregion
 
     #region Методы
+
+    /*
+     * Последовательность вызовов методов редактора:
+     * ColumnUIList.PerformInsert()
+     * ISubDocumentEditorCaller.InitNewSubDocValues()
+     * SubDocTypeUI.DoBeforeEdit()
+     * SubDocTypeUI.PerformInitEditForm(), cобытие SubDocTypeUI.InitEditForm
+     * UIExtEdiItemList.ReadValues() (вызовы IUIExtEditItem.BeforeReadValues(), ReadValues(), AfterReadValues())
+     * Событие SubDocumentEditor.AfterReadValues
+     * ExtEditDialog.ShowDialog()
+     * Проверка корректности значений полей EFPFormProvider.Validating
+     * Событие SubDocumentEditor.BeforeWrite
+     * UIExtEdiItemList.WriteValues() (вызовы IUIExtEditItem.WriteValues())
+     * Событие SubDocTypeUI.Writing
+     * Событие SubDocumentEditor.Executed
+     * Удаление поддокументов при State=Delete
+     * Событие SubDocTypeUI.Wrote
+     * ColumnUIList.PerformPost()
+     */
 
     /// <summary>
     /// Открывает окно редактора в модальном режиме, если обработчик события <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.BeforeEdit"/> 
@@ -222,6 +245,7 @@ namespace FreeLibSet.Forms.Docs
         }
 
         if (Caller != null)
+
         {
           for (int i = 0; i < SubDocs.SubDocCount; i++)
             Caller.InitNewSubDocValues(SubDocs[i]);
@@ -237,72 +261,72 @@ namespace FreeLibSet.Forms.Docs
       if (showEditor)
       {
         _Dialog = new DataEditDialog();
-          _Dialog.DataState = this.State;
-          _Dialog.ConfigSectionName = "Ed_" + _SubDocTypeUI.SubDocType.Name; // 09.06.2021
-          // Переключаем синхронизацию на основную форму редактирования
-          _Dialog.SyncProvider = MainEditor.Dialog.SyncProvider;
+        _Dialog.DataState = this.State;
+        _Dialog.ConfigSectionName = "Ed_" + _SubDocTypeUI.SubDocType.Name; // 09.06.2021
+                                                                           // Переключаем синхронизацию на основную форму редактирования
+        _Dialog.SyncProvider = MainEditor.Dialog.SyncProvider;
 
-          SubDocTypeUI.PerformInitEditForm(this);
+        SubDocTypeUI.PerformInitEditForm(this);
 
-          // Только после инициализации диалога можно запомнить исходные значения
-          _OrgVals = new DBxArrayExtValues(SubDocs.Values);
+        // Только после инициализации диалога можно запомнить исходные значения
+        _OrgVals = new DBxArrayExtValues(SubDocs.Values);
 
-          // Инициализируем значения
-          EditItems.ReadValues();
+        // Инициализируем значения
+        EditItems.ReadValues();
 
-          // Не уверен, что хочу звездочку
-          // Тогда нужно будет добавить предупреждение при нажатии "Отмена"
-          // FForm.FormProvider.ChangeInfo = FChangeInfo; // звездочка в заголовке формы
+        // Не уверен, что хочу звездочку
+        // Тогда нужно будет добавить предупреждение при нажатии "Отмена"
+        // FForm.FormProvider.ChangeInfo = FChangeInfo; // звездочка в заголовке формы
 
-          if (AfterReadValues != null)
-          {
-            SubDocEditEventArgs args = new SubDocEditEventArgs(this);
-            AfterReadValues(this, args);
-          }
+        if (AfterReadValues != null)
+        {
+          SubDocEditEventArgs args = new SubDocEditEventArgs(this);
+          AfterReadValues(this, args);
+        }
 
-          InitFormTitle();
+        InitFormTitle();
 
-          // Кнопка "Еще"
-          InitMoreClientItems();
+        // Кнопка "Еще"
+        InitMoreClientItems();
 
-          switch (State)
-          {
-            case UIDataState.Edit:
-              _Dialog.OKButtonToolTipText = "Закончить редактирование, сохранив внесенные изменения." + Environment.NewLine +
-                "Для реальной записи изменений нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
-              _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения внесенных изменений";
-              break;
-            case UIDataState.Insert:
-            case UIDataState.InsertCopy:
-              _Dialog.OKButtonToolTipText = "Создать новую запись и закончить редактирование." + Environment.NewLine +
-                "Для сохранения записи нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
-              _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения введенных значений";
-              break;
-            case UIDataState.Delete:
-              _Dialog.OKButtonToolTipText = "Удалить просматриваемую запись";
-              _Dialog.CancelButtonToolTipText = "Закрыть окно, не удаляя запись";
-              break;
-            case UIDataState.View:
-              _Dialog.OKButtonToolTipText = "Закрыть окно";
-              break;
-          }
-          _Dialog.ShowApplyButton= false;
-          _Dialog.MoreButtonToolTipText = "Дополнительные команды редактора";
+        switch (State)
+        {
+          case UIDataState.Edit:
+            _Dialog.OKButtonToolTipText = "Закончить редактирование, сохранив внесенные изменения." + Environment.NewLine +
+              "Для реальной записи изменений нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
+            _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения внесенных изменений";
+            break;
+          case UIDataState.Insert:
+          case UIDataState.InsertCopy:
+            _Dialog.OKButtonToolTipText = "Создать новую запись и закончить редактирование." + Environment.NewLine +
+              "Для сохранения записи нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
+            _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения введенных значений";
+            break;
+          case UIDataState.Delete:
+            _Dialog.OKButtonToolTipText = "Удалить просматриваемую запись";
+            _Dialog.CancelButtonToolTipText = "Закрыть окно, не удаляя запись";
+            break;
+          case UIDataState.View:
+            _Dialog.OKButtonToolTipText = "Закрыть окно";
+            break;
+        }
+        _Dialog.ShowApplyButton = false;
+        _Dialog.MoreButtonToolTipText = "Дополнительные команды редактора";
 
         _Dialog.Writing += Dialog_Writing;
-          _Dialog.FormClosed += new EventHandler(Dialog_FormClosed);
+        _Dialog.FormClosed += new EventHandler(Dialog_FormClosed);
         if (_Dialog.ShowDialog() != DialogResult.OK)
           return false;
         if (State == UIDataState.View)
           return false; // 11.11.2021
-        //DoWrite();
+        DoWrite(true);
       }
       else
       {
         // !ShowEditor
         if (!SubDocTypeUI.DoWriting(this))
           return false;
-        DoWrite();
+        DoWrite(false);
       }
 
       return true;
@@ -412,17 +436,17 @@ namespace FreeLibSet.Forms.Docs
     /// полей корректные.
     /// </summary>
     /// <returns></returns>
-    private bool DoWrite()
+    private void DoWrite(bool dialogShown)
     {
       // TODO:
       if (State == UIDataState.View)
-        return true;
+        return;
 
       if (State == UIDataState.Delete)
       {
         for (int i = 0; i < SubDocs.SubDocCount; i++)
           SubDocs[i].Delete();
-        return true;
+        return;
       }
 
 
@@ -467,10 +491,13 @@ namespace FreeLibSet.Forms.Docs
       SubDocTypeUI.DoWrote(this);
 
       // Уведомление о выполнении записи
-      if (AfterWrite != null)
+      if (dialogShown)
       {
-        SubDocEditEventArgs args = new SubDocEditEventArgs(this);
-        AfterWrite(this, args);
+        if (AfterWrite != null)
+        {
+          SubDocEditEventArgs args = new SubDocEditEventArgs(this);
+          AfterWrite(this, args);
+        }
       }
 
 
@@ -484,7 +511,7 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowException(e, "Ошибка сохранения копий значений поддокумента \"" + SubDocTypeUI.SubDocType.SingularTitle + "\" для будущего использования");
       }
 
-      return true;
+      return;
     }
 
     void Dialog_FormClosed(object sender, EventArgs args)
@@ -542,7 +569,7 @@ namespace FreeLibSet.Forms.Docs
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// true, если пользователь не может изменять поля документа. 
+    /// true, если пользователь не может изменять поля документа (<see cref="State"/>=<see cref="UIDataState.View"/> или <see cref="UIDataState.Delete"/>). 
     /// Это свойство не обязано совпадать с <see cref="MainEditor"/>.IsReadOnly.
     /// Основной редактор может находиться в режиме редактирования, а редактор документа - в режиме просмотра записей.
     /// </summary>

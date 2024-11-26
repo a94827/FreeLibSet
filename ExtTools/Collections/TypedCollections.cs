@@ -1764,7 +1764,7 @@ namespace FreeLibSet.Collections
     #region ICollection<T> Members
 
     /// <summary>
-    /// Добавляет элемент в коллецию
+    /// Добавляет элемент в коллекцию
     /// </summary>
     /// <param name="item">Добавляемый элемент</param>
     public void Add(T item)

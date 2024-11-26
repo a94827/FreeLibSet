@@ -22,6 +22,7 @@ namespace EFPCommandItemsDemo
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efp1 = new EFPTextBox(efpForm, ed1);
+      efp1.CommandItems.UseStatusBarRC = true;
       efp2 = new EFPIntEditBox(efpForm, ed2);
       efp3 = new EFPDateTimeBox(efpForm, ed3);
 

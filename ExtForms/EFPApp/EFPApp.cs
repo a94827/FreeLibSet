@@ -2228,7 +2228,7 @@ namespace FreeLibSet.Forms
 
         // Для старых приложений
         if (_StatusBar == null)
-          _StatusBar = new EFPAppStatusBar();
+          _StatusBar = new EFPAppStatusBar(false);
         return _StatusBar;
       }
     }

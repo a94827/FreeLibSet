@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
 
-      EFPDataViewCopyFormatsForm.AddCommandItem(this);
+      ciCopySettings = EFPDataViewCopyFormatsForm.AddCommandItem(this);
 
       /*
       if (EFPApp.ShowToolTips)
@@ -146,6 +146,11 @@ namespace FreeLibSet.Forms
         ciCut.Usage = clipboardUsage;
 
       ciCopy.Usage = clipboardUsage;
+      if (!ClipboardInToolBar)
+      {
+        ciCopySettings.Usage = EFPCommandItemUsage.Menu;
+        //ciCopyToolTip.Usage = EFPCommandItemUsage.Menu;
+      }
 
 
       // Добавляем форматы вставки текста после пользовательских форматов
@@ -197,7 +202,7 @@ namespace FreeLibSet.Forms
 
     #region Копировать
 
-    private EFPCommandItem ciCopy;
+    private EFPCommandItem ciCopy, ciCopySettings;
 
     private void DoCopy(object sender, EventArgs args)
     {

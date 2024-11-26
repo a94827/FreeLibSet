@@ -10,7 +10,11 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data
 {
   /// <summary>
-  /// Базовый класс "выражения", которое может быть обычным полем, ссылочным полем (получаемым через JOIN), константой, функцией или математическим выражением.
+  /// Базовый класс "выражения", которое может быть обычным полем <see cref="DBxColumn"/>, 
+  /// ссылочным полем (получаемым через JOIN), 
+  /// константой <see cref="DBxConst"/>, 
+  /// функцией <see cref="DBxFunction"/> или математическим выражением,
+  /// агрегатной функцией <see cref="DBxAggregateFunction"/>.
   /// Выражения должны сериализоваться и быть классами "однократной записи".
   /// Должен быть переопределен метод <see cref="Object.Equals(object)"/>.
   /// </summary>
@@ -108,7 +112,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает объект для простого или составного поля.
-    /// Не проверяется корректность имени, так как объект используется и для DataView, где ограничений на имя практически нет 
+    /// Не проверяется корректность имени, так как объект используется и для <see cref="System.Data.DataView"/>, где ограничений на имя практически нет.
+    /// Единственное ограничение - не допускается запятая в имени.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     public DBxColumn(string columnName)
@@ -223,7 +228,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает константу с заданным значением.
-    /// Нельзя использовать значение null или DBNull.
+    /// Нельзя использовать значение null или <see cref="DBNull"/>, используйте перегрузку с аргументом <see cref="DBxColumnType"/>.
     /// Тип данных определяется из константы.
     /// </summary>
     /// <param name="value">Значение</param>
@@ -244,7 +249,7 @@ namespace FreeLibSet.Data
       if (columnType == DBxColumnType.Unknown)
       {
         if (value == null || value is DBNull)
-          throw new ArgumentNullException("value", "Используйте конструктор, принимающий 2 аргумента");
+          throw new ArgumentNullException("value", "Используйте конструктор, принимающий 2 аргумента, и задавайте DBxColumnType");
         _Value = value;
 
         _ColumnType = DBxTools.ValueToColumnType(value);
@@ -517,7 +522,7 @@ namespace FreeLibSet.Data
     #region Конструктор
 
     /// <summary>
-    /// Создает объект функции, принимающей список аргументов DBxExpression
+    /// Создает объект функции, принимающей список аргументов <see cref="DBxExpression"/>.
     /// </summary>
     /// <param name="function">Функция</param>
     /// <param name="args">Аргументы функции - другие выражения</param>
@@ -848,7 +853,6 @@ namespace FreeLibSet.Data
 
     #endregion
   }
-
 
   /// <summary>
   /// Список функций и операторов

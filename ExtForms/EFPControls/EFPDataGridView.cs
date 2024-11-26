@@ -1954,6 +1954,9 @@ namespace FreeLibSet.Forms
         if (CurrentIncSearchColumn.GridColumn.Index != Control.CurrentCellAddress.X)
           CurrentIncSearchColumn = null;
       }
+
+      if (CommandItemsIfAssigned!=null)
+        CommandItems.RefreshStatItems();
     }
 
     #endregion
@@ -9228,6 +9231,7 @@ namespace FreeLibSet.Forms
         }
 
         InitTopLeftHeaderCellToolTipText();
+        CommandItems.RefreshStatItems();
       }
     }
 

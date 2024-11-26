@@ -599,6 +599,7 @@ namespace FreeLibSet.Forms
     /// Возвращает true, если управляющий элемент <paramref name="parent"/> прямо или косвенно является родителем для 
     /// <paramref name="child"/>.
     /// Метод рекурсивно просматривает свойство <see cref="Control.Parent"/> для дочернего элемента.
+    /// Если <paramref name="parent"/> и <paramref name="child"/> совпадают, также возвращается true.
     /// Если один из аргументов равен null, возвращает false.
     /// </summary>
     /// <param name="parent">Родительский элемент</param>
@@ -908,6 +909,38 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    /// <summary>
+    /// Возвращает <paramref name="control"/> или один из его вложенных управляющих элементов (самый вложенный), для которого <see cref="Control.Focused"/> возвращает true.
+    /// Если <paramref name="control"/>=null, возвращается null.
+    /// </summary>
+    /// <param name="control">Проверяемый управляющий элемент или <see cref="Form"/></param>
+    /// <returns>Элемент с фокусом ввода</returns>
+    public static Control GetFocusedControl(Control control)
+    {
+      if (control == null)
+        return null;
+      if (!control.ContainsFocus)
+        return null;
+      while ((!control.Focused) && control.HasChildren)
+      {
+        Control focusedChild = null;
+        foreach (Control child in control.Controls)
+        {
+          if (child.ContainsFocus)
+          {
+            focusedChild = child;
+            break;
+          }
+        }
+        if (focusedChild == null)
+          break;
+        else
+          control = focusedChild;
+      }
+      return control;
+    }
+
 
     #endregion
 

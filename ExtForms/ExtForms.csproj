@@ -76,6 +76,18 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
+    <Compile Include="Data\CodeGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Data\CodeGridFilterForm.designer.cs">
+      <DependentUpon>CodeGridFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DateRangeInclusionGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Data\DateRangeInclusionGridFilterForm.designer.cs">
+      <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\DBxExtValuesDialogInitEventArgs.cs" />
     <Compile Include="Data\EFPDBxGridFilters.cs" />
     <Compile Include="Data\ExtValueCheckBox.cs" />
@@ -84,6 +96,13 @@
     <Compile Include="Data\ExtValueNumEdit.cs" />
     <Compile Include="Data\OtherGridFilters.cs" />
     <Compile Include="Data\RangeGridFilters.cs" />
+    <Compile Include="Data\XmlCfgExtEditItem.cs" />
+    <Compile Include="Data\YearGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Data\YearGridFilterForm.designer.cs">
+      <DependentUpon>YearGridFilterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DataEditDialog.cs" />
     <Compile Include="Dialogs\EFPDataViewCopyFormatsForm.cs">
       <SubType>Form</SubType>
@@ -265,7 +284,9 @@
     <Compile Include="EFPControls\EFPXmlViewBox.cs" />
     <Compile Include="EFPControls\EFPYearMonthBox.cs" />
     <Compile Include="Controls\ExtDataGridViewCheckBoxColumn.cs" />
-    <Compile Include="Controls\ExtPrintPreviewControl.cs" />
+    <Compile Include="Controls\ExtPrintPreviewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Drawing\ExtTextRenderer.cs" />
     <Compile Include="Dialogs\FileBrowseForm.cs">
       <SubType>Form</SubType>
@@ -609,7 +630,9 @@
       <DependentUpon>WizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WizardSteps2.cs" />
-    <Compile Include="EFPControls\XmlEditor.cs" />
+    <Compile Include="EFPControls\XmlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Controls\XmlViewBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -629,6 +652,18 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\CodeGridFilterForm.resx">
+      <DependentUpon>CodeGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\DateRangeInclusionGridFilterForm.resx">
+      <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\YearGridFilterForm.resx">
+      <DependentUpon>YearGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
       <SubType>Designer</SubType>

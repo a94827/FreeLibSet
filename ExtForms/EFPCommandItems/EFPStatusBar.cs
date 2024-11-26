@@ -43,7 +43,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Эта версия конструктора предназначена для создания панелей на уровне приложения
     /// </summary>
-    [Obsolete("Создавать объекты EFPStatusBarPanels из прилоежния не следует. Используйте EFPApp.Interface", false)]
+    [Obsolete("Создавать объекты EFPStatusBarPanels из приложения не следует. Используйте EFPApp.Interface", false)]
     public EFPStatusBarPanels()
       : this(EFPApp.StatusBar, null)
     {
@@ -127,14 +127,23 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Отсоединяет панели в коллеции <see cref="StatusBarControl"/>.StatusBarHandler
+    /// Отсоединяет панели в коллекции <see cref="StatusBarControl"/>.StatusBarHandler
     /// </summary>
     public void Detach()
     {
       if (_UsedStatusBarHandler != null)
+      {
         _UsedStatusBarHandler.Remove(this);
-      _UsedStatusBarHandler = null;
+        _UsedStatusBarHandler = null;
+      }
     }
+
+    internal void DetachDelayed(EFPContextCommandItems commandItems)
+    {
+      if (_UsedStatusBarHandler != null)
+        _UsedStatusBarHandler.DelayedRemovingItems[this] = commandItems;
+    }
+
 
     #endregion
 
@@ -260,15 +269,15 @@ namespace FreeLibSet.Forms
     /// Возвращает обработчик статусной строки или null,
     /// если статусная строка не поддерживается
     /// </summary>
-    EFPStatusBarHandler StatusBarHandler { get;}
+    EFPStatusBarHandler StatusBarHandler { get; }
   }
 
   /// <summary>
-  /// Обработчик статусной строки в главном окне программы или статусной строки окна.
+  /// Обработчик статусной строки <see cref="StatusStrip"/> в главном окне программы или статусной строки окна.
   /// Хранит коллекцию объектов <see cref="EFPStatusBarPanels"/>, элементы которой меняются при смене фокуса ввода (или активного окна).
   /// Обработчик выполняет отложенное обновление панелек статусной строки по таймеру, так как из некоторых событий формы
   /// нельзя выполнять обновление. К тому же, изменение фокуса ввода может выполняться несколько раз подряд.
-  /// Объект реализует интерфейс <see cref="IDisposable"/>. Уничтожение объекта очищает список панелек, но не удаляет управляющий элемент
+  /// Объект реализует интерфейс <see cref="IDisposable"/>. Уничтожение объекта очищает список панелек, но не удаляет управляющий элемент <see cref="StatusStrip"/>.
   /// </summary>
   public sealed class EFPStatusBarHandler : DisposableObject, ICollection<EFPStatusBarPanels>, IEFPAppIdleHandler
   {
@@ -303,7 +312,9 @@ namespace FreeLibSet.Forms
       // ToolStrip.MouseMove не вызывается, если мышь находится над панелькой, а не над рамкой
       // ToolStripItem.MouseEnter,MouseLeave и MouseMove не вызываются, если ToolStripItem.Enabled=false
       // Поэтому всю обработку делаем в IdleHandler.
-      // Собственно, так даже проще
+      // Собственно, так даже проще.
+
+      DelayedRemovingItems = new Dictionary<EFPStatusBarPanels, EFPContextCommandItems>();
 
       EFPApp.IdleHandlers.Add(this);
     }
@@ -341,7 +352,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает true, если обработчик относится к конкретной форме.
-    /// False, если статусная строка для приложения в-целом
+    /// False, если статусная строка для приложения в-целом.
     /// </summary>
     public bool IsFormOwned { get { return _IsFormOwned; } }
     private readonly bool _IsFormOwned;
@@ -366,7 +377,7 @@ namespace FreeLibSet.Forms
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      StringBuilder sb=new StringBuilder();
+      StringBuilder sb = new StringBuilder();
       sb.Append("IsFormOwned=");
       sb.Append(IsFormOwned);
       if (IsDisposed)
@@ -406,12 +417,14 @@ namespace FreeLibSet.Forms
     {
       _Panels.Add(item);
       _Modified = true;
+      DelayedRemovingItems.Remove(item);
     }
 
     void ICollection<EFPStatusBarPanels>.Clear()
     {
       _Panels.Clear();
       _Modified = true;
+      DelayedRemovingItems.Clear();
     }
 
     /// <summary>
@@ -449,6 +462,7 @@ namespace FreeLibSet.Forms
     /// <returns>Результат удаления</returns>
     public bool Remove(EFPStatusBarPanels item)
     {
+      DelayedRemovingItems.Remove(item);
       if (_Panels.Remove(item))
       {
         _Modified = true;
@@ -482,10 +496,14 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    internal readonly Dictionary<EFPStatusBarPanels, EFPContextCommandItems> DelayedRemovingItems;
+
     #region IEFPAppIdleHandler Members
 
     void IEFPAppIdleHandler.HandleIdle()
     {
+      DetachDelaydItems();
+
       UpdateIfModified();
 
       //StatusStripControl_MouseMove(null, null);
@@ -502,6 +520,28 @@ namespace FreeLibSet.Forms
         }
       }
       catch { }
+    }
+
+    private void DetachDelaydItems()
+    {
+      if (DelayedRemovingItems.Count > 0)
+      {
+        List<EFPStatusBarPanels> lst = null;
+        foreach (KeyValuePair<EFPStatusBarPanels, EFPContextCommandItems> pair in DelayedRemovingItems)
+        {
+          if (pair.Value.StatusBarPanelsShouldBeDetached())
+          {
+            if (lst == null)
+              lst = new List<EFPStatusBarPanels>();
+            lst.Add(pair.Key);
+          }
+        }
+        if (lst != null)
+        {
+          foreach (EFPStatusBarPanels item in lst)
+            item.Detach();
+        }
+      }
     }
 
     #endregion
@@ -585,10 +625,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     private ToolStripItem _CurrentToolTipItem;
 
-
     private void InitToolTip(ToolStripItem item)
     {
-      if (_TheToolTip==null)
+      if (_TheToolTip == null)
         return;
 
       if (item == null)
@@ -600,21 +639,20 @@ namespace FreeLibSet.Forms
         else
         {
           // Количество строк в подсказке влияет на размещение
-          int LineCount = 1;
+          int lineCount = 1;
           foreach (char ch in item.ToolTipText)
           {
             if (ch == '\n')
-              LineCount++;
+              lineCount++;
           }
 
           // Выводим подсказку над статусной строкой
-          Point pos = new Point(item.Bounds.Left, -StatusStripControl.Height - (LineCount - 1) * StatusStripControl.Font.Height);
+          Point pos = new Point(item.Bounds.Left, -StatusStripControl.Height - (lineCount - 1) * StatusStripControl.Font.Height);
           _TheToolTip.Show(item.ToolTipText, StatusStripControl, pos, _TheToolTip.AutoPopDelay);
         }
       }
       _CurrentToolTipItem = item;
     }
-
 
     #endregion
   }
@@ -627,10 +665,13 @@ namespace FreeLibSet.Forms
   {
     #region Защищенный конструктор
 
-    internal EFPAppStatusBar()
+    internal EFPAppStatusBar(bool isSDI)
     {
       _Visible = true;
+      _IsSDI = isSDI;
     }
+
+    private readonly bool _IsSDI;
 
     #endregion
 
@@ -659,7 +700,7 @@ namespace FreeLibSet.Forms
         if (_StatusStripControl != null)
         {
           _StatusStripControl.Visible = Visible;
-          _StatusBarHandler = new EFPStatusBarHandler(_StatusStripControl, false);
+          _StatusBarHandler = new EFPStatusBarHandler(_StatusStripControl, _IsSDI);
           _StatusBarHandler.UpdateIfModified();
         }
       }

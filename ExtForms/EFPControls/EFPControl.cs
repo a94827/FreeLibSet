@@ -426,13 +426,13 @@ namespace FreeLibSet.Forms
     /// Свойство можно устанавливать только до вывода формы на экран
     /// </summary>
     public IButtonControl DefaultButton
-    { 
+    {
       get { return _DefaultButton; }
-      set 
+      set
       {
         CheckHasNotBeenCreated();
-        _DefaultButton = value; 
-      } 
+        _DefaultButton = value;
+      }
     }
     private IButtonControl _DefaultButton;
 
@@ -819,13 +819,17 @@ namespace FreeLibSet.Forms
       if (UseIdle) // проверка условия предотвратит бесполезный вызов Remove()
         EFPApp.IdleHandlers.Remove(this);
 
-      if (_UpdateByTimeHandlers != null)
+      EFPFormProvider formProvider = BaseProvider.FormProvider;
+      if (formProvider != null)
       {
-        if (BaseProvider.FormProvider != null)
+        if (_UpdateByTimeHandlers != null)
         {
           for (int i = 0; i < _UpdateByTimeHandlers.Count; i++)
-            BaseProvider.FormProvider.UpdateByTimeHandlers.Remove(_UpdateByTimeHandlers[i]);
+            formProvider.UpdateByTimeHandlers.Remove(_UpdateByTimeHandlers[i]);
         }
+
+        //if (formProvider.LastFocusedControl == this.Control)
+        //  formProvider.LastFocusedControl = null;
       }
 
       if (Detached != null)
@@ -1682,25 +1686,41 @@ namespace FreeLibSet.Forms
 
     internal void UpdateCommandItemsActive()
     {
-      bool wantsHasFocus = ProviderState == EFPControlProviderState.Attached &&
+      bool wantedHasFocus = ProviderState == EFPControlProviderState.Attached &&
         //Control.ContainsFocus && // нельзя полагаться на это свойство из обработчика Control.Leave
         _ControlHasFocus &&
         BaseProvider.FormProvider.Active;
 
-      bool wantHasStatus = wantsHasFocus;
-      if (StatusBarHandlerIsFormOwned)
-        wantHasStatus = (ProviderState == EFPControlProviderState.Attached) && _ControlHasFocus; // 12.10.2023
+      //bool wantedHasStatus = wantsHasFocus;
+      //if (StatusBarHandlerIsFormOwned)
+        //wantedHasStatus = (ProviderState == EFPControlProviderState.Attached) && _ControlHasFocus; // 12.10.2023
 
-      if (wantsHasFocus)
+      if (wantedHasFocus)
         PrepareContextMenu();
       if (_CommandItems != null)
       {
-        _CommandItems.SetHasFocus(wantsHasFocus);
-        _CommandItems.SetHasStatus(wantHasStatus);
+        _CommandItems.SetHasFocus(wantedHasFocus);
+        //_CommandItems.SetHasStatus(wantedHasStatus);
+        _CommandItems.SetHasStatus(wantedHasFocus);
       }
     }
 
     private bool _ControlHasFocus;
+
+    internal bool StatusBarPanelsShouldBeDetached()
+    {
+      // Открыт другой блок диалога?
+      if (EFPApp.ActiveDialog != null && EFPApp.ActiveDialog != BaseProvider.FormProvider.Form)
+        return true; 
+
+      bool wantedHasStatus = (ProviderState == EFPControlProviderState.Attached) &&
+          WinFormsTools.ContainsControl(this.Control, BaseProvider.FormProvider.LastFocusedControl); 
+      if (!StatusBarHandlerIsFormOwned)
+        wantedHasStatus &= BaseProvider.FormProvider.Active;
+
+      return !wantedHasStatus;
+    }
+
 
     private void Control_Enter(object sender, EventArgs args)
     {
@@ -1708,6 +1728,8 @@ namespace FreeLibSet.Forms
 
       try
       {
+        //BaseProvider.FormProvider.LastFocusedControl = this.Control;
+
         if (Enter != null)
           Enter(this, EventArgs.Empty);
 
@@ -1754,7 +1776,7 @@ namespace FreeLibSet.Forms
         if (BaseProvider.FormProvider != null)
           BaseProvider.FormProvider.TempDefaultButton = null;
       }
-      catch { } 
+      catch { }
     }
 
     /// <summary>
@@ -2458,7 +2480,7 @@ namespace FreeLibSet.Forms
       }
     }
     private EventHandler _Idle;
-   
+
     #endregion
 
     #region Обновление по времени

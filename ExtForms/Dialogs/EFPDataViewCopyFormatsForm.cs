@@ -93,33 +93,18 @@ namespace FreeLibSet.Forms
       }
     }
 
-    internal static void AddCommandItem(IEFPDataViewClipboardCommandItems commandItems)
+    internal static EFPCommandItem AddCommandItem(IEFPDataViewClipboardCommandItems commandItems)
     {
-      EFPCommandItem ci1 = new EFPCommandItem("Edit", "CopyFormats");
-      ci1.MenuText = "Настройка форматов копирования ...";
-      ci1.ImageKey = "CopySettings";
-      ci1.Tag = commandItems;
-      ci1.Usage = EFPCommandItemUsage.Menu;
-      ci1.Click += CopyFormats_Click;
-      ci1.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
+      EFPCommandItem ci = new EFPCommandItem("Edit", "CopyFormats");
+      ci.MenuText = "Настройка форматов копирования ...";
+      ci.ImageKey = "CopySettings";
+      ci.Tag = commandItems;
+      ci.Usage = EFPCommandItemUsage.Menu;
+      ci.Click += CopyFormats_Click;
+      ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
 
-      ((EFPCommandItems)commandItems).Add(ci1);
-      /*
-      EFPCommandItem toolBarSubMenu = new EFPCommandItem("Edit", "CopySubMenu");
-      toolBarSubMenu.MenuText = "Дополнительные команды копирования";
-      toolBarSubMenu.Usage = EFPCommandItemUsage.ToolBarDropDown;
-      ((EFPCommandItems)commandItems).Add(toolBarSubMenu);
-
-      EFPCommandItem ci2 = new EFPCommandItem("Edit", "CopyFormats2");
-      ci2.Parent = toolBarSubMenu;
-      ci2.MenuText = "Настройка форматов копирования";
-      ci2.Tag = commandItems;
-      ci2.Usage = EFPCommandItemUsage.Menu;
-      ci2.Click += CopyFormats_Click;
-      ((EFPCommandItems)commandItems).Add(ci2);
-
-      return toolBarSubMenu;
-      */
+      ((EFPCommandItems)commandItems).Add(ci);
+      return ci;
     }
 
     private static void CopyFormats_Click(object sender, EventArgs args)

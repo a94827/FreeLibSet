@@ -36,7 +36,7 @@ namespace FreeLibSet.Forms.Docs
     SubDocTypeUI SubDocTypeUI { get; }
 
     /// <summary>
-    /// Описание вида поддокументов (экивавалентно <see cref="SubDocTypeUI.SubDocType"/>)
+    /// Описание вида поддокументов (экивавалентно <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.SubDocType"/>)
     /// </summary>
     DBxSubDocType SubDocType { get; }
 
@@ -67,7 +67,7 @@ namespace FreeLibSet.Forms.Docs
     object UserInitData { get; }
 
     /// <summary>
-    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="SubDocTypeUI.ManualOrderColumn"/>)
+    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.ManualOrderColumn"/>)
     /// </summary>
     void InitManualOrderColumnValue();
   }
@@ -494,7 +494,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация табличного просмотра документов с помощью <see cref="SubDocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object, bool, bool)"/>.
+    /// Инициализация табличного просмотра документов с помощью <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.PerformInitGrid(EFPDBxGridView, bool, DBxColumnList, object, bool, bool)"/>.
     /// Переопределенный метод может, например, добавить порядки сортировки в список Orders.
     /// </summary>
     /// <param name="reInit">true при повторном вызове метода (после изменения конфигурации просмотра)
@@ -1198,7 +1198,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="SubDocTypeUI.ManualOrderColumn"/>)
+    /// Инициализация поддокументов в просмотре, для которых не установлено поле для ручной сортировки строк (свойство <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.ManualOrderColumn"/>)
     /// </summary>
     public void InitManualOrderColumnValue()
     {
