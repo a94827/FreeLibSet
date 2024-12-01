@@ -21,7 +21,7 @@ namespace FreeLibSet.Models.SpreadsheetBase
     /// <param name="columnNumber">Номер столбца, начиная с 1</param>
     /// <returns>Буквенное обозначение столбца</returns>
     /// <remarks>    
-    /// Для совместного преобразования номера строки и столбца используйте структуру CellRef
+    /// Для совместного преобразования номера строки и столбца используйте структуру <see cref="CellRef"/>.
     /// </remarks>
     public static string GetColumnName(int columnNumber)
     {
@@ -44,12 +44,12 @@ namespace FreeLibSet.Models.SpreadsheetBase
     /// <summary>
     /// Преобразование обозначения столбца в нотации "A1" в номер столбца: "A"=1, "B=2", "Z"=26, ..., "AA"=27, ...
     /// Если строка пустая или null, вызывается ArgumentNullException. Если строка содержит символы, отличные от "A"-"Z", генерируется
-    /// FormatException. Если число больше int.MaxValue, генерируется OverflowException
+    /// <see cref="FormatException"/>. Если число больше <see cref="System.Int32.MaxValue"/>, генерируется <see cref="OverflowException"/>.
     /// </summary>
     /// <param name="columnName">Буквенное обозначение столбца</param>
     /// <returns>Номер столбца, начиная с 1</returns>
     /// <remarks>    
-    /// Для совместного преобразования номера строки и столбца используйте структуру CellRef
+    /// Для совместного преобразования номера строки и столбца используйте структуру <see cref="CellRef"/>.
     /// </remarks>
     public static int GetColumnNumber(string columnName)
     {
@@ -75,13 +75,13 @@ namespace FreeLibSet.Models.SpreadsheetBase
 
     /// <summary>
     /// Преобразование обозначения столбца в нотации "A1" в номер столбца: "A"=1, "B=2", "Z"=26, ..., "AA"=27, ...
-    /// Если строка пустая или не может быть преобразована, возвращается false
+    /// Если строка пустая или не может быть преобразована, возвращается false.
     /// </summary>
     /// <param name="columnName">Буквенное обозначение столбца</param>
     /// <param name="columnNumber">Результат преобразования (номер столбца) или 0 в случае ошибки</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
     /// <remarks>    
-    /// Для совместного преобразования номера строки и столбца используйте структуру CellRef
+    /// Для совместного преобразования номера строки и столбца используйте структуру <see cref="CellRef"/>.
     /// </remarks>
     public static bool TryGetColumnNumber(string columnName, out int columnNumber)
     {
@@ -354,7 +354,7 @@ namespace FreeLibSet.Models.SpreadsheetBase
 
     /// <summary>
     /// Создает указанный диапазон.
-    /// Если строки или столбцы заданы в неправильном порядке, то они переставляются местами
+    /// Если строки или столбцы заданы в неправильном порядке, то они переставляются местами.
     /// </summary>
     /// <param name="firstRow">Первая строка</param>
     /// <param name="firstColumn">Первый столбец</param>
@@ -492,7 +492,7 @@ namespace FreeLibSet.Models.SpreadsheetBase
     /// <summary>
     /// Возвращает диаазон в виде "A1:B2".
     /// Если диапазон содержит одну ячейку, то разделитель не используется, возвращается "A1".
-    /// Если IsEmpty=true, возвращается пустая строка.
+    /// Если <see cref="IsEmpty"/>=true, возвращается пустая строка.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -509,7 +509,7 @@ namespace FreeLibSet.Models.SpreadsheetBase
     /// <summary>
     /// Выполняет преобразование строки вида "A1:B10" или "A1" в диапазон.
     /// Для пустой строки возвращается неинициализированная структура без выброса исключения.
-    /// Если строка имеет неподходящий формат, выбрасывается исключение FormatException.
+    /// Если строка имеет неподходящий формат, выбрасывается исключение <see cref="FormatException"/>.
     /// В частности, не допускаются пробелы.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>

@@ -3168,7 +3168,8 @@ namespace FreeLibSet.Forms
     public static void ShowFormOrDialog(Form form)
     {
       if (ActiveDialog == null &&
-        MainWindow != null) // 09.06.2015
+        (MainWindow != null || // 09.06.2015
+        Interface != null)) // 01.12.2024
 
         ShowChildForm(form);
       else

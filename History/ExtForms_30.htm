@@ -5,15 +5,15 @@
 	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2024-11-26T22:34:42.881000000"/>
+	<meta name="changed" content="2024-12-01T21:21:29.721000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; background: transparent }
 		td p { margin-bottom: 0.25cm; background: transparent; orphans: 0; widows: 0 }
 		h1 { margin-bottom: 0.21cm; background: transparent }
 		h1.western { font-family: "Liberation Serif", serif }
 		h1.cjk { font-family: "SimSun"; font-size: 24pt }
 		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		p { margin-bottom: 0.25cm; background: transparent }
 		a:link { so-language: zxx }
 		a:visited { color: #800080 }
 	</style>
@@ -41,6 +41,32 @@
 		</td>
 		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">357</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">28.11.2024-01.12.2024</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Улучшен вывод
+			сообщения &laquo;Внутренняя ошибка обработки UnhandledException&raquo;
+			в </span><span lang="en-US">ApplicationExceptionHandler (<a href="ExtForms_11.htm#v017p22">v.17
+			</a></span><a href="ExtForms_11.htm#v017p22"><span lang="ru-RU">п.22</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">В
+			</span><span lang="en-US">EFPControlBase.StatusBarPanelShoudBeDetached()
+			</span><span lang="ru-RU">возникала ошибка при работе </span><span lang="en-US">Wizard.</span></p>
+			<p><span lang="en-US">3. EFPApp.ShowFormOrDialog() </span><span lang="ru-RU">вызывает
+			</span><span lang="en-US">ShowChildForm(), </span><span lang="ru-RU">а
+			не </span><span lang="en-US">ShowDialog() (<a href="ExtForms_11.htm#v094p2">v.94
+			</a></span><a href="ExtForms_11.htm#v094p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">),
+			</span><span lang="ru-RU">если</span><span lang="en-US">
+			у</span><span lang="ru-RU">становлено свойство </span><span lang="en-US">EFPApp.Interdace</span><span lang="ru-RU">.
+			При использовании интерфейса </span><span lang="en-US">SDI </span><span lang="ru-RU">может
+			еще не быть главного окна программы, но при этом не следует
+			выводить окно как модальное.</span></p>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -81,9 +107,10 @@
 			печать возникала ошибка, так как </span><span lang="en-US">EFPReportFilterItem
 			</span><span lang="ru-RU">уже имеет владельца </span><span lang="en-US">(<a href="ExtForms_11.htm#v298p3">v.298
 			</a></span><a href="ExtForms_11.htm#v298p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span><span lang="ru-RU">.</span></p>
-			<p lang="en-US">5. <span lang="ru-RU">Зацикливался расчет суммы по
-			выбранным ячейкам в табличном просмотре после изменения</span>
-			(<a href="ExtForms_20.htm#v353p1">v.353 <span lang="ru-RU">п.1</span></a>)</p>
+			<p><span lang="en-US">5. </span><span lang="ru-RU">Зацикливался
+			расчет суммы по выбранным ячейкам в табличном просмотре после
+			изменения</span> <span lang="en-US">(<a href="ExtForms_20.htm#v353p1">v.353
+			</a></span><a href="ExtForms_20.htm#v353p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
 		</td>
 	</tr>
 	<tr valign="top">

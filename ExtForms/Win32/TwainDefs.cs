@@ -11,14 +11,12 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-#pragma warning disable 1591
-
 namespace FreeLibSet.Win32.Twain
 {
   #region Перечисления
 
-  public class TwProtocol
-  {									
+  internal class TwProtocol
+  {
     #region Константы TWON_PROTOCOL...
 
     public const short Major = 1;
@@ -133,8 +131,13 @@ namespace FreeLibSet.Win32.Twain
 
   #region Перечисление TwRC
 
+#pragma warning disable 1591
+
+  /// <summary>
+  /// Twain return codes
+  /// </summary>
   public enum TwRC : short
-  {									// TWRC_....
+  {                 // TWRC_....
     Success = 0x0000,
     Failure = 0x0001,
     CheckStatus = 0x0002,
@@ -146,6 +149,9 @@ namespace FreeLibSet.Win32.Twain
     InfoNotSupported = 0x0008,
     DataNotAvailable = 0x0009
   }
+
+#pragma warning restore 1591
+
 
   #endregion
 
@@ -400,4 +406,4 @@ namespace FreeLibSet.Win32.Twain
   #endregion
 
   #endregion
-} 
+}

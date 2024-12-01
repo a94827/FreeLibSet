@@ -8,7 +8,7 @@ using FreeLibSet.DependedValues;
 
 namespace FreeLibSet.UICore
 {
-  #region Интерфейс IDocEditItem
+  #region Интерфейс IUIExtEditItem
 
   /// <summary>
   /// Интерфейс одного элемента, выполняющего редактирование поля или полей
@@ -126,7 +126,7 @@ namespace FreeLibSet.UICore
 
     #endregion
 
-    #region IDocEditItem Members
+    #region IExtEditItem Members
 
     /// <summary>
     /// Вызывается перед вызовами <see cref="ReadValues()"/> для всех элементов. Метод может 
@@ -230,7 +230,7 @@ namespace FreeLibSet.UICore
 
       #endregion
 
-      #region ICollection<IDocEditItem> Members
+      #region ICollection<IExtEditItem> Members
 
       public void Add(IUIExtEditItem item)
       {
@@ -304,14 +304,14 @@ namespace FreeLibSet.UICore
     public DepChangeInfo ChangeInfo { get { return _ChangeInfo; } }
 
     /// <summary>
-    /// Доступ к ChangeInfo как к списку
+    /// Доступ к свойству <see cref="ChangeInfo"/> как к списку
     /// </summary>
     protected DepChangeInfoList ChangeInfoList { get { return _ChangeInfo; } }
     private readonly DepChangeInfoList _ChangeInfo;
 
     #endregion
 
-    #region IDocEditItem Members
+    #region IExtEditItem Members
 
     /// <summary>
     /// Вызывает метод для всех дочерних объектов

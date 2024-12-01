@@ -761,7 +761,8 @@ namespace FreeLibSet.Logging
         args.Object is System.Net.IPAddress || // Добавлено 17.01.2017
         args.Object is DateRange ||  // 21.06.2021
         args.Object is YearMonth || // 21.06.2021
-        args.Object is YearMonthRange // 21.06.2021
+        args.Object is YearMonthRange || // 21.06.2021
+        args.Object is System.Security.Principal.SecurityIdentifier // 27.11.2024
         )
       {
         if (args.Level > 0)
@@ -804,6 +805,8 @@ namespace FreeLibSet.Logging
           case "Keys":
           case "Values":
           case "IsFixedSize":
+
+          case "Comparer": // 27.11.2024
             args.Mode = LogoutPropMode.None;
             break;
         }
@@ -2056,7 +2059,7 @@ namespace FreeLibSet.Logging
       // не информативно args.WritePair("GetSystemVersion()", RuntimeEnvironment.GetSystemVersion());
       args.WritePair("Processor Count", Environment.ProcessorCount.ToString());
       args.WritePair("Command Line", Environment.CommandLine);
-      args.WritePair("Current Dir", Environment.CurrentDirectory);
+      WriteDirectoryPathPair(args, "Current Dir", Environment.CurrentDirectory);
       try
       {
         try
@@ -2071,7 +2074,38 @@ namespace FreeLibSet.Logging
         args.WritePair("HasShutdownStarted", Environment.HasShutdownStarted.ToString());
       }
       catch { }
+
       args.WritePair("Current time", DateTime.Now.ToString());
+
+      if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+      {
+        args.WriteLine("WindowsIdentity");
+        args.IndentLevel++;
+        try
+        {
+          System.Security.Principal.WindowsIdentity wi = System.Security.Principal.WindowsIdentity.GetCurrent();
+          args.WritePair("User SID", wi.User.Value);
+          args.WritePair("AuthenticationType", wi.AuthenticationType);
+          args.WritePair("ImpersonationLevel", wi.ImpersonationLevel.ToString());
+          //args.WritePair("IsAuthenticated", wi.IsAuthenticated.ToString());
+          //args.WritePair("IsSystem", wi.IsSystem.ToString());
+          //args.WritePair("IsGuest", wi.IsGuest.ToString());
+          //args.WritePair("IsAnonymous", wi.IsAnonymous.ToString());
+          System.Security.Principal.WindowsPrincipal role = new System.Security.Principal.WindowsPrincipal(wi);
+          List<string> lstMembers = new List<string>();
+          foreach (System.Security.Principal.WindowsBuiltInRole bir in Enum.GetValues(typeof(System.Security.Principal.WindowsBuiltInRole)))
+          {
+            if (role.IsInRole(bir))
+              lstMembers.Add(bir.ToString());
+          }
+          args.WritePair("Built-in roles", String.Join(", ", lstMembers.ToArray()));
+        }
+        catch (Exception e)
+        {
+          args.WriteLine("*** " + e.Message + " ***");
+        }
+        args.IndentLevel--;
+      }
 
       args.WritePair("App. path", FileTools.ApplicationPath.Path);
       if (!FileTools.ApplicationPath.IsEmpty)
@@ -2103,7 +2137,7 @@ namespace FreeLibSet.Logging
         args.IndentLevel = currIndentLevel;
       }
 
-      args.WritePair("ApplicationBaseDir", FileTools.ApplicationBaseDir.Path);
+      WriteDirectoryPathPair(args, "ApplicationBaseDir", FileTools.ApplicationBaseDir.Path);
       args.WritePair("ApplicationName", EnvironmentTools.ApplicationName);
       args.WritePair("EntryAssemblyDescriptionAndVersion", EnvironmentTools.EntryAssemblyDescriptionAndVersion);
       args.WritePair("Environment.NewLine", DataTools.StrToCSharpString(Environment.NewLine));
@@ -2163,19 +2197,7 @@ namespace FreeLibSet.Logging
 
       #region TempDirectory
 
-      try
-      {
-        bool dirEx = false;
-        string suffix;
-        try
-        {
-          dirEx = Directory.Exists(TempDirectory.RootDir.Path);
-          suffix = dirEx ? " (Exists)" : " (Doesn't exist)";
-        }
-        catch { suffix = " (Error)"; }
-        args.WritePair("TempDirectory.RootDir", TempDirectory.RootDir.Path + suffix);
-      }
-      catch { }
+      WriteDirectoryPathPair(args, "TempDirectory.RootDir", TempDirectory.RootDir.Path);
 
       #endregion
 
@@ -2211,18 +2233,17 @@ namespace FreeLibSet.Logging
         }
         try
         {
-          s = Environment.GetFolderPath(sf);
+          WriteDirectoryPathPair(args, sf.ToString(), Environment.GetFolderPath(sf));
         }
         catch (Exception e)
         {
-          s = "*** " + e.Message + " ***";
+          args.WritePair(sf.ToString(), "*** " + e.Message + " ***");
         }
-        args.WritePair(sf.ToString(), s);
       }
 
-      args.WritePair("RuntimeEnvironment.GetRuntimeDirectory()", RuntimeEnvironment.GetRuntimeDirectory());
-      args.WritePair("Path.GetTempPath()", System.IO.Path.GetTempPath());
-      args.WritePair("FileTools.UserProfileDir", FileTools.UserProfileDir.Path);
+      WriteDirectoryPathPair(args, "RuntimeEnvironment.GetRuntimeDirectory()", RuntimeEnvironment.GetRuntimeDirectory());
+      WriteDirectoryPathPair(args, "Path.GetTempPath()", System.IO.Path.GetTempPath());
+      WriteDirectoryPathPair(args, "FileTools.UserProfileDir", FileTools.UserProfileDir.Path);
       args.IndentLevel--;
       args.WriteLine();
 
@@ -2311,7 +2332,7 @@ namespace FreeLibSet.Logging
       #region Logout Info
 
       args.WriteHeader("LogoutTools");
-      args.WritePair("LogBaseDirectory", LogoutTools.LogBaseDirectory.ToString());
+      WriteDirectoryPathPair(args, "LogBaseDirectory", LogoutTools.LogBaseDirectory.ToString());
       args.WritePair("LogEncoding", LogEncoding.EncodingName);
       args.IndentLevel++;
       args.WritePair("CodePage", LogEncoding.CodePage.ToString());
@@ -2514,6 +2535,37 @@ namespace FreeLibSet.Logging
       args.WriteLine();
 
       #endregion
+    }
+
+    /// <summary>
+    /// Выводит пару "name=dir.Path (Exists)" с перехватом возможных ошибок
+    /// </summary>
+    /// <param name="args"></param>
+    /// <param name="name"></param>
+    /// <param name="dir"></param>
+    private static void WriteDirectoryPathPair(LogoutInfoNeededEventArgs args, string name, string dir)
+    {
+      try
+      {
+        if (String.IsNullOrEmpty(dir))
+          args.WritePair(name, "[ Empty ]");
+        else
+        {
+          bool dirEx = false;
+          string suffix;
+          try
+          {
+            dirEx = Directory.Exists(dir);
+            suffix = dirEx ? " (Exists)" : " (Doesn't exist)";
+          }
+          catch { suffix = " (Error)"; }
+          args.WritePair(name, dir + suffix);
+        }
+      }
+      catch (Exception e)
+      {
+        args.WritePair(name, "*** " + e.Message + " ***");
+      }
     }
 
     private static int EnvListComparision(DictionaryEntry x, DictionaryEntry y)

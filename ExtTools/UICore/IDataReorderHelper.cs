@@ -10,7 +10,7 @@ using FreeLibSet.Collections;
 namespace FreeLibSet.UICore
 {
   /// <summary>
-  /// Интерфейс вспомогательного объекта, предназначенного для ручной перестановки строк табличного просмотра, связанного с DataTable.
+  /// Интерфейс вспомогательного объекта, предназначенного для ручной перестановки строк табличного просмотра, связанного с <see cref="System.Data.DataTable"/>.
   /// Требуемый порядок строк в просмотре определяется числовым полем.
   /// Интерфейс реализуется классами <see cref="DataTableReorderHelper"/> (плоская таблица) и <see cref="DataTableTreeReorderHelper"/> (дерево).
   /// Используется для реализации команд локального меню в EFPDataGridViewCommandItems и EFPDataTreeViewCommandItems (ExtForms.dll).

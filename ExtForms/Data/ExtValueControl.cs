@@ -432,7 +432,7 @@ namespace FreeLibSet.Forms.Data
 
     #endregion
 
-    #region IDocEditItem Members
+    #region IExtEditItem Members
 
     /// <summary>
     /// Перенос значения из <see cref="ExtValue"/> в управляющий элемент
@@ -801,7 +801,7 @@ namespace FreeLibSet.Forms.Data
 
     #endregion
 
-    #region IDocEditItem Members
+    #region IExtEditItem Members
 
     /// <summary>
     /// Перенос значений из <see cref="ExtValue1"/> и <see cref="ExtValue2"/> в управляющий элемент
@@ -1193,7 +1193,7 @@ namespace FreeLibSet.Forms.Data
 
   #endregion
 
-  #region IDocEditItem Members
+  #region IExtEditItem Members
 
     /// <summary>
     /// Перенос значения из DocValue в управляющий элемент
@@ -1434,7 +1434,7 @@ namespace FreeLibSet.Forms.Data
 
   #endregion
 
-  #region IDocEditItem Members
+  #region IExtEditItem Members
 
     /// <summary>
     /// Перенос значения из DocValue в управляющий элемент

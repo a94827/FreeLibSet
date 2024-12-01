@@ -32,7 +32,7 @@ namespace FreeLibSet.Forms
     /// Обычная версия конструктора
     /// </summary>
     public ApplicationExceptionHandler()
-      :this(true)
+      : this(true)
     {
     }
 
@@ -131,7 +131,23 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e2)
       {
-        MessageBox.Show(e2.Message, "Внутренняя ошибка обработки UnhandledException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //MessageBox.Show(e2.Message, "Внутренняя ошибка обработки UnhandledException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+        // 28.11.2024
+        string msg = e2.GetType().ToString() + Environment.NewLine +
+          e2.Message + Environment.NewLine;
+        try
+        {
+          System.Diagnostics.Process prc = System.Diagnostics.Process.GetCurrentProcess();
+          msg += "Process ID=" + prc.Id + ", Name=" + prc.ProcessName + Environment.NewLine;
+        }
+        catch { }
+        try
+        {
+          msg += "IsTerminating=" + args.IsTerminating.ToString();
+        }
+        catch { }
+        MessageBox.Show(msg, "Внутренняя ошибка обработки UnhandledException", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
 
@@ -295,7 +311,7 @@ namespace FreeLibSet.Forms
 
     private bool ProcessToolStripSetItemLocationException(NotSupportedException ex)
     {
-      if (ex.StackTrace==null)
+      if (ex.StackTrace == null)
         return false; // на всякий случай
 
       if (ex.StackTrace.Contains("System.Windows.Forms.ToolStrip.SetItemLocation"))
@@ -326,7 +342,7 @@ namespace FreeLibSet.Forms
         return false;
       if (!ex.Message.Contains("SetCurrentCellAddressCore"))
         return false;
-      if (ex.StackTrace==null)
+      if (ex.StackTrace == null)
         return false; // на всякий случай
       if (!ex.StackTrace.Contains("System.Windows.Forms.DataGridView.SetCurrentCellAddressCore"))
         return false;

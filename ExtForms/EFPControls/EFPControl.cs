@@ -1710,7 +1710,11 @@ namespace FreeLibSet.Forms
     internal bool StatusBarPanelsShouldBeDetached()
     {
       // Открыт другой блок диалога?
-      if (EFPApp.ActiveDialog != null && EFPApp.ActiveDialog != BaseProvider.FormProvider.Form)
+      Form currForm = null;
+      if (BaseProvider.FormProvider != null) // 28.11.2024
+        currForm = BaseProvider.FormProvider.Form;
+
+      if (EFPApp.ActiveDialog != null && EFPApp.ActiveDialog != currForm)
         return true; 
 
       bool wantedHasStatus = (ProviderState == EFPControlProviderState.Attached) &&
