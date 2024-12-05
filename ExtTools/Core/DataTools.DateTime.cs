@@ -636,8 +636,15 @@ namespace FreeLibSet.Core
         dt = dt.Value.Date;
     }
 
-#pragma warning disable 1591
 
+    /// <summary>
+    /// Use DateRangesCrossed()
+    /// </summary>
+    /// <param name="firstDate1"></param>
+    /// <param name="lastDate1"></param>
+    /// <param name="firstDate2"></param>
+    /// <param name="lastDate2"></param>
+    /// <returns></returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("Method renamed to DateRangesCrossed()")]
     public static bool DateRangeCrossed(Nullable<DateTime> firstDate1, Nullable<DateTime> lastDate1,
@@ -646,7 +653,6 @@ namespace FreeLibSet.Core
       return DateRangesCrossed(firstDate1, lastDate1, firstDate2, lastDate2);
     }
 
-#pragma warning restore 1591
 
     /// <summary>
     /// Возвращает true, если интервал дат {<paramref name="firstDate1"/>, <paramref name="lastDate1"/>} целиком

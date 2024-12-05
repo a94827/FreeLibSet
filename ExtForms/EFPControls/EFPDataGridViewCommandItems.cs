@@ -532,6 +532,11 @@ namespace FreeLibSet.Forms
         ciDelete.Usage = EFPCommandItemUsage.None;
         ciView.Usage = EFPCommandItemUsage.None;
       }
+      if ((!ForceInlineEditStatusPanel) && ciInlineEditStatus!=null)
+      {
+        if (ControlProvider.Control.ReadOnly)
+          ciInlineEditStatus.Usage = EFPCommandItemUsage.None;
+      }
 
       if (UseRefresh)
         ciRefresh.Visible = ControlProvider.HasRefreshDataHandler;
@@ -645,6 +650,9 @@ namespace FreeLibSet.Forms
       {
         if (ciShowRowErrorMessages != null)
           ciShowRowErrorMessages.Usage = EFPCommandItemUsage.None;
+
+        if (ciCopyRowErrorMessages != null)
+          ciCopyRowErrorMessages.Usage = EFPCommandItemUsage.None; // 04.12.2024
       }
 
       if (ControlProvider.MarkRowsGridColumn == null)
@@ -671,6 +679,12 @@ namespace FreeLibSet.Forms
 
       if (ControlProvider.TextSearchContext == null)
         ciFind.Usage = EFPCommandItemUsage.None;
+
+      if (!ForceIncSearchStatusPanel)
+      {
+        if (!ControlProvider.CanIncSearch)
+          ciIncSearch.Usage &= (~EFPCommandItemUsage.StatusBar);
+      }
 
       // Доназначаем обработчики и горячие клавиши в зависимости от свойства EnterAsOk
       if (EnterAsOk)
@@ -994,6 +1008,25 @@ namespace FreeLibSet.Forms
     /// Панелька со значком для inline-редактирования
     /// </summary>
     private EFPCommandItem ciInlineEditStatus;
+
+    /// <summary>
+    /// Если установить в true, то значок состояния редактирования ячейки "по месту" будет присутствовать в статусной строке,
+    /// даже если на момент показа просмотра свойство <see cref="DataGridView.ReadOnly"/>=true.
+    /// Может потребоваться, если переключение просмотра в режим редактирования выполняется динамически.
+    /// По умолчанию - false, значок присутствует, только если просмотр допускает редактирование "по месту".
+    /// Свойство можно устанавливать только до вызова события <see cref="EFPControlBase.Created"/>.
+    /// </summary>
+    public bool ForceInlineEditStatusPanel
+    {
+      get { return _ForceInlineEditStatusPanel; }
+      set
+      {
+        CheckNotReadOnly();
+        _ForceInlineEditStatusPanel = value;
+      }
+    }
+    private bool _ForceInlineEditStatusPanel;
+
 
     private void ClickOKButton(object sender, EventArgs args)
     {
@@ -1577,6 +1610,24 @@ namespace FreeLibSet.Forms
 
     EFPCommandItem ciIncSearch, ciFind, ciFindNext;
 
+    /// <summary>
+    /// Если установить в true, то в статусной строке будет присутствовать панель поиска по первым буквам,
+    /// даже если нет ни одного столбца с установленным свойством <see cref="EFPDataGridView.CanIncSearch"/>=true.
+    /// Это может потребоваться, если столбцы добавляются динамически.
+    /// По умолчанию - false, панель отображается, только если есть хотя бы один столбец, поддерживающий поиск.
+    /// Свойство можно устанавливать только до вызова события <see cref="EFPControlBase.Created"/>.
+    /// </summary>
+    public bool ForceIncSearchStatusPanel
+    {
+      get { return _ForceIncSearchStatusPanel; }
+      set
+      {
+        ControlProvider.CheckHasNotBeenCreated();
+        _ForceIncSearchStatusPanel = value;
+      }
+    }
+    private bool _ForceIncSearchStatusPanel;
+
     private void IncSearch(object sender, EventArgs args)
     {
       // Начать / закончить поиск по первым буквам
@@ -1866,14 +1917,39 @@ namespace FreeLibSet.Forms
       if (_MenuRowErrors.Usage == EFPCommandItemUsage.None)
         return;
 
+      // Можно было бы точно определять наличие ошибок/предупреждений относительно текущей строки, но это затратно.
+      // Ориентируемся только на значок в левом верхнем углу просмотра.
+
       UISelectedRowsState selState = ControlProvider.SelectedRowsState;
+      bool possibleErrors = true;
+      bool possibleWarnings = true;
+      if (ControlProvider.ShowErrorCountInTopLeftCell)
+      {
+        // 04.12.2024
+        switch (ControlProvider.TopLeftCellImageKind)
+        {
+          case UIDataViewImageKind.Error:
+            possibleErrors = true;
+            possibleWarnings = true;
+            break;
+          case UIDataViewImageKind.Warning:
+            possibleErrors = false;
+            possibleWarnings = true;
+            break;
+          default:
+            possibleErrors = false;
+            possibleWarnings = false;
+            break;
+        }
+      }
 
       ciGotoNextErrorWarning.Enabled =
-      ciGotoPrevErrorWarning.Enabled =
+      ciGotoPrevErrorWarning.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection && possibleWarnings;
       ciGotoNextErrorOnly.Enabled =
-      ciGotoPrevErrorOnly.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection;
+      ciGotoPrevErrorOnly.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection && possibleErrors;
       if (ciCopyRowErrorMessages != null)
-        ciCopyRowErrorMessages.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection;
+        //ciCopyRowErrorMessages.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection;
+        ciCopyRowErrorMessages.Enabled = _GotoErrorEnabled && selState == UISelectedRowsState.SingleRow;
       if (ciShowRowErrorMessages != null)
         ciShowRowErrorMessages.Enabled = _GotoErrorEnabled && selState != UISelectedRowsState.NoSelection;
     }
@@ -1884,8 +1960,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если установлено в true(по умолчанию), а также установлены свойства <see cref="UseRowErrors"/>
-    /// и <see cref="EFPDataGridView.UseRowImages"/>, то в подменю "Строки с ошибками" есть команда
-    /// "Показать список".
+    /// и <see cref="EFPDataGridView.UseRowImages"/>, то в подменю "Строки с ошибками" есть команды
+    /// "Показать список" и "Копировать сообщение в буфер обмена".
     /// Это свойство сбрасывается в false в самом просмотре списка ошибок <see cref="EFPErrorDataGridView"/>, т.к.
     /// рекурсивный вызов не имеет смысла.
     /// </summary>

@@ -409,7 +409,7 @@ namespace FreeLibSet.UICore
     /// Имя числового столбца, используемого для сортировки
     /// </summary>
     public string OrderColumnName { get { return _Model.Table.Columns[_OrderColumnPos].ColumnName; } }
-    
+
     /// <summary>
     /// Позиция числового столбца, используемого для сортировки
     /// </summary>
@@ -620,16 +620,37 @@ namespace FreeLibSet.UICore
     /// <returns>True, если значение было изменено хотя бы для одной строки</returns>
     public bool Reorder()
     {
-      bool changed = false;
-      int cnt = 0;
+      //bool changed = false;
+      //int cnt = 0;
+      //foreach (TreePath path in new TreePathEnumerable(_Model))
+      //{
+      //  cnt++;
+      //  DataRow row = _Model.TreePathToDataRow(path);
+      //  if (DataTools.GetInt(row[_OrderColumnPos]) != cnt)
+      //  {
+      //    changed = true;
+      //    row[_OrderColumnPos] = cnt;
+      //  }
+      //}
+      //return changed;
+
+      // 03.12.2024
+      // Сначала собираем строки, потом нумеруем
+      List<DataRow> lst = new List<DataRow>(_Model.Table.Rows.Count);
       foreach (TreePath path in new TreePathEnumerable(_Model))
       {
-        cnt++;
         DataRow row = _Model.TreePathToDataRow(path);
-        if (DataTools.GetInt(row[_OrderColumnPos]) != cnt)
+        lst.Add(row);
+      }
+
+      bool changed = false;
+      for (int i = 0; i < lst.Count; i++)
+      {
+        DataRow row = lst[i];
+        if (DataTools.GetInt(row[_OrderColumnPos]) != (i+1))
         {
           changed = true;
-          row[_OrderColumnPos] = cnt;
+          row[_OrderColumnPos] = i+1;
         }
       }
       return changed;

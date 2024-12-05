@@ -7,8 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Core;
 
-#pragma warning disable 1591
-
 namespace FreeLibSet.Controls
 {
   /// <summary>                                                

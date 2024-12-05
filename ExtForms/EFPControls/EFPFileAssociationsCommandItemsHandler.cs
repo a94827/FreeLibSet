@@ -187,11 +187,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Подготовка файла.
     /// Вызывается перед выполнением любой команды.
-    /// <para>1. Вызывает событие FileNeeded, если есть обработчик.</para>
-    /// <para>2. Проверяет, что свойство FilePath установлено.</para>
-    /// <para>3. Проверяет наличие файла на диске</para>
+    /// <para>1. Вызывает событие <see cref="FileNeeded"/>, если есть обработчик.</para>
+    /// <para>2. Проверяет, что свойство <see cref="FilePath"/> установлено.</para>
+    /// <para>3. Проверяет наличие файла на диске.</para>
     /// </summary>
-    /// <returns>Возвращает false, если обработчик FileNeeded установил свойство Cancel</returns>
+    /// <returns>Возвращает false, если обработчик <see cref="FileNeeded"/> установил свойство <see cref="CancelEventArgs.Cancel"/></returns>
     public bool PrepareFile()
     {
       if (FileNeeded != null)
@@ -216,7 +216,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Все созданные команды меню
     /// </summary>
-    private List<EFPCommandItem> _AllCommands;
+    private readonly List<EFPCommandItem> _AllCommands;
 
     private EFPCommandItem CreateCommandItem(FileAssociationItem fa)
     {

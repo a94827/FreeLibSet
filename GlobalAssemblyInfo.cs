@@ -6,9 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Агеев Александр Владимирович")]
+[assembly: AssemblyCompany("Alexander Ageyev")]
 [assembly: AssemblyProduct("Freeware Library Set")]
-[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2006-2024 г. Свободное программное обеспечение (Free Software)")]
+[assembly: AssemblyCopyright("© Alexander Ageyev, 2006-2024 г. Free Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

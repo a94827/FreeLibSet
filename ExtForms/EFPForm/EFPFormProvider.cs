@@ -455,10 +455,18 @@ namespace FreeLibSet.Forms
 
         try
         {
-          if (!_OwnStatusBar.HasValue)
-            _OwnStatusBar = GetDefaultOwnStatusBar(); // фиксация значения свойства
-          if (OwnStatusBar && _StatusStripControl == null)
-            InitOwnStatusBar(/*AdjustFormSize*/ true); // должно быть до вызова Form.Activate(), иначе первый элемент не инициализирует статусную строку
+          _InsideOnSetFormVisible_StatusBarNeeded = true; // флажок для вызова EFPCommandItems.SetReadOnly()
+          try
+          {
+            if (!_OwnStatusBar.HasValue)
+              _OwnStatusBar = GetDefaultOwnStatusBar(); // фиксация значения свойства
+            if (OwnStatusBar && _StatusStripControl == null)
+              InitOwnStatusBar(/*AdjustFormSize*/ true); // должно быть до вызова Form.Activate(), иначе первый элемент не инициализирует статусную строку
+          }
+          finally
+          {
+            _InsideOnSetFormVisible_StatusBarNeeded = false;
+          }
         }
         catch (Exception e)
         {
@@ -2487,14 +2495,24 @@ namespace FreeLibSet.Forms
       return false;
     }
 
+    private bool _InsideOnSetFormVisible_StatusBarNeeded;
+
     private bool ContainsControlWantedStatusBar()
     {
       foreach (EFPControlBase controlProvider in GetAllControlProviders())
       {
         foreach (EFPCommandItem ci in controlProvider.CommandItems)
         {
-          if (ci.StatusBarUsage && ci.Visible /* 21.02.2020 */)
-            return true;
+          //if (ci.StatusBarUsage && ci.Visible /* 21.02.2020 */)
+          //  return true;
+          if (ci.StatusBarUsage)
+          {
+            if (_InsideOnSetFormVisible_StatusBarNeeded)
+              controlProvider.PrepareCommandItems(); // 02.12.2024
+            if (ci.Visible /* 21.02.2020 */ &&
+              ci.StatusBarUsage) // 03.12.2024 - свойство могло поменяться в EFPCommandItem.OnPrepare()
+              return true;
+          }
         }
       }
       return false;
@@ -2596,7 +2614,7 @@ namespace FreeLibSet.Forms
       Control focusedControl = WinFormsTools.GetFocusedControl(Form);
       if (focusedControl != null)
         _LastFocusedControl = focusedControl;
-      else
+      else if (_LastFocusedControl != null)
       {
         if (_LastFocusedControl.IsDisposed || (!_LastFocusedControl.Visible) || (!_LastFocusedControl.Enabled))
           _LastFocusedControl = null;

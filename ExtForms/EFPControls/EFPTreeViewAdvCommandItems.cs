@@ -233,6 +233,12 @@ namespace FreeLibSet.Forms
         ciView.Usage = EFPCommandItemUsage.None;
       }
 
+      if ((!ForceInlineEditStatusPanel) && ciInlineEditStatus != null)
+      {
+        if (ControlProvider.ControlIsReadOnly)
+          ciInlineEditStatus.Usage = EFPCommandItemUsage.None;
+      }
+
       if (UseRefresh)
         ciRefresh.Visible = ControlProvider.HasRefreshDataHandler;
       else
@@ -437,6 +443,24 @@ namespace FreeLibSet.Forms
     /// Панелька со значком для inline-редактирования
     /// </summary>
     private EFPCommandItem ciInlineEditStatus;
+
+    /// <summary>
+    /// Если установить в true, то значок состояния редактирования ячейки "по месту" будет присутствовать в статусной строке,
+    /// даже если на момент показа просмотра свойство <see cref="DataGridView.ReadOnly"/>=true.
+    /// Может потребоваться, если переключение просмотра в режим редактирования выполняется динамически.
+    /// По умолчанию - false, значок присутствует, только если просмотр допускает редактирование "по месту".
+    /// Свойство можно устанавливать только до вызова события <see cref="EFPControlBase.Created"/>.
+    /// </summary>
+    public bool ForceInlineEditStatusPanel
+    {
+      get { return _ForceInlineEditStatusPanel; }
+      set
+      {
+        CheckNotReadOnly();
+        _ForceInlineEditStatusPanel = value;
+      }
+    }
+    private bool _ForceInlineEditStatusPanel;
 
     private void ClickOKButton(object sender, EventArgs args)
     {

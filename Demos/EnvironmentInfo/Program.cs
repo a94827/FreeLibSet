@@ -28,6 +28,13 @@ namespace EnvironmentInfo
         sb.Append(Environment.NewLine);
         sb.Append("IsWine=");
         sb.Append(EnvironmentTools.IsWine.ToString());
+        if (EnvironmentTools.IsWine)
+          sb.Append(", Version=" + EnvironmentTools.WineVersion);
+        sb.Append(Environment.NewLine);
+        sb.Append("IsMono=");
+        sb.Append(EnvironmentTools.IsMono.ToString());
+        if (EnvironmentTools.IsMono)
+          sb.Append(EnvironmentTools.MonoVersion.ToString());
         sb.Append(Environment.NewLine);
 
         sb.Append("NetVersionText=");

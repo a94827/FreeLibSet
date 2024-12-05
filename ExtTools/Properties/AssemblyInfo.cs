@@ -6,5 +6,5 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("ExtTools")]
-[assembly: AssemblyDescription("Вспомогательные функции, кроме пользовательского интерфейса")]
+[assembly: AssemblyDescription("General purpose classes")]
 [assembly: Guid("2c0dfea6-8326-44e4-ba55-a994e0bedd10")]

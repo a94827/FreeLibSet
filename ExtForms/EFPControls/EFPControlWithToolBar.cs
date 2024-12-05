@@ -234,7 +234,7 @@ namespace FreeLibSet.Forms
     private readonly ExProvider _BaseProvider;
 
     /// <summary>
-    /// Основной управляющий элемент. Передается или создается в конструкторе
+    /// Основной управляющий элемент. Передается или создается в конструкторе.
     /// </summary>
     public T Control { get { return _Control; } }
     private readonly T _Control;

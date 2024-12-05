@@ -1895,7 +1895,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод вызывается после инициализации команд локального меню.
-    /// Добавляем обработчики, которые должны быть в конце цепочки.
+    /// Добавляет обработчики, которые должны быть в конце цепочки.
     /// </summary>
     protected override void OnAfterPrepareCommandItems()
     {
@@ -2881,9 +2881,9 @@ namespace FreeLibSet.Forms
     #region Доступ к выбранным ячейкам независимо от типа данных
 
     /// <summary>
-    /// Сколько строк выбрано сейчас в просмотре (одна, много или ни одной)
+    /// Сколько строк выбрано сейчас в просмотре (одна, много или ни одной).
     /// Для точного определения используйте свойство <see cref="SelectedGridRows"/>.
-    /// В отличие от обращения к свойству <see cref="SelectedGridRows"/>, это свойство вычисляется всегда быстро
+    /// В отличие от обращения к свойству <see cref="SelectedGridRows"/>, это свойство вычисляется всегда быстро.
     /// </summary>
     public UISelectedRowsState SelectedRowsState
     {
@@ -3310,8 +3310,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Выделяет строку в просмотре с заданыым индексом.
-    /// Используйте установку свойства CurrentRowIndex
+    /// Выделяет строку в просмотре с заданным индексом.
+    /// Используйте установку свойства <see cref="CurrentRowIndex"/>.
     /// </summary>
     /// <param name="rowIndex"></param>
     [Browsable(false)]
@@ -3331,7 +3331,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить выделенные столбцы таблицы. В режиме выделения
     /// ячейки возвращается массив из одного элемента. В режиме выбора строк
-    /// возвращается массив всех видимых столбцов
+    /// возвращается массив всех видимых столбцов.
     /// </summary>
     public DataGridViewColumn[] SelectedGridColumns
     {
@@ -3410,7 +3410,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Получить выделенные столбцы таблицы. В режиме выделения
     /// ячейки возвращается массив из одного элемента. В режиме выбора строк
-    /// возвращается массив всех видимых столбцов
+    /// возвращается массив всех видимых столбцов.
     /// </summary>
     public EFPDataGridViewColumn[] SelectedColumns
     {
@@ -4056,7 +4056,7 @@ namespace FreeLibSet.Forms
     /// В качестве текущих позиций запоминаются значения полей, заданных в <see cref="DataView.Sort"/>.
     /// Первый индекс двумерного массива соответствует количеству строк.
     /// Второй индекс соответствует количеству полей сортировки в <see cref="DataView.Sort"/>.
-    /// (обычно равно 1)
+    /// (обычно равно 1).
     /// Свойство возвращает null, если просмотр не соединен с <see cref="DataView"/>
     /// или <see cref="DataView.Sort"/> не имеет полей сортировки.
     /// </summary>
@@ -4470,7 +4470,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Номер текущего столбца. Если выбрано несколько столбцов (например, строка целиком),
-    /// то (-1)
+    /// то возвращается (-1).
     /// </summary>
     public int CurrentColumnIndex
     {
@@ -4536,7 +4536,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Имя текущего столбца. Если выбрано несколько столбцов (например, строка целиком),
-    /// то пустая строка ("")
+    /// то пустая строка ("").
     /// </summary>
     public string CurrentColumnName
     {
@@ -4710,7 +4710,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает высоту в пикселах, которую бы хотел иметь табличный просмотр
-    /// для размещения всех строк
+    /// для размещения всех строк.
     /// Возвращаемое значение не превышает высоту экрана.
     /// </summary>
     public int WantedHeight
@@ -5348,7 +5348,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Вызывается после установки нового значения свойства 
-    /// <see cref="CurrentOrderIndex"/> (или <see cref="CurrentOrder"/> / <see cref="CurrentOrderName"/>)
+    /// <see cref="CurrentOrderIndex"/> (или <see cref="CurrentOrder"/> / <see cref="CurrentOrderName"/>).
     /// Непереопределенный метод вызывает событие <see cref="CurrentOrderChanged"/>.
     /// </summary>
     /// <param name="args">Пустой аргумент</param>
@@ -8508,7 +8508,7 @@ namespace FreeLibSet.Forms
     /// подсказок. При установленном свойстве не будут правильно отображаться 
     /// значки и подсказки об ошибках в строках с помощью <see cref="DataRow.RowError"/>.
     /// По умолчанию - false (можно использовать стандартный механизм индикации в
-    /// DataGridView).
+    /// <see cref="DataGridView"/>).
     /// </summary>
     [DefaultValue(false)]
     public bool UseRowImages
@@ -8853,14 +8853,16 @@ namespace FreeLibSet.Forms
       if (Control.RowCount == 0)
       {
         EFPApp.ShowTempMessage("Просмотр не содержит ни одной строки");
+        return;
       }
+
       int startRowIndex;
       if (fromTableBegin)
         startRowIndex = -1;
       else
         startRowIndex = CurrentRowIndex;
-      int NewRowIndex = FindErrorRow(startRowIndex, forward, imageKind);
-      if (NewRowIndex < 0)
+      int newRowIndex = FindErrorRow(startRowIndex, forward, imageKind);
+      if (newRowIndex < 0)
       {
         string msg;
         switch (imageKind)
@@ -8885,15 +8887,25 @@ namespace FreeLibSet.Forms
           ", но строка" + msg + " не найдена");
         return;
       }
-      CurrentRowIndex = NewRowIndex;
+      CurrentRowIndex = newRowIndex;
     }
 
     /// <summary>
-    /// Найти строку, содержащую признак ошибки
+    /// <para>
+    /// Найти строку, содержащую признак ошибки.
+    /// Используются следующие критерии поиска в зависимости от аргумента <paramref name="imageKind"/>:
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description><see cref="UIDataViewImageKind.None"/> - Строки без ошибок, предупреждений и информационных сообщений</description></item>
+    /// <item><description><see cref="UIDataViewImageKind.Error"/> - Строки с ошибками</description></item>
+    /// <item><description><see cref="UIDataViewImageKind.Warning"/> - Строки с ошибками и предупреждениями</description></item>
+    /// <item><description><see cref="UIDataViewImageKind.Information"/> - Строки с ошибками, предупреждениями и информационными сообщениями</description></item>
+    /// </list>
     /// </summary>
     /// <param name="startRowIndex">С какой строки начать поиск. Значение (-1) указывает на поиск с начала (с конца) таблицы</param>
     /// <param name="forward">true-искать вперед к концу таблицы, false - искать назад к началу таблицы</param>
-    /// <param name="imageKind">Какую строку найти (условие поиска)</param>
+    /// <param name="imageKind">Какую строку найти (условие поиска). 
+    /// </param>
     /// <returns>Индекс найденной строки или (-1), если строка не найдена</returns>
     public int FindErrorRow(int startRowIndex, bool forward, UIDataViewImageKind imageKind)
     {

@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -40,16 +39,81 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileControlsForm.cs">
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="CultureDemo\CultureSelForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FileControlsForm.Designer.cs">
+    <Compile Include="CultureDemo\CultureSelForm.designer.cs">
+      <DependentUpon>CultureSelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CultureDemo\CultureTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CultureDemo\CultureTestForm.designer.cs">
+      <DependentUpon>CultureTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPDBxGridFiltersDemo\TestEFPDBxGridFilters.cs" />
+    <Compile Include="EFPTabControlDemo\EFPTabControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPTabControlDemo\EFPTabControlForm.Designer.cs">
+      <DependentUpon>EFPTabControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileControlsDemo\FileControlsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileControlsDemo\FileControlsForm.Designer.cs">
       <DependentUpon>FileControlsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManualOrderColumnDemo\ManualOrderColumnParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManualOrderColumnDemo\ManualOrderColumnParamForm.designer.cs">
+      <DependentUpon>ManualOrderColumnParamForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FileControlsForm.resx">
+    <Compile Include="TreeViewDemo\TreeViewParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TreeViewDemo\TreeViewParamsForm.designer.cs">
+      <DependentUpon>TreeViewParamsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeViewDemo\TreeViewResultForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TreeViewDemo\TreeViewResultForm.designer.cs">
+      <DependentUpon>TreeViewResultForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeViewDemo\TreeViewSimpleFileModel.cs" />
+    <Compile Include="WizardDemo\WizardParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WizardDemo\WizardParamForm.Designer.cs">
+      <DependentUpon>WizardParamForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardDemo\WizardTemplateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WizardDemo\WizardTemplateForm.Designer.cs">
+      <DependentUpon>WizardTemplateForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CultureDemo\CultureSelForm.resx">
+      <DependentUpon>CultureSelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CultureDemo\CultureTestForm.resx">
+      <DependentUpon>CultureTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPTabControlDemo\EFPTabControlForm.resx">
+      <DependentUpon>EFPTabControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileControlsDemo\FileControlsForm.resx">
       <DependentUpon>FileControlsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManualOrderColumnDemo\ManualOrderColumnParamForm.resx">
+      <DependentUpon>ManualOrderColumnParamForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -60,6 +124,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TreeViewDemo\TreeViewParamsForm.resx">
+      <DependentUpon>TreeViewParamsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TreeViewDemo\TreeViewResultForm.resx">
+      <DependentUpon>TreeViewResultForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardDemo\WizardParamForm.resx">
+      <DependentUpon>WizardParamForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardDemo\WizardTemplateForm.resx">
+      <DependentUpon>WizardTemplateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -246,6 +246,14 @@ namespace FreeLibSet.Forms
   public class SimpleForm<T> : Form, IEFPControlWithToolBar<T>
     where T : Control, new()
   {
+    // Расположение управляющих элементов:
+    // SimpleForm<T>
+    //   TopPanel
+    //   MainPanel
+    //     IEFPControlWithToolBar<T>.ToolBarPanel
+    //     IEFPControlWithToolBar<T>.Control
+    //   BottomPanel
+
     #region Конструктор
 
     /// <summary>
@@ -297,31 +305,31 @@ namespace FreeLibSet.Forms
     /// элемент Control и панель кнопок, если есть
     /// </summary>
     public Panel MainPanel { get { return _MainPanel; } }
-    private Panel _MainPanel;
+    private readonly Panel _MainPanel;
 
     /// <summary>
     /// Дополнительная  панель в верхней части окна. По умолчанию она пуста и скрыта.
     /// </summary>
     public Panel TopPanel { get { return _TopPanel; } }
-    private Panel _TopPanel;
+    private readonly Panel _TopPanel;
 
     /// <summary>
     /// Дополнительная  панель в нижней части окна. По умолчанию она пуста и скрыта.
     /// </summary>
     public Panel BottomPanel { get { return _BottomPanel; } }
-    private Panel _BottomPanel;
+    private readonly Panel _BottomPanel;
 
     /// <summary>
     /// Провайдер формы
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
 
     /// <summary>
     /// Управляющий элемент и панель инструментов
     /// </summary>
     public EFPControlWithToolBar<T> ControlWithToolBar { get { return _ControlWithToolBar; } }
-    private EFPControlWithToolBar<T> _ControlWithToolBar;
+    private readonly EFPControlWithToolBar<T> _ControlWithToolBar;
 
     #endregion
 
