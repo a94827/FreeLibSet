@@ -5,7 +5,7 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20241204;174917811000000">
+	<META NAME="CHANGED" CONTENT="20241209;134848627000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2024-12-01T21:21:29.721000000">
 	<STYLE TYPE="text/css">
@@ -48,16 +48,60 @@
 	</TR>
 	<TR VALIGN=TOP>
 		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>358</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>06.12.2024-09.12.2024</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Измененена
+			загрузка списка истории в EFPConfigParamSetComboBox (</SPAN><A HREF="ExtForms_11.htm#v132p2"><SPAN LANG="en-US">v.132
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">).
+			Выполняется сортировка по времени.</SPAN></P>
+			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Редактор
+			настройки табличного просмотра </SPAN><SPAN LANG="en-US">GridConfigForm
+			(<A HREF="ExtForms_11.htm#v100p3">v.100 </A></SPAN><A HREF="ExtForms_11.htm#v100p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">использует EFPConfigParamSetComboBox
+			(</SPAN><A HREF="ExtForms_11.htm#v132p2"><SPAN LANG="en-US">v.132
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)
+			вместо собственной реализации готовых наборов.</SPAN></P>
+			<P LANG="en-US">3. <SPAN LANG="ru-RU">Подсказки (список столбцов)
+			в списке готовых наборов настройки табличного просмотра.
+			</SPAN>EFPGridProducerEditor (<A HREF="ExtForms_11.htm#v276p11">v.276
+			<SPAN LANG="ru-RU">п.11</SPAN></A>) <SPAN LANG="ru-RU">реализует
+			интерфейс </SPAN>IEFPConfigParamSetAuxTextHandler <SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v243p1">v.243
+			<SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
+			<P LANG="en-US">4. EFPDataGridViewConfig.WriteConfig() (<A HREF="ExtForms_11.htm#v086p5">v.86
+			<SPAN LANG="ru-RU">п.5</SPAN></A>) <SPAN LANG="ru-RU">не
+			записывает значение &laquo;</SPAN>Width<SPAN LANG="ru-RU">&raquo;
+			для столбца, у которого &laquo;</SPAN>FillMode<SPAN LANG="ru-RU">&raquo;</SPAN>=1<SPAN LANG="ru-RU">.
+			Сохраненная конфигурация остается актуальной после измененения
+			ширины окна табличного просмотра.</SPAN></P>
+			<P><SPAN LANG="en-US">5</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">EFPConfigParamSetComboBox.</SPAN><SPAN LANG="en-US">FillSetItems()
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v132p2"><SPAN LANG="en-US">v.132
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)
+			выполняется дополительная запись-чтение настроек по умолчанию
+			EFPConfigParamDefaultSet.</SPAN><SPAN LANG="en-US">Config </SPAN><SPAN LANG="ru-RU">в
+			управляющие элементы формы, чтобы контрольная сумма
+			ParamSetComboBoxItem.</SPAN><SPAN LANG="en-US">MD5Sum </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v089p2"><SPAN LANG="en-US">v.89
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">
+			</SPAN><SPAN LANG="ru-RU">соответствовала актуальной. Свойство
+			EFPConfigParamDefaultSet.</SPAN><SPAN LANG="en-US">MD5Sum </SPAN><SPAN LANG="ru-RU">убрано</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>357</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>28.11.2024-04.12.2024</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P STYLE="page-break-before: always"><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Улучшен
-			вывод сообщения &laquo;Внутренняя ошибка обработки
-			UnhandledException&raquo; в </SPAN><SPAN LANG="en-US">ApplicationExceptionHandler
-			(<A HREF="ExtForms_11.htm#v017p22">v.17 </A></SPAN><A HREF="ExtForms_11.htm#v017p22"><SPAN LANG="ru-RU">п.22</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Улучшен вывод
+			сообщения &laquo;Внутренняя ошибка обработки UnhandledException&raquo;
+			в </SPAN><SPAN LANG="en-US">ApplicationExceptionHandler (<A HREF="ExtForms_11.htm#v017p22">v.17
+			</A></SPAN><A HREF="ExtForms_11.htm#v017p22"><SPAN LANG="ru-RU">п.22</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
 			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">В
 			</SPAN><SPAN LANG="en-US">EFPControlBase.StatusBarPanelShoudBeDetached()
 			</SPAN><SPAN LANG="ru-RU">возникала ошибка при работе </SPAN><SPAN LANG="en-US">Wizard.</SPAN></P>

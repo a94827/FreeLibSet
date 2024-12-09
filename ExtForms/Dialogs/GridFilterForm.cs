@@ -74,6 +74,10 @@ namespace FreeLibSet.Forms
         efpParamSet.ParamsCategory = EFPConfigCategories.Filters;
         efpParamSet.HistoryCategory = EFPConfigCategories.FiltersHistory;
 
+        // 06.12.2024
+        // Прогоняем конфигурацию по умолчанию через управляющие элементы, чтобы сделать полноценую настройку
+        //cfgDefault = efpParamSet.UpdateDefaultConfig(cfgDefault);
+
         EFPConfigParamDefaultSet defSet = new EFPConfigParamDefaultSet(cfgDefault);
         efpParamSet.DefaultSets.Add(defSet);
 
@@ -249,6 +253,10 @@ namespace FreeLibSet.Forms
 
     public void BeginGetAuxText()
     {
+#if DEBUG
+      if (_AuxTextTempCfg != null)
+        throw new InvalidOperationException("Вложенный вызов BeginAuxText");
+#endif
       _AuxTextTempCfg = new TempCfg();
       Filters.WriteConfig(_AuxTextTempCfg);
     }
@@ -277,6 +285,10 @@ namespace FreeLibSet.Forms
 
     public void EndGetAuxText()
     {
+#if DEBUG
+      if (_AuxTextTempCfg == null)
+        throw new InvalidOperationException("Не было вызова BeginAuxText()");
+#endif
       Filters.ClearAllFilters();
       Filters.ReadConfig(_AuxTextTempCfg);
       _AuxTextTempCfg = null;
@@ -286,7 +298,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер табличного просмотра для списка фильтров.
+  /// Провайдер табличного просмотра для списка фильтров (классы <see cref="EFPGridFilters"/>, <see cref="FreeLibSet.Forms.Data.EFPDBxGridFilters"/> или пользовательская реализация <see cref="IEFPGridFilters"/>).
   /// Используется командой "Установить фильтр" в настраиваемых табличных и иерарахических просмотрах.
   /// Также может использоваться в диалогов параметров отчетов для редактирования пользовательских фильтров.
   /// Для работы требуется установить свойство Filters.

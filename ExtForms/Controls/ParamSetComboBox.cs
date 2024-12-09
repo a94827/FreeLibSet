@@ -50,7 +50,7 @@ namespace FreeLibSet.Controls
 
       _InsideSetSelectedItem = false;
 
-      _DrawImages = true;
+      _ShowImages = true;
 
       _Items = new ObjectCollection(this);
       TheCB_TextChanged(null, null);
@@ -61,7 +61,7 @@ namespace FreeLibSet.Controls
     #region Класс коллекции элементов
 
     /// <summary>
-    /// Реализация свойства Items
+    /// Реализация свойства <see cref="Items"/>
     /// </summary>
     public class ObjectCollection : IList<ParamSetComboBoxItem>
     {
@@ -76,20 +76,39 @@ namespace FreeLibSet.Controls
 
       #region Свойства
 
-      private ParamSetComboBox _Owner;
+      private readonly ParamSetComboBox _Owner;
 
+      /// <summary>
+      /// Возвращает количество элементов в выпадающем списке
+      /// </summary>
       public int Count { get { return _Owner.TheCB.Items.Count; } }
 
+      /// <summary>
+      /// Получение элемента по индексу
+      /// </summary>
+      /// <param name="index">Индекс в диапазоне от 0 до (<see cref="Count"/>-1)</param>
+      /// <returns></returns>
       public ParamSetComboBoxItem this[int index]
       {
         get { return (ParamSetComboBoxItem)(_Owner.TheCB.Items[index]); }
-        set { throw new NotImplementedException(); }
+      }
+
+      ParamSetComboBoxItem IList<ParamSetComboBoxItem>.this[int index]
+      {
+        get { return this[index]; }
+        set
+        {
+          throw new NotImplementedException();
+        }
       }
 
       #endregion
 
       #region Методы
 
+      /// <summary>
+      /// Удаляет все элементы из списка
+      /// </summary>
       public void Clear()
       {
         _Owner.TheCB.Items.Clear();
@@ -97,6 +116,11 @@ namespace FreeLibSet.Controls
         _Owner.UseAuxText = false;
       }
 
+      /// <summary>
+      /// Добавляет элемент.
+      /// Устанавливает свойство <see cref="ParamSetComboBox.UseAuxText"/>=true, если задана непустая строка <see cref="ParamSetComboBoxItem.AuxText"/>.
+      /// </summary>
+      /// <param name="item">Новый элемент. Не может быть null.</param>
       public void Add(ParamSetComboBoxItem item)
       {
 #if DEBUG
@@ -108,6 +132,11 @@ namespace FreeLibSet.Controls
           _Owner.UseAuxText = true;
       }
 
+      /// <summary>
+      /// Добавляет несколько элементов.
+      /// Устанавливает свойство <see cref="ParamSetComboBox.UseAuxText"/>=true, если задана непустая строка <see cref="ParamSetComboBoxItem.AuxText"/> хотя бы у одного элемента.
+      /// </summary>
+      /// <param name="items">Массив элементов.</param>
       public void AddRange(ParamSetComboBoxItem[] items)
       {
         _Owner.TheCB.Items.AddRange(items);
@@ -121,17 +150,28 @@ namespace FreeLibSet.Controls
         }
       }
 
-      public void Insert(int Index, ParamSetComboBoxItem item)
+      /// <summary>
+      /// Вставляет элемент в указанную позицию.
+      /// Устанавливает свойство <see cref="ParamSetComboBox.UseAuxText"/>=true, если задана непустая строка <see cref="ParamSetComboBoxItem.AuxText"/>.
+      /// </summary>
+      /// <param name="index">Позиция для вставки от 0 до <see cref="Count"/></param>
+      /// <param name="item">Новый элемент. Не может быть null.</param>
+      public void Insert(int index, ParamSetComboBoxItem item)
       {
 #if DEBUG
         if (item == null)
           throw new ArgumentNullException("item");
 #endif
-        _Owner.TheCB.Items.Insert(Index, item);
+        _Owner.TheCB.Items.Insert(index, item);
         if (!String.IsNullOrEmpty(item.AuxText))
           _Owner.UseAuxText = true;
       }
 
+      /// <summary>
+      /// Удаление элемента
+      /// </summary>
+      /// <param name="item">Удаляемый элемент</param>
+      /// <returns>true, если если элемент быд найден и успешно удален</returns>
       public bool Remove(ParamSetComboBoxItem item)
       {
         if (item == null)
@@ -144,11 +184,20 @@ namespace FreeLibSet.Controls
         return true;
       }
 
+      /// <summary>
+      /// Выполняет поиск элемента
+      /// </summary>
+      /// <param name="item">Искомый элемент</param>
+      /// <returns>Индекс элемента или (-1), если не найден</returns>
       public int IndexOf(ParamSetComboBoxItem item)
       {
         return _Owner.TheCB.Items.IndexOf(item);
       }
 
+      /// <summary>
+      /// Удаление элемента по индексу
+      /// </summary>
+      /// <param name="index">Индекс в диапазоне от 0 до (<see cref="Count"/>-1)</param>
       public void RemoveAt(int index)
       {
         ParamSetComboBoxItem item = (ParamSetComboBoxItem)(_Owner.TheCB.Items[index]);
@@ -158,6 +207,11 @@ namespace FreeLibSet.Controls
       }
 
 
+      /// <summary>
+      /// Поиск элемента по коду
+      /// </summary>
+      /// <param name="code">Код элемента <see cref="ParamSetComboBoxItem.Code"/></param>
+      /// <returns>Найденный элемент или null</returns>
       public ParamSetComboBoxItem FindCode(string code)
       {
         if (String.IsNullOrEmpty(code))
@@ -170,6 +224,11 @@ namespace FreeLibSet.Controls
         return null;
       }
 
+      /// <summary>
+      /// Поиск элемента по контрольной сумме
+      /// </summary>
+      /// <param name="md5Sum">Контрольная сумма элемента <see cref="ParamSetComboBoxItem.MD5Sum"/></param>
+      /// <returns>Найденный элемент или null</returns>
       public ParamSetComboBoxItem FindMD5Sum(string md5Sum)
       {
         if (String.IsNullOrEmpty(md5Sum))
@@ -182,6 +241,11 @@ namespace FreeLibSet.Controls
         return null;
       }
 
+      /// <summary>
+      /// Поиск элемента по отображаемому тексту
+      /// </summary>
+      /// <param name="displayName">Текст элемента <see cref="ParamSetComboBoxItem.DisplayName"/></param>
+      /// <returns>Найденный элемент или null</returns>
       public ParamSetComboBoxItem FindDisplayName(string displayName)
       {
         if (String.IsNullOrEmpty(displayName))
@@ -198,11 +262,21 @@ namespace FreeLibSet.Controls
 
       #region ICollection<ParamSetComboBoxItem> Members
 
+      /// <summary>
+      /// Возвращает true, если элемент добавлен к списку
+      /// </summary>
+      /// <param name="item">Элемент</param>
+      /// <returns>Наличие элемента</returns>
       public bool Contains(ParamSetComboBoxItem item)
       {
         return _Owner.TheCB.Items.Contains(item);
       }
 
+      /// <summary>
+      /// Копирует все элементы в массив
+      /// </summary>
+      /// <param name="array">Заполняемый массив длиной не менее <see cref="Count"/> плюc <paramref name="arrayIndex"/></param>
+      /// <param name="arrayIndex">Начальный индекс в массиве</param>
       public void CopyTo(ParamSetComboBoxItem[] array, int arrayIndex)
       {
         _Owner.TheCB.Items.CopyTo(array, arrayIndex);
@@ -214,6 +288,10 @@ namespace FreeLibSet.Controls
 
       #region IEnumerable<ParamSetComboBoxItem> Members
 
+      /// <summary>
+      /// Создает перечислитель
+      /// </summary>
+      /// <returns>Перечислитель</returns>
       public IEnumerator<ParamSetComboBoxItem> GetEnumerator()
       {
         return new ConvertEnumerable<ParamSetComboBoxItem>.Enumerator(_Owner.TheCB.Items.GetEnumerator());
@@ -232,10 +310,10 @@ namespace FreeLibSet.Controls
     #region Свойства
 
     /// <summary>
-    /// Коллекция объектов ParamSetComboBoxItem
+    /// Коллекция объектов <see cref="ParamSetComboBoxItem"/>
     /// </summary>
     public ObjectCollection Items { get { return _Items; } }
-    private ObjectCollection _Items;
+    private readonly ObjectCollection _Items;
 
     /// <summary>
     /// Устанавливается в true, если в добавляемых элементах есть доп. текст
@@ -279,6 +357,9 @@ namespace FreeLibSet.Controls
 
     private bool _InsideSetSelectedItem;
 
+    /// <summary>
+    /// Текущий выбранный элемент с поиском по коду <see cref="ParamSetComboBoxItem.Code"/>
+    /// </summary>
     public string SelectedCode
     {
       get
@@ -291,11 +372,14 @@ namespace FreeLibSet.Controls
       }
       set
       {
-        ParamSetComboBoxItem Item = Items.FindCode(value);
-        SelectedItem = Item;
+        ParamSetComboBoxItem item = Items.FindCode(value);
+        SelectedItem = item;
       }
     }
 
+    /// <summary>
+    /// Текущий выбранный элемент с поиском по сумме <see cref="ParamSetComboBoxItem.MD5Sum"/>
+    /// </summary>
     public string SelectedMD5Sum
     {
       get
@@ -313,22 +397,40 @@ namespace FreeLibSet.Controls
       }
     }
 
+    /// <summary>
+    /// Надо ли рисовать значки в списке
+    /// </summary>
     [Description("Надо ли рисовать значки в списке")]
     [Category("Appearance")]
     [DefaultValue(true)]
     public bool ShowImages
     {
-      get { return _DrawImages; }
-      set { _DrawImages = value; }
+      get { return _ShowImages; }
+      set { _ShowImages = value; }
     }
-    private bool _DrawImages;
+    private bool _ShowImages;
+
+
+    /// <summary>
+    /// Если установить в true, то в тексте элемента будет выводиться сумма MD5 (для отладки)
+    /// </summary>
+    [Browsable(false)]
+    public bool ShowMD5 { get { return _ShowMD5; } set { _ShowMD5 = value; } }
+    private bool _ShowMD5;
 
     #endregion
 
     #region События
 
+    /// <summary>
+    /// Вызывается при выборе элемента из выпадающего списка
+    /// </summary>
     public event ParamSetComboBoxItemEventHandler ItemSelected;
 
+    /// <summary>
+    /// Вызывает событие <see cref="ItemSelected"/>
+    /// </summary>
+    /// <param name="item"></param>
     protected void OnItemSelected(ParamSetComboBoxItem item)
     {
       if (ItemSelected == null)
@@ -340,8 +442,15 @@ namespace FreeLibSet.Controls
       ItemSelected(this, args);
     }
 
+    /// <summary>
+    /// Вызывается при нажатии кнопки "Сохранить набор"
+    /// </summary>
     public event ParamSetComboBoxSaveEventHandler SaveClick;
 
+    /// <summary>
+    /// Вызывает событие <see cref="SaveClick"/>
+    /// </summary>
+    /// <param name="displayName">Текст, введенный пользователем в поле (имя сохраняемого набора)</param>
     protected void OnSaveClick(string displayName)
     {
       if (SaveClick == null)
@@ -353,8 +462,15 @@ namespace FreeLibSet.Controls
       SaveClick(this, args);
     }
 
+    /// <summary>
+    /// Вызывается при нажатии кнопки "Удалить набор"
+    /// </summary>
     public event ParamSetComboBoxItemEventHandler DeleteClick;
 
+    /// <summary>
+    /// Вызывает событие <see cref="DeleteClick"/>
+    /// </summary>
+    /// <param name="item">Удаляемый набор</param>
     protected void OnDeleteClick(ParamSetComboBoxItem item)
     {
       if (DeleteClick == null)
@@ -366,8 +482,19 @@ namespace FreeLibSet.Controls
       DeleteClick(this, args);
     }
 
+    /// <summary>
+    /// Вызывается для проверки возможности удаления элемента.
+    /// Используется для блокирования кнопки "Удалить набор".
+    /// Обработчик события должен установить свойство <see cref="CancelEventArgs.Cancel"/>=true в аргументах события,
+    /// если элемент нельзя удалять (предопределенный набор параметров).
+    /// </summary>
     public event ParamSetComboBoxItemCancelEventHandler CanDeleteItem;
 
+    /// <summary>
+    /// Вызывает событие <see cref="CanDeleteItem"/>
+    /// </summary>
+    /// <param name="item">Текущий выбранный набор</param>
+    /// <returns>True, если этот набор можно удалить из списка</returns>
     protected bool OnCanDeleteItem(ParamSetComboBoxItem item)
     {
       if (CanDeleteItem == null)
@@ -422,6 +549,10 @@ namespace FreeLibSet.Controls
             imageKey = "Warning";
           }
         }
+
+        if (ShowMD5)
+          text += " (" + item.MD5Sum + ")";
+
         //if (AccDepClientExec.DebugShowIds)
         //  Text += " \"" + Item.Code + "\"";
 
@@ -561,8 +692,10 @@ namespace FreeLibSet.Controls
     #endregion
   }
 
+#pragma warning restore 1591
+
   /// <summary>
-  /// Описание одного элемента для комбоблока ParamSetComboBox
+  /// Описание одного элемента для комбоблока <see cref="ParamSetComboBox"/>.
   /// </summary>
   public class ParamSetComboBoxItem
   {
@@ -587,10 +720,10 @@ namespace FreeLibSet.Controls
     /// </summary>
     /// <param name="code">Код элемента. Не отображается на экране</param>
     /// <param name="displayName">Текст элемента. Выводится в выпадающем списке и при закрытом комбоблоке</param>
-    /// <param name="imageKey">Имя изображения в списке EFPApp.MainImages</param>
+    /// <param name="imageKey">Имя изображения в списке <see cref="EFPApp.MainImages"/></param>
     /// <param name="writeTime">Время. Если задано, выводится в выпадающнм списке в скобках после <paramref name="displayName"/>.</param>
     /// <param name="group">Номер группы. Элементы с разными группами разделяются горизонтальной чертой</param>
-    /// <param name="md5Sum">Контрольная сумма. Используется методом ParamSetComboBox.ObjectCollection.FindMD5Sum()</param>
+    /// <param name="md5Sum">Контрольная сумма. Используется методом <see cref="ParamSetComboBox.ObjectCollection.FindMD5Sum(string)"/></param>
     /// <param name="auxText">Дополнительный текст, отображаемый в выпадающем списке под основным текстом.
     /// Когда комбоблок закрыт, этот текст не выводится</param>
     public ParamSetComboBoxItem(string code, string displayName, string imageKey, DateTime? writeTime, int group, string md5Sum, string auxText)
@@ -608,34 +741,60 @@ namespace FreeLibSet.Controls
 
     #region Свойства
 
+    /// <summary>
+    /// Код элемента. Не отображается на экране
+    /// </summary>
     public string Code { get { return _Code; } }
-    private string _Code;
+    private readonly string _Code;
 
+    /// <summary>
+    /// Текст элемента. Выводится в выпадающем списке и при закрытом комбоблоке
+    /// </summary>
     public string DisplayName { get { return _DisplayName; } }
-    private string _DisplayName;
+    private readonly string _DisplayName;
 
+    /// <summary>
+    /// Имя изображения в списке <see cref="EFPApp.MainImages"/>
+    /// </summary>
     public string ImageKey { get { return _ImageKey; } }
-    private string _ImageKey;
+    private readonly string _ImageKey;
 
+    /// <summary>
+    /// Время. Если задано, выводится в выпадающем списке в скобках после <see cref="DisplayName"/>.
+    /// </summary>
     public DateTime? WriteTime { get { return _WriteTime; } }
-    private DateTime? _WriteTime;
+    private readonly DateTime? _WriteTime;
 
+    /// <summary>
+    /// Номер группы. Элементы с разными группами разделяются горизонтальной чертой.
+    /// </summary>
     public int Group { get { return _Group; } }
-    private int _Group;
+    private readonly int _Group;
 
+    /// <summary>
+    /// Контрольная сумма. Используется методом <see cref="ParamSetComboBox.ObjectCollection.FindMD5Sum(string)"/>.
+    /// </summary>
     public string MD5Sum { get { return _MD5Sum; } }
-    private string _MD5Sum;
+    private readonly string _MD5Sum;
 
     /// <summary>
     /// Дополнительный текст, который выводится во второй строке выпадающего списка.
     /// Когда комбоблок закрыт, этот текст не выводится.
     /// </summary>
     public string AuxText { get { return _AuxText; } }
-    private string _AuxText;
+    private readonly string _AuxText;
 
+    /// <summary>
+    /// Произвольные данные вызывающего кода.
+    /// Это свойство может устанавливаться после вызова конструктора.
+    /// </summary>
     public object Tag { get { return _Tag; } set { _Tag = value; } }
     private object _Tag;
 
+    /// <summary>
+    /// Возвращает <see cref="DisplayName"/>
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       return _DisplayName;
@@ -647,11 +806,14 @@ namespace FreeLibSet.Controls
 
   #region Делегаты
 
+  /// <summary>
+  /// Аргументы события <see cref="ParamSetComboBox.ItemSelected"/> и <see cref="ParamSetComboBox.DeleteClick"/>
+  /// </summary>
   public class ParamSetComboBoxItemEventArgs : EventArgs
   {
     #region Конструктор
 
-    public ParamSetComboBoxItemEventArgs(ParamSetComboBoxItem item)
+    internal ParamSetComboBoxItemEventArgs(ParamSetComboBoxItem item)
     {
       _Item = item;
     }
@@ -660,20 +822,31 @@ namespace FreeLibSet.Controls
 
     #region Свойства
 
+    /// <summary>
+    /// Текущий выбранный элемент
+    /// </summary>
     public ParamSetComboBoxItem Item { get { return _Item; } }
-    private ParamSetComboBoxItem _Item;
+    private readonly ParamSetComboBoxItem _Item;
 
     #endregion
   }
 
+  /// <summary>
+  /// Делегат события <see cref="ParamSetComboBox.ItemSelected"/> и <see cref="ParamSetComboBox.DeleteClick"/>
+  /// </summary>
+  /// <param name="sender">Объект <see cref="ParamSetComboBox"/></param>
+  /// <param name="args">Аргументы события</param>
   public delegate void ParamSetComboBoxItemEventHandler(object sender,
     ParamSetComboBoxItemEventArgs args);
 
+  /// <summary>
+  /// Аргументы события <see cref="ParamSetComboBox.SaveClick"/>
+  /// </summary>
   public class ParamSetComboBoxSaveEventArgs : EventArgs
   {
     #region Конструктор
 
-    public ParamSetComboBoxSaveEventArgs(string displayName)
+    internal ParamSetComboBoxSaveEventArgs(string displayName)
     {
       _DisplayName = displayName;
     }
@@ -682,20 +855,31 @@ namespace FreeLibSet.Controls
 
     #region Свойства
 
+    /// <summary>
+    /// Текст, введенный пользователем в поле комбоблока. Название сохраняемого набора.
+    /// </summary>
     public string DisplayName { get { return _DisplayName; } }
-    private string _DisplayName;
+    private readonly string _DisplayName;
 
     #endregion
   }
 
+  /// <summary>
+  /// Делегат события <see cref="ParamSetComboBox.SaveClick"/>
+  /// </summary>
+  /// <param name="sender">Объект <see cref="ParamSetComboBox"/></param>
+  /// <param name="args">Аргументы события</param>
   public delegate void ParamSetComboBoxSaveEventHandler(object sender,
     ParamSetComboBoxSaveEventArgs args);
 
+  /// <summary>
+  /// Аргументы события <see cref="ParamSetComboBox.CanDeleteItem"/>
+  /// </summary>
   public class ParamSetComboBoxItemCancelEventArgs : CancelEventArgs
   {
     #region Конструктор
 
-    public ParamSetComboBoxItemCancelEventArgs(ParamSetComboBoxItem item)
+    internal ParamSetComboBoxItemCancelEventArgs(ParamSetComboBoxItem item)
     {
       _Item = item;
     }
@@ -704,12 +888,20 @@ namespace FreeLibSet.Controls
 
     #region Свойства
 
+    /// <summary>
+    /// Проверяемый элемент
+    /// </summary>
     public ParamSetComboBoxItem Item { get { return _Item; } }
-    private ParamSetComboBoxItem _Item;
+    private readonly ParamSetComboBoxItem _Item;
 
     #endregion
   }
 
+  /// <summary>
+  /// Делегат события <see cref="ParamSetComboBox.CanDeleteItem"/>
+  /// </summary>
+  /// <param name="sender">Объект <see cref="ParamSetComboBox"/></param>
+  /// <param name="args">Аргументы события</param>
   public delegate void ParamSetComboBoxItemCancelEventHandler(object sender,
     ParamSetComboBoxItemCancelEventArgs args);
 

@@ -71,17 +71,18 @@ namespace ExeFileInfoDemo
 
         using (Splash spl = new Splash("Просмотр файлов"))
         {
-          string[] aFiles1 = System.IO.Directory.GetFiles(dir.Path, "*.exe", SearchOption.TopDirectoryOnly);
-          string[] aFiles2 = System.IO.Directory.GetFiles(dir.Path, "*.dll", SearchOption.TopDirectoryOnly);
-          string[] aFiles = DataTools.MergeArrays<string>(aFiles1, aFiles2);
+          string[] aFiles = System.IO.Directory.GetFiles(dir.Path, "*.*", SearchOption.TopDirectoryOnly);
           Array.Sort<string>(aFiles);
           spl.PercentMax = aFiles.Length;
           spl.AllowCancel = true;
           for (int i = 0; i < aFiles.Length; i++)
           {
             AbsPath filePath = new AbsPath(aFiles[i]);
-            spl.PhaseText = filePath.FileName;
-            lst.Add(new MyFileInfo(filePath));
+            if (ExeFileInfo.IsExeExtension(filePath.Extension))
+            {
+              spl.PhaseText = filePath.FileName;
+              lst.Add(new MyFileInfo(filePath));
+            }
             spl.IncPercent();
           }
         }
@@ -93,6 +94,7 @@ namespace ExeFileInfoDemo
         efpGrid.Control.AutoGenerateColumns = true;
         efpGrid.Control.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
         efpGrid.Control.DataSource = lst;
+        efpGrid.Columns[0].CanIncSearch = true;
         efpGrid.DisableOrdering();
         efpGrid.Control.ReadOnly = true;
         efpGrid.ReadOnly = false;
@@ -156,6 +158,9 @@ namespace ExeFileInfoDemo
       EFPControlWithToolBar<TreeView> cwtRes = new EFPControlWithToolBar<TreeView>(efpTPRes);
       EFPTreeView efpRes = new EFPTreeView(cwtRes);
       efpRes.Control.NodeMouseDoubleClick += new TreeNodeMouseClickEventHandler(efpRes_NodeMouseDoubleClick);
+      efpRes.Control.ImageList = EFPApp.MainImages.ImageList;
+      efpRes.Control.ImageKey = "TreeViewClosedFolder";
+      efpRes.Control.SelectedImageKey = "TreeViewOpenFolder";
 
       #endregion
 
@@ -215,6 +220,14 @@ namespace ExeFileInfoDemo
             foreach (ResourceTable.CPInfo cpi in ni)
             {
               TreeNode cpNode = nNode.Nodes.Add("CodePage=" + cpi.CodePage.ToString() + ", Size=" + cpi.Size);
+              cpNode.ImageKey = cpNode.SelectedImageKey = "Item";
+              if (!String.IsNullOrEmpty(cpi.ErrorMessage))
+              {
+                cpNode.ImageKey = cpNode.SelectedImageKey = "Error";
+                nNode.ImageKey = nNode.SelectedImageKey = "Error";
+                tNode.ImageKey = tNode.SelectedImageKey = "Error";
+                cpNode.Text += ". Error=" + cpi.ErrorMessage;
+              }
               cpNode.Tag = fi.Resources.GetBytes(cpi);
             }
           }
@@ -227,16 +240,24 @@ namespace ExeFileInfoDemo
               {
                 Image iconImage = null;
                 ResourceTable.IconInfo iconInfo;
+                //string errorMessage = String.Empty;
                 try
                 {
                   byte[] b = fi.Resources.GetSingleImageIconBytes(cpi, out iconInfo);
-                  MemoryStream ms = new MemoryStream(b);
-                  Icon ic = new Icon(ms);
-                  iconImage = ic.ToBitmap();
+                  if (b != null)
+                  {
+                    MemoryStream ms = new MemoryStream(b);
+                    Icon ic = new Icon(ms);
+                    iconImage = ic.ToBitmap();
+                  }
+                  else
+                    iconImage = EFPApp.MainImages.Images["EmptyImage"];
                 }
-                catch
+                catch/*(Exception e)*/
                 {
                   iconInfo = new ResourceTable.IconInfo();
+                  //errorMessage = e.Message;
+                  iconImage = EFPApp.MainImages.Images["Error"];
                 }
                 lstIcons.Add(new MyIconInfo(iconImage, ni.Name, cpi.CodePage, iconInfo));
               }

@@ -274,11 +274,11 @@ namespace FreeLibSet.Win32
             uint dVA = _Owner._Reader.ReadUInt32(); // Виртуальный адрес, из него нужно вычесть начало таблицы
             uint dOffset = dVA - OptionalHeader._DataDirectories[(int)PEDataDirectoryKind.ResourceTable].Address;
             res._Entries[i]._DataStartPos = rt._StartPos + dOffset;
-            if (res._Entries[i]._DataStartPos < 0 || res._Entries[i]._DataStartPos >= _Owner._Stream.Length)
-              throw new BugException("Начальная позиция ресурса выходит за пределы файла");
             res._Entries[i]._DataSize = (int)_Owner._Reader.ReadUInt32();
-            if ((res._Entries[i]._DataStartPos + res._Entries[i]._DataSize) > _Owner._Stream.Length)
-              throw new BugException("Конец ресурса выходит за пределы файла");
+            if (res._Entries[i]._DataStartPos < 0 || res._Entries[i]._DataStartPos >= _Owner._Stream.Length)
+              res._Entries[i]._ErrorMessage = "Начальная позиция ресурса выходит за пределы файла";
+            else if ((res._Entries[i]._DataStartPos + res._Entries[i]._DataSize) > _Owner._Stream.Length)
+              res._Entries[i]._ErrorMessage = "Конец ресурса выходит за пределы файла";
             res._Entries[i]._CodePage = (int)_Owner._Reader.ReadUInt32();
             _Owner._Reader.ReadUInt32(); // Reserved
           }
@@ -853,9 +853,9 @@ namespace FreeLibSet.Win32
         int lvMajor = _Reader.ReadByte();
         int lvMinor = _Reader.ReadByte();
         optHead._LinkerVersion = new Version(lvMajor, lvMinor);
-        optHead._SizeOfCode = _Reader.ReadUInt32(); 
-        optHead._SizeOfInitializedData = _Reader.ReadUInt32(); 
-        optHead._SizeOfUninitializedData = _Reader.ReadUInt32(); 
+        optHead._SizeOfCode = _Reader.ReadUInt32();
+        optHead._SizeOfInitializedData = _Reader.ReadUInt32();
+        optHead._SizeOfUninitializedData = _Reader.ReadUInt32();
         long addrEP = _Reader.ReadUInt32(); // AddressOfEntryPoint
         optHead._HasEntryPoint = (addrEP != 0L);
         optHead._BaseOfCode = _Reader.ReadUInt32();
@@ -881,9 +881,9 @@ namespace FreeLibSet.Win32
         int ssverMajor = _Reader.ReadInt16();
         int ssverMinor = _Reader.ReadInt16();
         optHead._SubsystemVersion = new Version(ssverMajor, ssverMinor);
-        optHead._Win32VersionValue = _Reader.ReadUInt32(); 
-        optHead._SizeOfImage = _Reader.ReadUInt32(); 
-        optHead._SizeOfHeaders = _Reader.ReadUInt32(); 
+        optHead._Win32VersionValue = _Reader.ReadUInt32();
+        optHead._SizeOfImage = _Reader.ReadUInt32();
+        optHead._SizeOfHeaders = _Reader.ReadUInt32();
         optHead._CheckSum = _Reader.ReadUInt32();
         optHead._Subsystem = (PEWindowsSubsystem)(int)(_Reader.ReadUInt16());
         optHead._DllCharacteristics = (ImageDllCharacteristics)(int)(_Reader.ReadUInt16());
@@ -1061,7 +1061,7 @@ namespace FreeLibSet.Win32
         return;
 
       uint pos = RvaToRaw(_PE.OptionalHeader._DataDirectories[(int)PEDataDirectoryKind.CLRRuntimeHeader].Address);
-      if (pos ==INVALID_RAW)
+      if (pos == INVALID_RAW)
         return;
       _Stream.Position = pos;
       uint headSize = _Reader.ReadUInt32();
@@ -1259,12 +1259,14 @@ namespace FreeLibSet.Win32
 
       /// <summary>
       /// Данные ресурса или null, если узел является подкаталогом.
+      /// Также возвращает null в случае, если запись указывает неправильное положение ресурса.
+      /// В этом случае текст сообщения об ошибке возвращается свойством <see cref="ErrorMessage"/>.
       /// </summary>
       public byte[] ResourceData
       {
         get
         {
-          if (_DataStartPos == 0)
+          if (_DataStartPos == 0 || _ErrorMessage != null)
             return null;
           else
           {
@@ -1292,6 +1294,12 @@ namespace FreeLibSet.Win32
       /// </summary>
       public int CodePage { get { return _CodePage; } }
       internal int _CodePage;
+
+      /// <summary>
+      /// Текст сообщения об ошибке, если файл содержит ошибку
+      /// </summary>
+      public string ErrorMessage { get { return _ErrorMessage; } }
+      internal string _ErrorMessage;
 
       /// <summary>
       /// 
@@ -1367,7 +1375,7 @@ namespace FreeLibSet.Win32
                     if (cpEntry.DataSize == 0)
                       continue;
 
-                    rt.Add(typeEntry.ID, nameEntry.ID, cpEntry.CodePage, cpEntry._DataStartPos, cpEntry._DataSize);
+                    rt.Add(typeEntry.ID, nameEntry.ID, cpEntry.CodePage, cpEntry._DataStartPos, cpEntry._DataSize, cpEntry.ErrorMessage);
                   }
                 }
               }
@@ -1382,11 +1390,11 @@ namespace FreeLibSet.Win32
 
     #region Статические методы
 
-    private static readonly string[] _WantedExts = new string[] { ".exe", ".dll" }; // TODO: Расширить список
+    private static readonly string[] _WantedExts = new string[] { ".exe", ".dll", ".ocx", ".mui", "*.acm", ".ax", ".cpl", ".drv", ".efi", ".mof", ".rll", ".rs", ".scr", ".sys", ".tsp" }; 
 
     /// <summary>
     /// Возвращает true, если расширение файла соответствует формату MZ.
-    /// Регистр символов не учитывается
+    /// Регистр символов не учитывается.
     /// </summary>
     /// <param name="extension">Проверяемое расширение, включая ведущую точку</param>
     /// <returns></returns>

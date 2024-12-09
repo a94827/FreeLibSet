@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Config;
 using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
@@ -16,7 +17,7 @@ namespace FreeLibSet.Forms
   /// Управляющие элементы, встраиваемые в редактор настройки табличного просмотра.
   /// Сама форма не используется
   /// </summary>
-  internal partial class EFPGridProducerEditor : Form, IEFPGridProducerEditor
+  internal partial class EFPGridProducerEditor : Form, IEFPGridProducerEditor, IEFPConfigParamSetAuxTextHandler
   {
     #region Конструктор
 
@@ -692,6 +693,36 @@ namespace FreeLibSet.Forms
         defaultConfigCodes[i + 1] = fixedNames[i];
         defaultConfigs[i + 1] = _GridProducer.GetNamedConfig(fixedNames[i]);
       }
+    }
+
+    #endregion
+
+    #region IEFPConfigParamSetAuxTextHandler
+
+    public void BeginGetAuxText()
+    {
+    }
+
+    public string GetAuxText(CfgPart cfg)
+    {
+      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      config.ReadConfig(cfg);
+      StringBuilder sb = new StringBuilder();
+      foreach (EFPDataGridViewConfigColumn cfgCol in config.Columns)
+      {
+        EFPGridProducerColumn prodCol = _GridProducer.Columns[cfgCol.ColumnName];
+        if (prodCol != null)
+        {
+          if (sb.Length > 0)
+            sb.Append(", ");
+          sb.Append(prodCol.DisplayName);
+        }
+      }
+      return sb.ToString();
+    }
+
+    public void EndGetAuxText()
+    {
     }
 
     #endregion

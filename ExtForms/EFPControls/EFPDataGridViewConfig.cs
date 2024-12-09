@@ -121,7 +121,8 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Столбцы, входящие в просмотр
+    /// Столбцы, входящие в просмотр.
+    /// Потенциально возможные, но не выбранные, столбцы из <see cref="EFPGridProducer.Columns"/> не входят в список.
     /// </summary>
     public ColumnCollection Columns { get { return _Columns; } }
     private readonly ColumnCollection _Columns;
@@ -302,19 +303,20 @@ namespace FreeLibSet.Forms
       for (int i = 0; i < Columns.Count; i++)
       {
         CfgPart cfg3 = cfg2.GetChild(Columns[i].ColumnName, true);
-        cfg3.SetInt("Width", Columns[i].Width);
         cfg3.SetBool("FillMode", Columns[i].FillMode, true);
         if (Columns[i].FillMode)
           cfg3.SetInt("FillWeight", Columns[i].FillWeight);
+        else // 09.12.2024
+          cfg3.SetInt("Width", Columns[i].Width);
       }
 
-      cfg.SetInt("FrozenColumns", FrozenColumns);
-      cfg.SetString("StartColumn", StartColumnName);
+      cfg.SetInt("FrozenColumns", FrozenColumns, true);
+      cfg.SetString("StartColumn", StartColumnName, true);
 
       // Записываем настройки подсказок обязательно
       //if (EFPApp.ShowToolTips)
       //{
-      cfg.SetBool("NoCurrentCellToolTip", !CurrentCellToolTip);
+      cfg.SetBool("NoCurrentCellToolTip", !CurrentCellToolTip, true);
       s = String.Empty;
       for (int i = 0; i < ToolTips.Count; i++)
       {
@@ -322,7 +324,7 @@ namespace FreeLibSet.Forms
           s += ",";
         s += ToolTips[i];
       }
-      cfg.SetString("ToolTips", s);
+      cfg.SetString("ToolTips", s, true);
       //}
     }
 

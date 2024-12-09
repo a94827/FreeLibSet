@@ -505,12 +505,13 @@ namespace FreeLibSet.Win32
     {
       #region Конструктор
 
-      internal CPInfo(NameInfo name, int codePage, long offset, int size)
+      internal CPInfo(NameInfo name, int codePage, long offset, int size, string errorMessage)
       {
         _Name = name;
         _CodePage = codePage;
         _Offset = offset;
         _Size = size;
+        _ErrorMessage = errorMessage;
       }
 
       #endregion
@@ -538,6 +539,12 @@ namespace FreeLibSet.Win32
       /// </summary>
       public int Size { get { return _Size; } }
       private readonly int _Size;
+
+      /// <summary>
+      /// Сообщение об ошибке, если <see cref="Offset"/> или <see cref="Size"/> имеют неправильное значение
+      /// </summary>
+      public string ErrorMessage { get { return _ErrorMessage; } }
+      private readonly string _ErrorMessage;
 
       /// <summary>
       /// Объект - владелец
@@ -614,12 +621,7 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="typeId"></param>
-    /// <param name="name"></param>
-    /// <param name="codePage"></param>
-    /// <param name="offset"></param>
-    /// <param name="size"></param>
-    public void Add(ResourceID typeId, ResourceID name, int codePage, long offset, int size)
+    public void Add(ResourceID typeId, ResourceID name, int codePage, long offset, int size, string errorMessage)
     {
       if (typeId.IsEmpty)
         throw new ArgumentException("Не задан тип ресурса", "typeId");
@@ -634,7 +636,7 @@ namespace FreeLibSet.Win32
         ti.Add(ni);
       }
 
-      CPInfo cpi = new CPInfo(ni, codePage, offset, size);
+      CPInfo cpi = new CPInfo(ni, codePage, offset, size, errorMessage);
       ni.Add(cpi);
     }
 
@@ -805,6 +807,8 @@ namespace FreeLibSet.Win32
       if (niDir == null)
         throw new ArgumentException("Ресурс не найден");
       byte[] b = GetBytes(niDir[0]);
+      if (b.Length == 0)
+        return dict;
       MemoryStream ms = new MemoryStream(b);
       BinaryReader rdr = new BinaryReader(ms);
       if (rdr.ReadUInt16() != 0)
@@ -901,6 +905,8 @@ namespace FreeLibSet.Win32
     {
       iconInfo = new IconInfo();
       byte[] b = GetBytes(cpi);
+      if (b.Length == 0)
+        return null;
       MemoryStream ms1 = new MemoryStream(b);
       BinaryReader rdr = new BinaryReader(ms1);
 

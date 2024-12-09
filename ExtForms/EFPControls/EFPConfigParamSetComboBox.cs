@@ -84,7 +84,7 @@ namespace FreeLibSet.Forms
       _DisplayName = displayName;
       _ImageKey = imageKey;
 
-      _MD5Sum = config.MD5Sum();
+      // _MD5Sum = config.MD5Sum();
     }
 
     /// <summary>
@@ -128,11 +128,11 @@ namespace FreeLibSet.Forms
     public string ImageKey { get { return _ImageKey; } }
     private readonly string _ImageKey;
 
-    /// <summary>
-    /// Контрольная сумма для секции конфигурации
-    /// </summary>
-    public string MD5Sum { get { return _MD5Sum; } }
-    private readonly string _MD5Sum;
+    ///// <summary>
+    ///// Контрольная сумма для секции конфигурации
+    ///// </summary>
+    //public string MD5Sum { get { return _MD5Sum; } }
+    //private readonly string _MD5Sum;
 
     /// <summary>
     /// Возвращает свойство DisplayName
@@ -192,6 +192,8 @@ namespace FreeLibSet.Forms
         ci.Click += DebugSavedSettings_Click;
         ci.GroupEnd = true;
         efpSelCB.CommandItems.Add(ci);
+
+        control.ShowMD5 = true;
       }
 
       efpSaveButton = new EFPButton(baseProvider, control.SaveButton);
@@ -345,7 +347,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Интерфейс, реализуемый в пользовательском коде, для чтения и записей полей формы.
-    /// Задается в конструкторе. Не может быть null
+    /// Задается в конструкторе. Не может быть null.
     /// </summary>
     public IEFPConfigParamSetHandler FormHandler { get { return _FormHandler; } }
     private readonly IEFPConfigParamSetHandler _FormHandler;
@@ -452,7 +454,8 @@ namespace FreeLibSet.Forms
       // Выделяем в списке позицию, соответствующую текущему выбору
       TempCfg cfg2 = new TempCfg();
       ConfigFromControls(cfg2);
-      Control.SelectedMD5Sum = cfg2.MD5Sum(); // выбираем подходящий набор, если есть
+      string md5 = cfg2.MD5Sum();
+      Control.SelectedMD5Sum = md5; // выбираем подходящий набор, если есть
 
       // Присоединяем обработчики после выбора текущей позиции
       Control.ItemSelected += new ParamSetComboBoxItemEventHandler(SetComboBox_ItemSelected);
@@ -514,7 +517,6 @@ namespace FreeLibSet.Forms
       _TableHist.Columns.Add("Code", typeof(string));
       _TableHist.Columns.Add("Time", typeof(DateTime));
       _TableHist.Columns.Add("MD5", typeof(string));
-      _TableHist.Columns.Add("Order", typeof(int));
       DataTools.SetPrimaryKey(_TableHist, "Code");
 
       _TableUser = new DataTable();
@@ -537,15 +539,16 @@ namespace FreeLibSet.Forms
             {
               CfgPart cfgOne = cfgHist.GetChild(names[i], false);
               _TableHist.Rows.Add(names[i], cfgOne.GetNullableDateTime("Time"),
-                cfgOne.GetString("MD5"), _TableHist.Rows.Count + 1);
+                cfgOne.GetString("MD5")/*, _TableHist.Rows.Count + 1*/);
             }
-            if (names[i].StartsWith("User", StringComparison.Ordinal))
+            else if (names[i].StartsWith("User", StringComparison.Ordinal))
             {
               CfgPart cfgOne = cfgHist.GetChild(names[i], false);
               _TableUser.Rows.Add(names[i], cfgOne.GetString("Name"), cfgOne.GetNullableDateTime("Time"),
                 cfgOne.GetString("MD5"));
             }
           }
+
         }
         catch (Exception e)
         {
@@ -577,12 +580,33 @@ namespace FreeLibSet.Forms
         #endregion
       }
 
+      #region Нормирование настроек конфигурации
+
+      // Должно быть вне блока Begin/EndGetAuxText()
+      TempCfg[] defaultSetCfgs = new TempCfg[DefaultSets.Count];
+
+      TempCfg currCfg = new TempCfg();
+      FormHandler.ConfigFromControls(currCfg);
+      try
+      {
+        for (int i = 0; i < DefaultSets.Count; i++)
+        {
+          FormHandler.ConfigToControls(DefaultSets[i].Config);
+          defaultSetCfgs[i] = new TempCfg();
+          FormHandler.ConfigFromControls(defaultSetCfgs[i]);
+        }
+      }
+      finally
+      {
+        FormHandler.ConfigToControls(currCfg);
+      }
+
+      #endregion
+
       if (_UseAuxText)
         AuxTextHandler.BeginGetAuxText();
       try
       {
-        string auxText = null;
-
         #region Сначала - именные данные пользователя
 
         _TableUser.DefaultView.Sort = "Name";
@@ -591,6 +615,7 @@ namespace FreeLibSet.Forms
           string code = DataTools.GetString(drv.Row, "Code");
           //DateTime? dt = DataTools.GetNullableDateTime(drv.Row, "Time");
 
+          string auxText = null;
           if (_UseAuxText)
           {
             EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, ParamsCategory, code);
@@ -615,39 +640,41 @@ namespace FreeLibSet.Forms
 
         for (int i = 0; i < DefaultSets.Count; i++)
         {
+          string auxText = null;
           if (_UseAuxText)
             auxText = AuxTextHandler.GetAuxText(DefaultSets[i].Config);
 
-          Control.Items.Add(new ParamSetComboBoxItem(i.ToString(), "(" + DefaultSets[i].DisplayName + ")", DefaultSets[i].ImageKey, null, GroupDefault, DefaultSets[i].MD5Sum, auxText));
+          Control.Items.Add(new ParamSetComboBoxItem(StdConvert.ToString(i), "(" + DefaultSets[i].DisplayName + ")", DefaultSets[i].ImageKey, null, GroupDefault, defaultSetCfgs[i].MD5Sum(), auxText));
         }
 
         #endregion
 
         #region Последние - данные истории
 
-        _TableHist.DefaultView.Sort = "Order";
+        //_TableHist.DefaultView.Sort = "Order";
+        _TableHist.DefaultView.Sort = "Time DESC"; // 06.12.2024
         int cnt = 0;
-        for (int i = _TableHist.DefaultView.Count - 1; i >= 0; i--)
+        foreach (DataRowView drv in _TableHist.DefaultView)
         {
-          DataRow row = _TableHist.DefaultView[i].Row;
-          string code = DataTools.GetString(row, "Code");
-          DateTime? dt = DataTools.GetNullableDateTime(row, "Time");
+          string code = DataTools.GetString(drv.Row, "Code");
+          DateTime? dt = DataTools.GetNullableDateTime(drv.Row, "Time");
           cnt++;
-          string Name;
+          string name;
           switch (cnt)
           {
             case 1:
-              Name = "(Последний)";
+              name = "(Последний)";
               break;
             case 2:
-              Name = "(Предпоследний)";
+              name = "(Предпоследний)";
               break;
             default:
-              Name = "(Предыдущий №" + cnt.ToString() + ")";
+              name = "(Предыдущий №" + cnt.ToString() + ")";
               break;
           }
 
 
+          string auxText = null;
           if (_UseAuxText)
           {
             EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName, ParamsCategory, code);
@@ -658,8 +685,8 @@ namespace FreeLibSet.Forms
             }
           }
 
-          Control.Items.Add(new ParamSetComboBoxItem(code, Name, "Time", dt, GroupHist,
-          DataTools.GetString(row, "MD5"), auxText));
+          Control.Items.Add(new ParamSetComboBoxItem(code, name, "Time", dt, GroupHist,
+          DataTools.GetString(drv.Row, "MD5"), auxText));
         }
 
         #endregion
@@ -769,7 +796,7 @@ namespace FreeLibSet.Forms
         int cnt = 1;
         while (true)
         {
-          userSetName = "User" + cnt.ToString();
+          userSetName = "User" + StdConvert.ToString(cnt);
           if (_TableUser.Rows.Find(userSetName) == null)
             break;
           cnt++;
@@ -798,7 +825,13 @@ namespace FreeLibSet.Forms
           }
         }
 
-        ParamSetComboBoxItem newItem = new ParamSetComboBoxItem(userSetName, args.DisplayName, "User", null, GroupUser, cfgData.MD5Sum(), auxText);
+        // 06.12.2024
+        // Тоже требуется TempCfg для правильной контрольной суммы
+        TempCfg cfgData2 = new TempCfg();
+        ConfigFromControls(cfgData2);
+        string md5 = cfgData2.MD5Sum();
+
+        ParamSetComboBoxItem newItem = new ParamSetComboBoxItem(userSetName, args.DisplayName, "User", null, GroupUser, md5, auxText);
         Control.Items.Insert(0, newItem);
         Control.SelectedItem = newItem;
         DataRow row = DataTools.FindOrAddPrimaryKeyRow(_TableUser, userSetName);
@@ -862,14 +895,21 @@ namespace FreeLibSet.Forms
 
       if (BaseProvider.FormProvider.ValidateReason == EFPFormValidateReason.Closing)
       {
-        EFPConfigSectionInfo ConfigInfo = new EFPConfigSectionInfo(ConfigSectionName,
+        EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
           ParamsCategory, String.Empty);
         CfgPart cfg;
-        using (this.ConfigManager.GetConfig(ConfigInfo, EFPConfigMode.Write, out cfg))
+        using (this.ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfg))
         {
           ConfigFromControls(cfg);
-          AfterSave(cfg.MD5Sum());
         }
+
+        // 06.12.2024
+        // Запись конфигурации в реестр и последующее вычисление суммы MD5 может быть не эквивалентно вычислению суммы для временной секции конфигурации.
+        // Используем отдельный TempCfg.
+        TempCfg cfg2 = new TempCfg();
+        ConfigFromControls(cfg2);
+        string md5 = cfg2.MD5Sum();
+        AfterSave(md5);
       }
     }
 
@@ -884,7 +924,7 @@ namespace FreeLibSet.Forms
         if (DataTools.GetString(drv.Row, "MD5") == md5Sum)
         {
           drv.Row["Time"] = DateTime.Now;
-          drv.Row["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
+          // drv.Row["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
           found = true;
           break;
         }
@@ -895,22 +935,22 @@ namespace FreeLibSet.Forms
         // Новые данные записываем в другую секцию
         DataRow resRow = null;
         if (_TableHist.DefaultView.Count >= 9) // все позиции заняты
-          resRow = _TableHist.DefaultView[0].Row;
+          resRow = _TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row; // вместо самой старой позиции
         else
         {
           for (int i = 1; i <= 9; i++)
           {
-            if (DataTools.FindOrAddPrimaryKeyRow(_TableHist, "Hist" + i.ToString(), out resRow))
+            if (DataTools.FindOrAddPrimaryKeyRow(_TableHist, "Hist" + StdConvert.ToString(i), out resRow))
               break;
           }
         }
         string userSetName = DataTools.GetString(resRow, "Code");
         resRow["Time"] = DateTime.Now;
         resRow["MD5"] = md5Sum;
-        if (_TableHist.Rows.Count > 0)
-          resRow["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
-        else
-          resRow["Order"] = 1;
+        //if (_TableHist.Rows.Count > 0)
+        //  resRow["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
+        //else
+        //  resRow["Order"] = 1;
 
 
         EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(ConfigSectionName,
@@ -928,6 +968,32 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    //#region Вспомогательные методы
+
+    ///// <summary>
+    ///// Обновить настройки по умолчанию в секции конфигурации.
+    ///// Передает значения из <paramref name="cfg"/> в управляющие элементы с помощью <see cref="FormHandler"/>
+    ///// а затем считывает их в другую секцию конфигурации, которая и возвращается.
+    ///// На время вызова сохраняются и восстанавливаются текущие настройки формы
+    ///// </summary>
+    ///// <param name="cfg">Исходная секция, возможно, с неполным комплектом настроек</param>
+    ///// <returns>Полный комплект настроек</returns>
+    //public TempCfg UpdateDefaultConfig(TempCfg cfg)
+    //{
+    //  TempCfg currCfg = new TempCfg();
+    //  FormHandler.ConfigFromControls(currCfg);
+
+    //  FormHandler.ConfigToControls(cfg);
+    //  TempCfg newCfg = new TempCfg();
+    //  FormHandler.ConfigFromControls(newCfg);
+
+    //  FormHandler.ConfigToControls(currCfg);
+
+    //  return newCfg;
+    //}
+
+    //#endregion
+
     #region Отладочные средства
 
     /// <summary>
@@ -940,7 +1006,8 @@ namespace FreeLibSet.Forms
     {
       TempCfg cfg = new TempCfg();
       ConfigFromControls(cfg);
-      EFPApp.ShowXmlView(cfg.Document, "Текущие настройки диалога");
+      string md5 = cfg.MD5Sum();
+      EFPApp.ShowXmlView(cfg.Document, "Текущие настройки диалога (" + md5 + ")");
     }
 
     private void DebugSavedSettings_Click(object sender, EventArgs args)
@@ -957,7 +1024,7 @@ namespace FreeLibSet.Forms
       {
         int defIndex = int.Parse(item.Code);
         // Выбран набор по умолчанию
-        cfg=DefaultSets[defIndex].Config;
+        cfg = DefaultSets[defIndex].Config;
       }
       else
       {
@@ -971,8 +1038,7 @@ namespace FreeLibSet.Forms
           cfgData.CopyTo(cfg);
         }
       }
-
-      EFPApp.ShowXmlView(cfg.Document, item.DisplayName);
+      EFPApp.ShowXmlView(cfg.Document, item.DisplayName + " (" + item.MD5Sum + ")");
     }
 
     #endregion

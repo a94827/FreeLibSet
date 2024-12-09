@@ -85,7 +85,7 @@ namespace FreeLibSet.Forms
   /// Внизу формы есть панель с кнопками "ОК" и "Отмена", а также список с кнопками
   /// для выбора готовых наборов параметров.
   ///
-  /// Если параметры отчета содержат только фильтры DBxClientFilters, используйте форму EFPReportFilterExtParamsForm.
+  /// Если параметры отчета содержат только фильтры (реализацию <see cref="IEFPGridFilters"/>), используйте форму <see cref="EFPReportFilterExtParamsForm"/>.
   /// Также можно использовать форму с двумя вкладками <see cref="EFPReportExtParamsTwoPageForm"/>.
   /// </summary>
   public partial class EFPReportExtParamsForm : Form
@@ -186,8 +186,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Класс формы для параметров отчета, в котором есть только фильтры DBxClientFilters.
-  /// возможностей
+  /// Класс формы для параметров отчета, в котором есть только фильтры (реализация <see cref="IEFPGridFilters"/>).
   /// Форма содержит только табличку фильтров <see cref="EFPGridFilterEditorGridView"/>. 
   /// Этот класс формы нельзя наследовать. Используйте для этого <see cref="EFPReportExtParamsForm"/>.
   /// </summary>
