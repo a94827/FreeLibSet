@@ -167,7 +167,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика Control.MouseDown");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -194,7 +194,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика Control.MouseUp");
+        EFPApp.ShowException(e);
       }
     }
 

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.ComponentModel;
+using FreeLibSet.Formatting;
 
 namespace FreeLibSet.UICore
 {
@@ -265,6 +266,200 @@ namespace FreeLibSet.UICore
 
     #endregion
 
+    #region Реализация проверок для управляющих элементов
+
+
+    /// <summary>
+    /// Метод для выдачи ошибки или предупреждения, в зависимости от свойства 'CanBeEmptyMode'.
+    /// На момент вызова должно быть проверено значение, что оно является пустым.
+    /// </summary>
+    /// <param name="canBeEmptyMode">Значение свойства 'CanBeEmptyMode'.
+    /// Если равно <see cref="UIValidateState.Ok"/>, никаких действий не выполняется</param>
+    /// <param name="obj">Объект, для которого можно установить состояние ошибки или предупреждения</param>
+    /// <param name="displayName">Описание значения, которое должно быть заполнено</param>
+    public static void ValidateCanBeEmptyMode(UIValidateState canBeEmptyMode, IUIValidableObject obj, string displayName)
+    {
+      if (obj == null)
+        throw new ArgumentNullException("obj");
+
+      switch (canBeEmptyMode)
+      {
+        case UIValidateState.Error:
+          obj.SetError(String.Format(Res.UITools_Err_CanBeEmptyModeError, displayName));
+          break;
+        case UIValidateState.Warning:
+          obj.SetWarning(String.Format(Res.UITools_Err_CanBeEmptyModeWarning, displayName));
+          break;
+      }
+    }
+
+    /// <summary>
+    /// Метод для выдачи ошибки или предупреждения при проверке на попадание значения в диапазон.
+    /// Диапазон может быть закрытым, открытым или полуоткрытым.
+    /// </summary>
+    /// <typeparam name="T">Тип значения. Должен быть структурой, допускающей сравнение значений (число, <see cref="DateTime"/>, <see cref="TimeSpan"/>, ...)</typeparam>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="minimum">Начало диапазона или null</param>
+    /// <param name="maximum">Конец диапазона или null</param>
+    /// <param name="obj">Объект, для которого можно установить состояние ошибки или предупреждения</param>
+    /// <param name="displayName">Описание значения, которое должно быть заполнено</param>
+    /// <param name="isError">True - устанавливать ошибку, false - предупреждение</param>
+    /// <param name="format">Формат. Используется, если <typeparamref name="T"/> реализует интерфейс <see cref="IFormattable"/>.</param>
+    /// <param name="formatProvider">Провайдер форматирования. Используется, если <typeparamref name="T"/> реализует интерфейс <see cref="IFormattable"/>.</param>
+    public static void ValidateInRange<T>(T value, T? minimum, T? maximum, IUIValidableObject obj, string displayName, bool isError, string format, IFormatProvider formatProvider)
+      where T:struct, IComparable<T>
+    {
+      if (obj == null)
+        throw new ArgumentNullException("obj");
+
+      string message = null;
+      if (minimum.HasValue)
+      {
+        if (maximum.HasValue)
+        {
+          if (value.CompareTo(minimum.Value) < 0 || value.CompareTo(maximum.Value) > 0)
+            message = String.Format(Res.UITools_Err_OutOfRangeMinMax, displayName,
+              ToString(minimum, format, formatProvider), ToString(maximum, format, formatProvider));
+        }
+        else
+        {
+          if (value.CompareTo(minimum.Value) < 0)
+            message = String.Format(Res.UITools_Err_OutOfRangeMin, displayName, ToString(minimum, format, formatProvider));
+        }
+      }
+      else
+      {
+        if (maximum.HasValue)
+        {
+          if (value.CompareTo(maximum.Value) > 0)
+            message = String.Format(Res.UITools_Err_OutOfRangeMax, displayName, ToString(maximum, format, formatProvider));
+        }
+      }
+
+      if (message != null)
+      {
+        if (isError)
+          obj.SetError(message);
+        else
+          obj.SetWarning(message);
+      }
+    }
+
+    /// <summary>
+    /// Метод для выдачи ошибки или предупреждения при проверке на попадание значения <see cref="DateTime"/> в диапазон.
+    /// Диапазон может быть закрытым, открытым или полуоткрытым.
+    /// Для показа диапазона в сообщении используется <see cref="DateRangeFormatter"/>.
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="minimum">Начало диапазона или null</param>
+    /// <param name="maximum">Конец диапазона или null</param>
+    /// <param name="obj">Объект, для которого можно установить состояние ошибки или предупреждения</param>
+    /// <param name="displayName">Описание значения, которое должно быть заполнено</param>
+    /// <param name="isError">True - устанавливать ошибку, false - предупреждение</param>
+    public static void ValidateInRange(DateTime value, DateTime? minimum, DateTime? maximum, IUIValidableObject obj, string displayName, bool isError)
+    {
+      if (!DataTools.DateInRange(value, minimum, maximum))
+      {
+        string message = String.Format(Res.UITools_Err_OutOfRange, displayName, DateRangeFormatter.Default.ToString(minimum, maximum, true));
+        if (isError)
+          obj.SetError(message);
+        else
+          obj.SetWarning(message);
+      }
+    }
+
+    /// <summary>
+    /// Метод для выдачи ошибки или предупреждения при проверке на попадание значения <see cref="DateTime"/> в диапазон.
+    /// Диапазон может быть закрытым, открытым или полуоткрытым.
+    /// Для показа диапазона в сообщении используется <see cref="DateRangeFormatter"/>.
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="range">Диапазон дат</param>
+    /// <param name="obj">Объект, для которого можно установить состояние ошибки или предупреждения</param>
+    /// <param name="displayName">Описание значения, которое должно быть заполнено</param>
+    /// <param name="isError">True - устанавливать ошибку, false - предупреждение</param>
+    public static void ValidateInRange(DateTime value, DateRange range, IUIValidableObject obj, string displayName, bool isError)
+    {
+      if (!range.Contains(value))
+      {
+        string message = String.Format(Res.UITools_Err_OutOfRange, displayName, DateRangeFormatter.Default.ToString(range, true));
+        if (isError)
+          obj.SetError(message);
+        else
+          obj.SetWarning(message);
+      }
+    }
+
+
+    /// <summary>
+    /// Метод для выдачи ошибки или предупреждения при проверке на попадание значения <see cref="YearMonth"/> в диапазон.
+    /// Диапазон может быть закрытым, открытым или полуоткрытым.
+    /// Для показа диапазона в сообщении используется <see cref="DateRangeFormatter"/>.
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="minimum">Начало диапазона или null</param>
+    /// <param name="maximum">Конец диапазона или null</param>
+    /// <param name="obj">Объект, для которого можно установить состояние ошибки или предупреждения</param>
+    /// <param name="displayName">Описание значения, которое должно быть заполнено</param>
+    /// <param name="isError">True - устанавливать ошибку, false - предупреждение</param>
+    public static void ValidateInRange(YearMonth value, YearMonth minimum, YearMonth maximum, IUIValidableObject obj, string displayName, bool isError)
+    {
+      if (!value.IsInRange(minimum, maximum))
+      {
+        string message = String.Format(Res.UITools_Err_OutOfRange, displayName, DateRangeFormatter.Default.ToString(minimum, maximum));
+        if (isError)
+          obj.SetError(message);
+        else
+          obj.SetWarning(message);
+      }
+    }
+
+
+    /// <summary>
+    /// Метод для выдачи ошибки или предупреждения при проверке на попадание значения <see cref="YearMonth"/> в диапазон.
+    /// Диапазон может быть закрытым, открытым или полуоткрытым.
+    /// Для показа диапазона в сообщении используется <see cref="DateRangeFormatter"/>.
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="range">Диапазон</param>
+    /// <param name="obj">Объект, для которого можно установить состояние ошибки или предупреждения</param>
+    /// <param name="displayName">Описание значения, которое должно быть заполнено</param>
+    /// <param name="isError">True - устанавливать ошибку, false - предупреждение</param>
+    public static void ValidateInRange(YearMonth value, YearMonthRange range, IUIValidableObject obj, string displayName, bool isError)
+    {
+      if (!range.Contains(value))
+      {
+        string message = String.Format(Res.UITools_Err_OutOfRange, displayName, DateRangeFormatter.Default.ToString(range.FirstYM, range.LastYM));
+        if (isError)
+          obj.SetError(message);
+        else
+          obj.SetWarning(message);
+      }
+    }
+
+    /// <summary>
+    /// Метод для выдачи ошибки или предупреждения при проверке на попадание значения <see cref="MonthDay"/> в диапазон.
+    /// Диапазон может быть закрытым или открытым.
+    /// </summary>
+    /// <param name="value">Проверяемое значение</param>
+    /// <param name="range">Диапазон значений</param>
+    /// <param name="obj">Объект, для которого можно установить состояние ошибки или предупреждения</param>
+    /// <param name="displayName">Описание значения, которое должно быть заполнено</param>
+    /// <param name="isError">True - устанавливать ошибку, false - предупреждение</param>
+    public static void ValidateInRange(MonthDay value, MonthDayRange range, IUIValidableObject obj, string displayName, bool isError)
+    {
+      if (!range.Contains(value))
+      {
+        string message = String.Format(Res.UITools_Err_OutOfRange, displayName, DateRangeFormatter.Default.ToString(range, true));
+        if (isError)
+          obj.SetError(message);
+        else
+          obj.SetWarning(message);
+      }
+    }
+
+    #endregion
+
     #region Преобразование чисел
 
     /// <summary>
@@ -385,7 +580,7 @@ namespace FreeLibSet.UICore
       if (String.IsNullOrEmpty(mask))
         return true;
 
-      bool hasLetter=false;
+      bool hasLetter = false;
       int i = 0;
       while (i < mask.Length)
       {
@@ -409,7 +604,7 @@ namespace FreeLibSet.UICore
         i++;
       }
 
-      return hasLetter; 
+      return hasLetter;
     }
 
     #endregion
@@ -436,7 +631,7 @@ namespace FreeLibSet.UICore
         case "P":
           break;
         default:
-          throw new ArgumentException("Неизвестный формат", "format");
+          throw ExceptionFactory.ArgUnknownValue("format", format);
       }
 
       string mask = Guid.Empty.ToString(format); // получили строку из нулей и знаков
@@ -475,6 +670,194 @@ namespace FreeLibSet.UICore
           break;
       }
       return "^" + s + "$";
+    }
+
+    #endregion
+
+    #region Текстовое представление
+
+    /// <summary>
+    /// Вспомогательный метод для текстового представления объекта.
+    /// Вызывает метод <see cref="Object.ToString()"/> или <see cref="IFormattable.ToString(string, IFormatProvider)"/>,
+    /// в зависимости от того, поддерживает ли <paramref name="value"/> интерфейс <see cref="IFormattable"/>.
+    /// Если <paramref name="value"/>=null, возвращается строка "null".
+    /// </summary>
+    /// <param name="value">Значение, которое нужно преобразовать</param>
+    /// <param name="format">Формат. Используется, если <paramref name="value"/> реализует интерфейс <see cref="IFormattable"/>.</param>
+    /// <param name="formatProvider">Провайдер форматирования. Используется, если <paramref name="value"/>  реализует интерфейс <see cref="IFormattable"/>.</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToString(object value, string format, IFormatProvider formatProvider)
+    {
+      if (value == null)
+        return "null";
+      IFormattable value2 = value as IFormattable;
+      if (value2 == null)
+        return value.ToString();
+      else
+        return value2.ToString(format, formatProvider);
+    }
+
+    /// <summary>
+    /// Получение человеко-читаемого представления для заданного типа данных.
+    /// Например, для <see cref="System.Int32"/> возвращается "целое число".
+    /// Для <paramref name="typ"/>=null возвращает "пусто".
+    /// Для неизвестных типов данных возвращает имя типа без преобразования.
+    /// </summary>
+    /// <param name="typ">Тип данных</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToString(Type typ)
+    {
+      if (typ == null || typ == typeof(DBNull))
+        return Res.UITools_Msg_Null;
+      if (DataTools.IsIntegerType(typ))
+        return Res.UITools_Msg_Int;
+      if (DataTools.IsFloatType(typ))
+        return Res.UITools_Msg_Float;
+      if (typ == typeof(DateTime))
+        return Res.UITools_Msg_DateTime;
+      if (typ == typeof(string))
+        return Res.UITools_Msg_String;
+      if (typ == typeof(Boolean))
+        return Res.UITools_Msg_Boolean;
+
+      return typ.ToString();
+    }
+
+    /// <summary>
+    /// Получение человеко-читаемого представления для типа даты и/или времени.
+    /// Возвращает строку "дата", "время" или "дата и время".
+    /// </summary>
+    /// <param name="kind">Тип даты/времени</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToString(EditableDateTimeFormatterKind kind)
+    {
+      switch (kind)
+      {
+        case EditableDateTimeFormatterKind.Date: return Res.UITools_Msg_Date;
+        case EditableDateTimeFormatterKind.Time:
+        case EditableDateTimeFormatterKind.ShortTime: return Res.UITools_Msg_Time;
+        case EditableDateTimeFormatterKind.DateTime:
+        case EditableDateTimeFormatterKind.ShortDateTime: return Res.UITools_Msg_DateTime;
+        default:
+          throw ExceptionFactory.ArgUnknownValue("kind", kind);
+      }
+    }
+
+    /// <summary>
+    /// Получение текста сообщения "Текст 'XXX' нельзя преобразовать в значение типа 'YYY'".
+    /// </summary>
+    /// <param name="text">Текст, введенный пользователем</param>
+    /// <param name="typ">Тип, в который выполнялось преобразование</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ConvertErrorMessage(string text, Type typ)
+    {
+      return String.Format(Res.UITools_Msg_ConvertErrorMessage, text, ToString(typ));
+    }
+
+
+    /// <summary>
+    /// Получение текста сообщения "Текст 'XXX' нельзя преобразовать в значение типа 'YYY'" для даты/времени.
+    /// </summary>
+    /// <param name="text">Текст, введенный пользователем</param>
+    /// <param name="kind">Тип даты/времени</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ConvertErrorMessage(string text, EditableDateTimeFormatterKind kind)
+    {
+      return String.Format(Res.UITools_Msg_ConvertErrorMessage, text, ToString(kind));
+    }
+
+    /// <summary>
+    /// Возвращает "да" или "нет"
+    /// </summary>
+    /// <param name="value">значение</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToYesNo(bool value)
+    {
+      return value ? Res.UITools_Msg_Yes : Res.UITools_Msg_No;
+    }
+
+    /// <summary>
+    /// Читаемое текстовое представление для перечисления <see cref="MaskedTextResultHint"/>
+    /// </summary>
+    /// <param name="value">Значение перечисления</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToString(MaskedTextResultHint value)
+    {
+      switch (value)
+      {
+        case MaskedTextResultHint.DigitExpected:
+          return Res.MaskedTextResultHint_Msg_DigitExpected;
+        case MaskedTextResultHint.AlphanumericCharacterExpected:
+          return Res.MaskedTextResultHint_Msg_AlphanumericCharacterExpected;
+        case MaskedTextResultHint.LetterExpected:
+          return Res.MaskedTextResultHint_Msg_LetterExpected;
+        case MaskedTextResultHint.UnavailableEditPosition:
+          return Res.MaskedTextResultHint_Msg_UnavailableEditPosition;
+        case MaskedTextResultHint.CharacterEscaped:
+          return Res.MaskedTextResultHint_Msg_CharacterEscaped;
+        default:
+          return value.ToString();
+      }
+    }
+
+    /// <summary>
+    /// Читаемое текстовое представление для перечисления <see cref="ListSortDirection"/>
+    /// </summary>
+    /// <param name="value">Значение перечисления</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToString(ListSortDirection value)
+    {
+      return ToString(value, true);
+    }
+
+    /// <summary>
+    /// Читаемое текстовое представление для перечисления <see cref="ListSortDirection"/>
+    /// </summary>
+    /// <param name="value">Значение перечисления</param>
+    /// <param name="isLong">True - длинная форма. False - короткая форма</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToString(ListSortDirection value, bool isLong)
+    {
+      switch (value)
+      {
+        case ListSortDirection.Ascending:
+          return isLong ? Res.ListSortDirection_Name_Ascending : Res.ListSortDirection_Name_AscendingShort;
+        case ListSortDirection.Descending:
+          return isLong ? Res.ListSortDirection_Name_Descending : Res.ListSortDirection_Name_DescendingShort;
+        default:
+          throw ExceptionFactory.ArgUnknownValue("value", value);
+      }
+    }
+
+    /// <summary>
+    /// Читаемое текстовое представление для перечисления <see cref="ErrorMessageKind"/>
+    /// </summary>
+    /// <param name="value">Значение перечисления</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToString(ErrorMessageKind value)
+    {
+      return ToString(value, true);
+    }
+
+    /// <summary>
+    /// Читаемое текстовое представление для перечисления <see cref="ErrorMessageKind"/>
+    /// </summary>
+    /// <param name="value">Значение перечисления</param>
+    /// <param name="isLong">True - длинная форма. False - короткая форма</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ToString(ErrorMessageKind value, bool isLong)
+    {
+      switch (value)
+      {
+        case ErrorMessageKind.Error:
+          return isLong ? Res.ErrorMessageKind_Msg_Error : Res.ErrorMessageKind_Msg_ErrorShort;
+        case ErrorMessageKind.Warning:
+          return isLong ? Res.ErrorMessageKind_Msg_Warning : Res.ErrorMessageKind_Msg_WarningShort;
+        case ErrorMessageKind.Info:
+          return isLong ? Res.ErrorMessageKind_Msg_Info : Res.ErrorMessageKind_Msg_InfoShort;
+        default:
+          throw ExceptionFactory.ArgUnknownValue("value", value);
+      }
     }
 
     #endregion

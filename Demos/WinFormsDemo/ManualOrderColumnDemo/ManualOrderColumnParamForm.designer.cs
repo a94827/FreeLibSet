@@ -30,22 +30,22 @@
     {
       this.infoLabel1 = new FreeLibSet.Controls.InfoLabel();
       this.panel1 = new System.Windows.Forms.Panel();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnOk = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.rbEFPInputDataGridView = new System.Windows.Forms.RadioButton();
-      this.rbEFPDataGridView = new System.Windows.Forms.RadioButton();
-      this.rbEFPDataTreeView = new System.Windows.Forms.RadioButton();
-      this.rbBoth = new System.Windows.Forms.RadioButton();
-      this.cbReadOnly = new System.Windows.Forms.CheckBox();
-      this.cbMultiSelect = new System.Windows.Forms.CheckBox();
-      this.cbManualOrderColumn = new System.Windows.Forms.CheckBox();
-      this.cbDefaultManualOrderColumn = new System.Windows.Forms.CheckBox();
-      this.label1 = new System.Windows.Forms.Label();
-      this.cbOrderStartMode = new System.Windows.Forms.ComboBox();
-      this.label2 = new System.Windows.Forms.Label();
+      this.btnOk = new System.Windows.Forms.Button();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.cbOrderDataType = new System.Windows.Forms.ComboBox();
+      this.label2 = new System.Windows.Forms.Label();
+      this.cbOrderStartMode = new System.Windows.Forms.ComboBox();
+      this.label1 = new System.Windows.Forms.Label();
+      this.cbDefaultManualOrderColumn = new System.Windows.Forms.CheckBox();
+      this.cbManualOrderColumn = new System.Windows.Forms.CheckBox();
+      this.cbMultiSelect = new System.Windows.Forms.CheckBox();
+      this.cbReadOnly = new System.Windows.Forms.CheckBox();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.rbBoth = new System.Windows.Forms.RadioButton();
+      this.rbEFPDataTreeView = new System.Windows.Forms.RadioButton();
+      this.rbEFPDataGridView = new System.Windows.Forms.RadioButton();
+      this.rbEFPInputDataGridView = new System.Windows.Forms.RadioButton();
       this.panel1.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
@@ -54,22 +54,46 @@
       // infoLabel1
       // 
       this.infoLabel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.infoLabel1.Location = new System.Drawing.Point(0, 283);
+      this.infoLabel1.Location = new System.Drawing.Point(0, 349);
+      this.infoLabel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.infoLabel1.Name = "infoLabel1";
-      this.infoLabel1.Size = new System.Drawing.Size(513, 58);
+      this.infoLabel1.Size = new System.Drawing.Size(684, 71);
       this.infoLabel1.TabIndex = 2;
-      this.infoLabel1.Text = "Демонстрирует использование свойства EFPDataGridViewCommandItems, EFPDataTreeView" +
-          "CommandItems.ManualOrderColumn и связанных с ним действий";
+      this.infoLabel1.Text = "This demo shows the usage of properties EFPDataGridViewCommandItems, EFPDataTreeV" +
+    "iewCommandItems.ManualOrderColumn & related actions";
       // 
       // panel1
       // 
       this.panel1.Controls.Add(this.btnCancel);
       this.panel1.Controls.Add(this.btnOk);
       this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel1.Location = new System.Drawing.Point(0, 243);
+      this.panel1.Location = new System.Drawing.Point(0, 300);
+      this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(513, 40);
+      this.panel1.Size = new System.Drawing.Size(684, 49);
       this.panel1.TabIndex = 1;
+      // 
+      // btnCancel
+      // 
+      this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.btnCancel.Location = new System.Drawing.Point(119, 10);
+      this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.btnCancel.Name = "btnCancel";
+      this.btnCancel.Size = new System.Drawing.Size(117, 30);
+      this.btnCancel.TabIndex = 1;
+      this.btnCancel.Text = "Cancel";
+      this.btnCancel.UseVisualStyleBackColor = true;
+      // 
+      // btnOk
+      // 
+      this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOk.Location = new System.Drawing.Point(11, 10);
+      this.btnOk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.btnOk.Name = "btnOk";
+      this.btnOk.Size = new System.Drawing.Size(100, 28);
+      this.btnOk.TabIndex = 0;
+      this.btnOk.Text = "O&K";
+      this.btnOk.UseVisualStyleBackColor = true;
       // 
       // groupBox1
       // 
@@ -84,137 +108,36 @@
       this.groupBox1.Controls.Add(this.groupBox2);
       this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.groupBox1.Location = new System.Drawing.Point(0, 0);
+      this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(513, 243);
+      this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.groupBox1.Size = new System.Drawing.Size(684, 300);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Параметры";
+      this.groupBox1.Text = "Parameters";
       // 
-      // btnOk
+      // cbOrderDataType
       // 
-      this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOk.Location = new System.Drawing.Point(8, 8);
-      this.btnOk.Name = "btnOk";
-      this.btnOk.Size = new System.Drawing.Size(75, 23);
-      this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
-      this.btnOk.UseVisualStyleBackColor = true;
+      this.cbOrderDataType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cbOrderDataType.FormattingEnabled = true;
+      this.cbOrderDataType.Items.AddRange(new object[] {
+            "Int16",
+            "Int32"});
+      this.cbOrderDataType.Location = new System.Drawing.Point(277, 225);
+      this.cbOrderDataType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbOrderDataType.Name = "cbOrderDataType";
+      this.cbOrderDataType.Size = new System.Drawing.Size(160, 24);
+      this.cbOrderDataType.TabIndex = 6;
       // 
-      // btnCancel
+      // label2
       // 
-      this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(89, 8);
-      this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(88, 24);
-      this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
-      this.btnCancel.UseVisualStyleBackColor = true;
-      // 
-      // groupBox2
-      // 
-      this.groupBox2.Controls.Add(this.rbBoth);
-      this.groupBox2.Controls.Add(this.rbEFPDataTreeView);
-      this.groupBox2.Controls.Add(this.rbEFPDataGridView);
-      this.groupBox2.Controls.Add(this.rbEFPInputDataGridView);
-      this.groupBox2.Location = new System.Drawing.Point(12, 19);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(308, 115);
-      this.groupBox2.TabIndex = 0;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Просмотры";
-      // 
-      // rbEFPInputDataGridView
-      // 
-      this.rbEFPInputDataGridView.AutoSize = true;
-      this.rbEFPInputDataGridView.Location = new System.Drawing.Point(15, 88);
-      this.rbEFPInputDataGridView.Name = "rbEFPInputDataGridView";
-      this.rbEFPInputDataGridView.Size = new System.Drawing.Size(134, 17);
-      this.rbEFPInputDataGridView.TabIndex = 3;
-      this.rbEFPInputDataGridView.TabStop = true;
-      this.rbEFPInputDataGridView.Text = "EFPInputDataGridView";
-      this.rbEFPInputDataGridView.UseVisualStyleBackColor = true;
-      // 
-      // rbEFPDataGridView
-      // 
-      this.rbEFPDataGridView.AutoSize = true;
-      this.rbEFPDataGridView.Location = new System.Drawing.Point(15, 19);
-      this.rbEFPDataGridView.Name = "rbEFPDataGridView";
-      this.rbEFPDataGridView.Size = new System.Drawing.Size(110, 17);
-      this.rbEFPDataGridView.TabIndex = 0;
-      this.rbEFPDataGridView.TabStop = true;
-      this.rbEFPDataGridView.Text = "EFPDataGridView";
-      this.rbEFPDataGridView.UseVisualStyleBackColor = true;
-      // 
-      // rbEFPDataTreeView
-      // 
-      this.rbEFPDataTreeView.AutoSize = true;
-      this.rbEFPDataTreeView.Location = new System.Drawing.Point(15, 42);
-      this.rbEFPDataTreeView.Name = "rbEFPDataTreeView";
-      this.rbEFPDataTreeView.Size = new System.Drawing.Size(113, 17);
-      this.rbEFPDataTreeView.TabIndex = 1;
-      this.rbEFPDataTreeView.TabStop = true;
-      this.rbEFPDataTreeView.Text = "EFPDataTreeView";
-      this.rbEFPDataTreeView.UseVisualStyleBackColor = true;
-      // 
-      // rbBoth
-      // 
-      this.rbBoth.AutoSize = true;
-      this.rbBoth.Location = new System.Drawing.Point(15, 65);
-      this.rbBoth.Name = "rbBoth";
-      this.rbBoth.Size = new System.Drawing.Size(204, 17);
-      this.rbBoth.TabIndex = 2;
-      this.rbBoth.TabStop = true;
-      this.rbBoth.Text = "EFPDataGridView+EFPDataTreeView";
-      this.rbBoth.UseVisualStyleBackColor = true;
-      // 
-      // cbReadOnly
-      // 
-      this.cbReadOnly.AutoSize = true;
-      this.cbReadOnly.Location = new System.Drawing.Point(208, 140);
-      this.cbReadOnly.Name = "cbReadOnly";
-      this.cbReadOnly.Size = new System.Drawing.Size(73, 17);
-      this.cbReadOnly.TabIndex = 3;
-      this.cbReadOnly.Text = "ReadOnly";
-      this.cbReadOnly.UseVisualStyleBackColor = true;
-      // 
-      // cbMultiSelect
-      // 
-      this.cbMultiSelect.AutoSize = true;
-      this.cbMultiSelect.Location = new System.Drawing.Point(208, 163);
-      this.cbMultiSelect.Name = "cbMultiSelect";
-      this.cbMultiSelect.Size = new System.Drawing.Size(78, 17);
-      this.cbMultiSelect.TabIndex = 4;
-      this.cbMultiSelect.Text = "MultiSelect";
-      this.cbMultiSelect.UseVisualStyleBackColor = true;
-      // 
-      // cbManualOrderColumn
-      // 
-      this.cbManualOrderColumn.AutoSize = true;
-      this.cbManualOrderColumn.Location = new System.Drawing.Point(27, 140);
-      this.cbManualOrderColumn.Name = "cbManualOrderColumn";
-      this.cbManualOrderColumn.Size = new System.Drawing.Size(122, 17);
-      this.cbManualOrderColumn.TabIndex = 1;
-      this.cbManualOrderColumn.Text = "ManualOrderColumn";
-      this.cbManualOrderColumn.UseVisualStyleBackColor = true;
-      // 
-      // cbDefaultManualOrderColumn
-      // 
-      this.cbDefaultManualOrderColumn.AutoSize = true;
-      this.cbDefaultManualOrderColumn.Location = new System.Drawing.Point(27, 163);
-      this.cbDefaultManualOrderColumn.Name = "cbDefaultManualOrderColumn";
-      this.cbDefaultManualOrderColumn.Size = new System.Drawing.Size(156, 17);
-      this.cbDefaultManualOrderColumn.TabIndex = 2;
-      this.cbDefaultManualOrderColumn.Text = "DefaultManualOrderColumn";
-      this.cbDefaultManualOrderColumn.UseVisualStyleBackColor = true;
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(24, 212);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(170, 13);
-      this.label1.TabIndex = 7;
-      this.label1.Text = "Начальные значения поля Order";
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(32, 229);
+      this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(125, 17);
+      this.label2.TabIndex = 5;
+      this.label2.Text = "Order column type";
       // 
       // cbOrderStartMode
       // 
@@ -224,46 +147,144 @@
             "1,2,3",
             "Нулевые",
             "Случайные"});
-      this.cbOrderStartMode.Location = new System.Drawing.Point(208, 209);
+      this.cbOrderStartMode.Location = new System.Drawing.Point(277, 257);
+      this.cbOrderStartMode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.cbOrderStartMode.Name = "cbOrderStartMode";
-      this.cbOrderStartMode.Size = new System.Drawing.Size(293, 21);
+      this.cbOrderStartMode.Size = new System.Drawing.Size(389, 24);
       this.cbOrderStartMode.TabIndex = 8;
       // 
-      // label2
+      // label1
       // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(24, 186);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(82, 13);
-      this.label2.TabIndex = 5;
-      this.label2.Text = "Тип поля Order";
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(32, 261);
+      this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(213, 17);
+      this.label1.TabIndex = 7;
+      this.label1.Text = "Initial value for the Order column";
       // 
-      // cbOrderDataType
+      // cbDefaultManualOrderColumn
       // 
-      this.cbOrderDataType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.cbOrderDataType.FormattingEnabled = true;
-      this.cbOrderDataType.Items.AddRange(new object[] {
-            "Int16",
-            "Int32"});
-      this.cbOrderDataType.Location = new System.Drawing.Point(208, 183);
-      this.cbOrderDataType.Name = "cbOrderDataType";
-      this.cbOrderDataType.Size = new System.Drawing.Size(121, 21);
-      this.cbOrderDataType.TabIndex = 6;
+      this.cbDefaultManualOrderColumn.AutoSize = true;
+      this.cbDefaultManualOrderColumn.Location = new System.Drawing.Point(36, 201);
+      this.cbDefaultManualOrderColumn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbDefaultManualOrderColumn.Name = "cbDefaultManualOrderColumn";
+      this.cbDefaultManualOrderColumn.Size = new System.Drawing.Size(205, 21);
+      this.cbDefaultManualOrderColumn.TabIndex = 2;
+      this.cbDefaultManualOrderColumn.Text = "DefaultManualOrderColumn";
+      this.cbDefaultManualOrderColumn.UseVisualStyleBackColor = true;
       // 
-      // ParamForm
+      // cbManualOrderColumn
+      // 
+      this.cbManualOrderColumn.AutoSize = true;
+      this.cbManualOrderColumn.Location = new System.Drawing.Point(36, 172);
+      this.cbManualOrderColumn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbManualOrderColumn.Name = "cbManualOrderColumn";
+      this.cbManualOrderColumn.Size = new System.Drawing.Size(160, 21);
+      this.cbManualOrderColumn.TabIndex = 1;
+      this.cbManualOrderColumn.Text = "ManualOrderColumn";
+      this.cbManualOrderColumn.UseVisualStyleBackColor = true;
+      // 
+      // cbMultiSelect
+      // 
+      this.cbMultiSelect.AutoSize = true;
+      this.cbMultiSelect.Location = new System.Drawing.Point(277, 201);
+      this.cbMultiSelect.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbMultiSelect.Name = "cbMultiSelect";
+      this.cbMultiSelect.Size = new System.Drawing.Size(98, 21);
+      this.cbMultiSelect.TabIndex = 4;
+      this.cbMultiSelect.Text = "MultiSelect";
+      this.cbMultiSelect.UseVisualStyleBackColor = true;
+      // 
+      // cbReadOnly
+      // 
+      this.cbReadOnly.AutoSize = true;
+      this.cbReadOnly.Location = new System.Drawing.Point(277, 172);
+      this.cbReadOnly.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbReadOnly.Name = "cbReadOnly";
+      this.cbReadOnly.Size = new System.Drawing.Size(93, 21);
+      this.cbReadOnly.TabIndex = 3;
+      this.cbReadOnly.Text = "ReadOnly";
+      this.cbReadOnly.UseVisualStyleBackColor = true;
+      // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.rbBoth);
+      this.groupBox2.Controls.Add(this.rbEFPDataTreeView);
+      this.groupBox2.Controls.Add(this.rbEFPDataGridView);
+      this.groupBox2.Controls.Add(this.rbEFPInputDataGridView);
+      this.groupBox2.Location = new System.Drawing.Point(16, 23);
+      this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.groupBox2.Size = new System.Drawing.Size(411, 142);
+      this.groupBox2.TabIndex = 0;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = "Data views";
+      // 
+      // rbBoth
+      // 
+      this.rbBoth.AutoSize = true;
+      this.rbBoth.Location = new System.Drawing.Point(20, 80);
+      this.rbBoth.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.rbBoth.Name = "rbBoth";
+      this.rbBoth.Size = new System.Drawing.Size(264, 21);
+      this.rbBoth.TabIndex = 2;
+      this.rbBoth.TabStop = true;
+      this.rbBoth.Text = "EFPDataGridView+EFPDataTreeView";
+      this.rbBoth.UseVisualStyleBackColor = true;
+      // 
+      // rbEFPDataTreeView
+      // 
+      this.rbEFPDataTreeView.AutoSize = true;
+      this.rbEFPDataTreeView.Location = new System.Drawing.Point(20, 52);
+      this.rbEFPDataTreeView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.rbEFPDataTreeView.Name = "rbEFPDataTreeView";
+      this.rbEFPDataTreeView.Size = new System.Drawing.Size(144, 21);
+      this.rbEFPDataTreeView.TabIndex = 1;
+      this.rbEFPDataTreeView.TabStop = true;
+      this.rbEFPDataTreeView.Text = "EFPDataTreeView";
+      this.rbEFPDataTreeView.UseVisualStyleBackColor = true;
+      // 
+      // rbEFPDataGridView
+      // 
+      this.rbEFPDataGridView.AutoSize = true;
+      this.rbEFPDataGridView.Location = new System.Drawing.Point(20, 23);
+      this.rbEFPDataGridView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.rbEFPDataGridView.Name = "rbEFPDataGridView";
+      this.rbEFPDataGridView.Size = new System.Drawing.Size(141, 21);
+      this.rbEFPDataGridView.TabIndex = 0;
+      this.rbEFPDataGridView.TabStop = true;
+      this.rbEFPDataGridView.Text = "EFPDataGridView";
+      this.rbEFPDataGridView.UseVisualStyleBackColor = true;
+      // 
+      // rbEFPInputDataGridView
+      // 
+      this.rbEFPInputDataGridView.AutoSize = true;
+      this.rbEFPInputDataGridView.Location = new System.Drawing.Point(20, 108);
+      this.rbEFPInputDataGridView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.rbEFPInputDataGridView.Name = "rbEFPInputDataGridView";
+      this.rbEFPInputDataGridView.Size = new System.Drawing.Size(172, 21);
+      this.rbEFPInputDataGridView.TabIndex = 3;
+      this.rbEFPInputDataGridView.TabStop = true;
+      this.rbEFPInputDataGridView.Text = "EFPInputDataGridView";
+      this.rbEFPInputDataGridView.UseVisualStyleBackColor = true;
+      // 
+      // ManualOrderColumnParamForm
       // 
       this.AcceptButton = this.btnOk;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(513, 341);
+      this.ClientSize = new System.Drawing.Size(684, 420);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.panel1);
       this.Controls.Add(this.infoLabel1);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.MaximizeBox = false;
       this.MinimizeBox = false;
-      this.Name = "ParamForm";
+      this.Name = "ManualOrderColumnParamForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "ManualOrderColumn demo";
       this.panel1.ResumeLayout(false);

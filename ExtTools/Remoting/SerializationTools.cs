@@ -90,8 +90,8 @@ namespace FreeLibSet.Remoting
 
     /// <summary>
     /// Подготовка набора данных к кэшированию.
-    /// Вызывает DataSet.AccepChanges() и устанавливает свойство DataSet.RemotingFormat.
-    /// Этот метод рекомендуется вызывать из Вашей реализации ICacheFactory, если данные содержат объект(ы) DataSet
+    /// Вызывает <see cref="DataSet.AcceptChanges()"/> и устанавливает свойство <see cref="DataSet.RemotingFormat"/>.
+    /// Этот метод рекомендуется вызывать из Вашей реализации <see cref="FreeLibSet.Caching.ICacheFactory{T}"/>, если данные содержат объект(ы) <see cref="DataSet"/>.
     /// </summary>
     /// <param name="ds">Набор данных, который будет входить в кэшируемые данные.
     /// Если null, то никаких действий не выполняется</param>
@@ -107,7 +107,7 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Возвращает формат сериализации (Xml или Binary), предпочтительный для заданного набора DataSet.
+    /// Возвращает формат сериализации (Xml или Binary), предпочтительный для заданного набора <see cref="DataSet"/>.
     /// Большие таблицы выгодно, с точки зрения размера передаваемых байтов, сериализовывать в двоичном формате, а маленькие - в старом (XML) формате.
     /// </summary>
     /// <param name="ds">Проверяемый набор данных</param>
@@ -151,9 +151,9 @@ namespace FreeLibSet.Remoting
     #region Обработка DataTable.DateTimeMode
 
     /// <summary>
-    /// Устанавливает для всех столбцов всех таблиц набора, имеющих тип данных DateTime, свойство
-    /// DataColumn.DateTimeMode = DataSetDateTime.Unspecified, если текущим значением
-    /// является DataSetDateTime.UnspecifiedLocal.
+    /// Устанавливает для всех столбцов всех таблиц набора, имеющих тип данных <see cref="DateTime"/>, свойство
+    /// <see cref="DataColumn.DateTimeMode"/> = <see cref="DataSetDateTime.Unspecified"/>, если текущим значением
+    /// является <see cref="DataSetDateTime.UnspecifiedLocal"/>.
     /// Применение метода позволяет избежать ошибок передачи данных между компьютерами,
     /// если на них действуют разные часовые пояса.
     /// </summary>
@@ -165,9 +165,9 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// Устанавливает для всех столбцов таблицы, имеющих тип данных DateTime, свойство
-    /// DataColumn.DateTimeMode = DataSetDateTime.Unspecified, если текущим значением
-    /// является DataSetDateTime.UnspecifiedLocal.
+    /// Устанавливает для всех столбцов таблицы, имеющих тип данных <see cref="DateTime"/>, свойство
+    /// <see cref="DataColumn.DateTimeMode"/> = <see cref="DataSetDateTime.Unspecified"/>, если текущим значением
+    /// является <see cref="DataSetDateTime.UnspecifiedLocal"/>.
     /// Применение метода позволяет избежать ошибок передачи данных между компьютерами,
     /// если на них действуют разные часовые пояса.
     /// </summary>

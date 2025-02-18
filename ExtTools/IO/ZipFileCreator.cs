@@ -253,7 +253,7 @@ namespace FreeLibSet.IO
     public static void CheckZipLibAvailable()
     {
       if (!ZipLibAvailable)
-        throw new DllNotFoundException("Не удалось загрузить библиотеку ICSharpCode.SharpZipLib.dll. Без нее невозможно создание сжатых zip-файлов");
+        throw ExceptionFactory.DllNotFound("ICSharpCode.SharpZipLib.dll");
     }
 
     #endregion
@@ -342,7 +342,7 @@ namespace FreeLibSet.IO
       }
       catch { }
 
-      throw new FileNotFoundException("Не найден файл " + fileName);
+      throw ExceptionFactory.FileNotFound(FileTools.ApplicationBaseDir + fileName);
     }
 
     /// <summary>
@@ -351,7 +351,7 @@ namespace FreeLibSet.IO
     public static void CheckSevenZipSharpAvailable()
     {
       if (!SevenZipSharpAvailable)
-        throw new DllNotFoundException("Не найдена библиотека SevenZipSharp.dll для работы с архивами 7z. " + SevenZipSharpAvailabilityError); // ??
+        throw ExceptionFactory.DllNotFound("SevenZipSharp.dll");
     }
 
     #endregion
@@ -369,7 +369,7 @@ namespace FreeLibSet.IO
     public static void ExtractZipResourceFile(byte[] zipFileBytes, AbsPath resFilePath)
     {
       if (resFilePath.IsEmpty)
-        throw new ArgumentNullException("resFilePath");
+        throw ExceptionFactory.ArgIsEmpty("resFilePath");
 
       CheckZipLibAvailable();
 
@@ -385,12 +385,12 @@ namespace FreeLibSet.IO
             if (cnt == 0)
               FileTools.WriteStream(resFilePath, zis);
             else
-              throw new ArgumentException("Архив содержит несколько файлов");
+              throw new InvalidOperationException(Res.ZipFileTools_Err_ArcContainsManyFiles);
             cnt++;
           }
         }
         if (cnt == 0)
-          throw new ArgumentException("Архив не содержит файлов");
+          throw new InvalidOperationException(Res.ZipFileTools_Err_ArcIsEmpty);
       }
     }
 

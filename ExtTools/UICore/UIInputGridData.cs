@@ -526,9 +526,9 @@ namespace FreeLibSet.UICore
             if (column == null)
             {
               if (String.IsNullOrEmpty(columnName))
-                throw new ArgumentNullException("columnName");
+                throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
               else
-                throw new ArgumentException("В таблице " + _Owner.Table.ToString() + " нет столбца с именем \"" + columnName + "\"");
+                throw ExceptionFactory.ArgUnknownColumnName("columnName", _Owner.Table, columnName);
             }
             info = new ColumnInfo(_Owner, columnName);
             _Owner._Dict.Add(columnName, info);

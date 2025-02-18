@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms
     public override string ToString()
     {
       if (String.IsNullOrEmpty(Title))
-        return "[ Без заголовка ]";
+        return "[ Untitled ]";
       else
         return Title;
     }

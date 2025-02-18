@@ -401,7 +401,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика DateBox.ValueChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -723,6 +723,7 @@ namespace FreeLibSet.Forms
         if (value == _CanBeEmptyMode)
           return;
         _CanBeEmptyMode = value;
+        ControlCanBeEmpty = (value != UIValidateState.Error); // 27.01.2025
         Validate();
       }
     }
@@ -796,20 +797,10 @@ namespace FreeLibSet.Forms
       if (NValue.HasValue)
       {
         if (!DataTools.DateInRange(NValue.Value, Minimum, Maximum))
-          SetError("Дата должна быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum, true));
+          SetError(String.Format(Res.DateTimeBox_Err_DateMustBeInRange, DateRangeFormatter.Default.ToString(Minimum, Maximum, true)));
       }
       else
-      {
-        switch (CanBeEmptyMode)
-        {
-          case UIValidateState.Error:
-            SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
-            break;
-        }
-      }
+        ValidateCanBeEmptyMode(CanBeEmptyMode);
 
       base.OnValidate();
     }
@@ -851,9 +842,9 @@ namespace FreeLibSet.Forms
         control.ValueChanged += new EventHandler(Control_ValueChanged);
 
       if (String.IsNullOrEmpty(control.PopupButtonToolTipText))
-        control.PopupButtonToolTipText = "Выбрать из календаря";
+        control.PopupButtonToolTipText = Res.DateTimeBox_ToolTip_PopupButton;
       if (String.IsNullOrEmpty(control.ClearButtonToolTipText))
-        control.ClearButtonToolTipText = "Очистить дату";
+        control.ClearButtonToolTipText = Res.DateTimeBox_ToolTip_ClearButton;
     }
 
     #endregion
@@ -1247,7 +1238,7 @@ namespace FreeLibSet.Forms
         return;
 
       if (!DataTools.DateInRange(Value, Minimum, Maximum))
-          SetError("Дата должна быть в диапазоне " + DateRangeFormatter.Default.ToString(Minimum, Maximum, true));
+          SetError(String.Format(Res.DateTimeBox_Err_DateMustBeInRange, DateRangeFormatter.Default.ToString(Minimum, Maximum, true)));
 
       base.OnValidate();
     }
@@ -1318,7 +1309,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика MonthCalendar.ValueChanged");
+        EFPApp.ShowException(e);
       }
     }
 

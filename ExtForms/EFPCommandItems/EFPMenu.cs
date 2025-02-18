@@ -37,7 +37,7 @@ namespace FreeLibSet.Forms
       else if (menu is MenuStrip)
         ((MenuStrip)menu).MenuActivate += new EventHandler(Menu_MenuActivate2);
       else
-        throw new ArgumentException("Неизвестный тип меню", "menu");
+        throw ExceptionFactory.ArgUnknownType("menu", menu);
 
 #if DEBUG
       DisposableObject.RegisterDisposableObject(_Menu);
@@ -119,7 +119,7 @@ namespace FreeLibSet.Forms
       else
       {
         if (!ItemDict.ContainsKey(parent.CategoryAndName))
-          throw new InvalidOperationException("Родительская команда " + parent.ToString() + " не была добавлен в меню");
+          throw new InvalidOperationException(String.Format(Res.EFPMenu_Err_ParentNotAttached, parent.DisplayName));
         parentItems = ItemDict[parent.CategoryAndName].DropDownItems;
       }
 
@@ -202,14 +202,12 @@ namespace FreeLibSet.Forms
               {
                 if (item.IsInToolBarDropDown)
                   continue;
-                throw new InvalidOperationException("Нельзя присоединить команду \"" + item.ToString() +
-                  "\" к меню, потому что ее родительская команда \"" + item.Parent.ToString() +
-                  "\" не относится к меню");
+                throw new InvalidOperationException(String.Format(Res.EFPMenu_Err_ParentNotInMenu,
+                  item.ToString(), item.Parent.ToString()));
               }
               if (!items.Contains(item.Parent))
-                throw new InvalidOperationException("Нельзя присоединить команду \"" + item.ToString() +
-                  "\" к меню, потому что ее родительская команда \"" + item.Parent.ToString() +
-                  "\" не входит в список команд");
+                throw new InvalidOperationException(String.Format(Res.EFPMenu_Err_ParentNotInCommadList,
+                  item.ToString(), item.Parent.ToString()));
               if (!ItemDict.ContainsKey(item.Parent.CategoryAndName))
               {
                 hasDelayed = true;
@@ -263,10 +261,10 @@ namespace FreeLibSet.Forms
 
       ToolStripMenuItem beforeMenuItem;
       if (!ItemDict.TryGetValue(before.CategoryAndName, out beforeMenuItem))
-        throw new ArgumentException("Команда " + before.ToString() + " не была добавлена в меню", "before");
+        throw new ArgumentException(String.Format(Res.EFPMenu_Arg_NotInMenu, before.ToString()), "before");
       int index = parentItems.IndexOf(beforeMenuItem);
       if (index < 0)
-        throw new ArgumentException("Команда " + before.ToString() + " располагается в другом меню", "before");
+        throw new ArgumentException(String.Format(Res.EFPMenu_Arg_AnoherMenu, before.ToString()), "before");
 
       if (item.GroupBegin)
         InsertSeparator(parentItems, ref index);
@@ -362,7 +360,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка отложенной инициализации меню");
+          EFPApp.ShowException(e, Res.EFPMenu_ErrTitle_DelayedInit);
         }
         _DelayedItems = null;
 
@@ -749,7 +747,7 @@ namespace FreeLibSet.Forms
 
       ToolStripMenuItem windowMenuItem;
       if (!ItemDict.TryGetValue(windowCommandItem.CategoryAndName, out windowMenuItem))
-        throw new ArgumentException("Команда " + windowCommandItem.ToString() + " не была добавлена в меню", "windowCommandItem");
+        throw new ArgumentException(String.Format(Res.EFPMenu_Arg_NotInMenu, windowCommandItem.ToString()), "windowCommandItem");
 
       if (windowMenuItem.DropDownItems.Count > 0)
       {
@@ -777,7 +775,7 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("mainWindow");
 
       if (mainWindow.MainMenuStrip != null)
-        throw new InvalidOperationException("Повторное присоединение главного меню к окну " + mainWindow.ToString());
+        throw ExceptionFactory.RepeatedCall(this, "Attach()");
 
       // 10.06.2021
       foreach (ToolStripItem topItem in base.Menu.Items)
@@ -854,7 +852,7 @@ namespace FreeLibSet.Forms
     /// <returns>текстовое представление</returns>
     public override string ToString()
     {
-      return "Главное меню. " + base.ToString();
+      return "Main menu. " + base.ToString();
     }
 
     #endregion
@@ -889,7 +887,7 @@ namespace FreeLibSet.Forms
       if (control == null)
         throw new ArgumentNullException("control");
       if (_Control != null)
-        throw new InvalidOperationException("Повторное присоединение контекстного меню к управляющему элементу");
+        throw ExceptionFactory.RepeatedCall(this, "Attach()");
       _Control = control;
 #endif
 

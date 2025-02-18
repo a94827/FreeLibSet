@@ -1398,7 +1398,7 @@ namespace ExtTools_tests.Core
     #region GetDataTableRows()
 
     [Test]
-    public void GetDataTableRows()
+    public void GetDataTableRows_DataTable()
     {
       DataTable tbl = CreateTestTable123();
 
@@ -1413,6 +1413,31 @@ namespace ExtTools_tests.Core
       Assert.AreSame(tbl.Rows[1], rows2[0], "[0] #2");
       Assert.AreSame(tbl.Rows[2], rows2[1], "[1] #2");
     }
+
+
+    [Test]
+    public void GetDataTableRows_DataTable_null()
+    {
+      DataTable tbl = null;
+
+      DataRow[] rows = DataTools.GetDataTableRows(tbl);
+      Assert.AreEqual(0, rows.Length, "Length");
+    }
+
+
+    //[Test]
+    //public void GetDataTableRows_DataView()
+    //{
+    //  DataTable tbl = CreateTestTable123();
+    //  DataView dv = new DataView(tbl);
+    //  dv.Sort = "F1 DESC";
+
+    //  DataRow[] rows = DataTools.GetDataTableRows(dv);
+    //  Assert.AreEqual(3, rows.Length, "Length");
+    //  Assert.AreSame(tbl.Rows[2], rows[0], "[0]");
+    //  Assert.AreSame(tbl.Rows[1], rows[1], "[1]");
+    //  Assert.AreSame(tbl.Rows[0], rows[2], "[2]");
+    //}
 
     #endregion
 
@@ -1980,7 +2005,7 @@ namespace ExtTools_tests.Core
     #region GetColumnNames, GetTableNames
 
     [Test]
-    public static void GetColumnNames()
+    public void GetColumnNames()
     {
       DataTable tbl = CreateTestTable123();
       string[] res = DataTools.GetColumnNames(tbl);
@@ -1988,7 +2013,7 @@ namespace ExtTools_tests.Core
     }
 
     [Test]
-    public static void GetTableNames()
+    public void GetTableNames()
     {
       DataSet ds = new DataSet();
       ds.Tables.Add("T1");
@@ -1997,6 +2022,79 @@ namespace ExtTools_tests.Core
       string[] res = DataTools.GetTableNames(ds);
       Assert.AreEqual(new string[] { "T1", "T2" }, res);
     }
+
+    #endregion
+
+    #region AreColumnNamesEqual(), AreTableNamesEqual()
+
+    [TestCase("F1,F2,F3", "F1,F2,F3", false, true)]
+    [TestCase("F1,F2,F3", "F1,F2,F3", true, true)]
+    [TestCase("F1,F2", "F1,F2,F3", false, false)]
+    [TestCase("F1,F2", "F1,F2,F3", true, false)]
+    [TestCase("", "", false, true)]
+    [TestCase("F1,F2,F3", "F1,F3,F2", false, false)]
+    [TestCase("F1,F2,F3", "F1,F3,F2", true, true)]
+    [TestCase("F1,F2", "F1,f2", false, true)]
+    public void AreColumnNamesEqual(string sColNames1, string sColNames2, bool ignoreOrder, bool wantedRes)
+    {
+      DataTable tbl1 = AreColumnNamesEqual_CreateTestTable(sColNames1);
+      DataTable tbl2 = AreColumnNamesEqual_CreateTestTable(sColNames2);
+
+      bool res1 = DataTools.AreColumnNamesEqual(tbl1, tbl2, ignoreOrder);
+      Assert.AreEqual(wantedRes, res1, "#1");
+
+      bool res2 = DataTools.AreColumnNamesEqual(tbl2, tbl1, ignoreOrder);
+      Assert.AreEqual(wantedRes, res2, "#2");
+    }
+
+    private static DataTable AreColumnNamesEqual_CreateTestTable(string sColNames)
+    {
+      DataTable tbl = new DataTable();
+      if (sColNames.Length > 0)
+      {
+        string[] aColNames = sColNames.Split(',');
+        for (int i = 0; i < aColNames.Length; i++)
+        {
+          Type dataType = i % 2 == 0 ? typeof(string) : typeof(int);
+          DataColumn col = new DataColumn(aColNames[i], dataType);
+          tbl.Columns.Add(col);
+        }
+      }
+      return tbl;
+    }
+
+    [TestCase("T1,T2,T3", "T1,T2,T3", false, true)]
+    [TestCase("T1,T2,T3", "T1,T2,T3", true, true)]
+    [TestCase("T1,T2", "T1,T2,T3", false, false)]
+    [TestCase("T1,T2", "T1,T2,T3", true, false)]
+    [TestCase("", "", false, true)]
+    [TestCase("T1,T2,T3", "T1,T3,T2", false, false)]
+    [TestCase("T1,T2,T3", "T1,T3,T2", true, true)]
+    [TestCase("T1,T2", "T1,t2", false, true)]
+    public void AreTableNamesEqual(string sTableNames1, string sTableNames2, bool ignoreOrder, bool wantedRes)
+    {
+      DataSet ds1 = AreTableNamesEqual_CreateTestDS(sTableNames1);
+      DataSet ds2 = AreTableNamesEqual_CreateTestDS(sTableNames2);
+
+      bool res1 = DataTools.AreTableNamesEqual(ds1, ds2, ignoreOrder);
+      Assert.AreEqual(wantedRes, res1, "#1");
+
+      bool res2 = DataTools.AreTableNamesEqual(ds2, ds1, ignoreOrder);
+      Assert.AreEqual(wantedRes, res2, "#2");
+    }
+
+    private static DataSet AreTableNamesEqual_CreateTestDS(string sTableNames)
+    {
+      DataSet ds = new DataSet();
+      if (sTableNames.Length > 0)
+      {
+        string[] aTableNames = sTableNames.Split(',');
+        for (int i = 0; i < aTableNames.Length; i++)
+          ds.Tables.Add(aTableNames[i]);
+      }
+      return ds;
+    }
+
 
     #endregion
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 using FreeLibSet.Formatting;
 
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls
@@ -57,7 +58,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       set
       {
         if (value < 0 || value > DateTime.MaxValue.Year)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, DateTime.MaxValue.Year);
         _DefaultYear = value;
       }
     }
@@ -76,7 +77,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       get { return Formatter.Format; }
       set
       {
-        throw new InvalidOperationException("Следует устанавливать свойство Formatter");
+        throw new InvalidOperationException("Property cannot be set. Use \"Formatter\" property");
       }
     }
 
@@ -89,7 +90,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       get { return Formatter.FormatProvider; }
       set
       {
-        throw new InvalidOperationException("Следует устанавливать свойство Formatter");
+        throw new InvalidOperationException("Property cannot be set. Use \"Formatter\" property");
       }
     }
 

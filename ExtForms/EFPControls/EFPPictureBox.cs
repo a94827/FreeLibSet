@@ -79,7 +79,7 @@ namespace FreeLibSet.Forms
 
     private void Init()
     {
-      _NoImageText = "No image";
+      _NoImageText = Res.EFPThumbnailPictureButton_Msg_NoImage;
       _MaxMainImageSize = new Size(int.MaxValue, int.MaxValue);
       _MaxThumbnailSize = new Size(160, 160);
       Control.FlatStyle = FlatStyle.Flat;
@@ -92,6 +92,17 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Переопределенные методы
+
+    /// <summary>
+    /// Возвращает "Изображение"
+    /// </summary>
+    protected override string DefaultDisplayName
+    {
+      get
+      {
+        return Res.EFPThumbnailPictureButton_Name_Default;
+      }
+    }
 
     /// <summary>
     /// Создает объект EFPThumbnailPictureButtonCommandItems
@@ -233,7 +244,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public string NoImageText
     {
-      get { return _NoImageText; }
+      get { return _NoImageText ?? String.Empty; }
       set
       {
         if (value == _NoImageText)
@@ -301,7 +312,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value.Width < 100 || value.Height < 100)
-          throw new ArgumentOutOfRangeException("Недопустимый максимальный размер изображения: " + value.ToString());
+          throw ExceptionFactory.ArgOutOfRange("value", value, new Size(100, 100), null);
         _MaxMainImageSize = value;
       }
     }
@@ -317,7 +328,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value.Width < 16 || value.Width > 320 || value.Height < 16 || value.Height > 320)
-          throw new ArgumentOutOfRangeException("Недопустимый размер миниатюры: " + value.ToString());
+          throw ExceptionFactory.ArgOutOfRange("value", value, new Size(16, 16), new Size(320, 320));
         _MaxThumbnailSize = value;
       }
     }
@@ -370,7 +381,7 @@ namespace FreeLibSet.Forms
     {
       if (_ReadOnlyEx == null)
       {
-        _ReadOnlyEx = new DepInput<Boolean>(false,ReadOnlyEx_ValueChanged);
+        _ReadOnlyEx = new DepInput<Boolean>(false, ReadOnlyEx_ValueChanged);
         _ReadOnlyEx.OwnerInfo = new DepOwnerInfo(this, "ReadOnlyEx");
       }
     }
@@ -401,12 +412,12 @@ namespace FreeLibSet.Forms
     {
       if (MainImage == null)
       {
-        EFPApp.ShowTempMessage("Нет изображения для просмотра");
+        EFPApp.ShowTempMessage(Res.EFPThumbnailPictureButton_Msg_NoImage);
         return;
       }
 
       Form frm = new Form();
-      frm.Text = "Просмотр изображения (" + MainImage.Width.ToString() + "x" + MainImage.Height.ToString() + ")";
+      frm.Text = String.Format(Res.EFPThumbnailPictureButton_Title_View, DisplayName, MainImage.Width, MainImage.Height);
       frm.Icon = EFPApp.MainImages.Icons["View"];
       frm.WindowState = FormWindowState.Maximized;
       frm.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -439,7 +450,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     public EFPThumbnailPictureButtonCommandItems(EFPThumbnailPictureButton controlProvider)
-      :base(controlProvider)
+      : base(controlProvider)
     {
       ciOpen = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Open);
       ciOpen.Enabled = true;
@@ -456,16 +467,16 @@ namespace FreeLibSet.Forms
       ciSaveAs.Usage = EFPCommandItemUsage.Menu;
       Add(ciSaveAs);
 
-      ciClear = new EFPCommandItem("Edit", "Clear");
-      ciClear.MenuText = "Очистить изображение";
+      ciClear = new EFPCommandItem("Edit", "ClearImage");
+      ciClear.MenuText = Res.Cmd_Menu_Edit_ClearImage;
       ciClear.ImageKey = "No";
       ciClear.Click += new EventHandler(ciClear_Click);
       Add(ciClear);
 
       if (!EnvironmentTools.IsMono) // не совместимо
       {
-        ciScan = new EFPCommandItem("Edit", "Acquire");
-        ciScan.MenuText = "Со сканера или камеры";
+        ciScan = new EFPCommandItem("Edit", "AcquireImage");
+        ciScan.MenuText = Res.Cmd_Menu_Edit_AcquareImage;
         ciScan.ImageKey = "Scan";
         ciScan.Click += new EventHandler(ciScan_Click);
         Add(ciScan);
@@ -486,8 +497,8 @@ namespace FreeLibSet.Forms
 
       AddSeparator();
 
-      ciView = new EFPCommandItem("Edit", "View");
-      ciView.MenuText = "Просмотр изображения";
+      ciView = new EFPCommandItem("Edit", "ViewImage");
+      ciView.MenuText = Res.Cmd_Menu_Edit_ViewImage;
       ciView.ImageKey = "View";
       ciView.Usage = EFPCommandItemUsage.Menu;
       ciView.MenuRightText = EFPCommandItem.GetShortCutText(Keys.Space);
@@ -514,12 +525,12 @@ namespace FreeLibSet.Forms
     {
       OpenFileDialog dlg = new OpenFileDialog();
       dlg.Filter =
-        "Все изображения|*.BMP;*.DIB;*.JPG;*.JPEG;*.GIF;*.PNG;*TIF;*.TIFF|" +
-        "JPEG|*.JPEG;*.JPG|" +
-        "Точечные рисунки (BMP)|*.BMP;*.DIB|" +
-        "GIF|*.GIF|" +
-        "PNG|*.PNG|" +
-        "TIFF|*.TIF;*.TIFF";
+        Res.EFPThumbnailPictureButton_FileFilter_AllImages + "|*.BMP;*.DIB;*.JPG;*.JPEG;*.GIF;*.PNG;*TIF;*.TIFF|" +
+        Res.EFPThumbnailPictureButton_FileFilter_JPEG + "|*.JPEG;*.JPG|" +
+        Res.EFPThumbnailPictureButton_FileFilter_BMP + "|*.BMP;*.DIB|" +
+        Res.EFPThumbnailPictureButton_FileFilter_GIF + "|*.GIF|" +
+        Res.EFPThumbnailPictureButton_FileFilter_PNG + "|*.PNG|" +
+        Res.EFPThumbnailPictureButton_FileFilter_TIFF + "|*.TIF;*.TIFF";
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
 
@@ -530,7 +541,8 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ErrorMessageBox("Не удалось загрузить файл изображения \"" + dlg.FileName + "\". " + e.Message);
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPThumbnailPictureButton_Err_LoadFile,
+          dlg.FileName, e.Message));
         return;
       }
 
@@ -549,17 +561,17 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.MainImage == null)
       {
-        EFPApp.ShowTempMessage("Нет изображения");
+        EFPApp.ShowTempMessage(Res.EFPThumbnailPictureButton_Msg_NoImage);
         return;
       }
 
       SaveFileDialog dlg = new SaveFileDialog();
       dlg.Filter =
-        "JPEG|*.JPG|" +
-        "Точечные рисунки BMP|*.BMP|" +
-        "GIF|*.GIF|" +
-        "PNG|*.PNG|" +
-        "TIFF|*.TIF";
+        Res.EFPThumbnailPictureButton_FileFilter_JPEG + "|*.JPG|" +
+        Res.EFPThumbnailPictureButton_FileFilter_BMP + "|*.BMP|" +
+        Res.EFPThumbnailPictureButton_FileFilter_GIF + "|*.GIF|" +
+        Res.EFPThumbnailPictureButton_FileFilter_PNG + "|*.PNG|" +
+        Res.EFPThumbnailPictureButton_FileFilter_TIFF + "|*.TIF";
       dlg.FilterIndex = _LastSaveFilterIndex;
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
@@ -582,7 +594,7 @@ namespace FreeLibSet.Forms
           ControlProvider.MainImage.Save(dlg.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
           break;
         default:
-          throw new BugException("Неизвестный индекс формата файла: " + dlg.FilterIndex.ToString());
+          throw new BugException("Wrong file format index: " + dlg.FilterIndex.ToString());
       }
     }
 
@@ -645,10 +657,13 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.MainImage == null)
       {
-        EFPApp.ShowTempMessage("Нет изображения для копирования в буфер обмена");
+        EFPApp.ShowTempMessage(Res.EFPThumbnailPictureButton_Msg_NoImage);
         return;
       }
-      EFPApp.Clipboard.SetImage(ControlProvider.MainImage);
+      EFPClipboard clp=new EFPClipboard();
+      clp.SetImage(ControlProvider.MainImage);
+      if (clp.Exception != null)
+        return;
       ControlProvider.Clear();
     }
 
@@ -656,22 +671,19 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.MainImage == null)
       {
-        EFPApp.ShowTempMessage("Нет изображения для копирования в буфер обмена");
+        EFPApp.ShowTempMessage(Res.EFPThumbnailPictureButton_Msg_NoImage);
         return;
       }
-      EFPApp.Clipboard.SetImage(ControlProvider.MainImage);
+      new EFPClipboard().SetImage(ControlProvider.MainImage);
     }
 
     void ciPaste_Click(object sender, EventArgs args)
     {
-      Image img = EFPApp.Clipboard.GetImage();
-      if (EFPApp.Clipboard.HasError)
-        return;
+      EFPClipboard clp = new EFPClipboard();
+      clp.ErrorIfEmpty = true;
+      Image img = clp.GetImage();
       if (img == null)
-      {
-        EFPApp.ShowTempMessage("Буфер обмена не содержит изображения");
         return;
-      }
       ControlProvider.SetMainImage(img);
     }
 
@@ -694,10 +706,11 @@ namespace FreeLibSet.Forms
 
       string auxText = String.Empty;
       if (ControlProvider.MaxMainImageSize.Width != int.MaxValue)
-        auxText = ". Изображение будет уменьшено до размера " + ControlProvider.MaxMainImageSize.Width.ToString() +
-          "x" + ControlProvider.MaxMainImageSize.Height.ToString() + " пикселей";
-      ciOpen.ToolTipText = "Загрузить изображение из файла" + auxText;
-      ciPaste.ToolTipText = "Вставить изображение из буфера обмена" + auxText;
+        auxText = String.Format(Res.EFPThumbnailPictureButton_ToolTip_ShrinkAuxText,
+          ControlProvider.MaxMainImageSize.Width, 
+          ControlProvider.MaxMainImageSize.Height);
+      ciOpen.ToolTipText = String.Format(Res.EFPThumbnailPictureButton_ToolTip_File_Open, auxText);
+      ciPaste.ToolTipText = String.Format(Res.EFPThumbnailPictureButton_ToolTip_Edit_Paste, auxText);
 
       PerformRefreshItems();
     }

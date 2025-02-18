@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms
       else
       {
         if (String.IsNullOrEmpty(message))
-          message = "Ждите";
+          message = Res.EFPApp_Phase_Wait;
       }
 
       #endregion
@@ -123,7 +123,7 @@ namespace FreeLibSet.Forms
       if (_BeginEndWaitErrorLogged)
         return;
       _BeginEndWaitErrorLogged = true;
-      LogoutTools.LogoutException(e, "Перехват ошибки EFPApp.BeginWait()/EndWait(). Повторные сообщения не выводятся");
+      LogoutTools.LogoutException(e, Res.EFPApp_ErrTitle_Wait);
     }
 
     #endregion

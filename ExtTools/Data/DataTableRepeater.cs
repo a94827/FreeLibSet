@@ -90,7 +90,7 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Устанавливает свойство MasterTable=null.
+    /// Устанавливает свойство <see cref="MasterTable"/>=null.
     /// </summary>
     /// <param name="disposing"></param>
     protected override void Dispose(bool disposing)
@@ -107,11 +107,11 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Таблица-повторитель.
-    /// Структура таблицы должна быть заполнена до присоединения MasterTable.
+    /// Структура таблицы должна быть заполнена до присоединения <see cref="MasterTable"/>.
     /// Вместо заполнения этой таблицы, можно подключить свою, установив значение свойства.
     /// Если в таблице установлен первичный ключ, он будет использован вместо словаря строк.
-    /// После подключения ведущей таблицы, нельзя менять структуру, требуется создавать новый объект DataTableRepeater.
-    /// Эта таблица может использоваться в качестве источника данных табличного просмотра (DataGridView.DataSource)
+    /// После подключения ведущей таблицы, нельзя менять структуру, требуется создавать новый объект <see cref="DataTableRepeater"/>.
+    /// Эта таблица может использоваться в качестве источника данных табличного просмотра (System.Windows.Forms.DataGridView.DataSource),
     /// </summary>
     public DataTable SlaveTable
     {
@@ -145,7 +145,7 @@ namespace FreeLibSet.Data
 
       DataRow masterRow = GetMasterRow(args.Row);
       if (masterRow == null)
-        throw new NullReferenceException("Не найдена строка master-таблицы");
+        throw new NullReferenceException(Res.DataTableRepeater_Err_MasterRowNotFound);
 
       masterRow[args.Column.ColumnName] = args.ProposedValue;
     }
@@ -156,8 +156,8 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Ведущая таблица.
-    /// Свойство должно быть установлено после того, как заполнена структура таблицы SlaveTable.
-    /// Если SlaveTable имеет первичный ключ, то присоединяемая таблица должна иметь такой же первичный ключ.
+    /// Свойство должно быть установлено после того, как заполнена структура таблицы <see cref="SlaveTable"/>.
+    /// Если <see cref="SlaveTable"/> имеет первичный ключ, то присоединяемая таблица должна иметь такой же первичный ключ.
     /// </summary>
     public DataTable MasterTable
     {
@@ -165,9 +165,9 @@ namespace FreeLibSet.Data
       set
       {
         if (_SlaveTable.Columns.Count == 0)
-          throw new InvalidOperationException("Структура таблицы SlaveTable должна быть заполнена");
+          throw new InvalidOperationException(Res.DataTableRepeater_Err_SlaveTableStructNotDefined);
         if (Object.ReferenceEquals(value, _SlaveTable))
-          throw new ArgumentException("Нельзя присваивать ссылку на SlaveTable");
+          throw new  ArgumentException(Res.DataTableRepeater_Arg_MasterTableSetToSlaveTable);
 
         _SourceColumnMaps.Clear();
         _CalculatedColumns.Clear();
@@ -474,7 +474,8 @@ namespace FreeLibSet.Data
         string masterPK = DataTools.GetPrimaryKey(_MasterTable);
         string slavePK = DataTools.GetPrimaryKey(_SlaveTable);
         if (!String.Equals(masterPK, slavePK, StringComparison.Ordinal))
-          throw new InvalidOperationException("Таблица SlaveTable имеет первичный ключ \"" + slavePK + "\". Подключаемая таблица MasterTable должна иметь такой же ключ, а не \"" + masterPK + "\"");
+          throw new InvalidOperationException(String.Format(Res.DataTableRepeater_Err_DiffPrimaryKey,
+            slavePK, masterPK));
 
         if (slavePK.IndexOf(',') >= 0)
           _RowMapMode = RowMapMode.ComplexPrimaryKey;
@@ -643,7 +644,7 @@ namespace FreeLibSet.Data
       {
         sb.Append("\"");
         if (String.IsNullOrEmpty(MasterTable.TableName))
-          sb.Append("(без имени)");
+          sb.Append("(noname)");
         else
           sb.Append(MasterTable.TableName);
         sb.Append("\" (RowCount=");
@@ -653,14 +654,14 @@ namespace FreeLibSet.Data
 
       sb.Append("\"");
       if (String.IsNullOrEmpty(SlaveTable.TableName))
-        sb.Append("(без имени)");
+        sb.Append("(noname)");
       else
         sb.Append(SlaveTable.TableName);
       sb.Append("\" (RowCount=");
       sb.Append(SlaveTable.Rows.Count);
       sb.Append(")");
       if (MasterTable == null)
-        sb.Append(" нет источника");
+        sb.Append(" no MasterTable");
 
       string sPK = DataTools.GetPrimaryKey(SlaveTable);
       if (!String.IsNullOrEmpty(sPK))

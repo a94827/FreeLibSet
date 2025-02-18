@@ -32,7 +32,7 @@ namespace FreeLibSet.Forms.Data
     public GridFilter(string Name)
     {
       if (String.IsNullOrEmpty(Name))
-        throw new ArgumentNullException("Name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("Name");
       FName = Name;
     }
 
@@ -367,7 +367,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="cfg">Считываемая секция конфигурации</param>
     protected override void OnReadConfigError(Exception exception, DBxCommonFilter filter, CfgPart cfg)
     {
-      EFPApp.ShowException(exception, "Ошибка загрузки состояния фильтра \"" + filter.DisplayName + "\"");
+      EFPApp.ShowException(exception, String.Format(Res.DBxGridFilters_ErrTitle_ReadConfig, filter.DisplayName));
       filter.Clear();
     }
 
@@ -384,7 +384,7 @@ namespace FreeLibSet.Forms.Data
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события DBxClientFilters.Changed");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -403,7 +403,7 @@ namespace FreeLibSet.Forms.Data
 
       if (!(item is IEFPGridFilter))
       {
-        Exception e = new ArgumentException("Фильтр должен реализовывать интерфейс IEFPGridFilter", "item");
+        ArgumentException e = ExceptionFactory.ArgNoType("item", item, typeof(IEFPGridFilter));
         e.Data["Item.GetType()"] = item.GetType().ToString();
         e.Data["Item.DisplayName"] = item.DisplayName;
         e.Data["Item.Code"] = item.Code;

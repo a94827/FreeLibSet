@@ -17,7 +17,6 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   public class NodeEventArgs : EventArgs
   {
-    private TreeNodeAdv _node;
     public TreeNodeAdv Node
     {
       get { return _node; }
@@ -27,5 +26,6 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     {
       _node = node;
     }
+    private readonly TreeNodeAdv _node;
   }
 }

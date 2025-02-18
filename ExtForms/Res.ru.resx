@@ -1,0 +1,3102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Btn_Text_Abort" xml:space="preserve">
+    <value>Пр&amp;ервать</value>
+  </data>
+  <data name="Btn_Text_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Btn_Text_Ignore" xml:space="preserve">
+    <value>&amp;Пропустить</value>
+  </data>
+  <data name="Btn_Text_No" xml:space="preserve">
+    <value>&amp;Нет</value>
+  </data>
+  <data name="Btn_Text_OK" xml:space="preserve">
+    <value>О&amp;К</value>
+  </data>
+  <data name="Btn_Text_Retry" xml:space="preserve">
+    <value>По&amp;втор</value>
+  </data>
+  <data name="Btn_Text_Yes" xml:space="preserve">
+    <value>&amp;Да</value>
+  </data>
+  <data name="CodeGridFilterForm_Err_NoCodes" xml:space="preserve">
+    <value>Коды должны быть выбраны</value>
+  </data>
+  <data name="CodeGridFilterForm_ToolTip_Codes" xml:space="preserve">
+    <value>Список кодов, разделенных запятыми</value>
+  </data>
+  <data name="CodeGridFilterForm_ToolTip_Empty" xml:space="preserve">
+    <value>В режиме 'Включить коды' - включить в фильтр строки, в которых поле не установлено.
+В режиме 'Исключить коды - убрать строки с пустым значением поля</value>
+  </data>
+  <data name="CodesGridFilter_Msg_Empty" xml:space="preserve">
+    <value>[ Нет ]</value>
+  </data>
+  <data name="CodesGridFilter_Msg_ExcludePrefix" xml:space="preserve">
+    <value>Кроме:</value>
+  </data>
+  <data name="ColorComboBox_Arg_SystemColorNotSupported" xml:space="preserve">
+    <value>Системные цвета не поддерживаются</value>
+  </data>
+  <data name="ColorComboBox_Msg_NotInPopupColorsListItem" xml:space="preserve">
+    <value>Вне диапазона</value>
+  </data>
+  <data name="ColorComboBox_Msg_SelectWithDialogListItem" xml:space="preserve">
+    <value>Выбрать...</value>
+  </data>
+  <data name="DateRangeBox_Err_DatesNotEnabled" xml:space="preserve">
+    <value>Для изменения интервала необходимо, чтобы обе даты были доступны</value>
+  </data>
+  <data name="DateRangeBox_Err_DatesNotFilled" xml:space="preserve">
+    <value>Для изменения интервала необходимо, чтобы обе даты были заполнены</value>
+  </data>
+  <data name="DateRangeBox_ToolTip_Menu" xml:space="preserve">
+    <value>Меню готовых интервалов дат</value>
+  </data>
+  <data name="DateRangeBox_ToolTip_Next" xml:space="preserve">
+    <value>Следующий такой же интервал</value>
+  </data>
+  <data name="DateRangeBox_ToolTip_Prev" xml:space="preserve">
+    <value>Предыдущий такой же интервал</value>
+  </data>
+  <data name="DateRangeInclusionGridFilter_Msg_WorkDate" xml:space="preserve">
+    <value>Текущая дата</value>
+  </data>
+  <data name="DBxGridFilters_ErrTitle_ReadConfig" xml:space="preserve">
+    <value>Ошибка загрузки состояния фильтра '{0}'</value>
+  </data>
+  <data name="EFPTwoListSelector_Err_CannotBeEmpy" xml:space="preserve">
+    <value>Список не может быть пустым</value>
+  </data>
+  <data name="EFPTwoListSelector_Err_NothingAvailable" xml:space="preserve">
+    <value>Нет элементов в списке доступных</value>
+  </data>
+  <data name="EFPTwoListSelector_Err_NothingSelected" xml:space="preserve">
+    <value>Нет элементов в списке выбранных</value>
+  </data>
+  <data name="EFPTwoListSelector_Text_Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="EFPTwoListSelector_Text_Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="MonthDayBox_Arg_DayOutOfRange" xml:space="preserve">
+    <value>Неправильный день {0}. Значение должно быть в диапазоне от 1 до {1} для месяца {2}</value>
+  </data>
+  <data name="ParamSetComboBox_Err_NameIsEmpty" xml:space="preserve">
+    <value>Не задано название для набора</value>
+  </data>
+  <data name="ParamSetComboBox_Err_UnknownName" xml:space="preserve">
+    <value>Нет такой строки в списке. Выберите набор из выпадающего списка</value>
+  </data>
+  <data name="BoolValueGridFilter_Err_NoText" xml:space="preserve">
+    <value>Одновременная очистка свойств FilterTextTrue и FilterTextFalse не допускается</value>
+  </data>
+  <data name="BoolValueGridFilter_Msg_FilterTextFalse" xml:space="preserve">
+    <value>Значение сброшено</value>
+  </data>
+  <data name="BoolValueGridFilter_Msg_FilterTextTrue" xml:space="preserve">
+    <value>Значение установлено</value>
+  </data>
+  <data name="DateRangeDialog_Msg_Prompt" xml:space="preserve">
+    <value>Диапазон</value>
+  </data>
+  <data name="DateRangeDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод диапазона дат</value>
+  </data>
+  <data name="DebugTools_ErrTitle_AppInfo" xml:space="preserve">
+    <value>Отладочная информация о программе</value>
+  </data>
+  <data name="DebugTools_Phase_AppInfo" xml:space="preserve">
+    <value>Сбор информации о программе</value>
+  </data>
+  <data name="ExtValueControl_Name_GroupCheckBox" xml:space="preserve">
+    <value>Флажок группового редактирования</value>
+  </data>
+  <data name="ExtValueControl_ToolTip_GroupCheckBox" xml:space="preserve">
+    <value>Включите флажок, чтобы установить одинаковое значение поля '{0}' для всех редактируемых записей</value>
+  </data>
+  <data name="GridFilter_Err_NotEditable" xml:space="preserve">
+    <value>Редактирование этого фильтра невозможно</value>
+  </data>
+  <data name="GridFilter_Err_WrongValue" xml:space="preserve">
+    <value>Ошибка. Значение {0} недопустимо для этого фильтра</value>
+  </data>
+  <data name="GridFilter_Msg_EmptyValueText" xml:space="preserve">
+    <value>[ нет ]</value>
+  </data>
+  <data name="GridFilter_Msg_ListTitle" xml:space="preserve">
+    <value>Значение фильтра</value>
+  </data>
+  <data name="GridFilter_Msg_ManualInputPromptWithEmptyIfNoFilter" xml:space="preserve">
+    <value>Значение фильтра (пусто-нет фильтра)</value>
+  </data>
+  <data name="GridFilter_Msg_NoFilterMode" xml:space="preserve">
+    <value>Нет фильтра</value>
+  </data>
+  <data name="NullNotNullGridFilter_MsgNotNull" xml:space="preserve">
+    <value>Значение установлено</value>
+  </data>
+  <data name="NullNotNullGridFilter_MsgNull" xml:space="preserve">
+    <value>Значение не установлено</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_CannotOpenReportDir" xml:space="preserve">
+    <value>Не удалось открыть каталог с отчетами</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_CopyError" xml:space="preserve">
+    <value>Ошибка копирования отчета в буфер обмена</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_DataDebugError" xml:space="preserve">
+    <value>Ошибка просмотра объекта данных</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_ExecError" xml:space="preserve">
+    <value>Ошибка запуска {0}</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_ViewError" xml:space="preserve">
+    <value>Не удалось открыть файл отчета на просмотр</value>
+  </data>
+  <data name="ShowExceptionForm_Menu_Copy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="ShowExceptionForm_Menu_View" xml:space="preserve">
+    <value>Встроенный просмотр</value>
+  </data>
+  <data name="ShowExceptionForm_Msg_NoStackTrace" xml:space="preserve">
+    <value>Стек вызовов недоступен</value>
+  </data>
+  <data name="ShowExceptionForm_Msg_StackTraceError" xml:space="preserve">
+    <value>Не удалось получить стек вызовов</value>
+  </data>
+  <data name="ShowExceptionForm_Msg_Stopped" xml:space="preserve">
+    <value>Вывод сообщений об ошибках отключен. Завершите работу программы как можно быстрее</value>
+  </data>
+  <data name="ShowExceptionForm_Title_Stopped" xml:space="preserve">
+    <value>Отключение вывода сообщений</value>
+  </data>
+  <data name="StringValueGridFilter_ErrTitle_AllValuesNeeded" xml:space="preserve">
+    <value>Ошибка получения списка строк для фильтра '{0}'</value>
+  </data>
+  <data name="StringValueGridFilter_Err_NoManual" xml:space="preserve">
+    <value>Ручной ввод значения фильтра не предусмотрен</value>
+  </data>
+  <data name="StringValueGridFilter_Msg_Manual" xml:space="preserve">
+    <value>Задать вручную ...</value>
+  </data>
+  <data name="StringValueGridFilter_Msg_NoFilter" xml:space="preserve">
+    <value>[ Нет фильтра ]</value>
+  </data>
+  <data name="Btn_Text_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Cmd_Menu_Debug_Changes" xml:space="preserve">
+    <value>Отладка изменений</value>
+  </data>
+  <data name="Cmd_Menu_Debug_Form" xml:space="preserve">
+    <value>Отладка формы</value>
+  </data>
+  <data name="ExtEditDialogForm_ErrTitle_Writing" xml:space="preserve">
+    <value>Ошибка записи данных редактора</value>
+  </data>
+  <data name="ExtEditDialogForm_Err_InvalidState" xml:space="preserve">
+    <value>Неподходящее состояние формы: {0}</value>
+  </data>
+  <data name="ExtEditDialogForm_Err_WriteDataCall" xml:space="preserve">
+    <value>Вызов WriteData() не допускается из обработчиков кнопок</value>
+  </data>
+  <data name="ExtEditDialogForm_Err_WritingInProgress" xml:space="preserve">
+    <value>Предыдущая запись документа еще не закончена</value>
+  </data>
+  <data name="ExtEditDialogForm_Msg_CancelWarning" xml:space="preserve">
+    <value>Данные в редакторе '{0}' были изменены. Вы действительно хотите выйти и потерять изменения?</value>
+  </data>
+  <data name="ExtEditDialogForm_Name_ChangedInfoList" xml:space="preserve">
+    <value>Форма редактора</value>
+  </data>
+  <data name="ExtEditDialogForm_Title_CancelWarning" xml:space="preserve">
+    <value>Выход без сохранения изменений</value>
+  </data>
+  <data name="ExtEditPage_Name_ChangedInfoList" xml:space="preserve">
+    <value>Страница '{0}'</value>
+  </data>
+  <data name="HistFileBrowserDialog_Msg_Overwrite" xml:space="preserve">
+    <value>Файл '{0}' уже существует. Перезаписать его?"</value>
+  </data>
+  <data name="HistFileBrowserDialog_Prompt_MainGroup" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="HistFileBrowserDialog_Prompt_Path" xml:space="preserve">
+    <value>Путь к файлу</value>
+  </data>
+  <data name="HistFileBrowserDialog_Title_Form" xml:space="preserve">
+    <value>Выбор файла</value>
+  </data>
+  <data name="HistFileBrowserDialog_Title_Overwrite" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="HistFileBrowserDialog_ToolTip_MainCB" xml:space="preserve">
+    <value>Поле ввода файла.
+Чтобы выбрать ранее использованный путь, используйте выпадающий список.
+Чтобы выбрать файл с помощью стандартного диалога, нажмите кнопку 'Обзор'</value>
+  </data>
+  <data name="HistFolderBrowserDialog_Err_CreateDir" xml:space="preserve">
+    <value>Не удалось создать каталог. {0}</value>
+  </data>
+  <data name="HistFolderBrowserDialog_Prompt_MainGroup" xml:space="preserve">
+    <value>Каталог</value>
+  </data>
+  <data name="HistFolderBrowserDialog_Prompt_Path" xml:space="preserve">
+    <value>Путь</value>
+  </data>
+  <data name="HistFolderBrowserDialog_Title_Form" xml:space="preserve">
+    <value>Выбор папки</value>
+  </data>
+  <data name="HistFolderBrowserDialog_ToolTip_MainCB" xml:space="preserve">
+    <value>Поле ввода каталога.
+Чтобы выбрать ранее использованный путь, используйте выпадающий список.
+Чтобы выбрать каталог с помощью стандартного диалога, нажмите кнопку 'Обзор'</value>
+  </data>
+  <data name="HistFolderBrowserDialog_ToolTip_SubFolders" xml:space="preserve">
+    <value>Если флажок установлен, то будут просмотрены также все вложенные каталоги</value>
+  </data>
+  <data name="TextSearchForm_Text_AtEnd" xml:space="preserve">
+    <value>&amp;С конца</value>
+  </data>
+  <data name="TextSearchForm_Text_AtStart" xml:space="preserve">
+    <value>&amp;С начала</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_CaseSens" xml:space="preserve">
+    <value>Если флажок установлен, то регистр букв имеет значение,
+иначе заглавные и строчные буквы (например, 'А' и 'а') не различаются</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_Direction" xml:space="preserve">
+    <value>Направление перебора строк - к концу или к началу</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_From" xml:space="preserve">
+    <value>Определяет область для поиска: все строки или часть от текущей позиции до конца (или до начала таблицы)</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_SimilarCharsDiff" xml:space="preserve">
+    <value>Если флажок установлен, то похожие символы кириллицы и латиницы различаются,
+иначе, например, русская буква 'А' и латинская 'A' считаются совпадающими</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_Text" xml:space="preserve">
+    <value>Текст, который нужно найти</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_Where" xml:space="preserve">
+    <value>Поиск по всем столбцам занимает больше времени. Используйте поиск в текущем столбце, если Вы знаете, где расположен текст. Перед выбором этого режима в табличном просмотре должен быть выбран нужный столбец</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_Whole" xml:space="preserve">
+    <value>Если флажок установлен, то будут найдены только ячейки, содержимое которых точно совпадает с введенным текстом. Иначе достаточно найти вхождение введенного текста в любое место текста ячейки</value>
+  </data>
+  <data name="TextSearchr_NotStarted" xml:space="preserve">
+    <value>Поиск не был начат</value>
+  </data>
+  <data name="TextSearch_Err_NoColumns" xml:space="preserve">
+    <value>Табличный просмотр не содержит столбцов</value>
+  </data>
+  <data name="TextSearch_Err_NoCurrentRow" xml:space="preserve">
+    <value>Невозможно продолжить поиск, т.к. нет текущей строки</value>
+  </data>
+  <data name="TextSearch_Err_NoRows" xml:space="preserve">
+    <value>Просмотр не содержит строк</value>
+  </data>
+  <data name="TextSearch_Err_NoText" xml:space="preserve">
+    <value>Просмотр не содержит текста</value>
+  </data>
+  <data name="TextSearch_Err_NotFound" xml:space="preserve">
+    <value>Строка '{0}' не найдена</value>
+  </data>
+  <data name="TextSearch_Err_NotStarted" xml:space="preserve">
+    <value>Поиск не был начат</value>
+  </data>
+  <data name="TextSearch_Phase_Search" xml:space="preserve">
+    <value>Поиск текста</value>
+  </data>
+  <data name="TextSearch_Phase_SearchAllRows" xml:space="preserve">
+    <value>Поиск всех строк</value>
+  </data>
+  <data name="TextSearch_Title_Result" xml:space="preserve">
+    <value>Поиск текста</value>
+  </data>
+  <data name="Btn_Name_Copy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="Btn_Name_Paste" xml:space="preserve">
+    <value>Вставить</value>
+  </data>
+  <data name="Clipboard_Err_Empty" xml:space="preserve">
+    <value>Буфер обмена пуст</value>
+  </data>
+  <data name="FileCopier_Err_CheckBytes" xml:space="preserve">
+    <value>Ошибка при копировании файла. Файл записался неправильно</value>
+  </data>
+  <data name="FileCopier_Err_CheckDiskFail" xml:space="preserve">
+    <value>Ошибка при проверке файла '{0}'. {1}</value>
+  </data>
+  <data name="FileCopier_Err_CheckLen" xml:space="preserve">
+    <value>Исходный файл имеет длину {0}, а записанный - {1}</value>
+  </data>
+  <data name="FileCopier_Msg_Cancel" xml:space="preserve">
+    <value>Прервать операцию?</value>
+  </data>
+  <data name="FileCopier_Msg_ChangeDisk" xml:space="preserve">
+    <value>Вставьте следующую дискету в устройство {0} для копирования файла '{1}'. Размер файла: {2}, на текущей дискете свободного места: {3}. Нажмите &lt;Да&gt;, после замены дискеты или очистки существующей. Нажмите &lt;Нет&gt; показа диалога очистки дискеты.</value>
+  </data>
+  <data name="FileCopier_Msg_CheckDisk" xml:space="preserve">
+    <value>Для проверки {0} записанного файла(ов) извлеките дискету {1} и вставьте ее обратно</value>
+  </data>
+  <data name="FileCopier_Msg_ClearDialogDelete" xml:space="preserve">
+    <value>Удалить все файлы ({0}) и каталоги ({1})</value>
+  </data>
+  <data name="FileCopier_Msg_ClearDialogExplorer" xml:space="preserve">
+    <value>Запустить проводник Windows</value>
+  </data>
+  <data name="FileCopier_Msg_ConfirmDelele" xml:space="preserve">
+    <value>Сейчас все сушествующие файлы и каталоги на диске {0} будут необратимо УНИЧТОЖЕНЫ. Подтвердите Ваше намерение очистить диск</value>
+  </data>
+  <data name="FileCopier_Msg_SizeAsDir" xml:space="preserve">
+    <value>Каталог</value>
+  </data>
+  <data name="FileCopier_Msg_SizeAsFileAttr" xml:space="preserve">
+    <value>Атрибуты</value>
+  </data>
+  <data name="FileCopier_Phase_ClearDisk" xml:space="preserve">
+    <value>Очистка диска {0}</value>
+  </data>
+  <data name="FileCopier_Phase_Copy" xml:space="preserve">
+    <value>Копирование файлов</value>
+  </data>
+  <data name="FileCopier_Phase_DeleteDir" xml:space="preserve">
+    <value>Удаление каталога '{0}'</value>
+  </data>
+  <data name="FileCopier_Phase_DeleteFile" xml:space="preserve">
+    <value>Удаление файла '{0}'</value>
+  </data>
+  <data name="FileCopier_Phase_Prepare" xml:space="preserve">
+    <value>Подготовка к копированию</value>
+  </data>
+  <data name="FileCopier_Title_Cancel" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="FileCopier_Title_ChangeDisk" xml:space="preserve">
+    <value>Смена дискеты</value>
+  </data>
+  <data name="FileCopier_Title_CheckDisk" xml:space="preserve">
+    <value>Проверка записи</value>
+  </data>
+  <data name="FileCopier_Title_ClearDialog" xml:space="preserve">
+    <value>Очистка диска {0}</value>
+  </data>
+  <data name="FileCopier_Title_ClearDialogGroupTitle" xml:space="preserve">
+    <value>Что сделать</value>
+  </data>
+  <data name="FileCopier_Title_ConfirmDelele" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="FileCopier_Title_FreeSpaceDetectionError" xml:space="preserve">
+    <value>Ошибка при определении свободного места на диске {0}</value>
+  </data>
+  <data name="GridConfig_Err_ClipboardNoData" xml:space="preserve">
+    <value>Буфер обмена не содержит настроек табличного просмотра</value>
+  </data>
+  <data name="GridConfig_Err_NoDefaults" xml:space="preserve">
+    <value>Настройка по умолчанию не определена</value>
+  </data>
+  <data name="GridConfig_Msg_Default" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="GridConfig_Title_SelDefaults" xml:space="preserve">
+    <value>Выбор настройки по умолчанию</value>
+  </data>
+  <data name="GridConfig_ToolTip_Copy" xml:space="preserve">
+    <value>Копирует текущие настройки, заданные в этом окне, в буфер обмена</value>
+  </data>
+  <data name="GridConfig_ToolTip_Default" xml:space="preserve">
+    <value>Сброс настроек столбцов и подсказок в исходное состояние</value>
+  </data>
+  <data name="GridConfig_ToolTip_Paste" xml:space="preserve">
+    <value>Заменяет текущие настройки просмотра, ранее скопированными в буфер обмена.
+Если настройки были скопированы для другого просмотра, то будут вставлены только совместимые настройки</value>
+  </data>
+  <data name="Clipboard_ErrTitle_PasteFilters" xml:space="preserve">
+    <value>Ошибка вставки фильтра '{0}' из буфера обмена</value>
+  </data>
+  <data name="Clipboard_Err_FiltersDiffDB" xml:space="preserve">
+    <value>Фильтры в буфере обмена относятся к другой базе данных</value>
+  </data>
+  <data name="Clipboard_Err_NoFilters" xml:space="preserve">
+    <value>Буфер обмена не содержит фильтров табличного просмотра</value>
+  </data>
+  <data name="Clipboard_Err_OtherFilters" xml:space="preserve">
+    <value>Фильтры в буфере обмена отсутствуют в списке возможных фильтров</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Copy" xml:space="preserve">
+    <value>&amp;Копировать</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Cut" xml:space="preserve">
+    <value>&amp;Вырезать</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Paste" xml:space="preserve">
+    <value>Вст&amp;авить</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_ColTitle_DisplayName" xml:space="preserve">
+    <value>Фильтр</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_ColTitle_FilterText" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Menu_ClearAllFilters" xml:space="preserve">
+    <value>Очистить все фильтры</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Menu_ViewFiltersXML" xml:space="preserve">
+    <value>Просмотр фильтров в XML</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Msg_NoFilters" xml:space="preserve">
+    <value>Фильтры не установлены</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Name_Default" xml:space="preserve">
+    <value>{0} - Установка фильтров</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Name_PasteFormat" xml:space="preserve">
+    <value>Фильтры</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_ToolTip_Copy" xml:space="preserve">
+    <value>Копирует все фильтры, заданные в этом окне, в буфер обмена</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_ToolTip_Paste" xml:space="preserve">
+    <value>Заменяет текущие фильтры, ранее скопированными в буфер обмена.
+Если фильтры были скопированы для другого просмотра, то будут вставлены только совместимые фильтры, а остальные - очищены</value>
+  </data>
+  <data name="Btn_Text_More" xml:space="preserve">
+    <value>Ещ&amp;ё</value>
+  </data>
+  <data name="Btn_ToolTip_More" xml:space="preserve">
+    <value>Дополнительные команды меню</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleDate" xml:space="preserve">
+    <value>Ввод даты</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleDateTime" xml:space="preserve">
+    <value>Ввод даты и времени</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleTime" xml:space="preserve">
+    <value>Ввод времени</value>
+  </data>
+  <data name="ListSelectDialog_ColTitle_Sub" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="ListSelectDialog_Err_ItemNotFound" xml:space="preserve">
+    <value>Не найден элемент '{0}'</value>
+  </data>
+  <data name="ListSelectDialog_Err_NoChanges" xml:space="preserve">
+    <value>Нет изменений</value>
+  </data>
+  <data name="ListSelectDialog_Err_NoneChecked" xml:space="preserve">
+    <value>Должна быть выбрана хотя бы одна позиция</value>
+  </data>
+  <data name="ListSelectDialog_Err_NoSelection" xml:space="preserve">
+    <value>Нет выбранной строки</value>
+  </data>
+  <data name="ListSelectDialog_Err_PasteTextWithCommas" xml:space="preserve">
+    <value>В буфере обмена текст содержит запятые, но в списке можно выбрать только одну строку</value>
+  </data>
+  <data name="ListSelectDialog_Menu_CopyAllText" xml:space="preserve">
+    <value>Копировать весь список</value>
+  </data>
+  <data name="ListSelectDialog_Msg_PasteAdd" xml:space="preserve">
+    <value>Добавить к уже отмеченным позициям</value>
+  </data>
+  <data name="ListSelectDialog_Msg_PasteReplace" xml:space="preserve">
+    <value>Заменить существующее выделение</value>
+  </data>
+  <data name="ListSelectDialog_ToolTip_Copy" xml:space="preserve">
+    <value>Копирует в буфер обмена выбранные позиции списка</value>
+  </data>
+  <data name="ListSelectDialog_ToolTip_Paste" xml:space="preserve">
+    <value>Установить отметки в соответствии с текстом в буфере обмена</value>
+  </data>
+  <data name="NumInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="NumInputDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод числа</value>
+  </data>
+  <data name="PasswordInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="PasswordInputDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод пароля</value>
+  </data>
+  <data name="TextInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="TextInputDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод текста</value>
+  </data>
+  <data name="ListSelectDialog_Err_NoItems" xml:space="preserve">
+    <value>Нет элементов для выбора</value>
+  </data>
+  <data name="ListSelectDialog_Msg_TitleMultiSelect" xml:space="preserve">
+    <value>Выбор из списка</value>
+  </data>
+  <data name="ListSelectDialog_Msg_TitleSingleSelect" xml:space="preserve">
+    <value>Выбор из списка</value>
+  </data>
+  <data name="NumRangeInputDialog_Err_Inverted" xml:space="preserve">
+    <value>Минимальное значение больше максимального</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Диапазон</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_RangeIsEmpty" xml:space="preserve">
+    <value>Диапазон не задан</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод диапазона чисел</value>
+  </data>
+  <data name="NumRangeInputDialog_Name_2eq1" xml:space="preserve">
+    <value>Максимальное значение равно минимальному</value>
+  </data>
+  <data name="NumRangeInputDialog_ToolTip_2eq1" xml:space="preserve">
+    <value>Присваивает полю 'Максимум' значение из поля 'Минимум'</value>
+  </data>
+  <data name="InputDataGridDialog_Msg_Title" xml:space="preserve">
+    <value>Таблица</value>
+  </data>
+  <data name="ParamSetComboBox_Name_DelButton" xml:space="preserve">
+    <value>Удалить набор</value>
+  </data>
+  <data name="ParamSetComboBox_Name_SaveButton" xml:space="preserve">
+    <value>Сохранить набор</value>
+  </data>
+  <data name="ParamSetComboBox_ToolTip_DelButton" xml:space="preserve">
+    <value>Удалить пользовательский набор значений, имя которого задано в списке слева</value>
+  </data>
+  <data name="ParamSetComboBox_ToolTip_SaveButton" xml:space="preserve">
+    <value>Сохранить установленные значения как новый пользовательский набор
+Перед нажатием кнопки в поле слева должно быть введено имя набора</value>
+  </data>
+  <data name="SelectCompositionForm_ErrTitle_SetImage" xml:space="preserve">
+    <value>Не удалось вывести изображение. {0}</value>
+  </data>
+  <data name="SelectCompositionForm_Err_CannotDeleteCurrent" xml:space="preserve">
+    <value>Нельзя удалить текущую композицию</value>
+  </data>
+  <data name="SelectCompositionForm_Err_NaneIsEmpty" xml:space="preserve">
+    <value>Должно быть задано название сохраняемой композиции</value>
+  </data>
+  <data name="SelectCompositionForm_Err_NoImage" xml:space="preserve">
+    <value>Нет изображения</value>
+  </data>
+  <data name="SelectCompositionForm_Msg_ConfirmDel" xml:space="preserve">
+    <value>Удалить композицию '{0}'?</value>
+  </data>
+  <data name="SelectCompositionForm_Msg_CurrentComposition" xml:space="preserve">
+    <value>[ Текущая композиция ]</value>
+  </data>
+  <data name="SelectCompositionForm_Msg_SaveInHistory" xml:space="preserve">
+    <value>Сохранить текущую композицию в списке истории, а не как \"именную\" композицию?</value>
+  </data>
+  <data name="SelectCompositionForm_Name_XmlButton" xml:space="preserve">
+    <value>Просмотр XML</value>
+  </data>
+  <data name="SelectCompositionForm_ToolTip_XmlButton" xml:space="preserve">
+    <value>Просмотр данных выбранной композиции</value>
+  </data>
+  <data name="SettingsDialog_Err_NoPages" xml:space="preserve">
+    <value>Нет ни одной страницы</value>
+  </data>
+  <data name="SettingsDialog_Name_Default" xml:space="preserve">
+    <value>По умолчанию - {0}</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmArchitecture" xml:space="preserve">
+    <value>Архитектура</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmCopyright" xml:space="preserve">
+    <value>Авторские права</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmCreatied" xml:space="preserve">
+    <value>Файл создан</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmDebug" xml:space="preserve">
+    <value>Отладка</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmDescription" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmLocation" xml:space="preserve">
+    <value>Путь к сборке</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmName" xml:space="preserve">
+    <value>Имя сборки</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmOrder" xml:space="preserve">
+    <value>№ п/п</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmVersion" xml:space="preserve">
+    <value>Версия</value>
+  </data>
+  <data name="AboutDialog_Phase_Assemblies" xml:space="preserve">
+    <value>Получение списка загруженных сборок</value>
+  </data>
+  <data name="AboutDialog_Title_Assemblies" xml:space="preserve">
+    <value>Загруженные программные модули</value>
+  </data>
+  <data name="AboutDialog_Title_AssembliesGAC" xml:space="preserve">
+    <value>Из глобального кэша сборок</value>
+  </data>
+  <data name="AboutDialog_Title_AssembliesPrivate" xml:space="preserve">
+    <value>Основные модули</value>
+  </data>
+  <data name="AboutDialog_ToolTip_AsmArchitecture" xml:space="preserve">
+    <value>Поддерживаемая архитектура процессора</value>
+  </data>
+  <data name="AboutDialog_ToolTip_AsmDebug" xml:space="preserve">
+    <value>Флажок установлен, если сборка скомпилирована в отладочном режиме.
+Если флажка нет, сборка скомпилирована с оптимизацией кода</value>
+  </data>
+  <data name="AboutDialog_ToolTip_AssemblyCount" xml:space="preserve">
+    <value>Всего загружено сборок: {0}</value>
+  </data>
+  <data name="SettingsDialog_Arg_PageTemplateIsForm" xml:space="preserve">
+    <value>Управляющий элемент не может быть Form. Если используется форма-шаблон, то добавьте панель с элементами и передавайте Panel в конструктор SettingsDialogPage</value>
+  </data>
+  <data name="SettingsDialog_Arg_PageTemplateIsTabPage" xml:space="preserve">
+    <value>Управляющий элемент не может быть TabPage. Если используется форма-шаблон, то добавьте на TabPage объект Panel с элементами и передавайте Panel в конструктор SettingsDialogPage</value>
+  </data>
+  <data name="AboutDialog_Err_AttrException" xml:space="preserve">
+    <value>Ошибка получения атрибутов. {0}</value>
+  </data>
+  <data name="AboutDialog_Err_EntryAsmException" xml:space="preserve">
+    <value>Ошибка определения выполняемой сборки. {0}</value>
+  </data>
+  <data name="AboutDialog_Err_UnknownEntryAsm" xml:space="preserve">
+    <value>Не удалось определить сборку</value>
+  </data>
+  <data name="AboutDialog_Msg_Version" xml:space="preserve">
+    <value>Версия {0}</value>
+  </data>
+  <data name="AboutDialog_Order_AsmArchitecture" xml:space="preserve">
+    <value>Архитектура</value>
+  </data>
+  <data name="AboutDialog_Order_AsmCopyright" xml:space="preserve">
+    <value>Авторские права</value>
+  </data>
+  <data name="AboutDialog_Order_AsmCreatedASC" xml:space="preserve">
+    <value>Файл создан (старые вверху)</value>
+  </data>
+  <data name="AboutDialog_Order_AsmCreatedDESC" xml:space="preserve">
+    <value>Файл создан (новые вверху)</value>
+  </data>
+  <data name="AboutDialog_Order_AsmName" xml:space="preserve">
+    <value>Имя сборки</value>
+  </data>
+  <data name="AboutDialog_Order_AsmOrder" xml:space="preserve">
+    <value>В порядке загрузки</value>
+  </data>
+  <data name="AboutDialog_Order_AsmPath" xml:space="preserve">
+    <value>Путь к сборке</value>
+  </data>
+  <data name="AboutDialog_Title_Main" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="AboutDialog_Title_WithAppName" xml:space="preserve">
+    <value>О программе '{0}'</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_DataGridViewSetCurrentCellAddressCore" xml:space="preserve">
+    <value>Перехват Application.ThreadException. Oшибка выбора ячейки DataGridView. Исключение регистрируется однократно</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_IconDisposed" xml:space="preserve">
+    <value>Перехват Application.ThreadException. Ошибка доступа к удаленному значку. Исключение регистрируется однократно</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_ToolStripSetItemLocation" xml:space="preserve">
+    <value>Перехват Application.ThreadException. Ошибка позицонирования ToolStrip. Исключение регистрируется однократно</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_UnhandledInternalError" xml:space="preserve">
+    <value>Внутренняя ошибка обработки UnhandledException</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_UnhandledNoTermination" xml:space="preserve">
+    <value>Неперехваченное исключение UnhandledException без завершения работы</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_UnhandledWithTermination" xml:space="preserve">
+    <value>Неперехваченное исключение UnhandledException с завершением работы</value>
+  </data>
+  <data name="BackgroundPrint_Phase_AddDoc" xml:space="preserve">
+    <value>Постановка задания в очередь</value>
+  </data>
+  <data name="BackgroundPrint_Phase_Default" xml:space="preserve">
+    <value>Фоновая печать документов</value>
+  </data>
+  <data name="BackgroundPrint_Phase_Page" xml:space="preserve">
+    <value>страница {0}</value>
+  </data>
+  <data name="BackgroundPrint_Phase_PrintDoc" xml:space="preserve">
+    <value>Фоновая печать документа '{0}' {1}. Еще осталось документов в очереди: {2}</value>
+  </data>
+  <data name="BackgroundPrint_Phase_Terminating" xml:space="preserve">
+    <value>завершение печати</value>
+  </data>
+  <data name="BackgroundPrint_ToolTip_PrintPage" xml:space="preserve">
+    <value>Идет печать страницы {1} документа '{0}'</value>
+  </data>
+  <data name="BackgroundPrint_ToolTip_Terminating" xml:space="preserve">
+    <value>Завершается печать документа '{0}'</value>
+  </data>
+  <data name="Btn_Text_Back" xml:space="preserve">
+    <value>&amp;Назад</value>
+  </data>
+  <data name="Btn_Text_Finish" xml:space="preserve">
+    <value>&amp;Готово</value>
+  </data>
+  <data name="Btn_Text_Forward" xml:space="preserve">
+    <value>&amp;Далее</value>
+  </data>
+  <data name="Cmd_ToolTip_View_BackgroundPrintStatus" xml:space="preserve">
+    <value>Окно состояния фоновой печати. Нет заданий</value>
+  </data>
+  <data name="Common_Err_AppDomainUnhandledException" xml:space="preserve">
+    <value>Необрабатываемое исключение (событие AppDomain.UnhandledException)</value>
+  </data>
+  <data name="EFPAppExecProcCallList_ErrTitle_Running" xml:space="preserve">
+    <value>Ошибка выполнения {0}</value>
+  </data>
+  <data name="EFPAppExecProcCallList_Phase_Running" xml:space="preserve">
+    <value>Выполнение {0}</value>
+  </data>
+  <data name="EFPApp_ErrTitle_CreateSDIForm" xml:space="preserve">
+    <value>Не удалось создать окно класса '{0}' для интерфейса SDI. Будет создано пустое окно.</value>
+  </data>
+  <data name="EFPApp_ErrTitle_DialogPosition" xml:space="preserve">
+    <value>Ошибка определения позиции блока диалога</value>
+  </data>
+  <data name="EFPApp_ErrTitle_DialogRunnerDetach" xml:space="preserve">
+    <value>Ошибка отсоединения DialogRunner</value>
+  </data>
+  <data name="EFPApp_ErrTitle_LoadComposition" xml:space="preserve">
+    <value>Не удалось восстановить композицию окон</value>
+  </data>
+  <data name="EFPApp_ErrTitle_RICallBack" xml:space="preserve">
+    <value>Ошибка обработки обратного вызова</value>
+  </data>
+  <data name="EFPApp_ErrTitle_SaveComposition" xml:space="preserve">
+    <value>Не удалось сохранить существующую композицию окон</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ShellExecute" xml:space="preserve">
+    <value>Ошибка открытия файла</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ShowExceptionInternal" xml:space="preserve">
+    <value>Ошибка при выводе сообщения об исключении</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ToolFormHide" xml:space="preserve">
+    <value>Выключение tool forms</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ToolFormShow" xml:space="preserve">
+    <value>Включение tool forms</value>
+  </data>
+  <data name="EFPApp_Err_CreatorClassType" xml:space="preserve">
+    <value>Класс {0} не является производным от Form и не поддерживает интерфейс IEFPFormCreator</value>
+  </data>
+  <data name="EFPApp_Err_DirIsEmpty" xml:space="preserve">
+    <value>Каталог не задан</value>
+  </data>
+  <data name="EFPApp_Err_DirNotFound" xml:space="preserve">
+    <value>Каталог '{0}' не существует</value>
+  </data>
+  <data name="EFPApp_Err_FileNotFound" xml:space="preserve">
+    <value>Файл {0} не найден</value>
+  </data>
+  <data name="EFPApp_Err_MainWindowShown" xml:space="preserve">
+    <value>Главное окно уже выведено</value>
+  </data>
+  <data name="EFPApp_Err_NoHelpContext" xml:space="preserve">
+    <value>Контекст справки не задан</value>
+  </data>
+  <data name="EFPApp_Err_NoInitAppCalled" xml:space="preserve">
+    <value>Не было вызова EFPApp.InitApp()</value>
+  </data>
+  <data name="EFPApp_Err_NoInterface" xml:space="preserve">
+    <value>Нет подключенного пользовательского интерфейса</value>
+  </data>
+  <data name="EFPApp_Err_NotMainThread" xml:space="preserve">
+    <value>Вызов не из основного потока приложения</value>
+  </data>
+  <data name="EFPApp_Err_SetUnknownInterface" xml:space="preserve">
+    <value>Запрошена установка неизвестного интерфейса пользователя '{0}'. Будет использован интерфейс '{1}'</value>
+  </data>
+  <data name="EFPApp_Err_ShellExecuteFailed" xml:space="preserve">
+    <value>Не удалось открыть файл '{0}'</value>
+  </data>
+  <data name="EFPApp_Err_ShowWindowsExplorerFailed" xml:space="preserve">
+    <value>Ошибка запуска {0}</value>
+  </data>
+  <data name="EFPApp_Err_ShowWindowsExplorerNotSupported" xml:space="preserve">
+    <value>Для установленной операционной системы программа просмотра каталогов неизвестна</value>
+  </data>
+  <data name="EFPApp_Err_ShowWindowsExplorerRunning" xml:space="preserve">
+    <value>Предыдущая команда открытия Проводника еще не выполнена</value>
+  </data>
+  <data name="EFPApp_Msg_FormMinimized" xml:space="preserve">
+    <value>{0} (свернуто)</value>
+  </data>
+  <data name="EFPApp_Phase_DirExists" xml:space="preserve">
+    <value>Определение существования каталога</value>
+  </data>
+  <data name="EFPApp_Phase_FileExists" xml:space="preserve">
+    <value>Определение существования файла</value>
+  </data>
+  <data name="EFPApp_Phase_ShowWindowsExplorer" xml:space="preserve">
+    <value>Запуск {0}</value>
+  </data>
+  <data name="EFPApp_Title_LoadComposition" xml:space="preserve">
+    <value>Восстановление интерфейса</value>
+  </data>
+  <data name="EFPApp_Title_SelectForm" xml:space="preserve">
+    <value>Выбрать окно</value>
+  </data>
+  <data name="EFPTwainHandler_ErrTitle_Init" xml:space="preserve">
+    <value>Ошибка инициализации TWAIN</value>
+  </data>
+  <data name="EFPTwainHandler_Err_NoMainWindow" xml:space="preserve">
+    <value>Главное окно программы закрыто</value>
+  </data>
+  <data name="EFPTwainHandler_Phase_Init" xml:space="preserve">
+    <value>Инициализация TWAIN</value>
+  </data>
+  <data name="EFPTwainHandler_Phase_Scan" xml:space="preserve">
+    <value>Идет сканирование</value>
+  </data>
+  <data name="EFPTwainHandler_Phase_Start" xml:space="preserve">
+    <value>Запуск сканирования</value>
+  </data>
+  <data name="ErrorMessageKind_Title_Errors" xml:space="preserve">
+    <value>Ошибки</value>
+  </data>
+  <data name="ErrorMessageKind_Title_Infos" xml:space="preserve">
+    <value>Сообщения</value>
+  </data>
+  <data name="ErrorMessageKind_Title_None" xml:space="preserve">
+    <value>Нет ошибок</value>
+  </data>
+  <data name="ErrorMessageKind_Title_Warnings" xml:space="preserve">
+    <value>Предупреждения</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_Errors" xml:space="preserve">
+    <value>Ошибок: {0}</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_Infos" xml:space="preserve">
+    <value>Сообщений: {0}</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_NoMessageList" xml:space="preserve">
+    <value>Список ошибок не присоединен</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_None" xml:space="preserve">
+    <value>Нет сообщений об ошибках</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_Warnings" xml:space="preserve">
+    <value>Предупреждений: {0}</value>
+  </data>
+  <data name="ExtTextRenderer_Err_NotForPaint" xml:space="preserve">
+    <value>Объект предназначен только для измерения</value>
+  </data>
+  <data name="FileEditorFormHandler_Title_Default" xml:space="preserve">
+    <value>Без имени</value>
+  </data>
+  <data name="MessageBox_Title_Confirmation" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="MessageBox_Title_Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="MessageBox_Title_Information" xml:space="preserve">
+    <value>Сообщение</value>
+  </data>
+  <data name="MessageBox_Title_Warning" xml:space="preserve">
+    <value>Предупреждение</value>
+  </data>
+  <data name="Wizard_Arg_ControlIsForm" xml:space="preserve">
+    <value>Управляющий элемент не может быть Form. Если используется форма-шаблон, то добавьте панель элементами и передавайте Panel в конструктор WizardStep</value>
+  </data>
+  <data name="Wizard_Arg_ControlIsTabPage" xml:space="preserve">
+    <value>Управляющий элемент не может быть TabPage. Если используется форма-шаблон, то добавьте на TabPage объект Panel с элементами и передавайте Panel в конструктор WizardStep</value>
+  </data>
+  <data name="Wizard_Arg_TempPageAlreadyAttached" xml:space="preserve">
+    <value>Повторное присоединение временной страницы</value>
+  </data>
+  <data name="Wizard_Err_AlreadyStarted" xml:space="preserve">
+    <value>Свойство можно устанавливать только до запуска мастера</value>
+  </data>
+  <data name="Wizard_Err_BackFromFirstStep" xml:space="preserve">
+    <value>Нельзя отменить первый шаг</value>
+  </data>
+  <data name="Wizard_Err_NoNextStep" xml:space="preserve">
+    <value>Следующий кадр не определен</value>
+  </data>
+  <data name="Clipboard_ErrTitle_GetData" xml:space="preserve">
+    <value>Ошибка чтения из буфера обмена</value>
+  </data>
+  <data name="Clipboard_ErrTitle_SetData" xml:space="preserve">
+    <value>Ошибка записи в буфер обмена</value>
+  </data>
+  <data name="Clipboard_Err_NoText" xml:space="preserve">
+    <value>Буфер обмена не содержит текста</value>
+  </data>
+  <data name="Clipboard_Phase_GetData" xml:space="preserve">
+    <value>Извлечение данных из буфера обмена</value>
+  </data>
+  <data name="Clipboard_Phase_SetData" xml:space="preserve">
+    <value>Копирование данных в буфер обмена</value>
+  </data>
+  <data name="Cmd_Menu_Edit" xml:space="preserve">
+    <value>&amp;Правка</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Find" xml:space="preserve">
+    <value>&amp;Найти ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_FindNext" xml:space="preserve">
+    <value>Найти &amp;далее</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Goto" xml:space="preserve">
+    <value>Перейти ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_IncSearch" xml:space="preserve">
+    <value>Найти по первым буквам</value>
+  </data>
+  <data name="Cmd_Menu_Edit_PasteSpecial" xml:space="preserve">
+    <value>Сп&amp;ециальная вставка ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Redo" xml:space="preserve">
+    <value>&amp;Отменить</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Replace" xml:space="preserve">
+    <value>Заменить ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_SelectAll" xml:space="preserve">
+    <value>В&amp;ыделить все</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Undo" xml:space="preserve">
+    <value>Пов&amp;торить</value>
+  </data>
+  <data name="Cmd_Menu_File" xml:space="preserve">
+    <value>&amp;Файл</value>
+  </data>
+  <data name="Cmd_Menu_File_Exit" xml:space="preserve">
+    <value>В&amp;ыход</value>
+  </data>
+  <data name="Cmd_Menu_File_New" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="Cmd_Menu_File_Open" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Cmd_Menu_File_PageSetup" xml:space="preserve">
+    <value>Параметры страницы ...</value>
+  </data>
+  <data name="Cmd_Menu_File_Print" xml:space="preserve">
+    <value>Печать ...</value>
+  </data>
+  <data name="Cmd_Menu_File_PrintPreview" xml:space="preserve">
+    <value>Предварительный просмотр</value>
+  </data>
+  <data name="Cmd_Menu_File_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Cmd_Menu_File_SaveAs" xml:space="preserve">
+    <value>Сохранить как</value>
+  </data>
+  <data name="Cmd_Menu_Help" xml:space="preserve">
+    <value>&amp;Справка</value>
+  </data>
+  <data name="Cmd_Menu_Help_About" xml:space="preserve">
+    <value>О программе ...</value>
+  </data>
+  <data name="Cmd_Menu_Help_Contents" xml:space="preserve">
+    <value>&amp;Содержание</value>
+  </data>
+  <data name="Cmd_Menu_Help_ContextHelp" xml:space="preserve">
+    <value>Контекстная помощь</value>
+  </data>
+  <data name="Cmd_Menu_Help_Index" xml:space="preserve">
+    <value>&amp;Указатель</value>
+  </data>
+  <data name="Cmd_Menu_SendTo" xml:space="preserve">
+    <value>Отправит&amp;ь</value>
+  </data>
+  <data name="Cmd_Menu_SendTo_InternetBrowser" xml:space="preserve">
+    <value>Интернет-обозреватель</value>
+  </data>
+  <data name="Cmd_Menu_SendTo_Notepad" xml:space="preserve">
+    <value>Блокнот</value>
+  </data>
+  <data name="Cmd_Menu_View" xml:space="preserve">
+    <value>&amp;Вид</value>
+  </data>
+  <data name="Cmd_Menu_View_FullScreen" xml:space="preserve">
+    <value>Во весь экран</value>
+  </data>
+  <data name="Cmd_Menu_View_Refresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="Cmd_Menu_View_RestoreToolBars" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="Cmd_Menu_View_StatusBarVisible" xml:space="preserve">
+    <value>&amp;Статусная строка</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarOnBottom" xml:space="preserve">
+    <value>С&amp;низу</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarOnLeft" xml:space="preserve">
+    <value>С&amp;лева</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarOnRight" xml:space="preserve">
+    <value>С&amp;права</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarOnTop" xml:space="preserve">
+    <value>С&amp;верху</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBars" xml:space="preserve">
+    <value>&amp;Панели инструментов</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarVisible" xml:space="preserve">
+    <value>Панель включена</value>
+  </data>
+  <data name="Cmd_Menu_Window" xml:space="preserve">
+    <value>&amp;Окно</value>
+  </data>
+  <data name="Cmd_Menu_Window_ArrangeIcons" xml:space="preserve">
+    <value>Упорядочить значки</value>
+  </data>
+  <data name="Cmd_Menu_Window_Cascade" xml:space="preserve">
+    <value>Каскадом</value>
+  </data>
+  <data name="Cmd_Menu_Window_CloseAll" xml:space="preserve">
+    <value>Закрыть все</value>
+  </data>
+  <data name="Cmd_Menu_Window_CloseAllButThis" xml:space="preserve">
+    <value>Закрыть все, кроме текущего окна</value>
+  </data>
+  <data name="Cmd_Menu_Window_NewMainWindow" xml:space="preserve">
+    <value>Новое главное окно</value>
+  </data>
+  <data name="Cmd_Menu_Window_OtherWindows" xml:space="preserve">
+    <value>Другие окна ...</value>
+  </data>
+  <data name="Cmd_Menu_Window_SavedCompositions" xml:space="preserve">
+    <value>Композиции рабочего стола</value>
+  </data>
+  <data name="Cmd_Menu_Window_TileHorizotal" xml:space="preserve">
+    <value>Сверху вниз</value>
+  </data>
+  <data name="Cmd_Menu_Window_TileVertical" xml:space="preserve">
+    <value>Слева направо</value>
+  </data>
+  <data name="Cmd_ToolTip_File_PrintDefault" xml:space="preserve">
+    <value>Печать на принтере по умолчанию</value>
+  </data>
+  <data name="Cmd_ToolTip_Help_Contents" xml:space="preserve">
+    <value>Содержание справки</value>
+  </data>
+  <data name="Cmd_ToolTip_Help_Index" xml:space="preserve">
+    <value>Алфавитный указатель справки</value>
+  </data>
+  <data name="Cmd_ToolTip_SebdTo_InternetBrowser" xml:space="preserve">
+    <value>Открыть в интернет-обозревателе</value>
+  </data>
+  <data name="Cmd_ToolTip_SendTo_App" xml:space="preserve">
+    <value>Открыть в {0}</value>
+  </data>
+  <data name="Cmd_ToolTip_SendTo_NotePad" xml:space="preserve">
+    <value>Открыть в Блокноте</value>
+  </data>
+  <data name="EFPApp_Arg_UnknownStdCommandCategoryAndName" xml:space="preserve">
+    <value>Неизвестная стандартная команда с категорией '{0}' и именем '{1}'</value>
+  </data>
+  <data name="EFPApp_ErrTitle_InterfaceChanged" xml:space="preserve">
+    <value>Ошибка инициализации состояния команд главного меню при переключении интерфейса</value>
+  </data>
+  <data name="EFPApp_ErrTitle_Wait" xml:space="preserve">
+    <value>Перехват ошибки EFPApp.BeginWait()/EndWait(). Повторные сообщения не выводятся</value>
+  </data>
+  <data name="EFPApp_Err_NoCurrentForm" xml:space="preserve">
+    <value>Нет текущего окна</value>
+  </data>
+  <data name="EFPApp_Msg_RestoreToolBars_AllWindows" xml:space="preserve">
+    <value>Для всех открытых окон</value>
+  </data>
+  <data name="EFPApp_Msg_RestoreToolBars_CurrentWindow" xml:space="preserve">
+    <value>Только для текущего окна</value>
+  </data>
+  <data name="EFPApp_Phase_Wait" xml:space="preserve">
+    <value>Ждите</value>
+  </data>
+  <data name="EFPApp_Title_RestoreToolBars" xml:space="preserve">
+    <value>Восстановление панелей инструментов</value>
+  </data>
+  <data name="EFPCommandItem_ErrTitle_Click" xml:space="preserve">
+    <value>Ошибка при обработке команды '{0}'</value>
+  </data>
+  <data name="EFPCommandItem_ErrTitle_ClickUnhandled" xml:space="preserve">
+    <value>Неперехваченная ошибка при обработке команды. Обратитесь к разработчику программы</value>
+  </data>
+  <data name="EFPCommandItem_Err_AnotherOwner" xml:space="preserve">
+    <value>Команда '{0}' уже добавлена в другой список</value>
+  </data>
+  <data name="EFPCommandItem_Err_Disabled" xml:space="preserve">
+    <value>Команда заблокирована: '{0}'</value>
+  </data>
+  <data name="EFPCommandItem_Err_HasUIObjs" xml:space="preserve">
+    <value>Команда уже имеет связанные объекты пользовательского интерфейса</value>
+  </data>
+  <data name="EFPCommandItem_Err_Hidden" xml:space="preserve">
+    <value>Команда невидима: '{0}'</value>
+  </data>
+  <data name="EFPCommandItem_Err_Nested" xml:space="preserve">
+    <value>Предыдущее выполнение команды '{0}' еще не закончено</value>
+  </data>
+  <data name="EFPCommandItem_Err_NoHandler" xml:space="preserve">
+    <value>Нет обработчика выполнения команды '{0}'</value>
+  </data>
+  <data name="EFPCommandItem_Err_ParentNotAttached" xml:space="preserve">
+    <value>Родительская команда '{0}' не была присоединена к коллекции ранее</value>
+  </data>
+  <data name="EFPCommandItem_Name_StatusPanel" xml:space="preserve">
+    <value>[окно статусной строки]</value>
+  </data>
+  <data name="EFPMenu_Arg_AnoherMenu" xml:space="preserve">
+    <value>Команда '{0}' располагается в другом меню</value>
+  </data>
+  <data name="EFPMenu_Arg_NotInMenu" xml:space="preserve">
+    <value>Команда '{0}' не была добавлена в меню</value>
+  </data>
+  <data name="EFPMenu_ErrTitle_DelayedInit" xml:space="preserve">
+    <value>Ошибка отложенной инициализации меню</value>
+  </data>
+  <data name="EFPMenu_Err_ParentNotAttached" xml:space="preserve">
+    <value>Родительская команда '{0}' не была добавлен в меню</value>
+  </data>
+  <data name="EFPMenu_Err_ParentNotInCommadList" xml:space="preserve">
+    <value>Нельзя присоединить команду '{0}' к меню, потому что ее родительская команда '{1}' не входит в список команд</value>
+  </data>
+  <data name="EFPMenu_Err_ParentNotInMenu" xml:space="preserve">
+    <value>Нельзя присоединить команду '{0}' к меню, потому что ее родительская команда '{1}' не относится к меню</value>
+  </data>
+  <data name="EFPStatuBar_ErrTitle_DetachPanel" xml:space="preserve">
+    <value>Ошибка отсоединения панели статусной строки {0}</value>
+  </data>
+  <data name="FileEditorFormHandler_Msg_NotSaved" xml:space="preserve">
+    <value>Документ '{0}' не сохранен. Сохранить изменения?"</value>
+  </data>
+  <data name="Keys_Name_Down" xml:space="preserve">
+    <value>Стрелка вниз</value>
+  </data>
+  <data name="Keys_Name_Left" xml:space="preserve">
+    <value>Стрелка влево</value>
+  </data>
+  <data name="Keys_Name_OemMinus" xml:space="preserve">
+    <value>Верхний [-]</value>
+  </data>
+  <data name="Keys_Name_OemPlus" xml:space="preserve">
+    <value>Верхний [=]</value>
+  </data>
+  <data name="Keys_Name_Right" xml:space="preserve">
+    <value>Стрелка вправо</value>
+  </data>
+  <data name="Keys_Name_Space" xml:space="preserve">
+    <value>Пробел</value>
+  </data>
+  <data name="Keys_Name_Up" xml:space="preserve">
+    <value>Стрелка вверх</value>
+  </data>
+  <data name="Cmd_Menu_Debug_CurrentSettingsXML" xml:space="preserve">
+    <value>Текущие настройки диалога (XML)</value>
+  </data>
+  <data name="Cmd_Menu_Debug_SavedSettingsXML" xml:space="preserve">
+    <value>Сохраненные настройки набора (XML)</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_Arg_NotSaved" xml:space="preserve">
+    <value>Композиция не записана</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_ErrTitle_SavePreview" xml:space="preserve">
+    <value>Не удалось сохранить изображение для предварительного просмотра</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_Msg_Hist0" xml:space="preserve">
+    <value>Последняя</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_Msg_Hist1" xml:space="preserve">
+    <value>Предпоследняя</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_Msg_HistN" xml:space="preserve">
+    <value>Предыдущая №{0}</value>
+  </data>
+  <data name="EFPAppRI_Arg_BaseProviderForDialog" xml:space="preserve">
+    <value>Для диалога BaseProvider не задается</value>
+  </data>
+  <data name="EFPAppRI_Arg_NoCreator" xml:space="preserve">
+    <value>В списке EFPApp.RICreators не один из объектов не смог создать управляющий элемент для элемента удаленного интерфейса типа {0}</value>
+  </data>
+  <data name="EFPAppRI_ErrTitle_WriteValues" xml:space="preserve">
+    <value>Ошибка записи значения</value>
+  </data>
+  <data name="EFPAppRI_Err_CannotAddToBandPanel" xml:space="preserve">
+    <value>Элемент '{0}' нельзя добавить к полосе управляющих элементов</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ExitFailed" xml:space="preserve">
+    <value>Не удалось завершить приложение</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ExtractIconImage" xml:space="preserve">
+    <value>Ошибка извлечения значка из файла</value>
+  </data>
+  <data name="EFPApp_ErrTitle_IdleSingleAction" xml:space="preserve">
+    <value>Ошибка вызова обработчика однократного Idle-действия</value>
+  </data>
+  <data name="EFPApp_ErrTitle_LoadMainImages" xml:space="preserve">
+    <value>Ошибка загрузки значков</value>
+  </data>
+  <data name="EFPApp_ErrTitle_RestoreFormUnknownError" xml:space="preserve">
+    <value>Возникла неизвестная ошибка при восстановлении формы '{0}'</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ShowForm" xml:space="preserve">
+    <value>Не удалось показать форму {0}</value>
+  </data>
+  <data name="EFPApp_Err_CannotCloseAllForms" xml:space="preserve">
+    <value>Не удалось закрыть все открытые окна</value>
+  </data>
+  <data name="EFPApp_Err_FormAlreadyInMainWindow" xml:space="preserve">
+    <value>Форма '{0}' уже есть в списке форм главного окна</value>
+  </data>
+  <data name="EFPApp_Err_LoadCompositionForm" xml:space="preserve">
+    <value>Возникла ошибка при восстановлении формы '{0}'. {1}</value>
+  </data>
+  <data name="EFPApp_Msg_CloseMainWindowCloseCurrent" xml:space="preserve">
+    <value>Закрыть текущее главное окно</value>
+  </data>
+  <data name="EFPApp_Msg_CloseMainWindowExit" xml:space="preserve">
+    <value>Завершить работу</value>
+  </data>
+  <data name="EFPApp_Name_FormToolBar" xml:space="preserve">
+    <value>Панель инструментов окна</value>
+  </data>
+  <data name="EFPApp_Phase_GetPrinterList" xml:space="preserve">
+    <value>Определение списка установленных принтеров</value>
+  </data>
+  <data name="EFPApp_Phase_GetPrinterProps" xml:space="preserve">
+    <value>Получение свойств принтера '{0}'</value>
+  </data>
+  <data name="EFPApp_Phase_LoadFonts" xml:space="preserve">
+    <value>Загрузка списка установленных шрифтов</value>
+  </data>
+  <data name="EFPApp_Title_CloseMainWindow" xml:space="preserve">
+    <value>Закрытие окна '{0}'</value>
+  </data>
+  <data name="EFPApp_Title_CloseMainWindowAction" xml:space="preserve">
+    <value>Что надо сделать</value>
+  </data>
+  <data name="EFPButton_ErrTitle_Click" xml:space="preserve">
+    <value>Ошибка при нажатии кнопки '{0}'</value>
+  </data>
+  <data name="EFPButton_Err_ClickInProgress" xml:space="preserve">
+    <value>Предыдущее нажатие кнопки '{0}' еще не обработано</value>
+  </data>
+  <data name="EFPButton_Err_InsideClickEvent" xml:space="preserve">
+    <value>Не должно вызываться из обработчика события Click</value>
+  </data>
+  <data name="EFPButton_Phase_Click" xml:space="preserve">
+    <value>Нажатие кнопки '{0}'</value>
+  </data>
+  <data name="EFPCheckBox_Arg_ThreeStateInGroup" xml:space="preserve">
+    <value>Для CheckBox с индексом {0} установлено свойство ThreeState=true</value>
+  </data>
+  <data name="EFPCheckBox_Err_GroupNoneChecked" xml:space="preserve">
+    <value>Должен быть установлен хотя бы один флажок</value>
+  </data>
+  <data name="EFPCheckBox_Err_IndeterminateState" xml:space="preserve">
+    <value>Флажок должен быть установлен, либо снят</value>
+  </data>
+  <data name="EFPErrorMessageListButton_Msg_Errors" xml:space="preserve">
+    <value>Список содержит ошибки ({0})</value>
+  </data>
+  <data name="EFPErrorMessageListButton_Msg_Warnings" xml:space="preserve">
+    <value>Список содержит предупреждения ({0})</value>
+  </data>
+  <data name="EFPErrorMessageListButton_Name_Default" xml:space="preserve">
+    <value>Сообщения</value>
+  </data>
+  <data name="EFPMaskedTextBox_Err_MaskIncomplete" xml:space="preserve">
+    <value>Должны быть введены все символы</value>
+  </data>
+  <data name="EFPMaskedComboBox_ToolTip_ClearButton" xml:space="preserve">
+    <value>Очистить введенное значение</value>
+  </data>
+  <data name="ParamSetComboBox_ErrTitle_ConfigFromControls" xml:space="preserve">
+    <value>Ошибка получения значений из управляющих элементов</value>
+  </data>
+  <data name="ParamSetComboBox_ErrTitle_ConfigToControls" xml:space="preserve">
+    <value>Ошибка записи значений в управляющие элементы</value>
+  </data>
+  <data name="ParamSetComboBox_ErrTitle_ReadHistory" xml:space="preserve">
+    <value>Ошибка чтения списка истории</value>
+  </data>
+  <data name="ParamSetComboBox_Err_CannotDelete" xml:space="preserve">
+    <value>Этот набор нельзя удалить</value>
+  </data>
+  <data name="ParamSetComboBox_Err_NameStartsWithBracket" xml:space="preserve">
+    <value>Имя набора не может начинаться со скобки</value>
+  </data>
+  <data name="ParamSetComboBox_Err_NotPersist" xml:space="preserve">
+    <value>Cохранение значений между сеансами работы не предусмотрено в программе</value>
+  </data>
+  <data name="ParamSetComboBox_Err_NotUserSetOverwrite" xml:space="preserve">
+    <value>Перезаписывать можно только пользовательские наборы. Введите название набора.</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_Delete" xml:space="preserve">
+    <value>Удалить набор '{0}'?</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_Hist0" xml:space="preserve">
+    <value>(Последний)</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_Hist1" xml:space="preserve">
+    <value>(Предпоследний)</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_HistN" xml:space="preserve">
+    <value>(Предыдщий №{0})</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_NoSelection" xml:space="preserve">
+    <value>Нет выбранного готового набора</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_Overwrite" xml:space="preserve">
+    <value>Набор '{0}' уже существует. Вы хотите перезаписать его?</value>
+  </data>
+  <data name="ParamSetComboBox_Title_CurrentSettingsXML" xml:space="preserve">
+    <value>Текущие настройки диалога ({0})</value>
+  </data>
+  <data name="ParamSetComboBox_Title_Delete" xml:space="preserve">
+    <value>Удаление готового набора</value>
+  </data>
+  <data name="ParamSetComboBox_Title_Overwrite" xml:space="preserve">
+    <value>Подтверждение перезаписи набора</value>
+  </data>
+  <data name="ParamSetComboBox_ToolTip_ComboBox" xml:space="preserve">
+    <value>Выбор готового набора из выпадающего списка.
+В список входят:
+- пользовательские наборы, которые Вы сохранили;
+- настройки по умолчанию, если заданы в программе;
+- а также до 9 последних наборов значений (история)
+
+Текстовое поле предназначено для ввода названия для нового пользовательского набора</value>
+  </data>
+  <data name="TrayIcon_ErrTitle_RemoveNotifyIcon" xml:space="preserve">
+    <value>Ошибка удаления NotifyIcon</value>
+  </data>
+  <data name="Cmd_Menu_Filter" xml:space="preserve">
+    <value>&amp;Фильтр</value>
+  </data>
+  <data name="Cmd_Menu_Filter_NextDateFilter" xml:space="preserve">
+    <value>&amp;Следующий период времени</value>
+  </data>
+  <data name="Cmd_Menu_Filter_PrevDateFilter" xml:space="preserve">
+    <value>&amp;Предыдущий период времени</value>
+  </data>
+  <data name="Cmd_Menu_Filter_SetFilter" xml:space="preserve">
+    <value>&amp;Установить фильтр ...</value>
+  </data>
+  <data name="Cmd_Menu_View_GridConfig" xml:space="preserve">
+    <value>Настройка просмотра ...</value>
+  </data>
+  <data name="EFPConfigurableDataView_ErrTitle_ReadConfig" xml:space="preserve">
+    <value>Ошибка загрузки сохраненной конфигурации табличного просмотра</value>
+  </data>
+  <data name="EFPConfigurableDataView_Err_NoFilters" xml:space="preserve">
+    <value>Просмотр не содержит фильтров</value>
+  </data>
+  <data name="EFPConfigurableDataView_Err_ScrollFilter" xml:space="preserve">
+    <value>Прокрутка фильтра '{0}' невозможна</value>
+  </data>
+  <data name="EFPConfigurableDataView_ToolTip_ForFilter" xml:space="preserve">
+    <value>{0} для фильтра '{1}';</value>
+  </data>
+  <data name="EFPConfigurableDataView_ToolTip_ForNoActiveFilter" xml:space="preserve">
+    <value>{0} - нет активного фильтра</value>
+  </data>
+  <data name="EFPControl_ErrTitle_SetProviderStateDisposed" xml:space="preserve">
+    <value>Ошибка установки состояния EFPControlProviderState.Disposed</value>
+  </data>
+  <data name="EFPControlWithToolBar_Arg_ControlHasParent" xml:space="preserve">
+    <value>Основной управлящий элемент '{0}' не должен иметь родителя</value>
+  </data>
+  <data name="EFPControlWithToolBar_Arg_ParentNotEmpty" xml:space="preserve">
+    <value>Родительский управляющий элемент '{0}' уже содержит дочерние элементы</value>
+  </data>
+  <data name="EFPControl_Err_Created" xml:space="preserve">
+    <value>Управляюший элемент '{0}' уже был выведен на экран</value>
+  </data>
+  <data name="EFPControl_Err_LoadConfigCalled" xml:space="preserve">
+    <value>Для управляющего элемента '{0}' уже была загружена конфигурация</value>
+  </data>
+  <data name="EFPControl_Err_OutsideValidating" xml:space="preserve">
+    <value>Метод может вызываться только из метода OnValidate() или обработчика события Validating</value>
+  </data>
+  <data name="EFPControl_Err_Validating" xml:space="preserve">
+    <value>Ошибка при проверке. {0}</value>
+  </data>
+  <data name="EFPDataGridView_Err_DataErrorException" xml:space="preserve">
+    <value>Ошибка DataGridView.DataError ({0})</value>
+  </data>
+  <data name="EFPDataGridView_Err_DataErrorFormatting" xml:space="preserve">
+    <value>Ошибка форматирования для ячейки RowIndex={0} и ColIndex={1}</value>
+  </data>
+  <data name="EFPDataGridView_Err_DataErrorParsing" xml:space="preserve">
+    <value>Ошибка преобразования введенного значения '{0}'</value>
+  </data>
+  <data name="EFPDataGridView_Name_Default" xml:space="preserve">
+    <value>Табличный просмотр</value>
+  </data>
+  <data name="EFPDataView_Err_AlreadySorted" xml:space="preserve">
+    <value>Строки уже отсортированы по этому столбцу</value>
+  </data>
+  <data name="EFPDataView_Err_CellFormatting" xml:space="preserve">
+    <value>Ошибка форматирования. {0}</value>
+  </data>
+  <data name="EFPDataView_Err_ColumnCustomSortNotAllowed" xml:space="preserve">
+    <value>Нельзя выполнять сортировку по столбцу '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_ColumnHasNoSort" xml:space="preserve">
+    <value>Для этого столбца нет сортировки. Выберите порядок строк из меню.</value>
+  </data>
+  <data name="EFPDataView_Err_ComplexSortNotStarted" xml:space="preserve">
+    <value>В данный момент сортировка не выполнена. Не нажимайте &lt;Ctrl&gt;</value>
+  </data>
+  <data name="EFPDataView_Err_ComplexSortRepeatedColumn" xml:space="preserve">
+    <value>Нельзя добавить столбец к сортировке, так как он уже в ней участвует</value>
+  </data>
+  <data name="EFPDataView_Err_CustomOrderNotAllowed" xml:space="preserve">
+    <value>Произвольная сортировка запрещена для этого просмотра</value>
+  </data>
+  <data name="EFPDataView_Err_DataViewNotSorted" xml:space="preserve">
+    <value>Присоединенный к просмотру объект DataView не имеет полей сортировки</value>
+  </data>
+  <data name="EFPDataView_Err_EditNotFinished" xml:space="preserve">
+    <value>Редактирование не закончено</value>
+  </data>
+  <data name="EFPDataView_Err_InlineEditNotImplemented" xml:space="preserve">
+    <value>Редактирование по месту для режима {0} не реализовано</value>
+  </data>
+  <data name="EFPDataView_Err_MoveRowsUpDown" xml:space="preserve">
+    <value>Нельзя передвинуть выбранные строки ({0}) {1}</value>
+  </data>
+  <data name="EFPDataView_Err_MultiSelectedRows" xml:space="preserve">
+    <value>В просмотре выбрано больше одной строки</value>
+  </data>
+  <data name="EFPDataView_Err_NoDataView" xml:space="preserve">
+    <value>Просмотр не связан с DataView</value>
+  </data>
+  <data name="EFPDataView_Err_NoPredefinedOrders" xml:space="preserve">
+    <value>Нет предопределенных порядков сортировки. Переключитесь на произвольный порядок строк</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedCell" xml:space="preserve">
+    <value>В просмотре нет выбранной ячейки</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedRow" xml:space="preserve">
+    <value>В просмотре нет выбранной строки</value>
+  </data>
+  <data name="EFPDataView_Err_OrderNotAllowed" xml:space="preserve">
+    <value>Сортировка не предусмотрена</value>
+  </data>
+  <data name="EFPDataView_Err_PasteMore" xml:space="preserve">
+    <value>Текст в буфере обмена содержит {0} строк(и) и {1} столбца(ов), а выбрано меньше: {2} строк(и) и {3} столбца(ов)</value>
+  </data>
+  <data name="EFPDataView_Err_PasteNoDivided" xml:space="preserve">
+    <value>Текст в буфере обмена содержит {0} строк(и) и {1} столбца(ов), а выбрано (2) строк(и) и {3}столбца(ов). Не делится нацело</value>
+  </data>
+  <data name="EFPDataView_Err_PasteNoText" xml:space="preserve">
+    <value>Текст не задан</value>
+  </data>
+  <data name="EFPDataView_Err_PasteOutIOfBounds" xml:space="preserve">
+    <value>Текст в буфере обмена содержит {0} строк(и) и {1} столбца(ов), не помещается</value>
+  </data>
+  <data name="EFPDataView_Err_RefreshRestoreSelection" xml:space="preserve">
+    <value>Возникла ошибка при восстановлении выбранных строк при обновлении таблицы. {0}</value>
+  </data>
+  <data name="EFPDataView_Err_SetTextValue" xml:space="preserve">
+    <value>Нельзя записать значение '{0}' в ячейку. {1}</value>
+  </data>
+  <data name="EFPDataView_Msg_MoveDown" xml:space="preserve">
+    <value>вниз</value>
+  </data>
+  <data name="EFPDataView_Msg_MoveUp" xml:space="preserve">
+    <value>вверх</value>
+  </data>
+  <data name="EFPDataView_Msg_ReadOnlyColumn" xml:space="preserve">
+    <value>Столбец предназначен только для просмотра</value>
+  </data>
+  <data name="EFPDataView_Msg_ReadOnlyRow" xml:space="preserve">
+    <value>Строка предназначена только для просмотра</value>
+  </data>
+  <data name="EFPDataView_Msg_ReadOnlyView" xml:space="preserve">
+    <value>Просмотр предназначен только для чтения</value>
+  </data>
+  <data name="EFPDataView_Msg_RowIdText_NoDataRow" xml:space="preserve">
+    <value>Нет строки</value>
+  </data>
+  <data name="EFPDataView_Msg_RowIdText_RowNumber" xml:space="preserve">
+    <value>Строка {0}</value>
+  </data>
+  <data name="EFPDataView_Err_Empty" xml:space="preserve">
+    <value>Просмотр не содержит ни одной строки</value>
+  </data>
+  <data name="EFPDataView_Err_RowErrNavNotSuppoprted" xml:space="preserve">
+    <value>Просмотр не поддерживает навигацию по строкам с ошибками</value>
+  </data>
+  <data name="EFPDataView_Err_IncSearchCannotAddChar" xml:space="preserve">
+    <value>Символ '{0}' не может быть добавлен к строке быстрого поиска. {1}</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav" xml:space="preserve">
+    <value>{0}, но строка {1} не найдена</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNavTableBottom" xml:space="preserve">
+    <value>Достигнут конец таблицы</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNavTableTop" xml:space="preserve">
+    <value>Достигнуто начало таблицы</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav_Error" xml:space="preserve">
+    <value>с ошибкой</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav_Information" xml:space="preserve">
+    <value>с сообщением</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav_None" xml:space="preserve">
+    <value>без ошибок</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav_Warning" xml:space="preserve">
+    <value>с ошибкой или предупреждением</value>
+  </data>
+  <data name="EFPDataView_Name_NoNameColumn" xml:space="preserve">
+    <value>Столбец без названия</value>
+  </data>
+  <data name="EFPDataView_Phase_IncSearch" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="EFPDataView_ToolTip_Exception" xml:space="preserve">
+    <value>Ошибка при получении подсказки
+{0}</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellErrNav" xml:space="preserve">
+    <value>Используйте Ctrl+] и Ctrl+[ для перехода к этим строкам</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellErrors" xml:space="preserve">
+    <value>Есть строки с ошибками ({0})</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellNoErrors" xml:space="preserve">
+    <value>Нет строк с ошибками или предупреждениями</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellRowCount" xml:space="preserve">
+    <value>Строк в просмотре: {0}</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellWarmings" xml:space="preserve">
+    <value>Есть строки с предупреждениями ({0})</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks" xml:space="preserve">
+    <value>Установка/снятие отметок для строк</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_DelAll" xml:space="preserve">
+    <value>Снять отметки для всех строк</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_DelSelected" xml:space="preserve">
+    <value>Снять отметки для выбранных строк</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_InvSelected" xml:space="preserve">
+    <value>Инвертировать отметки для выбранных строк</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_SetAll" xml:space="preserve">
+    <value>Установить отметки для всех строк</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_SetSelected" xml:space="preserve">
+    <value>Установить отметки для выбранных строк</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopyToolTip" xml:space="preserve">
+    <value>Копировать всплывающую подсказку</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Delete" xml:space="preserve">
+    <value>Удалить запись</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Delete_MultiRows" xml:space="preserve">
+    <value>Удалить выбранные записи</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Delete_SingleRow" xml:space="preserve">
+    <value>Удалить запись</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Edit" xml:space="preserve">
+    <value>Редактировать запись</value>
+  </data>
+  <data name="Cmd_Menu_Edit_EditInline" xml:space="preserve">
+    <value>Редактировать по месту</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Edit_MultiRows" xml:space="preserve">
+    <value>Редактировать выбранные записи</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Edit_SingleRow" xml:space="preserve">
+    <value>Редактировать запись</value>
+  </data>
+  <data name="Cmd_Menu_Edit_IncSearch_Finish" xml:space="preserve">
+    <value>Закончить поиск по буквам</value>
+  </data>
+  <data name="Cmd_Menu_Edit_IncSearch_Start" xml:space="preserve">
+    <value>Начать поиск по буквам</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Insert" xml:space="preserve">
+    <value>Создать новую запись</value>
+  </data>
+  <data name="Cmd_Menu_Edit_InsertCopy" xml:space="preserve">
+    <value>Создать копию записи</value>
+  </data>
+  <data name="Cmd_Menu_Edit_View" xml:space="preserve">
+    <value>Просмотреть запись</value>
+  </data>
+  <data name="Cmd_Menu_Edit_View_MultiRows" xml:space="preserve">
+    <value>Просмотреть выбранные записи</value>
+  </data>
+  <data name="Cmd_Menu_Edit_View_SingleRow" xml:space="preserve">
+    <value>Просмотреть запись</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav" xml:space="preserve">
+    <value>Строки с ошибками</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_CopyMessage" xml:space="preserve">
+    <value>Копировать сообщение</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_MessageList" xml:space="preserve">
+    <value>Список сообщений</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_NextError" xml:space="preserve">
+    <value>Перейти к следующей строке с ошибкой</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_NextWarning" xml:space="preserve">
+    <value>Перейти к следующей строке с ош./пр.</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_PrevError" xml:space="preserve">
+    <value>Перейти к предыдущей строке с ошибкой</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_PrevWarning" xml:space="preserve">
+    <value>Перейти к предыдущей строке с ош./пр.</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder" xml:space="preserve">
+    <value>Порядок строк</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_Custom" xml:space="preserve">
+    <value>&amp;Произвольный</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_Dialog" xml:space="preserve">
+    <value>&amp;Еще ...</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_MoveDown" xml:space="preserve">
+    <value>Переместить вниз</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_MoveUp" xml:space="preserve">
+    <value>Переместить вверх</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_RestoreOrder" xml:space="preserve">
+    <value>Восстановить порядок по умолчанию</value>
+  </data>
+  <data name="Cmd_Menu_ToolTip_InsertCopy" xml:space="preserve">
+    <value>Создать новую запись на основании текущей записи</value>
+  </data>
+  <data name="Cmd_Status_Edit_IncSearch_NoColumn" xml:space="preserve">
+    <value>&lt;Столбец не выбран&gt;</value>
+  </data>
+  <data name="Cmd_Status_Edit_IncSearch_NotStarted" xml:space="preserve">
+    <value>&lt;Поиск не начат&gt;</value>
+  </data>
+  <data name="Cmd_Status_Edit_IncSearch_Unsupported" xml:space="preserve">
+    <value>&lt;Поиск невозможен&gt;</value>
+  </data>
+  <data name="Cmd_Status_Edit_IncSearch_WrongColumn" xml:space="preserve">
+    <value>&lt;Неподходящий столбец&gt;</value>
+  </data>
+  <data name="Cmd_Status_View_StatCalculating" xml:space="preserve">
+    <value>Идет расчет</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_CanStart" xml:space="preserve">
+    <value>Можно начать редактирование ячейки</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_CellReadOnly" xml:space="preserve">
+    <value>Нельзя редактировать ячейку. {0}</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_ControlReadOnly" xml:space="preserve">
+    <value>Просмотр не поддерживает редактирование по месту</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_EditInProgress" xml:space="preserve">
+    <value>Выполняется редактирование ячейки</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_NoSelectedCell" xml:space="preserve">
+    <value>Нет выбранной ячейки</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_CopyMessage" xml:space="preserve">
+    <value>Копировать сообщение в буфер обмена</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_MessageList" xml:space="preserve">
+    <value>Показать список сообщений</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_NextError" xml:space="preserve">
+    <value>Перейти к следующей строке с ошибкой</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_NextWarning" xml:space="preserve">
+    <value>Перейти к следующей строке с ошибкой или предупреждением</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_PrevError" xml:space="preserve">
+    <value>Перейти к предыдущей строке с ошибкой</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_PrevWarning" xml:space="preserve">
+    <value>Перейти к предыдущей строке с ошибкой или предупреждением</value>
+  </data>
+  <data name="Cmd_ToolTip_View_RowOrder_WithName" xml:space="preserve">
+    <value>Порядок строк ({0})</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatCount" xml:space="preserve">
+    <value>Количество чисел в выбранных ячейках просмотра</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatError" xml:space="preserve">
+    <value>Ошибка при вычислении значения</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatMouseInfo" xml:space="preserve">
+    <value>Двойной щелчок мыши - копирование значения в буфер обмена</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatNonSummable" xml:space="preserve">
+    <value>Некоторые выбранные ячейки не являются суммируемыми</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatSum" xml:space="preserve">
+    <value>Сумма выбранных ячеек</value>
+  </data>
+  <data name="EFPDataViewConfig_ErrTitle_Validation" xml:space="preserve">
+    <value>Ошибка проверки при записи конфигурации табличного просмотра</value>
+  </data>
+  <data name="EFPDataViewConfig_Err_NoColumns" xml:space="preserve">
+    <value>В конфигурации не задано ни одного столбца</value>
+  </data>
+  <data name="EFPDataView_Err_CheckMarksNotChanged" xml:space="preserve">
+    <value>Нет изменившихся отметок строк</value>
+  </data>
+  <data name="EFPDataView_Err_ControlReadOnly" xml:space="preserve">
+    <value>Просмотр не допускает редактирование ячеек</value>
+  </data>
+  <data name="EFPDataView_Err_Copy" xml:space="preserve">
+    <value>Ошибка при выполнении копирования ячеек</value>
+  </data>
+  <data name="EFPDataView_Err_DefaultOutItemDeleted" xml:space="preserve">
+    <value>Стандартный вариант печати табличного просмотра был удален</value>
+  </data>
+  <data name="EFPDataView_Err_IncSearchIsEmpty" xml:space="preserve">
+    <value>Строка быстрого поиска не содержит введенных символов</value>
+  </data>
+  <data name="EFPDataView_Err_IncSearchNoMoreRows" xml:space="preserve">
+    <value>Нет больше строк, в которых значение поля начинается с '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_IncSearchNotSupportedByColumn" xml:space="preserve">
+    <value>Столбец не поддерживает поиск по первым буквам</value>
+  </data>
+  <data name="EFPDataView_Err_MultiSelectedCells" xml:space="preserve">
+    <value>Должно быть выбрано не более одной ячейки</value>
+  </data>
+  <data name="EFPDataView_Err_NoCellToolTip" xml:space="preserve">
+    <value>Нет всплывающей подсказки для ячнйки</value>
+  </data>
+  <data name="EFPDataView_Err_NoRowToolTip" xml:space="preserve">
+    <value>Нет всплывающей подсказки для заголовка строки</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedColumn" xml:space="preserve">
+    <value>В просмотре нет выбранного столбца</value>
+  </data>
+  <data name="EFPDataView_Err_NoStatValueToCopy" xml:space="preserve">
+    <value>Нет значения для копирования в буфер обмена</value>
+  </data>
+  <data name="EFPDataView_Err_NotRectangleSelection" xml:space="preserve">
+    <value>Должна быть выбрана прямоугольная область ячеек</value>
+  </data>
+  <data name="EFPDataView_Name_ImageColumn" xml:space="preserve">
+    <value>Значок</value>
+  </data>
+  <data name="EFPDataView_Order_None" xml:space="preserve">
+    <value>Не задан</value>
+  </data>
+  <data name="EFPDataView_Phase_CalcColumnWidth" xml:space="preserve">
+    <value>Определение ширины столбца '{0}'</value>
+  </data>
+  <data name="EFPDataView_Phase_IncSearchLoadColumnData" xml:space="preserve">
+    <value>Загрузка данных столбца для поиска по первым буквам</value>
+  </data>
+  <data name="EFPDataView_Title_RowMessagesForAllRows" xml:space="preserve">
+    <value>Сообщения для всех строк</value>
+  </data>
+  <data name="EFPDataView_Title_RowMessagesForCurrentRow" xml:space="preserve">
+    <value>Сообщения для текущей строки</value>
+  </data>
+  <data name="EFPDataView_Title_RowMessagesForSelectedRows" xml:space="preserve">
+    <value>Сообщения для выбранных строк ({0})</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_ErrTitle_CreateList" xml:space="preserve">
+    <value>Ошибка получения элементов сортировки</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_Err_EmptyCustomList" xml:space="preserve">
+    <value>Должно быть выбрано хотя бы одно поле для сортировки</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_Name_Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_Name_Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_ToolTip_Add" xml:space="preserve">
+    <value>Добавляет столбец в список выбранных для сортировки</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_ToolTip_Remove" xml:space="preserve">
+    <value>Удаляет столбец из сортировки</value>
+  </data>
+  <data name="EFPDataView_Err_CalcRowsHeight" xml:space="preserve">
+    <value>Ошибка расчета высоты строк табличного просмотра. Повторные ошибки не регистрируются</value>
+  </data>
+  <data name="EFPDataView_Phase_CalcRowsHeight" xml:space="preserve">
+    <value>Вычисление высоты строк</value>
+  </data>
+  <data name="DateRangeBox_Err_CannotChangeYear" xml:space="preserve">
+    <value>Нельзя изменить год</value>
+  </data>
+  <data name="DateTimeBox_Err_DateMustBeInRange" xml:space="preserve">
+    <value>Дата должна быть в диапазоне {0}</value>
+  </data>
+  <data name="DateRangeBox_Err_Inverted" xml:space="preserve">
+    <value>Неправильный интервал дат. Начальная дата больше конечной</value>
+  </data>
+  <data name="DateRangeBox_Err_IsHalfEmpty" xml:space="preserve">
+    <value>Полуоткрытые интервалы не допускаются</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_Month" xml:space="preserve">
+    <value>Месяц</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_NextYear" xml:space="preserve">
+    <value>Следующий год</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_PrevYear" xml:space="preserve">
+    <value>Предыдущий год</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_Quarter" xml:space="preserve">
+    <value>Квартал</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_SetFirstDateAsLast" xml:space="preserve">
+    <value>Начальная дата равна конечной</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_SetLastDateAsFirst" xml:space="preserve">
+    <value>Конечная дата равна начальной</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_Today" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_Year" xml:space="preserve">
+    <value>Год</value>
+  </data>
+  <data name="DateRangeBox_Name_First" xml:space="preserve">
+    <value>Начальная дата</value>
+  </data>
+  <data name="DateRangeBox_Name_Last" xml:space="preserve">
+    <value>Конечная дата</value>
+  </data>
+  <data name="EFPDateOrRangeBox_Err_ShowCalendar" xml:space="preserve">
+    <value>Ошибка вызова календаря</value>
+  </data>
+  <data name="EFPDateOrRangeBox_Name_ToRangeButton" xml:space="preserve">
+    <value>Диапазон</value>
+  </data>
+  <data name="DateTimeBox_ToolTip_ClearButton" xml:space="preserve">
+    <value>Очистить дату</value>
+  </data>
+  <data name="DateTimeBox_ToolTip_PopupButton" xml:space="preserve">
+    <value>Выбрать дату из календаря</value>
+  </data>
+  <data name="EFPErrorDataGridView_ColTitle_Code" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="EFPErrorDataGridView_ColTitle_Kind" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="EFPErrorDataGridView_ColTitle_Message" xml:space="preserve">
+    <value>Сообщение</value>
+  </data>
+  <data name="EFPErrorDataGridView_ColTitle_Order" xml:space="preserve">
+    <value>№ п/п</value>
+  </data>
+  <data name="EFPErrorDataGridView_Msg_EmptyList" xml:space="preserve">
+    <value>Нет ошибок</value>
+  </data>
+  <data name="EFPErrorDataGridView_Msg_NoList" xml:space="preserve">
+    <value>Список ошибок не присоединен!</value>
+  </data>
+  <data name="Cmd_Menu_Scale" xml:space="preserve">
+    <value>Масштаб</value>
+  </data>
+  <data name="Cmd_Menu_Scale_100" xml:space="preserve">
+    <value>Масштаб 100 %</value>
+  </data>
+  <data name="Cmd_Menu_Scale_200" xml:space="preserve">
+    <value>Масштаб 200 %</value>
+  </data>
+  <data name="Cmd_Menu_Scale_50" xml:space="preserve">
+    <value>Масштаб 50 %</value>
+  </data>
+  <data name="Cmd_Menu_Scale_500" xml:space="preserve">
+    <value>Масштаб 500 %</value>
+  </data>
+  <data name="Cmd_Menu_Scale_AllPages" xml:space="preserve">
+    <value>Все страницы</value>
+  </data>
+  <data name="Cmd_Menu_Scale_OnePage" xml:space="preserve">
+    <value>Страница целиком</value>
+  </data>
+  <data name="Cmd_Menu_Scale_SetScale" xml:space="preserve">
+    <value>Установить масштаб ...</value>
+  </data>
+  <data name="Cmd_Menu_Scale_TwoPages" xml:space="preserve">
+    <value>Две страницы рядом</value>
+  </data>
+  <data name="Cmd_Menu_Scale_ZoomIn" xml:space="preserve">
+    <value>Увеличить изображение</value>
+  </data>
+  <data name="Cmd_Menu_Scale_ZoomOut" xml:space="preserve">
+    <value>Уменьшить изображение</value>
+  </data>
+  <data name="Cmd_Menu_View_FirstPage" xml:space="preserve">
+    <value>Первая страница</value>
+  </data>
+  <data name="Cmd_Menu_View_GotoPage" xml:space="preserve">
+    <value>Перейти к странице ...</value>
+  </data>
+  <data name="Cmd_Menu_View_LastPage" xml:space="preserve">
+    <value>Последняя страница</value>
+  </data>
+  <data name="Cmd_Menu_View_NextPage" xml:space="preserve">
+    <value>Следующая страница</value>
+  </data>
+  <data name="Cmd_Menu_View_PrevPage" xml:space="preserve">
+    <value>Предыдущая страница</value>
+  </data>
+  <data name="Cmd_Menu_View_ShowGrid" xml:space="preserve">
+    <value>Координатная сетка</value>
+  </data>
+  <data name="Cmd_Status_Scale_SetScale" xml:space="preserve">
+    <value>Масштаб {0} %</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_100" xml:space="preserve">
+    <value>Один к одному</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_200" xml:space="preserve">
+    <value>Двукратное увеличение</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_50" xml:space="preserve">
+    <value>Половинный размер</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_500" xml:space="preserve">
+    <value>Пятикратное увеличение</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_SetScale" xml:space="preserve">
+    <value>Масштаб просмотра изображения</value>
+  </data>
+  <data name="Cmd_ToolTip_View_GotoPage" xml:space="preserve">
+    <value>Отображаемая страница в просмотре</value>
+  </data>
+  <data name="ExtPrintPreviewControl_Err_NoDoc" xml:space="preserve">
+    <value>Нет документа</value>
+  </data>
+  <data name="ExtPrintPreviewControl_Msg_PagePrompt" xml:space="preserve">
+    <value>Введите номер страницы</value>
+  </data>
+  <data name="ExtPrintPreviewControl_Msg_PercentPrompt" xml:space="preserve">
+    <value>Масштаб в процентах</value>
+  </data>
+  <data name="Cmd_Menu_File_FAOpen" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Cmd_Menu_File_FAOpenWith" xml:space="preserve">
+    <value>Открыть с помощью</value>
+  </data>
+  <data name="Cmd_Menu_File_FAOpenWith_Error" xml:space="preserve">
+    <value>[ Ошибка ]</value>
+  </data>
+  <data name="Cmd_Menu_File_FAOpenWith_None" xml:space="preserve">
+    <value>[ Нет приложения ]</value>
+  </data>
+  <data name="Cmd_Status_View_GotoPage_None" xml:space="preserve">
+    <value>Нет страниц</value>
+  </data>
+  <data name="Cmd_Status_View_GotoPage_One" xml:space="preserve">
+    <value>Страница {0} из {1}</value>
+  </data>
+  <data name="Cmd_Status_View_GotoPage_Range" xml:space="preserve">
+    <value>Страницы {0}-{1} из {2}</value>
+  </data>
+  <data name="Cmd_ToolTip_File_FAOpen" xml:space="preserve">
+    <value>Открыть файл с помощью приложения {0} ({1})</value>
+  </data>
+  <data name="Cmd_ToolTip_File_FAOpen_Error" xml:space="preserve">
+    <value>Возникла ошибка при получении файловых ассоциаций. {0}</value>
+  </data>
+  <data name="Cmd_ToolTip_File_FAOpen_None" xml:space="preserve">
+    <value>Нет приложения, которое может открывать файлы с расширением '{0}'</value>
+  </data>
+  <data name="EFPFileAssociationsCommandItemsHandler_Arg_MustStartWithDot" xml:space="preserve">
+    <value>Расширение должно начинаться с точки</value>
+  </data>
+  <data name="EFPFileAssociationsCommandItemsHandler_ErrTitle_Init" xml:space="preserve">
+    <value>Ошибка инициализации EFPFileAssociationsCommandItemsHandler</value>
+  </data>
+  <data name="EFPFileAssociationsCommandItemsHandler_Err_ForFileExt" xml:space="preserve">
+    <value>Не удалось получить файловые ассоциации для расширения '{0}'</value>
+  </data>
+  <data name="EFPFolderBrowserButton_ToolTip_Default" xml:space="preserve">
+    <value>Выбор папки с помощью стандартного блока диалога операционной системы</value>
+  </data>
+  <data name="EFPPathValidator_Err_NestedValidation" xml:space="preserve">
+    <value>Предыдущая проверка еще не закончена</value>
+  </data>
+  <data name="EFPFolderBrowserButton_Err_DragDrop" xml:space="preserve">
+    <value>Перетаскивание не удалось. {0}</value>
+  </data>
+  <data name="EFPFolderBrowserButton_Name_FormatFileDrop" xml:space="preserve">
+    <value>Ссылка на папку</value>
+  </data>
+  <data name="Clipboard_Err_NoFileDrop" xml:space="preserve">
+    <value>В буфере обмена нет ссылок на файлы/каталоги</value>
+  </data>
+  <data name="EFPFileBrowserButton_Err_PasteMulti" xml:space="preserve">
+    <value>Можно вставить только один файл</value>
+  </data>
+  <data name="EFPFileDialogButton_Err_DragDrop" xml:space="preserve">
+    <value>Перетаскивание не удалось. {0}</value>
+  </data>
+  <data name="EFPFileDialogButton_Err_DragDropMulti" xml:space="preserve">
+    <value>Можно перетащить только один файл</value>
+  </data>
+  <data name="EFPFileDialogButton_Name_DragDropFormat" xml:space="preserve">
+    <value>Ссылка на файл</value>
+  </data>
+  <data name="EFPFileDialogButton_ToolTip_Default" xml:space="preserve">
+    <value>Выбор файла с помощью стандартного блока диалога операционной системы</value>
+  </data>
+  <data name="EFPFolderBrowserButton_Err_DragDropMulti" xml:space="preserve">
+    <value>Можно перетащить только один каталог</value>
+  </data>
+  <data name="EFPFolderBrowserButton_Err_PasteMulti" xml:space="preserve">
+    <value>Можно вставить только один каталог</value>
+  </data>
+  <data name="EFPGridFilterGridView_Err_CannotEditFilters" xml:space="preserve">
+    <value>Изменение установленных фильтров запрещено</value>
+  </data>
+  <data name="EFPWindowsExplorerButton_Err_PathIsEmpty" xml:space="preserve">
+    <value>Имя не задано</value>
+  </data>
+  <data name="EFPWindowsExplorerButton_ToolTip_Default" xml:space="preserve">
+    <value>Открытие выбранной папки с помощью {0}</value>
+  </data>
+  <data name="EFPWindowsExplorerButton_ToolTip_Unsupported" xml:space="preserve">
+    <value>Открытие папок на просмотр не поддерживается операционной системой</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>"Ошибка загрузки состояния фильтра \"" + filter.DisplayName + "\""</value>
+  </data>
+  <data name="EFPGridFilters_ErrTitle_ReadConfig" xml:space="preserve">
+    <value>Ошибка загрузки состояния фильтра '{0}'</value>
+  </data>
+  <data name="EFPInputDataGridView_Err_RowValidating" xml:space="preserve">
+    <value>Ошибка при проверке строки. {0}</value>
+  </data>
+  <data name="EFPInputDataGridView_Msg_InfoText_CanAddRows" xml:space="preserve">
+    <value>При вставке из буфера обмена недостающие строки будут добавлены автоматически</value>
+  </data>
+  <data name="Cmd_Menu_File_ExportFile" xml:space="preserve">
+    <value>Экспорт в файл...</value>
+  </data>
+  <data name="EFPMenuOutHandler_Phase_ExportFile" xml:space="preserve">
+    <value>Экспорт в файл {0}</value>
+  </data>
+  <data name="EFPMenuOutHandler_Phase_SendTo" xml:space="preserve">
+    <value>Отправка в {0}</value>
+  </data>
+  <data name="EFPSendToItem_ToolTip_Simple" xml:space="preserve">
+    <value>Отправить в {0}</value>
+  </data>
+  <data name="EFPSendToItem_ToolTip_WithSubMenu" xml:space="preserve">
+    <value>Отправить {0} в {1}</value>
+  </data>
+  <data name="MonthDayBox_Arg_IsEmpty" xml:space="preserve">
+    <value>Компонент MonthDayBox не поддерживает пустые значения</value>
+  </data>
+  <data name="Clipboard_Err_NoDataFormat" xml:space="preserve">
+    <value>Нет данных в формате '{0}'</value>
+  </data>
+  <data name="Clipboard_Err_NoImage" xml:space="preserve">
+    <value>Буфер обмена не содержит изображения</value>
+  </data>
+  <data name="Cmd_Menu_Edit_AcquareImage" xml:space="preserve">
+    <value>Со сканера или камеры</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ClearImage" xml:space="preserve">
+    <value>Очистить изображение</value>
+  </data>
+  <data name="Cmd_Menu_Edit_PasteAuxMenu" xml:space="preserve">
+    <value>Дополнительные варианты вставки</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ViewImage" xml:space="preserve">
+    <value>Просмотр изображения</value>
+  </data>
+  <data name="Cmd_Menu_StartEMailApp" xml:space="preserve">
+    <value>Запустить почтовую программу</value>
+  </data>
+  <data name="EFPEMailLabel_Err_NoAddress" xml:space="preserve">
+    <value>Адрес электронной почты не задан</value>
+  </data>
+  <data name="EFPEMailLabel_Err_Start" xml:space="preserve">
+    <value>Ошибка отправки почты. {0}. Если Вы отправляете электронную почту не через почтовую программу, а со страницы в Интернете, то скопируйте адрес в буфер обмена и вставьте его в нужное поле ввода на странице.</value>
+  </data>
+  <data name="EFPPasteFormat_Err_ActionCode" xml:space="preserve">
+    <value>Неподходящее действие '{0}'</value>
+  </data>
+  <data name="EFPPasteFormat_Err_BusyPaste" xml:space="preserve">
+    <value>В данный момент выполняется вставка для формата '{0}'</value>
+  </data>
+  <data name="EFPPasteFormat_Err_BusyTest" xml:space="preserve">
+    <value>В данный момент выполняется тестирование другого формата вставки ('{0}')</value>
+  </data>
+  <data name="EFPPasteFormat_Err_FormatNotAppliable" xml:space="preserve">
+    <value>Формат не применим</value>
+  </data>
+  <data name="EFPPasteFormat_Err_NoGoodFormat" xml:space="preserve">
+    <value>В буфере обмена нет данных в подходящем формате. {0}</value>
+  </data>
+  <data name="EFPPasteFormat_Err_NoPasteFormats" xml:space="preserve">
+    <value>Не задано ни одного обработчика форматов данных</value>
+  </data>
+  <data name="EFPPasteFormat_Err_PasteSpecial" xml:space="preserve">
+    <value>Cannot perform paste in the format '{0}'</value>
+  </data>
+  <data name="EFPPasteFormat_Err_TestError" xml:space="preserve">
+    <value>Ошибка при определении применимости формата. {0}</value>
+  </data>
+  <data name="EFPPasteFormat_Title_AllFormats" xml:space="preserve">
+    <value>{0} (все форматы)</value>
+  </data>
+  <data name="EFPPasteFormat_Title_Preview" xml:space="preserve">
+    <value>{0} - предварительный просмотр</value>
+  </data>
+  <data name="EFPPasteFormat_Title_SpecialPasteFormatGroup" xml:space="preserve">
+    <value>Формат данных в буфере обмена</value>
+  </data>
+  <data name="EFPPasteTextMatrixFormat_Err_ToMatrix" xml:space="preserve">
+    <value>Ошибка преобразования текста в прямоугольный блок. {0}</value>
+  </data>
+  <data name="EFPPasteTextMatrixFormat_Name_Csv" xml:space="preserve">
+    <value>Текст, разделенный запятыми</value>
+  </data>
+  <data name="EFPPasteTextMatrixFormat_Name_Text" xml:space="preserve">
+    <value>Неформатированный текст</value>
+  </data>
+  <data name="EFPRadioButtons_Err_DisabledSelected" xml:space="preserve">
+    <value>Заблокированная позиция не может быть выбрана</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_Err_LoadFile" xml:space="preserve">
+    <value>Не удалось загрузить файл изображения '{0}'. {1}</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_AllImages" xml:space="preserve">
+    <value>Все изображения</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_BMP" xml:space="preserve">
+    <value>Точечные рисунки (BMP)</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_GIF" xml:space="preserve">
+    <value>GIF</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_JPEG" xml:space="preserve">
+    <value>JPEG</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_PNG" xml:space="preserve">
+    <value>PNG</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_TIFF" xml:space="preserve">
+    <value>TIFF</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_Msg_NoImage" xml:space="preserve">
+    <value>Нет изображения</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_Name_Default" xml:space="preserve">
+    <value>Изображение</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_Title_View" xml:space="preserve">
+    <value>{0} - Просмотр изображения ({1}x{2})</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_ToolTip_Edit_Paste" xml:space="preserve">
+    <value>Вставить изображение из буфера обмена{0}</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_ToolTip_File_Open" xml:space="preserve">
+    <value>Загрузить изображение из файла{0}</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_ToolTip_ShrinkAuxText" xml:space="preserve">
+    <value>. Изображение будет уменьшено до размера {0}x{1} пикселей</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ConvertTextMenu" xml:space="preserve">
+    <value>Преобразовать текст</value>
+  </data>
+  <data name="Cmd_Menu_Edit_InsertNewLine" xml:space="preserve">
+    <value>Вставить перевод строки</value>
+  </data>
+  <data name="Cmd_Menu_Edit_InvertCase" xml:space="preserve">
+    <value>&amp;иЗМЕНИТЬ рЕГИСТР</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ToLowerCase" xml:space="preserve">
+    <value>к &amp;нижнему регистру</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ToUpperCase" xml:space="preserve">
+    <value>К &amp;ВЕРХНЕМУ РЕГИСТРУ</value>
+  </data>
+  <data name="EFPApp_Err_OpenWith" xml:space="preserve">
+    <value>Не удалось запустить '{0}'. {1}</value>
+  </data>
+  <data name="EFPCsvCodesComboBoxBase_ToolTip_ClearButton" xml:space="preserve">
+    <value>Очистить выбранные коды</value>
+  </data>
+  <data name="EFPCsvCodesComboBoxBase_ToolTip_PopupButton" xml:space="preserve">
+    <value>Выбрать коды из списка</value>
+  </data>
+  <data name="EFPCsvCodesComboBox_Err_UnknownCode" xml:space="preserve">
+    <value>Кода нет в списке</value>
+  </data>
+  <data name="EFPCsvCodesTextBox_Err_CodeTwice" xml:space="preserve">
+    <value>Код '{0}' задан дважды</value>
+  </data>
+  <data name="EFPCsvCodesTextBox_Err_EmptyCode" xml:space="preserve">
+    <value>Задан пустой код</value>
+  </data>
+  <data name="EFPCsvCodesTextBox_Err_WrongCode" xml:space="preserve">
+    <value>Неправильный код №{0}: '{1}'. {2}</value>
+  </data>
+  <data name="EFPCsvCodesTextBox_ToolTip_Codes" xml:space="preserve">
+    <value>Выбрано кодов: {0}</value>
+  </data>
+  <data name="EFPFileAssociationsCommandItemsHandler_Err_NoData" xml:space="preserve">
+    <value>Нет данных для отправки</value>
+  </data>
+  <data name="EFPListMultiSelComboBox_Msg_AllSelected" xml:space="preserve">
+    <value>[ все ]</value>
+  </data>
+  <data name="EFPListMultiSelComboBox_Msg_Empty" xml:space="preserve">
+    <value>[ нет ]</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_Cell" xml:space="preserve">
+    <value>Строка {0}, столбец {1} ('{2}'). {3}</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_ColumnNotFound" xml:space="preserve">
+    <value>Не найден столбец с названием '{0}'</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_ColumnTwice" xml:space="preserve">
+    <value>Столбец '{0}' выбран дважды</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_InitSelectedColumnsUnchanged" xml:space="preserve">
+    <value>Не удалось назначить другие столбцы</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_NoColumns" xml:space="preserve">
+    <value>Не выбрано ни одного столбца</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_NoData" xml:space="preserve">
+    <value>Нет данных для выбора</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_NoRows" xml:space="preserve">
+    <value>Нет ни одной выбранной строки данных</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Menu_Edit_ClearSelectedColumns" xml:space="preserve">
+    <value>Очистить привязку столбцов</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Menu_Edit_InitSelectedColumns" xml:space="preserve">
+    <value>Установить привязку столбцов</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Msg_CornerCell" xml:space="preserve">
+    <value>Эта ячейка не используется</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Msg_DataCell" xml:space="preserve">
+    <value>Нельзя редактировать значения</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Msg_None" xml:space="preserve">
+    <value>[ Нет ]</value>
+  </data>
+  <data name="EFPSelRCDataGridView_ToolTip_RowFlag" xml:space="preserve">
+    <value>Использование строки</value>
+  </data>
+  <data name="EFPSelRCDataGridView_ToolTip_TopLeftCell" xml:space="preserve">
+    <value>Всего строк: {0}, столбцов: {1}</value>
+  </data>
+  <data name="EFPTabPage_Err_SelectHiddenPage" xml:space="preserve">
+    <value>Нельзя активировать скрытую страницу</value>
+  </data>
+  <data name="EFPTabPage_Name_Default" xml:space="preserve">
+    <value>Для страницы '{0}'</value>
+  </data>
+  <data name="EFPTextBox_Err_Empty" xml:space="preserve">
+    <value>Нет текста</value>
+  </data>
+  <data name="EFPTextBox_Err_NoSelection" xml:space="preserve">
+    <value>Нет выделенного фрагмента текста</value>
+  </data>
+  <data name="EFPTextBox_Name_MulilineReadOnly" xml:space="preserve">
+    <value>Просмотр текста</value>
+  </data>
+  <data name="EFPTextBox_Name_MultiLine" xml:space="preserve">
+    <value>Текстовый редактор</value>
+  </data>
+  <data name="EFPTextBox_Name_Password" xml:space="preserve">
+    <value>Поле ввода пароля</value>
+  </data>
+  <data name="EFPTextBox_Name_PasteFormat" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="EFPTextBox_Name_SingleLine" xml:space="preserve">
+    <value>Поле ввода текста</value>
+  </data>
+  <data name="EFPTextBox_Status_Column" xml:space="preserve">
+    <value>Столбец {0}</value>
+  </data>
+  <data name="EFPTextBox_Status_Row" xml:space="preserve">
+    <value>Строка {0}</value>
+  </data>
+  <data name="EFPTreeViewAdv_Name_Default" xml:space="preserve">
+    <value>Иерархический просмотр</value>
+  </data>
+  <data name="EFPUserTextComboBox_ToolTip_ClearButton" xml:space="preserve">
+    <value>Очистить введенное значение</value>
+  </data>
+  <data name="EFPXmlViewBox_Arg_FileNameWithPath" xml:space="preserve">
+    <value>Имя файла не должно содержать путь</value>
+  </data>
+  <data name="EFPXmlViewBox_Err_Empty" xml:space="preserve">
+    <value>Просмотр не содержит XML-данных</value>
+  </data>
+  <data name="EFPXmlViewBox_Err_NoDoc" xml:space="preserve">
+    <value>Нет документа</value>
+  </data>
+  <data name="Clipboard_Err_UnextpectedType" xml:space="preserve">
+    <value>Для данных '{0}' получен объект неизвестного типа: {1}</value>
+  </data>
+  <data name="EFPBaseProvider_Err_AttachToItself" xml:space="preserve">
+    <value>Нельзя присоединить EFPBaseProvider к самому себе</value>
+  </data>
+  <data name="EFPReentranceLocker_Err_PrevInProgress" xml:space="preserve">
+    <value>Предыдущая операция еще не закончена: {0}</value>
+  </data>
+  <data name="EFPReentranceLocker_Name_Default" xml:space="preserve">
+    <value>Неизвестное действие</value>
+  </data>
+  <data name="ListControlImagePainter_Arg_nulls" xml:space="preserve">
+    <value>Список изображений или обработчик должны быть заданы</value>
+  </data>
+  <data name="XmlEditor_ErrTitle_FromText" xml:space="preserve">
+    <value>Ошибка в редакторе</value>
+  </data>
+  <data name="XmlEditor_Err_FormClosing" xml:space="preserve">
+    <value>Ошибка закрытия формы редактора</value>
+  </data>
+  <data name="XmlEditor_Err_FromText" xml:space="preserve">
+    <value>Введенный текст содержит ошибки и не может быть преобразован в XML-документ. {0}</value>
+  </data>
+  <data name="XmlEditor_Title_Form" xml:space="preserve">
+    <value>Документ XML</value>
+  </data>
+  <data name="XmlEditor_ToolTip_Edit" xml:space="preserve">
+    <value>Редактирование XML-документа в виде неформатированного текста</value>
+  </data>
+  <data name="XmlEditor_ToolTip_View" xml:space="preserve">
+    <value>Просмотр форматированного XML-документа</value>
+  </data>
+  <data name="YearMonthBox_Err_Inverted" xml:space="preserve">
+    <value>Начальный месяц больше конечного</value>
+  </data>
+  <data name="YearMonthRangeBox_Arg_DiffYear" xml:space="preserve">
+    <value>Интервал дат должен относиться к одному году</value>
+  </data>
+  <data name="Cmd_Menu_View_ShowToolTips" xml:space="preserve">
+    <value>Всплывающие подсказки</value>
+  </data>
+  <data name="EFPFormProvider_ErrTitle_FormClosed" xml:space="preserve">
+    <value>Ошибка при закрытии формы</value>
+  </data>
+  <data name="EFPFormProvider_ErrTitle_OnTick" xml:space="preserve">
+    <value>Ошибка обновления формы</value>
+  </data>
+  <data name="EFPFormProvider_ErrTitle_SetFocus" xml:space="preserve">
+    <value>Ошибка установки фокуса ввода</value>
+  </data>
+  <data name="EFPFormProvider_Err_CannotInitHelpContext" xml:space="preserve">
+    <value>Нельзя первоначально инициализировать контекст справки, когда форма уже выведена</value>
+  </data>
+  <data name="EFPFormProvider_Err_FormProviderNotFound" xml:space="preserve">
+    <value>Не найден EFPFormProvider для формы {0}</value>
+  </data>
+  <data name="EFPFormProvider_Err_HasBeenShown" xml:space="preserve">
+    <value>Форма '{0}' уже была выведена на экран</value>
+  </data>
+  <data name="EFPFormProvider_Err_NestedClosing" xml:space="preserve">
+    <value>Повторное закрытие формы</value>
+  </data>
+  <data name="EFPFormProvider_Err_OnTick" xml:space="preserve">
+    <value>Ошибка обновления формы. {0}</value>
+  </data>
+  <data name="EFPFormProvider_Menu_Debug_EFPFormProvider" xml:space="preserve">
+    <value>Просмотр объекта EFPFormProvider</value>
+  </data>
+  <data name="EFPFormProvider_Menu_Help_ContextHelp" xml:space="preserve">
+    <value>Справка</value>
+  </data>
+  <data name="EFPFormProvider_Phase_FormClosing" xml:space="preserve">
+    <value>Закрытие формы</value>
+  </data>
+  <data name="EFPFormProvider_ToolTip_Disabled" xml:space="preserve">
+    <value>{0} [Заблокировано]</value>
+  </data>
+  <data name="EFPDataViewOrder_Err_NoDefaultValue" xml:space="preserve">
+    <value>Для выражения '{0}' порядка сортировки '{1}' не удалось вычислить значение по умолчанию, чтобы определить тип данных</value>
+  </data>
+  <data name="EFPDataView_Err_ToolTip" xml:space="preserve">
+    <value>Ошибка при получении подсказки. {0}</value>
+  </data>
+  <data name="EFPGridProducer_Arg_NoNamedConfig" xml:space="preserve">
+    <value>Фиксированная настройка табличного просмотра с именем '{0}' не была объявлена в генераторе табличного просмотра</value>
+  </data>
+  <data name="EFPGridProducer_Err_ErrColInOrder" xml:space="preserve">
+    <value>Неправильное имя исходного столбца '{0}', используемого в порядке сортировки '{1}'. {2}</value>
+  </data>
+  <data name="EFPGridProducer_Err_ErrItemName" xml:space="preserve">
+    <value>Неправильное имя столбца в объекте '{0}'. {1}</value>
+  </data>
+  <data name="EFPGridProducer_Err_ErrSourceColumnName" xml:space="preserve">
+    <value>Неправильное имя исходного столбца '{0}' в вычисляемом объекте '{1}'. {2}</value>
+  </data>
+  <data name="EFPGridProducer_Err_NameBadChar" xml:space="preserve">
+    <value>Имя содержит недопустимый символ '{0}'</value>
+  </data>
+  <data name="EFPGridProducer_Err_NameIsEmpty" xml:space="preserve">
+    <value>Имя не задано</value>
+  </data>
+  <data name="EFPGridProducer_Err_NameStartsEndsDot" xml:space="preserve">
+    <value>Имя не может начинаться или заканичиваться точкой</value>
+  </data>
+  <data name="EFPGridProducer_Err_NameTwoDots" xml:space="preserve">
+    <value>Имя не может содержать 2 точки подряд</value>
+  </data>
+  <data name="EFPGridProducer_Err_UnknownCalcColumnName" xml:space="preserve">
+    <value>Неправильное имя вычисляемого столбца '{0}', так как это имя есть в списке исходных столбцов в других объектах EFPGridProducer</value>
+  </data>
+  <data name="EFPGridProducer_Err_UnknownCalcToolTipName" xml:space="preserve">
+    <value>Неправильное имя вычисляемой всплывающей подсказки '{0}', так как это имя есть в списке исходных столбцов в других объектах EFPGridProducer</value>
+  </data>
+  <data name="EFPGridProducer_Err_UnknownDefaultConfigName" xml:space="preserve">
+    <value>Фиксированная настройка табличного просмотра с именем '{0}' не найдена. Это имя задано в свойстве DefaultConfigName провайдера просмотра</value>
+  </data>
+  <data name="EFPGridProducerEditor_Err_NoColumnSelected" xml:space="preserve">
+    <value>Не выбрано ни одного столбца</value>
+  </data>
+  <data name="EFPGridProducerEditor_Err_NotSizeableColumn" xml:space="preserve">
+    <value>Для столбца '{0}' нельзя менять ширину</value>
+  </data>
+  <data name="EFPGridProducerEditor_Err_WidthForHiddenColumn" xml:space="preserve">
+    <value>Нельзя задавать ширину столбца, который не выводится на экран</value>
+  </data>
+  <data name="EFPGridProducerEditor_Err_WrongFrozenColumns" xml:space="preserve">
+    <value>Недопустимое число замороженных столбцов</value>
+  </data>
+  <data name="EFPGridProducerEditor_Msg_NoStartColumn" xml:space="preserve">
+    <value>[ Нет ]</value>
+  </data>
+  <data name="EFPGridProducerEditor_Msg_ToolTipsOff" xml:space="preserve">
+    <value>Всплывающие подсказки отключены</value>
+  </data>
+  <data name="EFPGridProducerEditor_ToolTip_StartColumn" xml:space="preserve">
+    <value>Если указан столбец, то он будет активироваться при каждом открытии табличного просмотра.
+Если выбран вариант '[ Нет ]', то последний выбранный столбец запоминается между открытиями просмотра</value>
+  </data>
+  <data name="EFPGridProducer_Arg_EmptySourceColumn" xml:space="preserve">
+    <value>SourceColumnNames не может содержать пустые элементы</value>
+  </data>
+  <data name="EFPGridProducer_Arg_NameStartsWithDigit" xml:space="preserve">
+    <value>Имя не может начинаться с цифры, т.к. это несовместимо с сохранением настройки просмотра</value>
+  </data>
+  <data name="EFPGridProducer_Arg_SourceColumnNameIsName" xml:space="preserve">
+    <value>Элемент в SourceColumnNames совпадает с именем вычисляемого столбца/подсказки '{0}'</value>
+  </data>
+  <data name="EFPGridProducer_Arg_SourceColumnNameTwice" xml:space="preserve">
+    <value>Два одинаковых элемента '{0}' в SourceColumnNames</value>
+  </data>
+  <data name="EFPGridProducer_Arg_SourceColumnWithComma" xml:space="preserve">
+    <value>Элементы в SourceColumnNames не могут содержать запятые</value>
+  </data>
+  <data name="EFPGridProducer_ColTitle_RowOrder" xml:space="preserve">
+    <value>№ п/п</value>
+  </data>
+  <data name="EFPGridProducer_ToolTip_WrongValue" xml:space="preserve">
+    <value>Неправильное значение: {0}</value>
+  </data>
+  <data name="Cmd_Menu_View_CloseAllTabs" xml:space="preserve">
+    <value>Закрыть все дополнительные вкладки</value>
+  </data>
+  <data name="Cmd_Menu_View_CloseAllTabsButThis" xml:space="preserve">
+    <value>Закрыть все дополнительные вкладки, кроме текущей</value>
+  </data>
+  <data name="Cmd_Menu_View_CloseTab" xml:space="preserve">
+    <value>Закрыть вкладку</value>
+  </data>
+  <data name="EFPReport_Arg_ParentControlHasChildren" xml:space="preserve">
+    <value>Родительский элемент уже имеет присоединенные управляющие элементы</value>
+  </data>
+  <data name="EFPReport_Arg_ParentControlHasNoForm" xml:space="preserve">
+    <value>Родительский элемент не присоединен к форме</value>
+  </data>
+  <data name="EFPReport_ErrTitle_Closing" xml:space="preserve">
+    <value>Ошибка при закрытии окна отчета</value>
+  </data>
+  <data name="EFPReport_ErrTitle_QueryParams" xml:space="preserve">
+    <value>Ошибка при запросе параметров</value>
+  </data>
+  <data name="EFPReport_ErrTitle_ReadConfig" xml:space="preserve">
+    <value>Ошибка загрузки параметров</value>
+  </data>
+  <data name="EFPReport_ErrTitle_SelectPage" xml:space="preserve">
+    <value>Ошибка при переключении на страницу отчета</value>
+  </data>
+  <data name="EFPReport_ErrTitle_WriteConfig" xml:space="preserve">
+    <value>Ошибка записи параметров</value>
+  </data>
+  <data name="EFPReport_Err_ConfigSectionNotFound" xml:space="preserve">
+    <value>Не удалось найти секцию параметров отчета '{0}'</value>
+  </data>
+  <data name="EFPReport_Err_CreateParams" xml:space="preserve">
+    <value>Этот отчет всегда использует задаваемые снаружи параметры</value>
+  </data>
+  <data name="EFPReport_Err_ReadConfig" xml:space="preserve">
+    <value>Возникла ошибка при загрузке ранее сохраненных параметров отчета. Будут использованы значения по умолчанию. Сообщение об ошибке: {0}</value>
+  </data>
+  <data name="EFPReport_Err_ReentrantBuiild" xml:space="preserve">
+    <value>Построение отчета уже начато</value>
+  </data>
+  <data name="EFPReport_Err_WriteConfig" xml:space="preserve">
+    <value>Возникла ошибка при сохранении параметров отчета. Сообщение об ошибке: {0}</value>
+  </data>
+  <data name="EFPReport_Menu_Edit_Refresh" xml:space="preserve">
+    <value>Обновить отчет без изменения параметров</value>
+  </data>
+  <data name="EFPReport_Msg_CloseAnyway" xml:space="preserve">
+    <value>Закрыть окно '{0}' несмотря на возникшую ошибку?</value>
+  </data>
+  <data name="EFPReport_Phase_Build" xml:space="preserve">
+    <value>Построение отчета '{0}'</value>
+  </data>
+  <data name="EFPReport_Phase_Init" xml:space="preserve">
+    <value>Подготовка к созданию отчета</value>
+  </data>
+  <data name="EFPReport_Phase_Rebuild" xml:space="preserve">
+    <value>Повторное построение отчета '{0}'</value>
+  </data>
+  <data name="BRDataTreeViewTable_Err_NoInteractiveControl" xml:space="preserve">
+    <value>Просмотр не содержит объектов InteractiveControl</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Err_SameTrueFalse" xml:space="preserve">
+    <value>Текст для включенного и выключенного флажка должен различаться</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Msg_CellDiffMargins" xml:space="preserve">
+    <value>Поля ячейки: левое {0}, верхнее {1}, правое {2}, нижнее {3} см</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Msg_CellSameMargins" xml:space="preserve">
+    <value>Поля ячейки: {0} см</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Msg_MayBeNotSupported" xml:space="preserve">
+    <value>{0} (может не поддерживаться)</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Title_Tab" xml:space="preserve">
+    <value>Оформление</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_ToolTip_Tab" xml:space="preserve">
+    <value>Выбор наличия границ, цветового оформления табличного просмотра</value>
+  </data>
+  <data name="BRDataView_FileType_CSV" xml:space="preserve">
+    <value>Текст CSV</value>
+  </data>
+  <data name="BRDataView_FileType_DBF3" xml:space="preserve">
+    <value>Файлы dBase III</value>
+  </data>
+  <data name="BRDataView_FileType_TXT" xml:space="preserve">
+    <value>Текст (разделитель - табуляция)</value>
+  </data>
+  <data name="BRReport_Title_ExportToFile" xml:space="preserve">
+    <value>Экспорт в {0}</value>
+  </data>
+  <data name="EFPRepoprtXmlViewPage_PhaseText_Load" xml:space="preserve">
+    <value>Загрузка XML-просмотра</value>
+  </data>
+  <data name="EFPReportControlPage_Msg_NoControl" xml:space="preserve">
+    <value>Нет данных</value>
+  </data>
+  <data name="EFPReportExtParams_Arg_MultiPart" xml:space="preserve">
+    <value>Одновременно задано несколько частей: {0}</value>
+  </data>
+  <data name="EFPReportExtParams_Arg_NoPart" xml:space="preserve">
+    <value>Часть не задана</value>
+  </data>
+  <data name="EFPReportExtParams_Err_AfterQueryParams" xml:space="preserve">
+    <value>Ошибка вызова AfterQueryParams</value>
+  </data>
+  <data name="EFPReportExtParams_Err_AuxText" xml:space="preserve">
+    <value>Ошибка. {0}</value>
+  </data>
+  <data name="EFPReportExtParams_Err_NotCallable" xml:space="preserve">
+    <value>Эта перегрузка метода не должна вызываться для EFPReportExtParams</value>
+  </data>
+  <data name="EFPReportExtParams_Err_WrongParams" xml:space="preserve">
+    <value>Заданы неверные параметры</value>
+  </data>
+  <data name="EFPReportExtParams_Msg_Default" xml:space="preserve">
+    <value>(По умолчанию)</value>
+  </data>
+  <data name="EFPReportExtParams_ToolTip_Cancel" xml:space="preserve">
+    <value>Отказаться от построения отчета</value>
+  </data>
+  <data name="EFPReportExtParams_ToolTip_Ok" xml:space="preserve">
+    <value>Построить отчет с введенными параметрами</value>
+  </data>
+  <data name="EFPReportPageFilterItems_ToolTip_NoFilter" xml:space="preserve">
+    <value>Без фильтра</value>
+  </data>
+  <data name="EFPReportVarGridPage_Msg_NoData" xml:space="preserve">
+    <value>Нет данных</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ColTitle_AutoGrow" xml:space="preserve">
+    <value>Р.</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ColTitle_Flag" xml:space="preserve">
+    <value>П.</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ColTitle_Name" xml:space="preserve">
+    <value>Столбец</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ColTitle_Width" xml:space="preserve">
+    <value>Ширина, см</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_Msg_WidthOfNotPrintedColumm" xml:space="preserve">
+    <value>Нельзя задавать ширину столбца, который не печатается</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_Name_AutoGrow" xml:space="preserve">
+    <value>Расширять</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_Name_Flag" xml:space="preserve">
+    <value>Печатать</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_Title_Tab" xml:space="preserve">
+    <value>Столбцы</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_AutoGrow" xml:space="preserve">
+    <value>Расширять столбец для заполнения листа</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_ColumnSubHeaderNumbers" xml:space="preserve">
+    <value>Наличие дополнительной строки под заголовками столбов, содержащей номера колонок</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_Flag" xml:space="preserve">
+    <value>Установите флажки для тех столбцов, которые должны быть напечатаны</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_Name" xml:space="preserve">
+    <value>Название столбца</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_RepeatedColumns" xml:space="preserve">
+    <value>Количество столбцов, которые будут повторятся для каждой полосы.
+Повторяться могут только первые печататаемые столбцы, выбранные в списке.
+Нулевое значение означает, что повторяемых столбцов нет</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_Tab" xml:space="preserve">
+    <value>Выбор печатаемых столбцов и их ширины</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_WholeWidth" xml:space="preserve">
+    <value>Полная ширина отмеченных столбцов в списке (в сантиметрах)</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_Width" xml:space="preserve">
+    <value>Ширина области, отведенной для печати столбца (в сантиметрах)</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_WorkWidth" xml:space="preserve">
+    <value>Ширина области печати, вычисляемая как
+Ширина страницы - Левое поле - Правое поле (в сантиметрах). 
+Для изменения значения (если возможно) используйте закладки 'Страница' и 'Поля'</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_ColTitle_DbfName" xml:space="preserve">
+    <value>Поле в DBF</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_ColTitle_DisplayName" xml:space="preserve">
+    <value>Столбец в просмотре</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_ColTitle_Format" xml:space="preserve">
+    <value>Формат</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Err_BadFieldName" xml:space="preserve">
+    <value>Неправильное имя поля</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Err_NoFields" xml:space="preserve">
+    <value>Нет выбранных полей</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Err_RepeatedFieldName" xml:space="preserve">
+    <value>Повторяющееся имя поля</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Err_RepeatedFieldName2" xml:space="preserve">
+    <value>Имя поля '{0}' встречается дважды</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Name_Exported" xml:space="preserve">
+    <value>Нужно ли экспортировать столбец</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Title_Tab" xml:space="preserve">
+    <value>DBF</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_ToolTip_Tab" xml:space="preserve">
+    <value>Выбор полей и кодировки для экспорта в файл DBF</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Msg_Export" xml:space="preserve">
+    <value>В файл записываются все строки таблицы и столбцы, отмеченные в диалоге 'Параметры страницы'</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Msg_GridSendTo" xml:space="preserve">
+    <value>Печатаются столбцы, отмеченные в диалоге 'Параметры страницы'</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Msg_TreeSendTo" xml:space="preserve">
+    <value>В режиме '{0}' печатаются столбцы, отмеченные в диалоге 'Параметры страницы'.
+В режиме '{1}' выбранные столбцы не учитываются.</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Text_SelCell" xml:space="preserve">
+    <value>Выбранная ячейка</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Text_SelCells" xml:space="preserve">
+    <value>Выбранные ячейки</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Text_SelRow" xml:space="preserve">
+    <value>Выбранная строка</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Text_SelRows" xml:space="preserve">
+    <value>Выбранные строки</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Title_Tab" xml:space="preserve">
+    <value>Область</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_ToolTip_Tab" xml:space="preserve">
+    <value>Выбор области просмотра для экспорта</value>
+  </data>
+  <data name="BRDataViewPageSetupText_Err_SingleCharRequired" xml:space="preserve">
+    <value>Строка должна содержать один символ</value>
+  </data>
+  <data name="BRDataViewPageSetupText_Title_CSV" xml:space="preserve">
+    <value>Параметры файла в формате CSV</value>
+  </data>
+  <data name="BRDataViewPageSetupText_Title_Tab" xml:space="preserve">
+    <value>Формат</value>
+  </data>
+  <data name="BRDataViewPageSetupText_ToolTip_Tab" xml:space="preserve">
+    <value>Формат файла для экспорта</value>
+  </data>
+  <data name="BRFilePdf_Err_NoDll" xml:space="preserve">
+    <value>Не удалось загрузить библиотеку PdfSharp.dll. Без нее невозможно создание pdf-файлов</value>
+  </data>
+  <data name="BRFileTiff_Err_NoCodec" xml:space="preserve">
+    <value>В GDI+ не установлен кодировщик для записи файлов TIFF</value>
+  </data>
+  <data name="BRMenuOutItem_ErrTitle_Print" xml:space="preserve">
+    <value>Ошибка печати документа</value>
+  </data>
+  <data name="BRMenuOutItem_Err_NoBRReport" xml:space="preserve">
+    <value>Отчет не присоединен</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_HTML" xml:space="preserve">
+    <value>Файлы HTML</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_PDF" xml:space="preserve">
+    <value>Файлы PDF</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_TIFF" xml:space="preserve">
+    <value>Файлы TIFF</value>
+  </data>
+  <data name="BRMenuOutItem_Msg_NoPageSetup" xml:space="preserve">
+    <value>Нет параметров страницы</value>
+  </data>
+  <data name="BRMenuOutItem_Name_BRReport" xml:space="preserve">
+    <value>Отчет</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_CreateBRReport" xml:space="preserve">
+    <value>Создание отчета '{0}'</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_CreateFile" xml:space="preserve">
+    <value>Создание файла</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_Export" xml:space="preserve">
+    <value>Сохранение файла '{0}'</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_LaunchApp" xml:space="preserve">
+    <value>Запуск {0}</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_Print" xml:space="preserve">
+    <value>Идет печать документа</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_SendTo" xml:space="preserve">
+    <value>Отправка в {0}</value>
+  </data>
+  <data name="BRMenuOutItem_Title_Export" xml:space="preserve">
+    <value>Экспорт в '{0}'</value>
+  </data>
+  <data name="BRMenuOutItem_Title_PageSetup" xml:space="preserve">
+    <value>Параметры страницы</value>
+  </data>
+  <data name="BRPageSetupBitmap_Msg_BitDepth" xml:space="preserve">
+    <value>{0}-битный цвет</value>
+  </data>
+  <data name="BRPageSetupBitmap_Msg_BW" xml:space="preserve">
+    <value>Черно-белый</value>
+  </data>
+  <data name="BRPageSetupBitmap_Title_Tab" xml:space="preserve">
+    <value>Графика</value>
+  </data>
+  <data name="BRPageSetupBitmap_ToolTip_Tab" xml:space="preserve">
+    <value>Выбор разрешения и количества цветов</value>
+  </data>
+  <data name="BRPageSetupFont_Err_Sample" xml:space="preserve">
+    <value>Ошибка при построении изображения</value>
+  </data>
+  <data name="BRPageSetupFont_Msg_Sample" xml:space="preserve">
+    <value>{0}. Высота {1}. Ширина {2} пт.</value>
+  </data>
+  <data name="BRPageSetupFont_Title_Tab" xml:space="preserve">
+    <value>Шрифт</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_FontHeight" xml:space="preserve">
+    <value>Высота шрифта в пунктах.
+1 пт = 1/72 дюйма (примерно 0,35 мм)</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_FontName" xml:space="preserve">
+    <value>Имя гарнитуры шрифта</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_FontWidth" xml:space="preserve">
+    <value>Ширина шрифта в пунктах.
+1 пт = 1/72 дюйма (примерно 0,35 мм)</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_LineHeight" xml:space="preserve">
+    <value>Высота строки в пунктах.
+Складывается из высоты шрифта и межстрочного интервала</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_Tab" xml:space="preserve">
+    <value>Выбор гарнитуры и размеров шрифта</value>
+  </data>
+  <data name="BRPageSetupMargins_Title_Tab" xml:space="preserve">
+    <value>Поля</value>
+  </data>
+  <data name="BRPageSetupMargins_ToolTip_Tab" xml:space="preserve">
+    <value>Размеры полей по краям бумаги</value>
+  </data>
+  <data name="BRPageSetupPaper_Msg_NonStandard" xml:space="preserve">
+    <value>Другой</value>
+  </data>
+  <data name="BRPageSetupPaper_Title_Tab" xml:space="preserve">
+    <value>Бумага</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_CenterHorizontally" xml:space="preserve">
+    <value>Если флажок установлен, документ будет напачатан посередине листа по горизонтали</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_CenterVertically" xml:space="preserve">
+    <value>Если флажок установлен, документ будет напачатан посередине листа по вертикали</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_Orientation" xml:space="preserve">
+    <value>Ориентация бумаги: книжная (вертикальная) или альбомная (горизонтальная).
+При альбомной ориентации принтер печатает 'боком'</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_PageSize" xml:space="preserve">
+    <value>Выбор стандартного размера бумаги</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_PaperHeight" xml:space="preserve">
+    <value>Задание высоты бумаги в сантиметрах (с учетом книжной или альбомной ориентации) при использовании нестандартных листов.
+Задавайте значение после выбора правильной ориентации бумаги.</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_PaperWidth" xml:space="preserve">
+    <value>Задание ширины бумаги в сантиметрах (с учетом книжной или альбомной ориентации) при использовании нестандартных листов.
+Задавайте значение после выбора правильной ориентации бумаги.</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_Tab" xml:space="preserve">
+    <value>Размер и ориентация бумаги</value>
+  </data>
+  <data name="BRReportPainter_Err_GetLines" xml:space="preserve">
+    <value>Ошибка получения текста</value>
+  </data>
+  <data name="BRReportPainter_Arg_PixelFormat" xml:space="preserve">
+    <value>Не удалось создать контекст вывода для изображения в формате {0}. {1}</value>
+  </data>
+  <data name="BRReportPainter_ErrTitle_Print" xml:space="preserve">
+    <value>Ошибка при печати</value>
+  </data>
+  <data name="Splash_Msg_Complete" xml:space="preserve">
+    <value>Выполнено</value>
+  </data>
+  <data name="Splash_Msg_Current" xml:space="preserve">
+    <value>Выполняется</value>
+  </data>
+  <data name="Splash_Msg_Skipped" xml:space="preserve">
+    <value>Отменено</value>
+  </data>
+  <data name="Twain_Err_Cancel" xml:space="preserve">
+    <value>Операция отменена пользователем</value>
+  </data>
+  <data name="Twain_Err_CheckStatus" xml:space="preserve">
+    <value>Операция выполнена частично</value>
+  </data>
+  <data name="Twain_Err_DataNotAvailable" xml:space="preserve">
+    <value>Данные недоступны</value>
+  </data>
+  <data name="Twain_Err_EndOfList" xml:space="preserve">
+    <value>Больше источников не найдено</value>
+  </data>
+  <data name="Twain_Err_Failure" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Twain_Err_InfoNotSupported" xml:space="preserve">
+    <value>Получение информации недоступно</value>
+  </data>
+  <data name="Twain_Err_InitTwain" xml:space="preserve">
+    <value>Не удалось инициализировать TWAIN</value>
+  </data>
+  <data name="Twain_Err_ScannerNotFound" xml:space="preserve">
+    <value>Сканер не найден</value>
+  </data>
+  <data name="Twain_Err_SourceNotOpened" xml:space="preserve">
+    <value>Не удалось открыть источник</value>
+  </data>
+  <data name="Twain_Err_TwainCaps" xml:space="preserve">
+    <value>Не удалось получить возможности устройства TWAIN</value>
+  </data>
+  <data name="Twain_Err_TwainUI" xml:space="preserve">
+    <value>Не удалось запустить пользовательский интерфейс TWAIN</value>
+  </data>
+  <data name="Twain_Err_WithCode" xml:space="preserve">
+    <value>Код ошибки {0}</value>
+  </data>
+  <data name="Twain_Err_XferDone" xml:space="preserve">
+    <value>Все данные переданы</value>
+  </data>
+  <data name="WinFormsTools_Arg_SystemColor" xml:space="preserve">
+    <value>Системные цвета недопустимы</value>
+  </data>
+</root>

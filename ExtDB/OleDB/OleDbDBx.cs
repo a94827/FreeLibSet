@@ -214,12 +214,12 @@ namespace FreeLibSet.Data.OleDb
     /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполняемых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISimpleSplash.PhaseText"/> для отображения выполняемых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
-    protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    protected override bool OnUpdateStruct(ISimpleSplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
       using (OleDbDBxCon con = new OleDbDBxCon(MainEntry))
@@ -973,7 +973,7 @@ namespace FreeLibSet.Data.OleDb
             e.Data["DB"] = DB.ToString();
             e.Data["Table"] = tableName;
             e.Data["Column"] = colDef.ColumnName;
-            LogoutTools.LogoutException(e, "Ошибка получения значения DBxColumnStruct.DefaultValue");
+            LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("DBxColumnStruct.DefaultValue"));
           }
         }
 
@@ -1069,7 +1069,7 @@ namespace FreeLibSet.Data.OleDb
       //SQLExecuteNonQuery(Buffer.SB.ToString());
     }
 
-    internal bool UpdateDBStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    internal bool UpdateDBStruct(ISimpleSplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       throw new NotImplementedException();
 #if XXX

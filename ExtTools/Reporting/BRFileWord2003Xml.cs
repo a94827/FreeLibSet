@@ -11,7 +11,7 @@ namespace FreeLibSet.Reporting
   /// <summary>
   /// Создание файла в формате XML для Word-2003
   /// </summary>
-  public class BRFileWord2003Xml: BRFileCreator
+  public class BRFileWord2003Xml : BRFileCreator
   {
     #region Константы
 
@@ -612,12 +612,12 @@ namespace FreeLibSet.Reporting
             }
 
             // Основная часть строки
-            DoWriteText(elP, aa[j],sel, columnWidth);
+            DoWriteText(elP, aa[j], sel, columnWidth);
           }
         }
         else
         {
-          DoWriteText(elP, a[i],sel, columnWidth);
+          DoWriteText(elP, a[i], sel, columnWidth);
         }
       }
     }
@@ -918,7 +918,7 @@ namespace FreeLibSet.Reporting
           // Предотвращаем ошибку открытия файла из-за неправильной даты
           if ((DateTime)(sel.Value) < MicrosoftOfficeTools.MinExcelDate || ((DateTime)(sel.Value)).Date > MicrosoftOfficeTools.MaxExcelDate)
           {
-            valueText = "*** Дата, выходящая за допустимые пределы Excel: " + (sel.Value).ToString() + " ***";
+            valueText = String.Format(Res.BRReport_Err_DateOutOfExcelRange, sel.Value);
             typeText = "String";
             return;
           }

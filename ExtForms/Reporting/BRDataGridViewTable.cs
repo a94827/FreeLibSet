@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Config;
 using FreeLibSet.Core;
-using FreeLibSet.Forms;
 using FreeLibSet.IO;
 using FreeLibSet.Reporting;
 using FreeLibSet.UICore;
@@ -69,7 +68,7 @@ namespace FreeLibSet.Forms.Reporting
     public BRDataViewMenuOutSettings Add(string defCfgCode, string displayName)
     {
       if (String.IsNullOrEmpty(defCfgCode))
-        throw new ArgumentNullException("defCfgCode");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("defCfgCode");
       SettingsData.DefaultConfigs[defCfgCode].DisplayName = displayName;
       return new BRDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
     }
@@ -260,10 +259,10 @@ namespace FreeLibSet.Forms.Reporting
       base.OnPrepare(args);
 
       // Пусть эти форматы будут в конце
-      base.ExportFileItems.Add(new EFPExportFileItem("TXT", "Текст (разделитель - табуляция) ", "*.txt"));
-      base.ExportFileItems.Add(new EFPExportFileItem("CSV", "Текст CSV", "*.csv"));
+      base.ExportFileItems.Add(new EFPExportFileItem("TXT", Res.BRDataView_FileType_TXT, "*.txt"));
+      base.ExportFileItems.Add(new EFPExportFileItem("CSV", Res.BRDataView_FileType_CSV, "*.csv"));
       if (ControlProvider.Columns.Count > 0) // Для TreeViewAdv без столбцов пока не реализовано
-        base.ExportFileItems.Add(new EFPExportFileItem("DBF3", "Файлы dBase III", "*.dbf"));
+        base.ExportFileItems.Add(new EFPExportFileItem("DBF3", Res.BRDataView_FileType_DBF3, "*.dbf"));
     }
 
 
@@ -351,7 +350,7 @@ namespace FreeLibSet.Forms.Reporting
       SettingsDialog dialog = new SettingsDialog();
       dialog.ConfigSectionName = GetConfigSectionName();
       dialog.Data = this.SettingsData;
-      dialog.Title = "Экспорт в " + filePath.FileName;
+      dialog.Title = String.Format(Res.BRReport_Title_ExportToFile, filePath.FileName);
       dialog.ImageKey = "Save";
 
       new BRDataViewPageSetupText(dialog, ControlProvider, item.Code == "CSV");
@@ -380,7 +379,7 @@ namespace FreeLibSet.Forms.Reporting
       SettingsDialog dialog = new SettingsDialog();
       dialog.ConfigSectionName = GetConfigSectionName();
       dialog.Data = this.SettingsData;
-      dialog.Title = "Экспорт в " + filePath.FileName;
+      dialog.Title = String.Format(Res.BRReport_Title_ExportToFile, filePath.FileName);
       dialog.ImageKey = "Save";
 
       new BRDataViewPageSetupDbf(dialog, ControlProvider);
@@ -416,7 +415,7 @@ namespace FreeLibSet.Forms.Reporting
     public BRDataGridViewMenuOutItem(string code, EFPDataGridView controlProvider)
       : base(code, controlProvider)
     {
-      DisplayName = "Табличный просмотр";
+      DisplayName = Res.EFPDataGridView_Name_Default;
     }
 
     #endregion
@@ -869,7 +868,7 @@ namespace FreeLibSet.Forms.Reporting
             case DataGridViewContentAlignment.BottomLeft: style.HAlign = BRHAlign.Left; style.VAlign = BRVAlign.Bottom; break;
             case DataGridViewContentAlignment.BottomCenter: style.HAlign = BRHAlign.Center; style.VAlign = BRVAlign.Bottom; break;
             case DataGridViewContentAlignment.BottomRight: style.HAlign = BRHAlign.Right; style.VAlign = BRVAlign.Bottom; break;
-            default: throw new BugException("Неизвестное выравнивание");
+            default: throw new BugException("Unknown alignment");
           }
           style.WrapMode = BRWrapMode.WordWrap;
         }

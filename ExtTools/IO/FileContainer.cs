@@ -65,11 +65,11 @@ namespace FreeLibSet.IO
     public StoredFileInfo(string name, long length, DateTime? creationTime, DateTime? lastWriteTime)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       if (name.IndexOf('\\') >= 0)
-        throw new ArgumentException("Имя файла не может содержать путь", "name");
+        throw new ArgumentException(Res.StoredFileInfo_Arg_FileNameWithPath, "name");
       if (length < 0L)
-        throw new ArgumentOutOfRangeException("length", length, "Длина файла не может быть отрицательной");
+        throw new ArgumentOutOfRangeException("length", length, Res.StoredFileInfo_Arg_NegativeFileLength);
 
       _Name = name;
       _Length = length;
@@ -93,11 +93,11 @@ namespace FreeLibSet.IO
     public StoredFileInfo(string name, long length)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       if (name.IndexOf('\\') >= 0)
-        throw new ArgumentException("Имя файла не может содержать путь", "name");
+        throw new ArgumentException(Res.StoredFileInfo_Arg_FileNameWithPath, "name");
       if (length < 0L)
-        throw new ArgumentOutOfRangeException("length", length, "Длина файла не может быть отрицательной");
+        throw new ArgumentOutOfRangeException("length", length, Res.StoredFileInfo_Arg_NegativeFileLength);
 
       _Name = name;
       _Length = length;
@@ -155,7 +155,7 @@ namespace FreeLibSet.IO
       if (filePath.IsEmpty)
         throw new ArgumentNullException("filePath");
       if (!File.Exists(filePath.Path))
-        throw new FileNotFoundException("Файл не найден", filePath.Path);
+        throw ExceptionFactory.FileNotFound(filePath);
       CheckNoEmpty();
 
       //FileInfo fi = new FileInfo(FilePath.Path);
@@ -192,7 +192,7 @@ namespace FreeLibSet.IO
     private void CheckNoEmpty()
     {
       if (IsEmpty)
-        throw new InvalidOperationException("Структура FileInfo не была заполнена");
+        throw ExceptionFactory.StructureNotInit(typeof(StoredFileInfo));
     }
 
     #endregion
@@ -240,7 +240,7 @@ namespace FreeLibSet.IO
         throw new ArgumentNullException("path");
 
       if (!File.Exists(path.Path))
-        throw new FileNotFoundException("Файл \"" + path + "\" не найден", path.Path);
+        throw ExceptionFactory.FileNotFound(path);
 
       _FileInfo = new StoredFileInfo(path);
       _Content = File.ReadAllBytes(path.Path);
@@ -267,14 +267,14 @@ namespace FreeLibSet.IO
     public FileContainer(StoredFileInfo fileInfo, byte[] content, string subDir)
     {
       if (fileInfo.IsEmpty)
-        throw new ArgumentException("Информация о файле должна быть заполнена", "fileInfo");
+        throw new ArgumentException(Res.FileContainer_Arg_FileInfoIsEmpty, "fileInfo");
 
       if (content == null)
         content = new byte[0];
 
       if (fileInfo.Length != content.Length)
-        throw new ArgumentException("Длина массива (" + content.Length.ToString() +
-          ") не совпадает с заданной в FileInfo (" + fileInfo.Length.ToString() + ") для файла \"" + fileInfo.Name + "\"", "contents");
+        throw new ArgumentException(String.Format(Res.FileContainer_Arg_LengthMismatch, 
+          content.Length, fileInfo.Length.ToString(), fileInfo.Name), "contents");
 
       _FileInfo = fileInfo;
       _Content = content;
@@ -303,7 +303,7 @@ namespace FreeLibSet.IO
     public FileContainer(string fileName, byte[] content, string subDir)
     {
       if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("fileName");
 
       if (content == null)
         _Content = new byte[0];
@@ -385,11 +385,11 @@ namespace FreeLibSet.IO
         return null;
 
       if (System.IO.Path.IsPathRooted(subDir))
-        throw new ArgumentException("Каталог не может содержать абсолютный путь");
+        throw new ArgumentException(Res.FileContainer_Arg_SubDirIsAbsolute);
       if (subDir.IndexOf("..") >= 0)
-        throw new ArgumentException("Каталог не может содержать символы \"..\"");
+        throw new ArgumentException(Res.FileContainer_Arg_SubDirWithParent);
       if (subDir[0] == System.IO.Path.DirectorySeparatorChar)
-        throw new ArgumentException("Каталог не может начинаться с символа каталога");
+        throw new ArgumentException(Res.FileContainer_Arg_SubDirStartsWithDirChar);
 
       if (System.IO.Path.DirectorySeparatorChar != '/')
         subDir = subDir.Replace(System.IO.Path.DirectorySeparatorChar, '/');
@@ -472,7 +472,7 @@ namespace FreeLibSet.IO
     public void Save(AbsPath dir)
     {
       if (dir.IsEmpty)
-        throw new ArgumentException("Не задан каталог для сохранения", "dir");
+        throw ExceptionFactory.ArgIsEmpty("dir");
 
       AbsPath dir2 = dir + SubDir;
       FileTools.ForceDirs(dir2);
@@ -490,7 +490,7 @@ namespace FreeLibSet.IO
     public void SaveAs(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentException("Не задано имя файла для сохранения", "filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       FileTools.ForceDirs(filePath.ParentDir);
       File.WriteAllBytes(filePath.Path, Content);
@@ -869,7 +869,7 @@ namespace FreeLibSet.IO
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException("Список файлов находится в режиме ReadOnly");
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion

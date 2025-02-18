@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
 using FreeLibSet.Formatting;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591
 
@@ -20,7 +21,7 @@ namespace FreeLibSet.Controls
   /// Месяц выбирается из выпадающего списка.
   /// </summary>
   [Designer(typeof(FreeLibSet.Controls.Design.YearMonthBoxDesigner))]
-  [Description("Поле выбора месяца и года")]
+  [Description("Two-control component for year and month selection")]
   [ToolboxBitmap(typeof(YearMonthBox), "YearMonthBox.bmp")]
   [ToolboxItem(true)]
   public partial class YearMonthBox : UserControl
@@ -45,7 +46,7 @@ namespace FreeLibSet.Controls
 
     #region Свойства
 
-    [Description("Текущее значение - Год")]
+    [Description("Current value: Year")]
     [Category("Appearance")]
     //[DefaultValue(2006)] нет значения по умолчанию
     public int Year
@@ -68,7 +69,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    [Description("Текущее значение - Месяц")]
+    [Description("Current value: Month")]
     [Category("Appearance")]
     //[DefaultValue(1)]
     public int Month
@@ -80,12 +81,12 @@ namespace FreeLibSet.Controls
       set
       {
         if (value < 1 || value > 12)
-          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, 12);
         cbMonth.SelectedIndex = value - 1;
       }
     }
 
-    [Description("Минимальное значение для года")]
+    [Description("Minimum value of Year property")]
     [Category("Behavior")]
     [RefreshProperties(RefreshProperties.All)]
     [DefaultValue(1001)]
@@ -101,7 +102,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    [Description("Максимальное значение для года")]
+    [Description("Maximum value of Year property")]
     [Category("Behavior")]
     [RefreshProperties(RefreshProperties.All)]
     [DefaultValue(9999)]
@@ -121,7 +122,7 @@ namespace FreeLibSet.Controls
 
     #region События
 
-    [Description("Вызывается при изменении текущего года или месяца")]
+    [Description("Called when Year or Month property changed")]
     [Category("Property Changed")]
     public event EventHandler ValueChanged;
 

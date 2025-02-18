@@ -67,7 +67,7 @@ namespace FreeLibSet.Drawing.Reporting
           EncoderParameters pars = new EncoderParameters(1);
           ImageCodecInfo ici = ImagingTools.GetImageCodecInfo(ImageFormat.Tiff);
           if (ici == null)
-            throw new InvalidOperationException("В GDI+ не установлен кодировщик для записи файлов TIFF");
+            throw new InvalidOperationException(Res.BRFileTiff_Err_NoCodec);
 
           Splash.PercentMax = pages.Length * 2 + 1;
           Splash.AllowCancel = true;

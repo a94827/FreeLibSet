@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms
         case MessageBoxIcon.Question: return SystemIcons.Question;
         case MessageBoxIcon.None: return null;
         default:
-          throw new ArgumentException("Неизвествное значение " + icon.ToString(), "icon");
+          throw ExceptionFactory.ArgUnknownValue("icon", icon);
       }
     }
 
@@ -85,7 +85,7 @@ namespace FreeLibSet.Forms
       if (size.IsEmpty)
         return size;
       if (factor.IsEmpty)
-        throw new ArgumentException("Не задан масштабный фактор", "factor");
+        throw ExceptionFactory.ArgIsEmpty("factor");
 
       return new Size(Scale(size.Width, factor.Width),
         Scale(size.Height, factor.Height));
@@ -280,9 +280,9 @@ namespace FreeLibSet.Forms
       if (newControl == null)
         throw new ArgumentNullException("newControl");
       if (oldControl.Parent == null)
-        throw new ArgumentException("Существующий элемент не имеет родителя", "oldControl");
+        throw ExceptionFactory.ArgProperty("oldControl", oldControl, "Parent", oldControl.Parent, null);
       if (newControl.Parent != null)
-        throw new ArgumentException("Добавляемый элемент уже имеет родителя", "newControl");
+        throw ExceptionFactory.ArgProperty("newControl", newControl, "Parent", newControl.Parent, null);
 
       // Копируем свойства
       newControl.Dock = oldControl.Dock;
@@ -523,6 +523,7 @@ namespace FreeLibSet.Forms
     /// Удаление мнемонических символов из текста команд меню, меток, кнопок.
     /// Одиночные символы "амперсанд" удаляются.
     /// Два идущих подряд символа "амперсанд" заменяются на один.
+    /// Конечное многоточие команды меню не удаляется.
     /// </summary>
     /// <param name="s">Строка, возможно содержащая мнемонический символ "амперсанд"</param>
     /// <returns>Строка без мнемонических символов</returns>
@@ -759,41 +760,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region FindButton()
-
-    /// <summary>
-    /// Поиск в форме закрывающей кнопки с заданным кодом <paramref name="dialogResult"/>.
-    /// Если кнопка не найдена, возвращает null.
-    /// </summary>
-    /// <param name="control">Управляющий элемент, с которого начинается поиск. Обычно это форма</param>
-    /// <param name="dialogResult">Значение свойства <see cref="Button.DialogResult"/></param>
-    /// <returns>Объект кнопки или null</returns>
-    public static Button FindButton(Control control, DialogResult dialogResult)
-    {
-      if (control == null)
-        return null;
-
-      Button btn = control as Button;
-      if (btn != null)
-      {
-        if (btn.DialogResult == dialogResult)
-          return btn;
-      }
-
-      if (!control.HasChildren)
-        return null;
-
-      for (int i = 0; i < control.Controls.Count; i++)
-      {
-        btn = FindButton(control.Controls[i], dialogResult); // рекурсивный вызов
-        if (btn != null)
-          return btn;
-      }
-      return null;
-    }
-
-    #endregion
-
     #region GetControlExcess()
 
     /// <summary>
@@ -941,6 +907,84 @@ namespace FreeLibSet.Forms
       return control;
     }
 
+
+    #endregion
+
+    #region Для Button
+
+    #region FindButton()
+
+    /// <summary>
+    /// Поиск в форме закрывающей кнопки с заданным кодом <paramref name="dialogResult"/>.
+    /// Если кнопка не найдена, возвращает null.
+    /// </summary>
+    /// <param name="control">Управляющий элемент, с которого начинается поиск. Обычно это форма</param>
+    /// <param name="dialogResult">Значение свойства <see cref="Button.DialogResult"/></param>
+    /// <returns>Объект кнопки или null</returns>
+    public static Button FindButton(Control control, DialogResult dialogResult)
+    {
+      if (control == null)
+        return null;
+
+      Button btn = control as Button;
+      if (btn != null)
+      {
+        if (btn.DialogResult == dialogResult)
+          return btn;
+      }
+
+      if (!control.HasChildren)
+        return null;
+
+      for (int i = 0; i < control.Controls.Count; i++)
+      {
+        btn = FindButton(control.Controls[i], dialogResult); // рекурсивный вызов
+        if (btn != null)
+          return btn;
+      }
+      return null;
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Возвращает локализованный текст стандартной кнопки блока диалога.
+    /// Для <see cref="DialogResult.None"/> возвращает пустую строку
+    /// </summary>
+    /// <param name="dialogResult">Значение свойства <see cref="Button.DialogResult"/></param>
+    /// <param name="useMnemonic">Если true, то возвращаемый текст может содержать амперсанд для выделения буквы.
+    /// Если false, то возвращается текст без выделения</param>
+    /// <returns>Текст кнопки <see cref="Control.Text"/></returns>
+    public static string GetButtonText(DialogResult dialogResult, bool useMnemonic)
+    {
+      if (dialogResult == DialogResult.None)
+        return String.Empty;
+      string s = Res.ResourceManager.GetString("Btn_Text_" + dialogResult.ToString());
+      if (!useMnemonic)
+        return s.Replace("&", "");
+      return s;
+    }
+
+    /// <summary>
+    /// Если у кнопки установлено свойство <see cref="Button.DialogResult"/>, то обновляется свойство <see cref="Control.Text"/>
+    /// в соответствии с региональными настройками.
+    /// Для этого у кнопки текст не должен быть задан или задан в соответствии с культурой "en-US" (амперсанды игнорируются).
+    /// В противном случае никаких действий не выполняется.
+    /// </summary>
+    /// <param name="button">Кнопка</param>
+    public static void UpdateStdButtonText(Button button)
+    {
+      if (button.DialogResult == DialogResult.None)
+        return;
+      if (!String.IsNullOrEmpty(button.Text))
+      {
+        string s1 = button.Text.Replace("&", "");
+        string s2 = button.DialogResult.ToString();
+        if (!String.Equals(s1, s2, StringComparison.OrdinalIgnoreCase))
+          return;
+      }
+      button.Text = GetButtonText(button.DialogResult, true);
+    }
 
     #endregion
 
@@ -1146,7 +1190,7 @@ namespace FreeLibSet.Forms
 
 #if DEBUG
       if (gridRow.Index < 0)
-        throw new ArgumentException("Строка DataGridViewRow является Shared", "gridRow");
+        throw ExceptionFactory.ArgProperty("gridRow", gridRow, "Index",gridRow.Index, null); // Shared
 #endif
 
       return null;
@@ -1160,7 +1204,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="control">Табличный просмотр</param>
     /// <param name="rowIndex">Номер строки</param>
-    /// <returns>Объект DataRow или null при любой ошибке</returns>
+    /// <returns>Объект <see cref="DataRow"/> или null при любой ошибке</returns>
     public static DataRow GetDataRow(DataGridView control, int rowIndex)
     {
       /*
@@ -1233,7 +1277,7 @@ namespace FreeLibSet.Forms
           return HorizontalAlignment.Right;
 
         default:
-          throw new ArgumentException("Неизвестное значение " + cellAlign.ToString(), "cellAlign");
+          throw ExceptionFactory.ArgUnknownValue("cellAlign", cellAlign);
       }
     }
 
@@ -1267,7 +1311,7 @@ namespace FreeLibSet.Forms
               return DataGridViewContentAlignment.BottomLeft;
 
             default:
-              throw new ArgumentException("Неизвестный cellAlign=" + cellAlign.ToString(), "cellAlign");
+              throw ExceptionFactory.ArgUnknownValue("cellAlign", cellAlign);
           }
         //break;
 
@@ -1290,7 +1334,7 @@ namespace FreeLibSet.Forms
               return DataGridViewContentAlignment.BottomCenter;
 
             default:
-              throw new ArgumentException("Неизвестный cellAlign=" + cellAlign.ToString(), "cellAlign");
+              throw ExceptionFactory.ArgUnknownValue("cellAlign", cellAlign);
           }
         //break;
 
@@ -1313,12 +1357,12 @@ namespace FreeLibSet.Forms
               return DataGridViewContentAlignment.BottomRight;
 
             default:
-              throw new ArgumentException("Неизвестный cellAlign=" + cellAlign.ToString(), "cellAlign");
+              throw ExceptionFactory.ArgUnknownValue("cellAlign", cellAlign);
           }
         //break;
 
         default:
-          throw new ArgumentException("Неизвестный textAlign=" + textAlign.ToString(), "textAlign");
+          throw ExceptionFactory.ArgUnknownValue("textAlign", textAlign);
       }
     }
 
@@ -1343,7 +1387,7 @@ namespace FreeLibSet.Forms
           return DataGridViewContentAlignment.MiddleRight;
 
         default:
-          throw new ArgumentException("Неизвестный textAlign=" + textAlign.ToString(), "textAlign");
+          throw ExceptionFactory.ArgUnknownValue("textAlign", textAlign);
       }
     }
 
@@ -1740,9 +1784,9 @@ namespace FreeLibSet.Forms
       if (form == null)
         throw new ArgumentNullException("form");
       if (form.AcceptButton == null)
-        throw new ArgumentException("У формы не установлено свойство AcceptButton", "form");
+        throw ExceptionFactory.ArgProperty("form", form, "AcceptButton", form.AcceptButton, null);
       if (form.CancelButton == null)
-        throw new ArgumentException("У формы не установлено свойство CancelButton", "form");
+        throw ExceptionFactory.ArgProperty("form", form, "CancelButton", form.CancelButton, null);
 #endif
       Button btnOk = (Button)(form.AcceptButton); // пусть будет исключение, если присоединены не кнопки
       Button btnCancel = (Button)(form.CancelButton);
@@ -1793,7 +1837,7 @@ namespace FreeLibSet.Forms
 #endif
 
       if (!mdiContainer.IsMdiContainer)
-        throw new ArgumentException("Свойство Form.IsMdiContainer не установлено", "mdiContainer");
+        throw ExceptionFactory.ArgProperty("mdiContainer", mdiContainer, "IsMdiContainer", mdiContainer.IsMdiContainer, new object[] { true });
       Rectangle area;
       FormWindowState oldState = mdiContainer.WindowState;
       try
@@ -1849,7 +1893,7 @@ namespace FreeLibSet.Forms
       else
       {
         if (value.Width < 0 || value.Height < 0)
-          throw new ArgumentOutOfRangeException("value");
+          throw ExceptionFactory.ArgOutOfRange("value", value, new Size(0,0), null);
 
         int w = value.Width + (form.Width - form.ClientSize.Width);
         int h = value.Height + (form.Height - form.ClientSize.Height);
@@ -1894,7 +1938,7 @@ namespace FreeLibSet.Forms
       else
       {
         if (value.Width < 0 || value.Height < 0)
-          throw new ArgumentOutOfRangeException("value");
+          throw ExceptionFactory.ArgOutOfRange("value", value, new Size(0, 0), null);
 
         int w = value.Width + (form.Width - form.ClientSize.Width);
         int h = value.Height + (form.Height - form.ClientSize.Height);
@@ -2502,7 +2546,7 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("dstImages");
 #endif
       if (Object.ReferenceEquals(srcImages, dstImages))
-        throw new ArgumentException("Списки не могут совпадать");
+        throw ExceptionFactory.ArgAreSame("srcImages", "dstImages");
 
       for (int i = 0; i < srcImages.Images.Count; i++)
       {
@@ -2915,7 +2959,8 @@ namespace FreeLibSet.Forms
         s = rdr.ReadToEnd();
       }
       else
-        throw new InvalidOperationException("Для данных " + DataFormats.CommaSeparatedValue + " получен объект неизвестного типа: " + obj.GetType().ToString());
+        throw new InvalidOperationException(String.Format(Res.Clipboard_Err_UnextpectedType, 
+          DataFormats.CommaSeparatedValue, obj.GetType().ToString()));
 
       if (String.IsNullOrEmpty(s))
         return null;
@@ -2975,7 +3020,8 @@ namespace FreeLibSet.Forms
         s = rdr.ReadToEnd();
       }
       else
-        throw new InvalidOperationException("Для данных " + sFormat + " получен объект неизвестного типа: " + obj.GetType().ToString());
+        throw new InvalidOperationException(String.Format(Res.Clipboard_Err_UnextpectedType,
+          sFormat, obj.GetType().ToString()));
 
       if (String.IsNullOrEmpty(s))
         return null;

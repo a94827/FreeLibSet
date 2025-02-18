@@ -288,7 +288,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
       if (type == typeof(DataRow)) // но не "is DataRow", т.к. могут быть проиводные классы типизированных строк
         return new DataRowMemberAdapter(DataPropertyName);
-      if (type==typeof(DataRowView))
+      if (type == typeof(DataRowView))
         return new DataRowViewMemberAdapter(DataPropertyName);
 
       PropertyInfo pi = type.GetProperty(DataPropertyName);

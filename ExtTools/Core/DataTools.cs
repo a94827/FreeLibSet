@@ -72,7 +72,7 @@ namespace FreeLibSet.Core
       if (row == null)
         return new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        return new ArgumentNullException("columnName");
+        return ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       if (row.Table == null)
         e.Data["Row.Table"] = "null";
@@ -929,7 +929,7 @@ namespace FreeLibSet.Core
       }
       if (value is DateTime)
         return ((DateTime)value).TimeOfDay; // 16.05.2023
-      throw new InvalidCastException("Тип " + value.GetType().FullName + " нельзя преобразовать в TimeSpan");
+      throw ExceptionFactory.Inconvertible(value, typeof(TimeSpan));
     }
 
     /// <summary>
@@ -1023,7 +1023,7 @@ namespace FreeLibSet.Core
       if (value is byte[])
         return new Guid((byte[])value);
 
-      throw new InvalidCastException("Значение типа " + value.GetType().ToString() + " нельзя преобразовать в Guid");
+      throw ExceptionFactory.Inconvertible(value, typeof(Guid));
     }
 
     /// <summary>
@@ -1170,13 +1170,14 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
+
       if (String.IsNullOrEmpty(value))
       {
         if (col.AllowDBNull)
@@ -1212,13 +1213,14 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
+
       if (IsIntegerType(col.DataType))
       {
         if (value == 0)
@@ -1241,7 +1243,7 @@ namespace FreeLibSet.Core
           SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
-      throw new ArgumentException("Столбец не может принимать числовое значение", "ColumnName");
+      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1262,13 +1264,14 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
+
       if (IsIntegerType(col.DataType))
       {
         if (value == 0L)
@@ -1291,7 +1294,7 @@ namespace FreeLibSet.Core
           SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
-      throw new ArgumentException("Столбец не может принимать числовое значение", "ColumnName");
+      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1312,13 +1315,14 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
+
       if (col.DataType == typeof(float) || col.DataType == typeof(double))
       {
         if (value == 0)
@@ -1354,7 +1358,7 @@ namespace FreeLibSet.Core
           SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
-      throw new ArgumentException("Столбец не может принимать числовое значение с плавающей точкой", "ColumnName");
+      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1375,13 +1379,14 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
+
       if (col.DataType == typeof(float) || col.DataType == typeof(double))
       {
         if (value == 0)
@@ -1417,7 +1422,7 @@ namespace FreeLibSet.Core
           SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
-      throw new ArgumentException("Столбец не может принимать числовое значение с плавающей точкой", "ColumnName");
+      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1438,13 +1443,14 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
+
       if (col.DataType == typeof(decimal))
       {
         if (value == 0)
@@ -1480,7 +1486,7 @@ namespace FreeLibSet.Core
           SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
-      throw new ArgumentException("Столбец не может принимать значение типа Decimal", "ColumnName");
+      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1500,12 +1506,12 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
 
       if (col.DataType == typeof(DateTime))
@@ -1525,7 +1531,7 @@ namespace FreeLibSet.Core
           SetString(row, columnName, null);
         return;
       }
-      throw new ArgumentException("Столбец не может принимать значение типа DateTime", "ColumnName");
+      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1545,12 +1551,12 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + columnName + "\"", "ColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
 
       if (col.DataType == typeof(TimeSpan))
@@ -1570,7 +1576,7 @@ namespace FreeLibSet.Core
           SetString(row, columnName, StdConvert.ToString(value));
         return;
       }
-      throw new ArgumentException("Столбец не может принимать значение типа TimeSpan", "ColumnName");
+      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1590,12 +1596,12 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       DataColumn col = row.Table.Columns[columnName];
 #if DEBUG
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
       if (value == Guid.Empty)
         row[columnName] = DBNull.Value;
@@ -1608,7 +1614,7 @@ namespace FreeLibSet.Core
         else if (col.DataType == typeof(byte[]))
           row[columnName] = value.ToByteArray();
         else
-          throw new ArgumentException("Поле \"" + columnName + "\" имеет неподходящий тип " + col.DataType.ToString(), "colName");
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -1930,12 +1936,12 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = row.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -1946,7 +1952,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: IncDecimal(row, columnName, DataTools.GetDecimal(delta)); break;
         case SumType.TimeSpan: IncTimeSpan(row, columnName, DataTools.GetTimeSpan(delta)); break;
         default:
-          throw new InvalidOperationException("Столбец \"" + columnName + "\" нельзя суммировать");
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -1969,12 +1975,12 @@ namespace FreeLibSet.Core
       if (dstRow == null)
         throw new ArgumentNullException("dstRow");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = srcRow.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", srcRow.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -1985,7 +1991,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: IncDecimal(srcRow, dstRow, columnName); break;
         case SumType.TimeSpan: IncTimeSpan(srcRow, dstRow, columnName); break;
         default:
-          throw new InvalidOperationException("Столбец \"" + columnName + "\" нельзя суммировать");
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -2003,12 +2009,14 @@ namespace FreeLibSet.Core
     /// <returns>Список пар имен и значений</returns>
     public static Hashtable NamesAndValuesToPairs(string[] columnNames, object[] columnValues)
     {
+#if DEBUG
       if (columnNames == null)
         throw new ArgumentNullException("columnNames");
       if (columnValues == null)
         throw new ArgumentNullException("columnValues");
+#endif
       if (columnNames.Length != columnValues.Length)
-        throw new ArgumentException("Массивы имен полей и значений имеют разную длину");
+        throw ExceptionFactory.ArgWrongCollectionCount("columnValues", columnValues, columnNames.Length);
 
       Hashtable res = new Hashtable();
       for (int i = 0; i < columnNames.Length; i++)
@@ -2293,19 +2301,18 @@ namespace FreeLibSet.Core
         cols[0] = table.Columns[columnNames];
         if (cols[0] == null)
         {
-          ArgumentException e = new ArgumentException("Таблица \"" + table.TableName +
-            "\" не содержит столбца \"" + columnNames + "\", которое предполагалось сделать ключевым", "columnNames");
+          ArgumentException e = new ArgumentException(String.Format(Res.DataTools_Err_DataTableHasNoKeyColumn,
+            table.TableName, columnNames), "columnNames");
           AddExceptionColumnsInfo(e, table);
           throw e;
         }
         table.PrimaryKey = cols;
-
-        return;
       }
-
-      string[] names = columnNames.Split(',');
-
-      SetPrimaryKey(table, names);
+      else
+      {
+        string[] names = columnNames.Split(',');
+        SetPrimaryKey(table, names);
+      }
     }
 
     /// <summary>
@@ -2332,13 +2339,21 @@ namespace FreeLibSet.Core
         cols[i] = table.Columns[columnNames[i]];
         if (cols[i] == null)
         {
-          ArgumentException e = new ArgumentException("Таблица \"" + table.TableName +
-            "\" не содержит столбца \"" + columnNames[i] + "\", которое предполагалось сделать ключевым", "columnNames");
+          ArgumentException e = new ArgumentException(String.Format(Res.DataTools_Err_DataTableHasNoKeyColumn,
+            table.TableName, columnNames[i]), "columnNames");
           AddExceptionColumnsInfo(e, table);
           throw e;
         }
       }
       table.PrimaryKey = cols;
+    }
+
+    private static int GetPrimaryKeyLength(DataTable table)
+    {
+      if (table.PrimaryKey == null)
+        return 0;
+      else
+        return table.PrimaryKey.Length;
     }
 
     /// <summary>
@@ -2354,14 +2369,23 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("table");
 #endif
 
-      if (table.PrimaryKey == null)
-        return String.Empty;
-      if (table.PrimaryKey.Length == 0)
-        return String.Empty;
-      string s = table.PrimaryKey[0].ColumnName;
-      for (int i = 1; i < table.PrimaryKey.Length; i++)
-        s += "," + table.PrimaryKey[i].ColumnName;
-      return s;
+      int nPK = GetPrimaryKeyLength(table);
+      switch (nPK)
+      {
+        case 0:
+          return String.Empty;
+        case 1:
+          return table.PrimaryKey[0].ColumnName;
+        default:
+          StringBuilder sb = new StringBuilder();
+          for (int i = 0; i < nPK; i++)
+          {
+            if (i > 0)
+              sb.Append(',');
+            sb.Append(table.PrimaryKey[i].ColumnName);
+          }
+          return sb.ToString();
+      }
     }
 
     /// <summary>
@@ -2391,20 +2415,22 @@ namespace FreeLibSet.Core
       if (table == null)
         throw new ArgumentNullException("table");
 #endif
-      if (table.PrimaryKey == null || table.PrimaryKey.Length == 0)
-        throw new ArgumentException("Таблица \"" + table.TableName + "\" не содержит первичного ключа", "table");
+
+      int nPK = GetPrimaryKeyLength(table);
+      if (nPK == 0)
+        throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("table", table);
 
 #if DEBUG
       if (rows == null)
         throw new ArgumentNullException("rows");
 #endif
 
-      object[,] keyValues = new object[rows.Length, table.PrimaryKey.Length];
+      object[,] keyValues = new object[rows.Length, nPK];
       for (int i = 0; i < rows.Length; i++)
       {
         if (rows[i] == null)
           continue;
-        for (int j = 0; j < table.PrimaryKey.Length; j++)
+        for (int j = 0; j < nPK; j++)
           keyValues[i, j] = rows[i][table.PrimaryKey[j]];
       }
       return keyValues;
@@ -2435,10 +2461,11 @@ namespace FreeLibSet.Core
     {
       if (row == null)
         return null;
-      if (table.PrimaryKey == null || table.PrimaryKey.Length == 0)
+      int nPK = GetPrimaryKeyLength(table);
+      if (nPK == 0)
         return null;
-      object[] keyValues = new object[table.PrimaryKey.Length];
-      for (int i = 0; i < keyValues.Length; i++)
+      object[] keyValues = new object[nPK];
+      for (int i = 0; i < nPK; i++)
       {
         string colName = table.PrimaryKey[i].ColumnName;
         keyValues[i] = row[colName];
@@ -2464,38 +2491,39 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("table");
 #endif
 
-      if (table.PrimaryKey == null || table.PrimaryKey.Length == 0)
-        throw new ArgumentException("Таблица \"" + table.TableName + "\" не содержит первичного ключа", "table");
+      int nPK = GetPrimaryKeyLength(table);
+      if (nPK == 0)
+        throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("table", table);
 
 #if DEBUG
       if (keyValues == null)
-        throw new ArgumentNullException("KeyValues");
+        throw new ArgumentNullException("keyValues");
 #endif
 
-      int n = table.PrimaryKey.Length;
-      if (keyValues.GetLength(1) != n)
-        throw new ArgumentException("Размерность массива (" + keyValues.GetLength(1).ToString() + ") не соответствует количеству ключевых полей (" + n.ToString() + ") таблицы \"" + table.TableName + "\"", "keyValues");
+      if (keyValues.GetLength(1) != nPK)
+        throw ExceptionFactory.ArgWrongCollectionCount("keyValues", keyValues, nPK);
 
       object[] findKeys = null;
-      if (n > 1)
-        findKeys = new object[n]; // сюда будем копировать ключи для поиска
+      if (nPK > 1)
+        findKeys = new object[nPK]; // сюда будем копировать ключи для поиска
 
       DataRow[] rows = new DataRow[keyValues.GetLength(0)];
       for (int i = 0; i < rows.Length; i++)
       {
         if (keyValues[i, 0] == null)
           continue;
-        if (n == 1)
+        if (nPK == 1)
           // Простой поиск по одному столбцу. Копирование не нужно
           rows[i] = table.Rows.Find(keyValues[i, 0]);
         else
         {
           // Требуется дополнительное копирование
-          for (int j = 0; j < n; j++)
+          for (int j = 0; j < nPK; j++)
             findKeys[j] = keyValues[i, j];
           rows[i] = table.Rows.Find(findKeys);
         }
       }
+
       return rows;
     }
 
@@ -2528,11 +2556,9 @@ namespace FreeLibSet.Core
       if (table == null)
         throw new ArgumentNullException("Table");
 #endif
-      int nPK = 0; // 27.12.2020
-      if (table.PrimaryKey != null)
-        nPK = table.PrimaryKey.Length;
+      int nPK = GetPrimaryKeyLength(table); // 27.12.2020
       if (nPK != 1)
-        throw new ArgumentException("Таблица \"" + table.TableName + "\" должна иметь одно ключевое поле, а не " + nPK.ToString(), "table");
+        throw ExceptionFactory.ArgDataTableMustHaveSingleColumnPrimaryKey("table", table);
 
       row = table.Rows.Find(keyValue);
       if (row == null)
@@ -2576,14 +2602,11 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("Table");
       if (keyValues == null)
         throw new ArgumentNullException("KeyValues");
-      int n;
-      if (table.PrimaryKey == null)
-        n = 0;
-      else
-        n = table.PrimaryKey.Length;
-      if (n != keyValues.Length)
-        throw new ArgumentException("Число значений в массиве KeyValues (" + keyValues.Length.ToString() +
-          ") не совпадает с числом ключевых полей (" + n.ToString() + ") в таблице \"" + table.TableName + "\"");
+
+      int nPK = GetPrimaryKeyLength(table);
+      if (nPK != keyValues.Length)
+        throw new ArgumentException(String.Format(Res.DataTools_Arg_KeyValuesLengthDiffWithPrimaryKey,
+          keyValues.Length, nPK, table.TableName), "keyValues");
 #endif
 
       row = table.Rows.Find(keyValues);
@@ -2604,12 +2627,13 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Создание объекта <see cref="DataRelation"/> для отношения "Мастер-детали" между двумя
-    /// таблицами. Мастер-таблица должна иметь первичный ключ
+    /// таблицами. Мастер-таблица должна иметь первичный ключ.
     /// </summary>
     /// <param name="masterTable">Главная таблица ("Customers")</param>
     /// <param name="detailsTable">Подчиненная таблица ("Orders")</param>
     /// <param name="referenceColumn">Имя столбца ("CustomerId") в подчиненной таблице, которое
-    /// будет связано с ключевым полем в <paramref name="masterTable"/>.</param>
+    /// будет связано с ключевым полем в <paramref name="masterTable"/>.
+    /// Может содержать несколько имен столбцов, если таблица <paramref name="masterTable"/> имеет составной первичный ключ.</param>
     /// <param name="relationName">Имя связи (свойство <see cref="DataRelation.RelationName"/>.
     /// Если не задано, то будет сгенерировано автоматически</param>
     public static void AddRelation(DataTable masterTable,
@@ -2624,9 +2648,10 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("referenceColumn");
 #endif
       if (masterTable.DataSet != detailsTable.DataSet)
-        throw new ArgumentException("Таблицы должны относится к одному DataSet'у", "detailsTable");
-      if (masterTable.PrimaryKey == null || masterTable.PrimaryKey.Length == 0)
-        throw new ArgumentException("Мастер таблица не имеет первичного ключа", "masterTable");
+        throw ExceptionFactory.ArgDataTablesNotSameDataSet("masteTable", masterTable, "detailsTable", detailsTable);
+      int nPK = GetPrimaryKeyLength(masterTable);
+      if (nPK == 0)
+        throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("masterTable", masterTable);
 
       string[] aColNames = referenceColumn.Split(',');
       DataColumn[] refCols = new DataColumn[aColNames.Length];
@@ -2634,19 +2659,18 @@ namespace FreeLibSet.Core
       {
         refCols[i] = detailsTable.Columns[aColNames[i]];
         if (refCols[i] == null)
-          throw new InvalidOperationException("Таблица \"" + detailsTable.TableName + "\" не имеет столбца \"" +
-            aColNames[i] + "\", которое предполагалось использовать для связывания");
+          throw new InvalidOperationException(String.Format(Res.DataTools_Err_DataTableHasNoRefColumn,
+            detailsTable.TableName, aColNames[i]));
       }
-      if (refCols.Length != masterTable.PrimaryKey.Length)
-        throw new InvalidOperationException("В мастер-таблице \"" + masterTable.TableName + "\" объявлены ключевые поля \"" +
-          GetPrimaryKey(masterTable) + "\" (" + masterTable.PrimaryKey.Length.ToString() +
-          " шт.) Нельзя использовать для связи поля \"" + referenceColumn +
-          "\" (" + refCols.Length.ToString() + " шт). Количество полей должно быть одинаковым");
+      if (refCols.Length != nPK)
+        throw new InvalidOperationException(String.Format(Res.DataTable_Err_DataTableRefColumnArrayLengthMismatch,
+          masterTable.TableName, GetPrimaryKey(masterTable), nPK,
+          referenceColumn, refCols.Length));
 
       if (String.IsNullOrEmpty(relationName))
         relationName = referenceColumn.Replace(',', '_') + "_Ref";
-      DataRelation Rel = new DataRelation(relationName, masterTable.PrimaryKey, refCols);
-      detailsTable.DataSet.Relations.Add(Rel);
+      DataRelation rel = new DataRelation(relationName, masterTable.PrimaryKey, refCols);
+      detailsTable.DataSet.Relations.Add(rel);
     }
 
     #endregion
@@ -2663,9 +2687,14 @@ namespace FreeLibSet.Core
     /// <returns>Таблица-копия</returns>
     public static DataTable CloneTableForSelectedRows(DataTable table, bool[] flags)
     {
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+      if (flags == null)
+        throw new ArgumentNullException("flags");
+#endif
       if (flags.Length != table.Rows.Count)
-        throw new ArgumentException("Длина массива флагов (" + flags.Length.ToString() +
-          ") не совпадает с количеством строк в таблице (" + table.Rows.Count.ToString() + ")");
+        throw ExceptionFactory.ArgWrongCollectionCount("flags", flags, table.Rows.Count);
 
       DataTable resTable = table.Clone();
       for (int i = 0; i < flags.Length; i++)
@@ -2716,17 +2745,15 @@ namespace FreeLibSet.Core
 #endif
 
       string sPK = GetPrimaryKey(table);
-      if (sPK.Length == 0)
-        throw new ArgumentException("У таблицы " + table.TableName + " не задан первичный ключ");
-      if (sPK.IndexOf(',') >= 0)
-        throw new ArgumentException("У таблицы " + table.TableName + " задан составной первичный ключ");
+      if (sPK.Length == 0 || sPK.IndexOf(',') >= 0)
+        throw ExceptionFactory.ArgDataTableMustHaveSingleColumnPrimaryKey("table", table);
 
       DataTable table2 = table.Clone();
       for (int i = 0; i < ids.Length; i++)
       {
         DataRow row1 = table.Rows.Find(ids[i]);
         if (row1 == null)
-          throw new InvalidOperationException("Для таблицы \"" + table.TableName + "\" не удалось получить строку со значением первичного ключа " + sPK + "=" + ids[i].ToString());
+          throw ExceptionFactory.DataRowNotFound(table, new object[1] { ids[i] });
         table2.Rows.Add(row1.ItemArray);
       }
       return table2;
@@ -2754,10 +2781,8 @@ namespace FreeLibSet.Core
 #endif
 
       string sPK = GetPrimaryKey(table);
-      if (sPK.Length == 0)
-        throw new ArgumentException("У таблицы " + table.TableName + " не задан первичный ключ");
-      if (sPK.IndexOf(',') >= 0)
-        throw new ArgumentException("У таблицы " + table.TableName + " задан составной первичный ключ");
+      if (sPK.Length == 0 || sPK.IndexOf(',') >= 0)
+        throw ExceptionFactory.ArgDataTableMustHaveSingleColumnPrimaryKey("table", table);
 
       // Сначала пытаемся проверить, не подойдет ли исходная таблица
       if (table.Rows.Count == ids.Length)
@@ -2900,7 +2925,7 @@ namespace FreeLibSet.Core
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       int colPos = GetColumnPosWithCheck(table, columnName);
       DataColumn col = table.Columns[colPos];
@@ -2949,7 +2974,7 @@ namespace FreeLibSet.Core
       if (dv == null)
         throw new ArgumentNullException("dv");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       if (dv.Count == 0)
         return EmptyIds;
@@ -3003,7 +3028,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         throw new ArgumentNullException("rows");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       if (rows.Count == 0)
@@ -3060,9 +3085,9 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (rows == null)
-        throw new ArgumentNullException("Rows");
+        throw new ArgumentNullException("rows");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("ColumnName");
+        throw new ArgumentNullException("columnName");
 #endif
 
       if (rows.Count == 0)
@@ -3380,10 +3405,10 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("table");
 #endif
 
-      int ColPos = GetColumnPosWithCheck(table, "Id");
+      int colPos = GetColumnPosWithCheck(table, "Id");
 
       if (n < 1)
-        throw new ArgumentException("N<1", "n");
+        throw ExceptionFactory.ArgOutOfRange("n", n, 1, null);
 
       int nn = ((table.Rows.Count + (n - 1))) / n;
       Int32[][] res = new Int32[nn][];
@@ -3402,9 +3427,9 @@ namespace FreeLibSet.Core
         int idx2 = index - (idx1 * n);
 
         if (table.Rows[index].RowState == DataRowState.Deleted)
-          res[idx1][idx2] = GetInt(table.Rows[index][ColPos, DataRowVersion.Original]);
+          res[idx1][idx2] = GetInt(table.Rows[index][colPos, DataRowVersion.Original]);
         else
-          res[idx1][idx2] = GetInt(table.Rows[index][ColPos]);
+          res[idx1][idx2] = GetInt(table.Rows[index][colPos]);
       }
       return res;
     }
@@ -3429,7 +3454,7 @@ namespace FreeLibSet.Core
       int colPos = GetColumnPosWithCheck(dv.Table, "Id");
 
       if (n < 1)
-        throw new ArgumentOutOfRangeException("N", n, "N<1");
+        throw ExceptionFactory.ArgOutOfRange("n", n, 1, null);
 
       int nn = ((dv.Count + (n - 1))) / n;
 
@@ -3470,7 +3495,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("Rows");
 #endif
       if (n < 1)
-        throw new ArgumentOutOfRangeException("N", n, "N<1");
+        throw ExceptionFactory.ArgOutOfRange("n", n, 1, null);
 
       int nn = ((rows.Count + (n - 1))) / n;
 
@@ -3570,9 +3595,9 @@ namespace FreeLibSet.Core
           // Нет смиысла создавать DataView на один раз
           if (ids[0] != 0)
           {
-            DataRow[] Row2 = table.Select("Id=" + ids[0]);
-            if (Row2.Length > 0)
-              res[0] = Row2[0];
+            DataRow[] row2 = table.Select("Id=" + ids[0]);
+            if (row2.Length > 0)
+              res[0] = row2[0];
           }
         }
         else
@@ -3603,7 +3628,7 @@ namespace FreeLibSet.Core
     /// <returns>Наличие ключа</returns>
     private static bool IsPrimaryIdKey(DataTable table)
     {
-      if (table.PrimaryKey.Length == 1)
+      if (GetPrimaryKeyLength(table) == 1)
         return String.Equals(table.PrimaryKey[0].ColumnName, "Id", StringComparison.OrdinalIgnoreCase);
       else
         return false;
@@ -3636,11 +3661,12 @@ namespace FreeLibSet.Core
     #region GetDataTableRows
 
     /// <summary>
-    /// Копирование строк таблицы <see cref="DataTable"/> в массив
+    /// Копирование строк таблицы <see cref="DataTable"/> в массив.
     /// </summary>
     /// <param name="table">Таблица, откуда берутся строки.
     /// Если null, то будет возвращен пустой массив.</param>
     /// <returns>Массив строк</returns>
+    /// <seealso cref="GetDataViewRows(DataView)"/>
     public static DataRow[] GetDataTableRows(DataTable table)
     {
       if (table == null)
@@ -3656,7 +3682,7 @@ namespace FreeLibSet.Core
     /// Копируются строки из выбранного диапазона.
     /// Параметры диапазона <paramref name="startIndex"/> и <paramref name="count"/> должны находится в пределах <paramref name="table"/>.Rows.Count.
     /// </summary>
-    /// <param name="table">Таблица, откуда берутся строки</param>
+    /// <param name="table">Таблица, откуда берутся строки. Не может быть null</param>
     /// <param name="startIndex">Начальный индекс</param>
     /// <param name="count">Количество строк</param>
     /// <returns>Массив строк</returns>
@@ -3664,7 +3690,7 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (table == null)
-        throw new ArgumentNullException("Table");
+        throw new ArgumentNullException("table");
 #endif
 
       DataRow[] res = new DataRow[count];
@@ -3672,6 +3698,26 @@ namespace FreeLibSet.Core
         res[i] = table.Rows[startIndex + i];
       return res;
     }
+
+    // Есть метод GetDataViewRows()
+
+    ///// <summary>
+    ///// Копирование строк таблицы <see cref="DataView.Table"/> в массив
+    ///// </summary>
+    ///// <param name="dv">Просмотр таблицы, откуда берутся строки.
+    ///// Если null, то будет возвращен пустой массив.</param>
+    ///// <returns>Массив строк</returns>
+    //public static DataRow[] GetDataTableRows(DataView dv)
+    //{
+    //  if (dv == null)
+    //    return new DataRow[0];
+
+    //  DataRow[] res = new DataRow[dv.Count];
+    //  for (int i = 0; i < dv.Count; i++)
+    //    res[i] = dv[i].Row;
+    //  return res;
+    //}
+
 
     #endregion
 
@@ -3812,7 +3858,7 @@ namespace FreeLibSet.Core
         else
         {
           if (!skipBadSource)
-            throw new ArgumentException("Неподдерживаемый тип аргумента: " + source.GetType().ToString(), "source");
+            throw ExceptionFactory.ArgUnknownType("source", source);
         }
       }
     }
@@ -3837,7 +3883,7 @@ namespace FreeLibSet.Core
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       int colPos = GetColumnPosWithCheck(table, columnName);
@@ -4944,7 +4990,7 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region GetColumnNames, GetTableNames
+    #region GetColumnNames(), GetTableNames()
 
     /// <summary>
     /// Получить список имен столбцов в таблице
@@ -4974,6 +5020,105 @@ namespace FreeLibSet.Core
 
     #endregion
 
+    #region AreColumnNamesEqual(), AreTableNamesEqual()
+
+    /// <summary>
+    /// Сравнение списка имен столбцов в двух таблицах.
+    /// Имена столбцов не чувствительны к регистру.
+    /// Сравниваются только имена столбов, но не тип данных и другие свойства <see cref="DataColumn"/>.
+    /// </summary>
+    /// <param name="table1">Первая таблица</param>
+    /// <param name="table2">Вторая таблица</param>
+    /// <param name="ignoreOrder">Если true, то порядок столбцов в таблицах может не совпадать.
+    /// Если false, то требуется совпадения порядка столбцов</param>
+    /// <returns>true, если имена полей одинаковые</returns>
+    public static bool AreColumnNamesEqual(DataTable table1, DataTable table2, bool ignoreOrder)
+    {
+#if DEBUG
+      if (table1 == null)
+        throw new ArgumentNullException("table1");
+      if (table2==null)
+        throw new ArgumentNullException("table2");
+#endif
+
+      if (table1.Columns.Count != table2.Columns.Count)
+        return false;
+
+      if (Object.ReferenceEquals(table1, table2))
+        return true;
+
+      if (ignoreOrder)
+      {
+        string[] names2 = GetColumnNames(table2);
+        StringArrayIndexer indexer2 = new StringArrayIndexer(names2, true);
+        for (int i = 0; i < table1.Columns.Count; i++)
+        {
+          if (!indexer2.Contains(table1.Columns[i].ColumnName))
+            return false;
+        }
+      }
+      else
+      {
+        for (int i = 0; i < table1.Columns.Count; i++)
+        {
+          if (!String.Equals(table1.Columns[i].ColumnName, table2.Columns[i].ColumnName, StringComparison.OrdinalIgnoreCase))
+            return false;
+        }
+      }
+
+      return true;
+    }
+
+    /// <summary>
+    /// Сравнение списка имен таблиц в двух наборах.
+    /// Имена таблиц не чувствительны к регистру.
+    /// Сравниваются только имена таблиц, но не не список полей в них.
+    /// Также не сравниваются <see cref="DataSet.Relations"/>, <see cref="DataSet.ExtendedProperties"/> и прочие свойства.
+    /// </summary>
+    /// <param name="ds1">Первый набор данных</param>
+    /// <param name="ds2">Второй набор данных</param>
+    /// <param name="ignoreOrder">Если true, то порядок таблиц в наборах может не совпадать.
+    /// Если false, то требуется совпадения порядка таблиц</param>
+    /// <returns>true, если имена таблиц одинаковые</returns>
+    public static bool AreTableNamesEqual(DataSet ds1, DataSet ds2, bool ignoreOrder)
+    {
+#if DEBUG
+      if (ds1 == null)
+        throw new ArgumentNullException("ds1");
+      if (ds2 == null)
+        throw new ArgumentNullException("ds2");
+#endif
+
+      if (ds1.Tables.Count != ds2.Tables.Count)
+        return false;
+
+      if (Object.ReferenceEquals(ds1, ds2))
+        return true;
+
+      if (ignoreOrder)
+      {
+        string[] names2 = GetTableNames(ds2);
+        StringArrayIndexer indexer2 = new StringArrayIndexer(names2, true);
+        for (int i = 0; i < ds1.Tables.Count; i++)
+        {
+          if (!indexer2.Contains(ds1.Tables[i].TableName))
+            return false;
+        }
+      }
+      else
+      {
+        for (int i = 0; i < ds1.Tables.Count; i++)
+        {
+          if (!String.Equals(ds1.Tables[i].TableName, ds2.Tables[i].TableName, StringComparison.OrdinalIgnoreCase))
+            return false;
+        }
+      }
+
+      return true;
+    }
+
+    #endregion
+
     #region SetBoundariesFlags
 
     /// <summary>
@@ -4998,7 +5143,7 @@ namespace FreeLibSet.Core
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(keyColumnNames))
-        throw new ArgumentNullException("keyColumnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("keyColumnNames");
 #endif
 
       int[] aKeyColumnPos = GetColumnPosArrayWithCheck(table, keyColumnNames);
@@ -5012,7 +5157,7 @@ namespace FreeLibSet.Core
         beginFlagColumnPos = GetColumnPosWithCheck(table, beginFlagColumnName);
 #if DEBUG
         if (table.Columns[beginFlagColumnPos].DataType != typeof(bool))
-          throw new ArgumentException("Столбец \"" + beginFlagColumnName + "\" таблицы \"" + table.TableName + "\" имеет тип \"" + table.Columns[beginFlagColumnPos].DataType.ToString() + "\", а не логический", "beginFlagColumnName");
+          throw ExceptionFactory.ArgInvalidColumnType("beginFlagColumnName", table.Columns[beginFlagColumnPos]);
 #endif
       }
 
@@ -5023,7 +5168,7 @@ namespace FreeLibSet.Core
         endFlagColumnPos = GetColumnPosWithCheck(table, endFlagColumnName);
 #if DEBUG
         if (table.Columns[endFlagColumnPos].DataType != typeof(bool))
-          throw new ArgumentException("Столбец \"" + endFlagColumnName + "\" таблицы \"" + table.TableName + "\" имеет тип \"" + table.Columns[endFlagColumnPos].DataType.ToString() + "\", а не логический", "endFlagColumnName");
+          throw ExceptionFactory.ArgInvalidColumnType("endFlagColumnName", table.Columns[endFlagColumnPos]);
 #endif
       }
 
@@ -5087,7 +5232,7 @@ namespace FreeLibSet.Core
         beginFlagColumnPos = GetColumnPosWithCheck(dv.Table, beginFlagColumnName);
 #if DEBUG
         if (dv.Table.Columns[beginFlagColumnPos].DataType != typeof(bool))
-          throw new ArgumentException("Столбец \"" + beginFlagColumnName + "\" таблицы \"" + dv.Table.TableName + "\" имеет тип \"" + dv.Table.Columns[beginFlagColumnPos].DataType.ToString() + "\", а не логический", "beginFlagColumnName");
+          throw ExceptionFactory.ArgInvalidColumnType("beginFlagColumnName", dv.Table.Columns[beginFlagColumnPos]);
 #endif
       }
 
@@ -5098,7 +5243,7 @@ namespace FreeLibSet.Core
         endFlagColumnPos = GetColumnPosWithCheck(dv.Table, endFlagColumnName);
 #if DEBUG
         if (dv.Table.Columns[endFlagColumnPos].DataType != typeof(bool))
-          throw new ArgumentException("Столбец \"" + endFlagColumnName + "\" таблицы \"" + dv.Table.TableName + "\" имеет тип \"" + dv.Table.Columns[endFlagColumnPos].DataType.ToString() + "\", а не логический", "endFlagColumnName");
+          throw ExceptionFactory.ArgInvalidColumnType("endFlagColumnName", dv.Table.Columns[endFlagColumnPos]);
 #endif
       }
 
@@ -5145,9 +5290,9 @@ namespace FreeLibSet.Core
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(keyColumnNames))
-        throw new ArgumentNullException("keyColumnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("keyColumnNames");
       if (String.IsNullOrEmpty(orderColumnName))
-        throw new ArgumentNullException("orderColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("orderColumnName");
 #endif
 
       int[] aKeyColumnPos = GetColumnPosArrayWithCheck(table, keyColumnNames);
@@ -5155,7 +5300,7 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (!IsIntegerType(table.Columns[orderColumnPos].DataType))
-        throw new ArgumentException("Столбец \"" + orderColumnName + "\" таблицы \"" + table.TableName + "\" имеет тип \"" + table.Columns[orderColumnPos].DataType.ToString() + "\", а не целочисленный", "orderColumnName");
+        throw ExceptionFactory.ArgInvalidColumnType("orderColumnName", table.Columns[orderColumnPos]);
 #endif
 
       if (table.Rows.Count == 0)
@@ -5200,7 +5345,7 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (!IsIntegerType(dv.Table.Columns[orderColumnPos].DataType))
-        throw new ArgumentException("Столбец \"" + orderColumnName + "\" таблицы \"" + dv.Table.TableName + "\" имеет тип \"" + dv.Table.Columns[orderColumnPos].DataType.ToString() + "\", а не целочисленный", "orderColumnName");
+        throw ExceptionFactory.ArgInvalidColumnType("orderColumnName", dv.Table.Columns[orderColumnPos]);
 #endif
 
       if (dv.Count == 0)
@@ -5392,7 +5537,7 @@ namespace FreeLibSet.Core
         case 3:
           return Convert.ToDecimal(value);
         default:
-          throw new ArgumentException("Неизвестный уровень", "Level");
+          throw ExceptionFactory.ArgUnknownValue("Level", level);
       }
     }
 
@@ -5417,7 +5562,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Возвращает значение ключевого поля, которого нет в таблице данных.
-    /// Таблица должна иметь первичный ключ по числовому полю
+    /// Таблица должна иметь первичный ключ по полю типа <see cref="Int32"/>.
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <returns>Идентификатор для новой строки</returns>
@@ -5427,10 +5572,10 @@ namespace FreeLibSet.Core
       if (table == null)
         throw new ArgumentNullException("table");
 #endif
-      if (table.PrimaryKey.Length != 1)
-        throw new ArgumentException("Таблица должна иметь первичный ключ по одному полю");
+      if (GetPrimaryKeyLength(table) != 1)
+        throw ExceptionFactory.ArgDataTableMustHaveSingleColumnPrimaryKey("table", table);
       if (table.PrimaryKey[0].DataType != typeof(Int32))
-        throw new ArgumentException("Таблица должна иметь первичный ключ по числовому полю");
+        throw ExceptionFactory.ArgDataTablePrimaryKeyWrongType("table", table, typeof(Int32));
 
       lock (_TheRandom)
       {
@@ -5497,9 +5642,9 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (srcTable == null)
-        throw new ArgumentNullException("SrcTable");
+        throw new ArgumentNullException("srcTable");
       if (String.IsNullOrEmpty(keyColumnNames))
-        throw new ArgumentNullException("KeyColumnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("keyColumnNames");
 #endif
 
       string[] aKeyColumnNames = keyColumnNames.Split(',');
@@ -5609,7 +5754,6 @@ namespace FreeLibSet.Core
 
     #region DataView
 
-
     /// <summary>
     /// Распределение строк таблицы, выбранных в <see cref="DataView"/> по группам с одинаковыми значениями ключевых
     /// полей. На входе задается список <paramref name="srcDataView"/> с произвольным набором строк.
@@ -5657,7 +5801,7 @@ namespace FreeLibSet.Core
       if (srcDataView == null)
         throw new ArgumentNullException("srcDataView");
       if (String.IsNullOrEmpty(keyColumnNames))
-        throw new ArgumentNullException("keyColumnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("keyColumnNames");
 #endif
       string[] aKeyColumnNames = keyColumnNames.Split(',');
       int[] keyColumnPoss = new int[aKeyColumnNames.Length];
@@ -5804,7 +5948,7 @@ namespace FreeLibSet.Core
       if (srcRows == null)
         throw new ArgumentNullException("srcTable");
       if (String.IsNullOrEmpty(keyColumnNames))
-        throw new ArgumentNullException("keyColumnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("keyColumnNames");
 #endif
       //if (srcRows == null)
       if (srcRows.Length == 0) // 27.12.2020
@@ -5932,7 +6076,7 @@ namespace FreeLibSet.Core
       {
 #if DEBUG
         if (row.Table == null)
-          throw new NullReferenceException("Не установлено свойство DataRow.Table");
+          throw ExceptionFactory.ArgProperty("row", row, "DataRow.Table", row.Table, null);
 #endif
 
         row.Table.Rows.Add(row);
@@ -6017,7 +6161,7 @@ namespace FreeLibSet.Core
           break;
 
         default:
-          throw new ArgumentException("Неизвестное значение аргумента " + newState.ToString(), "newState");
+          throw ExceptionFactory.ArgUnknownValue("newState", newState);
       }
     }
 
@@ -6290,7 +6434,7 @@ namespace FreeLibSet.Core
       if (fv != null)
         return fv.ToString(String.Empty, StdConvert.NumberFormat);
       else if (value.GetType().IsArray)
-        throw new ArgumentException("Массивы не поддерживаются", "value");
+        throw ExceptionFactory.ArgUnknownType("value", value);
       else
         return value.ToString();
     }
@@ -6370,7 +6514,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("dstDS");
 #endif
       if (object.ReferenceEquals(srcDS, dstDS))
-        throw new ArgumentException("Нельзя копировать набор сам в себя", "dstDS");
+        throw ExceptionFactory.ArgAreSame("srcDS", "dstDS");
 
       for (int i = 0; i < srcDS.Tables.Count; i++)
       {
@@ -6413,7 +6557,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("dstTable");
 #endif
       if (object.ReferenceEquals(srcTable, dstTable))
-        throw new ArgumentException("Нельзя копировать таблицу саму в себя", "dstTable");
+        throw ExceptionFactory.ArgAreSame("srcTable", "dstTable");
 
       // Таблица может содержать первичный ключ. 
       // При построчном копировании мы не используем поиск, поэтому ключ не нужен.
@@ -6515,7 +6659,7 @@ namespace FreeLibSet.Core
 
       // Это ужасно, но работать будет
       if (object.ReferenceEquals(srcRow, dstRow))
-        throw new ArgumentException("Нельзя копировать строку саму в себя", "dstRow");
+        throw ExceptionFactory.ArgAreSame("srcRow", "dstRow");
 #endif
 
       if (useColumnNames)
@@ -6549,7 +6693,6 @@ namespace FreeLibSet.Core
       }
     }
 
-
     /// <summary>
     /// Копирование значений полей из одной строки в другую для заданных имен полей.
     /// Если исходная строка помечена на удаление (<see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>), то используются значения полей в
@@ -6581,7 +6724,7 @@ namespace FreeLibSet.Core
 
       // Это ужасно, но работать будет
       if (object.ReferenceEquals(srcRow, dstRow))
-        throw new ArgumentException("Нельзя копировать строку саму в себя", "dstRow");
+        throw ExceptionFactory.ArgAreSame("srcRow", "dstRow");
 #endif
 
       DataRowVersion srcVer = DataRowVersion.Default;
@@ -6738,14 +6881,14 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (table == null)
-        throw new ArgumentNullException("Table");
+        throw new ArgumentNullException("table");
       if (columnIndex < 0 || columnIndex >= table.Columns.Count)
-        throw new ArgumentOutOfRangeException("columnIndex", columnIndex, "Неправильный индекс столбца таблицы");
+        throw ExceptionFactory.ArgOutOfRange("columnIndex", columnIndex, 0, table.Columns.Count - 1);
 #endif
       DataColumn col = table.Columns[columnIndex];
 
       if (col.DataType != typeof(string))
-        throw new ArgumentException("Столбец \"" + col.ColumnName + "\" не является строковым");
+        throw ExceptionFactory.ArgInvalidColumnType("columnIndex", col);
 
       foreach (DataRow row in table.Rows)
       {
@@ -6834,7 +6977,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("dstTable");
 #endif
       if (Object.ReferenceEquals(srcTable, dstTable))
-        throw new ArgumentException("Таблицы не должны совпадать", "dstTable");
+        throw ExceptionFactory.ArgAreSame("srcTable", "dstTable");
 
       foreach (DataRow srcRow in srcTable.Rows)
         UpdateRowByPrimaryKey(srcRow, dstTable, useColumnNames);
@@ -6864,7 +7007,7 @@ namespace FreeLibSet.Core
       // Поиск по ключу
       object[] keys = GetPrimaryKeyValues(srcRow, dstTable);
       if (keys == null)
-        throw new ArgumentException("Не удалось извлечь ключевые поля для строки", "dstTable");
+        throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("dstTable", dstTable);
 
       DataRow dstRow = dstTable.Rows.Find(keys);
       if (dstRow == null)
@@ -6900,7 +7043,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("dstTable");
 #endif
       if (Object.ReferenceEquals(srcTable, dstTable))
-        throw new ArgumentException("Таблицы не должны совпадать", "dstTable");
+        throw ExceptionFactory.ArgAreSame("srcTable", "dstTable");
 
       // Список строк в DstTable, которые были использованы
       Dictionary<DataRow, object> usedRows = new Dictionary<DataRow, object>(dstTable.Rows.Count);
@@ -6917,7 +7060,7 @@ namespace FreeLibSet.Core
           // Поиск по ключу
           object[] keys = GetPrimaryKeyValues(srcRow, dstTable);
           if (keys == null)
-            throw new InvalidOperationException("Не удалось извлечь ключевые поля для строки");
+            throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("dstTable", dstTable);
 
           DataRow dstRow = dstTable.Rows.Find(keys);
           if (dstRow == null)
@@ -7002,7 +7145,7 @@ namespace FreeLibSet.Core
           colPoss[j] = row.Table.Columns.IndexOf(colNames[j]);
 #if DEBUG
           if (colPoss[j] < 0)
-            throw new BugException("Не нашли поле \"" + colNames[j] + "\"");
+            throw new BugException("Column not found: \"" + colNames[j] + "\"");
 #endif
 
           rowVals[j] = row[colPoss[j]];
@@ -7066,6 +7209,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="dv">Объект <see cref="DataView"/>. Если null, то будет возвращен пустой массив строк</param>
     /// <returns>Массив строк</returns>
+    /// <seealso cref="GetDataTableRows(DataTable)"/>
     public static DataRow[] GetDataViewRows(DataView dv)
     {
       if (dv == null)
@@ -7183,7 +7327,7 @@ namespace FreeLibSet.Core
             s = s.Substring(0, s.Length - 4);
         }
         if (s.Length == 0)
-          throw new ArgumentException("Неправильный формат порядка сортировки", "sort");
+          throw ExceptionFactory.ArgUnknownValue("sort", sort);
         if (s[0] == '[' && s[s.Length - 1] == ']') // 21.04.2023
           s = s.Substring(1, s.Length - 2);
         columnNames[i] = s;
@@ -7234,7 +7378,7 @@ namespace FreeLibSet.Core
       }
 
       if (sort.IndexOf(',') >= 0)
-        throw new InvalidOperationException("В сортировке присутствует символ \",\". Следует использовать метод GetDataViewSortColumnNames(), поддерживающий массив полей");
+        throw ExceptionFactory.ArgBadChar("sort", sort, ",");
 
       columnName = sort.Trim();
       if (columnName.EndsWith(" DESC", StringComparison.OrdinalIgnoreCase))
@@ -7248,7 +7392,7 @@ namespace FreeLibSet.Core
           columnName = columnName.Substring(0, columnName.Length - 4);
       }
       if (columnName.Length == 0)
-        throw new ArgumentException("Неправильный формат порядка сортировки", "sort");
+        throw ExceptionFactory.ArgUnknownValue("sort", sort);
       if (columnName[0] == '[' && columnName[columnName.Length - 1] == ']')
         columnName = columnName.Substring(1, columnName.Length - 2);
     }
@@ -7272,14 +7416,14 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("directions");
 #endif
       if (directions.Length != columnNames.Length)
-        throw new ArgumentException("Длина массивов должна быть одинаковой");
+        throw ExceptionFactory.ArgWrongCollectionCount("directions", directions, columnNames.Length);
 
       if (columnNames.Length == 0)
         return String.Empty;
       if (columnNames.Length == 1 && directions[0] == ListSortDirection.Ascending)
       {
         if (String.IsNullOrEmpty(columnNames[0]))
-          throw new ArgumentException("columnNames[0] is null or empty", "columnNames");
+          throw ExceptionFactory.ArgInvalidListItem("columnNames", columnNames, 0);
         return columnNames[0];
       }
 
@@ -7287,7 +7431,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < columnNames.Length; i++)
       {
         if (String.IsNullOrEmpty(columnNames[i]))
-          throw new ArgumentException("columnNames[" + i.ToString() + "] is null or empty", "columnNames");
+          throw ExceptionFactory.ArgInvalidListItem("columnNames", columnNames, i);
 
         if (i > 0)
           sb.Append(',');
@@ -7383,10 +7527,10 @@ namespace FreeLibSet.Core
       if (dv == null)
         throw new ArgumentNullException("dv");
       if (String.IsNullOrEmpty(dv.Sort))
-        throw new ArgumentException("Свойство DataView.Sort не установлено", "dv");
+        throw ExceptionFactory.ArgProperty("dv", dv, "DataView.Sort", dv.Sort, null);
 #endif
       if (dv.Sort.IndexOf(',') >= 0)
-        throw new ArgumentException("Свойство DataView.Sort задает несколько полей для сортировки. Используйте перегрузку метода FindOrAddRow(), принимающую массив значений", "dv");
+        throw ExceptionFactory.ArgBadChar("dv",dv.Sort, ",");
 
       int p = dv.Find(searchValue);
       if (p < 0)
@@ -7436,7 +7580,7 @@ namespace FreeLibSet.Core
       if (dv == null)
         throw new ArgumentNullException("dv");
       if (String.IsNullOrEmpty(dv.Sort))
-        throw new ArgumentException("Свойство DataView.Sort не установлено", "dv");
+        throw ExceptionFactory.ArgProperty("dv", dv, "DataView.Sort", dv.Sort, null);
       if (searchValues == null)
         throw new ArgumentNullException("searchValues");
 #endif
@@ -7447,7 +7591,7 @@ namespace FreeLibSet.Core
         row = dv.Table.NewRow();
         string[] colNames = GetDataViewSortColumnNames(dv.Sort); // не может вернуть null, т.к. dvSort - непустая строка
         if (searchValues.Length != colNames.Length)
-          throw new ArgumentException("Длина списка значений (" + searchValues.Length.ToString() + ") не совпадает с числом полей для сортироки (" + colNames.Length.ToString() + ") заданном в свойстве Sort объекта DataView", "searchValues");
+          throw ExceptionFactory.ArgWrongCollectionCount("searchValues", searchValues, colNames.Length);
         for (int i = 0; i < colNames.Length; i++)
           row[colNames[i]] = searchValues[i];
         dv.Table.Rows.Add(row);
@@ -7526,7 +7670,7 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (String.IsNullOrEmpty(uniqueColumnNames))
-        throw new ArgumentNullException("UniqueColumnNames");
+        throw new ArgumentNullException("uniqueColumnNames");
 #endif
 
       return CreateUniqueTable(srcTable, uniqueColumnNames.Split(','));

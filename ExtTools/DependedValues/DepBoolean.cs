@@ -5,6 +5,7 @@ using FreeLibSet.DependedValues;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.DependedValues
 {
@@ -90,7 +91,7 @@ namespace FreeLibSet.DependedValues
       if (resValue == null)
         throw new ArgumentNullException("resValue");
       if (resValue2 == null)
-        throw new ArgumentException("К элементу " + resValue.ToString() + " нельзя присоединять источник");
+        throw new ArgumentException(String.Format(Res.DepValue_Arg_NotDepInput, resValue.ToString()), "resValue");
       if (srcValue == null)
         throw new ArgumentNullException("srcValue");
 #endif
@@ -190,7 +191,7 @@ namespace FreeLibSet.DependedValues
       if (resValue == null)
         throw new ArgumentNullException("resValue");
       if (resValue2 == null)
-        throw new ArgumentException("К элементу " + resValue.ToString() + " нельзя присоединять источник");
+        throw new ArgumentException(String.Format(Res.DepValue_Arg_NotDepInput, resValue.ToString()), "resValue");
       if (srcValue == null)
         throw new ArgumentNullException("srcValue");
 #endif
@@ -507,7 +508,7 @@ namespace FreeLibSet.DependedValues
         case DepCompareKind.GreaterOrEqualThan: return comparer.Compare(value1, value2) >= 0;
         case DepCompareKind.NotEqual: return comparer.Compare(value1, value2) != 0;
         default:
-          throw new ArgumentException("Неизвестная операция " + kind.ToString(), "kind");
+          throw ExceptionFactory.ArgUnknownValue("kind", kind);
       }
     }
 

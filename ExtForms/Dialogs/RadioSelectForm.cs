@@ -20,7 +20,7 @@ namespace FreeLibSet.Forms
     public RadioSelectForm(string formTitle, string groupTitle, string[] items, string[] imageKeys)
     {
       InitializeComponent();
-      EFPApp.InitFormImages(this);
+      //EFPApp.InitFormImages(this);
       Text = formTitle;
       TheGroupBox.Text = groupTitle;
 
@@ -133,7 +133,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public RadioSelectDialog()
     {
-      _Title = "Выбор из списка";
+      _Title = Res.ListSelectDialog_Msg_TitleSingleSelect;
       _SelectedIndex = 0;
       _DialogPosition = new EFPDialogPosition();
     }
@@ -179,7 +179,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (Items == null)
-          throw new NullReferenceException("Свойство Items должно быть установлено до установки текущей позиции");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
         SelectedIndex = Array.IndexOf<string>(Items, value);
       }
     }
@@ -239,9 +239,9 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (_Items == null)
-            throw new NullReferenceException("Сначала должно быть установлено свойство Items");
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Длина массива должна быть равна "+_Items.Length.ToString());
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
         }
         _EnabledItemFlags = value;
       }
@@ -270,9 +270,9 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (_Items == null)
-            throw new NullReferenceException("Сначала должно быть установлено свойство Items");
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Длина массива должна быть равна " + _Items.Length.ToString());
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
         }
         _ImageKeys = value;
       }
@@ -312,12 +312,12 @@ namespace FreeLibSet.Forms
     /// <returns><see cref="DialogResult.OK"/>, если пользователь сделал выбор</returns>
     public DialogResult ShowDialog()
     {
-      if (Items == null)
-        throw new NullReferenceException("Свойство Items не было установлено");
+      if (_Items == null)
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
 
       if (Items.Length == 0)
       {
-        EFPApp.MessageBox("Нет элементов для выбора", Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        EFPApp.MessageBox(Res.ListSelectDialog_Err_NoItems, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         return DialogResult.Cancel;
       }
 
@@ -327,7 +327,7 @@ namespace FreeLibSet.Forms
       if (_ImageKeys != null && EFPApp.ShowListImages /* 20.05.2021 */)
       { 
         if (_ImageKeys.Length!=Items.Length)
-          throw new InvalidOperationException("Длина массива ImageKeys ("+_ImageKeys.Length.ToString()+") не совпадает с длиной массива Items ("+Items.Length.ToString()+")");
+          throw ExceptionFactory.ObjectPropertyCount(this, "ImageKeys", ImageKeys, Items.Length);
         for (int i = 0; i < Items.Length; i++)
         {
           if (!String.IsNullOrEmpty(_ImageKeys[i]))
@@ -343,7 +343,7 @@ namespace FreeLibSet.Forms
       if (_EnabledItemFlags != null)
       {
         if (_EnabledItemFlags.Length != Items.Length)
-          throw new InvalidOperationException("Длина массива EnabledItemFlags  (" + _EnabledItemFlags.Length.ToString() + ") не совпадает с длиной массива Items (" + Items.Length.ToString() + ")");
+          throw ExceptionFactory.ObjectPropertyCount(this, "EnabledItemFlags", EnabledItemFlags, Items.Length);
       }
 
       RadioSelectForm frm = new RadioSelectForm(Title, GroupTitle, Items, imageKeys2);

@@ -36,7 +36,7 @@ namespace FreeLibSet.Reporting
     protected override void DoCreateFile(BRReport report, AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
       ZipFileTools.CheckZipLibAvailable();
       CreateFile2(report, filePath);
     }
@@ -570,7 +570,7 @@ namespace FreeLibSet.Reporting
                     case BRHAlign.Left: ha = "start"; break;
                     case BRHAlign.Center: ha = "center"; break;
                     case BRHAlign.Right: ha = "end"; break;
-                    default: throw new BugException("Неизвестное горизонтальное выравнивание");
+                    default: throw new BugException("Unknown horizontal alignment");
                   }
                   if (ha.Length > 0)
                     SetAttr(elParProps, "fo:text-align", ha, nmspcFo);
@@ -580,7 +580,7 @@ namespace FreeLibSet.Reporting
                     case BRVAlign.Top: va = "top"; break;
                     case BRVAlign.Center: va = "middle"; break;
                     case BRVAlign.Bottom: va = "bottom"; break;
-                    default: throw new BugException("Неизвестное вертикальное выравнивание");
+                    default: throw new BugException("Unknown vertical alignment");
                   }
                   SetAttr(elCellProps, "style:vertical-align", va, nmspcStyle);
 

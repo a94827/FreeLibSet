@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591 // пока не утрясется
 
@@ -22,7 +23,7 @@ namespace FreeLibSet.Forms
     public FileEditorFormHandler(EFPFormProvider formProvider, bool addCommands)
     {
       _FormProvider = formProvider;
-      DefaultFormTitle = "Без имени";
+      DefaultFormTitle = Res.FileEditorFormHandler_Title_Default;
 
       if (addCommands)
         formProvider.CommandItems = new FileEditorFormCommandItems(this);
@@ -133,7 +134,7 @@ namespace FreeLibSet.Forms
     public virtual void PerformSave(bool saveAs)
     {
       if (Save == null)
-        throw new InvalidOperationException("Обработчик события Save не установлен");
+        throw ExceptionFactory.ObjectEventHandlerNotSet(this, "Save");
 
       AbsPath oldFileName = FileName;
       AbsPath thisFileName = FileName;
@@ -174,8 +175,9 @@ namespace FreeLibSet.Forms
     {
       if (!Modified)
         return;
-      switch (EFPApp.MessageBox("Документ \"" + (FileName.IsEmpty ? DefaultFormTitle : FileName.Path) + "\" не сохранен. Сохранить изменения?",
-        "Подтверждение", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+      switch (EFPApp.MessageBox(String.Format(Res.FileEditorFormHandler_Msg_NotSaved,
+        (FileName.IsEmpty ? DefaultFormTitle : FileName.Path)),
+        Res.MessageBox_Title_Confirmation, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
       {
         case DialogResult.Yes:
           PerformSave(false);

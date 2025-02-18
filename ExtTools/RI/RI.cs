@@ -472,7 +472,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected virtual void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      throw new NotImplementedException("Метод OnWriteValues() должен быть переопределен для класса " + GetType().ToString());
+      throw ExceptionFactory.MustBeReimplemented(this, "OnWriteValues()");
     }
 
     /// <summary>
@@ -506,7 +506,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected virtual void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      throw new NotImplementedException("Метод OnReadValues() должен быть переопределен для класса " + GetType().ToString());
+      throw ExceptionFactory.MustBeReimplemented(this, "OnReadValues()");
     }
 
     #endregion
@@ -550,7 +550,7 @@ namespace FreeLibSet.RI
     public void CheckNotFixed()
     {
       if (_IsFixed)
-        throw new InvalidOperationException("Элемент защищен от изменения управляющих свойств и добавления дочерних элементов");
+        throw new InvalidOperationException(Res.RI_Err_IsFixed);
     }
 
     #endregion
@@ -566,7 +566,7 @@ namespace FreeLibSet.RI
     public void SetError(string message)
     {
       if (String.IsNullOrEmpty(message))
-        throw new ArgumentNullException("message");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("message");
       _ErrorMessage = message;
     }
 
@@ -994,7 +994,7 @@ namespace FreeLibSet.RI
     /// <param name="text">Текст сообщения</param>
     public void ErrorMessageBox(string text)
     {
-      MessageBox(text, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      MessageBox(text, Res.RI_Msg_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 
     /// <summary>
@@ -1013,7 +1013,7 @@ namespace FreeLibSet.RI
     /// <param name="text">Текст сообщения</param>
     public void WarningMessageBox(string text)
     {
-      MessageBox(text, "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+      MessageBox(text, Res.RI_Msg_Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
 
     /// <summary>
@@ -1183,7 +1183,7 @@ namespace FreeLibSet.RI
     /// Создает новый объект исключения со стандартным сообщением
     /// </summary>
     public RemoteInterfaceNotsopportedException()
-      : base("Вызов интерфейса пользователя невозможен")
+      : base(Res.RemoteInterfaceNotsopportedException_Err_Default)
     {
     }
 
@@ -1257,11 +1257,11 @@ namespace FreeLibSet.RI
     protected override NamedValues OnExecute(NamedValues args)
     {
       if (UI == null)
-        throw new NullReferenceException("Не установлено контекстное свойство \"UI\"");
-      NamedValues Res = ExecuteInterfaceCall(args, UI);
-      if (Res == null)
-        throw new InvalidOperationException("Неизвестное действие Action=\"" + args.GetString("Action") + "\"");
-      return Res;
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "UI");
+      NamedValues res = ExecuteInterfaceCall(args, UI);
+      if (res == null)
+        throw new InvalidOperationException(String.Format(Res.RI_Err_UnknownAction, args.GetString("Action")));
+      return res;
     }
 
     /// <summary>
@@ -1282,7 +1282,7 @@ namespace FreeLibSet.RI
         case "ShowDialog":
           Dialog dlg1 = dispArgs["Dialog"] as Dialog;
           if (dlg1 == null)
-            throw new NullReferenceException("Не задан аргумент \"Dialog\"");
+            throw new NullReferenceException(String.Format(Res.RI_Err_ArgumentNotSet, "Dialog"));
           dlg1.SetFixed();
 
           dispRes = new NamedValues();
@@ -1298,7 +1298,7 @@ namespace FreeLibSet.RI
         case "ShowStandardDialog":
           StandardDialog dlg2 = dispArgs["Dialog"] as StandardDialog;
           if (dlg2 == null)
-            throw new NullReferenceException("Не задан аргумент \"Dialog\"");
+            throw new NullReferenceException(String.Format(Res.RI_Err_ArgumentNotSet, "Dialog"));
           dlg2.SetFixed();
 
           dispRes = new NamedValues();

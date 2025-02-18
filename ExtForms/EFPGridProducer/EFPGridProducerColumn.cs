@@ -79,7 +79,7 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("item");
 #endif
       if (item.GridProducer != null && item.GridProducer != _GridProducer)
-        throw new InvalidOperationException("Повторное добавление столбца не допускается");
+        throw ExceptionFactory.CannotAddItemAgain(item);
       item.GridProducer = _GridProducer;
       base.Add(item);
     }
@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("item");
 #endif
       if (item.GridProducer != null && item.GridProducer != _GridProducer)
-        throw new InvalidOperationException("Повторное добавление столбца не допускается");
+        throw ExceptionFactory.CannotAddItemAgain(item);
       item.GridProducer = _GridProducer;
       base.Insert(index, item);
     }
@@ -247,7 +247,7 @@ namespace FreeLibSet.Forms
     public EFPGridProducerColumn AddFixedPoint(string columnName, string headerText, int textWidth, int decimalPlaces, string sizeGroup)
     {
       if (decimalPlaces < 0)
-        throw new ArgumentException("Количество знаков после запятой не может быть отрицательным", "decimalPlaces");
+        throw ExceptionFactory.ArgOutOfRange("decimalPlaces", decimalPlaces, 0, null);
 
       EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
       item.HeaderText = headerText;
@@ -1277,7 +1277,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException("value", value, "Ширина столбца не может быть меньше 1 символа");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
         _TextWidth = value;
       }
     }
@@ -1294,7 +1294,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException("value", value, "Минимальная ширина столбца не может быть меньше 1 символа");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
         _MinTextWidth = value;
       }
     }
@@ -1959,7 +1959,7 @@ namespace FreeLibSet.Forms
     private Reporting.BRDataViewMenuOutSettings GetSettings(string defCfgCode)
     {
       if (GridProducer == null)
-        throw new InvalidOperationException("Столбец должен быть присоединен к EFPGridProducer");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "GridProducer");
       return GridProducer.OutItem[defCfgCode];
     }
 
@@ -2294,7 +2294,7 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе
     /// </summary>
     public string[] ImageKeys { get { return _ImageKeys; } }
-    private string[] _ImageKeys;
+    private readonly string[] _ImageKeys;
 
     /// <summary>
     /// Если true (по умолчанию), то значение поля NULL интерпретируется как 0.
@@ -2321,7 +2321,7 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != _ImageKeys.Length)
-            throw new ArgumentException("Неправильная длина массива подсказок");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _ImageKeys.Length);
           _ToolTipTexts = value;
         }
       }
@@ -2362,7 +2362,7 @@ namespace FreeLibSet.Forms
         if (srcVal < 0 || srcVal >= ImageKeys.Length)
         {
           imageKey = ErrorImageKey;
-          args.ToolTipText = "Неправильное значение: " + srcVal.ToString();
+          args.ToolTipText = String.Format(Res.EFPGridProducer_ToolTip_WrongValue, srcVal);
         }
         else
         {
@@ -2403,7 +2403,7 @@ namespace FreeLibSet.Forms
     public EFPGridProducerRowOrderColumn(string name, string filterColumnName, int filterValue)
       : base(name, GetSourceColumnNames(filterColumnName))
     {
-      HeaderText = "№ п/п";
+      HeaderText = Res.EFPGridProducer_ColTitle_RowOrder;
       TextAlign = HorizontalAlignment.Right;
       _FilterColumnName = filterColumnName;
       _FilterValue = filterValue;

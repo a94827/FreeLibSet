@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DateRangeForm));
       this.btnOk = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
       this.edRange = new FreeLibSet.Controls.DateRangeBox();
@@ -36,47 +37,34 @@
       // 
       // btnOk
       // 
+      resources.ApplyResources(this.btnOk, "btnOk");
       this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOk.Location = new System.Drawing.Point(373, 17);
       this.btnOk.Name = "btnOk";
-      this.btnOk.Size = new System.Drawing.Size(88, 24);
-      this.btnOk.TabIndex = 2;
-      this.btnOk.Text = "О&К";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
       // 
+      resources.ApplyResources(this.btnCancel, "btnCancel");
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(373, 47);
       this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(88, 24);
-      this.btnCancel.TabIndex = 3;
-      this.btnCancel.Text = "Отмена";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // edRange
       // 
-      this.edRange.Location = new System.Drawing.Point(12, 43);
+      resources.ApplyResources(this.edRange, "edRange");
       this.edRange.Name = "edRange";
-      this.edRange.Size = new System.Drawing.Size(344, 37);
-      this.edRange.TabIndex = 1;
       // 
       // MainLabel
       // 
-      this.MainLabel.Location = new System.Drawing.Point(20, 20);
+      resources.ApplyResources(this.MainLabel, "MainLabel");
       this.MainLabel.Name = "MainLabel";
-      this.MainLabel.Size = new System.Drawing.Size(336, 20);
-      this.MainLabel.TabIndex = 0;
-      this.MainLabel.Text = "Период";
-      this.MainLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // DateRangeForm
       // 
       this.AcceptButton = this.btnOk;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(473, 92);
       this.Controls.Add(this.MainLabel);
       this.Controls.Add(this.edRange);
       this.Controls.Add(this.btnCancel);
@@ -85,7 +73,6 @@
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "DateRangeForm";
-      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.ResumeLayout(false);
 
     }

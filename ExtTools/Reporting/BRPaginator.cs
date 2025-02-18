@@ -46,9 +46,9 @@ namespace FreeLibSet.Reporting
     {
 #if DEBUG
       if (index < 0)
-        throw new ArgumentOutOfRangeException("index");
+        throw ExceptionFactory.ArgOutOfRange("index", index, 0, null);
       if (size < 10) // 1мм
-        throw new ArgumentOutOfRangeException("size");
+        throw ExceptionFactory.ArgOutOfRange("size", size, 10, null);
 #endif
 
       _Indexes.Add(index);
@@ -190,12 +190,12 @@ namespace FreeLibSet.Reporting
     public void GetCellMerge(BRSelector selector, out bool isFirstCell, out BRRange mergeRange)
     {
       if (!Object.ReferenceEquals(selector.Band, this.Band))
-        throw new ArgumentException("Селектор относится к другой полосе", "selector");
+        throw new ArgumentException(Res.BRPaginator_Arg_SelectorForAnotherBand, "selector");
 
       int pRow = RowArrayIndexer.IndexOf(selector.RowIndex);
       int pColumn = ColumnArrayIndexer.IndexOf(selector.ColumnIndex);
       if (pRow < 0 || pColumn < 0)
-        throw new ArgumentException("Селектор ссылается на ячейку, не входящую в текущий блок", "selector");
+        throw new ArgumentException(Res.BRPaginator_Arg_SelectorForAnotherCell, "selector");
 
       BRRange orgInfo = selector.MergeInfo;
       if (orgInfo.RowCount == 1 && orgInfo.ColumnCount == 1)
@@ -395,9 +395,9 @@ namespace FreeLibSet.Reporting
     {
 #if DEBUG
       if (index < 0)
-        throw new ArgumentOutOfRangeException("index");
+        throw ExceptionFactory.ArgOutOfRange("index", index, 0, null);
       if (size <= 0)
-        throw new ArgumentOutOfRangeException("size");
+        throw ExceptionFactory.ArgOutOfRange("size", size, 0, null);
 #endif
       _Index = index;
       _Size = size;
@@ -623,7 +623,7 @@ namespace FreeLibSet.Reporting
     {
       int maxW = band.Section.PageSetup.PrintAreaWidth;
       if (maxW < BRReport.MinColumnWidth)
-        throw new BugException("Неправильные параметры страницы");
+        throw new BugException("Wrong page setup");
 
       List<BRBlockSize> lst = new List<BRBlockSize>();
       BRBlockSize bs = null;
@@ -686,7 +686,7 @@ namespace FreeLibSet.Reporting
         {
 #if DEBUG
           if (bs.Sizes[j] < BRReport.MinColumnWidth)
-            throw new BugException("Неправильная ширина столбца");
+            throw new BugException("Wrong column width");
 #endif
 
           if (a[bs.Indexes[j]] == 0)
@@ -816,7 +816,7 @@ namespace FreeLibSet.Reporting
         _Section = section;
         _MaxHeight = section.PageSetup.PrintAreaHeight;
         if (_MaxHeight < BRReport.MinRowHeight)
-          throw new BugException("Неправильные параметры страницы");
+          throw new BugException("Wrong page setup");
       }
 
       private readonly BRPaginator _Paginator;
@@ -854,7 +854,7 @@ namespace FreeLibSet.Reporting
       {
 #if DEBUG
         if (realColWidthArrays.Length != _Section.Bands.Count)
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgWrongCollectionCount("realColWidthArrays", realColWidthArrays, _Section.Bands.Count);
 #endif
         _RowHeightArrays = new int[_Section.Bands.Count][];
         _RowRepeatableIndexes = new int[_Section.Bands.Count][];
@@ -976,7 +976,7 @@ namespace FreeLibSet.Reporting
           newPage = currH > 0;
           return true;
         }
-        throw new BugException("Не удалось получить данные");
+        throw new BugException("Data get failed");
       }
 
       /// <summary>
@@ -1144,7 +1144,7 @@ namespace FreeLibSet.Reporting
         }
 #if DEBUG
         if (lst.Count < 1)
-          throw new BugException("Пустой список");
+          throw new BugException("List is empty");
 #endif
 
         // Массив флагов
@@ -1261,7 +1261,7 @@ namespace FreeLibSet.Reporting
       {
 #if DEBUG
         if (n == 0 || n > lst.Count)
-          throw new ArgumentOutOfRangeException("n");
+          throw ExceptionFactory.ArgOutOfRange("n", n, 1, lst.Count-1);
 #endif
 
         List<RowStripePart> lst2 = new List<RowStripePart>();
@@ -1407,7 +1407,7 @@ namespace FreeLibSet.Reporting
     {
 #if DEBUG
       if (realColWidthArray.Length != sel.Band.ColumnCount)
-        throw new ArgumentException("Invalid length", "realColWidthArray");
+        throw ExceptionFactory.ArgWrongCollectionCount("realColWidthArray", realColWidthArray, sel.Band.ColumnCount);
 #endif
       int currRowIndex = sel.RowIndex;
       int h = 0;

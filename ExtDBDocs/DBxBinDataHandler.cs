@@ -1156,7 +1156,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Проверка ссылок из документов
 
-    private bool ValidateRefs(ISplash spl)
+    private bool ValidateRefs(ISimpleSplash spl)
     {
       if (UseTrace)
         Trace.WriteLine("Search for references in document tables...");
@@ -1203,7 +1203,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="masterCon">Подключение к (основной) базе данных, где находится <paramref name="masterTableName"/></param>
     /// <param name="masterTableName">Имя таблицы "BinData" или "FileNames"</param>
     /// <param name="spl">Текущая экранная заставка</param>
-    private void DoValidateRefs(DBxConBase detCon, DBxTableColumnList refList, DBxConBase masterCon, string masterTableName, ISplash spl)
+    private void DoValidateRefs(DBxConBase detCon, DBxTableColumnList refList, DBxConBase masterCon, string masterTableName, ISimpleSplash spl)
     {
       foreach (DBxTableColumnName tc in refList)
       {
@@ -1270,7 +1270,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Проверка целостности двоичных данных
 
-    private void ValidateBinDataSums(ISplash spl)
+    private void ValidateBinDataSums(ISimpleSplash spl)
     {
       if (UseTrace)
         Trace.WriteLine("Validating table BinData...");
@@ -1348,7 +1348,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Проверка повторов в таблице "BinData"
 
-    private void ValidateBinDataRepeats(ISplash spl)
+    private void ValidateBinDataRepeats(ISimpleSplash spl)
     {
       if (UseTrace)
         Trace.WriteLine("Search for MD5 repeats...");
@@ -1392,7 +1392,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Проверка фрагментированных баз
 
-    private void ValidateBinDataStorage(int section, ISplash spl)
+    private void ValidateBinDataStorage(int section, ISimpleSplash spl)
     {
       DBxEntry entry2 = _GlobalData.BinDataHandler.GetSectionEntry(section);
       spl.PhaseText = "Проверка BinDataStorage в базе данных " + entry2.DB.DisplayName;

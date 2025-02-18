@@ -72,7 +72,7 @@ namespace FreeLibSet.Forms
       if (_Control == null)
       {
         _Control = new Label();
-        _Control.Text = "Нет данных";
+        _Control.Text = Res.EFPReportControlPage_Msg_NoControl;
       }
       _Control.Dock = DockStyle.Fill;
 
@@ -103,7 +103,7 @@ namespace FreeLibSet.Forms
         {
 #if DEBUG
           if (_Control == null)
-            throw new BugException("Control==null при PageCreated==true");
+            throw new BugException("Control==null when PageCreated==true");
 #endif
           parentControl = _Control.Parent;
         }
@@ -448,7 +448,7 @@ namespace FreeLibSet.Forms
 
       if (!isEmpty2)
       {
-        EFPApp.BeginWait("Загрузка XML-просмотра", "XML");
+        EFPApp.BeginWait(Res.EFPRepoprtXmlViewPage_PhaseText_Load, "XML");
         try
         {
           if (!String.IsNullOrEmpty(_XmlFilePath))

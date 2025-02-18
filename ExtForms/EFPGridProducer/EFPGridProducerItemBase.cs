@@ -549,9 +549,9 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       if (name[0] >= '0' && name[0] <= '9')
-        throw new ArgumentException("Имя не может начинаться с цифры, т.к. это несовместимо с сохранением настройки просмотра", "name");
+        throw new ArgumentException(Res.EFPGridProducer_Arg_NameStartsWithDigit, "name");
 
       EFPApp.CheckMainThread();
 #endif
@@ -564,18 +564,18 @@ namespace FreeLibSet.Forms
         for (int i = 0; i < sourceColumnNames.Length; i++)
         {
           if (String.IsNullOrEmpty(sourceColumnNames[i]))
-            throw new ArgumentException("SourceColumnNames не может содержать пустые элементы", "sourceColumnNames");
+            throw new ArgumentException(Res.EFPGridProducer_Arg_EmptySourceColumn, "sourceColumnNames");
           if (sourceColumnNames[i].IndexOf(',') >= 0)
-            throw new ArgumentException("Элементы в SourceColumnNames не могут содержать запятые", "sourceColumnNames");
+            throw new ArgumentException(Res.EFPGridProducer_Arg_SourceColumnWithComma, "sourceColumnNames");
 
           // 21.05.2021
           if (String.Equals(name, sourceColumnNames[i], StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException("Элемент в SourceColumnNames совпадает с именем вычисляемого столбца/подсказки \"" + name + "\"", "sourceColumnNames");
+            throw new ArgumentException(String.Format(Res.EFPGridProducer_Arg_SourceColumnNameIsName, name), "sourceColumnNames");
 
           for (int j = 0; j < i; j++)
           {
             if (String.Equals(sourceColumnNames[i], sourceColumnNames[j], StringComparison.OrdinalIgnoreCase))
-              throw new ArgumentException("Два одинаковых элемента \"" + sourceColumnNames[i] + "\" в SourceColumnNames", "sourceColumnNames");
+              throw new ArgumentException(String.Format(Res.EFPGridProducer_Arg_SourceColumnNameTwice, sourceColumnNames[i]), "sourceColumnNames");
           }
         }
 

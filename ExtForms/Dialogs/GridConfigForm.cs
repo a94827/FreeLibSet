@@ -31,9 +31,9 @@ namespace FreeLibSet.Forms
       if (callerControlProvider == null)
         throw new ArgumentNullException("callerControlProvider");
       if (String.IsNullOrEmpty(configCategory))
-        throw new ArgumentNullException("configCategory");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("configCategory");
       if (String.IsNullOrEmpty(historyCategory))
-        throw new ArgumentNullException("historyCategory");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("historyCategory");
 #endif
 
       _CallerControlProvider = callerControlProvider;
@@ -62,7 +62,7 @@ namespace FreeLibSet.Forms
         btnDefault.ImageAlign = ContentAlignment.MiddleLeft;
         panDefault.Visible = true;
         EFPButton efpDefault = new EFPButton(_FormProvider, btnDefault);
-        efpDefault.ToolTipText = "Сброс настроек столбцов и подсказок в исходное состояние";
+        efpDefault.ToolTipText = Res.GridConfig_ToolTip_Default;
         efpDefault.Click += new EventHandler(efpDefault_Click);
       }
 
@@ -73,16 +73,15 @@ namespace FreeLibSet.Forms
       btnCopy.Image = EFPApp.MainImages.Images["Copy"];
       btnCopy.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpCopy = new EFPButton(_FormProvider, btnCopy);
-      efpCopy.DisplayName = "Копировать";
-      efpCopy.ToolTipText = "Копирует текущие настройки, заданные в этом окне, в буфер обмена";
+      efpCopy.DisplayName = Res.Btn_Name_Copy;
+      efpCopy.ToolTipText = Res.GridConfig_ToolTip_Copy;
       efpCopy.Click += new EventHandler(efpCopy_Click);
 
       btnPaste.Image = EFPApp.MainImages.Images["Paste"];
       btnPaste.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpPaste = new EFPButton(_FormProvider, btnPaste);
-      efpPaste.DisplayName = "Вставить";
-      efpPaste.ToolTipText = "Заменяет текущие настройки просмотра, ранее скопированными в буфер обмена." + Environment.NewLine +
-        "Если настройки были скопированы для другого просмотра, то будут вставлены только совместимые настройки";
+      efpPaste.DisplayName = Res.Btn_Name_Paste;
+      efpPaste.ToolTipText = Res.GridConfig_ToolTip_Paste;
       efpPaste.Click += new EventHandler(efpPaste_Click);
 
       #endregion
@@ -176,7 +175,7 @@ namespace FreeLibSet.Forms
         string displayName;
         string imageKey;
         if (String.IsNullOrEmpty(defaultConfigCodes[i]))
-          displayName = "По умолчанию";
+          displayName = Res.GridConfig_Msg_Default;
         else
           displayName = defaultConfigCodes[i];
 
@@ -205,7 +204,7 @@ namespace FreeLibSet.Forms
       switch (defaultConfigCodes.Length)
       {
         case 0:
-          EFPApp.ShowTempMessage("Настройка по умолчанию не определена");
+          EFPApp.ShowTempMessage(Res.GridConfig_Err_NoDefaults);
           break;
         case 1:
           Editor.WriteFormValues(defaultConfigs[0]);
@@ -213,7 +212,7 @@ namespace FreeLibSet.Forms
         default:
           // Выбираем, какую настройку применить
           ListSelectDialog dlg = new ListSelectDialog();
-          dlg.Title = "Выбор настройки по умолчанию";
+          dlg.Title = Res.GridConfig_Title_SelDefaults;
           dlg.ImageKey = "No";
           dlg.Items = new string[defaultConfigCodes.Length];
           for (int i = 0; i < defaultConfigCodes.Length; i++)
@@ -261,7 +260,7 @@ namespace FreeLibSet.Forms
       IDataObject dobj = Clipboard.GetDataObject();
       if (dobj == null)
       {
-        EFPApp.ShowTempMessage("Буфер обмена пуст");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_Empty);
         return;
       }
 
@@ -269,7 +268,7 @@ namespace FreeLibSet.Forms
       if (config == null)
       {
         // string txtFormats = String.Join(", ", dobj.GetFormats());
-        EFPApp.ShowTempMessage("Буфер обмена не содержит настроек табличного просмотра");
+        EFPApp.ShowTempMessage(Res.GridConfig_Err_ClipboardNoData);
         return;
       }
       Editor.WriteFormValues(config);

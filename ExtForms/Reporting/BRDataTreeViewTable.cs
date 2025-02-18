@@ -29,7 +29,7 @@ namespace FreeLibSet.Forms.Reporting
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
 
-      DisplayName = "Иерархический просмотр";
+      DisplayName = Res.EFPTreeViewAdv_Name_Default;
     }
 
     #endregion
@@ -226,7 +226,7 @@ namespace FreeLibSet.Forms.Reporting
             {
               TreeNodeAdv node = _ControlProvider.Control.FindNode(path, true);
               if (node == null)
-                throw new BugException("Не найден узел дерева");
+                throw new BugException("Tree node not found");
               lstNodes.Add(node);
             }
           }
@@ -238,7 +238,7 @@ namespace FreeLibSet.Forms.Reporting
       private void InitColumns(bool useExport, BRPageSetup pageSetup, BRFontSettingsDataItem fontData)
       {
         if (_ControlProvider.GetFirstNodeControl<InteractiveControl>() == null)
-          throw new InvalidOperationException("Просмотр не содержит объектов InteractiveControl");
+          throw new InvalidOperationException(Res.BRDataTreeViewTable_Err_NoInteractiveControl);
 
         // Выводимые столбцы для TreeViewAdv не зависят от режима ExpRange, так как выбирается строка целиком
 

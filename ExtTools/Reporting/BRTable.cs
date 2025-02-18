@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Reporting
 {
@@ -539,7 +540,7 @@ namespace FreeLibSet.Reporting
         for (int iCol = range.FirstColumnIndex; iCol <= range.LastColumnIndex; iCol++)
         {
           if (Table.CellMergeDict.ContainsKey(BRTable.GetCellMergeKey(iRow, iCol)))
-            throw new InvalidOperationException("Ячейка с индексом [" + iRow.ToString() + "," + iCol.ToString() + "] уже входит в состав другого объединения");
+            throw new InvalidOperationException(String.Format(Res.BRReport_Err_CellAlreadyMerged, iRow, iCol));
         }
       }
 
@@ -771,7 +772,7 @@ namespace FreeLibSet.Reporting
       {
         BRRange r =_Table.GetMergeInfo(RowIndex, ColumnIndex);
         if (r.FirstRowIndex > RowIndex || r.LastRowIndex < RowIndex || r.FirstColumnIndex > ColumnIndex || r.LastColumnIndex < ColumnIndex)
-          throw new FreeLibSet.Core.BugException("Для ячейки RowIndex="+RowIndex+", ColumnIndex="+ColumnIndex+" возвращена неправильная область объединения: "+r.ToString());
+          throw new FreeLibSet.Core.BugException("For the cell with RowIndex="+RowIndex+", ColumnIndex="+ColumnIndex+" returned wrong merged area: "+r.ToString());
         return r;
       }
     }

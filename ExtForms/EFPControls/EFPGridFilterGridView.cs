@@ -132,7 +132,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при установке фильтра");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -214,7 +214,7 @@ namespace FreeLibSet.Forms
     public void SetRow(int rowIndex, string filterName, string filterValue, string imageKey)
     {
       if (rowIndex < 0 || rowIndex >= RowCount)
-        throw new ArgumentOutOfRangeException("rowIndex", rowIndex, "Индекс строки должен быть в диапазоне от 0 до " + (RowCount - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, RowCount - 1);
 
       if (String.IsNullOrEmpty(imageKey))
         Control[0, rowIndex].Value = EFPApp.MainImages.Images["Filter"];
@@ -234,7 +234,7 @@ namespace FreeLibSet.Forms
     public void GetRow(int rowIndex, out string filterName, out string filterValue)
     {
       if (rowIndex < 0 || rowIndex >= RowCount)
-        throw new ArgumentOutOfRangeException("rowIndex", rowIndex, "Индекс строки должен быть в диапазоне от 0 до " + (RowCount - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, RowCount - 1);
 
       filterName = DataTools.GetString(Control[1, rowIndex].Value);
       filterValue = DataTools.GetString(Control[2, rowIndex].Value);
@@ -358,7 +358,7 @@ namespace FreeLibSet.Forms
     {
       if (!MainControlProvider.CommandItems.CanEditFilters)
       {
-        EFPApp.ShowTempMessage("Изменение установленного фильтра запрещено");
+        EFPApp.ShowTempMessage(Res.EFPGridFilterGridView_Err_CannotEditFilters);
         return;
       }
 

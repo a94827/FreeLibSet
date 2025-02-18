@@ -1,0 +1,1479 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Cache_ErrTitle_ClearByTimer" xml:space="preserve">
+    <value>Ошибка очистки кэша по таймеру</value>
+  </data>
+  <data name="Cache_SwitchDescr_TraceSwitch" xml:space="preserve">
+    <value>Трассировка создания / удаления элементов кэша и сброса/загрузки с диска</value>
+  </data>
+  <data name="CfgPart_Err_NameAnotherChar" xml:space="preserve">
+    <value>Недопустимый символ '{0}' в позиции {1}. Допускаются только буквы, цифры и символы '-', '_' и '.'</value>
+  </data>
+  <data name="CfgPart_Err_NameFirstChar" xml:space="preserve">
+    <value>Имя должно начинаться с буквы или знака подчеркивания</value>
+  </data>
+  <data name="CfgPart_Err_NameIsEmpty" xml:space="preserve">
+    <value>Имя не задано</value>
+  </data>
+  <data name="Common_Arg_CollectionSameAsThis" xml:space="preserve">
+    <value>Нельзя добавлять элементы в коллекцию из этой же коллекции</value>
+  </data>
+  <data name="Common_Arg_DataColumnInvalidType" xml:space="preserve">
+    <value>Столбец '{1}' таблицы '{0}' имеет недопустимый тип {2}</value>
+  </data>
+  <data name="Common_Arg_DataTableHasNoColumn" xml:space="preserve">
+    <value>Таблица '{0}' не содержит столбца с именем '{1}'</value>
+  </data>
+  <data name="Common_Arg_DataTableMustHaveSingleColumnPrimaryKey" xml:space="preserve">
+    <value>Таблица '{0}' должна иметь одно ключевое поле, а не {1}: {2}</value>
+  </data>
+  <data name="Common_Arg_DataTablesNotSameDataSet" xml:space="preserve">
+    <value>Таблицы должны относится к одному DataSet'у</value>
+  </data>
+  <data name="Common_Arg_DataTableWithoutPrimaryKey" xml:space="preserve">
+    <value>Таблица '{0}' не содержит первичного ключа</value>
+  </data>
+  <data name="Common_Arg_InvalidEnumerableType" xml:space="preserve">
+    <value>Недопустимый тип объекта {0} в перечислении</value>
+  </data>
+  <data name="Common_Arg_IsEmpty" xml:space="preserve">
+    <value>Значение не задано</value>
+  </data>
+  <data name="Common_Arg_ObjectWithoutCode" xml:space="preserve">
+    <value>У объекта {0} не задано значение свойства IObjectWithCode.Code</value>
+  </data>
+  <data name="Common_Arg_OutOfRange" xml:space="preserve">
+    <value>Значение вне диапазона</value>
+  </data>
+  <data name="Common_Arg_OutOfRangeMax" xml:space="preserve">
+    <value>Значение должно быть не больше {0}</value>
+  </data>
+  <data name="Common_Arg_OutOfRangeMin" xml:space="preserve">
+    <value>Значение должно быть не меньше {0}</value>
+  </data>
+  <data name="Common_Arg_OutOfRangeMinMax" xml:space="preserve">
+    <value>Значение должно быть в диапазоне от {0} до {1}</value>
+  </data>
+  <data name="Common_Arg_RangeInverted" xml:space="preserve">
+    <value>Начальное значение диапазона '{0}'={1} больше, чем конечное '{2}'={3}</value>
+  </data>
+  <data name="Common_Arg_UnknownValue" xml:space="preserve">
+    <value>Неизвестное значение {0}</value>
+  </data>
+  <data name="Common_Arg_WrongCollectionCount" xml:space="preserve">
+    <value>Неправильное количество элементов: {0}. Ожидалось: {1}</value>
+  </data>
+  <data name="Common_Err_Bug" xml:space="preserve">
+    <value>Внутренняя ошибка в программе. Обратитесь к разработчику</value>
+  </data>
+  <data name="Common_Err_BugWithMessage" xml:space="preserve">
+    <value>Внутренняя ошибка в программе. {0}. Обратитесь к разработчику</value>
+  </data>
+  <data name="Common_Err_Busy" xml:space="preserve">
+    <value>Приложение занято</value>
+  </data>
+  <data name="Common_Err_DataRowNotFound" xml:space="preserve">
+    <value>Для таблицы '{0}' не удалось получить строку со значением первичного ключа ({1})={2}</value>
+  </data>
+  <data name="Common_Err_DifferentThread" xml:space="preserve">
+    <value>Вызов из чужого потока {0}</value>
+  </data>
+  <data name="Common_Err_DifferentThreadWithWanted" xml:space="preserve">
+    <value>Вызов из чужого потока {0}. Ожидался вызов из потока {1}</value>
+  </data>
+  <data name="Common_Err_DirNotFound" xml:space="preserve">
+    <value>Каталог '{0}' не найден</value>
+  </data>
+  <data name="Common_Err_EmptyErrorMessageList" xml:space="preserve">
+    <value>Нет ошибок</value>
+  </data>
+  <data name="Common_Err_FileNotFound" xml:space="preserve">
+    <value>Файл '{0}' не найден</value>
+  </data>
+  <data name="Common_Err_Inconvertible" xml:space="preserve">
+    <value>Значение '{0}' типа {1} нельзя преобразовать в тип {2}</value>
+  </data>
+  <data name="Common_Err_KeyAlreadyExists" xml:space="preserve">
+    <value>Коллекция уже содержит элемент с ключом '{0}'</value>
+  </data>
+  <data name="Common_Err_KeyNotFound" xml:space="preserve">
+    <value>Коллекция не содержит элемента с ключом '{0}'</value>
+  </data>
+  <data name="Common_Err_ObjectReadOnly" xml:space="preserve">
+    <value>Объект заблокирован от внесения изменений (IsReadOnly=true)</value>
+  </data>
+  <data name="Common_Err_Reentrance" xml:space="preserve">
+    <value>Вложенный вызов процедуры</value>
+  </data>
+  <data name="Common_Err_StructureNotInit" xml:space="preserve">
+    <value>Структура {0} не была заполнена</value>
+  </data>
+  <data name="Common_Err_Test" xml:space="preserve">
+    <value>Тестовое исключение</value>
+  </data>
+  <data name="Common_Err_TypeNotCloneable" xml:space="preserve">
+    <value>Тип {0} не поддерживает клонирование объектов с помощью интерфейса ICloneable</value>
+  </data>
+  <data name="Common_Err_UnpairedCallOfEndMethod" xml:space="preserve">
+    <value>Непарный вызов метода {0} без предшествующего вызова метода {1}</value>
+  </data>
+  <data name="Common_Err_UserCancel" xml:space="preserve">
+    <value>Выполнение прервано пользователем</value>
+  </data>
+  <data name="DataTable_Err_DataTableRefColumnArrayLengthMismatch" xml:space="preserve">
+    <value>В мастер-таблице '{0}' объявлены ключевые поля '{1}' ({2}). Нельзя использовать для связи поля '{3}' ({4}). Количество полей должно быть одинаковым</value>
+  </data>
+  <data name="DataTools_Arg_KeyValuesLengthDiffWithPrimaryKey" xml:space="preserve">
+    <value>Число значений в массиве ({0}) не совпадает с числом ключевых полей ({1}) в таблице '{2}'</value>
+  </data>
+  <data name="DataTools_Err_DataTableHasNoKeyColumn" xml:space="preserve">
+    <value>Таблица '{0}' не содержит столбца с именем '{1}', которое предполагалось сделать ключевым</value>
+  </data>
+  <data name="DataTools_Err_DataTableHasNoRefColumn" xml:space="preserve">
+    <value>Таблица '{0}' не имеет столбца '{1}', которое предполагалось использовать для связывания</value>
+  </data>
+  <data name="DataTools_Err_IncompatibleTypes" xml:space="preserve">
+    <value>Несовместимые типы данных</value>
+  </data>
+  <data name="DateRangeFormatter_Msg_RangeMax" xml:space="preserve">
+    <value>по {0}</value>
+  </data>
+  <data name="DateRangeFormatter_Msg_RangeMin" xml:space="preserve">
+    <value>с {0}</value>
+  </data>
+  <data name="DateRangeFormatter_Msg_RangeMinMax" xml:space="preserve">
+    <value>с {0} по {1}</value>
+  </data>
+  <data name="DateRangeList_Arg_AppendCrossed" xml:space="preserve">
+    <value>Добавляемый интервал {0} пересекается с последним добавленным {1}</value>
+  </data>
+  <data name="DateRange_Err_RangesNotCrossed" xml:space="preserve">
+    <value>Интервалы {0} и {1} не пересекаются</value>
+  </data>
+  <data name="EnumDirectoryEventArgs_Err_IsReadOnly" xml:space="preserve">
+    <value>Менять значения свойства можно только в обработчике события BeforeDirectory</value>
+  </data>
+  <data name="FileCompression_Phase_WithCancellingOnNextFile" xml:space="preserve">
+    <value>{0}. Прерывание будет выполнено при обработке следующего файла</value>
+  </data>
+  <data name="FileCompressor_Action_Compress" xml:space="preserve">
+    <value>Сжатие</value>
+  </data>
+  <data name="FileCompressor_Action_Decompress" xml:space="preserve">
+    <value>Распаковка</value>
+  </data>
+  <data name="FileCompressor_Action_Test" xml:space="preserve">
+    <value>Проверка архива</value>
+  </data>
+  <data name="FileCompressor_Err_7z_Fatal" xml:space="preserve">
+    <value>Фатальная ошибка</value>
+  </data>
+  <data name="FileCompressor_Err_7z_InsufficientMemory" xml:space="preserve">
+    <value>Недостаточно памяти</value>
+  </data>
+  <data name="FileCompressor_Err_7z_InvalidCommandLine" xml:space="preserve">
+    <value>Неправильная командная строка</value>
+  </data>
+  <data name="FileCompressor_Err_7z_Success" xml:space="preserve">
+    <value>Успех</value>
+  </data>
+  <data name="FileCompressor_Err_7z_UserCancel" xml:space="preserve">
+    <value>Выполнение прервано пользователем</value>
+  </data>
+  <data name="FileCompressor_Err_7z_Warning" xml:space="preserve">
+    <value>Предупреждение</value>
+  </data>
+  <data name="FileCompressor_Err_ArchiveAndVolume1NotFound" xml:space="preserve">
+    <value>Не найден файл архива '{0}' или первый файл многотомного архива</value>
+  </data>
+  <data name="FileCompressor_Err_ArchiveFileNameIsEmpty" xml:space="preserve">
+    <value>Не задано имя файла архива</value>
+  </data>
+  <data name="FileCompressor_Err_ArchiveNotFound" xml:space="preserve">
+    <value>Архив '{0}' не найден</value>
+  </data>
+  <data name="FileCompressor_Err_ArchiverNotFound" xml:space="preserve">
+    <value>Не найден архиватор '{0}'</value>
+  </data>
+  <data name="FileCompressor_Err_CmdResult" xml:space="preserve">
+    <value>Выполнение команды {0} завершилось неудачно. Действие: {1}. Код ошибки: {2} ({3})</value>
+  </data>
+  <data name="FileCompressor_Err_DstDirNameIsEmpty" xml:space="preserve">
+    <value>Не задано имя каталога для распаковки</value>
+  </data>
+  <data name="FileCompressor_Err_PasswordWithQuoteChar" xml:space="preserve">
+    <value>Пароль не может содержать символ кавычки</value>
+  </data>
+  <data name="FileCompressor_Err_SrcDirNameIsEmpty" xml:space="preserve">
+    <value>Не задано имя каталога сжимаемых файлов</value>
+  </data>
+  <data name="FileCompressor_Err_SrcDirNotFound" xml:space="preserve">
+    <value>Каталог сжимаемых файлов '{0}' не найден</value>
+  </data>
+  <data name="FileCompressor_Err_UnknownFileExtension" xml:space="preserve">
+    <value>Не удалось определить тип архива по имени файла</value>
+  </data>
+  <data name="FileCompressor_Phase_Cancelling" xml:space="preserve">
+    <value>Работа с архивом сейчас будет прервана</value>
+  </data>
+  <data name="FileCompressor_Phase_FileAction" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="FileCompressor_Phase_FileList" xml:space="preserve">
+    <value>Построение списка файлов</value>
+  </data>
+  <data name="FileContainer_Arg_FileInfoIsEmpty" xml:space="preserve">
+    <value>Информация о файле должна быть заполнена</value>
+  </data>
+  <data name="FileContainer_Arg_LengthMismatch" xml:space="preserve">
+    <value>Длина массива Length={0} не совпадает с заданной в FileInfo.Length={1} для файла "{2}"</value>
+  </data>
+  <data name="FileContainer_Arg_SubDirIsAbsolute" xml:space="preserve">
+    <value>Каталог не может содержать абсолютный путь</value>
+  </data>
+  <data name="FileContainer_Arg_SubDirStartsWithDirChar" xml:space="preserve">
+    <value>Каталог не может начинаться с символа каталога</value>
+  </data>
+  <data name="FileContainer_Arg_SubDirWithParent" xml:space="preserve">
+    <value>Каталог не может содержать символы '..'</value>
+  </data>
+  <data name="FileTemplateDir_Err_BaseDirNotFound" xml:space="preserve">
+    <value>Базовый каталог '{0}' не существует</value>
+  </data>
+  <data name="FileTools_Arg_FileNameWithWildcardsOrDirSep" xml:space="preserve">
+    <value>Имя файла не может содержать шаблонные символы '*' и '?' и символ разделителя каталога</value>
+  </data>
+  <data name="FileTools_Arg_TemplateWithDirSep" xml:space="preserve">
+    <value>Шаблон не может содержать символ разделителя каталога</value>
+  </data>
+  <data name="FileTools_Msg_DirInsteadOfFile" xml:space="preserve">
+    <value>'{0}' является каталогом, а не файлом</value>
+  </data>
+  <data name="FileTools_Msg_DirNameMustEndWithDirSep" xml:space="preserve">
+    <value>Имя каталога должно заканчиваться символом '{0}'</value>
+  </data>
+  <data name="FileTools_Msg_DirNotFound" xml:space="preserve">
+    <value>Не найден каталог '{0}'</value>
+  </data>
+  <data name="FileTools_Msg_FileInsteadOfDir" xml:space="preserve">
+    <value>'{0}' является файлом, а не каталогом</value>
+  </data>
+  <data name="FileTools_Msg_FileNotFound" xml:space="preserve">
+    <value>Файл не найден: '{0}'</value>
+  </data>
+  <data name="FileTools_Msg_FilePathEndsWithDirSep" xml:space="preserve">
+    <value>Имя файла не должно заканчиваться символом '{0}'</value>
+  </data>
+  <data name="FileTools_Msg_InvalidChar" xml:space="preserve">
+    <value>Недопустимый символ '{0}' в позиции {1}</value>
+  </data>
+  <data name="FileTools_Msg_InvalidCharAltDirSep" xml:space="preserve">
+    <value>Недопустимый символ '{0}' в позиции {1}. Для разделения каталогов должен использоваться символ '{2}'</value>
+  </data>
+  <data name="FileTools_Msg_InvalidCharWildcards" xml:space="preserve">
+    <value>Недопустимый символ '{0}' в позиции {1}. Шаблонные символы не допускаются</value>
+  </data>
+  <data name="FileTools_Msg_LinuxPathTwoDirSeps" xml:space="preserve">
+    <value>Не может быть два символа '//' подряд</value>
+  </data>
+  <data name="FileTools_Msg_PathDirSepAndSpace" xml:space="preserve">
+    <value>Недопустимое сочетание символов в позиции {0}. После разделителя каталога не может идти пробел</value>
+  </data>
+  <data name="FileTools_Msg_PathEndsWithSpace" xml:space="preserve">
+    <value>Путь не должен заканчиваться пробелом</value>
+  </data>
+  <data name="FileTools_Msg_PathIsEmpty" xml:space="preserve">
+    <value>Путь не задан</value>
+  </data>
+  <data name="FileTools_Msg_PathSpaceAndDirSep" xml:space="preserve">
+    <value>Недопустимое сочетание символов в позиции {0}. Перед разделителем каталога не может идти пробел</value>
+  </data>
+  <data name="FileTools_Msg_PathStartsWithSpace" xml:space="preserve">
+    <value>Путь не должен начинаться с пробела</value>
+  </data>
+  <data name="FileTools_Msg_RootDirNotFound" xml:space="preserve">
+    <value>Не найден корневой каталог '{0}'</value>
+  </data>
+  <data name="FileTools_Msg_WindowsFilePathEndsWithColon" xml:space="preserve">
+    <value>Имя файла не должно заканчиваться символом ':'</value>
+  </data>
+  <data name="FileTools_Msg_WindowsNetFilePathFewSeparators" xml:space="preserve">
+    <value>Если имя начинается с '\\', то должно быть еще как минимум два разделителя: '\\Сервер\Ресурс\ИмяФайла'</value>
+  </data>
+  <data name="FileTools_Msg_WindowsPathDiskLetterRequired" xml:space="preserve">
+    <value>Перед символом ':' должна идти буква диска</value>
+  </data>
+  <data name="FileTools_Msg_WindowsPathInvalidColonPosition" xml:space="preserve">
+    <value>Символ ':' может быть только вторым в строке</value>
+  </data>
+  <data name="FileTools_Msg_WindowsPathTwoBackslashInTheMiddle" xml:space="preserve">
+    <value>Два символа '\\' подряд. Признак сетевого имени может быть только в начале имени</value>
+  </data>
+  <data name="FileTools_Phase_FileList" xml:space="preserve">
+    <value>Построение списка файлов</value>
+  </data>
+  <data name="FileTools_Phase_FileSize" xml:space="preserve">
+    <value>Вычисление размера файлов</value>
+  </data>
+  <data name="IniCfgPart_Arg_InvalidSepInSectionName" xml:space="preserve">
+    <value>Недопустимое имя секции конфигурации {0}, Имя не может начинаться или заканчиваться символом-разделителем '\', или содержать два разделителя '\\' подряд</value>
+  </data>
+  <data name="IniFile_Arg_KeyName" xml:space="preserve">
+    <value>Неправильное имя ключа '{0}'. {1}.</value>
+  </data>
+  <data name="IniFile_Arg_SectionName" xml:space="preserve">
+    <value>Неправильное имя секции '{0}'. {1}.</value>
+  </data>
+  <data name="IniFile_Err_KeyNameInvalidChar" xml:space="preserve">
+    <value>Недопустимый символ '{0}' в позиции {1}</value>
+  </data>
+  <data name="IniFile_Err_KeyNameIsEmpty" xml:space="preserve">
+    <value>Имя ключа должно быть задано</value>
+  </data>
+  <data name="IniFile_Err_KeyNameStartsOrEndsWithSpace" xml:space="preserve">
+    <value>Имя ключа не должно начинаться или заканчиваться пробелом</value>
+  </data>
+  <data name="IniFile_Err_SectionNameInvalidChar" xml:space="preserve">
+    <value>Недопустимый символ '{0}' в позиции {1}</value>
+  </data>
+  <data name="IniFile_Err_SectionNameIsEmpty" xml:space="preserve">
+    <value>Имя секции конфигурации должно быть задано</value>
+  </data>
+  <data name="IniFile_Err_SectionNameStartsOrEndsWithSpace" xml:space="preserve">
+    <value>Имя секции конфигурации не должно начинаться или заканчиваться пробелом</value>
+  </data>
+  <data name="MonthDay_Arg_DayOfYearOutOfRange" xml:space="preserve">
+    <value>Значение должно быть равно 0 или лежать в диапазоне от 1 до 365</value>
+  </data>
+  <data name="SettingsDataList_Arg_ItemTypeAlreadyExists" xml:space="preserve">
+    <value>В списке уже есть данные типа {0}</value>
+  </data>
+  <data name="StoredFileInfo_Arg_FileNameWithPath" xml:space="preserve">
+    <value>Имя файла не может содержать путь</value>
+  </data>
+  <data name="StoredFileInfo_Arg_NegativeFileLength" xml:space="preserve">
+    <value>Длина файла не может быть отрицательной</value>
+  </data>
+  <data name="YearMonthDayAge_Arg_MixedSigns" xml:space="preserve">
+    <value>Не допускается смешение отрицательных и положительных компонентов</value>
+  </data>
+  <data name="YearMonthDayAge_Arg_Year9999" xml:space="preserve">
+    <value>Значение 9999 допускается, только если months=0 и days==0</value>
+  </data>
+  <data name="YearMonthRange_Err_NotCrossed" xml:space="preserve">
+    <value>Интервалы {0} и {1} не пересекаются</value>
+  </data>
+  <data name="Common_Arg_AreSame" xml:space="preserve">
+    <value>Аргументы '{0}' и '{1}' не могут совпадать</value>
+  </data>
+  <data name="Common_Arg_BadChar" xml:space="preserve">
+    <value>Строка '{0}' содержит недопустимый символ '{1}' в позиции {2}</value>
+  </data>
+  <data name="Common_Arg_DataTablePrimaryKeyWrongType" xml:space="preserve">
+    <value>Таблица '{0}' имеет первичный ключ '{1}' по полю типа {2}. Требуется ключ полю типа {3}.</value>
+  </data>
+  <data name="Common_Arg_IncompatibleTypes" xml:space="preserve">
+    <value>Аргументы '{0}' типа {1} и '{2}' типа {3} несовместимы</value>
+  </data>
+  <data name="Common_Arg_InvalidListItem" xml:space="preserve">
+    <value>В списке присутствует элемент с недопустимым значением '{0}' по индексу {1} </value>
+  </data>
+  <data name="Common_Arg_StringsWithDifferentLength" xml:space="preserve">
+    <value>Длина строк {0} ({1}) и {2} ({3}) должна быть одинаковой</value>
+  </data>
+  <data name="Common_Arg_UnknownType" xml:space="preserve">
+    <value>Аргумент имеет неизвестный тип {0}</value>
+  </data>
+  <data name="DataTools_Arg_HexToBytesOddStringLength" xml:space="preserve">
+    <value>Строка содержит нечетное количество символов ({0})</value>
+  </data>
+  <data name="Common_Arg_DataRowNotInSameTable" xml:space="preserve">
+    <value>Строка относится к другой таблице данных</value>
+  </data>
+  <data name="EnumerableWrapper_Err_SecondHand" xml:space="preserve">
+    <value>Повторный вызов перечислителя не допускается</value>
+  </data>
+  <data name="ErrorMessageItem_Msg_ToString" xml:space="preserve">
+    <value>{0}. {1}</value>
+  </data>
+  <data name="ErrorMessageItem_Msg_ToStringWithCode" xml:space="preserve">
+    <value>{0} (код {2}). {1}</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_Info" xml:space="preserve">
+    <value>Сообщение</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_Warning" xml:space="preserve">
+    <value>Предупреждение</value>
+  </data>
+  <data name="Common_Err_CannotAddItemAgain" xml:space="preserve">
+    <value>Повторное добавление элемента '{0}' не допускается</value>
+  </data>
+  <data name="Common_Err_ObjectProperty" xml:space="preserve">
+    <value>Свойство {0} объекта {1} имеет недопустимое значение {2}</value>
+  </data>
+  <data name="CoreDBxSqlFormatter_Arg_CompareKingMustBeEQorNE" xml:space="preserve">
+    <value>В фильтре задано сравнение значения с NULL в режиме {0}. Допускается только сравнение на равенство и неравенство</value>
+  </data>
+  <data name="CoreDBxSqlFormatter_Err_CoalesceForUnknownColumnType" xml:space="preserve">
+    <value>Для столбца '{0}' требуется обработка значения NULL. Не найдено описание структуры столбца и не передан требуемый тип данных</value>
+  </data>
+  <data name="CoreDBxSqlFormatter_Err_NoTableAliasForColumn" xml:space="preserve">
+    <value>Для ссылочного столбца '{0}' не найден альяс таблицы</value>
+  </data>
+  <data name="DataTableRepeater_Arg_MasterTableSetToSlaveTable" xml:space="preserve">
+    <value>Нельзя присваивать ссылку на SlaveTable</value>
+  </data>
+  <data name="DataTableRepeater_Err_DiffPrimaryKey" xml:space="preserve">
+    <value>Таблица SlaveTable имеет первичный ключ '{0}'. Подключаемая таблица MasterTable должна иметь такой же ключ, а не '{1}'</value>
+  </data>
+  <data name="DataTableRepeater_Err_MasterRowNotFound" xml:space="preserve">
+    <value>Не найдена строка master-таблицы</value>
+  </data>
+  <data name="DataTableRepeater_Err_SlaveTableStructNotDefined" xml:space="preserve">
+    <value>Структура таблицы SlaveTable должна быть заполнена</value>
+  </data>
+  <data name="DataViewSortBuilder_Arg_NameStartsOrEndsWithDot" xml:space="preserve">
+    <value>Имя не может начинаться или заканчиваться точкой</value>
+  </data>
+  <data name="DataViewSortBuilder_Arg_NameWithTwoDots" xml:space="preserve">
+    <value>Имя не может содержать 2 точки подряд</value>
+  </data>
+  <data name="DataViewSortBuilder_Err_AddCallRequired" xml:space="preserve">
+    <value>Перед этим вызовом непосредственно должен быть вызов метода Add() или AddSubName()</value>
+  </data>
+  <data name="DateRangeCrossCommonFilter_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>Период</value>
+  </data>
+  <data name="DateRangeInclusionCommonFilter_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>Период</value>
+  </data>
+  <data name="DBxColumns_Err_BadColumnName" xml:space="preserve">
+    <value>Неправильное имя поля '{0}' в позиции с индексом {1}. {2}</value>
+  </data>
+  <data name="DBxColumns_Err_SourceColumnNotFound" xml:space="preserve">
+    <value>Таблица-шаблон не содержит столбца '{0}'</value>
+  </data>
+  <data name="DBxCommonFilters_Err_NoSqlFilter" xml:space="preserve">
+    <value>Для фильтра '{0}' свойство UseSqlFilter=false</value>
+  </data>
+  <data name="DBxCommonFilters_Err_UseSqlFilterMismatch" xml:space="preserve">
+    <value>Для фильтра '{0}' свойство DBxCommonFilter.UseSqlFilter=false, в то время как свойство DBxCommnonFilters.SqlFilterRequired=true"</value>
+  </data>
+  <data name="DBxCommonFilter_Err_CodeMustBeSet" xml:space="preserve">
+    <value>Свойство Code должно быть установлено до свойства Owner</value>
+  </data>
+  <data name="DBxCommonFilter_Err_OwnerAlreadyExists" xml:space="preserve">
+    <value>Повторная установка свойства Owner не допускается</value>
+  </data>
+  <data name="DBxCommonFilter_Err_OwnerHasBeenSet" xml:space="preserve">
+    <value>Выполнение действия допускается только до присоединения фильтра к коллекции</value>
+  </data>
+  <data name="DBxCommonFilter_Err_SetAsCurrRow" xml:space="preserve">
+    <value>Фильтр '{0}' не поддерживает установку значения по текущей строке</value>
+  </data>
+  <data name="DBxCommonFilter_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>[Без имени и кода]</value>
+  </data>
+  <data name="RangeCrossCommonFilterBase_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>Диапазон</value>
+  </data>
+  <data name="RangeInclusionCommonFilterBase_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>Диапазон</value>
+  </data>
+  <data name="Splash_Err_ExtraCompleteOrSkip" xml:space="preserve">
+    <value>Лишний вызов Complete()/Skip()</value>
+  </data>
+  <data name="Splash_Phase_Complete" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="Splash_Phase_Default" xml:space="preserve">
+    <value>Ждите...</value>
+  </data>
+  <data name="AndOrFilter_Arg_TwoItemsRequired" xml:space="preserve">
+    <value>Длина массива не может быть меньше 2. Используйте статический метод FromArray()</value>
+  </data>
+  <data name="Common_Arg_StringIsNullOrEmpty" xml:space="preserve">
+    <value>Аргумент задан как пустая строка или null</value>
+  </data>
+  <data name="Common_Err_ObjectReadOnlyWithStringAndType" xml:space="preserve">
+    <value>Объект '{0}' типа {1} заблокирован от внесения изменений (IsReadOnly=true)</value>
+  </data>
+  <data name="Common_Err_ObjectReadOnlyWithType" xml:space="preserve">
+    <value>Объект типа {0} заблокирован от внесения изменений (IsReadOnly=true)</value>
+  </data>
+  <data name="CompareFilter_Arg_InvalidCompareKindWithNull" xml:space="preserve">
+    <value>Так как одно из выражений является константой NULL, нельзя задавать режим сравнения Kind={0}. Допускается только сравнение на равенство или неравенство</value>
+  </data>
+  <data name="CompareFilter_Arg_NullAsDefaultValueWithNull" xml:space="preserve">
+    <value>Так как одно из выражений является константой NULL, нельзя задавать режим NullAsDefaultValue</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldLengthD" xml:space="preserve">
+    <value>Для типа 'D' длина должна быть равна 8</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldLengthL" xml:space="preserve">
+    <value>Для типа 'L' длина должна быть равна 1</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldLengthM" xml:space="preserve">
+    <value>Для типа 'M' длина должна быть равна 10</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldLengthN" xml:space="preserve">
+    <value>Для типа 'N' длина должна быть не больше 255</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldName" xml:space="preserve">
+    <value>Неправильное имя поля '{0}'. Имя должно иметь длину от 1 до 10 символов, содержать заглавные латинские буквы, цифры и знак подчеркивания. Имя не может начинаться с цифры</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldType" xml:space="preserve">
+    <value>Неправильный тип поля: '{0}'. Допускаются символы 'C', 'N', 'D', 'L', 'M', 'F'</value>
+  </data>
+  <data name="DbfStr_Arg_PrecisionForLength" xml:space="preserve">
+    <value>Точность не может иметь значение {0} если длина поля равна {1}</value>
+  </data>
+  <data name="DbfStr_Arg_PrecisionForType" xml:space="preserve">
+    <value>Точность не задается для типа данных '{0}'</value>
+  </data>
+  <data name="DbfStr_Arg_UnknownFieldName" xml:space="preserve">
+    <value>DBF-файл не содержит поля '{0}'</value>
+  </data>
+  <data name="DbfStr_Msg_DBase2InvalidFieldLengthC" xml:space="preserve">
+    <value>dBase II не поддерживает поля длиннее 255 символов. Для поля '{0}'задана длина {1}</value>
+  </data>
+  <data name="DbfStr_Msg_DBase2TooManyFields" xml:space="preserve">
+    <value>dBase II поддерживает максимально 32 поля в таблице</value>
+  </data>
+  <data name="DbfStr_Msg_InvalidFieldTypeForDbFormat" xml:space="preserve">
+    <value>Неподдерживаемый тип '{0}' поля '{1}'. Поддерживаемые типы для формата базы данных {2}: {3}</value>
+  </data>
+  <data name="DBxAggregateFunction_Arg_NoArg" xml:space="preserve">
+    <value>Аргумент (обычно, имя поля) должен быть задан для всех агрегатных функций, кроме COUNT(*)</value>
+  </data>
+  <data name="DBxAggregateFunction_Err_GetValueNotSupported" xml:space="preserve">
+    <value>Для агрегатных функций вычисление на основании строки данных невозможно</value>
+  </data>
+  <data name="DBxConst_Arg_UseDBxColumnType" xml:space="preserve">
+    <value>Используйте конструктор, принимающий 2 аргумента, и задавайте DBxColumnType</value>
+  </data>
+  <data name="DBxDataRowExtValues_Arg_TableDiff" xml:space="preserve">
+    <value>Список полей в новой таблице '{0}' должен совпадать с существующей таблицей '{1}'</value>
+  </data>
+  <data name="DBxExtValue_Err_BinDataNotSupported" xml:space="preserve">
+    <value>Хранение двоичных данных и файлов не предусмотрено набором данных {0}</value>
+  </data>
+  <data name="DBxFilter_Arg_IsDBxConst" xml:space="preserve">
+    <value>Константа не может быть аргументом</value>
+  </data>
+  <data name="DBxFunction_Arg_WrongArgCount" xml:space="preserve">
+    <value>Неправильное количество аргументов: {0}. Для функции '{1}' требуются аргументы в количестве от {2} до {3}</value>
+  </data>
+  <data name="DBxStruct_Arg_ColumnNotFound" xml:space="preserve">
+    <value>Для таблицы '{0}' не определен столбец '{1}'</value>
+  </data>
+  <data name="DBxStruct_Err_GetTableStructTableMissed" xml:space="preserve">
+    <value>Метод GetTableStruct() вернул null, хотя таблица '{0}' есть в списке всех таблиц AllTableNames</value>
+  </data>
+  <data name="DBxStruct_Err_TableNotFound" xml:space="preserve">
+    <value>Нет описания структуры таблицы '{0}'</value>
+  </data>
+  <data name="DBxTableStruct_Arg_RefTypeClearForNotNull" xml:space="preserve">
+    <value>Тип ссылки не может быть DBxRefType.Clear, если nullable=false</value>
+  </data>
+  <data name="DBxTableStruct_Err_PrimaryKeyColumnMustBeFirst" xml:space="preserve">
+    <value>Ключевое поле '{0}' должно быть первым в списке столбцов</value>
+  </data>
+  <data name="DBxTools_Arg_ValueToColumnTypeRequired" xml:space="preserve">
+    <value>Не удалось определить тип столбца из аргумента типа {0}</value>
+  </data>
+  <data name="ValuesFilter_Arg_DiffTypeValues" xml:space="preserve">
+    <value>Массив должен содержать однотипные значения. Первый элемент массива имеет тип {0}, но есть значение типа {1}</value>
+  </data>
+  <data name="DbfFieldTypeException_Err_Message" xml:space="preserve">
+    <value>Поле '{0}' имеет неподходящий тип '{1}'</value>
+  </data>
+  <data name="DbfValueFormatException_Err_Message" xml:space="preserve">
+    <value>Строка {0}, поле '{1}' содержит недопустимое значение для типа '{2}'</value>
+  </data>
+  <data name="DbfFile_Err_DataStartPositionOverTheHeader" xml:space="preserve">
+    <value>Неправильная позиция начала данных ({0}) в файле DBF. Описания полей перекрывают область данных</value>
+  </data>
+  <data name="DbfFile_Err_DBase4MemoNotImplement" xml:space="preserve">
+    <value>Формат MEMO-файла dBase IV не реализован</value>
+  </data>
+  <data name="DBfMemoFile_Err_FileIsTooShort" xml:space="preserve">
+    <value>МЕМО-файл имеет недопустимо малую длину</value>
+  </data>
+  <data name="DbfMemoFile_Err_FileSizeLessThanHeader" xml:space="preserve">
+    <value>Реальный размер МЕМО-файла ({0}) меньше, чем вычисленный минимально возможный размер, исходя из заголовка ({1})</value>
+  </data>
+  <data name="DbfFile_Err_HeaderRecSizeMismatch" xml:space="preserve">
+    <value>Размер записи, заданный в заголовке DBF-файла ({0}) не совпадает с суммарным размером всех полей ({1})</value>
+  </data>
+  <data name="DbfFile_Err_RecSizeIsZero" xml:space="preserve">
+    <value>Размер записи в заголовке DBF-файла не может быть равен 0</value>
+  </data>
+  <data name="DbfFile_Err_UnknownSignature" xml:space="preserve">
+    <value>Не DBF-файл. Неизвестная сигнатура '{0}'</value>
+  </data>
+  <data name="DbfMemoFile_Err_WrongBlockCount" xml:space="preserve">
+    <value>В заголовке МЕМО-файла указано недопустимое число 512-байтных блоков: {0}</value>
+  </data>
+  <data name="DbfFile_Err_ZeroLength" xml:space="preserve">
+    <value>DBF-файл '{0}' имеет нулевую длину</value>
+  </data>
+  <data name="DbfFile_Err_FileTooShort" xml:space="preserve">
+    <value>Длина DBF-файла ({0}) не соответствует размеру и числу записей, заданных в заголовке. Длина файла должна быть не меньше, чем {1}</value>
+  </data>
+  <data name="AlreadyExecutingException_Err_DefaultMessage" xml:space="preserve">
+    <value>Вложенный запуск процедуры на выполнение</value>
+  </data>
+  <data name="Common_Err_ObjectPropertyWithRequires" xml:space="preserve">
+    <value>Свойство {0} объекта {1} имеет недопустимое значение {2}. Допустимые значения: {3}</value>
+  </data>
+  <data name="Common_Err_RepeatedCallOfMethod" xml:space="preserve">
+    <value>Повторный вызов метода {0}</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_DiffColumnTypes" xml:space="preserve">
+    <value>Столбец '{0}' имеет тип данных {1}, а '{2}' - {3}</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_IsNullDefaultValueType" xml:space="preserve">
+    <value>Значение должно иметь тип {0}, a не {1}</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_ParentNotNull" xml:space="preserve">
+    <value>Столбец '{0}' имеет свойство AllowDBNull=false</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_TagAnotherTable" xml:space="preserve">
+    <value>Строка относится к другой таблице</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_TagType" xml:space="preserve">
+    <value>Аргумент не является DataRow</value>
+  </data>
+  <data name="DataTableTreeModel_Err_Loop" xml:space="preserve">
+    <value>Дерево зациклено для строки с идентификатором {0}</value>
+  </data>
+  <data name="DbfFileCopier_Err_FieldRuleExists" xml:space="preserve">
+    <value>Для конечного поля '{0}' уже задано правило копирования</value>
+  </data>
+  <data name="DbfFile_Arg_RecNoOutOfRange" xml:space="preserve">
+    <value>Нельзя перейти к записи {0}", т.к. количество записей в таблице равно {1}</value>
+  </data>
+  <data name="DbfFile_Arg_StringIsTooLong" xml:space="preserve">
+    <value>Строка имеет длину {0} и не может быть записана в поле '{1}' длиной {2}</value>
+  </data>
+  <data name="DbfFile_Err_CellErrorMessage" xml:space="preserve">
+    <value>Строка {0}, поле '{1}'. Произошла ошибка. {2}</value>
+  </data>
+  <data name="DbfFile_Err_CheckActiveRecord" xml:space="preserve">
+    <value>Нет выбранной записи</value>
+  </data>
+  <data name="DbfFile_Err_FieldListEmptyName" xml:space="preserve">
+    <value>В списке полей DBF-файоа для поля {0} не задано имя поля</value>
+  </data>
+  <data name="DbfFile_Err_FieldListNoEndOfName" xml:space="preserve">
+    <value>В списке полей DBF-файла для поля {0} не найден нулевой байт окончания имени поля</value>
+  </data>
+  <data name="DbfFile_Err_FieldListUnexpectedEOF" xml:space="preserve">
+    <value>Неожиданный конец DBF-файла. Список полей не закончен</value>
+  </data>
+  <data name="DbfFile_Err_MemoBlockCountLimitExceeded" xml:space="preserve">
+    <value>Нельзя добавить MEMO-значение, т.к. будет превышено максимально допустимое число блоков {0}</value>
+  </data>
+  <data name="DbfFile_Err_MemoBlockNumberOutOfFile" xml:space="preserve">
+    <value>Строка {0},  МЕМО-поле '{1}'. Задан недопустимый номер блока {2}, который выходит за пределы МЕМО-файла</value>
+  </data>
+  <data name="DbfFile_Err_MemoFileNotAttached" xml:space="preserve">
+    <value>Запрошен доступ к значению memo-поля '{0}', но memo-файл недоступен</value>
+  </data>
+  <data name="DbfFile_Err_MemoInvalidBlockNumber" xml:space="preserve">
+    <value>Строка {0},  МЕМО-поле '{1}'. Задан недопустимый номер блока {2}</value>
+  </data>
+  <data name="DbfFile_Err_MemoNoEndOfBlock" xml:space="preserve">
+    <value>Строка {0},  МЕМО-поле '{1}'. В МЕМО-файле для блока {2} не найден маркер конца блока на протяжении 64Кб</value>
+  </data>
+  <data name="DbfFile_Err_MemoReadError" xml:space="preserve">
+    <value>Строка {0},  МЕМО-поле '{1}'. Не удалось прочитать значение из MEMO-файла</value>
+  </data>
+  <data name="DbfFile_Err_MemoUnexpectedEOF" xml:space="preserve">
+    <value>Строка {0},  МЕМО-поле '{1}'. Обнаружен неожиданный конец МЕМО-файла для блока {2}</value>
+  </data>
+  <data name="DbfFile_Err_NumberStringTooLong" xml:space="preserve">
+    <value>Длина текстового представления '{0}' ({1}) превышает длину числового поля '{2}' ({3})</value>
+  </data>
+  <data name="DbfFile_Err_TooManyRecords" xml:space="preserve">
+    <value>Указано слишком много строк в заголовке DBF-файла: {0}</value>
+  </data>
+  <data name="DbfStr_Arg_FieldIndexOutOfRange" xml:space="preserve">
+    <value>Индекс поля должен быть в диапазоне от 0 до {0}</value>
+  </data>
+  <data name="DbfStr_Err_RecordSizeTooBig" xml:space="preserve">
+    <value>Слишком большой размер одной записи задан в структуре DBF-файла: {0}. Максимальное значение: {1}</value>
+  </data>
+  <data name="DepChangeInfo_Err_ChainLoop" xml:space="preserve">
+    <value>Нельзя добавить элемент {0} к родителю {1}, т.к. цепочка зацикливается</value>
+  </data>
+  <data name="DepEvalExpr_Err_ArgNumExpected" xml:space="preserve">
+    <value>После '@' должен идти номер аргумента</value>
+  </data>
+  <data name="DepEvalExpr_Err_ArgNumNotInt" xml:space="preserve">
+    <value>Строку {0} нельзя преобразовать в число</value>
+  </data>
+  <data name="DepEvalExpr_Err_ArgNumOutOfRange" xml:space="preserve">
+    <value>Номер аргумента должен быть в диапазоне от 1 до {0}</value>
+  </data>
+  <data name="DepEvalExpr_Err_OperationExpected" xml:space="preserve">
+    <value>Аргумент не должен идти непосредственно после другого выражения. Ожидалась операция</value>
+  </data>
+  <data name="DepExpr_Err_Calculate" xml:space="preserve">
+    <value>Метод Calculate() должен быть переопределен, если обработчик Function не был задан в конструкторе объекта</value>
+  </data>
+  <data name="DepSyncGroup_Err_SyncObjAlreadyAdded" xml:space="preserve">
+    <value>Нельзя повторно присоединять объект синхронизации {0} к группе</value>
+  </data>
+  <data name="DepValue_Arg_InputAlreadyAdded" xml:space="preserve">
+    <value>Повторное присоеднинение входа {0}</value>
+  </data>
+  <data name="DepValue_Arg_NotDepInput" xml:space="preserve">
+    <value>К элементу {0} нельзя присоединять источник. Требуется объект типа DepInput.</value>
+  </data>
+  <data name="DepValue_Err_RecursionOverflow" xml:space="preserve">
+    <value>Установка значения зациклилось. Предотвращено StackOverflowException</value>
+  </data>
+  <data name="ExcelFunctions_Err_DATEDIFFmode" xml:space="preserve">
+    <value>Режимы расчета 'ym', 'md' и 'yd 'не реализованы</value>
+  </data>
+  <data name="ExcelFunction_Arg_ArgCountExact" xml:space="preserve">
+    <value>Неправильное число аргументов при вызове функции '{0}': {1}. Ожидалось аргументов: {2}</value>
+  </data>
+  <data name="ExcelFunction_Arg_ArgCountRange" xml:space="preserve">
+    <value>Неправильное число аргументов при вызове функции '{0}': {1}. Ожидалось аргументов: от {2} до {3}</value>
+  </data>
+  <data name="ExecProc_Arg_AsyncResultForAnotherProc" xml:space="preserve">
+    <value>Объект AsyncResult относится к другой процедуре</value>
+  </data>
+  <data name="ExecProc_ErrTitle_AbortErrorWhenDispose" xml:space="preserve">
+    <value>Ошибка прекращения выполнения процедуры при удалении</value>
+  </data>
+  <data name="ExecProc_ErrTitle_ExecutingError" xml:space="preserve">
+    <value>Ошибка выполнения процедуры</value>
+  </data>
+  <data name="ExecProc_ErrTitle_RemoteExecProcQueryByTimer" xml:space="preserve">
+    <value>Ошибка опроса RemoteExecProc по таймеру</value>
+  </data>
+  <data name="ExecProc_Err_AsyncNotFinished" xml:space="preserve">
+    <value>Предыдущий асинхронный вызов еще не завершен</value>
+  </data>
+  <data name="ExecProc_Err_AsyncResultWithoutSplash" xml:space="preserve">
+    <value>Использовался вызов ExecProc.BeginExecute(), а не BeginExecuteWithSplash()</value>
+  </data>
+  <data name="ExecProc_Err_Finished" xml:space="preserve">
+    <value>Процедура уже была завершена</value>
+  </data>
+  <data name="ExecProc_Err_NoExecutionInCurrentThread" xml:space="preserve">
+    <value>В текущем потоке нет выполняющейся процедуры</value>
+  </data>
+  <data name="ExecProc_Err_NotExecutingState" xml:space="preserve">
+    <value>Вызов допускается только при работе процедуры. Текущее значение State={0}</value>
+  </data>
+  <data name="ExecProc_Err_ShouldCallFromExecute" xml:space="preserve">
+    <value>Метод должен вызываться из другой выполняющейся процедуры ExecProc</value>
+  </data>
+  <data name="ExecProc_Err_SplashStackSetWhileExecuting" xml:space="preserve">
+    <value>Свойство SplashStack нельзя устанавливать во время выполнения процедуры</value>
+  </data>
+  <data name="FunctionParser_Err_AfterOtherExpr" xml:space="preserve">
+    <value>Имя функции не может быть продолжением другого выражения. Ожидалась операция</value>
+  </data>
+  <data name="FunctionParser_Err_CloseParenthesisNotFound" xml:space="preserve">
+    <value>Не найдена закрывающая скобка для функции '{0}'</value>
+  </data>
+  <data name="FunctionParser_Err_OpenParenthesisNotFound" xml:space="preserve">
+    <value>Не найдена открывающая скобка после имени функции</value>
+  </data>
+  <data name="FunctionParser_Err_OutOfFunction" xml:space="preserve">
+    <value>Неожиданное вхождение '{0}' вне вызова функции</value>
+  </data>
+  <data name="FunctionParser_Err_UnknownFunctionName" xml:space="preserve">
+    <value>Неизвестное имя функции '{0}'</value>
+  </data>
+  <data name="FunctionParser_Err_WantedAnotherArg" xml:space="preserve">
+    <value>Ожидался еще аргумент</value>
+  </data>
+  <data name="FunctionParser_Err_WantedArg" xml:space="preserve">
+    <value>Ожидался аргумент</value>
+  </data>
+  <data name="FunctionParser_Err_WantedCloseParenthesis" xml:space="preserve">
+    <value>Ожидалась закрывающая скобка вызова функции</value>
+  </data>
+  <data name="FunctionParser_Err_WantedCloseParenthesisOrComma" xml:space="preserve">
+    <value>Ожидалась закрывающая скобка вызова функции или разделитель списка аргументов {0}</value>
+  </data>
+  <data name="FunctionParser_Err_WantedOpenParenthesis" xml:space="preserve">
+    <value>Ожидалась открывающая скобка после имени функции</value>
+  </data>
+  <data name="FunctionParser_Err_WrongArgCountRange" xml:space="preserve">
+    <value>Неправильное количество аргументов функции '{0}': {1}. Ожидалось аргументов: от {2} до {3}</value>
+  </data>
+  <data name="FunctionParser_Err_WrongArgCountSingle" xml:space="preserve">
+    <value>Неправильное количество аргументов функции '{0}': {1}. Ожидалось аргументов: {2}</value>
+  </data>
+  <data name="LoggingLogoutExecProc_Err_Busy" xml:space="preserve">
+    <value>Получение отладочной информации в данный момент выполняется другим пользователем</value>
+  </data>
+  <data name="LoggingLogoutExecProc_Phase_GetInfo" xml:space="preserve">
+    <value>Получение отладочной информации</value>
+  </data>
+  <data name="LogoutTools_Err_CannotGenerateUniqueFileName" xml:space="preserve">
+    <value>Не удалось придумать уникальное имя файла</value>
+  </data>
+  <data name="MathOpParser_Err_AfterNoOp" xml:space="preserve">
+    <value>Перед открывающей скобкой должна идти операция</value>
+  </data>
+  <data name="MathOpParser_Err_CloseParenthesisNotFound" xml:space="preserve">
+    <value>Не найдена парная закрывающая скобка</value>
+  </data>
+  <data name="MathOpParser_Err_LeftArgNotFound" xml:space="preserve">
+    <value>Не найден левый операнд для операции '{0}'. Операция не может быть унарной</value>
+  </data>
+  <data name="MathOpParser_Err_NothingInParentheses" xml:space="preserve">
+    <value>Выражение в скобках не задано</value>
+  </data>
+  <data name="MathOpParser_Err_NotImplementedForTypes" xml:space="preserve">
+    <value>Математические операции не реализованы для аргументов типа {0} и {1}</value>
+  </data>
+  <data name="MathOpParser_Err_OpNotBinary" xml:space="preserve">
+    <value>Операция '{0}' не может быть бинарной</value>
+  </data>
+  <data name="MathOpParser_Err_RightArgNotFound" xml:space="preserve">
+    <value>Не найден правый операнд для операции '{0}'</value>
+  </data>
+  <data name="MathOpParser_Err_UnknownBinaryOp" xml:space="preserve">
+    <value>Операции '{0}' нет в списке бинарных операций</value>
+  </data>
+  <data name="MathOpParser_Err_UnpairedCloseParenthesis" xml:space="preserve">
+    <value>Непарная закрывающая скобка</value>
+  </data>
+  <data name="MathOpParser_Err_WrongBinaryOp" xml:space="preserve">
+    <value>Недопустимая операция '{0}' для аргументов типа {1}</value>
+  </data>
+  <data name="MathOpParser_Err_WrongBinaryOpDiffTypes" xml:space="preserve">
+    <value>Недопустимая операция '{0}' для аргументов типа {1} и {2}</value>
+  </data>
+  <data name="MathOpParser_Err_WrongUnaryOp" xml:space="preserve">
+    <value>Недопустимая унарная операция '{0}' для аргумента типа {1}</value>
+  </data>
+  <data name="NumConstParser_Err_AfterOtherExpr" xml:space="preserve">
+    <value>Константа не должна идти непосредственно после другого выражения. Ожидалась операция</value>
+  </data>
+  <data name="NumConstParser_Err_InvalidReplace" xml:space="preserve">
+    <value>Задана недопустимая подстановка '{0}' -&gt; '{1}'. Исходный текст и замена должны иметь одинаковую длину</value>
+  </data>
+  <data name="ParserList_Err_CreateExpressionBeforeParsing" xml:space="preserve">
+    <value>Парсинг лексем не выполнялся</value>
+  </data>
+  <data name="ParserList_Err_CreateExpressionError" xml:space="preserve">
+    <value>Ошибка получения выражения. {0}</value>
+  </data>
+  <data name="ParserList_Err_CreateExpressionNone" xml:space="preserve">
+    <value>Ошибка парсинга.  {0}</value>
+  </data>
+  <data name="ParserList_Err_CreateExpressionOtherParserList" xml:space="preserve">
+    <value>Парсинг лексем выполнялся другим списком парсеров</value>
+  </data>
+  <data name="ParserList_Err_CreateSubExpressionCall" xml:space="preserve">
+    <value>Метод CreateSubExpression() должен вызываться только в процессе разбора всего выражения, а не самостоятельно</value>
+  </data>
+  <data name="ParserList_Err_SubParseCalled" xml:space="preserve">
+    <value>Метод SubParse() может вызываться исключительно из реализации IParser.Parse()</value>
+  </data>
+  <data name="ParserList_Err_TokenBeyondText" xml:space="preserve">
+    <value>Лексема '{0}' выходит за границу текста"</value>
+  </data>
+  <data name="ParserList_Err_TokenOverlap" xml:space="preserve">
+    <value>Лексема '{0}' перекрывается с предыдущей '{1}'</value>
+  </data>
+  <data name="ParserList_Err_TokenStartNegative" xml:space="preserve">
+    <value>Начальная позиция лексемы '{0}' не может быть отрицательной</value>
+  </data>
+  <data name="ParserList_Err_UnparsedMultiChars" xml:space="preserve">
+    <value>Нераспознанные символы</value>
+  </data>
+  <data name="ParserList_Err_UnparsedSingleChar" xml:space="preserve">
+    <value>Нераспознанный символ '{0}'</value>
+  </data>
+  <data name="ParsingData_Err_GetChildExpressionReturnsNull" xml:space="preserve">
+    <value>Для выражения {0} метод GetChildExpressions() добавил в список значение null</value>
+  </data>
+  <data name="ParsingData_Err_NotParsed" xml:space="preserve">
+    <value>Парсинг лексем не выполнялся</value>
+  </data>
+  <data name="ParsingData_Err_SkipTokenCall" xml:space="preserve">
+    <value>Метод может использоваться только в процессе получения вычислителя</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Arg_NoDigits" xml:space="preserve">
+    <value>Маска не содержит ни одной числовой позиции</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Msg_BadChar_DigitWanted" xml:space="preserve">
+    <value>Неправильный символ '{0}' в позиции {1}. Ожидалась цифра</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Msg_BadChar_SeparatorWanted" xml:space="preserve">
+    <value>Неправильный символ '{0}' в позиции {1}. Ожидался символ '{2}'</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Msg_Empty" xml:space="preserve">
+    <value>Пустая строка</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Msg_WrongLength" xml:space="preserve">
+    <value>Неправильная длина строки {0}. Должно быть {1} символ(a, ов)</value>
+  </data>
+  <data name="StdMaskProvider_Msg_BadChar" xml:space="preserve">
+    <value>Недопустимый символ '{0}' в позиции {1}</value>
+  </data>
+  <data name="StdMaskProvider_Msg_Empty" xml:space="preserve">
+    <value>Значение не задано</value>
+  </data>
+  <data name="StdMaskProvider_Msg_MaskMismatch" xml:space="preserve">
+    <value>Значение не соответствует маске</value>
+  </data>
+  <data name="StdMaskProvider_Msg_MoreCharsNeeded" xml:space="preserve">
+    <value>Требуются дополнительные символы</value>
+  </data>
+  <data name="StrConstParser_Err_AfterOtherExpr" xml:space="preserve">
+    <value>Константа не должна идти непосредственно после другого выражения. Ожидалась операция</value>
+  </data>
+  <data name="Token_Err_DataNotParsingState" xml:space="preserve">
+    <value>Набор данных не находится в состоянии парсинга</value>
+  </data>
+  <data name="LogoutTools_ErrTitle_Default" xml:space="preserve">
+    <value>Ошибка в {0}</value>
+  </data>
+  <data name="ExecProc_Err_CallBackGetSuspendedException" xml:space="preserve">
+    <value>Один из дочерних объектов в callback-селекторе создал исключение при вызове GetSuspended(). Этот объект удален из списка</value>
+  </data>
+  <data name="ExecProc_Err_CallBackGetSuspendedNoSuccess" xml:space="preserve">
+    <value>Не было успешного вызова GetSuspended()</value>
+  </data>
+  <data name="ExecProc_Err_Started" xml:space="preserve">
+    <value>Процедура уже была запущена</value>
+  </data>
+  <data name="LogoutTools_ErrTitle_WhenMethodCalled" xml:space="preserve">
+    <value>Ошибка при вызове {0}</value>
+  </data>
+  <data name="BRPaginator_Arg_SelectorForAnotherBand" xml:space="preserve">
+    <value>Селектор относится к другой полосе</value>
+  </data>
+  <data name="BRPaginator_Arg_SelectorForAnotherCell" xml:space="preserve">
+    <value>Селектор ссылается на ячейку, не входящую в текущий блок</value>
+  </data>
+  <data name="BRReport_Arg_ParentStyleForDifferentReport" xml:space="preserve">
+    <value>Родительский стиль относится к другому отчету</value>
+  </data>
+  <data name="BRReport_Arg_StyleForDifferentReport" xml:space="preserve">
+    <value>Стиль относится к другому отчету</value>
+  </data>
+  <data name="BRReport_Err_CellAlreadyMerged" xml:space="preserve">
+    <value>Ячейка с индексом [{0}, {1}] уже входит в состав другого объединения</value>
+  </data>
+  <data name="BRReport_Err_DateOutOfExcelRange" xml:space="preserve">
+    <value>*** Дата, выходящая за допустимые пределы Excel: {0} ***</value>
+  </data>
+  <data name="BRReport_Err_PropertyCannotBeSet" xml:space="preserve">
+    <value>Нельзя устанавливать это свойство</value>
+  </data>
+  <data name="BRReport_Err_StreamWithoutSeek" xml:space="preserve">
+    <value>Поток не поддерживает Seek</value>
+  </data>
+  <data name="BRReport_Msg_ExcelSheetName" xml:space="preserve">
+    <value>Лист {0}</value>
+  </data>
+  <data name="BRReport_Phase_CreateExcelWorkbook" xml:space="preserve">
+    <value>Создание книги</value>
+  </data>
+  <data name="BRReport_Phase_SendDataToExcel" xml:space="preserve">
+    <value>Передача данных в книгу Excel</value>
+  </data>
+  <data name="BRReport_Phase_StartExcel" xml:space="preserve">
+    <value>Запуск Excel</value>
+  </data>
+  <data name="Common_Err_MustBeReimplemented" xml:space="preserve">
+    <value>Method/Property {0} must be reimplented for the class {1}</value>
+  </data>
+  <data name="DateRangeDialog_Msg_Prompt" xml:space="preserve">
+    <value>Диапазон</value>
+  </data>
+  <data name="DateRangeDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод диапазона дат</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleDate" xml:space="preserve">
+    <value>Ввод даты</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleDateTime" xml:space="preserve">
+    <value>Ввод даты и времени</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleTime" xml:space="preserve">
+    <value>Ввод времени</value>
+  </data>
+  <data name="ExecProcLock_ErrTitle_UnlockError" xml:space="preserve">
+    <value>Ошибка разблокировки {0}</value>
+  </data>
+  <data name="ExecProcLock_ErrTitle_UserCancel" xml:space="preserve">
+    <value>Отказ пользователя от ожидания блокировки</value>
+  </data>
+  <data name="ExecProcLock_Phase_ErrorGetInfo" xml:space="preserve">
+    <value>Ошибка при получении описания заблокированного объекта. {0}</value>
+  </data>
+  <data name="ExecProcLock_Phase_NoLockOwner" xml:space="preserve">
+    <value>[ нет данных ]</value>
+  </data>
+  <data name="ExecProcLock_Phase_Wait" xml:space="preserve">
+    <value>Ожидание блокировки объекта '{0}'.  Заблокировал: {1}</value>
+  </data>
+  <data name="ExecProc_Phase_Executing" xml:space="preserve">
+    <value>Выполняется {0}</value>
+  </data>
+  <data name="FileAssociations_ArgExtNoDot" xml:space="preserve">
+    <value>Расширение должно начинаться с точки</value>
+  </data>
+  <data name="FileAssociations_ErrTitle_LoadError" xml:space="preserve">
+    <value>Ошибка загрузки файловых ассоциаций</value>
+  </data>
+  <data name="InputDataGridDialog_Msg_Title" xml:space="preserve">
+    <value>Таблица</value>
+  </data>
+  <data name="ListSelectDialog_Err_SingleSelect" xml:space="preserve">
+    <value>Список не предназначен для множественного выбора</value>
+  </data>
+  <data name="ListSelectDialog_Msg_TitleMultiSelect" xml:space="preserve">
+    <value>Выбор из списка</value>
+  </data>
+  <data name="ListSelectDialog_Msg_TitleSingleSelect" xml:space="preserve">
+    <value>Выбор из списка</value>
+  </data>
+  <data name="NamedValues_Arg_ConstructorNeeded" xml:space="preserve">
+    <value>Тип {0} не имеет конструктора без параметров</value>
+  </data>
+  <data name="NamedValues_Arg_MustBeClass" xml:space="preserve">
+    <value>Тип данных должен быть классом, а не {0}</value>
+  </data>
+  <data name="NamedValues_Err_NotSerializable" xml:space="preserve">
+    <value>Значение с ключом '{0}' имеет тип {1}, который не является сериализуемым и не может передаваться по ссылке</value>
+  </data>
+  <data name="NumInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="NumInputDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод числа</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Диапазон</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод диапазона чисел</value>
+  </data>
+  <data name="PasswordInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="PasswordInputDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод пароля</value>
+  </data>
+  <data name="RemoteInterfaceNotsopportedException_Err_Default" xml:space="preserve">
+    <value>Вызов интерфейса пользователя невозможен</value>
+  </data>
+  <data name="RI_Arg_AlienCfgPart" xml:space="preserve">
+    <value>Чужая секция данных</value>
+  </data>
+  <data name="RI_Arg_DateRangeDiffMonths" xml:space="preserve">
+    <value>Интервал дат должен относиться к одному месяцу</value>
+  </data>
+  <data name="RI_Arg_DateRangeDiffYears" xml:space="preserve">
+    <value>Интервал дат должен относиться к одному году</value>
+  </data>
+  <data name="RI_Err_ArgumentNotSet" xml:space="preserve">
+    <value>Не задан аргумент '{0}'</value>
+  </data>
+  <data name="RI_Err_IsFixed" xml:space="preserve">
+    <value>Элемент защищен от изменения управляющих свойств и добавления дочерних элементов</value>
+  </data>
+  <data name="RI_Err_UnknownAction" xml:space="preserve">
+    <value>Неизвестное действие Action='{0}'</value>
+  </data>
+  <data name="RI_Msg_Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="RI_Msg_Warning" xml:space="preserve">
+    <value>Предупреждение</value>
+  </data>
+  <data name="TextInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="TextInputDialog_Msg_Title" xml:space="preserve">
+    <value>Ввод текста</value>
+  </data>
+  <data name="CsvTextConvert_Err_BadChar" xml:space="preserve">
+    <value>Неправильный символ '{0}' в позиции {1}. Ожидался символ '{2}'</value>
+  </data>
+  <data name="CsvTextConvert_Err_StringWithoutEnd" xml:space="preserve">
+    <value>Неожиданный конец строки. Не найдена завершающая кавычка</value>
+  </data>
+  <data name="CsvTextConvert_Err_WithLineNumber" xml:space="preserve">
+    <value>Ошибка в строке {0}. {1}</value>
+  </data>
+  <data name="ExeFileInfo_Err_OptionalHeaderSignature" xml:space="preserve">
+    <value>Неправильная сигнатура дополнительного заголовка {0}</value>
+  </data>
+  <data name="ExeFileInfo_Err_ResEndOutOfFile" xml:space="preserve">
+    <value>Конец ресурса выходит за пределы файла</value>
+  </data>
+  <data name="ExeFileInfo_Err_ResStartOutOfFile" xml:space="preserve">
+    <value>Начальная позиция ресурса выходит за пределы файла</value>
+  </data>
+  <data name="OpenOfficeTools_Arg_GenericCulture" xml:space="preserve">
+    <value>Неправильная культура с кодом '{0}'. Отсутствует '-'</value>
+  </data>
+  <data name="OpenOfficeTools_Arg_TooManyPartsInNumberFormat" xml:space="preserve">
+    <value>Числовой формат '{0}' состоит больше, чем из трех частей</value>
+  </data>
+  <data name="SingleByteTranscoder_Arg_Unsupported" xml:space="preserve">
+    <value>Нельзя выполнять прямое перекодирование из кодировки {0} в {1}</value>
+  </data>
+  <data name="UISelRCGrid_Err_EmptyValuesNotAllowed" xml:space="preserve">
+    <value>Пустые значения не допускаются</value>
+  </data>
+  <data name="UISelRCGrid_Err_NoDate" xml:space="preserve">
+    <value>Строку '{0}' нельзя преобразовать в дату</value>
+  </data>
+  <data name="UISelRCGrid_Err_NoEnum" xml:space="preserve">
+    <value>Неизвестная строка '{0}'</value>
+  </data>
+  <data name="UISelRCGrid_Err_NoInt" xml:space="preserve">
+    <value>Строку '{0}' нельзя преобразовать в целое число</value>
+  </data>
+  <data name="UISelRCGrid_Err_NoNumber" xml:space="preserve">
+    <value>Строку '{0}' нельзя преобразовать в число</value>
+  </data>
+  <data name="UISelRCGrid_Err_Validating" xml:space="preserve">
+    <value>Ошибка проверки значения. {0}</value>
+  </data>
+  <data name="UIValidateResult_Msg_NoMessage" xml:space="preserve">
+    <value>Текст сообщения об ошибке не задан</value>
+  </data>
+  <data name="Common_Arg_UnknownValueWithWanted" xml:space="preserve">
+    <value>Неизвестное значение {0}. Допустимые значения: {1}</value>
+  </data>
+  <data name="RegistryKey2_Arg_InvalidValueType" xml:space="preserve">
+    <value>Только строка и массив байт может быть записана как значение реестра</value>
+  </data>
+  <data name="RegistryKey2_Arg_SubKeyNotFound" xml:space="preserve">
+    <value>Подраздел не существует</value>
+  </data>
+  <data name="RegistryKey2_Arg_ValueNotFound" xml:space="preserve">
+    <value>Значение не найдено</value>
+  </data>
+  <data name="RegistryKey2_Arg_ValueTypeMismatch" xml:space="preserve">
+    <value>Тип значения не соответствует valueKind</value>
+  </data>
+  <data name="RegistryKey2_Err_ChildMustBeVolatile" xml:space="preserve">
+    <value>Нельзя создать стабильный подраздел во временном родительском разделе</value>
+  </data>
+  <data name="RegistryKey2_Err_InvalidHandle" xml:space="preserve">
+    <value>Неправильный дескриптор</value>
+  </data>
+  <data name="RegistryKey2_Err_NetworkPathNotFound" xml:space="preserve">
+    <value>Сетевой путь не найден</value>
+  </data>
+  <data name="RegistryKey2_Err_Root" xml:space="preserve">
+    <value>Операция не может быть выполнена с корневым разделом реестра</value>
+  </data>
+  <data name="RegistryKey2_Err_SubKeyHasChildren" xml:space="preserve">
+    <value>Подраздел содержит дочерние подразделы</value>
+  </data>
+  <data name="RegistryTree_Arg_UnknownRoot" xml:space="preserve">
+    <value>Неизвестный корневной узел реестра '{0}'</value>
+  </data>
+  <data name="RegistryTree_Err_IsReadOnly" xml:space="preserve">
+    <value>Коллекция узлов реестра открыта только для чтения</value>
+  </data>
+  <data name="ResourceTable_Arg_ResourceNoFound" xml:space="preserve">
+    <value>Ресурс {0} не найден</value>
+  </data>
+  <data name="ResourceTable_Err_IconNotFound" xml:space="preserve">
+    <value>Не найден значок {0}</value>
+  </data>
+  <data name="ResourceTable_Err_IconWrongColorCount" xml:space="preserve">
+    <value>Для значка не задан BPP и задан недопустимый ColorCount=" + colorCount.ToString()</value>
+  </data>
+  <data name="ResourceTable_Err_PngSignature" xml:space="preserve">
+    <value>Первым блоком в PNG-файле должен быть заголовок IHDR</value>
+  </data>
+  <data name="ResourceTable_Err_ResourceIsEmpty" xml:space="preserve">
+    <value>Пустой ресурс с идентификатором {0}</value>
+  </data>
+  <data name="ResourceTable_Err_UnknownImageHeader" xml:space="preserve">
+    <value>Неизестный заголовок</value>
+  </data>
+  <data name="WTS_Err_NoCurrentSession" xml:space="preserve">
+    <value>Нет текущей сессии</value>
+  </data>
+  <data name="Common_Arg_OutOfRangeMinMaxInv" xml:space="preserve">
+    <value>Значение должно быть в диапазоне от {0} до {1}, но это невозможно. Поэтому вызов полностью недопустим</value>
+  </data>
+  <data name="Common_Arg_NoType" xml:space="preserve">
+    <value>Значение типа {0} не является типом {1}</value>
+  </data>
+  <data name="Common_Err_ObjectPropertyCount" xml:space="preserve">
+    <value>Свойство {0} объекта {1} имеет недопустимую длину  {2}. Ожидалось: {3}</value>
+  </data>
+  <data name="Common_Err_ObjectPropertyNotSet" xml:space="preserve">
+    <value>Свойство {0} объекта {1} не установлено</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>Диапазон не задан</value>
+  </data>
+  <data name="FileBatchHandler_Phase_CopyFile" xml:space="preserve">
+    <value>Копирование файла {0}</value>
+  </data>
+  <data name="FileBatchHandler_Phase_DeleteDir" xml:space="preserve">
+    <value>Удаление каталога {0}</value>
+  </data>
+  <data name="FileBatchHandler_Phase_DeleteFile" xml:space="preserve">
+    <value>Удаление файла {0}</value>
+  </data>
+  <data name="FileBatchHandler_Phase_MoveDir" xml:space="preserve">
+    <value>Перемещение каталога {0}</value>
+  </data>
+  <data name="FileBatchHandler_Phase_MoveFile" xml:space="preserve">
+    <value>Перемещение файла {0}</value>
+  </data>
+  <data name="FileTools_Phase_ForceDirs" xml:space="preserve">
+    <value>Создание каталога {0}</value>
+  </data>
+  <data name="Common_Err_ObjectEventHandlerNotSet" xml:space="preserve">
+    <value>Обработчик события {0} объекта {1} не установлен</value>
+  </data>
+  <data name="UITools_Msg_Boolean" xml:space="preserve">
+    <value>логическое значение</value>
+  </data>
+  <data name="UITools_Msg_ConvertErrorMessage" xml:space="preserve">
+    <value>Текст '{0}' нельзя преобразовать в значение типа '{1}'</value>
+  </data>
+  <data name="UITools_Msg_Date" xml:space="preserve">
+    <value>дата</value>
+  </data>
+  <data name="UITools_Msg_DateTime" xml:space="preserve">
+    <value>дата и время</value>
+  </data>
+  <data name="UITools_Msg_Float" xml:space="preserve">
+    <value>число</value>
+  </data>
+  <data name="UITools_Msg_Int" xml:space="preserve">
+    <value>целое число</value>
+  </data>
+  <data name="UITools_Msg_Null" xml:space="preserve">
+    <value>пусто</value>
+  </data>
+  <data name="UITools_Msg_String" xml:space="preserve">
+    <value>строка</value>
+  </data>
+  <data name="UITools_Msg_Time" xml:space="preserve">
+    <value>время</value>
+  </data>
+  <data name="Common_Err_ObjectPropertyAlreadySet" xml:space="preserve">
+    <value>Свойство {0} объекта {1} уже установлено</value>
+  </data>
+  <data name="Common_Err_ObjectPropertySwitch" xml:space="preserve">
+    <value>Недопустимое переключение свойства {0} объекта {1} из {2} в {3}</value>
+  </data>
+  <data name="UITools_Msg_No" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="UITools_Msg_Yes" xml:space="preserve">
+    <value>yes</value>
+  </data>
+  <data name="ListSortDirection_Name_Ascending" xml:space="preserve">
+    <value>по возрастанию</value>
+  </data>
+  <data name="ListSortDirection_Name_AscendingShort" xml:space="preserve">
+    <value>возр.</value>
+  </data>
+  <data name="ListSortDirection_Name_Descending" xml:space="preserve">
+    <value>по убыванию</value>
+  </data>
+  <data name="ListSortDirection_Name_DescendingShort" xml:space="preserve">
+    <value>убыв.</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_AlphanumericCharacterExpected" xml:space="preserve">
+    <value>Ожидалась цифра или буква</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_CharacterEscaped" xml:space="preserve">
+    <value>Символ пропускается</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_DigitExpected" xml:space="preserve">
+    <value>Ожидалась цифра</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_LetterExpected" xml:space="preserve">
+    <value>Ожидалась буква</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_UnavailableEditPosition" xml:space="preserve">
+    <value>Все символы уже введены</value>
+  </data>
+  <data name="Common_Arg_NotInCollection" xml:space="preserve">
+    <value>Значение {0} не принадлежит коллекции {1}</value>
+  </data>
+  <data name="Common_Arg_NotInPropertyCollection" xml:space="preserve">
+    <value>Значение {0} не принадлежит коллекции {1} ({2}) объекта {3}</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_ErrorShort" xml:space="preserve">
+    <value>Ош.</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_InfoShort" xml:space="preserve">
+    <value>Инфо</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_WarningShort" xml:space="preserve">
+    <value>Пр.</value>
+  </data>
+  <data name="UITools_Err_CanBeEmptyModeError" xml:space="preserve">
+    <value>Значение '{0}' должно быть заполнено</value>
+  </data>
+  <data name="UITools_Err_CanBeEmptyModeWarning" xml:space="preserve">
+    <value>Значение '{0}' , вероятно, должно быть заполнено</value>
+  </data>
+  <data name="UITools_Err_OutOfRangeMax" xml:space="preserve">
+    <value>Значение {0} должно быть не больше {1}</value>
+  </data>
+  <data name="UITools_Err_OutOfRangeMin" xml:space="preserve">
+    <value>Значение {0} должно быть не меньше {1}</value>
+  </data>
+  <data name="UITools_Err_OutOfRangeMinMax" xml:space="preserve">
+    <value>Значение {0} должно быть в диапазоне от {1} до {2}</value>
+  </data>
+  <data name="UITools_Err_OutOfRange" xml:space="preserve">
+    <value>Значение {0} должно быть в диапазоне {1}</value>
+  </data>
+  <data name="Common_Err_DllNotFound" xml:space="preserve">
+    <value>Не удалось загрузить библиотеку '{0}'</value>
+  </data>
+  <data name="ZipFileTools_ArcContainsManyFiles" xml:space="preserve">
+    <value>Архив содержит несколько файлов</value>
+  </data>
+  <data name="ZipFileTools_Err_ArcIsEmpty" xml:space="preserve">
+    <value>Архив не содержит файлов</value>
+  </data>
+</root>

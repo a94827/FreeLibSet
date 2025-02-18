@@ -34,7 +34,7 @@ namespace FreeLibSet.Forms
       TheLV.CheckBoxes = multiSelect;
 
       if (hasSubItems)
-        _SubColumn = TheLV.Columns.Add("Значение");
+        _SubColumn = TheLV.Columns.Add(Res.ListSelectDialog_ColTitle_Sub);
 
       _CanBeEmpty = canBeEmpty;
 
@@ -64,15 +64,15 @@ namespace FreeLibSet.Forms
         btnCopy.Image = EFPApp.MainImages.Images["Copy"];
         btnCopy.ImageAlign = ContentAlignment.MiddleCenter;
         EFPButton efpCopy = new EFPButton(efpForm, btnCopy);
-        efpCopy.DisplayName = "Копировать";
-        efpCopy.ToolTipText = "Копирует в буфер обмена выбранные позиции списка";
+        efpCopy.DisplayName = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_Copy);
+        efpCopy.ToolTipText = Res.ListSelectDialog_ToolTip_Copy;
         efpCopy.Click += new EventHandler(efpCopy_Click);
 
         btnPaste.Image = EFPApp.MainImages.Images["Paste"];
         btnPaste.ImageAlign = ContentAlignment.MiddleCenter;
         EFPButton efpPaste = new EFPButton(efpForm, btnPaste);
-        efpPaste.DisplayName = "Вставить";
-        efpPaste.ToolTipText = "Установить отметки в соответствии с текстом в буфере обмена";
+        efpPaste.DisplayName = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_Paste);
+        efpPaste.ToolTipText = Res.ListSelectDialog_ToolTip_Paste;
         efpPaste.Click += new EventHandler(efpPaste_Click);
       }
       else
@@ -82,12 +82,12 @@ namespace FreeLibSet.Forms
       }
 
       EFPButtonWithMenu efpMore = new EFPButtonWithMenu(efpForm, btnMore);
-      efpMore.DisplayName = "Еще";
-      efpMore.ToolTipText = "Дополнительные команды меню";
+      efpMore.DisplayName = Res.Btn_Text_More;
+      efpMore.ToolTipText = Res.Btn_ToolTip_More;
       //efpMore.Visible = false;
 
       EFPCommandItem ciCopyAll = new EFPCommandItem("Edit", "CopyAllText");
-      ciCopyAll.MenuText = "Копировать весь список";
+      ciCopyAll.MenuText = Res.ListSelectDialog_Menu_CopyAllText;
       ciCopyAll.Click += new EventHandler(ciCopyAll_Click);
       ciCopyAll.Enabled = itemCount > 0;
       efpMore.CommandItems.Add(ciCopyAll);
@@ -160,7 +160,7 @@ namespace FreeLibSet.Forms
             return;
           }
            * */
-          args.SetError("Должна быть выбрана хотя бы одна позиция");
+          args.SetError(Res.ListSelectDialog_Err_NoneChecked);
           return;
         }
       }
@@ -168,7 +168,7 @@ namespace FreeLibSet.Forms
       {
         if (TheLV.SelectedItems.Count == 0)
         {
-          args.SetError("Нет выбранной строки");
+          args.SetError(Res.ListSelectDialog_Err_NoSelection);
         }
       }
     }
@@ -236,22 +236,22 @@ namespace FreeLibSet.Forms
             }
             if (sb.Length == 0)
             {
-              EFPApp.ShowTempMessage("Нет отмеченных строк в списке");
+              EFPApp.ShowTempMessage(Res.ListSelectDialog_Err_NoneChecked);
               return;
             }
-            EFPApp.Clipboard.SetText(sb.ToString());
+            new EFPClipboard().SetText(sb.ToString());
           }
           else
           {
             if (TheLV.SelectedItems.Count == 1)
-              EFPApp.Clipboard.SetText(TheLV.SelectedItems[0].Text);
+              new EFPClipboard().SetText(TheLV.SelectedItems[0].Text);
             else
-              EFPApp.ShowTempMessage("Нет выбранной строки в списке");
+              EFPApp.ShowTempMessage(Res.ListSelectDialog_Err_NoSelection);
           }
           break;
 
         default:
-          throw new BugException("Неизвестное значение ClipboardMode=" + _ClipboardMode.ToString());
+          throw new BugException("ClipboardMode=" + _ClipboardMode.ToString());
       }
     }
 
@@ -264,6 +264,8 @@ namespace FreeLibSet.Forms
 
     void efpPaste_Click(object sender, EventArgs args)
     {
+      EFPButton efpPaste = (EFPButton)sender;
+
       #region Создаем словарь элементов
 
       if (_ItemDict == null)
@@ -278,7 +280,9 @@ namespace FreeLibSet.Forms
       switch (_ClipboardMode)
       {
         case ListSelectDialogClipboardMode.CommaCodes:
-          string s = EFPApp.Clipboard.GetText(true);
+          EFPClipboard clp = new EFPClipboard();
+          clp.ErrorIfEmpty = true;
+          string s = clp.GetText();
           if (String.IsNullOrEmpty(s))
             return;
           string[] a = s.Split(',');
@@ -299,24 +303,24 @@ namespace FreeLibSet.Forms
               }
               else
               {
-                EFPApp.ShowTempMessage("Не найден элемент \"" + s + "\"");
+                EFPApp.ShowTempMessage(String.Format(Res.ListSelectDialog_Err_ItemNotFound, s));
                 return;
               }
             }
             // lst содержит список элементов, которые нужно отметить
             if (lst2.Count == 0 && lst1.Count == TheLV.CheckedItems.Count)
             {
-              EFPApp.ShowTempMessage("Нет изменений");
+              EFPApp.ShowTempMessage(Res.ListSelectDialog_Err_NoChanges);
               return;
             }
             if (TheLV.CheckedItems.Count > 0)
             {
               RadioSelectDialog dlg2 = new RadioSelectDialog();
-              dlg2.Title = "Вставка выбранных элементов";
+              dlg2.Title = efpPaste.DisplayName;
               dlg2.ImageKey = "Paste";
               dlg2.Items = new string[]{
-                "Добавить к уже отмеченным позициям", 
-                "Заменить существующее выделение"};
+                Res.ListSelectDialog_Msg_PasteAdd,
+                Res.ListSelectDialog_Msg_PasteReplace};
               dlg2.ImageKeys = new string[] { "Insert", "Replace" };
               if (dlg2.ShowDialog() != DialogResult.OK)
                 return;
@@ -342,7 +346,7 @@ namespace FreeLibSet.Forms
           {
             if (a.Length > 1)
             {
-              EFPApp.ShowTempMessage("В буфере обмена текст содержит запятые, но в списке можно выбрать только одну строку");
+              EFPApp.ShowTempMessage(Res.ListSelectDialog_Err_PasteTextWithCommas);
               return;
             }
             s = a[0].Trim();
@@ -350,18 +354,20 @@ namespace FreeLibSet.Forms
             if (_ItemDict.TryGetValue(s, out li))
               li.Selected = true;
             else
-              EFPApp.ShowTempMessage("Не найден элемент \"" + s + "\"");
+              EFPApp.ShowTempMessage(String.Format(Res.ListSelectDialog_Err_ItemNotFound, s));
           }
           break;
 
         default:
-          throw new BugException("Неизвестное значение ClipboardMode=" + _ClipboardMode.ToString());
+          throw new BugException("ClipboardMode=" + _ClipboardMode.ToString());
       }
     }
 
     void ciCopyAll_Click(object sender, EventArgs args)
     {
-      EFPApp.BeginWait("Копирование списка", "Copy");
+      EFPCommandItem ciCopyAll = (EFPCommandItem)sender;
+
+      EFPApp.BeginWait(ciCopyAll.MenuText, ciCopyAll.ImageKey);
       try
       {
         string[,] a = new string[TheLV.Items.Count, _SubColumn == null ? 1 : 2];
@@ -380,7 +386,7 @@ namespace FreeLibSet.Forms
         //System.IO.File.WriteAllBytes(@"d:\temp\table.html", Buffer);
         dobj.SetData(DataFormats.Html, false, new MemoryStream(buffer));
 
-        EFPApp.Clipboard.SetDataObject(dobj, true);
+        new EFPClipboard().SetDataObject(dobj, true);
       }
       finally
       {
@@ -506,7 +512,7 @@ namespace FreeLibSet.Forms
     private static void WriteHtmlOff(Stream strm, int posWr, int value)
     {
       if (!strm.CanSeek)
-        throw new NotSupportedException("Поток не поддерживает Seek");
+        throw ExceptionFactory.ArgProperty("strm", strm, "CanSeek", strm.CanSeek, new object[] { true });
       string text = value.ToString("d10");
       strm.Seek(posWr, SeekOrigin.Begin);
       for (int i = 0; i < text.Length; i++)
@@ -566,7 +572,6 @@ namespace FreeLibSet.Forms
     {
       MultiSelect = false;
       _CanBeEmpty = false;
-      Title = "Выбор из списка";
       _SelectedIndex = -1;
       _DialogPosition = new EFPDialogPosition();
       _ClipboardMode = ListSelectDialogClipboardMode.None;
@@ -641,7 +646,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (!MultiSelect)
-          throw new InvalidOperationException("Свойство MultiSelect не установлено");
+          throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, null);
         value.CopyTo(_Selections, 0);
       }
     }
@@ -673,7 +678,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (Items == null)
-          throw new NullReferenceException("Свойство Items должно быть установлено до установки текущей позиции");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
         SelectedIndex = Array.IndexOf<string>(Items, value);
       }
     }
@@ -756,9 +761,9 @@ namespace FreeLibSet.Forms
         else
         {
           if (Items == null)
-            throw new InvalidOperationException("Свойство Items должно быть установлено");
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
           if (value.Length != Items.Length)
-            throw new ArgumentException("Длина массива должна быть равна " + Items.Length.ToString());
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, Items.Length);
           _ImageKeys = value;
         }
       }
@@ -766,21 +771,43 @@ namespace FreeLibSet.Forms
     private string[] _ImageKeys;
 
     /// <summary>
-    /// Заголовок формы
+    /// Заголовок формы.
+    /// Если свойство не установлено в явном виде, используется заголовок по умолчанию.
     /// </summary>
     public string Title
     {
-      get { return _Title; }
-      set { _Title = value; }
+      get
+      {
+        if (_Title == null)
+          return DefaultTitle;
+        else
+          return _Title;
+      }
+      set
+      {
+        _Title = value;
+      }
     }
     private string _Title;
 
+    private string DefaultTitle
+    {
+      get
+      {
+        if (MultiSelect)
+          return Res.ListSelectDialog_Msg_TitleMultiSelect;
+        else
+          return Res.ListSelectDialog_Msg_TitleSingleSelect;
+      }
+    }
+
     /// <summary>
-    /// Заголовок над списком
+    /// Заголовок над списком.
+    /// По умолчанию - пустая строка - заголовок не выводится
     /// </summary>
     public string ListTitle
     {
-      get { return _ListTitle; }
+      get { return _ListTitle??String.Empty; }
       set { _ListTitle = value; }
     }
     private string _ListTitle;
@@ -934,11 +961,11 @@ namespace FreeLibSet.Forms
     public DialogResult ShowDialog()
     {
       if (Items == null)
-        throw new NullReferenceException("Свойство Items не было установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
       if (SubItems != null)
       {
         if (SubItems.Length != Items.Length)
-          throw new InvalidOperationException("Список строк SubItems должен иметь ту же длину, что и Items");
+          throw ExceptionFactory.ObjectPropertyCount(this, "SubItems", SubItems, Items.Length);
       }
 
       ListSelectForm frm = new ListSelectForm(Items.Length, MultiSelect, CanBeEmpty, ClipboardMode, SubItems != null);
@@ -1096,9 +1123,9 @@ namespace FreeLibSet.Forms
     public void SetSelectedItems(string[] selectedItems)
     {
       if (!MultiSelect)
-        throw new InvalidOperationException("Свойство MultiSelect не установлено");
+        throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true});
       if (Items == null)
-        throw new NullReferenceException("Свойство Items не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
 
       Array.Clear(_Selections, 0, _Selections.Length);
 
@@ -1120,7 +1147,7 @@ namespace FreeLibSet.Forms
     public string[] GetSelectedItems()
     {
       if (Items == null)
-        throw new NullReferenceException("Свойство Items не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
 
       if (!MultiSelect)
       {
@@ -1156,7 +1183,7 @@ namespace FreeLibSet.Forms
     public void SelectAll()
     {
       if (!MultiSelect)
-        throw new InvalidOperationException("Свойство MultiSelect не установлено");
+        throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
 
       for (int i = 0; i < Selections.Length; i++)
         Selections[i] = true;
@@ -1169,7 +1196,7 @@ namespace FreeLibSet.Forms
     public void UnselectAll()
     {
       if (!MultiSelect)
-        throw new InvalidOperationException("Свойство MultiSelect не установлено");
+        throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
 
       for (int i = 0; i < Selections.Length; i++)
         Selections[i] = false;
@@ -1187,12 +1214,11 @@ namespace FreeLibSet.Forms
     #region Конструктор
 
     /// <summary>
-    /// Инициализация диалога значениями по уммолчанию
+    /// Инициализация диалога значениями по умолчанию
     /// </summary>
     public CodesListSelectDialog()
     {
       _CanBeEmpty = false;
-      Title = "Выбор из списка";
       _DialogPosition = new EFPDialogPosition();
     }
 
@@ -1249,22 +1275,34 @@ namespace FreeLibSet.Forms
     public string[] ImageKeys { get { return _ImageKeys; } set { _ImageKeys = value; } }
     private string[] _ImageKeys;
 
+
     /// <summary>
-    /// Заголовок формы
+    /// Заголовок формы.
+    /// Если свойство не установлено в явном виде, используется заголовок по умолчанию.
     /// </summary>
     public string Title
     {
-      get { return _Title; }
-      set { _Title = value; }
+      get
+      {
+        if (_Title == null)
+          return Res.ListSelectDialog_Msg_TitleMultiSelect;
+        else
+          return _Title;
+      }
+      set
+      {
+        _Title = value;
+      }
     }
     private string _Title;
 
     /// <summary>
-    /// Заголовок над списком
+    /// Заголовок над списком.
+    /// По умолчанию - пустая строка - нет заголовка
     /// </summary>
     public string ListTitle
     {
-      get { return _ListTitle; }
+      get { return _ListTitle??String.Empty; }
       set { _ListTitle = value; }
     }
     private string _ListTitle;
@@ -1303,20 +1341,20 @@ namespace FreeLibSet.Forms
     public DialogResult ShowDialog()
     {
       if (Codes == null)
-        throw new NullReferenceException("Свойство Codes не было установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
       if (Items == null)
         Items = Codes;
       if (Items.Length != Codes.Length)
-        throw new InvalidOperationException("Массивы Codes и Items должны иметь одинаковую длину");
+        throw ExceptionFactory.ObjectPropertyCount(this, "Codes", Codes, Items.Length);
       if (SubItems != null)
       {
         if (SubItems.Length != Codes.Length)
-          throw new InvalidOperationException("Список строк SubItems должен иметь ту же длину, что и Codes");
+          throw ExceptionFactory.ObjectPropertyCount(this, "SubItems", SubItems, Items.Length);
       }
       if (ImageKeys != null)
       {
         if (ImageKeys.Length != Codes.Length)
-          throw new InvalidOperationException("Список строк ImageKeys должен иметь ту же длину, что и Codes");
+          throw ExceptionFactory.ObjectPropertyCount(this, "ImageKeys", SubItems, Items.Length);
       }
 
       ListSelectForm frm = new ListSelectForm(Codes.Length, true, CanBeEmpty, ListSelectDialogClipboardMode.CommaCodes, SubItems != null);
@@ -1405,8 +1443,8 @@ namespace FreeLibSet.Forms
       {
         if (li.Checked)
         {
-          string Code = (string)(li.Tag);
-          lst.Add(Code);
+          string scode = (string)(li.Tag);
+          lst.Add(scode);
         }
       }
 

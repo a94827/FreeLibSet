@@ -54,11 +54,11 @@ namespace FreeLibSet.Shell
     internal FileAssociationItem(string progId, AbsPath programPath, string arguments, string displayName, AbsPath iconPath, int iconIndex, bool useURL, string infoSourceString)
     {
       if (String.IsNullOrEmpty(progId))
-        throw new ArgumentNullException("progId");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("progId");
       _ProgId = progId;
 
       if (programPath.IsEmpty)
-        throw new ArgumentNullException("programPath");
+        throw ExceptionFactory.ArgIsEmpty("programPath");
       _ProgramPath = programPath;
 
       if (String.IsNullOrEmpty(arguments))
@@ -440,7 +440,7 @@ namespace FreeLibSet.Shell
       catch (Exception e)
       {
         e.Data["FileExt"] = fileExt;
-        LogoutTools.LogoutException(e, "Ошибка загрузки файловых ассоциаций");
+        LogoutTools.LogoutException(e, Res.FileAssociations_ErrTitle_LoadError);
         return FromError(e);
       }
     }
@@ -463,9 +463,9 @@ namespace FreeLibSet.Shell
       // В случае изменений не забыть про свойство IsSupported
 
       if (String.IsNullOrEmpty(fileExt))
-        throw new ArgumentNullException("fileExt");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("fileExt");
       if (fileExt[0] != '.')
-        throw new ArgumentException("Расширение должно начинаться с точки", "fileExt");
+        throw new ArgumentException(Res.FileAssociations_ArgExtNoDot, "fileExt");
 
       switch (Environment.OSVersion.Platform)
       {
@@ -508,7 +508,7 @@ namespace FreeLibSet.Shell
       catch (Exception e)
       {
         e.Data["MimeType"] = mimeType;
-        LogoutTools.LogoutException(e, "Ошибка загрузки файловых ассоциаций для MIME-типа");
+        LogoutTools.LogoutException(e, Res.FileAssociations_ErrTitle_LoadError);
         return FromError(e);
       }
     }
@@ -519,7 +519,7 @@ namespace FreeLibSet.Shell
 
 
       if (String.IsNullOrEmpty(mimeType))
-        throw new ArgumentNullException("mimeType");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("mimeType");
 
       switch (Environment.OSVersion.Platform)
       {
@@ -554,7 +554,7 @@ namespace FreeLibSet.Shell
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка загрузки файловых ассоциаций для каталогов");
+        LogoutTools.LogoutException(e, Res.FileAssociations_ErrTitle_LoadError);
         return FromError(e);
       }
     }
@@ -1147,13 +1147,14 @@ namespace FreeLibSet.Shell
             }
             catch (Exception e)
             {
-              LogoutTools.LogoutException(e, "Ошибка загрузки " + aFiles[i].Length);
+              e.Data["PackageXmlFile"] = aFiles[i];
+              LogoutTools.LogoutException(e, Res.FileAssociations_ErrTitle_LoadError);
             }
           }
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка заполнения словаря mime-типов");
+          LogoutTools.LogoutException(e, Res.FileAssociations_ErrTitle_LoadError);
         }
 
         #endregion
@@ -1516,7 +1517,7 @@ namespace FreeLibSet.Shell
           FreeLibSet.IO.IniFile ini = new IniFile(true);
           ini.Load(_MimeinfoFilePath);
           foreach (IniKeyValue pair in ini.GetKeyValues("MIME Cache"))
-            _MimeDesktopFiles[pair.Key] = pair.Value;
+            _MimeDesktopFiles[pair.KeyName] = pair.Value;
           _MimeinfoFileTime = System.IO.File.GetLastWriteTime(_MimeinfoFilePath.Path);
         }
 
@@ -1533,10 +1534,10 @@ namespace FreeLibSet.Shell
           ini.Load(_UserFilePath);
           foreach (IniKeyValue pair in ini.GetKeyValues("Default Applications"))
           {
-            if (_MimeDesktopFiles.ContainsKey(pair.Key))
-              _MimeDesktopFiles[pair.Key] = pair.Value + ";" + _MimeDesktopFiles[pair.Key]; // пользовательские предпочтения вперед
+            if (_MimeDesktopFiles.ContainsKey(pair.KeyName))
+              _MimeDesktopFiles[pair.KeyName] = pair.Value + ";" + _MimeDesktopFiles[pair.KeyName]; // пользовательские предпочтения вперед
             else
-              _MimeDesktopFiles.Add(pair.Key, pair.Value);
+              _MimeDesktopFiles.Add(pair.KeyName, pair.Value);
           }
           _UserFileTime = System.IO.File.GetLastWriteTime(_UserFilePath.Path);
         }

@@ -55,14 +55,14 @@ namespace FreeLibSet.Forms
       Control.ScrollBars = ScrollBars.Vertical;
 
       //TheHandler.Columns.AddImage();
-      Columns.AddInt("NPop", false, "№ п/п", 4);
+      Columns.AddInt("Order", false, Res.EFPErrorDataGridView_ColTitle_Order, 4);
       DataGridViewTextBoxColumn col;
-      col = Columns.AddText("Kind", false, "Тип", 4);
+      col = Columns.AddText("Kind", false, Res.EFPErrorDataGridView_ColTitle_Kind, 4);
       col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-      col = Columns.AddText("Code", false, "Код", 1, 1, DataGridViewContentAlignment.MiddleCenter);
+      col = Columns.AddText("Code", false, Res.EFPErrorDataGridView_ColTitle_Code, 1, 1, DataGridViewContentAlignment.MiddleCenter);
       col.Visible = false;
-      col = Columns.AddTextFill("Text", false, "Сообщение", 100, 20);
+      col = Columns.AddTextFill("Text", false, Res.EFPErrorDataGridView_ColTitle_Message, 100, 20);
       col.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
       UseRowImages = true;
       ShowErrorCountInTopLeftCell = true;
@@ -90,7 +90,7 @@ namespace FreeLibSet.Forms
       Control[0, 0].Value = null;
       Control[1, 0].Value = null;
       Control[2, 0].Value = null;
-      Control[3, 0].Value = "Список ошибок не присоединен!";
+      Control[3, 0].Value = Res.EFPErrorDataGridView_Msg_NoList;
       Control.Rows[0].Tag = null;
 
       _FirstFlag = true;
@@ -146,7 +146,7 @@ namespace FreeLibSet.Forms
             Control[0, 0].Value = null;
             Control[1, 0].Value = null;
             Control[2, 0].Value = null;
-            Control[3, 0].Value = "Нет ошибок";
+            Control[3, 0].Value = Res.EFPErrorDataGridView_Msg_EmptyList;
             Control.Rows[0].Tag = null;
           }
           else
@@ -159,24 +159,7 @@ namespace FreeLibSet.Forms
             for (int i = 0; i < value.Count; i++)
             {
               //          Image img;
-              string kindText;
-              switch (value[i].Kind)
-              {
-                case ErrorMessageKind.Error:
-                  //              img = EFPApp.MainImages.Images["Error"];
-                  kindText = "Ош.";
-                  break;
-                case ErrorMessageKind.Warning:
-                  //              img = EFPApp.MainImages.Images["Warning"];
-                  kindText = "Пр.";
-                  break;
-                case ErrorMessageKind.Info:
-                  //              img = EFPApp.MainImages.Images["Information"];
-                  kindText = "Инфо";
-                  break;
-                default:
-                  throw new BugException("Неизвестный тип сообщения");
-              }
+              string kindText=UITools.ToString(value[i].Kind);
               //          TheHandler.MainGrid[0, i].ValueEx = img;
               Control[0, i].Value = i + 1;
               Control[1, i].Value = kindText;
@@ -239,7 +222,7 @@ namespace FreeLibSet.Forms
       {
 #if DEBUG
         if (value < 0 || value > 20)
-          throw new ArgumentException("Недопустимая ширина колонки \"Код\": " + CodeWidth);
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, 20);
 #endif
         int codeWidth2 = value;
         if (codeWidth2 == 0)
@@ -288,18 +271,8 @@ namespace FreeLibSet.Forms
       if (row.Tag != null)
       {
         ErrorMessageKind kind = (ErrorMessageKind)(row.Tag);
-        switch (kind)
-        {
-          case ErrorMessageKind.Error:
-            args.AddRowError("Ошибка");
-            break;
-          case ErrorMessageKind.Warning:
-            args.AddRowWarning("Предупреждение");
-            break;
-          case ErrorMessageKind.Info:
-            args.AddRowInformation("Сообщение");
-            break;
-        }
+
+        args.AddRowErrorMessage(kind, UITools.ToString(kind));
       }
 
       base.OnGetRowAttributes(args);

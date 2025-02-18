@@ -174,7 +174,7 @@ namespace FreeLibSet.Drawing
 #if DEBUG
         CheckNotDisposed();
         if (String.IsNullOrEmpty(value))
-          throw new ArgumentNullException("value", "Имя шрифта не задано");
+          throw new ArgumentNullException("value");
 #endif
         if (value == _FontName)
           return;
@@ -195,7 +195,7 @@ namespace FreeLibSet.Drawing
 #if DEBUG
         CheckNotDisposed();
         if (value < 0.1f)
-          throw new ArgumentException("Слишком маленький шрифт");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0.1f, null);
 #endif
         if (value == _FontHeight)
           return;
@@ -642,7 +642,7 @@ namespace FreeLibSet.Drawing
     private void CheckIsForPaint()
     {
       if (!IsForPaint)
-        throw new InvalidOperationException("Объект предназначен только для измерения");
+        throw new InvalidOperationException(Res.ExtTextRenderer_Err_NotForPaint);
     }
 
     /// <summary>

@@ -42,7 +42,7 @@ namespace FreeLibSet.Data
 #endif
 
       if (parts.Count < 1)
-        throw new ArgumentException("Список частей сортировки пустой", "parts");
+        throw ExceptionFactory.ArgIsEmpty("parts");
 
       _Parts = new DBxOrderPart[parts.Count];
       parts.CopyTo(_Parts, 0);
@@ -51,7 +51,7 @@ namespace FreeLibSet.Data
       for (int i = 0; i < _Parts.Length; i++)
       {
         if (_Parts[i].IsEmpty)
-          throw new ArgumentException("Элемент сортировки с индексом " + i.ToString() + " не задан", "parts");
+          throw ExceptionFactory.ArgInvalidListItem("parts", _Parts, i);
       }
 #endif
     }

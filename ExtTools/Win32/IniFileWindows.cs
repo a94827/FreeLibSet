@@ -129,7 +129,7 @@ namespace FreeLibSet.Win32
     public IniFileWindows(AbsPath path, bool isReadOnly)
     {
       if (path.IsEmpty)
-        throw new ArgumentNullException("path");
+        throw ExceptionFactory.ArgIsEmpty("path");
 
       switch (Environment.OSVersion.Platform)
       {
@@ -177,13 +177,13 @@ namespace FreeLibSet.Win32
     /// Если при чтении нет такой секции или ключа, возвращается пустое значение.
     /// При записи несуществующего значения выполняется создание секции или ключа
     /// </summary>
-    /// <param name="section">Имя секции</param>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="sectionName">Имя секции</param>
+    /// <param name="keyName">Имя параметра</param>
     /// <returns>Строковое значение</returns>
-    public string this[string section, string key]
+    public string this[string sectionName, string keyName]
     {
-      get { return GetString(section, key, String.Empty); }
-      set { SetString(section, key, value); }
+      get { return GetString(sectionName, keyName, String.Empty); }
+      set { SetString(sectionName, keyName, value); }
     }
 
     /// <summary>
@@ -206,11 +206,8 @@ namespace FreeLibSet.Win32
                             string keyName,
                             string defaultValue)
     {
-      if (String.IsNullOrEmpty(sectionName))
-        throw new ArgumentNullException("sectionName");
-
-      if (String.IsNullOrEmpty(keyName))
-        throw new ArgumentNullException("keyName");
+      IniFile.ValidateSectionName(sectionName);
+      IniFile.ValidateKeyName(keyName);
 
       StringBuilder retval = new StringBuilder(IniFileWindows.MaxSectionSize);
 
@@ -330,8 +327,7 @@ namespace FreeLibSet.Win32
       string key, value;
       int equalSignPos;
 
-      if (String.IsNullOrEmpty(sectionName))
-        throw new ArgumentNullException("sectionName");
+      IniFile.ValidateSectionName(sectionName);
 
       //Allocate a buffer for the returned section names.
       IntPtr ptr = Marshal.AllocCoTaskMem(IniFileWindows.MaxSectionSize);
@@ -392,8 +388,7 @@ namespace FreeLibSet.Win32
     /// </exception>
     public Dictionary<string, string> GetSectionValues(string sectionName)
     {
-      if (String.IsNullOrEmpty(sectionName))
-        throw new ArgumentNullException("sectionName");
+      IniFile.ValidateSectionName(sectionName);
 
       List<KeyValuePair<string, string>> keyValuePairs;
       Dictionary<string, string> retval;
@@ -438,9 +433,7 @@ namespace FreeLibSet.Win32
       int len;
       string[] retval;
 
-      if (String.IsNullOrEmpty(sectionName))
-        throw new ArgumentNullException("sectionName");
-
+      IniFile.ValidateSectionName(sectionName);
 
       //Allocate a buffer for the returned section names.
       IntPtr ptr = Marshal.AllocCoTaskMem(IniFileWindows.MaxSectionSize);
@@ -570,14 +563,11 @@ namespace FreeLibSet.Win32
     /// </exception>
     public void SetString(string sectionName, string keyName, string value)
     {
-      if (String.IsNullOrEmpty(sectionName))
-        throw new ArgumentNullException("sectionName");
-
-      if (String.IsNullOrEmpty(keyName))
-        throw new ArgumentNullException("keyName");
+      IniFile.ValidateSectionName(sectionName);
+      IniFile.ValidateKeyName(keyName);
 
       if (value == null)
-        throw new ArgumentNullException("value");
+        value=String.Empty;
 
       WriteValueInternal(sectionName, keyName, value);
     }
@@ -671,11 +661,8 @@ namespace FreeLibSet.Win32
     /// </exception>
     public void DeleteKey(string sectionName, string keyName)
     {
-      if (String.IsNullOrEmpty(sectionName))
-        throw new ArgumentNullException("sectionName");
-
-      if (String.IsNullOrEmpty(keyName))
-        throw new ArgumentNullException("keyName");
+      IniFile.ValidateSectionName(sectionName);
+      IniFile.ValidateKeyName(keyName);
 
       CheckNotReadOnly();
 
@@ -693,8 +680,7 @@ namespace FreeLibSet.Win32
     /// </exception>
     public void DeleteSection(string sectionName)
     {
-      if (String.IsNullOrEmpty(sectionName))
-        throw new ArgumentNullException("sectionName");
+      IniFile.ValidateSectionName(sectionName);
 
       CheckNotReadOnly();
 
@@ -708,14 +694,14 @@ namespace FreeLibSet.Win32
     /// <summary>
     /// Возвращает объект, для которого можно вызвать foreach по парам "Ключ-Значение"
     /// </summary>
-    /// <param name="section">Имя секции</param>
+    /// <param name="sectionName">Имя секции</param>
     /// <returns>Объект, реализующий интерфейс IEnumerable</returns>
-    public IEnumerable<IniKeyValue> GetKeyValues(string section)
+    public IEnumerable<IniKeyValue> GetKeyValues(string sectionName)
     {
-      string[] Keys = GetKeyNames(section);
-      IniKeyValue[] a = new IniKeyValue[Keys.Length];
-      for (int i = 0; i < Keys.Length; i++)
-        a[i] = new IniKeyValue(Keys[i], this[section, Keys[i]]);
+      string[] keys = GetKeyNames(sectionName);
+      IniKeyValue[] a = new IniKeyValue[keys.Length];
+      for (int i = 0; i < keys.Length; i++)
+        a[i] = new IniKeyValue(keys[i], this[sectionName, keys[i]]);
       return a;
     }
 
@@ -736,7 +722,7 @@ namespace FreeLibSet.Win32
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion

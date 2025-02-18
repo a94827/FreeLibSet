@@ -19,7 +19,7 @@ namespace FreeLibSet.Controls
   /// В основном, предназначен для использования без дизайнера форм
   /// </summary>
   [Designer(typeof(FreeLibSet.Controls.Design.RadioGroupBoxDesigner))]
-  [Description("Простой GroupBox с автоматически создаваемыми радиокнопками")]
+  [Description("Simple GroupBox with automatic RadioButton controls creation")]
   [ToolboxBitmap(typeof(RadioGroupBox), "RadioGroupBox.bmp")]
   [ToolboxItem(true)]
   [DefaultProperty("Items")]
@@ -97,7 +97,7 @@ namespace FreeLibSet.Controls
     #region Свойство Items
 
     [Category("Appearance")]
-    [Description("Строки текста радиокнопок. Количество строк определяет количество кнопок")]
+    [Description("RadioButton text (one string per a control)")]
     public string[] Items
     {
       get
@@ -163,7 +163,7 @@ namespace FreeLibSet.Controls
     }
 
     [Category("PropertyChanged")]
-    [Description("Вызывается при установке свойства Items")]
+    [Description("Called when Items property changed")]
     public event EventHandler ItemsChanged;
 
     protected virtual void OnItemsChanged(EventArgs args)
@@ -225,8 +225,7 @@ namespace FreeLibSet.Controls
 
     [DefaultValue(true)]
     [Category("Appearance")]
-    [Description("Получает или задает значение, которое указывает, должен ли первый знак, следующий за знаком амперсанда (&), " +
-      "должен использоваться как мнемонический ключ элемента управления.")]
+    [Description("True if the ampersand char in Items is used as mnemonic key for radio button")]
     public bool UseMnemonic
     {
       get { return _UseMnemonic; }
@@ -266,7 +265,7 @@ namespace FreeLibSet.Controls
 
     [DefaultValue(-1)]
     [Category("Behavior")]
-    [Description("Текущая выбранная позиция в группе")]
+    [Description("Current selected item index")]
     public int SelectedIndex
     {
       get
@@ -297,7 +296,7 @@ namespace FreeLibSet.Controls
     private int _PrevSelectedIndex;
 
     [Category("PropertyChanged")]
-    [Description("Вызывается при изменении свойства SelectedIndex")]
+    [Description("Called when SelectedIndex property changed")]
     public event EventHandler SelectedIndexChanged;
 
     protected virtual void OnSelectedIndexChanged(EventArgs args)
@@ -536,7 +535,7 @@ namespace FreeLibSet.Controls
         if (value == null)
           value = new string[_ImageLabels.Length];
         if (value.Length != _ImageLabels.Length)
-          throw new ArgumentException("Неправильная длина массива");
+          throw ExceptionFactory.ArgWrongCollectionCount("value", value, _ImageLabels.Length);
 
         for (int i = 0; i < _ImageLabels.Length; i++)
           _ImageLabels[i].ImageKey = value[i];
@@ -565,7 +564,7 @@ namespace FreeLibSet.Controls
         if (value == null)
           value = new int[_ImageLabels.Length];
         if (value.Length != _ImageLabels.Length)
-          throw new ArgumentException("Неправильная длина массива");
+          throw ExceptionFactory.ArgWrongCollectionCount("value", value, _ImageLabels.Length);
 
         for (int i = 0; i < _ImageLabels.Length; i++)
           _ImageLabels[i].ImageIndex = value[i];
@@ -592,7 +591,7 @@ namespace FreeLibSet.Controls
         if (value == null)
           value = new Image[_ImageLabels.Length];
         if (value.Length != _ImageLabels.Length)
-          throw new ArgumentException("Неправильная длина массива");
+          throw ExceptionFactory.ArgWrongCollectionCount("value", value, _ImageLabels.Length);
 
         for (int i = 0; i < _ImageLabels.Length; i++)
           _ImageLabels[i].Image = value[i];

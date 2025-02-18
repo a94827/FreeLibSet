@@ -148,7 +148,7 @@ namespace FreeLibSet.Models.Tree
     private readonly object[] _FullPath;
 
     /// <summary>
-    /// Возвращает первый узел пути (объект верхнего уровня)
+    /// Возвращает первый узел пути (объект верхнего уровня).
     /// Тип объекта зависит от модели.
     /// Возвращает null, если путь пустой.
     /// </summary>
@@ -164,7 +164,7 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Возвращает последний узел пути (объект нижнего уровня)
+    /// Возвращает последний узел пути (объект нижнего уровня).
     /// Тип объекта зависит от модели.
     /// Возвращает null, если путь пустой.
     /// </summary>
@@ -204,7 +204,7 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает true, если путь пустой (не содержит объектов)
     /// </summary>
-    /// <returns>FullPath.Length=0</returns>
+    /// <returns><see cref="FullPath"/>.Length=0</returns>
     public bool IsEmpty
     {
       get { return Object.ReferenceEquals(_FullPath, null); }
@@ -307,7 +307,7 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Находит часть пути, являющегося общим для обоих путей.
-    /// Если пути не имеют общей части, возвращается TreePath.Empty.
+    /// Если пути не имеют общей части, возвращается <see cref="TreePath.Empty"/>.
     /// </summary>
     /// <param name="a">Первый путь</param>
     /// <param name="b">Второй путь</param>
@@ -341,7 +341,7 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает true, если текущий путь является прямым потомком (дочерним узлом) заданного.
     /// Если <paramref name="ansector"/> совпадает с текущим путем, возвращается false.
-    /// Если текущий путь - пустой (IsEmpty=true), возвращается false.
+    /// Если текущий путь - пустой (<see cref="IsEmpty"/>=true), возвращается false.
     /// </summary>
     /// <param name="ansector">Кандидат в предки</param>
     /// <returns>True, если текущий объект - потомок</returns>
@@ -365,7 +365,7 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает true, если текущий путь является прямым предком (родителем) заданного.
     /// Если <paramref name="descendant"/> совпадает с текущим путем, возвращается false.
-    /// Если текущий путь - пустой (IsEmpty=true), возвращается true, если <paramref name="descendant"/>.IsEmpty=false.
+    /// Если текущий путь - пустой (<see cref="IsEmpty"/>=true), возвращается true, если <paramref name="descendant"/>.IsEmpty=false.
     /// </summary>
     /// <param name="descendant">Кандидат в потомки</param>
     /// <returns>True, если текущий объект - предок</returns>
@@ -388,7 +388,7 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает true, если текущий путь является потомком заданного.
     /// Если <paramref name="ansector"/> совпадает с текущим путем, возвращается false.
-    /// Если текущий путь - пустой (IsEmpty=true), возвращается false.
+    /// Если текущий путь - пустой (<see cref="IsEmpty"/>=true), возвращается false.
     /// </summary>
     /// <param name="ansector">Кандидат в предки</param>
     /// <returns>True, если текущий объект - потомок</returns>
@@ -411,7 +411,7 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Возвращает true, если текущий путь является предком заданного.
     /// Если <paramref name="descendant"/> совпадает с текущим путем, возвращается false.
-    /// Если текущий путь - пустой (IsEmpty=true), возвращается true, если <paramref name="descendant"/>.IsEmpty=false.
+    /// Если текущий путь - пустой (<see cref="IsEmpty"/>=true), возвращается true, если <paramref name="descendant"/>.IsEmpty=false.
     /// </summary>
     /// <param name="descendant">Кандидат в потомки</param>
     /// <returns>True, если текущий объект - предок</returns>
@@ -445,8 +445,8 @@ namespace FreeLibSet.Models.Tree
   }
 
   /// <summary>
-  /// Аргументы события ITreeModel.StructureChanged.
-  /// Также является базовым классом для TreeModelEventArgs
+  /// Аргументы события <see cref="ITreeModel.StructureChanged"/>.
+  /// Также является базовым классом для <see cref="TreeModelEventArgs"/>.
   /// </summary>
   public class TreePathEventArgs : EventArgs
   {
@@ -528,7 +528,7 @@ namespace FreeLibSet.Models.Tree
         throw new ArgumentNullException("children");
 
       if (indices != null && indices.Length != children.Length)
-        throw new ArgumentException("indices and children arrays must have the same length");
+        throw ExceptionFactory.ArgWrongCollectionCount("children", children, indices.Length);
 
       _Indices = indices;
       _Children = children;
@@ -544,7 +544,7 @@ namespace FreeLibSet.Models.Tree
     /// Дочерние узлы задаются относительно родительского узла, задаваемого свойством <see cref="TreePathEventArgs.Path"/>.
     /// </summary>
     public object[] Children { get { return _Children; } }
-    private object[] _Children;
+    private readonly object[] _Children;
 
     /// <summary>
     /// Индексы дочерних узлов в дереве.
@@ -552,7 +552,7 @@ namespace FreeLibSet.Models.Tree
     /// Может быть null, если индексы узлов не определены (кроме события <see cref="ITreeModel.NodesInserted"/>, где наличие индексов обязательно).
     /// </summary>
     public int[] Indices { get { return _Indices; } }
-    private int[] _Indices;
+    private readonly int[] _Indices;
 
     #endregion
   }

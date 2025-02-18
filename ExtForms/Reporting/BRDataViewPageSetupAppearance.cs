@@ -32,8 +32,8 @@ namespace FreeLibSet.Forms.Reporting
 
       SettingsDialogPage page = dialog.Pages.Add(MainPanel);
 
-      page.Text = "Оформление";
-      page.ToolTipText = "Выбор наличия границ, цветового оформления табличного просмотра";
+      page.Text = Res.BRDataViewPageSetupAppearance_Title_Tab;
+      page.ToolTipText = Res.BRDataViewPageSetupAppearance_ToolTip_Tab;
       page.ImageKey = "CircleGreenYellowRed";
 
       efpBorderStyle = new EFPListComboBox(page.BaseProvider, cbBorderStyle);
@@ -83,7 +83,7 @@ namespace FreeLibSet.Forms.Reporting
           EFPCommandItem ci = new EFPCommandItem("Edit", "SetText" + StdConvert.ToString(i));
           ci.MenuText = _TrueTextValues[i] + " / " + _FalseTextValues[i];
           if (useCheckBoxStr && (i == (_TrueTextValues.Count - 1)))
-            ci.MenuText += " (может не поддерживаться)";
+            ci.MenuText = String.Format(Res.BRDataViewPageSetupAppearance_Msg_MayBeNotSupported , ci.MenuText);
           ci.Tag = i;
           ci.Click += SelBoolText_Click;
           efpSelText.CommandItems.Add(ci);
@@ -148,7 +148,7 @@ namespace FreeLibSet.Forms.Reporting
       if (args.ValidateState == UICore.UIValidateState.Error)
         return;
       if (efpTextTrue.Text == efpTextFalse.Text)
-        args.SetError("Текст для включенного и выключенного флажка должен различаться");
+        args.SetError(Res.BRDataViewPageSetupAppearance_Err_SameTrueFalse);
     }
 
     #endregion
@@ -159,28 +159,19 @@ namespace FreeLibSet.Forms.Reporting
 
     private void UpdateCellParamsLabel()
     {
-      StringBuilder sb = new StringBuilder();
-
-      sb.Append("Поля ячейки: ");
       if (_CellLeftMargin == _CellTopMargin && _CellLeftMargin == _CellRightMargin && _CellLeftMargin == _CellBottomMargin)
       {
-        sb.Append((_CellLeftMargin / 100m).ToString("0.0#"));
-        sb.Append(" см");
+        lblCellParams.Text = String.Format(Res.BRDataViewPageSetupAppearance_Msg_CellSameMargins,
+        (_CellLeftMargin / 100m).ToString("0.0#"));
       }
       else
       {
-        sb.Append(" левое ");
-        sb.Append((_CellLeftMargin / 100m).ToString("0.0#"));
-        sb.Append(" верхнее ");
-        sb.Append((_CellTopMargin / 100m).ToString("0.0#"));
-        sb.Append(" правое ");
-        sb.Append((_CellRightMargin / 100m).ToString("0.0#"));
-        sb.Append(" нижнее ");
-        sb.Append((_CellBottomMargin / 100m).ToString("0.0#"));
-        sb.Append(" см");
+        lblCellParams.Text = String.Format(Res.BRDataViewPageSetupAppearance_Msg_CellDiffMargins,
+        (_CellLeftMargin / 100m).ToString("0.0#"),
+        (_CellTopMargin / 100m).ToString("0.0#"),
+        (_CellRightMargin / 100m).ToString("0.0#"),
+        (_CellBottomMargin / 100m).ToString("0.0#"));
       }
-
-      lblCellParams.Text = sb.ToString();
     }
 
     private void EfpCellParams_Click(object sender, EventArgs args)

@@ -4,6 +4,7 @@
 using System;
 using System.Windows.Forms;
 using System.Text;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -45,7 +46,7 @@ namespace FreeLibSet.Forms
       if (value)
       {
         if (!IsReadOnly)
-          throw new InvalidOperationException("Не было вызова SetReadOnly()");
+          throw new BugException("SetReadOnly() method has not been called");
 
         _IsModalForm = GetIsModalForm();
       }
@@ -200,7 +201,7 @@ namespace FreeLibSet.Forms
       {
         case EFPControlProviderState.Detached:
         case EFPControlProviderState.Disposed:
-          throw new InvalidOperationException();
+          throw ExceptionFactory.ObjectProperty(controlProvider, "ProviderState", controlProvider.ProviderState, null);
       }
       _ControlProvider = controlProvider;
     }

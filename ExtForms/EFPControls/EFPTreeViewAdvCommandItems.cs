@@ -43,9 +43,8 @@ namespace FreeLibSet.Forms
       #region Редактирование
 
       ciEdit = new EFPCommandItem("Edit", "Edit");
-      ciEdit.MenuText = "Редактировать запись";
+      ciEdit.MenuText = Res.Cmd_Menu_Edit_Edit;
       ciEdit.ImageKey = "Edit";
-      ciEdit.ToolTipText = "Редактировать";
       ciEdit.GroupBegin = true;
       ciEdit.Click += new EventHandler(ciEdit_Click);
       Add(ciEdit);
@@ -57,33 +56,29 @@ namespace FreeLibSet.Forms
       Add(ciEdit2);
 
       ciInsert = new EFPCommandItem("Edit", "Insert");
-      ciInsert.MenuText = "Новая запись";
+      ciInsert.MenuText = Res.Cmd_Menu_Edit_Insert;
       ciInsert.ImageKey = "Insert";
-      ciInsert.ToolTipText = "Создать";
       ciInsert.ShortCut = Keys.Insert;
       ciInsert.Click += new EventHandler(ciInsert_Click);
       Add(ciInsert);
 
       ciInsertCopy = new EFPCommandItem("Edit", "InsertCopy");
-      ciInsertCopy.MenuText = "Копия записи";
+      ciInsertCopy.MenuText = Res.Cmd_Menu_Edit_InsertCopy;
       ciInsertCopy.ImageKey = "InsertCopy";
-      ciInsertCopy.ToolTipText = "Создать на основании существующего";
       ciInsertCopy.ShortCut = Keys.Insert | Keys.Alt;
       ciInsertCopy.Click += new EventHandler(ciInsertCopy_Click);
       Add(ciInsertCopy);
 
       ciDelete = new EFPCommandItem("Edit", "Delete");
-      ciDelete.MenuText = "Удалить запись";
+      ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete;
       ciDelete.ImageKey = "Delete";
-      ciDelete.ToolTipText = "Удалить";
       ciDelete.ShortCut = Keys.Delete;
       ciDelete.Click += new EventHandler(ciDelete_Click);
       Add(ciDelete);
 
       ciView = new EFPCommandItem("Edit", "View");
-      ciView.MenuText = "Просмотреть запись";
+      ciView.MenuText = Res.Cmd_Menu_Edit_View;
       ciView.ImageKey = "View";
-      ciView.ToolTipText = "Просмотр";
       ciView.GroupEnd = true;
       ciView.ShortCut = Keys.Shift | Keys.Return;
       ciView.Click += new EventHandler(ciView_Click);
@@ -92,7 +87,7 @@ namespace FreeLibSet.Forms
       if (!EFPApp.EasyInterface)
       {
         ciInlineEditStatus = new EFPCommandItem("View", "InlineEditsStatus");
-        ciInlineEditStatus.MenuText = "Редактирование по месту";
+        ciInlineEditStatus.MenuText = Res.Cmd_Menu_Edit_EditInline;
         ciInlineEditStatus.ImageKey = "EmptyImage";
         ciInlineEditStatus.StatusBarText = EFPCommandItem.EmptyStatusBarText;
         ciInlineEditStatus.Click += new EventHandler(ciInlineEditStatus_Click);
@@ -105,9 +100,7 @@ namespace FreeLibSet.Forms
       #region Выделить все
 
       ciSelectAll = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.SelectAll);
-      ciSelectAll.MenuText = "Выделить все строки в просмотре";
       //ciDebugChanges.ImageKey="SelectAll";
-      ciSelectAll.ToolTipText = "Выделить все";
       ciSelectAll.Click += new EventHandler(SelectAll);
       Add(ciSelectAll);
 
@@ -116,7 +109,6 @@ namespace FreeLibSet.Forms
       #region "Обновить"
 
       ciRefresh = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Refresh);
-      ciRefresh.MenuText = "Обновить содержимое";
       ciRefresh.Click += new EventHandler(Refresh);
       Add(ciRefresh);
 
@@ -319,23 +311,15 @@ namespace FreeLibSet.Forms
 
         if (selState == UISelectedRowsState.MultiRows)
         {
-          if (!ControlProvider.ReadOnly)
-          {
-            ciEdit.MenuText = "Редактировать выбранные записи";
-            ciDelete.MenuText = "Удалить выбранные записи";
-          }
-          if (ControlProvider.CanView)
-            ciView.MenuText = "Просмотреть выбранные записи";
+          ciEdit.MenuText = Res.Cmd_Menu_Edit_Edit_MultiRows;
+          ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete_MultiRows;
+          ciView.MenuText = Res.Cmd_Menu_Edit_View_MultiRows;
         }
         else
         {
-          if (!ControlProvider.ReadOnly)
-          {
-            ciEdit.MenuText = "Редактировать запись";
-            ciDelete.MenuText = "Удалить запись";
-          }
-          if (ControlProvider.CanView)
-            ciView.MenuText = "Просмотреть запись";
+          ciEdit.MenuText = Res.Cmd_Menu_Edit_Edit_SingleRow;
+          ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete_SingleRow;
+          ciView.MenuText = Res.Cmd_Menu_Edit_View_SingleRow;
         }
 
       } // UseEditView
@@ -359,12 +343,12 @@ namespace FreeLibSet.Forms
         if (ControlProvider.ControlIsReadOnly)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditReadOnlyTable";
-          ciInlineEditStatus.ToolTipText = "Просмотр не поддерживает редактирование по месту";
+          ciInlineEditStatus.ToolTipText = Res.Cmd_ToolTip_Edit_EditInline_ControlReadOnly;
         }
         else if (btc != null)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditProcess";
-          ciInlineEditStatus.ToolTipText = "Выполняется редактирование ячейки";
+          ciInlineEditStatus.ToolTipText = Res.Cmd_ToolTip_Edit_EditInline_EditInProgress;
         }
         else
         {
@@ -378,7 +362,7 @@ namespace FreeLibSet.Forms
           //else
           //{
           ciInlineEditStatus.ImageKey = "TableInlineEdit";
-          ciInlineEditStatus.ToolTipText = "Можно начать редактирование ячейки";
+          ciInlineEditStatus.ToolTipText = Res.Cmd_ToolTip_Edit_EditInline_CanStart;
           //}
         }
       }
@@ -516,8 +500,8 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) || 
-            ControlProvider.CanView 
+          if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
+            ControlProvider.CanView
             /*|| (!Handler.MainGrid.ReadOnly)*/)
             ciEdit_Click(null, null);
         }
@@ -538,7 +522,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при " + (ControlProvider.ReadOnly ? "просмотре" : "редактировании") + " данных");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -550,7 +534,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при добавлении строки данных");
+        EFPApp.ShowException(e);
       }
 
     }
@@ -563,7 +547,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при создании копии строки данных");
+        EFPApp.ShowException(e);
       }
 
     }
@@ -576,7 +560,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при удалении данных");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -588,7 +572,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при просмотре данных");
+        EFPApp.ShowException(e);
       }
     }
 

@@ -120,14 +120,14 @@ namespace FreeLibSet.Forms
   /// </summary>
   public partial class EFPGridProducer : IEFPConfigurableGridProducer
   {
-    #region Константы
+    //#region Константы
 
-    /// <summary>
-    /// Имя конфигурации по умолчанию для отображения в списках
-    /// </summary>
-    public const string DefaultConfigDisplayName = "< По умолчанию >";
+    ///// <summary>
+    ///// Имя конфигурации по умолчанию для отображения в списках
+    ///// </summary>
+    //public const string DefaultConfigDisplayName = "< По умолчанию >";
 
-    #endregion
+    //#endregion
 
     #region Конструктор
 
@@ -324,7 +324,7 @@ namespace FreeLibSet.Forms
     public void InitGridView(EFPDataGridView controlProvider, bool reInit)
     {
       if (!(controlProvider is EFPConfigurableDataGridView))
-        throw new ArgumentException("Ожидался EFPConfigurableDataGridView", "controlProvider");
+        throw ExceptionFactory.ArgNoType("controlProvider", controlProvider, typeof(EFPConfigurableDataGridView));
       List<string> dummyColumns = new List<string>();
       InitGridView((EFPConfigurableDataGridView)controlProvider, reInit, controlProvider.CurrentConfig, dummyColumns);
     }
@@ -362,7 +362,7 @@ namespace FreeLibSet.Forms
       if (reInit)
       {
         if (controlProvider.GridProducer != this)
-          throw new InvalidOperationException("Запрошена повторная инициализация, но свойство EFPDataGridView.GridProducer не установлено или установлено неверно");
+          throw ExceptionFactory.ObjectProperty(controlProvider, "GridProducer", controlProvider.GridProducer, new object[] { this });
       }
       if (usedColumns == null)
         throw new ArgumentNullException("usedColumns");
@@ -395,8 +395,8 @@ namespace FreeLibSet.Forms
         {
           config = GetNamedConfig(controlProvider.DefaultConfigName);
           if (config == null)
-            throw new BugException("Не найдена именная конфигурация \"" + controlProvider.DefaultConfigName +
-              "\". Неправильное значение свойства EFPAccDepGrid.DefaultConfigName");
+            throw new InvalidOperationException(String.Format(Res.EFPGridProducer_Err_UnknownDefaultConfigName,
+              controlProvider.DefaultConfigName));
         }
         // TODO: ????? ControlProvider.CurrentConfigName = String.Empty;
       }
@@ -535,7 +535,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e) // 21.05.2021
           {
-            args.ToolTipText = "Ошибка при получении подсказки: " + e.Message;
+            args.ToolTipText = String.Format(Res.EFPDataView_Err_ToolTip, e.Message);
           }
           break;
       }
@@ -564,7 +564,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (controlProvider.CurrentConfig == null)
-        throw new NullReferenceException("Не задано свойство EFPDataGridView.CurrentConfig");
+        throw ExceptionFactory.ObjectPropertyNotSet(controlProvider, "CurrentConfig");
 #endif
 
       if (!controlProvider.CurrentConfig.CurrentCellToolTip)
@@ -603,7 +603,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          s = toolTip.DisplayName + ": Ошибка! " + e.Message;
+          s = toolTip.DisplayName + "." + String.Format(Res.EFPDataView_Err_ToolTip, e.Message);
         }
         if (!String.IsNullOrEmpty(s))
           lst2.Add(s);
@@ -631,7 +631,7 @@ namespace FreeLibSet.Forms
     public void InitTreeView(EFPDataTreeView controlProvider, bool reInit)
     {
       if (!(controlProvider is EFPConfigurableDataTreeView))
-        throw new ArgumentException("Ожидался EFPConfigurableDataTreeView", "controlProvider");
+        throw ExceptionFactory.ArgNoType("controlProvider", controlProvider, typeof(EFPConfigurableDataTreeView));
       List<string> dummyColumns = new List<string>();
       InitTreeView((EFPConfigurableDataTreeView)controlProvider, reInit, controlProvider.CurrentConfig, dummyColumns);
     }
@@ -668,7 +668,7 @@ namespace FreeLibSet.Forms
       if (reInit)
       {
         if (controlProvider.GridProducer != this)
-          throw new InvalidOperationException("Запрошена повторная инициализация, но свойство EFPDataGridView.GridProducer не установлено или установлено неверно");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(controlProvider, "GridProducer");
       }
       if (usedColumns == null)
         throw new ArgumentNullException("usedColumns");
@@ -701,8 +701,8 @@ namespace FreeLibSet.Forms
         {
           config = this.GetNamedConfig(controlProvider.DefaultConfigName);
           if (config == null)
-            throw new BugException("Не найдена именная конфигурация \"" + controlProvider.DefaultConfigName +
-              "\". Неправильное значение свойства EFPAccDepGrid.DefaultConfigName");
+            throw new InvalidOperationException(String.Format(Res.EFPGridProducer_Err_UnknownDefaultConfigName,
+              controlProvider.DefaultConfigName));
         }
         // TODO: ????? controlProvider.CurrentConfigName = String.Empty;
       }
@@ -864,7 +864,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(fixedName))
-        throw new ArgumentNullException(fixedName);
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("fixedName");
 #endif
 
       if (_NamedConfigs == null)
@@ -884,7 +884,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(fixedName))
-        throw new ArgumentNullException(fixedName);
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("fixedName");
 #endif
       if (_NamedConfigs == null)
         return null;
@@ -893,8 +893,8 @@ namespace FreeLibSet.Forms
       if (_NamedConfigs.TryGetValue(fixedName, out config))
         return config;
       else
-        throw new ArgumentException("Фиксированная настройка табличного просмотра с именем \"" + fixedName +
-          "\" не была объявлена в генераторе табличного просмотра", "fixedName");
+        throw new ArgumentException(String.Format(Res.EFPGridProducer_Arg_NoNamedConfig,
+          fixedName), "fixedName");
     }
 
     /// <summary>
@@ -980,7 +980,7 @@ namespace FreeLibSet.Forms
     public void GetColumnNames(EFPDataGridViewConfig config, IList<string> usedColumns)
     {
       if (usedColumns == null)
-        throw new ArgumentNullException();
+        throw new ArgumentNullException("usedColumns");
       //usedColumns.CheckNotReadOnly();
 
       if (_FixedColumns != null)
@@ -1141,7 +1141,7 @@ namespace FreeLibSet.Forms
         if (col.SourceColumnNames != null)
         {
           if (srcColumnNames.Contains(col.Name))
-            throw new EFPGridProducerValidationException("Неправильное имя вычисляемого столбца \"" + col.Name + "\", так как это имя есть в списке исходных столбцов в других объектах EFPGridProducer");
+            throw new EFPGridProducerValidationException(String.Format(Res.EFPGridProducer_Err_UnknownCalcColumnName, col.Name));
           calcColumnNames.Add(col.Name);
         }
       }
@@ -1150,7 +1150,7 @@ namespace FreeLibSet.Forms
         if (tt.SourceColumnNames != null)
         {
           if (srcColumnNames.Contains(tt.Name))
-            throw new EFPGridProducerValidationException("Неправильное имя вычисляемой всплывающей подсказки \"" + tt.Name + "\", так как это имя есть в списке исходных столбцов в других объектах EFPGridProducer");
+            throw new EFPGridProducerValidationException(String.Format(Res.EFPGridProducer_Err_UnknownCalcToolTipName, tt.Name));
 
           // имена вычисляемых подсказок не интересны для порядка сортировки
         }
@@ -1169,7 +1169,8 @@ namespace FreeLibSet.Forms
 
             string errorText;
             if (!IsValidSourceColumnName(orderColumnNames[i], out errorText))
-              throw new EFPGridProducerValidationException("Неправильное имя исходного столбца \"" + calcColumnNames + "\", используемого в порядке сортировки \"" + order.Name + "\". " + errorText);
+              throw new EFPGridProducerValidationException(String.Format(Res.EFPGridProducer_Err_ErrColInOrder,
+                orderColumnNames[i], order.Name, errorText));
           }
         }
       }
@@ -1181,14 +1182,16 @@ namespace FreeLibSet.Forms
       if (item.SourceColumnNames == null)
       {
         if (!IsValidSourceColumnName(item.Name, out errorText))
-          throw new EFPGridProducerValidationException("Неправильное имя столбца \"" + item.Name + "\". " + errorText);
+          throw new EFPGridProducerValidationException(String.Format(Res.EFPGridProducer_Err_ErrItemName,
+            item.Name, errorText));
       }
       else
       {
         for (int i = 0; i < item.SourceColumnNames.Length; i++)
         {
           if (!IsValidSourceColumnName(item.SourceColumnNames[i], out errorText))
-            throw new EFPGridProducerValidationException("Неправильное имя исходного столбца \"" + item.SourceColumnNames[i] + "\" в вычисляемом столбце/подсказке \"" + item.Name + "\". " + errorText);
+            throw new EFPGridProducerValidationException(String.Format(Res.EFPGridProducer_Err_ErrSourceColumnName,
+              item.SourceColumnNames[i], item.Name, errorText));
         }
       }
     }
@@ -1203,31 +1206,26 @@ namespace FreeLibSet.Forms
     {
       if (String.IsNullOrEmpty(columnName))
       {
-        errorText = "Имя не задано";
+        errorText = Res.EFPGridProducer_Err_NameIsEmpty;
         return false;
       }
 
-      if (columnName.IndexOf(',') >= 0)
+      int pBadChar = DataTools.IndexOfAny(columnName, " ,");
+      if (pBadChar  >= 0)
       {
-        errorText = "Имя не может содержать запятые";
-        return false;
-      }
-
-      if (columnName.IndexOf(' ') >= 0)
-      {
-        errorText = "Имя не может содержать пробелы";
+        errorText = String.Format(Res.EFPGridProducer_Err_NameBadChar, columnName[pBadChar]);
         return false;
       }
 
       if (columnName[0] == '.' || columnName[columnName.Length - 1] == '.')
       {
-        errorText = "Имя не может начинаться или заканичиваться точкой";
+        errorText = Res.EFPGridProducer_Err_NameStartsEndsDot;
         return false;
       }
 
       if (columnName.IndexOf("..", StringComparison.Ordinal) >= 0)
       {
-        errorText = "Имя не может содержать 2 точки подряд";
+        errorText = Res.EFPGridProducer_Err_NameTwoDots;
         return false;
       }
 
@@ -1346,7 +1344,7 @@ namespace FreeLibSet.Forms.Reporting
     public BRDataViewMenuOutSettings Add(string defCfgCode, string displayName)
     {
       if (String.IsNullOrEmpty(defCfgCode))
-        throw new ArgumentNullException("defCfgCode");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("defCfgCode");
       SettingsData.DefaultConfigs[defCfgCode].DisplayName = displayName;
       return new Reporting.BRDataViewMenuOutSettings(SettingsData.DefaultConfigs[defCfgCode]);
     }

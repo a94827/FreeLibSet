@@ -49,7 +49,7 @@ namespace FreeLibSet.Collections
     public ObjectWithCode(string code)
     {
       if (String.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
       _Code = code;
     }
 
@@ -972,7 +972,7 @@ namespace FreeLibSet.Collections
     private void CheckDictCount()
     {
       if (_Dict.Count != _List.Count)
-        throw new BugException("Длина списка (" + _List.Count.ToString() + ") не совпадает с длиной словаря индексов (" + _Dict.Count.ToString() + ")");
+        throw new BugException("List item count (" + _List.Count.ToString() + ") is not the same as the index dictionary item count (" + _Dict.Count.ToString() + ")");
     }
 
 #endif
@@ -994,7 +994,7 @@ namespace FreeLibSet.Collections
 #endif
         string newCode = value.Code;
         if (String.IsNullOrEmpty(newCode))
-          throw new ArgumentException("value.Code пустой");
+          throw ExceptionFactory.ArgObjectWithoutCode("value", value);
         if (_IgnoreCase)
           newCode = newCode.ToUpperInvariant();
 
@@ -1049,9 +1049,9 @@ namespace FreeLibSet.Collections
       if (index >= 0)
         return _List[index];
       else if (string.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
       else
-        throw new KeyNotFoundException("В списке нет элемента с кодом \"" + code + "\"");
+        throw ExceptionFactory.KeyNotFound(code);
     }
 
     /// <summary>
@@ -1108,7 +1108,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -1178,12 +1178,12 @@ namespace FreeLibSet.Collections
       if (Object.ReferenceEquals(item, null))
         throw new ArgumentNullException("item");
 #endif
-      if (index > _List.Count)
-        throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + _List.Count.ToString());
+      if (index < 0 || index > _List.Count)
+        throw ExceptionFactory.ArgOutOfRange("index", index, 0, _List.Count);
 
       string itemCode = item.Code;
       if (String.IsNullOrEmpty(itemCode))
-        throw new ArgumentException("Пустой Item.Code", "item");
+        throw ExceptionFactory.ArgObjectWithoutCode("item", item);
       if (IgnoreCase)
         itemCode = itemCode.ToUpperInvariant();
 
@@ -1243,7 +1243,7 @@ namespace FreeLibSet.Collections
 
       string itemCode = item.Code;
       if (String.IsNullOrEmpty(itemCode))
-        throw new ArgumentException("Пустой Item.Code", "item");
+        throw ExceptionFactory.ArgObjectWithoutCode("item", item);
       if (IgnoreCase)
         itemCode = itemCode.ToUpperInvariant();
 
@@ -1479,9 +1479,9 @@ namespace FreeLibSet.Collections
 #if DEBUG
       if (collection == null)
         throw new ArgumentException("collection");
-#endif
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
 
       foreach (T item in collection)
         Add(item);
@@ -2596,7 +2596,7 @@ namespace FreeLibSet.Collections
     private void CheckDictCount()
     {
       if (_Dict.Count != _List.Count)
-        throw new BugException("Длина списка (" + _List.Count.ToString() + ") не совпадает с длиной словаря индексов (" + _Dict.Count.ToString() + ")");
+        throw new BugException("List item count (" + _List.Count.ToString() + ") is not the same as the index dictionary item count (" + _Dict.Count.ToString() + ")");
     }
 
 #endif
@@ -2619,7 +2619,7 @@ namespace FreeLibSet.Collections
 #endif
         string newCode = value.Code;
         if (String.IsNullOrEmpty(newCode))
-          throw new ArgumentException("value.Code пустой");
+          throw ExceptionFactory.ArgObjectWithoutCode("value", value);
         if (_IgnoreCase)
           newCode = newCode.ToUpperInvariant();
 
@@ -2684,9 +2684,9 @@ namespace FreeLibSet.Collections
       if (index >= 0)
         return _List[index];
       else if (string.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
       else
-        throw new KeyNotFoundException("В списке нет элемента с кодом \"" + code + "\"");
+        throw ExceptionFactory.KeyNotFound(code);
     }
 
     /// <summary>
@@ -2743,7 +2743,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -2813,12 +2813,12 @@ namespace FreeLibSet.Collections
       if (Object.ReferenceEquals(item, null))
         throw new ArgumentNullException("item");
 #endif
-      if (index > _List.Count)
-        throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + _List.Count.ToString());
+      if (index < 0 || index > _List.Count)
+        throw ExceptionFactory.ArgOutOfRange("index", index, 0, _List.Count);
 
       string itemCode = item.Code;
       if (String.IsNullOrEmpty(itemCode))
-        throw new ArgumentException("Пустой Item.Code", "item");
+        throw ExceptionFactory.ArgObjectWithoutCode("item", item);
       if (IgnoreCase)
         itemCode = itemCode.ToUpperInvariant();
 
@@ -2890,7 +2890,7 @@ namespace FreeLibSet.Collections
 
       string itemCode = item.Code;
       if (String.IsNullOrEmpty(itemCode))
-        throw new ArgumentException("Пустой Item.Code", "item");
+        throw ExceptionFactory.ArgObjectWithoutCode("item", item);
       if (IgnoreCase)
         itemCode = itemCode.ToUpperInvariant();
 
@@ -3139,10 +3139,10 @@ namespace FreeLibSet.Collections
       CheckNotReadOnly();
 #if DEBUG
       if (collection == null)
-        throw new ArgumentException("collection");
-#endif
+        throw new ArgumentNullException("collection");
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
 
       BeginUpdate();
       try
@@ -3329,7 +3329,7 @@ namespace FreeLibSet.Collections
 #endif
 
       if (_InsideOnListChanged)
-        throw new ReenteranceException("Вложенный вызов ListChanged");
+        throw new ReenteranceException();
 
       if (_UpdateCount > 0)
         _DelayedListChanged = true; // запомнили на будущее
@@ -3362,7 +3362,7 @@ namespace FreeLibSet.Collections
     public void NotifyItemChanged(int index)
     {
       if (index < 0 || index >= Count)
-        throw new ArgumentOutOfRangeException("index", index, "Индекс элемента вне диапазона");
+        throw ExceptionFactory.ArgOutOfRange("index", index, 0, Count - 1);
 
       CallListChanged(ListChangedType.ItemChanged, index);
     }
@@ -3390,7 +3390,7 @@ namespace FreeLibSet.Collections
     public virtual void EndUpdate()
     {
       if (_UpdateCount <= 0)
-        throw new InvalidOperationException("Непарный вызов EndUpdate()");
+        throw ExceptionFactory.UnpairedCall(this, "BeginUpdate()", "EndUpdate()");
 
       _UpdateCount--;
       if (_UpdateCount == 0 && _DelayedListChanged)
@@ -3699,7 +3699,7 @@ namespace FreeLibSet.Collections
     {
       T res;
       if (string.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
 
       if (IgnoreCase)
         code = code.ToUpperInvariant();
@@ -3707,7 +3707,7 @@ namespace FreeLibSet.Collections
       if (_Dict.TryGetValue(code, out res))
         return res;
       else
-        throw new KeyNotFoundException("В коллекции нет элемента с кодом \"" + code + "\"");
+        throw ExceptionFactory.KeyNotFound(code);
     }
 
     /// <summary>
@@ -3760,7 +3760,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -3809,7 +3809,7 @@ namespace FreeLibSet.Collections
 
       string itemCode = item.Code;
       if (String.IsNullOrEmpty(itemCode))
-        throw new ArgumentException("Пустой Item.Code", "item"); // 09.08.2022
+        throw ExceptionFactory.ArgObjectWithoutCode("item", item); // 09.08.2022
       if (IgnoreCase)
         itemCode = itemCode.ToUpperInvariant();
 
@@ -3878,11 +3878,11 @@ namespace FreeLibSet.Collections
     {
       CheckNotReadOnly();
       if (Object.ReferenceEquals(item, null))
-        return false; 
+        return false;
 
       string itemCode = item.Code;
       if (String.IsNullOrEmpty(itemCode))
-        return false; 
+        return false;
       if (IgnoreCase)
         itemCode = itemCode.ToUpperInvariant();
 
@@ -3890,7 +3890,7 @@ namespace FreeLibSet.Collections
       if (_Dict.TryGetValue(itemCode, out dictItem))
       {
         if (dictItem.Equals(item))
-        { 
+        {
           _Dict.Remove(itemCode);
           return true;
         }
@@ -3963,10 +3963,10 @@ namespace FreeLibSet.Collections
       CheckNotReadOnly();
 #if DEBUG
       if (collection == null)
-        throw new ArgumentException("collection");
-#endif
+        throw new ArgumentNullException("collection");
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
 
       foreach (T item in collection)
         Add(item);
@@ -4186,7 +4186,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Доступ по коду.
-    /// В отличие от доступа по индексированному свойству, если запрошен несуществуюший код, генерируется исключение.
+    /// В отличие от доступа по индексированному свойству <see cref="this[string]"/>, если запрошен несуществуюший код, генерируется исключение.
     /// </summary>
     /// <param name="code">Код элемента</param>
     /// <returns>Найденный элемент</returns>
@@ -4244,7 +4244,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -4290,13 +4290,12 @@ namespace FreeLibSet.Collections
     {
 #if DEBUG
       if (collection == null)
-        throw new ArgumentException("collection");
-#endif
+        throw new ArgumentNullException("collection");
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
       if (Object.ReferenceEquals(collection, Source))
-        throw new ArgumentException("Нельзя добавить элементы из базового списка", "collection");
-
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
       lock (SyncRoot)
       {
         ResetCopyArray();

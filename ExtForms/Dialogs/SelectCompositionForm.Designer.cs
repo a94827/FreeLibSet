@@ -28,152 +28,167 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectCompositionForm));
       this.panel1 = new System.Windows.Forms.Panel();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.grpPresets = new System.Windows.Forms.GroupBox();
       this.cbParamSet = new FreeLibSet.Controls.ParamSetComboBox();
       this.panel2 = new System.Windows.Forms.Panel();
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnOk = new System.Windows.Forms.Button();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.grpInfo = new System.Windows.Forms.GroupBox();
       this.lblInfo = new FreeLibSet.Controls.InfoLabel();
       this.pbPreview = new System.Windows.Forms.PictureBox();
       this.panel3 = new System.Windows.Forms.Panel();
       this.btnXml = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
-      this.groupBox2.SuspendLayout();
+      this.grpPresets.SuspendLayout();
       this.panel2.SuspendLayout();
-      this.groupBox1.SuspendLayout();
+      this.grpInfo.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pbPreview)).BeginInit();
       this.panel3.SuspendLayout();
       this.SuspendLayout();
       // 
       // panel1
       // 
-      this.panel1.Controls.Add(this.groupBox2);
+      this.panel1.AccessibleDescription = null;
+      this.panel1.AccessibleName = null;
+      resources.ApplyResources(this.panel1, "panel1");
+      this.panel1.BackgroundImage = null;
+      this.panel1.Controls.Add(this.grpPresets);
       this.panel1.Controls.Add(this.panel2);
-      this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel1.Location = new System.Drawing.Point(0, 397);
+      this.panel1.Font = null;
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(624, 45);
-      this.panel1.TabIndex = 1;
       // 
-      // groupBox2
+      // grpPresets
       // 
-      this.groupBox2.Controls.Add(this.cbParamSet);
-      this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox2.Location = new System.Drawing.Point(200, 0);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(424, 45);
-      this.groupBox2.TabIndex = 1;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Сохраненные композиции";
+      this.grpPresets.AccessibleDescription = null;
+      this.grpPresets.AccessibleName = null;
+      resources.ApplyResources(this.grpPresets, "grpPresets");
+      this.grpPresets.BackgroundImage = null;
+      this.grpPresets.Controls.Add(this.cbParamSet);
+      this.grpPresets.Font = null;
+      this.grpPresets.Name = "grpPresets";
+      this.grpPresets.TabStop = false;
       // 
       // cbParamSet
       // 
-      this.cbParamSet.Location = new System.Drawing.Point(6, 17);
+      this.cbParamSet.AccessibleDescription = null;
+      this.cbParamSet.AccessibleName = null;
+      resources.ApplyResources(this.cbParamSet, "cbParamSet");
+      this.cbParamSet.BackgroundImage = null;
+      this.cbParamSet.Font = null;
       this.cbParamSet.MinimumSize = new System.Drawing.Size(200, 24);
       this.cbParamSet.Name = "cbParamSet";
       this.cbParamSet.SelectedCode = "";
       this.cbParamSet.SelectedItem = null;
       this.cbParamSet.SelectedMD5Sum = "";
-      this.cbParamSet.Size = new System.Drawing.Size(415, 24);
-      this.cbParamSet.TabIndex = 0;
+      this.cbParamSet.ShowMD5 = false;
       // 
       // panel2
       // 
+      this.panel2.AccessibleDescription = null;
+      this.panel2.AccessibleName = null;
+      resources.ApplyResources(this.panel2, "panel2");
+      this.panel2.BackgroundImage = null;
       this.panel2.Controls.Add(this.btnCancel);
       this.panel2.Controls.Add(this.btnOk);
-      this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
-      this.panel2.Location = new System.Drawing.Point(0, 0);
+      this.panel2.Font = null;
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(200, 45);
-      this.panel2.TabIndex = 0;
       // 
       // btnCancel
       // 
+      this.btnCancel.AccessibleDescription = null;
+      this.btnCancel.AccessibleName = null;
+      resources.ApplyResources(this.btnCancel, "btnCancel");
+      this.btnCancel.BackgroundImage = null;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(102, 17);
+      this.btnCancel.Font = null;
       this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(88, 24);
-      this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // btnOk
       // 
+      this.btnOk.AccessibleDescription = null;
+      this.btnOk.AccessibleName = null;
+      resources.ApplyResources(this.btnOk, "btnOk");
+      this.btnOk.BackgroundImage = null;
       this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOk.Location = new System.Drawing.Point(8, 17);
+      this.btnOk.Font = null;
       this.btnOk.Name = "btnOk";
-      this.btnOk.Size = new System.Drawing.Size(88, 24);
-      this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
-      // groupBox1
+      // grpInfo
       // 
-      this.groupBox1.Controls.Add(this.lblInfo);
-      this.groupBox1.Controls.Add(this.pbPreview);
-      this.groupBox1.Controls.Add(this.panel3);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(624, 397);
-      this.groupBox1.TabIndex = 0;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Выбранная композиция";
+      this.grpInfo.AccessibleDescription = null;
+      this.grpInfo.AccessibleName = null;
+      resources.ApplyResources(this.grpInfo, "grpInfo");
+      this.grpInfo.BackgroundImage = null;
+      this.grpInfo.Controls.Add(this.lblInfo);
+      this.grpInfo.Controls.Add(this.pbPreview);
+      this.grpInfo.Controls.Add(this.panel3);
+      this.grpInfo.Font = null;
+      this.grpInfo.Name = "grpInfo";
+      this.grpInfo.TabStop = false;
       // 
       // lblInfo
       // 
-      this.lblInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.lblInfo.AccessibleDescription = null;
+      this.lblInfo.AccessibleName = null;
+      resources.ApplyResources(this.lblInfo, "lblInfo");
+      this.lblInfo.BackgroundImage = null;
+      this.lblInfo.Font = null;
       this.lblInfo.IconSize = FreeLibSet.Controls.MessageBoxIconSize.Large;
-      this.lblInfo.Location = new System.Drawing.Point(3, 16);
       this.lblInfo.Name = "lblInfo";
-      this.lblInfo.Size = new System.Drawing.Size(578, 378);
-      this.lblInfo.TabIndex = 5;
-      this.lblInfo.Text = "???";
       // 
       // pbPreview
       // 
-      this.pbPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.pbPreview.Location = new System.Drawing.Point(3, 16);
+      this.pbPreview.AccessibleDescription = null;
+      this.pbPreview.AccessibleName = null;
+      resources.ApplyResources(this.pbPreview, "pbPreview");
+      this.pbPreview.BackgroundImage = null;
+      this.pbPreview.Font = null;
+      this.pbPreview.ImageLocation = null;
       this.pbPreview.Name = "pbPreview";
-      this.pbPreview.Size = new System.Drawing.Size(578, 378);
-      this.pbPreview.TabIndex = 4;
       this.pbPreview.TabStop = false;
       // 
       // panel3
       // 
+      this.panel3.AccessibleDescription = null;
+      this.panel3.AccessibleName = null;
+      resources.ApplyResources(this.panel3, "panel3");
+      this.panel3.BackgroundImage = null;
       this.panel3.Controls.Add(this.btnXml);
-      this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-      this.panel3.Location = new System.Drawing.Point(581, 16);
+      this.panel3.Font = null;
       this.panel3.Name = "panel3";
-      this.panel3.Size = new System.Drawing.Size(40, 378);
-      this.panel3.TabIndex = 3;
       // 
       // btnXml
       // 
-      this.btnXml.Location = new System.Drawing.Point(8, 8);
+      this.btnXml.AccessibleDescription = null;
+      this.btnXml.AccessibleName = null;
+      resources.ApplyResources(this.btnXml, "btnXml");
+      this.btnXml.BackgroundImage = null;
+      this.btnXml.Font = null;
       this.btnXml.Name = "btnXml";
-      this.btnXml.Size = new System.Drawing.Size(24, 24);
-      this.btnXml.TabIndex = 0;
       this.btnXml.UseVisualStyleBackColor = true;
       // 
       // SelectCompositionForm
       // 
       this.AcceptButton = this.btnOk;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AccessibleDescription = null;
+      this.AccessibleName = null;
+      resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.BackgroundImage = null;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(624, 442);
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.grpInfo);
       this.Controls.Add(this.panel1);
+      this.Font = null;
+      this.Icon = null;
       this.Name = "SelectCompositionForm";
-      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Композиции рабочего стола";
       this.panel1.ResumeLayout(false);
-      this.groupBox2.ResumeLayout(false);
+      this.grpPresets.ResumeLayout(false);
       this.panel2.ResumeLayout(false);
-      this.groupBox1.ResumeLayout(false);
+      this.grpInfo.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.pbPreview)).EndInit();
       this.panel3.ResumeLayout(false);
       this.ResumeLayout(false);
@@ -183,11 +198,11 @@
     #endregion
 
     private System.Windows.Forms.Panel panel1;
-    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.GroupBox grpPresets;
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.Button btnCancel;
     private System.Windows.Forms.Button btnOk;
-    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox grpInfo;
     private FreeLibSet.Controls.ParamSetComboBox cbParamSet;
     private FreeLibSet.Controls.InfoLabel lblInfo;
     private System.Windows.Forms.PictureBox pbPreview;

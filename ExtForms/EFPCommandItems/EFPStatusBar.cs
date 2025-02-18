@@ -169,7 +169,7 @@ namespace FreeLibSet.Forms
     {
       string s;
       if (_Items.Count == 0)
-        s = "Пустой список";
+        s = "Empty";
       else
       {
         StringBuilder sb = new StringBuilder();
@@ -577,7 +577,7 @@ namespace FreeLibSet.Forms
             }
             catch (Exception e)
             {
-              EFPApp.ShowException(e, "Ошибка отсоединения панели статусной строки " + uiObj.ToString());
+              EFPApp.ShowException(e, String.Format(Res.EFPStatuBar_ErrTitle_DetachPanel, uiObj.ToString()));
             }
           }
         }
@@ -764,7 +764,7 @@ namespace FreeLibSet.Forms
       public VisibleCommandItem()
         : base("", "StatusBarVisible")
       {
-        MenuText = "Статусная строка";
+        MenuText = Res.Cmd_Menu_View_StatusBarVisible;
         Checked = EFPApp.StatusBar.Visible;
         Click += new EventHandler(VisibleClick);
         EFPApp.StatusBar.VisibleChanged += new EventHandler(StatusBarVisibleChanged);

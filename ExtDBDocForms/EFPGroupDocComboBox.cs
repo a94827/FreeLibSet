@@ -395,7 +395,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "EFPGroupDocComboBox. Ошибка обработки DropDownClosed");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -437,7 +437,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "EFPGroupDocComboBox. Ошибка обработки SelectedValueChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -468,7 +468,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "EFPGroupDocComboBox.HandleIdle()");
+          EFPApp.ShowException(e);
         }
       }
     }
@@ -801,7 +801,7 @@ namespace FreeLibSet.Forms.Docs
       dObj.SetData(docSel);
       ControlProvider.DocTypeUI.UI.OnAddCopyFormats(dObj, docSel);
       dObj.SetText(ControlProvider.DocTypeUI.GetTextValue(ControlProvider.DocId));
-      EFPApp.Clipboard.SetDataObject(dObj, true);
+      new EFPClipboard().SetDataObject(dObj, true);
     }
 
     void ciPaste_Click(object sender, EventArgs args)

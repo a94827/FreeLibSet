@@ -127,7 +127,7 @@
     <Compile Include="Controls\BandPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="EFPApp\EFPAppClipboard.cs" />
+    <Compile Include="EFPApp\EFPClipboard.cs" />
     <Compile Include="EFPApp\EFPAppCommandItemHelpers.cs" />
     <Compile Include="EFPApp\EFPAppCompositionHistoryHandler.cs" />
     <Compile Include="EFPApp\EFPAppFileExtAssociations.cs" />
@@ -284,7 +284,9 @@
     <Compile Include="EFPControls\EFPXmlViewBox.cs" />
     <Compile Include="EFPControls\EFPYearMonthBox.cs" />
     <Compile Include="Controls\ExtDataGridViewCheckBoxColumn.cs" />
-    <Compile Include="Controls\ExtPrintPreviewControl.cs" />
+    <Compile Include="Controls\ExtPrintPreviewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Drawing\ExtTextRenderer.cs" />
     <Compile Include="Dialogs\FileBrowseForm.cs">
       <SubType>Form</SubType>
@@ -431,6 +433,11 @@
     <Compile Include="Reporting\BRReportPainter.cs" />
     <Compile Include="Reporting\BRFilePdf.cs" />
     <Compile Include="Reporting\PdfTextRenderer.cs" />
+    <Compile Include="Res.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Res.resx</DependentUpon>
+    </Compile>
     <Compile Include="SplashImagesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -628,7 +635,9 @@
       <DependentUpon>WizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WizardSteps2.cs" />
-    <Compile Include="EFPControls\XmlEditor.cs" />
+    <Compile Include="EFPControls\XmlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Controls\XmlViewBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -648,27 +657,127 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\DateRangeBox.ru.resx">
+      <DependentUpon>DateRangeBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TwoListSelector.ru.resx">
+      <DependentUpon>TwoListSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\YearMonthBox.ru.resx">
+      <DependentUpon>YearMonthBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\YearMonthRangeBox.ru.resx">
+      <DependentUpon>YearMonthRangeBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Data\CodeGridFilterForm.resx">
       <DependentUpon>CodeGridFilterForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\CodeGridFilterForm.ru.resx">
+      <DependentUpon>CodeGridFilterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Data\DateRangeInclusionGridFilterForm.resx">
       <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Data\DateRangeInclusionGridFilterForm.ru.resx">
+      <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Data\YearGridFilterForm.resx">
       <DependentUpon>YearGridFilterForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\YearGridFilterForm.ru.resx">
+      <DependentUpon>YearGridFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Diagnosics\ShowExceptionForm.ru.resx">
+      <DependentUpon>ShowExceptionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Diagnosics\ShowExceptionMsgBoxForm.ru.resx">
+      <DependentUpon>ShowExceptionMsgBoxForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DateRangeForm.ru.resx">
+      <DependentUpon>DateRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\EFPDataViewCopyFormatsForm.resx">
       <DependentUpon>EFPDataViewCopyFormatsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\EFPDataViewCopyFormatsForm.ru.resx">
+      <DependentUpon>EFPDataViewCopyFormatsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\EFPTextSearchForm.ru.resx">
+      <DependentUpon>EFPTextSearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ExtEditDialogForm.resx">
+      <DependentUpon>ExtEditDialogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ExtEditDialogForm.ru.resx">
+      <DependentUpon>ExtEditDialogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FileBrowseForm.ru.resx">
+      <DependentUpon>FileBrowseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FileCopier.ru.resx">
+      <DependentUpon>FileCopier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GridConfigForm.ru.resx">
+      <DependentUpon>GridConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GridFilterForm.ru.resx">
+      <DependentUpon>GridFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ListSelectForm.ru.resx">
+      <DependentUpon>ListSelectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\NumRangeForm.ru.resx">
+      <DependentUpon>NumRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SelectCompositionForm.ru.resx">
+      <DependentUpon>SelectCompositionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SettingsDialogForm.ru.resx">
+      <DependentUpon>SettingsDialogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SimpleAboutDialog.ru.resx">
+      <DependentUpon>SimpleAboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPApp\EFPAppRemoteExitHandler.ru.resx">
+      <DependentUpon>EFPAppRemoteExitHandler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPControls\EFPDataGridViewOrderForm.ru.resx">
+      <DependentUpon>EFPDataGridViewOrderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPGridProducer\EFPGridProducerEditor.ru.resx">
+      <DependentUpon>EFPGridProducerEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPReport\EFPReportExtParamsForm.ru.resx">
+      <DependentUpon>EFPReportExtParamsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPReport\EFPReportExtParamsTwoPageForm.ru.resx">
+      <DependentUpon>EFPReportExtParamsTwoPageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupAppearance.ru.resx">
+      <DependentUpon>BRDataViewPageSetupAppearance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupCellParamDialog.ru.resx">
+      <DependentUpon>BRDataViewPageSetupCellParamDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupColumns.ru.resx">
+      <DependentUpon>BRDataViewPageSetupColumns.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRDataViewPageSetupDbf.resx">
       <DependentUpon>BRDataViewPageSetupDbf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupDbf.ru.resx">
+      <DependentUpon>BRDataViewPageSetupDbf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupSendTo.ru.resx">
+      <DependentUpon>BRDataViewPageSetupSendTo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRDataViewPageSetupText.resx">
       <DependentUpon>BRDataViewPageSetupText.cs</DependentUpon>
@@ -729,20 +838,46 @@
     <EmbeddedResource Include="Reporting\BRDataViewPageSetupSendTo.resx">
       <DependentUpon>BRDataViewPageSetupSendTo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRDataViewPageSetupText.ru.resx">
+      <DependentUpon>BRDataViewPageSetupText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRPageSetupBitmap.resx">
+      <DependentUpon>BRPageSetupBitmap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupBitmap.ru.resx">
       <DependentUpon>BRPageSetupBitmap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRPageSetupFont.resx">
       <DependentUpon>BRPageSetupFont.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupFont.ru.resx">
+      <DependentUpon>BRPageSetupFont.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRPageSetupMargins.resx">
+      <DependentUpon>BRPageSetupMargins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupMargins.ru.resx">
       <DependentUpon>BRPageSetupMargins.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRPageSetupPaper.resx">
       <DependentUpon>BRPageSetupPaper.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupPaper.ru.resx">
+      <DependentUpon>BRPageSetupPaper.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reporting\BRPageSetupPrinter.resx">
       <DependentUpon>BRPageSetupPrinter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\BRPageSetupPrinter.ru.resx">
+      <DependentUpon>BRPageSetupPrinter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Res.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Res.ru.resx">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Splash\SplashForm.resx">
       <DependentUpon>SplashForm.cs</DependentUpon>
@@ -767,6 +902,9 @@
     <EmbeddedResource Include="Controls\YearMonthRangeBox.resx">
       <DependentUpon>YearMonthRangeBox.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Splash\SplashForm.ru.resx">
+      <DependentUpon>SplashForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

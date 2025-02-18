@@ -346,7 +346,7 @@ namespace FreeLibSet.Text
               phase = PhaseInStrQ;
               break;
             case PhaseWaitSep:
-              throw new ParsingException("В позиции " + (i + 1).ToString() + " неожиданный символ \". Ожидался разделитель \"" + FieldDelimiterText + "\"");
+              throw new ParsingException(String.Format(Res.CsvTextConvert_Err_BadChar, s[i], i + 1, FieldDelimiterText));
             case PhaseInStrNQ:
               // если текст начался не с кавычки, то кавычки в строке не задваиваются
               sb.Append(Quote);
@@ -403,7 +403,7 @@ namespace FreeLibSet.Text
               phase = PhaseInStrNQ;
               break;
             case PhaseWaitSep:
-              throw new ParsingException("В позиции " + (i + 1).ToString() + " неожиданный символ \"" + s[i] + "\". Ожидался разделитель \"" + FieldDelimiterText + "\"");
+              throw new ParsingException(String.Format(Res.CsvTextConvert_Err_BadChar, s[i], i + 1, FieldDelimiterText));
             case PhaseInStrNQ:
             case PhaseInStrQ:
               // 12.11.2021 Не уверен
@@ -426,7 +426,7 @@ namespace FreeLibSet.Text
           lst.Add(String.Empty);
           break;
         case PhaseInStrQ:
-          throw new ParsingException("Неожиданный конец строки. Не найдена завершающая кавычка");
+          throw new ParsingException(Res.CsvTextConvert_Err_StringWithoutEnd);
       }
 
       return lst.ToArray();
@@ -489,7 +489,7 @@ namespace FreeLibSet.Text
         }
         catch (Exception e)
         {
-          throw new ParsingException("Ошибка в строке " + (i + 1).ToString() + ". " + e.Message);
+          throw new ParsingException(String.Format(Res.CsvTextConvert_Err_WithLineNumber, i + 1, e.Message));
         }
       }
       return DataTools.ToArray2<string>(a3);

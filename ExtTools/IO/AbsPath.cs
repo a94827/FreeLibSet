@@ -13,6 +13,7 @@ namespace FreeLibSet.IO
    * AbsPath.cs может использоваться не только в библиотеке ExtTools.cs, 
    * но и самостоятельно, например, в загрузчиках программ.
    * Поэтому класс AbsPath не может зависеть от других классов, например, FileTools.
+   * Также нельзя использовать локализацию с помощью ресурсов.
    * 
    * Также в этом файле находится структура RelPath, так как AbsPath и RelPath зависят друг от друга
    */
@@ -107,7 +108,7 @@ namespace FreeLibSet.IO
       }
       catch (Exception e)
       {
-        throw new ArgumentException("Не удалось преобразовать \"" + s + "\" в полный путь. " + e.Message, e);
+        throw new ArgumentException(String.Format("Cannot convert \"{0}\" to the full path. {1}", s, e.Message), e);
       }
     }
 
@@ -361,7 +362,7 @@ namespace FreeLibSet.IO
     {
       if (basePath.IsEmpty)
         //return new AbsPath(SubDir);
-        throw new ArgumentException("Базовый каталог пустой", "basePath");
+        throw new ArgumentException("Base directory is empty", "basePath");
 
       if (String.IsNullOrEmpty(subDir))
         return basePath;
@@ -571,9 +572,9 @@ namespace FreeLibSet.IO
       if (extension.Length > 0)
       {
         if (extension[0] != '.')
-          throw new ArgumentException("Расширение должно начинаться с точки", "extension");
+          throw new ArgumentException("File extension must start with a period", "extension");
         if (extension.Length == 1)
-          throw new ArgumentException("Расширение должно быть задано. Для проверки отсутствия расширения используйте пустую строку, а не точку", "extension");
+          throw new ArgumentException("File extension must be given. To check the absent extension use the String.Empty, not a \".\" string", "extension");
       }
 
       if (IsEmpty)
@@ -963,7 +964,7 @@ namespace FreeLibSet.IO
         else
         {
           if (AbsPath.StartsWithUriScheme(s2))
-            throw new NotImplementedException("Задание относительного пути в формате URI не поддерживается");
+            throw new NotImplementedException("URI format for a relative path is not implemented");
           else
           {
             _Path = s2;
@@ -972,7 +973,7 @@ namespace FreeLibSet.IO
       }
       catch (Exception e)
       {
-        throw new ArgumentException("Не удалось преобразовать \"" + s + "\" в относительный путь. " + e.Message, e);
+        throw new ArgumentException(String.Format("Cannot convert \'{0}\' to the relative path. {1}", s, e.Message), e);
       }
     }
 

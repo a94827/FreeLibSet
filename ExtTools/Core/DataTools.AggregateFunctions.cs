@@ -687,20 +687,10 @@ namespace FreeLibSet.Core
           continue;
         column = row.Table.Columns[columnName];
         if (column == null)
-          throw new ArgumentException("Таблица " + row.Table.TableName + " не содержит столбца с именем \"" + columnName + "\"", "columnName");
+          throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
         return column.DataType;
       }
       return null; // Нет ни одной строки
-    }
-
-
-    private static Exception ColumnTypeException(string message, DataColumn column)
-    {
-      string s = message + ". Столбец \"" + column.ColumnName + "\"";
-      if (column.Table != null)
-        s += " таблицы \"" + column.Table.TableName + "\"";
-      s += " имеет неподходящий тип " + column.DataType.ToString();
-      return new InvalidOperationException(s);
     }
 
     private static object ConvertValue(object v, SumType st)
@@ -716,7 +706,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return DataTools.GetNullableDateTime(v);
         case SumType.None: return null;
         default:
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgUnknownValue("st", st);
       }
     }
 
@@ -738,7 +728,7 @@ namespace FreeLibSet.Core
 
       if (st1 == SumType.TimeSpan || st2 == SumType.TimeSpan ||
         st1 == SumType.DateTime || st2 == SumType.DateTime)
-        throw new InvalidCastException("Несовместимые типы данных");
+        throw new InvalidCastException(Res.DataTools_Err_IncompatibleTypes);
 
       return (SumType)Math.Max((int)st1, (int)st2);
     }
@@ -756,13 +746,13 @@ namespace FreeLibSet.Core
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       int p = table.Columns.IndexOf(columnName);
       if (p < 0)
       {
-        ArgumentException e = new ArgumentException("Таблица \"" + table.TableName + "\" не содержит столбца \"" + columnName + "\"", "columnName");
+        ArgumentException e = ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
         AddExceptionColumnsInfo(e, table);
         throw e;
       }
@@ -872,12 +862,12 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = dv.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -888,7 +878,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: return SumDecimal(dv, columnName);
         case SumType.TimeSpan: return SumTimeSpan(dv, columnName);
         default:
-          throw ColumnTypeException("Нельзя вычислить сумму значений", dv.Table.Columns[columnName]);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -905,13 +895,12 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
-
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -922,7 +911,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: return SumDecimal(table, columnName);
         case SumType.TimeSpan: return SumTimeSpan(table, columnName);
         default:
-          throw ColumnTypeException("Нельзя вычислить сумму значений", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -948,7 +937,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: return SumDecimal(rows, columnName);
         case SumType.TimeSpan: return SumTimeSpan(rows, columnName);
         default:
-          throw ColumnTypeException("Нельзя вычислить сумму значений", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -956,10 +945,10 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Получить сумму значений поля для всех строк в таблице, к которым 
     /// относится строка Row. Полученное значение записывается в поле строки.
-    /// Предполагается, что строка получена вызовом DataTable.NewRow(), но еще
+    /// Предполагается, что строка получена вызовом <see cref="DataTable.NewRow()"/>, но еще
     /// не добавлена в таблицу.
-    /// Метод используется для расчета итоговой строки в отчетах
-    /// Нулевые значения записываются без использования DBNull
+    /// Метод используется для расчета итоговой строки в отчетах.
+    /// Нулевые значения записываются без использования <see cref="DBNull"/>.
     /// </summary>
     /// <param name="row">Итоговая строка в процессе заполнения</param>
     /// <param name="columnName">Имя суммируемого поля</param>
@@ -969,12 +958,12 @@ namespace FreeLibSet.Core
       if (row == null)
         throw new ArgumentNullException("row");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = row.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName); ;
 
       switch (GetSumType(col.DataType))
       {
@@ -985,7 +974,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: SumDecimal(row, columnName); break;
         case SumType.TimeSpan: SumTimeSpan(row, columnName); break;
         default:
-          throw ColumnTypeException("Нельзя вычислить сумму значений", row.Table.Columns[columnName]);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -1028,7 +1017,7 @@ namespace FreeLibSet.Core
             case SumType.Decimal: res = (decimal)res + (decimal)v; break;
             case SumType.TimeSpan: res = (TimeSpan)res + (TimeSpan)v; break;
             default:
-              throw new ArgumentException("Значение типа " + vx.GetType() + " не может быть просуммировано");
+              throw ExceptionFactory.ArgInvalidEnumerableType("items", items);
           }
         }
       }
@@ -2073,12 +2062,12 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = dv.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -2090,7 +2079,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return MinDateTime(dv, columnName);
         case SumType.TimeSpan: return MinTimeSpan(dv, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить минимальное значение", dv.Table.Columns[columnName]);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -2108,12 +2097,12 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -2125,7 +2114,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return MinDateTime(table, columnName);
         case SumType.TimeSpan: return MinTimeSpan(table, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить минимальное значение", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -2154,7 +2143,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return MinDateTime(rows, columnName);
         case SumType.TimeSpan: return MinTimeSpan(rows, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить минимальное значение", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -2175,12 +2164,12 @@ namespace FreeLibSet.Core
       if (totalRow == null)
         throw new ArgumentNullException("totalRow");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = totalRow.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", totalRow.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -2192,7 +2181,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: MinDateTime(totalRow, columnName); break;
         case SumType.TimeSpan: MinTimeSpan(totalRow, columnName, skipNulls); break;
         default:
-          throw ColumnTypeException("Нельзя вычислить минимальное значение", totalRow.Table.Columns[columnName]);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -2243,7 +2232,7 @@ namespace FreeLibSet.Core
             case SumType.DateTime: res = DataTools.Min((DateTime)res, (DateTime)v); break;
             case SumType.TimeSpan: res = DataTools.Min((TimeSpan)res, (TimeSpan)v); break;
             default:
-              throw new ArgumentException("Значение типа " + vx.GetType() + " не может быть просуммировано");
+              throw ExceptionFactory.ArgInvalidEnumerableType("items", items);
           }
         }
       }
@@ -3288,12 +3277,12 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = dv.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -3305,7 +3294,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return MaxDateTime(dv, columnName);
         case SumType.TimeSpan: return MaxTimeSpan(dv, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить максимальное значение", dv.Table.Columns[columnName]);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -3323,12 +3312,12 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -3340,7 +3329,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return MaxDateTime(table, columnName);
         case SumType.TimeSpan: return MaxTimeSpan(table, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить максимальное значение", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -3369,7 +3358,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: return MaxDateTime(rows, columnName);
         case SumType.TimeSpan: return MaxTimeSpan(rows, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить максимальное значение", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -3390,12 +3379,12 @@ namespace FreeLibSet.Core
       if (totalRow == null)
         throw new ArgumentNullException("totalRow");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = totalRow.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", totalRow.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -3407,7 +3396,7 @@ namespace FreeLibSet.Core
         case SumType.DateTime: MaxDateTime(totalRow, columnName); break;
         case SumType.TimeSpan: MaxTimeSpan(totalRow, columnName, skipNulls); break;
         default:
-          throw ColumnTypeException("Нельзя вычислить максимальное значение", totalRow.Table.Columns[columnName]);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -3457,7 +3446,7 @@ namespace FreeLibSet.Core
             case SumType.DateTime: res = DataTools.Max((DateTime)res, (DateTime)v); break;
             case SumType.TimeSpan: res = DataTools.Max((TimeSpan)res, (TimeSpan)v); break;
             default:
-              throw new ArgumentException("Значение типа " + vx.GetType() + " не может быть просуммировано");
+              throw ExceptionFactory.ArgInvalidEnumerableType("items", items);
           }
         }
       }
@@ -5092,12 +5081,12 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = dv.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -5108,7 +5097,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: return AverageDecimal(dv, columnName, skipNulls);
         case SumType.TimeSpan: return AverageTimeSpan(dv, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить среднее значение", dv.Table.Columns[columnName]);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -5126,12 +5115,12 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -5142,7 +5131,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: return AverageDecimal(table, columnName, skipNulls);
         case SumType.TimeSpan: return AverageTimeSpan(table, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить среднее значение", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -5169,7 +5158,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: return AverageDecimal(rows, columnName, skipNulls);
         case SumType.TimeSpan: return AverageTimeSpan(rows, columnName, skipNulls);
         default:
-          throw ColumnTypeException("Нельзя вычислить среднее значение", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -5190,12 +5179,12 @@ namespace FreeLibSet.Core
       if (totalRow == null)
         throw new ArgumentNullException("totalRow");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       DataColumn col = totalRow.Table.Columns[columnName];
       if (col == null)
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", totalRow.Table, columnName);
 
       switch (GetSumType(col.DataType))
       {
@@ -5206,7 +5195,7 @@ namespace FreeLibSet.Core
         case SumType.Decimal: AverageDecimal(totalRow, columnName, skipNulls); break;
         case SumType.TimeSpan: AverageTimeSpan(totalRow, columnName, skipNulls); break;
         default:
-          throw ColumnTypeException("Нельзя вычислить среднее значение", col);
+          throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
     }
 
@@ -5248,7 +5237,7 @@ namespace FreeLibSet.Core
           case SumType.Decimal: res = (decimal)res + (decimal)v; break;
           case SumType.TimeSpan: res = (TimeSpan)res + (TimeSpan)v; break;
           default:
-            throw new ArgumentException("Значение типа " + vx.GetType() + " не может быть просуммировано");
+            throw ExceptionFactory.ArgInvalidEnumerableType("items", items);
         }
         cnt++;
       }

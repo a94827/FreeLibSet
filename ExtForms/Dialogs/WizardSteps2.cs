@@ -378,7 +378,7 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("items");
 #endif
       if (items.Length == 0)
-        throw new ArgumentException("Список строк пустой", "items");
+        throw ExceptionFactory.ArgIsEmpty("items");
 
       TableLayoutPanel panel = new TableLayoutPanel();
       panel.RowCount = items.Length;
@@ -431,7 +431,7 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != _TheButtons.Count)
-            throw new ArgumentException("Неправильная длина массива. Ожидалось подсказок: " + _TheButtons.Count.ToString());
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _TheButtons.Count);
           InfoText = "?";
         }
         _ItemInfoTextArray = value;
@@ -589,7 +589,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value.Length != _Items.Length)
-          throw new ArgumentException("Неправильная длина массива");
+          throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
         _ImageKeys = value;
         for (int i = 0; i < _TheListView.Control.Items.Count; i++)
           _TheListView.Control.Items[i].ImageKey = value[i];
@@ -609,10 +609,10 @@ namespace FreeLibSet.Forms
       set
       {
         if (_SubItems != null)
-          throw new InvalidOperationException("Повторная установка свойства");
+          throw ExceptionFactory.RepeatedCall(this, "SubItems");
         if (value.Length != _Items.Length)
-          throw new ArgumentException("Неправильная длина массива");
-        _TheListView.Control.Columns.Add("Значения");
+          throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
+        _TheListView.Control.Columns.Add(Res.ListSelectDialog_ColTitle_Sub);
         _SubItems = value;
         for (int i = 0; i < _TheListView.Control.Items.Count; i++)
           _TheListView.Control.Items[i].SubItems.Add(value[i]);
@@ -703,7 +703,7 @@ namespace FreeLibSet.Forms
       EFPControlWithToolBar<DataGridView> cwt = new EFPControlWithToolBar<DataGridView>(BaseProvider, MainPanel);
       _TheControlProvider = creator(cwt);
       if (_TheControlProvider == null)
-        throw new NullReferenceException("Делегат не создал провайдер EFPDataGridView");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "TheControlProvider");
 
       // Присоединяем BaseProvider
       cwt.BaseProvider.Parent = BaseProvider;

@@ -117,7 +117,8 @@ namespace FreeLibSet.Forms
 
       ToolFormsEnabled = true;
 
-      EFPApp.InitFormImages(form);
+      if (EFPApp.AppWasInit)
+        InitStdButtonTextAndImage(form);
 
 #if DEBUG
       DebugFormDispose.Add(_Form);
@@ -155,12 +156,12 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события Form.VisibleChanged");
+        EFPApp.ShowException(e);
       }
     }
 
     /// <summary>
-    /// Дублирует свойство Form.Modal с возможностью упреждающей установки
+    /// Дублирует свойство <see cref="System.Windows.Forms.Form.Modal"/> с возможностью упреждающей установки
     /// </summary>
     internal bool Modal
     {
@@ -177,7 +178,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события Form.VisibleChanged");
+        EFPApp.ShowException(e);
       }
       _Modal = null;
     }
@@ -190,7 +191,7 @@ namespace FreeLibSet.Forms
     /// Форма (задается в конструкторе)
     /// </summary>
     public Form Form { get { return _Form; } }
-    private Form _Form;
+    private readonly Form _Form;
 
     /// <summary>
     /// Провайдер синхронизации значений. К нему будет подключен объект Syncs
@@ -315,9 +316,9 @@ namespace FreeLibSet.Forms
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      string s = "Форма " + Form.ToString();
+      string s = "Form " + Form.ToString();
 #if DEBUG
-      s += ", создана: " + _DebugCreateTime.ToString("G");
+      s += ", created: " + _DebugCreateTime.ToString("G");
 #endif
       return s;
     }
@@ -354,7 +355,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события Form.VisibleChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -470,7 +471,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка инициализации статусной строки формы #1");
+          EFPApp.ShowException(e);
         }
       }
 
@@ -483,7 +484,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка инициализации статусной строки формы #2");
+        EFPApp.ShowException(e);
       }
 
       if (!HasBeenShown) // 24.09.2018
@@ -585,7 +586,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Отключение tool forms");
+          LogoutTools.LogoutException(e);
         }
       }
 
@@ -624,7 +625,7 @@ namespace FreeLibSet.Forms
           if (!_SaveFormConfigExceptionFlag)
           {
             _SaveFormConfigExceptionFlag = true;
-            LogoutTools.LogoutException(e, "Ошибка вызова EFPFormProvider.ConfigHandler.WriteConfigChanges()");
+            LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("EFPFormProvider.ConfigHandler.WriteConfigChanges()"));
           }
         }
         foreach (EFPControlBase controlProvider in GetAllControlProviders())
@@ -639,14 +640,14 @@ namespace FreeLibSet.Forms
             if (!_SaveFormConfigExceptionFlag)
             {
               _SaveFormConfigExceptionFlag = true;
-              LogoutTools.LogoutException(e, "Ошибка вызова EFPControlProvider.SaveConfig()");
+              LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("EFPControlProvider.SaveConfig()"));
             }
           }
         }
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Неперехваченная ошибка в EFPFormProvider.SaveFormConfig()");
+        LogoutTools.LogoutException(e);
       }
     }
 
@@ -693,7 +694,7 @@ namespace FreeLibSet.Forms
     public void CheckHasNotBeenShown()
     {
       if (HasBeenShown)
-        throw new InvalidOperationException("Форма " + _Form.ToString() + " уже была выведена на экран");
+        throw new InvalidOperationException(String.Format(Res.EFPFormProvider_Err_HasBeenShown, _Form.ToString()));
     }
 
     #endregion
@@ -740,7 +741,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка обработки события Form.Activated");
+        LogoutTools.LogoutException(e);
       }
     }
 
@@ -762,7 +763,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка обработки события Form.Deactivate");
+        LogoutTools.LogoutException(e);
       }
     }
 
@@ -860,7 +861,7 @@ namespace FreeLibSet.Forms
       {
         EFPErrorInfo info = GetFirstError();
         if (info == null)
-          throw new BugException("Потеряно сообщение об ошибке");
+          throw new BugException("EFPErrorInfo has been lost");
         WinFormsTools.FocusToControl(info.FocusedControl);
         EFPApp.ShowTempMessage(info.Message);
         return false;
@@ -929,7 +930,7 @@ namespace FreeLibSet.Forms
     public static EFPCommandItem CreateToolTipsVisibleCommandItem(EFPCommandItem parentMenu)
     {
       EFPCommandItem ci = new EFPCommandItem("View", "ShowToolTips");
-      ci.MenuText = "Всплывающие подсказки";
+      ci.MenuText = Res.Cmd_Menu_View_ShowToolTips;
       ci.Parent = parentMenu;
       ci.Checked = EFPApp.ShowToolTips;
       ci.Click += new EventHandler(ciShowToolTips_Click);
@@ -960,7 +961,7 @@ namespace FreeLibSet.Forms
     internal override void SetToolTip(Control control, string title, string mainInfo, string valueInfo, UIValidateState state, string errorMessage)
     {
       if (control == null)
-        throw new ArgumentNullException("control", "Не задан управляющий элемент");
+        throw new ArgumentNullException("control");
 
       // Проверяем объект TheToolTip, а не флаг ShowToolTips, т.к. флаг может
       // быть переключен в процессе вывода формы, а объект не создается в конструкторе
@@ -1001,17 +1002,16 @@ namespace FreeLibSet.Forms
       {
         case UIValidateState.Error:
           icon = ToolTipIcon.Error;
-          title += " - Ошибка";
+          title += " - " + UITools.ToString(ErrorMessageKind.Error);
           break;
         case UIValidateState.Warning:
           icon = ToolTipIcon.Warning;
-          title += " - Предупреждение";
+          title += " - " + UITools.ToString(ErrorMessageKind.Warning);
           break;
         default:
           icon = ToolTipIcon.Info;
           break;
       }
-
       // Рекурсия убрана 11.06.2021
 
       _TheToolTip.SetToolTip(control, sb.ToString());
@@ -1029,7 +1029,7 @@ namespace FreeLibSet.Forms
       else
       {
         _TheToolTip.ToolTipIcon = ToolTipIcon.None;
-        _TheToolTip.ToolTipTitle = _ToolTipTitles[args.AssociatedControl] + " [Заблокировано]";
+        _TheToolTip.ToolTipTitle = String.Format(Res.EFPFormProvider_ToolTip_Disabled, _ToolTipTitles[args.AssociatedControl]);
       }
     }
 
@@ -1038,7 +1038,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void RefreshToolTips()
     {
-      if (_TheToolTip == null) // 14.03.08 - подсказки могут быть отключены
+      if (_TheToolTip == null) // 14.03.2008 - подсказки могут быть отключены
         return;
       _TheToolTip.RemoveAll();
       _ToolTipIcons.Clear();
@@ -1072,7 +1072,7 @@ namespace FreeLibSet.Forms
       if (mainControl == null)
         throw new ArgumentNullException("mainControl");
       if (childControl == mainControl)
-        throw new ArgumentException("childControl и mainControl не могут совпадать");
+        throw ExceptionFactory.ArgAreSame("childControl", "mainControl");
 #endif
       if (_ToolTipNestedControls == null)
         return;
@@ -1291,7 +1291,7 @@ namespace FreeLibSet.Forms
       if (_FormHelpButtonClickedHandler != null)
         return; // не первый вызов
       if (CommandItems.IsReadOnly)
-        throw new InvalidOperationException("Нельзя первоначально инициализировать контекст справки, когда форма уже выведена");
+        throw new InvalidOperationException(Res.EFPFormProvider_Err_CannotInitHelpContext);
 
       _FormHelpButtonClickedHandler = new CancelEventHandler(FormHelpButtonClickedProc);
       _Form.HelpButton = true;
@@ -1300,7 +1300,7 @@ namespace FreeLibSet.Forms
       EFPCommandItem ciHelp;
 
       ciHelp = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.ContextHelp);
-      ciHelp.MenuText = "Справка";
+      ciHelp.MenuText = Res.EFPFormProvider_Menu_Help_ContextHelp;
       ciHelp.Enabled = true;
       ciHelp.Click += new EventHandler(ciHelp_Click);
       CommandItems.Add(ciHelp);
@@ -1309,7 +1309,7 @@ namespace FreeLibSet.Forms
       if (DebugFormProvider)
       {
         ciDebug = new EFPCommandItem("Debug", "EFPFormProvider");
-        ciDebug.MenuText = "Просмотр объекта EFPFormProvider";
+        ciDebug.MenuText = Res.EFPFormProvider_Menu_Debug_EFPFormProvider;
         ciDebug.Click += new EventHandler(ciDebug_Click);
         CommandItems.Add(ciDebug);
       }
@@ -1406,7 +1406,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при закрытии формы");
+        EFPApp.ShowException(e, Res.EFPFormProvider_ErrTitle_FormClosed);
         _Form.DialogResult = DialogResult.None;
         _TempFormClosingFlag = false;
       }
@@ -1446,7 +1446,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика Form.KeyDown");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1486,14 +1486,14 @@ namespace FreeLibSet.Forms
         {
           args.Cancel = true;
           Form.DialogResult = DialogResult.None;
-          EFPApp.ShowTempMessage("Повторное закрытие формы");
+          EFPApp.ShowTempMessage(Res.EFPFormProvider_Err_NestedClosing);
         }
         else
         {
           _InsideFormClosing1 = true;
           try
           {
-            if (ReentranceLocker.TryLock("Закрытие формы"))
+            if (ReentranceLocker.TryLock(Res.EFPFormProvider_Phase_FormClosing))
             {
               try
               {
@@ -1517,7 +1517,7 @@ namespace FreeLibSet.Forms
       {
         args.Cancel = true;
         Form.DialogResult = DialogResult.None;
-        EFPApp.ShowException(e, "Ошибка обработки события Form.Closing");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1557,7 +1557,7 @@ namespace FreeLibSet.Forms
         {
           args.Cancel = true;
           Form.DialogResult = DialogResult.None;
-          EFPApp.ShowTempMessage("Повторное закрытие формы");
+          EFPApp.ShowTempMessage(Res.EFPFormProvider_Err_NestedClosing);
         }
         else
         {
@@ -1589,7 +1589,7 @@ namespace FreeLibSet.Forms
       {
         args.Cancel = true;
         Form.DialogResult = DialogResult.None;
-        EFPApp.ShowException(e, "Ошибка обработки события Form.FormClosing");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1620,7 +1620,7 @@ namespace FreeLibSet.Forms
       try
       {
         if (_InsideFormClosed)
-          EFPApp.ShowTempMessage("Повторное закрытие формы");
+          EFPApp.ShowTempMessage(Res.EFPFormProvider_Err_NestedClosing);
         else
         {
           // 20.03.2018
@@ -1644,7 +1644,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события Form.FormClosed");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1690,7 +1690,7 @@ namespace FreeLibSet.Forms
 
     void ciDebug_Click(object sender, EventArgs args)
     {
-      DebugTools.DebugObject(this, "Объект EFPFormProvider");
+      DebugTools.DebugObject(this, "EFPFormProvider");
     }
 
     #endregion
@@ -1959,7 +1959,7 @@ namespace FreeLibSet.Forms
         Screen scr = StartScreen;
 #if DEBUG
         if (scr == null)
-          throw new NullReferenceException("Свойство StartScreen вернуло null");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "StartScreen");
 #endif
         StringBuilder sb = new StringBuilder();
         sb.Append("Screen");
@@ -2436,7 +2436,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e) // 23.11.2018
       {
-        LogoutTools.LogoutException(e, "EFPFormProvider.GetDefaultOwnStatusBar()");
+        LogoutTools.LogoutException(e);
         res = false;
       }
       return res;
@@ -2461,7 +2461,7 @@ namespace FreeLibSet.Forms
           {
 #if DEBUG
             if (dlgs[i] == null)
-              throw new NullReferenceException("Дырка в стеке блоков диалога");
+              throw new BugException("A hole in dialog stack");
 #endif
             if (Object.ReferenceEquals(dlgs[i], this.Form)) // 06.12.2018 пропускаем себя в списке, т.к. определяем ниже
               continue;
@@ -2733,7 +2733,7 @@ namespace FreeLibSet.Forms
         if (!_DelayedSetFocusExceptionLogged)
         {
           _DelayedSetFocusExceptionLogged = true;
-          EFPApp.ShowException(e, "Ошибка установки фокуса ввода");
+          EFPApp.ShowException(e, Res.EFPFormProvider_ErrTitle_SetFocus);
         }
       }
     }
@@ -2762,6 +2762,53 @@ namespace FreeLibSet.Forms
       catch
       {
         _FormIconImage = EFPApp.MainImages.Images["Error"];
+      }
+    }
+
+    #endregion
+
+    #region Значки и текст кнопок
+
+    /// <summary>
+    /// Установка изображений для кнопок "ОК", "Отмена" в форме
+    /// </summary>
+    /// <param name="control">Форма, в которой нужно украсить кнопки</param>
+    private static void InitStdButtonTextAndImage(Control control)
+    {
+      if (control == null)
+        return;
+
+      Button btn = control as Button;
+      if (btn != null)
+      {
+        WinFormsTools.UpdateStdButtonText(btn);
+        string imageKey;
+        switch (btn.DialogResult)
+        {
+          case DialogResult.OK: imageKey = "Ok"; break;
+          case DialogResult.Cancel:
+            // Форма может иметь единственную кнопку закрытия с
+            // DialogResult.Cancel. В этом случае рисуется значок от
+            // кнопки <OK>
+            if (control.FindForm().AcceptButton == (Button)control)
+              imageKey = "Ok";
+            else
+              imageKey = "Cancel";
+            break;
+          case DialogResult.Yes: imageKey = "Yes"; break;
+          case DialogResult.No: imageKey = "No"; break;
+          default: return;
+        }
+        btn.Image = EFPApp.MainImages.Images[imageKey];
+        btn.ImageAlign = ContentAlignment.MiddleLeft;
+      }
+      else
+      {
+        if (control.HasChildren)
+        {
+          foreach (Control childControl in control.Controls)
+            InitStdButtonTextAndImage(childControl); // рекурсивная процедура
+        }
       }
     }
 
@@ -2830,7 +2877,7 @@ namespace FreeLibSet.Forms
       EFPFormProvider res = FindFormProvider(form);
       if (res == null)
       {
-        Exception e = new NullReferenceException("Не найден EFPFormProvider для формы " + form.ToString());
+        Exception e = new NullReferenceException(String.Format(Res.EFPFormProvider_Err_FormProviderNotFound, form.ToString()));
         e.Data["FormClass"] = form.GetType().ToString();
         e.Data["AvailableFormProviders"] = DataTools.ToStringArray<EFPFormProvider>(_ProviderList.ToArray());
         throw e;
@@ -3029,11 +3076,11 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         if (_ErrorWasShown)
-          EFPApp.ShowTempMessage("Ошибка обновления формы. " + e.Message);
+          EFPApp.ShowTempMessage(String.Format(Res.EFPFormProvider_Err_OnTick, e.Message));
         else
         {
           _ErrorWasShown = true;
-          EFPApp.ShowException(e, "Ошибка обновления формы");
+          EFPApp.ShowException(e, Res.EFPFormProvider_ErrTitle_OnTick);
         }
       }
     }

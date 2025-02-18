@@ -50,32 +50,25 @@ namespace FreeLibSet.Forms
 
       efpText = new EFPTextComboBox(FormProvider, cbText);
       efpText.CanBeEmpty = false;
-      efpText.ToolTipText = "Текст, который нужно найти";
+      efpText.ToolTipText = Res.TextSearchForm_ToolTip_Text;
 
       efpCaseSens = new EFPCheckBox(FormProvider, cbCaseSens);
-      efpCaseSens.ToolTipText = "Если флажок установлен, то регистр букв имеет значение," + Environment.NewLine +
-        "иначе заглавные и строчные буквы (например, \"А\" и \"а\") не различаются";
+      efpCaseSens.ToolTipText = Res.TextSearchForm_ToolTip_CaseSens;
 
       efpSimilarCharsDiff = new EFPCheckBox(FormProvider, cbSimilarCharsDiff);
-      efpSimilarCharsDiff.ToolTipText = "Если флажок установлен, то похожие символы кириллицы и латиницы различаются," + Environment.NewLine +
-        "иначе, например, русская буква \"А\" и латинская \"A\" считаются совпадающими";
+      efpSimilarCharsDiff.ToolTipText = Res.TextSearchForm_ToolTip_SimilarCharsDiff;
 
       efpWhole = new EFPCheckBox(FormProvider, cbWhole);
-      efpWhole.ToolTipText = "Если флажок установлен, то будут найдены только ячейки, содержимое которых " +
-        "точно совпадает с введенным текстом. Иначе достаточно найти вхождение введенного текста " +
-        "в любое место текста ячейки";
+      efpWhole.ToolTipText = Res.TextSearchForm_ToolTip_Whole;
 
       efpWhere = new EFPRadioButtons(FormProvider, rbAllCols);
-      efpWhere.ToolTipText = "Поиск по всем столбцам занимает больше времени. Используйте поиск в текущем " +
-        "столбце, если Вы знаете, где расположен текст. Перед выбором этого режима в табличном просмотре " +
-        "должен быть выбран нужный столбец";
+      efpWhere.ToolTipText = Res.TextSearchForm_ToolTip_Where;
 
       efpDirection = new EFPRadioButtons(FormProvider, rbForward);
-      efpDirection.ToolTipText = "Направление перебора строк - к концу или к началу";
+      efpDirection.ToolTipText = Res.TextSearchForm_ToolTip_Direction;
 
       efpFrom = new EFPRadioButtons(FormProvider, rbFromStart);
-      efpFrom.ToolTipText = "Определяет область для поиска: все строки или часть " +
-        "от текущей позиции до конца (или до начала таблицы)";
+      efpFrom.ToolTipText = Res.TextSearchForm_ToolTip_From;
 
       efpDirection.SelectedIndexEx.ValueChanged += new EventHandler(efpDirection_ValueChanged);
       efpDirection_ValueChanged(null, null);
@@ -83,7 +76,7 @@ namespace FreeLibSet.Forms
 
     void efpDirection_ValueChanged(object sender, EventArgs args)
     {
-      rbFromStart.Text = efpDirection.SelectedIndex == 0 ? "&С начала" : "&С конца"; // 24.11.2017
+      rbFromStart.Text = efpDirection.SelectedIndex == 0 ? Res.TextSearchForm_Text_AtStart : Res.TextSearchForm_Text_AtEnd; // 24.11.2017
     }
 
     #endregion
@@ -429,7 +422,7 @@ namespace FreeLibSet.Forms
     {
       if (Owner.Text.Length == 0)
       {
-        EFPApp.ShowTempMessage("Просмотр не содержит текста");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoText);
         return;
       }
 
@@ -489,7 +482,7 @@ namespace FreeLibSet.Forms
     {
       if (!ContinueEnabled)
       {
-        EFPApp.ShowTempMessage("Поиск не был начат");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NotStarted);
         return;
       }
       //if (Owner.SelectionStart < 0)
@@ -523,7 +516,7 @@ namespace FreeLibSet.Forms
         MoveNext(ref startPos);
 
       bool found = false;
-      Splash spl = new Splash("Поиск текста");
+      Splash spl = new Splash(Res.TextSearch_Phase_Search);
       spl.AllowCancel = true;
 
       try
@@ -546,7 +539,7 @@ namespace FreeLibSet.Forms
         spl.Close();
       }
       if (!found)
-        EFPApp.MessageBox("Строка \"" + SearchInfo.Text + "\" не найдена", "Поиск текста");
+        EFPApp.MessageBox(String.Format(Res.TextSearch_Err_NotFound, SearchInfo.Text), Res.TextSearch_Title_Result);
     }
 
     /// <summary>
@@ -601,7 +594,7 @@ namespace FreeLibSet.Forms
     {
       if (Owner.Control.RowCount == 0)
       {
-        EFPApp.ShowTempMessage("Табличный просмотр не содержит строк");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoRows);
         return;
       }
 
@@ -618,7 +611,7 @@ namespace FreeLibSet.Forms
       // Пока работал диалог, в просмотре могли произойти изменения
       if (Owner.Control.RowCount == 0)
       {
-        EFPApp.ShowTempMessage("Табличный просмотр не содержит строк");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoRows);
         return;
       }
 
@@ -636,7 +629,7 @@ namespace FreeLibSet.Forms
       DataGridViewColumn[] visibleColumns = WinFormsTools.GetOrderedVisibleColumns(Owner.Control);
       if (visibleColumns.Length == 0)
       {
-        EFPApp.ShowTempMessage("Табличный просмотр не содержит видимых столбцов");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoColumns);
         return;
       }
 
@@ -678,12 +671,12 @@ namespace FreeLibSet.Forms
     {
       if (!ContinueEnabled)
       {
-        EFPApp.ShowTempMessage("Поиск не был начат");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NotStarted);
         return;
       }
       if (Owner.Control.CurrentRow == null)
       {
-        EFPApp.ShowTempMessage("Невозможно продолжить поиск, т.к. нет текущей строки");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoCurrentRow);
         return;
       }
 
@@ -699,7 +692,7 @@ namespace FreeLibSet.Forms
         MoveNext(ref row, ref columnIndex);
 
       bool found = false;
-      Splash spl = new Splash("Поиск текста");
+      Splash spl = new Splash(Res.TextSearch_Phase_Search);
       spl.AllowCancel = true;
       if (row != null)
       {
@@ -737,7 +730,7 @@ namespace FreeLibSet.Forms
         spl.Close();
       }
       if (!found)
-        EFPApp.MessageBox("Строка \"" + SearchInfo.Text + "\" не найдена", "Поиск текста");
+        EFPApp.MessageBox(String.Format(Res.TextSearch_Err_NotFound, SearchInfo.Text), Res.TextSearch_Title_Result);
     }
 
     /// <summary>
@@ -751,7 +744,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(SearchInfo.Text))
-        throw new NullReferenceException("Не задан текст для поиска");
+        throw ExceptionFactory.ObjectPropertyNotSet(SearchInfo, "Text");
 #endif
 
       //DataGridViewCell Cell = Row.Cells[ColumnIndex];
@@ -861,7 +854,7 @@ namespace FreeLibSet.Forms
     public int[] FindAllRowIndices()
     {
       List<int> rowIndices = new List<int>();
-      Splash spl = new Splash("Поиск всех подходящих строк");
+      Splash spl = new Splash(Res.TextSearch_Phase_SearchAllRows);
       try
       {
         spl.PercentMax = Owner.Control.RowCount;
@@ -941,7 +934,7 @@ namespace FreeLibSet.Forms
     {
       if (Owner.Control.Nodes.Count == 0)
       {
-        EFPApp.ShowTempMessage("Просмотр не содержит строк");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoRows);
         return;
       }
 
@@ -957,7 +950,7 @@ namespace FreeLibSet.Forms
       // Пока работал диалог, в просмотре могли произойти изменения
       if (Owner.Control.Nodes.Count == 0)
       {
-        EFPApp.ShowTempMessage("Просмотр не содержит строк");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoRows);
         return;
       }
 
@@ -1002,12 +995,12 @@ namespace FreeLibSet.Forms
     {
       if (!ContinueEnabled)
       {
-        EFPApp.ShowTempMessage("Поиск не был начат");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NotStarted);
         return;
       }
       if (Owner.Control.SelectedNode == null)
       {
-        EFPApp.ShowTempMessage("Невозможно продолжить поиск, т.к. нет текущей строки");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoCurrentRow);
         return;
       }
 
@@ -1020,7 +1013,7 @@ namespace FreeLibSet.Forms
         MoveNext(ref node);
 
       bool found = false;
-      Splash spl = new Splash("Поиск текста");
+      Splash spl = new Splash(Res.TextSearch_Phase_Search);
       spl.AllowCancel = true;
 
       try
@@ -1044,7 +1037,7 @@ namespace FreeLibSet.Forms
         spl.Close();
       }
       if (!found)
-        EFPApp.MessageBox("Строка \"" + SearchInfo.Text + "\" не найдена", "Поиск текста");
+        EFPApp.MessageBox(String.Format(Res.TextSearch_Err_NotFound, SearchInfo.Text), Res.TextSearch_Title_Result);
     }
 
     /// <summary>
@@ -1057,7 +1050,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(SearchInfo.Text))
-        throw new NullReferenceException("Не задан текст для поиска");
+        throw ExceptionFactory.ObjectPropertyNotSet(SearchInfo, "Text");
 #endif
 
       if (SearchInfo.TextMatch(node.Text))
@@ -1088,7 +1081,7 @@ namespace FreeLibSet.Forms
     protected TreeNode[] FindAllNodes()
     {
       List<TreeNode> lst = new List<TreeNode>();
-      Splash spl = new Splash("Поиск всех подходящих строк");
+      Splash spl = new Splash(Res.TextSearch_Phase_SearchAllRows);
       try
       {
         // spl.PercentMax = Owner.Control.Nod;
@@ -1152,7 +1145,7 @@ namespace FreeLibSet.Forms
     {
       if (Owner.Control.ItemCount == 0)
       {
-        EFPApp.ShowTempMessage("Просмотр не содержит строк");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoRows);
         return;
       }
 
@@ -1168,7 +1161,7 @@ namespace FreeLibSet.Forms
       // Пока работал диалог, в просмотре могли произойти изменения
       if (Owner.Control.ItemCount == 0)
       {
-        EFPApp.ShowTempMessage("Просмотр не содержит строк");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoRows);
         return;
       }
 
@@ -1213,12 +1206,12 @@ namespace FreeLibSet.Forms
     {
       if (!ContinueEnabled)
       {
-        EFPApp.ShowTempMessage("Поиск не был начат");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NotStarted);
         return;
       }
       if (Owner.Control.CurrentNode == null)
       {
-        EFPApp.ShowTempMessage("Невозможно продолжить поиск, т.к. нет текущей строки");
+        EFPApp.ShowTempMessage(Res.TextSearch_Err_NoCurrentRow);
         return;
       }
 
@@ -1231,7 +1224,7 @@ namespace FreeLibSet.Forms
         MoveNext(ref node);
 
       bool found = false;
-      Splash spl = new Splash("Поиск текста");
+      Splash spl = new Splash(Res.TextSearch_Phase_Search);
       spl.AllowCancel = true;
 
       try
@@ -1255,7 +1248,7 @@ namespace FreeLibSet.Forms
         spl.Close();
       }
       if (!found)
-        EFPApp.MessageBox("Строка \"" + SearchInfo.Text + "\" не найдена", "Поиск текста");
+        EFPApp.MessageBox(String.Format(Res.TextSearch_Err_NotFound, SearchInfo.Text), Res.TextSearch_Title_Result);
     }
 
     /// <summary>
@@ -1268,7 +1261,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(SearchInfo.Text))
-        throw new NullReferenceException("Не задан текст для поиска");
+        throw ExceptionFactory.ObjectPropertyNotSet(SearchInfo, "Text");
 #endif
 
       foreach (NodeControl ctrl in Owner.Control.NodeControls)
@@ -1314,7 +1307,7 @@ namespace FreeLibSet.Forms
     protected TreeNodeAdv[] FindAllNodes()
     {
       List<TreeNodeAdv> lst = new List<TreeNodeAdv>();
-      Splash spl = new Splash("Поиск всех подходящих строк");
+      Splash spl = new Splash(Res.TextSearch_Phase_SearchAllRows);
       try
       {
         // spl.PercentMax = Owner.Control.Nod;

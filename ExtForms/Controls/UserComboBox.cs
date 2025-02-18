@@ -242,7 +242,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Изображение слева от текста
     /// </summary>
-    [Description("Изображение слева от текста")]
+    [Description("Optional image at the left of the text")]
     [Category("Appearance")]
     [DefaultValue(null)]
     [RefreshProperties(RefreshProperties.All)]
@@ -259,7 +259,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Список, из которого выбирается изображение слева от текста
     /// </summary>
-    [Description("Список, из которого выбирается изображение слева от текста")]
+    [Description("ImageList to use with ImageIndex or ImageKey property")]
     [Category("Appearance")]
     [DefaultValue(null)]
     [RefreshProperties(RefreshProperties.All)]
@@ -276,7 +276,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Позиция в списке для изображения слева от текста
     /// </summary>
-    [Description("Позиция в списке для изображения слева от текста")]
+    [Description("Index of image in the ImageList")]
     [Category("Appearance")]
     [DefaultValue(-1)]
     [RefreshProperties(RefreshProperties.All)]
@@ -286,7 +286,7 @@ namespace FreeLibSet.Controls
       set { _ImageLabel.ImageIndex = value; }
     }
 
-    [Description("Имя в списке для изображения слева от текста")]
+    [Description("Key of image in the ImageList")]
     [Category("Appearance")]
     [DefaultValue("")]
     [RefreshProperties(RefreshProperties.All)]
@@ -474,7 +474,7 @@ namespace FreeLibSet.Controls
     #region PopupButton
 
     [DefaultValue(true)]
-    [Description("Видимость кнопки выпадающего списка (по умолчанию - true)")]
+    [Description("Combobox popup button [V] visibility")]
     [Category("Behavior")]
     public bool PopupButton
     {
@@ -497,7 +497,7 @@ namespace FreeLibSet.Controls
     /// </summary>
     private bool _PopupButton;
 
-    [Description("Вызывается при изменении видимости кнопки выпадающего списка (свойства PopupButton)")]
+    [Description("Called when PopupButton property changed")]
     [Category("Property Changed")]
     public event EventHandler PopupButtonChanged;
 
@@ -511,7 +511,7 @@ namespace FreeLibSet.Controls
 
     #region PopupButtonEnabled
 
-    [Description("Кнопка выпадающего списка может быть заблокирована, оставаясь видимой на экране")]
+    [Description("If false, combobox popup button [V] is disabled")]
     [DefaultValue(true)]
     [Category("Behavior")]
     public bool PopupButtonEnabled
@@ -520,7 +520,7 @@ namespace FreeLibSet.Controls
       set { _ThePopupButton.Enabled = value; }
     }
 
-    [Description("Вызывается при изменении значения свойства PopupButtonEnabled")]
+    [Description("Called when PopupButtonEnabled property changed")]
     [Category("Property Changed")]
     public event EventHandler PopupButtonEnabledChanged
     {
@@ -532,7 +532,7 @@ namespace FreeLibSet.Controls
 
     #region PopupButtonToolTipText
 
-    [Description("Всплывающая подсказка для кнопки выпадающего списка")]
+    [Description("Tooltip text for the combobox popup button [V]")]
     [DefaultValue("")]
     [Category("Appearance")]
     public string PopupButtonToolTipText
@@ -572,7 +572,7 @@ namespace FreeLibSet.Controls
      *    определить наличие обработчика события
      */
 
-    [Description("Вызывается при нажатии пользователем на кнопку выбора комбоблока")]
+    [Description("Called when the combobox popup button [V] clicked or Alt+ArrowDown pressed")]
     [Category("Action")]
     public event EventHandler PopupClick;
 
@@ -622,7 +622,7 @@ namespace FreeLibSet.Controls
     #region ClearButton
 
     [DefaultValue(false)]
-    [Description("Видимость кнопки \"Очистить\" (\"Х\")")]
+    [Description("Clear button [Х] visibility")]
     [Category("Behavior")]
     public bool ClearButton
     {
@@ -646,7 +646,7 @@ namespace FreeLibSet.Controls
     /// </summary>
     private bool _ClearButton;
 
-    [Description("Вызывается при изменении значения свойства ClearButton")]
+    [Description("Called when ClearButton property changed")]
     [Category("Property Changed")]
     public event EventHandler ClearButtonChanged;
 
@@ -661,7 +661,7 @@ namespace FreeLibSet.Controls
     #region ClearButtonEnabled
 
     [DefaultValue(true)]
-    [Description("Кнопка \"Очистить\" может быть заблокирована, оставаясь видимой на экране")]
+    [Description("If false, the clear button [X] is disabled")]
     [Category("Behavior")]
     public bool ClearButtonEnabled
     {
@@ -669,7 +669,7 @@ namespace FreeLibSet.Controls
       set { _TheClearButton.Enabled = value; }
     }
 
-    [Description("Вызывается при изменении значения свойства ClearButtonEnabled")]
+    [Description("Called when ClearButtonEnabled property changed")]
     [Category("Property Changed")]
     public event EventHandler ClearButtonEnabledChanged
     {
@@ -681,7 +681,7 @@ namespace FreeLibSet.Controls
 
     #region ClearButtonToolTipText
 
-    [Description("Всплывающая подсказка для кнопки \"Отмена\"")]
+    [Description("Tooltip text for the clear button [X]")]
     [DefaultValue("")]
     [Category("Appearance")]
     public string ClearButtonToolTipText
@@ -700,7 +700,7 @@ namespace FreeLibSet.Controls
 
     #region ClearClick
 
-    [Description("Вызывается при нажатии на кнопку \"X\" или клавиши пробел при ClearButton=True")]
+    [Description("Called when clear button [X] clicked or Space key pressed")]
     [Category("Action")]
     public event EventHandler ClearClick;
 
@@ -755,7 +755,7 @@ namespace FreeLibSet.Controls
     #region EditButton
 
     [DefaultValue(false)]
-    [Description("Видимость кнопки \"Редактировать\" (\"^\", клавиша F2)")]
+    [Description("Edit/view button [^] visibility")]
     [Category("Behavior")]
     public bool EditButton
     {
@@ -778,7 +778,7 @@ namespace FreeLibSet.Controls
     /// </summary>
     private bool _EditButton;
 
-    [Description("Вызывается при изменении значения свойства EditButton")]
+    [Description("Called when EditButton property changed")]
     [Category("Property Changed")]
     public event EventHandler EditButtonChanged;
 
@@ -792,7 +792,7 @@ namespace FreeLibSet.Controls
 
     #region EditButtonEnabled
 
-    [Description("Кнопка \"Редактировать\" может быть заблокирована, оставаясь видимой на экране")]
+    [Description("If false, the edit/view button [^] is disabled")]
     [DefaultValue(true)]
     [Category("Behavior")]
     public bool EditButtonEnabled
@@ -801,7 +801,7 @@ namespace FreeLibSet.Controls
       set { _TheEditButton.Enabled = value; }
     }
 
-    [Description("Вызывается при изменении значения свойства EditButtonEnabled")]
+    [Description("Called when EditButtonEnabled property changed")]
     [Category("Property Changed")]
     public event EventHandler EditButtonEnabledChanged
     {
@@ -809,7 +809,7 @@ namespace FreeLibSet.Controls
       remove { _TheEditButton.EnabledChanged -= value; }
     }
 
-    [Description("Вариант изображения на кнопке \"Редактировать\"")]
+    [Description("Image kind for the edit/view button [^]: Edit or View")]
     [DefaultValue(UserComboBoxEditButtonKind.Edit)]
     [Category("Appearance")]
     public UserComboBoxEditButtonKind EditButtonKind
@@ -841,7 +841,7 @@ namespace FreeLibSet.Controls
 
     #region EditButtonToolTipText
 
-    [Description("Всплывающая подсказка для кнопки \"Редактировать\"")]
+    [Description("Tooltip text for the edit/view [^] button")]
     [DefaultValue("")]
     [Category("Appearance")]
     public string EditButtonToolTipText
@@ -860,7 +860,7 @@ namespace FreeLibSet.Controls
 
     #region EditClick
 
-    [Description("Вызывается при нажатии на кнопку \"^\" или клавиши F2 при EditButton=True")]
+    [Description("Called when edit/view button [^] clicked or [F2] key pressed")]
     [Category("Action")]
     public event EventHandler EditClick;
 
@@ -1022,7 +1022,7 @@ namespace FreeLibSet.Controls
   /// без возможности редактирования значения
   /// </summary>
   [DefaultEvent("PopupClick")]
-  [Description("Комбоблок для выбора из списка с произвольной обработкой нажатия стрелочки")]
+  [Description("Non-editable combobox with user-defined popup handling")]
   [ToolboxBitmap(typeof(UserSelComboBox), "UserSelComboBox.bmp")]
   [ToolboxItem(true)]
   public class UserSelComboBox : UserComboBoxBase
@@ -1455,7 +1455,7 @@ namespace FreeLibSet.Controls
      */
 
 
-    [Description("Режим \"Только для просмотра\"")]
+    [Description("Read-only mode. User can only copy text to clipboard")]
     [Category("Appearance")]
     [DefaultValue(false)]
     public bool ReadOnly
@@ -1464,7 +1464,7 @@ namespace FreeLibSet.Controls
       set { MainControl.ReadOnly = value; }
     }
 
-    [Description("Изменилось свойство ReadOnly")]
+    [Description("Called when ReadOnly property changed")]
     [Category("PropertyChanged")]
     public event EventHandler ReadOnlyChanged;
 
@@ -1520,7 +1520,7 @@ namespace FreeLibSet.Controls
   /// Комбоблок с возможностью ввода текста и вызовом пользовательского кодового блока PopupClick
   /// </summary>
   [DefaultEvent("PopupClick")]
-  [Description("Комбоблок для ввода текста с произвольной обработкой нажатия стрелочки")]
+  [Description("Editable combobox with user-defined popup handling")]
   [ToolboxBitmap(typeof(UserTextComboBox), "UserTextComboBox.bmp")]
   [ToolboxItem(true)]
   public class UserTextComboBox : UserTextComboBoxBase
@@ -1542,7 +1542,7 @@ namespace FreeLibSet.Controls
 
     #region Свойство MaxLength
 
-    [Description("Максимальная длина текста")]
+    [Description("Maximum text length in the textbox")]
     [Category("Behavior")]
     [DefaultValue(32767)]
     public int MaxLength
@@ -1558,7 +1558,7 @@ namespace FreeLibSet.Controls
   /// Комбоблок с маской и с вызовом пользовательского кодового блока PopupClick
   /// </summary>
   [DefaultEvent("PopupClick")]
-  [Description("Комбоблок для ввода текста с маской и произвольной обработкой нажатия стрелочки")]
+  [Description("Editable combobox based on MaskedTextBox and user-defined popup handling")]
   [ToolboxBitmap(typeof(UserMaskedComboBox), "UserMaskedComboBox.bmp")]
   [ToolboxItem(true)]
   public class UserMaskedComboBox : UserTextComboBoxBase
@@ -1581,7 +1581,7 @@ namespace FreeLibSet.Controls
 
     #region Mask
 
-    [Description("Маска для редактирования текста")]
+    [Description("The mask for MaskedTextBox")]
     [Category("Appearance")]
     [DefaultValue("")]
     public string Mask
@@ -1590,7 +1590,7 @@ namespace FreeLibSet.Controls
       set { MainControl.Mask = value; }
     }
 
-    [Description("Вызывается после изменения маски редактивования")]
+    [Description("Called when Mask property changed")]
     [Category("Property Changed")]
     public event EventHandler MaskChanged;
 
@@ -1674,7 +1674,7 @@ namespace FreeLibSet.Controls
   /// Комбоблок, основным управляющим элементом которого является табличный просмотр DataGridView, состоящий из одной ячейки
   /// </summary>
   [DefaultEvent("PopupClick")]
-  [Description("Комбоблок с табличным просмотр DataGridView, состоящим из одной ячейки")]
+  [Description("Non-editable combobox with a single DataGridViewCell as a visible part. User-defined popup handling")]
   [ToolboxBitmap(typeof(UserSingleGridCellComboBox), "UserSingleGridCellComboBox.bmp")]
   [ToolboxItem(true)]
   public class UserSingleGridCellComboBox : UserComboBoxBase

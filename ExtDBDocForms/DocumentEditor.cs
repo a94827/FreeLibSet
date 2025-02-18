@@ -1122,7 +1122,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события VisibleChanged");
+        EFPApp.ShowException(e);
       }
     }
 

@@ -43,7 +43,7 @@ namespace FreeLibSet.Data
       #endregion
     }
 
-    private List<PartInfo> _Parts;
+    private readonly List<PartInfo> _Parts;
 
     private enum StateValue { Empty, NameSet, SortSet }
 
@@ -81,29 +81,29 @@ namespace FreeLibSet.Data
     private static void ValidateName(string name)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
       int pBad = DataTools.IndexOfAny(name, _BadChars);
       if (pBad >= 0)
-        throw new ArgumentException("Недопустимый символ \"" + name[pBad] + "\"", "name");
+        throw ExceptionFactory.ArgBadChar("name", name, pBad);
 
       if (name[0] == '.' || name[name.Length - 1] == '.')
-        throw new ArgumentException("Имя не может начинаться или заканчиваться точкой", "name");
+        throw new ArgumentException(Res.DataViewSortBuilder_Arg_NameStartsOrEndsWithDot, "name");
 
       if (name.IndexOf("..", StringComparison.Ordinal) >= 0)
-        throw new ArgumentException("Имя не может содержать 2 точки подряд", "name");
+        throw new ArgumentException(Res.DataViewSortBuilder_Arg_NameWithTwoDots, "name");
     }
 
     /// <summary>
     /// Добавляет к только что добавленному имени точку и имя ссылочного поля.
-    /// Непосредственно перед вызовом метода должен быть вызов Add() или другой вызов AddSubName()
+    /// Непосредственно перед вызовом метода должен быть вызов Add() или другой вызов AddSubName().
     /// </summary>
     /// <param name="subName"></param>
     public void AddSubName(string subName)
     {
       ValidateName(subName);
       if (_State != StateValue.NameSet)
-        throw new InvalidOperationException("Перед этим вызовом непосредственно должен быть вызов метода Add() или AddSubName()");
+        throw new InvalidOperationException(Res.DataViewSortBuilder_Err_AddCallRequired);
 
       PartInfo pi = _Parts[_Parts.Count - 1];
       pi.Name += "." + subName;
@@ -119,7 +119,7 @@ namespace FreeLibSet.Data
     public void SetSort(ListSortDirection sortOrder)
     {
       if (_State != StateValue.NameSet)
-        throw new InvalidOperationException("Перед этим вызовом непосредственно должен быть вызов метода Add() или AddSubName()");
+        throw new InvalidOperationException(Res.DataViewSortBuilder_Err_AddCallRequired);
 
       PartInfo pi = _Parts[_Parts.Count - 1];
       pi.SortOrder = sortOrder;
@@ -133,8 +133,8 @@ namespace FreeLibSet.Data
     #region ToString()
 
     /// <summary>
-    /// Возвращает текстовое значение, которое можно присвоить свойству DataView.Sort.
-    /// Если не были добавлены поля, то возвращает пустую строку
+    /// Возвращает текстовое значение, которое можно присвоить свойству <see cref="System.Data.DataView.Sort"/>.
+    /// Если не были добавлены поля, то возвращает пустую строку.
     /// </summary>
     /// <returns>Порядок сортировки</returns>
     public override string ToString()

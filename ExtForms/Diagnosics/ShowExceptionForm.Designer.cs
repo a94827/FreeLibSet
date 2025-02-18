@@ -32,10 +32,10 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShowExceptionForm));
       this.panel1 = new System.Windows.Forms.Panel();
       this.edMessage = new System.Windows.Forms.TextBox();
-      this.label2 = new System.Windows.Forms.Label();
-      this.cbInner = new System.Windows.Forms.Button();
+      this.lblMessage = new System.Windows.Forms.Label();
+      this.btnInner = new System.Windows.Forms.Button();
       this.edType = new System.Windows.Forms.TextBox();
-      this.label1 = new System.Windows.Forms.Label();
+      this.lblType = new System.Windows.Forms.Label();
       this.panel2 = new System.Windows.Forms.Panel();
       this.panStopShow = new System.Windows.Forms.Panel();
       this.label3 = new System.Windows.Forms.Label();
@@ -74,259 +74,266 @@
       // 
       // panel1
       // 
+      this.panel1.AccessibleDescription = null;
+      this.panel1.AccessibleName = null;
+      resources.ApplyResources(this.panel1, "panel1");
+      this.panel1.BackgroundImage = null;
       this.panel1.Controls.Add(this.edMessage);
-      this.panel1.Controls.Add(this.label2);
-      this.panel1.Controls.Add(this.cbInner);
+      this.panel1.Controls.Add(this.lblMessage);
+      this.panel1.Controls.Add(this.btnInner);
       this.panel1.Controls.Add(this.edType);
-      this.panel1.Controls.Add(this.label1);
-      this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-      this.panel1.Location = new System.Drawing.Point(0, 0);
+      this.panel1.Controls.Add(this.lblType);
+      this.panel1.Font = null;
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(632, 160);
-      this.panel1.TabIndex = 0;
       // 
       // edMessage
       // 
-      this.edMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.edMessage.Location = new System.Drawing.Point(131, 38);
-      this.edMessage.Multiline = true;
+      this.edMessage.AccessibleDescription = null;
+      this.edMessage.AccessibleName = null;
+      resources.ApplyResources(this.edMessage, "edMessage");
+      this.edMessage.BackgroundImage = null;
+      this.edMessage.Font = null;
       this.edMessage.Name = "edMessage";
       this.edMessage.ReadOnly = true;
-      this.edMessage.Size = new System.Drawing.Size(489, 116);
-      this.edMessage.TabIndex = 3;
       // 
-      // label2
+      // lblMessage
       // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(12, 38);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(65, 13);
-      this.label2.TabIndex = 2;
-      this.label2.Text = "Сообщение";
+      this.lblMessage.AccessibleDescription = null;
+      this.lblMessage.AccessibleName = null;
+      resources.ApplyResources(this.lblMessage, "lblMessage");
+      this.lblMessage.Font = null;
+      this.lblMessage.Name = "lblMessage";
       // 
-      // cbInner
+      // btnInner
       // 
-      this.cbInner.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.cbInner.Location = new System.Drawing.Point(8, 81);
-      this.cbInner.Name = "cbInner";
-      this.cbInner.Size = new System.Drawing.Size(112, 47);
-      this.cbInner.TabIndex = 4;
-      this.cbInner.Text = "Вложенная ошибка";
-      this.cbInner.UseVisualStyleBackColor = true;
-      this.cbInner.Click += new System.EventHandler(this.cbInner_Click);
+      this.btnInner.AccessibleDescription = null;
+      this.btnInner.AccessibleName = null;
+      resources.ApplyResources(this.btnInner, "btnInner");
+      this.btnInner.BackgroundImage = null;
+      this.btnInner.Font = null;
+      this.btnInner.Name = "btnInner";
+      this.btnInner.UseVisualStyleBackColor = true;
+      this.btnInner.Click += new System.EventHandler(this.cbInner_Click);
       // 
       // edType
       // 
-      this.edType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.edType.Location = new System.Drawing.Point(131, 7);
+      this.edType.AccessibleDescription = null;
+      this.edType.AccessibleName = null;
+      resources.ApplyResources(this.edType, "edType");
+      this.edType.BackgroundImage = null;
+      this.edType.Font = null;
       this.edType.Name = "edType";
       this.edType.ReadOnly = true;
-      this.edType.Size = new System.Drawing.Size(489, 20);
-      this.edType.TabIndex = 1;
       // 
-      // label1
+      // lblType
       // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(12, 10);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(67, 13);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "Тип ошибки";
+      this.lblType.AccessibleDescription = null;
+      this.lblType.AccessibleName = null;
+      resources.ApplyResources(this.lblType, "lblType");
+      this.lblType.Font = null;
+      this.lblType.Name = "lblType";
       // 
       // panel2
       // 
+      this.panel2.AccessibleDescription = null;
+      this.panel2.AccessibleName = null;
+      resources.ApplyResources(this.panel2, "panel2");
+      this.panel2.BackgroundImage = null;
       this.panel2.Controls.Add(this.panStopShow);
       this.panel2.Controls.Add(this.panel3);
-      this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel2.Location = new System.Drawing.Point(0, 355);
+      this.panel2.Font = null;
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(632, 51);
-      this.panel2.TabIndex = 3;
       // 
       // panStopShow
       // 
+      this.panStopShow.AccessibleDescription = null;
+      this.panStopShow.AccessibleName = null;
+      resources.ApplyResources(this.panStopShow, "panStopShow");
+      this.panStopShow.BackgroundImage = null;
       this.panStopShow.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.panStopShow.Controls.Add(this.label3);
       this.panStopShow.Controls.Add(this.cbStopShow);
-      this.panStopShow.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panStopShow.Location = new System.Drawing.Point(130, 0);
+      this.panStopShow.Font = null;
       this.panStopShow.Name = "panStopShow";
-      this.panStopShow.Size = new System.Drawing.Size(502, 51);
-      this.panStopShow.TabIndex = 1;
       // 
       // label3
       // 
-      this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.label3.AccessibleDescription = null;
+      this.label3.AccessibleName = null;
+      resources.ApplyResources(this.label3, "label3");
       this.label3.BackColor = System.Drawing.SystemColors.Info;
+      this.label3.Font = null;
       this.label3.ForeColor = System.Drawing.SystemColors.InfoText;
-      this.label3.Location = new System.Drawing.Point(198, 3);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(300, 44);
-      this.label3.TabIndex = 1;
-      this.label3.Text = "Отключите вывод сообщений только если программа \"зациклилась\" и сообщение появляе" +
-          "тся непрерывно. После этого следует завершить работу программы";
       // 
       // cbStopShow
       // 
-      this.cbStopShow.AutoSize = true;
-      this.cbStopShow.Location = new System.Drawing.Point(4, 15);
+      this.cbStopShow.AccessibleDescription = null;
+      this.cbStopShow.AccessibleName = null;
+      resources.ApplyResources(this.cbStopShow, "cbStopShow");
+      this.cbStopShow.BackgroundImage = null;
+      this.cbStopShow.Font = null;
       this.cbStopShow.Name = "cbStopShow";
-      this.cbStopShow.Size = new System.Drawing.Size(181, 17);
-      this.cbStopShow.TabIndex = 0;
-      this.cbStopShow.Text = "Прекратить вывод сообщений";
       this.cbStopShow.UseVisualStyleBackColor = true;
       // 
       // panel3
       // 
+      this.panel3.AccessibleDescription = null;
+      this.panel3.AccessibleName = null;
+      resources.ApplyResources(this.panel3, "panel3");
+      this.panel3.BackgroundImage = null;
       this.panel3.Controls.Add(this.btnClose);
-      this.panel3.Dock = System.Windows.Forms.DockStyle.Left;
-      this.panel3.Location = new System.Drawing.Point(0, 0);
+      this.panel3.Font = null;
       this.panel3.Name = "panel3";
-      this.panel3.Size = new System.Drawing.Size(130, 51);
-      this.panel3.TabIndex = 0;
       // 
       // btnClose
       // 
+      this.btnClose.AccessibleDescription = null;
+      this.btnClose.AccessibleName = null;
+      resources.ApplyResources(this.btnClose, "btnClose");
+      this.btnClose.BackgroundImage = null;
       this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnClose.Location = new System.Drawing.Point(8, 13);
+      this.btnClose.Font = null;
       this.btnClose.Name = "btnClose";
-      this.btnClose.Size = new System.Drawing.Size(112, 24);
-      this.btnClose.TabIndex = 0;
-      this.btnClose.Text = "Закрыть";
       this.btnClose.UseVisualStyleBackColor = true;
       // 
       // panLog
       // 
+      this.panLog.AccessibleDescription = null;
+      this.panLog.AccessibleName = null;
+      resources.ApplyResources(this.panLog, "panLog");
+      this.panLog.BackgroundImage = null;
       this.panLog.Controls.Add(this.btnOpenWith);
       this.panLog.Controls.Add(this.btnDirExplorer);
       this.panLog.Controls.Add(this.btnEdit);
       this.panLog.Controls.Add(this.edLogPath);
-      this.panLog.Dock = System.Windows.Forms.DockStyle.Top;
-      this.panLog.Location = new System.Drawing.Point(0, 160);
+      this.panLog.Font = null;
       this.panLog.Name = "panLog";
-      this.panLog.Size = new System.Drawing.Size(632, 32);
-      this.panLog.TabIndex = 1;
       // 
       // btnOpenWith
       // 
+      this.btnOpenWith.AccessibleDescription = null;
+      this.btnOpenWith.AccessibleName = null;
+      resources.ApplyResources(this.btnOpenWith, "btnOpenWith");
+      this.btnOpenWith.BackgroundImage = null;
       this.btnOpenWith.ContextMenuStrip = this.OpenWithMenu;
-      this.btnOpenWith.Location = new System.Drawing.Point(116, 4);
+      this.btnOpenWith.Font = null;
       this.btnOpenWith.Name = "btnOpenWith";
-      this.btnOpenWith.Size = new System.Drawing.Size(32, 24);
-      this.btnOpenWith.TabIndex = 1;
       this.btnOpenWith.UseVisualStyleBackColor = true;
       // 
       // OpenWithMenu
       // 
+      this.OpenWithMenu.AccessibleDescription = null;
+      this.OpenWithMenu.AccessibleName = null;
+      resources.ApplyResources(this.OpenWithMenu, "OpenWithMenu");
+      this.OpenWithMenu.BackgroundImage = null;
+      this.OpenWithMenu.Font = null;
       this.OpenWithMenu.Name = "OpenWithMenu";
-      this.OpenWithMenu.Size = new System.Drawing.Size(61, 4);
       // 
       // btnDirExplorer
       // 
-      this.btnDirExplorer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnDirExplorer.Location = new System.Drawing.Point(593, 4);
+      this.btnDirExplorer.AccessibleDescription = null;
+      this.btnDirExplorer.AccessibleName = null;
+      resources.ApplyResources(this.btnDirExplorer, "btnDirExplorer");
+      this.btnDirExplorer.BackgroundImage = null;
+      this.btnDirExplorer.Font = null;
       this.btnDirExplorer.Name = "btnDirExplorer";
-      this.btnDirExplorer.Size = new System.Drawing.Size(32, 24);
-      this.btnDirExplorer.TabIndex = 3;
       this.btnDirExplorer.UseVisualStyleBackColor = true;
       this.btnDirExplorer.Click += new System.EventHandler(this.btnDirExplorer_Click);
       // 
       // btnEdit
       // 
-      this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnEdit.Location = new System.Drawing.Point(8, 4);
+      this.btnEdit.AccessibleDescription = null;
+      this.btnEdit.AccessibleName = null;
+      resources.ApplyResources(this.btnEdit, "btnEdit");
+      this.btnEdit.BackgroundImage = null;
+      this.btnEdit.Font = null;
       this.btnEdit.Name = "btnEdit";
-      this.btnEdit.Size = new System.Drawing.Size(112, 24);
-      this.btnEdit.TabIndex = 0;
-      this.btnEdit.Text = "Отчет";
       this.btnEdit.UseVisualStyleBackColor = true;
       // 
       // edLogPath
       // 
-      this.edLogPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.edLogPath.Location = new System.Drawing.Point(154, 4);
+      this.edLogPath.AccessibleDescription = null;
+      this.edLogPath.AccessibleName = null;
+      resources.ApplyResources(this.edLogPath, "edLogPath");
+      this.edLogPath.BackgroundImage = null;
+      this.edLogPath.Font = null;
       this.edLogPath.Name = "edLogPath";
       this.edLogPath.ReadOnly = true;
-      this.edLogPath.Size = new System.Drawing.Size(433, 20);
-      this.edLogPath.TabIndex = 2;
       // 
       // TheTabControl
       // 
+      this.TheTabControl.AccessibleDescription = null;
+      this.TheTabControl.AccessibleName = null;
+      resources.ApplyResources(this.TheTabControl, "TheTabControl");
+      this.TheTabControl.BackgroundImage = null;
       this.TheTabControl.Controls.Add(this.tpObj);
       this.TheTabControl.Controls.Add(this.tpData);
       this.TheTabControl.Controls.Add(this.tpStack);
-      this.TheTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.TheTabControl.Location = new System.Drawing.Point(0, 192);
+      this.TheTabControl.Font = null;
       this.TheTabControl.Name = "TheTabControl";
       this.TheTabControl.SelectedIndex = 0;
-      this.TheTabControl.Size = new System.Drawing.Size(632, 163);
-      this.TheTabControl.TabIndex = 2;
       // 
       // tpObj
       // 
+      this.tpObj.AccessibleDescription = null;
+      this.tpObj.AccessibleName = null;
+      resources.ApplyResources(this.tpObj, "tpObj");
+      this.tpObj.BackgroundImage = null;
       this.tpObj.Controls.Add(this.pg1);
-      this.tpObj.Location = new System.Drawing.Point(4, 22);
+      this.tpObj.Font = null;
       this.tpObj.Name = "tpObj";
-      this.tpObj.Padding = new System.Windows.Forms.Padding(3);
-      this.tpObj.Size = new System.Drawing.Size(624, 137);
-      this.tpObj.TabIndex = 0;
-      this.tpObj.Text = "Объект ошибки";
       this.tpObj.UseVisualStyleBackColor = true;
       // 
       // pg1
       // 
-      this.pg1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.pg1.HelpVisible = false;
-      this.pg1.Location = new System.Drawing.Point(3, 3);
+      this.pg1.AccessibleDescription = null;
+      this.pg1.AccessibleName = null;
+      resources.ApplyResources(this.pg1, "pg1");
+      this.pg1.BackgroundImage = null;
+      this.pg1.Font = null;
       this.pg1.Name = "pg1";
       this.pg1.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
-      this.pg1.Size = new System.Drawing.Size(618, 131);
-      this.pg1.TabIndex = 0;
       this.pg1.ToolbarVisible = false;
       // 
       // tpData
       // 
+      this.tpData.AccessibleDescription = null;
+      this.tpData.AccessibleName = null;
+      resources.ApplyResources(this.tpData, "tpData");
+      this.tpData.BackgroundImage = null;
       this.tpData.Controls.Add(this.grData);
-      this.tpData.Location = new System.Drawing.Point(4, 22);
+      this.tpData.Font = null;
       this.tpData.Name = "tpData";
-      this.tpData.Padding = new System.Windows.Forms.Padding(3);
-      this.tpData.Size = new System.Drawing.Size(624, 137);
-      this.tpData.TabIndex = 2;
-      this.tpData.Text = "Данные";
       this.tpData.UseVisualStyleBackColor = true;
       // 
       // grData
       // 
+      this.grData.AccessibleDescription = null;
+      this.grData.AccessibleName = null;
       this.grData.AllowUserToAddRows = false;
       this.grData.AllowUserToDeleteRows = false;
       this.grData.AllowUserToResizeColumns = false;
       this.grData.AllowUserToResizeRows = false;
+      resources.ApplyResources(this.grData, "grData");
+      this.grData.BackgroundImage = null;
       this.grData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.grData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colData1,
             this.colData2,
             this.colData3});
-      this.grData.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.grData.Location = new System.Drawing.Point(3, 3);
+      this.grData.Font = null;
       this.grData.Name = "grData";
       this.grData.ReadOnly = true;
       this.grData.RowHeadersVisible = false;
-      this.grData.Size = new System.Drawing.Size(618, 131);
       this.grData.StandardTab = true;
-      this.grData.TabIndex = 0;
       this.grData.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grData_CellContentClick);
       // 
       // colData1
       // 
       this.colData1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
       this.colData1.FillWeight = 50F;
-      this.colData1.HeaderText = "Код";
+      resources.ApplyResources(this.colData1, "colData1");
       this.colData1.Name = "colData1";
       this.colData1.ReadOnly = true;
       this.colData1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -335,72 +342,72 @@
       // 
       this.colData2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
       this.colData2.FillWeight = 50F;
-      this.colData2.HeaderText = "Значение";
+      resources.ApplyResources(this.colData2, "colData2");
       this.colData2.Name = "colData2";
       this.colData2.ReadOnly = true;
       this.colData2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       // 
       // colData3
       // 
-      this.colData3.HeaderText = "";
+      resources.ApplyResources(this.colData3, "colData3");
       this.colData3.Name = "colData3";
       this.colData3.ReadOnly = true;
-      this.colData3.Width = 30;
       // 
       // tpStack
       // 
+      this.tpStack.AccessibleDescription = null;
+      this.tpStack.AccessibleName = null;
+      resources.ApplyResources(this.tpStack, "tpStack");
+      this.tpStack.BackgroundImage = null;
       this.tpStack.Controls.Add(this.grStack);
-      this.tpStack.Location = new System.Drawing.Point(4, 22);
+      this.tpStack.Font = null;
       this.tpStack.Name = "tpStack";
-      this.tpStack.Padding = new System.Windows.Forms.Padding(3);
-      this.tpStack.Size = new System.Drawing.Size(624, 137);
-      this.tpStack.TabIndex = 1;
-      this.tpStack.Text = "Стек вызовов";
       this.tpStack.UseVisualStyleBackColor = true;
       // 
       // grStack
       // 
+      this.grStack.AccessibleDescription = null;
+      this.grStack.AccessibleName = null;
       this.grStack.AllowUserToAddRows = false;
       this.grStack.AllowUserToDeleteRows = false;
       this.grStack.AllowUserToResizeColumns = false;
       this.grStack.AllowUserToResizeRows = false;
+      resources.ApplyResources(this.grStack, "grStack");
+      this.grStack.BackgroundImage = null;
       this.grStack.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.grStack.ColumnHeadersVisible = false;
       this.grStack.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colStack1});
-      this.grStack.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.grStack.Location = new System.Drawing.Point(3, 3);
+      this.grStack.Font = null;
       this.grStack.Name = "grStack";
       this.grStack.ReadOnly = true;
       this.grStack.RowHeadersVisible = false;
       this.grStack.RowTemplate.Height = 18;
       this.grStack.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-      this.grStack.Size = new System.Drawing.Size(618, 131);
       this.grStack.StandardTab = true;
-      this.grStack.TabIndex = 0;
       // 
       // colStack1
       // 
       this.colStack1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-      this.colStack1.HeaderText = "Column1";
+      resources.ApplyResources(this.colStack1, "colStack1");
       this.colStack1.Name = "colStack1";
       this.colStack1.ReadOnly = true;
       // 
       // ShowExceptionForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AccessibleDescription = null;
+      this.AccessibleName = null;
+      resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.BackgroundImage = null;
       this.CancelButton = this.btnClose;
-      this.ClientSize = new System.Drawing.Size(632, 406);
       this.Controls.Add(this.TheTabControl);
       this.Controls.Add(this.panLog);
       this.Controls.Add(this.panel2);
       this.Controls.Add(this.panel1);
-      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+      this.Font = null;
       this.MinimizeBox = false;
       this.Name = "ShowExceptionForm";
-      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "Отладка сообщения об ошибке";
       this.panel1.ResumeLayout(false);
       this.panel1.PerformLayout();
       this.panel2.ResumeLayout(false);
@@ -423,10 +430,10 @@
 
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.TextBox edType;
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Button cbInner;
+    private System.Windows.Forms.Label lblType;
+    private System.Windows.Forms.Button btnInner;
     private System.Windows.Forms.TextBox edMessage;
-    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Label lblMessage;
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.Panel panStopShow;
     private System.Windows.Forms.CheckBox cbStopShow;
@@ -443,12 +450,12 @@
     private System.Windows.Forms.Button btnEdit;
     private System.Windows.Forms.TabPage tpData;
     private System.Windows.Forms.DataGridView grData;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colData1;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colData2;
-    private System.Windows.Forms.DataGridViewButtonColumn colData3;
     private System.Windows.Forms.Button btnDirExplorer;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Button btnOpenWith;
     private System.Windows.Forms.ContextMenuStrip OpenWithMenu;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colData1;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colData2;
+    private System.Windows.Forms.DataGridViewButtonColumn colData3;
   }
 }

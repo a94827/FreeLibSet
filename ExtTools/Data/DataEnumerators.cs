@@ -24,42 +24,31 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Создает объект, для которого можно вызвать оператор foreach.
-    /// Будут возвращаться только строки с совпадающими значениями полей.
-    /// При сравнении учитываются все столбцы, заданные в <see cref="DataView.Sort"/>.
+    /// В сравнении участвуют все столбцы, заданные свойством <see cref="DataView.Sort"/>.
     /// </summary>
     /// <param name="dv">Набор данных с установленным свойством <see cref="DataView.Sort"/></param>
-    public DataViewRowPairEnumarable(DataView dv)
-      : this(dv, 0, false)
-    {
-    }
-
-    /// <summary>
-    /// Создает объект, для которого можно вызвать оператор foreach.
-    /// </summary>
-    /// <param name="dv">Набор данных с установленным свойством <see cref="DataView.Sort"/></param>
-    /// <param name="compareColumnCount">Количество столбцов, участвующих в сравнении.
-    /// В сравнении участвуют первые столбцы, заданные в <see cref="DataView.Sort"/>, но могут использоваться не все столбцы.
-    /// Нулевое значение означает использование всех столбцов.</param>
-    public DataViewRowPairEnumarable(DataView dv, int compareColumnCount)
-      : this(dv, compareColumnCount, false)
-    {
-    }
-
-    /// <summary>
-    /// Создает объект, для которого можно вызвать оператор foreach.
-    /// </summary>
-    /// <param name="dv">Набор данных с установленным свойством <see cref="DataView.Sort"/></param>
-    /// <param name="compareColumnCount">Количество столбцов, участвующих в сравнении.
-    /// В сравнении участвуют первые столбцы, заданные в <see cref="DataView.Sort"/>, но могут использоваться не все столбцы.
-    /// Нулевое значение означает использование всех столбцов.</param>
     /// <param name="enumSingleRows">Если true, то будут перебраны все строки в <see cref="DataView"/>, включая одиночные.
     /// Если false, то будут возвращаться только строки с совпадающими значениями полей.</param>
-    public DataViewRowPairEnumarable(DataView dv, int compareColumnCount, bool enumSingleRows)
+    public DataViewRowPairEnumarable(DataView dv, bool enumSingleRows)
+      : this(dv, enumSingleRows, 0)
+    {
+    }
+
+    /// <summary>
+    /// Создает объект, для которого можно вызвать оператор foreach.
+    /// </summary>
+    /// <param name="dv">Набор данных с установленным свойством <see cref="DataView.Sort"/></param>
+    /// <param name="enumSingleRows">Если true, то будут перебраны все строки в <see cref="DataView"/>, включая одиночные.
+    /// Если false, то будут возвращаться только строки с совпадающими значениями полей.</param>
+    /// <param name="compareColumnCount">Количество столбцов, участвующих в сравнении.
+    /// В сравнении участвуют первые столбцы, заданные в <see cref="DataView.Sort"/>, но могут использоваться не все столбцы.
+    /// Нулевое значение означает использование всех столбцов.</param>
+    public DataViewRowPairEnumarable(DataView dv, bool enumSingleRows, int compareColumnCount)
     {
       if (dv == null)
         throw new ArgumentNullException("dv");
       if (String.IsNullOrEmpty(dv.Sort))
-        throw new InvalidOperationException("Не установлено свойство DataView.Sort");
+        throw ExceptionFactory.ArgProperty("dv", dv, "DataView.Sort", dv.Sort, null);
 
       _DV = dv;
       string[] aColNames = DataTools.GetDataViewSortColumnNames(dv.Sort);
@@ -68,14 +57,14 @@ namespace FreeLibSet.Data
         compareColumnCount = aColNames.Length;
 
       if (compareColumnCount < 1 || compareColumnCount > aColNames.Length) // испр. 24.12.2021
-        throw new ArgumentOutOfRangeException("compareColumnCount", compareColumnCount, "Количество столбцов для сравнения должно быть в диапазоне от 1 до " + (aColNames.Length - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("compareColumnCount", compareColumnCount, 1, aColNames.Length - 1);
 
       _ColPoss = new int[compareColumnCount];
       for (int i = 0; i < compareColumnCount; i++)
       {
         _ColPoss[i] = dv.Table.Columns.IndexOf(aColNames[i]);
         if (_ColPoss[i] < 0)
-          throw new BugException("Не найден столбец \"" + aColNames[i] + "\"");
+          throw new BugException("Column not found: \"" + aColNames[i] + "\"");
       }
       _EnumSingleRows = enumSingleRows;
     }
@@ -167,7 +156,7 @@ namespace FreeLibSet.Data
       /// <summary>
       /// Просматриваемый набор данных
       /// </summary>
-      private DataViewRowPairEnumarable _Owner;
+      private readonly DataViewRowPairEnumarable _Owner;
 
       /// <summary>
       /// Индекс первой строки в блоке повторяющихся строк

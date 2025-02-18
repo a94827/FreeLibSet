@@ -397,19 +397,19 @@ namespace FreeLibSet.Diagnostics
           return GetMemoryBytesFromUnixFileString(a[i]);
       }
 
-      throw new InvalidOperationException("Не найдена строка MemTotal");
+      throw new InvalidOperationException("Cannot find a row MemTotal");
     }
 
     private static long GetMemoryBytesFromUnixFileString(string s)
     {
       int p = s.IndexOf(':');
       if (p < 0)
-        throw new ArgumentException("Нет символа \":\"");
+        throw new ArgumentException("There is no char \":\"", "s");
       s = s.Substring(p + 1).Trim();
 
       p = s.IndexOf(' ');
       if (p < 0)
-        throw new InvalidOperationException("Нет единицы измерения");
+        throw new InvalidOperationException("There is no measure unit");
       string s1 = s.Substring(0, p); // число
       string s2 = s.Substring(p + 1); // единица измерения
 
@@ -417,7 +417,7 @@ namespace FreeLibSet.Diagnostics
       switch (s2)
       {
         case "kB": v = v * FileTools.KByte; break;
-        default: throw new InvalidOperationException("Неизвестная единица измерения: \"" + s2 + "\"");
+        default: throw new InvalidOperationException("Unknown measure unit: \"" + s2 + "\"");
       }
 
       return v;

@@ -119,9 +119,9 @@ namespace FreeLibSet.Data
     public DBxColumn(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
       if (columnName.IndexOf(',') >= 0)
-        throw new ArgumentException("Имя поля не может содержать запятую", "columnName");
+        throw ExceptionFactory.ArgBadChar("columnName", columnName, ",");
 
       _ColumnName = columnName;
     }
@@ -173,7 +173,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить список используемых полей.
-    /// Добавляет в список имя поля ColumnName.
+    /// Добавляет в список имя поля <see cref="ColumnName"/>.
     /// </summary>
     /// <param name="list">Заполняемый список. Не может быть null</param>
     public override void GetColumnNames(DBxColumnList list)
@@ -183,7 +183,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Получить значение выражения из произвольного источника данных.
-    /// Извлекает значение ColumnName из <paramref name="rowValues"/>.
+    /// Извлекает значение <see cref="ColumnName"/> из <paramref name="rowValues"/>.
     /// </summary>
     /// <param name="rowValues">Источник данных</param>
     /// <returns>Значение</returns>
@@ -249,12 +249,10 @@ namespace FreeLibSet.Data
       if (columnType == DBxColumnType.Unknown)
       {
         if (value == null || value is DBNull)
-          throw new ArgumentNullException("value", "Используйте конструктор, принимающий 2 аргумента, и задавайте DBxColumnType");
+          throw new ArgumentNullException("value", Res.DBxConst_Arg_UseDBxColumnType);
         _Value = value;
 
-        _ColumnType = DBxTools.ValueToColumnType(value);
-        if (_ColumnType == DBxColumnType.Unknown)
-          throw new ArgumentException("Не удалось определить тип столбца из типа " + value.GetType().ToString(), "value");
+        _ColumnType = DBxTools.ValueToColumnTypeRequired(value);
       }
       else
       {
@@ -285,7 +283,7 @@ namespace FreeLibSet.Data
       if (value is Guid)
         return;
 
-      throw new ArgumentException("Значение константы имеет недопустимый тип: " + value.GetType().ToString(), "value");
+      throw ExceptionFactory.ArgUnknownType("value", value);
     }
 
     #endregion
@@ -533,11 +531,12 @@ namespace FreeLibSet.Data
       int minArgCount, maxArgCount;
       GetArgCount(function, out minArgCount, out maxArgCount);
       if (args.Length < minArgCount || args.Length > maxArgCount)
-        throw new ArgumentException("Неправильное количество аргументов: " + args.Length.ToString() + ". Для функции " + function.ToString() + " требуются аргументы в количестве от " + minArgCount.ToString() + " до " + maxArgCount.ToString());
+        throw new ArgumentException(String.Format(Res.DBxFunction_Arg_WrongArgCount,
+          args.Length, function.ToString(), minArgCount, maxArgCount));
       for (int i = 0; i < args.Length; i++)
       {
         if (args[i] == null)
-          throw new ArgumentNullException("args[" + i.ToString() + "]");
+          throw ExceptionFactory.ArgInvalidListItem("args", args, i);
       }
 
       _Function = function;
@@ -624,7 +623,7 @@ namespace FreeLibSet.Data
         #endregion
 
         default:
-          throw new ArgumentException("Неизвестная функция " + function.ToString());
+          throw ExceptionFactory.ArgUnknownValue("function", function);
       }
     }
 
@@ -786,7 +785,7 @@ namespace FreeLibSet.Data
           //return DataTools.GetString(a[0]).Substring(DataTools.GetInt(a[1]) - 1, DataTools.GetInt(a[2]));
           return DataTools.Substring(DataTools.GetString(a[0]), DataTools.GetInt(a[1]) - 1, DataTools.GetInt(a[2])); // 12.05.2023
         default:
-          throw new BugException("Неизвестная функция " + _Function.ToString());
+          throw new BugException("Unknown function " + _Function.ToString());
       }
     }
 
@@ -906,7 +905,7 @@ namespace FreeLibSet.Data
     public DBxAggregateFunction(DBxAggregateFunctionKind function, DBxExpression arg)
     {
       if (arg == null && function != DBxAggregateFunctionKind.Count)
-        throw new ArgumentNullException("arg", "Аргумент (обычно, имя поля) должен быть задан для всех агрегатных функций, кроме COUNT(*)");
+        throw new ArgumentNullException("arg", Res.DBxAggregateFunction_Arg_NoArg);
 
       _Function = function;
       _Argument = arg;
@@ -1004,7 +1003,7 @@ namespace FreeLibSet.Data
     /// <returns>Значение</returns>
     public override object GetValue(INamedValuesAccess rowValues)
     {
-      throw new NotSupportedException("Для агрегатных функций вычисление на основании строки данных невозможно");
+      throw new NotSupportedException(Res.DBxAggregateFunction_Err_GetValueNotSupported);
     }
 
     /// <summary>

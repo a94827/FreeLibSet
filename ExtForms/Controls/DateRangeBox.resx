@@ -117,28 +117,336 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="TheRightButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAEZJREFUKFNjYICC
-        /1AA4xOkQeoZGGDaQGwCAKYBpAmmEa8WdA0EbcOmAa9t+DRgdSJVNUAMQwMUexqrqciWkBVxBE0F2gAA
-        CK7DPcOB/M0AAAAASUVORK5CYII=
-</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TheLP.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
-  <data name="TheMenuButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAADFJREFUKFNjZGBg
-        +A/EJAOQJmIwisGENOB0BbpGopwL00SUYuorIuRZrH4iVtNgDFYA7F08xV4OixQAAAAASUVORK5CYII=
-</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>467, 46</value>
+  </data>
+  <data name="&gt;&gt;Last.Parent" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="TheMenuButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="label1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
+  <data name="&gt;&gt;TheMenuButton.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="First.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <data name="Last.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 22</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TheMenuButton.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;TheMenuButton.Parent" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="&gt;&gt;Last.Name" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="&gt;&gt;TheLeftButton.Name" xml:space="preserve">
+    <value>TheLeftButton</value>
+  </data>
+  <data name="&gt;&gt;TheRightButton.Name" xml:space="preserve">
+    <value>TheRightButton</value>
+  </data>
+  <data name="&gt;&gt;lblPeriod.Name" xml:space="preserve">
+    <value>lblPeriod</value>
+  </data>
+  <data name="&gt;&gt;Last.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="TheLP.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;TheLP.Name" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="TheRightButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>444, 0</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="label2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="TheLP.Size" type="System.Drawing.Size, System.Drawing">
+    <value>467, 46</value>
+  </data>
+  <data name="TheLP.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;TheLP.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="&gt;&gt;First.Name" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="TheMenuButton.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblPeriod.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;TheMenuButton.Name" xml:space="preserve">
+    <value>TheMenuButton</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 25</value>
+  </data>
+  <data name="&gt;&gt;TheRightButton.Parent" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="TheLeftButton.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;TheLP.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblPeriod.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="First.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;First.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.DateTimeBox, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Last.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.DateTimeBox, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="label2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
+  <data name="TheMenuButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>397, 0</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 25</value>
+  </data>
+  <data name="TheLeftButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="TheLP.RowCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;TheLeftButton.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.ControlRightButton, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>208, 0</value>
+  </data>
+  <data name="TheLeftButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>420, 0</value>
+  </data>
+  <data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="lblPeriod.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
+  <data name="TheRightButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 25</value>
+  </data>
+  <data name="&gt;&gt;lblPeriod.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="TheLeftButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 25</value>
+  </data>
+  <data name="TheLP.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="TheRightButton" Row="0" RowSpan="1" Column="7" ColumnSpan="1" /&gt;&lt;Control Name="lblPeriod" Row="1" RowSpan="1" Column="0" ColumnSpan="8" /&gt;&lt;Control Name="label1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="First" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="label2" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="TheMenuButton" Row="0" RowSpan="1" Column="5" ColumnSpan="1" /&gt;&lt;Control Name="Last" Row="0" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="TheLeftButton" Row="0" RowSpan="1" Column="6" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="AutoSize,0,Percent,50,AutoSize,0,Percent,50,Absolute,8,AutoSize,0,AutoSize,0,AutoSize,0" /&gt;&lt;Rows Styles="Absolute,25,Absolute,21" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="lblPeriod.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="TheMenuButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="&gt;&gt;TheRightButton.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.ControlRightButton, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="Last.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="&gt;&gt;TheLP.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="Last.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="lblPeriod.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
+  <data name="&gt;&gt;First.Parent" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="label1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="TheRightButton.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="TheRightButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="lblPeriod.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 25</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblPeriod.Text" xml:space="preserve">
+    <value>????</value>
+  </data>
+  <data name="TheMenuButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 25</value>
+  </data>
+  <data name="TheLP.ColumnCount" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>DateRangeBox</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 0</value>
   </data>
   <data name="TheLeftButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAElJREFUKFNjYCAA
-        /kMBIXUMCIUQFl4NEAUIjFMDsqkENaCbilcDPsUgjRhOIlkDKARIchIsyEjyNHI4Ex2s6JpgGglGHHaN
-        EFEA3JPDPXxOiCkAAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAATElEQVQoU5WLBwoAMAgD/f+nOzilA9Pi
+        QRAz7Edz/NV4bxTjPqCwxJ9AdJblADMX2QaGFvkGhhb5BWYusgSiwiCgUBhMqBUGAfUYmHXck8M9u+pK
+        pAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>till</value>
+  </data>
+  <data name="lblPeriod.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;First.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="First.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="lblPeriod.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="Last.Location" type="System.Drawing.Point, System.Drawing">
+    <value>233, 0</value>
+  </data>
+  <data name="Last.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;lblPeriod.Parent" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="&gt;&gt;TheRightButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="TheLP.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="TheLeftButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="TheMenuButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAOklEQVQoU63OQQoAMAgDQf//6bZ4irCB
+        CB3YkzlYz1nW6EANNNCseKhW4//036RGB2qggWbFQ2XGVRfjaUe5KiVKNwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="First.Location" type="System.Drawing.Point, System.Drawing">
+    <value>48, 0</value>
+  </data>
+  <data name="&gt;&gt;TheLeftButton.Parent" xml:space="preserve">
+    <value>TheLP</value>
+  </data>
+  <data name="TheRightButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAUklEQVQoU4WLQQ4AIAjD+P+nNdIZRUGb
+        7MBWbNKEzj/I/uOorkFa4X6AcD8NpEQY8rAdUNZh36Cow75BkYftgPIWB1IiDFHWlIPgnqO6Rt5HNOsI
+        rsM99mLCtwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="&gt;&gt;TheMenuButton.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.ControlRightButton, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;TheLeftButton.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;lblPeriod.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="First.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="TheRightButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblPeriod.Size" type="System.Drawing.Size, System.Drawing">
+    <value>459, 21</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

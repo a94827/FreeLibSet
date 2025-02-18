@@ -850,7 +850,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка вызова обработчика события DBUI.AddCopyFormats");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -867,7 +867,7 @@ namespace FreeLibSet.Forms.Docs
         DataObject dobj = new DataObject();
         dobj.SetData(docSel);
         OnAddCopyFormats(dobj, docSel); // 06.02.2021
-        EFPApp.Clipboard.SetDataObject(dobj, true);
+        new EFPClipboard().SetDataObject(dobj, true);
       }
       finally
       {
@@ -885,12 +885,17 @@ namespace FreeLibSet.Forms.Docs
     public DBxDocSelection PasteDocSel()
     {
       DBxDocSelection docSel = null;
-      IDataObject dobj = EFPApp.Clipboard.GetDataObject();
+      EFPClipboard clp = new EFPClipboard();
+      clp.ErrorIfEmpty = true;
+      IDataObject dobj = clp.GetDataObject();
       if (dobj != null)
         docSel = (DBxDocSelection)(dobj.GetData(typeof(DBxDocSelection)));
 
       if (docSel == null)
+      {
+        EFPApp.ShowTempMessage("В буфере обмена нет выборки документов");
         return null;
+      }
 
       if (docSel.DBIdentity != DocProvider.DBIdentity)
       {

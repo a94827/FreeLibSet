@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Выделенный фрагмент текста. Если выделения нет, содержит пустую строку.
-    /// Установка свойства заменяет выделенный фрагмент
+    /// Установка свойства заменяет выделенный фрагмент.
     /// </summary>
     string SelectedText { get; set; }
 
@@ -287,17 +287,7 @@ namespace FreeLibSet.Forms
         return; // никогда не будет
 
       if (String.IsNullOrEmpty(Text))
-      {
-        switch (CanBeEmptyMode)
-        {
-          case UIValidateState.Error:
-            SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
-            break;
-        }
-      }
+        ValidateCanBeEmptyMode(CanBeEmptyMode);
     }
 
     /// <summary>
@@ -464,7 +454,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика Control.TextChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -775,7 +765,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public virtual void Undo()
     {
-      throw new NotSupportedException("Команда Undo не поддерживается для " + GetType().ToString());
+      throw new NotImplementedException();
     }
 
     /// <summary>
@@ -785,7 +775,7 @@ namespace FreeLibSet.Forms
     public virtual void Cut()
     {
       if (String.IsNullOrEmpty(SelectedText))
-        EFPApp.ShowTempMessage("Нет выделенного фрагмента текста");
+        EFPApp.ShowTempMessage(Res.EFPTextBox_Err_NoSelection);
       else
       {
         Clipboard.SetText(SelectedText);
@@ -800,7 +790,7 @@ namespace FreeLibSet.Forms
     public virtual void Copy()
     {
       if (String.IsNullOrEmpty(SelectedText))
-        EFPApp.ShowTempMessage("Нет выделенного фрагмента текста");
+        EFPApp.ShowTempMessage(Res.EFPTextBox_Err_NoSelection);
       else
         Clipboard.SetText(SelectedText);
     }
@@ -813,7 +803,7 @@ namespace FreeLibSet.Forms
     {
       String s = Clipboard.GetText();
       if (String.IsNullOrEmpty(s))
-        EFPApp.ShowTempMessage("В буфере обмена нет текста");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoText);
       else
         SelectedText = s;
     }
@@ -1049,15 +1039,16 @@ namespace FreeLibSet.Forms
       get
       {
         if (IsPasswordInput)
-          return "Поле ввода пароля";
+          return Res.EFPTextBox_Name_Password;
         else if (IsMultiLine)
         {
           if (ReadOnly)
-            return "Просмотр текста";
+            return Res.EFPTextBox_Name_MulilineReadOnly;
           else
-            return "Текстовый редактор";
+            return Res.EFPTextBox_Name_MultiLine;
         }
-        else return "Поле ввода текста";
+        else
+          return Res.EFPTextBox_Name_SingleLine;
       }
     }
 
@@ -1272,7 +1263,7 @@ namespace FreeLibSet.Forms
           return; // Нет ни одного введенного символа
 
         if (!Control.MaskCompleted)
-          SetError("Должны быть введены все символы");
+          SetError(Res.EFPMaskedTextBox_Err_MaskIncomplete);
       }
       else
       {
@@ -1920,13 +1911,13 @@ namespace FreeLibSet.Forms
       string[] a = base.Text.Split(',');
       SingleScopeList<string> lst = new SingleScopeList<string>();
 
-      ValueToolTipText = "Выбрано кодов: " + a.Length.ToString();
+      ValueToolTipText = String.Format(Res.EFPCsvCodesTextBox_ToolTip_Codes, a.Length);
       for (int i = 0; i < a.Length; i++)
       {
         string s = a[i].Trim();
         if (s.Length == 0)
         {
-          base.SetError("Задан пустой код");
+          base.SetError(Res.EFPCsvCodesTextBox_Err_EmptyCode);
           return;
         }
 
@@ -1937,10 +1928,10 @@ namespace FreeLibSet.Forms
         switch (_CodeValidatingEventArgs.ValidateState)
         {
           case UIValidateState.Error:
-            SetError("Неправильный код №" + (i + 1).ToString() + " \"" + s + "\". " + _CodeValidatingEventArgs.Message);
+            SetError(String.Format(Res.EFPCsvCodesTextBox_Err_WrongCode, i + 1, s, _CodeValidatingEventArgs.Message));
             return;
           case UIValidateState.Warning:
-            SetWarning("Код №" + (i + 1).ToString() + " \"" + s + "\". " + _CodeValidatingEventArgs.Message);
+            SetWarning(String.Format(Res.EFPCsvCodesTextBox_Err_WrongCode, i + 1, s, _CodeValidatingEventArgs.Message));
             break;
         }
         if (a.Length == 1 && (!String.IsNullOrEmpty(_CodeValidatingEventArgs.Name)))
@@ -1948,7 +1939,7 @@ namespace FreeLibSet.Forms
 
         if (lst.Contains(s))
         {
-          SetError("Код \"" + s + "\" задан дважды");
+          SetError(String.Format(Res.EFPCsvCodesTextBox_Err_CodeTwice, s));
           return;
         }
         lst.Add(s);
@@ -2078,7 +2069,6 @@ namespace FreeLibSet.Forms
         ciUndo.ShortCutToRightText();
         ciUndo.GroupBegin = true;
         ciUndo.Click += new EventHandler(Undo);
-        ciUndo.MenuText = "&Отменить";
         Add(ciUndo);
       }
 
@@ -2108,7 +2098,7 @@ namespace FreeLibSet.Forms
 
         EFPPasteFormat fmtText = new EFPPasteFormat(DataFormats.UnicodeText);
         fmtText.AutoConvert = true;
-        fmtText.DisplayName = "Текст";
+        fmtText.DisplayName = Res.EFPTextBox_Name_PasteFormat;
         fmtText.TestFormat += new EFPTestDataObjectEventHandler(fmtText_TestFormat);
         fmtText.Paste += new EFPPasteDataObjectEventHandler(fmtText_Paste);
         _PasteHandler.Add(fmtText);
@@ -2155,7 +2145,7 @@ namespace FreeLibSet.Forms
           #region Вставить перевод строки
 
           ciNewLine = new EFPCommandItem("Edit", "InsertNewLine");
-          ciNewLine.MenuText = "Вставить перевод строки";
+          ciNewLine.MenuText = Res.Cmd_Menu_Edit_InsertNewLine;
           ciNewLine.ImageKey = "InsertNewLine";
           ciNewLine.GroupBegin = true;
           ciNewLine.GroupEnd = true;
@@ -2200,13 +2190,13 @@ namespace FreeLibSet.Forms
       {
         // Подменю команд преобразования регистра
         ciCase = new EFPCommandItem("Edit", "MenuCase");
-        ciCase.MenuText = "Преобразовать текст";
+        ciCase.MenuText = Res.Cmd_Menu_Edit_ConvertTextMenu;
         ciCase.GroupBegin = true;
         Add(ciCase);
 
         ciUpperCase = new EFPCommandItem("Edit", "ToUpper");
         ciUpperCase.Parent = ciCase;
-        ciUpperCase.MenuText = "К &ВЕРХНЕМУ РЕГИСТРУ";
+        ciUpperCase.MenuText = Res.Cmd_Menu_Edit_ToUpperCase;
         ciUpperCase.ShortCut = Keys.Control | Keys.U;
         ciUpperCase.GroupBegin = true;
         ciUpperCase.Click += new EventHandler(UpperCase);
@@ -2215,28 +2205,31 @@ namespace FreeLibSet.Forms
 
         ciLowerCase = new EFPCommandItem("Edit", "ToLower");
         ciLowerCase.Parent = ciCase;
-        ciLowerCase.MenuText = "к &нижнему регистру";
+        ciLowerCase.MenuText = Res.Cmd_Menu_Edit_ToLowerCase;
         ciLowerCase.ShortCut = Keys.Control | Keys.L;
         ciLowerCase.Click += new EventHandler(LowerCase);
         Add(ciLowerCase);
 
         ciChangeCase = new EFPCommandItem("Edit", "InvertCase");
         ciChangeCase.Parent = ciCase;
-        ciChangeCase.MenuText = "&иЗМЕНИТЬ рЕГИСТР";
+        ciChangeCase.MenuText = Res.Cmd_Menu_Edit_InvertCase;
         ciChangeCase.ShortCut = Keys.Control | Keys.R;
         ciChangeCase.GroupEnd = true;
         ciChangeCase.Click += new EventHandler(ChangeCase);
         Add(ciChangeCase);
 
-        ciRusLat = new EFPCommandItem("Edit", "ChangeRusLat");
-        ciRusLat.Parent = ciCase;
-        ciRusLat.MenuText = "Преобразовать РУС <-> ЛАТ";
-        ciRusLat.ShortCut = Keys.Control | Keys.T;
-        ciRusLat.GroupBegin = true;
-        ciRusLat.GroupEnd = true;
-        ciRusLat.Click += new EventHandler(RusLat);
-        //ciRusLat.GroupEnd = true;
-        Add(ciRusLat);
+        if (System.Globalization.CultureInfo.CurrentUICulture.Name.StartsWith("ru", StringComparison.Ordinal))
+        {
+          ciRusLat = new EFPCommandItem("Edit", "ChangeRusLat");
+          ciRusLat.Parent = ciCase;
+          ciRusLat.MenuText = "Преобразовать РУС <-> ЛАТ";
+          ciRusLat.ShortCut = Keys.Control | Keys.T;
+          ciRusLat.GroupBegin = true;
+          ciRusLat.GroupEnd = true;
+          ciRusLat.Click += new EventHandler(RusLat);
+          //ciRusLat.GroupEnd = true;
+          Add(ciRusLat);
+        }
       }
 
       #endregion
@@ -2465,7 +2458,7 @@ namespace FreeLibSet.Forms
       if (Owner is IEFPTextBox)
         ((IEFPTextBox)Owner).Undo();
       else
-        throw new BugException("Операция Undo неприменима к элементу " + ControlProvider.Control.GetType().ToString());
+        throw new BugException("Undo operation is not appliable for the control of type " + ControlProvider.Control.GetType().ToString());
       InitEnabled();
     }
 
@@ -2475,7 +2468,11 @@ namespace FreeLibSet.Forms
         ((IEFPTextBox)Owner).Cut();
       else
       {
-        EFPApp.Clipboard.SetText(Owner.SelectedText);
+        EFPClipboard clp = new EFPClipboard();
+        //clp.ErrorHandling = EFPClipboardErrorHandling.ThrowException;
+        clp.SetText(Owner.SelectedText);
+        if (clp.Exception != null)
+          return;
         Owner.SelectedText = String.Empty;
       }
       InitEnabled();
@@ -2487,8 +2484,8 @@ namespace FreeLibSet.Forms
         ((IEFPTextBox)Owner).Copy();
       else
       {
-        string Txt = Owner.SelectedText;
-        EFPApp.Clipboard.SetText(Txt);
+        string txt = Owner.SelectedText;
+        new EFPClipboard().SetText(txt);
       }
       InitEnabled();
     }
@@ -2502,7 +2499,7 @@ namespace FreeLibSet.Forms
     {
       string s = args.GetData() as string;
       if (String.IsNullOrEmpty(s))
-        EFPApp.ShowTempMessage("Буфер обмена не содержит текста");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoText);
       else
       {
         if (Owner is IEFPTextBox)
@@ -2674,7 +2671,7 @@ namespace FreeLibSet.Forms
     {
       if (Owner.TextLength == 0)
       {
-        EFPApp.ShowTempMessage("Нет текста");
+        EFPApp.ShowTempMessage(Res.EFPTextBox_Err_Empty);
         args.Cancel = true;
         return;
       }
@@ -2761,8 +2758,8 @@ namespace FreeLibSet.Forms
       ciStatusRow.Visible = tb.IsMultiLine && UseStatusBarRC /* 21.02.2020 */;
       int currRow, currCol;
       tb.GetCurrentRC(out currRow, out currCol);
-      ciStatusRow.StatusBarText = "Строка " + currRow.ToString();
-      ciStatusColumn.StatusBarText = "Столбец " + currCol.ToString();
+      ciStatusRow.StatusBarText = String.Format(Res.EFPTextBox_Status_Row, currRow);
+      ciStatusColumn.StatusBarText = String.Format(Res.EFPTextBox_Status_Column, currCol);
     }
 
     #endregion

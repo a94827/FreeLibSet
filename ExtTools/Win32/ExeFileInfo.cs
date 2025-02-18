@@ -27,8 +27,10 @@ namespace FreeLibSet.Win32
     {
       if (stream == null)
         throw new ArgumentNullException("stream");
-      if (!(stream.CanRead && stream.CanSeek))
-        throw new ArgumentException("Unsupported stream", "stream");
+      if (!stream.CanRead)
+        throw ExceptionFactory.ArgProperty("stream", stream, "CanRead", stream.CanRead, new object[] { true });
+      if (!stream.CanSeek)
+        throw ExceptionFactory.ArgProperty("stream", stream, "CanSeek", stream.CanSeek, new object[] { true });
       _Stream = stream;
       _Reader = new BinaryReader(_Stream);
       _OwnStream = ownStream;
@@ -46,7 +48,7 @@ namespace FreeLibSet.Win32
     private static Stream CreateFileStream(AbsPath path)
     {
       if (path.IsEmpty)
-        throw new ArgumentException("Путь не задан", "path");
+        throw ExceptionFactory.ArgIsEmpty("path");
       return new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
     }
 
@@ -211,7 +213,7 @@ namespace FreeLibSet.Win32
         //  OptionalHeader._DataDirectories[(int)(PEDataDirectotyKind.ResourceTable)].Address;
         rt._StartPos = sect.PointerToRawData;
         if (rt._StartPos < 0 || rt._StartPos >= _Owner._Stream.Length)
-          throw new BugException("Начало таблицы ресурсов выходит за пределы файла");
+          throw new BugException("Resource table exceeds the file stream");
 
         DoInitResourceDirectory(rt, rt, 0L);
 
@@ -276,9 +278,9 @@ namespace FreeLibSet.Win32
             res._Entries[i]._DataStartPos = rt._StartPos + dOffset;
             res._Entries[i]._DataSize = (int)_Owner._Reader.ReadUInt32();
             if (res._Entries[i]._DataStartPos < 0 || res._Entries[i]._DataStartPos >= _Owner._Stream.Length)
-              res._Entries[i]._ErrorMessage = "Начальная позиция ресурса выходит за пределы файла";
+              res._Entries[i]._ErrorMessage = Res.ExeFileInfo_Err_ResStartOutOfFile;
             else if ((res._Entries[i]._DataStartPos + res._Entries[i]._DataSize) > _Owner._Stream.Length)
-              res._Entries[i]._ErrorMessage = "Конец ресурса выходит за пределы файла";
+              res._Entries[i]._ErrorMessage = Res.ExeFileInfo_Err_ResEndOutOfFile;
             res._Entries[i]._CodePage = (int)_Owner._Reader.ReadUInt32();
             _Owner._Reader.ReadUInt32(); // Reserved
           }
@@ -848,7 +850,7 @@ namespace FreeLibSet.Win32
           case PEOptionalHeaderKind.PE32Plus:
             break;
           default:
-            throw new InvalidOperationException("Неправильная сигнатура дополнительного заголовка");
+            throw new InvalidOperationException(String.Format(Res.ExeFileInfo_Err_OptionalHeaderSignature, ((int)(optHead._Kind)).ToString("x")));
         }
         int lvMajor = _Reader.ReadByte();
         int lvMinor = _Reader.ReadByte();

@@ -359,6 +359,8 @@ namespace FreeLibSet.Forms
     /// 
     /// Именные настройки хранятся в <see cref="EFPGridProducer.GetNamedConfigNames"/>. Обычно, когда свойство не установлено,
     /// используется основная настройка <see cref="EFPGridProducer.DefaultConfig"/>.
+    /// 
+    /// Свойство должно устанавливаться до <see cref="EFPDataGridView.CurrentConfig"/>
     /// </summary>
     public string DefaultConfigName
     {
@@ -366,7 +368,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (CurrentConfigHasBeenSet)
-          throw new InvalidOperationException("Свойство DefaultConfigName должно устанавливаться до CurrentGridConfig");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "CurrentConfig");
         _DefaultConfigName = value;
       }
     }
@@ -385,7 +387,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_ColumnWidthChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -397,7 +399,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_ColumnDisplayIndexChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -580,7 +582,7 @@ namespace FreeLibSet.Forms
             e.Data["CfgPart.GetXmlText()"] = cfg.GetXmlText();
           }
           catch { }
-          EFPApp.ShowException(e, "Ошибка загрузки сохраненной конфигурации табличного просмотра");
+          EFPApp.ShowException(e, Res.EFPConfigurableDataView_ErrTitle_ReadConfig);
           InsideSetCurrentConfig = true; // 07.07.2017
           try
           {
@@ -591,7 +593,7 @@ namespace FreeLibSet.Forms
         }
       }
       if (base.CurrentConfig == null)
-        throw new BugException("Метод InitDefaultGridConfig() не установил свойство CurrentConfig");
+        throw new BugException("Property CurrentConfig has not been set while InitDefaultGridConfig() method called");
     }
 
     #endregion
@@ -677,7 +679,7 @@ namespace FreeLibSet.Forms
 
       if (!HasFilters)
       {
-        EFPApp.ErrorMessageBox("Табличный просмотр не содержит фильтров");
+        EFPApp.ErrorMessageBox(Res.EFPConfigurableDataView_Err_NoFilters);
         return false;
       }
 
@@ -886,7 +888,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка восстановления режима выделения целой строки / столбца");
+        LogoutTools.LogoutException(e);
       }
     }
 
@@ -919,7 +921,7 @@ namespace FreeLibSet.Forms
       #region Настройка просмотра
 
       ciEditConfig = new EFPCommandItem("View", "GridConfig");
-      ciEditConfig.MenuText = "Настройка просмотра";
+      ciEditConfig.MenuText = Res.Cmd_Menu_View_GridConfig;
       ciEditConfig.ImageKey = "EditGridConfig";
       ciEditConfig.Click += new EventHandler(ciEditConfig_Click);
       // пусть будет везде ciEditConfig.Usage = EFPCommandItemUsage.Menu;
@@ -930,7 +932,7 @@ namespace FreeLibSet.Forms
       #region Фильтр
 
       _MenuFilter = new EFPCommandItem("View", "MenuFilter");
-      _MenuFilter.MenuText = "&Фильтр";
+      _MenuFilter.MenuText = Res.Cmd_Menu_Filter;
       _MenuFilter.ImageKey = "Filter";
       _MenuFilter.Usage = EFPCommandItemUsage.Menu;
       Add(_MenuFilter);
@@ -939,18 +941,18 @@ namespace FreeLibSet.Forms
       //  ciSetFilter = new EFPCommandItem(AccDepMainMenu.Filter);
       //else
       //{
-      ciSetFilter = new EFPCommandItem("View", "Filter");
+      ciSetFilter = new EFPCommandItem("View", "SetFilter");
       ciSetFilter.ShortCut = Keys.F7;
       ciSetFilter.ImageKey = "Filter";
       //}
       ciSetFilter.Parent = _MenuFilter;
-      ciSetFilter.MenuText = "Установить фильтр";
+      ciSetFilter.MenuText = Res.Cmd_Menu_Filter_SetFilter;
       ciSetFilter.Click += new EventHandler(ciSetFilter_Click);
       Add(ciSetFilter);
 
       ciScrollFilterPrev = new EFPCommandItem("View", "PrevDateFilter");
       ciScrollFilterPrev.Parent = _MenuFilter;
-      ciScrollFilterPrev.MenuText = "Предыдущий период времени";
+      ciScrollFilterPrev.MenuText = Res.Cmd_Menu_Filter_PrevDateFilter;
       ciScrollFilterPrev.ShortCut = Keys.Alt | Keys.Up;
       ciScrollFilterPrev.ImageKey = "ArrowUp";
       ciScrollFilterPrev.GroupBegin = true;
@@ -960,7 +962,7 @@ namespace FreeLibSet.Forms
 
       ciScrollFilterNext = new EFPCommandItem("View", "NextDateFilter");
       ciScrollFilterNext.Parent = _MenuFilter;
-      ciScrollFilterNext.MenuText = "Следующий период времени";
+      ciScrollFilterNext.MenuText = Res.Cmd_Menu_Filter_NextDateFilter;
       ciScrollFilterNext.ShortCut = Keys.Alt | Keys.Down;
       ciScrollFilterNext.ImageKey = "ArrowDown";
       ciScrollFilterNext.GroupEnd = true;
@@ -1098,15 +1100,15 @@ namespace FreeLibSet.Forms
       {
         ciScrollFilterPrev.Enabled = sf.CanScrollUp && CanEditFilters;
         ciScrollFilterNext.Enabled = sf.CanScrollDown && CanEditFilters;
-        ciScrollFilterPrev.ToolTipText = ciScrollFilterPrev.MenuText + " для фильтра \"" + ((IEFPGridFilter)sf).DisplayName + "\"";
-        ciScrollFilterNext.ToolTipText = ciScrollFilterNext.MenuText + " для фильтра \"" + ((IEFPGridFilter)sf).DisplayName + "\"";
+        ciScrollFilterPrev.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForFilter, ciScrollFilterPrev.MenuText, ((IEFPGridFilter)sf).DisplayName);
+        ciScrollFilterNext.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForFilter, ciScrollFilterNext.MenuText, ((IEFPGridFilter)sf).DisplayName);
       }
       else
       {
         ciScrollFilterPrev.Enabled = false;
         ciScrollFilterNext.Enabled = false;
-        ciScrollFilterPrev.ToolTipText = ciScrollFilterPrev.MenuText + " (нет активного фильтра)";
-        ciScrollFilterNext.ToolTipText = ciScrollFilterNext.MenuText + " (нет активного фильтра)";
+        ciScrollFilterPrev.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForNoActiveFilter, ciScrollFilterPrev.MenuText);
+        ciScrollFilterNext.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForNoActiveFilter, ciScrollFilterNext.MenuText);
       }
     }
 
@@ -1156,7 +1158,7 @@ namespace FreeLibSet.Forms
         return;
       if (!(forward ? ActiveScrollableFilter.CanScrollDown : ActiveScrollableFilter.CanScrollUp))
       {
-        EFPApp.MessageBox("Прокрутка фильтра \"" + ((IEFPGridFilter)ActiveScrollableFilter).DisplayName + "\" невозможна");
+        EFPApp.MessageBox(String.Format(Res.EFPConfigurableDataView_Err_ScrollFilter, ((IEFPGridFilter)ActiveScrollableFilter).DisplayName));
         return;
       }
 

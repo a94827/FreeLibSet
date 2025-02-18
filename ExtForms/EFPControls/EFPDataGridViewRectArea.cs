@@ -70,7 +70,8 @@ namespace FreeLibSet.Forms
       _RowIndices = rowIndices;
       _ColumnIndices = columnIndices;
 
-      InitAuxProps();
+      _Rows = new RowCollection(this);
+      _Columns = new ColumnCollection(this);
     }
 
     ///// <summary>
@@ -103,9 +104,11 @@ namespace FreeLibSet.Forms
           InitVisible();
           break;
         default:
-          throw new ArgumentException("Неизвестный режим: " + rangeMode.ToString(), "rangeMode");
+          throw ExceptionFactory.ArgUnknownValue("rangeMode", rangeMode);
       }
-      InitAuxProps();
+
+      _Rows = new RowCollection(this);
+      _Columns = new ColumnCollection(this);
     }
 
     private void InitSelected()
@@ -248,12 +251,6 @@ namespace FreeLibSet.Forms
       return 0;
     }
 
-    private void InitAuxProps()
-    {
-      _Rows = new RowCollection(this);
-      _Columns = new ColumnCollection(this);
-    }
-
     #endregion
 
     #region Основные свойства
@@ -303,7 +300,7 @@ namespace FreeLibSet.Forms
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      return "Строк: " + RowCount.ToString() + ", столбцов: " + ColumnCount.ToString();
+      return "RowCount=" + RowCount.ToString() + ", ColumnCount=" + ColumnCount.ToString();
     }
 
     #endregion
@@ -326,7 +323,7 @@ namespace FreeLibSet.Forms
 
       #region Свойства
 
-      private EFPDataGridViewRectArea _Owner;
+      private readonly EFPDataGridViewRectArea _Owner;
 
       /// <summary>
       /// Возвращает количество строк в выборке
@@ -384,7 +381,7 @@ namespace FreeLibSet.Forms
 
       #region Поля
 
-      private EFPDataGridViewRectArea _Owner;
+      private readonly EFPDataGridViewRectArea _Owner;
 
       private int _CurrentIndex;
 
@@ -424,7 +421,7 @@ namespace FreeLibSet.Forms
     /// Коллекция строк, входящих в выборку
     /// </summary>
     public RowCollection Rows { get { return _Rows; } }
-    private RowCollection _Rows;
+    private readonly RowCollection _Rows;
 
     /// <summary>
     /// Коллекция для реализация свойства <see cref="Columns"/>.
@@ -442,7 +439,7 @@ namespace FreeLibSet.Forms
 
       #region Свойства
 
-      private EFPDataGridViewRectArea _Owner;
+      private readonly EFPDataGridViewRectArea _Owner;
 
       /// <summary>
       /// Возвращает количество столбцов в выборке
@@ -500,7 +497,7 @@ namespace FreeLibSet.Forms
 
       #region Поля
 
-      private EFPDataGridViewRectArea _Owner;
+      private readonly EFPDataGridViewRectArea _Owner;
 
       private int _CurrentIndex;
 
@@ -540,7 +537,7 @@ namespace FreeLibSet.Forms
     /// Коллекция столбцов, входящих в выборку
     /// </summary>
     public ColumnCollection Columns { get { return _Columns; } }
-    private ColumnCollection _Columns;
+    private readonly ColumnCollection _Columns;
 
     /// <summary>
     /// Доступ к ячейке таблицы

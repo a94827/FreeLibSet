@@ -348,7 +348,7 @@ namespace FreeLibSet.Forms.Docs
       {
         // Не стоит вызывать EFPApp.ShowException(), чтобы не провоцировать 
         // повторную активацию
-        LogoutTools.LogoutException(e, "DocTableViewForm.OnActivated()");
+        LogoutTools.LogoutException(e);
       }
     }
 

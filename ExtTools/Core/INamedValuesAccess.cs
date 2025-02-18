@@ -141,7 +141,7 @@ namespace FreeLibSet.Data
         if (value != null)
         {
           if (!Object.ReferenceEquals(value.Table, _Table))
-            throw new ArgumentException("Строка относится к другой таблице");
+            throw ExceptionFactory.ArgDataRowNotInSameTable("value", value, _Table);
         }
         _CurrentRow = value;
       }
@@ -188,12 +188,12 @@ namespace FreeLibSet.Data
       if (p < 0)
       {
         if (String.IsNullOrEmpty(name))
-          throw new ArgumentNullException("name");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
         else
-          throw new ArgumentException("Таблица " + _Table.TableName + " не содержит столбца \"" + name + "\"", "name");
+          throw ExceptionFactory.ArgUnknownColumnName("name", _Table, name);
       }
       if (_CurrentRow == null)
-        throw new NullReferenceException("Свойство CurrentRow не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CurrentRow");
       return _CurrentRow[p];
     }
 
@@ -311,15 +311,15 @@ namespace FreeLibSet.Data
     public object GetValue(string name)
     {
       if (_CurrentRow == null)
-        throw new NullReferenceException("Свойство CurrentRow не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CurrentRow");
 
       int p = ColumnNameIndexer.IndexOf(name);
       if (p < 0)
       {
         if (String.IsNullOrEmpty(name))
-          throw new ArgumentNullException("name");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
         else
-          throw new ArgumentException("Таблица " + _Table.TableName + " не содержит столбца \"" + name + "\"", "name");
+          throw ExceptionFactory.ArgUnknownColumnName("name", _Table, name);
       }
       return _CurrentRow[p];
     }

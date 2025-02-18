@@ -425,7 +425,7 @@ namespace ExtTools_tests.IO
 
       Dictionary<string, string> dict = new Dictionary<string, string>();
       foreach (IniKeyValue pair in sut.GetKeyValues("сЕкЦия1"))
-        dict.Add(pair.Key, pair.Value);
+        dict.Add(pair.KeyName, pair.Value);
 
       CollectionAssert.AreEquivalent(new string[] { "Имя1", "Имя2", "Имя3" }, dict.Keys, "Keys");
       Assert.AreEqual("BBB", dict["Имя1"], "Имя1");
@@ -441,7 +441,7 @@ namespace ExtTools_tests.IO
 
       Dictionary<string, string> dict = new Dictionary<string, string>();
       foreach (IniKeyValue pair in sut.GetKeyValues("Секция1"))
-        dict.Add(pair.Key, pair.Value);
+        dict.Add(pair.KeyName, pair.Value);
 
       Assert.AreEqual(0, dict.Count);
     }

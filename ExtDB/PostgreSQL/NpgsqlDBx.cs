@@ -176,12 +176,12 @@ namespace FreeLibSet.Data.Npgsql
     /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполняемых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISimpleSplash.PhaseText"/> для отображения выполняемых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
-    protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    protected override bool OnUpdateStruct(ISimpleSplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
       using (NpgsqlDBxCon con = new NpgsqlDBxCon(MainEntry, false))
@@ -1080,7 +1080,7 @@ namespace FreeLibSet.Data.Npgsql
             e.Data["DB"] = DB.ToString();
             e.Data["Table"] = tableName;
             e.Data["Column"] = colDef.ColumnName;
-            LogoutTools.LogoutException(e, "Ошибка получения значения DBxColumnStruct.DefaultValue");
+            LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("DBxColumnStruct.DefaultValue"));
           }
         }
 
@@ -1200,7 +1200,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #region Основной метод UpdateDBStruct
 
-    internal bool UpdateDBStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    internal bool UpdateDBStruct(ISimpleSplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       bool modified = false;
 
@@ -1240,7 +1240,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #region Добавление таблиц, столбцов и первичных ключей
 
-    private bool UpdateDBStructTables(ISplash splash, ErrorMessageList errors)
+    private bool UpdateDBStructTables(ISimpleSplash splash, ErrorMessageList errors)
     {
       bool modified = false;
 
@@ -1788,7 +1788,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #region Внешние ключи
 
-    private bool UpdateDBStructForeignKeys(ISplash splash, ErrorMessageList errors)
+    private bool UpdateDBStructForeignKeys(ISimpleSplash splash, ErrorMessageList errors)
     {
       bool modified = false;
 
@@ -1868,7 +1868,7 @@ namespace FreeLibSet.Data.Npgsql
       return modified;
     }
 
-    private bool UpdateForeignKeys(DBxTableStruct table, DataView dvForeignKeys, ISplash splash, ErrorMessageList errors)
+    private bool UpdateForeignKeys(DBxTableStruct table, DataView dvForeignKeys, ISimpleSplash splash, ErrorMessageList errors)
     {
       bool modified = false;
       foreach (DBxColumnStruct column in table.Columns)
@@ -1908,7 +1908,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #region Индексы
 
-    private bool UpdateDBStructIndices(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    private bool UpdateDBStructIndices(ISimpleSplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Индексы удаляем и создаем отдельно, не пытаясь объединить это с созданием таблицы
 
@@ -2131,7 +2131,7 @@ namespace FreeLibSet.Data.Npgsql
     }
 #endif
 
-    private bool DeleteAllIndices(string tableName, ISplash splash, ErrorMessageList errors)
+    private bool DeleteAllIndices(string tableName, ISimpleSplash splash, ErrorMessageList errors)
     {
       // Перебираем все существующие индексы
       // Один индекс может занимать несколько строк

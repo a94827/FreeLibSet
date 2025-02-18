@@ -13,17 +13,13 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal abstract class InputState
   {
-    private TreeViewAdv _tree;
-
-    public TreeViewAdv Tree
-    {
-      get { return _tree; }
-    }
-
     public InputState(TreeViewAdv tree)
     {
       _tree = tree;
     }
+
+    public TreeViewAdv Tree { get { return _tree; } }
+    private readonly TreeViewAdv _tree;
 
     public abstract void KeyDown(System.Windows.Forms.KeyEventArgs args);
     public abstract void MouseDown(TreeNodeAdvMouseEventArgs args);

@@ -360,7 +360,7 @@ namespace FreeLibSet.Reporting
       if (report == null)
         throw new ArgumentNullException("report");
       if (filePath.IsEmpty)
-        throw new ArgumentException("Не задан путь к файлу");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
       FreeLibSet.IO.FileTools.ForceDirs(filePath.ParentDir);
       DoCreateFile(report, filePath);
     }

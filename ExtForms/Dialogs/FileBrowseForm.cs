@@ -196,7 +196,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public HistFolderBrowserDialog()
     {
-      Title = "Выбор папки";
+      Title = Res.HistFolderBrowserDialog_Title_Form;
       ImageKey = "Open";
     }
 
@@ -320,8 +320,8 @@ namespace FreeLibSet.Forms
       {
         _TheForm.Text = Title;
         _TheForm.Icon = EFPApp.MainImages.Icons[ImageKey];
-        _TheForm.grpMain.Text = "Каталог";
-        _TheForm.TextLabel.Text = "Путь";
+        _TheForm.grpMain.Text = Res.HistFolderBrowserDialog_Prompt_MainGroup;
+        _TheForm.TextLabel.Text = Res.HistFolderBrowserDialog_Prompt_Path;
         _TheForm.lblDescription.Text = Description;
 
         _TheForm.efpMainCB = new EFPHistComboBox(_TheForm.FormProvider, _TheForm.MainCB);
@@ -330,9 +330,7 @@ namespace FreeLibSet.Forms
         _TheForm.efpMainCB.HistList = HistList;
         if (!String.IsNullOrEmpty(DefaultPath))
           _TheForm.efpMainCB.DefaultItems = new string[1] { DefaultPath };
-        _TheForm.efpMainCB.ToolTipText = "Поле ввода каталога." + Environment.NewLine +
-          "Чтобы выбрать ранее использованный путь, используйте выпадающий список." + Environment.NewLine +
-          "Чтобы выбрать каталог с помощью стандартного диалога, нажмите кнопку \"Обзор\"";
+        _TheForm.efpMainCB.ToolTipText = Res.HistFolderBrowserDialog_ToolTip_MainCB;
 
         EFPFolderBrowserButton efpBrowse = new EFPFolderBrowserButton(_TheForm.efpMainCB, _TheForm.btnBrowse);
         efpBrowse.ShowNewFolderButton = (Mode == FileDialogMode.Write);
@@ -343,7 +341,7 @@ namespace FreeLibSet.Forms
         {
           _TheForm.PanelSubFolders.Visible = true;
           _TheForm.efpSubFolders = new EFPCheckBox(_TheForm.FormProvider, _TheForm.cbSubFolders);
-          _TheForm.efpSubFolders.ToolTipText = "Если флажок установлен, то будут просмотрены также все вложенные каталоги";
+          _TheForm.efpSubFolders.ToolTipText = Res.HistFolderBrowserDialog_ToolTip_SubFolders;
           _TheForm.efpSubFolders.Checked = SubFolders;
         }
 
@@ -397,7 +395,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowTempMessage("Не удалось создать каталог. " + e.Message);
+          EFPApp.ShowTempMessage(String.Format(Res.HistFolderBrowserDialog_Err_CreateDir, e.Message));
           _TheForm.DialogResult = DialogResult.Cancel;
           args.Cancel = true;
         }
@@ -430,7 +428,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public HistFileBrowserDialog()
     {
-      Title = "Выбор файла";
+      Title = Res.HistFileBrowserDialog_Title_Form;
       ImageKey = "Open";
     }
 
@@ -552,8 +550,8 @@ namespace FreeLibSet.Forms
       {
         _TheForm.Text = Title;
         _TheForm.Icon = EFPApp.MainImages.Icons[ImageKey];
-        _TheForm.grpMain.Text = "Файл";
-        _TheForm.TextLabel.Text = "Путь к файлу";
+        _TheForm.grpMain.Text = Res.HistFolderBrowserDialog_Prompt_MainGroup;
+        _TheForm.TextLabel.Text = Res.HistFolderBrowserDialog_Prompt_Path;
         _TheForm.lblDescription.Text = Description;
 
         _TheForm.efpMainCB = new EFPHistComboBox(_TheForm.FormProvider, _TheForm.MainCB);
@@ -562,12 +560,9 @@ namespace FreeLibSet.Forms
         _TheForm.efpMainCB.HistList = HistList;
         if (!String.IsNullOrEmpty(DefaultFileName))
           _TheForm.efpMainCB.DefaultItems = new string[1] { DefaultFileName };
-        _TheForm.efpMainCB.ToolTipText = "Поле ввода пути к файлу." + Environment.NewLine +
-          "Чтобы выбрать ранее использованный путь, используйте выпадающий список." + Environment.NewLine +
-          "Чтобы выбрать файл с помощью стандартного диалога Windows, нажмите кнопку \"Обзор\"";
+        _TheForm.efpMainCB.ToolTipText = Res.HistFileBrowserDialog_ToolTip_MainCB;
 
         EFPFileDialogButton efpBrowse = new EFPFileDialogButton(_TheForm.efpMainCB, _TheForm.btnBrowse);
-        efpBrowse.Title = "Выбор файла";
         efpBrowse.Filter = Filter;
         efpBrowse.Mode = Mode;
         efpBrowse.PathValidateMode = PathValidateMode;
@@ -582,8 +577,8 @@ namespace FreeLibSet.Forms
         {
           if (Mode == FileDialogMode.Write && File.Exists(_TheForm.efpMainCB.Text))
           {
-            if (EFPApp.MessageBox("Файл \"" + _TheForm.efpMainCB.Text + "\" уже существует. Перезаписать его?",
-              "Подтверждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+            if (EFPApp.MessageBox(Res.HistFileBrowserDialog_Msg_Overwrite,
+              Res.HistFileBrowserDialog_Title_Overwrite, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
               return DialogResult.Cancel;
             FileTools.ForceDirs(new AbsPath(_TheForm.efpMainCB.Text).ParentDir);
 

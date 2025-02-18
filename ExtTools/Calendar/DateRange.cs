@@ -47,7 +47,7 @@ namespace FreeLibSet.Calendar
       _FirstDate = firstDate.Date;
       _LastDate = lastDate.Date;
       if (_FirstDate > _LastDate)
-        throw new ArgumentException("Начальная дата (" + firstDate.ToString() + ") больше конечной (" + lastDate.ToString() + ")", "lastDate");
+        throw ExceptionFactory.ArgRangeInverted("firstDate", firstDate, "lastDate", lastDate);
       _Tag = tag;
     }
 
@@ -149,21 +149,21 @@ namespace FreeLibSet.Calendar
     /// Начальная дата
     /// </summary>
     public DateTime FirstDate { get { return _FirstDate; } }
-    private DateTime _FirstDate;
+    private readonly DateTime _FirstDate;
 
     /// <summary>
     /// Конечная дата
     /// </summary>
     public DateTime LastDate { get { return _LastDate; } }
-    private DateTime _LastDate;
+    private readonly DateTime _LastDate;
 
     /// <summary>
-    /// Произвольные пользовательские данные
+    /// Произвольные пользовательские данные.
     /// При манипуляциях со списком интервалов поле копируется и может использоваться
-    /// для определения интервалов различных типов
+    /// для определения интервалов различных типов.
     /// </summary>
     public object Tag { get { return _Tag; } }
-    private object _Tag;
+    private readonly object _Tag;
 
     /// <summary>
     /// Число дней в интервале
@@ -347,7 +347,7 @@ namespace FreeLibSet.Calendar
     private void CheckIsNotEmpty()
     {
       if (IsEmpty)
-        throw new InvalidOperationException("DateRange is empty");
+        throw ExceptionFactory.StructureNotInit(typeof(DateRange));
     }
 
     /// <summary>
@@ -401,7 +401,8 @@ namespace FreeLibSet.Calendar
     }
 
     /// <summary>
-    /// Попадает ли заданная дата в интервал
+    /// Попадает ли заданная дата в интервал.
+    /// Если <see cref="IsEmpty"/>=true, то возвращается false.
     /// </summary>
     /// <param name="date">Проверяемая дата</param>
     /// <returns>true, если дата попадает в диапазон</returns>
@@ -664,8 +665,7 @@ namespace FreeLibSet.Calendar
     {
       DateRange r = GetCross(r1, r2);
       if (r.IsEmpty)
-        throw new InvalidOperationException("Интервалы " + r1.ToString() + " и " + r2.ToString() +
-          " не пересекаются");
+        throw new InvalidOperationException(String.Format(Res.DateRange_Err_RangesNotCrossed, r1.ToString(), r2.ToString()));
       return r;
     }
 
@@ -1042,7 +1042,7 @@ namespace FreeLibSet.Calendar
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException("Список интервалов дат предназначен только для чтения");
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -1083,8 +1083,9 @@ namespace FreeLibSet.Calendar
       if (_List.Count > 0)
       {
         if (_List[_List.Count - 1].LastDate >= range.FirstDate)
-          throw new ArgumentException("Добавляемый интервал " + range.ToString() +
-            " пересекается с последним добавленным " + _List[_List.Count - 1].ToString(), "range");
+          throw new ArgumentException(String.Format(Res.DateRangeList_Arg_AppendCrossed, 
+            range.ToString(), _List[_List.Count - 1].ToString()), 
+            "range");
       }
       _List.Add(range);
     }

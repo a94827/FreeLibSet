@@ -9,6 +9,7 @@ using FreeLibSet.Shell;
 using System.Drawing;
 using System.ComponentModel;
 using FreeLibSet.Logging;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -39,7 +40,7 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(fileExt))
         throw new ArgumentNullException("fileExt");
       if (fileExt[0] != '.')
-        throw new ArgumentException("Расширение должно начинаться с точки", "fileExt");
+        throw new ArgumentException(Res.EFPFileAssociationsCommandItemsHandler_Arg_MustStartWithDot, "fileExt");
       _FileExt = fileExt;
 
       #region Добавление команд
@@ -57,7 +58,7 @@ namespace FreeLibSet.Forms
         if (faItems.FirstItem != null)
         {
           EFPCommandItem ci = CreateCommandItem(faItems.FirstItem);
-          ci.MenuText = "Открыть";
+          ci.MenuText = Res.Cmd_Menu_File_FAOpen;
           ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBar;
           if (!ci.HasImage)
             ci.ImageKey = "UnknownState";
@@ -67,16 +68,16 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          EFPCommandItem ci = new EFPCommandItem("File", "OpenNowhere");
-          ci.MenuText = "Открыть";
+          EFPCommandItem ci = new EFPCommandItem("File", "FAOpenNone");
+          ci.MenuText = Res.Cmd_Menu_File_FAOpen;
           if (faItems.Exception == null)
           {
-            ci.ToolTipText = "Нет приложения, которое может открывать файлы с расширением \"" + fileExt + "\"";
+            ci.ToolTipText = String.Format(Res.Cmd_ToolTip_File_FAOpen_None, fileExt);
             ci.ImageKey = "UnknownState";
           }
           else
           {
-            ci.ToolTipText = "Возникла ошибка при получении файловых ассоциаций. " + faItems.Exception.Message;
+            ci.ToolTipText = String.Format(Res.Cmd_ToolTip_File_FAOpen_Error, faItems.Exception.Message);
             ci.ImageKey = "Error";
           }
           ci.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBar;
@@ -85,8 +86,8 @@ namespace FreeLibSet.Forms
           _AllCommands.Add(ci);
         }
 
-        EFPCommandItem smOpenWith = new EFPCommandItem("File", "OpenWith");
-        smOpenWith.MenuText = "Открыть с помощью";
+        EFPCommandItem smOpenWith = new EFPCommandItem("File", "FAOpenWith");
+        smOpenWith.MenuText = Res.Cmd_Menu_File_FAOpenWith;
         smOpenWith.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarDropDown;
         commandItems.Add(smOpenWith);
         _AllCommands.Add(smOpenWith);
@@ -104,9 +105,9 @@ namespace FreeLibSet.Forms
         }
         else if (faItems.Exception == null)
         {
-          EFPCommandItem ci = new EFPCommandItem("File", "OpenWithNone");
+          EFPCommandItem ci = new EFPCommandItem("File", "FAOpenWithNone");
           ci.Parent = smOpenWith;
-          ci.MenuText = "[ Нет приложения ]";
+          ci.MenuText = Res.Cmd_Menu_File_FAOpenWith_None;
           ci.ImageKey = "UnknownState";
           ci.Usage = EFPCommandItemUsage.Menu; // в панели инструментов не надо
           ci.Enabled = false;
@@ -117,7 +118,7 @@ namespace FreeLibSet.Forms
         {
           EFPCommandItem ci = new EFPCommandItem("File", "OpenWithError");
           ci.Parent = smOpenWith;
-          ci.MenuText = "[ Ошибка ]";
+          ci.MenuText = Res.Cmd_Menu_File_FAOpenWith_Error;
           ci.ImageKey = "Error";
           ci.Usage = EFPCommandItemUsage.Menu; // в панели инструментов не надо
           ci.Enabled = true;
@@ -134,13 +135,12 @@ namespace FreeLibSet.Forms
 
         // Исключение показываем один раз, дальше только выводим в log-файл
 
-        string title = "Ошибка инициализации EFPFileAssociationsCommandItemsHandler";
         if (_ExceptionShown)
-          LogoutTools.LogoutException(e, title);
+          LogoutTools.LogoutException(e, Res.EFPFileAssociationsCommandItemsHandler_ErrTitle_Init);
         else
         {
           _ExceptionShown = false;
-          EFPApp.ShowException(e, title);
+          EFPApp.ShowException(e, Res.EFPFileAssociationsCommandItemsHandler_ErrTitle_Init);
         }
       }
 
@@ -202,9 +202,9 @@ namespace FreeLibSet.Forms
           return false;
       }
       if (FilePath.IsEmpty)
-        throw new NullReferenceException("Свойство FilePath не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "FilePath");
       if (!System.IO.File.Exists(FilePath.Path))
-        throw new System.IO.FileNotFoundException("Файл не существует", FilePath.Path);
+        throw ExceptionFactory.FileNotFound(FilePath);
 
       return true;
     }
@@ -220,7 +220,7 @@ namespace FreeLibSet.Forms
 
     private EFPCommandItem CreateCommandItem(FileAssociationItem fa)
     {
-      EFPCommandItem ci = new EFPCommandItem("File", "Open" + Guid.NewGuid().ToString());
+      EFPCommandItem ci = new EFPCommandItem("File", "FAOpen" + Guid.NewGuid().ToString());
       ci.MenuText = fa.DisplayName;
       ci.Tag = fa;
       ci.Click += OpenFile_Click;
@@ -229,7 +229,7 @@ namespace FreeLibSet.Forms
       if (ci.Image == null)
         ci.ImageKey = "EmptyImage"; // иначе не будет кнопки на панели инструментов
 
-      ci.ToolTipText = "Открыть файл с помощью приложения " + fa.DisplayName + " (" + fa.ProgramPath.FileName + ")";
+      ci.ToolTipText = String.Format(Res.Cmd_ToolTip_File_FAOpen, fa.DisplayName, fa.ProgramPath.FileName);
 
       return ci;
     }
@@ -256,8 +256,9 @@ namespace FreeLibSet.Forms
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
       Exception ex = (Exception)(ci.Tag);
-      EFPApp.ExceptionMessageBox("Не удалось получить файловые ассоциации для расширения \"" + this.FileExt + "\"", ex,
-        "Открыть с помощью");
+      EFPApp.ExceptionMessageBox(String.Format(Res.EFPFileAssociationsCommandItemsHandler_Err_ForFileExt, FileExt), 
+        ex,
+        EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_File_FAOpenWith));
     }
 
     /// <summary>

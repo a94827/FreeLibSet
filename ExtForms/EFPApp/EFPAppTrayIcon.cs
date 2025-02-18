@@ -53,7 +53,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e)
           {
-            LogoutTools.LogoutException(e, "Ошибка удаления NotifyIcon");
+            LogoutTools.LogoutException(e, Res.TrayIcon_ErrTitle_RemoveNotifyIcon);
           }
         }
         _NotifyIcons = null;
@@ -118,7 +118,7 @@ namespace FreeLibSet.Forms
     /// Список может заполняться только до показа значка.
     /// </summary>
     public EFPCommandItems CommandItems { get { return _CommandItems; } }
-    private EFPCommandItems _CommandItems;
+    private readonly EFPCommandItems _CommandItems;
 
     /// <summary>
     /// Команда, вызываемая при двойном щелчке мыши на значке.

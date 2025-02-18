@@ -703,7 +703,7 @@ namespace FreeLibSet.Forms.Docs
 
       void ciCopyDocSel_Click(object sender, EventArgs args)
       {
-        EFPApp.Clipboard.SetDataObject(Editor.DocSel, true);
+        new EFPClipboard().SetDataObject(Editor.DocSel, true);
       }
 
       #endregion

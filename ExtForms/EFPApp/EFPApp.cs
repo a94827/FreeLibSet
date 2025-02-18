@@ -20,7 +20,6 @@ using FreeLibSet.Logging;
 using FreeLibSet.Remoting;
 using System.Runtime.InteropServices;
 using FreeLibSet.Config;
-using System.Data;
 using System.Reflection;
 using FreeLibSet.Core;
 using FreeLibSet.Shell;
@@ -28,6 +27,7 @@ using FreeLibSet.Forms.Diagnostics;
 using FreeLibSet.Controls;
 using FreeLibSet.Drawing;
 using FreeLibSet.UICore;
+using System.Runtime.CompilerServices;
 
 namespace FreeLibSet.Forms
 {
@@ -101,7 +101,7 @@ namespace FreeLibSet.Forms
       _Exception = exception;
 
       if (String.IsNullOrEmpty(title))
-        _Title = "Ошибка";
+        _Title = LogoutTools.GetDefaultTitle();
       else
         _Title = title;
     }
@@ -160,7 +160,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (_MainThread != null)
-        throw new BugException("Повторный вызова InitApp()");
+        throw ExceptionFactory.RepeatedCall(typeof(EFPApp), "InitApp()");
 #endif
       _MainThread = Thread.CurrentThread;
 
@@ -177,7 +177,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Не удалось установить обработчик системных событий");
+        EFPApp.ShowException(e, "Microsoft.Win32.SystemEvents.UserPreferenceChanged");
       }
 
       // SplashTools.PushThreadSplashStack(new SplashStack()); // 19.10.2020. Отменено 24.10.2020
@@ -196,11 +196,10 @@ namespace FreeLibSet.Forms
     public static void CheckMainThread()
     {
       if (_MainThread == null)
-        throw new InvalidOperationException("Не было вызова EFPApp.InitApp()");
+        throw new InvalidOperationException(Res.EFPApp_Err_NoInitAppCalled);
       if (Thread.CurrentThread != _MainThread)
-        throw new DifferentThreadException("Вызов не из основного потока приложения");
+        throw new DifferentThreadException(Res.EFPApp_Err_NotMainThread);
     }
-
 
     /// <summary>
     /// Возвращает поток, из которого был вызван <see cref="EFPApp.InitApp()"/>.
@@ -322,7 +321,7 @@ namespace FreeLibSet.Forms
       catch (Exception e) // 11.01.2019
       {
         args.Cancel = true;
-        EFPApp.ShowException(e, "Ошибка вызова EFPApp.OnClosing2");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -447,7 +446,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Вызов обработчика события EFPApp.Closed");
+        EFPApp.ShowException(e);
       }
 
       Microsoft.Win32.SystemEvents.UserPreferenceChanged -= new Microsoft.Win32.UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
@@ -924,11 +923,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    /// <summary>
-    /// Расширенные методы работы с буфером обмена
-    /// </summary>
-    public static EFPAppClipboard Clipboard { get { return _Clipboard; } }
-    private static readonly EFPAppClipboard _Clipboard = new EFPAppClipboard();
+    ///// <summary>
+    ///// Расширенные методы работы с буфером обмена
+    ///// </summary>
+    //public static EFPAppClipboard Clipboard { get { return _Clipboard; } }
+    //private static readonly EFPAppClipboard _Clipboard = new EFPAppClipboard();
 
     /// <summary>
     /// Набор виртуальных методов для системных вызовов.
@@ -936,13 +935,13 @@ namespace FreeLibSet.Forms
     /// который реализует методы по-своему. 
     /// </summary>
     public static EFPAppSystemMethods SystemMethods
-    { 
+    {
       get { return _SystemMethods; }
-      set 
+      set
       {
-        if (value == null)  
-         throw new ArgumentNullException();
-        _SystemMethods = value; 
+        if (value == null)
+          throw new ArgumentNullException();
+        _SystemMethods = value;
       }
     }
     private static EFPAppSystemMethods _SystemMethods = new EFPAppSystemMethods();
@@ -1121,7 +1120,7 @@ namespace FreeLibSet.Forms
         CheckMainThread();
 #endif
         if (InsideInterfaceAssignation)
-          throw new InvalidOperationException("Вложенная установка свойства EFPApp.Interface");
+          throw new ReenteranceException();
 
         if (Object.ReferenceEquals(_Interface, value))
           return;
@@ -1193,7 +1192,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (AvailableInterfaces == null)
-          throw new NullReferenceException("Свойство AvailableInterfaces не установлено");
+          throw ExceptionFactory.ObjectPropertyNotSet(typeof(EFPApp), "AvailableInterfaces");
         if (String.IsNullOrEmpty(value))
           Interface = null;
         else
@@ -1206,7 +1205,7 @@ namespace FreeLibSet.Forms
               return;
             }
           }
-          throw new ArgumentException("Неизвестный интерфейс с кодом \"" + value + "\"");
+          throw ExceptionFactory.ArgUnknownValue("value", value);
         }
       }
     }
@@ -1243,7 +1242,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось создать окно класса \"" + sdiFormType.ToString() + "\" для интерфейса SDI. Будет создано пустое окно");
+          EFPApp.ShowException(e, String.Format(Res.EFPApp_ErrTitle_CreateSDIForm, sdiFormType.ToString()));
         }
       }
 
@@ -1284,7 +1283,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось создать окно для интерфейса SDI. Будет создано пустое окно");
+          EFPApp.ShowException(e, String.Format(Res.EFPApp_ErrTitle_CreateSDIForm, sdiFormCreator.ToString()));
         }
       }
 
@@ -1319,7 +1318,7 @@ namespace FreeLibSet.Forms
     private static void DoSetInterface(string name)
     {
       if (EFPApp.AvailableInterfaces == null)
-        throw new NullReferenceException("Свойство EFPApp.AvailableInterfaces не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(typeof(EFPApp), "AvailableInterfaces");
 
       if (String.IsNullOrEmpty(name))
         name = EFPApp.AvailableInterfaces[0].Name;
@@ -1338,7 +1337,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось сохранить существующую композицию окон");
+          EFPApp.ShowException(e, Res.EFPApp_ErrTitle_SaveComposition);
           tempCfg = null;
         }
       }
@@ -1350,8 +1349,8 @@ namespace FreeLibSet.Forms
       }
       catch (ArgumentException)
       {
-        EFPApp.ErrorMessageBox("Запрошена установка неизвестного интерфейса пользователя \"" + name +
-          "\". Будет использован интерфейс \"" + AvailableInterfaces[0].Name + "\"");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPApp_Err_SetUnknownInterface,
+          name, AvailableInterfaces[0].Name));
         Interface = AvailableInterfaces[0];
       }
       if (tempCfg != null)
@@ -1362,7 +1361,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось восстановить композицию окон");
+          EFPApp.ShowException(e, Res.EFPApp_ErrTitle_LoadComposition);
         }
       }
     }
@@ -1405,7 +1404,7 @@ namespace FreeLibSet.Forms
       _UpdateInterfaceCount--;
 #if DEBUG
       if (_UpdateInterfaceCount < 0)
-        throw new InvalidOperationException("Лишний вызов EFPApp.EndUpdateInterface()");
+        throw ExceptionFactory.UnpairedCall(typeof(EFPApp), "BeginUpdateInterface()", "EndUpdateInterface()");
 #endif
       TestInterfaceChanged();
     }
@@ -1458,11 +1457,11 @@ namespace FreeLibSet.Forms
         CheckMainThread();
 #endif
         if (MainWindow != null)
-          throw new InvalidOperationException("Главное окно уже выведено");
+          throw new InvalidOperationException(Res.EFPApp_Err_MainWindowShown);
         if (value != null)
         {
           if (value.Length == 0)
-            throw new ArgumentException("Список пустой");
+            throw ExceptionFactory.ArgIsEmpty("value");
           for (int i = 0; i < value.Length; i++)
           {
             if (value[i] == null)
@@ -1543,7 +1542,7 @@ namespace FreeLibSet.Forms
 #endif
 
       if (InsideLoadComposition || InsideSaveComposition)
-        throw new ReenteranceException("Вложенный вызов LoadComposition");
+        throw new ReenteranceException();
 
       InsideLoadComposition = true;
       try
@@ -1568,13 +1567,13 @@ namespace FreeLibSet.Forms
               EFPApp.Interface = AvailableInterfaces[p];
             else
             {
-              EFPApp.WarningMessageBox("Интерфейс типа \"" + interfaceType + "\" недоступен. Будет использован интерфейс \"" + AvailableInterfaces[0].Name + "\"", "Восстановление интерфейса");
+              EFPApp.WarningMessageBox(String.Format(Res.EFPApp_Err_SetUnknownInterface, interfaceType, AvailableInterfaces[0].Name), Res.EFPApp_Title_LoadComposition);
               EFPApp.Interface = AvailableInterfaces[0];
             }
           }
         }
         else if (Interface == null)
-          throw new NullReferenceException("Не установлен список доступных интерфейсов EFPApp.AvailableInterfaces и текущий интерфейс EFPApp.Interface также не задан");
+          throw ExceptionFactory.ObjectPropertyNotSet(typeof(EFPApp), "AvailableInterfaces");
       }
       finally
       {
@@ -1752,7 +1751,7 @@ namespace FreeLibSet.Forms
 
       #endregion
 
-      throw new InvalidCastException("Класс " + t.ToString() + " не является производным от Form и не поддерживает интерфейс IEFPFormCreator");
+      throw new InvalidCastException(String.Format(Res.EFPApp_Err_CreatorClassType, t.ToString()));
     }
 
 
@@ -1772,7 +1771,7 @@ namespace FreeLibSet.Forms
         CheckMainThread();
 #endif
         if (value < 0)
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == _CompositionHistoryCount)
           return;
@@ -1826,10 +1825,10 @@ namespace FreeLibSet.Forms
     public static void SaveMainWindowLayout()
     {
       if (EFPApp.Interface == null)
-        throw new NullReferenceException("Свойство Interface не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(typeof(EFPApp), "Interface");
 
       if (ConfigManager == null)
-        throw new NullReferenceException("Свойство ConfigManager не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(typeof(EFPApp), "ConfigManager");
 
       EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(MainWindowConfigSectionName,
         EFPConfigCategories.MainWindow, String.Empty);
@@ -1850,10 +1849,10 @@ namespace FreeLibSet.Forms
     public static void LoadMainWindowLayout()
     {
       if (EFPApp.Interface == null)
-        throw new NullReferenceException("Свойство Interface не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(typeof(EFPApp), "Interface");
 
       if (ConfigManager == null)
-        throw new NullReferenceException("Свойство ConfigManager не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(typeof(EFPApp), "ConfigManager");
 
       EFPConfigSectionInfo configInfo = new EFPConfigSectionInfo(MainWindowConfigSectionName,
         EFPConfigCategories.MainWindow, String.Empty);
@@ -2016,7 +2015,7 @@ namespace FreeLibSet.Forms
 #if DEBUG
         CheckMainThread();
         if (MainWindow != null)
-          throw new InvalidOperationException("Главное окно уже выведено");
+          throw new InvalidOperationException(Res.EFPApp_Err_MainWindowShown);
 #endif
         _MainWindowDefaultMaximized = value;
       }
@@ -2327,65 +2326,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region InitFormImages
-
-    /// <summary>
-    /// Установка изображений для кнопок "ОК", "Отмена" в форме
-    /// </summary>
-    /// <param name="form">Форма, в которой нужно украсить кнопки</param>
-    public static void InitFormImages(Form form)
-    {
-      // 28.02.2013
-      // В процессе дизайна формы в Visual Studio картинки не инициализиоуем
-      if (!AppWasInit)
-        return;
-
-#if DEBUG
-      CheckMainThread();
-#endif
-
-      InitControlImages(form); // рекурсивная процедура
-    }
-
-    private static void InitControlImages(Control control)
-    {
-      if (control == null)
-        return;
-
-      if (control is Button)
-      {
-        string imageKey;
-        switch (((Button)control).DialogResult)
-        {
-          case DialogResult.OK: imageKey = "Ok"; break;
-          case DialogResult.Cancel:
-            // Форма может иметь единственную кнопку закрытия с
-            // DialogResult.Cancel. В этом случае рисуется значок от
-            // кнопки <OK>
-            if (control.FindForm().AcceptButton == (Button)control)
-              imageKey = "Ok";
-            else
-              imageKey = "Cancel";
-            break;
-          case DialogResult.Yes: imageKey = "Yes"; break;
-          case DialogResult.No: imageKey = "No"; break;
-          default: return;
-        }
-        ((Button)control).Image = MainImages.Images[imageKey];
-        ((Button)control).ImageAlign = ContentAlignment.MiddleLeft;
-      }
-      else
-      {
-        if (control.HasChildren)
-        {
-          foreach (Control childControl in control.Controls)
-            InitControlImages(childControl); // рекурсивная процедура
-        }
-      }
-    }
-
-    #endregion
-
     #region GetFormIconImage()
 
     /// <summary>
@@ -2525,7 +2465,7 @@ namespace FreeLibSet.Forms
       if (form.IsDisposed)
         throw new ObjectDisposedException("form");
       if (!DebugFormDispose.Exists(form))
-        throw new ArgumentException("Форма \"" + form.ToString() + "\" не была зарегистрирована в списке", "form");
+        throw new ArgumentException("Form has not been added to DebugFormDispose list", "form");
 #endif
 
       if (Interface != null)
@@ -2829,7 +2769,7 @@ namespace FreeLibSet.Forms
       if (form.IsDisposed)
         throw new ObjectDisposedException("form");
       if (!DebugFormDispose.Exists(form))
-        throw new ArgumentException("Форма \"" + form.ToString() + "\" не была зарегистрирована в списке", "form");
+        throw new ArgumentException("Form has not been added to DebugFormDispose list", "form");
 #endif
 
       if (ExternalDialogOwnerWindow == null)
@@ -2878,7 +2818,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка определения позиции блока диалога");
+        EFPApp.ShowException(e, Res.EFPApp_ErrTitle_DialogPosition);
       }
 
       IWin32Window currDialogOwnerWindow = EFPApp.DialogOwnerWindow; // запоминаем до очистки ExternalDialogOwnerWindow
@@ -2906,7 +2846,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Выключение tool forms"); // без вывода диалога
+        LogoutTools.LogoutException(e, Res.EFPApp_ErrTitle_ToolFormHide); // без вывода диалога
       }
 
       // 20.08.2020
@@ -2952,7 +2892,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e) // 13.04.2018
         {
-          EFPApp.ShowException(e, "Ошибка отсоединения DialogRunner");
+          EFPApp.ShowException(e, Res.EFPApp_ErrTitle_DialogRunnerDetach);
         }
 
         // 20.08.2020
@@ -2995,7 +2935,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Включение tool forms"); // без вывода диалога
+          LogoutTools.LogoutException(e, Res.EFPApp_ErrTitle_ToolFormShow); // без вывода диалога
         }
 
         //if (ExternalDialogOwnerWindow == null)
@@ -3038,8 +2978,8 @@ namespace FreeLibSet.Forms
       {
         if (we.ErrorCode == ERROR_HANDLE)
         {
-          e.Data["EFPApp.CanRepeatShowDialogAfterError.Message"] = "Внешнее окно-владелец EFPApp.ExternalDialogOwnerWindow=" + ExternalDialogOwnerWindow.Handle.ToString() + ", возможно вызвало ошибку вывода диалога. Свойство отключено";
-          LogoutTools.LogoutException(e, "EFPApp.CanRepeatShowDialogAfterError");
+          e.Data["EFPApp.CanRepeatShowDialogAfterError.Message"] = "External owner window EFPApp.ExternalDialogOwnerWindow=" + ExternalDialogOwnerWindow.Handle.ToString() + " possible cause the error when dialog was shown. The property is turned off.";
+          LogoutTools.LogoutException(e);
 
           ExternalDialogOwnerWindow = null;
           return true;
@@ -3432,28 +3372,28 @@ namespace FreeLibSet.Forms
       switch (buttonKind)
       {
         case DialogResult.OK:
-          btn = AddButton(parentPanel, "О&К", "OK");
+          btn = AddButton(parentPanel, Res.Btn_Text_OK, "OK");
           break;
         case DialogResult.Cancel:
-          btn = AddButton(parentPanel, "Отмена", "Cancel");
+          btn = AddButton(parentPanel, Res.Btn_Text_Cancel, "Cancel");
           break;
         case DialogResult.Yes:
-          btn = AddButton(parentPanel, "&Да", "Yes");
+          btn = AddButton(parentPanel, Res.Btn_Text_Yes, "Yes");
           break;
         case DialogResult.No:
-          btn = AddButton(parentPanel, "&Нет", "No");
+          btn = AddButton(parentPanel, Res.Btn_Text_No, "No");
           break;
         case DialogResult.Abort:
-          btn = AddButton(parentPanel, "Прервать", null);
+          btn = AddButton(parentPanel, Res.Btn_Text_Abort, null);
           break;
         case DialogResult.Retry:
-          btn = AddButton(parentPanel, "Повторить", null);
+          btn = AddButton(parentPanel, Res.Btn_Text_Retry, null);
           break;
         case DialogResult.Ignore:
-          btn = AddButton(parentPanel, "Пропустить", null);
+          btn = AddButton(parentPanel, Res.Btn_Text_Ignore, null);
           break;
         default:
-          throw new ArgumentException("Неизвестная кнопка " + buttonKind.ToString(), "buttonKind");
+          throw ExceptionFactory.ArgUnknownValue("buttonKind", buttonKind);
       }
       btn.DialogResult = buttonKind;
       return btn;
@@ -3538,7 +3478,7 @@ namespace FreeLibSet.Forms
           }
           break;
         default:
-          throw new ArgumentException("Неизвестный набор кнопок " + buttons.ToString(), "buttons");
+          throw ExceptionFactory.ArgUnknownValue("buttons", buttons);
       }
       return btns;
     }
@@ -3558,9 +3498,9 @@ namespace FreeLibSet.Forms
       if (form == null)
         throw new ArgumentNullException("form");
       if (scrPercentWidth < 1 || scrPercentWidth > 100)
-        throw new ArgumentOutOfRangeException("scrPercentWidth");
+        throw ExceptionFactory.ArgOutOfRange("scrPercentWidth", scrPercentWidth, 1, 100);
       if (scrPercentHeight < 1 || scrPercentHeight > 100)
-        throw new ArgumentOutOfRangeException("scrPercentHeight");
+        throw ExceptionFactory.ArgOutOfRange("scrPercentHeight", scrPercentHeight, 1, 100);
 
       Screen scr = Screen.PrimaryScreen;
       form.Size = new Size(scr.Bounds.Width * scrPercentWidth / 100,
@@ -3587,7 +3527,7 @@ namespace FreeLibSet.Forms
     {
       if (EFPApp.Interface == null)
       {
-        EFPApp.ErrorMessageBox("Нет подключенного пользовательского интерфейса");
+        EFPApp.ErrorMessageBox(Res.EFPApp_Err_NoInterface);
         return;
       }
 
@@ -3616,7 +3556,7 @@ namespace FreeLibSet.Forms
       {
         //SetFormSize(Form, 50, 50);
         form.StartPosition = FormStartPosition.WindowsDefaultBounds;
-        form.Text = "Выбрать окно";
+        form.Text = Res.EFPApp_Title_SelectForm;
         form.Icon = EFPApp.MainImages.Icons["WindowList"];
         form.FormProvider.OwnStatusBar = true;
         form.FormProvider.ConfigSectionName = "ChildFormListDialog";
@@ -3653,7 +3593,7 @@ namespace FreeLibSet.Forms
           gh.Control["Order", i].Value = i + 1;
           string txt = forms[i].Text;
           if (EFPApp.IsMinimized(forms[i]))
-            txt += " (свернуто)";
+            txt = String.Format(Res.EFPApp_Msg_FormMinimized, txt);
           if (debugShowHWND)
             txt += " (HWND=" + forms[i].Handle.ToString() + ")";
           gh.Control["Text", i].Value = txt;
@@ -4014,7 +3954,7 @@ namespace FreeLibSet.Forms
     /// <param name="text">Текст сообщения</param>
     public static void ErrorMessageBox(string text)
     {
-      MessageBox(text, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      MessageBox(text, Res.MessageBox_Title_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 
     /// <summary>
@@ -4046,7 +3986,7 @@ namespace FreeLibSet.Forms
     /// <param name="text">Текст сообщения</param>
     public static void WarningMessageBox(string text)
     {
-      MessageBox(text, "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+      MessageBox(text, Res.MessageBox_Title_Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
 
 
@@ -4103,7 +4043,19 @@ namespace FreeLibSet.Forms
     public static event EFPAppExceptionEventHandler ExceptionShowing;
 
     /// <summary>
-    /// Вывести сообщение об ошибке с помощью DebugTools.ShowException или присоединенного обработчика события <see cref="ExceptionShowing"/>.
+    /// Вывести сообщение об ошибке с помощью <see cref="DebugTools.ShowException(Exception, string)"/> или присоединенного обработчика события <see cref="ExceptionShowing"/>.
+    /// Метод должен использоваться внутри блока catch.
+    /// Этот метод может вызываться из любого потока.
+    /// </summary>
+    /// <param name="exception">Перехваченное исключение</param>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShowException(Exception exception)
+    {
+      ShowException(exception, LogoutTools.GetDefaultTitle(1));
+    }
+
+    /// <summary>
+    /// Вывести сообщение об ошибке с помощью <see cref="DebugTools.ShowException(Exception, string)"/> или присоединенного обработчика события <see cref="ExceptionShowing"/>.
     /// Метод должен использоваться внутри блока catch.
     /// Этот метод может вызываться из любого потока.
     /// </summary>
@@ -4111,6 +4063,8 @@ namespace FreeLibSet.Forms
     /// <param name="title">Заголовок для выдачи сообщения</param>
     public static void ShowException(Exception exception, string title)
     {
+      if (String.IsNullOrEmpty(title))
+        title = LogoutTools.GetDefaultTitle();
       Interlocked.Increment(ref _InsideShowExceptionCount);
       try
       {
@@ -4143,7 +4097,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e2)
       {
-        DebugTools.ShowException(e2, "Ошибка при выводе сообщения об исключении");
+        DebugTools.ShowException(e2, Res.EFPApp_ErrTitle_ShowExceptionInternal);
       }
     }
 
@@ -4152,6 +4106,21 @@ namespace FreeLibSet.Forms
     /// </summary>
     public static bool InsideShowException { get { return _InsideShowExceptionCount > 0; } }
     private static int _InsideShowExceptionCount = 0; // могут быть вложенные вызовы ShowException()
+
+    /// <summary>
+    /// Вывести сообщение об ошибке при обработке события Idle.
+    /// Используйте этот метод вместо <see cref="ShowException(Exception, string)"/> если текущая обработка должна быть выполнена как можно скорее,
+    /// или текущий поток принадлежит другому приложению и не может быть использован для вывода окон.
+    /// Ставит в очередь задание на показ окна и немедленно возвращает управление.
+    /// Метод должен использоваться внутри блока catch.
+    /// Этот метод может вызываться из любого потока.
+    /// </summary>
+    /// <param name="exception">Перехваченное исключение</param>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShowExceptionDelayed(Exception exception)
+    {
+      ShowExceptionDelayed(exception, LogoutTools.GetDefaultTitle(1));
+    }
 
     /// <summary>
     /// Вывести сообщение об ошибке при обработке события Idle.
@@ -4198,7 +4167,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e2)
         {
-          DebugTools.ShowException(e2, "Ошибка при выводе сообщения об исключении");
+          DebugTools.ShowException(e2, Res.EFPApp_ErrTitle_ShowExceptionInternal);
         }
       }
       finally
@@ -4206,6 +4175,21 @@ namespace FreeLibSet.Forms
         EFPApp.ResumeIdle();
       }
     }
+
+    /// <summary>
+    /// Альтернативный способ вывода сообщения об исключении.
+    /// Показывает сообщение a'la MessageBox() с текстом <paramref name="exception"/>.Message и дополнительной кнопкой "Подробности".
+    /// Этот метод может вызываться из обработчика <see cref="EFPApp.ExceptionShowing"/>.
+    /// Этот метод может вызываться из любого потока.
+    /// Log-файл создается, только если пользователь нажмет кнопку "Подробности".
+    /// </summary>
+    /// <param name="exception">Объект исключения</param>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ExceptionMessageBox(Exception exception)
+    {
+      ExceptionMessageBox(exception.Message, exception, LogoutTools.GetDefaultTitle(1), false);
+    }
+
 
     /// <summary>
     /// Альтернативный способ вывода сообщения об исключении.
@@ -4271,6 +4255,21 @@ namespace FreeLibSet.Forms
     public static void ExceptionMessageBoxDelayed(Exception exception, string title)
     {
       ExceptionMessageBoxDelayed(exception.Message, exception, title, false);
+    }
+
+    /// <summary>
+    /// Вывести сообщение об ошибке при обработке события Idle.
+    /// Используйте этот метод вместо <see cref="ExceptionMessageBox(Exception, string)"/> если текущая обработка должна быть выполнена как можно скорее,
+    /// или текущий поток принадлежит другому приложению и не может быть использован для вывода окон.
+    /// Ставит в очередь задание на показ окна и немедленно возвращает управление.
+    /// Этот метод может вызываться из любого потока.
+    /// Log-файл создается, только если пользователь нажмет кнопку "Подробности".
+    /// </summary>
+    /// <param name="exception">Объект исключения</param>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ExceptionMessageBoxDelayed(Exception exception)
+    {
+      ExceptionMessageBoxDelayed(exception.Message, exception, LogoutTools.GetDefaultTitle(1), false);
     }
 
     /// <summary>
@@ -4397,7 +4396,7 @@ namespace FreeLibSet.Forms
       if (action == null)
         throw new ArgumentNullException("action");
       if (interval < 1)
-        throw new ArgumentException("Интервал времени должен быть задан", "interval");
+        throw ExceptionFactory.ArgOutOfRange("interval", interval, 1, null);
 #endif
 
       Splash spl = null;
@@ -4770,13 +4769,13 @@ namespace FreeLibSet.Forms
       switch (kind)
       {
         case ErrorMessageKind.Error:
-          return "Ошибки";
+          return Res.ErrorMessageKind_Title_Errors;
         case ErrorMessageKind.Warning:
-          return "Предупреждения";
+          return Res.ErrorMessageKind_Title_Warnings;
         case ErrorMessageKind.Info:
-          return "Сообщения";
+          return Res.ErrorMessageKind_Title_Infos;
         default:
-          return "Неизв. состояние " + kind.ToString();
+          return "Unknown state " + kind.ToString();
       }
     }
 
@@ -4791,7 +4790,7 @@ namespace FreeLibSet.Forms
       if (kind.HasValue)
         return GetErrorTitleText(kind.Value);
       else
-        return "Нет ошибок";
+        return Res.ErrorMessageKind_Title_None;
     }
 
     /// <summary>
@@ -4803,7 +4802,7 @@ namespace FreeLibSet.Forms
     public static string GetErrorTitleText(ErrorMessageList errorMessages)
     {
       if (errorMessages == null)
-        return "Нет ошибок";
+        return Res.ErrorMessageKind_Title_None;
       else
         return GetErrorTitleText(errorMessages.NullableSeverity);
     }
@@ -4816,7 +4815,7 @@ namespace FreeLibSet.Forms
     public static string GetErrorToolTipText(ErrorMessageList errorMessages)
     {
       if (errorMessages == null)
-        return "Список ошибок не присоединен";
+        return Res.ErrorMessageKind_ToolTip_NoMessageList;
 
 
       int n1 = errorMessages.ErrorCount;
@@ -4824,15 +4823,15 @@ namespace FreeLibSet.Forms
       int n3 = errorMessages.InfoCount;
 
       if (n1 == 0 && n2 == 0 && n3 == 0)
-        return "Нет сообщений об ошибках";
+        return Res.ErrorMessageKind_ToolTip_None;
 
       List<string> lst = new List<string>();
       if (n1 > 0)
-        lst.Add("Ошибок: " + n1.ToString());
+        lst.Add(String.Format(Res.ErrorMessageKind_ToolTip_Errors, n1));
       if (n2 > 0)
-        lst.Add("Предупреждений: " + n2.ToString());
+        lst.Add(String.Format(Res.ErrorMessageKind_ToolTip_Warnings, n2));
       if (n3 > 0)
-        lst.Add("Инф. сообщений: " + n3.ToString());
+        lst.Add(String.Format(Res.ErrorMessageKind_ToolTip_Infos, n3));
       return String.Join(", ", lst.ToArray());
     }
 
@@ -4850,8 +4849,8 @@ namespace FreeLibSet.Forms
     {
       switch (state)
       {
-        case UIDataState.Edit: return "Edit"; 
-        case UIDataState.Insert: return "Insert"; 
+        case UIDataState.Edit: return "Edit";
+        case UIDataState.Insert: return "Insert";
         case UIDataState.InsertCopy: return "InsertCopy";
         case UIDataState.Delete: return "Delete";
         case UIDataState.View: return "View";
@@ -4919,7 +4918,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Начало индикации ожидания только с выводом песочных часов -
-    /// без сообщений в статусной строке
+    /// без сообщений в статусной строке.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
     /// </summary>
     public static void BeginWait()
     {
@@ -4929,6 +4930,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Начало индикации ожидания с выводом текстового сообщения в
     /// статусной строке.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
     /// </summary>
     /// <param name="message">Строка сообщения</param>
     public static void BeginWait(string message)
@@ -4966,7 +4969,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Начало индикации ожидания с выводом текстового сообщения в
-    /// статусной строке и значком
+    /// статусной строке и значком.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
     /// </summary>
     /// <param name="message">Строка сообщения</param>
     /// <param name="imageKey">Строковый идентификатор изображения в <see cref="MainImages"/></param>
@@ -4977,7 +4982,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Начало индикации ожидания с выводом текстового сообщения в
-    /// статусной строке и значком
+    /// статусной строке и значком.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
     /// </summary>
     /// <param name="message">Строка сообщения</param>
     /// <param name="imageKey">Строковый идентификатор изображения в <see cref="MainImages"/></param>
@@ -4991,7 +4998,10 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Завершение индикации ожидания
+    /// Завершение индикации ожидания.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
+    /// Вызовы <see cref="BeginWait()"/> и <see cref="EndWait()"/> должны быть парными и выполняться из одного потока.
     /// </summary>
     public static void EndWait()
     {
@@ -5021,7 +5031,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Индикация ожидания с использованием директивы using -
-    /// без сообщений в статусной строке
+    /// без сообщений в статусной строке.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
     /// </summary>
     /// <returns><see cref="IDisposable"/>-объект для использования в директиве using</returns>
     public static WaitHandler Wait()
@@ -5032,6 +5044,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Индикация ожидания с использованием директивы using -
     /// с выводом текстового сообщения в статусной строке.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
     /// </summary>
     /// <param name="message">Строка сообщения</param>
     /// <returns><see cref="IDisposable"/>-объект для использования в директиве using</returns>
@@ -5042,7 +5056,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Индикация ожидания с использованием директивы using с выводом текстового сообщения в
-    /// статусной строке и значком
+    /// статусной строке и значком.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
     /// </summary>
     /// <param name="message">Строка сообщения</param>
     /// <param name="imageKey">Строковый идентификатор изображения в <see cref="MainImages"/></param>
@@ -5054,7 +5070,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Индикация ожидания с использованием директивы using с выводом текстового сообщения в
-    /// статусной строке и значком
+    /// статусной строке и значком.
+    /// Если метод вызван не из основного потока <see cref="MainThread"/> или до вызова <see cref="InitApp()"/>, 
+    /// то это не является ошибкой, но никаких действий не выполняется.
     /// </summary>
     /// <param name="message">Строка сообщения</param>
     /// <param name="imageKey">Строковый идентификатор изображения в <see cref="MainImages"/></param>
@@ -5158,12 +5176,12 @@ namespace FreeLibSet.Forms
       if (ShowHelpNeeded == null)
       {
         if (String.IsNullOrEmpty(helpContext))
-          MessageBox("Контекст справки не задан");
+          MessageBox(Res.EFPApp_Err_NoHelpContext);
         else
         {
           int p = helpContext.IndexOf("::", StringComparison.Ordinal);
           if (p < 0)
-            throw new ArgumentException("Неправильный контекст справки: \"" + helpContext + "\"", "helpContext");
+            throw ExceptionFactory.ArgUnknownValue("helpContext", helpContext);
           string fileName = helpContext.Substring(0, p);
           string topic = helpContext.Substring(p + 2);
           Help.ShowHelp(null, fileName, HelpNavigator.Topic, topic);
@@ -5294,7 +5312,7 @@ namespace FreeLibSet.Forms
     {
       if (_InsideShowWindowsExplorer)
       {
-        EFPApp.ShowTempMessage("Предыдущая команда открытия Проводника еще не выполнена");
+        EFPApp.ShowTempMessage(Res.EFPApp_Err_ShowWindowsExplorerRunning);
         return false;
       }
 
@@ -5320,14 +5338,14 @@ namespace FreeLibSet.Forms
 
       if (dir.IsEmpty)
       {
-        EFPApp.ErrorMessageBox("Каталог не задан");
+        EFPApp.ErrorMessageBox(Res.EFPApp_Err_DirIsEmpty);
         return false;
       }
 
 
       if (!DirectoryExists(dir))
       {
-        EFPApp.ErrorMessageBox("Каталог не существует: \"" + dir.Path + "\"");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPApp_Err_DirNotFound, dir.Path));
         return false;
       }
 
@@ -5381,7 +5399,7 @@ namespace FreeLibSet.Forms
         FreeLibSet.Shell.FileAssociationItem faItem = EFPApp.FileExtAssociations.ShowDirectory.FirstItem;
         try
         {
-          EFPApp.BeginWait("Запуск " + faItem.DisplayName, "WindowsExplorer");
+          EFPApp.BeginWait(String.Format(Res.EFPApp_Phase_ShowWindowsExplorer, faItem.DisplayName), "WindowsExplorer");
           try
           {
             faItem.Execute(dir);
@@ -5395,13 +5413,13 @@ namespace FreeLibSet.Forms
         catch (Exception e)
         {
           e.Data["Dir"] = dir.Path;
-          EFPApp.ShowException(e, "Ошибка запуска " + faItem.DisplayName);
+          EFPApp.ShowException(e, String.Format(Res.EFPApp_Err_ShowWindowsExplorerFailed, faItem.DisplayName));
           return false;
         }
       }
       else
       {
-        EFPApp.ErrorMessageBox("Для установленной операционной системы программа просмотра каталогов неизвестна");
+        EFPApp.ErrorMessageBox(Res.EFPApp_Err_ShowWindowsExplorerNotSupported);
         return false;
       }
     }
@@ -5461,7 +5479,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         e.Data["Path"] = filePath;
-        EFPApp.ExceptionMessageBox("Не удалось открыть файл \"" + filePath.Path + "\"", e, "Ошибка открытия файла");
+        EFPApp.ExceptionMessageBox(String.Format(Res.EFPApp_Err_ShellExecuteFailed, filePath.Path), e, Res.EFPApp_ErrTitle_ShellExecute);
         return false;
       }
     }
@@ -5470,7 +5488,7 @@ namespace FreeLibSet.Forms
     {
       if (!FileExists(filePath))
       {
-        EFPApp.ErrorMessageBox("Файл не найден: " + filePath.Path, "Ошибка открытия файла");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPApp_Err_FileNotFound, filePath.Path), Res.EFPApp_ErrTitle_ShellExecute);
         return false;
       }
 
@@ -5489,7 +5507,7 @@ namespace FreeLibSet.Forms
     public static bool DirectoryExists(AbsPath dir)
     {
       bool res;
-      EFPApp.BeginWait("Определение существования каталога", "Open");
+      EFPApp.BeginWait(Res.EFPApp_Phase_DirExists, "Open");
       try
       {
         res = Directory.Exists(dir.Path);
@@ -5510,7 +5528,7 @@ namespace FreeLibSet.Forms
     public static bool FileExists(AbsPath filePath)
     {
       bool res;
-      EFPApp.BeginWait("Определение существования файла", "Open");
+      EFPApp.BeginWait(Res.EFPApp_Phase_FileExists, "Open");
       try
       {
         res = File.Exists(filePath.Path);
@@ -5952,7 +5970,7 @@ namespace FreeLibSet.Forms
               // Перехватываем исключение.
               // Не зациклится ли вывод сообщения об ошибке?
 
-              EFPApp.ShowException(e, "Ошибка обработки обратного вызова");
+              EFPApp.ShowException(e, Res.EFPApp_ErrTitle_RICallBack);
             }
           }
         }
@@ -6272,7 +6290,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка вызова ExecProcCallList.Process()");
+        EFPApp.ShowException(e, LogoutTools.GetTitleForCall("ExecProcCallList.Process()"));
       }
 
       // не нужно UpdateSplash();
@@ -6301,7 +6319,7 @@ namespace FreeLibSet.Forms
     {
       NamedValues res;
 
-      EFPApp.BeginWait("Выполнение " + item.DisplayName);
+      EFPApp.BeginWait(String.Format(Res.EFPAppExecProcCallList_Phase_Running, item.DisplayName));
       try
       {
         res = base.ExecuteSync(item, args);
@@ -6332,7 +6350,7 @@ namespace FreeLibSet.Forms
     public override NamedValues ExecuteAsyncAndWait(ExecProcCallItem item, NamedValues args)
     {
       NamedValues res;
-      EFPApp.BeginWait("Выполнение " + item.DisplayName);
+      EFPApp.BeginWait(String.Format(Res.EFPAppExecProcCallList_Phase_Running, item.DisplayName));
       try
       {
         res = base.ExecuteAsyncAndWait(item, args);
@@ -6360,7 +6378,7 @@ namespace FreeLibSet.Forms
     public override NamedValues ExecuteAsyncAndWait(IExecProc proc, NamedValues args)
     {
       NamedValues res;
-      EFPApp.BeginWait("Выполнение " + proc.DisplayName);
+      EFPApp.BeginWait(String.Format(Res.EFPAppExecProcCallList_Phase_Running, proc.DisplayName));
       try
       {
         res = base.ExecuteAsyncAndWait(proc, args);
@@ -6390,7 +6408,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка выполнения " + item.DisplayName);
+          EFPApp.ShowException(e, String.Format(Res.EFPAppExecProcCallList_ErrTitle_Running, item.DisplayName));
         }
       }
       else // 02.11.2020

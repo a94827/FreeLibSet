@@ -738,6 +738,17 @@ namespace FreeLibSet.Russian
                                    "ки", "ков","кам","ки","ками","ках"};
             return;
           }
+
+          if (upperForm.EndsWith("ВЕЛ", StringComparison.Ordinal) &&
+            (options & RusFormArrayGetCasesOptions.Name) == RusFormArrayGetCasesOptions.Name)
+          {
+            // 04.02.2024 В имени "Павел" исчезает буква "е"
+            cBase = baseForm.Substring(0, baseForm.Length - 2);// Отбросили "ел"
+            aEnds = new string[12]{"ел", "ла" ,"лу" ,"ла","лом" ,"ле",
+                                   "лы", "лов","лам", "лов","лами","лах"};
+            return;
+          }
+
           /**************
                    CASE s2=="ЕК" .AND. AT(LEFT(s3,1), "НРЛ")>0 // конек
                       // Вообще-то записит от наличия буквы "ё" или "е"

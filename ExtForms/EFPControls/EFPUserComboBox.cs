@@ -395,12 +395,12 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Текст комбоблока по умолчанию, когда не выбран ни один элемент
     /// </summary>
-    public const string DefaultEmptyText = "[ нет ]";
+    public static string DefaultEmptyText { get { return Res.EFPListMultiSelComboBox_Msg_Empty; } }
 
     /// <summary>
     /// Текст комбоблока по умолчанию, когда выбраны все элементы
     /// </summary>
-    public const string DefaultAllSelectedText = "[ все ]";
+    public static string DefaultAllSelectedText { get { return Res.EFPListMultiSelComboBox_Msg_AllSelected; } } 
 
     #endregion
 
@@ -468,7 +468,7 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Длина массива должна совпадать с Items");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
         }
         _SubItems = value;
       }
@@ -774,7 +774,7 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Длина массива должна совпадать с Items");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
         }
         _ImageKeys = value;
         InitTextAndImage(false);
@@ -834,15 +834,7 @@ namespace FreeLibSet.Forms
     {
       if (Selections.AreAllUnselected)
       {
-        switch (CanBeEmptyMode)
-        {
-          case UIValidateState.Error:
-            SetError("Хотя бы одно значение должно быть выбрано");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Хотя бы одно значение должно быть выбрано");
-            break;
-        }
+        ValidateCanBeEmptyMode(CanBeEmptyMode);
         Control.ClearButtonEnabled = false;
       }
       else
@@ -931,7 +923,7 @@ namespace FreeLibSet.Forms
           {
 #if DEBUG
             if (singleSelIndex < 0 || singleSelIndex >= ImageKeys.Length)
-              throw new BugException("Неправильный SingleSelIndex=" + singleSelIndex.ToString());
+              throw new BugException("SingleSelIndex=" + singleSelIndex.ToString());
 #endif
             _TextValueNeededArgs.ImageKey = ImageKeys[singleSelIndex];
           }
@@ -974,11 +966,11 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Длина массива должна совпадать с Items");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
           foreach (string s in value)
           {
             if (s == null)
-              throw new ArgumentException("Значения null не допускаются. Используйте String.Empty");
+              throw ExceptionFactory.ArgInvalidEnumerableItem("value", value, null);
           }
         }
 #endif
@@ -1129,7 +1121,7 @@ namespace FreeLibSet.Forms
     public EFPUserTextComboBox(EFPBaseProvider baseProvider, UserTextComboBox control)
       : base(baseProvider, control)
     {
-      control.ClearButtonToolTipText = "Очистить введенное значение";
+      control.ClearButtonToolTipText = Res.EFPUserTextComboBox_ToolTip_ClearButton;
     }
 
     #endregion
@@ -1236,7 +1228,7 @@ namespace FreeLibSet.Forms
     public void Init(string code)
     {
       if (String.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
 
       _Code = code;
       _ValidateState = UIValidateState.Ok;
@@ -1338,8 +1330,8 @@ namespace FreeLibSet.Forms
       : base(baseProvider, control)
     {
       _UseSpace = true;
-      control.PopupButtonToolTipText = "Выбрать коды из списка";
-      control.ClearButtonToolTipText = "Очистить выбранные коды";
+      control.PopupButtonToolTipText = Res.EFPCsvCodesComboBoxBase_ToolTip_PopupButton;
+      control.ClearButtonToolTipText = Res.EFPCsvCodesComboBoxBase_ToolTip_ClearButton;
 
       _CodeValidatingEventArgs = new EFPCodeValidatingEventArgs();
     }
@@ -1482,13 +1474,13 @@ namespace FreeLibSet.Forms
       string[] a = base.Text.Split(',');
       SingleScopeList<string> lst = new SingleScopeList<string>();
 
-      ValueToolTipText = "Выбрано кодов: " + a.Length.ToString();
+      ValueToolTipText = String.Format(Res.EFPCsvCodesTextBox_ToolTip_Codes, a.Length);
       for (int i = 0; i < a.Length; i++)
       {
         string s = a[i].Trim();
         if (s.Length == 0)
         {
-          base.SetError("Задан пустой код");
+          base.SetError(Res.EFPCsvCodesTextBox_Err_EmptyCode);
           return;
         }
 
@@ -1499,10 +1491,10 @@ namespace FreeLibSet.Forms
         switch (_CodeValidatingEventArgs.ValidateState)
         { 
           case UIValidateState.Error:
-            SetError("Неправильный код №" + (i + 1).ToString() + " \"" + s + "\". " + _CodeValidatingEventArgs.Message);
+            SetError(String.Format(Res.EFPCsvCodesTextBox_Err_WrongCode, i + 1, s, _CodeValidatingEventArgs.Message));
             return;
           case UIValidateState.Warning:
-            SetWarning("Код №" + (i + 1).ToString() + " \"" + s + "\". " + _CodeValidatingEventArgs.Message);
+            SetWarning(String.Format(Res.EFPCsvCodesTextBox_Err_WrongCode, i + 1, s, _CodeValidatingEventArgs.Message));
             break;
         }
         if (a.Length == 1 && (!String.IsNullOrEmpty(_CodeValidatingEventArgs.Name)))
@@ -1510,7 +1502,7 @@ namespace FreeLibSet.Forms
 
         if (lst.Contains(s))
         {
-          SetError("Код \"" + s + "\" задан дважды");
+          SetError(String.Format(Res.EFPCsvCodesTextBox_Err_CodeTwice, s));
           return;
         }
         lst.Add(s);
@@ -1638,7 +1630,7 @@ namespace FreeLibSet.Forms
       if (names != null)
       {
         if (names.Length != codes.Length)
-          throw new ArgumentException("Длина массивов codes (" + codes.Length.ToString() + ") и names (" + names.Length.ToString() + ") должна совпадать", "names");
+          throw ExceptionFactory.ArgWrongCollectionCount("names", names, codes.Length);
       }
 
       if (checkRepeats)
@@ -1669,7 +1661,7 @@ namespace FreeLibSet.Forms
       if (names != null)
       {
         if (names.Length != codes.Length)
-          throw new ArgumentException("Длина массивов codes (" + codes.Length.ToString() + ") и names (" + names.Length.ToString() + ") должна совпадать", "names");
+          throw ExceptionFactory.ArgWrongCollectionCount("names", names, codes.Length);
       }
 
       SingleScopeStringList lstCodes = new SingleScopeStringList(codes.Length, false);
@@ -1716,7 +1708,7 @@ namespace FreeLibSet.Forms
         {
 #if DEBUG
           if (lstNames.Count != lstCodes.Count)
-            throw new BugException("Получена разная длина списков кодов и значений");
+            throw new BugException("lstNames.Count != lstCodes.Count");
 #endif
           names = lstNames.ToArray();
         }
@@ -1748,7 +1740,7 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != _Codes.Length)
-            throw new ArgumentException("Неправильная длина массива: " + value.Length.ToString() + ". Ожидалось: " + _Codes.Length.ToString());
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Codes.Length);
           _Names = value;
         }
       }
@@ -1789,10 +1781,10 @@ namespace FreeLibSet.Forms
         switch (UnknownCodeSeverity)
         {
           case UIValidateState.Error:
-            args.SetError("Кода нет в списке");
+            args.SetError(Res.EFPCsvCodesComboBox_Err_UnknownCode);
             break;
           case UIValidateState.Warning:
-            args.SetWarning("Кода нет в списке");
+            args.SetWarning(Res.EFPCsvCodesComboBox_Err_UnknownCode);
             break;
         }
       }

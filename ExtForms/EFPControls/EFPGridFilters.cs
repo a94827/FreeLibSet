@@ -336,7 +336,7 @@ namespace FreeLibSet.Forms
     public void WriteConfig(CfgPart cfg)
     {
       if (cfg == null)
-        throw new ArgumentNullException("cfg", "Раздел для записи конфигурации фильтров должен быть задан");
+        throw new ArgumentNullException("cfg");
 
       cfg.Clear();
 
@@ -403,7 +403,7 @@ namespace FreeLibSet.Forms
     /// <param name="cfg">Считываемая секция конфигурации</param>
     protected virtual void OnReadConfigError(Exception exception, IEFPGridFilter filter, CfgPart cfg)
     {
-      EFPApp.ShowException(exception, "Ошибка загрузки состояния фильтра \"" + filter.DisplayName + "\"");
+      EFPApp.ShowException(exception, Res.EFPGridFilters_ErrTitle_ReadConfig);
       filter.Clear();
     }
 

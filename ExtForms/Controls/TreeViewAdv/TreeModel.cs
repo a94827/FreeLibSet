@@ -363,7 +363,7 @@ namespace FreeLibSet.Models.Tree
       if (node != null)
         return node.IsLeaf;
       else
-        throw new ArgumentException("treePath");
+        throw new ArgumentException("Path not found", "treePath");
     }
 
     public event EventHandler<TreeModelEventArgs> NodesChanged;

@@ -18,7 +18,7 @@ namespace WinFormsDemo.EFPTabControlDemo
 
       EFPCommandItem ci;
       ci = new EFPCommandItem("Тест", "Т0");
-      ci.MenuText = "Команда Form";
+      ci.MenuText = "Form-level command";
       ci.ImageKey = "CircleGreen";
       ci.Click += new EventHandler(ciTest_Click);
       efpForm.CommandItems.Add(ci);
@@ -26,30 +26,30 @@ namespace WinFormsDemo.EFPTabControlDemo
       // Общедоступные команды должны добавляться на уровне Form, а не TabControl
 
       ci = new EFPCommandItem("View", "Add");
-      ci.MenuText = "Добавить вкладку";
+      ci.MenuText = "Add a tab page";
       ci.ImageKey = "Insert";
       ci.Click += new EventHandler(ciAdd_Click);
       efpForm.CommandItems.Add(ci);
 
       ci = new EFPCommandItem("View", "AddHidden");
-      ci.MenuText = "Добавить скрытую вкладку";
+      ci.MenuText = "Add a hidden tab page";
       ci.Click += new EventHandler(ciAddHidden_Click);
       efpForm.CommandItems.Add(ci);
 
       ci = new EFPCommandItem("View", "CloseAll");
-      ci.MenuText = "Закрыть все вкладки";
+      ci.MenuText = "Close all tab pages";
       ci.ImageKey = "CloseAll";
       ci.Click += new EventHandler(ciCloseAll_Click);
       efpForm.CommandItems.Add(ci);
 
       ci = new EFPCommandItem("View", "ShowOrHide");
-      ci.MenuText = "Скрыть/показать ...";
+      ci.MenuText = "Show/hide ...";
       ci.Click += new EventHandler(ciShowOrHide_Click);
       efpForm.CommandItems.Add(ci);
 
       efpTC = new EFPTabControl(efpForm, TheTC);
       ci = new EFPCommandItem("Тест", "Т1");
-      ci.MenuText = "Команда TabControl";
+      ci.MenuText = "TabControl-level command";
       ci.ImageKey = "CircleBlue";
       ci.Click += new EventHandler(ciTest_Click);
       efpTC.CommandItems.Add(ci);
@@ -71,8 +71,8 @@ namespace WinFormsDemo.EFPTabControlDemo
     void ciShowOrHide_Click(object sender, EventArgs args)
     {
       ListSelectDialog dlg = new ListSelectDialog();
-      dlg.Title = "Видимость вкладок";
-      dlg.ListTitle = "Вкладки";
+      dlg.Title = "TabPage visibility";
+      dlg.ListTitle = "Tab pages";
       dlg.Items = new string[efpTC.TabPages.Count];
       dlg.MultiSelect = true;
       dlg.CanBeEmpty = true;
@@ -109,21 +109,21 @@ namespace WinFormsDemo.EFPTabControlDemo
       EFPTabPage efpTP = new EFPTabPage(TabCounter.ToString());
       efpTP.Visible = visible;
 
-      ci = new EFPCommandItem("Тест", "Т2");
-      ci.MenuText = "Команда TabPage " + efpTP.Text;
+      ci = new EFPCommandItem("Test", "T2");
+      ci.MenuText = "Command TabPage " + efpTP.Text;
       ci.ImageKey = "CircleYellow";
       ci.Click += new EventHandler(ciTest_Click);
       efpTP.CommandItems.Add(ci);
 
       ci = new EFPCommandItem("View", "Close");
-      ci.MenuText = "Закрыть вкладку";
+      ci.MenuText = "Close tab";
       ci.ImageKey = "Delete";
       ci.Tag = efpTP;
       ci.Click += new EventHandler(ciCloseTab_Click);
       efpTP.CommandItems.Add(ci);
 
       ci = new EFPCommandItem("View", "CloseAllButThis");
-      ci.MenuText = "Закрыть все вкладки, кроме текущей";
+      ci.MenuText = "Close all tab pages but this";
       ci.ImageKey = "CloseAllButThis";
       ci.Tag = efpTP;
       ci.Click += new EventHandler(ciCloseAllButThis_Click);
@@ -132,7 +132,7 @@ namespace WinFormsDemo.EFPTabControlDemo
       #region Текстовое поле
 
       Label lbl = new Label();
-      lbl.Text = "Поле ввода " + efpTP.Text;
+      lbl.Text = "Input TextBox " + efpTP.Text;
       lbl.Location = new Point(10, 10);
       lbl.AutoSize = true;
       efpTP.Control.Controls.Add(lbl);
@@ -182,7 +182,7 @@ namespace WinFormsDemo.EFPTabControlDemo
     void ciTest_Click(object Sender, EventArgs Args)
     {
       EFPCommandItem ci = (EFPCommandItem)Sender;
-      EFPApp.MessageBox("Команда \"" + ci.MenuTextWithoutMnemonic + "\"");
+      EFPApp.MessageBox("Command \"" + ci.MenuTextWithoutMnemonic + "\" performed");
     }
 
     #endregion

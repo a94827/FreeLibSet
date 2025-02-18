@@ -214,8 +214,8 @@ namespace FreeLibSet.Parsing
           foreach (KeyValuePair<string, string> pair in _ReplaceChars)
           {
             if (pair.Value.Length != pair.Key.Length)
-              throw new InvalidOperationException("Задана недопустимая подстановка \"" + pair.Key + "\" -> \"" + pair.Value +
-                "\". Исходный текст и замена должны иметь одинаковую длину");
+              throw new InvalidOperationException(String.Format(Res.NumConstParser_Err_InvalidReplace,
+                pair.Key, pair.Value));
 
             for (int j = 0; j < pair.Key.Length; j++)
               chars.Add(pair.Key[j]);
@@ -343,7 +343,7 @@ namespace FreeLibSet.Parsing
       data.SkipToken();
       if (leftExpression != null)
       {
-        currToken.SetError("Константа не должна идти непосредственно после другого выражения. Ожидалась операция");
+        currToken.SetError(Res.NumConstParser_Err_AfterOtherExpr);
         // ? можно продолжить разбор
       }
 
@@ -451,7 +451,7 @@ namespace FreeLibSet.Parsing
       data.SkipToken();
       if (leftExpression != null)
       {
-        currToken.SetError("Константа не должна идти непосредственно после другого выражения. Ожидалась операция");
+        currToken.SetError(Res.StrConstParser_Err_AfterOtherExpr);
         // ? можно продолжить разбор
       }
 
@@ -1021,7 +1021,7 @@ namespace FreeLibSet.Parsing
     public void SetLocalNames(string[] names, string[] localNames)
     {
       if (localNames.Length != names.Length)
-        throw new ArgumentException("Длина массивов не совпадает", "localNames");
+        throw ExceptionFactory.ArgWrongCollectionCount("localNames", localNames, names.Length);
 
       for (int i = 0; i < names.Length; i++)
       {
@@ -1286,13 +1286,13 @@ namespace FreeLibSet.Parsing
 
           if (leftExpression != null)
           {
-            currToken.SetError("Имя функции не может быть продолжением другого выражения. Ожидалась операция");
+            currToken.SetError(Res.FunctionParser_Err_AfterOtherExpr);
             // ? можно продолжить
           }
 
           string functionName = currToken.AuxData.ToString();
           if (String.IsNullOrEmpty(functionName))
-            throw new BugException("Не определено имя функции для лексемы");
+            throw new BugException("Function name is not defined for the token");
           FunctionDef fd = GetFunction(functionName);
 
           // Ищем лексему открывающей функции
@@ -1312,13 +1312,13 @@ namespace FreeLibSet.Parsing
                 break;
 
               default:
-                data.CurrToken.SetError("Ожидалась открывающая скобка после имени функции");
+                data.CurrToken.SetError(Res.FunctionParser_Err_WantedOpenParenthesis);
                 return null;
             }
           }
           if (openToken == null)
           {
-            currToken.SetError("Не найдена открывающая скобка после имени функции");
+            currToken.SetError(Res.FunctionParser_Err_OpenParenthesisNotFound);
             return null;
           }
 
@@ -1334,7 +1334,7 @@ namespace FreeLibSet.Parsing
             {
               if (data.CurrToken == null)
               {
-                currToken.SetError("Не найдена закрывающая скобка для функции " + functionName);
+                currToken.SetError(String.Format(Res.FunctionParser_Err_CloseParenthesisNotFound, functionName));
                 return null;
               }
 
@@ -1344,7 +1344,7 @@ namespace FreeLibSet.Parsing
                 data.SkipToken();
                 if (lastIsArgSep)
                 {
-                  closeToken.SetError("Ожидался еще аргумент");
+                  closeToken.SetError(Res.FunctionParser_Err_WantedAnotherArg);
                   return null; // 08.11.2022
                 }
                 break;
@@ -1356,7 +1356,7 @@ namespace FreeLibSet.Parsing
               else
                 errorToken = openToken;
 
-              errorToken.SetError("Ожидался аргумент");
+              errorToken.SetError(Res.FunctionParser_Err_WantedArg);
               return null; // 08.11.2022
             }
 
@@ -1364,7 +1364,7 @@ namespace FreeLibSet.Parsing
             lastIsArgSep = false;
             if (data.CurrToken == null)
             {
-              currToken.SetError("Не найдена закрывающая скобка для функции " + functionName);
+              currToken.SetError(String.Format(Res.FunctionParser_Err_CloseParenthesisNotFound, functionName));
               return null;
             }
             if (data.CurrTokenType == TokenClose)
@@ -1373,21 +1373,28 @@ namespace FreeLibSet.Parsing
               data.SkipToken();
               if (lastIsArgSep)
               {
-                closeToken.SetError("Ожидался еще аргумент");
+                closeToken.SetError(Res.FunctionParser_Err_WantedAnotherArg);
                 return null; // 08.11.2022
               }
               break;
             }
             if (data.CurrTokenType != TokenArgSep)
             {
-              string errorText = "Ожидалась закрывающая скобка вызова функции";
               if (argSepTokens.Count > 0)
               {
-                errorText += " или разделитель списка аргументов \"" + argSepTokens[0] + "\"";
-                for (int i = 1; i < argSepTokens.Count; i++)
-                  errorText += " или \"" + argSepTokens[i] + "\"";
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < argSepTokens.Count; i++)
+                {
+                  if (i > 0)
+                    sb.Append(", ");
+                  sb.Append('"');
+                  sb.Append(argSepTokens[i]);
+                  sb.Append('"');
+                }
+                data.CurrToken.SetError(String.Format(Res.FunctionParser_Err_WantedCloseParenthesisOrComma, sb.ToString()));
               }
-              data.CurrToken.SetError(errorText);
+              else
+                data.CurrToken.SetError(Res.FunctionParser_Err_WantedCloseParenthesis);
               return null;
             }
 
@@ -1399,7 +1406,7 @@ namespace FreeLibSet.Parsing
           // Список аргументов загружен. Скобка получена
           if (fd == null)
           {
-            currToken.SetError("Неизвестное имя функции \"" + currToken.AuxData.ToString() + "\"");
+            currToken.SetError(String.Format(Res.FunctionParser_Err_UnknownFunctionName, currToken.AuxData.ToString()));
             return null;
           }
 
@@ -1409,10 +1416,11 @@ namespace FreeLibSet.Parsing
           {
             string errorText = "Неправильное количество аргументов функции \"" + fd.ToString() + "\" (" + argExprs2.Length.ToString() + ")";
             if (fd.MaxArgCount == fd.MinArgCount)
-              errorText += ". Ожидалось аргументов: " + fd.MaxArgCount.ToString();
+              currToken.SetError(String.Format(Res.FunctionParser_Err_WrongArgCountSingle, 
+                fd.ToString(), argExprs2.Length, fd.MaxArgCount));
             else
-              errorText += ". Ожидалось аргументов: от " + fd.MinArgCount.ToString() + " до " + fd.MaxArgCount.ToString();
-            currToken.SetError(errorText);
+              currToken.SetError(String.Format(Res.FunctionParser_Err_WrongArgCountRange,
+                fd.ToString(), argExprs2.Length, fd.MinArgCount, fd.MaxArgCount));
             return null;
           }
 
@@ -1426,7 +1434,7 @@ namespace FreeLibSet.Parsing
           return funcExpr;
 
         default:
-          data.CurrToken.SetError("Неожиданное вхождение \"" + data.CurrToken.Text + "\" вне вызова функции");
+          data.CurrToken.SetError(String.Format(Res.FunctionParser_Err_OutOfFunction, data.CurrToken.Text));
           data.SkipToken();
           return null;
       }
@@ -1443,7 +1451,7 @@ namespace FreeLibSet.Parsing
     protected virtual FunctionDef GetFunction(string name)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       if (!CaseSensitive)
         name = name.ToUpperInvariant();
 
@@ -1640,10 +1648,10 @@ namespace FreeLibSet.Parsing
         // Сначала должны идти операции из двух символов, а затем - из одного,
         // иначе, например, операция ">=" будет распознана как ">" и "="
 
-        string[] binarySigns = new string[] { 
+        string[] binarySigns = new string[] {
           "<>", ">=", "<=",
           "*", "/", "+", "-", "=", ">", "<" };
-        int[] binaryPriorities = new int[] { 
+        int[] binaryPriorities = new int[] {
           BinaryOpDef.PriorityCompare, // "<>"
           BinaryOpDef.PriorityCompare, // ">="
           BinaryOpDef.PriorityCompare, // "<="
@@ -1759,12 +1767,13 @@ namespace FreeLibSet.Parsing
       if (arg1 is bool && arg2 is bool)
         return CalcBool(op, DataTools.GetBool(arg1), DataTools.GetBool(arg2));
 
-      throw new NotSupportedException("Остальное не реализовано. Тип данных аргумента 1:" + arg1.GetType().ToString() + ", аргумента 2: " + arg2.GetType().ToString());
+      throw new NotImplementedException(String.Format(Res.MathOpParser_Err_NotImplementedForTypes,
+        arg1.GetType().ToString(),arg2.GetType().ToString()));
     }
 
     /// <summary>
     /// "Вычисляет" унарную операцию для двух аргументов null.
-    /// Для операций сравнение, содержажих знак равенства, возвращает true.
+    /// Для операций сравнение, содержащих знак равенства, возвращает true.
     /// Для операций "больше", "меньше" и "не равно", возвращает false.
     /// Для арифметических операций возвращает null.
     /// </summary>
@@ -1788,7 +1797,7 @@ namespace FreeLibSet.Parsing
         case "<":
           return false;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не реализована для аргументов null");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, "null"));
       }
     }
 
@@ -1815,7 +1824,7 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не реализована");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, typeof(Decimal).ToString()));
       }
     }
 
@@ -1842,7 +1851,7 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не реализована");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, typeof(Double).ToString()));
       }
     }
 
@@ -1869,7 +1878,7 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не реализована");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, typeof(Single).ToString()));
       }
     }
 
@@ -1905,7 +1914,7 @@ namespace FreeLibSet.Parsing
             case ">=": return arg1 >= arg2;
             case "<=": return arg1 <= arg2;
             default:
-              throw new InvalidOperationException("Операция \"" + op + "\" не реализована");
+              throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, typeof(Int32).ToString()));
           }
         }
       }
@@ -1942,7 +1951,7 @@ namespace FreeLibSet.Parsing
         case "=": return arg1 == arg2;
         case "<>": return arg1 != arg2;
         default:
-          throw new InvalidOperationException("Для строк применимы только операции \"+\", \"=\" и \"<>\". Операция \"" + op + "\" не реализована");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, typeof(String).ToString()));
       }
     }
 
@@ -1953,7 +1962,7 @@ namespace FreeLibSet.Parsing
         case "=": return arg1 == arg2;
         case "<>": return arg1 != arg2;
         default:
-          throw new InvalidOperationException("Для логических значений применимы только операции \"=\" и \"<>\". Операция \"" + op + "\" не применима");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, typeof(Boolean).ToString()));
       }
     }
 
@@ -1982,7 +1991,7 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для двух аргументов DateTime");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, typeof(DateTime).ToString()));
       }
     }
 
@@ -2014,7 +2023,7 @@ namespace FreeLibSet.Parsing
         case ">=": return dt1 >= arg2;
         case "<=": return dt1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для двух аргументов DateTime");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOpDiffType, op, typeof(Double).ToString(), typeof(DateTime).ToString()));
       }
     }
 
@@ -2032,7 +2041,7 @@ namespace FreeLibSet.Parsing
         case ">=": return arg1 >= arg2;
         case "<=": return arg1 <= arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для двух аргументов TimeSpan");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOp, op, typeof(TimeSpan).ToString()));
       }
     }
 
@@ -2043,7 +2052,7 @@ namespace FreeLibSet.Parsing
       {
         case "+": return arg2 + arg1; // 09.11.2022
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для аргументов TimeSpan и DateTime");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOpDiffType, op, typeof(TimeSpan).ToString(), typeof(DateTime).ToString()));
       }
     }
 
@@ -2055,7 +2064,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg1 + arg2;
         case "-": return arg1 - arg2;
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для двух аргументов TimeSpan");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOpDiffType, op, typeof(DateTime).ToString(), typeof(TimeSpan).ToString()));
       }
     }
 
@@ -2066,7 +2075,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg1 + TimeSpan.FromDays(arg2);
         case "-": return arg1 - TimeSpan.FromDays(arg2);
         default:
-          throw new InvalidOperationException("Операция \"" + op + "\" не поддерживается для аргументов TimeSpan и Double");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongBinaryOpDiffType, op, typeof(TimeSpan).ToString(), typeof(Double).ToString()));
       }
     }
 
@@ -2103,7 +2112,7 @@ namespace FreeLibSet.Parsing
       if (arg is TimeSpan)
         return CalcTimeSpan(op, (TimeSpan)arg);
 
-      throw new NotSupportedException("Унарные операции не реализованы для типа " + arg.GetType().ToString());
+      throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongUnaryOp, op, arg.GetType().ToString()));
     }
 
     private static object CalcDecimal(string op, decimal arg)
@@ -2113,7 +2122,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для Decimal");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongUnaryOp, op, typeof(Decimal).ToString()));
       }
     }
 
@@ -2124,7 +2133,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для Double");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongUnaryOp, op, typeof(Double).ToString()));
       }
     }
 
@@ -2135,7 +2144,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для Single");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongUnaryOp, op, typeof(Single).ToString()));
       }
     }
 
@@ -2146,7 +2155,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для Int32");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongUnaryOp, op, typeof(Int32).ToString()));
       }
     }
 
@@ -2157,7 +2166,7 @@ namespace FreeLibSet.Parsing
         case "+": return arg;
         case "-": return -arg;
         default:
-          throw new InvalidOperationException("Унарная операция \"" + op + "\" не реализована для TimeSpan");
+          throw new InvalidOperationException(String.Format(Res.MathOpParser_Err_WrongUnaryOp, op, typeof(TimeSpan).ToString()));
       }
     }
 
@@ -2255,7 +2264,7 @@ namespace FreeLibSet.Parsing
         return CreateParenthesExpression(data, leftExpression);
       if (opToken.TokenType == ")")
       {
-        opToken.SetError("Непарная закрывающая скобка");
+        opToken.SetError(Res.MathOpParser_Err_UnpairedCloseParenthesis);
         return null;
       }
 
@@ -2291,7 +2300,7 @@ namespace FreeLibSet.Parsing
       if (rightExpession == null)
       {
         if (data.FirstErrorToken == null)
-          opToken.SetError("Не найден правый операнд для операции \"" + opToken.TokenType + "\"");
+          opToken.SetError(String.Format(Res.MathOpParser_Err_RightArgNotFound, opToken.TokenType));
         return null;
       }
 
@@ -2301,7 +2310,7 @@ namespace FreeLibSet.Parsing
         if (!UnaryOps.Contains(opToken.TokenType))
         {
           //data.CurrToken. Исправлено 10.01.2022
-          opToken.SetError("Не найден левый операнд для операции \"" + opToken.TokenType + "\". Операция не может быть унарной");
+          opToken.SetError(String.Format(Res.MathOpParser_Err_LeftArgNotFound, opToken.TokenType));
           return null;
         }
 
@@ -2314,7 +2323,7 @@ namespace FreeLibSet.Parsing
       if (!BinaryOps.Contains(opToken.TokenType))
       {
         //data.CurrToken. Исправлено 10.01.2022
-        opToken.SetError("Операция \"" + opToken.TokenType + "\" не может быть бинарной");
+        opToken.SetError(String.Format(Res.MathOpParser_Err_OpNotBinary, opToken.TokenType));
         return null;
       }
 
@@ -2384,7 +2393,7 @@ namespace FreeLibSet.Parsing
     {
       int p = BinaryOps.IndexOf(op);
       if (p < 0)
-        throw new ArgumentException("Операции \"" + op + "\" нет в списке бинарных операций", "op");
+        throw new ArgumentException(String.Format(Res.MathOpParser_Err_UnknownBinaryOp, op), "op");
 
       return BinaryOps[p].Priority;
     }
@@ -2397,7 +2406,7 @@ namespace FreeLibSet.Parsing
 
       if (leftExpression != null)
       {
-        openToken.SetError("Перед открывающей скобкой должна идти операция");
+        openToken.SetError(Res.MathOpParser_Err_AfterNoOp);
         // ? можно продолжить обзор
       }
 
@@ -2405,7 +2414,7 @@ namespace FreeLibSet.Parsing
       if (expr == null)
       {
         if (data.FirstErrorToken == null)
-          openToken.SetError("Выражение в скобках не задано");
+          openToken.SetError(Res.MathOpParser_Err_NothingInParentheses);
         return null;
       }
 
@@ -2419,7 +2428,7 @@ namespace FreeLibSet.Parsing
         return parExpr;
       }
 
-      openToken.SetError("Не найдена парная закрывающая скобка");
+      openToken.SetError(Res.MathOpParser_Err_CloseParenthesisNotFound);
       return null;
     }
 
@@ -2446,7 +2455,7 @@ namespace FreeLibSet.Parsing
     public BinaryExpression(string op, IExpression leftExpression, IExpression rightExpression, BinaryOpDelegate calcMethod)
     {
       if (String.IsNullOrEmpty(op))
-        throw new ArgumentNullException("op");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("op");
       if (leftExpression == null)
         throw new ArgumentNullException("leftExpression");
       if (rightExpression == null)
@@ -2650,7 +2659,7 @@ namespace FreeLibSet.Parsing
     public UnaryExpression(string op, IExpression rightExpression, UnaryOpDelegate calcMethod)
     {
       if (String.IsNullOrEmpty(op))
-        throw new ArgumentNullException("op");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("op");
       if (rightExpression == null)
         throw new ArgumentNullException("rightExpression");
       if (calcMethod == null)

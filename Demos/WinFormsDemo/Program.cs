@@ -26,19 +26,22 @@ namespace WinFormsDemo
 
         ListSelectDialog dlg = new ListSelectDialog();
         dlg.Title = "WinFormsDemo";
-        dlg.ListTitle = "Режим тестирования";
+        dlg.ListTitle = "Test mode";
         dlg.Items = new string[] {
-          "EFPFolderBrowserButton и EFPFileDialogButton",
+          "EFPDateRangeBox && EFPDateOrRangeBox",
+          "EFPFolderBrowserButton & EFPFileDialogButton",
           "EFPTabControl",
-          "EFPTreeView и EFPTreeViewAdv",
+          "EFPTreeView & EFPTreeViewAdv",
           "EFPDBxGridFilters",
           "ManualOrderColumn",
           "Wizard",
           "CultureInfo",
           "EFPApp.ShowAboutDialog()",
+          "EFPClipboard",
         };
 
         string[] codes = new string[] {
+          "EFPDateRangeBox",
           "FileControls",
           "EFPTabControl",
           "TreeView",
@@ -47,12 +50,16 @@ namespace WinFormsDemo
           "Wizard",
           "Culture",
           "About",
+          "EFPClipboard",
         };
 
         while (dlg.ShowDialog() == DialogResult.OK)
         {
           switch (codes[dlg.SelectedIndex])
           {
+            case "EFPDateRangeBox":
+              EFPApp.ShowDialog(new EFPDateRangeBoxDemo.DateRangeBoxForm(), true);
+              break;
             case "Culture":
               EFPApp.ShowDialog(new CultureDemo.CultureSelForm(), true);
               break;
@@ -77,14 +84,17 @@ namespace WinFormsDemo
             case "About":
               EFPApp.ShowAboutDialog();
               break;
+            case "EFPClipboard":
+              EFPApp.ShowDialog(new EFPClipboardDemo.EFPClipboardForm(), true);
+              break;
             default:
-              throw new BugException("Неизвестный режим");
+              throw new BugException("Unknown mode");
           }
         }
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска программы");
+        EFPApp.ShowException(e, "App start error");
       }
     }
 

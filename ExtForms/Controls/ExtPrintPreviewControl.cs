@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms
   /// Добавляет прокрутку изображения с помощью колесика мыши и сдвиг при нажатой
   /// левой кнопке
   /// </summary>
-  [Description("Расширение класса просмотра изображения с расширенной обработкой мыши")]
+  [Description("PrintPreviewControl with mouse support extension")]
   [ToolboxBitmap(typeof(ExtPrintPreviewControl), "ExtPrintPreviewControl.bmp")]
   [ToolboxItem(true)]
   public class ExtPrintPreviewControl : PrintPreviewControl
@@ -192,7 +192,7 @@ namespace FreeLibSet.Forms
                 (IntPtr)(SB_PAGEDOWN), (IntPtr)0);
               break;
             default:
-              throw new BugException("Неизвестный KeyCode=" + args.KeyCode.ToString());
+              throw new BugException("Unknown KeyCode=" + args.KeyCode.ToString());
           }
           WndProc(ref msg);
           return;
@@ -363,7 +363,7 @@ namespace FreeLibSet.Forms
           catch(Exception e)
           {
             _RowsErrorShift = 0;
-            EFPApp.ShowException(e, "Ошибка установки свойства PrintPreviewControl.Rows=0. Требуется исправление в ExtPrintPreviewControl");
+            EFPApp.ShowException(e, "Error property set for PrintPreviewControl.Rows=0. Bug fixing required in ExtPrintPreviewControl");
           }
         }
 

@@ -43,6 +43,7 @@
     <Compile Include="Calendar\YearMonthDayAgeTests.cs" />
     <Compile Include="Collections\DisposableDictionaryTests.cs" />
     <Compile Include="Collections\NumericStringComparerTests.cs" />
+    <Compile Include="Core\ExceptionFactoryTests.cs" />
     <Compile Include="Data\AndFilterTests.cs" />
     <Compile Include="Data\CompareFilterTests.cs" />
     <Compile Include="Data\DBxDataRowExtValuesTests.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Formatting\FormatStringToolsTests.cs" />
     <Compile Include="Formatting\SimpleDigitalMaskProviderTests.cs" />
     <Compile Include="Formatting\StdMaskProviderTests.cs" />
+    <Compile Include="IO\FileBatchHandlerTests.cs" />
     <Compile Include="IO\FileCompressorTests.cs" />
     <Compile Include="IO\IniFileTests.cs" />
     <Compile Include="IO\PathEnumerableTests.cs" />

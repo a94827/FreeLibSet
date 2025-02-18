@@ -36,8 +36,8 @@ namespace FreeLibSet.Forms.Reporting
 
       efpClipMargins = new EFPCheckBox(page.BaseProvider, cbClipMargins);
 
-      page.Text = "Графика";
-      page.ToolTipText = "Выбор разрешения и количества цветов";
+      page.Text = Res.BRPageSetupBitmap_Title_Tab;
+      page.ToolTipText = Res.BRPageSetupBitmap_ToolTip_Tab;
       page.ImageKey = "Font";
       page.DataToControls += DataToControls;
       page.DataFromControls += DataFromControls;
@@ -120,11 +120,12 @@ namespace FreeLibSet.Reporting
     /// ИменаЮ соответствующие <see cref="ColorFormatCodes"/>
     /// </summary>
     public static string[] ColorFormatNames = new string[] {
-        "Черно-белый",
-        "4-битный цвет",
-        "8-битный цвет",
-        //"16-битный цвет",
-        "24-битный цвет"};
+        Res.BRPageSetupBitmap_Msg_BW,
+        String.Format(Res.BRPageSetupBitmap_Msg_BitDepth, "4"),
+        String.Format(Res.BRPageSetupBitmap_Msg_BitDepth, "8"),
+        //String.Format(Res.BRPageSetupBitmap_Msg_BitDepth, "16"),
+        String.Format(Res.BRPageSetupBitmap_Msg_BitDepth, "24")
+    };
 
     #endregion
 
@@ -155,7 +156,7 @@ namespace FreeLibSet.Reporting
       set
       {
         if (value < MinResolution || value > MaxResolution)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, MinResolution, MaxResolution);
         _Resolution = value;
       }
     }
@@ -171,7 +172,7 @@ namespace FreeLibSet.Reporting
       set
       {
         if (Array.IndexOf<string>(ColorFormatCodes, value) < 0)
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgUnknownValue("value", value, ColorFormatCodes);
         _ColorFormat = value;
       }
     }
@@ -192,7 +193,7 @@ namespace FreeLibSet.Reporting
           //case "C16": return PixelFormat.Format16bppRgb565; 
           case "C24": return PixelFormat.Format24bppRgb;
           default:
-            throw new BugException("Неизвестный пиксельный формат \"" + _ColorFormat + "\"");
+            throw new BugException("Unknown ColorFormat=\"" + _ColorFormat + "\"");
         }
       }
     }

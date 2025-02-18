@@ -157,9 +157,8 @@ namespace FreeLibSet.Forms
       #region Редактирование
 
       ciEdit = new EFPCommandItem("Edit", "Edit");
-      ciEdit.MenuText = "Редактировать запись";
+      ciEdit.MenuText = Res.Cmd_Menu_Edit_Edit;
       ciEdit.ImageKey = "Edit";
-      ciEdit.ToolTipText = "Редактировать";
       ciEdit.GroupBegin = true;
       ciEdit.Click += new EventHandler(ciEdit_Click);
       Add(ciEdit);
@@ -171,33 +170,30 @@ namespace FreeLibSet.Forms
       Add(ciEdit2);
 
       ciInsert = new EFPCommandItem("Edit", "Insert");
-      ciInsert.MenuText = "Новая запись";
+      ciInsert.MenuText = Res.Cmd_Menu_Edit_Insert;
       ciInsert.ImageKey = "Insert";
-      ciInsert.ToolTipText = "Создать";
       ciInsert.ShortCut = Keys.Insert;
       ciInsert.Click += new EventHandler(ciInsert_Click);
       Add(ciInsert);
 
       ciInsertCopy = new EFPCommandItem("Edit", "InsertCopy");
-      ciInsertCopy.MenuText = "Копия записи";
+      ciInsertCopy.MenuText = Res.Cmd_Menu_Edit_InsertCopy;
       ciInsertCopy.ImageKey = "InsertCopy";
-      ciInsertCopy.ToolTipText = "Создать на основании существующего";
+      ciInsertCopy.ToolTipText = Res.Cmd_Menu_ToolTip_InsertCopy;
       ciInsertCopy.ShortCut = Keys.Insert | Keys.Alt;
       ciInsertCopy.Click += new EventHandler(ciInsertCopy_Click);
       Add(ciInsertCopy);
 
       ciDelete = new EFPCommandItem("Edit", "Delete");
-      ciDelete.MenuText = "Удалить запись";
+      ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete;
       ciDelete.ImageKey = "Delete";
-      ciDelete.ToolTipText = "Удалить";
       ciDelete.ShortCut = Keys.Delete;
       ciDelete.Click += new EventHandler(ciDelete_Click);
       Add(ciDelete);
 
       ciView = new EFPCommandItem("Edit", "View");
-      ciView.MenuText = "Просмотреть запись";
+      ciView.MenuText = Res.Cmd_Menu_Edit_View;
       ciView.ImageKey = "View";
-      ciView.ToolTipText = "Просмотр";
       ciView.GroupEnd = true;
       ciView.ShortCut = Keys.Shift | Keys.Return;
       ciView.Click += new EventHandler(ciView_Click);
@@ -205,8 +201,8 @@ namespace FreeLibSet.Forms
 
       if (!EFPApp.EasyInterface)
       {
-        ciInlineEditStatus = new EFPCommandItem("Edit", "InlineEditState");
-        ciInlineEditStatus.MenuText = "Редактирование по месту";
+        ciInlineEditStatus = new EFPCommandItem("Edit", "EditInline");
+        ciInlineEditStatus.MenuText = Res.Cmd_Menu_Edit_EditInline;
         ciInlineEditStatus.ImageKey = "EmptyImage";
         ciInlineEditStatus.StatusBarText = EFPCommandItem.EmptyStatusBarText;
         ciInlineEditStatus.Click += new EventHandler(ciInlineEditStatus_Click);
@@ -224,7 +220,6 @@ namespace FreeLibSet.Forms
       Add(ciCut);
 
       ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
-      ciCopy.MenuText = "Копировать ячейки";
       ciCopy.Enabled = true;
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
@@ -234,7 +229,7 @@ namespace FreeLibSet.Forms
       if (EFPApp.ShowToolTips)
       {
         ciCopyToolTip = new EFPCommandItem("Edit", "CopyToolTip");
-        ciCopyToolTip.MenuText = "Копировать всплывающую подсказку";
+        ciCopyToolTip.MenuText = Res.Cmd_Menu_Edit_CopyToolTip;
         ciCopyToolTip.ImageKey = "CopyToolTip";
         ciCopyToolTip.Click += new EventHandler(DoCopyToolTip);
         ciCopyToolTip.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
@@ -250,18 +245,14 @@ namespace FreeLibSet.Forms
       #region Выделить все
 
       ciSelectAll = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.SelectAll);
-      ciSelectAll.MenuText = "Выделить все строки таблицы";
-      //ciDebugChanges.ImageKey="SelectAll";
-      ciSelectAll.ToolTipText = "Выделить все";
       ciSelectAll.Click += new EventHandler(SelectAll);
       Add(ciSelectAll);
 
       #endregion
 
-      #region "Обновить"
+      #region Обновить
 
       ciRefresh = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Refresh);
-      ciRefresh.MenuText = "Обновить содержимое";
       ciRefresh.Click += new EventHandler(Refresh);
       Add(ciRefresh);
 
@@ -269,8 +260,8 @@ namespace FreeLibSet.Forms
 
       #region Установка отметок
 
-      MenuCheck = new EFPCommandItem("Edit", "CheckMarks");
-      MenuCheck.MenuText = "Установка отметок для строк";
+      MenuCheck = new EFPCommandItem("Edit", "MenuCheckMarks");
+      MenuCheck.MenuText = Res.Cmd_Menu_CheckMarks;
       MenuCheck.ImageKey = "CheckListChecked";
       MenuCheck.Usage = EFPCommandItemUsage.Menu;
       Add(MenuCheck);
@@ -278,7 +269,7 @@ namespace FreeLibSet.Forms
       ciCheckSel = new EFPCommandItem("Edit", "SetCheckMarks");
       ciCheckSel.Parent = MenuCheck;
       ciCheckSel.GroupBegin = true;
-      ciCheckSel.MenuText = "Установить отметки для выбранных строк";
+      ciCheckSel.MenuText = Res.Cmd_Menu_CheckMarks_SetSelected;
       ciCheckSel.ImageKey = "CheckListChecked";
       ciCheckSel.ShortCut = Keys.Add;
       ciCheckSel.Click += new EventHandler(ciCheckSel_Click);
@@ -286,7 +277,7 @@ namespace FreeLibSet.Forms
 
       ciUncheckSel = new EFPCommandItem("Edit", "DeleteCheckMarks");
       ciUncheckSel.Parent = MenuCheck;
-      ciUncheckSel.MenuText = "Снять отметки для выбранных строк";
+      ciUncheckSel.MenuText = Res.Cmd_Menu_CheckMarks_DelSelected;
       ciUncheckSel.ImageKey = "CheckListUnchecked";
       ciUncheckSel.ShortCut = Keys.Subtract;
       ciUncheckSel.Click += new EventHandler(ciUncheckSel_Click);
@@ -294,7 +285,7 @@ namespace FreeLibSet.Forms
 
       ciInvertSel = new EFPCommandItem("Edit", "InvertCheckMarks");
       ciInvertSel.Parent = MenuCheck;
-      ciInvertSel.MenuText = "Инвертировать отметки для выбранных строк";
+      ciInvertSel.MenuText = Res.Cmd_Menu_CheckMarks_InvSelected;
       ciInvertSel.ImageKey = "CheckListInvert";
       ciInvertSel.ShortCut = Keys.Multiply;
       ciInvertSel.Click += new EventHandler(ciInvertSel_Click);
@@ -302,7 +293,7 @@ namespace FreeLibSet.Forms
 
       ciCheckAll = new EFPCommandItem("Edit", "SetAllCheckMarks");
       ciCheckAll.Parent = MenuCheck;
-      ciCheckAll.MenuText = "Установить отметки для всех строк";
+      ciCheckAll.MenuText = Res.Cmd_Menu_CheckMarks_SetAll;
       ciCheckAll.ImageKey = "CheckListAll";
       ciCheckAll.ShortCut = Keys.Control | Keys.A;
       ciCheckAll.Click += new EventHandler(ciCheckAll_Click);
@@ -311,7 +302,7 @@ namespace FreeLibSet.Forms
       ciUncheckAll = new EFPCommandItem("Edit", "DeleteAllCheckMarks");
       ciUncheckAll.Parent = MenuCheck;
       ciUncheckAll.GroupEnd = true;
-      ciUncheckAll.MenuText = "Снять отметки для всех строк";
+      ciUncheckAll.MenuText = Res.Cmd_Menu_CheckMarks_DelAll;
       ciUncheckAll.ImageKey = "CheckListNone";
       ciUncheckAll.ShortCut = Keys.Control | Keys.Shift | Keys.A;
       ciUncheckAll.Click += new EventHandler(ciUncheckAll_Click);
@@ -341,7 +332,7 @@ namespace FreeLibSet.Forms
       #region Порядок строк
 
       _MenuSort = new EFPCommandItem("Edit", "MenuOrder");
-      _MenuSort.MenuText = "Порядок строк";
+      _MenuSort.MenuText = Res.Cmd_Menu_RowOrder;
       _MenuSort.ImageKey = "OrderAZ";
       _MenuSort.Usage = EFPCommandItemUsage.Menu;
       Add(_MenuSort);
@@ -350,7 +341,7 @@ namespace FreeLibSet.Forms
 
       ciSortMoveUp = new EFPCommandItem("Edit", "MoveUp");
       ciSortMoveUp.Parent = _MenuSort;
-      ciSortMoveUp.MenuText = "Переместить вверх";
+      ciSortMoveUp.MenuText = Res.Cmd_Menu_RowOrder_MoveUp;
       ciSortMoveUp.ImageKey = "ArrowUp";
       ciSortMoveUp.ShortCut = Keys.Alt | Keys.Up;
       ciSortMoveUp.Click += new EventHandler(ciSortMoveUp_Click);
@@ -359,7 +350,7 @@ namespace FreeLibSet.Forms
 
       ciSortMoveDown = new EFPCommandItem("Edit", "MoveDown");
       ciSortMoveDown.Parent = _MenuSort;
-      ciSortMoveDown.MenuText = "Переместить вниз";
+      ciSortMoveDown.MenuText = Res.Cmd_Menu_RowOrder_MoveDown;
       ciSortMoveDown.ImageKey = "ArrowDown";
       ciSortMoveDown.ShortCut = Keys.Alt | Keys.Down;
       ciSortMoveDown.Click += new EventHandler(ciSortMoveDown_Click);
@@ -368,7 +359,7 @@ namespace FreeLibSet.Forms
 
       ciSortRestore = new EFPCommandItem("Edit", "RestoreOrder");
       ciSortRestore.Parent = _MenuSort;
-      ciSortRestore.MenuText = "Восстановить порядок по умолчанию";
+      ciSortRestore.MenuText = Res.Cmd_Menu_RowOrder_RestoreOrder;
       ciSortRestore.ImageKey = "RestoreDefaultOrder";
       ciSortRestore.Click += new EventHandler(ciSortRestore_Click);
       ciSortRestore.Usage = EFPCommandItemUsage.None; // включим, когда надо
@@ -383,44 +374,44 @@ namespace FreeLibSet.Forms
       #region Строки с ошибками
 
       _MenuRowErrors = new EFPCommandItem("View", "MenuRowErrors");
-      _MenuRowErrors.MenuText = "Строки с ошибками";
+      _MenuRowErrors.MenuText = Res.Cmd_Menu_RowErrNav;
       _MenuRowErrors.ImageKey = "ErrorRowNavigation";
       _MenuRowErrors.Usage = EFPCommandItemUsage.Menu;
       Add(_MenuRowErrors);
 
       ciGotoPrevErrorWarning = new EFPCommandItem("View", "PrevRowWarning");
       ciGotoPrevErrorWarning.Parent = _MenuRowErrors;
-      ciGotoPrevErrorWarning.MenuText = "Перейти к предыдущей строке с ош./пр.";
+      ciGotoPrevErrorWarning.MenuText = Res.Cmd_Menu_RowErrNav_PrevWarning;
       ciGotoPrevErrorWarning.ImageKey = "PrevErrorRow";
       ciGotoPrevErrorWarning.ShortCut = Keys.Control | Keys.OemOpenBrackets;
-      ciGotoPrevErrorWarning.ToolTipText = "Перейти к предыдущей строке с ошибкой или предупреждением";
+      ciGotoPrevErrorWarning.ToolTipText = Res.Cmd_ToolTip_RowErrNav_PrevWarning;
       ciGotoPrevErrorWarning.Click += new EventHandler(ciGotoPrevErrorWarning_Click);
       Add(ciGotoPrevErrorWarning);
 
       ciGotoNextErrorWarning = new EFPCommandItem("View", "NextRowWarning");
       ciGotoNextErrorWarning.Parent = _MenuRowErrors;
-      ciGotoNextErrorWarning.MenuText = "Перейти к следующей строке с ош./пр.";
+      ciGotoNextErrorWarning.MenuText = Res.Cmd_Menu_RowErrNav_NextWarning;
       ciGotoNextErrorWarning.ImageKey = "NextErrorRow";
       ciGotoNextErrorWarning.ShortCut = Keys.Control | Keys.OemCloseBrackets;
-      ciGotoNextErrorWarning.ToolTipText = "Перейти к следующей строке с ошибкой или предупреждением";
+      ciGotoNextErrorWarning.ToolTipText = Res.Cmd_ToolTip_RowErrNav_NextWarning;
       ciGotoNextErrorWarning.Click += new EventHandler(ciGotoNextErrorWarning_Click);
       Add(ciGotoNextErrorWarning);
 
       ciGotoPrevErrorOnly = new EFPCommandItem("View", "PrevRowError");
       ciGotoPrevErrorOnly.Parent = _MenuRowErrors;
-      ciGotoPrevErrorOnly.MenuText = "Перейти к предыдущей строке с ошибкой";
+      ciGotoPrevErrorOnly.MenuText = Res.Cmd_Menu_RowErrNav_PrevError;
       //ciGotoPrevErrorOnly.ImageKey = "PrevErrorRow";
       ciGotoPrevErrorOnly.ShortCut = Keys.Control | Keys.Shift | Keys.OemOpenBrackets;
-      ciGotoPrevErrorOnly.ToolTipText = "Перейти к предыдущей строке с ошибкой";
+      ciGotoPrevErrorOnly.ToolTipText = Res.Cmd_ToolTip_RowErrNav_PrevError;
       ciGotoPrevErrorOnly.Click += new EventHandler(ciGotoPrevErrorOnly_Click);
       Add(ciGotoPrevErrorOnly);
 
       ciGotoNextErrorOnly = new EFPCommandItem("View", "NextRowError");
       ciGotoNextErrorOnly.Parent = _MenuRowErrors;
-      ciGotoNextErrorOnly.MenuText = "Перейти к следующей строке с ошибкой";
+      ciGotoNextErrorOnly.MenuText = Res.Cmd_Menu_RowErrNav_NextError;
       //ciGotoNextErrorOnly.ImageKey = "NextErrorRow";
       ciGotoNextErrorOnly.ShortCut = Keys.Control | Keys.Shift | Keys.OemCloseBrackets;
-      ciGotoNextErrorOnly.ToolTipText = "Перейти к следующей строке с ошибкой";
+      ciGotoNextErrorOnly.ToolTipText = Res.Cmd_ToolTip_RowErrNav_NextError;
       ciGotoNextErrorOnly.GroupEnd = true;
       ciGotoNextErrorOnly.Click += new EventHandler(ciGotoNextErrorOnly_Click);
       Add(ciGotoNextErrorOnly);
@@ -429,7 +420,8 @@ namespace FreeLibSet.Forms
       {
         ciCopyRowErrorMessages = new EFPCommandItem("Edit", "CopyError");
         ciCopyRowErrorMessages.Parent = _MenuRowErrors;
-        ciCopyRowErrorMessages.MenuText = "Копировать сообщение в буфер обмена";
+        ciCopyRowErrorMessages.MenuText = Res.Cmd_Menu_RowErrNav_CopyMessage;
+        ciCopyRowErrorMessages.ToolTipText = Res.Cmd_ToolTip_RowErrNav_CopyMessage;
         ciCopyRowErrorMessages.Click += new EventHandler(ciCopyRowErrorMessages_Click);
         Add(ciCopyRowErrorMessages);
       }
@@ -438,7 +430,8 @@ namespace FreeLibSet.Forms
       {
         ciShowRowErrorMessages = new EFPCommandItem("View", "ErrorList");
         ciShowRowErrorMessages.Parent = _MenuRowErrors;
-        ciShowRowErrorMessages.MenuText = "Список сообщений";
+        ciShowRowErrorMessages.MenuText = Res.Cmd_Menu_RowErrNav_MessageList;
+        ciShowRowErrorMessages.ToolTipText = Res.Cmd_ToolTip_RowErrNav_MessageList;
         ciShowRowErrorMessages.Click += new EventHandler(ciShowRowErrorMessages_Click);
         Add(ciShowRowErrorMessages);
 
@@ -458,21 +451,19 @@ namespace FreeLibSet.Forms
       if (EFPApp.ShowAutoCalcSums)
       {
         ciStatCount = new EFPCommandItem("View", "StatusCount");
+        ciStatCount.MenuText = Res.Cmd_ToolTip_View_StatCount; // для DisplayName
         ciStatCount.StatusBarText = "????";
-        ciStatCount.MenuText = "Количество чисел";
-        ciStatCount.ToolTipText = StatCountToolTipText1 + Environment.NewLine + StatCountToolTipText2;
         ciStatCount.Usage = EFPCommandItemUsage.StatusBar;
         ciStatCount.Click += new EventHandler(ciStatCount_Click);
         Add(ciStatCount);
 
-        ciStatSumma = new EFPCommandItem("View", "StatusSum");
-        ciStatSumma.StatusBarText = "??????????";
+        ciStatSum = new EFPCommandItem("View", "StatusSum");
+        ciStatSum.MenuText = Res.Cmd_ToolTip_View_StatSum; // для DisplayName
+        ciStatSum.StatusBarText = "??????????";
         //ciStatSumma.ImageKey = "Sum";
-        ciStatSumma.MenuText = "Сумма";
-        ciStatSumma.ToolTipText = StatSummaToolTipText1 + Environment.NewLine + StatSummaToolTipText2;
-        ciStatSumma.Usage = EFPCommandItemUsage.StatusBar;
-        ciStatSumma.Click += new EventHandler(ciStatSumma_Click);
-        Add(ciStatSumma);
+        ciStatSum.Usage = EFPCommandItemUsage.StatusBar;
+        ciStatSum.Click += new EventHandler(ciStatSum_Click);
+        Add(ciStatSum);
       }
 
       // так не работает
@@ -532,7 +523,7 @@ namespace FreeLibSet.Forms
         ciDelete.Usage = EFPCommandItemUsage.None;
         ciView.Usage = EFPCommandItemUsage.None;
       }
-      if ((!ForceInlineEditStatusPanel) && ciInlineEditStatus!=null)
+      if ((!ForceInlineEditStatusPanel) && ciInlineEditStatus != null)
       {
         if (ControlProvider.Control.ReadOnly)
           ciInlineEditStatus.Usage = EFPCommandItemUsage.None;
@@ -615,7 +606,7 @@ namespace FreeLibSet.Forms
         _MenuSort.Children.AddSeparator();
 
         ciOrderCustom = new EFPCommandItem("View", "CustomOrder");
-        ciOrderCustom.MenuText = "&Произвольный";
+        ciOrderCustom.MenuText = Res.Cmd_Menu_RowOrder_Custom;
         ciOrderCustom.ImageKey = "OrderCustom";
         ciOrderCustom.Parent = _MenuSort;
         ciOrderCustom.ShortCut = Keys.Control | Keys.D9;
@@ -625,7 +616,7 @@ namespace FreeLibSet.Forms
 
 
         ciOrderMore = new EFPCommandItem("View", "OrderDialog");
-        ciOrderMore.MenuText = "&Еще ...";
+        ciOrderMore.MenuText = Res.Cmd_Menu_RowOrder_Dialog;
         ciOrderMore.Parent = _MenuSort;
         ciOrderMore.ShortCut = Keys.Control | Keys.D0;
         ciOrderMore.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
@@ -707,12 +698,12 @@ namespace FreeLibSet.Forms
           ControlProvider.Control.SelectionMode == DataGridViewSelectionMode.ColumnHeaderSelect)))
         {
           ciStatCount.Visible = false;
-          ciStatSumma.Visible = false;
+          ciStatSum.Visible = false;
         }
         else if (!ControlProvider.HasSummableColumns)
         {
           ciStatCount.Visible = false;
-          ciStatSumma.Visible = false;
+          ciStatSum.Visible = false;
         }
       }
 
@@ -784,23 +775,15 @@ namespace FreeLibSet.Forms
 
         if (selState == UISelectedRowsState.MultiRows)
         {
-          if (!ControlProvider.ReadOnly)
-          {
-            ciEdit.MenuText = "Редактировать выбранные записи";
-            ciDelete.MenuText = "Удалить выбранные записи";
-          }
-          if (ControlProvider.CanView)
-            ciView.MenuText = "Просмотреть выбранные записи";
+          ciEdit.MenuText = Res.Cmd_Menu_Edit_Edit_MultiRows;
+          ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete_MultiRows;
+          ciView.MenuText = Res.Cmd_Menu_Edit_View_MultiRows;
         }
         else
         {
-          if (!ControlProvider.ReadOnly)
-          {
-            ciEdit.MenuText = "Редактировать запись";
-            ciDelete.MenuText = "Удалить запись";
-          }
-          if (ControlProvider.CanView)
-            ciView.MenuText = "Просмотреть запись";
+          ciEdit.MenuText = Res.Cmd_Menu_Edit_Edit_SingleRow;
+          ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete_SingleRow;
+          ciView.MenuText = Res.Cmd_Menu_Edit_View_SingleRow;
         }
 
         //if (ciCut.Usage != EFPCommandItemUsage.None)
@@ -823,17 +806,17 @@ namespace FreeLibSet.Forms
         if (ControlProvider.Control.ReadOnly)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditReadOnlyTable";
-          ciInlineEditStatus.ToolTipText = "Просмотр не поддерживает редактирование по месту";
+          ciInlineEditStatus.ToolTipText = Res.Cmd_ToolTip_Edit_EditInline_ControlReadOnly;
         }
         else if (ControlProvider.Control.CurrentCell == null)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditTableReadOnly";
-          ciInlineEditStatus.ToolTipText = "Нет выбранной ячейки";
+          ciInlineEditStatus.ToolTipText = Res.Cmd_ToolTip_Edit_EditInline_NoSelectedCell;
         }
         else if (ControlProvider.Control.IsCurrentCellInEditMode)
         {
           ciInlineEditStatus.ImageKey = "TableInlineEditProcess";
-          ciInlineEditStatus.ToolTipText = "Выполняется редактирование ячейки";
+          ciInlineEditStatus.ToolTipText = Res.Cmd_ToolTip_Edit_EditInline_EditInProgress;
         }
         else
         {
@@ -841,12 +824,12 @@ namespace FreeLibSet.Forms
           if (ControlProvider.GetCellReadOnly(ControlProvider.Control.CurrentCell, out readOnlyMessage))
           {
             ciInlineEditStatus.ImageKey = "TableInlineEditReadOnlyCell";
-            ciInlineEditStatus.ToolTipText = "Нельзя редактировать ячейку. " + readOnlyMessage;
+            ciInlineEditStatus.ToolTipText = String.Format(Res.Cmd_ToolTip_Edit_EditInline_CellReadOnly, readOnlyMessage);
           }
           else
           {
             ciInlineEditStatus.ImageKey = "TableInlineEdit";
-            ciInlineEditStatus.ToolTipText = "Можно начать редактирование ячейки";
+            ciInlineEditStatus.ToolTipText = Res.Cmd_ToolTip_Edit_EditInline_CanStart;
           }
         }
       }
@@ -875,7 +858,7 @@ namespace FreeLibSet.Forms
       {
         // Поиск по буквам выполняется
         isEnabled = true;
-        menuText = "Закончить поиск по буквам";
+        menuText = Res.Cmd_Menu_Edit_IncSearch_Finish;
         string s = ControlProvider.CurrentIncSearchChars;
         s = s.Replace(' ', (char)(0x00B7));
         s = s.PadRight(20);
@@ -887,26 +870,26 @@ namespace FreeLibSet.Forms
         // Поиск по буквам не выполняется
         if (ControlProvider.CanIncSearch)
         {
-          menuText = "Начать поиск по буквам";
+          menuText = Res.Cmd_Menu_Edit_IncSearch_Start;
           if (ControlProvider.CurrentColumn == null)
           {
             isEnabled = false;
-            statusBarText = "<Столбец не выбран>";
+            statusBarText = Res.Cmd_Status_Edit_IncSearch_NoColumn;
           }
           else
           {
             isEnabled = ControlProvider.CurrentColumn.CanIncSearch;
             if (isEnabled)
-              statusBarText = "<Поиск не начат>";
+              statusBarText = Res.Cmd_Status_Edit_IncSearch_NotStarted;
             else
-              statusBarText = "<Неподходящий столбец>";
+              statusBarText = Res.Cmd_Status_Edit_IncSearch_WrongColumn;
           }
         }
         else
         {
-          menuText = "Поиск по буквам";
+          menuText = Res.Cmd_Menu_Edit_IncSearch;
           isEnabled = false;
-          statusBarText = "<Поиск невозможен>";
+          statusBarText = Res.Cmd_Status_Edit_IncSearch_Unsupported;
         }
       }
 
@@ -999,7 +982,7 @@ namespace FreeLibSet.Forms
           case UIDataState.Delete: return ciDelete;
           case UIDataState.View: return ciView;
           default:
-            throw new ArgumentException();
+            throw ExceptionFactory.ArgUnknownValue("state", state);
         }
       }
     }
@@ -1096,63 +1079,27 @@ namespace FreeLibSet.Forms
 
     private void ciEdit_Click(object sender, EventArgs args)
     {
-      try
-      {
-        ControlProvider.PerformEditData(ControlProvider.ReadOnly ? UIDataState.View : UIDataState.Edit);
-      }
-      catch (Exception e)
-      {
-        EFPApp.ShowException(e, "Ошибка при " + (ControlProvider.ReadOnly ? "просмотре" : "редактировании") + " данных");
-      }
+      ControlProvider.PerformEditData(ControlProvider.ReadOnly ? UIDataState.View : UIDataState.Edit);
     }
 
     private void ciInsert_Click(object sender, EventArgs args)
     {
-      try
-      {
-        ControlProvider.PerformEditData(UIDataState.Insert);
-      }
-      catch (Exception e)
-      {
-        EFPApp.ShowException(e, "Ошибка при добавлении строки данных");
-      }
+      ControlProvider.PerformEditData(UIDataState.Insert);
     }
 
     private void ciInsertCopy_Click(object sender, EventArgs args)
     {
-      try
-      {
-        ControlProvider.PerformEditData(UIDataState.InsertCopy);
-      }
-      catch (Exception e)
-      {
-        EFPApp.ShowException(e, "Ошибка при создании копии строки данных");
-      }
-
+      ControlProvider.PerformEditData(UIDataState.InsertCopy);
     }
 
     private void ciDelete_Click(object sender, EventArgs args)
     {
-      try
-      {
-        ControlProvider.PerformEditData(UIDataState.Delete);
-      }
-      catch (Exception e)
-      {
-        EFPApp.ShowException(e, "Ошибка при удалении данных");
-      }
+      ControlProvider.PerformEditData(UIDataState.Delete);
     }
 
     private void ciView_Click(object sender, EventArgs args)
     {
-      try
-      {
-        ControlProvider.PerformEditData(UIDataState.View);
-      }
-      catch (Exception e)
-      {
-        EFPApp.ShowException(e, "Ошибка при просмотре данных");
-      }
+      ControlProvider.PerformEditData(UIDataState.View);
     }
 
     void ciInlineEditStatus_Click(object sender, EventArgs args)
@@ -1220,20 +1167,20 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.Control.ReadOnly)
       {
-        errorText = "Просмотр не допускает редактирование ячеек";
+        errorText = Res.EFPDataView_Err_ControlReadOnly;
         return false;
       }
 
       EFPDataGridViewRectArea selArea = new EFPDataGridViewRectArea(ControlProvider.Control, EFPDataViewExpRange.Selected);
       if (selArea.IsEmpty)
       {
-        errorText = "Нет выбранных ячеек";
+        errorText = Res.EFPDataView_Err_NoSelectedCell;
         return false;
       }
 
       if (!selArea.AreAllCellsSelected)
       {
-        errorText = "Должна быть выбрана прямоугольная область ячеек";
+        errorText = Res.EFPDataView_Err_NotRectangleSelection;
         return false;
       }
 
@@ -1254,7 +1201,7 @@ namespace FreeLibSet.Forms
       // Копируем все
       if (!PerformCopy())
       {
-        errorText = "Ошибка при выполнении копирования ячеек";
+        errorText = Res.EFPDataView_Err_Copy;
         return false;
       }
 
@@ -1318,11 +1265,11 @@ namespace FreeLibSet.Forms
       {
         if (ControlProvider.Control.GetCellCount(DataGridViewElementStates.Selected) <= 0)
         {
-          EFPApp.ShowTempMessage("В просмотре нет выбранных ячеек");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedCell);
           return false;
         }
 
-        EFPApp.BeginWait("Копирование ячеек в буфер обмена", "Copy");
+        EFPApp.BeginWait(Res.Clipboard_Phase_SetData, "Copy");
         try
         {
           // 05.06.2017
@@ -1344,7 +1291,7 @@ namespace FreeLibSet.Forms
           OnAddDefaultCopyFormats(args);
           OnAddCopyFormats(args);
 
-          EFPApp.Clipboard.SetDataObject(dobj2, true);
+          new EFPClipboard().SetDataObject(dobj2, true);
         }
         finally
         {
@@ -1354,8 +1301,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.MessageBox(e.Message, "Ошибка при копировании в буфер обмена",
-          MessageBoxButtons.OK, MessageBoxIcon.Error);
+        EFPApp.ErrorMessageBox(e.Message);
         return false;
       }
     }
@@ -1426,14 +1372,14 @@ namespace FreeLibSet.Forms
       {
         if (ControlProvider.Control.SelectedRows.Count != 1)
         {
-          EFPApp.ShowTempMessage("Должно быть выбрано не более одной строки");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_MultiSelectedRows);
           return;
         }
 
         text = ControlProvider.GetRowToolTipText(ControlProvider.Control.SelectedRows[0].Index);
         if (String.IsNullOrEmpty(text))
         {
-          EFPApp.ShowTempMessage("Нет всплывающей подсказки для заголовка строки");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoRowToolTip);
           return;
         }
       }
@@ -1441,12 +1387,12 @@ namespace FreeLibSet.Forms
       {
         if (ControlProvider.Control.SelectedCells.Count > 1)
         {
-          EFPApp.ShowTempMessage("Должно быть выбрано не более одной ячейки");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_MultiSelectedCells);
           return;
         }
         if (ControlProvider.Control.CurrentCell == null)
         {
-          EFPApp.ShowTempMessage("Нет выбранной ячейки");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedCell);
           return;
         }
 
@@ -1454,12 +1400,12 @@ namespace FreeLibSet.Forms
           ControlProvider.Control.CurrentCell.ColumnIndex);
         if (String.IsNullOrEmpty(text))
         {
-          EFPApp.ShowTempMessage("Нет всплывающей подсказки для выбранной ячейки");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoCellToolTip);
           return;
         }
       }
 
-      EFPApp.Clipboard.SetText(text);
+      new EFPClipboard().SetText(text);
     }
 
     #endregion
@@ -1537,14 +1483,14 @@ namespace FreeLibSet.Forms
       if (ControlProvider.Control.ReadOnly)
       {
         args.Appliable = false;
-        args.DataInfoText = "Просмотр не поддерживает редактирование \"по месту\"";
+        args.DataInfoText = Res.EFPDataView_Err_InlineEditNotImplemented;
         return;
       }
 
       if (ControlProvider.Control.CurrentCell == null)
       {
         args.Appliable = false;
-        args.DataInfoText = "В просмотре нет выбранной ячейки";
+        args.DataInfoText = Res.EFPDataView_Err_NoSelectedCell;
         return;
       }
 
@@ -1601,7 +1547,7 @@ namespace FreeLibSet.Forms
     private void DoCheckCommand(EFPDataGridViewCheckMarkRows rows, EFPDataGridViewCheckMarkAction action)
     {
       if (ControlProvider.CheckMarkRows(rows, action) == 0)
-        EFPApp.ShowTempMessage("Нет изменившихся отметок строк");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_CheckMarksNotChanged);
     }
 
     #endregion
@@ -1635,12 +1581,12 @@ namespace FreeLibSet.Forms
       {
         if (ControlProvider.CurrentColumn == null)
         {
-          EFPApp.ShowTempMessage("Столбец не выбран");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedColumn);
           return;
         }
         if (!ControlProvider.CurrentColumn.CanIncSearch)
         {
-          EFPApp.ShowTempMessage("Текущий столбец не поддерживает поиск по первым буквам");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_IncSearchNotSupportedByColumn);
           return;
         }
         ControlProvider.CurrentIncSearchColumn = ControlProvider.CurrentColumn;
@@ -1665,9 +1611,10 @@ namespace FreeLibSet.Forms
           ControlProvider.TextSearchContext.ContinueSearch();
       }
       else
+      {
         if (!ControlProvider.CurrentIncSearchColumn.PerformIncSearch(ControlProvider.CurrentIncSearchChars.ToUpper(), true))
-        EFPApp.ShowTempMessage("Нет больше строк, в которых значение поля начинается с \"" +
-          ControlProvider.CurrentIncSearchChars + "\"");
+          EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_IncSearchNoMoreRows, ControlProvider.CurrentIncSearchChars));
+      }
     }
 
     #endregion
@@ -1742,16 +1689,16 @@ namespace FreeLibSet.Forms
       {
         string s;
         if (ControlProvider.CurrentOrder == null)
-          s = "Не задан";
+          s = Res.EFPDataView_Order_None;
         else
           s = ControlProvider.CurrentOrder.DisplayName;
         _MenuSort.MenuRightText = s;
-        _MenuSort.ToolTipText = "Порядок строк (" + s + ")";
+        _MenuSort.ToolTipText = String.Format(Res.Cmd_ToolTip_View_RowOrder_WithName, s);
       }
       else
       {
         _MenuSort.MenuRightText = String.Empty;
-        _MenuSort.ToolTipText = "Порядок строк";
+        _MenuSort.ToolTipText = String.Empty;
       }
 
     }
@@ -1873,7 +1820,7 @@ namespace FreeLibSet.Forms
 
       if (errors.Count == 0)
       {
-        EFPApp.ShowTempMessage("Для текущей строки нет сообщений об ошибках");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoRowToolTip);
         return;
       }
       string[] a = new string[errors.Count];
@@ -1882,7 +1829,7 @@ namespace FreeLibSet.Forms
 
       string text = String.Join(Environment.NewLine, a);
 
-      EFPApp.Clipboard.SetText(text);
+      new EFPClipboard().SetText(text);
     }
 
     /// <summary>
@@ -1982,32 +1929,37 @@ namespace FreeLibSet.Forms
 
     void ciShowRowErrorMessages_Click(object sender, EventArgs args)
     {
+      EFPCommandItem ci = (EFPCommandItem)sender;
+
+      int nRows = ControlProvider.SelectedRowCount;
+      string title1;
+      if (nRows == 1)
+        title1 = Res.EFPDataView_Title_RowMessagesForCurrentRow;
+      else
+        title1 = String.Format(Res.EFPDataView_Title_RowMessagesForCurrentRow, nRows);
+      string title2 = Res.EFPDataView_Title_RowMessagesForAllRows;
+
       RadioSelectDialog dlg = new RadioSelectDialog();
-      dlg.Title = "Показать список сообщений";
-      int n = ControlProvider.SelectedRowCount;
-      dlg.Items = new string[]{ControlProvider.IsCurrentRowSingleSelected ? "Для текущей строки" : "Для выбранных строк (" + n.ToString() + ")",
-        "Для всех строк в просмотре"};
+      dlg.Title = ci.MenuTextWithoutMnemonic;
+      dlg.Items = new string[] { title1, title2 };
       dlg.SelectedIndex = _ShowRowErrorMessagesRowMode;
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
       _ShowRowErrorMessagesRowMode = dlg.SelectedIndex;
       ErrorMessageList errors = new ErrorMessageList();
       string title;
-      EFPApp.BeginWait("Сбор сообщений об ошибках");
+      EFPApp.BeginWait(ci.MenuTextWithoutMnemonic);
       try
       {
         if (_ShowRowErrorMessagesRowMode == 1)
         {
           ControlProvider.GetAllRowsErrorMessages(errors);
-          title = "Сообщения для всех строк таблицы";
+          title = title1;
         }
         else
         {
           ControlProvider.GetSelectedRowsErrorMessages(errors);
-          if (ControlProvider.IsCurrentRowSingleSelected)
-            title = "Сообщения для текущей строки таблицы";
-          else
-            title = "Сообщения для выбранных строк таблицы (" + n.ToString() + ")";
+          title = title2;
         }
       }
       finally
@@ -2039,8 +1991,6 @@ namespace FreeLibSet.Forms
       int rowIndex = DataTools.GetInt(args.Item.Tag);
       if (rowIndex >= 0 && rowIndex < ControlProvider.Control.RowCount)
         ControlProvider.SelectRowIndex(rowIndex);
-      else
-        EFPApp.ShowTempMessage("Несуществующий номер строки");
     }
 
     #endregion
@@ -2062,16 +2012,12 @@ namespace FreeLibSet.Forms
 
     #region Окно суммы в статусной строке
 
-    private EFPCommandItem ciStatCount, ciStatSumma/*, ciStatSummaCopy*/;
+    private EFPCommandItem ciStatCount, ciStatSum/*, ciStatSummaCopy*/;
 
     private Timer _StatSummaTimer;
 
     private const string EmptyStatCountText = "    ";
     private const string EmptyStatSummaText = "    ";
-    private const string StatCountToolTipText1 = "Количество чисел в выбранных ячейках табличного просмотра";
-    private const string StatCountToolTipText2 = "Двойной щелчок мыши - копирование числа в буфер обмена";
-    private const string StatSummaToolTipText1 = "Сумма выбранных ячеек";
-    private const string StatSummaToolTipText2 = "Двойной щелчок мыши - копирование суммы в буфер обмена";
 
 
     /// <summary>
@@ -2094,10 +2040,10 @@ namespace FreeLibSet.Forms
         _StatSummaTimer.Enabled = false;
       ciStatCount.StatusBarText = EmptyStatCountText;
       ciStatCount.ImageKey = String.Empty;
-      ciStatCount.ToolTipText = StatCountToolTipText1;
-      ciStatSumma.ImageKey = String.Empty;
-      ciStatSumma.StatusBarText = EmptyStatSummaText;
-      ciStatSumma.ToolTipText = StatSummaToolTipText1;
+      ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatCount;
+      ciStatSum.ImageKey = String.Empty;
+      ciStatSum.StatusBarText = EmptyStatSummaText;
+      ciStatSum.ToolTipText = Res.Cmd_ToolTip_View_StatSum;
       if (!WantCalcStatItems())
         return;
 
@@ -2106,7 +2052,7 @@ namespace FreeLibSet.Forms
       _CurrStatCellSummaDigits = 0;
       _CurrStatCellCount = null;
       _CurrStatState = StatCalcState.Process;
-      ciStatSumma.ImageKey = "HourGlass";
+      ciStatSum.ImageKey = "HourGlass";
       if (ControlProvider.Control.SelectedCells.Count <= StatCellCountPerCheck)
       {
         CalcStatSum(false);
@@ -2169,7 +2115,7 @@ namespace FreeLibSet.Forms
     private bool CalcStatSum(bool checkTime)
     {
       if (_CurrStatCellIndex == 0)
-        ciStatSumma.StatusBarText = "Идет расчет";
+        ciStatSum.StatusBarText = Res.Cmd_Status_View_StatCalculating;
 
       string errorMessage = null;
       try
@@ -2193,45 +2139,44 @@ namespace FreeLibSet.Forms
           {
             ciStatCount.StatusBarText = _CurrStatCellCount.Value.ToString();
             ciStatCount.ImageKey = "Count";
-            ciStatCount.ToolTipText = StatCountToolTipText1 + Environment.NewLine + StatCountToolTipText2;
+            ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatCount + Environment.NewLine + Res.Cmd_ToolTip_View_StatMouseInfo;
           }
           else
           {
             ciStatCount.StatusBarText = EmptyStatCountText;
             ciStatCount.ImageKey = String.Empty;
-            ciStatCount.ToolTipText = StatCountToolTipText1;
+            ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatCount;
           }
 
           if (_CurrStatCellSumma.HasValue)
           {
-            ciStatSumma.StatusBarText = /*Math.Round(*/_CurrStatCellSumma.Value/*, CurrStatCellSummaDigits, MidpointRounding.AwayFromZero)*/.ToString();
-            ciStatSumma.ImageKey = "Sum";
-            ciStatSumma.ToolTipText = StatSummaToolTipText1 + Environment.NewLine + StatSummaToolTipText2;
+            ciStatSum.StatusBarText = /*Math.Round(*/_CurrStatCellSumma.Value/*, CurrStatCellSummaDigits, MidpointRounding.AwayFromZero)*/.ToString();
+            ciStatSum.ImageKey = "Sum";
+            ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatSum + Environment.NewLine + Res.Cmd_ToolTip_View_StatMouseInfo;
           }
           else
           {
-            ciStatSumma.StatusBarText = EmptyStatSummaText;
-            ciStatSumma.ImageKey = String.Empty;
-            ciStatSumma.ToolTipText = StatSummaToolTipText1;
+            ciStatSum.StatusBarText = EmptyStatSummaText;
+            ciStatSum.ImageKey = String.Empty;
+            ciStatSum.ToolTipText = Res.Cmd_ToolTip_View_StatSum;
           }
           break;
 
         case StatCalcState.Error:
           ciStatCount.StatusBarText = EmptyStatCountText;
           ciStatCount.ImageKey = String.Empty;
-          ciStatCount.ToolTipText = StatCountToolTipText1 + Environment.NewLine + "Ошибка при выполнении суммирования. " + Environment.NewLine + errorMessage;
-          ciStatSumma.StatusBarText = "Ошибка!";
-          ciStatSumma.ImageKey = "Error";
-          ciStatCount.ToolTipText = StatSummaToolTipText1 + Environment.NewLine + "Ошибка при выполнении суммирования. " + Environment.NewLine + errorMessage;
+          ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatCount + Environment.NewLine + Res.Cmd_ToolTip_View_StatError + Environment.NewLine + errorMessage;
+          ciStatSum.ImageKey = "Error";
+          ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatSum + Environment.NewLine + Res.Cmd_ToolTip_View_StatError + Environment.NewLine + errorMessage;
           break;
 
         case StatCalcState.NotSummable:
           ciStatCount.StatusBarText = EmptyStatCountText;
           ciStatCount.ImageKey = String.Empty;
-          ciStatCount.ToolTipText = StatCountToolTipText1 + Environment.NewLine + "Некоторые выбранные ячейки не являются суммируемыми";
-          ciStatSumma.StatusBarText = EmptyStatSummaText;
-          ciStatSumma.ImageKey = String.Empty;
-          ciStatSumma.ToolTipText = StatSummaToolTipText1 + Environment.NewLine + "Некоторые выбранные ячейки не являются суммируемыми";
+          ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatCount + Environment.NewLine + Res.Cmd_ToolTip_View_StatNonSummable;
+          ciStatSum.StatusBarText = EmptyStatSummaText;
+          ciStatSum.ImageKey = String.Empty;
+          ciStatSum.ToolTipText = Res.Cmd_ToolTip_View_StatSum + Environment.NewLine + Res.Cmd_ToolTip_View_StatNonSummable;
           break;
 #if DEBUG
         default:
@@ -2319,18 +2264,18 @@ namespace FreeLibSet.Forms
     {
       string s = ciStatCount.StatusBarText.Trim();
       if (String.IsNullOrEmpty(s))
-        EFPApp.ShowTempMessage("Нет значения для копирования в буфер обмена");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoStatValueToCopy);
       else
-        EFPApp.Clipboard.SetText(s);
+        new EFPClipboard().SetText(s);
     }
 
-    void ciStatSumma_Click(object sender, EventArgs args)
+    void ciStatSum_Click(object sender, EventArgs args)
     {
-      string s = ciStatSumma.StatusBarText.Trim();
+      string s = ciStatSum.StatusBarText.Trim();
       if (String.IsNullOrEmpty(s))
-        EFPApp.ShowTempMessage("Нет значения для копирования в буфер обмена");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoStatValueToCopy);
       else
-        EFPApp.Clipboard.SetText(s);
+        new EFPClipboard().SetText(s);
     }
 
     #endregion

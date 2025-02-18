@@ -90,21 +90,24 @@ namespace FreeLibSet.Forms
     /// <param name="address">Адрес электронной почты</param>
     public static void StartMailTo(string address)
     {
-      try
+      if (String.IsNullOrEmpty(address))
+        EFPApp.ShowTempMessage(Res.EFPEMailLabel_Err_NoAddress);
+      else
       {
-        if (String.IsNullOrEmpty(address))
-          EFPApp.ShowTempMessage("Адрес электронной почты не задан");
-        else
+        try
+        {
           Process.Start("mailto://" + address);
-      }
-      catch
-      {
-        EFPApp.ErrorMessageBox("Почтовая программа не установлена. Если Вы отправляете электронную почту не через почтовую программу, а со страницы в Интернете, то скопируйте адрес в буфер обмена и вставьте его в нужное поле ввода на странице");
+        }
+        catch
+        {
+          EFPApp.ErrorMessageBox(Res.EFPEMailLabel_Err_Start);
+        }
       }
     }
 
     #endregion
   }
+
 
   /// <summary>
   /// Команды локального меню для EFPEMailLabel.
@@ -121,8 +124,8 @@ namespace FreeLibSet.Forms
     public EFPEMailLabelCommandItems(EFPEMailLabel controlProvider)
       :base(controlProvider)
     {
-      ciStart = new EFPCommandItem("Service", "SendMail");
-      ciStart.MenuText = "Запустить почтовую программу";
+      ciStart = new EFPCommandItem("Service", "StartEMailApp");
+      ciStart.MenuText = Res.Cmd_Menu_StartEMailApp;
       ciStart.ImageKey = "LetterClosed";
       ciStart.Click += new EventHandler(ciStart_Click);
       Add(ciStart);
@@ -156,9 +159,9 @@ namespace FreeLibSet.Forms
     void ciCopy_Click(object sender, EventArgs args)
     {
       if (String.IsNullOrEmpty(ControlProvider.Address))
-        EFPApp.ShowTempMessage("Адрес электронной почты не задан");
+        EFPApp.ShowTempMessage(Res.EFPEMailLabel_Err_NoAddress);
       else
-        EFPApp.Clipboard.SetText(ControlProvider.Address);
+        new EFPClipboard().SetText(ControlProvider.Address);
     }
 
     #endregion

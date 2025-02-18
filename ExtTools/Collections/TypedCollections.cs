@@ -213,7 +213,7 @@ namespace FreeLibSet.Collections
         _Owner = owner;
       }
 
-      private OrderSortedList<TKey, TValue> _Owner;
+      private readonly OrderSortedList<TKey, TValue> _Owner;
 
       #endregion
 
@@ -250,12 +250,12 @@ namespace FreeLibSet.Collections
 
       void IList<TKey>.Insert(int index, TKey item)
       {
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(_Owner);
       }
 
       void IList<TKey>.RemoveAt(int index)
       {
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(_Owner);
       }
 
       /// <summary>
@@ -438,7 +438,7 @@ namespace FreeLibSet.Collections
         _Owner = owner;
       }
 
-      private OrderSortedList<TKey, TValue> _Owner;
+      private readonly OrderSortedList<TKey, TValue> _Owner;
 
       #endregion
 
@@ -588,7 +588,7 @@ namespace FreeLibSet.Collections
 
         #region Поля
 
-        private OrderSortedList<TKey, TValue> _Owner;
+        private readonly OrderSortedList<TKey, TValue> _Owner;
 
         private int _CurrIndex;
 
@@ -821,7 +821,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -991,7 +991,7 @@ namespace FreeLibSet.Collections
 
       #region Поля
 
-      private OrderSortedList<TKey, TValue> _Owner;
+      private readonly OrderSortedList<TKey, TValue> _Owner;
 
       private int _CurrIndex;
 
@@ -1075,7 +1075,7 @@ namespace FreeLibSet.Collections
 
       #region Поля
 
-      private OrderSortedList<TKey, TValue> _Owner;
+      private readonly OrderSortedList<TKey, TValue> _Owner;
 
       private int _CurrIndex;
 
@@ -1177,7 +1177,7 @@ namespace FreeLibSet.Collections
     {
 #if DEBUG
       if (InternalKeys == null || InternalValues == null)
-        throw new BugException("Массивы не десериализованы");
+        throw new BugException("Arrays have not been deserialized");
 #endif
 
       _List = new List<TKey>(InternalKeys.Length);
@@ -1350,7 +1350,7 @@ namespace FreeLibSet.Collections
 
     #region Свойства
 
-    private IDictionary<TKey, TValue> _Dict;
+    private readonly IDictionary<TKey, TValue> _Dict;
 
 
     // Нельзя реализовать свойство DisposeOnDestuction.
@@ -1602,7 +1602,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -1699,12 +1699,12 @@ namespace FreeLibSet.Collections
     {
 #if DEBUG
       if (collection == null)
-        throw new ArgumentException("collection");
-#endif
+        throw new ArgumentNullException("collection");
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
       if (Object.ReferenceEquals(collection, Source))
-        throw new ArgumentException("Нельзя добавить элементы из базового списка", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
 
       lock (SyncRoot)
       {
@@ -1978,7 +1978,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     // ReSharper disable once InconsistentlySynchronizedField
     protected IDictionary<TKey, TValue> Source { get { return _Source; } }
-    private IDictionary<TKey, TValue> _Source;
+    private readonly IDictionary<TKey, TValue> _Source;
 
     /// <summary>
     /// Возвращает "Count=XXX"
@@ -2462,7 +2462,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     // ReSharper disable once InconsistentlySynchronizedField
     protected Queue<T> Source { get { return _Source; } }
-    private Queue<T> _Source;
+    private readonly Queue<T> _Source;
 
     /// <summary>
     /// Возвращает "Count=XXX"
@@ -2741,7 +2741,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     // ReSharper disable once InconsistentlySynchronizedField
     protected Stack<T> Source { get { return _Source; } }
-    private Stack<T> _Source;
+    private readonly Stack<T> _Source;
 
     /// <summary>
     /// Возвращает "Count=XXX"
@@ -2985,7 +2985,7 @@ namespace FreeLibSet.Collections
   /// Этот класс не является сериализуемым.
   /// </summary>
   /// <typeparam name="T">Тип значений в коллекции</typeparam>
-  public class ReadOnlyCollectionWrapper<T> : ICollection<T>, ICollection
+  public class ReadOnlyCollectionWrapper<T> : ICollection<T>, ICollection, IReadOnlyObject
   {
     #region Конструктор
 
@@ -3009,7 +3009,7 @@ namespace FreeLibSet.Collections
     /// Основная коллекция
     /// </summary>
     protected ICollection<T> Source { get { return _Source; } }
-    private ICollection<T> _Source;
+    private readonly ICollection<T> _Source;
 
     /// <summary>
     /// Возвращает текстовое представление исходной коллекции (например, "Count=XXX") и " (ReadOnly)".
@@ -3123,6 +3123,17 @@ namespace FreeLibSet.Collections
         else
           return src2.SyncRoot;
       }
+    }
+
+    #endregion
+
+    #region IReadOnlyObject Members
+
+    bool IReadOnlyObject.IsReadOnly { get { return true; } }
+
+    void IReadOnlyObject.CheckNotReadOnly()
+    {
+      ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -3405,7 +3416,7 @@ namespace FreeLibSet.Collections
     public ListWithReadOnly(IList<T> source, bool isReadOnly)
     {
       if (Object.ReferenceEquals(source, null))
-        throw new ArgumentNullException();
+        throw new ArgumentNullException("source");
 
       _Source = source;
       _IsReadOnly = isReadOnly;
@@ -3507,7 +3518,7 @@ namespace FreeLibSet.Collections
     /// Основной объект коллекции
     /// </summary>
     protected IList<T> Source { get { return _Source; } }
-    private IList<T> _Source;
+    private readonly IList<T> _Source;
 
     #endregion
 
@@ -3651,7 +3662,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -3686,12 +3697,12 @@ namespace FreeLibSet.Collections
       CheckNotReadOnly();
 #if DEBUG
       if (collection == null)
-        throw new ArgumentException("collection");
-#endif
+        throw new ArgumentNullException("collection");
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
       if (Object.ReferenceEquals(collection, Source))
-        throw new ArgumentException("Нельзя добавить элементы из базового списка", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
 
       // Оптимизированная загрузка для списков
       if (Source is List<T>)
@@ -3847,7 +3858,7 @@ namespace FreeLibSet.Collections
     public DictionaryWithReadOnly(IDictionary<TKey, TValue> source, bool isReadOnly)
     {
       if (Object.ReferenceEquals(source, null))
-        throw new ArgumentNullException();
+        throw new ArgumentNullException("source");
 
       _Source = source;
       _IsReadOnly = isReadOnly;
@@ -3913,7 +3924,7 @@ namespace FreeLibSet.Collections
     /// Основной объект коллекции
     /// </summary>
     protected IDictionary<TKey, TValue> Source { get { return _Source; } }
-    private IDictionary<TKey, TValue> _Source;
+    private readonly IDictionary<TKey, TValue> _Source;
 
     #endregion
 
@@ -4103,7 +4114,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -4217,9 +4228,9 @@ namespace FreeLibSet.Collections
   }
 
   /// <summary>
-  /// Список значений с однократным вхождением
-  /// Значения null не допускаются
-  /// После установки свойства ReadOnly=true, список становится потокобезопасным
+  /// Список значений с однократным вхождением.
+  /// Значения null не допускаются.
+  /// После установки свойства <see cref="IReadOnlyObject.IsReadOnly"/>=true, список становится потокобезопасным.
   /// </summary>
   [Serializable]
   public class SingleScopeList<T> : IList<T>, IList, IReadOnlyObject
@@ -4332,15 +4343,15 @@ namespace FreeLibSet.Collections
     private List<T> _List;
 
     /// <summary>
-    /// Коллекция для проверки наличия элементов
-    /// Ключ - элемент, значение не используется
+    /// Коллекция для проверки наличия элементов.
+    /// Ключ - элемент, значение не используется.
     /// </summary>
     [NonSerialized]
     private Dictionary<T, object> _Dict;
 
     /// <summary>
     /// Компаратор для сравнения ключей.
-    /// Если не был задан явно в конструкторе объекта, возвращается EquallityComparer.Default
+    /// Если не был задан явно в конструкторе объекта, возвращается <see cref="EqualityComparer{T}.Default"/>.
     /// </summary>
     public IEqualityComparer<T> Comparer
     {
@@ -4356,7 +4367,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Доступ по индексу. 
-    /// Индекс должен быть в диапазоне от 0 до (Count-1).
+    /// Индекс должен быть в диапазоне от 0 до (<see cref="Count"/>-1).
     /// Установка значения элемента выполняет замену элемента на новый. При этом может возникнуть
     /// исключение, если новый элемент отличается от старого и такой элемент уже есть в списке.
     /// </summary>                              
@@ -4372,7 +4383,7 @@ namespace FreeLibSet.Collections
         if (_Dict.ContainsKey(value))
         {
           if (IndexOf(value) != index) // Условие добавлено 21.04.2022
-            throw new InvalidOperationException("Значение " + value.ToString() + " уже есть в списке");
+            throw ExceptionFactory.KeyAlreadyExists(value);
         }
 
         T oldItem = _List[index];
@@ -4431,7 +4442,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -4721,10 +4732,10 @@ namespace FreeLibSet.Collections
       CheckNotReadOnly();
 #if DEBUG
       if (collection == null)
-        throw new ArgumentException("collection");
-#endif
+        throw new ArgumentNullException("collection");
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
 
       foreach (T item in collection)
         Add(item);
@@ -4991,12 +5002,12 @@ namespace FreeLibSet.Collections
     }
 
     /// <summary>
-    /// Выбрасывает исключение, если IsReadOnly=true.
+    /// Выбрасывает исключение, если <see cref="IsReadOnly"/>=true.
     /// </summary>
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -5027,7 +5038,7 @@ namespace FreeLibSet.Collections
       get { return _List.Keys[index]; }
       set
       {
-        throw new NotSupportedException("Допускается только чтение значения по индексу");
+        throw new ObjectReadOnlyException();
       }
     }
 
@@ -5049,7 +5060,7 @@ namespace FreeLibSet.Collections
     /// <param name="item">Добавляемый элемент</param>
     void IList<T>.Insert(int index, T item)
     {
-      throw new NotSupportedException("Используйте метод Add()");
+      throw new NotImplementedException("Use Add()");
     }
 
     /// <summary>
@@ -5181,10 +5192,10 @@ namespace FreeLibSet.Collections
       CheckNotReadOnly();
 #if DEBUG
       if (collection == null)
-        throw new ArgumentException("collection");
-#endif
+        throw new ArgumentNullException("collection");
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
 
       foreach (T item in collection)
         Add(item);
@@ -5558,7 +5569,7 @@ namespace FreeLibSet.Collections
     /// Доступ к значению
     /// При считывании значения для несуществующего ключа, возвращается значение по умолчанию
     /// При записи значения для несуществующего ключа, добавляется пара ключ+значение. При записи
-    /// для существующего ключа выполняется перезапись значения
+    /// для существующего ключа выполняется перезапись значения.
     /// </summary>
     /// <param name="Key">Ключ</param>
     /// <returns>Элемент коллекции</returns>
@@ -5751,7 +5762,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -5854,11 +5865,9 @@ namespace FreeLibSet.Collections
     #endregion
   }
 
-
-
   /// <summary>
-  /// Двусторонняя коллекция, в которой можно получить не только значение для ключа, но и ключ для значения
-  /// Содержит два объекта Dictionary
+  /// Двусторонняя коллекция, в которой можно получить не только значение для ключа, но и ключ для значения.
+  /// Содержит два объекта Dictionary.
   /// </summary>
   /// <typeparam name="TKey">Тип ключа</typeparam>
   /// <typeparam name="TValue">Тип значения</typeparam>
@@ -6251,7 +6260,7 @@ namespace FreeLibSet.Collections
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -6691,7 +6700,7 @@ namespace FreeLibSet.Collections
 
     /// <summary>
     /// Добавляет элемент.
-    /// Если текущий объект уже содержит Capacity элементов, то самый старый элемент будет удален.
+    /// Если текущий объект уже содержит <see cref="List{T}.Capacity"/> элементов, то самый старый элемент будет удален.
     /// </summary>
     /// <param name="item">Элемент для добавления</param>
     public new void Add(T item)
@@ -6712,10 +6721,10 @@ namespace FreeLibSet.Collections
     {
 #if DEBUG
       if (collection == null)
-        throw new ArgumentException("collection");
-#endif
+        throw new ArgumentNullException("collection");
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+#endif
 
       // Подсчет числа добавляемых элементов
       int addedCount = 0;
@@ -6739,7 +6748,7 @@ namespace FreeLibSet.Collections
         // Добавляем руками
 #if DEBUG
         if (Count > 0)
-          throw new BugException("Список должен быть пустым на момент вызова");
+          throw new BugException("List must be empty at the moment");
 #endif
         int cnt = 0;
         foreach (T item in collection)
@@ -6754,7 +6763,7 @@ namespace FreeLibSet.Collections
 
 #if DEBUG
       if (Count > Capacity)
-        throw new BugException("Неправильное число элементов после обновления");
+        throw new BugException("Wrong item count at the end");
 #endif
     }
 
@@ -6800,7 +6809,7 @@ namespace FreeLibSet.Collections
     /// Внутренний список ссылок.
     /// Этот объект используется для блокировок
     /// </summary>
-    private List<WeakReference> _Refs;
+    private readonly List<WeakReference> _Refs;
 
     #endregion
 
@@ -6825,7 +6834,7 @@ namespace FreeLibSet.Collections
     public void Add(T item)
     {
       if (object.ReferenceEquals(item, null))
-        throw new ArgumentNullException();
+        throw new ArgumentNullException("item");
 
       WeakReference wr = new WeakReference(item);
 
@@ -6863,7 +6872,7 @@ namespace FreeLibSet.Collections
     /// Обычно применение этого метода бесполезно, так как даже ссылка на объект есть сейчас,
     /// она может исчезнуть в любой момент.
     /// При поиске используется сравнение ссылок, даже если для класса определен оператор сравнения или
-    /// метод Equals()
+    /// метод Equals().
     /// </summary>
     /// <param name="item">Проверяемый объект</param>
     /// <returns>true, если ссылка на объект есть в списке.</returns>
@@ -6887,7 +6896,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Копирует ссылки на объекты в массив.
     /// Этот метод не должен вызываться, т.к. нельзя создать массив подходящего размера, используя
-    /// свойство Count.
+    /// свойство <see cref="Count"/>.
     /// </summary>
     /// <param name="array"></param>
     /// <param name="arrayIndex"></param>
@@ -6972,7 +6981,7 @@ namespace FreeLibSet.Collections
     /// Создать перечислитель.
     /// Перечисление будет выполняться по копии массива ссылок.
     /// 
-    /// Тип возвращаемого значения (ArrayEnumerator) может измениться в будущем, 
+    /// Тип возвращаемого значения (<see cref="ArrayEnumerable{T}.Enumerator"/>) может измениться в будущем, 
     /// гарантируется только реализация интерфейса перечислителя.
     /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
@@ -7065,7 +7074,7 @@ namespace FreeLibSet.Collections
   #region Перечисление UnknownItemPosition
 
   /// <summary>
-  /// Положение ненайденных элементов при вызове метода ArrayIndexer.Compare()
+  /// Положение ненайденных элементов при вызове метода <see cref="ArrayIndexer{T}.Compare(T, T)"/>
   /// </summary>
   public enum UnknownItemPosition
   {
@@ -7089,7 +7098,7 @@ namespace FreeLibSet.Collections
   /// значения null недопустимы.
   /// Не содержит исходного массива.
   /// Этот класс не является сериализуемым, т.к. легко может быть воссоздан.
-  /// Интерфейс реализует интерфейс IComparer для сортировки других массивов и списков (метод Compare()).
+  /// Класс реализует интерфейс <see cref="IComparer{T}"/> для сортировки других массивов и списков.
   /// Класс является потокобезопасным.
   /// </summary>
   /// <typeparam name="T">Произвольный тип</typeparam>
@@ -7264,7 +7273,7 @@ namespace FreeLibSet.Collections
             _UnknownItemPosition = value;
             break;
           default:
-            throw new ArgumentException();
+            throw ExceptionFactory.ArgUnknownValue("value", value);
         }
       }
     }

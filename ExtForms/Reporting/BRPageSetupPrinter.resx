@@ -117,4 +117,349 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;grpPrinter.Name" xml:space="preserve">
+    <value>grpPrinter</value>
+  </data>
+  <data name="&gt;&gt;lblBackInfo.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>593, 337</value>
+  </data>
+  <data name="rbSelPrinter.Text" xml:space="preserve">
+    <value>Select printer</value>
+  </data>
+  <data name="&gt;&gt;rbSelPrinter.Parent" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="&gt;&gt;btnDebug.Parent" xml:space="preserve">
+    <value>panPrinter</value>
+  </data>
+  <data name="lblBackInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>323, 31</value>
+  </data>
+  <data name="&gt;&gt;btnDebug.Name" xml:space="preserve">
+    <value>btnDebug</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="rbDefaultPrinter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="lblBackInfoLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>248, 31</value>
+  </data>
+  <data name="lblBackInfoLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 229</value>
+  </data>
+  <data name="btnPrinterProps.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="lblPrinterInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>481, 28</value>
+  </data>
+  <data name="&gt;&gt;lblBackInfo.Parent" xml:space="preserve">
+    <value>panPrinter</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>BRPageSetupPrinter</value>
+  </data>
+  <data name="btnDebug.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="&gt;&gt;lblBackInfoLabel.Parent" xml:space="preserve">
+    <value>panPrinter</value>
+  </data>
+  <data name="&gt;&gt;rbDefaultPrinter.Parent" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="panel3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>557, 60</value>
+  </data>
+  <data name="panel3.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="lblPrinterInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 178</value>
+  </data>
+  <data name="&gt;&gt;btnDebug.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;lblBackInfoLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblBackInfo.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="lblBackInfo.Text" xml:space="preserve">
+    <value>???</value>
+  </data>
+  <data name="lblBackInfo.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;panPrinter.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panPrinter.Name" xml:space="preserve">
+    <value>panPrinter</value>
+  </data>
+  <data name="panel3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;rbDefaultPrinter.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btnPrinterProps.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="panPrinter.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="grpPrinter.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;cbPrinter.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rbDefaultPrinter.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbDefaultPrinter.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="panPrinter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="cbPrinter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>511, 24</value>
+  </data>
+  <data name="&gt;&gt;lblBackInfoLabel.Name" xml:space="preserve">
+    <value>lblBackInfoLabel</value>
+  </data>
+  <data name="lblBackInfoLabel.Text" xml:space="preserve">
+    <value>Background document printing</value>
+  </data>
+  <data name="lblBackInfoLabel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
+  <data name="grpPrinter.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;lblBackInfoLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="panPrinter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>593, 337</value>
+  </data>
+  <data name="cbPrinter.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;cbPrinter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpPrinter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rbSelPrinter.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;rbDefaultPrinter.Name" xml:space="preserve">
+    <value>rbDefaultPrinter</value>
+  </data>
+  <data name="&gt;&gt;panel3.Name" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="&gt;&gt;rbSelPrinter.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;btnDebug.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpPrinter.Parent" xml:space="preserve">
+    <value>panPrinter</value>
+  </data>
+  <data name="&gt;&gt;lblPrinterInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rbDefaultPrinter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 7</value>
+  </data>
+  <data name="rbSelPrinter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>113, 21</value>
+  </data>
+  <data name="panel3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="&gt;&gt;btnPrinterProps.Parent" xml:space="preserve">
+    <value>panPrinter</value>
+  </data>
+  <data name="rbDefaultPrinter.Text" xml:space="preserve">
+    <value>Use default printer</value>
+  </data>
+  <data name="btnDebug.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;btnPrinterProps.Name" xml:space="preserve">
+    <value>btnPrinterProps</value>
+  </data>
+  <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="grpPrinter.Text" xml:space="preserve">
+    <value>Printer</value>
+  </data>
+  <data name="btnPrinterProps.Text" xml:space="preserve">
+    <value>Printer properties</value>
+  </data>
+  <data name="&gt;&gt;rbSelPrinter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblBackInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>263, 229</value>
+  </data>
+  <data name="&gt;&gt;lblBackInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbPrinter.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="btnDebug.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="lblBackInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="btnPrinterProps.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 134</value>
+  </data>
+  <data name="btnPrinterProps.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 30</value>
+  </data>
+  <data name="panPrinter.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lblPrinterInfo.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="grpPrinter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 4</value>
+  </data>
+  <data name="rbSelPrinter.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="panPrinter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="grpPrinter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>579, 123</value>
+  </data>
+  <data name="btnDebug.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 30</value>
+  </data>
+  <data name="&gt;&gt;cbPrinter.Parent" xml:space="preserve">
+    <value>grpPrinter</value>
+  </data>
+  <data name="lblBackInfo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
+  <data name="&gt;&gt;panel3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rbSelPrinter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="lblBackInfoLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="grpPrinter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;lblBackInfo.Name" xml:space="preserve">
+    <value>lblBackInfo</value>
+  </data>
+  <data name="panel3.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="btnDebug.Location" type="System.Drawing.Point, System.Drawing">
+    <value>468, 302</value>
+  </data>
+  <data name="&gt;&gt;rbDefaultPrinter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rbSelPrinter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 36</value>
+  </data>
+  <data name="&gt;&gt;cbPrinter.Name" xml:space="preserve">
+    <value>cbPrinter</value>
+  </data>
+  <data name="&gt;&gt;btnPrinterProps.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbPrinter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="grpPrinter.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="rbDefaultPrinter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>146, 21</value>
+  </data>
+  <data name="&gt;&gt;panPrinter.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panel3.Parent" xml:space="preserve">
+    <value>grpPrinter</value>
+  </data>
+  <data name="lblBackInfoLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;lblPrinterInfo.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lblPrinterInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;btnPrinterProps.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="lblPrinterInfo.Text" xml:space="preserve">
+    <value>???</value>
+  </data>
+  <data name="&gt;&gt;lblPrinterInfo.Name" xml:space="preserve">
+    <value>lblPrinterInfo</value>
+  </data>
+  <data name="btnDebug.Text" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="lblPrinterInfo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;lblPrinterInfo.Parent" xml:space="preserve">
+    <value>panPrinter</value>
+  </data>
+  <data name="cbPrinter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>53, 84</value>
+  </data>
+  <data name="&gt;&gt;grpPrinter.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;panPrinter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbSelPrinter.Name" xml:space="preserve">
+    <value>rbSelPrinter</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

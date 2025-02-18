@@ -438,7 +438,7 @@ namespace FreeLibSet.Forms
         catch (Exception e)
         {
           rvr.CellErrors = new Dictionary<int, string>();
-          rvr.CellErrors.Add(0, "Ошибка при проверке строки. " + e.Message);
+          rvr.CellErrors.Add(0, String.Format(Res.EFPInputDataGridView_Err_RowValidating, e.Message));
         }
 
         _ValidatingResults.Add(rowIndex, rvr);
@@ -465,17 +465,7 @@ namespace FreeLibSet.Forms
       {
         _TempValidableObject.Clear();
         if (row.IsNull(i))
-        {
-          switch (Data.Columns[i].CanBeEmptyMode)
-          {
-            case UIValidateState.Error:
-              _TempValidableObject.SetError("Значение должно быть задано");
-              break;
-            case UIValidateState.Warning:
-              _TempValidableObject.SetWarning("Значение, веротяно, должно быть задано");
-              break;
-          }
-        }
+          UITools.ValidateCanBeEmptyMode(Data.Columns[i].CanBeEmptyMode, _TempValidableObject, Data.Columns[i].ColumnName);
 
         if (Data.Columns[i].HasValidators)
           Data.Columns[i].Validators.Validate(_TempValidableObject);
@@ -514,7 +504,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public InputDataGridDialog()
     {
-      Title = "Таблица";
       ImageKey = "Table";
       _Data = new UIInputGridData();
     }
@@ -522,6 +511,17 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
+
+
+    /// <summary>
+    /// Заголовок блока диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.InputDataGridDialog_Msg_Title; } }
+
+    /// <summary>
+    /// Подсказка не используется
+    /// </summary>
+    protected override string DefaultPrompt { get { return String.Empty; } }
 
     /// <summary>
     /// Основное свойство - редактируемая таблица данных.
@@ -580,7 +580,7 @@ namespace FreeLibSet.Forms
           if (ReadOnly || FixedRows)
             return String.Empty;
           else
-            return "При вставке из буфера обмена недостающие строки будут добавлены автоматически";
+            return Res.EFPInputDataGridView_Msg_InfoText_CanAddRows;
         }
         else
           return _InfoText;

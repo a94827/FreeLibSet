@@ -105,10 +105,10 @@ namespace FreeLibSet.Data
       {
 #if DEBUG
         if (String.IsNullOrEmpty(columnName))
-          throw new ArgumentNullException("columnName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
         if (Count > 0)
-          throw new InvalidOperationException("Ключевое поле \"" + columnName + "\" должно быть первым в списке");
+          throw new InvalidOperationException(String.Format(Res.DBxTableStruct_Err_PrimaryKeyColumnMustBeFirst, columnName));
 
         DBxColumnStruct item = new DBxColumnStruct(columnName);
         item.ColumnType = DBxColumnType.Int;
@@ -127,7 +127,7 @@ namespace FreeLibSet.Data
       public DBxColumnStruct AddString(string columnName, int maxLength, bool nullable)
       {
         if (maxLength < 1 || maxLength > 255)
-          throw new ArgumentOutOfRangeException("maxLength", maxLength, "Длина строкового поля может быть от 1 до 255 символов");
+          throw ExceptionFactory.ArgOutOfRange("maxLength", maxLength, 1, 255);
         DBxColumnStruct item = new DBxColumnStruct(columnName);
         item.ColumnType = DBxColumnType.String;
         item.MaxLength = maxLength;
@@ -221,7 +221,7 @@ namespace FreeLibSet.Data
       public DBxColumnStruct AddInt(string columnName, int minValue, int maxValue)
       {
         if (minValue > maxValue)
-          throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
+          throw ExceptionFactory.ArgRangeInverted("minValue", minValue, "maxValue", maxValue);
 
         DBxColumnStruct item = new DBxColumnStruct(columnName);
         item.ColumnType = DBxColumnType.Int;
@@ -242,7 +242,7 @@ namespace FreeLibSet.Data
       public DBxColumnStruct AddInt(string columnName, int minValue, int maxValue, bool nullable)
       {
         if (minValue > maxValue)
-          throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
+          throw ExceptionFactory.ArgRangeInverted("minValue", minValue, "maxValue", maxValue);
 
         DBxColumnStruct item = new DBxColumnStruct(columnName);
         item.ColumnType = DBxColumnType.Int;
@@ -298,7 +298,7 @@ namespace FreeLibSet.Data
       public DBxColumnStruct AddInt(string columnName, long minValue, long maxValue)
       {
         if (minValue > maxValue)
-          throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
+          throw ExceptionFactory.ArgRangeInverted("minValue", minValue, "maxValue", maxValue);
 
         DBxColumnStruct item = new DBxColumnStruct(columnName);
         item.ColumnType = DBxColumnType.Int;
@@ -319,7 +319,7 @@ namespace FreeLibSet.Data
       public DBxColumnStruct AddInt(string columnName, long minValue, long maxValue, bool nullable)
       {
         if (minValue > maxValue)
-          throw new ArgumentException("Максимальное значение не может быть меньше минимального", "maxValue");
+          throw ExceptionFactory.ArgRangeInverted("minValue", minValue, "maxValue", maxValue);
 
         DBxColumnStruct item = new DBxColumnStruct(columnName);
         item.ColumnType = DBxColumnType.Int;
@@ -496,10 +496,10 @@ namespace FreeLibSet.Data
       public DBxColumnStruct AddReference(string columnName, string masterTableName, bool nullable, DBxRefType refType)
       {
         if (String.IsNullOrEmpty(masterTableName))
-          throw new ArgumentNullException("masterTableName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("masterTableName");
 
         if (refType == DBxRefType.Clear && (!nullable))
-          throw new ArgumentException("Тип ссылки не может быть DBxRefType.Clear, если nullable=false", "refType");
+          throw new ArgumentException(Res.DBxTableStruct_Arg_RefTypeClearForNotNull, "refType");
 
         DBxColumnStruct item = new DBxColumnStruct(columnName);
         item.ColumnType = DBxColumnType.Int;
@@ -867,7 +867,7 @@ namespace FreeLibSet.Data
         {
           DBxColumnStruct colStr = Columns[value[i]];
           if (colStr == null)
-            throw new ArgumentException("В списке полей нет \"" + value[i] + "\"");
+            throw new ArgumentException(String.Format(Res.DBxStruct_Arg_ColumnNotFound, this.TableName, value[i]));
         }
 
         _PrimaryKey = value;
@@ -1078,7 +1078,7 @@ namespace FreeLibSet.Data
     public DBxTableStruct Clone(string tableName)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException(tableName);
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       return new DBxTableStruct(this, tableName);
     }
 
@@ -1109,7 +1109,7 @@ namespace FreeLibSet.Data
       if (columns == null)
         throw new ArgumentNullException("columns");
       if (columns.Count == 0)
-        throw new ArgumentException("Список полей не задан", "columns");
+        throw ExceptionFactory.ArgIsEmpty("columns");
       _Columns = columns;
     }
 
@@ -1166,7 +1166,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     internal void SetReadOnly()

@@ -261,7 +261,7 @@ namespace FreeLibSet.Forms
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      return (String.IsNullOrEmpty(Name) ? "Панель без имени" : Name) + ". ItemCount=" + Count.ToString();
+      return (String.IsNullOrEmpty(Name) ? "Noname" : Name) + ". ItemCount=" + Count.ToString();
     }
 
     /// <summary>
@@ -367,7 +367,7 @@ namespace FreeLibSet.Forms
         if (String.IsNullOrEmpty(Item.ToolTipText))
         {
           if (!(String.IsNullOrEmpty(Item.MenuText)))
-            s = Item.MenuText.Replace("&", "");
+            s = Item.MenuTextWithoutMnemonic;
         }
         else
           s = _Button.ToolTipText = Item.ToolTipText;
@@ -408,7 +408,7 @@ namespace FreeLibSet.Forms
     public EFPAppToolBar(string name)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
       base.Name = name;
       _DisplayName = null;
@@ -427,7 +427,7 @@ namespace FreeLibSet.Forms
       : base(bar)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
       base.Name = name;
       _DisplayName = null;
@@ -628,7 +628,7 @@ namespace FreeLibSet.Forms
         case DockStyle.Right: panel = Info.StripPanelRight; break;
         case DockStyle.Bottom: panel = Info.StripPanelBottom; break;
         default:
-          throw new BugException("Неизвестное размещение ToolBar: " + _Dock.ToString());
+          throw new BugException("Unknown toolBar placement. Dock=" + _Dock.ToString());
       }
 
       if (_UseLocation)
@@ -815,7 +815,7 @@ namespace FreeLibSet.Forms
         }
       }
 
-      throw new NullReferenceException("Главное окно не задано");
+      throw new NullReferenceException("Main menu not set");
     }
 
     private int MyCmp(EFPAppToolBar b1, EFPAppToolBar b2)
@@ -1084,29 +1084,29 @@ namespace FreeLibSet.Forms
         if (owner.UseVisibleCommand)
         {
           ciVisible = new EFPCommandItem("View", "ToolBarVisible");
-          ciVisible.MenuText = "Панель включена";
+          ciVisible.MenuText = Res.Cmd_Menu_View_ToolBarVisible;
           ciVisible.GroupEnd = true;
           ciVisible.Click += new EventHandler(ciVisible_Click);
           Add(ciVisible);
         }
 
         ciTop = new EFPCommandItem("View", "ToolBarOnTop");
-        ciTop.MenuText = "Сверху";
+        ciTop.MenuText = Res.Cmd_Menu_View_ToolBarOnTop;
         ciTop.Click += new EventHandler(ciTop_Click);
         Add(ciTop);
 
         ciBottom = new EFPCommandItem("View", "ToolBarOnBottom");
-        ciBottom.MenuText = "Снизу";
+        ciBottom.MenuText = Res.Cmd_Menu_View_ToolBarOnBottom;
         ciBottom.Click += new EventHandler(ciBottom_Click);
         Add(ciBottom);
 
         ciLeft = new EFPCommandItem("View", "ToolBarOnLeft");
-        ciLeft.MenuText = "Слева";
+        ciLeft.MenuText = Res.Cmd_Menu_View_ToolBarOnLeft;
         ciLeft.Click += new EventHandler(ciLeft_Click);
         Add(ciLeft);
 
         ciRight = new EFPCommandItem("View", "ToolBarOnRight");
-        ciRight.MenuText = "Справа";
+        ciRight.MenuText = Res.Cmd_Menu_View_ToolBarOnRight;
         ciRight.Click += new EventHandler(ciRight_Click);
         Add(ciRight);
 

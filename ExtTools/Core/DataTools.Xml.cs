@@ -36,8 +36,8 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="xmlDoc">Проверяемый XML-документ</param>
     /// <param name="encoding">Результат. Сюда записывается обнаруженная кодировка</param>
-    /// <returns>True, если в документе есть узел XmlDeclaration с корректной кодировкой.
-    /// False, если нет узла XmlDeclation или задана неизвестная кодировка в свойстве Encoding</returns>
+    /// <returns>True, если в документе есть узел <see cref="XmlDeclaration"/> с корректной кодировкой.
+    /// False, если нет узла <see cref="XmlDeclaration"/> или задана неизвестная кодировка в свойстве <see cref="XmlDeclaration.Encoding"/></returns>
     public static bool GetXmlEncoding(XmlDocument xmlDoc, out Encoding encoding)
     {
       encoding = Encoding.Unicode; // по умолчанию
@@ -72,9 +72,9 @@ namespace FreeLibSet.Core
     public static void SetXmlEncoding(XmlDocument xmlDoc, Encoding encoding)
     {
       if (xmlDoc == null)
-        throw new ArgumentNullException("Doc");
+        throw new ArgumentNullException("xmlDoc");
       if (encoding == null)
-        throw new ArgumentNullException("Encoding");
+        throw new ArgumentNullException("encoding");
 
       XmlDeclaration decl = null;
       if (xmlDoc.ChildNodes.Count > 0)

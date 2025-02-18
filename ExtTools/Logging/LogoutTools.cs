@@ -29,6 +29,7 @@ using FreeLibSet.Core;
 using FreeLibSet.Calendar;
 using FreeLibSet.Data;
 using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
 
 namespace FreeLibSet.Logging
 {
@@ -42,7 +43,7 @@ namespace FreeLibSet.Logging
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события LogoutTools.LogoutInfoNeeded
+  /// Аргументы события <see cref="LogoutTools.LogoutInfoNeeded"/>
   /// </summary>
   public sealed class LogoutInfoNeededEventArgs
   {
@@ -50,7 +51,7 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Создает экземпляр объекта.
-    /// Обычно не требуется создавать его в пользовательском коде
+    /// Обычно не требуется создавать его в пользовательском коде.
     /// </summary>
     /// <param name="listener"></param>
     /// <param name="exception">Объект исключения или null</param>
@@ -67,14 +68,14 @@ namespace FreeLibSet.Logging
     #region Основные свойства и методы
 
     /// <summary>
-    /// Объект исключения, для которого вызван LogoutException().
-    /// Возвращает null, если вызван GetDebugInfo()
+    /// Объект исключения, для которого вызван <see cref="LogoutTools.LogoutException(Exception)"/>.
+    /// Возвращает null, если вызван <see cref="LogoutTools.GetDebugInfo()"/>.
     /// </summary>
     public Exception Exception { get { return _Exception; } }
     private readonly Exception _Exception;
 
     /// <summary>
-    /// Вывести строку текста. Слева будет добавлен отступ в соответствии с IndentLevel
+    /// Вывести строку текста. Слева будет добавлен отступ в соответствии с <see cref="IndentLevel"/>.
     /// </summary>
     /// <param name="text">Записываемый текст</param>
     public void WriteLine(string text)
@@ -97,10 +98,10 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// 19.02.2016
     /// В отладочной информации не должно быть управляющих символов CHR(0) - CHR(31),
-    /// т.к. при этом может быть обрыв текста без выбрасывания исключений
+    /// т.к. при этом может быть обрыв текста без выбрасывания исключений.
     /// </summary>
-    /// <param name="text"></param>
-    /// <returns></returns>
+    /// <param name="text">Исходная строка</param>
+    /// <returns>Исправленная строка</returns>
     private static string CorrectText(string text)
     {
       #region Поиск плохого символа
@@ -141,7 +142,7 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Текущий уровень отступа слева от текста. Методы, увеличивающие значение свойства, должны восстанавливать исходное значение.
-    /// Конкретное число символов, соответствующее единичному отступа, определяется свойство IndentSize
+    /// Конкретное число символов, соответствующее единичному отступа, определяется свойство <see cref="IndentSize"/>.
     /// </summary>
     public int IndentLevel
     {
@@ -185,8 +186,8 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// Запись пары "Имя=Значение"
     /// </summary>
-    /// <param name="name">Текст слева от от знака равенства. Может быть пустой строкой или null</param>
-    /// <param name="value">Текст справа от от знака равенства. Может быть пустой строкой или null</param>
+    /// <param name="name">Текст слева от от знака равенства. Может быть пустой строкой или null.</param>
+    /// <param name="value">Текст справа от от знака равенства. Может быть пустой строкой или null.</param>
     public void WritePair(string name, string value)
     {
       if (name == null)
@@ -213,10 +214,10 @@ namespace FreeLibSet.Logging
   }
 
   /// <summary>
-  /// Делегат события LogoutTools.LogoutInfoNeeded
+  /// Делегат события <see cref="LogoutTools.LogoutInfoNeeded"/>
   /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
+  /// <param name="sender">Не используется</param>
+  /// <param name="args">Аргументы события</param>
   public delegate void LogoutInfoNeededEventHandler(object sender, LogoutInfoNeededEventArgs args);
 
   #region Перечисление LogoutPropMode
@@ -245,14 +246,14 @@ namespace FreeLibSet.Logging
   #endregion
 
   /// <summary>
-  /// Формат обработчика для свойства LogoutPropEventArgs.Handler
+  /// Формат обработчика для свойства <see cref="LogoutPropEventArgs.Handler"/>.
   /// </summary>
-  /// <param name="args"></param>
-  /// <param name="obj"></param>
+  /// <param name="args">Аргументы события</param>
+  /// <param name="obj">Выводимый объект</param>
   public delegate void LogoutObjectHandler(LogoutInfoNeededEventArgs args, object obj);
 
   /// <summary>
-  /// Аргументы события LogoutTools.LogoutProp
+  /// Аргументы события <see cref="LogoutTools.LogoutProp"/>
   /// </summary>
   public sealed class LogoutPropEventArgs
   {
@@ -273,14 +274,14 @@ namespace FreeLibSet.Logging
     #region Свойства
 
     /// <summary>
-    /// Объект, свойства которого предполагается выводить в log-файл
-    /// Не может быть null
+    /// Объект, свойства которого предполагается выводить в log-файл.
+    /// Не может быть null.
     /// </summary>
     public object Object { get { return _Object; } }
     private readonly object _Object;
 
     /// <summary>
-    /// Уровень вложения. Для объекта, для которого был вызван метод LogoutObject(), возвращается значение 0. 
+    /// Уровень вложения. Для объекта, для которого был вызван метод <see cref="LogoutTools.LogoutObject(TextWriter, object)"/>, возвращается значение 0. 
     /// Для объектов, возвращаемых его свойствами, свойство имеет значение 1, и т.д.
     /// </summary>
     public int Level { get { return _Level; } }
@@ -289,7 +290,7 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// Очередное свойство, которое предполагается вывести.
     /// Перед выводом свойств, событие вызывается для объекта в-целом, чтобы можно было подавить вывод всех свойств.
-    /// При этом PropertyName=String.Empty
+    /// При этом <see cref="PropertyName"/>=<see cref="String.Empty"/>.
     /// </summary>
     public string PropertyName
     {
@@ -303,7 +304,7 @@ namespace FreeLibSet.Logging
     private string _PropertyName;
 
     /// <summary>
-    /// Устанавливаемое значение, что сделать со свойством: вывести свойство с вложенными свойствами, вывести только ToString() или пропуститиь свойство
+    /// Устанавливаемое значение, что сделать со свойством: вывести свойство с вложенными свойствами, вывести только <see cref="System.Object.ToString()"/> или пропуститиь свойство.
     /// </summary>
     public LogoutPropMode Mode
     {
@@ -313,7 +314,7 @@ namespace FreeLibSet.Logging
     private LogoutPropMode _Mode;
 
     /// <summary>
-    /// Если при вызове события установить обработчик, то после вывода свойств (в зависимости от Mode) будет вызван этот обработчик
+    /// Если при вызове события установить обработчик, то после вывода свойств (в зависимости от <see cref="Mode"/>) будет вызван этот обработчик
     /// для вывода дополнительной информации по объекту.
     /// Обработчик можно устанавливать только для объекта (когда PropertyName=""), а не для свойства
     /// </summary>
@@ -328,14 +329,14 @@ namespace FreeLibSet.Logging
   }
 
   /// <summary>
-  /// Делегат события LogoutTools.LogoutProp
+  /// Делегат события <see cref="LogoutTools.LogoutProp"/>
   /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
+  /// <param name="sender">Не используется</param>
+  /// <param name="args">Аргументы события</param>
   public delegate void LogoutPropEventHandler(object sender, LogoutPropEventArgs args);
 
   /// <summary>
-  /// Аргументы события LogoutTools.ExceptionLogFileCreated
+  /// Аргументы события <see cref="LogoutTools.ExceptionLogFileCreated"/>
   /// </summary>
   public sealed class ExceptionLogFileCreatedEventArgs : EventArgs
   {
@@ -360,26 +361,29 @@ namespace FreeLibSet.Logging
   }
 
   /// <summary>
-  /// Делегат события LogoutTools.ExceptionLogFileCreated
+  /// Делегат события <see cref="LogoutTools.ExceptionLogFileCreated"/>
   /// </summary>
-  /// <param name="sender"></param>
-  /// <param name="args"></param>
+  /// <param name="sender">Не используется</param>
+  /// <param name="args">Аргументы события</param>
   public delegate void ExceptionLogFileCreatedEventHandler(object sender,
     ExceptionLogFileCreatedEventArgs args);
 
   #endregion
 
   /// <summary>
-  /// Средства для вывода отладочной информации в файл
-  /// Все свойства и методы класса являются потокобезопасными, как и методы работы с событиями
+  /// Средства для вывода отладочной информации в файл.
+  /// Все свойства и методы класса являются потокобезопасными, как и методы работы с событиями.
   /// </summary>
   public static class LogoutTools
   {
     #region Log-файлы
 
     /// <summary>
-    /// Путь к подкаталогу LOG
-    /// Сам каталог не создается, требуется вызов ForceDirs()
+    /// Путь к подкаталогу Log.
+    /// Сам каталог не создается, требуется вызов <see cref="FreeLibSet.IO.FileTools.ForceDirs(AbsPath)"/>.
+    /// Какалог будет создан при создании отчета об ошибке в <see cref="LogoutExceptionToFile(AbsPath, Exception, string)"/>
+    /// или другого метода.
+    /// Для отчетов об ошибках, создаваемых <see cref="LogoutException(Exception)"/>, создается подкаталог "Errors".
     /// </summary>
     public static AbsPath LogBaseDirectory
     {
@@ -408,7 +412,7 @@ namespace FreeLibSet.Logging
     private static AbsPath _LogBaseDirectory;
 
     /// <summary>
-    /// Получить имя для LOG-файла.
+    /// Получить имя для log-файла.
     /// Генерируется уникальное имя файла в заданном подкаталоге в каталоге Log,
     /// с использованием префикса и расширением ".log". Имя базируется на текущей
     /// дате и времени с использованием дополнительного суффикса, если файл уже
@@ -418,8 +422,8 @@ namespace FreeLibSet.Logging
     /// </summary>
     /// <param name="subDir">Имя подкаталога в каталоге Log, например, "Errors".
     /// Имя без слэшей в начале и конце, но могут быть слэши внутри.
-    /// Может быть пустой строкой или null</param>
-    /// <param name="prefix">Префикс имени файла. Может быть пустой строкой или null</param>
+    /// Может быть пустой строкой или null.</param>
+    /// <param name="prefix">Префикс имени файла. Может быть пустой строкой или null.</param>
     /// <returns>Путь к файлу</returns>
     public static AbsPath GetLogFileName(string subDir, string prefix)
     {
@@ -439,7 +443,7 @@ namespace FreeLibSet.Logging
         while (File.Exists(fileName.Path))
         {
           if (cnt >= 100)
-            throw new InvalidOperationException("Не удалось придумать уникальное имя файла");
+            throw new InvalidOperationException(Res.LogoutTools_Err_CannotGenerateUniqueFileName);
           cnt++;
           fileName = new AbsPath(fileNameBase + cnt.ToString() + ".log");
         }
@@ -453,7 +457,7 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Кодировка, используемая для log-файлов ошибок.
-    /// Если свойство не установлено в явном виде, используется кодировка по умолчанию
+    /// Если свойство не установлено в явном виде, используется кодировка по умолчанию.
     /// </summary>
     public static Encoding LogEncoding
     {
@@ -485,12 +489,12 @@ namespace FreeLibSet.Logging
     /// В таблице есть колонки:
     /// "Time" - время создания файла (исходя из имени, а не из атрибутов)
     /// "FilePath" - полный путь к файлу
-    /// "ComputerName" - имя компьютера. Всегда заполняется значением Environment.MachineName.
+    /// "ComputerName" - имя компьютера. Всегда заполняется значением <see cref="Environment.MachineName"/>.
     /// </summary>
     /// <param name="subDir">Имя подкаталога в каталоге Log, например, "Errors".
     /// Имя без слэшей в начале и конце, но могут быть слэши внутри.
     /// Может быть пустой строкой или null</param>
-    /// <param name="prefix">Префикс имени файла. Может быть пустой строкой или null</param>
+    /// <param name="prefix">Префикс имени файла. Может быть пустой строкой или null.</param>
     /// <returns>Таблица со списком файлов</returns>
     public static DataTable CreateLogFileTable(string subDir, string prefix)
     {
@@ -542,9 +546,11 @@ namespace FreeLibSet.Logging
     #region LogoutInfoNeeded
 
     /// <summary>
-    /// Обработчик позволяет вывести в log-файл дополнительные сведения при возникновении исключительной ситуации (метод LogoutException())
-    /// и при извлечении информации методом GetDebugInfo()
-    /// Обработчик должен быть потокобезопасным
+    /// Обработчик позволяет вывести в log-файл дополнительные сведения при возникновении исключительной ситуации (метод <see cref="LogoutException(Exception)"/>)
+    /// и при извлечении информации методом <see cref="GetDebugInfo()"/>.
+    /// Обработчик должен быть потокобезопасным.
+    /// Если требуется вывести информацию по объектам, актуальным только в конкретном месте приложения, можно использовать
+    /// класс <see cref="LocalLogoutObjects"/> в блоке using.
     /// </summary>
     public static event LogoutInfoNeededEventHandler LogoutInfoNeeded
     {
@@ -553,8 +559,8 @@ namespace FreeLibSet.Logging
         lock (_LogoutInfoNeededList)
         {
           _LogoutInfoNeededList.Add(value);
-#if TRACE_LOGOUT
 
+#if TRACE_LOGOUT
           LogoutInfoNeededEventHandler [] Handlers = FLogoutInfoNeededList.ToArray();
 
           Trace.WriteLine("LogoutInfoNeededEventHandler #" + (Handlers.Length - 1).ToString() + " added. Stack trace:");
@@ -693,13 +699,13 @@ namespace FreeLibSet.Logging
     #region LogoutProp
 
     /// <summary>
-    /// Обработчик позволяет определить, какие свойства объекта следует выводить в log-файл, а какие нет
-    /// Для большинства стандартных классов реализована обработка по умолчанию
+    /// Обработчик позволяет определить, какие свойства объекта следует выводить в log-файл, а какие нет.
+    /// Для большинства стандартных классов реализована обработка по умолчанию.
     /// Если в программе требуется вывести в log-файл свойства собственных классов, может потребоваться обработчик
-    /// для подавления вывода ненужных свойств
+    /// для подавления вывода ненужных свойств.
     /// Обработчик должен быть потокобезопасным.
-    /// Обработчик вызывается для каждого выводимого в log-файл объекта (кроме объекта верхнего уровня, для которого вызван LogoutObject()),
-    /// а затем - для каждого public не-static свойства этого объекта
+    /// Обработчик вызывается для каждого выводимого в log-файл объекта (кроме объекта верхнего уровня, для которого вызван <see cref="LogoutObject(TextWriter, object)"/>),
+    /// а затем - для каждого public не-static свойства этого объекта.
     /// </summary>
     public static event LogoutPropEventHandler LogoutProp
     {
@@ -855,7 +861,7 @@ namespace FreeLibSet.Logging
       // Что-то не работает
       if (args.Object is System.Security.Policy.Hash)
       {
-        args.Mode = LogoutPropMode.None; // выводится бескончная куча цифр
+        args.Mode = LogoutPropMode.None; // выводится бесконечная куча цифр
         return;
       }
 #endif
@@ -978,6 +984,22 @@ namespace FreeLibSet.Logging
         }
       }
 
+      if (args.Object is Encoding) // 10.01.2025
+      {
+        if (args.Level > 0)
+        {
+          switch (args.PropertyName)
+          {
+            case "Preamble":
+            case "EncoderFallback":
+            case "DecoderFallback":
+            case "IsReadOnly":
+              args.Mode = LogoutPropMode.None;
+              break;
+          }
+        }
+      }
+
       if (args.Object is FileInfo) // 18.08.2021
       {
         switch (args.PropertyName)
@@ -1059,7 +1081,7 @@ namespace FreeLibSet.Logging
     #region EventLogException
 #if !NET
     /// <summary>
-    /// Записывает исключение в журнал EventLog
+    /// Записывает исключение в журнал <see cref="EventLog"/>
     /// </summary>
     /// <param name="e">Объект исключения</param>
     /// <param name="title">Заголовок</param>
@@ -1069,7 +1091,7 @@ namespace FreeLibSet.Logging
     }
 
     /// <summary>
-    /// Записывает исключение в журнал EventLog
+    /// Записывает исключение в журнал <see cref="EventLog"/>
     /// </summary>
     /// <param name="e">Объект исключения</param>
     /// <param name="title">Заголовок</param>
@@ -1126,9 +1148,9 @@ namespace FreeLibSet.Logging
     #region LogoutException
 
     /// <summary>
-    /// Управляет наличием информации в log-файле исклжчения.
-    /// Если true (по умолчанию), то метод LogoutException, после вывода свойств объекта Exception,
-    /// выводит системную информацию и вызывает обработчики события LogoutInfoNeeded.
+    /// Управляет наличием информации в log-файле исключения.
+    /// Если true (по умолчанию), то метод <see cref="LogoutException(Exception)"/>, после вывода свойств объекта <see cref="Exception"/>,
+    /// выводит системную информацию и вызывает обработчики события <see cref="LogoutInfoNeeded"/>.
     /// Свойство можно установить в false, если критичным является размер log-файла, требуется быстрая
     /// обработка исключения или возникают проблемы при выводе отладочной информации.
     /// </summary>
@@ -1145,6 +1167,15 @@ namespace FreeLibSet.Logging
     /// Записывает исключение в log-файл
     /// </summary>
     /// <param name="e">Объект исключения</param>
+    public static void LogoutException(Exception e)
+    {
+      LogoutExceptionToFile(e, GetDefaultTitle());
+    }
+
+    /// <summary>
+    /// Записывает исключение в log-файл
+    /// </summary>
+    /// <param name="e">Объект исключения</param>
     /// <param name="title">Заголовок</param>
     public static void LogoutException(Exception e, string title)
     {
@@ -1154,7 +1185,7 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// Записывает исключение в log-файл.
     /// Имя файла генерируется автоматически.
-    /// Записывается сообщение в EventLog.
+    /// Записывается сообщение в <see cref="EventLog"/>.
     /// </summary>
     /// <param name="e">Объект исключения</param>
     /// <param name="title">Заголовок</param>
@@ -1209,10 +1240,10 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Запись информации об исключении в произвольный файл.
-    /// В отличие от методов LogoutException() и перегрузки LogoutExceptionToFile() с двумя аргументами,
-    /// не делается запись в EventLog.
+    /// В отличие от методов <see cref="LogoutException(Exception)"/> и перегрузки <see cref="LogoutExceptionToFile(Exception, string)"/>,
+    /// не делается запись в <see cref="EventLog"/>.
     /// Каталог для записи должен существовать.
-    /// Вывод системной информации зависит от статического свойства LogoutInfoForException.
+    /// Вывод системной информации зависит от статического свойства <see cref="LogoutInfoForException"/>.
     /// </summary>
     /// <param name="filePath">Путь к записываемому файлу. Каталог должен существовать</param>
     /// <param name="e">Объект исключения</param>
@@ -1224,16 +1255,16 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Запись информации об исключении в произвольный файл.
-    /// В отличие от методов LogoutException() и перегрузки LogoutExceptionToFile() с двумя аргументами,
-    /// не делается запись в EventLog.
+    /// В отличие от методов <see cref="LogoutException(Exception)"/> и перегрузки <see cref="LogoutExceptionToFile(Exception, string)"/>,
+    /// не делается запись в <see cref="EventLog"/>.
     /// Каталог для записи должен существовать.
     /// </summary>
     /// <param name="filePath">Путь к записываемому файлу. Каталог должен существовать</param>
     /// <param name="e">Объект исключения</param>
     /// <param name="title">Заголовок исключения</param>
     /// <param name="encoding">Кодировка</param>
-    /// <param name="logoutInfo">Если true, то метод LogoutException, после вывода свойств объекта Exception,
-    /// выводит системную информацию и вызывает обработчики события LogoutInfoNeeded.</param>
+    /// <param name="logoutInfo">Если true, то метод <see cref="LogoutException(Exception)"/>, после вывода свойств объекта <see cref="Exception"/>,
+    /// выводит системную информацию и вызывает обработчики события <see cref="LogoutInfoNeeded"/>.</param>
     public static void LogoutExceptionToFile(AbsPath filePath, Exception e, string title, Encoding encoding, bool logoutInfo)
     {
       if (encoding == null)
@@ -1259,8 +1290,8 @@ namespace FreeLibSet.Logging
     /// <param name="writer">Объект для записи текста</param>
     /// <param name="e">Объект исключения</param>
     /// <param name="title">Заголовок исключения</param>
-    /// <param name="logoutInfo">Если true, то метод LogoutException, после вывода свойств объекта Exception,
-    /// выводит системную информацию и вызывает обработчики события LogoutInfoNeeded.</param>
+    /// <param name="logoutInfo">Если true, то метод <see cref="LogoutException(Exception)"/>, после вывода свойств объекта <see cref="Exception"/>,
+    /// выводит системную информацию и вызывает обработчики события <see cref="LogoutInfoNeeded"/>.</param>
     public static void LogoutException(TextWriter writer, Exception e, string title, bool logoutInfo)
     {
       using (TextWriterTraceListener listener = new TextWriterTraceListener(writer))
@@ -1278,8 +1309,8 @@ namespace FreeLibSet.Logging
     /// </summary>
     /// <param name="e">Объект исключения</param>
     /// <param name="title">Заголовок исключения</param>
-    /// <param name="logoutInfo">Если true, то метод LogoutException, после вывода свойств объекта Exception,
-    /// выводит системную информацию и вызывает обработчики события LogoutInfoNeeded.</param>
+    /// <param name="logoutInfo">Если true, то метод <see cref="LogoutException(Exception)"/>, после вывода свойств объекта <see cref="Exception"/>,
+    /// выводит системную информацию и вызывает обработчики события <see cref="LogoutInfoNeeded"/>.</param>
     public static string LogoutExceptionToString(Exception e, string title, bool logoutInfo)
     {
       StringWriter wrt = new StringWriter();
@@ -1341,7 +1372,7 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Событие вызывается после того, как создан log-файл с сообщением об ошибке.
-    /// Это вызывается в том потоке, в котором был вызван метод LogoutException
+    /// Это вызывается в том потоке, в котором был вызван метод <see cref="LogoutException(Exception)"/>.
     /// </summary>
     public static event ExceptionLogFileCreatedEventHandler ExceptionLogFileCreated;
 
@@ -1353,6 +1384,54 @@ namespace FreeLibSet.Logging
         ExceptionLogFileCreatedEventArgs args = new ExceptionLogFileCreatedEventArgs(filePath);
         ehExceptionLogFileCreated(null, args);
       }
+    }
+
+    #endregion
+
+    #region GetDefaultTitle()
+
+    /// <summary>
+    /// Заголовок по умолчанию для <see cref="LogoutException(Exception)"/> и аналогичных методов.
+    /// Возврашает строку "Ошибка в Класс.Метод".
+    /// Если метод вызывается из промежуточного (библиотечного) метода, то у промежуточного метода следует задать
+    /// атрибут <see cref="MethodImplAttribute"/> с опцией <see cref="MethodImplOptions.NoInlining"/> во избежания "съедания" метода в стеке вызовов.
+    /// </summary>
+    /// <param name="skipFrames">Количество фреймов, которые нужно пропустить.
+    /// Если 0, то возвращается метод, непосредственно вызвавший этот метод</param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static string GetDefaultTitle(int skipFrames)
+    {
+      StackFrame fr = new StackFrame(skipFrames + 1);
+      MethodBase mb = fr.GetMethod();
+      return String.Format(Res.LogoutTools_ErrTitle_Default, mb.DeclaringType.Name + "." + mb.Name);
+    }
+
+    /// <summary>
+    /// Заголовок по умолчанию для <see cref="LogoutException(Exception)"/> и аналогичных методов.
+    /// Возврашает строку "Ошибка в Класс.Метод".
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static string GetDefaultTitle()
+    {
+      StackFrame fr = new StackFrame(1);
+      MethodBase mb = fr.GetMethod();
+      return String.Format(Res.LogoutTools_ErrTitle_Default, mb.DeclaringType.Name + "." + mb.Name);
+    }
+
+    /// <summary>
+    /// Возвращает текст "Ошибка при вызове метода XXX".
+    /// Этот метод не предназначен для использования в прикладном коде.
+    /// </summary>
+    /// <param name="methodName">Имя метода, ошибка в котором была перехвачена</param>
+    /// <returns>Текст заголовка</returns>
+    public static string GetTitleForCall(string methodName)
+    {
+      if (String.IsNullOrEmpty(methodName))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("methodName");
+
+      return String.Format(Res.LogoutTools_ErrTitle_WhenMethodCalled, methodName);
     }
 
     #endregion
@@ -1385,7 +1464,7 @@ namespace FreeLibSet.Logging
     }
 
     /// <summary>
-    /// Получение отладочной информации с заданными настройками с записью в заданный TraceListener
+    /// Получение отладочной информации с заданными настройками с записью в заданный <see cref="TraceListener"/>
     /// </summary>
     /// <param name="listener">Объект для записи информации</param>
     /// <param name="settings">Настройки</param>
@@ -1398,7 +1477,7 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// Запись отладочной информации с заданными настройками в текстовый файл или в другой поток
     /// </summary>
-    /// <param name="writer">Объект TextWriter или другой поток</param>
+    /// <param name="writer">Объект <see cref="StreamWriter"/> или другой поток</param>
     /// <param name="settings">Настройки</param>
     public static void GetDebugInfo(TextWriter writer, LogoutDebugInfoSettings settings)
     {
@@ -1418,12 +1497,12 @@ namespace FreeLibSet.Logging
     #region LogoutObject
 
     /// <summary>
-    /// Вывод свойств объекта в log-файл
-    /// Перед выводов свойств, вероятно, следует вывести заголовок, т.к. метод не выводит информации о типе объекта или его назначении
+    /// Вывод свойств объекта в log-файл.
+    /// Перед выводов свойств, вероятно, следует вывести заголовок, т.к. метод не выводит информации о типе объекта или его назначении.
     /// Также, вероятно, должен быть вызов Args.IndentLevel++/--
     /// </summary>
-    /// <param name="args">Аргументы обработчика события Logout</param>
-    /// <param name="obj">Выводимый объект. Может быть null</param>
+    /// <param name="args">Аргументы обработчика события <see cref="LogoutInfoNeeded"/></param>
+    /// <param name="obj">Выводимый объект. Может быть null.</param>
     public static void LogoutObject(LogoutInfoNeededEventArgs args, object obj)
     {
       try
@@ -1437,9 +1516,9 @@ namespace FreeLibSet.Logging
     }
 
     /// <summary>
-    /// Вывод свойств для одного объекта
+    /// Вывод свойств для одного объекта.
     /// Рекурсивная функция: выводит свойства вложенных объектов, если Level не
-    /// превышает заданный уровень
+    /// превышает заданный уровень.
     /// </summary>
     //[DebuggerStepThrough] // подавление остановки в отладчике при возникновении исключения
     private static void DoLogoutObject(LogoutInfoNeededEventArgs args, object obj, Stack objStack)
@@ -1456,7 +1535,7 @@ namespace FreeLibSet.Logging
       // 23.05.2016
       // Проблема. Для поиска существующих элементов используется метод Stack.Contains().
       // Он, видимо, выполняет сравнение элементов, а не просто ссылок.
-      // Реализуем поиск вручную
+      // Реализуем поиск вручную.
 
       // if (ObjStack.Contains(Object))
       if (StackContainsElement(objStack, obj))
@@ -2084,6 +2163,7 @@ namespace FreeLibSet.Logging
         try
         {
           System.Security.Principal.WindowsIdentity wi = System.Security.Principal.WindowsIdentity.GetCurrent();
+          args.WritePair("Name", wi.Name);
           args.WritePair("User SID", wi.User.Value);
           args.WritePair("AuthenticationType", wi.AuthenticationType);
           args.WritePair("ImpersonationLevel", wi.ImpersonationLevel.ToString());
@@ -2896,8 +2976,8 @@ namespace FreeLibSet.Logging
     #region Вывод информации о процессе
 
     /// <summary>
-    /// Вывод информации о процессе
-    /// Не требуется вызывать для текущего процесса, т.к. эти сведения добавляются в log-файл автоматически
+    /// Вывод информации о процессе.
+    /// Не требуется вызывать для текущего процесса, т.к. эти сведения добавляются в log-файл автоматически.
     /// </summary>
     /// <param name="args">Объект для вывода информации</param>
     /// <param name="prc">Процесс, о котором выводится информация</param>
@@ -2969,8 +3049,8 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// Выводит пары "Имя поля = Значение" для строки таблицы
     /// </summary>
-    /// <param name="args">Аргументы события LogoutInfoNeeded</param>
-    /// <param name="row">Строка DataRow, для которой выводится информация</param>
+    /// <param name="args">Аргументы события <see cref="LogoutInfoNeeded"/></param>
+    /// <param name="row">Строка <see cref="DataRow"/>, для которой выводится информация</param>
     public static void LogoutDataRow(LogoutInfoNeededEventArgs args, DataRow row)
     {
       if (row == null)
@@ -3109,8 +3189,8 @@ namespace FreeLibSet.Logging
     }
 
     /// <summary>
-    /// Вывод информации о произвольном объекте в TextWriter.
-    /// Заголовок не добавляется
+    /// Вывод информации о произвольном объекте в <see cref="TextWriter"/>.
+    /// Заголовок не добавляется.
     /// </summary>
     /// <param name="writer">Объект для записи информации</param>
     /// <param name="obj">Объект, информация о котором выводится</param>
@@ -3127,15 +3207,15 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Поиск исключения заданного класса в списке вложенных исключений.
-    /// Если переданное исключение e имеет тип T или является классом-наследником,
+    /// Если переданное исключение <paramref name="e"/> имеет тип <typeparamref name="T"/> или является классом-наследником,
     /// то оно возвращается, приведенное к заданному типу. Иначе просматривается
-    /// цепочка исключений InnerException. Если обнаружен подходящий тип исключения,
+    /// цепочка исключений <see cref="Exception.InnerException"/>. Если обнаружен подходящий тип исключения,
     /// то возрашается это исключение.
     /// Если в цепочке исключений нет ни одного исключения подходящего класса, то
     /// возвращается null.
     /// Метод используется в catch-блоке для реализации специальной обработки
     /// исключения заданного вида, если нет уверенности, что исключение не "обернуто"
-    /// другим исключением
+    /// другим исключением.
     /// </summary>
     /// <typeparam name="T">Тип исключения, который должен быть найден</typeparam>
     /// <param name="e">Исходное исключение, пойманное в catch-блоке</param>
@@ -3234,7 +3314,7 @@ namespace FreeLibSet.Logging
   }
 
   /// <summary>
-  /// Настройка информации, которую требуется вывести методу LogoutTools.GetDebugInfo
+  /// Настройка информации, которую требуется вывести методу <see cref="LogoutTools.GetDebugInfo()"/>
   /// </summary>
   public class LogoutDebugInfoSettings
   {
@@ -3262,7 +3342,7 @@ namespace FreeLibSet.Logging
     private bool _AddSystemInfo;
 
     /// <summary>
-    /// Нужно ли использовать обработчики события LogoutTools.LogoutInfoNeeded.
+    /// Нужно ли использовать обработчики события <see cref="LogoutTools.LogoutInfoNeeded"/>.
     /// По умолчанию - true
     /// </summary>
     public bool UseHandlers { get { return _UseHandlers; } set { _UseHandlers = value; } }
@@ -3270,7 +3350,7 @@ namespace FreeLibSet.Logging
 
     /// <summary>
     /// Дополнительный обработчик, который будет вызван после стандартных.
-    /// По умолчанию - null
+    /// По умолчанию - null.
     /// </summary>
     public LogoutInfoNeededEventHandler AuxHandler { get { return _AuxHandler; } set { _AuxHandler = value; } }
     private LogoutInfoNeededEventHandler _AuxHandler;
@@ -3298,7 +3378,7 @@ namespace FreeLibSet.Logging
     }
 
     /// <summary>
-    /// Возвращает true, если отключен вывод всей информации (после вызова Clear())
+    /// Возвращает true, если отключен вывод всей информации (после вызова <see cref="Clear()"/>)
     /// </summary>
     public bool IsEmpty
     {
@@ -3314,10 +3394,14 @@ namespace FreeLibSet.Logging
   /// <summary>
   /// Вывод дополнительной отладочной информации, актуальной только в текущем контексте.
   /// Содержит коллекцию именованных объектов.
+  /// Информация выводится в отдельном блоке с заголовком.
+  /// Конструктор устанавливает обработчик <see cref="LogoutTools.LogoutInfoNeeded"/>, а метод <see cref="IDisposable.Dispose()"/> удаяляет его.
   /// Использование:
-  /// 1. Создать LocalLogoutObjects, используя конструкцию using
+  /// 1. Создать <see cref="LocalLogoutObjects"/>, используя конструкцию using
   /// 2. Добавить объекты в коллекцию, которые нужно показать в log-файле
-  /// 3. Выполнить код, который вызывает LogoutTools.GetDebugInfo() или LogoutException
+  /// 3. Выполнить код, который вызывает <see cref="LogoutTools.GetDebugInfo()"/> или <see cref="LogoutTools.LogoutException(Exception)"/>.
+  /// 
+  /// В отличие от коллекции <see cref="Exception.Data"/>, в эту коллекцию можно добавлять несериализуемые объекты.
   /// </summary>
   public sealed class LocalLogoutObjects : Dictionary<string, object>, IDisposable
   {
@@ -3328,17 +3412,16 @@ namespace FreeLibSet.Logging
     /// </summary>
     public LocalLogoutObjects()
     {
-      EHLogoutInfoNeeded = new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded);
-      LogoutTools.LogoutInfoNeeded += EHLogoutInfoNeeded;
+      LogoutTools.LogoutInfoNeeded += new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded);
     }
 
     /// <summary>
-    /// Реализация интерфейса IDisposable
+    /// Реализация интерфейса <see cref="IDisposable"/>
     /// </summary>
     public void Dispose()
     {
       // Можно упростить и не делать стандартную обработку IDisposable
-      LogoutTools.LogoutInfoNeeded -= EHLogoutInfoNeeded;
+      LogoutTools.LogoutInfoNeeded -= new LogoutInfoNeededEventHandler(LogoutTools_LogoutInfoNeeded);
     }
 
     #endregion
@@ -3354,8 +3437,6 @@ namespace FreeLibSet.Logging
     #endregion
 
     #region Обработчик LogoutInfoNeeded
-
-    private readonly LogoutInfoNeededEventHandler EHLogoutInfoNeeded;
 
     //[DebuggerStepThrough]
     void LogoutTools_LogoutInfoNeeded(object sender, LogoutInfoNeededEventArgs args)
@@ -3397,9 +3478,9 @@ namespace FreeLibSet.Logging
 
   /// <summary>
   /// Получение отладочной информации (сервера) с помощью выполняемой процедуры.
-  /// Выполняет вызов метода LogoutTools.GetDebugInfo()
+  /// Выполняет вызов метода <see cref="LogoutTools.GetDebugInfo()"/>.
   /// Возвращает аргумент с именем "Text"
-  /// Предотвращает одновременное получение информации двумя пользователями во избежание переполнения
+  /// Предотвращает одновременное получение информации двумя пользователями во избежание лишней нагрузки на сервер.
   /// </summary>
   public class LogoutExecProc : FreeLibSet.Remoting.ExecProc
   {
@@ -3411,7 +3492,7 @@ namespace FreeLibSet.Logging
     #region Выполнение
 
     /// <summary>
-    /// Вызывает LogoutTools.GetDebugInfo()
+    /// Вызывает <see cref="LogoutTools.GetDebugInfo()"/>
     /// </summary>
     /// <param name="args"></param>
     /// <returns></returns>
@@ -3422,13 +3503,13 @@ namespace FreeLibSet.Logging
       lock (_SyncRoot)
       {
         if (_ExecutingFlag)
-          throw new BusyException("Получение отладочной информации в данный момент выполняется другим пользователем");
+          throw new BusyException(Res.LoggingLogoutExecProc_Err_Busy);
 
         _ExecutingFlag = true;
       }
       try
       {
-        BeginSplash("Получение отладочной информации");
+        BeginSplash(Res.LoggingLogoutExecProc_Phase_GetInfo);
         res["Text"] = LogoutTools.GetDebugInfo();
         EndSplash();
       }
@@ -3447,7 +3528,8 @@ namespace FreeLibSet.Logging
   }
 
   /// <summary>
-  /// Извлечение информации из текстового log-файла отчета, созданного методом LogoutTools.LogoutException()
+  /// Извлечение информации из текстового log-файла отчета, созданного методом <see cref="LogoutTools.LogoutException(Exception)"/>.
+  /// Для получения информации из файла используются статические методы этого класса
   /// </summary>
   [Serializable]
   public sealed class ExceptionLogFileExtractedInfo
@@ -3455,25 +3537,26 @@ namespace FreeLibSet.Logging
     #region Свойства
 
     /// <summary>
-    /// Заголовок (первая строка файла), задаваемая аргументом Title метода LogoutTools.LogoutException()
+    /// Заголовок (первая строка файла), задаваемая аргументом title метода <see cref="LogoutTools.LogoutException(Exception, string)"/>.
+    /// Если использовался вызов <see cref="LogoutTools.LogoutException(Exception)"/> без аргумента title, используется заголовок по умолчанию.
     /// </summary>
-    public string Title { get { return _Title; } set { _Title = value; } }
+    public string Title { get { return _Title; } private set { _Title = value; } }
     private string _Title;
 
     /// <summary>
     /// Класс исключения в виде текстовой строки. Например, "System.ArgumentException".
     /// </summary>
     /// <remarks>
-    /// Нельзя использовать свойство типа Type, т.к. в том коде, который анализирует log-файл, может
-    /// не быть доступа к исходной сборке, содержащей класс исключения
+    /// Нельзя использовать свойство типа <see cref="Type"/>, т.к. в том коде, который анализирует log-файл, может
+    /// не быть доступа к исходной сборке, содержащей класс исключения.
     /// </remarks>
-    public string ExceptionClass { get { return _ExceptionClass; } set { _ExceptionClass = value; } }
+    public string ExceptionClass { get { return _ExceptionClass; } private set { _ExceptionClass = value; } }
     private string _ExceptionClass;
 
     /// <summary>
     /// Текст исключения (свойство Exception.Message)
     /// </summary>
-    public string Message { get { return _Message; } set { _Message = value; } }
+    public string Message { get { return _Message; } private set { _Message = value; } }
     private string _Message;
 
     #endregion
@@ -3483,7 +3566,7 @@ namespace FreeLibSet.Logging
     /// <summary>
     /// Извлекает информацию из файла, загруженного в память.
     /// Если файл имеет неподходящий формат, возвращается null.
-    /// При возникновении других ошибок генерируется исключение
+    /// При возникновении других ошибок генерируется исключение.
     /// </summary>
     /// <param name="file">Контейнер с файлом. Не может быть null.</param>
     /// <returns>Извлеченная информация или null</returns>
@@ -3507,7 +3590,7 @@ namespace FreeLibSet.Logging
     public static ExceptionLogFileExtractedInfo Extract(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath", "Путь к файлу не задан");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       using (FileStream stream = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
       {
@@ -3581,4 +3664,5 @@ namespace FreeLibSet.Logging
 
     #endregion
   }
+
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -80,7 +81,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// True, если ли элемент может находиться в промежуточном состоянии.
     /// По умолчанию - false.
-    /// Дублирует CanBeEmptyMode.
+    /// Дублирует <see cref="CanBeEmptyMode"/>.
     /// </summary>
     public bool CanBeEmpty
     {
@@ -187,7 +188,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика CheckBox.CheckStateChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -410,7 +411,7 @@ namespace FreeLibSet.Forms
       if (ValidateState == UIValidateState.Ok)
       {
         if (CanBeEmptyMode == UIValidateState.Warning && Control.CheckState == CheckState.Indeterminate)
-          SetWarning("Флажок должен быть установлен, либо снят");
+          SetWarning(Res.EFPCheckBox_Err_IndeterminateState);
       }
     }
 
@@ -441,7 +442,7 @@ namespace FreeLibSet.Forms
         }
 
         if (!hasChecked)
-          args.SetError("Должен быть установлен хотя бы один флажок");
+          args.SetError(Res.EFPCheckBox_Err_GroupNoneChecked);
       }
 
       public void CheckedChanged(object sender, EventArgs args)
@@ -462,15 +463,15 @@ namespace FreeLibSet.Forms
     public static void AddGroupAtLeastOneCheck(params EFPCheckBox[] controlProviders)
     {
       if (controlProviders.Length < 1)
-        throw new ArgumentException("Список пустой", "controlProviders");
+        throw ExceptionFactory.ArgIsEmpty("controlProviders");
       GroupValidator gv = new GroupValidator();
       gv.ControlProviders = controlProviders;
       for (int i = 0; i < controlProviders.Length; i++)
       {
         if (controlProviders[i] == null)
-          throw new ArgumentNullException("controlProviders[" + i.ToString() + "]");
+          throw ExceptionFactory.ArgInvalidEnumerableItem("controlProviders", controlProviders, controlProviders[i]);
         if (controlProviders[i].CanBeEmpty)
-          throw new ArgumentException("ThreeState=true", "controlProviders[" + i.ToString() + "]");
+          throw new ArgumentException(String.Format(Res.EFPCheckBox_Arg_ThreeStateInGroup, i), "controlProviders");
         controlProviders[i].Validating += new UIValidatingEventHandler(gv.ContrtolProvider_Validating);
         controlProviders[i].CheckedEx.ValueChanged += new EventHandler(gv.CheckedChanged);
       }

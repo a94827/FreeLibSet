@@ -101,7 +101,7 @@ namespace FreeLibSet.Forms
           catch { }
         }
         catch { }
-        LogoutTools.LogoutException(e, "Ошибка загрузки значков");
+        LogoutTools.LogoutException(e, Res.EFPApp_ErrTitle_LoadMainImages);
       }
     }
 

@@ -89,7 +89,7 @@ namespace FreeLibSet.Forms
     {
       CloseAll();
       if (MainWindowCount > 0)
-        throw new CannotCloseFormException("Не удалось закрыть все открытые окна");
+        throw new CannotCloseFormException(Res.EFPApp_Err_CannotCloseAllForms);
     }
 
     #endregion
@@ -173,10 +173,10 @@ namespace FreeLibSet.Forms
       if (layout == null)
         throw new ArgumentNullException("layout");
       if (layout.Interface != null)
-        throw new InvalidOperationException("Повторное присоединение главного окна");
+        throw ExceptionFactory.ArgProperty("layout", layout, "Interface", layout.Interface, new object[] { null });
       layout.Interface = this;
       if (layout.MainWindow == null)
-        throw new NullReferenceException("Нет главного окна");
+        throw ExceptionFactory.ArgProperty("layout", layout, "MainWindow", layout.MainWindow, null);
 
       #region Дополнительная обработка для главного окна
 
@@ -673,7 +673,7 @@ namespace FreeLibSet.Forms
 #endif
 
       if (EFPApp.InsideLoadComposition || EFPApp.InsideSaveComposition)
-        throw new ReenteranceException("Вложенный вызов SaveComposition()");
+        throw new ReenteranceException();
 
       EFPApp.InsideSaveComposition = true;
       try
@@ -726,7 +726,7 @@ namespace FreeLibSet.Forms
 
         EFPAppMainWindowLayout layout = FindMainWindowLayout(childForms[i]);
         if (layout == null)
-          throw new BugException("Не нашли EFPAppMainWindowLayout для дочерней формы " + childForms[i].ToString());
+          throw new BugException("Cannot find a EFPAppMainWindowLayout object for the child form:" + childForms[i].ToString());
         CfgPart cfgForm = cfg.GetChild("Form" + cnt.ToString(), true);
         if (layouts != null)
         {
@@ -784,7 +784,7 @@ namespace FreeLibSet.Forms
 #endif
 
       if (EFPApp.InsideLoadComposition || EFPApp.InsideSaveComposition)
-        throw new ReenteranceException("Вложенный вызов LoadComposition()");
+        throw new ReenteranceException();
 
       EFPApp.InsideLoadComposition = true;
       try
@@ -812,7 +812,7 @@ namespace FreeLibSet.Forms
     private void DoLoadComposition(CfgPart cfg)
     {
       if (!CloseAll())
-        throw new InvalidOperationException("Не удалось закрыть открытые окна");
+        throw new CannotCloseFormException(Res.EFPApp_Err_CannotCloseAllForms);
 
       List<EFPAppMainWindowLayout> mwls = new List<EFPAppMainWindowLayout>();
 
@@ -870,7 +870,7 @@ namespace FreeLibSet.Forms
             }
             catch (Exception e)
             {
-              EFPApp.ErrorMessageBox(e.Message, "Возникла ошибка при восстановлении формы \"" + creatorParams.Title + "\"");
+              EFPApp.ErrorMessageBox(String.Format(Res.EFPApp_Err_LoadCompositionForm, creatorParams.Title, e.Message));
               continue;
             }
             if (form == null)
@@ -878,7 +878,7 @@ namespace FreeLibSet.Forms
 
             EFPFormProvider formProvider = EFPFormProvider.FindFormProviderRequired(form);
             if (formProvider.HasBeenShown)
-              throw new BugException("При восстановлении формы \"" + form.ToString() + "\" она была досрочно выведена на экран");
+              throw new BugException("When the form \"" + form.ToString() + "\" restoring, it was shown early");
 
             if (!IsSDI)
             {
@@ -909,12 +909,12 @@ namespace FreeLibSet.Forms
             }
             catch (Exception e)
             {
-              EFPApp.ShowException(e, "Не удалось показать форму \"" + creatorParams.Title + "\"");
+              EFPApp.ShowException(e, String.Format(Res.EFPApp_ErrTitle_ShowForm, creatorParams.Title));
             }
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Возникла неизвестная ошибка при восстановлении формы №" + (i + 1).ToString() + " \"" + creatorParams.Title + "\"");
+            EFPApp.ShowException(e, String.Format(Res.EFPApp_ErrTitle_RestoreFormUnknownError, creatorParams.Title));
           }
         }
       } // цикл по дочерним формам

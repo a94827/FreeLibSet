@@ -129,7 +129,7 @@ namespace FreeLibSet.Forms
     /// Массив объектов RadioButton
     /// </summary>
     public RadioButton[] Controls { get { return _Controls; } }
-    private RadioButton[] _Controls;
+    private readonly RadioButton[] _Controls;
 
     /// <summary>
     /// 
@@ -236,21 +236,11 @@ namespace FreeLibSet.Forms
       //base.OnValidate();
 
       if (SelectedIndex < 0)
-      {
-        switch (CanBeEmptyMode)
-        {
-          case UIValidateState.Error:
-            SetError("Позиция должна быть выбрана");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Позиция должна быть выбрана");
-            break;
-        }
-      }
+        ValidateCanBeEmptyMode(CanBeEmptyMode);
       else
       {
         if ((!DisabledItemCanBeSelected) && (!this[SelectedIndex].Enabled))
-          SetError("Заблокированная позиция не может быть выбрана");
+          SetError(Res.EFPRadioButtons_Err_DisabledSelected);
       }
     }
 
@@ -344,7 +334,7 @@ namespace FreeLibSet.Forms
         if (value == null)
           throw new ArgumentNullException();
         if (value.Length != Count)
-          throw new ArgumentException("Неправильная длина массива");
+          throw ExceptionFactory.ArgWrongCollectionCount("value", value, Count);
         for (int i = 0; i < value.Length; i++)
           this[i].Enabled = value[i];
       }
@@ -575,9 +565,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error.
-    /// Это свойство переопределяется для нестандартных элементов, содержащих
-    /// кнопку очистки справа от элемента
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -608,7 +596,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Если False, то при проверке состояния считается ошибкой, если свойство
-    /// SelectedIndex указывает на элемент, свойство которого this[SelectedIndexEx].Enabled
+    /// <see cref="SelectedIndex"/> указывает на элемент, свойство которого <see cref="EFPSingleRadioButton.Enabled"/> 
     /// установлено в false.
     /// По умолчанию - False (считается ошибкой)
     /// </summary>
@@ -678,11 +666,11 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != _Controls.Length)
-            throw new ArgumentException("Неправильная длина массива (" + value.Length + "). Кнопок в группе: " + _Controls.Length.ToString());
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, Count);
           foreach (string s in value)
           {
             if (s == null)
-              throw new ArgumentException("Значения null не допускаются. Используйте String.Empty");
+              throw ExceptionFactory.ArgInvalidEnumerableItem("value", value, null);
           }
         }
 #endif
@@ -694,10 +682,10 @@ namespace FreeLibSet.Forms
     private string[] _Codes;
 
     /// <summary>
-    /// Подстановочное значение для SelectedCodeEx при SelectedIndexEx=-1
-    /// Если UnselectedCode совпадает с одним из значений массива Codes, то при
-    /// установке SelectedCodeEx.ValueEx=UnselectedCode свойство SelectedIndexEx примет
-    /// значение IndexOf(Codes), а не -1
+    /// Подстановочное значение для <see cref="SelectedCode"/> при <see cref="SelectedIndex"/> = (-1).
+    /// Если <see cref="UnselectedCode"/> совпадает с одним из значений массива <see cref="Codes"/>, то при
+    /// установке <see cref="SelectedCode"/>=<see cref="UnselectedCode"/> свойство <see cref="SelectedIndex"/> 
+    /// примет значение IndexOf(Codes), а не (-1).
     /// </summary>
     public string UnselectedCode
     {
@@ -716,7 +704,8 @@ namespace FreeLibSet.Forms
     private string _UnselectedCode;
 
     /// <summary>
-    /// Доступ к SelectedCodeEx.Value без принудительного создания объекта
+    /// Текущая выбранная позиция в виде кода из массива <see cref="Codes"/>. Если нет выбранной
+    /// кнопки (<see cref="SelectedIndex"/>=(-1)), то принимает значение <see cref="UnselectedCode"/>.
     /// </summary>
     public string SelectedCode
     {
@@ -741,8 +730,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Текущая выбранная позиция в виде кода из массива Codes. Если нет выбранной
-    /// кнопки (SelectedIndexEx.ValueEx=-1), то принимает значение UnselectedCode
+    /// Управляемое свойство для <see cref="SelectedCode"/>.
     /// </summary>
     public DepValue<string> SelectedCodeEx
     {
@@ -811,7 +799,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (SyncGroup != null)
-          throw new InvalidOperationException("Нельзя устанавливать свойство SyncValueType, когда объект уже добавлен в группу");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "SyncGroup");
         _SyncValueType = value;
       }
     }
@@ -1178,13 +1166,13 @@ namespace FreeLibSet.Forms
     /// Управляющий элемент кнопки Windows Forms
     /// </summary>
     public RadioButton Control { get { return _Control; } }
-    private RadioButton _Control;
+    private readonly RadioButton _Control;
 
     /// <summary>
     /// Объект-владелец
     /// </summary>
     public EFPRadioButtons Group { get { return _Group; } }
-    private EFPRadioButtons _Group;
+    private readonly EFPRadioButtons _Group;
 
     #endregion
 
@@ -1193,7 +1181,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Доступность кнопки. Возвращает true, если кнопка доступна и группа в-целом
     /// тоже доступна. Установка свойства может не отображаться сразу, если
-    /// EFPRadioButtons.Enabled=false
+    /// EFPRadioButtons.Enabled=false.
     /// </summary>
     public bool Enabled
     {
@@ -1211,12 +1199,10 @@ namespace FreeLibSet.Forms
           Group.Validate();
       }
     }
-    internal bool _Enabled;
+    private bool _Enabled;
 
     /// <summary>
-    /// Индивидуальная блокировка отдельных кнопок в группе.
-    /// По умолчанию Enabled.Value=true (кнопка разблокирована)
-    /// Если индивидуально заблокированная кнопка имеет точку, то это считается ошибкой
+    /// Управляемое свойство для <see cref="Enabled"/>.
     /// </summary>
     public DepValue<bool> EnabledEx
     {
@@ -1258,11 +1244,9 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика RadioButton.EnabledChanged");
+        EFPApp.ShowException(e);
       }
     }
-
-
 
     internal void GroupSetVisible()
     {
@@ -1322,7 +1306,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика RadioButton.CheckedChanged");
+        EFPApp.ShowException(e);
       }
     }
 

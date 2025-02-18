@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using FreeLibSet.Core;
 
 // Запуск форм в единственном экземпляре
 
@@ -109,7 +110,7 @@ namespace FreeLibSet.Forms
       /// Разрешение экрана
       /// </summary>
       public Size ScreenSize { get { return _ScreenSize; } }
-      private Size _ScreenSize;
+      private readonly Size _ScreenSize;
 
       #endregion
     }
@@ -141,7 +142,7 @@ namespace FreeLibSet.Forms
     /// Создается в конструкторе
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
 
     #endregion
 
@@ -264,16 +265,16 @@ namespace FreeLibSet.Forms
       set
       {
         if (_VisibleCommandItem != null)
-          throw new InvalidOperationException("Повторная установка свойства VisibleClientItem не допускается");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "VisibleCommandItem");
         if (value == null)
           throw new ArgumentNullException();
         _VisibleCommandItem = value;
-        _VisibleCommandItem.Click += new EventHandler(FVisibleCommandItem_Click);
+        _VisibleCommandItem.Click += new EventHandler(VisibleCommandItem_Click);
       }
     }
     private EFPCommandItem _VisibleCommandItem;
 
-    void FVisibleCommandItem_Click(object sender, EventArgs args)
+    void VisibleCommandItem_Click(object sender, EventArgs args)
     {
       UserShow();
     }
@@ -282,8 +283,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Список панелей инструментов ClientToolWindow.
-  /// Реализация свойства EFPApp.ToolWindows
+  /// Список панелей инструментов <see cref="EFPToolWindow"/>.
+  /// Реализация свойства <see cref="EFPApp.ToolWindows"/>
   /// </summary>
   public class EFPAppToolWindows : List<EFPToolWindow>
   {

@@ -28,239 +28,172 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EFPDataGridViewOrderForm));
       this.panel1 = new System.Windows.Forms.Panel();
+      this.btnCancel = new System.Windows.Forms.Button();
+      this.btnOk = new System.Windows.Forms.Button();
       this.TheTabControl = new System.Windows.Forms.TabControl();
       this.tpFixed = new System.Windows.Forms.TabPage();
-      this.tpCustom = new System.Windows.Forms.TabPage();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.grpPredefined = new System.Windows.Forms.GroupBox();
       this.grFixed = new System.Windows.Forms.DataGridView();
+      this.tpCustom = new System.Windows.Forms.TabPage();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-      this.btnOk = new System.Windows.Forms.Button();
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.groupBox3 = new System.Windows.Forms.GroupBox();
+      this.grpAvailable = new System.Windows.Forms.GroupBox();
       this.grAvailable = new System.Windows.Forms.DataGridView();
-      this.panSpbSelected = new System.Windows.Forms.Panel();
+      this.grpSelected = new System.Windows.Forms.GroupBox();
       this.grSelected = new System.Windows.Forms.DataGridView();
+      this.panSpbSelected = new System.Windows.Forms.Panel();
       this.panel2 = new System.Windows.Forms.Panel();
-      this.btnAdd = new System.Windows.Forms.Button();
       this.btnRemove = new System.Windows.Forms.Button();
+      this.btnAdd = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
       this.TheTabControl.SuspendLayout();
       this.tpFixed.SuspendLayout();
-      this.tpCustom.SuspendLayout();
-      this.groupBox1.SuspendLayout();
+      this.grpPredefined.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.grFixed)).BeginInit();
+      this.tpCustom.SuspendLayout();
       this.tableLayoutPanel1.SuspendLayout();
-      this.groupBox2.SuspendLayout();
-      this.groupBox3.SuspendLayout();
+      this.grpAvailable.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.grAvailable)).BeginInit();
+      this.grpSelected.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.grSelected)).BeginInit();
       this.panel2.SuspendLayout();
       this.SuspendLayout();
       // 
       // panel1
       // 
+      resources.ApplyResources(this.panel1, "panel1");
       this.panel1.Controls.Add(this.btnCancel);
       this.panel1.Controls.Add(this.btnOk);
-      this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel1.Location = new System.Drawing.Point(0, 412);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(632, 40);
-      this.panel1.TabIndex = 1;
-      // 
-      // ThetabControl
-      // 
-      this.TheTabControl.Controls.Add(this.tpFixed);
-      this.TheTabControl.Controls.Add(this.tpCustom);
-      this.TheTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.TheTabControl.Location = new System.Drawing.Point(0, 0);
-      this.TheTabControl.Name = "ThetabControl";
-      this.TheTabControl.SelectedIndex = 0;
-      this.TheTabControl.Size = new System.Drawing.Size(632, 412);
-      this.TheTabControl.TabIndex = 0;
-      // 
-      // tpFixed
-      // 
-      this.tpFixed.Controls.Add(this.groupBox1);
-      this.tpFixed.Location = new System.Drawing.Point(4, 22);
-      this.tpFixed.Name = "tpFixed";
-      this.tpFixed.Padding = new System.Windows.Forms.Padding(3);
-      this.tpFixed.Size = new System.Drawing.Size(624, 386);
-      this.tpFixed.TabIndex = 0;
-      this.tpFixed.Text = "Предопределенный";
-      this.tpFixed.UseVisualStyleBackColor = true;
-      // 
-      // tpCustom
-      // 
-      this.tpCustom.Controls.Add(this.tableLayoutPanel1);
-      this.tpCustom.Location = new System.Drawing.Point(4, 22);
-      this.tpCustom.Name = "tpCustom";
-      this.tpCustom.Padding = new System.Windows.Forms.Padding(3);
-      this.tpCustom.Size = new System.Drawing.Size(624, 386);
-      this.tpCustom.TabIndex = 1;
-      this.tpCustom.Text = "Произвольный";
-      this.tpCustom.UseVisualStyleBackColor = true;
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.grFixed);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox1.Location = new System.Drawing.Point(3, 3);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(618, 380);
-      this.groupBox1.TabIndex = 0;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Порядок сортировки";
-      // 
-      // grFixed
-      // 
-      this.grFixed.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.grFixed.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.grFixed.Location = new System.Drawing.Point(3, 16);
-      this.grFixed.Name = "grFixed";
-      this.grFixed.Size = new System.Drawing.Size(612, 361);
-      this.grFixed.TabIndex = 0;
-      // 
-      // tableLayoutPanel1
-      // 
-      this.tableLayoutPanel1.ColumnCount = 3;
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-      this.tableLayoutPanel1.Controls.Add(this.groupBox2, 0, 0);
-      this.tableLayoutPanel1.Controls.Add(this.groupBox3, 2, 0);
-      this.tableLayoutPanel1.Controls.Add(this.panel2, 1, 0);
-      this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-      this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-      this.tableLayoutPanel1.RowCount = 1;
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(618, 380);
-      this.tableLayoutPanel1.TabIndex = 0;
-      // 
-      // btnOk
-      // 
-      this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOk.Location = new System.Drawing.Point(8, 8);
-      this.btnOk.Name = "btnOk";
-      this.btnOk.Size = new System.Drawing.Size(88, 24);
-      this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
-      this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
       // 
+      resources.ApplyResources(this.btnCancel, "btnCancel");
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(102, 8);
       this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(88, 24);
-      this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
-      // groupBox2
+      // btnOk
       // 
-      this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox2.Controls.Add(this.grAvailable);
-      this.groupBox2.Location = new System.Drawing.Point(3, 3);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(276, 374);
-      this.groupBox2.TabIndex = 0;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Доступные столбцы";
+      resources.ApplyResources(this.btnOk, "btnOk");
+      this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.btnOk.Name = "btnOk";
+      this.btnOk.UseVisualStyleBackColor = true;
       // 
-      // groupBox3
+      // TheTabControl
       // 
-      this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox3.Controls.Add(this.grSelected);
-      this.groupBox3.Controls.Add(this.panSpbSelected);
-      this.groupBox3.Location = new System.Drawing.Point(339, 3);
-      this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(276, 374);
-      this.groupBox3.TabIndex = 2;
-      this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Выбранные столбцы";
+      resources.ApplyResources(this.TheTabControl, "TheTabControl");
+      this.TheTabControl.Controls.Add(this.tpFixed);
+      this.TheTabControl.Controls.Add(this.tpCustom);
+      this.TheTabControl.Name = "TheTabControl";
+      this.TheTabControl.SelectedIndex = 0;
+      // 
+      // tpFixed
+      // 
+      resources.ApplyResources(this.tpFixed, "tpFixed");
+      this.tpFixed.Controls.Add(this.grpPredefined);
+      this.tpFixed.Name = "tpFixed";
+      this.tpFixed.UseVisualStyleBackColor = true;
+      // 
+      // grpPredefined
+      // 
+      resources.ApplyResources(this.grpPredefined, "grpPredefined");
+      this.grpPredefined.Controls.Add(this.grFixed);
+      this.grpPredefined.Name = "grpPredefined";
+      this.grpPredefined.TabStop = false;
+      // 
+      // grFixed
+      // 
+      resources.ApplyResources(this.grFixed, "grFixed");
+      this.grFixed.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grFixed.Name = "grFixed";
+      // 
+      // tpCustom
+      // 
+      resources.ApplyResources(this.tpCustom, "tpCustom");
+      this.tpCustom.Controls.Add(this.tableLayoutPanel1);
+      this.tpCustom.Name = "tpCustom";
+      this.tpCustom.UseVisualStyleBackColor = true;
+      // 
+      // tableLayoutPanel1
+      // 
+      resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
+      this.tableLayoutPanel1.Controls.Add(this.grpAvailable, 0, 0);
+      this.tableLayoutPanel1.Controls.Add(this.grpSelected, 2, 0);
+      this.tableLayoutPanel1.Controls.Add(this.panel2, 1, 0);
+      this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+      // 
+      // grpAvailable
+      // 
+      resources.ApplyResources(this.grpAvailable, "grpAvailable");
+      this.grpAvailable.Controls.Add(this.grAvailable);
+      this.grpAvailable.Name = "grpAvailable";
+      this.grpAvailable.TabStop = false;
       // 
       // grAvailable
       // 
+      resources.ApplyResources(this.grAvailable, "grAvailable");
       this.grAvailable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.grAvailable.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.grAvailable.Location = new System.Drawing.Point(3, 16);
       this.grAvailable.Name = "grAvailable";
-      this.grAvailable.Size = new System.Drawing.Size(270, 355);
-      this.grAvailable.TabIndex = 0;
       // 
-      // panSpbSelected
+      // grpSelected
       // 
-      this.panSpbSelected.Dock = System.Windows.Forms.DockStyle.Top;
-      this.panSpbSelected.Location = new System.Drawing.Point(3, 16);
-      this.panSpbSelected.Name = "panSpbSelected";
-      this.panSpbSelected.Size = new System.Drawing.Size(270, 38);
-      this.panSpbSelected.TabIndex = 0;
+      resources.ApplyResources(this.grpSelected, "grpSelected");
+      this.grpSelected.Controls.Add(this.grSelected);
+      this.grpSelected.Controls.Add(this.panSpbSelected);
+      this.grpSelected.Name = "grpSelected";
+      this.grpSelected.TabStop = false;
       // 
       // grSelected
       // 
+      resources.ApplyResources(this.grSelected, "grSelected");
       this.grSelected.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.grSelected.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.grSelected.Location = new System.Drawing.Point(3, 54);
       this.grSelected.Name = "grSelected";
-      this.grSelected.Size = new System.Drawing.Size(270, 317);
-      this.grSelected.TabIndex = 1;
+      // 
+      // panSpbSelected
+      // 
+      resources.ApplyResources(this.panSpbSelected, "panSpbSelected");
+      this.panSpbSelected.Name = "panSpbSelected";
       // 
       // panel2
       // 
-      this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      resources.ApplyResources(this.panel2, "panel2");
       this.panel2.Controls.Add(this.btnRemove);
       this.panel2.Controls.Add(this.btnAdd);
-      this.panel2.Location = new System.Drawing.Point(285, 3);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(48, 374);
-      this.panel2.TabIndex = 1;
-      // 
-      // btnAdd
-      // 
-      this.btnAdd.Location = new System.Drawing.Point(8, 86);
-      this.btnAdd.Name = "btnAdd";
-      this.btnAdd.Size = new System.Drawing.Size(32, 24);
-      this.btnAdd.TabIndex = 0;
-      this.btnAdd.UseVisualStyleBackColor = true;
       // 
       // btnRemove
       // 
-      this.btnRemove.Location = new System.Drawing.Point(8, 116);
+      resources.ApplyResources(this.btnRemove, "btnRemove");
       this.btnRemove.Name = "btnRemove";
-      this.btnRemove.Size = new System.Drawing.Size(32, 24);
-      this.btnRemove.TabIndex = 1;
       this.btnRemove.UseVisualStyleBackColor = true;
+      // 
+      // btnAdd
+      // 
+      resources.ApplyResources(this.btnAdd, "btnAdd");
+      this.btnAdd.Name = "btnAdd";
+      this.btnAdd.UseVisualStyleBackColor = true;
       // 
       // EFPDataGridViewOrderForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AcceptButton = this.btnOk;
+      resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(632, 452);
+      this.CancelButton = this.btnCancel;
       this.Controls.Add(this.TheTabControl);
       this.Controls.Add(this.panel1);
       this.Name = "EFPDataGridViewOrderForm";
-      this.Text = "Порядок строк";
-      this.AcceptButton = btnOk;
-      this.CancelButton = btnCancel;
       this.panel1.ResumeLayout(false);
       this.TheTabControl.ResumeLayout(false);
       this.tpFixed.ResumeLayout(false);
-      this.tpCustom.ResumeLayout(false);
-      this.groupBox1.ResumeLayout(false);
+      this.grpPredefined.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.grFixed)).EndInit();
+      this.tpCustom.ResumeLayout(false);
       this.tableLayoutPanel1.ResumeLayout(false);
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox3.ResumeLayout(false);
+      this.grpAvailable.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.grAvailable)).EndInit();
+      this.grpSelected.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.grSelected)).EndInit();
       this.panel2.ResumeLayout(false);
       this.ResumeLayout(false);
@@ -272,15 +205,15 @@
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.TabControl TheTabControl;
     private System.Windows.Forms.TabPage tpFixed;
-    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox grpPredefined;
     private System.Windows.Forms.TabPage tpCustom;
     private System.Windows.Forms.DataGridView grFixed;
     private System.Windows.Forms.Button btnCancel;
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.GroupBox grpAvailable;
     private System.Windows.Forms.DataGridView grAvailable;
-    private System.Windows.Forms.GroupBox groupBox3;
+    private System.Windows.Forms.GroupBox grpSelected;
     private System.Windows.Forms.DataGridView grSelected;
     private System.Windows.Forms.Panel panSpbSelected;
     private System.Windows.Forms.Panel panel2;

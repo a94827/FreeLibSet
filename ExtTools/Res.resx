@@ -1,0 +1,1476 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Cache_ErrTitle_ClearByTimer" xml:space="preserve">
+    <value>Clear cache by timer error</value>
+  </data>
+  <data name="Cache_SwitchDescr_TraceSwitch" xml:space="preserve">
+    <value>Trace the creation and removing cache items and saving / loading disk operations</value>
+  </data>
+  <data name="CfgPart_Err_NameAnotherChar" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}. Letters, digits, and chars '-', '_' , '.' are only allowed</value>
+  </data>
+  <data name="CfgPart_Err_NameFirstChar" xml:space="preserve">
+    <value>Name must start with a letter or the underscore char</value>
+  </data>
+  <data name="CfgPart_Err_NameIsEmpty" xml:space="preserve">
+    <value>Name is empty</value>
+  </data>
+  <data name="Common_Arg_CollectionSameAsThis" xml:space="preserve">
+    <value>Cannot add items to collection from itself</value>
+  </data>
+  <data name="Common_Arg_DataColumnInvalidType" xml:space="preserve">
+    <value>Column '{1}' of table '{0}' has a wrong type {2}</value>
+  </data>
+  <data name="Common_Arg_DataTableHasNoColumn" xml:space="preserve">
+    <value>Table '{0}' does not have a column with name '{1}'</value>
+  </data>
+  <data name="Common_Arg_DataTableMustHaveSingleColumnPrimaryKey" xml:space="preserve">
+    <value>Table '{0}' must have single primary key column, not{1}. Current columns are: {2}</value>
+  </data>
+  <data name="Common_Arg_DataTablesNotSameDataSet" xml:space="preserve">
+    <value>Tables must belong to same DataSet</value>
+  </data>
+  <data name="Common_Arg_DataTableWithoutPrimaryKey" xml:space="preserve">
+    <value>Table '{0}' doesn't have the primary key</value>
+  </data>
+  <data name="Common_Arg_InvalidEnumerableType" xml:space="preserve">
+    <value>Invalid object type {0} in enumeration</value>
+  </data>
+  <data name="Common_Arg_IsEmpty" xml:space="preserve">
+    <value>Value is empty</value>
+  </data>
+  <data name="Common_Arg_ObjectWithoutCode" xml:space="preserve">
+    <value>Object {0} has no value of the property IObjectWithCode.Code</value>
+  </data>
+  <data name="Common_Arg_OutOfRange" xml:space="preserve">
+    <value>Value is out of range</value>
+  </data>
+  <data name="Common_Arg_OutOfRangeMax" xml:space="preserve">
+    <value>Value can't be greater than {0}</value>
+  </data>
+  <data name="Common_Arg_OutOfRangeMin" xml:space="preserve">
+    <value>Value can't be less than {0}</value>
+  </data>
+  <data name="Common_Arg_OutOfRangeMinMax" xml:space="preserve">
+    <value>Value must be in range from {0} to {1}</value>
+  </data>
+  <data name="Common_Arg_RangeInverted" xml:space="preserve">
+    <value>First range value '{0}'={1} is greater thal last value '{2}'={3}</value>
+  </data>
+  <data name="Common_Arg_UnknownValue" xml:space="preserve">
+    <value>Unknown value {0}</value>
+  </data>
+  <data name="Common_Arg_WrongCollectionCount" xml:space="preserve">
+    <value>Wrong item count: {0}. Expected: {1}</value>
+  </data>
+  <data name="Common_Err_Bug" xml:space="preserve">
+    <value>Application internal error. Ask the developer</value>
+  </data>
+  <data name="Common_Err_BugWithMessage" xml:space="preserve">
+    <value>Application internal error. {0}. Ask the developer</value>
+  </data>
+  <data name="Common_Err_Busy" xml:space="preserve">
+    <value>Application is busy</value>
+  </data>
+  <data name="Common_Err_DataRowNotFound" xml:space="preserve">
+    <value>For the table '{0}' there is no row with the primary key ({1})={2}</value>
+  </data>
+  <data name="Common_Err_DifferentThread" xml:space="preserve">
+    <value>Call from a different thread {0}</value>
+  </data>
+  <data name="Common_Err_DifferentThreadWithWanted" xml:space="preserve">
+    <value>Call from a different thread {0}. Wanted thread is {1}</value>
+  </data>
+  <data name="Common_Err_DirNotFound" xml:space="preserve">
+    <value>Directory not found: '{0}'</value>
+  </data>
+  <data name="Common_Err_EmptyErrorMessageList" xml:space="preserve">
+    <value>No errors</value>
+  </data>
+  <data name="Common_Err_FileNotFound" xml:space="preserve">
+    <value>File not found: '{0}' </value>
+  </data>
+  <data name="Common_Err_Inconvertible" xml:space="preserve">
+    <value>Value '{0}' of type {1} cannot be converted to the type {2}</value>
+  </data>
+  <data name="Common_Err_KeyAlreadyExists" xml:space="preserve">
+    <value>Collection already contains an item with the key '{0}'</value>
+  </data>
+  <data name="Common_Err_KeyNotFound" xml:space="preserve">
+    <value>Collection does not contain an item with the key '{0}'</value>
+  </data>
+  <data name="Common_Err_ObjectReadOnly" xml:space="preserve">
+    <value>Object can't be modified (IsReadOnly=true)</value>
+  </data>
+  <data name="Common_Err_Reentrance" xml:space="preserve">
+    <value>Reentrant method call</value>
+  </data>
+  <data name="Common_Err_StructureNotInit" xml:space="preserve">
+    <value>Structure {0} was not init</value>
+  </data>
+  <data name="Common_Err_Test" xml:space="preserve">
+    <value>Test exception</value>
+  </data>
+  <data name="Common_Err_TypeNotCloneable" xml:space="preserve">
+    <value>Type {0} doen't support object cloning with ICloneable interface</value>
+  </data>
+  <data name="Common_Err_UnpairedCallOfEndMethod" xml:space="preserve">
+    <value>Unpaired call the method {0} without previously called {1}</value>
+  </data>
+  <data name="Common_Err_UserCancel" xml:space="preserve">
+    <value>Execution cancelled by user</value>
+  </data>
+  <data name="DataTable_Err_DataTableRefColumnArrayLengthMismatch" xml:space="preserve">
+    <value>Master table '{0}' has the primary key column(s) '{1}' ({2}). Reference columnlist '{3}' ({4}) has a different length.</value>
+  </data>
+  <data name="DataTools_Arg_KeyValuesLengthDiffWithPrimaryKey" xml:space="preserve">
+    <value>Key values array length ({0}) is not the same as primary key column count ({1}) in table '{2}'</value>
+  </data>
+  <data name="DataTools_Err_DataTableHasNoKeyColumn" xml:space="preserve">
+    <value>Table '{0}' doesn't have a column '{1}' supposed to be a key</value>
+  </data>
+  <data name="DataTools_Err_DataTableHasNoRefColumn" xml:space="preserve">
+    <value>DataTable '{0}' doesn't have a column '{1}', supposed to link with master table</value>
+  </data>
+  <data name="DataTools_Err_IncompatibleTypes" xml:space="preserve">
+    <value>Incompatible data types</value>
+  </data>
+  <data name="DateRangeFormatter_Msg_RangeMax" xml:space="preserve">
+    <value>till {1}</value>
+  </data>
+  <data name="DateRangeFormatter_Msg_RangeMin" xml:space="preserve">
+    <value>since {0}</value>
+  </data>
+  <data name="DateRangeFormatter_Msg_RangeMinMax" xml:space="preserve">
+    <value>from {0} till {1}</value>
+  </data>
+  <data name="DateRangeList_Arg_AppendCrossed" xml:space="preserve">
+    <value>Range to add {0} is crossed with the last added range in the list {1}</value>
+  </data>
+  <data name="DateRange_Err_RangesNotCrossed" xml:space="preserve">
+    <value>Date ranges are not crossed</value>
+  </data>
+  <data name="EnumDirectoryEventArgs_Err_IsReadOnly" xml:space="preserve">
+    <value>Value can be changed in the BeforeDirectory event handler only</value>
+  </data>
+  <data name="FileCompression_Phase_WithCancellingOnNextFile" xml:space="preserve">
+    <value>{0}. Process will be cancelled on the next file</value>
+  </data>
+  <data name="FileCompressor_Action_Compress" xml:space="preserve">
+    <value>Compressing</value>
+  </data>
+  <data name="FileCompressor_Action_Decompress" xml:space="preserve">
+    <value>Decompressing</value>
+  </data>
+  <data name="FileCompressor_Action_Test" xml:space="preserve">
+    <value>Archive testing</value>
+  </data>
+  <data name="FileCompressor_Err_7z_Fatal" xml:space="preserve">
+    <value>Fatal error</value>
+  </data>
+  <data name="FileCompressor_Err_7z_InsufficientMemory" xml:space="preserve">
+    <value>Insuffitient memory</value>
+  </data>
+  <data name="FileCompressor_Err_7z_InvalidCommandLine" xml:space="preserve">
+    <value>Invalid command line</value>
+  </data>
+  <data name="FileCompressor_Err_7z_Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="FileCompressor_Err_7z_UserCancel" xml:space="preserve">
+    <value>Execution was cancelled by user</value>
+  </data>
+  <data name="FileCompressor_Err_7z_Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="FileCompressor_Err_ArchiveAndVolume1NotFound" xml:space="preserve">
+    <value>Archive file not found '{0}' neither the first part of multi-volume archive</value>
+  </data>
+  <data name="FileCompressor_Err_ArchiveFileNameIsEmpty" xml:space="preserve">
+    <value>Archive file name missing</value>
+  </data>
+  <data name="FileCompressor_Err_ArchiveNotFound" xml:space="preserve">
+    <value>Archive '{0}' not found</value>
+  </data>
+  <data name="FileCompressor_Err_ArchiverNotFound" xml:space="preserve">
+    <value>Archiver program '{0}' not found</value>
+  </data>
+  <data name="FileCompressor_Err_CmdResult" xml:space="preserve">
+    <value>Command {0} execution failed. Action {1}. Error code {2} ({3})</value>
+  </data>
+  <data name="FileCompressor_Err_DstDirNameIsEmpty" xml:space="preserve">
+    <value>Destination directory name missing</value>
+  </data>
+  <data name="FileCompressor_Err_PasswordWithQuoteChar" xml:space="preserve">
+    <value>Password can't contain a double-quote (") char</value>
+  </data>
+  <data name="FileCompressor_Err_SrcDirNameIsEmpty" xml:space="preserve">
+    <value>Source directory name missing</value>
+  </data>
+  <data name="FileCompressor_Err_SrcDirNotFound" xml:space="preserve">
+    <value>Source directory '{0}' not found</value>
+  </data>
+  <data name="FileCompressor_Err_UnknownFileExtension" xml:space="preserve">
+    <value>Can't define archive type with given file name</value>
+  </data>
+  <data name="FileCompressor_Phase_Cancelling" xml:space="preserve">
+    <value>Archiving job will be cancelled</value>
+  </data>
+  <data name="FileCompressor_Phase_FileAction" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="FileCompressor_Phase_FileList" xml:space="preserve">
+    <value>Creating file list</value>
+  </data>
+  <data name="FileContainer_Arg_FileInfoIsEmpty" xml:space="preserve">
+    <value>File info must be supplied</value>
+  </data>
+  <data name="FileContainer_Arg_LengthMismatch" xml:space="preserve">
+    <value>Content length={0} is not the same as in FileInfo.Length={1} for the file "{2}"</value>
+  </data>
+  <data name="FileContainer_Arg_SubDirIsAbsolute" xml:space="preserve">
+    <value>Directory can't be an absolute path</value>
+  </data>
+  <data name="FileContainer_Arg_SubDirStartsWithDirChar" xml:space="preserve">
+    <value>Directory can't start with a directory separator char</value>
+  </data>
+  <data name="FileContainer_Arg_SubDirWithParent" xml:space="preserve">
+    <value>Directory can't have a reference to the parent dir</value>
+  </data>
+  <data name="FileTemplateDir_Err_BaseDirNotFound" xml:space="preserve">
+    <value>Base directory '{0}' not found</value>
+  </data>
+  <data name="FileTools_Arg_FileNameWithWildcardsOrDirSep" xml:space="preserve">
+    <value>File name can't contain wildcards chars '*' or '?' and directory separator char</value>
+  </data>
+  <data name="FileTools_Arg_TemplateWithDirSep" xml:space="preserve">
+    <value>Template can't contain directory separaror char</value>
+  </data>
+  <data name="FileTools_Msg_DirInsteadOfFile" xml:space="preserve">
+    <value>'{0}' is a directory, not a file</value>
+  </data>
+  <data name="FileTools_Msg_DirNameMustEndWithDirSep" xml:space="preserve">
+    <value>Directory name must end with '{0}'</value>
+  </data>
+  <data name="FileTools_Msg_DirNotFound" xml:space="preserve">
+    <value>Directory '{0}' not found</value>
+  </data>
+  <data name="FileTools_Msg_FileInsteadOfDir" xml:space="preserve">
+    <value>'{0}' is a file, not a directory</value>
+  </data>
+  <data name="FileTools_Msg_FileNotFound" xml:space="preserve">
+    <value>File not found: '{0}'</value>
+  </data>
+  <data name="FileTools_Msg_FilePathEndsWithDirSep" xml:space="preserve">
+    <value>File name can't end with '{0}'</value>
+  </data>
+  <data name="FileTools_Msg_InvalidChar" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}</value>
+  </data>
+  <data name="FileTools_Msg_InvalidCharAltDirSep" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}. Use '{2}' as a directory separator</value>
+  </data>
+  <data name="FileTools_Msg_InvalidCharWildcards" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}. Wildcards are not allowed</value>
+  </data>
+  <data name="FileTools_Msg_LinuxPathTwoDirSeps" xml:space="preserve">
+    <value>Two directory separator chars '//'</value>
+  </data>
+  <data name="FileTools_Msg_PathDirSepAndSpace" xml:space="preserve">
+    <value>Invalid char combination at position {0}. Space char is not allowed after the directory separator</value>
+  </data>
+  <data name="FileTools_Msg_PathEndsWithSpace" xml:space="preserve">
+    <value>Path can't end with space char</value>
+  </data>
+  <data name="FileTools_Msg_PathIsEmpty" xml:space="preserve">
+    <value>Path is empty</value>
+  </data>
+  <data name="FileTools_Msg_PathSpaceAndDirSep" xml:space="preserve">
+    <value>Invalid char combination at position {0}. Space char is not allowed before the directory separator</value>
+  </data>
+  <data name="FileTools_Msg_PathStartsWithSpace" xml:space="preserve">
+    <value>Path can't start with space char</value>
+  </data>
+  <data name="FileTools_Msg_RootDirNotFound" xml:space="preserve">
+    <value>Root directory '{0}' not found</value>
+  </data>
+  <data name="FileTools_Msg_WindowsFilePathEndsWithColon" xml:space="preserve">
+    <value>File name can't end with':'</value>
+  </data>
+  <data name="FileTools_Msg_WindowsNetFilePathFewSeparators" xml:space="preserve">
+    <value>If path starts with '\\', there must be at least two more separators: '\\Server\Shared\File'</value>
+  </data>
+  <data name="FileTools_Msg_WindowsPathDiskLetterRequired" xml:space="preserve">
+    <value>There must be a disk letter 'A'-'Z' at the first position before the colon char</value>
+  </data>
+  <data name="FileTools_Msg_WindowsPathInvalidColonPosition" xml:space="preserve">
+    <value>Colon char ':' must be the second char in the path</value>
+  </data>
+  <data name="FileTools_Msg_WindowsPathTwoBackslashInTheMiddle" xml:space="preserve">
+    <value>Two directory separators '\\' in the middle. They allowed at the start only for the UNC names like '\\Server\Share...'</value>
+  </data>
+  <data name="FileTools_Phase_FileList" xml:space="preserve">
+    <value>Creating file list</value>
+  </data>
+  <data name="FileTools_Phase_FileSize" xml:space="preserve">
+    <value>Calculating file sizes</value>
+  </data>
+  <data name="IniCfgPart_Arg_InvalidSepInSectionName" xml:space="preserve">
+    <value>Invalid config section name {0}. It can't start nor end with a separator char '\', neither contain two separators '\\' together</value>
+  </data>
+  <data name="IniFile_Arg_KeyName" xml:space="preserve">
+    <value>Invalid key name '{0}'. {1}.</value>
+  </data>
+  <data name="IniFile_Arg_SectionName" xml:space="preserve">
+    <value>Invalid section name '{0}'. {1}.</value>
+  </data>
+  <data name="IniFile_Err_KeyNameInvalidChar" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}</value>
+  </data>
+  <data name="IniFile_Err_KeyNameIsEmpty" xml:space="preserve">
+    <value>Key name cannot be empty</value>
+  </data>
+  <data name="IniFile_Err_KeyNameStartsOrEndsWithSpace" xml:space="preserve">
+    <value>Key name cannot start or end with the space char</value>
+  </data>
+  <data name="IniFile_Err_SectionNameInvalidChar" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}</value>
+  </data>
+  <data name="IniFile_Err_SectionNameIsEmpty" xml:space="preserve">
+    <value>Section name cannot be empty</value>
+  </data>
+  <data name="IniFile_Err_SectionNameStartsOrEndsWithSpace" xml:space="preserve">
+    <value>Section name cannot start or end with the space char</value>
+  </data>
+  <data name="MonthDay_Arg_DayOfYearOutOfRange" xml:space="preserve">
+    <value>Value must be zero or in range beetween 1 to 365</value>
+  </data>
+  <data name="SettingsDataList_Arg_ItemTypeAlreadyExists" xml:space="preserve">
+    <value>Settings data list already contains the data item of type {0}</value>
+  </data>
+  <data name="StoredFileInfo_Arg_FileNameWithPath" xml:space="preserve">
+    <value>File name can't contain the path</value>
+  </data>
+  <data name="StoredFileInfo_Arg_NegativeFileLength" xml:space="preserve">
+    <value>File length must be greater or equal than 0 bytes</value>
+  </data>
+  <data name="YearMonthDayAge_Arg_MixedSigns" xml:space="preserve">
+    <value>Mixed positive and negative values are not allowed</value>
+  </data>
+  <data name="YearMonthDayAge_Arg_Year9999" xml:space="preserve">
+    <value>Year 9999 is acceptable only when months=0 and days==0</value>
+  </data>
+  <data name="YearMonthRange_Err_NotCrossed" xml:space="preserve">
+    <value>Ranges {0} and {1} are not crossed</value>
+  </data>
+  <data name="Common_Arg_AreSame" xml:space="preserve">
+    <value>Arguments '{0}' and '{1}' are same</value>
+  </data>
+  <data name="Common_Arg_BadChar" xml:space="preserve">
+    <value>String '{0}' contains invalid char '{1}' at position {2}</value>
+  </data>
+  <data name="Common_Arg_DataTablePrimaryKeyWrongType" xml:space="preserve">
+    <value>Table '{0}' has a primary key '{1}' fo the column of type {2}.  Column of type {3} expected.</value>
+  </data>
+  <data name="Common_Arg_IncompatibleTypes" xml:space="preserve">
+    <value>Arguments '{0}' of type {1} and '{2}' of type {3} have incompatible types</value>
+  </data>
+  <data name="Common_Arg_InvalidListItem" xml:space="preserve">
+    <value>There is an invalid item '{0}' at the index {1} in the list</value>
+  </data>
+  <data name="Common_Arg_StringsWithDifferentLength" xml:space="preserve">
+    <value>Strings {0} ({1}) and {2} ({3}) must have the same length</value>
+  </data>
+  <data name="Common_Arg_UnknownType" xml:space="preserve">
+    <value>Аргумент has an unknown type {0}</value>
+  </data>
+  <data name="DataTools_Arg_HexToBytesOddStringLength" xml:space="preserve">
+    <value>String contains odd number of chars ({0})</value>
+  </data>
+  <data name="Common_Arg_DataRowNotInSameTable" xml:space="preserve">
+    <value>Row belongs another table</value>
+  </data>
+  <data name="Common_Err_CannotAddItemAgain" xml:space="preserve">
+    <value>Cannot add the item '{0}' again</value>
+  </data>
+  <data name="Common_Err_ObjectProperty" xml:space="preserve">
+    <value>Property {0} of object {1} has invalid value {2}</value>
+  </data>
+  <data name="CoreDBxSqlFormatter_Arg_CompareKingMustBeEQorNE" xml:space="preserve">
+    <value>Filter uses comparison to NULL with mode {0}. Equal and NotEqual modes only are acceptable.</value>
+  </data>
+  <data name="CoreDBxSqlFormatter_Err_CoalesceForUnknownColumnType" xml:space="preserve">
+    <value>Column '{0}' requires NULL handling. There is no column definition, nor column type given as argument</value>
+  </data>
+  <data name="CoreDBxSqlFormatter_Err_NoTableAliasForColumn" xml:space="preserve">
+    <value>There is no table alias for the reference column '{0}'</value>
+  </data>
+  <data name="DataTableRepeater_Arg_MasterTableSetToSlaveTable" xml:space="preserve">
+    <value>Reference to SlaveTable cannot be used as the MasterTable</value>
+  </data>
+  <data name="DataTableRepeater_Err_DiffPrimaryKey" xml:space="preserve">
+    <value>SlaveTable has a primary key '{0}'. Connected MasterTable must have the same primary key, not the '{1}'</value>
+  </data>
+  <data name="DataTableRepeater_Err_MasterRowNotFound" xml:space="preserve">
+    <value>Row in master table not found</value>
+  </data>
+  <data name="DataTableRepeater_Err_SlaveTableStructNotDefined" xml:space="preserve">
+    <value>SlaveTable structure must be deined</value>
+  </data>
+  <data name="DataViewSortBuilder_Arg_NameStartsOrEndsWithDot" xml:space="preserve">
+    <value>Name cannot start nor end with the dot char</value>
+  </data>
+  <data name="DataViewSortBuilder_Arg_NameWithTwoDots" xml:space="preserve">
+    <value>Name cannot have two dot chars together</value>
+  </data>
+  <data name="DataViewSortBuilder_Err_AddCallRequired" xml:space="preserve">
+    <value>There must be call of Add() or AddSubName() just before this call</value>
+  </data>
+  <data name="DateRangeCrossCommonFilter_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>Period</value>
+  </data>
+  <data name="DateRangeInclusionCommonFilter_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>Period</value>
+  </data>
+  <data name="DBxColumns_Err_BadColumnName" xml:space="preserve">
+    <value>Invalid column name '{0}' at position with index {1}. {2}</value>
+  </data>
+  <data name="DBxColumns_Err_SourceColumnNotFound" xml:space="preserve">
+    <value>Template table does not contain a column '{0}'</value>
+  </data>
+  <data name="DBxCommonFilters_Err_NoSqlFilter" xml:space="preserve">
+    <value>For the filter '{0}' the property UseSqlFilter=false</value>
+  </data>
+  <data name="DBxCommonFilters_Err_UseSqlFilterMismatch" xml:space="preserve">
+    <value>For the filter '{0}' the property DBxCommonFilter.UseSqlFilter=false while DBxCommnonFilters.SqlFilterRequired=true"</value>
+  </data>
+  <data name="DBxCommonFilter_Err_CodeMustBeSet" xml:space="preserve">
+    <value>Code property must be set before the Owner</value>
+  </data>
+  <data name="DBxCommonFilter_Err_OwnerAlreadyExists" xml:space="preserve">
+    <value>Owner  property has already been set</value>
+  </data>
+  <data name="DBxCommonFilter_Err_OwnerHasBeenSet" xml:space="preserve">
+    <value>Action allowed only before the filler object is added to a collection</value>
+  </data>
+  <data name="DBxCommonFilter_Err_SetAsCurrRow" xml:space="preserve">
+    <value>Filter '{0}' does not support set with current row</value>
+  </data>
+  <data name="DBxCommonFilter_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>[Without name and code]</value>
+  </data>
+  <data name="EnumerableWrapper_Err_SecondHand" xml:space="preserve">
+    <value>Second call of the GetEnumerator() is not allowed</value>
+  </data>
+  <data name="ErrorMessageItem_Msg_ToString" xml:space="preserve">
+    <value>{0}. {1}</value>
+  </data>
+  <data name="ErrorMessageItem_Msg_ToStringWithCode" xml:space="preserve">
+    <value>{0} (code {2}). {1}</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_Info" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="RangeCrossCommonFilterBase_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>Range</value>
+  </data>
+  <data name="RangeInclusionCommonFilterBase_Msg_DefaultDisplayName" xml:space="preserve">
+    <value>Range</value>
+  </data>
+  <data name="Splash_Err_ExtraCompleteOrSkip" xml:space="preserve">
+    <value>Extra call for Complete()/Skip()</value>
+  </data>
+  <data name="Splash_Phase_Complete" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Splash_Phase_Default" xml:space="preserve">
+    <value>Wait...</value>
+  </data>
+  <data name="AndOrFilter_Arg_TwoItemsRequired" xml:space="preserve">
+    <value>Array length cannot be less than 2. Use static method FromArray()</value>
+  </data>
+  <data name="Common_Arg_StringIsNullOrEmpty" xml:space="preserve">
+    <value>String argument is null or an empty string</value>
+  </data>
+  <data name="Common_Err_ObjectReadOnlyWithStringAndType" xml:space="preserve">
+    <value>Object '{0}' of type {1} can't be modified (IsReadOnly=true)</value>
+  </data>
+  <data name="Common_Err_ObjectReadOnlyWithType" xml:space="preserve">
+    <value>Object of type {0} can't be modified (IsReadOnly=true)</value>
+  </data>
+  <data name="CompareFilter_Arg_InvalidCompareKindWithNull" xml:space="preserve">
+    <value>Cannot use comparison kind={0} because one of expression is a NULL const. Acceptable kinds are Equal and NotEqual</value>
+  </data>
+  <data name="CompareFilter_Arg_NullAsDefaultValueWithNull" xml:space="preserve">
+    <value>Mode NullAsDefaultValue cannot be used because one of expression is a NULL const</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldLengthD" xml:space="preserve">
+    <value>For the field type 'D' the length must be set to 8</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldLengthL" xml:space="preserve">
+    <value>For the field type 'L' the length must be set to 1</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldLengthM" xml:space="preserve">
+    <value>For the field type 'M' the length must be set to 10</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldLengthN" xml:space="preserve">
+    <value>For the field type 'N' the length must be less or equal 255</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldName" xml:space="preserve">
+    <value>Invalid field name '{0}'. The name length must be from 1 ti 10 chars. It must contains uppercased latin letters,. digits and underscore char. Name cannot start with a digit.</value>
+  </data>
+  <data name="DbfStr_Arg_InvalidFieldType" xml:space="preserve">
+    <value>Invalid field type: '{0}'. Allowed chars are: 'C', 'N', 'D', 'L', 'M', 'F'</value>
+  </data>
+  <data name="DbfStr_Arg_PrecisionForLength" xml:space="preserve">
+    <value>Precsion cannot have the value {0} when the length is {1}</value>
+  </data>
+  <data name="DbfStr_Arg_PrecisionForType" xml:space="preserve">
+    <value>Precision can't be set for the field type '{0}'</value>
+  </data>
+  <data name="DbfStr_Arg_UnknownFieldName" xml:space="preserve">
+    <value>DBF file doesn't contain a column '{0}'</value>
+  </data>
+  <data name="DbfStr_Msg_DBase2InvalidFieldLengthC" xml:space="preserve">
+    <value>dBase II does not support field length greater than 255 chararcters. For the field '{0}' it is given as {1}</value>
+  </data>
+  <data name="DbfStr_Msg_DBase2TooManyFields" xml:space="preserve">
+    <value>dBase II supports only 32 fields in the DBF-file</value>
+  </data>
+  <data name="DbfStr_Msg_InvalidFieldTypeForDbFormat" xml:space="preserve">
+    <value>Unsupported type '{0}' for the field '{1}'. For the database format {2} only those field types allowed: {3}</value>
+  </data>
+  <data name="DBxAggregateFunction_Arg_NoArg" xml:space="preserve">
+    <value>An argument, usually column name, must be given for any aggregate function except COUNT(*)</value>
+  </data>
+  <data name="DBxAggregateFunction_Err_GetValueNotSupported" xml:space="preserve">
+    <value>An aggregate function cannot be calculated on a data row</value>
+  </data>
+  <data name="DBxConst_Arg_UseDBxColumnType" xml:space="preserve">
+    <value>Use constructor with two args taken DBxColumnType</value>
+  </data>
+  <data name="DBxDataRowExtValues_Arg_TableDiff" xml:space="preserve">
+    <value>Column list in new table  '{0}' must be same as in the current table '{1}'</value>
+  </data>
+  <data name="DBxExtValue_Err_BinDataNotSupported" xml:space="preserve">
+    <value>Binary data and files can't be stored in data collection {0}</value>
+  </data>
+  <data name="DBxFilter_Arg_IsDBxConst" xml:space="preserve">
+    <value>Argument cannot be DBxConst</value>
+  </data>
+  <data name="DBxFunction_Arg_WrongArgCount" xml:space="preserve">
+    <value>Wrong number of arguments: {0}. Function '{1}' requires argument count from {2} to {3}</value>
+  </data>
+  <data name="DBxStruct_Arg_ColumnNotFound" xml:space="preserve">
+    <value>Structure for the table '{0}' does not contain a definition for the column '{1}'</value>
+  </data>
+  <data name="DBxStruct_Err_GetTableStructTableMissed" xml:space="preserve">
+    <value>GetTableStruct() returned null even though the table '{0}' exists in the AllTableNames list</value>
+  </data>
+  <data name="DBxStruct_Err_TableNotFound" xml:space="preserve">
+    <value>There is not structure definition for the table '{0}'</value>
+  </data>
+  <data name="DBxTableStruct_Arg_RefTypeClearForNotNull" xml:space="preserve">
+    <value>Reference type cannot be DBxRefType.Clear if nullable=false</value>
+  </data>
+  <data name="DBxTableStruct_Err_PrimaryKeyColumnMustBeFirst" xml:space="preserve">
+    <value>Key column '{0}' must be the first in the column list</value>
+  </data>
+  <data name="DBxTools_Arg_ValueToColumnTypeRequired" xml:space="preserve">
+    <value>Cannot define column type from the argument of type {0}</value>
+  </data>
+  <data name="ValuesFilter_Arg_DiffTypeValues" xml:space="preserve">
+    <value>Array must contain values of single type. The first item is {0}, but there is an item of type {1}</value>
+  </data>
+  <data name="DbfFieldTypeException_Err_Message" xml:space="preserve">
+    <value>Field '{0}' has an improper type '{1}'</value>
+  </data>
+  <data name="DbfValueFormatException_Err_Message" xml:space="preserve">
+    <value>Record {0}, field '{1}' contains an invalid value for converting to type '{2}'</value>
+  </data>
+  <data name="DbfFile_Err_DataStartPositionOverTheHeader" xml:space="preserve">
+    <value>Invalid data start poistion ({0}) in DBF-file. Field description overlaps the data area</value>
+  </data>
+  <data name="DbfFile_Err_DBase4MemoNotImplement" xml:space="preserve">
+    <value>MEMO-file format for dBase IV is not implemented</value>
+  </data>
+  <data name="DBfMemoFile_Err_FileIsTooShort" xml:space="preserve">
+    <value>МЕМО-file is too short</value>
+  </data>
+  <data name="DbfMemoFile_Err_FileSizeLessThanHeader" xml:space="preserve">
+    <value>МЕМО-file real size ({0}) is less than minimal size based on the header ({1})</value>
+  </data>
+  <data name="DbfFile_Err_HeaderRecSizeMismatch" xml:space="preserve">
+    <value>Record size in DBF file header is not the total field sizes ({1})</value>
+  </data>
+  <data name="DbfFile_Err_RecSizeIsZero" xml:space="preserve">
+    <value>Record size in DBF-file header cannot be 0 bytes</value>
+  </data>
+  <data name="DbfFile_Err_UnknownSignature" xml:space="preserve">
+    <value>Not a DBF-file Unknown signature '{0}'</value>
+  </data>
+  <data name="DbfMemoFile_Err_WrongBlockCount" xml:space="preserve">
+    <value>In МЕМО-file header points a wrong number of 512-byte blocks: {0}</value>
+  </data>
+  <data name="DbfFile_Err_ZeroLength" xml:space="preserve">
+    <value>DBF-file '{0}' has the zero length</value>
+  </data>
+  <data name="DbfFile_Err_FileTooShort" xml:space="preserve">
+    <value>DBF file length ({0}) does not match the record size and count from file header. Length must be at least {1}</value>
+  </data>
+  <data name="AlreadyExecutingException_Err_DefaultMessage" xml:space="preserve">
+    <value>Nested procedure execution start</value>
+  </data>
+  <data name="Common_Err_ObjectPropertyWithRequires" xml:space="preserve">
+    <value>Property {0} of object {1} has invalid value {2}. Requires: {3}</value>
+  </data>
+  <data name="Common_Err_RepeatedCallOfMethod" xml:space="preserve">
+    <value>Repeated call of method {0}</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_DiffColumnTypes" xml:space="preserve">
+    <value>Column '{0}' has a data type {1} but '{2}' has {3}</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_IsNullDefaultValueType" xml:space="preserve">
+    <value>Value must have type {0}, but was {1}</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_ParentNotNull" xml:space="preserve">
+    <value>Column '{0}' has invalid property value: AllowDBNull=false</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_TagAnotherTable" xml:space="preserve">
+    <value>Data row belongs another table</value>
+  </data>
+  <data name="DataTableTreeModel_Arg_TagType" xml:space="preserve">
+    <value>Tag must be a DataRow</value>
+  </data>
+  <data name="DataTableTreeModel_Err_Loop" xml:space="preserve">
+    <value>The tree is looped for the identifier {0}</value>
+  </data>
+  <data name="DbfFileCopier_Err_FieldRuleExists" xml:space="preserve">
+    <value>Copying rule for the destination column '{0}' already exists</value>
+  </data>
+  <data name="DbfFile_Arg_RecNoOutOfRange" xml:space="preserve">
+    <value>Cannot go to the record with RecNo={0}. The record count in the DBF-file is {1}</value>
+  </data>
+  <data name="DbfFile_Arg_StringIsTooLong" xml:space="preserve">
+    <value>String has length {0} and cannot be written in field '{1}' with field size {2}</value>
+  </data>
+  <data name="DbfFile_Err_CellErrorMessage" xml:space="preserve">
+    <value>Record no {0}, field '{1}'. Error occurred {2}</value>
+  </data>
+  <data name="DbfFile_Err_CheckActiveRecord" xml:space="preserve">
+    <value>There is no selected record. Set the RecNo property before.</value>
+  </data>
+  <data name="DbfFile_Err_FieldListEmptyName" xml:space="preserve">
+    <value>Invalid field list in the DBF-file header. For the field {0} there is a zero-length name</value>
+  </data>
+  <data name="DbfFile_Err_FieldListNoEndOfName" xml:space="preserve">
+    <value>Invalid field list in the DBF-file header. For the field {0} there is no end-of-name byte 0</value>
+  </data>
+  <data name="DbfFile_Err_FieldListUnexpectedEOF" xml:space="preserve">
+    <value>Unexpected end of DBF-file. Field list in header has not been finished yet</value>
+  </data>
+  <data name="DbfFile_Err_MemoBlockCountLimitExceeded" xml:space="preserve">
+    <value>Cannot add a MEMO-value. Block count limit ({0}) will be exceeded</value>
+  </data>
+  <data name="DbfFile_Err_MemoBlockNumberOutOfFile" xml:space="preserve">
+    <value>Record no {0},  МЕМО-field '{1}'. Block number {2} is out of the МЕМО-file</value>
+  </data>
+  <data name="DbfFile_Err_MemoFileNotAttached" xml:space="preserve">
+    <value>Access to memo field '{0}' failed bacause there is no memo-file attached</value>
+  </data>
+  <data name="DbfFile_Err_MemoInvalidBlockNumber" xml:space="preserve">
+    <value>Record no {0},  МЕМО-field '{1}'. Invalid block number: {2}</value>
+  </data>
+  <data name="DbfFile_Err_MemoNoEndOfBlock" xml:space="preserve">
+    <value>Record no {0},  МЕМО-field '{1}'. For the block number {2} in the МЕМО-file there is no end-of-block mark within 64KB</value>
+  </data>
+  <data name="DbfFile_Err_MemoReadError" xml:space="preserve">
+    <value>Record no {0},  МЕМО-field '{1}'. Read from memo file error</value>
+  </data>
+  <data name="DbfFile_Err_MemoUnexpectedEOF" xml:space="preserve">
+    <value>Record no {0},  МЕМО-field '{1}'. Unexpected end of МЕМО-file for the block number {2}</value>
+  </data>
+  <data name="DbfFile_Err_NumberStringTooLong" xml:space="preserve">
+    <value>Text presentation '{0}' length ({1}) exceeds the length of numeric field '{2}' ({3})</value>
+  </data>
+  <data name="DbfFile_Err_TooManyRecords" xml:space="preserve">
+    <value>There are too many records in the DBF-file header: {0}</value>
+  </data>
+  <data name="DbfStr_Arg_FieldIndexOutOfRange" xml:space="preserve">
+    <value>Field index must be in range from от 0 to {0}</value>
+  </data>
+  <data name="DbfStr_Err_RecordSizeTooBig" xml:space="preserve">
+    <value>Record size in DBF-file struct is too big: {0}. Maximum possible value is: {1}</value>
+  </data>
+  <data name="DepChangeInfo_Err_ChainLoop" xml:space="preserve">
+    <value>Cannot add an item {0} to the parent {1}. Chain is looping.</value>
+  </data>
+  <data name="DepEvalExpr_Err_ArgNumExpected" xml:space="preserve">
+    <value>Char '@' must be followed an argument number</value>
+  </data>
+  <data name="DepEvalExpr_Err_ArgNumNotInt" xml:space="preserve">
+    <value>String {0} cannot be converted to an integer. Argument number expected</value>
+  </data>
+  <data name="DepEvalExpr_Err_ArgNumOutOfRange" xml:space="preserve">
+    <value>Argument number must be in range from 1 to {0}</value>
+  </data>
+  <data name="DepEvalExpr_Err_OperationExpected" xml:space="preserve">
+    <value>Argument cannot immediatelly follow another expression. Operation expected.</value>
+  </data>
+  <data name="DepExpr_Err_Calculate" xml:space="preserve">
+    <value>Method Calculate() must be reimplemented if the Function handler has not been given in object constructor</value>
+  </data>
+  <data name="DepSyncGroup_Err_SyncObjAlreadyAdded" xml:space="preserve">
+    <value>Syncronization object{0} is already attached to group</value>
+  </data>
+  <data name="DepValue_Arg_InputAlreadyAdded" xml:space="preserve">
+    <value>Input {0} already used</value>
+  </data>
+  <data name="DepValue_Arg_NotDepInput" xml:space="preserve">
+    <value>Source cannot be attached to item {0}. DepInput type object required</value>
+  </data>
+  <data name="DepValue_Err_RecursionOverflow" xml:space="preserve">
+    <value>Value set is looped. StackOverflowException is prevented</value>
+  </data>
+  <data name="ExcelFunctions_Err_DATEDIFFmode" xml:space="preserve">
+    <value>Calculation modes 'ym', 'md' and 'yd are not implemented yet</value>
+  </data>
+  <data name="ExcelFunction_Arg_ArgCountExact" xml:space="preserve">
+    <value>Wrong argument count {1} in function '{0}' call. Expected argument count is {2}</value>
+  </data>
+  <data name="ExcelFunction_Arg_ArgCountRange" xml:space="preserve">
+    <value>Wrong argument count {1} in function '{0}' call. Expected argument count is from {2} to {3}</value>
+  </data>
+  <data name="ExecProc_Arg_AsyncResultForAnotherProc" xml:space="preserve">
+    <value>AsyncResult object belongs to another ExecProc</value>
+  </data>
+  <data name="ExecProc_ErrTitle_AbortErrorWhenDispose" xml:space="preserve">
+    <value>Error execution aborting when disposing the procedure object</value>
+  </data>
+  <data name="ExecProc_ErrTitle_ExecutingError" xml:space="preserve">
+    <value>Procedure executing failed</value>
+  </data>
+  <data name="ExecProc_ErrTitle_RemoteExecProcQueryByTimer" xml:space="preserve">
+    <value>Error on query RemoteExecProc by the timer</value>
+  </data>
+  <data name="ExecProc_Err_AsyncNotFinished" xml:space="preserve">
+    <value>Previous async call has not finished yet</value>
+  </data>
+  <data name="ExecProc_Err_AsyncResultWithoutSplash" xml:space="preserve">
+    <value>ExecProc.BeginExecute() was called instead of BeginExecuteWithSplash()</value>
+  </data>
+  <data name="ExecProc_Err_Finished" xml:space="preserve">
+    <value>Procedure has finished</value>
+  </data>
+  <data name="ExecProc_Err_NoExecutionInCurrentThread" xml:space="preserve">
+    <value>There is no executing procedure in the curren thread</value>
+  </data>
+  <data name="ExecProc_Err_NotExecutingState" xml:space="preserve">
+    <value>Call is allowed when the procedure is executing. Current state is {0}</value>
+  </data>
+  <data name="ExecProc_Err_ShouldCallFromExecute" xml:space="preserve">
+    <value>The mehod should be called from another executing ExecProc</value>
+  </data>
+  <data name="ExecProc_Err_SplashStackSetWhileExecuting" xml:space="preserve">
+    <value>SplashStack property cannot be set while ExecProc is executing</value>
+  </data>
+  <data name="FunctionParser_Err_AfterOtherExpr" xml:space="preserve">
+    <value>Function name should not follow another expression. Operation expected.</value>
+  </data>
+  <data name="FunctionParser_Err_CloseParenthesisNotFound" xml:space="preserve">
+    <value>Close parenthesis not found for the function '{0}'</value>
+  </data>
+  <data name="FunctionParser_Err_OpenParenthesisNotFound" xml:space="preserve">
+    <value>Open parenthesis not found after the function name</value>
+  </data>
+  <data name="FunctionParser_Err_OutOfFunction" xml:space="preserve">
+    <value>Unexpected appearance of '{0}' out of the function call</value>
+  </data>
+  <data name="FunctionParser_Err_UnknownFunctionName" xml:space="preserve">
+    <value>Unknown function name '{0}'</value>
+  </data>
+  <data name="FunctionParser_Err_WantedAnotherArg" xml:space="preserve">
+    <value>Another argument expected</value>
+  </data>
+  <data name="FunctionParser_Err_WantedArg" xml:space="preserve">
+    <value>Argument expected</value>
+  </data>
+  <data name="FunctionParser_Err_WantedCloseParenthesis" xml:space="preserve">
+    <value>Close parenthis expected for the function</value>
+  </data>
+  <data name="FunctionParser_Err_WantedCloseParenthesisOrComma" xml:space="preserve">
+    <value>Close parenthis or argument list separator ({0}) expected for the function</value>
+  </data>
+  <data name="FunctionParser_Err_WantedOpenParenthesis" xml:space="preserve">
+    <value>Open parenthesis expected after the function name</value>
+  </data>
+  <data name="FunctionParser_Err_WrongArgCountRange" xml:space="preserve">
+    <value>Wrong function '{0}' argument count: {1}. Expected arguments: from {2} to {3}</value>
+  </data>
+  <data name="FunctionParser_Err_WrongArgCountSingle" xml:space="preserve">
+    <value>Wrong function '{0}' argument count: {1}. Expected arguments: {2}</value>
+  </data>
+  <data name="LoggingLogoutExecProc_Err_Busy" xml:space="preserve">
+    <value>Debug information is gathering by another user at the time</value>
+  </data>
+  <data name="LoggingLogoutExecProc_Phase_GetInfo" xml:space="preserve">
+    <value>Collecting debug information</value>
+  </data>
+  <data name="LogoutTools_Err_CannotGenerateUniqueFileName" xml:space="preserve">
+    <value>Cannot generate an unique file name</value>
+  </data>
+  <data name="MathOpParser_Err_AfterNoOp" xml:space="preserve">
+    <value>There must be an operation before the open parenthesis</value>
+  </data>
+  <data name="MathOpParser_Err_CloseParenthesisNotFound" xml:space="preserve">
+    <value>Paired close parenthesis not found</value>
+  </data>
+  <data name="MathOpParser_Err_LeftArgNotFound" xml:space="preserve">
+    <value>Left side operand for the operation '{0}' not found. Operation cannot be unary.</value>
+  </data>
+  <data name="MathOpParser_Err_NothingInParentheses" xml:space="preserve">
+    <value>There is nothing beetween the parentheses</value>
+  </data>
+  <data name="MathOpParser_Err_NotImplementedForTypes" xml:space="preserve">
+    <value>Mathematical operations are not implemented for afguments of type {0} and {1}</value>
+  </data>
+  <data name="MathOpParser_Err_OpNotBinary" xml:space="preserve">
+    <value>Operation '{0}' cannot be binary</value>
+  </data>
+  <data name="MathOpParser_Err_RightArgNotFound" xml:space="preserve">
+    <value>Right side operand for the operation '{0}' not found</value>
+  </data>
+  <data name="MathOpParser_Err_UnknownBinaryOp" xml:space="preserve">
+    <value>Unknown binary operation '{0}'</value>
+  </data>
+  <data name="MathOpParser_Err_UnpairedCloseParenthesis" xml:space="preserve">
+    <value>Unpaired close parenthesis</value>
+  </data>
+  <data name="MathOpParser_Err_WrongBinaryOp" xml:space="preserve">
+    <value>Wrong operation '{0}' for the arguments of type {1}</value>
+  </data>
+  <data name="MathOpParser_Err_WrongBinaryOpDiffType" xml:space="preserve">
+    <value>Wrong operation '{0}' for the arguments of types {1} and {2}</value>
+  </data>
+  <data name="MathOpParser_Err_WrongUnaryOp" xml:space="preserve">
+    <value>Wrong unary operation '{0}' for the argument of type {1}</value>
+  </data>
+  <data name="NumConstParser_Err_AfterOtherExpr" xml:space="preserve">
+    <value>Constant should not follow another expression. Operation expected.</value>
+  </data>
+  <data name="NumConstParser_Err_InvalidReplace" xml:space="preserve">
+    <value>There in an invalid replacement pair '{0}' -&gt; '{1}'. Original text and replacing text must have the same length</value>
+  </data>
+  <data name="ParserList_Err_CreateExpressionBeforeParsing" xml:space="preserve">
+    <value>Token parsing has not been proceed</value>
+  </data>
+  <data name="ParserList_Err_CreateExpressionError" xml:space="preserve">
+    <value>Error when expression obtained. {0}</value>
+  </data>
+  <data name="ParserList_Err_CreateExpressionNone" xml:space="preserve">
+    <value>Parsing error.  {0}</value>
+  </data>
+  <data name="ParserList_Err_CreateExpressionOtherParserList" xml:space="preserve">
+    <value>Token parsing was proceed with another ParserList</value>
+  </data>
+  <data name="ParserList_Err_CreateSubExpressionCall" xml:space="preserve">
+    <value>CreateSubExpression() should be called within implementation of CreateExpression(). It cannot be called alone</value>
+  </data>
+  <data name="ParserList_Err_SubParseCalled" xml:space="preserve">
+    <value>SubParse() can be called only from an implementation of IParser.Parse() </value>
+  </data>
+  <data name="ParserList_Err_TokenBeyondText" xml:space="preserve">
+    <value>Token '{0}' is beyond the parsed text</value>
+  </data>
+  <data name="ParserList_Err_TokenOverlap" xml:space="preserve">
+    <value>Token '{0}' overlaps the previous token '{1}'</value>
+  </data>
+  <data name="ParserList_Err_TokenStartNegative" xml:space="preserve">
+    <value>Token '{0}' start position cannot be negative</value>
+  </data>
+  <data name="ParserList_Err_UnparsedMultiChars" xml:space="preserve">
+    <value>Unparsed chars</value>
+  </data>
+  <data name="ParserList_Err_UnparsedSingleChar" xml:space="preserve">
+    <value>Unparser char '{0}'</value>
+  </data>
+  <data name="ParsingData_Err_GetChildExpressionReturnsNull" xml:space="preserve">
+    <value>For the expression {0}, method GetChildExpressions() added null to the expression list</value>
+  </data>
+  <data name="ParsingData_Err_NotParsed" xml:space="preserve">
+    <value>Token parsing has not been proceed</value>
+  </data>
+  <data name="ParsingData_Err_SkipTokenCall" xml:space="preserve">
+    <value>Method should be used only within CreateExpression() processing</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Arg_NoDigits" xml:space="preserve">
+    <value>Mask does not contain any digit placeholder</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Msg_BadChar_DigitWanted" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}. A digit expected.</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Msg_BadChar_SeparatorWanted" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}. Char '{2}' expected.</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Msg_Empty" xml:space="preserve">
+    <value>Value is empty</value>
+  </data>
+  <data name="SimpleDigitalMaskProvider_Msg_WrongLength" xml:space="preserve">
+    <value>Invalid string length {0}. {1} char(s) expected.</value>
+  </data>
+  <data name="StdMaskProvider_Msg_BadChar" xml:space="preserve">
+    <value>Invalid char '{0}' at position {1}</value>
+  </data>
+  <data name="StdMaskProvider_Msg_Empty" xml:space="preserve">
+    <value>Value is empty</value>
+  </data>
+  <data name="StdMaskProvider_Msg_MaskMismatch" xml:space="preserve">
+    <value>Value does not match the mask</value>
+  </data>
+  <data name="StdMaskProvider_Msg_MoreCharsNeeded" xml:space="preserve">
+    <value>More characters required</value>
+  </data>
+  <data name="StrConstParser_Err_AfterOtherExpr" xml:space="preserve">
+    <value>Constant should not follow another expression. Operation expected.</value>
+  </data>
+  <data name="Token_Err_DataNotParsingState" xml:space="preserve">
+    <value>Data is not in the parsing state</value>
+  </data>
+  <data name="LogoutTools_ErrTitle_Default" xml:space="preserve">
+    <value>Error in {0}</value>
+  </data>
+  <data name="ExecProc_Err_CallBackGetSuspendedException" xml:space="preserve">
+    <value>One of the children objects in the callback selector threw an exception when GetSuspended() called. This object has been removed from the list</value>
+  </data>
+  <data name="ExecProc_Err_CallBackGetSuspendedNoSuccess" xml:space="preserve">
+    <value>There was no succeeded call of GetSuspended()</value>
+  </data>
+  <data name="ExecProc_Err_Started" xml:space="preserve">
+    <value>Procedure has already been started</value>
+  </data>
+  <data name="LogoutTools_ErrTitle_WhenMethodCalled" xml:space="preserve">
+    <value>Error when {0} called</value>
+  </data>
+  <data name="BRPaginator_Arg_SelectorForAnotherBand" xml:space="preserve">
+    <value>Selector belongs to another band</value>
+  </data>
+  <data name="BRPaginator_Arg_SelectorForAnotherCell" xml:space="preserve">
+    <value>Selector refers to a cell that does not included to the current range</value>
+  </data>
+  <data name="BRReport_Arg_ParentStyleForDifferentReport" xml:space="preserve">
+    <value>Parent style belongs to another report</value>
+  </data>
+  <data name="BRReport_Arg_StyleForDifferentReport" xml:space="preserve">
+    <value>Style belongs another report</value>
+  </data>
+  <data name="BRReport_Err_CellAlreadyMerged" xml:space="preserve">
+    <value>The cell with index [{0}, {1}] already belongs to another merged area</value>
+  </data>
+  <data name="BRReport_Err_DateOutOfExcelRange" xml:space="preserve">
+    <value>*** Date is out of Excel supported range:: {0} ***</value>
+  </data>
+  <data name="BRReport_Err_PropertyCannotBeSet" xml:space="preserve">
+    <value>This property cannot be set</value>
+  </data>
+  <data name="BRReport_Err_StreamWithoutSeek" xml:space="preserve">
+    <value>Stream doesn't support Seek method</value>
+  </data>
+  <data name="BRReport_Msg_ExcelSheetName" xml:space="preserve">
+    <value>Sheet {0}</value>
+  </data>
+  <data name="BRReport_Phase_CreateExcelWorkbook" xml:space="preserve">
+    <value>Workbook creation</value>
+  </data>
+  <data name="BRReport_Phase_SendDataToExcel" xml:space="preserve">
+    <value>Sending data to Excel</value>
+  </data>
+  <data name="BRReport_Phase_StartExcel" xml:space="preserve">
+    <value>Excel starting</value>
+  </data>
+  <data name="Common_Err_MustBeReimplemented" xml:space="preserve">
+    <value>Метод/свойство {0} должно быть переопределено для класса {1}</value>
+  </data>
+  <data name="DateRangeDialog_Msg_Prompt" xml:space="preserve">
+    <value>Range</value>
+  </data>
+  <data name="DateRangeDialog_Msg_Title" xml:space="preserve">
+    <value>Date range input</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleDate" xml:space="preserve">
+    <value>Date input</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleDateTime" xml:space="preserve">
+    <value>Date and time input</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleTime" xml:space="preserve">
+    <value>Time input</value>
+  </data>
+  <data name="ExecProcLock_ErrTitle_UnlockError" xml:space="preserve">
+    <value>Unlock error for {0}</value>
+  </data>
+  <data name="ExecProcLock_ErrTitle_UserCancel" xml:space="preserve">
+    <value>User cancelled the waiting for the lock</value>
+  </data>
+  <data name="ExecProcLock_Phase_ErrorGetInfo" xml:space="preserve">
+    <value>Error when taken description of locked object {0}</value>
+  </data>
+  <data name="ExecProcLock_Phase_NoLockOwner" xml:space="preserve">
+    <value>[ no owner info ]</value>
+  </data>
+  <data name="ExecProcLock_Phase_Wait" xml:space="preserve">
+    <value>Waiting for lock the object '{0}'. It's locked by {1}</value>
+  </data>
+  <data name="ExecProc_Phase_Executing" xml:space="preserve">
+    <value>Executing: {0}</value>
+  </data>
+  <data name="FileAssociations_ArgExtNoDot" xml:space="preserve">
+    <value>File extension should start with a dot char</value>
+  </data>
+  <data name="FileAssociations_ErrTitle_LoadError" xml:space="preserve">
+    <value>File associatiations loading error</value>
+  </data>
+  <data name="InputDataGridDialog_Msg_Title" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="ListSelectDialog_Err_SingleSelect" xml:space="preserve">
+    <value>List is for single selection only</value>
+  </data>
+  <data name="ListSelectDialog_Msg_TitleMultiSelect" xml:space="preserve">
+    <value>Selection from the list</value>
+  </data>
+  <data name="ListSelectDialog_Msg_TitleSingleSelect" xml:space="preserve">
+    <value>Selection from the list</value>
+  </data>
+  <data name="NamedValues_Arg_ConstructorNeeded" xml:space="preserve">
+    <value>Type {0} has no default constructor</value>
+  </data>
+  <data name="NamedValues_Arg_MustBeClass" xml:space="preserve">
+    <value>Type must be a class, Presented type: {0}</value>
+  </data>
+  <data name="NamedValues_Err_NotSerializable" xml:space="preserve">
+    <value>Value with key '{0}' has the type {1} which is neither serializable nor marshal-by-reference</value>
+  </data>
+  <data name="NumInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="NumInputDialog_Msg_Title" xml:space="preserve">
+    <value>Number input</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Range</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_Title" xml:space="preserve">
+    <value>Number range input</value>
+  </data>
+  <data name="PasswordInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PasswordInputDialog_Msg_Title" xml:space="preserve">
+    <value>Password input</value>
+  </data>
+  <data name="RemoteInterfaceNotsopportedException_Err_Default" xml:space="preserve">
+    <value>Calling of user interface is not possible</value>
+  </data>
+  <data name="RI_Arg_AlienCfgPart" xml:space="preserve">
+    <value>Alien config section</value>
+  </data>
+  <data name="RI_Arg_DateRangeDiffMonths" xml:space="preserve">
+    <value>Date range must belongs single month</value>
+  </data>
+  <data name="RI_Arg_DateRangeDiffYears" xml:space="preserve">
+    <value>Date range must belongs single year</value>
+  </data>
+  <data name="RI_Err_ArgumentNotSet" xml:space="preserve">
+    <value>Argument '{0}' not set</value>
+  </data>
+  <data name="RI_Err_IsFixed" xml:space="preserve">
+    <value>Item is fixed. You cannot change controlling properties or add children items</value>
+  </data>
+  <data name="RI_Err_UnknownAction" xml:space="preserve">
+    <value>Unknown Action='{0}'</value>
+  </data>
+  <data name="RI_Msg_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="RI_Msg_Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="TextInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="TextInputDialog_Msg_Title" xml:space="preserve">
+    <value>Text input</value>
+  </data>
+  <data name="CsvTextConvert_Err_BadChar" xml:space="preserve">
+    <value>Bad char '{0}' at position {1}. '{2}' expected</value>
+  </data>
+  <data name="CsvTextConvert_Err_StringWithoutEnd" xml:space="preserve">
+    <value>Unexpected end of line. Final quote char not found</value>
+  </data>
+  <data name="CsvTextConvert_Err_WithLineNumber" xml:space="preserve">
+    <value>Error at line {0}. {1}</value>
+  </data>
+  <data name="ExeFileInfo_Err_OptionalHeaderSignature" xml:space="preserve">
+    <value>Aux header has an invalid signature {0}</value>
+  </data>
+  <data name="ExeFileInfo_Err_ResEndOutOfFile" xml:space="preserve">
+    <value>Resource end position exceeds the file stream</value>
+  </data>
+  <data name="ExeFileInfo_Err_ResStartOutOfFile" xml:space="preserve">
+    <value>Resource start position exceeds the file stream</value>
+  </data>
+  <data name="OpenOfficeTools_Arg_GenericCulture" xml:space="preserve">
+    <value>Wrong culture with code '{0}'. There is no char '-' in code</value>
+  </data>
+  <data name="OpenOfficeTools_Arg_TooManyPartsInNumberFormat" xml:space="preserve">
+    <value>Number format '{0}' consists of more than three sections</value>
+  </data>
+  <data name="SingleByteTranscoder_Arg_Unsupported" xml:space="preserve">
+    <value>Cannot do a direct transcoding from encoding {0} to {1}</value>
+  </data>
+  <data name="UISelRCGrid_Err_EmptyValuesNotAllowed" xml:space="preserve">
+    <value>Empty values are not allowed</value>
+  </data>
+  <data name="UISelRCGrid_Err_NoDate" xml:space="preserve">
+    <value>String '{0}' cannot be converted to date</value>
+  </data>
+  <data name="UISelRCGrid_Err_NoEnum" xml:space="preserve">
+    <value>Unknown string '{0}'</value>
+  </data>
+  <data name="UISelRCGrid_Err_NoInt" xml:space="preserve">
+    <value>String '{0}' cannot be converted to an integer</value>
+  </data>
+  <data name="UISelRCGrid_Err_NoNumber" xml:space="preserve">
+    <value>String '{0}' cannot be converted to a number</value>
+  </data>
+  <data name="UISelRCGrid_Err_Validating" xml:space="preserve">
+    <value>Value validating error. {0}</value>
+  </data>
+  <data name="UIValidateResult_Msg_NoMessage" xml:space="preserve">
+    <value>Message text is not supplied</value>
+  </data>
+  <data name="Common_Arg_UnknownValueWithWanted" xml:space="preserve">
+    <value>Unknown value {0}. Available values are: {1}</value>
+  </data>
+  <data name="RegistryKey2_Arg_InvalidValueType" xml:space="preserve">
+    <value>Only string and byte arrays can written as registry values</value>
+  </data>
+  <data name="RegistryKey2_Arg_SubKeyNotFound" xml:space="preserve">
+    <value>Subkey does not exist</value>
+  </data>
+  <data name="RegistryKey2_Arg_ValueNotFound" xml:space="preserve">
+    <value>Value does not exist</value>
+  </data>
+  <data name="RegistryKey2_Arg_ValueTypeMismatch" xml:space="preserve">
+    <value>Type does not match the valueKind</value>
+  </data>
+  <data name="RegistryKey2_Err_ChildMustBeVolatile" xml:space="preserve">
+    <value>Cannot create a stable subkey under a volatile parent key</value>
+  </data>
+  <data name="RegistryKey2_Err_InvalidHandle" xml:space="preserve">
+    <value>Invalid handle</value>
+  </data>
+  <data name="RegistryKey2_Err_NetworkPathNotFound" xml:space="preserve">
+    <value>The network path was not found</value>
+  </data>
+  <data name="RegistryKey2_Err_Root" xml:space="preserve">
+    <value>Operation cannot be performed on the root registry key</value>
+  </data>
+  <data name="RegistryKey2_Err_SubKeyHasChildren" xml:space="preserve">
+    <value>Registry key has subkeys</value>
+  </data>
+  <data name="RegistryTree_Arg_UnknownRoot" xml:space="preserve">
+    <value>Unknown root registry key '{0}'</value>
+  </data>
+  <data name="RegistryTree_Err_IsReadOnly" xml:space="preserve">
+    <value>Registry key collection is open in read-only mode</value>
+  </data>
+  <data name="ResourceTable_Arg_ResourceNoFound" xml:space="preserve">
+    <value>Resource {0} not found</value>
+  </data>
+  <data name="ResourceTable_Err_IconNotFound" xml:space="preserve">
+    <value>Icon {0} not found</value>
+  </data>
+  <data name="ResourceTable_Err_IconWrongColorCount" xml:space="preserve">
+    <value>There is no BPP presented in the icon and it's given unknown ColorCount={0}</value>
+  </data>
+  <data name="ResourceTable_Err_PngSignature" xml:space="preserve">
+    <value>First block of PNG-file must be the IHDR-header</value>
+  </data>
+  <data name="ResourceTable_Err_ResourceIsEmpty" xml:space="preserve">
+    <value>Empty resource {0}</value>
+  </data>
+  <data name="ResourceTable_Err_UnknownImageHeader" xml:space="preserve">
+    <value>Unknown header</value>
+  </data>
+  <data name="WTS_Err_NoCurrentSession" xml:space="preserve">
+    <value>No current session</value>
+  </data>
+  <data name="Common_Arg_OutOfRangeMinMaxInv" xml:space="preserve">
+    <value>Value must be in range from {0} to {1}, but this is impossible. So, the call is completely unavailable</value>
+  </data>
+  <data name="Common_Arg_NoType" xml:space="preserve">
+    <value>Value of type {0} is not of the type {1}</value>
+  </data>
+  <data name="Common_Err_ObjectPropertyCount" xml:space="preserve">
+    <value>Property {0} of object {1} has wrong length {2}. Expected: {3}</value>
+  </data>
+  <data name="Common_Err_ObjectPropertyNotSet" xml:space="preserve">
+    <value>Property {0} of object {1} has not been set</value>
+  </data>
+  <data name="FileBatchHandler_Phase_CopyFile" xml:space="preserve">
+    <value>Copying file {0}</value>
+  </data>
+  <data name="FileBatchHandler_Phase_DeleteDir" xml:space="preserve">
+    <value>Deleting directory {0}</value>
+  </data>
+  <data name="FileBatchHandler_Phase_DeleteFile" xml:space="preserve">
+    <value>Deleting file {0}</value>
+  </data>
+  <data name="FileBatchHandler_Phase_MoveDir" xml:space="preserve">
+    <value>Moving directory {0}</value>
+  </data>
+  <data name="FileBatchHandler_Phase_MoveFile" xml:space="preserve">
+    <value>Moving file {0}</value>
+  </data>
+  <data name="FileTools_Phase_ForceDirs" xml:space="preserve">
+    <value>Creating directory {0}</value>
+  </data>
+  <data name="Common_Err_ObjectEventHandlerNotSet" xml:space="preserve">
+    <value>Event {0} handler for object {1} has not been set</value>
+  </data>
+  <data name="UITools_Msg_Boolean" xml:space="preserve">
+    <value>boolean value</value>
+  </data>
+  <data name="UITools_Msg_ConvertErrorMessage" xml:space="preserve">
+    <value>Text '{0}' cannot be converted to '{1}'</value>
+  </data>
+  <data name="UITools_Msg_Date" xml:space="preserve">
+    <value>date</value>
+  </data>
+  <data name="UITools_Msg_DateTime" xml:space="preserve">
+    <value>date and time</value>
+  </data>
+  <data name="UITools_Msg_Float" xml:space="preserve">
+    <value>float value</value>
+  </data>
+  <data name="UITools_Msg_Int" xml:space="preserve">
+    <value>integer value</value>
+  </data>
+  <data name="UITools_Msg_Null" xml:space="preserve">
+    <value>empty</value>
+  </data>
+  <data name="UITools_Msg_String" xml:space="preserve">
+    <value>string</value>
+  </data>
+  <data name="UITools_Msg_Time" xml:space="preserve">
+    <value>time</value>
+  </data>
+  <data name="Common_Err_ObjectPropertyAlreadySet" xml:space="preserve">
+    <value>Property {0} of object {1} has already been set</value>
+  </data>
+  <data name="Common_Err_ObjectPropertySwitch" xml:space="preserve">
+    <value>Invalid property {0} of object {1} switch from value {2} to {3}</value>
+  </data>
+  <data name="UITools_Msg_No" xml:space="preserve">
+    <value>нет</value>
+  </data>
+  <data name="UITools_Msg_Yes" xml:space="preserve">
+    <value>да</value>
+  </data>
+  <data name="ListSortDirection_Name_Ascending" xml:space="preserve">
+    <value>in ascending order</value>
+  </data>
+  <data name="ListSortDirection_Name_AscendingShort" xml:space="preserve">
+    <value>asc.</value>
+  </data>
+  <data name="ListSortDirection_Name_Descending" xml:space="preserve">
+    <value>in descending order</value>
+  </data>
+  <data name="ListSortDirection_Name_DescendingShort" xml:space="preserve">
+    <value>desc.</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_AlphanumericCharacterExpected" xml:space="preserve">
+    <value>A digit or a letter expected</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_CharacterEscaped" xml:space="preserve">
+    <value>Character escaped</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_DigitExpected" xml:space="preserve">
+    <value>A digit expected</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_LetterExpected" xml:space="preserve">
+    <value>A letter expected</value>
+  </data>
+  <data name="MaskedTextResultHint_Msg_UnavailableEditPosition" xml:space="preserve">
+    <value>All characters are entered</value>
+  </data>
+  <data name="Common_Arg_NotInCollection" xml:space="preserve">
+    <value>Value {0} does not belongs the collection {1}</value>
+  </data>
+  <data name="Common_Arg_NotInPropertyCollection" xml:space="preserve">
+    <value>Value {0} does not belongs the collection {1} ({2}) of object {3}</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_ErrorShort" xml:space="preserve">
+    <value>Err.</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_InfoShort" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="ErrorMessageKind_Msg_WarningShort" xml:space="preserve">
+    <value>W.</value>
+  </data>
+  <data name="UITools_Err_CanBeEmptyModeError" xml:space="preserve">
+    <value>Value '{0}' cannot be empty</value>
+  </data>
+  <data name="UITools_Err_CanBeEmptyModeWarning" xml:space="preserve">
+    <value>Value '{0}' probably should be not empty</value>
+  </data>
+  <data name="UITools_Err_OutOfRangeMax" xml:space="preserve">
+    <value>Value {0} cannot be greater than {1}</value>
+  </data>
+  <data name="UITools_Err_OutOfRangeMin" xml:space="preserve">
+    <value>Value {0} cannot be less than {1}</value>
+  </data>
+  <data name="UITools_Err_OutOfRangeMinMax" xml:space="preserve">
+    <value>Value {0} must be in range from {1} to {2}</value>
+  </data>
+  <data name="UITools_Err_OutOfRange" xml:space="preserve">
+    <value>Value {0} must be in range {1}</value>
+  </data>
+  <data name="Common_Err_DllNotFound" xml:space="preserve">
+    <value>Cannot load DLL '{0}'</value>
+  </data>
+  <data name="ZipFileTools_Err_ArcContainsManyFiles" xml:space="preserve">
+    <value>Archive contains more than single file</value>
+  </data>
+  <data name="ZipFileTools_Err_ArcIsEmpty" xml:space="preserve">
+    <value>Archive contains no files</value>
+  </data>
+</root>

@@ -22,7 +22,7 @@ namespace FreeLibSet.Controls
   /// Содержит комбоблок для выбора существующего набора или ввода имени нового набора,
   /// а также кнопки "Сохранить" и "Удалить"
   /// </summary>
-  [Description("Комбоблок для выбора набора готовых параметров")]
+  [Description("Combobox for selecting, adding and removing named presets of values for a dialog box")]
   [ToolboxBitmap(typeof(ParamSetComboBox), "ParamSetComboBox.bmp")]
   public partial class ParamSetComboBox : UserControl
   {
@@ -400,7 +400,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Надо ли рисовать значки в списке
     /// </summary>
-    [Description("Надо ли рисовать значки в списке")]
+    [Description("Defines wheather images should be show in the drop-down list")]
     [Category("Appearance")]
     [DefaultValue(true)]
     public bool ShowImages
@@ -435,7 +435,7 @@ namespace FreeLibSet.Controls
     {
       if (ItemSelected == null)
       {
-        EFPApp.ErrorMessageBox("Обработчик ItemSelected не установлен");
+        EFPApp.ErrorMessageBox("ItemSelected handler not set");
         return;
       }
       ParamSetComboBoxItemEventArgs args = new ParamSetComboBoxItemEventArgs(item);
@@ -455,7 +455,7 @@ namespace FreeLibSet.Controls
     {
       if (SaveClick == null)
       {
-        EFPApp.ErrorMessageBox("Обработчик SaveClick не установлен");
+        EFPApp.ErrorMessageBox("SaveClick handler not set");
         return;
       }
       ParamSetComboBoxSaveEventArgs args = new ParamSetComboBoxSaveEventArgs(displayName);
@@ -475,7 +475,7 @@ namespace FreeLibSet.Controls
     {
       if (DeleteClick == null)
       {
-        EFPApp.ErrorMessageBox("Обработчик DeleteClick не установлен");
+        EFPApp.ErrorMessageBox("DeleteClick handler not set");
         return;
       }
       ParamSetComboBoxItemEventArgs args = new ParamSetComboBoxItemEventArgs(item);
@@ -607,7 +607,7 @@ namespace FreeLibSet.Controls
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка выбора элемента");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -650,7 +650,7 @@ namespace FreeLibSet.Controls
         TheCB.Text = TheCB.Text.Trim();
         if (String.IsNullOrEmpty(TheCB.Text))
         {
-          EFPApp.ShowTempMessage("Не задано название для набора");
+          EFPApp.ShowTempMessage(Res.ParamSetComboBox_Err_NameIsEmpty);
           TheCB.Select();
           return;
         }
@@ -659,7 +659,7 @@ namespace FreeLibSet.Controls
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки нажатия кнопки сохранения");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -674,7 +674,7 @@ namespace FreeLibSet.Controls
         ParamSetComboBoxItem item = Items.FindDisplayName(TheCB.Text);
         if (item == null)
         {
-          EFPApp.ShowTempMessage("Нет такой строки в списке");
+          EFPApp.ShowTempMessage(Res.ParamSetComboBox_Err_UnknownName);
           TheCB.Select();
           return;
         }
@@ -683,7 +683,7 @@ namespace FreeLibSet.Controls
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки нажатия кнопки удаления");
+        EFPApp.ShowException(e);
       }
     }
 

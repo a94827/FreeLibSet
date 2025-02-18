@@ -574,7 +574,7 @@ namespace FreeLibSet.Forms.Docs
       dObj.SetData(docSel);
       ControlProvider.UI.OnAddCopyFormats(dObj, docSel); // 06.02.2021
       dObj.SetText(ControlProvider.Control.Text);
-      EFPApp.Clipboard.SetDataObject(dObj, true);
+      new EFPClipboard().SetDataObject(dObj, true);
     }
 
     void ciPaste_Click(object sender, EventArgs args)

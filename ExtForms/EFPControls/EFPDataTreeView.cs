@@ -1054,7 +1054,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_VisibleChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1071,7 +1071,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки нажатия клавиши KeyDown");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1093,7 +1093,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_MouseDown");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1474,7 +1474,6 @@ namespace FreeLibSet.Forms
               GridProducer.InitTreeView(this, CurrentConfigHasBeenSet);
               //int nCols2 = Control.Columns.Count;
               PerformGridProducerPostInit();
-
             }
           }
           finally
@@ -1760,12 +1759,12 @@ namespace FreeLibSet.Forms
     {
       if (Control.SelectedNode == null)
       {
-        EFPApp.ShowTempMessage("В просмотре нет выбранной строки");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedRow);
         return false;
       }
       if (Control.SelectedNodes.Count > 1)
       {
-        EFPApp.ShowTempMessage("В просмотре выбрано больше одной строки");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_MultiSelectedRows);
         return false;
       }
 
@@ -1823,13 +1822,23 @@ namespace FreeLibSet.Forms
     protected IDataTableTreeModel GetDataTableModelWithCheck()
     {
       if (Control.Model == null)
-        throw new NullReferenceException("Свойство TreeViewAdv.Model не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(Control, "Model");
 
       IDataTableTreeModel model = Control.Model as IDataTableTreeModel;
       if (model == null)
-        throw new NullReferenceException("Присоединенная модель не реализует IDataTableTreeModel");
+        throw ExceptionFactory.Inconvertible(Control.Model, typeof(IDataTableTreeModel));
 
       return model;
+    }
+
+    private DataTable GetDataTableWithCheck()
+    {
+      IDataTableTreeModel model = GetDataTableModelWithCheck();
+      if (model.DataView == null)
+        throw ExceptionFactory.ObjectProperty(model, "DataView", model.DataView, null);
+      if (model.DataView.Table==null)
+        throw ExceptionFactory.ObjectProperty(model.DataView, "Table", model.DataView.Table, null);
+      return model.DataView.Table;
     }
 
     /*
@@ -2036,9 +2045,8 @@ namespace FreeLibSet.Forms
           return;
         if (value.GetLength(0) == 0)
           return;
-        DataTable table = SourceAsDataTable;
-        if (table == null)
-          throw new InvalidOperationException("Control.Model не реализует интерфейс IDataTableTreeModel");
+
+        DataTable table = GetDataTableWithCheck();
         DataRow[] rows = DataTools.GetPrimaryKeyRows(table, value);
         SelectedDataRows = rows;
       }
@@ -2059,9 +2067,7 @@ namespace FreeLibSet.Forms
       }
       set
       {
-        DataTable table = SourceAsDataTable;
-        if (table == null)
-          throw new InvalidOperationException("Grid.DataSource не является DataTable");
+        DataTable table = GetDataTableWithCheck();
         if (value == null)
           return;
         DataRow row = table.Rows.Find(value);
@@ -2183,7 +2189,7 @@ namespace FreeLibSet.Forms
       {
         if (Control.Model is IDataTableTreeModel)
         {
-          DataTable table = ((IDataTableTreeModel)(Control.Model)).Table;
+          DataTable table = GetDataTableWithCheck();
           if (table.PrimaryKey.Length == 0)
             return EFPDataTreeViewSelectedNodesMode.DataRow;
           else
@@ -2342,8 +2348,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.MessageBox("Возникла ошибка при восстановлении выбранных строк при обновлении таблицы. " +
-            e.Message, "Ошибка табличного просмотра", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_RefreshRestoreSelection, e.Message));
         }
       }
       finally
@@ -2546,7 +2551,7 @@ namespace FreeLibSet.Forms
       TreePath treePath = model1.TreePathFromDataRow(row);
       IRefreshableTreeModel model2 = model1 as IRefreshableTreeModel;
       if (model2 == null)
-        throw new InvalidOperationException("Модель не поддерживает обновление");
+        throw ExceptionFactory.Inconvertible(model1, typeof(IRefreshableTreeModel));
       model2.RefreshNode(treePath);
     }
 
@@ -2561,7 +2566,7 @@ namespace FreeLibSet.Forms
       IDataTableTreeModel model1 = GetDataTableModelWithCheck();
       IRefreshableTreeModel model2 = model1 as IRefreshableTreeModel;
       if (model2 == null)
-        throw new InvalidOperationException("Модель не поддерживает обновление");
+        throw ExceptionFactory.Inconvertible(model1, typeof(IRefreshableTreeModel));
 
       for (int i = 0; i < rows.Length; i++)
       {
@@ -2623,8 +2628,7 @@ namespace FreeLibSet.Forms
         if (value == _CurrentOrderIndex)
           return;
         if (value < 0 || value >= OrderCount)
-          throw new ArgumentOutOfRangeException("value",
-            "Индекс сортировки должен быть в диапазоне от 0 до " + (OrderCount - 1).ToString());
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, OrderCount - 1);
         _CurrentOrderIndex = value;
 
         InternalSetCurrentOrder();
@@ -2681,7 +2685,7 @@ namespace FreeLibSet.Forms
           throw new ArgumentNullException("value");
         int p = Orders.IndexOf(value);
         if (p < 0)
-          throw new ArgumentException("Значение отсутствует в коллекции Orders", "value");
+          throw ExceptionFactory.ArgNotInCollection("value", value, this, "Orders", Orders);
         CurrentOrderIndex = p;
       }
     }
@@ -2781,7 +2785,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка нажатия мыши на заголовке табличного просмотра");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -2861,7 +2865,7 @@ namespace FreeLibSet.Forms
     {
       if (OrderCount == 0)
       {
-        EFPApp.ShowTempMessage("Нельзя выбрать порядок строк в табличном просмотре");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_OrderNotAllowed);
         return false;
       }
       int idx = CurrentOrderIndex;
@@ -3207,7 +3211,7 @@ return true;                          */
       DataReorderHelperNeededEventArgs args = new DataReorderHelperNeededEventArgs();
       OnDataReorderHelperNeeded(args);
       if (args.Helper == null)
-        throw new NullReferenceException("Объект, реализующий IDataReorderHelper, не был создан");
+        throw ExceptionFactory.ObjectPropertyNotSet(args, "Helper");
       return args.Helper;
     }
 
@@ -3230,15 +3234,12 @@ return true;                          */
     protected virtual IDataReorderHelper CreateDefaultDataReorderHelper()
     {
       if (String.IsNullOrEmpty(ManualOrderColumn))
-        throw new InvalidOperationException("Не установлено свойство ManualOrderColumn");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "ManualOrderColumn");
 
-      IDataTableTreeModel dtmodel = Control.Model as IDataTableTreeModel;
-      if (dtmodel != null)
-        return new DataTableTreeReorderHelper(dtmodel, ManualOrderColumn);
+      IDataTableTreeModel dtmodel = GetDataTableModelWithCheck();
+      return new DataTableTreeReorderHelper(dtmodel, ManualOrderColumn);
 
-      throw new InvalidOperationException("Модель не присоединена или она не реализует интерфейс IDataTableTreeModel");
-
-      /*
+     /*
       // Получаем доступ к объекту DataView
       DataView dv = SourceAsDataView;
       if (dv == null)
@@ -3268,13 +3269,13 @@ return true;                          */
     private bool DoReorderByDataColumn(bool down)
     {
       if (DataReorderHelper == null)
-        throw new NullReferenceException("DataReorderHelper=null");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DataReorderHelper");
 
       //Загружаем выбранные строки
       DataRow[] selRows = this.SelectedDataRows;
       if (selRows.Length == 0)
       {
-        EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedRow);
         return false;
       }
 
@@ -3286,16 +3287,9 @@ return true;                          */
 
       if (!res)
       {
-        string msg = "Нельзя передвинуть ";
-        if (selRows.Length > 1)
-          msg += "выбранные строки ";
-        else
-          msg += "выбранную строку ";
-        if (down)
-          msg += "вниз";
-        else
-          msg += "вверх";
-        EFPApp.ShowTempMessage(msg);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_MoveRowsUpDown,
+          selRows.Length,
+          down ? Res.EFPDataView_Msg_MoveDown : Res.EFPDataView_Msg_MoveUp));
         return false;
       }
 
@@ -3338,9 +3332,9 @@ return true;                          */
     private bool DoSortRestoreColumn()
     {
       if (String.IsNullOrEmpty(DefaultManualOrderColumn))
-        throw new NullReferenceException("Свойство DefaultManualOrderColumn не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DefaultManualOrderColumn");
       if (DataReorderHelper == null)
-        throw new NullReferenceException("DataReorderHelper=null");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DataReorderHelper");
 
 
       DataRow[] desiredOrder;

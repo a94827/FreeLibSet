@@ -91,14 +91,14 @@ namespace FreeLibSet.Core
       {
         posA = _FloatTypeArrayIndexer.IndexOf(a.GetType()) + 8;
         if (posA < 8)
-          throw new ArgumentException("Первый аргумент имеет нечисловой тип", "a");
+          throw ExceptionFactory.ArgUnknownType("a", a);
       }
       int posB = _IntegerTypeArrayIndexer.IndexOf(b.GetType());
       if (posB < 0)
       {
         posB = _FloatTypeArrayIndexer.IndexOf(b.GetType()) + 8;
         if (posB < 8)
-          throw new ArgumentException("Второй аргумент имеет нечисловой тип", "b");
+          throw ExceptionFactory.ArgUnknownType("b", b);
       }
 #if DEBUG
       if (posA < 0 || posA >= 11)
@@ -595,7 +595,7 @@ namespace FreeLibSet.Core
           case SumType.Decimal: return (decimal)v1 + (decimal)v2;
           case SumType.TimeSpan: return (TimeSpan)v1 + (TimeSpan)v2;
           default:
-            throw new ArgumentException("Значения типа " + a.GetType() + " и " + b.GetType() + " не могут быть просуммированы");
+            throw ExceptionFactory.ArgIncompatibleTypes("a", a, "b", b);
         }
       }
     }
@@ -639,7 +639,7 @@ namespace FreeLibSet.Core
           case SumType.TimeSpan: return (TimeSpan)v1 - (TimeSpan)v2;
           case SumType.DateTime: return (DateTime)v1 - (DateTime)v2;
           default:
-            throw new ArgumentException("Значения типа " + a.GetType() + " и " + b.GetType() + " не могут вычитаться");
+            throw ExceptionFactory.ArgIncompatibleTypes("a", a, "b", b);
         }
       }
     }
@@ -669,7 +669,7 @@ namespace FreeLibSet.Core
           case SumType.Decimal: return -(decimal)v;
           case SumType.TimeSpan: return -(TimeSpan)v;
           default:
-            throw new ArgumentException("Для значения типа " + a.GetType() + " не может быть получено отрицательное значение");
+            throw ExceptionFactory.ArgUnknownType("a", a);
         }
       }
     }
@@ -709,7 +709,7 @@ namespace FreeLibSet.Core
             double dbl_2 = (double)ConvertValue(b, SumType.Double);
             return new TimeSpan((long)(dbl_1 * dbl_2));
           default:
-            throw new ArgumentException("Значения типа " + a.GetType() + " и " + b.GetType() + " не могут быть перемножены");
+            throw ExceptionFactory.ArgIncompatibleTypes("a", a, "b", b);
         }
       }
 
@@ -742,7 +742,7 @@ namespace FreeLibSet.Core
           case SumType.Double: return (double)v1 * (double)v2;
           case SumType.Decimal: return (decimal)v1 * (decimal)v2;
           default:
-            throw new ArgumentException("Значения типа " + a.GetType() + " и " + b.GetType() + " не могут быть перемножены");
+            throw ExceptionFactory.ArgIncompatibleTypes("a", a, "b", b);
         }
       }
     }
@@ -782,7 +782,7 @@ namespace FreeLibSet.Core
           case SumType.TimeSpan:
             return DivideValues(((TimeSpan)a).Ticks, ((TimeSpan)b).Ticks); // рекурсивный вызов
           default:
-            throw new ArgumentException("Значения типа " + a.GetType() + " и " + b.GetType() + " не могут быть поделены");
+            throw ExceptionFactory.ArgIncompatibleTypes("a", a, "b", b);
         }
       }
 
@@ -813,7 +813,7 @@ namespace FreeLibSet.Core
           case SumType.Double: return (double)v1 / (double)v2;
           case SumType.Decimal: return (decimal)v1 / (decimal)v2;
           default:
-            throw new ArgumentException("Значения типа " + a.GetType() + " и " + b.GetType() + " не могут быть поделены");
+            throw ExceptionFactory.ArgIncompatibleTypes("a", a, "b", b);
         }
       }
     }
@@ -848,7 +848,7 @@ namespace FreeLibSet.Core
             else
               return ts;
           default:
-            throw new ArgumentException("Для значения типа " + a.GetType() + " не может быть получено абсолютное значение");
+            throw ExceptionFactory.ArgUnknownType("a", a);
         }
       }
     }

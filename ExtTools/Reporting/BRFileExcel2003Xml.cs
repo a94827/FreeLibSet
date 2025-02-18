@@ -430,7 +430,7 @@ namespace FreeLibSet.Reporting
           // Предотвращаем ошибку открытия файла из-за неправильной даты
           if ((DateTime)(sel.Value) < MicrosoftOfficeTools.MinExcelDate || ((DateTime)(sel.Value)).Date > MicrosoftOfficeTools.MaxExcelDate)
           {
-            valueText = "*** Дата, выходящая за допустимые пределы Excel: " + (sel.Value).ToString() + " ***";
+            valueText = String.Format(Res.BRReport_Err_DateOutOfExcelRange, sel.Value);
             typeText = "String";
             return;
           }

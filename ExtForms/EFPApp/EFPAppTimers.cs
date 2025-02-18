@@ -192,7 +192,7 @@ namespace FreeLibSet.Forms
               e.Data["IEFPTimeHandler"] = a[i].ToString();
             }
             catch { }
-            LogoutTools.LogoutException(e, "Ошибка при вызове IEFPTimeHandler.TimerTick");
+            LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("IEFPTimeHandler.TimerTick"));
           }
 
           // 07.05.2017
@@ -216,7 +216,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка при обработке сигнала таймера");
+        LogoutTools.LogoutException(e);
       }
     }
 
@@ -335,10 +335,10 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Минимальная задержка в миллисекуедах между установкой свойство Active=true и приходом
     /// сигнала Tick.
-    /// Так как используемый таймер в EFPAppTimers имеет низкую частоту, реальная задержка может быть
+    /// Так как используемый таймер в <see cref="EFPAppTimers"/> имеет низкую частоту, реальная задержка может быть
     /// значительно больше.
-    /// Значение по умолчанию - 0 - событие Tick вызывается при обработке события Idle.
-    /// Нельзя устанавливать свойство, если Active=true.
+    /// Значение по умолчанию - 0 - событие <see cref="Tick"/> вызывается при обработке события <see cref="System.Windows.Forms.Application.Idle"/>.
+    /// Нельзя устанавливать свойство, если <see cref="Active"/>=true.
     /// </summary>
     public int Delay
     {
@@ -346,9 +346,9 @@ namespace FreeLibSet.Forms
       set
       {
         if (Active)
-          throw new InvalidOperationException("Нельзя устанавливать свойство Delay, когда свойство Active=true");
+          throw ExceptionFactory.ObjectProperty(this, "Active", Active, new object[] { false});
         if (value < 0 || value > 86400000)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, 86400000);
         _Delay = value;
         _InitialSkipCounter = (value + 999) / 1000;
       }
@@ -373,7 +373,7 @@ namespace FreeLibSet.Forms
     #region IEFPAppIdleHandler Members
 
     /// <summary>
-    /// Реализация IEFPAppIdleHandler.
+    /// Реализация <see cref="IEFPAppIdleHandler"/>.
     /// </summary>
     public void HandleIdle()
     {
@@ -385,7 +385,7 @@ namespace FreeLibSet.Forms
 
   /*
    * 28.09.2017
-   * Обработка сигналов Idle управляющими элементами
+   * Обработка сигналов Idle управляющими элементами.
    * Важно для EFPDataGridView. Хочется вызывать OnCurrentCellChanged не из обработчика события,
    * а позже. Если OnCurrentCellChanged сам что-нибудь делает с табличным просмотрои и вызывает
    * Application.DoEvents(), может возникнуть Application.ThreadException
@@ -459,7 +459,7 @@ namespace FreeLibSet.Forms
 
     #region Список объектов
 
-    private List<IEFPAppIdleHandler> _List;
+    private readonly List<IEFPAppIdleHandler> _List;
 
     private IEFPAppIdleHandler[] _Array;
 
@@ -527,14 +527,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Флаг наличия однократных действий.
-    /// В отличие от основного списка EFPAppIdleHandler, однократные действия появляются очень редко,
-    /// и лучше обойтись без лишней блокировки
+    /// В отличие от основного списка <see cref="EFPAppIdleHandlers"/>, однократные действия появляются очень редко,
+    /// и лучше обойтись без лишней блокировки.
     /// </summary>
     volatile bool _HasSingleActions;
 
     /// <summary>
     /// Добавляет в список обработчик однократно вызываемого события.
-    /// Делегат будет вызван при ближайшем событии Idle, после чего удален из списка
+    /// Делегат будет вызван при ближайшем событии Idle, после чего удален из списка.
     /// </summary>
     /// <param name="handler">Обработчик события</param>
     public void AddSingleAction(EventHandler handler)
@@ -599,7 +599,7 @@ namespace FreeLibSet.Forms
             }
             catch (Exception e)
             {
-              LogoutTools.LogoutException(e, "Ошибка вызова обработчика однократного Idle-действия");
+              LogoutTools.LogoutException(e, Res.EFPApp_ErrTitle_IdleSingleAction);
             }
           }
         }
@@ -641,7 +641,7 @@ namespace FreeLibSet.Forms
               e.Data["IEFPIdleHandler"] = a[i].ToString();
             }
             catch { }
-            LogoutTools.LogoutException(e, "Ошибка при вызове IEFPIdleHandler.HandleIdle");
+            LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("IEFPIdleHandler.HandleIdle"));
           }
 
           // Обработчики могут удаляться не только в конце списка
@@ -665,7 +665,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка при обработке сигнала таймера");
+        LogoutTools.LogoutException(e);
       }
 
       IdleCalledFlag = true;

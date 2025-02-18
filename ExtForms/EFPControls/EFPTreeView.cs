@@ -20,7 +20,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если в дереве показываются флажки для отметки
     /// </summary>
-    bool CheckBoxes { get;}
+    bool CheckBoxes { get; }
 
     /// <summary>
     /// Выполняет установку или снятие всех флажков
@@ -142,7 +142,7 @@ namespace FreeLibSet.Forms
     public void CheckAll(bool isChecked)
     {
       if (!Control.CheckBoxes)
-        throw new InvalidOperationException("Свойство TreeView.CheckBoxes не установлено");
+        throw ExceptionFactory.ObjectProperty(Control, "CheckBoxes", Control.CheckBoxes, new object[] { true });
 
       _InsideAfterCheck = true;
       Control.BeginUpdate();
@@ -167,7 +167,7 @@ namespace FreeLibSet.Forms
     public void CheckAll(TreeNode parentNode, bool isChecked)
     {
       if (!Control.CheckBoxes)
-        throw new InvalidOperationException("Свойство TreeView.CheckBoxes не установлено");
+        throw ExceptionFactory.ObjectProperty(Control, "CheckBoxes", Control.CheckBoxes, new object[] { true });
       if (parentNode == null)
         throw new ArgumentNullException("parentNode");
 
@@ -282,7 +282,7 @@ namespace FreeLibSet.Forms
         case EFPTreeViewAutoCheckMode.None:
           break;
         default:
-          throw new BugException("Неизвестный режим");
+          throw new BugException("AutoCheckMode="+AutoCheckMode.ToString());
       }
     }
 
@@ -371,8 +371,8 @@ namespace FreeLibSet.Forms
     public bool CheckBoxes
     {
       get { return Control.CheckBoxes; }
-      set 
-      { 
+      set
+      {
         Control.CheckBoxes = value;
       }
     }

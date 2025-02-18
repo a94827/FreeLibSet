@@ -224,7 +224,7 @@ namespace FreeLibSet.Core
 
     #region GetEnumerator()
 
-    private IEnumerator<T> _Enumerator;
+    private /*readonly*/ IEnumerator<T> _Enumerator;
 
     /// <summary>
     /// Возвращает перечислитель, переданный конструктору.
@@ -234,7 +234,7 @@ namespace FreeLibSet.Core
     public IEnumerator<T> GetEnumerator()
     {
       if (_Enumerator == null)
-        throw new InvalidOperationException("Повторный вызов перечислителя не допускается");
+        throw new InvalidOperationException(Res.EnumerableWrapper_Err_SecondHand);
       IEnumerator<T> res = _Enumerator;
       _Enumerator = null;
       return res;
@@ -471,7 +471,7 @@ namespace FreeLibSet.Core
   /// <summary>
   /// Получение типизированного перечислителя для массива
   /// </summary>
-  /// <typeparam name="T"></typeparam>
+  /// <typeparam name="T">Тип данных элементов массива</typeparam>
   [Serializable]
   public struct ArrayEnumerable<T> : IEnumerable<T>
   {
@@ -612,7 +612,7 @@ namespace FreeLibSet.Core
       if (array == null)
         throw new ArgumentNullException("array");
       if (segmentSize < 1)
-        throw new ArgumentOutOfRangeException("segmentSize");
+        throw ExceptionFactory.ArgOutOfRange("segmentSize", segmentSize, 1, null);
 
       _Array = array;
       _SegmentSize = segmentSize;
@@ -622,8 +622,8 @@ namespace FreeLibSet.Core
 
     #region Поля
 
-    private T[] _Array;
-    private int _SegmentSize;
+    private readonly T[] _Array;
+    private readonly int _SegmentSize;
 
     #endregion
 
@@ -658,8 +658,8 @@ namespace FreeLibSet.Core
 
       #region Поля
 
-      private T[] _Array;
-      private int _SegmentSize;
+      private readonly T[] _Array;
+      private readonly int _SegmentSize;
       private int _CurrentOffset;
 
       #endregion
@@ -759,7 +759,7 @@ namespace FreeLibSet.Core
       if (array == null)
         throw new ArgumentNullException("array");
       if (segmentSize < 1)
-        throw new ArgumentOutOfRangeException("segmentSize");
+        throw ExceptionFactory.ArgOutOfRange("segmentSize", segmentSize, 1, null);
 
       _Array = array;
       _SegmentSize = segmentSize;
@@ -769,8 +769,8 @@ namespace FreeLibSet.Core
 
     #region Поля
 
-    private T[] _Array;
-    private int _SegmentSize;
+    private readonly T[] _Array;
+    private readonly int _SegmentSize;
 
     #endregion
 
@@ -805,8 +805,8 @@ namespace FreeLibSet.Core
 
       #region Поля
 
-      private T[] _Array;
-      private int _SegmentSize;
+      private readonly T[] _Array;
+      private readonly int _SegmentSize;
       private int _CurrentOffset;
 
       #endregion
@@ -916,7 +916,7 @@ namespace FreeLibSet.Core
 
     #region Поля
 
-    private System.Collections.IEnumerable _Enumerable;
+    private readonly System.Collections.IEnumerable _Enumerable;
 
     #endregion
 
@@ -950,7 +950,7 @@ namespace FreeLibSet.Core
       /// <summary>
       /// Оригинальный перечислитель
       /// </summary>
-      System.Collections.IEnumerator _Enumerator;
+      private /*readonly*/ System.Collections.IEnumerator _Enumerator;
 
       /// <summary>
       /// Сохраняем текущий элемент, чтобы избежать повторного преобразования
@@ -1024,14 +1024,100 @@ namespace FreeLibSet.Core
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      throw new NotImplementedException();
+      return new Enumerator(_Enumerable.GetEnumerator());
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      throw new NotImplementedException();
+      return new Enumerator(_Enumerable.GetEnumerator());
     }
 
     #endregion
   }
+
+  /// <summary>
+  /// Реализация интерфейса <see cref="IEnumerable"/>, когда имеется только ссылка на реализацию <see cref="IEnumerator"/>,
+  /// для которой требуется выполнить оператор foreach. 
+  /// Такая ссылка обычно является одноразововой, если метод <see cref="IEnumerator.Reset()"/> не реализован.
+  /// Для многоразовых перечислителей, если необходимо, перезапуск должен выполняться вызывающим кодом.
+  ///
+  /// Может использоваться для перебора таких коллекций, как <see cref="System.Net.AuthenticationManager.RegisteredModules"/>.
+  /// </summary>
+  public struct EnumerableForEnumerator : IEnumerable
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализация структуры
+    /// </summary>
+    /// <param name="en">Внешняя ссылка на перечислитель. Не может быть null</param>
+    public EnumerableForEnumerator(IEnumerator en)
+    {
+      if (en == null)
+        throw new ArgumentNullException();
+      _En = en;
+    }
+
+    #endregion
+
+    #region IEnumerable members
+
+    private readonly IEnumerator _En;
+
+    /// <summary>
+    /// Возвращает перечислитель, переданный конструктору.
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public IEnumerator GetEnumerator()
+    {
+      return _En;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Реализация интерфейса <see cref="IEnumerable{T}"/>, когда имеется только ссылка на реализацию <see cref="IEnumerator{T}"/>,
+  /// для которой требуется выполнить оператор foreach. 
+  /// Такая ссылка обычно является одноразововой, если метод <see cref="IEnumerator.Reset()"/> не реализован.
+  /// Для многоразовых перечислителей, если необходимо, перезапуск должен выполняться вызывающим кодом.
+  /// </summary>
+  public struct EnumerableForEnumerator<T> : IEnumerable<T>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализация структуры
+    /// </summary>
+    /// <param name="en">Внешняя ссылка на перечислитель. Не может быть null</param>
+    public EnumerableForEnumerator(IEnumerator<T> en)
+    {
+      if (en == null)
+        throw new ArgumentNullException();
+      _En = en;
+    }
+
+    #endregion
+
+    #region IEnumerable members
+
+    private readonly IEnumerator<T> _En;
+
+    /// <summary>
+    /// Возвращает перечислитель, переданный конструктору.
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public IEnumerator<T> GetEnumerator()
+    {
+      return _En;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return _En;
+    }
+
+    #endregion
+  }
+
 }

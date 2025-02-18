@@ -27,7 +27,7 @@ namespace FreeLibSet.Forms
     public InputForm()
     {
       InitializeComponent();
-      EFPApp.InitFormImages(this);
+      //EFPApp.InitFormImages(this);
 
       FormProvider = new EFPFormProvider(this);
 
@@ -124,8 +124,25 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Заголовок блока диалога
     /// </summary>
-    public string Title { get { return _Title; } set { _Title = value; } }
+    public string Title
+    {
+      get
+      {
+        if (_Title == null)
+          return DefaultTitle;
+        return _Title;
+      }
+      set
+      {
+        _Title = value;
+      }
+    }
     private string _Title;
+
+    /// <summary>
+    /// Значение свойства <see cref="Title"/> по умолчанию
+    /// </summary>
+    protected abstract string DefaultTitle { get; }
 
     /// <summary>
     /// Значок формы в <see cref="EFPApp.MainImages"/>.
@@ -134,10 +151,28 @@ namespace FreeLibSet.Forms
     private string _ImageKey;
 
     /// <summary>
-    /// Текст метки-подсказки
+    /// Текст подсказки.
+    /// Значение по умолчанию зависит от конкретного диалога.
     /// </summary>
-    public string Prompt { get { return _Prompt; } set { _Prompt = value; } }
+    public string Prompt
+    {
+      get
+      {
+        if (_Prompt == null)
+          return DefaultPrompt;
+        return _Prompt;
+      }
+      set
+      {
+        _Prompt = value;
+      }
+    }
     private string _Prompt;
+
+    /// <summary>
+    /// Возвращает значение по умолчанию для свойства <see cref="Prompt"/>
+    /// </summary>
+    protected abstract string DefaultPrompt { get; }
 
     /// <summary>
     /// Секция конфигурации для хранения значения.
@@ -301,8 +336,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public TextInputDialog()
     {
-      Title = "Ввод текста";
-      Prompt = "Значение";
       _Text = String.Empty;
       _MaxLength = 0;
       _CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
@@ -312,6 +345,28 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Заголовок диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle
+    {
+      get
+      {
+        return IsPassword ? Res.PasswordInputDialog_Msg_Title : Res.TextInputDialog_Msg_Title;
+      }
+    }
+
+    /// <summary>
+    /// Подсказка по умолчанию
+    /// </summary>
+    protected override string DefaultPrompt
+    {
+      get
+      {
+        return IsPassword ? Res.PasswordInputDialog_Msg_Prompt : Res.TextInputDialog_Msg_Prompt;
+      }
+    }
 
     #region Text
 
@@ -500,8 +555,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public TextComboInputDialog()
     {
-      Title = "Ввод текста";
-      Prompt = "Значение";
       _Text = String.Empty;
       _MaxLength = 0;
       _CanBeEmptyMode = UIValidateState.Error;
@@ -511,6 +564,16 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Заголовок диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.TextInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// Подсказка по умолчанию
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.TextInputDialog_Msg_Prompt; } }
 
     #region Text
 
@@ -695,8 +758,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public MaskedTextInputDialog()
     {
-      Title = "Ввод текста";
-      Prompt = "Значение";
       _Text = String.Empty;
       _CanBeEmptyMode = UIValidateState.Error;
     }
@@ -704,6 +765,16 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Заголовок диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.TextInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// Подсказка по умолчанию
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.TextInputDialog_Msg_Prompt; } }
 
     #region Text
 
@@ -818,8 +889,8 @@ namespace FreeLibSet.Forms
     /// <returns><see cref="DialogResult.OK"/>, если пользователь ввел текст</returns>
     public override DialogResult ShowDialog()
     {
-      if ((!String.IsNullOrEmpty(Mask)) && MaskProvider != null)
-        throw new InvalidOperationException("Свойства Mask и MaskProvider не могут задаваться одновременно");
+      //if ((!String.IsNullOrEmpty(Mask)) && MaskProvider != null)
+      //  throw new InvalidOperationException("Свойства Mask и MaskProvider не могут задаваться одновременно");
 
       InputForm form = new InputForm();
       InitFormTitle(form);
@@ -887,8 +958,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public BaseNumInputDialog()
     {
-      Title = "Ввод числа";
-      Prompt = "Значение";
       _Format = String.Empty;
       _CanBeEmptyMode = UIValidateState.Error;
     }
@@ -896,6 +965,16 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Заголовок диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.NumInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// Подсказка по умолчанию
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.NumInputDialog_Msg_Prompt; } }
 
     #region Value/NValue
 
@@ -1112,7 +1191,7 @@ namespace FreeLibSet.Forms
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, default(T), null);
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -1382,8 +1461,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public DateTimeInputDialog()
     {
-      Title = "Дата";
-      Prompt = "Значение";
       _NValue = null;
       _Formatter = EditableDateTimeFormatters.Date;
       _CanBeEmptyMode = UIValidateState.Error;
@@ -1392,6 +1469,31 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Заголовок диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle
+    {
+      get
+      {
+        switch (Kind)
+        {
+          case EditableDateTimeFormatterKind.Date: return Res.DateTimeInputDialog_Msg_TitleDate;
+          case EditableDateTimeFormatterKind.Time:
+          case EditableDateTimeFormatterKind.ShortTime: return Res.DateTimeInputDialog_Msg_TitleTime;
+          case EditableDateTimeFormatterKind.DateTime:
+          case EditableDateTimeFormatterKind.ShortDateTime: return Res.DateTimeInputDialog_Msg_TitleDateTime;
+          default:
+            throw new BugException();
+        }
+      }
+    }
+
+    /// <summary>
+    /// Подсказка по умолчанию
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.DateTimeInputDialog_Msg_Prompt; } }
 
     #region Kind, Formatter, UseCalendar
 
@@ -1776,6 +1878,16 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Заголовок диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.TextInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// Подсказка по умолчанию
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.TextInputDialog_Msg_Prompt; } }
 
     #region Text
 

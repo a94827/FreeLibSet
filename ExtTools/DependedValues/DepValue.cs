@@ -41,13 +41,13 @@ namespace FreeLibSet.DependedValues
     /// Объект-владелец
     /// </summary>
     public object Owner { get { return _Owner; } }
-    private object _Owner;
+    private readonly object _Owner;
 
     /// <summary>
     /// Реализуемое свойство
     /// </summary>
     public string Property { get { return _Property; } }
-    private string _Property;
+    private readonly string _Property;
 
     /// <summary>
     /// Выводит <see cref="Owner"/>.ToString() и <see cref="Property"/>.
@@ -194,7 +194,7 @@ namespace FreeLibSet.DependedValues
     protected void BaseSetValue(T value, bool forced)
     {
       if (_InsideSetValueCount > 10)
-        throw new ReenteranceException("Установка значения зациклилось. Предотвращено StackOverflowException");
+        throw new ReenteranceException(Res.DepValue_Err_RecursionOverflow);
 
       if (!forced)
       {
@@ -427,7 +427,7 @@ namespace FreeLibSet.DependedValues
 
 #if DEBUG
       if (theInput.NextOutput != null)
-        throw new ArgumentException("Повторное присоеднинение входа " + theInput.ToString());
+        throw new ArgumentException(String.Format(Res.DepValue_Arg_InputAlreadyAdded, theInput), "theInput");
 #endif
       theInput.NextOutput = FirstOutput;
       FirstOutput = theInput;
@@ -700,7 +700,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      return "Константа " + Value.ToString();
+      return "Const " + Value.ToString();
     }
 
     /// <summary>

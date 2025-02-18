@@ -188,11 +188,11 @@ namespace FreeLibSet.Forms
       if (parent == null)
         throw new ArgumentNullException("parent");
       if (parent.Controls.Count > 0)
-        throw new InvalidOperationException("Родительский управляющий элемент " + parent.ToString() + " уже содержит элементы");
+        throw new ArgumentException(String.Format(Res.EFPControlWithToolBar_Arg_ParentNotEmpty, parent.ToString()), "parent");
       if (control == null)
         throw new ArgumentNullException("control");
       if (control.Parent != null)
-        throw new ArgumentException("Основной управлящий элемент не должен иметь родителя", "control");
+        throw new ArgumentException(String.Format(Res.EFPControlWithToolBar_Arg_ControlHasParent, control.ToString()), "control");
 #endif
 
 

@@ -18,7 +18,7 @@ namespace FreeLibSet.Controls
   /// </summary>
   [DefaultProperty("Icon")]
   [DefaultEvent("IconChanged")]
-  [Description("Значок для MessageBox")]
+  [Description("Icon for a MessageBox-style dialogs")]
   [ToolboxBitmap(typeof(MessageBoxIconBox), "MessageBoxIconBox.bmp")]
   public class MessageBoxIconBox : Control
   {
@@ -62,7 +62,7 @@ namespace FreeLibSet.Controls
 
     #region Свойство IconSize
 
-    [Description("Размер значка")]
+    [Description("Icon size (small or big)")]
     [Category("Appearance")]
     [DefaultValue(MessageBoxIconSize.Small)]
     public MessageBoxIconSize IconSize
@@ -88,7 +88,7 @@ namespace FreeLibSet.Controls
 
     #region Событие IconChanged
 
-    [Description("Вызывается при изменении свойств Icon и IconSize")]
+    [Description("Called when Icon or IconSize property changed")]
     [Category("Property Changed")]
     public event EventHandler IconChanged;
 

@@ -1261,7 +1261,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e2) // 20.06.2021
         {
-          LogoutTools.LogoutException(e2, "Ошибка вызова ExtendedPropertiesSaver.Restore()");
+          LogoutTools.LogoutException(e2, LogoutTools.GetTitleForCall("ExtendedPropertiesSaver.Restore()"));
         }
         throw;
       }

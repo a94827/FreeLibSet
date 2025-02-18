@@ -50,7 +50,7 @@ namespace WinFormsDemo.TreeViewDemo
       efp3 = new EFPTreeViewAdv(cwt3);
       efp3.Control.UseColumns = true;
 
-      TreeColumn colName = new TreeColumn("Имя файла", 200);
+      TreeColumn colName = new TreeColumn("File name", 200);
       efp3.Control.Columns.Add(colName);
 
       NodeStateIcon ni = new NodeStateIcon();
@@ -62,7 +62,7 @@ namespace WinFormsDemo.TreeViewDemo
       tbName.ParentColumn = colName;
       efp3.Control.NodeControls.Add(tbName);
 
-      TreeColumn colLength = new TreeColumn("Размер", 100);
+      TreeColumn colLength = new TreeColumn("Size", 100);
       efp3.Control.Columns.Add(colLength);
       NodeTextBox tbLength = new NodeTextBox();
       tbLength.DataPropertyName = "Length";
@@ -70,14 +70,14 @@ namespace WinFormsDemo.TreeViewDemo
       tbLength.TextAlign = HorizontalAlignment.Right;
       efp3.Control.NodeControls.Add(tbLength);
                         
-      TreeColumn colReadOnly = new TreeColumn("Только чтение", 60);
+      TreeColumn colReadOnly = new TreeColumn("Read only", 60);
       efp3.Control.Columns.Add(colReadOnly);
       NodeCheckBox cbReadOnly = new NodeCheckBox();
       cbReadOnly.DataPropertyName = "ReadOnly";
       cbReadOnly.ParentColumn = colReadOnly;
       efp3.Control.NodeControls.Add(cbReadOnly);
 
-      TreeColumn colHidden = new TreeColumn("Скрытый", 60);
+      TreeColumn colHidden = new TreeColumn("Hidden", 60);
       efp3.Control.Columns.Add(colHidden);
       NodeCheckBox cbHidden = new NodeCheckBox();
       cbHidden.DataPropertyName = "Hidden";
@@ -155,7 +155,7 @@ namespace WinFormsDemo.TreeViewDemo
       TextInputDialog dlg = new TextInputDialog();
       dlg.Title = "CurrentPopupPosition";
       dlg.Text = "Тест";
-      dlg.Prompt = "Фиктивный диалог";
+      dlg.Prompt = "Fictive dialog box";
       dlg.DialogPosition = efp.CurrentPopupPosition;
       dlg.ShowDialog();
     }

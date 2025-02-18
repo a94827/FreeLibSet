@@ -321,7 +321,7 @@ namespace FreeLibSet.Forms.Reporting
     {
       BRExportFileItem expItem = (BRExportFileItem)(OutItem.ExportFileItems[code]);
       if (expItem == null)
-        throw new ArgumentException("В списке форматов файлов для экспорта нет записи с кодом \"" + code + "\"");
+        throw ExceptionFactory.ArgNotInCollection("code", code, OutItem, "ExportFileItems", OutItem.ExportFileItems);
 
       BRActionInfo info2 = new BRActionInfo();
       info2.Action = BRAction.ExportFile;
@@ -858,30 +858,30 @@ namespace FreeLibSet.Forms.Reporting
       }
     }
     private static NamedList<BRExportFileItem> _AppDefaultExportFileItems;
-
+    
     private static NamedList<BRExportFileItem> CreateAppDefaultExportFileItems()
     {
       NamedList<BRExportFileItem> lst = new NamedList<BRExportFileItem>();
       if (PdfFileTools.PdfLibAvailable)
-        lst.Add(new BRExportFileItem(BRExportFileItemCodes.PDF, "Файлы PDF", "*.pdf", ExportFilePdf));
+        lst.Add(new BRExportFileItem(BRExportFileItemCodes.PDF, Res.BRMenuOutItem_FileType_PDF, "*.pdf", ExportFilePdf));
       if (BRFileTiff.IsSupported)
       {
-        BRExportFileItem item1 = new BRExportFileItem(BRExportFileItemCodes.TIFF, "Файлы TIFF", "*.tif", ExportFileTiff);
+        BRExportFileItem item1 = new BRExportFileItem(BRExportFileItemCodes.TIFF, Res.BRMenuOutItem_FileType_TIFF, "*.tif", ExportFileTiff);
         item1.InitDialog += ExportFileTiff_InitDialog;
         lst.Add(item1);
       }
-      lst.Add(new BRExportFileItem(BRExportFileItemCodes.HTML, "Файлы HTML", "*.html", ExportFileHtml));
-      lst.Add(new BRExportFileItem(BRExportFileItemCodes.ExcelXML, "Microsoft Excel 2003 XML", "*.xml", ExportFileExcelXml));
-      lst.Add(new BRExportFileItem(BRExportFileItemCodes.WordXML, "Microsoft Word 2003 XML", "*.xml", ExportFileWordXml));
+      lst.Add(new BRExportFileItem(BRExportFileItemCodes.HTML, Res.BRMenuOutItem_FileType_HTML, "*.html", ExportFileHtml));
+      lst.Add(new BRExportFileItem(BRExportFileItemCodes.ExcelXML, Res.BRMenuOutItem_FileType_ExcelXML, "*.xml", ExportFileExcelXml));
+      lst.Add(new BRExportFileItem(BRExportFileItemCodes.WordXML, Res.BRMenuOutItem_FileType_WordXML, "*.xml", ExportFileWordXml));
       if (BRFileOffice2007Base.IsSupported)
       {
-        lst.Add(new BRExportFileItem(BRExportFileItemCodes.XLSX, "Microsoft Excel 2007", "*.xlsx", ExportFileExcel2007));
-        lst.Add(new BRExportFileItem(BRExportFileItemCodes.DOCX, "Microsoft Word 2007", "*.docx", ExportFileWord2007));
+        lst.Add(new BRExportFileItem(BRExportFileItemCodes.XLSX, Res.BRMenuOutItem_FileType_XLSX, "*.xlsx", ExportFileExcel2007));
+        lst.Add(new BRExportFileItem(BRExportFileItemCodes.DOCX, Res.BRMenuOutItem_FileType_DOCX, "*.docx", ExportFileWord2007));
       }
       if (BRFileODFBase.IsSupported)
       {
-        lst.Add(new BRExportFileItem(BRExportFileItemCodes.ODS, "OpenOffice/LibreOffice Calc (ODS)", "*.ods", ExportFileOds));
-        lst.Add(new BRExportFileItem(BRExportFileItemCodes.ODT, "OpenOffice/LibreOffice Writer (ODT)", "*.odt", ExportFileOdt));
+        lst.Add(new BRExportFileItem(BRExportFileItemCodes.ODS, Res.BRMenuOutItem_FileType_ODS, "*.ods", ExportFileOds));
+        lst.Add(new BRExportFileItem(BRExportFileItemCodes.ODT, Res.BRMenuOutItem_FileType_ODT, "*.odt", ExportFileOdt));
       }
       return lst;
     }
@@ -911,7 +911,7 @@ namespace FreeLibSet.Forms.Reporting
         item2 = new BRSendToItem(BRSendToItemCodes.Excel, String.Empty, SendToExcel);
         item2.MenuText = "Microsoft Excel";
         item2.Image = EFPApp.MicrosoftExcelImage;
-        item2.ToolTipText = "Отправить в " + MicrosoftOfficeTools.ExcelDisplayName;
+        item2.ToolTipText = String.Format(Res.Cmd_ToolTip_SendTo_App, MicrosoftOfficeTools.ExcelDisplayName);
         SendToItems.Add(item2);
       }
 
@@ -920,7 +920,7 @@ namespace FreeLibSet.Forms.Reporting
         item2 = new BRSendToItem(BRSendToItemCodes.Word, String.Empty, SendToWord);
         item2.MenuText = "Microsoft Word";
         item2.Image = EFPApp.MicrosoftWordImage;
-        item2.ToolTipText = "Отправить в " + MicrosoftOfficeTools.WordDisplayName;
+        item2.ToolTipText = String.Format(Res.Cmd_ToolTip_SendTo_App, MicrosoftOfficeTools.WordDisplayName);
         item2.UseWithControl = false;
         SendToItems.Add(item2);
       }
@@ -940,7 +940,7 @@ namespace FreeLibSet.Forms.Reporting
             item2.OOInfo = info;
             FileAssociationItem fa = calc.FileAssociation;
             item2.Image = EFPApp.FileExtAssociations.GetIconImage(fa.IconPath, fa.IconIndex, true);
-            item2.ToolTipText = "Отправить в " + calc.DisplayName;
+            item2.ToolTipText = String.Format(Res.Cmd_ToolTip_SendTo_App, calc.DisplayName);
             item2.SubMenuText = "Calc";
             SendToItems.Add(item2);
           }
@@ -953,7 +953,7 @@ namespace FreeLibSet.Forms.Reporting
             item2.OOInfo = info;
             FileAssociationItem fa = writer.FileAssociation;
             item2.Image = EFPApp.FileExtAssociations.GetIconImage(fa.IconPath, fa.IconIndex, true);
-            item2.ToolTipText = "Отправить в " + writer.DisplayName;
+            item2.ToolTipText = String.Format(Res.Cmd_ToolTip_SendTo_App, writer.DisplayName);
             item2.SubMenuText = "Writer";
             item2.UseWithControl = false;
             SendToItems.Add(item2);
@@ -1204,7 +1204,7 @@ namespace FreeLibSet.Forms.Reporting
     internal BRReport PerformCreateReport(BRActionInfo actionInfo)
     {
       BRMenuOutItemCreateReportEventArgs args;
-      EFPApp.BeginWait("Создание отчета \"" + DisplayName + "\"");
+      EFPApp.BeginWait(String.Format(Res.BRMenuOutItem_Phase_CreateBRReport, DisplayName));
       try
       {
         CallReadConfig();
@@ -1256,17 +1256,17 @@ namespace FreeLibSet.Forms.Reporting
       switch (dialogKind)
       {
         case BRDialogKind.PageSetup:
-          dialog.Title = "Параметры страницы";
+          dialog.Title = Res.BRMenuOutItem_Title_PageSetup;
           dialog.ImageKey = "PageSetup";
           break;
         case BRDialogKind.ControlExportFile:
         case BRDialogKind.PreviewExportFile:
-          dialog.Title = "Экспорт в " + actionInfo.FilePath.FileName;
+          dialog.Title = String.Format(Res.BRMenuOutItem_Title_Export, actionInfo.FilePath.FileName);
           dialog.ImageKey = "Save";
           break;
         case BRDialogKind.ControlSendTo:
         case BRDialogKind.PreviewSendTo:
-          dialog.Title = "Отправить в " + actionInfo.SendToItem.MenuText;
+          dialog.Title = String.Format(Res.Cmd_ToolTip_SendTo_App, actionInfo.SendToItem.MenuText);
           dialog.Image = actionInfo.SendToItem.Image;
           break;
         default:
@@ -1305,7 +1305,7 @@ namespace FreeLibSet.Forms.Reporting
       if (dialog.Pages.Count == 0)
       {
         if (dialogKind == BRDialogKind.PageSetup)
-          EFPApp.MessageBox("Нет параметров страницы", dialog.Title);
+          EFPApp.MessageBox(Res.BRMenuOutItem_Msg_NoPageSetup, dialog.Title);
 
         if (forceWriteConfig)
           CallWriteConfig();
@@ -1375,7 +1375,7 @@ namespace FreeLibSet.Forms.Reporting
         else
         {
           PrintController oldPD = pd.PrintController;
-          EFPApp.BeginWait("Идет печать документа", "Print");
+          EFPApp.BeginWait(Res.BRMenuOutItem_Phase_Print, "Print");
           try
           {
             //MessageBox.Show("PrintController.IsPreview:" + pd.PrintController.IsPreview.ToString(), pd.DocumentName);
@@ -1394,7 +1394,7 @@ namespace FreeLibSet.Forms.Reporting
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка печати документа");
+        EFPApp.ShowException(e, Res.BRMenuOutItem_ErrTitle_Print);
         return false;
       }
     }
@@ -1493,7 +1493,7 @@ namespace FreeLibSet.Forms.Reporting
 
       BRReport report = PerformCreateReport(actionInfo); // 15.11.2024. Должно быть после показа диалога.
 
-      EFPApp.BeginWait("Сохранение файла " + filePath.FileName, "Save");
+      EFPApp.BeginWait(String.Format(Res.BRMenuOutItem_Phase_Export, filePath.FileName), "Save");
       try
       {
         FileTools.ForceDirs(filePath.ParentDir);
@@ -1605,7 +1605,7 @@ namespace FreeLibSet.Forms.Reporting
         return;
 
       BRReport report = PerformCreateReport(actionInfo);
-      EFPApp.BeginWait("Отправка в " + item2.MenuText);
+      EFPApp.BeginWait(String.Format(Res.BRMenuOutItem_Phase_SendTo, item2.MenuText));
       try
       {
         BRActionItemPerformEventArgs args = new BRActionItemPerformEventArgs(this, report, actionInfo, null);
@@ -1628,8 +1628,8 @@ namespace FreeLibSet.Forms.Reporting
         if (EFPApp.MicrosoftExcelVersion.Major >= MicrosoftOfficeTools.MicrosoftOffice_XP)
         {
           using (Splash spl = new Splash(new string[] {
-          "Создание файла",
-          "Запуск Microsoft Excel"}))
+          Res.BRMenuOutItem_Phase_CreateFile,
+          String.Format(Res.BRMenuOutItem_Phase_LaunchApp, MicrosoftOfficeTools.ExcelDisplayName)}))
           {
             AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("xml");
             args.CreateFile(BRExportFileItemCodes.ExcelXML, filePath);
@@ -1641,7 +1641,7 @@ namespace FreeLibSet.Forms.Reporting
         }
       }
 
-      using (Splash spl = new Splash("Создание книги в Excel"))
+      using (Splash spl = new Splash())
       {
         BRFileExcelOLE creator = new BRFileExcelOLE();
         creator.Splash = spl;
@@ -1652,8 +1652,8 @@ namespace FreeLibSet.Forms.Reporting
     private static void SendToWord(object sender, BRActionItemPerformEventArgs args)
     {
       using (Splash spl = new Splash(new string[] {
-          "Создание файла",
-          "Запуск Microsoft Word"}))
+          Res.BRMenuOutItem_Phase_CreateFile,
+          String.Format(Res.BRMenuOutItem_Phase_LaunchApp, MicrosoftOfficeTools.WordDisplayName)}))
       {
         AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("xml");
         args.CreateFile(BRExportFileItemCodes.WordXML, filePath);
@@ -1665,27 +1665,35 @@ namespace FreeLibSet.Forms.Reporting
 
     private static void SendToCalc(object sender, BRActionItemPerformEventArgs args)
     {
-      using (Splash spl = new Splash("Создание книги в " + args.ActionInfo.SendToItem.OOInfo.Parts[OpenOfficePart.Calc].DisplayName))
+      using (Splash spl = new Splash(new string[] {
+          Res.BRMenuOutItem_Phase_CreateFile,
+          String.Format(Res.BRMenuOutItem_Phase_LaunchApp, args.ActionInfo.SendToItem.OOInfo.Parts[OpenOfficePart.Calc].DisplayName)}))
       {
         AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("ods");
         args.CreateFile(BRExportFileItemCodes.ODS, filePath);
+        spl.Complete();
         args.ActionInfo.SendToItem.OOInfo.Parts[OpenOfficePart.Calc].OpenFile(filePath, true);
+        spl.Complete();
       }
     }
 
     private static void SendToWriter(object sender, BRActionItemPerformEventArgs args)
     {
-      using (Splash spl = new Splash("Создание документа в " + args.ActionInfo.SendToItem.OOInfo.Parts[OpenOfficePart.Writer].DisplayName))
+      using (Splash spl = new Splash(new string[] {
+          Res.BRMenuOutItem_Phase_CreateFile,
+          String.Format(Res.BRMenuOutItem_Phase_LaunchApp, args.ActionInfo.SendToItem.OOInfo.Parts[OpenOfficePart.Writer].DisplayName)}))
       {
         AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("odt");
         args.CreateFile(BRExportFileItemCodes.ODT, filePath);
+        spl.Complete();
         args.ActionInfo.SendToItem.OOInfo.Parts[OpenOfficePart.Writer].OpenFile(filePath, true);
+        spl.Complete();
       }
     }
 
     private static void SendToPdf(object sender, BRActionItemPerformEventArgs args)
     {
-      using (Splash spl = new Splash("Создание PDF-файла"))
+      using (Splash spl = new Splash(Res.BRMenuOutItem_Phase_CreateFile))
       {
         AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("pdf");
         args.CreateFile(BRExportFileItemCodes.PDF, filePath);
@@ -1695,7 +1703,7 @@ namespace FreeLibSet.Forms.Reporting
 
     private static void SendToHtml(object sender, BRActionItemPerformEventArgs args)
     {
-      using (Splash spl = new Splash("Создание HTML-файла"))
+      using (Splash spl = new Splash(Res.BRMenuOutItem_Phase_CreateFile))
       {
         AbsPath filePath = EFPApp.SharedTempDir.GetTempFileName("html");
         args.CreateFile(BRExportFileItemCodes.HTML, filePath);
@@ -1782,7 +1790,7 @@ namespace FreeLibSet.Forms.Reporting
       if (!_Owner.ShowDialog(BRDialogKind.PreviewExportFile, actionInfo, item2, true))
         return;
 
-      EFPApp.BeginWait("Сохранение файла " + filePath.FileName, "Save");
+      EFPApp.BeginWait(String.Format(Res.BRMenuOutItem_Phase_Export, filePath.FileName), "Save");
       try
       {
         FileTools.ForceDirs(filePath.ParentDir);
@@ -1811,7 +1819,7 @@ namespace FreeLibSet.Forms.Reporting
       if (!_Owner.ShowDialog(BRDialogKind.PreviewSendTo, actionInfo, item2, false))
         return;
 
-      EFPApp.BeginWait("Отправка в " + item2.MenuText);
+      EFPApp.BeginWait(String.Format(Res.BRMenuOutItem_Phase_SendTo, item2.MenuText));
       try
       {
         BRActionItemPerformEventArgs args = new BRActionItemPerformEventArgs(_Owner, _Report, actionInfo, null);
@@ -1878,13 +1886,13 @@ namespace FreeLibSet.Forms.Reporting
     public void ShowDialog()
     {
       if (Report == null)
-        EFPApp.ErrorMessageBox("Отчет не присоединен");
+        EFPApp.ErrorMessageBox(Res.BRMenuOutItem_Err_NoBRReport);
 
       BRMenuOutItem outItem = new BRMenuOutItem("1");
       if (!String.IsNullOrEmpty(Report.DocumentProperties.Title))
         outItem.DisplayName = Report.DocumentProperties.Title;
       else
-        outItem.DisplayName = "Отчет";
+        outItem.DisplayName = Res.BRMenuOutItem_Name_BRReport;
       outItem.CreateReport += OutItem_CreateReport;
       outItem.ConfigSectionName = ConfigSectionName;
       outItem.ClosePreviewWhenPrinting = CloseWhenPrinting;

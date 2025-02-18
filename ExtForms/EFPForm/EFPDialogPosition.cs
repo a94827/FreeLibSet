@@ -9,7 +9,6 @@ using System.Windows.Forms;
 
 namespace FreeLibSet.Forms
 {
-
   /// <summary>
   /// Позволяет задавать позицию блока диалога на экране при использовании соответствующей
   /// перегрузки <see cref="EFPApp.ShowDialog(Form, bool, EFPDialogPosition)"/>.
@@ -91,11 +90,11 @@ namespace FreeLibSet.Forms
     public override string ToString()
     {
       if (_PopupOwnerControl != null)
-        return "Popup для элемента: " + _PopupOwnerControl.ToString();
+        return "Popup for control: " + _PopupOwnerControl.ToString();
       else if (!_PopupOwnerBounds.IsEmpty)
-        return "Popup для области: " + _PopupOwnerBounds.ToString();
+        return "Popup for rectangle area: " + _PopupOwnerBounds.ToString();
       else
-        return "По центру экрана";
+        return "Screen center";
     }
 
     #endregion

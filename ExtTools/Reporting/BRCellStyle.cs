@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Reporting
 {
@@ -689,7 +690,7 @@ namespace FreeLibSet.Reporting
       public BRFontSize(int heightTwip)
       {
         if (heightTwip < BRReport.MinFontHeightTwip || heightTwip > BRReport.MaxFontHeightTwip)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("heightTwip", heightTwip, BRReport.MinFontHeightTwip, BRReport.MaxFontHeightTwip);
         _HeightTwip = heightTwip;
         _WidthPercent = 100;
         _MaxEnlargePercent = 100;
@@ -754,19 +755,19 @@ namespace FreeLibSet.Reporting
         if (lineHeightTwip != 0)
         {
           if (lineHeightTwip < BRReport.MinFontHeightTwip || lineHeightTwip > BRReport.MaxFontHeightTwip)
-            throw new ArgumentOutOfRangeException();
+            throw ExceptionFactory.ArgOutOfRange("lineHeightTwip", lineHeightTwip, BRReport.MinFontHeightTwip, BRReport.MaxFontHeightTwip);
         }
 
         return new BRFontSize(this.HeightTwip, lineHeightTwip, this.WidthTwip, this.WidthPercent, this.MaxEnlargePercent, this.AlwaysEnlarge);
       }
 
-      public BRFontSize SetWidthTwip(int widthTwips)
+      public BRFontSize SetWidthTwip(int widthTwip)
       {
-        if (widthTwips == this.WidthTwip && this.WidthPercent == 100)
+        if (widthTwip == this.WidthTwip && this.WidthPercent == 100)
           return this;
-        if (widthTwips < BRReport.MinFontWidthTwip || widthTwips > BRReport.MaxFontWidthTwip)
-          throw new ArgumentOutOfRangeException();
-        return new BRFontSize(this.HeightTwip, this.LineHeightTwip, widthTwips, 100 /* 25.12.2023 */, this.MaxEnlargePercent, this.AlwaysEnlarge);
+        if (widthTwip < BRReport.MinFontWidthTwip || widthTwip > BRReport.MaxFontWidthTwip)
+          throw ExceptionFactory.ArgOutOfRange("widthTwip", widthTwip, BRReport.MinFontWidthTwip, BRReport.MaxFontWidthTwip);
+        return new BRFontSize(this.HeightTwip, this.LineHeightTwip, widthTwip, 100 /* 25.12.2023 */, this.MaxEnlargePercent, this.AlwaysEnlarge);
       }
 
       public BRFontSize SetWidthPercent(int widthPercent)
@@ -774,14 +775,14 @@ namespace FreeLibSet.Reporting
         if (widthPercent == this.WidthPercent && this.WidthTwip == 0)
           return this;
         if (widthPercent < BRReport.MinFontWidthPercent || widthPercent > BRReport.MaxFontWidthPercent)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("widthPercent", widthPercent, BRReport.MinFontWidthPercent, BRReport.MaxFontWidthPercent);
         return new BRFontSize(this.HeightTwip, this.LineHeightTwip, 0, widthPercent, this.MaxEnlargePercent, this.AlwaysEnlarge);
       }
 
       public BRFontSize SetMaxEnlargePercent(int maxEnlargePercent)
       {
         if (maxEnlargePercent < BRReport.MinFontEnlargePercent || maxEnlargePercent > BRReport.MaxFontEnlargePercent)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("maxEnlargePercent", maxEnlargePercent, BRReport.MinFontEnlargePercent, BRReport.MaxFontEnlargePercent);
         return new BRFontSize(this.HeightTwip, this.LineHeightTwip, this.WidthTwip, this.WidthPercent, maxEnlargePercent, this.AlwaysEnlarge);
       }
 
@@ -1094,7 +1095,7 @@ namespace FreeLibSet.Reporting
       set
       {
         if (value < BRReport.MinIndentLevel || value > BRReport.MaxIndentLevel)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, BRReport.MinIndentLevel, BRReport.MaxIndentLevel);
         SetValue(Index_IndentLevel, value);
       }
     }
@@ -1279,13 +1280,13 @@ namespace FreeLibSet.Reporting
       set
       {
         if (Report == null)
-          throw new InvalidOperationException();
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Report");
         if (value == null)
           value = String.Empty;
         if (value.Length > 0)
         {
           if (Report.NamedCellStyles[value] == null)
-            throw new ArgumentException("Имя стиля не найдено: " + value);
+            throw ExceptionFactory.ArgUnknownValue("value", value);
         }
         SetValue(Index_ParentStyleName, value);
       }
@@ -1305,13 +1306,13 @@ namespace FreeLibSet.Reporting
       set
       {
         if (Report == null)
-          throw new InvalidOperationException();
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Report");
         if (value == null)
           SetValue(Index_ParentStyleName, String.Empty);
         else
         {
           if (!Object.ReferenceEquals(value.Report, this.Report))
-            throw new ArgumentException("Стиль относится к другому отчету");
+            throw new ArgumentException(Res.BRReport_Arg_StyleForDifferentReport);
           SetValue(Index_ParentStyleName, value.Name);
         }
       }
@@ -1388,7 +1389,7 @@ namespace FreeLibSet.Reporting
         case Index_ParentStyleName:
           return String.Empty;
         default:
-          throw new ArgumentOutOfRangeException("index");
+          throw ExceptionFactory.ArgUnknownValue("index", index);
       }
     }
 
@@ -1483,7 +1484,7 @@ namespace FreeLibSet.Reporting
     public void SetSize(int value)
     {
       if ((value & (~SizeMask)) != 0)
-        throw new ArgumentOutOfRangeException();
+        throw new ArgumentOutOfRangeException("value");
 
       _Value = (_Value & (~SizeMask)) | value;
     }
@@ -1544,7 +1545,7 @@ namespace FreeLibSet.Reporting
         if (value != BRReport.AutoRowHeight)
         {
           if (value < BRReport.MinRowHeight || value > BRReport.MaxRowHeight)
-            throw new ArgumentOutOfRangeException();
+            throw ExceptionFactory.ArgOutOfRange("value", value, BRReport.MinRowHeight, BRReport.MaxRowHeight);
         }
         SetSize(value);
       }
@@ -1712,7 +1713,7 @@ namespace FreeLibSet.Reporting
       set
       {
         if (value < BRReport.MinColumnWidth || value > BRReport.MaxColumnWidth)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, BRReport.MinColumnWidth, BRReport.MaxColumnWidth);
         SetSize(value);
         SetFlag(NoAutoGrow_Flag, true);
       }
@@ -1825,7 +1826,7 @@ namespace FreeLibSet.Reporting
       : base(parent)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       _Name = name;
     }
 
@@ -1857,7 +1858,7 @@ namespace FreeLibSet.Reporting
     internal override void SetValue(int index, object value)
     {
       if (index == Index_ParentStyleName)
-        throw new InvalidOperationException("Нельзя устанавливать это свойство");
+        throw new InvalidOperationException(Res.BRReport_Err_PropertyCannotBeSet);
       base.SetValue(index, value);
     }
 

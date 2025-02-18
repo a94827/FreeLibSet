@@ -176,7 +176,7 @@ namespace FreeLibSet.Forms
       stripPanel.Controls.Add(strip);
       formCWT.ToolBarPanel.Visible = false;
 
-      displayName = "Панель инструментов окна";
+      displayName = Res.EFPApp_Name_FormToolBar;
       if (formCWT.BaseProvider.ControlProviders.Count > 0)
         displayName = formCWT.BaseProvider.ControlProviders[0].DisplayName;
 
@@ -219,7 +219,7 @@ namespace FreeLibSet.Forms
     /// <param name="mdiLayout"></param>
     public override void LayoutChildForms(MdiLayout mdiLayout)
     {
-      throw new NotImplementedException("Размещение окон интерфейса SDI не реализовано");
+      throw new NotImplementedException();
     }
 
     #endregion

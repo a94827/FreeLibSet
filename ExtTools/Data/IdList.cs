@@ -334,7 +334,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException("Список идентификатор находится в режиме ReadOnly");
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -727,7 +727,7 @@ namespace FreeLibSet.Data
 
       int colPos = table.Columns.IndexOf("Id");
       if (colPos < 0)
-        throw new ArgumentException("Таблица\"" + table.TableName + "\" не содержит столбца \"Id\"", "table");
+        throw ExceptionFactory.ArgUnknownColumnName("table", table, "Id");
 
       IdList res = new IdList(false, table.Rows.Count);
       for (int i = 0; i < table.Rows.Count; i++)
@@ -754,7 +754,7 @@ namespace FreeLibSet.Data
 
       int colPos = dv.Table.Columns.IndexOf("Id");
       if (colPos < 0)
-        throw new ArgumentException("Таблица\"" + dv.Table.TableName + "\" не содержит столбца \"Id\"", "dv");
+        throw ExceptionFactory.ArgUnknownColumnName("dv", dv.Table, "Id");
 
       IdList res = new IdList(false, dv.Count);
       for (int i = 0; i < dv.Count; i++)
@@ -788,7 +788,7 @@ namespace FreeLibSet.Data
         {
           colPos = row.Table.Columns.IndexOf("Id");
           if (colPos < 0)
-            throw new ArgumentException("Таблица\"" + row.Table.TableName + "\" не содержит столбца \"Id\"", "rows");
+            throw ExceptionFactory.ArgUnknownColumnName("rows", row.Table, "Id");
         }
         if (row.RowState == DataRowState.Deleted)
           res._Items.Add((Int32)(row[colPos, DataRowVersion.Original]), null);
@@ -818,7 +818,7 @@ namespace FreeLibSet.Data
         {
           colPos = drv.Row.Table.Columns.IndexOf("Id");
           if (colPos < 0)
-            throw new InvalidOperationException("Таблица\"" + drv.Row.Table.TableName + "\" не содержит столбца \"Id\"");
+            throw ExceptionFactory.ArgUnknownColumnName("rows", drv.Row.Table, "Id");
         }
         if (drv.Row.RowState == DataRowState.Deleted)
           res._Items.Add((Int32)(drv.Row[colPos, DataRowVersion.Original]), null);
@@ -861,11 +861,10 @@ namespace FreeLibSet.Data
         return new IdList(); // 20.08.2019
 
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
       int colPos = table.Columns.IndexOf(columnName);
       if (colPos < 0)
-        throw new ArgumentException("Таблица\"" + table.TableName + "\" не содержит столбца \"" +
-          columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
       IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
 
@@ -899,12 +898,11 @@ namespace FreeLibSet.Data
         return new IdList(); // 20.08.2019
 
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       int colPos = dv.Table.Columns.IndexOf(columnName);
       if (colPos < 0)
-        throw new ArgumentException("Таблица\"" + dv.Table.TableName + "\" не содержит столбца \"" +
-          columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
       IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
 
@@ -939,7 +937,7 @@ namespace FreeLibSet.Data
         return new IdList(); // 20.08.2019
 
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
       int colPos = -1;
@@ -949,8 +947,7 @@ namespace FreeLibSet.Data
         {
           colPos = row.Table.Columns.IndexOf(columnName);
           if (colPos < 0)
-            throw new ArgumentException("Таблица\"" + row.Table.TableName + "\" не содержит столбца \"" +
-              columnName + "\"", "columnName");
+            throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
         }
 
         if (row.IsNull(colPos))
@@ -981,7 +978,7 @@ namespace FreeLibSet.Data
         return new IdList(); // 20.08.2019
 
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
       int colPos = -1;
@@ -991,8 +988,7 @@ namespace FreeLibSet.Data
         {
           colPos = drv.Row.Table.Columns.IndexOf(columnName);
           if (colPos < 0)
-            throw new ArgumentException("Таблица\"" + drv.Row.Table.TableName + "\" не содержит столбца \"" +
-              columnName + "\"", "columnName");
+            throw ExceptionFactory.ArgUnknownColumnName("columnName", drv.Row.Table, columnName);
         }
 
         if (drv.Row.IsNull(colPos))
@@ -1190,7 +1186,7 @@ namespace FreeLibSet.Data
         if (!_Tables.TryGetValue(tableName, out list))
         {
           if (String.IsNullOrEmpty(tableName))
-            throw new ArgumentNullException("tableName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
           if (_Tables.IsReadOnly)
             return IdList.Empty;
@@ -1206,7 +1202,7 @@ namespace FreeLibSet.Data
       {
         CheckNotReadOnly();
         if (String.IsNullOrEmpty(tableName))
-          throw new ArgumentNullException("tableName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
         if (value.Count == 0)
         {
@@ -1827,7 +1823,7 @@ namespace FreeLibSet.Data
       if (!TryGetValue(item.Key, out lst))
         return false;
 
-      bool res=false;
+      bool res = false;
       foreach (Int32 id in item.Value)
       {
         if (lst.Remove(id))

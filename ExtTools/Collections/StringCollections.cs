@@ -731,7 +731,7 @@ namespace FreeLibSet.Collections
             _UnknownItemPosition = value;
             break;
           default:
-            throw new ArgumentException();
+            throw ExceptionFactory.ArgUnknownValue("value", value);
         }
       }
     }

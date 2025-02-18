@@ -237,9 +237,15 @@ namespace FreeLibSet.Core
     /// <returns>Массив, содержащий выбранные элементы из <paramref name="a"/></returns>
     public static T[] CreateSelectedArray<T>(T[] a, bool[] flags)
     {
+#if DEBUG
+      if (a == null)
+        throw new ArgumentNullException("a");
+      if (flags == null)
+        throw new ArgumentNullException("flags");
+#endif
       if (flags.Length != a.Length)
-        throw new ArgumentException("Длина массива флагов (" + flags.Length.ToString() +
-          ") не совпадает с длинной исходного массива (" + a.Length.ToString() + ")");
+        throw ExceptionFactory.ArgWrongCollectionCount("flags", flags, a.Length);
+
       // Подсчитываем число установленных флагов
       int i;
       int cnt = 0;
@@ -564,9 +570,9 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("a");
 
       if (startPosition < 0 || startPosition > a.Length)
-        throw new ArgumentOutOfRangeException("startPosition");
+        throw ExceptionFactory.ArgOutOfRange("startPosition", startPosition, 0, a.Length);
       if (count < 0 || (startPosition + count) > a.Length)
-        throw new ArgumentOutOfRangeException("count");
+        throw ExceptionFactory.ArgOutOfRange("count", count, 0, a.Length-startPosition);
 
       if (count == 0)
         return; // не надо ничего делать.
@@ -597,7 +603,7 @@ namespace FreeLibSet.Core
       if (a == null)
         throw new ArgumentNullException("a");
       if (startPosition < 0 || startPosition > a.Length)
-        throw new ArgumentOutOfRangeException("startPosition");
+        throw ExceptionFactory.ArgOutOfRange("startPosition", startPosition, 0, a.Length);
 
       if (insertingArray == null)
         return;
@@ -613,7 +619,6 @@ namespace FreeLibSet.Core
 
       a = b;
     }
-
 
     /// <summary>
     /// Возвращает первый элемент одномерного массива или null (значение по умолчанию для структур), если массив пустой
@@ -704,8 +709,7 @@ namespace FreeLibSet.Core
       if (a == null)
         throw new ArgumentNullException("a");
       if (rowIndex < a.GetLowerBound(0) || rowIndex > a.GetUpperBound(0))
-        throw new ArgumentOutOfRangeException("rowIndex", rowIndex, "Индекс строки должен быть в диапазоне от " +
-          a.GetLowerBound(0).ToString() + " до " + a.GetUpperBound(0).ToString());
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, a.GetLowerBound(0), a.GetUpperBound(0));
 #endif
 
       int n1 = a.GetLowerBound(1);
@@ -731,8 +735,7 @@ namespace FreeLibSet.Core
       if (a == null)
         throw new ArgumentNullException("a");
       if (columnIndex < a.GetLowerBound(1) || columnIndex > a.GetUpperBound(1))
-        throw new ArgumentOutOfRangeException("columnIndex", columnIndex, "Индекс столбца должен быть в диапазоне от " +
-          a.GetLowerBound(1).ToString() + " до " + a.GetUpperBound(1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("columnIndex", columnIndex, a.GetLowerBound(1), a.GetUpperBound(1));
 #endif
 
       int n1 = a.GetLowerBound(0);
@@ -904,7 +907,7 @@ namespace FreeLibSet.Core
         throw new ArgumentNullException("a");
 
       if (n < 1)
-        throw new ArgumentOutOfRangeException("n");
+        throw ExceptionFactory.ArgOutOfRange("n", n, 1, null);
 
       if (a.Length <= n)
         return new T[1][] { a };

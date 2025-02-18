@@ -290,7 +290,7 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public override string ToString()
     {
-      return "Общий список команд. Count=" + Count.ToString();
+      return "EFPAppCommandItems. Count=" + Count.ToString();
     }
 
     #endregion
@@ -361,48 +361,43 @@ namespace FreeLibSet.Forms
         #region Файл
 
         case EFPAppStdCommandItems.MenuFile:
-          ci.MenuText = "&Файл";
+          ci.MenuText = Res.Cmd_Menu_File;
           break;
 
         case EFPAppStdCommandItems.New:
-          ci.MenuText = "Создать";
-          ci.ToolTipText = "Создать";
+          ci.MenuText = Res.Cmd_Menu_File_New;
           ci.ShortCut = Keys.Control | Keys.N;
           ci.ImageKey = "New";
           break;
 
         case EFPAppStdCommandItems.Open:
-          ci.MenuText = "Открыть";
-          ci.ToolTipText = "Открыть";
+          ci.MenuText = Res.Cmd_Menu_File_Open;
           ci.ShortCut = Keys.Control | Keys.O;
           ci.ImageKey = "Open";
           break;
 
         case EFPAppStdCommandItems.Save:
-          ci.MenuText = "Сохранить";
-          ci.ToolTipText = "Сохранить";
+          ci.MenuText = Res.Cmd_Menu_File_Save;
           ci.ShortCut = Keys.Control | Keys.S;
           ci.ImageKey = "Save";
           break;
 
         case EFPAppStdCommandItems.SaveAs:
-          ci.MenuText = "Сохранить как";
+          ci.MenuText = Res.Cmd_Menu_File_SaveAs;
           break;
 
         case EFPAppStdCommandItems.PageSetup:
-          ci.MenuText = "Параметры страницы ...";
-          ci.ToolTipText = "Параметры страницы";
+          ci.MenuText = Res.Cmd_Menu_File_PageSetup;
           ci.ImageKey = "PageSetup";
           break;
 
         case EFPAppStdCommandItems.PrintPreview:
-          ci.MenuText = "Предварительный просмотр";
-          ci.ToolTipText = "Предварительный просмотр";
+          ci.MenuText = Res.Cmd_Menu_File_PrintPreview;
           ci.ImageKey = "Preview";
           break;
 
         case EFPAppStdCommandItems.Print:
-          ci.MenuText = "Печать ...";
+          ci.MenuText = Res.Cmd_Menu_File_Print;
           ci.ToolTipText = "Печать";
           ci.ShortCut = Keys.Control | Keys.P;
           ci.ImageKey = "Print";
@@ -410,12 +405,12 @@ namespace FreeLibSet.Forms
 
         case EFPAppStdCommandItems.PrintDefault:
           //      ci.MenuText = "Печать";
-          ci.ToolTipText = "Печать на принтере по умолчанию";
+          ci.ToolTipText = Res.Cmd_ToolTip_File_PrintDefault;
           ci.ImageKey = "Print";
           break;
 
         case EFPAppStdCommandItems.Exit:
-          ci.MenuText = "В&ыход";
+          ci.MenuText = Res.Cmd_Menu_File_Exit;
           ci.ImageKey = "Exit";
           break;
 
@@ -424,38 +419,38 @@ namespace FreeLibSet.Forms
         #region Файл - Отправить
 
         case EFPAppStdCommandItems.MenuSendTo:
-          ci.MenuText = "Отправит&ь";
+          ci.MenuText = Res.Cmd_Menu_SendTo;
           break;
 
         case EFPAppStdCommandItems.SendToInternetBrowser:
-          ci.MenuText = "Интернет-обозреватель";
+          ci.MenuText = Res.Cmd_Menu_SendTo_InternetBrowser;
           ci.ImageKey = "InternetExplorer";
-          ci.ToolTipText = "Открыть в интернет-обозревателе";
+          ci.ToolTipText = Res.Cmd_Menu_ToolTip_InternetBrowser;
           break;
         case EFPAppStdCommandItems.SendToMicrosoftWord:
           ci.MenuText = "Microsoft Word";
           ci.ImageKey = "MicrosoftWord";
-          ci.ToolTipText = "Открыть в Microsoft Word";
+          ci.ToolTipText = String.Format(Res.Cmd_ToolTip_SendTo_App, ci.MenuText);
           break;
         case EFPAppStdCommandItems.SendToMicrosoftExcel:
           ci.MenuText = "Microsoft Excel";
           ci.ImageKey = "MicrosoftExcel";
-          ci.ToolTipText = "Открыть в Microsoft Excel";
+          ci.ToolTipText = String.Format(Res.Cmd_ToolTip_SendTo_App, ci.MenuText);
           break;
         case EFPAppStdCommandItems.SendToOpenOfficeWriter:
           ci.MenuText = EFPApp.OpenOfficeKindName + " Writer";
           ci.ImageKey = "OpenOfficeWriter";
-          ci.ToolTipText = "Открыть в " + EFPApp.OpenOfficeKindName + " Writer";
+          ci.ToolTipText = String.Format(Res.Cmd_ToolTip_SendTo_App, ci.MenuText);
           break;
         case EFPAppStdCommandItems.SendToOpenOfficeCalc:
           ci.MenuText = EFPApp.OpenOfficeKindName + " Calc";
           ci.ImageKey = "OpenOfficeCalc";
-          ci.ToolTipText = "Открыть в " + EFPApp.OpenOfficeKindName + " Calc";
+          ci.ToolTipText = String.Format(Res.Cmd_ToolTip_SendTo_App, ci.MenuText);
           break;
         case EFPAppStdCommandItems.SendToNotepad:
-          ci.MenuText = "Блокнот";
+          ci.MenuText = Res.Cmd_Menu_SendTo_Notepad;
           ci.ImageKey = "Notepad";
-          ci.ToolTipText = "Открыть в Блокноте";
+          ci.ToolTipText = Res.Cmd_ToolTip_SendTo_NotePad;
           break;
 
         #endregion
@@ -463,81 +458,79 @@ namespace FreeLibSet.Forms
         #region Правка
 
         case EFPAppStdCommandItems.MenuEdit:
-          ci.MenuText = "&Правка";
+          ci.MenuText = Res.Cmd_Menu_Edit;
           break;
 
         case EFPAppStdCommandItems.Undo:
-          ci.MenuText = "&Отменить";
-          ci.ToolTipText = "Отменить";
+          ci.MenuText = Res.Cmd_Menu_Edit_Undo;
           ci.ImageKey = "Undo";
           ci.ShortCut = Keys.Control | Keys.Z;
           break;
 
         case EFPAppStdCommandItems.Redo:
-          ci.MenuText = "Пов&торить";
-          ci.ToolTipText = "Повторить";
+          ci.MenuText = Res.Cmd_Menu_Edit_Redo;
           ci.ImageKey = "Redo";
           ci.ShortCut = Keys.Control | Keys.Y;
           break;
 
         case EFPAppStdCommandItems.Cut:
-          ci.MenuText = "&Вырезать";
+          ci.MenuText = Res.Cmd_Menu_Edit_Cut;
           ci.ShortCut = Keys.Control | Keys.X;
           //ci.MenuRightText = "Ctrl+X";
           ci.ImageKey = "Cut";
           break;
 
         case EFPAppStdCommandItems.Copy:
-          ci.MenuText = "&Копировать";
+          ci.MenuText = Res.Cmd_Menu_Edit_Copy;
           ci.ShortCut = Keys.Control | Keys.C;
           //ci.MenuRightText = "Ctrl+С";
           ci.ImageKey = "Copy";
           break;
 
         case EFPAppStdCommandItems.Paste:
-          ci.MenuText = "Вст&авить";
+          ci.MenuText = Res.Cmd_Menu_Edit_Paste;
           ci.ShortCut = Keys.Control | Keys.V;
           //ci.MenuRightText = "Ctrl+V";
           ci.ImageKey = "Paste";
           break;
 
         case EFPAppStdCommandItems.PasteSpecial:
-          ci.MenuText = "Сп&ециальная вставка ...";
-          ci.ShortCut= Keys.Control | Keys.Shift | Keys.V;
+          ci.MenuText = Res.Cmd_Menu_Edit_PasteSpecial;
+          ci.ShortCut = Keys.Control | Keys.Shift | Keys.V;
           break;
 
         case EFPAppStdCommandItems.Find:
-          ci.MenuText = "&Найти";
+          ci.MenuText = Res.Cmd_Menu_Edit_Find;
           ci.ShortCut = Keys.Control | Keys.F;
           ci.ImageKey = "Find";
           break;
 
         case EFPAppStdCommandItems.IncSearch:
-          ci.MenuText = "Найти по первым буквам";
+          ci.MenuText = Res.Cmd_Menu_Edit_IncSearch;
           ci.ShortCut = Keys.Control | Keys.K;
           ci.ImageKey = "IncSearch";
           break;
 
         case EFPAppStdCommandItems.FindNext:
-          ci.MenuText = "Найти &далее";
+          ci.MenuText = Res.Cmd_Menu_Edit_FindNext;
           ci.ShortCut = Keys.F3;
           ci.ImageKey = "FindNext";
           break;
 
         case EFPAppStdCommandItems.Replace:
-          ci.MenuText = "Заменить";
+          ci.MenuText = Res.Cmd_Menu_Edit_Replace;
           ci.ShortCut = Keys.Control | Keys.H;
           ci.ImageKey = "Replace";
           break;
 
         case EFPAppStdCommandItems.Goto:
-          ci.MenuText = "Перейти";
+          ci.MenuText = Res.Cmd_Menu_Edit_Goto;
           ci.ShortCut = Keys.Control | Keys.G;
           ci.ImageKey = "Goto";
           break;
 
         case EFPAppStdCommandItems.SelectAll:
-          ci.MenuText = "В&ыделить все";
+          ci.MenuText = Res.Cmd_Menu_Edit_SelectAll;
           ci.ShortCut = Keys.Control | Keys.A;
           break;
 
@@ -546,17 +539,17 @@ namespace FreeLibSet.Forms
         #region Вид
 
         case EFPAppStdCommandItems.MenuView:
-          ci.MenuText = "&Вид";
+          ci.MenuText = Res.Cmd_Menu_View;
           break;
 
         case EFPAppStdCommandItems.Refresh:
-          ci.MenuText = "Обновить";
+          ci.MenuText = Res.Cmd_Menu_View_Refresh;
           ci.ShortCut = Keys.F5;
           ci.ImageKey = "Refresh";
           break;
 
         case EFPAppStdCommandItems.FullScreen:
-          ci.MenuText = "Во весь экран";
+          ci.MenuText = Res.Cmd_Menu_View_FullScreen;
           ci.ImageKey = "FullScreen";
 
           // плохо работает
@@ -569,51 +562,51 @@ namespace FreeLibSet.Forms
         #region Окно
 
         case EFPAppStdCommandItems.MenuWindow:
-          ci.MenuText = "&Окно";
+          ci.MenuText = Res.Cmd_Menu_Window;
           break;
 
         case EFPAppStdCommandItems.TileHorizontal:
-          ci.MenuText = "Сверху вниз";
+          ci.MenuText = Res.Cmd_Menu_Window_TileHorizotal;
           ci.ImageKey = "TileHorizontal";
           break;
 
         case EFPAppStdCommandItems.TileVertical:
-          ci.MenuText = "Слева направо";
+          ci.MenuText = Res.Cmd_Menu_Window_TileVertical;
           ci.ImageKey = "TileVertical";
           break;
 
         case EFPAppStdCommandItems.Cascade:
-          ci.MenuText = "Каскадом";
+          ci.MenuText = Res.Cmd_Menu_Window_Cascade;
           ci.ImageKey = "Cascade";
           break;
 
         case EFPAppStdCommandItems.ArrangeIcons:
-          ci.MenuText = "Упорядочить значки";
+          ci.MenuText = Res.Cmd_Menu_Window_ArrangeIcons;
           ci.ImageKey = "ArrangeIcons";
           break;
 
         case EFPAppStdCommandItems.CloseAll:
-          ci.MenuText = "Закрыть все";
+          ci.MenuText = Res.Cmd_Menu_Window_CloseAll;
           ci.ImageKey = "CloseAll";
           break;
 
         case EFPAppStdCommandItems.CloseAllButThis:
-          ci.MenuText = "Закрыть все, кроме текущего окна";
+          ci.MenuText = Res.Cmd_Menu_Window_CloseAllButThis;
           ci.ImageKey = "CloseAllButThis";
           break;
 
         case EFPAppStdCommandItems.OtherWindows:
-          ci.MenuText = "Другие окна ...";
+          ci.MenuText = Res.Cmd_Menu_Window_OtherWindows;
           ci.ImageKey = "WindowList";
           break;
 
         case EFPAppStdCommandItems.NewMainWindow:
-          ci.MenuText = "Новое главное окно";
+          ci.MenuText = Res.Cmd_Menu_Window_NewMainWindow;
           ci.ImageKey = "NewMainWindow";
           break;
 
         case EFPAppStdCommandItems.SavedCompositions:
-          ci.MenuText = "Композиции рабочего стола";
+          ci.MenuText = Res.Cmd_Menu_Window_SavedCompositions;
           ci.ImageKey = "SavedCompositions";
           break;
 
@@ -622,37 +615,38 @@ namespace FreeLibSet.Forms
         #region Справка
 
         case EFPAppStdCommandItems.MenuHelp:
-          ci.MenuText = "&Справка";
+          ci.MenuText = Res.Cmd_Menu_Help;
           break;
 
         case EFPAppStdCommandItems.HelpContents:
-          ci.MenuText = "&Содержание";
+          ci.MenuText = Res.Cmd_Menu_Help_Contents;
           ci.ShortCut = Keys.Control | Keys.F1;
           ci.ImageKey = "HelpContents";
-          ci.ToolTipText = "Содержание справки";
+          ci.ToolTipText = Res.Cmd_ToolTip_Help_Contents;
           break;
 
         case EFPAppStdCommandItems.HelpIndex:
-          ci.MenuText = "&Указатель";
+          ci.MenuText = Res.Cmd_Menu_Help_Index;
           ci.ShortCut = Keys.Shift | Keys.F1;
           ci.ImageKey = "HelpIndex";
+          ci.ToolTipText = Res.Cmd_ToolTip_Help_Index;
           break;
 
         case EFPAppStdCommandItems.ContextHelp:
-          ci.MenuText = "Контекстная помощь";
+          ci.MenuText = Res.Cmd_Menu_Help_ContextHelp;
           ci.ShortCut = Keys.F1;
           ci.ImageKey = "Help";
           break;
 
         case EFPAppStdCommandItems.About:
-          ci.MenuText = "О программе";
+          ci.MenuText = Res.Cmd_Menu_Help_About;
           ci.ImageKey = "About";
           break;
 
         #endregion
 
         default:
-          throw new ArgumentException("Неизвестная команда меню " + stdItem.ToString());
+          throw ExceptionFactory.ArgUnknownValue("stdItem", stdItem, null);
       }
       return ci;
     }
@@ -673,7 +667,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события MdiCildrenChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -832,7 +826,7 @@ namespace FreeLibSet.Forms
         name = s.Substring(p + 1);
       }
       else
-        throw new ArgumentException("Неизвестная команда " + stdItem.ToString(), "stdItem");
+        throw ExceptionFactory.ArgUnknownValue("stdItem", stdItem, null);
     }
 
     /// <summary>
@@ -855,7 +849,7 @@ namespace FreeLibSet.Forms
         return false;
       }
     }
-
+    
     /// <summary>
     /// Найти значение перечисления <see cref="EFPAppStdCommandItems"/> для стандартной команды по категории и имени.
     /// Если переданные аргументы не соответствуют стандартной команде, то генерируется исключение.
@@ -871,7 +865,7 @@ namespace FreeLibSet.Forms
       if (FindStdCommand(category, name, out res))
         return res;
       else
-        throw new ArgumentException("Неизвестная стандартная команда с категорией \"" + category + "\" и именем \"" + name + "\"");
+        throw new ArgumentException(String.Format(Res.EFPApp_Arg_UnknownStdCommandCategoryAndName, category, name));
     }
 
     private static BidirectionalDictionary<EFPAppStdCommandItems, string> _StdCommandDict = InitCommandDict();
@@ -939,7 +933,7 @@ namespace FreeLibSet.Forms
 
 #if DEBUG
       if (range.MaxValue != (a.Length - 1))
-        throw new BugException("Неправильный список");
+        throw new BugException("Bad list");
 #endif
 
       BidirectionalDictionary<EFPAppStdCommandItems, string> dict = new BidirectionalDictionary<EFPAppStdCommandItems, string>(a.Length);
@@ -1012,7 +1006,7 @@ namespace FreeLibSet.Forms
     public EFPAppToolBarCommandItems(string name)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       _Name = name;
 
       _DefaultVisible = true;
@@ -1028,7 +1022,7 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе
     /// </summary>
     public string Name { get { return _Name; } }
-    private string _Name;
+    private readonly string _Name;
 
     /// <summary>
     /// Отображаемое имя панели для меню "Вид" - "Панели инструментов".
@@ -1072,7 +1066,7 @@ namespace FreeLibSet.Forms
             _DefaultDock = value;
             break;
           default:
-            throw new ArgumentException();
+            throw ExceptionFactory.ArgUnknownValue("value", value);
         }
       }
     }

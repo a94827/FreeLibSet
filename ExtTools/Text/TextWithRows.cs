@@ -63,7 +63,7 @@ namespace FreeLibSet.Text
         case TextWithRowsLineSeparators.AllPosible:
           return DataTools.AllPossibleLineSeparators;
         default:
-          throw new ArgumentException("Неизвестное значение для списка сепараторов " + lineSeparators.ToString(), "lineSeparators");
+          throw ExceptionFactory.ArgUnknownValue("lineSeparators", lineSeparators);
       }
     }
 
@@ -209,7 +209,7 @@ namespace FreeLibSet.Text
       get
       {
         if (rowIndex < 0 || rowIndex >= _RowStarts.Count)
-          throw new ArgumentOutOfRangeException("rowIndex", rowIndex, "Индекс строки должен быть в диапазоне от 0 до " + (_RowStarts.Count - 1).ToString());
+          throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, _RowStarts.Count - 1);
         return _Text.Substring(_RowStarts[rowIndex], _RowLengths[rowIndex]);
       }
     }
@@ -247,7 +247,7 @@ namespace FreeLibSet.Text
     public int GetRow(int index)
     {
       if (index < 0 || index >= _Text.Length)
-        throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + (_Text.Length - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("index", index, 0,_Text.Length - 1);
 
       int p = _RowStarts.BinarySearch(index);
       if (p >= 0)
@@ -265,7 +265,7 @@ namespace FreeLibSet.Text
     public int GetRowStartIndex(int row)
     {
       if (row < 0 || row >= _RowStarts.Count)
-        throw new ArgumentOutOfRangeException("row", row, "Номер строки должен быть в диапазоне от 0 до " + (_RowStarts.Count - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("row", row, 0, _RowStarts.Count - 1);
       return _RowStarts[row];
     }
 
@@ -279,7 +279,7 @@ namespace FreeLibSet.Text
     public int GetRowLength(int row)
     {
       if (row < 0 || row >= _RowStarts.Count)
-        throw new ArgumentOutOfRangeException("row", row, "Номер строки должен быть в диапазоне от 0 до " + (_RowStarts.Count - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("row", row, 0, _RowStarts.Count - 1);
       return _RowLengths[row];
     }
 
@@ -408,9 +408,9 @@ namespace FreeLibSet.Text
     public TextPosition(int row, int column)
     {
       if (row < 0)
-        throw new ArgumentOutOfRangeException("row", row, "Номер строки не может быть отрицательным");
+        throw ExceptionFactory.ArgOutOfRange("row", row, 0, null);
       if (column < 0)
-        throw new ArgumentOutOfRangeException("column", column, "Номер столбца не может быть отрицательным");
+        throw ExceptionFactory.ArgOutOfRange("column", column, 0, null);
 
       _Row = row;
       _Column = column;

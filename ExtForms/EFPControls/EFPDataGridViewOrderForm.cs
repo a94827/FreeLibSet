@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using FreeLibSet.Logging;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -70,14 +71,14 @@ namespace FreeLibSet.Forms
         btnAdd.Image = EFPApp.MainImages.Images["RightRight"];
         btnAdd.ImageAlign = ContentAlignment.MiddleCenter;
         EFPButton efpAdd = new EFPButton(efpForm, btnAdd);
-        efpAdd.DisplayName = "Добавить";
-        efpAdd.ToolTipText = "Добавляет столбец в список выбранных для сортировки";
+        efpAdd.DisplayName = Res.EFPDataGridViewOrderForm_Name_Add;
+        efpAdd.ToolTipText = Res.EFPDataGridViewOrderForm_ToolTip_Add;
 
         btnRemove.Image = EFPApp.MainImages.Images["LeftLeft"];
         btnRemove.ImageAlign = ContentAlignment.MiddleCenter;
         EFPButton efpRemove = new EFPButton(efpForm, btnRemove);
-        efpRemove.DisplayName = "Удалить";
-        efpRemove.ToolTipText = "Удаляет столбец из сортировки";
+        efpRemove.DisplayName = Res.EFPDataGridViewOrderForm_Name_Remove;
+        efpRemove.ToolTipText = Res.EFPDataGridViewOrderForm_ToolTip_Remove;
 
         EFPDataGridView efpSelected = new EFPDataGridView(efpForm, grSelected);
         efpSelected.ToolBarPanel = panSpbSelected;
@@ -133,11 +134,11 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка получения элементов сортировки");
+          LogoutTools.LogoutException(e, Res.EFPDataGridViewOrderForm_ErrTitle_CreateList);
         }
 
         efpCustom.Validators.AddError(efpCustom.IsNotEmptyEx,
-          "Должно быть выбрано хотя бы одно поле для сортировки",
+          Res.EFPDataGridViewOrderForm_Err_EmptyCustomList,
           efpTabControl.TabPages[tpCustom].SelectedEx);
       }
       else
@@ -231,7 +232,7 @@ namespace FreeLibSet.Forms
       SortItem item = (SortItem)(args.Item);
       if (args.IsSelected)
       {
-        args.TextValue = item.Column.DisplayName + (item.Direction == ListSortDirection.Ascending ? " (по возрастанию)" : " (по убыванию)");
+        args.TextValue = String.Format("{0} ({1})", item.Column.DisplayName, UITools.ToString(item.Direction));
         args.ImageKey = (item.Direction == ListSortDirection.Ascending) ? "Up" : "Down";
       }
       else

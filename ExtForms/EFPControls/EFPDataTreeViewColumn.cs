@@ -474,6 +474,7 @@ namespace FreeLibSet.Forms
     #region Раскраска столбцов
 
     // TODO: Не используется
+
     /// <summary>
     /// Цвет столбца. Используется, если для текущей строки в событии 
     /// EFPDataTreeView.GetRowAttributres не определен более приоритетный цвет
@@ -670,7 +671,7 @@ namespace FreeLibSet.Forms
     {
       BRDataTreeViewMenuOutItem outItem = ControlProvider.DefaultOutItem;
       if (outItem == null)
-        throw new InvalidOperationException("Стандартный вариант печати иерархического просмотра был удален");
+        throw new InvalidOperationException(Res.EFPDataView_Err_DefaultOutItemDeleted);
       return outItem[defCfgCode];
     }
 
@@ -798,7 +799,7 @@ namespace FreeLibSet.Forms
         {
           TreeNodeAdv node = _Column.ControlProvider.Control.FindNode(_ModelEnumerator.Current, true);
           if (node == null)
-            throw new BugException("Не найден узел дерева");
+            throw new BugException("Tree node not found");
 
           InteractiveControl nc = _Column.NodeControl as InteractiveControl;
           if (nc == null)
@@ -883,7 +884,7 @@ namespace FreeLibSet.Forms
     private void UpdateColumnDict()
     {
       if (ControlProvider.Control.IsDisposed)
-        throw new ObjectDisposedException("TreeViewAdv is disposed");
+        throw new ObjectDisposedException("TreeViewAdv");
 
       if (!ControlProvider.Control.UseColumns)
       {
@@ -981,10 +982,10 @@ namespace FreeLibSet.Forms
           return res;
 
         if (treeColumn.Owner == null)
-          throw new ArgumentException("Столбец не присоединен к просмотру", "treeColumn");
+          throw ExceptionFactory.ArgProperty("treeColumn", treeColumn, "Owner", treeColumn.Owner, null);
 
         if (!Object.ReferenceEquals(treeColumn.Owner.TreeView, ControlProvider.Control))
-          throw new ArgumentException("Столбец не относится к текущему просмотру", "treeColumn");
+          throw ExceptionFactory.ObjectProperty(treeColumn.Owner, "TreeView", treeColumn.Owner.TreeView, new object[] { ControlProvider.Control });
 
         UpdateColumnDict();
         return _ColumnDict[treeColumn];
@@ -1192,7 +1193,7 @@ namespace FreeLibSet.Forms
       if (nodeControl == null)
         throw new ArgumentNullException("nodeControl");
       if (nodeControl.Parent != null)
-        throw new InvalidOperationException("Элемент уже добавлен");
+        throw ExceptionFactory.ObjectPropertyAlreadySet(nodeControl, "Parent");
 
       _LastAddedColumn = null;
 
@@ -1200,15 +1201,11 @@ namespace FreeLibSet.Forms
       //  throw new InvalidOperationException("Нельзя добавлять столбцы, когда UseColumns=false");
 
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
       if (textWidth < 1)
-        throw new ArgumentOutOfRangeException("textWidth");
-      if (minTextWidth < 1)
-        throw new ArgumentOutOfRangeException("minTextWidth");
-
-      if (minTextWidth > textWidth)
-        throw new ArgumentOutOfRangeException("minTextWidth", minTextWidth,
-          "Минимальная ширина столбца (" + minTextWidth.ToString() + ") не может быть больше, чем устанавливаемая (" + textWidth.ToString() + ")");
+        throw ExceptionFactory.ArgOutOfRange("textWidth", textWidth, 1, null);
+      if (minTextWidth < 1 || minTextWidth > textWidth)
+        throw ExceptionFactory.ArgOutOfRange("minTextWidth", minTextWidth, 1, textWidth);
 
       TreeColumn treeCol = null;
       if (ControlProvider.Control.UseColumns)
@@ -1797,7 +1794,7 @@ namespace FreeLibSet.Forms
           if (!_ColumnWidthChangedErrorWasShown)
           {
             _ColumnWidthChangedErrorWasShown = true;
-            DebugTools.ShowException(e, "Ошибка при установке размеров одинаковых столбцов");
+            DebugTools.ShowException(e);
           }
         }
       }

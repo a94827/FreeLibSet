@@ -1,0 +1,3121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Btn_Text_Abort" xml:space="preserve">
+    <value>&amp;Abort</value>
+  </data>
+  <data name="Btn_Text_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Btn_Text_Ignore" xml:space="preserve">
+    <value>&amp;Ignore</value>
+  </data>
+  <data name="Btn_Text_No" xml:space="preserve">
+    <value>&amp;No</value>
+  </data>
+  <data name="Btn_Text_OK" xml:space="preserve">
+    <value>O&amp;K</value>
+  </data>
+  <data name="Btn_Text_Retry" xml:space="preserve">
+    <value>&amp;Retry</value>
+  </data>
+  <data name="Btn_Text_Yes" xml:space="preserve">
+    <value>&amp;Yes</value>
+  </data>
+  <data name="CodeGridFilterForm_Err_NoCodes" xml:space="preserve">
+    <value>Codes should be selected</value>
+  </data>
+  <data name="CodeGridFilterForm_ToolTip_Codes" xml:space="preserve">
+    <value>List of codes, separated with the comma char</value>
+  </data>
+  <data name="CodeGridFilterForm_ToolTip_Empty" xml:space="preserve">
+    <value>In the mode 'Include codes the rows with empty field value will pass this filter. In the mode "Exclude codes" the rows with empty values will be rejected</value>
+  </data>
+  <data name="CodesGridFilter_Msg_Empty" xml:space="preserve">
+    <value>[ Empty ]</value>
+  </data>
+  <data name="CodesGridFilter_Msg_ExcludePrefix" xml:space="preserve">
+    <value>Except:</value>
+  </data>
+  <data name="ColorComboBox_Arg_SystemColorNotSupported" xml:space="preserve">
+    <value>System colors are bot supported</value>
+  </data>
+  <data name="ColorComboBox_Msg_NotInPopupColorsListItem" xml:space="preserve">
+    <value>Out of range</value>
+  </data>
+  <data name="ColorComboBox_Msg_SelectWithDialogListItem" xml:space="preserve">
+    <value>Choose...</value>
+  </data>
+  <data name="DateRangeBox_Err_DatesNotEnabled" xml:space="preserve">
+    <value>To change period, both of dates must be enabled</value>
+  </data>
+  <data name="DateRangeBox_Err_DatesNotFilled" xml:space="preserve">
+    <value>To change period, both of dates must be filled</value>
+  </data>
+  <data name="DateRangeBox_ToolTip_Menu" xml:space="preserve">
+    <value>Menu with predefined periods</value>
+  </data>
+  <data name="DateRangeBox_ToolTip_Next" xml:space="preserve">
+    <value>Next period like this</value>
+  </data>
+  <data name="DateRangeBox_ToolTip_Prev" xml:space="preserve">
+    <value>Previous period like this</value>
+  </data>
+  <data name="DateRangeInclusionGridFilter_Msg_WorkDate" xml:space="preserve">
+    <value>Current date</value>
+  </data>
+  <data name="DBxGridFilters_ErrTitle_ReadConfig" xml:space="preserve">
+    <value>Error reading filter '{0}' state</value>
+  </data>
+  <data name="EFPTwoListSelector_Err_CannotBeEmpy" xml:space="preserve">
+    <value>List cannot be empty</value>
+  </data>
+  <data name="EFPTwoListSelector_Err_NothingAvailable" xml:space="preserve">
+    <value>There is no avaliable item in the list</value>
+  </data>
+  <data name="EFPTwoListSelector_Err_NothingSelected" xml:space="preserve">
+    <value>There is no selected item in the list</value>
+  </data>
+  <data name="EFPTwoListSelector_Text_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="EFPTwoListSelector_Text_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="MonthDayBox_Arg_DayOutOfRange" xml:space="preserve">
+    <value>Invalid day {0}. Value must be in range from 1 to {1} while Month is {2}</value>
+  </data>
+  <data name="ParamSetComboBox_Err_NameIsEmpty" xml:space="preserve">
+    <value>Preset name cannot be empty</value>
+  </data>
+  <data name="ParamSetComboBox_Err_UnknownName" xml:space="preserve">
+    <value>There is no preset with given name. Select a preset from the drop-down list</value>
+  </data>
+  <data name="BoolValueGridFilter_Err_NoText" xml:space="preserve">
+    <value>Properties FilterTextTrue and FilterTextFalse cannot be cleared at the same time</value>
+  </data>
+  <data name="BoolValueGridFilter_Msg_FilterTextFalse" xml:space="preserve">
+    <value>Value is false</value>
+  </data>
+  <data name="BoolValueGridFilter_Msg_FilterTextTrue" xml:space="preserve">
+    <value>Value is true</value>
+  </data>
+  <data name="ExtValueControl_Name_GroupCheckBox" xml:space="preserve">
+    <value>Group editing mark</value>
+  </data>
+  <data name="ExtValueControl_ToolTip_GroupCheckBox" xml:space="preserve">
+    <value>Turn the check box on to set the same column '{0}' value for all the edited records</value>
+  </data>
+  <data name="GridFilter_Err_NotEditable" xml:space="preserve">
+    <value>You cannot edit this filter</value>
+  </data>
+  <data name="GridFilter_Err_WrongValue" xml:space="preserve">
+    <value>Error Value {0} is not appliable to thos filter</value>
+  </data>
+  <data name="GridFilter_Msg_EmptyValueText" xml:space="preserve">
+    <value>[ Empty ]</value>
+  </data>
+  <data name="GridFilter_Msg_ListTitle" xml:space="preserve">
+    <value>Filter value</value>
+  </data>
+  <data name="GridFilter_Msg_ManualInputPromptWithEmptyIfNoFilter" xml:space="preserve">
+    <value>Filter value (empty if no filter)</value>
+  </data>
+  <data name="GridFilter_Msg_NoFilterMode" xml:space="preserve">
+    <value>No filter</value>
+  </data>
+  <data name="NullNotNullGridFilter_MsgNotNull" xml:space="preserve">
+    <value>NOT NULL</value>
+  </data>
+  <data name="NullNotNullGridFilter_MsgNull" xml:space="preserve">
+    <value>NULL</value>
+  </data>
+  <data name="StringValueGridFilter_ErrTitle_AllValuesNeeded" xml:space="preserve">
+    <value>Error collecting row list for the filter '{0}'</value>
+  </data>
+  <data name="StringValueGridFilter_Err_NoManual" xml:space="preserve">
+    <value>Manual value input is not appliable</value>
+  </data>
+  <data name="StringValueGridFilter_Msg_Manual" xml:space="preserve">
+    <value>Set manually ...</value>
+  </data>
+  <data name="StringValueGridFilter_Msg_NoFilter" xml:space="preserve">
+    <value>[ No filter ]</value>
+  </data>
+  <data name="DateRangeDialog_Msg_Prompt" xml:space="preserve">
+    <value>Range</value>
+  </data>
+  <data name="DateRangeDialog_Msg_Title" xml:space="preserve">
+    <value>Date range input</value>
+  </data>
+  <data name="DebugTools_ErrTitle_AppInfo" xml:space="preserve">
+    <value>Application debug info</value>
+  </data>
+  <data name="DebugTools_Phase_AppInfo" xml:space="preserve">
+    <value>Garhering info about the application</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_CannotOpenReportDir" xml:space="preserve">
+    <value>Cannot open the directory with report files</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_CopyError" xml:space="preserve">
+    <value>Copying report text to clipboard error</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_DataDebugError" xml:space="preserve">
+    <value>Data object debug error</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_ExecError" xml:space="preserve">
+    <value>Error starting {0}</value>
+  </data>
+  <data name="ShowExceptionForm_ErrTitle_ViewError" xml:space="preserve">
+    <value>Cannot open report file for view</value>
+  </data>
+  <data name="ShowExceptionForm_Menu_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="ShowExceptionForm_Menu_View" xml:space="preserve">
+    <value>Internal view</value>
+  </data>
+  <data name="ShowExceptionForm_Msg_NoStackTrace" xml:space="preserve">
+    <value>Stack trace is not available</value>
+  </data>
+  <data name="ShowExceptionForm_Msg_StackTraceError" xml:space="preserve">
+    <value>Stack trace extracting error</value>
+  </data>
+  <data name="ShowExceptionForm_Msg_Stopped" xml:space="preserve">
+    <value>Showing the debug dialog is stopped, but the errors are not vanished. Close application as soon as possible</value>
+  </data>
+  <data name="ShowExceptionForm_Title_Stopped" xml:space="preserve">
+    <value>Error debug stopped</value>
+  </data>
+  <data name="Btn_Text_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Cmd_Menu_Debug_Changes" xml:space="preserve">
+    <value>Debug changes</value>
+  </data>
+  <data name="Cmd_Menu_Debug_Form" xml:space="preserve">
+    <value>Debug form</value>
+  </data>
+  <data name="ExtEditDialogForm_ErrTitle_Writing" xml:space="preserve">
+    <value>Data writing error</value>
+  </data>
+  <data name="ExtEditDialogForm_Err_InvalidState" xml:space="preserve">
+    <value>Invalid form state: {0}</value>
+  </data>
+  <data name="ExtEditDialogForm_Err_WriteDataCall" xml:space="preserve">
+    <value>Calling the method WriteData() is not allowed from the button click handlers</value>
+  </data>
+  <data name="ExtEditDialogForm_Err_WritingInProgress" xml:space="preserve">
+    <value>Previous writing is still in progress</value>
+  </data>
+  <data name="ExtEditDialogForm_Msg_CancelWarning" xml:space="preserve">
+    <value>Data in editor '{0}' has been changed. Do you really want to exit and lost the changes?</value>
+  </data>
+  <data name="ExtEditDialogForm_Name_ChangedInfoList" xml:space="preserve">
+    <value>Editor form</value>
+  </data>
+  <data name="ExtEditDialogForm_Title_CancelWarning" xml:space="preserve">
+    <value>Exit without saving</value>
+  </data>
+  <data name="ExtEditPage_Name_ChangedInfoList" xml:space="preserve">
+    <value>Page '{0}'</value>
+  </data>
+  <data name="HistFileBrowserDialog_Msg_Overwrite" xml:space="preserve">
+    <value>File '{0}' already exists. Overwrite it?"</value>
+  </data>
+  <data name="HistFileBrowserDialog_Prompt_MainGroup" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="HistFileBrowserDialog_Prompt_Path" xml:space="preserve">
+    <value>Path to file</value>
+  </data>
+  <data name="HistFileBrowserDialog_Title_Form" xml:space="preserve">
+    <value>File selection</value>
+  </data>
+  <data name="HistFileBrowserDialog_Title_Overwrite" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="HistFileBrowserDialog_ToolTip_MainCB" xml:space="preserve">
+    <value>File path text box.
+Use drop-down list to choose one of previously selected path.
+Use 'Browse' button to select path with the system dialog box.</value>
+  </data>
+  <data name="HistFolderBrowserDialog_Err_CreateDir" xml:space="preserve">
+    <value>Folder creation failed. {0}</value>
+  </data>
+  <data name="HistFolderBrowserDialog_Prompt_MainGroup" xml:space="preserve">
+    <value>Directory</value>
+  </data>
+  <data name="HistFolderBrowserDialog_Prompt_Path" xml:space="preserve">
+    <value>Path to directory</value>
+  </data>
+  <data name="HistFolderBrowserDialog_Title_Form" xml:space="preserve">
+    <value>Folder selection</value>
+  </data>
+  <data name="HistFolderBrowserDialog_ToolTip_MainCB" xml:space="preserve">
+    <value>Directory path text box.
+Use drop-down list to choose one of previously selected path.
+Use 'Browse' button to select path with the system dialog box.</value>
+  </data>
+  <data name="HistFolderBrowserDialog_ToolTip_SubFolders" xml:space="preserve">
+    <value>If the check box is set, the nested directories will be also viewed</value>
+  </data>
+  <data name="TextSearchForm_Text_AtEnd" xml:space="preserve">
+    <value>&amp;At the end</value>
+  </data>
+  <data name="TextSearchForm_Text_AtStart" xml:space="preserve">
+    <value>&amp;At the start</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_CaseSens" xml:space="preserve">
+    <value>If flag is set, the letter case has matter.
+Otherwise case ignored.</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_Direction" xml:space="preserve">
+    <value>Direction for the row enumeration: toward to end or beginning</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_From" xml:space="preserve">
+    <value>Defines the table part to search in. It could be a half or the whole table</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_SimilarCharsDiff" xml:space="preserve">
+    <value>If flag is set, the similar letter supposed to be different.
+Otherwise the cyrillic letter 'А' and latin 'A' are different</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_Text" xml:space="preserve">
+    <value>Text which should be found</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_Where" xml:space="preserve">
+    <value>Searching in all columns is slower for a large table. Use the current-column mode if you know in which column text could be found. Select the required current column before.</value>
+  </data>
+  <data name="TextSearchForm_ToolTip_Whole" xml:space="preserve">
+    <value>If flag is set, cells will be found if the context is equal the text to search.
+Otherwise if's enough to find the cell context contains the text as a part.</value>
+  </data>
+  <data name="TextSearch_Err_NoColumns" xml:space="preserve">
+    <value>Data view doesn't contain columns</value>
+  </data>
+  <data name="TextSearch_Err_NoCurrentRow" xml:space="preserve">
+    <value>Cannot continue to search because there is no current row</value>
+  </data>
+  <data name="TextSearch_Err_NoRows" xml:space="preserve">
+    <value>Data view doesn't contain rows</value>
+  </data>
+  <data name="TextSearch_Err_NoText" xml:space="preserve">
+    <value>View has no text </value>
+  </data>
+  <data name="TextSearch_Err_NotFound" xml:space="preserve">
+    <value>Text '{0}' has not been found</value>
+  </data>
+  <data name="TextSearch_Err_NotStarted" xml:space="preserve">
+    <value>Searching has not been started</value>
+  </data>
+  <data name="TextSearch_Phase_Search" xml:space="preserve">
+    <value>Text search</value>
+  </data>
+  <data name="TextSearch_Phase_SearchAllRows" xml:space="preserve">
+    <value>Search all rows</value>
+  </data>
+  <data name="TextSearch_Title_Result" xml:space="preserve">
+    <value>Search results</value>
+  </data>
+  <data name="Btn_Name_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Btn_Name_Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="Clipboard_Err_Empty" xml:space="preserve">
+    <value>Clipboard is empty</value>
+  </data>
+  <data name="FileCopier_Err_CheckBytes" xml:space="preserve">
+    <value>File copying error. Destination file contents is different</value>
+  </data>
+  <data name="FileCopier_Err_CheckDiskFail" xml:space="preserve">
+    <value>File '{0}' validation failed. {1}</value>
+  </data>
+  <data name="FileCopier_Err_CheckLen" xml:space="preserve">
+    <value>Source file has length {0}, but written file has {1}</value>
+  </data>
+  <data name="FileCopier_Msg_Cancel" xml:space="preserve">
+    <value>Cancel operation?</value>
+  </data>
+  <data name="FileCopier_Msg_ChangeFloppy" xml:space="preserve">
+    <value>Insert next floppy disk into the drive {0} to copy file '{1}'. File size is: {2}, but free space on the floppy is {3}. Press &lt;Yes&gt; after inserting an new floppy. Press &lt;No&gt; to show cleaning dialog box</value>
+  </data>
+  <data name="FileCopier_Msg_CheckDisk" xml:space="preserve">
+    <value>To validate {0} written file(s), extract the floppy disk and put it back againобратно</value>
+  </data>
+  <data name="FileCopier_Msg_ClearDialogDelete" xml:space="preserve">
+    <value>Delete all files ({0}) and directories ({1})</value>
+  </data>
+  <data name="FileCopier_Msg_ClearDialogExplorer" xml:space="preserve">
+    <value>Run Windows Explorer</value>
+  </data>
+  <data name="FileCopier_Msg_ConfirmDelele" xml:space="preserve">
+    <value>All exist files and directories on the drive {0} will be UNRECOVERABLE DELETED. Confirm your intension to clear the disk</value>
+  </data>
+  <data name="FileCopier_Msg_SizeAsDir" xml:space="preserve">
+    <value>Directory</value>
+  </data>
+  <data name="FileCopier_Msg_SizeAsFileAttr" xml:space="preserve">
+    <value>Attributes</value>
+  </data>
+  <data name="FileCopier_Phase_ClearDisk" xml:space="preserve">
+    <value>Disk {0} cleaning</value>
+  </data>
+  <data name="FileCopier_Phase_Copy" xml:space="preserve">
+    <value>File copying</value>
+  </data>
+  <data name="FileCopier_Phase_DeleteDir" xml:space="preserve">
+    <value>Deleting directory '{0}'</value>
+  </data>
+  <data name="FileCopier_Phase_DeleteFile" xml:space="preserve">
+    <value>Deleting file '{0}'</value>
+  </data>
+  <data name="FileCopier_Phase_Prepare" xml:space="preserve">
+    <value>Preparing to copy</value>
+  </data>
+  <data name="FileCopier_Title_Cancel" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="FileCopier_Title_ChangeFloppy" xml:space="preserve">
+    <value>Floppy disk change</value>
+  </data>
+  <data name="FileCopier_Title_CheckDisk" xml:space="preserve">
+    <value>Write validation</value>
+  </data>
+  <data name="FileCopier_Title_ClearDialog" xml:space="preserve">
+    <value>Clear drive {0}</value>
+  </data>
+  <data name="FileCopier_Title_ClearDialogGroupTitle" xml:space="preserve">
+    <value>What to do</value>
+  </data>
+  <data name="FileCopier_Title_ConfirmDelele" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="FileCopier_Title_FreeSpaceDetectionError" xml:space="preserve">
+    <value>Error while free space detection on drive  {0}</value>
+  </data>
+  <data name="GridConfig_Err_ClipboardNoData" xml:space="preserve">
+    <value>Clipboard doesn't contain data for any data view settings</value>
+  </data>
+  <data name="GridConfig_Err_NoDefaults" xml:space="preserve">
+    <value>Default settings are not defined</value>
+  </data>
+  <data name="GridConfig_Msg_Default" xml:space="preserve">
+    <value>Defauls</value>
+  </data>
+  <data name="GridConfig_Title_SelDefaults" xml:space="preserve">
+    <value>Select default settings</value>
+  </data>
+  <data name="GridConfig_ToolTip_Copy" xml:space="preserve">
+    <value>Copy current settings from this dialog to the clipboard</value>
+  </data>
+  <data name="GridConfig_ToolTip_Default" xml:space="preserve">
+    <value>Reset column settings and tooltip to their original state</value>
+  </data>
+  <data name="GridConfig_ToolTip_Paste" xml:space="preserve">
+    <value>Replaces current setiings in this dialog to another from the clipboard.
+If settings were copied from another grid view, the only compatible settins will be pasted</value>
+  </data>
+  <data name="Clipboard_ErrTitle_PasteFilters" xml:space="preserve">
+    <value>Error pasting filter '{0}' from the clipboard</value>
+  </data>
+  <data name="Clipboard_Err_FiltersDiffDB" xml:space="preserve">
+    <value>Filter in clipboard belongs the different database</value>
+  </data>
+  <data name="Clipboard_Err_NoFilters" xml:space="preserve">
+    <value>There are no filters in the clipboard</value>
+  </data>
+  <data name="Clipboard_Err_OtherFilters" xml:space="preserve">
+    <value>Filters in clipboard are different</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Copy" xml:space="preserve">
+    <value>&amp;Copy</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Cut" xml:space="preserve">
+    <value>Cu&amp;t</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Paste" xml:space="preserve">
+    <value>&amp;Paste</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_ColTitle_DisplayName" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_ColTitle_FilterText" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Menu_ClearAllFilters" xml:space="preserve">
+    <value>Clear all filters</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Menu_ViewFiltersXML" xml:space="preserve">
+    <value>View filters as XML</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Msg_NoFilters" xml:space="preserve">
+    <value>Filters are not set</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Name_Default" xml:space="preserve">
+    <value>{0} - Filter set</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_Name_PasteFormat" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_ToolTip_Copy" xml:space="preserve">
+    <value>Copy all filters from this dialog to the clipboard</value>
+  </data>
+  <data name="EFPGridFilterEditorGridView_ToolTip_Paste" xml:space="preserve">
+    <value>Replaces current filtres with previously copied to clipboard. If filters were copied from another view, the only same filters will be replaced. All remainded filters will be clean.</value>
+  </data>
+  <data name="Btn_Text_More" xml:space="preserve">
+    <value>&amp;More</value>
+  </data>
+  <data name="Btn_ToolTip_More" xml:space="preserve">
+    <value>Auxilirialy command items</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleDate" xml:space="preserve">
+    <value>Date input</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleDateTime" xml:space="preserve">
+    <value>Date and time input</value>
+  </data>
+  <data name="DateTimeInputDialog_Msg_TitleTime" xml:space="preserve">
+    <value>Time input</value>
+  </data>
+  <data name="ListSelectDialog_ColTitle_Sub" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="ListSelectDialog_Err_ItemNotFound" xml:space="preserve">
+    <value>Item '{0}' not found</value>
+  </data>
+  <data name="ListSelectDialog_Err_NoChanges" xml:space="preserve">
+    <value>Nothing has been changed</value>
+  </data>
+  <data name="ListSelectDialog_Err_NoneChecked" xml:space="preserve">
+    <value>There must be at least one checked item</value>
+  </data>
+  <data name="ListSelectDialog_Err_NoSelection" xml:space="preserve">
+    <value>There is no selected item</value>
+  </data>
+  <data name="ListSelectDialog_Err_PasteTextWithCommas" xml:space="preserve">
+    <value>Text in the clipboard contains commas while the only one item in the list can be selected</value>
+  </data>
+  <data name="ListSelectDialog_Menu_CopyAllText" xml:space="preserve">
+    <value>Copy whole list</value>
+  </data>
+  <data name="ListSelectDialog_Msg_PasteAdd" xml:space="preserve">
+    <value>Add to already checked items</value>
+  </data>
+  <data name="ListSelectDialog_Msg_PasteReplace" xml:space="preserve">
+    <value>Replace current checked items</value>
+  </data>
+  <data name="ListSelectDialog_ToolTip_Copy" xml:space="preserve">
+    <value>Copy text from selected items to the clipboard</value>
+  </data>
+  <data name="ListSelectDialog_ToolTip_Paste" xml:space="preserve">
+    <value>Set checkmarks for the items according to the text lines in the clipboard</value>
+  </data>
+  <data name="NumInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="NumInputDialog_Msg_Title" xml:space="preserve">
+    <value>Number input</value>
+  </data>
+  <data name="PasswordInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PasswordInputDialog_Msg_Title" xml:space="preserve">
+    <value>Password input</value>
+  </data>
+  <data name="TextInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="TextInputDialog_Msg_Title" xml:space="preserve">
+    <value>Text input</value>
+  </data>
+  <data name="ListSelectDialog_Err_NoItems" xml:space="preserve">
+    <value>There is no item to select</value>
+  </data>
+  <data name="ListSelectDialog_Msg_TitleMultiSelect" xml:space="preserve">
+    <value>Selection from the list</value>
+  </data>
+  <data name="ListSelectDialog_Msg_TitleSingleSelect" xml:space="preserve">
+    <value>Selection from the list</value>
+  </data>
+  <data name="NumRangeInputDialog_Err_Inverted" xml:space="preserve">
+    <value>Minimum value is greater than maximum value</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_Prompt" xml:space="preserve">
+    <value>Range</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_RangeIsEmpty" xml:space="preserve">
+    <value>Range is not set</value>
+  </data>
+  <data name="NumRangeInputDialog_Msg_Title" xml:space="preserve">
+    <value>Number range input</value>
+  </data>
+  <data name="NumRangeInputDialog_Name_2eq1" xml:space="preserve">
+    <value>Maximum = Minimum</value>
+  </data>
+  <data name="NumRangeInputDialog_ToolTip_2eq1" xml:space="preserve">
+    <value>Assigns the 'Maximum' field value from the field 'Minimum'</value>
+  </data>
+  <data name="InputDataGridDialog_Msg_Title" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="ParamSetComboBox_Name_DelButton" xml:space="preserve">
+    <value>Remove preset</value>
+  </data>
+  <data name="ParamSetComboBox_Name_SaveButton" xml:space="preserve">
+    <value>Save preset</value>
+  </data>
+  <data name="ParamSetComboBox_ToolTip_DelButton" xml:space="preserve">
+    <value>Remove user preset with the given name</value>
+  </data>
+  <data name="ParamSetComboBox_ToolTip_SaveButton" xml:space="preserve">
+    <value>Save cuurent values as a new user preset.
+You must input the name of preset before pressing the button.</value>
+  </data>
+  <data name="SelectCompositionForm_ErrTitle_SetImage" xml:space="preserve">
+    <value>Image set failed. {0}</value>
+  </data>
+  <data name="SelectCompositionForm_Err_CannotDeleteCurrent" xml:space="preserve">
+    <value>Unable removing current composition</value>
+  </data>
+  <data name="SelectCompositionForm_Err_NaneIsEmpty" xml:space="preserve">
+    <value>Name of a composition must be given before saving</value>
+  </data>
+  <data name="SelectCompositionForm_Err_NoImage" xml:space="preserve">
+    <value>There is no image</value>
+  </data>
+  <data name="SelectCompositionForm_Msg_ConfirmDel" xml:space="preserve">
+    <value>Do you want to delete the composition '{0}'?</value>
+  </data>
+  <data name="SelectCompositionForm_Msg_CurrentComposition" xml:space="preserve">
+    <value>[ Current composition ]</value>
+  </data>
+  <data name="SelectCompositionForm_Msg_SaveInHistory" xml:space="preserve">
+    <value>Save current composition in the history list instead of named compositions?</value>
+  </data>
+  <data name="SelectCompositionForm_Name_XmlButton" xml:space="preserve">
+    <value>XML view</value>
+  </data>
+  <data name="SelectCompositionForm_ToolTip_XmlButton" xml:space="preserve">
+    <value>Show current composition as XML text</value>
+  </data>
+  <data name="SettingsDialog_Err_NoPages" xml:space="preserve">
+    <value>There are no dialog pages</value>
+  </data>
+  <data name="SettingsDialog_Name_Default" xml:space="preserve">
+    <value>As default: {0}</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmArchitecture" xml:space="preserve">
+    <value>Architecture</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmCopyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmCreatied" xml:space="preserve">
+    <value>File created</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmDebug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmLocation" xml:space="preserve">
+    <value>Path to assembly</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmName" xml:space="preserve">
+    <value>Assembly name</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmOrder" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="AboutDialog_ColTitle_AsmVersion" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="AboutDialog_Phase_Assemblies" xml:space="preserve">
+    <value>Getting loaded assembly list</value>
+  </data>
+  <data name="AboutDialog_Title_Assemblies" xml:space="preserve">
+    <value>Loaded assemblies</value>
+  </data>
+  <data name="AboutDialog_Title_AssembliesGAC" xml:space="preserve">
+    <value>From Global Assmbly Cache</value>
+  </data>
+  <data name="AboutDialog_Title_AssembliesPrivate" xml:space="preserve">
+    <value>Private modules</value>
+  </data>
+  <data name="AboutDialog_ToolTip_AsmArchitecture" xml:space="preserve">
+    <value>Supported processor architecture</value>
+  </data>
+  <data name="AboutDialog_ToolTip_AsmDebug" xml:space="preserve">
+    <value>If marked, the assembly compiled in debug mode.
+If not marked, the assembly complied with optimization,</value>
+  </data>
+  <data name="AboutDialog_ToolTip_AssemblyCount" xml:space="preserve">
+    <value>Assembly loaded total: {0}</value>
+  </data>
+  <data name="SettingsDialog_Arg_PageTemplateIsForm" xml:space="preserve">
+    <value>The control cannot be a Form class. If you want to use a template form, create a Panel on the form. Panel should contains controls.. Then send the Panel as an argument.</value>
+  </data>
+  <data name="SettingsDialog_Arg_PageTemplateIsTabPage" xml:space="preserve">
+    <value>The control cannot be a TabPage class. If you want to use a template form, with TabControl create a Panel on the TabPage. Panel should contains controls.. Then send the Panel as an argument.</value>
+  </data>
+  <data name="AboutDialog_Err_AttrException" xml:space="preserve">
+    <value>Error getting attributes. {0}</value>
+  </data>
+  <data name="AboutDialog_Err_EntryAsmException" xml:space="preserve">
+    <value>Error defining entry assembly. {0}</value>
+  </data>
+  <data name="AboutDialog_Err_UnknownEntryAsm" xml:space="preserve">
+    <value>Cannot define entry assembly</value>
+  </data>
+  <data name="AboutDialog_Msg_Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="AboutDialog_Order_AsmArchitecture" xml:space="preserve">
+    <value>Architecture</value>
+  </data>
+  <data name="AboutDialog_Order_AsmCopyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="AboutDialog_Order_AsmCreatedASC" xml:space="preserve">
+    <value>File created (older first)</value>
+  </data>
+  <data name="AboutDialog_Order_AsmCreatedDESC" xml:space="preserve">
+    <value>File created (newer first)</value>
+  </data>
+  <data name="AboutDialog_Order_AsmName" xml:space="preserve">
+    <value>Assembly name</value>
+  </data>
+  <data name="AboutDialog_Order_AsmOrder" xml:space="preserve">
+    <value>Loading order</value>
+  </data>
+  <data name="AboutDialog_Order_AsmPath" xml:space="preserve">
+    <value>Path to assembly</value>
+  </data>
+  <data name="AboutDialog_Title_Main" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AboutDialog_Title_WithAppName" xml:space="preserve">
+    <value>About '{0}'</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_DataGridViewSetCurrentCellAddressCore" xml:space="preserve">
+    <value>Application.ThreadException catched. Error setting current cell in DataGridView. Exception registered once.</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_IconDisposed" xml:space="preserve">
+    <value>Application.ThreadException catched. Error access to disposed Icon object. Exception registered once.</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_ToolStripSetItemLocation" xml:space="preserve">
+    <value>Application.ThreadException catched. Error when ToolStrip object position defined. Exception registered once.</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_UnhandledInternalError" xml:space="preserve">
+    <value>Internal error in UnhandledException</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_UnhandledNoTermination" xml:space="preserve">
+    <value>Not catched exception UnhandledException without program termination</value>
+  </data>
+  <data name="ApplicationExceptionHandler_ErrTitle_UnhandledWithTermination" xml:space="preserve">
+    <value>Not catched exception UnhandledException with program termination</value>
+  </data>
+  <data name="BackgroundPrint_Phase_AddDoc" xml:space="preserve">
+    <value>Document is putting in the queue</value>
+  </data>
+  <data name="BackgroundPrint_Phase_Default" xml:space="preserve">
+    <value>Backgrount document printing</value>
+  </data>
+  <data name="BackgroundPrint_Phase_Page" xml:space="preserve">
+    <value>page {0}</value>
+  </data>
+  <data name="BackgroundPrint_Phase_PrintDoc" xml:space="preserve">
+    <value>Background printing of document '{0}' is in progress. {1}. The queue contains {2} more document(s)</value>
+  </data>
+  <data name="BackgroundPrint_Phase_Terminating" xml:space="preserve">
+    <value>printing finishing</value>
+  </data>
+  <data name="BackgroundPrint_ToolTip_PrintPage" xml:space="preserve">
+    <value>Document '{0}' page {1} is printed</value>
+  </data>
+  <data name="BackgroundPrint_ToolTip_Terminating" xml:space="preserve">
+    <value>Document '{0}' print terminating</value>
+  </data>
+  <data name="Btn_Text_Back" xml:space="preserve">
+    <value>&amp;Back</value>
+  </data>
+  <data name="Btn_Text_Finish" xml:space="preserve">
+    <value>&amp;Finish</value>
+  </data>
+  <data name="Btn_Text_Forward" xml:space="preserve">
+    <value>&amp;Forward</value>
+  </data>
+  <data name="Cmd_ToolTip_View_BackgroundPrintStatus" xml:space="preserve">
+    <value>Background printing state panel. No printing jobs.</value>
+  </data>
+  <data name="Common_Err_AppDomainUnhandledException" xml:space="preserve">
+    <value>Unhanded exception (событие AppDomain.UnhandledException)</value>
+  </data>
+  <data name="EFPAppExecProcCallList_ErrTitle_Running" xml:space="preserve">
+    <value>Execution {0} failed</value>
+  </data>
+  <data name="EFPAppExecProcCallList_Phase_Running" xml:space="preserve">
+    <value>Executing {0}</value>
+  </data>
+  <data name="EFPApp_ErrTitle_CreateSDIForm" xml:space="preserve">
+    <value>Cannot create an instance of form '{0}' for the SDI interface. An empty window will be created instead.</value>
+  </data>
+  <data name="EFPApp_ErrTitle_DialogPosition" xml:space="preserve">
+    <value>Error when defining dialog position</value>
+  </data>
+  <data name="EFPApp_ErrTitle_DialogRunnerDetach" xml:space="preserve">
+    <value>Error when DialogRunner detached</value>
+  </data>
+  <data name="EFPApp_ErrTitle_LoadComposition" xml:space="preserve">
+    <value>Cannot restore current workspace composition</value>
+  </data>
+  <data name="EFPApp_ErrTitle_RICallBack" xml:space="preserve">
+    <value>Callback handle error</value>
+  </data>
+  <data name="EFPApp_ErrTitle_SaveComposition" xml:space="preserve">
+    <value>Cannot save current workspace composition</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ShellExecute" xml:space="preserve">
+    <value>File open error</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ShowExceptionInternal" xml:space="preserve">
+    <value>Error when show exception message</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ToolFormHide" xml:space="preserve">
+    <value>Set tool forms off</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ToolFormShow" xml:space="preserve">
+    <value>Set tool forms on</value>
+  </data>
+  <data name="EFPApp_Err_CreatorClassType" xml:space="preserve">
+    <value>Type {0} is not a Form class descendant and does not implement the IEFPFormCreator interface</value>
+  </data>
+  <data name="EFPApp_Err_DirIsEmpty" xml:space="preserve">
+    <value>Directory is not given</value>
+  </data>
+  <data name="EFPApp_Err_DirNotFound" xml:space="preserve">
+    <value>Directory '{0}' not found</value>
+  </data>
+  <data name="EFPApp_Err_FileNotFound" xml:space="preserve">
+    <value>File {0} not found</value>
+  </data>
+  <data name="EFPApp_Err_MainWindowShown" xml:space="preserve">
+    <value>Main window has already been shown</value>
+  </data>
+  <data name="EFPApp_Err_NoHelpContext" xml:space="preserve">
+    <value>Help context is not given</value>
+  </data>
+  <data name="EFPApp_Err_NoInitAppCalled" xml:space="preserve">
+    <value>Method EFPApp.InitApp() has not been called</value>
+  </data>
+  <data name="EFPApp_Err_NoInterface" xml:space="preserve">
+    <value>There is no user interface set</value>
+  </data>
+  <data name="EFPApp_Err_NotMainThread" xml:space="preserve">
+    <value>Call not from the EFPApp.MainThread</value>
+  </data>
+  <data name="EFPApp_Err_SetUnknownInterface" xml:space="preserve">
+    <value>Unknown user interface type '{0}' inquired. The user interface '{1}' will be used instead.</value>
+  </data>
+  <data name="EFPApp_Err_ShellExecuteFailed" xml:space="preserve">
+    <value>Cannot open file '{0}'</value>
+  </data>
+  <data name="EFPApp_Err_ShowWindowsExplorerFailed" xml:space="preserve">
+    <value>Running {0} failed</value>
+  </data>
+  <data name="EFPApp_Err_ShowWindowsExplorerNotSupported" xml:space="preserve">
+    <value>There is no known application for viewing directories in the current operating system</value>
+  </data>
+  <data name="EFPApp_Err_ShowWindowsExplorerRunning" xml:space="preserve">
+    <value>Previous command to start the Explorer is in progress</value>
+  </data>
+  <data name="EFPApp_Msg_FormMinimized" xml:space="preserve">
+    <value>{0} (minimized)</value>
+  </data>
+  <data name="EFPApp_Phase_DirExists" xml:space="preserve">
+    <value>Is directory exist test</value>
+  </data>
+  <data name="EFPApp_Phase_FileExists" xml:space="preserve">
+    <value>Is file exist test</value>
+  </data>
+  <data name="EFPApp_Phase_ShowWindowsExplorer" xml:space="preserve">
+    <value>Starting {0}</value>
+  </data>
+  <data name="EFPApp_Title_LoadComposition" xml:space="preserve">
+    <value>Restore workspace composition</value>
+  </data>
+  <data name="EFPApp_Title_SelectForm" xml:space="preserve">
+    <value>Select a window</value>
+  </data>
+  <data name="EFPTwainHandler_ErrTitle_Init" xml:space="preserve">
+    <value>TWAIN initialization failed</value>
+  </data>
+  <data name="EFPTwainHandler_Err_NoMainWindow" xml:space="preserve">
+    <value>Application main window is closed</value>
+  </data>
+  <data name="EFPTwainHandler_Phase_Init" xml:space="preserve">
+    <value>TWAIN initialization</value>
+  </data>
+  <data name="EFPTwainHandler_Phase_Scan" xml:space="preserve">
+    <value>Scan in progress</value>
+  </data>
+  <data name="EFPTwainHandler_Phase_Start" xml:space="preserve">
+    <value>Scan starts</value>
+  </data>
+  <data name="ErrorMessageKind_Title_Errors" xml:space="preserve">
+    <value>Errors</value>
+  </data>
+  <data name="ErrorMessageKind_Title_Infos" xml:space="preserve">
+    <value>Messages</value>
+  </data>
+  <data name="ErrorMessageKind_Title_None" xml:space="preserve">
+    <value>No errors</value>
+  </data>
+  <data name="ErrorMessageKind_Title_Warnings" xml:space="preserve">
+    <value>Warnings</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_Errors" xml:space="preserve">
+    <value>Errors: {0}</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_Infos" xml:space="preserve">
+    <value>Messages: {0}</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_NoMessageList" xml:space="preserve">
+    <value>Error message list is not attached</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_None" xml:space="preserve">
+    <value>There are no error messages</value>
+  </data>
+  <data name="ErrorMessageKind_ToolTip_Warnings" xml:space="preserve">
+    <value>Warnings: {0}</value>
+  </data>
+  <data name="ExtTextRenderer_Err_NotForPaint" xml:space="preserve">
+    <value>Object is suitable only for measurement</value>
+  </data>
+  <data name="FileEditorFormHandler_Title_Default" xml:space="preserve">
+    <value>No name</value>
+  </data>
+  <data name="MessageBox_Title_Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="MessageBox_Title_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MessageBox_Title_Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="MessageBox_Title_Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Wizard_Arg_ControlIsForm" xml:space="preserve">
+    <value>Control is a Form class. If you use a template form, add a panel.  Put controls on the Panel and send the Panel as an argument.</value>
+  </data>
+  <data name="Wizard_Arg_ControlIsTabPage" xml:space="preserve">
+    <value>Control is a TabPage class. If you use a template form with TabControl, add a Panel to TabPage . Put controls on the Panel and send the Panel as an argument.</value>
+  </data>
+  <data name="Wizard_Arg_TempPageAlreadyAttached" xml:space="preserve">
+    <value>Temprary page already attached</value>
+  </data>
+  <data name="Wizard_Err_AlreadyStarted" xml:space="preserve">
+    <value>Property can be set until the wizard started</value>
+  </data>
+  <data name="Wizard_Err_BackFromFirstStep" xml:space="preserve">
+    <value>Cannot go back from the first step</value>
+  </data>
+  <data name="Wizard_Err_NoNextStep" xml:space="preserve">
+    <value>Next step is not defined</value>
+  </data>
+  <data name="Clipboard_ErrTitle_GetData" xml:space="preserve">
+    <value>Error extracting data from the clipboard</value>
+  </data>
+  <data name="Clipboard_ErrTitle_SetData" xml:space="preserve">
+    <value>Error writing data to the clipboard</value>
+  </data>
+  <data name="Clipboard_Err_NoText" xml:space="preserve">
+    <value>There is no text in the clipboard</value>
+  </data>
+  <data name="Clipboard_Phase_GetData" xml:space="preserve">
+    <value>Extracting data from the clipboard</value>
+  </data>
+  <data name="Clipboard_Phase_SetData" xml:space="preserve">
+    <value>Copying data to the clipboard</value>
+  </data>
+  <data name="Cmd_Menu_Edit" xml:space="preserve">
+    <value>&amp;Edit</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Find" xml:space="preserve">
+    <value>&amp;Find ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_FindNext" xml:space="preserve">
+    <value>Find &amp;next</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Goto" xml:space="preserve">
+    <value>Go to ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_IncSearch" xml:space="preserve">
+    <value>Incremental search</value>
+  </data>
+  <data name="Cmd_Menu_Edit_PasteSpecial" xml:space="preserve">
+    <value>Paste &amp;special ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Redo" xml:space="preserve">
+    <value>&amp;Redo</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Replace" xml:space="preserve">
+    <value>Replace ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_SelectAll" xml:space="preserve">
+    <value>Select &amp;all</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Undo" xml:space="preserve">
+    <value>&amp;Undo</value>
+  </data>
+  <data name="Cmd_Menu_File" xml:space="preserve">
+    <value>&amp;File</value>
+  </data>
+  <data name="Cmd_Menu_File_Exit" xml:space="preserve">
+    <value>E&amp;xit</value>
+  </data>
+  <data name="Cmd_Menu_File_New" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Cmd_Menu_File_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Cmd_Menu_File_PageSetup" xml:space="preserve">
+    <value>Page setup ...</value>
+  </data>
+  <data name="Cmd_Menu_File_Print" xml:space="preserve">
+    <value>Print ...</value>
+  </data>
+  <data name="Cmd_Menu_File_PrintPreview" xml:space="preserve">
+    <value>Print preview</value>
+  </data>
+  <data name="Cmd_Menu_File_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Cmd_Menu_File_SaveAs" xml:space="preserve">
+    <value>Save as</value>
+  </data>
+  <data name="Cmd_Menu_Help" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="Cmd_Menu_Help_About" xml:space="preserve">
+    <value>About ...</value>
+  </data>
+  <data name="Cmd_Menu_Help_Contents" xml:space="preserve">
+    <value>&amp;Contents</value>
+  </data>
+  <data name="Cmd_Menu_Help_ContextHelp" xml:space="preserve">
+    <value>Context help</value>
+  </data>
+  <data name="Cmd_Menu_Help_Index" xml:space="preserve">
+    <value>&amp;Index</value>
+  </data>
+  <data name="Cmd_Menu_SendTo" xml:space="preserve">
+    <value>Send &amp;to</value>
+  </data>
+  <data name="Cmd_Menu_SendTo_InternetBrowser" xml:space="preserve">
+    <value>Internet browser</value>
+  </data>
+  <data name="Cmd_Menu_SendTo_Notepad" xml:space="preserve">
+    <value>Notepad</value>
+  </data>
+  <data name="Cmd_Menu_ToolTip_InternetBrowser" xml:space="preserve">
+    <value>Open with an internet browser</value>
+  </data>
+  <data name="Cmd_Menu_View" xml:space="preserve">
+    <value>&amp;View</value>
+  </data>
+  <data name="Cmd_Menu_View_FullScreen" xml:space="preserve">
+    <value>Full screen</value>
+  </data>
+  <data name="Cmd_Menu_View_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Cmd_Menu_View_RestoreToolBars" xml:space="preserve">
+    <value>&amp;Restore</value>
+  </data>
+  <data name="Cmd_Menu_View_StatusBarVisible" xml:space="preserve">
+    <value>&amp;Status bar</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarOnBottom" xml:space="preserve">
+    <value>&amp;Bottom</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarOnLeft" xml:space="preserve">
+    <value>&amp;Left</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarOnRight" xml:space="preserve">
+    <value>&amp;Right</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarOnTop" xml:space="preserve">
+    <value>&amp;Top</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBars" xml:space="preserve">
+    <value>&amp;Toolbars</value>
+  </data>
+  <data name="Cmd_Menu_View_ToolBarVisible" xml:space="preserve">
+    <value>Panel is visible</value>
+  </data>
+  <data name="Cmd_Menu_Window" xml:space="preserve">
+    <value>&amp;Window</value>
+  </data>
+  <data name="Cmd_Menu_Window_ArrangeIcons" xml:space="preserve">
+    <value>Arrange icons</value>
+  </data>
+  <data name="Cmd_Menu_Window_Cascade" xml:space="preserve">
+    <value>Cascade</value>
+  </data>
+  <data name="Cmd_Menu_Window_CloseAll" xml:space="preserve">
+    <value>Close all</value>
+  </data>
+  <data name="Cmd_Menu_Window_CloseAllButThis" xml:space="preserve">
+    <value>Close all but this</value>
+  </data>
+  <data name="Cmd_Menu_Window_NewMainWindow" xml:space="preserve">
+    <value>New main window</value>
+  </data>
+  <data name="Cmd_Menu_Window_OtherWindows" xml:space="preserve">
+    <value>Other windows ...</value>
+  </data>
+  <data name="Cmd_Menu_Window_SavedCompositions" xml:space="preserve">
+    <value>Saved compositions</value>
+  </data>
+  <data name="Cmd_Menu_Window_TileHorizotal" xml:space="preserve">
+    <value>Tile horizontal</value>
+  </data>
+  <data name="Cmd_Menu_Window_TileVertical" xml:space="preserve">
+    <value>Tile vertical</value>
+  </data>
+  <data name="Cmd_ToolTip_File_PrintDefault" xml:space="preserve">
+    <value>Print on the default printer</value>
+  </data>
+  <data name="Cmd_ToolTip_Help_Contents" xml:space="preserve">
+    <value>Help contents</value>
+  </data>
+  <data name="Cmd_ToolTip_Help_Index" xml:space="preserve">
+    <value>Help index</value>
+  </data>
+  <data name="Cmd_ToolTip_SendTo_App" xml:space="preserve">
+    <value>Open with {0}</value>
+  </data>
+  <data name="Cmd_ToolTip_SendTo_NotePad" xml:space="preserve">
+    <value>Open with Notepad</value>
+  </data>
+  <data name="EFPApp_Arg_UnknownStdCommandCategoryAndName" xml:space="preserve">
+    <value>Unknown standard command with the category '{0}' and name '{1}'</value>
+  </data>
+  <data name="EFPApp_ErrTitle_InterfaceChanged" xml:space="preserve">
+    <value>Error in main menu commands state initialization when user interface switched</value>
+  </data>
+  <data name="EFPApp_ErrTitle_Wait" xml:space="preserve">
+    <value>EFPApp.BeginWait()/EndWait() error catched once</value>
+  </data>
+  <data name="EFPApp_Err_NoCurrentForm" xml:space="preserve">
+    <value>There is no current window</value>
+  </data>
+  <data name="EFPApp_Msg_RestoreToolBars_AllWindows" xml:space="preserve">
+    <value>For all open windows</value>
+  </data>
+  <data name="EFPApp_Msg_RestoreToolBars_CurrentWindow" xml:space="preserve">
+    <value>For the current window only</value>
+  </data>
+  <data name="EFPApp_Phase_Wait" xml:space="preserve">
+    <value>Wait</value>
+  </data>
+  <data name="EFPApp_Title_RestoreToolBars" xml:space="preserve">
+    <value>Toolbars restoring</value>
+  </data>
+  <data name="EFPCommandItem_ErrTitle_Click" xml:space="preserve">
+    <value>Error handling command '{0}'</value>
+  </data>
+  <data name="EFPCommandItem_ErrTitle_ClickUnhandled" xml:space="preserve">
+    <value>Unhandler exception in command handler. Call the application developer.</value>
+  </data>
+  <data name="EFPCommandItem_Err_AnotherOwner" xml:space="preserve">
+    <value>Command '{0}' has been attached to another command list</value>
+  </data>
+  <data name="EFPCommandItem_Err_Disabled" xml:space="preserve">
+    <value>Command disabled: '{0}'</value>
+  </data>
+  <data name="EFPCommandItem_Err_HasUIObjs" xml:space="preserve">
+    <value>Command already has an attached UI object</value>
+  </data>
+  <data name="EFPCommandItem_Err_Hidden" xml:space="preserve">
+    <value>Command hidden: '{0}'</value>
+  </data>
+  <data name="EFPCommandItem_Err_Nested" xml:space="preserve">
+    <value>Previous executing of command '{0}' is in progress</value>
+  </data>
+  <data name="EFPCommandItem_Err_NoHandler" xml:space="preserve">
+    <value>There is no handler for the command '{0}'</value>
+  </data>
+  <data name="EFPCommandItem_Err_ParentNotAttached" xml:space="preserve">
+    <value>Parent command '{0}' has not been attached to the current command list</value>
+  </data>
+  <data name="EFPCommandItem_Name_StatusPanel" xml:space="preserve">
+    <value>[status bar panel]</value>
+  </data>
+  <data name="EFPMenu_Arg_AnoherMenu" xml:space="preserve">
+    <value>Command '{0}' is situated in another menu</value>
+  </data>
+  <data name="EFPMenu_Arg_NotInMenu" xml:space="preserve">
+    <value>Command '{0}' has not been added to the menu</value>
+  </data>
+  <data name="EFPMenu_ErrTitle_DelayedInit" xml:space="preserve">
+    <value>Delayed menu initialization failed</value>
+  </data>
+  <data name="EFPMenu_Err_ParentNotAttached" xml:space="preserve">
+    <value>Parent command '{0}' has not been attached to the menu object</value>
+  </data>
+  <data name="EFPMenu_Err_ParentNotInCommadList" xml:space="preserve">
+    <value>Cannot attach the command '{0}' to menu, because parent command '{1}' has not been attached to the command list</value>
+  </data>
+  <data name="EFPMenu_Err_ParentNotInMenu" xml:space="preserve">
+    <value>Cannot attach the command '{0}' to the menu, because parent command '{1}' does not belong to menu</value>
+  </data>
+  <data name="EFPStatuBar_ErrTitle_DetachPanel" xml:space="preserve">
+    <value>Error when status bar panel detached: {0}</value>
+  </data>
+  <data name="FileEditorFormHandler_Msg_NotSaved" xml:space="preserve">
+    <value>Document '{0}' not saved. Save changes?"</value>
+  </data>
+  <data name="Keys_Name_Down" xml:space="preserve">
+    <value>Arrow down</value>
+  </data>
+  <data name="Keys_Name_Left" xml:space="preserve">
+    <value>Arrow left</value>
+  </data>
+  <data name="Keys_Name_OemMinus" xml:space="preserve">
+    <value>Top row [-]</value>
+  </data>
+  <data name="Keys_Name_OemPlus" xml:space="preserve">
+    <value>Top row [=]</value>
+  </data>
+  <data name="Keys_Name_PageDown" xml:space="preserve">
+    <value>PageDown</value>
+  </data>
+  <data name="Keys_Name_PageUp" xml:space="preserve">
+    <value>PageUp</value>
+  </data>
+  <data name="Keys_Name_Return" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="Keys_Name_Right" xml:space="preserve">
+    <value>Arrow right</value>
+  </data>
+  <data name="Keys_Name_Space" xml:space="preserve">
+    <value>Space</value>
+  </data>
+  <data name="Keys_Name_Up" xml:space="preserve">
+    <value>Arrow up</value>
+  </data>
+  <data name="Cmd_Menu_Debug_CurrentSettingsXML" xml:space="preserve">
+    <value>Current dialog settings (XML)</value>
+  </data>
+  <data name="Cmd_Menu_Debug_SavedSettingsXML" xml:space="preserve">
+    <value>Saved settings of the set (XML)</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_Arg_NotSaved" xml:space="preserve">
+    <value>Composition has not been saved</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_ErrTitle_SavePreview" xml:space="preserve">
+    <value>Preview image saving failed</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_Msg_Hist0" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_Msg_Hist1" xml:space="preserve">
+    <value>Second last</value>
+  </data>
+  <data name="EFPAppCompositionHistoryItem_Msg_HistN" xml:space="preserve">
+    <value>Previous nr {0}</value>
+  </data>
+  <data name="EFPAppRI_Arg_BaseProviderForDialog" xml:space="preserve">
+    <value>For the dialog. the BaseProvider must be null</value>
+  </data>
+  <data name="EFPAppRI_Arg_NoCreator" xml:space="preserve">
+    <value>In the list EFPApp.RICreators, none of object could create the windows control for the remote control of type {0}</value>
+  </data>
+  <data name="EFPAppRI_ErrTitle_WriteValues" xml:space="preserve">
+    <value>Value writing error</value>
+  </data>
+  <data name="EFPAppRI_Err_CannotAddToBandPanel" xml:space="preserve">
+    <value>Control item '{0}' cannot be added to a control band</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ExitFailed" xml:space="preserve">
+    <value>Cannot exit the application</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ExtractIconImage" xml:space="preserve">
+    <value>Error extracting icon image</value>
+  </data>
+  <data name="EFPApp_ErrTitle_IdleSingleAction" xml:space="preserve">
+    <value>Error when called the single-call idle handler</value>
+  </data>
+  <data name="EFPApp_ErrTitle_LoadMainImages" xml:space="preserve">
+    <value>Error when loading main images</value>
+  </data>
+  <data name="EFPApp_ErrTitle_RestoreFormUnknownError" xml:space="preserve">
+    <value>Error found on form '{0}' restoring</value>
+  </data>
+  <data name="EFPApp_ErrTitle_ShowForm" xml:space="preserve">
+    <value>Form {0} showing failed</value>
+  </data>
+  <data name="EFPApp_Err_CannotCloseAllForms" xml:space="preserve">
+    <value>Cannot close some open windows</value>
+  </data>
+  <data name="EFPApp_Err_FormAlreadyInMainWindow" xml:space="preserve">
+    <value>Form '{0}' already belongs to main window</value>
+  </data>
+  <data name="EFPApp_Err_LoadCompositionForm" xml:space="preserve">
+    <value>Form '{0}' restoring failed when composition loaded. {1}</value>
+  </data>
+  <data name="EFPApp_Msg_CloseMainWindowCloseCurrent" xml:space="preserve">
+    <value>Close current main window only</value>
+  </data>
+  <data name="EFPApp_Msg_CloseMainWindowExit" xml:space="preserve">
+    <value>Exit the application</value>
+  </data>
+  <data name="EFPApp_Name_FormToolBar" xml:space="preserve">
+    <value>Window toolbar</value>
+  </data>
+  <data name="EFPApp_Phase_GetPrinterList" xml:space="preserve">
+    <value>Gathering installed printers</value>
+  </data>
+  <data name="EFPApp_Phase_GetPrinterProps" xml:space="preserve">
+    <value>Gathering printer '{0}' properties</value>
+  </data>
+  <data name="EFPApp_Phase_LoadFonts" xml:space="preserve">
+    <value>Font list loading</value>
+  </data>
+  <data name="EFPApp_Title_CloseMainWindow" xml:space="preserve">
+    <value>Window '{0}' closing</value>
+  </data>
+  <data name="EFPApp_Title_CloseMainWindowAction" xml:space="preserve">
+    <value>What are you going to do</value>
+  </data>
+  <data name="EFPButton_ErrTitle_Click" xml:space="preserve">
+    <value>Error when handled the button '{0}' click</value>
+  </data>
+  <data name="EFPButton_Err_ClickInProgress" xml:space="preserve">
+    <value>Previous click the button '{0}' has not been handled yet</value>
+  </data>
+  <data name="EFPButton_Err_InsideClickEvent" xml:space="preserve">
+    <value>Cannot be called inside Click event handler</value>
+  </data>
+  <data name="EFPButton_Phase_Click" xml:space="preserve">
+    <value>Button '{0}' click handling</value>
+  </data>
+  <data name="EFPCheckBox_Arg_ThreeStateInGroup" xml:space="preserve">
+    <value>CheckBox item at position {0} has a property value ThreeState=true</value>
+  </data>
+  <data name="EFPCheckBox_Err_GroupNoneChecked" xml:space="preserve">
+    <value>At least one check mark must be set</value>
+  </data>
+  <data name="EFPCheckBox_Err_IndeterminateState" xml:space="preserve">
+    <value>Check mark may be set or clean</value>
+  </data>
+  <data name="EFPErrorMessageListButton_Msg_Errors" xml:space="preserve">
+    <value>Message list contains errors ({0})</value>
+  </data>
+  <data name="EFPErrorMessageListButton_Msg_Warnings" xml:space="preserve">
+    <value>Message list contains warnings ({0})</value>
+  </data>
+  <data name="EFPErrorMessageListButton_Name_Default" xml:space="preserve">
+    <value>Messages</value>
+  </data>
+  <data name="EFPMaskedTextBox_Err_MaskIncomplete" xml:space="preserve">
+    <value>All characters must be entered</value>
+  </data>
+  <data name="EFPMaskedComboBox_ToolTip_ClearButton" xml:space="preserve">
+    <value>Clean the text in the text box</value>
+  </data>
+  <data name="ParamSetComboBox_ErrTitle_ConfigFromControls" xml:space="preserve">
+    <value>Error reading values from controls</value>
+  </data>
+  <data name="ParamSetComboBox_ErrTitle_ConfigToControls" xml:space="preserve">
+    <value>Error writing values to controls</value>
+  </data>
+  <data name="ParamSetComboBox_ErrTitle_ReadHistory" xml:space="preserve">
+    <value>History list reading error</value>
+  </data>
+  <data name="ParamSetComboBox_Err_CannotDelete" xml:space="preserve">
+    <value>This preset cannot be deleted</value>
+  </data>
+  <data name="ParamSetComboBox_Err_NameStartsWithBracket" xml:space="preserve">
+    <value>Preset name should not start with a bracket</value>
+  </data>
+  <data name="ParamSetComboBox_Err_NotPersist" xml:space="preserve">
+    <value>Preset saving is not implemented by the application</value>
+  </data>
+  <data name="ParamSetComboBox_Err_NotUserSetOverwrite" xml:space="preserve">
+    <value>User presets only can be overwritten. Enter the name of a user new preset.</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_Delete" xml:space="preserve">
+    <value>Do you want to delete the preset '{0}'?</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_Hist0" xml:space="preserve">
+    <value>(Last)</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_Hist1" xml:space="preserve">
+    <value>(Second last)</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_HistN" xml:space="preserve">
+    <value>(Previous nr {0})</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_NoSelection" xml:space="preserve">
+    <value>There is no selected preset</value>
+  </data>
+  <data name="ParamSetComboBox_Msg_Overwrite" xml:space="preserve">
+    <value>Named preset '{0}' already exists. Do you want to override it?</value>
+  </data>
+  <data name="ParamSetComboBox_Title_CurrentSettingsXML" xml:space="preserve">
+    <value>Dialog current settings ({0})</value>
+  </data>
+  <data name="ParamSetComboBox_Title_Delete" xml:space="preserve">
+    <value>Удаление готового набора</value>
+  </data>
+  <data name="ParamSetComboBox_Title_Overwrite" xml:space="preserve">
+    <value>Подтверждение перезаписи набора</value>
+  </data>
+  <data name="ParamSetComboBox_ToolTip_ComboBox" xml:space="preserve">
+    <value>Selection of ready-to-use preset from a drop-down list.
+The list contains:
+- named user's sets you had saved;
+- application-predefined default set(s), if any;
+- up to 9 last used sets (history)
+
+Text box uses for entering a name for a new user preset.</value>
+  </data>
+  <data name="TrayIcon_ErrTitle_RemoveNotifyIcon" xml:space="preserve">
+    <value>NotifyIcon disposing error</value>
+  </data>
+  <data name="Cmd_Menu_Filter" xml:space="preserve">
+    <value>&amp;Filter</value>
+  </data>
+  <data name="Cmd_Menu_Filter_NextDateFilter" xml:space="preserve">
+    <value>&amp;Next time period</value>
+  </data>
+  <data name="Cmd_Menu_Filter_PrevDateFilter" xml:space="preserve">
+    <value>&amp;Previous time period</value>
+  </data>
+  <data name="Cmd_Menu_Filter_SetFilter" xml:space="preserve">
+    <value>&amp;Set filter ...</value>
+  </data>
+  <data name="Cmd_Menu_View_GridConfig" xml:space="preserve">
+    <value>Data view configuration ...</value>
+  </data>
+  <data name="EFPConfigurableDataView_ErrTitle_ReadConfig" xml:space="preserve">
+    <value>Data view config loading error</value>
+  </data>
+  <data name="EFPConfigurableDataView_Err_NoFilters" xml:space="preserve">
+    <value>Data view contains no filter</value>
+  </data>
+  <data name="EFPConfigurableDataView_Err_ScrollFilter" xml:space="preserve">
+    <value>Cannot scroll the filter '{0}'</value>
+  </data>
+  <data name="EFPConfigurableDataView_ToolTip_ForFilter" xml:space="preserve">
+    <value>{0} for the filter '{1}';</value>
+  </data>
+  <data name="EFPConfigurableDataView_ToolTip_ForNoActiveFilter" xml:space="preserve">
+    <value>{0} - there is no active filter</value>
+  </data>
+  <data name="EFPControl_ErrTitle_SetProviderStateDisposed" xml:space="preserve">
+    <value>Error when set EFPControlBase.State to EFPControlProviderState.Disposed</value>
+  </data>
+  <data name="EFPControlWithToolBar_Arg_ControlHasParent" xml:space="preserve">
+    <value>Main control '{0}' should have no parent</value>
+  </data>
+  <data name="EFPControlWithToolBar_Arg_ParentNotEmpty" xml:space="preserve">
+    <value>Parent control '{0}' has childen</value>
+  </data>
+  <data name="EFPControl_Err_Created" xml:space="preserve">
+    <value>Control '{0}' has already been created</value>
+  </data>
+  <data name="EFPControl_Err_LoadConfigCalled" xml:space="preserve">
+    <value>Configuration for the control '{0}' has already been loaded</value>
+  </data>
+  <data name="EFPControl_Err_OutsideValidating" xml:space="preserve">
+    <value>Method should be called only from OnValidate() or Validating event handler</value>
+  </data>
+  <data name="EFPControl_Err_Validating" xml:space="preserve">
+    <value>Exception occurred while validating. {0}</value>
+  </data>
+  <data name="EFPDataGridView_Err_DataErrorException" xml:space="preserve">
+    <value>DataGridView.DataError ({0}) occurred</value>
+  </data>
+  <data name="EFPDataGridView_Err_DataErrorFormatting" xml:space="preserve">
+    <value>Formatting error for the table cell with RowIndex={0} and ColIndex={1}</value>
+  </data>
+  <data name="EFPDataGridView_Err_DataErrorParsing" xml:space="preserve">
+    <value>Error parsing entered value '{0}'</value>
+  </data>
+  <data name="EFPDataGridView_Name_Default" xml:space="preserve">
+    <value>Grid view</value>
+  </data>
+  <data name="EFPDataView_Err_AlreadySorted" xml:space="preserve">
+    <value>Rows are already sorted for this column</value>
+  </data>
+  <data name="EFPDataView_Err_CellFormatting" xml:space="preserve">
+    <value>Cell formatting error. {0}</value>
+  </data>
+  <data name="EFPDataView_Err_ColumnCustomSortNotAllowed" xml:space="preserve">
+    <value>Cannot perform sort with the column '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_ColumnHasNoSort" xml:space="preserve">
+    <value>There is no sort order for thisc column. Select a predeined order from the menu.</value>
+  </data>
+  <data name="EFPDataView_Err_ComplexSortNotStarted" xml:space="preserve">
+    <value>Custom sort has not been started. Do not press &lt;Ctrl&gt; key</value>
+  </data>
+  <data name="EFPDataView_Err_ComplexSortRepeatedColumn" xml:space="preserve">
+    <value>Cannot add the column to the custom sort order since it already is a part of the sort</value>
+  </data>
+  <data name="EFPDataView_Err_CustomOrderNotAllowed" xml:space="preserve">
+    <value>Custom sort is not allowed for this view</value>
+  </data>
+  <data name="EFPDataView_Err_DataViewNotSorted" xml:space="preserve">
+    <value>Attached to view DataView object has no sort</value>
+  </data>
+  <data name="EFPDataView_Err_EditNotFinished" xml:space="preserve">
+    <value>Editing has not finished yet</value>
+  </data>
+  <data name="EFPDataView_Err_InlineEditNotImplemented" xml:space="preserve">
+    <value>Inline edit is not implemented for the state {0}</value>
+  </data>
+  <data name="EFPDataView_Err_MoveRowsUpDown" xml:space="preserve">
+    <value>Cannot move {1} selected rows ({0})</value>
+  </data>
+  <data name="EFPDataView_Err_MultiSelectedRows" xml:space="preserve">
+    <value>There are more than one selected rows in the view</value>
+  </data>
+  <data name="EFPDataView_Err_NoDataView" xml:space="preserve">
+    <value>Data view does not have linked DataView object</value>
+  </data>
+  <data name="EFPDataView_Err_NoPredefinedOrders" xml:space="preserve">
+    <value>There are no predefined sort orders for the view. Switch to the custom row order mode.</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedCell" xml:space="preserve">
+    <value>There is no selected cell in the view</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedRow" xml:space="preserve">
+    <value>There is no selected row in the view</value>
+  </data>
+  <data name="EFPDataView_Err_OrderNotAllowed" xml:space="preserve">
+    <value>Sorting is not allowed for the view</value>
+  </data>
+  <data name="EFPDataView_Err_PasteMore" xml:space="preserve">
+    <value>Text in clipoard contains {0} row(s) and {1} column(s), but selected less quantity of cells: {2} row(s} and {3} column{s}</value>
+  </data>
+  <data name="EFPDataView_Err_PasteNoDivided" xml:space="preserve">
+    <value>Text in clipoard contains {0} row(s) and {1} column(s), but selected {2} row(s} and {3} column{s}. Cannot multiply rows and columns because cell quantities are not divisible by an integer</value>
+  </data>
+  <data name="EFPDataView_Err_PasteNoText" xml:space="preserve">
+    <value>There is no text given</value>
+  </data>
+  <data name="EFPDataView_Err_PasteOutIOfBounds" xml:space="preserve">
+    <value>Text in clipoard contains {0} row(s) and {1} column(s), it excess the view boundaries</value>
+  </data>
+  <data name="EFPDataView_Err_RefreshRestoreSelection" xml:space="preserve">
+    <value>Error occurred when selected rows restored after the table had been refreshed. {0}</value>
+  </data>
+  <data name="EFPDataView_Err_SetTextValue" xml:space="preserve">
+    <value>Cannot write text value '{0}' to the cell. {1}</value>
+  </data>
+  <data name="EFPDataView_Msg_MoveDown" xml:space="preserve">
+    <value>down</value>
+  </data>
+  <data name="EFPDataView_Msg_MoveUp" xml:space="preserve">
+    <value>up</value>
+  </data>
+  <data name="EFPDataView_Msg_ReadOnlyColumn" xml:space="preserve">
+    <value>Column is read-only</value>
+  </data>
+  <data name="EFPDataView_Msg_ReadOnlyRow" xml:space="preserve">
+    <value>Row is read-only</value>
+  </data>
+  <data name="EFPDataView_Msg_ReadOnlyView" xml:space="preserve">
+    <value>View is read-only</value>
+  </data>
+  <data name="EFPDataView_Msg_RowIdText_NoDataRow" xml:space="preserve">
+    <value>No row</value>
+  </data>
+  <data name="EFPDataView_Msg_RowIdText_RowNumber" xml:space="preserve">
+    <value>Row {0}</value>
+  </data>
+  <data name="EFPDataView_Err_Empty" xml:space="preserve">
+    <value>The view has no rows</value>
+  </data>
+  <data name="EFPDataView_Err_RowErrNavNotSuppoprted" xml:space="preserve">
+    <value>The view does not support row error navigation</value>
+  </data>
+  <data name="EFPDataView_Err_IncSearchCannotAddChar" xml:space="preserve">
+    <value>The character '{0}' cannot be added to the increment search string. {1}</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav" xml:space="preserve">
+    <value>{0}, but there is no row {1} found</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNavTableBottom" xml:space="preserve">
+    <value>The bottom of the table reached</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNavTableTop" xml:space="preserve">
+    <value>The top of the table reached</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav_Error" xml:space="preserve">
+    <value>with an error</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav_Information" xml:space="preserve">
+    <value>with a message</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav_None" xml:space="preserve">
+    <value>without an error</value>
+  </data>
+  <data name="EFPDataView_Msg_RowErrNav_Warning" xml:space="preserve">
+    <value>with an error or a warning</value>
+  </data>
+  <data name="EFPDataView_Name_NoNameColumn" xml:space="preserve">
+    <value>Untitled column</value>
+  </data>
+  <data name="EFPDataView_Phase_IncSearch" xml:space="preserve">
+    <value>Increment search</value>
+  </data>
+  <data name="EFPDataView_ToolTip_Exception" xml:space="preserve">
+    <value>Error creating tooltip text.
+{0}</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellErrNav" xml:space="preserve">
+    <value>Use Ctrl+] и Ctrl+[ key combinations to navigate these rows</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellErrors" xml:space="preserve">
+    <value>There are rows with errors ({0})</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellNoErrors" xml:space="preserve">
+    <value>There are no rows with errors or warnings</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellRowCount" xml:space="preserve">
+    <value>Rows in the view: {0}</value>
+  </data>
+  <data name="EFPDataView_ToolTip_TopLeftCellWarmings" xml:space="preserve">
+    <value>There are rows with warnings ({0})</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks" xml:space="preserve">
+    <value>Check marks</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_DelAll" xml:space="preserve">
+    <value>Delete marks for all rows</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_DelSelected" xml:space="preserve">
+    <value>Delete marks for selected rows</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_InvSelected" xml:space="preserve">
+    <value>Invert marks for selected rows</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_SetAll" xml:space="preserve">
+    <value>Set marks for all rows</value>
+  </data>
+  <data name="Cmd_Menu_CheckMarks_SetSelected" xml:space="preserve">
+    <value>Set marks for selected rows</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopyToolTip" xml:space="preserve">
+    <value>Copy tooltip text</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Delete_MultiRows" xml:space="preserve">
+    <value>Delete selected rows</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Delete_SingleRow" xml:space="preserve">
+    <value>Delete current row</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Cmd_Menu_Edit_EditInline" xml:space="preserve">
+    <value>Edit inline</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Edit_MultiRows" xml:space="preserve">
+    <value>Edit selected rows</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Edit_SingleRow" xml:space="preserve">
+    <value>Edit current row</value>
+  </data>
+  <data name="Cmd_Menu_Edit_IncSearch_Finish" xml:space="preserve">
+    <value>Finish incremental search</value>
+  </data>
+  <data name="Cmd_Menu_Edit_IncSearch_Start" xml:space="preserve">
+    <value>Start incremental search</value>
+  </data>
+  <data name="Cmd_Menu_Edit_Insert" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Cmd_Menu_Edit_InsertCopy" xml:space="preserve">
+    <value>Create copy</value>
+  </data>
+  <data name="Cmd_Menu_Edit_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Cmd_Menu_Edit_View_MultiRows" xml:space="preserve">
+    <value>View selected rows</value>
+  </data>
+  <data name="Cmd_Menu_Edit_View_SingleRow" xml:space="preserve">
+    <value>View current row</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav" xml:space="preserve">
+    <value>Rows with messages</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_CopyMessage" xml:space="preserve">
+    <value>Copy message</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_MessageList" xml:space="preserve">
+    <value>Message list</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_NextError" xml:space="preserve">
+    <value>Go to next row with an error</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_NextWarning" xml:space="preserve">
+    <value>Go to next row with error/warning</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_PrevError" xml:space="preserve">
+    <value>Go to previous row with an error</value>
+  </data>
+  <data name="Cmd_Menu_RowErrNav_PrevWarning" xml:space="preserve">
+    <value>Go to previous row with error/warning</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder" xml:space="preserve">
+    <value>Row order</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_Custom" xml:space="preserve">
+    <value>&amp;Custom</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_Dialog" xml:space="preserve">
+    <value>&amp;More ...</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_MoveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_MoveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="Cmd_Menu_RowOrder_RestoreOrder" xml:space="preserve">
+    <value>Restore default order</value>
+  </data>
+  <data name="Cmd_Menu_ToolTip_InsertCopy" xml:space="preserve">
+    <value>Create new record using current as a template</value>
+  </data>
+  <data name="Cmd_Status_Edit_IncSearch_NoColumn" xml:space="preserve">
+    <value>&lt;Column not selected&gt;</value>
+  </data>
+  <data name="Cmd_Status_Edit_IncSearch_NotStarted" xml:space="preserve">
+    <value>&lt;Search not started&gt;</value>
+  </data>
+  <data name="Cmd_Status_Edit_IncSearch_Unsupported" xml:space="preserve">
+    <value>&lt;Search not supported&gt;</value>
+  </data>
+  <data name="Cmd_Status_Edit_IncSearch_WrongColumn" xml:space="preserve">
+    <value>&lt;Wrong column&gt;</value>
+  </data>
+  <data name="Cmd_Status_View_StatCalculating" xml:space="preserve">
+    <value>Calculating</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_CanStart" xml:space="preserve">
+    <value>Inline editing can be started</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_CellReadOnly" xml:space="preserve">
+    <value>Cannot edit the cell. {0}</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_ControlReadOnly" xml:space="preserve">
+    <value>The view does not support inline editing</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_EditInProgress" xml:space="preserve">
+    <value>Cell editing is in progress</value>
+  </data>
+  <data name="Cmd_ToolTip_Edit_EditInline_NoSelectedCell" xml:space="preserve">
+    <value>There is no selected cell</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_CopyMessage" xml:space="preserve">
+    <value>Copy message to the cipboard</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_MessageList" xml:space="preserve">
+    <value>Show the list of messages</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_NextError" xml:space="preserve">
+    <value>Go to next row with an error</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_NextWarning" xml:space="preserve">
+    <value>Go to next row with an error or a warning</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_PrevError" xml:space="preserve">
+    <value>Go to previous row with an error</value>
+  </data>
+  <data name="Cmd_ToolTip_RowErrNav_PrevWarning" xml:space="preserve">
+    <value>Go to previous row with an error or a warning</value>
+  </data>
+  <data name="Cmd_ToolTip_View_RowOrder_WithName" xml:space="preserve">
+    <value>Row order ({0})</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatCount" xml:space="preserve">
+    <value>Quantity of numbers in the selected cells</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatError" xml:space="preserve">
+    <value>Error occurred when value was calculated</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatMouseInfo" xml:space="preserve">
+    <value>Use left mouse button double click to copy shown value to the clipboard</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatNonSummable" xml:space="preserve">
+    <value>Some of selected cells are not summable</value>
+  </data>
+  <data name="Cmd_ToolTip_View_StatSum" xml:space="preserve">
+    <value>Sum of numbers in the selected cells</value>
+  </data>
+  <data name="EFPDataViewConfig_ErrTitle_Validation" xml:space="preserve">
+    <value>Validation failed when grid configuration saved</value>
+  </data>
+  <data name="EFPDataViewConfig_Err_NoColumns" xml:space="preserve">
+    <value>Configuration has no columns</value>
+  </data>
+  <data name="EFPDataView_Err_CheckMarksNotChanged" xml:space="preserve">
+    <value>There are no changes in row check marks</value>
+  </data>
+  <data name="EFPDataView_Err_ControlReadOnly" xml:space="preserve">
+    <value>Inline cell editing is not allowed in the view</value>
+  </data>
+  <data name="EFPDataView_Err_Copy" xml:space="preserve">
+    <value>Error occurred when cells copied</value>
+  </data>
+  <data name="EFPDataView_Err_DefaultOutItemDeleted" xml:space="preserve">
+    <value>Default print settings set for the view has been removed</value>
+  </data>
+  <data name="EFPDataView_Err_IncSearchIsEmpty" xml:space="preserve">
+    <value>Increment search string is empty</value>
+  </data>
+  <data name="EFPDataView_Err_IncSearchNoMoreRows" xml:space="preserve">
+    <value>There is no more row with cell value started with '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_IncSearchNotSupportedByColumn" xml:space="preserve">
+    <value>The column does not support incremental search</value>
+  </data>
+  <data name="EFPDataView_Err_MultiSelectedCells" xml:space="preserve">
+    <value>There are more than one selected cells in the view</value>
+  </data>
+  <data name="EFPDataView_Err_NoCellToolTip" xml:space="preserve">
+    <value>There is no tooltip for the cell</value>
+  </data>
+  <data name="EFPDataView_Err_NoRowToolTip" xml:space="preserve">
+    <value>There is no tooltip for the row header</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedColumn" xml:space="preserve">
+    <value>There is no selected column in the view</value>
+  </data>
+  <data name="EFPDataView_Err_NoStatValueToCopy" xml:space="preserve">
+    <value>There is no value to copy to the clipboard</value>
+  </data>
+  <data name="EFPDataView_Err_NotRectangleSelection" xml:space="preserve">
+    <value>A rectangle cell block should be selected</value>
+  </data>
+  <data name="EFPDataView_Name_ImageColumn" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="EFPDataView_Order_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="EFPDataView_Phase_CalcColumnWidth" xml:space="preserve">
+    <value>Column '{0}' width calculating</value>
+  </data>
+  <data name="EFPDataView_Phase_IncSearchLoadColumnData" xml:space="preserve">
+    <value>Column data loading for incremental search</value>
+  </data>
+  <data name="EFPDataView_Title_RowMessagesForAllRows" xml:space="preserve">
+    <value>Messages for all rows</value>
+  </data>
+  <data name="EFPDataView_Title_RowMessagesForCurrentRow" xml:space="preserve">
+    <value>Messages for current row</value>
+  </data>
+  <data name="EFPDataView_Title_RowMessagesForSelectedRows" xml:space="preserve">
+    <value>Messages for selected rows ({0})</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_ErrTitle_CreateList" xml:space="preserve">
+    <value>Error creating sorting list</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_Err_EmptyCustomList" xml:space="preserve">
+    <value>At least one column must be selected for the sort</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_Name_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_Name_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_ToolTip_Add" xml:space="preserve">
+    <value>Places column to the list of sorting columns</value>
+  </data>
+  <data name="EFPDataGridViewOrderForm_ToolTip_Remove" xml:space="preserve">
+    <value>Removes column from the sorting list</value>
+  </data>
+  <data name="EFPDataView_Err_CalcRowsHeight" xml:space="preserve">
+    <value>Error when row height calcualted. Repeated errors will not be logged</value>
+  </data>
+  <data name="EFPDataView_Phase_CalcRowsHeight" xml:space="preserve">
+    <value>Calculating heights of rows</value>
+  </data>
+  <data name="DateRangeBox_Err_CannotChangeYear" xml:space="preserve">
+    <value>Cannot change the year</value>
+  </data>
+  <data name="DateTimeBox_Err_DateMustBeInRange" xml:space="preserve">
+    <value>Date must be in range {0}</value>
+  </data>
+  <data name="DateRangeBox_Err_Inverted" xml:space="preserve">
+    <value>Wrong date interval. The first is greater than the last date</value>
+  </data>
+  <data name="DateRangeBox_Err_IsHalfEmpty" xml:space="preserve">
+    <value>Half-open periods are not allowed</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_NextYear" xml:space="preserve">
+    <value>Next year</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_PrevYear" xml:space="preserve">
+    <value>Previous year</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_Quarter" xml:space="preserve">
+    <value>Quarter</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_SetFirstDateAsLast" xml:space="preserve">
+    <value>Set first date as last</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_SetLastDateAsFirst" xml:space="preserve">
+    <value>Set last date as first</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="DateRangeBox_Menu_Edit_Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="DateRangeBox_Name_First" xml:space="preserve">
+    <value>First date</value>
+  </data>
+  <data name="DateRangeBox_Name_Last" xml:space="preserve">
+    <value>Last date</value>
+  </data>
+  <data name="EFPDateOrRangeBox_Err_ShowCalendar" xml:space="preserve">
+    <value>Calendar show error</value>
+  </data>
+  <data name="EFPDateOrRangeBox_Name_ToRangeButton" xml:space="preserve">
+    <value>Period</value>
+  </data>
+  <data name="DateTimeBox_ToolTip_ClearButton" xml:space="preserve">
+    <value>Clear date</value>
+  </data>
+  <data name="DateTimeBox_ToolTip_PopupButton" xml:space="preserve">
+    <value>Select date via calendar</value>
+  </data>
+  <data name="EFPErrorDataGridView_ColTitle_Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="EFPErrorDataGridView_ColTitle_Kind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="EFPErrorDataGridView_ColTitle_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="EFPErrorDataGridView_ColTitle_Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="EFPErrorDataGridView_Msg_NoList" xml:space="preserve">
+    <value>Message list has not been attached!</value>
+  </data>
+  <data name="Cmd_Menu_Scale" xml:space="preserve">
+    <value>Scale</value>
+  </data>
+  <data name="Cmd_Menu_Scale_100" xml:space="preserve">
+    <value>Scale 100 %</value>
+  </data>
+  <data name="Cmd_Menu_Scale_200" xml:space="preserve">
+    <value>Scale 200 %</value>
+  </data>
+  <data name="Cmd_Menu_Scale_50" xml:space="preserve">
+    <value>Scale 50 %</value>
+  </data>
+  <data name="Cmd_Menu_Scale_500" xml:space="preserve">
+    <value>Scale 500 %</value>
+  </data>
+  <data name="Cmd_Menu_Scale_AllPages" xml:space="preserve">
+    <value>All pages</value>
+  </data>
+  <data name="Cmd_Menu_Scale_OnePage" xml:space="preserve">
+    <value>Single page</value>
+  </data>
+  <data name="Cmd_Menu_Scale_SetScale" xml:space="preserve">
+    <value>Set scale ...</value>
+  </data>
+  <data name="Cmd_Menu_Scale_TwoPages" xml:space="preserve">
+    <value>Two pages side-by-side</value>
+  </data>
+  <data name="Cmd_Menu_Scale_ZoomIn" xml:space="preserve">
+    <value>Zoom In</value>
+  </data>
+  <data name="Cmd_Menu_Scale_ZoomOut" xml:space="preserve">
+    <value>Soom Out</value>
+  </data>
+  <data name="Cmd_Menu_View_FirstPage" xml:space="preserve">
+    <value>First page</value>
+  </data>
+  <data name="Cmd_Menu_View_GotoPage" xml:space="preserve">
+    <value>Go to page ...</value>
+  </data>
+  <data name="Cmd_Menu_View_LastPage" xml:space="preserve">
+    <value>Last page</value>
+  </data>
+  <data name="Cmd_Menu_View_NextPage" xml:space="preserve">
+    <value>Next page</value>
+  </data>
+  <data name="Cmd_Menu_View_PrevPage" xml:space="preserve">
+    <value>Previous page</value>
+  </data>
+  <data name="Cmd_Menu_View_ShowGrid" xml:space="preserve">
+    <value>Coordinate grid</value>
+  </data>
+  <data name="Cmd_Status_Scale_SetScale" xml:space="preserve">
+    <value>Scale {0} %</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_100" xml:space="preserve">
+    <value>Real size</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_200" xml:space="preserve">
+    <value>Double size</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_50" xml:space="preserve">
+    <value>Half size</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_500" xml:space="preserve">
+    <value>Five time enlarged size</value>
+  </data>
+  <data name="Cmd_ToolTip_Scale_SetScale" xml:space="preserve">
+    <value>Image view scale</value>
+  </data>
+  <data name="Cmd_ToolTip_View_GotoPage" xml:space="preserve">
+    <value>Current viewed page</value>
+  </data>
+  <data name="ExtPrintPreviewControl_Err_NoDoc" xml:space="preserve">
+    <value>There is no document</value>
+  </data>
+  <data name="ExtPrintPreviewControl_Msg_PagePrompt" xml:space="preserve">
+    <value>Page number</value>
+  </data>
+  <data name="ExtPrintPreviewControl_Msg_PercentPrompt" xml:space="preserve">
+    <value>Scale in percents</value>
+  </data>
+  <data name="Cmd_Menu_File_FAOpen" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Cmd_Menu_File_FAOpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
+  <data name="Cmd_Menu_File_FAOpenWith_Error" xml:space="preserve">
+    <value>[ Error ]</value>
+  </data>
+  <data name="Cmd_Menu_File_FAOpenWith_None" xml:space="preserve">
+    <value>[ No application ]</value>
+  </data>
+  <data name="Cmd_Status_View_GotoPage_None" xml:space="preserve">
+    <value>No pages</value>
+  </data>
+  <data name="Cmd_Status_View_GotoPage_One" xml:space="preserve">
+    <value>Page {0} from {1}</value>
+  </data>
+  <data name="Cmd_Status_View_GotoPage_Range" xml:space="preserve">
+    <value>Pages {0}-{1} from {2}</value>
+  </data>
+  <data name="Cmd_ToolTip_File_FAOpen" xml:space="preserve">
+    <value>Open file with {0} ({1})</value>
+  </data>
+  <data name="Cmd_ToolTip_File_FAOpen_Error" xml:space="preserve">
+    <value>Error occurred when extracting file associations. {0}</value>
+  </data>
+  <data name="Cmd_ToolTip_File_FAOpen_None" xml:space="preserve">
+    <value>There is no application could open a file with the extension '{0}'</value>
+  </data>
+  <data name="EFPErrorDataGridView_Msg_EmptyList" xml:space="preserve">
+    <value>No messages</value>
+  </data>
+  <data name="EFPFileAssociationsCommandItemsHandler_Arg_MustStartWithDot" xml:space="preserve">
+    <value>File extension must start with a dot character</value>
+  </data>
+  <data name="EFPFileAssociationsCommandItemsHandler_ErrTitle_Init" xml:space="preserve">
+    <value>Initialization error of EFPFileAssociationsCommandItemsHandler</value>
+  </data>
+  <data name="EFPFileAssociationsCommandItemsHandler_Err_ForFileExt" xml:space="preserve">
+    <value>Error occurred when getting file associations for the extension '{0}'</value>
+  </data>
+  <data name="EFPFolderBrowserButton_ToolTip_Default" xml:space="preserve">
+    <value>Directory selection via standard operating system dialog</value>
+  </data>
+  <data name="EFPPathValidator_Err_NestedValidation" xml:space="preserve">
+    <value>Previous validation has not been finished yet</value>
+  </data>
+  <data name="EFPFolderBrowserButton_Err_DragDrop" xml:space="preserve">
+    <value>Drag&amp;drop error. {0}</value>
+  </data>
+  <data name="EFPFolderBrowserButton_Name_FormatFileDrop" xml:space="preserve">
+    <value>Directory reference</value>
+  </data>
+  <data name="Clipboard_Err_NoFileDrop" xml:space="preserve">
+    <value>There is no file/directory reference in the clipboard</value>
+  </data>
+  <data name="EFPFileBrowserButton_Err_PasteMulti" xml:space="preserve">
+    <value>Only one file can be pasted</value>
+  </data>
+  <data name="EFPFileDialogButton_Err_DragDrop" xml:space="preserve">
+    <value>Drag-and-drop failed. {0}</value>
+  </data>
+  <data name="EFPFileDialogButton_Err_DragDropMulti" xml:space="preserve">
+    <value>Only one file can be dragged-and-dropped</value>
+  </data>
+  <data name="EFPFileDialogButton_Name_DragDropFormat" xml:space="preserve">
+    <value>File reference</value>
+  </data>
+  <data name="EFPFileDialogButton_ToolTip_Default" xml:space="preserve">
+    <value>Select a file with a standard operating system dialog</value>
+  </data>
+  <data name="EFPFolderBrowserButton_Err_DragDropMulti" xml:space="preserve">
+    <value>Only one directory can be dragged-and-dropped</value>
+  </data>
+  <data name="EFPFolderBrowserButton_Err_PasteMulti" xml:space="preserve">
+    <value>Only one directory can be pasted</value>
+  </data>
+  <data name="EFPGridFilterGridView_Err_CannotEditFilters" xml:space="preserve">
+    <value>Filters cannot be changed</value>
+  </data>
+  <data name="EFPWindowsExplorerButton_Err_PathIsEmpty" xml:space="preserve">
+    <value>Name is empty</value>
+  </data>
+  <data name="EFPWindowsExplorerButton_ToolTip_Default" xml:space="preserve">
+    <value>Open selected folder with  {0}</value>
+  </data>
+  <data name="EFPWindowsExplorerButton_ToolTip_Unsupported" xml:space="preserve">
+    <value>Folder browsing is not suppoted by the operating system</value>
+  </data>
+  <data name="EFPGridFilters_ErrTitle_ReadConfig" xml:space="preserve">
+    <value>Error when load filter '{0}' state</value>
+  </data>
+  <data name="EFPInputDataGridView_Err_RowValidating" xml:space="preserve">
+    <value>Error occurred when row validated. {0}</value>
+  </data>
+  <data name="EFPInputDataGridView_Msg_InfoText_CanAddRows" xml:space="preserve">
+    <value>When text is pasted from the clipboard, the required rows will be added automatically</value>
+  </data>
+  <data name="Cmd_Menu_File_ExportFile" xml:space="preserve">
+    <value>Export to file ...</value>
+  </data>
+  <data name="EFPMenuOutHandler_Phase_ExportFile" xml:space="preserve">
+    <value>Export to file {0}</value>
+  </data>
+  <data name="EFPMenuOutHandler_Phase_SendTo" xml:space="preserve">
+    <value>Sending to {0}</value>
+  </data>
+  <data name="EFPSendToItem_ToolTip_Simple" xml:space="preserve">
+    <value>Send to {0}</value>
+  </data>
+  <data name="EFPSendToItem_ToolTip_WithSubMenu" xml:space="preserve">
+    <value>Send {0} to {1}</value>
+  </data>
+  <data name="MonthDayBox_Arg_IsEmpty" xml:space="preserve">
+    <value>MonthDayBox control does not support empy values</value>
+  </data>
+  <data name="Clipboard_Err_NoDataFormat" xml:space="preserve">
+    <value>There is no data presented in '{0}' format</value>
+  </data>
+  <data name="Clipboard_Err_NoImage" xml:space="preserve">
+    <value>The clipboard does not contain an image</value>
+  </data>
+  <data name="Cmd_Menu_Edit_AcquareImage" xml:space="preserve">
+    <value>Acquare from scanner or camera</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ClearImage" xml:space="preserve">
+    <value>Clear image</value>
+  </data>
+  <data name="Cmd_Menu_Edit_PasteAuxMenu" xml:space="preserve">
+    <value>Paste options</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ViewImage" xml:space="preserve">
+    <value>View image</value>
+  </data>
+  <data name="Cmd_Menu_StartEMailApp" xml:space="preserve">
+    <value>Start e-mail application</value>
+  </data>
+  <data name="EFPEMailLabel_Err_NoAddress" xml:space="preserve">
+    <value>E-mail address not given</value>
+  </data>
+  <data name="EFPEMailLabel_Err_Start" xml:space="preserve">
+    <value>Error starting e-mail application. {0}. If you send messages via Internet page instead of an installed appication, you should copy the e-mail address to the clipboard and then paste it in the proper input field on the page.</value>
+  </data>
+  <data name="EFPPasteFormat_Err_ActionCode" xml:space="preserve">
+    <value>Wrong action '{0}'</value>
+  </data>
+  <data name="EFPPasteFormat_Err_BusyPaste" xml:space="preserve">
+    <value>Now it's another paste format '{0}' pasting</value>
+  </data>
+  <data name="EFPPasteFormat_Err_BusyTest" xml:space="preserve">
+    <value>Now it's another paste format ('{0}') testing</value>
+  </data>
+  <data name="EFPPasteFormat_Err_FormatNotAppliable" xml:space="preserve">
+    <value>Format is not aplliable</value>
+  </data>
+  <data name="EFPPasteFormat_Err_NoGoodFormat" xml:space="preserve">
+    <value>There is no appliable data in the clipboard. {0}</value>
+  </data>
+  <data name="EFPPasteFormat_Err_NoPasteFormats" xml:space="preserve">
+    <value>There is no paste format handler presented</value>
+  </data>
+  <data name="EFPPasteFormat_Err_PasteSpecial" xml:space="preserve">
+    <value>Нельзя выполнить вставку в формате '{0}'</value>
+  </data>
+  <data name="EFPPasteFormat_Err_TestError" xml:space="preserve">
+    <value>Error occured when format appliance was tested. {0}</value>
+  </data>
+  <data name="EFPPasteFormat_Title_AllFormats" xml:space="preserve">
+    <value>{0} (all formats)</value>
+  </data>
+  <data name="EFPPasteFormat_Title_Preview" xml:space="preserve">
+    <value>{0} - Preview</value>
+  </data>
+  <data name="EFPPasteFormat_Title_SpecialPasteFormatGroup" xml:space="preserve">
+    <value>Data format in the clipboard</value>
+  </data>
+  <data name="EFPPasteTextMatrixFormat_Err_ToMatrix" xml:space="preserve">
+    <value>Error converting text to a rectangle block. {0}</value>
+  </data>
+  <data name="EFPPasteTextMatrixFormat_Name_Csv" xml:space="preserve">
+    <value>Comma-separated text</value>
+  </data>
+  <data name="EFPPasteTextMatrixFormat_Name_Text" xml:space="preserve">
+    <value>Unformatted text</value>
+  </data>
+  <data name="EFPRadioButtons_Err_DisabledSelected" xml:space="preserve">
+    <value>Disabled item cannot be selected</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_Err_LoadFile" xml:space="preserve">
+    <value>Error occurred when file '{0}' loaded. {1}</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_AllImages" xml:space="preserve">
+    <value>All images</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_BMP" xml:space="preserve">
+    <value>Bitmap pictures (BMP)</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_GIF" xml:space="preserve">
+    <value>GIF</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_JPEG" xml:space="preserve">
+    <value>JPEG</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_PNG" xml:space="preserve">
+    <value>PNG</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_FileFilter_TIFF" xml:space="preserve">
+    <value>TIFF</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_Msg_NoImage" xml:space="preserve">
+    <value>No image</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_Name_Default" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_Title_View" xml:space="preserve">
+    <value>{0} - Image view ({1}x{2})</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_ToolTip_Edit_Paste" xml:space="preserve">
+    <value>Paste image from the clipboard{0}</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_ToolTip_File_Open" xml:space="preserve">
+    <value>Load image from a file{0}</value>
+  </data>
+  <data name="EFPThumbnailPictureButton_ToolTip_ShrinkAuxText" xml:space="preserve">
+    <value>. Image will be shrinked to size {0}x{1} pixels</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ConvertTextMenu" xml:space="preserve">
+    <value>Convert text</value>
+  </data>
+  <data name="Cmd_Menu_Edit_InsertNewLine" xml:space="preserve">
+    <value>Insert New Line</value>
+  </data>
+  <data name="Cmd_Menu_Edit_InvertCase" xml:space="preserve">
+    <value>&amp;iNVERT cASE</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ToLowerCase" xml:space="preserve">
+    <value>to &amp;lower case</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ToUpperCase" xml:space="preserve">
+    <value>TO &amp;UPPER CASE</value>
+  </data>
+  <data name="EFPApp_Err_OpenWith" xml:space="preserve">
+    <value>Cannot start '{0}'. {1}</value>
+  </data>
+  <data name="EFPCsvCodesComboBoxBase_ToolTip_ClearButton" xml:space="preserve">
+    <value>Clear selected codes</value>
+  </data>
+  <data name="EFPCsvCodesComboBoxBase_ToolTip_PopupButton" xml:space="preserve">
+    <value>Select codes from the list</value>
+  </data>
+  <data name="EFPCsvCodesComboBox_Err_UnknownCode" xml:space="preserve">
+    <value>The code not found in the list</value>
+  </data>
+  <data name="EFPCsvCodesTextBox_Err_CodeTwice" xml:space="preserve">
+    <value>Code '{0}' presented twice</value>
+  </data>
+  <data name="EFPCsvCodesTextBox_Err_EmptyCode" xml:space="preserve">
+    <value>Empty code presented</value>
+  </data>
+  <data name="EFPCsvCodesTextBox_Err_WrongCode" xml:space="preserve">
+    <value>Wrong code #{0}: '{1}'. {2}</value>
+  </data>
+  <data name="EFPCsvCodesTextBox_ToolTip_Codes" xml:space="preserve">
+    <value>Code count: {0}</value>
+  </data>
+  <data name="EFPFileAssociationsCommandItemsHandler_Err_NoData" xml:space="preserve">
+    <value>There are no data to send</value>
+  </data>
+  <data name="EFPListMultiSelComboBox_Msg_AllSelected" xml:space="preserve">
+    <value>[ all ]</value>
+  </data>
+  <data name="EFPListMultiSelComboBox_Msg_Empty" xml:space="preserve">
+    <value>[ none ]</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_Cell" xml:space="preserve">
+    <value>Row {0}, column {1} ('{2}'). {3}</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_ColumnNotFound" xml:space="preserve">
+    <value>Column with name '{0}' not found</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_ColumnTwice" xml:space="preserve">
+    <value>Column '{0}' selected twice</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_InitSelectedColumnsUnchanged" xml:space="preserve">
+    <value>No new bindings has been added</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_NoColumns" xml:space="preserve">
+    <value>There is no selected column</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_NoData" xml:space="preserve">
+    <value>There are no data</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Err_NoRows" xml:space="preserve">
+    <value>There is no selected row</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Menu_Edit_ClearSelectedColumns" xml:space="preserve">
+    <value>Clear columns binding</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Menu_Edit_InitSelectedColumns" xml:space="preserve">
+    <value>Initialize columns binding</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Msg_CornerCell" xml:space="preserve">
+    <value>This cell is not used</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Msg_DataCell" xml:space="preserve">
+    <value>Cells with data cannot be edited</value>
+  </data>
+  <data name="EFPSelRCDataGridView_Msg_None" xml:space="preserve">
+    <value>[ None ]</value>
+  </data>
+  <data name="EFPSelRCDataGridView_ToolTip_RowFlag" xml:space="preserve">
+    <value>Row used</value>
+  </data>
+  <data name="EFPSelRCDataGridView_ToolTip_TopLeftCell" xml:space="preserve">
+    <value>Total rows: {0}, columns: {1}</value>
+  </data>
+  <data name="EFPTabPage_Err_SelectHiddenPage" xml:space="preserve">
+    <value>Cannot activate a hidden page</value>
+  </data>
+  <data name="EFPTabPage_Name_Default" xml:space="preserve">
+    <value>For TabPage '{0}'</value>
+  </data>
+  <data name="EFPTextBox_Err_Empty" xml:space="preserve">
+    <value>There is not text</value>
+  </data>
+  <data name="EFPTextBox_Err_NoSelection" xml:space="preserve">
+    <value>There is no selected text</value>
+  </data>
+  <data name="EFPTextBox_Name_MulilineReadOnly" xml:space="preserve">
+    <value>Text view</value>
+  </data>
+  <data name="EFPTextBox_Name_MultiLine" xml:space="preserve">
+    <value>Text editor</value>
+  </data>
+  <data name="EFPTextBox_Name_Password" xml:space="preserve">
+    <value>Password input</value>
+  </data>
+  <data name="EFPTextBox_Name_PasteFormat" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="EFPTextBox_Name_SingleLine" xml:space="preserve">
+    <value>Text input</value>
+  </data>
+  <data name="EFPTextBox_Status_Column" xml:space="preserve">
+    <value>Column {0}</value>
+  </data>
+  <data name="EFPTextBox_Status_Row" xml:space="preserve">
+    <value>Line {0}</value>
+  </data>
+  <data name="EFPTreeViewAdv_Name_Default" xml:space="preserve">
+    <value>Tree view</value>
+  </data>
+  <data name="EFPUserTextComboBox_ToolTip_ClearButton" xml:space="preserve">
+    <value>Clean text</value>
+  </data>
+  <data name="EFPXmlViewBox_Arg_FileNameWithPath" xml:space="preserve">
+    <value>File name should not have path</value>
+  </data>
+  <data name="EFPXmlViewBox_Err_Empty" xml:space="preserve">
+    <value>The view does not conatin XML data</value>
+  </data>
+  <data name="EFPXmlViewBox_Err_NoDoc" xml:space="preserve">
+    <value>No document</value>
+  </data>
+  <data name="Clipboard_Err_UnextpectedType" xml:space="preserve">
+    <value>For the data '{0}' returned object has unexpected type {1}</value>
+  </data>
+  <data name="Cmd_Menu_View_ShowToolTips" xml:space="preserve">
+    <value>ToolTips</value>
+  </data>
+  <data name="EFPBaseProvider_Err_AttachToItself" xml:space="preserve">
+    <value>Cannot attachEFPBaseProvider to itself</value>
+  </data>
+  <data name="EFPFormProvider_ErrTitle_FormClosed" xml:space="preserve">
+    <value>Error occurred when form closed</value>
+  </data>
+  <data name="EFPFormProvider_ErrTitle_OnTick" xml:space="preserve">
+    <value>Form update error</value>
+  </data>
+  <data name="EFPFormProvider_ErrTitle_SetFocus" xml:space="preserve">
+    <value>Error occurred when focus set</value>
+  </data>
+  <data name="EFPFormProvider_Err_CannotInitHelpContext" xml:space="preserve">
+    <value>Cannot init help context at the first time if the has already been shown</value>
+  </data>
+  <data name="EFPFormProvider_Err_FormProviderNotFound" xml:space="preserve">
+    <value>EFPFormProvider not found for the form {0}</value>
+  </data>
+  <data name="EFPFormProvider_Err_HasBeenShown" xml:space="preserve">
+    <value>Form '{0}' has already been shown</value>
+  </data>
+  <data name="EFPFormProvider_Err_NestedClosing" xml:space="preserve">
+    <value>Nested form closing</value>
+  </data>
+  <data name="EFPFormProvider_Err_OnTick" xml:space="preserve">
+    <value>Form update error. {0}</value>
+  </data>
+  <data name="EFPFormProvider_Menu_Debug_EFPFormProvider" xml:space="preserve">
+    <value>Debug EFPFormProvider object</value>
+  </data>
+  <data name="EFPFormProvider_Menu_Help_ContextHelp" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="EFPFormProvider_Phase_FormClosing" xml:space="preserve">
+    <value>Form closing</value>
+  </data>
+  <data name="EFPFormProvider_ToolTip_Disabled" xml:space="preserve">
+    <value>{0} [Disabled]</value>
+  </data>
+  <data name="EFPReentranceLocker_Err_PrevInProgress" xml:space="preserve">
+    <value>Previous operation has not been finished yet: {0}</value>
+  </data>
+  <data name="EFPReentranceLocker_Name_Default" xml:space="preserve">
+    <value>Unknown action</value>
+  </data>
+  <data name="ListControlImagePainter_Arg_nulls" xml:space="preserve">
+    <value>Image list or handler must be not null</value>
+  </data>
+  <data name="XmlEditor_ErrTitle_FromText" xml:space="preserve">
+    <value>Error in editor</value>
+  </data>
+  <data name="XmlEditor_Err_FormClosing" xml:space="preserve">
+    <value>Error when editor form closing</value>
+  </data>
+  <data name="XmlEditor_Err_FromText" xml:space="preserve">
+    <value>Text on the Edit page contsins errors. It cannot be converted onto XML document</value>
+  </data>
+  <data name="XmlEditor_Title_Form" xml:space="preserve">
+    <value>XML document</value>
+  </data>
+  <data name="XmlEditor_ToolTip_Edit" xml:space="preserve">
+    <value>XML document editing as unformatted text</value>
+  </data>
+  <data name="XmlEditor_ToolTip_View" xml:space="preserve">
+    <value>XML document formatted view</value>
+  </data>
+  <data name="YearMonthBox_Err_Inverted" xml:space="preserve">
+    <value>First month is after th last month</value>
+  </data>
+  <data name="YearMonthRangeBox_Arg_DiffYear" xml:space="preserve">
+    <value>Range must belongs a single year</value>
+  </data>
+  <data name="EFPDataViewOrder_Err_NoDefaultValue" xml:space="preserve">
+    <value>For the expression '{0}' of sort order '{1}' is impossible to calculate default value to define expression data type</value>
+  </data>
+  <data name="EFPDataView_Err_ToolTip" xml:space="preserve">
+    <value>Error occurred when tooltip getting. {0}</value>
+  </data>
+  <data name="EFPGridProducer_Arg_NoNamedConfig" xml:space="preserve">
+    <value>Fixed grid config with the name '{0}' has not been defined for the grid producer</value>
+  </data>
+  <data name="EFPGridProducer_Err_ErrColInOrder" xml:space="preserve">
+    <value>Wrong source column name '{0}', used in sort order '{1}'. {2}</value>
+  </data>
+  <data name="EFPGridProducer_Err_ErrItemName" xml:space="preserve">
+    <value>Wrong column name in item '{0}'. {1}</value>
+  </data>
+  <data name="EFPGridProducer_Err_ErrSourceColumnName" xml:space="preserve">
+    <value>Wrong source column name '{0}' in caculated item '{1}'. {2}</value>
+  </data>
+  <data name="EFPGridProducer_Err_NameBadChar" xml:space="preserve">
+    <value>Name contains an invalid char '{0}'</value>
+  </data>
+  <data name="EFPGridProducer_Err_NameIsEmpty" xml:space="preserve">
+    <value>Name is empty</value>
+  </data>
+  <data name="EFPGridProducer_Err_NameStartsEndsDot" xml:space="preserve">
+    <value>Name cannot start or end with dot char</value>
+  </data>
+  <data name="EFPGridProducer_Err_NameTwoDots" xml:space="preserve">
+    <value>Name cannot contain two doth together</value>
+  </data>
+  <data name="EFPGridProducer_Err_UnknownCalcColumnName" xml:space="preserve">
+    <value>Wrong calculated column name '{0}'. This name presents in the source column name list used in another item of EFPGridProducer</value>
+  </data>
+  <data name="EFPGridProducer_Err_UnknownCalcToolTipName" xml:space="preserve">
+    <value>Wrong calculated tooltip name '{0}'. This name presents in the source column name list used in another item of EFPGridProducer</value>
+  </data>
+  <data name="EFPGridProducer_Err_UnknownDefaultConfigName" xml:space="preserve">
+    <value>Named configuration '{0}' not found. This name is set for the DefaultConfigName property of data view</value>
+  </data>
+  <data name="EFPGridProducerEditor_Err_NoColumnSelected" xml:space="preserve">
+    <value>No one column selected</value>
+  </data>
+  <data name="EFPGridProducerEditor_Err_NotSizeableColumn" xml:space="preserve">
+    <value>Column '{0}' has a prdefined width</value>
+  </data>
+  <data name="EFPGridProducerEditor_Err_WidthForHiddenColumn" xml:space="preserve">
+    <value>Cannot set width for a hidden column</value>
+  </data>
+  <data name="EFPGridProducerEditor_Err_WrongFrozenColumns" xml:space="preserve">
+    <value>Wrong number of frozen columns</value>
+  </data>
+  <data name="EFPGridProducerEditor_Msg_NoStartColumn" xml:space="preserve">
+    <value>[ None ]</value>
+  </data>
+  <data name="EFPGridProducerEditor_Msg_ToolTipsOff" xml:space="preserve">
+    <value>Tool tips are turned off</value>
+  </data>
+  <data name="EFPGridProducerEditor_ToolTip_StartColumn" xml:space="preserve">
+    <value>If a column selected here, it will be activated every time when data view shown.
+If '[None]' selected, the last user-selected column will be saved beetween data view appears.</value>
+  </data>
+  <data name="EFPGridProducer_Arg_EmptySourceColumn" xml:space="preserve">
+    <value>SourceColumnNames cannot contain empty items</value>
+  </data>
+  <data name="EFPGridProducer_Arg_NameStartsWithDigit" xml:space="preserve">
+    <value>Name cannot start with a digit because it is not possible to save view settings in config section</value>
+  </data>
+  <data name="EFPGridProducer_Arg_SourceColumnNameIsName" xml:space="preserve">
+    <value>Item in SourceColumnNames is equal to the calculated column/tooltip name '{0}'</value>
+  </data>
+  <data name="EFPGridProducer_Arg_SourceColumnNameTwice" xml:space="preserve">
+    <value>Item name '{0}' in SourceColumnNames presented twice</value>
+  </data>
+  <data name="EFPGridProducer_Arg_SourceColumnWithComma" xml:space="preserve">
+    <value>Item in SourceColumnNames cannot have a comma char</value>
+  </data>
+  <data name="EFPGridProducer_ColTitle_RowOrder" xml:space="preserve">
+    <value>Nr</value>
+  </data>
+  <data name="EFPGridProducer_ToolTip_WrongValue" xml:space="preserve">
+    <value>Wrong value: {0}</value>
+  </data>
+  <data name="Cmd_Menu_View_CloseAllTabs" xml:space="preserve">
+    <value>Close all aux tabs</value>
+  </data>
+  <data name="Cmd_Menu_View_CloseAllTabsButThis" xml:space="preserve">
+    <value>Close all aux tabs but this</value>
+  </data>
+  <data name="Cmd_Menu_View_CloseTab" xml:space="preserve">
+    <value>Close tab</value>
+  </data>
+  <data name="EFPReport_Arg_ParentControlHasChildren" xml:space="preserve">
+    <value>Parent control contains another children</value>
+  </data>
+  <data name="EFPReport_Arg_ParentControlHasNoForm" xml:space="preserve">
+    <value>Parent control does not belong to any form</value>
+  </data>
+  <data name="EFPReport_ErrTitle_Closing" xml:space="preserve">
+    <value>Error occurred when the report is about to be closed</value>
+  </data>
+  <data name="EFPReport_ErrTitle_QueryParams" xml:space="preserve">
+    <value>Error occurred when the report parameters queried</value>
+  </data>
+  <data name="EFPReport_ErrTitle_ReadConfig" xml:space="preserve">
+    <value>Parameters reading error</value>
+  </data>
+  <data name="EFPReport_ErrTitle_SelectPage" xml:space="preserve">
+    <value>Error occurred when report page selected</value>
+  </data>
+  <data name="EFPReport_ErrTitle_WriteConfig" xml:space="preserve">
+    <value>Parameters writing error</value>
+  </data>
+  <data name="EFPReport_Err_ConfigSectionNotFound" xml:space="preserve">
+    <value>Report '{0}' parameters config section not found</value>
+  </data>
+  <data name="EFPReport_Err_CreateParams" xml:space="preserve">
+    <value>This report always uses the external-set params</value>
+  </data>
+  <data name="EFPReport_Err_ReadConfig" xml:space="preserve">
+    <value>Error occurred when reading previously stored report parameters. Default values vill be used instead. Error message is: {0}</value>
+  </data>
+  <data name="EFPReport_Err_ReentrantBuiild" xml:space="preserve">
+    <value>Report building is already in progress</value>
+  </data>
+  <data name="EFPReport_Err_WriteConfig" xml:space="preserve">
+    <value>Error occurred when the report parameters was saved. Error message is: {0}</value>
+  </data>
+  <data name="EFPReport_Menu_Edit_Refresh" xml:space="preserve">
+    <value>Refresh report with the same parameters</value>
+  </data>
+  <data name="EFPReport_Msg_CloseAnyway" xml:space="preserve">
+    <value>Close window '{0}' regardless the error?</value>
+  </data>
+  <data name="EFPReport_Phase_Build" xml:space="preserve">
+    <value>Report '{0}' creating</value>
+  </data>
+  <data name="EFPReport_Phase_Init" xml:space="preserve">
+    <value>Preparing to report creation</value>
+  </data>
+  <data name="EFPReport_Phase_Rebuild" xml:space="preserve">
+    <value>Report '{0}' re-creating</value>
+  </data>
+  <data name="BRDataTreeViewTable_Err_NoInteractiveControl" xml:space="preserve">
+    <value>The view does not contain any InteractiveControl</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Err_SameTrueFalse" xml:space="preserve">
+    <value>Text for 'On' and 'Off' state should be different</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Msg_CellDiffMargins" xml:space="preserve">
+    <value>Cell margins: left {0}, top {1}, right {2}, bottom {3} cm</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Msg_CellSameMargins" xml:space="preserve">
+    <value>Cell margins: {0} cm</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Msg_MayBeNotSupported" xml:space="preserve">
+    <value>{0} (may be not supported)</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_Title_Tab" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="BRDataViewPageSetupAppearance_ToolTip_Tab" xml:space="preserve">
+    <value>Table border setting, color usage for data view</value>
+  </data>
+  <data name="BRDataView_FileType_CSV" xml:space="preserve">
+    <value>Comma-separated text</value>
+  </data>
+  <data name="BRDataView_FileType_DBF3" xml:space="preserve">
+    <value>dBase III files</value>
+  </data>
+  <data name="BRDataView_FileType_TXT" xml:space="preserve">
+    <value>Text (tab-separated)</value>
+  </data>
+  <data name="BRReport_Title_ExportToFile" xml:space="preserve">
+    <value>Export to {0}</value>
+  </data>
+  <data name="EFPRepoprtXmlViewPage_PhaseText_Load" xml:space="preserve">
+    <value>XML view loading</value>
+  </data>
+  <data name="EFPReportControlPage_Msg_NoControl" xml:space="preserve">
+    <value>No data</value>
+  </data>
+  <data name="EFPReportExtParams_Arg_MultiPart" xml:space="preserve">
+    <value>More than one part given: {0}</value>
+  </data>
+  <data name="EFPReportExtParams_Arg_NoPart" xml:space="preserve">
+    <value>Part not given</value>
+  </data>
+  <data name="EFPReportExtParams_Err_AfterQueryParams" xml:space="preserve">
+    <value>Error occurred when AfterQueryParams called</value>
+  </data>
+  <data name="EFPReportExtParams_Err_AuxText" xml:space="preserve">
+    <value>Error. {0}</value>
+  </data>
+  <data name="EFPReportExtParams_Err_NotCallable" xml:space="preserve">
+    <value>This method overload is not callable for EFPReportExtParams</value>
+  </data>
+  <data name="EFPReportExtParams_Err_WrongParams" xml:space="preserve">
+    <value>Wrong parameters given</value>
+  </data>
+  <data name="EFPReportExtParams_Msg_Default" xml:space="preserve">
+    <value>(Defaults)</value>
+  </data>
+  <data name="EFPReportExtParams_ToolTip_Cancel" xml:space="preserve">
+    <value>Don't build the report</value>
+  </data>
+  <data name="EFPReportExtParams_ToolTip_Ok" xml:space="preserve">
+    <value>Build report with given parameters</value>
+  </data>
+  <data name="EFPReportPageFilterItems_ToolTip_NoFilter" xml:space="preserve">
+    <value>No filter</value>
+  </data>
+  <data name="EFPReportVarGridPage_Msg_NoData" xml:space="preserve">
+    <value>No data</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ColTitle_AutoGrow" xml:space="preserve">
+    <value>G.</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ColTitle_Flag" xml:space="preserve">
+    <value>P.</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ColTitle_Name" xml:space="preserve">
+    <value>Column</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ColTitle_Width" xml:space="preserve">
+    <value>Width, см</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_Msg_WidthOfNotPrintedColumm" xml:space="preserve">
+    <value>Cannot set width of non-printed column</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_Name_AutoGrow" xml:space="preserve">
+    <value>Grow</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_Name_Flag" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_Title_Tab" xml:space="preserve">
+    <value>Columns</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_AutoGrow" xml:space="preserve">
+    <value>Grow column width to fill the whole page</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_ColumnSubHeaderNumbers" xml:space="preserve">
+    <value>Set presence of auxiliary row below the column titles where column numbers will be printed</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_Flag" xml:space="preserve">
+    <value>Set checkmarks for columns to be printed</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_Name" xml:space="preserve">
+    <value>Column title</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_RepeatedColumns" xml:space="preserve">
+    <value>Number of columns that will be repeated on every band.
+Only first items from selected column list can be repeated.
+Zero means there is no repeated column.</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_Tab" xml:space="preserve">
+    <value>Printed column selection with their width</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_WholeWidth" xml:space="preserve">
+    <value>Whole width of selected columns (in centimeters)</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_Width" xml:space="preserve">
+    <value>Column width on the paper (in centimeters)</value>
+  </data>
+  <data name="BRDataViewPageSetupColumns_ToolTip_WorkWidth" xml:space="preserve">
+    <value>Printable area width calculated as
+Paper width - Left margin - Right margin (in centimeters).
+To change value, if possible, use tabs 'Page' and 'Margins'</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_ColTitle_DbfName" xml:space="preserve">
+    <value>DBF field</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_ColTitle_DisplayName" xml:space="preserve">
+    <value>Column in data view</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_ColTitle_Format" xml:space="preserve">
+    <value>Field format</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Err_BadFieldName" xml:space="preserve">
+    <value>Invalid field name</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Err_NoFields" xml:space="preserve">
+    <value>There are no selected fields</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Err_RepeatedFieldName" xml:space="preserve">
+    <value>Repeated field name</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Err_RepeatedFieldName2" xml:space="preserve">
+    <value>Field name '{0}' appeared twice</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Name_Exported" xml:space="preserve">
+    <value>Shoud export column</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_Title_Tab" xml:space="preserve">
+    <value>DBF</value>
+  </data>
+  <data name="BRDataViewPageSetupDbf_ToolTip_Tab" xml:space="preserve">
+    <value>Column selection and used encoding to export to DBF file</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Msg_Export" xml:space="preserve">
+    <value>Columns will be sent if they are marked in the 'Page Setup' dialog. All rows wil be exported to file</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Msg_GridSendTo" xml:space="preserve">
+    <value>Columns will be sent if they are marked in the 'Page Setup' dialog</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Msg_TreeSendTo" xml:space="preserve">
+    <value>In '{0}' mode columns will be sent if they are selected in the 'Page Setup' dialog
+In '{1}' mode selected columns ignored</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Text_SelCell" xml:space="preserve">
+    <value>Selected cell</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Text_SelCells" xml:space="preserve">
+    <value>Selected cells</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Text_SelRow" xml:space="preserve">
+    <value>Selected row</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Text_SelRows" xml:space="preserve">
+    <value>Selected rows</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_Title_Tab" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="BRDataViewPageSetupSendTo_ToolTip_Tab" xml:space="preserve">
+    <value>View area selection for export</value>
+  </data>
+  <data name="BRDataViewPageSetupText_Err_SingleCharRequired" xml:space="preserve">
+    <value>String must contain single char only</value>
+  </data>
+  <data name="BRDataViewPageSetupText_Title_CSV" xml:space="preserve">
+    <value>CSV file parameters</value>
+  </data>
+  <data name="BRDataViewPageSetupText_Title_Tab" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="BRDataViewPageSetupText_ToolTip_Tab" xml:space="preserve">
+    <value>Export file format</value>
+  </data>
+  <data name="BRFilePdf_Err_NoDll" xml:space="preserve">
+    <value>Cannot load PdfSharp.dll. It requires to create a pdf file</value>
+  </data>
+  <data name="BRFileTiff_Err_NoCodec" xml:space="preserve">
+    <value>There is no GDI+ codec installed for TIFF writing</value>
+  </data>
+  <data name="BRMenuOutItem_ErrTitle_Print" xml:space="preserve">
+    <value>Error occurred when document printing</value>
+  </data>
+  <data name="BRMenuOutItem_Err_NoBRReport" xml:space="preserve">
+    <value>Resport is not attached</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_DOCX" xml:space="preserve">
+    <value>Microsoft Word 2007</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_ExcelXML" xml:space="preserve">
+    <value>Microsoft Excel 2003 XML</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_HTML" xml:space="preserve">
+    <value>HTML files</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_ODS" xml:space="preserve">
+    <value>OpenOffice/LibreOffice Calc (ODS)</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_ODT" xml:space="preserve">
+    <value>OpenOffice/LibreOffice Writer (ODT)</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_PDF" xml:space="preserve">
+    <value>PDF files</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_TIFF" xml:space="preserve">
+    <value>TIFF files</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_WordXML" xml:space="preserve">
+    <value>Microsoft Word 2003 XML</value>
+  </data>
+  <data name="BRMenuOutItem_FileType_XLSX" xml:space="preserve">
+    <value>Microsoft Excel 2007</value>
+  </data>
+  <data name="BRMenuOutItem_Msg_NoPageSetup" xml:space="preserve">
+    <value>There are no page settings</value>
+  </data>
+  <data name="BRMenuOutItem_Name_BRReport" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_CreateBRReport" xml:space="preserve">
+    <value>Creating report '{0}'</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_CreateFile" xml:space="preserve">
+    <value>File creating</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_Export" xml:space="preserve">
+    <value>Saving file '{0}'</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_LaunchApp" xml:space="preserve">
+    <value>Launching {0}</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_Print" xml:space="preserve">
+    <value>Document is printing</value>
+  </data>
+  <data name="BRMenuOutItem_Phase_SendTo" xml:space="preserve">
+    <value>Sending to {0}</value>
+  </data>
+  <data name="BRMenuOutItem_Title_Export" xml:space="preserve">
+    <value>Export to file '{0}'</value>
+  </data>
+  <data name="BRMenuOutItem_Title_PageSetup" xml:space="preserve">
+    <value>Page setup</value>
+  </data>
+  <data name="BRPageSetupBitmap_Msg_BitDepth" xml:space="preserve">
+    <value>{0}-bit color</value>
+  </data>
+  <data name="BRPageSetupBitmap_Msg_BW" xml:space="preserve">
+    <value>Black-white</value>
+  </data>
+  <data name="BRPageSetupBitmap_Title_Tab" xml:space="preserve">
+    <value>Graphics</value>
+  </data>
+  <data name="BRPageSetupBitmap_ToolTip_Tab" xml:space="preserve">
+    <value>Select resolution and color depth</value>
+  </data>
+  <data name="BRPageSetupFont_Err_Sample" xml:space="preserve">
+    <value>Image drawing error</value>
+  </data>
+  <data name="BRPageSetupFont_Msg_Sample" xml:space="preserve">
+    <value>{0}. Height {1}. Width {2} pt.</value>
+  </data>
+  <data name="BRPageSetupFont_Title_Tab" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_FontHeight" xml:space="preserve">
+    <value>Font height in points.
+1 pt = 1/72 inch (appox. 0,35 mm)</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_FontName" xml:space="preserve">
+    <value>Font family name</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_FontWidth" xml:space="preserve">
+    <value>Font width in points.
+1 pt = 1/72 inch (appox. 0,35 mm)</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_LineHeight" xml:space="preserve">
+    <value>Line height in points.
+Consists of font height and led height.</value>
+  </data>
+  <data name="BRPageSetupFont_ToolTip_Tab" xml:space="preserve">
+    <value>Select font name and size</value>
+  </data>
+  <data name="BRPageSetupMargins_Title_Tab" xml:space="preserve">
+    <value>Margins</value>
+  </data>
+  <data name="BRPageSetupMargins_ToolTip_Tab" xml:space="preserve">
+    <value>Margin sizes from paper edges to print area</value>
+  </data>
+  <data name="BRPageSetupPaper_Msg_NonStandard" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="BRPageSetupPaper_Title_Tab" xml:space="preserve">
+    <value>Paper</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_CenterHorizontally" xml:space="preserve">
+    <value>If mark set, document will be horizontally centered on the page</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_CenterVertically" xml:space="preserve">
+    <value>If mark set, document will be vertically centered on the page</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_Orientation" xml:space="preserve">
+    <value>Paper orientation: Portrait (vertical) or landscape (horizontal)</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_PageSize" xml:space="preserve">
+    <value>Standard paper size selection</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_PaperHeight" xml:space="preserve">
+    <value>Allows set non-standard paper height in centimeters regarding the portrait or landscape orientation. 
+Select paper orientation before.</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_PaperWidth" xml:space="preserve">
+    <value>Allows set non-standard paper width in centimeters regarding the portrait or landscape orientation. 
+Select paper orientation before.</value>
+  </data>
+  <data name="BRPageSetupPaper_ToolTip_Tab" xml:space="preserve">
+    <value>Paper size and orientation</value>
+  </data>
+  <data name="BRReportPainter_Err_GetLines" xml:space="preserve">
+    <value>Text getting error</value>
+  </data>
+  <data name="BRReportPainter_Arg_PixelFormat" xml:space="preserve">
+    <value>Cannot create graphics for drawing image in format {0}. {1}</value>
+  </data>
+  <data name="BRReportPainter_ErrTitle_Print" xml:space="preserve">
+    <value>Print error occurred</value>
+  </data>
+  <data name="Splash_Msg_Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="Splash_Msg_Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="Splash_Msg_Skipped" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="Twain_Err_Cancel" xml:space="preserve">
+    <value>Operation cancelled by user</value>
+  </data>
+  <data name="Twain_Err_CheckStatus" xml:space="preserve">
+    <value>Operation executed partially</value>
+  </data>
+  <data name="Twain_Err_DataNotAvailable" xml:space="preserve">
+    <value>Data not available</value>
+  </data>
+  <data name="Twain_Err_EndOfList" xml:space="preserve">
+    <value>There are no more sources</value>
+  </data>
+  <data name="Twain_Err_Failure" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="Twain_Err_InfoNotSupported" xml:space="preserve">
+    <value>Information not available</value>
+  </data>
+  <data name="Twain_Err_InitTwain" xml:space="preserve">
+    <value>TWAIN cannot be initialized</value>
+  </data>
+  <data name="Twain_Err_ScannerNotFound" xml:space="preserve">
+    <value>Scanner not found</value>
+  </data>
+  <data name="Twain_Err_SourceNotOpened" xml:space="preserve">
+    <value>Cannot open the source</value>
+  </data>
+  <data name="Twain_Err_TwainCaps" xml:space="preserve">
+    <value>Cannot get TWAIN device capabilties</value>
+  </data>
+  <data name="Twain_Err_TwainUI" xml:space="preserve">
+    <value>Cannot start TWAIN user interface</value>
+  </data>
+  <data name="Twain_Err_WithCode" xml:space="preserve">
+    <value>Error with code {0}</value>
+  </data>
+  <data name="Twain_Err_XferDone" xml:space="preserve">
+    <value>All data transferred</value>
+  </data>
+  <data name="WinFormsTools_Arg_SystemColor" xml:space="preserve">
+    <value>System colors are not allowed</value>
+  </data>
+</root>

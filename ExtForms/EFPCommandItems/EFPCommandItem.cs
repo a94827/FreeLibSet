@@ -165,7 +165,7 @@ namespace FreeLibSet.Forms
         return;
       if (Item.InsideClick)
       {
-        EFPApp.ShowTempMessage("Предыдущее выполнение этой команды еще не закончено");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPCommandItem_Err_Nested, Item.DisplayName));
         return;
       }
 
@@ -364,7 +364,7 @@ namespace FreeLibSet.Forms
       //if (String.IsNullOrEmpty(Category))
       //  throw new ArgumentNullException("Category");
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 #endif
 
       _CategoryAndName = category + "|" + name;
@@ -532,8 +532,7 @@ namespace FreeLibSet.Forms
       get { return _Usage; }
       set
       {
-        if (_FirstUIObj != null)
-          throw new InvalidOperationException("Свойство Usage нельзя устанавливать при наличии элементов пользовательского интерфейса");
+        CheckNoRun();
         _Usage = value;
       }
     }
@@ -972,7 +971,7 @@ namespace FreeLibSet.Forms
           else
           {
             if (StatusBarUsage)
-              sb.Append("[окно статусной строки]");
+              sb.Append(Res.EFPCommandItem_Name_StatusPanel);
           }
         }
         if (sb.Length == 0)
@@ -1454,21 +1453,21 @@ namespace FreeLibSet.Forms
       switch (value & Keys.KeyCode)
       {
         case Keys.Space:
-          return s + "Пробел";
+          return s + Res.Keys_Name_Space;
         case Keys.Return:
-          return s + "Enter";
+          return s + Res.Keys_Name_Return;
         case Keys.PageDown:
-          return s + "PageDown";
+          return s + Res.Keys_Name_PageDown;
         case Keys.PageUp:
-          return s + "PageUp";
+          return s + Res.Keys_Name_PageUp;
         case Keys.Up:
-          return s + "Стрелка вверх";
+          return s + Res.Keys_Name_Up;
         case Keys.Down:
-          return s + "Стрелка вниз";
+          return s + Res.Keys_Name_Down;
         case Keys.Left:
-          return s + "Стрелка влево";
+          return s + Res.Keys_Name_Left;
         case Keys.Right:
-          return s + "Стрелка вправо";
+          return s + Res.Keys_Name_Right;
         case Keys.D0:
           return s + "0";
         case Keys.D1:
@@ -1502,9 +1501,9 @@ namespace FreeLibSet.Forms
         case Keys.OemCloseBrackets:
           return s + "]";
         case Keys.Oemplus:
-          return s + "Верхний [=]";
+          return s + Res.Keys_Name_OemPlus;
         case Keys.OemMinus:
-          return s + "Верхний [-]";
+          return s + Res.Keys_Name_OemMinus;
         case Keys.OemPipe:
           return s + "[\\]";
         case Keys.OemQuestion:
@@ -1588,7 +1587,7 @@ namespace FreeLibSet.Forms
       {
         e.Data["EFPCommandItem"] = this.ToString();
         e.Data["EFPCommandItem.DisplayName"] = DisplayName;
-        EFPApp.ShowException(e, "Неперехваченная ошибка при обработке команды. Обратитесь к разработчику программы");
+        EFPApp.ShowException(e, Res.EFPCommandItem_ErrTitle_ClickUnhandled);
       }
     }
 
@@ -1613,12 +1612,12 @@ namespace FreeLibSet.Forms
       {
         if (!Visible)
         {
-          EFPApp.ShowTempMessage("Команда невидима: " + DisplayName);
+          EFPApp.ShowTempMessage(String.Format(Res.EFPCommandItem_Err_Hidden,DisplayName));
           return;
         }
         if (!Enabled)
         {
-          EFPApp.ShowTempMessage("Команда заблокирована: " + DisplayName);
+          EFPApp.ShowTempMessage(String.Format(Res.EFPCommandItem_Err_Disabled, DisplayName));
           return;
         }
 
@@ -1635,8 +1634,7 @@ namespace FreeLibSet.Forms
               try
               {
                 if (InsideClick)
-                  throw new ReenteranceException("Попытка повторного выполнения команды \"" +
-                    DisplayName + "\" до завершения предыдущего запуска");
+                  throw new ReenteranceException(String.Format(Res.EFPCommandItem_Err_Nested, DisplayName));
                 _InsideClick = true;
                 SetEnabled(); // блокирует команды на время выполнения
                 try
@@ -1651,11 +1649,11 @@ namespace FreeLibSet.Forms
               }
               catch (Exception e)
               {
-                EFPApp.ShowException(e, "Ошибка при обработке команды \"" + DisplayName + "\"");
+                EFPApp.ShowException(e, String.Format(Res.EFPCommandItem_ErrTitle_Click, DisplayName));
               }
             }
             else
-              EFPApp.ShowTempMessage("Нет обработчика выполнения команды " + DisplayName);
+              EFPApp.ShowTempMessage(String.Format(Res.EFPCommandItem_Err_NoHandler, DisplayName));
 
             if (Owner != null)
               Owner.DoAfterClick(this);
@@ -1851,7 +1849,7 @@ namespace FreeLibSet.Forms
             while (true)
             {
               if (ci == null)
-                throw new BugException("Потеряли ссылку на себя при отключении MasterActive");
+                throw new BugException("The self-link has been lost when MasterActive detached");
               if (ci._NextServant == this)
               {
                 ci._NextServant = _NextServant;
@@ -1967,7 +1965,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (uiObj.NextUIObj != null)
-        throw new ArgumentException("Поле UIObj.NextUIObj уже установлено", "uiObj");
+        throw ExceptionFactory.ArgProperty("uiObj", uiObj, "NextUIObj", uiObj.NextUIObj, new Object[1] { null });
 #endif
 
       if (_FirstUIObj == null)
@@ -1993,7 +1991,7 @@ namespace FreeLibSet.Forms
           prevObj = prevObj.NextUIObj;
 #if DEBUG
           if (prevObj == null)
-            throw new BugException("Потерялся объект UI");
+            throw new BugException("UI object has been lost");
 #endif
         }
         prevObj.NextUIObj = uiObj.NextUIObj;
@@ -2084,7 +2082,7 @@ namespace FreeLibSet.Forms
     private void CheckNoRun()
     {
       if (_FirstUIObj != null)
-        throw new BugException("Элемент уже имеет связанные объекты пользовательского интерфейса.");
+        throw new InvalidOperationException(Res.EFPCommandItem_Err_HasUIObjs);
     }
 
     /// <summary>
@@ -2437,16 +2435,16 @@ namespace FreeLibSet.Forms
 
       string code = ((IObjectWithCode)item).Code;
       if (_AllItems.Contains(code))
-        throw new InvalidOperationException("Команда с кодом \"" + code + "\" уже есть");
+        throw ExceptionFactory.KeyAlreadyExists(code);
 #endif
 
       if (item.Owner != null)
-        throw new InvalidOperationException("Повторное добавление команды \"" + item.DisplayName + "\" в список");
+        throw new InvalidOperationException(String.Format(Res.EFPCommandItem_Err_AnotherOwner, item.DisplayName));
 
       if (item.Parent == null)
         _TopLevelItems.Items.Add(item);
       else if (item.Parent.Owner != this)
-        throw new InvalidOperationException("Родительская команда " + item.Parent.ToString() + " не была присоединена к коллекции ранее");
+        throw new InvalidOperationException(String.Format(Res.EFPCommandItem_Err_ParentNotAttached, item.Parent.DisplayName));
 
       _AllItems.Add(item);
 
@@ -2484,7 +2482,7 @@ namespace FreeLibSet.Forms
       if (parent != null)
       {
         if (parent.Owner != this)
-          throw new ArgumentException("Родительская команда не относится к текущему набору", "parent");
+          throw new ArgumentException(String.Format(Res.EFPCommandItem_Err_ParentNotAttached, parent.DisplayName), "parent");
       }
 
       foreach (EFPCommandItem ci in source)
@@ -2699,7 +2697,7 @@ namespace FreeLibSet.Forms
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException("Нельзя изменять список команд, т.к. установлен признак \"Только для чтения\"");
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -2867,7 +2865,7 @@ namespace FreeLibSet.Forms
 
       if (ci.InsideClick)
       {
-        EFPApp.ShowTempMessage("Команда " + ci.DisplayName + " в настоящий момент выполняется");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPCommandItem_Err_Nested, ci.DisplayName));
         return true;
       }
 
@@ -3073,7 +3071,7 @@ namespace FreeLibSet.Forms
           if (item.Visible && item.Enabled)
           {
             if (item.InsideClick)
-              EFPApp.ShowTempMessage("Команда " + item.DisplayName + " в настоящий момент выполняется");
+              EFPApp.ShowTempMessage(String.Format(Res.EFPCommandItem_Err_Nested, item.DisplayName));
             else
               item.PerformClick();
           }
@@ -3164,7 +3162,7 @@ namespace FreeLibSet.Forms
 
       public DebugForm()
       {
-        base.Text = "Активные Command Items";
+        base.Text = "Active Command Items";
         base.FormBorderStyle = FormBorderStyle.SizableToolWindow;
         base.TopMost = true;
         base.FormClosed += new FormClosedEventHandler(DebugForm_FormClosed);
@@ -3216,7 +3214,7 @@ namespace FreeLibSet.Forms
         if (_TheListBox.SelectedItem == null)
           return;
 
-        FreeLibSet.Forms.Diagnostics.DebugTools.DebugObject(_TheListBox.SelectedItem, "EFPCommandItem №" + (_TheListBox.SelectedIndex + 1).ToString());
+        FreeLibSet.Forms.Diagnostics.DebugTools.DebugObject(_TheListBox.SelectedItem, "EFPCommandItem #" + (_TheListBox.SelectedIndex + 1).ToString());
       }
 
       #endregion
@@ -3278,7 +3276,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (this[stdItem] != null)
-        throw new BugException("Повторное создание стандартной команды " + stdItem.ToString());
+        throw ExceptionFactory.KeyAlreadyExists(stdItem);
 #endif
 
       EFPCommandItem ci = EFPAppCommandItems.CreateStdCommand(stdItem);

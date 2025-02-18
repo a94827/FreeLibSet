@@ -42,7 +42,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка инициализации состояния команд главного меню при переключении интерфейса");
+        EFPApp.ShowException(e, Res.EFPApp_ErrTitle_InterfaceChanged);
       }
     }
 
@@ -114,7 +114,7 @@ namespace FreeLibSet.Forms
     {
       //// Вид - Панели инструментов
       EFPCommandItem menuViewToolBars = new EFPCommandItem("View", "ToolBars");
-      menuViewToolBars.MenuText = "Панели инструментов";
+      menuViewToolBars.MenuText = Res.Cmd_Menu_View_ToolBars;
       menuViewToolBars.Parent = menuView;
       menuViewToolBars.GroupBegin = true;
       _CommandItems.Add(menuViewToolBars);
@@ -218,8 +218,10 @@ namespace FreeLibSet.Forms
       if (EFPApp.Interface.MainWindowCount > 1)
       {
         RadioSelectDialog dlg = new RadioSelectDialog();
-        dlg.Title = "Восстановление панелей инструментов";
-        dlg.Items = new string[] { "Только для текущего окна", "Для всех открытых окон" };
+        dlg.Title = Res.EFPApp_Title_RestoreToolBars;
+        dlg.Items = new string[] {
+          Res.EFPApp_Msg_RestoreToolBars_CurrentWindow,
+          Res.EFPApp_Msg_RestoreToolBars_AllWindows };
         dlg.SelectedIndex = _ToolBarsRestoreAllWindowsMode;
         if (dlg.ShowDialog() != DialogResult.OK)
           return;
@@ -254,8 +256,8 @@ namespace FreeLibSet.Forms
     /// <param name="menuView">Созданное меню "Вид"</param>
     public void AddStatusBarVisible(EFPCommandItem menuView)
     {
-      _StatusBarVisible = new EFPCommandItem("View", "StatusBar");
-      _StatusBarVisible.MenuText = "Статусная строка";
+      _StatusBarVisible = new EFPCommandItem("View", "StatusBarVisible");
+      _StatusBarVisible.MenuText = Res.Cmd_Menu_View_StatusBarVisible;
       _StatusBarVisible.Parent = menuView;
       _StatusBarVisible.Click += new EventHandler(StatusBarVisible_Click);
       _CommandItems.Add(_StatusBarVisible);
@@ -561,7 +563,7 @@ namespace FreeLibSet.Forms
         Form curr = EFPApp.Interface.CurrentChildForm;
         if (curr == null)
         {
-          EFPApp.ShowTempMessage("Нет текущего окна");
+          EFPApp.ShowTempMessage(Res.EFPApp_Err_NoCurrentForm);
           return;
         }
 
@@ -679,9 +681,9 @@ namespace FreeLibSet.Forms
       set
       {
         if (_WindowListItems != null)
-          throw new InvalidOperationException("Список уже был создан");
+          throw ExceptionFactory.ObjectProperty(this, "WindowListItems", WindowListItems, new object[] { null });
         if (value < 0 || value > 100)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, 100);
       }
     }
     private int _WindowListCount;
@@ -750,9 +752,7 @@ namespace FreeLibSet.Forms
 
       Form frm = ci.Tag as Form;
 
-      if (frm == null)
-        EFPApp.ErrorMessageBox("Форма не присоединена к команде");
-      else
+      if (frm != null)
         EFPApp.Activate(frm); // 07.06.2021
     }
 
@@ -763,7 +763,7 @@ namespace FreeLibSet.Forms
       int p = ci.MenuText.IndexOf(' '); // номерок и пробел
 #if DEBUG
       if (p < 0 || p > 3)
-        throw new BugException("Несанкционированное изменение текста команды меню");
+        throw new BugException("Command MenuText has been changed");
 #endif
 
       Form frm = ci.Tag as Form;
@@ -776,7 +776,7 @@ namespace FreeLibSet.Forms
       {
         string s = ci.MenuText.Substring(0, p + 1) + frm.Text; // Цифра и пробел сохранены
         if (EFPApp.IsMinimized(frm))
-          s += " (свернуто)";
+          s += String.Format(Res.EFPApp_Msg_FormMinimized, s);
 
         if (DebugShowHWND)
           s += " (HWND=" + frm.Handle.ToString() + ")";

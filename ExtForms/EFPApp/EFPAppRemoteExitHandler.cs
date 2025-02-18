@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -108,7 +109,7 @@ namespace FreeLibSet.Forms
       EFPApp.RemoteExitHandler.RemainderTime = remainderTime;
       ThePB.Maximum = EFPApp.RemoteExitHandler.WaitingTime; // вдруг поменялось
       ThePB.Value = ThePB.Maximum - remainderTime;
-      lblTime.Text = (remainderTime / 1000).ToString();
+      txtTime.Text = (remainderTime / 1000).ToString();
 
 
       if (remainderTime == 0)
@@ -124,7 +125,7 @@ namespace FreeLibSet.Forms
   #region Перечисление EFPAppRemoteExitState
 
   /// <summary>
-  /// Значения свойства EFPAppRemoteExitHandler.State
+  /// Значения свойства <see cref="EFPAppRemoteExitHandler.State"/>
   /// </summary>
   [Serializable]
   public enum EFPAppRemoteExitState
@@ -136,31 +137,31 @@ namespace FreeLibSet.Forms
     NotStarted,
 
     /// <summary>
-    /// Был вызван метод Start.
-    /// В данный момент выведена экранная заставка и ожидается реакция пользователя в течение интервала времени WaitingTime 
+    /// Был вызван метод <see cref="EFPAppRemoteExitHandler.Start()"/>.
+    /// В данный момент выведена экранная заставка и ожидается реакция пользователя в течение интервала времени <see cref="EFPAppRemoteExitHandler.WaitingTime"/>.
     /// </summary>
     Started,
 
     /// <summary>
     /// Пользователь нажал кнопку "Отмена", пока выводилась заставка.
-    /// Работа приложения продолжается в штатном режиме
+    /// Работа приложения продолжается в штатном режиме.
     /// </summary>
     UserCancelled,
 
     /// <summary>
     /// Сервер "передумал" и отменил завершение приложения в течение интервала ожидания.
-    /// Это свойство устанавливается вызовом Cancel().
+    /// Это свойство устанавливается вызовом <see cref="EFPAppRemoteExitHandler.Cancel()"/>.
     /// Работа приложения продолжается в штатном режиме
     /// </summary>
     ExternalCancelled,
 
     /// <summary>
-    /// Завершение отменено обработчиком события BeforeStart или BeforeExit
+    /// Завершение отменено обработчиком события <see cref="EFPAppRemoteExitHandler.BeforeStart"/> или <see cref="EFPAppRemoteExitHandler.BeforeExit"/>
     /// </summary>
     InternalCancelled,
 
     /// <summary>
-    /// Временное состояние, устанавливаемое на время вызова EFPApp.Exit
+    /// Временное состояние, устанавливаемое на время вызова <see cref="EFPApp.Exit()"/>
     /// </summary>
     Exiting,
 
@@ -170,8 +171,8 @@ namespace FreeLibSet.Forms
     Exited,
 
     /// <summary>
-    /// Работа приложения не была завершена. Вызов EFPApp.Exit() вернул false.
-    /// При этом часть функций приложения может оказаться недоступной
+    /// Работа приложения не была завершена. Вызов <see cref="EFPApp.Exit()"/> вернул false.
+    /// При этом часть функций приложения может оказаться недоступной.
     /// </summary>
     ExitError,
   }
@@ -181,8 +182,8 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Удаленное завершение работы, инициируемое сервером.
-  /// Реализует свойство EFPApp.RemoteExitHandler.
-  /// Доступ к объекту возможен только из основного потока приложения
+  /// Реализует свойство <see cref="EFPApp.RemoteExitHandler"/>.
+  /// Доступ к объекту возможен только из основного потока приложения.
   /// </summary>
   public sealed class EFPAppRemoteExitHandler
   {
@@ -201,7 +202,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Время ожидания реакции пользователя (вывода заставки) в миллисекундах.
     /// По умолчанию равно 30000 (30 секунд).
-    /// В текущей реализации точность составляет 1 секунду
+    /// В текущей реализации точность составляет 1 секунду.
     /// </summary>
     public int WaitingTime
     {
@@ -213,8 +214,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Информационное сообщение, переданное сервером.
     /// Описывает причину, по которой требуется завершить работу приложения.
-    /// Свойство может не устанавливаться или устанавливаться в процессе показа формы
-    /// 
+    /// Свойство может не устанавливаться или устанавливаться в процессе показа формы.
     /// </summary>
     public string Message
     {
@@ -240,7 +240,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Контекст справки для формы ожидания.
-    /// Свойство может устаналвиваться только до первого вызова Start()
+    /// Свойство может устаналвиваться только до первого вызова <see cref="Start()"/>.
     /// </summary>
     public string HelpContext
     {
@@ -248,7 +248,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (State != EFPAppRemoteExitState.NotStarted)
-          throw new InvalidOperationException("Свойство должно устанавливаться до первого вызова Start()");
+          throw ExceptionFactory.ObjectProperty(this, "State", State, new object[] { EFPAppRemoteExitState.NotStarted });
         _HelpContext = value;
       }
     }
@@ -276,8 +276,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Упрощенное значение для текущего состояние.
-    /// Возвращает true, если состояние равно Started или Exiting.
-    /// Установка свойства вызывает метод Start() или Cancel()
+    /// Возвращает true, если состояние <see cref="State"/> равно <see cref="EFPAppRemoteExitState.Started"/> или <see cref="EFPAppRemoteExitState.Exited"/>.
+    /// Установка свойства вызывает метод <see cref="Start()"/> или <see cref="Cancel()"/>.
     /// </summary>
     public bool Active
     {
@@ -297,23 +297,23 @@ namespace FreeLibSet.Forms
     internal EFPAppRemoteExitForm TheForm;
 
     /// <summary>
-    /// Время (последнего) вызова метода Start(). Вложенные вызовы Start() не учитываются.
-    /// Если State=NotStarted, возвращаемое значение не имеет смысла
+    /// Время вызова метода <see cref="Start()"/>. Вложенные вызовы <see cref="Start()"/> не учитываются.
+    /// Если <see cref="State"/>=<see cref="EFPAppRemoteExitState.NotStarted"/>, возвращаемое значение не имеет смысла.
     /// </summary>
     public DateTime StartTime { get { return _StartTime; } }
     private DateTime _StartTime;
 
     /// <summary>
-    /// Количество вызовом методов Start(). Вложенные вызовы Start() не учитываются.
+    /// Количество вызовом методов <see cref="Start()"/>.
     /// Значение может быть больше 1, если пользователь нажимал кнопку "Отмена" в заставке или приложение не было закрыто, например, из-за наличия несохраненных данных.
-    /// Свойство возвращает количество появлений на экране окна-заставки
+    /// Свойство возвращает количество появлений на экране окна-заставки.
     /// </summary>
     public int StartCount { get { return _StartCount; } }
     private int _StartCount;
 
     /// <summary>
     /// Время, оставшееся до закрытия окна заставки.
-    /// Свойство имеет значение только в состоянии State=Started
+    /// Свойство имеет значение только в состоянии <see cref="State"/>=<see cref="EFPAppRemoteExitState.Started"/>.
     /// </summary>
     public int RemainderTime
     {
@@ -328,10 +328,10 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Инициализирует завершение работы приложения.
-    /// Выводит на экран окно-заставку, в которой начинает уменьшаться отсчет таймера от WaitingTime до 0.
-    /// Устанавливается состояние State=Started.
+    /// Выводит на экран окно-заставку, в которой начинает уменьшаться отсчет таймера от <see cref="WaitingTime"/> до 0.
+    /// Устанавливается состояние <see cref="State"/>=<see cref="EFPAppRemoteExitState.Started"/>.
     /// Повторный вызов в процессе показа заставки не выполняет никаких действий. Таймер не продлевается.
-    /// Этот метод сразу возвращает управление
+    /// Этот метод сразу возвращает управление.
     /// </summary>
     public void Start()
     {
@@ -386,7 +386,7 @@ namespace FreeLibSet.Forms
     #region События
 
     /// <summary>
-    /// Событие вызывается при изменении значения свойства State
+    /// Событие вызывается при изменении значения свойства <see cref="State"/>
     /// </summary>
     public event EventHandler StateChanged;
 
@@ -398,14 +398,16 @@ namespace FreeLibSet.Forms
 
 
     /// <summary>
-    /// Это событие вызывается при вызове метода Start(), если он не является вложенным.
-    /// Если обработчик установит свойство Cancel=true, то заставка выводится не будет, и State будет установлено в InternalCancelled
+    /// Это событие вызывается при вызове метода <see cref="Start()"/>, если он не является вложенным.
+    /// Если обработчик установит свойство <see cref="CancelEventArgs.Cancel"/>=true, то заставка выводится не будет, 
+    /// и <see cref="State"/> будет установлено в <see cref="EFPAppRemoteExitState.InternalCancelled"/>.
     /// </summary>
     public event CancelEventHandler BeforeStart;
 
     /// <summary>
-    /// Это событие вызывается после того, как отработало окно ожидания, перед вызовом EFPApp.Exit().
-    /// Если обработчик установит свойство Cancel=true, то вызова Exit() не будет, и State будет установлено в InternalCancelled
+    /// Это событие вызывается после того, как отработало окно ожидания, перед вызовом <see cref="EFPApp.Exit()"/>.
+    /// Если обработчик установит свойство <see cref="CancelEventArgs.Cancel"/>=true, то вызова <see cref="EFPApp.Exit()"/> не будет, 
+    /// и <see cref="State"/> будет установлено в <see cref="EFPAppRemoteExitState.InternalCancelled"/>.
     /// </summary>
     public event CancelEventHandler BeforeExit;
 
@@ -420,8 +422,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Это событие вызывается после вызова EFPApp.Exit(), независимо от результатов вызова.
-    /// Чтобы определить успешность вызова, следует анализировать свойство State. Оно может иметь значение Exited или ExitError
+    /// Это событие вызывается после вызова <see cref="EFPApp.Exit()"/>, независимо от результатов вызова.
+    /// Чтобы определить успешность вызова, следует анализировать свойство <see cref="State"/>. 
+    /// Оно может иметь значение <see cref="EFPAppRemoteExitState.Exited"/> или <see cref="EFPAppRemoteExitState.ExitError"/>.
     /// </summary>
     public event EventHandler AfterExit;
 
@@ -463,7 +466,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Не удалось заверить приложение");
+        EFPApp.ShowException(e, Res.EFPApp_ErrTitle_ExitFailed);
         EFPApp.RemoteExitHandler.State = EFPAppRemoteExitState.ExitError;
       }
 

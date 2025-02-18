@@ -387,7 +387,7 @@ namespace FreeLibSet.Forms.Docs
           }
           catch (Exception e2)
           {
-            LogoutTools.LogoutException(e2, "DocProviderUI.OnApplyChanges()");
+            LogoutTools.LogoutException(e2);
           }
         }
       }

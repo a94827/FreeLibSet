@@ -150,7 +150,7 @@ namespace FreeLibSet.Parsing
     public ToEOLCommentParser(string startString)
     {
       if (String.IsNullOrEmpty(startString))
-        throw new ArgumentNullException("startString");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("startString");
       _StartString = startString;
     }
 

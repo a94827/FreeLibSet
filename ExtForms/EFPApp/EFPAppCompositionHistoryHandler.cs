@@ -46,7 +46,7 @@ namespace FreeLibSet.Forms
       //if (String.IsNullOrEmpty(UserSetName))
       //  throw new ArgumentNullException("UserSetName");
       if (String.IsNullOrEmpty(displayName))
-        throw new ArgumentNullException("displayName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("displayName");
       if (md5.Length != 32)
         throw new ArgumentException("MD5", "md5");
 #endif
@@ -66,14 +66,14 @@ namespace FreeLibSet.Forms
     /// Вид композиции: из списка истории или именная пользовательская
     /// </summary>
     public EFPAppCompositionHistoryItemKind Kind { get { return _Kind; } }
-    private EFPAppCompositionHistoryItemKind _Kind;
+    private readonly EFPAppCompositionHistoryItemKind _Kind;
 
     /// <summary>
     /// Внутреннее имя, например "Hist1", "User1".
     /// Может быть пустой строкой для последней сохраненной композиции
     /// </summary>
     public string UserSetName { get { return _UserSetName; } }
-    private string _UserSetName;
+    private readonly string _UserSetName;
 
     /// <summary>
     /// Отображаемое имя.
@@ -81,19 +81,19 @@ namespace FreeLibSet.Forms
     /// Для композиции из истории - текст в виде "Последний", "Предпоследний", ...
     /// </summary>
     public string DisplayName { get { return _DisplayName; } }
-    private string _DisplayName;
+    private readonly string _DisplayName;
 
     /// <summary>
     /// Время сохранения интерфейса
     /// </summary>
     public DateTime Time { get { return _Time; } }
-    private DateTime _Time;
+    private readonly DateTime _Time;
 
     /// <summary>
     /// Контрольная сумма, используемая для сравнения композиций
     /// </summary>
     public string MD5 { get { return _MD5; } }
-    private string _MD5;
+    private readonly string _MD5;
 
     /// <summary>
     /// Возвращает свойство DisplayName.
@@ -110,7 +110,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Вспомогательный класс для хранения истории сохранения композиций пользовательского интерфейса
   /// и именных сохраненных композиций.
-  /// Используется в EFPApp.SaveComposition(), в диалоге выбора сохраненной композиции.
+  /// Используется в <see cref="EFPApp.SaveComposition()"/>, в диалоге выбора сохраненной композиции.
   /// Также может использоваться в пользовательском коде.
   /// </summary>
   public static class EFPAppCompositionHistoryHandler
@@ -176,9 +176,9 @@ namespace FreeLibSet.Forms
       string prefix;
       switch (itemIndex)
       {
-        case 0: prefix = "Последняя"; break;
-        case 1: prefix = "Предпоследняя"; break;
-        default: prefix = "Предыдущая №" + (itemIndex + 1).ToString(); break;
+        case 0: prefix = Res.EFPAppCompositionHistoryItem_Msg_Hist0; break;
+        case 1: prefix = Res.EFPAppCompositionHistoryItem_Msg_Hist1; break;
+        default: prefix = String.Format(Res.EFPAppCompositionHistoryItem_Msg_HistN, itemIndex + 1); break;
       }
 
       return new EFPAppCompositionHistoryItem(EFPAppCompositionHistoryItemKind.History,
@@ -189,7 +189,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает список именных композиций.
-    /// Список отсортирован по алфавиту (свойство DisplayName)
+    /// Список отсортирован по алфавиту (свойство <see cref="EFPAppCompositionHistoryItem.DisplayName"/>).
     /// </summary>
     /// <returns>Массив описаний композиций</returns>
     public static EFPAppCompositionHistoryItem[] GetUserItems()
@@ -296,7 +296,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получить описание секции конфигурации для выбранной сохраненной композиции.
-    /// Полученный объект может быть передан методу EFPApp.ConfigManager.GetConfig() для загрузки данных
+    /// Полученный объект может быть передан методу EFPApp.ConfigManager.GetConfig() для загрузки данных.
     /// </summary>
     /// <param name="item">Сохраненный элемент истории</param>
     /// <returns>Имя, категория и пользовательский набор секции конфигурации</returns>
@@ -311,7 +311,9 @@ namespace FreeLibSet.Forms
           return new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
             EFPConfigCategories.UIUser, item.UserSetName);
         default:
-          throw new ArgumentException("Неизвестный Kind=" + item.Kind.ToString(), "item");
+          throw ExceptionFactory.ArgProperty("item", item, "Kind", item.Kind, new object[] {
+            EFPAppCompositionHistoryItemKind.History,
+            EFPAppCompositionHistoryItemKind.User});
       }
     }
 
@@ -333,15 +335,17 @@ namespace FreeLibSet.Forms
           return new EFPConfigSectionInfo(EFPApp.CompositionConfigSectionName,
             EFPConfigCategories.UIUserSnapshot, item.UserSetName);
         default:
-          throw new ArgumentException("Неизвестный Kind=" + item.Kind.ToString(), "item");
+          throw ExceptionFactory.ArgProperty("item", item, "Kind", item.Kind, new object[] {
+            EFPAppCompositionHistoryItemKind.History,
+            EFPAppCompositionHistoryItemKind.User});
       }
     }
 
     /// <summary>
-    /// Сохранить композицию окна, полученную вызовом EFPAppInterface.SaveComposition().
+    /// Сохранить композицию окна, полученную вызовом <see cref="EFPAppInterface.SaveComposition(CfgPart)"/>.
     /// При записи проверяется наличие секции с такой MD5. Если уже есть такая секция, то она
     /// "продвигается" наверх списка.
-    /// Этот метод вызывается в EFPApp.SaveComposition().
+    /// Этот метод вызывается в <see cref="EFPApp.SaveComposition()"/>.
     /// </summary>
     /// <param name="cfg">Записанная секция</param>
     /// <param name="snapshot">Изображение</param>
@@ -351,7 +355,7 @@ namespace FreeLibSet.Forms
       if (cfg == null)
         throw new ArgumentNullException("cfg");
       if (cfg.IsEmpty)
-        throw new ArgumentException("Композиция не записана", "cfg");
+        throw new ArgumentException(Res.EFPAppCompositionHistoryItem_Arg_NotSaved, "cfg");
 
       if (EFPApp.CompositionHistoryCount == 0)
         throw new InvalidOperationException("EFPApp.CompositionHistoryCount=0");
@@ -418,7 +422,7 @@ namespace FreeLibSet.Forms
           }
 
           if (userSetName == null)
-            throw new BugException("Не нашли имени набора для записи истории");
+            throw new BugException("Set name to write history has not been found");
           table.Rows.Add(userSetName, DateTime.Now, md5);
           table.AcceptChanges();
 
@@ -467,7 +471,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось сохранить изображение для предварительного просмотра");
+          EFPApp.ShowException(e, Res.EFPAppCompositionHistoryItem_ErrTitle_SavePreview);
         }
       }
 
@@ -492,11 +496,11 @@ namespace FreeLibSet.Forms
     public static EFPAppCompositionHistoryItem SaveUser(string name, CfgPart cfg, Bitmap snapshot)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException(name);
+        throw new ArgumentNullException("name");
       if (cfg == null)
         throw new ArgumentNullException("cfg");
       if (cfg.IsEmpty)
-        throw new ArgumentException("Композиция не записана", "cfg");
+        throw new ArgumentException(Res.EFPAppCompositionHistoryItem_Arg_NotSaved, "cfg");
 
       string md5 = cfg.MD5Sum();
 
@@ -556,7 +560,7 @@ namespace FreeLibSet.Forms
             }
           }
           if (userSetName == null)
-            throw new BugException("Не нашли имени набора для записи истории");
+            throw new BugException("Set name to write history has not been found");
 
           table.Rows.Add(userSetName, name, DateTime.Now, md5);
           table.AcceptChanges();
@@ -602,7 +606,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Не удалось сохранить изображение для предварительного просмотра");
+        EFPApp.ShowException(e, Res.EFPAppCompositionHistoryItem_ErrTitle_SavePreview);
       }
 
       #endregion
@@ -649,7 +653,9 @@ namespace FreeLibSet.Forms
           break;
 
         default:
-          throw new ArgumentException("Неизвестный Kind=" + item.Kind.ToString(), "item");
+          throw ExceptionFactory.ArgProperty("item", item, "Kind", item.Kind, new object[] {
+            EFPAppCompositionHistoryItemKind.History,
+            EFPAppCompositionHistoryItemKind.User});
       }
     }
 

@@ -35,20 +35,22 @@
       // 
       this.TheTC.Dock = System.Windows.Forms.DockStyle.Fill;
       this.TheTC.Location = new System.Drawing.Point(0, 0);
+      this.TheTC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.TheTC.Name = "TheTC";
       this.TheTC.SelectedIndex = 0;
-      this.TheTC.Size = new System.Drawing.Size(453, 262);
+      this.TheTC.Size = new System.Drawing.Size(604, 322);
       this.TheTC.TabIndex = 0;
       // 
-      // Form1
+      // EFPTabControlForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(453, 262);
+      this.ClientSize = new System.Drawing.Size(604, 322);
       this.Controls.Add(this.TheTC);
-      this.Name = "Form1";
+      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.Name = "EFPTabControlForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
-      this.Text = "Используйте команды локального меню";
+      this.Text = "Use context menu commands";
       this.ResumeLayout(false);
 
     }

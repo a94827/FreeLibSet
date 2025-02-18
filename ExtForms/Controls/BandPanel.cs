@@ -61,7 +61,7 @@ namespace FreeLibSet.Controls
           throw new ArgumentNullException("item");
 
         if (item.BandPanel != null)
-          throw new InvalidOperationException("Повторное добавление полосы");
+          throw ExceptionFactory.CannotAddItemAgain(item);
 
         if (item.Label != null)
           InitTabIndex(item.Label);

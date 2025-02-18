@@ -24,7 +24,7 @@ namespace FreeLibSet.Controls
   /// Справа имеются дополнительные кнопки для задания интервала
   /// </summary>
   [Designer(typeof(FreeLibSet.Controls.Design.DateRangeBoxDesigner))]
-  [Description("Два поля для ввода интервала дат")]
+  [Description("Two text boxes for input dates as a range")]
   [ToolboxBitmap(typeof(DateRangeBox), "DateRangeBox.bmp")]
   [ToolboxItem(true)]
   public partial class DateRangeBox : UserControl
@@ -43,9 +43,9 @@ namespace FreeLibSet.Controls
 
       SetStyle(ControlStyles.FixedHeight, true);
 
-      TheMenuButton.ToolTipText = "Меню готовых интервалов дат";
-      TheLeftButton.ToolTipText = "Предыдущий такой же интервал";
-      TheRightButton.ToolTipText = "Следующий такой же интервал";
+      TheMenuButton.ToolTipText = Res.DateRangeBox_ToolTip_Menu;
+      TheLeftButton.ToolTipText = Res.DateRangeBox_ToolTip_Prev;
+      TheRightButton.ToolTipText = Res.DateRangeBox_ToolTip_Next;
 
       // Блокировка кнопок
       First.EnabledChanged += new EventHandler(Date_EnabledChanged);
@@ -154,7 +154,7 @@ namespace FreeLibSet.Controls
       if ((!First.Visible) || (!First.Enabled) ||
         (!Last.Visible) || (!Last.Enabled))
       {
-        EFPApp.ShowTempMessage("Для изменения интервала необходимо, чтобы обе даты были доступны");
+        EFPApp.ShowTempMessage(Res.DateRangeBox_Err_DatesNotEnabled);
         return;
       }
 
@@ -163,7 +163,7 @@ namespace FreeLibSet.Controls
 
       if (!UITools.ShiftDateRange(ref dt1, ref dt2, forward))
       {
-        EFPApp.ShowTempMessage("Для изменения интервала необходимо, чтобы обе даты были заполнены");
+        EFPApp.ShowTempMessage(Res.DateRangeBox_Err_DatesNotFilled);
         return;
       }
 
@@ -175,7 +175,7 @@ namespace FreeLibSet.Controls
 
     #region ShowPeriodText
 
-    [Description("Управляет показом текста периода в нижней части элемента. Если установить в false, то элемент занимает меньше места")]
+    [Description("Controls the showing text in the bottom. If set to false, the control appears compact.")]
     [Category("Appearance")]
     [DefaultValue(true)]
     public bool ShowPeriodText
@@ -202,7 +202,7 @@ namespace FreeLibSet.Controls
         ShowPeriodTextChanged(this, args);
     }
 
-    [Description("Вызывается при изменении свойства ShowPeriodText")]
+    [Description("Called when the property ShowPeriodText changed")]
     [Category("Property Changed")]
     public event EventHandler ShowPeriodTextChanged;
 

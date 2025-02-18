@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Forms.Diagnostics;
+using FreeLibSet.Logging;
 using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
@@ -280,7 +281,7 @@ namespace FreeLibSet.Forms
       _Pages = new PageCollection(this);
       _EditItems = new UIExtEditItemList();
       _ChangeInfoList = new DepChangeInfoList();
-      _ChangeInfoList.DisplayName = "Форма редактора";
+      _ChangeInfoList.DisplayName = Res.ExtEditDialogForm_Name_ChangedInfoList;
       _Form.FormProvider.ChangeInfo = _ChangeInfoList;
       _DisposeFormList = new List<System.Windows.Forms.Form>();
       _CheckUnsavedChanges = true;
@@ -513,7 +514,7 @@ namespace FreeLibSet.Forms
         if (value == _CancelButtonAsClose)
           return;
         _CancelButtonAsClose = value;
-        _Form.CancelButtonProvider.Text = value ? "Закрыть" : "Отмена";
+        _Form.CancelButtonProvider.Text = value ? Res.Btn_Text_Close : Res.Btn_Text_Cancel;
       }
     }
     private bool _CancelButtonAsClose;
@@ -762,7 +763,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при обработке события DocEditPages.PageShow");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -834,13 +835,13 @@ namespace FreeLibSet.Forms
       _Form.FormProvider.CheckHasNotBeenShown();
 
       EFPCommandItem ciDebugChanges = new EFPCommandItem("Debug", "Changes");
-      ciDebugChanges.MenuText = "Отладка изменений";
+      ciDebugChanges.MenuText = Res.Cmd_Menu_Debug_Changes;
       ciDebugChanges.Click += new EventHandler(ciDebugChanges_Click);
       ciDebugChanges.GroupBegin = true;
       MoreCommandItems.Add(ciDebugChanges);
 
       EFPCommandItem ciDebugCheckItems = new EFPCommandItem("Debug", "Form");
-      ciDebugCheckItems.MenuText = "Отладка формы";
+      ciDebugCheckItems.MenuText = Res.Cmd_Menu_Debug_Form;
       ciDebugCheckItems.Click += new EventHandler(ciDebugCheckItems_Click);
       ciDebugCheckItems.GroupEnd = true;
       MoreCommandItems.Add(ciDebugCheckItems);
@@ -848,12 +849,14 @@ namespace FreeLibSet.Forms
 
     private void ciDebugChanges_Click(object sender, EventArgs args)
     {
-      DebugTools.DebugChangeInfo(ChangeInfoList, "Изменения значений");
+      EFPCommandItem ci = (EFPCommandItem)sender;
+      DebugTools.DebugChangeInfo(ChangeInfoList, ci.MenuTextWithoutMnemonic);
     }
 
     private void ciDebugCheckItems_Click(object sender, EventArgs args)
     {
-      DebugTools.DebugBaseProvider(_Form.FormProvider, "Form provider");
+      EFPCommandItem ci = (EFPCommandItem)sender;
+      DebugTools.DebugBaseProvider(_Form.FormProvider, ci.MenuTextWithoutMnemonic);
     }
 
     #endregion
@@ -916,7 +919,7 @@ namespace FreeLibSet.Forms
     public bool WriteData()
     {
       if (FormState != ExtEditDialogState.Shown)
-        throw new InvalidOperationException("Вызов WriteData() допускается не допускается из обработчиков кнопок");
+        throw new InvalidOperationException(Res.ExtEditDialogForm_Err_WriteDataCall);
       return DoWrite(ExtEditDialogState.WriteData);
     }
 
@@ -942,7 +945,7 @@ namespace FreeLibSet.Forms
             _Form.CancelButtonProvider.Control.PerformClick();
           return FormState == ExtEditDialogState.Closed;
         default:
-          throw new InvalidOperationException("Неподходящее состояние формы: " + FormState.ToString());
+          throw new InvalidOperationException(String.Format(Res.ExtEditDialogForm_Err_InvalidState, FormState.ToString()));
       }
     }
 
@@ -955,12 +958,8 @@ namespace FreeLibSet.Forms
       if (_Form.DialogResult != DialogResult.No && CheckUnsavedChanges && (!ReadOnly) && ChangeInfoList.Changed)
       {
         EFPApp.Activate(_Form); // 07.06.2021
-        StringBuilder sb = new StringBuilder();
-        sb.Append("Данные в редакторе \"");
-        sb.Append(Title);
-        sb.Append("\" были изменены. Вы действительно хотите выйти и потерять изменения?");
-        if (EFPApp.MessageBox(sb.ToString(),
-          "Выход без сохранения изменений", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+        if (EFPApp.MessageBox(String.Format(Res.ExtEditDialogForm_Msg_CancelWarning, Title),
+          Res.ExtEditDialogForm_Title_CancelWarning, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
         {
           args.Cancel = true;
           return;
@@ -972,7 +971,7 @@ namespace FreeLibSet.Forms
     {
       if (FormState != ExtEditDialogState.Shown)
       {
-        EFPApp.ShowTempMessage("Предыдущая запись документа еще не закончена");
+        EFPApp.ShowTempMessage(Res.ExtEditDialogForm_Err_WritingInProgress);
         return false;
       }
       _FormState = state;
@@ -992,7 +991,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка записи данных редактора");
+        EFPApp.ShowException(e, Res.ExtEditDialogForm_ErrTitle_Writing);
         res = false;
       }
       _FormState = ExtEditDialogState.Shown;
@@ -1158,7 +1157,7 @@ namespace FreeLibSet.Forms
       set
       {
         _TabPage.Text = value;
-        _ChangeInfoList.DisplayName = "Страница \"" + value + "\"";
+        _ChangeInfoList.DisplayName = String.Format(Res.ExtEditPage_Name_ChangedInfoList, value);
       }
     }
 
@@ -1289,7 +1288,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Ошибка при обработке события ExtEditDialogPage.FirstShow");
+            EFPApp.ShowException(e, LogoutTools.GetTitleForCall("ExtEditDialogPage.FirstShow"));
           }
         }
         _HasBeenShown = true;
@@ -1306,7 +1305,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка при обработке события ExtEditDialogPage.PageShow");
+          EFPApp.ShowException(e, LogoutTools.GetTitleForCall("ExtEditDialogPage.PageShow"));
         }
       }
       // Событие у объекта-владельца

@@ -81,7 +81,7 @@ namespace FreeLibSet.Forms
     public EFPReport(string configSectionName)
     {
       if (String.IsNullOrEmpty(configSectionName))
-        throw new ArgumentNullException("configSectionName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("configSectionName");
 
       _RootProvider = new EFPReportRootProvider(this);
       _Pages = new PageCollection(this);
@@ -104,18 +104,24 @@ namespace FreeLibSet.Forms
     /// Параметры отчета (создаются перед вызовом <see cref="BuildReport()"/> с помощью метода <see cref="CreateParams()"/>).
     /// Также параметры могут быть созданы и присвоены свойству до вызова <see cref="Run()"/>,
     /// в этом случае запрос параметров не выполняется, если <see cref="AlwaysQueryParams"/>=false.
+    /// Свойство можно устанавливать только до запуска процедуры отчета на выполнение.
     /// </summary>
     public EFPReportParams ReportParams
     {
       get { return _ReportParams; }
       set
       {
-        if (IsExecuting)
-          throw new InvalidOperationException("Свойство ReportParams можно устанавливать только до запуска процедуры отчета на выполнение");
+        CheckNotExecuting();
         _ReportParams = value;
       }
     }
     private EFPReportParams _ReportParams;
+
+    private void CheckNotExecuting()
+    {
+      if (IsExecuting)
+        throw ExceptionFactory.ObjectProperty(this, "IsExecuting", IsExecuting, new object[] { false });
+    }
 
     /// <summary>
     /// Если true, то вывод диалога параметров перед построением отчета выполняется,
@@ -190,8 +196,7 @@ namespace FreeLibSet.Forms
       get { return _HelpContext; }
       set
       {
-        if (_TheForm != null)
-          throw new InvalidOperationException("Свойство должно быть установлено до вывода отчета");
+        CheckNotExecuting();
         _HelpContext = value;
       }
     }
@@ -384,7 +389,7 @@ namespace FreeLibSet.Forms
         //  throw new InvalidOperationException("Можно закрывать только дополнительные вкладки");
 
         if (pageIndex < 0 || pageIndex >= Count)
-          throw new ArgumentOutOfRangeException("pageIndex", pageIndex, "Недопустимый индекс страницы");
+          throw ExceptionFactory.ArgOutOfRange("pageIndex", pageIndex, 0, Count - 1);
 
         EFPReportPage page = _Items[pageIndex];
         page.BaseProvider.Parent = null; // 06.07.2021
@@ -402,7 +407,7 @@ namespace FreeLibSet.Forms
         {
 #if DEBUG
           if (Count != 1)
-            throw new BugException("Неправильное число страниц: " + Count.ToString());
+            throw new BugException("Wrong page count: " + Count.ToString());
 #endif
 
           _Owner._TheFirstPagePanel.Dispose();
@@ -419,7 +424,7 @@ namespace FreeLibSet.Forms
       void ICollection<EFPReportPage>.Clear()
       {
         if (ExtraPageCount < Count)
-          throw new InvalidOperationException("Нельзя удалить страницы, которые не являются дополнительными");
+          throw new InvalidOperationException("Cannot clear if there are fixed pages");
 
         for (int i = Count - 1; i >= 0; i--)
           RemoveAt(i);
@@ -488,7 +493,7 @@ namespace FreeLibSet.Forms
       {
         // CheckNotDisposed();
         if (String.IsNullOrEmpty(extraPageKey))
-          throw new ArgumentNullException("extraPageKey");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("extraPageKey");
 
         if (_ExtraPages == null)
           return false;
@@ -698,8 +703,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public void Run()
     {
-      if (_IsExecuting)
-        throw new InvalidOperationException("Повторный запуск отчета");
+      CheckNotExecuting();
       _IsExecuting = true;
       try
       {
@@ -797,7 +801,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     private bool DoInitReport(EFPCommandItems dstItems)
     {
-      EFPApp.BeginWait("Подготовка к созданию отчета");
+      EFPApp.BeginWait(Res.EFPReport_Phase_Init);
       try
       {
         DataGridView filtGrid = new DataGridView();
@@ -845,7 +849,7 @@ namespace FreeLibSet.Forms
       InitTitleAndGridFilter(); // заголовок формы установлен
       try
       {
-        EFPApp.BeginWait("Построение отчета \"" + ReportParams.Title + "\"", MainImageKey);
+        EFPApp.BeginWait(String.Format(Res.EFPReport_Phase_Build, ReportParams.Title), MainImageKey);
 
         DoBuildReport();
 
@@ -962,7 +966,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка при переключении на страницу отчета");
+        EFPApp.ShowException(e, Res.EFPReport_ErrTitle_SelectPage);
       }
 
       ReportCommandItems.InitCloseCommands();
@@ -982,9 +986,10 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка при закрытии окна отчета");
-        args.Cancel = (EFPApp.MessageBox("Закрыть окно \"" + _TheForm.Text + "\" несмотря на возникшую ошибку?",
-          "Ошибка при закрытии окна отчета", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK);
+        EFPApp.ShowException(e, Res.EFPReport_ErrTitle_Closing);
+
+        args.Cancel = (EFPApp.MessageBox(String.Format(Res.EFPReport_Msg_CloseAnyway, _TheForm.Text),
+          Res.EFPReport_ErrTitle_Closing, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK);
       }
     }
 
@@ -1113,7 +1118,7 @@ namespace FreeLibSet.Forms
     /// <returns>Созданный объект параметров</returns>
     protected virtual EFPReportParams CreateParams()
     {
-      throw new InvalidOperationException("Этот отчет всегда использует задаваемые снаружи параметры");
+      throw new InvalidOperationException(Res.EFPReport_Err_CreateParams);
     }
 
     /// <summary>
@@ -1163,7 +1168,7 @@ namespace FreeLibSet.Forms
         catch (Exception e)
         {
           AddExceptionInfo(e);
-          EFPApp.ShowException(e, "Ошибка при запросе параметров");
+          EFPApp.ShowException(e, Res.EFPReport_ErrTitle_QueryParams);
           return false;
         }
 
@@ -1190,9 +1195,8 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ErrorMessageBox("Возникла ошибка при загрузке ранее сохраненных параметров отчета. " +
-          "Будут использованы значения по умолчанию. Сообщение об ошибке: " + e.Message,
-          "Ошибка загрузки параметров");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPReport_Err_ReadConfig, e.Message),
+          Res.EFPReport_ErrTitle_ReadConfig);
         _ReportParams = CreateParams();
       }
     }
@@ -1205,9 +1209,8 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ErrorMessageBox("Возникла ошибка при сохранении параметров отчета. " +
-          "Сообщение об ошибке: " + e.Message,
-          "Ошибка записи параметров");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPReport_Err_WriteConfig, e.Message),
+          Res.EFPReport_ErrTitle_WriteConfig);
       }
     }
 
@@ -1234,7 +1237,7 @@ namespace FreeLibSet.Forms
       // CheckNotDisposed();
 
       if (InsideBuildReport)
-        throw new InvalidOperationException("Нельзя повторно вызвать BulidReport()");
+        throw new ReenteranceException();
 
       _InsideBuildReport = true;
       try
@@ -1407,7 +1410,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Основная форма отчета.
-    /// null, если отчет запущен встроенным вдругое окно.
+    /// null, если отчет запущен встроенным в другое окно.
     /// </summary>
     private InternalReportForm _TheForm;
 
@@ -1684,7 +1687,7 @@ namespace FreeLibSet.Forms
 
       CfgPart cfgReportParams = creatorParams.Config.GetChild(EFPConfigCategories.ReportParams, false);
       if (cfgReportParams == null)
-        throw new NullReferenceException("Не удалось найти секцию параметров отчета " + creatorParams.Title);
+        throw new NullReferenceException(String.Format(Res.EFPReport_Err_ConfigSectionNotFound, creatorParams.Title));
       ReportParams.ReadConfig(cfgReportParams);
 
       Run();
@@ -1756,7 +1759,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPReportParams()
     {
-      _FilterInfo = new EFPReportFilterItems2(this);
+      _FilterInfo = new EFPReportFilterItems();
+      _FilterInfo.Changed += _FilterInfo_Changed;
     }
 
     #endregion
@@ -1772,34 +1776,6 @@ namespace FreeLibSet.Forms
     public string Title { get { return _Title; } set { _Title = value; } }
     private string _Title;
 
-    private class EFPReportFilterItems2 : EFPReportFilterItems
-    {
-      #region Конструктор
-
-      public EFPReportFilterItems2(EFPReportParams owner)
-      {
-        _Owner = owner;
-      }
-
-      #endregion
-
-      #region Свойства
-
-      private readonly EFPReportParams _Owner;
-
-      #endregion
-
-      #region Переопределенные методы
-
-      internal protected override void OnChanged()
-      {
-        base.OnChanged();
-
-        _Owner.FilterInfoModified = true;
-      }
-
-      #endregion
-    }
 
     /// <summary>
     /// Фильтры отчета
@@ -1812,6 +1788,11 @@ namespace FreeLibSet.Forms
     /// Флажок для отслеживания изменений в фильтрах отчета, если они выполняются в процессе построения отчета
     /// </summary>
     internal bool FilterInfoModified;
+
+    private void _FilterInfo_Changed(object sender, EventArgs args)
+    {
+      FilterInfoModified = true;
+    }
 
     #endregion
 
@@ -1920,7 +1901,6 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPReportPage()
     {
-      //HelpContext = "BuxBase.chm::Report.htm";
       _BaseProvider = new EFPReportPageBaseProvider();
       _BaseProvider.ReportPage = this;
       _FilterInfo = new EFPReportPageFilterItems(this);
@@ -1970,20 +1950,20 @@ namespace FreeLibSet.Forms
         #region Команды закрытия доп. вкладок
 
         ciClose = new EFPCommandItem("View", "CloseTab");
-        ciClose.MenuText = "Закрыть вкладку";
+        ciClose.MenuText = Res.Cmd_Menu_View_CloseTab;
         ciClose.Click += new EventHandler(ciClose_Click);
         ciClose.GroupBegin = true;
         Add(ciClose);
 
-        ciCloseAllButThis = new EFPCommandItem("View", "CloseAllButThis");
-        ciCloseAllButThis.MenuText = "Закрыть все дополнительные вкладки, кроме текущей";
+        ciCloseAllButThis = new EFPCommandItem("View", "CloseAllTabsButThis");
+        ciCloseAllButThis.MenuText = Res.Cmd_Menu_View_CloseAllTabsButThis;
         ciCloseAllButThis.Click += new EventHandler(ciCloseAllButThis_Click);
         Add(ciCloseAllButThis);
 
         #endregion
       }
 
-      private EFPReportPage _ReportPage;
+      private readonly EFPReportPage _ReportPage;
 
       #endregion
 
@@ -2192,7 +2172,7 @@ namespace FreeLibSet.Forms
       {
         if (OwnerReport != null)
           OwnerReport.AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка при активации закладки \"" + WholeTitle + "\"");
+        EFPApp.ShowException(e, Res.EFPReport_ErrTitle_SelectPage);
       }
     }
 
@@ -2227,7 +2207,7 @@ namespace FreeLibSet.Forms
     /// Дополнительные фильтры, которые будут выведены вверху страницы отчета.
     /// </summary>
     public EFPReportPageFilterItems FilterInfo { get { return _FilterInfo; } }
-    private EFPReportPageFilterItems _FilterInfo;
+    private readonly EFPReportPageFilterItems _FilterInfo;
 
     /// <summary>
     /// Дополнительная панель в верхней части страницы отчета (ниже строк фильтров).
@@ -2241,7 +2221,7 @@ namespace FreeLibSet.Forms
       {
         CheckPageNotCreated();
         if (_AuxTopPanel != null)
-          throw new InvalidOperationException("Свойство AuxTopPanel уже было установлено");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "AuxTopPanel");
         _AuxTopPanel = value;
       }
     }
@@ -2259,7 +2239,7 @@ namespace FreeLibSet.Forms
       {
         CheckPageNotCreated();
         if (_AuxBottomPanel != null)
-          throw new InvalidOperationException("Свойство AuxBottomPanel уже было установлено");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "AuxBottomPanel");
         _AuxBottomPanel = value;
       }
     }
@@ -2279,7 +2259,7 @@ namespace FreeLibSet.Forms
     {
       string s = Title;
       if (IsExtraPage)
-        s += " (дополнительная страница)";
+        s += " (extra page)";
       if (!String.IsNullOrEmpty(Name))
         s += ", Name=" + Name;
       return GetType().Name + ": " + s;
@@ -2323,7 +2303,7 @@ namespace FreeLibSet.Forms
     internal protected void CheckNotAdded()
     {
       if (OwnerReport != null)
-        throw new InvalidOperationException("Страница уже присоединена к отчету");
+        throw ExceptionFactory.ObjectPropertyAlreadySet(this, "OwnerReport");
     }
 
     /// <summary>
@@ -2365,11 +2345,11 @@ namespace FreeLibSet.Forms
       if (parentControl == null)
         throw new ArgumentNullException("parentControl");
       if (parentControl.HasChildren)
-        throw new ArgumentException("Родительский элемент уже имеет присоединенные управляющие элементы", "parentControl");
+        throw new ArgumentException(Res.EFPReport_Arg_ParentControlHasChildren, "parentControl");
       if (parentControl.FindForm() == null)
-        throw new ArgumentException("Родительский элемент не присоединен к форме", "parentControl");
+        throw new ArgumentException(Res.EFPReport_Arg_ParentControlHasNoForm, "parentControl");
       if (_ParentControl != null)
-        throw new InvalidOperationException("Повторный вызов AssignParentControl()");
+        throw ExceptionFactory.RepeatedCall(this, "AssignParentControl()");
 #endif
       _ParentControl = parentControl;
     }
@@ -2399,12 +2379,13 @@ namespace FreeLibSet.Forms
     /// использоваться в прикладном модуле. Однако он может быть вызван, если
     /// страница должна быть обязательно создана.
     /// Допускается вложенный вызов метода из обработчика события активации страницы.
+    /// Метод должен вызываться после <see cref="AssignParentControl(Panel)"/>.
     /// </summary>
     public void SetPageCreated()
     {
 #if DEBUG
       if (_ParentControl == null)
-        throw new InvalidOperationException("Нельзя вызывать SetPageCreated() до AssignParentControl()");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "ParentControl");
 #endif
 
       if (_ParentControl.HasChildren)
@@ -2448,7 +2429,7 @@ namespace FreeLibSet.Forms
     protected void CheckPageNotCreated()
     {
       if (PageCreated)
-        throw new InvalidOperationException("Страница отчета уже была создана");
+        throw ExceptionFactory.ObjectProperty(this, "PageCreated", PageCreated, new object[] { false});
     }
 
     /// <summary>
@@ -2482,10 +2463,10 @@ namespace FreeLibSet.Forms
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
       if (String.IsNullOrEmpty(nameSuffix))
-        throw new ArgumentNullException("nameSuffix");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("nameSuffix");
 
       if (OwnerReport == null)
-        throw new InvalidOperationException("Страница не присоединена к отчету");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "OwnerReport");
 
       string prefix;
 
@@ -2799,7 +2780,7 @@ namespace FreeLibSet.Forms
           throw new ArgumentNullException("page");
 
         if (page.ParentPage != null)
-          throw new InvalidOperationException("Добавляемая страница уже принадлежит другому просмотру с закладками");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(page, "ParentPage");
 
         _Items.Add(page);
         page.BaseProvider.Parent = _Owner.BaseProvider;
@@ -3215,14 +3196,14 @@ namespace FreeLibSet.Forms
       _Owner = owner;
 
       ciCloseAll = new EFPCommandItem("View", "CloseAllTabs");
-      ciCloseAll.MenuText = "Закрыть все дополнительные вкладки";
+      ciCloseAll.MenuText = Res.Cmd_Menu_View_CloseAllTabs;
       ciCloseAll.Click += new EventHandler(ciCloseAll_Click);
       ciCloseAll.GroupEnd = true;
       Add(ciCloseAll);
 
       ciRefresh = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Refresh);
       ciRefresh.Enabled = true;
-      ciRefresh.MenuText = "Обновить отчет без изменения параметров";
+      ciRefresh.MenuText = Res.EFPReport_Menu_Edit_Refresh;
       ciRefresh.Click += new EventHandler(ciRefresh_Click);
       ciRefresh.GroupBegin = true;
       ciRefresh.GroupEnd = true;
@@ -3267,10 +3248,10 @@ namespace FreeLibSet.Forms
     {
       if (Owner.InsideBuildReport)
       {
-        EFPApp.ShowTempMessage("Построение отчета уже начато");
+        EFPApp.ShowTempMessage(Res.EFPReport_Err_ReentrantBuiild);
         return;
       }
-      EFPApp.BeginWait("Повторное построение отчета", Owner.MainImageKey);
+      EFPApp.BeginWait(String.Format(Res.EFPReport_Phase_Rebuild, Owner.ReportParams.Title), Owner.MainImageKey);
       try
       {
         ciRefresh.Enabled = false;

@@ -29,7 +29,7 @@ namespace FreeLibSet.Formatting
     /// Свойство возвращает маску, пригодую для использования в поле ввода MaskedTextBox или <see cref="MaskedTextProvider"/>.
     /// Если объект не поддерживает маски, совместимые с <see cref="MaskedTextProvider"/>, свойство возвращает пустую строку
     /// </summary>
-    string EditMask { get;}
+    string EditMask { get; }
 
     /// <summary>
     /// Настройки локализации для символов-разделителей.
@@ -93,7 +93,7 @@ namespace FreeLibSet.Formatting
     /// При работе с <see cref="MaskedTextProvider"/> выполняется Monitor.Enter()/Leave() для обеспечения потокобезопасности
     /// </summary>
     public MaskedTextProvider Provider { get { return _Provider; } }
-    private MaskedTextProvider _Provider;
+    private readonly MaskedTextProvider _Provider;
 
     /// <summary>
     /// Возвращает свойство <see cref="MaskedTextProvider.Mask"/>
@@ -119,7 +119,7 @@ namespace FreeLibSet.Formatting
     {
       if (String.IsNullOrEmpty(text))
       {
-        errorText = "Значение не задано";
+        errorText = Res.StdMaskProvider_Msg_Empty;
         return false;
       }
 
@@ -142,15 +142,15 @@ namespace FreeLibSet.Formatting
         }
         else
         {
-          errorText = "Требуются дополнительные символы";
+          errorText = Res.StdMaskProvider_Msg_MoreCharsNeeded;
           return false;
         }
       }
 
       if (testPos >= 0 && testPos < text.Length)
-        errorText = "Недопустимый символ \"" + text[testPos] + "\" в позиции " + (testPos + 1).ToString();
+        errorText = String.Format(Res.StdMaskProvider_Msg_BadChar, text[testPos], testPos + 1);
       else
-        errorText = "Значение не соответствует маске";
+        errorText = Res.StdMaskProvider_Msg_MaskMismatch;
       return false;
     }
 
@@ -199,12 +199,12 @@ namespace FreeLibSet.Formatting
     public SimpleDigitalMaskProvider(string mask)
     {
       if (String.IsNullOrEmpty(mask))
-        throw new ArgumentNullException("mask");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("mask");
       int p = DataTools.IndexOfAnyOther(mask, ValidMaskChars);
       if (p >= 0)
-        throw new ArgumentException("Маска содержит недопустимый символ \"" + mask[p] + "\"", "mask");
+        throw ExceptionFactory.ArgBadChar("mask", mask, p);
       if (mask.IndexOf('0') < 0)
-        throw new ArgumentException("Маска не содержит ни одной числовой позиции", "mask");
+        throw new ArgumentException(Res.SimpleDigitalMaskProvider_Arg_NoDigits, "mask");
       _Mask = mask;
     }
 
@@ -215,7 +215,7 @@ namespace FreeLibSet.Formatting
     public SimpleDigitalMaskProvider(int digits)
     {
       if (digits < 1)
-        throw new ArgumentOutOfRangeException("digits", digits, "Количество цифр должно быть больше 0");
+        throw ExceptionFactory.ArgOutOfRange("digits", digits, 1, null);
       _Mask = new string('0', digits);
     }
 
@@ -229,7 +229,7 @@ namespace FreeLibSet.Formatting
     /// Маска
     /// </summary>
     public string Mask { get { return _Mask; } }
-    private string _Mask;
+    private readonly string _Mask;
 
     /// <summary>
     /// Возвращает свойство <see cref="Mask"/>
@@ -255,13 +255,13 @@ namespace FreeLibSet.Formatting
     {
       if (String.IsNullOrEmpty(text))
       {
-        errorText = "Пустая строка";
+        errorText = Res.SimpleDigitalMaskProvider_Msg_Empty;
         return false;
       }
 
       if (text.Length != _Mask.Length)
       {
-        errorText = "Неправильная длина строки (" + text.Length + "). Должно быть " + _Mask.Length.ToString() + " символов";
+        errorText = String.Format(Res.SimpleDigitalMaskProvider_Msg_WrongLength, text.Length, _Mask.Length);
         return false;
       }
 
@@ -271,7 +271,7 @@ namespace FreeLibSet.Formatting
         {
           if (text[i] < '0' || text[i] > '9') // исправлено 27.12.2020
           {
-            errorText = "Неправильный символ \"" + text[i] + "\" в позиции " + (i + 1).ToString() + ". Ожидалась цифра";
+            errorText = String.Format(Res.SimpleDigitalMaskProvider_Msg_BadChar_DigitWanted, text[i], i + 1);
             return false;
           }
         }
@@ -279,7 +279,7 @@ namespace FreeLibSet.Formatting
         {
           if (text[i] != _Mask[i])
           {
-            errorText = "Неправильный символ \"" + text[i] + "\" в позиции " + (i + 1).ToString() + ". Ожидался символ \"" + _Mask[i] + "\"";
+            errorText = String.Format(Res.SimpleDigitalMaskProvider_Msg_BadChar_SeparatorWanted, text[i], i + 1, _Mask[i]);
             return false;
           }
         }

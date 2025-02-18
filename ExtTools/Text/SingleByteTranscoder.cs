@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Text
 {
@@ -26,7 +27,7 @@ namespace FreeLibSet.Text
         throw new ArgumentNullException("resEncoding");
 
       if (!CanCreate(srcEncoding, resEncoding))
-        throw new ArgumentException("Нельзя выполнять прямое перекодирование из " + srcEncoding.ToString() + " в " + resEncoding.ToString());
+        throw new ArgumentException(String.Format(Res.SingleByteTranscoder_Arg_Unsupported, srcEncoding, resEncoding));
 
       _SrcEncoding = srcEncoding;
       _ResEncoding = resEncoding;
@@ -113,10 +114,10 @@ namespace FreeLibSet.Text
       if (resArray == null)
         throw new ArgumentNullException("resArray");
 
-      if (srcArray.Rank != 1)
-        throw new ArgumentException("Исходный массив должен быть одномерным", "srcArray");
-      if (resArray.Rank != 1)
-        throw new ArgumentException("Заполняемый массив должен быть одномерным", "resArray");
+      //if (srcArray.Rank != 1)
+      //  throw new ArgumentException("Исходный массив должен быть одномерным", "srcArray");
+      //if (resArray.Rank != 1)
+      //  throw new ArgumentException("Заполняемый массив должен быть одномерным", "resArray");
 #endif
 
       if (_IsDirect)
@@ -139,8 +140,14 @@ namespace FreeLibSet.Text
     /// <param name="resArray">Заполняемый массив байт, задающий символы в кодировке <see cref="ResEncoding"/></param>
     public void Transcode(byte[] srcArray, byte[] resArray)
     {
+#if DEBUG
+      if (srcArray == null)
+        throw new ArgumentNullException("srcArray");
+      if (resArray == null)
+        throw new ArgumentNullException("resArray");
+#endif
       if (resArray.Length != srcArray.Length)
-        throw new ArgumentException("Массивы должны быть одной длины");
+        throw ExceptionFactory.ArgWrongCollectionCount("resArray", resArray, srcArray.Length);
       Transcode(srcArray, 0, resArray, 0, srcArray.Length);
     }
 

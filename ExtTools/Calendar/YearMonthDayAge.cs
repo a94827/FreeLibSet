@@ -41,15 +41,15 @@ namespace FreeLibSet.Calendar
         if (Math.Abs(years) == 9999)
         {
           if (months != 0 || days != 0)
-            throw new ArgumentException("years", "Значение 9999 допускается, только если months=0 и days==0");
+            throw new ArgumentException("years", Res.YearMonthDayAge_Arg_Year9999);
         }
         else
-          throw new ArgumentOutOfRangeException("years", years, "Число лет должно быть не больше 9999");
+          throw ExceptionFactory.ArgOutOfRange("years", years, null, 9999);
       }
       if (Math.Abs(months) > 11)
-        throw new ArgumentOutOfRangeException("months", months, "Число месяцев должно быть в диапазоне от 0 до 11");
+        throw ExceptionFactory.ArgOutOfRange("months", months, 0, 11);
       if (Math.Abs(days) > 30)
-        throw new ArgumentOutOfRangeException("days", days, "Число дней должно быть в диапазоне от 0 до 30");
+        throw ExceptionFactory.ArgOutOfRange("days", days, 0, 30);
 
 
       int sign = 0;
@@ -72,7 +72,7 @@ namespace FreeLibSet.Calendar
       if (sign == 0)
         sign = s;
       else if (s != sign)
-        throw new ArgumentException("Не допускается смешение отрицательных и положительных компонентов");
+        throw new ArgumentException(Res.YearMonthDayAge_Arg_MixedSigns);
 
       if (s < 0)
         value = -value;

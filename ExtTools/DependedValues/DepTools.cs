@@ -1704,7 +1704,7 @@ namespace FreeLibSet.DependedValues
       where T : IComparable<T>
     {
       if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
+        throw ExceptionFactory.ArgIsEmpty("values");
 
       T res = values[0];
       for (int i = 1; i < values.Length; i++)
@@ -1781,7 +1781,7 @@ namespace FreeLibSet.DependedValues
       where T : IComparable<T>
     {
       if (values.Length == 0)
-        throw new ArgumentException("Список аргументов пустой");
+        throw ExceptionFactory.ArgIsEmpty("values");
 
       T res = values[0];
       for (int i = 1; i < values.Length; i++)
@@ -1979,7 +1979,7 @@ namespace FreeLibSet.DependedValues
       Type[] a = t.GetGenericArguments();
 #if DEBUG
       if (a.Length != 1)
-        throw new BugException("GetGenericArguments() для типа " + t.ToString());
+        throw new BugException("GetGenericArguments() for the type " + t.ToString());
 #endif
       return a[0];
     }

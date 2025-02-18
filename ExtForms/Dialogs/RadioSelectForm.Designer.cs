@@ -35,9 +35,9 @@
       // 
       // TheGroupBox
       // 
-      this.TheGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.TheGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.TheGroupBox.Location = new System.Drawing.Point(5, 12);
       this.TheGroupBox.Name = "TheGroupBox";
       this.TheGroupBox.Size = new System.Drawing.Size(148, 49);
@@ -52,7 +52,7 @@
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 1;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "OK";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
@@ -63,7 +63,7 @@
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 2;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "Cancel";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // RadioSelectForm

@@ -117,4 +117,496 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="ButtonsPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 231</value>
+  </data>
+  <data name="ButtonsPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>411, 40</value>
+  </data>
+  <data name="&gt;&gt;ButtonsPanel.Name" xml:space="preserve">
+    <value>ButtonsPanel</value>
+  </data>
+  <data name="&gt;&gt;ButtonsPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ButtonsPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;ButtonsPanel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="rbFromCurr.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbFromCurr.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 42</value>
+  </data>
+  <data name="rbFromCurr.Size" type="System.Drawing.Size, System.Drawing">
+    <value>109, 17</value>
+  </data>
+  <data name="rbFromCurr.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="rbFromCurr.Text" xml:space="preserve">
+    <value>At the current &amp;row</value>
+  </data>
+  <data name="&gt;&gt;rbFromCurr.Name" xml:space="preserve">
+    <value>rbFromCurr</value>
+  </data>
+  <data name="&gt;&gt;rbFromCurr.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbFromCurr.Parent" xml:space="preserve">
+    <value>grpFrom</value>
+  </data>
+  <data name="&gt;&gt;rbFromCurr.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbFromStart.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbFromStart.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 19</value>
+  </data>
+  <data name="rbFromStart.Size" type="System.Drawing.Size, System.Drawing">
+    <value>109, 17</value>
+  </data>
+  <data name="rbFromStart.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="rbFromStart.Text" xml:space="preserve">
+    <value>&amp;At the start or end</value>
+  </data>
+  <data name="&gt;&gt;rbFromStart.Name" xml:space="preserve">
+    <value>rbFromStart</value>
+  </data>
+  <data name="&gt;&gt;rbFromStart.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbFromStart.Parent" xml:space="preserve">
+    <value>grpFrom</value>
+  </data>
+  <data name="&gt;&gt;rbFromStart.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="grpFrom.Location" type="System.Drawing.Point, System.Drawing">
+    <value>220, 158</value>
+  </data>
+  <data name="grpFrom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>176, 68</value>
+  </data>
+  <data name="grpFrom.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="grpFrom.Text" xml:space="preserve">
+    <value>From where tu start</value>
+  </data>
+  <data name="&gt;&gt;grpFrom.Name" xml:space="preserve">
+    <value>grpFrom</value>
+  </data>
+  <data name="&gt;&gt;grpFrom.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpFrom.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;grpFrom.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbCurrCol.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbCurrCol.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 42</value>
+  </data>
+  <data name="rbCurrCol.Size" type="System.Drawing.Size, System.Drawing">
+    <value>129, 17</value>
+  </data>
+  <data name="rbCurrCol.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="rbCurrCol.Text" xml:space="preserve">
+    <value>In c&amp;urrent column only</value>
+  </data>
+  <data name="&gt;&gt;rbCurrCol.Name" xml:space="preserve">
+    <value>rbCurrCol</value>
+  </data>
+  <data name="&gt;&gt;rbCurrCol.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbCurrCol.Parent" xml:space="preserve">
+    <value>grpWhere</value>
+  </data>
+  <data name="&gt;&gt;rbCurrCol.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbAllCols.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbAllCols.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 19</value>
+  </data>
+  <data name="rbAllCols.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 17</value>
+  </data>
+  <data name="rbAllCols.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="rbAllCols.Text" xml:space="preserve">
+    <value>In &amp;all columns</value>
+  </data>
+  <data name="&gt;&gt;rbAllCols.Name" xml:space="preserve">
+    <value>rbAllCols</value>
+  </data>
+  <data name="&gt;&gt;rbAllCols.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbAllCols.Parent" xml:space="preserve">
+    <value>grpWhere</value>
+  </data>
+  <data name="&gt;&gt;rbAllCols.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="grpWhere.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 158</value>
+  </data>
+  <data name="grpWhere.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 68</value>
+  </data>
+  <data name="grpWhere.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="grpWhere.Text" xml:space="preserve">
+    <value>Where</value>
+  </data>
+  <data name="&gt;&gt;grpWhere.Name" xml:space="preserve">
+    <value>grpWhere</value>
+  </data>
+  <data name="&gt;&gt;grpWhere.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpWhere.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;grpWhere.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rbBackward.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbBackward.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 41</value>
+  </data>
+  <data name="rbBackward.Size" type="System.Drawing.Size, System.Drawing">
+    <value>73, 17</value>
+  </data>
+  <data name="rbBackward.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="rbBackward.Text" xml:space="preserve">
+    <value>&amp;Backward</value>
+  </data>
+  <data name="&gt;&gt;rbBackward.Name" xml:space="preserve">
+    <value>rbBackward</value>
+  </data>
+  <data name="&gt;&gt;rbBackward.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbBackward.Parent" xml:space="preserve">
+    <value>grpDirection</value>
+  </data>
+  <data name="&gt;&gt;rbBackward.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbForward.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbForward.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 21</value>
+  </data>
+  <data name="rbForward.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 17</value>
+  </data>
+  <data name="rbForward.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="rbForward.Text" xml:space="preserve">
+    <value>&amp;Forward</value>
+  </data>
+  <data name="&gt;&gt;rbForward.Name" xml:space="preserve">
+    <value>rbForward</value>
+  </data>
+  <data name="&gt;&gt;rbForward.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbForward.Parent" xml:space="preserve">
+    <value>grpDirection</value>
+  </data>
+  <data name="&gt;&gt;rbForward.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="grpDirection.Location" type="System.Drawing.Point, System.Drawing">
+    <value>220, 61</value>
+  </data>
+  <data name="grpDirection.Size" type="System.Drawing.Size, System.Drawing">
+    <value>176, 68</value>
+  </data>
+  <data name="grpDirection.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="grpDirection.Text" xml:space="preserve">
+    <value>Direction</value>
+  </data>
+  <data name="&gt;&gt;grpDirection.Name" xml:space="preserve">
+    <value>grpDirection</value>
+  </data>
+  <data name="&gt;&gt;grpDirection.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpDirection.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;grpDirection.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="cbWhole.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbWhole.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 65</value>
+  </data>
+  <data name="cbWhole.Size" type="System.Drawing.Size, System.Drawing">
+    <value>85, 17</value>
+  </data>
+  <data name="cbWhole.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="cbWhole.Text" xml:space="preserve">
+    <value>&amp;Whole string</value>
+  </data>
+  <data name="&gt;&gt;cbWhole.Name" xml:space="preserve">
+    <value>cbWhole</value>
+  </data>
+  <data name="&gt;&gt;cbWhole.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbWhole.Parent" xml:space="preserve">
+    <value>grpConditions</value>
+  </data>
+  <data name="&gt;&gt;cbWhole.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="cbSimilarCharsDiff.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbSimilarCharsDiff.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 42</value>
+  </data>
+  <data name="cbSimilarCharsDiff.Size" type="System.Drawing.Size, System.Drawing">
+    <value>139, 17</value>
+  </data>
+  <data name="cbSimilarCharsDiff.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="cbSimilarCharsDiff.Text" xml:space="preserve">
+    <value>&amp;Distinguish similar letters</value>
+  </data>
+  <data name="&gt;&gt;cbSimilarCharsDiff.Name" xml:space="preserve">
+    <value>cbSimilarCharsDiff</value>
+  </data>
+  <data name="&gt;&gt;cbSimilarCharsDiff.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbSimilarCharsDiff.Parent" xml:space="preserve">
+    <value>grpConditions</value>
+  </data>
+  <data name="&gt;&gt;cbSimilarCharsDiff.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="cbCaseSens.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbCaseSens.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 19</value>
+  </data>
+  <data name="cbCaseSens.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 17</value>
+  </data>
+  <data name="cbCaseSens.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="cbCaseSens.Text" xml:space="preserve">
+    <value>&amp;Case sensitive</value>
+  </data>
+  <data name="&gt;&gt;cbCaseSens.Name" xml:space="preserve">
+    <value>cbCaseSens</value>
+  </data>
+  <data name="&gt;&gt;cbCaseSens.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbCaseSens.Parent" xml:space="preserve">
+    <value>grpConditions</value>
+  </data>
+  <data name="&gt;&gt;cbCaseSens.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="grpConditions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 61</value>
+  </data>
+  <data name="grpConditions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 91</value>
+  </data>
+  <data name="grpConditions.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="grpConditions.Text" xml:space="preserve">
+    <value>Conditions</value>
+  </data>
+  <data name="&gt;&gt;grpConditions.Name" xml:space="preserve">
+    <value>grpConditions</value>
+  </data>
+  <data name="&gt;&gt;grpConditions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpConditions.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;grpConditions.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lblText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 16</value>
+  </data>
+  <data name="lblText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>88, 21</value>
+  </data>
+  <data name="lblText.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblText.Text" xml:space="preserve">
+    <value>&amp;Text to search</value>
+  </data>
+  <data name="lblText.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblText.Name" xml:space="preserve">
+    <value>lblText</value>
+  </data>
+  <data name="&gt;&gt;lblText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblText.Parent" xml:space="preserve">
+    <value>grpText</value>
+  </data>
+  <data name="&gt;&gt;lblText.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="cbText.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cbText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>100, 16</value>
+  </data>
+  <data name="cbText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>275, 21</value>
+  </data>
+  <data name="cbText.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;cbText.Name" xml:space="preserve">
+    <value>cbText</value>
+  </data>
+  <data name="&gt;&gt;cbText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbText.Parent" xml:space="preserve">
+    <value>grpText</value>
+  </data>
+  <data name="&gt;&gt;cbText.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="grpText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 8</value>
+  </data>
+  <data name="grpText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>382, 47</value>
+  </data>
+  <data name="grpText.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;grpText.Name" xml:space="preserve">
+    <value>grpText</value>
+  </data>
+  <data name="&gt;&gt;grpText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpText.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;grpText.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="MainPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>411, 231</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Name" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;BottomPanel.Name" xml:space="preserve">
+    <value>BottomPanel</value>
+  </data>
+  <data name="&gt;&gt;BottomPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BottomPanel.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;BottomPanel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;TopPanel.Name" xml:space="preserve">
+    <value>TopPanel</value>
+  </data>
+  <data name="&gt;&gt;TopPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TopPanel.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;TopPanel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>411, 271</value>
+  </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>352, 84</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Text search</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>EFPTextSearchForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>FreeLibSet.Forms.OKCancelForm, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
 </root>

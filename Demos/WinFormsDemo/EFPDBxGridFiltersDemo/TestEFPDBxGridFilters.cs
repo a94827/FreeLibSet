@@ -100,8 +100,8 @@ namespace WinFormsDemo.EFPDBxGridFiltersDemo
 
       #region Сортировка
 
-      efpGrid.Orders.Add("", "Нет сортировки");
-      efpGrid.Orders.Add("I1", "I1 (простая сортировка)");
+      efpGrid.Orders.Add("", "No sort");
+      efpGrid.Orders.Add("I1", "I1 (simple sort)");
       efpGrid.Orders.Add("S1 DESC,I1", "S1 DESC,I1");
       DBxExpression filtExpr1 = new DBxFunction(DBxFunctionKind.IIf, new DBxColumn("L1"), new DBxColumn("I1"), new DBxColumn("I2"));
       efpGrid.Orders.Add(new DBxOrder(filtExpr1), "IIF(L1, I1, I2)");

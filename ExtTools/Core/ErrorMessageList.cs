@@ -74,7 +74,7 @@ namespace FreeLibSet.Core
     public ErrorMessageItem(ErrorMessageKind kind, string text, string code, object tag)
     {
       if (String.IsNullOrEmpty(text))
-        throw new ArgumentNullException("text");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("text");
 
       _Kind = kind;
       _Text = text;
@@ -153,30 +153,11 @@ namespace FreeLibSet.Core
     /// <returns>Текст</returns>
     public override string ToString()
     {
-      StringBuilder sb = new StringBuilder();
-      switch (_Kind)
-      {
-        case ErrorMessageKind.Error:
-          sb.Append("Ошибка. ");
-          break;
-        case ErrorMessageKind.Warning:
-          sb.Append("Предупреждение. ");
-          break;
-        case ErrorMessageKind.Info:
-          sb.Append("Инфо. ");
-          break;
-        default:
-          sb.Append("Неизвестно что. ");
-          break;
-      }
-      sb.Append(_Text);
-      if (!String.IsNullOrEmpty(_Code))
-      {
-        sb.Append(" (Код");
-        sb.Append(_Code);
-        sb.Append(")");
-      }
-      return sb.ToString();
+      string sKind = UICore.UITools.ToString(_Kind);
+      if (String.IsNullOrEmpty(_Code))
+        return String.Format(Res.ErrorMessageItem_Msg_ToString, sKind, _Text);
+      else
+        return String.Format(Res.ErrorMessageItem_Msg_ToStringWithCode, sKind, _Text, _Code);
     }
 
     #endregion
@@ -224,7 +205,7 @@ namespace FreeLibSet.Core
         CheckNotReadOnly();
 
         if (value < 0 || value > base.Count)
-          throw new ArgumentOutOfRangeException("value", value, "Нельзя увеличивать число сообщений в списке");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, Count);
 
         if (value == 0)
           Clear();
@@ -620,7 +601,7 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (String.IsNullOrEmpty(sourceItem.Text))
-        throw new ArgumentException("Неинициализированное сообщение", "sourceItem");
+        throw ExceptionFactory.ArgIsEmpty("sourceItem");
 #endif
 
       if (String.IsNullOrEmpty(prefixText) && String.IsNullOrEmpty(suffixText))
@@ -881,7 +862,7 @@ namespace FreeLibSet.Core
     public override string ToString()
     {
       if (Count == 0)
-        return "Нет сообщений";
+        return "Empty";
 
       int errorCount, warningCount, infoCount;
       this.GetCounts(out errorCount, out warningCount, out infoCount);
@@ -889,21 +870,21 @@ namespace FreeLibSet.Core
       StringBuilder sb = new StringBuilder();
       if (errorCount > 0)
       {
-        sb.Append("Ошибок: ");
+        sb.Append("Errors: ");
         sb.Append(errorCount.ToString());
       }
       if (warningCount > 0)
       {
         if (sb.Length > 0)
           sb.Append(", ");
-        sb.Append("Предупреждений: ");
+        sb.Append("Warnings: ");
         sb.Append(warningCount.ToString());
       }
       if (infoCount > 0)
       {
         if (sb.Length > 0)
           sb.Append(", ");
-        sb.Append("Информационных сообщений: ");
+        sb.Append("Infos: ");
         sb.Append(infoCount.ToString());
       }
 

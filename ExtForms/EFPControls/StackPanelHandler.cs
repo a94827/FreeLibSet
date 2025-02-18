@@ -52,10 +52,10 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     public Control ParentControl { get { return _ParentControl; } }
-    private Control _ParentControl;
+    private readonly Control _ParentControl;
 
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private EFPBaseProvider _BaseProvider;
+    private readonly EFPBaseProvider _BaseProvider;
 
     #endregion
   }
@@ -80,7 +80,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     protected Control ItemControl { get { return _ItemControl; } }
-    protected Control _ItemControl;
+    protected readonly Control _ItemControl;
 
     #endregion
   }

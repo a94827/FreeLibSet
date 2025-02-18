@@ -29,9 +29,9 @@ namespace FreeLibSet.Forms.Diagnostics
       if (form == null)
         throw new ArgumentNullException("form");
       if (form.IsDisposed)
-        throw new ObjectDisposedException("Форма уже разрушена");
+        throw new ObjectDisposedException("Form already disposed");
       if (Exists(form))
-        throw new InvalidOperationException("Повторное добавление формы " + form.ToString() + " в список для отладки");
+        throw new InvalidOperationException("Form " + form.ToString() + " already in the debug list");
       _Form = form;
       _Form.Disposed += new EventHandler(Form_Disposed);
       _StackTrace = Environment.StackTrace;
@@ -87,7 +87,7 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <returns></returns>
     public override string ToString()
     {
-      return "DebugFormDispose для " + _Form.ToString();
+      return "DebugFormDispose for " + _Form.ToString();
     }
 
     #endregion
@@ -141,7 +141,7 @@ namespace FreeLibSet.Forms.Diagnostics
           return;
         }
       }
-      throw new ArgumentException("Форма не была добавлена");
+      throw new ArgumentException("Form has not been added", "form");
     }
 
     /// <summary>
@@ -181,11 +181,11 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       if (_List.Count == 0)
       {
-        EFPApp.MessageBox("Нет форм, для которых не было вызова Dispose()");
+        EFPApp.MessageBox("There is no form without Dispose() called");
         return;
       }
 
-      ObjectDebugControl.ShowDebugObject(_List.ToArray(), "Формы, для которых не было вызова Dispose()");
+      ObjectDebugControl.ShowDebugObject(_List.ToArray(), "Forms without Dispose() call");
 
       //string[] Items = new string[List.Count];
       //for (int i = 0; i < Items.Length; i++)

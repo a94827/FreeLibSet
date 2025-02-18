@@ -17,16 +17,17 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   public class EditEventArgs : NodeEventArgs
   {
-    private Control _control;
-    public Control Control
-    {
-      get { return _control; }
-    }
 
     public EditEventArgs(TreeNodeAdv node, Control control)
       : base(node)
     {
       _control = control;
     }
+
+    public Control Control
+    {
+      get { return _control; }
+    }
+    private readonly Control _control;
   }
 }

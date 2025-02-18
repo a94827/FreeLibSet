@@ -19,12 +19,6 @@ namespace FreeLibSet.Forms
   /// </summary>
   public class EFPSelRCDataGridView : EFPDataGridView
   {
-    #region Константы
-
-    private const string NoneColText = "[ Нет ]";
-
-    #endregion
-
     #region Конструкторы
 
     /// <summary>
@@ -101,7 +95,7 @@ namespace FreeLibSet.Forms
         if (_Data == null)
           TopLeftCellToolTipText = String.Empty;
         else
-          TopLeftCellToolTipText = "Всего строк: " + _Data.RowCount.ToString() + ", столбцов: " + _Data.ColumnCount.ToString();
+          TopLeftCellToolTipText = String.Format(Res.EFPSelRCDataGridView_ToolTip_TopLeftCell, _Data.RowCount, _Data.ColumnCount);
 
         ValidateAndRepaint(null, null);
       }
@@ -118,11 +112,11 @@ namespace FreeLibSet.Forms
       }
 
       Columns.AddBool("RowFlag", false, String.Empty);
-      Columns.LastAdded.GridColumn.ToolTipText = "Использование строки";
+      Columns.LastAdded.GridColumn.ToolTipText = Res.EFPSelRCDataGridView_ToolTip_RowFlag;
       Columns.LastAdded.GridColumn.DividerWidth = 1; // 12.01.2022
 
       string[] displayNames = new string[Data.AvailableColumns.Count + 1];
-      displayNames[0] = NoneColText;
+      displayNames[0] = Res.EFPSelRCDataGridView_Msg_None;
       for (int i = 0; i < Data.AvailableColumns.Count; i++)
         displayNames[i + 1] = Data.AvailableColumns[i].DisplayName;
       int dropDownWidth = CalcDropDownWidth(displayNames);
@@ -236,7 +230,7 @@ namespace FreeLibSet.Forms
           {
             UISelRCColumn Col = Data.SelColumns[args.ColumnIndex - 1];
             if (Col == null)
-              args.Value = NoneColText;
+              args.Value = Res.EFPSelRCDataGridView_Msg_None;
             else
               args.Value = Col.DisplayName;
           }
@@ -252,7 +246,7 @@ namespace FreeLibSet.Forms
       try
       {
         if (Data == null)
-          throw new ArgumentNullException("Data==null");
+          throw new NullReferenceException("Data==null");
 
         if (args.ColumnIndex == 0)
         {
@@ -266,7 +260,7 @@ namespace FreeLibSet.Forms
         if (args.ColumnIndex > 0 && args.RowIndex == 0)
         {
           string displayName = DataTools.GetString(args.Value);
-          if (displayName == NoneColText)
+          if (displayName == Res.EFPSelRCDataGridView_Msg_None)
             Data.SelColumns[args.ColumnIndex - 1] = null;
           else
           {
@@ -281,7 +275,7 @@ namespace FreeLibSet.Forms
               }
             }
             if (!found)
-              throw new InvalidOperationException("Не найден столбец с названием \"" + displayName + "\"");
+              throw new InvalidOperationException(String.Format(Res.EFPSelRCDataGridView_Err_ColumnNotFound, displayName));
           }
 
           Control.InvalidateColumn(args.ColumnIndex);
@@ -290,7 +284,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "CellValuePushed");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -343,7 +337,7 @@ namespace FreeLibSet.Forms
           // Пустая ячейка
           args.ContentVisible = false;
           args.ReadOnly = true;
-          args.ReadOnlyMessage = "Пустая ячейка";
+          args.ReadOnlyMessage = Res.EFPSelRCDataGridView_Msg_CornerCell;
           return;
         }
 
@@ -370,7 +364,7 @@ namespace FreeLibSet.Forms
           else
             args.Grayed = true;
           args.ReadOnly = true;
-          args.ReadOnlyMessage = "Нельзя редактировать значения";
+          args.ReadOnlyMessage = Res.EFPSelRCDataGridView_Msg_DataCell;
         }
         // Ячейка с флажком никогда не делается серой
       }
@@ -400,19 +394,19 @@ namespace FreeLibSet.Forms
     {
       if (Data == null)
       {
-        SetError("Нет данных для выбора");
+        SetError(Res.EFPSelRCDataGridView_Err_NoData);
         return;
       }
 
       if (Data.SelColumns.IsEmpty)
       {
-        base.SetError("Не выбрано ни одного столбца");
+        base.SetError(Res.EFPSelRCDataGridView_Err_NoColumns);
         return;
       }
 
       if (Data.SelColumns.HasRepeats)
       {
-        SetError("Столбец \"" + Data.SelColumns[Data.SelColumns.FirstRepeatedColumnIndex] + "\" выбран дважды");
+        SetError(String.Format(Res.EFPSelRCDataGridView_Err_ColumnTwice, Data.SelColumns[Data.SelColumns.FirstRepeatedColumnIndex]));
         return;
       }
 
@@ -439,8 +433,11 @@ namespace FreeLibSet.Forms
                 // Теперь можно использовать Ctrl+] и Ctrl+[ для поиска ошибок.
                 //Control.CurrentCell = Control[j + 1, i + 1];
 
-                base.SetError("Строка " + (i + 1).ToString() + ", столбец " + (j + 1).ToString() + " (" + Data.SelColumns[j].DisplayName + "). " +
-                  errorText);
+                base.SetError(String.Format(Res.EFPSelRCDataGridView_Err_Cell, 
+                  i + 1, 
+                  j + 1, 
+                  Data.SelColumns[j].DisplayName,
+                  errorText));
                 return;
               }
             }
@@ -452,7 +449,7 @@ namespace FreeLibSet.Forms
       {
         this.CurrentColumnIndex = 0;
         //EFPApp.ShowTempMessage("Нет ни одной выбранной строки данных");
-        base.SetError("Нет ни одной выбранной строки данных"); // 12.01.2022
+        base.SetError(Res.EFPSelRCDataGridView_Err_NoRows); // 12.01.2022
         return;
       }
 
@@ -499,7 +496,7 @@ namespace FreeLibSet.Forms
       : base(controlProvider)
     {
       ciClearColumns = new EFPCommandItem("Edit", "ClearSelectedColumns");
-      ciClearColumns.MenuText = "Очистить привязку столбцов";
+      ciClearColumns.MenuText = Res.EFPSelRCDataGridView_Menu_Edit_ClearSelectedColumns;
       ciClearColumns.ImageKey = "No";
       ciClearColumns.ShortCut = Keys.F8;
       ciClearColumns.GroupBegin = true;
@@ -507,7 +504,7 @@ namespace FreeLibSet.Forms
       base.Add(ciClearColumns);
 
       ciInitColumns = new EFPCommandItem("Edit", "InitSelectedColumns");
-      ciInitColumns.MenuText = "Установить привязку столбцов";
+      ciInitColumns.MenuText = Res.EFPSelRCDataGridView_Menu_Edit_InitSelectedColumns;
       ciInitColumns.ImageKey = "Execute";
       ciInitColumns.ShortCut = Keys.F9;
       ciInitColumns.GroupEnd = true;
@@ -553,7 +550,7 @@ namespace FreeLibSet.Forms
       string oldCodes = ControlProvider.Data.SelColumns.AsString;
       ControlProvider.Data.SelColumns.Init();
       if (ControlProvider.Data.SelColumns.AsString == oldCodes)
-        EFPApp.ShowTempMessage("Не удалось назначить другие столбцы");
+        EFPApp.ShowTempMessage(Res.EFPSelRCDataGridView_Err_InitSelectedColumnsUnchanged);
     }
 
     #endregion

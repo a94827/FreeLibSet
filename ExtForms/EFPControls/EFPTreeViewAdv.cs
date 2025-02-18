@@ -31,11 +31,11 @@ namespace FreeLibSet.Forms
       if (indexArray != null)
       {
         if (indexArray.Length < 1)
-          throw new ArgumentException("Length==0", "indexArray");
+          throw ExceptionFactory.ArgIsEmpty("indexArray");
         for (int i = 0; i < indexArray.Length; i++)
         {
           if (indexArray[i] < 0)
-            throw new ArgumentException("indexArray[" + i.ToString() + "]<0", "indexArray");
+            throw ExceptionFactory.ArgInvalidEnumerableItem("indexArray", indexArray, indexArray[i]);
         }
       }
 
@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms
     /// Первый элемент массива соответствует индексу узла верхнего уровня.
     /// </summary>
     public int[] IndexArray { get { return _IndexArray; } }
-    private int[] _IndexArray;
+    private readonly int[] _IndexArray;
 
     /// <summary>
     /// Возвращает true, если структура не была не инициализирована.
@@ -614,7 +614,7 @@ namespace FreeLibSet.Forms
     {
       if (_InsideEditData)
       {
-        EFPApp.ShowTempMessage("Предыдущее редактирование еще не выполнено");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_EditNotFinished);
         return;
       }
       // Любая операция редактирования останавливает поиск по первым буквам
@@ -903,7 +903,7 @@ namespace FreeLibSet.Forms
     public void CheckAll(bool isChecked)
     {
       if (_CheckBoxControl == null)
-        throw new InvalidOperationException("Свойство CheckBoxes не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CheckBoxControl");
 
       foreach (TreeNodeAdv node in Control.AllNodes)
       {
@@ -923,7 +923,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (ProviderState == EFPControlProviderState.Attached)
-          throw new InvalidOperationException("Нельзя устанавливать свойство, если управляющий элемент выведен на экран");
+          throw ExceptionFactory.ObjectProperty(this, "ProviderState", ProviderState, null);
 
         if (Object.ReferenceEquals(_CheckBoxStorage, value))
           return;
@@ -989,7 +989,7 @@ namespace FreeLibSet.Forms
             if (!_CheckBoxControl_CheckStateChanged_ExceptionShown)
             {
               _CheckBoxControl_CheckStateChanged_ExceptionShown = true;
-              LogoutTools.LogoutException(e, "CheckBoxControl_CheckStateChanged");
+              LogoutTools.LogoutException(e);
             }
             EFPApp.ShowTempMessage(e.Message);
           }
@@ -1030,7 +1030,7 @@ namespace FreeLibSet.Forms
         case EFPTreeViewAutoCheckMode.None:
           break;
         default:
-          throw new BugException("Неизвестный режим");
+          throw new BugException("AutoCheckMode=" + AutoCheckMode.ToString());
       }
     }
 
@@ -1072,7 +1072,7 @@ namespace FreeLibSet.Forms
     public void ExpandToCheckedNodes()
     {
       if (CheckBoxControl == null)
-        throw new InvalidOperationException("Свойство CheckBoxControl не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CheckBoxControl");
 
       foreach (TreeNodeAdv node in Control.AllNodes)
       {
@@ -1096,7 +1096,7 @@ namespace FreeLibSet.Forms
     public void SelectFirstCheckedNode()
     {
       if (CheckBoxControl == null)
-        throw new InvalidOperationException("Свойство CheckBoxControl не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CheckBoxControl");
 
       foreach (TreeNodeAdv node in Control.AllNodes)
       {
@@ -1430,7 +1430,7 @@ namespace FreeLibSet.Forms
               AddAllInheritedTags(lst, Control.GetPath(node));
             break;
           default:
-            throw new ArgumentException("Неизвестный режим " + mode.ToString(), "mode");
+            throw ExceptionFactory.ArgUnknownValue("mode", mode, null);
         }
       }
       return lst.ToArray();
@@ -1475,7 +1475,7 @@ namespace FreeLibSet.Forms
               AddAllInheritedPaths(lst, path);
             break;
           default:
-            throw new ArgumentException("Неизвестный режим " + mode.ToString(), "mode");
+            throw ExceptionFactory.ArgUnknownValue("mode", mode, null);
         }
       }
       return lst.ToArray();
@@ -1504,7 +1504,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Значение свойства <see cref="EFPControlBase.DisplayName"/>, если оно не задано в явном виде
     /// </summary>
-    protected override string DefaultDisplayName { get { return "Иерархический просмотр"; } }
+    protected override string DefaultDisplayName { get { return Res.EFPTreeViewAdv_Name_Default; } }
 
     /// <summary>
     /// Возвращает позицию для будущего выпадающего блока диалога, который будет показан для редактирования ячейки.

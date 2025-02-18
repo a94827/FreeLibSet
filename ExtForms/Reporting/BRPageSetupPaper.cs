@@ -25,27 +25,22 @@ namespace FreeLibSet.Forms.Reporting
 
       //grpPaperSize.Visible = FForm.PageSetup.AllowPaper;
       efpPageSize = new EFPListComboBox(page.BaseProvider, cbPageSize);
-      efpPageSize.ToolTipText = "Выбор стандартного размера бумаги";
+      efpPageSize.ToolTipText = Res.BRPageSetupPaper_ToolTip_PageSize;
       efpPageSize.SelectedIndexEx.ValueChanged += new EventHandler(PageSizeChanged);
 
       efpPaperHeight = new EFPDecimalEditBox(page.BaseProvider, edPaperHeight);
-      efpPaperHeight.ToolTipText = "Задание высоты бумаги в сантиметрах (с учетом книжной или альбомной ориентации)" + Environment.NewLine +
-        "при использовании нестандартных листов." + Environment.NewLine +
-        "Задавайте значение после выбора правильной ориентации бумаги";
+      efpPaperHeight.ToolTipText = Res.BRPageSetupPaper_ToolTip_PaperHeight;
       efpPaperHeight.Control.Increment = 0.1m;
       efpPaperHeight.ValueEx.ValueChanged += new EventHandler(PaperWidthOrHeightChanged);
 
       efpPaperWidth = new EFPDecimalEditBox(page.BaseProvider, edPaperWidth);
-      efpPaperWidth.ToolTipText = "Задание ширины бумаги в сантиметрах (с учетом книжной или альбомной ориентации)" + Environment.NewLine +
-        "при использовании нестандартных листов." + Environment.NewLine +
-        "Задавайте значение после выбора правильной ориентации бумаги";
+      efpPaperWidth.ToolTipText = Res.BRPageSetupPaper_ToolTip_PaperWidth;
       efpPaperWidth.Control.Increment = 0.1m;
       efpPaperWidth.ValueEx.ValueChanged += new EventHandler(PaperWidthOrHeightChanged);
 
       //grpOrientation.Visible = FForm.PageSetup.AllowPaper;
       efpOrientation = new EFPRadioButtons(page.BaseProvider, rbPortrait);
-      efpOrientation.ToolTipText = "Ориентация бумаги: книжная (вертикальная) или альбомная (горизонтальная)." + Environment.NewLine +
-        "При альбомной ориентации принтер печатает \"боком\"";
+      efpOrientation.ToolTipText = Res.BRPageSetupPaper_ToolTip_Orientation;
       efpOrientation.SelectedIndexEx.ValueChanged += new EventHandler(OrientationChanged);
 
       //// TODO: grpDuplex.Visible = FForm.PageSetup.AllowDuplex;
@@ -57,13 +52,13 @@ namespace FreeLibSet.Forms.Reporting
 
       //grpCenterPage.Visible = FForm.PageSetup.AllowCenterPage;
       efpCenterHorizontal = new EFPCheckBox(page.BaseProvider, cbCenterHorizontal);
-      efpCenterHorizontal.ToolTipText = "Если флажок установлен, документ будет напачатан посередине листа по горизонтали";
+      efpCenterHorizontal.ToolTipText = Res.BRPageSetupPaper_ToolTip_CenterHorizontally;
 
       efpCenterVertical = new EFPCheckBox(page.BaseProvider, cbCenterVertical);
-      efpCenterVertical.ToolTipText = "Если флажок установлен, документ будет напачатан посередине листа по вертикали";
+      efpCenterVertical.ToolTipText = Res.BRPageSetupPaper_ToolTip_CenterVertically;
 
-      page.Text = "Бумага";
-      page.ToolTipText = "Размер и ориентация бумаги";
+      page.Text = Res.BRPageSetupPaper_Title_Tab;
+      page.ToolTipText = Res.BRPageSetupPaper_ToolTip_Tab;
       page.ImageKey = "PaperSize";
       page.DataToControls += DataToControls;
       page.DataFromControls += DataFromControls;
@@ -127,7 +122,7 @@ namespace FreeLibSet.Forms.Reporting
       string[] aNames = new string[_DVByName.Count + 1];
       for (int i = 0; i < _DVByName.Count; i++)
         aNames[i] = _DVByName[i].Row["Name"].ToString();
-      aNames[_DVByName.Count] = "Другой";
+      aNames[_DVByName.Count] = Res.BRPageSetupPaper_Msg_NonStandard;
       cbPageSize.Items.Clear();
       cbPageSize.Items.AddRange(aNames);
     }
@@ -169,8 +164,8 @@ namespace FreeLibSet.Forms.Reporting
       _InsidePaperSize = true;
       try
       {
-        int h = (int)(Math.Round(efpPaperHeight.Value , 1, MidpointRounding.AwayFromZero)*10m); // в единицах 1мм
-        int w = (int)(Math.Round(efpPaperWidth.Value, 1, MidpointRounding.AwayFromZero)*10m);
+        int h = (int)(Math.Round(efpPaperHeight.Value, 1, MidpointRounding.AwayFromZero) * 10m); // в единицах 1мм
+        int w = (int)(Math.Round(efpPaperWidth.Value, 1, MidpointRounding.AwayFromZero) * 10m);
         if (efpOrientation.SelectedIndex == 1)
           DataTools.Swap<int>(ref h, ref w);
 
@@ -195,7 +190,7 @@ namespace FreeLibSet.Forms.Reporting
 
     #endregion
 
-#region Двусторонняя печать
+    #region Двусторонняя печать
 #if XXX
     EFPCheckBox efpDuplex;
 
@@ -245,15 +240,15 @@ namespace FreeLibSet.Forms.Reporting
     }
 #endif
 
-#endregion
+    #endregion
 
-#region Центрирование
+    #region Центрирование
 
     EFPCheckBox efpCenterHorizontal, efpCenterVertical;
 
-#endregion
+    #endregion
 
-#region Ориентация бумаги
+    #region Ориентация бумаги
 
     EFPRadioButtons efpOrientation;
 
@@ -276,9 +271,9 @@ namespace FreeLibSet.Forms.Reporting
       PaperWidthOrHeightChanged(null, null);
     }
 
-#endregion
+    #endregion
 
-#region Обработчики SettingsDialogPage
+    #region Обработчики SettingsDialogPage
 
     private void DataToControls(object sender, EventArgs args)
     {
@@ -318,7 +313,7 @@ namespace FreeLibSet.Forms.Reporting
       ps.CenterVertical = efpCenterVertical.Checked;
     }
 
-#endregion
+    #endregion
 
   }
 }

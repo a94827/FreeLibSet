@@ -574,7 +574,7 @@ namespace FreeLibSet.Reporting
     private static void WriteHtmlOff(Stream stream, int posWr, int value)
     {
       if (!stream.CanSeek)
-        throw new NotSupportedException("Поток не поддерживает Seek");
+        throw new NotSupportedException(Res.BRReport_Err_StreamWithoutSeek);
       string text = value.ToString("d10");
       stream.Seek(posWr, SeekOrigin.Begin);
       for (int i = 0; i < text.Length; i++)

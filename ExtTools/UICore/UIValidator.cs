@@ -7,6 +7,7 @@ using System.Text;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Collections;
 using System.ComponentModel;
+using FreeLibSet.Core;
 
 // Общие объявления пользовательского интерфейса.
 // Используется классами FreeLibSet.RI.Control (удаленный пользовательский интерфейс)
@@ -237,7 +238,7 @@ namespace FreeLibSet.UICore
       if (isValid)
         _Message = null;
       else if (String.IsNullOrEmpty(message))
-        _Message = "Текст сообщения об ошибке не задан";
+        _Message = Res.UIValidateResult_Msg_NoMessage;
       else
         _Message = message;
     }

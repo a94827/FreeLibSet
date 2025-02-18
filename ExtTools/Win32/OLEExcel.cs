@@ -227,7 +227,7 @@ namespace FreeLibSet.OLE.Excel
     #region Основной объект
 
     public Application Application { get { return _Application; } }
-    private Application _Application;
+    private readonly Application _Application;
 
     #endregion
 
@@ -263,7 +263,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -777,13 +777,13 @@ namespace FreeLibSet.OLE.Excel
 #if DEBUG
       ExcelHelper helper = (ExcelHelper)(_Base.Helper);
       if (rowIndex1 < 1 || rowIndex1 > helper.MaxRowCount)
-        throw new ArgumentOutOfRangeException("rowIndex1", rowIndex1, "Неправильный номер первой строки");
+        throw ExceptionFactory.ArgOutOfRange("rowIndex1", rowIndex1, 1, helper.MaxRowCount);
       if (colIndex1 < 1 || colIndex1 > helper.MaxColumnCount)
-        throw new ArgumentOutOfRangeException("colIndex1", colIndex1, "Неправильный номер первого столбца");
+        throw ExceptionFactory.ArgOutOfRange("colIndex1", colIndex1, 1, helper.MaxColumnCount);
       if (rowIndex2 < rowIndex1 || rowIndex2 > helper.MaxRowCount)
-        throw new ArgumentOutOfRangeException("rowIndex2", rowIndex2, "Неправильный номер последней строки");
+        throw ExceptionFactory.ArgOutOfRange("rowIndex2", rowIndex2, rowIndex1, helper.MaxRowCount);
       if (colIndex2 < colIndex1 || colIndex2 > helper.MaxColumnCount)
-        throw new ArgumentOutOfRangeException("colIndex2", colIndex2, "Неправильный номер последнего столбца");
+        throw ExceptionFactory.ArgOutOfRange("colIndex2", colIndex2, colIndex1, helper.MaxColumnCount);
 #endif
       // Простой диапазон
       if (rowIndex2 == rowIndex1 && colIndex2 == colIndex1)
@@ -812,12 +812,14 @@ namespace FreeLibSet.OLE.Excel
     /// <returns>Диапазон</returns>
     public Range GetRowsRange(int firstRow, int lastRow)
     {
-      if (firstRow < 1)
-        throw new ArgumentException("Неправильный номер первой строки:" + firstRow.ToString(), "firstRow");
-      if (lastRow < 1)
-        throw new ArgumentException("Неправильный номер последней строки:" + lastRow.ToString(), "lastRow");
+      ExcelHelper helper = (ExcelHelper)(_Base.Helper);
+
+      if (firstRow < 1 || firstRow>helper.MaxRowCount)
+        throw ExceptionFactory.ArgOutOfRange("firstRow", firstRow, 1, helper.MaxRowCount);
+      if (lastRow < 1 || firstRow > helper.MaxRowCount)
+        throw ExceptionFactory.ArgOutOfRange("lastRow", lastRow,1, helper.MaxRowCount);
       if (firstRow > lastRow)
-        throw new ArgumentException("Номер последней строки (" + lastRow.ToString() + ") меньше, чем первой строки (" + firstRow.ToString() + ")" + firstRow.ToString(), "lastRow");
+        throw ExceptionFactory.ArgRangeInverted("firstRow", firstRow, "lastRow", lastRow);
 
       Range r1 = Rows[firstRow];
       Range r2 = Rows[lastRow];
@@ -832,12 +834,14 @@ namespace FreeLibSet.OLE.Excel
     /// <returns>Диапазон</returns>
     public Range GetColumnsRange(int firstColumn, int lastColumn)
     {
-      if (firstColumn < 1 || firstColumn > 256)
-        throw new ArgumentException("Неправильный номер первого столбца:" + firstColumn.ToString(), "firstColumn");
-      if (lastColumn < 1 || lastColumn > 256)
-        throw new ArgumentException("Неправильный номер последнего столбца:" + lastColumn.ToString(), "lastColumn");
+      ExcelHelper helper = (ExcelHelper)(_Base.Helper);
+
+      if (firstColumn < 1 || firstColumn > helper.MaxColumnCount)
+        throw ExceptionFactory.ArgOutOfRange("firstColumn", firstColumn, 1, helper.MaxColumnCount);
+      if (lastColumn < 1 || lastColumn > helper.MaxColumnCount)
+        throw ExceptionFactory.ArgOutOfRange("lastColumn", lastColumn, 1,helper.MaxColumnCount);
       if (firstColumn > lastColumn)
-        throw new ArgumentException("Номер последнего столбца (" + lastColumn.ToString() + ") меньше, чем первого столбца (" + firstColumn.ToString() + ")" + firstColumn.ToString(), "lastColumn");
+        throw ExceptionFactory.ArgRangeInverted("firstColumn", firstColumn, "lastColumn", lastColumn);
 
       Range r1 = Columns[firstColumn];
       Range r2 = Columns[lastColumn];
@@ -889,13 +893,14 @@ namespace FreeLibSet.OLE.Excel
     private void SetRowHeightsLM(int height, int firstRowIndex, int rowCount)
     {
 #if DEBUG
-      if (rowCount < 1 || rowCount > 65535)
-        throw new ArgumentOutOfRangeException("rowCount", rowCount,
-          "rowCount должен быть в диапазоне от 1 до 65535");
-      if (firstRowIndex < 1 || (firstRowIndex + rowCount - 1) > 65535)
-        throw new ArgumentOutOfRangeException("firstRowIndex", firstRowIndex,
-          "firstRowIndex должен быть в диапазоне от 1 до 65535-rowCount+1");
+      ExcelHelper helper = (ExcelHelper)(_Base.Helper);
+
+      if (firstRowIndex < 1 || firstRowIndex > helper.MaxRowCount)
+        throw ExceptionFactory.ArgOutOfRange("firstRowIndex", firstRowIndex, 1, helper.MaxRowCount);
+      if (rowCount < 1 || (firstRowIndex + rowCount - 1) > helper.MaxRowCount)
+        throw ExceptionFactory.ArgOutOfRange("rowCount", rowCount, 1, helper.MaxRowCount - firstRowIndex + 1);
 #endif
+
       Range r = GetRange(firstRowIndex, 1, firstRowIndex + rowCount - 1, 1);
       r.SetRowHeight((double)height / 254.0 * 72.0);
     }
@@ -931,12 +936,12 @@ namespace FreeLibSet.OLE.Excel
         double wantedW = (double)widths[i] - prevErr; // в единицах 0.1 мм с учетом ошибки
         if (wantedW < cs2)
           wantedW = cs2;
-        double colWPt = MySetColumnWidth(colRange, WidthScale, wantedW / 254.0 * 72.0);
+        double colWPt = DoSetColumnWidth(colRange, WidthScale, wantedW / 254.0 * 72.0);
         double realW = colWPt / 72.0 * 254.0 + cs2; // Реальная ширина в единицах 0.1 мм
         wantedW = (double)widths[i] - prevErr; // еще раз
         prevErr = realW - wantedW;
         if (Math.Abs(prevErr) > 20.0)
-          throw new BugException("Не удалось установить ширину столбца с приемлемой точностью");
+          throw new BugException("Cannot set the column width with appropriate precision");
       }
     }
 
@@ -947,7 +952,7 @@ namespace FreeLibSet.OLE.Excel
     /// <param name="scale">Результат GetColumnWidthScale()</param>
     /// <param name="ptW">Желаемая ширина столбца в пунктах</param>
     /// <returns>Реальная ширина столбца в пунктах</returns>
-    private double MySetColumnWidth(Range colRange, double scale, double ptW)
+    private double DoSetColumnWidth(Range colRange, double scale, double ptW)
     {
       double w2 = 0; // иначе будет предупреждение
       colRange.ColumnWidth = ptW * scale;
@@ -998,11 +1003,11 @@ namespace FreeLibSet.OLE.Excel
     public void SetTableRowCount(int firstRow, int oldRowCount, int newRowCount)
     {
       if (firstRow < 1)
-        throw new ArgumentException("Индекс первой строки не может быть меньше 1", "firstRow");
+        throw ExceptionFactory.ArgOutOfRange("firstRow", firstRow, 1, null);
       if (oldRowCount < 0)
-        throw new ArgumentException("Неправильное число существующих строк: " + oldRowCount.ToString(), "oldRowCount");
+        throw ExceptionFactory.ArgOutOfRange("oldRowCount", oldRowCount, 0, null);
       if (newRowCount < 0)
-        throw new ArgumentException("Неправильное число новых строк: " + newRowCount.ToString(), "newRowCount");
+        throw ExceptionFactory.ArgOutOfRange("newRowCount", newRowCount, 0, null);
 
       if (newRowCount > oldRowCount)
       {
@@ -2057,7 +2062,7 @@ namespace FreeLibSet.OLE.Excel
     public void SetName(string value)
     {
       if (String.IsNullOrEmpty(value))
-        throw new ArgumentNullException("value", "Имя шрифта не может быть пустым");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
       Base.Helper.SetProp(Base.Obj, "[DispID=110]", value);
     }
 
@@ -2097,7 +2102,8 @@ namespace FreeLibSet.OLE.Excel
     public void SetSize(double value)
     {
       if (value <= 0.0)
-        throw new ArgumentException("Размер шрифта должен быть больше 0");
+        throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
+
       Base.Helper.SetProp(Base.Obj, "[DispID=104]", value);
     }
 
@@ -2508,9 +2514,9 @@ namespace FreeLibSet.OLE.Excel
     public void SetFitToPages(int wide, int tall)
     {
       if (wide < 0)
-        throw new ArgumentOutOfRangeException("wide");
+        throw ExceptionFactory.ArgOutOfRange("wide", wide, 0, null);
       if (tall < 0)
-        throw new ArgumentOutOfRangeException("tall");
+        throw ExceptionFactory.ArgOutOfRange("tall", tall, 0, null);
 
       Base.Helper.SetProp(Base.Obj, "[DispID=663]", false);
 
@@ -2528,7 +2534,8 @@ namespace FreeLibSet.OLE.Excel
     public void SetFitToPagesTall(int value)
     {
       if (value < 0)
-        throw new ArgumentOutOfRangeException();
+        throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
+
       if (value == 0)
         Base.Helper.SetProp(Base.Obj, "[DispID=1013]", false);
       else
@@ -2560,6 +2567,7 @@ namespace FreeLibSet.OLE.Excel
     {
       if (value == null)
         value = String.Empty;
+
       Base.Helper.SetProp(Base.Obj, "[DispID=1024]", value);
     }
 

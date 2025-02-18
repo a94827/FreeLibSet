@@ -117,25 +117,341 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="TheImageList.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>17, 17</value>
+  <data name="&gt;&gt;btnOpenWith.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="OpenWithMenu.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>141, 17</value>
+  <data name="&gt;&gt;panel3.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="cbStopShow.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 17</value>
+  </data>
+  <data name="&gt;&gt;btnEdit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="colData1.UserAddedColumn" type="System.Boolean, mscorlib">
+  <data name="tpObj.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbStopShow.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="grData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>618, 131</value>
+  </data>
+  <data name="pg1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="btnEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 24</value>
+  </data>
+  <data name="grStack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>618, 131</value>
+  </data>
+  <data name="&gt;&gt;colData2.Name" xml:space="preserve">
+    <value>colData2</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="edMessage.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="panel3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>130, 51</value>
+  </data>
+  <data name="edLogPath.Location" type="System.Drawing.Point, System.Drawing">
+    <value>154, 4</value>
+  </data>
+  <data name="edLogPath.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="tpObj.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="&gt;&gt;panLog.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;btnClose.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 10</value>
+  </data>
+  <data name="colStack1.HeaderText" xml:space="preserve">
+    <value>Column1</value>
+  </data>
+  <data name="btnDirExplorer.Location" type="System.Drawing.Point, System.Drawing">
+    <value>593, 4</value>
+  </data>
+  <data name="&gt;&gt;tpStack.Name" xml:space="preserve">
+    <value>tpStack</value>
+  </data>
+  <data name="&gt;&gt;edLogPath.Parent" xml:space="preserve">
+    <value>panLog</value>
+  </data>
+  <data name="panLog.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;btnClose.Parent" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="cbStopShow.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 15</value>
+  </data>
+  <data name="edType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>489, 20</value>
+  </data>
+  <data name="&gt;&gt;lblMessage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="panLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>632, 32</value>
+  </data>
+  <data name="btnClose.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;panel3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="panLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 160</value>
+  </data>
+  <data name="colData1.HeaderText" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="tpData.Text" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="OpenWithMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 4</value>
+  </data>
+  <data name="&gt;&gt;tpStack.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="TheTabControl.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="TheTabControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 192</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Stop showing only if application fell into endless loop and this dialog shows continuosly. Then you should close apllication normally if possible.</value>
+  </data>
+  <data name="btnInner.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;colData1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="panStopShow.Size" type="System.Drawing.Size, System.Drawing">
+    <value>502, 51</value>
+  </data>
+  <data name="&gt;&gt;btnEdit.Parent" xml:space="preserve">
+    <value>panLog</value>
+  </data>
+  <data name="&gt;&gt;btnInner.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="TheTabControl.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="cbStopShow.Text" xml:space="preserve">
+    <value>Stop showing errors</value>
+  </data>
+  <data name="edType.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="tpObj.Text" xml:space="preserve">
+    <value>Error object</value>
+  </data>
+  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tpStack.Parent" xml:space="preserve">
+    <value>TheTabControl</value>
+  </data>
+  <data name="btnOpenWith.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 24</value>
+  </data>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="btnDirExplorer.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tpStack.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="panel2.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;btnOpenWith.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbStopShow.Parent" xml:space="preserve">
+    <value>panStopShow</value>
+  </data>
+  <data name="&gt;&gt;lblType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grStack.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="&gt;&gt;tpData.Parent" xml:space="preserve">
+    <value>TheTabControl</value>
+  </data>
+  <data name="lblMessage.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="colData2.UserAddedColumn" type="System.Boolean, mscorlib">
+  <data name="&gt;&gt;tpData.Name" xml:space="preserve">
+    <value>tpData</value>
+  </data>
+  <data name="lblMessage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 13</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Error message debug</value>
+  </data>
+  <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 355</value>
+  </data>
+  <data name="tpStack.Text" xml:space="preserve">
+    <value>Stack trace</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="&gt;&gt;lblMessage.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>632, 160</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;TheTabControl.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;edType.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;edMessage.Name" xml:space="preserve">
+    <value>edMessage</value>
+  </data>
+  <data name="&gt;&gt;grData.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblType.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panStopShow.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblMessage.Text" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="&gt;&gt;tpObj.Parent" xml:space="preserve">
+    <value>TheTabControl</value>
+  </data>
+  <data name="btnInner.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 43</value>
+  </data>
+  <data name="&gt;&gt;edType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="edMessage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>489, 116</value>
+  </data>
+  <data name="cbStopShow.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="edMessage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>131, 38</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnOpenWith.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="grData.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lblType.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tpData.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="&gt;&gt;btnDirExplorer.Parent" xml:space="preserve">
+    <value>panLog</value>
+  </data>
+  <data name="&gt;&gt;panStopShow.Name" xml:space="preserve">
+    <value>panStopShow</value>
+  </data>
+  <data name="panStopShow.Location" type="System.Drawing.Point, System.Drawing">
+    <value>130, 0</value>
+  </data>
+  <data name="panel3.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblType.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="colData3.UserAddedColumn" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;lblMessage.Name" xml:space="preserve">
+    <value>lblMessage</value>
   </data>
-  <data name="colStack1.UserAddedColumn" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="panStopShow.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;colData2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TheTabControl.Name" xml:space="preserve">
+    <value>TheTabControl</value>
+  </data>
+  <data name="btnInner.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 81</value>
+  </data>
+  <data name="tpStack.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="&gt;&gt;pg1.Parent" xml:space="preserve">
+    <value>tpObj</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;btnOpenWith.Parent" xml:space="preserve">
+    <value>panLog</value>
+  </data>
+  <data name="btnClose.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pg1.HelpVisible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnEdit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 4</value>
+  </data>
+  <data name="&gt;&gt;edLogPath.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;OpenWithMenu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -147,4 +463,364 @@
         AACAAQAAwAMAAOAHAAD4HwAA
 </value>
   </data>
+  <data name="&gt;&gt;lblMessage.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="edLogPath.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;btnClose.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="edMessage.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tpObj.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="&gt;&gt;pg1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colStack1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="&gt;&gt;label3.Name" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="&gt;&gt;grStack.Name" xml:space="preserve">
+    <value>grStack</value>
+  </data>
+  <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>632, 51</value>
+  </data>
+  <data name="edType.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>198, 3</value>
+  </data>
+  <data name="btnClose.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 24</value>
+  </data>
+  <data name="&gt;&gt;btnDirExplorer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnClose.Name" xml:space="preserve">
+    <value>btnClose</value>
+  </data>
+  <data name="&gt;&gt;edLogPath.Name" xml:space="preserve">
+    <value>edLogPath</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grData.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="lblMessage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 38</value>
+  </data>
+  <data name="btnEdit.Text" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="&gt;&gt;btnDirExplorer.Name" xml:space="preserve">
+    <value>btnDirExplorer</value>
+  </data>
+  <data name="&gt;&gt;panStopShow.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpObj.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="edType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>131, 7</value>
+  </data>
+  <data name="&gt;&gt;OpenWithMenu.Name" xml:space="preserve">
+    <value>OpenWithMenu</value>
+  </data>
+  <data name="&gt;&gt;tpObj.Name" xml:space="preserve">
+    <value>tpObj</value>
+  </data>
+  <data name="tpStack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>624, 137</value>
+  </data>
+  <data name="btnEdit.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="panLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="colData3.HeaderText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pg1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="&gt;&gt;lblType.Name" xml:space="preserve">
+    <value>lblType</value>
+  </data>
+  <data name="label3.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;tpData.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;grData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="edLogPath.Size" type="System.Drawing.Size, System.Drawing">
+    <value>433, 20</value>
+  </data>
+  <data name="btnDirExplorer.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="colData3.Width" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="tpData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>624, 137</value>
+  </data>
+  <data name="&gt;&gt;pg1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btnOpenWith.Location" type="System.Drawing.Point, System.Drawing">
+    <value>116, 4</value>
+  </data>
+  <data name="&gt;&gt;pg1.Name" xml:space="preserve">
+    <value>pg1</value>
+  </data>
+  <data name="&gt;&gt;edMessage.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panStopShow.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="btnDirExplorer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 24</value>
+  </data>
+  <data name="&gt;&gt;tpData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInner.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pg1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;edLogPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnInner.Text" xml:space="preserve">
+    <value>Inner error</value>
+  </data>
+  <data name="colData2.HeaderText" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="btnInner.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;lblType.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;edMessage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colData1.Name" xml:space="preserve">
+    <value>colData1</value>
+  </data>
+  <data name="&gt;&gt;btnOpenWith.Name" xml:space="preserve">
+    <value>btnOpenWith</value>
+  </data>
+  <data name="&gt;&gt;TheTabControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+    <value>panStopShow</value>
+  </data>
+  <data name="&gt;&gt;edMessage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;btnEdit.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="panel3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>ShowExceptionForm</value>
+  </data>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;grStack.Parent" xml:space="preserve">
+    <value>tpStack</value>
+  </data>
+  <data name="&gt;&gt;tpObj.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;grData.Parent" xml:space="preserve">
+    <value>tpData</value>
+  </data>
+  <data name="lblType.Text" xml:space="preserve">
+    <value>Error type</value>
+  </data>
+  <data name="&gt;&gt;panLog.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="edMessage.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="panStopShow.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;colData3.Name" xml:space="preserve">
+    <value>colData3</value>
+  </data>
+  <data name="grStack.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="pg1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>618, 131</value>
+  </data>
+  <data name="panel2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="&gt;&gt;btnEdit.Name" xml:space="preserve">
+    <value>btnEdit</value>
+  </data>
+  <data name="btnClose.Text" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="&gt;&gt;grStack.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panLog.Name" xml:space="preserve">
+    <value>panLog</value>
+  </data>
+  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tpData.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="lblMessage.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="grStack.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lblType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 13</value>
+  </data>
+  <data name="tpStack.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;cbStopShow.Name" xml:space="preserve">
+    <value>cbStopShow</value>
+  </data>
+  <data name="cbStopShow.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="tpData.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>632, 406</value>
+  </data>
+  <data name="panel3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;edType.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;grData.Name" xml:space="preserve">
+    <value>grData</value>
+  </data>
+  <data name="btnEdit.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;panel3.Name" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="tpObj.Size" type="System.Drawing.Size, System.Drawing">
+    <value>624, 137</value>
+  </data>
+  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;tpStack.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDirExplorer.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;colStack1.Name" xml:space="preserve">
+    <value>colStack1</value>
+  </data>
+  <data name="TheTabControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>632, 163</value>
+  </data>
+  <data name="&gt;&gt;edType.Name" xml:space="preserve">
+    <value>edType</value>
+  </data>
+  <data name="&gt;&gt;colData3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewButtonColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TheTabControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="btnClose.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 13</value>
+  </data>
+  <data name="&gt;&gt;cbStopShow.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grStack.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInner.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 44</value>
+  </data>
+  <data name="grData.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;btnInner.Name" xml:space="preserve">
+    <value>btnInner</value>
+  </data>
+  <metadata name="colStack1.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colData3.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colData1.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colData2.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="OpenWithMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>141, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

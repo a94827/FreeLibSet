@@ -25,7 +25,7 @@ namespace FreeLibSet.Forms.Reporting
     {
       InitializeComponent();
       if (isCsv)
-        grpMain.Text += " в формате CSV";
+        grpMain.Text = Res.BRDataViewPageSetupText_Title_CSV;
 
       _ControlProvider = controlProvider;
       _ViewData = dialog.Data.GetRequired<BRDataViewSettingsDataItem>();
@@ -66,8 +66,8 @@ namespace FreeLibSet.Forms.Reporting
         efpSingleLineField.Enabled = false;
       }
 
-      page.Text = "Формат";
-      page.ToolTipText = "Формат файла для экспорта";
+      page.Text = Res.BRDataViewPageSetupText_Title_Tab;
+      page.ToolTipText = Res.BRDataViewPageSetupText_ToolTip_Tab;
       page.ImageKey = "Settings";
 
       page.DataToControls += Page_DataToControls;
@@ -97,13 +97,13 @@ namespace FreeLibSet.Forms.Reporting
     private void EfpFieldDelimiter_Validating(object sender, UICore.UIValidatingEventArgs args)
     {
       if (efpFieldDelimiter.Text.Length != 1)
-        args.SetError("Строка должна содержать один символ");
+        args.SetError(Res.BRDataViewPageSetupText_Err_SingleCharRequired);
     }
 
     private void EfpQuote_Validating(object sender, UICore.UIValidatingEventArgs args)
     {
       if (efpQuote.Text.Length != 1)
-        args.SetError("Строка должна содержать один символ");
+        args.SetError(Res.BRDataViewPageSetupText_Err_SingleCharRequired);
     }
 
     #endregion
@@ -161,7 +161,7 @@ namespace FreeLibSet.Forms.Reporting
     private StreamWriter CreateStreamWriter(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentException("Не задан путь к файлу");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
       FreeLibSet.IO.FileTools.ForceDirs(filePath.ParentDir);
       Encoding enc = Encoding.GetEncoding(_Settings.CodePage);
       StreamWriter sw = new StreamWriter(filePath.Path, false, enc);

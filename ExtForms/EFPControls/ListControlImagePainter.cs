@@ -240,7 +240,7 @@ namespace FreeLibSet.Forms
         case UIValidateState.Error: return EFPApp.Colors.ListStateError;
         case UIValidateState.Warning: return EFPApp.Colors.ListStateWarning;
         default:
-          throw new ArgumentException("Неизвестное значение " + state.ToString(), "state");
+          throw ExceptionFactory.ArgUnknownValue("state", state);
       }
     }
 
@@ -267,7 +267,7 @@ namespace FreeLibSet.Forms
       if (control == null)
         throw new ArgumentNullException("control");
       if (itemImageKeys == null && handler == null)
-        throw new ArgumentNullException("handler", "Список изображений или обработчик должны быть заданы");
+        throw new ArgumentNullException("handler", Res.ListControlImagePainter_Arg_nulls);
 #endif
       _Control = control;
       _ItemImageKeys = itemImageKeys;
@@ -293,7 +293,7 @@ namespace FreeLibSet.Forms
       if (control == null)
         throw new ArgumentNullException("control");
       if (itemImageKeys == null && handler == null)
-        throw new ArgumentNullException("handler", "Список изображений или обработчик должны быть заданы");
+        throw new ArgumentNullException("handler", Res.ListControlImagePainter_Arg_nulls);
 #endif
       _Control = control;
       _ItemImageKeys = itemImageKeys;
@@ -360,7 +360,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(imageKey))
-        throw new ArgumentNullException("imageKey");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("imageKey");
 #endif
       this.OutOfRangeImageKey = imageKey;
     }
@@ -375,7 +375,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(imageKey))
-        throw new ArgumentNullException("imageKey");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("imageKey");
 #endif
       this.OutOfRangeImageKey = imageKey;
     }

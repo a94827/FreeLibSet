@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms
     public override string ToString()
     {
       if (MainWindow == null)
-        return "Нет окна";
+        return "There is no main window";
       else
         return MainWindow.Text;
     }
@@ -73,7 +73,7 @@ namespace FreeLibSet.Forms
         if (value == null)
           throw new ArgumentNullException();
         if (_MainWindow != null)
-          throw new InvalidOperationException("Повторная установка свойства");
+          throw ExceptionFactory.RepeatedCall(this, "MainWindow");
 #endif
         _MainWindow = value;
         _MainWindow.SizeChanged += new EventHandler(MainWindow_SizeChanged);
@@ -303,7 +303,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Подготовка дочернего окна к присоединению.
-    /// Добавляет окно в список ChildForms и присоединяет необходимые обработчики форм.
+    /// Добавляет окно в список <see cref="_ChildForms"/> и присоединяет необходимые обработчики форм.
     /// </summary>
     /// <param name="form">Дочернее окно</param>
     protected void PrepareChildForm(Form form)
@@ -314,7 +314,7 @@ namespace FreeLibSet.Forms
         throw new ObjectDisposedException("form");
 
       if (_ChildForms.Contains(form))
-        throw new InvalidOperationException("Форма " + form.ToString() + " уже есть в списке форм главного окна");
+        throw new InvalidOperationException(String.Format(Res.EFPApp_Err_FormAlreadyInMainWindow, form.ToString()));
 
       _ChildForms.Add(form);
 
@@ -365,7 +365,7 @@ namespace FreeLibSet.Forms
     /// <param name="mdiLayout">Способ упорядочения</param>
     public virtual void LayoutChildForms(MdiLayout mdiLayout)
     {
-      throw new InvalidOperationException("Не реализовано для интерфейса " + Interface.Name);
+      throw new InvalidOperationException();
     }
 
     /// <summary>
@@ -469,10 +469,12 @@ namespace FreeLibSet.Forms
         if ((!closeApp) && (!Interface.IsSDI) && (!InsideCloseMainWindow))
         {
           RadioSelectDialog dlg = new RadioSelectDialog();
-          dlg.Title = "Закрытие окна " + this.MainWindow.Text;
+          dlg.Title = String.Format(Res.EFPApp_Title_CloseMainWindow,this.MainWindow.Text);
           //dlg.ImageKey = "CloseWindow"; // значок слишком реалистично выглядит - кнопка закрытия вместо системного меню
-          dlg.GroupTitle = "Что надо сделать";
-          dlg.Items = new string[] { "Закрыть текущее главное окно", "Завершить работу" };
+          dlg.GroupTitle = Res.EFPApp_Title_CloseMainWindowAction;
+          dlg.Items = new string[] {
+            Res.EFPApp_Msg_CloseMainWindowCloseCurrent,
+            Res.EFPApp_Msg_CloseMainWindowExit };
           dlg.ImageKeys = new string[] { "CloseWindow", "Exit" };
           if (dlg.ShowDialog() != DialogResult.OK)
           {
@@ -528,7 +530,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "MainWindow_Activated");
+        LogoutTools.LogoutException(e);
       }
     }
 
@@ -589,7 +591,7 @@ namespace FreeLibSet.Forms
       {
 #if DEBUG
         if (_MainMenu != null || _ToolBars != null || _StatusBar != null)
-          throw new BugException("Повторная инициализация");
+          throw new BugException("Repeated initialization");
 #endif
 
         #region Главное меню
@@ -643,7 +645,7 @@ namespace FreeLibSet.Forms
         // 22.11.2018
         // Команда "Восстановить"
         EFPCommandItem ciRestore = new EFPCommandItem("View", "RestoreToolBars");
-        ciRestore.MenuText = "Восстановить";
+        ciRestore.MenuText = Res.Cmd_Menu_View_RestoreToolBars;
         ciRestore.Click += new EventHandler(EFPAppCommandItemHelpers.ToolBarsRestore_Click);
         ciRestore.GroupBegin = true;
         _ToolBars.ContextMenu.Add(ciRestore);

@@ -484,7 +484,7 @@ namespace FreeLibSet.Shell
     {
       int p = ci.Name.IndexOf('-');
       if (p < 0)
-        throw new ArgumentException("Неправильная культура \"" + ci.Name + "\". Отсутствует \"-\"", "ci");
+        throw new ArgumentException(String.Format(Res.OpenOfficeTools_Arg_GenericCulture, ci.Name), "ci");
       string language = ci.Name.Substring(0, p);
       string country = ci.Name.Substring(p + 1);
 
@@ -571,7 +571,7 @@ namespace FreeLibSet.Shell
           break;
 
         default:
-          throw new ArgumentException("Числовой формат \"" + formatText + "\" состоит больше, чем из трех частей", "formatText");
+          throw new ArgumentException(String.Format(Res.OpenOfficeTools_Arg_TooManyPartsInNumberFormat, formatText), "formatText");
       }
 
       return true;

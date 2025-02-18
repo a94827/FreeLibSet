@@ -138,7 +138,7 @@ namespace FreeLibSet.Forms
           e.Data["Path"] = filePath;
           e.Data["IconIndex"] = iconIndex;
           e.Data["SmallIcon"] = smallIcon;
-          LogoutTools.LogoutException(e, "Ошибка извлечения значка из файла");
+          LogoutTools.LogoutException(e, Res.EFPApp_ErrTitle_ExtractIconImage);
           image = null;
         }
         _IconImageDict.Add(key, image);

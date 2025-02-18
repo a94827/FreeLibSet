@@ -19,14 +19,13 @@ namespace FreeLibSet.Core
     private static void CheckYear(int year)
     {
       if (year < DateTime.MinValue.Year || year > DateTime.MaxValue.Year)
-        throw new ArgumentOutOfRangeException("year", year, "Год должен быть в диапазоне от " +
-          DateTime.MinValue.Year.ToString() + " до " + DateTime.MaxValue.Year.ToString());
+        throw ExceptionFactory.ArgOutOfRange("year", year, DateTime.MinValue.Year.ToString(), DateTime.MaxValue.Year.ToString());
     }
 
     private static void CheckMonth(int month)
     {
       if (month < 1 || month > 12)
-        throw new ArgumentOutOfRangeException("month", month, "Месяц должен быть в диапазоне от 1 до 12");
+        throw ExceptionFactory.ArgOutOfRange("month", month, 1, 12);
     }
 
 #endif

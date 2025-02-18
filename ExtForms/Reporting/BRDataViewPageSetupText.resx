@@ -117,4 +117,352 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;cbExpColumnHeaders.Name" xml:space="preserve">
+    <value>cbExpColumnHeaders</value>
+  </data>
+  <data name="&gt;&gt;lblQuote.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblFieldDelimiter.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;cbFieldDelimiter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="MainPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 10</value>
+  </data>
+  <data name="&gt;&gt;cbRemoveDoubleSpaces.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbRemoveDoubleSpaces.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblFieldDelimiter.Text" xml:space="preserve">
+    <value>Field delimiter</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="cbCodePage.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="cbFieldDelimiter.Items1" xml:space="preserve">
+    <value>;</value>
+  </data>
+  <data name="cbSingleLineField.Text" xml:space="preserve">
+    <value>Replace new-line char with space</value>
+  </data>
+  <data name="cbRemoveDoubleSpaces.Size" type="System.Drawing.Size, System.Drawing">
+    <value>175, 17</value>
+  </data>
+  <data name="&gt;&gt;grpMain.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Name" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;cbCodePage.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="&gt;&gt;cbFieldDelimiter.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="cbQuote.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="&gt;&gt;lblCodePage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblFieldDelimiter.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="lblCodePage.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblQuote.Text" xml:space="preserve">
+    <value>String value quotation marks</value>
+  </data>
+  <data name="cbCodePage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>166, 24</value>
+  </data>
+  <data name="cbCodePage.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cbQuote.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="cbRemoveDoubleSpaces.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 144</value>
+  </data>
+  <data name="lblFieldDelimiter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="cbSingleLineField.Size" type="System.Drawing.Size, System.Drawing">
+    <value>186, 17</value>
+  </data>
+  <data name="&gt;&gt;cbSingleLineField.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="grpMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>436, 196</value>
+  </data>
+  <data name="lblFieldDelimiter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>149, 20</value>
+  </data>
+  <data name="cbSingleLineField.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="&gt;&gt;cbFieldDelimiter.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="&gt;&gt;cbSingleLineField.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="grpMain.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="cbSingleLineField.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="cbRemoveDoubleSpaces.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="grpMain.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="cbFieldDelimiter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>166, 58</value>
+  </data>
+  <data name="lblQuote.Size" type="System.Drawing.Size, System.Drawing">
+    <value>149, 20</value>
+  </data>
+  <data name="lblCodePage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>149, 20</value>
+  </data>
+  <data name="&gt;&gt;lblCodePage.Name" xml:space="preserve">
+    <value>lblCodePage</value>
+  </data>
+  <data name="lblQuote.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 89</value>
+  </data>
+  <data name="lblCodePage.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="cbQuote.Location" type="System.Drawing.Point, System.Drawing">
+    <value>166, 89</value>
+  </data>
+  <data name="lblQuote.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="cbFieldDelimiter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 21</value>
+  </data>
+  <data name="cbSingleLineField.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbFieldDelimiter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="&gt;&gt;lblCodePage.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;lblFieldDelimiter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbRemoveDoubleSpaces.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="&gt;&gt;cbExpColumnHeaders.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="&gt;&gt;cbQuote.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="cbFieldDelimiter.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="grpMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;lblCodePage.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="cbExpColumnHeaders.Size" type="System.Drawing.Size, System.Drawing">
+    <value>85, 17</value>
+  </data>
+  <data name="cbRemoveDoubleSpaces.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="cbCodePage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 21</value>
+  </data>
+  <data name="cbExpColumnHeaders.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;cbSingleLineField.Name" xml:space="preserve">
+    <value>cbSingleLineField</value>
+  </data>
+  <data name="cbExpColumnHeaders.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;lblFieldDelimiter.Name" xml:space="preserve">
+    <value>lblFieldDelimiter</value>
+  </data>
+  <data name="&gt;&gt;grpMain.Name" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="cbExpColumnHeaders.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 166</value>
+  </data>
+  <data name="cbSingleLineField.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 123</value>
+  </data>
+  <data name="cbRemoveDoubleSpaces.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbQuote.Items" xml:space="preserve">
+    <value>"</value>
+  </data>
+  <data name="&gt;&gt;cbQuote.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="grpMain.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="grpMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="MainPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbCodePage.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;cbQuote.Name" xml:space="preserve">
+    <value>cbQuote</value>
+  </data>
+  <data name="cbRemoveDoubleSpaces.Text" xml:space="preserve">
+    <value>Remove double and tail spaces</value>
+  </data>
+  <data name="grpMain.Text" xml:space="preserve">
+    <value>Text file parameters</value>
+  </data>
+  <data name="&gt;&gt;lblFieldDelimiter.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="lblQuote.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="cbCodePage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>BRDataViewPageSetupText</value>
+  </data>
+  <data name="&gt;&gt;lblQuote.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblCodePage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 24</value>
+  </data>
+  <data name="&gt;&gt;cbExpColumnHeaders.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblFieldDelimiter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 58</value>
+  </data>
+  <data name="lblFieldDelimiter.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;cbRemoveDoubleSpaces.Name" xml:space="preserve">
+    <value>cbRemoveDoubleSpaces</value>
+  </data>
+  <data name="&gt;&gt;cbQuote.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MainPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="lblQuote.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="cbFieldDelimiter.Items" xml:space="preserve">
+    <value>,</value>
+  </data>
+  <data name="&gt;&gt;cbCodePage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbExpColumnHeaders.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;lblQuote.Name" xml:space="preserve">
+    <value>lblQuote</value>
+  </data>
+  <data name="cbFieldDelimiter.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cbQuote.Size" type="System.Drawing.Size, System.Drawing">
+    <value>254, 21</value>
+  </data>
+  <data name="cbQuote.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;grpMain.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;lblQuote.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="lblCodePage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="&gt;&gt;cbSingleLineField.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>458, 218</value>
+  </data>
+  <data name="&gt;&gt;grpMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="cbQuote.Items1" xml:space="preserve">
+    <value>'</value>
+  </data>
+  <data name="lblCodePage.Text" xml:space="preserve">
+    <value>Encoding</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbCodePage.Name" xml:space="preserve">
+    <value>cbCodePage</value>
+  </data>
+  <data name="&gt;&gt;cbFieldDelimiter.Name" xml:space="preserve">
+    <value>cbFieldDelimiter</value>
+  </data>
+  <data name="MainPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>436, 196</value>
+  </data>
+  <data name="cbExpColumnHeaders.Text" xml:space="preserve">
+    <value>Column titles</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

@@ -91,9 +91,9 @@ namespace FreeLibSet.Forms
     public EFPConfigSectionInfo(string configSectionName, string category, string userSetName)
     {
       if (String.IsNullOrEmpty(configSectionName))
-        throw new ArgumentNullException("configSectionName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("configSectionName");
       if (String.IsNullOrEmpty(category))
-        throw new ArgumentNullException("category");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("category");
 
       _ConfigSectionName = configSectionName;
       _Category = category;
@@ -125,7 +125,7 @@ namespace FreeLibSet.Forms
     /// Не может быть null или пустой строкой.
     /// </summary>
     public string ConfigSectionName { get { return _ConfigSectionName; } }
-    private string _ConfigSectionName;
+    private readonly string _ConfigSectionName;
 
     /// <summary>
     /// Категория сохраняемых данных ("Filters", "Order", ...). 
@@ -134,7 +134,7 @@ namespace FreeLibSet.Forms
     /// Не может быть null или пустой строкой.
     /// </summary>
     public string Category { get { return _Category; } }
-    private string _Category;
+    private readonly string _Category;
 
     /// <summary>
     /// Название пользовательского набора данных. 
@@ -142,7 +142,7 @@ namespace FreeLibSet.Forms
     /// Обычно, пустая строка.
     /// </summary>
     public string UserSetName { get { return _UserSetName; } }
-    private string _UserSetName;
+    private readonly string _UserSetName;
 
     #endregion
 
@@ -482,7 +482,7 @@ namespace FreeLibSet.Forms
     public static bool IsMachineDepended(string category)
     {
       if (String.IsNullOrEmpty(category))
-        throw new ArgumentNullException("category");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("category");
       switch (category)
       {
         case ReportFiles:
@@ -541,8 +541,8 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Менеджер-заглушка для сохранения конфигурации в течение сеанса работы
-  /// Содержит коллекцию временных секций конфигурации
+  /// Менеджер-заглушка для сохранения конфигурации в течение сеанса работы.
+  /// Содержит коллекцию временных секций конфигурации.
   /// </summary>
   public class EFPRuntimeOnlyConfigManager : IEFPConfigManager
   {
@@ -556,7 +556,7 @@ namespace FreeLibSet.Forms
       _Dict = new Dictionary<EFPConfigSectionInfo, TempCfg>();
     }
 
-    private Dictionary<EFPConfigSectionInfo, TempCfg> _Dict;
+    private readonly Dictionary<EFPConfigSectionInfo, TempCfg> _Dict;
 
     #endregion
 

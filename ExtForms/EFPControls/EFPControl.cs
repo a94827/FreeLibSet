@@ -169,25 +169,24 @@ namespace FreeLibSet.Forms
     /// </summary>
     EFPPanelToolBar ToolBar { get; }
 
-
     /// <summary>
     /// Менеджер чтения и записи конфигурации.
     /// Если не определен специально для этого управляющего элемента, берется из
-    /// EFPBaseProvider. Если он не определен явно в цепочке провайдеров до EFPFormProvider,
-    /// берется EFPApp.ConfigManager.
-    /// Свойство не может возвращать null, т.к. в EFPApp.ConfigManager всегда есть заглушка
+    /// <see cref="EFPBaseProvider"/>. Если он не определен явно в цепочке провайдеров до <see cref="EFPFormProvider"/>,
+    /// берется <see cref="EFPApp.ConfigManager"/>.
+    /// Свойство не может возвращать null, т.к. в <see cref="EFPApp.ConfigManager"/> всегда есть заглушка.
     /// </summary>
     IEFPConfigManager ConfigManager { get; }
 
     /// <summary>
-    /// Обработчик конфигурации. Для элементов, не выполняющих сохранение конфигурации, обычно возвращает null
+    /// Обработчик конфигурации. Для элементов, не выполняющих сохранение конфигурации, обычно возвращает null.
     /// </summary>
     EFPConfigHandler ConfigHandler { get; }
 
     /// <summary>
     /// Имя секции конфигурации для хранения настроек элемента.
-    /// Реализуется объектом EFPConfigHandler.
-    /// Если свойство ConfigHandler равно null, ConfigSectionName возвращает пустую строку и установить свойство нельзя.
+    /// Реализуется объектом <see cref="EFPConfigHandler"/>.
+    /// Если свойство <see cref="ConfigHandler"/> равно null, <see cref="ConfigSectionName"/> возвращает пустую строку и установить свойство нельзя.
     /// </summary>
     string ConfigSectionName { get; set; }
 
@@ -396,7 +395,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Не должно использоваться в прикладном коде.
-    /// Переопределяется для EFPRadioButtons.
+    /// Переопределяется для <see cref="EFPRadioButtons"/>.
     /// </summary>
     protected virtual Control[] GetControls()
     {
@@ -423,7 +422,7 @@ namespace FreeLibSet.Forms
     /// Если свойство установлено, то у управляющего элемента будет собственная кнопка по умолчанию.
     /// Когда элемент получает фокус ввода, то свойство <see cref="System.Windows.Forms.Form.AcceptButton"/> временно переключается
     /// на указанную кнопку, а после утери фокуса восстанавливается на предыдущее значение (кнопку "ОК" в диалоге).
-    /// Свойство можно устанавливать только до вывода формы на экран
+    /// Свойство можно устанавливать только до вывода формы на экран.
     /// </summary>
     public IButtonControl DefaultButton
     {
@@ -564,7 +563,7 @@ namespace FreeLibSet.Forms
           return;
         else
         {
-          Exception e = new InvalidOperationException("Вложенный вызов InternalSetProviderState(). В данный момент выполняется установка другого состояния");
+          Exception e = new ReenteranceException();
           AddExceptionInfo(e);
           e.Data["InternalSetProviderState.NewState"] = value;
           e.Data["InternalSetProviderState.OldState"] = _ProviderState;
@@ -623,7 +622,7 @@ namespace FreeLibSet.Forms
 #endif
 
           if (value == EFPControlProviderState.Disposed)
-            LogoutTools.LogoutException(e, "Ошибка установки состояния EFPControlProviderState.Disposed");
+            LogoutTools.LogoutException(e, Res.EFPControl_ErrTitle_SetProviderStateDisposed);
           else
             throw; // 17.07.2021
         }
@@ -639,7 +638,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="oldState">Старое состояние</param>
     /// <param name="newState">Новое состояние</param>
-    private static void CheckIsValidNewProviderState(EFPControlProviderState oldState, EFPControlProviderState newState)
+    private void CheckIsValidNewProviderState(EFPControlProviderState oldState, EFPControlProviderState newState)
     {
       bool isValid;
       switch (newState)
@@ -662,7 +661,7 @@ namespace FreeLibSet.Forms
           throw new ArgumentException("newState");
       }
       if (!isValid)
-        throw new InvalidOperationException("Недопустимое переключение ProviderState с " + oldState.ToString() + " на " + newState.ToString());
+        throw ExceptionFactory.ObjectPropertySwitch(this, "ProviderState", oldState, newState);
     }
 
 #if DEBUG
@@ -729,7 +728,7 @@ namespace FreeLibSet.Forms
     public void CheckHasNotBeenCreated()
     {
       if (HasBeenCreated)
-        throw new InvalidOperationException("Элемент " + ToString() + " уже был выведен на экран");
+        throw new InvalidOperationException(String.Format(Res.EFPControl_Err_Created, ToString()));
     }
 
     #endregion
@@ -890,7 +889,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         AddExceptionInfo(e);
-        LogoutTools.LogoutException(e, "Ошибка аварийной установки состояния Detached при при обработке события Control.Disposed");
+        LogoutTools.LogoutException(e);
         // Будет и вторая ошибка при установке Disposed
       }
 
@@ -901,7 +900,7 @@ namespace FreeLibSet.Forms
       catch (Exception e) // 25.01.2022
       {
         AddExceptionInfo(e);
-        LogoutTools.LogoutException(e, "Ошибка установки состояния Disposed при обработке события Control.Disposed");
+        LogoutTools.LogoutException(e);
       }
     }
 
@@ -1010,7 +1009,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка обработчика Control.VisibleChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1188,7 +1187,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка обработчика Control.EnabledChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1268,7 +1267,11 @@ namespace FreeLibSet.Forms
     /// По умолчанию свойство устанавливается на предыдущий управляющий элемент (вызовом <see cref="System.Windows.Forms.Control.GetNextControl(System.Windows.Forms.Control, bool)"/> для родительского элемента),
     /// если он является <see cref="Label"/> или <see cref="GroupBox"/>.
     /// Свойство не имеет значения, если в конструкторе задана аргумент <see cref="LabelNeeded"/>=false (зависит от типа управляющего элемента).
-    /// Свойству может быть присвоено значение null, <see cref="System.Windows.Forms.Label"/>, <see cref="System.Windows.Forms.GroupBox"/>, <see cref="System.Windows.Forms.CheckBox"/> или <see cref="System.Windows.Forms.RadioButton"/>. Использование других
+    /// Свойству может быть присвоено значение null, 
+    /// <see cref="System.Windows.Forms.Label"/>, 
+    /// <see cref="System.Windows.Forms.GroupBox"/>, 
+    /// <see cref="System.Windows.Forms.CheckBox"/> или 
+    /// <see cref="System.Windows.Forms.RadioButton"/>. Использование других
     /// типов управляющих элементов не допускается.
     /// </summary>
     public virtual Control Label
@@ -1282,7 +1285,8 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (!IsValidLabelControl(value))
-            throw new ArgumentException("Свойство Label может быть меткой, GroupBox, CheckBox или RadioButton");
+            throw ExceptionFactory.ArgUnknownValue("value", value, new Type[] {
+            typeof(Label), typeof(GroupBox), typeof(CheckBox), typeof(RadioButton)});
 
           // 03.07.2017
           // Запоминаем цвет метки
@@ -1373,13 +1377,13 @@ namespace FreeLibSet.Forms
         if (String.IsNullOrEmpty(_DisplayName))
         {
           if (Label != null)
-            return MyDelSC(Label.Text);
+            return WinFormsTools.RemoveMnemonic(Label.Text);
           if (LabelNeeded)
             return DefaultDisplayName;
           if (String.IsNullOrEmpty(Control.Text))
             //return Control.GetType().ToString();
             return DefaultDisplayName; // 15.08.2020
-          return MyDelSC(Control.Text);
+          return WinFormsTools.RemoveMnemonic(Control.Text);
         }
         return _DisplayName;
       }
@@ -1404,21 +1408,6 @@ namespace FreeLibSet.Forms
         //return "Без названия";
         return Control.GetType().Name; // 18.06.2024
       }
-    }
-
-    /// <summary>
-    /// Удаление амперсанда
-    /// </summary>
-    /// <param name="s">Строка</param>
-    /// <returns>Строка без амперсанда</returns>
-    private string MyDelSC(string s)
-    {
-      int p = s.IndexOf('&');
-      if (p >= 0)
-        s = s.Remove(p, 1);
-
-      s = s.Replace(Environment.NewLine, " ");
-      return s;
     }
 
     /// <summary>
@@ -1653,7 +1642,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка обработчика Control.MouseDown");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1693,7 +1682,7 @@ namespace FreeLibSet.Forms
 
       //bool wantedHasStatus = wantsHasFocus;
       //if (StatusBarHandlerIsFormOwned)
-        //wantedHasStatus = (ProviderState == EFPControlProviderState.Attached) && _ControlHasFocus; // 12.10.2023
+      //wantedHasStatus = (ProviderState == EFPControlProviderState.Attached) && _ControlHasFocus; // 12.10.2023
 
       if (wantedHasFocus)
         PrepareContextMenu();
@@ -1715,10 +1704,10 @@ namespace FreeLibSet.Forms
         currForm = BaseProvider.FormProvider.Form;
 
       if (EFPApp.ActiveDialog != null && EFPApp.ActiveDialog != currForm)
-        return true; 
+        return true;
 
       bool wantedHasStatus = (ProviderState == EFPControlProviderState.Attached) &&
-          WinFormsTools.ContainsControl(this.Control, BaseProvider.FormProvider.LastFocusedControl); 
+          WinFormsTools.ContainsControl(this.Control, BaseProvider.FormProvider.LastFocusedControl);
       if (!StatusBarHandlerIsFormOwned)
         wantedHasStatus &= BaseProvider.FormProvider.Active;
 
@@ -1748,7 +1737,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка обработчика Control.Enter");
+        EFPApp.ShowException(e);
       }
 
       if (ValidateWhenFocusChanged)
@@ -1848,7 +1837,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         AddExceptionInfo(e);
-        EFPApp.ShowException(e, "Ошибка инициализации локального меню для " + ToString());
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1882,6 +1871,7 @@ namespace FreeLibSet.Forms
     /// Панель инструментов для локального меню.
     /// Если провайдер управляющего элемента создан без использования <see cref="IEFPControlWithToolBar"/>, но ему требуется
     /// панель инструментов, то следует установить это свойство.
+    /// Свойство может устанавливаться однократно.
     /// </summary>
     public Panel ToolBarPanel
     {
@@ -1897,7 +1887,7 @@ namespace FreeLibSet.Forms
         if (value == this.ToolBarPanel)
           return;
         if (_ToolBar != null)
-          throw new InvalidOperationException("Повторная установка свойства EFPControl.ToolBarPanel не допускается");
+          throw ExceptionFactory.RepeatedCall(this, "ToolBarPanel");
 
         if (!EFPApp.ShowControlToolBars)
         {
@@ -2049,7 +2039,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e) // 25.06.2015
         {
-          SetError("Ошибка при проверке. " + e.Message);
+          SetError(String.Format(Res.EFPControl_Err_Validating, e.Message));
         }
       } // Editable
 
@@ -2187,7 +2177,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (!_InsideValidate)
-        throw new InvalidOperationException("Метод может вызываться только из OnValidate() или обработчика события Validating");
+        throw new InvalidOperationException(Res.EFPControl_Err_OutsideValidating);
 #endif
 
       if (_ValidateState == UIValidateState.Error)
@@ -2204,7 +2194,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (!_InsideValidate)
-        throw new InvalidOperationException("Метод может вызываться только из OnValidate() или обработчика события Validating");
+        throw new InvalidOperationException(Res.EFPControl_Err_OutsideValidating);
 #endif
 
       if (_ValidateState != UIValidateState.Ok)
@@ -2353,6 +2343,21 @@ namespace FreeLibSet.Forms
     /// Событие не вызывается, если <see cref="OnValidate()"/> установил состояние ошибки.
     /// </summary>
     public event UIValidatingEventHandler Validating;
+
+    #endregion
+
+    #region Методы, которые можно использовать в OnValidate()
+
+
+    /// <summary>
+    /// Вспомогательный метод для выдачи ошибки или предупреждения, в зависимости от свойства 'CanBeEmptyMode'.
+    /// Используется в реализации <see cref="OnValidate()"/> классов-наследников, имеющих такое свойство, когда текущее значение пустое.
+    /// </summary>
+    /// <param name="canBeEmptyMode">Значение свойства 'CanBeEmptyMode'</param>
+    protected void ValidateCanBeEmptyMode(UIValidateState canBeEmptyMode)
+    {
+      UITools.ValidateCanBeEmptyMode(canBeEmptyMode, this, DisplayName);
+    }
 
     #endregion
 
@@ -2653,7 +2658,7 @@ namespace FreeLibSet.Forms
     public void CheckLoadConfigHasNotBeenCalled()
     {
       if (LoadConfigCalled)
-        throw new InvalidOperationException("Для элемента " + this.ToString() + " уже была загружена конфигурация");
+        throw new InvalidOperationException(String.Format(Res.EFPControl_Err_LoadConfigCalled, this.ToString()));
     }
 
     /// <summary>

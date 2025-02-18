@@ -161,12 +161,12 @@ namespace FreeLibSet.Forms
       control.AddButton.Image = EFPApp.MainImages.Images["RightRight"];
       control.AddButton.ImageAlign = ContentAlignment.MiddleCenter;
       _AddButtonProvider = new EFPButton(baseProvider, control.AddButton);
-      _AddButtonProvider.DisplayName = "Добавить";
+      _AddButtonProvider.DisplayName = Res.EFPTwoListSelector_Text_Add;
 
       control.RemoveButton.Image = EFPApp.MainImages.Images["LeftLeft"];
       control.RemoveButton.ImageAlign = ContentAlignment.MiddleCenter;
       _RemoveButtonProvider = new EFPButton(baseProvider, control.RemoveButton);
-      _RemoveButtonProvider.DisplayName = "Удалить";
+      _RemoveButtonProvider.DisplayName = Res.EFPTwoListSelector_Text_Remove;
 
       _SelectedGridViewProvider = new EFPDataGridView(baseProvider, control.SelectedGrid);
       _SelectedGridViewProvider.ToolBarPanel = control.SelectedToolBarPanel;
@@ -510,7 +510,7 @@ namespace FreeLibSet.Forms
       DataGridViewRow[] rows1 = _AvailableGridViewProvider.SelectedGridRows;
       if (rows1.Length == 0)
       {
-        EFPApp.ShowTempMessage("Нет элементов в списке доступных");
+        EFPApp.ShowTempMessage(Res.EFPTwoListSelector_Err_NothingAvailable);
         return;
       }
 
@@ -532,7 +532,7 @@ namespace FreeLibSet.Forms
       DataGridViewRow[] rows1 = _SelectedGridViewProvider.SelectedGridRows;
       if (rows1.Length == 0)
       {
-        EFPApp.ShowTempMessage("Нет элементов в списке выбранных");
+        EFPApp.ShowTempMessage(Res.EFPTwoListSelector_Err_NothingSelected);
         return;
       }
 
@@ -590,10 +590,10 @@ namespace FreeLibSet.Forms
         switch (CanBeEmptyMode)
         {
           case UIValidateState.Error:
-            args.SetError("Список не может быть пустым");
+            args.SetError(Res.EFPTwoListSelector_Err_CannotBeEmpy);
             break;
           case UIValidateState.Warning:
-            args.SetWarning("Список не должен быть пустым");
+            args.SetWarning(Res.EFPTwoListSelector_Err_CannotBeEmpy);
             break;
         }
       }

@@ -23,13 +23,11 @@ namespace FreeLibSet.Forms
   {
     #region Конструктор
 
-    const string DefaultStatusToolTipText = "Окно состояния фоновой печати. Нет заданий";
-
     internal BackgroundPrinting()
     {
       _Enabled = false;
-      _StatusItem = new EFPCommandItem("View", "BackgroundPrint");
-      _StatusItem.ToolTipText = DefaultStatusToolTipText;
+      _StatusItem = new EFPCommandItem("View", "BackgroundPrintStatus");
+      _StatusItem.ToolTipText = Res.Cmd_ToolTip_View_BackgroundPrintStatus;
       _StatusItem.Usage = EFPCommandItemUsage.StatusBar;
       _StatusItem.ImageKey = "Print";
       _StatusItem.Enabled = false;
@@ -102,7 +100,7 @@ namespace FreeLibSet.Forms
         {
           if (spl == null)
           {
-            spl = new Splash("Фоновая печать документов");
+            spl = new Splash(Res.BackgroundPrint_Phase_Default);
             spl.AllowCancel = true;
           }
           lock (_TheQueue)
@@ -110,15 +108,14 @@ namespace FreeLibSet.Forms
             StringBuilder sb = new StringBuilder();
             if (_LastStatusInfo != null)
             {
-              sb.Append("Фоновая печать документа \"" + _LastStatusInfo.DocumentName + "\", ");
+              string text1;
               if (_LastStatusInfo.CurrentPage < 0)
-                sb.Append("завершение печати");
+                text1 = Res.BackgroundPrint_Phase_Terminating;
               else
-                sb.Append("страница " + _LastStatusInfo.CurrentPage);
+                text1 = String.Format(Res.BackgroundPrint_Phase_Page, _LastStatusInfo.CurrentPage);
+              spl.PhaseText = String.Format(Res.BackgroundPrint_Phase_PrintDoc,
+                _LastStatusInfo.DocumentName, text1, _TheQueue.Count);
             }
-            sb.Append(". Еще осталось документов в очереди: ");
-            sb.Append(_TheQueue.Count);
-            spl.PhaseText = sb.ToString();
           }
           Application.DoEvents();
           if (spl.Cancelled)
@@ -159,7 +156,7 @@ namespace FreeLibSet.Forms
       if (document == null)
         throw new ArgumentNullException("document");
 #endif
-      EFPApp.BeginWait("Постановка задания в очередь", "Print");
+      EFPApp.BeginWait(Res.BackgroundPrint_Phase_AddDoc, "Print");
       try
       {
         lock (_TheQueue)
@@ -278,12 +275,12 @@ namespace FreeLibSet.Forms
       if (_LastStatusInfo.CurrentPage < 0)
       {
         _StatusItem.StatusBarText = "...";
-        _StatusItem.ToolTipText = "Завершается печать документа \"" + _LastStatusInfo.DocumentName + "\"";
+        _StatusItem.ToolTipText = String.Format(Res.BackgroundPrint_ToolTip_Terminating,_LastStatusInfo.DocumentName);
       }
       else
       {
         _StatusItem.StatusBarText = _LastStatusInfo.CurrentPage.ToString();
-        _StatusItem.ToolTipText = "Идет печать страницы " + _LastStatusInfo.CurrentPage.ToString() + " документа \"" + _LastStatusInfo.DocumentName + "\"";
+        _StatusItem.ToolTipText = String.Format(Res.BackgroundPrint_ToolTip_PrintPage,_LastStatusInfo.DocumentName, _LastStatusInfo.CurrentPage);
       }
     }
 
@@ -292,7 +289,7 @@ namespace FreeLibSet.Forms
       _LastStatusInfo = null;
       _StatusItem.Enabled = false;
       _StatusItem.StatusBarText = EFPCommandItem.EmptyStatusBarText;
-      _StatusItem.ToolTipText = DefaultStatusToolTipText;
+      _StatusItem.ToolTipText = Res.Cmd_ToolTip_View_BackgroundPrintStatus;
     }
 
     #endregion

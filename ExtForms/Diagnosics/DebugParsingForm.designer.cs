@@ -28,7 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.grpText = new System.Windows.Forms.GroupBox();
       this.edText = new System.Windows.Forms.RichTextBox();
       this.TheTabControl = new System.Windows.Forms.TabControl();
       this.tpTokens = new System.Windows.Forms.TabPage();
@@ -38,7 +38,7 @@
       this.tpErrors = new System.Windows.Forms.TabPage();
       this.grErrors = new System.Windows.Forms.DataGridView();
       this.PanSpbErrors = new System.Windows.Forms.Panel();
-      this.groupBox1.SuspendLayout();
+      this.grpText.SuspendLayout();
       this.TheTabControl.SuspendLayout();
       this.tpTokens.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.grTokens)).BeginInit();
@@ -47,21 +47,21 @@
       ((System.ComponentModel.ISupportInitialize)(this.grErrors)).BeginInit();
       this.SuspendLayout();
       // 
-      // groupBox1
+      // grpText
       // 
-      this.groupBox1.Controls.Add(this.edText);
-      this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-      this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(672, 54);
-      this.groupBox1.TabIndex = 1;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Выражение";
+      this.grpText.Controls.Add(this.edText);
+      this.grpText.Dock = System.Windows.Forms.DockStyle.Top;
+      this.grpText.Location = new System.Drawing.Point(0, 0);
+      this.grpText.Name = "grpText";
+      this.grpText.Size = new System.Drawing.Size(672, 54);
+      this.grpText.TabIndex = 1;
+      this.grpText.TabStop = false;
+      this.grpText.Text = "Parsed text";
       // 
       // edText
       // 
-      this.edText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.edText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.edText.Location = new System.Drawing.Point(6, 17);
       this.edText.Multiline = false;
       this.edText.Name = "edText";
@@ -90,7 +90,7 @@
       this.tpTokens.Padding = new System.Windows.Forms.Padding(3);
       this.tpTokens.Size = new System.Drawing.Size(664, 250);
       this.tpTokens.TabIndex = 0;
-      this.tpTokens.Text = "Парсинг";
+      this.tpTokens.Text = "Tokens";
       this.tpTokens.UseVisualStyleBackColor = true;
       // 
       // grTokens
@@ -110,7 +110,7 @@
       this.tpExpr.Padding = new System.Windows.Forms.Padding(3);
       this.tpExpr.Size = new System.Drawing.Size(664, 250);
       this.tpExpr.TabIndex = 1;
-      this.tpExpr.Text = "Выражение";
+      this.tpExpr.Text = "Expressions";
       this.tpExpr.UseVisualStyleBackColor = true;
       // 
       // tvExpr
@@ -131,7 +131,7 @@
       this.tpErrors.Padding = new System.Windows.Forms.Padding(3);
       this.tpErrors.Size = new System.Drawing.Size(664, 250);
       this.tpErrors.TabIndex = 2;
-      this.tpErrors.Text = "Ошибки";
+      this.tpErrors.Text = "Errors";
       this.tpErrors.UseVisualStyleBackColor = true;
       // 
       // grErrors
@@ -157,10 +157,10 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(672, 330);
       this.Controls.Add(this.TheTabControl);
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.grpText);
       this.Name = "DebugParsingForm";
-      this.Text = "Просмотр выражения";
-      this.groupBox1.ResumeLayout(false);
+      this.Text = "Expression view";
+      this.grpText.ResumeLayout(false);
       this.TheTabControl.ResumeLayout(false);
       this.tpTokens.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.grTokens)).EndInit();
@@ -173,7 +173,7 @@
 
     #endregion
 
-    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox grpText;
     private System.Windows.Forms.RichTextBox edText;
     private System.Windows.Forms.TabControl TheTabControl;
     private System.Windows.Forms.TabPage tpTokens;

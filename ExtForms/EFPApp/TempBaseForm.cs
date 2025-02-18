@@ -153,7 +153,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка отключения обработчика SizeChanged");
+        LogoutTools.LogoutException(e);
       }
 
       #endregion

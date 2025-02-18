@@ -314,7 +314,7 @@ namespace FreeLibSet.Data
           for (int j = 0; j < i; j++)
           {
             if (String.Equals(_Items[i], _Items[j], StringComparison.Ordinal))
-              throw new ArgumentException("Повторное вхождение ключа \"" + _Items[i] + "\"");
+              throw ExceptionFactory.KeyAlreadyExists(_Items[i]);
           }
         }
       }
@@ -355,21 +355,21 @@ namespace FreeLibSet.Data
         }
         catch (Exception e)
         {
-          throw new InvalidOperationException("Неправильное имя поля \"" + _Items[i] + "\" в позиции с индексом " + i.ToString() + ". " + e.Message, e);
+          throw new InvalidOperationException(String.Format(Res.DBxColumns_Err_BadColumnName, _Items[i] + i, e.Message), e);
         }
       }
     }
 
-    private static readonly CharArrayIndexer BadChars = new CharArrayIndexer(" ,");
+    private static readonly CharArrayIndexer _BadChars = new CharArrayIndexer(" ,");
 
     private void CheckName(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName", "Имя поля не может быть пустым");
+        throw ExceptionFactory.ArgIsEmpty("columnName");
       for (int i = 0; i < columnName.Length; i++)
       {
-        if (BadChars.Contains(columnName[i]))
-          throw new ArgumentException("columnName", "Недопустимый символ \"" + columnName[i] + "\" в позиции " + (i + 1).ToString());
+        if (_BadChars.Contains(columnName[i]))
+          throw ExceptionFactory.ArgBadChar("columnName", columnName, i);
       }
     }
 #endif
@@ -629,7 +629,7 @@ namespace FreeLibSet.Data
         return -1;
 #if DEBUG
       if (columnName.IndexOf(',') >= 0)
-        throw new ArgumentException("Неправильное имя поля \"" + columnName + "\". Может быть задано только одно поле для поиска", "columnName");
+        throw ExceptionFactory.ArgBadChar("columnName", columnName, ",");
 #endif
 
       if (_Indexer == null)
@@ -746,7 +746,7 @@ namespace FreeLibSet.Data
       if (values == null)
         throw new ArgumentNullException("values");
       if (values.Length != columnNames.Count)
-        throw new ArgumentException("Массив значений не соответствует списку полей", "values");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values, columnNames.Count);
 
       object[] res = new object[Count];
       for (int i = 0; i < Count; i++)
@@ -831,7 +831,7 @@ namespace FreeLibSet.Data
       {
         int p = sourceColumns.IndexOf(_Items[i]);
         if (p < 0)
-          throw new InvalidOperationException("Таблица-шаблон не содержит поля \"" + _Items[i] + "\"");
+          throw new InvalidOperationException(String.Format(Res.DBxColumns_Err_SourceColumnNotFound, _Items[i]));
         DataColumn srcColumn = sourceColumns[p];
         columns.Add(DataTools.CloneDataColumn(srcColumn));
       }
@@ -879,7 +879,7 @@ namespace FreeLibSet.Data
       {
         int p = sourceTable.Columns.IndexOf(this[i]);
         if (p < 0)
-          throw new ArgumentException("Таблица \"" + sourceTable.TableName + "\" не содержит столбца \"" + this[i] + "\"", "sourceTable");
+          throw ExceptionFactory.ArgUnknownColumnName("sourceTable", sourceTable, this[i]);
 
         resTable.Columns.Add(DataTools.CloneDataColumn(sourceTable.Columns[p])); // испр.01.05.2023
       }
@@ -921,8 +921,7 @@ namespace FreeLibSet.Data
         if (p < 0)
         {
           if (throwIfNoColumn)
-            throw new ArgumentException("Строка таблицы \"" + row.Table.TableName +
-              "\" не содержит столбца \"" + this[i] + "\"", "row");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, this[i]);
           continue;
         }
         values[i] = row[p];
@@ -946,7 +945,7 @@ namespace FreeLibSet.Data
       if (values == null)
         throw new ArgumentNullException("values");
       if (values.Length != Count)
-        throw new ArgumentException("Неправильная длина массива значений", "values");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values, Count);
 #endif
 
       for (int i = 0; i < Count; i++)
@@ -1668,9 +1667,9 @@ namespace FreeLibSet.Data
     public DBxTableColumnName(string tableName, string columnName)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       _TableName = tableName;
       _ColumnName = columnName;
@@ -2181,7 +2180,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -2233,12 +2232,12 @@ namespace FreeLibSet.Data
         throw new ArgumentException("collection");
 #endif
       if (Object.ReferenceEquals(collection, this))
-        throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
 
       foreach (DBxTableColumnName item in collection)
       {
         if (item.IsEmpty)
-          throw new ArgumentException("Один из элементов пустой", "collection");
+          throw ExceptionFactory.ArgInvalidEnumerableItem("collection", collection, item);
 
         Tables[item.TableName].Add(item.ColumnName);
       }
@@ -2506,7 +2505,7 @@ namespace FreeLibSet.Data
         if (value == null)
           throw new ArgumentNullException();
         if (value.Length != _Columns.Count)
-          throw new ArgumentException("Неправильная длина массива значений. Ожидалось значений: " + _Columns.Count.ToString() + ", передано: " + value.Length.ToString());
+          throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Columns.Count);
         _Values = value;
       }
     }
@@ -2526,9 +2525,9 @@ namespace FreeLibSet.Data
         if (p < 0)
         {
           if (String.IsNullOrEmpty(columnName))
-            throw new ArgumentNullException("columnName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
           else
-            throw new ArgumentException("В списке значений нет столбца с именем \"" + columnName + "\"", "columnName");
+            throw ExceptionFactory.ArgUnknownValue("columnName", columnName);
         }
         return _Values[p];
       }

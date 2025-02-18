@@ -32,7 +32,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Не используется</param>
     internal protected override void FormatColumnName(DBxSqlBuffer buffer, string tableAlias, string columnName)
     {
-      throw new NotImplementedException("Альясы таблиц не поддерживаются в DataView");
+      throw new NotImplementedException("Table aliases are not supported for DataView");
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ namespace FreeLibSet.Data
       if (useCoalesce)
       {
         if (wantedType == DBxColumnType.Unknown)
-          throw new InvalidOperationException("Для столбца \"" + column.ColumnName + "\" требуется обработка значения NULL. Не найдено описание структуры столбца и не передан требуемый тип данных");
+          throw new InvalidOperationException(String.Format(Res.CoreDBxSqlFormatter_Err_CoalesceForUnknownColumnType, column.ColumnName));
 
         DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(GetDefaultValue(wantedType), wantedType));
         FormatExpression(buffer, f2, new DBxFormatExpressionInfo()); // рекурсивный вызов форматировщика
@@ -164,7 +164,7 @@ namespace FreeLibSet.Data
     /// <param name="formatInfo"></param>
     protected override void OnFormatAggregateFunction(DBxSqlBuffer buffer, DBxAggregateFunction function, DBxFormatExpressionInfo formatInfo)
     {
-      throw new NotSupportedException("Для DataView не поддерживаются агрегатные функции");
+      throw new NotSupportedException("Aggregate functions are not supported for DataView");
     }
 
     #endregion
@@ -178,7 +178,7 @@ namespace FreeLibSet.Data
     /// <param name="column">Не используется</param>
     internal protected override void FormatValueType(DBxSqlBuffer buffer, DBxColumnStruct column)
     {
-      throw new NotImplementedException("DataView не имеет реализации DDL");
+      throw new NotImplementedException("DataView has no DDL implementation");
     }
 
     #endregion
@@ -472,8 +472,7 @@ namespace FreeLibSet.Data
     /// <param name="paramIndex">Не используется</param>
     internal protected override void FormatParamPlaceholder(DBxSqlBuffer buffer, int paramIndex)
     {
-      throw new NotImplementedException("DataView не поддерживает именованные параметры SQL-запросов, т.к. не содержит методов, выполняющих запросы");
-      //Buffer.SB.Append("[?]");
+      throw new NotSupportedException("DataView does not support named parameters in SQL query because there are no methods handle queries");
     }
 
     #endregion

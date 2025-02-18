@@ -26,7 +26,7 @@ namespace FreeLibSet.DependedValues
       : base(args, null)
     {
       if (string.IsNullOrEmpty(expression))
-        throw new ArgumentNullException("expression");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("expression");
 
       _Expression = expression;
 
@@ -71,7 +71,7 @@ namespace FreeLibSet.DependedValues
 
 #if DEBUG
       if (_ParsedExpression == null)
-        throw new NullReferenceException("ParserList.CreateExpression() не вернул вычисляемое выражение");
+        throw new NullReferenceException("ParserList.CreateExpression() did not return a calculable expression");
 #endif
     }
 
@@ -118,11 +118,11 @@ namespace FreeLibSet.DependedValues
         string argName = data.Text.Text.Substring(data.CurrPos + 1, ndig);
         int argNum = 0;
         if (ndig == 0)
-          err = new ErrorMessageItem(ErrorMessageKind.Error, "После \"@\" должен идти номер аргумента");
+          err = new ErrorMessageItem(ErrorMessageKind.Error, Res.DepEvalExpr_Err_ArgNumExpected);
         else if (!int.TryParse(argName, out argNum))
-          err = new ErrorMessageItem(ErrorMessageKind.Error, "Строку \"" + argName + "\" нельзя преобразовать в число");
+          err = new ErrorMessageItem(ErrorMessageKind.Error, String.Format(Res.DepEvalExpr_Err_ArgNumExpected, argName));
         else if (argNum < 1 || argNum > args.Length)
-          err = new ErrorMessageItem(ErrorMessageKind.Error, "Номер аргумента должен быть в диапазоне от 1 до " + args.Length.ToString());
+          err = new ErrorMessageItem(ErrorMessageKind.Error, String.Format(Res.DepEvalExpr_Err_ArgNumOutOfRange, args.Length));
         Token tk = new Token(data, this, "Argument", data.CurrPos, ndig + 1, argNum, err);
         data.Tokens.Add(tk);
       }
@@ -132,7 +132,7 @@ namespace FreeLibSet.DependedValues
         Token currToken = data.CurrToken;
         data.SkipToken();
         if (leftExpression != null)
-          currToken.SetError("Аргумент не должен идти непосредственно после другого выражения. Ожидалась операция");
+          currToken.SetError(Res.DepEvalExpr_Err_OperationExpected);
 
         IDepValue[] args = (IDepValue[])(data.UserData["Args"]);
         int argNum = (int)(currToken.AuxData);
@@ -214,7 +214,6 @@ namespace FreeLibSet.DependedValues
 
       return pl;
     }
-
 
     #endregion
   }

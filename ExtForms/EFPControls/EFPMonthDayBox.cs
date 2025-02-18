@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value.IsEmpty)
-          throw new ArgumentException("Компонент MonthDayBox не поддерживает пустые значения");
+          throw new ArgumentException(Res.MonthDayBox_Arg_IsEmpty); // если использовать ExceptionFactory.ArgIsEmpty(), то сообщение будет недостаточно понятным
         Control.SetValue(value.Month, value.Day);
       }
     }
@@ -95,7 +95,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика MonthDayBox.ValueChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -219,7 +219,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value == 0)
-          throw new ArgumentException("Компонент MonthDayBox не поддерживает пустые значения");
+          throw new ArgumentException(Res.MonthDayBox_Arg_IsEmpty);
         Value = new MonthDay(value);
       }
     }
@@ -307,7 +307,7 @@ namespace FreeLibSet.Forms
           case "MM/dd":
             break;
           default:
-            throw new ArgumentException("Неподдерживаемый формат");
+            throw ExceptionFactory.ArgUnknownValue("value", value,new string[] { "dd/MM", "MM/dd"});
         }
 
         _Format = value;
@@ -557,17 +557,7 @@ namespace FreeLibSet.Forms
       }
 
       if (Value.IsEmpty)
-      {
-        switch (CanBeEmptyMode)
-        {
-          case UIValidateState.Error:
-            SetError("Значение должно быть задано");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Значение, вероятно, должно быть задано");
-            break;
-        }
-      }
+        ValidateCanBeEmptyMode(CanBeEmptyMode);
     }
 
     #endregion

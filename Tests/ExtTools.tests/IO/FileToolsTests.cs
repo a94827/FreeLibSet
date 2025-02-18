@@ -219,7 +219,7 @@ namespace ExtTools_tests.IO
     }
 
     [Platform("Linux")]
-    [TestCase(@"/", false, Description="Root is not a file anyway")]
+    [TestCase(@"/", false, Description = "Root is not a file anyway")]
     [TestCase(@"//", false)]
     [TestCase(@"/123.txt", true)]
     [TestCase(@"/123", true)]
@@ -458,6 +458,36 @@ namespace ExtTools_tests.IO
         Assert.IsTrue(System.IO.Directory.Exists(dir1.Path), "#1");
         Assert.IsTrue(System.IO.Directory.Exists(dir2.Path), "#2");
         Assert.IsTrue(System.IO.Directory.Exists(dir3.Path), "#3");
+
+        FileTools.ForceDirs(dir3);
+        Assert.IsTrue(System.IO.Directory.Exists(dir3.Path), "Nothing changed");
+      }
+    }
+
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public void ForceDirs_createdDirs(int numDirs)
+    {
+      using (TempDirectory dir = new TempDirectory())
+      {
+        AbsPath[] aDirs = new AbsPath[4]
+        {
+          dir.Dir,
+          new AbsPath(dir.Dir, "1"),
+          new AbsPath(dir.Dir, "1", "2"),
+          new AbsPath(dir.Dir, "1", "2", "3")
+        };
+
+        AbsPath[] createdDirs;
+        FileTools.ForceDirs(aDirs[numDirs], null, out createdDirs);
+
+        Assert.IsTrue(System.IO.Directory.Exists(aDirs[numDirs].Path), "Directory exists");
+
+        AbsPath[] wantedCreatedDirs = new AbsPath[numDirs];
+        Array.Copy(aDirs, 1, wantedCreatedDirs, 0, numDirs);
+        CollectionAssert.AreEqual(wantedCreatedDirs, createdDirs, "createdDirs");
       }
     }
 

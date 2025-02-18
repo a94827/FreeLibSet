@@ -76,9 +76,9 @@ namespace FreeLibSet.Forms
       if (config == null)
         throw new ArgumentNullException("config");
       if (String.IsNullOrEmpty(displayName))
-        throw new ArgumentNullException("displayName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("displayName");
       if (String.IsNullOrEmpty(imageKey))
-        throw new ArgumentNullException("imageKey");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("imageKey");
 
       _Config = config;
       _DisplayName = displayName;
@@ -177,18 +177,19 @@ namespace FreeLibSet.Forms
       efpSelCB = new EFPTextComboBox(baseProvider, control.TheCB);
       efpSelCB.DisplayName = "Готовые наборы";
       efpSelCB.CanBeEmpty = true;
+      efpSelCB.ToolTipText = Res.ParamSetComboBox_ToolTip_ComboBox;
 
       if (DebugCommands)
       {
         EFPCommandItem ci;
         ci = new EFPCommandItem("Debug", "CurrentSettingsXML");
-        ci.MenuText = "Текущие настройки диалога (XML)";
+        ci.MenuText = Res.Cmd_Menu_Debug_CurrentSettingsXML;
         ci.Click += DebugCurrentSettings_Click;
         ci.GroupBegin = true;
         efpSelCB.CommandItems.Add(ci);
 
         ci = new EFPCommandItem("Debug", "SavedSettingsXML");
-        ci.MenuText = "Сохраненные настройки набора (XML)";
+        ci.MenuText = Res.Cmd_Menu_Debug_SavedSettingsXML;
         ci.Click += DebugSavedSettings_Click;
         ci.GroupEnd = true;
         efpSelCB.CommandItems.Add(ci);
@@ -197,13 +198,12 @@ namespace FreeLibSet.Forms
       }
 
       efpSaveButton = new EFPButton(baseProvider, control.SaveButton);
-      efpSaveButton.DisplayName = "Сохранить набор";
-      efpSaveButton.ToolTipText = "Сохранить установленные значения как новый пользовательский набор" + Environment.NewLine +
-        "Перед нажатием кнопки в поле слева должно быть введено имя набора";
+      efpSaveButton.DisplayName = Res.ParamSetComboBox_Name_SaveButton;
+      efpSaveButton.ToolTipText = Res.ParamSetComboBox_ToolTip_SaveButton;
 
       efpDelButton = new EFPButton(baseProvider, control.DeleteButton);
-      efpDelButton.DisplayName = "Удалить набор";
-      efpDelButton.ToolTipText = "Удалить пользовательский набор значений, имя которого задано в списке слева";
+      efpDelButton.DisplayName = Res.ParamSetComboBox_Name_DelButton;
+      efpDelButton.ToolTipText = Res.ParamSetComboBox_ToolTip_DelButton;
 
       _ParamsCategory = EFPConfigCategories.UserParams;
       _HistoryCategory = EFPConfigCategories.UserHistory;
@@ -219,11 +219,11 @@ namespace FreeLibSet.Forms
 
     #region Поля
 
-    private EFPTextComboBox efpSelCB;
+    private readonly EFPTextComboBox efpSelCB;
 
-    private EFPButton efpSaveButton;
+    private readonly EFPButton efpSaveButton;
 
-    private EFPButton efpDelButton;
+    private readonly EFPButton efpDelButton;
 
     #endregion
 
@@ -241,7 +241,7 @@ namespace FreeLibSet.Forms
       {
         base.CheckHasNotBeenCreated();
         if (String.IsNullOrEmpty(value))
-          throw new ArgumentNullException();
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
         _ParamsCategory = value;
       }
     }
@@ -260,7 +260,7 @@ namespace FreeLibSet.Forms
       {
         base.CheckHasNotBeenCreated();
         if (String.IsNullOrEmpty(value))
-          throw new ArgumentNullException();
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
         _HistoryCategory = value;
       }
     }
@@ -360,7 +360,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка записи значений в управляющие элементы");
+        EFPApp.ShowException(e, Res.ParamSetComboBox_ErrTitle_ConfigToControls);
       }
     }
 
@@ -372,7 +372,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка получения значений из управляющих элементов");
+        EFPApp.ShowException(e, Res.ParamSetComboBox_ErrTitle_ConfigFromControls);
       }
     }
 
@@ -426,7 +426,7 @@ namespace FreeLibSet.Forms
     protected override void OnCreated()
     {
       if (String.IsNullOrEmpty(ConfigSectionName))
-        throw new NullReferenceException("Свойство \"ConfigSectionName\" должно быть установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "ConfigSectionName");
 
       base.OnCreated();
 
@@ -438,7 +438,6 @@ namespace FreeLibSet.Forms
 
       FillSetItems();
 
-      InitSubToolTips();
 
       if (AutoLoadLastConfig)
       {
@@ -464,27 +463,6 @@ namespace FreeLibSet.Forms
       Control.CanDeleteItem += new ParamSetComboBoxItemCancelEventHandler(SetComboBox_CanDeleteItem);
     }
 
-    private void InitSubToolTips()
-    {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("Выбор готового набора фильтров из выпадающего списка.");
-      sb.Append(Environment.NewLine);
-      sb.Append("В список входят:");
-      sb.Append(Environment.NewLine);
-      sb.Append("- пользовательские наборы, которые Вы сохранили;");
-      sb.Append(Environment.NewLine);
-      if (DefaultSets.Count > 0)
-      {
-        sb.Append("- настройки по умолчанию;");
-        sb.Append(Environment.NewLine);
-      }
-      sb.Append("- а также до 9 последних наборов значений (история)");
-      sb.Append(Environment.NewLine);
-      sb.Append(Environment.NewLine);
-      sb.Append("Поле для ввода названия для нового набора");
-
-      efpSelCB.ToolTipText = sb.ToString();
-    }
 
     #endregion
 
@@ -548,11 +526,10 @@ namespace FreeLibSet.Forms
                 cfgOne.GetString("MD5"));
             }
           }
-
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка чтения списка истории");
+          EFPApp.ShowException(e, Res.ParamSetComboBox_ErrTitle_ReadHistory);
         }
       }
     }
@@ -663,16 +640,15 @@ namespace FreeLibSet.Forms
           switch (cnt)
           {
             case 1:
-              name = "(Последний)";
+              name = Res.ParamSetComboBox_Msg_Hist0;
               break;
             case 2:
-              name = "(Предпоследний)";
+              name = Res.ParamSetComboBox_Msg_Hist1;
               break;
             default:
-              name = "(Предыдущий №" + cnt.ToString() + ")";
+              name = String.Format(Res.ParamSetComboBox_Msg_Hist0, cnt);
               break;
           }
-
 
           string auxText = null;
           if (_UseAuxText)
@@ -752,13 +728,13 @@ namespace FreeLibSet.Forms
     {
       if (String.IsNullOrEmpty(ConfigSectionName))
       {
-        EFPApp.ErrorMessageBox("Не предусмотрено сохранение значений между сеансами работы");
+        EFPApp.ErrorMessageBox(Res.ParamSetComboBox_Err_NotPersist);
         return;
       }
 
       if (!EFPConfigTools.IsPersist(this.ConfigManager.Persistence))
       {
-        EFPApp.ErrorMessageBox("Cохранение значений между сеансами работы не предусмотрено в программе");
+        EFPApp.ErrorMessageBox(Res.ParamSetComboBox_Err_NotPersist);
         return;
       }
 
@@ -770,18 +746,18 @@ namespace FreeLibSet.Forms
       {
         if (!oldItem.Code.StartsWith("User", StringComparison.Ordinal))
         {
-          EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы. Введите название набора.");
+          EFPApp.ShowTempMessage(Res.ParamSetComboBox_Err_NotUserSetOverwrite);
           return;
         }
-        if (EFPApp.MessageBox("Набор \"" + args.DisplayName + "\" уже существует. Вы хотите перезаписать его?",
-          "Подтверждение перезаписи набора",
+        if (EFPApp.MessageBox(String.Format(Res.ParamSetComboBox_Msg_Overwrite, args.DisplayName),
+          Res.ParamSetComboBox_Title_Overwrite,
           MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
           return;
       }
 
       if (args.DisplayName.StartsWith("(", StringComparison.Ordinal))
       {
-        EFPApp.ShowTempMessage("Имя набора не может начинаться со скобки");
+        EFPApp.ShowTempMessage(Res.ParamSetComboBox_Err_NameStartsWithBracket);
         return;
       }
 
@@ -851,20 +827,20 @@ namespace FreeLibSet.Forms
         table = _TableHist;
       else
       {
-        EFPApp.ErrorMessageBox("Этот набор нельзя удалить", "Удаление готового набора");
+        EFPApp.ErrorMessageBox(Res.ParamSetComboBox_Err_CannotDelete, Res.ParamSetComboBox_Title_Delete);
         return;
       }
 
       DataRow row = table.Rows.Find(args.Item.Code);
       if (row == null)
       {
-        BugException ex = new BugException("Набор с кодом \"" + args.Item.Code + "\" не найден");
+        BugException ex = new BugException("Preset with code \"" + args.Item.Code + "\" not found");
         ex.Data["Item"] = args.Item;
         throw ex;
       }
 
-      if (EFPApp.MessageBox("Удалить набор \"" + args.Item.DisplayName + "\"?",
-        "Подтверждение удаления набора", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+      if (EFPApp.MessageBox(String.Format(Res.ParamSetComboBox_Msg_Delete, args.Item.DisplayName),
+        Res.ParamSetComboBox_Title_Delete, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
         return;
 
       table.Rows.Remove(row);
@@ -1007,7 +983,7 @@ namespace FreeLibSet.Forms
       TempCfg cfg = new TempCfg();
       ConfigFromControls(cfg);
       string md5 = cfg.MD5Sum();
-      EFPApp.ShowXmlView(cfg.Document, "Текущие настройки диалога (" + md5 + ")");
+      EFPApp.ShowXmlView(cfg.Document, String.Format(Res.ParamSetComboBox_Title_CurrentSettingsXML, md5));
     }
 
     private void DebugSavedSettings_Click(object sender, EventArgs args)
@@ -1015,7 +991,7 @@ namespace FreeLibSet.Forms
       ParamSetComboBoxItem item = Control.Items.FindDisplayName(efpSelCB.Text);
       if (item == null)
       {
-        EFPApp.ShowTempMessage("Нет выбранного готового набора");
+        EFPApp.ShowTempMessage(Res.ParamSetComboBox_Msg_NoSelection);
         return;
       }
 

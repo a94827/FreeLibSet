@@ -41,13 +41,13 @@ namespace FreeLibSet.Forms
       tpView.Text = "Просмотр XML";
       _TheTabControl.TabPages.Add(tpView);
       tpView.ImageKey = "View";
-      tpView.ToolTipText = "Просмотр форматированного XML-документа";
+      tpView.ToolTipText = Res.XmlEditor_ToolTip_View;
 
       TabPage tpEdit = new TabPage();
       tpEdit.Text = "Редактирование";
       _TheTabControl.TabPages.Add(tpEdit);
       tpEdit.ImageKey = "Edit";
-      tpEdit.ToolTipText = "Редактирование XML-документа в виде неформатированного текста";
+      tpEdit.ToolTipText = Res.XmlEditor_ToolTip_Edit;
 
 
       EFPControlWithToolBar<XmlViewBox> cwtView = new EFPControlWithToolBar<XmlViewBox>(baseProvider, tpView);
@@ -63,20 +63,20 @@ namespace FreeLibSet.Forms
 
     #region Управляющие элементы
 
-    private TabControl _TheTabControl;
+    private readonly TabControl _TheTabControl;
 
     public EFPXmlViewBox ViewBox { get { return _ViewBox; } }
-    private EFPXmlViewBox _ViewBox;
+    private readonly EFPXmlViewBox _ViewBox;
 
     public EFPRichTextBox EditBox { get { return _EditBox; } }
-    private EFPRichTextBox _EditBox;
+    private readonly EFPRichTextBox _EditBox;
 
     #endregion
 
     #region XML-данные
 
     /// <summary>
-    /// Основное свойство. Содержит редактируемые данные в виде массива байт
+    /// Основное свойство. Содержит редактируемые данные в виде массива байт.
     /// </summary>
     public byte[] XmlBytes
     {
@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Альтернативное свойство. Содержит редактируемые данные в виде объекта XmlDocument
+    /// Альтернативное свойство. Содержит редактируемые данные в виде объекта <see cref="System.Xml.XmlDocument"/>.
     /// </summary>
     public XmlDocument XmlDocument
     {
@@ -110,7 +110,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Альтернативное свойство. Содержит редактируемые данные в виде объекта XmlDocument
+    /// Альтернативное свойство. Содержит редактируемые данные в виде текста XML
     /// </summary>
     public string XmlText
     {
@@ -139,8 +139,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Признак наличия изменений.
-    /// Свойство сбрасывается в false при присвоении значении свойству XmlBytes 
-    /// и устанавливается в true, когда пользователь перекчается с закладки 2
+    /// Свойство сбрасывается в false при присвоении значении свойству <see cref="XmlBytes"/>
+    /// и устанавливается в true, когда пользователь перекчается с "Edit" 
     /// на закладку 1
     /// </summary>
     public bool Modified
@@ -180,7 +180,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка окончания редактирования");
+        EFPApp.ShowException(e);
         args.Cancel = true;
       }
     }
@@ -213,8 +213,8 @@ namespace FreeLibSet.Forms
           //  FEditBox.Control.Select(
           //e2.LineNumber
         }
-        EFPApp.ErrorMessageBox("Введенный текст содержит ошибки и не может быть преобразован в XML-документ. " + e.Message,
-          "Ошибка в редакторе");
+        EFPApp.ErrorMessageBox(String.Format(Res.XmlEditor_Err_FromText, e.Message),
+          Res.XmlEditor_ErrTitle_FromText);
         return false;
       }
 
@@ -242,7 +242,7 @@ namespace FreeLibSet.Forms
       :base(false)
     {
       Icon = EFPApp.MainImages.Icons["XML"];
-      base.Text = "Документ XML";
+      base.Text = Res.XmlEditor_Title_Form;
       _Editor = new XmlEditor(FormProvider, MainPanel);
     }
 
@@ -268,7 +268,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка закрытия формы редактора");
+          EFPApp.ShowException(e, Res.XmlEditor_Err_FormClosing);
           args.Cancel = true;
         }
       }

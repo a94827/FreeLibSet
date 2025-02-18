@@ -409,7 +409,7 @@ namespace FreeLibSet.Forms.Docs
           }
           catch (Exception e)
           {
-            LogoutTools.LogoutException(e, "EFPGroupTreeView.InitDocumentViewHandler.CopyRowValues()");
+            LogoutTools.LogoutException(e);
           }
 #endif
           return;

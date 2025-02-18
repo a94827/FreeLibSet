@@ -78,7 +78,7 @@ namespace FreeLibSet.Forms.Data
     /// Если производный класс переопределяет свойство WorkData, то он, вероятно,
     /// будет переопределять и это свойство
     /// </summary>
-    public virtual string WorkDateText { get { return "Текущая дата"; } }
+    public virtual string WorkDateText { get { return Res.DateRangeInclusionGridFilter_Msg_WorkDate; } }
 
     #endregion
 

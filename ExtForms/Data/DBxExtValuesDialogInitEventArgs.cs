@@ -9,6 +9,7 @@ using FreeLibSet.Data;
 using FreeLibSet.DependedValues;
 using FreeLibSet.UICore;
 using FreeLibSet.Controls;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms.Data
 {
@@ -68,7 +69,7 @@ namespace FreeLibSet.Forms.Data
       if (item == null)
         throw new ArgumentNullException("item");
       if (_Dialog.EditItems.Contains(item))
-        throw new InvalidOperationException("Повторное добавление элемента \"" + item.ToString() + "\"");
+        throw ExceptionFactory.CannotAddItemAgain(item);
 #endif
       _Dialog.EditItems.Add(item);
       if (item.ChangeInfo != null)
@@ -83,10 +84,10 @@ namespace FreeLibSet.Forms.Data
     protected DBxExtValue GetExtValue(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       if (Values.IndexOf(columnName) < 0)
-        throw new ArgumentException("В редактируемой записи нет поля \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownType("columnName", columnName);
 
       return Values[columnName];
     }

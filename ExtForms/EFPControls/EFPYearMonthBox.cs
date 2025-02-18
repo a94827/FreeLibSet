@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Controls;
 using FreeLibSet.Calendar;
+using FreeLibSet.UICore;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -60,12 +62,18 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      if (!ym2.IsInRange(Minimum, Maximum))
-        SetError("Значение должно быть в диапазоне: " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
+      UITools.ValidateInRange(ym2, Minimum, Maximum, this, DisplayName, true);
 
       base.OnValidate();
     }
 
+    private static Nullable<YearMonth> ToNullable(YearMonth value)
+    {
+      if (value.IsEmpty)
+        return null;
+      else
+        return value;
+    }
 
     #endregion
 
@@ -162,7 +170,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика YearMonthBox.ValueChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -240,11 +248,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Минимальное значение, которую можно ввести.
-    /// Если значение свойства не равно YearMonth.Empty и свойство Value меньше заданной даты, будет выдана ошибка
+    /// Если значение свойства не равно YearMonth.Empty и свойство <see cref="YM"/> меньше заданной даты, будет выдана ошибка
     /// или предупреждение при проверке контроля.
     /// По умолчанию ограничение не установлено (YearMonth.Empty)
-    /// Управляющий элемент имеет свойство MinimumYear, которое устанавливается синхронно, но установка
-    /// MinimumYear не выполняет обратную установку
+    /// Управляющий элемент имеет свойство <see cref="YearMonthBox.MinimumYear"/>, которое устанавливается синхронно, но установка
+    /// <see cref="YearMonthBox.MinimumYear"/> не выполняет обратную установку.
     /// </summary>
     public YearMonth Minimum
     {
@@ -262,11 +270,11 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Максимальное значение, которую можно ввести.
-    /// Если значение свойства не равно YearMonth.Empty и свойство Value больше заданной даты, будет выдана ошибка
+    /// Если значение свойства задано и свойство <see cref="YM"/> больше заданной даты, будет выдана ошибка
     /// или предупреждение при проверке контроля.
     /// По умолчанию ограничение не установлено (YearMonth.Empty)
-    /// Управляющий элемент имеет свойство MaximumYear, которое устанавливается синхронно, но установка
-    /// MaximumYear не выполняет обратную установку
+    /// Управляющий элемент имеет свойство <see cref="YearMonthBox.MaximumYear"/>, которое устанавливается синхронно, но установка
+    /// <see cref="YearMonthBox.MaximumYear"/> не выполняет обратную установку.
     /// </summary>
     public YearMonth Maximum
     {
@@ -322,7 +330,7 @@ namespace FreeLibSet.Forms
 
       if (LastMonth < FirstMonth)
       {
-        SetError("Начальный месяц больше конечного");
+        SetError(Res.YearMonthBox_Err_Inverted);
         return;
       }
 
@@ -338,8 +346,8 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      if (!(firstYM2.IsInRange(Minimum, Maximum) && lastYM2.IsInRange(Minimum, Maximum)))
-        SetError("Значение должно быть в диапазоне: " + DateRangeFormatter.Default.ToString(Minimum, Maximum));
+      UITools.ValidateInRange(firstYM2, Minimum, Maximum, this, DisplayName, true);
+      UITools.ValidateInRange(lastYM2, Minimum, Maximum, this, DisplayName, true);
 
       base.OnValidate();
     }
@@ -590,9 +598,9 @@ namespace FreeLibSet.Forms
       set
       {
         if (value.IsEmpty)
-          throw new ArgumentNullException("value", "Задан пустой интервал дат");
+          throw ExceptionFactory.ArgIsEmpty("value");
         if (value.FirstDate.Year != value.LastDate.Year)
-          throw new ArgumentException("Интервал дат должен относиться к одному году");
+          throw new ArgumentException(Res.YearMonthRangeBox_Arg_DiffYear, "value");
 
         Year = value.FirstDate.Year;
         FirstMonth = value.FirstDate.Month;
@@ -613,7 +621,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value.FirstYM.Year != value.LastYM.Year)
-          throw new ArgumentException("Диапазон должен относится к одному году");
+          throw new ArgumentException(Res.YearMonthRangeBox_Arg_DiffYear, "value");
         Year = value.FirstYM.Year;
         FirstMonth = value.FirstYM.Month;
         LastMonth = value.LastYM.Month;

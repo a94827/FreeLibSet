@@ -67,7 +67,7 @@ namespace WinFormsDemo.WizardDemo
       {
         WizardTemplateForm frm = new WizardTemplateForm();
         if (parForm.efpTitle.Checked)
-          frm.TheWizard.Title = "Тестирование Мастера";
+          frm.TheWizard.Title = "Wizard test";
         if (parForm.efpImageKey.Checked)
           frm.TheWizard.ImageKey = "CircleGreen";
         frm.TheWizard.Sizeable = parForm.efpSizeable.Checked;

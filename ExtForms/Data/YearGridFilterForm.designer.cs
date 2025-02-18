@@ -28,108 +28,112 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YearGridFilterForm));
+      this.grpMain = new System.Windows.Forms.GroupBox();
       this.edYear = new FreeLibSet.Controls.IntEditBox();
       this.panel1 = new System.Windows.Forms.Panel();
       this.rbFilter = new System.Windows.Forms.RadioButton();
       this.rbNoFilter = new System.Windows.Forms.RadioButton();
       this.btnOk = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
-      this.groupBox1.SuspendLayout();
+      this.grpMain.SuspendLayout();
       this.panel1.SuspendLayout();
       this.SuspendLayout();
       // 
-      // groupBox1
+      // grpMain
       // 
-      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox1.Controls.Add(this.edYear);
-      this.groupBox1.Controls.Add(this.panel1);
-      this.groupBox1.Location = new System.Drawing.Point(12, 12);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(202, 91);
-      this.groupBox1.TabIndex = 0;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Фильтр по году";
+      this.grpMain.AccessibleDescription = null;
+      this.grpMain.AccessibleName = null;
+      resources.ApplyResources(this.grpMain, "grpMain");
+      this.grpMain.BackgroundImage = null;
+      this.grpMain.Controls.Add(this.edYear);
+      this.grpMain.Controls.Add(this.panel1);
+      this.grpMain.Font = null;
+      this.grpMain.Name = "grpMain";
+      this.grpMain.TabStop = false;
       // 
       // edYear
       // 
-      this.edYear.Location = new System.Drawing.Point(115, 53);
+      this.edYear.AccessibleDescription = null;
+      this.edYear.AccessibleName = null;
+      resources.ApplyResources(this.edYear, "edYear");
+      this.edYear.Font = null;
       this.edYear.Name = "edYear";
-      this.edYear.Size = new System.Drawing.Size(73, 20);
-      this.edYear.TabIndex = 1;
-      this.edYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
       // 
       // panel1
       // 
+      this.panel1.AccessibleDescription = null;
+      this.panel1.AccessibleName = null;
+      resources.ApplyResources(this.panel1, "panel1");
+      this.panel1.BackgroundImage = null;
       this.panel1.Controls.Add(this.rbFilter);
       this.panel1.Controls.Add(this.rbNoFilter);
-      this.panel1.Location = new System.Drawing.Point(6, 19);
+      this.panel1.Font = null;
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(103, 69);
-      this.panel1.TabIndex = 0;
       // 
       // rbFilter
       // 
-      this.rbFilter.AutoSize = true;
-      this.rbFilter.Location = new System.Drawing.Point(8, 34);
+      this.rbFilter.AccessibleDescription = null;
+      this.rbFilter.AccessibleName = null;
+      resources.ApplyResources(this.rbFilter, "rbFilter");
+      this.rbFilter.BackgroundImage = null;
+      this.rbFilter.Font = null;
       this.rbFilter.Name = "rbFilter";
-      this.rbFilter.Size = new System.Drawing.Size(43, 17);
-      this.rbFilter.TabIndex = 1;
       this.rbFilter.TabStop = true;
-      this.rbFilter.Text = "&Год";
       this.rbFilter.UseVisualStyleBackColor = true;
       // 
       // rbNoFilter
       // 
-      this.rbNoFilter.AutoSize = true;
-      this.rbNoFilter.Location = new System.Drawing.Point(8, 11);
+      this.rbNoFilter.AccessibleDescription = null;
+      this.rbNoFilter.AccessibleName = null;
+      resources.ApplyResources(this.rbNoFilter, "rbNoFilter");
+      this.rbNoFilter.BackgroundImage = null;
+      this.rbNoFilter.Font = null;
       this.rbNoFilter.Name = "rbNoFilter";
-      this.rbNoFilter.Size = new System.Drawing.Size(90, 17);
-      this.rbNoFilter.TabIndex = 0;
       this.rbNoFilter.TabStop = true;
-      this.rbNoFilter.Text = "&Нет фильтра";
       this.rbNoFilter.UseVisualStyleBackColor = true;
       // 
       // btnOk
       // 
-      this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnOk.AccessibleDescription = null;
+      this.btnOk.AccessibleName = null;
+      resources.ApplyResources(this.btnOk, "btnOk");
+      this.btnOk.BackgroundImage = null;
       this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOk.Location = new System.Drawing.Point(220, 12);
+      this.btnOk.Font = null;
       this.btnOk.Name = "btnOk";
-      this.btnOk.Size = new System.Drawing.Size(88, 24);
-      this.btnOk.TabIndex = 1;
-      this.btnOk.Text = "О&К";
       this.btnOk.UseVisualStyleBackColor = true;
       // 
       // btnCancel
       // 
-      this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnCancel.AccessibleDescription = null;
+      this.btnCancel.AccessibleName = null;
+      resources.ApplyResources(this.btnCancel, "btnCancel");
+      this.btnCancel.BackgroundImage = null;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(220, 42);
+      this.btnCancel.Font = null;
       this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(88, 24);
-      this.btnCancel.TabIndex = 2;
-      this.btnCancel.Text = "Отмена";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
       // YearGridFilterForm
       // 
       this.AcceptButton = this.btnOk;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AccessibleDescription = null;
+      this.AccessibleName = null;
+      resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.BackgroundImage = null;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(314, 112);
       this.Controls.Add(this.btnCancel);
       this.Controls.Add(this.btnOk);
-      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.grpMain);
+      this.Font = null;
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+      this.Icon = null;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "YearGridFilterForm";
-      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.groupBox1.ResumeLayout(false);
+      this.grpMain.ResumeLayout(false);
       this.panel1.ResumeLayout(false);
       this.panel1.PerformLayout();
       this.ResumeLayout(false);
@@ -138,7 +142,7 @@
 
     #endregion
 
-    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox grpMain;
     private FreeLibSet.Controls.IntEditBox edYear;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.RadioButton rbFilter;

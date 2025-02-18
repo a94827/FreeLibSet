@@ -46,9 +46,8 @@ namespace FreeLibSet.Forms
         }
       }
         //if (callerControlProvider.out)
-      FilterGridProvider.DefaultOutItem.Title = baseTitle + " - Установка фильтров";
+      FilterGridProvider.DefaultOutItem.Title = String.Format(Res.EFPGridFilterEditorGridView_Name_Default, baseTitle);
       FilterGridProvider.CommandItems.ClipboardInToolBar = true;
-
 
       FilterGridProvider.ToolBarPanel = panSpb;
 
@@ -93,16 +92,15 @@ namespace FreeLibSet.Forms
       btnCopy.Image = EFPApp.MainImages.Images["Copy"];
       btnCopy.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpCopy = new EFPButton(_FormProvider, btnCopy);
-      efpCopy.DisplayName = "Копировать";
-      efpCopy.ToolTipText = "Копирует все фильтры, заданные в этом окне, в буфер обмена";
+      efpCopy.DisplayName = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_Copy);
+      efpCopy.ToolTipText = Res.EFPGridFilterEditorGridView_ToolTip_Copy;
       efpCopy.Click += new EventHandler(efpCopy_Click);
 
       btnPaste.Image = EFPApp.MainImages.Images["Paste"];
       btnPaste.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpPaste = new EFPButton(_FormProvider, btnPaste);
-      efpPaste.DisplayName = "Вставить";
-      efpPaste.ToolTipText = "Заменяет текущие фильтры, ранее скопированными в буфер обмена." + Environment.NewLine +
-        "Если фильтры были скопированы для другого просмотра, то будут вставлены только совместимые фильтры, а остальные - очищены";
+      efpPaste.DisplayName = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_Paste);
+      efpPaste.ToolTipText = Res.EFPGridFilterEditorGridView_ToolTip_Paste;
       efpPaste.Click += new EventHandler(efpPaste_Click);
 
       #endregion
@@ -198,7 +196,7 @@ namespace FreeLibSet.Forms
       IDataObject dobj = Clipboard.GetDataObject();
       if (dobj == null)
       {
-        EFPApp.ShowTempMessage("Буфер обмена пуст");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_Empty);
         return;
       }
 
@@ -207,7 +205,7 @@ namespace FreeLibSet.Forms
       if (filterInfo == null)
       {
         // string txtFormats = String.Join(", ", dobj.GetFormats());
-        EFPApp.ShowTempMessage("Буфер обмена не содержит фильтров табличного просмотра");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoFilters);
         return;
       }
 
@@ -215,7 +213,7 @@ namespace FreeLibSet.Forms
         (!String.IsNullOrEmpty(filterInfo.DBIdentity)) &&
         (!String.IsNullOrEmpty(Filters.DBIdentity)))
       {
-        EFPApp.ShowTempMessage("Фильтры в буфере обмена относятся к другой базе данных");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_FiltersDiffDB);
         return;
       }
 
@@ -255,7 +253,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (_AuxTextTempCfg != null)
-        throw new InvalidOperationException("Вложенный вызов BeginAuxText");
+        throw new ReenteranceException();
 #endif
       _AuxTextTempCfg = new TempCfg();
       Filters.WriteConfig(_AuxTextTempCfg);
@@ -266,7 +264,7 @@ namespace FreeLibSet.Forms
       Filters.ClearAllFilters();
       Filters.ReadConfig(cfg);
       if (Filters.IsEmpty)
-        return "Фильтры не установлены";
+        return Res.EFPGridFilterEditorGridView_Msg_NoFilters;
 
       StringBuilder sb = new StringBuilder();
       for (int i = 0; i < Filters.Count; i++)
@@ -287,7 +285,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (_AuxTextTempCfg == null)
-        throw new InvalidOperationException("Не было вызова BeginAuxText()");
+        throw ExceptionFactory.UnpairedCall(this, "BeginGetAuxText()", "EndGetAuxText()");
 #endif
       Filters.ClearAllFilters();
       Filters.ReadConfig(_AuxTextTempCfg);
@@ -336,10 +334,10 @@ namespace FreeLibSet.Forms
       Control.VirtualMode = false;
       Control.AutoGenerateColumns = false;
       Columns.AddImage(); // 0
-      Columns.AddText("DisplayName", false, "Фильтр", 20, 10); // 1
+      Columns.AddText("DisplayName", false, Res.EFPGridFilterEditorGridView_ColTitle_DisplayName, 20, 10); // 1
       Columns.LastAdded.CanIncSearch = true;
       Columns.LastAdded.PrintWidth = 500;
-      Columns.AddTextFill("FilterText", false, "Значение", 100, 10); // 2
+      Columns.AddTextFill("FilterText", false, Res.EFPGridFilterEditorGridView_ColTitle_FilterText, 100, 10); // 2
       DisableOrdering();
 
       Control.ReadOnly = true;
@@ -361,8 +359,8 @@ namespace FreeLibSet.Forms
       fmtFilter.Paste += new EFPPasteDataObjectEventHandler(fmtFilter_Paste);
       CommandItems.PasteHandler.Add(fmtFilter);
 
-      EFPCommandItem ciClearAll = new EFPCommandItem("View", "ClearFilter");
-      ciClearAll.MenuText = "Очистить все фильтры";
+      EFPCommandItem ciClearAll = new EFPCommandItem("View", "ClearAllFilters");
+      ciClearAll.MenuText = Res.EFPGridFilterEditorGridView_Menu_ClearAllFilters;
       ciClearAll.ImageKey = "No";
       ciClearAll.ShortCut = Keys.F8;
       //ciClearAll.Usage = EFPCommandItemUsage.ShortCut | EFPCommandItemUsage.Menu; // обойдемся без значка
@@ -372,8 +370,8 @@ namespace FreeLibSet.Forms
 
       if (true/*AccDepClientExec.DebugShowIds*/) // TODO:
       {
-        EFPCommandItem ciXml = new EFPCommandItem("View", "XML");
-        ciXml.MenuText = "Просмотр фильтров в XML";
+        EFPCommandItem ciXml = new EFPCommandItem("View", "ViewFiltersXML");
+        ciXml.MenuText = Res.EFPGridFilterEditorGridView_Menu_ViewFiltersXML;
         ciXml.Click += new EventHandler(ciXml_Click);
         CommandItems.Add(ciXml);
       }
@@ -534,7 +532,7 @@ namespace FreeLibSet.Forms
         (!String.IsNullOrEmpty(filterInfo.DBIdentity)) &&
         (!String.IsNullOrEmpty(Filters.DBIdentity)))
       {
-        EFPApp.ShowTempMessage("Фильтры в буфере обмена относятся к другой базе данных");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_FiltersDiffDB);
         return;
       }
 
@@ -559,7 +557,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Ошибка вставки фильтра \"" + item.DisplayName + "\" из буфера обмена");
+            EFPApp.ShowException(e, String.Format(Res.Clipboard_ErrTitle_PasteFilters, item.DisplayName));
           }
         }
       }
@@ -567,7 +565,7 @@ namespace FreeLibSet.Forms
       if (flag)
         PerformRefresh();
       else
-        EFPApp.ShowTempMessage("Фильтры в буфере обмена отсутствуют в списке возможных фильтров");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_OtherFilters);
     }
 
 
@@ -579,7 +577,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Вырезка фильтров в буфер обмена");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -619,10 +617,11 @@ namespace FreeLibSet.Forms
 
     void ciXml_Click(object sender, EventArgs args)
     {
+      EFPCommandItem ci = (EFPCommandItem)sender;
       TempCfg sect = new TempCfg();
       Filters.WriteConfig(sect);
       //FreeLibSet.Forms.Diagnostics.DebugTools.DebugXml(sect.Document, "Текущие фильтры");
-      EFPApp.ShowXmlView(sect.Document, "Текущие фильтры");
+      EFPApp.ShowXmlView(sect.Document, ci.MenuTextWithoutMnemonic);
     }
 
     #endregion

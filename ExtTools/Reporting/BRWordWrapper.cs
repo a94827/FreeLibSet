@@ -390,13 +390,11 @@ namespace FreeLibSet.Reporting
     private void CheckIndexRange(int firstIndex, int lastIndex)
     {
       if (_Items.Length == 0)
-        throw new InvalidOperationException("Никакой диапазон символов не может быть правильным, т.к. строка пустая");
+        throw ExceptionFactory.ObjectProperty(_Items.Length, "_Items.Length", 0, null);
       if (firstIndex < 0 || firstIndex >= _Items.Length)
-        throw new ArgumentOutOfRangeException("firstIndex", firstIndex,
-          "Начальный индекс должен быть в диапазоне от 0 до " + (_Items.Length - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("firstIndex", firstIndex, 0, _Items.Length - 1);
       if (lastIndex < firstIndex || lastIndex >= _Items.Length)
-        throw new ArgumentOutOfRangeException("lastIndex", lastIndex,
-          "Конечный индекс должен быть в диапазоне от " + firstIndex.ToString() + " до " + (_Items.Length - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("lastIndex", lastIndex, firstIndex, _Items.Length - 1);
     }
 
 #endif

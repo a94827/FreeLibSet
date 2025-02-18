@@ -48,7 +48,7 @@ namespace FreeLibSet.Controls
       {
         _Owner = owner;
         if (base.Controls.Count != 2)
-          throw new BugException("Неправильная реализация UpDownBase");
+          throw new BugException("Invalid realization of UpDownBase control");
         _ScrollPart = base.Controls[0];
         _MainPart = (TextBox)(base.Controls[1]);
 
@@ -74,12 +74,12 @@ namespace FreeLibSet.Controls
       /// См. исходный текст класса net framework UpDownBase.
       /// </summary>
       public TextBox MainPart { get { return _MainPart; } }
-      private TextBox _MainPart;
-
+      private readonly TextBox _MainPart;
+      
       /// <summary>
       /// Элемент со стрелочками
       /// </summary>
-      private Control _ScrollPart;
+      private readonly Control _ScrollPart;
 
       protected override void OnSizeChanged(EventArgs args)
       {
@@ -255,7 +255,7 @@ namespace FreeLibSet.Controls
     [Bindable(true)]
     [DefaultValue(null)]
     [RefreshProperties(RefreshProperties.All)]
-    [Description("Текущее значение с выделением пустого значения")]
+    [Description("Current value with null support")]
     [Category("Appearance")]
     public T? NValue
     {
@@ -292,7 +292,7 @@ namespace FreeLibSet.Controls
     [Bindable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [RefreshProperties(RefreshProperties.All)]
-    [Description("Текущее значение без поддержки null")]
+    [Description("Current value without null")]
     [Category("Appearance")]
     [Browsable(false)]
     public T Value
@@ -307,7 +307,7 @@ namespace FreeLibSet.Controls
         ValueChanged(this, args);
     }
 
-    [Description("Посылается после изменения свойств NValue/Value")]
+    [Description("Called when NValue and Value property changed")]
     [Category("Property Changed")]
     public event EventHandler ValueChanged;
 
@@ -342,9 +342,9 @@ namespace FreeLibSet.Controls
 
     [Bindable(true)]
     //[RefreshProperties(RefreshProperties.All)]
-    [Description("Инкремент. Если равно 0, то есть только поле ввода. Положительное значение приводит к появлению стрелочек для прокрутки значения")]
+    [Description("Increment value. If 0, there are no arrow button presented. Positive value allows scrolling current value.")]
     [Category("Appearance")]
-    [DefaultValue(0.0)]
+    [DefaultValue(0)]
     public T Increment
     {
       get
@@ -361,7 +361,7 @@ namespace FreeLibSet.Controls
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -398,7 +398,7 @@ namespace FreeLibSet.Controls
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     //[RefreshProperties(RefreshProperties.All)]
-    [Description("Минимальное значение, используемое для прокрутки")]
+    [Description("Minimum allowed value for scrolling, if any")]
     [Category("Appearance")]
     [DefaultValue(null)]
     public T? Minimum
@@ -410,7 +410,7 @@ namespace FreeLibSet.Controls
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     //[RefreshProperties(RefreshProperties.All)]
-    [Description("Максимальное значение, используемое для прокрутки")]
+    [Description("Maximum allowed value for scrolling, if any")]
     [Category("Appearance")]
     [DefaultValue(null)]
     public T? Maximum
@@ -426,7 +426,7 @@ namespace FreeLibSet.Controls
 
     [Bindable(true)]
     [DefaultValue("")]
-    [Description("Форматирование текстового вывода")]
+    [Description("Number format")]
     [RefreshProperties(RefreshProperties.All)]
     [Category("Appearance")]
     public string Format
@@ -480,7 +480,7 @@ namespace FreeLibSet.Controls
     /// Возвращает количество десятичных разрядов для числа с плавающей точкой, которое определено в свойстве Format
     /// </summary>
     [DefaultValue("")]
-    [Description("Количество знаков после запятой. Альтернативная установка для свойства Format")]
+    [Description("Number of digits after the decimal point. Alternative to Format property")]
     [RefreshProperties(RefreshProperties.All)]
     [Category("Appearance")]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -494,7 +494,7 @@ namespace FreeLibSet.Controls
 
     #region Свойство ReadOnly
 
-    [Description("Режим \"Только для просмотра\"")]
+    [Description("View only mode")]
     [Category("Appearance")]
     [DefaultValue(false)]
     public bool ReadOnly
@@ -525,7 +525,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    [Description("Изменилось свойство ReadOnly")]
+    [Description("Called when ReadOnly property changed")]
     [Category("PropertyChanged")]
     public event EventHandler ReadOnlyChanged;
 
@@ -619,7 +619,7 @@ namespace FreeLibSet.Controls
       set { _MainControl.Text = value; }
     }
 
-    [Description("Горизонтальное выравнивание (по умолчанию - по правому краю)")]
+    [Description("Horizontal text alignment")]
     [Localizable(true)]
     [DefaultValue(HorizontalAlignment.Right)]
     [Category("Appearance")]
@@ -989,7 +989,7 @@ namespace FreeLibSet.Controls
   /// <summary>
   /// Поле ввода числового значения типа Double
   /// </summary>
-  [Description("Поле ввода целого числа")]
+  [Description("Text box for input an integer value with null support")]
   [ToolboxBitmap(typeof(IntEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   [DesignerSerializer("System.Windows.Forms.Design.ControlCodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", "System.ComponentModel.Design.Serialization.CodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
@@ -1032,7 +1032,7 @@ namespace FreeLibSet.Controls
   /// <summary>
   /// Поле ввода числового значения типа Double
   /// </summary>
-  [Description("Поле ввода числового значения типа Single")]
+  [Description("Text box for input a floating point value of type Single with null support")]
   [ToolboxBitmap(typeof(SingleEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   public class SingleEditBox : NumEditBoxBase<Single>
@@ -1071,7 +1071,7 @@ namespace FreeLibSet.Controls
   /// <summary>
   /// Поле ввода числового значения типа Double
   /// </summary>
-  [Description("Поле ввода числового значения типа Double")]
+  [Description("Text box for input a floating point value of type Double with null support")]
   [ToolboxBitmap(typeof(DoubleEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   public class DoubleEditBox : NumEditBoxBase<Double>
@@ -1109,7 +1109,7 @@ namespace FreeLibSet.Controls
   /// <summary>
   /// Поле ввода числового значения типа Double
   /// </summary>
-  [Description("Поле ввода числового значения типа Decimal")]
+  [Description("Text box for input a floating point value of type Decimal with null support")]
   [ToolboxBitmap(typeof(DecimalEditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   public class DecimalEditBox : NumEditBoxBase<Decimal>

@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.Drawing;
 using FreeLibSet.Controls.TreeViewAdvInternal;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591
 
@@ -44,8 +45,12 @@ namespace FreeLibSet.Controls
 
     internal void DisplayEditor(Control editor, EditableControl owner)
     {
-      if (editor == null || owner == null || CurrentNode == null)
-        throw new ArgumentNullException();
+      if (editor == null)
+        throw new ArgumentNullException("editor");
+      if (owner == null)
+        throw new ArgumentNullException("owner");
+      if (CurrentNode == null)
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CurrentNode");
 
       HideEditor(false);
 

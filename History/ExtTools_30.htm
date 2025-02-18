@@ -5,9 +5,10 @@
 	<TITLE>Изменения в модуле ExtTools.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20241209;170259597000000">
+	<META NAME="CHANGED" CONTENT="20250218;153719820000000">
 	<META NAME="created" CONTENT="00:00:00">
-	<META NAME="changed" CONTENT="2023-11-17T22:46:28.165000000">
+	<META NAME="changed" CONTENT="2025-02-09T13:28:56.718000000">
+	<META NAME="created" CONTENT="00:00:00">
 	<META NAME="created" CONTENT="00:00:00">
 	<META NAME="created" CONTENT="00:00:00">
 	<STYLE TYPE="text/css">
@@ -50,20 +51,107 @@
 	</TR>
 	<TR VALIGN=TOP>
 		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>359</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>12.12.2024-18.02.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US">1. И<SPAN LANG="ru-RU">нтернационализация</SPAN> <SPAN LANG="ru-RU">с
+			использованием строковых ресурсов</SPAN></P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">2. Класс </SPAN>ExceptionFactory</P>
+			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Методы
+			</SPAN><SPAN LANG="en-US">FormatStringTools.ExpandDateTimeFormat(),
+			GetEditableDateTimeFormatterKind() </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtTools_20.htm#v351p9"><SPAN LANG="en-US">v.351
+			</SPAN><SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
+			GetDateFormatOrder() (<A HREF="ExtTools_11.htm#v233p2">v.233 </A></SPAN><A HREF="ExtTools_11.htm#v233p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">принимают аргумент </SPAN><SPAN LANG="en-US">IFormatProvider
+			</SPAN><SPAN LANG="ru-RU">вместо </SPAN><SPAN LANG="en-US">DateTimeFormatInfo</SPAN></P>
+			<P>4. <SPAN LANG="en-US">MonthDay.ToString() (<A HREF="ExtTools_11.htm#v184p1">v.184
+			</A></SPAN><A HREF="ExtTools_11.htm#v184p1">п.1<SPAN LANG="en-US">)</SPAN></A>
+			учитывает порядок следования месяца и дня с помощью
+			<SPAN LANG="en-US">FormatStringTools.GetDateFormatOrder()</SPAN></P>
+			<P><SPAN LANG="en-US">5</SPAN><SPAN LANG="ru-RU">. Проверка
+			корректности имени секции и ключа. Методы
+			</SPAN><SPAN LANG="en-US">IniFile.IsValidSectionName() </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">IsValidKeyName() (<A HREF="ExtTools_11.htm#v161p2">v.161
+			</A></SPAN><A HREF="ExtTools_11.htm#v161p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">).
+			</SPAN><SPAN LANG="ru-RU">Используются также в </SPAN><SPAN LANG="en-US">WindowsIniFile.</SPAN></P>
+			<P><SPAN LANG="en-US">6. </SPAN><SPAN LANG="ru-RU">Оптимизация
+			метода </SPAN><SPAN LANG="en-US">DataTools.GetPrimaryKey() (<A HREF="ExtTools_11.htm#v001p1">v.1
+			</A></SPAN><A HREF="ExtTools_11.htm#v001p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">7. </SPAN><SPAN LANG="ru-RU">Новые методы
+			</SPAN><SPAN LANG="en-US">DataTools.AreTableNamesEqual</SPAN><SPAN LANG="ru-RU">()
+			и </SPAN><SPAN LANG="en-US">AreColumnNamesEqual().</SPAN></P>
+			<P><SPAN LANG="en-US">8. </SPAN><SPAN LANG="ru-RU">Изменены
+			конструкторы DataViewRowPairEnumarable (</SPAN><A HREF="ExtTools_11.htm#v214p1"><SPAN LANG="en-US">v.214
+			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">).
+			Аргумент enumSingleRows теперь является обязательным. Раньше он по
+			умолчанию предполагал значение </SPAN><SPAN LANG="en-US">false,
+			</SPAN><SPAN LANG="ru-RU">что означало пропуск одиночных строк при
+			переборе</SPAN></P>
+			<P><A NAME="v359p9"></A><SPAN LANG="en-US">9. </SPAN><SPAN LANG="ru-RU">Методы
+			</SPAN><SPAN LANG="en-US">LogoutTools.GetDefaultTitle().
+			</SPAN><SPAN LANG="ru-RU">Перегрузка </SPAN><SPAN LANG="en-US">LogoutException()
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtTools_11.htm#v039p1"><SPAN LANG="en-US">v.39
+			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">) без
+			аргумента </SPAN><SPAN LANG="en-US">title </SPAN><SPAN LANG="ru-RU">с
+			заголовком по умолчанию</SPAN></P>
+			<P><SPAN LANG="en-US">10. </SPAN><SPAN LANG="ru-RU">Защищенные
+			</SPAN><SPAN LANG="en-US">абс</SPAN><SPAN LANG="ru-RU">трактные
+			свойства </SPAN><SPAN LANG="en-US">StandardDialog.DefaultTitle </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">BaseInputDialog.DefaultPrompt (<A HREF="ExtTools_11.htm#v071p3">v.71
+			</A></SPAN><A HREF="ExtTools_11.htm#v071p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)
+			</SPAN>
+			</P>
+			<P>11. Изменена внутренняя реализация перечислителей
+			<SPAN LANG="en-US">DictionaryWithMRU&lt;TKey,
+			TValue&gt;.KeyEnumerator </SPAN>и <SPAN LANG="en-US">ValueEnumerator.
+			</SPAN>В поле структуры хранится ссылка на интерфейс
+			<SPAN LANG="en-US">IEnumerator&lt;TKey&gt;, </SPAN>а не экземпляр
+			структуры LinkedList&lt;TKey&gt;.Enumerator. Непонятно почему,
+			перечислитель зацикливался, непрерывно возвращая <SPAN LANG="en-US">null
+			</SPAN>как текущее значение. 
+			</P>
+			<P LANG="en-US">12. <SPAN LANG="ru-RU">Структуры
+			EnumerableForEnumerator и EnumerableForEnumerator</SPAN>&lt;T&gt;</P>
+			<P><SPAN LANG="en-US">13. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">ISplash.PhaseText (<A HREF="ExtTools_11.htm#v018p2">v.18
+			</A></SPAN><A HREF="ExtTools_11.htm#v018p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">перенесено в </SPAN><SPAN LANG="en-US">ISimpleSplash</SPAN></P>
+			<P LANG="en-US">14. <SPAN LANG="ru-RU">Методы класса </SPAN>DbfFile
+			<SPAN LANG="ru-RU">используют аргумент </SPAN>ISimpleSplash <SPAN LANG="ru-RU">вместо
+			</SPAN>ISplash. <SPAN LANG="ru-RU">Изменен тип свойств
+			</SPAN>FileCompressor, DBFileExcelOLE.Splash</P>
+			<P><SPAN LANG="en-US">15. </SPAN><SPAN LANG="ru-RU">Перегрузка
+			</SPAN><SPAN LANG="en-US">FileTools.ForceDirs() (<A HREF="ExtTools_11.htm#v001p2">v.1
+			</A></SPAN><A HREF="ExtTools_11.htm#v001p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">с аргументом </SPAN><SPAN LANG="en-US">createdDirs,
+			</SPAN><SPAN LANG="ru-RU">куда записываются результаты выполнения</SPAN></P>
+			<P LANG="en-US">16. <SPAN LANG="ru-RU">Методы </SPAN>UITools.ToString(),
+			ConvertErrorMessage(), ToYesNo(), ValidateCanBeEmptyMode(),
+			ValidateInRange()</P>
+			<P LANG="en-US">17. <SPAN LANG="ru-RU">Методы
+			</SPAN>YearMonthRange.Contains()</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>358</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>09.12.2024</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US">1. <SPAN LANG="ru-RU">Если в </SPAN>ExeFileInfo
-			<SPAN LANG="ru-RU">при разборе таблицы ресурсов обнаруживается
-			выход за пределы файла, то вместо выброса исключения сохраняется
-			сообщение об ошибке. Свойства </SPAN>ResourceTable.CPInfo.ErrorMessage
-			<SPAN LANG="ru-RU">(</SPAN><A HREF="ExtTools_20.htm#v348p25">v.348
-			<SPAN LANG="ru-RU">п.25</SPAN></A><SPAN LANG="ru-RU">)</SPAN>,
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Если в
+			</SPAN><SPAN LANG="en-US">ExeFileInfo </SPAN><SPAN LANG="ru-RU">при
+			разборе таблицы ресурсов обнаруживается выход за пределы файла, то
+			вместо выброса исключения сохраняется сообщение об ошибке.
+			Свойства </SPAN><SPAN LANG="en-US">ResourceTable.CPInfo.ErrorMessage
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtTools_20.htm#v348p25"><SPAN LANG="en-US">v.348
+			</SPAN><SPAN LANG="ru-RU">п.25</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
 			ExeFileInfo.ResourceEntry.ErrorMessage (<A HREF="ExtTools_20.htm#v348p24">v.348
-			<SPAN LANG="ru-RU">п.24</SPAN></A>).</P>
+			</A></SPAN><A HREF="ExtTools_20.htm#v348p24"><SPAN LANG="ru-RU">п.24</SPAN></A><SPAN LANG="en-US">).</SPAN></P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>
@@ -158,20 +246,6 @@
 			<P><SPAN LANG="en-US">9. </SPAN><SPAN LANG="ru-RU">Структура
 			</SPAN><SPAN LANG="en-US">YearMonthDayAge. </SPAN><SPAN LANG="ru-RU">Свойства
 			</SPAN><SPAN LANG="en-US">DateRange, YearMonthRange, MonthDay.Age</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER><BR>
-			</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER><BR>
-			</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><BR>
-			</P>
 		</TD>
 	</TR>
 </TABLE>

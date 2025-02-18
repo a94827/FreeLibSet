@@ -17,55 +17,6 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   public class DrawEventArgs : NodeEventArgs
   {
-    private TreeViewAdvDrawContext _context;
-    public TreeViewAdvDrawContext Context
-    {
-      get { return _context; }
-    }
-
-    private Brush _textBrush;
-    [Obsolete("Use TextColor")]
-    public Brush TextBrush
-    {
-      get { return _textBrush; }
-      set { _textBrush = value; }
-    }
-
-    private Brush _backgroundBrush;
-    public Brush BackgroundBrush
-    {
-      get { return _backgroundBrush; }
-      set { _backgroundBrush = value; }
-    }
-
-    private Font _font;
-    public Font Font
-    {
-      get { return _font; }
-      set { _font = value; }
-    }
-
-    private Color _textColor;
-    public Color TextColor
-    {
-      get { return _textColor; }
-      set { _textColor = value; }
-    }
-
-    private string _text;
-    public string Text
-    {
-      get { return _text; }
-      set { _text = value; }
-    }
-
-
-    private EditableControl _control;
-    public EditableControl Control
-    {
-      get { return _control; }
-    }
-
     public DrawEventArgs(TreeNodeAdv node, EditableControl control, TreeViewAdvDrawContext context, string text)
       : base(node)
     {
@@ -73,5 +24,50 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       _context = context;
       _text = text;
     }
+
+    public TreeViewAdvDrawContext Context { get { return _context; } }
+    private readonly TreeViewAdvDrawContext _context;
+
+    [Obsolete("Use TextColor")]
+    public Brush TextBrush
+    {
+      get { return _textBrush; }
+      set { _textBrush = value; }
+    }
+    private Brush _textBrush;
+
+    public Brush BackgroundBrush
+    {
+      get { return _backgroundBrush; }
+      set { _backgroundBrush = value; }
+    }
+    private Brush _backgroundBrush;
+
+    public Font Font
+    {
+      get { return _font; }
+      set { _font = value; }
+    }
+    private Font _font;
+
+    public Color TextColor
+    {
+      get { return _textColor; }
+      set { _textColor = value; }
+    }
+    private Color _textColor;
+
+    public string Text
+    {
+      get { return _text; }
+      set { _text = value; }
+    }
+    private string _text;
+
+    public EditableControl Control
+    {
+      get { return _control; }
+    }
+    private readonly EditableControl _control;
   }
 }

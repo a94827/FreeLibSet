@@ -12,6 +12,7 @@ using System.Drawing.Design;
 using System.Globalization;
 using FreeLibSet.UICore;
 using FreeLibSet.Formatting;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591
 
@@ -127,7 +128,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, default(T), null);
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -198,7 +199,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         Format = FormatStringTools.DecimalPlacesToNumberFormat(value);
       }
     }

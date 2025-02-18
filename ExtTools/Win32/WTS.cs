@@ -163,7 +163,7 @@ namespace FreeLibSet.Win32
     public WTSServer(string serverName)
     {
       if (String.IsNullOrEmpty(serverName))
-        throw new ArgumentNullException("serverName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("serverName");
 
       _ServerName = serverName;
 
@@ -477,7 +477,7 @@ namespace FreeLibSet.Win32
       {
         _SessionId = WTSNativeMethods.WTSGetActiveConsoleSessionId();
         if (_SessionId == (-1))
-          throw new InvalidOperationException("Нет текущей сессии");
+          throw new InvalidOperationException(Res.WTS_Err_NoCurrentSession);
       }
       else
         _SessionId = sessionId;

@@ -94,6 +94,17 @@ namespace FreeLibSet.Forms.Diagnostics
       ShowException(e, title, true);
     }
 
+    /// <summary>
+    /// Вывод на экран окна с сообщением об исключении.
+    /// Отчет также записывается в log-файл.
+    /// Этот метод может вызываться из любого потока.
+    /// </summary>
+    /// <param name="e">Перехваченное исключение</param>
+    public static void ShowException(Exception e)
+    {
+      ShowException(e, LogoutTools.GetDefaultTitle(1), true);
+    }
+
     private static readonly object _SyncRoot = new object();
 
     /// <summary>
@@ -136,33 +147,33 @@ namespace FreeLibSet.Forms.Diagnostics
                 AbsPath logFilePath2 = AbsPath.Empty;
                 try
                 {
-                  logFilePath2 = LogoutTools.LogoutExceptionToFile(e2, "Ошибка при выводе отладочного окна просмотра ошибки");
+                  logFilePath2 = LogoutTools.LogoutExceptionToFile(e2, "Error when ShowExceptionForm shown");
                 }
                 catch { }
                 StringBuilder sb = new StringBuilder();
-                sb.Append("Ошибка при выводе отладочного окна просмотра ошибки.");
+                sb.Append("Error when ShowExceptionForm shown.");
                 sb.Append(Environment.NewLine);
                 sb.Append(Environment.NewLine);
                 if (e != null) // 27.12.2020
                 {
-                  sb.Append("Исходная ошибка: ");
+                  sb.Append("Source error: ");
                   sb.Append(e.Message);
                 }
                 sb.Append(Environment.NewLine);
-                sb.Append("Log-файл: ");
+                sb.Append("Log file: ");
                 sb.Append(logFilePath.Path);
                 sb.Append(Environment.NewLine);
                 sb.Append(Environment.NewLine);
-                sb.Append("Ошибка вывода окна: ");
+                sb.Append("Form showing error: ");
                 sb.Append(e2.Message);
                 sb.Append(Environment.NewLine);
-                sb.Append("Log-файл: ");
+                sb.Append("Log file: ");
                 if (logFilePath2.IsEmpty)
-                  sb.Append("Не создан");
+                  sb.Append("Not created");
                 else
                   sb.Append(logFilePath2.Path);
 
-                MessageBox.Show(sb.ToString(), "Не удалось показать окно ошибки", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(sb.ToString(), "Cannot show the error window", MessageBoxButtons.OK, MessageBoxIcon.Error);
               }
             }
             finally
@@ -279,7 +290,7 @@ namespace FreeLibSet.Forms.Diagnostics
     public static void DebugAssemblies(string title)
     {
       Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
-      string s = "Загруженные сборки для домена " + AppDomain.CurrentDomain.ToString() + "\n";
+      string s = "Loaded assemblies for AppDomain " + AppDomain.CurrentDomain.ToString() + "\n";
       foreach (Assembly asm in asms)
         s += asm.FullName + "\n";
       MessageBox.Show(s, title);
@@ -304,11 +315,11 @@ namespace FreeLibSet.Forms.Diagnostics
     public static void ShowDebugInfo(string title)
     {
       if (String.IsNullOrEmpty(title))
-        title = "Отладочная информация о программе";
+        title = Res.DebugTools_ErrTitle_AppInfo;
 
       string s;
       if (EFPApp.IsMainThread)
-        EFPApp.BeginWait("Сбор информации о программе", "Debug");
+        EFPApp.BeginWait(Res.DebugTools_Phase_AppInfo, "Debug");
       try
       {
         s = LogoutTools.GetDebugInfo();
@@ -334,7 +345,7 @@ namespace FreeLibSet.Forms.Diagnostics
     public static void DebugObject(object theObject, string title)
     {
       if (title == null)
-        title = "Отладка объекта";
+        title = "Object debug info";
       if (theObject == null)
       {
         MessageBox.Show("null", title);
@@ -529,7 +540,7 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       if (args.ColumnIndex < 1 || args.RowIndex < 0)
       {
-        MessageBox.Show("Должен быть выбран ключ или значение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show("There must be key or value selected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         return;
       }
 
@@ -550,7 +561,7 @@ namespace FreeLibSet.Forms.Diagnostics
       }
       catch (Exception e)
       {
-        DebugTools.ShowException(e, "Ошибка показа ключа/значения коллекции");
+        DebugTools.ShowException(e);
       }
     }
 
@@ -566,14 +577,14 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       if (rootControl == null)
       {
-        MessageBox.Show("null", "Отладка Control");
+        MessageBox.Show("null", "Control debugging");
         return;
       }
 
       using (Form frm = new Form())
       {
         frm.ShowIcon = false;
-        frm.Text = "Отладка Control";
+        frm.Text = "Control debugging";
         SplitContainer splControl = new SplitContainer();
         splControl.Dock = DockStyle.Fill;
         frm.Controls.Add(splControl);
@@ -777,7 +788,7 @@ namespace FreeLibSet.Forms.Diagnostics
     public static void DebugDataSet(DataSet ds, string title)
     {
       if (title == null)
-        title = "Набор данных DataSet";
+        title = "DataSet";
 
       if (ds == null)
       {
@@ -804,7 +815,7 @@ namespace FreeLibSet.Forms.Diagnostics
           AddDebugDataTable(ds.Tables[i], page);
         }
 
-        TabPage tpProps = new TabPage("Свойства DataSet");
+        TabPage tpProps = new TabPage("DataSet properties");
         theTabControl.TabPages.Add(tpProps);
 
         PropertyGrid pg = new PropertyGrid();
@@ -848,8 +859,8 @@ namespace FreeLibSet.Forms.Diagnostics
     private static void AddDebugDataTable(DataTable table, Control parent)
     {
       if (!String.IsNullOrEmpty(table.DefaultView.RowFilter))
-        MessageBox.Show("Предупреждение. У таблицы " + table.ToString() +
-          " установлен RowFilter=" + table.DefaultView.RowFilter.ToString(), "Отладка таблицы");
+        MessageBox.Show("Warning. DataTable " + table.ToString() +
+          " has RowFilter=" + table.DefaultView.RowFilter.ToString(), "DataTable");
 
       TabControl theTabControl = new TabControl();
       theTabControl.Dock = DockStyle.Fill;
@@ -862,7 +873,7 @@ namespace FreeLibSet.Forms.Diagnostics
       DataGridView grid1 = CreateDebugGrid(tpTable, table, false);
       grid1.RowCount = table.Rows.Count; // должно быть после инициализации столбцов
 
-      TabPage tpProps1 = new TabPage("Свойства DataTable");
+      TabPage tpProps1 = new TabPage("DataTable properties");
       theTabControl.TabPages.Add(tpProps1);
 
       PropertyGrid pg1 = new PropertyGrid();
@@ -875,7 +886,7 @@ namespace FreeLibSet.Forms.Diagnostics
       DataGridView grid2 = CreateDebugGrid(tpDV, table, true);
       grid2.DataSource = table.DefaultView;
 
-      TabPage tpProps2 = new TabPage("Свойства DefaultView");
+      TabPage tpProps2 = new TabPage("DefaultView properties");
       theTabControl.TabPages.Add(tpProps2);
 
       PropertyGrid pg2 = new PropertyGrid();
@@ -1037,7 +1048,7 @@ namespace FreeLibSet.Forms.Diagnostics
       if (row == null)
       {
         if (title == null)
-          title = "Строка DataRow";
+          title = "DataRow";
 
         MessageBox.Show("Row=null", title);
         return;
@@ -1045,12 +1056,12 @@ namespace FreeLibSet.Forms.Diagnostics
 
       if (title == null)
       {
-        title = "Строка таблицы " + row.Table.TableName + " (" + row.RowState.ToString() + ")";
+        title = "DataRow for table " + row.Table.TableName + " (" + row.RowState.ToString() + ")";
         int p = row.Table.Rows.IndexOf(row);
         if (p >= 0)
-          title += " (Номер строки: " + p.ToString() + ")";
+          title += " (RowIndex: " + p.ToString() + ")";
         else
-          title += " (Не присоединена)";
+          title += " (Not attached)";
       }
 
       using (Form frm = new Form())
@@ -1070,7 +1081,7 @@ namespace FreeLibSet.Forms.Diagnostics
         theTabControl.Alignment = TabAlignment.Bottom;
         frm.Controls.Add(theTabControl);
 
-        TabPage tpData = new TabPage("Данные");
+        TabPage tpData = new TabPage("Data");
         theTabControl.TabPages.Add(tpData);
 
         DataGridView grid = new DataGridView();
@@ -1105,7 +1116,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
         tpData.Controls.Add(grid);
 
-        TabPage tpProps = new TabPage("Свойства DataRow");
+        TabPage tpProps = new TabPage("DataRow properties");
         theTabControl.TabPages.Add(tpProps);
 
         PropertyGrid pg = new PropertyGrid();
@@ -1131,7 +1142,7 @@ namespace FreeLibSet.Forms.Diagnostics
       }
 
       if (title == null)
-        title = "DataView для " + dv.Table.TableName;
+        title = "DataView for " + dv.Table.TableName;
 
 
       using (Form frm = new Form())
@@ -1148,7 +1159,7 @@ namespace FreeLibSet.Forms.Diagnostics
         theTabControl.Alignment = TabAlignment.Bottom;
         frm.Controls.Add(theTabControl);
 
-        TabPage tpData = new TabPage("Данные");
+        TabPage tpData = new TabPage("Data");
         theTabControl.TabPages.Add(tpData);
 
         DataGridView grid = new DataGridView();
@@ -1161,7 +1172,7 @@ namespace FreeLibSet.Forms.Diagnostics
         tpData.Controls.Add(grid);
         grid.DataSource = dv;
 
-        TabPage tpProps = new TabPage("Свойства DataView");
+        TabPage tpProps = new TabPage("DataView properties");
         theTabControl.TabPages.Add(tpProps);
 
         PropertyGrid pg = new PropertyGrid();
@@ -1186,7 +1197,7 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       Form frm = new Form();
       if (String.IsNullOrEmpty(title))
-        frm.Text = "Просмотр изменений";
+        frm.Text = "Change view";
       else
         frm.Text = title;
       frm.Icon = EFPApp.MainImages.Icons["Debug"];
@@ -1206,7 +1217,7 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       if (level > 10)
       {
-        TreeNode node = nodes.Add("[ Слишком большой уровень вложения ]");
+        TreeNode node = nodes.Add("[ Nested level is too high ]");
         node.ImageKey = "Error";
         node.SelectedImageKey = node.ImageKey;
         return;
@@ -1222,7 +1233,7 @@ namespace FreeLibSet.Forms.Diagnostics
       {
         string displayName = changeInfo.DisplayName;
         if (String.IsNullOrEmpty(displayName))
-          displayName = "[ Баз заголовка ]";
+          displayName = "[ Untitled ]";
         if (changeInfo.Changed)
           displayName = "(*) " + displayName;
         TreeNode node = nodes.Add(displayName);
@@ -1240,7 +1251,7 @@ namespace FreeLibSet.Forms.Diagnostics
             s = "null";
           else
             s = ci.OriginalValue.ToString();
-          TreeNode nodeSrc = node.Nodes.Add(null, "Исходное значение: " + s, "View");
+          TreeNode nodeSrc = node.Nodes.Add(null, "Original value: " + s, "View");
           nodeSrc.ImageKey = "EmptyImage"; // NodeSrc.Parent.ImageKey;
           nodeSrc.SelectedImageKey = "EmptyImage"; //NodeSrc.Parent.SelectedImageKey;
 
@@ -1248,7 +1259,7 @@ namespace FreeLibSet.Forms.Diagnostics
             s = "null";
           else
             s = ci.CurrentValue.ToString();
-          TreeNode nodeCurr = node.Nodes.Add(null, "Текущее значение : " + s, "View");
+          TreeNode nodeCurr = node.Nodes.Add(null, "CurrentValue : " + s, "View");
           nodeCurr.ImageKey = "EmptyImage"; //NodeCurr.Parent.ImageKey;
           nodeCurr.SelectedImageKey = "EmptyImage"; //NodeCurr.Parent.SelectedImageKey;
         }
@@ -1310,7 +1321,7 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       if (level > 10)
       {
-        TreeNode node = nodes.Add("[ Слишком большой уровень вложения ]");
+        TreeNode node = nodes.Add("[ Nested level is too high ]");
         node.ImageKey = "Error";
         node.SelectedImageKey = node.ImageKey;
         return;
@@ -1325,7 +1336,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
       if (baseProvider.Children.Count > 0)
       {
-        TreeNode grpNode = thisNode.Nodes.Add("Дочерние EFPBaseProvider (" + baseProvider.Children.Count.ToString() + ")");
+        TreeNode grpNode = thisNode.Nodes.Add("Child EFPBaseProvider (" + baseProvider.Children.Count.ToString() + ")");
         grpNode.ImageKey = "TreeViewClosedFolder";
         grpNode.SelectedImageKey = "TreeViewOpenFolder";
         foreach (EFPBaseProvider child in baseProvider.Children)
@@ -1611,7 +1622,7 @@ namespace FreeLibSet.Forms.Diagnostics
       using (Form frm = new Form())
       {
         if (String.IsNullOrEmpty(text))
-          frm.Text = "Отладочная информация";
+          frm.Text = "Debug info";
         else
           frm.Text = title;
         frm.ShowIcon = false;
@@ -1678,7 +1689,7 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       DebugParsingForm frm = new DebugParsingForm();
       if (String.IsNullOrEmpty(title))
-        frm.Text = "Парсинг";
+        frm.Text = "Parsing";
       else
         frm.Text = title;
 
@@ -2007,7 +2018,7 @@ namespace FreeLibSet.Forms.Diagnostics
           }
           catch (Exception e)
           {
-            args.WriteLine("Ошибка. " + e.Message);
+            args.WriteLine("Error. " + e.Message);
           }
           args.IndentLevel--;
         }

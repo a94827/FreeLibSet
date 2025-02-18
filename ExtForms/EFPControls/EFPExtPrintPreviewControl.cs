@@ -257,7 +257,7 @@ namespace FreeLibSet.Forms
       Color color = Color.FromArgb(196, 196, 64);
       Pen pen = new Pen(color);
       pen.Width = 0;
-      Font font = new Font("Arial", 10);
+      Font font = new Font(SystemFonts.DefaultFont.Name, 10);
       Brush brush = new SolidBrush(color);
       try
       {
@@ -346,7 +346,7 @@ namespace FreeLibSet.Forms
       DelayedPrint = false;
 
       ciFirstPage = new EFPCommandItem("View", "FirstPage");
-      ciFirstPage.MenuText = "Первая страница";
+      ciFirstPage.MenuText = Res.Cmd_Menu_View_FirstPage;
       ciFirstPage.ShortCut = Keys.Control | Keys.PageUp;
       ciFirstPage.Click += new EventHandler(FirstPageClick);
       ciFirstPage.GroupBegin = true;
@@ -354,7 +354,7 @@ namespace FreeLibSet.Forms
       Add(ciFirstPage);
 
       ciPrevPage = new EFPCommandItem("View", "PreviousPage");
-      ciPrevPage.MenuText = "Предыдущая страница";
+      ciPrevPage.MenuText = Res.Cmd_Menu_View_PrevPage;
       //ciPrevPage.ShortCut = Keys.PageUp;
       ciPrevPage.MenuRightText = EFPCommandItem.GetShortCutText(Keys.PageUp);
       ciPrevPage.Click += new EventHandler(PrevPageClick);
@@ -363,14 +363,14 @@ namespace FreeLibSet.Forms
 
       //ciGotoPage = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Goto);
       ciGotoPage = new EFPCommandItem("View", "GotoPage");
-      ciGotoPage.MenuText = "Перейти к странице ...";
+      ciGotoPage.MenuText = Res.Cmd_Menu_View_GotoPage;
       ciGotoPage.Click += new EventHandler(GotoPageClick);
-      ciGotoPage.StatusBarText = "Страница ??? из ???";
-      ciGotoPage.ToolTipText = "Отображаемая страница в просмотре";
+      ciGotoPage.StatusBarText = String.Format(Res.Cmd_Status_View_GotoPage_One, "???", "???");
+      ciGotoPage.ToolTipText = Res.Cmd_ToolTip_View_GotoPage;
       Add(ciGotoPage);
 
       ciNextPage = new EFPCommandItem("View", "NextPage");
-      ciNextPage.MenuText = "Следующая страница";
+      ciNextPage.MenuText = Res.Cmd_Menu_View_NextPage;
       //ciNextPage.ShortCut = Keys.PageDown;
       ciNextPage.MenuRightText = EFPCommandItem.GetShortCutText(Keys.PageDown);
       ciNextPage.Click += new EventHandler(NextPageClick);
@@ -378,7 +378,7 @@ namespace FreeLibSet.Forms
       Add(ciNextPage);
 
       ciLastPage = new EFPCommandItem("View", "LastPage");
-      ciLastPage.MenuText = "Последняя страница";
+      ciLastPage.MenuText = Res.Cmd_Menu_View_LastPage;
       ciLastPage.ShortCut = Keys.Control | Keys.PageDown;
       ciLastPage.Click += new EventHandler(LastPageClick);
       ciLastPage.ImageKey = "LastRight";
@@ -394,55 +394,54 @@ namespace FreeLibSet.Forms
       Add(ciFullScreen);
 
       ciScale = new EFPCommandItem("View", "ScaleMenu");
-      ciScale.MenuText = "Масштаб";
+      ciScale.MenuText = Res.Cmd_Menu_Scale;
       ciScale.ImageKey = "Scale";
-      ciScale.ToolTipText = "Масштаб";
       ciScale.GroupBegin = true;
       ciScale.GroupEnd = true;
       Add(ciScale);
 
-      ciSetScale = new EFPCommandItem("View", "Scale");
+      ciSetScale = new EFPCommandItem("View", "SetScale");
       ciSetScale.Parent = ciScale;
-      ciSetScale.MenuText = "Установить масштаб ...";
+      ciSetScale.MenuText = Res.Cmd_Menu_Scale_SetScale;
       ciSetScale.Click += new EventHandler(SetScaleClick);
       ciSetScale.ImageKey = "Scale";
-      ciSetScale.StatusBarText = "Масштаб ??? %";
-      ciSetScale.ToolTipText = "Масштаб просмотра изображения";
+      ciSetScale.StatusBarText = String.Format(Res.Cmd_Status_Scale_SetScale, "???");
+      ciSetScale.ToolTipText = Res.Cmd_ToolTip_Scale_SetScale;
       ciSetScale.GroupBegin = true;
       ciSetScale.GroupEnd = true;
       Add(ciSetScale);
 
       ciScale50 = new EFPCommandItem("View", "Scale50");
       ciScale50.Parent = ciScale;
-      ciScale50.MenuText = "Масштаб 50 %";
+      ciScale50.MenuText = Res.Cmd_Menu_Scale_50;
       ciScale50.ImageKey = "Scale50";
       ciScale50.GroupBegin = true;
-      ciScale50.ToolTipText = "Половинный размер";
+      ciScale50.ToolTipText = Res.Cmd_ToolTip_Scale_50;
       ciScale50.Click += new EventHandler(Scale50Click);
       Add(ciScale50);
 
       ciScale100 = new EFPCommandItem("View", "Scale100");
       ciScale100.Parent = ciScale;
-      ciScale100.MenuText = "Масштаб 100 %";
+      ciScale100.MenuText = Res.Cmd_Menu_Scale_100;
       ciScale100.ImageKey = "Scale100";
-      ciScale100.ToolTipText = "Один к одному";
+      ciScale100.ToolTipText = Res.Cmd_ToolTip_Scale_100;
       ciScale100.Click += new EventHandler(Scale100Click);
       Add(ciScale100);
 
       ciScale200 = new EFPCommandItem("View", "Scale200");
       ciScale200.Parent = ciScale;
-      ciScale200.MenuText = "Масштаб 200 %";
+      ciScale200.MenuText = Res.Cmd_Menu_Scale_200;
       ciScale200.ImageKey = "Scale200";
-      ciScale200.ToolTipText = "Двукратное увеличение";
+      ciScale200.ToolTipText = Res.Cmd_ToolTip_Scale_200;
       ciScale200.Click += new EventHandler(Scale200Click);
       Add(ciScale200);
 
       ciScale500 = new EFPCommandItem("View", "Scale500");
       ciScale500.Parent = ciScale;
-      ciScale500.MenuText = "Масштаб 500 %";
+      ciScale500.MenuText = Res.Cmd_Menu_Scale_500;
       ciScale500.ImageKey = "Scale500";
       ciScale500.GroupEnd = true;
-      ciScale500.ToolTipText = "Пятикратное увеличение";
+      ciScale500.ToolTipText = Res.Cmd_ToolTip_Scale_500;
       ciScale500.Click += new EventHandler(Scale500Click);
       Add(ciScale500);
 
@@ -450,56 +449,50 @@ namespace FreeLibSet.Forms
 
       ciZoomIn = new EFPCommandItem("View", "ZoomIn");
       ciZoomIn.Parent = ciScale;
-      ciZoomIn.MenuText = "Увеличить изображение";
+      ciZoomIn.MenuText = Res.Cmd_Menu_Scale_ZoomIn;
       ciZoomIn.ImageKey = "ZoomIn";
       ciZoomIn.GroupBegin = true;
-      ciZoomIn.ToolTipText = "Увеличить";
       ciZoomIn.ShortCut = Keys.Control | Keys.I;
       ciZoomIn.Click += new EventHandler(ZoomInClick);
       Add(ciZoomIn);
 
       ciZoomOut = new EFPCommandItem("View", "ZoomOut");
       ciZoomOut.Parent = ciScale;
-      ciZoomOut.MenuText = "Уменьшить изображение";
+      ciZoomOut.MenuText = Res.Cmd_Menu_Scale_ZoomOut;
       ciZoomOut.ImageKey = "ZoomOut";
       ciZoomOut.GroupEnd = true;
-      ciZoomOut.ToolTipText = "Уменьшить";
       ciZoomOut.ShortCut = Keys.Control | Keys.U;
       ciZoomOut.Click += new EventHandler(ZoomOutClick);
       Add(ciZoomOut);
 
       ciOnePage = new EFPCommandItem("View", "OnePage");
       ciOnePage.Parent = ciScale;
-      ciOnePage.MenuText = "Страница целиком";
+      ciOnePage.MenuText = Res.Cmd_Menu_Scale_OnePage;
       ciOnePage.ImageKey = "OnePage";
       ciOnePage.GroupBegin = true;
-      ciOnePage.ToolTipText = "Одна страница";
       ciOnePage.Click += new EventHandler(OnePageClick);
       Add(ciOnePage);
 
       ciTwoPages = new EFPCommandItem("View", "TwoPages");
       ciTwoPages.Parent = ciScale;
-      ciTwoPages.MenuText = "Две страницы рядом";
+      ciTwoPages.MenuText = Res.Cmd_Menu_Scale_TwoPages;
       ciTwoPages.ImageKey = "TwoPages";
-      ciTwoPages.ToolTipText = "Две страницы";
       ciTwoPages.Click += new EventHandler(TwoPagesClick);
       Add(ciTwoPages);
 
       ciAllPages = new EFPCommandItem("View", "AllPages");
       ciAllPages.Parent = ciScale;
-      ciAllPages.MenuText = "Все страницы";
+      ciAllPages.MenuText = Res.Cmd_Menu_Scale_AllPages;
       ciAllPages.ImageKey = "FourPages";
       ciAllPages.GroupEnd = true;
-      ciAllPages.ToolTipText = "Все страницы";
       ciAllPages.Click += new EventHandler(AllPagesClick);
       Add(ciAllPages);
 
       ciShowGrid = new EFPCommandItem("View", "ShowGrid");
-      ciShowGrid.MenuText = "Координатная сетка";
+      ciShowGrid.MenuText = Res.Cmd_Menu_View_ShowGrid;
       ciShowGrid.ImageKey = "ShowGrid";
       ciShowGrid.GroupBegin = true;
       ciShowGrid.GroupEnd = true;
-      ciShowGrid.ToolTipText = "Сетка";
       ciShowGrid.Click += new EventHandler(ShowGridClick);
       Add(ciShowGrid);
 
@@ -554,11 +547,12 @@ namespace FreeLibSet.Forms
 
     private void SetScaleClick(object sender, EventArgs args)
     {
+      EFPCommandItem ci = (EFPCommandItem)sender;
       int prc = (int)(Math.Round(ControlProvider.Control.Zoom * 100));
       IntInputDialog dlg = new IntInputDialog();
-      dlg.Title = "Масштаб";
+      dlg.Title = ci.MenuTextWithoutMnemonic;
       dlg.Value = prc;
-      dlg.Prompt = "Введите масштаб в процентах";
+      dlg.Prompt = Res.ExtPrintPreviewControl_Msg_PercentPrompt;
       dlg.Minimum = 10;
       dlg.Maximum = 1000;
       if (dlg.ShowDialog() == DialogResult.OK)
@@ -657,7 +651,7 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.PageCount == 0)
       {
-        EFPApp.ShowTempMessage("Нет документа");
+        EFPApp.ShowTempMessage(Res.ExtPrintPreviewControl_Err_NoDoc);
         return;
       }
       ControlProvider.Control.StartPage = 0;
@@ -667,7 +661,7 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.PageCount == 0)
       {
-        EFPApp.ShowTempMessage("Нет документа");
+        EFPApp.ShowTempMessage(Res.ExtPrintPreviewControl_Err_NoDoc);
         return;
       }
       int p = ControlProvider.Control.StartPage - ControlProvider.Control.Rows * ControlProvider.Control.Columns;
@@ -680,7 +674,7 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.PageCount == 0)
       {
-        EFPApp.ShowTempMessage("Нет документа");
+        EFPApp.ShowTempMessage(Res.ExtPrintPreviewControl_Err_NoDoc);
         return;
       }
       int p = ControlProvider.Control.StartPage + ControlProvider.Control.Rows * ControlProvider.Control.Columns;
@@ -691,7 +685,7 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.PageCount == 0)
       {
-        EFPApp.ShowTempMessage("Нет документа");
+        EFPApp.ShowTempMessage(Res.ExtPrintPreviewControl_Err_NoDoc);
         return;
       }
       int p = ControlProvider.PageCount - 1;
@@ -700,15 +694,16 @@ namespace FreeLibSet.Forms
 
     private void GotoPageClick(object sender, EventArgs args)
     {
+      EFPCommandItem ci = (EFPCommandItem)sender;
       if (ControlProvider.PageCount == 0)
       {
-        EFPApp.ShowTempMessage("Нет документа");
+        EFPApp.ShowTempMessage(Res.ExtPrintPreviewControl_Err_NoDoc);
         return;
       }
       int p = ControlProvider.Control.StartPage + 1;
       IntInputDialog dlg = new IntInputDialog();
-      dlg.Title = "Перейти к странице";
-      dlg.Prompt = "Введите номер страницы";
+      dlg.Title = ci.MenuTextWithoutMnemonic;
+      dlg.Prompt = Res.ExtPrintPreviewControl_Msg_PagePrompt;
       dlg.Minimum = 1;
       dlg.Maximum = ControlProvider.PageCount;
       dlg.Increment = 1;
@@ -867,15 +862,16 @@ namespace FreeLibSet.Forms
       if (lastPage > ControlProvider.PageCount)
         lastPage = ControlProvider.PageCount;
 
+
       string pageStatusText;
       if (ControlProvider.PageCount == 0)
-        pageStatusText = "Нет страниц";
+        pageStatusText = Res.Cmd_Status_View_GotoPage_None;
       else
       {
         if (lastPage == firstPage)
-          pageStatusText = "Страница " + firstPage.ToString() + " из " + ControlProvider.PageCount.ToString();
+          pageStatusText = String.Format(Res.Cmd_Status_View_GotoPage_One, firstPage, ControlProvider.PageCount);
         else
-          pageStatusText = "Страницы " + firstPage.ToString() + "-" + lastPage.ToString() + " из " + ControlProvider.PageCount.ToString();
+          pageStatusText = String.Format(Res.Cmd_Status_View_GotoPage_Range, firstPage, lastPage, ControlProvider.PageCount);
       }
       ciGotoPage.StatusBarText = pageStatusText;
       ciGotoPage.MenuRightText = (ControlProvider.Control.StartPage + 1).ToString();
@@ -883,8 +879,8 @@ namespace FreeLibSet.Forms
       int prc = (int)(Math.Round(ControlProvider.Control.Zoom * 100.0));
 
       ciSetScale.MenuRightText = prc.ToString() + " %";
-      string ScaleStatusText = "Масштаб " + prc.ToString() + " %";
-      ciSetScale.StatusBarText = ScaleStatusText;
+      string scaleStatusText = String.Format(Res.Cmd_Status_Scale_SetScale, prc);
+      ciSetScale.StatusBarText = scaleStatusText;
 
       bool isPrc = !ControlProvider.Control.AutoZoom; // В Mono свойство Zoom остается установленным при AutoZoom=true. Если не проверять, то будут одновременно помечены и кнопки масштаба, и количества страниц
 

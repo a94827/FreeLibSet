@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 // Реализация вычисления произвольных выражений
 // Эти классы могут быть сериализуемыми, если обработчик может быть передан, или, если используется производный класс
@@ -114,7 +115,7 @@ namespace FreeLibSet.DependedValues
     protected virtual TResult Calculate()
     {
       if (_Function == null)
-        throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
+        throw new NullReferenceException(Res.DepExpr_Err_Calculate);
       return _Function(_Arg.Value);
     }
 
@@ -256,7 +257,7 @@ namespace FreeLibSet.DependedValues
     protected virtual TResult Calculate()
     {
       if (_Function == null)
-        throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
+        throw new NullReferenceException(Res.DepExpr_Err_Calculate);
       return _Function(_Arg1.Value, _Arg2.Value);
     }
 
@@ -431,7 +432,7 @@ namespace FreeLibSet.DependedValues
     protected virtual TResult Calculate()
     {
       if (_Function == null)
-        throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
+        throw new NullReferenceException(Res.DepExpr_Err_Calculate);
       return _Function(_Arg1.Value, _Arg2.Value, _Arg3.Value);
     }
 
@@ -553,7 +554,7 @@ namespace FreeLibSet.DependedValues
     protected virtual TResult Calculate()
     {
       if (_Function == null)
-        throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
+        throw new NullReferenceException(Res.DepExpr_Err_Calculate);
       TArg[] a = new TArg[_Args.Length];
       for (int i = 0; i < _Args.Length; i++)
         a[i] = _Args[i].Value;
@@ -674,7 +675,7 @@ namespace FreeLibSet.DependedValues
     protected virtual TResult Calculate()
     {
       if (_Function == null)
-        throw new NullReferenceException("Метод Calculate должен быть переопределен, если обработчик Function не был задан в конструкторе");
+        throw new NullReferenceException(Res.DepExpr_Err_Calculate);
       object[] a = new object[_Args.Length];
       for (int i = 0; i < _Args.Length; i++)
         a[i] = _Args[i].Value;

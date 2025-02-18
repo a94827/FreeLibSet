@@ -447,7 +447,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -568,7 +568,7 @@ namespace FreeLibSet.Data
             return typeof(byte[]);
 
           default:
-            throw new NotSupportedException("Неизвестный тип столбца " + ColumnType.ToString());
+            throw new NotSupportedException("Unknown column type " + ColumnType.ToString());
         }
       }
     }
@@ -594,11 +594,11 @@ namespace FreeLibSet.Data
     public DataColumn CreateDataColumn(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       Type t = DataType;
       if (t == null)
-        throw new InvalidOperationException("Не удалось определить тип данных для столбца " + ToString());
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DataType");
       DataColumn column = new DataColumn(columnName, t);
       column.AllowDBNull = Nullable;
       if (DefaultValue != null)

@@ -88,13 +88,13 @@ namespace FreeLibSet.UICore
       if (dv == null)
         throw new ArgumentNullException("dv");
       if (String.IsNullOrEmpty(orderColumnName))
-        throw new ArgumentNullException("orderColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("orderColumnName");
 #endif
 
       _DV = dv;
       _OrderColumnPos = _DV.Table.Columns.IndexOf(orderColumnName);
       if (_OrderColumnPos < 0)
-        throw new ArgumentException("Таблица " + dv.Table.TableName + " не содержит столбца с именем \"" + orderColumnName + "\"", "orderColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("orderColumnName", dv.Table, orderColumnName);
     }
 
     #endregion
@@ -386,13 +386,13 @@ namespace FreeLibSet.UICore
       if (model == null)
         throw new ArgumentNullException("model");
       if (String.IsNullOrEmpty(orderColumnName))
-        throw new ArgumentNullException("orderColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("orderColumnName");
 #endif
 
       _Model = model;
       _OrderColumnPos = model.Table.Columns.IndexOf(orderColumnName);
       if (_OrderColumnPos < 0)
-        throw new ArgumentException("Таблица " + model.Table.TableName + " не содержит столбца с именем \"" + orderColumnName + "\"", "orderColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("orderColumnName", model.Table, orderColumnName);
     }
 
     #endregion

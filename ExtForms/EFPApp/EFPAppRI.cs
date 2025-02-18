@@ -31,7 +31,7 @@ namespace FreeLibSet.Forms.RI
 {
   /// <summary>
   /// Реализация удаленного пользовательского интерфейса.
-  /// Вызовы методов интерфейса должны выполняться в основном потоке приложения EFPApp
+  /// Вызовы методов интерфейса должны выполняться в основном потоке приложения <see cref="EFPApp.MainThread"/>.
   /// </summary>
   internal sealed class EFPAppRemoteInterface : MarshalByRefObject, IRemoteInterface
   {
@@ -107,7 +107,7 @@ namespace FreeLibSet.Forms.RI
     /// <param name="text">Текст сообщения</param>
     public void ErrorMessageBox(string text)
     {
-      MessageBox(text, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      MessageBox(text, Res.MessageBox_Title_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ namespace FreeLibSet.Forms.RI
     /// <param name="text">Текст сообщения</param>
     public void WarningMessageBox(string text)
     {
-      MessageBox(text, "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+      MessageBox(text, Res.MessageBox_Title_Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
 
     /// <summary>
@@ -183,29 +183,28 @@ namespace FreeLibSet.Forms.RI
   #region Интерфейсы
 
   /// <summary>
-  /// Интерфейс взаимодействия RIItem и "настоящего" управляющего элемента
+  /// Интерфейс взаимодействия <see cref="RIItem"/> и "настоящего" управляющего элемента
   /// </summary>
   public interface IEFPAppRIItem
   {
     /// <summary>
-    /// Запись значений из RIItem в управляющий элемент
-    /// Отвечает за вызов метода дочерних элементов
+    /// Запись значений из <see cref="RIItem"/> в управляющий элемент.
+    /// Отвечает за вызов метода дочерних элементов.
     /// </summary>
     void WriteValues();
 
     /// <summary>
-    /// Чтение значений из управляющего элемента в RIItem при нажатии кнопки "ОК"
-    /// Отвечает за вызов метода дочерних элементов
+    /// Чтение значений из управляющего элемента в <see cref="RIItem"/> при нажатии кнопки "ОК".
+    /// Отвечает за вызов метода дочерних элементов.
     /// </summary>
     void ReadValues();
   }
 
   /// <summary>
-  /// Расширяет IEFPAppRIItem возможностью проверки значений
+  /// Расширяет <see cref="IEFPAppRIItem"/> возможностью проверки значений
   /// </summary>
   public interface IEFPAppRIControlItem : IEFPAppRIItem, IEFPControl
   {
-
   }
 
   /// <summary>
@@ -232,8 +231,8 @@ namespace FreeLibSet.Forms.RI
   }
 
   /// <summary>
-  /// Интерфейс создателя управляющего элемента
-  /// Объекты, поддерживающие интерфейс, хранятся в коллекции EFPApp.RICreators
+  /// Интерфейс создателя управляющего элемента.
+  /// Объекты, поддерживающие интерфейс, хранятся в коллекции <see cref="EFPApp.RICreators"/>.
   /// </summary>
   public interface IEFPAppRICreator
   {
@@ -241,7 +240,7 @@ namespace FreeLibSet.Forms.RI
     /// Создать управляющий элемент 
     /// </summary>
     /// <param name="item">Сериализуемый объект, полученный с сервера</param>
-    /// <param name="baseProvider">Базовый провайдер для создания EFPControl</param>
+    /// <param name="baseProvider">Базовый провайдер для создания <see cref="EFPControlBase"/></param>
     /// <returns>Созданный переходник, если данный объект</returns>
     IEFPAppRIItem Create(RIItem item, EFPBaseProvider baseProvider);
   }
@@ -249,7 +248,7 @@ namespace FreeLibSet.Forms.RI
   #endregion
 
   /// <summary>
-  /// Аргумент события EFPAppRICreators.BeforeCreate
+  /// Аргумент события <see cref="EFPAppRICreators.BeforeCreate"/>
   /// </summary>
   public sealed class EFPAppRIBeforeCreateEventArgs : EventArgs
   {
@@ -270,17 +269,17 @@ namespace FreeLibSet.Forms.RI
     /// Не может быть null.
     /// </summary>
     public RIItem RIItem { get { return _RIItem; } }
-    private RIItem _RIItem;
+    private readonly RIItem _RIItem;
 
     /// <summary>
     /// Базовый провайдер, если создается управляющий элемент.
     /// Null, если создается блок диалога.
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private EFPBaseProvider _BaseProvider;
+    private readonly EFPBaseProvider _BaseProvider;
 
     /// <summary>
-    /// Сюда может быть помещена ссылка на созданный объект. В этом случае не будут вызываться методы IEFPAppRICreator.Create().
+    /// Сюда может быть помещена ссылка на созданный объект. В этом случае не будут вызываться методы <see cref="IEFPAppRICreator.Create(RIItem, EFPBaseProvider)"/>.
     /// </summary>
     public IEFPAppRIItem Result { get { return _Result; } set { _Result = value; } }
     private IEFPAppRIItem _Result;
@@ -289,22 +288,22 @@ namespace FreeLibSet.Forms.RI
   }
 
   /// <summary>
-  /// Делегат события EFPAppRICreators.BeforeCreate
+  /// Делегат события <see cref="EFPAppRICreators.BeforeCreate"/>
   /// </summary>
-  /// <param name="sender">Ссылка на объект EFPAppRICreators</param>
+  /// <param name="sender">Ссылка на объект <see cref="EFPAppRICreators"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void EFPAppRIBeforeCreateEventHandler(object sender, EFPAppRIBeforeCreateEventArgs args);
 
   /// <summary>
-  /// Реализация свойства EFPApp.RICreators
+  /// Реализация свойства <see cref="EFPApp.RICreators"/>
   /// </summary>
   public sealed class EFPAppRICreators : List<IEFPAppRICreator>
   {
-    #region Метод Create
+    #region Метод Create()
 
     /// <summary>
-    /// Создание IEFPAppRIItem для выбранной RIItem.
-    /// Если в списке нет создателя для данного типа класса, генерируется исключение
+    /// Создание <see cref="IEFPAppRIItem"/> для выбранной <see cref="RIItem"/>.
+    /// Если в списке нет создателя для данного типа класса, генерируется исключение.
     /// </summary>
     /// <param name="item">Описатель объект удаленного интерфейса</param>
     /// <param name="baseProvider">Провайдер для подключения</param>
@@ -332,14 +331,14 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      throw new ArgumentException("В списке EFPApp.RICreators не один из объектов не смог создать управляющий элемент для элемента удаленного интерфейса типа " + item.GetType().ToString());
+      throw new ArgumentException(String.Format(Res.EFPAppRI_Arg_NoCreator, item.GetType()), "item");
     }
 
     /// <summary>
     /// Событие вызывается при создании любого элемента удаленного пользовательского интерфейса.
-    /// Пользовательский обработчик может, например, проверить аргумент RIItem и, при необходимости, добавить
-    /// IEFPAppRICreator в список, если используется отложенная загрузка библиотек.
-    /// Также, обработчик может создать элемент в обход списка IEFPAppRICreator.
+    /// Пользовательский обработчик может, например, проверить аргумент <see cref="RIItem"/> и, при необходимости, добавить
+    /// <see cref="IEFPAppRICreator"/> в список, если используется отложенная загрузка библиотек.
+    /// Также, обработчик может создать элемент в обход списка <see cref="IEFPAppRICreator"/>.
     /// </summary>
     public event EFPAppRIBeforeCreateEventHandler BeforeCreate;
 
@@ -357,7 +356,7 @@ namespace FreeLibSet.Forms.RI
 
       IEFPAppRIControlItem efpControl = efpItem as IEFPAppRIControlItem;
       if (efpControl == null)
-        throw new InvalidOperationException("Класс " + efpItem.GetType().ToString() + " не реализует интерфейс IEFPAppRIItemWithValidating для проверки корректности введенных значений. Нельзя использовать списки валидаторов " + riItem.GetType().ToString() + ".Validators");
+        throw ExceptionFactory.Inconvertible(efpControl, typeof(IEFPAppRIControlItem));
 
       efpControl.Validators.AddRange(riControl.Validators);
     }
@@ -377,7 +376,7 @@ namespace FreeLibSet.Forms.RI
       if (item is Dialog)
       {
         if (baseProvider != null)
-          throw new ArgumentException("Для диалога BaseProvider не задается");
+          throw new ArgumentException(Res.EFPAppRI_Arg_BaseProviderForDialog);
         return new DialogItem((Dialog)item);
       }
       if (item is Band)
@@ -536,7 +535,7 @@ namespace FreeLibSet.Forms.RI
           return;
         }
 
-        throw new InvalidOperationException("Элемент \"" + item.ToString() + "\" нельзя добавить к полосе управляющих элементов");
+        throw new InvalidOperationException(String.Format(Res.EFPAppRI_Err_CannotAddToBandPanel, item.ToString()));
       }
 
       #endregion
@@ -553,7 +552,7 @@ namespace FreeLibSet.Forms.RI
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Ошибка записи значения");
+            EFPApp.ShowException(e, Res.EFPAppRI_ErrTitle_WriteValues);
           }
         }
       }
@@ -586,10 +585,10 @@ namespace FreeLibSet.Forms.RI
       #region Свойства
 
       public string LabelText { get { return _LabelText; } }
-      private string _LabelText;
+      private readonly string _LabelText;
 
       public IEFPAppRIItem ControlItem { get { return _ControlItem; } }
-      private IEFPAppRIItem _ControlItem;
+      private readonly IEFPAppRIItem _ControlItem;
 
       #endregion
 
@@ -646,9 +645,9 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      EFPControlBase _ControlProvider;
+      private readonly EFPControlBase _ControlProvider;
 
-      Control _RIItem;
+      private readonly Control _RIItem;
 
       #endregion
 
@@ -698,10 +697,10 @@ namespace FreeLibSet.Forms.RI
     }
 
     /// <summary>
-    /// Этот метод должен вызываться в конструкторе класса, реализующего интерфейс IEFPAppRIItem для провайдера управляющего элемента.
+    /// Этот метод должен вызываться в конструкторе класса, реализующего интерфейс <see cref="IEFPAppRIItem"/> для провайдера управляющего элемента.
     /// Если используется иерархия из нескольких классов, то метод должен вызываться только один раз.
     /// 
-    /// Реализует удаленную проверку состояния формы, обеспечивает свойство Control.EnabledEx.
+    /// Реализует удаленную проверку состояния формы, обеспечивает свойство <see cref="EFPControlBase.EnabledEx"/>.
     /// </summary>
     /// <param name="controlProvider">Расширение провайдера управляющего элемента, в котором реализуется интерфейс IEFPAppRIItem</param>
     /// <param name="riItem">Связанный объект удаленного интерфейса</param>
@@ -711,7 +710,7 @@ namespace FreeLibSet.Forms.RI
         throw new ArgumentNullException("controlProvider");
 
       if (!(controlProvider is IEFPAppRIItem))
-        throw new ArgumentException("Класс " + controlProvider.GetType().ToString() + " не реализует интерфейс IEFPAppRIItem", "controlProvider");
+        throw ExceptionFactory.Inconvertible(controlProvider, typeof(IEFPAppRIItem));
 
       if (riItem == null)
         throw new ArgumentNullException("riItem");
@@ -852,7 +851,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.TextBox _RIItem;
+      private readonly FreeLibSet.RI.TextBox _RIItem;
 
       #endregion
 
@@ -906,7 +905,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.MaskedTextBox _RIItem;
+      private readonly FreeLibSet.RI.MaskedTextBox _RIItem;
 
       #endregion
 
@@ -950,7 +949,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.PasswordBox _RIItem;
+      private readonly FreeLibSet.RI.PasswordBox _RIItem;
 
       #endregion
 
@@ -985,7 +984,7 @@ namespace FreeLibSet.Forms.RI
         InitEFPNumEditBox<Int32>(this, riItem);
       }
 
-      FreeLibSet.RI.IntEditBox _RIItem;
+      private readonly FreeLibSet.RI.IntEditBox _RIItem;
 
       #endregion
 
@@ -1055,7 +1054,7 @@ namespace FreeLibSet.Forms.RI
         InitEFPNumEditBox<Single>(this, riItem);
       }
 
-      FreeLibSet.RI.SingleEditBox _RIItem;
+      private readonly FreeLibSet.RI.SingleEditBox _RIItem;
 
       #endregion
 
@@ -1086,7 +1085,7 @@ namespace FreeLibSet.Forms.RI
         InitEFPNumEditBox<Double>(this, riItem);
       }
 
-      FreeLibSet.RI.DoubleEditBox _RIItem;
+      private readonly FreeLibSet.RI.DoubleEditBox _RIItem;
 
       #endregion
 
@@ -1117,7 +1116,7 @@ namespace FreeLibSet.Forms.RI
         InitEFPNumEditBox<Decimal>(this, riItem);
       }
 
-      FreeLibSet.RI.DecimalEditBox _RIItem;
+      private readonly FreeLibSet.RI.DecimalEditBox _RIItem;
 
       #endregion
 
@@ -1172,7 +1171,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.CheckBox _RIItem;
+      private readonly FreeLibSet.RI.CheckBox _RIItem;
 
       #endregion
 
@@ -1229,7 +1228,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.RadioGroup _RIItem;
+      private readonly FreeLibSet.RI.RadioGroup _RIItem;
 
       #endregion
 
@@ -1314,7 +1313,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.DateTimeBox _RIItem;
+      private readonly FreeLibSet.RI.DateTimeBox _RIItem;
 
       #endregion
 
@@ -1391,7 +1390,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.DateRangeBox _RIItem;
+      private readonly FreeLibSet.RI.DateRangeBox _RIItem;
 
       #endregion
 
@@ -1466,7 +1465,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.DateOrRangeBox _RIItem;
+      private readonly FreeLibSet.RI.DateOrRangeBox _RIItem;
 
       #endregion
 
@@ -1532,7 +1531,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.YearMonthBox _RIItem;
+      private readonly FreeLibSet.RI.YearMonthBox _RIItem;
 
       #endregion
 
@@ -1619,7 +1618,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.YearMonthRangeBox _RIItem;
+      private readonly FreeLibSet.RI.YearMonthRangeBox _RIItem;
 
       #endregion
 
@@ -1667,7 +1666,7 @@ namespace FreeLibSet.Forms.RI
             base.Control.ForeColor = System.Drawing.SystemColors.ControlText;
             break;
           default:
-            throw new BugException("Неизвестное значение свойства ColorType=" + riItem.ColorType.ToString());
+            throw new BugException("Unknown ColorType=" + riItem.ColorType.ToString());
         }
       }
 
@@ -1726,7 +1725,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.ListComboBox _RIItem;
+      private readonly FreeLibSet.RI.ListComboBox _RIItem;
 
       #endregion
 
@@ -1773,7 +1772,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.TextComboBox _RIItem;
+      private readonly FreeLibSet.RI.TextComboBox _RIItem;
 
       #endregion
 
@@ -1836,7 +1835,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.CsvCodesTextBox _RIItem;
+      private readonly FreeLibSet.RI.CsvCodesTextBox _RIItem;
 
       #endregion
 
@@ -1900,7 +1899,7 @@ namespace FreeLibSet.Forms.RI
         }
       }
 
-      FreeLibSet.RI.CsvCodesComboBox _RIItem;
+      private readonly FreeLibSet.RI.CsvCodesComboBox _RIItem;
 
       #endregion
 
@@ -2075,9 +2074,9 @@ namespace FreeLibSet.Forms.RI
         _TheButton.EnabledEx = TheTextBox.EditableEx; // 25.11.2021
       }
 
-      EFPFolderBrowserButton _TheButton;
+      private readonly EFPFolderBrowserButton _TheButton;
 
-      FreeLibSet.RI.FolderBrowserTextBox _RIItem;
+      private readonly FreeLibSet.RI.FolderBrowserTextBox _RIItem;
 
       #endregion
 
@@ -2136,9 +2135,9 @@ namespace FreeLibSet.Forms.RI
         _TheButton.EnabledEx = TheTextBox.EditableEx; // 25.11.2021
       }
 
-      EFPFileDialogButton _TheButton;
+      private readonly EFPFileDialogButton _TheButton;
 
-      FreeLibSet.RI.FileTextBox _RIItem;
+      private readonly FreeLibSet.RI.FileTextBox _RIItem;
 
       #endregion
 
@@ -2258,8 +2257,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FolderBrowserDialog _RIDialog;
-      private System.Windows.Forms.FolderBrowserDialog _WinDlg;
+      private readonly FolderBrowserDialog _RIDialog;
+      private readonly System.Windows.Forms.FolderBrowserDialog _WinDlg;
 
       #endregion
 
@@ -2307,8 +2306,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FileDialog _RIDialog;
-      private System.Windows.Forms.FileDialog _WinDlg;
+      private readonly FileDialog _RIDialog;
+      private readonly System.Windows.Forms.FileDialog _WinDlg;
 
       #endregion
 
@@ -2364,8 +2363,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.TextInputDialog _RIDialog;
-      private FreeLibSet.Forms.TextInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.TextInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.TextInputDialog _WinDlg;
 
       #endregion
 
@@ -2417,8 +2416,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.PasswordInputDialog _RIDialog;
-      private FreeLibSet.Forms.TextInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.PasswordInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.TextInputDialog _WinDlg;
 
       #endregion
 
@@ -2467,8 +2466,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.TextComboInputDialog _RIDialog;
-      private FreeLibSet.Forms.TextComboInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.TextComboInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.TextComboInputDialog _WinDlg;
 
       #endregion
 
@@ -2507,8 +2506,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.IntInputDialog _RIDialog;
-      private FreeLibSet.Forms.IntInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.IntInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.IntInputDialog _WinDlg;
 
       #endregion
 
@@ -2567,8 +2566,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.SingleInputDialog _RIDialog;
-      private FreeLibSet.Forms.SingleInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.SingleInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.SingleInputDialog _WinDlg;
 
       #endregion
 
@@ -2607,8 +2606,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.DoubleInputDialog _RIDialog;
-      private FreeLibSet.Forms.DoubleInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.DoubleInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.DoubleInputDialog _WinDlg;
 
       #endregion
 
@@ -2647,8 +2646,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.DecimalInputDialog _RIDialog;
-      private FreeLibSet.Forms.DecimalInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.DecimalInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.DecimalInputDialog _WinDlg;
 
       #endregion
 
@@ -2705,8 +2704,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.DateTimeInputDialog _RIDialog;
-      private FreeLibSet.Forms.DateTimeInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.DateTimeInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.DateTimeInputDialog _WinDlg;
 
       #endregion
 
@@ -2757,8 +2756,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.MultiLineTextInputDialog _RIDialog;
-      private FreeLibSet.Forms.MultiLineTextInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.MultiLineTextInputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.MultiLineTextInputDialog _WinDlg;
 
       #endregion
 
@@ -2805,8 +2804,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.IntRangeDialog _RIDialog;
-      private FreeLibSet.Forms.IntRangeDialog _WinDlg;
+      private readonly FreeLibSet.RI.IntRangeDialog _RIDialog;
+      private readonly FreeLibSet.Forms.IntRangeDialog _WinDlg;
 
       #endregion
 
@@ -2857,8 +2856,6 @@ namespace FreeLibSet.Forms.RI
         winDlg.Validators.AddRange(riDialog.Validators);
     }
 
-
-
     private class SingleRangeDialogItem : IEFPAppRIStandardDialogItem
     {
       #region Конструктор
@@ -2881,8 +2878,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.SingleRangeDialog _RIDialog;
-      private FreeLibSet.Forms.SingleRangeDialog _WinDlg;
+      private readonly FreeLibSet.RI.SingleRangeDialog _RIDialog;
+      private readonly FreeLibSet.Forms.SingleRangeDialog _WinDlg;
 
       #endregion
 
@@ -2930,8 +2927,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.DoubleRangeDialog _RIDialog;
-      private FreeLibSet.Forms.DoubleRangeDialog _WinDlg;
+      private readonly FreeLibSet.RI.DoubleRangeDialog _RIDialog;
+      private readonly FreeLibSet.Forms.DoubleRangeDialog _WinDlg;
 
       #endregion
 
@@ -2979,8 +2976,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.DecimalRangeDialog _RIDialog;
-      private FreeLibSet.Forms.DecimalRangeDialog _WinDlg;
+      private readonly FreeLibSet.RI.DecimalRangeDialog _RIDialog;
+      private readonly FreeLibSet.Forms.DecimalRangeDialog _WinDlg;
 
       #endregion
 
@@ -3039,8 +3036,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.DateRangeDialog _RIDialog;
-      private FreeLibSet.Forms.DateRangeDialog _WinDlg;
+      private readonly FreeLibSet.RI.DateRangeDialog _RIDialog;
+      private readonly FreeLibSet.Forms.DateRangeDialog _WinDlg;
 
       #endregion
 
@@ -3093,8 +3090,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.ListSelectDialog _RIDialog;
-      private FreeLibSet.Forms.ListSelectDialog _WinDlg;
+      private readonly FreeLibSet.RI.ListSelectDialog _RIDialog;
+      private readonly FreeLibSet.Forms.ListSelectDialog _WinDlg;
 
       #endregion
 
@@ -3139,8 +3136,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.RadioSelectDialog _RIDialog;
-      private FreeLibSet.Forms.RadioSelectDialog _WinDlg;
+      private readonly FreeLibSet.RI.RadioSelectDialog _RIDialog;
+      private readonly FreeLibSet.Forms.RadioSelectDialog _WinDlg;
 
       #endregion
 
@@ -3188,8 +3185,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private FreeLibSet.RI.InputDataGridDialog _RIDialog;
-      private FreeLibSet.Forms.InputDataGridDialog _WinDlg;
+      private readonly FreeLibSet.RI.InputDataGridDialog _RIDialog;
+      private readonly FreeLibSet.Forms.InputDataGridDialog _WinDlg;
 
       #endregion
 

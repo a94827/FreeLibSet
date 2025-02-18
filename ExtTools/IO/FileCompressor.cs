@@ -120,8 +120,8 @@ namespace FreeLibSet.IO
     /// Без заставки действие нельзя прервать.
     /// Если процентный индикатор должен управляться внешним кодом, а не <see cref="FileCompressor"/>, установите свойство <see cref="UseSplashPercent"/>=false.
     /// </summary>
-    public ISplash Splash { get { return _Splash; } set { _Splash = value; } }
-    private ISplash _Splash;
+    public ISimpleSplash Splash { get { return _Splash; } set { _Splash = value; } }
+    private ISimpleSplash _Splash;
 
     /// <summary>
     /// Если true (по умолчанию), то в заставке <see cref="Splash"/> будет устанавливаться процентный индикатор для отображения прогресса.
@@ -182,7 +182,7 @@ namespace FreeLibSet.IO
       path = FindExeFile("7za.exe");
       if (!path.IsEmpty)
         return new CmdLine7zArchiveHandler(path.FileName);
-      throw new FileNotFoundException("Не найден архиватор командной строки 7z.exe");
+      throw new FileNotFoundException(String.Format(Res.FileCompressor_Err_ArchiverNotFound, "7z.exe"));
     }
 
     private IArchiveHandler CreateCommandLineLinux()
@@ -191,7 +191,7 @@ namespace FreeLibSet.IO
       path = FindExeFile("7z");
       if (!path.IsEmpty)
         return new CmdLine7zArchiveHandler(path.FileName);
-      throw new FileNotFoundException("Не найден архиватор 7z");
+      throw new FileNotFoundException(String.Format(Res.FileCompressor_Err_ArchiverNotFound, "7z"));
     }
 
     private static AbsPath FindExeFile(string fileName)
@@ -236,11 +236,11 @@ namespace FreeLibSet.IO
     public void Compress()
     {
       if (ArchiveFileName.IsEmpty)
-        throw new NullReferenceException("Не задано имя файла архива");
+        throw new NullReferenceException(Res.FileCompressor_Err_ArchiveFileNameIsEmpty);
       if (FileDirectory.IsEmpty)
-        throw new NullReferenceException("Не задано имя каталога сжимаемых файлов");
+        throw new NullReferenceException(Res.FileCompressor_Err_SrcDirNameIsEmpty);
       if (!Directory.Exists(FileDirectory.Path))
-        throw new FileNotFoundException("Каталог сжимаемых файлов \"" + FileDirectory.Path + "\" не найден");
+        throw new FileNotFoundException(String.Format(Res.FileCompressor_Err_SrcDirNotFound, FileDirectory.Path));
 
       if (ArchiveType == FileComressorArchiveType.Auto)
         ArchiveType = GetArchiveTypeFromFileName(ArchiveFileName);
@@ -257,7 +257,7 @@ namespace FreeLibSet.IO
     {
       TestArchiveFileExists();
       if (FileDirectory.IsEmpty)
-        throw new NullReferenceException("Не задано имя каталога для распаковки");
+        throw new NullReferenceException(Res.FileCompressor_Err_DstDirNameIsEmpty);
       FileTools.ForceDirs(FileDirectory);
 
       CreateHandler().Decompress(this);
@@ -277,13 +277,13 @@ namespace FreeLibSet.IO
     private void TestArchiveFileExists()
     {
       if (ArchiveFileName.IsEmpty)
-        throw new NullReferenceException("Не задано имя файла архива");
+        throw new NullReferenceException(Res.FileCompressor_Err_ArchiveFileNameIsEmpty);
 
       string sPath1 = ArchiveFileName.Path;
       string sPath2 = ArchiveFileName.Path + ".001"; // 17.12.2014
       if (File.Exists(sPath1) || File.Exists(sPath2))
         return;
-      throw new FileNotFoundException("Архив \"" + ArchiveFileName.Path + "\" не найден");
+      throw new FileNotFoundException(String.Format(Res.FileCompressor_Err_ArchiveNotFound, ArchiveFileName.Path));
     }
 
     #endregion
@@ -318,7 +318,7 @@ namespace FreeLibSet.IO
         public string IntPhaseText;
 
         // Проблема.
-        // Прерывание ппроцесса сжатия / распаковки возможно только при переходе к следующему файлу
+        // Прерывание процесса сжатия / распаковки возможно только при переходе к следующему файлу
         // Когда пользователь устанавливает ISplash.Cancelled=true, устанавливается IntCancelled=true,
         // а у самого индикатора свойство ISplash.Cancelled сбрасывается обратно в false, вместе с AllowCancel
         // В текущую фазу добавляет текст о необходимости подождать
@@ -359,10 +359,10 @@ namespace FreeLibSet.IO
             if (IntCancelled)
             {
               args.Cancel = true;
-              IntPhaseText = "Работа с архивом сейчас будет прервана";
+              IntPhaseText = Res.FileCompressor_Phase_Cancelling;
             }
             else
-              IntPhaseText = actionTitle + " " + Path.GetFileName(args.FileName);
+              IntPhaseText = String.Format(Res.FileCompressor_Phase_FileAction, actionTitle, Path.GetFileName(args.FileName));
           }
         }
 
@@ -373,10 +373,10 @@ namespace FreeLibSet.IO
             if (IntCancelled)
             {
               args.Cancel = true;
-              IntPhaseText = "Работа с архивом сейчас будет прервана";
+              IntPhaseText = Res.FileCompressor_Phase_Cancelling;
             }
             else
-              IntPhaseText = actionTitle + " " + Path.GetFileName(args.FileInfo.FileName);
+              IntPhaseText = String.Format(Res.FileCompressor_Phase_FileAction, actionTitle, Path.GetFileName(args.FileInfo.FileName));
           }
         }
 
@@ -407,9 +407,9 @@ namespace FreeLibSet.IO
                 cmp.ArchiveFormat = SevenZip.OutArchiveFormat.Zip;
                 break;
               case FileComressorArchiveType.Unknown:
-                throw new InvalidOperationException("Не удалось определить тип архива по имени файла");
+                throw new InvalidOperationException(Res.FileCompressor_Err_UnknownFileExtension);
               default:
-                throw new InvalidOperationException("Неизвестный формат архива: " + Caller.ArchiveType.ToString());
+                throw new BugException("Unknown archive format: " + Caller.ArchiveType.ToString());
             }
 
             cmp.Compressing += new EventHandler<SevenZip.ProgressEventArgs>(ProgressHandler);
@@ -425,10 +425,10 @@ namespace FreeLibSet.IO
             {
               lock (this)
               {
-                IntPhaseText = "Построение списка файлов";
+                IntPhaseText = Res.FileCompressor_Phase_FileList;
               }
 
-              ISplash spl = null;
+              ISimpleSplash spl = null;
               if (Caller.UseSplashPercent)
                 spl = Caller.Splash;
               string[] aFiles = Caller.FileTemplates.GetAbsFileNames(Caller.FileDirectory, spl);
@@ -448,7 +448,7 @@ namespace FreeLibSet.IO
 
         void cmp_FileCompressionStarted(object sender, SevenZip.FileNameEventArgs args)
         {
-          base.FileStartedHandler(args, "Сжатие");
+          base.FileStartedHandler(args, Res.FileCompressor_Action_Compress);
         }
 
         #endregion
@@ -500,7 +500,7 @@ namespace FreeLibSet.IO
               try
               {
                 if (asyncBase.IntCancelled)
-                  caller.Splash.PhaseText = asyncBase.IntPhaseText + ". Прерывание будет выполнено при обработке следующего файла";
+                  caller.Splash.PhaseText = String.Format(Res.FileCompression_Phase_WithCancellingOnNextFile, asyncBase.IntPhaseText);
                 else
                   caller.Splash.PhaseText = asyncBase.IntPhaseText;
                 if (caller.UseSplashPercent)
@@ -571,7 +571,7 @@ namespace FreeLibSet.IO
               return Caller.ArchiveFileName.Path;
             if (File.Exists(Caller.ArchiveFileName.Path + ".001"))
               return Caller.ArchiveFileName.Path + ".001";
-            throw new FileNotFoundException("Не найден файл архива \"Owner.ArchiveFileName.Path\" или первый файл многотомного архива", Caller.ArchiveFileName.Path);
+            throw new FileNotFoundException(String.Format(Res.FileCompressor_Err_ArchiveAndVolume1NotFound, Caller.ArchiveFileName.Path));
           }
         }
 
@@ -596,7 +596,7 @@ namespace FreeLibSet.IO
                 ext.ExtractArchive(Caller.FileDirectory.Path);
               else
               {
-                IntPhaseText = "Получение списка файлов";
+                IntPhaseText = Res.FileCompressor_Phase_FileList;
                 ICollection<string> AllFiles = ext.ArchiveFileNames;
                 List<string> UsedFiles = new List<string>();
                 foreach (string FileName in AllFiles)
@@ -666,12 +666,12 @@ namespace FreeLibSet.IO
 
         void ext_FileExtractionStarted(object sender, SevenZip.FileInfoEventArgs args)
         {
-          base.FileStartedHandler(args, "Распаковка");
+          base.FileStartedHandler(args, Res.FileCompressor_Action_Decompress);
         }
 
         void test_FileExtractionStarted(object sender, SevenZip.FileInfoEventArgs args)
         {
-          base.FileStartedHandler(args, "Проверка");
+          base.FileStartedHandler(args, Res.FileCompressor_Action_Test);
         }
 
         #endregion
@@ -758,7 +758,7 @@ namespace FreeLibSet.IO
           case FileComressorArchiveType.Auto:
             break;
           default:
-            throw new BugException("Неизвестный тип архива: " + caller.ArchiveType.ToString());
+            throw new BugException("Unknonw archive type: " + caller.ArchiveType.ToString());
         }
 
         if (caller.VolumeSize > 0)
@@ -782,30 +782,24 @@ namespace FreeLibSet.IO
 
         int res = RunCommand(sbArgs, caller.FileDirectory);
         if (res > 0)
-          ThrowExitCodeException("Создание архива", res);
+          ThrowExitCodeException(Res.FileCompressor_Action_Compress, res);
       }
 
       private void ThrowExitCodeException(string actionName, int exitCode)
       {
-        StringBuilder sb = new StringBuilder();
-        sb.Append("Выполнение команды ");
-        sb.Append(_ExeFileName);
-        sb.Append(" завершилось неудачно. Действие: ");
-        sb.Append(actionName);
-        sb.Append(". Код ошибки: ");
-        sb.Append(exitCode);
-
         // https://7-zip.opensource.jp/chm/cmdline/exit_codes.htm
+        string exitDescr;
         switch (exitCode)
         {
-          case 0: sb.Append(" (Успех)"); break;
-          case 1: sb.Append(" (Предупреждение)");break;
-          case 2: sb.Append(" (Фатальная ошибка)"); break;
-          case 7: sb.Append(" (Неправильная командная строка)"); break;
-          case 8: sb.Append(" (Недостаточно памяти)"); break;
-          case 255: sb.Append(" (Выполнение прервано пользователем)"); break;
+          case 0: exitDescr=Res.FileCompressor_Err_7z_Success; break;
+          case 1: exitDescr = Res.FileCompressor_Err_7z_Warning; break;
+          case 2: exitDescr = Res.FileCompressor_Err_7z_Fatal; break;
+          case 7: exitDescr = Res.FileCompressor_Err_7z_InvalidCommandLine; break;
+          case 8: exitDescr = Res.FileCompressor_Err_7z_InsufficientMemory; break;
+          case 255: exitDescr = Res.FileCompressor_Err_7z_UserCancel; break;
+          default: exitDescr = "Unknown result";break;
         }
-        throw new InvalidOperationException(sb.ToString());
+        throw new InvalidOperationException(String.Format(Res.FileCompressor_Err_CmdResult, _ExeFileName, actionName, exitCode, exitDescr));
       }
 
       private void AddPassword(FileCompressor caller, StringBuilder sbArgs)
@@ -813,7 +807,7 @@ namespace FreeLibSet.IO
         if (!String.IsNullOrEmpty(caller.Password))
         {
           if (caller.Password.IndexOf('\"') >= 0)
-            throw new InvalidOperationException("Пароль не может содержать символ кавычки");
+            throw new InvalidOperationException(Res.FileCompressor_Err_PasswordWithQuoteChar);
           sbArgs.Append("-p\"");
           sbArgs.Append(caller.Password);
           sbArgs.Append("\" ");
@@ -832,7 +826,7 @@ namespace FreeLibSet.IO
 
         int res = RunCommand(sbArgs, caller.FileDirectory);
         if (res > 0)
-          ThrowExitCodeException("Распаковка архива", res);
+          ThrowExitCodeException(Res.FileCompressor_Action_Decompress, res);
       }
 
       public bool TestArchive(FileCompressor caller)
@@ -852,7 +846,7 @@ namespace FreeLibSet.IO
           case 0: return true;
           case 2: return false;
           default:
-            ThrowExitCodeException("Тестирование архива", res);
+            ThrowExitCodeException(Res.FileCompressor_Action_Test, res);
             throw new BugException(); // не может быть
         }
       }
@@ -889,7 +883,7 @@ namespace FreeLibSet.IO
           path = path001;
           return true;
         }
-        throw new FileNotFoundException("Не найден файл архива", path.Path);
+        throw new FileNotFoundException(String.Format(Res.FileCompressor_Err_ArchiveNotFound, path.Path));
       }
     }
 

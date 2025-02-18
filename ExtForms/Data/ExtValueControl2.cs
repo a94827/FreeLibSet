@@ -766,7 +766,7 @@ namespace FreeLibSet.Forms.Data
       : base(extValue, controlProvider, true, canMultiEdit)
     {
       if (controlProvider.Codes == null)
-        throw new ArgumentNullException("Должно быть установлено свойство Codes", "controlProvider");
+        throw ExceptionFactory.ArgProperty("controlProvider", controlProvider, "Codes", controlProvider.Codes, null);
 
       _ValueProxy = new IntEnumCodeProxy<T>();
 
@@ -847,7 +847,7 @@ namespace FreeLibSet.Forms.Data
       : base(extValue, controlProvider, false, canMultiEdit)
     {
       if (controlProvider.Controls.Length != 2)
-        throw new ArgumentException("Группа должна состоять из двух радиокнопок", "controlProvider");
+        throw ExceptionFactory.ArgProperty("controlProvider", controlProvider, "Controls.Length", controlProvider.Controls.Length, new object[] { 2 });
 
       DepInput<bool> currentValueInput = new DepInput<bool>(false, null);
       currentValueInput.OwnerInfo = new DepOwnerInfo(this, "CurrentValueInput");

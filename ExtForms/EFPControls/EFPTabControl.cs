@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -103,7 +104,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика TabControl.Disposed");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -254,20 +255,20 @@ namespace FreeLibSet.Forms
       /// Можно использовать и для динамического добавления страниц.
       /// Добавление страницы не делает ее активной. Используйте свойство <see cref="EFPTabControl.SelectedTab"/>.
       /// </summary>
-      /// <param name="tab">Созданный но не присоединенный провайдер страницы</param>
-      public void Add(EFPTabPage tab)
+      /// <param name="tabPage">Созданный но не присоединенный провайдер страницы</param>
+      public void Add(EFPTabPage tabPage)
       {
 #if DEBUG
-        if (tab == null)
-          throw new ArgumentNullException("tab");
+        if (tabPage == null)
+          throw new ArgumentNullException("tabPage");
 #endif
-        if (tab.Parent != null)
-          throw new ArgumentException("Страница уже была добавлена", "tab");
-        tab.BaseProvider.Parent = _Owner.BaseProvider;
-        tab.Parent = _Owner;
-        _Owner._Items.Add(tab);
-        if (tab.Visible)
-          _Owner.Control.TabPages.Add(tab.Control);
+        if (tabPage.Parent != null)
+          throw ExceptionFactory.ObjectPropertyAlreadySet(tabPage, "Parent");
+        tabPage.BaseProvider.Parent = _Owner.BaseProvider;
+        tabPage.Parent = _Owner;
+        _Owner._Items.Add(tabPage);
+        if (tabPage.Visible)
+          _Owner.Control.TabPages.Add(tabPage.Control);
       }
 
       #endregion
@@ -307,8 +308,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Флажок корректности списка страниц. 
-    /// В TabControl страницы могут добавляться или удаляться и может быть необходимо
-    /// обновить список EFPTabPage
+    /// В <see cref="System.Windows.Forms.TabControl"/> страницы могут добавляться или удаляться и может быть необходимо
+    /// обновить список <see cref="EFPTabPage"/>.
     /// </summary>
     internal bool ItemListValid;
 
@@ -319,13 +320,13 @@ namespace FreeLibSet.Forms
         if (!_InsideVisibleChanged)
           ItemListValid = false;
 
-        TabPage Page = args.Control as TabPage;
-        if (Page != null)
-          UpdatePageImageKey(Page);
+        TabPage tabPage = args.Control as TabPage;
+        if (tabPage != null)
+          UpdatePageImageKey(tabPage);
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика Control.ControlAdded");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -338,7 +339,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика Control.ControlRemoved");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -438,7 +439,7 @@ namespace FreeLibSet.Forms
         if (value == null)
           return;
         if (!value.Visible)
-          throw new InvalidOperationException("Нельзя активировать скрытую страницу");
+          throw new InvalidOperationException(Res.EFPTabPage_Err_SelectHiddenPage);
 
         Control.SelectedTab = value.Control;
       }
@@ -518,7 +519,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика TabControl.VisibleChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -530,7 +531,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика TabControl.Selected");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -817,7 +818,7 @@ namespace FreeLibSet.Forms
       Control.UseVisualStyleBackColor = !EFPApp.EasyInterface; // 10.04.2015
 
       _PageVisible = true;
-      ((EFPTabPageBaseProvider)BaseProvider).DisplayName = "Для TabPage \"" + Control.Text + "\"";
+      ((EFPTabPageBaseProvider)BaseProvider).DisplayName = String.Format(Res.EFPTabPage_Name_Default, Control.Text);
       ((EFPTabPageBaseProvider)BaseProvider).ControlProvider = this;
     }
 

@@ -279,12 +279,12 @@ namespace FreeLibSet.Forms
         {
           if (Columns.Count == 0)
           {
-            throw new BugException("Конфигурация не содержит ни одного столбца");
+            throw new BugException("Configuration has no columns");
           }
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка проверки при записи конфигурации табличного просмотра");
+          EFPApp.ShowException(e, Res.EFPDataViewConfig_ErrTitle_Validation);
         }
       }
 
@@ -364,7 +364,7 @@ namespace FreeLibSet.Forms
         Columns.Add(col);
       }
       if (Columns.Count == 0)
-        throw new InvalidOperationException("В конфигурации не задано ни одного столбца");
+        throw new InvalidOperationException(Res.EFPDataViewConfig_Err_NoColumns);
 
       FrozenColumns = cfg.GetInt("FrozenColumns");
       StartColumnName = cfg.GetString("StartColumn");
@@ -728,7 +728,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (String.IsNullOrEmpty(value))
-          throw new ArgumentNullException();
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
         _ConfigCategory = value;
       }
     }
@@ -744,7 +744,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (String.IsNullOrEmpty(value))
-          throw new ArgumentNullException();
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
         _HistoryCategory = value;
       }
     }
@@ -761,9 +761,9 @@ namespace FreeLibSet.Forms
     public DialogResult ShowDialog()
     {
       if (CallerControlProvider == null)
-        throw new NullReferenceException("Свойство CallerControlProvider не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CallerControlProvider");
       if (GridProducer == null)
-        throw new NullReferenceException("Свойство GridProducer должно быть установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "GridProducer");
 
       if (Value == null)
         Value = new EFPDataGridViewConfig(); // пустышка. 

@@ -70,7 +70,7 @@ namespace FreeLibSet.Remoting
       {
         CheckNotReadOnly();
         if (String.IsNullOrEmpty(name))
-          throw new ArgumentNullException("name");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
         if (_Items.ContainsKey(name))
           _Items[name] = value;
@@ -230,7 +230,7 @@ namespace FreeLibSet.Remoting
         return (T)res;
 
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
       res = new T();
       _Items.Add(name, res);
@@ -251,18 +251,18 @@ namespace FreeLibSet.Remoting
         return res;
 
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
 #if DEBUG
       if (objType == null)
         throw new ArgumentNullException("objType");
 #endif
       if (!objType.IsClass)
-        throw new ArgumentException("Тип данных должен быть классом", "objType");
+        throw new ArgumentException(String.Format(Res.NamedValues_Arg_MustBeClass, objType), "objType");
 
       System.Reflection.ConstructorInfo ci = objType.GetConstructor(Type.EmptyTypes);
       if (ci == null)
-        throw new ArgumentException("Тип " + objType.ToString() + " не имеет конструктора без параметров");
+        throw new ArgumentException(String.Format(Res.NamedValues_Arg_ConstructorNeeded, objType.ToString()));
 
       res = ci.Invoke(DataTools.EmptyObjects);
       _Items.Add(name, res);
@@ -353,7 +353,7 @@ namespace FreeLibSet.Remoting
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException("Коллекция значений находится в режиме ReadOnly");
+        throw new ObjectReadOnlyException();
     }
 
     #endregion
@@ -393,8 +393,7 @@ namespace FreeLibSet.Remoting
       foreach (KeyValuePair<string, object> pair in _Items)
       {
         if (!SerializationTools.IsMarshallable(pair.Value))
-          throw new SerializationException("Значение с ключом \"" + pair.Key + "\" имеет тип \"" + pair.Value.GetType().ToString() +
-            "\", который не является сериализуемым и не может передаваться по ссылке");
+          throw new SerializationException(String.Format(Res.NamedValues_Err_NotSerializable, pair.Key, pair.Value.GetType().ToString()));
       }
     }
 
@@ -748,13 +747,13 @@ namespace FreeLibSet.Remoting
 
       SN sn = (SN)(_StoredSerInfo.GetValue("SN", typeof(SN)));
       if (sn == null)
-        throw new NullReferenceException("Не удалось извлечь SN");
+        throw new NullReferenceException("Cannot extract SN");
 
       if (sn.Keys != null)
       {
         string[] aKeys = sn.Keys.Split('|');
         if (sn.Values.Length != aKeys.Length)
-          throw new InvalidOperationException("Несоответствие длины списка ключей (" + aKeys.Length.ToString() + ") и значений (" + sn.Values.Length.ToString() + ")");
+          throw new InvalidOperationException("Key list length (" + aKeys.Length.ToString() + ") and value count (" + sn.Values.Length.ToString() + ") are different");
         _Items = new Dictionary<string, object>(aKeys.Length);
         for (int i = 0; i < aKeys.Length; i++)
           _Items.Add(aKeys[i], sn.Values[i]);

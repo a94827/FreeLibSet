@@ -9,6 +9,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Formatting;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591
 
@@ -18,7 +19,7 @@ namespace FreeLibSet.Controls
   /// Управляющий элемент для ввода месяца и дня
   /// </summary>
   [Designer(typeof(FreeLibSet.Controls.Design.MonthDayBoxDesigner))]
-  [Description("Выбор дня и месяца")]
+  [Description("Day and month selection box without year")]
   [ToolboxBitmap(typeof(MonthDayBox), "MonthDayBox.bmp")]
   [ToolboxItem(true)]
   public partial class MonthDayBox : UserControl
@@ -44,7 +45,7 @@ namespace FreeLibSet.Controls
 
     #region Свойства
 
-    [Description("Месяц (от 1 до 12)")]
+    [Description("Month from 1 to 12")]
     [Category("Appearance")]
     [DefaultValue(1)]
     public int Month
@@ -53,12 +54,12 @@ namespace FreeLibSet.Controls
       set
       {
         if (value < 1 || value > 12)
-          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, 12);
         cbMonth.SelectedIndex = value - 1;
       }
     }
 
-    [Description(" День (от 1 до 30 или 31, в зависимости от месяца; для февраля - от 1 до 28)")]
+    [Description("Day from 1 to 28, 30 or 31, depends on Month current value")]
     [Category("Appearance")]
     [DefaultValue(1)]
     public int Day
@@ -67,8 +68,8 @@ namespace FreeLibSet.Controls
       set
       {
         if (value < 1 || value > (int)(edDay.Maximum))
-          throw new ArgumentOutOfRangeException("value", value, "День должен быть в диапазоне от 1 до " +
-            ((int)(edDay.Maximum)).ToString() + " для месяца " + Month.ToString());
+          throw new ArgumentOutOfRangeException("value", value, String.Format(Res.MonthDayBox_Arg_DayOutOfRange,
+            value, (int)(edDay.Maximum), Month));
         edDay.Value = value;
       }
     }
@@ -101,7 +102,7 @@ namespace FreeLibSet.Controls
 
     #region События
 
-    [Description("Событие вызывается при изменении значения свойств Day и/или Month")]
+    [Description("Called when Day or Month property changed")]
     [Category("Property Changed")]
     public event EventHandler ValueChanged;
 

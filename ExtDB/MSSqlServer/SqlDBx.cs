@@ -462,12 +462,12 @@ namespace FreeLibSet.Data.SqlClient
     /// данных на основании созданного описание в свойстве <see cref="DBx.Struct"/>.
     /// На момент вызова база данных (возможно, пустая) должна существовать.
     /// </summary>
-    /// <param name="splash">Здесь устанавливается свойство <see cref="ISplash.PhaseText"/> для отображения выполняемых действий</param>
+    /// <param name="splash">Здесь устанавливается свойство <see cref="ISimpleSplash.PhaseText"/> для отображения выполняемых действий</param>
     /// <param name="errors">Сюда помещаются предупреждения и информационные сообщения. Если никаких изменений
     /// не вносится, сообщения не добавляются</param>
     /// <param name="options">Опции обновления</param>
     /// <returns>true, если в базу данных были внесены изменения</returns>
-    protected override bool OnUpdateStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    protected override bool OnUpdateStruct(ISimpleSplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       // Делегируем все действия соединению, т.к. нужен доступ к защищенным методам
       using (SqlDBxCon con = new SqlDBxCon(MainEntry, false))
@@ -1399,7 +1399,7 @@ namespace FreeLibSet.Data.SqlClient
             e.Data["DB"] = DB.ToString();
             e.Data["Table"] = tableName;
             e.Data["Column"] = colDef.ColumnName;
-            LogoutTools.LogoutException(e, "Ошибка получения значения DBxColumnStruct.DefaultValue");
+            LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("DBxColumnStruct.DefaultValue"));
           }
         }
 
@@ -1525,7 +1525,7 @@ namespace FreeLibSet.Data.SqlClient
     }
 
 
-    internal bool UpdateDBStruct(ISplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
+    internal bool UpdateDBStruct(ISimpleSplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       bool modified = false;
 
@@ -2080,7 +2080,7 @@ namespace FreeLibSet.Data.SqlClient
       return modified;
     }
 
-    private bool UpdateForeignKeys(DBxTableStruct table, DataView dvForeignKeys, ISplash splash, ErrorMessageList errors)
+    private bool UpdateForeignKeys(DBxTableStruct table, DataView dvForeignKeys, ISimpleSplash splash, ErrorMessageList errors)
     {
       bool modified = false;
 
@@ -2126,7 +2126,7 @@ namespace FreeLibSet.Data.SqlClient
 
     #region Индексы
 
-    private void RemoveExtraIndices(DBxTableStruct table, List<string> goodIndices, ErrorMessageList errors, ISplash splash, bool drop)
+    private void RemoveExtraIndices(DBxTableStruct table, List<string> goodIndices, ErrorMessageList errors, ISimpleSplash splash, bool drop)
     {
       DataTable tableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, table.TableName });
       foreach (DataRow indexRow in tableIndexes.Rows)
@@ -2195,7 +2195,7 @@ namespace FreeLibSet.Data.SqlClient
       SQLExecuteNonQuery(Buffer.SB.ToString());
     }
 
-    private void CreateIndices(DBxTableStruct table, List<string> goodIndices, ErrorMessageList errors, ISplash splash)
+    private void CreateIndices(DBxTableStruct table, List<string> goodIndices, ErrorMessageList errors, ISimpleSplash splash)
     {
       for (int i = 0; i < table.Indexes.Count; i++)
       {
@@ -2265,7 +2265,7 @@ namespace FreeLibSet.Data.SqlClient
     }
 #endif
 
-    private bool DeleteAllIndices(string tableName, ISplash splash, ErrorMessageList errors)
+    private bool DeleteAllIndices(string tableName, ISimpleSplash splash, ErrorMessageList errors)
     {
       // Перебираем все существующие индексы
       // Один индекс может занимать несколько строк

@@ -58,7 +58,7 @@ namespace FreeLibSet.Controls
     #region Свойства
 
     [DefaultValue(false)]
-    [Description("Разрешает получение кнопкой фокуса ввода")]
+    [Description("Enables taking input focus by the button")]
     [Browsable(true)]
     [Category("Behavior")]
     public bool Selectable
@@ -78,7 +78,7 @@ namespace FreeLibSet.Controls
 
     private bool _Selectable;
 
-    [Description("Вызывается при изменении свойства Selectable")]
+    [Description("Called when Selectable property value changed")]
     [Category("PropertyChanged")]
     public event EventHandler SelectableChanged;
 
@@ -89,7 +89,7 @@ namespace FreeLibSet.Controls
     }
 
     [DefaultValue("")]
-    [Description("Всплывающая подсказка для кнопки")]
+    [Description("Tool tip text for the button")]
     [Browsable(true)]
     [Category("Appearance")]
     public string ToolTipText
@@ -117,7 +117,7 @@ namespace FreeLibSet.Controls
     private ToolTip _TheToolTip;
 
     [DefaultValue(false)]
-    [Description("Прорисовка кнопки ComboBox вместо заданного изображения")]
+    [Description("Drawing ComboBox button image instead of presented")]
     [Browsable(true)]
     [Category("Appearance")]
     public bool ComboBoxButton
@@ -135,7 +135,7 @@ namespace FreeLibSet.Controls
     }
     private bool _ComboBoxButton;
 
-    [Description("Вызывается при изменении свойства ComboBoxButton")]
+    [Description("Called when ComboBoxButton property changed")]
     [Category("PropertyChanged")]
     public event EventHandler ComboBoxButtonChanged;
 

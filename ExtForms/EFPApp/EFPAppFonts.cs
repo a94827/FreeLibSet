@@ -68,9 +68,9 @@ namespace FreeLibSet.Forms
     public override string ToString()
     {
       if (_FontNames == null)
-        return "Список шрифтов не загружен";
+        return "Font list has not been loaded";
       else
-        return "Шрифтов: " + _FontNames.Length.ToString();
+        return "Font count = " + _FontNames.Length.ToString();
     }
 
     #endregion
@@ -86,7 +86,7 @@ namespace FreeLibSet.Forms
       {
         if (_FontNames == null)
         {
-          EFPApp.BeginWait("Загрузка списка установленных шрифтов");
+          EFPApp.BeginWait(Res.EFPApp_Phase_LoadFonts);
           try
           {
             // 27.12.2020 Добавлен "using"

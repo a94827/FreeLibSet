@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms
         this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       }
 
-      EFPApp.InitFormImages(this);
+      //EFPApp.InitFormImages(this);
 
       _FormProvider = new EFPFormProvider(this);
       _OKButtonProvider = new EFPButton(FormProvider, btnOk);
@@ -414,7 +414,7 @@ namespace FreeLibSet.Forms
           parent = BottomPanel;
           break;
         default:
-          throw new ArgumentException("dock");
+          throw ExceptionFactory.ArgUnknownValue("dock", dock, new object[] { DockStyle.Top, DockStyle.Bottom});
       }
 
       InfoLabel lbl = new InfoLabel();

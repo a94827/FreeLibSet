@@ -34,18 +34,17 @@ namespace FreeLibSet.Forms
 
       efpSelCB = new EFPTextComboBox(efpForm, cbParamSet.TheCB);
       efpSelCB.CanBeEmpty = true;
-      efpSelCB.DisplayName = "Готовые наборы";
+      efpSelCB.DisplayName = EFPCommandItem.RemoveMnemonic(grpPresets.Text);
 
       efpSaveButton = new EFPButton(efpForm, cbParamSet.SaveButton);
-      efpSaveButton.DisplayName = "Сохранить набор";
-      efpSaveButton.ToolTipText = "Сохранить установленные значения как новый пользовательский набор" + Environment.NewLine +
-        "Перед нажатием кнопки в поле слева должно быть введено имя набора";
+      efpSaveButton.DisplayName = Res.ParamSetComboBox_Name_SaveButton;
+      efpSaveButton.ToolTipText = Res.ParamSetComboBox_ToolTip_SaveButton;
       //efpSaveButton.Click += new EventHandler(efpSaveButton_Click);
       cbParamSet.SaveClick += new ParamSetComboBoxSaveEventHandler(cbParamSet_SaveClick);
 
       efpDelButton = new EFPButton(efpForm, cbParamSet.DeleteButton);
-      efpDelButton.DisplayName = "Удалить набор";
-      efpDelButton.ToolTipText = "Удалить пользовательский набор значений, имя которого задано в списке слева";
+      efpDelButton.DisplayName = Res.ParamSetComboBox_Name_DelButton;
+      efpDelButton.ToolTipText = Res.ParamSetComboBox_ToolTip_DelButton;
       //efpDelButton.Click += new EventHandler(efpDelButton_Click);
       cbParamSet.DeleteClick += new ParamSetComboBoxItemEventHandler(cbParamSet_DeleteClick);
 
@@ -57,8 +56,8 @@ namespace FreeLibSet.Forms
       btnXml.Image = EFPApp.MainImages.Images["XML"];
       btnXml.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpXml = new EFPButton(efpForm, btnXml);
-      efpXml.DisplayName = "Просмотр XML";
-      efpXml.ToolTipText = "Просмотр данных выбранной композиции";
+      efpXml.DisplayName = Res.SelectCompositionForm_Name_XmlButton;
+      efpXml.ToolTipText = Res.SelectCompositionForm_ToolTip_XmlButton;
       efpXml.Click += new EventHandler(efpXml_Click);
     }
 
@@ -83,7 +82,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка OnLoad");
+        EFPApp.ShowException(e);
       }
 
       cbParamSet.Select();
@@ -95,7 +94,7 @@ namespace FreeLibSet.Forms
 
       #region Текущая композиция
 
-      ParamSetComboBoxItem currItem = new ParamSetComboBoxItem("Current", "[ Текущая композиция ]",
+      ParamSetComboBoxItem currItem = new ParamSetComboBoxItem("Current", Res.SelectCompositionForm_Msg_CurrentComposition,
         "ArrowRight", /*DateTime.Now*/null, 1, _CurrPart.MD5Sum());
       cbParamSet.Items.Add(currItem);
 
@@ -151,7 +150,7 @@ namespace FreeLibSet.Forms
     {
       if (image == null)
       {
-        SetWarning("Нет изображения");
+        SetWarning(Res.SelectCompositionForm_Err_NoImage);
         return;
       }
       try
@@ -162,7 +161,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        SetError("Не удалось вывести изображение. " + e.Message);
+        SetError(String.Format(Res.SelectCompositionForm_ErrTitle_SetImage, e.Message));
       }
     }
 
@@ -242,8 +241,8 @@ namespace FreeLibSet.Forms
       {
         if (Name.Length == 0)
         {
-          if (EFPApp.MessageBox("Сохранить текущую композицию в списке истории, а не как \"именную\" композицию?",
-            "Сохранение текущей композиции", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+          if (EFPApp.MessageBox(Res.SelectCompositionForm_Msg_SaveInHistory,
+            efpSaveButton.DisplayName, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
             return;
           UserSetName = EFPAppCompositionHistoryHandler.SaveHistory(_CurrPart, _CurrSnapshot).UserSetName;
         }
@@ -254,7 +253,7 @@ namespace FreeLibSet.Forms
       {
         if (Name.Length == 0)
         {
-          EFPApp.ShowTempMessage("Должно быть задано название сохраняемой композиции");
+          EFPApp.ShowTempMessage(Res.SelectCompositionForm_Err_NaneIsEmpty);
           return;
         }
         UserSetName = EFPAppCompositionHistoryHandler.SaveUser(Name, _CurrPart, _CurrSnapshot).UserSetName;
@@ -267,11 +266,11 @@ namespace FreeLibSet.Forms
     {
       if (SelectedItem == null)
       {
-        EFPApp.ShowTempMessage("Нельзя удалить текущую композицию");
+        EFPApp.ShowTempMessage(Res.SelectCompositionForm_Err_CannotDeleteCurrent);
         return;
       }
-      if (EFPApp.MessageBox("Удалить композицию \"" + SelectedItem.DisplayName + "\"?",
-        "Подтверждение удаления", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+      if (EFPApp.MessageBox(String.Format(Res.SelectCompositionForm_Msg_ConfirmDel, SelectedItem.DisplayName),
+        efpDelButton.DisplayName, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
         return;
 
       EFPAppCompositionHistoryHandler.Delete(SelectedItem);

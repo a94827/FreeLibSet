@@ -56,7 +56,7 @@ namespace FreeLibSet.Data
     protected void CheckNoOwner()
     {
       if (_Owner != null)
-        throw new InvalidOperationException("Выполнение действия допускается только до присоединения фильтра к коллекции");
+        throw new InvalidOperationException(Res.DBxCommonFilter_Err_OwnerHasBeenSet);
     }
 
     #endregion
@@ -75,10 +75,10 @@ namespace FreeLibSet.Data
         if (value != null)
         {
           if (_Owner != null)
-            throw new InvalidOperationException("Повторная установка свойства Owner не допускается");
+            throw new InvalidOperationException(Res.DBxCommonFilter_Err_OwnerAlreadyExists);
 
           if (String.IsNullOrEmpty(_Code))
-            throw new NullReferenceException("Свойство Code должно быть установлено до свойства Owner");
+            throw new NullReferenceException(Res.DBxCommonFilter_Err_CodeMustBeSet);
         }
         _Owner = value;
       }
@@ -129,7 +129,7 @@ namespace FreeLibSet.Data
         else if (!String.IsNullOrEmpty(Code))
           return Code;
         else
-          return "[Без имени и кода]";
+          return Res.DBxCommonFilter_Msg_DefaultDisplayName;
       }
       set { _DisplayName = value; }
     }
@@ -154,8 +154,7 @@ namespace FreeLibSet.Data
       get { return _UseSqlFilter; }
       set
       {
-        if (_Owner != null)
-          throw new InvalidOperationException("Установка свойства UseSqlFilter допускается только до присоединения фильтра к коллекции");
+        CheckNoOwner();
         _UseSqlFilter = value;
       }
     }
@@ -298,7 +297,7 @@ namespace FreeLibSet.Data
     /// <param name="row">Строка, откуда берутся значения</param>
     public virtual void SetAsCurrRow(DataRow row)
     {
-      throw new InvalidOperationException("Фильтр \"" + ToString() + "\" не поддерживает установку значения по текущей строке");
+      throw new InvalidOperationException(String.Format(Res.DBxCommonFilter_Err_SetAsCurrRow, ToString()));
     }
 
     #endregion
@@ -407,7 +406,7 @@ namespace FreeLibSet.Data
         if (value != null)
         {
           if (_Owner != null)
-            throw new InvalidOperationException("Повторная установка свойства Owner не допускается");
+            throw new InvalidOperationException(Res.DBxCommonFilter_Err_OwnerAlreadyExists);
         }
         _Owner = value;
         SetReadOnly();
@@ -616,7 +615,7 @@ namespace FreeLibSet.Data
           for (int i = 0; i < Count; i++)
           {
             if (!this[i].UseSqlFilter)
-              throw new InvalidOperationException("Для фильтра \"" + this[i].DisplayName + "\" свойство UseSqlFilter=false");
+              throw new InvalidOperationException(String.Format(Res.DBxCommonFilters_Err_NoSqlFilter, this[i].DisplayName));
           }
         }
         _SqlFilterRequired = value;
@@ -633,11 +632,11 @@ namespace FreeLibSet.Data
       if (item == null)
         throw new ArgumentNullException("item");
       if (item.Owner != null)
-        throw new InvalidOperationException("Повторное добавление элемента не допускается");
+        throw ExceptionFactory.CannotAddItemAgain(item);
       if (String.IsNullOrEmpty(item.Code))
-        throw new NullReferenceException("Свойство DBxCommonFilter.Code должно быть установлено перед добавлением элемента");
+        throw ExceptionFactory.ArgProperty("item", item, "DBxCommonFilter.Code", item.Code, null);
       if (SqlFilterRequired && (!item.UseSqlFilter))
-        throw new InvalidOperationException("Свойство DBxCommonFilter.UseSqlFilter=false, в то время как свойство DBxCommnonFilter.SqlFilterRequired=true");
+        throw new InvalidOperationException(String.Format(Res.DBxCommonFilters_Err_UseSqlFilterMismatch, item.DisplayName));
 
       base.OnBeforeAdd(item);
     }
@@ -1162,7 +1161,7 @@ namespace FreeLibSet.Data
     public void WriteConfig(CfgPart cfg)
     {
       if (cfg == null)
-        throw new ArgumentNullException("cfg", "Раздел для записи конфигурации фильтров должен быть задан");
+        throw new ArgumentNullException("cfg");
 
       cfg.Clear();
 
@@ -1184,15 +1183,15 @@ namespace FreeLibSet.Data
     {
       get
       {
-        TempCfg Cfg = new TempCfg();
-        WriteConfig(Cfg);
-        return Cfg.AsXmlText;
+        TempCfg cfg = new TempCfg();
+        WriteConfig(cfg);
+        return cfg.AsXmlText;
       }
       set
       {
-        TempCfg Cfg = new TempCfg();
-        Cfg.AsXmlText = value;
-        ReadConfig(Cfg);
+        TempCfg cfg = new TempCfg();
+        cfg.AsXmlText = value;
+        ReadConfig(cfg);
       }
     }
 
@@ -1243,7 +1242,7 @@ namespace FreeLibSet.Data
     public OneColumnCommonFilter(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       _ColumnName = columnName;
 
@@ -2900,7 +2899,7 @@ namespace FreeLibSet.Data
       : base(columnName)
     {
       if (itemCount < 1)
-        throw new ArgumentOutOfRangeException("itemCount", itemCount, "Количество элементов перечисления должно быть не меньше 1");
+        throw ExceptionFactory.ArgOutOfRange("itemCount", itemCount, 1, null);
       _ItemCount = itemCount;
     }
 
@@ -3314,11 +3313,11 @@ namespace FreeLibSet.Data
     public TwoColumnsCommonFilter(string columnName1, string columnName2)
     {
       if (String.IsNullOrEmpty(columnName1))
-        throw new ArgumentNullException("columnName1");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName1");
       if (String.IsNullOrEmpty(columnName2))
-        throw new ArgumentNullException("columnName2");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName2");
       if (columnName1 == columnName2)
-        throw new ArgumentException("Имена полей совпадают", "columnName2");
+        throw ExceptionFactory.ArgAreSame("columnName1", "columnName2");
 
       _ColumnName1 = columnName1;
       _ColumnName2 = columnName2;
@@ -3407,6 +3406,7 @@ namespace FreeLibSet.Data
       : base(columnName1, columnName2)
     {
       _Value = null;
+      DisplayName = Res.RangeInclusionCommonFilterBase_Msg_DefaultDisplayName;
     }
 
     #endregion
@@ -3879,7 +3879,7 @@ namespace FreeLibSet.Data
     public DateRangeInclusionCommonFilter(string firstDateColumnName, string lastDateColumnName)
       : base(firstDateColumnName, lastDateColumnName)
     {
-      DisplayName = "Период";
+      DisplayName = Res.DateRangeInclusionCommonFilter_Msg_DefaultDisplayName;
     }
 
     #endregion
@@ -4044,6 +4044,7 @@ namespace FreeLibSet.Data
     public RangeCrossCommonFilterBase(string columnName1, string columnName2)
       : base(columnName1, columnName2)
     {
+      DisplayName = Res.RangeCrossCommonFilterBase_Msg_DefaultDisplayName;
     }
 
     #endregion
@@ -4212,7 +4213,6 @@ namespace FreeLibSet.Data
     public SingleRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
       : base(firstColumnName, lastColumnName)
     {
-      DisplayName = "Диапазон";
     }
 
     #endregion
@@ -4282,7 +4282,6 @@ namespace FreeLibSet.Data
     public DoubleRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
       : base(firstColumnName, lastColumnName)
     {
-      DisplayName = "Диапазон";
     }
 
     #endregion
@@ -4352,7 +4351,6 @@ namespace FreeLibSet.Data
     public DecimalRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
       : base(firstColumnName, lastColumnName)
     {
-      DisplayName = "Диапазон";
     }
 
     #endregion
@@ -4422,7 +4420,7 @@ namespace FreeLibSet.Data
     public DateRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
       : base(firstColumnName, lastColumnName)
     {
-      DisplayName = "Период";
+      DisplayName = Res.DateRangeCrossCommonFilter_Msg_DefaultDisplayName;
     }
 
     #endregion

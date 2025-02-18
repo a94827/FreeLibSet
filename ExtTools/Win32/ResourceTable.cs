@@ -32,7 +32,7 @@ namespace FreeLibSet.Win32
     public ResourceID(string name)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       _Name = name;
       _ID = 0;
     }
@@ -624,9 +624,9 @@ namespace FreeLibSet.Win32
     public void Add(ResourceID typeId, ResourceID name, int codePage, long offset, int size, string errorMessage)
     {
       if (typeId.IsEmpty)
-        throw new ArgumentException("Не задан тип ресурса", "typeId");
+        throw ExceptionFactory.ArgIsEmpty("typeId");
       if (name.IsEmpty)
-        throw new ArgumentException("Не задан идентификатор ресурса", "name");
+        throw ExceptionFactory.ArgIsEmpty("name");
 
       TypeInfo ti = Types[typeId];
       NameInfo ni = ti.GetByName(name);
@@ -662,7 +662,7 @@ namespace FreeLibSet.Win32
     public struct IconInfo : IEquatable<IconInfo>
     {
       #region Конструктор
-      
+
       /// <summary>
       /// Инициализация структуры
       /// </summary>
@@ -672,12 +672,11 @@ namespace FreeLibSet.Win32
       public IconInfo(int width, int height, int bpp)
       {
         if (width < 1)
-          throw new ArgumentOutOfRangeException("width");
+          throw ExceptionFactory.ArgOutOfRange("width", width, 1, null);
         if (height < 0)
-          throw new ArgumentOutOfRangeException("height");
+          throw ExceptionFactory.ArgOutOfRange("height", height, 1, null);
         if (Array.IndexOf<int>(ValidBPPs, bpp) < 0)
-          throw new ArgumentOutOfRangeException("bpp", bpp, "Неправильное значение BPP. Допустимые значения: "+
-            DataTools.ToStringJoin<int>(", ", ValidBPPs));
+          throw ExceptionFactory.ArgUnknownValue("bpp", bpp, ValidBPPs);
 
         _Width = width;
         _Height = height;
@@ -699,7 +698,7 @@ namespace FreeLibSet.Win32
       /// </summary>
       public int Height { get { return _Height; } }
       private readonly int _Height;
-      
+
       /// <summary>
       /// Количество бит на пиксель
       /// </summary>
@@ -805,7 +804,7 @@ namespace FreeLibSet.Win32
 
       NameInfo niDir = Types[ResourceType.GroupIcon].GetByName(groupIconId);
       if (niDir == null)
-        throw new ArgumentException("Ресурс не найден");
+        throw new ArgumentException(String.Format(Res.ResourceTable_Arg_ResourceNoFound, groupIconId), "groupIconId");
       byte[] b = GetBytes(niDir[0]);
       if (b.Length == 0)
         return dict;
@@ -824,7 +823,7 @@ namespace FreeLibSet.Win32
         int colorCount = rdr.ReadByte(); // colorCount
         rdr.ReadByte(); // reserved
         rdr.ReadUInt16(); // Planes
-        int bpp = rdr.ReadUInt16(); 
+        int bpp = rdr.ReadUInt16();
         rdr.ReadUInt32(); // BytesInRes
         int iconId = rdr.ReadUInt16();
 
@@ -840,9 +839,9 @@ namespace FreeLibSet.Win32
 
           switch (colorCount)
           {
-            case 2:bpp = 1;break;
-            case 16: bpp = 4;break;
-            default: throw new InvalidOperationException("Для значка не задан BPP и задан недопустимый ColorCount="+colorCount.ToString());            
+            case 2: bpp = 1; break;
+            case 16: bpp = 4; break;
+            default: throw new InvalidOperationException(String.Format(Res.ResourceTable_Err_IconWrongColorCount, colorCount));
           }
         }
 
@@ -851,7 +850,7 @@ namespace FreeLibSet.Win32
         ResourceID iconId2 = new ResourceID(iconId);
         NameInfo niIcon = Types[ResourceType.Icon].GetByName(iconId2);
         if (niIcon == null)
-          throw new InvalidOperationException("Не найден значок " + iconId2.ToString());
+          throw new InvalidOperationException(String.Format(Res.ResourceTable_Err_IconNotFound, iconId2));
 
         dict.Add(ii, niIcon[0]);
       }
@@ -868,13 +867,13 @@ namespace FreeLibSet.Win32
     public byte[] GetSingleImageIconBytes(ResourceID iconId)
     {
       if (iconId.IsEmpty)
-        throw new ArgumentException("Идентификатор не задан", "iconId");
+        throw ExceptionFactory.ArgIsEmpty("iconId");
       TypeInfo ti = Types[ResourceType.Icon];
       NameInfo ni = ti.GetByName(iconId);
       if (ni == null)
-        throw new ArgumentException("Нет значка с идентификатором " + iconId.ToString(), "iconId");
+        throw new ArgumentException(String.Format(Res.ResourceTable_Arg_ResourceNoFound, iconId), "iconId");
       if (ni.Count == 0)
-        throw new ArgumentException("Пустой ресурс значка с идентификатором " + ni.Name);
+        throw new InvalidOperationException(String.Format(Res.ResourceTable_Err_ResourceIsEmpty, ni.Name));
 
       return GetSingleImageIconBytes(ni[0]);
     }
@@ -918,9 +917,9 @@ namespace FreeLibSet.Win32
         w = rdr.ReadInt32();
         h = rdr.ReadInt32() / 2; // удвоенная высота
         if (w < 1 | w > 256)
-          throw new BugException("Ширина");
+          throw new BugException("Width="+w.ToString());
         if (h < 1 | h > 256)
-          throw new BugException("Высота");
+          throw new BugException("Height="+h.ToString());
 
         planes = rdr.ReadInt16();
         bpp = rdr.ReadInt16();
@@ -939,7 +938,7 @@ namespace FreeLibSet.Win32
           const int nameMask = ~specBitMask;
           recType = recType & nameMask;
           if (recType != 0x52444849) //"IHDR"
-            throw new InvalidOperationException("Первым блоком в PNG-файле должен быть заголовок IHDR");
+            throw new InvalidOperationException(Res.ResourceTable_Err_PngSignature);
           w = rdr.ReadInt32();
           h = rdr.ReadInt32();
           bpp = rdr.ReadByte();
@@ -951,7 +950,7 @@ namespace FreeLibSet.Win32
           planes = 1; // не знаю, зачем это поле
         }
         else
-          throw new InvalidOperationException("Неизестный заголовок");
+          throw new InvalidOperationException(Res.ResourceTable_Err_UnknownImageHeader);
       }
 
       iconInfo = new IconInfo(w, h, bpp);
@@ -1072,12 +1071,12 @@ namespace FreeLibSet.Win32
       NameInfo ni = Types[ResourceType.GroupIcon][iconIndex - 1];
       GroupIconInfo grpInfo = GetGroupIconInfo(ni.Name);
       int wantedSize = smallIcon ? 16 : 32;
-      KeyValuePair<IconInfo, CPInfo> bestPair=new KeyValuePair<IconInfo, CPInfo>();
+      KeyValuePair<IconInfo, CPInfo> bestPair = new KeyValuePair<IconInfo, CPInfo>();
 
       foreach (KeyValuePair<IconInfo, CPInfo> pair in grpInfo)
       {
         if (bestPair.Value == null)
-          bestPair=pair;
+          bestPair = pair;
         else
         {
           int delta1 = Math.Abs(pair.Key.Width - wantedSize);

@@ -7,12 +7,13 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using FreeLibSet.Data;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Расширение провайдера табличного просмотра для использования класса продюсера EFPGridProducer, вместо интерфейса IEFPGridProducer.
-  /// Позволяет использовать повторитель таблиц EFPGridProducerDataTableRepeater.
+  /// Расширение провайдера табличного просмотра для использования класса продюсера <see cref="EFPGridProducer"/>, вместо интерфейса <see cref="IEFPGridProducer"/>.
+  /// Позволяет использовать повторитель таблиц <see cref="EFPGridProducerDataTableRepeater"/>.
   /// </summary>
   public class EFPStdConfigurableDataGridView : EFPConfigurableDataGridView
   {
@@ -44,8 +45,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Генератор столбцов таблицы. Если задан, то в локальном меню доступны
     /// команды настройки столбцов таблицы.
-    /// Установка свойства также устанавливает свойство AutoSort=true.
-    /// При необходимости использования события CurrentOrderChanged, установите AutoSort=false обратно.
+    /// Установка свойства также устанавливает свойство <see cref="EFPDataGridView.AutoSort"/>=true.
+    /// При необходимости использования события <see cref="EFPDataGridView.CurrentOrderChanged"/>, 
+    /// установите <see cref="EFPDataGridView.AutoSort"/>=false обратно.
     /// </summary>
     public new EFPGridProducer GridProducer
     {
@@ -63,7 +65,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызывает InitTableRepeaterForGridProducer(), если хотя бы раз выполнялась установка свойств MasterDataTable или MasterDataView
+    /// Вызывает <see cref="InitTableRepeaterForGridProducer(DataTable)"/>, если хотя бы раз выполнялась установка свойств 
+    /// <see cref="MasterDataTable"/> или <see cref="MasterDataView"/>
     /// </summary>
     protected override void OnGridProducerPostInit()
     {
@@ -84,7 +87,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Базовый источник для автоматического использования таблицы-повторителя.
-    /// Должен использоваться вместо непосредственной установки DataGridView.DataSource или EFPDataGridView.SourceAsDataTable
+    /// Должен использоваться вместо непосредственной установки <see cref="DataGridView.DataSource"/> или 
+    /// <see cref="EFPDataGridView.SourceAsDataTable"/>.
     /// </summary>
     public new DataTable MasterDataTable
     {
@@ -107,8 +111,8 @@ namespace FreeLibSet.Forms
     private bool _MasterDataTableHasBeenSet;
 
     /// <summary>
-    /// Альтеранативная установка свойства MasterDataTable.
-    /// Проверяет, есть ли у присоединяемого DataView фильтр по строкам данных.
+    /// Альтеранативная установка свойства <see cref="MasterDataTable"/>.
+    /// Проверяет, есть ли у присоединяемого <see cref="DataView"/> фильтр по строкам данных.
     /// Если есть, то создает еще одну промежуточную таблицу.
     /// </summary>
     public new DataView MasterDataView
@@ -145,14 +149,14 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверяет столбцы просмотра на наличие полей в таблице данных <paramref name="masterTable"/>.
-    /// Если есть вычисляемые столбцы, то создается таблица-повторитель EFPGridProducerDataTableRepeater.
-    /// После этого устанавливаются свойства DataGridViewColumn.DataPropertyName, чтобы значения столбцов
+    /// Если есть вычисляемые столбцы, то создается таблица-повторитель <see cref="EFPGridProducerDataTableRepeater"/>.
+    /// После этого устанавливаются свойства <see cref="DataGridViewColumn.DataPropertyName"/>, чтобы значения столбцов
     /// не вычислялись, а брались из таблицы-повторителя. Это позволяет использовать для этих столбцов произвольную сортировку.
     /// 
-    /// Если в просмотре нет подходящих вычисляемых столбцов, свойство SourceAsDataTable устанавливается напрямую на <paramref name="masterTable"/>.
+    /// Если в просмотре нет подходящих вычисляемых столбцов, свойство <see cref="EFPDataGridView.SourceAsDataTable"/> устанавливается напрямую на <paramref name="masterTable"/>.
     /// Если раньше использовалась таблица-повторитель, она удаляется.
     /// 
-    /// Свойство GridProducer должно быть установлено.
+    /// Свойство <see cref="GridProducer"/> должно быть установлено.
     /// 
     /// В прикладном коде предпочтительнее использовать свойства MasterDataTable или MasterDataView.
     /// </summary>
@@ -160,7 +164,7 @@ namespace FreeLibSet.Forms
     public void InitTableRepeaterForGridProducer(DataTable masterTable)
     {
       if (GridProducer == null)
-        throw new NullReferenceException("Свойство GridProducer не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "GridProducer");
 
       if (masterTable == null)
       {
@@ -284,13 +288,13 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе.
     /// </summary>
     public EFPGridProducer GridProducer { get { return _GridProducer; } }
-    EFPGridProducer _GridProducer;
+    private readonly EFPGridProducer _GridProducer;
 
     /// <summary>
     /// Провадйер управляющего элемента
     /// </summary>
     public IEFPDataView ControlProvider { get { return _ControlProvider; } }
-    private IEFPDataView _ControlProvider;
+    private readonly IEFPDataView _ControlProvider;
 
     #endregion
 

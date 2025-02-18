@@ -28,17 +28,17 @@ namespace FreeLibSet.Forms.Reporting
       SettingsDialogPage page = dialog.Pages.Add(MainPanel);
 
       ghColumns = new EFPDataGridView(page.BaseProvider, grColumns);
-      ghColumns.Columns.AddBool("Flag", false, "П.");
-      ghColumns.Columns.LastAdded.GridColumn.ToolTipText = "Печатать столбец";
-      ghColumns.Columns.AddTextFill("Name", false, "Столбец", 100, 15);
-      ghColumns.Columns.AddFixedPoint("Width", false, "Ширина, см", 10, 2, null);
-      ghColumns.Columns.AddBool("AutoGrow", false, "Р.");
+      ghColumns.Columns.AddBool("Flag", false, Res.BRDataViewPageSetupColumns_ColTitle_Flag);
+      ghColumns.Columns.LastAdded.DisplayName = Res.BRDataViewPageSetupColumns_Name_Flag;
+      ghColumns.Columns.AddTextFill("Name", false, Res.BRDataViewPageSetupColumns_ColTitle_Name, 100, 15);
+      ghColumns.Columns.AddFixedPoint("Width", false, Res.BRDataViewPageSetupColumns_ColTitle_Width, 10, 2, null);
+      ghColumns.Columns.AddBool("AutoGrow", false, Res.BRDataViewPageSetupColumns_ColTitle_AutoGrow);
+      ghColumns.Columns.LastAdded.DisplayName = Res.BRDataViewPageSetupColumns_Name_AutoGrow;
 
-      grColumns.Columns[0].ToolTipText = "Установите флажки для тех столбцов," + Environment.NewLine +
-        "которые должны быть напечатаны";
-      grColumns.Columns[1].ToolTipText = "Название столбца";
-      grColumns.Columns[2].ToolTipText = "Ширина области, отведенной для печати столбца (в сантиметрах)";
-      grColumns.Columns[3].ToolTipText = "Расширять столбец для заполнения листа";
+      grColumns.Columns[0].ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_Flag;
+      grColumns.Columns[1].ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_Name;
+      grColumns.Columns[2].ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_Width;
+      grColumns.Columns[3].ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_AutoGrow;
       grColumns.Columns[1].ReadOnly = true;
       ghColumns.Columns[1].CanIncSearch = true;
       ghColumns.DisableOrdering();
@@ -53,29 +53,24 @@ namespace FreeLibSet.Forms.Reporting
       ghColumns.ToolBarPanel = panSpbColumns;
 
       EFPLabel efpWholeWidthValueText = new EFPLabel(page.BaseProvider, lblWholeWidthValueText);
-      efpWholeWidthValueText.DisplayName = "Ширина печатаемых столбцов";
-      efpWholeWidthValueText.ToolTipText = "Полная ширина отмеченных столбцов в списке (в сантиметрах)";
+      efpWholeWidthValueText.DisplayName = WinFormsTools.RemoveMnemonic(lblWholeWidth.Text);
+      efpWholeWidthValueText.ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_WholeWidth;
 
       EFPLabel efpWorkWidthValueText = new EFPLabel(page.BaseProvider, lblWorkWidthValueText);
-      efpWorkWidthValueText.DisplayName = "Ширина рабочей области";
-      efpWorkWidthValueText.ToolTipText = "Ширина области печати, вычисляемая как" + Environment.NewLine +
-        "Ширина страницы - Левое поле - Правое поле" + Environment.NewLine +
-        "(в сантиметрах). Для изменения значения (если возможно) используйте" + Environment.NewLine +
-        "закладки \"Страница\" и \"Поля\"";
+      efpWorkWidthValueText.DisplayName = WinFormsTools.RemoveMnemonic(lblWorkWidth.Text);
+      efpWorkWidthValueText.ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_WorkWidth;
 
       efpRepeatedColumns = new EFPIntEditBox(page.BaseProvider, edRepeatColumns);
-      efpRepeatedColumns.ToolTipText = "Количество столбцов, которые будут повторятся для каждой полосы." + Environment.NewLine +
-        "Повторяться могут только первые печататаемые столбцы, выбранные в списке." + Environment.NewLine +
-        "Нулевое значение означает, что повторяемых столбцов нет";
+      efpRepeatedColumns.ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_RepeatedColumns;
       efpRepeatedColumns.Control.Minimum = 0;
 
 
       efpColumnSubHeaderNumbers = new EFPListComboBox(page.BaseProvider, cbColumnSubHeaderNumbers);
-      efpColumnSubHeaderNumbers.ToolTipText = "Наличие дополнительной строки под заголовками столбов, содержащей номера колонок";
+      efpColumnSubHeaderNumbers.ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_ColumnSubHeaderNumbers;
       //efpColumnSubHeaderNumbers.Enabled = _PageSetup.AllowColumnSubHeaderNumbers;
 
-      page.Text = "Столбцы";
-      page.ToolTipText = "Выбор печатаемых столбцов и их ширины";
+      page.Text = Res.BRDataViewPageSetupColumns_Title_Tab;
+      page.ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_Tab;
       page.ImageKey = "TableColumns";
 
       page.DataToControls += Page_DataToControls;
@@ -118,7 +113,7 @@ namespace FreeLibSet.Forms.Reporting
               args.Grayed = true;
               //Args.ContentVisible = false;
               args.ReadOnly = true;
-              args.ReadOnlyMessage = "Нельзя задавать ширину столбца, который не печатается";
+              args.ReadOnlyMessage = Res.BRDataViewPageSetupColumns_Msg_WidthOfNotPrintedColumm;
             }
           }
           else

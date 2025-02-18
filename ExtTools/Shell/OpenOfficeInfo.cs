@@ -171,7 +171,7 @@ namespace FreeLibSet.Shell
       #region Копирование аргументов
 
       if (programDir.IsEmpty)
-        throw new ArgumentException("Не задан ProgramDir", "programDir");
+        throw ExceptionFactory.ArgIsEmpty("programDir");
 
       _ProgramDir = programDir;
       _Kind = kind;
@@ -228,7 +228,7 @@ namespace FreeLibSet.Shell
         case OpenOfficePart.Base: return Kind == OpenOfficeKind.AlterOffice ? "abase" : "sbase";
         case OpenOfficePart.Math: return Kind == OpenOfficeKind.AlterOffice ? "amath" : "smath";
         default:
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgUnknownValue("part", part);
       }
     }
 

@@ -29,10 +29,28 @@ namespace FreeLibSet.RI
 
     /// <summary>
     /// Заголовок окна.
-    /// Значение по умолчанию зависить от конкруетного диалога.
+    /// Значение по умолчанию зависит от конкретного диалога.
     /// </summary>
-    public string Title { get { return _Title; } set { _Title = value; } }
+    public string Title
+    {
+      get
+      {
+        if (_Title == null)
+          return DefaultTitle;
+        return _Title;
+      }
+      set
+      {
+        CheckNotFixed();
+        _Title = value;
+      }
+    }
     private string _Title;
+
+    /// <summary>
+    /// Значение свойства <see cref="Title"/> по умолчанию
+    /// </summary>
+    protected abstract string DefaultTitle { get; }
 
     #endregion
 
@@ -127,7 +145,12 @@ namespace FreeLibSet.RI
     /// </summary>
     public string Prompt
     {
-      get { return _Prompt; }
+      get
+      {
+        if (_Prompt == null)
+          return DefaultPrompt;
+        return _Prompt;
+      }
       set
       {
         CheckNotFixed();
@@ -135,6 +158,11 @@ namespace FreeLibSet.RI
       }
     }
     private string _Prompt;
+
+    /// <summary>
+    /// Возвращает значение по умолчанию для свойства <see cref="Prompt"/>
+    /// </summary>
+    protected abstract string DefaultPrompt { get; }
 
     #endregion
 
@@ -210,8 +238,6 @@ namespace FreeLibSet.RI
     /// </summary>
     public TextInputDialog()
     {
-      Title = "Ввод текста";
-      Prompt = "Значение";
       _Text = String.Empty;
       _MaxLength = 0;
       _CanBeEmptyMode = UIValidateState.Error;
@@ -220,6 +246,15 @@ namespace FreeLibSet.RI
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.TextInputDialog_Msg_Title; } }
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.TextInputDialog_Msg_Prompt; } }
 
     #region Text
 
@@ -460,8 +495,6 @@ namespace FreeLibSet.RI
     /// </summary>
     public PasswordInputDialog()
     {
-      Title = "Ввод пароля";
-      Prompt = "Пароль";
       _Text = String.Empty;
       _CanBeEmptyMode = UIValidateState.Error;
     }
@@ -469,6 +502,16 @@ namespace FreeLibSet.RI
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.PasswordInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.PasswordInputDialog_Msg_Prompt; } }
 
     #region Text
 
@@ -699,8 +742,6 @@ namespace FreeLibSet.RI
         throw new ArgumentNullException("items");
       _Items = items;
 
-      Title = "Ввод текста";
-      Prompt = "Значение";
       _Text = String.Empty;
       _MaxLength = 0;
       _CanBeEmptyMode = UIValidateState.Error;
@@ -709,6 +750,16 @@ namespace FreeLibSet.RI
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.TextInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.TextInputDialog_Msg_Prompt; } }
 
     #region Text
 
@@ -958,8 +1009,6 @@ namespace FreeLibSet.RI
     /// </summary>
     public BaseNumInputDialog()
     {
-      Title = "Ввод числа";
-      Prompt = "Значение";
       _Format = String.Empty;
       _CanBeEmptyMode = UIValidateState.Error;
     }
@@ -967,6 +1016,16 @@ namespace FreeLibSet.RI
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.NumInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.NumInputDialog_Msg_Prompt; } }
 
     #region CanBeEmpty
 
@@ -1270,7 +1329,7 @@ namespace FreeLibSet.RI
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -1630,8 +1689,6 @@ namespace FreeLibSet.RI
     /// </summary>
     public DateTimeInputDialog()
     {
-      Title = "Ввод текста";
-      Prompt = "Значение";
       _NValue = null;
       _Kind = EditableDateTimeFormatterKind.Date;
       _CanBeEmptyMode = UIValidateState.Error;
@@ -1640,6 +1697,31 @@ namespace FreeLibSet.RI
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle
+    {
+      get
+      {
+        switch (Kind)
+        {
+          case EditableDateTimeFormatterKind.Date: return Res.DateTimeInputDialog_Msg_TitleDate;
+          case EditableDateTimeFormatterKind.Time:
+          case EditableDateTimeFormatterKind.ShortTime: return Res.DateTimeInputDialog_Msg_TitleTime;
+          case EditableDateTimeFormatterKind.DateTime:
+          case EditableDateTimeFormatterKind.ShortDateTime: return Res.DateTimeInputDialog_Msg_TitleDateTime;
+          default:
+            throw new BugException();
+        }
+      }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.DateTimeInputDialog_Msg_Prompt; } }
 
     #region Kind
 
@@ -2174,8 +2256,6 @@ namespace FreeLibSet.RI
     /// </summary>
     public MultiLineTextInputDialog()
     {
-      Title = "Ввод текста";
-      Prompt = "Текст"; // 17.02.2021
       _Lines = DataTools.EmptyStrings;
       _CanBeEmptyMode = UIValidateState.Error;
     }
@@ -2183,6 +2263,16 @@ namespace FreeLibSet.RI
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.TextInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.TextInputDialog_Msg_Prompt; } }
 
     #region Text/Lines
 
@@ -2516,8 +2606,6 @@ namespace FreeLibSet.RI
     /// </summary>
     public BaseNumRangeDialog()
     {
-      Title = "Ввод диапазона чисел";
-      Prompt = "Диапазон";
       _Format = String.Empty;
       _CanBeEmptyMode = UIValidateState.Error;
     }
@@ -2525,6 +2613,16 @@ namespace FreeLibSet.RI
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.NumRangeInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.NumRangeInputDialog_Msg_Prompt; } }
 
     #region First/LastValue/NValue
 
@@ -2964,7 +3062,7 @@ namespace FreeLibSet.RI
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -3348,14 +3446,22 @@ namespace FreeLibSet.RI
     /// </summary>
     public DateRangeDialog()
     {
-      Title = "Ввод диапазона дат";
-      Prompt = "Диапазон";
       _CanBeEmptyMode = UIValidateState.Error;
     }
 
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.DateRangeDialog_Msg_Title; } }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.DateRangeDialog_Msg_Prompt; } }
 
     #region N/First/LastDate
 
@@ -3892,6 +3998,20 @@ namespace FreeLibSet.RI
     #region Свойства
 
     /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle
+    {
+      get
+      {
+        if (MultiSelect)
+          return Res.ListSelectDialog_Msg_TitleMultiSelect;
+        else
+          return Res.ListSelectDialog_Msg_TitleSingleSelect;
+      }
+    }
+
+    /// <summary>
     /// Список для выбора. Задается в конструкторе
     /// Строки могут содержать символ "амперсанд" для подчеркивания буквы.
     /// </summary>
@@ -3931,7 +4051,7 @@ namespace FreeLibSet.RI
       set
       {
         if (!MultiSelect)
-          throw new InvalidOperationException("Список не предназначен для множественного выбора");
+          throw new InvalidOperationException(Res.ListSelectDialog_Err_SingleSelect);
         if (value == null)
           throw new ArgumentNullException();
         value.CopyTo(_Selections, 0);
@@ -4102,7 +4222,7 @@ namespace FreeLibSet.RI
       set
       {
         if (Codes == null)
-          throw new InvalidOperationException("Свойство Codes не установено");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
 
         if (MultiSelect)
         {
@@ -4147,7 +4267,7 @@ namespace FreeLibSet.RI
         if (value != null)
         {
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Неправильная длина массива");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
         }
         _SubItems = value;
       }
@@ -4168,7 +4288,7 @@ namespace FreeLibSet.RI
         if (value != null)
         {
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Неправильная длина массива кодов");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
           _Codes = value;
         }
       }
@@ -4191,7 +4311,7 @@ namespace FreeLibSet.RI
       set
       {
         if (Codes == null)
-          throw new InvalidOperationException("Свойство Codes не установено");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
         SelectedIndex = Array.IndexOf<string>(Codes, value);
       }
     }
@@ -4224,7 +4344,7 @@ namespace FreeLibSet.RI
     public void SetSelectedItems(string[] selectedItems)
     {
       if (!MultiSelect)
-        throw new InvalidOperationException("Свойство MultiSelect не установлено");
+        throw new InvalidOperationException(Res.ListSelectDialog_Err_SingleSelect);
 
       Array.Clear(_Selections, 0, _Selections.Length);
 
@@ -4279,7 +4399,7 @@ namespace FreeLibSet.RI
     public void SelectAll()
     {
       if (!MultiSelect)
-        throw new InvalidOperationException("Свойство MultiSelect не установлено");
+        throw new InvalidOperationException(Res.ListSelectDialog_Err_SingleSelect);
 
       for (int i = 0; i < Selections.Length; i++)
         Selections[i] = true;
@@ -4476,6 +4596,11 @@ namespace FreeLibSet.RI
     #region Свойства
 
     /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.ListSelectDialog_Msg_TitleSingleSelect; } }
+
+    /// <summary>
     /// Список для выбора. Задается в конструкторе
     /// Строки могут содержать символ "амперсанд" для подчеркивания буквы
     /// </summary>
@@ -4493,7 +4618,7 @@ namespace FreeLibSet.RI
       set
       {
         if (value < 0 || value > Items.Length)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, Items.Length - 1);
         _SelectedIndex = value;
       }
     }
@@ -4529,7 +4654,7 @@ namespace FreeLibSet.RI
         if (value != null)
         {
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Неправильная длина массива кодов");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
           _Codes = value;
         }
       }
@@ -4552,7 +4677,7 @@ namespace FreeLibSet.RI
       set
       {
         if (Codes == null)
-          throw new InvalidOperationException("Свойство Codes не установено");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
         SelectedIndex = Array.IndexOf<string>(Codes, value);
       }
     }
@@ -4660,6 +4785,11 @@ namespace FreeLibSet.RI
   public class FolderBrowserDialog : StandardDialog
   {
     #region Свойства
+
+    /// <summary>
+    /// Не используется
+    /// </summary>
+    protected override string DefaultTitle { get { return String.Empty; } }
 
     /// <summary>
     /// Выбранный каталог (вход и выход)
@@ -4775,12 +4905,17 @@ namespace FreeLibSet.RI
   }
 
   /// <summary>
-  /// Базовый класс для OpenFileDialog и SaveFileDialog
+  /// Базовый класс для <see cref="OpenFileDialog"/> и <see cref="SaveFileDialog"/>
   /// </summary>
   [Serializable]
   public abstract class FileDialog : StandardDialog
   {
     #region Свойства
+
+    /// <summary>
+    /// Пустая строка - заголовок определяется операционной системой на стороне клиента
+    /// </summary>
+    protected override string DefaultTitle { get { return String.Empty; } }
 
     /// <summary>
     /// Выбранный файл
@@ -4940,14 +5075,35 @@ namespace FreeLibSet.RI
     /// </summary>
     public InputDataGridDialog()
     {
-      Title = "Таблица";
-
       _Data = new UIInputGridData();
     }
 
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.InputDataGridDialog_Msg_Title; } }
+
+    /// <summary>
+    /// Не используется
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new string Prompt
+    {
+      get { return base.Prompt; }
+      set { base.Prompt = value; }
+    }
+
+    /// <summary>
+    /// Не используется
+    /// </summary>
+    protected override string DefaultPrompt
+    {
+      get { return String.Empty; }
+    }
 
     /// <summary>
     /// Основное свойство - редактируемая таблица данных.

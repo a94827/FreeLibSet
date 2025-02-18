@@ -60,7 +60,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в целое число");
+        throw ExceptionFactory.Inconvertible(s, typeof(Int32));
     }
 
     #endregion
@@ -100,7 +100,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в целое число Int64");
+        throw ExceptionFactory.Inconvertible(s, typeof(Int64));
     }
 
     #endregion
@@ -140,7 +140,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в число Single");
+        throw ExceptionFactory.Inconvertible(s, typeof(Single));
     }
 
     #endregion
@@ -180,7 +180,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в число Double");
+        throw ExceptionFactory.Inconvertible(s, typeof(Double));
     }
 
     #endregion
@@ -220,7 +220,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в число Decimal");
+        throw ExceptionFactory.Inconvertible(s, typeof(Decimal));
     }
 
     #endregion
@@ -272,7 +272,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в логическое значение");
+        throw ExceptionFactory.Inconvertible(s, typeof(Boolean));
     }
 
     #endregion
@@ -327,7 +327,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value, useTime))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в DateTime");
+        throw ExceptionFactory.Inconvertible(s, typeof(DateTime));
     }
 
     #endregion
@@ -367,7 +367,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в TimeSpan");
+        throw ExceptionFactory.Inconvertible(s, typeof(TimeSpan));
     }
 
     #endregion
@@ -420,7 +420,7 @@ namespace FreeLibSet.Config
       if (TryParse(s, out value))
         return value;
       else
-        throw new FormatException("Строку \"" + s + "\" нельзя преобразовать в GUID");
+        throw ExceptionFactory.Inconvertible(s, typeof(Guid));
     }
 
     #endregion
@@ -505,8 +505,8 @@ namespace FreeLibSet.Config
     public bool GetString(string name, ref string value)
     {
       string s = GetString(name);
-      if (s.Length>0)
-      { 
+      if (s.Length > 0)
+      {
         value = s;
         return true;
       }
@@ -2527,7 +2527,7 @@ namespace FreeLibSet.Config
         CfgPart srcChild = GetChild(childNames[i], false);
 #if DEBUG
         if (srcChild == null)
-          throw new BugException("В текущем объекте \"" + ToString() + "\" не найдена дочерняя секция с именем \"" + childNames[i] + "\", хотя она была возвращена методом GetChildNames()");
+          throw new BugException("In current object \"" + ToString() + "\" there is no child section with the name \"" + childNames[i] + "\", despite the name was returned by GetChildNames()");
 #endif
         CfgPart destChild = dest.GetChild(childNames[i], true);
         // Рекурсивный вызов
@@ -2630,13 +2630,13 @@ namespace FreeLibSet.Config
     {
       if (String.IsNullOrEmpty(name))
       {
-        errorText = "Имя не задано";
+        errorText = Res.CfgPart_Err_NameIsEmpty;
         return false;
       }
 
       if (!(Char.IsLetter(name[0]) || name[0] == '_'))
       {
-        errorText = "Имя должно начинаться с буквы или знака подчеркивания";
+        errorText = Res.CfgPart_Err_NameFirstChar;
         return false;
       }
 
@@ -2647,7 +2647,7 @@ namespace FreeLibSet.Config
         if (_ValidNameCharIndexer.Contains(name[i]))
           continue;
 
-        errorText = "Недопустимый символ \"" + name[i] + "\" в позиции " + (i + 1).ToString() + ". Допускаются только буквы, цифры и символы \"-\", \"_\" и \".\"";
+        errorText = String.Format(Res.CfgPart_Err_NameAnotherChar, name[i], (i + 1));
         return false;
       }
 
@@ -2677,7 +2677,7 @@ namespace FreeLibSet.Config
       if (!IsValidName(name, out errorText))
       {
         if (String.IsNullOrEmpty(name))
-          throw new ArgumentNullException("name");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
         else
           throw new ArgumentException(errorText, "name");
       }
@@ -2994,7 +2994,7 @@ namespace FreeLibSet.Config
     {
 #if DEBUG
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 #endif
 
       dest.Remove(name);
@@ -3119,7 +3119,7 @@ namespace FreeLibSet.Config
       : base(converter)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
       if (converter == null)
         throw new ArgumentNullException("converter");
 
@@ -3184,7 +3184,7 @@ namespace FreeLibSet.Config
     /// Текущая кодировка XML-файла.
     /// Она будет использована при вызове метода Save().
     /// В конструкторе свойство устанавливается, исходя из текущей кодировки файла.
-    /// Если файл отсутствует (новый файл), или кодировку определить не удалось, свойство устанавливается равным DefaultEncoding.
+    /// Если файл отсутствует (новый файл), или кодировку определить не удалось, свойство устанавливается равным <see cref="DefaultEncoding"/>.
     /// </summary>
     public Encoding Encoding
     {
@@ -3300,7 +3300,7 @@ namespace FreeLibSet.Config
         throw new ArgumentNullException("tree");
       tree.CheckNotDisposed();
       if (String.IsNullOrEmpty(keyName))
-        throw new ArgumentNullException("keyName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("keyName");
       if (converter == null)
         throw new ArgumentNullException("converter");
 
@@ -3614,10 +3614,10 @@ namespace FreeLibSet.Config
 
   /// <summary>
   /// Секция конфигурации, хранящаяся в ветви реестра.
-  /// Внешний объект RegistryTree2 используется для доступа к данным реестра.
-  /// В пользовательском коде используйте класс RegistryCfg2 для доступа к реестру.
-  /// В отличие от RegistryCfgPart, позволяет управлять виртуализацией реестра в Windows-64 bit.
-  /// Режим виртуализации задается в RegistryTree2.
+  /// Внешний объект <see cref="RegistryTree2"/> используется для доступа к данным реестра.
+  /// В пользовательском коде используйте класс <see cref="RegistryCfg2"/> для доступа к реестру.
+  /// В отличие от <see cref="RegistryCfgPart"/>, позволяет управлять виртуализацией реестра в Windows-64 bit.
+  /// Режим виртуализации задается в <see cref="RegistryTree2"/>.
   /// </summary>
   public class RegistryCfgPart2 : CfgPart
   {
@@ -3645,7 +3645,7 @@ namespace FreeLibSet.Config
         throw new ArgumentNullException("tree");
       tree.CheckNotDisposed();
       if (String.IsNullOrEmpty(keyName))
-        throw new ArgumentNullException("keyName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("keyName");
       if (converter == null)
         throw new ArgumentNullException("converter");
 
@@ -3701,7 +3701,7 @@ namespace FreeLibSet.Config
     protected override void DoSetString(string name, string value, bool removeEmpty)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
       if (removeEmpty && String.IsNullOrEmpty(value))
       {
@@ -3865,12 +3865,12 @@ namespace FreeLibSet.Config
   }
 
   /// <summary>
-  /// Объединение объектов RegistryTree2 и RegistryCfgPart2.
+  /// Объединение объектов <see cref="RegistryTree2"/> и <see cref="RegistryCfgPart2"/>.
   /// Обычно этот класс используется в прикладном коде.
   /// Обычно следует создавать объект для корневой ветви реестра, в которой хранится конфигурация приложения,
   /// например, "HKEY_CURRENT_USER\МояКомпания\МоеПриложение", а для обращения к вложенным ветвям использовать GetChild().
-  /// В отличие от RegistryCfg, позволяет управлять виртуализацией реестра в Windows-64 bit.
-  /// Режим виртуализации задается в RegistryTree2.
+  /// В отличие от <see cref="RegistryCfg"/>, позволяет управлять виртуализацией реестра в Windows-64 bit.
+  /// Режим виртуализации задается в <see cref="RegistryTree2"/>.
   /// </summary>
   public class RegistryCfg2 : RegistryCfgPart2, IDisposable
   {
@@ -3878,7 +3878,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Начать работу с реестром в режиме чтения и записи, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
-    /// Будет использован режим виртуализации View=Registry64 или Registry32 в зависимости от
+    /// Будет использован режим виртуализации <see cref="RegistryTree2.View"/>=<see cref="RegistryView2.Registry64"/> или <see cref="RegistryView2.Registry32"/> в зависимости от
     /// разрядности операционной системы, а не от разрядности приложения.
     /// </summary>
     /// <param name="keyName">Путь к корневой ветви реестра</param>
@@ -3889,7 +3889,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Начать работу с реестром, используя конвертер по умолчанию <see cref="CfgConverter.Default"/>.
-    /// Будет использован режим виртуализации View=Registry64 или Registry32 в зависимости от
+    /// Будет использован режим виртуализации <see cref="RegistryTree2.View"/>=<see cref="RegistryView2.Registry64"/> или <see cref="RegistryView2.Registry32"/> в зависимости от
     /// разрядности операционной системы, а не от разрядности приложения.
     /// </summary>
     /// <param name="keyName">Путь к корневой ветви реестра</param>
@@ -3901,7 +3901,7 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Начать работу с реестром, используя заданный конвертер
-    /// Будет использован режим виртуализации View=Registry64 или Registry32 в зависимости от
+    /// Будет использован режим виртуализации <see cref="RegistryTree2.View"/>=<see cref="RegistryView2.Registry64"/> или <see cref="RegistryView2.Registry32"/> в зависимости от
     /// разрядности операционной системы, а не от разрядности приложения.
     /// </summary>
     /// <param name="keyName">Путь к корневой ветви реестра</param>
@@ -3925,9 +3925,7 @@ namespace FreeLibSet.Config
     }
 
     /// <summary>
-    /// Начать работу с реестром, используя заданный конвертер
-    /// Будет использован режим виртуализации View=Registry64 или Registry32 в зависимости от
-    /// разрядности операционной системы, а не от разрядности приложения.
+    /// Начать работу с реестром, используя заданный конвертер.
     /// Эта версия позволяет задать режим виртуализации.
     /// </summary>
     /// <param name="keyName">Путь к корневой ветви реестра</param>
@@ -3966,7 +3964,7 @@ namespace FreeLibSet.Config
     /// <summary>
     /// Вызывается для закрытия ключей реестра
     /// </summary>
-    /// <param name="disposing">true, если был вызван метод Dispose()</param>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/></param>
     protected virtual void Dispose(bool disposing)
     {
 
@@ -4005,7 +4003,7 @@ namespace FreeLibSet.Config
     #region Конструкторы
 
     /// <summary>
-    /// Создает пустое хранилище в памяти. Использует конвертер по умолчанию
+    /// Создает пустое хранилище в памяти. Использует конвертер по умолчанию.
     /// </summary>
     public TempCfg()
       : base(CfgConverter.Default)
@@ -4092,7 +4090,7 @@ namespace FreeLibSet.Config
   /// Для их эмуляции используются имена секций вида "Родитель\Дочерняя\..\Дочерняя".
   /// 
   /// Нельзя хранить значения вне какой-либо секции в ini-файле, поэтому нет версии конструктора для ini-файла в-целом.
-  /// Задание имени секции является обязательным
+  /// Задание имени секции является обязательным.
   /// </summary>
   public class IniCfgPart : CfgPart
   {
@@ -4118,12 +4116,9 @@ namespace FreeLibSet.Config
     {
       if (file == null)
         throw new ArgumentNullException("file");
-      if (String.IsNullOrEmpty(sectionName))
-        throw new ArgumentNullException("sectionName");
-      if (sectionName.IndexOf('[') >= 0 || sectionName.IndexOf('[') >= 0)
-        throw new ArgumentException("Имя секции не должно содержать квадратные скобки", sectionName);
+      IniFile.ValidateSectionName(sectionName);
       if (sectionName[0] == '\\' || sectionName[sectionName.Length - 1] == '\\' || sectionName.IndexOf("\\\\") >= 0)
-        throw new ArgumentException("Имя секции не может начинаться или заканчиваться символом-разделителем, или содержать два разделителя подряд", "sectionName");
+        throw new ArgumentException(Res.IniCfgPart_Arg_InvalidSepInSectionName, "sectionName");
       if (converter == null)
         throw new ArgumentNullException("converter");
 

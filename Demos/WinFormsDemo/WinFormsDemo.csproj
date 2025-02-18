@@ -54,6 +54,18 @@
     <Compile Include="CultureDemo\CultureTestForm.designer.cs">
       <DependentUpon>CultureTestForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EFPClipboardDemo\EFPClipboardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPClipboardDemo\EFPClipboardForm.Designer.cs">
+      <DependentUpon>EFPClipboardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EFPDateRangeBoxDemo\DateRangeBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPDateRangeBoxDemo\DateRangeBoxForm.Designer.cs">
+      <DependentUpon>DateRangeBoxForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EFPDBxGridFiltersDemo\TestEFPDBxGridFilters.cs" />
     <Compile Include="EFPTabControlDemo\EFPTabControlForm.cs">
       <SubType>Form</SubType>
@@ -106,6 +118,12 @@
     <EmbeddedResource Include="CultureDemo\CultureTestForm.resx">
       <DependentUpon>CultureTestForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="EFPClipboardDemo\EFPClipboardForm.resx">
+      <DependentUpon>EFPClipboardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPDateRangeBoxDemo\DateRangeBoxForm.resx">
+      <DependentUpon>DateRangeBoxForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EFPTabControlDemo\EFPTabControlForm.resx">
       <DependentUpon>EFPTabControlForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -156,8 +174,8 @@
       <Name>ExtTools</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using FreeLibSet.Formatting;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Calendar
 {
@@ -55,9 +56,10 @@ namespace FreeLibSet.Calendar
     /// <summary>
     /// Получение текста для диапазона дат.
     /// Диапазон может быть закрытым, полуоткрытым или полностью открытым
-    /// Версия метода в <see cref="DateRangeFormatter"/> использует для вывода дат вызов <see cref="DateTime.ToString()"/> для даты.
+    /// Непереопределенная версия метода использует для вывода дат вызов <see cref="DateRangeFormatter.ToString(DateTime, bool)"/> для даты.
     /// Переопределенный метод может реализовать более интеллектуальное представление, например,
-    /// объединяя даты в пределах месяца: "01-31 июля 2017 года"
+    /// объединяя даты в пределах месяца: "01-31 июля 2017 года".
+    /// Если обе даты не заданы, возвращается пустая строка.
     /// </summary>
     /// <param name="firstDate">Начальная дата диапазона или null для (полу)открытого интервала</param>
     /// <param name="lastDate">Конечная дата диапазона или null для (полу)открытого интервала</param>
@@ -72,15 +74,15 @@ namespace FreeLibSet.Calendar
           if (firstDate.Value == lastDate.Value)
             return ToString(firstDate.Value, longFormat);
           else
-            return ToString(firstDate.Value, longFormat) + "-" + ToString(lastDate.Value, longFormat);
+            return String.Format(Res.DateRangeFormatter_Msg_RangeMinMax, ToString(firstDate.Value, longFormat), ToString(lastDate.Value, longFormat));
         }
         else
-          return ">=" + ToString(firstDate.Value, longFormat);
+          return String.Format(Res.DateRangeFormatter_Msg_RangeMin, ToString(firstDate.Value, longFormat));
       }
       else
       {
         if (lastDate.HasValue)
-          return "<=" + ToString(lastDate.Value, longFormat);
+          return String.Format(Res.DateRangeFormatter_Msg_RangeMax, ToString(lastDate.Value, longFormat));
         else
           return String.Empty;
       }
@@ -90,6 +92,7 @@ namespace FreeLibSet.Calendar
     /// Получение текста для диапазона месяцев.
     /// Диапазон может быть закрытым, полуоткрытым или полностью открытым (<see cref="YearMonth.IsEmpty"/>=true).
     /// Версия метода в <see cref="DateRangeFormatter"/> использует для вывода дат вызов <see cref="DateTime"/>.ToString("y") для даты.
+    /// Если обе даты не заданы, возвращается пустая строка.
     /// </summary>
     /// <param name="firstYM">Начальный месяц диапазона</param>
     /// <param name="lastYM">Конечный месяц диапазона</param>
@@ -103,23 +106,23 @@ namespace FreeLibSet.Calendar
           if (firstYM == lastYM)
             return firstYM.BottomOfMonth.ToString("y");
           else
-            return firstYM.BottomOfMonth.ToString("y") + "-" + lastYM.EndOfMonth.ToString("y");
+            return String.Format(Res.DateRangeFormatter_Msg_RangeMinMax, firstYM.BottomOfMonth.ToString("y"), lastYM.EndOfMonth.ToString("y"));
         }
         else
-          return ">=" + firstYM.BottomOfMonth.ToString("y");
+          return String.Format(Res.DateRangeFormatter_Msg_RangeMin, firstYM.BottomOfMonth.ToString("y"));
       }
       else
       {
         if (!lastYM.IsEmpty)
-          return "<=" + lastYM.EndOfMonth.ToString("y");
+          return String.Format(Res.DateRangeFormatter_Msg_RangeMax, lastYM.EndOfMonth.ToString("y"));
         else
           return String.Empty;
       }
     }
 
     /// <summary>
-    /// Возвращает true, если идет сначала месяц, потом день.
-    /// Возвращает false, если сначала должен быть день, потом месяц.
+    /// Возвращает true, если идет сначала месяц, потом день (как в США или Японии).
+    /// Возвращает false, если сначала должен быть день, потом месяц (как в Германии).
     /// </summary>
     private static bool IsMDOrder
     {
@@ -174,7 +177,7 @@ namespace FreeLibSet.Calendar
           return range.First.ToString("dd") + "-" + ToString(range.Last, longFormat);
       }
       else
-        return ToString(range.First, longFormat) + "-" + ToString(range.Last, longFormat);
+        return String.Format(Res.DateRangeFormatter_Msg_RangeMinMax,  ToString(range.First, longFormat), ToString(range.Last, longFormat));
     }
 
     #endregion

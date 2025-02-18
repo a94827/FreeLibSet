@@ -163,7 +163,7 @@ namespace FreeLibSet.Config
       foreach (SettingsDataItem item2 in _Items)
       {
         if (item2.GetType() == item.GetType())
-          throw new ArgumentException("В списке уже есть данные такого типа");
+          throw new ArgumentException(String.Format(Res.SettingsDataList_Arg_ItemTypeAlreadyExists, item.GetType()), "item");
       }
       _Items.Add(item);
     }
@@ -402,7 +402,7 @@ namespace FreeLibSet.Config
         _Owner = owner;
       }
 
-      private SettingsDataList _Owner;
+      private readonly SettingsDataList _Owner;
 
       #endregion
 
@@ -420,7 +420,7 @@ namespace FreeLibSet.Config
         get
         {
           if (String.IsNullOrEmpty(code))
-            throw new ArgumentNullException("code");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
 
           if (_Items == null)
             _Items = new NamedList<DefaultSettingsDataList>();
@@ -523,7 +523,7 @@ namespace FreeLibSet.Config
     {
       T res = GetItem<T>();
       if (res == null)
-        throw new InvalidOperationException("Набор данных не содержит объекта класса " + typeof(T).Name);
+        throw ExceptionFactory.KeyNotFound(typeof(T));
       return res;
     }
 
@@ -558,7 +558,7 @@ namespace FreeLibSet.Config
     {
       _Owner = owner;
       if (String.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
       _Code = code;
     }
 
@@ -610,7 +610,7 @@ namespace FreeLibSet.Config
       {
         ICloneable mainObj = _Owner.GetRequired<T>() as ICloneable;
         if (mainObj == null)
-          throw new InvalidOperationException("Тип " + typeof(T).ToString() + " не поддерживает клонирование объектов");
+          throw ExceptionFactory.TypeNotCloneable(typeof(T));
         res = (T)(mainObj.Clone());
         base.Add(res);
       }

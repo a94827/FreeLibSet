@@ -11,6 +11,8 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using FreeLibSet.Core;
 using FreeLibSet.Win32.Twain;
+using FreeLibSet.Logging;
+
 namespace FreeLibSet.Forms
 {
   /// <summary>
@@ -36,7 +38,7 @@ namespace FreeLibSet.Forms
     public EFPTwainHandler()
     {
       if (!EFPApp.MainWindowVisible)
-        throw new InvalidOperationException("Главное окно программы закрыто");
+        throw new InvalidOperationException(Res.EFPTwainHandler_Err_NoMainWindow);
 
       Application.AddMessageFilter(this);
       _MsgFilterInstalled = true;
@@ -75,7 +77,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Ошибка Twain.Finish()");
+            EFPApp.ShowException(e, LogoutTools.GetTitleForCall("Twain.Finish()"));
           }
           _MainObj.Dispose();
           _MainObj = null;
@@ -114,16 +116,16 @@ namespace FreeLibSet.Forms
     public Bitmap[] Acquire()
     {
       if (_InsideAcquire)
-        throw new InvalidOperationException("Предыдущий вызов еще не выполнен");
+        throw new ReenteranceException();
 
       ClearBitmaps();
       _Bitmaps = new List<Bitmap>();
 
       _InsideAcquire = true;
       Splash spl = new Splash(new string[]{
-        "Инициализация TWAIN",
-        "Запуск сканирования",
-        "Идет сканирование"});
+        Res.EFPTwainHandler_Phase_Init,
+        Res.EFPTwainHandler_Phase_Start,
+        Res.EFPTwainHandler_Phase_Scan});
       try
       {
         // Если инициализировать внутри splash, не будет перекрываться окно сканера
@@ -134,7 +136,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ErrorMessageBox(e.Message, "Ошибка инициализации TWAIN");
+          EFPApp.ErrorMessageBox(e.Message, Res.EFPTwainHandler_ErrTitle_Init);
           ErrorFlag = true;
         }
         if (!ErrorFlag)

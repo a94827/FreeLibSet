@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Collections
 {
@@ -142,9 +143,9 @@ namespace FreeLibSet.Collections
     public void FromArray(bool[] value)
     {
       if (value == null)
-        throw new ArgumentNullException();
+        throw new ArgumentNullException("value");
       if (value.Length != _Flags.Length)
-        throw new ArgumentException("Неправильная длина массива");
+        throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Flags.Length);
 
       bool changed = false;
       for (int i = 0; i < _Flags.Length; i++)

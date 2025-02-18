@@ -53,7 +53,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (_InsideClick)
-          throw new InvalidOperationException("Свойство не может устанавливаться из обработчика события Click");
+          throw new InvalidOperationException(Res.EFPButton_Err_InsideClickEvent);
         _PreventFormClosing = value;
       }
     }
@@ -103,7 +103,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при нажатии кнопки \"" + DisplayName + "\"");
+        EFPApp.ShowException(e, String.Format(Res.EFPButton_ErrTitle_Click, DisplayName));
       }
     }
 
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms
     {
       if (_InsideClick)
       {
-        EFPApp.ShowTempMessage("Предыдущее нажатие кнопки \"" + DisplayName + "\" еще не обработано");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPButton_Err_ClickInProgress, DisplayName));
         return;
       }
 
@@ -123,7 +123,7 @@ namespace FreeLibSet.Forms
       {
         if (PreventFormClosing)
         {
-          if (BaseProvider.ReentranceLocker.TryLock("Нажатие кнопки \"" + DisplayName + "\""))
+          if (BaseProvider.ReentranceLocker.TryLock(String.Format(Res.EFPButton_Phase_Click, DisplayName)))
           {
             try
             {
@@ -248,7 +248,7 @@ namespace FreeLibSet.Forms
       _AutoValidate = true;
 
       if (String.IsNullOrEmpty(control.Text))
-        DisplayName = "Сообщения";
+        DisplayName = Res.EFPErrorMessageListButton_Name_Default;
     }
 
     #endregion
@@ -287,7 +287,7 @@ namespace FreeLibSet.Forms
       {
 #if DEBUG
         if (value < 0 || value > 20)
-          throw new ArgumentException("Недопустимая ширина колонки \"Код\": " + CodeWidth);
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, 20);
 #endif
         _CodeWidth = value;
       }
@@ -477,7 +477,7 @@ namespace FreeLibSet.Forms
             SetError(lst2.AllText);
           }
           else
-            SetError("Список содержит ошибки (" + _ErrorMessages.ErrorCount.ToString() + ")");
+            SetError(String.Format(Res.EFPErrorMessageListButton_Msg_Errors, _ErrorMessages.ErrorCount));
           break;
 
         case ErrorMessageKind.Warning:
@@ -488,7 +488,7 @@ namespace FreeLibSet.Forms
             SetWarning(lst2.AllText); // 05.01.2021
           }
           else
-            SetWarning("Список содержит предупреждения (" + _ErrorMessages.WarningCount.ToString() + ")");
+            SetWarning(String.Format(Res.EFPErrorMessageListButton_Msg_Warnings, _ErrorMessages.WarningCount));
           break;
       }
     }

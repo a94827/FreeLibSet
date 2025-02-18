@@ -25,19 +25,19 @@ namespace FreeLibSet.Forms
     public EFPExportFileItem(string code, string filterText, string fileMask)
     {
       if (String.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
       _Code = code;
 
       if (String.IsNullOrEmpty(filterText))
-        throw new ArgumentNullException("filterText");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("filterText");
       if (filterText.IndexOf('|') >= 0)
-        throw new ArgumentException("Недопустимые символы", "filterText");
+        throw ExceptionFactory.ArgBadChar("filterText", filterText, "|");
       _FilterText = filterText;
 
       if (String.IsNullOrEmpty(fileMask))
-        throw new ArgumentNullException("fileMask");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("fileMask");
       if (fileMask.IndexOf('|') >= 0)
-        throw new ArgumentException("Недопустимые символы", "fileMask");
+        throw ExceptionFactory.ArgBadChar("fileMask", FileMask, "|");
       _FileMask = fileMask;
     }
 
@@ -98,7 +98,7 @@ namespace FreeLibSet.Forms
     public EFPSendToItem(string mainCode, string auxCode)
     {
       if (String.IsNullOrEmpty(mainCode))
-        throw new ArgumentNullException("mainCode");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("mainCode");
       _MainCode = mainCode;
       _AuxCode = auxCode ?? String.Empty;
     }
@@ -192,16 +192,10 @@ namespace FreeLibSet.Forms
       {
         if (_ToolTipText == null)
         {
-          StringBuilder sb = new StringBuilder();
-          sb.Append("Отправить ");
-          if (!String.IsNullOrEmpty(SubMenuText))
-          {
-            sb.Append(SubMenuText);
-            sb.Append(" ");
-          }
-          sb.Append("в ");
-          sb.Append(MenuText);
-          return sb.ToString();
+          if (String.IsNullOrEmpty(SubMenuText))
+            return String.Format(Res.EFPSendToItem_ToolTip_Simple, MenuText);
+          else
+            return String.Format(Res.EFPSendToItem_ToolTip_WithSubMenu, SubMenuText, MenuText);
         }
         else
           return _ToolTipText;
@@ -323,7 +317,7 @@ namespace FreeLibSet.Forms
     public EFPMenuOutItem(string code)
     {
       if (String.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
       _Code = code;
       _ExportFileItems = new NamedList<EFPExportFileItem>();
       _SendToItems = new NamedList<EFPSendToItem>();
@@ -536,7 +530,7 @@ namespace FreeLibSet.Forms
       commandItems.Add(ciPrintPreview);
 
       ciExportFile = new EFPCommandItem("File", "ExportFile");
-      ciExportFile.MenuText = "Экспорт в файл...";
+      ciExportFile.MenuText = Res.Cmd_Menu_File_ExportFile;
       ciExportFile.Click += ExportFile_Click;
       commandItems.Add(ciExportFile);
 
@@ -766,14 +760,14 @@ namespace FreeLibSet.Forms
 
     private void PrintDefault_Click(object sender, EventArgs args)
     {
-      EFPMenuOutItem outItem = SelectItem("Печать", ciPrint.ImageKey, null, delegate (EFPMenuOutItem item2) { return item2.CanPrint; });
+      EFPMenuOutItem outItem = SelectItem(ciPrint.MenuTextWithoutMnemonic /* а не ciPrintDefault*/, "Print", null, delegate (EFPMenuOutItem item2) { return item2.CanPrint; });
       if (outItem != null)
         outItem.Print(true);
     }
 
     private void Print_Click(object sender, EventArgs args)
     {
-      EFPMenuOutItem outItem = SelectItem("Печать", ciPrint.ImageKey, null, delegate (EFPMenuOutItem item2) { return item2.CanPrint; });
+      EFPMenuOutItem outItem = SelectItem(ciPrint.MenuTextWithoutMnemonic, "Print", null, delegate (EFPMenuOutItem item2) { return item2.CanPrint; });
       if (outItem != null)
         outItem.Print(false);
     }
@@ -826,7 +820,7 @@ namespace FreeLibSet.Forms
       AbsPath filePath = new AbsPath(dlg.FileName);
       LastExportFileDir = filePath.ParentDir;
 
-      EFPApp.BeginWait("Экспорт в файл " + filePath.FileName, "Save");
+      EFPApp.BeginWait(String.Format(Res.EFPMenuOutHandler_Phase_ExportFile, filePath.FileName), "Save");
       try
       {
         FileTools.ForceDirs(filePath.ParentDir);
@@ -842,13 +836,13 @@ namespace FreeLibSet.Forms
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
       string sendToCode = (string)(ci.Tag);
-      EFPMenuOutItem item = SelectItem("Отправить в " + ci.MenuTextWithoutMnemonic, ci.ImageKey, ci.Image,
+      EFPMenuOutItem item = SelectItem(String.Format(Res.EFPSendToItem_ToolTip_Simple, ci.MenuTextWithoutMnemonic), ci.ImageKey, ci.Image,
         delegate (EFPMenuOutItem item2) { return item2.SendToItems.Contains(sendToCode); });
       if (item == null)
         return;
 
       EFPSendToItem sendToItem = item.SendToItems.GetRequired(sendToCode);
-      EFPApp.BeginWait("Отправка в " + sendToItem.MenuText, "Play");
+      EFPApp.BeginWait(String.Format(Res.EFPMenuOutHandler_Phase_SendTo, sendToItem.MenuText), "Play");
       try
       {
         item.SendTo(sendToItem);
@@ -877,7 +871,7 @@ namespace FreeLibSet.Forms
       switch (list2.Count)
       {
         case 0:
-          throw new BugException("Нет подходящих вариантов");
+          throw new BugException("There is no avaialable EFPMenuOutItem");
         case 1:
           return list2[0];
       }

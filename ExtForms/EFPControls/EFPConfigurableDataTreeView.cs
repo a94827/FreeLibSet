@@ -273,7 +273,9 @@ CommandItems.PerformRefreshItems();
 
     /// <summary>
     /// Имя фиксированной настройки табличного просмотра
-    /// Если свойство не установлено, используется настройка по умолчанию: <see cref="EFPGridProducer.DefaultConfig"/>
+    /// Если свойство не установлено, используется настройка по умолчанию: <see cref="EFPGridProducer.DefaultConfig"/>.
+    /// 
+    /// Свойство должно устанавливаться до <see cref="EFPDataTreeView.CurrentConfig"/>.
     /// </summary>
     public string DefaultConfigName
     {
@@ -281,7 +283,7 @@ CommandItems.PerformRefreshItems();
       set
       {
         if (CurrentConfigHasBeenSet)
-          throw new InvalidOperationException("Свойство DefaultConfigName должно устанавливаться до CurrentGridConfig");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "CurrentConfig");
         _DefaultConfigName = value;
       }
     }
@@ -300,7 +302,7 @@ CommandItems.PerformRefreshItems();
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_ColumnWidthChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -312,7 +314,7 @@ CommandItems.PerformRefreshItems();
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_ColumnReordered");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -495,7 +497,7 @@ CommandItems.PerformRefreshItems();
             e.Data["CfgPart.GetXmlText()"] = cfg.GetXmlText();
           }
           catch { }
-          EFPApp.ShowException(e, "Ошибка загрузки сохраненной конфигурации табличного просмотра");
+          EFPApp.ShowException(e, Res.EFPConfigurableDataView_ErrTitle_ReadConfig);
           InsideSetCurrentConfig = true; // 07.07.2017
           try
           {
@@ -506,7 +508,7 @@ CommandItems.PerformRefreshItems();
         }
       }
       if (base.CurrentConfig == null)
-        throw new BugException("Метод InitDefaultGridConfig() не установил свойство CurrentConfig");
+        throw new BugException("Property CurrentConfig has not been set whyle InitDefaultGridConfig() method called");
     }
 
     #endregion
@@ -591,7 +593,7 @@ CommandItems.PerformRefreshItems();
 
       if (!HasFilters)
       {
-        EFPApp.ErrorMessageBox("Табличный просмотр не содержит фильтров");
+        EFPApp.ErrorMessageBox(Res.EFPConfigurableDataView_Err_NoFilters);
         return false;
       }
 
@@ -744,7 +746,7 @@ CommandItems.PerformRefreshItems();
       #region Настройка просмотра
 
       ciEditConfig = new EFPCommandItem("View", "GridConfig");
-      ciEditConfig.MenuText = "Настройка просмотра";
+      ciEditConfig.MenuText = Res.Cmd_Menu_View_GridConfig;
       ciEditConfig.ImageKey = "EditGridConfig";
       ciEditConfig.Click += new EventHandler(ciEditConfig_Click);
       // пусть будет везде ciEditConfig.Usage = EFPCommandItemUsage.Menu;
@@ -755,7 +757,7 @@ CommandItems.PerformRefreshItems();
       #region Фильтр
 
       _MenuFilter = new EFPCommandItem("View", "MenuFilter");
-      _MenuFilter.MenuText = "&Фильтр";
+      _MenuFilter.MenuText = Res.Cmd_Menu_Filter;
       _MenuFilter.ImageKey = "Filter";
       _MenuFilter.Usage = EFPCommandItemUsage.Menu;
       Add(_MenuFilter);
@@ -769,13 +771,13 @@ CommandItems.PerformRefreshItems();
       ciSetFilter.ImageKey = "Filter";
       //}
       ciSetFilter.Parent = _MenuFilter;
-      ciSetFilter.MenuText = "Установить фильтр";
+      ciSetFilter.MenuText = Res.Cmd_Menu_Filter_SetFilter;
       ciSetFilter.Click += new EventHandler(ciSetFilter_Click);
       Add(ciSetFilter);
 
       ciScrollFilterPrev = new EFPCommandItem("View", "PrevDateFilter");
       ciScrollFilterPrev.Parent = _MenuFilter;
-      ciScrollFilterPrev.MenuText = "Предыдущий период времени";
+      ciScrollFilterPrev.MenuText = Res.Cmd_Menu_Filter_PrevDateFilter;
       ciScrollFilterPrev.ShortCut = Keys.Alt | Keys.Up;
       ciScrollFilterPrev.ImageKey = "ArrowUp";
       ciScrollFilterPrev.GroupBegin = true;
@@ -785,7 +787,7 @@ CommandItems.PerformRefreshItems();
 
       ciScrollFilterNext = new EFPCommandItem("View", "NextDateFilter");
       ciScrollFilterNext.Parent = _MenuFilter;
-      ciScrollFilterNext.MenuText = "Следующий период времени";
+      ciScrollFilterNext.MenuText = Res.Cmd_Menu_Filter_NextDateFilter;
       ciScrollFilterNext.ShortCut = Keys.Alt | Keys.Down;
       ciScrollFilterNext.ImageKey = "ArrowDown";
       ciScrollFilterNext.GroupEnd = true;
@@ -918,15 +920,15 @@ CommandItems.PerformRefreshItems();
       {
         ciScrollFilterPrev.Enabled = sf.CanScrollUp;
         ciScrollFilterNext.Enabled = sf.CanScrollDown;
-        ciScrollFilterPrev.ToolTipText = ciScrollFilterPrev.MenuText + " для фильтра \"" + ((IEFPGridFilter)sf).DisplayName + "\"";
-        ciScrollFilterNext.ToolTipText = ciScrollFilterNext.MenuText + " для фильтра \"" + ((IEFPGridFilter)sf).DisplayName + "\"";
+        ciScrollFilterPrev.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForFilter, ciScrollFilterPrev.MenuText, ((IEFPGridFilter)sf).DisplayName);
+        ciScrollFilterNext.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForFilter, ciScrollFilterNext.MenuText, ((IEFPGridFilter)sf).DisplayName);
       }
       else
       {
         ciScrollFilterPrev.Enabled = false;
         ciScrollFilterNext.Enabled = false;
-        ciScrollFilterPrev.ToolTipText = ciScrollFilterPrev.MenuText + " (нет активного фильтра)";
-        ciScrollFilterNext.ToolTipText = ciScrollFilterNext.MenuText + " (нет активного фильтра)";
+        ciScrollFilterPrev.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForNoActiveFilter, ciScrollFilterPrev.MenuText);
+        ciScrollFilterNext.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForNoActiveFilter, ciScrollFilterNext.MenuText);
       }
     }
 
@@ -976,7 +978,7 @@ CommandItems.PerformRefreshItems();
         return;
       if (!(forward ? ActiveScrollableFilter.CanScrollDown : ActiveScrollableFilter.CanScrollUp))
       {
-        EFPApp.MessageBox("Прокрутка фильтра \"" + ((IEFPGridFilter)ActiveScrollableFilter).DisplayName + "\" невозможна");
+        EFPApp.MessageBox(String.Format(Res.EFPConfigurableDataView_Err_ScrollFilter, ((IEFPGridFilter)ActiveScrollableFilter).DisplayName));
         return;
       }
 

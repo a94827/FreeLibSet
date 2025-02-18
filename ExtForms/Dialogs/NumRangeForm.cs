@@ -36,8 +36,8 @@ namespace FreeLibSet.Forms
       btn2eq1.Image = EFPApp.MainImages.Images["SignEqual"];
       btn2eq1.ImageAlign = ContentAlignment.MiddleCenter;
       efp2eq1 = new EFPButton(FormProvider, btn2eq1);
-      efp2eq1.DisplayName = "Максимальное значение равно минимальному";
-      efp2eq1.ToolTipText = "Присваивает полю \"Максимум\" значение из поля \"Минимум\"";
+      efp2eq1.DisplayName = Res.NumRangeInputDialog_Name_2eq1;
+      efp2eq1.ToolTipText = Res.NumRangeInputDialog_ToolTip_2eq1;
 
       btnNo.Visible = false;
     }
@@ -70,8 +70,6 @@ namespace FreeLibSet.Forms
 
     internal BaseNumRangeDialog()
     {
-      Title = "Ввод диапазона чисел";
-      Prompt = "Диапазон";
       _Format = String.Empty;
       _CanBeEmptyMode = UIValidateState.Error;
     }
@@ -79,6 +77,16 @@ namespace FreeLibSet.Forms
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Заголовок блока диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.NumRangeInputDialog_Msg_Title; } }
+
+    /// <summary>
+    /// Подсказка по умолчанию
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.NumRangeInputDialog_Msg_Prompt; } }
 
     #region N/First/LastValue
 
@@ -362,7 +370,7 @@ namespace FreeLibSet.Forms
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, default(T), null);
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -504,7 +512,7 @@ namespace FreeLibSet.Forms
         {
           if (efpFirstValue.Value.CompareTo(efpLastValue.Value) > 0)
           {
-            args.SetError("Минимальное значение больше максимального");
+            args.SetError(Res.NumRangeInputDialog_Err_Inverted);
             return;
           }
         }
@@ -524,7 +532,7 @@ namespace FreeLibSet.Forms
           if (v1.HasValue || v2.HasValue)
             lblRange.Text = FormatStringTools.RangeToString<T>(v1, v2, efpFirstValue.Control.Format, efpFirstValue.Control.FormatProvider);
           else
-            lblRange.Text = "Диапазон не задан";
+            lblRange.Text = Res.NumRangeInputDialog_Msg_RangeIsEmpty;
         }
       }
 

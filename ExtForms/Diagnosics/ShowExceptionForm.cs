@@ -31,7 +31,7 @@ namespace FreeLibSet.Forms.Diagnostics
       InitializeComponent();
       try
       {
-        this.cbInner.Image = MainImagesResource.View;
+        this.btnInner.Image = MainImagesResource.View;
         this.btnClose.Image = MainImagesResource.Cancel;
         this.btnOpenWith.Image = MainImagesResource.MenuButton;
         this.btnDirExplorer.Image = MainImagesResource.WindowsExplorer;
@@ -58,7 +58,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
     private void cbInner_Click(object sender, EventArgs args)
     {
-      ShowException(_ThisObj.InnerException, "Вложенная ошибка", this, AbsPath.Empty);
+      ShowException(_ThisObj.InnerException, btnInner.Text, this, AbsPath.Empty);
     }
 
     private void btnDirExplorer_Click(object sender, EventArgs args)
@@ -70,8 +70,8 @@ namespace FreeLibSet.Forms.Diagnostics
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Не удалось открыть каталог с отчетами");
-        MessageBox.Show(e.Message, "Не удалось открыть каталог с отчетами",
+        LogoutTools.LogoutException(e, Res.ShowExceptionForm_ErrTitle_CannotOpenReportDir);
+        MessageBox.Show(e.Message, Res.ShowExceptionForm_ErrTitle_CannotOpenReportDir,
           MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
@@ -116,13 +116,13 @@ namespace FreeLibSet.Forms.Diagnostics
 
         // Команда для показа в окне
         ToolStripMenuItem viewMenuItem = new ToolStripMenuItem();
-        viewMenuItem.Text = "Встроенный просмотр";
+        viewMenuItem.Text = Res.ShowExceptionForm_Menu_View;
         try { viewMenuItem.Image = btnEdit.Image; } catch { }
         viewMenuItem.Click += new EventHandler(ViewMenuItem_Click);
         OpenWithMenu.Items.Add(viewMenuItem);
 
         ToolStripMenuItem copyMenuItem = new ToolStripMenuItem();
-        copyMenuItem.Text = "Копировать";
+        copyMenuItem.Text = Res.ShowExceptionForm_Menu_Copy;
         try { copyMenuItem.Image = MainImagesResource.Copy; } catch { }
         copyMenuItem.Click += new EventHandler(CopyMenuItem_Click);
         OpenWithMenu.Items.Add(copyMenuItem);
@@ -165,7 +165,7 @@ namespace FreeLibSet.Forms.Diagnostics
       else
         faItem = (FileAssociationItem)(((ToolStripMenuItem)sender).Tag);
       if (faItem == null)
-        MessageBox.Show("Нет файловой ассоциации", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show("There is no file association", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       else
       {
         try
@@ -174,8 +174,8 @@ namespace FreeLibSet.Forms.Diagnostics
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка запуска " + faItem.DisplayName);
-          MessageBox.Show(e.Message, "Ошибка запуска " + faItem.DisplayName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          LogoutTools.LogoutException(e, String.Format(Res.ShowExceptionForm_ErrTitle_ExecError, faItem.DisplayName));
+          MessageBox.Show(e.Message, String.Format(Res.ShowExceptionForm_ErrTitle_ExecError, faItem.DisplayName), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
       }
     }
@@ -194,8 +194,8 @@ namespace FreeLibSet.Forms.Diagnostics
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Не удалось открыть файл отчета на просмотр");
-        MessageBox.Show(e.Message, "Не удалось открыть файл отчета на просмотр",
+        LogoutTools.LogoutException(e, Res.ShowExceptionForm_ErrTitle_ViewError);
+        MessageBox.Show(e.Message, Res.ShowExceptionForm_ErrTitle_ViewError,
           MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
@@ -238,8 +238,8 @@ namespace FreeLibSet.Forms.Diagnostics
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка копирования отчета в буфер обмена");
-        MessageBox.Show(e.Message, "Ошибка копирования отчета в буфер обмена",
+        LogoutTools.LogoutException(e, Res.ShowExceptionForm_ErrTitle_CopyError);
+        MessageBox.Show(e.Message, Res.ShowExceptionForm_ErrTitle_CopyError,
           MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
@@ -265,7 +265,7 @@ namespace FreeLibSet.Forms.Diagnostics
       }
       catch (Exception e)
       {
-        MessageBox.Show(e.Message, "Ошибка просмотра объекта данных",
+        MessageBox.Show(e.Message, Res.ShowExceptionForm_ErrTitle_DataDebugError,
           MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
@@ -281,7 +281,7 @@ namespace FreeLibSet.Forms.Diagnostics
       // и для первого окна пользователь установил флажок
       if (e == null)
       {
-        MessageBox.Show("Объект исключения не задан", "ShowExceptionForm.ShowException()");
+        MessageBox.Show("Exception object is null", "ShowExceptionForm.ShowException()");
         return;
       }
 
@@ -352,7 +352,7 @@ namespace FreeLibSet.Forms.Diagnostics
           try
           {
             if (String.IsNullOrEmpty(e.StackTrace))
-              frm1.grStack.Rows.Add("Стек вызовов недоступен");
+              frm1.grStack.Rows.Add(Res.ShowExceptionForm_Msg_NoStackTrace);
             else
             {
               string[] a = e.StackTrace.Split(DataTools.NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
@@ -362,7 +362,7 @@ namespace FreeLibSet.Forms.Diagnostics
           }
           catch
           {
-            frm1.grStack.Rows.Add("Не удалось получить стек вызовов");
+            frm1.grStack.Rows.Add(Res.ShowExceptionForm_Msg_StackTraceError);
           }
 
           #endregion
@@ -386,7 +386,7 @@ namespace FreeLibSet.Forms.Diagnostics
                   try
                   {
                     row.Cells[1].Value = value.ToString();
-                    row.Cells[2].ToolTipText = "Тип: " + value.GetType().ToString();
+                    row.Cells[2].ToolTipText = "Type: " + value.GetType().ToString();
                   }
                   catch (Exception e2)
                   {
@@ -415,12 +415,12 @@ namespace FreeLibSet.Forms.Diagnostics
 
           try
           {
-            frm1.cbInner.Enabled = e.InnerException != null;
+            frm1.btnInner.Enabled = e.InnerException != null;
           }
           catch
           {
-            frm1.cbInner.Text = "Нет доступа к InnerException";
-            frm1.cbInner.Enabled = false;
+            frm1.btnInner.Text = "InnerException failed";
+            frm1.btnInner.Enabled = false;
           }
 
           #endregion
@@ -433,7 +433,7 @@ namespace FreeLibSet.Forms.Diagnostics
           if (frm1.cbStopShow.Checked)
           {
             DebugTools.ShowExceptionEnabled = false; // 31.01.2020
-            MessageBox.Show("Вывод сообщений об ошибках отключен. Завершите работу программы как можно быстрее", "Отключение вывода сообщений", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            MessageBox.Show(Res.ShowExceptionForm_Msg_Stopped, Res.ShowExceptionForm_Title_Stopped, MessageBoxButtons.OK, MessageBoxIcon.Stop);
           }
         }
       }

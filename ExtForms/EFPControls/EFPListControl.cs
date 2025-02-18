@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using FreeLibSet.DependedValues;
 using FreeLibSet.UICore;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -134,17 +135,7 @@ namespace FreeLibSet.Forms
       base.OnValidate();
 
       if (SelectedIndex < 0)
-      {
-        switch (CanBeEmptyMode)
-        {
-          case UIValidateState.Error:
-            SetError("Значение должно быть выбрано из списка");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Значение, вероятно, должно быть выбрано из списка");
-            break;
-        }
-      }
+        ValidateCanBeEmptyMode(CanBeEmptyMode);
     }
 
     /// <summary>
@@ -219,7 +210,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика Control.SelectedIndexChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -426,8 +417,9 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Необязательный список подстановочных значений, соответствующих элементам списка.
     /// Сначала должны быть заполнен основной список элементов ListBox/ComboBox.Items, а
-    /// затем - установлено свойство Codes.
-    /// Длина массива Codes должна быть равна числу элементов списка
+    /// затем - установлено свойство <see cref="Codes"/>.
+    /// Длина массива <see cref="Codes"/> должна быть равна числу элементов списка.
+    /// Если один из элементов должен иметь пустой код, используйте для него <see cref="string.Empty"/>, а не null.
     /// </summary>
     public string[] Codes
     {
@@ -438,11 +430,11 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.Length != ControlItemCount)
-            throw new ArgumentException("Неправильная длина массива (" + value.Length + "). Строк в списке: " + ControlItemCount.ToString());
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, ControlItemCount);
           foreach (string s in value)
           {
             if (s == null)
-              throw new ArgumentException("Значения null не допускаются. Используйте String.Empty");
+              throw ExceptionFactory.ArgInvalidEnumerableItem("value", value, null);
           }
         }
 #endif
@@ -541,8 +533,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Какое свойство будет использовано для синхронизации в SyncGroup
-    /// (по умолчанию - SelectedIndexEx)
-    /// Свойство должно устанавливаться жо добавления объекта в список синхронизации
+    /// (по умолчанию - SelectedIndexEx).
+    /// Свойство должно устанавливаться жо добавления объекта в список синхронизации.
     /// </summary>
     public EFPListControlSyncValueType SyncValueType
     {
@@ -550,7 +542,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (SyncGroup != null)
-          throw new InvalidOperationException("Нельзя устанавливать свойство SyncValueType, когда объект уже добавлен в группу");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "SyncGroup");
         _SyncValueType = value;
       }
     }
@@ -680,7 +672,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика ListBox.MouseDoubleClick");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1072,7 +1064,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика ListView.MouseDoubleClick");
+        EFPApp.ShowException(e);
       }
     }
 

@@ -93,7 +93,7 @@ namespace FreeLibSet.Parsing
   public interface IExpression
   {
     /// <summary>
-    /// Вызывается однократно после создания дерева выражений в ParserList.CreateExpression().
+    /// Вызывается однократно после создания дерева выражений в <see cref="ParserList.CreateExpression(ParsingData)"/>.
     /// Метод вызывается рекурсивно, сначала для корневого объекта, а затем для вложенных в него.
     /// </summary>
     /// <param name="data">Данные парсинга</param>
@@ -103,7 +103,7 @@ namespace FreeLibSet.Parsing
     /// Основной метод, выполняющий вычисления.
     /// Метод не получает никакого контекста для вычисления. Если для вычисления требуются данные, например,
     /// для извлечения ячейки электронной таблицы, то контекст должен быть сохранен в полях объекта при его
-    /// создании. Для передачи данных следует использовать свойство ParsingData.UserData
+    /// создании. Для передачи данных следует использовать свойство <see cref="ParsingData.UserData"/>.
     /// </summary>
     /// <returns>Результат вычислений</returns>
     object Calc();
@@ -121,7 +121,7 @@ namespace FreeLibSet.Parsing
     /// добавляются все аргументы.
     /// Рекурсивный вызов не выполняется.
     /// Если требуется получить все вычислители рекурсивно, следует использовать статический метод
-    /// ParsingData.GetExpressions()
+    /// <see cref="ParsingData.GetExpressions(IExpression)"/>.
     /// </summary>
     /// <param name="expressions">Список, куда следует добавить ссылки</param>
     void GetChildExpressions(IList<IExpression> expressions);
@@ -138,7 +138,7 @@ namespace FreeLibSet.Parsing
   #region IParser
 
   /// <summary>
-  /// Интерфейс одного парсера, добавляемого в список ParserList
+  /// Интерфейс одного парсера, добавляемого в список <see cref="ParserList"/>
   /// </summary>
   public interface IParser
   {
@@ -251,17 +251,17 @@ namespace FreeLibSet.Parsing
         {
           if (data.Tokens[i].Start < 0)
           {
-            data.Tokens[i].SetError("Начальная позиция лексемы \"" + data.Tokens[i].TokenType + "\" не может быть отрицательной");
+            data.Tokens[i].SetError(String.Format(Res.ParserList_Err_TokenStartNegative, data.Tokens[i].TokenType));
             break;
           }
           if (data.Tokens[i].Start < lastPos)
           {
-            data.Tokens[i].SetError("Лексема \"" + data.Tokens[i].TokenType + "\" перекрывается с предыдущей \"" + data.Tokens[i - 1].TokenType + "\"");
+            data.Tokens[i].SetError(String.Format(Res.ParserList_Err_TokenOverlap, data.Tokens[i].TokenType, data.Tokens[i - 1].TokenType));
             break;
           }
           if ((data.Tokens[i].Start + data.Tokens[i].Length) > data.Text.Text.Length)
           {
-            data.Tokens[i].SetError("Лексема \"" + data.Tokens[i].TokenType + "\" выходит за границу текста");
+            data.Tokens[i].SetError(String.Format(Res.ParserList_Err_TokenBeyondText, data.Tokens[i].TokenType));
             break;
           }
           lastPos = data.Tokens[i].Start + data.Tokens[i].Length;
@@ -342,7 +342,7 @@ namespace FreeLibSet.Parsing
         throw new ArgumentNullException("data");
 #endif
       if (data.State != ParsingState.Parsing)
-        throw new InvalidOperationException("Метод SubParse() может вызываться исключительно из реализации IParser.Parse()");
+        throw new InvalidOperationException(Res.ParserList_Err_SubParseCalled);
 
       if (endTokens == null)
         endTokens = DataTools.EmptyStrings;
@@ -382,13 +382,13 @@ namespace FreeLibSet.Parsing
           if (data.CurrToken.Length == 2)
           {
             data.CurrToken.ClearError();
-            data.CurrToken.SetError("Нераспознанные символы");
+            data.CurrToken.SetError(Res.ParserList_Err_UnparsedMultiChars);
           }
         }
         else
         {
           data.Tokens.Add(new Token(data, this, "Error", data.CurrPos, 1));
-          data.CurrToken.SetError("Нераспознанный символ \"" + data.CurrToken.Text + "\"");
+          data.CurrToken.SetError(String.Format(Res.ParserList_Err_UnparsedSingleChar, data.CurrToken.Text));
         }
       }
 
@@ -418,9 +418,9 @@ namespace FreeLibSet.Parsing
         if (throwException)
         {
           if (et == null)
-            throw new BugException("Не удалось создать вычислимое выражение. Причина ошибки неизвестна");
+            throw new BugException("Cannot create a calculable expression. Error origin is unknown");
           else
-            throw new ParserCreateExpressionException("Ошибка парсинга. " + et.ErrorMessage.Value.Text);
+            throw new ParserCreateExpressionException(String.Format(Res.ParserList_Err_CreateExpressionNone, et.ErrorMessage));
         }
       }
       else
@@ -428,7 +428,7 @@ namespace FreeLibSet.Parsing
         if (et != null)
         {
           if (throwException)
-            throw new ParserCreateExpressionException("Ошибка получения выражения. " + et.ErrorMessage.Value.Text);
+            throw new ParserCreateExpressionException(String.Format(Res.ParserList_Err_CreateExpressionError, et.ErrorMessage.Value.Text));
           // не удаляем, оно может пригодиться при анализе ошибок Expr = null;
         }
       }
@@ -447,12 +447,12 @@ namespace FreeLibSet.Parsing
       if (data == null)
         throw new ArgumentNullException("data");
       if (data.Parsers == null)
-        throw new NullReferenceException("Парсинг лексем не выполнялся");
+        throw new InvalidOperationException(Res.ParserList_Err_CreateExpressionBeforeParsing);
       if (data.Parsers != this)
-        throw new NullReferenceException("Парсинг лексем выполнялся другим списком парсеров");
+        throw new InvalidOperationException(Res.ParserList_Err_CreateExpressionOtherParserList);
 
       if (data.InternalTokenIndex != -1)
-        throw new ReenteranceException("Вложенный вызов метода не допускается");
+        throw new ReenteranceException();
 
       if (data.FirstErrorToken != null)
         return null; // были ошибки на первой фазе парсинга
@@ -499,7 +499,7 @@ namespace FreeLibSet.Parsing
     public IExpression CreateSubExpression(ParsingData data, string[] endTokens)
     {
       if (data.EndTokens == null)
-        throw new InvalidOperationException("Метод должен вызываться только в процессе разбора всего выражения, а не самостоятельно");
+        throw new InvalidOperationException(Res.ParserList_Err_CreateSubExpressionCall);
 
       if (endTokens == null)
         endTokens = data.EndTokens;
@@ -628,22 +628,20 @@ namespace FreeLibSet.Parsing
     public Token(ParsingData data, IParser parser, string tokenType, int start, int length, object auxData, ErrorMessageItem? errorMessage)
     {
       if (data == null)
-        throw new ArgumentException("data");
+        throw new ArgumentNullException("data");
       if (data.State != ParsingState.Parsing)
-        throw new InvalidOperationException("Набор данных не находится в состоянии парсинга");
+        throw new InvalidOperationException(Res.Token_Err_DataNotParsingState);
       if (parser == null)
         throw new ArgumentNullException("parser");
       if (String.IsNullOrEmpty(tokenType))
-        throw new ArgumentNullException("tokenType");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tokenType");
       if (length > 0)
       {
         if (start < 0 || start >= data.Text.Text.Length)
-          throw new ArgumentOutOfRangeException("start", start, "Start должно быть в диапазоне от 0 до " +
-            (data.Text.Text.Length - 1).ToString());
+          throw ExceptionFactory.ArgOutOfRange("start", start, 0, data.Text.Text.Length - 1);
       }
       if (length < 0 || (start + length) > data.Text.Text.Length)
-        throw new ArgumentOutOfRangeException("length", length, "Length должно быть в диапазоне от 1 до " +
-          (data.Text.Text.Length - 1 - start).ToString());
+        throw ExceptionFactory.ArgOutOfRange("length", length, 1, data.Text.Text.Length - 1 - start);
 
       _Data = data;
       _Parser = parser;
@@ -726,8 +724,7 @@ namespace FreeLibSet.Parsing
       set
       {
         if (value < 0 || (Start + value) > Data.Text.Text.Length)
-          throw new ArgumentOutOfRangeException("value", value, "Length должно быть в диапазоне от 1 до " +
-            (Data.Text.Text.Length - 1 - Start).ToString());
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, Data.Text.Text.Length - 1 - Start);
 
         _Length = value;
       }
@@ -913,7 +910,6 @@ namespace FreeLibSet.Parsing
 
     #endregion
   }
-
 
   /// <summary>
   /// Соответствие между лексемой и вычисляемым выражением.
@@ -1124,7 +1120,7 @@ namespace FreeLibSet.Parsing
         return;
 
       if (String.IsNullOrEmpty(tokenType))
-        throw new ArgumentNullException("tokenType");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tokenType");
 
       Token[] tokens2 = GetTokens(expression);
       for (int i = 0; i < tokens2.Length; i++)
@@ -1151,7 +1147,7 @@ namespace FreeLibSet.Parsing
         return null;
 
       if (String.IsNullOrEmpty(tokenType))
-        throw new ArgumentNullException("tokenType");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tokenType");
 
       Token[] tokens = GetTokens(expression);
       for (int i = 0; i < tokens.Length; i++)
@@ -1645,10 +1641,10 @@ namespace FreeLibSet.Parsing
     public void SkipToken(int tokenIndex)
     {
       if (_CurrTokenIndex < 0)
-        throw new InvalidOperationException("Метод может использоваться только в процессе получения вычислителя");
+        throw new InvalidOperationException(Res.ParsingData_Err_SkipTokenCall);
 
       if (tokenIndex < 0 || tokenIndex >= Tokens.Count)
-        throw new ArgumentOutOfRangeException("tokenIndex", tokenIndex, "Номер лексемы должен быть в диапазоне от 0 до " + (Tokens.Count - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("tokenIndex", tokenIndex, 0,Tokens.Count - 1);
 
       _CurrTokenIndex = Math.Max(_CurrTokenIndex, tokenIndex + 1);
     }
@@ -1737,12 +1733,12 @@ namespace FreeLibSet.Parsing
     public ParsingData CreateSubTokens(int firstTokenIndex, int tokenCount)
     {
       if (Parsers == null)
-        throw new NullReferenceException("Парсинг лексем не выполнялся");
+        throw new InvalidOperationException(Res.ParsingData_Err_NotParsed);
 
       if (firstTokenIndex < 0 || firstTokenIndex > Tokens.Count)
-        throw new ArgumentOutOfRangeException("firstTokenIndex", firstTokenIndex, "Номер первой лексемы должен быть в диапазоне от 0 до " + Tokens.Count.ToString());
+        throw ExceptionFactory.ArgOutOfRange("firstTokenIndex", firstTokenIndex, 0,Tokens.Count);
       if (tokenCount < 0 || (firstTokenIndex + tokenCount) > Tokens.Count)
-        throw new ArgumentOutOfRangeException("tokenCount", tokenCount, "Число лексем должно быть в диапазоне от 0 до " + (Tokens.Count - firstTokenIndex).ToString());
+        throw ExceptionFactory.ArgOutOfRange("tokenCount", tokenCount, 0, Tokens.Count - firstTokenIndex);
 
       ParsingData data2 = new ParsingData(Text);
       data2._UserData = UserData.Clone(); // обязательно! Реализация может устанавливать разные параметры при разборе частей
@@ -1849,7 +1845,7 @@ namespace FreeLibSet.Parsing
           ErrorMessageItem src = Tokens[i].ErrorMessage.Value;
           string text = src.Text;
           if (addTokenNumberAndState)
-            text = "№" + (i + 1).ToString() + " [" + Tokens[i].ErrorState.ToString() + "]. " + text;
+            text = "#" + (i + 1).ToString() + " [" + Tokens[i].ErrorState.ToString() + "]. " + text;
           msgs.Add(new ErrorMessageItem(src.Kind, text, src.Code, data));
         }
       }
@@ -2010,7 +2006,7 @@ namespace FreeLibSet.Parsing
       for (int i = first; i <= last; i++)
       {
         if (expressions[i] == null)
-          throw new NullReferenceException("Для выражения " + expression.ToString() + " метод GetChildExpressions() добавил в список значение null");
+          throw new NullReferenceException(String.Format(Res.ParsingData_Err_GetChildExpressionReturnsNull,  expression.ToString()));
         DoGetChildExpressions(expressions[i], expressions);
       }
     }
@@ -2068,7 +2064,7 @@ namespace FreeLibSet.Parsing
       for (int i = 0; i < exprs2.Count; i++)
       {
         if (exprs2[i] == null)
-          throw new NullReferenceException("Для выражения " + expression.ToString() + " метод GetChildExpressions() добавил в список значение null");
+          throw new NullReferenceException(String.Format(Res.ParsingData_Err_GetChildExpressionReturnsNull, expression.ToString()));
         GetExpressions<T>(exprs2[i], expressions);
       }
     }
@@ -2181,7 +2177,7 @@ namespace FreeLibSet.Parsing
       if (expression == null)
         throw new ArgumentNullException("expression");
       if (String.IsNullOrEmpty(tokenType))
-        throw new ArgumentNullException("tokenType");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tokenType");
       if (text == null) // пустая строка может быть
         throw new ArgumentNullException("text");
 

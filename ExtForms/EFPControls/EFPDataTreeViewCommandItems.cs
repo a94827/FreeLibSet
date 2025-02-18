@@ -5,16 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using System.Drawing;
-using System.Data;
 using System.Globalization;
-using FreeLibSet.Models.Tree;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Forms.Reporting;
-using FreeLibSet.Reporting;
-using FreeLibSet.Controls.TreeViewAdvNodeControls;
 
 namespace FreeLibSet.Forms
 {
@@ -99,14 +93,14 @@ namespace FreeLibSet.Forms
       #region Порядок строк
 
       _MenuSort = new EFPCommandItem("Edit", "MenuOrder");
-      _MenuSort.MenuText = "Порядок строк";
+      _MenuSort.MenuText = Res.Cmd_Menu_RowOrder;
       _MenuSort.ImageKey = "OrderAZ";
       _MenuSort.Usage = EFPCommandItemUsage.Menu;
       Add(_MenuSort);
 
       ciSortMoveUp = new EFPCommandItem("Edit", "MoveUp");
       ciSortMoveUp.Parent = _MenuSort;
-      ciSortMoveUp.MenuText = "Переместить вверх";
+      ciSortMoveUp.MenuText = Res.Cmd_Menu_RowOrder_MoveUp;
       ciSortMoveUp.ImageKey = "ArrowUp";
       ciSortMoveUp.ShortCut = Keys.Alt | Keys.Up;
       ciSortMoveUp.Click += new EventHandler(ciSortMoveUp_Click);
@@ -115,7 +109,7 @@ namespace FreeLibSet.Forms
 
       ciSortMoveDown = new EFPCommandItem("Edit", "MoveDown");
       ciSortMoveDown.Parent = _MenuSort;
-      ciSortMoveDown.MenuText = "Переместить вниз";
+      ciSortMoveDown.MenuText = Res.Cmd_Menu_RowOrder_MoveDown;
       ciSortMoveDown.ImageKey = "ArrowDown";
       ciSortMoveDown.ShortCut = Keys.Alt | Keys.Down;
       ciSortMoveDown.Click += new EventHandler(ciSortMoveDown_Click);
@@ -124,7 +118,7 @@ namespace FreeLibSet.Forms
 
       ciSortRestore = new EFPCommandItem("Edit", "RestoreOrder");
       ciSortRestore.Parent = _MenuSort;
-      ciSortRestore.MenuText = "Восстановить порядок по умолчанию";
+      ciSortRestore.MenuText = Res.Cmd_Menu_RowOrder_RestoreOrder;
       ciSortRestore.ImageKey = "RestoreDefaultOrder";
       ciSortRestore.Click += new EventHandler(ciSortRestore_Click);
       ciSortRestore.Usage = EFPCommandItemUsage.None; // включим, когда надо
@@ -219,7 +213,7 @@ namespace FreeLibSet.Forms
           _OrderItems[i] = ci1;
         }
         ciOrderMore = new EFPCommandItem("View", "OrderDialog");
-        ciOrderMore.MenuText = "&Еще ...";
+        ciOrderMore.MenuText = Res.Cmd_Menu_RowOrder_Dialog;
         ciOrderMore.Parent = _MenuSort;
         ciOrderMore.GroupBegin = true;
         ciOrderMore.ShortCut = Keys.Control | Keys.D0;
@@ -298,11 +292,11 @@ namespace FreeLibSet.Forms
         _OrderItems[i].Checked = (ControlProvider.CurrentOrderIndex == i);
       string s;
       if (ControlProvider.CurrentOrderIndex < 0 || ControlProvider.CurrentOrderIndex >= ControlProvider.OrderCount)
-        s = "Не задан";
+        s = Res.EFPDataView_Order_None;
       else
         s = ControlProvider.Orders[ControlProvider.CurrentOrderIndex].DisplayName;
       _MenuSort.MenuRightText = s;
-      _MenuSort.ToolTipText = "Порядок строк (" + s + ")";
+      _MenuSort.ToolTipText = String.Format(Res.Cmd_ToolTip_View_RowOrder_WithName, s);
 
       ControlProvider.InitColumnHeaderTriangles();
     }

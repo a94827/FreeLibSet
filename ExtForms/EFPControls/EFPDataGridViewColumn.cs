@@ -260,12 +260,7 @@ namespace FreeLibSet.Forms
 
 #if DEBUG
       if (!Object.ReferenceEquals(GridColumn.DataGridView, controlProvider.Control))
-      {
-        if (gridColumn.DataGridView == null)
-          throw new ArgumentException("Столбец не присоединен к табличному просмотру", "gridColumn");
-        else
-          throw new ArgumentException("Столбец присоединен к другому табличному просмотру", "gridColumn");
-      }
+        throw ExceptionFactory.ArgProperty("gridColumn", gridColumn, "DataGridView", gridColumn.DataGridView, new object[] { controlProvider.Control });
 #endif
 
       //лишнее gridColumn.Tag = this;
@@ -471,7 +466,7 @@ namespace FreeLibSet.Forms
         if (ControlProvider.IncSearchDataViewIsManual)
         {
           // Создаем временную таблицу из одного столбца, в котором будеи искать
-          EFPApp.BeginWait("Загрузка данных столбца для поиска по первым буквам");
+          EFPApp.BeginWait(Res.EFPDataView_Phase_IncSearchLoadColumnData);
           try
           {
             DataTable tempTable = new DataTable();
@@ -690,13 +685,13 @@ namespace FreeLibSet.Forms
     #region Сортировка
 
     /// <summary>
-    /// Имя столбца, используемого для произвольной сортировки
+    /// Имя столбца, используемого для произвольной сортировки.
     /// Когда столбец добавляется методом AddXXX(), свойство устанавливается равным DataPropertyName
     /// </summary>
     public string CustomOrderColumnName
     {
       get { return _CustomOrderColumnName; }
-      set { _CustomOrderColumnName = value; }
+      set { _CustomOrderColumnName = value ?? String.Empty; }
     }
     private string _CustomOrderColumnName;
 
@@ -917,7 +912,7 @@ namespace FreeLibSet.Forms
     {
       BRDataGridViewMenuOutItem outItem = ControlProvider.DefaultOutItem;
       if (outItem == null)
-        throw new InvalidOperationException("Стандартный вариант печати табличного просмотра был удален");
+        throw new InvalidOperationException(Res.EFPDataView_Err_DefaultOutItemDeleted);
       return outItem[defCfgCode];
     }
 
@@ -1090,7 +1085,7 @@ namespace FreeLibSet.Forms
 
       // Перебираем все значения, выискивая самое длинное
       int w = 1;
-      EFPApp.BeginWait("Определение ширины столблца \"" + GridColumn.HeaderText + "\"");
+      EFPApp.BeginWait(String.Format(Res.EFPDataView_Phase_CalcColumnWidth, GridColumn.HeaderText));
       try
       {
         for (int i = 0; i < ControlProvider.Control.RowCount; i++)
@@ -1120,7 +1115,7 @@ namespace FreeLibSet.Forms
 
     #region Перебор значений
 
-    private class ValueEnumerable: System.Collections.IEnumerable
+    private class ValueEnumerable : System.Collections.IEnumerable
     {
       #region Конструктор
 
@@ -1165,7 +1160,7 @@ namespace FreeLibSet.Forms
         get
         {
           _Column.ControlProvider.DoGetRowAttributes(_CurrentRowIndex, EFPDataGridViewAttributesReason.View);
-          EFPDataGridViewCellAttributesEventArgs cellArgs= _Column.ControlProvider.DoGetCellAttributes(_Column.Index);
+          EFPDataGridViewCellAttributesEventArgs cellArgs = _Column.ControlProvider.DoGetCellAttributes(_Column.Index);
           return cellArgs.Value; // ?
         }
       }
@@ -1221,7 +1216,7 @@ namespace FreeLibSet.Forms
     /// Объект - владелец
     /// </summary>
     public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
-    private EFPDataGridView _ControlProvider;
+    private readonly EFPDataGridView _ControlProvider;
 
     #endregion
 
@@ -1253,7 +1248,7 @@ namespace FreeLibSet.Forms
         if (gridColumn.DataGridView != null)
         {
           if (!Object.ReferenceEquals(gridColumn.DataGridView, ControlProvider.Control))
-            throw new ArgumentException("Столбец относится к другому табличному просмотру", "gridColumn");
+            throw ExceptionFactory.ArgProperty("gridColumn", gridColumn, "DataGridView", gridColumn.DataGridView, new object[] { ControlProvider.Control });
         }
 #endif
         if (gridColumn.Tag == null)
@@ -1379,12 +1374,9 @@ namespace FreeLibSet.Forms
     {
       if (textWidth < 1)
         throw new ArgumentOutOfRangeException("textWidth");
-      if (minTextWidth < 1)
-        throw new ArgumentOutOfRangeException("minTextWidth");
 
-      if (minTextWidth > textWidth)
-        throw new ArgumentOutOfRangeException("minTextWidth", minTextWidth,
-          "Минимальная ширина столбца (" + minTextWidth.ToString() + ") не может быть больше, чем устанавливаемая (" + textWidth.ToString() + ")");
+      if (minTextWidth < 1 || minTextWidth > textWidth)
+        throw ExceptionFactory.ArgOutOfRange("minTextWidth", minTextWidth, 1, textWidth);
 
       DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
       col.Name = columnName;
@@ -1668,10 +1660,9 @@ namespace FreeLibSet.Forms
     /// <returns>Объект столбца табличного просмотра (а не EFPDataGrodViewColumn)</returns>
     public DataGridViewTextBoxColumn AddFixedPoint(string columnName, bool isDataColumn, string headerText, int textWidth, int decimalPlaces, string sizeGroup)
     {
-#if DEBUG
       if (decimalPlaces < 0)
-        throw new ArgumentException("Количество знаков после запятой не может быть отрицательным", "DecimalPlaces");
-#endif
+        throw ExceptionFactory.ArgOutOfRange("decimalPlaces", decimalPlaces, 0, null);
+
       DataGridViewTextBoxColumn col = AddText(columnName, isDataColumn, headerText, textWidth, decimalPlaces + 2);
       col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
       if (decimalPlaces > 0)
@@ -1684,7 +1675,7 @@ namespace FreeLibSet.Forms
       ghCol.DbfPreliminaryInfo.Length = textWidth;
       ghCol.DbfPreliminaryInfo.Precision = decimalPlaces;
       ghCol.DbfPreliminaryInfo.LengthIsDefined = false; // длина может быть больше
-      ghCol.DbfPreliminaryInfo.PrecisionIsDefined = true; 
+      ghCol.DbfPreliminaryInfo.PrecisionIsDefined = true;
       return col;
     }
 
@@ -1797,7 +1788,7 @@ namespace FreeLibSet.Forms
       col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
       ControlProvider.Control.Columns.Add(col);
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
-      ghCol.DisplayName = "Значок";
+      ghCol.DisplayName = Res.EFPDataView_Name_ImageColumn;
       return col;
     }
 
@@ -1833,13 +1824,9 @@ namespace FreeLibSet.Forms
     public DataGridViewComboBoxColumn AddCombo(string columnName, bool isDataColumn, string headerText, int textWidth, int minTextWidth)
     {
       if (textWidth < 1)
-        throw new ArgumentOutOfRangeException("textWidth");
-      if (minTextWidth < 1)
-        throw new ArgumentOutOfRangeException("minTextWidth");
-
-      if (minTextWidth > textWidth)
-        throw new ArgumentOutOfRangeException("minTextWidth", minTextWidth,
-          "Минимальная ширина столбца (" + minTextWidth.ToString() + ") не может быть больше, чем устанавливаемая (" + textWidth.ToString() + ")");
+        throw ExceptionFactory.ArgOutOfRange("textWidth", textWidth, 1, null);
+      if (minTextWidth < 1 || minTextWidth > textWidth)
+        throw ExceptionFactory.ArgOutOfRange("minTextWidth", minTextWidth, 1, textWidth);
 
       DataGridViewComboBoxColumn col = new DataGridViewComboBoxColumn();
       col.Name = columnName;
@@ -2004,7 +1991,7 @@ namespace FreeLibSet.Forms
           if (!_ColumnWidthChangedErrorWasShown)
           {
             _ColumnWidthChangedErrorWasShown = true;
-            EFPApp.ShowException(e, "Ошибка при установке размеров одинаковых столбцов");
+            EFPApp.ShowException(e);
           }
         }
       }

@@ -58,7 +58,7 @@ namespace FreeLibSet.DBF
       set 
       {
         if (" CNFLDM".IndexOf(value) < 0)
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgUnknownValue("value", value);
 
         _Type = value; 
       } 
@@ -74,7 +74,7 @@ namespace FreeLibSet.DBF
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange ("value", value, 0, null);
         _Length = value;
       }
     }
@@ -89,7 +89,7 @@ namespace FreeLibSet.DBF
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _Precision = value;
       }
     }
@@ -218,7 +218,7 @@ namespace FreeLibSet.DBF
       set
       {
         if (!DbfFieldInfo.IsValidFieldName(value))
-          throw new ArgumentException("Неправильное имя поля");
+          throw new ArgumentException(String.Format(Res.DbfStr_Arg_InvalidFieldName, value));
         _ColumnName = value;
       }
     }

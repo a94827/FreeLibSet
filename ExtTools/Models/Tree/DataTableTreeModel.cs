@@ -13,10 +13,10 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Models.Tree
 {
   /// <summary>
-  /// Расширение интерфейса ITreeModel, связанного с DataTable или DataView.
-  /// Объявляет методы для преобразования строки таблицы данных DataRow в TreePath и обратно.
+  /// Расширение интерфейса <see cref="ITreeModel"/>, связанного с <see cref="System.Data.DataTable"/> или <see cref="System.Data.DataView"/>.
+  /// Объявляет методы для преобразования строки таблицы данных <see cref="System.Data.DataRow"/> в <see cref="TreePath"/> и обратно.
   /// Интерфейс не определяет факт наличия первичного ключа в таблице и типы полей, используемых для построения дерева.
-  /// Также этот интерфейс, как и ITreeModel, не определяет, что используется в качестве частей TreePath.
+  /// Также этот интерфейс, как и <see cref="ITreeModel"/>, не определяет, что используется в качестве частей <see cref="TreePath"/>.
   /// </summary>
   public interface IDataTableTreeModel : ITreeModel
   {
@@ -41,7 +41,7 @@ namespace FreeLibSet.Models.Tree
     /// Возвращает строку данных, соответствующую заданному пути
     /// </summary>
     /// <param name="path">Путь к узлу дерева</param>
-    /// <returns>Объект DataRow из таблицы данных</returns>
+    /// <returns>Объект <see cref="DataRow"/> из таблицы данных</returns>
     DataRow TreePathToDataRow(TreePath path);
 
     /// <summary>
@@ -92,21 +92,20 @@ namespace FreeLibSet.Models.Tree
   }
 
   /// <summary>
-  /// Источник просмотра древовидной структуры из таблицы DataTable.
+  /// Источник просмотра древовидной структуры из таблицы <see cref="System.Data.DataTable"/>.
   /// Предполагается, что имеется поле (IdColumnName), идентифицирующее строки (обычно поле является первичным ключом,
   /// но это не является обязательным условием). Также имеется ссылочное поле (ParentColumnName), используемое для построения дерева.
-  /// Поле IdColumnName может быть числовым, строковым или иметь тип Guid или DateTime, лишь бы для этого поля можно было вычислить выражение с помощью DataTable.Select().
+  /// Поле IdColumnName может быть числовым, строковым или иметь тип <see cref="Guid"/> или <see cref="DateTime"/>, лишь бы для этого поля можно было вычислить выражение с помощью <see cref="System.Data.DataTable.Select(string)"/>.
   /// Поле ParentColumnName должно иметь тот же тип, но обязательно поддерживать значение NULL, которое идентифицирует строки верхнего уровня.
   /// В процессе работы могут добавляться, изменяться или удаляться строки. 
   /// Значение поля IdColumnName не должно меняться.
-  /// Значение поля ParentColumnName может меняться, при этом вызывается событие StructureChanged
+  /// Значение поля ParentColumnName может меняться, при этом вызывается событие StructureChanged.
   /// 
-  /// В текущей реализации в качестве тегов, входящих в TreePath, используются ссылки на строки таблицы DataRow.
+  /// В текущей реализации в качестве тегов, входящих в <see cref="TreePath"/>, используются ссылки на строки таблицы <see cref="DataRow"/>.
   /// 
-  /// Класс реализует интерфейс IDisposable. Его следует использовать, если время жизни таблицы Table превышает
-  /// время жизни таблицы. К таблице DataTable присоединяются обработчики событий и могут создаваться внутренние
-  /// объекты DataView. Чтобы отцепить обработчики, когда модель больше не используется, вызовите Dispose() или
-  /// используйте экземпляр DataTableTreeModel внутри блока using. В обычных сценариях, когда таблица создается специально для модели, вызывать Dispose() не нужно.
+  /// Класс реализует интерфейс <see cref="IDisposable"/>. К таблице <see cref="DataTable"/> присоединяются обработчики событий и могут создаваться внутренние
+  /// объекты <see cref="DataView"/>. Чтобы отцепить обработчики, когда модель больше не используется, вызовите <see cref="IDisposable.Dispose()"/> или
+  /// используйте экземпляр <see cref="DataTableTreeModel"/> внутри блока using. В обычных сценариях, когда таблица создается специально для модели, вызывать <see cref="IDisposable.Dispose()"/> не нужно.
   /// </summary>
   public class DataTableTreeModel : TreeModelBase, IDataTableTreeModel, IDisposable
   {
@@ -124,9 +123,9 @@ namespace FreeLibSet.Models.Tree
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(idColumnName))
-        throw new ArgumentNullException("idColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("idColumnName");
       if (String.IsNullOrEmpty(parentColumnName))
-        throw new ArgumentNullException("parentColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("parentColumnName");
 #endif
 
       _Table = table;
@@ -135,18 +134,20 @@ namespace FreeLibSet.Models.Tree
 
 #if DEBUG
       if (_IdColumnPosition < 0)
-        throw new ArgumentException("Столбец \"" + idColumnName + "\" не принадлежит таблице \"" + table.TableName + "\"", "idColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("idColumnName", table, idColumnName);
       if (_ParentColumnPosition < 0)
-        throw new ArgumentException("Столбец \"" + parentColumnName + "\" не принадлежит таблице \"" + table.TableName + "\"", "parentColumnName");
+        throw ExceptionFactory.ArgUnknownColumnName("parentColumnName", table, parentColumnName);
       if (_ParentColumnPosition == _IdColumnPosition)
-        throw new ArgumentException("Столбцы idColumnName и parentColumnName не могут совпадать");
+        throw ExceptionFactory.ArgAreSame("idColumnName", "parentColumnName");
 #endif
 
       if (_Table.Columns[_ParentColumnPosition].DataType != _Table.Columns[_IdColumnPosition].DataType)
-        throw new ArgumentException("Столбец \"" + idColumnName + "\" имеет тип данных " + _Table.Columns[_IdColumnPosition].DataType.ToString() + ", а \"" + parentColumnName + "\" - " +
-          _Table.Columns[parentColumnName].DataType.ToString(), "parentColumnName");
+        throw new ArgumentException(String.Format(Res.DataTableTreeModel_Arg_DiffColumnTypes,
+          idColumnName, _Table.Columns[_IdColumnPosition].DataType.ToString(),
+          parentColumnName, _Table.Columns[parentColumnName].DataType.ToString()), "parentColumnName");
       if (!_Table.Columns[_ParentColumnPosition].AllowDBNull)
-        throw new ArgumentNullException("Столбец \"" + parentColumnName + "\" имеет свойство AllowDBNull=false", "parentColumnName");
+        throw new ArgumentException(String.Format(Res.DataTableTreeModel_Arg_ParentNotNull,
+          parentColumnName), "parentColumnName");
 
       //_Sort = String.Empty;
       //_SortColumnPositions = DataTools.EmptyInts;
@@ -201,7 +202,7 @@ namespace FreeLibSet.Models.Tree
     /// <summary>
     /// Таблица данных. Задается в конструкторе.
     /// К таблице присоединяется множество обработчиков событий, поэтому не следует использовать этот объект
-    /// DataTable многократно
+    /// DataTable многократно.
     /// </summary>
     public DataTable Table { get { return _Table; } }
     private DataTable _Table;
@@ -252,7 +253,7 @@ namespace FreeLibSet.Models.Tree
           {
             a[i] = Table.Columns.IndexOf(aColNames[i]);
             if (a[i] < 0)
-              throw new ArgumentException("Таблица " + Table.TableName + " не содержит столбца \"" + aColNames[i] + "\", используемого для сортировки");
+              throw ExceptionFactory.ArgUnknownColumnName("value", Table, aColNames[i]);
           }
           _SortColumnPositions = a; // только, если не возникло исключения
         }
@@ -282,7 +283,8 @@ namespace FreeLibSet.Models.Tree
           throw new ArgumentNullException();
 #endif
         if (value.GetType() != _Table.Columns[IdColumnPosition].DataType)
-          throw new ArgumentException("Значение должно иметь тип " + _Table.Columns[IdColumnPosition].DataType.ToString());
+          throw new ArgumentException(String.Format(Res.DataTableTreeModel_Arg_IsNullDefaultValueType, 
+            _Table.Columns[IdColumnPosition].DataType.ToString(), value.GetType().ToString()));
         _IsNullDefaultValue = value;
       }
     }
@@ -336,10 +338,10 @@ namespace FreeLibSet.Models.Tree
         if (tag == null)
           throw new ArgumentNullException("tag");
         else
-          throw new ArgumentException("Аргумент tag не является DataRow", "tag");
+          throw new ArgumentException(Res.DataTableTreeModel_Arg_TagType, "tag");
       }
       if (row.Table != _Table)
-        throw new ArgumentException("Строка относится к другой таблице", "tag");
+        throw  new ArgumentException(Res.DataTableTreeModel_Arg_TagAnotherTable, "tag");
       return row;
     }
 
@@ -393,7 +395,7 @@ namespace FreeLibSet.Models.Tree
     public void EndUpdate()
     {
       if (_UpdateSuspendCount == 0)
-        throw new InvalidOperationException("Лишний вызов EndUpdate()");
+        throw ExceptionFactory.UnpairedCall(this, "BeginUpdate()", "EndUpdate()");
       _UpdateSuspendCount--;
       if (_UpdateSuspendCount == 0 && _TableChanged)
         OnStructureChanged(TreePathEventArgs.Empty);
@@ -592,9 +594,9 @@ namespace FreeLibSet.Models.Tree
         return null;
       DataRow row = path.LastNode as DataRow;
       if (row == null)
-        throw new InvalidCastException("Аргумент treePath.LastNode не является DataRow");
+        throw new InvalidCastException(Res.DataTableTreeModel_Arg_TagType);
       if (row.Table != _Table)
-        throw new ArgumentException("Строка относится к другой таблице");
+        throw new ArgumentException(Res.DataTableTreeModel_Arg_TagAnotherTable, "path");
       return row;
     }
 
@@ -609,9 +611,9 @@ namespace FreeLibSet.Models.Tree
         return TreePath.Empty;
 
       if (row.Table != _Table)
-        throw new ArgumentException("Строка не принадлежит таблице данных " + Table.TableName, "row");
+        throw ExceptionFactory.ArgDataRowNotInSameTable("row", row, Table);
       if (row.RowState == DataRowState.Detached)
-        throw new ArgumentException("Строка отсоединена от таблицы данных" + Table.TableName, "row");
+        throw ExceptionFactory.ArgProperty("row", row, "RowState", row.RowState, null);
 
       object parentId = row[ParentColumnPosition];
       if (parentId is DBNull)
@@ -626,11 +628,11 @@ namespace FreeLibSet.Models.Tree
         {
           row = _Table.Rows.Find(parentId);
           if (row == null)
-            throw new InvalidOperationException("В таблице " + _Table.TableName + " не найдена строка с идентификатором " + DataTools.GetString(parentId));
+            throw ExceptionFactory.DataRowNotFound(_Table, new object[] { parentId} );
           parentId = row[ParentColumnPosition];
 
           if (lst.Contains(row))
-            throw new InvalidOperationException("Дерево зациклено для строки с идентификатором " + row[IdColumnPosition].ToString());
+            throw new InvalidOperationException(String.Format(Res.DataTableTreeModel_Err_Loop, row[IdColumnPosition]));
           lst.Insert(0, row);
         }
       }
@@ -640,12 +642,12 @@ namespace FreeLibSet.Models.Tree
         {
           int p = InternalDataViewByIdColumn.Find(parentId);
           if (p < 0)
-            throw new InvalidOperationException("В таблице " + _Table.TableName + " не найдена строка с идентификатором " + DataTools.GetString(parentId));
+            throw ExceptionFactory.DataRowNotFound(_Table, new object[] { parentId });
           row = InternalDataViewByIdColumn[p].Row;
           parentId = row[ParentColumnPosition];
 
           if (lst.Contains(row))
-            throw new InvalidOperationException("Дерево зациклено для строки с идентификатором " + row[IdColumnPosition].ToString());
+            throw new InvalidOperationException(String.Format(Res.DataTableTreeModel_Err_Loop, row[IdColumnPosition]));
           lst.Insert(0, row);
         }
       }
@@ -786,7 +788,7 @@ namespace FreeLibSet.Models.Tree
       : base(table, idColumnName, parentColumnName)
     {
       if (Table.Columns[idColumnName].DataType != typeof(T))
-        throw new ArgumentException("Столбец идентификатора должен иметь тип " + typeof(T).ToString());
+        throw ExceptionFactory.ArgInvalidColumnType("idColumnName", Table.Columns[idColumnName]);
     }
 
     #endregion
@@ -794,7 +796,7 @@ namespace FreeLibSet.Models.Tree
     #region Доступ к строке по идентификатору
 
     /// <summary>
-    /// Нулевой идентификатор. Дублирует свойство IsNullDefaultValue
+    /// Нулевой идентификатор. Дублирует свойство <see cref="DataTableTreeModel.IsNullDefaultValue"/>
     /// </summary>
     public T DefaultId
     {
@@ -803,7 +805,7 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Возвращает идентификатор (значение поля IdColumnName), соответствующее заданному пути.
+    /// Возвращает идентификатор (значение поля <see cref="DataTableTreeModel.IdColumnName"/>), соответствующее заданному пути.
     /// Метод не проверяет весь путь, а находит строку, соответствующуую <paramref name="path"/>.LastNode.
     /// Если строка не найдена, возвращается значение по умолчанию (0 ).
     /// </summary>
@@ -871,9 +873,9 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Возвращает массив идентификаторов (значений поля IdColumnName) дочерних узлов, для заданного родительского идентификатора нерекурсивно.
+    /// Возвращает массив идентификаторов (значений поля <see cref="DataTableTreeModel.IdColumnName"/>) дочерних узлов, для заданного родительского идентификатора нерекурсивно.
     /// Порядок идентификаторов в массиве соответствует порядку узлов данного уровня.
-    /// Используется метод GetChildRows().
+    /// Используется метод <see cref="DataTableTreeModel.GetChildRows(DataRow)"/>.
     /// </summary>
     /// <param name="id">Идентификатор родительского узла.
     /// Если 0, то будут возвращены идентификаторы строк верхнего уровня</param>
@@ -888,7 +890,7 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Возвращает массив идентификаторов (значений поля IdColumnName), для заданного родительского идентификатора
+    /// Возвращает массив идентификаторов (значений поля <see cref="DataTableTreeModel.IdColumnName"/>), для заданного родительского идентификатора
     /// и всем его вложенным узлам рекурсивно.
     /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
     /// </summary>
@@ -911,10 +913,10 @@ namespace FreeLibSet.Models.Tree
 
 
     /// <summary>
-    /// Возвращает массив идентификаторов (значений поля IdColumnName), соответствующее заданному пути
+    /// Возвращает массив идентификаторов (значений поля <see cref="DataTableTreeModel.IdColumnName"/>), соответствующее заданному пути
     /// и всем его вложенным узлам рекурсивно.
     /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
-    /// Для <paramref name="path"/>=TreePath.Empty возвращает все существующие идентификаторы в таблице.
+    /// Для <paramref name="path"/>=<see cref="TreePath.Empty"/> возвращает все существующие идентификаторы в таблице.
     /// </summary>
     /// <param name="path">Путь к узлу дерева. Если путь пустой, возвращаются все идентификаторы в таблице</param>
     /// <returns>Массив идентификаторов</returns>
@@ -927,7 +929,7 @@ namespace FreeLibSet.Models.Tree
     }
 
     /// <summary>
-    /// Возвращает массив идентификаторов (значений поля IdColumnName), соответствующее заданному пути
+    /// Возвращает массив идентификаторов (значений поля <see cref="DataTableTreeModel.IdColumnName"/>), соответствующее заданному пути
     /// и всем его вложенным узлам рекурсивно.
     /// Порядок идентификаторов в массиве соответствует порядку обхода узлов в дереве.
     /// Для <paramref name="row"/>=null возвращает все существующие идентификаторы в таблице.

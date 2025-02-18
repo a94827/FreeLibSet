@@ -69,7 +69,7 @@ namespace FreeLibSet.Drawing
       if (source == null)
         throw new ArgumentNullException("source");
       if (source.PixelFormat != PixelFormat.Format24bppRgb)
-        throw new ArgumentException("Неверный формат исходного изображения: " + source.PixelFormat.ToString() + ". Ожидалось: " + PixelFormat.Format24bppRgb.ToString(), "source");
+        throw ExceptionFactory.ArgProperty("source", source, "PixelFormat", source.PixelFormat, new object[] { PixelFormat.Format24bppRgb });
 
       switch (resFormat)
       {
@@ -78,7 +78,7 @@ namespace FreeLibSet.Drawing
         case PixelFormat.Format8bppIndexed:
           break;
         default:
-          throw new ArgumentException("Неподдерживаемый выходной формат: " + resFormat.ToString(), "resFormat");
+          throw ExceptionFactory.ArgUnknownValue("resFormat", resFormat, new object[] { PixelFormat.Format1bppIndexed , PixelFormat.Format4bppIndexed, PixelFormat.Format8bppIndexed });
       }
 
       Dictionary<Color, int> colorIndices = new Dictionary<Color, int>();
@@ -196,7 +196,7 @@ namespace FreeLibSet.Drawing
       if (image == null)
         throw new ArgumentNullException("image");
       if (image.PixelFormat != PixelFormat.Format32bppArgb)
-        throw new ArgumentException("Wrong PixelFormat");
+        throw ExceptionFactory.ArgProperty("image", image, "PixelFormat", image.PixelFormat, new object[] { PixelFormat.Format32bppArgb } );
 
       BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
                    ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
@@ -383,9 +383,9 @@ namespace FreeLibSet.Drawing
     {
 #if DEBUG
       if (srcImageSize.Width < 0 || srcImageSize.Height < 0)
-        throw new ArgumentException("Неправильный исходный размер: " + srcImageSize.ToString(), "maxSize");
+        throw  ExceptionFactory.ArgUnknownValue("srcImageSize", srcImageSize);
       if (maxSize.Width < 1 || maxSize.Height < 1)
-        throw new ArgumentException("Неправильный максимальный размер: " + maxSize.ToString(), "maxSize");
+        throw ExceptionFactory.ArgUnknownValue("maxSize", maxSize);
 #endif
 
       if (srcImageSize.Width > maxSize.Width || srcImageSize.Height > maxSize.Height)
@@ -400,7 +400,7 @@ namespace FreeLibSet.Drawing
 
 #if DEBUG
         if (s <= 0.0 || s > 1.0)
-          throw new BugException("Неправильный коэффициент масштабирования: " + s.ToString());
+          throw new BugException("Invalid scale factor: " + s.ToString());
 #endif
 
         newSize = new Size((int)(Math.Round(srcImageSize.Width * s)),

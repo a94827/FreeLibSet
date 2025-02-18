@@ -22,7 +22,7 @@ namespace FreeLibSet.Core
     /// Создает объект исключения с текстом сообщения по умолчанию
     /// </summary>
     public UserCancelException()
-      : base("Выполнение прервано пользователем")
+      : base(Res.Common_Err_UserCancel)
     {
     }
 
@@ -62,7 +62,7 @@ namespace FreeLibSet.Core
     /// <param name="message">Сообщение. К нему будет добавлен дополнительный текст</param>
     /// <param name="innerException">Вложенное исключение</param>
     public BugException(string message, Exception innerException)
-      : base("Внутренняя ошибка в программе. " + message + ". Обратитесь к разработчику", innerException)
+      : base(String.Format(Res.Common_Err_BugWithMessage, message), innerException)
     {
     }
 
@@ -70,7 +70,7 @@ namespace FreeLibSet.Core
     /// Создает новый объект исключения со стандартным сообщением
     /// </summary>
     public BugException()
-      : base("Внутренняя ошибка в программе. Обратитесь к разработчику")
+      : base(Res.Common_Err_Bug)
     {
     }
 
@@ -117,7 +117,7 @@ namespace FreeLibSet.Core
     /// Создает исключение с текстом сообщения по умолчанию
     /// </summary>
     public ObjectReadOnlyException()
-      : base("Объект заблокирован от внесения изменений (ReadOnly)")
+      : base(Res.Common_Err_ObjectReadOnly)
     {
     }
 
@@ -163,7 +163,7 @@ namespace FreeLibSet.Core
     /// Создает объект исключения с текстом сообщения по умолчанию
     /// </summary>
     public DifferentThreadException()
-      : base("Вызов из чужого потока " + ToString(Thread.CurrentThread))
+      : base(String.Format(Res.Common_Err_DifferentThread, ToString(Thread.CurrentThread)))
     {
     }
 
@@ -172,7 +172,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="wantedThread">Поток, вызов из которого ожидался</param>
     public DifferentThreadException(Thread wantedThread)
-      : base("Вызов из чужого потока " + ToString(Thread.CurrentThread) + ". Ожидался вызов из потока " + ToString(wantedThread))
+      : base(String.Format(Res.Common_Err_DifferentThreadWithWanted, ToString(Thread.CurrentThread), ToString(wantedThread)))
     {
     }
 
@@ -223,7 +223,7 @@ namespace FreeLibSet.Core
     /// Создает объект исключения с текстом сообщения по умолчанию
     /// </summary>
     public ReenteranceException()
-      : base("Вложенный вызов процедуры")
+      : base(Res.Common_Err_Reentrance)
     {
     }
 
@@ -284,7 +284,7 @@ namespace FreeLibSet.Core
     private static string GetMessageText(ErrorMessageList errors)
     {
       if (errors == null)
-        return "Нет ошибок";
+        return Res.Common_Err_EmptyErrorMessageList;
       else
         return errors.ToString();
     }
@@ -318,7 +318,7 @@ namespace FreeLibSet.Core
     /// Задается в конструкторе и находится в режиме только для чтения.
     /// </summary>
     public ErrorMessageList Errors { get { return _Errors; } }
-    private ErrorMessageList _Errors;
+    private readonly ErrorMessageList _Errors;
 
     #endregion
   }
@@ -354,7 +354,7 @@ namespace FreeLibSet.Core
     /// Создает новый объект исключения со стандартным сообщением
     /// </summary>
     public BusyException()
-      : base("Приложение занято")
+      : base(Res.Common_Err_Busy)
     {
     }
 
@@ -520,7 +520,7 @@ namespace FreeLibSet.Core
     /// Создает новый объект исключения со стандартным сообщением
     /// </summary>
     public TestException()
-      : base("Тестовое исключение")
+      : base(Res.Common_Err_Test)
     {
     }
 

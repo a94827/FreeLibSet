@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.DependedValues
 {
@@ -85,7 +86,7 @@ namespace FreeLibSet.DependedValues
             if (xx == this)
             {
               _Parent = null;
-              throw new InvalidOperationException("Нельзя добавить элемент \"" + this.DisplayName + "\" к родителю \"" + value.DisplayName + "\", т.к. цепочка зацикливается");
+              throw new InvalidOperationException(String.Format(Res.DepChangeInfo_Err_ChainLoop, this.DisplayName, value.DisplayName));
             }
             xx = xx.Parent;
           }

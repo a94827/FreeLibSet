@@ -18,17 +18,17 @@ namespace FreeLibSet.Reporting
     /// <summary>
     /// 
     /// </summary>
-    public ISplash Splash
+    public ISimpleSplash Splash
     {
       get
       {
         if (_Splash == null)
-          _Splash = new DummySplash();
+          _Splash = new DummySimpleSplash();
         return _Splash;
       }
       set { _Splash = value; }
     }
-    private ISplash _Splash;
+    private ISimpleSplash _Splash;
 
     #endregion
 
@@ -41,7 +41,7 @@ namespace FreeLibSet.Reporting
     /// <param name="report"></param>
     public void Send(BRReport report)
     {
-      Splash.PhaseText = "Запуск Excel";
+      Splash.PhaseText = Res.BRReport_Phase_StartExcel;
       using (ExcelHelper helper = new ExcelHelper(true))
       {
         helper.ShowOnEnd = true;
@@ -49,7 +49,7 @@ namespace FreeLibSet.Reporting
         bool oldDisplayAlerts = helper.Application.DisplayAlerts;
         helper.Application.SetDisplayAlerts(false);
 
-        Splash.PhaseText = "Создание книги";
+        Splash.PhaseText = Res.BRReport_Phase_CreateExcelWorkbook;
 
         // Передача через OLE
         Workbook wbk = helper.Application.Workbooks.Add(Math.Max(report.Sections.Count, 1)); // один лист является обязательным
@@ -61,7 +61,7 @@ namespace FreeLibSet.Reporting
 
         //wbk.Windows[1].SetView(XlWindowView.xlPageBreakPreview);
 
-        Splash.PhaseText = "Передача данных в книгу Excel";
+        Splash.PhaseText = Res.BRReport_Phase_SendDataToExcel;
         Splash.PercentMax = report.BandCount;
         Splash.AllowCancel = true;
 
@@ -465,7 +465,7 @@ namespace FreeLibSet.Reporting
         case BRHAlign.Center: return XlHAlign.xlHAlignCenter;
         case BRHAlign.Right: return XlHAlign.xlHAlignRight;
         default:
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgUnknownValue("value", value);
       }
     }
 
@@ -477,7 +477,7 @@ namespace FreeLibSet.Reporting
         case BRVAlign.Center: return XlVAlign.xlVAlignCenter;
         case BRVAlign.Bottom: return XlVAlign.xlVAlignBottom;
         default:
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgUnknownValue("value", value);
       }
     }
 
@@ -574,7 +574,7 @@ namespace FreeLibSet.Reporting
     public BRColumnBoundList(BRSection section, int minWidth, int firstCol)
     {
       if (minWidth < 1)
-        throw new ArgumentOutOfRangeException("minWidth");
+        throw ExceptionFactory.ArgOutOfRange("minWidth", minWidth, 1, null);
 
       #region Первый проход - собираем все размеры, игнорируя minWidth
 

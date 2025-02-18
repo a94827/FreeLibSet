@@ -19,7 +19,7 @@ namespace FreeLibSet.Controls
   /// Поле ввода даты.
   /// Содержит выпадающий список для выбора даты из календаря
   /// </summary>
-  [Description("Поле для ввода даты с выпадающим календариком")]
+  [Description("Text box to input date and/or time. Empty text can be considered as null")]
   [ToolboxBitmap(typeof(DateTimeBox), "DateTimeBox.bmp")]
   [ToolboxItem(true)]
   [DefaultProperty("Value")]
@@ -62,7 +62,7 @@ namespace FreeLibSet.Controls
 
     #region Свойства Kind и Formatter
 
-    [Description("Формат вывода даты и/иди времени")]
+    [Description("Input format to choose date and/or time")]
     [Category("Appearance")]
     [DefaultValue(typeof(EditableDateTimeFormatterKind), "Date")]
     [RefreshProperties(RefreshProperties.All)]
@@ -98,7 +98,7 @@ namespace FreeLibSet.Controls
 
     #region Value/NValue
 
-    [Description("Редактируемое значение с поддержкой значения null")]
+    [Description("Current value with null support when text is empty")]
     [Category("Appearance")]
     [Bindable(true)]
     //[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -127,7 +127,7 @@ namespace FreeLibSet.Controls
     private Nullable<DateTime> _NValue;
 
 
-    [Description("Редактируемое значение (свойство NValue) без поддежки значения null")]
+    [Description("Current value without null support")]
     [Category("Appearance")]
     //[DefaultValue(null)]
     [Bindable(true)]
@@ -146,7 +146,7 @@ namespace FreeLibSet.Controls
     }
 
 
-    [Description("Вызывается при изменении даты (свойства Value или NValue)")]
+    [Description("Called when Value or NValue property changed")]
     [Category("Property Changed")]
     public event EventHandler ValueChanged;
 
@@ -160,7 +160,7 @@ namespace FreeLibSet.Controls
 
     #region DefaultYear
 
-    [Description("Год по умолчанию. Если задано ненулевое значение, то пользователь может ввести только день и месяц, после чего дата будет считаться введенной")]
+    [Description("Default year. If not zero, the value used when day and month both are input without a year.")]
     [Category("Behavior")]
     [DefaultValue(0)]
     public int DefaultYear
@@ -178,7 +178,7 @@ namespace FreeLibSet.Controls
     }
     private int _DefaultYear;
 
-    [Description("Вызывается при изменении года по умолчанию (свойство DefaultYear)")]
+    [Description("Called when the DefaultYear property changed")]
     [Category("Property Changed")]
     public event EventHandler DefaultYearChanged;
 
@@ -327,8 +327,13 @@ namespace FreeLibSet.Controls
         }
         catch (Exception e)
         {
-          MessageBox.Show(e.Message, "Ошибка вызова OnDateSelected");
+          FreeLibSet.Logging.LogoutTools.LogoutException(e);
         }
+      }
+
+      private void LogoutTools(string message, string v)
+      {
+        throw new NotImplementedException();
       }
 
       private void SetResult()
@@ -373,7 +378,7 @@ namespace FreeLibSet.Controls
         }
         catch (Exception e)
         {
-          MessageBox.Show(e.Message, "Ошибка вызова OnDateSelected");
+          FreeLibSet.Logging.LogoutTools.LogoutException(e);
         }
         base.OnKeyDown(args);
       }
@@ -454,7 +459,7 @@ namespace FreeLibSet.Controls
         }
         catch (Exception e)
         {
-          MessageBox.Show(e.Message, "Ошибка изменения размеров календаря");
+          FreeLibSet.Logging.LogoutTools.LogoutException(e);
         }
       }
 
@@ -507,7 +512,7 @@ namespace FreeLibSet.Controls
       }
       catch (Exception e)
       {
-        MessageBox.Show(e.Message, "Ошибка вызова календаря");
+        FreeLibSet.Logging.LogoutTools.LogoutException(e);
       }
     }
 

@@ -174,7 +174,7 @@ namespace FreeLibSet.UICore
     public UISelRCColumn(string code)
     {
       if (String.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
 
       _Code = code;
       _CanBeEmpty = true;
@@ -281,7 +281,7 @@ namespace FreeLibSet.UICore
     {
       if (String.IsNullOrEmpty(args.SourceText) && (!CanBeEmpty))
       {
-        args.SetError("Пустые значения не допускаются");
+        args.SetError(Res.UISelRCGrid_Err_EmptyValuesNotAllowed);
         return;
       }
 
@@ -356,7 +356,7 @@ namespace FreeLibSet.UICore
         //{
         if (!DateTime.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в дату");
+          args.SetError(String.Format(Res.UISelRCGrid_Err_NoDate, args.SourceText));
           return;
         }
         //}
@@ -441,7 +441,7 @@ namespace FreeLibSet.UICore
         UITools.CorrectNumberString(ref s);
         if (!Int32.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в целое число");
+          args.SetError(String.Format(Res.UISelRCGrid_Err_NoInt, args.SourceText));
           return;
         }
         args.ResultValue = value;
@@ -525,7 +525,7 @@ namespace FreeLibSet.UICore
         UITools.CorrectNumberString(ref s);
         if (!Single.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в числовое значение");
+          args.SetError(String.Format(Res.UISelRCGrid_Err_NoNumber, args.SourceText));
           return;
         }
         args.ResultValue = value;
@@ -609,7 +609,7 @@ namespace FreeLibSet.UICore
         UITools.CorrectNumberString(ref s);
         if (!Double.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в числовое значение");
+          args.SetError(String.Format(Res.UISelRCGrid_Err_NoNumber, args.SourceText));
           return;
         }
         args.ResultValue = value;
@@ -693,7 +693,7 @@ namespace FreeLibSet.UICore
         UITools.CorrectNumberString(ref s);
         if (!decimal.TryParse(s, out value))
         {
-          args.SetError("Строку \"" + args.SourceText + "\" нельзя преобразовать в числовое значение");
+          args.SetError(String.Format(Res.UISelRCGrid_Err_NoNumber, args.SourceText));
           return;
         }
         args.ResultValue = value;
@@ -755,7 +755,7 @@ namespace FreeLibSet.UICore
       if (textValues == null)
         throw new ArgumentNullException("textValues");
       if (textValues.Length == 0)
-        throw new ArgumentException("TextValues.Length=0", "textValues");
+        throw ExceptionFactory.ArgProperty("textValues", textValues, "Length", textValues.Length, null);
       _TextValues = textValues;
       _TextValueIndexer = new StringArrayIndexer(textValues, true);
     }
@@ -794,7 +794,7 @@ namespace FreeLibSet.UICore
         int p = _TextValueIndexer.IndexOf(args.SourceText);
         if (p < 0)
         {
-          args.SetError("Неизвестная строка \"" + args.SourceText + "\"");
+          args.SetError(String.Format(Res.UISelRCGrid_Err_NoEnum, args.SourceText));
           args.ResultValue = null;
         }
         else
@@ -863,7 +863,7 @@ namespace FreeLibSet.UICore
       if (textValues == null)
         throw new ArgumentNullException("textValues");
       if (textValues.Count == 0)
-        throw new ArgumentException("textValues.Count=0", "textValues");
+        throw ExceptionFactory.ArgProperty("textValues", textValues, "Count", textValues.Count, null);
       _TextValues = textValues;
     }
 
@@ -901,7 +901,7 @@ namespace FreeLibSet.UICore
         }
         else
         {
-          args.SetError("Неизвестная строка \"" + args.SourceText + "\"");
+          args.SetError(String.Format(Res.UISelRCGrid_Err_NoEnum, args.SourceText));
           args.ResultValue = null;
         }
       }
@@ -1725,7 +1725,7 @@ namespace FreeLibSet.UICore
 
 #if DEBUG
             if (lst.Count < 2)
-              throw new BugException("Найдено меньше двух индексов в списке повторов");
+              throw new BugException("There are less than two indexes in the list of repeats");
 #endif
             lst.Sort(); // при переборе коллекции _Repeats порядок не гарантирован
 
@@ -1868,7 +1868,7 @@ namespace FreeLibSet.UICore
     public void EndUpdate()
     {
       if (_UpdateCount <= 0)
-        throw new InvalidOperationException();
+        throw ExceptionFactory.UnpairedCall(this, "BeginUpdate()", "EndUpdate()");
       _UpdateCount--;
       if (_UpdateCount == 0)
       {
@@ -1916,7 +1916,7 @@ namespace FreeLibSet.UICore
       }
       catch (Exception e)
       {
-        errorText = "Ошибка проверки значения. " + e.Message;
+        errorText = String.Format(Res.UISelRCGrid_Err_Validating, e.Message);
         return UIValidateState.Error;
       }
     }

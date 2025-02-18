@@ -26,7 +26,7 @@ namespace FreeLibSet.Calendar
     public MonthDay(int dayOfYear)
     {
       if (dayOfYear < 0 || dayOfYear > 365)
-        throw new ArgumentOutOfRangeException("dayOfYear", dayOfYear, "Значение должно быть равно 0 или лежать в диапазоне от 1 до 365");
+        throw new ArgumentOutOfRangeException("dayOfYear", dayOfYear, Res.MonthDay_Arg_DayOfYearOutOfRange);
       _DayOfYear = (short)dayOfYear;
     }
 
@@ -242,7 +242,7 @@ namespace FreeLibSet.Calendar
     public static MonthDay operator +(MonthDay monthDay, int days)
     {
       if (monthDay.IsEmpty)
-        throw new ArgumentException("Пустая дата", "monthDay");
+        throw ExceptionFactory.ArgIsEmpty("monthDay");
 
       days = days % 365;
 
@@ -264,7 +264,7 @@ namespace FreeLibSet.Calendar
     public static MonthDay operator -(MonthDay monthDay, int days)
     {
       if (monthDay.IsEmpty)
-        throw new ArgumentException("Пустая дата", "monthDay");
+        throw ExceptionFactory.ArgIsEmpty("monthDay");
 
       days = days % 365;
 
@@ -286,9 +286,9 @@ namespace FreeLibSet.Calendar
     public static int operator -(MonthDay a, MonthDay b)
     {
       if (a.IsEmpty)
-        throw new ArgumentException("Пустая первая дата", "a");
+        throw ExceptionFactory.ArgIsEmpty("a");
       if (b.IsEmpty)
-        throw new ArgumentException("Пустая вторая дата", "b");
+        throw ExceptionFactory.ArgIsEmpty("b");
 
       int days = a.DayOfYear - b.DayOfYear;
       if (days < 0)
@@ -324,7 +324,7 @@ namespace FreeLibSet.Calendar
       const int DayFeb28 = 31 + 28; // 28 февраля
 
       if (IsEmpty)
-        throw new InvalidOperationException("Структура не инициализирована");
+        throw ExceptionFactory.StructureNotInit(typeof(MonthDay));
       if (february29 && DayOfYear == DayFeb28)
         return DataTools.EndOfMonth(year, 2);
       else
@@ -374,7 +374,18 @@ namespace FreeLibSet.Calendar
         return String.Empty;
 
       if (String.IsNullOrEmpty(format))
-        format = "dd MMMM";
+      {
+        switch (Formatting.FormatStringTools.GetDateFormatOrder(String.Empty, formatProvider))
+        {
+          case Formatting.DateFormatYMDOrder.DMY:
+          case Formatting.DateFormatYMDOrder.YDM:
+            format = "dd MMMM";
+            break;
+          default:
+            format = "MMMM dd";
+            break;
+        }
+      }
 
       return GetDate(2001, false).ToString(format, formatProvider);
     }
@@ -387,7 +398,6 @@ namespace FreeLibSet.Calendar
     {
       return DayOfYear;
     }
-
 
     /// <summary>
     /// Возвращает true, если текущий объект равен <paramref name="other"/>.
@@ -577,9 +587,9 @@ namespace FreeLibSet.Calendar
       if (!(first.IsEmpty && last.IsEmpty))
       {
         if (first.IsEmpty)
-          throw new ArgumentException("Пустое значение First", "first");
+          throw ExceptionFactory.ArgIsEmpty("first");
         if (last.IsEmpty)
-          throw new ArgumentException("Пустое значение Last", "last");
+          throw ExceptionFactory.ArgIsEmpty("last");
       }
 
       _First = first;
@@ -711,7 +721,7 @@ namespace FreeLibSet.Calendar
     /// Произвольные пользовательские данные
     /// </summary>
     public object Tag { get { return _Tag; } }
-    private object _Tag;
+    private readonly object _Tag;
 
     /// <summary>
     /// Получить комплементарный интервал дат. Например, для периода "10 октября-15 мая"

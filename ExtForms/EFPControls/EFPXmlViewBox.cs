@@ -82,7 +82,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика WebBrowser.PreviewKeyDown");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -209,7 +209,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика XmlViewBox.XmlDataChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -341,7 +341,7 @@ namespace FreeLibSet.Forms
           value.IndexOf(Path.AltDirectorySeparatorChar) >= 0 ||
           value.IndexOf(Path.VolumeSeparatorChar) >= 0)
 
-          throw new ArgumentException("Имя файла не должно содержать путь");
+          throw new ArgumentException(Res.EFPXmlViewBox_Arg_FileNameWithPath);
 
         _FileName = value;
         _TempFilePath = AbsPath.Empty; // сброс временного файла
@@ -401,7 +401,7 @@ namespace FreeLibSet.Forms
 
 
       if (Control.SourceKind == XmlViewBoxSourceKind.None)
-        throw new InvalidOperationException("Просмотр не содержит XML-данных");
+        throw new InvalidOperationException(Res.EFPXmlViewBox_Err_Empty);
       if (Control.SourceKind == XmlViewBoxSourceKind.File && IsDefaultFileName)
         return new AbsPath(Control.XmlFilePath);
 
@@ -426,7 +426,7 @@ namespace FreeLibSet.Forms
           break;
 
         default:
-          throw new NotSupportedException("Неизвестное значение XmlViewBox.SourceKind=" + Control.SourceKind.ToString());
+          throw ExceptionFactory.ObjectProperty(Control, "SourceKind", Control.SourceKind, null);
       }
 
       _TempFilePath = res; // запоминаем для повторного использования
@@ -589,7 +589,7 @@ namespace FreeLibSet.Forms
 
       if (ControlProvider.Control.DocumentStream == null)
       {
-        EFPApp.ShowTempMessage("Нет документа");
+        EFPApp.ShowTempMessage(Res.EFPXmlViewBox_Err_NoDoc);
         args.Cancel = true;
         return;
       }
@@ -613,7 +613,7 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.Control.DocumentStream == null)
       {
-        EFPApp.ShowTempMessage("Нет документа");
+        EFPApp.ShowTempMessage(Res.EFPXmlViewBox_Err_NoDoc);
         return null;
       }
       AbsPath tempFilePath = EFPApp.SharedTempDir.GetTempFileName("HTML");
@@ -651,7 +651,9 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          MessageBox.Show("Не удалось запустить " + EFPApp.OpenOfficeKindName + " Writer. " + e.Message);
+          EFPApp.ErrorMessageBox(String.Format(Res.EFPApp_Err_OpenWith,
+            "Microsoft Word",
+            e.Message));
         }
       }
     }
@@ -672,7 +674,9 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          MessageBox.Show("Не удалось запустить " + EFPApp.OpenOfficeKindName + " Writer. " + e.Message);
+          EFPApp.ErrorMessageBox(String.Format(Res.EFPApp_Err_OpenWith,
+            EFPApp.OpenOfficeKindName + " Writer. ",
+            e.Message));
         }
       }
     }
@@ -730,12 +734,12 @@ namespace FreeLibSet.Forms
         // Управляющий элемент 
         if (ControlProvider.Control is XmlViewBox)
         {
-          XmlViewBox NewControl = new XmlViewBox();
-          NewControl.Dock = DockStyle.Fill;
-          frm.Controls.Add(NewControl);
-          NewControl.XmlBytes = ((XmlViewBox)(ControlProvider.Control)).XmlBytes;
+          XmlViewBox newControl = new XmlViewBox();
+          newControl.Dock = DockStyle.Fill;
+          frm.Controls.Add(newControl);
+          newControl.XmlBytes = ((XmlViewBox)(ControlProvider.Control)).XmlBytes;
 
-          efpNewControl = new EFPXmlViewBox(efpForm, NewControl);
+          efpNewControl = new EFPXmlViewBox(efpForm, newControl);
         }
         else
         {
@@ -795,7 +799,7 @@ namespace FreeLibSet.Forms
     #region "Открыть" и "Открыть с помощью"
 
     /// <summary>
-    /// Вызывает EFPXmlViewBox.GetFilePath()
+    /// Вызывает <see cref="EFPXmlViewBox.GetFilePath()"/>
     /// </summary>
     /// <param name="sender">Не используется</param>
     /// <param name="args">Не используется</param>
@@ -803,7 +807,7 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.Control.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Нет данных для отправки");
+        EFPApp.ShowTempMessage(Res.EFPFileAssociationsCommandItemsHandler_Err_NoData);
         args.Cancel = true;
         return;
       }
@@ -824,7 +828,7 @@ namespace FreeLibSet.Forms
     {
       if (ControlProvider.Control.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Нет данных для отправки");
+        EFPApp.ShowTempMessage(Res.EFPFileAssociationsCommandItemsHandler_Err_NoData);
         return;
       }
 
@@ -836,7 +840,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        MessageBox.Show("Не удалось запустить " + EFPApp.OpenOfficeKindName + " Writer. " + e.Message);
+        MessageBox.Show(String.Format(Res.EFPApp_Err_OpenWith, EFPApp.OpenOfficeKindName + " Writer", e.Message));
       }
     }
 

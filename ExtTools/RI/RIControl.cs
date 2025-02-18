@@ -39,8 +39,8 @@ namespace FreeLibSet.RI
     /// Доступность элемента для ввода пользователем.
     /// По умолчанию - true.
     /// Нет смысла устанавливать в false это свойство, так как элемент становится бесполезным.
-    /// Вместо этого можно использовать свойство EnabledEx для организации условных блокировок элементов.
-    /// Свойство, однако, может опрашиваться в обработчике события Dialog.Validating, чтобы выполнять
+    /// Вместо этого можно использовать свойство <see cref="EnabledEx"/> для организации условных блокировок элементов.
+    /// Свойство, однако, может опрашиваться в обработчике события <see cref="Dialog.Validating"/>, чтобы выполнять
     /// проверку корректности введенного эначения только когда элемент доступен для ввода.
     /// </summary>
     public bool Enabled
@@ -66,7 +66,7 @@ namespace FreeLibSet.RI
     }
 
     /// <summary>
-    /// Управляемое значение для Enabled.
+    /// Управляемое значение для <see cref="Enabled"/>.
     /// Используется для организации условной блокировки элементов.
     /// Например, элемент может быть доступен, только если включен флажок CheckBox.
     /// </summary>
@@ -86,8 +86,8 @@ namespace FreeLibSet.RI
     private DepInput<bool> _EnabledEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства EnabledEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
+    /// Возвращает true, если обработчик свойства <see cref="EnabledEx"/> присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде.
     /// </summary>
     public bool EnabledExConnected
     {
@@ -193,7 +193,7 @@ namespace FreeLibSet.RI
     public Label(string text)
     {
       if (String.IsNullOrEmpty(text))
-        throw new ArgumentNullException("text");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("text");
       _Text = text;
     }
 
@@ -1524,7 +1524,7 @@ namespace FreeLibSet.RI
           return;
 
         if (value.CompareTo(default(T)) < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value.CompareTo(default(T)) == 0)
           UpDownHandler = null;
@@ -1887,7 +1887,7 @@ namespace FreeLibSet.RI
     public CheckBox(string text)
     {
       if (String.IsNullOrEmpty(text))
-        throw new ArgumentNullException("text");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("text");
       _Text = text;
       _CanBeEmptyMode = UIValidateState.Error;
       _NChecked = false; // 25.11.2021. а не null
@@ -2319,7 +2319,7 @@ namespace FreeLibSet.RI
         if (value != null)
         {
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Неправильная длина массива кодов");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
           _Codes = value;
         }
       }
@@ -2351,7 +2351,7 @@ namespace FreeLibSet.RI
       set
       {
         if (Codes == null)
-          throw new InvalidOperationException("Свойство Codes не установено");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
         SelectedIndex = Array.IndexOf<string>(Codes, value);
       }
     }
@@ -4386,7 +4386,7 @@ namespace FreeLibSet.RI
       set
       {
         if (value < 1 || value > 12)
-          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, 12);
         _Month = value;
         if (_MonthEx != null)
           _MonthEx.Value = value;
@@ -4569,9 +4569,9 @@ namespace FreeLibSet.RI
       set
       {
         if (value.IsEmpty)
-          throw new ArgumentNullException("value", "Задан пустой интервал дат");
+          throw new ArgumentNullException("value");
         if (value.FirstDate.Year != value.LastDate.Year || value.FirstDate.Month != value.LastDate.Month)
-          throw new ArgumentException("Интервал дат должен относиться к одному месяцу");
+          throw new ArgumentException(Res.RI_Arg_DateRangeDiffMonths);
 
         Year = value.FirstDate.Year;
         Month = value.FirstDate.Month;
@@ -4781,7 +4781,7 @@ namespace FreeLibSet.RI
       set
       {
         if (value < 1 || value > 12)
-          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, 12);
         _FirstMonth = value;
         if (_FirstMonthEx != null)
           _FirstMonthEx.Value = value;
@@ -4854,7 +4854,7 @@ namespace FreeLibSet.RI
       set
       {
         if (value < 1 || value > 12)
-          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, 12);
         _LastMonth = value;
         if (_LastMonthEx != null)
           _LastMonthEx.Value = value;
@@ -5068,9 +5068,9 @@ namespace FreeLibSet.RI
       set
       {
         if (value.IsEmpty)
-          throw new ArgumentNullException("value", "Задан пустой интервал дат");
+          throw new ArgumentNullException("value");
         if (value.FirstDate.Year != value.LastDate.Year)
-          throw new ArgumentException("Интервал дат должен относиться к одному году");
+          throw new ArgumentException(Res.RI_Arg_DateRangeDiffYears);
 
         Year = value.FirstDate.Year;
         FirstMonth = value.FirstDate.Month;
@@ -5096,7 +5096,7 @@ namespace FreeLibSet.RI
         if (value.IsEmpty)
           throw new ArgumentNullException();
         if (value.LastYM.Year != value.FirstYM.Year)
-          throw new ArgumentException("Период должен относиться к одному году");
+          throw new ArgumentException(Res.RI_Arg_DateRangeDiffYears);
         this.Year = value.FirstYM.Year;
         this.FirstMonth = value.FirstYM.Month;
         this.LastMonth = value.LastYM.Month;
@@ -5260,7 +5260,7 @@ namespace FreeLibSet.RI
       if (items == null)
         throw new ArgumentNullException("items");
       if (items.Length == 0)
-        throw new ArgumentException("Список элементов не может быть пустым", "items");
+        throw ExceptionFactory.ArgIsEmpty("items");
       _Items = items;
     }
 
@@ -5369,7 +5369,7 @@ namespace FreeLibSet.RI
         if (value != null)
         {
           if (value.Length != _Items.Length)
-            throw new ArgumentException("Неправильная длина массива кодов");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
           _Codes = value;
         }
       }
@@ -5396,7 +5396,7 @@ namespace FreeLibSet.RI
       set
       {
         if (Codes == null)
-          throw new InvalidOperationException("Свойство Codes не установено");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
         SelectedIndex = Array.IndexOf<string>(Codes, value);
       }
     }
@@ -6194,7 +6194,6 @@ namespace FreeLibSet.RI
     #endregion
   }
 
-
   /// <summary>
   /// Комбоблок для выбора одного или нескольких кодов, разделенных запятыми.
   /// Текущий выбор пользователя задает свойство SelectedCodes
@@ -6244,7 +6243,7 @@ namespace FreeLibSet.RI
         if (value != null)
         {
           if (value.Length != _Codes.Length)
-            throw new ArgumentException("Неправильная длина массива: " + value.Length.ToString() + ". Ожидалось: " + _Codes.Length.ToString());
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Codes.Length);
           _Names = value;
         }
       }
@@ -6670,7 +6669,7 @@ namespace FreeLibSet.RI
       if (lines == null)
         throw new ArgumentNullException("lines");
       if (lines.Length < 1)
-        throw new ArgumentException("Текст должен быть задан", "lines");
+        throw ExceptionFactory.ArgIsEmpty("lines");
       _Lines = lines;
     }
 
@@ -6999,7 +6998,7 @@ namespace FreeLibSet.RI
       {
         CheckNotFixed();
         if (value == TestPathMode.FileExists)
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgUnknownValue("value", value);
         _PathValidateMode = value;
       }
     }

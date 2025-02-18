@@ -95,13 +95,20 @@ namespace FreeLibSet.Data
     /// <param name="value">Значение поля</param>
     public void SetColumnValues(DataTable table, string columnName, object value)
     {
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+      if (String.IsNullOrEmpty(columnName))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
+#endif
+
       DataRow[] rows = table.Select(ToString());
       if (rows.Length > 0)
       {
         int p = table.Columns.IndexOf(columnName);
 #if DEBUG
         if (p < 0)
-          throw new ArgumentException("Столбец \"" + columnName + "\" не найден в таблице \"" + table.TableName + "\"");
+          throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 #endif
         for (int i = 0; i < rows.Length; i++)
           rows[i][p] = value;
@@ -189,17 +196,17 @@ namespace FreeLibSet.Data
     protected void CheckColumnName(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       const string badChars = " ,;";
       for (int i = 0; i < badChars.Length; i++)
       {
         int p = columnName.IndexOf(badChars[i]);
         if (p >= 0)
-          throw new ArgumentException("Имя поля \"" + columnName + "\" содержит недопустимый символ \"" +
-            badChars[i] + "\" в позиции " + (p + 1).ToString());
+          throw ExceptionFactory.ArgBadChar("columnName", columnName, p);
       }
     }
+
 #endif
 
     #endregion
@@ -305,7 +312,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("expression");
 #if DEBUG
       if (expression.GetConst() != null)
-        throw new ArgumentException("Константа не может быть аргументом", "expression");
+        throw new ArgumentException(Res.DBxFilter_Arg_IsDBxConst, "expression");
 #endif
 
       _Expression = expression;
@@ -541,10 +548,10 @@ namespace FreeLibSet.Data
           case CompareKind.NotEqual:
             break;
           default:
-            throw new ArgumentException("Так как одно из выражений является константой NULL, нельзя задавать режим сравнения Kind=" + _Kind.ToString() + ". Допускается только сравнение на равенство или неравенство");
+            throw new ArgumentException(String.Format(Res.CompareFilter_Arg_InvalidCompareKindWithNull, _Kind.ToString()), "expression");
         }
         if (_NullAsDefaultValue)
-          throw new ArgumentException("Так как одно из выражений является константой NULL, нельзя задавать режим NullAsDefaultValue");
+          throw new ArgumentException(Res.CompareFilter_Arg_NullAsDefaultValueWithNull, "expression");
       }
     }
 
@@ -809,7 +816,7 @@ namespace FreeLibSet.Data
         case CompareKind.GreaterOrEqualThan: return res >= 0;
         case CompareKind.LessOrEqualThan: return res <= 0;
         default:
-          throw new ArgumentException("Неизвестный Kind=" + kind.ToString(), "kind");
+          throw ExceptionFactory.ArgUnknownValue("kind", kind);
       }
     }
 
@@ -1019,8 +1026,15 @@ namespace FreeLibSet.Data
     /// <returns>Объект фильтра или null</returns>
     public static DBxFilter CreateFilter(DBxColumns columnNames, object[] values)
     {
+#if DEBUG
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
+      if(values==null)
+        throw new ArgumentNullException("values");
+#endif
       if (columnNames.Count != values.Length)
-        throw new ArgumentException("Список значений не совпадает со списком имен полей");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values,columnNames.Count);
+
       if (columnNames.Count == 0)
         return null;
       if (columnNames.Count == 1)
@@ -1091,7 +1105,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("ids");
 #endif
       if (ids.Count == 0)
-        throw new ArgumentException("Массив идентификаторов не может быть пустым", "ids");
+        throw ExceptionFactory.ArgIsEmpty("ids");
 
       ids.SetReadOnly();
       _Ids = ids;
@@ -1152,7 +1166,6 @@ namespace FreeLibSet.Data
       : this(new DBxColumn(columnName), new IdList(ids))
     {
     }
-
 
     /// <summary>
     /// Создает фильтр для заданного поля.
@@ -1302,16 +1315,16 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("values");
 #endif
       if (values.Length == 0)
-        throw new ArgumentException("Список значений пуст", "values");
+        throw ExceptionFactory.ArgIsEmpty("values");
       Type t = null;
       foreach (object value in values)
       {
         if (value == null || (value is DBNull))
-          throw new ArgumentException("Массив не может содержать значения null или DBNull", "values");
+          throw ExceptionFactory.ArgInvalidEnumerableItem("values", values, value);
         if (t == null)
           t = value.GetType();
         else if (t != value.GetType())
-          throw new ArgumentNullException("Массив должен содержать однотипные значения. Первый элемент массива имеет тип " + t.ToString() + ", но есть значение типа " + value.GetType().ToString());
+          throw new ArgumentException(String.Format(Res.ValuesFilter_Arg_DiffTypeValues, t.ToString(), value.GetType().ToString()));
       }
 
       _Values = values;
@@ -1421,7 +1434,7 @@ namespace FreeLibSet.Data
       v = DBxTools.Convert(v, colType); // в том числе, преобразует null в 0.
 #if DEBUG
       if (Object.ReferenceEquals(v, null))
-        throw new NullReferenceException("После вызова Convert() возвращен null");
+        throw new NullReferenceException("DBxTools.Convert() returned null");
 #endif
 
       bool isNumeric = DataTools.IsNumericType(v.GetType()) && DataTools.IsNumericType(values.GetValue(0).GetType());
@@ -1447,7 +1460,6 @@ namespace FreeLibSet.Data
 
     #endregion
   }
-
 
   /// <summary>
   /// Комбинация из нескольких условий, объединенных условием "И"
@@ -1516,10 +1528,12 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("filters");
 #endif
       if (filters.Length < 2)
-        throw new ArgumentException("Длина массива не может быть меньше 2. Используйте статический метод FromArray()");
+        throw new ArgumentException(Res.AndOrFilter_Arg_TwoItemsRequired, "filters");
 
-      if (Array.IndexOf<DBxFilter>(filters, null) >= 0)
-        throw new ArgumentException("Массив фильтров не может содержать значения null", "filters");
+      int pNull = Array.IndexOf<DBxFilter>(filters, null);
+      if (pNull >= 0)
+        throw ExceptionFactory.ArgInvalidListItem("filters", filters, pNull);
+
       _Filters = filters;
     }
 
@@ -1777,9 +1791,12 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("filters");
 #endif
       if (filters.Length < 2)
-        throw new ArgumentException("Длина массива не может быть меньше 2. Используйте статический метод FromArray()");
-      if (Array.IndexOf<DBxFilter>(filters, null) >= 0)
-        throw new ArgumentException("Массив фильтров не может создержать значения null", "filters");
+        throw new ArgumentException(Res.AndOrFilter_Arg_TwoItemsRequired, "filters");
+
+      int pNull = Array.IndexOf<DBxFilter>(filters, null);
+      if (pNull >= 0)
+        throw ExceptionFactory.ArgInvalidListItem("filters", filters, pNull);
+
       _Filters = filters;
     }
 
@@ -2203,7 +2220,6 @@ namespace FreeLibSet.Data
     #endregion
   }
 
-
   /// <summary>
   /// Фильтр по двум полям, содержащим диапазон чисел.
   /// В фильтр входят строки, в диапазон дат которых попадает указанное число.
@@ -2539,7 +2555,6 @@ namespace FreeLibSet.Data
 
     #endregion
   }
-
 
   /// <summary>
   /// Фильтр по полю, содержащему дату, по диапазону дат.
@@ -3217,9 +3232,9 @@ namespace FreeLibSet.Data
       : base(expression)
     {
       if (startIndex < 0)
-        throw new ArgumentOutOfRangeException("startIndex", startIndex, "Начальная позиция не может быть отрицательной");
+        throw ExceptionFactory.ArgOutOfRange("startIndex", startIndex, 0, null);
       if (String.IsNullOrEmpty(value))
-        throw new ArgumentNullException("value");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
       _StartIndex = startIndex;
       _Value = value;
       _IgnoreCase = ignoreCase;
@@ -3436,10 +3451,10 @@ namespace FreeLibSet.Data
       _IdArrays = new Int32[n1][];
       for (int i = 0; i < n1; i++)
       {
-        int StartIndex = i * maxCount;
-        int n2 = Math.Min(maxCount, allIds.Length - StartIndex);
+        int startIndex = i * maxCount;
+        int n2 = Math.Min(maxCount, allIds.Length - startIndex);
         _IdArrays[i] = new Int32[n2];
-        Array.Copy(allIds, StartIndex, _IdArrays[i], 0, n2);
+        Array.Copy(allIds, startIndex, _IdArrays[i], 0, n2);
       }
     }
 
@@ -3514,7 +3529,7 @@ namespace FreeLibSet.Data
       {
 #if DEBUG
         if (_Filters == null)
-          throw new InvalidOperationException("Не было вызова метода CreateFilters");
+          throw new InvalidOperationException("CreateFilters() has not been called");
 #endif
         return _Filters[index];
       }

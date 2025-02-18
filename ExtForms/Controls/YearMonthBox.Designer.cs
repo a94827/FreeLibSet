@@ -28,68 +28,56 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.label1 = new System.Windows.Forms.Label();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YearMonthBox));
+      this.lblMonth = new System.Windows.Forms.Label();
       this.cbMonth = new System.Windows.Forms.ComboBox();
-      this.label2 = new System.Windows.Forms.Label();
+      this.lblYear = new System.Windows.Forms.Label();
       this.edYear = new FreeLibSet.Controls.IntEditBox();
       this.SuspendLayout();
       // 
-      // label1
+      // lblMonth
       // 
-      this.label1.Location = new System.Drawing.Point(0, 0);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(70, 21);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "Месяц";
-      this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      resources.ApplyResources(this.lblMonth, "lblMonth");
+      this.lblMonth.Name = "lblMonth";
       // 
       // cbMonth
       // 
+      resources.ApplyResources(this.cbMonth, "cbMonth");
       this.cbMonth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.cbMonth.FormattingEnabled = true;
-      this.cbMonth.Location = new System.Drawing.Point(76, 0);
       this.cbMonth.Name = "cbMonth";
-      this.cbMonth.Size = new System.Drawing.Size(121, 21);
-      this.cbMonth.TabIndex = 1;
       // 
-      // label2
+      // lblYear
       // 
-      this.label2.Location = new System.Drawing.Point(203, 0);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(57, 21);
-      this.label2.TabIndex = 2;
-      this.label2.Text = "Год";
-      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      resources.ApplyResources(this.lblYear, "lblYear");
+      this.lblYear.Name = "lblYear";
       // 
       // edYear
       // 
-      this.edYear.Location = new System.Drawing.Point(266, 0);
+      resources.ApplyResources(this.edYear, "edYear");
       this.edYear.Increment = 1;
       this.edYear.Maximum = 9999;
       this.edYear.Minimum = 1001;
       this.edYear.Name = "edYear";
-      this.edYear.Size = new System.Drawing.Size(78, 20);
-      this.edYear.TabIndex = 3;
       // 
       // YearMonthBox
       // 
+      resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.Controls.Add(this.edYear);
-      this.Controls.Add(this.label2);
+      this.Controls.Add(this.lblYear);
       this.Controls.Add(this.cbMonth);
-      this.Controls.Add(this.label1);
+      this.Controls.Add(this.lblMonth);
       this.Name = "YearMonthBox";
-      this.Size = new System.Drawing.Size(345, 21);
       this.ResumeLayout(false);
 
     }
 
     #endregion
 
-    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label lblMonth;
     internal System.Windows.Forms.ComboBox cbMonth;
-    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Label lblYear;
     internal FreeLibSet.Controls.IntEditBox edYear;
   }
 }

@@ -640,7 +640,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка обработчика события InitView");
+          EFPApp.ShowException(e);
         }
       }
     }

@@ -87,9 +87,9 @@ namespace FreeLibSet.Data
           buffer.SB.Append(name);
           break;
         case EnvelopMode.Unsupported:
-          throw new NotSupportedException("Метод должен быть реализован в производном классе");
+          throw new NotSupportedException("Method must be implemented in the inherited class");
         default:
-          throw new BugException("Недопустимое значение свойства NameEnvelopMode=" + NameEnvelopMode.ToString());
+          throw new BugException("Invalid property NameEnvelopMode=" + NameEnvelopMode.ToString());
       }
     }
 
@@ -237,7 +237,7 @@ namespace FreeLibSet.Data
         return;
       }
 
-      throw new NotImplementedException("Значение " + value.ToString() + " имеет неизвестный тип " + value.GetType().ToString());
+      throw new NotImplementedException("Value " + value.ToString() + " has unknown type " + value.GetType().ToString());
     }
 
     /// <summary>
@@ -425,7 +425,7 @@ namespace FreeLibSet.Data
       else if (expression is DBxAggregateFunction)
         OnFormatAggregateFunction(buffer, (DBxAggregateFunction)expression, formatInfo);
       else
-        throw new ArgumentException("Неподдерживаемый тип выражения: " + expression.GetType().ToString());
+        throw ExceptionFactory.ArgUnknownType("expression", expression);
     }
 
 
@@ -451,7 +451,7 @@ namespace FreeLibSet.Data
       {
         actualName = actualName.Substring(lastDotPos + 1);
         if (String.IsNullOrEmpty(tableAlias))
-          throw new InvalidOperationException("Для ссылочного столбца \"" + column.ColumnName + "\" не найден альяс таблицы");
+          throw new InvalidOperationException(String.Format(Res.CoreDBxSqlFormatter_Err_NoTableAliasForColumn, column.ColumnName));
       }
 
       bool useCoalesce = false;
@@ -472,7 +472,7 @@ namespace FreeLibSet.Data
       if (useCoalesce)
       {
         if (wantedType == DBxColumnType.Unknown)
-          throw new InvalidOperationException("Для столбца \"" + column.ColumnName + "\" требуется обработка значения NULL. Не найдено описание структуры столбца и не передан требуемый тип данных");
+          throw new InvalidOperationException(String.Format(Res.CoreDBxSqlFormatter_Err_CoalesceForUnknownColumnType, column.ColumnName));
 
         DBxFunction f2 = new DBxFunction(DBxFunctionKind.Coalesce, column, new DBxConst(GetDefaultValue(wantedType), wantedType));
         FormatExpression(buffer, f2, new DBxFormatExpressionInfo()); // рекурсивный вызов форматировщика, но уже без флага 
@@ -766,7 +766,7 @@ namespace FreeLibSet.Data
         case DBxFunctionKind.Upper: return "UPPER";
         case DBxFunctionKind.Substring: return "SUBSTRING";
         default:
-          throw new ArgumentException("Неизвестная функция " + function.ToString(), "function");
+          throw ExceptionFactory.ArgUnknownValue("function", function);
       }
     }
 
@@ -800,7 +800,7 @@ namespace FreeLibSet.Data
         case DBxAggregateFunctionKind.Avg:
           return kind.ToString().ToUpperInvariant();
         default:
-          throw new ArgumentException("Неизвестная агрегатная функция " + kind.ToString());
+          throw ExceptionFactory.ArgUnknownValue("kind", kind);
       }
     }
 
@@ -850,7 +850,7 @@ namespace FreeLibSet.Data
       else if (filter is DummyFilter)
         OnFormatDummyFilter(buffer, (DummyFilter)filter);
       else
-        throw new ArgumentException("Неподдерживаемый тип фильтра: " + filter.GetType().ToString());
+        throw ExceptionFactory.ArgUnknownType("filter", filter);
     }
 
     /// <summary>
@@ -868,7 +868,7 @@ namespace FreeLibSet.Data
         case CompareKind.GreaterThan: return ">";
         case CompareKind.GreaterOrEqualThan: return ">=";
         case CompareKind.NotEqual: return "<>";
-        default: throw new ArgumentException("Неизвестный Kind: " + kind.ToString());
+        default: throw ExceptionFactory.ArgUnknownValue("kind", kind);
       }
     }
 
@@ -1403,7 +1403,7 @@ namespace FreeLibSet.Data
               OnFormatNullNotNullCompareFilter(buffer, filter.Expression1, cnst2.ColumnType, filter.Kind);
               return;
             default:
-              throw new ArgumentException("В фильтре задано сравнение значения с NULL в режиме " + filter.Kind.ToString() + ". Допускаются только сравнения на равенство и неравенство");
+              throw new ArgumentException(String.Format(Res.CoreDBxSqlFormatter_Arg_CompareKingMustBeEQorNE, filter.Kind, "filter"));
           }
         }
 
@@ -1422,7 +1422,7 @@ namespace FreeLibSet.Data
                 OnFormatNullNotNullCompareFilter(buffer, filter.Expression2, cnst1.ColumnType, filter.Kind);
                 return;
               default:
-                throw new ArgumentException("В фильтре задано сравнение значения с NULL в режиме " + filter.Kind.ToString() + ". Допускаются только сравнения на равенство и неравенство");
+                throw new ArgumentException(String.Format(Res.CoreDBxSqlFormatter_Arg_CompareKingMustBeEQorNE, filter.Kind, "filter"));
             }
           }
 
@@ -1461,7 +1461,7 @@ namespace FreeLibSet.Data
           buffer.SB.Append(" IS NOT NULL");
           break;
         default:
-          throw new ArgumentException("Недопустимый kind=" + kind.ToString(), "kind");
+          throw ExceptionFactory.ArgUnknownValue("kind", kind);
       }
     }
 
@@ -1618,5 +1618,4 @@ namespace FreeLibSet.Data
 
     #endregion
   }
-
 }

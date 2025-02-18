@@ -214,7 +214,7 @@ namespace FreeLibSet.Collections
     private static void CheckMaxLength(int maxHistLength)
     {
       if (maxHistLength < 1)
-        throw new ArgumentOutOfRangeException("maxHistLength", maxHistLength, "Длина списка истории не может быть меньше 1");
+        throw ExceptionFactory.ArgOutOfRange("maxHistLength", maxHistLength, 1, null);
     }
 
     /// <summary>

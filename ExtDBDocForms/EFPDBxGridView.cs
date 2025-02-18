@@ -1297,7 +1297,7 @@ namespace FreeLibSet.Forms.Docs
         if (!_CellValueNeededExceptionLogged)
         {
           _CellValueNeededExceptionLogged = true;
-          LogoutTools.LogoutException(e, "EFPDBxGridView.CellValueNeeded");
+          LogoutTools.LogoutException(e);
         }
       }
     }

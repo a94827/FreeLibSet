@@ -13,14 +13,6 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
 
-// Part of FreeLibSet.
-// See copyright notices in "license" file in the FreeLibSet root directory.
-//
-// Original TreeViewAdv component from Aga.Controls.dll
-// Copyright (c) 2009, Andrey Gliznetsov (a.gliznetsov@gmail.com)
-// http://www.codeproject.com/Articles/14741/Advanced-TreeView-for-NET
-// http://sourceforge.net/projects/treeviewadv/
-
 #pragma warning disable 1591
 
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls

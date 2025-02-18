@@ -133,7 +133,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;
@@ -324,7 +324,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0f)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0f)
           UpDownHandler = null;
@@ -515,7 +515,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0.0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0.0)
           UpDownHandler = null;
@@ -706,7 +706,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0m)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0m)
           UpDownHandler = null;
@@ -1036,7 +1036,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;
@@ -1218,7 +1218,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;
@@ -1400,7 +1400,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;
@@ -1582,7 +1582,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;
@@ -1771,7 +1771,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;
@@ -1953,7 +1953,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;
@@ -2135,7 +2135,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;
@@ -2317,7 +2317,7 @@ namespace FreeLibSet.Forms.Data
           return;
 
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value", value, "Значение должно быть больше или равно 0");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         if (value == 0)
           UpDownHandler = null;

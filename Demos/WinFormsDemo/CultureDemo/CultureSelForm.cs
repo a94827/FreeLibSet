@@ -41,7 +41,7 @@ namespace WinFormsDemo.CultureDemo
         names[i] = AllCultures[i].DisplayName + " (" + AllCultures[i].Name + ")";
         if (Object.ReferenceEquals(AllCultures[i], CultureInfo.CurrentCulture))
         {
-          names[i] += " (Текущая)";
+          names[i] += " (current)";
           selIndex = i;
         }
       }
@@ -52,8 +52,7 @@ namespace WinFormsDemo.CultureDemo
       btnShowTable.Image = EFPApp.MainImages.Images["Table"];
       btnShowTable.ImageAlign = ContentAlignment.MiddleCenter;
       EFPButton efpShowTable = new EFPButton(efpForm, btnShowTable);
-      efpShowTable.DisplayName = "Таблица CultureInfo";
-      efpShowTable.ToolTipText = "Открывает таблицу со списком всех таблиц";
+      efpShowTable.DisplayName = "CultureInfo table";
       efpShowTable.Click += EfpShowTable_Click;
 
       #endregion
@@ -64,9 +63,9 @@ namespace WinFormsDemo.CultureDemo
       #region Таблица параметров
 
       efpInfo = new EFPDataGridView(efpForm, grInfo);
-      efpInfo.Columns.AddText("Параметр", false, "Параметр", 20);
-      efpInfo.Columns.AddTextFill("Значение", 50);
-      efpInfo.Columns.AddTextFill("Пример", 50);
+      efpInfo.Columns.AddText("Param", false, "Param", 20);
+      efpInfo.Columns.AddTextFill("Value", 50);
+      efpInfo.Columns.AddTextFill("Sample", 50);
       efpInfo.DisableOrdering();
       efpInfo.ReadOnly = true;
       efpInfo.Control.ReadOnly = true;
@@ -80,8 +79,8 @@ namespace WinFormsDemo.CultureDemo
       #region Стандартные форматы
 
       efpFormats = new EFPDataGridView(efpForm, grFormats);
-      efpFormats.Columns.AddText("Формат", false, "Формат", 6);
-      efpFormats.Columns.AddTextFill("Значение");
+      efpFormats.Columns.AddText("Format", false, "Format", 6);
+      efpFormats.Columns.AddTextFill("Value");
       efpFormats.DisableOrdering();
       efpFormats.ReadOnly = true;
       efpFormats.Control.ReadOnly = true;
@@ -191,7 +190,7 @@ namespace WinFormsDemo.CultureDemo
       table.DefaultView.Sort = "DisplayName";
 
       SimpleGridForm form = new SimpleGridForm();
-      form.Text = "Все культуры";
+      form.Text = "All cultures";
       EFPDataGridView efpGr = new EFPDataGridView(form.ControlWithToolBar);
       efpGr.Control.AutoGenerateColumns = true;
       efpGr.ReadOnly = true;

@@ -45,7 +45,6 @@ namespace FreeLibSet.Forms
       Add(ciCut);
 
       ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
-      ciCopy.MenuText = "Копировать ячейки";
       ciCopy.Enabled = true;
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
@@ -91,17 +90,25 @@ namespace FreeLibSet.Forms
 
       #region Установка отметок
 
+      MenuCheck = new EFPCommandItem("Edit", "MenuCheckMarks");
+      MenuCheck.MenuText = Res.Cmd_Menu_CheckMarks;
+      MenuCheck.ImageKey = "CheckListChecked";
+      MenuCheck.Usage = EFPCommandItemUsage.Menu;
+      Add(MenuCheck);
+
+
       ciCheckAll = new EFPCommandItem("Edit", "SetAllCheckMarks");
-      //ciCheckAll.Parent = MenuCheck;
-      ciCheckAll.MenuText = "Установить отметки для всех строк";
+      ciCheckAll.Parent = MenuCheck;
+      ciCheckAll.MenuText = Res.Cmd_Menu_CheckMarks_SetAll;
       ciCheckAll.ImageKey = "CheckListAll";
       ciCheckAll.ShortCut = Keys.Control | Keys.A;
       ciCheckAll.Click += new EventHandler(ciCheckAll_Click);
       Add(ciCheckAll);
 
-      ciUncheckAll = new EFPCommandItem("Edit", "DeleteAllCheckmarks");
-      //ciUncheckAll.Parent = MenuCheck;
-      ciUncheckAll.MenuText = "Снять отметки для всех строк";
+      ciUncheckAll = new EFPCommandItem("Edit", "DeleteAllCheckMarks");
+      ciUncheckAll.Parent = MenuCheck;
+      ciUncheckAll.GroupEnd = true;
+      ciUncheckAll.MenuText = Res.Cmd_Menu_CheckMarks_DelAll;
       ciUncheckAll.ImageKey = "CheckListNone";
       ciUncheckAll.ShortCut = Keys.Control | Keys.Shift | Keys.A;
       ciUncheckAll.Click += new EventHandler(ciUncheckAll_Click);
@@ -282,7 +289,7 @@ namespace FreeLibSet.Forms
     {
       try
       {
-        EFPApp.BeginWait("Копирование ячеек в буфер обмена", "Copy");
+        EFPApp.BeginWait(Res.Clipboard_Phase_SetData, "Copy");
         try
         {
           DataObject dobj2 = new DataObject();
@@ -291,7 +298,7 @@ namespace FreeLibSet.Forms
           OnAddDefaultCopyFormats(args);
           OnAddCopyFormats(args);
 
-          EFPApp.Clipboard.SetDataObject(dobj2, true);
+          new EFPClipboard().SetDataObject(dobj2, true);
         }
         finally
         {
@@ -301,8 +308,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.MessageBox(e.Message, "Ошибка при копировании в буфер обмена",
-          MessageBoxButtons.OK, MessageBoxIcon.Error);
+        EFPApp.ErrorMessageBox(e.Message);
         return false;
       }
     }
@@ -443,7 +449,7 @@ namespace FreeLibSet.Forms
 
     #region Команды установки отметок
 
-    private EFPCommandItem ciCheckAll, ciUncheckAll;
+    private EFPCommandItem MenuCheck, ciCheckAll, ciUncheckAll;
 
     private void ciCheckAll_Click(object sender, EventArgs args)
     {

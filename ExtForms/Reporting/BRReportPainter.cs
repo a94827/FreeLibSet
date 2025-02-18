@@ -515,7 +515,7 @@ namespace FreeLibSet.Drawing.Reporting
       catch (Exception e)
       {
         graphics.FillRectangle(Brushes.Red, rc);
-        lines = new string[] { "Ошибка получения текста", e.Message };
+        lines = new string[] { Res.BRReportPainter_Err_GetLines, e.Message };
       }
 
       if (lines.Length == 0 && sel.CellStyle.TextFiller == BRTextFiller.None)
@@ -767,7 +767,7 @@ namespace FreeLibSet.Drawing.Reporting
           _BorderPen.DashStyle = DashStyle.DashDotDot;
           break;
         default:
-          throw new ArgumentException("Неправильная толщина линии");
+          throw ExceptionFactory.ArgUnknownValue("line", line);
       }
       _BorderPen.Width = (float)BRLine.GetLineWidthPt01mm(line.Style) * _Scale;
       if (line.Color == BRColor.Auto)
@@ -826,7 +826,7 @@ namespace FreeLibSet.Drawing.Reporting
         }
         catch (Exception e)
         {
-          Forms.EFPApp.ShowException(e, "Ошибка при печати");
+          Forms.EFPApp.ShowException(e, Res.BRReportPainter_ErrTitle_Print);
           args.HasMorePages = false;
         }
       }
@@ -921,7 +921,7 @@ namespace FreeLibSet.Drawing.Reporting
 
 #if DEBUG
       if (res.PrinterSettings == null)
-        throw new NullReferenceException("PageSettings.PrinterSettings=null");
+        throw ExceptionFactory.ObjectPropertyNotSet(res, "PrinterSettings");
 #endif
 
       bool found = false;
@@ -1058,7 +1058,8 @@ namespace FreeLibSet.Drawing.Reporting
       }
       catch (Exception e)
       {
-        throw new ArgumentException("Не удалось создать контекст вывода для изображения в формате " + format.ToString() + ". " + e.Message, "format", e);
+        throw new ArgumentException(String.Format(Res.BRReportPainter_Arg_PixelFormat,
+          format, e.Message), "format", e);
       }
       try
       {

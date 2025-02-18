@@ -65,7 +65,7 @@ namespace FreeLibSet.Drawing.Reporting
     protected void CheckGraphics()
     {
       if (_Graphics == null)
-        throw new NullReferenceException("Свойство Graphics не было установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Graphics");
     }
 
     #endregion
@@ -98,7 +98,7 @@ namespace FreeLibSet.Drawing.Reporting
       {
 #if DEBUG
         if (value < 0.1f)
-          throw new ArgumentException("Слишком маленький шрифт", "value");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0.1f, null);
 #endif
         if (value == _FontHeight)
           return;

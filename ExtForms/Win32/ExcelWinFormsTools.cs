@@ -153,7 +153,7 @@ namespace FreeLibSet.OLE.Excel
     {
 #if DEBUG
       if (value.IsSystemColor)
-        throw new ArgumentException("Системные цвета недопустимы", "value");
+        throw new ArgumentException(Res.WinFormsTools_Arg_SystemColor, "value");
 #endif
       return (((int)(value.B)) << 16) | (((int)(value.G)) << 8) | ((int)(value.R));
     }

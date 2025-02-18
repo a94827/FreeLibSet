@@ -101,6 +101,7 @@ namespace FreeLibSet.Forms
 
       btnBack.Image = EFPApp.MainImages.Images["LeftLeft"];
       btnBack.ImageAlign = ContentAlignment.MiddleLeft;
+      btnBack.Text = Res.Btn_Text_Back;
       efpBack = new EFPButton(efpForm, btnBack);
       efpBack.Click += new System.EventHandler(btnBack_Click);
 
@@ -185,11 +186,11 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (TheWizard.TempPage != null)
-        throw new BugException("Выведена временная страница");
+        throw new BugException("TempPage is shown");
 #endif
 
       if (CurrentStep.Control.IsDisposed)
-        throw new ObjectDisposedException(CurrentStep.Control.ToString(), "Панель для шага мастера уже разрушена");
+        throw new ObjectDisposedException(CurrentStep.Control.ToString());
 
       panMain.SuspendLayout();
       try
@@ -241,12 +242,12 @@ namespace FreeLibSet.Forms
       {
         if (CurrentStep.FinalStep)
         {
-          efpNext.Text = "&Готово";
+          efpNext.Text = Res.Btn_Text_Finish;
           btnNext.Image = EFPApp.MainImages.Images["Ok"];
         }
         else
         {
-          efpNext.Text = "&Далее";
+          efpNext.Text = Res.Btn_Text_Forward;
           btnNext.Image = EFPApp.MainImages.Images["RightRight"];
         }
         efpNext.Enabled = CurrentStep.ForwardEnabled;
@@ -277,7 +278,7 @@ namespace FreeLibSet.Forms
     {
       if (CurrentStepIndex < 1)
       {
-        EFPApp.ShowTempMessage("Нельзя отменить первый шаг");
+        EFPApp.ShowTempMessage(Res.Wizard_Err_BackFromFirstStep);
         return;
       }
       if (!CurrentStep.OnEndStep(WizardAction.Back))
@@ -302,7 +303,7 @@ namespace FreeLibSet.Forms
         return;
 
       if (CurrentStep == null)
-        throw new NullReferenceException("Не найден текущий шаг мастера (CurrentStep=null)");
+        throw new NullReferenceException("CurrentStep=null");
 
       if (!CurrentStep.OnEndStep(CurrentStep.FinalStep ? WizardAction.Finish : WizardAction.Next))
       {
@@ -324,7 +325,7 @@ namespace FreeLibSet.Forms
       if (nextStep == null)
       {
         CloseAllTempPages(true);
-        EFPApp.ShowTempMessage("Следующий кадр не определен");
+        EFPApp.ShowTempMessage(Res.Wizard_Err_NoNextStep);
         return;
       }
 
@@ -363,7 +364,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         TheWizard.AddExceptionInfo(e);
-        LogoutTools.LogoutException(e, "Ошибка WizardForm.FormClosing");
+        LogoutTools.LogoutException(e);
         args.Cancel = false; // пусть закрывают
       }
     }
@@ -398,7 +399,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (TheWizard.TempPage == null)
-        throw new BugException("Нет временной страницы");
+        throw new BugException("TempPage == null");
 #endif
       panMain.Controls.Clear();
       panMain.Controls.Add(TheWizard.TempPage.Control);
@@ -457,7 +458,7 @@ namespace FreeLibSet.Forms
     {
 
       if (TheWizard.TempPage == null)
-        throw new BugException("Нет временной страницы");
+        throw new BugException("TempPage == null");
       panMain.Controls.Clear(); // Иначе нельзя разрушать управляющие элементы закладки
 
       WizardTempPage thisPage = TheWizard.TempPage;
@@ -521,7 +522,7 @@ namespace FreeLibSet.Forms
           catch (Exception e)
           {
             AddExceptionInfo(e);
-            EFPApp.ShowException(e, "Событие Wizard.Disposed"); // не Wizard.ShowException()
+            EFPApp.ShowException(e); // не Wizard.ShowException()
           }
         }
       }
@@ -567,7 +568,7 @@ namespace FreeLibSet.Forms
     private void CheckNotStarted()
     {
       if (TheForm != null)
-        throw new InvalidOperationException("Свойство можно устанавливать только до запуска мастера");
+        throw new InvalidOperationException(Res.Wizard_Err_AlreadyStarted);
     }
 
     /// <summary>
@@ -732,7 +733,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        ShowException(e, "Завершение работы мастера");
+        ShowException(e);
       }
     }
 
@@ -821,7 +822,7 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("page");
 #endif
       if (page.Wizard != null || page.PrevTempPage != null)
-        throw new ArgumentException("Повторное присоединение временной страницы", "page");
+        throw new ArgumentException(Res.Wizard_Arg_TempPageAlreadyAttached, "page");
 
       page.PrevTempPage = TempPage;
       _TempPage = page;
@@ -889,7 +890,7 @@ namespace FreeLibSet.Forms
 
     ISplash ISplashStack.BeginSplash()
     {
-      return BeginTempPage("Идет процесс");
+      return BeginTempPage(SplashTools.DefaultSplashText);
     }
 
     void ISplashStack.EndSplash()
@@ -948,6 +949,15 @@ namespace FreeLibSet.Forms
     /// Вызывает <see cref="EFPApp.ShowException(Exception, string)"/>, предварительно вызывая событие <see cref="HandleException"/>.
     /// </summary>
     /// <param name="exception">Перехваченное исключение</param>
+    public void ShowException(Exception exception)
+    {
+      ShowException(exception, LogoutTools.GetDefaultTitle());
+    }
+
+    /// <summary>
+    /// Вызывает <see cref="EFPApp.ShowException(Exception, string)"/>, предварительно вызывая событие <see cref="HandleException"/>.
+    /// </summary>
+    /// <param name="exception">Перехваченное исключение</param>
     /// <param name="exceptionTitle">Заголовок исключения</param>
     public void ShowException(Exception exception, string exceptionTitle)
     {
@@ -966,7 +976,7 @@ namespace FreeLibSet.Forms
         catch (Exception e2)
         {
           AddExceptionInfo(e2);
-          LogoutTools.LogoutException(e2, "Ошибка обработки события Wizard.HandlerException");
+          LogoutTools.LogoutException(e2, LogoutTools.GetTitleForCall("Wizard.HandlerException"));
         }
       }
       EFPApp.ShowException(exception, exceptionTitle);
@@ -1193,11 +1203,11 @@ namespace FreeLibSet.Forms
       if (control == null)
         throw new ArgumentNullException("control");
       if (control.IsDisposed)
-        throw new ObjectDisposedException(control.ToString(), "Панель шага мастера уже разрушена");
+        throw new ObjectDisposedException(control.ToString());
       if (control is Form)
-        throw new ArgumentException("Управляющий элемент не может быть Form. Если используется форма-шаблон, то добавьте панель элементами и передавайте Panel в конструктор WizardStep");
+        throw new ArgumentException(Res.Wizard_Arg_ControlIsForm, "control");
       if (control is TabPage)
-        throw new ArgumentException("Управляющий элемент не может быть TabPage. Если используется форма-шаблон, то добавьте на TabPage объект Panel с элементами и передавайте Panel в конструктор WizardStep");
+        throw new ArgumentException(Res.Wizard_Arg_ControlIsTabPage, "control");
 
       control.Dock = DockStyle.Fill;
 
@@ -1475,7 +1485,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          _Wizard.ShowException(e, "Инициализация очередного шага мастера");
+          _Wizard.ShowException(e);
         }
       }
 
@@ -1550,7 +1560,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          _Wizard.ShowException(e, "Завершение текущего шага мастера");
+          _Wizard.ShowException(e);
           return false;
         }
       }
@@ -1584,7 +1594,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          _Wizard.ShowException(e, "Получение следующего шага мастера");
+          _Wizard.ShowException(e);
           return null;
         }
       }
@@ -1698,7 +1708,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          _Wizard.ShowException(e, "Ошибка при обработке нажатия кнопки \"Отмена\"");
+          _Wizard.ShowException(e);
         }
       }
     }

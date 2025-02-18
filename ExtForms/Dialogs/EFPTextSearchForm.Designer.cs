@@ -30,6 +30,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EFPTextSearchForm));
       this.grpFrom = new System.Windows.Forms.GroupBox();
       this.rbFromCurr = new System.Windows.Forms.RadioButton();
       this.rbFromStart = new System.Windows.Forms.RadioButton();
@@ -44,7 +45,7 @@ namespace FreeLibSet.Forms
       this.cbSimilarCharsDiff = new System.Windows.Forms.CheckBox();
       this.cbCaseSens = new System.Windows.Forms.CheckBox();
       this.grpText = new System.Windows.Forms.GroupBox();
-      this.label1 = new System.Windows.Forms.Label();
+      this.lblText = new System.Windows.Forms.Label();
       this.cbText = new System.Windows.Forms.ComboBox();
       this.MainPanel.SuspendLayout();
       this.grpFrom.SuspendLayout();
@@ -56,8 +57,7 @@ namespace FreeLibSet.Forms
       // 
       // ButtonsPanel
       // 
-      this.ButtonsPanel.Location = new System.Drawing.Point(0, 231);
-      this.ButtonsPanel.Size = new System.Drawing.Size(411, 40);
+      resources.ApplyResources(this.ButtonsPanel, "ButtonsPanel");
       // 
       // MainPanel
       // 
@@ -66,105 +66,72 @@ namespace FreeLibSet.Forms
       this.MainPanel.Controls.Add(this.grpDirection);
       this.MainPanel.Controls.Add(this.grpConditions);
       this.MainPanel.Controls.Add(this.grpText);
-      this.MainPanel.Size = new System.Drawing.Size(411, 231);
+      resources.ApplyResources(this.MainPanel, "MainPanel");
       // 
       // grpFrom
       // 
       this.grpFrom.Controls.Add(this.rbFromCurr);
       this.grpFrom.Controls.Add(this.rbFromStart);
-      this.grpFrom.Location = new System.Drawing.Point(220, 158);
+      resources.ApplyResources(this.grpFrom, "grpFrom");
       this.grpFrom.Name = "grpFrom";
-      this.grpFrom.Size = new System.Drawing.Size(176, 68);
-      this.grpFrom.TabIndex = 9;
       this.grpFrom.TabStop = false;
-      this.grpFrom.Text = "Откуда начать";
       // 
       // rbFromCurr
       // 
-      this.rbFromCurr.AutoSize = true;
-      this.rbFromCurr.Location = new System.Drawing.Point(11, 42);
+      resources.ApplyResources(this.rbFromCurr, "rbFromCurr");
       this.rbFromCurr.Name = "rbFromCurr";
-      this.rbFromCurr.Size = new System.Drawing.Size(116, 17);
-      this.rbFromCurr.TabIndex = 1;
       this.rbFromCurr.TabStop = true;
-      this.rbFromCurr.Text = "С тек&ущей строки";
       this.rbFromCurr.UseVisualStyleBackColor = true;
       // 
       // rbFromStart
       // 
-      this.rbFromStart.AutoSize = true;
-      this.rbFromStart.Location = new System.Drawing.Point(11, 19);
+      resources.ApplyResources(this.rbFromStart, "rbFromStart");
       this.rbFromStart.Name = "rbFromStart";
-      this.rbFromStart.Size = new System.Drawing.Size(123, 17);
-      this.rbFromStart.TabIndex = 0;
       this.rbFromStart.TabStop = true;
-      this.rbFromStart.Text = "&С начала /  с конца";
       this.rbFromStart.UseVisualStyleBackColor = true;
       // 
       // grpWhere
       // 
       this.grpWhere.Controls.Add(this.rbCurrCol);
       this.grpWhere.Controls.Add(this.rbAllCols);
-      this.grpWhere.Location = new System.Drawing.Point(14, 158);
+      resources.ApplyResources(this.grpWhere, "grpWhere");
       this.grpWhere.Name = "grpWhere";
-      this.grpWhere.Size = new System.Drawing.Size(200, 68);
-      this.grpWhere.TabIndex = 8;
       this.grpWhere.TabStop = false;
-      this.grpWhere.Text = "Где искать";
       // 
       // rbCurrCol
       // 
-      this.rbCurrCol.AutoSize = true;
-      this.rbCurrCol.Location = new System.Drawing.Point(9, 42);
+      resources.ApplyResources(this.rbCurrCol, "rbCurrCol");
       this.rbCurrCol.Name = "rbCurrCol";
-      this.rbCurrCol.Size = new System.Drawing.Size(124, 17);
-      this.rbCurrCol.TabIndex = 1;
       this.rbCurrCol.TabStop = true;
-      this.rbCurrCol.Text = "В текущем стол&бце";
       this.rbCurrCol.UseVisualStyleBackColor = true;
       // 
       // rbAllCols
       // 
-      this.rbAllCols.AutoSize = true;
-      this.rbAllCols.Location = new System.Drawing.Point(9, 19);
+      resources.ApplyResources(this.rbAllCols, "rbAllCols");
       this.rbAllCols.Name = "rbAllCols";
-      this.rbAllCols.Size = new System.Drawing.Size(113, 17);
-      this.rbAllCols.TabIndex = 0;
       this.rbAllCols.TabStop = true;
-      this.rbAllCols.Text = "Во &всех столбцах";
       this.rbAllCols.UseVisualStyleBackColor = true;
       // 
       // grpDirection
       // 
       this.grpDirection.Controls.Add(this.rbBackward);
       this.grpDirection.Controls.Add(this.rbForward);
-      this.grpDirection.Location = new System.Drawing.Point(220, 61);
+      resources.ApplyResources(this.grpDirection, "grpDirection");
       this.grpDirection.Name = "grpDirection";
-      this.grpDirection.Size = new System.Drawing.Size(176, 68);
-      this.grpDirection.TabIndex = 7;
       this.grpDirection.TabStop = false;
-      this.grpDirection.Text = "Направление поиска";
       // 
       // rbBackward
       // 
-      this.rbBackward.AutoSize = true;
-      this.rbBackward.Location = new System.Drawing.Point(11, 41);
+      resources.ApplyResources(this.rbBackward, "rbBackward");
       this.rbBackward.Name = "rbBackward";
-      this.rbBackward.Size = new System.Drawing.Size(57, 17);
-      this.rbBackward.TabIndex = 1;
       this.rbBackward.TabStop = true;
-      this.rbBackward.Text = "На&зад";
       this.rbBackward.UseVisualStyleBackColor = true;
       // 
       // rbForward
       // 
-      this.rbForward.AutoSize = true;
-      this.rbForward.Location = new System.Drawing.Point(11, 21);
+      resources.ApplyResources(this.rbForward, "rbForward");
       this.rbForward.Name = "rbForward";
-      this.rbForward.Size = new System.Drawing.Size(62, 17);
-      this.rbForward.TabIndex = 0;
       this.rbForward.TabStop = true;
-      this.rbForward.Text = "Вп&еред";
       this.rbForward.UseVisualStyleBackColor = true;
       // 
       // grpConditions
@@ -172,79 +139,51 @@ namespace FreeLibSet.Forms
       this.grpConditions.Controls.Add(this.cbWhole);
       this.grpConditions.Controls.Add(this.cbSimilarCharsDiff);
       this.grpConditions.Controls.Add(this.cbCaseSens);
-      this.grpConditions.Location = new System.Drawing.Point(14, 61);
+      resources.ApplyResources(this.grpConditions, "grpConditions");
       this.grpConditions.Name = "grpConditions";
-      this.grpConditions.Size = new System.Drawing.Size(200, 91);
-      this.grpConditions.TabIndex = 6;
       this.grpConditions.TabStop = false;
-      this.grpConditions.Text = "Условия поиска";
       // 
       // cbWhole
       // 
-      this.cbWhole.AutoSize = true;
-      this.cbWhole.Location = new System.Drawing.Point(9, 65);
+      resources.ApplyResources(this.cbWhole, "cbWhole");
       this.cbWhole.Name = "cbWhole";
-      this.cbWhole.Size = new System.Drawing.Size(109, 17);
-      this.cbWhole.TabIndex = 2;
-      this.cbWhole.Text = "Строка &целиком";
       this.cbWhole.UseVisualStyleBackColor = true;
       // 
       // cbSimilarCharsDiff
       // 
-      this.cbSimilarCharsDiff.AutoSize = true;
-      this.cbSimilarCharsDiff.Location = new System.Drawing.Point(9, 42);
+      resources.ApplyResources(this.cbSimilarCharsDiff, "cbSimilarCharsDiff");
       this.cbSimilarCharsDiff.Name = "cbSimilarCharsDiff";
-      this.cbSimilarCharsDiff.Size = new System.Drawing.Size(153, 17);
-      this.cbSimilarCharsDiff.TabIndex = 1;
-      this.cbSimilarCharsDiff.Text = "Отличать похо&жие буквы";
       this.cbSimilarCharsDiff.UseVisualStyleBackColor = true;
       // 
       // cbCaseSens
       // 
-      this.cbCaseSens.AutoSize = true;
-      this.cbCaseSens.Location = new System.Drawing.Point(9, 19);
+      resources.ApplyResources(this.cbCaseSens, "cbCaseSens");
       this.cbCaseSens.Name = "cbCaseSens";
-      this.cbCaseSens.Size = new System.Drawing.Size(120, 17);
-      this.cbCaseSens.TabIndex = 0;
-      this.cbCaseSens.Text = "С учетом &регистра";
       this.cbCaseSens.UseVisualStyleBackColor = true;
       // 
       // grpText
       // 
-      this.grpText.Controls.Add(this.label1);
+      this.grpText.Controls.Add(this.lblText);
       this.grpText.Controls.Add(this.cbText);
-      this.grpText.Location = new System.Drawing.Point(14, 8);
+      resources.ApplyResources(this.grpText, "grpText");
       this.grpText.Name = "grpText";
-      this.grpText.Size = new System.Drawing.Size(382, 47);
-      this.grpText.TabIndex = 5;
       this.grpText.TabStop = false;
       // 
-      // label1
+      // lblText
       // 
-      this.label1.Location = new System.Drawing.Point(6, 16);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(88, 21);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "Искать &текст";
-      this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      resources.ApplyResources(this.lblText, "lblText");
+      this.lblText.Name = "lblText";
       // 
       // cbText
       // 
-      this.cbText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      resources.ApplyResources(this.cbText, "cbText");
       this.cbText.FormattingEnabled = true;
-      this.cbText.Location = new System.Drawing.Point(100, 16);
       this.cbText.Name = "cbText";
-      this.cbText.Size = new System.Drawing.Size(275, 21);
-      this.cbText.TabIndex = 1;
       // 
       // EFPTextSearchForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.ClientSize = new System.Drawing.Size(411, 271);
-      this.MinimumSize = new System.Drawing.Size(352, 84);
+      resources.ApplyResources(this, "$this");
       this.Name = "EFPTextSearchForm";
-      this.Text = "Поиск текста";
       this.MainPanel.ResumeLayout(false);
       this.grpFrom.ResumeLayout(false);
       this.grpFrom.PerformLayout();
@@ -271,7 +210,7 @@ namespace FreeLibSet.Forms
     private System.Windows.Forms.CheckBox cbSimilarCharsDiff;
     private System.Windows.Forms.CheckBox cbCaseSens;
     private System.Windows.Forms.GroupBox grpText;
-    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label lblText;
     private System.Windows.Forms.ComboBox cbText;
     public System.Windows.Forms.GroupBox grpWhere;
     public System.Windows.Forms.GroupBox grpFrom;

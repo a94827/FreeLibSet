@@ -65,7 +65,7 @@ namespace FreeLibSet.Forms
 #endif
 
       if (phases == null)
-        throw new ArgumentNullException("phases", "Не задан список строк для заставки");
+        throw new ArgumentNullException("phases");
 
 #if DEBUG
       if (form == null)
@@ -144,7 +144,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e) // 07.03.2018
       {
-        LogoutTools.LogoutException(e, "Ошибка закрытия Splash-заставки");
+        LogoutTools.LogoutException(e);
       }
 
       _Form = null;
@@ -243,12 +243,8 @@ namespace FreeLibSet.Forms
       {
         if (value == _CurrentIndex)
           return;
-        if (value < _CurrentIndex)
-          throw new InvalidOperationException("Нельзя установить фазу " + value.ToString() +
-              "т.к. текущая фаза процентного индикатора=" + _CurrentIndex.ToString());
-        if (value >= _Phases.Length)
-          throw new InvalidOperationException("Нельзя установить фазу " + value.ToString() +
-              "т.к. процентный индикатор содержит меньше фаз: " + _Phases.Length.ToString());
+        if (value < _CurrentIndex || value >= _Phases.Length)
+          throw ExceptionFactory.ArgOutOfRange("value", value, _CurrentIndex, _Phases.Length - 1);
         while (_CurrentIndex < value)
           Complete();
       }
@@ -319,7 +315,7 @@ namespace FreeLibSet.Forms
     private void DoSetItem()
     {
       ListViewItem li = _Form.PhasesListView.Items[_CurrentIndex];
-      li.SubItems.Add("Выполняется");
+      li.SubItems.Add(Res.Splash_Msg_Current);
       li.ImageIndex = 1;
       _Form.lblCurrent.Text = _Phases[_CurrentIndex];
       _PhaseText = _Phases[_CurrentIndex];
@@ -340,12 +336,12 @@ namespace FreeLibSet.Forms
         ListViewItem li = _Form.PhasesListView.Items[_CurrentIndex];
         if (isComplete)
         {
-          li.SubItems[1].Text = "Выполнено";
+          li.SubItems[1].Text = Res.Splash_Msg_Complete;
           li.ImageIndex = 2;
         }
         else
         {
-          li.SubItems[1].Text = "Отменено";
+          li.SubItems[1].Text = Res.Splash_Msg_Skipped;
           li.ImageIndex = 3;
         }
         if (_CurrentIndex < (_Form.PhasesListView.Items.Count - 1))
@@ -365,7 +361,7 @@ namespace FreeLibSet.Forms
     public SplashPhaseState GetPhaseState(int phase)
     {
       if (phase < 0 || phase >= _Phases.Length)
-        throw new ArgumentOutOfRangeException();
+        throw ExceptionFactory.ArgOutOfRange("phase", phase, 0, _Phases.Length);
 
       if (phase == _CurrentIndex)
         return SplashPhaseState.Current;
@@ -604,7 +600,7 @@ namespace FreeLibSet.Forms
     internal void CheckThread()
     {
       if (!Object.ReferenceEquals(Thread.CurrentThread, _DebugTheThread))
-        throw new DifferentThreadException();
+        throw new DifferentThreadException(_DebugTheThread);
     }
 
 #endif
@@ -886,7 +882,7 @@ namespace FreeLibSet.Forms
     public void CheckThread()
     {
       if (Thread.CurrentThread != _TheThread)
-        throw new DifferentThreadException();
+        throw new DifferentThreadException(_TheThread);
     }
 
 #endif

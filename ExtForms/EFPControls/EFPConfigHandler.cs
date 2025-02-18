@@ -252,14 +252,14 @@ namespace FreeLibSet.Forms
 
       #region Свойства
 
-      private EFPConfigHandler _Owner;
+      private readonly EFPConfigHandler _Owner;
 
       /// <summary>
       /// Коллекция установленных флажков.
       /// Ключ - категория.
       /// Значение - не используется.
       /// </summary>
-      private Dictionary<string, object> _Flags;
+      private readonly Dictionary<string, object> _Flags;
 
       /// <summary>
       /// Чтение или установка признака изменения для категории
@@ -302,7 +302,7 @@ namespace FreeLibSet.Forms
     /// Флажки изменений по категориям
     /// </summary>
     public ChangeFlags Changed { get { return _Changed; } }
-    private ChangeFlags _Changed;
+    private readonly ChangeFlags _Changed;
 
     #endregion
 
@@ -334,7 +334,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Единственный список для сбора списка категорий
     /// </summary>
-    private SingleScopeStringList _Categories;
+    private readonly SingleScopeStringList _Categories;
 
     /// <summary>
     /// Записывает все данные, независимо от флажков.
@@ -346,7 +346,7 @@ namespace FreeLibSet.Forms
     public void WriteConfig(IEFPConfigManager configManager)
     {
       if (configManager == null)
-        throw new NullReferenceException("configManager");
+        throw new ArgumentNullException("configManager");
 
       if (ConfigSectionName.Length == 0)
         return;
@@ -375,7 +375,7 @@ namespace FreeLibSet.Forms
     public void WriteConfigChanges(IEFPConfigManager configManager)
     {
       if (configManager == null)
-        throw new NullReferenceException("ConfigManager");
+        throw new ArgumentNullException("configManager");
 
       if (ConfigSectionName.Length == 0)
         return;
@@ -412,7 +412,7 @@ namespace FreeLibSet.Forms
     public void ReadConfig(IEFPConfigManager configManager)
     {
       if (configManager == null)
-        throw new NullReferenceException("configManager");
+        throw new ArgumentNullException("configManager");
 
       if (ConfigSectionName.Length == 0)
         return;
@@ -525,7 +525,7 @@ namespace FreeLibSet.Forms
     public EFPConfigCategorySuppressor(string suppressedCategory)
     {
       if (String.IsNullOrEmpty(suppressedCategory))
-        throw new ArgumentNullException("suppressedCategory");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("suppressedCategory");
       _SuppressedCategory = suppressedCategory;
     }
 
@@ -537,7 +537,7 @@ namespace FreeLibSet.Forms
     /// Подавляемая категория
     /// </summary>
     public string SuppressedCategory { get { return _SuppressedCategory; } }
-    private string _SuppressedCategory;
+    private readonly string _SuppressedCategory;
 
     /// <summary>
     /// Возвращает отладочную информацию

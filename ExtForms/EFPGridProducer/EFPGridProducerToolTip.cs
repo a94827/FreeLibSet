@@ -288,7 +288,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          s = toolTip.DisplayName + ": Ошибка! " + e.Message;
+          s = toolTip.DisplayName + ": " + String.Format(Res.EFPGridProducer_ToolTip_WrongValue, e.Message);
         }
         if (!String.IsNullOrEmpty(s))
         {

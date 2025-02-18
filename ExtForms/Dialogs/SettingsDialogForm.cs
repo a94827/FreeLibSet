@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using FreeLibSet.Config;
 using FreeLibSet.Collections;
 using FreeLibSet.UICore;
+using FreeLibSet.Core;
 
 #pragma warning disable 414
 #pragma warning disable 0169
@@ -75,7 +76,7 @@ namespace FreeLibSet.Forms
           foreach (string code in codes)
           {
             DefaultSettingsDataList ds = owner.Data.DefaultConfigs[code];
-            EFPConfigParamDefaultSet defSet = new EFPConfigParamDefaultSet(defSectDict[code], "По умолчанию - " + ds.DisplayName);
+            EFPConfigParamDefaultSet defSet = new EFPConfigParamDefaultSet(defSectDict[code], String.Format(Res.SettingsDialog_Name_Default, ds.DisplayName));
             efpParamSet.DefaultSets.Add(defSet);
           }
         }
@@ -483,7 +484,7 @@ namespace FreeLibSet.Forms
     {
       if (_Pages.Count == 0)
       {
-        EFPApp.ErrorMessageBox("Нет ни одной страницы", Title);
+        EFPApp.ErrorMessageBox(Res.SettingsDialog_Err_NoPages, Title);
         return DialogResult.Cancel;
       }
 
@@ -528,11 +529,11 @@ namespace FreeLibSet.Forms
       if (control == null)
         throw new ArgumentNullException("control");
       if (control.IsDisposed)
-        throw new ObjectDisposedException(control.ToString(), "Панель шага мастера уже разрушена");
+        throw new ObjectDisposedException(control.ToString());
       if (control is Form)
-        throw new ArgumentException("Управляющий элемент не может быть Form. Если используется форма-шаблон, то добавьте панель с элементами и передавайте Panel в конструктор SettingsDialogPage");
+        throw new ArgumentException(Res.SettingsDialog_Arg_PageTemplateIsForm, "control");
       if (control is TabPage)
-        throw new ArgumentException("Управляющий элемент не может быть TabPage. Если используется форма-шаблон, то добавьте на TabPage объект Panel с элементами и передавайте Panel в конструктор SettingsDialogPage");
+        throw new ArgumentException(Res.SettingsDialog_Arg_PageTemplateIsTabPage, "control");
 
       _Owner = owner;
       control.Dock = DockStyle.Fill;

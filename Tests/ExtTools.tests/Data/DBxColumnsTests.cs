@@ -95,9 +95,9 @@ namespace ExtTools_tests.Data
       string[] src2 = aNames.Split(',');
       ICollection<string> src3 = new List<string>(src2);
 
-      Assert.Catch<ArgumentException>(delegate() { new DBxColumns(aNames); }, "string");
-      Assert.Catch<ArgumentException>(delegate() { new DBxColumns(src2); }, "string[]");
-      Assert.Catch<ArgumentException>(delegate() { new DBxColumns(src3); }, "ICollection<string>");
+      Assert.Catch(delegate() { new DBxColumns(aNames); }, "string");
+      Assert.Catch(delegate() { new DBxColumns(src2); }, "string[]");
+      Assert.Catch(delegate() { new DBxColumns(src3); }, "ICollection<string>");
     }
 
     #endregion

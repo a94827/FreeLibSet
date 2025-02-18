@@ -69,7 +69,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Этот метод должен быть вызван по окончании использования объекта, как положено при использовании <see cref="IDisposable"/>-объекта.
-    /// Вызывает виртуальный метод Dispose() с аргументом true и предотвращает вызов деструктора.
+    /// Вызывает виртуальный метод <see cref="Dispose(bool)"/> с аргументом true и предотвращает вызов деструктора.
     /// Повторный вызов метода не выполняет никиких действий.
     /// </summary>
     public void Dispose()
@@ -89,7 +89,7 @@ namespace FreeLibSet.Core
     /// Базовый метод обязательно должен быть вызван, обычно после выполнения собственных действий.
     /// Устанавливает свойство <see cref="IsDisposed"/> равным true. В отладочном режиме убирает объект из списка.
     /// </summary>
-    /// <param name="disposing">true, если метод вызван в явном виде из public-версии Dispose().
+    /// <param name="disposing">true, если метод вызван в явном виде из public-версии <see cref="Dispose()"/>.
     /// false, если метод вызван из деструктора</param>
     protected virtual void Dispose(bool disposing)
     {
@@ -120,10 +120,9 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Текстовое представление.
     /// Выводит тип объекта с возможным добавлением " (Disposed)"
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
       string s = base.ToString();
@@ -220,7 +219,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Отменить регистрирацию объекта в списке для отладочных целей.
-    /// Вызывается из метода DisposableObject.Dispose() и методов Dispose() других классов, 
+    /// Вызывается из метода <see cref="DisposableObject.Dispose()"/> и методов Dispose() других классов, 
     /// желающих отслеживать использование объектов.
     /// В конфигурации RELEASE никаких действий не выполняется.
     /// </summary>
@@ -344,9 +343,9 @@ namespace FreeLibSet.Core
       object[] res;
       lock (ObjectTypes)
       {
-        DisposableObjList List;
-        if (ObjectTypes.TryGetValue(typeName, out List))
-          res = List.ToArray();
+        DisposableObjList list;
+        if (ObjectTypes.TryGetValue(typeName, out list))
+          res = list.ToArray();
         else
           res = new object[0];
       }
@@ -427,7 +426,7 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (type == null)
-        throw new ArgumentNullException();
+        throw new ArgumentNullException("type");
       // Не проверяем. Может быть MarshalByRefDisposableObject
       //if (!t.IsSubclassOf(typeof(DisposableObject)))
       //  throw new ArgumentException("Тип должен быть производным от DisposableObject");
@@ -1065,14 +1064,14 @@ namespace FreeLibSet.Core
     /// Задается в конструкторе.
     /// </summary>
     public IDisposableObject MainObject { get { return _MainObject; } }
-    private IDisposableObject _MainObject;
+    private readonly IDisposableObject _MainObject;
 
     /// <summary>
     /// Время, на которое продляется лицензия.
     /// Задается в конструкторе
     /// </summary>
     public TimeSpan RenewalTime { get { return _RenewalTime; } }
-    private TimeSpan _RenewalTime;
+    private readonly TimeSpan _RenewalTime;
 
     #endregion
 

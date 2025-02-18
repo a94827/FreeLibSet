@@ -312,9 +312,10 @@ namespace FreeLibSet.Data
 #if DEBUG
       if (source == null)
         throw new ArgumentNullException("source");
-      if (index < 0 || index >= source.Count)
-        throw new ArgumentOutOfRangeException("index", index, "Индекс значения должен быть в диапазоне от 0 до " + (source.Count - 1).ToString());
 #endif
+      if (index < 0 || index >= source.Count)
+        throw ExceptionFactory.ArgOutOfRange("index", index, 0, source.Count - 1);
+
       _Source = source;
       _Index = index;
     }
@@ -355,7 +356,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -832,10 +833,15 @@ namespace FreeLibSet.Data
     /// <param name="data">Двоичные данные или null</param>
     public void SetBinData(byte[] data)
     {
+      GetBinDataExtValuesRequired().SetBinData(Index, data);
+    }
+
+    private IDBxBinDataExtValues GetBinDataExtValuesRequired()
+    {
       IDBxBinDataExtValues bddv = Source as IDBxBinDataExtValues;
       if (bddv == null)
-        throw new NullReferenceException("Двоичные данные по ссылке не поддерживаются");
-      bddv.SetBinData(Index, data);
+        throw new NotSupportedException(String.Format(Res.DBxExtValue_Err_BinDataNotSupported, Source.ToString()));
+      return bddv;
     }
 
     /// <summary>
@@ -881,10 +887,7 @@ namespace FreeLibSet.Data
     /// <param name="file">Контейнер с файлом или null</param>
     public void SetDBFile(FileContainer file)
     {
-      IDBxBinDataExtValues bddv = Source as IDBxBinDataExtValues;
-      if (bddv == null)
-        throw new NullReferenceException("Файлы по ссылке не поддерживаются");
-      bddv.SetDBFile(Index, file);
+      GetBinDataExtValuesRequired().SetDBFile(Index, file);
     }
 
     /// <summary>
@@ -1051,13 +1054,13 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Создает перечислитель
     /// </summary>
-    /// <param name="docValues">Интерфейс для доступа к коллекции значений</param>
-    public DBxExtValueEnumerator(IDBxExtValues docValues)
+    /// <param name="extValues">Интерфейс для доступа к коллекции значений</param>
+    public DBxExtValueEnumerator(IDBxExtValues extValues)
     {
-      if (docValues == null)
-        throw new ArgumentNullException("docValues");
+      if (extValues == null)
+        throw new ArgumentNullException("extValues");
 
-      _DocValues = docValues;
+      _ExtValues = extValues;
       _Index = -1;
     }
 
@@ -1065,7 +1068,7 @@ namespace FreeLibSet.Data
 
     #region Поля
 
-    private readonly IDBxExtValues _DocValues;
+    private readonly IDBxExtValues _ExtValues;
 
     private int _Index;
 
@@ -1078,7 +1081,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public DBxExtValue Current
     {
-      get { return _DocValues[_Index]; }
+      get { return _ExtValues[_Index]; }
     }
 
     /// <summary>
@@ -1090,7 +1093,7 @@ namespace FreeLibSet.Data
 
     object System.Collections.IEnumerator.Current
     {
-      get { return _DocValues[_Index]; }
+      get { return _ExtValues[_Index]; }
     }
 
     /// <summary>
@@ -1100,7 +1103,7 @@ namespace FreeLibSet.Data
     public bool MoveNext()
     {
       _Index++;
-      return _Index < _DocValues.Count;
+      return _Index < _ExtValues.Count;
     }
 
     /// <summary>
@@ -1138,7 +1141,7 @@ namespace FreeLibSet.Data
       for (int i = 0; i < names.Length; i++)
       {
         if (String.IsNullOrEmpty(names[i]))
-          throw new ArgumentNullException("names[" + i.ToString() + "]");
+          ExceptionFactory.ArgInvalidListItem("names", names, i);
       }
 
       _Names = names;
@@ -1190,7 +1193,7 @@ namespace FreeLibSet.Data
       if (columnValues == null)
         throw new ArgumentNullException("columnValues");
       if (columnValues.Length != columnNames.Count)
-        throw new ArgumentException("Длина массива значений не совпадает с количеством полей", "columnValues");
+        throw ExceptionFactory.ArgWrongCollectionCount("columnValues", columnValues, columnNames.Count);
 
       for (int i = 0; i < _Names.Length; i++)
         _Values[i] = columnValues[i];
@@ -1222,9 +1225,10 @@ namespace FreeLibSet.Data
 #if DEBUG
         if (value == null)
           throw new ArgumentNullException("value");
-        if (value.Length != Names.Length)
-          throw new ArgumentException("Неправильная длина массива", "value");
 #endif
+        if (value.Length != Names.Length)
+          ExceptionFactory.ArgWrongCollectionCount("value", value, Names.Length);
+
         _Values = value;
       }
     }
@@ -1246,7 +1250,7 @@ namespace FreeLibSet.Data
       {
         int p = IndexOf(name);
         if (p < 0)
-          throw new ArgumentException("Набор значений не содержит имени \"" + name + "\"");
+          throw ExceptionFactory.ArgUnknownValue("name", name);
         return new DBxExtValue(this, p);
       }
     }
@@ -1374,14 +1378,14 @@ namespace FreeLibSet.Data
     object IDBxExtValues.GetRowValue(int valueIndex, int rowIndex)
     {
       if (rowIndex != 0)
-        throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, 0);
       return GetValue(valueIndex, DBxExtValuePreferredType.Unknown);
     }
 
     void IDBxExtValues.SetRowValue(int valueIndex, int rowIndex, object value)
     {
       if (rowIndex != 0)
-        throw new ArgumentOutOfRangeException("rowIndex", "Row index must be 0");
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, 0);
       CheckNotReadOnly(); // 03.03.2022
       SetValue(valueIndex, value);
     }
@@ -1425,7 +1429,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>

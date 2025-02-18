@@ -45,7 +45,7 @@ using FreeLibSet.Collections;
  * 3. Асинхронный без ожидания завершения
  */
 
- // TODO: Возможно, есть классы, которые не нужны в .Net Core. (расширить определения "#if !NET")
+// TODO: Возможно, есть классы, которые не нужны в .Net Core. (расширить определения "#if !NET")
 
 #if NET
    // TODO: Заменить вызовы Thread.Abort() в .NET
@@ -249,7 +249,7 @@ namespace FreeLibSet.Remoting
     #region Конструктор и Dispose
 
     /// <summary>
-    /// Создает новую процедуру в состоянии NotStarted
+    /// Создает новую процедуру в состоянии <see cref="ExecProcState.NotStarted"/>
     /// </summary>
     public ExecProc()
     {
@@ -299,7 +299,7 @@ namespace FreeLibSet.Remoting
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка прекращения выполнения процедуры при удалении");
+          LogoutTools.LogoutException(e, Res.ExecProc_ErrTitle_AbortErrorWhenDispose);
         }
 
         if (_Proxy != null)
@@ -406,7 +406,7 @@ namespace FreeLibSet.Remoting
       set
       {
         if (CurrentProc == null)
-          throw new InvalidOperationException("В текущем потоке нет выполняющейся процедуры");
+          throw new InvalidOperationException(Res.ExecProc_Err_NoExecutionInCurrentThread);
         CurrentProc.ActionName = value;
       }
     }
@@ -450,7 +450,7 @@ namespace FreeLibSet.Remoting
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _SyncTime = value;
       }
     }
@@ -467,7 +467,7 @@ namespace FreeLibSet.Remoting
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _DefaultSyncTime = value;
       }
     }
@@ -500,7 +500,7 @@ namespace FreeLibSet.Remoting
       lock (_SyncRoot)
       {
         if (_Context != null)
-          throw new InvalidOperationException("Повторный вызов SetContext()");
+          throw ExceptionFactory.RepeatedCall(this, "SetContext()");
 
         // Проверять IsExecuting не надо
 
@@ -698,7 +698,7 @@ namespace FreeLibSet.Remoting
       }
       catch { }
 
-      LogoutTools.LogoutException(e, "Ошибка выполнения процедуры");
+      LogoutTools.LogoutException(e, Res.ExecProc_ErrTitle_ExecutingError);
     }
 
     /// <summary>
@@ -738,7 +738,7 @@ namespace FreeLibSet.Remoting
         }
         catch (Exception e)
         {
-          args2[pair.Key] = "*** Ошибка получения аргумента ***. " + e.Message;
+          args2[pair.Key] = "*** Error getting argument ***. " + e.Message;
         }
       }
       args2.SetReadOnly();
@@ -761,7 +761,7 @@ namespace FreeLibSet.Remoting
     private void CheckIsFromExecute()
     {
       if (_State != ExecProcState.Executing)
-        throw new InvalidCastException("Вызов допускается только при работе процедуры. State=" + State.ToString());
+        throw new InvalidOperationException(String.Format(Res.ExecProc_Err_NotExecutingState, State));
 
       if (Thread.CurrentThread != _ExecThread)
         throw new DifferentThreadException(_ExecThread);
@@ -786,7 +786,7 @@ namespace FreeLibSet.Remoting
       args.SetReadOnly();
 
       if (_Context == null)
-        throw new NullReferenceException("Не установлен контекст выполнения (свойство Context)");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Context");
 
       NamedValues res = null;
       Exception ex2 = null;
@@ -796,7 +796,7 @@ namespace FreeLibSet.Remoting
         lock (_CurrentProc.SyncRoot)
         {
           if (_CurrentProc._ChildProc != null)
-            throw new BugException("Свойство CurrentProc.ChildProc уже установлено");
+            throw new BugException("Property CurrentProc.ChildProc has already been set");
           _CurrentProc._ChildProc = this;
         }
       }
@@ -956,7 +956,7 @@ namespace FreeLibSet.Remoting
       public bool GetIsCompleted(out SplashInfoPack splashInfoPack)
       {
         if (SplashWatcher == null)
-          throw new InvalidOperationException("Использовался вызов ExecProc.BeginExecute(), а не BeginExecuteWithSplash()");
+          throw new InvalidOperationException(Res.ExecProc_Err_AsyncResultWithoutSplash);
 
         splashInfoPack = SplashWatcher.GetSplashInfoPack();
         return _IsCompleted;
@@ -1035,7 +1035,7 @@ namespace FreeLibSet.Remoting
       args.SetReadOnly();
 
       if (_Context == null)
-        throw new NullReferenceException("Не установлен контекст выполнения (свойство Context)");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Context");
 
       ExecProcAsyncResult ar = new ExecProcAsyncResult();
       ar.Owner = this;
@@ -1109,10 +1109,10 @@ namespace FreeLibSet.Remoting
       if (ar == null)
         throw new ArgumentNullException("asyncResult");
       if (!Object.ReferenceEquals(ar.Owner, this))
-        throw new ArgumentException("Объект AsyncResult относится к другой процедуре", "asyncResult");
+        throw new ArgumentException(Res.ExecProc_Arg_AsyncResultForAnotherProc, "asyncResult");
 
       if (ar.EndExecuteCalled)
-        throw new InvalidOperationException("Повторный вызов EndExecute()");
+        throw ExceptionFactory.RepeatedCall(this, "EndExecute()");
 
       if (!ar.IsCompleted)
       {
@@ -1153,7 +1153,7 @@ namespace FreeLibSet.Remoting
     public void ExecuteNoResults(NamedValues args)
     {
       if (!AutoDispose)
-        throw new InvalidOperationException("Свойство AutoDispose должно быть установлено в true");
+        throw ExceptionFactory.ObjectProperty(this, "AutoDispose", AutoDispose, new object[] { true });
       SyncTime = 0; // нечего ждать.
 
       BeginExecute(args, new AsyncCallback(ExecuteNoResultsFinished), null);
@@ -1484,7 +1484,7 @@ namespace FreeLibSet.Remoting
         if (value == null)
           throw new ArgumentNullException();
         if (IsExecuting)
-          throw new InvalidOperationException("Свойство SplashStack нельзя устанавливать во время выполнения процедуры");
+          throw new InvalidOperationException(Res.ExecProc_Err_SplashStackSetWhileExecuting);
 
         _SplashStack = value;
       }
@@ -1660,12 +1660,11 @@ namespace FreeLibSet.Remoting
       get
       {
         StringWriter sw = new StringWriter();
-        TextWriterTraceListener Res = new TextWriterTraceListener(sw);
-        LogoutInfoNeededEventArgs Args = new LogoutInfoNeededEventArgs(Res, null);
-        GetDebugInfo(Args);
-        Res.Flush();
+        TextWriterTraceListener res = new TextWriterTraceListener(sw);
+        LogoutInfoNeededEventArgs args = new LogoutInfoNeededEventArgs(res, null);
+        GetDebugInfo(args);
+        res.Flush();
         return sw.ToString();
-
       }
     }
 
@@ -1830,7 +1829,7 @@ namespace FreeLibSet.Remoting
       }
       catch (Exception e)
       {
-        args.WriteLine("*** Ошибка получения сведений о процедуре. *** " + e.Message);
+        args.WriteLine("*** Error getting information from the procedure *** " + e.Message);
       }
     }
 
@@ -1844,9 +1843,9 @@ namespace FreeLibSet.Remoting
           case "Proxy": // 29.05.2017
             args.Mode = LogoutPropMode.None;
             break;
-          //case "Results": // 16.01.2016
-          //  Args.Mode = LogoutPropMode.ToString;
-          //  break;
+            //case "Results": // 16.01.2016
+            //  Args.Mode = LogoutPropMode.ToString;
+            //  break;
         }
       }
       //else if (Args.Object is RemoteExecProc)
@@ -2085,14 +2084,14 @@ namespace FreeLibSet.Remoting
         if (AutoDispose)
         {
           if (State != ExecProcState.NotStarted)
-            throw new InvalidOperationException("Процедура находится в состоянии " + State.ToString());
+            throw ExceptionFactory.ObjectProperty(this, "State", State, new object[] { ExecProcState.NotStarted });
         }
         _Proxy = new ExecProcProxy1(this);
       }
       else
       {
         if (AutoDispose)
-          throw new InvalidOperationException("Повторный вызов CreateProxy()");
+          throw ExceptionFactory.RepeatedCall(this, "CreateProxy()");
       }
       return _Proxy;
     }
@@ -2144,7 +2143,7 @@ namespace FreeLibSet.Remoting
     public DistributedCallData StartDistributedCall(NamedValues args)
     {
       if (!AutoDispose)
-        throw new InvalidOperationException("Свойство AutoDispose должно иметь значение true");
+        throw ExceptionFactory.ObjectProperty(this, "AutoDispose", AutoDispose, new object[] { true });
 
       ExecProcProxy proxy = CreateProxy(); // здесь проверяется и состояние процедуры
       NamedValues res = proxy.Handler.InternalBeginExecute(args, true, SyncTime, true);
@@ -2293,7 +2292,7 @@ namespace FreeLibSet.Remoting
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -2332,7 +2331,7 @@ namespace FreeLibSet.Remoting
     #endregion
   }
 
-  #endif
+#endif
 
   /// <summary>
   /// Данные, передаваемые от сервера к клиенту для реализации "разделенного" вызова серверной процедуры
@@ -2799,12 +2798,12 @@ namespace FreeLibSet.Remoting
         if (ep == null)
           ep = _ExecProc2;
         if (ep == null)
-          throw new ObjectDisposedException("Процедура уже была завершена");
+          throw new ObjectDisposedException(Res.ExecProc_Err_Finished);
         CheckNotDisposed();
 
         if (_AsyncResult2 != null)
         {
-          Exception e = new InvalidOperationException("Предыдущий асинхронный вызов еще не завершен");
+          Exception e = new InvalidOperationException(Res.ExecProc_Err_AsyncNotFinished);
           try
           {
             e.Data["PrevExecProcInfo"] = ep.GetInfo(true);
@@ -2849,7 +2848,7 @@ namespace FreeLibSet.Remoting
       public override NamedValues InternalTryEndExecute(bool splashInfoNeeded, out SplashInfoPack splashInfoPack)
       {
         if (_AsyncResult2 == null)
-          throw new ArgumentException("Не было вызова BeginExecute()");
+          throw ExceptionFactory.UnpairedCall(this, "BeginExecute()", "InternalTryEndExecute()");
 
         bool isCompleted;
         if (splashInfoNeeded)
@@ -2979,7 +2978,7 @@ namespace FreeLibSet.Remoting
       {
         ExecProc ep = ExecProc;
         if (ep == null)
-          throw new ObjectDisposedException("ExecProc", "Процедура уже была удалена"); // 14.07.2022
+          throw new ObjectDisposedException("ExecProc"); // 14.07.2022
         return ep.CreateSplashWatcher();
       }
 
@@ -3271,7 +3270,7 @@ namespace FreeLibSet.Remoting
     /// </summary>
     /// <param name="execProc">Ссылка на ExecProc или RemoteExecProc</param>
     public AlreadyExecutingException(IExecProc execProc)
-      : base("Вложенный запуск процедуры на выполнение")
+      : base(Res.AlreadyExecutingException_Err_DefaultMessage)
     {
       if (execProc != null)
         _ExecProcInfo = execProc.GetInfo();
@@ -3642,7 +3641,7 @@ namespace FreeLibSet.Remoting
     {
       ExecProcProxy proxy = _Proxy;
       if (proxy == null)
-        throw new NullReferenceException("Объект Proxy был отсоединен");
+        throw new NullReferenceException("Proxy object has been detached");
       return proxy;
     }
 
@@ -3708,7 +3707,7 @@ namespace FreeLibSet.Remoting
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _SyncTime = value;
       }
     }
@@ -3980,7 +3979,7 @@ namespace FreeLibSet.Remoting
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка опроса RemoteExecProc по таймеру");
+          LogoutTools.LogoutException(e, Res.ExecProc_ErrTitle_RemoteExecProcQueryByTimer);
         }
       }
       finally
@@ -4017,9 +4016,9 @@ namespace FreeLibSet.Remoting
           }
           catch (Exception e2)
           {
-            e.Data["RemoteExecProc.GetInfo"] = "Исключение " + e2.GetType().ToString() + ". " + e2.Message;
+            e.Data["RemoteExecProc.GetInfo"] = "Exception " + e2.GetType().ToString() + ". " + e2.Message;
           }
-          LogoutTools.LogoutException(e, "Ошибка опроса RemoteExecProc по таймеру");
+          LogoutTools.LogoutException(e, Res.ExecProc_ErrTitle_RemoteExecProcQueryByTimer);
 
           // Убираем, чтобы ошибка не повторялась
           ars[i]._IsCompleted = true;
@@ -4189,7 +4188,7 @@ namespace FreeLibSet.Remoting
       if (ar == null)
         throw new ArgumentNullException("asyncResult");
       if (!Object.ReferenceEquals(ar.Owner, this))
-        throw new ArgumentException("Объект AsyncResult относится к другой процедуре", "asyncResult");
+        throw new ArgumentException(Res.ExecProc_Arg_AsyncResultForAnotherProc, "asyncResult");
 
       if (!ar.IsCompleted)
       {
@@ -4197,13 +4196,13 @@ namespace FreeLibSet.Remoting
           throw new NullReferenceException("AsyncWaitHandle=null");
         ar.AsyncWaitHandle.WaitOne(); // 02.05.2017
         if (!ar.IsCompleted)
-          throw new BugException("После ожидания AsyncWaitHandler не установлено состояние IsCompleted");
+          throw new BugException("After the waiting for AsyncWaitHandler finished, the state IsCompleted has not been set");
       }
 
       _ExecutingProcs.Remove(this); // Процедуры может и не быть в списке, но это не важно
 
       if (ar.EndExecuteCalled)
-        throw new InvalidOperationException("Повторный вызов EndExecute()");
+        throw ExceptionFactory.RepeatedCall(this, "EndExecute()");
 
       lock (ar)
       {
@@ -4226,7 +4225,7 @@ namespace FreeLibSet.Remoting
       else if (ar.Exception != null)
         throw ar.Exception;
       else
-        throw new BugException("Процедура считается завершенной, но нет ни результатов, ни объекта исключения");
+        throw new BugException("The procedure is supposed to be finished, but there is neither result nor an exception object");
     }
 
     /// <summary>
@@ -4243,7 +4242,7 @@ namespace FreeLibSet.Remoting
       ExecProcProxy proxy = GetProxyWithCheck();
 
       if (!AutoDispose)
-        throw new InvalidOperationException("Свойство AutoDispose должно быть установлено в true");
+        throw ExceptionFactory.ObjectProperty(this, "AutoDispose", AutoDispose, new object[] { true });
 
       proxy.Handler.InternalExecuteNoResults(args);
       _Proxy = null; // чтобы сигнал Dispose не попал в ExecProc
@@ -4674,8 +4673,8 @@ namespace FreeLibSet.Remoting
 
     /// <summary>
     /// Метод, периодически вызываемый клиентом. Если он возвращает значение, отличное от null, значит
-    /// требуется обработка callback вызова. Клиент должен выполнить необходимые действия и вызвать Resume()
-    /// Повторный вызов GetSuspended(), вернувшего не null, без вызова Resume() или SetExeption() считается ошибкой
+    /// требуется обработка callback вызова. Клиент должен выполнить необходимые действия и вызвать <see cref="Resume(NamedValues)"/>.
+    /// Повторный вызов <see cref="GetSuspended()"/>, вернувшего не null, без вызова <see cref="Resume(NamedValues)"/> или <see cref="SetException(Exception)"/> считается ошибкой
     /// </summary>
     /// <returns></returns>
     NamedValues GetSuspended();
@@ -4693,7 +4692,7 @@ namespace FreeLibSet.Remoting
     void SetException(Exception exception);
 
     /// <summary>
-    /// Метод вызывается ExecProcCallBackSelector.Dispose()
+    /// Метод вызывается <see cref="ExecProcCallBackSelector.Dispose(bool)"/>
     /// </summary>
     void SetDisposed();
 
@@ -4702,11 +4701,11 @@ namespace FreeLibSet.Remoting
 
   /// <summary>
   /// Обратный вызов, когда серверу требуется управление клиентом.
-  /// Другая процедура (в ExecProc.OnExecute) вызывает ExecProcCallBack.Execute().
+  /// Другая процедура (в <see cref="ExecProc.OnExecute(NamedValues)"/>) вызывает <see cref="ExecProcCallBack.Execute(NamedValues)"/>.
   /// При этом текущий поток приостанавливается.
-  /// Клиент должен периодически вызывать метод GetSuspended(). Если метод вернул объект NamedValues, а не null,
-  /// клиент должен выполнить необходимые действия и вызвать Resume()
-  /// Объект передается клиенту по ссылке (Marshal-by-reference)
+  /// Клиент должен периодически вызывать метод <see cref="GetSuspended()"/>. Если метод вернул объект <see cref="NamedValues"/>, а не null,
+  /// клиент должен выполнить необходимые действия и вызвать <see cref="Resume(NamedValues)"/>.
+  /// Объект передается клиенту по ссылке (Marshal-by-reference).
   /// </summary>
   public class ExecProcCallBack : MarshalByRefSponsoredObject, IExecProc, IExecProcCallBack
   {
@@ -4850,13 +4849,13 @@ namespace FreeLibSet.Remoting
     public NamedValues Execute(NamedValues args)
     {
       if (args == null)
-        throw new ArgumentException("Args");
+        throw new ArgumentNullException("args");
 
       if (ExecProc.CurrentProc == null)
-        throw new InvalidOperationException("Метод должен вызываться из другой процедуры");
+        throw new InvalidOperationException(Res.ExecProc_Err_ShouldCallFromExecute);
 
       if (ExecProc.CurrentProc.ChildProcCallBack != null)
-        throw new BugException("Свойство ExecProc.ChildProcCallBack уже установлено");
+        throw new BugException("Property ExecProc.ChildProcCallBack has already been set");
 
       if (SetDisposedCalled)
         Thread.CurrentThread.Abort();
@@ -5042,9 +5041,9 @@ namespace FreeLibSet.Remoting
       lock (_SyncRoot)
       {
         if (_Signaller == null)
-          throw new InvalidOperationException("Метод должен вызываться только из состояния ожидания");
+          throw ExceptionFactory.ObjectProperty(this, "State", State, new object[] { ExecProcState.Executing });
         if (_Results != null || _Exception != null)
-          throw new InvalidOperationException("Повторный вызов Resume()/SetException()");
+          throw ExceptionFactory.RepeatedCall(this, "Resume()/SetException()");
         _Results = results;
         _SuspendedArgs = null;
       }
@@ -5064,9 +5063,9 @@ namespace FreeLibSet.Remoting
       lock (_SyncRoot)
       {
         if (_Signaller == null)
-          throw new InvalidOperationException("Метод должен вызываться только из состояния ожидания");
+          throw ExceptionFactory.ObjectProperty(this, "State", State, new object[] { ExecProcState.Executing });
         if (_Results != null || _Exception != null)
-          throw new InvalidOperationException("Повторный вызов Resume()/SetException()");
+          throw ExceptionFactory.RepeatedCall(this, "Resume()/SetException()");
         _Exception = exception;
         _SuspendedArgs = null;
       }
@@ -5204,7 +5203,7 @@ namespace FreeLibSet.Remoting
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка вызова ExecProcCallBackSelector.SetDisposed()");
+          LogoutTools.LogoutException(e);
         }
       }
       base.Dispose(disposing);
@@ -5227,7 +5226,7 @@ namespace FreeLibSet.Remoting
           {
             e.Data["List.Count"] = _List.Count;
             e.Data["List.Index"] = i;
-            LogoutTools.LogoutException(e, "Ошибка вызова IExecProcCallBackSelector.SetDisposed()");
+            LogoutTools.LogoutException(e);
           }
         }
       }
@@ -5397,7 +5396,7 @@ namespace FreeLibSet.Remoting
           catch (Exception e)
           {
             _List.RemoveAt(i);
-            throw new InvalidOperationException("Один из дочерних объектов в callback-селекторе создал исключение при вызове GetSuspended(). Этот объект удален из списка", e);
+            throw new InvalidOperationException(Res.ExecProc_Err_CallBackGetSuspendedException, e);
           }
 
           if (args != null)
@@ -5417,7 +5416,7 @@ namespace FreeLibSet.Remoting
     public void Resume(NamedValues results)
     {
       if (_SelectedItem == null)
-        throw new InvalidOperationException("Не было успешного вызова GetSuspended()");
+        throw new InvalidOperationException(Res.ExecProc_Err_CallBackGetSuspendedNoSuccess);
 
       _SelectedItem.Resume(results);
       _SelectedItem = null;
@@ -5429,7 +5428,7 @@ namespace FreeLibSet.Remoting
     public void SetException(Exception exception)
     {
       if (_SelectedItem == null)
-        throw new InvalidOperationException("Не было успешного вызова GetSuspended()");
+        throw new InvalidOperationException(Res.ExecProc_Err_CallBackGetSuspendedNoSuccess);
 
       _SelectedItem.SetException(exception);
       _SelectedItem = null;

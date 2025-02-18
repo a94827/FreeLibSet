@@ -16,6 +16,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Drawing.Imaging;
 using FreeLibSet.Drawing;
 using FreeLibSet.Controls.TreeViewAdvInternal;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Controls
 {
@@ -52,7 +53,7 @@ namespace FreeLibSet.Controls
                                                TextFormatFlags.EndEllipsis |
                                                TextFormatFlags.VerticalCenter |
                                                TextFormatFlags.PreserveGraphicsTranslateTransform;
-    
+
     #endregion
 
     #region Конструкторы
@@ -166,7 +167,7 @@ namespace FreeLibSet.Controls
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         _minColumnWidth = value;
         Width = Math.Max(value, Width);
@@ -185,7 +186,7 @@ namespace FreeLibSet.Controls
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException("value");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         _maxColumnWidth = value;
         if (value > 0)

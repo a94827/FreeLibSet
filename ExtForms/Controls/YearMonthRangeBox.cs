@@ -9,6 +9,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Formatting;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591 // используются атрибуты
 
@@ -18,7 +19,7 @@ namespace FreeLibSet.Controls
   /// Поле выбора диапазона месяцев в пределах года
   /// </summary>
   [Designer(typeof(FreeLibSet.Controls.Design.YearMonthRangeBoxDesigner))]
-  [Description("Поле выбора диапазона месяцев в пределах года")]
+  [Description("Three-control component to select pair of months within a single year")]
   [ToolboxBitmap(typeof(YearMonthRangeBox), "YearMonthRangeBox.bmp")]
   [ToolboxItem(true)]
   public partial class YearMonthRangeBox : UserControl
@@ -47,7 +48,7 @@ namespace FreeLibSet.Controls
 
     #region Свойства
 
-    [Description("Текущее значение - Год")]
+    [Description("Current value: Year")]
     [Category("Appearance")]
     //[DefaultValue(2006)] нет значения по умолчанию
     public int Year
@@ -70,7 +71,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    [Description("Текущее значение - Первый месяц периода")]
+    [Description("Current value: First month of the period")]
     [Category("Appearance")]
     [DefaultValue(1)]
     public int FirstMonth
@@ -82,12 +83,12 @@ namespace FreeLibSet.Controls
       set
       {
         if (value < 1 || value > 12)
-          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, 12);
         cbMonth1.SelectedIndex = value - 1;
       }
     }
 
-    [Description("Текущее значение - Последний месяц периода")]
+    [Description("Current value: Last month of the period")]
     [Category("Appearance")]
     [DefaultValue(12)]
     public int LastMonth
@@ -99,7 +100,7 @@ namespace FreeLibSet.Controls
       set
       {
         if (value < 1 || value > 12)
-          throw new ArgumentOutOfRangeException("value", value, "Месяц должен быть в диапазоне от 1 до 12");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, 12);
         cbMonth2.SelectedIndex = value - 1;
       }
     }
@@ -139,7 +140,7 @@ namespace FreeLibSet.Controls
 
     #region События
 
-    [Description("Вызывается при изменении текущего года или месяца")]
+    [Description("Called when Year, FirstMonth or LastMonth property changed")]
     [Category("Property Changed")]
     public event EventHandler ValueChanged;
 

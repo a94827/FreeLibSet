@@ -148,14 +148,14 @@ namespace FreeLibSet.IO
     /// Просматриваемый каталог - Абсолютный путь
     /// </summary>
     public AbsPath Directory { get { return _Directory; } }
-    private AbsPath _Directory;
+    private readonly AbsPath _Directory;
 
 
     /// <summary>
     /// Просматриваемый каталог - Путь относительно <see cref="PathEnumerableBase.RootDirectory"/>
     /// </summary>
     public RelPath DirectoryRel { get { return _DirectoryRel; } }
-    private RelPath _DirectoryRel;
+    private readonly RelPath _DirectoryRel;
 
     /// <summary>
     /// Уровень вложения каталога <see cref="Directory"/> относительно базового каталога <see cref="PathEnumerableBase.RootDirectory"/>, 
@@ -181,7 +181,7 @@ namespace FreeLibSet.IO
     private void CheckNotReadOnly()
     {
       if (_Stage != PathEnumerateStage.Start)
-        throw new ObjectReadOnlyException("Менять значения свойство можно только в обработчике события BeforeDirectory");
+        throw new ObjectReadOnlyException(Res.EnumDirectoryEventArgs_Err_IsReadOnly);
     }
 
     /// <summary>
@@ -477,7 +477,7 @@ namespace FreeLibSet.IO
     protected PathEnumerableBase(AbsPath rootDirectory, PathEnumerateKind enumerateKind)
     {
       if (rootDirectory.IsEmpty)
-        throw new ArgumentException("Не задан корневой каталог для перечисления");
+        throw ExceptionFactory.ArgIsEmpty("rootDirectory");
 
       _RootDirectory = rootDirectory;
       _EnumerateKind = enumerateKind;
@@ -683,7 +683,7 @@ namespace FreeLibSet.IO
     {
 #if DEBUG
       if (stack.Count == 0)
-        throw new BugException("Пустой стек");
+        throw new BugException("Stack is empty");
 #endif
       EnumDirectoryEventArgs args = stack.Peek();
       if (AfterDirectory != null)
@@ -746,7 +746,7 @@ namespace FreeLibSet.IO
 
       #region Поля
 
-      private AbsPathEnumerable _Owner;
+      private readonly AbsPathEnumerable _Owner;
 
       private Stack<EnumDirectoryEventArgs> _Stack;
 
@@ -914,7 +914,7 @@ namespace FreeLibSet.IO
 
       #region Поля
 
-      private RelPathEnumerable _Owner;
+      private readonly RelPathEnumerable _Owner;
 
       private Stack<EnumDirectoryEventArgs> _Stack;
 

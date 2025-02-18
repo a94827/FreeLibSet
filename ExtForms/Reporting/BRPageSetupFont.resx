@@ -117,4 +117,460 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;grpFontSample.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rbWidthAuto.Text" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="cbFontName.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;edFontHeight.Name" xml:space="preserve">
+    <value>edFontHeight</value>
+  </data>
+  <data name="&gt;&gt;grpFontWidth.Name" xml:space="preserve">
+    <value>grpFontWidth</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="edLineHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 20</value>
+  </data>
+  <data name="rbLineFixed.Text" xml:space="preserve">
+    <value>Value, pt</value>
+  </data>
+  <data name="&gt;&gt;edFontWidth.Parent" xml:space="preserve">
+    <value>grpFontWidth</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblFontName.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;lblFontHeight.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="grpFontSample.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 194</value>
+  </data>
+  <data name="&gt;&gt;panFont.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panFont.Name" xml:space="preserve">
+    <value>panFont</value>
+  </data>
+  <data name="grpFontSample.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="grpFontWidth.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;lblFontName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Name" xml:space="preserve">
+    <value>cbFontName</value>
+  </data>
+  <data name="&gt;&gt;grpFontSample.Name" xml:space="preserve">
+    <value>grpFontSample</value>
+  </data>
+  <data name="rbLineFixed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 26</value>
+  </data>
+  <data name="&gt;&gt;rbWidthAuto.Name" xml:space="preserve">
+    <value>rbWidthAuto</value>
+  </data>
+  <data name="grpFontSample.Size" type="System.Drawing.Size, System.Drawing">
+    <value>518, 191</value>
+  </data>
+  <data name="panFont.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;pbFontSample.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grLineHeight.Parent" xml:space="preserve">
+    <value>panFont</value>
+  </data>
+  <data name="lblFontName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 10</value>
+  </data>
+  <data name="&gt;&gt;grLineHeight.Name" xml:space="preserve">
+    <value>grLineHeight</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;edFontHeight.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.SingleEditBox, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="grpFontWidth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>233, 38</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="&gt;&gt;lblFontHeight.Name" xml:space="preserve">
+    <value>lblFontHeight</value>
+  </data>
+  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grLineHeight.Text" xml:space="preserve">
+    <value>Line height</value>
+  </data>
+  <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 46</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 19</value>
+  </data>
+  <data name="&gt;&gt;edFontHeight.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rbLineFixed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 17</value>
+  </data>
+  <data name="lblFontHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;rbLineAuto.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;edLineHeight.Parent" xml:space="preserve">
+    <value>grLineHeight</value>
+  </data>
+  <data name="grLineHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>220, 72</value>
+  </data>
+  <data name="rbWidthFixed.Text" xml:space="preserve">
+    <value>Value, pt</value>
+  </data>
+  <data name="&gt;&gt;grLineHeight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grpFontHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 38</value>
+  </data>
+  <data name="&gt;&gt;rbWidthAuto.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="panFont.Size" type="System.Drawing.Size, System.Drawing">
+    <value>531, 392</value>
+  </data>
+  <data name="&gt;&gt;pbFontSample.Name" xml:space="preserve">
+    <value>pbFontSample</value>
+  </data>
+  <data name="rbLineAuto.Size" type="System.Drawing.Size, System.Drawing">
+    <value>47, 17</value>
+  </data>
+  <data name="grLineHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 116</value>
+  </data>
+  <data name="&gt;&gt;rbWidthAuto.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pbFontSample.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 19</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>BRPageSetupFont</value>
+  </data>
+  <data name="&gt;&gt;grpFontHeight.Name" xml:space="preserve">
+    <value>grpFontHeight</value>
+  </data>
+  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;rbLineFixed.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rbWidthFixed.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="rbWidthAuto.Size" type="System.Drawing.Size, System.Drawing">
+    <value>47, 17</value>
+  </data>
+  <data name="&gt;&gt;edFontHeight.Parent" xml:space="preserve">
+    <value>grpFontHeight</value>
+  </data>
+  <data name="panFont.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;rbLineFixed.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;grpFontHeight.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;edFontWidth.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="grpFontWidth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>220, 72</value>
+  </data>
+  <data name="&gt;&gt;panFont.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblFontName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 21</value>
+  </data>
+  <data name="edFontHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="grpFontHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>220, 72</value>
+  </data>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>grpFontWidth</value>
+  </data>
+  <data name="&gt;&gt;rbLineFixed.Name" xml:space="preserve">
+    <value>rbLineFixed</value>
+  </data>
+  <data name="&gt;&gt;grpFontSample.Parent" xml:space="preserve">
+    <value>panFont</value>
+  </data>
+  <data name="edFontWidth.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="cbFontName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>425, 21</value>
+  </data>
+  <data name="edFontHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 20</value>
+  </data>
+  <data name="grpFontHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="rbLineFixed.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;lblFontHeight.Parent" xml:space="preserve">
+    <value>grpFontHeight</value>
+  </data>
+  <data name="lblFontName.Text" xml:space="preserve">
+    <value>&amp;Font</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 46</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grpFontHeight.Text" xml:space="preserve">
+    <value>Font &amp;height</value>
+  </data>
+  <data name="&gt;&gt;pbFontSample.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;grpFontHeight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;edFontWidth.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.SingleEditBox, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;edLineHeight.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="cbFontName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>95, 10</value>
+  </data>
+  <data name="rbLineAuto.Text" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
+    <value>grLineHeight</value>
+  </data>
+  <data name="edLineHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;rbWidthFixed.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panFont.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="lblFontHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 20</value>
+  </data>
+  <data name="&gt;&gt;grpFontWidth.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpFontSample.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;lblFontName.Parent" xml:space="preserve">
+    <value>panFont</value>
+  </data>
+  <data name="&gt;&gt;edLineHeight.Name" xml:space="preserve">
+    <value>edLineHeight</value>
+  </data>
+  <data name="edFontWidth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 42</value>
+  </data>
+  <data name="rbLineAuto.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;edLineHeight.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.SingleEditBox, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="rbWidthFixed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 26</value>
+  </data>
+  <data name="rbLineAuto.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;rbLineAuto.Name" xml:space="preserve">
+    <value>rbLineAuto</value>
+  </data>
+  <data name="panel2.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblFontName.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="edLineHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 42</value>
+  </data>
+  <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 19</value>
+  </data>
+  <data name="rbLineFixed.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="rbWidthAuto.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="pbFontSample.Size" type="System.Drawing.Size, System.Drawing">
+    <value>506, 166</value>
+  </data>
+  <data name="edFontHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 42</value>
+  </data>
+  <data name="&gt;&gt;rbLineFixed.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;grpFontWidth.Parent" xml:space="preserve">
+    <value>panFont</value>
+  </data>
+  <data name="&gt;&gt;lblFontName.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;grpFontHeight.Parent" xml:space="preserve">
+    <value>panFont</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="pbFontSample.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="pbFontSample.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="rbWidthFixed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 17</value>
+  </data>
+  <data name="&gt;&gt;grpFontWidth.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;rbWidthFixed.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;grLineHeight.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbLineAuto.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 3</value>
+  </data>
+  <data name="&gt;&gt;cbFontName.Parent" xml:space="preserve">
+    <value>panFont</value>
+  </data>
+  <data name="grLineHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="panFont.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="edFontWidth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 20</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>531, 392</value>
+  </data>
+  <data name="lblFontHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 41</value>
+  </data>
+  <data name="rbWidthAuto.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 3</value>
+  </data>
+  <data name="rbWidthFixed.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;rbWidthAuto.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lblFontHeight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbWidthFixed.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblFontHeight.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblFontName.Name" xml:space="preserve">
+    <value>lblFontName</value>
+  </data>
+  <data name="&gt;&gt;pbFontSample.Parent" xml:space="preserve">
+    <value>grpFontSample</value>
+  </data>
+  <data name="grpFontSample.Text" xml:space="preserve">
+    <value>Sample</value>
+  </data>
+  <data name="lblFontHeight.Text" xml:space="preserve">
+    <value>Value, pt</value>
+  </data>
+  <data name="&gt;&gt;rbLineAuto.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;edFontWidth.Name" xml:space="preserve">
+    <value>edFontWidth</value>
+  </data>
+  <data name="&gt;&gt;rbLineAuto.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grpFontWidth.Text" xml:space="preserve">
+    <value>Font &amp;width</value>
+  </data>
+  <data name="rbWidthAuto.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="grpFontSample.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;rbWidthFixed.Name" xml:space="preserve">
+    <value>rbWidthFixed</value>
+  </data>
+  <data name="cbFontName.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

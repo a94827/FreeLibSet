@@ -31,17 +31,16 @@ namespace FreeLibSet.Forms.Data
 
       efpCodes = new EFPCsvCodesComboBox(efpForm, edCodes, codes);
       efpCodes.Names = names;
-      efpCodes.ToolTipText = "Список кодов, разделенных запятыми";
+      efpCodes.ToolTipText = Res.CodeGridFilterForm_ToolTip_Codes;
       efpCodes.CanBeEmpty = true;
       efpCodes.CodeValidating += codeValidating;
       efpCodes.UnknownCodeSeverity = UIValidateState.Warning;
 
       efpEmpty = new EFPCheckBox(efpForm, cbEmpty);
-      efpEmpty.ToolTipText = "В режиме \"Включить коды\" - включить в фильтр строки, в которых поле не установлено." + Environment.NewLine +
-      "В режиме \"Исключить коды\" - убрать строки с пустым значением поля";
+      efpEmpty.ToolTipText = Res.CodeGridFilterForm_ToolTip_Empty;
 
       efpCodes.EnabledEx = new DepExpr1<bool, int>(efpMode.SelectedIndexEx, new DepFunction1<bool, int>(CalcCodesEnabled));
-      efpCodes.Validators.AddError(efpCodes.IsNotEmptyEx, "Коды должны быть выбраны", new DepNot(efpEmpty.CheckedEx));
+      efpCodes.Validators.AddError(efpCodes.IsNotEmptyEx, Res.CodeGridFilterForm_Err_NoCodes, new DepNot(efpEmpty.CheckedEx));
       efpEmpty.EnabledEx = efpCodes.EnabledEx;
       efpEmpty.CheckedEx.ValueChanged += efpCodes.Validate;
     }
@@ -101,7 +100,8 @@ namespace FreeLibSet.Forms.Data
           case CodeFilterMode.Include:
             break;
           case CodeFilterMode.Exclude:
-            sb.Append("Кроме: ");
+            sb.Append(Res.CodesGridFilter_Msg_ExcludePrefix);
+            sb.Append(" ");
             break;
           default:
             return String.Empty;
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms.Data
         {
           if (Codes.Length > 0)
             sb.Append(", ");
-          sb.Append("[ Нет ]");
+          sb.Append(Res.CodesGridFilter_Msg_Empty);
         }
         return sb.ToString();
       }

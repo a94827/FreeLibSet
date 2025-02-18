@@ -92,13 +92,13 @@ namespace FreeLibSet.Collections
     /// Список ключей, отсортированный по последнему обращению. Ключ, к которому обращались последним,
     /// находится в начале списка
     /// </summary>
-    private LinkedList<KeyValuePair<TKey, TValue>> _MRU;
+    private readonly LinkedList<KeyValuePair<TKey, TValue>> _MRU;
 
     /// <summary>
     /// Словарь объектов по ключам для поиска
     /// В качестве значения используется LinkedListNode, чтобы быстрее перемещать запись в связанном списке
     /// </summary>
-    private Dictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>> _Dict;
+    private readonly Dictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>> _Dict;
 
     /// <summary>
     /// Получение объекта по ключу.
@@ -193,7 +193,7 @@ namespace FreeLibSet.Collections
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
         _MaxCapacity = value;
         LimitCount(value);
       }
@@ -229,7 +229,8 @@ namespace FreeLibSet.Collections
 
     void IDictionary<TKey, TValue>.Add(TKey key, TValue value)
     {
-      throw new InvalidOperationException("Эта коллекция реализует автоматическое создание элементов при обращении. Добавление существующих элементов не предусмотрено");
+      // Эта коллекция реализует автоматическое создание элементов при обращении. Добавление существующих элементов не предусмотрено
+      throw new NotImplementedException();
     }
 
     /// <summary>
@@ -325,7 +326,7 @@ namespace FreeLibSet.Collections
       }
       set
       {
-        throw new InvalidOperationException("Эта коллекция не поддерживает замену элементов");
+        throw new NotImplementedException();
       }
     }
 
@@ -335,7 +336,8 @@ namespace FreeLibSet.Collections
 
     void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
     {
-      throw new InvalidOperationException("Коллекция не поддерживает добавление элементов");
+      // Коллекция не поддерживает добавление элементов
+      throw new InvalidOperationException();
     }
 
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
@@ -403,7 +405,8 @@ namespace FreeLibSet.Collections
 
     void IDictionary.Add(object key, object value)
     {
-      throw new InvalidOperationException("Коллекция не поддерживает добавление элементов");
+      // Коллекция не поддерживает добавление элементов
+      throw new NotImplementedException();
     }
 
     bool IDictionary.Contains(object key)
@@ -581,14 +584,14 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Основной список
     /// </summary>
-    private List<T> _List;
+    private readonly List<T> _List;
 
     /// <summary>
     /// Список для ведения MRU.
     /// При добавлении элементов в список и при вызове Touch(),
     /// ссылка на элемент перемещается в начало связанного списка.
     /// </summary>
-    private LinkedList<T> _LinkedList;
+    private readonly LinkedList<T> _LinkedList;
 
     #endregion
 
@@ -606,7 +609,7 @@ namespace FreeLibSet.Collections
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
         _MaxCapacity = value;
         LimitCount();
       }
@@ -618,7 +621,7 @@ namespace FreeLibSet.Collections
       while (Count > MaxCapacity)
       {
         if (!Remove(MRU.Last))
-          throw new BugException("Ошибка удаления последнего элемента списка");
+          throw new BugException("Error when removing the last item from MRU");
       }
     }
 
@@ -878,7 +881,7 @@ namespace FreeLibSet.Collections
 
       #region Свойства
 
-      private ListWithMRU<T> _Owner;
+      private readonly ListWithMRU<T> _Owner;
 
       /// <summary>
       /// Возвращает первый объект в списке MRU.
@@ -970,7 +973,7 @@ namespace FreeLibSet.Collections
     private void CheckCount()
     {
       if (_List.Count != _LinkedList.Count)
-        throw new BugException("Длина внутренних списков различается");
+        throw new BugException("List and LinkedList lengths are different");
     }
 
     #endregion
@@ -1557,10 +1560,10 @@ namespace FreeLibSet.Collections
       #region Свойства
 
       public LinkedListNode<TKey> Node { get { return _Node; } }
-      private LinkedListNode<TKey> _Node;
+      private readonly LinkedListNode<TKey> _Node;
 
       public TValue Value { get { return _Value; } }
-      private TValue _Value;
+      private readonly TValue _Value;
 
       #endregion
     }
@@ -1569,14 +1572,14 @@ namespace FreeLibSet.Collections
     /// Основная коллекция.
     /// Используется для поиска значений по ключу.
     /// </summary>
-    private Dictionary<TKey, NodeAndValue> _Dict;
+    private readonly Dictionary<TKey, NodeAndValue> _Dict;
 
     /// <summary>
     /// Список для ведения MRU.
     /// При добавлении элементов в список и при вызове Touch(),
     /// ссылка на элемент перемещается в начало связанного списка.
     /// </summary>
-    private LinkedList<TKey> _LinkedList;
+    private readonly LinkedList<TKey> _LinkedList;
 
     #endregion
 
@@ -1594,7 +1597,7 @@ namespace FreeLibSet.Collections
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
         _MaxCapacity = value;
         LimitCount();
       }
@@ -1606,7 +1609,7 @@ namespace FreeLibSet.Collections
       while (Count > MaxCapacity)
       {
         if (!Remove(MRULastKey))
-          throw new BugException("Ошибка удаления последнего элемента списка");
+          throw new BugException("Error when removing the last item from the list");
       }
 
 #if DEBUG
@@ -1772,7 +1775,7 @@ namespace FreeLibSet.Collections
 
       #region Поля
 
-      private LinkedList<TKey>.Enumerator _En;
+      private readonly /*LinkedList<TKey>.Enumerator*/ IEnumerator<TKey> _En; // 24.12.2024
 
       #endregion
 
@@ -1799,7 +1802,8 @@ namespace FreeLibSet.Collections
       /// <returns></returns>
       public bool MoveNext()
       {
-        return _En.MoveNext();
+        bool res = _En.MoveNext();
+        return res;
       }
 
       void System.Collections.IEnumerator.Reset()
@@ -1828,7 +1832,7 @@ namespace FreeLibSet.Collections
 
       #region Поля
 
-      private DictionaryWithMRU<TKey, TValue> _Owner;
+      private readonly DictionaryWithMRU<TKey, TValue> _Owner;
 
       #endregion
 
@@ -1966,9 +1970,9 @@ namespace FreeLibSet.Collections
 
       #region Поля
 
-      private DictionaryWithMRU<TKey, TValue> _Owner;
+      private readonly DictionaryWithMRU<TKey, TValue> _Owner;
 
-      private LinkedList<TKey>.Enumerator _En;
+      private readonly /*LinkedList<TKey>.Enumerator*/ IEnumerator<TKey> _En; // 24.12.2024
 
       #endregion
 
@@ -2028,7 +2032,7 @@ namespace FreeLibSet.Collections
 
       #region Поля
 
-      private DictionaryWithMRU<TKey, TValue> _Owner;
+      private readonly DictionaryWithMRU<TKey, TValue> _Owner;
 
       #endregion
 
@@ -2254,9 +2258,9 @@ namespace FreeLibSet.Collections
 
       #region Поля
 
-      private DictionaryWithMRU<TKey, TValue> _Owner;
+      private readonly DictionaryWithMRU<TKey, TValue> _Owner;
 
-      private LinkedList<TKey>.Enumerator _En;
+      private /*readonly*/ LinkedList<TKey>.Enumerator _En;
 
       #endregion
 
@@ -2359,7 +2363,7 @@ namespace FreeLibSet.Collections
 
       private DictionaryWithMRU<TKey, TValue> _Owner;
 
-      private LinkedList<TKey>.Enumerator _En;
+      private /*readonly*/ LinkedList<TKey>.Enumerator _En;
 
       #endregion
 
@@ -2475,7 +2479,7 @@ namespace FreeLibSet.Collections
     private void DebugCheckCount()
     {
       if (_Dict.Count != _LinkedList.Count)
-        throw new BugException("Длина внутренних списков различается");
+        throw new BugException("Dict and LinkedList item counts are different");
     }
 #endif
 

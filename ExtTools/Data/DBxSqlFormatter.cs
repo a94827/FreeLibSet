@@ -8,6 +8,7 @@ using System.Data;
 using System.Runtime.Serialization;
 using System.Globalization;
 using System.ComponentModel;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Data
 {
@@ -173,7 +174,7 @@ namespace FreeLibSet.Data
     public void FormatTableName(string tableName)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       _Formatter.FormatTableName(this, tableName);
     }
@@ -185,7 +186,7 @@ namespace FreeLibSet.Data
     public void FormatColumnName(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
       _Formatter.FormatColumnName(this, columnName);
     }
 
@@ -197,9 +198,9 @@ namespace FreeLibSet.Data
     public void FormatColumnName(string tableAlias, string columnName)
     {
       if (String.IsNullOrEmpty(tableAlias))
-        throw new ArgumentNullException("tableAlias");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableAlias");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       _Formatter.FormatColumnName(this, tableAlias, columnName);
     }
@@ -337,7 +338,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (columnTypes.Length != values.Length)
-        throw new ArgumentException("Неправильная длина columnTypes", "columnTypes");
+        throw ExceptionFactory.ArgWrongCollectionCount("columnTypes", columnTypes, values.Length);
 #endif
 
       for (int i = 0; i < values.Length; i++)

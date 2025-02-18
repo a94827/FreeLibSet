@@ -19,7 +19,7 @@ namespace FreeLibSet.Forms
     public DateRangeForm()
     {
       InitializeComponent();
-      EFPApp.InitFormImages(this);
+      //EFPApp.InitFormImages(this);
 
       FormProvider = new EFPFormProvider(this);
       TheDateRangeBox = new EFPDateRangeBox(FormProvider, edRange);
@@ -33,7 +33,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Диалог редактирования интервала дат с помощью элемента <see cref="EFPDateRangeBox"/>.
   /// </summary>
-  public class DateRangeDialog: BaseInputDialog
+  public class DateRangeDialog : BaseInputDialog
   {
     #region Конструктор
 
@@ -42,16 +42,25 @@ namespace FreeLibSet.Forms
     /// </summary>
     public DateRangeDialog()
     {
-      Title = "Интервал дат";
-      Prompt = String.Empty;
       _NFirstDate = null;
       _NLastDate = null;
       _CanBeEmptyMode = UIValidateState.Error;
+      _CanBeHalfEmpty = true;
     }
 
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Заголовок блока диалога по умолчанию
+    /// </summary>
+    protected override string DefaultTitle { get { return Res.DateRangeDialog_Msg_Title; } }
+
+    /// <summary>
+    /// Подсказка по умолчанию
+    /// </summary>
+    protected override string DefaultPrompt { get { return Res.DateRangeDialog_Msg_Prompt; } }
 
     #region Текущее значение
 
@@ -252,6 +261,19 @@ namespace FreeLibSet.Forms
       get { return CanBeEmptyMode != UIValidateState.Error; }
       set { CanBeEmptyMode = value ? UIValidateState.Ok : UIValidateState.Error; }
     }
+    /// <summary>
+    /// Допускаются ли полуоткрытые интервалы.
+    /// По умолчанию - true - допускаются.
+    /// Свойство имеет смысл при <see cref="EFPDateTimeControl{DateTimeBox}.ControlCanBeEmpty"/>, отличном
+    /// от <see cref="UIValidateState.Error"/>, когда допустимы полностью открыты интервалы.
+    /// Если false, то выдается сообщение об ошибке, когда одно поле заполнено, а второе - нет
+    /// </summary>
+    public bool CanBeHalfEmpty
+    {
+      get { return _CanBeHalfEmpty; }
+      set { _CanBeHalfEmpty = value; }
+    }
+    private bool _CanBeHalfEmpty;
 
     #endregion
 
@@ -292,6 +314,7 @@ namespace FreeLibSet.Forms
       frm.TheDateRangeBox.Last.Minimum = Minimum;
       frm.TheDateRangeBox.First.Maximum = Maximum;
       frm.TheDateRangeBox.Last.Maximum = Maximum;
+      frm.TheDateRangeBox.CanBeHalfEmpty = CanBeHalfEmpty;
 
       if (HasConfig)
       {

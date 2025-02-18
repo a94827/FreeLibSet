@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using FreeLibSet.Collections;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
@@ -210,7 +211,7 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        return PasteFormat.DisplayName + " - предварительный просмотр";
+        return String.Format(Res.EFPPasteFormat_Title_Preview, PasteFormat.DisplayName);
       }
     }
 
@@ -262,7 +263,7 @@ namespace FreeLibSet.Forms
       _CommandItems.Add(ciPaste);
 
       menuPasteAux = new EFPCommandItem("Edit", "PasteAuxMenu");
-      menuPasteAux.MenuText = "Дополнительные варианты вставки";
+      menuPasteAux.MenuText = Res.Cmd_Menu_Edit_PasteAuxMenu;
       menuPasteAux.Usage = EFPCommandItemUsage.None;
       _CommandItems.Add(menuPasteAux);
 
@@ -625,7 +626,7 @@ namespace FreeLibSet.Forms
     /// Используется только при <paramref name="reason"/>=<see cref="EFPPasteReason.Paste"/>.</param>
     public void PerformPaste(EFPPasteReason reason, string actionCode)
     {
-      IDataObject data = EFPApp.Clipboard.GetDataObject();
+      IDataObject data = new EFPClipboard().GetDataObject();
       PerformPaste(data, reason, actionCode);
     }
 
@@ -647,7 +648,7 @@ namespace FreeLibSet.Forms
     /// Используется только при <paramref name="reason"/>=<see cref="EFPPasteReason.Paste"/>.</param>
     public void PerformPaste(IDataObject data, EFPPasteReason reason, string actionCode)
     {
-      EFPApp.BeginWait("Вставка из буфера обмена", "Paste");
+      EFPApp.BeginWait(Res.Clipboard_Phase_GetData, "Paste");
       try
       {
         string dataInfoText;
@@ -682,12 +683,12 @@ namespace FreeLibSet.Forms
     {
       if (data == null)
       {
-        dataInfoText = "Буфер обмена пустой";
+        dataInfoText = Res.Clipboard_Err_Empty;
         return false;
       }
       if (Count == 0)
       {
-        dataInfoText = "Не задано ни одного обработчика форматов данных";
+        dataInfoText = Res.EFPPasteFormat_Err_NoPasteFormats;
         return false;
       }
 
@@ -776,19 +777,19 @@ namespace FreeLibSet.Forms
           {
             // 11.06.2024 
             if (errorMessagesAreDiff)
-              dataInfoText = "В буфере обмена нет данных в подходящем формате. " + firstErrorMessage;
+              dataInfoText = String.Format(Res.EFPPasteFormat_Err_NoGoodFormat, firstErrorMessage);
             else
               dataInfoText = firstErrorMessage;
             return false;
           }
 
           ListSelectDialog dlg = new ListSelectDialog();
-          dlg.Title = "Специальная вставка";
+          dlg.Title = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_PasteSpecial);
           if (PasteSpecialDebugMode)
-            dlg.Title += " (все форматы)";
+            dlg.Title =String.Format(Res.EFPPasteFormat_Title_AllFormats, dlg.Title);
           dlg.ImageKey = "Paste";
           dlg.Items = goodNames.ToArray();
-          dlg.ListTitle = "Формат данных в буфере обмена";
+          dlg.ListTitle = Res.EFPPasteFormat_Title_SpecialPasteFormatGroup;
           dlg.ImageKeys = goodImageKeys.ToArray();
           dlg.ConfigSectionName = "SpecialPasteFormatDialog";
 
@@ -822,13 +823,14 @@ namespace FreeLibSet.Forms
           }
           else
           {
-            EFPApp.ErrorMessageBox("Нельзя выполнить вставку: " + goodNames[dlg.SelectedIndex],
+            EFPApp.ErrorMessageBox(String.Format(Res.EFPPasteFormat_Err_PasteSpecial, 
+              goodNames[dlg.SelectedIndex]), 
               goodFormats[dlg.SelectedIndex].DisplayName);
             return false;
           }
 
         default:
-          throw new ArgumentException("Неизвестный Reason=" + reason.ToString(), "reason");
+          throw ExceptionFactory.ArgUnknownValue("reason", reason);
       }
     }
 
@@ -863,9 +865,9 @@ namespace FreeLibSet.Forms
     private void CheckNotBusy()
     {
       if (_TestingFormat != null)
-        throw new InvalidOperationException("В данный момент выполняется тестирование другого формата вставки (" + _TestingFormat.DisplayName + ")");
+        throw new InvalidOperationException(String.Format(Res.EFPPasteFormat_Err_BusyTest,_TestingFormat.DisplayName));
       if (_PastingFormat != null)
-        throw new InvalidOperationException("В данный момент выполняется вставка для формата (" + _PastingFormat.DisplayName + ")");
+        throw new InvalidOperationException(String.Format(Res.EFPPasteFormat_Err_BusyPaste, _PastingFormat.DisplayName));
     }
 
     #endregion
@@ -921,7 +923,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(dataFormat))
-        throw new ArgumentNullException("dataFormat");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("dataFormat");
 #endif
       _DataFormat = dataFormat;
     }
@@ -1033,7 +1035,7 @@ namespace FreeLibSet.Forms
     /// <param name="dataInfoText">Сюда записывается описание формата или сообщение об ошибке</param>
     /// <param name="dataImageKey">Сюда записывается код значка</param>
     /// <returns>true, если формат подходит</returns>
-    [Obsolete("Используйте перегрузку с EFPTestDataObjectEventArgs", false)]
+    [Obsolete("Use method overload with EFPTestDataObjectEventArgs", false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool PerformTestFormat(IDataObject data, EFPPasteReason reason, out string dataInfoText, out string dataImageKey)
     {
@@ -1054,7 +1056,7 @@ namespace FreeLibSet.Forms
       {
         if (args.Data == null)
         {
-          args.DataInfoText = "Нет данных";
+          args.DataInfoText = Res.Clipboard_Err_Empty;
           args.DataImageKey = "No";
           args.Appliable = false;
         }
@@ -1064,7 +1066,7 @@ namespace FreeLibSet.Forms
           {
             if (!Actions.Contains(args.ActionCode))
             {
-              args.DataInfoText = "Неподходящее действие \"" + args.ActionCode + "\"";
+              args.DataInfoText = String.Format(Res.EFPPasteFormat_Err_ActionCode, args.ActionCode);
               args.DataImageKey = "No";
               args.Appliable = false;
               return;
@@ -1075,13 +1077,13 @@ namespace FreeLibSet.Forms
           args.DataImageKey = "Item";
           OnTestFormat(args);
           if ((!args.Appliable) && (String.IsNullOrEmpty(args.DataInfoText)))
-            args.DataInfoText = "Формат не применим";
+            args.DataInfoText = Res.EFPPasteFormat_Err_FormatNotAppliable;
         }
       }
       catch (Exception e)
       {
         args.Appliable = false;
-        args.DataInfoText = "Ошибка при определении применимости формата. " + e.Message;
+        args.DataInfoText = String.Format(Res.EFPPasteFormat_Err_TestError, e.Message);
         args.DataImageKey = "Error";
       }
     }
@@ -1097,7 +1099,7 @@ namespace FreeLibSet.Forms
       args.Appliable = args.Data.GetDataPresent(DataFormat, AutoConvert);
       if (!args.Appliable)
       {
-        args.DataInfoText = "Нет данных в формате " + DisplayName;
+        args.DataInfoText = String.Format(Res.Clipboard_Err_NoDataFormat, DisplayName);
         args.DataImageKey = "No";
         return;
       }
@@ -1133,7 +1135,7 @@ namespace FreeLibSet.Forms
     /// <param name="data"></param>
     /// <param name="reason"></param>
     /// <returns></returns>
-    [Obsolete("Используйте перегрузку с EFPPreviewDataObjectEventArgs", false)]
+    [Obsolete("Используйте method overload with EFPPreviewDataObjectEventArgs", false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool PerformPreview(IDataObject data, EFPPasteReason reason)
     {
@@ -1176,7 +1178,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Заголовок для диалога Preview.
     /// </summary>
-    protected string PreviewTitle { get { return DisplayName + " - предварительный просмотр"; } }
+    protected string PreviewTitle { get { return String.Format(Res.EFPPasteFormat_Title_Preview, DisplayName); } }
 
     #endregion
 
@@ -1193,7 +1195,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="data">Данные из буфера обмена</param>
     /// <param name="reason">Обычная или специальная вставка</param>
-    [Obsolete("Используйте перегрузку с EFPPasteDataObjectEventArgs", false)]
+    [Obsolete("Use overload method with EFPPasteDataObjectEventArgs", false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public void PerformPaste(IDataObject data, EFPPasteReason reason)
     {
@@ -1219,7 +1221,7 @@ namespace FreeLibSet.Forms
     protected virtual void OnPaste(EFPPasteDataObjectEventArgs args)
     {
       if (Paste == null)
-        throw new NullReferenceException("Обработчик события Paste не установлен");
+        throw ExceptionFactory.ObjectEventHandlerNotSet(this, "Paste");
 
       Paste(this, args);
     }
@@ -1281,7 +1283,7 @@ namespace FreeLibSet.Forms
     public EFPPasteAction(string code, string displayName, string imageKey)
     {
       if (String.IsNullOrEmpty(code))
-        throw new ArgumentNullException("code");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("code");
       _Code = code;
       _MenuText = displayName;
       _ImageKey = imageKey;
@@ -1385,9 +1387,9 @@ namespace FreeLibSet.Forms
       AutoConvert = !isCSV;
       _IsCSV = isCSV;
       if (isCSV)
-        DisplayName = "Текст, разделенный запятыми";
+        DisplayName = Res.EFPPasteTextMatrixFormat_Name_Csv;
       else
-        DisplayName = "Неформатированный текст";
+        DisplayName = Res.EFPPasteTextMatrixFormat_Name_Text;
     }
 
     #endregion
@@ -1431,7 +1433,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        args.DataInfoText = "Ошибка преобразования текста в прямоугольный блок: " + e.Message;
+        args.DataInfoText = String.Format(Res.EFPPasteTextMatrixFormat_Err_ToMatrix, e.Message);
         args.DataImageKey = "Error";
         args.Appliable = false;
         return;
@@ -1439,7 +1441,7 @@ namespace FreeLibSet.Forms
 
       if (_TextMatrix == null)
       {
-        args.DataInfoText = "Нет данных в формате " + (IsCSV ? "CSV" : "Текст");
+        args.DataInfoText = String.Format(Res.Clipboard_Err_NoDataFormat, DisplayName);
         args.DataImageKey = "No";
         args.Appliable = false;
         return;
@@ -1474,7 +1476,8 @@ namespace FreeLibSet.Forms
 
       if (TextMatrix == null)
       {
-        EFPApp.MessageBox("Нет данных", PreviewTitle);
+        EFPApp.MessageBox(String.Format(Res.Clipboard_Err_NoDataFormat, DisplayName), 
+          PreviewTitle);
         args.Cancel = false; // 27.12.2020
         return;
       }

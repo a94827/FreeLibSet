@@ -21,7 +21,7 @@ namespace FreeLibSet.Forms
 
     internal EFPPrinterInfo(string printerName)
     {
-      EFPApp.BeginWait("Получение свойств принтера \"" + printerName + "\"", "Print");
+      EFPApp.BeginWait(String.Format(Res.EFPApp_Phase_GetPrinterProps, printerName), "Print");
       try
       {
         _PrinterName = printerName;
@@ -67,32 +67,32 @@ namespace FreeLibSet.Forms
     /// Имя принтера, к которому относится объект
     /// </summary>
     public string PrinterName { get { return _PrinterName; } }
-    private string _PrinterName;
+    private readonly string _PrinterName;
 
     /// <summary>
     /// Оригинальный объект
     /// </summary>
     public PrinterSettings PrinterSettings { get { return _PrinterSettings; } }
-    private PrinterSettings _PrinterSettings;
+    private readonly PrinterSettings _PrinterSettings;
 
 
     /// <summary>
     /// true, если имя принтера было задано верно
     /// </summary>
     public bool IsValid { get { return _IsValid; } }
-    private bool _IsValid;
+    private readonly bool _IsValid;
 
     /// <summary>
     /// Поддерживает ли принтер двустороннюю печать
     /// </summary>
     public bool CanDuplex { get { return _CanDuplex; } }
-    private bool _CanDuplex;
+    private readonly bool _CanDuplex;
 
     /// <summary>
     /// Поддерживаемые принтером размеры бумаги
     /// </summary>
     public PaperSize[] PaperSizes { get { return _PaperSizes; } }
-    private PaperSize[] _PaperSizes;
+    private readonly PaperSize[] _PaperSizes;
 
     #endregion
 
@@ -127,7 +127,7 @@ namespace FreeLibSet.Forms
     {
       if (_Printers != null)
         return; // Все готово
-      EFPApp.BeginWait("Определение списка установленных принтеров", "Print");
+      EFPApp.BeginWait(Res.EFPApp_Phase_GetPrinterList, "Print");
       try
       {
         // Список имен принтеров

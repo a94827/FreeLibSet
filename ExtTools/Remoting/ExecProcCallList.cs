@@ -187,7 +187,7 @@ namespace FreeLibSet.Remoting
           catch (Exception e)
           {
             AddExceptionInfo(e);
-            LogoutTools.LogoutException(e, "Ошибка вызова ClientSplashWatcher.ClearClientStack()"); // тут не выйдет показать сообщение
+            LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("ClientSplashWatcher.ClearClientStack()")); // тут не выйдет показать сообщение
             _State = ExecProcCallItemState.Failed; // 16.01.2020
           }
           SplashWatcher = null;
@@ -206,7 +206,7 @@ namespace FreeLibSet.Remoting
         catch (Exception e)// 16.01.2020
         {
           AddExceptionInfo(e);
-          LogoutTools.LogoutException(e, "Ошибка вызова обработчика события ExecProcCallItem.Disposed"); // тут не выйдет показать сообщение
+          LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("ExecProcCallItem.Disposed")); // тут не выйдет показать сообщение
           _State = ExecProcCallItemState.Failed;
         }
       }
@@ -360,7 +360,7 @@ namespace FreeLibSet.Remoting
     private void CheckNotStarted()
     {
       if (State != ExecProcCallItemState.NotStarted)
-        throw new InvalidOperationException("Процедура " + DisplayName + " уже запущена");
+        throw new InvalidOperationException(Res.ExecProc_Err_Started);
       // 19.08.2020
       // Проверка убрана, так как она провоцирует лишний сетевой вызов
       //if (!FreeLibSet.Remoting.ExecProc.GetCanStart(ExecProc.State))
@@ -440,7 +440,7 @@ namespace FreeLibSet.Remoting
           catch (Exception e) // 16.01.2020
           {
             AddExceptionInfo(e);
-            LogoutTools.LogoutException(e, "Ошибка вызова IExecProc.Dispose()"); // тут не выйдет показать сообщение
+            LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("IExecProc.Dispose()")); // тут не выйдет показать сообщение
             base.State = ExecProcCallItemState.Failed;
           }
         }
@@ -564,7 +564,7 @@ namespace FreeLibSet.Remoting
         catch (Exception e)
         {
           AddExceptionInfo(e);
-          LogoutTools.LogoutException(e, "Ошибка вызова RemoteSingleCallExecProc.Dispose()"); // тут не выйдет показать сообщение
+          LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("RemoteDistributedProc.Dispose()")); // тут не выйдет показать сообщение
           base.State = ExecProcCallItemState.Failed;
         }
       }
@@ -890,7 +890,7 @@ namespace FreeLibSet.Remoting
       ISplashStack sstack = CreateSplashStack();
 #if DEBUG
       if (sstack == null)
-        throw new NullReferenceException("CreateSplashStack() вернул null");
+        throw new NullReferenceException("CreateSplashStack() returned null");
 #endif
 
       ISplashStack oldss = proc.SplashStack;
@@ -976,13 +976,13 @@ namespace FreeLibSet.Remoting
         ISplashStack sstack = CreateSplashStack();
 #if DEBUG
         if (sstack == null)
-          throw new NullReferenceException("CreateSplashStack() вернул null");
+          throw new NullReferenceException("CreateSplashStack() returned null");
 #endif
 
         ClientSplashWatcher csw = new ClientSplashWatcher(ssw, sstack);
         try
         {
-          csw.DefaultSplashPhaseText = "Выполняется: " + ase.Item.DisplayName;
+          csw.DefaultSplashPhaseText = String.Format(Res.ExecProc_Phase_Executing, ase.Item.DisplayName);
           csw.UseDefaultSplash = this.UseDefaultSplash;
 
           while (!ase.Finished)
@@ -1015,7 +1015,7 @@ namespace FreeLibSet.Remoting
       {
         // Нельзя выпускать исключение из этого метода
         ase.Item.AddExceptionInfo(e);
-        OnUnhandledException(e, "Ошибка в RunAsyncSplash");
+        OnUnhandledException(e, LogoutTools.GetDefaultTitle());
       }
     }
 
@@ -1064,7 +1064,7 @@ namespace FreeLibSet.Remoting
           item.AsyncResultHandler = new AsyncResultWithSplashHandler(ar2);
           item.SplashWatcher = new ClientSplashWatcher(item.AsyncResultHandler, splStack);
           item.SplashWatcher.UseDefaultSplash = this.UseDefaultSplash;
-          item.SplashWatcher.DefaultSplashPhaseText = "Выполняется: " + item.DisplayName;
+          item.SplashWatcher.DefaultSplashPhaseText = String.Format(Res.ExecProc_Phase_Executing, item.DisplayName);
         }
         lock (_Items)
         {
@@ -1240,7 +1240,7 @@ namespace FreeLibSet.Remoting
       Exception Exception = item.UserData["Exception"] as Exception;
       if (Exception != null)
         throw Exception;
-      throw new BugException("После завершения процедуры возвращен неправильный результат");
+      throw new BugException("After the executiom there is neither result nor exception object");
     }
 
     #endregion
@@ -1276,7 +1276,7 @@ namespace FreeLibSet.Remoting
           item.AsyncResultHandler = new AsyncResultWithSplashHandler(ar2);
           item.SplashWatcher = new ClientSplashWatcher(item.AsyncResultHandler, splStack);
           item.SplashWatcher.UseDefaultSplash = this.UseDefaultSplash;
-          item.SplashWatcher.DefaultSplashPhaseText = "Выполняется: " + item.DisplayName;
+          item.SplashWatcher.DefaultSplashPhaseText = String.Format(Res.ExecProc_Phase_Executing, item.DisplayName);
         }
 
         if (item.DistributedProc.StartData.IsCompleted)
@@ -1372,7 +1372,7 @@ namespace FreeLibSet.Remoting
         {
 #if DEBUG
           if (item2.DistributedProc.StartData.IsCompleted)
-            throw new BugException("Застряла процедура, которая уже была выполнена на сервере");
+            throw new BugException("The procedure has finished on the server, but it got stuck");
 #endif
           Sleep(250);
         }
@@ -1524,7 +1524,7 @@ namespace FreeLibSet.Remoting
       }
       catch (Exception e)
       {
-        OnUnhandledException(e, "Внутренняя ошибка в ExecProcCallList.Process()");
+        OnUnhandledException(e, LogoutTools.GetDefaultTitle());
       }
       _InsideProcess = false;
     }
@@ -1572,7 +1572,7 @@ namespace FreeLibSet.Remoting
         }
         catch (Exception e2)
         {
-          OnUnhandledException(e2, "Неперехваченная ошибка вызова OnFailed() при аварийном завершении вызова GetIsCompleted()");
+          OnUnhandledException(e2, "Unhandled exception when called OnFailed() after an error in GetIsCompleted()");
         }
         lock (_Items)
         {
@@ -1612,7 +1612,7 @@ namespace FreeLibSet.Remoting
         }
         catch (Exception e2)
         {
-          OnUnhandledException(e2, "Неперехваченная ошибка вызова OnFailed() при аварийном завершении вызова EndExecute()");
+          OnUnhandledException(e2, "Unhandled exception when called OnFailed() after an error in EndExecute()");
         }
       }
 
@@ -1748,7 +1748,7 @@ namespace FreeLibSet.Remoting
       }
       catch (Exception e)
       {
-        OnUnhandledException(e, "Внутренняя ошибка в ExecProcCallList.ProcessAll()");
+        OnUnhandledException(e, LogoutTools.GetDefaultTitle());
       }
       _InsideProcess = false;
     }

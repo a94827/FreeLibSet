@@ -49,7 +49,7 @@ namespace FreeLibSet.Forms
         {
           Res = Proc(Args);
           if (Res == null)
-            throw new BugException("Процедура не вернула результат");
+            throw new BugException(@"Async procedure doesn't return a result");
         }
         catch (Exception e)
         {
@@ -71,7 +71,7 @@ namespace FreeLibSet.Forms
       try
       {
         if (!ThreadPool.QueueUserWorkItem(info.AsyncProc))
-          throw new InvalidOperationException("Не удалось поставить процедуру в очередь");
+          throw new InvalidOperationException("ThreadPool.QueueUserWorkItem() failed");
 
         while (info.Res == null && info.Exception == null)
         {
@@ -89,6 +89,7 @@ namespace FreeLibSet.Forms
       else
         throw (info.Exception);
     }
+   
     #endregion
 
     #region Проверка имени файла и каталога
@@ -117,7 +118,7 @@ namespace FreeLibSet.Forms
           NamedValues dispargs = new NamedValues();
           dispargs["DirName"] = dirName;
           dispargs["Mode"] = mode;
-          NamedValues dispres = ExecuteAsync(AsyncTestDirSlashedPath, dispargs, "Проверка существования каталога \"" + dirName + "\"", "Open");
+          NamedValues dispres = ExecuteAsync(AsyncTestDirSlashedPath, dispargs, Res.EFPApp_Phase_DirExists, "Open");
           errorText = (string)(dispres["ErrorText"]);
           res = (bool)(dispres["Res"]);
           break;
@@ -159,7 +160,7 @@ namespace FreeLibSet.Forms
           NamedValues dispargs = new NamedValues();
           dispargs["FileName"] = fileName;
           dispargs["Mode"] = mode;
-          NamedValues dispres = ExecuteAsync(AsyncTestFilePath, dispargs, "Проверка существования файла \"" + fileName + "\"", "Open");
+          NamedValues dispres = ExecuteAsync(AsyncTestFilePath, dispargs, Res.EFPApp_Phase_FileExists, "Open");
           errorText = (string)(dispres["ErrorText"]);
           res = (bool)(dispres["Res"]);
           break;

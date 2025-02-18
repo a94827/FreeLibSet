@@ -320,7 +320,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (_ParentControl == null)
-        throw new BugException("Не было вызова CreatePage()");
+        throw new BugException("CreatePage() has not been called");
 #endif
 
       WinFormsTools.DisposeChildren(_ParentControl);
@@ -428,7 +428,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (_ControlProvider == null)
-        throw new BugException("Табличный просмотр не был создан");
+        throw new BugException("Control propvider has not been created");
 #endif
 
       if (InitGrid != null)
@@ -710,7 +710,7 @@ namespace FreeLibSet.Forms
       if (ControlProvider == null)
       {
         Label lbl = new Label();
-        lbl.Text = "Нет данных";
+        lbl.Text = Res.EFPReportVarGridPage_Msg_NoData;
         lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         lbl.Dock = DockStyle.Fill;
         _ParentPanel.Controls.Add(lbl);
@@ -790,9 +790,9 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.BaseProvider != _BaseProvider)
-            throw new InvalidOperationException("Присоединяемый EFPDataGridView должен быть создан с текущим EFPBaseProvider");
-          if (value.BaseProvider.Parent != null)
-            throw new InvalidOperationException("EFPDataGridView.BaseProvider уже к чему-то присоединен");
+            throw ExceptionFactory.ArgProperty("value", value, "BaseProvider", value.BaseProvider, new object[] { _BaseProvider });
+          if (_BaseProvider.Parent != null)
+            throw ExceptionFactory.ObjectPropertyAlreadySet(_BaseProvider, "Parent");
         }
 
         if (_ControlProvider != null)

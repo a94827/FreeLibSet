@@ -268,7 +268,7 @@ namespace FreeLibSet.Remoting
     public ServerSplashWatcher(ISplashStack source)
     {
       if (source == null)
-        throw new ArgumentNullException();
+        throw new ArgumentNullException("source");
 
       _Source = source;
 
@@ -287,7 +287,7 @@ namespace FreeLibSet.Remoting
     /// Прослушиваемый стек
     /// </summary>
     public ISplashStack Source { get { return _Source; } }
-    private ISplashStack _Source;
+    private readonly ISplashStack _Source;
 
 #if DEBUG_SPLASHWATCHERS
 
@@ -456,7 +456,7 @@ namespace FreeLibSet.Remoting
     }
 
     /// <summary>
-    /// После вызова этого метода, следующий вызов GetSplashInfoPack() вернет полную информацию о стеке заставок.
+    /// После вызова этого метода, следующий вызов <see cref="GetSplashInfoPack()"/> вернет полную информацию о стеке заставок.
     /// Метод используется для восстановления после ошибок соединения клиента с сервером.
     /// </summary>
     public void ResetSplashInfo()
@@ -478,17 +478,17 @@ namespace FreeLibSet.Remoting
   }
 
   /// <summary>
-  /// Парный объект для ServerSplashWatcher.
-  /// Дополнительно позволяет выводить заставку на время, пока ServerSplashWatcher не предоставляет заставки
+  /// Парный объект для <see cref="ServerSplashWatcher"/>.
+  /// Дополнительно позволяет выводить заставку на время, пока <see cref="ServerSplashWatcher"/> не предоставляет заставки.
   /// Этот объект не является потокобезопасным. Все методы должны вызываться из одного потока, в котором 
-  /// был вызван конструктор объекта
+  /// был вызван конструктор объекта.
   /// </summary>
   public sealed class ClientSplashWatcher
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает объект, который подсоединяется к ServerSplashWatcher для получения от него данных и управляющий стеком заставок на стороне клиента
+    /// Создает объект, который подсоединяется к <see cref="ServerSplashWatcher"/> для получения от него данных и управляющий стеком заставок на стороне клиента
     /// </summary>
     /// <param name="serverWatcher">Серверная часть, поставляющая данные</param>
     /// <param name="clientStack">Стек заставок на стороне клиента, которыми нужно управлять</param>
@@ -524,13 +524,13 @@ namespace FreeLibSet.Remoting
     /// Серверная часть, поставляющая данные
     /// </summary>
     public IServerSplashWatcher ServerWatcher { get { return _ServerWatcher; } }
-    private IServerSplashWatcher _ServerWatcher;
+    private readonly IServerSplashWatcher _ServerWatcher;
 
     /// <summary>
     /// Стек заставок на стороне клиента, которыми нужно управлять
     /// </summary>
     public ISplashStack ClientStack { get { return _ClientStack; } }
-    private ISplashStack _ClientStack;
+    private readonly ISplashStack _ClientStack;
 
 #if DEBUG_SPLASHWATCHERS
 
@@ -588,7 +588,7 @@ namespace FreeLibSet.Remoting
     /// Здесь нет заставки "Идет процесс".
     /// Активная заставка находится на вершине
     /// </summary>
-    private Stack<ISplash> _ClientSplashes;
+    private readonly Stack<ISplash> _ClientSplashes;
 
     private void ProcessUpdateStack()
     {
@@ -654,7 +654,7 @@ namespace FreeLibSet.Remoting
         }
 
         if (_ClientSplashes.Count != pack1.Stack.Length)
-          throw new BugException("Расхождение количества заставок");
+          throw new BugException("Splash count mismatch");
 
         ISplash[] clientSplashes2 = _ClientSplashes.ToArray();
         // Инициализируем состояние всех заставок
@@ -669,7 +669,7 @@ namespace FreeLibSet.Remoting
       {
         // Получена информация об обновлении одной заставки
         if (_ClientSplashes.Count == 0)
-          throw new BugException("Обработка SplashInfoPackSplash. В списке _ClientSplashes нет заставок");
+          throw new BugException("SplashInfoPackSplash processing. There is no splash in ClientSplashes");
         InitSplashStates(pack2, _ClientSplashes.Peek());
         return;
       }
@@ -679,7 +679,7 @@ namespace FreeLibSet.Remoting
       {
         // Получена информация об обновлении процентного индикатора
         if (_ClientSplashes.Count == 0)
-          throw new BugException("Обработка SplashInfoPackCurrentPhase. В списке _ClientSplashes нет заставок");
+          throw new BugException("SplashInfoPackCurrentPhase processing. There is no splash in ClientSplashes");
         InitSplashCurrentPhase(pack3, _ClientSplashes.Peek());
         return;
       }
@@ -689,7 +689,7 @@ namespace FreeLibSet.Remoting
         return;
 #endif
 
-      throw new BugException("Получен объект неизвестного типа " + pack.GetType().ToString());
+      throw new BugException("Unknown object type taken: " + pack.GetType().ToString());
     }
 
     /// <summary>
@@ -725,7 +725,7 @@ namespace FreeLibSet.Remoting
     {
       SplashPhaseState[] dstStates = dst.GetPhaseStates();
       if (dstStates.Length != src.PhaseStates.Length)
-        throw new BugException("Разное количество фаз в заставке");
+        throw new BugException("Different phase count in the splash");
       for (int i = 0; i < dst.PhaseCount; i++)
       {
         if (dstStates[i] != src.PhaseStates[i])

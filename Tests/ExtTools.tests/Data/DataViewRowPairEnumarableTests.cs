@@ -45,42 +45,34 @@ namespace ExtTools_tests.Data
     #endregion
 
     [Test]
-    public void Constructor_simple()
+    public void Constructor_nosinglerows()
     {
       DataTable tbl = CreateTestTable();
-      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView);
+      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, false);
       Assert.AreEqual("3aei2ch2df", TestEnum(sut));
     }
 
     [Test]
-    public void Constructor_twocolumns()
+    public void Constructor_nosinglerows_onecolumn()
     {
       DataTable tbl = CreateTestTable();
-      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, 2);
-      Assert.AreEqual("3aei2ch2df", TestEnum(sut));
-    }
-
-    [Test]
-    public void Constructor_onecolumn()
-    {
-      DataTable tbl = CreateTestTable();
-      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, 1);
+      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, false, 1);
       Assert.AreEqual("4aeib2ch2df", TestEnum(sut));
     }
 
     [Test]
-    public void Constructor_twocolumns_nosinglerows()
+    public void Constructor_nosinglerows_twocolumns()
     {
       DataTable tbl = CreateTestTable();
-      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, 2, false);
+      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, false, 2);
       Assert.AreEqual("3aei2ch2df", TestEnum(sut));
     }
 
     [Test]
-    public void Constructor_twocolumns_enumsinglerows()
+    public void Constructor_enumsinglerows_twocolumns()
     {
       DataTable tbl = CreateTestTable();
-      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, 2, true);
+      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, true, 2);
       Assert.AreEqual("3aei1b2ch2df1g", TestEnum(sut));
     }
 
@@ -88,7 +80,7 @@ namespace ExtTools_tests.Data
     public void Constructor_onecolumn_enumsinglerows()
     {
       DataTable tbl = CreateTestTable();
-      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, 1, true);
+      DataViewRowPairEnumarable sut = new DataViewRowPairEnumarable(tbl.DefaultView, true, 1);
       Assert.AreEqual("4aeib2ch2df1g", TestEnum(sut));
     }
 
@@ -97,9 +89,9 @@ namespace ExtTools_tests.Data
     {
       DataTable tbl = CreateTestTable();
 
-      Assert.Catch(delegate { new DataViewRowPairEnumarable(null); }, "DataView=null");
-      Assert.Catch(delegate { new DataViewRowPairEnumarable(tbl.DefaultView, -1); }, "ColumnCount=-1");
-      Assert.Catch(delegate { new DataViewRowPairEnumarable(tbl.DefaultView, 3); }, "ColumnCount=3");
+      Assert.Catch(delegate { new DataViewRowPairEnumarable(null, false); }, "DataView=null");
+      Assert.Catch(delegate { new DataViewRowPairEnumarable(tbl.DefaultView, false, -1); }, "ColumnCount=-1");
+      Assert.Catch(delegate { new DataViewRowPairEnumarable(tbl.DefaultView, false, 3); }, "ColumnCount=3");
     }
 
     /// <summary>

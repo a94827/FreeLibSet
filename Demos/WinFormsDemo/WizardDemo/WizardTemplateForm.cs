@@ -40,15 +40,15 @@ namespace WinFormsDemo.WizardDemo
       {
         string[] a = new string[]
         {
-          "Использование формы-шаблона",
-          "Свойства WizardStep",
+          "Template form usage",
+          "WizardStep properties",
           "ExtWizardStep",
           "WizardStepWithTabControl",
           "TempPage",
         };
 
         Step1 = new WizardStepWithRadioButtons(a);
-        Step1.GroupTitle = "Режим работы";
+        Step1.GroupTitle = "Demo mode";
         Step1.TheButtons.Codes = new string[] { "TemplateForm", "WizardStepProps", "ExtWizardStep", "WizardStepWithTabControl", "TempPage"};
 
         Step1.EndStep += Step1_EndStep;
@@ -186,7 +186,7 @@ namespace WinFormsDemo.WizardDemo
     private void efpTitle501_ValueChanged(object sender, EventArgs args)
     {
       if (efpTitle501.Checked)
-        Step501.Title = "Особый заголовок";
+        Step501.Title = "Special title";
       else
         Step501.Title = String.Empty;
     }
@@ -217,7 +217,7 @@ namespace WinFormsDemo.WizardDemo
       if (Step502 == null)
       {
         Step502 = new WizardStepWithMessage();
-        Step502.Text = "Промежуточный шаг";
+        Step502.Text = "Intermediate step";
         Step502.GetNext += Step502_GetNext;
       }
     }
@@ -235,7 +235,7 @@ namespace WinFormsDemo.WizardDemo
       if (Step503 == null)
       {
         Step503 = new WizardStepWithMessage();
-        Step503.Text = "Финальный шаг";
+        Step503.Text = "The final step";
         Step503.FinalStep = true;
       }
     }
@@ -298,7 +298,7 @@ namespace WinFormsDemo.WizardDemo
     private void Step202_BeginStep(object sender, WizardBeginStepEventArgs args)
     {
       if (efpGroupTitle201.Checked)
-        Step202.GroupTitle = "Это заголовок группы";
+        Step202.GroupTitle = "It's a group title";
       else
         Step202.GroupTitle = String.Empty;
 
@@ -308,14 +308,14 @@ namespace WinFormsDemo.WizardDemo
           Step202.InfoText = String.Empty;
           break;
         case 1:
-          Step202.InfoText = "Короткий текст";
+          Step202.InfoText = "Short text";
           break;
         case 2:
           StringBuilder sb = new StringBuilder();
           int n = 10 + rnd.Next(30);
           for (int i = 0; i < n; i++)
-            sb.Append("Длинный ");
-          sb.Append("текст");
+            sb.Append("Long ");
+          sb.Append("text");
           Step202.InfoText = sb.ToString();
           break;
       }
@@ -343,11 +343,11 @@ namespace WinFormsDemo.WizardDemo
         efp1.ControlledTabPageControl = tp1;
 
         ErrorMessageList msgs = new ErrorMessageList();
-        msgs.AddWarning("Тестовое сообщение");
+        msgs.AddWarning("Sample message");
         efp1.ErrorMessages = msgs;
 
-        EFPTabPage tp2 = Step401.TheTabControl.TabPages.Add("Текст");
-        EFPControlWithToolBar<TextBox> cwt2 = new EFPControlWithToolBar<TextBox>(tp2, "Текстовое поле");
+        EFPTabPage tp2 = Step401.TheTabControl.TabPages.Add("Text");
+        EFPControlWithToolBar<TextBox> cwt2 = new EFPControlWithToolBar<TextBox>(tp2, "Text control");
         cwt2.Control.Multiline = true;
         EFPTextBox efp2 = new EFPTextBox(cwt2);
         efp2.CanBeEmpty = false;
@@ -367,8 +367,8 @@ namespace WinFormsDemo.WizardDemo
         Step301 = new WizardStepWithRadioButtons(new string[] { "BeginStep", "EndStep" });
         Step301.GroupTitle = "Когда показать заставку";
         Step301.ItemInfoTextArray = new string[] {
-          "Действие выполняется внутри обработчика события BeginStep. Прерывание действия не предотвращает переход к следующему кадру",
-          "Действие выполняется внутри обработчика события EndStep. Прерывание действия оставляет мастер на текущем кадре"};
+          "Action performs within BeginStep event handler. User interrupting does not prevent jump to the next step.",
+          "Action performs within EndStep event handler. User interrupting prevents jump and stays the current step active."};
         Step301.EndStep += Step301_EndStep;
         Step301.GetNext += Step301_GetNext;
       }
@@ -385,7 +385,7 @@ namespace WinFormsDemo.WizardDemo
 
     private void ProcessTempPage(Wizard wizard)
     {
-      ISplash spl = wizard.BeginTempPage("Длительный процесс");
+      ISplash spl = wizard.BeginTempPage("Long term demo process");
       try
       {
         spl.AllowCancel = true;
@@ -405,7 +405,7 @@ namespace WinFormsDemo.WizardDemo
     private void Step301_GetNext(object sender, WizardGetNextEventArgs args)
     {
       WizardStepWithMessage step302 = new WizardStepWithMessage();
-      step302.Text = "Длительный процесс выполнен";
+      step302.Text = "Long term process complete";
       step302.BeginStep += Step302_BeginStep;
       step302.FinalStep = true;
       args.NextStep = step302;

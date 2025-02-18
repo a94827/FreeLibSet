@@ -94,7 +94,7 @@ namespace FreeLibSet.Data
       {
         int index = IndexOf(name);
         if (index < 0)
-          throw new ArgumentException("Таблица \"" + _Row.Table.TableName + "\" не содержит поля \"" + name + "\"");
+          throw ExceptionFactory.ArgUnknownColumnName("name", _Row.Table, name);
         return new DBxExtValue(this, index);
       }
     }
@@ -307,7 +307,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -375,20 +375,19 @@ namespace FreeLibSet.Data
 
         if (value == null)
           throw new ArgumentNullException();
-        if (value.Columns.Count != _Table.Columns.Count)
-          throw new ArgumentException("Количество полей в новой таблице \"" + value.TableName + "\" (" + value.Columns.Count + ") должно совпадать с существующей таблицей (" + _Table.Columns.Count + ")");
-        for (int i = 0; i < value.Columns.Count; i++)
-        {
-          DataColumn oldCol = _Table.Columns[i];
-          DataColumn newCol = value.Columns[i];
-          if (!String.Equals(oldCol.ColumnName, newCol.ColumnName, StringComparison.OrdinalIgnoreCase))
-            throw new ArgumentException("Имя столбца с индексом " + i.ToString() + " в новой таблице \"" + value.TableName + "\" (" + newCol.ColumnName + ") не совпадает с именем столбца в существующей таблице (" + oldCol.ColumnName + ")");
 
-          // 13.06.2017 Убрано.
-          // Так может быть: в первоначальной таблице поле имеет тип Byte, а в новой - Int16
-          //if (NewCol.DataType!=OldCol.DataType)
-          //  throw new ArgumentException("Тип данных столбца с \""+NewCol.ColumnName+"\" в новой таблице \""+value.TableName+"\" (" + NewCol.DataType.ToString() + ") не совпадает с типом данных столбца в существующей таблице (" + OldCol.DataType.ToString()+ ")");
-        }
+        if (!DataTools.AreColumnNamesEqual(_Table, value, false))
+          throw new ArgumentException(String.Format(Res.DBxDataRowExtValues_Arg_TableDiff, value.TableName,_Table.TableName));
+
+        // 13.06.2017 Убрано.
+        // Так может быть: в первоначальной таблице поле имеет тип Byte, а в новой - Int16
+        // for (int i = 0; i < value.Columns.Count; i++)
+        // {
+        //   DataColumn oldCol = _Table.Columns[i];
+        //   DataColumn newCol = value.Columns[i];
+        //   if (NewCol.DataType!=OldCol.DataType)
+        //     throw new ArgumentException("Тип данных столбца с \""+NewCol.ColumnName+"\" в новой таблице \""+value.TableName+"\" (" + NewCol.DataType.ToString() + ") не совпадает с типом данных столбца в существующей таблице (" + OldCol.DataType.ToString()+ ")");
+        // }
 
         #endregion
 
@@ -408,7 +407,7 @@ namespace FreeLibSet.Data
     {
       string tableName;
       if (String.IsNullOrEmpty(_Table.TableName))
-        tableName = "Без имени";
+        tableName = "noname";
       else
         tableName = _Table.TableName;
       return tableName + ", RowCount=" + _Table.Rows.Count.ToString();
@@ -502,7 +501,7 @@ namespace FreeLibSet.Data
     {
       int index = IndexOf(name);
       if (index < 0)
-        throw new ArgumentException("Таблица \"" + _Table.TableName + "\" не содержит столбца \"" + name + "\"");
+        throw ExceptionFactory.ArgUnknownColumnName("name", _Table, name);
 
       _BufFlags[index] = false;
     }
@@ -523,7 +522,7 @@ namespace FreeLibSet.Data
       {
         int index = IndexOf(name);
         if (index < 0)
-          throw new ArgumentException("Таблица \"" + _Table.TableName + "\" не содержит столбца \"" + name + "\"", "name");
+          throw ExceptionFactory.ArgUnknownColumnName("name", _Table, name);
         return new DBxExtValue(this, index);
       }
     }
@@ -733,7 +732,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("values");
 #endif
       if (values.Length != Table.Rows.Count)
-        throw new ArgumentException("Длина массива должна быть равна " + RowCount.ToString(), "values");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values, Table.Rows.Count);
 
       CheckNotReadOnly(); // 28.02.2022
 
@@ -814,7 +813,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion

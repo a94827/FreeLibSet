@@ -267,7 +267,7 @@ namespace FreeLibSet.Core
     #region TimeSpan
 
     /// <summary>
-    /// Преобразует значение TimeSpan в строку.
+    /// Преобразует значение <see cref="TimeSpan"/> в строку.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Строковое представление значения</returns>
@@ -277,7 +277,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Пытается преобразовать строку в значение TimeSpan.
+    /// Пытается преобразовать строку в значение <see cref="TimeSpan"/>.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="value">Сюда записывается преобразованное значение</param>
@@ -288,7 +288,7 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Преобразует строку в TimeSpan.
+    /// Преобразует строку в <see cref="TimeSpan"/>.
     /// В случае невозможности преобразования генерируется исключение.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
@@ -440,7 +440,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Преобразует строку в <see cref="Guid"/>.
     /// В случае невозможности преобразования генерируется исключение.
-    /// Просто вызывает конструктор <see cref="Guid"/>(String).
+    /// Просто вызывает конструктор <see cref="Guid"/>.
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <returns>Преобразованное значение</returns>
@@ -557,7 +557,7 @@ namespace FreeLibSet.Core
       if (TryParse(s, out values))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив целых чисел");
+        throw ExceptionFactory.Inconvertible(s, typeof(Int32[]));
     }
 
     #endregion
@@ -633,7 +633,7 @@ namespace FreeLibSet.Core
       if (TryParse(s, out values))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив целых чисел");
+        throw ExceptionFactory.Inconvertible(s, typeof(Int64[]));
     }
 
     #endregion
@@ -709,7 +709,7 @@ namespace FreeLibSet.Core
       if (TryParse(s, out values))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив чисел");
+        throw ExceptionFactory.Inconvertible(s, typeof(Single[]));
     }
 
     #endregion
@@ -785,7 +785,7 @@ namespace FreeLibSet.Core
       if (TryParse(s, out values))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив чисел");
+        throw ExceptionFactory.Inconvertible(s, typeof(Double[]));
     }
 
     #endregion
@@ -861,7 +861,7 @@ namespace FreeLibSet.Core
       if (TryParse(s, out values))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив чисел");
+        throw ExceptionFactory.Inconvertible(s, typeof(Decimal[]));
     }
 
     #endregion
@@ -940,7 +940,7 @@ namespace FreeLibSet.Core
       if (TryParse(s, out values, useTime))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив значений даты/времени");
+        throw ExceptionFactory.Inconvertible(s, typeof(DateTime[]));
     }
 
     #endregion
@@ -1016,7 +1016,7 @@ namespace FreeLibSet.Core
       if (TryParse(s, out values))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив чисел");
+        throw ExceptionFactory.Inconvertible(s, typeof(TimeSpan[]));
     }
 
     #endregion
@@ -1098,7 +1098,7 @@ namespace FreeLibSet.Core
       if (TryParseEnum<T>(s, out values))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив перечислимых значений");
+        throw ExceptionFactory.Inconvertible(s, typeof(T[]));
     }
 
     #endregion
@@ -1174,7 +1174,7 @@ namespace FreeLibSet.Core
       if (TryParse(s, out values))
         return values;
       else
-        throw new InvalidCastException("Строку нельзя преобразовать в массив Guid");
+        throw ExceptionFactory.Inconvertible(s, typeof(Guid[]));
     }
 
     #endregion

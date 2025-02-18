@@ -132,7 +132,7 @@ namespace FreeLibSet.Forms
       if (_Form.CancelClicked)
       {
         _Form.CancelClicked = false;
-        if (EFPApp.MessageBox("Прервать операцию?", "Подтверждение",
+        if (EFPApp.MessageBox(Res.FileCopier_Msg_Cancel, Res.FileCopier_Title_Cancel,
           MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
 
           throw new UserCancelException();
@@ -199,9 +199,11 @@ namespace FreeLibSet.Forms
     public void AddTemplate(string template, bool recurse)
     {
       if (String.IsNullOrEmpty(template))
-        throw new ArgumentNullException("template");
-      if (template[0] == Path.DirectorySeparatorChar || template[template.Length - 1] == Path.DirectorySeparatorChar)
-        throw new ArgumentException("Шаблон не может начинаться или заканчиваться символом \"" + Path.DirectorySeparatorChar + "\"");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("template");
+      if (template[0] == Path.DirectorySeparatorChar)
+        throw ExceptionFactory.ArgBadChar("template", template, 0);
+      if (template[template.Length - 1] == Path.DirectorySeparatorChar)
+        throw ExceptionFactory.ArgBadChar("template", template, template.Length - 1);
       _Templates.Add((recurse ? ">" : "") + template);
     }
 
@@ -234,17 +236,17 @@ namespace FreeLibSet.Forms
     public void Copy()
     {
       if (SrcDir.IsEmpty)
-        throw new NullReferenceException("Не задан исходный каталог");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "SrcDir");
       if (DstDir.IsEmpty)
-        throw new NullReferenceException("Не задан конечный каталог");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DstDir");
       if (_Templates.Count == 0)
-        throw new InvalidOperationException("Не задано ни одного шаблона файлов");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Templates");
 
       //      SrcDir = FileTools.GetFullDirName(SrcDir);
       //      DstDir = FileTools.GetFullDirName(DstDir);
 
       BeginForm();
-      _Form.Text = "Копирование файлов";
+      _Form.Text = Res.FileCopier_Phase_Copy;
       try
       {
         CreateFileList();
@@ -272,16 +274,16 @@ namespace FreeLibSet.Forms
 
     private void CreateFileList()
     {
-      _Form.grpTotal.Text = "Подготовка к копированию";
+      _Form.grpTotal.Text = Res.FileCopier_Phase_Prepare;
       _Form.grpTotal.Visible = true;
       _FileNames = new List<string>();
       _TotalSize = 0L;
 
       if (!EFPApp.DirectoryExists(SrcDir))
-        throw new DirectoryNotFoundException("Исходный каталог не существует: \"" + SrcDir + "\"");
+        throw ExceptionFactory.DirectoryNotFound(SrcDir);
 
-      _Form.lblTotalFiles.Text = "0";
-      _Form.lblTotalBytes.Text = "0";
+      _Form.txtTotalFiles.Text = "0";
+      _Form.txtTotalBytes.Text = "0";
       _Form.ExtPBTotal.MaxValue = 2 * _Templates.Count;
       for (int i = 0; i < _Templates.Count; i++)
       {
@@ -314,15 +316,15 @@ namespace FreeLibSet.Forms
         string fileName = a[i].Substring(dir.SlashedPath.Length);
         FileInfo fi = new FileInfo(dir.SlashedPath + fileName);
         if (!fi.Exists)
-          throw new BugException("Потеряли файл \"" + a[i] + "\"");
+          throw new BugException("File lost: \"" + a[i] + "\"");
         if (_FileNames.Contains(fileName))
           continue; // файл может входить больше чем в один шаблон
         _TotalSize += fi.Length;
         _FileNames.Add(fileName);
       }
 
-      _Form.lblTotalFiles.Text = _FileNames.Count.ToString();
-      _Form.lblTotalBytes.Text = _TotalSize.ToString();
+      _Form.txtTotalFiles.Text = _FileNames.Count.ToString();
+      _Form.txtTotalBytes.Text = _TotalSize.ToString();
       _Form.ExtPBTotal.Inc();
     }
 
@@ -342,12 +344,12 @@ namespace FreeLibSet.Forms
 
     private void DoCopy()
     {
-      _Form.lblCopiedFiles.Text = "0";
-      _Form.lblCopiedBytes.Text = "0";
-      _Form.lblTotalFiles.Text = _FileNames.Count.ToString();
-      _Form.lblTotalBytes.Text = _TotalSize.ToString();
+      _Form.txtCopiedFiles.Text = "0";
+      _Form.txtCopiedBytes.Text = "0";
+      _Form.txtTotalFiles.Text = _FileNames.Count.ToString();
+      _Form.txtTotalBytes.Text = _TotalSize.ToString();
       _Form.ExtPBTotal.MaxValue = _TotalSize;
-      _Form.grpTotal.Text = "Копирование";
+      _Form.grpTotal.Text = Res.FileCopier_Phase_Copy;
       _Form.grpTotal.Visible = true;
       _Form.grpCurrentFile.Visible = true;
 
@@ -359,48 +361,48 @@ namespace FreeLibSet.Forms
         AbsPath thisPath = new AbsPath(SrcDir.SlashedPath + _FileNames[i]);
         FileInfo fi = new FileInfo(thisPath.Path);
         if (!fi.Exists)
-          throw new FileNotFoundException("Не найден исходный файл", thisPath.Path);
+          throw ExceptionFactory.FileNotFound(thisPath);
 
-        if (DstDir.Path.StartsWith("A:\\", StringComparison.OrdinalIgnoreCase))
+        if (IsWindows())
         {
-          long freeSpace = GetFreeSpace(DstDir.Path);
-          if (freeSpace < fi.Length)
+          if (DstDir.Path.StartsWith("A:\\", StringComparison.OrdinalIgnoreCase) || DstDir.Path.StartsWith("B:\\", StringComparison.OrdinalIgnoreCase))
           {
-            // Перед сменой дискеты надо выполнить проверку
-            CheckPrevFiles();
-          }
-          // Требуем вставить дискету
-          while (freeSpace < fi.Length)
-          {
-            DialogResult res = EFPApp.MessageBox("Вставьте следующую дискету в устройство " +
-              DstDir.Path.Substring(0, 2) + " для копирования файла \"" + _FileNames[i] +
-              "\". Размер файла: " + fi.Length.ToString() +
-              ", на текущей дискете свободного места: " + freeSpace.ToString() +
-              ". Нажмите <Да>, после замены дискеты или очистки существующей. Нажмите <Нет> для очистки текущей дискеты с помощью Проводника Windows или автоматически",
-              "Смена дискеты", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
-            switch (res)
+            long freeSpace = GetFreeSpace(DstDir.Path);
+            if (freeSpace < fi.Length)
             {
-              case DialogResult.Yes:
-                break;
-              case DialogResult.No:
-                ShowClearFloppyMenu(DstDir);
-                break;
-              default:
-                throw new UserCancelException();
+              // Перед сменой дискеты надо выполнить проверку
+              CheckPrevFiles();
             }
-            // Перечитываем размер
-            freeSpace = GetFreeSpace(DstDir.Path);
+            // Требуем вставить дискету
+            while (freeSpace < fi.Length)
+            {
+              DialogResult res = EFPApp.MessageBox(String.Format(Res.FileCopier_Msg_ChangeFloppy,
+                DstDir.Path.Substring(0, 2), _FileNames[i], fi.Length.ToString(), freeSpace.ToString()),
+                Res.FileCopier_Title_ChangeFloppy, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+              switch (res)
+              {
+                case DialogResult.Yes:
+                  break;
+                case DialogResult.No:
+                  ShowClearFloppyMenu(DstDir);
+                  break;
+                default:
+                  throw new UserCancelException();
+              }
+              // Перечитываем размер
+              freeSpace = GetFreeSpace(DstDir.Path);
+            }
           }
         }
 
-        _Form.lblFileName.Text = Path.GetFileName(_FileNames[i]);
-        _Form.lblFileSize.Text = "Каталог";
+        _Form.txtFileName.Text = Path.GetFileName(_FileNames[i]);
+        _Form.txtFileSize.Text = Res.FileCopier_Msg_SizeAsDir;
         Application.DoEvents();
         // Создаем каталог
         AbsPath dstFile = DstDir + _FileNames[i];
         FileTools.ForceDirs(dstFile.ParentDir);
         // Копирование одного файла
-        _Form.lblFileSize.Text = fi.Length.ToString();
+        _Form.txtFileSize.Text = fi.Length.ToString();
         _Form.ExtPBFile.MaxValue = fi.Length;
         FileStream fsSrc = new FileStream(SrcDir.SlashedPath + _FileNames[i], FileMode.Open, FileAccess.Read, FileShare.Read);
         try
@@ -416,7 +418,7 @@ namespace FreeLibSet.Forms
               fsDst.Write(buffer, 0, count);
               _Form.ExtPBFile.Inc(count);
               _Form.ExtPBTotal.Inc(count);
-              _Form.lblCopiedBytes.Text = _Form.ExtPBTotal.Value.ToString();
+              _Form.txtCopiedBytes.Text = _Form.ExtPBTotal.Value.ToString();
             }
 
             fsDst.Close();
@@ -431,7 +433,7 @@ namespace FreeLibSet.Forms
         {
           fsSrc.Dispose();
         }
-        _Form.lblFileSize.Text = "Атрибуты";
+        _Form.txtFileSize.Text = Res.FileCopier_Msg_SizeAsFileAttr;
         FileInfo fiDst = new FileInfo(dstFile.Path); // исправлено 18.03.2016
         if (fi.CreationTime.Year < 1980)
           fiDst.CreationTime = fi.LastWriteTime;
@@ -441,20 +443,33 @@ namespace FreeLibSet.Forms
 
         _CopiedFiles.Add(_FileNames[i]);
         _CopiedTotalSize += fi.Length;
-        _Form.lblCopiedFiles.Text = (i + 1).ToString();
+        _Form.txtCopiedFiles.Text = (i + 1).ToString();
       }
 
       CheckPrevFiles();
+    }
+
+    private static bool IsWindows()
+    {
+      switch (Environment.OSVersion.Platform)
+      {
+        case PlatformID.Win32NT:
+        case PlatformID.Win32Windows:
+        case PlatformID.Win32S:
+        case PlatformID.WinCE:
+          return true;
+        default:
+          return false;
+      }
     }
 
     private void CheckPrevFiles()
     {
       if (!FileTools.IsFloppyDriveDir(DstDir))
         return;
-      if (EFPApp.MessageBox("Для проверки " + (_CopiedFiles.Count == 1 ? "записанного файла" : "записанных файлов") +
-        " извлеките дискету " +
-        DstDir.Path.Substring(0, 2) + " и вставьте ее обратно",
-        "Проверка записи", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk) == DialogResult.OK)
+      if (EFPApp.MessageBox(String.Format(Res.FileCopier_Msg_CheckDisk,
+        _CopiedFiles.Count, DstDir.Path.Substring(0, 2)),
+        Res.FileCopier_Title_CheckDisk, MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk) == DialogResult.OK)
       {
         _Form.ExtPBCheck.MaxValue = _CopiedTotalSize;
         _Form.grpCheck.Visible = true;
@@ -466,7 +481,7 @@ namespace FreeLibSet.Forms
           }
           catch (Exception e)
           {
-            throw new IOException("Ошибка при проверке файла \"" + _CopiedFiles[i] + "\". " + e.Message, e);
+            throw new IOException(String.Format(Res.FileCopier_Err_CheckDiskFail, _CopiedFiles[i], e.Message), e);
           }
         }
       }
@@ -480,11 +495,11 @@ namespace FreeLibSet.Forms
     {
       AbsPath srcFile = SrcDir + fileName;
       AbsPath dstFile = DstDir + fileName;
-      _Form.lblFileName.Text = Path.GetFileName(fileName);
+      _Form.txtFileName.Text = Path.GetFileName(fileName);
       FileInfo fiSrc = new FileInfo(srcFile.Path);
       if (!fiSrc.Exists)
-        throw new FileNotFoundException("Не найден исходный файл", srcFile.Path);
-      _Form.lblFileSize.Text = fiSrc.Length.ToString();
+        throw ExceptionFactory.FileNotFound(srcFile);
+      _Form.txtFileSize.Text = fiSrc.Length.ToString();
 
       FileTools.ForceDirs(dstFile.ParentDir);
 
@@ -495,12 +510,11 @@ namespace FreeLibSet.Forms
         try
         {
           if (fsDst.Length != fsSrc.Length)
-            throw new IOException("Исходный файл имеет длину " + fsSrc.Length.ToString() +
-              ", а записанный - " + fsDst.Length.ToString());
+            throw new IOException(String.Format(Res.FileCopier_Err_CheckLen, fsSrc.Length, fsDst.Length));
           for (int i = 0; i < fsSrc.Length; i++)
           {
             if (fsDst.ReadByte() != fsSrc.ReadByte())
-              throw new IOException("Ошибка при копировании файла. Файл записался неправильно");
+              throw new IOException(Res.FileCopier_Err_CheckBytes);
           }
           _Form.ExtPBCheck.Inc(fsDst.Length);
         }
@@ -518,7 +532,7 @@ namespace FreeLibSet.Forms
     static long GetFreeSpace(string path)
     {
       if (path.Length < 3 || path.Substring(1, 2) != ":\\")
-        throw new ArgumentException("Неправильный путь", "path");
+        throw new ArgumentException("Invalid path", "path");
       try
       {
 
@@ -528,7 +542,7 @@ namespace FreeLibSet.Forms
       catch (Exception e)
       {
         EFPApp.MessageBox(e.Message,
-          "Ошибка при определении свободного места на диске " + path.Substring(0, 2),
+          String.Format(Res.FileCopier_Title_FreeSpaceDetectionError, path.Substring(0, 2)),
           MessageBoxButtons.OK, MessageBoxIcon.Error);
         return 0;
       }
@@ -594,7 +608,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.MessageBox(e.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        EFPApp.ErrorMessageBox(e.Message);
       }
     }
 
@@ -604,11 +618,11 @@ namespace FreeLibSet.Forms
       string[] subDirs = Directory.GetDirectories(rootDir.Path);
 
       RadioSelectDialog dlg = new RadioSelectDialog();
-      dlg.Title = "Очистка диска " + rootDir.Path.Substring(0, 2);
-      dlg.GroupTitle = "Что сделать";
+      dlg.Title = String.Format(Res.FileCopier_Title_ClearDialog, rootDir.Path.Substring(0, 2));
+      dlg.GroupTitle = Res.FileCopier_Title_ClearDialogGroupTitle;
       dlg.Items = new string[]{
-        "Запустить проводник Windows",
-        "Удалить все файлы ("+files.Length.ToString()+") и каталоги ("+subDirs.Length.ToString()+")"};
+        Res.FileCopier_Msg_ClearDialogExplorer,
+        String.Format(Res.FileCopier_Msg_ClearDialogDelete, files.Length,subDirs.Length)};
       dlg.SelectedIndex = 0;
 #if DEBUG
       if (dlg.EnabledItemFlags == null)
@@ -621,25 +635,24 @@ namespace FreeLibSet.Forms
         EFPApp.ShowWindowsExplorer(rootDir);
       else
       {
-        if (EFPApp.MessageBox("Сейчас все сушествующие файлы и каталоги на диске " +
-          rootDir.Path.Substring(0, 2) + " будут необратимо УНИЧТОЖЕНЫ. Подтвердите Ваше намерение очистить диск",
-          "Подтверждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
+        if (EFPApp.MessageBox(String.Format(Res.FileCopier_Msg_ConfirmDelele, rootDir.Path.Substring(0, 2)),
+          Res.FileCopier_Title_ConfirmDelele, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
           return;
-        Splash spl = new Splash("Очистка диска " + rootDir.Path.Substring(0, 2));
+        Splash spl = new Splash(String.Format(Res.FileCopier_Phase_ClearDisk, rootDir.Path.Substring(0, 2)));
         try
         {
           spl.AllowCancel = true;
           spl.PercentMax = files.Length + subDirs.Length;
           for (int i = 0; i < files.Length; i++)
           {
-            spl.PhaseText = "Удаление файла \"" + files[i] + "\"";
+            spl.PhaseText = String.Format(Res.FileCopier_Phase_DeleteFile, files[i]);
             spl.CheckCancelled();
             File.Delete(files[i]);
             spl.IncPercent();
           }
           for (int i = 0; i < subDirs.Length; i++)
           {
-            spl.PhaseText = "Удаление каталога \"" + subDirs[i] + "\"";
+            spl.PhaseText = String.Format(Res.FileCopier_Phase_DeleteDir, subDirs[i]);
             spl.CheckCancelled();
             Directory.Delete(subDirs[i], true);
             spl.IncPercent();

@@ -97,7 +97,7 @@ namespace FreeLibSet.Forms.Data
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка получения списка строк для фильтра \"" + DisplayName + "\"");
+          EFPApp.ShowException(e, String.Format(Res.StringValueGridFilter_ErrTitle_AllValuesNeeded, DisplayName));
         }
       }
 
@@ -108,7 +108,7 @@ namespace FreeLibSet.Forms.Data
           n++;
         string[] list2 = new string[n];
         string[] imageKeys = new string[n];
-        list2[0] = "[ Нет фильтра ]";
+        list2[0] = Res.StringValueGridFilter_Msg_NoFilter;
         imageKeys[0] = EFPGridFilterTools.NoFilterImageKey;
         for (int i = 0; i < AllValues.Length; i++)
         {
@@ -117,13 +117,13 @@ namespace FreeLibSet.Forms.Data
         }
         if (UseManualInput)
         {
-          list2[AllValues.Length + 1] = "Задать вручную ...";
+          list2[AllValues.Length + 1] = Res.StringValueGridFilter_Msg_Manual;
           imageKeys[AllValues.Length + 1] = "Edit";
         }
 
         ListSelectDialog dlg1 = new ListSelectDialog();
         dlg1.Title = DisplayName;
-        dlg1.ListTitle = "Значение фильтра";
+        dlg1.ListTitle = Res.GridFilter_Msg_ListTitle;
         dlg1.ImageKey = "Filter";
         dlg1.MultiSelect = false;
         dlg1.Items = list2;
@@ -165,7 +165,7 @@ namespace FreeLibSet.Forms.Data
         TextInputDialog dlg2 = new TextInputDialog();
         dlg2.Title = DisplayName;
         dlg2.ImageKey = "Filter";
-        dlg2.Prompt = "Значение фильтра (пусто-нет фильтра)";
+        dlg2.Prompt = Res.GridFilter_Msg_ManualInputPromptWithEmptyIfNoFilter;
         dlg2.CanBeEmpty = true;
         dlg2.Text = Value;
         dlg2.DialogPosition = dialogPosition;
@@ -178,7 +178,7 @@ namespace FreeLibSet.Forms.Data
       }
       else
       {
-        EFPApp.ErrorMessageBox("Ручной ввод значения фильтра не предусмотрен");
+        EFPApp.ErrorMessageBox(Res.StringValueGridFilter_Err_NoManual);
         return false;
       }
     }
@@ -259,7 +259,7 @@ namespace FreeLibSet.Forms.Data
     public StringValuesGridFilter(string columnName)
       : base(columnName)
     {
-      _EmptyValueText = "[ нет ]";
+      _EmptyValueText = Res.GridFilter_Msg_EmptyValueText;
     }
 
     #endregion
@@ -343,7 +343,7 @@ namespace FreeLibSet.Forms.Data
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка получения списка строк для фильтра \"" + DisplayName + "\"");
+          EFPApp.ShowException(e, String.Format(Res.StringValueGridFilter_ErrTitle_AllValuesNeeded, DisplayName));
         }
       }
 
@@ -426,7 +426,7 @@ namespace FreeLibSet.Forms.Data
         if (value != null)
         {
           if (value.Length != _TextValues.Length)
-            throw new ArgumentException("Неправильная длина массива для свойства ImageKeys");
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _TextValues.Length);
         }
 #endif
         _ImageKeys = value;
@@ -506,7 +506,7 @@ namespace FreeLibSet.Forms.Data
       ListSelectDialog dlg = new ListSelectDialog();
       dlg.Title = DisplayName;
       dlg.ImageKey = "Filter";
-      dlg.ListTitle = "Выбрать значения фильтра";
+      dlg.ListTitle = Res.GridFilter_Msg_ListTitle;
       dlg.Items = TextValues;
       if (_ImageKeys != null)
         dlg.ImageKeys = ImageKeys;
@@ -537,7 +537,7 @@ namespace FreeLibSet.Forms.Data
       int value = DataTools.GetInt(columnValues[0]);
       string s;
       if (value < 0 || value >= TextValues.Length)
-        s = "Значение " + value.ToString();
+        s = "Value # " + value.ToString();
       else
         s = TextValues[value];
       return new string[] { s };
@@ -563,8 +563,8 @@ namespace FreeLibSet.Forms.Data
     public BoolValueGridFilter(string columnName)
       : base(columnName)
     {
-      _FilterTextTrue = "Значение установлено";
-      _FilterTextFalse = "Значение сброшено";
+      _FilterTextTrue = Res.BoolValueGridFilter_Msg_FilterTextTrue;
+      _FilterTextFalse = Res.BoolValueGridFilter_Msg_FilterTextFalse;
     }
 
     #endregion
@@ -655,28 +655,28 @@ namespace FreeLibSet.Forms.Data
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
       if (String.IsNullOrEmpty(FilterTextTrue) && String.IsNullOrEmpty(FilterTextFalse))
-        throw new NullReferenceException("Одновременная очистка свойств FilterTextTrue и FilterTextFalse не допускается.");
+        throw new NullReferenceException(Res.BoolValueGridFilter_Err_NoText);
 
       RadioSelectDialog dlg = new RadioSelectDialog();
       dlg.Title = DisplayName;
       dlg.ImageKey = "Filter";
-      dlg.GroupTitle = "Установка фильтра";
+      dlg.GroupTitle = Res.GridFilter_Msg_ListTitle;
 
       if (String.IsNullOrEmpty(FilterTextTrue))
       {
-        dlg.Items = new string[2] { "Нет фильтра", FilterTextFalse };
+        dlg.Items = new string[2] { Res.GridFilter_Msg_NoFilterMode, FilterTextFalse };
         dlg.ImageKeys = new string[] { EFPGridFilterTools.NoFilterImageKey, FilterImageKeyFalse };
         dlg.SelectedIndex = (Value ?? true) ? 0 : 1;
       }
       else if (String.IsNullOrEmpty(FilterTextFalse))
       {
-        dlg.Items = new string[2] { "Нет фильтра", FilterTextTrue };
+        dlg.Items = new string[2] { Res.GridFilter_Msg_NoFilterMode, FilterTextTrue };
         dlg.ImageKeys = new string[] { EFPGridFilterTools.NoFilterImageKey, FilterImageKeyTrue };
         dlg.SelectedIndex = (Value ?? false) ? 1 : 0;
       }
       else
       {
-        dlg.Items = new string[3] { "Нет фильтра", FilterTextTrue, FilterTextFalse };
+        dlg.Items = new string[3] { Res.GridFilter_Msg_NoFilterMode, FilterTextTrue, FilterTextFalse };
         dlg.ImageKeys = new string[] { EFPGridFilterTools.NoFilterImageKey, FilterImageKeyTrue, FilterImageKeyFalse };
         if (Value.HasValue)
         {
@@ -740,14 +740,14 @@ namespace FreeLibSet.Forms.Data
           if (Value.Value)
           {
             if (String.IsNullOrEmpty(FilterTextTrue))
-              return "Ошибка. Значение TRUE недопустимо для этого фильтра";
+              return String.Format(Res.GridFilter_Err_WrongValue, "TRUE");
             else
               return FilterTextTrue;
           }
           else
           {
             if (String.IsNullOrEmpty(FilterTextFalse))
-              return "Ошибка. Значение FALSE недопустимо для этого фильтра";
+              return String.Format(Res.GridFilter_Err_WrongValue, "FALSE");
             else
               return FilterTextFalse;
           }
@@ -841,7 +841,7 @@ namespace FreeLibSet.Forms.Data
       dlg.CanBeEmpty = true;
       dlg.NValue = Value;
       dlg.Title = DisplayName;
-      dlg.Prompt = "Фильтр (пусто-нет фильтра)";
+      dlg.Prompt = Res.GridFilter_Msg_ManualInputPromptWithEmptyIfNoFilter;
       dlg.DialogPosition = dialogPosition;
       if (dlg.ShowDialog() == DialogResult.OK)
       {
@@ -912,7 +912,7 @@ namespace FreeLibSet.Forms.Data
       get
       {
         if (String.IsNullOrEmpty(_FilterTextNotNull))
-          return "Значение установлено";
+          return Res.NullNotNullGridFilter_MsgNotNull;
         else
           return _FilterTextNotNull;
       }
@@ -929,7 +929,7 @@ namespace FreeLibSet.Forms.Data
       get
       {
         if (String.IsNullOrEmpty(_FilterTextNull))
-          return "Значение не установлено";
+          return Res.NullNotNullGridFilter_MsgNull;
         else
           return _FilterTextNull;
       }
@@ -1023,8 +1023,8 @@ namespace FreeLibSet.Forms.Data
       RadioSelectDialog dlg = new RadioSelectDialog();
       dlg.Title = DisplayName;
       dlg.ImageKey = "Filter";
-      dlg.GroupTitle = "Установка фильтра";
-      dlg.Items = new string[3] { "Нет фильтра", FilterTextNotNull, FilterTextNull };
+      dlg.GroupTitle = Res.GridFilter_Msg_ListTitle;
+      dlg.Items = new string[3] { Res.GridFilter_Msg_NoFilterMode, FilterTextNotNull, FilterTextNull };
       dlg.ImageKeys = new string[3] { EFPGridFilterTools.NoFilterImageKey, FilterImageKeyNotNull, FilterImageKeyNull };
       dlg.SelectedIndex = (int)(Value);
       dlg.DialogPosition = dialogPosition;
@@ -1054,7 +1054,7 @@ namespace FreeLibSet.Forms.Data
     public DummyGridFilter(string code)
       : base(code)
     {
-      _FilterTextFalse = "Нет";
+      _FilterTextFalse = Res.GridFilter_Msg_EmptyValueText;
     }
 
     #endregion
@@ -1072,7 +1072,7 @@ namespace FreeLibSet.Forms.Data
       set
       {
         if (String.IsNullOrEmpty(value))
-          throw new ArgumentNullException();
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
         _FilterTextFalse = value;
       }
     }
@@ -1106,7 +1106,8 @@ namespace FreeLibSet.Forms.Data
       RadioSelectDialog dlg = new RadioSelectDialog();
       dlg.Title = DisplayName;
       dlg.ImageKey = "Filter";
-      dlg.Items = new string[] { "Нет фильтра", FilterTextFalse };
+      dlg.GroupTitle = Res.GridFilter_Msg_ListTitle;
+      dlg.Items = new string[] { Res.GridFilter_Msg_NoFilterMode, FilterTextFalse };
       dlg.SelectedIndex = IsTrue ? 0 : 1;
       dlg.DialogPosition = dialogPosition;
       if (dlg.ShowDialog() != DialogResult.OK)
@@ -1164,7 +1165,7 @@ namespace FreeLibSet.Forms.Data
     /// <returns>false</returns>
     public bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      EFPApp.ErrorMessageBox("Редактирование этого фильтра невозможно", DisplayName);
+      EFPApp.ErrorMessageBox(Res.GridFilter_Err_NotEditable, DisplayName);
       return false;
     }
 

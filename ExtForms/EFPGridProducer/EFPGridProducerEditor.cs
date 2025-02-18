@@ -75,8 +75,7 @@ namespace FreeLibSet.Forms
       //InitCBStartCol();
 
       efpStartColumn = new EFPListComboBox(baseProvider, cbStartColumn);
-      efpStartColumn.ToolTipText = "Если указан столбец, то он будет активироваться при каждом открытии табличного просмотра." + Environment.NewLine +
-        "Если выбран вариант \"[ Нет ]\", то последний выбранный столбец запоминается между открытиями просмотра";
+      efpStartColumn.ToolTipText = Res.EFPGridProducerEditor_ToolTip_StartColumn;
 
       if (_IsTreeView)
       {
@@ -114,7 +113,7 @@ namespace FreeLibSet.Forms
         tpToolTips.Controls.Clear();
         Label lbl = new Label();
         lbl.Dock = DockStyle.Fill;
-        lbl.Text = "Всплывающие подсказки отключены";
+        lbl.Text = Res.EFPGridProducerEditor_Msg_ToolTipsOff;
         lbl.TextAlign = ContentAlignment.MiddleCenter;
         lbl.BackColor = SystemColors.Info;
         lbl.ForeColor = SystemColors.InfoText;
@@ -318,7 +317,7 @@ namespace FreeLibSet.Forms
       }
       if (config.Columns.Count == 0)
       {
-        errorText = "Не выбрано ни одного столбца";
+        errorText = Res.EFPGridProducerEditor_Err_NoColumnSelected;
         ghColumns.SetFocus();
         return false;
       }
@@ -375,13 +374,13 @@ namespace FreeLibSet.Forms
           {
             args.Grayed = true;
             args.ReadOnly = true;
-            args.ReadOnlyMessage = "Нельзя задавать ширину столбца, который не выводится на экран";
+            args.ReadOnlyMessage = Res.EFPGridProducerEditor_Err_WidthForHiddenColumn;
           }
           else if (!colProd.Resizable)
           {
             args.Grayed = true;
             args.ReadOnly = true;
-            args.ReadOnlyMessage = "Для столбца \"" + colProd.DisplayName + "\" нельзя менять ширину";
+            args.ReadOnlyMessage = String.Format(Res.EFPGridProducerEditor_Err_NotSizeableColumn, colProd.DisplayName);
           }
           break;
       }
@@ -468,7 +467,7 @@ namespace FreeLibSet.Forms
 
       codes.Add(String.Empty);
       //Names.Add("[ Авто ]");
-      names.Add("[ Нет ]"); // 19.05.2021
+      names.Add(Res.EFPGridProducerEditor_Msg_NoStartColumn); // 19.05.2021
 
       string currCode = efpStartColumn.SelectedCode;
 
@@ -664,7 +663,7 @@ namespace FreeLibSet.Forms
         config.FrozenColumns = efpFrozenColumns.Value;
         if (config.FrozenColumns < 0 || config.FrozenColumns >= config.Columns.Count)
         {
-          errorText = "Недопустимое число замороженных столбцов";
+          errorText = Res.EFPGridProducerEditor_Err_WrongFrozenColumns;
           return false;
         }
 

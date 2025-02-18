@@ -298,7 +298,7 @@ namespace FreeLibSet.Forms
     private static void WriteHtmlOff(Stream strm, int posWr, int value)
     {
       if (!strm.CanSeek)
-        throw new NotSupportedException("Поток не поддерживает Seek");
+        throw new NotSupportedException("Stream does not support Seek()");
       string text = value.ToString("d10");
       strm.Seek(posWr, SeekOrigin.Begin);
       for (int i = 0; i < text.Length; i++)

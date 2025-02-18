@@ -640,15 +640,18 @@ namespace FreeLibSet.Core
       if (String.IsNullOrEmpty(s))
         return EmptyBytes;
       if ((s.Length % 2) != 0)
-        throw new ArgumentException("Строка содержит нечетное количество символов (" + s.Length.ToString() + ")", "s");
+        throw new ArgumentException(String.Format(Res.DataTools_Arg_HexToBytesOddStringLength,
+          s.Length), "s");
+
       byte[] a = new byte[s.Length / 2];
       for (int i = 0; i < a.Length; i++)
-        a[i] = (byte)(GetBytePart(s[2 * i]) << 4 | GetBytePart(s[2 * i + 1]));
+        a[i] = (byte)(GetBytePart(s, 2 * i) << 4 | GetBytePart(s, 2 * i + 1));
       return a;
     }
 
-    private static int GetBytePart(char c)
+    private static int GetBytePart(string s, int charIndex)
     {
+      char c = s[charIndex];
       if (c >= '0' && c <= '9')
         return (c - '0');
       if (c >= 'A' && c <= 'F')
@@ -656,7 +659,7 @@ namespace FreeLibSet.Core
       if (c >= 'a' && c <= 'f')
         return (c - 'a') + 10;
 
-      throw new ArgumentException("Недопустимый символ \"" + c + "\"");
+      throw ExceptionFactory.ArgBadChar("s", s, charIndex);
     }
 
     #endregion
@@ -1027,7 +1030,7 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if (replaceDict == null)
-        throw new ArgumentNullException("Dict");
+        throw new ArgumentNullException("replaceDict");
 #endif
       if (replaceDict.Count == 0)
         return str;
@@ -1061,7 +1064,7 @@ namespace FreeLibSet.Core
     public static string ReplaceChars(string str, string searchChars, string replaceChars)
     {
       if (replaceChars.Length != searchChars.Length)
-        throw new ArgumentException("Длина строк SearchChars и replaceChars должна быть одинаковой", "replaceChars");
+        throw ExceptionFactory.ArgStringsWithDifferentLength("str", str, "replaceChars", replaceChars);
 
       if (String.IsNullOrEmpty(str))
         return String.Empty;
@@ -1460,10 +1463,10 @@ namespace FreeLibSet.Core
       sb.Append(str, 0, p + 1); // включая первый из двух символов в паре
       for (int i = p + 1; i < str.Length; i++)
       {
-        char LastChar = sb[sb.Length - 1];
-        if (LastChar == searchChar)
+        char lastChar = sb[sb.Length - 1];
+        if (lastChar == searchChar)
         {
-          if (str[i] != LastChar)
+          if (str[i] != lastChar)
             sb.Append(str[i]);
         }
         else
@@ -1712,7 +1715,7 @@ namespace FreeLibSet.Core
     public static string TrimStartNewLineSeparators(string s, bool trimAll, string newLine)
     {
       if (String.IsNullOrEmpty(newLine))
-        throw new ArgumentNullException("newLine");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("newLine");
 
       if (String.IsNullOrEmpty(s))
         return String.Empty;
@@ -1771,7 +1774,7 @@ namespace FreeLibSet.Core
     public static string TrimEndNewLineSeparators(string s, bool trimAll, string newLine)
     {
       if (String.IsNullOrEmpty(newLine))
-        throw new ArgumentNullException("newLine");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("newLine");
 
       if (String.IsNullOrEmpty(s))
         return String.Empty;
@@ -2181,13 +2184,13 @@ namespace FreeLibSet.Core
 
       int nRows = a.GetLength(0);
       int nCols = a.GetLength(1);
-      bool[] RowFlags = new bool[nCols];
+      bool[] rowFlags = new bool[nCols];
       for (int i = 0; i < nRows; i++)
       {
         for (int j = 0; j < nCols; j++)
         {
           if (!String.IsNullOrEmpty(a[i, j]))
-            RowFlags[i] = true;
+            rowFlags[i] = true;
         }
       }
 
@@ -2195,7 +2198,7 @@ namespace FreeLibSet.Core
       int[] rowRefs = new int[nRows];
       for (int i = 0; i < nRows; i++)
       {
-        if (RowFlags[i])
+        if (rowFlags[i])
         {
           rowRefs[i] = nRows2;
           nRows2++;
@@ -2337,7 +2340,7 @@ namespace FreeLibSet.Core
 
 #if DEBUG
       if ((nRows2 == 0) != (nCols2 == 0))
-        throw new BugException("Неправильное определение пустых строк и столбцов. nRows2=" + nRows2.ToString() + ", nCols2=" + nCols2);
+        throw new BugException("Invalid detection for empty rows and columns. nRows2=" + nRows2.ToString() + ", nCols2=" + nCols2);
 #endif
 
       if (nRows2 == 0 || nCols2 == 0) // вообще-то должны быть обе вместе

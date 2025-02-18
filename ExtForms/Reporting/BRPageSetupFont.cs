@@ -25,7 +25,7 @@ namespace FreeLibSet.Forms.Reporting
       new FontComboBoxFiller(cbFontName);
 
       efpFontName = new EFPTextComboBox(page.BaseProvider, cbFontName);
-      efpFontName.ToolTipText = "Имя гарнитуры шрифта";
+      efpFontName.ToolTipText = Res.BRPageSetupFont_ToolTip_FontName;
       //efpFontName.Enabled = FForm.PageSetup.AllowFontName;
       efpFontName.TextEx.ValueChanged += new EventHandler(FontChanged);
 
@@ -33,8 +33,7 @@ namespace FreeLibSet.Forms.Reporting
       //grpFontWidth.Enabled = FForm.PageSetup.AllowFontSize;
 
       efpFontHeight = new EFPSingleEditBox(page.BaseProvider, edFontHeight);
-      efpFontHeight.ToolTipText = "Высота шрифта в пунктах." + Environment.NewLine +
-        "1 пт = 1/72 дюйма (примерно 0,35 мм)";
+      efpFontHeight.ToolTipText = Res.BRPageSetupFont_ToolTip_FontHeight;
       efpFontHeight.Control.Minimum = BRReport.MinFontHeightTwip / 20f;
       efpFontHeight.Control.Maximum = BRReport.MaxFontHeightTwip / 20f;
       efpFontHeight.Control.Increment = 1f;
@@ -44,8 +43,7 @@ namespace FreeLibSet.Forms.Reporting
       efpFontWidthMode.SelectedIndexEx.ValueChanged += new EventHandler(FontChanged);
 
       efpFontWidth = new EFPSingleEditBox(page.BaseProvider, edFontWidth);
-      efpFontWidth.ToolTipText = "Ширина шрифта в пунктах." + Environment.NewLine +
-        "1 пт = 1/72 дюйма (примерно 0,35 мм)";
+      efpFontWidth.ToolTipText = Res.BRPageSetupFont_ToolTip_FontWidth;
       efpFontWidth.Control.Minimum = BRReport.MinFontWidthTwip / 20f;
       efpFontWidth.Control.Maximum = BRReport.MaxFontWidthTwip / 20f;
       efpFontWidth.Control.Increment = 1f;
@@ -57,8 +55,7 @@ namespace FreeLibSet.Forms.Reporting
       efpLineHeightMode.SelectedIndexEx.ValueChanged += new EventHandler(FontChanged);
 
       efpLineHeight = new EFPSingleEditBox(page.BaseProvider, edLineHeight);
-      efpLineHeight.ToolTipText = "Высота строки в пунктах." + Environment.NewLine +
-        "Складывается из высоты шрифта и межстрочного интервала";
+      efpLineHeight.ToolTipText = Res.BRPageSetupFont_ToolTip_LineHeight;
       efpLineHeight.Control.Increment = 1f;
       efpLineHeight.Control.Minimum = BRReport.MinFontHeightTwip / 20f;
       efpLineHeight.Control.Maximum = BRReport.MaxFontHeightTwip * 2f / 20f;
@@ -68,8 +65,8 @@ namespace FreeLibSet.Forms.Reporting
 
       pbFontSample.Paint += new PaintEventHandler(pbFontSample_Paint);
 
-      page.Text = "Шрифт";
-      page.ToolTipText = "Выбор гарнитуры и размеров грифта";
+      page.Text = Res.BRPageSetupFont_Title_Tab;
+      page.ToolTipText = Res.BRPageSetupFont_ToolTip_Tab;
       page.ImageKey = "Font";
       page.DataToControls += DataToControls;
       page.DataFromControls += DataFromControls;
@@ -82,7 +79,6 @@ namespace FreeLibSet.Forms.Reporting
     EFPTextComboBox efpFontName;
     EFPSingleEditBox efpFontHeight, efpLineHeight, efpFontWidth;
     EFPRadioButtons efpFontWidthMode, efpLineHeightMode;
-
 
     private new void FontChanged(object sender, EventArgs args)
     {
@@ -130,7 +126,8 @@ namespace FreeLibSet.Forms.Reporting
             //    w2 = FForm.PageSetup.MinFontWidth;
             //}
 
-            string s = rdr.Font.Name + ". Высота " + rdr.FontHeight.ToString() + ". Ширина " + rdr.FontWidth.ToString() + " пт.";
+            string s = String.Format(Res.BRPageSetupFont_Msg_Sample,
+              rdr.Font.Name, rdr.FontHeight, rdr.FontWidth);
             string[] a = new string[5];
             DataTools.FillArray<string>(a, s);
             //RectangleF rc = pbFontSample.ClientRectangle;
@@ -150,7 +147,7 @@ namespace FreeLibSet.Forms.Reporting
       }
       catch (Exception e)
       {
-        args.Graphics.DrawString("Ошибка при построении изображения", SystemFonts.DefaultFont, Brushes.Red, 10, 10);
+        args.Graphics.DrawString(Res.BRPageSetupFont_Err_Sample, SystemFonts.DefaultFont, Brushes.Red, 10, 10);
         args.Graphics.DrawString(e.Message, SystemFonts.DefaultFont, Brushes.Red, 10, 30);
       }
     }

@@ -202,7 +202,7 @@ namespace FreeLibSet.Caching
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException("value", value, "Значение не можеть быть меньше 1");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
 
         lock (this)
         {
@@ -278,7 +278,7 @@ namespace FreeLibSet.Caching
       {
         CheckNotReadOnly();
         if (value < 0 || value > 100)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, 100);
         _CriticalMemoryLoad = value;
       }
     }
@@ -295,7 +295,7 @@ namespace FreeLibSet.Caching
       {
         CheckNotReadOnly();
         if (value < 1)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
         _ClearCacheBlockSize = value;
       }
     }
@@ -325,7 +325,7 @@ namespace FreeLibSet.Caching
     internal static void CheckLockTimeOutValue(int lockTimeout)
     {
       if (lockTimeout < 1 && lockTimeout != System.Threading.Timeout.Infinite)
-        throw new ArgumentOutOfRangeException("lockTimeout", lockTimeout, "Значение должно быть больше 0 или равна System.Threading.Timeout.Infinite");
+        throw new ArgumentOutOfRangeException("lockTimeout", lockTimeout, "Value must be greater than 0 or equal System.Threading.Timeout.Infinite");
     }
 
     #endregion
@@ -344,7 +344,7 @@ namespace FreeLibSet.Caching
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     internal void SetReadOnly()
@@ -508,7 +508,7 @@ namespace FreeLibSet.Caching
       {
 #if DEBUG
         if (MRUContainsItem(item))
-          throw new InvalidOperationException("Повторный вызов MRUAdd()");
+          throw new InvalidOperationException("Second call MRUAdd()");
 
         CheckMRUState(item);
 #endif
@@ -569,14 +569,14 @@ namespace FreeLibSet.Caching
         if (item.PrevItem == null)
         {
           if (item.NextItem != null && this._FirstItem != null && this._FirstItem != item)
-            throw new BugException("FirstItem должен указывать на элемент, т.к. Item.PrevItem==null");
+            throw new BugException("FirstItem must point to the item because Item.PrevItem==null");
         }
         else
         {
           if (this._FirstItem == item)
-            throw new BugException("FirstItem не должен указывать на элемент, т.к. Item.PrevItem!=null");
+            throw new BugException("FirstItem can not point to the item because Item.PrevItem!=null");
           if (item.PrevItem == item)
-            throw new BugException("Item.PrevItem указывает сам на себя");
+            throw new BugException("Item.PrevItem points to itself");
           if (item.PrevItem.NextItem != item)
             throw new BugException("Item.PrevItem.NextItem != Item");
         }
@@ -584,23 +584,23 @@ namespace FreeLibSet.Caching
         if (item.NextItem == null)
         {
           if (item.PrevItem != null && this._LastItem != null && this._LastItem != item)
-            throw new BugException("LastItem должен указывать на элемент, т.к. Item.NextItem==null");
+            throw new BugException("LastItem must point to the item because Item.NextItem==null");
         }
         else
         {
           if (this._LastItem == item)
-            throw new BugException("LastItem не должен указывать на элемент, т.к. Item.NextItem!=null");
+            throw new BugException("LastItem can not point to the item because Item.NextItem!=null");
           if (item.NextItem == item)
-            throw new BugException("Item.NextItem указывает сам на себя");
+            throw new BugException("Item.NextItem points to itself");
           if (item.NextItem.PrevItem != item)
             throw new BugException("Item.NextItem.PrevItem != Item");
         }
 
         if ((this._FirstItem == null) != (this._LastItem == null))
-          throw new BugException("FirstItem и LastItem могут быть null только одновременно");
+          throw new BugException("FirstItem and LastItem can be null at the same time only");
 
         if ((item.PrevItem != null || item.NextItem != null) && this._FirstItem == null)
-          throw new BugException("Item находится в списке, но список считается пустым");
+          throw new BugException("Item is in list, but the list i supposed to be empty");
       }
 
 #endif
@@ -626,7 +626,7 @@ namespace FreeLibSet.Caching
         if (objType == null)
           throw new ArgumentNullException("objType");
         if (keys.Length < 1)
-          throw new ArgumentException("Длина списка ключей не может быть меньше 1", "keys");
+          throw new ArgumentException("Key array length must be greater than 0", "keys");
 
         InternalCacheItem res;
 
@@ -918,8 +918,8 @@ namespace FreeLibSet.Caching
         {
           // Проверка реентрантного вызова должна выполняться внутри блокировки, а не снаружи
           if (item.InsideGetItemFlag)
-            throw new ReenteranceException("Вложенный вызов GetItem() для объекта " + typeof(T).ToString() +
-              " с ключами {" + String.Join(", ", keys) + "}");
+            throw new ReenteranceException("Reentrant call of method GetItem() for the object " + typeof(T).ToString() +
+              " with keys {" + String.Join(", ", keys) + "}");
 
           item.InsideGetItemFlag = true;
           try
@@ -948,7 +948,7 @@ namespace FreeLibSet.Caching
 
         //try
         //{
-        throw new LockTimeoutException("Тайм-аут установки блокировки на страницу кэша типа " + objType.ToString() + " с ключами {" + String.Join(", ", keys) + "}");
+        throw new LockTimeoutException("Timeout in cache page lock set. ObjType=" + objType.ToString() + ", Keys= {" + String.Join(", ", keys) + "}");
         //}
         //catch (LockTimeoutException e)
         //{
@@ -1040,7 +1040,7 @@ namespace FreeLibSet.Caching
           res = factory.CreateCacheItem(keys);
 
         if (res == null)
-          throw new NullReferenceException("Объект кэша не был создан в " + factory.ToString());
+          throw new NullReferenceException("Cache object was not created by the factory " + factory.ToString());
 
         IncStat(typeof(T), CacheStatParam.CreateCount);
 
@@ -1165,8 +1165,8 @@ namespace FreeLibSet.Caching
         {
           // Проверка реентрантного вызова должна выполняться внутри блокировки, а не снаружи
           if (item.InsideGetItemFlag)
-            throw new ReenteranceException("Вложенный вызов SetItem() при вызове GetItem() для объекта " + typeof(T).ToString() +
-              " с ключами {" + String.Join(", ", keys) + "}");
+            throw new ReenteranceException("Nested call of SetItem() when GetItem() called for the object  " + typeof(T).ToString() +
+              " with keys {" + String.Join(", ", keys) + "}");
 
           Clear(typeof(T), keys, true); // удаляем
           DoGetItem<T>(keys, persistance, new DummyFactory<T>(newValue), lockTimeout /* Фиктивный параметр, т.к. уже заблокировано */ ); // добавляем
@@ -1263,10 +1263,10 @@ namespace FreeLibSet.Caching
           else
           {
             if (keys.Length != ti.VersionKeyLen)
-              throw new ArgumentException("Неправильная длина массива ключей: " + keys.Length.ToString() +
-                ". При прошлом вызове SetVersion()/SyncVersion() для типа " + objType.ToString() + " длина массива ключей была равна " + ti.VersionKeyLen.ToString(), "keys");
+              throw new ArgumentException("Invalid key array length: " + keys.Length.ToString() +
+                ". Previous call of SetVersion()/SyncVersion() for the type " + objType.ToString() + " declared the key array length=" + ti.VersionKeyLen.ToString(), "keys");
             if (useVersionTxt != ti.UseVersionTxt)
-              throw new InvalidOperationException("Для одного типа данных нельзя вызывать попеременно SetVersion() и SyncVersion()");
+              throw new InvalidOperationException("It is not allowed to call SetVersion() and SyncVersion() for the same object type");
           }
 
           #endregion
@@ -1539,7 +1539,7 @@ namespace FreeLibSet.Caching
             {
               dict = currObj as KeyDict;
               if (dict == null)
-                throw new ArgumentException("Неправильная длина списка ключей: " + keys.Length.ToString());
+                throw new ArgumentException("Invalid ke length: " + keys.Length.ToString());
             }
           }
 
@@ -1717,7 +1717,7 @@ namespace FreeLibSet.Caching
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка очистки кэша по таймеру");
+          LogoutTools.LogoutException(e, Res.Cache_ErrTitle_ClearByTimer);
         }
       }
 
@@ -2016,7 +2016,7 @@ namespace FreeLibSet.Caching
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка очистки кэша по таймеру");
+          LogoutTools.LogoutException(e, Res.Cache_ErrTitle_ClearByTimer);
         }
       }
 
@@ -2763,7 +2763,7 @@ namespace FreeLibSet.Caching
       if (objType == null)
         throw new ArgumentNullException("objType");
       if (String.IsNullOrEmpty(version))
-        throw new ArgumentNullException("version");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("version");
 
       return GetMainObj(GetMainObjMode.Create).SetVersion(objType, keys, version);
     }
@@ -2907,7 +2907,7 @@ namespace FreeLibSet.Caching
     /// <summary>
     /// Управляет трассировкой работы с кэшем
     /// </summary>
-    public static readonly BooleanSwitch TraceSwitch = new BooleanSwitch("TraceCache", "Трассировка создания / удаления элементов кэша и сброса/загрузки с диска");
+    public static readonly BooleanSwitch TraceSwitch = new BooleanSwitch("TraceCache", Res.Cache_SwitchDescr_TraceSwitch);
 
     private static string GetTracePrefix(Type type, string[] keys)
     {
@@ -2954,9 +2954,9 @@ namespace FreeLibSet.Caching
         LogoutCacheStat(args, stats[i]);
         Total.Add(stats[i]);
       }
-      args.WriteLine("Общая статистика");
+      args.WriteLine("Common statistics");
       LogoutCacheStat(args, Total);
-      args.WriteLine("Статистика по CheckMemory");
+      args.WriteLine("CheckMemory statistics");
       args.IndentLevel++;
       foreach (KeyValuePair<CacheCheckMemoryStatParam, long> Pair in Cache.GetCheckMemoryStat())
         args.WritePair(Pair.Key.ToString().ToString(), Pair.Value.ToString().PadRight(8));
@@ -3524,7 +3524,7 @@ namespace FreeLibSet.Caching
 
       #region Поля
 
-      private CacheCheckMemoryStat _Owner;
+      private readonly CacheCheckMemoryStat _Owner;
 
       private int _Index;
 

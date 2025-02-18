@@ -272,9 +272,8 @@ namespace FreeLibSet.Forms.Data
 
       ControlProvider.Label = grayCheckBox;
       // Установка DisplayName должна идти после установки свойства Label
-      efpGrayCheckBox.DisplayName = "Флажок группового редактирования";
-      efpGrayCheckBox.ToolTipText = "Включите флажок, чтобы установить одинаковое значение поля \"" +
-        orgDisplayName + "\" для всех редактируемых документов";
+      efpGrayCheckBox.DisplayName = Res.ExtValueControl_Name_GroupCheckBox;
+      efpGrayCheckBox.ToolTipText = String.Format(Res.ExtValueControl_ToolTip_GroupCheckBox, orgDisplayName);
       ControlProvider.DisplayName = orgDisplayName;
     }
 
@@ -390,7 +389,7 @@ namespace FreeLibSet.Forms.Data
       if (value == null)
         throw new ArgumentNullException();
       if (_CurrentValueEx != null)
-        throw new InvalidOperationException("Повторная установка свойства CurrentValueEx");
+        throw ExceptionFactory.RepeatedCall(this, "CurrentValueEx");
       _CurrentValueEx = (value as DepInput<TValue>);
       if (_CurrentValueEx == null)
       {
@@ -497,7 +496,7 @@ namespace FreeLibSet.Forms.Data
             _ExtValue.Value = UserDisabledValue;
             return;
           default:
-            throw new BugException("Неизвестный UserDisableMode=" + UserDisabledMode.ToString());
+            throw new BugException("Unknown UserDisableMode=" + UserDisabledMode.ToString());
         }
       }
 
@@ -738,10 +737,12 @@ namespace FreeLibSet.Forms.Data
     /// <param name="value2">Устанавливаемое управляемое свойство (второе)</param>
     protected void SetCurrentValueEx(DepValue<TValue1> value1, DepValue<TValue2> value2)
     {
-      if (value1 == null || value2 == null)
-        throw new ArgumentNullException();
+      if (value1 == null)
+        throw new ArgumentNullException("value1");
+      if (value2 == null)
+        throw new ArgumentNullException("value2");
       if (_CurrentValue1Ex != null || _CurrentValue2Ex != null)
-        throw new InvalidOperationException("Повторный вызов метода");
+        throw ExceptionFactory.RepeatedCall(this, "CurrentValueEx");
 
       _CurrentValue1Ex = value1 as DepInput<TValue1>;
       _CurrentValue2Ex = value2 as DepInput<TValue2>;
@@ -892,7 +893,7 @@ namespace FreeLibSet.Forms.Data
             _ExtValue2.Value = UserDisabledValue2;
             return;
           default:
-            throw new BugException("Неизвестный UserDisableMode=" + UserDisabledMode.ToString());
+            throw new BugException("Unknown UserDisableMode=" + UserDisabledMode.ToString());
         }
       }
 

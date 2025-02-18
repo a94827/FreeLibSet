@@ -48,7 +48,7 @@ namespace FreeLibSet.Models.Tree
 
     /// <summary>
     /// Возвращает перечислитель для узлов, являющихся дочерними для заданного родителького узла.
-    /// Если treePath.IsEmpty=true, возвращает список узлов верхнего уровня
+    /// Если <paramref name="treePath"/>.IsEmpty=true, возвращает список узлов верхнего уровня.
     /// </summary>
     /// <param name="treePath">Путь к родительскому узлу</param>
     /// <returns>Перечислитель</returns>
@@ -148,15 +148,16 @@ namespace FreeLibSet.Models.Tree
     public void RefreshNode(TreePath path)
     {
       if (path.IsEmpty)
-        throw new ArgumentException("Узел должен быть задан", "path");
+        throw ExceptionFactory.ArgIsEmpty("path");
+
       TreeModelEventArgs args = new TreeModelEventArgs(path.Parent, new object[] { path.LastNode });
       OnNodesChanged(args);
     }
 
     /// <summary>
     /// Определяет, является ли один из узлов <paramref name="path1"/> и <paramref name="path2"/> частью другого.
-    /// Если да, то вызывается OnStructureChanged() для узла, который ближе к корню.
-    /// Иначе дважды вызывается OnStructureChanged() для обоих узлов.
+    /// Если да, то вызывается <see cref="OnStructureChanged(TreePathEventArgs)"/> для узла, который ближе к корню.
+    /// Иначе дважды вызывается <see cref="OnStructureChanged(TreePathEventArgs)"/> для обоих узлов.
     /// Если любой из узлов является пустым, то выполняется полное обновление.
     /// </summary>
     /// <param name="path1">Первый путь</param>
@@ -186,7 +187,7 @@ namespace FreeLibSet.Models.Tree
 
   /// <summary>
   /// Добавление сортировки узлов дерева в пределах уровня иерархии для произвольной модели.
-  /// Определяет метод GetChildren(), остальные вызовы переадресуются базовой модели.
+  /// Определяет метод <see cref="TreeModelBase.GetChildren(TreePath)"/>, остальные вызовы переадресуются базовой модели.
   /// Передает события <seealso cref="ITreeModel"/> из базовой модели в текущий объект, учитывая несоответствие индексов узов в свойстве <seealso cref="TreeModelEventArgs.Indices"/>.
   /// </summary>
   public class SortedTreeModel : TreeModelBase
@@ -218,13 +219,13 @@ namespace FreeLibSet.Models.Tree
     /// Задается в конструкторе.
     /// </summary>
     public ITreeModel InnerModel { get { return _InnerModel; } }
-    private ITreeModel _InnerModel;
+    private readonly ITreeModel _InnerModel;
 
     /// <summary>
     /// Интерфейс сортировки узлов.
     /// Пока не задан (по умолчанию), узлы не сортируются и возвращаются в том порядке,
     /// в котором определены в базовой модели.
-    /// Свойство должно быть установлено, иначе использование класса SortedTreeModel не имеет смысла
+    /// Свойство должно быть установлено, иначе использование класса <see cref="SortedTreeModel"/> не имеет смысла.
     /// </summary>
     public IComparer Comparer
     {
@@ -329,8 +330,8 @@ namespace FreeLibSet.Models.Tree
       //else
       //  OnNodesChanged(args);
 
-      // Для узла могло изменится свойство/поле, по которому выполняется сортировка.
-      // Нет способа узнать, так ли это
+      // Для узла могло измениться свойство/поле, по которому выполняется сортировка.
+      // Нет способа узнать, так ли это.
       OnStructureChanged(new TreePathEventArgs(args.Path));
     }
 
@@ -373,8 +374,8 @@ namespace FreeLibSet.Models.Tree
 
     #region Поля
 
-    private ITreeModel _Model;
-    private TreePath _ParentPath;
+    private readonly ITreeModel _Model;
+    private readonly TreePath _ParentPath;
 
     #endregion
 
@@ -409,8 +410,8 @@ namespace FreeLibSet.Models.Tree
       /// <summary>
       /// Конструктор перечислителя
       /// </summary>
-      /// <param name="model"></param>
-      /// <param name="parentPath"></param>
+      /// <param name="model">Модель</param>
+      /// <param name="parentPath">Корневой узел</param>
       public Enumerator(ITreeModel model, TreePath parentPath)
       {
         _Model = model;
@@ -423,9 +424,9 @@ namespace FreeLibSet.Models.Tree
 
       #region Поля
 
-      private ITreeModel _Model;
-      private TreePath _ParentPath;
-      private Stack<OneLevelInfo> _Stack;
+      private readonly ITreeModel _Model;
+      private readonly TreePath _ParentPath;
+      private /*readonly*/ Stack<OneLevelInfo> _Stack;
 
       /// <summary>
       /// Переключение между переходом к следующему или к дочернему узлу.

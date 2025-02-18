@@ -124,8 +124,8 @@ namespace FreeLibSet.Parsing
     };
 
     /// <summary>
-    /// Возвращает определение для определенной функции с заданным именем
-    /// Свойство LocalName не устанавливается
+    /// Возвращает определение для определенной функции с заданным именем.
+    /// Свойство <see cref="FunctionDef.LocalName"/> не устанавливается.
     /// </summary>
     /// <param name="name">Нелокализованное имя</param>
     /// <returns>Определение функции или null</returns>
@@ -312,9 +312,9 @@ namespace FreeLibSet.Parsing
     }
 
     /// <summary>
-    /// Добавляет все функции в парсер
+    /// Добавляет все функции в парсер.
     /// Имена функций не локализованы.
-    /// Для локализации следует вызвать FunctionParser.SetLocalNames() после добавления функций
+    /// Для локализации следует вызвать <see cref="FunctionParser.SetLocalNames(string[], string[])"/> после добавления функций.
     /// </summary>
     /// <param name="parser"></param>
     public static void AddFunctions(FunctionParser parser)
@@ -323,7 +323,7 @@ namespace FreeLibSet.Parsing
       {
         FunctionDef fd = GetFunction(Names[i]);
         if (fd == null)
-          throw new BugException("Не найдена функция \"" + Names[i] + "\"");
+          throw new BugException("Function not found \"" + Names[i] + "\"");
         parser.Functions.Add(fd);
       }
     }
@@ -709,9 +709,9 @@ namespace FreeLibSet.Parsing
     }
 #endif
 
-#endregion
+    #endregion
 
-#region Математические функции типа Double
+    #region Математические функции типа Double
 
     private static object CalcMath0Arg(FunctionExpression expression, object[] args)
     {
@@ -773,7 +773,7 @@ namespace FreeLibSet.Parsing
       {
         // С двумя аргументами
         case "POWER": return Math.Pow(a1, a2);
-        case "ATAN2": 
+        case "ATAN2":
           //return Math.Atan2(a1, a2);
           return Math.Atan2(a2, a1); // 08.11.2022. В Net Framework аргументы идут в обратном порядке по отношению к Excel
         default:
@@ -798,9 +798,9 @@ namespace FreeLibSet.Parsing
           throw new BugException();
       }
     }
-#endregion
+    #endregion
 
-#region Строковые функции
+    #region Строковые функции
 
     /// <summary>
     /// Возвращает строку в понятиях Excel
@@ -818,18 +818,18 @@ namespace FreeLibSet.Parsing
 
     private static object CalcLen(FunctionExpression expression, object[] args)
     {
-      CheckArgCount(args, 1);
+      CheckArgCount(expression, args, 1);
       return GetStr(args[0]).Length;
     }
 
     private static object CalcLeftRight(FunctionExpression expression, object[] args)
     {
-      CheckArgCount(args, 1, 2);
+      CheckArgCount(expression, args, 1, 2);
       int len = 1;
       if (args.Length >= 2)
         len = DataTools.GetInt(args[1]);
       if (len < 0)
-        throw new ArgumentException("Число знаков должно быть больше или равно 0");
+        throw ExceptionFactory.ArgOutOfRange("Len", len, 0, null);
 
       if (expression.Function.Name == "LEFT")
         return DataTools.StrLeft(GetStr(args[0]), len);
@@ -839,13 +839,13 @@ namespace FreeLibSet.Parsing
 
     private static object CalcMid(FunctionExpression expression, object[] args)
     {
-      CheckArgCount(args, 3);
+      CheckArgCount(expression, args, 3);
       int start = DataTools.GetInt(args[1]); // Помним, что нумерация символов с 1, а не с 0 
       int len = DataTools.GetInt(args[2]);
       if (start < 1)
-        throw new ArgumentException("Начальная позиция должна быть больше 0");
+        throw ExceptionFactory.ArgOutOfRange("start", start, 1, null);
       if (len < 0)
-        throw new ArgumentException("Начальная позиция должна быть больше 0");
+        throw ExceptionFactory.ArgOutOfRange("len", len, 0, null);
 
       // В остальных случаях ошибка не возвращается
 
@@ -860,7 +860,7 @@ namespace FreeLibSet.Parsing
 
     private static object CalcUpperLower(FunctionExpression expression, object[] args)
     {
-      CheckArgCount(args, 1);
+      CheckArgCount(expression, args, 1);
       if (expression.Function.Name == "UPPER")
         return (GetStr(args[0])).ToUpper();
       else
@@ -918,14 +918,14 @@ namespace FreeLibSet.Parsing
         else
           startIndex += s2.Length;
       }
-      throw new BugException("Ошибка выполнения цикла");
+      throw new BugException("Loop error");
     }
 
-#endregion
+    #endregion
 
-#region Функции даты и времени
+    #region Функции даты и времени
 
-#region DATE, TIME, NOW, TODAY
+    #region DATE, TIME, NOW, TODAY
 
     private static FunctionDelegate _FDDateTime = new FunctionDelegate(CalcDateTime);
 
@@ -934,35 +934,35 @@ namespace FreeLibSet.Parsing
       switch (expression.Function.Name)
       {
         case "DATE":
-          CheckArgCount(args, 3);
-          return new DateTime(DataTools.GetInt(args[0]), DataTools.GetInt(args[1]), DataTools.GetInt(args[2]),0,0,0,0, DateTimeKind.Unspecified);
-        
+          CheckArgCount(expression, args, 3);
+          return new DateTime(DataTools.GetInt(args[0]), DataTools.GetInt(args[1]), DataTools.GetInt(args[2]), 0, 0, 0, 0, DateTimeKind.Unspecified);
+
         case "TIME":
-          CheckArgCount(args, 3);
+          CheckArgCount(expression, args, 3);
           return new TimeSpan(DataTools.GetInt(args[0]), DataTools.GetInt(args[1]), DataTools.GetInt(args[2]));
 
         case "NOW":
-          CheckArgCount(args, 0);
+          CheckArgCount(expression, args, 0);
           return DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
 
         case "TODAY":
-          CheckArgCount(args, 0);
+          CheckArgCount(expression, args, 0);
           return DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Unspecified);
 
         default:
-          throw new ArgumentException("Неизвестное имя функции \"" + expression.Function.Name + "\"", "name");
+          throw ExceptionFactory.ArgUnknownValue("expression", expression.Function.Name);
       }
     }
 
-#endregion
+    #endregion
 
-#region Компоненты даты (YEAR .. SECOND), WEEKDAY
+    #region Компоненты даты (YEAR .. SECOND), WEEKDAY
 
     private static FunctionDelegate _FDDateTimePart = new FunctionDelegate(CalcDateTimePart);
 
     private static object CalcDateTimePart(FunctionExpression expression, object[] args)
     {
-      CheckArgCount(args, 1);
+      CheckArgCount(expression, args, 1);
       if (args[0] == null)
         return 0; // В Excel функция DAY() возвращает 0, а остальные - непонятные значения
       // Пока буду возвращать 0
@@ -977,7 +977,7 @@ namespace FreeLibSet.Parsing
         case "SECOND": return dt.Second;
         case "WEEKDAY": return ((int)dt.DayOfWeek) + 1;
         default:
-          throw new ArgumentException("Неизвестное имя функции \"" + expression.Function.Name + "\"", "name");
+          throw ExceptionFactory.ArgUnknownValue("expression", expression.Function.Name);
       }
     }
 
@@ -1002,16 +1002,16 @@ namespace FreeLibSet.Parsing
           return DateTime.SpecifyKind(DateTime.MaxValue.Date.AddTicks(ts.Ticks), DateTimeKind.Unspecified);
       }
 
-      throw new InvalidCastException("Аргумент типа " + arg.GetType().ToString() + " нельзя преобразовать в DateTime");
+      throw ExceptionFactory.Inconvertible(arg, typeof(DateTime));
     }
 
-#endregion
+    #endregion
 
-#region DATEDIF и Days
+    #region DATEDIF и Days
 
     private static object CalcDateDif(FunctionExpression expression, object[] args)
     {
-      CheckArgCount(args, 3);
+      CheckArgCount(expression, args, 3);
       DateTime dt1 = GetDateTime(args[0]).Date; // начальная дата
       DateTime dt2 = GetDateTime(args[1]).Date; // конечная дата
       if (dt2 < dt1)
@@ -1019,28 +1019,28 @@ namespace FreeLibSet.Parsing
       if (dt2 == dt1)
         return 0;
 
-      DateRange dtr = new DateRange(dt1, dt2.AddDays(-1)); 
+      DateRange dtr = new DateRange(dt1, dt2.AddDays(-1));
 
       string mode = DataTools.GetString(args[2]);
       switch (mode.ToLowerInvariant())
       {
         case "d": return dtr.Days;
         case "m":
-          return dtr.SimpleMonths; 
-        case "y": 
+          return dtr.SimpleMonths;
+        case "y":
           return dtr.SimpleYears;
         case "ym":
         case "md":
         case "yd":
-          throw new NotImplementedException("Режимы расчета ym, md и yd не реализованы");
+          throw new NotImplementedException(Res.ExcelFunctions_Err_DATEDIFFmode);
         default:
-          throw new ArgumentException("Задан неправильный режим вычисления \"" + mode + "\"");
+          throw ExceptionFactory.ArgUnknownValue("mode", mode);
       }
     }
 
     private static object CalcDays(FunctionExpression expression, object[] args)
     {
-      CheckArgCount(args, 2);
+      CheckArgCount(expression, args, 2);
       DateTime dt1 = GetDateTime(args[0]); // начальная дата
       DateTime dt2 = GetDateTime(args[1]); // конечная дата
       TimeSpan ts = dt1 - dt2; // 09.11.2022 - не отрезаем компоненты времени
@@ -1050,11 +1050,11 @@ namespace FreeLibSet.Parsing
         return ts.TotalDays;
     }
 
-#endregion
+    #endregion
 
-#endregion
+    #endregion
 
-#region Логические функции
+    #region Логические функции
 
     private static object CalcIf(FunctionExpression expression, object[] args)
     {
@@ -1108,35 +1108,35 @@ namespace FreeLibSet.Parsing
         return DataTools.GetBool(value);
     }
 
-#endregion
+    #endregion
 
-#region Выбор
+    #region Выбор
 
     private static object CalcChoose(FunctionExpression expression, object[] args)
     {
       int index = DataTools.GetInt(args[0]);
       if (index < 1 || index >= args.Length)
-        throw new ArgumentOutOfRangeException("args", index, "Индекс должен быть в диапазоне от 1 до " + (args.Length - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("index", index, 1, args.Length - 1);
       //return args[index - 1];
       return args[index]; // испр.08.11.2022
     }
 
-#endregion
+    #endregion
 
-#region Вспомогательные методы
+    #region Вспомогательные методы
 
-    private static void CheckArgCount(object[] args, int count)
+    private static void CheckArgCount(FunctionExpression expression, object[] args, int count)
     {
       if (args.Length != count)
-        throw new ArgumentException("Неправильное число аргументов (" + args.Length.ToString() + "). Ожидалось аргументов: " + count.ToString(), "args");
+        throw new ArgumentException(String.Format(Res.ExcelFunction_Arg_ArgCountExact, expression.Function.Name, args.Length, count), "args");
     }
 
-    private static void CheckArgCount(object[] args, int minCount, int maxCount)
+    private static void CheckArgCount(FunctionExpression expression, object[] args, int minCount, int maxCount)
     {
       if (args.Length < minCount || args.Length > maxCount)
-        throw new ArgumentException("Неправильное число аргументов (" + args.Length.ToString() + "). Должно быть аргументов от " + minCount.ToString() + " до " + maxCount.ToString(), "args");
+        throw new ArgumentException(String.Format(Res.ExcelFunction_Arg_ArgCountRange, expression.Function.Name, args.Length, minCount, maxCount), "args");
     }
 
-#endregion
+    #endregion
   }
 }

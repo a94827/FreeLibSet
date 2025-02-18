@@ -17,36 +17,24 @@ namespace FreeLibSet.Forms.Reporting
       SettingsDialogPage page = dialog.Pages.Add(panMargins);
 
       efpLeftMargin = new EFPDecimalEditBox(page.BaseProvider, edLeftMargin);
-      efpLeftMargin.ToolTipText = "Расстояние от левого края листа до начала области печати (в сантиметрах)" +Environment.NewLine+
-        "Обычно принтер не может печатать ближе 0.5 см от края." + Environment.NewLine +
-        "Если задать меньшее поле, то часть изображения будет обрезана";
       efpLeftMargin.Control.Minimum = 0m;
       efpLeftMargin.Control.Increment = 0.1m;
 
       efpTopMargin = new EFPDecimalEditBox(page.BaseProvider, edTopMargin);
-      efpTopMargin.ToolTipText = "Расстояние от верхнего края листа до начала области печати (в сантиметрах)" + Environment.NewLine +
-        "Обычно принтер не может печатать ближе 0.5 см от края." + Environment.NewLine +
-        "Если задать меньшее поле, то часть изображения будет обрезана";
       efpTopMargin.Control.Minimum = 0m;
       efpTopMargin.Control.Increment = 0.1m;
 
       efpRightMargin = new EFPDecimalEditBox(page.BaseProvider, edRightMargin);
-      efpRightMargin.ToolTipText = "Расстояние от правого края листа до начала области печати (в сантиметрах)" + Environment.NewLine +
-        "Обычно принтер не может печатать ближе 0.5 см от края." + Environment.NewLine +
-        "Если задать меньшее поле, то часть изображения будет обрезана";
       efpRightMargin.Control.Minimum = 0m;
       efpRightMargin.Control.Increment = 0.1m;
 
       efpBottomMargin = new EFPDecimalEditBox(page.BaseProvider, edBottomMargin);
-      efpBottomMargin.ToolTipText = "Расстояние от нижнего края листа до начала области печати (в сантиметрах)" + Environment.NewLine +
-        "Обычно принтер не может печатать ближе 0.5 см от края." + Environment.NewLine +
-        "Если задать меньшее поле, то часть изображения будет обрезана";
       efpBottomMargin.Control.Minimum = 0m;
       efpBottomMargin.Control.Increment = 0.1m;
 
-      page.Text ="Поля";
-      page.ToolTipText="Размеры полей по краям бумаги"; 
-      page.ImageKey="PaperMargins";
+      page.Text = Res.BRPageSetupMargins_Title_Tab;
+      page.ToolTipText = Res.BRPageSetupMargins_ToolTip_Tab;
+      page.ImageKey = "PaperMargins";
       page.DataToControls += DataToControls;
       page.DataFromControls += DataFromControls;
     }

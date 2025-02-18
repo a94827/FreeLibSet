@@ -19,7 +19,7 @@ namespace FreeLibSet.Controls
   [DefaultProperty("Text")]
   [DefaultBindingProperty("Text")]
   [DefaultEvent("TextChanged")]
-  [Description("Метка для вывода справочной информации с возможностью вывода значка")]
+  [Description("Label for showing helpful information with an icon if required")]
   [ToolboxBitmap(typeof(InfoLabel), "InfoLabel.bmp")]
   public class InfoLabel : ContainerControl
   {
@@ -156,7 +156,7 @@ namespace FreeLibSet.Controls
 
     #region TextAlign
 
-    [Description("Выравнивание текста в метке")]
+    [Description("Text alignment in the label")]
     [Category("Appearance")]
     [DefaultValue(ContentAlignment.MiddleLeft)]
     public virtual ContentAlignment TextAlign
@@ -171,7 +171,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    [Description("Вызывается при изменении свойства TextAlign")]
+    [Description("Called when TextAlign changed")]
     [Category("Property Changed")]
     public event EventHandler TextAlignChanged;
 
@@ -185,7 +185,7 @@ namespace FreeLibSet.Controls
 
     #region Свойство Icon
 
-    [Description("Значок")]
+    [Description("Icon (none, error, warning or information)")]
     [Category("Appearance")]
     [DefaultValue(MessageBoxIcon.None)]
     [TypeConverter(typeof(MessageBoxIconEnumConverter))]
@@ -216,7 +216,7 @@ namespace FreeLibSet.Controls
 
     #region Свойство IconSize
 
-    [Description("Размер значка")]
+    [Description("Icon size when the icon property is set")]
     [Category("Appearance")]
     [DefaultValue(MessageBoxIconSize.Small)]
     public MessageBoxIconSize IconSize
@@ -243,7 +243,7 @@ namespace FreeLibSet.Controls
 
     #region Событие IconChanged
 
-    [Description("Вызывается при изменении свойств Icon и IconSize")]
+    [Description("Called when Icon or IconSize property changed")]
     [Category("Property Changed")]
     public event EventHandler IconChanged;
 

@@ -529,7 +529,7 @@ namespace FreeLibSet.RI
     public void EndReadWrite(CfgPart cfg, RIValueCfgType cfgType, bool isWrite)
     {
       if (!Object.ReferenceEquals(cfg, _SinglePart))
-        throw new ArgumentException("Чужая секция данных", "cfg");
+        throw new ArgumentException(Res.RI_Arg_AlienCfgPart, "cfg");
     }
 
     #endregion

@@ -46,11 +46,11 @@ namespace FreeLibSet.Forms.Reporting
       ghColumns = new EFPDataGridView(page.BaseProvider, grColumns);
       ghColumns.Control.AutoGenerateColumns = false;
       ghColumns.Columns.AddBool("Exported", true, "");
-      ghColumns.Columns.LastAdded.DisplayName = "Нужно ли экспортировать столбец";
-      ghColumns.Columns.AddTextFill("DisplayName", true, "Столбец в просмотре", 100, 10);
+      ghColumns.Columns.LastAdded.DisplayName = Res.BRDataViewPageSetupDbf_Name_Exported;
+      ghColumns.Columns.AddTextFill("DisplayName", true, Res.BRDataViewPageSetupDbf_ColTitle_DisplayName, 100, 10);
       ghColumns.Columns.LastAdded.CanIncSearch = true;
-      ghColumns.Columns.AddText("DbfName", true, "Поле в DBF", 10, 10);
-      ghColumns.Columns.AddText("Format", true, "Формат", 5, 2);
+      ghColumns.Columns.AddText("DbfName", true, Res.BRDataViewPageSetupDbf_ColTitle_DbfName, 10, 10);
+      ghColumns.Columns.AddText("Format", true, Res.BRDataViewPageSetupDbf_ColTitle_Format, 5, 2);
       ghColumns.MarkRowsColumnName = "Exported";
       ghColumns.ReadOnly = true;
       ghColumns.CanView = false;
@@ -89,8 +89,8 @@ namespace FreeLibSet.Forms.Reporting
 
       #endregion
 
-      page.Text = "DBF";
-      page.ToolTipText = "Выбор полей и кодировки для экспорта";
+      page.Text = Res.BRDataViewPageSetupDbf_Title_Tab;
+      page.ToolTipText = Res.BRDataViewPageSetupDbf_ToolTip_Tab;
       page.ImageKey = "Settings";
 
       page.DataToControls += Page_DataToControls;
@@ -121,9 +121,9 @@ namespace FreeLibSet.Forms.Reporting
         return;
 
       if (DataTools.GetBool(args.DataRow, "ErrorDbfName"))
-        args.AddRowError("Неправильное имя поля", "DbfName");
+        args.AddRowError(Res.BRDataViewPageSetupDbf_Err_BadFieldName, "DbfName");
       if (DataTools.GetBool(args.DataRow, "RepeatedDbfName"))
-        args.AddRowError("Повторяющееся имя поля", "DbfName");
+        args.AddRowError(Res.BRDataViewPageSetupDbf_Err_RepeatedFieldName, "DbfName");
     }
 
     private void GhColumns_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
@@ -159,20 +159,20 @@ namespace FreeLibSet.Forms.Reporting
         if (!DbfFieldInfo.IsValidFieldName(nm))
         {
           row["ErrorDbfName"] = true;
-          args.SetError("Неправильное имя поля");
+          args.SetError(Res.BRDataViewPageSetupDbf_Err_BadFieldName);
         }
         else if (dict.ContainsKey(nm))
         {
           row["RepeatedDbfName"] = true;
           dict[nm]["RepeatedDbfName"] = true;
-          args.SetError("Имя поля \"" + nm + "\" встречается дважды");
+          args.SetError(String.Format(Res.BRDataViewPageSetupDbf_Err_RepeatedFieldName2, nm));
         }
         else
           dict.Add(nm, row);
       }
 
       if (dict.Count == 0)
-        args.SetError("Нет выбранных полей");
+        args.SetError(Res.BRDataViewPageSetupDbf_Err_NoFields);
     }
 
     private void GhColumns_CellFinished(object sender, EFPDataGridViewCellFinishedEventArgs args)
@@ -253,7 +253,7 @@ namespace FreeLibSet.Forms.Reporting
 
       Encoding enc = Encoding.GetEncoding(_Settings.DbfCodePage);
       if (enc == null)
-        throw new BugException("Неизвестная кодировка " + _Settings.DbfCodePage.ToString());
+        throw new BugException("Unknown encoding " + _Settings.DbfCodePage.ToString());
       DbfStruct dbs = new DbfStruct();
       for (int i = 0; i < columns.Length; i++)
         dbs.Add(GetDbfFieldInfo(columns[i], names[i], DbfFileFormat.dBase3, enc));
@@ -300,13 +300,13 @@ namespace FreeLibSet.Forms.Reporting
       columns = lstCols.ToArray();
       names = lstNames.ToArray();
       if (columns.Length == 0)
-        throw new BugException("Нет экспортируемых столбцов");
+        throw new BugException("There are no exported columns");
     }
 
     private DbfFieldInfo GetDbfFieldInfo(IEFPDataViewColumn column, string colName, DbfFileFormat format, Encoding enc)
     {
       if (column.DbfPreliminaryInfo == null)
-        throw new BugException("Столбец \"" + column.Name + "\" не может экспортироваться в DBF-файл");
+        throw new BugException("Column \"" + column.Name + "\" cannot be exported to DBF-file");
 
       if (!column.DbfInfo.IsEmpty)
       {

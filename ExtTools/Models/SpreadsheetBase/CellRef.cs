@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Models.SpreadsheetBase
 {
@@ -26,7 +27,7 @@ namespace FreeLibSet.Models.SpreadsheetBase
     public static string GetColumnName(int columnNumber)
     {
       if (columnNumber < 1)
-        throw new ArgumentOutOfRangeException("columnNumber", columnNumber, "Номер столбца должен быть больше 0");
+        throw ExceptionFactory.ArgOutOfRange("columnNumber", columnNumber, 1, null);
 
       string s = String.Empty;
       do
@@ -54,7 +55,7 @@ namespace FreeLibSet.Models.SpreadsheetBase
     public static int GetColumnNumber(string columnName)
     {
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       int columnNumber = 0;
 
@@ -136,9 +137,9 @@ namespace FreeLibSet.Models.SpreadsheetBase
     public CellRef(int row, int column)
     {
       if (row < 1)
-        throw new ArgumentOutOfRangeException("row", row, "Номер строки должен быть больше 0");
+        throw ExceptionFactory.ArgOutOfRange("row", row, 1, null);
       if (column < 1)
-        throw new ArgumentOutOfRangeException("column", column, "Номер столбца должен быть больше 0");
+        throw ExceptionFactory.ArgOutOfRange("column", column, 1, null);
 
       _Row = row;
       _Column = column;
@@ -340,8 +341,10 @@ namespace FreeLibSet.Models.SpreadsheetBase
     /// <param name="cell2">Вторая ячейка</param>
     public RangeRef(CellRef cell1, CellRef cell2)
     {
-      if (cell1.IsEmpty || cell2.IsEmpty)
-        throw new ArgumentException("cells are empty");
+      if (cell1.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("cell1");
+      if (cell2.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("cell2");
 
       int firstRow = Math.Min(cell1.Row, cell2.Row);
       int lastRow = Math.Max(cell1.Row, cell2.Row);

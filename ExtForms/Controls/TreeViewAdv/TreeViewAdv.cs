@@ -18,6 +18,7 @@ using System.Collections;
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Models.Tree;
 using FreeLibSet.Controls.TreeViewAdvInternal;
+using FreeLibSet.Core;
 
 /*
  * Внесены незначительные исправления в элемент
@@ -432,7 +433,7 @@ namespace FreeLibSet.Controls
         throw new ArgumentNullException("node");
 
       if (!IsMyNode(node))
-        throw new ArgumentException();
+        throw new ArgumentException("IsMyNode()=false", "node");
 
       if (node == _root) // 02.11.2015 Агеев А.В.
         return;
@@ -456,7 +457,7 @@ namespace FreeLibSet.Controls
         throw new ArgumentNullException("node");
 
       if (!IsMyNode(node))
-        throw new ArgumentException();
+        throw new ArgumentException("IsMyNode()=false", "node");
 
       if (node.Row < 0)
         CreateRowMap();
@@ -1288,7 +1289,7 @@ namespace FreeLibSet.Controls
             if (index >= 0 && index <= parent.Nodes.Count)
               parent.Nodes.RemoveAt(index);
             else
-              throw new ArgumentOutOfRangeException("Index out of range");
+              throw new ArgumentOutOfRangeException("Index out of range"); // TODO: Здесь не должно быть ArgumentOutOfRangeException
           }
         }
         else

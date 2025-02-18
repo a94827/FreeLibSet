@@ -104,7 +104,7 @@ namespace FreeLibSet.Win32
             case Microsoft.Win32.RegistryHive.Users: Name = "HKEY_USERS"; break;
             case Microsoft.Win32.RegistryHive.CurrentConfig: Name = "HKEY_CURRENT_CONFIG"; break;
             default:
-              throw new ArgumentException("Неподдерживаемый hKey", "hKey");
+              throw ExceptionFactory.ArgUnknownValue("hKey", hKey);
           }
 
           res = new RegistryKey2(Name, (IntPtr)hKey, false, view);
@@ -142,7 +142,7 @@ namespace FreeLibSet.Win32
     {
 #if DEBUG
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       if (!IsValidHandle(handle))
       {
         ArgumentException ex = new ArgumentException("Handle=0", "handle");
@@ -270,7 +270,7 @@ namespace FreeLibSet.Win32
     public RegistryKey2 OpenSubKey(string name, bool writable)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
       int access = OpenRegKeyRead;
       if (writable)
@@ -366,15 +366,13 @@ namespace FreeLibSet.Win32
       if (child == null)
       {
         if (throwOnMissingSubKey)
-          throw new ArgumentException("Cannot delete a subkey tree"
-            + " because the subkey does not exist.");
+          throw new ArgumentException(Res.RegistryKey2_Arg_SubKeyNotFound);
         return;
       }
 
       if (child.SubKeyCount > 0)
       {
-        throw new InvalidOperationException("Registry key has subkeys"
-          + " and recursive removes are not supported by this method.");
+        throw new InvalidOperationException(Res.RegistryKey2_Err_SubKeyHasChildren);
       }
 
       child.Dispose();
@@ -384,7 +382,7 @@ namespace FreeLibSet.Win32
       if (result == Win32ResultCode.FileNotFound)
       {
         if (throwOnMissingSubKey)
-          throw new ArgumentException("key " + subkey);
+          throw new ArgumentException(Res.RegistryKey2_Arg_SubKeyNotFound, "subKey");
         return;
       }
 
@@ -427,8 +425,7 @@ namespace FreeLibSet.Win32
         if (!throwOnMissingSubKey)
           return;
 
-        throw new ArgumentException("Cannot delete a subkey tree"
-          + " because the subkey does not exist.");
+        throw new ArgumentException(Res.RegistryKey2_Arg_SubKeyNotFound, "subKey");
       }
 
       try
@@ -451,7 +448,7 @@ namespace FreeLibSet.Win32
     private void DeleteChildKeysAndValues()
     {
       if (!_OwnHandle)
-        throw new InvalidOperationException("Корневой узел нельзя чистить");
+        throw new InvalidOperationException(Res.RegistryKey2_Err_Root);
 
       string[] subKeys = GetSubKeyNames();
       for (int i = 0; i < subKeys.Length; i++)
@@ -749,7 +746,7 @@ namespace FreeLibSet.Win32
       }
       else if (type.IsArray)
       {
-        throw new ArgumentException("Only string and byte arrays can written as registry values");
+        throw new ArgumentException(Res.RegistryKey2_Arg_InvalidValueType);
       }
       else
       {
@@ -848,12 +845,12 @@ namespace FreeLibSet.Win32
         default:
           if (type.IsArray)
           {
-            throw new ArgumentException("Only string and byte arrays can written as registry values");
+            throw new ArgumentException(Res.RegistryKey2_Arg_InvalidValueType);
           }
           break;
       }
 
-      throw new ArgumentException("Type does not match the valueKind");
+      throw new ArgumentException(Res.RegistryKey2_Arg_ValueTypeMismatch);
     }
 
 
@@ -884,7 +881,7 @@ namespace FreeLibSet.Win32
       if (result == Win32ResultCode.FileNotFound)
       {
         if (throwOnMissingValue)
-          throw new ArgumentException("value " + name);
+          throw new ArgumentException(Res.RegistryKey2_Arg_ValueNotFound, "name");
         return;
       }
 
@@ -929,13 +926,13 @@ namespace FreeLibSet.Win32
           case Win32ResultCode.AccessDenied:
             throw new SecurityException();
           case Win32ResultCode.NetworkPathNotFound:
-            throw new IOException("The network path was not found.");
+            throw new IOException(Res.RegistryKey2_Err_NetworkPathNotFound);
           case Win32ResultCode.InvalidHandle:
-            throw new IOException("Invalid handle.");
+            throw new IOException(Res.RegistryKey2_Err_InvalidHandle);
           //case Win32ResultCode.MarkedForDeletion:
           //  throw RegistryKey.CreateMarkedForDeletionException();
           case Win32ResultCode.ChildMustBeVolatile:
-            throw new IOException("Cannot create a stable subkey under a volatile parent key.");
+            throw new IOException(Res.RegistryKey2_Err_ChildMustBeVolatile);
           default:
             // unidentified system exception
             throw new System.ComponentModel.Win32Exception(errorCode);

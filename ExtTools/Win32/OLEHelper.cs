@@ -72,11 +72,11 @@ namespace FreeLibSet.OLE
     {
       CheckNotDisposed();
       if (_MainObj != null)
-        throw new InvalidOperationException("Повторное создание объекта");
+        throw ExceptionFactory.RepeatedCall(this, "CreateMainObj()");
 
       Type mainObjType = Type.GetTypeFromProgID(progId);
       if (mainObjType == null)
-        throw new ArgumentException("Неизвестный тип объекта ProgId=\"" + progId + "\"", "progId");
+        throw ExceptionFactory.ArgUnknownValue("progId", progId);
       _MainObj = Activator.CreateInstance(mainObjType);
     }
 
@@ -147,7 +147,7 @@ namespace FreeLibSet.OLE
     {
       CheckNotDisposed();
       if (_MainObj != null)
-        throw new InvalidOperationException("Повторная активация объекта");
+        throw ExceptionFactory.RepeatedCall(this, "GetActiveMainObj()");
 
 #if NET
       _MainObj = Marshal2.GetActiveObject(progId);
@@ -189,7 +189,7 @@ namespace FreeLibSet.OLE
       {
         _CultureInfo = CultureInfo.GetCultureInfo(value);
         if (_CultureInfo == null)
-          throw new ArgumentException("Неизвестный LCID=" + value.ToString());
+          throw ExceptionFactory.ArgUnknownValue("value", value);
       }
     }
 
@@ -559,7 +559,7 @@ namespace FreeLibSet.OLE
         throw new ArgumentNullException("obj");
       Type t = obj.GetType();
       if (!t.IsCOMObject)
-        throw new ArgumentException("Не COM-объект", "obj");
+        throw new ArgumentException("Not a COM-object", "obj");
       if (helper == null)
         throw new ArgumentNullException("helper");
 #endif

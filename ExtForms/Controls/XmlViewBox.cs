@@ -45,7 +45,7 @@ namespace FreeLibSet.Controls
   /// <summary>
   /// Объект для просмотра XML-документов
   /// </summary>
-  [Description("Просмотр XML-документов")]
+  [Description("XML-document viewer. Extends WebBrowser.")]
   [ToolboxBitmap(typeof(XmlViewBox), "XmlViewBox.bmp")]
   [ToolboxItem(true)]
   public class XmlViewBox : WebBrowser
@@ -106,7 +106,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Свойство используется для просмотра постоянно существующего файла на диске
     /// </summary>
-    [Description("Имя файла для просмотра")]
+    [Description("Name of disk file to view")]
     [Category("Appearance")]
     [DefaultValue("")]
     public string XmlFilePath
@@ -288,7 +288,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Событие вызывается после присоединения данных (установки одного из свойств <see cref="XmlFilePath"/>, <see cref="XmlDocument"/>, <see cref="XmlBytes"/> или <see cref="XmlText"/>)
     /// </summary>
-    [Description("Событие вызывается после присоединения данных")]
+    [Description("Called when the XmlPath, XmlBytes, XmlText or XmlDocument property changed")]
     [Category("Property Changed")]
     public event EventHandler XmlDataChanged;
 
@@ -305,7 +305,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Представление XML-документа как строки текста
     /// </summary>
-    [Description("Текущий XML-документ как строка текста")]
+    [Description("XML-document to view as a String")]
     [Category("Appearance")]
     [DefaultValue("")]
     public string XmlText

@@ -38,7 +38,7 @@ namespace FreeLibSet.Controls
 
     #region Свойства
 
-    [Description("Текущий цвет. Значение по умолчанию: Color.White")]
+    [Description("Current color. Default value is Color.White")]
     [Category("Appearance")]
     [DefaultValue(typeof(Color), "White")]
     public Color Color
@@ -49,7 +49,7 @@ namespace FreeLibSet.Controls
         if (value == _Color)
           return;
         if (value.IsSystemColor)
-          throw new ArgumentException("Системные цвета не поддерживаются");
+          throw new ArgumentException(Res.ColorComboBox_Arg_SystemColorNotSupported, "value");
         _Color = value;
         Invalidate();
         if (ColorChanged != null)
@@ -68,7 +68,7 @@ namespace FreeLibSet.Controls
     }
     private Color _Color;
 
-    [Description("Цвета в выпадающем списке")]
+    [Description("Colors presented in the drop-down list")]
     [Category("Behavior")]
     [DefaultValue(null)]
     public Color[] PopupColors
@@ -84,7 +84,7 @@ namespace FreeLibSet.Controls
     }
     private Color[] _PopupColors;
 
-    [Description("Имена цветов в выпадающем списке")]
+    [Description("Color names in the drop-down list")]
     [Category("Behavior")]
     [DefaultValue(null)]
     public string[] PopupColorNames
@@ -99,8 +99,8 @@ namespace FreeLibSet.Controls
     }
     private string[] _PopupColorNames;
 
-    [Description("Цвет изображения для значения Color.Empty. " +
-    "По умолчанию - Color.Empty, при этом внутренность квадратика не заполняется")]
+    [Description("Image color for the value of Color.Empty. " +
+    "Default value is Color.Empty, the rectangle shape has no filling")]
     [Category("Appearance")]
     [DefaultValue(typeof(Color), "Empty")]
     public Color EmptyColor
@@ -114,7 +114,7 @@ namespace FreeLibSet.Controls
 
     #region События
 
-    [Description("Вызывается при изменении значения свойства Color")]
+    [Description("Event called when the Color changed")]
     [Category("Property Changed")]
     public event EventHandler ColorChanged;
 
@@ -127,7 +127,7 @@ namespace FreeLibSet.Controls
       Color clr = _Color;
       // Инициализация выпадающего списка
       base.Items.Clear();
-      base.Items.Add("Выбрать");
+      base.Items.Add(Res.ColorComboBox_Msg_SelectWithDialogListItem);
       if (_PopupColors != null)
       {
         object[] items = new object[_PopupColors.Length];
@@ -159,7 +159,7 @@ namespace FreeLibSet.Controls
       {
         clr = Color;
         if (args.Index == 0)
-          itemText = "Выбрать ...";
+          itemText = Res.ColorComboBox_Msg_SelectWithDialogListItem;
         else
           itemText = MyGetColorText(Color);
       }
@@ -217,7 +217,7 @@ namespace FreeLibSet.Controls
           if (p < PopupColorNames.Length)
             return PopupColorNames[p];
           else
-            return "Вне диапазона";
+            return Res.ColorComboBox_Msg_NotInPopupColorsListItem;
         }
       }
       return clr.Name;

@@ -107,10 +107,10 @@ namespace FreeLibSet.Forms
         _FormProvider = new EFPFormProvider(this);
 
         EFPButton efpOkButton = new EFPButton(FormProvider, btnOk);
-        efpOkButton.ToolTipText = "Построить отчет с введенными параметрами";
+        efpOkButton.ToolTipText = Res.EFPReportExtParams_ToolTip_Ok;
 
         EFPButton efpCancelButton = new EFPButton(FormProvider, btnCancel);
-        efpCancelButton.ToolTipText = "Отказаться от построения отчета";
+        efpCancelButton.ToolTipText = Res.EFPReportExtParams_ToolTip_Cancel;
 
         // Не знаю, как использовать EFPConfigParamSetComboBox. 
         // Интерфейс IEFPConfigParamSetHandler поддерживает только одну секцию конфигурации, а не несколько.
@@ -118,19 +118,15 @@ namespace FreeLibSet.Forms
         SetComboBox.ShowImages = EFPApp.ShowListImages;
         EFPTextComboBox efpSelCB = new EFPTextComboBox(FormProvider, SetComboBox.TheCB);
         efpSelCB.CanBeEmpty = true;
-        efpSelCB.DisplayName = "Готовые наборы";
-        efpSelCB.ToolTipText = "Выбор готового набора параметров отчета из выпадающего списка." + Environment.NewLine +
-          "В список входят пользовательские наборы, которые вы сохранили, а также до 9 последних наборов параметров построения отчета (история)" + Environment.NewLine + Environment.NewLine +
-          "Поле для ввода названия для нового набора";
+        efpSelCB.ToolTipText = Res.ParamSetComboBox_ToolTip_ComboBox;
 
         EFPButton efpSaveButton = new EFPButton(FormProvider, SetComboBox.SaveButton);
-        efpSaveButton.DisplayName = "Сохранить набор";
-        efpSaveButton.ToolTipText = "Сохранить введенные параметры отчета как новый пользовательский набор." + Environment.NewLine +
-          "Перед нажатием кнопки в поле слева должно быть введено имя набора";
+        efpSaveButton.DisplayName = Res.ParamSetComboBox_Name_SaveButton;
+        efpSaveButton.ToolTipText = Res.ParamSetComboBox_ToolTip_SaveButton;
 
         EFPButton efpDelButton = new EFPButton(FormProvider, SetComboBox.DeleteButton);
-        efpDelButton.DisplayName = "Удалить набор";
-        efpDelButton.ToolTipText = "Удалить пользовательский набор параметров, имя которого задано в списке слева";
+        efpDelButton.DisplayName = Res.ParamSetComboBox_Name_DelButton;
+        efpDelButton.ToolTipText = Res.ParamSetComboBox_ToolTip_DelButton;
       }
     }
 
@@ -372,7 +368,7 @@ namespace FreeLibSet.Forms
     public sealed override void WriteConfig(CfgPart cfg)
     {
       if (!EFPApp.InsideSaveComposition)
-        throw new NotSupportedException("Эта перегрузка метода не должна вызываться для EFPReportExtParams");
+        throw new NotSupportedException(Res.EFPReportExtParams_Err_NotCallable);
 
       if ((UsedParts & SettingsPart.User) == SettingsPart.User)
         WriteConfig(cfg, SettingsPart.User);
@@ -391,7 +387,7 @@ namespace FreeLibSet.Forms
     public sealed override void ReadConfig(CfgPart cfg)
     {
       if (!EFPApp.InsideLoadComposition)
-        throw new NotSupportedException("Эта перегрузка метода не должна вызываться для EFPReportExtParams");
+        throw new NotSupportedException(Res.EFPReportExtParams_Err_NotCallable);
 
       if ((UsedParts & SettingsPart.User) == SettingsPart.User)
         ReadConfig(cfg, SettingsPart.User);
@@ -420,9 +416,9 @@ namespace FreeLibSet.Forms
         case SettingsPart.Machine:
           break;
         case (SettingsPart)0:
-          throw new ArgumentException("Часть не задана", "part");
+          throw new ArgumentException(Res.EFPReportExtParams_Arg_NoPart, "part");
         default:
-          throw new ArgumentException("Одновременно задано несколько частей: " + part.ToString(), "part");
+          throw new ArgumentException(String.Format(Res.EFPReportExtParams_Arg_MultiPart, part.ToString()), "part");
       }
     }
 
@@ -542,7 +538,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e) // 20.06.2017 Перехватываем ошибку
         {
-          EFPApp.ShowException(e, "Вызов EFPReportExtParams.BeforeQueryParams()");
+          EFPApp.ShowException(e, LogoutTools.GetTitleForCall("EFPReportExtParams.BeforeQueryParams()"));
         }
         WriteFormValueParts(AllParts);
 
@@ -623,7 +619,7 @@ namespace FreeLibSet.Forms
       if (_Form.FormProvider.ValidateReason == EFPFormValidateReason.Shown)
         return;
       if (!ReadFormValueParts(AllParts))
-        args.SetError("Заданы неверные параметры");
+        args.SetError(Res.EFPReportExtParams_Err_WrongParams);
       if (_Form.FormProvider.ValidateReason == EFPFormValidateReason.Closing)
       {
         try
@@ -632,8 +628,8 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e) // 20.06.2017 Перехватываем ошибку
         {
-          args.SetError("Ошибка вызова AfterQueryParams");
-          EFPApp.ShowException(e, "Вызов EFPReportExtParams.AfterQueryParams()");
+          args.SetError(Res.EFPReportExtParams_Err_AfterQueryParams);
+          EFPApp.ShowException(e, LogoutTools.GetTitleForCall("EFPReportExtParams.AfterQueryParams()"));
         }
       }
     }
@@ -694,7 +690,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка чтения списка истории параметров отчета");
+          EFPApp.ShowException(e, Res.ParamSetComboBox_ErrTitle_ReadHistory);
         }
 
         if (_UseAuxText)
@@ -728,7 +724,7 @@ namespace FreeLibSet.Forms
         DoReadConfigParts("Empty");
         auxText = ReportParams.GetAuxText();
       }
-      _Form.SetComboBox.Items.Add(new ParamSetComboBoxItem("Empty", "(По умолчанию)", "No", null, GroupDefault, _CfgEmpty.MD5Sum(), auxText));
+      _Form.SetComboBox.Items.Add(new ParamSetComboBoxItem("Empty", Res.EFPReportExtParams_Msg_Default, "No", null, GroupDefault, _CfgEmpty.MD5Sum(), auxText));
 
       // Последние - данные истории
       _TableHist.DefaultView.Sort = "Order";
@@ -743,13 +739,13 @@ namespace FreeLibSet.Forms
         switch (cnt)
         {
           case 1:
-            name = "(Последний)";
+            name = Res.ParamSetComboBox_Msg_Hist0;
             break;
           case 2:
-            name = "(Предпоследний)";
+            name = Res.ParamSetComboBox_Msg_Hist1;
             break;
           default:
-            name = "(Предыдущий №" + cnt.ToString() + ")";
+            name = String.Format(Res.ParamSetComboBox_Msg_HistN, cnt) + ")";
             break;
         }
         if (_UseAuxText)
@@ -880,18 +876,18 @@ namespace FreeLibSet.Forms
       {
         if (!oldItem.Code.StartsWith("User", StringComparison.Ordinal))
         {
-          EFPApp.ShowTempMessage("Перезаписывать можно только пользовательские наборы. Введите название набора.");
+          EFPApp.ShowTempMessage(Res.ParamSetComboBox_Err_NotUserSetOverwrite);
           return;
         }
-        if (EFPApp.MessageBox("Набор \"" + args.DisplayName + "\" уже существует. Вы хотите перезаписать его?",
-          "Подтверждение перезаписи набора параметров",
+        if (EFPApp.MessageBox(String.Format(Res.ParamSetComboBox_Msg_Overwrite, args.DisplayName),
+          Res.ParamSetComboBox_Title_Overwrite,
           MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
           return;
       }
 
       if (args.DisplayName.StartsWith("(", StringComparison.Ordinal))
       {
-        EFPApp.ShowTempMessage("Имя набора не может начинаться со скобки");
+        EFPApp.ShowTempMessage(Res.ParamSetComboBox_Err_NameStartsWithBracket);
         return;
       }
 
@@ -954,20 +950,20 @@ namespace FreeLibSet.Forms
         table = _TableHist;
       else
       {
-        EFPApp.ErrorMessageBox("Этот набор нельзя удалить", "Удаление готового набора");
+        EFPApp.ErrorMessageBox(Res.ParamSetComboBox_Err_CannotDelete, Res.ParamSetComboBox_Title_Delete);
         return;
       }
 
       DataRow row = table.Rows.Find(args.Item.Code);
       if (row == null)
       {
-        BugException ex = new BugException("Набор с кодом \"" + args.Item.Code + "\" не найден");
+        BugException ex = new BugException("Set with code \"" + args.Item.Code + "\" not found");
         ex.Data["Item"] = args.Item;
         throw ex;
       }
 
-      if (EFPApp.MessageBox("Удалить набор \"" + args.Item.DisplayName + "\"?",
-        "Подтверждение удаления набора", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+      if (EFPApp.MessageBox(String.Format(Res.ParamSetComboBox_Msg_Delete, args.Item.DisplayName),
+        Res.ParamSetComboBox_Title_Delete, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
         return;
 
       table.Rows.Remove(row);
@@ -1022,9 +1018,8 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ErrorMessageBox("Возникла ошибка при загрузке ранее сохраненных параметров отчета. " +
-          "Будут использованы значения по умолчанию. Сообщение об ошибке: " + e.Message,
-          "Ошибка загрузки параметров");
+        EFPApp.ErrorMessageBox(String.Format (Res.EFPReport_Err_ReadConfig, e.Message),
+          Res.EFPReport_ErrTitle_ReadConfig);
       }
     }
 
@@ -1074,9 +1069,8 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ErrorMessageBox("Возникла ошибка при сохранении параметров отчета. " +
-          "Сообщение об ошибке: " + e.Message,
-          "Ошибка записи параметров");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPReport_Err_WriteConfig, e.Message),
+          Res.EFPReport_ErrTitle_WriteConfig);
       }
     }
 
@@ -1119,9 +1113,9 @@ namespace FreeLibSet.Forms
         if (!_SafeGetAuxTextErrorLogged)
         {
           _SafeGetAuxTextErrorLogged = true;
-          LogoutTools.LogoutException(e, "Ошибка вызова EFPReportExtParams.GetAuxText(). Повторные ошибки не сохраняются");
+          LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("EFPReportExtParams.GetAuxText()"));
         }
-        return "Ошибка. " + e.Message;
+        return String.Format(Res.EFPReportExtParams_Err_AuxText, e.Message);
       }
     }
 

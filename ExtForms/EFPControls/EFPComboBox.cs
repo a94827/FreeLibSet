@@ -307,8 +307,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < MinimumMaxHistLength || value > MaximumMaxHistLength)
-          throw new ArgumentOutOfRangeException("value", value,
-            "Максимальное число строк истории может быть в диапазоне от "+MinimumMaxHistLength.ToString()+" до "+MaximumMaxHistLength.ToString());
+          throw ExceptionFactory.ArgOutOfRange("value", value, MinimumMaxHistLength, MaximumMaxHistLength);
         _MaxHistLength = value;
       }
     }
@@ -422,7 +421,7 @@ namespace FreeLibSet.Forms
     public EFPMaskedComboBox(EFPBaseProvider baseProvider, UserMaskedComboBox control)
       : base(baseProvider, control)
     {
-      control.ClearButtonToolTipText = "Очистить введенное значение";
+      control.ClearButtonToolTipText = Res.EFPMaskedComboBox_ToolTip_ClearButton;
     }
 
     #endregion
@@ -488,7 +487,7 @@ namespace FreeLibSet.Forms
           return; // Нет ни одного введенного символа
 
         if (!Control.MaskCompleted)
-          SetError("Должны быть введены все символы");
+          SetError(Res.EFPMaskedTextBox_Err_MaskIncomplete);
       }
       else
       {
@@ -773,7 +772,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика ColorComboBox.ColorChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -823,7 +822,6 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
-
 
   /// <summary>
   /// Провайдер комбоблока, который рисуется в пользовательском коде.
@@ -958,7 +956,7 @@ namespace FreeLibSet.Forms
         return;
       int x;
       if (!TryTextToValue(Control.Text, out x))
-        SetError("Неправильное значение");
+        SetError(UITools.ConvertErrorMessage(Control.Text, typeof(Int32)));
     }
 
     #endregion
@@ -983,20 +981,21 @@ namespace FreeLibSet.Forms
     /// Присвоение кодов подстановки и соответствующих текстовых значений.
     /// Элементы <see cref="SubstValues"/> добавляются в комбоблок сразу или когда он будет 
     /// присоединен.
+    /// Этот метод может вызываться однократно.
     /// </summary>
     /// <param name="codes">Числовые коды подстановок</param>
     /// <param name="values">Текстовые представления для выпадающего списка</param>
     public void AssignSubsts(int[] codes, string[] values)
     {
       if (_SubstCodes != null)
-        throw new InvalidOperationException("Повторный вызов AssignSubsts()");
+        throw ExceptionFactory.RepeatedCall(this, "AssignSubsts");
 
       if (codes == null)
         throw new ArgumentNullException("codes");
       if (values == null)
         throw new ArgumentNullException("values");
       if (values.Length != codes.Length)
-        throw new ArgumentException("Массивы имеют разную длину", "values");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values, codes.Length);
 
       _SubstCodes = codes;
       _SubstValues = values;
@@ -1033,7 +1032,7 @@ namespace FreeLibSet.Forms
     {
       int value;
       if (!TryTextToValue(text, out value))
-        throw new InvalidCastException("Нельзя преобразовать \"" + text + "\" в целое число");
+        throw new FormatException(UITools.ConvertErrorMessage(text, typeof(Int32)));
       return value;
     }
 
@@ -1111,7 +1110,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика ComboBox.TextChanged");
+        EFPApp.ShowException(e);
       }
     }
 

@@ -65,11 +65,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     #region Properties
 
-    private Font _font = null;
-
     /// <summary>
     /// Шрифт для прорисовки текста ячеек.
-    /// По умолчанию используется шрифт Control.DefaultFont, зависящий от операционной системы.
+    /// По умолчанию используется шрифт <see cref="Control.DefaultFont"/>, зависящий от операционной системы.
     /// </summary>
     public Font Font
     {
@@ -88,6 +86,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
           _font = value;
       }
     }
+    private Font _font = null;
 
     /// <summary>
     /// Возвращает true, если задан нестандартный шрифт
@@ -108,7 +107,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     private HorizontalAlignment _textAlign = HorizontalAlignment.Left;
     /// <summary>
     /// Горизонтальное выравнивание для содержимого ячейки.
-    /// По умолчанию используется выравнивание по левому краю
+    /// По умолчанию используется выравнивание по левому краю.
     /// </summary>
     [DefaultValue(HorizontalAlignment.Left)]
     public HorizontalAlignment TextAlign
@@ -139,21 +138,21 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       }
     }
 
-    private bool _displayHiddenContentInToolTip = true;
     [DefaultValue(true)]
     public bool DisplayHiddenContentInToolTip
     {
       get { return _displayHiddenContentInToolTip; }
       set { _displayHiddenContentInToolTip = value; }
     }
+    private bool _displayHiddenContentInToolTip = true;
 
-    private bool _useCompatibleTextRendering = false;
     [DefaultValue(false)]
     public bool UseCompatibleTextRendering
     {
       get { return _useCompatibleTextRendering; }
       set { _useCompatibleTextRendering = value; }
     }
+    private bool _useCompatibleTextRendering = false;
 
     [DefaultValue(false)]
     public bool TrimMultiLine

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 /*
  * Синхронизация редактируемых значений в управляющих элементах формы
@@ -96,12 +97,12 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Текущее значение синхронизируемого объекта
     /// </summary>
-    object SyncValue { get; set;}
+    object SyncValue { get; set; }
 
     /// <summary>
     /// True, если объект является источником значения (управляющим)
     /// </summary>
-    bool SyncMaster { get;}
+    bool SyncMaster { get; }
 
     /// <summary>
     /// Установка режима "Управляющий" или "Управляемый". По умолчанию объект должен
@@ -114,7 +115,7 @@ namespace FreeLibSet.DependedValues
     /// <summary>
     /// Группа синхронизации, к которой присоединен объект
     /// </summary>
-    DepSyncGroup SyncGroup { get; set;}
+    DepSyncGroup SyncGroup { get; set; }
   }
 
   #endregion
@@ -182,8 +183,9 @@ namespace FreeLibSet.DependedValues
 
     internal void Add(IDepSyncObject syncObj)
     {
+
       if (syncObj.SyncGroup != null)
-        throw new InvalidOperationException("Нельзя повторно присоединять объект синхронизации к группе");
+        throw new InvalidOperationException(String.Format(Res.DepSyncGroup_Err_SyncObjAlreadyAdded, syncObj.ToString()));
 
       _Objects.Add(syncObj);
       syncObj.SyncGroup = this;
@@ -363,7 +365,7 @@ namespace FreeLibSet.DependedValues
     public void Add(string name, IDepSyncObject syncObj)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       if (syncObj == null)
         throw new ArgumentNullException("syncObj");
       _Names.Add(name);

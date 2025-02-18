@@ -66,17 +66,17 @@ namespace FreeLibSet.Win32.Twain
     {
       switch (rc)
       {
-        case TwRC.Failure: return "Ошибка";
-        case TwRC.CheckStatus: return "Операция выполнена частично";
-        case TwRC.Cancel: return "Операция отменена пользователем";
-        case TwRC.XferDone: return "Все данные переданы";
-        case TwRC.EndOfList: return "Больше источников не найдено";
-        case TwRC.InfoNotSupported: return "Получение информации недоступно";
-        case TwRC.DataNotAvailable: return "Данные недоступны";
+        case TwRC.Failure: return Res.Twain_Err_Failure;
+        case TwRC.CheckStatus: return Res.Twain_Err_CheckStatus;
+        case TwRC.Cancel: return Res.Twain_Err_Cancel;
+        case TwRC.XferDone: return Res.Twain_Err_XferDone;
+        case TwRC.EndOfList: return Res.Twain_Err_EndOfList;
+        case TwRC.InfoNotSupported: return Res.Twain_Err_InfoNotSupported;
+        case TwRC.DataNotAvailable: return Res.Twain_Err_DataNotAvailable;
         //case TwRC.DSEvent:
         //case TwRC.NotDSEvent:
         default:
-          return "Код ошибки " + ((int)rc).ToString();
+          return String.Format(Res.Twain_Err_WithCode, (int)rc);
       }
     }
 
@@ -159,13 +159,13 @@ namespace FreeLibSet.Win32.Twain
       if (attrCompany != null)
         appid.Manufacturer = attrCompany.Company;
       else
-        appid.Manufacturer = "";
+        appid.Manufacturer = String.Empty;
 
       AssemblyProductAttribute attrProduct = (AssemblyProductAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyProductAttribute));
       if (attrProduct != null)
         appid.ProductName = attrProduct.Product;
       else
-        appid.ProductName = "";
+        appid.ProductName = String.Empty;
 
       srcds = new TwIdentity();
       srcds.Id = IntPtr.Zero;
@@ -208,13 +208,13 @@ namespace FreeLibSet.Win32.Twain
         return;
 
       TwRC rc = DSMparent(appid, IntPtr.Zero, TwDG.Control, TwDAT.Parent, TwMSG.OpenDSM, ref hwndp);
-      CheckResult(rc, "Не удалось инициализировать TWAIN");
+      CheckResult(rc, Res.Twain_Err_InitTwain);
 
       rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetDefault, srcds);
       if (rc != TwRC.Success)
       {
         DSMparent(appid, IntPtr.Zero, TwDG.Control, TwDAT.Parent, TwMSG.CloseDSM, ref hwndp);
-        CheckResult(rc, "Сканер не найден");
+        CheckResult(rc, Res.Twain_Err_ScannerNotFound);
       }
       hwnd = hwndp;
     }
@@ -244,7 +244,7 @@ namespace FreeLibSet.Win32.Twain
           return;
       }
       rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.OpenDS, srcds);
-      CheckResult(rc, "Не удалось открыть источник");
+      CheckResult(rc, Res.Twain_Err_SourceNotOpened);
 
       TwCapability cap = new TwCapability(TwCap.XferCount, 1);
       rc = DScap(appid, srcds, TwDG.Control, TwDAT.Capability, TwMSG.Set, cap);
@@ -252,7 +252,7 @@ namespace FreeLibSet.Win32.Twain
       if (rc != TwRC.Success)
       {
         CloseSrc();
-        CheckResult(rc, "Не удалось получить возможности устройства TWAIN");
+        CheckResult(rc, Res.Twain_Err_TwainCaps);
       }
 
       TwUserInterface guif = new TwUserInterface();
@@ -263,7 +263,7 @@ namespace FreeLibSet.Win32.Twain
       if (rc != TwRC.Success)
       {
         CloseSrc();
-        CheckResult(rc, "Не удалось запустить пользовательский интерфейс TWAIN");
+        CheckResult(rc, Res.Twain_Err_TwainUI);
       }
     }
 

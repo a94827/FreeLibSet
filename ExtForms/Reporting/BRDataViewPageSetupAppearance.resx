@@ -117,4 +117,592 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="&gt;&gt;grpPageBreak.Name" xml:space="preserve">
+    <value>grpPageBreak</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbColorStyle.Items" xml:space="preserve">
+    <value>Not used</value>
+  </data>
+  <data name="&gt;&gt;lblCellParams.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="&gt;&gt;grpAppearance.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lblTextFalse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblTextFalse.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 151</value>
+  </data>
+  <data name="&gt;&gt;grpAppearance.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="&gt;&gt;cbIgnoreWith.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;lblTextTrue.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;edTextTrue.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="cbBoolMode.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 7, 9, 7</value>
+  </data>
+  <data name="&gt;&gt;edTextTrue.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="cbBorderStyle.Items3" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="cbColorStyle.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="lblCellParams.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="edTextTrue.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;cbBorderStyle.Name" xml:space="preserve">
+    <value>cbBorderStyle</value>
+  </data>
+  <data name="lblTextTrue.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="cbColorStyle.Items2" xml:space="preserve">
+    <value>Gray scale</value>
+  </data>
+  <data name="MainPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>700, 358</value>
+  </data>
+  <data name="&gt;&gt;grpPageBreak.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="edTextFalse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="grpPageBreak.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="grpAppearance.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="edTextFalse.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 6, 7, 6</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Name" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="lblCellParams.Size" type="System.Drawing.Size, System.Drawing">
+    <value>373, 82</value>
+  </data>
+  <data name="grpPageBreak.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 295</value>
+  </data>
+  <data name="cbBorderStyle.Items2" xml:space="preserve">
+    <value>Vertical lines</value>
+  </data>
+  <data name="&gt;&gt;btnSelText.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblBorderStyle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 26</value>
+  </data>
+  <data name="cbIgnoreWith.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 23</value>
+  </data>
+  <data name="edTextFalse.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tableLayoutPanel1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="cbBoolMode.Items" xml:space="preserve">
+    <value>Do not replace (TRUE, FALSE)</value>
+  </data>
+  <data name="&gt;&gt;lblColorStyle.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="lblCellParams.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="lblColorStyle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="cbIgnoreWith.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 7, 9, 7</value>
+  </data>
+  <data name="&gt;&gt;cbBoolMode.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;cbBorderStyle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbBorderStyle.Items" xml:space="preserve">
+    <value>No norders</value>
+  </data>
+  <data name="lblTextTrue.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="btnCellParams.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 203</value>
+  </data>
+  <data name="lblBorderStyle.Text" xml:space="preserve">
+    <value>&amp;Borders</value>
+  </data>
+  <data name="cbBoolMode.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;lblBoolMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblBorderStyle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="lblColorStyle.Text" xml:space="preserve">
+    <value>&amp;Colors</value>
+  </data>
+  <data name="btnCellParams.Text" xml:space="preserve">
+    <value>C&amp;ell parameters</value>
+  </data>
+  <data name="&gt;&gt;lblColorStyle.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="&gt;&gt;cbBorderStyle.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="lblTextFalse.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;cbBoolMode.Name" xml:space="preserve">
+    <value>cbBoolMode</value>
+  </data>
+  <data name="tableLayoutPanel1.ColumnCount" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="grpPageBreak.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="lblBoolMode.Text" xml:space="preserve">
+    <value>&amp;Boolean values</value>
+  </data>
+  <data name="&gt;&gt;grpPageBreak.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="cbIgnoreWith.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbBoolMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblColorStyle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="edTextTrue.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;btnCellParams.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="edTextFalse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 22</value>
+  </data>
+  <data name="edTextTrue.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 22</value>
+  </data>
+  <data name="lblTextTrue.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;edTextTrue.Name" xml:space="preserve">
+    <value>edTextTrue</value>
+  </data>
+  <data name="cbBorderStyle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 31</value>
+  </data>
+  <data name="btnSelText.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 6, 7, 6</value>
+  </data>
+  <data name="grpPageBreak.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;edTextFalse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblTextFalse.Text" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="lblCellParams.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 0, 7, 0</value>
+  </data>
+  <data name="&gt;&gt;btnCellParams.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="lblColorStyle.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="&gt;&gt;grpPageBreak.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;lblBorderStyle.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="&gt;&gt;lblTextFalse.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="grpPageBreak.Text" xml:space="preserve">
+    <value>Page breaks</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>BRDataViewPageSetupAppearance</value>
+  </data>
+  <data name="grpAppearance.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbIgnoreWith.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbColorStyle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnCellParams.Name" xml:space="preserve">
+    <value>btnCellParams</value>
+  </data>
+  <data name="&gt;&gt;lblTextFalse.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="edTextTrue.Location" type="System.Drawing.Point, System.Drawing">
+    <value>74, 6</value>
+  </data>
+  <data name="lblTextFalse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 38</value>
+  </data>
+  <data name="lblCellParams.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 203</value>
+  </data>
+  <data name="lblTextFalse.Location" type="System.Drawing.Point, System.Drawing">
+    <value>167, 0</value>
+  </data>
+  <data name="cbBorderStyle.Items1" xml:space="preserve">
+    <value>Border around the column titles</value>
+  </data>
+  <data name="cbColorStyle.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 7, 9, 7</value>
+  </data>
+  <data name="&gt;&gt;lblCellParams.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbBoolMode.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="grpPageBreak.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 7, 9, 7</value>
+  </data>
+  <data name="cbColorStyle.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnCellParams.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 6, 7, 6</value>
+  </data>
+  <data name="lblColorStyle.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 0, 9, 0</value>
+  </data>
+  <data name="&gt;&gt;edTextFalse.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="cbBoolMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>367, 24</value>
+  </data>
+  <data name="lblBorderStyle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 31</value>
+  </data>
+  <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="edTextFalse" Row="0" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="lblTextTrue" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="lblTextFalse" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="edTextTrue" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="btnSelText" Row="0" RowSpan="1" Column="4" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,67,Percent,50,Absolute,67,Percent,50,Absolute,48" /&gt;&lt;Rows Styles="Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="cbBoolMode.Items1" xml:space="preserve">
+    <value>As number (1, 0)</value>
+  </data>
+  <data name="cbBoolMode.Items2" xml:space="preserve">
+    <value>As text</value>
+  </data>
+  <data name="lblBorderStyle.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 0, 9, 0</value>
+  </data>
+  <data name="&gt;&gt;lblBoolMode.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="grpPageBreak.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 7, 9, 7</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 6, 7, 6</value>
+  </data>
+  <data name="cbIgnoreWith.Size" type="System.Drawing.Size, System.Drawing">
+    <value>395, 21</value>
+  </data>
+  <data name="&gt;&gt;btnSelText.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="MainPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="lblTextTrue.Text" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="&gt;&gt;lblTextTrue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblBoolMode.Name" xml:space="preserve">
+    <value>lblBoolMode</value>
+  </data>
+  <data name="&gt;&gt;btnSelText.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="cbBoolMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 112</value>
+  </data>
+  <data name="btnSelText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>327, 6</value>
+  </data>
+  <data name="lblBoolMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>187, 26</value>
+  </data>
+  <data name="lblColorStyle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 70</value>
+  </data>
+  <data name="&gt;&gt;lblTextTrue.Name" xml:space="preserve">
+    <value>lblTextTrue</value>
+  </data>
+  <data name="&gt;&gt;cbIgnoreWith.Parent" xml:space="preserve">
+    <value>grpPageBreak</value>
+  </data>
+  <data name="&gt;&gt;grpAppearance.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="&gt;&gt;grpAppearance.Name" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="&gt;&gt;edTextFalse.Name" xml:space="preserve">
+    <value>edTextFalse</value>
+  </data>
+  <data name="cbIgnoreWith.Text" xml:space="preserve">
+    <value>Ignore no-&amp;page-break marks for header and subtotal rows</value>
+  </data>
+  <data name="&gt;&gt;lblBorderStyle.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="btnSelText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>34, 26</value>
+  </data>
+  <data name="cbColorStyle.Items1" xml:space="preserve">
+    <value>As on the screen</value>
+  </data>
+  <data name="cbColorStyle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 71</value>
+  </data>
+  <data name="lblBoolMode.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 0, 9, 0</value>
+  </data>
+  <data name="&gt;&gt;lblColorStyle.Name" xml:space="preserve">
+    <value>lblColorStyle</value>
+  </data>
+  <data name="&gt;&gt;lblCellParams.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblCellParams.Text" xml:space="preserve">
+    <value>???</value>
+  </data>
+  <data name="&gt;&gt;lblBorderStyle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblTextFalse.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 0, 7, 0</value>
+  </data>
+  <data name="grpAppearance.Size" type="System.Drawing.Size, System.Drawing">
+    <value>700, 295</value>
+  </data>
+  <data name="lblColorStyle.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;cbIgnoreWith.Name" xml:space="preserve">
+    <value>cbIgnoreWith</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblBorderStyle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="MainPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="grpAppearance.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 7, 9, 7</value>
+  </data>
+  <data name="lblTextTrue.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 0</value>
+  </data>
+  <data name="edTextTrue.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 6, 7, 6</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>368, 38</value>
+  </data>
+  <data name="tableLayoutPanel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 6, 7, 6</value>
+  </data>
+  <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;cbColorStyle.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btnCellParams.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="lblBoolMode.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblTextTrue.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;btnCellParams.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;cbColorStyle.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="btnCellParams.Size" type="System.Drawing.Size, System.Drawing">
+    <value>196, 30</value>
+  </data>
+  <data name="&gt;&gt;edTextTrue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Name" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="grpAppearance.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="lblTextTrue.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 38</value>
+  </data>
+  <data name="MainPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;lblCellParams.Name" xml:space="preserve">
+    <value>lblCellParams</value>
+  </data>
+  <data name="cbColorStyle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>367, 24</value>
+  </data>
+  <data name="cbBorderStyle.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="cbBorderStyle.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 7, 9, 7</value>
+  </data>
+  <data name="&gt;&gt;cbBorderStyle.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="grpAppearance.Text" xml:space="preserve">
+    <value>Table appearance</value>
+  </data>
+  <data name="&gt;&gt;lblBoolMode.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="lblColorStyle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>181, 26</value>
+  </data>
+  <data name="lblTextTrue.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 0, 7, 0</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>700, 366</value>
+  </data>
+  <data name="cbBorderStyle.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;cbBoolMode.Parent" xml:space="preserve">
+    <value>grpAppearance</value>
+  </data>
+  <data name="cbIgnoreWith.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="grpPageBreak.Size" type="System.Drawing.Size, System.Drawing">
+    <value>700, 53</value>
+  </data>
+  <data name="tableLayoutPanel1.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="grpAppearance.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>9, 7, 9, 7</value>
+  </data>
+  <data name="lblBoolMode.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="lblTextFalse.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="btnSelText.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;edTextFalse.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;lblBorderStyle.Name" xml:space="preserve">
+    <value>lblBorderStyle</value>
+  </data>
+  <data name="edTextFalse.Location" type="System.Drawing.Point, System.Drawing">
+    <value>234, 6</value>
+  </data>
+  <data name="&gt;&gt;cbColorStyle.Name" xml:space="preserve">
+    <value>cbColorStyle</value>
+  </data>
+  <data name="cbBorderStyle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>367, 24</value>
+  </data>
+  <data name="MainPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>7, 6, 7, 6</value>
+  </data>
+  <data name="&gt;&gt;lblTextFalse.Name" xml:space="preserve">
+    <value>lblTextFalse</value>
+  </data>
+  <data name="lblBoolMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 112</value>
+  </data>
+  <data name="&gt;&gt;btnSelText.Name" xml:space="preserve">
+    <value>btnSelText</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

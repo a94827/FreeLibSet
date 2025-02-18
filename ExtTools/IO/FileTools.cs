@@ -360,9 +360,9 @@ namespace FreeLibSet.IO
     public static bool TestRelFileNameWildcards(string fileName, string template)
     {
       if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("fileName");
       if (String.IsNullOrEmpty(template))
-        throw new ArgumentNullException("template");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("template");
 
       if (fileName.IndexOf(Path.DirectorySeparatorChar) < 0 && template.IndexOf(Path.DirectorySeparatorChar) < 0)
         // Нет разделителей каталога - простая проверка
@@ -394,14 +394,14 @@ namespace FreeLibSet.IO
     public static bool TestFileNameWildcards(string fileName, string template)
     {
       if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("fileName");
       if (String.IsNullOrEmpty(template))
-        throw new ArgumentNullException("template");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("template");
 
       if (fileName.IndexOfAny(new char[] { '*', '?', Path.DirectorySeparatorChar }) >= 0)
-        throw new ArgumentException("Имя файла не может содержать шаблонные символы \"*\" и \"?\" и символ разделителя каталога", "fileName");
+        throw new ArgumentException(Res.FileTools_Arg_FileNameWithWildcardsOrDirSep, "fileName");
       if (template.IndexOf(Path.DirectorySeparatorChar) >= 0)
-        throw new ArgumentException("Шаблон не может содержать шаблонные символы символ разделителя каталога", "template");
+        throw new ArgumentException(Res.FileTools_Arg_TemplateWithDirSep, "template");
 
       int p;
       string fileName1, fileName2;
@@ -535,7 +535,7 @@ namespace FreeLibSet.IO
 
       if (dirName[dirName.Length - 1] != System.IO.Path.DirectorySeparatorChar)
       {
-        errorText = "Имя каталога должно заканчиваться символом \"" + System.IO.Path.DirectorySeparatorChar + "\"";
+        errorText = String.Format(Res.FileTools_Msg_DirNameMustEndWithDirSep, System.IO.Path.DirectorySeparatorChar);
         return false;
       }
 
@@ -543,8 +543,8 @@ namespace FreeLibSet.IO
     }
 
     /// <summary>
-    /// Проверка имени файла
-    /// Реальное существование файла и пути к нему не проверяется
+    /// Проверка имени файла.
+    /// Реальное существование файла и пути к нему не проверяется.
     /// Перегрузка соответствует режиму <see cref="TestPathMode.FormatOnly"/>.
     /// Пустая строка считается ошибочной.
     /// </summary>
@@ -558,7 +558,7 @@ namespace FreeLibSet.IO
 
       if (fileName[fileName.Length - 1] == System.IO.Path.DirectorySeparatorChar)
       {
-        errorText = "Имя файла не должно заканчиваться символом \"" + System.IO.Path.DirectorySeparatorChar + "\"";
+        errorText = String.Format(Res.FileTools_Msg_FilePathEndsWithDirSep, +System.IO.Path.DirectorySeparatorChar);
         return false;
       }
 
@@ -570,7 +570,7 @@ namespace FreeLibSet.IO
         case PlatformID.WinCE:
           if (fileName.EndsWith(":", StringComparison.Ordinal))
           {
-            errorText = "Имя файла не должно заканчиваться символом \":\"";
+            errorText = Res.FileTools_Msg_WindowsFilePathEndsWithColon;
             return false;
           }
 
@@ -579,7 +579,7 @@ namespace FreeLibSet.IO
           {
             if (DataTools.GetCharCount(fileName, '\\') < 4)
             {
-              errorText = "Если имя начинается с \\\\, то должно быть еще два разделителя: \\Сервер\\Ресурс\\ИмяФайла";
+              errorText = Res.FileTools_Msg_WindowsNetFilePathFewSeparators;
               return false;
             }
           }
@@ -594,7 +594,7 @@ namespace FreeLibSet.IO
     {
       if (String.IsNullOrEmpty(name))
       {
-        errorText = "Путь не задан";
+        errorText = Res.FileTools_Msg_PathIsEmpty;
         return false;
       }
 
@@ -603,21 +603,20 @@ namespace FreeLibSet.IO
       {
         if (Array.IndexOf<char>(badChars, name[i]) >= 0)
         {
-          errorText = "Недопустимый символ \"" + name[i] + "\" в позиции " + (i + 1).ToString();
+          errorText = String.Format(Res.FileTools_Msg_InvalidChar, name[i], i + 1);
           return false;
         }
 
         if (name[i] == System.IO.Path.AltDirectorySeparatorChar &&
           System.IO.Path.AltDirectorySeparatorChar != System.IO.Path.DirectorySeparatorChar)
         {
-          errorText = "Недопустимый символ \"" + name[i] + "\" в позиции " + (i + 1).ToString() + ". Для разделения каталогов должен использоваться символ \"" +
-            System.IO.Path.DirectorySeparatorChar + "\"";
+          errorText = String.Format(Res.FileTools_Msg_InvalidCharAltDirSep, name[i], i + 1, System.IO.Path.DirectorySeparatorChar);
           return false;
         }
 
         if (name[i] == '*' || name[i] == '?')
         {
-          errorText = "Недопустимый символ \"" + name[i] + "\" в позиции " + (i + 1).ToString() + ". Шаблонные символы не допускаются";
+          errorText = String.Format(Res.FileTools_Msg_InvalidCharWildcards, name[i], i + 1);
           return false;
         }
 
@@ -639,27 +638,27 @@ namespace FreeLibSet.IO
 
       if (name[0] == ' ')
       {
-        errorText = "Путь не должен начинаться с пробела";
+        errorText = Res.FileTools_Msg_PathStartsWithSpace;
         return false;
       }
 
       if (name[name.Length - 1] == ' ')
       {
-        errorText = "Путь не должен заканчиваться пробелом";
+        errorText = Res.FileTools_Msg_PathEndsWithSpace;
         return false;
       }
 
       int p = name.IndexOf(System.IO.Path.DirectorySeparatorChar + " ", StringComparison.Ordinal);
       if (p >= 0)
       {
-        errorText = "Недопустимое сочетание символов в позиции " + (p + 1).ToString() + ". После разделителя каталога не может идти пробел";
+        errorText = String.Format(Res.FileTools_Msg_PathDirSepAndSpace, p + 1);
         return false;
       }
 
       p = name.IndexOf(" " + System.IO.Path.DirectorySeparatorChar, StringComparison.Ordinal);
       if (p >= 0)
       {
-        errorText = "Недопустимое сочетание символов в позиции " + (p + 1).ToString() + ". Перед разделителем каталога не может идти пробел";
+        errorText = String.Format(Res.FileTools_Msg_PathSpaceAndDirSep, p + 1);
         return false;
       }
 
@@ -674,7 +673,7 @@ namespace FreeLibSet.IO
       {
         if (p > 0 || name.LastIndexOf("\\\\", StringComparison.Ordinal) != p)
         {
-          errorText = "Два символа \"\\\\\" подряд (признак сетевого) имени может быть только в начале имени";
+          errorText = Res.FileTools_Msg_WindowsPathTwoBackslashInTheMiddle;
           return false;
         }
       }
@@ -684,14 +683,14 @@ namespace FreeLibSet.IO
       {
         if (p != 1 || name.LastIndexOf(':') != p)
         {
-          errorText = "Символ \":\" может быть только вторым в строке";
+          errorText = Res.FileTools_Msg_WindowsPathInvalidColonPosition;
           return false;
         }
 
         char firstChar = char.ToUpperInvariant(name[0]);
         if (firstChar < 'A' || firstChar > 'Z')
         {
-          errorText = "Перед символом \":\" должна идти буква диска";
+          errorText = Res.FileTools_Msg_WindowsPathDiskLetterRequired;
           return false;
         }
       }
@@ -705,7 +704,7 @@ namespace FreeLibSet.IO
       int p = name.IndexOf("//", StringComparison.Ordinal);
       if (p >= 0)
       {
-        errorText = "Не может быть два символа \"//\" подряд";
+        errorText = Res.FileTools_Msg_LinuxPathTwoDirSeps;
         return false;
       }
       errorText = null;
@@ -751,7 +750,7 @@ namespace FreeLibSet.IO
               return true;
             else
             {
-              errorText = "Не найден корневой каталог \"" + dir.Path + "\"";
+              errorText = String.Format(Res.FileTools_Msg_RootDirNotFound, dir.Path);
               return false;
             }
           }
@@ -769,9 +768,9 @@ namespace FreeLibSet.IO
             else
             {
               if (File.Exists(dir.Path))
-                errorText = "\"" + dir.Path + "\" является файлом, а не каталогом"; // 17.07.2023
+                errorText = String.Format(Res.FileTools_Msg_FileInsteadOfDir, dir.Path); // 17.07.2023
               else
-                errorText = "Не найден каталог \"" + dir.Path + "\"";
+                errorText = String.Format(Res.FileTools_Msg_DirNotFound, dir.Path);
               return false;
             }
           }
@@ -781,7 +780,7 @@ namespace FreeLibSet.IO
             return false;
           }
         default:
-          throw new ArgumentException("Неизвестный режим " + mode.ToString(), "mode");
+          throw ExceptionFactory.ArgUnknownValue("mode", mode);
       }
     }
 
@@ -818,12 +817,12 @@ namespace FreeLibSet.IO
             return true;
           else if (Directory.Exists(path.Path))
           {
-            errorText = "\"" + path.Path + "\" является каталогом, а не файлом";
+            errorText = String.Format(Res.FileTools_Msg_DirInsteadOfFile, path.Path);
             return false;
           }
           else
           {
-            errorText = "Файл не найден: \"" + path.Path + "\"";
+            errorText = String.Format(Res.FileTools_Msg_FileNotFound, path.Path);
             return false;
           }
         }
@@ -851,14 +850,14 @@ namespace FreeLibSet.IO
     public static void CheckFileExists(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentException("Путь не задан", "filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       if (!File.Exists(filePath.Path))
       {
         if (Directory.Exists(filePath.ParentDir.Path))
-          throw new FileNotFoundException("Файл " + filePath.QuotedPath + " не найден");
+          throw new FileNotFoundException(String.Format(Res.FileTools_Msg_FileNotFound, filePath.Path));
         else
-          throw new DirectoryNotFoundException("Каталог " + filePath.ParentDir.QuotedPath + " не найден"); // 26.06.2023
+          throw new DirectoryNotFoundException(String.Format(Res.FileTools_Msg_DirNotFound, filePath.ParentDir.Path)); // 26.06.2023
       }
     }
 
@@ -870,10 +869,10 @@ namespace FreeLibSet.IO
     public static void CheckDirectoryExists(AbsPath dirPath)
     {
       if (dirPath.IsEmpty)
-        throw new ArgumentException("Путь не задан", "dirPath");
+        throw ExceptionFactory.ArgIsEmpty("dirPath");
 
       if (!Directory.Exists(dirPath.Path))
-        throw new DirectoryNotFoundException("Каталог " + dirPath.QuotedPath + " не найден");
+        throw new DirectoryNotFoundException(String.Format(Res.FileTools_Msg_DirNotFound, dirPath.Path));
     }
 
     #endregion
@@ -889,7 +888,7 @@ namespace FreeLibSet.IO
     public static void DeleteFile(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       try
       {
@@ -920,7 +919,7 @@ namespace FreeLibSet.IO
     public static void DeleteFiles(AbsPath dirPath, string searchPattern, SearchOption searchOption)
     {
       if (dirPath.IsEmpty)
-        throw new ArgumentNullException("dirPath");
+        throw ExceptionFactory.ArgIsEmpty("dirPath");
       string[] aFiles = Directory.GetFiles(dirPath.Path, searchPattern, searchOption);
       for (int i = 0; i < aFiles.Length; i++)
         DeleteFile(new AbsPath(aFiles[i]));
@@ -954,10 +953,55 @@ namespace FreeLibSet.IO
     public static void ForceDirs(AbsPath dirPath)
     {
       if (dirPath.IsEmpty)
-        throw new ArgumentNullException("dirPath");
+        throw ExceptionFactory.ArgIsEmpty("dirPath");
       if (!Directory.Exists(dirPath.Path))
         Directory.CreateDirectory(dirPath.Path);
+    }
 
+    private static readonly AbsPath[] _EmptyArray = new AbsPath[0];
+
+    /// <summary>
+    /// Обеспечение существования каталога.
+    /// Выполняется немного медленнее, чем <see cref="ForceDirs(AbsPath)"/>, но возвращает список
+    /// каталогов, которые были созданы. Эта перегрузка может использоваться, когда требуется учет выполненных действий для последующей возможной отмены.
+    /// </summary>
+    /// <param name="dirPath">Каталог, который должен существовать</param>
+    /// <param name="splash">Интерфейс управления экранной заставкой.
+    /// Если задано, то будет установлен текст фазы в случае создания каталогов</param>
+    /// <param name="createdDirs">Сюда записывается массив каталогов, которые были созданы, начиная с каталога верхнего уровня.
+    /// Последним элементом массива является <paramref name="dirPath"/>.
+    /// Если на момент вызова каталог <paramref name="dirPath"/> уже существует,
+    /// возвращается массив нулевой длины</param>
+    public static void ForceDirs(AbsPath dirPath, ISimpleSplash splash, out AbsPath[] createdDirs)
+    {
+      if (dirPath.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("dirPath");
+      if (Directory.Exists(dirPath.Path))
+      {
+        createdDirs =_EmptyArray;
+        return;
+      }
+
+      if (splash != null)
+        splash.PhaseText = String.Format(Res.FileTools_Phase_ForceDirs, dirPath.Path);
+
+      List<AbsPath> lst = new List<AbsPath>();
+      AbsPath root = dirPath.RootDir;
+      DoForceDirs(dirPath, lst, root);
+      createdDirs = lst.ToArray();
+    }
+
+    private static void DoForceDirs(AbsPath dirPath, List<AbsPath> lst, AbsPath root)
+    {
+      if (dirPath == root)
+        return;
+      if (Directory.Exists(dirPath.Path))
+        return;
+
+      DoForceDirs(dirPath.ParentDir, lst, root); // рекурсивный вызов
+
+      Directory.CreateDirectory(dirPath.Path);
+      lst.Add(dirPath);
     }
 
     /// <summary>
@@ -1007,7 +1051,7 @@ namespace FreeLibSet.IO
     public static bool ClearDirAsPossible(AbsPath dirPath)
     {
       if (dirPath.IsEmpty)
-        throw new ArgumentNullException("dirPath");
+        throw ExceptionFactory.ArgIsEmpty("dirPath");
 
       try
       {
@@ -1122,7 +1166,7 @@ namespace FreeLibSet.IO
     public static bool DeleteEmptyDirs(AbsPath dirPath, bool deleteRootDir)
     {
       if (dirPath.IsEmpty)
-        throw new ArgumentException("Каталог не задан", "dirPath");
+        throw ExceptionFactory.ArgIsEmpty("dirPath");
 
       bool res = true;
 
@@ -1235,9 +1279,9 @@ namespace FreeLibSet.IO
 
     private static void MyThrowWin32Exception(AbsPath path)
     {
-      Win32Exception e1 = new Win32Exception();
-      Win32Exception e2 = new Win32Exception(e1.ErrorCode, e1.Message + ". Имя: \"" + path.Path + "\"");
-      throw e2;
+      Win32Exception e = new Win32Exception();
+      e.Data["Path"] = path.Path;
+      throw e;
     }
 
     #endregion
@@ -1253,7 +1297,7 @@ namespace FreeLibSet.IO
     public static void WriteStream(AbsPath filePath, Stream sourceStream)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       using (FileStream fs = new FileStream(filePath.Path, FileMode.Create, FileAccess.Write))
       {
@@ -1369,7 +1413,7 @@ namespace FreeLibSet.IO
       if (reader == null)
         throw new ArgumentNullException("reader");
       if (String.IsNullOrEmpty(signature))
-        throw new ArgumentNullException("signature");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("signature");
 #endif
 
       char[] buf = new char[signature.Length];
@@ -1493,7 +1537,7 @@ namespace FreeLibSet.IO
     public static void WriteXmlDocument(AbsPath filePath, XmlDocument xmlDoc)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
       XmlWriterSettings settings = new XmlWriterSettings();
@@ -1559,7 +1603,7 @@ namespace FreeLibSet.IO
     public static XmlDocument ReadXmlDocument(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       XmlDocument xmlDoc = new XmlDocument();
       xmlDoc.XmlResolver = null; // 16.01.2024
@@ -1587,7 +1631,6 @@ namespace FreeLibSet.IO
     #endregion
 
     #region Проверка начала файла
-
 
     /// <summary>
     /// Начало любого XML-файла в однобайтной кодировке (например, 1251 или 866)
@@ -1680,9 +1723,9 @@ namespace FreeLibSet.IO
       if (!File.Exists(filePath.Path))
         return false;
 
-      using (FileStream Stream = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read))
+      using (FileStream stream = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read))
       {
-        return IsValidXmlStart(Stream);
+        return IsValidXmlStart(stream);
       }
     }
 
@@ -1705,7 +1748,7 @@ namespace FreeLibSet.IO
     public static void WriteDataSetBinary(AbsPath filePath, DataSet ds)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       ds.RemotingFormat = SerializationFormat.Binary;
       ds.AcceptChanges();
@@ -1731,7 +1774,7 @@ namespace FreeLibSet.IO
     public static DataSet ReadDataSetBinary(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       DataSet ds;
       FileStream fs = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -2056,9 +2099,9 @@ namespace FreeLibSet.IO
     public static void Copy(AbsPath srcDir, AbsPath resDir, FileTemplateList templates, ISplash splash)
     {
       if (srcDir.IsEmpty)
-        throw new ArgumentNullException("srcDir");
+        throw ExceptionFactory.ArgIsEmpty("srcDir");
       if (resDir.IsEmpty)
-        throw new ArgumentNullException("resDir");
+        throw ExceptionFactory.ArgIsEmpty("resDir");
       if (templates == null)
       {
         templates = new FileTemplateList();
@@ -2071,11 +2114,11 @@ namespace FreeLibSet.IO
       string oldPhaseText = splash.PhaseText;
       bool oldAllowCancel = splash.AllowCancel;
 
-      splash.PhaseText = "Построение списка файлов";
+      splash.PhaseText = Res.FileTools_Phase_FileList;
       splash.AllowCancel = false;
       string[] aFiles = templates.GetRelFileNames(srcDir, splash);
 
-      splash.PhaseText = "Вычисление размера файлов";
+      splash.PhaseText = Res.FileTools_Phase_FileSize;
       splash.PercentMax = aFiles.Length;
       splash.AllowCancel = true;
       long totalSize = 0;
@@ -2280,7 +2323,7 @@ namespace FreeLibSet.IO
     /// Под Windows возвращает "C:\Users\ИмяПользователя", под Linux - путь к папке "~".
     /// </summary>
     public static AbsPath UserProfileDir { get { return _UserProfileDir; } }
-    private static AbsPath _UserProfileDir = GetUserProfileDir();
+    private static readonly AbsPath _UserProfileDir = GetUserProfileDir();
 
     private static AbsPath GetUserProfileDir()
     {
@@ -2378,7 +2421,7 @@ namespace FreeLibSet.IO
     public static string MD5Sum(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       string str;
       FileStream fs = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -2494,7 +2537,7 @@ namespace FreeLibSet.IO
     /// Возвращает имя временного каталога.
     /// </summary>
     public AbsPath Dir { get { return _Dir; } }
-    private AbsPath _Dir;
+    private /*readonly*/ AbsPath _Dir;
 
     /// <summary>
     /// Если true (по умолчанию), то файлы и сам каталог будут удалены при вызове Dispose() или деструктора объекта.
@@ -2540,7 +2583,7 @@ namespace FreeLibSet.IO
     public SharedTempDirectory(AbsPath dir)
     {
       if (dir.IsEmpty)
-        throw new ArgumentNullException("dir", "Не задан временный каталог");
+        throw ExceptionFactory.ArgIsEmpty("dir");
       _Dir = dir;
 
       // Сразу пытаемся очистить каталог
@@ -2583,7 +2626,7 @@ namespace FreeLibSet.IO
     /// Возвращает имя временного каталога.
     /// </summary>
     public AbsPath Dir { get { return _Dir; } }
-    private AbsPath _Dir;
+    private /*readonly*/ AbsPath _Dir;
 
     /// <summary>
     /// Возвращает путь к каталогу, если не было вызова Dispose()
@@ -2654,7 +2697,7 @@ namespace FreeLibSet.IO
       CheckNotDisposed();
 
       if (String.IsNullOrEmpty(fileName))
-        throw new ArgumentNullException("fileName");
+        throw ExceptionFactory.ArgIsEmpty("fileName");
 
       string subDirName = Guid.NewGuid().ToString("D");
       AbsPath dir2 = new AbsPath(Dir, subDirName);
@@ -2984,31 +3027,31 @@ namespace FreeLibSet.IO
     /// Если файл входит больше, чем в два шаблона, повторы отбрасываются.
     /// Список файлов сортируется по алфавиту.
     /// </summary>
-    /// <param name="root">Корневой каталог, относительно которого заданы шаблоны</param>
+    /// <param name="baseDir">Корневой каталог, относительно которого заданы шаблоны</param>
     /// <param name="splash">Необязательная экранная заставка</param>
     /// <returns>Массив путей</returns>
-    public string[] GetRelFileNames(AbsPath root, ISimpleSplash splash)
+    public string[] GetRelFileNames(AbsPath baseDir, ISimpleSplash splash)
     {
-      if (root.IsEmpty)
-        throw new ArgumentNullException("root", "Не задан базовый каталог для поиска");
+      if (baseDir.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("baseDir");
 
       if (splash == null)
         splash = new DummySimpleSplash();
 
-      if (!Directory.Exists(root.Path))
-        throw new DirectoryNotFoundException("Каталог не существует: \"" + root + "\"");
+      if (!Directory.Exists(baseDir.Path))
+        throw new DirectoryNotFoundException(String.Format(Res.FileTemplateDir_Err_BaseDirNotFound, baseDir.Path));
 
       SortedDictionary<string, object> lst = new SortedDictionary<string, object>(); // Используем только ключи
 
       // Длина обрезки каталога
-      int baseLen = root.SlashedPath.Length;
+      int baseLen = baseDir.SlashedPath.Length;
 
       // Файлы могут входить сразу в несколько шаблонов
       for (int i = 0; i < Count; i++)
       {
         AbsPath newRoot;
         string newTemplate;
-        this[i].GetNormalTemplate(root, out newRoot, out newTemplate);
+        this[i].GetNormalTemplate(baseDir, out newRoot, out newTemplate);
         if (Directory.Exists(newRoot.Path))
         {
           string[] a = Directory.GetFiles(newRoot.Path, newTemplate, this[i].Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
@@ -3034,19 +3077,19 @@ namespace FreeLibSet.IO
     /// Если файл входит больше, чем в два шаблона, повторы отбрасываются.
     /// Список файлов сортируется по алфавиту.
     /// </summary>
-    /// <param name="root">Корневой каталог, относительно которого заданы шаблоны</param>
+    /// <param name="baseDir">Корневой каталог, относительно которого заданы шаблоны</param>
     /// <param name="splash">Необязательная экранная заставка</param>
     /// <returns>Массив путей</returns>
-    public string[] GetAbsFileNames(AbsPath root, ISimpleSplash splash)
+    public string[] GetAbsFileNames(AbsPath baseDir, ISimpleSplash splash)
     {
-      if (root.IsEmpty)
-        throw new ArgumentNullException("root", "Не задан базовый каталог для поиска");
+      if (baseDir.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("baseDir");
 
       if (splash == null)
         splash = new DummySimpleSplash();
 
-      if (!Directory.Exists(root.Path))
-        throw new DirectoryNotFoundException("Каталог не существует: \"" + root + "\"");
+      if (!Directory.Exists(baseDir.Path))
+        throw new DirectoryNotFoundException(String.Format(Res.FileTemplateDir_Err_BaseDirNotFound, baseDir.Path));
 
       SortedDictionary<string, object> lst = new SortedDictionary<string, object>(); // Используем только ключи
 
@@ -3055,7 +3098,7 @@ namespace FreeLibSet.IO
       {
         AbsPath newRoot;
         string newTemplate;
-        this[i].GetNormalTemplate(root, out newRoot, out newTemplate);
+        this[i].GetNormalTemplate(baseDir, out newRoot, out newTemplate);
         if (Directory.Exists(newRoot.Path))
         {
           string[] a = Directory.GetFiles(newRoot.Path, newTemplate, this[i].Recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);

@@ -68,7 +68,7 @@ namespace FreeLibSet.UICore
     public IncrementUpDownHandler(T increment, IMinMaxSource<T?> minMaxSource)
     {
       if (increment.CompareTo(default(T)) <= 0)
-        throw new ArgumentException("increment должен быть больше 0", "increment");
+        throw ExceptionFactory.ArgOutOfRange("increment", increment, null, null);
       if (minMaxSource == null)
         throw new ArgumentNullException("minMaxSource");
 
@@ -266,7 +266,7 @@ namespace FreeLibSet.UICore
       : base(increment, minMaxSource)
     {
       if (increment < 1)
-        throw new ArgumentOutOfRangeException("increment");
+        throw ExceptionFactory.ArgOutOfRange("increment", increment, 1, null);
     }
 
     #endregion
@@ -378,7 +378,7 @@ namespace FreeLibSet.UICore
     {
 #if DEBUG
       if (increment < 1L)
-        throw new ArgumentOutOfRangeException("increment");
+        throw ExceptionFactory.ArgOutOfRange("increment", increment, 1L, null);
 #endif
 
       if ((currValue % increment) == 0)
@@ -399,7 +399,7 @@ namespace FreeLibSet.UICore
     {
 #if DEBUG
       if (increment < 1L)
-        throw new ArgumentOutOfRangeException("increment");
+        throw ExceptionFactory.ArgOutOfRange("increment", increment, 1L, null);
 #endif
 
       if ((currValue % increment) == 0)

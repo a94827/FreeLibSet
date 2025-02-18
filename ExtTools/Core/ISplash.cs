@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Core
 {
   /// <summary>
   /// Интерфейс для простого процентного индикатора.
-  /// Поддерживает установку значения индикатора и возможность прерывания процесса.
+  /// Поддерживает установку значения индикатора, текста выполняемого действия, и возможность прерывания процесса.
   /// </summary>
   public interface ISimpleSplash
   {
@@ -77,6 +78,15 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="milliseconds">Время в миллисекундах</param>
     void Sleep(int milliseconds);
+
+    #endregion
+
+    #region Текст
+
+    /// <summary>
+    /// Текст текущей фазы
+    /// </summary>
+    string PhaseText { get; set; }
 
     #endregion
   }
@@ -159,11 +169,6 @@ namespace FreeLibSet.Core
     /// Может вернуть значение, равное количеству строк в заставке, если <see cref="Complete()"/> или <see cref="Skip()"/> вызваны для последней фазы.
     /// </summary>
     int Phase { get; }
-
-    /// <summary>
-    /// Текст текущей фазы
-    /// </summary>
-    string PhaseText { get; set; }
 
     /// <summary>
     /// Пометить текущую фазу как завершенную и перейти к следующей фазе.
@@ -327,6 +332,16 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
+    /// Это свойство ни на что не влияет
+    /// </summary>
+    public string PhaseText
+    {
+      get { return _PhaseText; }
+      set { _PhaseText = value; }
+    }
+    private string _PhaseText;
+
+    /// <summary>
     /// Вызывает <see cref="Thread.Sleep(int)"/>
     /// </summary>
     /// <param name="milliseconds">Интервал задержки в миллисекундах</param>
@@ -344,16 +359,6 @@ namespace FreeLibSet.Core
   public class DummySplash : DummySimpleSplash, ISplash
   {
     #region ISplash Members
-
-    /// <summary>
-    /// Это свойство ни на что не влияет
-    /// </summary>
-    public string PhaseText
-    {
-      get { return _PhaseText; }
-      set { _PhaseText = value; }
-    }
-    private string _PhaseText;
 
     /// <summary>
     /// Ничего не делает
@@ -436,7 +441,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < phases.Length; i++)
       {
         if (String.IsNullOrEmpty(phases[i]))
-          throw new ArgumentNullException("phases", "phases[" + i.ToString() + "]==null");
+          throw ExceptionFactory.ArgInvalidListItem("phases", phases, i);
       }
 
       _Phases = phases;
@@ -470,7 +475,7 @@ namespace FreeLibSet.Core
     {
 #if DEBUG
       if (phase < 0 || phase >= _PhaseStates.Length)
-        throw new ArgumentOutOfRangeException();
+        throw ExceptionFactory.ArgOutOfRange("phase", phase, 0, _PhaseStates.Length-1);
 #endif
       return _PhaseStates[phase]; // можно без блокировки
     }
@@ -510,7 +515,7 @@ namespace FreeLibSet.Core
         if (String.IsNullOrEmpty(value))
         {
           if (_Phase >= _Phases.Length)
-            value = "Готово";
+            value = Res.Splash_Phase_Complete;
           else
             value = _Phases[_Phase];
         }
@@ -528,7 +533,7 @@ namespace FreeLibSet.Core
       lock (_PhaseStates)
       {
         if (_Phase >= _Phases.Length)
-          throw new InvalidOperationException("Лишний вызов Complete()/Skip()");
+          throw new InvalidOperationException(Res.Splash_Err_ExtraCompleteOrSkip);
 
         _PhaseStates[_Phase] = SplashPhaseState.Complete;
         _Phase++;
@@ -548,7 +553,7 @@ namespace FreeLibSet.Core
       lock (_PhaseStates)
       {
         if (_Phase >= _Phases.Length)
-          throw new InvalidOperationException("Лишний вызов Complete()/Skip()");
+          throw new InvalidOperationException(Res.Splash_Err_ExtraCompleteOrSkip);
 
         _PhaseStates[_Phase] = SplashPhaseState.Skipped;
         _Phase++;
@@ -656,7 +661,7 @@ namespace FreeLibSet.Core
     public void Sleep(int milliseconds)
     {
       if (milliseconds < 0)
-        throw new ArgumentOutOfRangeException();
+        throw ExceptionFactory.ArgOutOfRange("milliseconds", milliseconds, 0, null);
       Thread.Sleep(milliseconds);
     }
 
@@ -913,9 +918,9 @@ namespace FreeLibSet.Core
     public static void PopThreadSplashStack()
     {
       if (_ThreadSplashStackStack == null)
-        throw new InvalidOperationException("Не было вызова PushThreadSplashStack");
+        throw ExceptionFactory.UnpairedCall(null, "PushThreadSplashStack()", "PopThreadSplashStack()");
       if (_ThreadSplashStackStack.Count == 0)
-        throw new InvalidOperationException("Лишний вызов PopThreadSplashStack");
+        throw ExceptionFactory.UnpairedCall(null, "PushThreadSplashStack()", "PopThreadSplashStack()");
 
       _ThreadSplashStack = _ThreadSplashStackStack.Pop();
     }
@@ -1233,7 +1238,7 @@ namespace FreeLibSet.Remoting
     {
 #if DEBUG
       if (_GetIsCompletedCalled)
-        throw new InvalidOperationException("Повторный вызов GetIsCompleted");
+        throw new InvalidOperationException("Second call for GetIsCompleted()");
 #endif
 
       bool res = _AsyncResult.GetIsCompleted(out _SplashInfoPack);
@@ -1263,7 +1268,7 @@ namespace FreeLibSet.Remoting
     {
 #if DEBUG
       if (!_GetIsCompletedCalled)
-        throw new InvalidOperationException("Не было вызова GetIsCOmpleted() или повторный вызов GetSplashInfoPack()");
+        throw ExceptionFactory.UnpairedCall(this, "GetIsCompleted()", "GetSplashInfoPack()");
       _GetIsCompletedCalled = false;
 #endif
 

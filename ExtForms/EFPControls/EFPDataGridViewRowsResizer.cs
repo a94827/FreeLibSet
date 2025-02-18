@@ -30,7 +30,7 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private DataGridView _Control;
+    private readonly DataGridView _Control;
 
     /// <summary>
     /// Индекс первой отображаемой строки просмотра, который был при последнем вызове CalcRowHeights().
@@ -76,7 +76,7 @@ namespace FreeLibSet.Forms
       if (_Control.FirstDisplayedScrollingRowIndex == _FirstDisplayedRowIndex)
         return; // ничего не изменилось
 
-      EFPApp.BeginWait("Вычисление высоты строк");
+      EFPApp.BeginWait(Res.EFPDataView_Phase_CalcRowsHeight);
       try
       {
         // Нельзя использовать цикл for, так как в процессе расчета может меняться высота строк и,
@@ -101,7 +101,7 @@ namespace FreeLibSet.Forms
         if (!_CalcRowHeightsExceptionHandled)
         {
           _CalcRowHeightsExceptionHandled = true;
-          LogoutTools.LogoutException(e, "Ошибка расчета высоты строк табличного просмотра. Повторные ошибки не регистрируются");
+          LogoutTools.LogoutException(e, Res.EFPDataView_Err_CalcRowsHeight);
         }
       }
       EFPApp.EndWait();

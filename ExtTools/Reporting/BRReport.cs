@@ -250,7 +250,7 @@ namespace FreeLibSet.Reporting
       set
       {
         if (value < MinRowHeight || value > MaxRowHeight)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, MinRowHeight, MaxRowHeight);
         _AppDefaultEmptyRowHeight = value;
       }
     }
@@ -266,7 +266,7 @@ namespace FreeLibSet.Reporting
       set
       {
         if (value < MinRowHeight || value > MaxRowHeight)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, MinRowHeight, MaxRowHeight);
         _DefaultEmptyRowHeight = value;
       }
     }
@@ -282,7 +282,7 @@ namespace FreeLibSet.Reporting
       set
       {
         if (value < MinColumnWidth || value > MaxColumnWidth)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, MinColumnWidth, MaxColumnWidth);
         _AppDefaultColumnWidth = value;
       }
     }
@@ -297,7 +297,7 @@ namespace FreeLibSet.Reporting
       set
       {
         if (value < MinColumnWidth || value > MaxColumnWidth)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, MinColumnWidth, MaxColumnWidth);
         _DefaultColumnWidth = value;
       }
     }
@@ -367,7 +367,7 @@ namespace FreeLibSet.Reporting
       internal override void SetValue(int index, object value)
       {
         if (index == Index_ParentStyleName)
-          throw new InvalidOperationException("Нельзя устанавливать это свойство");
+          throw new InvalidOperationException(Res.BRReport_Err_PropertyCannotBeSet);
         base.SetValue(index, value);
       }
 
@@ -472,7 +472,7 @@ namespace FreeLibSet.Reporting
         else
         {
           if (!Object.ReferenceEquals(parent.Report, _Report))
-            throw new ArgumentException("Родительский стиль относится к другому отчету");
+            throw new ArgumentException(Res.BRReport_Arg_ParentStyleForDifferentReport);
           parent2 = parent;
         }
         BRNamedCellStyle obj = new BRNamedCellStyle(name, parent2);
@@ -762,7 +762,7 @@ namespace FreeLibSet.Reporting
         if (band == null)
           throw new ArgumentNullException("band");
         if (band.Section != _Section)
-          throw new ArgumentException();
+          throw ExceptionFactory.ArgProperty("band", band, "Section", band.Section, new object[] { band.Section });
         _Section._BandList.Add(band);
       }
 
@@ -835,7 +835,7 @@ namespace FreeLibSet.Reporting
       get
       {
         if (String.IsNullOrEmpty(_Name))
-          return "Лист " + (SectionIndex + 1).ToString();
+          return String.Format(Res.BRReport_Msg_ExcelSheetName, SectionIndex + 1);
         else
           return _Name;
       }
@@ -1172,7 +1172,7 @@ namespace FreeLibSet.Reporting
           return;
 
         if (value < 0 || value >= _Band.RowCount)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, _Band.RowCount - 1);
         _RowIndex = value;
 
         OnRowIndexChanged();
@@ -1198,7 +1198,7 @@ namespace FreeLibSet.Reporting
         if (value == _ColumnIndex)
           return;
         if (value < 0 || value >= _Band.ColumnCount)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, _Band.ColumnCount - 1);
         _ColumnIndex = value;
         OnColumnIndexChanged();
       }

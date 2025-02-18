@@ -18,99 +18,72 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtEditDialogForm));
       this.ClientPanel = new System.Windows.Forms.Panel();
+      this.MainTabControl = new System.Windows.Forms.TabControl();
       this.ButtonsPanel = new System.Windows.Forms.Panel();
       this.btnMore = new System.Windows.Forms.Button();
       this.btnApply = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnOK = new System.Windows.Forms.Button();
-      this.MainTabControl = new System.Windows.Forms.TabControl();
       this.ClientPanel.SuspendLayout();
       this.ButtonsPanel.SuspendLayout();
       this.SuspendLayout();
       // 
       // ClientPanel
       // 
+      resources.ApplyResources(this.ClientPanel, "ClientPanel");
       this.ClientPanel.Controls.Add(this.MainTabControl);
-      this.ClientPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.ClientPanel.Location = new System.Drawing.Point(0, 0);
       this.ClientPanel.Name = "ClientPanel";
-      this.ClientPanel.Size = new System.Drawing.Size(393, 125);
-      this.ClientPanel.TabIndex = 0;
+      // 
+      // MainTabControl
+      // 
+      resources.ApplyResources(this.MainTabControl, "MainTabControl");
+      this.MainTabControl.Name = "MainTabControl";
+      this.MainTabControl.SelectedIndex = 0;
       // 
       // ButtonsPanel
       // 
+      resources.ApplyResources(this.ButtonsPanel, "ButtonsPanel");
       this.ButtonsPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.ButtonsPanel.Controls.Add(this.btnMore);
       this.ButtonsPanel.Controls.Add(this.btnApply);
       this.ButtonsPanel.Controls.Add(this.btnCancel);
       this.ButtonsPanel.Controls.Add(this.btnOK);
-      this.ButtonsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.ButtonsPanel.Location = new System.Drawing.Point(0, 125);
       this.ButtonsPanel.Name = "ButtonsPanel";
-      this.ButtonsPanel.Size = new System.Drawing.Size(393, 40);
-      this.ButtonsPanel.TabIndex = 1;
       // 
       // btnMore
       // 
-      this.btnMore.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnMore.Location = new System.Drawing.Point(292, 9);
+      resources.ApplyResources(this.btnMore, "btnMore");
       this.btnMore.Name = "btnMore";
-      this.btnMore.Size = new System.Drawing.Size(88, 24);
-      this.btnMore.TabIndex = 4;
-      this.btnMore.Text = "Ещ&ё";
       this.btnMore.UseVisualStyleBackColor = true;
       // 
       // btnApply
       // 
-      this.btnApply.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnApply.Location = new System.Drawing.Point(198, 8);
+      resources.ApplyResources(this.btnApply, "btnApply");
       this.btnApply.Name = "btnApply";
-      this.btnApply.Size = new System.Drawing.Size(88, 24);
-      this.btnApply.TabIndex = 3;
-      this.btnApply.Text = "&Запись";
       // 
       // btnCancel
       // 
+      resources.ApplyResources(this.btnCancel, "btnCancel");
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnCancel.Location = new System.Drawing.Point(104, 8);
       this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(88, 24);
-      this.btnCancel.TabIndex = 2;
-      this.btnCancel.Text = "Отмена";
       // 
       // btnOK
       // 
+      resources.ApplyResources(this.btnOK, "btnOK");
       this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.btnOK.Location = new System.Drawing.Point(10, 8);
       this.btnOK.Name = "btnOK";
-      this.btnOK.Size = new System.Drawing.Size(88, 24);
-      this.btnOK.TabIndex = 1;
-      this.btnOK.Text = "О&К";
       // 
-      // MainTabControl
+      // ExtEditDialogForm
       // 
-      this.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.MainTabControl.Location = new System.Drawing.Point(0, 0);
-      this.MainTabControl.Name = "MainTabControl";
-      this.MainTabControl.SelectedIndex = 0;
-      this.MainTabControl.ShowToolTips = true;
-      this.MainTabControl.Size = new System.Drawing.Size(393, 125);
-      this.MainTabControl.TabIndex = 2;
-      // 
-      // DocEditForm
-      // 
-
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AcceptButton = this.btnOK;
+      resources.ApplyResources(this, "$this");
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(393, 165);
       this.Controls.Add(this.ClientPanel);
       this.Controls.Add(this.ButtonsPanel);
-      this.Name = "DocEditForm";
+      this.Name = "ExtEditDialogForm";
       this.ClientPanel.ResumeLayout(false);
       this.ButtonsPanel.ResumeLayout(false);
       this.ResumeLayout(false);

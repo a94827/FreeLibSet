@@ -25,11 +25,11 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Создает пару "Ключ-Значение"
     /// </summary>
-    /// <param name="key">Имя параметра</param>
+    /// <param name="keyName">Имя параметра</param>
     /// <param name="value">Значение</param>
-    public IniKeyValue(string key, string value)
+    public IniKeyValue(string keyName, string value)
     {
-      _Key = key;
+      _KeyName = keyName;
       _Value = value;
     }
 
@@ -40,8 +40,8 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Ключ
     /// </summary>
-    public string Key { get { return _Key; } }
-    private readonly string _Key;
+    public string KeyName { get { return _KeyName; } }
+    private readonly string _KeyName;
 
     /// <summary>
     /// Значение
@@ -55,7 +55,7 @@ namespace FreeLibSet.IO
     /// <returns></returns>
     public override string ToString()
     {
-      return Key + "=" + Value;
+      return KeyName + "=" + Value;
     }
 
     #endregion
@@ -64,7 +64,7 @@ namespace FreeLibSet.IO
 
     string IObjectWithCode.Code
     {
-      get { return Key; }
+      get { return KeyName; }
     }
 
     #endregion
@@ -89,8 +89,8 @@ namespace FreeLibSet.IO
     /// Удаление секции и всех значений в ней.
     /// Если секция не существует, никаких действий не выполняется.
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    void DeleteSection(string section);
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    void DeleteSection(string sectionName);
 
     #endregion
 
@@ -101,41 +101,41 @@ namespace FreeLibSet.IO
     /// Если при чтении нет такой секции или ключа, возвращается пустое значение.
     /// При записи несуществующего значения выполняется создание секции или ключа
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="keyName">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Строковое значение</returns>
-    string this[string section, string key] { get; set; }
+    string this[string sectionName, string keyName] { get; set; }
 
     /// <summary>
     /// Получение строкого значения с указанием значения по умолчанию
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="keyName">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <param name="defaultValue">Значение по умолчанию</param>
     /// <returns>Строковое значение</returns>
-    string GetString(string section, string key, string defaultValue);
+    string GetString(string sectionName, string keyName, string defaultValue);
 
     /// <summary>
     /// Возвращает массив имен всех параметров для заданной секции
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Массив имен</returns>
-    string[] GetKeyNames(string section);
+    string[] GetKeyNames(string sectionName);
 
     /// <summary>
     /// Возвращает объект, для которого можно вызвать foreach по парам "Ключ-Значение"
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Объект, реализующий интерфейс <see cref="IEnumerable{IniKeyValue}"/></returns>
-    IEnumerable<IniKeyValue> GetKeyValues(string section);
+    IEnumerable<IniKeyValue> GetKeyValues(string sectionName);
 
     /// <summary>
     /// Удаление параметра из секции.
     /// Если секция или значение не существуют, никаких действий не выполняется.
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    void DeleteKey(string section, string key);
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="keyName">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    void DeleteKey(string sectionName, string keyName);
 
     #endregion
   }
@@ -157,20 +157,20 @@ namespace FreeLibSet.IO
     {
       #region Конструктор
 
-      public IniSection(string section)
+      public IniSection(string sectionName)
         : base(true)
       {
-        _Section = section;
+        _SectionName = sectionName;
       }
 
       #endregion
 
       #region Свойства
 
-      public string Section { get { return _Section; } }
-      private string _Section;
+      public string SectionName { get { return _SectionName; } }
+      private readonly string _SectionName;
 
-      string IObjectWithCode.Code { get { return _Section; } }
+      string IObjectWithCode.Code { get { return _SectionName; } }
 
       #endregion
     }
@@ -236,7 +236,7 @@ namespace FreeLibSet.IO
     public void Load(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       using (StreamReader oReader = new StreamReader(filePath.Path))
       {
@@ -254,7 +254,7 @@ namespace FreeLibSet.IO
     public void Load(AbsPath filePath, Encoding encoding)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       using (StreamReader oReader = new StreamReader(filePath.Path, encoding))
       {
@@ -316,7 +316,7 @@ namespace FreeLibSet.IO
         {
           IniSection sect = _Sections[_Sections.Count - 1];
           IniKeyValue v = new IniKeyValue(m.Groups[1].Value, m.Groups[2].Value);
-          sect.Remove(v.Key); // на случай ошибки
+          sect.Remove(v.KeyName); // на случай ошибки
           sect.Add(v);
         }
       }
@@ -334,7 +334,7 @@ namespace FreeLibSet.IO
     public void Save(AbsPath filePath)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       CheckNotReadOnly();
       using (StreamWriter oWriter = new StreamWriter(filePath.Path, false))
@@ -354,7 +354,7 @@ namespace FreeLibSet.IO
     public void Save(AbsPath filePath, Encoding encoding)
     {
       if (filePath.IsEmpty)
-        throw new ArgumentNullException("filePath");
+        throw ExceptionFactory.ArgIsEmpty("filePath");
 
       CheckNotReadOnly();
       using (StreamWriter oWriter = new StreamWriter(filePath.Path, false, encoding))
@@ -388,10 +388,10 @@ namespace FreeLibSet.IO
       _FilePath = AbsPath.Empty;
       foreach (IniSection sect in _Sections)
       {
-        oWriter.WriteLine(String.Format("[{0}]", sect.Section));
+        oWriter.WriteLine(String.Format("[{0}]", sect.SectionName));
         foreach (IniKeyValue v in sect)
         {
-          oWriter.WriteLine(String.Format("{0}={1}", v.Key, v.Value));
+          oWriter.WriteLine(String.Format("{0}={1}", v.KeyName, v.Value));
         }
       }
     }
@@ -424,37 +424,35 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Чтение и запись строкового значения.
-    /// Если при чтении нет такой секции или ключа, возвращается пустое значение.
+    /// Если при чтении нет такой секции или ключа, возвращается пустое значение <see cref="string.Empty"/>.
     /// При записи несуществующего значения выполняется создание секции или ключа.
     /// Нельзя устанавливать свойство при <see cref="IsReadOnly"/>=true.
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="keyName">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Строковое значение</returns>
-    public string this[string section, string key]
+    public string this[string sectionName, string keyName]
     {
       get
       {
-        return GetString(section, key, String.Empty);
+        return GetString(sectionName, keyName, String.Empty);
       }
       set
       {
-        if (String.IsNullOrEmpty(section))
-          throw new ArgumentNullException("section");
-        if (String.IsNullOrEmpty(key))
-          throw new ArgumentNullException("key");
+        ValidateSectionName(sectionName);
+        ValidateKeyName(keyName);
         if (value == null)
           value = String.Empty;
         CheckNotReadOnly();
-        IniSection sect = _Sections[section];
+        IniSection sect = _Sections[sectionName];
         if (sect == null)
         {
-          sect = new IniSection(section);
+          sect = new IniSection(sectionName);
           _Sections.Add(sect);
         }
 
-        IniKeyValue v = new IniKeyValue(key, value);
-        sect.Remove(key);
+        IniKeyValue v = new IniKeyValue(keyName, value);
+        sect.Remove(keyName);
         sect.Add(v);
       }
     }
@@ -462,22 +460,20 @@ namespace FreeLibSet.IO
     /// <summary>
     /// Получение строкого значения с указанием значения по умолчанию
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="keyName">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <param name="defaultValue">Значение по умолчанию</param>
     /// <returns>Строковое значение</returns>
-    public string GetString(string section, string key, string defaultValue)
+    public string GetString(string sectionName, string keyName, string defaultValue)
     {
-      if (String.IsNullOrEmpty(section))
-        throw new ArgumentNullException("section");
-      if (String.IsNullOrEmpty(key))
-        throw new ArgumentNullException("key");
+      ValidateSectionName(sectionName);
+      ValidateKeyName(keyName);
 
-      IniSection sect = _Sections[section];
+      IniSection sect = _Sections[sectionName];
       if (sect == null)
         return defaultValue;
-      IniKeyValue v = sect[key];
-      //if (v.Key == null)
+      IniKeyValue v = sect[keyName];
+      //if (v.KeyName == null)
       if (v == null) // исправлено 08.11.2019
         return defaultValue;
       else
@@ -497,14 +493,13 @@ namespace FreeLibSet.IO
     /// Возвращает массив имен всех параметров для заданной секции.
     /// Возвращает пустой массив строк, если секции не существует.
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Массив имен</returns>
-    public string[] GetKeyNames(string section)
+    public string[] GetKeyNames(string sectionName)
     {
-      if (String.IsNullOrEmpty(section))
-        throw new ArgumentNullException("section");
+      ValidateSectionName(sectionName);
 
-      IniSection sect = _Sections[section];
+      IniSection sect = _Sections[sectionName];
       if (sect == null)
         return DataTools.EmptyStrings;
       else
@@ -516,14 +511,13 @@ namespace FreeLibSet.IO
     /// Если секция не существует, никаких действий не выполняется.
     /// Этот метод нельзя вызывать при <see cref="IsReadOnly"/>=true.
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    public void DeleteSection(string section)
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    public void DeleteSection(string sectionName)
     {
-      if (String.IsNullOrEmpty(section))
-        throw new ArgumentNullException("section");
+      ValidateSectionName(sectionName);
 
       CheckNotReadOnly();
-      _Sections.Remove(section);
+      _Sections.Remove(sectionName);
     }
 
     /// <summary>
@@ -531,32 +525,29 @@ namespace FreeLibSet.IO
     /// Если секция или значение не существуют, никаких действий не выполняется.
     /// Этот метод нельзя вызывать при <see cref="IsReadOnly"/>=true.
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    /// <param name="key">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
-    public void DeleteKey(string section, string key)
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="keyName">Имя параметра. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    public void DeleteKey(string sectionName, string keyName)
     {
-      if (String.IsNullOrEmpty(section))
-        throw new ArgumentNullException("section");
-      if (String.IsNullOrEmpty(key))
-        throw new ArgumentNullException("key");
+      ValidateSectionName(sectionName);
+      ValidateKeyName(keyName);
 
       CheckNotReadOnly();
-      IniSection sect = _Sections[section];
+      IniSection sect = _Sections[sectionName];
       if (sect == null)
         return;
-      sect.Remove(key);
+      sect.Remove(keyName);
     }
 
     /// <summary>
     /// Возвращает объект, для которого можно вызвать foreach по парам "Ключ-Значение"
     /// </summary>
-    /// <param name="section">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
+    /// <param name="sectionName">Имя секции. Не может быть пустой строкой. Регистр символов не имеет значения</param>
     /// <returns>Объект, реализующий интерфейс <see cref="IEnumerable"/></returns>
-    public IEnumerable<IniKeyValue> GetKeyValues(string section)
+    public IEnumerable<IniKeyValue> GetKeyValues(string sectionName)
     {
-      if (String.IsNullOrEmpty(section))
-        throw new ArgumentNullException("section");
-      IniSection sect = _Sections[section];
+      ValidateSectionName(sectionName);
+      IniSection sect = _Sections[sectionName];
       if (sect == null)
         return new DummyEnumerable<IniKeyValue>();
       else
@@ -580,7 +571,96 @@ namespace FreeLibSet.IO
     public void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
+    #endregion
+
+    #region Проверка имени секции и ключа
+
+    private static readonly CharArrayIndexer _SectionBadChars = new CharArrayIndexer("[]");
+
+    /// <summary>
+    /// Проверка корректности имени секции конфигурации.
+    /// Имя не может содержать символы "[" и "]".
+    /// Пустая строка считается ошибочной.
+    /// </summary>
+    /// <param name="sectionName">Проверяемое имя</param>
+    /// <param name="errorText">Сюда текст сообщения об ошибке</param>
+    /// <returns>true, если имя правильное</returns>
+    public static bool IsValidSectionName(string sectionName, out string errorText)
+    {
+      if (String.IsNullOrEmpty(sectionName))
+      {
+        errorText = Res.IniFile_Err_SectionNameIsEmpty;
+        return false;
+      }
+      if (sectionName[0] == ' ' || sectionName[sectionName.Length - 1] == ' ')
+      {
+        errorText = Res.IniFile_Err_SectionNameStartsOrEndsWithSpace;
+        return false;
+      }
+
+      int p = _SectionBadChars.IndexOfAny(sectionName);
+      if (p >= 0)
+      {
+        errorText = String.Format(Res.IniFile_Err_SectionNameInvalidChar, sectionName[p], p + 1);
+        return false;
+      }
+      errorText = null;
+      return true;
+    }
+
+    internal static void ValidateSectionName(string sectionName)
+    {
+      if (String.IsNullOrEmpty(sectionName))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("sectionName");
+      string errorText;
+      if (!IsValidSectionName(sectionName, out errorText))
+        throw new ArgumentException(String.Format(Res.IniFile_Arg_SectionName, sectionName, errorText), "sectionName");
+    }
+
+
+    private static readonly CharArrayIndexer _KeyBadChars = new CharArrayIndexer("[]=");
+
+    /// <summary>
+    /// Проверка корректности имени ключа.
+    /// Имя не может содержать символы "=", "[" и "]".
+    /// Пустая строка считается ошибочной.
+    /// </summary>
+    /// <param name="keyName">Проверяемое имя</param>
+    /// <param name="errorText">Сюда текст сообщения об ошибке</param>
+    /// <returns>true, если имя правильное</returns>
+    public static bool IsValidKeyName(string keyName, out string errorText)
+    {
+      if (String.IsNullOrEmpty(keyName))
+      {
+        errorText = Res.IniFile_Err_KeyNameIsEmpty;
+        return false;
+      }
+      if (keyName[0] == ' ' || keyName[keyName.Length - 1] == ' ')
+      {
+        errorText = Res.IniFile_Err_KeyNameStartsOrEndsWithSpace;
+        return false;
+      }
+
+      int p = _SectionBadChars.IndexOfAny(keyName);
+      if (p >= 0)
+      {
+        errorText = String.Format(Res.IniFile_Err_SectionNameInvalidChar, keyName[p], p + 1);
+        return false;
+      }
+      errorText = null;
+      return true;
+    }
+
+    internal static void ValidateKeyName(string keyName)
+    {
+      if (String.IsNullOrEmpty(keyName))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("keyName");
+      string errorText;
+      if (!IsValidSectionName(keyName, out errorText))
+        throw new ArgumentException(String.Format(Res.IniFile_Arg_SectionName, keyName, errorText), "keyName");
     }
 
     #endregion

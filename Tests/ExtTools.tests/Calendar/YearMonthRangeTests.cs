@@ -161,6 +161,40 @@ namespace ExtTools_tests.Calendar
 
     #endregion
 
+    #region Contains()
+
+    // полуоткрытые интервалы не поддерживаются в YearMonthRange
+
+    [TestCase("202412-202501", "202411", false)]
+    [TestCase("202412-202501", "202412", true)]
+    [TestCase("202412-202501", "202501", true)]
+    [TestCase("202412-202501", "202502", false)]
+    [TestCase("", "202501", false)]
+    public void Contains_YearMonth(string sSut, string sValue, bool wantedRes)
+    {
+      YearMonthRange sut = Creators.YearMonthRange(sSut);
+      YearMonth value = Creators.YearMonth(sValue);
+
+      bool res = sut.Contains(value);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [TestCase("202412-202501", "20241130", false)]
+    [TestCase("202412-202501", "20241201", true)]
+    [TestCase("202412-202501", "20250131", true)]
+    [TestCase("202412-202501", "20250201", false)]
+    [TestCase("", "20250130", false)]
+    public void Contains_DateTime(string sSut, string sValue, bool wantedRes)
+    {
+      YearMonthRange sut = Creators.YearMonthRange(sSut);
+      DateTime value = Creators.DateTime(sValue);
+
+      bool res = sut.Contains(value);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    #endregion
+
     #region Объединение и пересечение периодов
 
     [TestCase("202112-202202", "202211-202302", "202112-202302")]

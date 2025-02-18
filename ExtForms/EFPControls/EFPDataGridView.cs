@@ -454,12 +454,12 @@ namespace FreeLibSet.Forms
         if (!String.IsNullOrEmpty(ControlProvider.RowIdTextDataColumnName))
         {
           if (DataRow == null)
-            return "Нет строки";
+            return Res.EFPDataView_Msg_RowIdText_NoDataRow;
           return DataTools.GetString(DataRow, ControlProvider.RowIdTextDataColumnName);
         }
 
         // Значение по умолчанию
-        return "Строка " + (RowIndex + 1).ToString();
+        return String.Format(Res.EFPDataView_Msg_RowIdText_RowNumber, RowIndex + 1);
       }
     }
 
@@ -548,7 +548,7 @@ namespace FreeLibSet.Forms
         case ErrorMessageKind.Warning: newImageKind = UIDataViewImageKind.Warning; break;
         case ErrorMessageKind.Info: newImageKind = UIDataViewImageKind.Information; break;
         default:
-          throw new ArgumentException("Неправильное значение Error.Kind=" + item.Kind.ToString());
+          throw ExceptionFactory.ArgProperty("item", item, "Kind", item.Kind, null);
       }
 
       if ((int)newImageKind > (int)ImageKind)
@@ -593,7 +593,7 @@ namespace FreeLibSet.Forms
 
 #if DEBUG
       if (String.IsNullOrEmpty(message))
-        throw new ArgumentNullException("message");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("message");
 #endif
 
       if (String.IsNullOrEmpty(ToolTipText))
@@ -715,7 +715,7 @@ namespace FreeLibSet.Forms
       }
 
       ReadOnly = false;
-      ReadOnlyMessage = "Строка предназначена только для просмотра";
+      ReadOnlyMessage = Res.EFPDataView_Msg_ReadOnlyRow;
       if (reason == EFPDataGridViewAttributesReason.ReadOnly)
       {
         DataGridViewRow gridRow = ControlProvider.Control.Rows.SharedRow(rowIndex);
@@ -975,7 +975,7 @@ namespace FreeLibSet.Forms
       _OriginalValue = originalValue;
 
       ReadOnly = false;
-      ReadOnlyMessage = "Столбец предназначен только для просмотра";
+      ReadOnlyMessage = Res.EFPDataView_Msg_ReadOnlyColumn;
       if (Reason == EFPDataGridViewAttributesReason.ReadOnly)
       {
         DataGridViewRow gridRow = ControlProvider.Control.Rows[RowIndex]; // Unshared
@@ -1287,25 +1287,25 @@ namespace FreeLibSet.Forms
     /// Провайдер табличного просмотра, вызвавшего событие
     /// </summary>
     public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
-    private EFPDataGridView _ControlProvider;
+    private readonly EFPDataGridView _ControlProvider;
 
     /// <summary>
     /// Индекс строки
     /// </summary>
     public int RowIndex { get { return _RowIndex; } }
-    private int _RowIndex;
+    private readonly int _RowIndex;
 
     /// <summary>
     /// Индекс строки
     /// </summary>
     public int ColumnIndex { get { return _ColumnIndex; } }
-    private int _ColumnIndex;
+    private readonly int _ColumnIndex;
 
     /// <summary>
     /// Причина появления события
     /// </summary>
     public EFPDataGridViewCellFinishedReason Reason { get { return _Reason; } }
-    private EFPDataGridViewCellFinishedReason _Reason;
+    private readonly EFPDataGridViewCellFinishedReason _Reason;
 
     /// <summary>
     /// Ячейка табличного просмотра
@@ -1652,7 +1652,7 @@ namespace FreeLibSet.Forms
     /// Параметры печати/экспорта табличного просмотра.
     /// Может возвращать null, если в <see cref="EFPDataGridViewCommandItems.OutHandler"/> был удален вариант "Control"
     /// </summary>
-    Reporting.BRDataViewMenuOutItemBase DefaultOutItem { get;}
+    Reporting.BRDataViewMenuOutItemBase DefaultOutItem { get; }
 
     /// <summary>
     /// Вызывается для редактирования записей
@@ -1879,7 +1879,7 @@ namespace FreeLibSet.Forms
     public void EndUpdate()
     {
       if (_UpdateCount <= 0)
-        throw new InvalidOperationException("Не было вызова BeginUpdate");
+        throw ExceptionFactory.UnpairedCall(this, "BeginUpdate()", "EndUpdate()");
 
       _UpdateCount--;
       if (_UpdateCount == 0)
@@ -1955,7 +1955,7 @@ namespace FreeLibSet.Forms
           CurrentIncSearchColumn = null;
       }
 
-      if (CommandItemsIfAssigned!=null)
+      if (CommandItemsIfAssigned != null)
         CommandItems.RefreshStatItems();
     }
 
@@ -1997,7 +1997,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_VisibleChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -2030,7 +2030,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка вызова OnDataBindingChanged()");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -2089,7 +2089,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_DataBindingComplete");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -2143,7 +2143,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки нажатия клавиши KeyDown");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -2165,7 +2165,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_MouseDown");
+        EFPApp.ShowException(e);
       }
     }
     void DoControl_MouseDown(MouseEventArgs args)
@@ -2367,12 +2367,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Значение свойства <see cref="EFPControlBase.DisplayName"/>, если оно не задано в явном виде
     /// </summary>
-    protected override string DefaultDisplayName { get { return "Табличный просмотр"; } }
+    protected override string DefaultDisplayName { get { return Res.EFPDataGridView_Name_Default; } }
 
     #endregion
 
     #region Управление поведением просмотра
-
 
     #region ReadOnly
 
@@ -3549,12 +3548,12 @@ namespace FreeLibSet.Forms
     {
       if (CurrentGridRow == null)
       {
-        EFPApp.ShowTempMessage("В табличном просмотре нет выбранной строки");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedRow);
         return false;
       }
       if (!IsCurrentRowSingleSelected)
       {
-        EFPApp.ShowTempMessage("В табличном просмотре выбрано больше одной строки");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_MultiSelectedRows);
         return false;
       }
       return true;
@@ -3889,7 +3888,7 @@ namespace FreeLibSet.Forms
 
         DataView dv = SourceAsDataView;
         if (dv == null)
-          throw new InvalidDataSourceException("Просмотр не связан с DataView");
+          throw new InvalidDataSourceException(Res.EFPDataView_Err_NoDataView);
 
         if (dv.Count != Control.RowCount)
           return; // 09.02.2021. Просмотр может быть еще не выведен на экран и Control.RowCount==0.
@@ -3956,9 +3955,9 @@ namespace FreeLibSet.Forms
         {
           Exception e;
           if (Control.DataSource == null)
-            e = new NullReferenceException("Свойство DataGridView.DataSource = null");
+            e = ExceptionFactory.ObjectProperty(Control, "DataSource", Control.DataSource, null);
           else
-            e = new InvalidDataSourceException("Свойство DataGridView.DataSource не является DataView или DataTable");
+            e = new InvalidDataSourceException(Res.EFPDataView_Err_NoDataView);
           AddExceptionInfo(e);
           throw e;
         }
@@ -4015,7 +4014,7 @@ namespace FreeLibSet.Forms
           return;
         DataTable table = SourceAsDataTable;
         if (table == null)
-          throw new InvalidOperationException("DataGridView.DataSource не является DataTable");
+          throw new InvalidOperationException(Res.EFPDataView_Err_NoDataView);
         DataRow[] rows = DataTools.GetPrimaryKeyRows(table, value);
         SelectedDataRows = rows;
       }
@@ -4041,7 +4040,7 @@ namespace FreeLibSet.Forms
       {
         DataTable table = SourceAsDataTable;
         if (table == null)
-          throw new InvalidOperationException("DataGridView.DataSource не является DataTable");
+          throw new InvalidOperationException(Res.EFPDataView_Err_NoDataView);
         if (value == null)
           return;
         DataRow row = table.Rows.Find(value);
@@ -4085,9 +4084,9 @@ namespace FreeLibSet.Forms
           return;
         DataView dv = SourceAsDataView;
         if (dv == null)
-          throw new InvalidOperationException("К просмотру не присоединен объект DataView");
+          throw new InvalidOperationException(Res.EFPDataView_Err_NoDataView);
         if (String.IsNullOrEmpty(dv.Sort))
-          throw new InvalidOperationException("Присоединенный к просмотру объект DataView не имеет полей сортировки");
+          throw new InvalidOperationException(Res.EFPDataView_Err_DataViewNotSorted);
 
         int nRows = value.GetLength(0);
         if (nRows == 0)
@@ -4138,9 +4137,9 @@ namespace FreeLibSet.Forms
           return;
         DataView dv = SourceAsDataView;
         if (dv == null)
-          throw new InvalidOperationException("К просмотру не присоединен объект DataView");
+          throw new InvalidOperationException(Res.EFPDataView_Err_NoDataView);
         if (String.IsNullOrEmpty(dv.Sort))
-          throw new InvalidOperationException("Присоединенный к просмотру объект DataView не имеет полей сортировки");
+          throw new InvalidOperationException(Res.EFPDataView_Err_DataViewNotSorted);
 
         int idx = dv.Find(value);
         if (idx > 0)
@@ -4927,7 +4926,7 @@ namespace FreeLibSet.Forms
 
       DataView dv = SourceAsDataView;
       if (dv == null)
-        throw new InvalidOperationException("Табличный просмотр не связан с набором данных");
+        throw new InvalidOperationException(Res.EFPDataView_Err_NoDataView);
 
       Dictionary<DataRow, int> allRowIndices = new Dictionary<DataRow, int>(dv.Count);
       for (int i = 0; i < dv.Count; i++)
@@ -4955,7 +4954,7 @@ namespace FreeLibSet.Forms
 
       DataView dv = SourceAsDataView;
       if (dv == null)
-        throw new InvalidOperationException("Табличный просмотр не связан с набором данных");
+        throw new InvalidOperationException(Res.EFPDataView_Err_NoDataView);
 
       // Нет оптимального метода поиска
       for (int i = 0; i < dv.Count; i++)
@@ -5029,8 +5028,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < 0 || value >= OrderCount)
-          throw new ArgumentOutOfRangeException("value",
-            "Индекс сортировки должен быть в диапазоне от 0 до " + (OrderCount - 1).ToString());
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, OrderCount - 1);
 
 
         _CurrentOrder = Orders[value];
@@ -5112,7 +5110,7 @@ namespace FreeLibSet.Forms
         if (value == _CustomOrderAllowed)
           return;
         if ((!value) && CustomOrderActive)
-          throw new InvalidOperationException("Свойство CustomOrderActive уже установлено");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "CustomOrderActive");
         _CustomOrderAllowed = value;
       }
     }
@@ -5141,7 +5139,7 @@ namespace FreeLibSet.Forms
           return;
 
         if (!_CustomOrderAllowed)
-          throw new InvalidOperationException("Произвольная сортировка запрещена для этого просмотра");
+          throw new InvalidOperationException(Res.EFPDataView_Err_CustomOrderNotAllowed);
 
         _CustomOrderActive = value;
         _CustomOrderAutoActivated = false;
@@ -5274,7 +5272,7 @@ namespace FreeLibSet.Forms
           {
             int p = Orders.IndexOf(value);
             if (p < 0)
-              throw new ArgumentException("Значение отсутствует в коллекции Orders", "value");
+              throw ExceptionFactory.ArgUnknownValue("value", value, Orders.ToArray());
             CurrentOrderIndex = p;
           }
         }
@@ -5397,7 +5395,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (SourceAsDataTable == null)
-        throw new InvalidOperationException("SourceAsDataTable==null");
+        throw new InvalidOperationException(Res.EFPDataView_Err_NoDataView);
       //if (!AutoSort)
       //  throw new InvalidOperationException("AutoSort=false");
 #endif
@@ -5514,7 +5512,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка нажатия мыши на заголовке табличного просмотра");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -5561,12 +5559,12 @@ namespace FreeLibSet.Forms
       {
         if (CustomOrderAllowed)
         {
-          EFPApp.ShowTempMessage("Нет предопределенных порядков сортировки. Переключитесь на произвольный порядок строк");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoPredefinedOrders);
           return false;
         }
         else
         {
-          EFPApp.ShowTempMessage("Сортировка не предусмотрена");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_OrderNotAllowed);
           return false;
         }
       }
@@ -5593,7 +5591,7 @@ namespace FreeLibSet.Forms
               return false;
             }
           }
-          EFPApp.ShowTempMessage("Строки уже отсортированы по этому столбцу");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_AlreadySorted);
           return false;
         }
       }
@@ -5624,7 +5622,7 @@ namespace FreeLibSet.Forms
         }
       }
 
-      EFPApp.ShowTempMessage("Для этого столбца нет сортировки. Выберите порядок строк из меню");
+      EFPApp.ShowTempMessage(Res.EFPDataView_Err_ColumnHasNoSort);
       return false;
     }
 
@@ -5633,7 +5631,7 @@ namespace FreeLibSet.Forms
       EFPDataGridViewColumn col = Columns[clickedColumnName];
       if (!col.CustomOrderAllowed)
       {
-        EFPApp.ShowTempMessage("Нельзя выполнять сортировку по столбцу " + col.GridColumn.HeaderText);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_ColumnCustomSortNotAllowed, col.GridColumn.HeaderText));
         return false;
       }
 
@@ -5647,7 +5645,7 @@ namespace FreeLibSet.Forms
       {
         if (currColNames.Length == 0)
         {
-          EFPApp.ShowTempMessage("В данный момент сортировка не выполнена. Не нажимайте <Ctrl>");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_ComplexSortNotStarted);
           return false;
         }
 
@@ -5660,7 +5658,7 @@ namespace FreeLibSet.Forms
         }
         if (Array.IndexOf<string>(currColNames, col.CustomOrderColumnName) >= 0)
         {
-          EFPApp.ShowTempMessage("Нельзя добавить столбец к сортировке, так как он уже в ней участвует");
+          EFPApp.ShowTempMessage(Res.EFPDataView_Err_ComplexSortRepeatedColumn);
           return false;
 
         }
@@ -5732,20 +5730,9 @@ namespace FreeLibSet.Forms
         else
           sb.Append(colNames[i]);
 
-        if (colNames.Length == 1)
-        {
-          if (dirs[i] == ListSortDirection.Ascending)
-            sb.Append(" (по возрастанию)");
-          else
-            sb.Append(" (по убыванию)");
-        }
-        else
-        {
-          if (dirs[i] == ListSortDirection.Ascending)
-            sb.Append(" (возр.)");
-          else
-            sb.Append(" (убыв.)");
-        }
+        sb.Append(" (");
+        sb.Append(UITools.ToString(dirs[i], colNames.Length == 1)); // короткая форма если сложный порядок сортировки
+        sb.Append(")");
       }
       return sb.ToString();
     }
@@ -5858,7 +5845,7 @@ namespace FreeLibSet.Forms
                 }
                 catch { }
 
-                FreeLibSet.Logging.LogoutTools.LogoutException(e, "Ошибка установки DataGridViewColumn.SortGlyphDirection");
+                LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("DataGridViewColumn.SortGlyphDirection"));
               }
             }
           }
@@ -5888,7 +5875,7 @@ namespace FreeLibSet.Forms
               }
               catch { }
 
-              FreeLibSet.Logging.LogoutTools.LogoutException(e, "Ошибка установки DataGridViewColumn.SortGlyphDirection");
+              LogoutTools.LogoutException(e, LogoutTools.GetTitleForCall("DataGridViewColumn.SortGlyphDirection"));
             }
           }
         }
@@ -5917,7 +5904,7 @@ namespace FreeLibSet.Forms
 
       if (OrderCount == 0 && (!CustomOrderAllowed))
       {
-        EFPApp.ShowTempMessage("Нельзя выбрать порядок строк в табличном просмотре");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_OrderNotAllowed);
         return false;
       }
 
@@ -6040,7 +6027,7 @@ namespace FreeLibSet.Forms
     {
       if (!Control.EndEdit())
       {
-        EFPApp.ErrorMessageBox("Редактирование не закончено");
+        EFPApp.ErrorMessageBox(Res.EFPDataView_Err_EditNotFinished);
         return;
       }
 
@@ -6081,7 +6068,6 @@ namespace FreeLibSet.Forms
         OnManualOrderChanged(EventArgs.Empty);
       }
     }
-
 
     /// <summary>
     /// Вызывается, когда выполнена ручная сортировка строк (по окончании изменения
@@ -6146,7 +6132,7 @@ namespace FreeLibSet.Forms
       int[] selPoss = SelectedRowIndices;
       if (selPoss.Length == 0)
       {
-        EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedRow);
         return false;
       }
 
@@ -6164,16 +6150,9 @@ namespace FreeLibSet.Forms
       }
       if (lBound)
       {
-        string msg = "Нельзя передвинуть ";
-        if (selPoss.Length > 1)
-          msg += "выбранные строки ";
-        else
-          msg += "выбранную строку ";
-        if (down)
-          msg += "вниз";
-        else
-          msg += "вверх";
-        EFPApp.ShowTempMessage(msg);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_MoveRowsUpDown,
+          selPoss.Length,
+          down ? Res.EFPDataView_Msg_MoveDown : Res.EFPDataView_Msg_MoveUp));
         return false;
       }
 
@@ -6225,7 +6204,7 @@ namespace FreeLibSet.Forms
     private bool DoSortRestoreRows()
     {
       if (DefaultManualOrderRows == null)
-        throw new NullReferenceException("Свойство DefaultManulOrderRows не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DefaultManualOrderRows");
 
       // 1. Загружаем полный список строк DataGridViewRow в массив
       DataGridViewRow[] rows1 = new DataGridViewRow[Control.Rows.Count];
@@ -6348,7 +6327,7 @@ namespace FreeLibSet.Forms
       DataReorderHelperNeededEventArgs args = new DataReorderHelperNeededEventArgs();
       OnDataReorderHelperNeeded(args);
       if (args.Helper == null)
-        throw new NullReferenceException("Объект, реализующий IDataReorderHelper, не был создан");
+        throw ExceptionFactory.ObjectPropertyNotSet(args, "Helper");
       return args.Helper;
     }
 
@@ -6372,12 +6351,12 @@ namespace FreeLibSet.Forms
     protected virtual IDataReorderHelper CreateDefaultDataReorderHelper()
     {
       if (String.IsNullOrEmpty(ManualOrderColumn))
-        throw new InvalidOperationException("Не установлено свойство ManualOrderColumn");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "ManualOrderColumn");
 
       // Получаем доступ к объекту DataView
       DataView dv = SourceAsDataView;
       if (dv == null)
-        throw new InvalidDataSourceException("Нельзя получить DataView");
+        throw new InvalidDataSourceException(Res.EFPDataView_Err_NoDataView);
 
       return new DataTableReorderHelper(dv, ManualOrderColumn);
     }
@@ -6412,13 +6391,13 @@ namespace FreeLibSet.Forms
     private bool DoReorderByDataColumn(bool down)
     {
       if (DataReorderHelper == null)
-        throw new NullReferenceException("DataReorderHelper=null");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DataReorderHelper");
 
       // Загружаем выбранные строки
       DataRow[] selRows = this.SelectedDataRows;
       if (selRows.Length == 0)
       {
-        EFPApp.ShowTempMessage("Нет ни одной выбранной строки, которую надо перемещать");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedRow);
         return false;
       }
 
@@ -6430,16 +6409,9 @@ namespace FreeLibSet.Forms
 
       if (!res)
       {
-        string msg = "Нельзя передвинуть ";
-        if (selRows.Length > 1)
-          msg += "выбранные строки ";
-        else
-          msg += "выбранную строку ";
-        if (down)
-          msg += "вниз";
-        else
-          msg += "вверх";
-        EFPApp.ShowTempMessage(msg);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_MoveRowsUpDown,
+          selRows.Length,
+          down ? Res.EFPDataView_Msg_MoveDown : Res.EFPDataView_Msg_MoveUp));
         return false;
       }
 
@@ -6477,9 +6449,9 @@ namespace FreeLibSet.Forms
     private bool DoSortRestoreColumn()
     {
       if (String.IsNullOrEmpty(DefaultManualOrderColumn))
-        throw new NullReferenceException("Свойство DefaultManualOrderColumn не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DefaultManualOrderColumn");
       if (DataReorderHelper == null)
-        throw new NullReferenceException("DataReorderHelper=null");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DataReorderHelper");
 
       DataRow[] desiredOrder;
       using (DataView dv = new DataView(SourceAsDataTable))
@@ -6581,7 +6553,7 @@ namespace FreeLibSet.Forms
       get { return MenuOutItems["Control"] as Reporting.BRDataGridViewMenuOutItem; }
     }
 
-    Reporting.BRDataViewMenuOutItemBase IEFPDataView.DefaultOutItem { get { return DefaultOutItem;} }
+    Reporting.BRDataViewMenuOutItemBase IEFPDataView.DefaultOutItem { get { return DefaultOutItem; } }
 
     #endregion
 
@@ -6606,7 +6578,7 @@ namespace FreeLibSet.Forms
 
           if (Control.IsCurrentCellInEditMode)
           {
-            EFPApp.ShowTempMessage("Ячейка уже редактируется");
+            EFPApp.ShowTempMessage(Res.EFPDataView_Err_EditNotFinished);
             return;
           }
           string readOnlyMessage;
@@ -6623,7 +6595,7 @@ namespace FreeLibSet.Forms
           {
             DataGridViewRow[] rows = SelectedGridRows;
             if (rows.Length == 0)
-              EFPApp.ShowTempMessage("Нет выбранных строк для удаления");
+              EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedRow);
             else
             {
               for (int i = 0; i < rows.Length; i++)
@@ -6634,8 +6606,7 @@ namespace FreeLibSet.Forms
             ClearSelectedCells();
           break;
         default:
-          EFPApp.ShowTempMessage("Редактирование по месту для режима \"" +
-            state.ToString() + "\" не реализовано");
+          EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_InlineEditNotImplemented, state));
           break;
       }
     }
@@ -6661,7 +6632,7 @@ namespace FreeLibSet.Forms
     {
       if (area.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Нет выбранных ячеек");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedCell);
         return;
       }
 
@@ -6743,7 +6714,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_CellBeginEdit");
+        EFPApp.ShowException(e);
       }
     }
     void DoControl_CellBeginEdit1(DataGridViewCellCancelEventArgs args)
@@ -6780,7 +6751,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_CellBeginEdit");
+        EFPApp.ShowException(e);
       }
     }
     void DoControl_CellBeginEdit2(DataGridViewCellCancelEventArgs args)
@@ -6828,7 +6799,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_CellEndEdit");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -6845,7 +6816,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки щелчка мыши на содержимом ячейки табличного просмотра");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -6872,7 +6843,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события CurrentCellDirtyStateChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -6884,7 +6855,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события CellParsing");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -6951,7 +6922,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при обработк события CellValidating");
+        EFPApp.ShowException(e);
         args.Cancel = true;
       }
     }
@@ -6991,7 +6962,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки события CellValueChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -7055,7 +7026,7 @@ namespace FreeLibSet.Forms
         if (!_CellFinishedErrorShown)
         {
           _CellFinishedErrorShown = true;
-          EFPApp.ShowException(e, "Ошибка в обработчике события CellFinished");
+          EFPApp.ShowException(e);
         }
       }
 
@@ -7073,7 +7044,7 @@ namespace FreeLibSet.Forms
     {
       if (cell == null)
       {
-        readOnlyMessage = "Ячейка не выбрана";
+        readOnlyMessage = Res.EFPDataView_Err_NoSelectedCell;
         return true;
       }
       return GetCellReadOnly(cell.RowIndex, cell.ColumnIndex, out readOnlyMessage);
@@ -7109,13 +7080,13 @@ namespace FreeLibSet.Forms
     {
       if (Control.ReadOnly)
       {
-        readOnlyMessage = "Просмотр предназначен только для чтения";
+        readOnlyMessage = Res.EFPDataView_Msg_ReadOnlyView;
         return true;
       }
 
       if (rowIndex < 0 || rowIndex >= Control.RowCount)
       {
-        readOnlyMessage = "Неправильный номер строки";
+        readOnlyMessage = "Wrong row index";
         return true;
       }
 
@@ -7198,7 +7169,7 @@ namespace FreeLibSet.Forms
 
       if (Control.ReadOnly)
       {
-        errorText = "Табличный просмотр не допускает редактирование";
+        errorText = Res.EFPDataView_Msg_ReadOnlyView;
         return false;
       }
 
@@ -7212,7 +7183,7 @@ namespace FreeLibSet.Forms
 
       if (nX1 == 0 || nY1 == 0)
       {
-        errorText = "Текст не задан";
+        errorText = Res.EFPDataView_Err_PasteNoText;
         return false; // 27.12.2020
       }
 
@@ -7221,7 +7192,7 @@ namespace FreeLibSet.Forms
       int nY2 = rect.Height;
       if (nX2 == 0 || nY2 == 0)
       {
-        errorText = "Нет выбранной ячейки";
+        errorText = Res.EFPDataView_Err_NoSelectedCell;
         return false;
       }
 
@@ -7240,9 +7211,8 @@ namespace FreeLibSet.Forms
             RusNumberConvert.IntWithNoun(nX2, "столбец", "столбца", "столбцов"));
            * */
 
-          errorText = "Текст в буфере обмена содержит строк: " +
-            nY1.ToString() + " и столбцов: " + nX1.ToString() +
-            ", а выбрано меньше: строк: " + nY2.ToString() + " и столбцов: " + nX2.ToString();
+          errorText = String.Format(Res.EFPDataView_Err_PasteMore,
+            nY1, nX1, nY2, nX2);
           return false;
         }
 
@@ -7257,10 +7227,8 @@ namespace FreeLibSet.Forms
             RusNumberConvert.IntWithNoun(nX2, "столбец", "столбца", "столбцов") +
             ". Не делится нацело");
            * */
-          errorText = "Текст в буфере обмена содержит строк: " +
-            nY1.ToString() + " и столбцов: " + nX1.ToString() +
-            ", а выбрано строк: " + nY2.ToString() + " и столбцов: " + nX2.ToString() +
-            ". Не делится нацело";
+          errorText = String.Format(Res.EFPDataView_Err_PasteNoDivided,
+            nY1, nX1, nY2, nX2);
           return false;
         }
       }
@@ -7275,8 +7243,8 @@ namespace FreeLibSet.Forms
             RusNumberConvert.IntWithNoun(nX1, "столбец", "столбца", "столбцов") +
             " - не помещается");
            * */
-          errorText = "Текст в буфере обмена содержит строк: " + nY1.ToString() + " и столбцов:" + nX1.ToString() +
-            " - не помещается";
+          errorText = String.Format(Res.EFPDataView_Err_PasteOutIOfBounds,
+            nY1, nX1);
           return false;
         }
 
@@ -7528,8 +7496,7 @@ namespace FreeLibSet.Forms
         }
         catch (Exception e)
         {
-          EFPApp.MessageBox("Возникла ошибка при восстановлении выбранных строк при обновлении таблицы. " +
-            e.Message, "Ошибка табличного просмотра", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_RefreshRestoreSelection, e.Message));
         }
       }
 
@@ -7557,7 +7524,7 @@ namespace FreeLibSet.Forms
     {
       if (_InsideEditData)
       {
-        EFPApp.ShowTempMessage("Предыдущее редактирование еще не выполнено");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_EditNotFinished);
         return;
       }
       // Любая операция редактирования останавливает поиск по первым буквам
@@ -7622,7 +7589,7 @@ namespace FreeLibSet.Forms
     {
       string errorText;
       if (!TrySetTextValue(cell, textValue, out errorText, false, reason))
-        throw new InvalidOperationException("Нельзя записать значение \"" + textValue + "\". " + errorText);
+        throw new InvalidOperationException(String.Format(Res.EFPDataView_Err_SetTextValue, textValue, errorText));
     }
 
     /// <summary>
@@ -7748,7 +7715,7 @@ namespace FreeLibSet.Forms
       #region Конструктор
 
       public DataGridViewDataErrorException(DataGridView control, DataGridViewDataErrorEventArgs args)
-        : base("Ошибка DataGridView.DataError (" + args.Context.ToString() + ")", args.Exception)
+        : base(String.Format(Res.EFPDataGridView_Err_DataErrorException, args.Context), args.Exception)
       {
         _Control = control;
         _Arguments = args;
@@ -7805,7 +7772,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_DataError");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -7825,7 +7792,7 @@ namespace FreeLibSet.Forms
         // Введено неправильное значение в поле. Вместо большого сообщения об ошибке
         // выдаем всплывающее сообщение внизу экрана
         DataGridViewCell cell = control.Rows[args.RowIndex].Cells[args.ColumnIndex];
-        EFPApp.ShowTempMessage("Ошибка преобразования введенного значения \"" + cell.EditedFormattedValue.ToString() + "\"");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataGridView_Err_DataErrorParsing, cell.EditedFormattedValue) + "\"");
         return;
       }
 
@@ -7838,7 +7805,7 @@ namespace FreeLibSet.Forms
           return; // сообщение выдается только один раз
         _FormatDisplayErrorWasShown = true;
         Exception e1 = new DataGridViewDataErrorException(control, args);
-        EFPApp.ShowException(e1, "Ошибка форматирования для ячейки RowIndex=" + args.RowIndex.ToString() + " и ColIndex=" + args.ColumnIndex.ToString());
+        EFPApp.ShowException(e1, String.Format(Res.EFPDataGridView_Err_DataErrorFormatting, args.RowIndex, args.ColumnIndex));
         return;
       }
 
@@ -7858,7 +7825,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Control_CellClick");
+        EFPApp.ShowException(e);
       }
     }
     void DoControl_CellClick(DataGridViewCellEventArgs args)
@@ -8086,7 +8053,7 @@ namespace FreeLibSet.Forms
       {
         if (!_RowPrePaintErrorMessageWasShown)
         {
-          EFPApp.ShowException(e, "Control_RowPrePaint");
+          EFPApp.ShowException(e);
           _RowPrePaintErrorMessageWasShown = true;
         }
       }
@@ -8147,7 +8114,7 @@ namespace FreeLibSet.Forms
       {
         if (!_RowPrePaintErrorMessageWasShown)
         {
-          EFPApp.ShowException(e, "Control_CellPaint");
+          EFPApp.ShowException(e);
           _RowPrePaintErrorMessageWasShown = true;
         }
       }
@@ -8162,6 +8129,8 @@ namespace FreeLibSet.Forms
         w = 1;
       return new Pen(color, w);
     }
+
+    private bool _Control_CellFormatting_Logged;
 
     void Control_CellFormatting(object sender, DataGridViewCellFormattingEventArgs args)
     {
@@ -8230,8 +8199,12 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Ошибка CellFormatting");
-        EFPApp.ShowTempMessage("Ошибка CellFormatting. " + e.Message);
+        if (!_Control_CellFormatting_Logged)
+        {
+          _Control_CellFormatting_Logged = true;
+          LogoutTools.LogoutException(e);
+        }
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_CellFormatting, e.Message));
       }
     }
 
@@ -8659,7 +8632,7 @@ namespace FreeLibSet.Forms
     /// Дублирует ShowRowCountInTopLeftCell
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("Используйте ShowRowCountInTopLeftCell")]
+    [Obsolete("Use ShowRowCountInTopLeftCell")]
     public bool ShowRowCountInTopLeftCellToolTipText
     {
       get { return ShowRowCountInTopLeftCell; }
@@ -8768,10 +8741,7 @@ namespace FreeLibSet.Forms
         else if (col.GridColumn is DataGridViewCheckBoxColumn)
         {
           object v = Control.Rows[rowIndex].Cells[columnIndex].Value;
-          if (DataTools.GetBool(v))
-            sText = "Да";
-          else
-            sText = "Нет";
+          sText = UITools.ToYesNo(DataTools.GetBool(v));
         }
         else
           sText = String.Empty;
@@ -8785,7 +8755,7 @@ namespace FreeLibSet.Forms
           {
             sHead = col.GridColumn.HeaderText;
             if (String.IsNullOrEmpty(sHead))
-              sHead = "Столбец без названия";
+              sHead = Res.EFPDataView_Name_NoNameColumn;
           }
           sText = sHead + ": " + sText;
         }
@@ -8829,7 +8799,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        args.ToolTipText = "!!! Ошибка при получении подсказки !!!" + Environment.NewLine + e.Message;
+        args.ToolTipText = String.Format(Res.EFPDataView_ToolTip_Exception, e.Message);
       }
     }
 
@@ -8846,13 +8816,13 @@ namespace FreeLibSet.Forms
     {
       if (!UseRowImages)
       {
-        EFPApp.ShowTempMessage("Просмотр не поддерживает навигацию по строкам с ошибками");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_RowErrNavNotSuppoprted);
         return;
       }
 
       if (Control.RowCount == 0)
       {
-        EFPApp.ShowTempMessage("Просмотр не содержит ни одной строки");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_Empty);
         return;
       }
 
@@ -8864,29 +8834,21 @@ namespace FreeLibSet.Forms
       int newRowIndex = FindErrorRow(startRowIndex, forward, imageKind);
       if (newRowIndex < 0)
       {
-        string msg;
+        string msg1 = forward ? Res.EFPDataView_Msg_RowErrNavTableBottom : Res.EFPDataView_Msg_RowErrNavTableTop;
+        string msg2;
         switch (imageKind)
         {
-          case UIDataViewImageKind.Error:
-            msg = " с ошибкой";
-            break;
-          case UIDataViewImageKind.Warning:
-            msg = " с ошибкой или предупреждением";
-            break;
-          case UIDataViewImageKind.Information:
-            msg = " с сообщением";
-            break;
-          case UIDataViewImageKind.None:
-            msg = " без ошибок";
-            break;
+          case UIDataViewImageKind.Error: msg2 = Res.EFPDataView_Msg_RowErrNav_Error; break;
+          case UIDataViewImageKind.Warning: msg2 = Res.EFPDataView_Msg_RowErrNav_Warning; break;
+          case UIDataViewImageKind.Information: msg2 = Res.EFPDataView_Msg_RowErrNav_Information; break;
+          case UIDataViewImageKind.None: msg2 = Res.EFPDataView_Msg_RowErrNav_None; break;
           default:
-            msg = ", удовлетворяющая условию,";
-            break;
+            throw ExceptionFactory.ArgUnknownValue("imageKind", imageKind);
         }
-        EFPApp.ShowTempMessage((forward ? "Достигнут конец таблицы" : "Достигнуто начало таблицы") +
-          ", но строка" + msg + " не найдена");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Msg_RowErrNav, msg1, msg2));
         return;
       }
+
       CurrentRowIndex = newRowIndex;
     }
 
@@ -8965,7 +8927,7 @@ namespace FreeLibSet.Forms
         case UIDataViewImageKind.Error:
           return thisKind == UIDataViewImageKind.Error;
         default:
-          throw new ArgumentException("Недопустимый тип изображения строки для поиска:" + imageKind.ToString(), "imageKind");
+          throw ExceptionFactory.ArgUnknownValue("imageKind", imageKind);
       }
     }
 
@@ -9044,7 +9006,7 @@ namespace FreeLibSet.Forms
         // Признак ошибки установлен, но сообщение не добавлено
         string msg;
         if (String.IsNullOrEmpty(_GetRowAttributesArgs.ToolTipText))
-          msg = "Сообщение об ошибке отсутствует";
+          msg = "No message";
         else
           msg = _GetRowAttributesArgs.ToolTipText.Replace(Environment.NewLine, " ");
 
@@ -9179,7 +9141,7 @@ namespace FreeLibSet.Forms
       if (ProviderState == EFPControlProviderState.Attached)
       {
         if (ShowRowCountInTopLeftCell)
-          _RowCountTopLeftCellToolTipText = "Строк в просмотре: " + Control.RowCount.ToString();
+          _RowCountTopLeftCellToolTipText = String.Format(Res.EFPDataView_ToolTip_TopLeftCellRowCount, Control.RowCount);
         else
           _RowCountTopLeftCellToolTipText = String.Empty;
 
@@ -9202,27 +9164,23 @@ namespace FreeLibSet.Forms
           }
 
           if (errorCount == 0 && warningCount == 0)
-            _ErrorCountTopLeftCellToolTipText = "Нет строк с ошибками или предупреждениями";
+            _ErrorCountTopLeftCellToolTipText = Res.EFPDataView_ToolTip_TopLeftCellNoErrors;
           else
           {
             StringBuilder sb = new StringBuilder();
             if (errorCount > 0)
             {
-              sb.Append("Есть строки с ошибками (");
-              sb.Append(errorCount);
-              sb.Append(")");
+              sb.Append(String.Format(Res.EFPDataView_ToolTip_TopLeftCellErrors,errorCount));
               sb.Append(Environment.NewLine);
             }
             if (warningCount > 0)
             {
-              sb.Append("Есть строки с предупреждениями (");
-              sb.Append(warningCount);
-              sb.Append(")");
+              sb.Append(String.Format(Res.EFPDataView_ToolTip_TopLeftCellWarmings, warningCount));
               sb.Append(Environment.NewLine);
             }
 
             if (CommandItems.UseRowErrors)
-              sb.Append("Используйте Ctrl+] и Ctrl+[ для перехода к этим строкам");
+              sb.Append(Res.EFPDataView_ToolTip_TopLeftCellErrNav);
             _ErrorCountTopLeftCellToolTipText = sb.ToString();
           }
 
@@ -9357,7 +9315,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработки нажатия клавиши KeyPress");
+        EFPApp.ShowException(e);
       }
     }
     void DoControl_KeyPress(KeyPressEventArgs args)
@@ -9403,7 +9361,7 @@ namespace FreeLibSet.Forms
       }
 
       bool res;
-      EFPApp.BeginWait("Поиск");
+      EFPApp.BeginWait(Res.EFPDataView_Phase_IncSearch);
       try
       {
         //Res = CurrentColumn.PerformIncSearch(s.ToUpper(), false);
@@ -9416,7 +9374,7 @@ namespace FreeLibSet.Forms
       }
       if (!res)
       {
-        EFPApp.ShowTempMessage("Символ \"" + keyChar + "\" не может быть добавлен к строке быстрого поиска");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_IncSearchCannotAddChar, keyChar, String.Empty));
         return;
       }
 
@@ -9453,36 +9411,17 @@ namespace FreeLibSet.Forms
               return true;
             }
           }
-          EFPApp.ShowTempMessage("Нельзя добавить символ \"" + keyChar + "\" для быстрого поиска. " + GetMaskedTextResultHintText(resHint));
+          EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_IncSearchCannotAddChar, keyChar, UITools.ToString(resHint)));
           return false;
         }
       }
       if (resHint == MaskedTextResultHint.CharacterEscaped)
       {
-        EFPApp.ShowTempMessage("Нельзя добавить символ \"" + keyChar + "\" для быстрого поиска. " + GetMaskedTextResultHintText(resHint));
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_IncSearchCannotAddChar, keyChar, UITools.ToString(resHint)));
         return false;
       }
       s = maskProvider.ToString(0, maskProvider.LastAssignedPosition + 1);
       return true;
-    }
-
-    private static string GetMaskedTextResultHintText(MaskedTextResultHint resHint)
-    {
-      switch (resHint)
-      {
-        case MaskedTextResultHint.DigitExpected:
-          return "Ожидалась цифра";
-        case MaskedTextResultHint.AlphanumericCharacterExpected:
-          return "Ожидалась цифра или буква";
-        case MaskedTextResultHint.LetterExpected:
-          return "Ожидалась буква";
-        case MaskedTextResultHint.UnavailableEditPosition:
-          return "Все символы уже введены";
-        case MaskedTextResultHint.CharacterEscaped:
-          return "Символ пропускается";
-        default:
-          return resHint.ToString();
-      }
     }
 
     void DoControl_KeyDown2(KeyEventArgs args)
@@ -9500,7 +9439,7 @@ namespace FreeLibSet.Forms
           EFPApp.ShowTempMessage(null);
           if (_CurrentIncSearchChars.Length < 1)
           {
-            EFPApp.ShowTempMessage("Строка быстрого поиска не содержит введенных символов");
+            EFPApp.ShowTempMessage(Res.EFPDataView_Err_IncSearchIsEmpty);
             return;
           }
 
@@ -9751,7 +9690,7 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.DataGridView != Control)
-            throw new ArgumentException("Столбец не принадлежит табличному просмотру", "value");
+            throw ExceptionFactory.ArgProperty("value", value, "DataGridView", value.DataGridView, new object[] { Control} );
         }
 #endif
         _MarkRowsGridColumn = value;
@@ -9852,8 +9791,8 @@ namespace FreeLibSet.Forms
     /// <returns>Число строк, которые были изменены</returns>
     public int CheckMarkRows(EFPDataGridViewCheckMarkRows rows, EFPDataGridViewCheckMarkAction action)
     {
-      if (_MarkRowsGridColumn == null)
-        throw new InvalidOperationException("Свойство MarkRowsColumn не установлено");
+      if (MarkRowsGridColumn == null)
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "MarkRowsGridColumn");
 
       // Отменяем режим редактирования и поиск по буквам
       CurrentIncSearchColumn = null;
@@ -9885,7 +9824,7 @@ namespace FreeLibSet.Forms
 
           break;
         default:
-          throw new ArgumentException("Неивестный Rows=" + rows.ToString(), "rows");
+          throw ExceptionFactory.ArgUnknownValue("rows", rows);
       }
       return cnt;
     }
@@ -9904,8 +9843,8 @@ namespace FreeLibSet.Forms
       }
       /*EFPDataGridViewRowAttributesEventArgs RowArgs = */
       DoGetRowAttributes(rowIndex, EFPDataGridViewAttributesReason.View);
-      EFPDataGridViewCellAttributesEventArgs CellArgs = DoGetCellAttributes(columnIndex);
-      bool orgValue = DataTools.GetBool(CellArgs.Value);
+      EFPDataGridViewCellAttributesEventArgs cellArgs = DoGetCellAttributes(columnIndex);
+      bool orgValue = DataTools.GetBool(cellArgs.Value);
       bool newValue;
       switch (action)
       {
@@ -9919,7 +9858,7 @@ namespace FreeLibSet.Forms
           newValue = !orgValue;
           break;
         default:
-          throw new ArgumentException("Неизвестный Action=" + action.ToString(), "action");
+          throw ExceptionFactory.ArgUnknownValue("action", action);
       }
 
       if (newValue == orgValue)

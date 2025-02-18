@@ -49,7 +49,7 @@ namespace FreeLibSet.Data
       if (t == typeof(Byte[]))
         return DBxColumnType.Binary;
 
-      throw new ArgumentException("Неизвестный тип данных: " + t.ToString(), "t");
+      throw ExceptionFactory.ArgUnknownValue("t", t);
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ namespace FreeLibSet.Data
         case DBxColumnType.Xml: return typeof(string);
         case DBxColumnType.Binary: return typeof(byte[]);
         default:
-          throw new ArgumentException("Неизвестный тип данных: " + columnType.ToString(), "columnType");
+          throw ExceptionFactory.ArgUnknownValue("columnType", columnType);
       }
     }
 
@@ -107,6 +107,16 @@ namespace FreeLibSet.Data
       return DataTypeToColumnType(value.GetType());
     }
 
+    internal static DBxColumnType ValueToColumnTypeRequired(object value)
+    {
+      DBxColumnType ct = ValueToColumnType(value);
+
+      if (ct == DBxColumnType.Unknown)
+        throw new ArgumentException(String.Format(Res.DBxTools_Arg_ValueToColumnTypeRequired, value.GetType().ToString()), "value");
+
+      return ct;
+    }
+
     /// <summary>
     /// Получить значение по умолчанию для типа столбца
     /// </summary>
@@ -130,7 +140,7 @@ namespace FreeLibSet.Data
         case DBxColumnType.Xml: return String.Empty;
         case DBxColumnType.Binary: return DataTools.EmptyBytes;
         default:
-          throw new ArgumentException("Неизвестный тип данных: " + columnType.ToString(), "columnType");
+          throw ExceptionFactory.ArgUnknownValue("columnType", columnType);
       }
     }
 

@@ -117,16 +117,113 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="cbCenterVertical.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="grpDuplex.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="lblPaperHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;panPaper.Name" xml:space="preserve">
+    <value>panPaper</value>
+  </data>
+  <data name="&gt;&gt;grpOrientation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbCenterHorizontal.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="panPaper.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pbSrcLandscape.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAA20lEQVRYR+2SUQ7DIAxDuf+puFk7o3ii
-        GQFnUteP8SSrjNjBHyubzYvjB5py3An2m0LMeg/cj297bUAzZEFOyfYey3xg4xzIKVnvsdwFG+kg02vG
-        aG65N3atg0yvGd7r1DCrBvzM8JzdAZCpteKbL0BwprIgky7gH+Nvf68A/1cFPLijMsCfKhA9wvtoHgFv
-        ukAEZpQKvHIBLlelAF+qwAp4KAX4pALqUvoyfrmACrzUCniWBdRlhH4lh3lYgAu8IkbeXiNwL/8J72AX
-        uBR4SixQcHhKrcDmjynlBCSbFJW1UqvDAAAAAElFTkSuQmCC
-</value>
+  <data name="lblPaperWidth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 43</value>
+  </data>
+  <data name="rbPortrait.Text" xml:space="preserve">
+    <value>&amp;Portrait</value>
+  </data>
+  <data name="&gt;&gt;cbDuplex.Name" xml:space="preserve">
+    <value>cbDuplex</value>
+  </data>
+  <data name="&gt;&gt;cbDuplex.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblPaperWidth.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;lblPaperHeight.Name" xml:space="preserve">
+    <value>lblPaperHeight</value>
+  </data>
+  <data name="&gt;&gt;lblPaperHeight.Parent" xml:space="preserve">
+    <value>grpPaperSize</value>
+  </data>
+  <data name="grpCenterPage.Text" xml:space="preserve">
+    <value>Center to page</value>
+  </data>
+  <data name="lblPaperWidth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>55, 13</value>
+  </data>
+  <data name="&gt;&gt;lblDuplexInfo.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="cbCenterHorizontal.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;rbPortrait.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;grpPaperSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;edPaperWidth.Name" xml:space="preserve">
+    <value>edPaperWidth</value>
+  </data>
+  <data name="grpOrientation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>169, 79</value>
+  </data>
+  <data name="lblDuplexInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 36</value>
+  </data>
+  <data name="grpDuplex.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="grpPaperSize.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="grpOrientation.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;pbSrcLandscape.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="edPaperWidth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 20</value>
+  </data>
+  <data name="&gt;&gt;edPaperWidth.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;rbLandscape.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lblPaperHeight.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="pbSrcPortrait.Location" type="System.Drawing.Point, System.Drawing">
+    <value>354, 34</value>
+  </data>
+  <data name="&gt;&gt;cbCenterVertical.Parent" xml:space="preserve">
+    <value>grpCenterPage</value>
+  </data>
+  <data name="&gt;&gt;cbCenterVertical.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="pbSrcLandscape.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>AutoSize</value>
   </data>
   <data name="pbSrcPortrait.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -138,4 +235,401 @@
         7uECnD2N8Lyt5Nn+E56A/LfAW+AtMC3wtGYFCoanZZ/6UcoXdSgGNsd0JNQAAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="&gt;&gt;pbOrientation.Parent" xml:space="preserve">
+    <value>grpOrientation</value>
+  </data>
+  <data name="&gt;&gt;grpCenterPage.Name" xml:space="preserve">
+    <value>grpCenterPage</value>
+  </data>
+  <data name="grpPaperSize.Text" xml:space="preserve">
+    <value>Paper size</value>
+  </data>
+  <data name="pbSrcLandscape.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;cbCenterHorizontal.Name" xml:space="preserve">
+    <value>cbCenterHorizontal</value>
+  </data>
+  <data name="cbCenterVertical.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbCenterHorizontal.Text" xml:space="preserve">
+    <value>Horizontally</value>
+  </data>
+  <data name="&gt;&gt;cbCenterVertical.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pbSrcLandscape.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAA20lEQVRYR+2SUQ7DIAxDuf+puFk7o3ii
+        GQFnUteP8SSrjNjBHyubzYvjB5py3An2m0LMeg/cj297bUAzZEFOyfYey3xg4xzIKVnvsdwFG+kg02vG
+        aG65N3atg0yvGd7r1DCrBvzM8JzdAZCpteKbL0BwprIgky7gH+Nvf68A/1cFPLijMsCfKhA9wvtoHgFv
+        ukAEZpQKvHIBLlelAF+qwAp4KAX4pALqUvoyfrmACrzUCniWBdRlhH4lh3lYgAu8IkbeXiNwL/8J72AX
+        uBR4SixQcHhKrcDmjynlBCSbFJW1UqvDAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="&gt;&gt;panPaper.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;grpPaperSize.Name" xml:space="preserve">
+    <value>grpPaperSize</value>
+  </data>
+  <data name="cbDuplex.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="cbPageSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>147, 21</value>
+  </data>
+  <data name="&gt;&gt;cbPageSize.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="panPaper.Size" type="System.Drawing.Size, System.Drawing">
+    <value>450, 283</value>
+  </data>
+  <data name="rbLandscape.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;cbPageSize.Name" xml:space="preserve">
+    <value>cbPageSize</value>
+  </data>
+  <data name="&gt;&gt;pbSrcPortrait.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="pbOrientation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>114, 19</value>
+  </data>
+  <data name="rbLandscape.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 17</value>
+  </data>
+  <data name="cbCenterVertical.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 17</value>
+  </data>
+  <data name="&gt;&gt;pbSrcPortrait.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbSrcPortrait.Parent" xml:space="preserve">
+    <value>panPaper</value>
+  </data>
+  <data name="&gt;&gt;lblDuplexInfo.Name" xml:space="preserve">
+    <value>lblDuplexInfo</value>
+  </data>
+  <data name="pbSrcLandscape.Location" type="System.Drawing.Point, System.Drawing">
+    <value>392, 34</value>
+  </data>
+  <data name="lblDuplexInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>328, 55</value>
+  </data>
+  <data name="&gt;&gt;grpOrientation.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="lblPaperWidth.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="grpPaperSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 3</value>
+  </data>
+  <data name="pbOrientation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>49, 40</value>
+  </data>
+  <data name="grpOrientation.Text" xml:space="preserve">
+    <value>Orientation</value>
+  </data>
+  <data name="rbPortrait.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;grpOrientation.Parent" xml:space="preserve">
+    <value>panPaper</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>BRPageSetupPaper</value>
+  </data>
+  <data name="lblPaperHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 13</value>
+  </data>
+  <data name="cbCenterVertical.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 39</value>
+  </data>
+  <data name="lblPaperHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 66</value>
+  </data>
+  <data name="edPaperWidth.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;lblDuplexInfo.Parent" xml:space="preserve">
+    <value>grpDuplex</value>
+  </data>
+  <data name="&gt;&gt;grpCenterPage.Parent" xml:space="preserve">
+    <value>panPaper</value>
+  </data>
+  <data name="cbDuplex.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="grpOrientation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>179, 16</value>
+  </data>
+  <data name="&gt;&gt;edPaperHeight.Name" xml:space="preserve">
+    <value>edPaperHeight</value>
+  </data>
+  <data name="pbSrcPortrait.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
+  </data>
+  <data name="lblDuplexInfo.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;rbLandscape.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pbSrcPortrait.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>AutoSize</value>
+  </data>
+  <data name="lblDuplexInfo.Text" xml:space="preserve">
+    <value>???</value>
+  </data>
+  <data name="&gt;&gt;grpCenterPage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbCenterVertical.Name" xml:space="preserve">
+    <value>cbCenterVertical</value>
+  </data>
+  <data name="&gt;&gt;grpDuplex.Name" xml:space="preserve">
+    <value>grpDuplex</value>
+  </data>
+  <data name="&gt;&gt;grpOrientation.Name" xml:space="preserve">
+    <value>grpOrientation</value>
+  </data>
+  <data name="&gt;&gt;grpPaperSize.Parent" xml:space="preserve">
+    <value>panPaper</value>
+  </data>
+  <data name="&gt;&gt;panPaper.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="cbCenterVertical.Text" xml:space="preserve">
+    <value>Vertically</value>
+  </data>
+  <data name="&gt;&gt;cbCenterHorizontal.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lblPaperWidth.Parent" xml:space="preserve">
+    <value>grpPaperSize</value>
+  </data>
+  <data name="&gt;&gt;edPaperWidth.Parent" xml:space="preserve">
+    <value>grpPaperSize</value>
+  </data>
+  <data name="grpCenterPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 102</value>
+  </data>
+  <data name="edPaperHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 20</value>
+  </data>
+  <data name="grpDuplex.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 171</value>
+  </data>
+  <data name="&gt;&gt;pbSrcPortrait.Name" xml:space="preserve">
+    <value>pbSrcPortrait</value>
+  </data>
+  <data name="&gt;&gt;grpPaperSize.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;pbSrcLandscape.Parent" xml:space="preserve">
+    <value>panPaper</value>
+  </data>
+  <data name="lblPaperHeight.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbDuplex.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="&gt;&gt;edPaperWidth.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.DecimalEditBox, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="pbSrcPortrait.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="rbLandscape.Text" xml:space="preserve">
+    <value>&amp;Landscape</value>
+  </data>
+  <data name="grpCenterPage.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="cbCenterHorizontal.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 18</value>
+  </data>
+  <data name="&gt;&gt;cbCenterHorizontal.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblPaperWidth.Text" xml:space="preserve">
+    <value>&amp;Width, cm</value>
+  </data>
+  <data name="&gt;&gt;pbSrcLandscape.Name" xml:space="preserve">
+    <value>pbSrcLandscape</value>
+  </data>
+  <data name="pbSrcLandscape.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="grpCenterPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>344, 63</value>
+  </data>
+  <data name="rbLandscape.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;edPaperHeight.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.DecimalEditBox, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="lblDuplexInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="cbDuplex.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 17</value>
+  </data>
+  <data name="&gt;&gt;pbOrientation.Name" xml:space="preserve">
+    <value>pbOrientation</value>
+  </data>
+  <data name="edPaperWidth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>94, 43</value>
+  </data>
+  <data name="&gt;&gt;grpDuplex.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;cbDuplex.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbSrcLandscape.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panPaper.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pbOrientation.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="pbSrcLandscape.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
+  </data>
+  <data name="&gt;&gt;rbPortrait.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbOrientation.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;rbLandscape.Name" xml:space="preserve">
+    <value>rbLandscape</value>
+  </data>
+  <data name="&gt;&gt;grpCenterPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbPortrait.Name" xml:space="preserve">
+    <value>rbPortrait</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="&gt;&gt;rbPortrait.Parent" xml:space="preserve">
+    <value>grpOrientation</value>
+  </data>
+  <data name="&gt;&gt;lblPaperWidth.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;grpDuplex.Parent" xml:space="preserve">
+    <value>panPaper</value>
+  </data>
+  <data name="&gt;&gt;cbDuplex.Parent" xml:space="preserve">
+    <value>grpDuplex</value>
+  </data>
+  <data name="&gt;&gt;lblPaperWidth.Name" xml:space="preserve">
+    <value>lblPaperWidth</value>
+  </data>
+  <data name="pbSrcPortrait.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="rbPortrait.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 19</value>
+  </data>
+  <data name="&gt;&gt;lblPaperHeight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;edPaperHeight.Parent" xml:space="preserve">
+    <value>grpPaperSize</value>
+  </data>
+  <data name="&gt;&gt;edPaperHeight.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbPortrait.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 17</value>
+  </data>
+  <data name="edPaperHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="rbLandscape.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 42</value>
+  </data>
+  <data name="grpPaperSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 92</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>450, 283</value>
+  </data>
+  <data name="&gt;&gt;lblPaperWidth.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;cbCenterHorizontal.Parent" xml:space="preserve">
+    <value>grpCenterPage</value>
+  </data>
+  <data name="cbCenterHorizontal.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 17</value>
+  </data>
+  <data name="grpDuplex.Size" type="System.Drawing.Size, System.Drawing">
+    <value>343, 94</value>
+  </data>
+  <data name="&gt;&gt;cbPageSize.Parent" xml:space="preserve">
+    <value>grpPaperSize</value>
+  </data>
+  <data name="panPaper.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;lblDuplexInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbPageSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 19</value>
+  </data>
+  <data name="&gt;&gt;rbLandscape.Parent" xml:space="preserve">
+    <value>grpOrientation</value>
+  </data>
+  <data name="pbOrientation.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>AutoSize</value>
+  </data>
+  <data name="lblPaperHeight.Text" xml:space="preserve">
+    <value>&amp;Height, cm</value>
+  </data>
+  <data name="rbPortrait.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="panPaper.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="&gt;&gt;cbPageSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cbDuplex.Text" xml:space="preserve">
+    <value>Duplex</value>
+  </data>
+  <data name="cbPageSize.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="edPaperHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>94, 66</value>
+  </data>
+  <data name="&gt;&gt;grpDuplex.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbOrientation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

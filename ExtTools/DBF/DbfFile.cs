@@ -42,21 +42,22 @@ namespace FreeLibSet.DBF
       if (validateArgs)
       {
         if (!IsValidFieldName(name))
-          throw new ArgumentException("Неправильное имя DBF-поля: \"" + name + "\"", "name");
+          throw new ArgumentException(String.Format(Res.DbfStr_Arg_InvalidFieldName, name), "name");
         if ("CNDLMF".IndexOf(typeChar) < 0)
-          throw new ArgumentException("Неправильный тип поля: \"" + typeChar + "\"", "typeChar");
-
-        if (length < 1 || length > UInt16.MaxValue)
-          throw new ArgumentOutOfRangeException("length", length, "Длина поля должна быть в диапазоне от 1 до " + UInt16.MaxValue.ToString());
+          throw new ArgumentException(String.Format(Res.DbfStr_Arg_InvalidFieldType, typeChar), "typeChar");
 
         switch (typeChar)
         {
+          case 'C':
+            if (length < 1 || length > UInt16.MaxValue)
+              throw ExceptionFactory.ArgOutOfRange("length", length, 1, UInt16.MaxValue);
+            break;
           case 'N':
           case 'F':
-            if (length > 255) throw new ArgumentException("Для типа \"N\" длина должна быть не больше 255", "length"); break;
-          case 'D': if (length != 8) throw new ArgumentException("Для типа \"D\" длина должна быть равна 8", "length"); break;
-          case 'L': if (length != 1) throw new ArgumentException("Для типа \"L\" длина должна быть равна 1", "length"); break;
-          case 'M': if (length != 10) throw new ArgumentException("Для типа \"M\" длина должна быть равна 10", "length"); break;
+            if (length < 1 || length > 255) throw new ArgumentException(Res.DbfStr_Arg_InvalidFieldLengthN, "length"); break;
+          case 'D': if (length != 8) throw new ArgumentException(Res.DbfStr_Arg_InvalidFieldLengthD, "length"); break;
+          case 'L': if (length != 1) throw new ArgumentException(Res.DbfStr_Arg_InvalidFieldLengthL, "length"); break;
+          case 'M': if (length != 10) throw new ArgumentException(Res.DbfStr_Arg_InvalidFieldLengthM, "length"); break;
         }
 
         switch (typeChar)
@@ -64,11 +65,11 @@ namespace FreeLibSet.DBF
           case 'N':
           case 'F':
             if (precision > 0 && precision > (length - 2))
-              throw new ArgumentException("Точность не может иметь значение " + precision + ", если длина поля равна " + length.ToString(), "precision");
+              throw new ArgumentException(String.Format(Res.DbfStr_Arg_PrecisionForLength, precision, length), "precision");
             break;
           default:
             if (precision != 0)
-              throw new ArgumentException("Точность не задается для типа данных \"" + typeChar + "\"", "precision");
+              throw new ArgumentException(String.Format(Res.DbfStr_Arg_PrecisionForType, typeChar), "precision");
             break;
         }
       }
@@ -87,7 +88,7 @@ namespace FreeLibSet.DBF
     public DbfFieldInfo(string name, DbfFieldInfo otherInfo)
     {
       if (!IsValidFieldName(name))
-        throw new ArgumentException("Неправильное имя DBF-поля: \"" + name + "\"", "name");
+        throw new ArgumentException(String.Format(Res.DbfStr_Arg_InvalidFieldName, name), "name");
       if (otherInfo.IsEmpty)
         throw new ArgumentNullException("otherInfo");
 
@@ -359,14 +360,14 @@ namespace FreeLibSet.DBF
       {
         if (validFieldTypes.IndexOf(Type) < 0)
         {
-          errorText = "Неподдерживаемый тип \"" + Type + "\" поля \"" + Name + "\". Поддерживаемые типы: " + validFieldTypes;
+          errorText = String.Format(Res.DbfStr_Msg_InvalidFieldTypeForDbFormat, Type, Name, fileFormat, validFieldTypes);
           return false;
         }
       }
 
       if (fileFormat == DbfFileFormat.dBase2 && Length > 255)
       {
-        errorText = "dBase II не поддерживает поля длиннее 255 символов. Для поля \"" + Name + "\" задана длина: " + Length.ToString();
+        errorText = String.Format(Res.DbfStr_Msg_DBase2InvalidFieldLengthC, Name, Length);
         return false;
       }
 
@@ -531,7 +532,7 @@ namespace FreeLibSet.DBF
       CheckNotReadOnly();
 
       if (item.IsEmpty)
-        throw new ArgumentException("Item is empty", "item");
+        throw ExceptionFactory.ArgIsEmpty("item");
 
       _Items.Add(item);
     }
@@ -629,7 +630,7 @@ namespace FreeLibSet.DBF
       {
         dbfColPoss[i] = this.IndexOf(aColNames[i]);
         if (dbfColPoss[i] < 0)
-          throw new ArgumentException("DBF-файл не содержит поля \"" + aColNames[i] + "\"", "columnNames");
+          throw new ArgumentException(String.Format(Res.DbfStr_Arg_UnknownFieldName, aColNames[i]), "columnNames");
 
         table.Columns.Add(aColNames[i], this[dbfColPoss[i]].DataType);
       }
@@ -665,7 +666,7 @@ namespace FreeLibSet.DBF
       {
         if (_Items.Count > 32)
         {
-          errorText = "dBase II поддерживает максимально 32 поля в таблице";
+          errorText = Res.DbfStr_Msg_DBase2TooManyFields;
           return false;
         }
       }
@@ -714,7 +715,7 @@ namespace FreeLibSet.DBF
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException("Список полей находится в режиме ReadOnly");
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion
@@ -879,7 +880,7 @@ namespace FreeLibSet.DBF
     /// <param name="fieldName">Имя поля</param>
     /// <param name="fieldType">Тип поля</param>
     public DbfFieldTypeException(string fieldName, char fieldType)
-      : base("Поле \"" + fieldName + "\" имеет неподходящий тип \"" + fieldType + "\"")
+      : base(String.Format(Res.DbfFieldTypeException_Err_Message, fieldName + fieldType))
     {
       _FieldName = fieldName;
       _FieldType = fieldType;
@@ -955,20 +956,8 @@ namespace FreeLibSet.DBF
 
     private static string GetMessageText(int recNo, DbfFieldInfo fieldInfo, Exception innerException)
     {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("Строка ");
-      sb.Append(recNo);
-      sb.Append(", поле \"");
-      sb.Append(fieldInfo.Name);
-      sb.Append("\" содержит недопустимое значение для типа \"");
-      sb.Append(fieldInfo.Type);
-      sb.Append("\"");
-      if (innerException != null)
-      {
-        sb.Append(". ");
-        sb.Append(innerException.Message);
-      }
-      return sb.ToString();
+      string msg = String.Format(Res.DbfValueFormatException_Err_Message, recNo, fieldInfo.Name, fieldInfo.Type);
+      return ExceptionFactory.MergeInnerException(msg, innerException);
     }
 
     /// <summary>
@@ -1106,7 +1095,7 @@ namespace FreeLibSet.DBF
         throw new ArgumentNullException("dbfPath");
 
       if (!File.Exists(dbfPath.Path))
-        throw new FileNotFoundException("Файл не найден: \"" + dbfPath.Path + "\"");
+        throw ExceptionFactory.FileNotFound(dbfPath);
 
       _ShouldDisposeStreams = true;
 
@@ -1117,7 +1106,7 @@ namespace FreeLibSet.DBF
       try
       {
         if (_fsDBF.Length < 1)
-          throw new DbfFileFormatException("Файл \"" + dbfPath + "\" имеет нулевую длину");
+          throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_ZeroLength, dbfPath));
 
         // Определяем наличие МЕМО-файла
         int code = _fsDBF.ReadByte();
@@ -1267,11 +1256,11 @@ namespace FreeLibSet.DBF
         //case 0x32: // Visual FoxPro с полями типов Varchar и/или Varbinary
 
         default:
-          throw new DbfFileFormatException("Не DBF-файл. Неизвестная сигнатура " + dbfId.ToString("X2"));
+          throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_UnknownSignature,dbfId.ToString("X2")));
       }
 
       if (_MemoFormat == DbfMemoFormat.dBase4)
-        throw new NotImplementedException("Формат MEMO-файла dBase IV не реализован");
+        throw new NotImplementedException(Res.DbfFile_Err_DBase4MemoNotImplement);
 
       #endregion
 
@@ -1283,11 +1272,10 @@ namespace FreeLibSet.DBF
         InitExistDbf34(rdrDBF);
 
       if (DBStruct.RecordSize != _RecSize)
-        throw new DbfFileFormatException("Размер записи, заданный в заголовке (" + _RecSize.ToString() +
-          ") не совпадает с размером всех полей (" + DBStruct.RecordSize.ToString() + ")");
+        throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_HeaderRecSizeMismatch, _RecSize, DBStruct.RecordSize));
 
       if (_DataOffset < rdrDBF.BaseStream.Position)
-        throw new DbfFileFormatException("Неправильная позиция начала данных (" + _DataOffset.ToString() + "). Описания полей перекрывают область данных");
+        throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_DataStartPositionOverTheHeader, _DataOffset));
 
       // Внутренние поля
       InitDBStructInternal();
@@ -1326,18 +1314,17 @@ namespace FreeLibSet.DBF
         BinaryReader rdrDBT = new BinaryReader(_fsDBT);
 
         if (rdrDBT.BaseStream.Length < 5)
-          throw new DbfFileFormatException("МЕМО-файл имеет недопустимо малую длину");
+          throw new DbfFileFormatException(Res.DBfMemoFile_Err_FileIsTooShort);
 
         _MemoBlockCount = rdrDBT.ReadUInt32();
         if (_MemoBlockCount < MinMemoBlockCount || _MemoBlockCount > MaxMemoBlockCount)
-          throw new DbfFileFormatException("В заголовке МЕМО-файла указано недопустимое число 512-байтных блоков: " + _MemoBlockCount.ToString());
+          throw new DbfFileFormatException(String.Format(Res.DbfMemoFile_Err_WrongBlockCount, _MemoBlockCount));
 
         long minMemoFileSize = (long)(_MemoBlockCount - 1) * 512 + 2;
         //long MaxMemoFileSize = (long)(_MemoBlockCount) * 512 + 1;
         if (rdrDBT.BaseStream.Length < minMemoFileSize)
-          throw new DbfFileFormatException("Реальный размер МЕМО-файла (" + rdrDBT.BaseStream.Length +
-            ") меньше, чем вычисленный минимально возможный размер, исходя из заголовка (" +
-            minMemoFileSize.ToString() + ")");
+          throw new DbfFileFormatException(String.Format(Res.DbfMemoFile_Err_FileSizeLessThanHeader, 
+            rdrDBT.BaseStream.Length, minMemoFileSize));
         // Максимально возможный размер не проверяем, вдруг там ЭЦП
       }
 
@@ -1362,32 +1349,32 @@ namespace FreeLibSet.DBF
       // Размер записи
       _RecSize = rdrDBF.ReadUInt16();
       if (_RecSize < 1)
-        throw new DbfFileFormatException("Размер записи не может быть равен 0");
+        throw new DbfFileFormatException(Res.DbfFile_Err_RecSizeIsZero);
 
       long wantedSize = _DataOffset + (long)_RecSize * (long)_RecordCount;
       if (rdrDBF.BaseStream.Length < wantedSize)
-        throw new DbfFileFormatException("Длина файла (" + wantedSize.ToString() + ") не соответствует размеру и числу записей, заданных в заголовке. Длина файла должна быть не меньше, чем " + wantedSize.ToString());
+        throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_FileTooShort, rdrDBF.BaseStream.Length, wantedSize));
 
       byte[] bFldName = new byte[11];
       _DBStruct = new DbfStruct();
       while (true)
       {
         if (rdrDBF.Read(bFldName, 0, 1) < 1)
-          throw new DbfFileFormatException("Неожиданный конец файла. Список полей не закончен");
+          throw new DbfFileFormatException(Res.DbfFile_Err_FieldListUnexpectedEOF);
 
         if (bFldName[0] == 0x0D)
           break; // Конец списка полей
 
         // Имя поля
         if (rdrDBF.Read(bFldName, 1, 10) < 10)
-          throw new DbfFileFormatException("Неожиданный конец файла. Список полей не закончен");
+          throw new DbfFileFormatException(Res.DbfFile_Err_FieldListUnexpectedEOF);
 
         int endPos = Array.IndexOf<byte>(bFldName, 0);
         if (endPos < 0)
-          throw new DbfFileFormatException("В списке полей для поля " + (DBStruct.Count + 1).ToString() + " не найден нулевой байт окончания имени поля");
+          throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_FieldListNoEndOfName, DBStruct.Count + 1));
 
         if (endPos == 0)
-          throw new DbfFileFormatException("В списке полей для поля " + (DBStruct.Count + 1).ToString() + " не задано имя поля");
+          throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_FieldListEmptyName, DBStruct.Count + 1));
 
         string fieldName = Encoding.GetString(bFldName, 0, endPos);
         // Тип поля
@@ -1412,18 +1399,18 @@ namespace FreeLibSet.DBF
       // Число записей
       uint recCount = rdrDBF.ReadUInt32();
       if (recCount > (uint)(int.MaxValue))
-        throw new DbfFileFormatException("Указано слишком много строк в заголовке: " + recCount.ToString());
+        throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_TooManyRecords, recCount));
       _RecordCount = (int)recCount;
       // Смещение до начала данных
       _DataOffset = rdrDBF.ReadUInt16();
       // Размер записи
       _RecSize = rdrDBF.ReadUInt16();
       if (_RecSize < 1)
-        throw new DbfFileFormatException("Размер записи не может быть равен 0");
+        throw new DbfFileFormatException(Res.DbfFile_Err_RecSizeIsZero);
 
       long wantedSize = _DataOffset + (long)_RecSize * (long)_RecordCount;
       if (rdrDBF.BaseStream.Length < wantedSize)
-        throw new DbfFileFormatException("Длина файла (" + wantedSize.ToString() + ") не соответствует размеру и числу записей, заданных в заголовке. Длина файла должна быть не меньше, чем " + wantedSize.ToString());
+        throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_FileTooShort, rdrDBF.BaseStream.Length, wantedSize));
 
       // Заполнитель
       rdrDBF.ReadBytes(20);
@@ -1433,21 +1420,21 @@ namespace FreeLibSet.DBF
       while (true)
       {
         if (rdrDBF.Read(bFldName, 0, 1) < 1)
-          throw new DbfFileFormatException("Неожиданный конец файла. Список полей не закончен");
+          throw new DbfFileFormatException(Res.DbfFile_Err_FieldListUnexpectedEOF);
 
         if (bFldName[0] == 0x0D)
           break; // Конец списка полей
 
         // Имя поля
         if (rdrDBF.Read(bFldName, 1, 10) < 10)
-          throw new DbfFileFormatException("Неожиданный конец файла. Список полей не закончен");
+          throw new DbfFileFormatException(Res.DbfFile_Err_FieldListUnexpectedEOF);
 
         int endPos = Array.IndexOf<byte>(bFldName, 0);
         if (endPos < 0)
-          throw new DbfFileFormatException("В списке полей для поля " + (DBStruct.Count + 1).ToString() + " не найден нулевой байт окончания имени поля");
+          throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_FieldListNoEndOfName, DBStruct.Count + 1));
 
         if (endPos == 0)
-          throw new DbfFileFormatException("В списке полей для поля " + (DBStruct.Count + 1).ToString() + " не задано имя поля");
+          throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_FieldListEmptyName, DBStruct.Count + 1));
 
         string fieldName = Encoding.GetString(bFldName, 0, endPos);
         // Тип поля
@@ -1553,7 +1540,7 @@ namespace FreeLibSet.DBF
         throw new ArgumentNullException("dbStruct");
 #endif
       if (dbStruct.Count == 0)
-        throw new ArgumentException("Структура таблицы не заполнена", "dbStruct");
+        throw ExceptionFactory.ArgIsEmpty("dbStruct");
 
       _DBStruct = dbStruct;
       _Encoding = encoding;
@@ -1671,7 +1658,7 @@ namespace FreeLibSet.DBF
         throw new ArgumentNullException("dbStruct");
 #endif
       if (dbStruct.Count == 0)
-        throw new ArgumentException("Структура таблицы не заполнена", "dbStruct");
+        throw ExceptionFactory.ArgIsEmpty("dbStruct");
 
       _ShouldDisposeStreams = false;
       _fsDBF = dbfStream;
@@ -1701,7 +1688,7 @@ namespace FreeLibSet.DBF
 
       InitDBStructInternal();
       if (DBStruct.RecordSize > DbfStruct.MaxRecordSize)
-        throw new DbfFileFormatException("Слишком большой размер одной записи");
+        throw new DbfFileFormatException(String.Format(Res.DbfStr_Err_RecordSizeTooBig, DBStruct.RecordSize, DbfStruct.MaxRecordSize));
       _RecSize = (ushort)(DBStruct.RecordSize);
 
       BinaryWriter wrtDBF = new BinaryWriter(_fsDBF); // нельзя использовать using, чтобы не закрыть поток
@@ -1716,7 +1703,7 @@ namespace FreeLibSet.DBF
         if (_Format == DbfFileFormat.dBase3)
           _MemoFormat = DbfMemoFormat.dBase3;
         else
-          throw new NotImplementedException("Формат MEMO-файла dBase IV не поддерживается");
+          throw new NotImplementedException(Res.DbfFile_Err_DBase4MemoNotImplement);
       }
       _RecordBuffer = new byte[_RecSize];
 
@@ -1757,7 +1744,7 @@ namespace FreeLibSet.DBF
 
       // Описания полей
       if (DBStruct.Count > 32)
-        throw new InvalidOperationException("Количество полей не должно превышать 32");
+        throw new InvalidOperationException(Res.DbfStr_Msg_DBase2TooManyFields);
       for (int i = 0; i < DBStruct.Count; i++)
       {
         byte[] bName = System.Text.Encoding.ASCII.GetBytes(DBStruct[i].Name);
@@ -2008,7 +1995,7 @@ namespace FreeLibSet.DBF
     /// Возвращает массив, размер которого равен <see cref="DbfStruct.Count"/>.
     /// Для всех полей, кроме 'C' и 'M' возвращается стандартная длина из <see cref="DbfFieldInfo.Length"/>.
     /// Для строковых и MEMO-полей возвращается максимальная длина поля, возможно - 0.
-    /// Для больших таблиц рекомендуется использовать перегрузку <see cref="GetMaxLengths(ISplash)"/>,
+    /// Для больших таблиц рекомендуется использовать перегрузку <see cref="GetMaxLengths(ISimpleSplash)"/>,
     /// чтобы пользователь мош прервать процесс.
     /// </summary>
     /// <returns>Массив длин</returns>
@@ -2027,7 +2014,7 @@ namespace FreeLibSet.DBF
     /// <param name="splash">Управляемая splash-заставка для индикации процесса и возможности прерывания.
     /// Если null, то процесс нельзя прервать</param>
     /// <returns>Массив длин</returns>
-    public int[] GetMaxLengths(ISplash splash)
+    public int[] GetMaxLengths(ISimpleSplash splash)
     {
       return GetMaxLengths(splash, false);
     }
@@ -2045,7 +2032,7 @@ namespace FreeLibSet.DBF
     /// Ксли true, то возвращается частичный результат, по той части, которую успели просмотреть.
     /// Если false, выбрасывается исключение UserCancelException.</param>
     /// <returns>Массив длин</returns>
-    public int[] GetMaxLengths(ISplash splash, bool wheneverUserCancel)
+    public int[] GetMaxLengths(ISimpleSplash splash, bool wheneverUserCancel)
     {
       int[] a = new int[DBStruct.Count];
       List<int> indices = new List<int>();
@@ -2168,7 +2155,7 @@ namespace FreeLibSet.DBF
       set
       {
         if (value < 0 || value > _RecordCount)
-          throw new ArgumentOutOfRangeException("Нельзя перейти к записи " + value.ToString() + ", т.к. количество записей в таблице равно " + _RecordCount.ToString());
+          throw new ArgumentOutOfRangeException(String.Format(Res.DbfFile_Arg_RecNoOutOfRange, value, _RecordCount));
 
         if (value == _RecNo)
           return;
@@ -2228,7 +2215,7 @@ namespace FreeLibSet.DBF
     private void CheckActiveRecord()
     {
       if (_RecordBuffer == null)
-        throw new InvalidOperationException("Нет выбранной записи");
+        throw new InvalidOperationException(Res.DbfFile_Err_CheckActiveRecord);
     }
 
     /// <summary>
@@ -2364,7 +2351,7 @@ namespace FreeLibSet.DBF
           return String.Empty;
 
         if (_fsDBT == null)
-          throw new DbfMemoFileMissingException("Запрошено чтение значения memo-поля \"" + DBStruct[fieldIndex].Name + "\", но memo-файл недоступен");
+          throw new DbfMemoFileMissingException(String.Format(Res.DbfFile_Err_MemoFileNotAttached, DBStruct[fieldIndex].Name));
 
         byte[] b = ReadMemoValue(memoBlockEntry, DBStruct[fieldIndex].Name);
         return Encoding.GetString(b);
@@ -2390,8 +2377,7 @@ namespace FreeLibSet.DBF
     private void CheckFieldIndex(int fieldIndex)
     {
       if (fieldIndex < 0 || fieldIndex >= DBStruct.Count)
-        throw new ArgumentOutOfRangeException("fieldIndex", fieldIndex, "Индекс поля должен быть в диапазоне от 0 до " +
-          (DBStruct.Count - 1).ToString());
+        throw new ArgumentOutOfRangeException("fieldIndex", fieldIndex, String.Format(Res.DbfStr_Arg_FieldIndexOutOfRange,DBStruct.Count - 1));
     }
 
     /// <summary>
@@ -2765,7 +2751,7 @@ namespace FreeLibSet.DBF
         case '\0': // 18.03.2017
           return null;
         default:
-          throw new ArgumentException("Непреобразуемое значение \"" + ch + "\"");
+          throw ExceptionFactory.ArgUnknownValue("ch", ch);
       }
     }
 
@@ -2864,11 +2850,11 @@ namespace FreeLibSet.DBF
     private int InternalIndexOfField(string fieldName)
     {
       if (String.IsNullOrEmpty(fieldName))
-        throw new ArgumentNullException("fieldName"); // 27.12.2020 Перенесено в начало
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("fieldName"); // 27.12.2020 Перенесено в начало
 
       int fieldPos;
       if (!_FieldIndices.TryGetValue(fieldName.ToUpperInvariant(), out fieldPos))
-        throw new ArgumentException("Таблица не содержит поля \"" + fieldName + "\"", "fieldName");
+        throw new ArgumentException(String.Format(Res.DbfStr_Arg_UnknownFieldName, fieldName), "fieldName");
       return fieldPos;
     }
 
@@ -2895,14 +2881,13 @@ namespace FreeLibSet.DBF
     private byte[] ReadMemoValue(uint memoBlockEntry, string fieldName)
     {
       if (memoBlockEntry < MinMemoBlockCount || memoBlockEntry > MaxMemoBlockCount)
-        throw new DbfFileFormatException("В строке " + RecNo.ToString() + " в МЕМО-поле \"" + fieldName +
-          "\" задан недопустимый номер блока: " + memoBlockEntry.ToString());
+        throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_MemoInvalidBlockNumber,
+          RecNo,fieldName, memoBlockEntry));
 
       long fileOff = (long)memoBlockEntry * 512L;
       if (_fsDBT.Length <= fileOff)
-        throw new DbfFileFormatException("В строке " + RecNo.ToString() + " в МЕМО-поле \"" + fieldName +
-          "\" задан недопустимый номер блока: " + memoBlockEntry.ToString() +
-          ", который выходит за пределы МЕМО-файла");
+        throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_MemoBlockNumberOutOfFile,
+          RecNo, fieldName, memoBlockEntry));
 
       // Сначала нужно найти символ 1A, который завершает текст
       _fsDBT.Position = fileOff;
@@ -2911,22 +2896,22 @@ namespace FreeLibSet.DBF
       {
         int v = _fsDBT.ReadByte();
         if (v < 0)
-          throw new DbfFileFormatException("Обнаружен неожиданный конец МЕМО-файла для блока " +
-            memoBlockEntry.ToString() + ", указанного в строке " + RecNo.ToString() + " в поле \"" + fieldName);
+          throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_MemoUnexpectedEOF,
+            RecNo, fieldName, memoBlockEntry));
         if (v == 0x1A)
           break;
         cnt++;
         if (cnt > 65535)
-          throw new DbfFileFormatException("В МЕМО-файле для блока " +
-            memoBlockEntry.ToString() + ", указанного в строке " + RecNo.ToString() + " в поле \"" + fieldName +
-            " не найден маркер конца блока на протяжении 64Кб");
+          throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_MemoNoEndOfBlock,
+            RecNo, fieldName, memoBlockEntry));
       }
 
       // Теперь можно прочитать все байты
       _fsDBT.Position = fileOff;
       byte[] buff = new byte[cnt];
       if (_fsDBT.Read(buff, 0, cnt) != cnt)
-        throw new IOException("Не удалось прочитать значение MEMO-поля");
+        throw new IOException(String.Format(Res.DbfFile_Err_MemoReadError,
+          RecNo, fieldName));
       return buff;
     }
 
@@ -3037,8 +3022,8 @@ namespace FreeLibSet.DBF
           {
             int v = _fsDBT.ReadByte();
             if (v < 0)
-              throw new DbfFileFormatException("Обнаружен неожиданный конец МЕМО-файла для блока " +
-                memoBlockEntry.ToString() + ", указанного в строке " + RecNo.ToString() + " в поле \"" + DBStruct[fieldIndex].Name);
+              throw new DbfFileFormatException(String.Format(Res.DbfFile_Err_MemoUnexpectedEOF,
+                RecNo, DBStruct[fieldIndex].Name, memoBlockEntry));
             if (v == 0x1A)
               break;
             cnt++;
@@ -3070,7 +3055,7 @@ namespace FreeLibSet.DBF
     protected void CheckNotReadOnly()
     {
       if (_IsReadOnly)
-        throw new ReadOnlyException("Таблица данных предназначена только для чтения");
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     void IReadOnlyObject.CheckNotReadOnly()
@@ -3247,8 +3232,8 @@ namespace FreeLibSet.DBF
             if (!trim)
               throw new ArgumentOutOfRangeException(
                 "value", value,
-                "Строка имеет длину " + value.Length.ToString() + " и не может быть записана в поле \"" +
-                DBStruct[fieldIndex].Name + "\" длиной " + fieldLength.ToString());
+                String.Format(Res.DbfFile_Arg_StringIsTooLong,
+                value.Length, DBStruct[fieldIndex].Name, fieldLength));
             // Нельзя сразу писать в буфер строки, так как затрутся поля справа.
             byte[] b2 = this.Encoding.GetBytes(value);
             Array.Copy(b2, 0, _RecordBuffer, _FieldOffsets[fieldIndex], fieldLength);
@@ -3265,8 +3250,8 @@ namespace FreeLibSet.DBF
           if (value.Length > DBStruct[fieldIndex].Length && (!trim))
             throw new ArgumentOutOfRangeException(
               "value", value,
-              "Строка имеет длину " + value.Length.ToString() + " и не может быть записана в поле \"" +
-              DBStruct[fieldIndex].Name + "\" длиной " + DBStruct[fieldIndex].Length.ToString());
+                String.Format(Res.DbfFile_Arg_StringIsTooLong,
+                value.Length, DBStruct[fieldIndex].Name, fieldLength));
           value = DataTools.PadRight(value, DBStruct[fieldIndex].Length);
           System.Text.Encoding.ASCII.GetBytes(value, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
@@ -3284,7 +3269,7 @@ namespace FreeLibSet.DBF
     private uint WriteMemoValue(int fieldIndex, byte[] value)
     {
       if (_fsDBT == null)
-        throw new DbfMemoFileMissingException("Нельзя записать значение в MEMO-поле, т.к. DBT-файл не открыт");
+        throw new DbfMemoFileMissingException(String.Format(Res.DbfFile_Err_MemoFileNotAttached, DBStruct[fieldIndex].Name));
 
       // Число необходимых блоков
       int nBlocks = (value.Length + 511 + 1) / 512; // 1 байт для 0x1A
@@ -3308,7 +3293,7 @@ namespace FreeLibSet.DBF
 
       firstBlock = _MemoBlockCount;
       if ((_MemoBlockCount + nBlocks) > MaxMemoBlockCount)
-        throw new InvalidOperationException("Нельзя добавить MEMO-значение в DBT-файл, т.к. будет превышено максимально допустимое число блоков " + MaxMemoBlockCount.ToString());
+        throw new InvalidOperationException(String.Format(Res.DbfFile_Err_MemoBlockCountLimitExceeded,MaxMemoBlockCount));
 
       // Дополняем нулями, если файл короче, чем надо
       FillMemoToBlockCount();
@@ -3397,7 +3382,7 @@ namespace FreeLibSet.DBF
           string s = value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat);
           if (s.Length > DBStruct[fieldIndex].Length)
             throw new ArgumentOutOfRangeException("value", value,
-              "Длина текстового представления (" + s.Length + ") превышает длину поля \"" + DBStruct[fieldIndex].Name + "\" (" + DBStruct[fieldIndex].Length + ")");
+              String.Format(Res.DbfFile_Err_NumberStringTooLong, s, s.Length, DBStruct[fieldIndex].Name, DBStruct[fieldIndex].Length));
           s = s.PadLeft(DBStruct[fieldIndex].Length, ' ');
           System.Text.Encoding.ASCII.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
@@ -3438,7 +3423,7 @@ namespace FreeLibSet.DBF
           string s = value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat);
           if (s.Length > DBStruct[fieldIndex].Length)
             throw new ArgumentOutOfRangeException("value", value,
-              "Длина текстового представления (" + s.Length + ") превышает длину поля \"" + DBStruct[fieldIndex].Name + "\" (" + DBStruct[fieldIndex].Length + ")");
+              String.Format(Res.DbfFile_Err_NumberStringTooLong, s, s.Length, DBStruct[fieldIndex].Name, DBStruct[fieldIndex].Length));
           s = s.PadLeft(DBStruct[fieldIndex].Length, ' ');
           System.Text.Encoding.ASCII.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
@@ -3479,7 +3464,7 @@ namespace FreeLibSet.DBF
           string s = value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat);
           if (s.Length > DBStruct[fieldIndex].Length)
             throw new ArgumentOutOfRangeException("value", value,
-              "Длина текстового представления (" + s.Length + ") превышает длину поля \"" + DBStruct[fieldIndex].Name + "\" (" + DBStruct[fieldIndex].Length + ")");
+              String.Format(Res.DbfFile_Err_NumberStringTooLong, s, s.Length, DBStruct[fieldIndex].Name, DBStruct[fieldIndex].Length));
           s = s.PadLeft(DBStruct[fieldIndex].Length, ' ');
           System.Text.Encoding.ASCII.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
@@ -3521,7 +3506,7 @@ namespace FreeLibSet.DBF
           string s = value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat);
           if (s.Length > DBStruct[fieldIndex].Length)
             throw new ArgumentOutOfRangeException("value", value,
-              "Длина текстового представления (" + s.Length + ") превышает длину поля \"" + DBStruct[fieldIndex].Name + "\" (" + DBStruct[fieldIndex].Length + ")");
+              String.Format(Res.DbfFile_Err_NumberStringTooLong, s, s.Length, DBStruct[fieldIndex].Name, DBStruct[fieldIndex].Length));
           s = s.PadLeft(DBStruct[fieldIndex].Length, ' ');
           System.Text.Encoding.ASCII.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
@@ -3563,7 +3548,7 @@ namespace FreeLibSet.DBF
           string s = value.ToString(DBStruct[fieldIndex].Mask, StdConvert.NumberFormat);
           if (s.Length > DBStruct[fieldIndex].Length)
             throw new ArgumentOutOfRangeException("value", value,
-              "Длина текстового представления (" + s.Length + ") превышает длину поля \"" + DBStruct[fieldIndex].Name + "\" (" + DBStruct[fieldIndex].Length + ")");
+              String.Format(Res.DbfFile_Err_NumberStringTooLong, s, s.Length, DBStruct[fieldIndex].Name, DBStruct[fieldIndex].Length));
           s = s.PadLeft(DBStruct[fieldIndex].Length, ' ');
           System.Text.Encoding.ASCII.GetBytes(s, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
@@ -3848,7 +3833,7 @@ namespace FreeLibSet.DBF
     /// <param name="splash">Интерфейс управления процентным инидкатором.
     /// Если свойство <see cref="ISimpleSplash.AllowCancel"/> установлено в true, пользователь сможет прервать процесс загрузки</param>
     /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
-    public DataTable CreateTable(ISplash splash)
+    public DataTable CreateTable(ISimpleSplash splash)
     {
       return CreateTable(splash, null);
     }
@@ -3864,7 +3849,7 @@ namespace FreeLibSet.DBF
     /// <param name="errors">Если аргумент передан, то при невозможности прочитать значение поля, будет добавлено сообщение об ошибке и чтение будет продолжено.
     /// Если null, то будет выброшено исключение</param>
     /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
-    public DataTable CreateTable(ISplash splash, ErrorMessageList errors)
+    public DataTable CreateTable(ISimpleSplash splash, ErrorMessageList errors)
     {
       if (splash == null)
         splash = new DummySplash();
@@ -3907,7 +3892,7 @@ namespace FreeLibSet.DBF
           }
           catch (Exception e)
           {
-            errors.AddError("Строка " + RecNo.ToString() + ", поле \"" + DBStruct[i].Name + "\". Произошла ошибка. " + e.Message);
+            errors.AddError(String.Format(Res.DbfFile_Err_CellErrorMessage, RecNo, DBStruct[i].Name, e.Message));
           }
         }
       }
@@ -3936,7 +3921,7 @@ namespace FreeLibSet.DBF
     /// <param name="splash">Интерфейс управления процентным инидкатором.
     /// Если свойство <see cref="ISimpleSplash.AllowCancel"/> установлено в true, пользователь сможет прервать процесс загрузки</param>
     /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
-    public DataTable CreateTable(string columnNames, ISplash splash)
+    public DataTable CreateTable(string columnNames, ISimpleSplash splash)
     {
       return CreateTable(columnNames, splash, null);
     }
@@ -3954,10 +3939,10 @@ namespace FreeLibSet.DBF
     /// <param name="errors">Если аргумент передан, то при невозможности прочитать значение поля, будет добавлено сообщение об ошибке и чтение будет продолжено.
     /// Если null, то будет выброшено исключение</param>
     /// <returns>Заполненный объект <see cref="System.Data.DataTable"/></returns>
-    public DataTable CreateTable(string columnNames, ISplash splash, ErrorMessageList errors)
+    public DataTable CreateTable(string columnNames, ISimpleSplash splash, ErrorMessageList errors)
     {
       if (String.IsNullOrEmpty(columnNames))
-        throw new ArgumentNullException("columnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnNames");
 
       if (splash == null)
         splash = new DummySplash();
@@ -4002,7 +3987,7 @@ namespace FreeLibSet.DBF
           }
           catch (Exception e)
           {
-            errors.AddError("Строка " + RecNo.ToString() + ", поле \"" + DBStruct[dbfColPoss[i]].Name + "\". Произошла ошибка. " + e.Message);
+            errors.AddError(String.Format(Res.DbfFile_Err_CellErrorMessage, RecNo, DBStruct[i].Name, e.Message));
           }
         }
       }
@@ -4091,7 +4076,7 @@ namespace FreeLibSet.DBF
     public bool CreateBlockedTable(int maxRowCount, string columnNames, ErrorMessageList errors, out DataTable table)
     {
       if (String.IsNullOrEmpty(columnNames))
-        throw new ArgumentNullException("columnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnNames");
 
       int[] dbfColPoss = null; // без присвоения значения будет ошибка компилятора
 
@@ -4144,9 +4129,9 @@ namespace FreeLibSet.DBF
 #endif
 
       if (resFile == srcFile)
-        throw new ArgumentException("Конечный и исходный файлы не могут совпадать", "resFile");
+        throw ExceptionFactory.ArgAreSame("srcFile", "resFile");
       if (resFile.IsReadOnly)
-        throw new ReadOnlyException("Конечный файл открыт только для чтения");
+        throw ExceptionFactory.ObjectReadOnly(resFile);
 
       _SrcFile = srcFile;
       _ResFile = resFile;
@@ -4192,11 +4177,11 @@ namespace FreeLibSet.DBF
       CheckNotReadOnly();
 
       if (srcFieldIndex < 0 || srcFieldIndex >= SrcFile.DBStruct.Count)
-        throw new ArgumentOutOfRangeException("srcFieldIndex", srcFieldIndex, "Индекс исходного поля должен быть в диапазоне от 0 до " + (SrcFile.DBStruct.Count - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("srcFieldIndex", srcFieldIndex, 0, SrcFile.DBStruct.Count - 1);
       if (resFieldIndex < 0 || resFieldIndex >= ResFile.DBStruct.Count)
-        throw new ArgumentOutOfRangeException("resFieldIndex", resFieldIndex, "Индекс конечного поля должен быть в диапазоне от 0 до " + (ResFile.DBStruct.Count - 1).ToString());
+        throw ExceptionFactory.ArgOutOfRange("resFieldIndex", resFieldIndex, 0, ResFile.DBStruct.Count - 1);
       if (_MainCopyList.ContainsKey(resFieldIndex))
-        throw new InvalidOperationException("Для конечного поля \"" + ResFile.DBStruct[resFieldIndex].Name + "\" уже задано правило копирования");
+        throw new InvalidOperationException(String.Format(Res.DbfFileCopier_Err_FieldRuleExists, ResFile.DBStruct[resFieldIndex]));
 
       _MainCopyList.Add(resFieldIndex, srcFieldIndex);
     }
@@ -4211,10 +4196,10 @@ namespace FreeLibSet.DBF
     {
       int srcFieldIndex = SrcFile.DBStruct.IndexOf(srcFieldName);
       if (srcFieldIndex < 0)
-        throw new ArgumentException("Исходная таблица не содержит поля \"" + srcFieldName + "\"", "srcFieldName");
+        throw ExceptionFactory.ArgUnknownValue("srcFieldName", srcFieldName);
       int resFieldIndex = ResFile.DBStruct.IndexOf(resFieldName);
       if (resFieldIndex < 0)
-        throw new ArgumentException("Конечная таблица не содержит поля \"" + resFieldName + "\"", "resFieldName");
+        throw new ArgumentException("resFieldName", resFieldName);
       AddField(srcFieldIndex, resFieldIndex);
     }
 
@@ -4271,7 +4256,7 @@ namespace FreeLibSet.DBF
     protected void CheckNotReadOnly()
     {
       if (_DirectCopyList != null)
-        throw new ReadOnlyException("Объект уже использован для копирования и не может быть модифицирован");
+        throw new ObjectReadOnlyException();
     }
 
     #endregion
@@ -4582,7 +4567,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Основной метод копирования.
     /// Перебирает все записи в исходной таблицы <see cref="SrcFile"/> и вызывает <see cref="DbfFile.AppendRecord()"/> в конечной таблице <see cref="ResFile"/> для каждой строки.
-    /// Для больших таблиц рекомендуется использовать перегрузку <see cref="AppendRecords(ISplash)"/>, чтобы пользователь мог прервать процесс.
+    /// Для больших таблиц рекомендуется использовать перегрузку <see cref="AppendRecords(ISimpleSplash)"/>, чтобы пользователь мог прервать процесс.
     /// </summary>
     public void AppendRecords()
     {
@@ -4594,7 +4579,7 @@ namespace FreeLibSet.DBF
     /// Перебирает все записи в исходной таблицы <see cref="SrcFile"/> и вызывает <see cref="DbfFile.AppendRecord()"/> в конечной таблице <see cref="ResFile"/> для каждой строки.
     /// </summary>
     /// <param name="splash">Управляемая splash-заставка. Если null, то пользователь не может прервать процесс.</param>
-    public void AppendRecords(ISplash splash)
+    public void AppendRecords(ISimpleSplash splash)
     {
       Prepare();
 

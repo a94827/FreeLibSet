@@ -28,17 +28,17 @@ namespace FreeLibSet.Forms.Reporting
         if (controlProvider is EFPDataTreeView)
         {
           TreeViewAdv control = controlProvider.Control as TreeViewAdv;
-          rbAll.Text = "Весь просмотр";
+          //rbAll.Text = "Весь просмотр";
           if (controlProvider.MultiSelect)
-            rbSelected.Text = "Выбранные строки";
+            rbSelected.Text = Res.BRDataViewPageSetupSendTo_Text_SelRows;
           else
-            rbSelected.Text = "Выбранная строка";
+            rbSelected.Text = Res.BRDataViewPageSetupSendTo_Text_SelRow;
 
           if (control.Root.Nodes.Count == 0)
             efpExpArea[1].Enabled = false; // 17.06.2024
 
           if (control.UseColumns)
-            lblInfo.Text = "Печатаются столбцы, отмеченные в диалоге \"Параметры страницы\"";
+            lblInfo.Text = Res.BRDataViewPageSetupSendTo_Msg_GridSendTo;
           else
             lblInfo.Visible = false;
         }
@@ -48,29 +48,28 @@ namespace FreeLibSet.Forms.Reporting
           if (control.SelectedRows.Count > 0)
           {
             if (control.SelectedRows.Count == 1)
-              rbSelected.Text = "Выбранная строка";
+              rbSelected.Text = Res.BRDataViewPageSetupSendTo_Text_SelRow;
             else
-              rbSelected.Text = "Выбранные строки";
+              rbSelected.Text = Res.BRDataViewPageSetupSendTo_Text_SelRows;
           }
           else
           {
             if (controlProvider.MultiSelect)
-              rbSelected.Text = "Выбранные ячейки";
+              rbSelected.Text = Res.BRDataViewPageSetupSendTo_Text_SelCells;
             else
-              rbSelected.Text = "Выбранная ячейка";
+              rbSelected.Text = Res.BRDataViewPageSetupSendTo_Text_SelCell;
           }
           if (control.RowCount == 0)
             efpExpArea[1].Enabled = false; // 17.06.2024
 
-          lblInfo.Text = "В режиме \"" + rbAll.Text + "\" печатаются столбцы, отмеченные в диалоге \"Параметры страницы\"." + Environment.NewLine +
-            "В режиме \"" + rbSelected.Text + "\" выбранные столбцы не учитываются.";
+          lblInfo.Text = String.Format(Res.BRDataViewPageSetupSendTo_Msg_TreeSendTo, rbAll.Text, rbSelected.Text);
         }
       }
       else
       {
         efpExpArea.SelectedIndex = 0;
         efpExpArea.Enabled = false;
-        lblInfo.Text = "В файл записываются все строки таблицы и столбцы, отмеченные в диалоге \"Параметры страницы\"";
+        lblInfo.Text = Res.BRDataViewPageSetupSendTo_Msg_Export;
       }
 
       efpExpTableHeader = new EFPCheckBox(page.BaseProvider, cbExpTableHeader);
@@ -82,8 +81,8 @@ namespace FreeLibSet.Forms.Reporting
       efpExpColumnHeaders = new EFPCheckBox(page.BaseProvider, cbExpColumnHeaders);
       efpExpColumnHeaders.Enabled = _ViewData.UseExpColumnHeaders;
 
-      page.Text = "Область";
-      page.ToolTipText = "Выбор области просмотра для экспорта";
+      page.Text = Res.BRDataViewPageSetupSendTo_Title_Tab;
+      page.ToolTipText = Res.BRDataViewPageSetupSendTo_ToolTip_Tab;
       page.ImageKey = "Table";
 
       page.DataToControls += Page_DataToControls;

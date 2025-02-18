@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FreeLibSet.Core;
 
 /*
  * Строки табличек фильтров в отчетах (для отчета в-целом и для отдельных страниц
@@ -49,7 +50,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(displayName))
-        throw new ArgumentNullException("displayName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("displayName");
 #endif
       _DisplayName = displayName;
       _Value = value;
@@ -66,7 +67,7 @@ namespace FreeLibSet.Forms
     internal void CheckNotAdded()
     {
       if (_Owner != null)
-        throw new InvalidOperationException("Строка фильтра уже была добавлена в коллекцию");
+        throw ExceptionFactory.ObjectPropertyAlreadySet(this, "Owner");
     }
 
     /// <summary>
@@ -319,7 +320,7 @@ namespace FreeLibSet.Forms
       {
 #if DEBUG
         if (item == null)
-          throw new ArgumentException("Один из элементов равен null", "items");
+          throw ExceptionFactory.ArgInvalidEnumerableItem("items", items, null);
 #endif
         EFPReportFilterItem item2 = item.Clone();
         item2.Owner = this;
@@ -479,13 +480,21 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Виртуальные методы
+    #region Событие Changed
 
     /// <summary>
-    /// Вызывается при всех изменениях в списке фильтров
+    /// Событие вызывается при любом изменении в списке фильтров
+    /// </summary>
+    public event EventHandler Changed;
+
+    /// <summary>
+    /// Вызывается при всех изменениях в списке фильтров.
+    /// Вызывает событие <see cref="Changed"/>.
     /// </summary>
     internal protected virtual void OnChanged()
     {
+      if (Changed != null)
+        Changed(this, EventArgs.Empty);
     }
 
     #endregion
@@ -551,7 +560,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (Count == 0)
-          return "Без фильтра";
+          return Res.EFPReportPageFilterItems_ToolTip_NoFilter;
         else
         {
           StringBuilder sb = new StringBuilder();

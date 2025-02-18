@@ -11,6 +11,7 @@ using System.ComponentModel;
 using FreeLibSet.Collections;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms
 {
@@ -119,9 +120,11 @@ namespace FreeLibSet.Forms
     public override string ToString()
     {
       if (IsEmpty)
-        return "[не задано]";
+        return "[ Empty ]";
       else
-        return String.Join(",", _ClickableColumnNames) + (_Direction == ListSortDirection.Descending ? " (по убыванию)" : " (по возрастанию)");
+        return String.Format("{0} {1}",
+          String.Join(",", _ClickableColumnNames),
+          UITools.ToString(_Direction));
     }
 
     #endregion
@@ -166,7 +169,7 @@ namespace FreeLibSet.Forms
     public EFPDataViewOrder(string name, string sort)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
       // 08.07.2024 Эта проверка неправильная. Запятая может использоваться
       //if (name.IndexOf(',') >= 0)
@@ -177,7 +180,7 @@ namespace FreeLibSet.Forms
       if (!String.IsNullOrEmpty(sort))
       {
         if (sort.IndexOf('!') >= 0)
-          throw new ArgumentException("Нельзя использовать \"!\". Используйте DESC", "sort");
+          throw new ArgumentException("You should not use \"!\" char. Use DESC instead", "sort");
       }
 
       _Name = name;
@@ -269,7 +272,7 @@ namespace FreeLibSet.Forms
     {
       DataView dv = controlProvider.SourceAsDataView;
       if (dv == null)
-        throw new InvalidDataSourceException("Источником данных просмотра не является DataView");
+        throw new InvalidDataSourceException(Res.EFPDataView_Err_NoDataView);
 
       dv.Sort = Sort;
     }
@@ -391,7 +394,7 @@ namespace FreeLibSet.Forms
       {
         order.DisplayName = aColNames[0];
         if (aDirs[0] == ListSortDirection.Descending)
-          order.DisplayName += " (по убыванию)";
+          order.DisplayName += " ("+UITools.ToString(aDirs[0])+")";
       }
     }
 
@@ -572,7 +575,7 @@ namespace FreeLibSet.Forms
     public bool ShowSelectDialog(ref int orderIndex)
     {
       ListSelectDialog dlg = new ListSelectDialog();
-      dlg.Title = "Порядок строк";
+      dlg.Title = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_RowOrder);
       dlg.ImageKey = "OrderAZ";
       dlg.Items = new string[Count];
       dlg.ImageKeys = new string[Count];
@@ -669,7 +672,7 @@ namespace FreeLibSet.Forms.Data
       {
         int p = _Table.Columns.IndexOf(name);
         if (p < 0)
-          throw new ArgumentException("Неизвестный столбец \"" + name + "\"");
+          throw ExceptionFactory.ArgUnknownColumnName("name", _Table, name);
 
         return DataTools.GetEmptyValue(_Table.Columns[p].DataType);
       }
@@ -705,7 +708,7 @@ namespace FreeLibSet.Forms.Data
 
       DataView dv = controlProvider.SourceAsDataView;
       if (dv == null)
-        throw new InvalidDataSourceException("Источником данных просмотра не является DataView");
+        throw new InvalidDataSourceException(Res.EFPDataView_Err_NoDataView);
 
       // Обычно, порядок сортировки задается нормальными полями и вычисляемые столбцы
       // не нужны. При наличии выражения, например, DBxOrderColumnIfNull, его нельзя
@@ -740,7 +743,8 @@ namespace FreeLibSet.Forms.Data
           DefValAccess dva = new DefValAccess(dv.Table);
           object defVal = Order.Parts[i].Expression.GetValue(dva);
           if (defVal == null)
-            throw new NullReferenceException("Для выражения \"" + expr + "\" порядка сортировки \"" + DisplayName + "\" не удалось вычислить значение по умолчанию, чтобы определить тип данных");
+            throw new NullReferenceException(String.Format(Res.EFPDataViewOrder_Err_NoDefaultValue,
+              expr, DisplayName));
           Type dataType = defVal.GetType();
 
 

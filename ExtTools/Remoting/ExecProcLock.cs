@@ -33,7 +33,7 @@ namespace FreeLibSet.Remoting
     {
 #if DEBUG
       if (String.IsNullOrEmpty(displayName))
-        throw new ArgumentNullException("displayName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("displayName");
 #endif
 
       _MainSyncRoot = new object();
@@ -53,7 +53,7 @@ namespace FreeLibSet.Remoting
     internal void CheckLocked()
     {
       if (LockCount == 0)
-        throw new BugException("Объект " + DisplayName + " не был заблокирован");
+        throw new BugException("Object " + DisplayName + " has not been locked");
     }
 
     /// <summary>
@@ -232,7 +232,7 @@ namespace FreeLibSet.Remoting
         while (!TryLock(caller, out lockedObj))
         {
           if (lockedObj == null)
-            throw new BugException("Метод TryLock не вернул LockedObj");
+            throw new BugException("TryLock() was not return a LockedObj");
 
 
           // 29.11.2014
@@ -245,7 +245,7 @@ namespace FreeLibSet.Remoting
               if (stepInfo == null) // первый такт ожидания
               {
                 if (lockedObjOwnCaller == caller)
-                  throw new BugException("Ошибка вложенной блокировки. Процедура " + caller.ToString() + " пытается повторно установить блокировку объекта " + lockedObj.ToString());
+                  throw new BugException("Nested lock error. Procedure \"" + caller.ToString() + "\" is going to set repeated lock to the object " + lockedObj.ToString());
 
                 // Синхронизируем splash-заставки.
                 // Эта заставки используется для проформы
@@ -305,7 +305,7 @@ namespace FreeLibSet.Remoting
 #endif
             e.Data["PretenderTimeSpan"] = DateTime.Now - pretendingStartTime;
 
-            LogoutTools.LogoutException(e, "Отказ от ожидания блокировки");
+            LogoutTools.LogoutException(e, Res.ExecProcLock_ErrTitle_UserCancel);
             throw;
           }
         }
@@ -332,23 +332,16 @@ namespace FreeLibSet.Remoting
       {
         try
         {
-          StringBuilder sb = new StringBuilder();
-          sb.Append("Ожидание блокировки объекта \"");
-          sb.Append(lockedObj.DisplayName);
-          sb.Append("\"");
-          //sb.Append(". Ожидающая процедура: ");
-          //sb.Append(Caller.ToString());
-          sb.Append(". Заблокировал: ");
+          string ownerInfo;
           if (lockedObjOwnCaller == null)
-            sb.Append("[ нет данных]");
+            ownerInfo=Res.ExecProcLock_Phase_NoLockOwner;
           else
           {
-            sb.Append(lockedObjOwnCaller.ToString());
-
+            ownerInfo = lockedObjOwnCaller.ToString();
             ISplash orgSplash = lockedObjOwnCaller.SplashStack.Splash;
             if (orgSplash != null)
             {
-              sb.Append(" - " + orgSplash.PhaseText);
+              ownerInfo += " - " + orgSplash.PhaseText;
               waitSPH.SetPercent(orgSplash.Percent, orgSplash.PercentMax);
             }
             else
@@ -357,11 +350,11 @@ namespace FreeLibSet.Remoting
             }
           }
 
-          waitSPH.PhaseText = sb.ToString();
+          waitSPH.PhaseText = String.Format(Res.ExecProcLock_Phase_Wait, lockedObj.DisplayName, ownerInfo);
         }
         catch (Exception e)
         {
-          waitSPH.PhaseText = "Ошибка при получении описания заблокированного объекта. " + e.Message;
+          waitSPH.PhaseText = String.Format(Res.ExecProcLock_Phase_ErrorGetInfo, e.Message);
         }
       }
       catch { }
@@ -385,7 +378,7 @@ namespace FreeLibSet.Remoting
           }
           catch (Exception e)
           {
-            LogoutTools.LogoutException(e, "Ошибка разблокировки " + this.ToString());
+            LogoutTools.LogoutException(e, String.Format(Res.ExecProcLock_ErrTitle_UnlockError,  this.ToString()));
           }
         }
 
@@ -484,27 +477,27 @@ namespace FreeLibSet.Remoting
 
     #region Отладочные средства
 
-    internal static void GetDebugCallStack(LogoutInfoNeededEventArgs args, string stackTrace, string title)
-    {
-      if (!String.IsNullOrEmpty(title))
-      {
-        args.WriteLine(title);
-        args.IndentLevel++;
-      }
+    //internal static void GetDebugCallStack(LogoutInfoNeededEventArgs args, string stackTrace, string title)
+    //{
+    //  if (!String.IsNullOrEmpty(title))
+    //  {
+    //    args.WriteLine(title);
+    //    args.IndentLevel++;
+    //  }
 
-      if (String.IsNullOrEmpty(stackTrace))
-        args.WriteLine("Стек вызовов недоступен");
-      else
-      {
+    //  if (String.IsNullOrEmpty(stackTrace))
+    //    args.WriteLine("Стек вызовов недоступен");
+    //  else
+    //  {
 
-        string[] a = stackTrace.Split(DataTools.NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
-        for (int i = 0; i < a.Length; i++)
-          args.WriteLine(a[i].Trim());
-      }
+    //    string[] a = stackTrace.Split(DataTools.NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
+    //    for (int i = 0; i < a.Length; i++)
+    //      args.WriteLine(a[i].Trim());
+    //  }
 
-      if (!String.IsNullOrEmpty(title))
-        args.IndentLevel--;
-    }
+    //  if (!String.IsNullOrEmpty(title))
+    //    args.IndentLevel--;
+    //}
 
     /// <summary>
     /// Добавляет отладочную информацию
@@ -512,22 +505,22 @@ namespace FreeLibSet.Remoting
     /// <param name="args">Объект для записи log-данных</param>
     public virtual void GetDebugInfo(LogoutInfoNeededEventArgs args)
     {
-      args.WritePair("Блокировка", DisplayName);
+      args.WritePair("Object lock ", DisplayName);
       lock (_MainSyncRoot)
       {
-        args.WritePair("Уровень блокировки", LockCount.ToString());
+        args.WritePair("Lock level", LockCount.ToString());
         if (OwnCaller != null)
         {
-          args.WritePair("Владелец блокировки", OwnCaller.ToString());
+          args.WritePair("Lock owner", OwnCaller.ToString());
 #if DEBUGSTACK
-          GetDebugCallStack(Args, OwnCallerStackTrace, "Стек вызовов:");
-          Args.WritePair("Блокировка установлена", LockStartTime.ToString() + ", время: " + CommonTools.TimeSpanToString(DateTime.Now - LockStartTime));
+          GetDebugCallStack(Args, OwnCallerStackTrace, "Call stack:");
+          Args.WritePair("Lock set at ", LockStartTime.ToString() + ", period: " + CommonTools.TimeSpanToString(DateTime.Now - LockStartTime));
 #endif
         }
 
 
         ExecProcLockLogger[] others = Waiters.ToArray();
-        args.WriteLine("Процедуры, ожидающие освобождения блокировки (" + others.Length.ToString() + ")");
+        args.WriteLine("Procedures are waiting for the unlocking (" + others.Length.ToString() + ")");
         args.IndentLevel++;
         for (int i = 0; i < others.Length; i++)
         {
@@ -672,26 +665,26 @@ namespace FreeLibSet.Remoting
     /// <param name="args">Аргументы события получения отладочной информации</param>
     public void GetDebugInfo(LogoutInfoNeededEventArgs args)
     {
-      args.WritePair("Идентификатор ожидания", WaitingId.ToString() + ", начало ожидания: " + StartTime.ToString() + ", время: " + (DateTime.Now - StartTime).ToString());
-      args.WritePair("Ожидание блокировки", Lock.DisplayName);
+      args.WritePair("WaitingId", WaitingId.ToString() + ", waiting since: " + StartTime.ToString() + ", for: " + (DateTime.Now - StartTime).ToString());
+      args.WritePair("Waiting for the lock", Lock.DisplayName);
       if (LockedObj != Lock)
-        args.WritePair("Блокированный объект", LockedObj.DisplayName);
+        args.WritePair("LockedObj", LockedObj.DisplayName);
 #if DEBUGSTACK
       Args.WriteLine("");
 #endif
-      args.WritePair("Ожидающая процедура", Pretender.ToString());
+      args.WritePair("Wait pretender", Pretender.ToString());
 #if DEBUGSTACK
       ExecProcLock.GetDebugCallStack(Args, PretenderStackTrace, "Стек вызовов ожидающей процедуры");
       Args.WriteLine("");
 #endif
 
       if (LockedObjOwnCaller == null)
-        args.WriteLine("Нет информации о процедуре, установившей блокировку");
+        args.WriteLine("There is no info of the owner procedure");
       else
       {
-        args.WriteLine("Заблокировавшая процедура :" + LockedObjOwnCaller.ToString());
+        args.WriteLine("Owner procedure :" + LockedObjOwnCaller.ToString());
 #if DEBUGSTACK
-        ExecProcLock.GetDebugCallStack(Args, OwnCallerStackTrace, "Стек вызовов заблокировавшей процедуры");
+        ExecProcLock.GetDebugCallStack(Args, OwnCallerStackTrace, "Owner procedure stack trace");
 #endif
       }
     }
@@ -763,9 +756,9 @@ namespace FreeLibSet.Remoting
     public void GetDebugInfo(LogoutInfoNeededEventArgs args)
     {
       Logger.GetDebugInfo(args);
-      args.WritePair("Текущая блокировка", LockedObj.ToString());
-      args.WritePair("Идентификатор блокировки", LockedObj.LockingId.ToString());
-      args.WriteLine("Текущий блокирующий объект");
+      args.WritePair("Current lock", LockedObj.ToString());
+      args.WritePair("LockingId", LockedObj.LockingId.ToString());
+      args.WriteLine("Current lock owner");
       args.IndentLevel++;
       LockedObjOwnCaller.GetDebugInfo(args);
       args.IndentLevel--;

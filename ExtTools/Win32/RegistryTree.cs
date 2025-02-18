@@ -130,14 +130,14 @@ namespace FreeLibSet.Win32
           return item; // узел уже был найден
 
         if (String.IsNullOrEmpty(keyName))
-          throw new ArgumentNullException("keyName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("keyName");
 
         int p = keyName.LastIndexOf('\\');
         if (p < 0)
         {
           RegistryKey root = GetRootKey(keyName);
           if (root == null)
-            throw new ArgumentException("Неизвестный корневной узел реестра \"" + keyName + "\"", "keyName");
+            throw new ArgumentException(String.Format(Res.RegistryTree_Arg_UnknownRoot, keyName), "keyName");
           return root;
         }
 
@@ -202,7 +202,7 @@ namespace FreeLibSet.Win32
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new InvalidOperationException("Коллекция узлов реестра открыта только для чтения");
+        throw new ObjectReadOnlyException(Res.RegistryTree_Err_IsReadOnly);
     }
 
     /// <summary>
@@ -343,7 +343,7 @@ namespace FreeLibSet.Win32
 
       int p = keyName.LastIndexOf('\\');
       if (p < 0)
-        throw new InvalidOperationException("Нельзя удалить корневой узел");
+        throw new InvalidOperationException(Res.RegistryKey2_Err_Root);
 
       string parentKeyName = keyName.Substring(0, p);
       RegistryKey parentKey = this[parentKeyName];
@@ -674,7 +674,7 @@ namespace FreeLibSet.Win32
         if (_En2.MoveNext())
         {
           if (Current == null)
-            throw new BugException("Текущий элемент равен null");
+            throw new BugException("Current item is null");
           return true;
         }
         else

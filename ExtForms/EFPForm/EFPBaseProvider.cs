@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel;
 using FreeLibSet.UICore;
+using FreeLibSet.Core;
 
 // Система проверки корректности введенных значений
 
@@ -33,7 +34,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(message))
-        throw new ArgumentNullException("message");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("message");
 #endif
       _Message = message;
       _IsError = isError;
@@ -112,7 +113,7 @@ namespace FreeLibSet.Forms
         if (value == _Parent)
           return; // ничего не поменялось
         if (value == this)
-          throw new InvalidOperationException("Нельзя присоединить EFPBaseProvider к самому себе");
+          throw new InvalidOperationException(Res.EFPBaseProvider_Err_AttachToItself);
 
         if (_Parent != null)
         {
@@ -199,7 +200,7 @@ namespace FreeLibSet.Forms
         get
         {
           if (index < 0 || index >= Count)
-            throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + (index - 1).ToString());
+            throw ExceptionFactory.ArgOutOfRange("index", index, 0, Count-1);
           return _Owner._Children[index];
         }
       }
@@ -341,7 +342,7 @@ namespace FreeLibSet.Forms
         get
         {
           if (index < 0 || index >= Count)
-            throw new ArgumentOutOfRangeException("index", index, "Индекс должен быть в диапазоне от 0 до " + (index - 1).ToString());
+            throw ExceptionFactory.ArgOutOfRange("index", index, 0, Count-1);
           return _Owner._ControlProviders[index];
         }
       }
@@ -538,7 +539,7 @@ namespace FreeLibSet.Forms
           throw new ArgumentNullException("item");
 #endif
         if (item.BaseProvider != null)
-          throw new InvalidOperationException("Объект уже был добавлен");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "BaseProvider");
         if (_Owner._FormChecks == null)
           _Owner._FormChecks = new List<EFPFormCheck>();
         item.BaseProvider = _Owner;
@@ -1344,11 +1345,11 @@ namespace FreeLibSet.Forms
 #endif
 
       if (String.IsNullOrEmpty(displayName))
-        displayName = "Неизвестное действие";
+        displayName = Res.EFPReentranceLocker_Name_Default;
 
       if (_LockedDisplayName != null)
       {
-        EFPApp.ShowTempMessage("Предыдущая операция еще не закончена: " + _LockedDisplayName);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPReentranceLocker_Err_PrevInProgress, _LockedDisplayName));
         return false;
       }
 
@@ -1365,7 +1366,7 @@ namespace FreeLibSet.Forms
       CheckThread();
 #endif
       if (_LockedDisplayName == null)
-        throw new InvalidOperationException("Не было вызова TryLock()");
+        throw ExceptionFactory.UnpairedCall(this, "TryLock()", "Unlock()");
       _LockedDisplayName = null;
     }
 

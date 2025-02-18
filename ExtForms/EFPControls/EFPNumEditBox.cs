@@ -260,7 +260,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка обработчика NumEditBox.ValueChanged");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -524,9 +524,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Режим проверки пустого значения.
-    /// По умолчанию - Error.
-    /// Это свойство переопределяется для нестандартных элементов, содержащих
-    /// кнопку очистки справа от элемента
+    /// По умолчанию - <see cref="UIValidateState.Error"/>.
     /// </summary>
     public UIValidateState CanBeEmptyMode
     {
@@ -600,53 +598,17 @@ namespace FreeLibSet.Forms
     {
       if (!Control.TextIsValid)
       {
-        SetError("Введенный текст нельзя преобразовать " + (Control.DecimalPlaces == 0 ? "в целое число" : "в число"));
+        SetError(UITools.ConvertErrorMessage(Control.Text, typeof(T)));
         return;
       }
 
       base.OnValidate();
 
-      string errorMessage = null;
 
       if (NValue.HasValue)
-      {
-        if (Minimum.HasValue)
-        {
-          if (Maximum.HasValue)
-          {
-            if (Value.CompareTo(Minimum.Value) < 0 || Value.CompareTo(Maximum.Value) > 0)
-              errorMessage = "Значение должно быть в диапазоне от " + Minimum.Value.ToString() + " до " + Maximum.Value.ToString();
-          }
-          else
-          {
-            if (Value.CompareTo(Minimum.Value) < 0)
-              errorMessage = "Значение должно быть не меньше " + Minimum.Value.ToString();
-          }
-        }
-        else
-        {
-          if (Maximum.HasValue)
-          {
-            if (Value.CompareTo(Maximum.Value) > 0)
-              errorMessage = "Значение должно не больше " + Maximum.Value.ToString();
-          }
-        }
-
-        if (errorMessage != null)
-          SetError(errorMessage);
-      }
+        UITools.ValidateInRange<T>(Value, Minimum, Maximum, this, DisplayName, true, Control.Format, Control.FormatProvider);
       else
-      {
-        switch (CanBeEmptyMode)
-        {
-          case UIValidateState.Error:
-            SetError("Поле \"" + DisplayName + "\" должно быть заполнено");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Поле \"" + DisplayName + "\" , вероятно, должно быть заполнено");
-            break;
-        }
-      }
+        ValidateCanBeEmptyMode(CanBeEmptyMode);
     }
 
     #endregion

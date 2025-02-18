@@ -57,7 +57,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -74,19 +74,19 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
     /// </summary>
-    /// <returns>Свойство ColumnName</returns>
+    /// <returns>Свойство <see cref="ColumnName"/></returns>
     public override string ToString()
     {
       return _ColumnName;
     }
 
     /// <summary>
-    /// Таблица, из которой посндний раз было извлечено значения.
+    /// Таблица, из которой последний раз было извлечено значения.
     /// До первого извлечения содержит null.
     /// </summary>
     private DataTable _CurrentTable;
@@ -119,7 +119,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Int32))
             _ColumnIndex = p;
           else
@@ -166,7 +166,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -183,7 +183,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -229,7 +229,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Int32))
             _ColumnIndex = p;
           else
@@ -282,7 +282,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -299,7 +299,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -344,7 +344,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Int64))
             _ColumnIndex = p;
           else
@@ -391,7 +391,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -408,7 +408,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -454,7 +454,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Int64))
             _ColumnIndex = p;
           else
@@ -507,7 +507,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -524,7 +524,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -569,7 +569,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Single))
             _ColumnIndex = p;
           else
@@ -617,7 +617,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -634,7 +634,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -680,7 +680,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Int64))
             _ColumnIndex = p;
           else
@@ -733,7 +733,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -750,7 +750,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -795,7 +795,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Double))
             _ColumnIndex = p;
           else
@@ -842,7 +842,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -859,7 +859,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -905,7 +905,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Double))
             _ColumnIndex = p;
           else
@@ -958,7 +958,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -975,7 +975,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1020,7 +1020,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Decimal))
             _ColumnIndex = p;
           else
@@ -1067,7 +1067,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1084,7 +1084,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1130,7 +1130,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Decimal))
             _ColumnIndex = p;
           else
@@ -1185,7 +1185,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1202,7 +1202,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1242,11 +1242,11 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(DateTime))
             _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw ExceptionFactory.ArgInvalidColumnType("row", row.Table.Columns[p]);
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
@@ -1286,7 +1286,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1303,7 +1303,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1343,11 +1343,11 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(DateTime)) // 28.11.2017
             _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw ExceptionFactory.ArgInvalidColumnType("row", row.Table.Columns[p]);
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
@@ -1385,7 +1385,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1402,7 +1402,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1442,11 +1442,11 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(TimeSpan)) // испр. 5.12.2021
             _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw ExceptionFactory.ArgInvalidColumnType("row", row.Table.Columns[p]);
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
@@ -1484,7 +1484,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1501,7 +1501,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1541,11 +1541,11 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(TimeSpan))
             _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw ExceptionFactory.ArgInvalidColumnType("row", row.Table.Columns[p]);
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
@@ -1583,7 +1583,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1600,7 +1600,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1645,7 +1645,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(String))
             _ColumnIndex = p;
           else
@@ -1692,7 +1692,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1709,7 +1709,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1754,7 +1754,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Boolean))
             _ColumnIndex = p;
           else
@@ -1801,7 +1801,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1818,7 +1818,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1864,7 +1864,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Boolean))
             _ColumnIndex = p;
           else
@@ -1917,7 +1917,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -1934,7 +1934,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -1979,7 +1979,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Guid))
             _ColumnIndex = p;
           else
@@ -2026,7 +2026,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -2043,7 +2043,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -2089,7 +2089,7 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(Guid))
             _ColumnIndex = p;
           else
@@ -2143,7 +2143,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -2160,7 +2160,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -2200,11 +2200,11 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(int) || row.Table.Columns[p].DataType == typeof(string))
             _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw ExceptionFactory.ArgInvalidColumnType("row", row.Table.Columns[p]);
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 
@@ -2239,7 +2239,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
 
       _ColumnName = columnName;
@@ -2256,7 +2256,7 @@ namespace FreeLibSet.Data
     /// Имя поля, из которого извлекаются значения
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Возвращает имя поля.
@@ -2297,11 +2297,11 @@ namespace FreeLibSet.Data
         {
           int p = row.Table.Columns.IndexOf(_ColumnName);
           if (p < 0)
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" + _ColumnName + "\"");
+            throw ExceptionFactory.ArgUnknownColumnName("row", row.Table, _ColumnName);
           if (row.Table.Columns[p].DataType == typeof(int) || row.Table.Columns[p].DataType == typeof(string))
             _ColumnIndex = p;
           else
-            throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" содержит столбец \"" + _ColumnName + "\" неподходящего типа " + row.Table.Columns[p].DataType.ToString());
+            throw ExceptionFactory.ArgInvalidColumnType("row", row.Table.Columns[p]);
           _CurrentTable = row.Table; // присваиваем в последнюю очередь
         }
 

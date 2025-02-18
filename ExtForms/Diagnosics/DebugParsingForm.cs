@@ -36,12 +36,12 @@ namespace FreeLibSet.Forms.Diagnostics
       tpTokens.ImageKey = "Table";
 
       efpTokens = new EFPDataGridView(efpForm, grTokens);
-      efpTokens.Columns.AddInt("NPop", false, "№ лексемы", 2);
-      efpTokens.Columns.AddInt("Start", false, "Начальная позиция", 3);
-      efpTokens.Columns.AddInt("Length", false, "Длина", 3);
-      efpTokens.Columns.AddText("TokenType", false, "Лексема", 10, 5);
-      efpTokens.Columns.AddTextFill("Text", false, "Текст", 100, 5);
-      efpTokens.Columns.AddText("Parser", false, "Парсер", 15, 5);
+      efpTokens.Columns.AddInt("NPop", false, "# token", 2);
+      efpTokens.Columns.AddInt("Start", false, "Start", 3);
+      efpTokens.Columns.AddInt("Length", false, "Length", 3);
+      efpTokens.Columns.AddText("TokenType", false, "Token type", 10, 5);
+      efpTokens.Columns.AddTextFill("Text", false, "Text", 100, 5);
+      efpTokens.Columns.AddText("Parser", false, "Parser", 15, 5);
       efpTokens.DisableOrdering();
       efpTokens.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(efpTokens_GetRowAttributes);
       efpTokens.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpTokens_GetCellAttributes);
@@ -200,7 +200,7 @@ namespace FreeLibSet.Forms.Diagnostics
         return;
 
       Token tk = ParsingData.Tokens[efpTokens.CurrentRowIndex];
-      DebugTools.DebugObject(tk, "Лексема №" + (efpTokens.CurrentRowIndex + 1).ToString());
+      DebugTools.DebugObject(tk, "Token #" + (efpTokens.CurrentRowIndex + 1).ToString());
     }
 
     #endregion
@@ -232,7 +232,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
       if (_Expression == null)
       {
-        TreeNode dummyNode = new TreeNode("Разбор выражения не выполнен");
+        TreeNode dummyNode = new TreeNode("Parsing has not been proceed");
         tvExpr.Nodes.Add(dummyNode);
         dummyNode.ImageKey = "No";
         dummyNode.SelectedImageKey = dummyNode.ImageKey;
@@ -303,7 +303,7 @@ namespace FreeLibSet.Forms.Diagnostics
       }
       catch (Exception e)
       {
-        DebugTools.ShowException(e, "Ошибка обработки DoubleClick"); // не используем EFPApp
+        DebugTools.ShowException(e); // не используем EFPApp
       }
     }
 

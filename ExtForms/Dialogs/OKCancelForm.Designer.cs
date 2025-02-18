@@ -33,9 +33,9 @@
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnOk = new System.Windows.Forms.Button();
       this.panel1 = new System.Windows.Forms.Panel();
-      this.TopPanel = new System.Windows.Forms.Panel();
-      this.BottomPanel = new System.Windows.Forms.Panel();
       this.MainPanel = new System.Windows.Forms.Panel();
+      this.BottomPanel = new System.Windows.Forms.Panel();
+      this.TopPanel = new System.Windows.Forms.Panel();
       this.ButtonsPanel.SuspendLayout();
       this.panel1.SuspendLayout();
       this.SuspendLayout();
@@ -58,7 +58,7 @@
       this.btnNo.Name = "btnNo";
       this.btnNo.Size = new System.Drawing.Size(88, 24);
       this.btnNo.TabIndex = 2;
-      this.btnNo.Text = "&Нет";
+      this.btnNo.Text = "No";
       this.btnNo.UseVisualStyleBackColor = true;
       this.btnNo.Visible = false;
       // 
@@ -69,7 +69,7 @@
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(88, 24);
       this.btnCancel.TabIndex = 1;
-      this.btnCancel.Text = "Отмена";
+      this.btnCancel.Text = "Cancel";
       this.btnCancel.UseVisualStyleBackColor = true;
       this.btnCancel.Click += new System.EventHandler(this.btn_Click);
       // 
@@ -80,7 +80,7 @@
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(88, 24);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "О&К";
+      this.btnOk.Text = "OK";
       this.btnOk.UseVisualStyleBackColor = true;
       this.btnOk.Click += new System.EventHandler(this.btn_Click);
       // 
@@ -95,28 +95,6 @@
       this.panel1.Size = new System.Drawing.Size(355, 287);
       this.panel1.TabIndex = 0;
       // 
-      // TopPanel
-      // 
-      //this.TopPanel.AutoSize = true;
-      //this.TopPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-      this.TopPanel.Dock = System.Windows.Forms.DockStyle.Top;
-      this.TopPanel.Location = new System.Drawing.Point(0, 0);
-      this.TopPanel.Name = "TopPanel";
-      this.TopPanel.Size = new System.Drawing.Size(355, 0);
-      this.TopPanel.TabIndex = 0;
-      this.TopPanel.Visible = false;
-      // 
-      // BottomPanel
-      // 
-      //this.BottomPanel.AutoSize = true;
-      //this.BottomPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-      this.BottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.BottomPanel.Location = new System.Drawing.Point(0, 287);
-      this.BottomPanel.Name = "BottomPanel";
-      this.BottomPanel.Size = new System.Drawing.Size(355, 0);
-      this.BottomPanel.TabIndex = 2;
-      this.BottomPanel.Visible = false;
-      // 
       // MainPanel
       // 
       this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -124,6 +102,24 @@
       this.MainPanel.Name = "MainPanel";
       this.MainPanel.Size = new System.Drawing.Size(355, 287);
       this.MainPanel.TabIndex = 1;
+      // 
+      // BottomPanel
+      // 
+      this.BottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.BottomPanel.Location = new System.Drawing.Point(0, 287);
+      this.BottomPanel.Name = "BottomPanel";
+      this.BottomPanel.Size = new System.Drawing.Size(355, 0);
+      this.BottomPanel.TabIndex = 2;
+      this.BottomPanel.Visible = false;
+      // 
+      // TopPanel
+      // 
+      this.TopPanel.Dock = System.Windows.Forms.DockStyle.Top;
+      this.TopPanel.Location = new System.Drawing.Point(0, 0);
+      this.TopPanel.Name = "TopPanel";
+      this.TopPanel.Size = new System.Drawing.Size(355, 0);
+      this.TopPanel.TabIndex = 0;
+      this.TopPanel.Visible = false;
       // 
       // OKCancelForm
       // 
@@ -137,7 +133,6 @@
       this.Name = "OKCancelForm";
       this.ButtonsPanel.ResumeLayout(false);
       this.panel1.ResumeLayout(false);
-      this.panel1.PerformLayout();
       this.ResumeLayout(false);
 
     }

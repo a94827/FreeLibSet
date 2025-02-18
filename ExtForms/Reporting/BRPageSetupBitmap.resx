@@ -117,4 +117,196 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cbClipMargins.Text" xml:space="preserve">
+    <value>Clip &amp;margins</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="MainPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="grpMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;lblColorFormat.Name" xml:space="preserve">
+    <value>lblColorFormat</value>
+  </data>
+  <data name="&gt;&gt;edResolution.Type" xml:space="preserve">
+    <value>FreeLibSet.Controls.IntEditBox, ExtForms, Version=3.0.0.359, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="cbClipMargins.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;lblResolution.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;grpMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbClipMargins.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblColorFormat.Text" xml:space="preserve">
+    <value>&amp;Color format</value>
+  </data>
+  <data name="MainPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="lblColorFormat.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbColorFormat.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;edResolution.Name" xml:space="preserve">
+    <value>edResolution</value>
+  </data>
+  <data name="grpMain.Text" xml:space="preserve">
+    <value>Graphics parameters</value>
+  </data>
+  <data name="&gt;&gt;cbColorFormat.Name" xml:space="preserve">
+    <value>cbColorFormat</value>
+  </data>
+  <data name="&gt;&gt;edResolution.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="&gt;&gt;edResolution.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;lblColorFormat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblColorFormat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 57</value>
+  </data>
+  <data name="lblResolution.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="lblResolution.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 30</value>
+  </data>
+  <data name="&gt;&gt;cbClipMargins.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>406, 260</value>
+  </data>
+  <data name="cbColorFormat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>196, 57</value>
+  </data>
+  <data name="cbClipMargins.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 17</value>
+  </data>
+  <data name="cbClipMargins.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 88</value>
+  </data>
+  <data name="&gt;&gt;lblResolution.Name" xml:space="preserve">
+    <value>lblResolution</value>
+  </data>
+  <data name="lblResolution.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;grpMain.Parent" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="MainPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="edResolution.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="lblResolution.Size" type="System.Drawing.Size, System.Drawing">
+    <value>175, 20</value>
+  </data>
+  <data name="&gt;&gt;grpMain.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>BRPageSetupBitmap</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Name" xml:space="preserve">
+    <value>MainPanel</value>
+  </data>
+  <data name="cbClipMargins.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="grpMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>406, 119</value>
+  </data>
+  <data name="&gt;&gt;lblResolution.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="&gt;&gt;lblColorFormat.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="edResolution.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 20</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="grpMain.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbColorFormat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MainPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="lblColorFormat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 21</value>
+  </data>
+  <data name="cbColorFormat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>193, 21</value>
+  </data>
+  <data name="grpMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="&gt;&gt;cbColorFormat.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="edResolution.Location" type="System.Drawing.Point, System.Drawing">
+    <value>196, 30</value>
+  </data>
+  <data name="lblResolution.Text" xml:space="preserve">
+    <value>&amp;Resolution. dpi</value>
+  </data>
+  <data name="cbColorFormat.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;cbClipMargins.Name" xml:space="preserve">
+    <value>cbClipMargins</value>
+  </data>
+  <data name="&gt;&gt;lblResolution.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbClipMargins.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="MainPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>406, 260</value>
+  </data>
+  <data name="&gt;&gt;lblColorFormat.Parent" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <data name="lblColorFormat.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;grpMain.Name" xml:space="preserve">
+    <value>grpMain</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

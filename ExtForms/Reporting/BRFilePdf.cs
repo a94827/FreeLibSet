@@ -492,7 +492,7 @@ namespace FreeLibSet.Drawing.Reporting
       catch (Exception e)
       {
         graphics.DrawRectangle(XBrushes.Red, rc);
-        lines = new string[] { "Ошибка получения текста", e.Message };
+        lines = new string[] { Res.BRReportPainter_Err_GetLines, e.Message };
       }
 
       if (lines.Length == 0 && sel.CellStyle.TextFiller == BRTextFiller.None)
@@ -805,7 +805,7 @@ namespace FreeLibSet.Drawing.Reporting
           BorderPen.DashStyle = XDashStyle.DashDotDot;
           break;
         default:
-          throw new ArgumentException("Неправильная толщина линии");
+          throw ExceptionFactory.ArgProperty("line", line, "Style", line.Style, null);
       }
       BorderPen.Width = BRLine.GetLineWidthPt01mm(line.Style) * Scale;
       if (line.Color == BRColor.Auto)
@@ -946,7 +946,7 @@ namespace FreeLibSet.Drawing.Reporting
     public static void CheckPdfLibAvailable()
     {
       if (!PdfLibAvailable)
-        throw new DllNotFoundException("Не удалось загрузить библиотеку PdfSharp.dll. Без нее невозможно создание pdf-файлов");
+        throw new DllNotFoundException(Res.BRFilePdf_Err_NoDll);
     }
 
     #endregion

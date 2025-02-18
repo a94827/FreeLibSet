@@ -1181,14 +1181,16 @@ namespace FreeLibSet.Shell
     /// <summary>
     /// Открыть файл текстового документа в редакторе Microsoft Office Word
     /// </summary>
-    /// <param name="fileName">Полный путь к doc-, rtf- или html- файлу</param>
+    /// <param name="filePath">Полный путь к doc-, rtf- или html- файлу</param>
     /// <param name="asTemplate">Если true, то файл используется как шаблон.
     /// В заголовке не будет показано имя файла, а команда "Сохранить" предложит выбрать имя файла.
     /// Используется для реализации команд "Отправить"</param>
-    public static void OpenWithWord(AbsPath fileName, bool asTemplate)
+    public static void OpenWithWord(AbsPath filePath, bool asTemplate)
     {
-      if (!File.Exists(fileName.Path))
-        throw new FileNotFoundException("Файл не найден: \"" + fileName.Path + "\"", fileName.Path);
+      if (filePath.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("filePath");
+      if (!File.Exists(filePath.Path))
+        throw ExceptionFactory.FileNotFound(filePath);
 
       try
       {
@@ -1200,16 +1202,16 @@ namespace FreeLibSet.Shell
           {
             if (asTemplate)
             {
-              OLE.Word.Document srcDoc = helper.Application.Documents.Open(fileName.Path);
+              OLE.Word.Document srcDoc = helper.Application.Documents.Open(filePath.Path);
               OLE.Word.Document doc = helper.Application.Documents.Add();
               doc.CopyAllStylesFrom(srcDoc);
               srcDoc.StartDoc().PageSetup.CopyTo(doc.PageSetup);
               srcDoc.Close();
-              doc.Range().InsertFile(fileName.Path);
+              doc.Range().InsertFile(filePath.Path);
               doc.Saved = true;
             }
             else
-              helper.Application.Documents.Open(fileName.Path);
+              helper.Application.Documents.Open(filePath.Path);
           }
           finally
           {
@@ -1219,7 +1221,7 @@ namespace FreeLibSet.Shell
       }
       catch (Exception e)
       {
-        e.Data["OpenWithWord() - FileName"] = fileName;
+        e.Data["OpenWithWord() - FileName"] = filePath;
         e.Data["OpenWithWord() - AsTemplate"] = asTemplate;
         throw;
       }
@@ -1228,14 +1230,16 @@ namespace FreeLibSet.Shell
     /// <summary>
     /// Открыть файл электронной таблицы в Microsoft Office Excel
     /// </summary>
-    /// <param name="fileName">Полный путь к xls-файлу</param>
+    /// <param name="filePath">Полный путь к xls-файлу</param>
     /// <param name="asTemplate">Если true, то файл используется как шаблон.
     /// В заголовке не будет показано имя файла, а команда "Сохранить" предложит выбрать имя файла.
     /// Используется для реализации команд "Отправить"</param>
-    public static void OpenWithExcel(AbsPath fileName, bool asTemplate)
+    public static void OpenWithExcel(AbsPath filePath, bool asTemplate)
     {
-      if (!File.Exists(fileName.Path))
-        throw new FileNotFoundException("Файл не найден: \"" + fileName.Path + "\"", fileName.Path);
+      if (filePath.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("filePath");
+      if (!File.Exists(filePath.Path))
+        throw ExceptionFactory.FileNotFound(filePath);
       try
       {
         using (OLE.Excel.ExcelHelper helper = new OLE.Excel.ExcelHelper(true))
@@ -1246,7 +1250,7 @@ namespace FreeLibSet.Shell
           {
             if (asTemplate)
             {
-              helper.Application.Workbooks.Open(fileName.Path);
+              helper.Application.Workbooks.Open(filePath.Path);
               OLE.Excel.Workbook wbk1 = helper.Application.ActiveWorkbook;
               string Title = wbk1.Title;
               string Subject = wbk1.Subject;
@@ -1264,7 +1268,7 @@ namespace FreeLibSet.Shell
             }
             else
             {
-              helper.Application.Workbooks.Open(fileName.Path);
+              helper.Application.Workbooks.Open(filePath.Path);
             }
           }
           finally
@@ -1275,7 +1279,7 @@ namespace FreeLibSet.Shell
       }
       catch (Exception e)
       {
-        e.Data["OpenWithExcel() - FileName"] = fileName;
+        e.Data["OpenWithExcel() - FileName"] = filePath;
         e.Data["OpenWithExcel() - AsTemplate"] = asTemplate;
         throw;
       }

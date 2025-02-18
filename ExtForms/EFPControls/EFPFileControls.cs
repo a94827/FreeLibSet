@@ -253,7 +253,7 @@ namespace FreeLibSet.Forms
     void ControlProvider_Validating(object sender, UIValidatingEventArgs args)
     {
       if (_InsideControlProvider_Validating)
-        args.SetError("Предыдущая проверка еще не закончена");
+        args.SetError(Res.EFPPathValidator_Err_NestedValidation);
       else
       {
         _InsideControlProvider_Validating = true;
@@ -422,7 +422,8 @@ namespace FreeLibSet.Forms
     {
       base.CheckValidateMode(value);
       if (value == TestPathMode.FileExists)
-        throw new ArgumentException("Режим проверки " + value.ToString() + " не допускается для проверки каталога");
+        throw ExceptionFactory.ArgUnknownValue("value", value,  new object[] {
+          TestPathMode.None, TestPathMode.FormatOnly, TestPathMode.RootExists, TestPathMode.DirectoryExists });
     }
 
     private void ControlProvider_Leave(object sender, EventArgs args)
@@ -498,8 +499,8 @@ namespace FreeLibSet.Forms
       SetMainImageKey("Open");
       VisibleEx = mainProvider.VisibleEx;
       EnabledEx = mainProvider.EnabledEx;
-      base.ToolTipText = "Выбор папки с помощью стандартного блока диалога Windows";
-
+      base.ToolTipText = Res.EFPFolderBrowserButton_ToolTip_Default;
+      
       _PathHandler = new UIPathInputHandler(mainProvider.TextEx);
       _PathHandler.UseSlashedPath = true;
 
@@ -513,7 +514,7 @@ namespace FreeLibSet.Forms
       {
         EFPPasteFormat fmtFileDrop = new EFPPasteFormat(DataFormats.FileDrop);
         fmtFileDrop.AutoConvert = false;
-        fmtFileDrop.DisplayName = "Ссылка на папку";
+        fmtFileDrop.DisplayName = Res.EFPFolderBrowserButton_Name_FormatFileDrop;
         fmtFileDrop.TestFormat += FmtFileDrop_TestFormat;
         fmtFileDrop.Paste += FmtFileDrop_Paste;
         mainProvider.CommandItems.PasteHandler.Insert(0, fmtFileDrop); // должно быть до текста
@@ -703,7 +704,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowTempMessage("Перетаскивание не удалось: " + e.Message);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPFolderBrowserButton_Err_DragDrop, e.Message));
       }
     }
 
@@ -715,7 +716,7 @@ namespace FreeLibSet.Forms
       string[] a = (string[])(args.Data.GetData(DataFormats.FileDrop));
       if (a.Length != 1)
       {
-        EFPApp.ShowTempMessage("Можно перетащить только один каталог");
+        EFPApp.ShowTempMessage(Res.EFPFolderBrowserButton_Err_DragDropMulti);
         return;
       }
 
@@ -748,12 +749,12 @@ namespace FreeLibSet.Forms
       string[] a = args.Data.GetData(DataFormats.FileDrop) as string[];
       if (a == null)
       {
-        EFPApp.ShowTempMessage("В буфере обмена нет ссылок");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoFileDrop);
         return;
       }
       if (a.Length != 1)
       {
-        EFPApp.ShowTempMessage("Можно вставить только один каталог");
+        EFPApp.ShowTempMessage(Res.EFPFolderBrowserButton_Err_PasteMulti);
         return;
       }
 
@@ -797,7 +798,7 @@ namespace FreeLibSet.Forms
       SetMainImageKey("Open");
       VisibleEx = mainProvider.VisibleEx;
       EnabledEx = mainProvider.EnabledEx;
-      base.ToolTipText = "Выбор файла с помощью стандартного блока диалога Windows";
+      base.ToolTipText = Res.EFPFileDialogButton_ToolTip_Default;
 
       _PathHandler = new UIPathInputHandler(mainProvider.TextEx);
       _PathHandler.UseSlashedPath = false;
@@ -812,7 +813,7 @@ namespace FreeLibSet.Forms
       {
         EFPPasteFormat fmtFileDrop = new EFPPasteFormat(DataFormats.FileDrop);
         fmtFileDrop.AutoConvert = false;
-        fmtFileDrop.DisplayName = "Ссылка на файл";
+        fmtFileDrop.DisplayName = Res.EFPFileDialogButton_Name_DragDropFormat;
         fmtFileDrop.TestFormat += FmtFileDrop_TestFormat;
         fmtFileDrop.Paste += FmtFileDrop_Paste;
         mainProvider.CommandItems.PasteHandler.Insert(0, fmtFileDrop); // должно быть до текста
@@ -1036,7 +1037,7 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e)
       {
-        EFPApp.ShowTempMessage("Перетаскивание не удалось: " + e.Message);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPFileDialogButton_Err_DragDrop, e.Message));
       }
     }
 
@@ -1048,12 +1049,12 @@ namespace FreeLibSet.Forms
       string[] a = args.Data.GetData(DataFormats.FileDrop) as string[];
       if (a == null)
       {
-        EFPApp.ShowTempMessage("В буфере обмена нет ссылок");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoFileDrop);
         return;
       }
       if (a.Length != 1)
       {
-        EFPApp.ShowTempMessage("Можно перетащить только один файл");
+        EFPApp.ShowTempMessage(Res.EFPFileDialogButton_Err_DragDropMulti);
         return;
       }
 
@@ -1085,7 +1086,7 @@ namespace FreeLibSet.Forms
       string[] a = (string[])(args.Data.GetData(DataFormats.FileDrop));
       if (a.Length != 1)
       {
-        EFPApp.ShowTempMessage("Можно перетащить только один файл");
+        EFPApp.ShowTempMessage(Res.EFPFileBrowserButton_Err_PasteMulti);
         return;
       }
 
@@ -1133,12 +1134,12 @@ namespace FreeLibSet.Forms
       {
         EnabledEx = new DepExpr2<bool, bool, string>(mainProvider.EnabledEx, mainProvider.TextEx,
           new DepFunction2<bool, bool, string>(CalcEnabled));
-        base.ToolTipText = "Открытие выбранной папки с помощью " + EFPApp.WindowsExplorerDisplayName;
+        base.ToolTipText = String.Format(Res.EFPWindowsExplorerButton_ToolTip_Default, EFPApp.WindowsExplorerDisplayName);
       }
       else
       {
         Enabled = false;
-        base.ToolTipText = "Открытие папок на просмотр не поддерживается операционной системой";
+        base.ToolTipText = Res.EFPWindowsExplorerButton_ToolTip_Unsupported;
       }
     }
 
@@ -1283,7 +1284,7 @@ namespace FreeLibSet.Forms
       string s = MainProvider.Text;
       if (String.IsNullOrEmpty(s))
       {
-        EFPApp.ShowTempMessage("Имя не задано");
+        EFPApp.ShowTempMessage(Res.EFPWindowsExplorerButton_Err_PathIsEmpty);
         return;
       }
 

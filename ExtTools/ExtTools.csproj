@@ -63,6 +63,7 @@
     <Compile Include="Collections\NumericStringComparer.cs" />
     <Compile Include="Core\DataTools.Arrays.cs" />
     <Compile Include="Core\DataTools.Math.cs" />
+    <Compile Include="Core\ExceptionFactory.cs" />
     <Compile Include="Data\CoreDBxSqlFormatter.cs" />
     <Compile Include="Data\DataEnumerators.cs" />
     <Compile Include="Data\DBxCommonFilter.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Core\EnvironmentTools.cs" />
     <Compile Include="Core\ErrorMessageList.cs" />
     <Compile Include="IO\FileCompressor.cs" />
+    <Compile Include="IO\FileBatchHandler.cs" />
     <Compile Include="Reporting\BRFileOffice2007.cs" />
     <Compile Include="Reporting\BRFileWord2003Xml.cs" />
     <Compile Include="Reporting\BRFileExcel2003Xml.cs" />
@@ -109,6 +111,11 @@
     <Compile Include="Reporting\BRFileODF.cs" />
     <Compile Include="Reporting\BRFileExcelOLE.cs" />
     <Compile Include="Reporting\BRFileTools.cs" />
+    <Compile Include="Res.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Res.resx</DependentUpon>
+    </Compile>
     <Compile Include="Shell\OpenOfficeInfo.cs" />
     <Compile Include="Text\SingleByteTranscoder.cs" />
     <Compile Include="UICore\UIExtEditItem.cs" />
@@ -200,6 +207,16 @@
     <Compile Include="Models\SpreadsheetBase\CellRef.cs" />
     <Compile Include="Models\Tree\ListTreeModel.cs" />
     <Compile Include="UICore\IDataReorderHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Res.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Res.ru.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

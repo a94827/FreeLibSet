@@ -286,7 +286,7 @@ namespace FreeLibSet.Data
               {
                 obj = _Owner.Source.GetTableStruct(tableName);
                 if (obj == null)
-                  throw new NullReferenceException("Метод GetTableStruct() вернул null, хотя таблица \"" + tableName + "\" есть в списке всех таблиц");
+                  throw new NullReferenceException(String.Format(Res.DBxStruct_Err_GetTableStructTableMissed, tableName));
                 _List.Add(obj);
               }
             }
@@ -307,9 +307,9 @@ namespace FreeLibSet.Data
         if (tstr == null)
         {
           if (String.IsNullOrEmpty(tableName))
-            throw new ArgumentNullException("tableName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
           else
-            throw new KeyNotFoundException("Нет описания структуры таблицы \"" + tableName + "\"");
+            throw new KeyNotFoundException(String.Format(Res.DBxStruct_Err_TableNotFound, tableName));
         }
         return tstr;
       }
@@ -818,7 +818,7 @@ namespace FreeLibSet.Data
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     /// <summary>
@@ -896,10 +896,10 @@ namespace FreeLibSet.Data
     public DataTable CreateDataTable(string tableName, DBxColumns columnNames)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       DBxTableStruct ts = Tables[tableName];
       if (ts == null)
-        throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\". Нет описания структуры таблицы", "tableName");
+        throw ExceptionFactory.ArgUnknownValue("tableName", tableName);
 
       if (columnNames == null)
         return ts.CreateDataTable();
@@ -909,7 +909,7 @@ namespace FreeLibSet.Data
       {
         DBxColumnStruct colDef = this.FindColumn(tableName, columnNames[i]);
         if (colDef == null)
-          throw new ArgumentException("Для таблицы \"" + tableName + "\" не определен столбец \"" + columnNames[i] + "\"", "columnNames");
+          throw new ArgumentException(String.Format(Res.DBxStruct_Arg_ColumnNotFound, tableName, columnNames[i]), "columnNames");
         table.Columns.Add(colDef.CreateDataColumn(columnNames[i]));
       }
       return table;

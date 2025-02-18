@@ -38,7 +38,7 @@ namespace FreeLibSet.Core
     public MinMax(T minValue, T maxValue)
     {
       if (minValue.CompareTo(maxValue) > 0)
-        throw new ArgumentException("minValue больше maxValue");
+        throw ExceptionFactory.ArgRangeInverted("minValue", minValue, "maxValue", maxValue);
 
       _HasValue = true;
       _MinValue = minValue;

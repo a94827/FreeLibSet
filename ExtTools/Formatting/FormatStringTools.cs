@@ -318,6 +318,17 @@ namespace FreeLibSet.Formatting
       return containsTime;
     }
 
+    private static DateTimeFormatInfo GetDateTimeFormatInfo(IFormatProvider formatProvider)
+    {
+      DateTimeFormatInfo dateTimeFormat = null;
+      if (formatProvider != null)
+        dateTimeFormat = formatProvider.GetFormat(typeof(DateTimeFormatInfo)) as DateTimeFormatInfo;
+      if (dateTimeFormat == null)
+        return CultureInfo.CurrentCulture.DateTimeFormat;
+      else
+        return dateTimeFormat;
+    }
+
     /// <summary>
     /// Расширяет односимвольный формат даты/времени в полный формат.
     /// Если длина переданного формата отличается от 1 (формат не задан или задан пользовательский формат),
@@ -325,12 +336,11 @@ namespace FreeLibSet.Formatting
     /// Если передан неизвестный односимвольный формат, он также возвращается, без выброса исключений
     /// </summary>
     /// <param name="formatString">Исходный формат</param>
-    /// <param name="dateTimeFormat">Форматизатор. Если null, то используется формат из <see cref="CultureInfo.CurrentCulture"/></param>
+    /// <param name="formatProvider">Форматизатор. Если null, то используется формат из <see cref="CultureInfo.CurrentCulture"/></param>
     /// <returns>Развернутый формат или <paramref name="formatString"/> без изменений</returns>
-    public static string ExpandDateTimeFormat(string formatString, DateTimeFormatInfo dateTimeFormat)
+    public static string ExpandDateTimeFormat(string formatString, IFormatProvider formatProvider)
     {
-      if (dateTimeFormat == null)
-        dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat;
+      DateTimeFormatInfo dateTimeFormat = GetDateTimeFormatInfo(formatProvider);
 
       switch (formatString)
       {
@@ -415,18 +425,18 @@ namespace FreeLibSet.Formatting
     /// <summary>
     /// Преобразует строку форматирования даты и/или времени в перечислимое значение <see cref="EditableDateTimeFormatterKind"/>.
     /// В случае ошибки возвращается false и в <paramref name="kind"/> записывается <see cref="EditableDateTimeFormatterKind.DateTime"/>.
-    /// Поддерживаются односимвольные форматы. При этом используется <paramref name="formatInfo"/> (или <see cref="CultureInfo.CurrentCulture"/>, если null) для преобразования в реальный формат.
+    /// Поддерживаются односимвольные форматы. При этом используется <paramref name="formatProvider"/> (или <see cref="CultureInfo.CurrentCulture"/>, если null) для преобразования в реальный формат.
     /// </summary>
     /// <param name="formatString">Строка форматирования</param>
     /// <param name="kind">Результат: тип редактируемого значения</param>
-    /// <param name="formatInfo">Используется для преобразования стандартных форматов или null</param>
+    /// <param name="formatProvider">Используется для преобразования стандартных форматов или null</param>
     /// <returns>True, если распознавание выполнено успешно</returns>
-    public static bool GetEditableDateTimeFormatterKind(string formatString, out EditableDateTimeFormatterKind kind, DateTimeFormatInfo formatInfo)
+    public static bool GetEditableDateTimeFormatterKind(string formatString, out EditableDateTimeFormatterKind kind, IFormatProvider formatProvider)
     {
       kind = EditableDateTimeFormatterKind.DateTime;
       if (String.IsNullOrEmpty(formatString))
         return false;
-      formatString = ExpandDateTimeFormat(formatString, formatInfo);
+      formatString = ExpandDateTimeFormat(formatString, formatProvider);
 
       int index = 0;
       for (int i = 0; i < formatString.Length; i++)
@@ -460,19 +470,20 @@ namespace FreeLibSet.Formatting
     /// Возвращает порядок следования дня, месяца и года в строке форматирования даты.
     /// Анализируется наличие символов "d", "M" и "y" для определения порядка.
     /// Если задан стандартный односимвольный формат (например, "D"), то он заменяется на полный формат 
-    /// с помощью метода <see cref="ExpandDateTimeFormat(string, DateTimeFormatInfo)"/>.
+    /// с помощью метода <see cref="ExpandDateTimeFormat(string, IFormatProvider)"/>.
     /// Если строка не задана или не содержит ни одного из символов "d", "M" и "y", то используется шаблон 
     /// <see cref="DateTimeFormatInfo.ShortDatePattern"/>.
     /// Если в строке части элементов нет, подбирается наиболее подходящий вариант.
     /// </summary>
     /// <param name="formatString">Короткий формат даты</param>
-    /// <param name="dateTimeFormat">Формат даты/времени, используемый для преобразования стандартного формата.
+    /// <param name="formatProvider">Форматизатор для извлечения <see cref="DateTimeFormatInfo"/>,
+    /// может быть и непосредственно ссылкой на <see cref="DateTimeFormatInfo"/>. 
+    /// Определяет формат даты/времени, используемый для преобразования стандартного формата.
     /// Если null, то используется <see cref="DateTimeFormatInfo"/> из <see cref="CultureInfo.CurrentCulture"/></param>
     /// <returns>Порядок следования компонентов</returns>
-    public static DateFormatYMDOrder GetDateFormatOrder(string formatString, DateTimeFormatInfo dateTimeFormat)
+    public static DateFormatYMDOrder GetDateFormatOrder(string formatString, IFormatProvider formatProvider)
     {
-      if (dateTimeFormat == null)
-        dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat;
+      DateTimeFormatInfo dateTimeFormat=GetDateTimeFormatInfo(formatProvider);
 
       if (String.IsNullOrEmpty(formatString))
         formatString = "d";

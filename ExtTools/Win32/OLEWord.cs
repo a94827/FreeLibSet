@@ -1203,7 +1203,7 @@ namespace FreeLibSet.OLE.Word
     public void SetName(string value)
     {
       if (String.IsNullOrEmpty(value))
-        throw new ArgumentNullException("value", "Имя шрифта не может быть пустым");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
       Base.Helper.SetProp(Base.Obj, "[DispID=142]", value);
     }
 
@@ -1244,7 +1244,7 @@ namespace FreeLibSet.OLE.Word
     public void SetSize(float value)
     {
       if (value <= 0.0)
-        throw new ArgumentException("Размер шрифта должен быть больше 0", "value");
+        throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
       Base.Helper.SetProp(Base.Obj, "[DispID=141]", value);
     }
 
@@ -1513,10 +1513,11 @@ namespace FreeLibSet.OLE.Word
     {
 #if DEBUG
       if (row < 1)
-        throw new ArgumentOutOfRangeException("row", row, "Неправильный номер строки");
+        throw ExceptionFactory.ArgOutOfRange("row", row, 1, null);
       if (column < 1)
-        throw new ArgumentOutOfRangeException("column", column, "Неправильный номер столбца");
+        throw ExceptionFactory.ArgOutOfRange("column", column, 1, null);
 #endif
+
       return new Cell(new ObjBase(Base.Helper.Call(Base.Obj, "[DispID=17]", row, column), Base.Helper));
     }
 
@@ -1533,13 +1534,17 @@ namespace FreeLibSet.OLE.Word
     {
 #if DEBUG
       if (firstRow < 1)
-        throw new ArgumentOutOfRangeException("firstRow", firstRow, "Неправильный номер первой строки");
-      if (lastRow < firstRow)
-        throw new ArgumentOutOfRangeException("lastRow", lastRow, "Неправильный номер последней строки");
+        throw ExceptionFactory.ArgOutOfRange("firstRow", firstRow, 1, null);
       if (firstColumn < 1)
-        throw new ArgumentOutOfRangeException("firstColumn", firstColumn, "Неправильный номер первого столбца");
+        throw ExceptionFactory.ArgOutOfRange("firstColumn", firstColumn, 1, null);
+      if (lastRow < 1)
+        throw ExceptionFactory.ArgOutOfRange("lastRow", lastRow, 1, null);
+      if (lastColumn < 1)
+        throw ExceptionFactory.ArgOutOfRange("lastColumn", lastColumn, 1, null);
+      if (lastRow < firstRow)
+        throw ExceptionFactory.ArgRangeInverted("firstRow", firstRow, "lastRow", lastRow);
       if (lastColumn < firstColumn)
-        throw new ArgumentOutOfRangeException("lastColumn", lastColumn, "Неправильный номер последнего столбца");
+        throw ExceptionFactory.ArgRangeInverted("firstColumn", firstColumn, "lastColumn", lastColumn);
 #endif
       Range r1 = Cell(firstRow, firstColumn).Range;
       Range r2 = Cell(lastRow, lastColumn).Range;
@@ -1551,13 +1556,17 @@ namespace FreeLibSet.OLE.Word
     {
 #if DEBUG
       if (firstRow < 1)
-        throw new ArgumentOutOfRangeException("firstRow", firstRow, "Неправильный номер первой строки");
-      if (lastRow < firstRow)
-        throw new ArgumentOutOfRangeException("lastRow", lastRow, "Неправильный номер последней строки");
+        throw ExceptionFactory.ArgOutOfRange("firstRow", firstRow, 1, null);
       if (firstColumn < 1)
-        throw new ArgumentOutOfRangeException("firstColumn", firstColumn, "Неправильный номер первого столбца");
+        throw ExceptionFactory.ArgOutOfRange("firstColumn", firstColumn, 1, null);
+      if (lastRow < 1)
+        throw ExceptionFactory.ArgOutOfRange("lastRow", lastRow, 1, null);
+      if (lastColumn < 1)
+        throw ExceptionFactory.ArgOutOfRange("lastColumn", lastColumn, 1, null);
+      if (lastRow < firstRow)
+        throw ExceptionFactory.ArgRangeInverted("firstRow", firstRow, "lastRow", lastRow);
       if (lastColumn < firstColumn)
-        throw new ArgumentOutOfRangeException("lastColumn", lastColumn, "Неправильный номер последнего столбца");
+        throw ExceptionFactory.ArgRangeInverted("firstColumn", firstColumn, "lastColumn", lastColumn);
 #endif
 
       Cell c1 = Cell(firstRow, firstColumn);

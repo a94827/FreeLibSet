@@ -83,7 +83,7 @@ namespace FreeLibSet.Data
         if (!_Items.TryGetValue(name, out p))
         {
           if (String.IsNullOrEmpty(name))
-            throw new ArgumentNullException("name");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
           p = _Items.Count;
           _Items.Add(name, p);
         }
@@ -273,12 +273,12 @@ namespace FreeLibSet.Data
     private bool _IsReadOnly;
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException();
+        throw ExceptionFactory.ObjectReadOnly(this);
     }
 
     #endregion

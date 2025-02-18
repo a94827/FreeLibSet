@@ -178,8 +178,8 @@ namespace FreeLibSet.Data.Docs
     /// Управление заставкой на время создания/обновления структуры базы данных.
     /// Может быть не задано
     /// </summary>
-    public ISplash Splash { get { return _Splash; } set { _Splash = value; } }
-    private ISplash _Splash;
+    public ISimpleSplash Splash { get { return _Splash; } set { _Splash = value; } }
+    private ISimpleSplash _Splash;
 
     /// <summary>
     /// Сюда добавляются сообщения об ошибках при обновлении структуры базы данных.
@@ -308,7 +308,7 @@ namespace FreeLibSet.Data.Docs
           db.CreateIfRequired();
           db.Struct = dbStruct; // возможно, была изменена пользовательским обработчиком
 
-          ISplash spl = this.Splash ?? new DummySplash();
+          ISimpleSplash spl = this.Splash ?? new DummySimpleSplash();
           int oldErrorCount = Errors.Count;
           db.UpdateStruct(spl, Errors, UpdateStructOptions);
           Errors.SetPrefix("Обновление структуры " + dbName + ". ", oldErrorCount);

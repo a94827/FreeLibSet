@@ -124,9 +124,9 @@ namespace FreeLibSet.Forms
           // Если исключение не завершает программу, то ничего не выводим на экран, 
           // иначе - выводим
           if (args.IsTerminating)
-            EFPApp.ShowException(e1, "Неперехваченное исключение UnhandledException с завершением работы");
+            EFPApp.ShowException(e1, Res.ApplicationExceptionHandler_ErrTitle_UnhandledWithTermination);
           else
-            LogoutTools.LogoutException(e1, "Неперехваченное исключение UnhandledException без завершения работы");
+            LogoutTools.LogoutException(e1, Res.ApplicationExceptionHandler_ErrTitle_UnhandledNoTermination);
         }
       }
       catch (Exception e2)
@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms
           msg += "IsTerminating=" + args.IsTerminating.ToString();
         }
         catch { }
-        MessageBox.Show(msg, "Внутренняя ошибка обработки UnhandledException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(msg, Res.ApplicationExceptionHandler_ErrTitle_UnhandledInternalError, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
 
@@ -299,7 +299,7 @@ namespace FreeLibSet.Forms
         _IconDisposedExceptionFlag = true;
 
         if (LogoutKnownBugExceptions)
-          LogoutTools.LogoutException(ex, "Перехват Application.ThreadException. Ошибка доступа к удаленному значку. Исключение регистрируется однократно");
+          LogoutTools.LogoutException(ex, Res.ApplicationExceptionHandler_ErrTitle_IconDisposed);
 
         return true;
       }
@@ -320,7 +320,7 @@ namespace FreeLibSet.Forms
           return true;
         _ToolStripSetItemLocationExceptionFlag = true;
         if (LogoutKnownBugExceptions)
-          LogoutTools.LogoutException(ex, "Перехват Application.ThreadException. Ошибка позицонирования ToolStrip. Исключение регистрируется однократно");
+          LogoutTools.LogoutException(ex, Res.ApplicationExceptionHandler_ErrTitle_ToolStripSetItemLocation);
 
         return true;
       }
@@ -353,7 +353,7 @@ namespace FreeLibSet.Forms
       {
         _DataGridViewSetCurrentCellAddressCoreExceptionFlag = true;
         if (LogoutKnownBugExceptions)
-          LogoutTools.LogoutException(ex, "Перехват Application.ThreadException. " + ex.Message + ". Исключение регистрируется однократно");
+          LogoutTools.LogoutException(ex, Res.ApplicationExceptionHandler_ErrTitle_DataGridViewSetCurrentCellAddressCore);
       }
 
       return true;
@@ -374,7 +374,7 @@ namespace FreeLibSet.Forms
       /// </summary>
       /// <param name="args">Аргументы события <see cref="AppDomain.UnhandledException"/></param>
       public AppDomainUnhandledException(UnhandledExceptionEventArgs args)
-        : base("Необрабатываемое исключение (событие AppDomain.UnhandledException)",
+        : base(Res.Common_Err_AppDomainUnhandledException,
         args.ExceptionObject is Exception ? (Exception)(args.ExceptionObject) : null)
       {
         _ExceptionObject = args.ExceptionObject;

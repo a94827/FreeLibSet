@@ -30,9 +30,9 @@ namespace FreeLibSet.Forms.Diagnostics
       if (parent == null)
         throw new ArgumentNullException("parent");
       if (parent.FindForm() == null)
-        throw new ArgumentException("Родительский управляющий элемент должен быть присоединен к форме до создания ObjectDebugControl", "parent");
+        throw new ArgumentException("Parent control must be placed in the form before ObjectDebugControl creation", "parent");
       if (parent.HasChildren)
-        throw new ArgumentException("Родительский управляющий элемент не должен иметь других детей", "parent");
+        throw new ArgumentException("Parent control must have no children", "parent");
 #endif
 
       _TheTV = new TreeView();
@@ -100,21 +100,21 @@ namespace FreeLibSet.Forms.Diagnostics
       {
         sb1.Append("[null]");
 
-        sb2.Append("Значение null");
+        sb2.Append("Null value");
       }
       else
       {
         sb1.Append(": ");
 
         sb2.Append(Environment.NewLine);
-        sb2.Append("тип: ");
+        sb2.Append("type: ");
         sb2.Append(value.GetType().ToString());
         sb2.Append(Environment.NewLine);
         try
         {
           sb1.Append(value.ToString());
 
-          sb2.Append("Значение:");
+          sb2.Append("Value:");
           sb2.Append(value.ToString());
 
         }
@@ -122,10 +122,10 @@ namespace FreeLibSet.Forms.Diagnostics
         {
           sb1.Append(e.Message);
 
-          sb2.Append("Ошибка при получении значения: ");
+          sb2.Append("Getting value error: ");
           sb2.Append(e.GetType().ToString());
           sb2.Append(Environment.NewLine);
-          sb2.Append("Сообщение: ");
+          sb2.Append("Exception message: ");
           sb2.Append(e.Message);
           errFlag = true;
         }
@@ -229,11 +229,11 @@ namespace FreeLibSet.Forms.Diagnostics
         sb1.Append(pi[i].Name);
         sb1.Append(": ");
 
-        sb2.Append("Свойство ");
+        sb2.Append("Property ");
         sb2.Append(pi[i].Name);
 
         sb2.Append(Environment.NewLine);
-        sb2.Append("Тип свойства: ");
+        sb2.Append("Property type: ");
         sb2.Append(pi[i].PropertyType.ToString());
         sb2.Append(Environment.NewLine);
 
@@ -243,16 +243,16 @@ namespace FreeLibSet.Forms.Diagnostics
           if (v == null)
           {
             sb1.Append("[null]");
-            sb2.Append("Значение null");
+            sb2.Append("Null value");
           }
           else
           {
             sb1.Append(v.ToString());
 
-            sb2.Append("Тип значения: ");
+            sb2.Append("Value type: ");
             sb2.Append(v.GetType().ToString());
             sb2.Append(Environment.NewLine);
-            sb2.Append("Значение:");
+            sb2.Append("Value:");
             sb2.Append(v.ToString());
 
             theValue = v;
@@ -262,10 +262,10 @@ namespace FreeLibSet.Forms.Diagnostics
         {
           sb1.Append(e.Message);
 
-          sb2.Append("Ошибка получения значения: ");
+          sb2.Append("Getting value error: ");
           sb2.Append(e.GetType().ToString());
           sb2.Append(Environment.NewLine);
-          sb2.Append("Сообщение: ");
+          sb2.Append("Exception message: ");
           sb2.Append(e.Message);
           errFlag = true;
         }
@@ -308,11 +308,11 @@ namespace FreeLibSet.Forms.Diagnostics
         sb1.Append(fi[i].Name);
         sb1.Append(": ");
 
-        sb2.Append("Поле ");
+        sb2.Append("Field ");
         sb2.Append(fi[i].Name);
 
         sb2.Append(Environment.NewLine);
-        sb2.Append("Тип поля: ");
+        sb2.Append("Field type: ");
         sb2.Append(fi[i].FieldType.ToString());
         sb2.Append(Environment.NewLine);
 
@@ -322,16 +322,16 @@ namespace FreeLibSet.Forms.Diagnostics
           if (v == null)
           {
             sb1.Append("[null]");
-            sb2.Append("Значение null");
+            sb2.Append("Null value");
           }
           else
           {
             sb1.Append(v.ToString());
 
-            sb2.Append("Тип значения: ");
+            sb2.Append("Value type: ");
             sb2.Append(v.GetType().ToString());
             sb2.Append(Environment.NewLine);
-            sb2.Append("Значение:");
+            sb2.Append("Value:");
             sb2.Append(v.ToString());
 
             theValue = v;
@@ -341,10 +341,10 @@ namespace FreeLibSet.Forms.Diagnostics
         {
           sb1.Append(e.Message);
 
-          sb2.Append("Ошибка получения значения: ");
+          sb2.Append("Getting value error: ");
           sb2.Append(e.GetType().ToString());
           sb2.Append(Environment.NewLine);
-          sb2.Append("Сообщение: ");
+          sb2.Append("Exception message: ");
           sb2.Append(e.Message);
           errFlag = true;
         }
