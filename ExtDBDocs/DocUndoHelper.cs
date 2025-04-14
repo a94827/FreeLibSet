@@ -83,71 +83,71 @@ namespace FreeLibSet.Data.Docs
     #region Общие свойства
 
     public DBxCon MainConGlobal { get { return _MainConGlobal; } }
-    private DBxCon _MainConGlobal;
+    private readonly DBxCon _MainConGlobal;
 
     public DBxCon UndoCon { get { return _UndoCon; } }
-    private DBxCon _UndoCon;
+    private readonly DBxCon _UndoCon;
 
     /// <summary>
     /// Текстовое название действия пользователя для команды меню Undo
     /// </summary>
     public string ActionInfo { get { return _ActionInfo; } }
-    private string _ActionInfo;
+    private readonly string _ActionInfo;
 
     /// <summary>
     /// Время начала редактирования
     /// </summary>
     public DateTime StartTime { get { return _StartTime; } }
-    private DateTime _StartTime;
+    private readonly DateTime _StartTime;
 
     /// <summary>
     /// Время выполнения пользователем действия
     /// </summary>
     public DateTime ActionTime { get { return _ActionTime; } }
-    private DateTime _ActionTime;
+    private readonly DateTime _ActionTime;
 
     /// <summary>
     /// Идентификатор действия пользователя. При первой операции
     /// автоматически присваивается, если был равен 0
     /// </summary>
     public Int32 UserActionId { get { return _UserActionId; } }
-    private Int32 _UserActionId;
+    private /*readonly*/ Int32 _UserActionId;
 
     /// <summary>
     /// Идентификатор пользователя
     /// Используется при DBxDocTypes.UseUsers=true
     /// </summary>
     public Int32 UserId { get { return _UserId; } }
-    private Int32 _UserId;
+    private readonly Int32 _UserId;
 
     /// <summary>
     /// Идентификатор сессии.
     /// Используется при DBxDocTypes.UseSessionId=true
     /// </summary>
     public Int32 SessionId { get { return _SessionId; } }
-    private Int32 _SessionId;
+    private readonly Int32 _SessionId;
 
     /// <summary>
     /// Описания видов документов
     /// </summary>
     public DBxDocTypes DocTypes { get { return _DocTypes; } }
-    private DBxDocTypes _DocTypes;
+    private readonly DBxDocTypes _DocTypes;
 
     #endregion
 
-    #region Добавление записей в таблицы UserActions и DocActions
+    #region Добавление записей в таблицы "UserActions" и "DocActions"
 
     public void CheckIsRealDocId(DBxDocType docType, Int32 id)
     {
       if (docType == null)
         throw new ArgumentNullException("docType");
       if (id < 0)
-        throw new BugException("Недопустимый идентификатор документа " + docType.SingularTitle + ": " + id.ToString());
+        throw new BugException("Invalid DocId " + docType.SingularTitle + ": " + id.ToString());
     }
 
     /// <summary>
-    /// Добавление записи в DocActions. 
-    /// При первом вызове также добавляется строка в UserActions
+    /// Добавление записи в "DocActions". 
+    /// При первом вызове также добавляется строка в "UserActions"
     /// </summary>
     /// <param name="docType">Вид документа</param>
     /// <param name="docId">Идентификатор документа, для которого добавляется запись</param>
@@ -158,7 +158,8 @@ namespace FreeLibSet.Data.Docs
       // 31.01.2022 Перенесено наверх, до проверки UndoCon=null
       docVersion++;
       if (docVersion > Int16.MaxValue)
-        throw new InvalidOperationException("Невозможно задать следующую версию документа " + docType.SingularTitle + " с DocId=" + docId.ToString() + ", т.к. она превышает максимальное значение " + Int32.MaxValue.ToString());
+        throw new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_DocActionLimitExceeded,
+          docType.SingularTitle, docId, Int16.MaxValue));
 
       if (UndoCon == null)
         //return 0;
@@ -223,7 +224,7 @@ namespace FreeLibSet.Data.Docs
 
         int applyChangesCount = DataTools.GetInt(UndoCon.GetValue("UserActions", _UserActionId, "ApplyChangesCount"));
         if (applyChangesCount <= 0)
-          throw new BugException("Существующее значение ApplyChangesCount=" + applyChangesCount.ToString());
+          throw new BugException("Current value of ApplyChangesCount=" + applyChangesCount.ToString());
 
         Hashtable fieldPairs = new Hashtable();
         if (DocTypes.UseUsers) // 31.08.2018
@@ -256,11 +257,11 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка текущей версии документа
-    /// Сравнивает поле Version, записанное в последней строке таблицы DocActions с полем Version
-    /// основной базы данных
-    /// При отсутствии записей в таблице DocActions добавляет запись с Action="Base"
-    /// При наличии расхождений выполняет корректировку данных
-    /// На момент вызова таблица DocActions заблокирована
+    /// Сравнивает поле "Version", записанное в последней строке таблицы "DocActions" с полем "Version"
+    /// основной базы данных.
+    /// При отсутствии записей в таблице "DocActions" добавляет запись с Action="Base".
+    /// При наличии расхождений выполняет корректировку данных.
+    /// На момент вызова таблица "DocActions" заблокирована.
     /// </summary>
     /// <param name="docType"></param>
     /// <param name="docId"></param>
@@ -317,15 +318,15 @@ namespace FreeLibSet.Data.Docs
           fieldPairs = new Hashtable();
           fieldPairs.Add("UserId", fakeUserId);
           fieldPairs.Add("ActionTime", fakeTime);
-          fieldPairs.Add("ActionInfo", "[ Автоматическое восстановление состояния с версии " + undoDocVersion.ToString() + " ]");
+          fieldPairs.Add("ActionInfo", String.Format(Res.DBxDocProvider_Msg_ActionAutoRecover, undoDocVersion));
           fakeUserActionId = _UndoCon.AddRecordWithIdResult("UserActions", fieldPairs);
         }
         else
         {
           try
           {
-            Exception e = new InvalidOperationException("Для документа \"" + docType.SingularTitle + "\" с DocId=" + docId.ToString() +
-              " не удалось извлечь текущие значения пользователя/времени из основной таблицы документов");
+            Exception e = new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_AddFakeUserAction,
+              docType.SingularTitle, docId));
             e.Data["ChangeTime"] = aMainValues[0];
             e.Data["ChangeUserId"] = aMainValues[1];
             e.Data["CreateTime"] = aMainValues[2];
@@ -334,7 +335,7 @@ namespace FreeLibSet.Data.Docs
           }
           catch (Exception e)
           {
-            LogoutTools.LogoutException(e, "Ошибка добавления фиктивной записи в UserActions");
+            LogoutTools.LogoutException(e, Res.DBxDocProvider_ErrTitle_AddFakeUserAction);
           }
         }
 
@@ -369,14 +370,13 @@ namespace FreeLibSet.Data.Docs
 
         try
         {
-          Exception e = new InvalidOperationException("Для документа \"" + docType.SingularTitle + "\" с DocId=" + docId.ToString() +
-            " обнаружено несоответствие версии в основной таблице документов (" + mainDocVersion.ToString() +
-            ") и в таблице DocActions (" + undoDocVersion.ToString() + "). В основной таблице документов будет скорректирована версия");
+          Exception e = new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_VersionMismatch,
+            docType.SingularTitle, docId, mainDocVersion, undoDocVersion));
           throw e;
         }
         catch (Exception e)
         {
-          LogoutTools.LogoutException(e, "Ошибка добавления фиктивной записи в UserActions");
+          LogoutTools.LogoutException(e, Res.DBxDocProvider_ErrTitle_AddFakeUserAction);
         }
 
         MainConGlobal.SetValue(docType.Name, docId, "Version", undoDocVersion); // транзакция не нужна
@@ -492,9 +492,9 @@ namespace FreeLibSet.Data.Docs
       if (subDocType == null)
         throw new ArgumentNullException("subDocType");
       if (subDocId <= 0)
-        throw new ArgumentException("Фиктивный идентификатор поддокумента \"" + subDocType.SingularTitle + "\" SubDocId=" + subDocId.ToString(), "subDocId");
-      if (docVersion < 1 || docVersion > short.MaxValue)
-        throw new ArgumentOutOfRangeException("docVersion", docVersion, "Неправильная существующая версия документа\"" + subDocType.DocType.SingularTitle + "\"");
+        throw ExceptionFactory.ArgOutOfRange("subDocId", subDocId, 1, null);
+      if (docVersion < 1 || docVersion > Int16.MaxValue)
+        throw ExceptionFactory.ArgOutOfRange("docVersion", docVersion, 1, Int16.MaxValue);
 
       Int32 version2 = DataTools.GetInt(MainConGlobal.GetValue(subDocType.Name, subDocId, "Version2"));
       //if (Version2 == DocVersion)

@@ -99,8 +99,8 @@ namespace FreeLibSet.Forms.Docs
 #endif
 
   /// <summary>
-  /// Обработчики документов на стороне клиента
-  /// Класс не является потокобезопасным.
+  /// Обработчики документов на стороне клиента.
+  /// Класс не является потокобезопасным..
   /// 
   /// Если используется сохранение композиции рабочего стола
   /// (<see cref="EFPApp.LoadComposition()"/>), то созданный объект <see cref="DBUI"/>
@@ -173,12 +173,12 @@ namespace FreeLibSet.Forms.Docs
 
           DBxColumnStruct colDef = dt.Struct.Columns[dt.GroupRefColumnName];
           if (colDef == null)
-            throw new BugException("Неизвестное имя столбца \"" + dt.GroupRefColumnName + "\" в документе \"" + dt.Name + "\", которое задается свойством GroupRefColumnName");
+            throw new InvalidOperationException(String.Format(Res.DBUI_Err_UnknownGroupRefColumnName, dt.GroupRefColumnName, dt.Name));
           if (String.IsNullOrEmpty(colDef.MasterTableName))
-            throw new BugException("Столбец \"" + dt.GroupRefColumnName + "\" документа \"" + dt.Name + " не является ссылочным");
+            throw new InvalidOperationException(String.Format(Res.DBUI_Err_ColumnIsNotRef, dt.GroupRefColumnName, dt.Name));
           DBxDocType dt2 = DocProvider.DocTypes[colDef.MasterTableName];
           if (dt2 == null)
-            throw new BugException("Неизвестный вид документов \"" + colDef.MasterTableName + "\" в документе \"" + dt.Name + "\" для группировки");
+            throw new InvalidOperationException(String.Format(Res.DBUI_Err_UnknownGroupDocType, colDef.MasterTableName, dt.Name));
 
           _GroupDocDict.Add(dt.Name, dt2.Name);
           _GroupDocList.Add(dt2.Name);
@@ -189,7 +189,7 @@ namespace FreeLibSet.Forms.Docs
       foreach (string nm in _GroupDocList)
       {
         GroupDocTypeUI dtui = (GroupDocTypeUI)(DocTypes[nm]);
-        dtui.GridProducer.Columns.AddText(dtui.NameColumnName, "Группа", 30, 5);
+        dtui.GridProducer.Columns.AddText(dtui.NameColumnName, Res.Common_ColTitle_GroupName, 30, 5);
         dtui.GridProducer.DefaultConfig = new EFPDataGridViewConfig();
         dtui.GridProducer.DefaultConfig.Columns.AddFill(dtui.NameColumnName);
         dtui.ImageKey = "TreeViewClosedFolder";
@@ -331,10 +331,10 @@ namespace FreeLibSet.Forms.Docs
 
       #region Свойства
 
-      private DBUI _UI;
+      private readonly DBUI _UI;
 
       internal Dictionary<string, DocTypeUI> Items { get { return _Items; } }
-      private Dictionary<string, DocTypeUI> _Items;
+      private readonly Dictionary<string, DocTypeUI> _Items;
 
       /// <summary>
       /// Возвращает интерфейс вида документа по имени таблицы.
@@ -350,9 +350,9 @@ namespace FreeLibSet.Forms.Docs
           if (!_Items.TryGetValue(docTypeName, out res))
           {
             if (String.IsNullOrEmpty(docTypeName))
-              throw new ArgumentNullException("docTypeName");
+              throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
             if (!_UI.DocProvider.DocTypes.Contains(docTypeName))
-              throw new ArgumentException("Неизвестный тип документов \"" + docTypeName + "\"", "docTypeName");
+              throw new ArgumentException(String.Format(Res.Common_Arg_UnknownDocType, docTypeName), "docTypeName");
 
             if (_UI._GroupDocList.Contains(docTypeName))
               res = new GroupDocTypeUI(_UI, _UI.DocProvider.DocTypes[docTypeName]);
@@ -419,14 +419,64 @@ namespace FreeLibSet.Forms.Docs
         DBxSubDocType subDocType;
         if (_UI.DocProvider.DocTypes.FindByTableName(tableName, out docType, out subDocType))
         {
-          DocTypeUI DocTypeUI = this[docType.Name];
+          DocTypeUI docTypeUI = this[docType.Name];
           if (subDocType == null)
-            return DocTypeUI;
+            return docTypeUI;
           else
-            return DocTypeUI.SubDocTypes[subDocType.Name];
+            return docTypeUI.SubDocTypes[subDocType.Name];
         }
         else
           return null;
+      }
+
+      /// <summary>
+      /// Поиск интерфейса документа или поддокумента по имени таблицы.
+      /// Если в <see cref="DBxDocTypes"/> нет описания с заданным именем таблицы, выбрасывается исключение.
+      /// </summary>
+      /// <param name="tableName">Имя таблицы</param>
+      /// <returns>Интерфейс</returns>
+      public DocTypeUIBase GetByTableName(string tableName)
+      {
+        DocTypeUIBase dtui = FindByTableName(tableName);
+        if (dtui == null)
+        {
+          if (String.IsNullOrEmpty(tableName))
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
+          else
+            throw new ArgumentException(String.Format(Res.DBUI_Arg_UnknownTableName, tableName), "tableName");
+        }
+        return dtui;
+      }
+
+      // Не нужен, т.к. это просто this
+      ///// <summary>
+      ///// Поиск интерфейса документа по имени таблицы.
+      ///// Если в <see cref="DBxDocTypes"/> нет описания с заданным именем таблицы или она не является документом, выбрасывается исключение.
+      ///// </summary>
+      ///// <param name="tableName">Имя таблицы</param>
+      ///// <returns>Интерфейс</returns>
+      //public DocTypeUI GetDocTypeUIByTableName(string tableName)
+      //{
+      //  DocTypeUIBase dtui1 = GetByTableName(tableName);
+      //  DocTypeUI dtui2 = dtui1 as DocTypeUI;
+      //  if (dtui2 == null)
+      //    throw new ArgumentException(String.Format(Res.DBUI_Arg_TableNameIsSubDoc, tableName), "tableName");
+      //  return dtui2;
+      //}
+
+      /// <summary>
+      /// Поиск интерфейса поддокумента по имени таблицы.
+      /// Если в <see cref="DBxDocTypes"/> нет описания с заданным именем таблицы или она не является поддокументом, выбрасывается исключение.
+      /// </summary>
+      /// <param name="tableName">Имя таблицы</param>
+      /// <returns>Интерфейс</returns>
+      public SubDocTypeUI GetSubDocTypeUIByTableName(string tableName)
+      {
+        DocTypeUIBase dtui1 = GetByTableName(tableName);
+        SubDocTypeUI dtui2 = dtui1 as SubDocTypeUI;
+        if (dtui2 == null)
+          throw new ArgumentException(String.Format(Res.DBUI_Arg_TableNameIsDoc, tableName), "tableName");
+        return dtui2;
       }
 
       /// <summary>
@@ -530,7 +580,7 @@ namespace FreeLibSet.Forms.Docs
       if (_DocProvider.UserPermissionCreators == null)
         _DocProvider.UserPermissionCreators = UserPermissionsUI.Creators;
       else
-        throw new InvalidOperationException("Свойство DocProvider.UserPermissionCreators не должно устанавливаться вручную");
+        throw new InvalidOperationException(Res.DBUI_Err_UserPermissionCreatorsHasBeenSet);
       //{
       //  UserPermissionCreators Creators = new UserPermissionCreators();
       //  DBxDocProvider.InitStdUserPermissionCreators(Creators, FDocProvider.DocTypes);
@@ -548,7 +598,7 @@ namespace FreeLibSet.Forms.Docs
         foreach (SubDocTypeUI sdtui in dtui.SubDocTypes)
         {
           if (sdtui.CanMultiInsert && (!sdtui.CanMultiEdit))
-            throw new BugException("Для поддокументов "+sdtui.ToString()+" установлено свойство CanMultiInsert, но не установлено CanMultiEdit");
+            throw new InvalidOperationException(String.Format(Res.DBUI_Err_SubDocCanMultiInsert, sdtui, dtui));
           sdtui.GridProducer.SetReadOnly();
         }
       }
@@ -620,7 +670,7 @@ namespace FreeLibSet.Forms.Docs
         if (!dt.GridProducer.Columns.Contains("Id"))
         {
           EFPGridProducerColumn idCol = dt.GridProducer.Columns.AddInt("Id", "Id", 6);
-          idCol.DisplayName = "Идентификатор документа";
+          idCol.DisplayName = Res.Common_Name_DocId;
           idCol.CanIncSearch = true;
           // Делаем первым в списке
           dt.GridProducer.Columns.RemoveAt(dt.GridProducer.Columns.Count - 1);
@@ -634,7 +684,7 @@ namespace FreeLibSet.Forms.Docs
         {
           if (DocProvider.DocTypes.UseTime)
           {
-            dt.GridProducer.Columns.AddDateTime("CreateTime", "Время создания документа");
+            dt.GridProducer.Columns.AddDateTime("CreateTime", Res.Common_ColTitle_CreateTime);
           }
 
           if (DocProvider.DocTypes.UseUsers)
@@ -642,7 +692,7 @@ namespace FreeLibSet.Forms.Docs
             //dt2.GridProducer.Columns.AddText("CreateUser", "Документ создан пользователем", 20, 10);
             dt.GridProducer.Columns.AddUserText("CreateUserName", "ChangeUserId,CreateUserId",
               new EFPGridProducerValueNeededEventHandler(CreateUserNameColumnValueNeeded),
-              "Документ создан пользователем", 20, 10);
+              Res.Common_ColTitle_CreateUserName, 20, 10);
             dt.GridProducer.Columns.LastAdded.SizeGroup = "UserName";
             dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
           }
@@ -652,7 +702,7 @@ namespace FreeLibSet.Forms.Docs
             //dt2.GridProducer.Columns.AddDateTime("ChangeTime", "Время изменения документа");
             dt.GridProducer.Columns.AddUserDateTime("ChangeTime2" /*21.05.2021 */, "ChangeTime,CreateTime",
               new EFPGridProducerValueNeededEventHandler(ChangeTimeColumnValueNeeded),
-              "Время изменения документа");
+              Res.Common_ColTitle_ChangeTime);
           }
 
           if (DocProvider.DocTypes.UseUsers)
@@ -660,14 +710,14 @@ namespace FreeLibSet.Forms.Docs
             //dt2.GridProducer.Columns.AddText("ChangeUserId.ИмяПользователя", "Документ изменен пользователем", 20, 10);
             dt.GridProducer.Columns.AddUserText("ChangeUserName", "ChangeUserId,CreateUserId",
               new EFPGridProducerValueNeededEventHandler(ChangeUserNameColumnValueNeeded),
-              "Документ изменен пользователем", 20, 10);
+              Res.Common_ColTitle_ChangeUserName, 20, 10);
             dt.GridProducer.Columns.LastAdded.SizeGroup = "UserName";
             dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
           }
 
           if (DocProvider.DocTypes.UseVersions)
           {
-            dt.GridProducer.Columns.AddText("Version", "Версия документа", 4, 2);
+            dt.GridProducer.Columns.AddText("Version", Res.Common_ColTitle_DocVersion, 4, 2);
             dt.GridProducer.Columns.LastAdded.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
           }
 
@@ -712,7 +762,7 @@ namespace FreeLibSet.Forms.Docs
           {
             EFPGridProducerToolTip ttDocumentInfo = dt.GridProducer.ToolTips.AddUserItem("DocumentInfo", aboutDocSrcColNames,
               new EFPGridProducerValueNeededEventHandler(AboutDoc_ToolTipTextNeeded));
-            ttDocumentInfo.DisplayName = "Документ создан / изменен";
+            ttDocumentInfo.DisplayName = Res.Common_Name_DocChangedCreated;
             ttDocumentInfo.Tag = dt;
           }
         } // HistoryAllowed
@@ -757,57 +807,50 @@ namespace FreeLibSet.Forms.Docs
     private void AboutDoc_ToolTipTextNeeded(object sender,
       EFPGridProducerValueNeededEventArgs args)
     {
+      // Гарантировано, что DocProvider.DocTypes.UseUsers.UseTime=true
+
       Int32 docId = args.GetInt("Id");
       if (docId == 0)
       {
-        args.Value = "Нет выбранного документа";
+        args.Value = Res.Common_ToolTipText_NoDoc;
         return;
       }
 
       DocTypeUI dt = (DocTypeUI)(args.Tag);
-      StringBuilder sb = new StringBuilder();
+      //StringBuilder sb = new StringBuilder();
 
-      sb.Append("Документ \"");
-      sb.Append(dt.DocType.SingularTitle);
-      sb.Append("\" Id=");
-      sb.Append(docId);
-
+      List<string> lst = new List<string>();
+      lst.Add(String.Format(Res.AboutDoc_ToolTip_Main, dt.DocType.SingularTitle, docId));
       if (DocProvider.DocTypes.UseVersions)
-      {
-        sb.Append(" Версия ");
-        sb.Append(args.GetInt("Version"));
-      }
+        lst.Add(String.Format(Res.AboutDoc_ToolTip_Version, args.GetInt("Version")));
 
-      sb.Append(" создан ");
       DateTime? createTime = args.GetNullableDateTime("CreateTime");
-      if (createTime.HasValue)
-        sb.Append(createTime.Value.ToString());
       if (DocProvider.DocTypes.UseUsers)
       {
-        sb.Append(" (");
-        sb.Append(TextHandlers.GetTextValue("Пользователи", args.GetInt("CreateUserId")));
-        sb.Append(")");
+        string userName = TextHandlers.GetTextValue(DocProvider.DocTypes.UsersTableName, args.GetInt("CreateUserId"));
+        lst.Add(String.Format(Res.AboutDoc_ToolTip_ActionTimeAndUser, Res.AboutDoc_ToolTip_Created, createTime, userName));
       }
+      else
+        lst.Add(String.Format(Res.AboutDoc_ToolTip_ActionTime, Res.AboutDoc_ToolTip_Created, createTime));
+
       DateTime? changeTime = args.GetNullableDateTime("ChangeTime");
       if (changeTime.HasValue)
       {
         bool isDeleted = false;
         if (DocProvider.DocTypes.UseDeleted)
           isDeleted = args.GetBool("Deleted");
-        if (isDeleted)
-          sb.Append(". Удален ");
-        else
-          sb.Append(". Изменен ");
-        sb.Append(changeTime.Value.ToString());
+        string actName = isDeleted ? Res.AboutDoc_ToolTip_Deleted : Res.AboutDoc_ToolTip_Changed;
+
         if (DocProvider.DocTypes.UseUsers)
         {
-          sb.Append(" (");
-          sb.Append(TextHandlers.GetTextValue("Пользователи", args.GetInt("ChangeUserId")));
-          sb.Append(")");
+          string userName = TextHandlers.GetTextValue(DocProvider.DocTypes.UsersTableName, args.GetInt("ChangeUserId"));
+          lst.Add(String.Format(Res.AboutDoc_ToolTip_ActionTimeAndUser, actName, changeTime, userName));
         }
+        else
+          lst.Add(String.Format(Res.AboutDoc_ToolTip_ActionTime, actName, changeTime));
       }
 
-      args.Value = sb.ToString();
+      args.Value = String.Join(", ", lst.ToArray());
     }
 
     #endregion
@@ -861,7 +904,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docSel">Копируемая выборка. Не может быть null</param>
     public void CopyDocSel(DBxDocSelection docSel)
     {
-      EFPApp.BeginWait("Копирование выборки документов в буфер обмена", "Copy");
+      EFPApp.BeginWait(Res.Clipboard_Phase_CopyDocSel, "Copy");
       try
       {
         DataObject dobj = new DataObject();
@@ -893,13 +936,13 @@ namespace FreeLibSet.Forms.Docs
 
       if (docSel == null)
       {
-        EFPApp.ShowTempMessage("В буфере обмена нет выборки документов");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoDocSel);
         return null;
       }
 
       if (docSel.DBIdentity != DocProvider.DBIdentity)
       {
-        EFPApp.ShowTempMessage("Выборка в буфере обмена относится к другой базе данных");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_DocSelDiffDB);
         return null;
       }
 
@@ -916,26 +959,25 @@ namespace FreeLibSet.Forms.Docs
     {
 #if DEBUG
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
 #endif
 
       DBxDocType dt = DocTypes[docTypeName].DocType;
-
-#if DEBUG
-      if (dt == null)
-        throw new ArgumentException("Неизвестный вид документа", "docTypeName");
-#endif
+      //#if DEBUG // не может быть
+      //      if (dt == null)
+      //        throw new ArgumentException("Неизвестный вид документа", "docTypeName");
+      //#endif
 
       DBxDocSelection docSel = PasteDocSel();
       if (docSel == null)
       {
-        EFPApp.ShowTempMessage("В буфере обмена нет выборки документов");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoDocSel);
         return 0;
       }
 
       Int32 docId = docSel.GetSingleId(docTypeName);
       if (docId == 0)
-        EFPApp.ShowTempMessage("В буфере обмена нет ссылки на документ \"" + dt.SingularTitle + "\"");
+        EFPApp.ShowTempMessage(String.Format(Res.Clipboard_Err_NoDocType, dt.SingularTitle));
       return docId;
     }
 
@@ -981,7 +1023,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docSel">Заполненная выборка документов</param>
     public void ShowDocSel(DBxDocSelection docSel)
     {
-      ShowDocSel(docSel, "Выборка документов");
+      ShowDocSel(docSel, Res.DocSel_Title_Default);
     }
 
     /// <summary>
@@ -994,7 +1036,7 @@ namespace FreeLibSet.Forms.Docs
       if (docSel == null || docSel.IsEmpty)
       {
         // 06.04.2018
-        EFPApp.MessageBox("Выборка не содержит ни одного документа", title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        EFPApp.MessageBox(Res.DocSel_Msg_IsEmpty, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
         return;
       }
 
@@ -1021,12 +1063,12 @@ namespace FreeLibSet.Forms.Docs
     {
 #if DEBUG
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
       if (docIds == null)
         throw new ArgumentNullException("docIds");
 #endif
       if (!DocProvider.DocTypes.Contains(docTypeName))
-        throw new ArgumentException("Неизвестный вид документов \"" + docTypeName + "\"", "docTypeName");
+        throw new ArgumentException(String.Format(Res.Common_Arg_UnknownDocType, docTypeName), "docTypeName");
 
       DBxDocSelection docSel = new DBxDocSelection(DocProvider.DBIdentity);
       for (int i = 0; i < docIds.Length; i++)
@@ -1041,7 +1083,6 @@ namespace FreeLibSet.Forms.Docs
     #endregion
 
     #region Изображения для DBxDocState
-
 
     /// <summary>
     /// Получить имя изображения в <see cref="EFPApp.MainImages"/> для перечисления <see cref="DBxDocState"/>
@@ -1122,25 +1163,6 @@ namespace FreeLibSet.Forms.Docs
     #endregion
 
     #region Изображения для UndoAction
-
-    /// <summary>
-    /// Получить текстовое обозначение для перечисления <see cref="UndoAction"/>
-    /// </summary>
-    /// <param name="action">Действие</param>
-    /// <returns>Текстовое представление</returns>
-    public static string GetUndoActionName(UndoAction action)
-    {
-      switch (action)
-      {
-        case UndoAction.Base: return "Начальное состояние";
-        case UndoAction.Insert: return "Создание";
-        case UndoAction.Edit: return "Изменение";
-        case UndoAction.Delete: return "Удаление";
-        case UndoAction.Undo: return "Откат";
-        case UndoAction.Redo: return "Повтор";
-        default: return "Неизвестное действие " + ((int)action).ToString();
-      }
-    }
 
     /// <summary>
     /// Получить имя изображения в <see cref="EFPApp.MainImages"/> для перечисления <see cref="UndoAction"/>
@@ -1224,7 +1246,7 @@ namespace FreeLibSet.Forms.Docs
       if (eAE != null)
       {
         //EFPApp.ErrorMessageBox("Отказано в доступе." + Environment.NewLine + Environment.NewLine + eAE.Message, args.Title);
-        EFPApp.ExceptionMessageBox("Отказано в доступе." + Environment.NewLine + Environment.NewLine + eAE.Message, args.Exception, args.Title); // 25.09.2020
+        EFPApp.ExceptionMessageBox(String.Format(Res.DBUI_Err_DBxAccessException, eAE.Message), args.Exception, args.Title); // 25.09.2020
         args.Handled = true;
         return;
       }
@@ -1233,7 +1255,7 @@ namespace FreeLibSet.Forms.Docs
       if (eCDE != null)
       {
         //EFPApp.ErrorMessageBox("Ошибка удаления данных на сервере." + Environment.NewLine + Environment.NewLine + eCDE.Message, args.Title);
-        EFPApp.ExceptionMessageBox("Ошибка удаления данных на сервере." + Environment.NewLine + Environment.NewLine + eCDE.Message, args.Exception, args.Title); // 25.09.2020
+        EFPApp.ExceptionMessageBox(String.Format(Res.DBUI_Err_DBxDocCannotDeleteException, eCDE.Message), args.Exception, args.Title); // 25.09.2020
         args.Handled = true;
         return;
       }
@@ -1241,37 +1263,27 @@ namespace FreeLibSet.Forms.Docs
       DBxDocsLockException eDL = LogoutTools.GetException<DBxDocsLockException>(args.Exception);
       if (eDL != null)
       {
-        StringBuilder sb = new StringBuilder();
-        sb.Append("Ошибка установки блокировки.");
-        sb.Append(Environment.NewLine);
-        sb.Append(Environment.NewLine);
-        sb.Append("Не удалось установить блокировку. ");
+        string lockedBy;
         if (eDL.IsSameDocProvider)
         {
           // 04.07.2016
           // На самом деле, все равно не работает.
           // Некоторые действия, например, установка состояния формы, выполняются на стороне сервера
           // с созданием отдельного DBxRealDocProvider
-          sb.Append("Документ заблокирован Вами в текущем сеансе работы");
+          lockedBy = Res.DBUI_Err_DocLockedByYou;
         }
         else if (String.IsNullOrEmpty(eDL.OldLock.UserName))
-          sb.Append("Документ заблокирован");
+          lockedBy = Res.DBUI_Err_DocLockedByUnknown;
         else
-        {
-          sb.Append("Документ заблокирован пользователем ");
-          sb.Append(eDL.OldLock.UserName);
-        }
-        sb.Append(".");
-        sb.Append(Environment.NewLine);
-        sb.Append(Environment.NewLine);
+          lockedBy = String.Format(Res.DBUI_Err_DocLockedByUser, eDL.OldLock.UserName);
+
+        string docInfo;
         if (eDL.OldLock.Data.DocCount == 1)
-          sb.Append("Заблокированный документ: ");
+          docInfo = String.Format(Res.DBUI_Err_SingleDocLocked, eDL.OldLock.DocText);
         else
-          sb.Append("Заблокированные документы: ");
-        sb.Append(eDL.OldLock.DocText);
+          docInfo = String.Format(Res.DBUI_Err_MultiDocsLocked, eDL.OldLock.DocText);
 
-
-        EFPApp.MessageBox(sb.ToString(),
+        EFPApp.MessageBox(String.Format(Res.DBUI_Err_DBxDocsLockException, eDL.Message, lockedBy, docInfo),
           args.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         args.Handled = true;
         return;

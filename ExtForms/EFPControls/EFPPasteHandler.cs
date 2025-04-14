@@ -240,7 +240,7 @@ namespace FreeLibSet.Forms
   /// У кнопки "Вставить" (если задается для панели инструментов) появляется треугольник, который открывает выпадающее меню "Дополнительные варианты вставки".
   /// </para>
   /// </summary>
-  public class EFPPasteHandler : List<EFPPasteFormat>
+  public class EFPPasteHandler : ListWithReadOnly<EFPPasteFormat>
   {
     #region Конструктор
 
@@ -314,6 +314,8 @@ namespace FreeLibSet.Forms
 
     private void CommandItems_Prepare(object sender, EventArgs args)
     {
+      SetReadOnly(); // 27.02.2025
+
       if (Count == 0)
       {
         ciPaste.Usage = EFPCommandItemUsage.None;
@@ -356,18 +358,19 @@ namespace FreeLibSet.Forms
 
         if (Enabled)
           SetRealEnabled();
+
+        /*
+        foreach (EFPPasteFormat format in this)
+        {
+          if (format.HasIdle)
+          {
+            CommandItems.Idle += CommandItems_Idle;
+          }
+        }*/
+        if (!EFPApp.EasyInterface)
+          CommandItems.Idle += CommandItems_Idle;
       }
 
-      /*
-      foreach (EFPPasteFormat format in this)
-      {
-        if (format.HasIdle)
-        {
-          CommandItems.Idle += CommandItems_Idle;
-        }
-      }*/
-      if (!EFPApp.EasyInterface)
-        CommandItems.Idle += CommandItems_Idle;
     }
 
     #endregion
@@ -400,6 +403,10 @@ namespace FreeLibSet.Forms
     /// <param name="args"></param>
     private void CommandItems_Idle(object sender, EventArgs args)
     {
+#if DEBUG
+      EFPApp.CheckMainThread();
+#endif
+
       foreach (EFPPasteFormat format in this)
         format.HandleIdle();
       if (Enabled)
@@ -459,10 +466,23 @@ namespace FreeLibSet.Forms
     }
 
     [DebuggerStepThrough]
-    private static IDataObject ClipboardGetDataObject()
+    private IDataObject ClipboardGetDataObjectForTest()
     {
+
       try
       {
+        Form frm = Form.ActiveForm;
+        if (frm != null)
+        {
+          if (frm.WindowState == FormWindowState.Minimized)
+          {
+            //Trace.WriteLine("Form.ActiveForm.WindowState=Minimized");
+            return null; // 27.02.2025 Без этого возникает глюк. 
+                         // Видимо, запрос к буферу выполняется от имени активной формы приложения.
+                         // Но если она свернута, то после такого запроса ее нельзя восстановить с помощью мыши.
+          }
+        }
+        
         return Clipboard.GetDataObject();
       }
       catch
@@ -477,7 +497,8 @@ namespace FreeLibSet.Forms
       try
       {
         bool hasAnyFormat = false;
-        IDataObject dataObj = ClipboardGetDataObject();
+
+        IDataObject dataObj = ClipboardGetDataObjectForTest();
         if (dataObj != null)
         {
           for (int j = 0; j < Count; j++)
@@ -489,6 +510,7 @@ namespace FreeLibSet.Forms
             }
           }
         }
+
         ciPaste.Enabled = hasAnyFormat;
         if (HasActions)
         {
@@ -786,7 +808,7 @@ namespace FreeLibSet.Forms
           ListSelectDialog dlg = new ListSelectDialog();
           dlg.Title = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_PasteSpecial);
           if (PasteSpecialDebugMode)
-            dlg.Title =String.Format(Res.EFPPasteFormat_Title_AllFormats, dlg.Title);
+            dlg.Title = String.Format(Res.EFPPasteFormat_Title_AllFormats, dlg.Title);
           dlg.ImageKey = "Paste";
           dlg.Items = goodNames.ToArray();
           dlg.ListTitle = Res.EFPPasteFormat_Title_SpecialPasteFormatGroup;
@@ -823,8 +845,8 @@ namespace FreeLibSet.Forms
           }
           else
           {
-            EFPApp.ErrorMessageBox(String.Format(Res.EFPPasteFormat_Err_PasteSpecial, 
-              goodNames[dlg.SelectedIndex]), 
+            EFPApp.ErrorMessageBox(String.Format(Res.EFPPasteFormat_Err_PasteSpecial,
+              goodNames[dlg.SelectedIndex]),
               goodFormats[dlg.SelectedIndex].DisplayName);
             return false;
           }
@@ -865,7 +887,7 @@ namespace FreeLibSet.Forms
     private void CheckNotBusy()
     {
       if (_TestingFormat != null)
-        throw new InvalidOperationException(String.Format(Res.EFPPasteFormat_Err_BusyTest,_TestingFormat.DisplayName));
+        throw new InvalidOperationException(String.Format(Res.EFPPasteFormat_Err_BusyTest, _TestingFormat.DisplayName));
       if (_PastingFormat != null)
         throw new InvalidOperationException(String.Format(Res.EFPPasteFormat_Err_BusyPaste, _PastingFormat.DisplayName));
     }
@@ -882,7 +904,7 @@ namespace FreeLibSet.Forms
     private EFPPasteFormat _TestingFormat;
 
     /// <summary>
-    /// Возвращает true, если в данный момент выполняется встака для одной из команд
+    /// Возвращает true, если в данный момент выполняется вставка для одной из команд
     /// (выполняется обработчик события <see cref="EFPPasteFormat.Paste"/>.
     /// </summary>
     public bool IsPasting { get { return _PastingFormat != null; } }
@@ -1476,7 +1498,7 @@ namespace FreeLibSet.Forms
 
       if (TextMatrix == null)
       {
-        EFPApp.MessageBox(String.Format(Res.Clipboard_Err_NoDataFormat, DisplayName), 
+        EFPApp.MessageBox(String.Format(Res.Clipboard_Err_NoDataFormat, DisplayName),
           PreviewTitle);
         args.Cancel = false; // 27.12.2020
         return;

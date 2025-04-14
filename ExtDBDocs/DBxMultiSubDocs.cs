@@ -124,12 +124,12 @@ namespace FreeLibSet.Data.Docs
       for (int i = 0; i < subDocIds.Length; i++)
       {
         if (subDocIds[i] == 0)
-          throw new ArgumentException("В списке идентификаторов поддокументов задано значение 0", "subDocIds["+i.ToString()+"]");
+          throw ExceptionFactory.ArgInvalidEnumerableItem("subDocIds", subDocIds, 0);
         // Фиктивные идентификаторы могут быть
 
         srcSubDocRows[i] = mainObj._Table.Rows.Find(subDocIds[i]);
         if (srcSubDocRows[i] == null)
-          throw new ArgumentException("Не найдена строка поддокумента с идентификатором " + subDocIds[i].ToString());
+          throw new ArgumentException(String.Format(Res.DBxMultiSubDoc_Err_RowNotFound, subDocIds[i]), "subDocIds");
       }
 
       return srcSubDocRows;
@@ -226,13 +226,13 @@ namespace FreeLibSet.Data.Docs
     /// Доступ к списку документов
     /// </summary>
     public DBxMultiDocs Owner { get { return _Owner; } }
-    private DBxMultiDocs _Owner;
+    private readonly DBxMultiDocs _Owner;
 
     /// <summary>
     /// Описание вида поддокументов
     /// </summary>
     public DBxSubDocType SubDocType { get { return _SubDocType; } }
-    private DBxSubDocType _SubDocType;
+    private readonly DBxSubDocType _SubDocType;
 
 
     /// <summary>
@@ -244,7 +244,7 @@ namespace FreeLibSet.Data.Docs
     /// Для набора, созданного методом GetSubSet(), содержит ссылку на основной набор.
     /// Для основного набора поддокументов содержит null
     /// </summary>
-    private DBxMultiSubDocs _MainObj;
+    private readonly DBxMultiSubDocs _MainObj;
 
     /// <summary>
     /// Возвращает права доступа к таблице документов
@@ -304,12 +304,12 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Создает новый объект DataView для таблицы поддокументов.
-    /// Если метод вызывается несколько раз, то следует удалять созданные объекты вызовом DataView.Dispose(),
-    /// т.к. объекты DataView являются ресурсоемкими.
+    /// Создает новый объект <see cref="DataView"/> для таблицы поддокументов.
+    /// Если метод вызывается несколько раз, то следует удалять созданные объекты вызовом <see cref="IDisposable.Dispose()"/>,
+    /// т.к. объекты <see cref="DataView"/> являются ресурсоемкими.
     /// Также можно использовать директиву using.
     /// </summary>
-    /// <returns>Новый объект DataView</returns>
+    /// <returns>Новый объект <see cref="DataView"/></returns>
     public DataView CreateSubDocsView()
     {
       GetTableReady();
@@ -482,7 +482,7 @@ namespace FreeLibSet.Data.Docs
     internal void ResetTable()
     {
       if (_MainObj != null)
-        throw new InvalidOperationException("Сброс таблицы не разрешается для набора подмножества");
+        throw new InvalidOperationException(Res.DBxMultiSubDoc_Err_ResetTableForSubSet);
       _TableIsReady = false;
     }
 
@@ -555,7 +555,7 @@ namespace FreeLibSet.Data.Docs
           // Нужно, чтобы возвращался объект, ссылающийся на нас
           int index = _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
           if (index < 0)
-            throw new ArgumentException("Таблица \"" + _MultiSubDocs._Table.TableName + "\" не содержит столбца \"" + name + "\"", "name");
+            throw ExceptionFactory.ArgUnknownColumnName("name",_MultiSubDocs._Table, name);
           return new DBxExtValue(this, index);
         }
       }
@@ -734,7 +734,7 @@ namespace FreeLibSet.Data.Docs
       if (!_DocRowDict.TryGetValue(docRow, out res))
       {
         Int32 DocId = DataTools.GetInt(docRow, "Id");
-        throw new BugException("Таблица поддокументов для документа с DocId=" + DocId.ToString() + " не была загружена");
+        throw new BugException("Subdocument table for document with DocId=" + DocId.ToString() + " has not been loaded");
       }
 
       if (res == null)
@@ -869,9 +869,9 @@ namespace FreeLibSet.Data.Docs
           if (row == null)
             throw new ArgumentNullException("row");
           if (row.Table != _Table)
-            throw new ArgumentException("Строка относится к другой таблице", "row");
+            throw ExceptionFactory.ArgDataRowNotInSameTable("row", row, _Table);
           else
-            throw new ArgumentException("Строка не найдена в таблице", "row");
+            throw ExceptionFactory.ArgNotInCollection("row", row, _Table.Rows);
         }
         return new DBxSubDoc(this, p);
       }
@@ -910,7 +910,7 @@ namespace FreeLibSet.Data.Docs
     {
       int p = IndexOfSubDocId(subDocId);
       if (p < 0)
-        throw new ArgumentException("Не найден поддокумент с идентификатором " + subDocId.ToString(), "subDocId");
+        throw new ArgumentException(String.Format(Res.DBxMultiSubDoc_Err_RowNotFound, subDocId), "subDocId");
       else
         return this[p];
     }
@@ -953,7 +953,7 @@ namespace FreeLibSet.Data.Docs
       internal SingleSubDocValues(DBxMultiSubDocs multiSubDocs, int rowIndex, DataRowVersion rowVersion)
       {
         if (rowIndex < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, null);
 
         _MultiSubDocs = multiSubDocs;
         _RowIndex = rowIndex;
@@ -982,7 +982,7 @@ namespace FreeLibSet.Data.Docs
         {
           int index = _MultiSubDocs.ColumnNameIndexer.IndexOf(name);
           if (index < 0)
-            throw new ArgumentException("Поле \"" + name + "\" не принадлежит поддокументу \""+_MultiSubDocs.SubDocType.SingularTitle+"\"", "name");
+            throw ExceptionFactory.ArgUnknownColumnName("name", _MultiSubDocs.Table, name);
           return new DBxExtValue(this, index);
         }
       }
@@ -1211,13 +1211,13 @@ namespace FreeLibSet.Data.Docs
     {
       if (_SingleSubDocValues == null)
         _SingleSubDocValues = new Dictionary<int, SingleSubDocValues>();
-      SingleSubDocValues Values;
-      if (!_SingleSubDocValues.TryGetValue(rowIndex, out Values))
+      SingleSubDocValues values;
+      if (!_SingleSubDocValues.TryGetValue(rowIndex, out values))
       {
-        Values = new SingleSubDocValues(this, rowIndex, DataRowVersion.Current);
-        _SingleSubDocValues.Add(rowIndex, Values);
+        values = new SingleSubDocValues(this, rowIndex, DataRowVersion.Current);
+        _SingleSubDocValues.Add(rowIndex, values);
       }
-      return Values;
+      return values;
     }
 
     /// <summary>
@@ -1271,7 +1271,7 @@ namespace FreeLibSet.Data.Docs
 
       #region Поля
 
-      private DBxMultiSubDocs _Owner;
+      private readonly DBxMultiSubDocs _Owner;
 
       private int _SubDocIndex;
 
@@ -1381,7 +1381,7 @@ namespace FreeLibSet.Data.Docs
           }
           break;
         default:
-          throw new ArgumentException("Недопустимое значение State=" + state.ToString(), "state");
+          throw ExceptionFactory.ArgUnknownValue("state", state);
       }
       return cnt;
     }
@@ -1452,9 +1452,9 @@ namespace FreeLibSet.Data.Docs
       if (Permissions != DBxAccessMode.Full)
       {
         if (Permissions == DBxAccessMode.None)
-          throw new DBxAccessException("У пользователя нет прав на доступ к поддокументам \"" + SubDocType.PluralTitle + "\"");
+          throw new DBxAccessException(String.Format(Res.DBxMultiSubDocs_Err_AccessDenied, SubDocType.PluralTitle));
         else
-          throw new DBxAccessException("У пользователя нет прав на создание, редактирование и удаление поддокументов \"" + SubDocType.PluralTitle + "\"");
+          throw new DBxAccessException(String.Format(Res.DBxMultiSubDocs_Err_AccessReadOnly, SubDocType.PluralTitle));
       }
     }
 
@@ -1504,7 +1504,8 @@ namespace FreeLibSet.Data.Docs
 
           return new DBxSubDoc(this, _Table.Rows.Count - 1);
         default:
-          throw new InvalidOperationException("Нельзя добавить поддокумент, т.к. документ \"" + doc.DocType.SingularTitle + "\" с DocId=" + doc.DocId.ToString() + " находится в состоянии " + doc.DocState.ToString());
+          throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Err_InsertDocState,
+            doc.DocType.SingularTitle, doc.DocId, doc.DocState));
       }
     }
 
@@ -1515,9 +1516,11 @@ namespace FreeLibSet.Data.Docs
     public DBxSubDoc Insert()
     {
       if (Owner.DocCount == 0)
-        throw new InvalidOperationException("Невозможно создать поддокумент, т.к. в наборе нет документов \"" + Owner.DocType.PluralTitle + "\"");
+        throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Err_InsertNoDocuments,
+          SubDocType.SingularTitle, Owner.DocType.PluralTitle));
       if (Owner.DocCount != 1)
-        throw new InvalidOperationException("Невозможно определить, для какого документа \"" + Owner.DocType.SingularTitle + "\" нужно создать поддокумент, т.к. в наборе находится больше одного документа (" + Owner.DocCount.ToString() + ")");
+        throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Err_InsertMultiDocs,
+          Owner.DocType.SingularTitle, Owner.DocCount.ToString()));
 
       CheckCanModify();
       return Insert(Owner[0]);
@@ -1551,7 +1554,8 @@ namespace FreeLibSet.Data.Docs
           case DBxDocState.Edit:
             break;
           default:
-            throw new InvalidOperationException("Нельзя добавить поддокумент, т.к. документ \"" + docs[i].DocType.SingularTitle + "\" с DocId=" + docs[i].DocId.ToString() + " находится в состоянии " + docs[i].DocState.ToString());
+            throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Err_InsertDocState,
+              docs[i].DocType.SingularTitle, docs[i].DocId, docs[i].DocState));
         }
       }
 
@@ -1586,9 +1590,9 @@ namespace FreeLibSet.Data.Docs
       if (SubDocState != DBxDocState.View)
       {
         if (SubDocCount == 0)
-          throw new InvalidOperationException("Нет открытых поддокументов \"" + SubDocType.PluralTitle + "\"");
+          throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Err_IsEmpty, SubDocType.PluralTitle));
         else
-          throw new InvalidOperationException("Все поддокументы \"" + SubDocType.PluralTitle + "\" должны находиться в состоянии View");
+          throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Err_StateRequired, SubDocType.PluralTitle,"View"));
       }
 
       CheckCanModify();
@@ -1604,8 +1608,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Переводит все поддокументы в режим редактирования
-    /// Все поддокументы должны находиться в состоянии View
+    /// Переводит все поддокументы в режим редактирования.
+    /// Все поддокументы должны находиться в состоянии View.
     /// </summary>
     public void Edit()
     {
@@ -1621,8 +1625,8 @@ namespace FreeLibSet.Data.Docs
             Row.SetModified();
           break;
         default:
-          throw new InvalidOperationException("Нельзя перевести все поддокументы \"" + SubDocType.PluralTitle +
-            "\" в режим редактирования, т.к. текущее состояние набора: " + SubDocState.ToString());
+          throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Err_SetAllState,
+            SubDocType.PluralTitle, "Edit", SubDocState));
       }
     }
 
@@ -1682,9 +1686,9 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Создание подмножества поддокументов с единственным поддокументом.
-    /// В полученном наборе для всех поддокументов устанавливается состояние View, независимо от состояния поддокументов
+    /// В полученном наборе для всех поддокументов устанавливается состояние <see cref="DBxDocState.View"/>, независимо от состояния поддокументов
     /// в текущем наборе. В текущем наборе состояние поддокументов не меняется.
-    /// Используйте ReplaceWithSubSet() по окончании работы с подмножеством.
+    /// Используйте <see cref="ReplaceWithSubSet(DBxMultiSubDocs)"/> по окончании работы с подмножеством.
     /// </summary>
     /// <param name="subDocId">Идентификатор поддокумента, который должен попасть в подмножество. 
     /// Могут быть фиктивные идентификаторы для несохраненных поддокументов</param>
@@ -1692,13 +1696,13 @@ namespace FreeLibSet.Data.Docs
     public DBxMultiSubDocs CreateSubSet(Int32 subDocId)
     {
       return CreateSubSet(new Int32[] { subDocId });
-    }                                             
+    }
 
     /// <summary>
     /// Создание подмножества поддокументов с заданными идентификаторами.
-    /// В полученном наборе для всех поддокументов устанавливается состояние View, независимо от состояния поддокументов
+    /// В полученном наборе для всех поддокументов устанавливается состояние <see cref="DBxDocState.View"/>, независимо от состояния поддокументов
     /// в текущем наборе. В текущем наборе состояние поддокументов не меняется.
-    /// Используйте ReplaceWithSubSet() по окончании работы с подмножеством.
+    /// Используйте <see cref="ReplaceWithSubSet(DBxMultiSubDocs)"/> по окончании работы с подмножеством.
     /// </summary>
     /// <param name="subDocIds">Идентификаторы поддокументов, которые должны попасть в подмножество. 
     /// Могут быть фиктивные идентификаторы для несохраненных поддокументов</param>
@@ -1746,7 +1750,7 @@ namespace FreeLibSet.Data.Docs
       }
 
       if (subSet._MainObj != this)
-        throw new ArgumentException("Присоединяемый дочерний набор не был создан из текущего набора поддокументов");
+        throw new ArgumentException(Res.DBxMultiSubDocs_Arg_MergeAlienSubSet, "subSet");
 
       GetTableReady();
 
@@ -1766,8 +1770,8 @@ namespace FreeLibSet.Data.Docs
             continue; // в подмножество добавили поддокумент, а затем - удалили.
 
           if (DocSet.DocProvider.IsRealDocId(id))
-            throw new InvalidOperationException("Попытка добавление строка поддокумента \"" + SubDocType.SingularTitle +
-              "\" с Id=" + id.ToString() + ". Строка поддокумента в состоянии " + srcRow.RowState.ToString());
+            throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Arg_MergeSubSetRowState,
+              SubDocType.SingularTitle, id, srcRow.RowState));
 
           resRow = _Table.NewRow();
           resRow.ItemArray = srcRow.ItemArray;

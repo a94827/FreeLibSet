@@ -241,11 +241,10 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка иницилизации новых значений подокумента \"" + SubDocTypeUI.SubDocType.SingularTitle + "\"");
+          EFPApp.ShowException(e, String.Format(Res.SubDocumentEditor_ErrTitle_InitNewValues, SubDocTypeUI.SubDocType.SingularTitle));
         }
 
         if (Caller != null)
-
         {
           for (int i = 0; i < SubDocs.SubDocCount; i++)
             Caller.InitNewSubDocValues(SubDocs[i]);
@@ -292,26 +291,24 @@ namespace FreeLibSet.Forms.Docs
         switch (State)
         {
           case UIDataState.Edit:
-            _Dialog.OKButtonToolTipText = "Закончить редактирование, сохранив внесенные изменения." + Environment.NewLine +
-              "Для реальной записи изменений нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
-            _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения внесенных изменений";
+            _Dialog.OKButtonToolTipText = Res.SubDocumentEditor_ToolTip_OkEdit;
+            _Dialog.CancelButtonToolTipText = Res.SubDocumentEditor_ToolTip_Cancel;
             break;
           case UIDataState.Insert:
           case UIDataState.InsertCopy:
-            _Dialog.OKButtonToolTipText = "Создать новую запись и закончить редактирование." + Environment.NewLine +
-              "Для сохранения записи нажимите кнопку \"ОК\" или \"Запись\" в основном редакторе документа";
-            _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения введенных значений";
+            _Dialog.OKButtonToolTipText = Res.SubDocumentEditor_ToolTip_OkInsert;
+            _Dialog.CancelButtonToolTipText = Res.SubDocumentEditor_ToolTip_Cancel;
             break;
           case UIDataState.Delete:
-            _Dialog.OKButtonToolTipText = "Удалить просматриваемую запись";
-            _Dialog.CancelButtonToolTipText = "Закрыть окно, не удаляя запись";
+            _Dialog.OKButtonToolTipText = Res.SubDocumentEditor_ToolTip_OkDelete;
+            _Dialog.CancelButtonToolTipText = Res.SubDocumentEditor_ToolTip_CancelDelete;
             break;
           case UIDataState.View:
-            _Dialog.OKButtonToolTipText = "Закрыть окно";
+            _Dialog.OKButtonToolTipText = Res.SubDocumentEditor_ToolTip_OkView;
             break;
         }
         _Dialog.ShowApplyButton = false;
-        _Dialog.MoreButtonToolTipText = "Дополнительные команды редактора";
+        _Dialog.MoreButtonToolTipText = Res.SubDocumentEditor_ToolTip_More;
 
         _Dialog.Writing += Dialog_Writing;
         _Dialog.FormClosed += new EventHandler(Dialog_FormClosed);
@@ -358,34 +355,35 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     private void InitFormTitle()
     {
+      string s1;
+      if (MultiDocMode)
+        s1 = SubDocTypeUI.SubDocType.PluralTitle + " (" + SubDocs.SubDocCount.ToString() + ")";
+      else
+        s1 = SubDocTypeUI.SubDocType.SingularTitle;
+
+      string s2;
       switch (State)
       {
         case UIDataState.Edit:
-          if (MultiDocMode)
-            _Dialog.Title = SubDocTypeUI.SubDocType.PluralTitle + " (Редактирование записей (" + SubDocs.SubDocCount.ToString() + "))";
-          else
-            _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Редактирование)";
+          s2 = Res.Editor_Msg_TitleEdit;
           break;
         case UIDataState.Insert:
-          _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Создание)";
+          s2 = Res.Editor_Msg_TitleInsert;
           break;
         case UIDataState.InsertCopy:
-          _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Создание копии)";
+          s2 = Res.Editor_Msg_TitleInsertCopy;
           break;
         case UIDataState.Delete:
-          if (MultiDocMode)
-            _Dialog.Title = SubDocTypeUI.SubDocType.PluralTitle + " (Удаление записей (" + SubDocs.SubDocCount.ToString() + "))";
-          else
-            _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Удаление)";
+          s2 = Res.Editor_Msg_TitleDelete;
           break;
         case UIDataState.View:
-          if (MultiDocMode)
-            _Dialog.Title = SubDocTypeUI.SubDocType.PluralTitle + " (Просмотр записей (" + SubDocs.SubDocCount.ToString() + "))";
-          else
-            _Dialog.Title = SubDocTypeUI.SubDocType.SingularTitle + " (Просмотр)";
+          s2 = Res.Editor_Msg_TitleView;
           break;
+        default:
+          throw new BugException("State=" + State.ToString());
       }
 
+      _Dialog.Title = String.Format(Res.Editor_Msg_Title, s1, s2);
       if (SubDocTypeUI.UI.DebugShowIds && State != UIDataState.Insert && (!MultiDocMode))
         _Dialog.Title += " Id=" + SubDocs.Values["Id"].AsString;
     }
@@ -508,10 +506,8 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка сохранения копий значений поддокумента \"" + SubDocTypeUI.SubDocType.SingularTitle + "\" для будущего использования");
+        EFPApp.ShowException(e, String.Format(Res.SubDocumentEditor_ErrTitle_SaveColumnValues, SubDocTypeUI.SubDocType.SingularTitle));
       }
-
-      return;
     }
 
     void Dialog_FormClosed(object sender, EventArgs args)
@@ -544,8 +540,8 @@ namespace FreeLibSet.Forms.Docs
     {
       if (SubDocTypeUI.UI.DebugShowIds)
       {
-        EFPCommandItem ciDebugChanges = new EFPCommandItem("Edit", "Changes");
-        ciDebugChanges.MenuText = "Отладка изменений";
+        EFPCommandItem ciDebugChanges = new EFPCommandItem("Debug", "Changes");
+        ciDebugChanges.MenuText = Res.Cmd_Menu_Debug_Changes;
         ciDebugChanges.Click += new EventHandler(ciDebugChanges_Click);
         ciDebugChanges.GroupBegin = true;
         ciDebugChanges.GroupEnd = true;
@@ -559,7 +555,8 @@ namespace FreeLibSet.Forms.Docs
 
     private void ciDebugChanges_Click(object sender, EventArgs args)
     {
-      FreeLibSet.Forms.Diagnostics.DebugTools.DebugChangeInfo(ChangeInfo, "Изменения значений");
+      EFPCommandItem ci = (EFPCommandItem)sender;
+      FreeLibSet.Forms.Diagnostics.DebugTools.DebugChangeInfo(ChangeInfo, ci.MenuTextWithoutMnemonic);
     }
 
     #endregion

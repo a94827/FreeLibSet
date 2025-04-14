@@ -1267,7 +1267,7 @@ namespace FreeLibSet.Data
     {
       string s;
       if (_Source == null)
-        s = "DBxCon отсоединен от DBxConBase";
+        s = "DBxCon is diconnected from DBxConBase";
       else
         s = "DBxConBase=" + _Source.ToString();
       if (IsDisposed)
@@ -3440,7 +3440,7 @@ namespace FreeLibSet.Data
           }
           catch (Exception e)
           {
-            LogoutTools.LogoutException(e, "Ошибка отката транзакции");
+            LogoutTools.LogoutException(e, Res.DBxTransactionArray_ErrTitle_Roolback);
           }
           _Cons[i] = null;
         }

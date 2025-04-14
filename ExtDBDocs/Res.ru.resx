@@ -1,0 +1,729 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DBxBinDataHandler_Arg_BinDataId" xml:space="preserve">
+    <value>Неправильный идентификатор записи для таблицы 'BinData' Id={0}</value>
+  </data>
+  <data name="DBxBinDataHandler_Arg_FileNameId" xml:space="preserve">
+    <value>Неправильный идентификатор записи в таблице 'FileNames' Id={0}</value>
+  </data>
+  <data name="DBxBinDataHandler_Arg_FileTooLong" xml:space="preserve">
+    <value>Слишком длинный файл</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataBlokReading" xml:space="preserve">
+    <value>Таблица 'BinData', Id={0}. Ошибка чтения блока данных. {1}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataLength" xml:space="preserve">
+    <value>В таблице 'BinData' для блока данных с Id={0} расходится длина. Записано в базе данных: {1}, запрошенная длина: {2}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataNoReplays" xml:space="preserve">
+    <value>Повторов в таблице 'BinData' ('{0}') не обнаружено</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataReplayMD5" xml:space="preserve">
+    <value>Повтор в таблице 'BinData'. Для Id={0} и Id={1} задана одинаковая сумма MD5='{2}'</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageDiffSection" xml:space="preserve">
+    <value>База данных '{0}', таблица 'BinDataStorage', Id={1}.  В основной таблице 'BinData' для этого идентификатора задана секция №{2}, а не №{3}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageError" xml:space="preserve">
+    <value>База данных '{0}', таблица 'BinDataStorage'. Неперехваченная ошибка: {1}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageHasWarnings" xml:space="preserve">
+    <value>База данных '{0}', таблица 'BinDataStorage' (секция №{1}). Обнаружены предупреждения.</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageNoErrors" xml:space="preserve">
+    <value>База данных '{0}', таблица 'BinDataStorage' (секция №{1}). Нет ошибок</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageUnknownId" xml:space="preserve">
+    <value>База данных '{0}', таблица 'BinDataStorage', Id={1}. Такого идентификатора нет в основной таблице 'BinData'</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataTotalInfo" xml:space="preserve">
+    <value>Записей в таблице 'BinData' ({0}): {1}, с ошибками: {2}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataWrongBlockLength" xml:space="preserve">
+    <value>Таблица 'BinData', Id={0}. Неправильная длина блока данных. Ожидалось: {1}, прочитано: {2}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataWrongMD5" xml:space="preserve">
+    <value>Таблица 'BinData', Id={0}. Неправильная контрольная сумма MD5 для блока данных.</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataZeroMD5" xml:space="preserve">
+    <value>Таблица 'BinData', Id={0}. Нулевое значение MD5. Не проверяется.</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_DocRefUnknown" xml:space="preserve">
+    <value>{0}. Id={1}. Неправильная ссылка {2}. В таблице '{3}' нет записи с таким идентификатором</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_ImportToNotEmptyTable" xml:space="preserve">
+    <value>Таблица '{0}' уже содержит строки. Импорт возможен, только если таблица пуста</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_InsufficientEntryCount" xml:space="preserve">
+    <value>Недостаточное количество точек входа во фрагментированные базы данных ({0}). В таблице 'BinData' используется секция с номером {1}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_NoSectionEntries" xml:space="preserve">
+    <value>Не задано ни одной точки входа в SectionEntries</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_NoUsBinDataUseFiles" xml:space="preserve">
+    <value>Должно быть установлено хотя бы одно из свойств UseBinData или UseFiles. Если в программе не храняться такие данные, то объект DBxBinDataHandler создавать не следует</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_SectionEntriesWithoutFragmentation" xml:space="preserve">
+    <value>Нельзя задавать точки входа в SectionEntries, если UseFragmentation=false</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_BinDataReplaySearch" xml:space="preserve">
+    <value>Поиск повторов в двоичных данных</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_BinDataStorage" xml:space="preserve">
+    <value>Проверка 'BinDataStorage' в базе данных '{0}'</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_BinDataValidation" xml:space="preserve">
+    <value>Проверка двоичных данных</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_DBValidation" xml:space="preserve">
+    <value>Проверка БД '{0}'</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_DocRefValidation" xml:space="preserve">
+    <value>Проверка ссылок в документах</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_RefSearching" xml:space="preserve">
+    <value>Поиск ссылок. {0}</value>
+  </data>
+  <data name="DBxDocConnectionHelper_Err_DBxManagerListEmpty" xml:space="preserve">
+    <value>Список менеджеров баз данных DBxManager.Managers пуст</value>
+  </data>
+  <data name="DBxDocConnectionHelper_Err_StructUpdatingPrefix" xml:space="preserve">
+    <value>Обновление структуры {0}. </value>
+  </data>
+  <data name="DBxDocConnectionHelper_Err_UndoNotAppliable" xml:space="preserve">
+    <value>При заданных настройках объекта DBxDocTypes, ведение истории невозможно</value>
+  </data>
+  <data name="DBxDocConnectionHelper_Err_UnknownProviderName" xml:space="preserve">
+    <value>Свойство ProviderName содержит неизвестный провайдер '{0}'. Допустимые значения: {1}</value>
+  </data>
+  <data name="DBxDocConnectionHelper_Phase_DBUpdating" xml:space="preserve">
+    <value>Обновление базы данных '{0}'</value>
+  </data>
+  <data name="DBxDocPermissions_Arg_DocProviderIsProxy" xml:space="preserve">
+    <value>docProvider не может быть удаленным объектом (transparent proxy), т.к. объект UserPermissions не является сериализуемым</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedDelete" xml:space="preserve">
+    <value>на удаление</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedEdit" xml:space="preserve">
+    <value>на изменение</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedNew" xml:space="preserve">
+    <value>на создание</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedRestore" xml:space="preserve">
+    <value>на восстановление</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedView" xml:space="preserve">
+    <value>на просмотр</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedViewHistory" xml:space="preserve">
+    <value>на просмотр истории</value>
+  </data>
+  <data name="DBxDocPermissions_Err_DocAccessDenied" xml:space="preserve">
+    <value>Нет права {0} документа '{1}' '{2}'. {3}</value>
+  </data>
+  <data name="DBxDocPermissions_Err_DocProviderWithoutUserPermissions" xml:space="preserve">
+    <value>docProvider не возвращает свойство UserPermissions, вероятно, из-за того, что выполняется переход между контекстами, а объект UserPermissions не является сериализуемым. Следует использовать DBxDocProvider, хранящий собственную копию разрешений.</value>
+  </data>
+  <data name="DBxDocPermissions_Err_DocSetAccessDenied" xml:space="preserve">
+    <value>Нет права {0} документов. {1}</value>
+  </data>
+  <data name="DBxDocProviderIdReplacer_Err_NoDocIdColumn" xml:space="preserve">
+    <value>Неправильный набор данных. При создании строки в таблице '{0}' сущействует переменное ссылочное поле '{1}', содержащее идентификатор таблицы, но нет поля '{2}' содержащего идентификатор документа"</value>
+  </data>
+  <data name="DBxDocProviderIdReplacer_Err_NoTableIdColumn" xml:space="preserve">
+    <value>Неправильный набор данных. В таблице '{0}' существует переменное ссылочное поле '{1}', содержащее идентификатор документа, но нет поля '{2}', содержащего идентификатор таблицы</value>
+  </data>
+  <data name="DBxDocProviderIdReplacer_Err_UnknownTableId" xml:space="preserve">
+    <value>При создании строки в таблице '{0}' в поле '{1}' задан идентификатор таблицы {2}, на которую выполняется ссылка, которому не соответствует никакая таблица документа</value>
+  </data>
+  <data name="DBxDocProvider_Arg_UnknownDocType" xml:space="preserve">
+    <value>Неизвестный вид документа '{0}'</value>
+  </data>
+  <data name="DBxDocProvider_Arg_WrongId" xml:space="preserve">
+    <value>Недопустимый идентификатор {0}</value>
+  </data>
+  <data name="DBxDocProvider_Arg_WrongIdInTable" xml:space="preserve">
+    <value>Недопустимый идентификатор {0} в таблице '{1}'</value>
+  </data>
+  <data name="DBxDocProvider_Name_NoUser" xml:space="preserve">
+    <value>Нет пользователя</value>
+  </data>
+  <data name="DBxDocSelection_Msg_Empty" xml:space="preserve">
+    <value>Нет документов</value>
+  </data>
+  <data name="DBxDocSet_Arg_ProviderIsProxy" xml:space="preserve">
+    <value>Провайдер DBxDocProvider является удаленным объектом (TransparentProxy). Для правильной работы требуется, чтобы он был в текущем контексте. Используйте переходник DBxChainDocProvider</value>
+  </data>
+  <data name="DBxDocSet_Err_DocSubDocStateMismatch" xml:space="preserve">
+    <value>Поддокумент '{0}' с идентификатором SubDocId={1} находится в состоянии '{2}', а строка документа '{3}' с идентификатором DocId={4} к которому относится поддокумент, - в состоянии '{5}'</value>
+  </data>
+  <data name="DBxDocSet_Err_FicvtiveIdInUnchangedRow" xml:space="preserve">
+    <value>{0}, Id={1}. Строка находится в состоянии Unchanged, а идентификатор является фиктивным</value>
+  </data>
+  <data name="DBxDocSet_Err_NoBinDataTable" xml:space="preserve">
+    <value>Запрошены двоичные данные с временным идентификатором, но таблицы 'BinData' нет в наборе данных</value>
+  </data>
+  <data name="DBxDocSet_Err_NoDocForSubDoc" xml:space="preserve">
+    <value>Поддокумент '{0}' с идентификатором SubDocId={1} относится к документу '{2}'с идентификатором DocId={3}, которого нет в наборе</value>
+  </data>
+  <data name="DBxDocSet_Err_NoFileNameTable" xml:space="preserve">
+    <value>Запрошен файл с временным идентификатором, но таблицы 'FileNames' нет в наборе данных</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToDeletedInDB" xml:space="preserve">
+    <value>{0}, Id={1}, поле '{2}'. Задана ссылка на документ/поддокумент '{3}' с Id={4}, который в базе данных помечен как удаленный</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToDocDeletedInDB" xml:space="preserve">
+    <value>{0}, Id={1}, поле '{2}'. Задана ссылка на поддокумент '{3}' с Id={4}, документ '{5}' которого с DocId={6} помечен как удаленный</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNewButNoTable" xml:space="preserve">
+    <value>{0}, Id={1}, поле '{2}'. Задана ссылка на новый документ/поддокумент RefId={3}, но в наборе нет таблицы '{4}'</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNewDeleted" xml:space="preserve">
+    <value>{0}, Id={1}, поле '{2}'. Задана ссылка на новый документ/поддокумент RefId={3}, но в таблице '{4}' строка помечена на удаление</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNewInUnchangedRow" xml:space="preserve">
+    <value>{0}, Id={1}, поле '{2}'. Задана ссылка на новый документ/поддокумент RefId={3}, но строка находится в режиме просмотра</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNewUnknown" xml:space="preserve">
+    <value>{0}, Id={1}, поле '{2}'.  Задана ссылка на новый документ/поддокумент RefId={3}, но в таблице '{4}' нет строки с таким идентификатором</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNotInDB" xml:space="preserve">
+    <value>{0}, Id={1}, поле '{2}'. Задана ссылка на документ/поддокумент '{3}' с Id={4}, которого нет в базе данных</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToOldDeleted" xml:space="preserve">
+    <value>{0}, Id={1}, поле '{2}'. Задана ссылка на существующий документ/поддокумент RefId={3}, но в таблице '{4}' строка помечена на удаление</value>
+  </data>
+  <data name="DBxDocSet_Err_UnknownBinDataId" xml:space="preserve">
+    <value>Запрошены двоичные данные для несуществующего временного идентификатора Id={0}</value>
+  </data>
+  <data name="DBxDocSet_Err_UnknownFileNameId" xml:space="preserve">
+    <value>Запрошен файл для несуществующего временного идентификатора Id={0}</value>
+  </data>
+  <data name="DBxDocSet_Msg_DocWithType" xml:space="preserve">
+    <value>Документ '{0}'</value>
+  </data>
+  <data name="DBxDocSet_Msg_SubDocWithType" xml:space="preserve">
+    <value>Поддокумент '{0}'</value>
+  </data>
+  <data name="DBxDocsLockException_Err_Default" xml:space="preserve">
+    <value>Невозможно установить блокировку '{0}', т.к. она конфликтует с блокировкой '{1}'</value>
+  </data>
+  <data name="DBxDocsLockException_Err_DocText" xml:space="preserve">
+    <value>Не удалось получить текстовое представление документа. {0}</value>
+  </data>
+  <data name="DBxDocsLockException_Err_SameUser" xml:space="preserve">
+    <value>Невозможно установить блокировку '{0}', т.к. она конфликтует с другой блокировкой '{1}', установленной тем же пользователем</value>
+  </data>
+  <data name="DBxDocsLock_Msg_IsEmpty" xml:space="preserve">
+    <value>(Нет документов)</value>
+  </data>
+  <data name="DBxDocsLock_Msg_LockAdd" xml:space="preserve">
+    <value>(Добавление документов)</value>
+  </data>
+  <data name="DBxDocTextHandlers_Arg_NotRefColumn" xml:space="preserve">
+    <value>Поле '{0}' таблицы '{1}' не является ссылочным</value>
+  </data>
+  <data name="DBxDocTextHandlers_Arg_UnknownColumnName" xml:space="preserve">
+    <value>Поле '{0}' не было добавлено в список требуемых для получения текстового представления таблицы '{1}'. Допустимые поля: {2}</value>
+  </data>
+  <data name="DBxDocTextHandlers_Err_NoTextForGroupTrese" xml:space="preserve">
+    <value>У документов '{0}' нет ни одного текстового столбца. Эти документы не образуют дерево групп</value>
+  </data>
+  <data name="DBxDocTextHandlers_Err_RefTextValue" xml:space="preserve">
+    <value>Ошибка. {0}</value>
+  </data>
+  <data name="DBxDocTextHandlers_Err_TextValue" xml:space="preserve">
+    <value>Id={0}. Ошибка. {1}</value>
+  </data>
+  <data name="DBxDocTextHandlers_Err_VTTextValue" xml:space="preserve">
+    <value>TableId={0}, DocId={1}. Ошибка. {2}</value>
+  </data>
+  <data name="DBxDocTextHandlers_Msg_Deleted" xml:space="preserve">
+    <value>(удален)</value>
+  </data>
+  <data name="DBxDocTextHandlers_Msg_DocDeleted" xml:space="preserve">
+    <value>(в удаленном документе)</value>
+  </data>
+  <data name="DBxDocTypes_Arg_UnknownTableName" xml:space="preserve">
+    <value>Неизвестное имя таблицы '{0}'. Должно быть задано имя документа или поддокумента</value>
+  </data>
+  <data name="DBxDocTypes_Err_DocTableNameTwice" xml:space="preserve">
+    <value>Ошибка в таблице 'DocTables'. Повторное вхождение документа '{0}'.</value>
+  </data>
+  <data name="DBxDocTypes_Err_FindByTableIdBeforeUpdate" xml:space="preserve">
+    <value>Поиск по идентификатору TableId возможен только после обновления структуры базы данных. До этого момента свойство DBxDocType.TableId не определено.</value>
+  </data>
+  <data name="DBxDocTypes_Err_InvaldidPK" xml:space="preserve">
+    <value>Описание таблицы '{0}' имеет неправильный первичный ключ по полю '{1}', а не 'Id'</value>
+  </data>
+  <data name="DBxDocTypes_Err_NoCalcCalumn" xml:space="preserve">
+    <value>Описание таблицы '{0}' не содержит описания вычисляемого поля '{1}'</value>
+  </data>
+  <data name="DBxDocTypes_Err_NoRefColumn" xml:space="preserve">
+    <value>Столбец '{0}' таблицы '{1}' не является ссылочным</value>
+  </data>
+  <data name="DBxDocTypes_Err_UnknownUsersDocType" xml:space="preserve">
+    <value>Свойство UsersTableName ссылается на несуществующую таблицу документов '{0}'</value>
+  </data>
+  <data name="DBxDocTypes_Err_VTRefColumnUsed" xml:space="preserve">
+    <value>Для таблицы '{0}' в переменной ссылке '{1}' используется поле '{2}', которое уже используется в другой ссылке</value>
+  </data>
+  <data name="DBxDocTypes_Msg_SingularTitleDefault" xml:space="preserve">
+    <value>Объект '{0}'</value>
+  </data>
+  <data name="DBxShortDocsLock_Name_Default" xml:space="preserve">
+    <value>Запись в базу данных</value>
+  </data>
+  <data name="DBxExtRefs_Name_PluralDoc" xml:space="preserve">
+    <value>Документы '{0}'</value>
+  </data>
+  <data name="DBxExtRefs_Name_PluralSubDoc" xml:space="preserve">
+    <value>Документы '{0}', поддокументы '{1}'</value>
+  </data>
+  <data name="DBxExtRefs_Name_SingularDoc" xml:space="preserve">
+    <value>Документ '{0}'</value>
+  </data>
+  <data name="DBxExtRefs_Name_SingularSubDoc" xml:space="preserve">
+    <value>Документ '{0}', поддокумент '{1}'</value>
+  </data>
+  <data name="DBxDocPermissions_Err_DocTypeAccessDenied" xml:space="preserve">
+    <value>Нет права {0} документов '{1}'</value>
+  </data>
+  <data name="DBxDocProvider_Err_DocInDocSet" xml:space="preserve">
+    <value>Документ '{0}' с идентификатором {1} уже есть в наборе</value>
+  </data>
+  <data name="DBxDocProvider_Err_LoadDocRowCount" xml:space="preserve">
+    <value>Не удалось загрузить все затребованные документы '{0}'. Запрошено строк: {1}, получено: {2}</value>
+  </data>
+  <data name="DBxMultiDocs_Arg_UnknownColumn" xml:space="preserve">
+    <value>Поле '{0}' не принадлежит документу '{1}'</value>
+  </data>
+  <data name="DBxMultiDocs_Err_DocNotFound" xml:space="preserve">
+    <value>Не найден документ '{0}' с идентификатором {1}</value>
+  </data>
+  <data name="DBxMultiDocs_Err_IsEmpty" xml:space="preserve">
+    <value>Нет открытых документов '{0}'</value>
+  </data>
+  <data name="DBxMultiDocs_Err_IsReadOnly" xml:space="preserve">
+    <value>Редактирование значений не допускается</value>
+  </data>
+  <data name="DBxMultiDocs_Err_SetDocState" xml:space="preserve">
+    <value>Нельзя перевести документ '{0}' с DocId={1} в состояние '{2}', так как сейчас он находится в состоянии '{3}'</value>
+  </data>
+  <data name="DBxMultiDocs_Err_StateRequired" xml:space="preserve">
+    <value>Все документы '{0}' должны находиться в состоянии {1}</value>
+  </data>
+  <data name="DBxMultiDocs_Err_AccessDenied" xml:space="preserve">
+    <value>У пользователя нет прав на доступ к документам '{0}'</value>
+  </data>
+  <data name="DBxMultiDocs_Err_AccessReadOnly" xml:space="preserve">
+    <value>У пользователя нет прав на создание, редактирование и удаление документов '{0}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Arg_MergeAlienSubSet" xml:space="preserve">
+    <value>Присоединяемый дочерний набор не был создан из текущего набора поддокументов</value>
+  </data>
+  <data name="DBxMultiSubDocs_Arg_MergeSubSetRowState" xml:space="preserve">
+    <value>Попытка добавление строки поддокумента '{0}' с SubDocId={1}. Строка поддокумента в состоянии '{2}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_AccessDenied" xml:space="preserve">
+    <value>У пользователя нет прав на доступ к поддокументам '{0}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_AccessReadOnly" xml:space="preserve">
+    <value>У пользователя нет прав на создание, редактирование и удаление поддокументов '{0}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_InsertDocState" xml:space="preserve">
+    <value>Нельзя добавить поддокумент, т.к. документ '{0}' с DocId={1} находится в состоянии '{2}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_InsertMultiDocs" xml:space="preserve">
+    <value>Невозможно определить, для какого документа '{0}' нужно создать поддокумент, т.к. в наборе находится больше одного такого документа ({1}). Используйте перегрузку метода Insert(), принимающую ссылку на документ-владелец</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_InsertNoDocuments" xml:space="preserve">
+    <value>Невозможно создать поддокумент '{0}', т.к. в наборе нет документов '{1}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_IsEmpty" xml:space="preserve">
+    <value>Нет открытых поддокументов '{0}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_SetAllState" xml:space="preserve">
+    <value>Нельзя перевести все поддокументы '{0}' в режим '{1}', т.к. текущее состояние набора: '{2}'</value>
+  </data>
+  <data name="DBxMultiSubDoc_Err_ResetTableForSubSet" xml:space="preserve">
+    <value>Сброс таблицы не разрешается для набора подмножества</value>
+  </data>
+  <data name="DBxMultiSubDoc_Err_RowNotFound" xml:space="preserve">
+    <value>Не найдена строка поддокумента с идентификатором {0}</value>
+  </data>
+  <data name="DBxMultSubiDocs_Err_StateRequired" xml:space="preserve">
+    <value>Все поддокументы '{0}' должны находиться в состоянии {1}</value>
+  </data>
+  <data name="DBxDocPrivider_Err_DelRefColumnInfo" xml:space="preserve">
+    <value>Ошибка при запросе таблицы '{0}'. Удаляемые документы/поддокументы: '{1}'. Проверяемое ссылочное поле: '{2}'. {3}</value>
+  </data>
+  <data name="DBxDocPrivider_Err_IncompleteVTRef" xml:space="preserve">
+    <value>В таблице '{0}' присутствуют некомплектные поля для переменной ссылки '{1}'</value>
+  </data>
+  <data name="DBxDocPrivider_Err_RefIdsNotInDB" xml:space="preserve">
+    <value>Имеются ссылки на таблицу '{0}' для идентификаторов {1}, которых нет в базе данных</value>
+  </data>
+  <data name="DBxDocPrivider_Err_SetValueDenied" xml:space="preserve">
+    <value>Невозможно изменить значения поля '{0}' таблицы '{1}', т.к. нет прав на изменение значения</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefDisabledDocType" xml:space="preserve">
+    <value>В таблице '{0}' для переменной ссылки '{1}' задан фиктивный идентификатор таблицы. Поле '{2}'={3}. Ему соответствует вид документа '{4}', который нельзя использовать в этой ссылке. Допускаются только таблицы: {5}</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefFictiveTable" xml:space="preserve">
+    <value>В таблице '{0}' для переменной ссылки '{1}' задан фиктивный идентификатор таблицы. Поле '{2}'={3}</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefIncompleteIds" xml:space="preserve">
+    <value>В таблице '{0}' для переменной ссылки '{1}' заданы некомплектные идентификаторы. Поле '{2}'={3}, а поле '{4}'={5}.</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefUnknownDocId" xml:space="preserve">
+    <value>В таблице '{0}' для переменной ссылки '{1}' задан фиктивный идентификатор документа. Поле '{2}'={3}, для которого не была найдена запись в таблице {4}</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefUnknownDocType" xml:space="preserve">
+    <value>В таблице '{0}' для переменной ссылки '{1}' задан фиктивный идентификатор таблицы. Поле '{2}'={3}, которому не соответствует никакой вид документа</value>
+  </data>
+  <data name="DBxDocPrivider_Err_WrongFictiveRefId" xml:space="preserve">
+    <value>В таблице '{0}' для ссылочного поля '{1}' задан фиктивный идентификатор {2}, для которого не была найдена запись в наборе данных</value>
+  </data>
+  <data name="DBxDocProvider_Arg_SubDocIdForDoc" xml:space="preserve">
+    <value>Задан ненулевой идентификатор поддокумента, хотя таблица '{0}' является документом</value>
+  </data>
+  <data name="DBxDocProvider_Arg_UnknownTable" xml:space="preserve">
+    <value>Неизвестная таблица '{0}'</value>
+  </data>
+  <data name="DBxDocProvider_Arg_UserIdNoUsers" xml:space="preserve">
+    <value>UserId не может быть задан, т.к. DBxDocTypes.UseUsers=false</value>
+  </data>
+  <data name="DBxDocProvider_Arg_WrongTableCount" xml:space="preserve">
+    <value>Набор данных имеет другое количество таблиц: '{0}'. Ожидалось: '{1}'</value>
+  </data>
+  <data name="DBxDocProvider_Err_NoBinDataHandler" xml:space="preserve">
+    <value>Обработчик двоичных данных DBxBinDataHandler не установлен</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoDelete" xml:space="preserve">
+    <value>Удаление</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoEdit" xml:space="preserve">
+    <value>Изменение</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoEmpty" xml:space="preserve">
+    <value>Нет действий</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoInsert" xml:space="preserve">
+    <value>Создание</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoMixed" xml:space="preserve">
+    <value>Обработка</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoMultiDocs" xml:space="preserve">
+    <value>{0} д-тов '{1}' ({2})</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoSingleDoc" xml:space="preserve">
+    <value>{0} д-та '{1}'</value>
+  </data>
+  <data name="DBxExtRefs_Err_RefToUnknownTable" xml:space="preserve">
+    <value>Объявление таблицы '{0}' содержит описание ссылочного поля '{1}', которое ссылается на неизвестную таблицу '{2}'</value>
+  </data>
+  <data name="DBxDocProvider_Err_DelMulti" xml:space="preserve">
+    <value>Нельзя удалить {0}, потому что на один из них есть ссылка из: {1}</value>
+  </data>
+  <data name="DBxDocProvider_Err_DelSingle" xml:space="preserve">
+    <value>Нельзя удалить {0}, потому что на него есть ссылка из: {1}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_DocSubDocText" xml:space="preserve">
+    <value>'{0}' ({1}), {2}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_MultiDocs" xml:space="preserve">
+    <value>документы {0}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_MultiSubDocs" xml:space="preserve">
+    <value>поддокументы {0} документа {1}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_SingleDoc" xml:space="preserve">
+    <value>документ {0}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_SingleSubDoc" xml:space="preserve">
+    <value>подокумент {0} документа {0}</value>
+  </data>
+  <data name="DBxDocProvider_Arg_ActionId" xml:space="preserve">
+    <value>Недопустимый идентификатор действия пользователя ActionId={0}</value>
+  </data>
+  <data name="DBxDocProvider_Arg_UnknownSubDocType" xml:space="preserve">
+    <value>Неизвестный вид поддокумента '{0}'</value>
+  </data>
+  <data name="DBxDocProvider_Err_ViewOtherUsersAction" xml:space="preserve">
+    <value>Запрещен доступ на просмотр действий, выполненных другими пользователями</value>
+  </data>
+  <data name="DBxDocProvider_Msg_NewDocSubDoc" xml:space="preserve">
+    <value>[ Новый ]</value>
+  </data>
+  <data name="DBxDocProvider_NoSingleDocType" xml:space="preserve">
+    <value>Идентификатор единственного документа, ссылки в котором ищутся, не может задаваться без вида документов</value>
+  </data>
+  <data name="DBxDocProvider_Phase_DocumentRecalc" xml:space="preserve">
+    <value>Пересчет документов '{0}' ({1} шт.)</value>
+  </data>
+  <data name="DBxDocStructSource_Err_AccessDenied" xml:space="preserve">
+    <value>Доступ к таблице '{0}' запрещен</value>
+  </data>
+  <data name="DBxRealDocProviderGlobal_Arg_BinDataHandlerIsNull" xml:space="preserve">
+    <value>Так как в DocTypes задано использование ссылок на двоичные данные, аргумент BinDataHandler должен быть задан</value>
+  </data>
+  <data name="DBxRealDocProviderGlobal_Arg_CannotUseHistory" xml:space="preserve">
+    <value>Ведение истории невозможно, если свойство {0}={1}</value>
+  </data>
+  <data name="DBxRealDocProviderGlobal_Arg_CannotUseSessionId" xml:space="preserve">
+    <value>Нельзя устанавливать свойство DBxDocTypes.UseSessionId, если история документов не ведется</value>
+  </data>
+  <data name="DBxRealDocProviderSource_Err_GetTextValue" xml:space="preserve">
+    <value>Id={0}. Ошибка. {1}</value>
+  </data>
+  <data name="DBxRealDocProviderSource_Name_Default" xml:space="preserve">
+    <value>[ Без имени ]</value>
+  </data>
+  <data name="DBxSingleDoc_Err_DelSubDoc" xml:space="preserve">
+    <value>Нельзя удалять поддокумент, относящийся к документу {0}. Документ должен быть в состоянии Edit или Insert</value>
+  </data>
+  <data name="DBxSingleSubDocs_Arg_SubDocDiffDoc" xml:space="preserve">
+    <value>Поддокумент '{0}' c SubDocId={1} относится к документу '{2}' с DocId={3}, а не {4}</value>
+  </data>
+  <data name="DBxSingleSubDocs_Err_RowDetached" xml:space="preserve">
+    <value>Нельзя получить доступ к поддокументу с индексом {0}, так  как строка для него была удалена из таблицы поддокументов (RowState=Detached)</value>
+  </data>
+  <data name="DBxSubDoc_Arg_WrongState" xml:space="preserve">
+    <value>Поддокумент должен находиться в состоянии {0}, а не {1}</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Err_Disabled" xml:space="preserve">
+    <value>Запрещен пересчет вычисляемых полей</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Err_Selected" xml:space="preserve">
+    <value>Запрещен пересчет вычисляемых полей, если не указаны идентификаторы конкретных документов</value>
+  </data>
+  <data name="UndoAction_Msg_Base" xml:space="preserve">
+    <value>Начальное состояние</value>
+  </data>
+  <data name="Allowed_Msg_False" xml:space="preserve">
+    <value>Запрещен</value>
+  </data>
+  <data name="Allowed_Msg_True" xml:space="preserve">
+    <value>Разрешен</value>
+  </data>
+  <data name="DBxDocProvider_ErrTitle_AddFakeUserAction" xml:space="preserve">
+    <value>Ошибка добавления фиктивной записи в таблицу 'UserActions'</value>
+  </data>
+  <data name="DBxDocProvider_Err_AddFakeUserAction" xml:space="preserve">
+    <value>Для документа '{0}' с DocId={1} не удалось извлечь текущие значения пользователя/времени из основной таблицы документов</value>
+  </data>
+  <data name="DBxDocProvider_Err_DocActionLimitExceeded" xml:space="preserve">
+    <value>Невозможно задать следующую версию документа '{0}' с DocId={1}, так как. она превышает максимальное значение {2}</value>
+  </data>
+  <data name="DBxDocProvider_Err_VersionMismatch" xml:space="preserve">
+    <value>Для документа '{0}' с DocId={1} обнаружено несоответствие версии в основной таблице документов ({2}) и в таблице 'DocActions' ({3}). В основной таблице документов будет скорректирована версия</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionAutoRecover" xml:space="preserve">
+    <value>[ Автоматическое восстановление состояния с версии {0} ]</value>
+  </data>
+  <data name="DBxVTReference_Arg_ColumnIsRef" xml:space="preserve">
+    <value>Столбец '{0}' не должен быть ссылочным</value>
+  </data>
+  <data name="DBxVTReference_Arg_ColumnNoInt" xml:space="preserve">
+    <value>Столбец '{0}' должен быть целочисленным</value>
+  </data>
+  <data name="DBxVTReference_Arg_NoColumn" xml:space="preserve">
+    <value>Таблица '{0}' не содержит столбца '{1}'</value>
+  </data>
+  <data name="DBxVTReference_Arg_NullableDiff" xml:space="preserve">
+    <value>Признак Nullable у столбцов должен быть одинаковым</value>
+  </data>
+  <data name="DocTypePermission_Arg_NoDocTypes" xml:space="preserve">
+    <value>Должен быть хотя бы один тип документов</value>
+  </data>
+  <data name="DocTypePermission_Msg_AllDocTypes" xml:space="preserve">
+    <value>Все документы</value>
+  </data>
+  <data name="DocTypePermission_Msg_ObjectText" xml:space="preserve">
+    <value>Документы {0}</value>
+  </data>
+  <data name="DocTypePermission_Msg_ObjectTextNoDocTypes" xml:space="preserve">
+    <value>Список видов документов не задан</value>
+  </data>
+  <data name="DocTypeViewHistoryPermission_Msg_ObjectText" xml:space="preserve">
+    <value>Просмотр истории - {0}</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Msg_All" xml:space="preserve">
+    <value>Все существующие</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Msg_Disabled" xml:space="preserve">
+    <value>Запрещен</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Msg_Selected" xml:space="preserve">
+    <value>Выбранные в просмотре</value>
+  </data>
+  <data name="RecalcColumnsPermission_Msg_ObjectText" xml:space="preserve">
+    <value>Calculated columns re-evaluating</value>
+  </data>
+  <data name="RefDocCommonFilterSet_Arg_GroupIdColumnIsNotRef" xml:space="preserve">
+    <value>Неправильное описание вида документа '{0}'. Поле '{1}' не является ссылочным.</value>
+  </data>
+  <data name="RefDocCommonFilterSet_Arg_NoGroupIdColumn" xml:space="preserve">
+    <value>Неправильное описание вида документа '{0}'. Нет поля '{1}'</value>
+  </data>
+  <data name="RefDocCommonFilterSet_Err_UnknownMasterTable" xml:space="preserve">
+    <value>Не найдены документы для мастер-таблицы '{0}'</value>
+  </data>
+  <data name="RefGroupDocCommonFilter_Arg_NoTreeParentColumnName" xml:space="preserve">
+    <value>Для документов '{0}' не установлено свойство TreeParentColumnName. Следовательно, эти документы не могут быть деревом групп.</value>
+  </data>
+  <data name="ViewOtherUsersActionPermission_Msg_ObjectText" xml:space="preserve">
+    <value>Просмотр действий других пользователей</value>
+  </data>
+  <data name="UndoAction_Msg_Delete" xml:space="preserve">
+    <value>Удаление</value>
+  </data>
+  <data name="UndoAction_Msg_Edit" xml:space="preserve">
+    <value>Изменение</value>
+  </data>
+  <data name="UndoAction_Msg_Insert" xml:space="preserve">
+    <value>Создание</value>
+  </data>
+  <data name="UndoAction_Msg_Redo" xml:space="preserve">
+    <value>Повтор</value>
+  </data>
+  <data name="UndoAction_Msg_Undo" xml:space="preserve">
+    <value>Откат</value>
+  </data>
+  <data name="UndoAction_Msg_Unknown" xml:space="preserve">
+    <value>Неизвестное действие {0}</value>
+  </data>
+  <data name="DBxDocTypes_Arg_UnknownTableId" xml:space="preserve">
+    <value>Неизвестный идентификатор таблицы документов {0}</value>
+  </data>
+  <data name="DBxDocTypes_Arg_ZeroTableId" xml:space="preserve">
+    <value>Идентификатор таблицы документов не может быть равен 0</value>
+  </data>
+  <data name="DBxDocSet_Msg_MultiDocsOfType" xml:space="preserve">
+    <value>{0} документ(а)(ов) '{1}'</value>
+  </data>
+  <data name="DBxDocSet_Msg_SingleDocOfType" xml:space="preserve">
+    <value>1 документ '{0}'</value>
+  </data>
+</root>

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -78,6 +81,7 @@ namespace FreeLibSet.Reporting
     const string nmspcW = "http://schemas.microsoft.com/office/word/2003/wordml";
     const string nmspcWx = "http://schemas.microsoft.com/office/word/2003/auxHint";
     const string nmspcO = "urn:schemas-microsoft-com:office:office";
+    const string nmspcAml = "http://schemas.microsoft.com/aml/2001/core";
 
     private XmlDocument CreateXml(BRReport report)
     {
@@ -97,6 +101,7 @@ namespace FreeLibSet.Reporting
       SetAttr(elWholeDoc, "xmlns:w", nmspcW, null);  // без namespace
       SetAttr(elWholeDoc, "xmlns:wx", nmspcWx, null);
       SetAttr(elWholeDoc, "xmlns:o", nmspcO, null);
+      SetAttr(elWholeDoc, "xmlns:aml", nmspcAml, null);
       SetAttr(elWholeDoc, "xml:space", "preserve", null); // без этого, все <w:tab> в тексте будут проигнорированы
 
       #endregion
@@ -157,15 +162,19 @@ namespace FreeLibSet.Reporting
       #endregion
 
       // Таблица стилей
-      // Задаем только стиль "Normal". Остальное форматирование стили не использует
+      // Задаем только стиль "Normal". Остальное форматирование стили не использует.
+      // Если документ содержит гиперссылки, добавляем еще два стиля
       XmlElement elStyles = xmlDoc.CreateElement("w:styles", nmspcW);
       elWholeDoc.AppendChild(elStyles);
 
       InitDefaultStyle(elStyles, report.DefaultCellStyle);
+      if (report.HasLinks)
+        InitHyperlinkStyles(elStyles);
 
       XmlElement elBody = xmlDoc.CreateElement("w:body", nmspcW);
       elWholeDoc.AppendChild(elBody);
 
+      _BookmarkCounter = 0; // для идентификаторов закладок
 
       for (int i = 0; i < report.Sections.Count; i++)
       {
@@ -243,7 +252,9 @@ namespace FreeLibSet.Reporting
               bool bandKeepWithNext = sel.Band.KeepWithNext || GetBandKeepWithPrev(section, j + 1);
 
               XmlElement elP = xmlDoc.CreateElement("w:p", nmspcW);
+              AddBookMarkStart(sel, elP);
               WriteTextValue(sel, elSect, ref elP, section.PageSetup.PrintAreaWidth, true, bandKeepWithNext);
+              AddBookMarkEnd(sel, elP);
               elSect.AppendChild(elP);
             }
             else
@@ -352,7 +363,9 @@ namespace FreeLibSet.Reporting
 
                     #region Значение
 
+                    AddBookMarkStart(sel, elP);
                     WriteTextValue(sel, elTc, ref elP, GetColumnWidth(stripeCols, l, merge.ColumnCount), false, rowKeepWithNext);
+                    AddBookMarkEnd(sel, elP);
 
                     #endregion
 
@@ -557,6 +570,63 @@ namespace FreeLibSet.Reporting
       SetAttr(elSz, "w:val", StdConvert.ToString((int)(cellStyle.FontHeightTwip / 10)), nmspcW); // в полупунктах
     }
 
+    /// <summary>
+    /// Создает стили "ahl" и "ahl2"
+    /// </summary>
+    /// <param name="elStyles"></param>
+    private static void InitHyperlinkStyles(XmlElement elStyles)
+    {
+      XmlDocument xmlDoc = elStyles.OwnerDocument;
+
+      #region Основной стиль ссылки
+
+      XmlElement elStyle = xmlDoc.CreateElement("w:style", nmspcW);
+      elStyles.AppendChild(elStyle);
+      SetAttr(elStyle, "w:type", "character", nmspcW);
+      SetAttr(elStyle, "w:styleId", "ahl", nmspcW);
+
+      XmlElement elName = xmlDoc.CreateElement("w:name", nmspcW);
+      elStyle.AppendChild(elName);
+      SetAttr(elName, "w:val", "Hyperlink", nmspcW);
+
+      XmlElement elRPr = xmlDoc.CreateElement("w:rPr", nmspcW);
+      elStyle.AppendChild(elRPr);
+
+      XmlElement elColor = xmlDoc.CreateElement("w:color", nmspcW);
+      elRPr.AppendChild(elColor);
+      SetAttr(elColor, "w:val", GetColorHex(BRFileTools.LinkForeColor), nmspcW);
+
+      XmlElement elU = xmlDoc.CreateElement("w:u", nmspcW);
+      elRPr.AppendChild(elU);
+      SetAttr(elU, "w:val", "single", nmspcW);
+
+      #endregion
+
+      #region Стиль нажатой ссылки
+
+      elStyle = xmlDoc.CreateElement("w:style", nmspcW);
+      elStyles.AppendChild(elStyle);
+      SetAttr(elStyle, "w:type", "character", nmspcW);
+      SetAttr(elStyle, "w:styleId", "ahl2", nmspcW);
+
+      elName = xmlDoc.CreateElement("w:name", nmspcW);
+      elStyle.AppendChild(elName);
+      SetAttr(elName, "w:val", "FollowedHyperlink", nmspcW);
+
+      elRPr = xmlDoc.CreateElement("w:rPr", nmspcW);
+      elStyle.AppendChild(elRPr);
+
+      elColor = xmlDoc.CreateElement("w:color", nmspcW);
+      elRPr.AppendChild(elColor);
+      SetAttr(elColor, "w:val", GetColorHex(BRFileTools.VisitedLinkForeColor), nmspcW);
+
+      elU = xmlDoc.CreateElement("w:u", nmspcW);
+      elRPr.AppendChild(elU);
+      SetAttr(elU, "w:val", "single", nmspcW);
+
+      #endregion
+    }
+
     private static int GetColumnWidth(BRStripeItem[] aStripeCols, int firstColumn, int columnCount)
     {
       int w = 0;
@@ -582,12 +652,24 @@ namespace FreeLibSet.Reporting
           WritePPr(elP, sel, columnWidth, isSimpleBand, keepWithNext);
         }
 
+        XmlElement elROwner = elP;
+        if (sel.HasLink)
+        {
+          XmlElement elHLink = elP.OwnerDocument.CreateElement("w:hlink", nmspcW);
+          if (sel.LinkData[0] == '#')
+            SetAttr(elHLink, "w:bookmark", sel.LinkData.Substring(1), nmspcW);
+          else
+            SetAttr(elHLink, "w:dest", sel.LinkData, nmspcW);
+          elP.AppendChild(elHLink);
+          elROwner = elHLink; // текст вставляется внутрь гиперссылки
+        }
+
         if (sel.CellStyle.TextFiller != BRTextFiller.None)
         {
           if (sel.ActualHAlign == BRHAlign.Center || sel.ActualHAlign == BRHAlign.Right)
           {
-            XmlElement elR2 = elP.OwnerDocument.CreateElement("w:r", nmspcW);
-            elP.AppendChild(elR2);
+            XmlElement elR2 = elROwner.OwnerDocument.CreateElement("w:r", nmspcW);
+            elROwner.AppendChild(elR2);
             WriteRPr(elR2, sel, columnWidth);
             XmlElement elTab1 = elR2.OwnerDocument.CreateElement("w:tab", nmspcW);
             elR2.AppendChild(elTab1);
@@ -603,8 +685,8 @@ namespace FreeLibSet.Reporting
             if (j > 0)
             {
               // Вставляем мягкий перенос
-              XmlElement elR2 = elP.OwnerDocument.CreateElement("w:r", nmspcW);
-              elP.AppendChild(elR2);
+              XmlElement elR2 = elROwner.OwnerDocument.CreateElement("w:r", nmspcW);
+              elROwner.AppendChild(elR2);
               WriteRPr(elR2, sel, columnWidth);
 
               XmlElement elSoftHyphen = elR2.OwnerDocument.CreateElement("w:softHyphen", nmspcW);
@@ -612,12 +694,12 @@ namespace FreeLibSet.Reporting
             }
 
             // Основная часть строки
-            DoWriteText(elP, aa[j], sel, columnWidth);
+            DoWriteText(elROwner, aa[j], sel, columnWidth);
           }
         }
         else
         {
-          DoWriteText(elP, a[i], sel, columnWidth);
+          DoWriteText(elROwner, a[i], sel, columnWidth);
         }
       }
     }
@@ -786,6 +868,13 @@ namespace FreeLibSet.Reporting
       XmlDocument xmlDoc = elR.OwnerDocument;
 
       XmlElement elRPr = xmlDoc.CreateElement("w:rPr", nmspcW);
+
+      if (sel.HasLink)
+      {
+        XmlElement elRStyle = xmlDoc.CreateElement("w:rStyle", nmspcW);
+        elRPr.AppendChild(elRStyle);
+        SetAttr(elRStyle, "w:val", "ahl", nmspcW); // ссылки на стиль "ahl2" нет нигде
+      }
 
       BRCellStyle defStyle = sel.Band.Report.DefaultCellStyle;
 
@@ -1013,6 +1102,46 @@ namespace FreeLibSet.Reporting
     }
 
     #endregion
+
+    #region Закладки
+
+    /// <summary>
+    /// Счетчик для идентификаторов закладок
+    /// </summary>
+    private int _BookmarkCounter;
+
+    private BRBookmark[] _StartedBookmarks;
+
+    private void AddBookMarkStart(BRSelector sel, XmlElement elP)
+    {
+      _StartedBookmarks = sel.Bookmarks.ToArray();
+      for (int i = 0; i < _StartedBookmarks.Length; i++)
+      {
+        int nId = _BookmarkCounter + i + 1;
+        XmlElement elBookmarkStart = elP.OwnerDocument.CreateElement("aml:annotation", nmspcAml);
+        elP.AppendChild(elBookmarkStart);
+        SetAttr(elBookmarkStart, "aml:id", StdConvert.ToString(nId), nmspcAml);
+        SetAttr(elBookmarkStart, "w:type", "Word.Bookmark.Start", nmspcW);
+        SetAttr(elBookmarkStart, "w:name", _StartedBookmarks[i].Name, nmspcW);
+      }
+    }
+
+    private void AddBookMarkEnd(BRSelector sel, XmlElement elP)
+    {
+      for (int i = 0; i < _StartedBookmarks.Length; i++)
+      {
+        int nId = _BookmarkCounter + i + 1;
+        XmlElement elBookmarkEnd = elP.OwnerDocument.CreateElement("aml:annotation", nmspcAml);
+        elP.AppendChild(elBookmarkEnd);
+        SetAttr(elBookmarkEnd, "aml:id", StdConvert.ToString(nId), nmspcAml);
+        SetAttr(elBookmarkEnd, "w:type", "Word.Bookmark.End", nmspcW);
+      }
+      _BookmarkCounter += _StartedBookmarks.Length;
+      _StartedBookmarks = null;
+    }
+
+    #endregion
+
 
     #region Вспомогательные методы
     private static string GetTwips01Attr(int size01mm)

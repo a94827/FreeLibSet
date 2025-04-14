@@ -138,7 +138,7 @@ namespace FreeLibSet.Data
       set
       {
         if (_CommandTimeout < 0)
-          throw new ArgumentException("Значение не может быть отрицательным");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _CommandTimeout = value;
       }
     }
@@ -453,8 +453,10 @@ namespace FreeLibSet.Data
     public Int32 FindRecord(string tableName, DBxColumns columnNames, object[] values, DBxOrder orderBy)
     {
 #if DEBUG
-      if (columnNames == null || columnNames.Count == 0)
-        throw new ArgumentException("Не задано ни одного поля для поиска в FindRecord для таблицы " + tableName, "columnNames");
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
+      if (columnNames.Count == 0)
+        throw ExceptionFactory.ArgIsEmpty("columnNames");
 #endif
 
       DBxFilter filter = ValueFilter.CreateFilter(columnNames, values);
@@ -690,7 +692,7 @@ namespace FreeLibSet.Data
     public IdList GetIds(string tableName, DBxColumns columnNames, object[] values)
     {
       if (columnNames.Count == 0)
-        throw new ArgumentException("Не задано ни одного поля для поиска в GetIds для таблицы " + tableName, "columnNames");
+        throw ExceptionFactory.ArgIsEmpty("columnNames");
 
       DBxFilter filter = ValueFilter.CreateFilter(columnNames, values);
       return GetIds(tableName, filter);
@@ -854,7 +856,7 @@ namespace FreeLibSet.Data
         // Находим ссылочную таблицу
         DBxColumnStruct colDef = GetTableStruct(tableName).Columns[colName1];
         if (String.IsNullOrEmpty(colDef.MasterTableName))
-          throw new InvalidOperationException("Поле \"" + colName1 + "\" таблицы \"" + tableName + "\" не является ссылочным");
+          throw new InvalidOperationException(String.Format(Res.Common_Err_ColumnIsNotRef, colName1, tableName));
         // Рекурсивный вызов
         return GetValue(colDef.MasterTableName, id2, columnName.Substring(p + 1), out value);
       }
@@ -1528,7 +1530,7 @@ namespace FreeLibSet.Data
       Validator.CheckTablePrimaryKeyInt32(tableName);
 
       if (id == 0)
-        throw new DBxNoIdArgumentException("Не задан идентификатор записи", "id"); // 20.12.2019
+        throw new DBxNoIdArgumentException(Res.DBxCon_Arg_NoId, "id"); // 20.12.2019
 
       string[] columnNames = new string[1];
       columnNames[0] = columnName;
@@ -1614,7 +1616,7 @@ namespace FreeLibSet.Data
     {
       Validator.CheckTablePrimaryKeyInt32(tableName);
       if (id == 0)
-        throw new DBxNoIdArgumentException("Не задан идентификатор записи", "id"); // 20.12.2019
+        throw new DBxNoIdArgumentException(Res.DBxCon_Arg_NoId, "id"); // 20.12.2019
 
       string PKColumnName = DBxStructChecker.CheckTablePrimaryKeyInt32(GetTableStruct(tableName));
 
@@ -1835,7 +1837,7 @@ namespace FreeLibSet.Data
       DBxColumnType[] ColumnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
 
       if (columnNames.Count != values.Length)
-        throw new ArgumentException("Число полей не совпадает с числом значений");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values, columnNames.Count);
 
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
@@ -1902,7 +1904,7 @@ namespace FreeLibSet.Data
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(table.TableName))
-        throw new ArgumentException("У таблицы не задано свойство TableName. Следует использовать перегрузку метода AddRecords() с аргументом TableName", "table");
+        throw ExceptionFactory.ArgProperty("table", table, "TableName", table.TableName, null);
 
       AddRecords(table.TableName, table);
     }
@@ -2192,7 +2194,7 @@ namespace FreeLibSet.Data
       for (int i = 0; i < columnNamesAndValuesArray.Length; i++)
       {
         if (columnNamesAndValuesArray[i] == null)
-          throw new ArgumentNullException("ColumnNamesAndValuesArray[" + i.ToString() + "]");
+          throw ExceptionFactory.ArgInvalidEnumerableItem("columnNamesAndValuesArray", columnNamesAndValuesArray, null);
 
         foreach (string columnName in columnNamesAndValuesArray[i].Keys)
         {
@@ -2248,7 +2250,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("table");
 #endif
       if (String.IsNullOrEmpty(table.TableName))
-        throw new ArgumentException("У таблицы не задано свойство TableName. Следует использовать перегрузку метода UpdateRecords() с аргументом TableName", "table");
+        throw ExceptionFactory.ArgProperty("table", table, "TableName", table.TableName, null);
 
       UpdateRecords(table.TableName, table);
     }
@@ -2314,7 +2316,9 @@ namespace FreeLibSet.Data
         {
           pPKs[i] = table.Columns.IndexOf(PKColumnNames[i]);
           if (pPKs[i] < 0)
-            throw new ArgumentException("Таблица DataTable не содержит поля первичного ключа \"" + PKColumnNames[i] + "\", объявленного в таблице \"" + ts.TableName + "\" базы данных \"" + validator.Con.Entry.DB.DatabaseName + "\"");
+            throw new ArgumentException(String.Format(Res.DBxCon_Arg_DataTableHasNoPKColumn,
+              PKColumnNames[i], ts.TableName, validator.Con.Entry.DB.DatabaseName), 
+              "table");
         }
         this.PKColumnPositions = pPKs;
 
@@ -2400,7 +2404,7 @@ namespace FreeLibSet.Data
           case 1:
             v = row[PKColumnPositions[0]];
             if (v is DBNull)
-              throw new ArgumentException("Строка данных имеет значение DBNull в поле первичного ключа \"" + PKColumnNames[0] + "\"", "row");
+              throw new ArgumentException(String.Format(Res.DBxCon_Arg_DataRowNullInPKColumn, PKColumnNames[0]), "row");
             return new ValueFilter(PKColumnNames[0], v);
 
           default:
@@ -2409,7 +2413,7 @@ namespace FreeLibSet.Data
             {
               v = row[PKColumnPositions[i]];
               if (v is DBNull)
-                throw new ArgumentException("Строка данных имеет значение DBNull в поле первичного ключа \"" + PKColumnNames[i] + "\"", "row");
+                throw new ArgumentException(String.Format(Res.DBxCon_Arg_DataRowNullInPKColumn, PKColumnNames[i]), "row");
               a[i] = new ValueFilter(PKColumnNames[i], v);
             }
             return new AndFilter(a);
@@ -2417,7 +2421,7 @@ namespace FreeLibSet.Data
       }
 
       /// <summary>
-      /// Заполняет массив значениями полей, не входязими в первичный кюлюч таблицы
+      /// Заполняет массив значениями полей, не входящими в первичный ключ таблицы
       /// </summary>
       /// <param name="row">Строка исходных данных</param>
       /// <param name="values">Заполняемый массив</param>
@@ -2427,7 +2431,7 @@ namespace FreeLibSet.Data
         if (row == null)
           throw new ArgumentNullException("row");
         if (values.Length != OtherColumnNames.Count)
-          throw new ArgumentException("Неправильная длина массива", "values");
+          throw ExceptionFactory.ArgWrongCollectionCount("values", values, OtherColumnNames.Count);
 #endif
 
         for (int i = 0; i < values.Length; i++)
@@ -2448,11 +2452,12 @@ namespace FreeLibSet.Data
 
       DBxTableStruct ts = GetTableStruct(tableName);
       if (ts.PrimaryKey.Count == 0)
-        throw new InvalidOperationException("Таблица \"" + tableName + "\" в базе данных \"" + DB.DatabaseName + "\" не имеет первичного ключа. Для нее нельзя использовать операцию обновления строк");
+        throw new InvalidOperationException(String.Format(Res.DBxCon_Err_UpdateNoPK, tableName, DB.DatabaseName));
 
       DataTableColumnPositions colPosInfo = new DataTableColumnPositions(ts, Validator, table);
       if (colPosInfo.OtherColumnNames.Count == 0)
-        throw new ArgumentException("Таблица DataTable имеет только столбцы первичного ключа (" + colPosInfo.PKColumnNames.ToString() + ") и ни одного дополнительного столбца для обновления", "table");
+        throw new ArgumentException(String.Format(Res.DBxCon_Arg_UpdateDataTableWithPKOnly,
+          colPosInfo.PKColumnNames.ToString()), "table");
       DoUpdateRecords(tableName, table, colPosInfo);
     }
 
@@ -2522,7 +2527,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("table");
 #endif
       if (String.IsNullOrEmpty(table.TableName))
-        throw new ArgumentException("У таблицы не задано свойство TableName. Следует использовать перегрузку метода UpdateRecords() с аргументом TableName", "table");
+        throw ExceptionFactory.ArgProperty("table", table, "TableName", table.TableName, null);
 
       AddOrUpdateRecords(table.TableName, table);
     }
@@ -2564,7 +2569,7 @@ namespace FreeLibSet.Data
       switch (ts.PrimaryKey.Count)
       {
         case 0:
-          throw new InvalidOperationException("Таблица \"" + tableName + "\" в базе данных \"" + DB.DatabaseName + "\" не имеет первичного ключа. Обновление невозможно");
+          throw new InvalidOperationException(String.Format(Res.DBxCon_Err_UpdateNoPK, tableName, DB.DatabaseName));
         case 1:
           DoAddOrUpdateRecordsSingleColumn(tableName, table, ts.PrimaryKey[0]);
           break;
@@ -2598,7 +2603,7 @@ namespace FreeLibSet.Data
     {
       int pPK = table.Columns.IndexOf(pkColumnName);
       if (pPK < 0)
-        throw new ArgumentException("Таблица " + table.TableName + " должна содержать поле первичного ключа \"" + pkColumnName + "\"", "table");
+        throw ExceptionFactory.DataColumnNotFound(table, pkColumnName);
 #if DEBUG
       if (table.Rows.Count < 1)
         throw new BugException("table.Rows.Count=0");
@@ -2609,7 +2614,7 @@ namespace FreeLibSet.Data
       {
         pkValues[i] = table.Rows[i][pPK]; // тут не может быть 
         if (pkValues[i] is DBNull)
-          throw new ArgumentException("В поле \"" + pkColumnName + "\" не могут встречаться значения DBNull, так как это первичный ключ таблицы \"" + tableName + "\" базы данных \"" + DB.DatabaseName + "\"");
+          throw new ArgumentException(String.Format(Res.DBxCon_Arg_DataRowNullInPKColumn, pkColumnName));
       }
 
       DBxColumnType pkColType = DBxColumnType.Unknown;
@@ -2647,7 +2652,7 @@ namespace FreeLibSet.Data
 
 #if DEBUG
         if (updTable.Rows.Count == 0 || newTable.Rows.Count == 0)
-          throw new BugException("Одна из таблиц пустая");
+          throw new BugException("One of tables is empty");
 #endif
 
         UpdateRecords2(tableName, updTable);
@@ -2661,10 +2666,10 @@ namespace FreeLibSet.Data
 
       DBxTableStruct ts = GetTableStruct(tableName);
       if (ts.PrimaryKey.Count == 0)
-        throw new InvalidOperationException("Таблица \"" + tableName + "\" в базе данных \"" + DB.DatabaseName + "\" не имеет первичного ключа. Для нее нельзя использовать операцию обновления строк");
+        throw new InvalidOperationException(String.Format(Res.DBxCon_Err_UpdateNoPK, tableName, DB.DatabaseName));
       DataTableColumnPositions colPosInfo = new DataTableColumnPositions(ts, Validator, table);
       if (colPosInfo.OtherColumnNames.Count == 0)
-        throw new ArgumentException("Таблица DataTable имеет только столбцы первичного ключа (" + colPosInfo.PKColumnNames.ToString() + ") и ни одного дополнительного столбца для обновления", "table");
+        throw new ArgumentException(String.Format(Res.DBxCon_Arg_UpdateDataTableWithPKOnly, colPosInfo.PKColumnNames.ToString()), "table");
 
       DataTable newTable = null;
       object[] values = new object[colPosInfo.OrherColumnPositions.Length];
@@ -2761,10 +2766,10 @@ namespace FreeLibSet.Data
     public void EndUpdate(string tableName)
     {
       if (_UpdateTableLockObjects == null)
-        throw new InvalidOperationException("Не было вызова BeginUpdate()");
+        throw ExceptionFactory.UnpairedCall(this, "BeginUpdate()", "EndUpdate()");
       object lockObj;
       if (!_UpdateTableLockObjects.TryGetValue(tableName, out lockObj))
-        throw new InvalidOperationException("Не было вызова BeginUpdate() для таблицы \"" + tableName + "\"");
+        throw new InvalidOperationException(String.Format(Res.DBxCon_Err_EndUpdateForTable, tableName));
 
       Monitor.Exit(lockObj);
     }
@@ -2893,7 +2898,7 @@ namespace FreeLibSet.Data
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(table.TableName))
-        throw new ArgumentException("У таблицы не задано свойство TableName. Следует использовать перегрузку метода FindOrAddRecords() с аргументом TableName", "table");
+        throw ExceptionFactory.ArgProperty("table", table, "TableName", table.TableName, null);
 
       return FindOrAddRecords(table.TableName, table);
     }
@@ -2920,11 +2925,13 @@ namespace FreeLibSet.Data
       if (table == null)
         throw new ArgumentNullException("table");
 #endif
-      if (table.Columns.Count == 0)
-        throw new ArgumentException("Таблица не содержит столбцов", "table");
+      // Ненужная проверка. Если передали пустую таблицу, можно вернуть пустой массив
+      //if (table.Columns.Count == 0)
+      //  throw new ArgumentException("Таблица не содержит столбцов", "table");
 
       if (table.Columns.Contains(IdColumnName))
-        throw new ArgumentException("Таблица со строками для поиска не может содержать столбца \"" + IdColumnName + "\" первичного ключа таблицы \"" + tableName + "\"");
+        throw new ArgumentException(String.Format(Res.DBxCon_Arg_DataTableWithPKColumn,
+          IdColumnName, tableName), "table");
 
       for (int j = 0; j < table.Columns.Count; j++)
         _Validator.CheckTableColumnName(tableName, table.Columns[j].ColumnName, false, DBxAccessMode.Full);
@@ -2977,7 +2984,7 @@ namespace FreeLibSet.Data
       string idColumnName = _Validator.CheckTablePrimaryKeyInt32(tableName);
 
       if (table.Columns.Count != 1)
-        throw new ArgumentException("Таблица должна иметь только один столбец", "table");
+        throw new ArgumentException(Res.DBxCon_Arg_DataTableMustHaveSingleColumn, "table");
 
       DBxColumnType colType = DBxColumnType.Unknown;
       DBxColumnStruct colDef = DB.Struct.FindColumn(tableName, table.Columns[0].ColumnName);
@@ -3096,7 +3103,7 @@ namespace FreeLibSet.Data
       Validator.CheckTableName(tableName, DBxAccessMode.Full);
 
       if (where == null)
-        throw new ArgumentNullException("where", "Удаление всех строк таблицы не поддерживается. Используйте метод DeleteAll");
+        throw new ArgumentNullException("where", Res.DBxCon_Arg_UseDeleteAll);
       Validator.CheckFilterColumnNames(tableName, where, false);
 
       Buffer.SB.Append("DELETE FROM ");
@@ -3147,7 +3154,7 @@ namespace FreeLibSet.Data
       if (where != null)
         Validator.CheckFilterColumnNames(tableName, where, false);
       else
-        throw new ArgumentNullException("where", "Фильтр по строкам должен быть задан");
+        throw new ArgumentNullException("where");
 
       Buffer.SB.Append("UPDATE ");
       Buffer.FormatTableName(tableName);
@@ -3182,7 +3189,7 @@ namespace FreeLibSet.Data
     {
       string idColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
       if (id == 0)
-        throw new DBxNoIdArgumentException("Не задан идентификатор записи", "id");
+        throw new DBxNoIdArgumentException(Res.DBxCon_Arg_NoId, "id");
 
       WriteBlob(tableName, new IdsFilter(idColumnName, id), columnName, value);
     }
@@ -3258,7 +3265,7 @@ namespace FreeLibSet.Data
       if (where != null)
         Validator.CheckFilterColumnNames(tableName, where, false);
       else
-        throw new ArgumentNullException("where", "Фильтр по строкам должен быть задан");
+        throw new ArgumentNullException("where");
 
       bool res;
 
@@ -3502,10 +3509,10 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (command == null)
-        throw new ArgumentNullException("commnd");
+        throw new ArgumentNullException("command");
 #endif
       if (!Object.ReferenceEquals(command.Connection, this.DbConnection))
-        throw new ArgumentException("Команда относится к другому соединению");
+        throw new ArgumentException(Res.DBxCon_Arg_DBCommandDiffConnection);
     }
 
 
@@ -3694,7 +3701,7 @@ namespace FreeLibSet.Data
       catch { }
 
       if (LogoutSqlExceptions)
-        LogoutException(args.Exception, "Ошибка выполнения запроса");
+        LogoutException(args.Exception, Res.DBxCon_ErrTitle_Sql);
       throw args.Exception;
     }
 
@@ -3851,12 +3858,33 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает описание структуры таблицы с заданным именем.
+    /// Если запрошена неизвестная таблица, возвращается null.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
-    /// <returns></returns>
+    /// <returns>Структура таблицы или null</returns>
     public virtual DBxTableStruct GetTableStruct(string tableName)
     {
       return DB.Struct.Tables[tableName];
+    }
+
+    /// <summary>
+    /// Возвращает описание структуры таблицы с заданным именем.
+    /// Если запрошена неизвестная таблица, выбрасывает исключение.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>Структура таблицы</returns>
+    public DBxTableStruct GetTableStructRequired(string tableName)
+    {
+      DBxTableStruct str = GetTableStruct(tableName); // виртуальный метод
+      if (str == null)
+      {
+        if (String.IsNullOrEmpty(tableName))
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
+        else
+          throw ExceptionFactory.KeyNotFound(tableName);
+      }
+      else
+        return str;
     }
 
     #endregion
@@ -3908,7 +3936,7 @@ namespace FreeLibSet.Data
       CheckNotDisposed();
 
       if (_CurrentTransaction != null)
-        throw new InvalidOperationException("Предыдущая транзакция не была завершена");
+        throw new InvalidOperationException(Res.DBxCon_Err_PrevTransaction);
 
 #if DEBUG
       //lock (LogSyncRoot)
@@ -3938,7 +3966,7 @@ namespace FreeLibSet.Data
     public void TransactionCommit()
     {
       if (_CurrentTransaction == null)
-        throw new InvalidOperationException("Транзакция не была начата");
+        throw new InvalidOperationException(Res.DBxCon_Err_NoTransaction);
       try
       {
         _CurrentTransaction.Commit();
@@ -3980,7 +4008,7 @@ namespace FreeLibSet.Data
       }
       catch (Exception e)
       {
-        LogoutException(e, "Ошибка отката транзакции в БД: " + ToString());
+        LogoutException(e, String.Format(Res.DBxCon_ErrTitle_Rollback, ToString()));
       }
 
       _CurrentTransaction = null;
@@ -4107,7 +4135,7 @@ namespace FreeLibSet.Data
     public virtual void CopyTo(DBxConBase dest)
     {
       if (dest == null)
-        throw new ArgumentNullException("Dest");
+        throw new ArgumentNullException("dest");
 
       dest.NameCheckingEnabled = this.NameCheckingEnabled;
       dest.LogoutSqlExceptions = this.LogoutSqlExceptions;

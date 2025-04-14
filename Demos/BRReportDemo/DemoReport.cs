@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Core;
 using FreeLibSet.Reporting;
+using FreeLibSet.IO;
 
 namespace BRReportDemo
 {
@@ -18,7 +19,7 @@ namespace BRReportDemo
       BRReport report = new BRReport();
       report.DefaultCellStyle.FormatProvider = formatProvider;
 
-      report.DocumentProperties.Title = "Тестирование возможностей BRReport";
+      report.DocumentProperties.Title = "BRReport features demo";
       report.DocumentProperties.Author = Environment.UserName;
       report.DocumentProperties.Subject = "BRReport";
       report.DocumentProperties.Company = "FreeLibSet";
@@ -34,14 +35,13 @@ namespace BRReportDemo
       //table.Cells.Value = "Hello, World!";
       //table.Cells.CellStyle.AllBorders = BRLine.Thin;
 
-#if !XXX
-
       #region Выравнивание
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Принудительное выравнивание";
+      table.Cells.Value = "Forced aligmnent";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
+      table.Bookmarks.Add("Top");
 
       table = sect.Bands.Add(4, 4);
       table.DefaultCellStyle.AllBorders = BRLine.Thin;
@@ -83,34 +83,34 @@ namespace BRReportDemo
       }
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Автоматическое выравнивание";
+      table.Cells.Value = "Automatic alignment";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
 
       table = sect.Bands.Add(5, 2);
       table.DefaultCellStyle.AllBorders = BRLine.Thin;
-      table.SetValue(0, 0, "Однострочный текст");
+      table.SetValue(0, 0, "One-line text");
       table.SetValue(0, 1, "AAA");
-      table.SetValue(1, 0, "Многострочный текст");
+      table.SetValue(1, 0, "Multi-line text");
       table.SetValue(1, 1, "BBB" + Environment.NewLine + "CCC" + Environment.NewLine + "DDD");
-      table.SetValue(2, 0, "Число");
+      table.SetValue(2, 0, "A number");
       table.SetValue(2, 1, 123.456m);
-      table.SetValue(3, 0, "Дата");
+      table.SetValue(3, 0, "A date");
       table.SetValue(3, 1, DateTime.Today);
       table.SetFormat(3, 1, "d");
-      table.SetValue(4, 0, "Дата/время");
+      table.SetValue(4, 0, "A date with time");
       table.SetValue(4, 1, DateTime.Now);
       table.SetFormat(4, 1, "g");
 
       table = sect.Bands.Add(1, 1);
-      table.SetValue(0, 0, "Простой текст тоже может" + Environment.NewLine + "содержать символ новой строки");
+      table.SetValue(0, 0, "A plain text could contain" + Environment.NewLine + "a new line character too");
 
       #endregion
 
       #region Перенос по словам
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Перенос по словам";
+      table.Cells.Value = "Word wrapping";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
 
@@ -136,7 +136,7 @@ namespace BRReportDemo
       #region Шрифты
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Шрифты";
+      table.Cells.Value = "Fonts";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
 
@@ -165,7 +165,7 @@ namespace BRReportDemo
       lstFontDescrs.Add("SystemFonts.DefaultFont");
       lstFontNames.Add(System.Drawing.SystemFonts.DefaultFont.Name);
 
-      lstFontDescrs.Add("Подстановка");
+      lstFontDescrs.Add("Font substitute");
       lstFontNames.Add("Tms Rmn");
 
       table = sect.Bands.Add(lstFontNames.Count, 2);
@@ -198,8 +198,9 @@ namespace BRReportDemo
       {
         table.Cells.RowIndex = i;
         table.Cells.CellStyle.FontHeightPt = fontSizes[i];
-        table.Cells.Value = "Шрифт " + fontSizes[i].ToString() + " пт.";
+        table.Cells.Value = "Font of size " + fontSizes[i].ToString() + " pt.";
       }
+      table.Bookmarks.Add("F12", 2, 0); // закладка на ячейку
 
       #endregion
 
@@ -326,6 +327,8 @@ namespace BRReportDemo
         for (int j = 1; j <= 5; j++)
           table.SetValue(i, j, "Hello!");
 
+      report.Bookmarks.Add(new BRBookmark("FontStyles", table)); // прямое добавление закладки
+
       #endregion
 
       #endregion
@@ -357,7 +360,7 @@ namespace BRReportDemo
       #region Цвета
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Цвета";
+      table.Cells.Value = "Colors";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
 
@@ -377,11 +380,11 @@ namespace BRReportDemo
       }
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "У обычного текста тоже можно задать цвет шрифта...";
+      table.Cells.Value = "A plain text could contain the font color ...";
       table.Cells.CellStyle.ForeColor = BRColor.Green;
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "... или цвет фона";
+      table.Cells.Value = "... or the background color";
       table.Cells.CellStyle.BackColor = BRColor.Yellow;
 
       #endregion
@@ -389,7 +392,7 @@ namespace BRReportDemo
       #region Границы
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Границы";
+      table.Cells.Value = "Borders";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
 
@@ -451,7 +454,7 @@ namespace BRReportDemo
       #region Merge
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Объединение ячеек";
+      table.Cells.Value = "Cell merging";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
 
@@ -482,7 +485,7 @@ namespace BRReportDemo
       #region Заполнитель
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Заполнитель";
+      table.Cells.Value = "Cell filler";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
 
@@ -513,31 +516,89 @@ namespace BRReportDemo
       #region Специальные символы
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Специальные символы";
+      table.Cells.Value = "Special characters";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "В тексте может встречаться два  пробела подряд или три   пробела";
+      table.Cells.Value = "Text could contain the couple  of space chars together or even tree   space chars";
       table.Cells.CellStyle.FontName = "Courier";
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = MakeLongString("Не_раз_рыв_ный__про_бел").Replace('_', DataTools.NonBreakSpaceChar);
+      table.Cells.Value = MakeLongString("Non_breakable_space").Replace('_', DataTools.NonBreakSpaceChar);
       table.Cells.CellStyle.WrapMode = BRWrapMode.WordWrap;
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = MakeLongString("Сим^во^лы пе^ре^но^са").Replace('^', DataTools.SoftHyphenChar);
+      table.Cells.Value = MakeLongString("Hyp^he^na^ti^on cha^rac^ters pre^sen^ted").Replace('^', DataTools.SoftHyphenChar);
       table.Cells.CellStyle.WrapMode = BRWrapMode.WordWrap;
 
       #endregion
+
+      #region Ссылки
+
+      table = sect.Bands.Add(1, 1);
+      table.Cells.Value = "BRValueWithLink references (work when report exported, not in the view)";
+      table.Cells.CellStyle.ParentStyle = head1;
+      table.KeepWithNext = true;
+
+      table = sect.Bands.Add(8, 2);
+      table.DefaultCellStyle.AllBorders = BRLine.Thin;
+
+      table.SetValue(0, 0, "Internet reference");
+      table.SetValue(0, 1, new BRValueWithLink(@"https://stackoverflow.com"));
+
+      AbsPath tempPath = new AbsPath(System.IO.Path.GetTempPath());
+      table.SetValue(1, 0, "Directory reference");
+      table.SetValue(1, 1, new BRValueWithLink(tempPath.FileName, tempPath.UriString));
+
+      table.SetValue(2, 0, "Reference as a number");
+      table.SetValue(2, 1, new BRValueWithLink(451, @"https://en.wikipedia.org/wiki/Fahrenheit_451"));
+
+      string testEmail = "test@test.com";
+      table.SetValue(3, 0, "mailto:// reference");
+      table.SetValue(3, 1, new BRValueWithLink(testEmail, "mailto://" + testEmail));
+
+      table.SetValue(4, 0, "Links to bookmarks");
+      table.SetValue(4, 1, new BRValueWithLink("Top", "#Top"));
+      table.SetValue(5, 1, new BRValueWithLink("Font size 12pt", "#F12"));
+      table.SetValue(6, 1, new BRValueWithLink("Font styles", "#FontStyles"));
+      table.SetValue(7, 0, "(forward link)");
+      table.SetValue(7, 1, new BRValueWithLink("Big table cell", "#B52"));
+
+      #endregion
+
+      //#region Скрытые строки и столбцы
+
+      //table = sect.Bands.Add(1, 1);
+      //table.Cells.Value = "Hidden rows and columns";
+      //table.Cells.CellStyle.ParentStyle = head1;
+      //table.KeepWithNext = true;
+
+      //table = CreateTestTableForHiding(sect);
+      //table.SetValue(4, 4, "Nothing is hidden");
+
+      //table = CreateTestTableForHiding(sect);
+      //table.SetValue(4, 4, "Column with index 2 is hidden");
+      //table.Cells.ColumnIndex = 2;
+      //table.Cells.ColumnCellStyle.BackColor = BRColor.Red;
+      //table.Cells.ColumnInfo.Visible = false;
+
+      //table = CreateTestTableForHiding(sect);
+      //table.SetValue(4, 4, "Row with index 2 is hidden");
+      //table.Cells.RowIndex = 2;
+      //table.Cells.RowCellStyle.BackColor = BRColor.Red;
+      //table.Cells.RowInfo.Visible = false;
+
+      //#endregion
 
       #region Большая таблица
 
       sect = report.Sections.Add();
       sect.PageSetup.SetOrientation(BROrientation.Landscape, true);
+      sect.Name = "Big table";
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = "Большая таблица";
+      table.Cells.Value = "The big multipage table";
       table.Cells.CellStyle.ParentStyle = head1;
       table.KeepWithNext = true;
       // Если задать высоту строки, то заголовок будет идти как таблица из одной ячейки
@@ -565,10 +626,57 @@ namespace BRReportDemo
       table.Cells.ColumnInfo.AutoGrow = true;
       table.Cells.ColumnCellStyle.BackColor = new BRColor(128, 128, 255);
 
+      table.Bookmarks.Add("B52", 49, 1);
+
       #endregion
-#endif
+
       return report;
     }
+
+    //private static BRTable CreateTestTableForHiding(BRSection sect)
+    //{
+    //  BRTable table = sect.Bands.Add(5, 5);
+    //  table.DefaultCellStyle.HAlign = BRHAlign.Center;
+    //  table.DefaultCellStyle.AllBorders = BRLine.Thin;
+    //  table.DefaultCellStyle.WrapMode = BRWrapMode.WordWrap;
+    //  table.SetValue(0, 0, 1);
+    //  table.SetValue(0, 1, 2);
+    //  table.SetValue(0, 2, 3);
+    //  table.SetValue(0, 3, 3);
+    //  table.SetValue(0, 4, 5);
+    //  table.SetValue(1, 0, 2);
+    //  table.SetValue(2, 0, 3);
+    //  table.SetValue(3, 0, 4);
+    //  table.SetValue(4, 0, 5);
+
+    //  table.Cells.Select(1, 1);
+    //  table.Cells.CellStyle.AllBorders = BRLine.Medium;
+    //  table.Cells.CellStyle.BackColor = new BRColor(255, 255, 128);
+    //  table.Cells.Value = "Merged cells #1. Two cells merged vertically";
+    //  table.Cells.Merge(2, 1);
+
+    //  table.Cells.Select(1, 2);
+    //  table.Cells.CellStyle.AllBorders = BRLine.Medium;
+    //  table.Cells.CellStyle.BackColor = new BRColor(128, 255, 128);
+    //  table.Cells.Value = "Merged cells #2. Two cells merged horizontally";
+    //  table.Cells.Merge(1, 2);
+
+    //  table.Cells.Select(2, 3);
+    //  table.Cells.CellStyle.AllBorders = BRLine.Medium;
+    //  table.Cells.CellStyle.BackColor = new BRColor(128, 128, 255);
+    //  table.Cells.Value = "Merged cells #3. Two cells merged vertically";
+    //  table.Cells.Merge(2, 1);
+
+    //  table.Cells.Select(3, 1);
+    //  table.Cells.CellStyle.AllBorders = BRLine.Medium;
+    //  table.Cells.CellStyle.BackColor = new BRColor(255, 128, 255);
+    //  table.Cells.Value = "Merged cells #4. Two cells merged horizontally";
+    //  table.Cells.Merge(1, 2);
+
+    //  table.BottomMargin = 50;
+
+    //  return table;
+    //}
 
     public static string MakeLongString(string s)
     {

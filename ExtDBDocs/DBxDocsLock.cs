@@ -205,7 +205,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает количество заблокированных документов всех видов.
-    /// Блокировки DBxDocTableLockData.LockAdd не учитываются
+    /// Блокировки <see cref="DBxDocTableLockData.LockAdd"/> не учитываются.
     /// </summary>
     public int DocCount
     {
@@ -220,7 +220,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает информацию о единственном забловированном документе.
-    /// Если есть блокировка DBxDocTableLockData.LockAdd, то возвращается false
+    /// Если есть блокировка <see cref="DBxDocTableLockData.LockAdd"/>, то возвращается false
     /// </summary>
     /// <param name="tableName">Сюда записывается имя таблицы заблокированного документа</param>
     /// <param name="docId">Сюда записывается идентификатор заблокированного документа</param>
@@ -246,7 +246,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Текстовое представление по установленным блокировкам.
-    /// Рекомендуется использовать перегрузку, получающую StringBuilder и DBxDocTextHandlers
+    /// Рекомендуется использовать перегрузку, получающую <see cref="StringBuilder"/> и <see cref="DBxDocTextHandlers"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -258,7 +258,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Текстовое представление по установленным блокировкам.
-    /// Рекомендуется использовать перегрузку, получающую StringBuilder и DBxDocTextHandlers
+    /// Рекомендуется использовать перегрузку, получающую <see cref="StringBuilder"/> и <see cref="DBxDocTextHandlers"/>.
     /// </summary>
     /// <param name="sb">Объект StringBuilder для заполнения</param>
     public void ToString(StringBuilder sb)
@@ -270,7 +270,7 @@ namespace FreeLibSet.Data.Docs
     /// Текстовое представление по установленным блокировкам.
     /// </summary>
     /// <param name="sb">Объект StringBuilder для заполнения</param>
-    /// <param name="textHandlers">Используется для извлечения текстовых представлений. Может быть null</param>
+    /// <param name="textHandlers">Используется для извлечения текстовых представлений. Может быть null.</param>
     public void ToString(StringBuilder sb, DBxDocTextHandlers textHandlers)
     {
       bool isFirstPair = true;
@@ -325,7 +325,7 @@ namespace FreeLibSet.Data.Docs
     {
 #if DEBUG
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 #endif
       _Owner = owner;
       _TableName = tableName;
@@ -343,13 +343,13 @@ namespace FreeLibSet.Data.Docs
     /// Объект-владелец
     /// </summary>
     public DBxDocSetLockData Owner { get { return _Owner; } }
-    private DBxDocSetLockData _Owner;
+    private readonly DBxDocSetLockData _Owner;
 
     /// <summary>
     /// Имя таблицы документа, для которого создан текущйи объект
     /// </summary>
     public string TableName { get { return _TableName; } }
-    private string _TableName;
+    private readonly string _TableName;
 
     /// <summary>
     /// Предполагается добавление строк в таблицу
@@ -369,11 +369,11 @@ namespace FreeLibSet.Data.Docs
     /// Идентификаторы блокируемых документов
     /// </summary>
     public IdList LockIds { get { return _LockIds; } }
-    private IdList _LockIds;
+    private readonly IdList _LockIds;
 
     /// <summary>
     /// Текстовое представление.
-    /// Рекомендуется использовать перегрузку, получающую StringBuilder и DBxDocTextHandlers
+    /// Рекомендуется использовать перегрузку, получающую <see cref="StringBuilder"/> и <see cref="DBxDocTextHandlers"/>.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -385,7 +385,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить текстовое представление для блокировок по таблицы
-    /// Рекомендуется использовать перегрузку, получающую StringBuilder и DBxDocTextHandlers
+    /// Рекомендуется использовать перегрузку, получающую <see cref="StringBuilder"/> и <see cref="DBxDocTextHandlers"/>.
     /// </summary>
     /// <param name="sb">Объект для заполнения</param>
     public void ToString(StringBuilder sb)
@@ -394,10 +394,10 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Получить текстовое представление для блокировок по таблицы
+    /// Получить текстовое представление для блокировок по таблицам
     /// </summary>
     /// <param name="sb">Объект для заполнения</param>
-    /// <param name="textHandlers">Используется для получения названия документа. Может быть null</param>
+    /// <param name="textHandlers">Используется для получения названия документа. Может быть null.</param>
     public void ToString(StringBuilder sb, DBxDocTextHandlers textHandlers)
     {
       if (textHandlers == null)
@@ -413,11 +413,17 @@ namespace FreeLibSet.Data.Docs
           sb.Append(dt.PluralTitle);
       }
       if (IsEmpty)
-        sb.Append(" (нет документов)");
+      {
+        sb.Append(" ");
+        sb.Append(Res.DBxDocsLock_Msg_IsEmpty);
+      }
       else
       {
         if (LockAdd)
-          sb.Append(" (Добавление документов)");
+        {
+          sb.Append(" ");
+          sb.Append(Res.DBxDocsLock_Msg_LockAdd);
+        }
 
         sb.Append(" ");
         if (LockIds.Count > 0)
@@ -533,8 +539,8 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Кратковременная блокировка документов
-  /// Используется при внесении изменений в базу данных в DBxRealDocProvider.ApplyChanged
+  /// Кратковременная блокировка документов.
+  /// Используется при внесении изменений в базу данных в <see cref="DBxRealDocProvider"/>
   /// </summary>
   public class DBxShortDocsLock : ExecProcMultiLock, IDBxDocsLock, IReadOnlyObject
   {
@@ -557,10 +563,10 @@ namespace FreeLibSet.Data.Docs
     /// Создает кратковременную блокировку
     /// </summary>
     /// <param name="docProvider">Провайдер для доступа к документам</param>
-    /// <param name="ignoreAllLocks">Значение свойства DBxDocSet.IgnoreAllLocks</param>
-    /// <param name="ignoredLocks">Значение свойства DBxDocSet.IgnoredLocks</param>
+    /// <param name="ignoreAllLocks">Значение свойства <see cref="DBxDocSet.IgnoreAllLocks"/></param>
+    /// <param name="ignoredLocks">Значение свойства <see cref="DBxDocSet.IgnoredLocks"/></param>
     public DBxShortDocsLock(DBxRealDocProvider docProvider, bool ignoreAllLocks, IList<Guid> ignoredLocks)
-      : base("Запись в базу данных")
+      : base(Res.DBxShortDocsLock_Name_Default)
     {
 #if DEBUG
       if (docProvider == null)
@@ -580,7 +586,7 @@ namespace FreeLibSet.Data.Docs
     /// Владелец блокировки
     /// </summary>
     public DBxRealDocProvider DocProvider { get { return _DocProvider; } }
-    private DBxRealDocProvider _DocProvider;
+    private readonly DBxRealDocProvider _DocProvider;
 
     /// <summary>
     /// Значение свойства DBxDocSet.IgnoreAllLocks.
@@ -589,20 +595,20 @@ namespace FreeLibSet.Data.Docs
     /// кратковременной блокировкой
     /// </summary>
     public bool IgnoreAllLocks { get { return _IgnoreAllLocks; } }
-    private bool _IgnoreAllLocks;
+    private readonly bool _IgnoreAllLocks;
 
     /// <summary>
     /// Значение свойства DBxDocSet.IgnoredLocks.
     /// Блокировки из списка не учитываются при проверке конфликта блокировок
     /// </summary>
     public IList<Guid> IgnoredLocks { get { return _IgnoredLocks; } }
-    private IList<Guid> _IgnoredLocks;
+    private readonly IList<Guid> _IgnoredLocks;
 
     /// <summary>
     /// Данные блокировки по документам
     /// </summary>
     public DBxDocSetLockData Data { get { return _Data; } }
-    private DBxDocSetLockData _Data;
+    private readonly DBxDocSetLockData _Data;
 
     /// <summary>
     /// Возвращает читаемую информацию о блокировке, включая имя пользователя, установившего эту блокировку
@@ -684,7 +690,7 @@ namespace FreeLibSet.Data.Docs
     protected override bool DoTryLock(ExecProc caller, out ExecProcLock lockedObj)
     {
       if (DocProvider.Source.MainDBEntry == null)
-        throw new NullReferenceException("Не установлено свойство DBxRealDocProviderGlobal.MainDBEntry");
+        throw ExceptionFactory.ObjectPropertyNotSet(DocProvider.Source, "MainDBEntry");
 
       lockedObj = null;
 
@@ -767,8 +773,8 @@ namespace FreeLibSet.Data.Docs
     public override void GetDebugInfo(LogoutInfoNeededEventArgs args)
     {
       //Args.WritePair("Процедура", Owner.Caller.ToString());
-      args.WritePair("БД", DocProvider.Source.GlobalData.ToString());
-      args.WriteLine("Блокируемые таблицы:");
+      args.WritePair("Database", DocProvider.Source.GlobalData.ToString());
+      args.WriteLine("Locked tables:");
       args.IndentLevel++;
       int cnt = 0;
       foreach (DBxDocTableLockData table in Data)
@@ -779,7 +785,7 @@ namespace FreeLibSet.Data.Docs
         args.WriteLine(table.ToString());
       }
       if (cnt == 0)
-        args.WriteLine("Нет блокируемых таблиц (пустой объект)");
+        args.WriteLine("No locked tables (empty object)");
       args.IndentLevel--;
 
       base.GetDebugInfo(args);
@@ -829,26 +835,26 @@ namespace FreeLibSet.Data.Docs
     /// Владелец блокировки
     /// </summary>
     public DBxRealDocProvider DocProvider { get { return _DocProvider; } }
-    private DBxRealDocProvider _DocProvider;
+    private readonly DBxRealDocProvider _DocProvider;
 
     /// <summary>
     /// Данные блокировки по документам
     /// </summary>
     public DBxDocSetLockData Data { get { return _Data; } }
-    private DBxDocSetLockData _Data;
+    private readonly DBxDocSetLockData _Data;
 
     /// <summary>
     /// Идентификатор длительной блокировки
     /// Для кратковременной блокировки возвращает Guid.Empty
     /// </summary>
     public Guid Guid { get { return _Guid; } }
-    private Guid _Guid;
+    private readonly Guid _Guid;
 
     /// <summary>
     /// Время установки блокировки
     /// </summary>
     public DateTime StartTime { get { return _StartTime; } }
-    private DateTime _StartTime;
+    private readonly DateTime _StartTime;
 
     /// <summary>
     /// Читаемое описание блокировки
@@ -907,9 +913,9 @@ namespace FreeLibSet.Data.Docs
     private static string GetMessage(IDBxDocsLock pretender, IDBxDocsLock oldLock)
     {
       if (pretender.DocProvider == oldLock.DocProvider)
-        return "Невозможно установить блокировку \"" + pretender.ToString() + "\", т.к. она конфликтует с другой блокировкой \"" + oldLock.Data.ToString() + "\", установленной тем же пользователем";
+        return String.Format(Res.DBxDocsLockException_Err_SameUser, pretender, oldLock.Data);
       else
-        return "Невозможно установить блокировку \"" + pretender.ToString() + "\", т.к. она конфликтует с блокировкой \"" + oldLock.ToString() + "\"";
+        return String.Format(Res.DBxDocsLockException_Err_Default, pretender, oldLock.Data);
     }
 
     /// <summary>
@@ -963,7 +969,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          _DocText = "Не удалось получить текстовое представление документа. " + e.Message;
+          _DocText = String.Format(Res.DBxDocsLockException_Err_DocText, e.Message);
         }
       }
 
@@ -975,25 +981,25 @@ namespace FreeLibSet.Data.Docs
       /// Идентификатор пользователя
       /// </summary>
       public Int32 UserId { get { return _UserId; } }
-      private Int32 _UserId;
+      private readonly Int32 _UserId;
 
       /// <summary>
       /// Имя пользователя
       /// </summary>
       public string UserName { get { return _UserName; } }
-      private string _UserName;
+      private readonly string _UserName;
 
       /// <summary>
       /// Данные по блокируемым документам
       /// </summary>
       public DBxDocSetLockData Data { get { return _Data; } }
-      private DBxDocSetLockData _Data;
+      private readonly DBxDocSetLockData _Data;
 
       /// <summary>
       /// Текстовое представление блокируемых документов
       /// </summary>
       public string DocText { get { return _DocText; } }
-      private string _DocText;
+      private readonly string _DocText;
 
       #endregion
     }
@@ -1002,20 +1008,20 @@ namespace FreeLibSet.Data.Docs
     /// Блокировка, которую не удалось установить
     /// </summary>
     public LockInfo Pretender { get { return _Pretender; } }
-    private LockInfo _Pretender;
+    private readonly LockInfo _Pretender;
 
     /// <summary>
     /// Существующая блокировка
     /// </summary>
     public LockInfo OldLock { get { return _OldLock; } }
-    private LockInfo _OldLock;
+    private readonly LockInfo _OldLock;
 
     /// <summary>
     /// Возвращает true, если существующая блокировка установлена из того же DBxRealDocProvider,
     /// что и потерпевший неудачу
     /// </summary>
     public bool IsSameDocProvider { get { return _IsSameDocProvider; } }
-    private bool _IsSameDocProvider;
+    private readonly bool _IsSameDocProvider;
 
     #endregion
   }
@@ -1069,13 +1075,13 @@ namespace FreeLibSet.Data.Docs
 
     #region Свойства
 
-    private DBxDocProvider _DocProvider;
+    private /*readonly*/ DBxDocProvider _DocProvider;
 
     /// <summary>
     /// Идентификатор установленной блокировки
     /// </summary>
     public Guid LockGuid { get { return _LockGuid; } }
-    private Guid _LockGuid;
+    private readonly Guid _LockGuid;
 
     #endregion
   }

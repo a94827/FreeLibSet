@@ -457,7 +457,7 @@ namespace FreeLibSet.Forms.Docs
     {
       DBxSubDocType newSubDocType = DocType.SubDocs[_SubDocType.Name]; // DocTypeUI.DocType уже обновлено на момент вызова
       if (newSubDocType == null)
-        throw new NullReferenceException("Не найден новый SubDocType для SubDocTypeName=\"" + _SubDocType.Name + "\" документа \"" + DocType.Name + "\"");
+        throw new NullReferenceException(String.Format(Res.SubDocTypeUI_Err_NoNewSubDocType, _SubDocType.Name, DocType.Name));
       _SubDocType = newSubDocType;
     }
 
@@ -507,7 +507,7 @@ namespace FreeLibSet.Forms.Docs
         DataGridViewImageColumn imgCol = new DataGridViewImageColumn();
         imgCol.Name = "Image";
         imgCol.HeaderText = String.Empty;
-        imgCol.ToolTipText = "Значок поддокумента \"" + SubDocType.SingularTitle + "\"";
+        imgCol.ToolTipText = String.Format(Res.Common_ToolTip_SubDocImageColumn, SubDocType.SingularTitle);
         imgCol.Width = controlProvider.Measures.ImageColumnWidth;
         imgCol.FillWeight = 1; // 08.02.2017
         imgCol.Resizable = DataGridViewTriState.False;
@@ -704,7 +704,7 @@ namespace FreeLibSet.Forms.Docs
               }
               catch (Exception e)
               {
-                s2 = "Ошибка: " + e.Message;
+                s2 = String.Format(Res.Common_Err_ErrorMessage, e.Message);
               }
               args.ToolTipText = String.Join(EFPGridProducerToolTips.ToolTipTextSeparator, new string[] { args.ToolTipText, s2 });
             }
@@ -812,8 +812,6 @@ namespace FreeLibSet.Forms.Docs
 
         controlProvider.Control.Columns[0].Width += 24; // ???
       }
-
-
 
       if (!reInit)
       {
@@ -934,7 +932,7 @@ namespace FreeLibSet.Forms.Docs
     public Int32[] GetSubDocIds(Int32 docId)
     {
       if (docId == 0)
-        throw new ArgumentException("Идентификатор документа должен быть задан", "docId");
+        throw ExceptionFactory.ArgIsEmpty("docId");
 
       // TODO: !!!
       /*
@@ -1088,7 +1086,7 @@ namespace FreeLibSet.Forms.Docs
         currDocId = DataTools.GetInt(controlProvider.CurrentDataRow, "DocId");
 
       ListSelectDialog dlg = new ListSelectDialog();
-      dlg.Title = SubDocType.SingularTitle + " (Создание)";
+      dlg.Title = String.Format(Res.SubDocTypeUI_Title_SelectDocsForInsert, SubDocType.SingularTitle);
       dlg.ImageKey = "Insert";
       dlg.ListTitle = SubDocType.DocType.SingularTitle;
       dlg.Items = new string[controlProvider.SubDocs.Owner.DocCount];
@@ -1278,7 +1276,7 @@ namespace FreeLibSet.Forms.Docs
         if (!String.IsNullOrEmpty(value))
         {
           if (!SubDocType.Struct.Columns.Contains(value))
-            throw new ArgumentException("Таблица \"" + SubDocType.Name + "\" не содержит столбца \"" + value + "\"");
+            throw new ArgumentException(String.Format(Res.Common_Arg_UnknownColumn, SubDocType.Name, value));
           this.Columns[value].NewMode = ColumnNewMode.AlwaysDefaultValue; // чтобы новые поддокументы попадали в конец списка
         }
         _ManualOrderColumn = value;
@@ -1304,11 +1302,11 @@ namespace FreeLibSet.Forms.Docs
         return false; // пустой список
 
       if (subDocs.Owner.DocCount != 1)
-        throw new InvalidOperationException("Не реализовано для наборов, в которых редактируется несколько документов");
+        throw new InvalidOperationException(Res.SubDocTypeUI_Err_NotImplementedMultiDocEdit);
 
       int pOrderCol = subDocs.Values.IndexOf(ManualOrderColumn);
       if (pOrderCol < 0)
-        throw new BugException("Не найдено поле \"" + ManualOrderColumn + "\"");
+        throw new BugException("Column not found \"" + ManualOrderColumn + "\"");
       List<DataRow> lstRows = null;
       foreach (DBxSubDoc sd in subDocs)
       {
@@ -1318,7 +1316,7 @@ namespace FreeLibSet.Forms.Docs
         {
           DataRow row = subDocs.SubDocsView.Table.Rows.Find(sd.SubDocId);
           if (row == null)
-            throw new BugException("Не найдена строка поддокумента для SubDocId=" + sd.SubDocId);
+            throw new BugException("Subdocument row not found for SubDocId=" + sd.SubDocId);
 
           if (lstRows == null)
             lstRows = new List<DataRow>();
@@ -1360,7 +1358,7 @@ namespace FreeLibSet.Forms.Docs
         {
           DataRow row1 = mainSubDocs.SubDocsView.Table.Rows.Find(sd2.SubDocId);
           if (row1 == null)
-            throw new BugException("Не найдена строка поддокумента для SubDocId=" + sd2.SubDocId);
+            throw new BugException("Subdocument row not found for SubDocId=" + sd2.SubDocId);
 
           if (lstRows1 == null)
             lstRows1 = new List<DataRow>();
@@ -1470,8 +1468,8 @@ namespace FreeLibSet.Forms.Docs
           {
             cntCancelled++;
             if (String.IsNullOrEmpty(args2.ErrorMessage))
-              args2.ErrorMessage = "Нельзя добавить строку";
-            errors.AddWarning("Строка " + (i + 1).ToString() + " пропускается. " + args2.ErrorMessage);
+              args2.ErrorMessage = Res.Common_Err_CannotAddRow;
+            errors.AddWarning(String.Format(Res.SubDocTypeUI_Err_PastedRowSkipped, i + 1, args2.ErrorMessage));
             subDoc2.Delete();
           }
         }
@@ -1483,8 +1481,8 @@ namespace FreeLibSet.Forms.Docs
         if (cntCancelled > 0)
         {
           if (subDocs2.SubDocCount == 0)
-            errors.AddError("Ни одна из строк (" + srcRows.Length.ToString() + " шт.) не может быть добавлена");
-          EFPApp.ShowErrorMessageListDialog(errors, "Вставка");
+            errors.AddError(String.Format(Res.SubDocTypeUI_Err_NoRowsPasted, srcRows.Length));
+          EFPApp.ShowErrorMessageListDialog(errors, Res.Common_Title_Paste);
           if (subDocs2.SubDocCount == 0)
             return null;
         }
@@ -1504,9 +1502,9 @@ namespace FreeLibSet.Forms.Docs
         }
         else
         {
-          if (EFPApp.MessageBox("Вставить " + (srcDocTypeBase.DocTypeBase.IsSubDoc ?
-            "копии поддокументов" : "копии документов") + " (" + subDocs2.SubDocCount.ToString() + " шт.)?",
-            "Подтверждение вставки поддокументов \"" + SubDocType.PluralTitle + "\"",
+          if (EFPApp.MessageBox(String.Format(srcDocTypeBase.DocTypeBase.IsSubDoc ? 
+            Res.SubDocTypeUI_Msg_ConfirmPasteSubDocs: Res.SubDocTypeUI_Msg_ConfirmPasteDocs, subDocs2.SubDocCount),
+            String.Format(Res.SubDocTypeUI_Title_ConfirmPasteSubDocs, SubDocType.PluralTitle),
             MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
 
             return null;
@@ -1576,8 +1574,8 @@ namespace FreeLibSet.Forms.Docs
             {
               cntCancelled++;
               if (String.IsNullOrEmpty(args2.ErrorMessage))
-                args2.ErrorMessage = "Нельзя добавить строку";
-              errors.AddWarning("Строка " + (i + 1).ToString() + " пропускается. " + args2.ErrorMessage);
+                args2.ErrorMessage = Res.Common_Err_CannotAddRow;
+              errors.AddWarning(String.Format(Res.SubDocTypeUI_Err_PastedRowSkipped, i + 1, args2.ErrorMessage));
               subDoc2.Delete();
             }
           }
@@ -1594,7 +1592,7 @@ namespace FreeLibSet.Forms.Docs
         if (cntCancelled > 0)
         {
           if (subDocs2.SubDocCount == 0)
-            errors.AddError("Ни одна из строк (" + srcRows.Length.ToString() + " шт.) не может быть добавлена");
+            errors.AddError(String.Format(Res.SubDocTypeUI_Err_NoRowsPasted, srcRows.Length));
           EFPApp.ShowErrorMessageListDialog(errors, "Вставка");
           if (subDocs2.SubDocCount == 0)
             return null;
@@ -1621,9 +1619,9 @@ namespace FreeLibSet.Forms.Docs
         }
         else
         {
-          if (EFPApp.MessageBox("Вставить " + (srcDocTypeBase.DocTypeBase.IsSubDoc ?
-            "копии поддокументов" : "копии документов") + " (" + subDocs2.SubDocCount.ToString() + " шт.)?",
-            "Подтверждение вставки поддокументов \"" + SubDocType.PluralTitle + "\"",
+          if (EFPApp.MessageBox(String.Format(srcDocTypeBase.DocTypeBase.IsSubDoc ?
+            Res.SubDocTypeUI_Msg_ConfirmPasteSubDocs : Res.SubDocTypeUI_Msg_ConfirmPasteDocs, subDocs2.SubDocCount),
+            String.Format(Res.SubDocTypeUI_Title_ConfirmPasteSubDocs, SubDocType.PluralTitle),
             MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
 
             return null;

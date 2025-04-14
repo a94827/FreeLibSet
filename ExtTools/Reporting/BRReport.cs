@@ -1,10 +1,14 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Collections;
 using FreeLibSet.Config;
 using FreeLibSet.Core;
+using System.Text.RegularExpressions;
 
 namespace FreeLibSet.Reporting
 {
@@ -129,6 +133,7 @@ namespace FreeLibSet.Reporting
       _SectionList = new List<BRSection>();
       _NamedCellStyleList = new NamedList<BRNamedCellStyle>();
       _DocumentProperties = _AppDefaultDocumentProperties.Clone();
+      _BookmarkList = new NamedList<BRBookmark>();
     }
 
     #endregion
@@ -222,6 +227,22 @@ namespace FreeLibSet.Reporting
         foreach (BRSection sect in Sections)
           cnt += sect.Bands.Count;
         return cnt;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает true, если в документе есть хотя бы одна гиперссылка
+    /// </summary>
+    public bool HasLinks
+    {
+      get
+      {
+        foreach (BRSection sect in Sections)
+        {
+          if (sect.HasLinks)
+            return true;
+        }
+        return false;
       }
     }
 
@@ -582,6 +603,97 @@ namespace FreeLibSet.Reporting
     private BRDocumentProperties _DocumentProperties;
 
     #endregion
+
+    #region Закладки
+
+    private readonly NamedList<BRBookmark> _BookmarkList;
+
+    /// <summary>
+    /// Реализация свойства <see cref="Bookmarks"/>
+    /// </summary>
+    public struct BookmarkCollection : ICollection<BRBookmark>
+    {
+      #region Конструктор
+
+      internal BookmarkCollection(BRReport owner)
+      {
+        _Owner = owner;
+      }
+
+      private BRReport _Owner;
+
+      #endregion
+
+      #region ICollection<BRBookmark>
+
+      /// <summary>
+      /// Возвращает количество закладок
+      /// </summary>
+      public int Count { get { return _Owner._BookmarkList.Count; } }
+
+      bool ICollection<BRBookmark>.IsReadOnly { get { return false; } }
+
+      /// <summary>
+      /// Добавляет закладку
+      /// </summary>
+      /// <param name="item">Добавляемая закладка</param>
+      public void Add(BRBookmark item)
+      {
+        if (item == null)
+          throw new ArgumentNullException("item");
+        if (item.Report != _Owner)
+          throw ExceptionFactory.ArgProperty("item", item, "Report", item.Report, new object[] { _Owner });
+        _Owner._BookmarkList.Add(item);
+        if (item.Band.BookmarkList == null)
+          item.Band.BookmarkList = new List<BRBookmark>();
+        item.Band.BookmarkList.Add(item);
+      }
+
+      void ICollection<BRBookmark>.Clear()
+      {
+        throw new NotImplementedException();
+        //_Owner._BookmarkList.Clear();
+      }
+
+      bool ICollection<BRBookmark>.Contains(BRBookmark item)
+      {
+        return _Owner._BookmarkList.Contains(item);
+      }
+
+      void ICollection<BRBookmark>.CopyTo(BRBookmark[] array, int arrayIndex)
+      {
+        _Owner._BookmarkList.CopyTo(array, arrayIndex);
+      }
+
+      bool ICollection<BRBookmark>.Remove(BRBookmark item)
+      {
+        throw new NotImplementedException();
+        //return _Owner._BookmarkList.Remove(item);
+      }
+
+      /// <summary>
+      /// Возвращает перечислитель по закладкам
+      /// </summary>
+      /// <returns>Перечислитель</returns>
+      public IEnumerator<BRBookmark> GetEnumerator()
+      {
+        return _Owner._BookmarkList.GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+        return GetEnumerator();
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Список всех закладок отчета
+    /// </summary>
+    public BookmarkCollection Bookmarks { get { return new BookmarkCollection(this); } }
+
+    #endregion
   }
 
   /// <summary>
@@ -853,6 +965,22 @@ namespace FreeLibSet.Reporting
       return Name + " (BandCount=" + Bands.Count.ToString() + ")";
     }
 
+    /// <summary>
+    /// Возвращает true, если в секции есть хотя бы одна гиперссылка
+    /// </summary>
+    public bool HasLinks
+    {
+      get
+      {
+        foreach (BRBand band in Bands)
+        {
+          if (band.HasLinks)
+            return true;
+        }
+        return false;
+      }
+    }
+
     #endregion
   }
 
@@ -877,9 +1005,9 @@ namespace FreeLibSet.Reporting
       if (section == null)
         throw new ArgumentNullException("section");
       if (rowCount < 1)
-        throw new ArgumentOutOfRangeException("rowCount");
+        throw ExceptionFactory.ArgOutOfRange("rowCount", rowCount, 1, null);
       if (columnCount < 1)
-        throw new ArgumentOutOfRangeException("columnCount");
+        throw ExceptionFactory.ArgOutOfRange("columnCount", columnCount, 1, null);
 
       _Section = section;
       _RowCount = rowCount;
@@ -997,6 +1125,121 @@ namespace FreeLibSet.Reporting
     /// <returns>Новый селектор</returns>
     public abstract BRSelector CreateSelector();
 
+    #region Закладки
+
+    /// <summary>
+    /// Реализация свойства <see cref="Bookmarks"/>.
+    /// В текущей реализации нет доступа к закладкам для полосы
+    /// </summary>
+    public struct BookmarkCollection
+    {
+      #region Конструктор
+
+      internal BookmarkCollection(BRBand owner)
+      {
+        _Owner = owner;
+      }
+
+      private readonly BRBand _Owner;
+
+      #endregion
+
+      #region Доступ к закладкам
+
+      private static readonly BRBookmark[] _EmptyBookmarkArray = new BRBookmark[0];
+
+      /// <summary>
+      /// Возвращает массив закладок, относящихся к ячейке.
+      /// Если закладок нет, возвращается пустой массив
+      /// </summary>
+      /// <param name="rowIndex">Ин</param>
+      /// <param name="columnIndex"></param>
+      /// <returns>Массив закладок</returns>
+      public BRBookmark[] this[int rowIndex, int columnIndex]
+      {
+        get
+        {
+          if (_Owner.BookmarkList == null)
+            return _EmptyBookmarkArray;
+
+          List<BRBookmark> lst = null;
+          foreach (BRBookmark bm in _Owner.BookmarkList)
+          {
+            if (bm.RowIndex == rowIndex && bm.ColumnIndex == columnIndex)
+            {
+              if (lst == null)
+                lst = new List<BRBookmark>();
+              lst.Add(bm);
+            }
+          }
+
+          if (lst == null)
+            return _EmptyBookmarkArray;
+          else
+            return lst.ToArray();
+        }
+      }
+
+      /// <summary>
+      /// Возвращает количество закладок для полосы.
+      /// Если закладок нет, возвращается 0.
+      /// </summary>
+      public int Count
+      {
+        get
+        {
+          if (_Owner.BookmarkList == null)
+            return 0;
+          else
+            return _Owner.BookmarkList.Count;
+        }
+      }
+
+      #endregion
+
+      #region Методы добавления
+
+      /// <summary>
+      /// Добавляет закладку в отчет
+      /// </summary>
+      /// <param name="name">Имя закладки</param>
+      /// <param name="rowIndex">Индекс строки</param>
+      /// <param name="columnIndex">Индекс столбца</param>
+      /// <returns>Созданная закладка</returns>
+      public BRBookmark Add(string name, int rowIndex, int columnIndex)
+      {
+        BRBookmark bookmark = new BRBookmark(name, _Owner, rowIndex, columnIndex);
+        _Owner.Report.Bookmarks.Add(bookmark);
+        return bookmark;
+      }
+
+      /// <summary>
+      /// Добавляет закладку в отчет
+      /// </summary>
+      /// <param name="name">Имя закладки</param>
+      /// <returns>Созданная закладка</returns>
+      public BRBookmark Add(string name)
+      {
+        return Add(name, 0, 0);
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Свойство для добавления закладок
+    /// </summary>
+    public BookmarkCollection Bookmarks { get { return new BookmarkCollection(this); } }
+
+
+    /// <summary>
+    /// Список закладок, относящихся к полосе.
+    /// Пополняется из BRReport.BookMarks
+    /// </summary>
+    internal List<BRBookmark> BookmarkList;
+
+    #endregion
+
     #region Дополнительные методы и свойства
 
     /// <summary>
@@ -1031,6 +1274,28 @@ namespace FreeLibSet.Reporting
       }
     }
 
+    /// <summary>
+    /// Возвращает true, если для полосы есть хотя бы одна гиперссылка
+    /// </summary>
+    public bool HasLinks
+    {
+      get
+      {
+        BRSelector sel = CreateSelector();
+        for (int i = 0; i < RowCount; i++)
+        {
+          sel.RowIndex = i;
+          for (int j = 0; j < ColumnCount; j++)
+          {
+            sel.ColumnIndex = j;
+            if (sel.HasLink)
+              return true;
+          }
+        }
+        return false;
+      }
+    }
+
     #endregion
   }
 
@@ -1051,12 +1316,11 @@ namespace FreeLibSet.Reporting
     /// <param name="columnCount">Количество столбцов</param>
     public BRRange(int firstRowIndex, int firstColumnIndex, int rowCount, int columnCount)
     {
-#if DEBUG
       if (rowCount < 1)
-        throw new ArgumentOutOfRangeException("rowCount");
+        throw ExceptionFactory.ArgOutOfRange("rowCount", rowCount, 1, null);
       if (columnCount < 1)
-        throw new ArgumentOutOfRangeException("columnCount");
-#endif
+        throw ExceptionFactory.ArgOutOfRange("columnCount", columnCount, 1, null);
+
       _FirstRowIndex = firstRowIndex;
       _FirstColumnIndex = firstColumnIndex;
       _RowCount = rowCount;
@@ -1123,6 +1387,239 @@ namespace FreeLibSet.Reporting
         sb.Append(LastColumnIndex);
       }
       return sb.ToString();
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Хранит значение (любого вида, не обязательно строку) и ссылку.
+  /// Ссылка должна быть общепринятого вида ("https://", "mailto://"), чтобы по ней мог выполняться переход из
+  /// браузера, Excel/Word/Calc/Writer.
+  /// Когда отчет выводится на экран или на печать, ссылка не используется.
+  /// Может использоваться в качестве значения свойства <see cref="BRSelector.Value"/> и связанных методах.
+  /// </summary>
+  [Serializable]
+  public sealed class BRValueWithLink : IFormattable
+  {
+    // Нет смысла делать структурой, так как всегда будет боксинг
+
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект, у которого значение и ссылка могут не совпадать
+    /// </summary>
+    /// <param name="value">Значение. Не может быть null</param>
+    /// <param name="linkData">Ссылка. Не может быть пустой строкой</param>
+    public BRValueWithLink(object value, string linkData)
+    {
+      if (value == null)
+        throw new ArgumentNullException("value");
+      if (String.IsNullOrEmpty(linkData))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("linkData");
+
+      if (linkData[0] == '#')
+      {
+        string errorText;
+        if (!BRBookmark.IsValidBookmarkName(linkData.Substring(1), out errorText))
+          throw new ArgumentException(errorText, "linkData");
+      }
+      else
+        new Uri(linkData); // проверка значения
+
+      if (value is BRValueWithLink) // попытка вложенного создания
+        value = ((BRValueWithLink)value).Value;
+
+      _Value = value;
+      _LinkData = linkData;
+    }
+
+    /// <summary>
+    /// Создает объект с текстовым значением, которое совпадает с ссылкой.
+    /// Обычно используется для интернет-ссылок
+    /// </summary>
+    /// <param name="linkData">Значение и ссылка. Не может быть пустой строкой.</param>
+    public BRValueWithLink(string linkData)
+      : this(linkData, linkData)
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Отображаемое значение
+    /// </summary>
+    public object Value { get { return _Value; } }
+    private readonly object _Value;
+
+    /// <summary>
+    /// Ссылка
+    /// </summary>
+    public string LinkData { get { return _LinkData; } }
+    private string _LinkData;
+
+    #endregion
+
+    #region Текстовое представление
+
+    /// <summary>
+    /// Вызывает <see cref="Object.ToString()"/> для значения <see cref="Value"/>.
+    /// Форматирование не используется.
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return _Value.ToString();
+    }
+
+    /// <summary>
+    /// Если <see cref="Value"/> поддерживает форматирование, то вызывается <see cref="IFormattable.ToString(string, IFormatProvider)"/>.
+    /// Иначе вызывается <see cref="Object.ToString()"/> без форматирования.
+    /// </summary>
+    /// <param name="format">Формат</param>
+    /// <param name="formatProvider">Провайдер форматирования</param>
+    /// <returns>Текстовое представление</returns>
+    public string ToString(string format, IFormatProvider formatProvider)
+    {
+      IFormattable v2 = _Value as IFormattable;
+      if (v2 == null)
+        return _Value.ToString();
+      else
+        return v2.ToString(format, formatProvider);
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Закладка в отчете, на которую может быть сделана ссылка (например, для оглавления).
+  /// Закладка задается для ячейки.
+  /// Закладка имеет имя, состоящее из латинских букв, цифр и знака подчеркивания. Имя должно начинаться с буквы.
+  /// Имя не может начинаться или заканчиваться подчеркиванием, или содержать два подчеркивания подряд.
+  /// Имя закладки не начинается со знака "#", а ссылка - начинается.
+  /// Имена должны быть уникальными в пределах <see cref="BRReport"/> (без учета регистра). Имена в пределах листа Excel не поддерживаются.
+  /// Закладки добавляются в список <see cref="BRReport.Bookmarks"/> или могут быть заданы непосредственно в объекте <see cref="BRBand"/>.
+  /// </summary>
+  public sealed class BRBookmark : IObjectWithCode
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает объект закладки
+    /// </summary>
+    /// <param name="name">Имя закладки</param>
+    /// <param name="band">Полоса, в которой располагается закладка</param>
+    /// <param name="rowIndex">Индекс строки ячейки в пределах <paramref name="band"/></param>
+    /// <param name="columnIndex">Индекс столбца ячейки в пределах <paramref name="band"/></param>
+    public BRBookmark(string name, BRBand band, int rowIndex, int columnIndex)
+    {
+      if (String.IsNullOrEmpty(name))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
+
+      string errorText;
+      if (!IsValidBookmarkName(name, out errorText))
+        throw new ArgumentException(errorText, "name");
+
+      if (band == null)
+        throw new ArgumentNullException("band");
+
+      if (rowIndex < 0 || rowIndex >= band.RowCount)
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, band.RowCount - 1);
+      if (columnIndex < 0 || columnIndex >= band.ColumnCount)
+        throw ExceptionFactory.ArgOutOfRange("columnIndex", columnIndex, 0, band.ColumnCount - 1);
+
+      _Name = name;
+      _Band = band;
+      _RowIndex = rowIndex;
+      _ColumnIndex = columnIndex;
+    }
+
+    /// <summary>
+    /// Создает объект закладки на первую ячейку полосы
+    /// </summary>
+    /// <param name="name">Имя закладки</param>
+    /// <param name="band">Полоса, в которой располагается закладка</param>
+    public BRBookmark(string name, BRBand band)
+      : this(name, band, 0, 0)
+    {
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Имя закладки (без ведущего символа "#")
+    /// </summary>
+    public string Name { get { return _Name; } }
+    private readonly string _Name;
+
+    string IObjectWithCode.Code { get { return _Name; } }
+
+    /// <summary>
+    /// Полоса, в которой располагается закладка
+    /// </summary>
+    public BRBand Band { get { return _Band; } }
+    private readonly BRBand _Band;
+
+    /// <summary>
+    /// Индекс строки
+    /// </summary>
+    public int RowIndex { get { return _RowIndex; } }
+    private readonly int _RowIndex;
+
+    /// <summary>
+    /// Индекс столбца
+    /// </summary>
+    public int ColumnIndex { get { return _ColumnIndex; } }
+    private readonly int _ColumnIndex;
+
+    /// <summary>
+    /// Возвращает <see cref="Name"/>
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return _Name;
+    }
+
+    /// <summary>
+    /// Ссылка на отчет
+    /// </summary>
+    public BRReport Report { get { return _Band.Report; } }
+
+    #endregion
+
+    #region Проверка корректности имени
+
+    /// <summary>
+    /// Проверка корректности имени закладки
+    /// </summary>
+    /// <param name="name">Проверяемое имя</param>
+    /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
+    /// <returns>true, если имя корректное</returns>
+    public static bool IsValidBookmarkName(string name, out string errorText)
+    {
+      if (String.IsNullOrEmpty(name))
+      {
+        errorText = Res.BRBookmark_Err_NameIsEmpty;
+        return false;
+      }
+      if (!Regex.IsMatch(name, "^[A-Za-z][A-Za-z0-9_]*$"))
+      {
+        errorText = String.Format(Res.BRBookmark_Err_NameIsInvalid, name);
+        return false;
+      }
+      if (name.EndsWith("_", StringComparison.Ordinal) || name.IndexOf("__") >= 0)
+      {
+        errorText = String.Format(Res.BRBookmark_Err_NameUnderscore, name);
+        return false;
+      }
+
+      errorText = null;
+      return true;
     }
 
     #endregion
@@ -1322,7 +1819,44 @@ namespace FreeLibSet.Reporting
       }
     }
 
+    /// <summary>
+    /// Возвращает <see cref="BRValueWithLink.Value"/>, если в ячейке задана ссылка.
+    /// Для обычных ячеек возвращает свойство <see cref="Value"/>.
+    /// </summary>
+    public object ActualValue
+    {
+      get
+      {
+        object v = Value;
+        BRValueWithLink v2 = v as BRValueWithLink;
+        if (v2 == null)
+          return v;
+        else
+          return v2.Value;
+      }
+    }
 
+    /// <summary>
+    /// Возвращает <see cref="BRValueWithLink.LinkData"/>, если в ячейке задана ссылка.
+    /// Для обычных ячеек возвращает пустую строку.
+    /// </summary>
+    public string LinkData
+    {
+      get
+      {
+        object v = Value;
+        BRValueWithLink v2 = v as BRValueWithLink;
+        if (v2 == null)
+          return String.Empty;
+        else
+          return v2.LinkData;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает true, если в ячейке задана ссылка.
+    /// </summary>
+    public bool HasLink { get { return Value is BRValueWithLink; } }
 
     /// <summary>
     /// Возвращает реальное выравнивание по горизонтали для случая <see cref="CellStyle"/>.HAlign=<see cref="BRHAlign.Auto"/>, в зависимости от типа значения <see cref="Value"/>
@@ -1335,9 +1869,13 @@ namespace FreeLibSet.Reporting
         if (res != BRHAlign.Auto)
           return res;
 
-        if (Value == null)
+        object v = Value;
+        if (v is BRValueWithLink)
+          v = ((BRValueWithLink)v).Value;
+
+        if (v == null)
           return BRHAlign.Left;
-        Type t = Value.GetType();
+        Type t = v.GetType();
         if (DataTools.IsNumericType(t))
           return BRHAlign.Right;
         if (t == typeof(DateTime) || t == typeof(bool))
@@ -1357,6 +1895,60 @@ namespace FreeLibSet.Reporting
         return r.FirstRowIndex == RowIndex && r.FirstColumnIndex == ColumnIndex;
       }
     }
+
+    #endregion
+
+    #region Закладки
+
+    /// <summary>
+    /// Реализация свойства <see cref="Bookmarks"/>
+    /// </summary>
+    public struct BookmarkCollection
+    {
+      #region Конструктор
+
+      internal BookmarkCollection(BRSelector owner)
+      {
+        _Owner = owner;
+      }
+
+      private readonly BRSelector _Owner;
+
+      #endregion
+
+      #region Доступ к закладкам
+
+      /// <summary>
+      /// Возвращает массив закладок для текущей ячейки.
+      /// Если закладок нет, возвращается пустой массив
+      /// </summary>
+      /// <returns>Массив закладок</returns>
+      public BRBookmark[] ToArray()
+      {
+        return _Owner.Band.Bookmarks[_Owner.RowIndex, _Owner.ColumnIndex];
+      }
+
+      #endregion
+
+      #region Добавление закладки
+
+      /// <summary>
+      /// Добавляет закладку на текущую ячейку
+      /// </summary>
+      /// <param name="name"></param>
+      /// <returns></returns>
+      public BRBookmark Add(string name)
+      {
+        return _Owner.Band.Bookmarks.Add(name, _Owner.RowIndex, _Owner.ColumnIndex);
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Доступ к закладкам, относящимся к ячейке
+    /// </summary>
+    public BookmarkCollection Bookmarks { get { return new BookmarkCollection(this); } }
 
     #endregion
   }

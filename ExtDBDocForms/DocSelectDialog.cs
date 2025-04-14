@@ -171,9 +171,9 @@ namespace FreeLibSet.Forms.Docs
         if (_Title == null)
         {
           if (MultiSelect)
-            return "Выбор документов \"" + DocTypeUI.DocType.PluralTitle + "\"";
+            return String.Format(Res.DocSelectDialog_Title_MultiSelect, DocTypeUI.DocType.PluralTitle);
           else
-            return "Выбор документа \"" + DocTypeUI.DocType.SingularTitle + "\"";
+            return String.Format(Res.DocSelectDialog_Title_SingleSelect, DocTypeUI.DocType.SingularTitle);
         }
         else
           return _Title;
@@ -309,10 +309,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          if (MultiSelect)
-            EFPApp.ShowException(e, "Не удалось установить выбранные документы \"" + DocTypeUI.DocType.PluralTitle + "\"");
-          else
-            EFPApp.ShowException(e, "Не удалось установить выбранный документ \"" + DocTypeUI.DocType.SingularTitle + "\" с DocId=" + DocId.ToString());
+          EFPApp.ShowException(e, Res.DocSelectDialog_ErrTitle_InitSelection);
         }
         form.ExternalFilters = Filters;
         form.ExternalEditorCaller = EditorCaller;
@@ -419,7 +416,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Не удалось установить выбранный документ \"" + DocTypeUI.DocType.SingularTitle + "\" с DocId=" + DocId.ToString());
+          EFPApp.ShowException(e, Res.DocSelectDialog_ErrTitle_InitSelection);
         }
 
         switch (EFPApp.ShowDialog(form, false, DialogPosition))
@@ -446,12 +443,12 @@ namespace FreeLibSet.Forms.Docs
       if (MultiSelect)
       {
         if (gh.SelectedRowCount == 0)
-          args.SetError("Документы должны быть выбраны");
+          args.SetError(Res.DocSelectDialog_Err_IsEmptyMultiSelect);
       }
       else
       {
         if (gh.CurrentId == 0)
-          args.SetError("Документ должен быть выбран");
+          args.SetError(Res.DocSelectDialog_Err_IsEmptySingleSelect);
       }
     }
 
@@ -636,9 +633,9 @@ namespace FreeLibSet.Forms.Docs
         if (_Title == null)
         {
           if (MultiSelect)
-            return "Выбор поддокументов \"" + SubDocTypeUI.SubDocType.PluralTitle + "\"";
+            return String.Format(Res.SubDocSelectDialog_Title_MultiSelect, SubDocTypeUI.SubDocType.PluralTitle);
           else
-            return "Выбор поддокумента \"" + SubDocTypeUI.SubDocType.SingularTitle + "\"";
+            return String.Format(Res.SubDocSelectDialog_Title_SingleSelect, SubDocTypeUI.SubDocType.SingularTitle);
         }
         else
           return _Title;
@@ -718,10 +715,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          if (MultiSelect)
-            EFPApp.ShowException(e, "Не удалось установить выбранные поддокументы \"" + SubDocTypeUI.SubDocType.PluralTitle + "\"");
-          else
-            EFPApp.ShowException(e, "Не удалось установить выбранный поддокумент \"" + SubDocTypeUI.SubDocType.SingularTitle + "\" с SubDocId=" + SubDocId.ToString());
+          EFPApp.ShowException(e, Res.SubDocSelectDialog_ErrTitle_InitSelection);
         }
         //Form.ExternalFilters = Filters;
 

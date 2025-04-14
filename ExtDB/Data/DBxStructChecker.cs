@@ -41,18 +41,23 @@ namespace FreeLibSet.Data
           {
             DBxTableStruct masterTable = dbs.Tables[col.MasterTableName];
             if (masterTable == null)
-              throw new DBxStructException(table, "В таблице \"" + table.TableName + "\" ссылочное поле \"" + col.ColumnName + "\" ссылается на несуществующую таблицу \"" + col.MasterTableName + "\"");
+              throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToUnknownTable,
+                table.TableName, col.ColumnName, col.MasterTableName));
             switch (masterTable.PrimaryKey.Count)
             {
               case 0:
-                throw new DBxStructException(table, "В таблице \"" + table.TableName + "\" ссылочное поле \"" + col.ColumnName + "\" ссылается на таблицу \"" + masterTable.TableName + "\", которая не имеет первичного ключа");
+                throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToTableNoPK,
+                  table.TableName, col.ColumnName, masterTable.TableName));
               case 1:
                 DBxColumnStruct pkCol = masterTable.Columns[masterTable.PrimaryKey[0]];
                 if (pkCol.ColumnType != col.ColumnType)
-                  throw new DBxStructException(table, "В таблице \"" + table.TableName + "\" ссылочное поле \"" + col.ColumnName + "\" типа \"" + col.ColumnType.ToString() + "\" ссылается на таблицу \"" + masterTable.TableName + "\", которая имеет первичный ключ по полю \"" + pkCol.ColumnType + "\"типа " + pkCol.ColumnType);
+                  throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefColumnTypeMismatch,
+                    table.TableName, col.ColumnName, col.ColumnType.ToString(),
+                    masterTable.TableName, pkCol.ColumnName, pkCol.ColumnType));
                 break;
               default:
-                throw new DBxStructException(table, "В таблице \"" + table.TableName + "\" ссылочное поле \"" + col.ColumnName + "\" ссылается на таблицу \"" + masterTable.TableName + "\", которая имеет составной первичный ключ");
+                throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToTableComplexPK,
+                  table.TableName, col.ColumnName, masterTable.TableName));
             }
           }
         }
@@ -89,11 +94,12 @@ namespace FreeLibSet.Data
       {
         string errorText;
         if (!db.IsValidTableName(table.TableName, out errorText))
-          throw new DBxStructException(table, "Неправильное имя таблицы \"" + table.TableName + "\"." + errorText);
+          throw new DBxStructException(table, String.Format(Res.DBxNameValidator_Arg_InvalidTableName,
+            table.TableName, errorText));
       }
 
       if (table.Columns.Count == 0)
-        throw new DBxStructException(table, "Таблица \"" + table.TableName + "\" не содержит ни одного столбца"); // 07.06.2023
+        throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_TableWithoutColumns, table.TableName)); // 07.06.2023
 
       foreach (DBxColumnStruct column in table.Columns)
         CheckColumnStruct(column, table, db);
@@ -111,14 +117,16 @@ namespace FreeLibSet.Data
       {
         string ErrorText;
         if (!db.IsValidColumnName(column.ColumnName, false, out ErrorText))
-          throw new DBxStructException(table, "Неправильное имя столбца \"" + column.ColumnName + "\". " + ErrorText);
+          throw new DBxStructException(table, String.Format(Res.DBxNameValidator_Arg_InvalidColumnName,
+            column.ColumnName, ErrorText));
       }
 
       switch (column.ColumnType)
       {
         case DBxColumnType.String:
           if (column.MaxLength < 1)
-            throw new DBxStructException(table, "Для текстового столбца \"" + column.ColumnName + "\" не задана длина строки");
+            throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_StringColumnWithoutLen,
+              column.ColumnName));
           break;
         case DBxColumnType.Int:
         case DBxColumnType.Float:
@@ -126,11 +134,13 @@ namespace FreeLibSet.Data
           if (column.MinValue != 0.0 || column.MaxValue != 0.0)
           {
             if (column.MinValue > column.MaxValue)
-              throw new DBxStructException(table, "Для числового столбца \"" + column.ColumnName + "\" не задан неправильный диапазон значений: {" + column.MinValue.ToString() + ":" + column.MaxValue.ToString() + "}");
+              throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_InvNumRange,
+                column.ColumnName, column.MinValue, column.MaxValue));
           }
           break;
         case DBxColumnType.Unknown:
-          throw new DBxStructException(table, "Для столбца \"" + column.ColumnName + "\" не задан тип данных");
+          throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_UnknownColumnType,
+            column.ColumnName));
       }
     }
 
@@ -148,12 +158,15 @@ namespace FreeLibSet.Data
         case 1:
           DBxColumnStruct column = table.Columns[table.PrimaryKey[0]];
           if (column.DataType != typeof(Int32))
-            throw new DBxPrimaryKeyException("Таблица \"" + table.TableName + "\" имеет первичный ключа по полю \"" + column.ColumnName + "\", которое имеет тип (" + column.ColumnType.ToString() + "), отличный от Int32");
+            throw new DBxPrimaryKeyException(String.Format(Res.DBxStructChecker_Err_PKWrongType,
+              table.TableName, column.ColumnName, column.ColumnType, "Int32"));
           return column.ColumnName;
         case 0:
-          throw new DBxPrimaryKeyException("Таблица \"" + table.TableName + "\" не имеет первичного ключа. Требуется первичный ключ по целочисленному полю");
+          throw new DBxPrimaryKeyException(String.Format(Res.DBxStructChecker_Err_NoPK,
+            table.TableName, "Int32"));
         default:
-          throw new DBxPrimaryKeyException("Таблица \"" + table.TableName + "\" имеет составной первичный ключ. Требуется первичный ключ по единственному целочисленному полю");
+          throw new DBxPrimaryKeyException(String.Format(Res.DBxStructChecker_Err_ComplexPK,
+            table.TableName, "Int32"));
       }
     }
 

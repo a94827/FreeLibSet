@@ -107,6 +107,25 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Другие свойства
+
+    /// <summary>
+    /// Управляющий элемент.
+    /// Для <see cref="EFPFormCommandItems"/> возвращается объект формы.
+    /// Не может быть null.
+    /// </summary>
+    public abstract Control Control { get; }
+
+    /// <summary>
+    /// Форма, на которой расположен управляющий элемент.
+    /// Для <see cref="EFPControlCommandItems"/> возвращается <see cref="System.Windows.Forms.Control.FindForm()"/>,
+    /// а для <see cref="EFPFormCommandItems"/> - сама форма.
+    /// Может быть null для <see cref="EFPControlCommandItems"/>.
+    /// </summary>
+    public abstract Form Form { get; }
+
+    #endregion
+
     #region Подготовка
 
     /// <summary>
@@ -268,6 +287,16 @@ namespace FreeLibSet.Forms
       return ControlProvider.StatusBarPanelsShouldBeDetached();
     }
 
+    /// <summary>
+    /// Возвращает свойство <see cref="EFPControlBase.Control"/>
+    /// </summary>
+    public override Control Control { get { return ControlProvider.Control; } }
+
+    /// <summary>
+    /// Возвращает значение <see cref="System.Windows.Forms.Control.FindForm()"/>
+    /// </summary>
+    public override Form Form { get { return Control.FindForm(); } }
+
     #endregion
   }
 
@@ -298,6 +327,16 @@ namespace FreeLibSet.Forms
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
     private readonly EFPFormProvider _FormProvider;
+
+    /// <summary>
+    /// Возвращает ссылку на объект <see cref="System.Windows.Forms.Form"/>
+    /// </summary>
+    public override Control Control { get { return _FormProvider.Form; } }
+
+    /// <summary>
+    /// Возвращает ссылку на объект <see cref="System.Windows.Forms.Form"/>
+    /// </summary>
+    public override Form Form { get { return _FormProvider.Form; } }
 
     #endregion
 

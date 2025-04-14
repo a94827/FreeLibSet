@@ -131,7 +131,7 @@ namespace FreeLibSet.Data.SQLite
       {
         if (value < SQLiteDBx.MinDate)
           throw new ArgumentOutOfRangeException("value", value,
-            "В полях типа \"дата\" и \"дата-время\" нельзя задавать год меньше " + SQLiteDBx.MinDate.Year.ToString() + ". База данных SQLite не может потом прочитать такие значения");
+            String.Format(Res.SQLiteDBx_Arg_YearOutOfRange, SQLiteDBx.MinDate.Year));
       }
 
       // 08.10.2018

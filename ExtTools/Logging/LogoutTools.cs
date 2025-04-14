@@ -2867,11 +2867,11 @@ namespace FreeLibSet.Logging
       int cnt = 0;
       args.WriteLine("Private assemblies");
       args.IndentLevel++;
-      DoLogoutAssemblies1(args, ref cnt, asms, false);
+      DoLogoutAssemblies(args, ref cnt, asms, false);
       args.IndentLevel--;
       args.WriteLine("GAC assemblies");
       args.IndentLevel++;
-      DoLogoutAssemblies1(args, ref cnt, asms, true);
+      DoLogoutAssemblies(args, ref cnt, asms, true);
       args.IndentLevel--;
     }
 
@@ -2898,7 +2898,7 @@ namespace FreeLibSet.Logging
     }
 
     [DebuggerStepThrough]
-    private static void DoLogoutAssemblies1(LogoutInfoNeededEventArgs args, ref int cnt, Assembly[] asms, bool isGAC)
+    private static void DoLogoutAssemblies(LogoutInfoNeededEventArgs args, ref int cnt, Assembly[] asms, bool isGAC)
     {
       for (int i = 0; i < asms.Length; i++)
       {
@@ -2935,24 +2935,37 @@ namespace FreeLibSet.Logging
 
         args.IndentLevel++;
         args.WriteLine("Build: " + (debugMode ? " (Debug)" : " (Release)") + " (" + asms[i].GetName().ProcessorArchitecture.ToString() + ")" + (isPIA ? " [PrimaryInteropAssembly]" : String.Empty));
-#if NET
-        args.WriteLine(asms[i].Location);
-#else
-        args.WriteLine(asms[i].CodeBase);
-#endif
+
+        string location = String.Empty;
+        try
+        {
+          // 09.04.2025. Всегда используем свойство Location
+          //#if NET
+          //          location = asms[i].Location;
+          //#else
+          //          location = asms[i].CodeBase;
+          //#endif
+          location = asms[i].Location;
+
+          args.WriteLine(asms[i].Location);
+        }
+        catch (Exception e)
+        {
+          args.WriteLine("Error getting location: " + e.Message);
+        }
+
         int indentLevel = args.IndentLevel;
         try
         {
-#if NET
-          AbsPath filePath = new AbsPath(asms[i].Location);
-#else
-          AbsPath filePath = new AbsPath(asms[i].CodeBase);
-#endif
-          if (File.Exists(filePath.Path))
+          if (!String.IsNullOrEmpty(location))
           {
-            args.IndentLevel++;
-            FileInfo fi = new FileInfo(filePath.Path);
-            args.WriteLine("LastWriteTime=" + fi.LastWriteTime.ToString() + ", Length=" + fi.Length.ToString());
+            AbsPath filePath = new AbsPath(location);
+            if (File.Exists(filePath.Path))
+            {
+              args.IndentLevel++;
+              FileInfo fi = new FileInfo(filePath.Path);
+              args.WriteLine("LastWriteTime=" + fi.LastWriteTime.ToString() + ", Length=" + fi.Length.ToString());
+            }
           }
         }
         catch { }

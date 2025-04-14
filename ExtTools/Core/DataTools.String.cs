@@ -486,6 +486,8 @@ namespace FreeLibSet.Core
 
     #region AddStrIfNoEmpty
 
+    // Есть также перегрузка для DataRow в DataTools.cs
+
     /// <summary>
     /// Добавляет строку <paramref name="addedStr"/> к строке <paramref name="resStr"/>, если <paramref name="addedStr"/> непустая. 
     /// Перед <paramref name="addedStr"/> добавляется сепаратор <paramref name="separator"/>. 
@@ -659,7 +661,7 @@ namespace FreeLibSet.Core
       if (c >= 'a' && c <= 'f')
         return (c - 'a') + 10;
 
-      throw ExceptionFactory.ArgBadChar("s", s, charIndex);
+      throw ExceptionFactory.ArgInvalidChar("s", s, charIndex);
     }
 
     #endregion
@@ -946,7 +948,7 @@ namespace FreeLibSet.Core
     public static int IndexOfOccurence(string str, string value, int occurence, StringComparison comparisonType)
     {
       if (occurence < 0)
-        throw new ArgumentOutOfRangeException("occurence");
+        throw ExceptionFactory.ArgOutOfRange("occurence", occurence, 0, null);
 
       if (String.IsNullOrEmpty(value))
         return 0;
@@ -989,7 +991,7 @@ namespace FreeLibSet.Core
     public static int LastIndexOfOccurence(string str, string value, int occurence, StringComparison comparisonType)
     {
       if (occurence < 0)
-        throw new ArgumentOutOfRangeException("occurence");
+        throw ExceptionFactory.ArgOutOfRange("occurence", occurence, 0, null);
 
       if (String.IsNullOrEmpty(value))
         return 0;

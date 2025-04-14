@@ -372,6 +372,36 @@ namespace ExtTools_tests.Core
 
     #endregion
 
+    #region AddStrIfNotEmpty()
+
+    [TestCase(null, null, null, "")]
+    [TestCase(null, "", null, "")]
+    [TestCase(null, null, "", "")]
+    [TestCase(null, "", "", "")]
+    [TestCase("", "", "", "")]
+    [TestCase("A", "", "", "A")]
+    [TestCase("", "B", "", "B")]
+    [TestCase("", "", "C", "")]
+    [TestCase("", "B", "C", "B")]
+    [TestCase("A", "", "C", "A")]
+    [TestCase("A", "B", "C", "ACB")]
+    [TestCase("A", "B", "", "AB")]
+    public void AddStrIfNotEmpty_DataRow(string orgVal, string addedStr, string separator, string wantedRes)
+    {
+      DataTable table = new DataTable();
+      table.Columns.Add("F1", typeof(string));
+
+      DataRow row = table.Rows.Add();
+      DataTools.SetString(row, "F1", orgVal);
+
+      DataTools.AddStrIfNotEmpty(row, "F1", addedStr, separator);
+
+      string res = DataTools.GetString(row, "F1");
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    #endregion
+
     #region GetValues()
 
     [Test]

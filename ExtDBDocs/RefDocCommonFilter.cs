@@ -176,7 +176,7 @@ namespace FreeLibSet.Data.Docs
           OnChanged();
           break;
         default:
-          throw new ArgumentException("Неизвестный режим " + mode.ToString(), "mode");
+          throw ExceptionFactory.ArgUnknownValue("mode", mode);
       }
     }
 
@@ -277,7 +277,7 @@ namespace FreeLibSet.Data.Docs
         case RefDocFilterMode.Null:
           return new ValueFilter(ColumnName, null, typeof(Int32));
         default:
-          throw new BugException("Неизвестный режим " + Mode.ToString());
+          throw new BugException("Unknown mode=" + Mode.ToString());
       }
     }
 
@@ -377,7 +377,7 @@ namespace FreeLibSet.Data.Docs
         case RefDocFilterMode.Null:
           return id == 0;
         default:
-          throw new BugException("Неизвестный режим " + Mode.ToString());
+          throw new BugException("Unknown mode " + Mode.ToString());
       }
     }
 
@@ -404,20 +404,22 @@ namespace FreeLibSet.Data.Docs
       if (docType == null)
         throw new ArgumentNullException("docType");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       if (!String.IsNullOrEmpty(docType.GroupRefColumnName))
       {
         DBxColumnStruct groupIdCol = docType.Struct.Columns[docType.GroupRefColumnName];
         if (groupIdCol == null)
-          throw new ArgumentException("Неправильное описание вида документа \"" + docType.Name + "\". Нет поля \"" + docType.GroupRefColumnName + "\"", "docType");
+          throw new ArgumentException(String.Format(Res.RefDocCommonFilterSet_Arg_NoGroupIdColumn,
+            docType.Name, docType.GroupRefColumnName), "docType");
         if (String.IsNullOrEmpty(groupIdCol.MasterTableName))
-          throw new ArgumentException("Неправильное описание вида документа \"" + docType.Name + "\". Поле \"" + docType.GroupRefColumnName + "\" нея является", "docType");
-        DBxDocType GroupDocType = docProvider.DocTypes[groupIdCol.MasterTableName];
-        if (GroupDocType == null)
-          throw new NullReferenceException("Не найдены документы для мастер-таблицы \"" + groupIdCol.MasterTableName + "\"");
-        _GroupFilter = new RefDocCommonFilter(docProvider, GroupDocType, columnName + "." + docType.GroupRefColumnName);
-        _GroupFilter.DisplayName = GroupDocType.SingularTitle;
+          throw new ArgumentException(String.Format(Res.RefDocCommonFilterSet_Arg_GroupIdColumnIsNotRef,
+            docType.Name, docType.GroupRefColumnName), "docType");
+        DBxDocType groupDocType = docProvider.DocTypes[groupIdCol.MasterTableName];
+        if (groupDocType == null)
+          throw new NullReferenceException(String.Format(Res.RefDocCommonFilterSet_Err_UnknownMasterTable, groupIdCol.MasterTableName));
+        _GroupFilter = new RefDocCommonFilter(docProvider, groupDocType, columnName + "." + docType.GroupRefColumnName);
+        _GroupFilter.DisplayName = groupDocType.SingularTitle;
         Add(_GroupFilter);
       }
 
@@ -485,7 +487,7 @@ namespace FreeLibSet.Data.Docs
       if (groupDocType == null)
         throw new ArgumentNullException("groupDocType");
       if (String.IsNullOrEmpty(groupDocType.TreeParentColumnName))
-        throw new ArgumentException("Для документов \"" + groupDocType.Name + "\" не установлено свойство TreeParentColumnName. Следовательно, эти документы не могут быть деревом групп");
+        throw new ArgumentException(String.Format(Res.RefGroupDocCommonFilter_Arg_NoTreeParentColumnName, groupDocType.Name));
 
       _DocProvider = docProvider;
       _GroupDocType = groupDocType;
@@ -884,7 +886,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Проверка значения для фильтра отчета.
-    /// Если фильтр не установлен (IsEmpty=true), возвращается true
+    /// Если фильтр не установлен (<see cref="IsEmpty"/>=true), возвращается true.
     /// </summary>
     /// <param name="rowValue">Проверяемое значение</param>
     /// <returns>true, если значение проходит условие фильтра</returns>

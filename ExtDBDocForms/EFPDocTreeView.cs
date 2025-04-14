@@ -96,8 +96,7 @@ namespace FreeLibSet.Forms.Docs
       if (docTypeUI.UI.DocProvider.DocTypes.UseDeleted)
       {
         ciShowDeleted = new EFPCommandItem("View", "ShowHiddenDocs");
-        ciShowDeleted.MenuText = "Показывать удаленные записи";
-        ciShowDeleted.ToolTipText = "Показывать удаленные записи";
+        ciShowDeleted.MenuText = Res.Cmd_Menu_View_ShowHiddenDocs;
         ciShowDeleted.Parent = CommandItems.MenuFilter;
         ciShowDeleted.ImageKey = "ShowHiddenDocs";
         ciShowDeleted.Click += new EventHandler(ShowDeletedClick);
@@ -226,9 +225,9 @@ namespace FreeLibSet.Forms.Docs
     protected override void OnRefreshData(EventArgs args)
     {
       if (args == null)
-        EFPApp.BeginWait("Загрузка данных", DocTypeUI.TableImageKey);
+        EFPApp.BeginWait(Res.Common_Phase_DataLoad, DocTypeUI.TableImageKey);
       else
-        EFPApp.BeginWait("Обновление данных", "Refresh");
+        EFPApp.BeginWait(Res.Common_Phase_Refresh, "Refresh");
       try
       {
         DBxFilter filter = Filters.GetSqlFilter();
@@ -297,7 +296,7 @@ namespace FreeLibSet.Forms.Docs
       set
       {
         if (value != null && DocTypeUI.GroupDocType == null)
-          throw new InvalidOperationException("Нельзя устанавливать свойство AuxFilterGroupIds для просмотра документов \"" + DocTypeUI.DocType.PluralTitle + "\"");
+          throw new InvalidOperationException(String.Format(Res.EFPDataView_Err_AuxFilterGroupIds, DocTypeUI.DocType.PluralTitle));
 
         _AuxFilterGroupIds = value;
         if (_OriginalModel != null)
@@ -848,7 +847,7 @@ namespace FreeLibSet.Forms.Docs
               value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
             }
             else
-              throw new BugException("Не найдено поле \"" + mainColName + "\"");
+              throw new BugException("Column not found: \"" + mainColName + "\"");
           }
           else
             value = srcRow[colName, rowVer];
@@ -937,7 +936,7 @@ namespace FreeLibSet.Forms.Docs
       public override string ToString()
       {
         if (Owner == null)
-          return "[ Отключен от просмотра ]";
+          return "Disconnected";
         else
           return Owner.ToString();
       }
@@ -990,7 +989,7 @@ namespace FreeLibSet.Forms.Docs
         catch (Exception e) // 04.02.2022
         {
           AddExceptionInfo(e);
-          EFPApp.ShowException(e, DisplayName + " - ошибка загрузки данных");
+          EFPApp.ShowException(e, String.Format(Res.EFPDataView_ErrTitle_DataViewDataLoading, DisplayName));
         }
       }
     }
@@ -1019,7 +1018,7 @@ namespace FreeLibSet.Forms.Docs
 
 #if DEBUG
       if (UsedColumnNames == null)
-        throw new NullReferenceException("Свойство UsedColumnNames не инициализировано");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "UsedColumnNames");
 #endif
     }
 

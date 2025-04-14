@@ -203,7 +203,7 @@ namespace FreeLibSet.Data
       {
         int p = columnName.IndexOf(badChars[i]);
         if (p >= 0)
-          throw ExceptionFactory.ArgBadChar("columnName", columnName, p);
+          throw ExceptionFactory.ArgInvalidChar("columnName", columnName, p);
       }
     }
 
@@ -3444,7 +3444,7 @@ namespace FreeLibSet.Data
     public IdsFilterGenerator(Int32[] allIds, int maxCount)
     {
       if (maxCount < 1)
-        throw new ArgumentOutOfRangeException("maxCount");
+        throw ExceptionFactory.ArgOutOfRange("maxCount", maxCount, 1, null);
 
       // Число групп
       int n1 = (allIds.Length + maxCount - 1) / maxCount;

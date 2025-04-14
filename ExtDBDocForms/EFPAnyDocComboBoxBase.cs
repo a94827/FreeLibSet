@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using FreeLibSet.Data;
 using FreeLibSet.Controls;
 using FreeLibSet.UICore;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -24,7 +25,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Текст комбоблока по умолчанию, когда не выбран документ
     /// </summary>
-    public const string DefaultEmptyText = "[ нет ]";
+    public static string DefaultEmptyText { get{return Res.EFPComboBox_Msg_Empty; } }
 
     #endregion
 
@@ -105,7 +106,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка при выборе из комбоблока \"" + DisplayName + "\"");
+        EFPApp.ShowException(e, String.Format(Res.EFPComboBox_ErrTitle_PopupClick, DisplayName));
         //EFPApp.MessageBox(e.Message, "Ошибка при выборе из списка",
         //  MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
@@ -146,7 +147,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка очистки значения");
+        EFPApp.ShowException(e, String.Format(Res.EFPComboBox_ErrTitle_ClearClick, DisplayName));
       }
     }
 
@@ -408,7 +409,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docSel">Выборка документов</param>
     protected virtual void OnSetDocSel(DBxDocSelection docSel)
     {
-      throw new NotSupportedException("Присвоение выборки документов не реализовано");
+      throw ExceptionFactory.MustBeReimplemented(this, "OnSetDocSel");
     }
 
     /// <summary>
@@ -492,7 +493,7 @@ namespace FreeLibSet.Forms.Docs
       if (controlProvider.DocInfoSupported)
       {
         ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
-        ciShowDocInfo.MenuText = "Информация о документе";
+        ciShowDocInfo.MenuText = Res.Cmd_Menu_DocInfo;
         ciShowDocInfo.ShortCut = Keys.F12;
         ciShowDocInfo.ImageKey = "Information";
         ciShowDocInfo.Click += new EventHandler(ciShowDocInfo_Click);
@@ -566,7 +567,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (!ControlProvider.IsNotEmpty)
       {
-        EFPApp.ShowTempMessage("Значение не выбрано");
+        EFPApp.ShowTempMessage(Res.EFPComboBox_Err_IsEmpty);
         return;
       }
       DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxViewDocSelReason.Copy);
@@ -582,7 +583,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = ControlProvider.UI.PasteDocSel();
       if (docSel == null)
       {
-        EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoDocSel);
         return;
       }
       // Сами не нормализуем
@@ -600,13 +601,13 @@ namespace FreeLibSet.Forms.Docs
     {
       if (!ControlProvider.IsNotEmpty)
       {
-        EFPApp.ShowTempMessage("Значение не выбрано");
+        EFPApp.ShowTempMessage(Res.EFPComboBox_Err_IsEmpty);
         return;
       }
       DBxDocSelection docSel = ControlProvider.PerformGetDocSel(EFPDBxViewDocSelReason.Copy);
       if (docSel.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Нет выбранного документа");
+        EFPApp.ShowTempMessage(Res.Common_ToolTipText_NoDoc);
         return;
       }
 

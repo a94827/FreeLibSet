@@ -213,7 +213,7 @@ namespace FreeLibSet.Forms.Docs
             }
           }
 
-          EFPApp.ShowTempMessage("Нет связанных с сообщением документов");
+          EFPApp.ShowTempMessage(Res.EFPDBxErrorGridView_Err_NoDocs);
           return true;
       }
 
@@ -313,7 +313,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = null;
       try
       {
-        EFPApp.BeginWait("Создание выборки документов", "Выборка");
+        EFPApp.BeginWait(Res.Common_Phase_DocSelCreation, "DBxDocSelection");
         try
         {
           EFPDBxErrorGridViewDocSelEventArgs args = new EFPDBxErrorGridViewDocSelEventArgs(items, UI, reason);
@@ -328,7 +328,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка создания выборки документов для табличного просмотра");
+        EFPApp.ShowException(e);
       }
       return docSel;
     }
@@ -373,8 +373,8 @@ namespace FreeLibSet.Forms.Docs
 
       if (ControlProvider.HasGetDocSelHandler) // Есть обработчик
       {
-        EFPCommandItem ci = new EFPCommandItem("Send", "DocSel");
-        ci.MenuText = "Выборка документов";
+        EFPCommandItem ci = new EFPCommandItem("SendTo", "DocSel");
+        ci.MenuText = Res.Cmd_Menu_SendTo_DocSel;
         ci.ImageKey = "DBxDocSelection";
         ci.Parent = base.MenuSendTo;
         ci.Click += ciSendToDocSel_Click;
@@ -409,7 +409,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Выборка не содержит документов");
+        EFPApp.ShowTempMessage(Res.DocSel_Msg_IsEmpty);
         return;
       }
       ControlProvider.UI.ShowDocSel(docSel);

@@ -586,10 +586,7 @@ namespace FreeLibSet.Data.Docs
       DataTable table1;
       if (!_BufStructs.TryGetValue(tableName, out table1))
       {
-        DBxDocTypeBase dtb = DocTypes.FindByTableName(tableName);
-        if (dtb == null)
-          throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
-
+        DBxDocTypeBase dtb = DocTypes.GetByTableName(tableName);
 
         table1 = DoGetTemplate(tableName, dtb.IsSubDoc);
         _BufStructs[tableName] = table1; // при асинхронном вызове ничего плохого не случится
@@ -779,14 +776,23 @@ namespace FreeLibSet.Data.Docs
     #region Обработка данных
 
     /// <summary>
-    /// Загрузить документы (без поддокументов)
+    /// Загрузить документы (без поддокументов).
+    /// Гарантируется, что будут загружены все документы, в противном случае будет выброшено исключение
     /// </summary>
     /// <param name="docTypeName">Имя таблицы документов</param>
     /// <param name="docIds">Массив идентификаторов</param>
     /// <returns>Таблица документов</returns>
     public DataTable LoadDocData(string docTypeName, Int32[] docIds)
     {
-      return DoLoadDocData(docTypeName, docIds);
+      DataTable table = DoLoadDocData(docTypeName, docIds);
+      if (table.Rows.Count != docIds.Length)
+      {
+        InvalidOperationException ex = new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_LoadDocRowCount,
+          docTypeName, docIds.Length, table.Rows.Count));
+        ex.Data["WantedDocIds"] = docIds;
+        ex.Data["LoadedDocIds"] = DataTools.GetIds(table);
+      }
+      return table;
     }
 
     /// <summary>
@@ -1065,6 +1071,26 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Таблица ссылок</returns>
     protected abstract DataTable DoGetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId);
 
+
+    /// <summary>
+    /// Получить текстовое обозначение для перечисления <see cref="UndoAction"/>
+    /// </summary>
+    /// <param name="action">Действие</param>
+    /// <returns>Текстовое представление</returns>
+    public static string GetUndoActionName(UndoAction action)
+    {
+      switch (action)
+      {
+        case UndoAction.Base: return Res.UndoAction_Msg_Base;
+        case UndoAction.Insert: return Res.UndoAction_Msg_Insert;
+        case UndoAction.Edit: return Res.UndoAction_Msg_Edit;
+        case UndoAction.Delete: return Res.UndoAction_Msg_Delete;
+        case UndoAction.Undo: return Res.UndoAction_Msg_Undo;
+        case UndoAction.Redo: return Res.UndoAction_Msg_Redo;
+        default: return String.Format(Res.UndoAction_Msg_Unknown, (int)action);
+      }
+    }
+
     #endregion
 
     #region Доступ к версиям документа
@@ -1148,7 +1174,7 @@ namespace FreeLibSet.Data.Docs
 
     /*
      * В целях безопасности соединение с базой данной недоступно через провайдер документов.
-     * Доступны только некоторые вызовы
+     * Доступны только некоторые вызовы.
      */
 
     #region DBCache
@@ -1271,7 +1297,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получение значений служебных полей произвольного документа.
-    /// Некоторые поля могут быть не заполнены, если у пользователя нет прав или информация недоступна из-за конфигурации DBxDocTypes.
+    /// Некоторые поля могут быть не заполнены, если у пользователя нет прав или информация недоступна из-за конфигурации <see cref="DBxDocTypes"/>.
     /// Выполняется SQL-запрос к базе данных.
     /// </summary>
     /// <param name="docTypeName">Имя вида документа</param>
@@ -1284,7 +1310,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получение значений служебных полей произвольного документа.
-    /// Некоторые поля могут быть не заполнены, если у пользователя нет прав или информация недоступна из-за конфигурации DBxDocTypes.
+    /// Некоторые поля могут быть не заполнены, если у пользователя нет прав или информация недоступна из-за конфигурации <see cref="DBxDocTypes"/>.
     /// </summary>
     /// <param name="docTypeName">Имя вида документа</param>
     /// <param name="docId">Идентификатор вида документа. Не может быть фиктивным идентификатором или 0</param>
@@ -1293,9 +1319,9 @@ namespace FreeLibSet.Data.Docs
     public DBxDocServiceInfo GetDocServiceInfo(string docTypeName, Int32 docId, bool fromCache)
     {
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
       if (!DocTypes.Contains(docTypeName))
-        throw new ArgumentException("Неизвестный вид документа \"" + docTypeName + "\"");
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownDocType, docTypeName), "docTypeName");
       CheckIsRealDocId(docId);
 
       DBxColumns cols = AllDocServiceColumns;
@@ -1811,8 +1837,12 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Массив идентификаторов</returns>
     public IdList GetIds(string tableName, DBxColumns columnNames, object[] values)
     {
+#if DEBUG
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
+#endif
       if (columnNames.Count == 0)
-        throw new ArgumentException("Не задано ни одного поля для поиска в GetIds для таблицы " + tableName, "columnNames");
+        throw ExceptionFactory.ArgIsEmpty("columnNames");
 
       DBxFilter filter = ValueFilter.CreateFilter(columnNames, values);
       return DoGetIds(tableName, filter);
@@ -1927,9 +1957,11 @@ namespace FreeLibSet.Data.Docs
     public Int32 FindRecord(string tableName, DBxColumns columnNames, object[] values, DBxOrder orderBy)
     {
 #if DEBUG
-      if (columnNames == null || columnNames.Count == 0)
-        throw new ArgumentException("Не задано ни одного поля для поиска в FindRecord для таблицы " + tableName, "columnNames");
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
 #endif
+      if (columnNames.Count == 0)
+        throw ExceptionFactory.ArgIsEmpty("columnNames");
 
       DBxFilter filter = ValueFilter.CreateFilter(columnNames, values);
 
@@ -2270,7 +2302,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Идентификатор двоичных данных или файла, дополненный идентификатором документа и поддокумента.
-    /// Эта структура не используется в прикладном коде
+    /// Эта структура не используется в прикладном коде.
     /// </summary>
     [Serializable]
     public struct DocSubDocDataId
@@ -2285,10 +2317,10 @@ namespace FreeLibSet.Data.Docs
       /// <param name="dataId">Идентификатор двоочиных данных или файла</param>
       public DocSubDocDataId(Int32 docId, Int32 subDocId, Int32 dataId)
       {
-        if (docId == 0) // может быть реальный или фиктиывный идкентификатор
+        if (docId == 0) // может быть реальный или фиктивный идкентификатор
           throw new ArgumentException("docId=" + docId.ToString(), "docId");
 
-        //if (subDocId<0) // может быть реальный или фиктиывный идкентификатор или 0
+        //if (subDocId<0) // может быть реальный или фиктивный идкентификатор или 0
         //  throw new ArgumentException("subDocId=" + subDocId.ToString(), "subDocId");
         if (dataId <= 0) // обязательно реальный
           throw new ArgumentException("dataId=" + dataId.ToString(), "dataId");
@@ -2307,21 +2339,21 @@ namespace FreeLibSet.Data.Docs
       /// Должен быть реальным идентификатором.
       /// </summary>
       public Int32 DocId { get { return _DocId; } }
-      private Int32 _DocId;
+      private readonly Int32 _DocId;
 
       /// <summary>
       /// Идентификатор поддокумента.
       /// Должен быть реальным идентификатором или 0 для основного документа
       /// </summary>
       public Int32 SubDocId { get { return _SubDocId; } }
-      private Int32 _SubDocId;
+      private readonly Int32 _SubDocId;
 
       /// <summary>
       /// Идентификатор двоичных данных или файла.
       /// Должен быть реальным идентификатором.
       /// </summary>
       public Int32 DataId { get { return _DataId; } }
-      private Int32 _DataId;
+      private readonly Int32 _DataId;
 
       #endregion
 
@@ -2369,8 +2401,7 @@ namespace FreeLibSet.Data.Docs
 
       DBxDocType docType;
       DBxSubDocType subDocType;
-      if (!DocTypes.FindByTableName(tableName, out docType, out subDocType))
-        throw new ArgumentException("Таблица \"" + tableName + "\" не относится к документу или поддокументу");
+      DocTypes.GetByTableName(tableName, out docType, out subDocType);
 
       List<DocSubDocDataId> dummyIds = new List<DocSubDocDataId>();
 
@@ -2498,7 +2529,7 @@ namespace FreeLibSet.Data.Docs
       Dictionary<Int32, byte[]> dict = InternalGetBinData2(tableName, columnName, wantedId, docVersion, preloadIds);
 #if DEBUG
       if (dict.Count < 1)
-        throw new BugException("InternalGetBinData2 вернул пустую коллекцию");
+        throw new BugException("InternalGetBinData2 returned an empty dictionary");
 #endif
 
       #endregion
@@ -2510,7 +2541,7 @@ namespace FreeLibSet.Data.Docs
 #if DEBUG
         CheckIsRealDocId(pair.Key);
         if (pair.Value == null)
-          throw new BugException("InternalGetBinData2 вернул null для BinDataId=" + pair.Key.ToString());
+          throw new BugException("InternalGetBinData2 returned null for BinDataId=" + pair.Key.ToString());
 #endif
         item = new BinDataCacheItem();
         item.Data = pair.Value;
@@ -2595,7 +2626,7 @@ namespace FreeLibSet.Data.Docs
     public StoredFileInfo GetDBFileInfo(Int32 fileId)
     {
       if (DBCache == null)
-        throw new NullReferenceException("Свойство DBCache не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DBCache");
 
       if (fileId == 0)
         return StoredFileInfo.Empty;
@@ -2650,13 +2681,12 @@ namespace FreeLibSet.Data.Docs
 
       DBxDocType docType;
       DBxSubDocType subDocType;
-      if (!DocTypes.FindByTableName(tableName, out docType, out subDocType))
-        throw new ArgumentException("Таблица \"" + tableName + "\" не относится к документу или поддокументу");
+      DocTypes.GetByTableName(tableName, out docType, out subDocType);
 
       if (subDocType == null)
       {
-        Int32 FileId = DataTools.GetInt(GetValue(tableName, id, columnName));
-        return InternalGetDBFile1(tableName, columnName, new DocSubDocDataId(id, 0, FileId), 0, dummyIds);
+        Int32 fileId = DataTools.GetInt(GetValue(tableName, id, columnName));
+        return InternalGetDBFile1(tableName, columnName, new DocSubDocDataId(id, 0, fileId), 0, dummyIds);
       }
       else
       {
@@ -2766,19 +2796,20 @@ namespace FreeLibSet.Data.Docs
       Dictionary<Int32, FileContainer> dict = InternalGetDBFile2(tableName, columnName, wantedId, docVersion, preloadIds);
 #if DEBUG
       if (dict.Count < 1)
-        throw new BugException("InternalGetDBFile2 вернул пустую коллекцию");
+        throw new BugException("InternalGetDBFile2 returned empty dictionary");
 #endif
 
       #endregion
 
       #region 4. Добавление в кэш
 
+
       foreach (KeyValuePair<Int32, FileContainer> pair in dict)
       {
 #if DEBUG
         CheckIsRealDocId(pair.Key);
         if (pair.Value == null)
-          throw new BugException("InternalGetDBFile2 вернул null для FileId=" + pair.Key.ToString());
+          throw new BugException("InternalGetDBFile2 returned null для FileId=" + pair.Key.ToString());
 #endif
         item = new DBFileCacheItem();
         item.File = pair.Value;
@@ -2965,7 +2996,7 @@ namespace FreeLibSet.Data.Docs
         // Не буферизуем строку, на случай, если имя пользователя поменяется динамически
 
         if (UserId == 0)
-          return "Нет пользователя";
+          return Res.DBxDocProvider_Name_NoUser;
         else
           return GetTextValue(DocTypes.UsersTableName, UserId);
       }
@@ -3086,7 +3117,7 @@ namespace FreeLibSet.Data.Docs
     #region Вспомогательные методы и свойства
 
     /// <summary>
-    /// Возвращает true, если идентификатор больше 0
+    /// Возвращает true, если идентификатор больше 0 (то есть задан и не является фиктивным)
     /// </summary>
     /// <param name="id">Проверяемый идентификатор</param>
     /// <returns>Результат проверки</returns>
@@ -3100,11 +3131,10 @@ namespace FreeLibSet.Data.Docs
     /// Если передан неправильный (нулевой или фиктивный) идентификатор, генерируется исключение
     /// </summary>
     /// <param name="id">Проверяемый идентификатор</param>
-    /// <returns>Результат проверки</returns>
     public void CheckIsRealDocId(Int32 id)
     {
       if (!IsRealDocId(id))
-        throw new BugException("Недопустимый идентификатор " + id.ToString());
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_WrongId, id), "id");
     }
 
     /// <summary>
@@ -3123,9 +3153,9 @@ namespace FreeLibSet.Data.Docs
           if (row.RowState == DataRowState.Deleted)
             continue;
 
-          Int32 Id = DataTools.GetInt(row[pId]);
-          if (Id <= 0)
-            throw new BugException("Недопустимый идентификатор " + Id.ToString() + " в таблице \"" + table.TableName + "\"");
+          Int32 id = DataTools.GetInt(row[pId]);
+          if (id <= 0)
+            throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_WrongIdInTable, id, table.TableName), "ds");
         }
       }
     }
@@ -3308,7 +3338,7 @@ namespace FreeLibSet.Data.Docs
     /// Не использовать в прикладном коде.
     /// </summary>
     public DateTime DebugCreateTime { get { return _DebugCreateTime; } }
-    private DateTime _DebugCreateTime;
+    private readonly DateTime _DebugCreateTime;
 
 #if DEBUG_STACK
 

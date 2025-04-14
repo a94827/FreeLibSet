@@ -87,7 +87,7 @@ namespace FreeLibSet.Forms.Docs
         if (value.Length == 0)
           CurrentId = 0;
         else if (value.Length > 1)
-          throw new ArgumentException("Множественный выбор узлов в дереве групп документов не допускается");
+          throw new ArgumentException(Res.EFPGroupDocTreeView_Arg_MultiSelect);
         else
           CurrentId = value[0];
       }
@@ -127,9 +127,9 @@ namespace FreeLibSet.Forms.Docs
     protected override void OnRefreshData(EventArgs args)
     {
       if (args == null)
-        EFPApp.BeginWait("Загрузка данных", DocTypeUI.TableImageKey);
+        EFPApp.BeginWait(Res.Common_Phase_DataLoad, DocTypeUI.TableImageKey);
       else
-        EFPApp.BeginWait("Обновление данных", "Refresh");
+        EFPApp.BeginWait(Res.Common_Phase_Refresh, "Refresh");
       try
       {
         DBxDocTreeModel model = new DBxDocTreeModel(DocTypeUI.UI.DocProvider, DocTypeUI.DocType, UsedColumnNames);
@@ -405,7 +405,7 @@ namespace FreeLibSet.Forms.Docs
 #if DEBUG
           try
           {
-            throw new BugException("Попытка обновления для фиктивной строки");
+            throw new BugException("Attempt to refresh for fictive row");
           }
           catch (Exception e)
           {

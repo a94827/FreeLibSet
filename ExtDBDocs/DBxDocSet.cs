@@ -8,6 +8,7 @@ using System.Data;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.Remoting;
+using FreeLibSet.UICore;
 
 /*
  * Редактирование документов
@@ -122,8 +123,7 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("docProvider");
 #if !NET
       if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(docProvider))
-        throw new ArgumentException("Провайдер DocProvider является удаленным объектом (TransparentProxy). " +
-          "Для правильной работы требуется, чтобы он был в текущем контексте. Используйте переходник DBxChainDocProvider", "docProvider");
+        throw new ArgumentException(Res.DBxDocSet_Arg_ProviderIsProxy, "docProvider");
 #endif
 
       _DocProvider = docProvider;
@@ -202,9 +202,9 @@ namespace FreeLibSet.Data.Docs
           if (dt == null)
           {
             if (String.IsNullOrEmpty(docTypeName))
-              throw new ArgumentNullException("docTypeName");
+              throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
             else
-              throw new ArgumentException("Неизвестный тип документов \"" + docTypeName + "\"", "docTypeName");
+              throw ExceptionFactory.ArgUnknownValue("docTypeName", docTypeName);
           }
           DBxMultiDocs res2 = new DBxMultiDocs(this, dt);
           if (!_MultiDocs.TryGetValue(docTypeName, out res)) // 22.01.2019 поддержка реетрабельности
@@ -220,7 +220,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Доступ к коллекции документов одного вида по индекск
     /// </summary>
-    /// <param name="docTypeIndex">Индекс вида документов от 0 до Count-1</param>
+    /// <param name="docTypeIndex">Индекс вида документов от 0 до (<see cref="Count"/>-1)</param>
     /// <returns></returns>
     public DBxMultiDocs this[int docTypeIndex]
     {
@@ -229,7 +229,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает количество видов документов в наборе.
-    /// Для получения количества документов используйте свойство DocCount.
+    /// Для получения количества документов используйте свойство <see cref="DocCount"/>.
     /// </summary>
     public int Count { get { return _MultiDocs.Count; } }
 
@@ -242,14 +242,14 @@ namespace FreeLibSet.Data.Docs
     /// Задается в конструкторе.
     /// </summary>
     public DBxDocProvider DocProvider { get { return _DocProvider; } }
-    private DBxDocProvider _DocProvider;
+    private readonly DBxDocProvider _DocProvider;
 
     /// <summary>
     /// Хранилище для всех документов.
     /// Прикладной код не должен использовать это свойство.
     /// </summary>
     public DataSet DataSet { get { return _DataSet; } }
-    private DataSet _DataSet;
+    private /*readonly*/ DataSet _DataSet;
 
 
     /// <summary>
@@ -275,7 +275,7 @@ namespace FreeLibSet.Data.Docs
       set
       {
         if (UserActionId != 0)
-          throw new InvalidOperationException("Нельзя устанавливать свойство ActionInfo после применения изменений");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "UserActionId");
         _DataSet.ExtendedProperties["ActionInfo"] = value;
       }
     }
@@ -289,7 +289,7 @@ namespace FreeLibSet.Data.Docs
       set
       {
         if (UserActionId != 0)
-          throw new InvalidOperationException("Нельзя устанавливать свойство CheckDocs после применения изменений");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "UserActionId");
         _DataSet.ExtendedProperties["CheckDocs"] = value ? "1" : "0";
       }
     }
@@ -305,7 +305,7 @@ namespace FreeLibSet.Data.Docs
       set
       {
         if (UserActionId != 0)
-          throw new InvalidOperationException("Нельзя устанавливать свойство EditIfNotChanged после применения изменений");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "UserActionId");
         _DataSet.ExtendedProperties["WriteIfNotChanged"] = value ? "1" : "0";
       }
     }
@@ -317,7 +317,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Состояния документов.
-    /// Если документы находятся в разных состояниях, возвращается DBxDocState.Mixed.
+    /// Если документы находятся в разных состояниях, возвращается <see cref="DBxDocState.Mixed"/>.
     /// </summary>
     public DBxDocState DocState
     {
@@ -346,9 +346,8 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-
     /// <summary>
-    /// Состояния документов. Документы в состоянии View пропускаются
+    /// Состояния документов. Документы в состоянии <see cref="DBxDocState.View"/> пропускаются.
     /// </summary>
     public DBxDocState DocStateNoView
     {
@@ -420,7 +419,7 @@ namespace FreeLibSet.Data.Docs
         case DBxDocState.Delete:
           break;
         default:
-          throw new ArgumentException("Недопустимое значение state=" + state.ToString(), "state");
+          throw ExceptionFactory.ArgUnknownValue("state", state);
       }
     }
 
@@ -466,6 +465,25 @@ namespace FreeLibSet.Data.Docs
       }
 
       return sb.ToString();
+    }
+
+    /// <summary>
+    /// Возвращает строку с описанием типов и количества документов вида
+    /// "1 документ 'XXX', 2 документа 'YYY' и 5 документов 'ZZZ'".
+    /// Используется в интерфейсе пользователя
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public string DocTypeAndCountToString()
+    {
+      string[] a = new string[Count];
+      for (int i = 0; i < Count; i++)
+      {
+        if (this[i].DocCount == 1)
+          a[i] = String.Format(Res.DBxDocSet_Msg_SingleDocOfType, this[i].DocType.SingularTitle);
+        else
+          a[i] = String.Format(Res.DBxDocSet_Msg_MultiDocsOfType, this[i].DocCount, this[i].DocType.PluralTitle);
+      }
+      return String.Join(", ", a);
     }
 
     /// <summary>
@@ -644,7 +662,7 @@ namespace FreeLibSet.Data.Docs
 
           DataRow mainRow = mainTable.Rows.Find(oldId);
           if (mainRow == null)
-            throw new BugException("Не нашли основную строку таблицы \"" + tempTable.TableName + "\", Id=" + oldId.ToString());
+            throw new BugException("Row in main table \"" + tempTable.TableName + "\"not found for Id=" + oldId.ToString());
 
           mainRow["Id"] = newId;
           if (dtb.IsSubDoc)
@@ -1013,7 +1031,7 @@ namespace FreeLibSet.Data.Docs
 
       foreach (DBxMultiDocs mDocs in _MultiDocs)
       {
-        string prefix = "Документ \"" + mDocs.DocType.SingularTitle + "\"";
+        string prefix = String.Format(Res.DBxDocSet_Msg_DocWithType, mDocs.DocType.SingularTitle);
         ValidateTable1(errors, mDocs.Table, mDocs.DocType, prefix, queryIds);
         foreach (DBxSubDocType sdt in mDocs.DocType.SubDocs)
         {
@@ -1021,7 +1039,7 @@ namespace FreeLibSet.Data.Docs
             continue;
           DBxMultiSubDocs sds = mDocs.SubDocs[sdt.Name];
 
-          prefix = "Поддокумент \"" + sdt.SingularTitle + "\"";
+          prefix = String.Format(Res.DBxDocSet_Msg_SubDocWithType, sdt.SingularTitle);
           ValidateTable1(errors, sds.Table, sdt, prefix, queryIds);
 
           // Проверяем, что все поддокументы относятся к нашим документам
@@ -1033,9 +1051,9 @@ namespace FreeLibSet.Data.Docs
             Int32 thisDocId = DataTools.GetInt(subDocRow, "DocId");
             DataRow docRow = mDocs.Table.Rows.Find(thisDocId);
             if (docRow == null)
-              errors.AddError("Поддокумент \"" + sds.Table.TableName + "\" с идентификатором SubDocId=" +
-                DataTools.GetInt(subDocRow, "Id") + " относится к документу с идентификатором DocId=" + thisDocId.ToString() +
-                ", которого нет в наборе");
+              errors.AddError(String.Format(Res.DBxDocSet_Err_NoDocForSubDoc,
+                sdt.SingularTitle, DataTools.GetInt(subDocRow, "Id"),
+                mDocs.DocType.SingularTitle, thisDocId));
             else
             {
               // Проверяем состояние документа
@@ -1048,9 +1066,9 @@ namespace FreeLibSet.Data.Docs
                   case DataRowState.Deleted:
                     continue;
                   default:
-                    errors.AddError("Поддокумент \"" + sds.Table.TableName + "\" с идентификатором SubDocId=" +
-                      DataTools.GetInt(subDocRow, "Id") + " находится в состоянии " + subDocRow.RowState.ToString() + ", а строка документа с идентификатором DocId=" + thisDocId.ToString() +
-                      ", к которому относится поддокумент - в состоянии " + docRow.RowState.ToString());
+                    errors.AddError(String.Format(Res.DBxDocSet_Err_DocSubDocStateMismatch,
+                      sdt.SingularTitle, DataTools.GetInt(subDocRow, "Id"), subDocRow.RowState,
+                      mDocs.DocType.SingularTitle, thisDocId, docRow.RowState));
                     break;
                 }
               }
@@ -1069,8 +1087,7 @@ namespace FreeLibSet.Data.Docs
         if (!IsValidableTable(pair.Key))
           continue;
         DBxDocTypeBase dtb;
-        if (!DocProvider.DocTypes.FindByTableName(pair.Key, out dtb))
-          throw new BugException("Не найден документ или поддокумент с именем \"" + pair.Key + "\"");
+        dtb = DocProvider.DocTypes.GetByTableName(pair.Key);
         DBxColumns cols;
         if (DocProvider.DocTypes.UseDeleted)
         {
@@ -1097,7 +1114,7 @@ namespace FreeLibSet.Data.Docs
 
       foreach (DBxMultiDocs mDocs in _MultiDocs)
       {
-        string prefix = "Документ \"" + mDocs.DocType.SingularTitle + "\"";
+        string prefix = String.Format(Res.DBxDocSet_Msg_DocWithType, mDocs.DocType.SingularTitle);
         ValidateTable2(errors, mDocs.Table, mDocs.DocType, prefix, queryTables);
         foreach (DBxSubDocType sdt in mDocs.DocType.SubDocs)
         {
@@ -1105,7 +1122,7 @@ namespace FreeLibSet.Data.Docs
             continue;
           DBxMultiSubDocs sds = mDocs.SubDocs[sdt.Name];
 
-          prefix = "Поддокумент \"" + sdt.SingularTitle + "\"";
+          prefix = String.Format(Res.DBxDocSet_Msg_SubDocWithType, sdt.SingularTitle);
           ValidateTable2(errors, sds.Table, sdt, prefix, queryTables);
         }
       }
@@ -1139,7 +1156,8 @@ namespace FreeLibSet.Data.Docs
           continue;
 
         if (DataTools.GetInt(row, "Id") < 0 && row.RowState == DataRowState.Unchanged)
-          errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ". Строка находится в состоянии Unchanged, а Id=" + DataTools.GetInt(row, "Id"));
+          errors.AddError(String.Format(Res.DBxDocSet_Err_FicvtiveIdInUnchangedRow,
+            prefix, DataTools.GetInt(row, "Id")));
 
         for (int i = 0; i < ts.Columns.Count; i++)
         {
@@ -1160,27 +1178,23 @@ namespace FreeLibSet.Data.Docs
             if (refId < 0)
             {
               if (row.RowState == DataRowState.Unchanged)
-                errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ", поле \"" + ts.Columns[i].ColumnName +
-                  "\". Задана ссылка на новый документ/поддокумент RefId=" + refId.ToString() +
-                  ", но строка находится в режиме просмотра");
+                errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNewInUnchangedRow,
+                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId));
 
               if (!_DataSet.Tables.Contains(refTableName))
               {
-                errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ", поле \"" + ts.Columns[i].ColumnName +
-                  "\". Задана ссылка на новый документ/поддокумент RefId=" + refId.ToString() +
-                  ", но в наборе нет таблицы \"" + refTableName + "\"");
+                errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNewButNoTable,
+                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
                 continue;
               }
 
               DataRow refRow = _DataSet.Tables[refTableName].Rows.Find(refId);
               if (refRow == null)
-                errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ", поле \"" + ts.Columns[i].ColumnName +
-                  "\". Задана ссылка на новый документ/поддокумент RefId=" + refId.ToString() +
-                  ", но в таблице \"" + refTableName + "\" нет строки с таким идентификатором");
+                errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNewUnknown,
+                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
               else if (refRow.RowState == DataRowState.Deleted)
-                errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ", поле \"" + ts.Columns[i].ColumnName +
-                  "\". Задана ссылка на новый документ/поддокумент RefId=" + refId.ToString() +
-                  ", но в таблице \"" + refTableName + "\" строка помечена на удаление");
+                errors.AddError(String.Format(Res.DBxDocSet_Err_RefToOldDeleted,
+                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
             }
             else // RefId>0
             {
@@ -1190,9 +1204,8 @@ namespace FreeLibSet.Data.Docs
                 if (refRow != null)
                 {
                   if (refRow.RowState == DataRowState.Deleted)
-                    errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ", поле \"" + ts.Columns[i].ColumnName +
-                     "\". Задана ссылка на существующий документ/поддокумент RefId=" + refId.ToString() +
-                     ", но в таблице \"" + refTableName + "\" строка помечена на удаление");
+                    errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNewDeleted,
+                      prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
                   continue;
                 }
               }
@@ -1247,21 +1260,23 @@ namespace FreeLibSet.Data.Docs
               DataTable refTable = queryTables[refTableName];
               DataRow refRow = refTable.Rows.Find(refId);
               if (refRow == null)
-                errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ", поле \"" + ts.Columns[i].ColumnName +
-                  "\". Задана ссылка на документ/поддокумент \"" + refTableName + "\" с Id=" + refId.ToString() +
-                  ", которого нет в базе данных");
+                errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNotInDB,
+                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName,
+                  refTableName, refId));
               else if (DocProvider.DocTypes.UseDeleted)
               {
                 if (DataTools.GetBool(refRow, "Deleted"))
-                  errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ", поле \"" + ts.Columns[i].ColumnName +
-                    "\". Задана ссылка на документ/поддокумент \"" + refTableName + "\" с Id=" + refId.ToString() +
-                    ", который в базе данных помечен как удаленный");
+                  errors.AddError(String.Format(Res.DBxDocSet_Err_RefToDeletedInDB,
+                    prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName,
+                    refTableName, refId));
                 else if (refTable.Columns.Contains("DocId.Deleted"))
                 {
+                  DBxDocType refDoc = DocProvider.DocTypes[refTableName];
                   if (DataTools.GetBool(refRow, "DocId.Deleted"))
-                    errors.AddError(prefix + ", Id=" + DataTools.GetInt(row, "Id") + ", поле \"" + ts.Columns[i].ColumnName +
-                      "\". Задана ссылка на поддокумент \"" + refTableName + "\" с Id=" + refId.ToString() +
-                      ", документ которого с DocId=" + DataTools.GetInt(refRow, "Docid") + " помечен как удаленный");
+                    errors.AddError(String.Format(Res.DBxDocSet_Err_RefToDocDeletedInDB,
+                      prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName +
+                      refTableName, refId,
+                       refDoc.SingularTitle, DataTools.GetInt(refRow, "Docid")));
                 }
               }
             }
@@ -1285,7 +1300,7 @@ namespace FreeLibSet.Data.Docs
       set
       {
         if (UserActionId != 0)
-          throw new InvalidOperationException("Нельзя устанавливать свойство IgnoreAllLocks после применения изменений");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "UserActionId");
         _DataSet.ExtendedProperties["IgnoreAllLocks"] = value ? "1" : "0";
       }
     }
@@ -1431,8 +1446,8 @@ namespace FreeLibSet.Data.Docs
           int p = table.Columns.IndexOf(dt.BinDataRefs[i].Column.ColumnName);
 #if DEBUG
           if (p < 0)
-            throw new BugException("Не найден столбец \"" + dt.BinDataRefs[i].Column.ColumnName +
-              "\" в таблице \"" + table.TableName + "\", заданный в BinDataRefs");
+            throw new BugException("Column \"" + dt.BinDataRefs[i].Column.ColumnName +
+              "\" not found in table \"" + table.TableName + "\", which presented in BinDataRefs");
 #endif
           for (int j = 0; j < table.Rows.Count; j++)
           {
@@ -1449,8 +1464,8 @@ namespace FreeLibSet.Data.Docs
           int p = table.Columns.IndexOf(dt.FileRefs[i].Column.ColumnName);
 #if DEBUG
           if (p < 0)
-            throw new BugException("Не найден столбец \"" + dt.FileRefs[i].Column.ColumnName +
-              "\" в таблице \"" + table.TableName + "\", заданный в FileRefs");
+            throw new BugException("Column \"" + dt.FileRefs[i].Column.ColumnName +
+              "\" not found in table \"" + table.TableName + "\", which presented in FileRefs");
 #endif
           for (int j = 0; j < table.Rows.Count; j++)
           {
@@ -1484,23 +1499,23 @@ namespace FreeLibSet.Data.Docs
       if (binDataIds.Count > 0)
       {
         if (tblBinData == null)
-          throw new BugException("В наборе есть ссылки на новые двоичные данные, но нет таблицы BinData");
+          throw new BugException("DBxDocSet contains references to new binary data, but the there is no 'BinData' table exists");
 
         foreach (Int32 id in binDataIds)
         {
           if (tblBinData.Rows.Find(id) == null)
-            throw new BugException("В наборе есть ссылки на новые двоичные данные с Id=" + id.ToString() + ", но в таблице BinData нет такой строки");
+            throw new BugException("DBxDocSet contains references to new binary data with Id=" + id.ToString() + ", but table 'BinData' does not contain a row with this id");
         }
       }
 
       if (fileNameIds.Count > 0)
       {
         if (tblFileNames == null)
-          throw new BugException("В наборе есть ссылки на новые файлы, но нет таблицы FileNames");
+          throw new BugException("DBxDocSet contains references to new files, but the there is no 'FileNames' table exists");
         foreach (Int32 id in fileNameIds)
         {
           if (tblFileNames.Rows.Find(id) == null)
-            throw new BugException("В наборе есть ссылки на новые файлы с Id=" + id.ToString() + ", но в таблице FileNames нет такой строки");
+            throw new BugException("DBxDocSet contains references to new file with Id=" + id.ToString() + ", but table 'FileNames' does not contain a row with this id");
         }
       }
 
@@ -1547,11 +1562,11 @@ namespace FreeLibSet.Data.Docs
       {
         DataTable tblBinData = DataSet.Tables["BinData"];
         if (tblBinData == null)
-          throw new InvalidOperationException("Запрошены двоичные данные с временным идентификатором, но таблицы BinData нет в наборе данных");
+          throw new InvalidOperationException(Res.DBxDocSet_Err_NoBinDataTable);
 
         DataRow row = tblBinData.Rows.Find(binDataId2);
         if (row == null)
-          throw new InvalidOperationException("Запрошены двоичные данные для несуществующего временного идентификатора Id=" + binDataId2.ToString());
+          throw new InvalidOperationException(String.Format(Res.DBxDocSet_Err_UnknownBinDataId, binDataId2));
         return (byte[])(row["Contents"]);
       }
 
@@ -1674,11 +1689,11 @@ namespace FreeLibSet.Data.Docs
       {
         DataTable tblFileNames = DataSet.Tables["FileNames"];
         if (tblFileNames == null)
-          throw new InvalidOperationException("Запрошен файл с временным идентификатором, но таблицы FileNames нет в наборе данных");
+          throw new InvalidOperationException(Res.DBxDocSet_Err_NoFileNameTable);
 
         DataRow row = tblFileNames.Rows.Find(fileId2);
         if (row == null)
-          throw new InvalidOperationException("Запрошен файл для несуществующего временного идентификатора Id=" + fileId2.ToString());
+          throw new InvalidOperationException(String.Format(Res.DBxDocSet_Err_UnknownFileNameId, fileId2));
         return new FreeLibSet.IO.StoredFileInfo((string)(row["Name"]),
           (int)(row["Length"]), DataTools.GetNullableDateTime(row, "CreationTime"), DataTools.GetNullableDateTime(row, "LastWriteTime"));
       }
@@ -1700,11 +1715,11 @@ namespace FreeLibSet.Data.Docs
       {
         DataTable tblFileNames = DataSet.Tables["FileNames"];
         if (tblFileNames == null)
-          throw new InvalidOperationException("Запрошен файл с временным идентификатором, но таблицы FileNames нет в наборе данных");
+          throw new InvalidOperationException(Res.DBxDocSet_Err_NoFileNameTable);
 
         DataRow row = tblFileNames.Rows.Find(fileId2);
         if (row == null)
-          throw new InvalidOperationException("Запрошен файл для несуществующего временного идентификатора Id=" + fileId2.ToString());
+          throw new InvalidOperationException(String.Format(Res.DBxDocSet_Err_UnknownFileNameId, fileId2));
         FreeLibSet.IO.StoredFileInfo FileInfo = new FreeLibSet.IO.StoredFileInfo((string)(row["Name"]),
           (int)(row["Length"]), DataTools.GetNullableDateTime(row, "CreationTime"), DataTools.GetNullableDateTime(row, "LastWriteTime"));
 
@@ -1834,7 +1849,7 @@ namespace FreeLibSet.Data.Docs
         case DataRowState.Modified: return DBxDocState.Edit;
         case DataRowState.Deleted: return DBxDocState.Delete;
         case DataRowState.Unchanged: return DBxDocState.View;
-        default: throw new BugException("Строка таблицы документов находится в недопустимом состоянии RowState=" + dataRow.RowState.ToString());
+        default: throw new BugException("Document table row is invalid RowState=" + dataRow.RowState.ToString());
       }
     }
 

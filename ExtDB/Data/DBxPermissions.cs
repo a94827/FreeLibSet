@@ -64,7 +64,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Режим доступа к базе данных в-целом.
     /// Установка свойства должна выполняться в первую очередь, так как списки разрешений на таблицы очищаются.
-    /// Значение по умолчанию - Full.
+    /// Значение по умолчанию - <see cref="DBxAccessMode.Full"/>.
     /// </summary>
     public DBxAccessMode DBMode
     {
@@ -118,7 +118,7 @@ namespace FreeLibSet.Data
         {
           _Owner.CheckNotReadOnly();
           if (String.IsNullOrEmpty(tableName))
-            throw new ArgumentNullException("TableName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
           if (_Owner._TableData == null)
             _Owner._TableData = new Dictionary<string, InternalTableData>();
@@ -237,9 +237,9 @@ namespace FreeLibSet.Data
         {
           _Owner.CheckNotReadOnly();
           if (String.IsNullOrEmpty(tableName))
-            throw new ArgumentNullException("tableName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
           if (String.IsNullOrEmpty(columnName))
-            throw new ArgumentNullException("columnName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
           if (_Owner._TableData == null)
             _Owner._TableData = new Dictionary<string, InternalTableData>();
@@ -427,7 +427,7 @@ namespace FreeLibSet.Data
     /// <returns>текстовое представление</returns>
     public override string ToString()
     {
-      return "Режим=" + GetAccessModeText(DBMode) + (ContainsTableModes() ? ", разрешения на таблицы" : "");
+      return "Mode=" + GetAccessModeText(DBMode) + (ContainsTableModes() ? ", table permissions" : "");
     }
 
     #endregion
@@ -441,13 +441,10 @@ namespace FreeLibSet.Data
     /// <returns>Строка</returns>
     public static string GetAccessModeText(DBxAccessMode mode)
     {
-      switch (mode)
-      {
-        case DBxAccessMode.Full: return "Полный доступ";
-        case DBxAccessMode.ReadOnly: return "Просмотр";
-        case DBxAccessMode.None: return "Запрет";
-        default: return "??? " + mode.ToString();
-      }
+      if ((int)mode >= 0 && (int)mode < DBUserPermission.ValueNames.Length)
+        return DBUserPermission.ValueNames[(int)mode];
+      else
+        return "??? " + mode.ToString();
     }
 
     /// <summary>
@@ -577,7 +574,7 @@ namespace FreeLibSet.Data
     /// Создает объект исключения с текстом "У Вас нет прав для выполнения действия"
     /// </summary>
     public DBxAccessException()
-      : base("У Вас нет прав для выполнения действия")
+      : base(Res.DBxAccessException_Err_Message)
     {
     }
 

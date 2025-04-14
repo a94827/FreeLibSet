@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -6,6 +9,10 @@ using FreeLibSet.Core;
 using FreeLibSet.IO;
 using FreeLibSet.Models.SpreadsheetBase;
 using FreeLibSet.Shell;
+using FreeLibSet.Collections;
+
+// Документация по Open Office XML
+// https://ecma-international.org/publications-and-standards/standards/ecma-376/
 
 namespace FreeLibSet.Reporting
 {
@@ -191,30 +198,38 @@ namespace FreeLibSet.Reporting
 
       #endregion
 
-      #region Workbook
-
-      XmlDocument xmlDocWorkbook = CreateWorkbookXml(report);
-      zf.AddXmlFile("xl/workbook.xml", xmlDocWorkbook);
-
-      #endregion
-
       #region Worksheet
 
       List<string> sharedStrings = new List<string>();
       int sharedStringCount = 0;
       StyleTable styles = new StyleTable();
-      styles.GetStyle(report.DefaultCellStyle, false); // сразу добавляем основной стиль
+      styles.GetStyle(report.DefaultCellStyle, false, false); // сразу добавляем основной стиль
+      TypedStringDictionary<string> definedNames = new TypedStringDictionary<string>(true);
 
       for (int iSect = 0; iSect < report.Sections.Count; iSect++)
       {
-        XmlDocument xmlDocSheet = CreateSheetXml(report.Sections[iSect], sharedStrings, ref sharedStringCount, styles);
+        SingleScopeList<string> hyperlinkTargets = new SingleScopeList<string>();
+        XmlDocument xmlDocSheet = CreateSheetXml(report.Sections[iSect], sharedStrings, ref sharedStringCount, styles, hyperlinkTargets, definedNames);
         zf.AddXmlFile("xl/worksheets/sheet" + StdConvert.ToString(iSect + 1) + ".xml", xmlDocSheet);
+        if (hyperlinkTargets.Count > 0)
+        {
+          XmlDocument xmlSheetRels = CreateSheetRels(hyperlinkTargets);
+          zf.AddXmlFile("xl/worksheets/_rels/sheet" + StdConvert.ToString(iSect + 1) + ".xml.rels", xmlSheetRels);
+        }
       }
 
       XmlDocument xmlDocStyles = styles.FinishDoc();
       zf.AddXmlFile("xl/styles.xml", xmlDocStyles);
 
       #endregion
+
+      #region Workbook
+
+      XmlDocument xmlDocWorkbook = CreateWorkbookXml(report, definedNames);
+      zf.AddXmlFile("xl/workbook.xml", xmlDocWorkbook);
+
+      #endregion
+
 
       #region Список строк
 
@@ -361,9 +376,34 @@ namespace FreeLibSet.Reporting
       return xmlDoc;
     }
 
+
+    private static XmlDocument CreateSheetRels(SingleScopeList<string> hyperlinkTargets)
+    {
+      XmlDocument xmlDoc = new XmlDocument();
+      XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+      xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
+
+      XmlElement elRoot = xmlDoc.CreateElement("Relationships", nmspcPackageRels);
+      SetAttr(elRoot, "xmlns", nmspcPackageRels, String.Empty);
+      xmlDoc.AppendChild(elRoot);
+
+      for (int i = 0; i < hyperlinkTargets.Count; i++)
+      {
+        string sRefId = "rId" + StdConvert.ToString(i + 1);
+        XmlElement elRL = xmlDoc.CreateElement("Relationship", nmspcPackageRels);
+        SetAttr(elRL, "Id", sRefId, String.Empty);
+        SetAttr(elRL, "Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", String.Empty);
+        SetAttr(elRL, "Target", hyperlinkTargets[i], String.Empty);
+        SetAttr(elRL, "TargetMode", "External", String.Empty);
+        elRoot.AppendChild(elRL);
+      }
+      return xmlDoc;
+    }
+
+
     private const string nmspcSpreadsheet = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 
-    private static XmlDocument CreateWorkbookXml(BRReport report)
+    private static XmlDocument CreateWorkbookXml(BRReport report, TypedStringDictionary<string> definedNames)
     {
       XmlDocument xmlDoc = new XmlDocument();
       XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
@@ -380,14 +420,28 @@ namespace FreeLibSet.Reporting
       for (int iSect = 0; iSect < report.Sections.Count; iSect++)
       {
         XmlElement elSheet = xmlDoc.CreateElement("sheet", nmspcSpreadsheet);
-        SetAttr(elSheet, "name", StdConvert.ToString(iSect + 1), String.Empty);
+        SetAttr(elSheet, "name", report.Sections[iSect].Name, String.Empty);
         SetAttr(elSheet, "sheetId", StdConvert.ToString(iSect + 1), String.Empty);
         SetAttr(elSheet, "r:id", "rId" + StdConvert.ToString(iSect + 1), nmspcOfficeRels);
         elSheets.AppendChild(elSheet);
       }
 
+      XmlElement elDefinedNames = xmlDoc.CreateElement("definedNames", nmspcSpreadsheet);
+      elRoot.AppendChild(elDefinedNames);
+
+      foreach (KeyValuePair<string, string> pair in definedNames)
+      {
+        XmlElement elDefinedName = xmlDoc.CreateElement("definedName", nmspcSpreadsheet);
+        elDefinedNames.AppendChild(elDefinedName);
+        SetAttr(elDefinedName, "name", pair.Key, String.Empty);
+
+        XmlText text = xmlDoc.CreateTextNode(pair.Value);
+        elDefinedName.AppendChild(text);
+      }
+
       return xmlDoc;
     }
+
 
     #endregion
 
@@ -417,13 +471,13 @@ namespace FreeLibSet.Reporting
         _XmlDoc.AppendChild(_elRoot);
 
         // Обязательно создаем корневые узды сейчас, иначе они будут не в том порядке
-        _elNumFmtRoot = _XmlDoc.CreateElement("numFmts", nmspcSpreadsheet);
-        _elRoot.AppendChild(_elNumFmtRoot);
-        _elFontRoot = _XmlDoc.CreateElement("fonts", nmspcSpreadsheet);
-        _elRoot.AppendChild(_elFontRoot);
+        _elNumFmts = _XmlDoc.CreateElement("numFmts", nmspcSpreadsheet);
+        _elRoot.AppendChild(_elNumFmts);
+        _elFonts = _XmlDoc.CreateElement("fonts", nmspcSpreadsheet);
+        _elRoot.AppendChild(_elFonts);
 
-        _elFillRoot = _XmlDoc.CreateElement("fills", nmspcSpreadsheet);
-        _elRoot.AppendChild(_elFillRoot);
+        _elFills = _XmlDoc.CreateElement("fills", nmspcSpreadsheet);
+        _elRoot.AppendChild(_elFills);
 
         // Тут бяка в Excel
         // Должно быть как минимум 2 входа заполнения.
@@ -432,17 +486,52 @@ namespace FreeLibSet.Reporting
         GetFillIdx(BRColor.Auto);
 
         XmlElement elFill1 = _XmlDoc.CreateElement("fill", nmspcSpreadsheet);
-        _elFillRoot.AppendChild(elFill1);
+        _elFills.AppendChild(elFill1);
 
         XmlElement elPatternFill = _XmlDoc.CreateElement("patternFill", nmspcSpreadsheet);
         SetAttr(elPatternFill, "patternType", "gray125", String.Empty);
         elFill1.AppendChild(elPatternFill);
         _FillDict.Add("Dummy1", 1);
 
-        _elBordersRoot = _XmlDoc.CreateElement("borders", nmspcSpreadsheet);
-        _elRoot.AppendChild(_elBordersRoot);
-        _elCellXfsRoot = _XmlDoc.CreateElement("cellXfs", nmspcSpreadsheet);
-        _elRoot.AppendChild(_elCellXfsRoot);
+        _elBorders = _XmlDoc.CreateElement("borders", nmspcSpreadsheet);
+        _elRoot.AppendChild(_elBorders);
+
+        XmlElement elCellStyleXFs = _XmlDoc.CreateElement("cellStyleXfs", nmspcSpreadsheet);
+        _elRoot.AppendChild(elCellStyleXFs);
+        SetAttr(elCellStyleXFs, "count", "2", String.Empty);
+
+        XmlElement elXF = _XmlDoc.CreateElement("xf", nmspcSpreadsheet);
+        elCellStyleXFs.AppendChild(elXF);
+        SetAttr(elXF, "numFmtId", "0", String.Empty);
+        SetAttr(elXF, "fontId", "0", String.Empty);
+        SetAttr(elXF, "fillId", "0", String.Empty);
+        SetAttr(elXF, "borderId", "0", String.Empty);
+
+        elXF = _XmlDoc.CreateElement("xf", nmspcSpreadsheet);
+        elCellStyleXFs.AppendChild(elXF);
+        SetAttr(elXF, "numFmtId", "0", String.Empty);
+        SetAttr(elXF, "fontId", "0", String.Empty);
+        SetAttr(elXF, "fillId", "0", String.Empty);
+        SetAttr(elXF, "borderId", "0", String.Empty);
+
+        _elCellXfs = _XmlDoc.CreateElement("cellXfs", nmspcSpreadsheet);
+        _elRoot.AppendChild(_elCellXfs);
+
+        XmlElement elCellStyles = _XmlDoc.CreateElement("cellStyles", nmspcSpreadsheet);
+        _elRoot.AppendChild(elCellStyles);
+        SetAttr(elCellStyles, "count", "2", String.Empty);
+
+        XmlElement elCellStyle = _XmlDoc.CreateElement("cellStyle", nmspcSpreadsheet);
+        elCellStyles.AppendChild(elCellStyle);
+        SetAttr(elCellStyle, "name", "Normal", String.Empty);
+        SetAttr(elCellStyle, "xfId", "0", String.Empty);
+        SetAttr(elCellStyle, "builtinId", "0", String.Empty); // Normal
+
+        elCellStyle = _XmlDoc.CreateElement("cellStyle", nmspcSpreadsheet);
+        elCellStyles.AppendChild(elCellStyle);
+        SetAttr(elCellStyle, "name", "Hyperlink", String.Empty);
+        SetAttr(elCellStyle, "xfId", "1", String.Empty);
+        SetAttr(elCellStyle, "builtinId", "8", String.Empty); // Hyperlink
 
       }
 
@@ -455,8 +544,35 @@ namespace FreeLibSet.Reporting
       /// </summary>
       private XmlDocument _XmlDoc;
 
+      /// <summary>
+      /// "styleSheet" (корень документа)
+      /// </summary>
       private XmlElement _elRoot;
-      private XmlElement _elNumFmtRoot, _elFontRoot, _elFillRoot, _elBordersRoot, _elCellXfsRoot;
+
+      /// <summary>
+      /// "numFmts"
+      /// </summary>
+      private XmlElement _elNumFmts;
+
+      /// <summary>
+      /// "fonts"
+      /// </summary>
+      private XmlElement _elFonts;
+
+      /// <summary>
+      /// "fills"
+      /// </summary>
+      private XmlElement _elFills;
+
+      /// <summary>
+      /// "borders"
+      /// </summary>
+      private XmlElement _elBorders;
+
+      /// <summary>
+      /// "cellXfs"
+      /// </summary>
+      private XmlElement _elCellXfs;
 
       Dictionary<string, int> _NumFmtDict;
       Dictionary<string, int> _FontDict;
@@ -474,8 +590,9 @@ namespace FreeLibSet.Reporting
       /// <param name="cellStyle">Стиль ячейки</param>
       /// <param name="addWrap">True, если обязательно нужен перенос по словам. 
       /// Перенос нужен, если внутри текста ячейки есть символы переноса строки</param>
-      /// <returns></returns>
-      public int GetStyle(BRCellStyle cellStyle, bool addWrap)
+      /// <param name="hasLink">True, если ячейка содержит гиперссылку</param>
+      /// <returns>0-базированный индекс формата в тегах "cellFxs"</returns>
+      public int GetStyle(BRCellStyle cellStyle, bool addWrap, bool hasLink)
       {
         #region Числовые форматы
 
@@ -484,17 +601,17 @@ namespace FreeLibSet.Reporting
         {
           if (!_NumFmtDict.TryGetValue(cellStyle.Format, out numFmtId))
           {
-            if (_elNumFmtRoot == null)
+            if (_elNumFmts == null)
             {
-              _elNumFmtRoot = _XmlDoc.CreateElement("numFmts", nmspcSpreadsheet);
-              _elRoot.AppendChild(_elNumFmtRoot);
+              _elNumFmts = _XmlDoc.CreateElement("numFmts", nmspcSpreadsheet);
+              _elRoot.AppendChild(_elNumFmts);
             }
 
             XmlElement elNumFmt = _XmlDoc.CreateElement("numFmt", nmspcSpreadsheet);
             numFmtId = _NumFmtDict.Count + 1001; // Начинаем нумерацию с 1001
             SetAttr(elNumFmt, "numFmtId", numFmtId.ToString(), String.Empty);
             SetAttr(elNumFmt, "formatCode", cellStyle.Format, String.Empty);
-            _elNumFmtRoot.AppendChild(elNumFmt);
+            _elNumFmts.AppendChild(elNumFmt);
 
             _NumFmtDict.Add(cellStyle.Format, numFmtId);
           }
@@ -514,19 +631,20 @@ namespace FreeLibSet.Reporting
           cellStyle.Italic.ToString() + "|" +
           cellStyle.Underline.ToString() + "|" +
           cellStyle.Strikeout.ToString() + "|" +
-          cellStyle.ForeColor.ToString();
+          cellStyle.ForeColor.ToString() + "|" +
+          (hasLink ? "1" : "0");
         int fontIdx;
         if (!_FontDict.TryGetValue(fontKey, out fontIdx))
         {
-          if (_elFontRoot == null)
+          if (_elFonts == null)
           {
-            _elFontRoot = _XmlDoc.CreateElement("fonts", nmspcSpreadsheet);
-            _elRoot.AppendChild(_elFontRoot);
+            _elFonts = _XmlDoc.CreateElement("fonts", nmspcSpreadsheet);
+            _elRoot.AppendChild(_elFonts);
           }
 
 
           XmlElement elFont = _XmlDoc.CreateElement("font", nmspcSpreadsheet);
-          _elFontRoot.AppendChild(elFont);
+          _elFonts.AppendChild(elFont);
 
           XmlElement elFontName = _XmlDoc.CreateElement("name", nmspcSpreadsheet);
           SetAttr(elFontName, "val", cellStyle.FontName, String.Empty);
@@ -537,29 +655,35 @@ namespace FreeLibSet.Reporting
 
           if (cellStyle.Bold)
           {
-            XmlElement elBold = _XmlDoc.CreateElement("b", nmspcSpreadsheet);
-            elFont.AppendChild(elBold);
+            XmlElement elB = _XmlDoc.CreateElement("b", nmspcSpreadsheet);
+            elFont.AppendChild(elB);
           }
           if (cellStyle.Italic)
           {
-            XmlElement elBold = _XmlDoc.CreateElement("i", nmspcSpreadsheet);
-            elFont.AppendChild(elBold);
+            XmlElement elI = _XmlDoc.CreateElement("i", nmspcSpreadsheet);
+            elFont.AppendChild(elI);
           }
-          if (cellStyle.Underline)
+          if (cellStyle.Underline || hasLink)
           {
-            XmlElement elBold = _XmlDoc.CreateElement("u", nmspcSpreadsheet);
-            elFont.AppendChild(elBold);
+            XmlElement elU = _XmlDoc.CreateElement("u", nmspcSpreadsheet);
+            elFont.AppendChild(elU);
           }
           if (cellStyle.Strikeout)
           {
-            XmlElement elStrikeout = _XmlDoc.CreateElement("s", nmspcSpreadsheet);
-            elFont.AppendChild(elStrikeout);
+            XmlElement elS = _XmlDoc.CreateElement("s", nmspcSpreadsheet);
+            elFont.AppendChild(elS);
           }
 
           if (!cellStyle.ForeColor.IsAuto)
           {
             XmlElement elColor = _XmlDoc.CreateElement("color", nmspcSpreadsheet);
             SetAttr(elColor, "rgb", MyColorStr(cellStyle.ForeColor), String.Empty);
+            elFont.AppendChild(elColor);
+          }
+          else if (hasLink)
+          {
+            XmlElement elColor = _XmlDoc.CreateElement("color", nmspcSpreadsheet);
+            SetAttr(elColor, "rgb", MyColorStr(BRFileTools.LinkForeColor), String.Empty);
             elFont.AppendChild(elColor);
           }
 
@@ -586,14 +710,14 @@ namespace FreeLibSet.Reporting
         int borderIdx;
         if (!_BordersDict.TryGetValue(borderKey, out borderIdx))
         {
-          if (_elBordersRoot == null)
+          if (_elBorders == null)
           {
-            _elBordersRoot = _XmlDoc.CreateElement("borders", nmspcSpreadsheet);
-            _elRoot.AppendChild(_elBordersRoot);
+            _elBorders = _XmlDoc.CreateElement("borders", nmspcSpreadsheet);
+            _elRoot.AppendChild(_elBorders);
           }
 
           XmlElement elBorder = _XmlDoc.CreateElement("border", nmspcSpreadsheet);
-          _elBordersRoot.AppendChild(elBorder);
+          _elBorders.AppendChild(elBorder);
 
           AddBorder(elBorder, "left", cellStyle.LeftBorder);
           AddBorder(elBorder, "right", cellStyle.RightBorder);
@@ -668,7 +792,7 @@ namespace FreeLibSet.Reporting
             SetAttr(elXf, "borderId", StdConvert.ToString(borderIdx), String.Empty);
             SetAttr(elXf, "applyBorder", "1", String.Empty);
           }
-          _elCellXfsRoot.AppendChild(elXf);
+          _elCellXfs.AppendChild(elXf);
 
           XmlElement elAlignment = _XmlDoc.CreateElement("alignment", nmspcSpreadsheet);
           switch (cellStyle.HAlign)
@@ -691,6 +815,9 @@ namespace FreeLibSet.Reporting
             SetAttr(elAlignment, "wrapText", "1", String.Empty);
           elXf.AppendChild(elAlignment);
 
+          if (hasLink)
+            SetAttr(elXf, "xfId", "1", String.Empty);
+
           styleIdx = _CellXfsDict.Count;
           _CellXfsDict.Add(styleKey, styleIdx);
         }
@@ -706,15 +833,15 @@ namespace FreeLibSet.Reporting
         int fillIdx;
         if (!_FillDict.TryGetValue(fillKey, out fillIdx))
         {
-          if (_elFillRoot == null)
+          if (_elFills == null)
           {
-            _elFillRoot = _XmlDoc.CreateElement("fills", nmspcSpreadsheet);
-            _elRoot.AppendChild(_elFillRoot);
+            _elFills = _XmlDoc.CreateElement("fills", nmspcSpreadsheet);
+            _elRoot.AppendChild(_elFills);
           }
 
 
           XmlElement elFill = _XmlDoc.CreateElement("fill", nmspcSpreadsheet);
-          _elFillRoot.AppendChild(elFill);
+          _elFills.AppendChild(elFill);
 
           XmlElement elPatternFill = _XmlDoc.CreateElement("patternFill", nmspcSpreadsheet);
           if (backColor.IsAuto)
@@ -774,14 +901,14 @@ namespace FreeLibSet.Reporting
 
       public XmlDocument FinishDoc()
       {
-        SetAttr(_elNumFmtRoot, "count", StdConvert.ToString(_NumFmtDict.Count), String.Empty);
-        SetAttr(_elFontRoot, "count", StdConvert.ToString(_FontDict.Count), String.Empty);
-        SetAttr(_elFillRoot, "count", StdConvert.ToString(_FillDict.Count), String.Empty);
-        SetAttr(_elBordersRoot, "count", StdConvert.ToString(_BordersDict.Count), String.Empty);
+        SetAttr(_elNumFmts, "count", StdConvert.ToString(_NumFmtDict.Count), String.Empty);
+        SetAttr(_elFonts, "count", StdConvert.ToString(_FontDict.Count), String.Empty);
+        SetAttr(_elFills, "count", StdConvert.ToString(_FillDict.Count), String.Empty);
+        SetAttr(_elBorders, "count", StdConvert.ToString(_BordersDict.Count), String.Empty);
         if (_CellXfsDict.Count > 0)
-          SetAttr(_elCellXfsRoot, "count", StdConvert.ToString(_CellXfsDict.Count), String.Empty);
+          SetAttr(_elCellXfs, "count", StdConvert.ToString(_CellXfsDict.Count), String.Empty);
         else
-          _elCellXfsRoot.ParentNode.RemoveChild(_elCellXfsRoot);
+          _elCellXfs.ParentNode.RemoveChild(_elCellXfs);
 
         return _XmlDoc;
       }
@@ -795,7 +922,10 @@ namespace FreeLibSet.Reporting
 
     private static readonly char[] _NewLineChars = new char[] { '\r', '\n' };
 
-    private XmlDocument CreateSheetXml(BRSection section, List<string> sharedStrings, ref int sharedStringCount, StyleTable styles)
+    private XmlDocument CreateSheetXml(BRSection section, List<string> sharedStrings, ref int sharedStringCount,
+      StyleTable styles,
+      SingleScopeList<string> hyperlinkTargets,
+      TypedStringDictionary<string> definedNames)
     {
       #region Таблица разделяемых строк
 
@@ -816,6 +946,9 @@ namespace FreeLibSet.Reporting
 
       XmlElement elMergeCells = xmlDoc.CreateElement("mergeCells", nmspcSpreadsheet);
       // Потом добавим elSheetRoot.AppendChild(elMergeCells);
+
+      XmlElement elHyperlinks = xmlDoc.CreateElement("hyperlinks", nmspcSpreadsheet);
+      // Потом добавим elSheetRoot.AppendChild(elHyperlinks );
 
       #endregion
 
@@ -914,12 +1047,15 @@ namespace FreeLibSet.Reporting
 
               bool hasNewLine = false;
 
+              CellRef cellAddr1 = new CellRef(rowCount, m);
+              SetAttr(elC, "r", cellAddr1.ToString(), String.Empty);
+
               if (isFirstCell)
               {
                 #region Значение
 
                 string valueText, typeText, formatText;
-                GetCellValue(sel.Value, out valueText, out typeText, out formatText);
+                GetCellValue(sel.ActualValue, out valueText, out typeText, out formatText);
 
                 if (!String.IsNullOrEmpty(typeText))
                 {
@@ -941,11 +1077,32 @@ namespace FreeLibSet.Reporting
                 }
 
                 #endregion
+
+                #region Гиперссылка
+
+                if (sel.HasLink)
+                {
+                  XmlElement elHyperlink = xmlDoc.CreateElement("hyperlink", nmspcSpreadsheet);
+                  elHyperlinks.AppendChild(elHyperlink);
+                  SetAttr(elHyperlink, "ref", cellAddr1.ToString(), String.Empty);
+
+                  if (sel.LinkData[0] == '#')
+                  {
+                    string excelName = BRFileTools.GetExcelBookmarkName(sel.LinkData.Substring(1));
+                    SetAttr(elHyperlink, "location", excelName, String.Empty);
+                  }
+                  else
+                  {
+                    hyperlinkTargets.Add(sel.LinkData);
+                    string sRefId = "rId" + StdConvert.ToString(hyperlinkTargets.IndexOf(sel.LinkData) + 1);
+                    SetAttr(elHyperlink, "r:id", sRefId, nmspcOfficeRels);
+                  }
+                }
+
+                #endregion
               }
 
-              string cellAddr1 = SpreadsheetTools.GetColumnName(m) + StdConvert.ToString(rowCount);
-              SetAttr(elC, "r", cellAddr1, String.Empty);
-              int styleIdx = styles.GetStyle(sel.CellStyle, hasNewLine);
+              int styleIdx = styles.GetStyle(sel.CellStyle, hasNewLine, sel.HasLink);
               SetAttr(elC, "s", StdConvert.ToString(styleIdx), String.Empty);
 
               if (isFirstCell)
@@ -955,17 +1112,30 @@ namespace FreeLibSet.Reporting
                 int xlsColumn1 = leftCols[merge.FirstColumnIndex];
                 int xlsColumn2 = rightCols[merge.LastColumnIndex];
 
-                if (merge.RowCount > 1 || xlsColumn2 > xlsColumn1)
+                RangeRef range = new RangeRef(rowCount, xlsColumn1, rowCount + merge.RowCount - 1, xlsColumn2);
+
+                if (!range.IsSingleCell)
                 {
-                  string cellAddr2 = SpreadsheetTools.GetColumnName(xlsColumn2) + StdConvert.ToString(rowCount + merge.RowCount - 1);
                   XmlElement elMergeCell = xmlDoc.CreateElement("mergeCell", nmspcSpreadsheet);
-                  SetAttr(elMergeCell, "ref", cellAddr1 + ":" + cellAddr2, String.Empty);
+                  SetAttr(elMergeCell, "ref", range.ToString(), String.Empty);
                   elMergeCells.AppendChild(elMergeCell);
                 }
 
                 #endregion
+
+                #region Именованная ячейка
+
+                foreach (BRBookmark bm in sel.Bookmarks.ToArray())
+                {
+                  string excelBMName = BRFileTools.GetExcelBookmarkName(bm.Name);
+                  string cellAddr2 = SpreadsheetTools.GetQuotedSheetName(section.Name)+ "!" + range.ToString(CellRefFormat.Abs);
+                  definedNames.Add(excelBMName, cellAddr2);
+                }
+
+                #endregion
               }
-            }
+            } // цикл по объединенным столбцам 
+
           } // цикл по столбцам
         } // цикл по строкам
       } // цикл по полосам
@@ -978,6 +1148,11 @@ namespace FreeLibSet.Reporting
       {
         SetAttr(elMergeCells, "count", elMergeCells.ChildNodes.Count.ToString(), String.Empty); // число объединений
         elWorksheet.AppendChild(elMergeCells);
+      }
+
+      if (elHyperlinks.ChildNodes.Count > 0)
+      {
+        elWorksheet.AppendChild(elHyperlinks);
       }
 
       #region Параметры страницы
@@ -1044,14 +1219,6 @@ namespace FreeLibSet.Reporting
 
       switch (value.GetType().Name)
       {
-        case "String":
-        case "Guid": // 03.02.2020
-          if (value.ToString().Trim().Length == 0) // 08.08.2012
-            return;
-          valueText = value.ToString();
-          valueText = DataTools.ReplaceAny(valueText, BRFileTools.BadValueChars, ' ');
-          typeText = "s";
-          break;
         case "Boolean":
           valueText = (bool)value ? "1" : "0";
           typeText = "b";
@@ -1085,6 +1252,14 @@ namespace FreeLibSet.Reporting
           {
             valueText = Convert.ToString(value, StdConvert.NumberFormat);
             typeText = "n";
+          }
+          else
+          {
+            if (value.ToString().Trim().Length == 0) // 08.08.2012
+              return;
+            valueText = value.ToString();
+            valueText = DataTools.ReplaceAny(valueText, BRFileTools.BadValueChars, ' ');
+            typeText = "s";
           }
           break;
       }
@@ -1211,16 +1386,6 @@ namespace FreeLibSet.Reporting
 
       #endregion
 
-      #region Связи (_rels/.rels)
-
-      XmlDocument xmlDocRels1 = CreateRels1();
-      zf.AddXmlFile("_rels/.rels", xmlDocRels1);
-
-      XmlDocument xmlDocRels2 = CreateRels2(report);
-      zf.AddXmlFile("word/_rels/document.xml.rels", xmlDocRels2);
-
-      #endregion
-
       #region Сводка
 
       XmlDocument xmlDocCore = CreateDocPropsCoreXml(report.DocumentProperties);
@@ -1241,8 +1406,19 @@ namespace FreeLibSet.Reporting
 
       #region Document
 
-      XmlDocument xmlDocument = CreateDocumentXml(report);
+      SingleScopeList<string> hyperlinkTagrets = new SingleScopeList<string>();
+      XmlDocument xmlDocument = CreateDocumentXml(report, hyperlinkTagrets);
       zf.AddXmlFile("word/document.xml", xmlDocument);
+
+      #endregion
+
+      #region Связи (_rels/.rels)
+
+      XmlDocument xmlDocRels1 = CreateRels1();
+      zf.AddXmlFile("_rels/.rels", xmlDocRels1);
+
+      XmlDocument xmlDocRels2 = CreateRels2(report, hyperlinkTagrets);
+      zf.AddXmlFile("word/_rels/document.xml.rels", xmlDocRels2);
 
       #endregion
 
@@ -1335,7 +1511,7 @@ namespace FreeLibSet.Reporting
       return xmlDoc;
     }
 
-    private static XmlDocument CreateRels2(BRReport report)
+    private static XmlDocument CreateRels2(BRReport report, SingleScopeList<string> hyperlinkTargets)
     {
       XmlDocument xmlDoc = new XmlDocument();
       XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
@@ -1345,14 +1521,23 @@ namespace FreeLibSet.Reporting
       SetAttr(elRoot, "xmlns", nmspcPackageRels, String.Empty);
       xmlDoc.AppendChild(elRoot);
 
-      int cntRId = 0;
       XmlElement elRL;
 
       elRL = xmlDoc.CreateElement("Relationship", nmspcPackageRels);
-      SetAttr(elRL, "Id", "rId" + StdConvert.ToString(++cntRId), String.Empty);
+      SetAttr(elRL, "Id", "rId0", String.Empty);
       SetAttr(elRL, "Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles", String.Empty);
       SetAttr(elRL, "Target", "styles.xml", String.Empty);
       elRoot.AppendChild(elRL);
+
+      for (int i = 0; i < hyperlinkTargets.Count; i++)
+      {
+        elRL = xmlDoc.CreateElement("Relationship", nmspcPackageRels);
+        SetAttr(elRL, "Id", "rId" + StdConvert.ToString(i + 1), String.Empty);
+        SetAttr(elRL, "Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", String.Empty);
+        SetAttr(elRL, "Target", hyperlinkTargets[i], String.Empty);
+        SetAttr(elRL, "TargetMode", "External", String.Empty);
+        elRoot.AppendChild(elRL);
+      }
 
       return xmlDoc;
     }
@@ -1507,7 +1692,7 @@ namespace FreeLibSet.Reporting
 
     #region document.xml
 
-    private XmlDocument CreateDocumentXml(BRReport report)
+    private XmlDocument CreateDocumentXml(BRReport report, SingleScopeList<string> hyperlinkTargets)
     {
       XmlDocument xmlDoc = new XmlDocument();
       XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
@@ -1516,10 +1701,13 @@ namespace FreeLibSet.Reporting
       XmlElement elRoot = xmlDoc.CreateElement("w:document", nmspcW);
       SetAttr(elRoot, "xmlns:w", nmspcW, String.Empty);
       SetAttr(elRoot, "xmlns:mc", nmspcMC, String.Empty);
+      SetAttr(elRoot, "xmlns:r", nmspcOfficeRels, String.Empty);
       xmlDoc.AppendChild(elRoot);
 
       XmlElement elBody = xmlDoc.CreateElement("w:body", nmspcW);
       elRoot.AppendChild(elBody);
+
+      _BookmarkCounter = 0; // для идентификаторов закладок
 
       for (int i = 0; i < report.Sections.Count; i++)
       {
@@ -1594,7 +1782,9 @@ namespace FreeLibSet.Reporting
               bool bandKeepWithNext = sel.Band.KeepWithNext || GetBandKeepWithPrev(section, j + 1);
 
               XmlElement elP = xmlDoc.CreateElement("w:p", nmspcW);
-              WriteTextValue(sel, elBody, ref elP, section.PageSetup.PrintAreaWidth, true, bandKeepWithNext);
+              AddBookMarkStart(sel, elP);
+              WriteTextValue(sel, elBody, ref elP, section.PageSetup.PrintAreaWidth, true, bandKeepWithNext, hyperlinkTargets);
+              AddBookMarkEnd(sel, elP);
               elBody.AppendChild(elP);
             }
             else
@@ -1702,7 +1892,11 @@ namespace FreeLibSet.Reporting
 
                     #region Значение
 
-                    WriteTextValue(sel, elTc, ref elP, GetColumnWidth(stripeCols, l, merge.ColumnCount), false, rowKeepWithNext);
+                    AddBookMarkStart(sel, elP);
+
+                    WriteTextValue(sel, elTc, ref elP, GetColumnWidth(stripeCols, l, merge.ColumnCount), false, rowKeepWithNext, hyperlinkTargets);
+
+                    AddBookMarkEnd(sel, elP);
 
                     #endregion
 
@@ -1897,7 +2091,7 @@ namespace FreeLibSet.Reporting
       return w;
     }
 
-    private void WriteTextValue(BRSelector sel, XmlElement elFutureParent, ref XmlElement elP, int columnWidth, bool isSimpleBand, bool keepWithNext)
+    private void WriteTextValue(BRSelector sel, XmlElement elFutureParent, ref XmlElement elP, int columnWidth, bool isSimpleBand, bool keepWithNext, SingleScopeList<string> hyperlinkTargets)
     {
       string s = sel.AsString;
       if (s.Length == 0)
@@ -1926,6 +2120,24 @@ namespace FreeLibSet.Reporting
           }
         }
 
+        XmlElement elROwner = elP;
+        if (sel.HasLink)
+        {
+          XmlElement elHyperlink = elP.OwnerDocument.CreateElement("w:hyperlink", nmspcW);
+          elP.AppendChild(elHyperlink);
+          elROwner = elHyperlink;
+          if (sel.LinkData[0] == '#')
+          {
+            SetAttr(elHyperlink, "w:anchor", sel.LinkData.Substring(1), nmspcW);
+          }
+          else
+          {
+            hyperlinkTargets.Add(sel.LinkData);
+            string rId = "rId" + StdConvert.ToString(hyperlinkTargets.IndexOf(sel.LinkData) + 1);
+            SetAttr(elHyperlink, "r:id", rId, nmspcOfficeRels);
+          }
+        }
+
         if (a[i].IndexOf(DataTools.SoftHyphenChar) >= 0)
         {
           // Обработка мягких переносов
@@ -1935,8 +2147,8 @@ namespace FreeLibSet.Reporting
             if (j > 0)
             {
               // Вставляем мягкий перенос
-              XmlElement elR2 = elP.OwnerDocument.CreateElement("w:r", nmspcW);
-              elP.AppendChild(elR2);
+              XmlElement elR2 = elROwner.OwnerDocument.CreateElement("w:r", nmspcW);
+              elROwner.AppendChild(elR2);
               WriteRPr(elR2, sel, columnWidth);
 
               XmlElement elSoftHyphen = elR2.OwnerDocument.CreateElement("w:softHyphen", nmspcW);
@@ -1944,12 +2156,12 @@ namespace FreeLibSet.Reporting
             }
 
             // Основная часть строки
-            DoWriteText(elP, aa[j], sel, columnWidth);
+            DoWriteText(elROwner, aa[j], sel, columnWidth);
           }
         }
         else
         {
-          DoWriteText(elP, a[i], sel, columnWidth);
+          DoWriteText(elROwner, a[i], sel, columnWidth);
         }
       }
     }
@@ -2145,7 +2357,7 @@ namespace FreeLibSet.Reporting
         XmlElement elI = xmlDoc.CreateElement("w:i", nmspcW);
         elRPr.AppendChild(elI);
       }
-      if (sel.CellStyle.Underline)
+      if (sel.CellStyle.Underline || sel.HasLink)
       {
         XmlElement elU = xmlDoc.CreateElement("w:u", nmspcW);
         elRPr.AppendChild(elU);
@@ -2179,9 +2391,53 @@ namespace FreeLibSet.Reporting
         elRPr.AppendChild(elColor);
         SetAttr(elColor, "w:val", GetColorHex(sel.CellStyle.ForeColor), nmspcW);
       }
+      else if (sel.HasLink)
+      {
+        XmlElement elColor = xmlDoc.CreateElement("w:color", nmspcW);
+        elRPr.AppendChild(elColor);
+        SetAttr(elColor, "w:val", GetColorHex(BRFileTools.LinkForeColor), nmspcW);
+        SetAttr(elColor, "w:themeColor", "hyperlink", nmspcW);
+      }
 
       if (elRPr.HasChildNodes) // чтобы не добавлять пустышку
         elR.AppendChild(elRPr);
+    }
+
+    #endregion
+
+    #region Закладки
+
+    /// <summary>
+    /// Счетчик для идентификаторов закладок
+    /// </summary>
+    private int _BookmarkCounter;
+
+    private BRBookmark[] _StartedBookmarks;
+
+    private void AddBookMarkStart(BRSelector sel, XmlElement elP)
+    {
+      _StartedBookmarks = sel.Bookmarks.ToArray();
+      for (int i = 0; i < _StartedBookmarks.Length; i++)
+      {
+        int nId = _BookmarkCounter + i + 1;
+        XmlElement elBookmarkStart = elP.OwnerDocument.CreateElement("w:bookmarkStart", nmspcW);
+        elP.AppendChild(elBookmarkStart);
+        SetAttr(elBookmarkStart, "w:id", StdConvert.ToString(nId), nmspcW);
+        SetAttr(elBookmarkStart, "w:name", _StartedBookmarks[i].Name, nmspcW);
+      }
+    }
+
+    private void AddBookMarkEnd(BRSelector sel, XmlElement elP)
+    {
+      for (int i = 0; i < _StartedBookmarks.Length; i++)
+      {
+        int nId = _BookmarkCounter + i + 1;
+        XmlElement elBookmarkEnd = elP.OwnerDocument.CreateElement("w:bookmarkEnd", nmspcW);
+        elP.AppendChild(elBookmarkEnd);
+        SetAttr(elBookmarkEnd, "w:id", StdConvert.ToString(nId), nmspcW);
+      }
+      _BookmarkCounter += _StartedBookmarks.Length;
+      _StartedBookmarks = null;
     }
 
     #endregion

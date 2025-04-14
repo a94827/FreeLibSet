@@ -4040,7 +4040,7 @@ namespace FreeLibSet.DBF
     public bool CreateBlockedTable(int maxRowCount, ErrorMessageList errors, out DataTable table)
     {
       if (maxRowCount < 1)
-        throw new ArgumentOutOfRangeException("maxRowCount");
+        throw ExceptionFactory.ArgOutOfRange("maxRowCount", maxRowCount, 1, null);
 
       table = null;
       while (Read())

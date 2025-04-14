@@ -54,23 +54,23 @@ namespace FreeLibSet.Data.Docs
       if (undoDBEntry != null)
       {
         if (!docTypes.UseDeleted)
-          throw new ArgumentException("Ведение истории невозможно, если свойство DBxDocTypes.UseDeleted=false", "undoDBEntry");
+          throw new ArgumentException(String.Format(Res.DBxRealDocProviderGlobal_Arg_CannotUseHistory, "DBxDocTypes.UseDeleted", false), "undoDBEntry");
         if (!docTypes.UseVersions)
-          throw new ArgumentException("Ведение истории невозможно, если свойство DBxDocTypes.UseVersions=false", "undoDBEntry");
+          throw new ArgumentException(String.Format(Res.DBxRealDocProviderGlobal_Arg_CannotUseHistory, "DBxDocTypes.UseVersions", false), "undoDBEntry");
         if (!docTypes.UseTime)
-          throw new ArgumentException("Ведение истории невозможно, если свойство DBxDocTypes.UseTime=false", "undoDBEntry");
+          throw new ArgumentException(String.Format(Res.DBxRealDocProviderGlobal_Arg_CannotUseHistory, "DBxDocTypes.UseTime", false), "undoDBEntry");
       }
       else
       {
         if (docTypes.UseSessionId)
-          throw new ArgumentException("Нельзя устанавливать свойство DBxDocTypes.UseSessionId, если история документов не ведется", "undoDBEntry");
+          throw new ArgumentException(Res.DBxRealDocProviderGlobal_Arg_CannotUseSessionId, "undoDBEntry");
       }
       _UndoDBEntry = undoDBEntry;
 
       if (binDataHandler == null)
       {
         if (docTypes.HasBinDataRefs || docTypes.HasFileRefs)
-          throw new ArgumentNullException("binDataHandler", "Так как в DocTypes задано использование ссылок на двоичные данные, аргумент BinDataHandler должен быть задан");
+          throw new ArgumentNullException("binDataHandler", Res.DBxRealDocProviderGlobal_Arg_BinDataHandlerIsNull);
       }
       else
         binDataHandler.SetReadOnly();
@@ -183,16 +183,16 @@ namespace FreeLibSet.Data.Docs
     /// Объявления для документов
     /// </summary>
     public DBxDocTypes DocTypes { get { return _DocTypes; } }
-    private DBxDocTypes _DocTypes;
+    private readonly DBxDocTypes _DocTypes;
 
 
     /// <summary>
     /// Подключение к основной базе данных.
-    /// Это подключение не содержит ограничений пользователя
+    /// Это подключение не содержит ограничений пользователя.
     /// Не может быть null
     /// </summary>
     public DBxEntry MainDBEntry { get { return _MainDBEntry; } }
-    private DBxEntry _MainDBEntry;
+    private readonly DBxEntry _MainDBEntry;
 
     /// <summary>
     /// Подключение к базе данных undo.
@@ -203,14 +203,14 @@ namespace FreeLibSet.Data.Docs
     /// Наличие служебных полей определяется управляющими свойствами в DBxDocTypes.
     /// </summary>
     public DBxEntry UndoDBEntry { get { return _UndoDBEntry; } }
-    private DBxEntry _UndoDBEntry;
+    private readonly DBxEntry _UndoDBEntry;
 
     /// <summary>
-    /// Обработчик двоичных данных (таблиц BinData и FileNames)
-    /// Может быть null, если хранение таких данных не предусмотрено
+    /// Обработчик двоичных данных (таблиц BinData и FileNames).
+    /// Может быть null, если хранение таких данных не предусмотрено.
     /// </summary>
     public DBxBinDataHandler BinDataHandler { get { return _BinDataHandler; } }
-    private DBxBinDataHandler _BinDataHandler;
+    private readonly DBxBinDataHandler _BinDataHandler;
 
     /// <summary>
     /// Структура, содержащая объявления таблиц "BinData" и "FileNames".
@@ -219,7 +219,7 @@ namespace FreeLibSet.Data.Docs
     /// Если BinDataHandler=null, содержит пустое объявление структуры, а не null.
     /// </summary>
     internal DBxStruct BinDataDBStruct { get { return _BinDataDBStruct; } }
-    private DBxStruct _BinDataDBStruct;
+    private readonly DBxStruct _BinDataDBStruct;
 
     /// <summary>
     /// Идентификатор основной базы данных
@@ -228,34 +228,34 @@ namespace FreeLibSet.Data.Docs
 
 
     /// <summary>
-    /// Служебные поля в начале таблицы документов, загружаемых в таблицу DBxMultiDocs
+    /// Служебные поля в начале таблицы документов, загружаемых в таблицу 'DBxMultiDocs'
     /// </summary>
     internal DBxColumns MainDocTableServiceColumns { get { return _MainDocTableServiceColumns; } }
-    private DBxColumns _MainDocTableServiceColumns;
+    private readonly DBxColumns _MainDocTableServiceColumns;
 
     /// <summary>
     /// Служебные поля в начале таблицы поддокументов, загружаемых в таблицу DBxMultiSubDocs
     /// </summary>
     internal DBxColumns SubDocTableServiceColumns { get { return _SubDocTableServiceColumns; } }
-    private DBxColumns _SubDocTableServiceColumns;
+    private readonly DBxColumns _SubDocTableServiceColumns;
 
     /// <summary>
     /// Все служебные поля в таблицах документов
     /// </summary>
     internal DBxColumns AllDocServiceColumns { get { return _AllDocServiceColumns; } }
-    private DBxColumns _AllDocServiceColumns;
+    private readonly DBxColumns _AllDocServiceColumns;
 
     /// <summary>
     /// Все служебные поля в таблицах поддокументов
     /// </summary>
     internal DBxColumns AllSubDocServiceColumns { get { return _AllSubDocServiceColumns; } }
-    private DBxColumns _AllSubDocServiceColumns;
+    private readonly DBxColumns _AllSubDocServiceColumns;
 
     /// <summary>
     /// Описание межтабличных ссылок с возможностью быстрого поиска для мастер-таблицы
     /// </summary>
     internal DBxExtRefs MasterRefs { get { return _MasterRefs; } }
-    private DBxExtRefs _MasterRefs;
+    private readonly DBxExtRefs _MasterRefs;
 
     #endregion
 
@@ -265,7 +265,7 @@ namespace FreeLibSet.Data.Docs
     /// Последние идентификаторы, использованные для каждой таблицы документов
     /// При обращении этот объект блокируется
     /// </summary>
-    private Dictionary<string, Int32> _LastUsedTableIds;
+    private readonly Dictionary<string, Int32> _LastUsedTableIds;
 
     /// <summary>
     /// Получить следующий свободный идентификатор для нового документа или поддокумента
@@ -305,7 +305,7 @@ namespace FreeLibSet.Data.Docs
     /// При работе с элементами списка должен блокироваться список
     /// </summary>
     internal List<DBxShortDocsLock> ActiveLocks { get { return _ActiveLocks; } }
-    private List<DBxShortDocsLock> _ActiveLocks;
+    private readonly List<DBxShortDocsLock> _ActiveLocks;
 
     #endregion
 
@@ -330,9 +330,9 @@ namespace FreeLibSet.Data.Docs
       /// Чтобы быстрее обращаться без преобразования.
       /// На момент вызова обязательно должно быть lock(SyncRoot).
       /// </summary>
-      private /*new*/ List<DBxLongDocsLock> _Source;
+      private /*new*/ readonly List<DBxLongDocsLock> _Source;
 
-      private DBxDocTextHandlers _TextHandlers;
+      private readonly DBxDocTextHandlers _TextHandlers;
 
       #endregion
 
@@ -376,7 +376,7 @@ namespace FreeLibSet.Data.Docs
           throw new ArgumentException("collection");
 #endif
         if (Object.ReferenceEquals(collection, this))
-          throw new ArgumentException("Нельзя добавить элементы из самого себя", "collection");
+          throw ExceptionFactory.ArgCollectionSameAsThis("collection");
 
         foreach (DBxLongDocsLock item in collection)
           Add(item);
@@ -415,7 +415,7 @@ namespace FreeLibSet.Data.Docs
     /// Список установленных длительных блокировок
     /// </summary>
     public LongTermLockList LongLocks { get { return _LongLocks; } }
-    private LongTermLockList _LongLocks;
+    private readonly LongTermLockList _LongLocks;
 
     #endregion
 
@@ -427,7 +427,7 @@ namespace FreeLibSet.Data.Docs
     /// Объект кэширования данных "без ограничений".
     /// </summary>
     public DBxCache DBCache { get { return _DBCache; } }
-    private DBxCache _DBCache;
+    private readonly DBxCache _DBCache;
 
     #endregion
 
@@ -438,7 +438,7 @@ namespace FreeLibSet.Data.Docs
     /// Приложение сервера должно вызывать по таймеру метод ClearCacheBuffer.Swap()
     /// </summary>
     public DBxClearCacheBuffer ClearCacheBuffer { get { return _ClearCacheBuffer; } }
-    private DBxClearCacheBuffer _ClearCacheBuffer;
+    private readonly DBxClearCacheBuffer _ClearCacheBuffer;
 
     /// <summary>
     /// Очищает кэш DBCache.
@@ -530,7 +530,7 @@ namespace FreeLibSet.Data.Docs
 
       #region Поля
 
-      private DBxRealDocProviderGlobal _Owner;
+      private readonly DBxRealDocProviderGlobal _Owner;
 
       #endregion
 
@@ -551,7 +551,7 @@ namespace FreeLibSet.Data.Docs
       #endregion
     }
 
-    private InternalStructSource _StructSource;
+    private readonly InternalStructSource _StructSource;
 
     IDBxStructSource IDBxCacheSource.StructSource { get { return _StructSource; } }
 
@@ -561,7 +561,7 @@ namespace FreeLibSet.Data.Docs
     /// Ключ - имя таблицы.
     /// На момент обращения коллекция блокируется для обеспечения потокобезопасности
     /// </summary>
-    private Dictionary<string, DBxTableCacheInfo> _TableCacheInfos;
+    private readonly Dictionary<string, DBxTableCacheInfo> _TableCacheInfos;
 
     DBxTableCacheInfo IDBxCacheSource.GetTableCacheInfo(string tableName)
     {
@@ -572,7 +572,7 @@ namespace FreeLibSet.Data.Docs
         {
           DBxDocTypeBase docTypeBase;
           if (!DocTypes.FindByTableName(tableName, out docTypeBase))
-            throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
+            throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownTable, tableName), "tableName");
 
           if (docTypeBase.IndividualCacheColumns.AreAllDefaults)
             info = null;
@@ -613,10 +613,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Генераторы текстового представления документа.
-    /// Список должен быть заполнен (вызовами Add()) до создания первого объекта DBxRealDocProviderSource
+    /// Список должен быть заполнен (вызовами Add()) до создания первого объекта <see cref="DBxRealDocProviderSource"/>.
     /// </summary>
     public DBxDocTextHandlers TextHandlers { get { return _TextHandlers; } }
-    private DBxDocTextHandlers _TextHandlers;
+    private readonly DBxDocTextHandlers _TextHandlers;
 
     #endregion
 

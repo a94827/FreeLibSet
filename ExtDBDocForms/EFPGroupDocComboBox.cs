@@ -291,16 +291,16 @@ namespace FreeLibSet.Forms.Docs
       /// Идентификатор группы
       /// </summary>
       public Int32 DocId { get { return _DocId; } }
-      private Int32 _DocId;
+      private readonly Int32 _DocId;
 
       /// <summary>
       /// Уровень вложения
       /// </summary>
       public int IndentLevel { get { return _IndentLevel; } }
-      private int _IndentLevel;
+      private readonly int _IndentLevel;
 
       public bool IsOpen { get { return _IsOpen; } }
-      private bool _IsOpen;
+      private readonly bool _IsOpen;
 
       #endregion
 
@@ -635,7 +635,7 @@ namespace FreeLibSet.Forms.Docs
       public override string ToString()
       {
         if (Owner == null)
-          return "[ Отключен от просмотра ]";
+          return "[ Disconnected from data view ]";
         else
           return Owner.ToString();
       }
@@ -743,7 +743,7 @@ namespace FreeLibSet.Forms.Docs
       Add(ciPaste);
 
       ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
-      ciShowDocInfo.MenuText = "Информация о документе";
+      ciShowDocInfo.MenuText = Res.Cmd_Menu_DocInfo;
       ciShowDocInfo.ShortCut = Keys.F12;
       ciShowDocInfo.ImageKey = "Information";
       ciShowDocInfo.Click += new EventHandler(ciShowDocInfo_Click);
@@ -792,7 +792,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (ControlProvider.DocId == 0)
       {
-        EFPApp.ShowTempMessage("Документ группы не выбран");
+        EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
         return;
       }
       DBxDocSelection docSel = new DBxDocSelection(ControlProvider.DocTypeUI.UI.DocProvider.DBIdentity);
@@ -809,16 +809,17 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = ControlProvider.DocTypeUI.UI.PasteDocSel();
       if (docSel == null)
       {
-        EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы");
+        EFPApp.ShowTempMessage(Res.Clipboard_Err_NoDocSel);
         return;
       }
 
       Int32[] ids = docSel[ControlProvider.DocTypeUI.DocType.Name];
       if (ids.Length == 0)
       {
-        EFPApp.ShowTempMessage("Буфер обмена не содержит ссылок на документы \"" + ControlProvider.DocTypeUI.DocType.PluralTitle + "\"");
+        EFPApp.ShowTempMessage(String.Format(Res.Clipboard_Err_NoDocType, ControlProvider.DocTypeUI.DocType.PluralTitle));
         return;
       }
+
       ControlProvider.DocId = ids[0];
     }
 
@@ -832,7 +833,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (ControlProvider.DocId == 0)
       {
-        EFPApp.ShowTempMessage("Группа не выбрана");
+        EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
         return;
       }
 

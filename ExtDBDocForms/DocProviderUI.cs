@@ -39,7 +39,7 @@ namespace FreeLibSet.Forms.Docs
     /// Интерфейс доступа к документам, к которому относится провайдер
     /// </summary>
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     #endregion
 
@@ -80,17 +80,17 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoFillSelect(DBxSelectInfo info)
     {
       DataTable table;
-      BeginWait("Запрос таблицы \"" + info.TableName + "\"", GetTableImageKey(info.TableName));
+      BeginWait(String.Format(Res.Common_Phase_FillSelect, info.TableName), GetTableImageKey(info.TableName));
       try
       {
         // 29.08.2020
         // Используем процедуру на случай длительного вызова
 
-        NamedValues DispArgs = new NamedValues();
-        DispArgs["Action"] = "FillSelect";
-        DispArgs["SelectInfo"] = info;
-        NamedValues DispRes = ExecuteServerAsync(DispArgs, "SELECT для таблицы \"" + info.TableName + "\"");
-        table = (DataTable)(DispRes["Table"]);
+        NamedValues dispArgs = new NamedValues();
+        dispArgs["Action"] = "FillSelect";
+        dispArgs["SelectInfo"] = info;
+        NamedValues dispRes = ExecuteServerAsync(dispArgs, String.Format(Res.Common_Phase_FillSelect, info.TableName));
+        table = (DataTable)(dispRes["Table"]);
       }
       finally
       {
@@ -110,7 +110,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoFillUniqueColumnValues(string tableName, string columnName, DBxFilter where)
     {
       DataTable table;
-      BeginWait("Получение списка значений для таблицы \"" + tableName + "\"", GetTableImageKey(tableName));
+      BeginWait(String.Format(Res.Common_Phase_FillSelect, tableName), GetTableImageKey(tableName));
       try { table = base.DoFillUniqueColumnValues(tableName, columnName, where); }
       finally { EndWait(); }
       return table;
@@ -125,7 +125,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoGetDocHistTable(string docTypeName, Int32 docId)
     {
       DataTable table;
-      BeginWait("Получение таблицы истории документа", "Information");
+      BeginWait(Res.Common_Phase_GetDocHistTable, "Information");
       try { table = base.DoGetDocHistTable(docTypeName, docId); }
       finally { EndWait(); }
       return table;
@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoGetDocRefTable(string docTypeName, Int32 docId, bool showDeleted, bool unique, string fromSingleDocTypeName, Int32 fromSingleDocId)
     {
       DataTable table;
-      BeginWait("Получение таблицы ссылок для документа", "DocRefs");
+      BeginWait(Res.Common_Phase_GetDocRefTable, "DocRefs");
       try { table = base.DoGetDocRefTable(docTypeName, docId, showDeleted, unique, fromSingleDocTypeName, fromSingleDocId); }
       finally { EndWait(); }
       return table;
@@ -164,7 +164,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoGetUserActionsTable(DateTime? firstDate, DateTime? lastDate, Int32 userId, string singleDocTypeName)
     {
       DataTable table;
-      BeginWait("Получение списка действий пользователя", "UserActions");
+      BeginWait(Res.Common_Phase_GetUserActionTable, "UserActions");
       try { table = base.DoGetUserActionsTable(firstDate, lastDate, userId, singleDocTypeName); }
       finally { EndWait(); }
       return table;
@@ -178,7 +178,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoGetUserActionDocTable(Int32 actionId)
     {
       DataTable table;
-      BeginWait("Получение таблицы документов для действия пользователя", "UserActions");
+      BeginWait(Res.Common_Phase_GetUserActionDocTable, "UserActions");
       try { table = base.DoGetUserActionDocTable(actionId); }
       finally { EndWait(); }
       return table;
@@ -198,21 +198,21 @@ namespace FreeLibSet.Forms.Docs
     protected override Dictionary<Int32, byte[]> DoInternalGetBinData2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
     {
       Dictionary<Int32, byte[]> res;
-      BeginWait("Получение двоичных данных", GetTableImageKey(tableName));
+      BeginWait(Res.Common_Phase_GetBinData, GetTableImageKey(tableName));
       try
       {
         // 14.10.2020
         // Используем процедуру на случай длительного вызова
         //res = base.InternalGetBinData2(tableName, columnName, wantedId, docVersion, preloadIds); 
-        NamedValues DispArgs = new NamedValues();
-        DispArgs["Action"] = "InternalGetBinData2";
-        DispArgs["TableName"] = tableName;
-        DispArgs["ColumnName"] = columnName;
-        DispArgs["WantedId"] = wantedId;
-        DispArgs["DocVersion"] = docVersion;
-        DispArgs["PreloadIds"] = preloadIds;
-        NamedValues DispRes = ExecuteServerAsync(DispArgs, "Получение двоичных данных");
-        res = (Dictionary<Int32, byte[]>)(DispRes["Data"]);
+        NamedValues dispArgs = new NamedValues();
+        dispArgs["Action"] = "InternalGetBinData2";
+        dispArgs["TableName"] = tableName;
+        dispArgs["ColumnName"] = columnName;
+        dispArgs["WantedId"] = wantedId;
+        dispArgs["DocVersion"] = docVersion;
+        dispArgs["PreloadIds"] = preloadIds;
+        NamedValues dispRes = ExecuteServerAsync(dispArgs, Res.Common_Phase_GetBinData);
+        res = (Dictionary<Int32, byte[]>)(dispRes["Data"]);
       }
       finally
       {
@@ -235,21 +235,21 @@ namespace FreeLibSet.Forms.Docs
     protected override Dictionary<Int32, FreeLibSet.IO.FileContainer> DoInternalGetDBFile2(string tableName, string columnName, DBxDocProvider.DocSubDocDataId wantedId, int docVersion, List<DBxDocProvider.DocSubDocDataId> preloadIds)
     {
       Dictionary<Int32, FreeLibSet.IO.FileContainer> res;
-      BeginWait("Получение файла из базы данных", GetTableImageKey(tableName));
+      BeginWait(Res.Common_Phase_GetDBFile, GetTableImageKey(tableName));
       try
       {
         // 14.10.2020
         // Используем процедуру на случай длительного вызова
         //res = base.InternalGetDBFile2(tableName, columnName, wantedId, docVersion, preloadIds);
-        NamedValues DispArgs = new NamedValues();
-        DispArgs["Action"] = "InternalGetDBFile2";
-        DispArgs["TableName"] = tableName;
-        DispArgs["ColumnName"] = columnName;
-        DispArgs["WantedId"] = wantedId;
-        DispArgs["DocVersion"] = docVersion;
-        DispArgs["PreloadIds"] = preloadIds;
-        NamedValues DispRes = ExecuteServerAsync(DispArgs, "Получение содержимого файла");
-        res = (Dictionary<Int32, FreeLibSet.IO.FileContainer>)(DispRes["Data"]);
+        NamedValues dispArgs = new NamedValues();
+        dispArgs["Action"] = "InternalGetDBFile2";
+        dispArgs["TableName"] = tableName;
+        dispArgs["ColumnName"] = columnName;
+        dispArgs["WantedId"] = wantedId;
+        dispArgs["DocVersion"] = docVersion;
+        dispArgs["PreloadIds"] = preloadIds;
+        NamedValues dispRes = ExecuteServerAsync(dispArgs, Res.Common_Phase_GetDBFile);
+        res = (Dictionary<Int32, FreeLibSet.IO.FileContainer>)(dispRes["Data"]);
       }
       finally
       {
@@ -266,7 +266,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DBxCacheLoadResponse DoLoadCachePages(DBxCacheLoadRequest request)
     {
       DBxCacheLoadResponse res;
-      BeginWait("Получение кэшированных страниц для " + request.ToString(), "Database");
+      BeginWait(String.Format(Res.Common_Phase_LoadCachePages, request), "Database");
       try { res = base.DoLoadCachePages(request); }
       finally { EndWait(); }
       return res;
@@ -281,7 +281,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoLoadDocData(string docTypeName, DBxFilter filter)
     {
       DataTable table;
-      BeginWait("Загрузка документов \"" + DocTypes[docTypeName].PluralTitle + "\"", GetTableImageKey(docTypeName));
+      BeginWait(String.Format(Res.Common_Phase_LoadDocData, DocTypes[docTypeName].PluralTitle), GetTableImageKey(docTypeName));
       try { table = base.DoLoadDocData(docTypeName, filter); }
       finally { EndWait(); }
       return table;
@@ -296,7 +296,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoLoadDocData(string docTypeName, Int32[] docIds)
     {
       DataTable table;
-      BeginWait("Загрузка документов \"" + DocTypes[docTypeName].PluralTitle + "\" по фильтру", GetTableImageKey(docTypeName));
+      BeginWait(String.Format(Res.Common_Phase_LoadDocData, DocTypes[docTypeName].PluralTitle), GetTableImageKey(docTypeName));
       try { table = base.DoLoadDocData(docTypeName, docIds); }
       finally { EndWait(); }
       return table;
@@ -313,7 +313,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
     {
       DataTable table;
-      BeginWait("Загрузка поддокументов", GetTableImageKey(subDocTypeName));
+      BeginWait(Res.Common_Phase_LoadSubDocData, GetTableImageKey(subDocTypeName));
       try { table = base.DoLoadSubDocData(docTypeName, subDocTypeName, docIds); }
       finally { EndWait(); }
       return table;
@@ -339,7 +339,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DataSet DoApplyChanges(DataSet dataSet, bool reloadData)
     {
       DataSet res;
-      BeginWait("Запись изменений в документах", "Save");
+      BeginWait(Res.Common_Phase_ApplyChanges, "Save");
       try { res = DoApplyChanges2(dataSet, reloadData); }
       finally { EndWait(); }
       return res;
@@ -360,7 +360,7 @@ namespace FreeLibSet.Forms.Docs
         dispArgs["Action"] = "ApplyChanges";
         dispArgs["DataSet"] = dataSet;
         dispArgs["ReloadData"] = reloadData;
-        NamedValues DispRes = ExecuteServerAsync(dispArgs, "Запись изменений документов");
+        NamedValues DispRes = ExecuteServerAsync(dispArgs, Res.Common_Phase_ApplyChanges);
         dataSet2 = (DataSet)(DispRes["DataSet"]);
       }
       else
@@ -382,7 +382,7 @@ namespace FreeLibSet.Forms.Docs
         {
           try
           {
-            NullReferenceException e = new NullReferenceException("При вызове OnApplyChanges() не получен ответный набор данных при ReloadData=true");
+            NullReferenceException e = new NullReferenceException(Res.DocProvider_Err_ApplyChangesNoResults);
             e.Data["UseAsyncCall"] = UseAsyncCall;
           }
           catch (Exception e2)
@@ -419,7 +419,7 @@ namespace FreeLibSet.Forms.Docs
       {
         for (int i = 0; i < docTypeUI.Browsers.Count; i++)
         {
-          DocumentViewHandler dvh=docTypeUI.Browsers[i];
+          DocumentViewHandler dvh = docTypeUI.Browsers[i];
           bool IsCaller = (dvh.BrowserGuid == browserGuid) && browserGuid != Guid.Empty;
           try
           {
@@ -431,7 +431,7 @@ namespace FreeLibSet.Forms.Docs
             e.Data["DocumentViewHandler"] = dvh.ToString();
             e.Data["BrowserGuid"] = dvh.BrowserGuid;
             e.Data["IsCaller"] = IsCaller;
-            EFPApp.ShowException(e, "Ошибка обновления просмотра после записи изменений для документов \"" + docTypeUI.DocType.PluralTitle+"\"");
+            EFPApp.ShowException(e, String.Format(Res.DocProvider_ErrTitle_DocUpdating, docTypeUI.DocType.PluralTitle));
           }
         }
         docTypeUI.RefreshBufferedData(); // 03.02.2022

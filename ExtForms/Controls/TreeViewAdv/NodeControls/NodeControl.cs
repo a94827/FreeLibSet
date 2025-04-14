@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms.VisualStyles;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591
 
@@ -110,7 +111,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
 
         _leftMargin = value;
         if (_parent != null)

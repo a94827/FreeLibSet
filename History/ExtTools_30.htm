@@ -5,7 +5,7 @@
 	<TITLE>Изменения в модуле ExtTools.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20250218;153719820000000">
+	<META NAME="CHANGED" CONTENT="20250411;143805149000000">
 	<META NAME="created" CONTENT="00:00:00">
 	<META NAME="changed" CONTENT="2025-02-09T13:28:56.718000000">
 	<META NAME="created" CONTENT="00:00:00">
@@ -13,12 +13,12 @@
 	<META NAME="created" CONTENT="00:00:00">
 	<STYLE TYPE="text/css">
 	<!--
+		P { margin-bottom: 0.25cm; background: transparent; color: #000000 }
 		TD P { margin-bottom: 0.25cm; background: transparent; color: #000000; widows: 0; orphans: 0 }
 		H1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
 		H1.western { font-family: "Liberation Serif", serif }
 		H1.cjk { font-family: "NSimSun"; font-size: 24pt }
 		H1.ctl { font-family: "Mangal"; font-size: 24pt }
-		P { margin-bottom: 0.25cm; background: transparent; color: #000000 }
 		A:link { color: #0000ff; so-language: zxx }
 		A:visited { color: #800080 }
 	-->
@@ -51,6 +51,103 @@
 	</TR>
 	<TR VALIGN=TOP>
 		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>360</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>24.02.2025-11.04.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US">1. <SPAN LANG="ru-RU">Класс </SPAN>CommandLineParser</P>
+			<P LANG="en-US">2. <SPAN LANG="ru-RU">Методы</SPAN>
+			UITools.ValueListToString(), InvalidCharErrorMessage<SPAN LANG="ru-RU">()</SPAN></P>
+			<P LANG="en-US">3<SPAN LANG="ru-RU">. Метод
+			</SPAN>ExceptionFactory.ObjectMethodNotCalled(),
+			DataColumnNotFound()</P>
+			<P><SPAN LANG="en-US">4. </SPAN><SPAN LANG="ru-RU">Класс
+			FilteredDataTableTreeModelWithIds перенесен из </SPAN><SPAN LANG="en-US">ExtDBDocs
+			(<A HREF="ExtDBDocs_20.htm#v311p10">ExtDBDocs, v.311 </A></SPAN><A HREF="ExtDBDocs_20.htm#v311p10"><SPAN LANG="ru-RU">п.10</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">5. </SPAN><SPAN LANG="ru-RU">Выделен метод
+			</SPAN><SPAN LANG="en-US">BRFileHtml.ToString() (<A HREF="ExtTools_20.htm#v348p36">v.348
+			</A></SPAN><A HREF="ExtTools_20.htm#v348p36"><SPAN LANG="ru-RU">п.36</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">6. BRFileHtml (<A HREF="ExtTools_20.htm#v348p36">v.348
+			</A></SPAN><A HREF="ExtTools_20.htm#v348p36"><SPAN LANG="ru-RU">п.36</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">для тонких линий </SPAN><SPAN LANG="en-US">BRLineStyle.Solid
+			</SPAN><SPAN LANG="ru-RU">задает толщину </SPAN>&ldquo;<SPAN LANG="ru-RU">1</SPAN><SPAN LANG="en-US">px&rdquo;</SPAN></P>
+			<P><A NAME="v360p7"></A><SPAN LANG="en-US">7. </SPAN><SPAN LANG="ru-RU">Поддержка
+			закладок и ссылок в отчетах. </SPAN>
+			</P>
+			<P><SPAN LANG="ru-RU">- Класс </SPAN><SPAN LANG="en-US">BRBookMarks,
+			о</SPAN><SPAN LANG="ru-RU">сновная коллекция </SPAN><SPAN LANG="en-US">BRReport.Bookmarks,
+			</SPAN><SPAN LANG="ru-RU">вспомогательные коллекции </SPAN><SPAN LANG="en-US">BRBand
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">BRSelector.Bookmarks.</SPAN></P>
+			<P><SPAN LANG="ru-RU">- Новый класс </SPAN><SPAN LANG="en-US">BRValueWithLink</SPAN>
+			<SPAN LANG="ru-RU">может зад</SPAN><SPAN LANG="en-US">аваться</SPAN>
+			<SPAN LANG="ru-RU">как значение в </SPAN><SPAN LANG="en-US">BRSelector.Value
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtTools_20.htm#v348p26"><SPAN LANG="en-US">v.348
+			</SPAN><SPAN LANG="ru-RU">п.26</SPAN></A><SPAN LANG="ru-RU">) и
+			связанных методах. </SPAN>
+			</P>
+			<P><SPAN LANG="ru-RU">- Свойства </SPAN><SPAN LANG="en-US">BRSelector.ActualValue
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">LinkData.
+			</SPAN><SPAN LANG="ru-RU">Поддерживаются  </SPAN><SPAN LANG="en-US">URI-</SPAN><SPAN LANG="ru-RU">подобные
+			ссылки </SPAN><SPAN LANG="ru-RU">и ссылки на закладки &laquo;</SPAN><SPAN LANG="en-US">#Name</SPAN><SPAN LANG="ru-RU">&raquo;</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
+			<P><SPAN LANG="en-US">8. </SPAN><SPAN LANG="ru-RU">Закладки и
+			с</SPAN><SPAN LANG="ru-RU">сылки отображаются в </SPAN><SPAN LANG="en-US">BRFileHtml
+			(<A HREF="ExtTools_20.htm#v348p36">v.348 </A></SPAN><A HREF="ExtTools_20.htm#v348p36"><SPAN LANG="ru-RU">п.36</SPAN></A><SPAN LANG="en-US">),
+			BRFileExcel2003 (<A HREF="ExtTools_20.htm#v348p32">v.348 </A></SPAN><A HREF="ExtTools_20.htm#v348p32"><SPAN LANG="ru-RU">п.32</SPAN></A><SPAN LANG="en-US">),
+			BRFileWord2003 (<A HREF="ExtTools_20.htm#v348p33">v.348 </A></SPAN><A HREF="ExtTools_20.htm#v348p33"><SPAN LANG="ru-RU">п.33</SPAN></A><SPAN LANG="en-US">),
+			BRFileXLSX (<A HREF="ExtTools_20.htm#v351p2">v.351 </A></SPAN><A HREF="ExtTools_20.htm#v351p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">),
+			BRFileDOCX (<A HREF="ExtTools_20.htm#v351p3">v.351 п.3</A>),
+			BRFileODS (<A HREF="ExtTools_20.htm#v348p34">v.348 </A></SPAN><A HREF="ExtTools_20.htm#v348p34"><SPAN LANG="ru-RU">п.34</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">,
+			</SPAN><SPAN LANG="en-US">BRFileODT (<A HREF="ExtTools_20.htm#v348p35">v.348
+			</A></SPAN><A HREF="ExtTools_20.htm#v348p35"><SPAN LANG="ru-RU">п.35</SPAN></A><SPAN LANG="en-US">),
+			BRFileExcelOLE (<A HREF="ExtTools_20.htm#v348p31">v.348 </A></SPAN><A HREF="ExtTools_20.htm#v348p31"><SPAN LANG="ru-RU">п.31</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">9. BRFileExcelOLE (<A HREF="ExtTools_20.htm#v348p31">v.348
+			</A></SPAN><A HREF="ExtTools_20.htm#v348p31"><SPAN LANG="ru-RU">п.31</SPAN></A><SPAN LANG="en-US">)
+			у</SPAN><SPAN LANG="ru-RU">даляет символы мягкого переноса, как
+			</SPAN><SPAN LANG="en-US">BRFileExcel2003 (<A HREF="ExtTools_20.htm#v348p32">v.348
+			</A></SPAN><A HREF="ExtTools_20.htm#v348p32"><SPAN LANG="ru-RU">п.32</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">BRFileODS
+			(<A HREF="ExtTools_20.htm#v348p34">v.348 </A></SPAN><A HREF="ExtTools_20.htm#v348p34"><SPAN LANG="ru-RU">п.34</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">требуют аргумент </SPAN><SPAN LANG="en-US">IBRMeasurer
+			</SPAN><SPAN LANG="ru-RU">по аналогии с другими офисными форматами</SPAN></P>
+			<P><SPAN LANG="en-US">10. BRFileHtml (<A HREF="ExtTools_20.htm#v348p36">v.348
+			</A></SPAN><A HREF="ExtTools_20.htm#v348p36"><SPAN LANG="ru-RU">п.36</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">учитывает свойства </SPAN><SPAN LANG="en-US">BRBand.TopMargin
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">BottomMargin</SPAN></P>
+			<P><SPAN LANG="en-US">11. </SPAN><SPAN LANG="ru-RU">Убраны
+			свойства </SPAN><SPAN LANG="en-US">BRRowInfo, BRColumnInfo.Visible
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtTools_20.htm#v348p26"><SPAN LANG="en-US">v.348
+			</SPAN><SPAN LANG="ru-RU">п.26</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
+			</SPAN><SPAN LANG="ru-RU">так как они не поддерживались при
+			экспорте</SPAN></P>
+			<P><SPAN LANG="en-US">1</SPAN><SPAN LANG="ru-RU">2</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">Перегрузка метода
+			</SPAN><SPAN LANG="en-US">DataTools.AddStrIfNoEmpty() (<A HREF="ExtTools_11.htm#v243p4">v.243
+			</A></SPAN><A HREF="ExtTools_11.htm#v243p4"><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">с аргументами </SPAN><SPAN LANG="en-US">DataRow
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">ColumnName</SPAN></P>
+			<P><SPAN LANG="en-US">13. </SPAN><SPAN LANG="ru-RU">Перегрузки
+			методов </SPAN><SPAN LANG="en-US">CellRef (<A HREF="ExtTools_20.htm#v325p2">v.325
+			</A></SPAN><A HREF="ExtTools_20.htm#v325p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">RangeRef.ToString()
+			(<A HREF="ExtTools_20.htm#v325p4">v.325 </A></SPAN><A HREF="ExtTools_20.htm#v325p4"><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">с аргументом C</SPAN><SPAN LANG="en-US">ellRefFormat
+			</SPAN><SPAN LANG="ru-RU">(стили &laquo;</SPAN><SPAN LANG="en-US">A1</SPAN><SPAN LANG="ru-RU">&raquo;
+			</SPAN><SPAN LANG="en-US">(</SPAN><SPAN LANG="ru-RU">по
+			умолчанию), &laquo;</SPAN><SPAN LANG="en-US">$A$1</SPAN><SPAN LANG="ru-RU">&raquo;
+			и &laquo;</SPAN><SPAN LANG="en-US">R1C1</SPAN><SPAN LANG="ru-RU">&raquo;
+			)</SPAN><SPAN LANG="en-US">. </SPAN><SPAN LANG="ru-RU">Методы
+			</SPAN><SPAN LANG="en-US">TryParse() </SPAN><SPAN LANG="ru-RU">поддерживают
+			все форматы. </SPAN><SPAN LANG="ru-RU">Вспомогательное свойство
+			</SPAN><SPAN LANG="en-US">RangeRef.IsSingleCell</SPAN></P>
+			<P>14. Метод <SPAN LANG="en-US">SpreadSheetTools.GetQuotedSheetName()
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtTools_20.htm#v325p3"><SPAN LANG="en-US">v.325
+			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>359</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -59,7 +156,8 @@
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P LANG="en-US">1. И<SPAN LANG="ru-RU">нтернационализация</SPAN> <SPAN LANG="ru-RU">с
 			использованием строковых ресурсов</SPAN></P>
-			<P LANG="en-US"><SPAN LANG="ru-RU">2. Класс </SPAN>ExceptionFactory</P>
+			<P LANG="en-US"><A NAME="v359p2"></A><SPAN LANG="ru-RU">2. Класс
+			</SPAN>ExceptionFactory</P>
 			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Методы
 			</SPAN><SPAN LANG="en-US">FormatStringTools.ExpandDateTimeFormat(),
 			GetEditableDateTimeFormatterKind() </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtTools_20.htm#v351p9"><SPAN LANG="en-US">v.351

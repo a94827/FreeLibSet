@@ -78,11 +78,17 @@
     <Compile Include="Data\DBxNameValidator.cs" />
     <Compile Include="Data\DBxStructChecker.cs" />
     <Compile Include="Data\DBxRealStructSource.cs" />
+    <Compile Include="Data\DBxUITools.cs" />
     <Compile Include="MSSqlServer\SqlDBxDataWriter.cs" />
     <Compile Include="OleDbTemplateFilesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OleDbTemplateFilesResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Res.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Res.resx</DependentUpon>
     </Compile>
     <Compile Include="SQLite\SQLiteDBxDataWriter.cs" />
     <Compile Include="SQLite\SQLiteDBxSqlFormatter.cs" />
@@ -91,8 +97,8 @@
     <Compile Include="OleDB\OleDbDBx.cs" />
     <Compile Include="Data\DBxClearCacheData.cs" />
     <Compile Include="Oracle\OracleDBxSqlFormatter.cs" />
-    <Compile Include="Oracle\OraclelDBx.cs" />
-    <Compile Include="PostgreSQL\NpgqlDBxSqlFormatter.cs" />
+    <Compile Include="Oracle\OracleDBx.cs" />
+    <Compile Include="PostgreSQL\NpgsqlDBxSqlFormatter.cs" />
     <Compile Include="Data\DBxCache.cs" />
     <Compile Include="Data\DBxEntry.cs" />
     <Compile Include="Data\DBxPermissions.cs" />
@@ -119,6 +125,11 @@
       <SubType>Designer</SubType>
       <LastGenOutput>OleDbTemplateFilesResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Res.ru.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TemplateFiles\Access2000.zip" />

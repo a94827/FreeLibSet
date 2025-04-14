@@ -117,66 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnCopy.Location" type="System.Drawing.Point, System.Drawing">
-    <value>547, 20</value>
-  </data>
-  <data name="btnCopy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 24</value>
-  </data>
-  <data name="btnPaste.Location" type="System.Drawing.Point, System.Drawing">
-    <value>584, 20</value>
-  </data>
-  <data name="btnPaste.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 24</value>
-  </data>
-  <data name="SetComboBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 17</value>
-  </data>
-  <data name="SetComboBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>333, 24</value>
-  </data>
-  <data name="grpSets.Location" type="System.Drawing.Point, System.Drawing">
-    <value>196, 3</value>
-  </data>
-  <data name="grpSets.Size" type="System.Drawing.Size, System.Drawing">
-    <value>345, 43</value>
-  </data>
   <data name="grpSets.Text" xml:space="preserve">
     <value>Готовые наборы</value>
-  </data>
-  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>106, 20</value>
-  </data>
-  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 24</value>
-  </data>
-  <data name="btnOk.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 20</value>
-  </data>
-  <data name="btnOk.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 24</value>
-  </data>
-  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 250</value>
-  </data>
-  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>624, 52</value>
-  </data>
-  <data name="panSpb.Size" type="System.Drawing.Size, System.Drawing">
-    <value>624, 51</value>
-  </data>
-  <data name="FilterGrid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 51</value>
-  </data>
-  <data name="FilterGrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>624, 199</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>624, 302</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Установка фильтров</value>

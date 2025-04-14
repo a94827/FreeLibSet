@@ -273,15 +273,11 @@ namespace FreeLibSet.Data.Docs
           if (tableIdColumnPos <0 && docIdColumnPos < 0)
             continue;
           if (tableIdColumnPos < 0)
-            throw new InvalidOperationException("Неправильный набор данных. В таблице \"" + table.TableName +
-              "\" существует переменное ссылочное поле \"" + vtr.DocIdColumn.ColumnName +
-              "\", содержащее идентификатор документа, но нет поля \"" + vtr.TableIdColumn.ColumnName +
-              "\" содержащего идентификатор таблицы");
+            throw new InvalidOperationException(String.Format(Res.DBxDocProviderIdReplacer_Err_NoTableIdColumn,
+              table.TableName, vtr.DocIdColumn.ColumnName, vtr.TableIdColumn.ColumnName));
           if (docIdColumnPos < 0)
-            throw new InvalidOperationException("Неправильный набор данных. При создании строки в таблице \"" + table.TableName +
-              "\" сущействует переменное ссылочное поле \"" + vtr.TableIdColumn.ColumnName +
-              "\", содержащее идентификатор таблицы, но нет поля \"" + vtr.TableIdColumn.ColumnName +
-              "\" содержащего идентификатор документа");
+            throw new InvalidOperationException(String.Format(Res.DBxDocProviderIdReplacer_Err_NoDocIdColumn,
+              table.TableName, vtr.TableIdColumn.ColumnName, vtr.TableIdColumn.ColumnName));
 
           foreach (DataRow row in table.Rows)
           {
@@ -307,9 +303,8 @@ namespace FreeLibSet.Data.Docs
 #endif
             DBxDocType masterDT = _Caller.DocTypes.FindByTableId(tableId);
             if (masterDT == null)
-              throw new InvalidOperationException("При создании строки в таблице \"" + table.TableName +
-                "\" задан идентификатор " + tableId + " мастер-таблицы в поле " +
-                vtr.TableIdColumn.ColumnName + "\", которому не соответствует никакая таблица");
+              throw new InvalidOperationException(String.Format(Res.DBxDocProviderIdReplacer_Err_UnknownTableId,
+                table.TableName, vtr.TableIdColumn.ColumnName, tableId));
 #if XXX
 
             if (!vtr.MasterTableNames.Contains(masterDT.Name))

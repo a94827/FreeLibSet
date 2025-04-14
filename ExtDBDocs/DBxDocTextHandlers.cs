@@ -63,7 +63,8 @@ namespace FreeLibSet.Data.Docs
     {
       int p = _ColumnNames.IndexOf(columnName);
       if (p < 0)
-        throw new ArgumentException("Поле \"" + columnName + "\" не было объявлено добавлено в список требуемых для полученния текстового представления таблицы \"" + TableName + "\". Допустимые поля: " + _ColumnNames.ToString(), "columnName");
+        throw new ArgumentException(String.Format(Res.DBxDocTextHandlers_Arg_UnknownColumnName,
+          columnName, TableName, _ColumnNames), "columnName");
       return _Values[p];
     }
 
@@ -470,13 +471,13 @@ namespace FreeLibSet.Data.Docs
     #region Списки полей для запроса
 
     internal DBxColumns ColumnsId { get { return _ColumnsId; } }
-    private DBxColumns _ColumnsId;
+    private readonly DBxColumns _ColumnsId;
 
     internal DBxColumns ColumnsDoc { get { return _ColumnsDoc; } }
-    private DBxColumns _ColumnsDoc;
+    private readonly DBxColumns _ColumnsDoc;
 
     internal DBxColumns ColumnsSubDoc { get { return _ColumnsSubDoc; } }
-    private DBxColumns _ColumnsSubDoc;
+    private readonly DBxColumns _ColumnsSubDoc;
 
     #endregion
 
@@ -487,7 +488,7 @@ namespace FreeLibSet.Data.Docs
     /// Задается в конструкторе
     /// </summary>
     public DBxDocTypes DocTypes { get { return _DocTypes; } }
-    private DBxDocTypes _DocTypes;
+    private readonly DBxDocTypes _DocTypes;
 
     /// <summary>
     /// Источник для получения значений полей.
@@ -532,11 +533,11 @@ namespace FreeLibSet.Data.Docs
     public void Add(string tableName, DBxColumns columnNames, DBxTextValueNeededEventHandler textValueNeeded)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       if (columnNames == null)
         throw new ArgumentNullException("columnNames");
       if (columnNames.Count == 0)
-        throw new ArgumentException("Список полей для получения текстового представления таблицы \"" + tableName + "\" пустой", "columnNames");
+        throw ExceptionFactory.ArgIsEmpty("columnNames");
 
       lock (_TableItems)
       {
@@ -614,13 +615,13 @@ namespace FreeLibSet.Data.Docs
       }
       catch (Exception e)
       {
-        return "Id=" + id.ToString() + ". Ошибка. " + e.Message;
+        return String.Format(Res.DBxDocTextHandlers_Err_TextValue,id, e.Message);
       }
     }
 
     /// <summary>
     /// Получить текстовое представление документа или поддокумента.
-    /// В отличие от GetTextValue(), в текст обязательно добавляется идентификатор документа
+    /// В отличие от <see cref="GetTextValue(string, int)"/>, в текст обязательно добавляется идентификатор документа.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа или поддокумента</param>
     /// <param name="id">Идентификатор</param>
@@ -633,7 +634,7 @@ namespace FreeLibSet.Data.Docs
       }
       catch (Exception e)
       {
-        return "Id=" + id.ToString() + ". Ошибка. " + e.Message;
+        return String.Format(Res.DBxDocTextHandlers_Err_TextValue, id, e.Message);
       }
     }
 
@@ -652,7 +653,7 @@ namespace FreeLibSet.Data.Docs
         {
           // добавляем пустышку
           if (String.IsNullOrEmpty(tableName))
-            throw new ArgumentNullException("tableName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
           handler = new TableHandler(this, tableName, ColumnsId, null);
           _TableItems.Add(tableName, handler);
@@ -692,8 +693,7 @@ namespace FreeLibSet.Data.Docs
           {
             if (_Args.Text.Length > 0) // часть текста была добавлена
               _Args.Text.Append(". ");
-            _Args.Text.Append("Ошибка: ");
-            _Args.Text.Append(e.Message);
+            _Args.Text.Append(String.Format(Res.DBxDocTextHandlers_Err_TextValue, id, e.Message));
           }
         }
         else
@@ -733,14 +733,23 @@ namespace FreeLibSet.Data.Docs
           if (handler.SubDocType == null)
           {
             if (_Args.GetBool("Deleted"))
-              _Args.Text.Append(" (удален)");
+            {
+              _Args.Text.Append(" ");
+              _Args.Text.Append(Res.DBxDocTextHandlers_Msg_Deleted);
+            }
           }
           else
           {
             if (_Args.GetBool("Deleted"))
-              _Args.Text.Append(" (удален)");
+            {
+              _Args.Text.Append(" ");
+              _Args.Text.Append(Res.DBxDocTextHandlers_Msg_Deleted);
+            }
             if (GetDocIdDeleted(handler))
-              _Args.Text.Append(" (в удаленном документе)");
+            {
+              _Args.Text.Append(" ");
+              _Args.Text.Append(Res.DBxDocTextHandlers_Msg_DocDeleted);
+            }
           }
         }
 
@@ -796,7 +805,7 @@ namespace FreeLibSet.Data.Docs
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       int p = columnName.IndexOf('.');
       if (p < 0)
@@ -818,7 +827,7 @@ namespace FreeLibSet.Data.Docs
 
         string extTableName = tableStruct.Columns[refColumnName].MasterTableName;
         if (String.IsNullOrEmpty(extTableName))
-          throw new ArgumentException("Поле \"" + extTableName + "\" таблицы \"" + tableName + "\" не является ссылочным", "columnName");
+          throw new ArgumentException(String.Format(Res.DBxDocTextHandlers_Arg_NotRefColumn, extTableName, tableName), "columnName");
         string ExtColumnName = columnName.Substring(p + 1);
 
         DataRow row2 = InternalGetRow(extTableName, refId, primaryDS);
@@ -850,7 +859,7 @@ namespace FreeLibSet.Data.Docs
       }
       catch (Exception e)
       {
-        return "DocId=" + doc.DocId.ToString() + ". Ошибка. " + e.Message;
+        return String.Format(Res.DBxDocTextHandlers_Err_TextValue, doc.DocId, e.Message);
       }
     }
 
@@ -867,7 +876,7 @@ namespace FreeLibSet.Data.Docs
       }
       catch (Exception e)
       {
-        return "SubDocId=" + subDoc.SubDocId.ToString() + ". Ошибка. " + e.Message;
+        return String.Format(Res.DBxDocTextHandlers_Err_TextValue, subDoc.SubDocId, e.Message);
       }
     }
 
@@ -889,7 +898,7 @@ namespace FreeLibSet.Data.Docs
       }
       catch (Exception e)
       {
-        return "Ошибка. " + e.Message;
+        return String.Format(Res.DBxDocTextHandlers_Err_RefTextValue, e.Message);
       }
     }
 
@@ -914,7 +923,8 @@ namespace FreeLibSet.Data.Docs
       }
       catch (Exception e)
       {
-        return "TableId=" + tableId + ", DocId=" + docId.ToString() + ". Ошибка. " + e.Message;
+        return String.Format(Res.DBxDocTextHandlers_Err_VTTextValue,
+          tableId, docId, e.Message);
       }
     }
 
@@ -954,16 +964,16 @@ namespace FreeLibSet.Data.Docs
       /// Имя таблицы
       /// </summary>
       public string TableName { get { return _TableName; } }
-      private string _TableName;
+      private readonly string _TableName;
 
       /// <summary>
       /// Список полей, заданных пользователем
       /// </summary>
       public DBxColumns ColumnNames { get { return _ColumnNames; } }
-      private DBxColumns _ColumnNames;
+      private readonly DBxColumns _ColumnNames;
 
       public DBxTextValueNeededEventHandler TextValueNeeded { get { return _TextValueNeeded; } }
-      private DBxTextValueNeededEventHandler _TextValueNeeded;
+      private readonly DBxTextValueNeededEventHandler _TextValueNeeded;
 
       public override string ToString()
       {
@@ -974,21 +984,21 @@ namespace FreeLibSet.Data.Docs
       /// Вид документа, к которому относится таблица (если найдено)
       /// </summary>
       public DBxDocType DocType { get { return _DocType; } }
-      private DBxDocType _DocType;
+      private readonly DBxDocType _DocType;
 
       /// <summary>
       /// Вид поддокумента, к которому относится таблица, или null, если таблица относится к документу
       /// </summary>
       public DBxSubDocType SubDocType { get { return _SubDocType; } }
-      private DBxSubDocType _SubDocType;
+      private readonly DBxSubDocType _SubDocType;
 
       /// <summary>
       /// Список полей, используемых для запросов.
-      /// В начале идут поля из ColumnNames, затем - Id, DocId и Deleted
-      /// Если null, значит объект TableHandler еще не был инициализирован для DocProvider
+      /// В начале идут поля из <see cref="ColumnNames"/>, затем - "Id", "DocId" и "Deleted"
+      /// Если null, значит объект TableHandler еще не был инициализирован для <see cref="DBxDocProvider"/>.
       /// </summary>
       public DBxColumns QueriedColumnNames { get { return _QueriedColumnNames; } }
-      private DBxColumns _QueriedColumnNames;
+      private readonly DBxColumns _QueriedColumnNames;
 
       #endregion
 
@@ -1023,13 +1033,13 @@ namespace FreeLibSet.Data.Docs
     {
       lock (_TableItems)
       {
-        TableHandler Handler;
-        if (_TableItems.TryGetValue(tableName, out Handler))
+        TableHandler handler;
+        if (_TableItems.TryGetValue(tableName, out handler))
         {
           if (forQuery)
-            return Handler.QueriedColumnNames;
+            return handler.QueriedColumnNames;
           else
-            return Handler.ColumnNames;
+            return handler.ColumnNames;
         }
         else
         {
@@ -1062,12 +1072,12 @@ namespace FreeLibSet.Data.Docs
     /// <returns>true, если список полей задан или обработчик задан</returns>
     public bool Contains(string tableName)
     {
-      bool Flag;
+      bool flag;
       lock (_TableItems)
       {
-        Flag = _TableItems.ContainsKey(tableName);
+        flag = _TableItems.ContainsKey(tableName);
       }
-      return Flag;
+      return flag;
     }
 
     #endregion
@@ -1076,7 +1086,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает true, если объект находится в режиме "только чтение".
-    /// При этом нельзя больше добавлять обработчики
+    /// При этом нельзя больше добавлять обработчики.
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
@@ -1129,7 +1139,8 @@ namespace FreeLibSet.Data.Docs
               }
             }
             if (String.IsNullOrEmpty(nameColumnName))
-              throw new BugException("У документов \"" + a[i].PluralTitle + "\" нет ни одного текстового столбца. Эти документы не образуют дерево групп");
+              throw new InvalidOperationException(String.Format(Res.DBxDocTextHandlers_Err_NoTextForGroupTrese,
+                a[i].PluralTitle));
             this.Add(a[i].Name, nameColumnName);
           }
         }

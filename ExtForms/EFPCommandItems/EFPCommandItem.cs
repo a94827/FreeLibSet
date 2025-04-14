@@ -2826,7 +2826,7 @@ namespace FreeLibSet.Forms
     {
       if (Idle != null)
         Idle(this, EventArgs.Empty);
-
+      
       if (_ItemsWithIdle != null)
       {
         for (int i = 0; i < _ItemsWithIdle.Count; i++)

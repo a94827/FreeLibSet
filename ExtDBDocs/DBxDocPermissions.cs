@@ -278,11 +278,10 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("docProvider");
 #if !NET
       if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(docProvider))
-        throw new ArgumentException("docProvider не может быть удаленным объектом (transparent proxy), т.к. объект UserPermissions не является сериализуемым", "docProvider");
+        throw new ArgumentException(Res.DBxDocPermissions_Arg_DocProviderIsProxy, "docProvider");
 #endif
       if (docProvider.UserPermissions == null)
-        throw new NullReferenceException("docProvider не возвращает свойство UserPermissions, вероятно, из-за того, что выполняется переход между контекстами, а объект UserPermissions не является сериализуемым. " +
-          "Следует использовать DBxDocProvider, хранящий собственную копию разрешений");
+        throw new NullReferenceException(Res.DBxDocPermissions_Err_DocProviderWithoutUserPermissions);
 
       _DocProvider = docProvider;
 
@@ -299,7 +298,7 @@ namespace FreeLibSet.Data.Docs
 
         string tableNames = item.TableNames;
         if (String.IsNullOrEmpty(tableNames))
-          throw new NullReferenceException("Свойство \"TableNames\" для объекта " + item.ToString() + " не вернуло список таблиц");
+          throw ExceptionFactory.ObjectPropertyNotSet(item, "TableNames");
         if (tableNames.IndexOf(',') >= 0)
         {
           string[] a = tableNames.Split(',');
@@ -415,22 +414,22 @@ namespace FreeLibSet.Data.Docs
       string errorText;
       if (!TestDocument(doc, reason, out errorText))
         // throw new DBxAccessException("Нет права " + GetActionName(Reason) + " документа \"" + Doc.DocType.SingularTitle + "\" с Id="+Doc.DocId.ToString()+". " + ErrorText);
-        throw new DBxAccessException("Нет права " + GetActionName(reason) + " документа \"" +
-          doc.DocType.SingularTitle + "\" \"" + doc.TextValue + "\". " + errorText);
+        throw new DBxAccessException(String.Format(Res.DBxDocPermissions_Err_AccessDenied,
+          GetActionName(reason), doc.DocType.SingularTitle, doc.TextValue, errorText));
     }
 
     private static string GetActionName(DBxDocPermissionReason reason)
     {
       switch (reason)
       {
-        case DBxDocPermissionReason.View: return "на просмотр";
-        case DBxDocPermissionReason.ViewHistory: return "на просмотр истории";
-        case DBxDocPermissionReason.ApplyNew: return "на создание";
+        case DBxDocPermissionReason.View: return Res.DBxDocPermissions_Err_AccessDeniedView;
+        case DBxDocPermissionReason.ViewHistory: return Res.DBxDocPermissions_Err_AccessDeniedViewHistory;
+        case DBxDocPermissionReason.ApplyNew: return Res.DBxDocPermissions_Err_AccessDeniedNew;
         case DBxDocPermissionReason.BeforeDelete: 
-        case DBxDocPermissionReason.ApplyDelete: return "на удаление";
+        case DBxDocPermissionReason.ApplyDelete: return Res.DBxDocPermissions_Err_AccessDeniedDelete;
         case DBxDocPermissionReason.BeforeRestore: 
-        case DBxDocPermissionReason.ApplyRestore: return "на восстановление";
-        default: return "на изменение";
+        case DBxDocPermissionReason.ApplyRestore: return Res.DBxDocPermissions_Err_AccessDeniedRestore;
+        default: return Res.DBxDocPermissions_Err_AccessDeniedEdit;
       }
     }
 
@@ -472,7 +471,14 @@ namespace FreeLibSet.Data.Docs
       string errorText;
       if (!TestDocuments(docSet, reason, out errorText))
         // throw new DBxAccessException("Нет права " + GetActionName(Reason) + " документа \"" + Doc.DocType.SingularTitle + "\" с Id="+Doc.DocId.ToString()+". " + ErrorText);
-        throw new DBxAccessException("Нет права " + GetActionName(reason) + " документов \"" + errorText);
+        throw new DBxAccessException(String.Format(Res.DBxDocPermissions_Err_DocSetAccessDenied, 
+          GetActionName(reason), errorText));
+    }
+
+    internal static DBxAccessException GetException(DBxDocType docType, DBxDocPermissionReason reason)
+    {
+      return new DBxAccessException(String.Format(Res.DBxDocPermissions_Err_DocTypeAccessDenied,
+        GetActionName(reason), docType.PluralTitle));
     }
 
     #endregion

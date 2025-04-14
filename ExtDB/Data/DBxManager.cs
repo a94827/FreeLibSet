@@ -116,11 +116,12 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(oldName))
         oldName = oldItem;
       if (String.IsNullOrEmpty(newName))
-        throw new ArgumentNullException("newName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("newName");
 
       int p = oldItem.LastIndexOf(oldName, StringComparison.OrdinalIgnoreCase);
       if (p < 0)
-        throw new ArgumentException("Имя базы данных \"" + oldItem + "\" не содержит в себе фрагмента \"" + oldName + "\", который требуется заменить");
+        throw new InvalidOperationException(String.Format(Res.DBxManager_Err_ReplaceDBItem,
+          oldItem, oldName));
       return oldItem.Substring(0, p) + newName + oldItem.Substring(p + oldName.Length);
     }
 
@@ -148,7 +149,8 @@ namespace FreeLibSet.Data
       string fileName = oldItem.Substring(p + 1); // без пути
 
       if (DataTools.IndexOfAny(fileName, InvalidFileNameChars) >= 0)
-        throw new ArgumentException("Имя файла \"" + fileName + "\" содержит недопустимые символы", "oldItem");
+        throw new ArgumentException(String.Format(Res.DBxManager_Arg_FileNameBadChars,
+          fileName), "oldItem");
       // Путь dir не проверяем
 
       string ext = System.IO.Path.GetExtension(fileName);
@@ -157,11 +159,12 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(oldName))
         oldName = fileName;
       if (String.IsNullOrEmpty(newName))
-        throw new ArgumentNullException("newName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("newName");
 
       p = fileName.LastIndexOf(oldName, StringComparison.OrdinalIgnoreCase);
       if (p < 0)
-        throw new ArgumentException("Имя файла базы данных \"" + oldItem + "\" не содержит в себе фрагмента \"" + oldName + "\", который требуется заменить");
+        throw new InvalidOperationException(String.Format(Res.DBxManager_Err_ReplaceDBItem,
+          oldItem, oldName));
       fileName = fileName.Substring(0, p) + newName + fileName.Substring(p + oldName.Length);
 
       return dir + fileName + ext;
@@ -229,7 +232,8 @@ namespace FreeLibSet.Data
 
       DBxManager manager = Managers[settings.ProviderName];
       if (manager == null)
-        throw new InvalidOperationException("Неизвестный провайдер базы данных \"" + settings.ProviderName + "\" для сохраненной строки подключения \"" + settings.Name + "\"");
+        throw new InvalidOperationException(String.Format(Res.DBxManager_Err_UnknownProviderForSettings,
+          settings.ProviderName, settings.Name));
       return manager.CreateDBObject(settings.ConnectionString);
     }
 
@@ -244,24 +248,16 @@ namespace FreeLibSet.Data
     public static DBx CreateDBObjectFromSettingsName(string settingsName)
     {
       if (String.IsNullOrEmpty(settingsName))
-        throw new ArgumentNullException("settingsName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("settingsName");
 
       System.Configuration.ConnectionStringSettings settings = System.Configuration.ConfigurationManager.ConnectionStrings[settingsName];
       if (settings == null)
       {
-        string s = "В конфигурационном файле не задана строка подключения с именем \"" + settingsName + "\"";
-#if DEBUG
-        if (System.Configuration.ConfigurationManager.ConnectionStrings.Count == 0)
-          s += ". В файле не найдено ни одной строки подключения";
-        else
-        {
-          List<string> lstNames = new List<string>();
-          foreach (System.Configuration.ConnectionStringSettings cs2 in System.Configuration.ConfigurationManager.ConnectionStrings)
-            lstNames.Add(cs2.Name);
-          s += ". В файле заданы следующие имена (" + System.Configuration.ConfigurationManager.ConnectionStrings.Count.ToString() + "): " + String.Join(", ", lstNames.ToArray());
-        }
-#endif
-        throw new InvalidOperationException(s);
+        List<string> lstNames = new List<string>();
+        foreach (System.Configuration.ConnectionStringSettings cs2 in System.Configuration.ConfigurationManager.ConnectionStrings)
+          lstNames.Add(cs2.Name);
+        throw new InvalidOperationException(String.Format(Res.DBxManager_Err_NoConnectionString,
+          settingsName, UICore.UITools.ValueListToString(lstNames)));
       }
       return CreateDBObjectFromSettings(settings);
     }

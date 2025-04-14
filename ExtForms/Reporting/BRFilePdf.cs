@@ -9,6 +9,8 @@ using FreeLibSet.IO;
 using FreeLibSet.Reporting;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using PdfSharp.Pdf.Annotations;
+using FreeLibSet.Collections;
 
 namespace FreeLibSet.Drawing.Reporting
 {
@@ -75,7 +77,7 @@ namespace FreeLibSet.Drawing.Reporting
 
       renderer.WordWrap = cellStyle.WrapMode == BRWrapMode.WordWrap;
       if (cellStyle.WrapMode == BRWrapMode.WordWrap)
-      { 
+      {
       }
 
       BRColor clr = cellStyle.ForeColor;
@@ -172,7 +174,7 @@ namespace FreeLibSet.Drawing.Reporting
   /// <summary>
   /// Создание pdf-файла с помощью библиотеки PdfSharp
   /// </summary>
-  public class BRFilePdf: BRFileCreator
+  public class BRFilePdf : BRFileCreator
   {
     #region Конструктор
 
@@ -184,7 +186,7 @@ namespace FreeLibSet.Drawing.Reporting
       CompressContentStreams = true;
 
       //Scale = 0.1f;
-      Scale = 72f/254f;
+      Scale = 72f / 254f;
       //CellFrames = false;
       //ShowHiddenCells = false;
       //ShowSampleValues = true;
@@ -242,6 +244,8 @@ namespace FreeLibSet.Drawing.Reporting
       _SB.Append((int)(sel.CellStyle.WrapMode));
       _SB.Append('|');
       _SB.Append(sel.CellStyle.ForeColor.IntValue);
+      _SB.Append('|');
+      _SB.Append(sel.HasLink ? '1' : '0');
 
       string key = _SB.ToString();
       PdfTextRenderer renderer;
@@ -250,6 +254,12 @@ namespace FreeLibSet.Drawing.Reporting
         renderer = new PdfTextRenderer();
         renderer.Graphics = graphics;
         BRPdfMeasurer.InitRenderer(renderer, sel.CellStyle);
+        if (sel.HasLink)
+        {
+          renderer.Underline = true;
+          if (sel.CellStyle.ForeColor.IsAuto)
+            renderer.Color = Color.FromArgb(0x05, 0x63, 0xC1);
+        }
 
         _FontRenderers.Add(key, renderer);
       }
@@ -274,6 +284,37 @@ namespace FreeLibSet.Drawing.Reporting
     #endregion
 
     #region Основной метод
+
+    /// <summary>
+    /// Отложенное добавление ссылок на страницы.
+    /// Нельзя сразу добавить ссылку на будущую страницу документа, так как неизвестно, где она будет
+    /// </summary>
+    private struct InternalLinkInfo
+    {
+      #region Поля
+
+      /// <summary>
+      /// Имя закладки
+      /// </summary>
+      public string Name;
+
+      /// <summary>
+      /// Страница, где добавляется гиперссылка
+      /// </summary>
+      public PdfPage Page;
+
+      /// <summary>
+      /// Прямоугольник для добавлен
+      /// </summary>
+      public PdfRectangle Rect;
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Запоминаем области, куда нужно добавить гиперссылки для перехода к закладкам
+    /// </summary>
+    private List<InternalLinkInfo> _DelayedInternalLinks;
 
     /// <summary>
     /// Создает файл
@@ -302,6 +343,11 @@ namespace FreeLibSet.Drawing.Reporting
 
       #endregion
 
+      // Ключ - имя закладки,
+      // значение - номер страницы (начинается с 1)
+      TypedStringDictionary<int> bookmarkPages = new TypedStringDictionary<int>(true);
+      _DelayedInternalLinks = new List<InternalLinkInfo>();
+
       using (BRReportPainter painter = new BRReportPainter())
       {
         BRPaginator paginator = new BRPaginator(painter);
@@ -310,21 +356,21 @@ namespace FreeLibSet.Drawing.Reporting
         for (int i = 0; i < pages.Length; i++)
         {
           BRPageSetup ps = pages[i].Section.PageSetup;
-          PdfPage PdfPage = pdfDoc.AddPage();
+          PdfPage pdfPage = pdfDoc.AddPage();
           if (ps.Orientation == BROrientation.Landscape)
           {
-            PdfPage.Width = LMToXUnit(ps.PaperHeight);
-            PdfPage.Height = LMToXUnit(ps.PaperWidth);
-            PdfPage.Orientation = PdfSharp.PageOrientation.Landscape;
+            pdfPage.Width = LMToXUnit(ps.PaperHeight);
+            pdfPage.Height = LMToXUnit(ps.PaperWidth);
+            pdfPage.Orientation = PdfSharp.PageOrientation.Landscape;
           }
           else
           {
-            PdfPage.Width = LMToXUnit(ps.PaperWidth);
-            PdfPage.Height = LMToXUnit(ps.PaperHeight);
-            PdfPage.Orientation = PdfSharp.PageOrientation.Portrait;
+            pdfPage.Width = LMToXUnit(ps.PaperWidth);
+            pdfPage.Height = LMToXUnit(ps.PaperHeight);
+            pdfPage.Orientation = PdfSharp.PageOrientation.Portrait;
           }
 
-          using (XGraphics gfx = XGraphics.FromPdfPage(PdfPage))
+          using (XGraphics gfx = XGraphics.FromPdfPage(pdfPage))
           {
             // Увы, использовать XGraphics.Graphics нельзя, рисует на рабочем столе :)
             //painter.Paint(pages[i], gfx.Graphics);
@@ -346,10 +392,47 @@ namespace FreeLibSet.Drawing.Reporting
             y0 = ps.TopMargin;
             //}
 
-            Paint(pages[i], gfx);
+            Paint(pages[i], gfx, pdfPage);
+
+            #region Запоминаем закладки
+
+            foreach (BRPaginatiorBlockInfo block in pages[i].Blocks)
+            {
+              if (block.Band.Bookmarks.Count > 0)
+              {
+                foreach (int rowIndex in block.RowIndexes)
+                {
+                  foreach (int colIndex in block.ColumnIndexes)
+                  {
+                    BRBookmark[] abm = block.Band.Bookmarks[rowIndex, colIndex];
+                    foreach (BRBookmark bm in abm)
+                      bookmarkPages.Add(bm.Name, pdfDoc.PageCount);
+                  }
+                }
+              }
+            }
+
+            #endregion
           }
+        } // цикл по BRPaginatorPageInfo
+      } // using Painter
+
+      #region Добавление внутренних ссылок
+
+      foreach (InternalLinkInfo info in _DelayedInternalLinks)
+      {
+        int pageNum;
+        if (bookmarkPages.TryGetValue(info.Name, out pageNum))
+        {
+          PdfLinkAnnotation ann = PdfLinkAnnotation.CreateDocumentLink(info.Rect, pageNum);
+          info.Page.Annotations.Add(ann);
         }
+        // если есть ссылка на несуществующую закладку, ничего не делаем
       }
+
+      _DelayedInternalLinks = null; // чтобы сбощик мусора мог убрать PdfDocument
+
+      #endregion
 
       // Сохраняем документ
       pdfDoc.Save(filePath.Path);
@@ -365,15 +448,16 @@ namespace FreeLibSet.Drawing.Reporting
     /// </summary>
     /// <param name="pageInfo">Информация о странице, полученная в процессе разбиения</param>
     /// <param name="graphics">Контекст для рисования</param>
-    public void Paint(BRPaginatorPageInfo pageInfo, XGraphics graphics)
+    /// <param name="pdfPage">Страница (для создания гиперссылок)</param>
+    public void Paint(BRPaginatorPageInfo pageInfo, XGraphics graphics, PdfPage pdfPage)
     {
       for (int i = 0; i < pageInfo.Blocks.Length; i++)
-        Paint(pageInfo.Blocks[i], graphics);
+        Paint(pageInfo.Blocks[i], graphics, pdfPage);
     }
 
     float Scale;
 
-    private void Paint(BRPaginatiorBlockInfo blockInfo, XGraphics graphics)
+    private void Paint(BRPaginatiorBlockInfo blockInfo, XGraphics graphics, PdfPage pdfPage)
     {
       // Вычисляем координаты ячеек в контексте вывода
       float[] xx = new float[blockInfo.ColumnIndexes.Length + 1];
@@ -419,14 +503,38 @@ namespace FreeLibSet.Drawing.Reporting
           float y1 = yy[cellRange.FirstRowIndex];
           float y2 = yy[cellRange.LastRowIndex + 1];
 
-          //float x1 = xx[iCol];
-          //float x2 = xx[iCol + 1];
-          //float y1 = yy[iRow];
-          //float y2 = yy[iRow + 1];
           XRect rc = new XRect(x1, y1, x2 - x1, y2 - y1);
           PaintCellContext(graphics, rc, sel);
 
-          // Запоминаем границы для будущего рисования
+          if (sel.HasLink && pdfPage != null)
+          {
+            XRect rc2 = graphics.Transformer.WorldToDefaultPage(rc);
+            PdfRectangle rc3 = new PdfRectangle(rc2);
+            PdfLinkAnnotation ann;
+            if (sel.LinkData.StartsWith("file://", StringComparison.Ordinal))
+            {
+              Uri uri = new Uri(sel.LinkData);
+              ann = PdfLinkAnnotation.CreateFileLink(rc3, uri.AbsolutePath);
+            }
+            else if (sel.LinkData.StartsWith("#", StringComparison.Ordinal))
+            {
+              // Так нельзя, так так как может быть переход на будущую страницу, которая еще неизвестна
+              //ann = PdfLinkAnnotation.CreateDocumentLink(rc3, ?)
+              InternalLinkInfo info = new InternalLinkInfo();
+              info.Name = sel.LinkData.Substring(1); // без "#"
+              info.Page = pdfPage;
+              info.Rect = rc3;
+              _DelayedInternalLinks.Add(info);
+              continue;
+            }
+            else
+            {
+              ann = PdfLinkAnnotation.CreateWebLink(rc3, sel.LinkData);
+            }
+            pdfPage.Annotations.Add(ann);
+          }
+
+
           for (int iCol2 = cellRange.FirstColumnIndex; iCol2 <= cellRange.LastColumnIndex; iCol2++)
           {
             hLines[cellRange.FirstRowIndex, iCol2] |= sel.CellStyle.TopBorder;
@@ -877,7 +985,7 @@ namespace FreeLibSet.Drawing.Reporting
     }
 
     #endregion
-  } 
+  }
 
   /// <summary>
   /// Статические методы для работы с библиотекой PdfSharp

@@ -93,7 +93,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Заголовок группы радиокнопок в редакторе
     /// </summary>
-    protected virtual string GroupTitle { get { return "Режим доступа"; } }
+    protected virtual string GroupTitle { get { return Res.EnumUserPermissionUI_Title_GroupTitle; } }
 
     /// <summary>
     /// Создает панель для редактирования разрешения
@@ -144,7 +144,7 @@ namespace FreeLibSet.Forms.Docs
     public WholeDBPermissionUI()
       : base("DB", DBUserPermission.ValueNames, ValueImageKeys)
     {
-      base.DisplayName = "База данных";
+      base.DisplayName = Res.WholeDBPermissionUI_Name_Default;
       base.ImageKey = "Database";
     }
 
@@ -262,7 +262,7 @@ namespace FreeLibSet.Forms.Docs
     public RecalcColumnsPermissionUI()
       : base("RecalcColumns", RecalcColumnsPermission.ValueNames, ValueImageKeys)
     {
-      base.DisplayName = "Пересчет вычисляемых полей";
+      base.DisplayName = Res.RecalcColumnsPermissionUI_Name_Default;
       base.ImageKey = "RecalcColumns";
     }
 

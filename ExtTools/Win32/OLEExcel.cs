@@ -459,6 +459,14 @@ namespace FreeLibSet.OLE.Excel
       }
     }
 
+    public Names Names
+    {
+      get
+      {
+        return new Names(new ObjBase(Base.Helper.GetProp(Base.Obj, "[DispID=442]"), Base.Helper));
+      }
+    }
+
     #endregion
 
     #region Свойства документа
@@ -759,6 +767,11 @@ namespace FreeLibSet.OLE.Excel
     }
     private PageSetup _PageSetup;
 
+    public Hyperlinks Hyperlinks
+    {
+      get { return new Hyperlinks(new ObjBase(Base.Helper.GetProp(Base.Obj, "[DispID=1393]"), Base.Helper)); }
+    }
+
     #endregion
 
     #region Методы
@@ -814,10 +827,10 @@ namespace FreeLibSet.OLE.Excel
     {
       ExcelHelper helper = (ExcelHelper)(_Base.Helper);
 
-      if (firstRow < 1 || firstRow>helper.MaxRowCount)
+      if (firstRow < 1 || firstRow > helper.MaxRowCount)
         throw ExceptionFactory.ArgOutOfRange("firstRow", firstRow, 1, helper.MaxRowCount);
       if (lastRow < 1 || firstRow > helper.MaxRowCount)
-        throw ExceptionFactory.ArgOutOfRange("lastRow", lastRow,1, helper.MaxRowCount);
+        throw ExceptionFactory.ArgOutOfRange("lastRow", lastRow, 1, helper.MaxRowCount);
       if (firstRow > lastRow)
         throw ExceptionFactory.ArgRangeInverted("firstRow", firstRow, "lastRow", lastRow);
 
@@ -839,7 +852,7 @@ namespace FreeLibSet.OLE.Excel
       if (firstColumn < 1 || firstColumn > helper.MaxColumnCount)
         throw ExceptionFactory.ArgOutOfRange("firstColumn", firstColumn, 1, helper.MaxColumnCount);
       if (lastColumn < 1 || lastColumn > helper.MaxColumnCount)
-        throw ExceptionFactory.ArgOutOfRange("lastColumn", lastColumn, 1,helper.MaxColumnCount);
+        throw ExceptionFactory.ArgOutOfRange("lastColumn", lastColumn, 1, helper.MaxColumnCount);
       if (firstColumn > lastColumn)
         throw ExceptionFactory.ArgRangeInverted("firstColumn", firstColumn, "lastColumn", lastColumn);
 
@@ -1129,6 +1142,51 @@ namespace FreeLibSet.OLE.Excel
     #endregion
 
     #region Свойства
+
+    #region Диапазон
+
+    /// <summary>
+    /// Номер первой строки, начиная с 1
+    /// </summary>
+    public int Row
+    {
+      get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=257]")); }
+    }
+
+
+    /// <summary>
+    /// Номер первого столбца, начиная с 1
+    /// </summary>
+    public int Column
+    {
+      get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=240]")); }
+    }
+
+    /// <summary>
+    /// Координаты диапазона.
+    /// Использование метода не является оптимальным, так как выполняется 6 вызовов Excel
+    /// </summary>
+    public Models.SpreadsheetBase.RangeRef RangeRef
+    {
+      get
+      {
+        int r1 = Row;
+        int c1 = Column;
+        int nr = Rows.Count;
+        int nc = Columns.Count;
+        return new Models.SpreadsheetBase.RangeRef(r1, c1, r1 + nr - 1, c1 + nc - 1);
+      }
+    }
+
+    public Worksheet Worksheet
+    {
+      get
+      {
+        return new Worksheet(new ObjBase(Base.Helper.GetProp(Base.Obj, "[DispID=348]"), Base.Helper));
+      }
+    }
+
+    #endregion
 
     #region Поддиапазоны
 
@@ -2283,6 +2341,117 @@ namespace FreeLibSet.OLE.Excel
 
   #endregion
 
+  #region Имена ячеек
+
+  public struct Names
+  {
+    #region Конструктор
+
+    public Names(ObjBase theBase)
+    {
+      _Base = theBase;
+    }
+
+    public ObjBase Base { get { return _Base; } }
+    private ObjBase _Base;
+
+    #endregion
+
+    #region Методы
+
+    public Name Add(string name, Range range)
+    {
+      if (String.IsNullOrEmpty(name))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
+      if (range.Base.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("range");
+      string sheetName = range.Worksheet.Name;
+      string refTo = "=" + Models.SpreadsheetBase.SpreadsheetTools.GetQuotedSheetName(sheetName) + "!" + 
+        range.RangeRef.ToString(Models.SpreadsheetBase.CellRefFormat.Abs);
+      Name nm = new Name(new ObjBase(Base.Helper.Call(Base.Obj, "[DispID=181]", name, refTo), Base.Helper));
+      return nm;
+    }
+
+    #endregion
+  }
+
+
+  public struct Name
+  {
+    #region Конструктор
+
+    public Name(ObjBase theBase)
+    {
+      _Base = theBase;
+    }
+
+    public ObjBase Base { get { return _Base; } }
+    private ObjBase _Base;
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Имя. Свойство не может иметь такое же имя, как и класс
+    /// </summary>
+    public string NameStr
+    {
+      get { return DataTools.GetString(Base.Helper.GetProp(Base.Obj, "[DispID=110]")); }
+      set
+      {
+        if (String.IsNullOrEmpty(value))
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
+
+        Base.Helper.SetProp(Base.Obj, "[DispID=110]", value);
+      }
+    }
+
+    #endregion
+  }
+
+  #endregion
+
+  #region Гиперссылки
+
+  public struct Hyperlinks
+  {
+    #region Конструктор
+
+    public Hyperlinks(ObjBase theBase)
+    {
+      _Base = theBase;
+    }
+
+    public ObjBase Base { get { return _Base; } }
+    private ObjBase _Base;
+
+    #endregion
+
+    #region Методы
+
+    public void Add(Range anchor, string address)
+    {
+      Add(anchor, address, String.Empty);
+    }
+
+    public void Add(Range anchor, string address, string subAddress)
+    {
+      if (anchor.Base.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("anchor");
+
+      // Может быть задан subAddress без address
+      if (String.IsNullOrEmpty(address) && String.IsNullOrEmpty(subAddress))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("address");
+
+      Base.Helper.Call(Base.Obj, "[DispID=181]", anchor.Base.Obj, address, subAddress);
+    }
+
+    #endregion
+  }
+
+  #endregion
+
   #region Параметры страницы
 
   public struct PageSetup
@@ -2493,7 +2662,7 @@ namespace FreeLibSet.OLE.Excel
     /// </summary>
     public int FitToPagesWide
     {
-        get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=1014]")); }
+      get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=1014]")); }
     }
     /// <summary>
     /// Размещение по высоте на заданном числе страниц.

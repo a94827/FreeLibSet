@@ -30,14 +30,14 @@ namespace FreeLibSet.Data.Docs
   /// <summary>
   /// Разрешение на просмотр/редактирование для одного или несколько видов документов.
   /// Код класса: "DocType"
-  /// Если список DocTypeNames не задан, разрешение не действует
+  /// Если список DocTypeNames не задан, разрешение не действует.
   /// </summary>
   public class DocTypePermission : DBUserPermission
   {
     #region Creator
 
     /// <summary>
-    /// Генератор для разрешений DocTypePermission
+    /// Генератор для разрешений <see cref="DocTypePermission"/>
     /// </summary>
     public sealed class Creator : IUserPermissionCreator, IUserPermissionCreatorWithDbInitialization
     {
@@ -62,7 +62,7 @@ namespace FreeLibSet.Data.Docs
       /// Коллекция для доступа к видам документов
       /// </summary>
       public DBxDocTypes AllDocTypes { get { return _AllDocTypes; } }
-      private DBxDocTypes _AllDocTypes;
+      private readonly DBxDocTypes _AllDocTypes;
 
       #endregion
 
@@ -85,6 +85,7 @@ namespace FreeLibSet.Data.Docs
       #endregion
 
       #region IUserPermissionCreatorWithDbInitialization Members 
+
       // 28.04.2021
 
       /// <summary>
@@ -126,7 +127,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Создает разрешение класса "DocType".
-    /// Свойства DocTypeNames и Mode должны быть установлены в явном виде
+    /// Свойства <see cref="DocTypeNames"/> и <see cref="DBUserPermission.Mode"/> должны быть установлены в явном виде
     /// </summary>
     /// <param name="allDocTypes">Полный список возможных видов документов</param>
     public DocTypePermission(DBxDocTypes allDocTypes)
@@ -147,7 +148,7 @@ namespace FreeLibSet.Data.Docs
       : this(allDocTypes)
     {
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
       DocTypeNames = new string[] { docTypeName };
       base.Mode = mode;
     }
@@ -160,7 +161,7 @@ namespace FreeLibSet.Data.Docs
     /// Коллекция для доступа к видам документов
     /// </summary>
     public DBxDocTypes AllDocTypes { get { return _AllDocTypes; } }
-    private DBxDocTypes _AllDocTypes;
+    private readonly DBxDocTypes _AllDocTypes;
 
     /// <summary>
     /// Список видов документов.
@@ -175,11 +176,11 @@ namespace FreeLibSet.Data.Docs
         if (value != null)
         {
           if (value.Length < 1)
-            throw new ArgumentException("Должен быть хотя бы один тип документов");
+            throw new ArgumentException(Res.DocTypePermission_Arg_NoDocTypes);
           for (int i = 0; i < value.Length; i++)
           {
             if (String.IsNullOrEmpty(value[i]))
-              throw new ArgumentException("Элемент с индексом [" + i.ToString() + "] не задан");
+              throw ExceptionFactory.ArgInvalidEnumerableItem("value", value, value[i]);
           }
         }
         _DocTypeNames = value;
@@ -269,7 +270,7 @@ namespace FreeLibSet.Data.Docs
     internal static string GetDocTypeObjectText(DBxDocTypes allDocTypes, string[] docTypeNames)
     {
       if (docTypeNames == null)
-        return "Список видов документов не задан";
+        return Res.DocTypePermission_Msg_ObjectTextNoDocTypes;
 
       string[] titles = new string[docTypeNames.Length];
       for (int i = 0; i < docTypeNames.Length; i++)
@@ -280,7 +281,7 @@ namespace FreeLibSet.Data.Docs
         else
           titles[i] = "\"" + docType.PluralTitle + "\"";
       }
-      return "Документы " + String.Join(", ", titles);
+      return String.Format(Res.DocTypePermission_Msg_ObjectText, String.Join(", ", titles));
     }
 
     #endregion
@@ -289,8 +290,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Просматривает разрешения на просмотр заданного вида документов.
-    /// Возвращает действующее разрешение DocTypePermission, относящееся к заданному виду документа,
-    /// или null, если разрешения нет в списке
+    /// Возвращает действующее разрешение <see cref="DocTypePermission"/>, относящееся к заданному виду документа,
+    /// или null, если разрешения нет в списке.
     /// </summary>
     /// <param name="permissions">Список пользовательских разрешений</param>
     /// <param name="docTypeName">Имя типа документов. Если задана пустая строка, то возвращается разрешение "вообще", то есть то, у которого не заданы типы документов</param>
@@ -320,8 +321,9 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает режим доступа для вида документов.
-    /// Вызывает FindPermission(). Если разрешение найдено, то возвращается заданное в нем значение.
-    /// Иначе извлекается режим доступа для таблицы документв или для базы данных в целом. Для этого используется метод TablePermission.GetAccessMode()
+    /// Вызывает <see cref="FindPermission(UserPermissions, string)"/>. Если разрешение найдено, то возвращается заданное в нем значение.
+    /// Иначе извлекается режим доступа для таблицы документов или для базы данных в целом. 
+    /// Для этого используется метод <see cref="TablePermission.GetAccessMode(UserPermissions, string)"/>.
     /// </summary>
     /// <param name="permissions">Список пользовательских разрешений</param>
     /// <param name="docTypeName">Имя типа документов. Если задана пустая строка, то возвращается разрешение "вообще", то есть то, у которого не заданы типы документов</param>
@@ -339,7 +341,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Разрешение на просмотр истории для одного или нескольких видов документов
+  /// Разрешение на просмотр истории для одного или нескольких видов документов.
   /// Список может быть пустым. В этом случае выполняется полная блокировка истории
   /// Код класса: "History"
   /// </summary>
@@ -348,7 +350,7 @@ namespace FreeLibSet.Data.Docs
     #region Creator
 
     /// <summary>
-    /// Генератор для разрешений DocTypeViewHistoryPermission
+    /// Генератор для разрешений <see cref="DocTypeViewHistoryPermission"/>
     /// </summary>
     public sealed class Creator : IUserPermissionCreator
     {
@@ -373,7 +375,7 @@ namespace FreeLibSet.Data.Docs
       /// Коллекция описаний видов документов
       /// </summary>
       public DBxDocTypes AllDocTypes { get { return _AllDocTypes; } }
-      private DBxDocTypes _AllDocTypes;
+      private readonly DBxDocTypes _AllDocTypes;
 
       #endregion
 
@@ -439,7 +441,7 @@ namespace FreeLibSet.Data.Docs
     /// Коллекция для доступа к видам документов
     /// </summary>
     public DBxDocTypes AllDocTypes { get { return _AllDocTypes; } }
-    private DBxDocTypes _AllDocTypes;
+    private readonly DBxDocTypes _AllDocTypes;
 
     /// <summary>
     /// Список видов документов.
@@ -454,11 +456,11 @@ namespace FreeLibSet.Data.Docs
         if (value != null)
         {
           if (value.Length < 1)
-            throw new ArgumentException("Должен быть хотя бы один тип документов");
+            throw new ArgumentException(Res.DocTypePermission_Arg_NoDocTypes);
           for (int i = 0; i < value.Length; i++)
           {
             if (String.IsNullOrEmpty(value[i]))
-              throw new ArgumentException("Элемент с индексом [" + i.ToString() + "] не задан");
+              throw ExceptionFactory.ArgInvalidEnumerableItem("value", value, value[i]);
           }
         }
         _DocTypeNames = value;
@@ -514,10 +516,10 @@ namespace FreeLibSet.Data.Docs
       {
         string s;
         if (DocTypeNames == null)
-          s = "Все документы";
+          s = Res.DocTypePermission_Msg_AllDocTypes;
         else
           s = DocTypePermission.GetDocTypeObjectText(AllDocTypes, DocTypeNames);
-        return "Просмотр истории - " + s;
+        return String.Format(Res.DocTypeViewHistoryPermission_Msg_ObjectText, s);
       }
     }
 
@@ -526,7 +528,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override string ValueText
     {
-      get { return Allowed ? "Разрешен" : "Запрещен"; }
+      get { return Allowed ? Res.Allowed_Msg_True : Res.Allowed_Msg_False; }
     }
 
     #endregion
@@ -535,8 +537,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Просматривает разрешения на просмотр истории для заданного вида документов.
-    /// Возвращает действующее разрешение DocTypeViewHistoryPermission, относящееся к заданному виду документа,
-    /// или null, если разрешения нет в списке
+    /// Возвращает действующее разрешение <see cref="DocTypeViewHistoryPermission"/>, относящееся к заданному виду документа,
+    /// или null, если разрешения нет в списке.
     /// </summary>
     /// <param name="permissions">Список пользовательских разрешений</param>
     /// <param name="docTypeName">Имя типа документов. Если задана пустая строка, то возвращается разрешение "вообще", то есть то, у которого не заданы типы документов</param>
@@ -596,8 +598,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Просматривает разрешения на просмотр истории.
-    /// Возвращает true, если разрешен просмотр истории хотя бы для одного типа документов
-    /// Если разрешения не были установлены в явном виде, возвращается true (доступ разрешен)
+    /// Возвращает true, если разрешен просмотр истории хотя бы для одного типа документов.
+    /// Если разрешения не были установлены в явном виде, возвращается true (доступ разрешен).
     /// </summary>
     /// <param name="permissions">Список пользовательских разрешений</param>
     /// <returns>true, если доступ разрешен</returns>
@@ -627,7 +629,7 @@ namespace FreeLibSet.Data.Docs
   #region Перечисление RecalcColumnsPermissionMode
 
   /// <summary>
-  /// Доступные режимы для разрешения RecalcColumnsPermission
+  /// Доступные режимы для разрешения <see cref="RecalcColumnsPermission"/>
   /// </summary>
   public enum RecalcColumnsPermissionMode
   {
@@ -651,7 +653,7 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Пользовательское разрешение на пересчет вычисляемых полей.
-  /// Доступны три уровня: Запрещено, Выбранные или Все существующие.
+  /// Доступны три уровня: "Запрещено", "Выбранные" или "Все существующие".
   /// В табличном просмотре документов команда доступна, если у пользователя есть
   /// разрешение на редактирование таблицы документа, в документе есть вычисляемые поля 
   /// и просмотр открыт на редактирование.
@@ -674,7 +676,7 @@ namespace FreeLibSet.Data.Docs
       public string Code { get { return "RecalcColumns"; } }
 
       /// <summary>
-      /// Создает новый объект RecalcColumnsPermission
+      /// Создает новый объект <see cref="RecalcColumnsPermission"/>
       /// </summary>
       /// <returns>Разрешение</returns>
       public UserPermission CreateUserPermission()
@@ -752,16 +754,19 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override string ObjectText
     {
-      get { return "Пересчет вычисляемых полей"; }
+      get { return Res.RecalcColumnsPermission_Msg_ObjectText; }
     }
 
     /// <summary>
-    /// Текстовые представления, соответствующие перечислению RecalcColumnsPermissionMode
+    /// Текстовые представления, соответствующие перечислению <see cref="RecalcColumnsPermissionMode"/>
     /// </summary>
-    public static string[] ValueNames = new string[] { "Запрещен", "Выбранные в просмотре", "Все существующие" };
+    public static string[] ValueNames = new string[] {
+      Res.RecalcColumnsPermissionMode_Msg_Disabled,
+      Res.RecalcColumnsPermissionMode_Msg_Disabled,
+      Res.RecalcColumnsPermissionMode_Msg_All };
 
     /// <summary>
-    /// Возвращает текстовое значение для перечисления RecalcColumnsPermissionMode 
+    /// Возвращает текстовое значение для перечисления <see cref="RecalcColumnsPermissionMode"/> 
     /// </summary>
     /// <param name="mode">Перечисление</param>
     /// <returns>Текстовое представление</returns>
@@ -774,7 +779,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает текстовое значение для Mode
+    /// Возвращает текстовое значение для <see cref="Mode"/>
     /// </summary>
     public override string ValueText
     {
@@ -792,9 +797,9 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Действующий режим</returns>
     public static RecalcColumnsPermissionMode GetMode(UserPermissions userPermissions)
     {
-      RecalcColumnsPermission RecalcColumnsPerm = userPermissions.GetLast<RecalcColumnsPermission>();
-      if (RecalcColumnsPerm != null)
-        return RecalcColumnsPerm.Mode;
+      RecalcColumnsPermission recalcColumnsPerm = userPermissions.GetLast<RecalcColumnsPermission>();
+      if (recalcColumnsPerm != null)
+        return recalcColumnsPerm.Mode;
       else
         return RecalcColumnsPermissionMode.All;
     }
@@ -811,7 +816,7 @@ namespace FreeLibSet.Data.Docs
     #region Creator
 
     /// <summary>
-    /// Генератор разрешений ViewOtherUsersActionPermission
+    /// Генератор разрешений <see cref="ViewOtherUsersActionPermission"/>
     /// </summary>
     public sealed class Creator : IUserPermissionCreator
     {
@@ -823,7 +828,7 @@ namespace FreeLibSet.Data.Docs
       public string Code { get { return "ViewOtherUsersAction"; } }
 
       /// <summary>
-      /// Создает новое разрешение ViewOtherUsersActionPermission
+      /// Создает новое разрешение <see cref="ViewOtherUsersActionPermission"/>
       /// </summary>
       /// <returns>Разрешение</returns>
       public UserPermission CreateUserPermission()
@@ -893,7 +898,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override string ObjectText
     {
-      get { return "Просмотр действий других пользователей"; }
+      get { return Res.ViewOtherUsersActionPermission_Msg_ObjectText; }
     }
 
     /// <summary>
@@ -901,7 +906,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public override string ValueText
     {
-      get { return Allowed ? "Разрешен" : "Запрещен"; }
+      get { return Allowed ? Res.Allowed_Msg_True : Res.Allowed_Msg_False; }
     }
 
     #endregion

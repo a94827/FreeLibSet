@@ -1,0 +1,519 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Common_Err_ColumnIsNotRef" xml:space="preserve">
+    <value>Поле '{0}' таблицы '{1}' не является ссылочным</value>
+  </data>
+  <data name="DBxCacheLoadException_Error_Nessage" xml:space="preserve">
+    <value>{0}. Запрос DBxCache: {1}</value>
+  </data>
+  <data name="DBxCache_Arg_RefColumnHasNoDot" xml:space="preserve">
+    <value>Поле '{0}' не является ссылочным, так как не содержит точки</value>
+  </data>
+  <data name="DBxCache_Arg_UnknownColumn" xml:space="preserve">
+    <value>Поля '{0}' нет в описании структуры таблицы '{1}'</value>
+  </data>
+  <data name="DBxCache_ErrTitle_Load" xml:space="preserve">
+    <value>Ошибка получения страницы DBxCache</value>
+  </data>
+  <data name="DBxCache_Err_IndividualValueNotReturned" xml:space="preserve">
+    <value>Не получено индивидуальное значение для ключа '{0}'</value>
+  </data>
+  <data name="DBxCache_Err_Load" xml:space="preserve">
+    <value>Не удалось получить данные из источника</value>
+  </data>
+  <data name="DBxCache_Err_TablePageNotReturned" xml:space="preserve">
+    <value>Не получена страница для ключа '{0}'</value>
+  </data>
+  <data name="DBxCache_TraceSwitch_Default" xml:space="preserve">
+    <value>Трассировка кэша базы данных DBxCache</value>
+  </data>
+  <data name="DBxClearCacheBuffer_Arg_VersionTooBig" xml:space="preserve">
+    <value>Переданное исходное значение Version={0} превышает последнюю существующую версию буфера {1}</value>
+  </data>
+  <data name="DBxCon_Arg_DataRowNullInPKColumn" xml:space="preserve">
+    <value>Строка данных имеет значение DBNull в поле первичного ключа '{0}'</value>
+  </data>
+  <data name="DBxCon_Arg_DataTableHasNoPKColumn" xml:space="preserve">
+    <value>Таблица DataTable не содержит поля первичного ключа '{0}', объявленного в таблице '{1}' базы данных '{2}'</value>
+  </data>
+  <data name="DBxCon_Arg_DataTableMustHaveSingleColumn" xml:space="preserve">
+    <value>Таблица должна иметь только один столбец</value>
+  </data>
+  <data name="DBxCon_Arg_DataTableWithPKColumn" xml:space="preserve">
+    <value>Таблица DataTable со строками для поиска не может содержать столбца '{0}' первичного ключа таблицы '{1}'</value>
+  </data>
+  <data name="DBxCon_Arg_DBCommandDiffConnection" xml:space="preserve">
+    <value>Команда относится к другому соединению</value>
+  </data>
+  <data name="DBxCon_Arg_NoId" xml:space="preserve">
+    <value>Не задан идентификатор записи</value>
+  </data>
+  <data name="DBxCon_Arg_UpdateDataTableWithPKOnly" xml:space="preserve">
+    <value>Таблица DataTable имеет только столбцы первичного ключа ({0}) и ни одного дополнительного столбца для обновления</value>
+  </data>
+  <data name="DBxCon_Arg_UseDeleteAll" xml:space="preserve">
+    <value>Удаление всех строк таблицы  без фильтра не поддерживается. Используйте метод DeleteAll()</value>
+  </data>
+  <data name="DBxCon_ErrTitle_Rollback" xml:space="preserve">
+    <value>Ошибка отката транзакции в БД '{0}'</value>
+  </data>
+  <data name="DBxCon_ErrTitle_Sql" xml:space="preserve">
+    <value>Ошибка выполнения запроса</value>
+  </data>
+  <data name="DBxCon_Err_EndUpdateForTable" xml:space="preserve">
+    <value>Не было вызова BeginUpdate() для таблицы '{0}'</value>
+  </data>
+  <data name="DBxCon_Err_NoTransaction" xml:space="preserve">
+    <value>Транзакция не была начата</value>
+  </data>
+  <data name="DBxCon_Err_PrevTransaction" xml:space="preserve">
+    <value>Предыдущая транзакция не была завершена</value>
+  </data>
+  <data name="DBxCon_Err_UpdateNoPK" xml:space="preserve">
+    <value>Таблица '{0}' в базе данных '{1}' не имеет первичного ключа. Для нее нельзя использовать операцию обновления строк</value>
+  </data>
+  <data name="DBxFSqlFormatter_Arg_RefTypeEmulation" xml:space="preserve">
+    <value>Не должно вызываться в режиме Emulation </value>
+  </data>
+  <data name="DBxTransactionArray_ErrTitle_Roolback" xml:space="preserve">
+    <value>Ошибка отката транзакции</value>
+  </data>
+  <data name="DBxUserPermission_Msg_AccessModeFull" xml:space="preserve">
+    <value>Полный</value>
+  </data>
+  <data name="DBxUserPermission_Msg_AccessModeNone" xml:space="preserve">
+    <value>Запрет</value>
+  </data>
+  <data name="DBxUserPermission_Msg_AccessModeReadOnly" xml:space="preserve">
+    <value>Чтение</value>
+  </data>
+  <data name="DBx_Err_AlreadyConnected" xml:space="preserve">
+    <value>С базой данных '{0}' уже было установлено соединение</value>
+  </data>
+  <data name="DBx_Err_DotColumnNamePart" xml:space="preserve">
+    <value>Неправильная составная часть №{0} имени поля с точками. {1}</value>
+  </data>
+  <data name="DBx_Err_HasConnection" xml:space="preserve">
+    <value>Для базы данных '{0}' есть открытые соединения</value>
+  </data>
+  <data name="DBx_Err_NameStartsWithDigit" xml:space="preserve">
+    <value>Имя не может начинаться с цифры</value>
+  </data>
+  <data name="DBx_Err_NoColumnName" xml:space="preserve">
+    <value>Имя поля не задано</value>
+  </data>
+  <data name="DBx_Err_NoTableName" xml:space="preserve">
+    <value>Имя таблицы не задано</value>
+  </data>
+  <data name="TablePermission_Name_ObjectText0" xml:space="preserve">
+    <value>Таблицы не заданы</value>
+  </data>
+  <data name="TablePermission_Name_ObjectText1" xml:space="preserve">
+    <value>Таблица '{0}'</value>
+  </data>
+  <data name="TablePermission_Name_ObjectTextN" xml:space="preserve">
+    <value>Таблицы {0}</value>
+  </data>
+  <data name="WholeDBPermission_Name_ObjectText" xml:space="preserve">
+    <value>Доступ к базе данных</value>
+  </data>
+  <data name="DBxDataWriter_Arg_ColumnType" xml:space="preserve">
+    <value>Столбец '{0}' таблицы '{1}' имеет тип {2} и не может принимать значения типа {3}</value>
+  </data>
+  <data name="DBxDataWriter_Arg_OtherColumnRequired" xml:space="preserve">
+    <value>В режиме '{0}' список столбцов должен включать в себя хотя бы один столбец, не являющийся столбцом для поиска в таблице '{1}'</value>
+  </data>
+  <data name="DBxDataWriter_Arg_PartialSearchColumns" xml:space="preserve">
+    <value>Список всех столбцов не может содержать только часть столбцов составного ключа для поиска ({0}) в таблице '{1}'</value>
+  </data>
+  <data name="DBxDataWriter_Arg_SearchColumnRequired" xml:space="preserve">
+    <value>В режиме '{0}' должен быть задан список столбцов для поиска</value>
+  </data>
+  <data name="DBxDataWriter_Err_NoPK" xml:space="preserve">
+    <value>Таблица '{0}' не содержит первичного ключа. Первичный ключ требуется для режима '{1}'</value>
+  </data>
+  <data name="DBxManager_Arg_FileNameBadChars" xml:space="preserve">
+    <value>Имя файла '{0}' содержит недопустимые символы</value>
+  </data>
+  <data name="DBxManager_Err_NoConnectionString" xml:space="preserve">
+    <value>В конфигурационном файле не задана строка подключения с именем '{0}'. Существующие строки подключения: {1}</value>
+  </data>
+  <data name="DBxManager_Err_ReplaceDBItem" xml:space="preserve">
+    <value>Имя базы данных '{0}' не содержит в себе фрагмента '{1}', который требуется заменить</value>
+  </data>
+  <data name="DBxManager_Err_UnknownProviderForSettings" xml:space="preserve">
+    <value>Неизвестный провайдер базы данных '{0}' для сохраненной строки подключения '{1}'</value>
+  </data>
+  <data name="DBxNameValidator_Arg_ColumnListIsEmpty" xml:space="preserve">
+    <value>Пустой список имен полей</value>
+  </data>
+  <data name="DBxNameValidator_Arg_ColumnNotRef" xml:space="preserve">
+    <value>Столбец '{0}' таблицы '{1}' БД '{2}' не является ссылочным</value>
+  </data>
+  <data name="DBxNameValidator_Arg_InvalidColumnName" xml:space="preserve">
+    <value>Недопустимое имя столбца '{0}'. {1}</value>
+  </data>
+  <data name="DBxNameValidator_Arg_InvalidTableName" xml:space="preserve">
+    <value>Недопустимое имя таблицы '{0}'. {1}</value>
+  </data>
+  <data name="DBxNameValidator_Arg_UnknownColumnName" xml:space="preserve">
+    <value>Определения для столбца '{0}' нет в определении таблицы '{1}' БД '{2}'</value>
+  </data>
+  <data name="DBxNameValidator_Arg_UnknownTableName" xml:space="preserve">
+    <value>Определения для таблицы '{0}' не существует для БД '{1}'</value>
+  </data>
+  <data name="DBxNameValidator_Err_ColumnRead" xml:space="preserve">
+    <value>Запрещен доступ к полю '{0}' таблицы '{1}'</value>
+  </data>
+  <data name="DBxNameValidator_Err_ColumnWrite" xml:space="preserve">
+    <value>Запрещено изменение поля '{0}' таблицы '{1}'. Есть право только на просмотр поля</value>
+  </data>
+  <data name="DBxNameValidator_Err_TableRead" xml:space="preserve">
+    <value>Нет разрешения на доступ к таблице '{0}'</value>
+  </data>
+  <data name="DBxNameValidator_Err_TableWrite" xml:space="preserve">
+    <value>Нет разрешения на запись в таблицу '{0}'</value>
+  </data>
+  <data name="DBxNoIdArgumentException_Err_Message" xml:space="preserve">
+    <value>Не задан идентификатор</value>
+  </data>
+  <data name="DBxPrimaryKeyException_Err_Message" xml:space="preserve">
+    <value>Неправильный первичный ключ</value>
+  </data>
+  <data name="DBxRecordNotFoundException_Err_Message" xml:space="preserve">
+    <value>Не найдена запись в таблице '{0}' с идентификатором {1}</value>
+  </data>
+  <data name="DBxStructException_Err_Message" xml:space="preserve">
+    <value>Ошибка в описании структуры таблицы '{0}'. {1}</value>
+  </data>
+  <data name="DBxAccessException_Err_Message" xml:space="preserve">
+    <value>У Вас нет прав для выполнения действия</value>
+  </data>
+  <data name="DBxNameExpression_Arg_AliasRequired" xml:space="preserve">
+    <value>Для использования выражения типа {0} требуется задавать альяс в явном виде</value>
+  </data>
+  <data name="DBxSelectFormat_Arg_WrongColumnCount" xml:space="preserve">
+    <value>Неправильное количество столбцов в таблице: {0}. Ожидалось: {1}</value>
+  </data>
+  <data name="DBxSelectFormat_Err_FormatAlreadyCalled" xml:space="preserve">
+    <value>Повторный вызов метода Format() не допускается. Объект FillSelectFormatter является одноразовым</value>
+  </data>
+  <data name="DBxSelectFormat_Err_GroupByWithoutExpr" xml:space="preserve">
+    <value>Задан список GROUP BY без задания списка выражений (SELECT *)</value>
+  </data>
+  <data name="DBxSelectFormat_Err_HavingWithoutGroupBy" xml:space="preserve">
+    <value>Задано предложение HAVING без GROUP BY</value>
+  </data>
+  <data name="DBxSelectFormat_Err_NoAliasForColumn" xml:space="preserve">
+    <value>Таблица '{0}' содержит поле '{1}', для которого не найден альяс в списке DBxFillSelectInfo.Expressions</value>
+  </data>
+  <data name="DBxSelectFormat_Err_NoColumnInDBxSqlBuffer" xml:space="preserve">
+    <value>Для столбца '{0}' не найдено описание поля в списке DBxSqlBuffer.ColumnStructs</value>
+  </data>
+  <data name="DBxSelectFormat_Err_NoColumnsAccessable" xml:space="preserve">
+    <value>Для выражения 'SELECT * FROM {0}' невозможно получить список полей, так как у пользователя нет прав на просмотр каких-либо столбцов таблицы</value>
+  </data>
+  <data name="DBxSelectInfo_Err_ColumnAndAggMixed" xml:space="preserve">
+    <value>Выражение Expressions[{0}] '{1}' содержит одновременно и агрегатную функцию и ссылку на поле таблицы</value>
+  </data>
+  <data name="DBxSelectInfo_Err_GroupByWithoutExpression" xml:space="preserve">
+    <value>Не задан список выражений. Для оператора 'SELECT * FROM xxx' не может использоваться выражение GROUP BY</value>
+  </data>
+  <data name="DBxSelectInfo_Err_InitGroupByAlreadyCalled" xml:space="preserve">
+    <value>Список GroupBy уже заполнен. Повторный вызов метода не допускается</value>
+  </data>
+  <data name="DBxSelectInfo_Err_NoExpressions" xml:space="preserve">
+    <value>Список выражений Expressions не заполнен</value>
+  </data>
+  <data name="DBxStructChecker_Err_ComplexPK" xml:space="preserve">
+    <value>Таблица '{0}' имеет составной первичный ключ. Требуется первичный ключ по единственному полю типа {1}.</value>
+  </data>
+  <data name="DBxStructChecker_Err_InvNumRange" xml:space="preserve">
+    <value>Для числового столбца '{0}' задан неправильный диапазон значений: '{1} : {2}'</value>
+  </data>
+  <data name="DBxStructChecker_Err_NoPK" xml:space="preserve">
+    <value>Таблица '{0}' не имеет первичного ключа. Требуется первичный ключ по полю типа {1}.</value>
+  </data>
+  <data name="DBxStructChecker_Err_PKWrongType" xml:space="preserve">
+    <value>Таблица '{0}' имеет первичный ключа по полю '{1}', которое имеет тип {2}, отличный от {3}</value>
+  </data>
+  <data name="DBxStructChecker_Err_RefColumnTypeMismatch" xml:space="preserve">
+    <value>В таблице '{0}' ссылочное поле '{1}' типа {2} ссылается на таблицу '{3}', которая имеет первичный ключ по полю '{4}' типа {5}</value>
+  </data>
+  <data name="DBxStructChecker_Err_RefToTableComplexPK" xml:space="preserve">
+    <value>В таблице '{0}' ссылочное поле '{1}' ссылается на таблицу '{2}', которая имеет составной первичный ключ</value>
+  </data>
+  <data name="DBxStructChecker_Err_RefToTableNoPK" xml:space="preserve">
+    <value>В таблице '{0}' ссылочное поле '{1}' ссылается на таблицу '{2}', которая не имеет первичного ключа</value>
+  </data>
+  <data name="DBxStructChecker_Err_RefToUnknownTable" xml:space="preserve">
+    <value>В таблице '{0}' ссылочное поле '{1}' ссылается на несуществующую таблицу '{2}'</value>
+  </data>
+  <data name="DBxStructChecker_Err_StringColumnWithoutLen" xml:space="preserve">
+    <value>Для текстового столбца '{0}' не задана длина строки</value>
+  </data>
+  <data name="DBxStructChecker_Err_TableWithoutColumns" xml:space="preserve">
+    <value>Таблица '{0}' не содержит ни одного столбца</value>
+  </data>
+  <data name="DBxStructChecker_Err_UnknownColumnType" xml:space="preserve">
+    <value>Для столбца '{0}' не задан тип данных</value>
+  </data>
+  <data name="DBx_Msg_ColumnLonger" xml:space="preserve">
+    <value>Поле '{0}' таблицы '{1}' должно иметь длину {2} символа(ов), в то время, как реальное поле длиннее:  {3} символа(ов)</value>
+  </data>
+  <data name="DBx_Err_ColumnTypeDiff" xml:space="preserve">
+    <value>Несоответствие типа поля '{0}' таблицы '{1}'. Объявление поля типа {2} предполагает тип {3}, в то время как реальный тип поля: {4}</value>
+  </data>
+  <data name="DBx_Msg_DelAllIndexesByColumnLength" xml:space="preserve">
+    <value>Все существующие индексы таблицы '{0}' будут удалены из-за изменения размера поля '{1}'</value>
+  </data>
+  <data name="DBx_Err_GetConnectionString" xml:space="preserve">
+    <value>Ошибка получения строки подключения. {0}</value>
+  </data>
+  <data name="DBx_Err_NoMainEntry" xml:space="preserve">
+    <value>Основная точка подключения еще не была инициализирована</value>
+  </data>
+  <data name="DBx_Msg_ColumnCreated" xml:space="preserve">
+    <value>Создано поле '{0}' в таблице '{1}'</value>
+  </data>
+  <data name="DBx_Msg_ColumnLengthChanged" xml:space="preserve">
+    <value>Длина поля '{0}' в таблице '{1}' изменена с {2} до {3} символов</value>
+  </data>
+  <data name="DBx_Msg_TableCreated" xml:space="preserve">
+    <value>Создана таблица '{0}'</value>
+  </data>
+  <data name="DBx_Phase_ColumnCreation" xml:space="preserve">
+    <value>Добавление поля '{0}' в таблицу '{1}'</value>
+  </data>
+  <data name="DBx_Phase_ColumnSetLength" xml:space="preserve">
+    <value>Изменение длины поля '{0}' в таблице '{1}'</value>
+  </data>
+  <data name="DBx_Phase_TableCreation" xml:space="preserve">
+    <value>Создается таблица '{0}'</value>
+  </data>
+  <data name="SqlDBx_Arg_FileExtension" xml:space="preserve">
+    <value>Неправильное значение SqlConnectionStringBuilder.AttachDBFilename='{0}'. У файла должно быть расширение '.mdf', иначе работа с базой данных невозможна</value>
+  </data>
+  <data name="SqlDBx_Arg_NoDBName" xml:space="preserve">
+    <value>В строке подключения не заданы параметры InitialCatalog или AttachDBFilename, определяющие базу данных</value>
+  </data>
+  <data name="UnknownUserPermission_Name_Default" xml:space="preserve">
+    <value>Неизвестное разрешение '{0}'</value>
+  </data>
+  <data name="UserPermission_Err_NotCreated" xml:space="preserve">
+    <value>Не создано разрешение для ClassCode='{0}'</value>
+  </data>
+  <data name="DBx_Msg_DefaultReset" xml:space="preserve">
+    <value>Для поля '{0}' в таблице '{1}' очищен признак DEFAULT</value>
+  </data>
+  <data name="DBx_Msg_DefaultSet" xml:space="preserve">
+    <value>Для поля '{0}' в таблице '{1}' установлен признак DEFAULT '{2}'</value>
+  </data>
+  <data name="DBx_Msg_FKCreated" xml:space="preserve">
+    <value>Создан внешний ключ '{0}' в таблице '{1}' для поля '{2}'</value>
+  </data>
+  <data name="DBx_Msg_IndexCreated" xml:space="preserve">
+    <value>Создан индекс '{0}' в таблице '{1}' с полями {2}</value>
+  </data>
+  <data name="DBx_Msg_IndexRemovedExcess" xml:space="preserve">
+    <value>Удален лишний индекс '{0}' в таблице '{1}'</value>
+  </data>
+  <data name="DBx_Msg_IndexRemovedWrong" xml:space="preserve">
+    <value>Удален индекс '{0}' в таблице '{1}', т.к. он не соответствует объявленному в структуре данных</value>
+  </data>
+  <data name="DBx_Msg_NullChanged" xml:space="preserve">
+    <value>Для поля '{0}' в таблице '{1}' установлен признак '{2}'</value>
+  </data>
+  <data name="DBx_Msg_NullToDefaultValue" xml:space="preserve">
+    <value>Для поля '{0}' в таблице '{1}' значения NULL заменены на значение по умолчанию</value>
+  </data>
+  <data name="DBx_Msg_PKAdded" xml:space="preserve">
+    <value>Добавлено ограничение первичного ключа '{0}' в таблице '{2}'</value>
+  </data>
+  <data name="DBx_Msg_PKRemovedNoPK" xml:space="preserve">
+    <value>Удалено ограничение первичного ключа '{0}', так как таблица '{1}' не содержит первичного ключа</value>
+  </data>
+  <data name="DBx_Msg_PKRemovedWrong" xml:space="preserve">
+    <value>Удалено неправильное ограничение первичного ключа '{0}' в таблице '{1}'</value>
+  </data>
+  <data name="DBx_Phase_FKCreation" xml:space="preserve">
+    <value>Создание внешнего ключа '{0}'</value>
+  </data>
+  <data name="DBx_Phase_ForeignKeysVerification" xml:space="preserve">
+    <value>Проверка внешних ключей</value>
+  </data>
+  <data name="DBx_Phase_IndexCreation" xml:space="preserve">
+    <value>Создание индекса таблицы '{0}' для полей {1}</value>
+  </data>
+  <data name="DBx_Phase_IndexRemoving" xml:space="preserve">
+    <value>Удаление индекса '{0}'</value>
+  </data>
+  <data name="DBxCon_Err_SchemaColumnListIsEmpty" xml:space="preserve">
+    <value>Не найден список столбцов для таблицы '{0}' при загрузке схемы базы данныъ</value>
+  </data>
+  <data name="DBx_Msg_ColumnCommentChanged" xml:space="preserve">
+    <value>Для поля '{0}' в таблице '{1}' изменен комментарий</value>
+  </data>
+  <data name="DBx_Msg_TableCommentChanged" xml:space="preserve">
+    <value>Для таблицы '{0}' изменен комментарий</value>
+  </data>
+  <data name="NpgsqlDBx_Arg_NoDatabase" xml:space="preserve">
+    <value>В строке подключения не задан параметр Database, определяющий базу данных</value>
+  </data>
+  <data name="NpgsqlDBx_Msg_ConstraintColumnNotFound" xml:space="preserve">
+    <value>В системной таблице 'pg_constraint' задано ограничение внешнего ключа для таблицы '{0}' и столбца с индексом {1}. Для этой пары таблица+поле не найдено записи в таблице столбцов. Существующее ограничение не рассматривается, но возможна ошибка повторного добавления ограничения.</value>
+  </data>
+  <data name="NpgsqlDBx_Msg_ConstraintWrongConkey" xml:space="preserve">
+    <value>В системной таблице 'pg_constraint' задано ограничение внешнего ключа с неправильным полем 'conkey'</value>
+  </data>
+  <data name="NpgsqlDBx_Msg_IndexColumnNotFound" xml:space="preserve">
+    <value>Для индекса '{0}' задан столбец с номером {1}, которого нет в таблице '{2}'</value>
+  </data>
+  <data name="Npgsql_Msg_UnreadableMessage" xml:space="preserve">
+    <value>Если сообщение об ошибке не читается (сердечки вместо букв), настройте сервер на выдачу сообщений на английском языке в файле postgresql.conf. Задайте строку &lt;lc_messages = 'en_EN.UTF-8'&gt;</value>
+  </data>
+  <data name="OleDbDBx_Arg_FileExtension" xml:space="preserve">
+    <value>Путь к базе данных '{0}' должен иметь расширение '.mdb'</value>
+  </data>
+  <data name="OleDbDBx_Arg_InvalidDataSource" xml:space="preserve">
+    <value>Задан неправильный элемент DataSource '{0}' строки подключения. Элемент должен указывать на путь к файлу базы данных</value>
+  </data>
+  <data name="OleDbDBx_Arg_NoDataSource" xml:space="preserve">
+    <value>В строке подключения не указан параметр 'DataSource'</value>
+  </data>
+  <data name="OracleDBx_Err_OwnerPrefix" xml:space="preserve">
+    <value>Префикс OWNER. {0}</value>
+  </data>
+  <data name="SQLiteDBx_Arg_NoDataSource" xml:space="preserve">
+    <value>В строке подключения не задан параметр 'DataSource'</value>
+  </data>
+  <data name="SQLiteDBx_Arg_YearOutOfRange" xml:space="preserve">
+    <value>В полях типа 'дата' и 'дата-время' нельзя задавать год меньше {0}. База данных SQLite не может потом прочитать такие значения</value>
+  </data>
+  <data name="SQLiteDBx_Err_SplitColumnType" xml:space="preserve">
+    <value>Ошибка разбора описания типа '{0}'. {1}</value>
+  </data>
+  <data name="SQLiteDBx_Msg_TableRecreatedByColumnFormat" xml:space="preserve">
+    <value>Таблица '{0}' пересоздана из-за изменения формата столбцов</value>
+  </data>
+  <data name="SQLiteDBx_Phase_TableStructChanging" xml:space="preserve">
+    <value>Изменение структуры таблицы '{0}'</value>
+  </data>
+</root>

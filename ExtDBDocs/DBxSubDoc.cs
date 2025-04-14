@@ -35,7 +35,7 @@ namespace FreeLibSet.Data.Docs
 
     internal DataRow Row { get { return _MultiSubDocs.Table.Rows[_RowIndex]; } }
 
-    private int _RowIndex;
+    private readonly int _RowIndex;
 
     //private DataRow FRow;
 
@@ -126,7 +126,7 @@ namespace FreeLibSet.Data.Docs
     /// Доступ ко всем поддокументам одного вида, загруженных в DBxDocSet
     /// </summary>
     public DBxMultiSubDocs MultiSubDocs { get { return _MultiSubDocs; } }
-    private DBxMultiSubDocs _MultiSubDocs;
+    private readonly DBxMultiSubDocs _MultiSubDocs;
 
     /// <summary>
     /// Описание вида документа
@@ -194,7 +194,7 @@ namespace FreeLibSet.Data.Docs
     public void InsertCopy()
     {
       if (SubDocState != DBxDocState.View)
-        throw new InvalidOperationException("Поддокумент должен находиться в состоянии View, а не " + SubDocState.ToString());
+        throw new InvalidOperationException(String.Format(Res.DBxSubDoc_Arg_WrongState, "View", SubDocState));
       DataSet tempDS = new DataSet();
 
       DBxDocSet.DoInsertCopy1(tempDS, MultiSubDocs.SubDocType.Name, SubDocId, MultiSubDocs.NextFictiveId());

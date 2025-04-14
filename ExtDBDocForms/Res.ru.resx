@@ -1,0 +1,1329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutDoc_ToolTip_ActionTime" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="AboutDoc_ToolTip_ActionTimeAndUser" xml:space="preserve">
+    <value>{0} {1} ({2})</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Changed" xml:space="preserve">
+    <value>изменен</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Created" xml:space="preserve">
+    <value>создан</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Deleted" xml:space="preserve">
+    <value>удален</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Main" xml:space="preserve">
+    <value>Документ '{0}' Id={1}</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Version" xml:space="preserve">
+    <value>версия {0}</value>
+  </data>
+  <data name="Clipboard_Err_DocSelDiffDB" xml:space="preserve">
+    <value>Выборка в буфере обмена относится к другой базе данных</value>
+  </data>
+  <data name="Clipboard_Err_NoDataSet" xml:space="preserve">
+    <value>Буфер обмена не содержит набора данных DataSet</value>
+  </data>
+  <data name="Clipboard_Err_NoDocSel" xml:space="preserve">
+    <value>В буфере обмена нет выборки документов</value>
+  </data>
+  <data name="Clipboard_Err_NoDocType" xml:space="preserve">
+    <value>В буфере обмена нет ссылки на документ '{0}'</value>
+  </data>
+  <data name="Clipboard_Err_NoTable" xml:space="preserve">
+    <value>В буфере обмена нет таблицы '{0}'</value>
+  </data>
+  <data name="Clipboard_Phase_CopyDocSel" xml:space="preserve">
+    <value>Копирование выборки документов в буфер обмена</value>
+  </data>
+  <data name="Cmd_Menu_DocInfo" xml:space="preserve">
+    <value>Информация о документе</value>
+  </data>
+  <data name="Common_Arg_NoRefColumn" xml:space="preserve">
+    <value>Поле '{0}' таблицы '{1}' не является ссылочным</value>
+  </data>
+  <data name="Common_Arg_RefColumn" xml:space="preserve">
+    <value>Поле '{0}' таблицы '{1}' является ссылочным.</value>
+  </data>
+  <data name="Common_Arg_UnknownDocType" xml:space="preserve">
+    <value>Неизвестный тип документов '{0}'</value>
+  </data>
+  <data name="Common_Arg_UnknownSubDocType" xml:space="preserve">
+    <value>Неизвестный тип поддокументов '{0}' для документа типа '{1}'</value>
+  </data>
+  <data name="Common_ColTitle_ChangeTime" xml:space="preserve">
+    <value>Время изменения документа</value>
+  </data>
+  <data name="Common_ColTitle_ChangeUserName" xml:space="preserve">
+    <value>Документ изменен пользователем</value>
+  </data>
+  <data name="Common_ColTitle_CreateTime" xml:space="preserve">
+    <value>Время создания документа</value>
+  </data>
+  <data name="Common_ColTitle_CreateUserName" xml:space="preserve">
+    <value>Документ создан пользователем</value>
+  </data>
+  <data name="Common_ColTitle_DocVersion" xml:space="preserve">
+    <value>Версия документа</value>
+  </data>
+  <data name="Common_ColTitle_GroupName" xml:space="preserve">
+    <value>Группа</value>
+  </data>
+  <data name="Common_ErrTitle_DocEdit" xml:space="preserve">
+    <value>Ошибка редактирования документа</value>
+  </data>
+  <data name="Common_Err_MultiDocSelected" xml:space="preserve">
+    <value>Выбрано несколько документов</value>
+  </data>
+  <data name="Common_Err_NoDocType" xml:space="preserve">
+    <value>Тип документа не задан</value>
+  </data>
+  <data name="Common_Err_NoSelectedDoc" xml:space="preserve">
+    <value>Документ не выбран</value>
+  </data>
+  <data name="Common_Err_NoSelectedSubDoc" xml:space="preserve">
+    <value>Поддокумент не выбран</value>
+  </data>
+  <data name="Common_Err_SelectedDocDeleted" xml:space="preserve">
+    <value>Выбранный документ '{0}' удален</value>
+  </data>
+  <data name="Common_Err_SelectedSubDocDeleted" xml:space="preserve">
+    <value>Выбранный поддокумент '{0}' удален</value>
+  </data>
+  <data name="Common_Name_DocChangedCreated" xml:space="preserve">
+    <value>Документ создан / изменен</value>
+  </data>
+  <data name="Common_Name_DocId" xml:space="preserve">
+    <value>Идентификатор документа</value>
+  </data>
+  <data name="Common_Name_SubDocId" xml:space="preserve">
+    <value>Идентификатор поддокумента</value>
+  </data>
+  <data name="Common_Phase_DataLoad" xml:space="preserve">
+    <value>Загрузка данных</value>
+  </data>
+  <data name="Common_Phase_Refresh" xml:space="preserve">
+    <value>Обновление данных</value>
+  </data>
+  <data name="Common_ToolTipText_NoDoc" xml:space="preserve">
+    <value>Нет выбранного документа</value>
+  </data>
+  <data name="DBUI_Arg_TableNameIsDoc" xml:space="preserve">
+    <value>Таблица '{0}' соответствует документу, а не поддокументу</value>
+  </data>
+  <data name="DBUI_Arg_TableNameIsSubDoc" xml:space="preserve">
+    <value>Таблица '{0}' соответствует подокументу, а не документу</value>
+  </data>
+  <data name="DBUI_Arg_UnknownTableName" xml:space="preserve">
+    <value>Таблица '{0}' не соответствует документу или поддокументу</value>
+  </data>
+  <data name="DBUI_Err_ColumnIsNotRef" xml:space="preserve">
+    <value>Столбец '{0}' таблицы'{1}' не является ссылочным</value>
+  </data>
+  <data name="DBUI_Err_DBxAccessException" xml:space="preserve">
+    <value>Отказано в доступе.
+
+{0}</value>
+  </data>
+  <data name="DBUI_Err_DBxDocCannotDeleteException" xml:space="preserve">
+    <value>Ошибка удаления данных.
+
+{0}</value>
+  </data>
+  <data name="DBUI_Err_DBxDocsLockException" xml:space="preserve">
+    <value>Ошибка установки блокировки.
+
+Не удалось установить блокировку. {0}.
+{1}.
+{2}.</value>
+  </data>
+  <data name="DBUI_Err_DocLockedByUnknown" xml:space="preserve">
+    <value>Документ заблокирован</value>
+  </data>
+  <data name="DBUI_Err_DocLockedByUser" xml:space="preserve">
+    <value>Документ заблокирован пользователем {0}</value>
+  </data>
+  <data name="DBUI_Err_DocLockedByYou" xml:space="preserve">
+    <value>Документ заблокирован Вами в текущем сеансе работы</value>
+  </data>
+  <data name="DBUI_Err_MultiDocsLocked" xml:space="preserve">
+    <value>Заблокированные документы: {0}</value>
+  </data>
+  <data name="DBUI_Err_SingleDocLocked" xml:space="preserve">
+    <value>Заблокированный документ: {0}</value>
+  </data>
+  <data name="DBUI_Err_SubDocCanMultiInsert" xml:space="preserve">
+    <value>Для поддокументов '{0}' документа '{1}' установлено свойство CanMultiInsert, но не установлено CanMultiEdit</value>
+  </data>
+  <data name="DBUI_Err_UnknownGroupDocType" xml:space="preserve">
+    <value>Неизвестный вид документов '{0}' в документе '{1}' для группировки</value>
+  </data>
+  <data name="DBUI_Err_UnknownGroupRefColumnName" xml:space="preserve">
+    <value>Неизвестное имя столбца '{0}' в документе '{1}', которое задается свойством GroupRefColumnName</value>
+  </data>
+  <data name="DBUI_Err_UserPermissionCreatorsHasBeenSet" xml:space="preserve">
+    <value>Свойство DocProvider.UserPermissionCreators не должно устанавливаться вручную</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Msg_NoRows" xml:space="preserve">
+    <value>{0} не содержит строк</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Msg_RowCount" xml:space="preserve">
+    <value>{0} - {1} строк(а,и)</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Name_Default" xml:space="preserve">
+    <value>Таблицы данных</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Name_DocTable" xml:space="preserve">
+    <value>Таблица документов '{0}'</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Name_SubDocTable" xml:space="preserve">
+    <value>Таблица поддокументов '{0}'</value>
+  </data>
+  <data name="DBxDocImageHandler_Err_GetToolTipText" xml:space="preserve">
+    <value>Ошибка при получении всплывающей подсказки. {0}</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_AccessDenied" xml:space="preserve">
+    <value>Доступ к таблице запрещен</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_DocDeleted" xml:space="preserve">
+    <value>Документ удален</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_FictiveId" xml:space="preserve">
+    <value>Фиктивный идентификатор</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_MainDocDeleted" xml:space="preserve">
+    <value>Удален основной документ</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_RowDeleted" xml:space="preserve">
+    <value>Строка удалена</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_SubDocDeleted" xml:space="preserve">
+    <value>Поддокумент удален</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_TableNotFound" xml:space="preserve">
+    <value>Таблица не найдена</value>
+  </data>
+  <data name="DBxDocSelectionPasteFormat_Name_Default" xml:space="preserve">
+    <value>Выборка документов</value>
+  </data>
+  <data name="DBxDocSelectionPasteFormat_Name_DocType" xml:space="preserve">
+    <value>Документы '{0}'</value>
+  </data>
+  <data name="DBxDocSelectionPasteFormat_Name_SingleDoc" xml:space="preserve">
+    <value>Документ '{0}'</value>
+  </data>
+  <data name="DocSel_Msg_IsEmpty" xml:space="preserve">
+    <value>Выборка не содержит ни одного документа</value>
+  </data>
+  <data name="DocSel_Title_Default" xml:space="preserve">
+    <value>Выборка документов</value>
+  </data>
+  <data name="DocTableIdGridFilter_Arg_AlienDBUI" xml:space="preserve">
+    <value>Элемент с индексом {0} относится к другому объекту DBUI</value>
+  </data>
+  <data name="DocTableIdGridFilter_Msg_NoFilter" xml:space="preserve">
+    <value>Нет фильтра</value>
+  </data>
+  <data name="DocTableIdGridFilter_Msg_TextUnknownTableId" xml:space="preserve">
+    <value>Неизвестный тип документа с TableId={0}</value>
+  </data>
+  <data name="Editor_Err_DocTreeLoop" xml:space="preserve">
+    <value>Зацикливание дерева для документа: {0}</value>
+  </data>
+  <data name="Editor_Err_IsReadOnly" xml:space="preserve">
+    <value>Редактор находится в режиме просмотра данных</value>
+  </data>
+  <data name="EFPComboBox_ErrTitle_Filter" xml:space="preserve">
+    <value>Ошибка проверки соответствия значения '{0}' фильтру</value>
+  </data>
+  <data name="EFPComboBox_Err_FilterNotPassed" xml:space="preserve">
+    <value>Выбраное значение не проходит фильтр '{0}' ({1})</value>
+  </data>
+  <data name="EFPComboBox_Err_GetText" xml:space="preserve">
+    <value>Ошибка при получении текста: {0}</value>
+  </data>
+  <data name="EFPComboBox_Msg_ErrorText" xml:space="preserve">
+    <value>!!! Ошибка !!! {0}</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_ClearButton" xml:space="preserve">
+    <value>Очистить поле выбора</value>
+  </data>
+  <data name="Common_Err_DocTypeAccessDenied" xml:space="preserve">
+    <value>У Вас нет прав для просмотра документов '{0}'</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_EditButtonEditDoc" xml:space="preserve">
+    <value>Редактировать выбранный документ '{0}'</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_EditButtonNoDoc" xml:space="preserve">
+    <value>Нельзя редактировать, т.к. нет выбранного документа</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_EditButtonViewDoc" xml:space="preserve">
+    <value>Просмотреть выбранный документ '{0}'</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_EditButtonViewDocNoEdit" xml:space="preserve">
+    <value>Просмотреть выбранный документ '{0}'. У Вас нет прав для редактирования документов '{1}'</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_SelectButton" xml:space="preserve">
+    <value>Выбрать: {0}</value>
+  </data>
+  <data name="EFPDataView_ErrTitle_DataViewDataLoading" xml:space="preserve">
+    <value>'{0}' - ошибка загрузки данных</value>
+  </data>
+  <data name="EFPDataView_ErrTitle_RowUpdate" xml:space="preserve">
+    <value>Ошибка обновления строк</value>
+  </data>
+  <data name="EFPDataView_ErrTitle_SetDataViewSort" xml:space="preserve">
+    <value>Ошибка установки порядка строк DataView.Sort для просмотра '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_DocRowLoad" xml:space="preserve">
+    <value>Не удалось загрузить из базы данных строку документа '{0}' с идентификатором {1}</value>
+  </data>
+  <data name="EFPDataView_Err_ManualOrderSubDocsForMultiDocs" xml:space="preserve">
+    <value>Использование ручной сортировки поддокументов не допускается, если одновременно редактируется несколько документов</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedDocs" xml:space="preserve">
+    <value>Нет выбранных документов '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedSubDocs" xml:space="preserve">
+    <value>Нет выбранных поддокументов '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_NoSubDocsInSelectedDocs" xml:space="preserve">
+    <value>Выбранные документы '{0}' ({1} шт.) не содержат ни одного поддокумента '{2}'</value>
+  </data>
+  <data name="EFPDataView_Err_SetValidateBeforEdit" xml:space="preserve">
+    <value>Нельзя устанавливать свойство ValidateBeforeEdit в true, т.к. просмотр не относится к DocumentEditor</value>
+  </data>
+  <data name="EFPDataView_Err_TooManyDocsToInsertSubDocs" xml:space="preserve">
+    <value>Выбрано слишком много документов '{0}' ({1} шт.). Максимально за один раз могут быть вставлены поддокументы для {2} документов</value>
+  </data>
+  <data name="EFPDataView_Msg_ConfirmDeleteMulti" xml:space="preserve">
+    <value>Удалить выбранные записи '{0}' ({1})?</value>
+  </data>
+  <data name="EFPDataView_Msg_ConfirmDeleteSingle" xml:space="preserve">
+    <value>Удалить запись '{0}' ({1})?"</value>
+  </data>
+  <data name="Common_Title_ConfirmDelete" xml:space="preserve">
+    <value>Подтверждение удаления</value>
+  </data>
+  <data name="EFPGroupDocTreeView_Arg_MultiSelect" xml:space="preserve">
+    <value>Множественный выбор узлов в дереве групп документов не допускается</value>
+  </data>
+  <data name="EFPMultiDocComboBox_ToolTip_Multi" xml:space="preserve">
+    <value>Выбрано документов: {0}</value>
+  </data>
+  <data name="EFPComboBox_Err_AnotherDoc" xml:space="preserve">
+    <value>Выбранный поддокумент '{0}' - '{1}' относится к документу '{3}', а не '{4}'</value>
+  </data>
+  <data name="EFPMultiSubDocComboBox_Err_DiffDocs" xml:space="preserve">
+    <value>Выбранные поддокументы относятся к разным документам</value>
+  </data>
+  <data name="EFPComboBox_Err_NoOwnerDoc" xml:space="preserve">
+    <value>Не задан документ '{0}', из которого можно выбирать</value>
+  </data>
+  <data name="EFPComboBox_Msg_OwnerDocDeleted" xml:space="preserve">
+    <value>Документ '{0}' ({1}), к которому относится выбранный поддокумент, удален</value>
+  </data>
+  <data name="EFPMultiSubDocComboBox_ToolTip_Multi" xml:space="preserve">
+    <value>Выбрано поддокументов: {0}</value>
+  </data>
+  <data name="EFPSubDocTreeView_Arg_NoTreeParentColumnName" xml:space="preserve">
+    <value>Поддокументы '{0}' не поддерживают древовидное представление. Свойство DBxSubDocType.TreeParentColumnName не установлено</value>
+  </data>
+  <data name="EnumUserPermissionUI_Title_GroupTitle" xml:space="preserve">
+    <value>Режим доступа</value>
+  </data>
+  <data name="Form_Arg_ParentIsNotEmpty" xml:space="preserve">
+    <value>В панели не должно быть управляющих элементов</value>
+  </data>
+  <data name="Form_Err_NoTreeTab" xml:space="preserve">
+    <value>Форма не содержит вкладки иерархического просмотра</value>
+  </data>
+  <data name="Form_Prompt_Table" xml:space="preserve">
+    <value>Таблица</value>
+  </data>
+  <data name="Form_Prompt_Tree" xml:space="preserve">
+    <value>Дерево</value>
+  </data>
+  <data name="RecalcColumnsPermissionUI_Name_Default" xml:space="preserve">
+    <value>Пересчет вычисляемых полей</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_Exclude" xml:space="preserve">
+    <value>Кроме выбранных документов</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_Include" xml:space="preserve">
+    <value>Выбранные документы</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_NoFilter" xml:space="preserve">
+    <value>Нет фильтра</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_NotNull" xml:space="preserve">
+    <value>Ссылка на любой документ</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_Null" xml:space="preserve">
+    <value>Ссылка не задана</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_TextNotNull" xml:space="preserve">
+    <value>Ссылка на любой документ '{0}'</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_TextNull" xml:space="preserve">
+    <value>Ссылка не задана</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_RefsToExcluded" xml:space="preserve">
+    <value>Ссылки на документы '{0}', которые надо исключить</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_RefsToIncluded" xml:space="preserve">
+    <value>Ссылки на документы '{0}'</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_TextExcludeDocs" xml:space="preserve">
+    <value>Кроме {0}</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_TextExcludeNoDocs" xml:space="preserve">
+    <value>Фиктивное значение фильтра - все ссылки</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_TextIncludeNoDocs" xml:space="preserve">
+    <value>Нет ни одной ссылки на документы '{0}'</value>
+  </data>
+  <data name="RefGroupDocGridFilter_Arg_NoGroupDocType" xml:space="preserve">
+    <value>Вид документов '{0}' не является деревом групп</value>
+  </data>
+  <data name="RefGroupDocGridFilter_Err_RootSelected" xml:space="preserve">
+    <value>Должна быть выбрана какая-либо группа, а не корневой узел</value>
+  </data>
+  <data name="RefGroupDocGridFilter_Msg_DocsWithoutGroup" xml:space="preserve">
+    <value>Документы без групп</value>
+  </data>
+  <data name="RefGroupDocGridFilter_Msg_GroupAndNested" xml:space="preserve">
+    <value>{0} и вложенные группы</value>
+  </data>
+  <data name="WholeDBPermissionUI_Name_Default" xml:space="preserve">
+    <value>База данных</value>
+  </data>
+  <data name="Common_Arg_UnknownColumn" xml:space="preserve">
+    <value>Таблица '{0}' не содержит столбца '{1}'</value>
+  </data>
+  <data name="Common_Err_CannotAddRow" xml:space="preserve">
+    <value>Нельзя добавить строку</value>
+  </data>
+  <data name="Common_Err_ErrorMessage" xml:space="preserve">
+    <value>Ошибка. {0}</value>
+  </data>
+  <data name="Common_Title_Paste" xml:space="preserve">
+    <value>Вставка</value>
+  </data>
+  <data name="Common_ToolTip_SubDocImageColumn" xml:space="preserve">
+    <value>Значок поддокумента '{0}'</value>
+  </data>
+  <data name="SubDocTypeUI_Err_NoNewSubDocType" xml:space="preserve">
+    <value>Не найден новый SubDocType для SubDocTypeName='{0}' документа '{1}'</value>
+  </data>
+  <data name="SubDocTypeUI_Err_NoRowsPasted" xml:space="preserve">
+    <value>Ни одна из строк ({0} шт.) не может быть добавлена</value>
+  </data>
+  <data name="SubDocTypeUI_Err_NotImplementedMultiDocEdit" xml:space="preserve">
+    <value>Не реализовано для наборов, в которых редактируется несколько документов</value>
+  </data>
+  <data name="SubDocTypeUI_Err_PastedRowSkipped" xml:space="preserve">
+    <value>Строка №{0} пропускается. {1}</value>
+  </data>
+  <data name="SubDocTypeUI_Msg_ConfirmPasteDocs" xml:space="preserve">
+    <value>Вставить копии документов ({0} шт.)?</value>
+  </data>
+  <data name="SubDocTypeUI_Msg_ConfirmPasteSubDocs" xml:space="preserve">
+    <value>Вставить копии поддокументов ({0} шт.)?</value>
+  </data>
+  <data name="SubDocTypeUI_Title_ConfirmPasteSubDocs" xml:space="preserve">
+    <value>Подтверждение вставки поддокументов '{0}'</value>
+  </data>
+  <data name="SubDocTypeUI_Title_SelectDocsForInsert" xml:space="preserve">
+    <value>{0} (Создание)</value>
+  </data>
+  <data name="SubDocumentEditor_ErrTitle_InitNewValues" xml:space="preserve">
+    <value>Ошибка иницилизации новых значений поддокумента '{0}'</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_Cancel" xml:space="preserve">
+    <value>Закончить редактирование без сохранения внесенных изменений</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_CancelDelete" xml:space="preserve">
+    <value>Закрыть окно, не удаляя запись</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_More" xml:space="preserve">
+    <value>Дополнительные команды редактора</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_OkDelete" xml:space="preserve">
+    <value>Удалить просматриваемую запись</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_OkEdit" xml:space="preserve">
+    <value>Закончить редактирование, сохранив внесенные изменения.
+Для сохранения изменений в базе данных, нажимите затем кнопку 'ОК' или 'Запись' в основном редакторе документа</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_OkInsert" xml:space="preserve">
+    <value>Создать новую запись и закончить редактирование.
+Для сохранения записи в базе данных, нажимите затем кнопку 'ОК' или 'Запись' в основном редакторе документа</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_OkView" xml:space="preserve">
+    <value>Закрыть окно</value>
+  </data>
+  <data name="Cmd_Menu_Debug_Changes" xml:space="preserve">
+    <value>Отладка изменений</value>
+  </data>
+  <data name="Editor_Msg_Title" xml:space="preserve">
+    <value>{0} - ({1})</value>
+  </data>
+  <data name="Editor_Msg_TitleDelete" xml:space="preserve">
+    <value>Удаление</value>
+  </data>
+  <data name="Editor_Msg_TitleEdit" xml:space="preserve">
+    <value>Редактирование</value>
+  </data>
+  <data name="Editor_Msg_TitleInsert" xml:space="preserve">
+    <value>Создание</value>
+  </data>
+  <data name="Editor_Msg_TitleInsertCopy" xml:space="preserve">
+    <value>Создание копии</value>
+  </data>
+  <data name="Editor_Msg_TitleRestore" xml:space="preserve">
+    <value>Восстановление</value>
+  </data>
+  <data name="Editor_Msg_TitleView" xml:space="preserve">
+    <value>Просмотр</value>
+  </data>
+  <data name="Editor_Msg_TitleViewDeleted" xml:space="preserve">
+    <value>Просмотр удаленного документа</value>
+  </data>
+  <data name="Editor_Msg_TitleViewPrevVersions" xml:space="preserve">
+    <value>Просмотр предыдущих версий</value>
+  </data>
+  <data name="Editor_Msg_TitleViewVersion" xml:space="preserve">
+    <value>Просмотр версии {0}</value>
+  </data>
+  <data name="SubDocumentEditor_ErrTitle_SaveColumnValues" xml:space="preserve">
+    <value>Ошибка сохранения копий значений поддокумента '{0}' для будущего использования</value>
+  </data>
+  <data name="Common_Cmd_DataSetXML" xml:space="preserve">
+    <value>Данные документа DataSet XML</value>
+  </data>
+  <data name="Common_ColTitle_ActionInfo" xml:space="preserve">
+    <value>Действие пользователя</value>
+  </data>
+  <data name="Common_ColTitle_ActionStartTime" xml:space="preserve">
+    <value>Время начала редактирования</value>
+  </data>
+  <data name="Common_ColTitle_ActionTime" xml:space="preserve">
+    <value>Время первого сохранения</value>
+  </data>
+  <data name="Common_ColTitle_ApplyChangesCount" xml:space="preserve">
+    <value>Кол-во сохранений</value>
+  </data>
+  <data name="Common_ColTitle_ApplyChangesTime" xml:space="preserve">
+    <value>Время последнего сохранения</value>
+  </data>
+  <data name="Common_ColTitle_DocType" xml:space="preserve">
+    <value>Вид документа</value>
+  </data>
+  <data name="Common_ColTitle_EditTime" xml:space="preserve">
+    <value>Время редактирования</value>
+  </data>
+  <data name="Common_ColTitle_UserName" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="Common_Msg_NoUser" xml:space="preserve">
+    <value>[ нет ]</value>
+  </data>
+  <data name="Common_Name_ActionImage" xml:space="preserve">
+    <value>Значок действия (создание, изменение, удаление)</value>
+  </data>
+  <data name="DocInfo_Cmd_Debug_DocTables" xml:space="preserve">
+    <value>Все таблицы для документа</value>
+  </data>
+  <data name="DocInfo_ColTitle_FromDocText" xml:space="preserve">
+    <value>Документ</value>
+  </data>
+  <data name="DocInfo_Menu_ToolTip_RefInfo" xml:space="preserve">
+    <value>Показывает поля в других документах, которые могут ссылаться на документы</value>
+  </data>
+  <data name="DocInfo_Menu_View_RefInfo" xml:space="preserve">
+    <value>Схема (возможные ссылки)</value>
+  </data>
+  <data name="Cmd_Menu_View_ShowHiddenDocs" xml:space="preserve">
+    <value>Показать удаленные документы</value>
+  </data>
+  <data name="DocInfo_Menu_View_SingleRef" xml:space="preserve">
+    <value>Детальная информация о ссылке</value>
+  </data>
+  <data name="DocInfo_Msg_DocTypeNotSelected" xml:space="preserve">
+    <value>Вид документа не выбран</value>
+  </data>
+  <data name="DocInfo_Name_DocText" xml:space="preserve">
+    <value>Текстовое представление</value>
+  </data>
+  <data name="DocInfo_Phase_DocRefs" xml:space="preserve">
+    <value>Получение таблицы ссылок на документ</value>
+  </data>
+  <data name="DocInfo_Title_Form" xml:space="preserve">
+    <value>{0} Id={1} - Информация о документе</value>
+  </data>
+  <data name="DocInfo_ToolTip_ChangeTime" xml:space="preserve">
+    <value>Дата и время последнего изменения документа.
+Если после создания документ не редактировался и не изменялся другими способами, то поле пустое.
+Подробнее можно посмотреть в таблице 'История'</value>
+  </data>
+  <data name="DocInfo_ToolTip_ChangeUserName" xml:space="preserve">
+    <value>Пользователь, который последним редактировал документ или выполнил команду, которая привела к изменению документа.
+Если после создания документ не изменялся, то поле пустое.
+Подробнее можно посмотреть в таблице 'История'</value>
+  </data>
+  <data name="DocInfo_ToolTip_CreateTime" xml:space="preserve">
+    <value>Дата и время создания документа</value>
+  </data>
+  <data name="DocInfo_ToolTip_CreateUserName" xml:space="preserve">
+    <value>Пользователь, который создал документ</value>
+  </data>
+  <data name="DocInfo_ToolTip_Debug_DocTables" xml:space="preserve">
+    <value>Показывает неотформатированные таблицы данных для документа</value>
+  </data>
+  <data name="DocInfo_ToolTip_DocText" xml:space="preserve">
+    <value>Представление документа в виде строки текста.
+Используется для отображения выбранного документа в комбоблоках, когда выпадающий список закрыт.</value>
+  </data>
+  <data name="DocInfo_ToolTip_Id" xml:space="preserve">
+    <value>Внутренний идентификатор строки документа в таблице базы данных.
+Генерируется автоматически при создании документа и никогда не изменяется.
+Каждый документ данного типа имеет уникальный идентификатор.</value>
+  </data>
+  <data name="DocInfo_ToolTip_Status" xml:space="preserve">
+    <value>Может принимать значения 'Действует' или 'Удален'.
+Удаленные документы не показываются в справочниках, если не включен режим 'Показывать удаленные документы'.
+Чтобы восстановить удаленный документ, нужно открыть его на редактирование и сохранить.</value>
+  </data>
+  <data name="DocInfo_ToolTip_Version" xml:space="preserve">
+    <value>Версия изменения документа.
+После создания документа он имеет номер версии '1', который затем увеличивается при каждом редактировании или другом изменении документа.
+Подробнее можно посмотреть в таблице 'История'.</value>
+  </data>
+  <data name="DocInfo_Msg_AllTypeDocs" xml:space="preserve">
+    <value>Документы всех типов</value>
+  </data>
+  <data name="DocInfo_Msg_DocStatusActive" xml:space="preserve">
+    <value>Действует</value>
+  </data>
+  <data name="DocInfo_Msg_DocStatusDeleted" xml:space="preserve">
+    <value>Удален</value>
+  </data>
+  <data name="DocInfo_Msg_RefsImpossible" xml:space="preserve">
+    <value>На документы '{0}' не может быть ссылок из других документов</value>
+  </data>
+  <data name="DocInfo_Title_FilterFromDocs" xml:space="preserve">
+    <value>Ссылки из документов</value>
+  </data>
+  <data name="DocInfo_Title_FilterToDoc" xml:space="preserve">
+    <value>Документ</value>
+  </data>
+  <data name="DocInfo_Title_MainOutItem" xml:space="preserve">
+    <value>Информация о документе '{0}', DocId={1}</value>
+  </data>
+  <data name="DocInfo_Title_RefOutItem" xml:space="preserve">
+    <value>Ссылки на документ '{0}', DocId={1}</value>
+  </data>
+  <data name="DocInfo_ToolTip_RefInfoPage" xml:space="preserve">
+    <value>Возможные ссылки на документы '{0}'</value>
+  </data>
+  <data name="DocInfo_ToolTip_SchemaColFromImage" xml:space="preserve">
+    <value>Значок вида документа / поддокумента, в котором есть ссылочное поле</value>
+  </data>
+  <data name="DocInfo_ColTitle_RefFromColumn" xml:space="preserve">
+    <value>Ссылочное поле</value>
+  </data>
+  <data name="DocInfo_ColTitle_RefFromDoc" xml:space="preserve">
+    <value>Ссылающийся документ</value>
+  </data>
+  <data name="Common_Phase_ApplyChanges" xml:space="preserve">
+    <value>Запись изменений в документах</value>
+  </data>
+  <data name="Common_Phase_FillSelect" xml:space="preserve">
+    <value>Запрос таблицы '{0}'</value>
+  </data>
+  <data name="Common_Phase_GetBinData" xml:space="preserve">
+    <value>Получение двоичных данных</value>
+  </data>
+  <data name="Common_Phase_GetDBFile" xml:space="preserve">
+    <value>Получение файла из базы данных</value>
+  </data>
+  <data name="Common_Phase_GetDocHistTable" xml:space="preserve">
+    <value>Получение таблицы истории документа</value>
+  </data>
+  <data name="Common_Phase_GetDocRefTable" xml:space="preserve">
+    <value>Получение таблицы ссылок для документа</value>
+  </data>
+  <data name="Common_Phase_GetUserActionDocTable" xml:space="preserve">
+    <value>Получение таблицы документов для действия пользователя</value>
+  </data>
+  <data name="Common_Phase_GetUserActionTable" xml:space="preserve">
+    <value>Получение списка действий пользователя</value>
+  </data>
+  <data name="Common_Phase_LoadCachePages" xml:space="preserve">
+    <value>Получение кэшированных страниц для {0}</value>
+  </data>
+  <data name="Common_Phase_LoadDocData" xml:space="preserve">
+    <value>Загрузка документов '{0}'</value>
+  </data>
+  <data name="Common_Phase_LoadSubDocData" xml:space="preserve">
+    <value>Загрузка поддокументов</value>
+  </data>
+  <data name="DocInfo_ColTitle_SchemaColFrom" xml:space="preserve">
+    <value>Ссылка из</value>
+  </data>
+  <data name="DocInfo_ColTitle_SchemaColTo" xml:space="preserve">
+    <value>Ссылка на</value>
+  </data>
+  <data name="DocInfo_ToolTip_SchemaColToImage" xml:space="preserve">
+    <value>Значок вида документа / поддокумента, на который выполняется ссылка</value>
+  </data>
+  <data name="DocProvider_ErrTitle_DocUpdating" xml:space="preserve">
+    <value>Ошибка обновления просмотра после записи изменений для документов '{0}'</value>
+  </data>
+  <data name="DocProvider_Err_ApplyChangesNoResults" xml:space="preserve">
+    <value>При вызове OnApplyChanges() не получен ответный набор данных при ReloadData=true</value>
+  </data>
+  <data name="DocSelectDialog_ErrTitle_InitSelection" xml:space="preserve">
+    <value>Ошибка выбора исходного документа</value>
+  </data>
+  <data name="DocSelectDialog_Err_IsEmptyMultiSelect" xml:space="preserve">
+    <value>Документы должны быть выбраны</value>
+  </data>
+  <data name="DocSelectDialog_Err_IsEmptySingleSelect" xml:space="preserve">
+    <value>Документ должен быть выбран</value>
+  </data>
+  <data name="DocSelectDialog_Title_MultiSelect" xml:space="preserve">
+    <value>Выбор документов '{0}'</value>
+  </data>
+  <data name="DocSelectDialog_Title_SingleSelect" xml:space="preserve">
+    <value>Выбор документа '{0}'</value>
+  </data>
+  <data name="Common_Err_NoMultiEdit" xml:space="preserve">
+    <value>Множественное редактирование документов '{0}' не разрешено</value>
+  </data>
+  <data name="DocSel_Err_NoSelRows" xml:space="preserve">
+    <value>Строки не выбраны</value>
+  </data>
+  <data name="DocSel_Err_NothingAdded" xml:space="preserve">
+    <value>Новых ссылок не добавлено</value>
+  </data>
+  <data name="DocSel_Err_NothingRemoved" xml:space="preserve">
+    <value>Ни одной ссылки не удалено</value>
+  </data>
+  <data name="DocSel_Menu_Edit_CopyDocSel" xml:space="preserve">
+    <value>Скопировать всю выборку документов</value>
+  </data>
+  <data name="DocSel_Menu_View_CloneDocSel" xml:space="preserve">
+    <value>Открыть копию выборки</value>
+  </data>
+  <data name="DocSel_Msg_DeleteDocs" xml:space="preserve">
+    <value>Сами документы</value>
+  </data>
+  <data name="DocSel_Msg_DeleteRefs" xml:space="preserve">
+    <value>Ссылки из этой выборки документов (документы останутся)</value>
+  </data>
+  <data name="DocSel_Msg_PasteAdd" xml:space="preserve">
+    <value>Добавить ссылки (объединение выборок)</value>
+  </data>
+  <data name="DocSel_Msg_PasteCross" xml:space="preserve">
+    <value>Оставить общие (пересечение выборок)</value>
+  </data>
+  <data name="DocSel_Msg_PasteRemove" xml:space="preserve">
+    <value>Удалить ссылки (разность выборок)</value>
+  </data>
+  <data name="DocSel_Title_Clone" xml:space="preserve">
+    <value>Копия выборки</value>
+  </data>
+  <data name="DocSel_Title_Delete" xml:space="preserve">
+    <value>Удаление строк документов '{0}' ({1} шт.)</value>
+  </data>
+  <data name="DocSel_Title_DeleteGroupTitle" xml:space="preserve">
+    <value>Что требуется удалить</value>
+  </data>
+  <data name="DocSel_Title_Paste" xml:space="preserve">
+    <value>Вставка выборки документов</value>
+  </data>
+  <data name="DocSel_Title_PasteGroupTitle" xml:space="preserve">
+    <value>Действие с выборкой</value>
+  </data>
+  <data name="SubDocSelectDialog_ErrTitle_InitSelection" xml:space="preserve">
+    <value>Ошибка выбора исходного поддокумента</value>
+  </data>
+  <data name="SubDocSelectDialog_Title_MultiSelect" xml:space="preserve">
+    <value>Выбор поддокументов '{0}'</value>
+  </data>
+  <data name="SubDocSelectDialog_Title_SingleSelect" xml:space="preserve">
+    <value>Выбор поддокумента '{0}'</value>
+  </data>
+  <data name="Common_Err_SingleDocRequired" xml:space="preserve">
+    <value>Должен быть выбран единственный документ</value>
+  </data>
+  <data name="DocTypeUI)_Msg_NoGroupDisplayName" xml:space="preserve">
+    <value>Документы без иерархии</value>
+  </data>
+  <data name="DocTypeUI_Msg_AllGroupsDisplayName" xml:space="preserve">
+    <value>Все документы</value>
+  </data>
+  <data name="EFPDocTableView_Menu_Edit_OpenGroupWindow" xml:space="preserve">
+    <value>Открыть просмотр групп в отдельном окне</value>
+  </data>
+  <data name="EFPDocTableView_Menu_View_GroupCBVisible" xml:space="preserve">
+    <value>Выпадающий список групп</value>
+  </data>
+  <data name="EFPDocTableView_Menu_View_GroupTreeVisible" xml:space="preserve">
+    <value>Дерево групп</value>
+  </data>
+  <data name="EFPDocTableView_Menu_View_HideNestedGroups" xml:space="preserve">
+    <value>Скрыть документы во вложенных группах</value>
+  </data>
+  <data name="EFPDocTableView_Name_Default" xml:space="preserve">
+    <value>Составная панель просмотра документов</value>
+  </data>
+  <data name="EFPDocTableView_Name_Filters" xml:space="preserve">
+    <value>Фильтры</value>
+  </data>
+  <data name="EFPDocTableView_Name_Grid" xml:space="preserve">
+    <value>Таблица документов</value>
+  </data>
+  <data name="EFPDocTableView_Name_GroupComboBox" xml:space="preserve">
+    <value>Выпадающий список групп</value>
+  </data>
+  <data name="EFPDocTableView_Name_GroupTree" xml:space="preserve">
+    <value>Дерево групп</value>
+  </data>
+  <data name="EFPDocTableView_Name_Tree" xml:space="preserve">
+    <value>Дерево документов</value>
+  </data>
+  <data name="EFPSubDocTableView_Name_Default" xml:space="preserve">
+    <value>Составная панель просмотра поддокументов</value>
+  </data>
+  <data name="EFPSubDocTableView_Name_Grid" xml:space="preserve">
+    <value>Таблица поддокументов</value>
+  </data>
+  <data name="EFPSubDocTableView_Name_Tree" xml:space="preserve">
+    <value>Дерево поддокументов</value>
+  </data>
+  <data name="Cmd_Menu_Service_RecalcAllDocs" xml:space="preserve">
+    <value>&amp;Все существующие</value>
+  </data>
+  <data name="Cmd_Menu_Service_RecalcDocsInView" xml:space="preserve">
+    <value>Все в &amp;просмотре</value>
+  </data>
+  <data name="Cmd_Menu_Service_RecalcDocsMenu" xml:space="preserve">
+    <value>Пересчитать вычисляемые поля</value>
+  </data>
+  <data name="Cmd_Menu_Service_RecalcSelectedDocs" xml:space="preserve">
+    <value>В&amp;ыделенные</value>
+  </data>
+  <data name="Common_Phase_RecalcColumns" xml:space="preserve">
+    <value>Пересчет вычисляемых полей документов '{0}'</value>
+  </data>
+  <data name="Common_ToolTip_DocImageColumn" xml:space="preserve">
+    <value>Значок документа '{0}'</value>
+  </data>
+  <data name="DocSel_Title_SelectedDocs" xml:space="preserve">
+    <value>Выбранные документы '{0}'</value>
+  </data>
+  <data name="Editor_ErrTitle_AlreadyOpen" xml:space="preserve">
+    <value>Повторное открытие редактора</value>
+  </data>
+  <data name="Editor_Err_AlreadyOpen" xml:space="preserve">
+    <value>Редактор уже открыт.</value>
+  </data>
+  <data name="Editor_Err_AlreadyOpenCannotActivate" xml:space="preserve">
+    <value>Так как есть открытые диалоговые окна, нельзя активировать окно редактора.</value>
+  </data>
+  <data name="Editor_Err_AlreadyOpenExtra" xml:space="preserve">
+    <value>Открытый редактор использует груповое редактирование документов, в том числе других.</value>
+  </data>
+  <data name="Editor_Err_AlreadyOpenPartial" xml:space="preserve">
+    <value>Вы пытаетесь открыть сразу несколько документов, но не все они присутствуют в открытом редакторе.</value>
+  </data>
+  <data name="EFPDataView_Err_NoData" xml:space="preserve">
+    <value>Набор данных не присоединен к просмотру</value>
+  </data>
+  <data name="GroupDocTypeUI_Arg_NoTextColumn" xml:space="preserve">
+    <value>У документов '{0}' нет ни одного текстового столбца. Эти документы не образуют дерево групп</value>
+  </data>
+  <data name="Common_ErrTitle_AccessDenied" xml:space="preserve">
+    <value>Доступ запрещен</value>
+  </data>
+  <data name="Common_ErrTitle_CannotDeleteDoc" xml:space="preserve">
+    <value>Нельзя удалить документ</value>
+  </data>
+  <data name="Common_Err_DocTypeReadOnly" xml:space="preserve">
+    <value>У Вас нет права добавлять, удалять или редактировать документы '{0}'. Есть право только на просмотр.</value>
+  </data>
+  <data name="DocTypePermissionUI_Name_Default" xml:space="preserve">
+    <value>Вид документов</value>
+  </data>
+  <data name="DocTypePermissionUI_Name_SelMode" xml:space="preserve">
+    <value>Режим выбора все документы / выбранный тип</value>
+  </data>
+  <data name="DocTypeUserPermissionUI_Err_MultiDocTypesNotSupported" xml:space="preserve">
+    <value>В редактируемом разрешении указано несколько видов документов. Редактирование таких разрешений не поддерживается</value>
+  </data>
+  <data name="DocTypeUserPermissionUI_Msg_AllDocTypes" xml:space="preserve">
+    <value>[ Все типы документов ]</value>
+  </data>
+  <data name="DocTypeViewHistoryPermissionUI_Name_Default" xml:space="preserve">
+    <value>Просмотр истории</value>
+  </data>
+  <data name="Editor_ErrTitle_LockForEdit" xml:space="preserve">
+    <value>Нельзя редактировать документ</value>
+  </data>
+  <data name="Editor_ErrTitle_Run" xml:space="preserve">
+    <value>Ошибка запуска редактора</value>
+  </data>
+  <data name="Editor_Err_LockForEdit" xml:space="preserve">
+    <value>Не удалось установить блокировку для редактирования. Документ будет открыт для просмотра.</value>
+  </data>
+  <data name="Editor_Err_LockedByUser" xml:space="preserve">
+    <value>Документ заблокирован пользователем {0}</value>
+  </data>
+  <data name="Editor_Err_StartWithChangesInView" xml:space="preserve">
+    <value>Нельзя устанавливать свойство 'StartWithChanges' в режиме просмотра</value>
+  </data>
+  <data name="Editor_Msg_ActionMulti" xml:space="preserve">
+    <value>{0} документов '{1}' ({2} шт.)</value>
+  </data>
+  <data name="Editor_Msg_ActionSingle" xml:space="preserve">
+    <value>{0} документа '{1}'</value>
+  </data>
+  <data name="Editor_Msg_DeleteMultiDocs" xml:space="preserve">
+    <value>Удалить документы ({0})?</value>
+  </data>
+  <data name="Editor_Msg_DeleteSingleDoc" xml:space="preserve">
+    <value>Удалить документ '{0}' ({1})?</value>
+  </data>
+  <data name="Editor_Msg_TitleEditRestore" xml:space="preserve">
+    <value>Редактирование / восстановление</value>
+  </data>
+  <data name="Editor_Name_ExternalChangeInfo" xml:space="preserve">
+    <value>Внешние изменения</value>
+  </data>
+  <data name="Editor_Name_SubDocsChangeInfo" xml:space="preserve">
+    <value>Изменения в поддокументах</value>
+  </data>
+  <data name="Editor_Phase_EditorOpen" xml:space="preserve">
+    <value>Открытие редактора</value>
+  </data>
+  <data name="Enabled_Msg_False" xml:space="preserve">
+    <value>Запрещено</value>
+  </data>
+  <data name="Enabled_Msg_True" xml:space="preserve">
+    <value>Разрешено</value>
+  </data>
+  <data name="ViewOtherUsersActionPermissionUI_Name_Default" xml:space="preserve">
+    <value>Просмотр действий других пользователей</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopyMultiDocRefs" xml:space="preserve">
+    <value>Копировать ссылки на документы</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopySingleDocRef" xml:space="preserve">
+    <value>Копировать ссылку на документ</value>
+  </data>
+  <data name="Cmd_Menu_Edit_DeleteMultiDocs" xml:space="preserve">
+    <value>Удалить эти документы</value>
+  </data>
+  <data name="Cmd_Menu_Edit_DeleteSingleDoc" xml:space="preserve">
+    <value>Удалить этот документ</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ReopenForEdit" xml:space="preserve">
+    <value>Переоткрыть для редактирования</value>
+  </data>
+  <data name="Cmd_Menu_File_SendToDocSelMultiDocs" xml:space="preserve">
+    <value>Открыть выборку документов</value>
+  </data>
+  <data name="Cmd_Menu_File_SendToDocSelSingleDoc" xml:space="preserve">
+    <value>Открыть выборку с документом</value>
+  </data>
+  <data name="Cmd_Menu_View_ViewSourceDoc" xml:space="preserve">
+    <value>Просмотр исходного документа</value>
+  </data>
+  <data name="Common_Err_Cancelled" xml:space="preserve">
+    <value>Отменено</value>
+  </data>
+  <data name="DocInfo_Title_SelectDoc" xml:space="preserve">
+    <value>Документ</value>
+  </data>
+  <data name="DocumentEditor_ErrTitle_Deleting" xml:space="preserve">
+    <value>Редактор документа. Ошибка удаления данных из базы данных</value>
+  </data>
+  <data name="DocumentEditor_ErrTitle_InitNewValues" xml:space="preserve">
+    <value>Ошибка иницилизации новых значений документа '{0}'</value>
+  </data>
+  <data name="DocumentEditor_ErrTitle_ReloadValue" xml:space="preserve">
+    <value>Ошибка при считывании значения '{0}'</value>
+  </data>
+  <data name="DocumentEditor_ErrTitle_SaveColumnValues" xml:space="preserve">
+    <value>Ошибка сохранения копий значений документа '{0}' для будущего использования</value>
+  </data>
+  <data name="DocumentEditor_Err_NestedWriting" xml:space="preserve">
+    <value>Предыдущая запись еще не закончена</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_ApplyEdit" xml:space="preserve">
+    <value>Сохранить внесенные изменения и продолжить редактирование</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_ApplyInsert" xml:space="preserve">
+    <value>Создать новую запись и продолжить ее редактирование</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_ApplyInsertApplied" xml:space="preserve">
+    <value>Сохранить внесенные изменения и продолжить редактирование созданной записи</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_CancelDelete" xml:space="preserve">
+    <value>Закрыть просмотр, не удаляя запись</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_CancelEditApplied" xml:space="preserve">
+    <value>Закончить редактирование без сохранения изменений, внесенных после нажатия кнопки 'Запись'</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_CancelEditInsert" xml:space="preserve">
+    <value>Закончить редактирование без сохранения внесенных изменений</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_CancelInsertApplied" xml:space="preserve">
+    <value>Закончить редактирование созданной записи, без сохранения изменений, внесенных после нажатия кнопки 'Запись'</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_More" xml:space="preserve">
+    <value>Дополнительные команды редактора</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkDelete" xml:space="preserve">
+    <value>Удалить просматриваемую запись</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkEdit" xml:space="preserve">
+    <value>Закончить редактирование, сохранив внесенные изменения</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkInsert" xml:space="preserve">
+    <value>Создать новую запись и закончить редактирование</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkInsertApplied" xml:space="preserve">
+    <value>Закончить редактирование созданной записи, сохранив изменения, внесенных после нажатия кнопки 'Запись'</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkView" xml:space="preserve">
+    <value>Закрыть просмотр</value>
+  </data>
+  <data name="Editor_ErrTitle_LockForInsert" xml:space="preserve">
+    <value>Ошибка установки блокировки созданных документов</value>
+  </data>
+  <data name="Editor_ErrTitle_Writing" xml:space="preserve">
+    <value>Ошибка записи в базу данных</value>
+  </data>
+  <data name="Editor_Err_DocNotWritten" xml:space="preserve">
+    <value>Документ '{0}' не был записан</value>
+  </data>
+  <data name="Editor_Err_LockForInsert" xml:space="preserve">
+    <value>Не удалось установить блокировку для созданных документов. Документ заблокирован</value>
+  </data>
+  <data name="EFPDataView_Err_ActivatingNewRows" xml:space="preserve">
+    <value>Не удалось активировать добавленные строки в просмотре</value>
+  </data>
+  <data name="Cmd_Menu_SendTo_DocSel" xml:space="preserve">
+    <value>Выборка документов</value>
+  </data>
+  <data name="Common_Phase_DocSelCreation" xml:space="preserve">
+    <value>Создание выборки документов</value>
+  </data>
+  <data name="EFPAllSubDocComboBox_Err_NoDocumentEditor" xml:space="preserve">
+    <value>Нельзя устанавливать свойство, т.к. просмотр не относится к DocumentEditor</value>
+  </data>
+  <data name="EFPComboBox_ErrTitle_ClearClick" xml:space="preserve">
+    <value>Ошибка очистки значения комбоблока '{0}'</value>
+  </data>
+  <data name="EFPComboBox_ErrTitle_PopupClick" xml:space="preserve">
+    <value>Ошибка при выборе из комбоблока '{0}'</value>
+  </data>
+  <data name="EFPComboBox_Err_IsEmpty" xml:space="preserve">
+    <value>Значение не выбрано</value>
+  </data>
+  <data name="EFPComboBox_Msg_Empty" xml:space="preserve">
+    <value>[ нет ]</value>
+  </data>
+  <data name="EFPDataView_Err_RowWithoutId" xml:space="preserve">
+    <value>Для строки нет идентификатора</value>
+  </data>
+  <data name="EFPDBxErrorGridView_Err_NoDocs" xml:space="preserve">
+    <value>Нет связанных с сообщением документов</value>
+  </data>
+  <data name="EFPDBxFilterGrid_Err_DocSelMismatch" xml:space="preserve">
+    <value>Выборка документов в буфере обмена не подходит фильтру '{0}'</value>
+  </data>
+  <data name="EFPDBxFilterGrid_Err_NotSupportedFilter" xml:space="preserve">
+    <value>Фильтр '{0}' не поддерживает вставку выборки документов</value>
+  </data>
+  <data name="EFPDBxGridProducer_Name_RefDocImage" xml:space="preserve">
+    <value>{0} (значок)</value>
+  </data>
+  <data name="EFPDBxGridProducer_Name_RefDocText" xml:space="preserve">
+    <value>{0} (текст)</value>
+  </data>
+  <data name="Common_ColTitle_DocText" xml:space="preserve">
+    <value>Документ</value>
+  </data>
+  <data name="Common_Err_DocNotInFixedList" xml:space="preserve">
+    <value>Выбранного документа нет в списке допустимых</value>
+  </data>
+  <data name="Common_Err_InknownEditMode" xml:space="preserve">
+    <value>Неизвестный режим редактирования</value>
+  </data>
+  <data name="Common_Err_NoSelectedRow" xml:space="preserve">
+    <value>Строка не выбрана</value>
+  </data>
+  <data name="Common_Phase_ValidateSelDocs" xml:space="preserve">
+    <value>Проверка выбранных документов</value>
+  </data>
+  <data name="EFPComboBox_Err_DocDeleted" xml:space="preserve">
+    <value>Документ '{0}' удален</value>
+  </data>
+  <data name="EFPComboBox_Err_DocFilterMismatch" xml:space="preserve">
+    <value>Документ не проходит фильтр '{0}'</value>
+  </data>
+  <data name="EFPDataView_ErrTitle_RowCountLimited" xml:space="preserve">
+    <value>Количество строк в просмотре было ограничено</value>
+  </data>
+  <data name="EFPDataView_Err_AuxFilterGroupIds" xml:space="preserve">
+    <value>Нельзя устанавливать свойство AuxFilterGroupIds для просмотра документов '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_DocsMismatchFilters" xml:space="preserve">
+    <value>Выбранные документы ({0} из {1}) не проходят условие фильтра</value>
+  </data>
+  <data name="EFPDataView_Err_PasteNoNewDocs" xml:space="preserve">
+    <value>Все документы '{0}' в буфере обмена ({1} шт.) уже есть в списке</value>
+  </data>
+  <data name="EFPDataView_Err_RowCountLimited" xml:space="preserve">
+    <value>Количество строк в просмотре было ограничено до {0}. Используйте фильтрацию документов</value>
+  </data>
+  <data name="EFPDataView_ShowHiddenDocsNotSupported" xml:space="preserve">
+    <value>Просмотр удаленных документов не поддерживается</value>
+  </data>
+  <data name="EFPDataView_Title_AddDocs" xml:space="preserve">
+    <value>Добавление документов '{0}' в просмотр</value>
+  </data>
+  <data name="EFPDataView_Title_ChangeDocRef" xml:space="preserve">
+    <value>Изменение ссылки на документ</value>
+  </data>
+  <data name="EFPDBxTextSearch_Err_NoRowsFound" xml:space="preserve">
+    <value>Нет подходящих строк</value>
+  </data>
+  <data name="EFPDBxTextSearch_Title_DocSel" xml:space="preserve">
+    <value>Результаты поиска</value>
+  </data>
+  <data name="EFPDBxTextSearch_ToolTip_DocSel" xml:space="preserve">
+    <value>Вместо поиска, построить выборку документов на основании флажков 'Условия поиска' и 'Где искать'.
+Переключатели 'Направление поиска' и 'Откуда начать' игнорируются.</value>
+  </data>
+  <data name="UnknownUserPermissionUI_Err_Edit" xml:space="preserve">
+    <value>Нельзя редактировать неизвестное разрешение</value>
+  </data>
+  <data name="UnknownUserPermissionUI_Name_Default" xml:space="preserve">
+    <value>Неизвестное разрешение</value>
+  </data>
+  <data name="UserActionReport_ErrTitle_UnknownDocType" xml:space="preserve">
+    <value>Неизвестный тип документа</value>
+  </data>
+  <data name="UserActionReport_Err_UnknownTableId" xml:space="preserve">
+    <value>Тип документа {0} не зарегистрирован. Вероятно, модуль, который использовал такие документы, сейчас не подключен</value>
+  </data>
+  <data name="UserActionReport_Err_UserHasNoAction" xml:space="preserve">
+    <value>Для пользователя нет действий</value>
+  </data>
+  <data name="UserActionReport_Err_UserNotSelected" xml:space="preserve">
+    <value>Пользователь не выбран</value>
+  </data>
+  <data name="UserActionReport_Msg_AllUsers" xml:space="preserve">
+    <value>[ Все пользователи ]</value>
+  </data>
+  <data name="UserActionReport_Name_FindLastDay" xml:space="preserve">
+    <value>Найти последнюю дату</value>
+  </data>
+  <data name="UserActionReport_Name_UserFilter" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="UserActionReport_Title_Default" xml:space="preserve">
+    <value>Просмотр действий пользователя</value>
+  </data>
+  <data name="UserActionReport_Title_MainPage" xml:space="preserve">
+    <value>Действия</value>
+  </data>
+  <data name="UserActionReport_ToolTip_FindLastDay" xml:space="preserve">
+    <value>Устанавливает период на последний день, в который для выбранного пользователя есть действия.
+Поле 'Один тип документов' не учитывается</value>
+  </data>
+  <data name="UserActionReport_ToolTip_FirstDate" xml:space="preserve">
+    <value>Начальная дата</value>
+  </data>
+  <data name="UserActionReport_ToolTip_LastDate" xml:space="preserve">
+    <value>Конечная дата</value>
+  </data>
+  <data name="UserActionReport_ToolTip_MainPage" xml:space="preserve">
+    <value>Список действий</value>
+  </data>
+  <data name="UserActionReport_ToolTip_User" xml:space="preserve">
+    <value>Пользователь, действия которого просматриваются</value>
+  </data>
+  <data name="UserPermissionUI_ColTitle_ObjectText" xml:space="preserve">
+    <value>Разрешение</value>
+  </data>
+  <data name="UserPermissionUI_ColTitle_ValueText" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="UserPermissionUI_ErrTitle_Read" xml:space="preserve">
+    <value>Ошибка загрузки данных для разрешения '{0}'. Будет использовано значение по умолчанию.</value>
+  </data>
+  <data name="UserPermissionUI_Err_EditNotImplemented" xml:space="preserve">
+    <value>Редактирование разрешения '{0}' не реализовано</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoClassCode" xml:space="preserve">
+    <value>Не задан класс разрешения</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoColumnValue" xml:space="preserve">
+    <value>Не установлено значение поля '{0}'</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoCreator" xml:space="preserve">
+    <value>Нельзя добавить интерфейс разрешения '{0}', для которого нет объекта в списке Creators</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoUI" xml:space="preserve">
+    <value>Нельзя просмотреть разрешение типа '{0}', т.к. для него не зарегистрирован объект пользовательского интерфейса</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoView" xml:space="preserve">
+    <value>Просмотр разрешений '{0}' не предусмотрен</value>
+  </data>
+  <data name="UserPermissionUI_Name_Default" xml:space="preserve">
+    <value>Класс '{0}'</value>
+  </data>
+  <data name="UserPermissionUI_Name_Editor" xml:space="preserve">
+    <value>Редактор разрешения</value>
+  </data>
+  <data name="UserPermissionUI_Name_ValueImage" xml:space="preserve">
+    <value>Значок значения разрешения</value>
+  </data>
+  <data name="UserPermissionUI_Title_ClassList" xml:space="preserve">
+    <value>Класс разрешения</value>
+  </data>
+  <data name="UserPermissionUI_Title_SelectClass" xml:space="preserve">
+    <value>Выбор класса разрешения</value>
+  </data>
+  <data name="UserPermissionUI_ToolTip_Image" xml:space="preserve">
+    <value>{0}
+Класс разрешения: {1};</value>
+  </data>
+</root>

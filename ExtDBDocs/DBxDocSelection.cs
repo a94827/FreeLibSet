@@ -30,7 +30,7 @@ namespace FreeLibSet.Data.Docs
     public DBxDocSelection(string dbIdentity)
     {
       if (String.IsNullOrEmpty(dbIdentity))
-        throw new ArgumentNullException("dbIdentity");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("dbIdentity");
 
       _Data = new DataSet();
       //_Data.RemotingFormat = SerializationFormat.Binary;
@@ -92,12 +92,12 @@ namespace FreeLibSet.Data.Docs
     /// работающей с другой базой данных
     /// </summary>
     public string DBIdentity { get { return _DBIdentity; } }
-    private string _DBIdentity;
+    private readonly string _DBIdentity;
 
     /// <summary>
     /// Основные данные. В каждой таблице имеется единственное поле Id
     /// </summary>
-    private DataSet _Data;
+    private readonly DataSet _Data;
 
     /// <summary>
     /// Список имен таблиц, входящих в выборку
@@ -193,7 +193,7 @@ namespace FreeLibSet.Data.Docs
     {
 #if DEBUG
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 #endif
       int p = _Data.Tables.IndexOf(tableName);
       if (p >= 0)
@@ -308,7 +308,7 @@ namespace FreeLibSet.Data.Docs
     public int Add(string tableName, DataTable table)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       if (table == null)
         return 0;
       if (table.Rows.Count == 0)
@@ -481,7 +481,7 @@ namespace FreeLibSet.Data.Docs
     public int Remove(string tableName, DataTable table)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       if (table == null)
         return 0;
       if (table.Rows.Count == 0)
@@ -983,7 +983,7 @@ namespace FreeLibSet.Data.Docs
 #endif
 
       if (IsEmpty)
-        return "Нет документов";
+        return Res.DBxDocSelection_Msg_Empty;
       if (TotalCount == 1)
       {
         DBxDocType docType = textHandlers.DocTypes[_Data.Tables[0].TableName];

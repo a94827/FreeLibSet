@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -6,6 +9,7 @@ using System.Xml;
 using FreeLibSet.Core;
 using FreeLibSet.IO;
 using FreeLibSet.Shell;
+using FreeLibSet.Models.SpreadsheetBase;
 
 namespace FreeLibSet.Reporting
 {
@@ -14,6 +18,28 @@ namespace FreeLibSet.Reporting
   /// </summary>
   public class BRFileExcel2003Xml : BRFileCreator
   {
+
+    #region Конструктор
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="measurer"></param>
+    public BRFileExcel2003Xml(IBRMeasurer measurer)
+    {
+      if (measurer == null)
+        throw new ArgumentNullException("measurer");
+      _Measurer = measurer;
+    }
+
+    /// <summary>
+    /// Объект для измерения текста. Задается в конструкторе
+    /// </summary>
+    protected IBRMeasurer Measurer { get { return _Measurer; } }
+    private readonly IBRMeasurer _Measurer;
+
+    #endregion
+
     #region Управляющие свойства
 
     /// <summary>
@@ -137,6 +163,24 @@ namespace FreeLibSet.Reporting
       SetAttr(elFontDef, "ss:FontName", report.DefaultCellStyle.FontName, nmspcSS);
       SetAttr(elFontDef, "ss:Size", report.DefaultCellStyle.FontHeightPt.ToString(StdConvert.NumberFormat), nmspcSS);
 
+      if (report.HasLinks)
+      {
+        // TODO: Не работает смена цвета при посещении ссылки
+        XmlElement elStyleHL = xmlDoc.CreateElement("Style", nmspcSS);
+        elStyles.AppendChild(elStyleHL);
+        SetAttr(elStyleHL, "ss:ID", "shl", nmspcSS);
+        SetAttr(elStyleHL, "ss:Name", "Hyperlink", nmspcSS);
+        XmlElement elFontHL = xmlDoc.CreateElement("Font", nmspcSS);
+        elStyleHL.AppendChild(elFontHL);
+        SetAttr(elFontHL, "ss:FontName", report.DefaultCellStyle.FontName, nmspcSS);
+        SetAttr(elFontHL, "ss:Size", report.DefaultCellStyle.FontHeightPt.ToString(StdConvert.NumberFormat), nmspcSS);
+        SetAttr(elFontHL, "ss:Color", MyColorStr(BRFileTools.LinkForeColor), nmspcSS);
+        SetAttr(elFontHL, "ss:Underline", "Single", nmspcSS);
+      }
+
+      XmlElement elNames = xmlDoc.CreateElement("Names", nmspcSS);
+      elWholeDoc.AppendChild(elNames);
+
       StringBuilder sb = new StringBuilder();
       Dictionary<string, int> cellStyleDict = new Dictionary<string, int>(); // ключ-описание стиля, значение N для стиля с именем "sN"
 
@@ -200,6 +244,7 @@ namespace FreeLibSet.Reporting
 
         #region Перебор полос
 
+        int rowCount = 0;
         for (int j = 0; j < section.Bands.Count; j++)
         {
           #region Зазор между полосами
@@ -211,6 +256,7 @@ namespace FreeLibSet.Reporting
           {
             XmlElement elGapRow = xmlDoc.CreateElement("Row", nmspcSS);
             elTable.AppendChild(elGapRow);
+            rowCount++;
             SetAttr(elGapRow, "ss:AutoFitHeight", "0", nmspcSS);
             SetAttr(elGapRow, "ss:Height", StdConvert.ToString((int)(gap / 254.0 * 72.0)), nmspcSS);
           }
@@ -228,6 +274,7 @@ namespace FreeLibSet.Reporting
             sel.RowIndex = k;
             XmlElement elRow = xmlDoc.CreateElement("Row", nmspcSS);
             elTable.AppendChild(elRow);
+            rowCount++;
             if (sel.RowInfo.Height != BRReport.AutoRowHeight)
             {
               SetAttr(elRow, "ss:AutoFitHeight", "0", nmspcSS);
@@ -266,6 +313,18 @@ namespace FreeLibSet.Reporting
                     hasNewLine = true;
                 }
 
+                if (sel.HasLink)
+                {
+                  if (sel.LinkData[0] == '#')
+                  {
+                    // для внутренних ссылок записывается с "#"
+                    string sRefTo = BRFileTools.GetExcelBookmarkName(sel.LinkData.Substring(1));
+                    SetAttr(elCell, "ss:HRef", "#"+sRefTo, nmspcSS);
+                  }
+                  else
+                    SetAttr(elCell, "ss:HRef", sel.LinkData, nmspcSS); 
+                }
+
                 #region Форматирование
 
                 BRFileTools.InitCellStyleKey(sb, sel, 0);
@@ -283,6 +342,9 @@ namespace FreeLibSet.Reporting
                   XmlElement elStyle = xmlDoc.CreateElement("Style", nmspcSS);
                   elStyles.AppendChild(elStyle);
                   SetAttr(elStyle, "ss:ID", "s" + StdConvert.ToString(styleKeyNum), nmspcSS);
+
+                  if (sel.HasLink)
+                    SetAttr(elStyle, "ss:Parent", "shl", nmspcSS);
 
                   string ha, va;
                   switch (sel.ActualHAlign)
@@ -332,12 +394,14 @@ namespace FreeLibSet.Reporting
 
                   if (sel.CellStyle.ForeColor != BRColor.Auto)
                     SetAttr(elFont, "ss:Color", MyColorStr(sel.CellStyle.ForeColor), nmspcSS);
+                  else if (sel.HasLink)
+                    SetAttr(elFont, "ss:Color", MyColorStr(BRFileTools.LinkForeColor), nmspcSS);
 
                   if (sel.CellStyle.Bold)
                     SetAttr(elFont, "ss:Bold", "1", nmspcSS);
                   if (sel.CellStyle.Italic)
                     SetAttr(elFont, "ss:Italic", "1", nmspcSS);
-                  if (sel.CellStyle.Underline)
+                  if (sel.CellStyle.Underline || sel.HasLink)
                     SetAttr(elFont, "ss:Underline", "Single", nmspcSS);
                   if (sel.CellStyle.Strikeout)
                     SetAttr(elFont, "ss:StrikeThrough", "1", nmspcSS);
@@ -356,6 +420,8 @@ namespace FreeLibSet.Reporting
                     elStyle.AppendChild(elNumberFormat);
                     SetAttr(elNumberFormat, "ss:Format", formatText, nmspcSS);
                   }
+
+
                   #endregion
                 }
 
@@ -375,6 +441,29 @@ namespace FreeLibSet.Reporting
                   SetAttr(elCell, "ss:MergeDown", StdConvert.ToString(merge.RowCount - 1), nmspcSS);
                 if (xlsColumn2 > xlsColumn1)
                   SetAttr(elCell, "ss:MergeAcross", StdConvert.ToString(xlsColumn2 - xlsColumn1), nmspcSS);
+
+                #endregion
+
+                #region Имя ячейки
+
+                foreach (BRBookmark bm in sel.Bookmarks.ToArray())
+                {
+                  // Запись в NamedRange
+                  XmlElement elNamedRange = xmlDoc.CreateElement("NamedRange", nmspcSS);
+                  elNames.AppendChild(elNamedRange);
+
+                  SetAttr(elNamedRange, "ss:Name", BRFileTools.GetExcelBookmarkName(bm.Name), nmspcSS);
+
+                  CellRef cell = new CellRef(rowCount, leftCols[l]);
+                  string sRefTo = SpreadsheetTools.GetQuotedSheetName(section.Name) + 
+                    "!" + cell.ToString(CellRefFormat.R1C1);
+                  SetAttr(elNamedRange, "ss:RefersTo", sRefTo, nmspcSS);
+
+                  // Запись в ячейке
+                  XmlElement elNamedCell = xmlDoc.CreateElement("NamedCell", nmspcSS);
+                  elCell.AppendChild(elNamedCell);
+                  SetAttr(elNamedCell, "ss:Name", BRFileTools.GetExcelBookmarkName(bm.Name), nmspcSS);
+                }
 
                 #endregion
               }
@@ -409,50 +498,50 @@ namespace FreeLibSet.Reporting
       if (sel.Value == null)
         return;
 
-      switch (sel.Value.GetType().Name)
+      switch (sel.ActualValue.GetType().Name)
       {
-        case "String":
-        case "Guid":
-          if (sel.Value.ToString().Trim().Length == 0)
-            return;
-          valueText = sel.Value.ToString();
-          if (Environment.NewLine != "\r")
-            valueText = valueText.Replace(Environment.NewLine, "\r");
-          //valueText = DataTools.ReplaceAny(valueText, BRFileTools.BadValueChars, ' ');
-          valueText = valueText.Replace(DataTools.SoftHyphenStr, String.Empty);
-          typeText = "String";
-          break;
         case "Boolean":
           valueText = (bool)(sel.Value) ? "1" : "0";
           typeText = "Boolean";
           break;
         case "DateTime":
           // Предотвращаем ошибку открытия файла из-за неправильной даты
-          if ((DateTime)(sel.Value) < MicrosoftOfficeTools.MinExcelDate || ((DateTime)(sel.Value)).Date > MicrosoftOfficeTools.MaxExcelDate)
+          if ((DateTime)(sel.ActualValue) < MicrosoftOfficeTools.MinExcelDate || ((DateTime)(sel.ActualValue)).Date > MicrosoftOfficeTools.MaxExcelDate)
           {
-            valueText = String.Format(Res.BRReport_Err_DateOutOfExcelRange, sel.Value);
+            valueText = String.Format(Res.BRReport_Err_DateOutOfExcelRange, sel.ActualValue);
             typeText = "String";
             return;
           }
 
-          valueText = ((DateTime)(sel.Value)).ToString("s", StdConvert.DateTimeFormat);
+          valueText = ((DateTime)(sel.ActualValue)).ToString("s", StdConvert.DateTimeFormat);
           typeText = "DateTime";
 
           // Если формат данных не задан, используем формат по умолчанию
           // Если оставить формат "Общий", то даты будут отображаться в Excel как числа
           if (String.IsNullOrEmpty(sel.CellStyle.Format))
           {
-            if (((DateTime)(sel.Value)).TimeOfDay.Ticks != 0L)
+            if (((DateTime)(sel.ActualValue)).TimeOfDay.Ticks != 0L)
               formatText = MicrosoftOfficeTools.DefaultShortDateTimeFormat;
             else
               formatText = MicrosoftOfficeTools.DefaultShortDateFormat;
           }
           break;
         default:
-          if (DataTools.IsNumericType(sel.Value.GetType()))
+          if (DataTools.IsNumericType(sel.ActualValue.GetType()))
           {
-            valueText = Convert.ToString(sel.Value, StdConvert.NumberFormat);
+            valueText = Convert.ToString(sel.ActualValue, StdConvert.NumberFormat);
             typeText = "Number";
+          }
+          else // 28.03.2025
+          {
+            if (sel.ActualValue.ToString().Trim().Length == 0)
+              return;
+            valueText = sel.ActualValue.ToString();
+            if (Environment.NewLine != "\r")
+              valueText = valueText.Replace(Environment.NewLine, "\r");
+            //valueText = DataTools.ReplaceAny(valueText, BRFileTools.BadValueChars, ' ');
+            valueText = valueText.Replace(DataTools.SoftHyphenStr, String.Empty);
+            typeText = "String";
           }
           break;
       }

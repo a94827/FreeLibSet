@@ -28,29 +28,60 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EFPDBxTextSearchForm));
       this.btnDocSel = new System.Windows.Forms.Button();
       this.ButtonsPanel.SuspendLayout();
+      this.MainPanel.SuspendLayout();
       this.SuspendLayout();
+      // 
+      // grpWhere
+      // 
+      resources.ApplyResources(this.grpWhere, "grpWhere");
+      // 
+      // grpFrom
+      // 
+      resources.ApplyResources(this.grpFrom, "grpFrom");
+      // 
+      // grpDirection
+      // 
+      resources.ApplyResources(this.grpDirection, "grpDirection");
+      // 
+      // grpConditions
+      // 
+      resources.ApplyResources(this.grpConditions, "grpConditions");
       // 
       // ButtonsPanel
       // 
+      resources.ApplyResources(this.ButtonsPanel, "ButtonsPanel");
       this.ButtonsPanel.Controls.Add(this.btnDocSel);
       this.ButtonsPanel.Controls.SetChildIndex(this.btnDocSel, 0);
       // 
+      // MainPanel
+      // 
+      resources.ApplyResources(this.MainPanel, "MainPanel");
+      // 
+      // BottomPanel
+      // 
+      resources.ApplyResources(this.BottomPanel, "BottomPanel");
+      // 
+      // TopPanel
+      // 
+      resources.ApplyResources(this.TopPanel, "TopPanel");
+      // 
       // btnDocSel
       // 
-      this.btnDocSel.Location = new System.Drawing.Point(196, 8);
+      resources.ApplyResources(this.btnDocSel, "btnDocSel");
       this.btnDocSel.Name = "btnDocSel";
-      this.btnDocSel.Size = new System.Drawing.Size(176, 24);
-      this.btnDocSel.TabIndex = 2;
-      this.btnDocSel.Text = "Выборка документов";
       this.btnDocSel.UseVisualStyleBackColor = true;
       // 
       // EFPDBxTextSearchForm
       // 
+      resources.ApplyResources(this, "$this");
       this.Name = "EFPDBxTextSearchForm";
       this.ButtonsPanel.ResumeLayout(false);
+      this.MainPanel.ResumeLayout(false);
       this.ResumeLayout(false);
+
     }
 
     #endregion

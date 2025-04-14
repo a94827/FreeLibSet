@@ -117,8 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="infoLabel1.Text" xml:space="preserve">
-    <value>Отключите формат HTML, чтобы вставка в офисные приложения выполнялась как текст, с использованием форматирования конечного документа.
-Общая настройка для всех просмотров действует в течение сеанса работы.</value>
+  <data name="label2.Text" xml:space="preserve">
+    <value>&amp;Родительская группа</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>&amp;Название</value>
+  </data>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>Группа</value>
+  </data>
+  <data name="tpMain.Text" xml:space="preserve">
+    <value>Общие</value>
   </data>
 </root>

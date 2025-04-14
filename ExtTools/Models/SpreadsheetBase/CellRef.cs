@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using FreeLibSet.Core;
+using System.Text.RegularExpressions;
 
 namespace FreeLibSet.Models.SpreadsheetBase
 {
@@ -117,6 +118,50 @@ namespace FreeLibSet.Models.SpreadsheetBase
     }
 
     #endregion
+
+    #region Имя листа
+
+
+    /// <summary>
+    /// Возвращает имя листа в апострофах, если это необходимо.
+    /// Если имя не содержит плохих символов, возвращается исходное имя.
+    /// Используется при задании ссылок.
+    /// </summary>
+    /// <param name="name">Имя листа без апострофов</param>
+    /// <returns>Имя с апострофами</returns>
+    public static string GetQuotedSheetName(string name)
+    {
+      if (String.IsNullOrEmpty(name))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
+
+      if (Regex.IsMatch(name, @"^{Letter}({Letter}|\d)*$"))
+        return name;
+      else
+        return "'" + name + "'";
+    }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Стиль форматирования ссылки для <see cref="CellRef"/> и <see cref="RangeRef"/>
+  /// </summary>
+  public enum CellRefFormat
+  {
+    /// <summary>
+    /// Основной стиль ("A1")
+    /// </summary>
+    A1,
+
+    /// <summary>
+    /// Абсолютная ссылка с долларами ("$A$1")
+    /// </summary>
+    Abs,
+
+    /// <summary>
+    /// RC-ссылка ("R1C1")
+    /// </summary>
+    R1C1
   }
 
   /// <summary>
@@ -234,15 +279,33 @@ namespace FreeLibSet.Models.SpreadsheetBase
     #region Преобразование в строку / из строки
 
     /// <summary>
-    /// Возвращает текстовое представление в формате "A1".
+    /// Возвращает текстовое представление в формате "A1"
     /// При IsEmpty=true возвращает пустую строку.
     /// </summary>
     /// <returns>Тестовое представление</returns>
     public override string ToString()
     {
+      return ToString(CellRefFormat.A1);
+    }
+
+    /// <summary>
+    /// Возвращает текстовое представление в формате "A1", "$A$1" или "R1C1".
+    /// При <see cref="IsEmpty"/>=true возвращает пустую строку.
+    /// </summary>
+    /// <param name="format">Формат представления</param>
+    /// <returns>Тестовое представление</returns>
+    public string ToString(CellRefFormat format)
+    {
       if (_Row == 0)
         return String.Empty;
-      return SpreadsheetTools.GetColumnName(Column) + Row.ToString();
+      switch (format)
+      {
+        case CellRefFormat.A1: return SpreadsheetTools.GetColumnName(Column) + StdConvert.ToString(Row);
+        case CellRefFormat.Abs: return "$" + SpreadsheetTools.GetColumnName(Column) + "$" + StdConvert.ToString(Row);
+        case CellRefFormat.R1C1: return "R" + StdConvert.ToString(Row) + "C" + StdConvert.ToString(Column);
+        default:
+          throw ExceptionFactory.ArgUnknownValue("format", format);
+      }
     }
 
     /// <summary>
@@ -259,6 +322,8 @@ namespace FreeLibSet.Models.SpreadsheetBase
       else
         throw new FormatException();
     }
+
+#if XXX
 
     /// <summary>
     /// Попытка преобразования строки в формате "A1" в адрес ячейки.
@@ -320,6 +385,69 @@ namespace FreeLibSet.Models.SpreadsheetBase
       res = new CellRef(rowNumber, columnNumber);
       return true;
     }
+
+#else
+
+    /// <summary>
+    /// Попытка преобразования строки в адрес ячейки.
+    /// Строка может быть задана в формате "A1", "$A$1" или "R1C1"
+    /// Пустая строка преобразуется в неинициализированную структуру без выдачи ошибки.
+    /// </summary>
+    /// <param name="s">Преобразуемая строка</param>
+    /// <param name="res">Результат преобразования или неинициализированная структура, в случае ошибки</param>
+    /// <returns>true, если преобразование успешно выполнено</returns>
+    public static bool TryParse(string s, out CellRef res)
+    {
+      res = Empty;
+      if (String.IsNullOrEmpty(s))
+        return true; // 18.07.2022
+
+      s = s.ToUpperInvariant();
+
+      // "Группами" являются части регулярного выражения в круглых скобках.
+      // Значения групп доступно через коллекцию Match.Groups.
+      // Индекс группы начинается с 1, т.к. индекс 0 соответствует всему выражению
+      const string regexA1_Abs = "^[$]?([A-Z]+)[$]?([0-9]+)$";
+      const string regexR1C1 = "^[R]([0-9]+)[C]([0-9]+)$";
+
+      int row, col;
+
+      Match m = Regex.Match(s, regexA1_Abs);
+      if (m.Success)
+      {
+        string sCol = m.Groups[1].Value;
+        string sRow = m.Groups[2].Value;
+
+        if (!SpreadsheetTools.TryGetColumnNumber(sCol, out col))
+          return false;
+        if (!StdConvert.TryParse(sRow, out row))
+          return false;
+      }
+      else
+      {
+        m = Regex.Match(s, regexR1C1);
+        if (m.Success)
+        {
+          string sRow = m.Groups[1].Value;
+          string sCol = m.Groups[2].Value;
+
+          if (!StdConvert.TryParse(sRow, out row))
+            return false;
+          if (!StdConvert.TryParse(sCol, out col))
+            return false;
+        }
+        else
+          return false;
+      }
+
+      if (row < 1 || col < 1)
+        return false;
+
+      res = new CellRef(row, col);
+      return true;
+    }
+
+#endif
 
     #endregion
   }
@@ -421,6 +549,21 @@ namespace FreeLibSet.Models.SpreadsheetBase
     }
 
     /// <summary>
+    /// Возвращает true, если диапазон содержит одну ячейку.
+    /// При <see cref="IsEmpty"/>=true возвращается false.
+    /// </summary>
+    public bool IsSingleCell
+    {
+      get
+      {
+        if (IsEmpty)
+          return false;
+        else
+          return _LastCell.Row == _FirstCell.Row && _LastCell.Column == _FirstCell.Column;
+      }
+    }
+
+    /// <summary>
     /// Возвращает true, если структура не была инициализирована
     /// </summary>
     public bool IsEmpty { get { return _FirstCell.IsEmpty; } }
@@ -500,13 +643,26 @@ namespace FreeLibSet.Models.SpreadsheetBase
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
+      return ToString(CellRefFormat.A1);
+    }
+
+
+    /// <summary>
+    /// Возвращает диаазон в виде "A1:B2", "$A$1:$B$2" или "R1C1:R2C2".
+    /// Если диапазон содержит одну ячейку, то разделитель не используется, возвращается "A1".
+    /// Если <see cref="IsEmpty"/>=true, возвращается пустая строка.
+    /// </summary>
+    /// <param name="format">Формат представления</param>
+    /// <returns>Текстовое представление</returns>
+    public string ToString(CellRefFormat format)
+    {
       if (IsEmpty)
         return String.Empty;
 
       if (FirstCell == LastCell)
-        return FirstCell.ToString();
+        return FirstCell.ToString(format);
       else
-        return FirstCell.ToString() + ":" + LastCell.ToString();
+        return FirstCell.ToString(format) + ":" + LastCell.ToString(format);
     }
 
     /// <summary>

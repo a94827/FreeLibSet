@@ -10,11 +10,13 @@ using FreeLibSet.Collections;
 
 namespace FreeLibSet.Data.Docs
 {
+  // TODO: Может быть классы коллекций стоит сделать внутренними для DBxDocTypeBase
+
   /// <summary>
   /// Описание одного поля, хранящего ссылку на файл.
   /// </summary>
   [Serializable]
-  public class DBxDocTypeFileRef:IObjectWithCode
+  public sealed class DBxDocTypeFileRef:IObjectWithCode
   {
     #region Конструктор
 
@@ -31,7 +33,7 @@ namespace FreeLibSet.Data.Docs
     /// Описание структуры столбца числового столбца, хранящего идентификаторы во внутренней таблице
     /// </summary>
     public DBxColumnStruct Column { get { return _Column; } }
-    private DBxColumnStruct _Column;
+    private readonly DBxColumnStruct _Column;
 
     /// <summary>
     /// Возвращает Column.ColumnName
@@ -59,7 +61,7 @@ namespace FreeLibSet.Data.Docs
   /// Реализация свойства
   /// </summary>
   [Serializable]
-  public class DBxDocTypeFileRefs : NamedList<DBxDocTypeFileRef>
+  public sealed class DBxDocTypeFileRefs : NamedList<DBxDocTypeFileRef>
   {
     #region Конструктор
 
@@ -72,7 +74,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Свойства
 
-    private DBxTableStruct _TableStruct;
+    private readonly DBxTableStruct _TableStruct;
 
     /// <summary>
     /// Для отладки
@@ -127,10 +129,10 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Описание одного поля, хранящего двоичные данные в виде ссылки на таблицу BinData
+  /// Описание одного поля, хранящего двоичные данные в виде ссылки на таблицу "BinData"
   /// </summary>
   [Serializable]
-  public class DBxDocTypeBinDataRef : IObjectWithCode
+  public sealed class DBxDocTypeBinDataRef : IObjectWithCode
   {
     #region Конструктор
 

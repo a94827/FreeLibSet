@@ -305,7 +305,7 @@ namespace FreeLibSet.Collections
     public HistoryList RemoveAt(int index)
     {
       if (index < 0 || index >= Count)
-        throw new ArgumentOutOfRangeException();
+        throw ExceptionFactory.ArgOutOfRange("index", index, 0, Count - 1);
 
       if (_Items.Length == 1)
         return HistoryList.Empty;

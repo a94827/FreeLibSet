@@ -172,7 +172,7 @@ namespace FreeLibSet.Data.Docs
     public void AddSectionTableStructs(DBxStruct dbStruct)
     {
       if (!UseFragmentation)
-        throw new InvalidOperationException("Свойство UseFragmentation не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "UseFragmentation");
 
       if (UseBinData || UseFiles)
       {
@@ -182,7 +182,7 @@ namespace FreeLibSet.Data.Docs
         dbStruct.Tables.Add(ts);
       }
       else
-        throw new InvalidOperationException("Не установлены свойства UseBinData и UseFiles");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "UseBinData,UseFiles");
     }
 
     #endregion
@@ -222,14 +222,14 @@ namespace FreeLibSet.Data.Docs
       if (dbEntry == null)
         throw new ArgumentNullException("dbEntry");
       if (!UseFragmentation)
-        throw new InvalidOperationException("Добавлять секционные базы данных можно только при UseFragmentation=true");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "UseFragmentation");
 
       lock (_SectionEntries)
       {
         for (int i = 0; i < _SectionEntries.Count; i++)
         {
           if (_SectionEntries[i].DB == dbEntry.DB)
-            throw new InvalidOperationException("Повторно добавление точки входа в базу данных " + dbEntry.DB.ToString());
+            throw ExceptionFactory.CannotAddItemAgain(dbEntry);
         }
         _SectionEntries.Add(dbEntry);
       }
@@ -287,7 +287,7 @@ namespace FreeLibSet.Data.Docs
 
 #if DEBUG
       if (Object.ReferenceEquals(en.DB, MainEntry.DB))
-        throw new BugException("База данных секции совпадает с основной базой данных");
+        throw new BugException("Section database is same as main database");
 #endif
 
       return en;
@@ -308,8 +308,8 @@ namespace FreeLibSet.Data.Docs
       }
 
       if (maxSection > SectionEntryCount)
-        throw new InvalidOperationException("Недостаточное количество точек входа во фрагментированные базы данных (" + SectionEntryCount.ToString() + ")." +
-          "В таблице BinData используется секция с номером " + maxSection.ToString());
+        throw new InvalidOperationException(String.Format(Res.DBxBinDataHandler_Err_InsufficientEntryCount,
+          SectionEntryCount, maxSection));
 
       // "Лишние" секции могут быть, это не ошибка
     }
@@ -352,23 +352,23 @@ namespace FreeLibSet.Data.Docs
         return;
 
       if (!(_UseFiles || _UseBinData))
-        throw new BugException("Должно быть установлено хотя бы одно из свойств: UseBinData или UseFiles. Если в программе не храняться такие данные, то объект DBxBinDataHandler создавать не следует");
+        throw new InvalidOperationException(Res.DBxBinDataHandler_Err_NoUsBinDataUseFiles);
       _IsReadOnly = true;
 
       if (_MainEntry == null)
-        throw new NullReferenceException("Не было установлено свойство MainEntry");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "MainEntry");
 
       if (_UseFragmentation)
       {
         // ReSharper disable once InconsistentlySynchronizedField
         if (_SectionEntries.Count == 0)
-          throw new InvalidOperationException("Не задано ни одной точки входа в SectionEntries");
+          throw new InvalidOperationException(Res.DBxBinDataHandler_Err_NoSectionEntries);
       }
       else
       {
         // ReSharper disable once InconsistentlySynchronizedField
         if (_SectionEntries.Count > 0)
-          throw new InvalidOperationException("Нельзя задаватьточки входа в SectionEntries, если FUseFragmentation=false");
+          throw new InvalidOperationException(Res.DBxBinDataHandler_Err_SectionEntriesWithoutFragmentation);
       }
     }
 
@@ -415,8 +415,8 @@ namespace FreeLibSet.Data.Docs
         {
           Int32 realLength = DataTools.GetInt(con.GetValue("BinData", id, "Length"));
           if (realLength != length)
-            throw new DBxConsistencyException("В таблице BinData для блока данных с Id=" + id.ToString() + " расходится длина. В базе данных: " +
-              realLength.ToString() + ", запрошенная длина: " + length.ToString());
+            throw new DBxConsistencyException(String.Format(Res.DBxBinDataHandler_Err_BinDataLength,
+              id, realLength, length));
         }
         return id;
       }
@@ -624,7 +624,7 @@ namespace FreeLibSet.Data.Docs
           // Сначала требуется определить секцию для хранения данных
           int section = DataTools.GetInt(con.GetValue("BinData", binDataId, "Section"));
           if (section == 0)
-            throw new ArgumentException("Неправильный идентификатор записи для таблицы BinData Id=" + binDataId.ToString(), "binDataId");
+            throw new ArgumentException(String.Format(Res.DBxBinDataHandler_Arg_BinDataId, binDataId), "binDataId");
 
           DBxEntry entry = GetSectionEntry(section);
           using (DBxCon con2 = new DBxCon(entry))
@@ -695,7 +695,7 @@ namespace FreeLibSet.Data.Docs
     public Int32 FindDBFile(StoredFileInfo fileInfo, string md5, out Int32 binDataId)
     {
       if (fileInfo.Length > MaxFileLength)
-        throw new ArgumentException("Слишком длинный файл");
+        throw new ArgumentException(Res.DBxBinDataHandler_Arg_FileTooLong, "fileInfo");
 
       // Сначала ищем по содержимому файла
       binDataId = FindBinDataWithLenChecking(md5, (int)(fileInfo.Length));
@@ -736,12 +736,12 @@ namespace FreeLibSet.Data.Docs
         return 0;
 
       if (file.FileInfo.Length > MaxFileLength)
-        throw new ArgumentException("Слишком длинный файл");
+        throw new ArgumentException(Res.DBxBinDataHandler_Arg_FileTooLong, "file");
 
       // Сначала ищем по содержимому файла
       Int32 binDataId = AppendBinData(file.Content);
       if (binDataId == 0)
-        throw new BugException("AppendBinData вернул 0");
+        throw new BugException("AppendBinData returned 0");
 
       return AppendDBFile(file.FileInfo, binDataId);
     }
@@ -756,9 +756,9 @@ namespace FreeLibSet.Data.Docs
     public Int32 AppendDBFile(StoredFileInfo fileInfo, Int32 binDataId)
     {
       if (fileInfo.IsEmpty)
-        throw new ArgumentException("Информация о файле не задана", "fileInfo");
+        throw ExceptionFactory.ArgIsEmpty("fileInfo");
       if (binDataId <= 0)
-        throw new DBxNoIdArgumentException("Неправильный идентификатор данных в таблице BinData. DataId=" + binDataId.ToString(), "binDataId");
+        throw new DBxNoIdArgumentException(String.Format(Res.DBxBinDataHandler_Arg_BinDataId, binDataId), "binDataId");
 
       DBxFilter[] filters = new DBxFilter[4];
       filters[0] = new ValueFilter("Data", binDataId);
@@ -799,11 +799,11 @@ namespace FreeLibSet.Data.Docs
         values = con.GetValues("FileNames", fileId, _GetDBFileInfoColumns);
       }
 
-      string Name = DataTools.GetString(values[0]);
-      if (Name.Length == 0)
-        throw new ArgumentException("Запрошен несуществующий идентификатор записи в таблице FileNames Id=" + fileId.ToString());
+      string name = DataTools.GetString(values[0]);
+      if (name.Length == 0)
+        throw new ArgumentException(String.Format(Res.DBxBinDataHandler_Arg_FileNameId, fileId));
 
-      return new StoredFileInfo(Name, DataTools.GetInt(values[1]), DataTools.GetNullableDateTime(values[2]), DataTools.GetNullableDateTime(values[3]));
+      return new StoredFileInfo(name, DataTools.GetInt(values[1]), DataTools.GetNullableDateTime(values[2]), DataTools.GetNullableDateTime(values[3]));
     }
 
     private static readonly DBxColumns _GetDBFileColumns = new DBxColumns("Name,Data.Length,CreationTime,LastWriteTime,Data");
@@ -828,14 +828,14 @@ namespace FreeLibSet.Data.Docs
 
       string name = DataTools.GetString(values[0]);
       if (name.Length == 0)
-        throw new ArgumentException("Запрошен несуществующий идентификатор записи в таблице FileNames Id=" + fileId.ToString()); // это никогда не возникнет
+        throw new ArgumentException(String.Format(Res.DBxBinDataHandler_Arg_FileNameId, fileId)); // это никогда не возникнет
 
       StoredFileInfo fileInfo = new StoredFileInfo(name, DataTools.GetInt(values[1]), DataTools.GetNullableDateTime(values[2]), DataTools.GetNullableDateTime(values[3]));
 
       Int32 binDataId = DataTools.GetInt(values[4]);
       byte[] contents = GetBinData(binDataId);
       if (contents == null)
-        throw new BugException("GetBinData() вернул null");
+        throw new BugException("GetBinData() returned null");
 
       return new FileContainer(fileInfo, contents);
     }
@@ -882,12 +882,12 @@ namespace FreeLibSet.Data.Docs
         if (UseBinData || UseFiles)
         {
           if (!resMainCon.IsTableEmpty("BinData"))
-            throw new InvalidOperationException("Таблица \"BinData\" уже содержит строки. Импорт возможен, только если таблица пуста");
+            throw new InvalidOperationException(String.Format(Res.DBxBinDataHandler_Err_ImportToNotEmptyTable, "BinData"));
         }
         if (UseFiles)
         {
           if (!resMainCon.IsTableEmpty("FileNames"))
-            throw new InvalidOperationException("Таблица \"FileNames\" уже содержит строки. Импорт возможен, только если таблица пуста");
+            throw new InvalidOperationException(String.Format(Res.DBxBinDataHandler_Err_ImportToNotEmptyTable, "FileNames"));
         }
 
         #endregion
@@ -1019,7 +1019,7 @@ namespace FreeLibSet.Data.Docs
 #endif
 
       if (globalData.BinDataHandler == null)
-        throw new ArgumentException("Переданный объект не содержит ссылки на DBxBinDataHandler");
+        throw ExceptionFactory.ArgProperty("globalData", globalData, "BinDataHandler", globalData.BinDataHandler, null);
 
 
       _GlobalData = globalData;
@@ -1078,13 +1078,13 @@ namespace FreeLibSet.Data.Docs
 
       List<string> splashItems = new List<string>();
       if (UseDocRefValidation)
-        splashItems.Add("Проверка ссылок в документах");
+        splashItems.Add(Res.DBxBinDataHandler_Phase_DocRefValidation);
 
       int SectionEntryCount = 0;
       if (UseBinDataValidation)
       {
-        splashItems.Add("Проверка двоичных данных");
-        splashItems.Add("Поиск повторов в двоичных данных");
+        splashItems.Add(Res.DBxBinDataHandler_Phase_BinDataValidation);
+        splashItems.Add(Res.DBxBinDataHandler_Phase_BinDataReplaySearch);
         if (_GlobalData.BinDataHandler.UseFragmentation)
         {
           // Запоминаем количество секций заранее.
@@ -1093,7 +1093,7 @@ namespace FreeLibSet.Data.Docs
           for (int section = 1; section <= SectionEntryCount; section++)
           {
             DBxEntry en = _GlobalData.BinDataHandler.GetSectionEntry(section);
-            splashItems.Add("Проверка БД " + en.DB.DatabaseName);
+            splashItems.Add(String.Format(Res.DBxBinDataHandler_Phase_DBValidation, en.DB.DatabaseName));
           }
         }
       }
@@ -1123,7 +1123,7 @@ namespace FreeLibSet.Data.Docs
           ValidateBinDataSums(spl);
           spl.Complete();
 
-          ValidateBinDataRepeats(spl);
+          ValidateBinDataReplays(spl);
           spl.Complete();
 
           for (int section = 1; section <= SectionEntryCount; section++)
@@ -1189,7 +1189,7 @@ namespace FreeLibSet.Data.Docs
         }
 #if DEBUG
         else if (finder.UndoBinDataRefs.Count > 0 || finder.UndoFileNameRefs.Count > 0)
-          throw new BugException("Лишние Undo");
+          throw new BugException("Undo excess");
 #endif
       }
       return true;
@@ -1210,7 +1210,7 @@ namespace FreeLibSet.Data.Docs
         string oldPT = spl.PhaseText;
 
         string refText = "DB=" + detCon.DB.DatabaseName + ", TableName=\"" + tc.TableName + "\", ColumnName=\"" + tc.ColumnName + "\"";
-        spl.PhaseText = "Поиск ссылок. " + refText;
+        spl.PhaseText = String.Format(Res.DBxBinDataHandler_Phase_RefSearching, refText);
         if (UseTrace)
           Trace.WriteLine(refText + "...");
 
@@ -1249,14 +1249,15 @@ namespace FreeLibSet.Data.Docs
                   throw new BugException("RefId=0");
                 if (!realIdIndexer.Contains(refId))
                 {
-                  Errors.AddError(refText + "Id=" + id.ToString() + ". Неправильная ссылка " + refId.ToString() + ". В таблице \"" + masterTableName + "\" нет записи с таким идентификатором");
+                  Errors.AddError(String.Format(Res.DBxBinDataHandler_Err_DocRefUnknown,
+                    refText, id, refId, masterTableName));
                   if (UseTrace)
                     Trace.TraceError("Error reference. " + refText + ". RefId=" + refId.ToString() + " (Id=" + id.ToString() + ")");
                 }
               }
 
               if (Errors.Severity != ErrorMessageKind.Error)
-                throw new BugException("Ошибка углубленного поиска ссылки в блоке");
+                throw new BugException("Error occurred when refence deep search performed in the block");
             }
           }
         }
@@ -1292,7 +1293,7 @@ namespace FreeLibSet.Data.Docs
             if (md5 == DBxBinDataHandler.EmptyMD5)
             {
               // 19.11.2020
-              Errors.AddWarning("Таблица BinData, Id=" + id.ToString() + ". Нулевое значение MD5. Не проверяется");
+              Errors.AddWarning(String.Format(Res.DBxBinDataHandler_Err_BinDataZeroMD5, id));
               if (UseTrace)
                 Trace.TraceWarning("BinData, Id=" + id.ToString() + ". MD5 is empty");
             }
@@ -1309,7 +1310,7 @@ namespace FreeLibSet.Data.Docs
 
                 if (data.Length != length)
                 {
-                  Errors.AddError("Таблица BinData, Id=" + id.ToString() + ". Неправильная длина блока данных. Ожидалось: " + length.ToString() + ", прочитано: " + data.Length.ToString());
+                  Errors.AddError(String.Format(Res.DBxBinDataHandler_Err_BinDataWrongBlockLength, id, length, data.Length));
                   if (UseTrace)
                     Trace.TraceError("BinData, Id=" + id.ToString() + ". Invalid Length");
                   cntError++;
@@ -1319,7 +1320,7 @@ namespace FreeLibSet.Data.Docs
                   string realMD5 = DataTools.MD5Sum(data);
                   if (md5 != realMD5)
                   {
-                    Errors.AddError("Таблица BinData, Id=" + id.ToString() + ". Неправильный блок данных. Неправильная контрольная сумма");
+                    Errors.AddError(String.Format(Res.DBxBinDataHandler_Err_BinDataWrongMD5,id));
                     if (UseTrace)
                       Trace.TraceError("BinData, Id=" + id.ToString() + ". Invalid MD5");
                     cntError++;
@@ -1328,7 +1329,7 @@ namespace FreeLibSet.Data.Docs
               }
               catch (Exception e)
               {
-                Errors.AddError("Таблица BinData, Id=" + id.ToString() + ". Ошибка чтения блока данных. " + e.Message);
+                Errors.AddError(String.Format(Res.DBxBinDataHandler_Err_BinDataBlokReading, id, e.Message));
                 if (UseTrace)
                   Trace.TraceError("BinData, Id=" + id.ToString() + ". Cannot read the data. " + e.Message);
                 cntError++;
@@ -1340,7 +1341,8 @@ namespace FreeLibSet.Data.Docs
         }
         spl.PercentMax = 0;
 
-        Errors.AddInfo("Записей в таблице BinData (" + _GlobalData.BinDataHandler.MainEntry.DB.DisplayName + "): " + cnt.ToString() + ", с ошибками: " + cntError.ToString());
+        Errors.AddInfo(String.Format(Res.DBxBinDataHandler_Err_BinDataTotalInfo, 
+          _GlobalData.BinDataHandler.MainEntry.DB.DisplayName, cnt, cntError));
       }
     }
 
@@ -1348,11 +1350,11 @@ namespace FreeLibSet.Data.Docs
 
     #region Проверка повторов в таблице "BinData"
 
-    private void ValidateBinDataRepeats(ISimpleSplash spl)
+    private void ValidateBinDataReplays(ISimpleSplash spl)
     {
       if (UseTrace)
-        Trace.WriteLine("Search for MD5 repeats...");
-      bool hasRepeats = false;
+        Trace.WriteLine("Search for MD5 replays...");
+      bool hasReplays = false;
       using (DBxCon con = new DBxCon(_GlobalData.BinDataHandler.MainEntry))
       {
         spl.PercentMax = con.GetRecordCount("BinData");
@@ -1369,10 +1371,10 @@ namespace FreeLibSet.Data.Docs
             {
               if (md5 == prevMD5)
               {
-                Errors.AddWarning("Повтор в таблице BinData. Для Id=" + prevId.ToString() + " и Id=" + id.ToString() + " задана одинаковая сумма MD5=\"" + md5 + "\"");
+                Errors.AddWarning(String.Format(Res.DBxBinDataHandler_Err_BinDataReplayMD5, prevId, id, md5));
                 if (UseTrace)
                   Trace.TraceWarning("BinData has an MD5 twice. Id=" + prevId.ToString() + " and Id=" + id.ToString() + ". MD5=\"" + md5 + "\"");
-                hasRepeats = true;
+                hasReplays = true;
               }
             }
             prevId = id;
@@ -1383,8 +1385,8 @@ namespace FreeLibSet.Data.Docs
         }
         spl.PercentMax = 0;
 
-        if (!hasRepeats)
-          Errors.AddInfo("Повторов в таблице BinData (" + _GlobalData.BinDataHandler.MainEntry.DB.DisplayName + ") не обнаружено");
+        if (!hasReplays)
+          Errors.AddInfo(String.Format(Res.DBxBinDataHandler_Err_BinDataNoReplays, _GlobalData.BinDataHandler.MainEntry.DB.DisplayName));
       }
     }
 
@@ -1395,7 +1397,7 @@ namespace FreeLibSet.Data.Docs
     private void ValidateBinDataStorage(int section, ISimpleSplash spl)
     {
       DBxEntry entry2 = _GlobalData.BinDataHandler.GetSectionEntry(section);
-      spl.PhaseText = "Проверка BinDataStorage в базе данных " + entry2.DB.DisplayName;
+      spl.PhaseText = String.Format(Res.DBxBinDataHandler_Phase_BinDataStorage, entry2.DB.DisplayName);
       if (UseTrace)
         Trace.WriteLine("Validating " + entry2.DB.DisplayName + "...");
       bool hasWarnings = false;
@@ -1417,7 +1419,8 @@ namespace FreeLibSet.Data.Docs
                 object oWantedSection;
                 if (!con1.GetValue("BinData", id, "Section", out oWantedSection)) // 04.06.2020
                 {
-                  Errors.AddWarning("База данных " + entry2.DB.DisplayName + ", таблица BinDataStorage, Id=" + id.ToString() + ". Такого идентификатора нет в основной таблице BinData");
+                  Errors.AddWarning(String.Format(Res.DBxBinDataHandler_Err_BinDataStorageUnknownId,
+                    entry2.DB.DisplayName, id));
                   if (UseTrace)
                     Trace.TraceWarning(entry2.DB.DisplayName + ", BinDataStorage, Id=" + id.ToString() + ". There is no such Id in BinData");
                   hasWarnings = true;
@@ -1430,7 +1433,8 @@ namespace FreeLibSet.Data.Docs
                     // Это считается предупреждением а не ошибкой.
                     // Либо блок данных присутствует сразу в двух секциях, и тогда лишний блок никому не мешает.
                     // Либо блока нет в нужной секции, тогда ошибка уже была выловлена при основной проверке
-                    Errors.AddWarning("База данных " + entry2.DB.DisplayName + ", таблица BinDataStorage, Id=" + id.ToString() + ". В основной таблице BinData для этого идентификатора задана секция №" + wantedSection.ToString() + ", а не №" + section.ToString());
+                    Errors.AddWarning(String.Format(Res.DBxBinDataHandler_Err_BinDataStorageDiffSection,
+                      entry2.DB.DisplayName, id, wantedSection, section));
                     if (UseTrace)
                       Trace.TraceWarning(entry2.DB.DisplayName + ", BinDataStorage, Id=" + id.ToString() + ". BinData section number is different for this Id.");
 
@@ -1440,7 +1444,8 @@ namespace FreeLibSet.Data.Docs
               }
               catch (Exception e)
               {
-                Errors.AddError("База данных " + entry2.DB.DisplayName + ", таблица BinDataStorage. Неперехваченная ошибка: " + e.Message);
+                Errors.AddError(String.Format(Res.DBxBinDataHandler_Err_BinDataStorageError,
+                  entry2.DB.DisplayName, e.Message));
                 if (UseTrace)
                   Trace.TraceError(entry2.DB.DisplayName + ", BinDataStorage. Exception occured. " + e.Message);
               }
@@ -1450,10 +1455,11 @@ namespace FreeLibSet.Data.Docs
           spl.PercentMax = 0;
           spl.AllowCancel = false;
           if (hasWarnings)
-            Errors.AddInfo("Обнаружены предупреждения по базе данных " + entry2.DB.DisplayName);
+            Errors.AddInfo(String.Format(Res.DBxBinDataHandler_Err_BinDataStorageHasWarnings,
+              entry2.DB.DisplayName, section.ToString()));
           else
-            Errors.AddInfo("В BinDataStorage секции №" + section.ToString() + " (" + entry2.DB.DisplayName + ") нет ошибок");
-
+            Errors.AddInfo(String.Format(Res.DBxBinDataHandler_Err_BinDataStorageNoErrors,
+              entry2.DB.DisplayName, section.ToString()));
         } // using Con2
       } // using Con1
     }
@@ -1497,7 +1503,7 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("globalData");
 #endif
       if (MainBinDataRefs.IsReadOnly)
-        throw new InvalidOperationException("Повторный вызов");
+        throw ExceptionFactory.RepeatedCall(this, "FindRefs()");
 
       // Поиск в DBxDocTypes
       DBxTableColumnList binDataRefs = new DBxTableColumnList();
@@ -1533,9 +1539,9 @@ namespace FreeLibSet.Data.Docs
           if (String.IsNullOrEmpty(cs.MasterTableName))
             MainBinDataRefs.Add(tc);
           else if (!String.Equals(cs.MasterTableName, "BinData", StringComparison.OrdinalIgnoreCase))
-            throw new BugException("В реальной структуре БД " + globalData.MainDBEntry.DB.DatabaseName +
-              ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + ", объявлена ссылка на таблицу \"" +
-              cs.MasterTableName + "\", а не на \"BinData\"");
+            throw new BugException("Real DB struct " + globalData.MainDBEntry.DB.DatabaseName +
+              ", table " + tc.TableName + ", column " + tc.ColumnName + ". Reference to table \"" +
+              cs.MasterTableName + "\" used, but to \"BinData\" expected");
         }
 
         foreach (DBxTableColumnName tc in fileNameRefs)
@@ -1544,9 +1550,9 @@ namespace FreeLibSet.Data.Docs
           if (String.IsNullOrEmpty(cs.MasterTableName))
             MainFileNameRefs.Add(tc);
           else if (!String.Equals(cs.MasterTableName, "FileNames", StringComparison.OrdinalIgnoreCase))
-            throw new BugException("В реальной структуре БД " + globalData.MainDBEntry.DB.DatabaseName +
-              ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + ", объявлена ссылка на таблицу \"" +
-              cs.MasterTableName + "\", а не на \"FileNames\"");
+            throw new BugException("Real DB struct " + globalData.MainDBEntry.DB.DatabaseName +
+              ", table " + tc.TableName + ", column " + tc.ColumnName + ". Reference to table \"" +
+              cs.MasterTableName + "\" used, but to \"FileNames\" expected");
         }
       }
       else
@@ -1570,8 +1576,8 @@ namespace FreeLibSet.Data.Docs
             continue;
 
           if (!String.IsNullOrEmpty(cs.MasterTableName))
-            throw new BugException("В реальной структуре БД " + globalData.UndoDBEntry.DB.DatabaseName +
-              ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + " объявлено ссылочным");
+            throw new BugException("Real DB struct " + globalData.UndoDBEntry.DB.DatabaseName +
+              ", table " + tc.TableName + ", column " + tc.ColumnName + " defined as reference");
 
           UndoBinDataRefs.Add(tc);
         }
@@ -1586,8 +1592,8 @@ namespace FreeLibSet.Data.Docs
             continue;
 
           if (!String.IsNullOrEmpty(cs.MasterTableName))
-            throw new BugException("В реальной структуре БД " + globalData.UndoDBEntry.DB.DatabaseName +
-              ", в таблице " + tc.TableName + ", поле " + tc.ColumnName + " объявлено ссылочным");
+            throw new BugException("Real DB struct " + globalData.UndoDBEntry.DB.DatabaseName +
+              ", table " + tc.TableName + ", column " + tc.ColumnName + " defined as reference");
 
           UndoFileNameRefs.Add(tc);
         }

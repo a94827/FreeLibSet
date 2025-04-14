@@ -23,7 +23,7 @@ namespace FreeLibSet.Data.Docs
     internal DBxSingleDoc(DBxMultiDocs multiDocs, int rowIndex)
     {
       if (rowIndex < 0)
-        throw new ArgumentOutOfRangeException();
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, null);
 
       _MultiDocs = multiDocs;
       _RowIndex = rowIndex;
@@ -34,7 +34,7 @@ namespace FreeLibSet.Data.Docs
     #region Свойства
 
     internal DataRow Row { get { return _MultiDocs.Table.Rows[_RowIndex]; } }
-    private int _RowIndex;
+    private readonly int _RowIndex;
 
 
     // Если хранить прямую ссылку на строку DataRow, то она станет недействительной, т.к. от сервера будет
@@ -51,7 +51,7 @@ namespace FreeLibSet.Data.Docs
     /// Объект-владелец
     /// </summary>
     public DBxMultiDocs MultiDocs { get { return _MultiDocs; } }
-    private DBxMultiDocs _MultiDocs;
+    private readonly DBxMultiDocs _MultiDocs;
 
     /// <summary>
     /// Описание вида документа
@@ -71,7 +71,7 @@ namespace FreeLibSet.Data.Docs
     public Int32 DocId { get { return (Int32)(DBxDocSet.GetValue(Row, "Id")); } }
 
     /// <summary>
-    /// Возвращает DocId, а если документ был создан, но не записан в базу данных, то 0.
+    /// Возвращает <see cref="DocId"/>, а если документ был создан, но не записан в базу данных, то 0.
     /// </summary>
     public Int32 RealDocId
     {
@@ -98,9 +98,9 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает true, если открытый документ был помечен на удаление.
-    /// Если DocState=Edit, то после вызова ApplyChanges() документ будет восстановлен
-    /// Если документ был помечен на удаление в текущем сеансе работы вызовом метода Delete(),
-    /// то для него объект DBxSingleDoc становится недействительным
+    /// Если <see cref="DocState"/>=<see cref="DBxDocState.Edit"/>, то после вызова <see cref="DBxDocSet.ApplyChanges(bool)"/> документ будет восстановлен.
+    /// Если документ был помечен на удаление в текущем сеансе работы вызовом метода <see cref="Delete()"/>,
+    /// то для него объект <see cref="DBxSingleDoc"/> становится недействительным.
     /// </summary>
     public bool Deleted
     {
@@ -116,13 +116,13 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Коллекция видов поддокументов.
-    /// Вложенные коллекции содержат только поддокументы, относящиеся к данному документу
+    /// Вложенные коллекции содержат только поддокументы, относящиеся к данному документу.
     /// </summary>
     public DBxSingleDocSubDocs SubDocs { get { return new DBxSingleDocSubDocs(this); } }
 
     /// <summary>
     /// Текстовое представление для отладки.
-    /// Содержит вид документа, идентификатор и состояние документа
+    /// Содержит вид документа, идентификатор и состояние документа.
     /// </summary>
     /// <returns>Текстовое представление</returns>
     public override string ToString()
@@ -142,9 +142,9 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает текущую версию документа.
-    /// До первого вызова DBxDocSet.ApplyChanges() возвращает старую версию. Для документов в режиме Insert
-    /// возвращается 0. После вызова ApplyChanges() возвращает измененную версию документа. 
-    /// Для режима Edit версия может не поменяться.
+    /// До первого вызова <see cref="DBxDocSet.ApplyChanges(bool)"/> возвращает старую версию. Для документов в режиме <see cref="DBxDocState.Insert"/>
+    /// возвращается 0. После вызова <see cref="DBxDocSet.ApplyChanges(bool)"/> возвращает измененную версию документа. 
+    /// Для режима <see cref="DBxDocState.Edit"/> версия может не поменяться.
     /// </summary>
     public int Version
     {
@@ -291,7 +291,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Доступ к оригинальным значениям в режиме Edit
+    /// Доступ к оригинальным значениям в режиме <see cref="DBxDocState.Edit"/>
     /// </summary>
     public IDBxExtValues OriginalValues
     {
@@ -310,7 +310,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Переводит документ в режим редактирования.
-    /// Документ должен находиться в состоянии View
+    /// Документ должен находиться в состоянии <see cref="DBxDocState.View"/>.
     /// </summary>
     public void Edit()
     {
@@ -330,7 +330,8 @@ namespace FreeLibSet.Data.Docs
           Row.SetModified();
           break;
         default:
-          throw new InvalidOperationException("Нельзя перевести документ " + ToString() + " в режим редактирования из текущего состояния");
+          throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_SetDocState,
+            DocType.SingularTitle, DocId, "Edit", DocState));
       }
     }
 
@@ -350,7 +351,8 @@ namespace FreeLibSet.Data.Docs
           Row.RejectChanges();
           break;
         default:
-          throw new InvalidOperationException("Нельзя перевести документ " + ToString() + " в режим просмотра из текущего состояния");
+          throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_SetDocState,
+            DocType.SingularTitle, DocId, "View", DocState));
       }
     }
 
@@ -382,8 +384,8 @@ namespace FreeLibSet.Data.Docs
     #region Проверка наличия изменений в документе
 
     /// <summary>
-    /// Свойство возвращает true, если для документа в состоянии Edit есть измененные значения
-    /// Также возвращается true, если есть какие-либо изменения в поддокументах
+    /// Свойство возвращает true, если для документа в состоянии <see cref="DBxDocState.Edit"/> есть измененные значения.
+    /// Также возвращается true, если есть какие-либо изменения в поддокументах.
     /// </summary>
     public bool IsDataModified
     {
@@ -418,8 +420,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Свойство возвращает true, если для документа в состоянии Edit есть измененные значения
-    /// Изменения в поддокументах не учитываются
+    /// Свойство возвращает true, если для документа в состоянии <see cref="DBxDocState.Edit"/> есть измененные значения.
+    /// Изменения в поддокументах не учитываются.
     /// </summary>
     public bool IsMainDocModified
     {
@@ -446,7 +448,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращается "выборка" из одного документа.
-    /// Если новый документ еще не записан в базу данных, возвращается пустая выборка
+    /// Если новый документ еще не записан в базу данных, возвращается пустая выборка.
     /// </summary>
     /// <returns>Выборка</returns>
     public DBxDocSelection GetDocSelection()
@@ -460,8 +462,8 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Возвращает true, если текущий и сравниваемый документ относятся к одному и тому же 
     /// документу базы данных.
-    /// Документы могут относится к разным DBxDocProvider
-    /// Возвращает false, если текущий документ не был сохранен в базе данных
+    /// Документы могут относится к разным <see cref="DBxDocProvider"/>, если они подключены к одной базе данных.
+    /// Возвращает false, если текущий документ не был сохранен в базе данных.
     /// </summary>
     /// <param name="otherDoc">Сравниваемый документ</param>
     /// <returns>true, если один документ</returns>
@@ -482,7 +484,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Выполняет проверку прав доступа к документу.
     /// При отсутствии прав доступа в заданном режиме возвращается false.
-    /// Вызывает метод DBxDocPermissions.TestDocument().
+    /// Вызывает метод <see cref="DBxDocPermissions.TestDocument(DBxSingleDoc, DBxDocPermissionReason)"/>.
     /// </summary>
     /// <param name="reason">Режим доступа, права для которого проверяются</param>
     /// <param name="errorText">Сюда помещается сообщение об ошибке, если прав нет</param>
@@ -513,8 +515,7 @@ namespace FreeLibSet.Data.Docs
         case DBxDocState.Insert:
           break;
         default:
-          throw new InvalidOperationException("Нельзя удалять поддокумент, относящийся к документу " +
-            this.ToString() + ". Документ должен быть в состоянии Edit или Insert");
+          throw new InvalidOperationException(String.Format(Res.DBxSingleDoc_Err_DelSubDoc, this));
       }
     }
 

@@ -95,7 +95,7 @@
       resources.ApplyResources(this.SetComboBox, "SetComboBox");
       this.SetComboBox.BackgroundImage = null;
       this.SetComboBox.Font = null;
-      this.SetComboBox.MinimumSize = new System.Drawing.Size(200, 24);
+      this.SetComboBox.MinimumSize = new System.Drawing.Size(150, 20);
       this.SetComboBox.Name = "SetComboBox";
       this.SetComboBox.SelectedCode = "";
       this.SetComboBox.SelectedItem = null;

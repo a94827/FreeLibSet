@@ -511,6 +511,10 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnPrepare()
     {
+      // Добавляем форматы вставки текста после пользовательских форматов
+      // (если уже не были добавлены явно)
+      AddTextPasteFormats(); // Вызов метода базового класса заблокирует EFPPasteHandler
+
       base.OnPrepare();
 
       // Отключаем ненужные команды
@@ -553,10 +557,6 @@ namespace FreeLibSet.Forms
         ciCopyToolTip.Usage = EFPCommandItemUsage.Menu;
       }
 
-
-      // Добавляем форматы вставки текста после пользовательских форматов
-      // (если уже не были добавлены явно)
-      AddTextPasteFormats();
 
       _PasteHandler.PasteApplied += new EventHandler(PasteHandler_PasteApplied);
 

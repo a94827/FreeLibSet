@@ -1920,7 +1920,7 @@ namespace FreeLibSet.Forms
     public override void HandleIdle()
     {
       base.HandleIdle();
-
+      
       if (_CurrentCellChangedFlag)
       {
         // обязательно до вызова CurrentCellChangedFlag.

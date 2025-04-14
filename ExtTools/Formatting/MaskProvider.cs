@@ -202,7 +202,7 @@ namespace FreeLibSet.Formatting
         throw ExceptionFactory.ArgStringIsNullOrEmpty("mask");
       int p = DataTools.IndexOfAnyOther(mask, ValidMaskChars);
       if (p >= 0)
-        throw ExceptionFactory.ArgBadChar("mask", mask, p);
+        throw ExceptionFactory.ArgInvalidChar("mask", mask, p);
       if (mask.IndexOf('0') < 0)
         throw new ArgumentException(Res.SimpleDigitalMaskProvider_Arg_NoDigits, "mask");
       _Mask = mask;

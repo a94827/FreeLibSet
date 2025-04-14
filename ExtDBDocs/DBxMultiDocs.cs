@@ -65,7 +65,7 @@ namespace FreeLibSet.Data.Docs
         {
           //int x = DocSet.DataSet.Tables["ПакетыФормФормы"].Rows.Count;
 
-          DBxMultiSubDocs Dummy = SubDocs[sdt.Name];
+          DBxMultiSubDocs dummy = SubDocs[sdt.Name];
           //int n = Dummy.SubDocsView.Table.Rows.Count;
           //       DataRow r = Dummy.SubDocsView.Table.Rows[0];
         }
@@ -96,7 +96,7 @@ namespace FreeLibSet.Data.Docs
     /// Набор, к которому относится коллекция объектов
     /// </summary>
     public DBxDocSet DocSet { get { return _DocSet; } }
-    private DBxDocSet _DocSet;
+    private readonly DBxDocSet _DocSet;
 
     /// <summary>
     /// Возвращает DocSet.DocProvider
@@ -107,7 +107,7 @@ namespace FreeLibSet.Data.Docs
     /// Возвращает описание вида документов
     /// </summary>
     public DBxDocType DocType { get { return _DocType; } }
-    private DBxDocType _DocType;
+    private readonly DBxDocType _DocType;
 
     /// <summary>
     /// Количество открытых документов. Документы в списке на удаление не учитываются
@@ -235,7 +235,7 @@ namespace FreeLibSet.Data.Docs
           }
           break;
         default:
-          throw new ArgumentException("Недопустимое значение state=" + state.ToString(), "state");
+          throw ExceptionFactory.ArgUnknownValue("state", state);
       }
       return cnt;
     }
@@ -343,7 +343,8 @@ namespace FreeLibSet.Data.Docs
               doc.Delete();
               break;
             default:
-              throw new ArgumentException("Нельзя переводить документы в состояние " + newState.ToString());
+              throw ExceptionFactory.ArgUnknownValue("newState", newState, new object[] {
+              DBxDocState.View, DBxDocState.Edit, DBxDocState.Delete});
           }
 
           cnt++;
@@ -380,8 +381,8 @@ namespace FreeLibSet.Data.Docs
         {
           case DataRowState.Modified:
           case DataRowState.Unchanged:
-            Int32 DocId = DataTools.GetInt(row, "Id");
-            docSel.Add(DocType.Name, DocId);
+            Int32 docId = DataTools.GetInt(row, "Id");
+            docSel.Add(DocType.Name, docId);
             break;
         }
       }
@@ -476,15 +477,15 @@ namespace FreeLibSet.Data.Docs
     {
       int p = IndexOfDocId(docId);
       if (p < 0)
-        throw new ArgumentException("Не найден документ \"" + DocType.SingularTitle + "\" с идентификатором " + docId.ToString());
+        throw new ArgumentException(String.Format(Res.DBxMultiDocs_Err_DocNotFound, DocType.SingularTitle, docId));
       else
         return this[p];
     }
 
     /// <summary>
     /// Поиск документа с заданным идентификатором <paramref name="docId"/>.
-    /// Возвращает индекс документа в DocIds или (-1), если такого документа нет
-    /// или DocId=0
+    /// Возвращает индекс документа в <see cref="DocIds"/> или (-1), если такого документа нет
+    /// или <paramref name="docId"/>=0.
     /// </summary>
     /// <param name="docId">Идентифккатор документа</param>
     /// <returns>Индекс документа</returns>
@@ -494,7 +495,7 @@ namespace FreeLibSet.Data.Docs
         return -1;
 #if DEBUG
       if (DocIds.Length != DocCount)
-        throw new BugException("Неправильная длина массива DocIds");
+        throw new BugException("DocIds length is wrong");
 #endif
 
       if (DocIds.Length <= 3)
@@ -524,8 +525,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Список идентификаторов документов в режиме просмотра и редактирование
-    /// Также доступен в режиме добавления после вызова ApplyChanges().
-    /// Если есть новые документы, которые не были сохранены, в массиве будут присутствовать фиктивные идентификаторы
+    /// Также доступен в режиме добавления после вызова <see cref="DBxDocProvider.ApplyChanges(DataSet, bool)"/>.
+    /// Если есть новые документы, которые не были сохранены, в массиве будут присутствовать фиктивные идентификаторы.
     /// </summary>
     public Int32[] DocIds
     {
@@ -546,11 +547,10 @@ namespace FreeLibSet.Data.Docs
         _SubDocs.ResetTables();
     }
 
-
     /// <summary>
     /// Получить массив идентификаторов документа, находящихся в заданном состоянии.
     /// Если нет ни одного документа в заданном состоянии, возвращается пустой массив.
-    /// Метод может вернуть фиктивные идентификаторы при DocState=Insert.
+    /// Метод может вернуть фиктивные идентификаторы при <paramref name="docState"/>=Insert.
     /// </summary>
     /// <param name="docState">Состояние документов</param>
     /// <returns>Массив идентификаторов документов</returns>
@@ -596,7 +596,7 @@ namespace FreeLibSet.Data.Docs
 
       /// <summary>
       /// Объект-владелец
-      /// Нельзя использовать прямую ссылку на FTable, т.к. она может меняться
+      /// Нельзя использовать прямую ссылку на Table, т.к. она может меняться
       /// </summary>
       private DBxMultiDocs _MultiDocs;
 
@@ -607,7 +607,7 @@ namespace FreeLibSet.Data.Docs
       /// <summary>
       /// Возвращает true, если: 
       /// - нет открытых документов
-      /// - есть хотя бы один документ в состоянии View
+      /// - есть хотя бы один документ в состоянии <see cref="DBxDocState.View"/>.
       /// </summary>
       public new bool IsReadOnly
       {
@@ -632,7 +632,7 @@ namespace FreeLibSet.Data.Docs
       public new void CheckNotReadOnly()
       {
         if (IsReadOnly)
-          throw new ObjectReadOnlyException("Редактирование значений не допускается");
+          throw new ObjectReadOnlyException(Res.DBxMultiDocs_Err_IsReadOnly);
       }
 
       private DataColumn GetColumnDef(int index)
@@ -707,8 +707,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Доступ к "серым" значениям полей документов
-    /// Инициализируется при изменении FTable
+    /// Доступ к "серым" значениям полей документов.
+    /// Инициализируется при изменении <see cref="Table"/>.
     /// </summary>
     public IDBxExtValues Values { get { return _DocValues; } }
     private MultiDocValues _DocValues;
@@ -803,7 +803,7 @@ namespace FreeLibSet.Data.Docs
         {
           int colIndex = _MultiDocs.ColumnNameIndexer.IndexOf(name);
           if (colIndex < 0)
-            throw new ArgumentException("Поле \"" + name + "\" не принадлежит документу \"" + _MultiDocs.DocType.SingularTitle + "\"", "name");
+            throw new ArgumentException(String.Format(Res.DBxMultiDocs_Arg_UnknownColumn, name, _MultiDocs.DocType.SingularTitle), "name");
           return new DBxExtValue(this, colIndex);
         }
       }
@@ -1105,8 +1105,7 @@ namespace FreeLibSet.Data.Docs
     internal void SetDocIdActionId(Int32 docId, Int32 actionId)
     {
 #if DEBUG
-      if (!DocSet.DocProvider.IsRealDocId(docId))
-        throw new ArgumentException("Недопустимый идентификатор документа: " + docId.ToString(), "docId");
+      DocSet.DocProvider.CheckIsRealDocId(docId);
 #endif
 
       _Table.ExtendedProperties["DocActionId" + docId.ToString()] = actionId.ToString();
@@ -1146,11 +1145,10 @@ namespace FreeLibSet.Data.Docs
       if (docIds == null)
         throw new ArgumentNullException("docIds");
       if (docIds.Length < 1)
-        throw new ArgumentException("Массив идентификаторов нулевой длины", "docIds");
+        throw ExceptionFactory.ArgIsEmpty("docIds");
       for (int i = 0; i < docIds.Length; i++)
       {
-        if (!DocProvider.IsRealDocId(docIds[i]))
-          throw new ArgumentException("В позиции " + i.ToString() + " задан недопустимый идентификатор документа " + docIds[i].ToString(), "docIds");
+        DocProvider.CheckIsRealDocId(docIds[i]); 
       }
 
       // 15.10.2015 CheckNotInTable(DocIds);
@@ -1202,7 +1200,7 @@ namespace FreeLibSet.Data.Docs
     private void DoView(DataTable table2)
     {
       if (Permissions == DBxAccessMode.None)
-        throw new DBxAccessException("У пользователя нет прав на просмотр документов \"" + DocType.PluralTitle + "\"");
+        throw new DBxAccessException(String.Format(Res.DBxMultiDocs_Err_AccessDenied, DocType.PluralTitle));
 
       int oldDocCount = DocCount;
 
@@ -1305,9 +1303,9 @@ namespace FreeLibSet.Data.Docs
       if (Permissions != DBxAccessMode.Full)
       {
         if (Permissions == DBxAccessMode.None)
-          throw new DBxAccessException("У пользователя нет прав на доступ к документам \"" + DocType.PluralTitle + "\"");
+          throw new DBxAccessException(String.Format(Res.DBxMultiDocs_Err_AccessDenied, DocType.PluralTitle));
         else
-          throw new DBxAccessException("У пользователя нет прав на создание, редактирование и удаление документов \"" + DocType.PluralTitle + "\"");
+          throw new DBxAccessException(String.Format(Res.DBxMultiDocs_Err_AccessReadOnly, DocType.PluralTitle));
       }
     }
 
@@ -1341,14 +1339,14 @@ namespace FreeLibSet.Data.Docs
       {
         DataRow row = _Table.Rows.Find(docIds[i]);
         if (row == null)
-          throw new BugException("Потеряна строка документа с DocId=" + docIds[i].ToString());
+          throw new BugException("DataRow is lost for DocId=" + docIds[i].ToString());
+        int rowIndex = _Table.Rows.IndexOf(row);
+        DBxSingleDoc doc = new DBxSingleDoc(this, rowIndex);
         switch (row.RowState)
         {
           case DataRowState.Modified:
             break; // ничего не надо проверять
           case DataRowState.Unchanged:
-            int rowIndex = _Table.Rows.IndexOf(row);
-            DBxSingleDoc doc = new DBxSingleDoc(this, rowIndex);
             if (DocSet.UseTestDocument)
             {
               if (doc.Deleted)
@@ -1358,8 +1356,8 @@ namespace FreeLibSet.Data.Docs
             row.SetModified();
             break;
           default:
-            throw new InvalidOperationException("Нельзя перевести документ \"" + DocType.SingularTitle + "\" с DocId=" +
-              docIds[i].ToString() + " в режим редактирования, так как строка находится в состоянии " + row.RowState.ToString());
+            throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_SetDocState, 
+              DocType.SingularTitle, docIds[i], "Edit", doc.DocState));
         }
       }
     }
@@ -1425,9 +1423,10 @@ namespace FreeLibSet.Data.Docs
       if (DocState != DBxDocState.View)
       {
         if (DocCount == 0)
-          throw new InvalidOperationException("Нет открытых документов \"" + DocType.PluralTitle + "\"");
+          throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_IsEmpty, DocType.PluralTitle));
         else
-          throw new InvalidOperationException("Все документы \"" + DocType.PluralTitle + "\" должны находиться в состоянии View");
+          throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_StateRequired,
+            DocType.PluralTitle, "View"));
       }
 
       CheckCanModify();
@@ -1544,9 +1543,10 @@ namespace FreeLibSet.Data.Docs
       if (DocState != DBxDocState.View)
       {
         if (DocCount == 0)
-          throw new InvalidOperationException("Нет открытых документов \"" + DocType.PluralTitle + "\"");
+          throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_IsEmpty, DocType.PluralTitle));
         else
-          throw new InvalidOperationException("Все документы \"" + DocType.PluralTitle + "\" должны находиться в состоянии View");
+          throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_StateRequired,
+            DocType.PluralTitle, "View"));
       }
 
       CheckCanModify();
@@ -1573,14 +1573,13 @@ namespace FreeLibSet.Data.Docs
     internal void DoInsertCopy1(DataSet tempDS, Int32 docId)
     {
       if (docId <= 0)
-        throw new ArgumentException("Недопустимый DocId=" + docId.ToString(), "docId");
+        throw new ArgumentException("DocId=" + docId.ToString(), "docId");
 
       DBxSingleDoc doc = GetDocById(docId);
 
       if (doc.DocState != DBxDocState.View)
-        throw new InvalidOperationException("Документ \"" + DocType.SingularTitle + "\" с DocId=" + docId.ToString() +
-          " не может быть переведен в режим создания копии, т.к. он находится в состоянии " +
-          doc.DocState.ToString() + ", а не View");
+        throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_SetDocState,
+          DocType.SingularTitle, docId, "InsertCopy", doc.DocState));
 
       DBxDocSet.DoInsertCopy1(tempDS, DocType.Name, docId, NextFictiveId());
 
@@ -1626,8 +1625,6 @@ namespace FreeLibSet.Data.Docs
       int oldDocCount = DocCount;
 
       DataTable table2 = DocProvider.LoadDocData(DocType.Name, docIds);
-      if (table2.Rows.Count != docIds.Length)
-        throw new InvalidOperationException("Не удалось загрузить все требуемые документы");
       DoView(table2);
 
       if (DocCount != oldDocCount + docIds.Length)
@@ -1715,7 +1712,8 @@ namespace FreeLibSet.Data.Docs
 
       for (int i = 0; i < DocCount; i++)
       {
-        switch (DBxDocSet.GetDocState(_Table.Rows[i]))
+        DBxSingleDoc doc = new DBxSingleDoc(this, i);
+        switch (doc.DocState)
         {
           case DBxDocState.Delete:
             break;
@@ -1727,7 +1725,8 @@ namespace FreeLibSet.Data.Docs
             rowsToDelete.Add(_Table.Rows[i]);
             break;
           default:
-            throw new InvalidOperationException("Нельзя удалить документ, находящийся в состоянии " + DBxDocSet.GetDocState(_Table.Rows[i]).ToString());
+            throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_SetDocState,
+              DocType.Name, doc.DocId, "Delete", doc.DocState));
         }
       }
 
@@ -1779,16 +1778,16 @@ namespace FreeLibSet.Data.Docs
       for (int i = 0; i < docIds.Length; i++)
       {
         if (_Table.Rows.Contains(docIds[i]))
-          throw new InvalidOperationException("Документ " + DocType.SingularTitle + "с идентификатором " + docIds[i].ToString() +
-            " уже есть в наборе");
+          throw new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_DocInDocSet, 
+            DocType.SingularTitle, docIds[i]));
       }
     }
 
     private void CheckNotInTable(Int32 docId)
     {
       if (_Table.Rows.Contains(docId))
-        throw new InvalidOperationException("Документ " + DocType.SingularTitle + "с идентификатором " + docId.ToString() +
-          " уже есть в наборе");
+        throw new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_DocInDocSet,
+          DocType.SingularTitle, docId));
     }
 
     #endregion
@@ -1826,8 +1825,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Объект одиночного документа для доступа к значениям полей</returns>
     public DBxSingleDoc ViewVersion(Int32 docId, int version)
     {
-      if (!DocProvider.IsRealDocId(docId))
-        throw new ArgumentException("Недопустимый идентификатор документа " + docId.ToString(), "docId");
+      DocProvider.CheckIsRealDocId(docId);
 
       CheckNotInTable(docId);
 
@@ -1916,7 +1914,7 @@ namespace FreeLibSet.Data.Docs
 
       #region Поля
 
-      private DBxMultiDocs _Owner;
+      private readonly DBxMultiDocs _Owner;
 
       private int _DocIndex;
 
@@ -1938,7 +1936,6 @@ namespace FreeLibSet.Data.Docs
       public void Dispose()
       {
       }
-
 
       object System.Collections.IEnumerator.Current
       {

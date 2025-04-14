@@ -1834,11 +1834,15 @@ namespace FreeLibSet.Forms
     private DataTable GetDataTableWithCheck()
     {
       IDataTableTreeModel model = GetDataTableModelWithCheck();
-      if (model.DataView == null)
-        throw ExceptionFactory.ObjectProperty(model, "DataView", model.DataView, null);
-      if (model.DataView.Table==null)
-        throw ExceptionFactory.ObjectProperty(model.DataView, "Table", model.DataView.Table, null);
-      return model.DataView.Table;
+      //if (model.DataView == null)
+      //  throw ExceptionFactory.ObjectProperty(model, "DataView", model.DataView, null);
+      //if (model.DataView.Table==null)
+      //  throw ExceptionFactory.ObjectProperty(model.DataView, "Table", model.DataView.Table, null);
+      //return model.DataView.Table;
+      // 02.03.2025
+      if (model.Table == null)
+        throw ExceptionFactory.ObjectPropertyNotSet(model, "Table");
+      return model.Table;
     }
 
     /*

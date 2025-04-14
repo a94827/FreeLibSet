@@ -1,6 +1,7 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+using FreeLibSet.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -242,10 +243,10 @@ namespace FreeLibSet.Russian
     {
       int n1 = (int)theCase;
       if (n1 < 0 || n1 > 5)
-        throw new ArgumentOutOfRangeException("theCase", theCase, "Неправильный род");
+        throw ExceptionFactory.ArgUnknownValue("theCase", theCase);
       int n2 = (int)theNumber;
       if (n2 < 0 || n2 > 1)
-        throw new ArgumentOutOfRangeException("theNumber", theNumber, "Неправильное число");
+        throw ExceptionFactory.ArgUnknownValue("theNumber", theNumber);
 
       return n1 * 6 + n2;
     }

@@ -439,7 +439,8 @@ namespace FreeLibSet.Forms.Docs
       switch (State)
       {
         case UIDataState.Insert:
-          Int32[] selIds = DocTypeUI.SelectDocs("Добавление документов \"" + DocType.PluralTitle + "\" в просмотр", this.Filters);
+          Int32[] selIds = DocTypeUI.SelectDocs(String.Format(Res.EFPDataView_Title_AddDocs,
+            DocType.PluralTitle), this.Filters);
           if (selIds.Length == 0)
             return true;
           for (int i = 0; i < selIds.Length; i++)
@@ -457,7 +458,7 @@ namespace FreeLibSet.Forms.Docs
           break;
         case UIDataState.Edit:
           id = CurrentId;
-          if (DocTypeUI.SelectDoc(ref id, "Изменение ссылки на документ", false, this.Filters))
+          if (DocTypeUI.SelectDoc(ref id, Res.EFPDataView_Title_ChangeDocRef, false, this.Filters))
           {
             CurrentDataRow.Delete();
             AddId(id);
@@ -466,7 +467,7 @@ namespace FreeLibSet.Forms.Docs
           }
           break;
         default:
-          EFPApp.ShowTempMessage("Неизвестный режим редактирования");
+          EFPApp.ShowTempMessage("Unknown edit mode");
           break;
       }
       return true;
@@ -539,7 +540,8 @@ namespace FreeLibSet.Forms.Docs
           cnt++;
       }
       if (cnt == 0)
-        EFPApp.ShowTempMessage("Все документы \"" + DocType.PluralTitle + "\" в буфере обмена (" + ids.Length.ToString() + " шт.) уже есть в списке");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_PasteNoNewDocs,
+          DocType.PluralTitle, ids.Length));
     }
 
     #endregion
@@ -666,7 +668,7 @@ namespace FreeLibSet.Forms.Docs
       public override string ToString()
       {
         if (Owner == null)
-          return "[ Отключен от просмотра ]";
+          return "Disconnected";
         else
           return Owner.ToString();
       }
@@ -707,7 +709,7 @@ namespace FreeLibSet.Forms.Docs
       //{
       // 09.07.2019 - Проверяем всегда
       if ((!CanBeEmpty) && _Table.DefaultView.Count == 0)
-        base.SetError("Не выбрано ни одного документа");
+        base.SetError(Res.Common_ToolTipText_NoDoc);
       //}
       if (BaseProvider.FormProvider.ValidateReason == EFPFormValidateReason.Closing)
         ValidateFilters();
@@ -721,7 +723,7 @@ namespace FreeLibSet.Forms.Docs
         return;
 
       IdList badIds;
-      EFPApp.BeginWait("Проверка выбранных документов", "Filter");
+      EFPApp.BeginWait(Res.Common_Phase_ValidateSelDocs, "Filter");
       try
       {
         // Список полей для фильтра
@@ -750,7 +752,8 @@ namespace FreeLibSet.Forms.Docs
       if (badIds.Count > 0)
       {
         this.SelectedIds = badIds.ToArray();
-        SetError("Выбранные документы (" + badIds.Count.ToString() + " из " + Control.RowCount.ToString() + ") не проходят условие фильтра");
+        SetError(String.Format(Res.EFPDataView_Err_DocsMismatchFilters,
+          badIds.Count, Control.RowCount));
       }
     }
 

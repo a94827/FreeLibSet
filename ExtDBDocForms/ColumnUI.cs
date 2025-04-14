@@ -72,7 +72,7 @@ namespace FreeLibSet.Forms.Docs
     /// Имя столбца в базе данных
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     /// <summary>
     /// Способ установки значения для поля при добавлении или копировании записи.
@@ -130,10 +130,10 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Событие каждый раз вызывается, когда требуется значение по умолчанию.
-    /// Обработчик может установить свойство DefaultValue.
-    /// Событие вызывается при каждом чтении свойства DefaultValue. Если требуется выполнение длительных
+    /// Обработчик может установить свойство <see cref="DefaultValue"/>.
+    /// Событие вызывается при каждом чтении свойства <see cref="DefaultValue"/>. Если требуется выполнение длительных
     /// действий, следует предусмотреть какую-нибудь проверку, чтобы не выполнять их многократно.
-    /// Если обработчик события сам читает свойство DefaultValue, то рекурсивный вызов обработчика не выполняется.
+    /// Если обработчик события сам читает свойство <see cref="DefaultValue"/>, то рекурсивный вызов обработчика не выполняется.
     /// </summary>
     public event EventHandler DefaultValueNeeded;
 
@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms.Docs
     #region Методы
 
     /// <summary>
-    /// Возвращает свойство ColumnName
+    /// Возвращает свойство <see cref="ColumnName"/>
     /// </summary>
     /// <returns>текстовое представление</returns>
     public override string ToString()
@@ -166,7 +166,7 @@ namespace FreeLibSet.Forms.Docs
     /// диалогах, работающих со значением поля. 
     /// При чтении возвращается сохраненное
     /// значение (если сохранение выполнялось) или значение по умолчанию. При записи свойства значение сохраняется.
-    /// Работа этого свойства не зависит от свойства NewMode
+    /// Работа этого свойства не зависит от свойства <see cref="NewMode"/>.
     /// </summary>
     public object Value
     {
@@ -207,7 +207,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Форматированный доступ к сохраняемому значению.
-    /// См. описание свойства Value.
+    /// См. описание свойства <see cref="Value"/>.
     /// </summary>
     public string AsString
     {
@@ -223,7 +223,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Форматированный доступ к сохраняемому значению.
-    /// См. описание свойства Value.
+    /// См. описание свойства <see cref="Value"/>.
     /// </summary>
     public bool AsBoolean
     {
@@ -233,7 +233,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Форматированный доступ к сохраняемому значению.
-    /// См. описание свойства Value.
+    /// См. описание свойства <see cref="Value"/>.
     /// </summary>
     public int AsInteger
     {
@@ -249,7 +249,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Форматированный доступ к сохраняемому значению.
-    /// См. описание свойства Value.
+    /// См. описание свойства <see cref="Value"/>.
     /// </summary>
     public float AsSingle
     {
@@ -265,7 +265,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Форматированный доступ к сохраняемому значению.
-    /// См. описание свойства Value.
+    /// См. описание свойства <see cref="Value"/>.
     /// </summary>
     public double AsDouble
     {
@@ -281,7 +281,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Форматированный доступ к сохраняемому значению.
-    /// См. описание свойства Value.
+    /// См. описание свойства <see cref="Value"/>.
     /// </summary>
     public decimal AsDecimal
     {
@@ -297,7 +297,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Форматированный доступ к сохраняемому значению.
-    /// См. описание свойства Value.
+    /// См. описание свойства <see cref="Value"/>.
     /// </summary>
     public DateTime? AsNullableDate
     {
@@ -352,8 +352,8 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Коллекция описаний полей для объектов DocTypeUI или SubDocTypeUI
-  /// (свойство Columns)
+  /// Коллекция описаний полей для объектов <see cref="DocTypeUI"/> или <see cref="SubDocTypeUI"/>
+  /// (свойство <see cref="DocTypeUIBase.Columns"/>)
   /// </summary>
   public sealed class ColumnUIList
   {
@@ -365,13 +365,13 @@ namespace FreeLibSet.Forms.Docs
       _Owner = owner;
     }
 
-    private DocTypeUIBase _Owner;
+    private readonly DocTypeUIBase _Owner;
 
     #endregion
 
     #region Доступ к полям
 
-    private Dictionary<string, ColumnUI> _Items;
+    private readonly Dictionary<string, ColumnUI> _Items;
 
     /// <summary>
     /// Доступ к столбцу по имени
@@ -384,12 +384,12 @@ namespace FreeLibSet.Forms.Docs
       get                                          
       {
         if (String.IsNullOrEmpty(columnName))
-          throw new ArgumentNullException("columnName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
         ColumnUI res;
         if (!_Items.TryGetValue(columnName, out res))
         {
           if (columnName.IndexOf('.') >= 0)
-            throw new ArgumentException("Ссылочные поля не допускаются", "columnName");
+            throw new ArgumentException(String.Format(Res.Common_Arg_RefColumn, columnName, _Owner.DocTypeBase.Name), "columnName");
 
           res = new ColumnUI(columnName);
           _Items.Add(columnName, res);
@@ -573,7 +573,7 @@ namespace FreeLibSet.Forms.Docs
             SetIfNotNull(value, colUI.Value);
             break;
           default:
-            throw new BugException("Неизвестный NewMode=" + colUI.NewMode.ToString());
+            throw new BugException("NewMode=" + colUI.NewMode.ToString());
         }
       }
     }
@@ -623,7 +623,7 @@ namespace FreeLibSet.Forms.Docs
             // не сохраняем
             break;
           default:
-            throw new BugException("Неизвестный NewMode=" + colUI.NewMode.ToString());
+            throw new BugException("NewMode=" + colUI.NewMode.ToString());
         }
       }
     }

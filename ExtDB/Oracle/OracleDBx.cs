@@ -194,7 +194,6 @@ namespace FreeLibSet.Data.OracleClient
 
     #region Прочее
 
-
     /// <summary>
     /// Не реализовано.
     /// Удаление базы данных, если она существует.
@@ -205,7 +204,6 @@ namespace FreeLibSet.Data.OracleClient
     {
       throw new NotSupportedException();
     }
-
 
     /*
      * Таблицы и просмотры в Oracle имеют формат "Owner.ИмяТаблицы".
@@ -224,7 +222,7 @@ namespace FreeLibSet.Data.OracleClient
     {
       if (String.IsNullOrEmpty(tableName))
       {
-        errorText = "Имя таблицы не задано";
+        errorText = Res.DBx_Err_NoTableName;
         return false;
       }
 
@@ -237,7 +235,7 @@ namespace FreeLibSet.Data.OracleClient
           return false;
         if (!CheckInvalidChars(user, out errorText))
         {
-          errorText = "Префикс OWNER. " + errorText;
+          errorText = String.Format(Res.OracleDBx_Err_OwnerPrefix, errorText);
           return false;
         }
         return true;
@@ -367,7 +365,7 @@ namespace FreeLibSet.Data.OracleClient
       }
       catch (Exception e)
       {
-        return "Ошибка получения строки подключения. " + e.Message;
+        return String.Format(Res.DBx_Err_GetConnectionString, e.Message);
       }
     }
 
@@ -729,7 +727,7 @@ namespace FreeLibSet.Data.OracleClient
       tableName = tableName.ToUpperInvariant();
       DataTable table = Connection.GetSchema("Columns", new string[] { owner, tableName });
       if (table.Rows.Count == 0)
-        throw new ArgumentException("Не найден список столбцов для таблицы \"" + owner + "." + tableName + "\"");
+        throw new InvalidOperationException(String.Format(Res.DBxCon_Err_SchemaColumnListIsEmpty, owner + "." + tableName));
 
       foreach (DataRowView drv in table.DefaultView)
       {

@@ -87,7 +87,7 @@ namespace FreeLibSet.Forms.Docs
       if (args.ValidateState == UIValidateState.Error)
         return;
       if (efpGroup.CurrentId == 0)
-        args.SetError("Должна быть выбрана какая-либо группа, а не корневой узел");
+        args.SetError(Res.RefGroupDocGridFilter_Err_RootSelected);
     }
 
     #endregion
@@ -123,7 +123,7 @@ namespace FreeLibSet.Forms.Docs
     {
       _GroupDocTypeUI = ui.DocTypes[groupDocTypeName] as GroupDocTypeUI;
       if (_GroupDocTypeUI == null)
-        throw new ArgumentException("Вид документов \"" + groupDocTypeName + "\" не является деревом групп", "groupDocTypeName");
+        throw new ArgumentException(String.Format(Res.RefGroupDocGridFilter_Arg_NoGroupDocType, groupDocTypeName), "groupDocTypeName");
     }
 
     #endregion
@@ -152,7 +152,7 @@ namespace FreeLibSet.Forms.Docs
           if (IncludeNestedGroups)
             return String.Empty;
           else
-            return "Документы без групп";
+            return Res.RefGroupDocGridFilter_Msg_DocsWithoutGroup;
         }
         else
         {
@@ -161,7 +161,7 @@ namespace FreeLibSet.Forms.Docs
           {
             if (AuxFilterGroupIdList.Count > 1)
             {
-              s += " и вложенные группы";
+              s =String.Format(Res.RefGroupDocGridFilter_Msg_GroupAndNested, s);
             }
           }
           return s;

@@ -268,7 +268,6 @@ namespace FreeLibSet.UICore
 
     #region Реализация проверок для управляющих элементов
 
-
     /// <summary>
     /// Метод для выдачи ошибки или предупреждения, в зависимости от свойства 'CanBeEmptyMode'.
     /// На момент вызова должно быть проверено значение, что оно является пустым.
@@ -859,6 +858,80 @@ namespace FreeLibSet.UICore
           throw ExceptionFactory.ArgUnknownValue("value", value);
       }
     }
+
+    /// <summary>
+    /// Возвращает список значений, разделенных запятыми.
+    /// Используется для вывода пользователю списка допустимых значений.
+    /// Строки заключаются в кавычки, для null выводится "null".
+    /// Если список пустой, возвращается соответствующее сообщение.
+    /// </summary>
+    /// <param name="values">Список значений</param>
+    /// <returns>Текстовое представление</returns>
+    public static string ValueListToString(System.Collections.IEnumerable values)
+    {
+      StringBuilder sb = new StringBuilder();
+      foreach (Object obj in values)
+      {
+        if (sb.Length > 0)
+          sb.Append(", ");
+        if (obj == null)
+          sb.Append("null");
+        else if (obj is String)
+        {
+          sb.Append('"');
+          sb.Append(obj);
+          sb.Append('"');
+        }
+        else
+          sb.Append(obj);
+      }
+      if (sb.Length == 0)
+        return Res.UITools_Msg_ListIsEmpty;
+      else
+        return sb.ToString();
+    }
+
+    #endregion
+
+    #region Сообщения об ошибках
+
+    /// <summary>
+    /// Возвращает сообщение "Строка 'S' содержит недопустимый символ 'X' в позиции Y"
+    /// </summary>
+    /// <param name="s">Строка</param>
+    /// <param name="invalidCharIndex">Позиция в пределах <paramref name="s"/>. Нумерация символов начинается с 0</param>
+    /// <returns>Текст сообщения об ошибке</returns>
+    public static string InvalidCharErrorMessage(string s, int invalidCharIndex)
+    {
+      if (String.IsNullOrEmpty(s))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("s");
+      if (invalidCharIndex < 0 || invalidCharIndex >= s.Length)
+        throw ExceptionFactory.ArgOutOfRange("charIndex", invalidCharIndex, 0, s.Length - 1);
+
+      return String.Format(Res.UITools_Err_InvalidChar, s, s[invalidCharIndex], invalidCharIndex + 1);
+    }
+
+
+    /// <summary>
+    /// Возвращает сообщение "Строка 'S' содержит недопустимый символ 'X' в позиции Y"
+    /// </summary>
+    /// <param name="s">Строка</param>
+    /// <param name="invalidChars">Один или несколько плохих символов, которые найдены в строке <paramref name="s"/></param>
+    /// <returns>Текст сообщения об ошибке</returns>
+    public static string InvalidCharErrorMessage(string s, string invalidChars)
+    {
+      if (String.IsNullOrEmpty(s))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("s");
+      if (String.IsNullOrEmpty(invalidChars))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("invalidChars");
+
+      int charIndex = DataTools.IndexOfAny(s, invalidChars);
+      if (charIndex < 0)
+        throw new BugException("String does not contain invalid chars");
+
+      return InvalidCharErrorMessage(s, charIndex);
+    }
+
 
     #endregion
   }

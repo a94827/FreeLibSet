@@ -10,6 +10,7 @@ using FreeLibSet.Config;
 using FreeLibSet.Caching;
 using FreeLibSet.Remoting;
 using System.Diagnostics;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Data.Docs
 {
@@ -1367,7 +1368,7 @@ namespace FreeLibSet.Data.Docs
         CheckThread();
 
         if (_UserPermissionCreators != null)
-          throw new InvalidOperationException("Повторная установка свойства не допускается");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "UserPermissionCreators");
         if (value == null)
           throw new ArgumentNullException();
         _UserPermissionCreators = value;

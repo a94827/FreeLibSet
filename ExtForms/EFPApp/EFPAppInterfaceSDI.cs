@@ -144,8 +144,10 @@ namespace FreeLibSet.Forms
         pd.Layout.LocalToolBar = new EFPAppToolBar("CurrentForm", localToolStrip);
         pd.Layout.LocalToolBar.DisplayName = displayName;
       }
-      base.AddMainWindow(pd.Layout);
 
+      form.WindowState = pd.SrcState; // на всякий случай
+      base.AddMainWindow(pd.Layout);
+      pd.SrcState = form.WindowState; // 26.02.2025 EFPAppInterface.AddMainWindow() может установить состояние Maximized
 
       return pd;
     }
@@ -200,6 +202,7 @@ namespace FreeLibSet.Forms
       EFPFormProvider formProvider = EFPFormProvider.FindFormProviderRequired(form);
       if ((!pd.SrcSize.IsEmpty) && (formProvider.ReadConfigFormBoundsParts & EFPFormBoundsPart.Size) == 0)
       {
+        form.WindowState = FormWindowState.Normal; // 26.02.2025
         // Должно быть после вызова AddMainWindow(), т.к. там добавляется статусная строка и панели
         Size newSize = pd.StripContainer.ContentPanel.ClientSize;
         int dx = pd.SrcSize.Width - newSize.Width;

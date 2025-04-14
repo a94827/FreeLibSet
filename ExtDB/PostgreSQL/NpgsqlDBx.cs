@@ -55,7 +55,7 @@ namespace FreeLibSet.Data.Npgsql
       if (!String.IsNullOrEmpty(connectionStringBuilder.Database))
         return connectionStringBuilder.Database;
       else
-        throw new ArgumentException("В строке подключения не задан параметр Database, определяющий базу данных", "connectionStringBuilder");
+        throw new ArgumentException(Res.NpgsqlDBx_Arg_NoDatabase, "connectionStringBuilder");
     }
 
     #endregion
@@ -358,11 +358,11 @@ namespace FreeLibSet.Data.Npgsql
       }
       catch (Exception e)
       {
-        return "Ошибка получения строки подключения. " + e.Message;
+        return String.Format(Res.DBx_Err_GetConnectionString, e.Message);
       }
     }
 
-#endregion
+    #endregion
   }
 
   /// <summary>
@@ -478,7 +478,7 @@ namespace FreeLibSet.Data.Npgsql
         e.Data["NpgsqlDBx.DatabaseName"] = DB.DatabaseName;
         e.Data["NpgsqlDBxCon.ServerWide"] = _ServerWide.ToString();
         e.Data["NpgsqlDBxCon.ConnectionString"] = NpgsqlDBxEntry.GetUnpasswordedConnectionString(_Connection.ConnectionString);
-        e.Data["NpgsqlDBxCon.Remark"] = @"Если сообщение об ошибке не читается (сердечки вместо букв), настройте сервер на выдачу сообщений на английском языке в файле postgresql.conf. Задайте строку <lc_messages = 'en_EN.UTF-8'>";
+        e.Data["NpgsqlDBxCon.Remark"] = Res.Npgsql_Msg_UnreadableMessage;
         throw;
       }
     }
@@ -621,7 +621,7 @@ namespace FreeLibSet.Data.Npgsql
       string PrimaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
 
       if (columnNames.Count != values.Length)
-        throw new ArgumentException("Число полей не совпадает с числом значений");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values, columnNames.Count);
 
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
@@ -643,7 +643,7 @@ namespace FreeLibSet.Data.Npgsql
       id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
 
       if (id <= 0)
-        throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + tableName + "\" Id=" + id.ToString());
+        throw new BugException("Invalid record identifier returned for table \"" + tableName + "\" Id=" + id.ToString());
 
       return id;
     }
@@ -878,7 +878,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-#endregion
+    #endregion
 
     #region Удаление записей
 
@@ -898,7 +898,7 @@ namespace FreeLibSet.Data.Npgsql
 
     #endregion
 
-#endregion
+    #endregion
 
     #region Транзакция
 
@@ -937,7 +937,7 @@ namespace FreeLibSet.Data.Npgsql
     {
       int tableOID = GetTableOID(tableName);
       if (tableOID == 0)
-        throw new BugException("Не удалось получить идентификатор object_id таблицы \"" + tableName + "\"");
+        throw new BugException("Cannot get object_id for table \"" + tableName + "\"");
 
       DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
@@ -1113,7 +1113,7 @@ namespace FreeLibSet.Data.Npgsql
         Int32 refTableOID = DataTools.GetInt(row, "confrelid");
         string refTableName = GetTableNameFromOID(refTableOID);
         if (String.IsNullOrEmpty(refTableName))
-          throw new BugException("Не найдено имя для мастер-таблицы с OID=" + refTableOID);
+          throw new BugException("Master-table name with OID=" + refTableOID + " not found");
 
         Int16[] detColPoss = (Int16[])(row["conkey"]);
         // не нужен Int16[] RefColPoss = (Int16[])(Row["confkey"]);
@@ -1130,7 +1130,6 @@ namespace FreeLibSet.Data.Npgsql
           case "n": colStr.RefType = DBxRefType.Clear; break;
           default: colStr.RefType = DBxRefType.Disallow; break;
         }
-
       }
 
       #endregion
@@ -1151,7 +1150,7 @@ namespace FreeLibSet.Data.Npgsql
     public Int32 GetTableOID(string tableName)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       // Имя таблицы идет в апострофах, а не в кавычках, т.к. это - строка
       return DataTools.GetInt(SQLExecuteScalar("SELECT oid FROM pg_catalog.pg_class WHERE relname=\'" + tableName + "\' AND relkind=\'r\'"));
@@ -1276,9 +1275,9 @@ namespace FreeLibSet.Data.Npgsql
         {
           #region Требуется полное создание таблицы
 
-          splash.PhaseText = "Создается таблица \"" + table.TableName + "\"";
+          splash.PhaseText = DBxUITools.PhaseText.TableCreation(table);
           CreateTable(table);
-          errors.AddInfo("Создана таблица \"" + table.TableName + "\"");
+          errors.AddInfo(DBxUITools.UpdateMsg.TableCreated(table));
           modified = true;
 
           #endregion
@@ -1315,14 +1314,14 @@ namespace FreeLibSet.Data.Npgsql
             if (columnRowIndex < 0)
             {
               // Поля не существует
-              splash.PhaseText = "Добавление поля \"" + colDef.ColumnName + "\"в таблицу \"" + table.TableName + "\"";
+              splash.PhaseText = DBxUITools.PhaseText.ColumnCreation(table, colDef);
               Buffer.Clear();
               Buffer.SB.Append("ALTER TABLE ");
               Buffer.FormatTableName(table.TableName);
               Buffer.SB.Append(" ADD "); // а не ADD COLUMN
               AppendColumnDef(/*Table, */colDef, false, true);
               SQLExecuteNonQuery(Buffer.SB.ToString());
-              errors.AddInfo("Создано поле \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName + "\"");
+              errors.AddInfo(DBxUITools.UpdateMsg.ColumnCreated(table, colDef));
               modified = true;
             }
             else
@@ -1341,10 +1340,7 @@ namespace FreeLibSet.Data.Npgsql
 
               if (realType != wantedType)
               {
-                errors.AddError("Несоответствие типа поля \"" + colDef.ColumnName + "\" таблицы \"" +
-                    table.TableName + "\". Объявление поля типа " + colDef.ColumnType.ToString() +
-                    " предполагает тип " + wantedType +
-                    " в то время как реальный тип поля " + realType);
+                errors.AddError(DBxUITools.UpdateMsg.ColumnTypeDiff(table, colDef, wantedType, realType));
               }
               else
               {
@@ -1358,23 +1354,20 @@ namespace FreeLibSet.Data.Npgsql
                     if (realLen > colDef.MaxLength)
                     {
                       // !!! Проверка, нельзя ли укоротить поле
-                      errors.AddWarning("Поле \"" + colDef.ColumnName + "\" таблицы \"" +
-                          table.TableName + "\" должно иметь длину " + colDef.MaxLength.ToString() +
-                          " символов, в то время, как реальное поле длиннее:  " + realLen.ToString() + " символов");
+                      errors.AddWarning(DBxUITools.UpdateMsg.ColumnIsLonger(table, colDef, realLen));
                       //DisallowFieldChange = true;
                     }
                     else
                     {
                       // Лучше пересоздать все индексы
-                      errors.AddInfo("Все существующие индексы таблицы \"" + table.TableName + "\" будут удалены из-за изменения размера поля \"" + colDef.ColumnName + "\"");
-                      if (DeleteAllIndices(table.TableName, splash, errors))
+                      errors.AddInfo(DBxUITools.UpdateMsg.DeleteAllIndexesByColumnLength(table, colDef));
+                      if (DeleteAllIndices(table, splash, errors))
                         modified = true;
 
                       // Увеличиваем длину поля
-                      splash.PhaseText = "Изменение длины поля \"" + colDef.ColumnName + "\" в таблице \"" + table.TableName + "\"";
+                      splash.PhaseText = DBxUITools.PhaseText.ColumnLengthChanging(table, colDef);
                       AlterColumn(table, colDef, true, false);
-                      errors.AddInfo("Длина поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                        "\" увеличена с " + realLen.ToString() + " до " + colDef.MaxLength.ToString() + " символов");
+                      errors.AddInfo(DBxUITools.UpdateMsg.ColumnLengthChanged(table, colDef, realLen));
                       modified = true;
                     }
                   }
@@ -1409,8 +1402,7 @@ namespace FreeLibSet.Data.Npgsql
                     Buffer.SB.Append(" DROP DEFAULT");
 
                     SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                        "\" очищен признак DEFAULT");
+                    errors.AddInfo(DBxUITools.UpdateMsg.ColumnDefaultSet(table, colDef, null));
                   }
                   if (wantedDefExpr.Length > 0)
                   {
@@ -1423,8 +1415,7 @@ namespace FreeLibSet.Data.Npgsql
                     Buffer.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
                     SQLExecuteNonQuery(Buffer.SB.ToString());
 
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" установлен признак DEFAULT " + wantedDefExpr);
+                    errors.AddInfo(DBxUITools.UpdateMsg.ColumnDefaultSet(table, colDef, wantedDefExpr));
                   }
                   modified = true;
                 }
@@ -1452,7 +1443,7 @@ namespace FreeLibSet.Data.Npgsql
 
                 if (colDef.Nullable != realNullable)
                 {
-                  if (DeleteAllIndices(table.TableName, splash, errors))
+                  if (DeleteAllIndices(table, splash, errors))
                     modified = true;
 
                   #region Замена NULL'ов на DEFAULT
@@ -1472,16 +1463,14 @@ namespace FreeLibSet.Data.Npgsql
                     Buffer.FormatColumnName(colDef.ColumnName);
                     Buffer.SB.Append(" IS NULL");
                     SQLExecuteNonQuery(Buffer.SB.ToString());
-                    errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" значения NULL заменены на значение по умолчанию");
+                    errors.AddInfo(DBxUITools.UpdateMsg.NullToDefaultValue(table, colDef));
                   }
 
                   #endregion
 
                   // Делаем поле NULLABLE
                   AlterColumn(table, colDef, false, true);
-                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                    "\" установлен признак " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\""));
+                  errors.AddInfo(DBxUITools.UpdateMsg.NullChanged(table, colDef));
                   modified = true;
                 }
 
@@ -1498,7 +1487,7 @@ namespace FreeLibSet.Data.Npgsql
           if (table.Comment != GetTableComment(tableOId))
           {
             SetTableComment(table.TableName, table.Comment);
-            errors.AddInfo("Для таблицы \"" + table.TableName + "\" изменен комментарий");
+            errors.AddInfo(DBxUITools.UpdateMsg.TableCommentChanged(table));
             modified = true;
           }
           for (int i = 0; i < table.Columns.Count; i++)
@@ -1507,8 +1496,7 @@ namespace FreeLibSet.Data.Npgsql
             if (table.Columns[i].Comment != GetColumnComment(tableOId, table.Columns[i].ColumnName))
             {
               SetColumnComment(table.TableName, table.Columns[i].ColumnName, table.Columns[i].Comment);
-              errors.AddInfo("Для поля \"" + table.Columns[i].ColumnName + "\"в таблице \"" + table.TableName +
-                "\" изменен комментарий");
+              errors.AddInfo(DBxUITools.UpdateMsg.ColumnCommentChanged(table, table.Columns[i]));
               modified = true;
             }
           }
@@ -1680,7 +1668,7 @@ namespace FreeLibSet.Data.Npgsql
     private bool CorrectPrimaryKey(DBxTableStruct table, DataView dvIndexColumns, ErrorMessageList errors)
     {
       if (table.PrimaryKey.Count != 1)
-        throw new NotSupportedException("В таблице должен быть первичный ключ из одного поля");
+        throw new NotImplementedException("Multi-column primary keys are not implemented");
 
       bool modified = false;
       bool found = false;
@@ -1703,7 +1691,7 @@ namespace FreeLibSet.Data.Npgsql
           //if (IndexName.StartsWith("Index"))
           //  continue; // составной пользовательский индекс, в который входит поле "Id"
           SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" DROP CONSTRAINT \"" + pkName2 + "\"");
-          errors.AddInfo("Удалено неправильное ограничение первичного ключа \"" + pkName2 + "\" в таблице \"" + table.TableName + "\"");
+          errors.AddInfo(DBxUITools.UpdateMsg.PKRemovedWrong(table, pkName2));
           modified = true;
           break;
         }
@@ -1712,7 +1700,7 @@ namespace FreeLibSet.Data.Npgsql
       if (!found)
       {
         SQLExecuteNonQuery("ALTER TABLE \"" + table.TableName + "\" ADD CONSTRAINT \"" + pkName + "\" PRIMARY KEY (\"" + table.PrimaryKey[0] + "\")");
-        errors.AddInfo("Добавлено ограничение первичного ключа \"" + pkName + "\" в таблице \"" + table.TableName + "\"");
+        errors.AddInfo(DBxUITools.UpdateMsg.PKAdded(table, pkName));
         modified = true;
       }
 
@@ -1822,7 +1810,7 @@ namespace FreeLibSet.Data.Npgsql
         Array aColIdxs = rowPGC[2] as Array;
         if (aColIdxs == null)
         {
-          errors.AddWarning("В системной таблице \"pg_constraint\" задано ограничение внешнего ключа с неправильным полем \"conkey\"");
+          errors.AddWarning(Res.NpgsqlDBx_Msg_ConstraintWrongConkey);
           continue;
         }
         if (aColIdxs.Length != 1)
@@ -1838,8 +1826,8 @@ namespace FreeLibSet.Data.Npgsql
         int p = dvColumns.Find(new object[2] { tableName, colIdx });
         if (p < 0)
         {
-          errors.AddWarning("В системной таблице \"pg_constraint\" задано ограничение внешнего ключа для таблицы \"" + tableName + "\" и столюца с индексом " + colIdx.ToString() +
-            ". Для этих таблицы+поле не найдено записи в таблице столбцов. Существующее ограничение не рассматривается, но возможна ошибка повторного добавления ограничения");
+          errors.AddWarning(String.Format(Res.NpgsqlDBx_Msg_ConstraintColumnNotFound,
+            tableName, colIdx));
           continue;
         }
         string colName = DataTools.GetString(dvColumns[p].Row, "COLUMN_NAME");
@@ -1853,7 +1841,7 @@ namespace FreeLibSet.Data.Npgsql
 
       #endregion
 
-      splash.PhaseText = "Проверка внешних ключей";
+      splash.PhaseText = DBxUITools.PhaseText.FKVerification();
       splash.PercentMax = DB.Struct.Tables.Count;
       foreach (DBxTableStruct table in DB.Struct.Tables)
       {
@@ -1884,7 +1872,7 @@ namespace FreeLibSet.Data.Npgsql
         }
 
         // Создаем внешний ключ
-        splash.PhaseText = "Создание внешнего ключа для таблицы \"" + table.TableName + "\", столбца \"" + column.ColumnName + "\"";
+        splash.PhaseText = DBxUITools.PhaseText.FKCreation(table.TableName + "." + column.ColumnName);
 
         Buffer.Clear();
         Buffer.SB.Append("ALTER TABLE ");
@@ -1897,7 +1885,7 @@ namespace FreeLibSet.Data.Npgsql
         BaseDBxSqlFormatter.FormatRefColumnDeleteAction(Buffer, column.RefType);
 
         SQLExecuteNonQuery(Buffer.SB.ToString());
-        errors.AddInfo("Создан внешний ключ в таблице \"" + table.TableName + "\" для столбца \"" + column.ColumnName + "\"");
+        errors.AddInfo(DBxUITools.UpdateMsg.FKCreated(table, table.TableName + "." + column.ColumnName, column));
         modified = true;
       }
 
@@ -1914,7 +1902,7 @@ namespace FreeLibSet.Data.Npgsql
 
       bool modified = false;
 
-      splash.PhaseText = "Проверка индексов";
+      //splash.PhaseText =DBxUITools.PhaseText.  "Проверка индексов";
 
       #region Загружаем существующие индексы и столбцы
 
@@ -1998,7 +1986,7 @@ namespace FreeLibSet.Data.Npgsql
           #region Столбцы существующего индекса
 
           // Поле "indexname" имеет противный тип int2vector
-          // Х.З., как с ним правильно работать. Net Framework делает из него строку вида"1 3 5"
+          // Х.З., как с ним правильно работать. Net Framework делает из него строку вида "1 3 5"
 
           string sColIdxs = drvIdx.Row[2].ToString();
           string[] aColIdxs = sColIdxs.Split(' ');
@@ -2018,7 +2006,8 @@ namespace FreeLibSet.Data.Npgsql
               int p = dvColumns.Find(new object[] { table.TableName, colIdx });
               if (p < 0)
               {
-                errors.AddError("Для индекса \"" + indexName + "\" задан столбец с номером " + colIdx.ToString() + ", которого нет в таблице \"" + table.TableName + "\"");
+                errors.AddError(String.Format(Res.NpgsqlDBx_Msg_IndexColumnNotFound,
+                  indexName, colIdx, table.TableName));
                 colNames = null;
                 break;
               }
@@ -2037,10 +2026,10 @@ namespace FreeLibSet.Data.Npgsql
             indexFlags[indexIdx] = true; // нашли индекс
           else if (options.DropUnusedIndices)
           {
-            splash.PhaseText = "Удаление индекса " + indexName;
+            splash.PhaseText = DBxUITools.PhaseText.IndexRemoving(indexName);
             DropIndex(/*Table.TableName, */indexName);
             modified = true;
-            errors.AddInfo("Удален индекс \"" + indexName + "\" в таблице \"" + table.TableName + "\", т.к. он не соответствует объявленному в структуре данных");
+            errors.AddInfo(DBxUITools.UpdateMsg.IndexRemovedWrong(table, indexName));
           }
         } // цикл по существующим индексам
 
@@ -2054,7 +2043,7 @@ namespace FreeLibSet.Data.Npgsql
           {
             CreateIndex(table.TableName, table.Indexes[i].Columns);
             modified = true;
-            errors.AddInfo("Добавлен индекс для таблицы \"" + table.TableName + "\", по полям " + table.Indexes[i].Columns.AsString);
+            errors.AddInfo(DBxUITools.UpdateMsg.IndexCreated(table, table.Indexes[i]));
           }
         }
 
@@ -2131,14 +2120,14 @@ namespace FreeLibSet.Data.Npgsql
     }
 #endif
 
-    private bool DeleteAllIndices(string tableName, ISimpleSplash splash, ErrorMessageList errors)
+    private bool DeleteAllIndices(DBxTableStruct table, ISimpleSplash splash, ErrorMessageList errors)
     {
       // Перебираем все существующие индексы
       // Один индекс может занимать несколько строк
       // Создаем список индексов для удаления
       List<string> indexNames = null;
 
-      DataTable tableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, tableName });
+      DataTable tableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, table.TableName });
       foreach (DataRow indexRow in tableIndexes.Rows)
       {
         string indexName = DataTools.GetString(indexRow, "INDEX_NAME");
@@ -2155,16 +2144,16 @@ namespace FreeLibSet.Data.Npgsql
       if (indexNames == null)
         return false;
 
-      splash.PhaseText = "Удаление индексов таблицы \"" + tableName + "\"";
       for (int i = 0; i < indexNames.Count; i++)
       {
+        DBxUITools.PhaseText.IndexRemoving(indexNames[i]);
         Buffer.Clear();
         Buffer.SB.Append("DROP INDEX \"");
         Buffer.SB.Append(indexNames[i]);
         Buffer.SB.Append("\"");
 
         SQLExecuteNonQuery(Buffer.SB.ToString());
-        errors.AddInfo("Удален индекс \"" + indexNames[i] + "\" в таблице \"" + tableName + "\"");
+        errors.AddInfo(DBxUITools.UpdateMsg.IndexRemovedExcess(table, indexNames[i]));
       }
       return true;
     }

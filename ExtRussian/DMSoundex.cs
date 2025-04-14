@@ -260,7 +260,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         for (int j = 0; j < key.Length; j++)
         {
           if (!_ValidChars.ContainsKey(key[j]))
-            throw new BugException("Ключ \"" + key + "\" содержит недопустимый символ \"" + key[j] + "\"");
+            throw new BugException("Key \"" + key + "\" contains bad char \"" + key[j] + "\"");
         }
 #endif
 
@@ -298,16 +298,16 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
           aValues = xValue.Split('/');
 #if DEBUG
           if (aValues.Length == 0)
-            throw new BugException("Нет кодов для ключа \"" + key + "\"");
+            throw new BugException("There are no codes for key \"" + key + "\"");
           for (int i = 0; i < aValues.Length; i++)
           {
             if (String.IsNullOrEmpty(aValues[i]))
-              throw new BugException("Пустое значение при разбиении \"" + xValue + "\"");
+              throw new BugException("Empty value when split \"" + xValue + "\"");
             for (int j = 0; j < aValues[i].Length; j++)
             {
               char ch = aValues[i][j];
               if (ch < '0' || ch > '9')
-                throw new BugException("Недопустимый символ \"" + ch + "\" в значении \"" + xValue + "\"");
+                throw new BugException("Invalid char \"" + ch + "\" in value \"" + xValue + "\"");
             }
           }
 #endif
@@ -331,7 +331,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
         for (int i = 0; i < s.Length; i++)
         {
           if (!_ValidChars.ContainsKey(s[i]))
-            throw new BugException("Последовательность \"" + s + "\" содержит недопустимый символ \"" + s[i] + "\"");
+            throw new BugException("Secuence \"" + s + "\" contains invalid char \"" + s[i] + "\"");
         }
       }
 
@@ -343,7 +343,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
       {
         string s = new string(pair.Key, 1);
         if (!dict.ContainsKey(s))
-          throw new BugException("Словарь не содержит одиночного символа \"" + s + "\" (0x" + ((int)pair.Key).ToString("x") + ")");
+          throw new BugException("Dictionary does not contain a single char \"" + s + "\" (0x" + ((int)pair.Key).ToString("x") + ")");
       }
 
       #endregion
@@ -565,9 +565,9 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
 
 #if DEBUG
         if (codes == null)
-          throw new BugException("Внутренняя ошибка. Не найдена последовательность");
+          throw new BugException("codes==null");
         if (codes.Length == 0)
-          throw new BugException("Внутренняя ошибка. Найдены пустые коды для последовательности \"" + seq + "\"");
+          throw new BugException("Empty codes for secuence \"" + seq + "\" not found");
 #endif
 
         if (debugList != null)

@@ -12,8 +12,8 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data.Docs
 {
   /// <summary>
-  /// Список однотипных поддокументов, относящихся к одному документу
-  /// При переборе поддокументов могут встречаться удаленные поддокументы
+  /// Список однотипных поддокументов, относящихся к одному документу.
+  /// При переборе поддокументов могут встречаться удаленные поддокументы.
   /// </summary>
   public struct DBxSingleSubDocs : IObjectWithCode, IEnumerable<DBxSubDoc>, IReadOnlyObject
   {
@@ -33,13 +33,13 @@ namespace FreeLibSet.Data.Docs
     /// Документ, к которому относятся поддокументы
     /// </summary>
     public DBxSingleDoc Doc { get { return _Doc; } }
-    private DBxSingleDoc _Doc;
+    private readonly DBxSingleDoc _Doc;
 
     /// <summary>
-    /// Доступ ко всем однотипным поддокументам всех документов набора DBxDocSe
+    /// Доступ ко всем однотипным поддокументам всех документов набора <see cref="DBxDocSet"/>
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
-    private DBxMultiSubDocs _SubDocs;
+    private readonly DBxMultiSubDocs _SubDocs;
 
     /// <summary>
     /// Набор данных, к которому относится документ
@@ -59,7 +59,7 @@ namespace FreeLibSet.Data.Docs
     {
       StringBuilder sb = new StringBuilder();
       sb.Append(_SubDocs.SubDocType.PluralTitle);
-      sb.Append(" для ");
+      sb.Append(" for ");
       sb.Append(_Doc.ToString());
       sb.Append(", SubDocCount=");
       sb.Append(SubDocCount.ToString());
@@ -172,7 +172,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Доступ к поддокументу по индексу, а не по идентификатору
     /// </summary>
-    /// <param name="index">Индекс поддокумента в диапазоне от 0 до (SubDocCount-1)</param>
+    /// <param name="index">Индекс поддокумента в диапазоне от 0 до (<see cref="SubDocCount"/>-1)</param>
     /// <returns>Поддокумент</returns>
     public DBxSubDoc this[int index]
     {
@@ -181,8 +181,7 @@ namespace FreeLibSet.Data.Docs
         DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
         DataRow row = subDocRows[index];
         if (row.RowState == DataRowState.Detached)
-          throw new InvalidOperationException("Нельзя получить доступ к поддокументу с индексом " + index.ToString() +
-            ", т.к. строка для него была удалена из таблицы поддокументов (RowState=Detached)");
+          throw new InvalidOperationException(String.Format(Res.DBxSingleSubDocs_Err_RowDetached, index));
         int rowIndex = _SubDocs.Table.Rows.IndexOf(row);
         return new DBxSubDoc(SubDocs, rowIndex);
       }
@@ -211,7 +210,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Доступ к одному поддокументу по идентификатору.
-    /// Если SubDocId=0 или в наборе нет поддокумента с таким идентификатором, выбрасывается исключение.
+    /// Если <paramref name="subDocId"/>=0 или в наборе нет поддокумента с таким идентификатором, выбрасывается исключение.
     /// Если найденный поддокуммент относится к другому документу в наборе, то также генерируется исключение.
     /// </summary>
     /// <param name="subDocId">Идентификатор поддокумента</param>
@@ -221,8 +220,8 @@ namespace FreeLibSet.Data.Docs
     {
       DBxSubDoc res = SubDocs.GetSubDocById(subDocId);
       if (res.DocId != Doc.DocId)
-        throw new ArgumentException("Поддокумент \"" + SubDocs.SubDocType.SingularTitle + "\" c SubDocId=" + subDocId.ToString() + " относится к документу \"" +
-          Doc.DocType.SingularTitle + "\" с DocId=" + res.DocId.ToString() + ", а не " + Doc.DocId.ToString(), "subDocId");
+        throw new ArgumentException(String.Format(Res.DBxSingleSubDocs_Arg_SubDocDiffDoc,
+          SubDocs.SubDocType.SingularTitle, subDocId, Doc.DocType.SingularTitle, res.DocId, Doc.DocId), "subDocId");
       return res;
     }
 
@@ -271,9 +270,9 @@ namespace FreeLibSet.Data.Docs
 
       #region Поля
 
-      DBxMultiSubDocs _SubDocs;
+      private readonly DBxMultiSubDocs _SubDocs;
 
-      private DataRow[] _SubDocRows;
+      private readonly DataRow[] _SubDocRows;
 
       private int _SubDocIndex;
 
@@ -354,8 +353,8 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает true:
-    /// - если у пользователя нет прав на изменение поддокумента
-    /// - если документ находится в режиме View
+    /// - если у пользователя нет прав на изменение поддокумента.
+    /// - если документ находится в режиме <see cref="DBxDocState.View"/>.
     /// </summary>
     public bool IsReadOnly
     {
@@ -371,7 +370,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -386,7 +385,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Возвращает КОПИЮ таблицы данных поддокументов.
     /// Удаленные поддокументы не включаются в таблицу.
-    /// Строки в таблице имеют порядок, соответствующий заданному порядку сортировки поддокументов в DBxSubDocType.DefaultOrder
+    /// Строки в таблице имеют порядок, соответствующий заданному порядку сортировки поддокументов в DBxSubDocType.DefaultOrder.
     /// </summary>
     /// <returns></returns>
     public DataTable CreateSubDocsData()

@@ -267,7 +267,7 @@ namespace FreeLibSet.Forms.Docs
       set
       {
         if (value && _MainEditor == null)
-          throw new InvalidOperationException("Нельзя устанавливать свойство ValidateBeforeEdit в true, т.к. просмотр не относится к DocumentEditor"); // 21.01.2022
+          throw new InvalidOperationException(Res.EFPDataView_Err_SetValidateBeforEdit); // 21.01.2022
         _ValidateBeforeEdit = value;
       }
     }
@@ -408,7 +408,7 @@ namespace FreeLibSet.Forms.Docs
           // Если выпустить исключение, то оно может привести к повторному вызову OnCreated().
           // При этом список команд меню попытается инициализироваться еще раз, а он уже IsReadOnly=true.
           AddExceptionInfo(e);
-          EFPApp.ShowException(e, DisplayName + " - ошибка загрузки данных");
+          EFPApp.ShowException(e, String.Format(Res.EFPDataView_ErrTitle_DataViewDataLoading, DisplayName));
         }
       }
     }
@@ -892,7 +892,7 @@ namespace FreeLibSet.Forms.Docs
         DataRow[] rows = GetMasterRows(this.SelectedDataRows);
         if (rows.Length == 0)
         {
-          EFPApp.MessageBox("Нет выбранных поддокументов \"" + SubDocType.PluralTitle + "\"");
+          EFPApp.MessageBox(String.Format(Res.EFPDataView_Err_NoSelectedSubDocs, SubDocType.PluralTitle));
           return true;
         }
 
@@ -904,10 +904,10 @@ namespace FreeLibSet.Forms.Docs
           {
             string s;
             if (subDocs2.SubDocCount == 1)
-              s = "Удалить запись \"" + SubDocType.SingularTitle + "\" (" + SubDocTypeUI.UI.TextHandlers.GetTextValue(subDocs2[0]) + ")?";
+              s = String.Format(Res.EFPDataView_Msg_ConfirmDeleteSingle, SubDocType.SingularTitle, SubDocTypeUI.UI.TextHandlers.GetTextValue(subDocs2[0]));
             else
-              s = "Удалить выбранные записи \"" + SubDocs.SubDocType.PluralTitle + "\" (" + subDocs2.SubDocCount.ToString() + ")?";
-            if (EFPApp.MessageBox(s, "Подтверждение удаления",
+              s = String.Format(Res.EFPDataView_Msg_ConfirmDeleteMulti, SubDocs.SubDocType.PluralTitle, subDocs2.SubDocCount);
+            if (EFPApp.MessageBox(s, Res.Common_Title_ConfirmDelete,
               MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
               return true;
           }
@@ -973,7 +973,7 @@ namespace FreeLibSet.Forms.Docs
           }
           catch (Exception ex)
           {
-            EFPApp.ShowException(ex, "Ошибка обновления строк");
+            EFPApp.ShowException(ex, Res.EFPDataView_ErrTitle_RowUpdate);
           }
         }
       }
@@ -1072,14 +1072,14 @@ namespace FreeLibSet.Forms.Docs
       //if (DocIds.Length < 0)
       if (docIds.Length <= 0) // 28.12.2020
       {
-        EFPApp.ErrorMessageBox("Нет выбранных документов \"" + fmtDocSel.DocType.DocType.PluralTitle + "\"");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSelectedDocs, fmtDocSel.DocTypeUI.DocType.PluralTitle));
         return;
       }
 
       if (docIds.Length > 100)
       {
-        EFPApp.ErrorMessageBox("Выбрано слишком много документов \"" + fmtDocSel.DocType.DocType.PluralTitle + "\" (" +
-          docIds.Length.ToString() + " шт.). Максимально за один раз могут быть вставлены поддокументы для 100 документов");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_TooManyDocsToInsertSubDocs,
+          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Length, 100));
         return;
       }
 
@@ -1093,8 +1093,8 @@ namespace FreeLibSet.Forms.Docs
 
       if (Table.Rows.Count == 0)
       {
-        EFPApp.ErrorMessageBox("Выбранные документы \"" + fmtDocSel.DocType.DocType.PluralTitle + "\" (" + docIds.Length.ToString() +
-          " шт.) не содержат ни одного поддокумента \"" + sdt.SubDocType.SingularTitle + "\"");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSubDocsInSelectedDocs,
+          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Length, sdt.SubDocType.SingularTitle));
         return;
       }
 
@@ -1108,7 +1108,7 @@ namespace FreeLibSet.Forms.Docs
       // if (DocIds.Length < 0)
       if (docIds.Length == 0) // 28.12.2020
       {
-        EFPApp.ErrorMessageBox("Нет выбранных документов \"" + fmtDocSel.DocType.DocType.PluralTitle + "\"");
+        EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSelectedDocs, fmtDocSel.DocTypeUI.DocType.PluralTitle));
         return;
       }
 
@@ -1124,13 +1124,14 @@ namespace FreeLibSet.Forms.Docs
         DataRow row = table.Rows.Find(docIds[i]);
         if (row == null)
         {
-          EFPApp.ErrorMessageBox("Не удалось загрузить из базы данных строку документа \"" + fmtDocSel.DocType.DocType.SingularTitle + "\" с идентификатором " + docIds[i]);
+          EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_DocRowLoad,
+            fmtDocSel.DocTypeUI.DocType.SingularTitle, docIds[i]));
           return;
         }
         srcRows[i] = row;
       }
 
-      DoPasteRows(srcRows, fmtDocSel.DocType);
+      DoPasteRows(srcRows, fmtDocSel.DocTypeUI);
     }
 
     void DoPasteTable(DataTable srcTable, DocTypeUIBase docTypeBase)
@@ -1185,7 +1186,7 @@ namespace FreeLibSet.Forms.Docs
     protected override IDataReorderHelper CreateDefaultDataReorderHelper()
     {
       if (SubDocs.Owner.DocCount != 1)
-        throw new InvalidOperationException("Использование ручной сортировки поддокументов не допускается, если одновременно редактируется несколько документов");
+        throw new InvalidOperationException(Res.EFPDataView_Err_ManualOrderSubDocsForMultiDocs);
 
       if (!String.IsNullOrEmpty(SubDocType.TreeParentColumnName))
       {

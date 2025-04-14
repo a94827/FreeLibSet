@@ -1,0 +1,1330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutDoc_ToolTip_ActionTime" xml:space="preserve">
+    <value>{0} at {1}</value>
+  </data>
+  <data name="AboutDoc_ToolTip_ActionTimeAndUser" xml:space="preserve">
+    <value>{0} at {1} by user {2}</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Changed" xml:space="preserve">
+    <value>changed</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Created" xml:space="preserve">
+    <value>created</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Deleted" xml:space="preserve">
+    <value>deleted</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Main" xml:space="preserve">
+    <value>Document '{0}' with Id={1}</value>
+  </data>
+  <data name="AboutDoc_ToolTip_Version" xml:space="preserve">
+    <value>version {0}</value>
+  </data>
+  <data name="Clipboard_Err_DocSelDiffDB" xml:space="preserve">
+    <value>Document selection in the clipboard belongs to another database</value>
+  </data>
+  <data name="Clipboard_Err_NoDataSet" xml:space="preserve">
+    <value>There is no DataSet object in the clipboard</value>
+  </data>
+  <data name="Clipboard_Err_NoDocSel" xml:space="preserve">
+    <value>There is no document selection in the clipboard</value>
+  </data>
+  <data name="Clipboard_Err_NoDocType" xml:space="preserve">
+    <value>There is no document of type '{0}' in the clipboard</value>
+  </data>
+  <data name="Clipboard_Err_NoTable" xml:space="preserve">
+    <value>There is no table '{0}' in the clipboard</value>
+  </data>
+  <data name="Clipboard_Phase_CopyDocSel" xml:space="preserve">
+    <value>Document selection copying to the clipboard</value>
+  </data>
+  <data name="Cmd_Menu_DocInfo" xml:space="preserve">
+    <value>Document information</value>
+  </data>
+  <data name="Common_Arg_NoRefColumn" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' is not a reference column</value>
+  </data>
+  <data name="Common_Arg_RefColumn" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' is a reference column</value>
+  </data>
+  <data name="Common_Arg_UnknownDocType" xml:space="preserve">
+    <value>Unknown document type '{0}'</value>
+  </data>
+  <data name="Common_Arg_UnknownSubDocType" xml:space="preserve">
+    <value>Unknown subdocument type '{0}' for document '{1}'</value>
+  </data>
+  <data name="Common_ColTitle_ChangeTime" xml:space="preserve">
+    <value>Document changed time</value>
+  </data>
+  <data name="Common_ColTitle_ChangeUserName" xml:space="preserve">
+    <value>Document changed by user</value>
+  </data>
+  <data name="Common_ColTitle_CreateTime" xml:space="preserve">
+    <value>Document created time</value>
+  </data>
+  <data name="Common_ColTitle_CreateUserName" xml:space="preserve">
+    <value>Document created by user</value>
+  </data>
+  <data name="Common_ColTitle_DocVersion" xml:space="preserve">
+    <value>Document version</value>
+  </data>
+  <data name="Common_ColTitle_GroupName" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="Common_ErrTitle_DocEdit" xml:space="preserve">
+    <value>Error document editing</value>
+  </data>
+  <data name="Common_Err_MultiDocSelected" xml:space="preserve">
+    <value>More than one document selected</value>
+  </data>
+  <data name="Common_Err_NoDocType" xml:space="preserve">
+    <value>Document type not set</value>
+  </data>
+  <data name="Common_Err_NoSelectedDoc" xml:space="preserve">
+    <value>Document is not selected</value>
+  </data>
+  <data name="Common_Err_NoSelectedSubDoc" xml:space="preserve">
+    <value>Subdocument is not selected</value>
+  </data>
+  <data name="Common_Err_SelectedDocDeleted" xml:space="preserve">
+    <value>Selected document '{0}' is deleted</value>
+  </data>
+  <data name="Common_Err_SelectedSubDocDeleted" xml:space="preserve">
+    <value>Selected subdocument '{0}' is deleted</value>
+  </data>
+  <data name="Common_Name_DocChangedCreated" xml:space="preserve">
+    <value>Document created or changed</value>
+  </data>
+  <data name="Common_Name_DocId" xml:space="preserve">
+    <value>Document identifier</value>
+  </data>
+  <data name="Common_Name_SubDocId" xml:space="preserve">
+    <value>Subdocument identifier</value>
+  </data>
+  <data name="Common_Phase_DataLoad" xml:space="preserve">
+    <value>Data loading</value>
+  </data>
+  <data name="Common_Phase_Refresh" xml:space="preserve">
+    <value>Data refreshing</value>
+  </data>
+  <data name="Common_ToolTipText_NoDoc" xml:space="preserve">
+    <value>There is no selected document</value>
+  </data>
+  <data name="DBUI_Arg_TableNameIsDoc" xml:space="preserve">
+    <value>Table name '{0}' is a document, not a subdocument name</value>
+  </data>
+  <data name="DBUI_Arg_TableNameIsSubDoc" xml:space="preserve">
+    <value>Table name '{0}' is a subdocument, not a document name</value>
+  </data>
+  <data name="DBUI_Arg_UnknownTableName" xml:space="preserve">
+    <value>Table name '{0}' is not a document nor subdocument name</value>
+  </data>
+  <data name="DBUI_Err_ColumnIsNotRef" xml:space="preserve">
+    <value>Column '{0}' in table '{1}' is not a reference column</value>
+  </data>
+  <data name="DBUI_Err_DBxAccessException" xml:space="preserve">
+    <value>Access denied.
+
+{0}</value>
+  </data>
+  <data name="DBUI_Err_DBxDocCannotDeleteException" xml:space="preserve">
+    <value>Data deleting error.
+
+{0}</value>
+  </data>
+  <data name="DBUI_Err_DBxDocsLockException" xml:space="preserve">
+    <value>Lock acquiring error.
+
+Cannot set the lock. {0}.
+{1}.
+{2}.</value>
+  </data>
+  <data name="DBUI_Err_DocLockedByUnknown" xml:space="preserve">
+    <value>Document is locked</value>
+  </data>
+  <data name="DBUI_Err_DocLockedByUser" xml:space="preserve">
+    <value>Document is locked by user {0}</value>
+  </data>
+  <data name="DBUI_Err_DocLockedByYou" xml:space="preserve">
+    <value>Document is locked by yourself in the current session</value>
+  </data>
+  <data name="DBUI_Err_MultiDocsLocked" xml:space="preserve">
+    <value>Locked documents: {0}</value>
+  </data>
+  <data name="DBUI_Err_SingleDocLocked" xml:space="preserve">
+    <value>Locked document: {0}</value>
+  </data>
+  <data name="DBUI_Err_SubDocCanMultiInsert" xml:space="preserve">
+    <value>For subdocuments '{0}' of document type '{1}' the propety CanMultiInsert=True, but CanMultiEdit=False</value>
+  </data>
+  <data name="DBUI_Err_UnknownGroupDocType" xml:space="preserve">
+    <value>Unknown document type '{0}' used in document type '{1}' for produceing a group tree</value>
+  </data>
+  <data name="DBUI_Err_UnknownGroupRefColumnName" xml:space="preserve">
+    <value>Unknown column name '{0}' in document '{1}' which given by property GroupRefColumnName</value>
+  </data>
+  <data name="DBUI_Err_UserPermissionCreatorsHasBeenSet" xml:space="preserve">
+    <value>Property DocProvider.UserPermissionCreators should not been set within user code</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Msg_NoRows" xml:space="preserve">
+    <value>{0} has no rows</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Msg_RowCount" xml:space="preserve">
+    <value>{0} - {1} row(s)</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Name_Default" xml:space="preserve">
+    <value>Data tables</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Name_DocTable" xml:space="preserve">
+    <value>Table of documents '{0}'</value>
+  </data>
+  <data name="DBxDataSetPasteFormat_Name_SubDocTable" xml:space="preserve">
+    <value>Table of subdocuments '{0}'</value>
+  </data>
+  <data name="DBxDocImageHandler_Err_GetToolTipText" xml:space="preserve">
+    <value>Error occurred while getting tool tip. {0}</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_AccessDenied" xml:space="preserve">
+    <value>Access to table is denied</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_DocDeleted" xml:space="preserve">
+    <value>Document is deleted</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_FictiveId" xml:space="preserve">
+    <value>Fictive identifier</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_MainDocDeleted" xml:space="preserve">
+    <value>Main document is deleted</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_RowDeleted" xml:space="preserve">
+    <value>Row deleted</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_SubDocDeleted" xml:space="preserve">
+    <value>Subdocument is deleted</value>
+  </data>
+  <data name="DBxDocImageHandler_Msg_TableNotFound" xml:space="preserve">
+    <value>Table not found</value>
+  </data>
+  <data name="DBxDocSelectionPasteFormat_Name_Default" xml:space="preserve">
+    <value>Document selection</value>
+  </data>
+  <data name="DBxDocSelectionPasteFormat_Name_DocType" xml:space="preserve">
+    <value>Documents of type '{0}'</value>
+  </data>
+  <data name="DBxDocSelectionPasteFormat_Name_SingleDoc" xml:space="preserve">
+    <value>Document of type '{0}'</value>
+  </data>
+  <data name="DocSel_Msg_IsEmpty" xml:space="preserve">
+    <value>Document selection is empty</value>
+  </data>
+  <data name="DocSel_Title_Default" xml:space="preserve">
+    <value>Document selection</value>
+  </data>
+  <data name="DocTableIdGridFilter_Arg_AlienDBUI" xml:space="preserve">
+    <value>Items with index {0} belongs to another DBUI</value>
+  </data>
+  <data name="DocTableIdGridFilter_Msg_NoFilter" xml:space="preserve">
+    <value>No filter</value>
+  </data>
+  <data name="DocTableIdGridFilter_Msg_TextUnknownTableId" xml:space="preserve">
+    <value>Unknown document type with TableId={0}</value>
+  </data>
+  <data name="Editor_Err_DocTreeLoop" xml:space="preserve">
+    <value>Document tree has a loop for document: {0}</value>
+  </data>
+  <data name="Editor_Err_IsReadOnly" xml:space="preserve">
+    <value>Editor is in read-only mode</value>
+  </data>
+  <data name="EFPComboBox_ErrTitle_Filter" xml:space="preserve">
+    <value>Error occurred when value '{0}' tests the filter</value>
+  </data>
+  <data name="EFPComboBox_Err_FilterNotPassed" xml:space="preserve">
+    <value>Selected value does not pass the filter '{0}' ({1})</value>
+  </data>
+  <data name="EFPComboBox_Err_GetText" xml:space="preserve">
+    <value>Error when text queried: {0}</value>
+  </data>
+  <data name="EFPComboBox_Msg_ErrorText" xml:space="preserve">
+    <value>!!! Error !!! {0}</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_ClearButton" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="Common_Err_DocTypeAccessDenied" xml:space="preserve">
+    <value>Access denied to view documents of type '{0}'</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_EditButtonEditDoc" xml:space="preserve">
+    <value>Edit selected document '{0}'</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_EditButtonNoDoc" xml:space="preserve">
+    <value>Cannot edit while there is no selected document</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_EditButtonViewDoc" xml:space="preserve">
+    <value>View selected document '{0}'</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_EditButtonViewDocNoEdit" xml:space="preserve">
+    <value>View selected document '{0}' because you don't have access right to edit documents of type '{1}'</value>
+  </data>
+  <data name="EFPComboBox_ToolTip_SelectButton" xml:space="preserve">
+    <value>Select from: {0}</value>
+  </data>
+  <data name="EFPDataView_ErrTitle_DataViewDataLoading" xml:space="preserve">
+    <value>'{0}' - error when data loading</value>
+  </data>
+  <data name="EFPDataView_ErrTitle_RowUpdate" xml:space="preserve">
+    <value>Row updating error</value>
+  </data>
+  <data name="EFPDataView_ErrTitle_SetDataViewSort" xml:space="preserve">
+    <value>Error occurred while row order (DataView.Sort) is set for '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_DocRowLoad" xml:space="preserve">
+    <value>Cannot load data row for the document of type '{0}' with DocId= {1}</value>
+  </data>
+  <data name="EFPDataView_Err_ManualOrderSubDocsForMultiDocs" xml:space="preserve">
+    <value>Manual subdocument ordering is not allowed when more than one documents are edited</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedDocs" xml:space="preserve">
+    <value>There are no selected documents of type '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedSubDocs" xml:space="preserve">
+    <value>There are no selected subdocuments of type '{0}'</value>
+  </data>
+  <data name="EFPDataView_Err_NoSubDocsInSelectedDocs" xml:space="preserve">
+    <value>Selected documents of type '{0}' ({1} шт.) does not contain subdocuments of type '{2}'</value>
+  </data>
+  <data name="EFPDataView_Err_SetValidateBeforEdit" xml:space="preserve">
+    <value>Cannot set property ValidateBeforeEdit to true because data view does not belong to a DocumentEditor</value>
+  </data>
+  <data name="EFPDataView_Err_TooManyDocsToInsertSubDocs" xml:space="preserve">
+    <value>There are too many documents of type '{0}' selected ({1}). Only for {2} selected documents the subdocuments must be created at the same time</value>
+  </data>
+  <data name="EFPDataView_Msg_ConfirmDeleteMulti" xml:space="preserve">
+    <value>Delete selected records '{0}' ({1})?</value>
+  </data>
+  <data name="EFPDataView_Msg_ConfirmDeleteSingle" xml:space="preserve">
+    <value>Delete record '{0}' ({1})?"</value>
+  </data>
+  <data name="Common_Title_ConfirmDelete" xml:space="preserve">
+    <value>Deleting confirmation</value>
+  </data>
+  <data name="EFPGroupDocTreeView_Arg_MultiSelect" xml:space="preserve">
+    <value>Only one document group can be selected</value>
+  </data>
+  <data name="EFPMultiDocComboBox_ToolTip_Multi" xml:space="preserve">
+    <value>Documents selected: {0}</value>
+  </data>
+  <data name="EFPComboBox_Err_AnotherDoc" xml:space="preserve">
+    <value>Selected subdocument of type '{0}' - '{1}' belongs to document '{3}', but '{4}' expected</value>
+  </data>
+  <data name="EFPMultiSubDocComboBox_Err_DiffDocs" xml:space="preserve">
+    <value>Selected subdocuments belongs to different documents</value>
+  </data>
+  <data name="EFPComboBox_Err_NoOwnerDoc" xml:space="preserve">
+    <value>Document of type '{0}' to select from is not set</value>
+  </data>
+  <data name="EFPComboBox_Msg_OwnerDocDeleted" xml:space="preserve">
+    <value>Document of type '{0}' ({1}), to which selected subdocument belongs is deleted</value>
+  </data>
+  <data name="EFPMultiSubDocComboBox_ToolTip_Multi" xml:space="preserve">
+    <value>Subdocuments selected: {0}</value>
+  </data>
+  <data name="EFPSubDocTreeView_Arg_NoTreeParentColumnName" xml:space="preserve">
+    <value>Subdocuments of type '{0}' don't suuport hierarchical view. Property DBxSubDocType.TreeParentColumnName is not set</value>
+  </data>
+  <data name="EnumUserPermissionUI_Title_GroupTitle" xml:space="preserve">
+    <value>Access mode</value>
+  </data>
+  <data name="Form_Arg_ParentIsNotEmpty" xml:space="preserve">
+    <value>Panel must be empty</value>
+  </data>
+  <data name="Form_Err_NoTreeTab" xml:space="preserve">
+    <value>There is no hierarchical view tab in the form</value>
+  </data>
+  <data name="Form_Prompt_Table" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="Form_Prompt_Tree" xml:space="preserve">
+    <value>Tree</value>
+  </data>
+  <data name="RecalcColumnsPermissionUI_Name_Default" xml:space="preserve">
+    <value>Calculated column re-evaluation</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_Exclude" xml:space="preserve">
+    <value>Except selected documents</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_Include" xml:space="preserve">
+    <value>Selected documents</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_NoFilter" xml:space="preserve">
+    <value>No filter</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_NotNull" xml:space="preserve">
+    <value>Reference to any document</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_Null" xml:space="preserve">
+    <value>Reference is not set</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_TextNotNull" xml:space="preserve">
+    <value>Reference to any document of type '{0}'</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_TextNull" xml:space="preserve">
+    <value>Reference is not set</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_RefsToExcluded" xml:space="preserve">
+    <value>References to excluded documents '{0}'</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_RefsToIncluded" xml:space="preserve">
+    <value>References to documents '{0}'</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_TextExcludeDocs" xml:space="preserve">
+    <value>Except {0}</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_TextExcludeNoDocs" xml:space="preserve">
+    <value>Fictive filter value, not any excluded reference</value>
+  </data>
+  <data name="RefDocGridFilter_Msg_TextIncludeNoDocs" xml:space="preserve">
+    <value>There are no references to documents of type '{0}'</value>
+  </data>
+  <data name="RefGroupDocGridFilter_Arg_NoGroupDocType" xml:space="preserve">
+    <value>Document type '{0}' is not a group tree</value>
+  </data>
+  <data name="RefGroupDocGridFilter_Err_RootSelected" xml:space="preserve">
+    <value>Root node selected. Some group should be selected.</value>
+  </data>
+  <data name="RefGroupDocGridFilter_Msg_DocsWithoutGroup" xml:space="preserve">
+    <value>Documents without groups</value>
+  </data>
+  <data name="RefGroupDocGridFilter_Msg_GroupAndNested" xml:space="preserve">
+    <value>{0} and nested groups</value>
+  </data>
+  <data name="WholeDBPermissionUI_Name_Default" xml:space="preserve">
+    <value>Database</value>
+  </data>
+  <data name="Common_Arg_UnknownColumn" xml:space="preserve">
+    <value>Table '{0}' has no column '{1}'</value>
+  </data>
+  <data name="Common_Err_CannotAddRow" xml:space="preserve">
+    <value>Cannot add a row</value>
+  </data>
+  <data name="Common_Err_ErrorMessage" xml:space="preserve">
+    <value>Error. {0}</value>
+  </data>
+  <data name="Common_Title_Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="Common_ToolTip_SubDocImageColumn" xml:space="preserve">
+    <value>Subdocument '{0}' image</value>
+  </data>
+  <data name="SubDocTypeUI_Err_NoNewSubDocType" xml:space="preserve">
+    <value>New SubDocType object not found for SubDocTypeName='{0}' of document'{1}'</value>
+  </data>
+  <data name="SubDocTypeUI_Err_NoRowsPasted" xml:space="preserve">
+    <value>Nono of the rows ({0}) can be added</value>
+  </data>
+  <data name="SubDocTypeUI_Err_NotImplementedMultiDocEdit" xml:space="preserve">
+    <value>Not implemeted for doc set where more than single docuemt edited</value>
+  </data>
+  <data name="SubDocTypeUI_Err_PastedRowSkipped" xml:space="preserve">
+    <value>Row #{0} skipped. {1}</value>
+  </data>
+  <data name="SubDocTypeUI_Msg_ConfirmPasteDocs" xml:space="preserve">
+    <value>Paste documents copies ({0})?</value>
+  </data>
+  <data name="SubDocTypeUI_Msg_ConfirmPasteSubDocs" xml:space="preserve">
+    <value>Paste subdocuments copies ({0})?</value>
+  </data>
+  <data name="SubDocTypeUI_Title_ConfirmPasteSubDocs" xml:space="preserve">
+    <value>Subdocuments '{0}' paste confirmation</value>
+  </data>
+  <data name="SubDocTypeUI_Title_SelectDocsForInsert" xml:space="preserve">
+    <value>{0} (Creation)</value>
+  </data>
+  <data name="SubDocumentEditor_ErrTitle_InitNewValues" xml:space="preserve">
+    <value>Error occurred when new values of subdocument '{0}' initialized</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_Cancel" xml:space="preserve">
+    <value>Finish editing without saving changes</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_CancelDelete" xml:space="preserve">
+    <value>Close fialog without record deleting</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_More" xml:space="preserve">
+    <value>Editor aux commands</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_OkDelete" xml:space="preserve">
+    <value>Delete viewed record</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_OkEdit" xml:space="preserve">
+    <value>Finish editing of record and save changes.
+To write changes to database, then press button 'OK' or 'Write' in the main document editor.</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_OkInsert" xml:space="preserve">
+    <value>Create new record and finish editing.
+To write changes to database, then press button 'OK' or 'Write' in the main document editor.</value>
+  </data>
+  <data name="SubDocumentEditor_ToolTip_OkView" xml:space="preserve">
+    <value>Close dialog</value>
+  </data>
+  <data name="Cmd_Menu_Debug_Changes" xml:space="preserve">
+    <value>Changes debug</value>
+  </data>
+  <data name="Editor_Msg_Title" xml:space="preserve">
+    <value>{0} - ({1})</value>
+  </data>
+  <data name="Editor_Msg_TitleDelete" xml:space="preserve">
+    <value>Deleting</value>
+  </data>
+  <data name="Editor_Msg_TitleEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Editor_Msg_TitleInsert" xml:space="preserve">
+    <value>Creation</value>
+  </data>
+  <data name="Editor_Msg_TitleInsertCopy" xml:space="preserve">
+    <value>Copy creation</value>
+  </data>
+  <data name="Editor_Msg_TitleRestore" xml:space="preserve">
+    <value>Restroring</value>
+  </data>
+  <data name="Editor_Msg_TitleView" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Editor_Msg_TitleViewDeleted" xml:space="preserve">
+    <value>View deleted</value>
+  </data>
+  <data name="Editor_Msg_TitleViewPrevVersions" xml:space="preserve">
+    <value>View previous versions</value>
+  </data>
+  <data name="Editor_Msg_TitleViewVersion" xml:space="preserve">
+    <value>View version {0}</value>
+  </data>
+  <data name="SubDocumentEditor_ErrTitle_SaveColumnValues" xml:space="preserve">
+    <value>Error when subdocument '{0}' values saved for future usage</value>
+  </data>
+  <data name="Common_Cmd_DataSetXML" xml:space="preserve">
+    <value>Document DataSet XML</value>
+  </data>
+  <data name="Common_ColTitle_ActionInfo" xml:space="preserve">
+    <value>User action</value>
+  </data>
+  <data name="Common_ColTitle_ActionStartTime" xml:space="preserve">
+    <value>Editing start time</value>
+  </data>
+  <data name="Common_ColTitle_ActionTime" xml:space="preserve">
+    <value>Time of the first saving</value>
+  </data>
+  <data name="Common_ColTitle_ApplyChangesCount" xml:space="preserve">
+    <value>Number of savings</value>
+  </data>
+  <data name="Common_ColTitle_ApplyChangesTime" xml:space="preserve">
+    <value>Time of the last saving</value>
+  </data>
+  <data name="Common_ColTitle_DocType" xml:space="preserve">
+    <value>Document type</value>
+  </data>
+  <data name="Common_ColTitle_EditTime" xml:space="preserve">
+    <value>Editing time</value>
+  </data>
+  <data name="Common_ColTitle_UserName" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Common_Msg_NoUser" xml:space="preserve">
+    <value>[ none ]</value>
+  </data>
+  <data name="Common_Name_ActionImage" xml:space="preserve">
+    <value>Action image (creation, changing, deletion)</value>
+  </data>
+  <data name="DocInfo_Cmd_Debug_DocTables" xml:space="preserve">
+    <value>All tables for document</value>
+  </data>
+  <data name="DocInfo_ColTitle_FromDocText" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="DocInfo_Menu_ToolTip_RefInfo" xml:space="preserve">
+    <value>Shows columns in other documents which could refer to documents of this type</value>
+  </data>
+  <data name="DocInfo_Menu_View_RefInfo" xml:space="preserve">
+    <value>Schema (possible references)</value>
+  </data>
+  <data name="Cmd_Menu_View_ShowHiddenDocs" xml:space="preserve">
+    <value>Show deleted documents</value>
+  </data>
+  <data name="DocInfo_Menu_View_SingleRef" xml:space="preserve">
+    <value>Reference details</value>
+  </data>
+  <data name="DocInfo_Msg_DocTypeNotSelected" xml:space="preserve">
+    <value>Document type not selected</value>
+  </data>
+  <data name="DocInfo_Name_DocText" xml:space="preserve">
+    <value>Text representation</value>
+  </data>
+  <data name="DocInfo_Phase_DocRefs" xml:space="preserve">
+    <value>Creating document refs table</value>
+  </data>
+  <data name="DocInfo_Title_Form" xml:space="preserve">
+    <value>{0} Id={1} - Document info</value>
+  </data>
+  <data name="DocInfo_ToolTip_ChangeTime" xml:space="preserve">
+    <value>Date and time of the last document changing.
+Field is empty if the document has not been changed since it had created.
+More info in the 'History' table.</value>
+  </data>
+  <data name="DocInfo_ToolTip_ChangeUserName" xml:space="preserve">
+    <value>User who edited document last time or executed a command that changed the document.
+Field is empty if the document has not been changed since it had created.
+More info in the 'History' table.</value>
+  </data>
+  <data name="DocInfo_ToolTip_CreateTime" xml:space="preserve">
+    <value>Document creation date and time</value>
+  </data>
+  <data name="DocInfo_ToolTip_CreateUserName" xml:space="preserve">
+    <value>User who created the document</value>
+  </data>
+  <data name="DocInfo_ToolTip_Debug_DocTables" xml:space="preserve">
+    <value>Shows non-formatted tables for the document</value>
+  </data>
+  <data name="DocInfo_ToolTip_DocText" xml:space="preserve">
+    <value>Represents document as a text string.
+Used in comboboxes to display selected document while drop-down list is closed.</value>
+  </data>
+  <data name="DocInfo_ToolTip_Id" xml:space="preserve">
+    <value>Internal document row identifier in the database table.
+Automatically generated when document created and then never changed.
+Each document of same type has an unique identifier.</value>
+  </data>
+  <data name="DocInfo_ToolTip_Status" xml:space="preserve">
+    <value>Can have value 'Active' or 'Deleted'.
+Deleted documents is not shown in the table views until mode 'Show deleted records' is not turned on.
+To restore deleted document, it should be open for editing and then saved.
+</value>
+  </data>
+  <data name="DocInfo_ToolTip_Version" xml:space="preserve">
+    <value>Document change version.
+When document created, it has version '1'. Then version incremented in every editing session or another document changing.
+More info available in the 'History' table.</value>
+  </data>
+  <data name="DocInfo_Msg_AllTypeDocs" xml:space="preserve">
+    <value>All type documents</value>
+  </data>
+  <data name="DocInfo_Msg_DocStatusActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="DocInfo_Msg_DocStatusDeleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="DocInfo_Msg_RefsImpossible" xml:space="preserve">
+    <value>Documents of type '{0}' cannot be referred</value>
+  </data>
+  <data name="DocInfo_Title_FilterFromDocs" xml:space="preserve">
+    <value>References from documents</value>
+  </data>
+  <data name="DocInfo_Title_FilterToDoc" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="DocInfo_Title_MainOutItem" xml:space="preserve">
+    <value>Document '{0}' info, DocId={1}</value>
+  </data>
+  <data name="DocInfo_Title_RefOutItem" xml:space="preserve">
+    <value>References to document '{0}', DocId={1}</value>
+  </data>
+  <data name="DocInfo_ToolTip_RefInfoPage" xml:space="preserve">
+    <value>Possible references to documents of type '{0}'</value>
+  </data>
+  <data name="DocInfo_ToolTip_SchemaColFromImage" xml:space="preserve">
+    <value>Image of document or subdocument type which contains a reference column</value>
+  </data>
+  <data name="DocInfo_ColTitle_RefFromColumn" xml:space="preserve">
+    <value>Referring column</value>
+  </data>
+  <data name="DocInfo_ColTitle_RefFromDoc" xml:space="preserve">
+    <value>Referring document</value>
+  </data>
+  <data name="Common_Phase_ApplyChanges" xml:space="preserve">
+    <value>Writing document changes</value>
+  </data>
+  <data name="Common_Phase_FillSelect" xml:space="preserve">
+    <value>Table '{0}' query</value>
+  </data>
+  <data name="Common_Phase_GetBinData" xml:space="preserve">
+    <value>Getting binary data</value>
+  </data>
+  <data name="Common_Phase_GetDBFile" xml:space="preserve">
+    <value>Gettfing file data from database</value>
+  </data>
+  <data name="Common_Phase_GetDocHistTable" xml:space="preserve">
+    <value>Getting document history table</value>
+  </data>
+  <data name="Common_Phase_GetDocRefTable" xml:space="preserve">
+    <value>Getting document reference table</value>
+  </data>
+  <data name="Common_Phase_GetUserActionDocTable" xml:space="preserve">
+    <value>Getting document list for user action</value>
+  </data>
+  <data name="Common_Phase_GetUserActionTable" xml:space="preserve">
+    <value>Getting user actions table</value>
+  </data>
+  <data name="Common_Phase_LoadCachePages" xml:space="preserve">
+    <value>Getting cached pages for {0}</value>
+  </data>
+  <data name="Common_Phase_LoadDocData" xml:space="preserve">
+    <value>Loading documents '{0}'</value>
+  </data>
+  <data name="Common_Phase_LoadSubDocData" xml:space="preserve">
+    <value>Loading subdocuments</value>
+  </data>
+  <data name="DocInfo_ColTitle_SchemaColFrom" xml:space="preserve">
+    <value>Reference from</value>
+  </data>
+  <data name="DocInfo_ColTitle_SchemaColTo" xml:space="preserve">
+    <value>Reference to</value>
+  </data>
+  <data name="DocInfo_ToolTip_SchemaColToImage" xml:space="preserve">
+    <value>Image of document or subdocument type which is referenced</value>
+  </data>
+  <data name="DocProvider_ErrTitle_DocUpdating" xml:space="preserve">
+    <value>Error when data view updated for document of type '{0}'</value>
+  </data>
+  <data name="DocProvider_Err_ApplyChangesNoResults" xml:space="preserve">
+    <value>When OnApplyChanges() called it has not rerurn data set while ReloadData=true</value>
+  </data>
+  <data name="DocSelectDialog_ErrTitle_InitSelection" xml:space="preserve">
+    <value>Error occurred when original document selected</value>
+  </data>
+  <data name="DocSelectDialog_Err_IsEmptyMultiSelect" xml:space="preserve">
+    <value>Documents must ne selected</value>
+  </data>
+  <data name="DocSelectDialog_Err_IsEmptySingleSelect" xml:space="preserve">
+    <value>Document must be selected</value>
+  </data>
+  <data name="DocSelectDialog_Title_MultiSelect" xml:space="preserve">
+    <value>Select documents of type '{0}'</value>
+  </data>
+  <data name="DocSelectDialog_Title_SingleSelect" xml:space="preserve">
+    <value>Select document of type '{0}'</value>
+  </data>
+  <data name="Common_Err_NoMultiEdit" xml:space="preserve">
+    <value>Multi-document of type '{0}' editing isn not allowed</value>
+  </data>
+  <data name="DocSel_Err_NoSelRows" xml:space="preserve">
+    <value>There are no selected rows</value>
+  </data>
+  <data name="DocSel_Err_NothingAdded" xml:space="preserve">
+    <value>No new reference added</value>
+  </data>
+  <data name="DocSel_Err_NothingRemoved" xml:space="preserve">
+    <value>No reference removed</value>
+  </data>
+  <data name="DocSel_Menu_Edit_CopyDocSel" xml:space="preserve">
+    <value>Copy whole document selection</value>
+  </data>
+  <data name="DocSel_Menu_View_CloneDocSel" xml:space="preserve">
+    <value>Open a copy of document selection</value>
+  </data>
+  <data name="DocSel_Msg_DeleteDocs" xml:space="preserve">
+    <value>The documents</value>
+  </data>
+  <data name="DocSel_Msg_DeleteRefs" xml:space="preserve">
+    <value>References from this selection (documents stay alive)</value>
+  </data>
+  <data name="DocSel_Msg_PasteAdd" xml:space="preserve">
+    <value>Add references (selections merge)</value>
+  </data>
+  <data name="DocSel_Msg_PasteCross" xml:space="preserve">
+    <value>Set common (selecttions cross)</value>
+  </data>
+  <data name="DocSel_Msg_PasteRemove" xml:space="preserve">
+    <value>Remove referebces (selections difference)</value>
+  </data>
+  <data name="DocSel_Title_Clone" xml:space="preserve">
+    <value>Copy of selection</value>
+  </data>
+  <data name="DocSel_Title_Delete" xml:space="preserve">
+    <value>Document of type '{0}' row deletion ({1})</value>
+  </data>
+  <data name="DocSel_Title_DeleteGroupTitle" xml:space="preserve">
+    <value>What should be deleted</value>
+  </data>
+  <data name="DocSel_Title_Paste" xml:space="preserve">
+    <value>Document selection paste</value>
+  </data>
+  <data name="DocSel_Title_PasteGroupTitle" xml:space="preserve">
+    <value>Paste action</value>
+  </data>
+  <data name="SubDocSelectDialog_ErrTitle_InitSelection" xml:space="preserve">
+    <value>Error occurred when original subdocument selected</value>
+  </data>
+  <data name="SubDocSelectDialog_Title_MultiSelect" xml:space="preserve">
+    <value>Select subdocuments of type '{0}'</value>
+  </data>
+  <data name="SubDocSelectDialog_Title_SingleSelect" xml:space="preserve">
+    <value>Select subdocument of type '{0}'</value>
+  </data>
+  <data name="Common_Err_SingleDocRequired" xml:space="preserve">
+    <value>Single document required</value>
+  </data>
+  <data name="DocTypeUI_Msg_AllGroupsDisplayName" xml:space="preserve">
+    <value>All documents</value>
+  </data>
+  <data name="DocTypeUI_Msg_NoGroupDisplayName" xml:space="preserve">
+    <value>Document without hierarchy</value>
+  </data>
+  <data name="EFPDocTableView_Menu_Edit_OpenGroupWindow" xml:space="preserve">
+    <value>Open group view in separated window</value>
+  </data>
+  <data name="EFPDocTableView_Menu_View_GroupCBVisible" xml:space="preserve">
+    <value>Group drop-down list</value>
+  </data>
+  <data name="EFPDocTableView_Menu_View_GroupTreeVisible" xml:space="preserve">
+    <value>Group tree</value>
+  </data>
+  <data name="EFPDocTableView_Menu_View_HideNestedGroups" xml:space="preserve">
+    <value>Hide documents in nested groups</value>
+  </data>
+  <data name="EFPDocTableView_Name_Default" xml:space="preserve">
+    <value>Document view complex panel</value>
+  </data>
+  <data name="EFPDocTableView_Name_Filters" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="EFPDocTableView_Name_Grid" xml:space="preserve">
+    <value>Document table</value>
+  </data>
+  <data name="EFPDocTableView_Name_GroupComboBox" xml:space="preserve">
+    <value>Group drop-down list</value>
+  </data>
+  <data name="EFPDocTableView_Name_GroupTree" xml:space="preserve">
+    <value>Group tree</value>
+  </data>
+  <data name="EFPDocTableView_Name_Tree" xml:space="preserve">
+    <value>Document tree</value>
+  </data>
+  <data name="EFPSubDocTableView_Name_Default" xml:space="preserve">
+    <value>Subdocument view complex panel</value>
+  </data>
+  <data name="EFPSubDocTableView_Name_Grid" xml:space="preserve">
+    <value>Subdocument table</value>
+  </data>
+  <data name="EFPSubDocTableView_Name_Tree" xml:space="preserve">
+    <value>Subdocument tree</value>
+  </data>
+  <data name="Cmd_Menu_Service_RecalcAllDocs" xml:space="preserve">
+    <value>&amp;All in database</value>
+  </data>
+  <data name="Cmd_Menu_Service_RecalcDocsInView" xml:space="preserve">
+    <value>All in the &amp;view</value>
+  </data>
+  <data name="Cmd_Menu_Service_RecalcDocsMenu" xml:space="preserve">
+    <value>Re-evaluate calculated columns</value>
+  </data>
+  <data name="Cmd_Menu_Service_RecalcSelectedDocs" xml:space="preserve">
+    <value>&amp;Selected</value>
+  </data>
+  <data name="Common_Phase_RecalcColumns" xml:space="preserve">
+    <value>Re-evaluating calculaing columns in documents of type '{0}'</value>
+  </data>
+  <data name="Common_ToolTip_DocImageColumn" xml:space="preserve">
+    <value>Document '{0}' image</value>
+  </data>
+  <data name="DocSel_Title_SelectedDocs" xml:space="preserve">
+    <value>Selected documents of type '{0}'</value>
+  </data>
+  <data name="Editor_ErrTitle_AlreadyOpen" xml:space="preserve">
+    <value>Editor re-opening</value>
+  </data>
+  <data name="Editor_Err_AlreadyOpen" xml:space="preserve">
+    <value>Editor is already open.</value>
+  </data>
+  <data name="Editor_Err_AlreadyOpenCannotActivate" xml:space="preserve">
+    <value>Cannot activate editor window since there is an open dialog window</value>
+  </data>
+  <data name="Editor_Err_AlreadyOpenExtra" xml:space="preserve">
+    <value>Opened editor uses multi-document editing, and there are other document(s) open here.</value>
+  </data>
+  <data name="Editor_Err_AlreadyOpenPartial" xml:space="preserve">
+    <value>You try to open more than one documents, but not all of them are in the opened editor.</value>
+  </data>
+  <data name="EFPDataView_Err_NoData" xml:space="preserve">
+    <value>There is no attached data set in the view</value>
+  </data>
+  <data name="GroupDocTypeUI_Arg_NoTextColumn" xml:space="preserve">
+    <value>Documents type '{0}' have no text column. These type cannot be a group tree</value>
+  </data>
+  <data name="Common_ErrTitle_AccessDenied" xml:space="preserve">
+    <value>Access denied</value>
+  </data>
+  <data name="Common_ErrTitle_CannotDeleteDoc" xml:space="preserve">
+    <value>Cannot delete document</value>
+  </data>
+  <data name="Common_Err_DocTypeReadOnly" xml:space="preserve">
+    <value>You don't have rights to add, remove or edit docuemts of type '{0}'. You can only view them.</value>
+  </data>
+  <data name="DocTypePermissionUI_Name_Default" xml:space="preserve">
+    <value>Document type</value>
+  </data>
+  <data name="DocTypePermissionUI_Name_SelMode" xml:space="preserve">
+    <value>Selection mode: All documents / Selected type</value>
+  </data>
+  <data name="DocTypeUserPermissionUI_Err_MultiDocTypesNotSupported" xml:space="preserve">
+    <value>Edited permission contains more than one document type. Editing of such a permission is not supported.</value>
+  </data>
+  <data name="DocTypeUserPermissionUI_Msg_AllDocTypes" xml:space="preserve">
+    <value>[ All document types ]</value>
+  </data>
+  <data name="DocTypeViewHistoryPermissionUI_Name_Default" xml:space="preserve">
+    <value>History view</value>
+  </data>
+  <data name="Editor_ErrTitle_LockForEdit" xml:space="preserve">
+    <value>Cannot edit the document</value>
+  </data>
+  <data name="Editor_ErrTitle_Run" xml:space="preserve">
+    <value>Error occurred when editor runned</value>
+  </data>
+  <data name="Editor_Err_LockForEdit" xml:space="preserve">
+    <value>Cannot lock the document for editing. Document will be open for view only.</value>
+  </data>
+  <data name="Editor_Err_LockedByUser" xml:space="preserve">
+    <value>Document is locked by user {0}</value>
+  </data>
+  <data name="Editor_Err_StartWithChangesInView" xml:space="preserve">
+    <value>Cannot set property 'StartWithChanges' in view mode</value>
+  </data>
+  <data name="Editor_Msg_ActionMulti" xml:space="preserve">
+    <value>{0} documents of type '{1}' ({2})</value>
+  </data>
+  <data name="Editor_Msg_ActionSingle" xml:space="preserve">
+    <value>{0} document of type '{1}'</value>
+  </data>
+  <data name="Editor_Msg_DeleteMultiDocs" xml:space="preserve">
+    <value>Delete documents ({0})?</value>
+  </data>
+  <data name="Editor_Msg_DeleteSingleDoc" xml:space="preserve">
+    <value>Delete a document of type '{0}' ({1})?</value>
+  </data>
+  <data name="Editor_Msg_TitleEditRestore" xml:space="preserve">
+    <value>Edit / restore</value>
+  </data>
+  <data name="Editor_Name_ExternalChangeInfo" xml:space="preserve">
+    <value>External changes</value>
+  </data>
+  <data name="Editor_Name_SubDocsChangeInfo" xml:space="preserve">
+    <value>Subdocuments changes</value>
+  </data>
+  <data name="Editor_Phase_EditorOpen" xml:space="preserve">
+    <value>Editor opening</value>
+  </data>
+  <data name="Enabled_Msg_False" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Enabled_Msg_True" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="ViewOtherUsersActionPermissionUI_Name_Default" xml:space="preserve">
+    <value>Other users actions view</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopyMultiDocRefs" xml:space="preserve">
+    <value>Copy document references</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopySingleDocRef" xml:space="preserve">
+    <value>Copy document reference</value>
+  </data>
+  <data name="Cmd_Menu_Edit_DeleteMultiDocs" xml:space="preserve">
+    <value>Delete these documents</value>
+  </data>
+  <data name="Cmd_Menu_Edit_DeleteSingleDoc" xml:space="preserve">
+    <value>Delete this document</value>
+  </data>
+  <data name="Cmd_Menu_Edit_ReopenForEdit" xml:space="preserve">
+    <value>Re-open for editing</value>
+  </data>
+  <data name="Cmd_Menu_File_SendToDocSelMultiDocs" xml:space="preserve">
+    <value>Open document selection</value>
+  </data>
+  <data name="Cmd_Menu_File_SendToDocSelSingleDoc" xml:space="preserve">
+    <value>Open document selection</value>
+  </data>
+  <data name="Cmd_Menu_View_ViewSourceDoc" xml:space="preserve">
+    <value>View source document</value>
+  </data>
+  <data name="Common_Err_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="DocInfo_Title_SelectDoc" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="DocumentEditor_ErrTitle_Deleting" xml:space="preserve">
+    <value>Document editor. Error occurred when dala deleted from database</value>
+  </data>
+  <data name="DocumentEditor_ErrTitle_InitNewValues" xml:space="preserve">
+    <value>Error occurred when new values of document '{0}' initialized</value>
+  </data>
+  <data name="DocumentEditor_ErrTitle_ReloadValue" xml:space="preserve">
+    <value>Error occurred when value '{0}' read</value>
+  </data>
+  <data name="DocumentEditor_ErrTitle_SaveColumnValues" xml:space="preserve">
+    <value>Error when document '{0}' values saved for future usage</value>
+  </data>
+  <data name="DocumentEditor_Err_NestedWriting" xml:space="preserve">
+    <value>Previous writing has not been finished yet</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_ApplyEdit" xml:space="preserve">
+    <value>Save changes and continue editing</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_ApplyInsert" xml:space="preserve">
+    <value>Create new record and continue edit it</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_ApplyInsertApplied" xml:space="preserve">
+    <value>Savecve changessince 'Apply' button had been pressed and continue editing created record</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_CancelDelete" xml:space="preserve">
+    <value>Close view without deleting the record</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_CancelEditApplied" xml:space="preserve">
+    <value>Finish editing without saving changes since 'Apply' button had been pressed</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_CancelEditInsert" xml:space="preserve">
+    <value>Finish editing without saving changes</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_CancelInsertApplied" xml:space="preserve">
+    <value>Finish editing created record without saving changes since 'Apply' button had been pressed</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_More" xml:space="preserve">
+    <value>Shows drop-down menu with other editor commands</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkDelete" xml:space="preserve">
+    <value>Delete viewed record</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkEdit" xml:space="preserve">
+    <value>Finish editing and save changes</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkInsert" xml:space="preserve">
+    <value>Create new record and finish editing</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkInsertApplied" xml:space="preserve">
+    <value>Finish editing and saving changes since 'Apply' button had been pressed</value>
+  </data>
+  <data name="DocumentEditor_ToolTip_OkView" xml:space="preserve">
+    <value>Close view</value>
+  </data>
+  <data name="Editor_ErrTitle_LockForInsert" xml:space="preserve">
+    <value>Error when lock set for created documents</value>
+  </data>
+  <data name="Editor_ErrTitle_Writing" xml:space="preserve">
+    <value>Error when writing to database</value>
+  </data>
+  <data name="Editor_Err_DocNotWritten" xml:space="preserve">
+    <value>Document '{0}' has not been written</value>
+  </data>
+  <data name="Editor_Err_LockForInsert" xml:space="preserve">
+    <value>Cannot lock the document for inserting.</value>
+  </data>
+  <data name="EFPDataView_Err_ActivatingNewRows" xml:space="preserve">
+    <value>Cannot activate added rows in the view</value>
+  </data>
+  <data name="Cmd_Menu_SendTo_DocSel" xml:space="preserve">
+    <value>Document selection</value>
+  </data>
+  <data name="Common_Phase_DocSelCreation" xml:space="preserve">
+    <value>Document selection creation</value>
+  </data>
+  <data name="EFPAllSubDocComboBox_Err_NoDocumentEditor" xml:space="preserve">
+    <value>Cannot set property because data view does not belong to DocumentEditor</value>
+  </data>
+  <data name="EFPComboBox_ErrTitle_ClearClick" xml:space="preserve">
+    <value>Error when clearing value of combobox  '{0}'</value>
+  </data>
+  <data name="EFPComboBox_ErrTitle_PopupClick" xml:space="preserve">
+    <value>Error when selecting from combobox '{0}'</value>
+  </data>
+  <data name="EFPComboBox_Err_IsEmpty" xml:space="preserve">
+    <value>Value is not selected</value>
+  </data>
+  <data name="EFPComboBox_Msg_Empty" xml:space="preserve">
+    <value>[ None ]</value>
+  </data>
+  <data name="EFPDataView_Err_RowWithoutId" xml:space="preserve">
+    <value>Row contains no identifier</value>
+  </data>
+  <data name="EFPDBxErrorGridView_Err_NoDocs" xml:space="preserve">
+    <value>There is no document related to the message</value>
+  </data>
+  <data name="EFPDBxFilterGrid_Err_DocSelMismatch" xml:space="preserve">
+    <value>Document selection in the clipboard does not match the filter '{0}'</value>
+  </data>
+  <data name="EFPDBxFilterGrid_Err_NotSupportedFilter" xml:space="preserve">
+    <value>Filter '{0}' does not support paste operation for a document selection</value>
+  </data>
+  <data name="EFPDBxGridProducer_Name_RefDocImage" xml:space="preserve">
+    <value>{0} (image)</value>
+  </data>
+  <data name="EFPDBxGridProducer_Name_RefDocText" xml:space="preserve">
+    <value>{0} (text)</value>
+  </data>
+  <data name="Common_ColTitle_DocText" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="Common_Err_DocNotInFixedList" xml:space="preserve">
+    <value>Selected document does not belong the available document list</value>
+  </data>
+  <data name="Common_Err_InknownEditMode" xml:space="preserve">
+    <value>Unknown edit mode</value>
+  </data>
+  <data name="Common_Err_NoSelectedRow" xml:space="preserve">
+    <value>There is no selected row</value>
+  </data>
+  <data name="Common_Phase_ValidateSelDocs" xml:space="preserve">
+    <value>Validating selected documents</value>
+  </data>
+  <data name="EFPComboBox_Err_DocDeleted" xml:space="preserve">
+    <value>Document '{0}' has been deleted</value>
+  </data>
+  <data name="EFPComboBox_Err_DocFilterMismatch" xml:space="preserve">
+    <value>Document does not match the filter '{0}'</value>
+  </data>
+  <data name="EFPDataView_ErrTitle_RowCountLimited" xml:space="preserve">
+    <value>Row count in the view has been limited</value>
+  </data>
+  <data name="EFPDataView_Err_AuxFilterGroupIds" xml:space="preserve">
+    <value>Cannot set property AuxFilterGroupIds for documents '{0}' view</value>
+  </data>
+  <data name="EFPDataView_Err_DocsMismatchFilters" xml:space="preserve">
+    <value>Selected documents ({0} of {1}) does not match the filter</value>
+  </data>
+  <data name="EFPDataView_Err_PasteNoNewDocs" xml:space="preserve">
+    <value>All documents of type '{0}' in the clipboard ({1}) are already in the list</value>
+  </data>
+  <data name="EFPDataView_Err_RowCountLimited" xml:space="preserve">
+    <value>Row count in the view has been limited up to {0}. Use filters.</value>
+  </data>
+  <data name="EFPDataView_ShowHiddenDocsNotSupported" xml:space="preserve">
+    <value>Deleted document show is not supported</value>
+  </data>
+  <data name="EFPDataView_Title_AddDocs" xml:space="preserve">
+    <value>Add documents of type '{0}' to the view</value>
+  </data>
+  <data name="EFPDataView_Title_ChangeDocRef" xml:space="preserve">
+    <value>Change document reference</value>
+  </data>
+  <data name="EFPDBxTextSearch_Err_NoRowsFound" xml:space="preserve">
+    <value>No rows found</value>
+  </data>
+  <data name="EFPDBxTextSearch_Title_DocSel" xml:space="preserve">
+    <value>Search results</value>
+  </data>
+  <data name="EFPDBxTextSearch_ToolTip_DocSel" xml:space="preserve">
+    <value>Create document selection instead of searching. Parameters 'Conditions' and 'Where' are used.
+Switches 'Direction' and 'Where start from' are ignored.</value>
+  </data>
+  <data name="UnknownUserPermissionUI_Err_Edit" xml:space="preserve">
+    <value>Cannot edit unknown permission</value>
+  </data>
+  <data name="UnknownUserPermissionUI_Name_Default" xml:space="preserve">
+    <value>Unknown permission</value>
+  </data>
+  <data name="UserActionReport_ErrTitle_UnknownDocType" xml:space="preserve">
+    <value>Unknown document type</value>
+  </data>
+  <data name="UserActionReport_Err_UnknownTableId" xml:space="preserve">
+    <value>Document type {0} is not registered. It's possible if the program module uses such documents is not loaded now</value>
+  </data>
+  <data name="UserActionReport_Err_UserHasNoAction" xml:space="preserve">
+    <value>There are no action for the selected user</value>
+  </data>
+  <data name="UserActionReport_Err_UserNotSelected" xml:space="preserve">
+    <value>User is not selected</value>
+  </data>
+  <data name="UserActionReport_Msg_AllUsers" xml:space="preserve">
+    <value>[ All users ]</value>
+  </data>
+  <data name="UserActionReport_Name_FindLastDay" xml:space="preserve">
+    <value>Find last day</value>
+  </data>
+  <data name="UserActionReport_Name_UserFilter" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="UserActionReport_Title_Default" xml:space="preserve">
+    <value>User actions</value>
+  </data>
+  <data name="UserActionReport_Title_MainPage" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="UserActionReport_ToolTip_FindLastDay" xml:space="preserve">
+    <value>Set period to the very last day when selected user makes some activity.
+Parameter 'Single document type' is ignored.</value>
+  </data>
+  <data name="UserActionReport_ToolTip_FirstDate" xml:space="preserve">
+    <value>First date</value>
+  </data>
+  <data name="UserActionReport_ToolTip_LastDate" xml:space="preserve">
+    <value>Last date</value>
+  </data>
+  <data name="UserActionReport_ToolTip_MainPage" xml:space="preserve">
+    <value>List of user actions</value>
+  </data>
+  <data name="UserActionReport_ToolTip_User" xml:space="preserve">
+    <value>User which action will be shown</value>
+  </data>
+  <data name="UserPermissionUI_ColTitle_ObjectText" xml:space="preserve">
+    <value>Permission</value>
+  </data>
+  <data name="UserPermissionUI_ColTitle_ValueText" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="UserPermissionUI_ErrTitle_Read" xml:space="preserve">
+    <value>Error loading data for permission '{0}'. Default value vill be used.</value>
+  </data>
+  <data name="UserPermissionUI_Err_EditNotImplemented" xml:space="preserve">
+    <value>Permission '{0}' editing is not implemented</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoClassCode" xml:space="preserve">
+    <value>No permission class given</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoColumnValue" xml:space="preserve">
+    <value>Column '{0}' value is not set</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoCreator" xml:space="preserve">
+    <value>Cannot attach interface for perminssion of class '{0}' since there is no corresponding object in the Creators list</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoUI" xml:space="preserve">
+    <value>Cannot view permission of type '{0}' because its user interface object has no been registered</value>
+  </data>
+  <data name="UserPermissionUI_Err_NoView" xml:space="preserve">
+    <value>Permission '{0}' vieing is not supported</value>
+  </data>
+  <data name="UserPermissionUI_Name_Default" xml:space="preserve">
+    <value>Class '{0}'</value>
+  </data>
+  <data name="UserPermissionUI_Name_Editor" xml:space="preserve">
+    <value>Permission editor</value>
+  </data>
+  <data name="UserPermissionUI_Name_ValueImage" xml:space="preserve">
+    <value>Permission value image</value>
+  </data>
+  <data name="UserPermissionUI_Title_ClassList" xml:space="preserve">
+    <value>Permission class</value>
+  </data>
+  <data name="UserPermissionUI_Title_SelectClass" xml:space="preserve">
+    <value>Permission class selection</value>
+  </data>
+  <data name="UserPermissionUI_ToolTip_Image" xml:space="preserve">
+    <value>{0}
+Permission class: {1};</value>
+  </data>
+</root>

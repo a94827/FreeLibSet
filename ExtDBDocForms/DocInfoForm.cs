@@ -14,6 +14,7 @@ using FreeLibSet.Remoting;
 using System.Xml;
 using FreeLibSet.Config;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -52,55 +53,41 @@ namespace FreeLibSet.Forms.Docs
 
       efpDocText = new EFPTextBox(baseProvider, edDocText);
       efpDocText.ReadOnly = true;
-      efpDocText.DisplayName = "Текстовое представление";
-      efpDocText.ToolTipText = "Представление документа в виде строки текста." + Environment.NewLine +
-        "Используется для отображения выбранного документа в комбоблоках, когда выпадающий список закрыт";
+      efpDocText.DisplayName = Res.DocInfo_Name_DocText;
+      efpDocText.ToolTipText = Res.DocInfo_ToolTip_DocText;
 
       efpId = new EFPTextBox(baseProvider, edId);
       efpId.ReadOnly = true;
       //efpId.CanBeEmpty = false;
-      efpId.DisplayName = "Id";
-      efpId.ToolTipText = "Внутренний идентификатор строки документа в таблице базы данных." + Environment.NewLine +
-        "Генерируется автоматически при создании документа и никогда не изменяется." + Environment.NewLine +
-        "Каждый документ данного типа имеет уникальный идентификатор";
+      efpId.ToolTipText = Res.DocInfo_ToolTip_Id;
 
       efpStatus = new EFPTextBox(baseProvider, edStatus);
       efpStatus.ReadOnly = true;
-      efpStatus.DisplayName = "Статус";
-      efpStatus.ToolTipText = "Может принимать значения \"Действует\" или \"Удален\"" + Environment.NewLine +
-        "Удаленные документы не показываются в справочниках, если не включен режим \"Показывать удаленные документы\"." + Environment.NewLine +
-        "Чтобы восстановить удаленный документ, нужно открыть его на редактирование и сохранить";
+      efpStatus.ToolTipText = Res.DocInfo_ToolTip_Status;
 
       efpVersion = new EFPTextBox(baseProvider, edVersion);
       efpVersion.ReadOnly = true;
-      efpVersion.DisplayName = "Версия";
-      efpVersion.ToolTipText = "Версия изменения документа." + Environment.NewLine +
-        "После создания документа он имеет номер версии \"1\", который затем увеличивается при каждом редактировании или другом изменении документа." + Environment.NewLine +
-        "Подробнее можно посмотреть в группе \"История\"";
+      efpVersion.ToolTipText = Res.DocInfo_ToolTip_Version;
 
       efpCreateTime = new EFPTextBox(baseProvider, edCreateTime);
       efpCreateTime.ReadOnly = true;
-      efpCreateTime.DisplayName = "Время создания";
-      efpCreateTime.ToolTipText = "Дата и время создания документа";
+      efpCreateTime.DisplayName = Res.Common_ColTitle_CreateTime;
+      efpCreateTime.ToolTipText = Res.DocInfo_ToolTip_CreateTime;
 
       efpCreateUser = new EFPTextBox(baseProvider, edCreateUser);
       efpCreateUser.ReadOnly = true;
-      efpCreateUser.DisplayName = "Кто создал";
-      efpCreateUser.ToolTipText = "Пользователь, который создал документ";
+      efpCreateUser.DisplayName = Res.Common_ColTitle_CreateUserName;
+      efpCreateUser.ToolTipText = Res.DocInfo_ToolTip_CreateUserName;
 
       efpChangeTime = new EFPTextBox(baseProvider, edChangeTime);
       efpChangeTime.ReadOnly = true;
-      efpChangeTime.DisplayName = "Время последнего изменения";
-      efpChangeTime.ToolTipText = "Дата и время последнего изменения документа." + Environment.NewLine +
-        "Если после создания документ не редактировался и не изменялся другими способами, то поле пустое." + Environment.NewLine +
-        "Подробнее можно посмотреть в группе \"История\"";
+      efpChangeTime.DisplayName = Res.Common_ColTitle_ChangeTime;
+      efpChangeTime.ToolTipText = Res.DocInfo_ToolTip_ChangeTime;
 
       efpChangeUser = new EFPTextBox(baseProvider, edChangeUser);
       efpChangeUser.ReadOnly = true;
-      efpChangeUser.DisplayName = "Кто изменил";
-      efpChangeUser.ToolTipText = "Пользователь, который последним редактировал документ или выполнил команду, которая привела к изменению документа" + Environment.NewLine +
-        "Если после создания документ не изменялся, то поле пустое" + Environment.NewLine +
-        "Подробнее можно посмотреть в группе \"История\"";
+      efpChangeUser.DisplayName = Res.Common_ColTitle_ChangeUserName;
+      efpChangeUser.ToolTipText = Res.DocInfo_ToolTip_ChangeUserName;
 
       if (UI.DebugShowIds)
       {
@@ -108,8 +95,8 @@ namespace FreeLibSet.Forms.Docs
         btnDebug.Image = EFPApp.MainImages.Images["Debug"];
         btnDebug.ImageAlign = ContentAlignment.MiddleCenter;
         EFPButton efpDebug = new EFPButton(baseProvider, btnDebug);
-        efpDebug.DisplayName = "Отладочная информация";
-        efpDebug.ToolTipText = "Показывает неотформатированные таблицы данных для документа";
+        efpDebug.DisplayName = Res.DocInfo_Cmd_Debug_DocTables;
+        efpDebug.ToolTipText = Res.DocInfo_ToolTip_Debug_DocTables;
         efpDebug.Click += efpDebug_Click;
       }
 
@@ -122,40 +109,40 @@ namespace FreeLibSet.Forms.Docs
       producer.OutItem.Default.PageSetup.SetOrientation(FreeLibSet.Reporting.BROrientation.Landscape, true);
 
       producer.Columns.AddUserImage("Image", "Action", ImageColumnValueNeeded, String.Empty);
-      producer.Columns.LastAdded.DisplayName = "Значок действия (создание, изменение, удаление)";
-      producer.Columns.AddInt("Version", "Версия документа", 3);
-      producer.Columns.AddDateTime("UserActionId.StartTime", "Время начала редактирования");
+      producer.Columns.LastAdded.DisplayName = Res.Common_Name_ActionImage;
+      producer.Columns.AddInt("Version", Res.Common_ColTitle_DocVersion, 3);
+      producer.Columns.AddDateTime("UserActionId.StartTime", Res.Common_ColTitle_ActionStartTime);
       producer.Columns.LastAdded.Printed = false;
-      producer.Columns.AddDateTime("UserActionId.ActionTime", "Время первого сохранения");
+      producer.Columns.AddDateTime("UserActionId.ActionTime", Res.Common_ColTitle_ActionTime);
       producer.Columns.LastAdded.Printed = false;
-      producer.Columns.AddInt("UserActionId.ApplyChangesCount", "Кол-во сохранений", 4);
-      producer.Columns.AddDateTime("UserActionId.ApplyChangesTime", "Время последнего сохранения");
+      producer.Columns.AddInt("UserActionId.ApplyChangesCount", Res.Common_ColTitle_ApplyChangesCount, 4);
+      producer.Columns.AddDateTime("UserActionId.ApplyChangesTime", Res.Common_ColTitle_ApplyChangesTime);
       producer.Columns.AddUserText("EditTime", "UserActionId.StartTime,UserActionId.ApplyChangesTime",
-        EditTimeColumnValueNeeded, "Время редактирования", 10, 6);
+        EditTimeColumnValueNeeded, Res.Common_ColTitle_EditTime, 10, 6);
       producer.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
       if (UI.DocProvider.DocTypes.UseUsers)
       {
         producer.Columns.AddUserText("UserActionId.UserId.UserName", "UserActionId.UserId",
-          UserNameColumnValueNeeded, "Пользователь", 20, 10);
+          UserNameColumnValueNeeded, Res.Common_ColTitle_UserName, 20, 10);
         producer.Columns.AddInt("UserActionId.UserId", "UserId", 7);
       }
       if (UI.DocProvider.DocTypes.UseSessionId)
         producer.Columns.AddInt("UserActionId.SessionId", "SessionId", 7);
       producer.Columns.AddInt("UserActionId", "UserActionId", 7);
-      producer.Columns.AddText("UserActionId.ActionInfo", "Действие пользователя", 100, 20);
+      producer.Columns.AddText("UserActionId.ActionInfo", Res.Common_ColTitle_ActionInfo, 100, 20);
       producer.Columns.AddInt("Id", "DocActionId", 7);
 
-      producer.ToolTips.AddDateTime("UserActionId.StartTime", "Время начала редактирования");
-      producer.ToolTips.AddDateTime("UserActionId.ActionTime", "Время первого сохранения");
-      producer.ToolTips.AddText("UserActionId.ApplyChangesCount", "Кол-во сохранений");
-      producer.ToolTips.AddDateTime("UserActionId.ApplyChangesTime", "Время последнего сохранения");
+      producer.ToolTips.AddDateTime("UserActionId.StartTime", Res.Common_ColTitle_ActionStartTime);
+      producer.ToolTips.AddDateTime("UserActionId.ActionTime", Res.Common_ColTitle_ActionTime);
+      producer.ToolTips.AddText("UserActionId.ApplyChangesCount", Res.Common_ColTitle_ApplyChangesCount);
+      producer.ToolTips.AddDateTime("UserActionId.ApplyChangesTime", Res.Common_ColTitle_ApplyChangesTime);
       producer.ToolTips.AddUserItem("EditTime", "UserActionId.StartTime,UserActionId.ApplyChangesTime",
         EditTimeColumnValueNeeded);
-      producer.ToolTips.LastAdded.DisplayName = "Время редактирования";
-      producer.ToolTips.LastAdded.PrefixText = "Время редактирования: ";
+      producer.ToolTips.LastAdded.DisplayName = Res.Common_ColTitle_EditTime;
+      producer.ToolTips.LastAdded.PrefixText = Res.Common_ColTitle_EditTime + ": ";
       producer.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
       producer.ToolTips.AddText("UserActionId.ActionInfo", String.Empty);
-      producer.ToolTips.LastAdded.DisplayName = "Действие пользователя";
+      producer.ToolTips.LastAdded.DisplayName = Res.Common_ColTitle_ActionInfo;
 
       producer.DefaultConfig = new EFPDataGridViewConfig();
       producer.DefaultConfig.Columns.Add("Image");
@@ -173,7 +160,7 @@ namespace FreeLibSet.Forms.Docs
       producer.DefaultConfig.Columns.AddFill("UserActionId.ActionInfo");
       //producer.DefaultConfig.Columns.Add("Id");
 
-      EFPControlWithToolBar<DataGridView> cwtHist = new EFPControlWithToolBar<DataGridView>(baseProvider, grpHist);
+      EFPControlWithToolBar<DataGridView> cwtHist = new EFPControlWithToolBar<DataGridView>(baseProvider, grpHistory);
       efpHist = new EFPDBxGridView(cwtHist, UI);
 
       efpHist.Control.AutoGenerateColumns = false;
@@ -193,7 +180,7 @@ namespace FreeLibSet.Forms.Docs
 
       EFPCommandItem ci;
       ci = new EFPCommandItem("View", "DataSetXML");
-      ci.MenuText = "Данные документа DataSet XML";
+      ci.MenuText = Res.Common_Cmd_DataSetXML;
       ci.ImageKey = "XMLDataSet";
       ci.Click += ciDataSetXml_Click;
       ci.GroupBegin = true;
@@ -221,8 +208,9 @@ namespace FreeLibSet.Forms.Docs
 
     void efpDebug_Click(object sender, EventArgs args)
     {
+      EFPCommandItem ci = (EFPCommandItem)sender;
       DataSet ds = UI.DocProvider.LoadUnformattedDocData(Params.DocTypeName, Params.DocId);
-      FreeLibSet.Forms.Diagnostics.DebugTools.DebugDataSet(ds, "Все таблицы для документа");
+      FreeLibSet.Forms.Diagnostics.DebugTools.DebugDataSet(ds, ci.MenuTextWithoutMnemonic);
     }
 
     #endregion
@@ -238,7 +226,7 @@ namespace FreeLibSet.Forms.Docs
       UndoAction action = (UndoAction)(args.GetInt("Action"));
       string imageKey = DBUI.GetUndoActionImageKey(action);
       args.Value = EFPApp.MainImages.Images[imageKey];
-      args.ToolTipText = DBUI.GetUndoActionName(action);
+      args.ToolTipText = DBxDocProvider.GetUndoActionName(action);
     }
 
     private void EditTimeColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
@@ -253,7 +241,7 @@ namespace FreeLibSet.Forms.Docs
     {
       Int32 userId = args.GetInt("UserActionId.UserId");
       if (userId == 0)
-        args.Value = "[ нет ]";
+        args.Value = Res.Common_Msg_NoUser;
       else
         args.Value = UI.TextHandlers.GetTextValue(UI.DocProvider.DocTypes.UsersTableName, userId);
     }
@@ -312,7 +300,7 @@ namespace FreeLibSet.Forms.Docs
       efpRefStat = new EFPDataGridView(baseProvider, grRefStat);
       efpRefStat.Control.AutoGenerateColumns = false;
       efpRefStat.Columns.AddImage();
-      efpRefStat.Columns.AddTextFill("FromDocTypeText", true, "Вид документа", 100, 10);
+      efpRefStat.Columns.AddTextFill("FromDocTypeText", true, Res.Common_ColTitle_DocType, 100, 10);
       if (UI.DebugShowIds)
       {
         efpRefStat.Columns.AddInt("FromDocTableId", true, "TableId", 4);
@@ -332,17 +320,17 @@ namespace FreeLibSet.Forms.Docs
       efpRefStat.CommandItems.ClearUsage(EFPCommandItemUsage.ToolBar); // оставим только 2 свои кнопки
 
       ciShowHiddenRefs = new EFPCommandItem("View", "ShowHiddenDocs");
-      ciShowHiddenRefs.MenuText = "Показать удаленные документы";
+      ciShowHiddenRefs.MenuText = Res.Cmd_Menu_View_ShowHiddenDocs;
       ciShowHiddenRefs.ImageKey = "ShowHiddenDocs";
       ciShowHiddenRefs.Click += new EventHandler(ciShowHiddenRefs_Click);
       ciShowHiddenRefs.GroupBegin = true;
       efpRefStat.CommandItems.Add(ciShowHiddenRefs);
 
       EFPCommandItem ciRefInfo = new EFPCommandItem("View", "RefInfo");
-      ciRefInfo.MenuText = "Схема (возможные ссылки)";
+      ciRefInfo.MenuText = Res.DocInfo_Menu_View_RefInfo;
       // Поле Params может быть еще не инициализировано
       //ciRefInfo.ToolTipText = "Показывает поля в других документах, которые могут ссылаться на документы \"" + Params.DocTypeUI.DocType.PluralTitle + "\"";
-      ciRefInfo.ToolTipText = "Показывает поля в других документах, которые могут ссылаться на документы";
+      ciRefInfo.ToolTipText = Res.DocInfo_Menu_ToolTip_RefInfo;
       ciRefInfo.ImageKey = "DocRefSchema";
       ciRefInfo.Click += new EventHandler(ciRefInfo_Click);
       ciRefInfo.GroupEnd = true;
@@ -355,7 +343,7 @@ namespace FreeLibSet.Forms.Docs
       efpRefDet = new EFPDBxGridView(baseProvider, grRefDet, UI);
       efpRefDet.Control.AutoGenerateColumns = false;
       efpRefDet.Columns.AddImage();
-      efpRefDet.Columns.AddTextFill("FromDocText", false, "Документ", 100, 10);
+      efpRefDet.Columns.AddTextFill("FromDocText", false, Res.DocInfo_ColTitle_FromDocText, 100, 10);
       efpRefDet.Columns.LastAdded.CanIncSearch = true;
       if (UI.DebugShowIds)
       {
@@ -377,7 +365,7 @@ namespace FreeLibSet.Forms.Docs
       #region Локальное меню
 
       EFPCommandItem ciSingleRef = new EFPCommandItem("View", "SingleRef");
-      ciSingleRef.MenuText = "Детальная информация о ссылке";
+      ciSingleRef.MenuText = Res.DocInfo_Menu_View_SingleRef;
       ciSingleRef.ShortCut = Keys.F4;
       ciSingleRef.ImageKey = "Properties";
       ciSingleRef.Click += new EventHandler(ciSingleRef_Click);
@@ -385,8 +373,7 @@ namespace FreeLibSet.Forms.Docs
       efpRefDet.CommandItems.Add(ciSingleRef);
 
       EFPCommandItem ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
-      ciShowDocInfo.MenuText = "Информация о документе";
-      ciShowDocInfo.ToolTipText = "Информация о документе";
+      ciShowDocInfo.MenuText = Res.Cmd_Menu_DocInfo;
       ciShowDocInfo.ShortCut = Keys.F12;
       ciShowDocInfo.ImageKey = "Information";
       ciShowDocInfo.Click += new EventHandler(ciShowDocInfo_Click);
@@ -417,7 +404,7 @@ namespace FreeLibSet.Forms.Docs
 
       try
       {
-        EFPApp.BeginWait("Получение таблицы ссылок на документ");
+        EFPApp.BeginWait(Res.DocInfo_Phase_DocRefs);
         try
         {
           RefTable = Params.DocTypeUI.GetDocRefTable(Params.DocId, ciShowHiddenRefs.Checked, true);
@@ -442,7 +429,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка построения списка ссылок");
+        EFPApp.ShowException(e);
       }
 
       efpRefStat.Selection = oldSelStat;
@@ -527,7 +514,7 @@ namespace FreeLibSet.Forms.Docs
       if (_CurrFromDocType == null)
       {
         efpRefDet.Control.DataSource = null;
-        grpRefDet.Text = "Вид документа не выбран";
+        grpRefDet.Text = Res.DocInfo_Msg_DocTypeNotSelected;
       }
       else
       {
@@ -583,7 +570,7 @@ namespace FreeLibSet.Forms.Docs
       DataRow[] rows = efpRefDet.SelectedDataRows;
       if (rows.Length == 0)
       {
-        EFPApp.ShowTempMessage("Нет выбранных документов");
+        EFPApp.ShowTempMessage(Res.Common_ToolTipText_NoDoc);
         return;
       }
 
@@ -666,7 +653,7 @@ namespace FreeLibSet.Forms.Docs
 
     protected override void OnInitTitle()
     {
-      base.Title = this.DocTypeUI.DocType.SingularTitle + " Id=" + DocId.ToString() + " - Информация о документе";
+      base.Title = String.Format(Res.DocInfo_Title_Form, this.DocTypeUI.DocType.SingularTitle, DocId);
     }
 
     // Чтение и запись параметров нужна для сохранение композиции рабочего стола
@@ -717,7 +704,7 @@ namespace FreeLibSet.Forms.Docs
       _ReportForm = new DocInfoForm(this);
 
       _MainPage = new EFPReportControlPage();
-      _MainPage.Title = "Информация о документе";
+      _MainPage.Title = _ReportForm.tpInfo.Text;
       _MainPage.ImageKey = "Information";
       _MainPage.Control = _ReportForm.Panel1;
       _ReportForm.InitMainPage(_MainPage.BaseProvider);
@@ -726,13 +713,13 @@ namespace FreeLibSet.Forms.Docs
       Pages.Add(_MainPage);
 
       _RefPage = new EFPReportControlPage();
-      _RefPage.Title = "Ссылки";
+      _RefPage.Title = _ReportForm.tpRefs.Text;
       _RefPage.ImageKey = "DocRefs";
       _RefPage.Control = _ReportForm.Panel2;
       _ReportForm.InitRefPage(_RefPage.BaseProvider);
       _RefPage.DataQuery += new EventHandler(RefPage_DataQuery);
       _ReportForm.efpRefStat.MenuOutItems.Clear();
-      _ReportForm.efpRefDet.DefaultOutItem.TitleNeeded+=new EventHandler(RefDet_DefaultOutItem_TitleNeeded);
+      _ReportForm.efpRefDet.DefaultOutItem.TitleNeeded += new EventHandler(RefDet_DefaultOutItem_TitleNeeded);
       Pages.Add(_RefPage);
     }
 
@@ -743,7 +730,7 @@ namespace FreeLibSet.Forms.Docs
     internal DocInfoReportParams Params { get { return (DocInfoReportParams)(base.ReportParams); } }
 
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
 
     #endregion
@@ -783,7 +770,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        _ReportForm.efpDocText.Text = "Ошибка: " + e.Message;
+        _ReportForm.efpDocText.Text = String.Format(Res.Common_Err_ErrorMessage, e.Message);
       }
       _ReportForm.efpId.Text = Params.DocId.ToString();
       //Form.efpStatus.Text = DataTools.GetString(DstData[0]);
@@ -792,7 +779,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocServiceInfo info = UI.DocProvider.GetDocServiceInfo(Params.DocTypeName, Params.DocId, false);
 
       if (UI.DocProvider.DocTypes.UseDeleted)
-        _ReportForm.efpStatus.Text = info.Deleted ? "Удален" : "Действует";
+        _ReportForm.efpStatus.Text = info.Deleted ? Res.DocInfo_Msg_DocStatusDeleted : Res.DocInfo_Msg_DocStatusActive;
       else
         _ReportForm.efpStatus.Visible = false;
 
@@ -830,7 +817,7 @@ namespace FreeLibSet.Forms.Docs
       }
       else
       {
-        _ReportForm.grpHist.Visible = false;
+        _ReportForm.grpHistory.Visible = false;
       }
     }
 
@@ -853,9 +840,9 @@ namespace FreeLibSet.Forms.Docs
     private void MainPage_DefaultOutItem_TitleNeeded(object sender, EventArgs args)
     {
       Reporting.BRDataGridViewMenuOutItem outItem = (Reporting.BRDataGridViewMenuOutItem)sender;
-      outItem.Title = "Информация о документе \"" + Params.DocTypeUI.DocType.SingularTitle + "\", DocId=" + Params.DocId.ToString();
+      outItem.Title = String.Format(Res.DocInfo_Title_MainOutItem, Params.DocTypeUI.DocType.SingularTitle, Params.DocId);
       outItem.FilterInfo.Clear();
-      outItem.FilterInfo.Add("Документ", UI.TextHandlers.GetTextValue(Params.DocTypeName, Params.DocId));
+      outItem.FilterInfo.Add(Res.DocInfo_Title_FilterToDoc, UI.TextHandlers.GetTextValue(Params.DocTypeName, Params.DocId));
     }
 
     #endregion
@@ -866,7 +853,7 @@ namespace FreeLibSet.Forms.Docs
 
     void RefPage_DataQuery(object sender, EventArgs args)
     {
-      _ReportForm.lblNoRefs.Text = "На документы \"" + Params.DocTypeUI.DocType.PluralTitle + "\" не может быть ссылок из других документов";
+      _ReportForm.lblNoRefs.Text = String.Format(Res.DocInfo_Msg_RefsImpossible, Params.DocTypeUI.DocType.PluralTitle);
       _ReportForm.lblNoRefs.Visible = (Params.DocTypeUI.ToDocTypeRefs.Length == 0);
       _ReportForm.lblUserDocsInfo.Visible = (Params.DocTypeName == UI.DocProvider.DocTypes.UsersTableName);
 
@@ -876,13 +863,13 @@ namespace FreeLibSet.Forms.Docs
     private void RefDet_DefaultOutItem_TitleNeeded(object sender, EventArgs args)
     {
       Reporting.BRDataGridViewMenuOutItem outItem = (Reporting.BRDataGridViewMenuOutItem)sender;
-      outItem.Title = "Ссылки на документ \"" + Params.DocTypeUI.DocType.SingularTitle + "\", DocId=" + Params.DocId.ToString();
+      outItem.Title = String.Format(Res.DocInfo_Title_RefOutItem, Params.DocTypeUI.DocType.SingularTitle, Params.DocId);
       outItem.FilterInfo.Clear();
-      outItem.FilterInfo.Add("Документ", UI.TextHandlers.GetTextValue(Params.DocTypeName, Params.DocId));
-      string fromTypeText = "Документы всех типов";
+      outItem.FilterInfo.Add(Res.DocInfo_Title_FilterToDoc, UI.TextHandlers.GetTextValue(Params.DocTypeName, Params.DocId));
+      string fromTypeText = Res.DocInfo_Msg_AllTypeDocs;
       if (_ReportForm.CurrFromDocType != null)
         fromTypeText = _ReportForm.CurrFromDocType.PluralTitle;
-      outItem.FilterInfo.Add("Ссылки из документов", fromTypeText);
+      outItem.FilterInfo.Add(Res.DocInfo_Title_FilterFromDocs, fromTypeText);
     }
 
     #endregion
@@ -896,7 +883,7 @@ namespace FreeLibSet.Forms.Docs
 
       EFPReportGridPage refInfoPage = new EFPReportGridPage();
       refInfoPage.Title = "Схема";
-      refInfoPage.ToolTipText = "Возможные ссылки на документы \"" + Params.DocTypeUI.DocType.PluralTitle + "\"";
+      refInfoPage.ToolTipText = String.Format(Res.DocInfo_ToolTip_RefInfoPage, Params.DocTypeUI.DocType.PluralTitle);
       refInfoPage.ImageKey = "DocRefSchema";
       refInfoPage.InitGrid += new EventHandler(RefInfoPage_InitGrid);
       refInfoPage.ExtraPageKey = "AllPossibleRefs";
@@ -907,13 +894,13 @@ namespace FreeLibSet.Forms.Docs
     {
       EFPReportGridPage refInfoPage = (EFPReportGridPage)sender;
       refInfoPage.ControlProvider.Control.AutoGenerateColumns = false;
-      refInfoPage.ControlProvider.Columns.AddImage("FromImage");
-      refInfoPage.ControlProvider.Columns.LastAdded.GridColumn.ToolTipText = "Значок вида документа / поддокумента, в котором есть ссылочное поле";
-      refInfoPage.ControlProvider.Columns.AddTextFill("FromDoc", false, "Ссылающийся документ", 100, 10);
-      refInfoPage.ControlProvider.Columns.AddText("FromColumn", false, "Ссылочное поле", 20, 10);
-      refInfoPage.ControlProvider.Columns.AddImage("ToImage");
-      refInfoPage.ControlProvider.Columns.LastAdded.GridColumn.ToolTipText = "Значок вида документа / поддокумента, на который выполняется ссылка";
-      refInfoPage.ControlProvider.Columns.AddText("ToSubDocType", false, "Ссылка на", 20, 10);
+      refInfoPage.ControlProvider.Columns.AddImage("FromImage"); // 0
+      refInfoPage.ControlProvider.Columns.LastAdded.GridColumn.ToolTipText = Res.DocInfo_ToolTip_SchemaColFromImage;
+      refInfoPage.ControlProvider.Columns.AddTextFill("FromDoc", false, Res.DocInfo_ColTitle_RefFromDoc, 100, 10); // 1
+      refInfoPage.ControlProvider.Columns.AddText("FromColumn", false, Res.DocInfo_ColTitle_RefFromColumn, 20, 10); // 2
+      refInfoPage.ControlProvider.Columns.AddImage("ToImage"); // 3
+      refInfoPage.ControlProvider.Columns.LastAdded.GridColumn.ToolTipText = Res.DocInfo_ToolTip_SchemaColToImage;
+      refInfoPage.ControlProvider.Columns.AddText("ToSubDocType", false, Res.DocInfo_ColTitle_SchemaColTo, 20, 10); //
       refInfoPage.ControlProvider.DisableOrdering();
       refInfoPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ghRefInfo_GetCellAttributes);
       refInfoPage.ControlProvider.ReadOnly = true;
@@ -1013,10 +1000,10 @@ namespace FreeLibSet.Forms.Docs
       EFPReportDBxGridPage singleRefPage = (EFPReportDBxGridPage)sender;
       singleRefPage.ControlProvider.Control.AutoGenerateColumns = false;
       singleRefPage.ControlProvider.Columns.AddImage("FromImage");
-      singleRefPage.ControlProvider.Columns.AddTextFill("FromText", false, "Ссылка из", 50, 20);
-      singleRefPage.ControlProvider.Columns.AddText("FromColumnName", true, "Ссылочное поле", 15, 10);
+      singleRefPage.ControlProvider.Columns.AddTextFill("FromText", false, Res.DocInfo_ColTitle_SchemaColFrom, 50, 20);
+      singleRefPage.ControlProvider.Columns.AddText("FromColumnName", true, Res.DocInfo_ColTitle_RefFromColumn, 15, 10);
       singleRefPage.ControlProvider.Columns.AddImage("ToImage");
-      singleRefPage.ControlProvider.Columns.AddTextFill("ToText", false, "Ссылка на", 50, 20);
+      singleRefPage.ControlProvider.Columns.AddTextFill("ToText", false, Res.DocInfo_ColTitle_SchemaColTo, 50, 20);
       singleRefPage.ControlProvider.DisableOrdering();
       singleRefPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(SingleRefPage_GetCellAttributes);
 

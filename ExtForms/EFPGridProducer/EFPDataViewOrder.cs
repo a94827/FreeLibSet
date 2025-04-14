@@ -33,7 +33,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (clickableColumnNames == null)
-        throw new ArgumentNullException("clickableColumnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("clickableColumnNames");
 #endif
       //if (clickableColumnNames.Length == 0)
       //  throw new ArgumentException("Не задано ни одного имени столбца", "clickableColumnNames");
@@ -53,7 +53,7 @@ namespace FreeLibSet.Forms
     {
 #if DEBUG
       if (String.IsNullOrEmpty(clickableColumnNames))
-        throw new ArgumentNullException("clickableColumnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("clickableColumnNames");
 #endif
 
       _ClickableColumnNames = clickableColumnNames.Split(',');

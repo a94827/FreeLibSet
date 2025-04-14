@@ -17,7 +17,7 @@ namespace FreeLibSet.Forms.Docs
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события EFPAllSubDocComboBox.TextValueNeeded
+  /// Аргументы события <see cref="EFPAllSubDocComboBox.TextValueNeeded"/>
   /// </summary>
   public class EFPAllSubDocComboBoxTextValueNeededEventArgs : EFPComboBoxTextValueNeededEventArgs
   {
@@ -27,7 +27,7 @@ namespace FreeLibSet.Forms.Docs
     /// Создается комбоблоком
     /// </summary>
     /// <param name="owner">Объект-владелец</param>
-    public EFPAllSubDocComboBoxTextValueNeededEventArgs(EFPAllSubDocComboBox owner)
+    internal EFPAllSubDocComboBoxTextValueNeededEventArgs(EFPAllSubDocComboBox owner)
     {
       _Owner = owner;
     }
@@ -36,7 +36,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Свойства
 
-    private EFPAllSubDocComboBox _Owner;
+    private readonly EFPAllSubDocComboBox _Owner;
 
     // Пока нет дополнительных свойств
 
@@ -44,7 +44,7 @@ namespace FreeLibSet.Forms.Docs
   }
 
   /// <summary>
-  /// Делегат события EFPAllSubDocComboBox.TextValueNeeded
+  /// Делегат события <see cref="EFPAllSubDocComboBox.TextValueNeeded"/>
   /// </summary>
   /// <param name="sender">Комбоблок</param>
   /// <param name="args">Аргументы события</param>
@@ -167,7 +167,7 @@ namespace FreeLibSet.Forms.Docs
       set
       {
         if (value && _MainEditor == null)
-          throw new InvalidOperationException("Нельзя устанавливать свойство ValidateBeforeEdit в true, т.к. просмотр не относится к DocumentEditor"); // 21.01.2022
+          throw new InvalidOperationException(Res.EFPAllSubDocComboBox_Err_NoDocumentEditor); // 21.01.2022
         _ValidateBeforeEdit = value;
       }
     }
@@ -321,10 +321,10 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        Control.Text = "!!! Ошибка !!! " + e.Message;
+        Control.Text = String.Format(Res.EFPComboBox_Msg_ErrorText, e.Message);
         if (EFPApp.ShowListImages)
           Control.Image = EFPApp.MainImages.Images["Error"];
-        EFPApp.ShowTempMessage("Ошибка при получении текста: " + e.Message);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPComboBox_Err_GetText, e.Message));
       }
     }
 

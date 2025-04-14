@@ -31,13 +31,13 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(filterText))
         throw ExceptionFactory.ArgStringIsNullOrEmpty("filterText");
       if (filterText.IndexOf('|') >= 0)
-        throw ExceptionFactory.ArgBadChar("filterText", filterText, "|");
+        throw ExceptionFactory.ArgInvalidChar("filterText", filterText, "|");
       _FilterText = filterText;
 
       if (String.IsNullOrEmpty(fileMask))
         throw ExceptionFactory.ArgStringIsNullOrEmpty("fileMask");
       if (fileMask.IndexOf('|') >= 0)
-        throw ExceptionFactory.ArgBadChar("fileMask", FileMask, "|");
+        throw ExceptionFactory.ArgInvalidChar("fileMask", FileMask, "|");
       _FileMask = fileMask;
     }
 

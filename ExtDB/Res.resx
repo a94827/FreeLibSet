@@ -1,0 +1,519 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Common_Err_ColumnIsNotRef" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' is not a reference column</value>
+  </data>
+  <data name="DBxCacheLoadException_Error_Nessage" xml:space="preserve">
+    <value>{0}. DBxCache query: {1}</value>
+  </data>
+  <data name="DBxCache_Arg_RefColumnHasNoDot" xml:space="preserve">
+    <value>Column '{0}' is not a reference column because doesn't contain a dot</value>
+  </data>
+  <data name="DBxCache_Arg_UnknownColumn" xml:space="preserve">
+    <value>There is no column '{0}' in table '{1}' structure</value>
+  </data>
+  <data name="DBxCache_ErrTitle_Load" xml:space="preserve">
+    <value>Error occurred when DBxCache page loaded</value>
+  </data>
+  <data name="DBxCache_Err_IndividualValueNotReturned" xml:space="preserve">
+    <value>Individual value for the key '{0}' has not been returned</value>
+  </data>
+  <data name="DBxCache_Err_Load" xml:space="preserve">
+    <value>Cannot get data from the source</value>
+  </data>
+  <data name="DBxCache_Err_TablePageNotReturned" xml:space="preserve">
+    <value>Table page for the key '{0}' has not been returned</value>
+  </data>
+  <data name="DBxCache_TraceSwitch_Default" xml:space="preserve">
+    <value>Database cache tracing (DBxCache)</value>
+  </data>
+  <data name="DBxClearCacheBuffer_Arg_VersionTooBig" xml:space="preserve">
+    <value>Give original Version={0} is greater than last existed buffer version {1}</value>
+  </data>
+  <data name="DBxCon_Arg_DataRowNullInPKColumn" xml:space="preserve">
+    <value>Data row contains DBNull value in primary key column '{0}'</value>
+  </data>
+  <data name="DBxCon_Arg_DataTableHasNoPKColumn" xml:space="preserve">
+    <value>DataTable does not have the primary key column '{0}' as defined for the table '{1}' of database '{2}'</value>
+  </data>
+  <data name="DBxCon_Arg_DataTableMustHaveSingleColumn" xml:space="preserve">
+    <value>DataTable must have only one column</value>
+  </data>
+  <data name="DBxCon_Arg_DataTableWithPKColumn" xml:space="preserve">
+    <value>DataTable with rows to find cannot have primary key column '{0}' of table '{1}'</value>
+  </data>
+  <data name="DBxCon_Arg_DBCommandDiffConnection" xml:space="preserve">
+    <value>Command belongs to another connection</value>
+  </data>
+  <data name="DBxCon_Arg_NoId" xml:space="preserve">
+    <value>Record identifier is not given</value>
+  </data>
+  <data name="DBxCon_Arg_UpdateDataTableWithPKOnly" xml:space="preserve">
+    <value>DataTable has only primary key columns ({0}). There is no more column for update</value>
+  </data>
+  <data name="DBxCon_Arg_UseDeleteAll" xml:space="preserve">
+    <value>Deleting all rows without a filter is not supported. Use method DeleteAll()</value>
+  </data>
+  <data name="DBxCon_ErrTitle_Rollback" xml:space="preserve">
+    <value>Transaction rollback error in database '{0}'</value>
+  </data>
+  <data name="DBxCon_ErrTitle_Sql" xml:space="preserve">
+    <value>Error occurred when SQL query executed</value>
+  </data>
+  <data name="DBxCon_Err_EndUpdateForTable" xml:space="preserve">
+    <value>BeginUpdate() for the table '{0}' has not been called</value>
+  </data>
+  <data name="DBxCon_Err_NoTransaction" xml:space="preserve">
+    <value>Transaction has not been started</value>
+  </data>
+  <data name="DBxCon_Err_PrevTransaction" xml:space="preserve">
+    <value>Previous transaction has not been finished yet</value>
+  </data>
+  <data name="DBxCon_Err_UpdateNoPK" xml:space="preserve">
+    <value>Table '{0}' in the database '{1}' has no primary key. Rows cannnot be updated.</value>
+  </data>
+  <data name="DBxFSqlFormatter_Arg_RefTypeEmulation" xml:space="preserve">
+    <value>Should not call in Emulation mode</value>
+  </data>
+  <data name="DBxTransactionArray_ErrTitle_Roolback" xml:space="preserve">
+    <value>Error occurred when transaction rolled back</value>
+  </data>
+  <data name="DBxUserPermission_Msg_AccessModeFull" xml:space="preserve">
+    <value>Full</value>
+  </data>
+  <data name="DBxUserPermission_Msg_AccessModeNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="DBxUserPermission_Msg_AccessModeReadOnly" xml:space="preserve">
+    <value>Read only</value>
+  </data>
+  <data name="DBx_Err_AlreadyConnected" xml:space="preserve">
+    <value>Database '{0}' has already had a connection</value>
+  </data>
+  <data name="DBx_Err_DotColumnNamePart" xml:space="preserve">
+    <value>Invalid part #{0} of dotted column name. {1}</value>
+  </data>
+  <data name="DBx_Err_HasConnection" xml:space="preserve">
+    <value>There is a connection to database '{0}' </value>
+  </data>
+  <data name="DBx_Err_NameStartsWithDigit" xml:space="preserve">
+    <value>Name cannot start with a digit</value>
+  </data>
+  <data name="DBx_Err_NoColumnName" xml:space="preserve">
+    <value>Column name is empty</value>
+  </data>
+  <data name="DBx_Err_NoTableName" xml:space="preserve">
+    <value>Table name is empty</value>
+  </data>
+  <data name="TablePermission_Name_ObjectText0" xml:space="preserve">
+    <value>No tables</value>
+  </data>
+  <data name="TablePermission_Name_ObjectText1" xml:space="preserve">
+    <value>Table '{0}'</value>
+  </data>
+  <data name="TablePermission_Name_ObjectTextN" xml:space="preserve">
+    <value>Tables {0}</value>
+  </data>
+  <data name="WholeDBPermission_Name_ObjectText" xml:space="preserve">
+    <value>Database access</value>
+  </data>
+  <data name="DBxDataWriter_Arg_ColumnType" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' has type {2} and cannot take values of type {3}</value>
+  </data>
+  <data name="DBxDataWriter_Arg_OtherColumnRequired" xml:space="preserve">
+    <value>For the mode '{0}' column list must contain at least one column not used for the search in the table '{1}'</value>
+  </data>
+  <data name="DBxDataWriter_Arg_PartialSearchColumns" xml:space="preserve">
+    <value>Whole column list cannot contains partial set of search columns ({0}) for the table '{1}'</value>
+  </data>
+  <data name="DBxDataWriter_Arg_SearchColumnRequired" xml:space="preserve">
+    <value>For the mode '{0}' there must be seaarch column(s) in the table</value>
+  </data>
+  <data name="DBxDataWriter_Err_NoPK" xml:space="preserve">
+    <value>Table '{0}' does not contain a primary key. Primary key is required for the mode {1}</value>
+  </data>
+  <data name="DBxManager_Arg_FileNameBadChars" xml:space="preserve">
+    <value>File name '{0}' contains invalid chars</value>
+  </data>
+  <data name="DBxManager_Err_NoConnectionString" xml:space="preserve">
+    <value>There is no connection string with name '{0}' in the settings file. Available connection strings are: {1}</value>
+  </data>
+  <data name="DBxManager_Err_ReplaceDBItem" xml:space="preserve">
+    <value>Database name '{0}' does not contain a text fragment '{1}' to replace</value>
+  </data>
+  <data name="DBxManager_Err_UnknownProviderForSettings" xml:space="preserve">
+    <value>Unknown database provider '{0}' for stored connection string '{1}'</value>
+  </data>
+  <data name="DBxNameValidator_Arg_ColumnListIsEmpty" xml:space="preserve">
+    <value>Empty column list</value>
+  </data>
+  <data name="DBxNameValidator_Arg_ColumnNotRef" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' in database '{2}' is not a refernce column</value>
+  </data>
+  <data name="DBxNameValidator_Arg_InvalidColumnName" xml:space="preserve">
+    <value>Invalid column name '{0}'. {1}</value>
+  </data>
+  <data name="DBxNameValidator_Arg_InvalidTableName" xml:space="preserve">
+    <value>Invalid table name '{0}'. {1}</value>
+  </data>
+  <data name="DBxNameValidator_Arg_UnknownColumnName" xml:space="preserve">
+    <value>There is no declaration for column '{0}' of table '{1}' in database '{2}'</value>
+  </data>
+  <data name="DBxNameValidator_Arg_UnknownTableName" xml:space="preserve">
+    <value>There is no declaration for table '{0}' in database '{1}'</value>
+  </data>
+  <data name="DBxNameValidator_Err_ColumnRead" xml:space="preserve">
+    <value>There is no access permission for column '{0}' of table '{1}'</value>
+  </data>
+  <data name="DBxNameValidator_Err_ColumnWrite" xml:space="preserve">
+    <value>There is no writing permission for column '{0}' of table '{1}'. There is only a reading access permission</value>
+  </data>
+  <data name="DBxNameValidator_Err_TableRead" xml:space="preserve">
+    <value>There is no access permission for table '{0}'</value>
+  </data>
+  <data name="DBxNameValidator_Err_TableWrite" xml:space="preserve">
+    <value>There is no writing permission for table'{0}'</value>
+  </data>
+  <data name="DBxNoIdArgumentException_Err_Message" xml:space="preserve">
+    <value>Identifier not given</value>
+  </data>
+  <data name="DBxPrimaryKeyException_Err_Message" xml:space="preserve">
+    <value>Invalid primary key</value>
+  </data>
+  <data name="DBxRecordNotFoundException_Err_Message" xml:space="preserve">
+    <value>Record in table '{0}' with identifier {1} not found</value>
+  </data>
+  <data name="DBxStructException_Err_Message" xml:space="preserve">
+    <value>Error in table '{0}' structure declaration. {1}</value>
+  </data>
+  <data name="DBxAccessException_Err_Message" xml:space="preserve">
+    <value>You have no rights to perform the action</value>
+  </data>
+  <data name="DBxNameExpression_Arg_AliasRequired" xml:space="preserve">
+    <value>Alias must be given to use expression of type {0}</value>
+  </data>
+  <data name="DBxSelectFormat_Arg_WrongColumnCount" xml:space="preserve">
+    <value>Wrong column count in the table: {0}. Expected: {1}</value>
+  </data>
+  <data name="DBxSelectFormat_Err_FormatAlreadyCalled" xml:space="preserve">
+    <value>Repeated call of method  Format() is not allowed. Instance of FillSelectFormatter can be used only once</value>
+  </data>
+  <data name="DBxSelectFormat_Err_GroupByWithoutExpr" xml:space="preserve">
+    <value>GROUP BY list presented without the expression list (SELECT *)</value>
+  </data>
+  <data name="DBxSelectFormat_Err_HavingWithoutGroupBy" xml:space="preserve">
+    <value>HAVING clause presented without GROUP BY</value>
+  </data>
+  <data name="DBxSelectFormat_Err_NoAliasForColumn" xml:space="preserve">
+    <value>Table '{0}' contains column '{1}', but there is no alias for it in the DBxFillSelectInfo.Expressions list</value>
+  </data>
+  <data name="DBxSelectFormat_Err_NoColumnInDBxSqlBuffer" xml:space="preserve">
+    <value>There is no definition for column '{0}' in the DBxSqlBuffer.ColumnStructs list</value>
+  </data>
+  <data name="DBxSelectFormat_Err_NoColumnsAccessable" xml:space="preserve">
+    <value>For sql expression 'SELECT * FROM {0}' is not possible to get a column list since user has no rights to access to any of table columns</value>
+  </data>
+  <data name="DBxSelectInfo_Err_ColumnAndAggMixed" xml:space="preserve">
+    <value>Expressions[{0}] '{1}' contains both an aggregate function and a column reference</value>
+  </data>
+  <data name="DBxSelectInfo_Err_GroupByWithoutExpression" xml:space="preserve">
+    <value>Expression list not presented. For operator 'SELECT * FROM xxx' with an asterisk, clause GROUP BY cannot be used</value>
+  </data>
+  <data name="DBxSelectInfo_Err_InitGroupByAlreadyCalled" xml:space="preserve">
+    <value>GroupBy list is already filled. Repeated method call is not allowed.</value>
+  </data>
+  <data name="DBxSelectInfo_Err_NoExpressions" xml:space="preserve">
+    <value>Expression list is empty</value>
+  </data>
+  <data name="DBxStructChecker_Err_ComplexPK" xml:space="preserve">
+    <value>Table '{0}' has a multi-column primary key. Primary key on the single column of type {1} required.</value>
+  </data>
+  <data name="DBxStructChecker_Err_InvNumRange" xml:space="preserve">
+    <value>For the numeric column '{0}' defined invalid value range: '{1} : {2}'</value>
+  </data>
+  <data name="DBxStructChecker_Err_NoPK" xml:space="preserve">
+    <value>Table '{0}' has no primary key. Primary key on column of type {1} required.</value>
+  </data>
+  <data name="DBxStructChecker_Err_PKWrongType" xml:space="preserve">
+    <value>Table '{0}' has the primary key on column  '{1}' of type {2}. Type {3} required</value>
+  </data>
+  <data name="DBxStructChecker_Err_RefColumnTypeMismatch" xml:space="preserve">
+    <value>In the table '{0}' reference column '{1}' of type {2} to table '{3}', but its primary key column '{4}' is of type {5}</value>
+  </data>
+  <data name="DBxStructChecker_Err_RefToTableComplexPK" xml:space="preserve">
+    <value>In the table '{0}' reference column '{1}' to table '{2}', with multi-column primary key</value>
+  </data>
+  <data name="DBxStructChecker_Err_RefToTableNoPK" xml:space="preserve">
+    <value>In the table '{0}' reference column '{1}' to table '{2}' without primary key</value>
+  </data>
+  <data name="DBxStructChecker_Err_RefToUnknownTable" xml:space="preserve">
+    <value>In the table '{0}' reference column '{1}' to unknown table '{2}'</value>
+  </data>
+  <data name="DBxStructChecker_Err_StringColumnWithoutLen" xml:space="preserve">
+    <value>For the string column '{0}' there is no length givem</value>
+  </data>
+  <data name="DBxStructChecker_Err_TableWithoutColumns" xml:space="preserve">
+    <value>Table '{0}' has no columns</value>
+  </data>
+  <data name="DBxStructChecker_Err_UnknownColumnType" xml:space="preserve">
+    <value>There is no type defined for the column '{0}'</value>
+  </data>
+  <data name="DBx_Msg_ColumnLonger" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' should have length of {2} char(s) while real column length is greater: {3} char(s)</value>
+  </data>
+  <data name="DBx_Err_ColumnTypeDiff" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' has a wrong type. Declaration of type {2} requires column type {3}, while real type is {4}</value>
+  </data>
+  <data name="DBx_Msg_DelAllIndexesByColumnLength" xml:space="preserve">
+    <value>All indexes for table '{0}' will be removed because the column '{1}' length changed</value>
+  </data>
+  <data name="DBx_Err_GetConnectionString" xml:space="preserve">
+    <value>Error when getting connection string. {0}</value>
+  </data>
+  <data name="DBx_Err_NoMainEntry" xml:space="preserve">
+    <value>Main connection entry has not been initialized yet</value>
+  </data>
+  <data name="DBx_Msg_ColumnCreated" xml:space="preserve">
+    <value>Column '{0}' created in table '{1}'</value>
+  </data>
+  <data name="DBx_Msg_ColumnLengthChanged" xml:space="preserve">
+    <value>Length of column '{0}' of table '{1}' has been changed from {2} to {3} chars</value>
+  </data>
+  <data name="DBx_Msg_TableCreated" xml:space="preserve">
+    <value>Table '{0}' created</value>
+  </data>
+  <data name="DBx_Phase_ColumnCreation" xml:space="preserve">
+    <value>Creating column '{0}' in table '{1}'</value>
+  </data>
+  <data name="DBx_Phase_ColumnSetLength" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' length changing</value>
+  </data>
+  <data name="DBx_Phase_TableCreation" xml:space="preserve">
+    <value>Creating table '{0}'</value>
+  </data>
+  <data name="SqlDBx_Arg_FileExtension" xml:space="preserve">
+    <value>Invalid value SqlConnectionStringBuilder.AttachDBFilename='{0}'. File must have the extension '.mdf', else work with database is unpossible</value>
+  </data>
+  <data name="SqlDBx_Arg_NoDBName" xml:space="preserve">
+    <value>Connection string does not have parameters InitialCatalog nor AttachDBFilename, that define database name</value>
+  </data>
+  <data name="UnknownUserPermission_Name_Default" xml:space="preserve">
+    <value>Uknown permission '{0}'</value>
+  </data>
+  <data name="UserPermission_Err_NotCreated" xml:space="preserve">
+    <value>Permission for ClassCode='{0}' has not been created</value>
+  </data>
+  <data name="DBx_Msg_DefaultReset" xml:space="preserve">
+    <value>For column '{0}' of table '{1}' the DEFAULT value has been reset</value>
+  </data>
+  <data name="DBx_Msg_DefaultSet" xml:space="preserve">
+    <value>For column '{0}' of table '{1}' the DEFAULT value has been set '{2}'</value>
+  </data>
+  <data name="DBx_Msg_FKCreated" xml:space="preserve">
+    <value>Foreign key '{0}' created for the table '{1}' with column(s) '{2}'</value>
+  </data>
+  <data name="DBx_Msg_IndexCreated" xml:space="preserve">
+    <value>Index '{0}' for table '{1}' with columns {2}</value>
+  </data>
+  <data name="DBx_Msg_IndexRemovedExcess" xml:space="preserve">
+    <value>Excess index '{0}' removed from table '{1}'</value>
+  </data>
+  <data name="DBx_Msg_IndexRemovedWrong" xml:space="preserve">
+    <value>Index '{0}' removed from table '{1}' because it's mismatch the table structure</value>
+  </data>
+  <data name="DBx_Msg_NullChanged" xml:space="preserve">
+    <value>For column '{0}' of table '{1}' the '{2}' attribute has been set</value>
+  </data>
+  <data name="DBx_Msg_NullToDefaultValue" xml:space="preserve">
+    <value>For column '{0}' of table '{1}' the NULL values have been replaced to DEFAULT value</value>
+  </data>
+  <data name="DBx_Msg_PKAdded" xml:space="preserve">
+    <value>Primary key '{0}' for table '{1}' has been added</value>
+  </data>
+  <data name="DBx_Msg_PKRemovedNoPK" xml:space="preserve">
+    <value>Primary key '{0}' for table '{1}' has been removed because table does not use a primary key</value>
+  </data>
+  <data name="DBx_Msg_PKRemovedWrong" xml:space="preserve">
+    <value>Primary key '{0}' for table '{1}' has been removed bacause it was wrong</value>
+  </data>
+  <data name="DBx_Phase_FKCreation" xml:space="preserve">
+    <value>Foreign key '{0}' creation</value>
+  </data>
+  <data name="DBx_Phase_FKVerification" xml:space="preserve">
+    <value>Foreign key verification</value>
+  </data>
+  <data name="DBx_Phase_IndexCreation" xml:space="preserve">
+    <value>Index creation for table '{0}' and columns {1}</value>
+  </data>
+  <data name="DBx_Phase_IndexRemoving" xml:space="preserve">
+    <value>Index '{0}' removing</value>
+  </data>
+  <data name="DBxCon_Err_SchemaColumnListIsEmpty" xml:space="preserve">
+    <value>Column list is empty for table '{0}' when database schema loading</value>
+  </data>
+  <data name="DBx_Msg_ColumnCommentChanged" xml:space="preserve">
+    <value>Comment has been changed for column '{0}' in table '{1}' </value>
+  </data>
+  <data name="DBx_Msg_TableCommentChanged" xml:space="preserve">
+    <value>Comment has been changed for table '{0}'</value>
+  </data>
+  <data name="NpgsqlDBx_Arg_NoDatabase" xml:space="preserve">
+    <value>Connection string does not have parameter 'Database'</value>
+  </data>
+  <data name="NpgsqlDBx_Msg_ConstraintColumnNotFound" xml:space="preserve">
+    <value>In the system table 'pg_constraint' there is a foreign key constraint for the table '{0}' and column with index {1}. For the pair table+column there is no record in column table. Current constraint will not be analyzed but an error is possible when the constraint will be added again.</value>
+  </data>
+  <data name="NpgsqlDBx_Msg_ConstraintWrongConkey" xml:space="preserve">
+    <value>In the system table 'pg_constraint' there is a foreign key constraint with wrong field 'conkey'</value>
+  </data>
+  <data name="NpgsqlDBx_Msg_IndexColumnNotFound" xml:space="preserve">
+    <value>For the index '{0}' there is column with a number {1}, which is not found in table '{2}'</value>
+  </data>
+  <data name="Npgsql_Msg_UnreadableMessage" xml:space="preserve">
+    <value>If localized error message is not readable (some characters instead of letters), configure Postgresql server to use english language for message output. In the file postgresql.conf set a line &lt;lc_messages = 'en_EN.UTF-8'&gt;</value>
+  </data>
+  <data name="OleDbDBx_Arg_FileExtension" xml:space="preserve">
+    <value>Connection string has invalid value 'DataSource': '{0}'. FIle must have extension '.mdb'</value>
+  </data>
+  <data name="OleDbDBx_Arg_InvalidDataSource" xml:space="preserve">
+    <value>Connection string has invalid value 'DataSource': '{0}'. Parameter must contain a path to the database file.</value>
+  </data>
+  <data name="OleDbDBx_Arg_NoDataSource" xml:space="preserve">
+    <value>Connection string does not have parameter 'DataSource'</value>
+  </data>
+  <data name="OracleDBx_Err_OwnerPrefix" xml:space="preserve">
+    <value>OWNER prefix. {0}</value>
+  </data>
+  <data name="SQLiteDBx_Arg_NoDataSource" xml:space="preserve">
+    <value>Connection string does not have parameter 'DataSource'</value>
+  </data>
+  <data name="SQLiteDBx_Arg_YearOutOfRange" xml:space="preserve">
+    <value>Columns of type date' and 'datetime' cannot accept year less than {0}. SQLite then cannot read such a value</value>
+  </data>
+  <data name="SQLiteDBx_Err_SplitColumnType" xml:space="preserve">
+    <value>Error occurred when type description '{0}' parsed. {1}</value>
+  </data>
+  <data name="SQLiteDBx_Msg_TableRecreatedByColumnFormat" xml:space="preserve">
+    <value>Table '{0}' has been recreated since column format changed</value>
+  </data>
+  <data name="SQLiteDBx_Phase_TableStructChanging" xml:space="preserve">
+    <value>Table '{0}' struct changing</value>
+  </data>
+</root>

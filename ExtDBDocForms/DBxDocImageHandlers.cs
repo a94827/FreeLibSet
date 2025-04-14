@@ -286,7 +286,7 @@ namespace FreeLibSet.Forms.Docs
     public void Add(string tableName, string imageKey, DBxColumns columnNames, DBxImageValueNeededEventHandler imageValueNeeded)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       //string TableName2 = TableName;
 
@@ -397,7 +397,7 @@ namespace FreeLibSet.Forms.Docs
         {
           // добавляем пустышку
           if (String.IsNullOrEmpty(tableName))
-            throw new ArgumentNullException("tableName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
           return "Item";
         }
@@ -520,7 +520,7 @@ namespace FreeLibSet.Forms.Docs
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       int p = columnName.IndexOf('.');
       if (p < 0)
@@ -542,18 +542,18 @@ namespace FreeLibSet.Forms.Docs
 
         string extTableName = tableStruct.Columns[refColumnName].MasterTableName;
         if (String.IsNullOrEmpty(extTableName))
-          throw new ArgumentException("Поле \"" + extTableName + "\" таблицы \"" + tableName + "\" не является ссылочным", "columnName");
-        string ExtColumnName = columnName.Substring(p + 1);
+          throw new ArgumentException(String.Format(Res.Common_Arg_NoRefColumn, extTableName, tableName), "columnName");
+        string extColumnName = columnName.Substring(p + 1);
 
         DataRow row2 = InternalGetRow(extTableName, refId, primaryDS);
         if (row2 == null)
         {
           if (refId > 0)
-            return DBCache[extTableName].GetValue(refId, ExtColumnName);
+            return DBCache[extTableName].GetValue(refId, extColumnName);
           else
             return null;
         }
-        return InternalGetValue(row2, extTableName, ExtColumnName, primaryDS);
+        return InternalGetValue(row2, extTableName, extColumnName, primaryDS);
       }
     }
 
@@ -688,7 +688,7 @@ namespace FreeLibSet.Forms.Docs
           {
             // добавляем пустышку
             if (String.IsNullOrEmpty(tableName))
-              throw new ArgumentNullException("tableName");
+              throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
             return GetDummyImageKey(kind);
           }
@@ -759,7 +759,7 @@ namespace FreeLibSet.Forms.Docs
         {
           // добавляем пустышку
           if (String.IsNullOrEmpty(tableName))
-            throw new ArgumentNullException("tableName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
           return;
         }
@@ -926,7 +926,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        return "Ошибка при получении всплывающей подсказки. " + e.Message;
+        return String.Format(Res.DBxDocImageHandler_Err_GetToolTipText, e.Message);
       }
     }
 
@@ -941,13 +941,13 @@ namespace FreeLibSet.Forms.Docs
       try
       {
         if (row.RowState == DataRowState.Deleted)
-          return "Строка удалена";
+          return Res.DBxDocImageHandler_Msg_RowDeleted;
         Int32 id = DataTools.GetInt(row, "Id");
         return DoGetToolTipText(tableName, id, row.Table.DataSet, row);
       }
       catch (Exception e)
       {
-        return "Ошибка при получении всплывающей подсказки. " + e.Message;
+        return String.Format(Res.DBxDocImageHandler_Err_GetToolTipText, e.Message);
       }
     }
 
@@ -966,16 +966,16 @@ namespace FreeLibSet.Forms.Docs
         {
           // добавляем пустышку
           if (String.IsNullOrEmpty(tableName))
-            throw new ArgumentNullException("tableName");
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
           return String.Empty;
         }
 
         if (handler.DocType == null)
           // Не найденная таблица. Не нужно ничего запрашивать, даже если есть поля и обработчик
-          return "Таблица не найдена";
+          return Res.DBxDocImageHandler_Msg_TableNotFound;
         if (handler.AccessDeniedFlag)
-          return "Доступ к таблице запрещен"; // 10.07.2018
+          return Res.DBxDocImageHandler_Msg_AccessDenied; // 10.07.2018
 
         bool fromRow = false;
         if (row != null)
@@ -991,7 +991,7 @@ namespace FreeLibSet.Forms.Docs
             {
               values = InternalGetValues(tableName, id, handler.QueriedColumnNames, primaryDS); // 31.05.2022
               if (values == null)
-                return "Фиктивный идентификатор"; // 16.06.2021
+                return Res.DBxDocImageHandler_Msg_FictiveId; // 16.06.2021
             }
             else
               values = DBCache[tableName].GetValues(id, handler.QueriedColumnNames, primaryDS); // включая Id,DocId и Delete
@@ -1011,14 +1011,14 @@ namespace FreeLibSet.Forms.Docs
           if (handler.SubDocType == null)
           {
             if (_Args.GetBool("Deleted"))
-              return "Документ удален";
+              return Res.DBxDocImageHandler_Msg_DocDeleted;
           }
           else
           {
             if (_Args.GetBool("Deleted"))
-              return "Поддокумент удален";
+              return Res.DBxDocImageHandler_Msg_SubDocDeleted;
             if (GetDocIdDeleted(handler))
-              return "Удален основной документ";
+              return Res.DBxDocImageHandler_Msg_MainDocDeleted;
           }
         }
 
@@ -1031,7 +1031,7 @@ namespace FreeLibSet.Forms.Docs
           }
           catch (Exception e)
           {
-            _Args.ToolTipText = "Ошибка при получении всплывающей подсказки. " + e.Message;
+            _Args.ToolTipText = String.Format(Res.DBxDocImageHandler_Err_GetToolTipText, e.Message);
           }
         }
 
@@ -1055,7 +1055,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        return "Ошибка при получении всплывающей подсказки. " + e.Message;
+        return String.Format(Res.DBxDocImageHandler_Err_GetToolTipText, e.Message);
       }
     }
 
@@ -1074,7 +1074,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        return "Ошибка при получении всплывающей подсказки. " + e.Message;
+        return String.Format(Res.DBxDocImageHandler_Err_GetToolTipText, e.Message);
       }
     }
 
@@ -1095,7 +1095,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        return "Ошибка при получении всплывающей подсказки. " + e.Message;
+        return String.Format(Res.DBxDocImageHandler_Err_GetToolTipText, e.Message);
       }
     }
 
@@ -1134,19 +1134,19 @@ namespace FreeLibSet.Forms.Docs
       #region Свойства, задаваемые в конструкторе
 
       public string TableName { get { return _TableName; } }
-      private string _TableName;
+      private readonly string _TableName;
 
       public string ImageKey { get { return _ImageKey; } }
-      private string _ImageKey;
+      private readonly string _ImageKey;
 
       /// <summary>
       /// Список полей, заданных пользователем
       /// </summary>
       public DBxColumns ColumnNames { get { return _ColumnNames; } }
-      private DBxColumns _ColumnNames;
+      private readonly DBxColumns _ColumnNames;
 
       public DBxImageValueNeededEventHandler ImageValueNeeded { get { return _ImageValueNeeded; } }
-      private DBxImageValueNeededEventHandler _ImageValueNeeded;
+      private readonly DBxImageValueNeededEventHandler _ImageValueNeeded;
 
       public override string ToString()
       {
@@ -1157,21 +1157,21 @@ namespace FreeLibSet.Forms.Docs
       /// Вид документа, к которому относится таблица (если найдено)
       /// </summary>
       public DBxDocType DocType { get { return _DocType; } }
-      private DBxDocType _DocType;
+      private readonly DBxDocType _DocType;
 
       /// <summary>
       /// Вид поддокумента, к которому относится таблица, или null, если таблица относится к документу
       /// </summary>
       public DBxSubDocType SubDocType { get { return _SubDocType; } }
-      private DBxSubDocType _SubDocType;
+      private readonly DBxSubDocType _SubDocType;
 
       /// <summary>
       /// Список полей, используемых для запросов.
-      /// В начале идут поля из ColumnNames, затем - Id, DocId и Deleted
+      /// В начале идут поля из <see cref="ColumnNames"/>, затем - "Id", "DocId" и "Deleted"
       /// Если null, значит объект TableHandler еще не был инициализирован для DocProvider
       /// </summary>
       public DBxColumns QueriedColumnNames { get { return _QueriedColumnNames; } }
-      private DBxColumns _QueriedColumnNames;
+      private readonly DBxColumns _QueriedColumnNames;
 
       #endregion
 

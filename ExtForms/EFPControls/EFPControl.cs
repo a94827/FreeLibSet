@@ -980,6 +980,9 @@ namespace FreeLibSet.Forms
     {
       try
       {
+        if (DesignMode)
+          return; // 31.03.2025
+
         EFPFormProvider formProvider = BaseProvider.FormProvider;
         if (formProvider == null)
           return; // 09.06.2021. До присоединения к форме - игнорируем
@@ -1920,7 +1923,7 @@ namespace FreeLibSet.Forms
     /// В классах-наследниках можно переопределить методы <see cref="OnBeforePrepareCommandItems()"/> или <see cref="OnAfterPrepareCommandItems()"/>,
     /// а в прикладном коде добавить обработчик события <see cref="BeforePrepareCommandItems"/>.
     /// </summary>
-    public void PrepareCommandItems()
+    private void PrepareCommandItems()
     {
       if (CommandItems.IsReadOnly)
         return;
@@ -2330,6 +2333,7 @@ namespace FreeLibSet.Forms
     /// Частные проверки для конкретных управляющих элементов.
     /// Этот метод сам не вызывает обработчик события <see cref="Validating"/>. 
     /// Событие всегда вызывается после вызова <see cref="OnValidate()"/>.
+    /// Если в переопределенном методе требуется узнать причину проверки, используйте свойство <see cref="EFPBaseProvider.ValidateReason"/>.
     /// </summary>
     protected virtual void OnValidate()
     {
@@ -2341,6 +2345,7 @@ namespace FreeLibSet.Forms
     /// Обработчик всегда вызывается после защищенного метода <see cref="OnValidate()"/>.
     /// Обработчик не может "понизить" состояние проверки, например, убрать предупреждение.
     /// Событие не вызывается, если <see cref="OnValidate()"/> установил состояние ошибки.
+    /// Если в обработчике требуется узнать причину проверки, используйте свойство <see cref="EFPBaseProvider.ValidateReason"/>.
     /// </summary>
     public event UIValidatingEventHandler Validating;
 
@@ -2429,13 +2434,18 @@ namespace FreeLibSet.Forms
     public virtual void HandleIdle()
     {
       SaveConfig();
-
+      
       if (_Idle != null)
         _Idle(this, EventArgs.Empty);
 
       if (_CommandItems != null)
-        _CommandItems.HandleIdle(); // 28.01.2021
+      {
+        if (_CommandItems.HasIdle &&
+          BaseProvider.FormProvider.Form.WindowState != FormWindowState.Minimized) // 27.02.2025
 
+        _CommandItems.HandleIdle(); // 28.01.2021
+      }
+      
       if (_IdleValidationRequired)
       {
         _IdleValidationRequired = false;

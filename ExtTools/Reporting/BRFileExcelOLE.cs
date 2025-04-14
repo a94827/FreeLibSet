@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Core;
@@ -66,7 +69,7 @@ namespace FreeLibSet.Reporting
         Splash.AllowCancel = true;
 
         for (int i = 0; i < report.Sections.Count; i++)
-          SendSection(report.Sections[i], wbk.Sheets[i + 1], excelVersion);
+          SendSection(report.Sections[i], wbk, wbk.Sheets[i + 1], excelVersion);
 
         helper.Application.SetDisplayAlerts(oldDisplayAlerts);
       }
@@ -89,7 +92,24 @@ namespace FreeLibSet.Reporting
       #endregion
     }
 
-    private void SendSection(BRSection section, Worksheet sheet, int excelVersion)
+
+    /// <summary>
+    /// Хранилище для отложенной записи ссылок
+    /// </summary>
+    private struct DelayedLinkData
+    {
+      #region Поля
+
+      public int Row;
+
+      public int Column;
+
+      public string LinkData;
+
+      #endregion
+    }
+
+    private void SendSection(BRSection section, Workbook wbk, Worksheet sheet, int excelVersion)
     {
       sheet.SetName(section.Name);
 
@@ -184,6 +204,8 @@ namespace FreeLibSet.Reporting
           SetBorders(rBand.Borders, sel1.CellStyle.LeftBorder);
         }
 
+        List<DelayedCellValue> dcvs = null; // отложенная запись длинных строк
+        List<DelayedLinkData> dlinks = null; // отложенная запись ссылок
         // Выполняем запись блоками. В блоке используем максимум 8000 ячеек
         int maxBlockRowCount = 8000 / band.ColumnCount;
 
@@ -195,7 +217,6 @@ namespace FreeLibSet.Reporting
           #region Сбор значений для блока
 
           object[,] values = new object[blockRowCount, rightCols[rightCols.Length - 1]];
-          List<DelayedCellValue> dcvs = null; // отложенная запись длинных строк
 
           for (int j2 = 0; j2 < blockRowCount; j2++)
           {
@@ -208,7 +229,7 @@ namespace FreeLibSet.Reporting
             {
               sel1.ColumnIndex = k;
 
-              object value = sel1.Value;
+              object value = sel1.ActualValue;
               if (value is Boolean)
                 value = ((bool)value) ? 1 : 0;
 
@@ -216,26 +237,67 @@ namespace FreeLibSet.Reporting
               {
                 string s = (string)value;
                 s = DataTools.ReplaceAny(s, BRFileTools.BadValueChars, ' ');
+                s = s.Replace(DataTools.SoftHyphenStr, String.Empty); // 08.04.2025, как и в BRFileExcel2003Xml
 
                 // Длинные строки будем передавать поштучно
                 // Excel 2003 [иногда] начинает глючить, если строка длинная.
                 // Дефект вылазеет, только если используется свойство Range.FormulaArray и отсутствует,
-                // если используется свойство Formula
+                // если используется свойство Formula.
                 if ((excelVersion < MicrosoftOfficeTools.MicrosoftOffice_2007 && s.Length > 255) ||
-                  s.IndexOf(Environment.NewLine) > 0)
+                  s.IndexOf(Environment.NewLine) >= 0)
                 {
-                    DelayedCellValue dcv = new DelayedCellValue();
-                    dcv.Row = firstBlockRow+j2;
-                    dcv.Column = leftCols[k];
-                    dcv.Value = s;
-                    if (dcvs == null)
-                      dcvs = new List<DelayedCellValue>();
-                    dcvs.Add(dcv);
-                    continue;
+                  DelayedCellValue dcv = new DelayedCellValue();
+                  dcv.Row = firstBlockRow + j2;
+                  dcv.Column = leftCols[k];
+                  dcv.Value = s;
+                  if (dcvs == null)
+                    dcvs = new List<DelayedCellValue>();
+                  dcvs.Add(dcv);
+                  continue;
                 }
                 value = s;
               }
               values[j2, leftCols[k] - 1] = value;
+
+              #region Имя ячейки
+
+              /*
+               * 
+Sub Ìàêðîñ1()
+    Range("A1").Select
+    ActiveWorkbook.Names.Add Name:="Name1", RefersToR1C1:="=Ëèñò1!R1C1"
+    ActiveWorkbook.Names("Name1").Comment = ""
+    Range("A4").Select
+    ActiveSheet.Hyperlinks.Add Anchor:=Selection, Address:="", SubAddress:= _
+        "Name1", TextToDisplay:="XYXYXY"
+End Sub
+
+               */
+
+
+              foreach (BRBookmark bm in sel1.Bookmarks.ToArray())
+              {
+                string name = BRFileTools.GetExcelBookmarkName(bm.Name);
+                FreeLibSet.OLE.Excel.Range rSingle = sheet.Cells[firstBlockRow + j2, leftCols[k]];
+                wbk.Names.Add(name, rSingle);
+              }
+
+              #endregion
+
+              #region Гиперссылка
+
+              if (sel1.HasLink)
+              {
+                DelayedLinkData dlink = new DelayedLinkData();
+                dlink.Row = firstBlockRow + j2;
+                dlink.Column = leftCols[k];
+                dlink.LinkData = sel1.LinkData;
+                if (dlinks == null)
+                  dlinks = new List<DelayedLinkData>();
+                dlinks.Add(dlink);
+              }
+
+              #endregion
             } // цикл по столбцам
 
             currRow++;
@@ -268,21 +330,40 @@ namespace FreeLibSet.Reporting
           }
 
           #endregion
-
-          #region Запись длинных строк
-
-          if (dcvs != null)
-          {
-            for (int j = 0; j < dcvs.Count; i++)
-            {
-              FreeLibSet.OLE.Excel.Range  rSingle = sheet.Cells[dcvs[i].Row, dcvs[i].Column];
-              //rSingle.Formula = DCVs[i].Value;
-              rSingle.Value = dcvs[i].Value.Replace(Environment.NewLine, "\r");
-            }
-          }
-
-          #endregion
         } // цикл по блокам
+
+        #region Запись длинных строк
+
+        if (dcvs != null)
+        {
+          for (int j = 0; j < dcvs.Count; j++)
+          {
+            FreeLibSet.OLE.Excel.Range rSingle = sheet.Cells[dcvs[j].Row, dcvs[j].Column];
+            //rSingle.Formula = DCVs[i].Value;
+            rSingle.Value = dcvs[j].Value.Replace(Environment.NewLine, "\r");
+          }
+        }
+
+        #endregion
+
+        #region Добавление гиперссылок
+
+        if (dlinks != null)
+        {
+          for (int j = 0; j < dlinks.Count; j++)
+          {
+            FreeLibSet.OLE.Excel.Range rSingle = sheet.Cells[dlinks[j].Row, dlinks[j].Column];
+            if (dlinks[j].LinkData[0] == '#')
+            {
+              string name = BRFileTools.GetExcelBookmarkName(dlinks[j].LinkData.Substring(1));
+              sheet.Hyperlinks.Add(rSingle, String.Empty, name);
+            }
+            else
+              sheet.Hyperlinks.Add(rSingle, dlinks[j].LinkData);
+          }
+        }
+
+        #endregion
 
         #region Объединение ячеек
 
@@ -673,7 +754,7 @@ namespace FreeLibSet.Reporting
       {
         sel.ColumnIndex = i;
         ws[i] = sel.ColumnInfo.Width;
-        grows[i] = sel.ColumnInfo.Visible && sel.ColumnInfo.AutoGrow;
+        grows[i] = /* sel.ColumnInfo.Visible && */ sel.ColumnInfo.AutoGrow;
       }
       int wholeW = DataTools.SumInt(ws);
       if (wholeW < printAreaWidth)

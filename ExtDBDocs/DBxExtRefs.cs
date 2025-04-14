@@ -11,13 +11,13 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Data.Docs
 {
   /// <summary>
-  /// Хранение описаний внешних ссылок на строки документов и поддокументов
+  /// Хранение описаний внешних ссылок на строки документов и поддокументов.
   /// Используется при проверке возможности удаления. Чтобы не перебирать
   /// описания всех таблиц, используются списки, содержащие возможные ссылочные
   /// поля и переменные ссылки, допускающие хранение документов данного вида.
-  /// Экземпляр класса содержит коллекцию списков для всех документов/поддокументов в DBxDocTypes,
+  /// Экземпляр класса содержит коллекцию списков для всех документов/поддокументов в <see cref="DBxDocTypes"/>,
   /// включая те, к которым у пользователя может не быть доступа.
-  /// Создается в конструкторе DBxRealDocProviderGlobal.
+  /// Создается в конструкторе <see cref="DBxRealDocProviderGlobal"/>.
   /// </summary>
   internal class DBxExtRefs
   {
@@ -34,13 +34,14 @@ namespace FreeLibSet.Data.Docs
       {
 #if DEBUG
         if (columnDef.ColumnType != DBxColumnType.Int)
-          throw new ArgumentException("Поле должно иметь ссылочный тип", "columnDef");
+          throw ExceptionFactory.ArgProperty("columnDef", columnDef, "ColumnType", columnDef.ColumnType, new object[] { DBxColumnType.Int });
         if (detailsDocType == null)
           throw new ArgumentNullException("detailsDocType");
         if (detailsSubDocType != null)
         {
           if (detailsSubDocType.DocType != detailsDocType)
-            throw new ArgumentException("Чужой поддокумент", "detailsSubDocType");
+            throw ExceptionFactory.ArgProperty("detailsSubDocType", detailsSubDocType, "DocType", detailsSubDocType.DocType,
+              new object[] { detailsDocType });
         }
 #endif
 
@@ -57,13 +58,13 @@ namespace FreeLibSet.Data.Docs
       /// Описание вида документа, в котором расположено ссылочное под\ле
       /// </summary>
       public DBxDocType DetailsDocType { get { return _DetailsDocType; } }
-      private DBxDocType _DetailsDocType;
+      private readonly DBxDocType _DetailsDocType;
 
       /// <summary>
       /// Описание вида поддокумента, в котором расположено ссылочное поле, или null
       /// </summary>
       public DBxSubDocType DetailsSubDocType { get { return _DetailsSubDocType; } }
-      private DBxSubDocType _DetailsSubDocType;
+      private readonly DBxSubDocType _DetailsSubDocType;
 
       public DBxDocTypeBase DetailsType
       {
@@ -93,10 +94,10 @@ namespace FreeLibSet.Data.Docs
       {
         get
         {
-          string s = "Документ \"" + DetailsDocType.SingularTitle + "\"";
-          if (DetailsSubDocType != null)
-            s += ", поддокумент \"" + DetailsSubDocType.SingularTitle + "\"";
-          return s;
+          if (DetailsSubDocType == null)
+            return String.Format(Res.DBxExtRefs_Name_SingularDoc, DetailsDocType.SingularTitle);
+          else
+            return String.Format(Res.DBxExtRefs_Name_SingularSubDoc, DetailsDocType.SingularTitle, DetailsSubDocType.SingularTitle);
         }
       }
 
@@ -104,10 +105,10 @@ namespace FreeLibSet.Data.Docs
       {
         get
         {
-          string s = "Документы \"" + DetailsDocType.PluralTitle + "\"";
-          if (DetailsSubDocType != null)
-            s += ", поддокументы \"" + DetailsSubDocType.PluralTitle + "\"";
-          return s;
+          if (DetailsSubDocType == null)
+            return String.Format(Res.DBxExtRefs_Name_PluralDoc, DetailsDocType.PluralTitle);
+          else
+            return String.Format(Res.DBxExtRefs_Name_PluralSubDoc, DetailsDocType.PluralTitle, DetailsSubDocType.PluralTitle);
         }
       }
 
@@ -144,7 +145,8 @@ namespace FreeLibSet.Data.Docs
         if (detailsSubDocType != null)
         {
           if (detailsSubDocType.DocType != detailsDocType)
-            throw new ArgumentException("Чужой поддокумент", "detailsSubDocType");
+            throw ExceptionFactory.ArgProperty("detailsSubDocType", detailsSubDocType, "DocType", detailsSubDocType.DocType,
+              new object[] { detailsDocType });
         }
 #endif
 
@@ -161,13 +163,13 @@ namespace FreeLibSet.Data.Docs
       /// Описание вида документа, в котором объявлена ссылка
       /// </summary>
       public DBxDocType DetailsDocType { get { return _DetailsDocType; } }
-      private DBxDocType _DetailsDocType;
+      private readonly DBxDocType _DetailsDocType;
 
       /// <summary>
       /// Описание вида поддокумента, в котором объявлена ссылка, или null.
       /// </summary>
       public DBxSubDocType DetailsSubDocType { get { return _DetailsSubDocType; } }
-      private DBxSubDocType _DetailsSubDocType;
+      private readonly DBxSubDocType _DetailsSubDocType;
 
       public DBxDocTypeBase DetailsType
       {
@@ -197,10 +199,10 @@ namespace FreeLibSet.Data.Docs
       {
         get
         {
-          string s = "Документ \"" + DetailsDocType.SingularTitle + "\"";
-          if (DetailsSubDocType != null)
-            s += ", поддокумент \"" + DetailsSubDocType.SingularTitle + "\"";
-          return s;
+          if (DetailsSubDocType == null)
+            return String.Format(Res.DBxExtRefs_Name_SingularDoc, DetailsDocType.SingularTitle);
+          else
+            return String.Format(Res.DBxExtRefs_Name_SingularSubDoc, DetailsDocType.SingularTitle, DetailsSubDocType.SingularTitle);
         }
       }
 
@@ -208,10 +210,10 @@ namespace FreeLibSet.Data.Docs
       {
         get
         {
-          string s = "Документы \"" + DetailsDocType.PluralTitle + "\"";
-          if (DetailsSubDocType != null)
-            s += ", поддокументы \"" + DetailsSubDocType.PluralTitle + "\"";
-          return s;
+          if (DetailsSubDocType == null)
+            return String.Format(Res.DBxExtRefs_Name_PluralDoc, DetailsDocType.PluralTitle);
+          else
+            return String.Format(Res.DBxExtRefs_Name_PluralSubDoc, DetailsDocType.PluralTitle, DetailsSubDocType.PluralTitle);
         }
       }
 
@@ -219,7 +221,7 @@ namespace FreeLibSet.Data.Docs
       /// Объявление переменной ссылки
       /// </summary>
       public DBxVTReference VTRef { get { return _VTRef; } }
-      private DBxVTReference _VTRef;
+      private readonly DBxVTReference _VTRef;
 
       /// <summary>
       /// Текстовое представление для отдадки
@@ -254,13 +256,13 @@ namespace FreeLibSet.Data.Docs
       /// Список обычных ссылочных полей
       /// </summary>
       public List<RefColumnInfo> RefColumns { get { return _RefColumns; } }
-      private List<RefColumnInfo> _RefColumns;
+      private readonly List<RefColumnInfo> _RefColumns;
 
       /// <summary>
       /// Список переменных ссылок на документы
       /// </summary>
       public List<VTRefInfo> VTRefs { get { return _VTRefs; } }
-      private List<VTRefInfo> _VTRefs;
+      private readonly List<VTRefInfo> _VTRefs;
 
       /// <summary>
       /// Возвращает true, если в документе или поддокументе нет ссылочных полей
@@ -337,9 +339,8 @@ namespace FreeLibSet.Data.Docs
           if (!(colDef.MasterTableName == "BinData" || colDef.MasterTableName == "FileNames"))
           {
             if (!dts.FindByTableName(colDef.MasterTableName, out dt1, out sdt1))
-              throw new BugException("Объявление таблицы \"" + detailBase.Name +
-                "\" содержит описание ссылочного поля \"" + colDef.ColumnName +
-                "\", которое ссылается на неизвестную таблицу \"" + colDef.MasterTableName + "\"");
+              throw new InvalidOperationException(String.Format(Res.DBxExtRefs_Err_RefToUnknownTable,
+                detailBase.Name, colDef.ColumnName, colDef.MasterTableName));
           }
 
           TableRefList list = InternalGetList(colDef.MasterTableName);
@@ -359,12 +360,7 @@ namespace FreeLibSet.Data.Docs
         {
           DBxDocType dt1;
           DBxSubDocType sdt1;
-          if (!dts.FindByTableName(vtRef.MasterTableNames[j], out dt1, out sdt1))
-            throw new BugException("Объявление таблицы \"" + detailBase.Name +
-              "\" содержит описание полей переменной ссылки \"" + vtRef.Name +
-              "\", которое ссылается на неизвестную таблицу \"" + vtRef.MasterTableNames[j] + "\"");
-
-
+          dts.GetByTableName(vtRef.MasterTableNames[j], out dt1, out sdt1);
           TableRefList list = InternalGetList(vtRef.MasterTableNames[j]);
           list.VTRefs.Add(new VTRefInfo(detailDocType, detailSubDocType, vtRef));
         }
@@ -398,7 +394,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Этот список может содержать не все виды документов и поддокументов
     /// </summary>
-    private Dictionary<string, TableRefList> _MasterTableDict;
+    private readonly Dictionary<string, TableRefList> _MasterTableDict;
 
     private static readonly TableRefList _EmptyRefList = new TableRefList();
 
@@ -406,7 +402,7 @@ namespace FreeLibSet.Data.Docs
     {
 #if DEBUG
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 #endif
 
       TableRefList res;

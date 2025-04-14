@@ -63,24 +63,24 @@ namespace FreeLibSet.Data
       #region Проверка аргументов
 
       if (_Buffer2 != null)
-        throw new InvalidOperationException("Повторный вызов метода Format не допускается. Объект FillSelectFormatter является одноразовым");
+        throw new InvalidOperationException(Res.DBxSelectFormat_Err_FormatAlreadyCalled);
 
       if (buffer == null)
         throw new ArgumentNullException("buffer");
       if (String.IsNullOrEmpty(_Info.TableName))
-        throw new InvalidDataException("Не задано DBxSelectInfo.TableName");
+        throw ExceptionFactory.ObjectPropertyNotSet(_Info, "TableName");
 
       _Validator.CheckTableName(_Info.TableName, DBxAccessMode.ReadOnly);
 
       if (_Info.HasGroupBy)
       {
         if (_Info.Expressions.Count == 0)
-          throw new InvalidOperationException("Задан список GROUP BY без задания списка выражений (SELECT *)");
+          throw new InvalidOperationException(Res.DBxSelectFormat_Err_GroupByWithoutExpr);
       }
       else
       {
         if (_Info.Having != null)
-          throw new InvalidOperationException("Задано предложение HAVING без GROUP BY");
+          throw new InvalidOperationException(Res.DBxSelectFormat_Err_HavingWithoutGroupBy);
       }
 
       PrepareColumnNames();
@@ -129,7 +129,7 @@ namespace FreeLibSet.Data
       if (_Info.MaxRecordCount != 0)
       {
         if (_Info.MaxRecordCount < 0)
-          throw new InvalidOperationException("DBxSelectInfo.MaxRecordCount<0");
+          throw new BugException("DBxSelectInfo.MaxRecordCount<0");
 
         switch (buffer.Formatter.SelectMaxRecordCountMode)
         {
@@ -142,7 +142,7 @@ namespace FreeLibSet.Data
             // Добавим в конце
             break;
           default:
-            throw new BugException("Неизвестное значение SelectMaxRecordCountMode=" + buffer.Formatter.SelectMaxRecordCountMode);
+            throw new BugException("SelectMaxRecordCountMode=" + buffer.Formatter.SelectMaxRecordCountMode);
         }
       }
 
@@ -211,9 +211,9 @@ namespace FreeLibSet.Data
           // Не всегда первичным ключом является поле "Id"
           DBxTableStruct RightTS = _Validator.Con.GetTableStruct(thisInfo.RightTableName);
           if (RightTS == null)
-            throw new BugException("Не найдено описание мастер-таблицы \"" + thisInfo.RightTableName + "\"");
+            throw new BugException("Master table \"" + thisInfo.RightTableName + "\" structure declaration not found");
           if (RightTS.PrimaryKeyColumns.Length != 1)
-            throw new BugException("Для мастер-таблицы \"" + thisInfo.RightTableName + "\" не задан первичный ключ или он составной");
+            throw new BugException("In the master table \"" + thisInfo.RightTableName + "\" structure declaration there is no primary key column, or primary key is complex");
           _Buffer2.FormatColumnName(RightTS.PrimaryKeyColumns[0].ColumnName);
         }
       }
@@ -310,7 +310,8 @@ namespace FreeLibSet.Data
         _Info.Expressions.Add(new DBxColumn(colDef.ColumnName));
       }
       if (_Info.Expressions.Count == 0)
-        throw new ArgumentException("Для выражения SELECT * FROM " + _Info.TableName + " невозможно получить список полей, так как у пользователя нет прав на просмотр каких-либо столбцов");
+        throw new DBxAccessException(String.Format(Res.DBxSelectFormat_Err_NoColumnsAccessable,
+          _Info.TableName));
     }
 
     #endregion
@@ -464,10 +465,12 @@ namespace FreeLibSet.Data
           string name1 = thisColumnName.Substring(0, p); // слева от точки
           // Ищем описание ссылочного поля в описании структуры БД
           if (!_Validator.Con.GetTableStruct(thisTableName1).Columns.Contains(name1))
-            throw new InvalidOperationException("Таблица \"" + thisTableName1 + "\" не содержит поля \"" + name1 + "\" ");
+            throw new InvalidOperationException(String.Format(Res.DBxNameValidator_Arg_UnknownColumnName,
+              name1, thisTableName1, _Validator.Con.DB.DisplayName));
           DBxColumnStruct colDef = _Validator.Con.GetTableStruct(thisTableName1).Columns[name1];
           if (String.IsNullOrEmpty(colDef.MasterTableName))
-            throw new InvalidOperationException("Поле \"" + name1 + "\" таблицы \"" + thisTableName1 + "\" не является ссылочным");
+            throw new InvalidOperationException(String.Format(Res.DBxNameValidator_Arg_ColumnNotRef,
+              name1,thisTableName1, _Validator.Con.DB.DisplayName));
 
           JoinInfo ji = JoinInfo.FindOrAdd(_JoinInfoList, thisTableName2, colDef.MasterTableName, name1);
 
@@ -556,7 +559,8 @@ namespace FreeLibSet.Data
 #endif
       if (table.Columns.Count < _Info.Expressions.Count) // 20.11.2019
       { 
-        ArgumentException e=new ArgumentException("Неправильное количество столбцов в таблице: "+table.Columns.Count.ToString()+". Ожидалось: "+_Info.Expressions.Count.ToString(), "table");
+        ArgumentException e=new ArgumentException(String.Format(Res.DBxSelectFormat_Arg_WrongColumnCount,
+          table.Columns.Count, _Info.Expressions.Count), "table");
         e.Data["table.ColumnNames"] = DataTools.GetColumnNames(table);
         e.Data["DBxFillSelectInfo"] = _Info;
         throw e;
@@ -586,7 +590,8 @@ namespace FreeLibSet.Data
       {
         DBxNamedExpression ne;
         if (!_Info.Expressions.TryGetValue(table.Columns[i].ColumnName, out ne))
-          throw new InvalidOperationException("Таблица " + table.TableName + " содержит поле \"" + table.Columns[i].ColumnName + "\", для которого не найден альяс в списке DBxFillSelectInfo.Expressions");
+          throw new InvalidOperationException(String.Format(Res.DBxSelectFormat_Err_NoAliasForColumn,
+            table.TableName, table.Columns[i].ColumnName));
 
         DBxColumn col = ne.Expression as DBxColumn;
         if (col == null)
@@ -596,7 +601,8 @@ namespace FreeLibSet.Data
         if (cs == null)
         {
           if (_Validator.NameCheckingEnabled)
-            throw new NullReferenceException("Для столбца \"" + col.ColumnName + "\" не найдено описание поля в списке DBxSqlBuffer.ColumnStructs");
+            throw new NullReferenceException(String.Format(Res.DBxSelectFormat_Err_NoColumnInDBxSqlBuffer,
+              col.ColumnName));
           else
             continue; // проверка отключена
         }

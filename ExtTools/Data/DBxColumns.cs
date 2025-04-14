@@ -369,7 +369,7 @@ namespace FreeLibSet.Data
       for (int i = 0; i < columnName.Length; i++)
       {
         if (_BadChars.Contains(columnName[i]))
-          throw ExceptionFactory.ArgBadChar("columnName", columnName, i);
+          throw ExceptionFactory.ArgInvalidChar("columnName", columnName, i);
       }
     }
 #endif
@@ -629,7 +629,7 @@ namespace FreeLibSet.Data
         return -1;
 #if DEBUG
       if (columnName.IndexOf(',') >= 0)
-        throw ExceptionFactory.ArgBadChar("columnName", columnName, ",");
+        throw ExceptionFactory.ArgInvalidChar("columnName", columnName, ",");
 #endif
 
       if (_Indexer == null)

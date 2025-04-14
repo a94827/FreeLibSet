@@ -35,12 +35,11 @@ namespace FreeLibSet.Data
           buffer.SB.Append(" ON DELETE SET NULL");
           break;
         case DBxRefType.Emulation:
-          throw new InvalidOperationException("В режиме Emulation не должно вызываться");
+          throw new ArgumentException(Res.DBxFSqlFormatter_Arg_RefTypeEmulation, "refType");
         default:
-          throw new ArgumentException("Неизвестный режим " + refType.ToString(), "refType");
+          throw ExceptionFactory.ArgUnknownValue("refType", refType);
       }
     }
-
 
     #region Типы данных
 
@@ -142,7 +141,7 @@ namespace FreeLibSet.Data
         #endregion
 
         default:
-          throw new BugException("Неизвестный тип поля " + column.ColumnType.ToString());
+          throw new BugException("Unknown column type " + column.ColumnType.ToString());
       }
     }
 

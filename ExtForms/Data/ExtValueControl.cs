@@ -321,9 +321,18 @@ namespace FreeLibSet.Forms.Data
       ControlProvider.Control.Dock = DockStyle.None;
       ControlProvider.Control.Location = new Point(16, 0);
       ControlProvider.Control.Size = new Size(thePanel.ClientSize.Width - 16, thePanel.ClientSize.Height);
+      ControlProvider.Control.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom; // 02.04.2025
       ControlProvider.Control.TabIndex = 1;
       thePanel.Controls.Add(ControlProvider.Control);
+      thePanel.SizeChanged += new EventHandler(NewCheckBoxPanel_SizeChanged); // 02.04.2025
       return theCheckBox;
+    }
+
+    private static void NewCheckBoxPanel_SizeChanged(object sender, EventArgs args)
+    {
+      Panel thePanel = (Panel)sender;
+      CheckBox theCheckBox = (CheckBox)(thePanel.Controls[0]);
+      theCheckBox.Location = new Point(0, (thePanel.ClientSize.Height - theCheckBox.Height) / 2);
     }
 
     #endregion

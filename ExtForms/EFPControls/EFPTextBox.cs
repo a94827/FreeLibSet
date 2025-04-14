@@ -278,7 +278,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Проверка корректности значения.
-    /// Используется свойство <see cref="CanBeEmptyMode"/>
+    /// Используется свойство <see cref="CanBeEmptyMode"/>.
     /// </summary>
     protected override void OnValidate()
     {

@@ -177,7 +177,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="editor">Объект редактора</param>
     public virtual void CreateEditor(UserPermissionEditor editor)
     {
-      throw new NotSupportedException("Редактирование разрешения " + DisplayName + " не реализовано");
+      throw new NotSupportedException(String.Format(Res.UserPermissionUI_Err_EditNotImplemented, DisplayName));
     }
 
     #endregion
@@ -195,7 +195,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (!UseInRB)
       {
-        EFPApp.ErrorMessageBox("Просмотр разрешений \"" + DisplayName + "\" не предусмотрен", this.DisplayName);
+        EFPApp.ErrorMessageBox(String.Format(Res.UserPermissionUI_Err_NoView, DisplayName), this.DisplayName);
         return;
       }
 
@@ -272,7 +272,7 @@ namespace FreeLibSet.Forms.Docs
       base.Remove(item.ClassCode);
       base.Add(item);
       if (!Creators.Contains(item.ClassCode))
-        throw new InvalidOperationException("Нельзя добавить интерфейс разрешения \"" + item.ClassCode + "\", для которого нет объекта в списке Creators");
+        throw new InvalidOperationException(String.Format(Res.UserPermissionUI_Err_NoCreator, item.ClassCode));
     }
 
     /// <summary>
@@ -308,7 +308,7 @@ namespace FreeLibSet.Forms.Docs
       if (ui == null)
       {
         //UI.DisplayName = "Класс \"" + permission.ClassCode + "\"";
-        info.DisplayName = "Класс \"" + permission.ClassCode + "\""; // 28.12.2020
+        info.DisplayName = String.Format(Res.UserPermissionUI_Name_Default, permission.ClassCode); // 28.12.2020
         info.ObjectImageKey = "UnknownState";
       }
       else
@@ -430,8 +430,7 @@ namespace FreeLibSet.Forms.Docs
       UserPermission p = InfoCache[classCode, xmlText];
 
       args.ImageKey = this.GetInfo(p).ObjectImageKey;
-      args.ToolTipText = p.ToString() + Environment.NewLine +
-        "Класс разрешения: " + p.ClassCode;
+      args.ToolTipText = String.Format(Res.UserPermissionUI_ToolTip_Image, p, p.ClassCode);
     }
 
     #endregion
@@ -449,7 +448,7 @@ namespace FreeLibSet.Forms.Docs
     public EFPGridProducerColumn AddObjectTextColumn(EFPGridProducer producer, string classCodeColumnName, string dataColumnName)
     {
       return producer.Columns.AddUserText("ObjectText", classCodeColumnName + "," + dataColumnName,
-        new EFPGridProducerValueNeededEventHandler(ObjectTextColumnValueNeeded), "Разрешение", 25, 10);
+        new EFPGridProducerValueNeededEventHandler(ObjectTextColumnValueNeeded), Res.UserPermissionUI_ColTitle_ObjectText, 25, 10);
     }
 
     private void ObjectTextColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
@@ -457,7 +456,7 @@ namespace FreeLibSet.Forms.Docs
       string classCode = args.GetString(0);
       if (String.IsNullOrEmpty(classCode))
       {
-        args.Value = "Не задан класс разрешения";
+        args.Value = Res.UserPermissionUI_Err_NoClassCode;
         return;
       }
 
@@ -478,7 +477,7 @@ namespace FreeLibSet.Forms.Docs
     public EFPGridProducerColumn AddValueTextColumn(EFPGridProducer producer, string classCodeColumnName, string dataColumnName)
     {
       return producer.Columns.AddUserText("ValueText", classCodeColumnName + "," + dataColumnName,
-        new EFPGridProducerValueNeededEventHandler(ValueTextColumnValueNeeded), "Значение", 15, 5);
+        new EFPGridProducerValueNeededEventHandler(ValueTextColumnValueNeeded), Res.UserPermissionUI_ColTitle_ValueText, 15, 5);
     }
 
     private void ValueTextColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
@@ -486,7 +485,7 @@ namespace FreeLibSet.Forms.Docs
       string classCode = args.GetString(0);
       if (String.IsNullOrEmpty(classCode))
       {
-        args.Value = "Не задан класс разрешения";
+        args.Value = Res.UserPermissionUI_Err_NoClassCode;
         return;
       }
 
@@ -508,7 +507,7 @@ namespace FreeLibSet.Forms.Docs
     {
       EFPGridProducerColumn col = producer.Columns.AddUserImage("ValueImage", classCodeColumnName + "," + dataColumnName,
         new EFPGridProducerValueNeededEventHandler(ValueImageColumnValueNeeded), "");
-      col.DisplayName = "Значок значения разрешения";
+      col.DisplayName = Res.UserPermissionUI_Name_ValueImage;
       return col;
     }
 
@@ -546,14 +545,14 @@ namespace FreeLibSet.Forms.Docs
     {
       ListSelectDialog dlg = new ListSelectDialog();
       if (String.IsNullOrEmpty(title))
-        dlg.Title = "Выбор класса разрешения";
+        dlg.Title = Res.UserPermissionUI_Title_SelectClass;
       else
         dlg.Title = title;
       if (String.IsNullOrEmpty(imageKey))
         dlg.ImageKey = "UserPermission";
       else
         dlg.ImageKey = imageKey;
-      dlg.ListTitle = "Класс разрешения";
+      dlg.ListTitle = Res.UserPermissionUI_Title_ClassList;
 
       List<UserPermissionUI> usedClasses = new List<UserPermissionUI>();
       foreach (UserPermissionUI item in this)
@@ -616,8 +615,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка загрузки данных для разрешения \"" + _Editor.UI.DisplayName +
-            "\" . Будет использовано значение по умолчанию");
+          EFPApp.ShowException(e, String.Format(Res.UserPermissionUI_ErrTitle_Read,_Editor.UI.DisplayName));
         }
 
         _Editor.PerformReadValues(Permission);
@@ -646,16 +644,14 @@ namespace FreeLibSet.Forms.Docs
     {
       string classCode = args.Editor.SubDocs.Values[classCodeColumnName].AsString;
       if (String.IsNullOrEmpty(classCode))
-        throw new InvalidOperationException("Не установлено значение поля \"" + classCodeColumnName + "\"");
-      UserPermissionUI ui = this[classCode];
-      if (ui == null)
-        throw new InvalidOperationException("Не найден объект UserPermissionClassUI для класса разрешения \"" + classCode + "\"");
+        throw new InvalidOperationException(String.Format(Res.UserPermissionUI_Err_NoColumnValue, classCodeColumnName));
+      UserPermissionUI ui = GetRequired(classCode);     
 
       //Panel ParentPanel = new Panel();
       //ParentPanel.Dock = DockStyle.Fill;
 
       EFPBaseProvider baseProvider = new EFPBaseProvider();
-      baseProvider.DisplayName = "Редактор разрешения";
+      baseProvider.DisplayName = Res.UserPermissionUI_Name_Editor;
       UserPermissionEditor editor = new UserPermissionEditor(ui, args.Editor.IsReadOnly, baseProvider);
       ui.CreateEditor(editor);
 
@@ -663,9 +659,7 @@ namespace FreeLibSet.Forms.Docs
       baseProvider.Parent = page.BaseProvider;
       page.ImageKey = ui.ImageKey;
 
-      IUserPermissionCreator creator = Creators[classCode];
-      if (creator == null)
-        throw new NullReferenceException("В списке Creators нет генератора разрешений \"" + classCode + "\"");
+      IUserPermissionCreator creator = Creators.GetRequired(classCode);
 
       DataEditItem editItem = new DataEditItem(args.Editor.SubDocs.Values[dataColumnName], editor, creator);
       args.AddEditItem(editItem);
@@ -687,7 +681,7 @@ namespace FreeLibSet.Forms.Docs
       UserPermissionUI ui = this[permission.ClassCode];
       if (ui == null)
       {
-        EFPApp.ErrorMessageBox("Нельзя просмотреть разрешение типа \"" + permission.ClassCode + "\", т.к. для него не зарегистрирован объект пользовательского интерфейса");
+        EFPApp.ErrorMessageBox(String.Format(Res.UserPermissionUI_Err_NoUI, permission.ClassCode));
         return;
       }
 
@@ -711,7 +705,7 @@ namespace FreeLibSet.Forms.Docs
         //base.ImageKey = "UnknownState";
         base.ImageKey = "Error";
         base.UseInRB = false;
-        base.DisplayName = "Неизвестное разрешение";
+        base.DisplayName = Res.UnknownUserPermissionUI_Name_Default;
       }
 
       #endregion
@@ -722,7 +716,7 @@ namespace FreeLibSet.Forms.Docs
       /// <param name="editor"></param>
       public override void CreateEditor(UserPermissionEditor editor)
       {
-        throw new NotSupportedException("Нельзя редактировать неизвестное разрешения");
+        throw new NotSupportedException(Res.UnknownUserPermissionUI_Err_Edit);
       }
 
       /// <summary>

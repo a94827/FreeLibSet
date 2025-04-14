@@ -4032,8 +4032,8 @@ namespace FreeLibSet.RI
       get { return _SelectedIndex; }
       set
       {
-        if (value < (-1) || value > Items.Length)
-          throw new ArgumentOutOfRangeException();
+        if (value < (-1) || value >= Items.Length)
+          throw ExceptionFactory.ArgOutOfRange("value", value, -1, Items.Length - 1);
         _SelectedIndex = value;
       }
     }

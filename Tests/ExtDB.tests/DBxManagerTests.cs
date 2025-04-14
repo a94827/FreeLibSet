@@ -136,7 +136,7 @@ namespace ExtDB_tests.Data
     public void ReplaceDBItem_exceptions(string oldItem, string oldName, string newName)
     {
       TestManager tester = new TestManager();
-      Assert.Catch<ArgumentException>(delegate () { tester.TestReplaceDBItem(oldItem, oldName, newName); });
+      Assert.Catch(delegate () { tester.TestReplaceDBItem(oldItem, oldName, newName); });
     }
 
     [Platform("Win")]
@@ -183,7 +183,7 @@ namespace ExtDB_tests.Data
     public void ReplaceFileItem_exceptions_Windows(string oldItem, string oldName, string newName)
     {
       TestManager tester = new TestManager();
-      Assert.Catch<ArgumentException>(delegate () { tester.TestReplaceFileItem(oldItem, oldName, newName); });
+      Assert.Catch(delegate () { tester.TestReplaceFileItem(oldItem, oldName, newName); });
     }
 
     [Platform("Linux")]
@@ -194,7 +194,7 @@ namespace ExtDB_tests.Data
     public void ReplaceFileItem_exceptions_Linux(string oldItem, string oldName, string newName)
     {
       TestManager tester = new TestManager();
-      Assert.Catch<ArgumentException>(delegate () { tester.TestReplaceFileItem(oldItem, oldName, newName); });
+      Assert.Catch(delegate () { tester.TestReplaceFileItem(oldItem, oldName, newName); });
     }
 
     #endregion

@@ -101,33 +101,8 @@ namespace FreeLibSet.Core
       if (wantedValues == null)
         return new ArgumentException(String.Format(Res.Common_Arg_UnknownValue, value), paramName);
       else
-        return new ArgumentException(String.Format(Res.Common_Arg_UnknownValueWithWanted, value, GetWantedValueList(wantedValues)), paramName);
+        return new ArgumentException(String.Format(Res.Common_Arg_UnknownValueWithWanted, value, UICore.UITools.ValueListToString(wantedValues)), paramName);
     }
-
-    private static string GetWantedValueList(Array wantedValues)
-    {
-      StringBuilder sb = new StringBuilder();
-      foreach (Object obj in wantedValues)
-      {
-        if (sb.Length > 0)
-          sb.Append(", ");
-        if (obj == null)
-          sb.Append("null");
-        else if (obj is String)
-        {
-          sb.Append('"');
-          sb.Append(obj);
-          sb.Append('"');
-        }
-        else
-          sb.Append(obj);
-      }
-      if (sb.Length == 0)
-        return "list is empty";
-      else
-        return sb.ToString();
-    }
-
 
 
     /// <summary>
@@ -235,12 +210,9 @@ namespace FreeLibSet.Core
     /// <param name="value">Переданное значение аргумента</param>
     /// <param name="badCharIndex">Позиция в пределах <paramref name="value"/>. Нумерация символов начинается с 0</param>
     /// <returns>Объект исключения</returns>
-    public static ArgumentException ArgBadChar(string paramName, string value, int badCharIndex)
+    public static ArgumentException ArgInvalidChar(string paramName, string value, int badCharIndex)
     {
-      if (String.IsNullOrEmpty(value))
-        throw new ArgumentNullException("value");
-      char ch = value[badCharIndex];
-      return new ArgumentException(String.Format(Res.Common_Arg_BadChar, value, ch, badCharIndex + 1), paramName);
+      return new ArgumentException(UICore.UITools.InvalidCharErrorMessage(value, badCharIndex), paramName);
     }
 
     /// <summary>
@@ -248,20 +220,12 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="paramName">Имя параметра метода</param>
     /// <param name="value">Переданное значение аргумента</param>
-    /// <param name="badChar">Плохой символ. Его позиция будет найдена.
+    /// <param name="invalidChars">Плохой символ. Его позиция будет найдена.
     /// Используется строковый аргумент, а не <see cref="Char"/>, чтобы избежать путаницы с основной перегрузкой метода</param>
     /// <returns>Объект исключения</returns>
-    public static ArgumentException ArgBadChar(string paramName, string value, string badChar)
+    public static ArgumentException ArgInvalidChar(string paramName, string value, string invalidChars)
     {
-      if (String.IsNullOrEmpty(value))
-        throw new ArgumentNullException("value");
-      if (String.IsNullOrEmpty(badChar))
-        throw ExceptionFactory.ArgStringIsNullOrEmpty("badChar");
-      if (badChar.Length != 1)
-        throw new ArgumentException("One-char string required", "badChar");
-
-      int pos = value.IndexOf(badChar);
-      return ArgBadChar(paramName, value, pos);
+      return new ArgumentException(UICore.UITools.InvalidCharErrorMessage(value, invalidChars), paramName);
     }
 
     /// <summary>
@@ -305,7 +269,7 @@ namespace FreeLibSet.Core
         return String.Format(Res.Common_Err_ObjectProperty, propertyName, obj.ToString(), propertyValue);
       else
       {
-        string sReqs = GetWantedValueList(requires);
+        string sReqs = UICore.UITools.ValueListToString(requires);
         return String.Format(Res.Common_Err_ObjectPropertyWithRequires, propertyName, obj.ToString(), propertyValue, sReqs);
       }
     }
@@ -548,7 +512,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает исключение, когда у объекта свойство не установлено или имеет неправильное значение.
     /// </summary>
-    /// <param name="obj">Объект</param>
+    /// <param name="obj">Объект. Для статического свойства передается ссылка на <see cref="System.Type"/>.</param>
     /// <param name="propertyName">Имя свойства</param>
     /// <param name="propertyValue">Неправильное значение свойства</param>
     /// <param name="requires">Если не null, то будет выведен список допустимых значений.
@@ -562,7 +526,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает исключение, когда у объекта не установлено свойство
     /// </summary>
-    /// <param name="obj">Объект</param>
+    /// <param name="obj">Объект. Для статического свойства передается ссылка на <see cref="System.Type"/>.</param>
     /// <param name="propertyName">Имя свойства</param>
     /// <returns>Объект исключения</returns>
     public static InvalidOperationException ObjectPropertyNotSet(object obj, string propertyName)
@@ -578,7 +542,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает исключение, когда у объекта уже установлено свойство
     /// </summary>
-    /// <param name="obj">Объект</param>
+    /// <param name="obj">Объект. Для статического свойства передается ссылка на <see cref="System.Type"/>.</param>
     /// <param name="propertyName">Имя свойства</param>
     /// <returns>Объект исключения</returns>
     public static InvalidOperationException ObjectPropertyAlreadySet(object obj, string propertyName)
@@ -595,7 +559,7 @@ namespace FreeLibSet.Core
     /// Возвращает исключение <see cref="InvalidOperationException"/>, когда выполняется недопустимое переключение
     /// объекта из одного состояния в другое
     /// </summary>
-    /// <param name="obj">Объект</param>
+    /// <param name="obj">Объект. Для статического свойства передается ссылка на <see cref="System.Type"/>.</param>
     /// <param name="propertyName">Имя свойства</param>
     /// <param name="oldValue">Текущее значение свойства</param>
     /// <param name="newValue">Новое (неправильное) значение свойства</param>
@@ -616,9 +580,26 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
+    /// Возвращает исключение, когда у объекта не вызывался метод
+    /// </summary>
+    /// <param name="obj">Объект. Для статического метода передается ссылка на <see cref="System.Type"/>.</param>
+    /// <param name="methodName">Имя свойства</param>
+    /// <returns>Объект исключения</returns>
+    public static InvalidOperationException ObjectMethodNotCalled(object obj, string methodName)
+    {
+      if (obj == null)
+        throw new ArgumentNullException("obj");
+      if (String.IsNullOrEmpty(methodName))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("methodName");
+
+      return new InvalidOperationException(String.Format(Res.Common_Err_ObjectMethodNotCalled, methodName, obj.ToString()));
+    }
+
+
+    /// <summary>
     /// Возвращает исключение, когда у объекта не установлен обработчик события
     /// </summary>
-    /// <param name="obj">Объект</param>
+    /// <param name="obj">Объект. Для статического события передается ссылка на <see cref="System.Type"/>.</param>
     /// <param name="eventName">Имя свойства</param>
     /// <returns>Объект исключения</returns>
     public static InvalidOperationException ObjectEventHandlerNotSet(object obj, string eventName)
@@ -634,7 +615,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает исключение, когда у объекта свойство-коллекция имеет неправильную длину
     /// </summary>
-    /// <param name="obj">Объект</param>
+    /// <param name="obj">Объект. Для статического свойства передается ссылка на <see cref="System.Type"/>.</param>
     /// <param name="propertyName">Имя свойства</param>
     /// <param name="propertyValue">Неправильное значение свойства</param>
     /// <param name="wantedCount">Ожидавшаяся длина коллекции.</param>
@@ -719,7 +700,7 @@ namespace FreeLibSet.Core
     /// <param name="callee"></param>
     /// <param name="beginMethodName"></param>
     /// <param name="endErrorMethod"></param>
-    /// <returns></returns>
+    /// <returns>Объект исключения</returns>
     public static InvalidOperationException UnpairedCall(object callee, string beginMethodName, string endErrorMethod)
     {
       string sPrefix = String.Empty;
@@ -738,7 +719,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="callee"></param>
     /// <param name="methodName"></param>
-    /// <returns></returns>
+    /// <returns>Объект исключения</returns>
     public static InvalidOperationException RepeatedCall(object callee, string methodName)
     {
       string sPrefix = String.Empty;
@@ -752,6 +733,18 @@ namespace FreeLibSet.Core
       return new InvalidOperationException(String.Format(Res.Common_Err_RepeatedCallOfMethod, sPrefix + methodName));
     }
 
+    /// <summary>
+    /// Создает <see cref="InvalidOperationException"/> при вызове статического метода или установке
+    /// статического свойства класса, если вызов допускается только до первого создания экземпляря объекта.
+    /// </summary>
+    /// <param name="typ">Тип объекта</param>
+    /// <returns>Объект исключения</returns>
+    public static InvalidOperationException ConstructorAlreadyCalled(Type typ)
+    {
+      if (typ == null)
+        throw new ArgumentNullException("typ");
+      return new InvalidOperationException(String.Format(Res.Common_Err_ConstructorAlreadyCalled, typ));
+    }
 
     #endregion
 
@@ -918,6 +911,37 @@ namespace FreeLibSet.Core
       string sKeyValues = DataTools.ToStringJoin(", ", keyValues);
       return new InvalidOperationException(String.Format(Res.Common_Err_DataRowNotFound,
         table.TableName, DataTools.GetPrimaryKey(table), sKeyValues));
+    }
+
+    /// <summary>
+    /// Создает <see cref="InvalidOperationException"/>, когда в таблице не найдено поле с заданным именем <see cref="System.Data.DataColumn.ColumnName"/>.
+    /// </summary>
+    /// <param name="table">Таблица для поиска</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Объект исключения</returns>
+    public static InvalidOperationException DataColumnNotFound(System.Data.DataTable table, string columnName)
+    {
+      if (table == null)
+        throw new ArgumentNullException("table");
+      if (String.IsNullOrEmpty(columnName))
+        throw ArgStringIsNullOrEmpty("columnName");
+      return new InvalidOperationException(String.Format(Res.Common_Err_DataColumnNotFound,
+        table.TableName, columnName));
+    }
+
+    /// <summary>
+    /// Создает <see cref="InvalidOperationException"/>, когда в DbDataReader не найдено поле с заданным именем <see cref="System.Data.DataColumn.ColumnName"/>.
+    /// </summary>
+    /// <param name="reader">Объект для поиска</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Объект исключения</returns>
+    public static InvalidOperationException DataReaderColumnNotFound(System.Data.Common.DbDataReader reader, string columnName)
+    {
+      if (reader == null)
+        throw new ArgumentNullException("reader");
+      if (String.IsNullOrEmpty(columnName))
+        throw ArgStringIsNullOrEmpty("columnName");
+      return new InvalidOperationException(String.Format(Res.Common_Err_DataReaderColumnNotFound, columnName));
     }
 
     #endregion

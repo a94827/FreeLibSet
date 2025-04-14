@@ -36,8 +36,7 @@ namespace FreeLibSet.Forms.Docs
       btnDocSel.Image = EFPApp.MainImages.Images["DBxDocSelection"];
       btnDocSel.ImageAlign = ContentAlignment.MiddleLeft;
       efpDocSel = new EFPButton(FormProvider, btnDocSel);
-      efpDocSel.ToolTipText = "Вместо поиска, построить выборку документов на основании флажков \"Условия поиска\" и \"Где искать\"." +Environment.NewLine+
-        "Переключатели \"Направление поиска\" и \"Откуда начать\" игнорируются";
+      efpDocSel.ToolTipText = Res.EFPDBxTextSearch_ToolTip_DocSel;
       efpDocSel.Click += efpDocSel_Click;
     }
 
@@ -111,12 +110,12 @@ namespace FreeLibSet.Forms.Docs
       int[] rowIndices = base.FindAllRowIndices();
       if (rowIndices == null)
       {
-        EFPApp.ShowTempMessage("Нет подходящих строк");
+        EFPApp.ShowTempMessage(Res.EFPDBxTextSearch_Err_NoRowsFound);
         return;
       }
 
       DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxViewDocSelReason.SendTo, rowIndices);
-      Owner.UI.ShowDocSel(docSel, "Результаты поиска");
+      Owner.UI.ShowDocSel(docSel, Res.EFPDBxTextSearch_Title_DocSel);
     }
 
     #endregion
@@ -181,12 +180,12 @@ namespace FreeLibSet.Forms.Docs
       FreeLibSet.Controls.TreeNodeAdv[] nodes = base.FindAllNodes();
       if (nodes == null)
       {
-        EFPApp.ShowTempMessage("Нет подходящих строк");
+        EFPApp.ShowTempMessage(Res.EFPDBxTextSearch_Err_NoRowsFound);
         return;
       }
 
       DBxDocSelection docSel = Owner.CreateDocSel(EFPDBxViewDocSelReason.SendTo, nodes);
-      Owner.UI.ShowDocSel(docSel, "Результаты поиска");
+      Owner.UI.ShowDocSel(docSel, Res.EFPDBxTextSearch_Title_DocSel);
     }
 
     #endregion

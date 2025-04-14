@@ -404,7 +404,7 @@ namespace FreeLibSet.Forms.Reporting
     public void SetColumnPrintWidth(IEFPDataViewColumnBase column, int value)
     {
       if (value < 0)
-        throw new ArgumentOutOfRangeException("value");
+        throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
       if (!column.Printable)
         return;
 

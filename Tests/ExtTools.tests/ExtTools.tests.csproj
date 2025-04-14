@@ -43,6 +43,7 @@
     <Compile Include="Calendar\YearMonthDayAgeTests.cs" />
     <Compile Include="Collections\DisposableDictionaryTests.cs" />
     <Compile Include="Collections\NumericStringComparerTests.cs" />
+    <Compile Include="CommandLine\CommandLineParserTests.cs" />
     <Compile Include="Core\ExceptionFactoryTests.cs" />
     <Compile Include="Data\AndFilterTests.cs" />
     <Compile Include="Data\CompareFilterTests.cs" />

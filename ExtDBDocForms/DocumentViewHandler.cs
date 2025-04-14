@@ -249,7 +249,7 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("docTypeUI");
 #endif
       if (!Object.ReferenceEquals(owner.UI, docTypeUI.UI))
-        throw new ArgumentException("Разные ссылки на DBUI");
+        throw ExceptionFactory.ArgProperty("docTypeUI", docTypeUI, "UI", docTypeUI.UI, new object[] { owner.UI });
 
       _Owner = owner;
       _DocTypeUI = docTypeUI;
@@ -467,7 +467,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch
         {
-          EFPApp.ErrorMessageBox("Не удалось активировать добавленные строки в табличном просмотре");
+          EFPApp.ErrorMessageBox(Res.EFPDataView_Err_ActivatingNewRows);
         }
       }
     }
@@ -549,7 +549,7 @@ namespace FreeLibSet.Forms.Docs
             value = Owner.UI.TextHandlers.DBCache[DocTypeUI.DocType.Name].GetRefValue(colName, refId);
           }
           else
-            throw new BugException("Не найдено поле \"" + mainColName + "\"");
+            throw new BugException("Column not found: \"" + mainColName + "\"");
         }
         else
           value = srcRow[colName, rowVer];
@@ -573,7 +573,7 @@ namespace FreeLibSet.Forms.Docs
     public override string ToString()
     {
       if (Owner == null)
-        return "[ Отключен от просмотра ]";
+        return "[ Disconnected from data view ]";
       else
         return Owner.ToString();
     }

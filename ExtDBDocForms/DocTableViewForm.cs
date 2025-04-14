@@ -433,7 +433,7 @@ namespace FreeLibSet.Forms.Docs
       : base(baseProvider, parent, false)
     {
       if (parent.HasChildren)
-        throw new ArgumentException("В панели не должно быть управляющих элементов", "parent");
+        throw new ArgumentException(Res.Form_Arg_ParentIsNotEmpty, "parent");
 
       DocTableViewForm dummyForm = new DocTableViewForm();
 
@@ -461,7 +461,7 @@ namespace FreeLibSet.Forms.Docs
         _TheTabControl.ImageList = EFPApp.MainImages.ImageList;
         form.MainPanel.Controls.Add(_TheTabControl);
 
-        TabPage tpTree = new TabPage("Дерево");
+        TabPage tpTree = new TabPage(Res.Form_Prompt_Tree);
         _TheTabControl.Controls.Add(tpTree);
         tpTree.ImageKey = "TreeView";
 
@@ -474,7 +474,7 @@ namespace FreeLibSet.Forms.Docs
         _DocTreeSpeedPanel.Dock = DockStyle.Top;
         tpTree.Controls.Add(_DocTreeSpeedPanel);
 
-        TabPage tpTable = new TabPage("Таблица");
+        TabPage tpTable = new TabPage(Res.Form_Prompt_Table);
         _TheTabControl.Controls.Add(tpTable);
         tpTable.ImageKey = "Table";
 
@@ -508,13 +508,13 @@ namespace FreeLibSet.Forms.Docs
       if (!String.IsNullOrEmpty(docTypeUI.DocType.TreeParentColumnName))
       {
         _DocTreeView = new EFPDocTreeView(baseProvider, _DocTree, docTypeUI);
-        _DocTreeView.DisplayName = "Дерево документов";
+        _DocTreeView.DisplayName = Res.EFPDocTableView_Name_Tree;
         _DocTreeView.CommandItems.EnterAsOk = (mode != DocTableViewMode.Browse);
         _DocTreeView.ToolBarPanel = _DocTreeSpeedPanel;
       }
 
       _DocGridView = new EFPDocGridView(baseProvider, _DocGrid, docTypeUI);
-      _DocGridView.DisplayName = "Таблица документов";
+      _DocGridView.DisplayName = Res.EFPDocTableView_Name_Grid;
       _DocGridView.CommandItems.EnterAsOk = (mode != DocTableViewMode.Browse);
       _DocGridView.ToolBarPanel = _DocGridSpeedPanel;
       if (mode == DocTableViewMode.SelectSingle)
@@ -546,7 +546,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       _FilterView = new EFPGridFilterGridView(_DocGridView, form.FilterGrid);
-      _FilterView.DisplayName = "Табличка фильтров";
+      _FilterView.DisplayName = Res.EFPDocTableView_Name_Filters;
       _Mode = mode;
 
       #region Дерево групп
@@ -556,7 +556,7 @@ namespace FreeLibSet.Forms.Docs
         #region GroupTreeView
 
         _GroupTreeView = new EFPGroupDocTreeView(baseProvider, form.GroupTree, GroupTypeUI);
-        _GroupTreeView.DisplayName = "Дерево групп";
+        _GroupTreeView.DisplayName = Res.EFPDocTableView_Name_GroupTree;
         AddOpenGroupWindowCommandItem(_GroupTreeView.CommandItems);
         _GroupTreeView.CommandItems.UseRefresh = false; // обновляется из основного просмотра
         _GroupTreeView.ToolBarPanel = form.GroupSpeedPanel;
@@ -575,7 +575,7 @@ namespace FreeLibSet.Forms.Docs
         #region GroupComboBox
 
         _GroupComboBox = new EFPGroupDocComboBox(baseProvider, form.GroupCB, GroupTypeUI);
-        _GroupComboBox.DisplayName = "Выпадающий список групп";
+        _GroupComboBox.DisplayName = Res.EFPDocTableView_Name_GroupComboBox;
         _GroupComboBox.DocIdEx.ValueChanged += new EventHandler(CurrentGroupChanged);
         _GroupComboBox.IncludeNestedEx.ValueChanged += new EventHandler(IncludeNestedChanged);
         AddOpenGroupWindowCommandItem(_GroupComboBox.CommandItems);
@@ -736,7 +736,7 @@ namespace FreeLibSet.Forms.Docs
         {
           case DocViewFormActiveTab.Tree:
             if (_DocTreeView == null)
-              throw new InvalidOperationException("Форма не содержит вкладки иерархического просмотра");
+              throw new InvalidOperationException(Res.Form_Err_NoTreeTab);
             else
               _TheTabControl.SelectedIndex = 0;
             break;
@@ -755,9 +755,8 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override string DefaultDisplayName
     {
-      get { return "Составная панель просмотра документов"; }
+      get { return Res.EFPDocTableView_Name_Default; }
     }
-
 
     #endregion
 
@@ -1097,13 +1096,13 @@ namespace FreeLibSet.Forms.Docs
               if (model == null)
               {
                 if (GroupTreeView.Control.Model == null)
-                  throw new NullReferenceException("Не установлено свойство GroupTreeView.Control.Model");
+                  throw ExceptionFactory.ObjectPropertyNotSet(GroupTreeView.Control, "Model");
                 else
-                  throw new BugException("Неправильная модель в GroupTreeView");
+                  throw new BugException("Wrong model in GroupTreeView");
               }
             }
             else
-              throw new BugException("CurrentGroupId!=0 при скрытом дереве и комбоблоке выбора группы");
+              throw new BugException("CurrentGroupId!=0 while group tree and combobox are hidden");
 
             return model.GetIdWithChildren(CurrentGroupId);
           }
@@ -1131,13 +1130,13 @@ namespace FreeLibSet.Forms.Docs
         commandItems.AddSeparator();
 
         ciGroupTreeVisible = new EFPCommandItem("View", "GroupTreeVisible");
-        ciGroupTreeVisible.MenuText = "Дерево групп";
+        ciGroupTreeVisible.MenuText = Res.EFPDocTableView_Menu_View_GroupTreeVisible;
         ciGroupTreeVisible.ImageKey = "GroupDocTreePanel";
         ciGroupTreeVisible.Click += new EventHandler(ciGroupTreeVisible_Click);
         commandItems.Add(ciGroupTreeVisible);
 
         ciGroupCBVisible = new EFPCommandItem("View", "GroupCBVisible");
-        ciGroupCBVisible.MenuText = "Выпадающий список групп";
+        ciGroupCBVisible.MenuText = Res.EFPDocTableView_Menu_View_GroupCBVisible;
         ciGroupCBVisible.ImageKey = "GroupDocTreeCB";
         ciGroupCBVisible.Click += new EventHandler(ciGroupCBVisible_Click);
         commandItems.Add(ciGroupCBVisible);
@@ -1145,7 +1144,7 @@ namespace FreeLibSet.Forms.Docs
         commandItems.AddSeparator();
 
         ciHideNested = new EFPCommandItem("View", "HideNestedGroups");
-        ciHideNested.MenuText = "Скрыть документы во вложенных группах";
+        ciHideNested.MenuText = Res.EFPDocTableView_Menu_View_HideNestedGroups;
         ciHideNested.ImageKey = "OnlyOneGroupDoc";
         ciHideNested.Click += new EventHandler(ciHideNested_Click);
         commandItems.Add(ciHideNested);
@@ -1225,7 +1224,7 @@ namespace FreeLibSet.Forms.Docs
     private void AddOpenGroupWindowCommandItem(EFPCommandItems commandItems)
     {
       EFPCommandItem ciOpenGroupWindow = new EFPCommandItem("Edit", "OpenGroupWindow");
-      ciOpenGroupWindow.MenuText = "Открыть просмотр групп в отдельном окне";
+      ciOpenGroupWindow.MenuText = Res.EFPDocTableView_Menu_Edit_OpenGroupWindow;
       ciOpenGroupWindow.Click += new EventHandler(ciOpenGroupWindow_Click);
       ciOpenGroupWindow.GroupBegin = true;
       ciOpenGroupWindow.GroupEnd = true;
@@ -1388,7 +1387,7 @@ namespace FreeLibSet.Forms.Docs
           if (!CanBeEmpty)
           {
             if (CurrentDocId == 0)
-              SetError("Документ не выбран");
+              SetError(Res.Common_Err_NoSelectedDoc);
           }
           break;
       }

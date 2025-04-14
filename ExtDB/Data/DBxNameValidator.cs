@@ -68,23 +68,25 @@ namespace FreeLibSet.Data
     {
       string errorText;
       if (!Con.Entry.DB.IsValidTableName(tableName, out errorText))
-        throw new ArgumentException("Недопустимое имя таблицы \"" + tableName + "\". " + errorText);
+        throw new ArgumentException(String.Format(Res.DBxNameValidator_Arg_InvalidTableName,
+          tableName, errorText), "tableName");
 
       if (NameCheckingEnabled)
       {
         if (Con.GetTableStruct(tableName) == null)
-          throw new ArgumentException("Определения для таблицы \"" + tableName + "\" не существует для БД \"" + Con.DB.ToString() + "\"", "tableName");
+          throw new ArgumentException(String.Format(Res.DBxNameValidator_Arg_UnknownTableName,
+            tableName, Con.DB), "tableName");
       }
 
       switch (mode)
       {
         case DBxAccessMode.Full:
           if (Con.Entry.Permissions.TableModes[tableName] != DBxAccessMode.Full)
-            throw new DBxAccessException("Нет разрешения на запись в таблицу \"" + tableName + "\"");
+            throw new DBxAccessException(String.Format(Res.DBxNameValidator_Err_TableWrite, tableName));
           break;
         case DBxAccessMode.ReadOnly:
           if (Con.Entry.Permissions.TableModes[tableName] == DBxAccessMode.None)
-            throw new DBxAccessException("Нет разрешения на доступ к таблице \"" + tableName + "\"");
+            throw new DBxAccessException(String.Format(Res.DBxNameValidator_Err_TableRead, tableName));
           break;
       }
     }
@@ -114,7 +116,8 @@ namespace FreeLibSet.Data
     {
       string errorText;
       if (!Con.DB.IsValidColumnName(columnName, allowDots, out errorText))
-        throw new ArgumentException("Недопустимое имя столбца \"" + columnName + "\". " + errorText, "columnName");
+        throw new ArgumentException(String.Format(Res.DBxNameValidator_Arg_InvalidColumnName,
+          columnName, errorText), "columnName");
 
       int pDot = columnName.IndexOf('.');
 
@@ -125,12 +128,14 @@ namespace FreeLibSet.Data
         if (colDef == null)
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Определения для столбца \"" + mainColumnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Con.DB.ToString() + "\"", "columnName");
+            throw new ArgumentException(String.Format(Res.DBxNameValidator_Arg_UnknownColumnName,
+              mainColumnName, tableName, Con), "columnName");
           else
             return null;
         }
         if (String.IsNullOrEmpty(colDef.MasterTableName))
-          throw new ArgumentException("Столбец \"" + mainColumnName + "\" таблицы \"" + tableName + "\" БД \"" + Con.DB.ToString() + "\" не является ссылочным", "columnName");
+          throw new ArgumentException(String.Format(Res.DBxNameValidator_Arg_ColumnNotRef,
+            mainColumnName, tableName, Con.DB), "columnName");
 
         if (NameCheckingEnabled)
           CheckTableName(colDef.MasterTableName, mode);
@@ -144,14 +149,16 @@ namespace FreeLibSet.Data
         if (ts == null)
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Нет определения для таблицы \"" + tableName + "\" БД \"" + Con.DB.ToString() + "\"", "tableName");
+            throw new ArgumentException(String.Format(Res.DBxNameValidator_Arg_UnknownTableName,
+              tableName, Con.DB), "tableName");
           else
             return null; // 22.07.2021
         }
         if (!ts.Columns.Contains(columnName))
         {
           if (NameCheckingEnabled)
-            throw new ArgumentException("Определения для столбца \"" + columnName + "\" нет в определении таблицы \"" + tableName + "\" БД \"" + Con.Entry.DB.ToString() + "\"", "columnName");
+            throw new ArgumentException(String.Format(Res.DBxNameValidator_Arg_UnknownColumnName,
+              columnName, tableName, Con.Entry.DB), "columnName");
           else
             return null;
         }
@@ -164,14 +171,14 @@ namespace FreeLibSet.Data
               switch (Con.Entry.Permissions.ColumnModes[tableName, columnName])
               {
                 case DBxAccessMode.ReadOnly:
-                  throw new DBxAccessException("Запрещено изменение поля \"" + columnName + "\" таблицы \"" + tableName + "\". Есть право только на просмотр поля");
+                  throw new DBxAccessException(String.Format(Res.DBxNameValidator_Err_ColumnWrite, columnName, tableName));
                 case DBxAccessMode.None:
-                  throw new DBxAccessException("Запрещен доступ к полю \"" + columnName + "\" таблицы \"" + tableName + "\"");
+                  throw new DBxAccessException(String.Format(Res.DBxNameValidator_Err_ColumnRead, columnName, tableName));
               }
               break;
             case DBxAccessMode.ReadOnly:
               if (Con.Entry.Permissions.ColumnModes[tableName, columnName] == DBxAccessMode.None)
-                throw new DBxAccessException("Запрещен доступ к полю \"" + columnName + "\" таблицы \"" + tableName + "\"");
+                throw new DBxAccessException(String.Format(Res.DBxNameValidator_Err_ColumnRead, columnName, tableName));
               break;
           }
         }
@@ -193,7 +200,7 @@ namespace FreeLibSet.Data
       if (columnNames == null)
         throw new ArgumentNullException("columnNames");
       if (columnNames.Count == 0)
-        throw new ArgumentException("Пустой список имен полей", "columnNames");
+        throw new ArgumentException(Res.DBxNameValidator_Arg_ColumnListIsEmpty, "columnNames");
 
       DBxColumnType[] columnTypes = new DBxColumnType[columnNames.Count];
 
@@ -216,7 +223,7 @@ namespace FreeLibSet.Data
       if (columnNames == null)
         throw new ArgumentNullException("columnNames");
       if (columnNames.Count == 0)
-        throw new ArgumentException("Пустой список имен полей", "columnNames");
+        throw new ArgumentException(Res.DBxNameValidator_Arg_ColumnListIsEmpty, "columnNames");
 
       DBxColumnType[] columnTypes = new DBxColumnType[columnNames.Count];
 

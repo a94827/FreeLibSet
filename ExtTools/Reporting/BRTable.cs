@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Core;
@@ -176,7 +179,7 @@ namespace FreeLibSet.Reporting
       {
         _Selector = selector;
       }
-      private BRTableCellSelector _Selector;
+      private readonly BRTableCellSelector _Selector;
 
       internal override object GetValue(BRCellStyle caller, int index)
       {
@@ -240,7 +243,7 @@ namespace FreeLibSet.Reporting
     /// Стиль текущей ячейки
     /// </summary>
     public override BRCellStyle CellStyle { get { return _CellStyle; } }
-    private BRInternalCellStyle _CellStyle;
+    private readonly BRInternalCellStyle _CellStyle;
 
     #endregion
 
@@ -252,7 +255,8 @@ namespace FreeLibSet.Reporting
       {
         _Selector = selector;
       }
-      private BRTableCellSelector _Selector;
+
+      private readonly BRTableCellSelector _Selector;
 
       internal override object GetValue(BRCellStyle caller, int index)
       {
@@ -294,7 +298,8 @@ namespace FreeLibSet.Reporting
       {
         _Selector = selector;
       }
-      private BRTableCellSelector _Selector;
+
+      private readonly BRTableCellSelector _Selector;
 
       internal override object GetValue(BRCellStyle caller, int index)
       {
@@ -335,14 +340,14 @@ namespace FreeLibSet.Reporting
     /// Можно использовать, например, для форматирования заголовков или организации полосатой раскраски строк
     /// </summary>
     public BRCellStyle RowCellStyle { get { return _RowCellStyle; } }
-    private BRInternalRowCellStyle _RowCellStyle;
+    private readonly BRInternalRowCellStyle _RowCellStyle;
 
     /// <summary>
     /// Стили ячеек, входящих в столбец.
     /// Можно использовать, например, для задания горизонтального выравнивания.
     /// </summary>
     public BRCellStyle ColumnCellStyle { get { return _ColumnCellStyle; } }
-    private BRInternalColumnCellStyle _ColumnCellStyle;
+    private readonly BRInternalColumnCellStyle _ColumnCellStyle;
 
     #endregion
 
@@ -522,11 +527,10 @@ namespace FreeLibSet.Reporting
     /// <param name="columnSpan">Количество объединяемых столбцов</param>
     public void Merge(int rowSpan, int columnSpan)
     {
-      if (rowSpan < 1 | (RowIndex + rowSpan - 1) >= Table.RowCount)
-        throw new ArgumentOutOfRangeException("rowSpan");
-      if (columnSpan < 1 | (ColumnIndex + columnSpan - 1) >= Table.ColumnCount)
-        throw new ArgumentOutOfRangeException("columnSpan");
-
+      if (rowSpan < 1 | rowSpan > (Table.RowCount - RowIndex))
+        throw ExceptionFactory.ArgOutOfRange("rowSpan", rowSpan, 1, Table.RowCount - RowIndex);
+      if (columnSpan < 1 | columnSpan > (Table.ColumnCount - ColumnIndex))
+        throw ExceptionFactory.ArgOutOfRange("columnSpan", columnSpan, 1, Table.ColumnCount - ColumnIndex);
 
       if (Table.MergeList == null)
       {

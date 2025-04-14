@@ -5,9 +5,9 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20250218;153836196000000">
+	<META NAME="CHANGED" CONTENT="20250409;91759025000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
-	<META NAME="changed" CONTENT="2025-02-15T21:50:46.312000000">
+	<META NAME="changed" CONTENT="2025-04-02T21:57:59.921000000">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 2cm }
@@ -48,6 +48,96 @@
 	</TR>
 	<TR VALIGN=TOP>
 		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>360</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>26.02.2025-08.04.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Метод
+			</SPAN><SPAN LANG="en-US">EFPFormProvider.WriteConfigPart() </SPAN><SPAN LANG="ru-RU">не
+			пытается сохранять размеры и положение формы при
+			</SPAN><SPAN LANG="en-US">FormState=Minimized (<A HREF="ExtForms_11.htm#v297p2">v.297
+			</A></SPAN><A HREF="ExtForms_11.htm#v297p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">.
+			</SPAN><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">События
+			</SPAN><SPAN LANG="en-US">EFPTimers.Tick </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v022p2"><SPAN LANG="en-US">v.22
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">) и
+			</SPAN><SPAN LANG="en-US">EFPAppIdleHandlers.Idle (<A HREF="ExtForms_11.htm#v162p3">v.162
+			</A></SPAN><A HREF="ExtForms_11.htm#v162p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">2. EFPDelayedTrigger </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v125p2"><SPAN LANG="en-US">v.125
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)
+			больше не реализует интерфейсы </SPAN><SPAN LANG="en-US">IEFPAppTimeHandler
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">IEFPAppIdleHandle,
+			</SPAN><SPAN LANG="ru-RU">чтобы нельзя было по ошибке присоединить
+			его в прикладном коде. Используется внутренний объект
+			</SPAN><SPAN LANG="en-US">IntenalHandler </SPAN><SPAN LANG="ru-RU">для
+			реализации интерфейсов.</SPAN></P>
+			<P LANG="en-US">3. <SPAN LANG="ru-RU">Свойства
+			</SPAN>EFPContextCommandItems.Control <SPAN LANG="ru-RU">и </SPAN>Form</P>
+			<P><SPAN LANG="en-US">4. </SPAN><SPAN LANG="ru-RU">Получение
+			данных из буфера обмена в </SPAN><SPAN LANG="en-US">EFPPasteHandler
+			</SPAN><SPAN LANG="ru-RU">для блокировки команд (</SPAN><A HREF="ExtForms_20.htm#v351p27"><SPAN LANG="en-US">v.351
+			</SPAN><SPAN LANG="ru-RU">п.27</SPAN></A><SPAN LANG="ru-RU">) не
+			выполняется, когда активная форма приложения свернута
+			(</SPAN><SPAN LANG="en-US">Form.ActiveForm.WindowState=Minimized</SPAN><SPAN LANG="ru-RU">).
+			При попытке получения данных, когда открыто несколько окон и
+			выполнена системная команда &laquo;Свернуть все окна&raquo;,
+			свернутое окно &laquo;заклинивало&raquo;. Его нельзя было
+			восстановить мышью или </SPAN><SPAN LANG="en-US">Alt+Tab. </SPAN><SPAN LANG="ru-RU">Можно
+			было только нажать </SPAN><SPAN LANG="en-US">Alt+Space </SPAN><SPAN LANG="ru-RU">и
+			выполнить команду &laquo;Восстановить&raquo; в системном меню.</SPAN></P>
+			<P><SPAN LANG="en-US">5</SPAN>. <SPAN LANG="en-US">EFPPasteHandler
+			</SPAN>не использует блокировку команд по <SPAN LANG="en-US">Idle
+			</SPAN>(<A HREF="ExtForms_20.htm#v351p27"><SPAN LANG="en-US">v.351
+			</SPAN>п.27</A>)<SPAN LANG="en-US">, </SPAN>если команды вставки
+			были отключены из-за пустого списка форматов.</P>
+			<P><SPAN LANG="en-US">6. EFPPasteHandler (<A HREF="ExtForms_11.htm#v020p5">v.20
+			</A></SPAN><A HREF="ExtForms_11.htm#v020p5"><SPAN LANG="ru-RU">п.5</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">блокирует список объектов </SPAN><SPAN LANG="en-US">EFPPasteFormat
+			</SPAN><SPAN LANG="ru-RU">при вызове </SPAN><SPAN LANG="en-US">EFPCommandItems.Prepare().
+			</SPAN><SPAN LANG="ru-RU">Метод
+			</SPAN><SPAN LANG="en-US">EFPDataGridViewCommandItems.AddTextPasteFormats()
+			</SPAN><SPAN LANG="ru-RU">вызывается до события
+			</SPAN><SPAN LANG="en-US">EFPCommandItems.Prepare.</SPAN></P>
+			<P><SPAN LANG="en-US">7. EFPControlBase </SPAN><SPAN LANG="ru-RU">не
+			вызывает </SPAN><SPAN LANG="en-US">EFPCommandItems.HandleIdle()
+			(<A HREF="ExtForms_11.htm#v269p2">v.269 </A></SPAN><A HREF="ExtForms_11.htm#v269p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">),
+			</SPAN><SPAN LANG="ru-RU">если форма минимизирована или
+			</SPAN><SPAN LANG="en-US">EFPCommandItems.HasIdle=false</SPAN></P>
+			<P><SPAN LANG="en-US">8</SPAN>. <SPAN LANG="en-US">EFPFormProvider
+			</SPAN>вызывает <SPAN LANG="en-US">EFPCommandItems.HandleIdle()
+			</SPAN>для команд локального меню формы</P>
+			<P LANG="en-US">9. <SPAN LANG="ru-RU">Исправлена ошибка во
+			внутреннем методе </SPAN>EFPDataTreeView.GetDataTableWithCheck(),
+			<SPAN LANG="ru-RU">когда </SPAN>IDataTableTreeModel.DataView
+			<SPAN LANG="ru-RU">возвращает </SPAN>null.</P>
+			<P><SPAN LANG="en-US">10. </SPAN><SPAN LANG="ru-RU">Исправлено
+			положение флажка группового редактирования и основного элемента
+			для элементов без метки в </SPAN><SPAN LANG="en-US">ExtValueControlBase.MakeNewCheckBox()
+			(<A HREF="#v355p21">v.355 </A></SPAN><A HREF="#v355p21"><SPAN LANG="ru-RU">п.21</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">11. EFPApp.ShowXmlView() </SPAN><SPAN LANG="ru-RU">ошибочно
+			вызывал </SPAN><SPAN LANG="en-US">Form.Dispose()</SPAN><SPAN LANG="ru-RU">,
+			когда форма показывалась в немодальном режиме. В результате,
+			просмотр сразу закрывался.</SPAN></P>
+			<P LANG="en-US">12. EFPHistComboBox <SPAN LANG="ru-RU">добавляет в
+			список истории текущее значение в методе </SPAN>OnValidate()</P>
+			<P>13. <SPAN LANG="en-US">BRFilePdf </SPAN>поддерживает
+			гиперссылки (<A HREF="ExtTools_30.htm#v360p7"><SPAN LANG="en-US">ExtTools,
+			v.360 </SPAN>п.7</A>)</P>
+			<P>1<SPAN LANG="en-US">4</SPAN>. Внутренний метод
+			EFPFormProvider.ContainsControlWantedStatusBar() вызывает
+			EFPControlBase.FormVisibleChanged() вместо PrepareCommandItems()
+			(<A HREF="#v357p4">v.357 п.4</A>). Требуется, чтобы
+			EFPControlBase.OnCreated() был вызван. В противном случае, когда
+			метод OnCreated() будет вызван, он может попытаться добавить новые
+			команды меню в список, который уже заблокирован. Метод
+			EFPControlBase.PrepareC<SPAN LANG="en-US">o</SPAN>mmandItems()
+			<SPAN LANG="en-US">(<A HREF="ExtForms_11.htm#v169p7">v.169 </A></SPAN><A HREF="ExtForms_11.htm#v169p7"><SPAN LANG="ru-RU">п.7</SPAN></A><SPAN LANG="en-US">)</SPAN>
+			сделан private.</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>359</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -56,10 +146,11 @@
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P>1. <SPAN LANG="ru-RU">И</SPAN>нтернационализация с
 			использованием строковых ресурсов</P>
-			<P LANG="en-US"><SPAN LANG="ru-RU">2</SPAN>. <SPAN LANG="ru-RU">Перегрузки
-			</SPAN>EFPApp.ShowException(), ShowExceptionDelayed(), <SPAN LANG="ru-RU">без
-			аргумента </SPAN>title (<A HREF="ExtTools_30.htm#v359p9">ExtTools,
-			v.359 <SPAN LANG="ru-RU">п.9</SPAN></A>)</P>
+			<P><SPAN LANG="ru-RU">2</SPAN><SPAN LANG="en-US">. </SPAN><SPAN LANG="ru-RU">Перегрузки
+			</SPAN><SPAN LANG="en-US">EFPApp.ShowException(),
+			ShowExceptionDelayed(), </SPAN><SPAN LANG="ru-RU">без аргумента
+			</SPAN><SPAN LANG="en-US">title (<A HREF="ExtTools_30.htm#v359p9">ExtTools,
+			v.359 </A></SPAN><A HREF="ExtTools_30.htm#v359p9"><SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
 			<P LANG="en-US"><SPAN LANG="ru-RU">3. Методы
 			</SPAN>WinFormsTools.GetButtonText() <SPAN LANG="ru-RU">и
 			</SPAN>InitStdButtonText()</P>
@@ -159,7 +250,7 @@
 			При использовании интерфейса </SPAN><SPAN LANG="en-US">SDI </SPAN><SPAN LANG="ru-RU">может
 			еще не быть главного окна программы, но при этом не следует
 			выводить окно как модальное.</SPAN></P>
-			<P><SPAN LANG="en-US">4.
+			<P><A NAME="v357p4"></A><SPAN LANG="en-US">4.
 			EFPFormProvider.ContainsControlWantedStatusBar() </SPAN><SPAN LANG="ru-RU">вызывает
 			</SPAN><SPAN LANG="en-US">EFPCommandItems.SetReadOnly() </SPAN><SPAN LANG="ru-RU">при
 			вызове из </SPAN><SPAN LANG="en-US">EFPFormProvider.OnSetFormVisible.

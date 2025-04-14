@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Config;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Data
 {
@@ -91,7 +92,7 @@ namespace FreeLibSet.Data
         case "ReadOnly": Mode = DBxAccessMode.ReadOnly; break;
         case "None": Mode = DBxAccessMode.None; break;
         default:
-          throw new InvalidOperationException("Неизвестное значение Mode=\"" + s + "\"");
+          throw ExceptionFactory.Inconvertible(s, typeof(DBxAccessMode));
       }
     }
 
@@ -123,7 +124,10 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Отображаемые значения, соответствующие перечислению <see cref="DBxAccessMode"/>
     /// </summary>
-    public static readonly string[] ValueNames = new string[] { "Полный", "Чтение", "Запрет" };
+    public static readonly string[] ValueNames = new string[] {
+      Res.DBxUserPermission_Msg_AccessModeFull,
+      Res.DBxUserPermission_Msg_AccessModeReadOnly,
+      Res.DBxUserPermission_Msg_AccessModeNone };
 
 
     /// <summary>
@@ -163,7 +167,7 @@ namespace FreeLibSet.Data
       if ((int)mode >= 0 && (int)mode <= ValueCodes.Length)
         return ValueCodes[(int)mode];
       else
-        throw new ArgumentException("Неизвестный режим доступа " + mode.ToString());
+        throw ExceptionFactory.ArgUnknownValue("mode", mode);
     }
 
     /// <summary>
@@ -178,7 +182,7 @@ namespace FreeLibSet.Data
       if (p >= 0)
         return (DBxAccessMode)p;
       else
-        throw new ArgumentException("Неизвестный код режима доступа: \"" + code + "\"", "code");
+        throw ExceptionFactory.ArgUnknownValue("code", code);
     }
 
     /// <summary>
@@ -265,7 +269,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Возвращает "Доступ к базе данных"
     /// </summary>
-    public override string ObjectText { get { return "Доступ к базе данных"; } }
+    public override string ObjectText { get { return Res.WholeDBPermission_Name_ObjectText; } }
 
     #endregion
   }
@@ -380,12 +384,13 @@ namespace FreeLibSet.Data
       get
       {
         if (TableNames == null)
-          return "Таблицы не заданы";
+          return Res.TablePermission_Name_ObjectText0;
 
         if (TableNames.Length == 1)
-          return "Таблица \"" + TableNames[0] + "\"";
+          return String.Format(Res.TablePermission_Name_ObjectText1, TableNames[0]);
         else
-          return "Таблицы " + String.Join(", ", TableNames);
+          return String.Format(Res.TablePermission_Name_ObjectTextN,
+            UICore.UITools.ValueListToString(TableNames));
       }
     }
 
@@ -430,7 +435,7 @@ namespace FreeLibSet.Data
       if (permissions == null)
         throw new ArgumentNullException("permissions");
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       for (int i = permissions.Count - 1; i >= 0; i--)
       {
         TablePermission tp = permissions[i] as TablePermission;

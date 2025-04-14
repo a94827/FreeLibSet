@@ -138,6 +138,10 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected override void OnPrepare()
     {
+      // Добавляем форматы вставки текста после пользовательских форматов
+      // (если уже не были добавлены явно)
+      //AddTextPasteFormats();
+
       base.OnPrepare();
 
       EFPCommandItemUsage clipboardUsage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
@@ -159,10 +163,6 @@ namespace FreeLibSet.Forms
         //ciCopyToolTip.Usage = EFPCommandItemUsage.Menu;
       }
 
-
-      // Добавляем форматы вставки текста после пользовательских форматов
-      // (если уже не были добавлены явно)
-      //AddTextPasteFormats();
 
       ciIncSearch.Usage = EFPCommandItemUsage.None; // TODO: Команды поиска по первым буквам
       if (Owner.TextSearchContext == null)

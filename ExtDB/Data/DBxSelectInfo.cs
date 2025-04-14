@@ -38,7 +38,8 @@ namespace FreeLibSet.Data
         if (!(expression is DBxColumn))
           //_Alias = ((DBxColumn)expression).ColumnName;
           //else
-          throw new ArgumentException("Для использования выражения типа " + expression.GetType() + " требуется задавать альяс в явном виде");
+          throw new ArgumentException(String.Format(Res.DBxNameExpression_Arg_AliasRequired,
+            expression.GetType()), "alias");
       }
     }
 
@@ -202,7 +203,7 @@ namespace FreeLibSet.Data
     public void Add(string columnNames)
     {
       if (String.IsNullOrEmpty(columnNames))
-        throw new ArgumentNullException("columnNames");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnNames");
       if (columnNames.IndexOf(',') >= 0)
       {
         string[] a = columnNames.Split(',');
@@ -341,10 +342,10 @@ namespace FreeLibSet.Data
     public void InitGroupBy()
     {
       if (Expressions.Count == 0)
-        throw new InvalidOperationException("Не задан список выражений. Для оператора \"SELECT * FROM xxx\" не может использоваться выражение GROUP BY");
+        throw new InvalidOperationException(Res.DBxSelectInfo_Err_GroupByWithoutExpression);
 
       if (GroupBy.Count > 0)
-        throw new InvalidOperationException("Список GroupBy уже заполнен. Повторный вызов метода не допускается");
+        throw new InvalidOperationException(Res.DBxSelectInfo_Err_InitGroupByAlreadyCalled);
 
       for (int i = 0; i < Expressions.Count; i++)
       {
@@ -354,7 +355,8 @@ namespace FreeLibSet.Data
         if (hasColumn)
         {
           if (hasAggregate)
-            throw new InvalidOperationException("Выражение Expressions[" + i.ToString() + "] (" + Expressions[i].Expression.ToString() + ") содержит одновременно и агрегатную функцию и ссылку на поле таблицы");
+            throw new InvalidOperationException(String.Format(Res.DBxSelectInfo_Err_ColumnAndAggMixed,
+              i, Expressions[i].Expression.ToString()));
           else
             GroupBy.Add(Expressions[i].Expression);
         }
@@ -409,7 +411,7 @@ namespace FreeLibSet.Data
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _MaxRecordCount = value;
       }
     }
@@ -442,7 +444,7 @@ namespace FreeLibSet.Data
 #endif
 
       if (Expressions.Count == 0)
-        throw new InvalidOperationException("Список выражений Expressions не заполнен");
+        throw new InvalidOperationException(Res.DBxSelectInfo_Err_NoExpressions);
 
       Expressions.GetColumnNames(list);
 

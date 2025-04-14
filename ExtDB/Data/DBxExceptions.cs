@@ -1,6 +1,7 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+using FreeLibSet.Core;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -24,7 +25,8 @@ namespace FreeLibSet.Data
     /// <param name="table">Описание структуры таблицы, содержащее ошибку</param>
     /// <param name="message">Текст сообщения</param>
     public DBxStructException(DBxTableStruct table, string message)
-      : base("Ошибка в описании структуры таблицы \"" + table.TableName + "\". " + message)
+      : base(String.Format(Res.DBxStructException_Err_Message,
+        table.TableName, message))
     {
       _Table = table;
     }
@@ -74,7 +76,7 @@ namespace FreeLibSet.Data
     /// Создает исключение с сообщением "Неправильный первичный ключ"
     /// </summary>
     public DBxPrimaryKeyException()
-      : base("Неправильный первичный ключ")
+      : base(Res.DBxPrimaryKeyException_Err_Message)
     {
     }
 
@@ -162,11 +164,11 @@ namespace FreeLibSet.Data
     private static string CreateMessage(string tableName, string id)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       if (String.IsNullOrEmpty(id))
-        throw new ArgumentNullException("id");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("id");
 
-      return "Не найдена запись в таблице \"" + tableName + "\" с идентификатором " + id.ToString();
+      return String.Format(Res.DBxRecordNotFoundException_Err_Message, tableName, id);
     }
 
     #endregion
@@ -228,7 +230,7 @@ namespace FreeLibSet.Data
     /// Создает исключение с сообщением "Не задан идентификатор"
     /// </summary>
     public DBxNoIdArgumentException()
-      : base("Не задан идентификатор")
+      : base(Res.DBxNoIdArgumentException_Err_Message)
     {
     }
 

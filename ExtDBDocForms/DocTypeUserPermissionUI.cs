@@ -30,7 +30,7 @@ namespace FreeLibSet.Forms.Docs
       InitializeComponent();
 
       efpSelMode = new EFPRadioButtons(baseProvider, rbAllTypes);
-      efpSelMode.DisplayName = "Режим выбора все документы / выбранный тип";
+      efpSelMode.DisplayName = Res.DocTypePermissionUI_Name_SelMode;
       if (isReadOnly)
         efpSelMode.Enabled = false;
 
@@ -222,7 +222,7 @@ efpMode.Enabled = false;
       form.efpSelMode[0].Enabled = CanBeEmpty;
       if (CanBeEmpty)
       {
-        form.efpDocType.EmptyText = "[ Все типы документов ]";
+        form.efpDocType.EmptyText = Res.DocTypeUserPermissionUI_Msg_AllDocTypes;
         form.efpDocType.EmptyImageKey = "Table";
       }
       editor.Control = form.MainPanel;
@@ -252,7 +252,7 @@ efpMode.Enabled = false;
         form.efpDocType.DocTypeName = docTypeNames[0];
         form.efpSelMode.SelectedIndex = 1;
         if (docTypeNames.Length > 1)
-          EFPApp.ErrorMessageBox("В редактируемом разрешениии указано несколько видов документов. Редактирование таких разрешений не поддерживается");
+          EFPApp.ErrorMessageBox(Res.DocTypeUserPermissionUI_Err_MultiDocTypesNotSupported);
       }
 
       int intValue = GetIndexValue(args.Permission);
@@ -267,7 +267,7 @@ efpMode.Enabled = false;
       if (form.efpSelMode.SelectedIndex == 0)
         SetDocTypeNames(args.Permission, null);
       else if (form.efpDocType.DocType == null)
-        throw new BugException("Тип документов не выбран");
+        throw new BugException("DocType=null");
       else
         SetDocTypeNames(args.Permission, new string[] { form.efpDocType.DocTypeName });
 
@@ -307,7 +307,7 @@ efpMode.Enabled = false;
     public DocTypePermissionUI(DBUI ui)
       : base("DocType", DBUserPermission.ValueNames, WholeDBPermissionUI.ValueImageKeys, ui)
     {
-      base.DisplayName = "Вид документов";
+      base.DisplayName = Res.DocTypePermissionUI_Name_Default;
       base.ImageKey = "Table";
       base.CanBeEmpty = false;
     }
@@ -376,9 +376,9 @@ efpMode.Enabled = false;
     /// </summary>
     /// <param name="ui">Интерфейс для документов</param>
     public DocTypeViewHistoryPermissionUI(DBUI ui)
-      : base("History", new string[] { "Разрешено", "Запрещено" }, new string[] { "Ok", "No" }, ui)
+      : base("History", new string[] { Res.Enabled_Msg_True, Res.Enabled_Msg_False }, new string[] { "Ok", "No" }, ui)
     {
-      base.DisplayName = "Просмотр истории";
+      base.DisplayName = Res.DocTypeViewHistoryPermissionUI_Name_Default;
       base.ImageKey = "Information";
       base.CanBeEmpty = true;
     }
@@ -447,9 +447,9 @@ efpMode.Enabled = false;
     /// Создает интерфейс разрешения
     /// </summary>
     public ViewOtherUsersActionPermissionUI()
-      : base("ViewOtherUsersAction", new string[] { "Разрешен", "Запрещен" }, new string[] { "Ok", "No" })
+      : base("ViewOtherUsersAction", new string[] { Res.Enabled_Msg_True, Res.Enabled_Msg_False }, new string[] { "Ok", "No" })
     {
-      base.DisplayName = "Просмотр действий других пользователей";
+      base.DisplayName = Res.ViewOtherUsersActionPermissionUI_Name_Default;
       base.ImageKey = "UserActions";
     }
 

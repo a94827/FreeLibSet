@@ -29,10 +29,9 @@ namespace FreeLibSet.Data.Docs
         throw new ArgumentNullException("db");
       if (dbStruct == null)
         throw new ArgumentNullException("dbStruct");
-      if (dbStruct.IsReadOnly)
-        throw new ObjectReadOnlyException("DBxStruct.IsReadOnly=true");
+      dbStruct.CheckNotReadOnly();
       if (String.IsNullOrEmpty(dbName))
-        throw new ArgumentNullException("dbName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("dbName");
 #endif
 
       _DB = db;
@@ -49,20 +48,20 @@ namespace FreeLibSet.Data.Docs
     /// Свойство DBx.Struct не установлено
     /// </summary>
     public DBx DB { get { return _DB; } }
-    private DBx _DB;
+    private readonly DBx _DB;
 
     /// <summary>
     /// Структура базы данных.
     /// Пользовательский код может добавить описания таблиц и полей.
     /// </summary>
     public DBxStruct Struct { get { return _Struct; } }
-    private DBxStruct _Struct;
+    private readonly DBxStruct _Struct;
 
     /// <summary>
     /// Имя базы данных, переданное при вызове InitDB() ("db", "undo", "files", "files2", ...)
     /// </summary>
     public string DBName { get { return _DBName; } }
-    private string _DBName;
+    private readonly string _DBName;
 
     #endregion
   }
@@ -234,7 +233,7 @@ namespace FreeLibSet.Data.Docs
       #region Проверка аргументов
 
       if (String.IsNullOrEmpty(dbName))
-        throw new ArgumentNullException("dbName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("dbName");
       // if (DBStruct == null)
       //   throw new ArgumentNullException("DBStruct");
 
@@ -246,7 +245,7 @@ namespace FreeLibSet.Data.Docs
       if (Splash != null)
       {
         oldSplashText = Splash.PhaseText;
-        Splash.PhaseText = "Обновление базы данных " + dbName;
+        Splash.PhaseText = String.Format(Res.DBxDocConnectionHelper_Phase_DBUpdating, dbName);
       }
       try
       {
@@ -255,7 +254,7 @@ namespace FreeLibSet.Data.Docs
           // TODO: Учет ProviderName для выбора формата базы данных
 
           if (DBDir.IsEmpty)
-            throw new NullReferenceException("Не установлено свойство DBDir");
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "DBDir");
 
           // Строка подключения не задана
 #if NET
@@ -272,15 +271,15 @@ namespace FreeLibSet.Data.Docs
         else
         {
           if (String.IsNullOrEmpty(ProviderName))
-            throw new NullReferenceException("Не установлено свойство \"ProviderName\"");
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "ProviderName");
           DBxManager dbMan = DBxManager.Managers[ProviderName];
           if (dbMan == null)
           {
             if (DBxManager.Managers.Count == 0)
-              throw new NullReferenceException("Список менеджеров баз данных DBxManager.Managers пуст");
+              throw new NullReferenceException(Res.DBxDocConnectionHelper_Err_DBxManagerListEmpty);
             else
-              throw new NullReferenceException("Свойство ProviderName содержит неизвестный провайдер \"" + ProviderName + "\". Допустимые значения: " +
-                String.Join(", ", DBxManager.Managers.GetCodes()));
+              throw new NullReferenceException(String.Format(Res.DBxDocConnectionHelper_Err_UnknownProviderName,
+                ProviderName, UICore.UITools.ValueListToString(DBxManager.Managers.GetCodes())));
           }
           string conStr = dbMan.ReplaceDBName(ConnectionString, "db", dbName);
 
@@ -311,7 +310,7 @@ namespace FreeLibSet.Data.Docs
           ISimpleSplash spl = this.Splash ?? new DummySimpleSplash();
           int oldErrorCount = Errors.Count;
           db.UpdateStruct(spl, Errors, UpdateStructOptions);
-          Errors.SetPrefix("Обновление структуры " + dbName + ". ", oldErrorCount);
+          Errors.SetPrefix(String.Format(Res.DBxDocConnectionHelper_Err_StructUpdatingPrefix, dbName), oldErrorCount);
         }
       }
       finally
@@ -351,9 +350,9 @@ namespace FreeLibSet.Data.Docs
         if (value == null)
           throw new ArgumentNullException();
         if (value.Count == 0)
-          throw new ArgumentException("Список объявлений не заполнен");
+          throw ExceptionFactory.ArgIsEmpty("value");
         if (_DocTypes != null)
-          throw new InvalidOperationException("Повторная установка свойства");
+          throw ExceptionFactory.ObjectPropertyAlreadySet(this, "DocTypes");
         value.SetReadOnly();
         _DocTypes = value;
 
@@ -431,7 +430,7 @@ namespace FreeLibSet.Data.Docs
     public DBxRealDocProviderGlobal CreateRealDocProviderGlobal()
     {
       if (DocTypes == null)
-        throw new NullReferenceException("Свойство DocTypes не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "DocTypes");
 
       DBxBinDataHandler binDataHandler;
       DBxStruct filesDBStruct; // Структура баз данных files. Используется, если DBxBinDataHandler.UseFragmentation=true.
@@ -442,7 +441,7 @@ namespace FreeLibSet.Data.Docs
       if (UseUndo)
       {
         if (UndoDBStruct == null)
-          throw new InvalidOperationException("При заданных настройках объекта DBxDocTypes, ведение истории невозможно");
+          throw new InvalidOperationException(Res.DBxDocConnectionHelper_Err_UndoNotAppliable);
         undoDB = InitDB("undo", UndoDBStruct);
       }
 

@@ -89,7 +89,7 @@ namespace FreeLibSet.Data
     protected UserPermission(string classCode)
     {
       if (String.IsNullOrEmpty(classCode))
-        throw new ArgumentNullException("classCode");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("classCode");
       _ClassCode = classCode;
     }
 
@@ -101,7 +101,7 @@ namespace FreeLibSet.Data
     /// Код класса разрешения, например, "DB", "Table", ...
     /// </summary>
     public string ClassCode { get { return _ClassCode; } }
-    private string _ClassCode;
+    private readonly string _ClassCode;
 
     /// <summary>
     /// Коллекция-владелец разрешения.
@@ -304,7 +304,8 @@ namespace FreeLibSet.Data
       UserPermission up = Creators.Create(classCode);
 #if DEBUG
       if (up == null)
-        throw new NullReferenceException("Не создано разрешение для ClassCode=\"" + classCode + "\"");
+        throw new NullReferenceException(String.Format(Res.UserPermission_Err_NotCreated,
+          classCode));
 #endif
       up.Owner = this;
       base.Add(up);
@@ -321,7 +322,7 @@ namespace FreeLibSet.Data
       if (permission == null)
         throw new ArgumentNullException("permission");
       if (permission.Owner != null)
-        throw new InvalidOperationException("Повторное добавление разрешения в список не допускается");
+        throw ExceptionFactory.CannotAddItemAgain(permission);
       permission.Owner = this;
       base.Add(permission);
     }
@@ -481,19 +482,19 @@ namespace FreeLibSet.Data
       if (creator == null)
       {
         if (String.IsNullOrEmpty(classCode))
-          throw new ArgumentNullException("classCode");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("classCode");
         up = new UnknownUserPermission(classCode);
       }
       else
       {
         up = creator.CreateUserPermission();
         if (up == null)
-          throw new BugException("Метод " + creator.GetType().ToString() + ".CreateUserPermission() вернул null");
+          throw new BugException("Method " + creator.GetType().ToString() + ".CreateUserPermission() returned null");
       }
 
       if (up.ClassCode != classCode)
-        throw new BugException("Полученное разрешение " + up.GetType().ToString() +
-          " имеет ClassCode=\"" + classCode + "\", отличное от запрошенного \"" + classCode + "\"");
+        throw new BugException("Created permission of type " + up.GetType().ToString() +
+          " has ClassCode=\"" + classCode + "\", different of required \"" + classCode + "\"");
 
       return up;
     }
@@ -612,7 +613,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public override string ObjectText
     {
-      get { return "Неизвестное разрешение \"" + ClassCode + "\""; }
+      get { return String.Format(Res.UnknownUserPermission_Name_Default, ClassCode); }
     }
 
     /// <summary>

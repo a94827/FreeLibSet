@@ -1535,7 +1535,7 @@ namespace FreeLibSet.Forms.Reporting
 
     private static void ExportFileExcelXml(object sender, BRActionItemPerformEventArgs args)
     {
-      args.CreateFile(new BRFileExcel2003Xml());
+      args.CreateFile(new BRFileExcel2003Xml(BRMeasurer.Default));
     }
 
     private static void ExportFileWordXml(object sender, BRActionItemPerformEventArgs args)
@@ -1555,7 +1555,7 @@ namespace FreeLibSet.Forms.Reporting
 
     private static void ExportFileOds(object sender, BRActionItemPerformEventArgs args)
     {
-      args.CreateFile(new BRFileODS());
+      args.CreateFile(new BRFileODS(BRMeasurer.Default));
     }
 
     private static void ExportFileOdt(object sender, BRActionItemPerformEventArgs args)

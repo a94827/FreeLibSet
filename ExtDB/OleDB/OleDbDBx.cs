@@ -36,13 +36,16 @@ namespace FreeLibSet.Data.OleDb
       SyncRoot = new object();
 
       if (String.IsNullOrEmpty(connectionStringBuilder.DataSource))
-        throw new ArgumentException("Не указан элемент DataSource", "connectionStringBuilder");
+        throw new ArgumentException(Res.OleDbDBx_Arg_NoDataSource, "connectionStringBuilder");
 
-      _DataSource = new AbsPath(connectionStringBuilder.DataSource);
+      try { _DataSource = new AbsPath(connectionStringBuilder.DataSource); }
+      catch { }
       if (_DataSource.IsEmpty)
-        throw new ArgumentException("Задан неправильный элемент DataSource \"" + connectionStringBuilder.DataSource + "\" строки подключения. Элемент должен указывать на путь к файлу базы данных", "connectionStringBuilder");
+        throw new ArgumentException(String.Format(Res.OleDbDBx_Arg_InvalidDataSource, 
+          connectionStringBuilder.DataSource), "connectionStringBuilder");
       if (_DataSource.Extension.ToUpperInvariant() != ".MDB")
-        throw new ArgumentException("Путь к базе данных \"" + _DataSource.Path + "\" должен иметь расширение \".mdb\"", "connectionStringBuilder");
+        throw new ArgumentException(String.Format(Res.OleDbDBx_Arg_FileExtension,
+          _DataSource.Path), "connectionStringBuilder");
 
       base.DisplayName = _DataSource.FileName;
 
@@ -378,7 +381,7 @@ namespace FreeLibSet.Data.OleDb
       }
       catch (Exception e)
       {
-        return "Ошибка получения строки подключения. " + e.Message;
+        return String.Format(Res.DBx_Err_GetConnectionString, e.Message);
       }
 
     }

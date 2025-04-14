@@ -1997,6 +1997,42 @@ namespace FreeLibSet.Core
 
     #endregion
 
+    #region AddStrIfNotEmpty()
+
+    // Остальные перегрузки в модуле DataTools.Strings.cs
+
+    /// <summary>
+    /// Добавляет строку <paramref name="addedStr"/> к текущему значению строкового поля, если <paramref name="addedStr"/> непустая. 
+    /// Перед <paramref name="addedStr"/> добавляется сепаратор <paramref name="separator"/>. 
+    /// Если <paramref name="addedStr"/> - пустая строка, то значение поля остается без изменений. 
+    /// Сепаратор не добавляется, если поле содержит null или пустую строку.
+    /// Версия для <see cref="DataRow"/>.
+    /// </summary>
+    /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
+    /// <param name="columnName">Имя поля, которое будет изменено</param>
+    /// <param name="addedStr">Добавляемая строка</param>
+    /// <param name="separator">Разделитель</param>
+    public static void AddStrIfNotEmpty(DataRow row, string columnName, string addedStr, string separator)
+    {
+      if (String.IsNullOrEmpty(addedStr))
+        return;
+
+      string resStr = DataTools.GetString(row, columnName);
+
+      if (String.IsNullOrEmpty(resStr))
+        resStr = addedStr;
+      else
+      {
+        if (!String.IsNullOrEmpty(separator))
+          resStr += separator;
+        resStr += addedStr;
+      }
+
+      row[columnName] = resStr;
+    }
+
+    #endregion
+
     #endregion
 
     #region Пары "Имя поля - значение"
@@ -7378,7 +7414,7 @@ namespace FreeLibSet.Core
       }
 
       if (sort.IndexOf(',') >= 0)
-        throw ExceptionFactory.ArgBadChar("sort", sort, ",");
+        throw ExceptionFactory.ArgInvalidChar("sort", sort, ",");
 
       columnName = sort.Trim();
       if (columnName.EndsWith(" DESC", StringComparison.OrdinalIgnoreCase))
@@ -7530,7 +7566,7 @@ namespace FreeLibSet.Core
         throw ExceptionFactory.ArgProperty("dv", dv, "DataView.Sort", dv.Sort, null);
 #endif
       if (dv.Sort.IndexOf(',') >= 0)
-        throw ExceptionFactory.ArgBadChar("dv",dv.Sort, ",");
+        throw ExceptionFactory.ArgInvalidChar("dv",dv.Sort, ",");
 
       int p = dv.Find(searchValue);
       if (p < 0)

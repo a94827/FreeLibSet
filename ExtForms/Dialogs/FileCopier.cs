@@ -201,9 +201,9 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(template))
         throw ExceptionFactory.ArgStringIsNullOrEmpty("template");
       if (template[0] == Path.DirectorySeparatorChar)
-        throw ExceptionFactory.ArgBadChar("template", template, 0);
+        throw ExceptionFactory.ArgInvalidChar("template", template, 0);
       if (template[template.Length - 1] == Path.DirectorySeparatorChar)
-        throw ExceptionFactory.ArgBadChar("template", template, template.Length - 1);
+        throw ExceptionFactory.ArgInvalidChar("template", template, template.Length - 1);
       _Templates.Add((recurse ? ">" : "") + template);
     }
 

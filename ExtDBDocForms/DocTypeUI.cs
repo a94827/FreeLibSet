@@ -12,6 +12,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Forms.Data;
 using FreeLibSet.UICore;
+using FreeLibSet.Logging;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -212,7 +213,7 @@ namespace FreeLibSet.Forms.Docs
           break;
         case UIDataState.InsertCopy:
           if (EditIds.Length != 1)
-            throw new InvalidOperationException("Должен быть задан единственный идентификатор документа");
+            throw new InvalidOperationException(Res.Common_Err_SingleDocRequired);
           mDocs.InsertCopy(EditIds[0]);
           break;
         default:
@@ -986,7 +987,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка создания выборки связанных документов");
+          EFPApp.ShowException(e);
         }
       }
     }
@@ -1009,7 +1010,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка создания выборки связанных документов");
+          EFPApp.ShowException(e);
         }
       }
     }
@@ -1127,10 +1128,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     internal void OnDocProviderChanged()
     {
-      DBxDocType newDocType = UI.DocProvider.DocTypes[_DocType.Name];
-      if (newDocType == null)
-        throw new NullReferenceException("Не найден новый DocType для DocTypeName=\"" + _DocType.Name + "\"");
-      _DocType = newDocType;
+      _DocType = UI.DocProvider.DocTypes.GetRequired(_DocType.Name);
       foreach (SubDocTypeUI sdtui in SubDocTypes.Items.Values)
         sdtui.OnDocProviderChanged();
     }
@@ -1160,7 +1158,7 @@ namespace FreeLibSet.Forms.Docs
       get
       {
         if (String.IsNullOrEmpty(_AllGroupsDisplayName))
-          return "Все документы";
+          return Res.DocTypeUI_Msg_AllGroupsDisplayName;
         else
           return _AllGroupsDisplayName;
       }
@@ -1181,7 +1179,7 @@ namespace FreeLibSet.Forms.Docs
       get
       {
         if (String.IsNullOrEmpty(_NoGroupDisplayName))
-          return "Документы без иерархии";
+          return Res.DocTypeUI_Msg_NoGroupDisplayName;
         else
           return _NoGroupDisplayName;
       }
@@ -1233,9 +1231,10 @@ namespace FreeLibSet.Forms.Docs
           if (!_Items.TryGetValue(subDocTypeName, out res))
           {
             if (String.IsNullOrEmpty(subDocTypeName))
-              throw new ArgumentNullException("subDocTypeName");
+              throw ExceptionFactory.ArgStringIsNullOrEmpty("subDocTypeName");
             if (!_Owner.DocType.SubDocs.Contains(subDocTypeName))
-              throw new ArgumentException("Неизвестный тип поддокументов \"" + subDocTypeName + "\"", "subDocTypeName");
+              throw new ArgumentException(String.Format(Res.Common_Arg_UnknownSubDocType,
+                subDocTypeName, this), "subDocTypeName");
 
             res = new SubDocTypeUI(_Owner, _Owner.DocType.SubDocs[subDocTypeName]);
             _Items.Add(subDocTypeName, res);
@@ -1365,13 +1364,13 @@ namespace FreeLibSet.Forms.Docs
         DataTable dt = GetUnbufferedData(columns, filter, showDeleted, orderBy, maxRecordCount);
         dv = new DataView(dt);
       }
-
+        
 #if DEBUG
       int p = dv.Table.Columns.IndexOf("Id");
       if (p >= 0)
       {
         if (dv.Table.Columns[p].DataType != typeof(Int32))
-          throw new BugException("Таблица " + dv.Table.TableName + " имеет поле Id неправильного типа " + dv.Table.Columns[p].DataType.ToString());
+          throw new BugException("Table " + dv.Table.TableName + " has column 'Id' of wrong type " + dv.Table.Columns[p].DataType.ToString());
       }
 #endif
 
@@ -1599,7 +1598,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка очистки списка столбцов");
+          EFPApp.ShowException(e, LogoutTools.GetTitleForCall("EFPDataGridViewColumns.Clear()"));
         }
       }
       // Добавляем столбец с картинками
@@ -1612,7 +1611,7 @@ namespace FreeLibSet.Forms.Docs
         DataGridViewImageColumn imgCol = new DataGridViewImageColumn();
         imgCol.Name = "Image";
         imgCol.HeaderText = String.Empty;
-        imgCol.ToolTipText = "Значок документа \"" + DocType.SingularTitle + "\"";
+        imgCol.ToolTipText = String.Format(Res.Common_ToolTip_DocImageColumn, DocType.SingularTitle);
         imgCol.Width = controlProvider.Measures.ImageColumnWidth;
         imgCol.FillWeight = 1; // 08.02.2017
         imgCol.Resizable = DataGridViewTriState.False;
@@ -1738,7 +1737,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка обработчика события InitView");
+          EFPApp.ShowException(e);
         }
       }
     }
@@ -1768,7 +1767,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка обработчика события InitDocSelView");
+          EFPApp.ShowException(e);
         }
       }
     }
@@ -1897,7 +1896,7 @@ namespace FreeLibSet.Forms.Docs
                 }
                 catch (Exception e)
                 {
-                  s2 = "Ошибка: " + e.Message;
+                  s2 = String.Format(Res.Common_Err_ErrorMessage, e.Message);
                 }
                 args.ToolTipText = DataTools.JoinNotEmptyStrings(EFPGridProducerToolTips.ToolTipTextSeparator, new string[] { args.ToolTipText, s2 });
               }
@@ -2066,7 +2065,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка очистки списка столбцов");
+          EFPApp.ShowException(e, LogoutTools.GetTitleForCall("EFPDataTreeViewColumns.Clear()"));
         }
       }
 
@@ -2190,21 +2189,21 @@ namespace FreeLibSet.Forms.Docs
         if (mode != RecalcColumnsPermissionMode.Disabled)
         {
           EFPCommandItem MenuRecalcDocuments = new EFPCommandItem("Service", "RecalcDocsMenu");
-          MenuRecalcDocuments.MenuText = "Пересчитать вычисляемые поля";
+          MenuRecalcDocuments.MenuText = Res.Cmd_Menu_Service_RecalcDocsMenu;
           MenuRecalcDocuments.Usage = EFPCommandItemUsage.Menu;
           MenuRecalcDocuments.ImageKey = "RecalcColumns";
           MenuRecalcDocuments.Enabled = !controlProvider.ReadOnly;
           controlProvider.CommandItems.Add(MenuRecalcDocuments);
 
           ci = new EFPCommandItem("Service", "RecalcSelectedDocs");
-          ci.MenuText = "Выделенные";
+          ci.MenuText = Res.Cmd_Menu_Service_RecalcSelectedDocs;
           ci.Parent = MenuRecalcDocuments;
           ci.Tag = controlProvider;
           ci.Click += new EventHandler(RecalcSelDocuments_Click);
           controlProvider.CommandItems.Add(ci);
 
           ci = new EFPCommandItem("Service", "RecalcDocsInView");
-          ci.MenuText = "Все в просмотре";
+          ci.MenuText = Res.Cmd_Menu_Service_RecalcDocsInView;
           ci.Parent = MenuRecalcDocuments;
           ci.Tag = controlProvider;
           ci.Click += new EventHandler(RecalcViewDocuments_Click);
@@ -2213,7 +2212,7 @@ namespace FreeLibSet.Forms.Docs
           if (mode == RecalcColumnsPermissionMode.All)
           {
             ci = new EFPCommandItem("Service", "RecalcAllDocs");
-            ci.MenuText = "Все существующие";
+            ci.MenuText = Res.Cmd_Menu_Service_RecalcAllDocs;
             ci.Parent = MenuRecalcDocuments;
             ci.Tag = controlProvider;
             ci.Click += new EventHandler(RecalcAllDocuments_Click);
@@ -2223,8 +2222,7 @@ namespace FreeLibSet.Forms.Docs
       }
 
       ci = new EFPCommandItem("View", "DocInfo");
-      ci.MenuText = "Информация о документе";
-      ci.ToolTipText = "Информация о документе";
+      ci.MenuText = Res.Cmd_Menu_DocInfo;
       ci.ShortCut = Keys.F12;
       ci.ImageKey = "Information";
       ci.Click += new EventHandler(ShowDocInfoItem_Click);
@@ -2291,7 +2289,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (ControlProvider.SourceAsDataView == null)
       {
-        EFPApp.ShowTempMessage("Набор данных не присоединен к табличному просмотру");
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoData);
         return;
       }
 
@@ -2384,7 +2382,7 @@ namespace FreeLibSet.Forms.Docs
       Int32 docId = controlProvider.CurrentId;
       if (docId == 0)
       {
-        EFPApp.ShowTempMessage("Документ в табличном просмотре не выбран");
+        EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
         return;
       }
 
@@ -2799,7 +2797,7 @@ namespace FreeLibSet.Forms.Docs
         case UIDataState.InsertCopy:
           if (editIds.Length != 1)
           {
-            EFPApp.ShowTempMessage("Должен быть выбран один документ");
+            EFPApp.ShowTempMessage(Res.Common_Err_SingleDocRequired);
             return false;
           }
           break;
@@ -2807,7 +2805,7 @@ namespace FreeLibSet.Forms.Docs
         case UIDataState.Delete: // 19.08.2016
           if (editIds.Length < 1)
           {
-            EFPApp.ShowTempMessage("Не выбрано ни одного документа");
+            EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
             return false;
           }
           break;
@@ -2815,12 +2813,12 @@ namespace FreeLibSet.Forms.Docs
         default:
           if (editIds.Length < 1)
           {
-            EFPApp.ShowTempMessage("Не выбрано ни одного документа");
+            EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
             return false;
           }
           if (editIds.Length > 1 && (!CanMultiEdit))
           {
-            EFPApp.ShowTempMessage("Множественное редактирование документов \"" + DocType.PluralTitle + "\" не допускается");
+            EFPApp.ShowTempMessage(String.Format(Res.Common_Err_NoMultiEdit, DocType.PluralTitle));
             return false;
           }
           break;
@@ -2847,29 +2845,21 @@ namespace FreeLibSet.Forms.Docs
         {
           DBxDocSelection oldDocSel = oldDE.Documents.DocSelection;
           oldDocSel = new DBxDocSelection(oldDocSel, DocType.Name); // другие виды документов не интересны
-          StringBuilder sb = new StringBuilder();
-          sb.Append("Редактор уже открыт.");
+          List<string> lst = new List<string>();
+          lst.Add(Res.Editor_Err_AlreadyOpen);
           if (!oldDocSel.ContainsAll(docSel))
-          {
-            sb.Append(Environment.NewLine);
-            sb.Append("Вы пытаетесь открыть сразу несколько документов, но не все они присутствуют в открытом редакторе.");
-          }
+            lst.Add(Res.Editor_Err_AlreadyOpenPartial);
           else if (!docSel.ContainsAll(oldDocSel))
-          {
-            sb.Append(Environment.NewLine);
-            sb.Append("Открытый редактор использует груповое редактирование документов, в том числе других.");
-          }
+            lst.Add(Res.Editor_Err_AlreadyOpenExtra);
 
           if (EFPApp.ActiveDialog == null)
             EFPApp.Interface.CurrentChildForm = oldDE.Dialog.Form;
           else
           {
-            sb.Append(Environment.NewLine);
-            sb.Append(Environment.NewLine);
-            sb.Append("Так как есть открытые диалоговые окна, нельзя активировать окно редактора.");
+            lst.Add(Res.Editor_Err_AlreadyOpenCannotActivate);
           }
 
-          EFPApp.MessageBox(sb.ToString(), "Повторное открытие редактора");
+          EFPApp.MessageBox(String.Join(Environment.NewLine, lst.ToArray()), Res.Editor_ErrTitle_AlreadyOpen);
           return false;
         }
       }
@@ -2916,7 +2906,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (editId == 0)
       {
-        EFPApp.ShowTempMessage("Должен быть выбран один документ");
+        EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
         return false;
       }
 
@@ -2989,15 +2979,15 @@ namespace FreeLibSet.Forms.Docs
       switch (docIds.Length)
       {
         case 0:
-          EFPApp.ShowTempMessage("Нет выбранного документа \"" + DocType.SingularTitle + "\"");
+          EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_NoSelectedDocs, DocType.PluralTitle));
           break;
         case 1:
           PerformEditing(docIds[0], readOnly, caller);
           break;
         default:
           // Показываем как выборку документов
-          DBxDocSelection DocSel2 = new DBxDocSelection(UI.DocProvider.DBIdentity, DocType.Name, docIds);
-          UI.ShowDocSel(DocSel2, "Выбранные документы \"" + DocType.PluralTitle + "\"");
+          DBxDocSelection docSel2 = new DBxDocSelection(UI.DocProvider.DBIdentity, DocType.Name, docIds);
+          UI.ShowDocSel(docSel2, String.Format(Res.DocSel_Title_SelectedDocs, DocType.PluralTitle));
           break;
       }
     }
@@ -3010,7 +3000,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (docId == 0)
       {
-        EFPApp.ShowTempMessage("Документ для просмотра информации не выбран");
+        EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
         return;
       }
       try
@@ -3019,7 +3009,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Просмотр информации о документе");
+        EFPApp.ShowException(e, EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_DocInfo));
       }
     }
 
@@ -3124,7 +3114,7 @@ namespace FreeLibSet.Forms.Docs
     internal void PerformInitEditForm(DocumentEditor editor, DBxMultiDocs multiDocs)
     {
       if (multiDocs.DocType.Name != this.DocType.Name)
-        throw new ArgumentException("Попытка инициализации для чужого типа документов", "multiDocs");
+        throw ExceptionFactory.ArgProperty("multiDocs", multiDocs, "DocType.Name", multiDocs.DocType.Name, new object[] { this.DocType.Name });
 
       InitDocEditFormEventArgs args = new InitDocEditFormEventArgs(editor, multiDocs);
       if (InitEditForm != null)
@@ -3172,7 +3162,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка при обработке события после записи значений");
+          EFPApp.ShowException(e);
         }
       }
     }
@@ -3223,7 +3213,7 @@ namespace FreeLibSet.Forms.Docs
       DistributedCallData startData = UI.DocProvider.StartServerExecProc(dispArgs);
 
       DistributedProcCallItem callItem = new DistributedProcCallItem(startData);
-      callItem.DisplayName = "Пересчет вычисляемых полей документов \"" + DocType.PluralTitle + "\"";
+      callItem.DisplayName = String.Format(Res.Common_Phase_RecalcColumns, DocType.PluralTitle);
       callItem.UserData["AfterRecalc"] = afterRecalc;
       callItem.UserData["AfterRecalcParams"] = afterRecalcParams;
       callItem.Finished += new DistributedProcCallEventHandler(RecalcColumnsCallItem_Finished);
@@ -3352,7 +3342,7 @@ namespace FreeLibSet.Forms.Docs
       #region Инициализация полей
 
       if (String.IsNullOrEmpty(docType.TreeParentColumnName))
-        throw new ArgumentException("Для документов \"" + docType.PluralTitle + "\" не задано свойство TreeParentColumnName. Эти документы не образуют дерево групп", "docType");
+        throw ExceptionFactory.ArgProperty("docType", docType, "TreeParentColumnName", docType.TreeParentColumnName, null);
 
       for (int i = 0; i < docType.Struct.Columns.Count; i++)
       {
@@ -3364,7 +3354,7 @@ namespace FreeLibSet.Forms.Docs
         }
       }
       if (String.IsNullOrEmpty(_NameColumnName))
-        throw new ArgumentException("У документов \"" + docType.PluralTitle + "\" нет ни одного текстового столбца. Эти документы не образуют дерево групп", "docType");
+        throw new ArgumentException(String.Format(Res.GroupDocTypeUI_Arg_NoTextColumn, docType.PluralTitle), "docType");
 
       this.Columns[_NameColumnName].NewMode = ColumnNewMode.AlwaysDefaultValue; // 10.06.2019 - название группы должно быть пустым
 
@@ -3379,7 +3369,7 @@ namespace FreeLibSet.Forms.Docs
     /// Имя столбца, содержащего название группы
     /// </summary>
     public string NameColumnName { get { return _NameColumnName; } }
-    private string _NameColumnName;
+    private readonly string _NameColumnName;
 
     ///// <summary>
     ///// TreeParentColumnName

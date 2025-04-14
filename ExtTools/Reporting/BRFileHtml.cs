@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -12,7 +15,7 @@ namespace FreeLibSet.Reporting
   /// <summary>
   /// Объект для создания файла отчета <see cref="BRReport"/> в формате HTML
   /// </summary>
-  public class BRFileHtml: BRFileCreator
+  public class BRFileHtml : BRFileCreator
   {
     #region Конструктор
 
@@ -54,7 +57,7 @@ namespace FreeLibSet.Reporting
 
     /// <summary>
     /// Запись отчета в поток.
-    /// Поток должен поддерживать позиционирование
+    /// Поток должен поддерживать позиционирование.
     /// </summary>
     /// <param name="report">Отчет</param>
     /// <param name="stream">Записываемый поток</param>
@@ -62,6 +65,25 @@ namespace FreeLibSet.Reporting
     public void Write(BRReport report, Stream stream, bool useFragment)
     {
       StreamWriter wrt = new StreamWriter(stream, Encoding);
+      DoWrite(report, stream, wrt, useFragment);
+    }
+
+    /// <summary>
+    /// Создает строку с HTML-текстом
+    /// </summary>
+    /// <param name="report">Отчет</param>
+    /// <returns>Строка HTML</returns>
+    public string ToString(BRReport report)
+    {
+      StringWriter wrt = new StringWriter();
+      DoWrite(report, null, wrt, false);
+      wrt.Flush();
+      return wrt.ToString();
+    }
+
+
+    private void DoWrite(BRReport report, Stream stream, TextWriter wrt, bool useFragment)
+    {
       const int PosWrStartHtml = 23;
       const int PosWrEndHtml = 43;
       const int PosWrStartFragment = 70;
@@ -220,12 +242,34 @@ namespace FreeLibSet.Reporting
       sb.Append("mm");
     }
 
-    private void WriteSection(BRSection section, StreamWriter wrt)
+    private void WriteSection(BRSection section, TextWriter wrt)
     {
       StringBuilder sb = new StringBuilder(); // Открывающие теги 
 
-      foreach (BRBand band in section.Bands)
+      for (int iBand = 0; iBand < section.Bands.Count; iBand++)
       {
+        #region Зазор между полосами
+
+        int gap = 0;
+        if (iBand > 0)
+          gap = Math.Max(section.Bands[iBand - 1].BottomMargin, section.Bands[iBand].TopMargin);
+        if (gap >= 10)
+        {
+          double gapPt = gap / 254.0 * 72.0; // зазор в пунктах
+          sb.Length = 0;
+          sb.Append("font-size: ");
+          sb.Append(gapPt.ToString("0.0", StdConvert.NumberFormat));
+          sb.Append("pt; ");
+          sb.Append("line-height: ");
+          sb.Append(gapPt.ToString("0.0", StdConvert.NumberFormat));
+          sb.Append("pt; ");
+          wrt.WriteLine("<P " + sb.ToString() + ">" + " " + "</P>"); // пробел
+        }
+
+        #endregion
+
+
+        BRBand band = section.Bands[iBand];
         BRSelector sel = band.CreateSelector();
 
         if (IsSimpleBand(sel))
@@ -233,7 +277,7 @@ namespace FreeLibSet.Reporting
           sb.Length = 0;
           InitStyles(sel, section.Report.DefaultCellStyle, sb);
           // Простой абзац текста
-          wrt.WriteLine("<P " + sb.ToString() + ">" + MakeHtmlSpc(sel.AsString) + "</P>");
+          wrt.WriteLine(GetBookMarks(sel)+"<P " + sb.ToString() + ">" + MakeHtmlSpc(sel.AsString) + "</P>");
         }
         else
         {
@@ -243,7 +287,7 @@ namespace FreeLibSet.Reporting
           for (int j = 0; j < band.ColumnCount; j++)
           {
             sel.ColumnIndex = j;
-            aTxtWidth[j] = (sel.ColumnInfo.Width/10.0).ToString("0.0", StdConvert.NumberFormat)  + "mm";
+            aTxtWidth[j] = (sel.ColumnInfo.Width / 10.0).ToString("0.0", StdConvert.NumberFormat) + "mm";
             totalWidth += sel.ColumnInfo.Width;
             if (sel.ColumnInfo.AutoGrow)
               totalGrowWidth += sel.ColumnInfo.Width;
@@ -323,7 +367,13 @@ namespace FreeLibSet.Reporting
                 sb.Append("\"");
               }
 
-              wrt.WriteLine("    <TD" + sb.ToString() + ">" + txt + "</TD>");
+              string linkData = sel.LinkData;
+              if (!String.IsNullOrEmpty(linkData))
+              {
+                txt = "<A HREF=\"" + linkData + "\">" + txt + "</A>";
+              }
+
+              wrt.WriteLine("    <TD" + sb.ToString() + ">" + GetBookMarks(sel) + txt + "</TD>");
             }
             wrt.WriteLine("  </TR>");
           }
@@ -331,6 +381,18 @@ namespace FreeLibSet.Reporting
           wrt.WriteLine("</TABLE>");
         }
       }
+    }
+
+    private static string GetBookMarks(BRSelector sel)
+    {
+      BRBookmark[] a = sel.Bookmarks.ToArray();
+      if (a.Length == 0)
+        return String.Empty;
+
+      string s = String.Empty;
+      foreach (BRBookmark bm in a)
+        s += "<A NAME=\"" + bm.Name + "\">";
+      return s;
     }
 
     private static bool IsSimpleBand(BRSelector sel)
@@ -342,7 +404,7 @@ namespace FreeLibSet.Reporting
         return false;
 
       string s = sel.AsString;
-      if (s.IndexOf('\n')>=0 || s.IndexOf('\r')>=0)
+      if (s.IndexOf('\n') >= 0 || s.IndexOf('\r') >= 0)
         return false;
 
       return
@@ -453,7 +515,7 @@ namespace FreeLibSet.Reporting
         style.RightBorder != defaultStyle.RightBorder ||
         style.BottomBorder != defaultStyle.BottomBorder ||
         style.LeftBorder != defaultStyle.LeftBorder ||
-        style.IndentLevel!=0)
+        style.IndentLevel != 0)
       {
         int topMargin = style.TopMargin;
         int rightMargin = style.RightMargin;
@@ -471,7 +533,7 @@ namespace FreeLibSet.Reporting
               rightMargin += 30 * style.IndentLevel;
               break;
             case BRHAlign.Center:
-              leftMargin += 15 * style.IndentLevel; 
+              leftMargin += 15 * style.IndentLevel;
               rightMargin += 15 * style.IndentLevel;
               break;
           }
@@ -538,7 +600,7 @@ namespace FreeLibSet.Reporting
 
       switch (border.Style)
       {
-        case BRLineStyle.Thin: sb.Append("solid"); break;
+        case BRLineStyle.Thin: sb.Append("1px solid"); break; // 28.03.2025
         case BRLineStyle.Medium: sb.Append("2px solid"); break;
         case BRLineStyle.Thick: sb.Append("4px solid"); break;
         case BRLineStyle.Dot: sb.Append("dotted"); break;

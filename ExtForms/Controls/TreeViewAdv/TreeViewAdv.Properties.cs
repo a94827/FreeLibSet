@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Models.Tree;
 using FreeLibSet.Controls.TreeViewAdvInternal;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591
 
@@ -462,8 +463,8 @@ namespace FreeLibSet.Controls
       }
       set
       {
-        if (value <= 0)
-          throw new ArgumentOutOfRangeException("value");
+        if (value < 1)
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
 
         _rowHeight = value;
         _rowLayout.PreferredRowHeight = value;
@@ -501,8 +502,8 @@ namespace FreeLibSet.Controls
       get { return _topEdgeSensivity; }
       set
       {
-        if (value < 0 || value > 1)
-          throw new ArgumentOutOfRangeException();
+        if (value < 0f || value > 1f)
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0f, 1f);
         _topEdgeSensivity = value;
       }
     }
@@ -514,8 +515,8 @@ namespace FreeLibSet.Controls
       get { return _bottomEdgeSensivity; }
       set
       {
-        if (value < 0 || value > 1)
-          throw new ArgumentOutOfRangeException("value should be from 0 to 1");
+        if (value < 0f || value > 1f)
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0f, 1f);
         _bottomEdgeSensivity = value;
       }
     }

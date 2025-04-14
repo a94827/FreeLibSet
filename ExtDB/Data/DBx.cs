@@ -391,7 +391,7 @@ namespace FreeLibSet.Data
       set
       {
         if (String.IsNullOrEmpty(value))
-          throw new ArgumentNullException();
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
         lock (_Cons.SyncRoot)
         {
           _DisplayName = value;
@@ -434,7 +434,7 @@ namespace FreeLibSet.Data
     public void CheckHasNotConnected()
     {
       if (_HasConnected)
-        throw new InvalidOperationException("С базой данных уже было установлено соединение");
+        throw new InvalidOperationException(String.Format(Res.DBx_Err_AlreadyConnected, DisplayName));
     }
 
     #endregion
@@ -519,7 +519,7 @@ namespace FreeLibSet.Data
         lock (_Cons.SyncRoot)
         {
           if (_Cons.Count > 0)
-            throw new InvalidOperationException("Нельзя задать структуру, если есть установленные соединения");
+            throw new InvalidOperationException(String.Format(Res.DBx_Err_HasConnection, DisplayName));
 
           _Struct = value;
           _StructHasBeenSet = true;
@@ -596,7 +596,7 @@ namespace FreeLibSet.Data
     public bool UpdateStruct(ISimpleSplash splash, ErrorMessageList errors, DBxUpdateStructOptions options)
     {
       if (!StructHasBeenSet)
-        throw new InvalidOperationException("StructHasBeenSet=false");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "StructHasBeenSet");
       bool res = OnUpdateStruct(splash, errors, options);
       _StructHasBeenUpdated = true;
       return res;
@@ -698,7 +698,7 @@ namespace FreeLibSet.Data
     {
       if (String.IsNullOrEmpty(tableName))
       {
-        errorText = "Имя таблицы не задано";
+        errorText = Res.DBx_Err_NoTableName;
         return false;
       }
 
@@ -717,7 +717,7 @@ namespace FreeLibSet.Data
     {
       if (String.IsNullOrEmpty(columnName))
       {
-        errorText = "Имя поля не задано";
+        errorText = Res.DBx_Err_NoColumnName;
         return false;
       }
 
@@ -728,7 +728,8 @@ namespace FreeLibSet.Data
         {
           if (!IsValidColumnName(a[i], out errorText))
           {
-            errorText = "Неправильная составная часть имени поля с точками №" + (i + 1).ToString() + ". " + errorText;
+            errorText = String.Format(Res.DBx_Err_DotColumnNamePart, 
+              i + 1, errorText);
             return false;
           }
         }
@@ -751,7 +752,7 @@ namespace FreeLibSet.Data
     {
       if (String.IsNullOrEmpty(columnName))
       {
-        errorText = "Имя столбца не задано";
+        errorText = Res.DBx_Err_NoColumnName;
         return false;
       }
 
@@ -793,13 +794,13 @@ namespace FreeLibSet.Data
           if (name[i] == '_')
             continue; // допускается
 
-          errorText = "Недопустимый символ \"" + name[i] + "\" в позиции " + (i + 1).ToString();
+          errorText = UICore.UITools.InvalidCharErrorMessage(name, i);
           return false;
         }
       }
       if (Char.IsDigit(name, 0))
       {
-        errorText = "Имя не может начинаться с цифры";
+        errorText = Res.DBx_Err_NameStartsWithDigit;
         return false;
       }
 
@@ -828,7 +829,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (_Formatter != null)
-        throw new InvalidOperationException("Повторная установка форматировщика не допускается");
+        throw ExceptionFactory.RepeatedCall(this, "SetFormatter()");
 #endif
       _Formatter = formatter;
     }
@@ -942,7 +943,7 @@ namespace FreeLibSet.Data
           if (_CurrentLogoutExceptionCount <= 2)
             LogoutTools.LogoutException(args.Exception, args.Title);
           else // 19.09.2019
-            args.Exception.Data["DBx.OnLogoutException()"] = "Вывод ошибки в log-файл отменен для предотвращения исчерпания ресурсов, так как в текущий момент в log-файлы выводятся другие ошибки";
+            args.Exception.Data["DBx.OnLogoutException()"] = "Error logging is cancelled to prevent memory overflow, because there are other errors logging at this moment";
         }
       }
       finally
@@ -1005,7 +1006,7 @@ namespace FreeLibSet.Data
       set
       {
         if (_CommandTimeout < 0)
-          throw new ArgumentException("Значение не может быть отрицательным");
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _CommandTimeout = value;
       }
     }

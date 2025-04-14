@@ -35,7 +35,7 @@ namespace FreeLibSet.Data.Docs
   /// Переменная ссылка - это два числовых поля, первое из которых задает идентификатор таблицы документа, 
   /// а второе - идентификатор документа.
   /// Числовые поля сами по себе не являются ссылочными. СУБД не поддерживают ссылки на разные таблицы из одного поля.
-  /// Функционал переменной ссылки, включая обеспечение целостности, реализуется на уровне DBxRealDocProvider.
+  /// Функционал переменной ссылки, включая обеспечение целостности, реализуется на уровне <see cref="DBxRealDocProvider"/>.
   /// </summary>
   [Serializable]
   public sealed class DBxVTReference:ObjectWithCode, IReadOnlyObject
@@ -59,25 +59,25 @@ namespace FreeLibSet.Data.Docs
       if (tableIdColumn == null)
         throw new ArgumentNullException("tableIdColumn");
       if (docIdColumn == null)
-        throw new ArgumentNullException("tableIdColumn");
+        throw new ArgumentNullException("docIdColumn");
 #endif
       if (!table.Columns.Contains(tableIdColumn))
-        throw new ArgumentException("Таблица не содержит столбца идентификатора таблицы", "tableIdColumn");
+        throw new ArgumentException(String.Format(Res.DBxVTReference_Arg_NoColumn, table.TableName, tableIdColumn.ColumnName), "tableIdColumn");
       if (!table.Columns.Contains(docIdColumn))
-        throw new ArgumentException("Таблица не содержит столбца идентификатора документа", "docIdColumn");
+        throw new ArgumentException(String.Format(Res.DBxVTReference_Arg_NoColumn, table.TableName, docIdColumn.ColumnName), "docIdColumn");
       if (Object.ReferenceEquals(tableIdColumn, docIdColumn))
-        throw new ArgumentException("Не может задаваться один и тот же столбец");
+        throw ExceptionFactory.ArgAreSame("tableIdColumn", "docIdColumn");
 
       if (tableIdColumn.ColumnType != DBxColumnType.Int)
-        throw new ArgumentException("Столбец должен быть целочисленным", "tableIdColumn");
+        throw new ArgumentException(String.Format(Res.DBxVTReference_Arg_ColumnNoInt, tableIdColumn.ColumnName), "tableIdColumn");
       if (docIdColumn.ColumnType != DBxColumnType.Int)
-        throw new ArgumentException("Столбец должен быть целочисленным", "docIdColumn");
+        throw new ArgumentException(String.Format(Res.DBxVTReference_Arg_ColumnNoInt, docIdColumn.ColumnName), "docIdColumn");
       if (tableIdColumn.Nullable != docIdColumn.Nullable)
-        throw new ArgumentException("Признак Nullable у столбцов должен быть одинаковым");
+        throw new ArgumentException(Res.DBxVTReference_Arg_NullableDiff);
       if (!String.IsNullOrEmpty(tableIdColumn.MasterTableName))
-        throw new ArgumentException("Столбец не должен быть ссылочным", "tableIdColumn");
+        throw new ArgumentException(String.Format(Res.DBxVTReference_Arg_ColumnIsRef, tableIdColumn.ColumnName), "tableIdColumn");
       if (!String.IsNullOrEmpty(docIdColumn.MasterTableName))
-        throw new ArgumentException("Столбец не должен быть ссылочным", "docIdColumn");
+        throw new ArgumentException(String.Format(Res.DBxVTReference_Arg_ColumnIsRef, docIdColumn.ColumnName), "docIdColumn");
 
       _Table = table;
       _TableIdColumn = tableIdColumn;
@@ -98,20 +98,20 @@ namespace FreeLibSet.Data.Docs
     /// Таблица, в которой объявлена переменная ссылка
     /// </summary>
     public DBxTableStruct Table { get { return _Table; } }
-    private DBxTableStruct _Table;
+    private readonly DBxTableStruct _Table;
 
     /// <summary>
     /// Числовое поле, содержащее идентификатор таблицы
     /// </summary>
     public DBxColumnStruct TableIdColumn { get { return _TableIdColumn; } }
-    private DBxColumnStruct _TableIdColumn;
+    private readonly DBxColumnStruct _TableIdColumn;
 
     /// <summary>
     /// Числовое поле, содержащее идентификатор строки в таблице, на которую
     /// выполняется ссылка
     /// </summary>
     public DBxColumnStruct DocIdColumn { get { return _DocIdColumn; } }
-    private DBxColumnStruct _DocIdColumn;
+    private readonly DBxColumnStruct _DocIdColumn;
 
     [Serializable]
     private class MasterTableNameList : SingleScopeList<string>
@@ -130,7 +130,7 @@ namespace FreeLibSet.Data.Docs
     /// Если список таблиц пустой, то поля добавляются в базу данных, но их нельзя будет использовать. Они всегда будут содержать значения NULL.
     /// </summary>
     public IList<string> MasterTableNames { get { return _MasterTableNames; } }
-    private MasterTableNameList _MasterTableNames;
+    private readonly MasterTableNameList _MasterTableNames;
 
     /// <summary>
     /// Идентификаторы таблиц, на которые возможна ссылка, то есть список возможных
@@ -161,7 +161,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Реализация свойства Table.VTReferenceCollection
+  /// Реализация свойства <see cref="DBxDocTypeBase.VTRefs"/>
   /// </summary>
   [Serializable]
   public sealed class DBxVTReferenceList : NamedList<DBxVTReference>
@@ -181,7 +181,7 @@ namespace FreeLibSet.Data.Docs
     /// Описание документа или поддокумента, в котором располагается ссылка
     /// </summary>
     public DBxDocTypeBase Owner { get { return _Owner; } }
-    private DBxDocTypeBase _Owner;
+    private readonly DBxDocTypeBase _Owner;
 
     #endregion
 
@@ -208,7 +208,7 @@ namespace FreeLibSet.Data.Docs
     {
 #if DEBUG
       if (String.IsNullOrEmpty(vtName))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("vtName");
       Owner.CheckNotReadOnly();
 #endif
       DBxColumnStruct tableIdColumn = Owner.Struct.Columns.AddInt(tableIdColumnName); 
@@ -229,8 +229,8 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Простая структура, содержащая идентификатор таблицы документа и идентификатор документа
-  /// Удобно использовать в качестве поля ErrorMessageItem.Tag для перехода к ошибочному документу
+  /// Простая структура, содержащая идентификатор таблицы документа и идентификатор документа.
+  /// Удобно использовать в качестве свойства <see cref="ErrorMessageItem.Tag"/> для перехода к ошибочному документу.
   /// </summary>
   [Serializable]
   public struct DBxVTValue : IEquatable<DBxVTValue>

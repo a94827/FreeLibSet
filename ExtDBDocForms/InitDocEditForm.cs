@@ -250,7 +250,7 @@ namespace FreeLibSet.Forms.Docs
     public void CheckNotReadOnly()
     {
       if (IsReadOnly)
-        throw new ObjectReadOnlyException("Редактор находится в режиме просмотра данных");
+        throw new ObjectReadOnlyException(Res.Editor_Err_IsReadOnly);
     }
 
     #endregion
@@ -671,7 +671,7 @@ namespace FreeLibSet.Forms.Docs
 
           if (chain2.Contains(currIds[i]))
           {
-            args.SetError("Зацикливание дерева для документа: " + ControlProvider.DocTypeUI.GetTextValue(currIds[i]));
+            args.SetError(String.Format(Res.Editor_Err_DocTreeLoop, ControlProvider.DocTypeUI.GetTextValue(currIds[i])));
             return;
           }
         }

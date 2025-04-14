@@ -90,7 +90,7 @@ namespace FreeLibSet.Data.SQLite
           break;
 
         default:
-          throw new BugException("Неизвестный Mode=" + WriterInfo.Mode.ToString());
+          throw new BugException("Unknown Mode=" + WriterInfo.Mode.ToString());
       }
 
       _Command = new SQLiteCommand(buffer.SB.ToString());

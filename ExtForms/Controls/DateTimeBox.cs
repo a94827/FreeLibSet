@@ -10,6 +10,7 @@ using System.Globalization;
 using System.ComponentModel;
 using FreeLibSet.Formatting;
 using FreeLibSet.Forms;
+using FreeLibSet.Core;
 
 #pragma warning disable 1591
 
@@ -169,7 +170,7 @@ namespace FreeLibSet.Controls
       set
       {
         if (value < 0 || value > DateTime.MaxValue.Year)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, DateTime.MaxValue.Year);
         if (value == _DefaultYear)
           return;
         _DefaultYear = value;

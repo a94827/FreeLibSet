@@ -193,6 +193,16 @@ namespace FreeLibSet.Forms
       {
         form.WindowState = FormWindowState.Normal;
 
+//#if DEBUG
+//        if ((boundsparts & EFPFormBoundsPart.Location) != 0)
+//        {
+//          if (Bounds.Location.X < (-Screen.PrimaryScreen.Bounds.Width) ||
+//            Bounds.Location.Y < (-Screen.PrimaryScreen.Bounds.Height))
+//          {
+//          }
+//        }
+//#endif
+
         switch (form.FormBorderStyle)
         {
           case FormBorderStyle.Sizable:

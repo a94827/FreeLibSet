@@ -141,7 +141,7 @@ namespace FreeLibSet.Data
       {
         CheckNotReadOnly();
         if (value < 0L)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0L, null);
         _ExpectedRowCount = value;
       }
     }
@@ -165,7 +165,7 @@ namespace FreeLibSet.Data
       {
         CheckNotReadOnly();
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _TransactionPulseRowCount = value;
       }
     }
@@ -298,19 +298,11 @@ namespace FreeLibSet.Data
       _Values = new object[writerInfo.Columns.Count];
       _ColumnNameIndexer = new StringArrayIndexer(writerInfo.Columns.AsArray, false);
 
-      _TableStruct = con.GetTableStruct(writerInfo.TableName);
-#if DEBUG
-      if (_TableStruct == null)
-        throw new ArgumentException("Не найдена структура таблицы \"" + writerInfo.TableName + "\"", "writerInfo");
-#endif
+      _TableStruct = con.GetTableStructRequired(writerInfo.TableName);
 
       _ColumnDefs = new DBxColumnStruct[writerInfo.Columns.Count];
       for (int i = 0; i < writerInfo.Columns.Count; i++)
-      {
-        _ColumnDefs[i] = _TableStruct.Columns[writerInfo.Columns[i]];
-        if (_ColumnDefs[i] == null)
-          throw new ArgumentException("Не найден столбец \"" + writerInfo.Columns[i] + "\" в таблице \"" + writerInfo.TableName + "\"", "writerInfo");
-      }
+        _ColumnDefs[i] = _TableStruct.Columns.GetRequired(writerInfo.Columns[i]);
 
       if (writerInfo.SearchColumns == null)
       {
@@ -326,7 +318,10 @@ namespace FreeLibSet.Data
       {
         if (writerInfo.Columns.ContainsAny(_SearchColumns) &&
           (!writerInfo.Columns.Contains(_SearchColumns)))
-          throw new ArgumentException("Список всех столбцов не может содержать только часть столбцов составного ключа для поиска (" + _SearchColumns.ToString() + ") в таблице \"" + _TableStruct.TableName + "\"", "writerInfo");
+        {
+          throw new ArgumentException(String.Format(Res.DBxDataWriter_Arg_PartialSearchColumns,
+            _SearchColumns, _TableStruct.TableName), "writerInfo");
+        }
       }
       else // SearchColumns.IsEmpty
       {
@@ -334,7 +329,8 @@ namespace FreeLibSet.Data
         {
           case DBxDataWriterMode.Update:
           case DBxDataWriterMode.InsertOrUpdate:
-            throw new ArgumentException("Таблица \"" + writerInfo.TableName + "\" не содержит первичного ключа. Первичный ключ требуется для режима " + writerInfo.Mode.ToString(), "writerInfo");
+            throw new InvalidOperationException(String.Format(Res.DBxDataWriter_Err_NoPK,
+              writerInfo.TableName, writerInfo.Mode));
         }
       }
 
@@ -354,9 +350,11 @@ namespace FreeLibSet.Data
         case DBxDataWriterMode.Update:
         case DBxDataWriterMode.InsertOrUpdate:
           if (_SearchColumns.Count == 0)
-            throw new ArgumentException("В режиме " + writerInfo.Mode.ToString() + " должен быть задан список столбцов для поиска", "writerInfo");
+            throw new ArgumentException(String.Format(Res.DBxDataWriter_Arg_SearchColumnRequired, 
+              writerInfo.Mode), "writerInfo");
           if (_OtherColumns.Count == 0)
-            throw new ArgumentException("В режиме " + writerInfo.Mode.ToString() + " список столбцов должен включать в себя хотя бы один столбец, не являющийся столбцом для поиска в таблице \"" + _TableStruct.TableName + "\"", "writerInfo");
+            throw new ArgumentException(String.Format(Res.DBxDataWriter_Arg_OtherColumnRequired,
+              writerInfo.Mode, _TableStruct.TableName), "writerInfo");
           break;
       }
 
@@ -436,7 +434,7 @@ namespace FreeLibSet.Data
         if (value == null)
           throw new ArgumentNullException();
         if (value.Length != _Values.Length)
-          throw new ArgumentException("Неправильная длина массива");
+          throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Values.Length);
         _Values = value;
       }
     }
@@ -473,9 +471,9 @@ namespace FreeLibSet.Data
         return p;
 
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
       else
-        throw new ArgumentException("Неизвестное имя столбца \"" + columnName + "\"", "columnName");
+        throw ExceptionFactory.ArgUnknownValue("columnName", columnName, _WriterInfo.Columns.AsArray);
     }
 
     #endregion
@@ -990,8 +988,9 @@ namespace FreeLibSet.Data
 
     private Exception CreateColumnTypeException(int columnIndex, Type type)
     {
-      return new ArgumentException("Столбец \"" + _ColumnDefs[columnIndex] + "\" таблицы \"" + _TableStruct.TableName + "\" имеет тип " +
-        _ColumnDefs[columnIndex].ColumnType.ToString() + " и не может принимать значения типа " + type.ToString());
+      return new ArgumentException(String.Format(Res.DBxDataWriter_Arg_ColumnType,
+        _ColumnDefs[columnIndex], _TableStruct.TableName,
+        _ColumnDefs[columnIndex].ColumnType, type.ToString()));
     }
 
     #endregion
@@ -1094,7 +1093,6 @@ namespace FreeLibSet.Data
           _TransactionStarted = false;
         }
 
-
         _State = DBxDataWriterState.Finished;
       }
       catch
@@ -1116,7 +1114,8 @@ namespace FreeLibSet.Data
         case DBxDataWriterState.Writing:
           break;
         default:
-          throw new InvalidOperationException("DBxDataWriter находится в состоянии " + _State.ToString());
+          throw ExceptionFactory.ObjectProperty(this, "State", State, 
+            new object[] { DBxDataWriterState.Created , DBxDataWriterState.Writing });
       }
     }
 
@@ -1167,7 +1166,7 @@ namespace FreeLibSet.Data
       {
         columnIndices[i] = table.Columns.IndexOf(_WriterInfo.Columns[i]);
         if (columnIndices[i] < 0)
-          throw new ArgumentException("Таблица \"" + table.TableName + "\" не содержит столбца \"" + _WriterInfo.Columns[i] + "\"", "table");
+          throw ExceptionFactory.DataColumnNotFound(table, _WriterInfo.Columns[i]);
       }
 
       foreach (DataRow row in table.Rows)
@@ -1193,7 +1192,7 @@ namespace FreeLibSet.Data
       {
         columnIndices[i] = reader.GetOrdinal(_WriterInfo.Columns[i]);
         if (columnIndices[i] < 0)
-          throw new ArgumentException("Источник данных не содержит столбца \"" + _WriterInfo.Columns[i] + "\"", "reader");
+          throw ExceptionFactory.DataReaderColumnNotFound(reader, _WriterInfo.Columns[i]);
       }
 
       while (reader.Read())

@@ -132,7 +132,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _PageCount = value;
         CommandItems.InitEnabled();
       }

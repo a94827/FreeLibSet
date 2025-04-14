@@ -1,6 +1,7 @@
 ﻿// Part of FreeLibSet.
 // See copyright notices in "license" file in the FreeLibSet root directory.
 
+using FreeLibSet.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace FreeLibSet.Data.Docs
   #region Перечисление DBxDocTypeRefType
 
   /// <summary>
-  /// Тип ссылки между документами (свойство DBxDocTypeRefInfo.RefType)
+  /// Тип ссылки между документами (свойство <see cref="DBxDocTypeRefInfo.RefType"/>)
   /// </summary>
   public enum DBxDocTypeRefType
   {
@@ -20,7 +21,7 @@ namespace FreeLibSet.Data.Docs
     Column,
 
     /// <summary>
-    /// Переменная ссылка VTReference
+    /// Переменная ссылка <see cref="FreeLibSet.Data.Docs.DBxVTReference"/>
     /// </summary>
     VTRefernce
   }
@@ -42,7 +43,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Поддокумент, в котором есть ссылочное поле. Если ссылочное поле находится в основном документе, то
-    /// свойство содержит null
+    /// свойство содержит null.
     /// </summary>
     public DBxSubDocType FromSubDocType { get { return _FromSubDocType; } internal set { _FromSubDocType = value; } }
     private DBxSubDocType _FromSubDocType;
@@ -55,7 +56,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Поддокумент, на который идет ссылка.
-    /// Если ссылка идет на основной документ, то свойство содержит null
+    /// Если ссылка идет на основной документ, то свойство содержит null.
     /// </summary>
     public DBxSubDocType ToSubDocType { get { return _ToSubDocType; } internal set { _ToSubDocType = value; } }
     private DBxSubDocType _ToSubDocType;
@@ -75,15 +76,15 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Ссылочное поле в FromDocType или FromSubDocType.
-    /// Свойство используется если RefType=Column
+    /// Ссылочное поле в <see cref="FromDocType"/> или <see cref="FromSubDocType"/>.
+    /// Свойство используется если <see cref="RefType"/>=<see cref="DBxDocTypeRefType.Column"/>.
     /// </summary>
     public DBxColumnStruct FromColumn { get { return _FromColumn; } internal set { _FromColumn = value; } }
     private DBxColumnStruct _FromColumn;
 
     /// <summary>
-    /// Переменная ссылка в FromDocType или FromSubDocType.
-    /// Свойство используется если RefType=VTReference
+    /// Переменная ссылка в <see cref="FromDocType"/> или <see cref="FromSubDocType"/>.
+    /// Свойство используется если <see cref="RefType"/>=<see cref="DBxDocTypeRefType.VTRefernce"/>.
     /// </summary>
     public DBxVTReference FromVTReference { get { return _FromVTReference; } internal set { _FromVTReference = value; } }
     private DBxVTReference _FromVTReference;
@@ -93,12 +94,12 @@ namespace FreeLibSet.Data.Docs
     #region Вспомогательные свойства
 
     /// <summary>
-    /// Возвращает свойство ToDocType или ToSubDocType
+    /// Возвращает свойство <see cref="ToDocType"/> или <see cref="ToSubDocType"/>
     /// </summary>
     public DBxDocTypeBase ToDocTypeBase { get { return ToSubDocType == null ? (DBxDocTypeBase)ToDocType : (DBxDocTypeBase)ToSubDocType; } }
 
     /// <summary>
-    /// Возвращает свойство FromDocType или FromSubDocType
+    /// Возвращает свойство <see cref="FromDocType"/> или <see cref="FromSubDocType"/>
     /// </summary>
     public DBxDocTypeBase FromDocTypeBase { get { return FromSubDocType == null ? (DBxDocTypeBase)FromDocType : (DBxDocTypeBase)FromSubDocType; } }
 
@@ -142,21 +143,18 @@ namespace FreeLibSet.Data.Docs
     internal static DBxDocTypeRefInfo[] GetToDocTypeRefs(DBxDocTypes docTypes, string docTypeName)
     {
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
-      DBxDocType ToDocType = docTypes[docTypeName];
-      if (ToDocType == null)
-        throw new ArgumentException("Неизвестный вид документа: \"" + docTypeName + "\"", "docTypeName");
-
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
+      DBxDocType toDocType = docTypes.GetRequired(docTypeName);
 
       List<DBxDocTypeRefInfo> lst = new List<DBxDocTypeRefInfo>();
       for (int i = 0; i < docTypes.Count; i++)
       {
         DBxDocType fromDocType = docTypes[i];
         // Ищем ссылки из основного документа
-        GetToDocTypeRefs2(lst, ToDocType, fromDocType, fromDocType);
+        GetToDocTypeRefs2(lst, toDocType, fromDocType, fromDocType);
         // Ищем ссылки из поддокументов
         for (int j = 0; j < fromDocType.SubDocs.Count; j++)
-          GetToDocTypeRefs2(lst, ToDocType, fromDocType, fromDocType.SubDocs[j]);
+          GetToDocTypeRefs2(lst, toDocType, fromDocType, fromDocType.SubDocs[j]);
       }
 
       return lst.ToArray();
@@ -176,14 +174,14 @@ namespace FreeLibSet.Data.Docs
         DBxVTReference vtr = fromDTB.VTRefs[i];
         if (vtr.MasterTableNames.Contains(toDocType.Name))
         {
-          DBxDocTypeRefInfo Info = new DBxDocTypeRefInfo();
-          Info.FromDocType = fromDocType;
+          DBxDocTypeRefInfo refInfo = new DBxDocTypeRefInfo();
+          refInfo.FromDocType = fromDocType;
           if (fromDTB.IsSubDoc)
-            Info.FromSubDocType = (DBxSubDocType)fromDTB;
+            refInfo.FromSubDocType = (DBxSubDocType)fromDTB;
 
-          Info.ToDocType = toDocType;
-          Info.FromVTReference = vtr;
-          lst.Add(Info);
+          refInfo.ToDocType = toDocType;
+          refInfo.FromVTReference = vtr;
+          lst.Add(refInfo);
         }
         // VTReference на поддокументы не бывает
       }
@@ -193,19 +191,19 @@ namespace FreeLibSet.Data.Docs
     {
       for (int i = 0; i < fromDTB.Struct.Columns.Count; i++)
       {
-        DBxColumnStruct ColDef = fromDTB.Struct.Columns[i];
-        if (ColDef.MasterTableName == toDTB.Name)
+        DBxColumnStruct colDef = fromDTB.Struct.Columns[i];
+        if (colDef.MasterTableName == toDTB.Name)
         {
-          DBxDocTypeRefInfo Info = new DBxDocTypeRefInfo();
-          Info.FromDocType = fromDocType;
+          DBxDocTypeRefInfo refInfo = new DBxDocTypeRefInfo();
+          refInfo.FromDocType = fromDocType;
           if (fromDTB.IsSubDoc)
-            Info.FromSubDocType = (DBxSubDocType)fromDTB;
+            refInfo.FromSubDocType = (DBxSubDocType)fromDTB;
 
-          Info.ToDocType = toDocType;
+          refInfo.ToDocType = toDocType;
           if (toDTB.IsSubDoc)
-            Info.ToSubDocType = (DBxSubDocType)toDTB;
-          Info.FromColumn = ColDef;
-          lst.Add(Info);
+            refInfo.ToSubDocType = (DBxSubDocType)toDTB;
+          refInfo.FromColumn = colDef;
+          lst.Add(refInfo);
         }
       }
     }

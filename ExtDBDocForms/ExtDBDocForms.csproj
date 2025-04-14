@@ -44,12 +44,6 @@
     <Compile Include="DocProviderUI.cs" />
     <Compile Include="DocTypeUI.cs" />
     <Compile Include="EFPAllSubDocComboBox.cs" />
-    <Compile Include="EFPDataViewCopyFormatsForm - Copy.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EFPDataViewCopyFormatsForm - Copy.Designer.cs">
-      <DependentUpon>EFPDataViewCopyFormatsForm - Copy.cs</DependentUpon>
-    </Compile>
     <Compile Include="ExtValueControl3.cs" />
     <Compile Include="GroupGridFilterForm.cs">
       <SubType>Form</SubType>
@@ -62,6 +56,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MainImagesResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Res.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Res.resx</DependentUpon>
     </Compile>
     <Compile Include="SubDocTableViewForm.cs">
       <SubType>Form</SubType>
@@ -103,7 +102,6 @@
     <Compile Include="EFPSubDocTreeView.cs" />
     <Compile Include="DBxPasteFormats.cs" />
     <Compile Include="ColumnUI.cs" />
-    <Compile Include="DocEditPage.cs" />
     <Compile Include="RefDocGridFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,11 +162,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="EFPDataViewCopyFormatsForm - Copy.resx">
-      <DependentUpon>EFPDataViewCopyFormatsForm - Copy.cs</DependentUpon>
+    <EmbeddedResource Include="DocInfoForm.ru.resx">
+      <DependentUpon>DocInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocTableViewForm.ru.resx">
+      <DependentUpon>DocTableViewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocTypeUserPermissionUI.ru.resx">
+      <DependentUpon>DocTypeUserPermissionUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditGroupDoc.ru.resx">
+      <DependentUpon>EditGroupDoc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPDBxTextSearchForm.ru.resx">
+      <DependentUpon>EFPDBxTextSearchForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GroupGridFilterForm.resx">
       <SubType>Designer</SubType>
+      <DependentUpon>GroupGridFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GroupGridFilterForm.ru.resx">
       <DependentUpon>GroupGridFilterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainImagesResource.resx">
@@ -176,6 +189,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MainImagesResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="RefDocGridFilterForm.ru.resx">
+      <DependentUpon>RefDocGridFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Res.ru.resx" />
     <EmbeddedResource Include="SubDocTableViewForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SubDocTableViewForm.cs</DependentUpon>
@@ -207,6 +228,9 @@
     <EmbeddedResource Include="UserActionsReportParamsForm.resx">
       <DependentUpon>UserActionsReportParamsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserActionsReportParamsForm.ru.resx">
+      <DependentUpon>UserActionsReportParamsForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

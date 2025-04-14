@@ -1,9 +1,13 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using FreeLibSet.Core;
 using FreeLibSet.Reporting;
+using System.Text.RegularExpressions;
 
 namespace FreeLibSet.Reporting
 {
@@ -60,13 +64,10 @@ namespace FreeLibSet.Reporting
       sb.Append("|");
       sb.Append(sel.CellStyle.ForeColor.ToString());
       sb.Append("|");
-      sb.Append(sel.CellStyle.Bold);
-      sb.Append("|");
-      sb.Append(sel.CellStyle.Italic);
-      sb.Append("|");
-      sb.Append(sel.CellStyle.Underline);
-      sb.Append("|");
-      sb.Append(sel.CellStyle.Strikeout);
+      sb.Append(sel.CellStyle.Bold?'1':'0');
+      sb.Append(sel.CellStyle.Italic ? '1' : '0');
+      sb.Append(sel.CellStyle.Underline ? '1' : '0');
+      sb.Append(sel.CellStyle.Strikeout ? '1' : '0');
       sb.Append("|");
 
       sb.Append(sel.CellStyle.TextFiller);
@@ -74,16 +75,23 @@ namespace FreeLibSet.Reporting
 
       sb.Append(sel.CellStyle.LeftBorder.Style.ToString());
       sb.Append(sel.CellStyle.LeftBorder.Color.ToString());
+      sb.Append("|");
       sb.Append(sel.CellStyle.TopBorder.Style.ToString());
       sb.Append(sel.CellStyle.TopBorder.Color.ToString());
+      sb.Append("|");
       sb.Append(sel.CellStyle.RightBorder.Style.ToString());
       sb.Append(sel.CellStyle.RightBorder.Color.ToString());
+      sb.Append("|");
       sb.Append(sel.CellStyle.BottomBorder.Style.ToString());
       sb.Append(sel.CellStyle.BottomBorder.Color.ToString());
+      sb.Append("|");
       sb.Append(sel.CellStyle.DiagonalUp.Style.ToString());
       sb.Append(sel.CellStyle.DiagonalUp.Color.ToString());
+      sb.Append("|");
       sb.Append(sel.CellStyle.DiagonalDown.Style.ToString());
       sb.Append(sel.CellStyle.DiagonalDown.Color.ToString());
+      sb.Append("|");
+      sb.Append(sel.HasLink ? '1' : '0');
     }
 
     #endregion
@@ -329,15 +337,51 @@ namespace FreeLibSet.Reporting
     /// Возвращает величину отступа, соответствующую <see cref="BRCellStyle.IndentLevel"/>, в единицах 0.1мм
     /// </summary>
     /// <param name="cellStyle"></param>
-    /// <param name="_Measurer"></param>
+    /// <param name="measurer"></param>
     /// <returns></returns>
-    public static int GetIndentWidth(BRCellStyle cellStyle, IBRMeasurer _Measurer)
+    public static int GetIndentWidth(BRCellStyle cellStyle, IBRMeasurer measurer)
     {
       if (cellStyle.IndentLevel == 0)
         return 0;
       int w, h;
-      _Measurer.MeasureString("0", cellStyle, out w, out h);
+      measurer.MeasureString("0", cellStyle, out w, out h);
       return w * cellStyle.IndentLevel;
+    }
+
+    #endregion
+
+    #region Цвета
+
+    /// <summary>
+    /// Цвет для обычной гиперссылок
+    /// </summary>
+    public static readonly BRColor LinkForeColor = new BRColor(0x05, 0x63, 0xC1); // взято из MS Office 2003
+
+    /// <summary>
+    /// Цвет для посещенной гиперссылки
+    /// </summary>
+    public static readonly BRColor VisitedLinkForeColor = new BRColor(0x95, 0x4F, 0x72); // взято из MS Office 2003
+
+    #endregion
+
+    #region Закладки
+
+    /// <summary>
+    /// Возвращает исправленное имя закладки для Excel/Calc.
+    /// Если <see cref="BRBookmark.Name"/> задает имя закладки, которое может быть спутано с адресом ячейки, 
+    /// например, "A1", то к имени добавляется префикс.
+    /// </summary>
+    /// <param name="name">Имя закладки <see cref="BRBookmark.Name"/></param>
+    /// <returns>Исправленное имя</returns>
+    public static string GetExcelBookmarkName(string name)
+    {
+      if (String.IsNullOrEmpty(name))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
+
+      if (Regex.IsMatch(name, "^[A-Za-z]+[0-9]+$"))
+        return "BM__" + name;
+      else
+        return name;
     }
 
     #endregion

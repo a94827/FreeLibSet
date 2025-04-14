@@ -483,7 +483,7 @@
   <data name="Common_Arg_AreSame" xml:space="preserve">
     <value>Аргументы '{0}' и '{1}' не могут совпадать</value>
   </data>
-  <data name="Common_Arg_BadChar" xml:space="preserve">
+  <data name="UITools_Err_InvalidChar" xml:space="preserve">
     <value>Строка '{0}' содержит недопустимый символ '{1}' в позиции {2}</value>
   </data>
   <data name="Common_Arg_DataTablePrimaryKeyWrongType" xml:space="preserve">
@@ -1475,5 +1475,77 @@
   </data>
   <data name="ZipFileTools_Err_ArcIsEmpty" xml:space="preserve">
     <value>Архив не содержит файлов</value>
+  </data>
+  <data name="UITools_Msg_ListIsEmpty" xml:space="preserve">
+    <value>[ Пустой список ]</value>
+  </data>
+  <data name="CommandLineParser_Arg_AddOptionWithValues" xml:space="preserve">
+    <value>Для режима ValueMode=None используйте перегрузку без списка значений</value>
+  </data>
+  <data name="CommandLineParser_Arg_BadActionFormat" xml:space="preserve">
+    <value>Неправильный описатель действия {0}</value>
+  </data>
+  <data name="CommandLineParser_Arg_BadOptionFormat" xml:space="preserve">
+    <value>Неправильный описатель опции {0}</value>
+  </data>
+  <data name="CommandLineParser_Err_ActionDisabled" xml:space="preserve">
+    <value>Действие заблокировано</value>
+  </data>
+  <data name="CommandLineParser_Err_ActionModeNone" xml:space="preserve">
+    <value>Свойство ActionMode должно быть установлено, если заданы описания действий в ActionDefs</value>
+  </data>
+  <data name="CommandLineParser_Err_CommonArgsErrorMessage" xml:space="preserve">
+    <value>Аргументы командной строки, кроме опций, не допускаются</value>
+  </data>
+  <data name="CommandLineParser_Err_MisplacedOption" xml:space="preserve">
+    <value>Недопустимое вхождение опции '{0}'. {1}</value>
+  </data>
+  <data name="CommandLineParser_Err_NoValueAfterEq" xml:space="preserve">
+    <value>После знака '=' не задано значение опции '{0}'</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionDisabled" xml:space="preserve">
+    <value>Опция заблокирована</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionTwice" xml:space="preserve">
+    <value>Для опции '{0}' может быть задано только одно вхождение в командной строке</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionUnknownValue" xml:space="preserve">
+    <value>Недопустимое значение {0} для опции {1}. Допустимые значения: {2}</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionValueRequired" xml:space="preserve">
+    <value>Для опции '{0}' не задано обязательное значение</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionValueUnwanted" xml:space="preserve">
+    <value>Опция '{0}' не предусматривает задания значения</value>
+  </data>
+  <data name="CommandLineParser_Err_UnknownAction" xml:space="preserve">
+    <value>Неизвестное действие '{0}'</value>
+  </data>
+  <data name="CommandLineParser_Err_UnknownOption" xml:space="preserve">
+    <value>Неизвестная опция '{0}'</value>
+  </data>
+  <data name="Common_Err_ObjectMethodNotCalled" xml:space="preserve">
+    <value>Метод {0} объекта {1} не вызывался</value>
+  </data>
+  <data name="Common_Err_DataColumnNotFound" xml:space="preserve">
+    <value>Таблица '{0}' не содержит столбца с именем '{1}'</value>
+  </data>
+  <data name="Common_Err_DataReaderColumnNotFound" xml:space="preserve">
+    <value>Источник данных не содержит столбца с именем '{0}'</value>
+  </data>
+  <data name="String2" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Common_Err_ConstructorAlreadyCalled" xml:space="preserve">
+    <value>Уже выполнялось создание объектов типа '{0}'</value>
+  </data>
+  <data name="BRBookmark_Err_NameIsEmpty" xml:space="preserve">
+    <value>Имя закладки не задано</value>
+  </data>
+  <data name="BRBookmark_Err_NameIsInvalid" xml:space="preserve">
+    <value>Неправильное имя закладки '{0}'. Имя может содержать латинские буквы, цифры и знак подчеркивания и должно начинаться с буквы.</value>
+  </data>
+  <data name="BRBookmark_Err_NameUnderscore" xml:space="preserve">
+    <value>Неправильное имя закладки '{0}'. Имя не должно зваканчиваться подчеркиванием или содержать два символа подчеркивания подряд.</value>
   </data>
 </root>

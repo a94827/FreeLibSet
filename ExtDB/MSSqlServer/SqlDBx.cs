@@ -84,8 +84,8 @@ namespace FreeLibSet.Data.SqlClient
       {
         AbsPath path = new AbsPath(connectionStringBuilder.AttachDBFilename);
         if (path.Extension.ToUpperInvariant() != ".MDF")
-          throw new ArgumentException("Неправильное значение SqlConnectionStringBuilder.AttachDBFilename=\"" + connectionStringBuilder.AttachDBFilename + "\". " +
-            "У файла должно быть расширение \".mdf\", иначе работа с базой данных невозможна", "connectionStringBuilder");
+          throw new ArgumentException(String.Format(Res.SqlDBx_Arg_FileExtension,
+            connectionStringBuilder.AttachDBFilename), "connectionStringBuilder");
       }
 
       _SyncRoot = new object();
@@ -116,7 +116,7 @@ namespace FreeLibSet.Data.SqlClient
       else if (!String.IsNullOrEmpty(connectionStringBuilder.AttachDBFilename))
         return connectionStringBuilder.AttachDBFilename;
       else
-        throw new ArgumentException("В строке подключения не заданы параметры InitialCatalog или AttachDBFilename, определяющие базу данных");
+        throw new ArgumentException(Res.SqlDBx_Arg_NoDBName);
     }
 
     #endregion
@@ -166,7 +166,7 @@ namespace FreeLibSet.Data.SqlClient
         if (_ServerVersion == null)
         {
           if (MainEntry == null)
-            throw new InvalidOperationException("Основная точка подключения еще не была инициализирована");
+            throw new InvalidOperationException(Res.DBx_Err_NoMainEntry);
           using (SqlDBxCon con = new SqlDBxCon(MainEntry, true))
           {
             _ServerVersionText = DataTools.GetString(con.SQLExecuteScalar("SELECT @@VERSION"));
@@ -556,7 +556,7 @@ namespace FreeLibSet.Data.SqlClient
     {
       if (String.IsNullOrEmpty(tableName))
       {
-        errorText = "Имя таблицы не задано";
+        errorText = Res.DBx_Err_NoTableName;
         return false;
       }
 
@@ -693,7 +693,7 @@ namespace FreeLibSet.Data.SqlClient
       }
       catch (Exception e)
       {
-        return "Ошибка получения строки подключения. " + e.Message;
+        return String.Format(Res.DBx_Err_GetConnectionString, e.Message);
       }
     }
 
@@ -999,7 +999,7 @@ namespace FreeLibSet.Data.SqlClient
       DBxColumnType[] columnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
 
       if (columnNames.Count != values.Length)
-        throw new ArgumentException("Число полей не совпадает с числом значений");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values, columnNames.Count);
 
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
@@ -1019,7 +1019,7 @@ namespace FreeLibSet.Data.SqlClient
       id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
 
       if (id <= 0)
-        throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + tableName + "\" Id=" + id.ToString());
+        throw new BugException("Wrong identifier has been returned when record added to the table \"" + tableName + "\" Id=" + id.ToString());
 
       return id;
     }
@@ -1041,7 +1041,7 @@ namespace FreeLibSet.Data.SqlClient
       //CheckTableLocked(TableName);
 
       if (columnNames.Count != values.Length)
-        throw new ArgumentException("Число полей не совпадает с числом значений", "values");
+        throw ExceptionFactory.ArgWrongCollectionCount("values", values, columnNames.Count);
 
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
@@ -1265,11 +1265,13 @@ namespace FreeLibSet.Data.SqlClient
     /// <returns>Структура</returns>
     internal protected override DBxTableStruct GetRealTableStructFromSchema(string tableName)
     {
-      DBxTableStruct TableStr = new DBxTableStruct(tableName);
+      DBxTableStruct tableStr = new DBxTableStruct(tableName);
 
       #region Список столбцов, тип, MaxLen, Nullable
 
       DataTable table = Connection.GetSchema("Columns", new string[] { DB.DatabaseName, "dbo", tableName });
+      if (table.Rows.Count == 0)
+        throw new InvalidOperationException(String.Format(Res.DBxCon_Err_SchemaColumnListIsEmpty, tableName));
       table.DefaultView.Sort = "ordinal_position"; // обязательно по порядку, иначе ключевое поле будет не первым
 
       foreach (DataRowView drv in table.DefaultView)
@@ -1403,7 +1405,7 @@ namespace FreeLibSet.Data.SqlClient
           }
         }
 
-        TableStr.Columns.Add(colDef);
+        tableStr.Columns.Add(colDef);
       }
 
       #endregion
@@ -1412,7 +1414,7 @@ namespace FreeLibSet.Data.SqlClient
 
       int tableObjId = GetTableObjId(tableName);
       if (tableObjId == 0)
-        throw new BugException("Не удалось получить идентификатор object_id таблицы \"" + tableName + "\"");
+        throw new BugException("Object_id for table \"" + tableName + "\" has not been taken");
 
       Buffer.Clear();
       Buffer.SB.Append("SELECT [name],[object_id],[referenced_object_id],[delete_referential_action] FROM sys.foreign_keys WHERE parent_object_id=");
@@ -1429,9 +1431,9 @@ namespace FreeLibSet.Data.SqlClient
         // TODO: Нужно сделать метод SQLExecuteScalarSingle(), который будет работать как ExecuteScalar(), но с проверкой количества данных в DataReader'е
         DataTable tbl2 = SQLExecuteDataTable(Buffer.SB.ToString(), "sys.foreign_key_columns");
         if (tbl2.Rows.Count == 0)
-          throw new BugException("Не найдено ни одного столбца для ограничения с constraint_object_id=" + fkObjId.ToString());
+          throw new BugException("No column found for a foreign key with constraint_object_id=" + fkObjId.ToString());
         if (tbl2.Rows.Count > 1)
-          throw new BugException("Ограничение с constraint_object_id=" + fkObjId.ToString() + " содержит несколько столбцов (" + tbl2.Rows.Count.ToString() + ")");
+          throw new BugException("Foreign key with constraint_object_id=" + fkObjId.ToString() + " has more than one column (" + tbl2.Rows.Count.ToString() + ")");
         int ParentColumnId = DataTools.GetInt(tbl2.Rows[0], "parent_column_id");
 
         Buffer.Clear();
@@ -1441,16 +1443,16 @@ namespace FreeLibSet.Data.SqlClient
         Buffer.FormatValue(ParentColumnId, DBxColumnType.Int);
         string parentColumnName = DataTools.GetString(SQLExecuteScalar(Buffer.SB.ToString()));
         if (String.IsNullOrEmpty(parentColumnName))
-          throw new BugException("Не удалось определить имя ссылочного поля");
+          throw new BugException("Cannot define the reference column name");
 
         Buffer.Clear();
         Buffer.SB.Append("SELECT [name] FROM sys.tables WHERE object_id=");
         Buffer.FormatValue(refTableObjId, DBxColumnType.Int);
         string RefTableName = DataTools.GetString(SQLExecuteScalar(Buffer.SB.ToString()));
         if (String.IsNullOrEmpty(RefTableName))
-          throw new BugException("Не удалось определить имя ссылочной таблицы для RefTableId=" + refTableObjId.ToString());
+          throw new BugException("Cannot define the reference table name for RefTableId=" + refTableObjId.ToString());
 
-        DBxColumnStruct colDef = TableStr.Columns[parentColumnName];
+        DBxColumnStruct colDef = tableStr.Columns[parentColumnName];
         colDef.MasterTableName = RefTableName;
 
         int refTypeCode = DataTools.GetInt(row, "delete_referential_action");
@@ -1465,8 +1467,8 @@ namespace FreeLibSet.Data.SqlClient
 
       #endregion
 
-      TableStr.SetReadOnly();
-      return TableStr;
+      tableStr.SetReadOnly();
+      return tableStr;
     }
 
     private int GetTableObjId(string tableName)
@@ -1572,9 +1574,9 @@ namespace FreeLibSet.Data.SqlClient
         {
           #region Требуется полное создание таблицы
 
-          splash.PhaseText = "Создается таблица \"" + table.TableName + "\"";
+          splash.PhaseText = DBxUITools.PhaseText.TableCreation(table);
           CreateTable(table, table.TableName, false);
-          errors.AddInfo("Создана таблица \"" + table.TableName + "\"");
+          errors.AddInfo(DBxUITools.UpdateMsg.TableCreated(table));
           modified = true;
 
           #endregion
@@ -1592,11 +1594,11 @@ namespace FreeLibSet.Data.SqlClient
 
           foreach (DBxColumnStruct colDef in table.Columns)
           {
-            int ColumnRowIndex = dvColumns.Find(new object[] { table.TableName, colDef.ColumnName });
-            if (ColumnRowIndex < 0)
+            int columnRowIndex = dvColumns.Find(new object[] { table.TableName, colDef.ColumnName });
+            if (columnRowIndex < 0)
             {
               // Поля не существует
-              splash.PhaseText = "Добавление поля \"" + colDef.ColumnName + "\"в таблицу \"" + table.TableName + "\"";
+              splash.PhaseText = DBxUITools.PhaseText.ColumnCreation(table, colDef);
               Buffer.Clear();
               Buffer.SB.Append("ALTER TABLE [");
               Buffer.SB.Append(table.TableName);
@@ -1604,13 +1606,13 @@ namespace FreeLibSet.Data.SqlClient
               AppendColumnDef(/*Table, */colDef, true);
 
               SQLExecuteNonQuery(Buffer.SB.ToString());
-              errors.AddInfo("Создано поле \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName + "\"");
+              errors.AddInfo(DBxUITools.UpdateMsg.ColumnCreated(table, colDef));
               modified = true;
             }
             else
             {
               // Проверяем соответствие поля
-              DataRow columnRow = dvColumns[ColumnRowIndex].Row;
+              DataRow columnRow = dvColumns[columnRowIndex].Row;
               // Проверяем соответствие типа столбца объявлению
               string realType = DataTools.GetString(columnRow, "DATA_TYPE").ToUpperInvariant();
               buffer2.Clear();
@@ -1622,10 +1624,7 @@ namespace FreeLibSet.Data.SqlClient
 
               if (realType != wantedType)
               {
-                errors.AddError("Несоответствие типа поля \"" + colDef.ColumnName + "\" таблицы \"" +
-                    table.TableName + "\". Объявление поля типа " + colDef.ColumnType.ToString() +
-                    " предполагает тип  " + wantedType +
-                    " в то время как реальный тип поля " + realType);
+                errors.AddError(DBxUITools.UpdateMsg.ColumnTypeDiff(table, colDef, wantedType, realType));
 
                 // TODO: И что с этим делать?
               }
@@ -1641,23 +1640,20 @@ namespace FreeLibSet.Data.SqlClient
                   if (realLen > colDef.MaxLength)
                   {
                     // !!! Проверка, нельзя ли укоротить поле
-                    errors.AddWarning("Поле \"" + colDef.ColumnName + "\" таблицы \"" +
-                        table.TableName + "\" должно иметь длину " + colDef.MaxLength.ToString() +
-                        " символов, в то время, как реальное поле длиннее:  " + realLen.ToString() + " символов");
+                    errors.AddWarning(DBxUITools.UpdateMsg.ColumnIsLonger(table, colDef, realLen));
                     //DisallowFieldChange = true;
                   }
                   else
                   {
                     // Лучше пересоздать все индексы
-                    errors.AddInfo("Все существующие индексы таблицы \"" + table.TableName + "\" будут удалены из-за изменения размера поля \"" + colDef.ColumnName + "\"");
-                    if (DeleteAllIndices(table.TableName, splash, errors))
+                    errors.AddInfo(DBxUITools.UpdateMsg.DeleteAllIndexesByColumnLength(table, colDef));
+                    if (DeleteAllIndices(table, splash, errors))
                       modified = true;
 
                     // Увеличиваем длину поля
-                    splash.PhaseText = "Изменение длины поля \"" + colDef.ColumnName + "\" в таблице \"" + table.TableName + "\"";
+                    splash.PhaseText = DBxUITools.PhaseText.ColumnLengthChanging(table, colDef);
                     AlterColumn(table, colDef);
-                    errors.AddInfo("Длина поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" увеличена с " + realLen.ToString() + " до " + colDef.MaxLength.ToString() + " символов");
+                    errors.AddInfo(DBxUITools.UpdateMsg.ColumnLengthChanged(table, colDef, realLen));
                     modified = true;
                   }
                 }
@@ -1676,12 +1672,12 @@ namespace FreeLibSet.Data.SqlClient
                 buffer2.FormatExpression(colDef.DefaultExpression, new DBxFormatExpressionInfo());
                 wantedDefExpr = buffer2.SB.ToString();
               }
-              string RealDefExpr = DataTools.GetString(columnRow, "COLUMN_DEFAULT");
+              string realDefExpr = DataTools.GetString(columnRow, "COLUMN_DEFAULT");
 
-              if (RealDefExpr != wantedDefExpr)
+              if (realDefExpr != wantedDefExpr)
               {
                 // Вседа сначала убираем старое правило, потом добавляем новое
-                if (RealDefExpr.Length > 0)
+                if (realDefExpr.Length > 0)
                 {
                   Buffer.Clear();
                   //Buffer.SB.Append("ALTER TABLE ");
@@ -1707,8 +1703,7 @@ namespace FreeLibSet.Data.SqlClient
                   Buffer.SB.Append(@" DROP CONSTRAINT ' + @ObjectName)");
 
                   SQLExecuteNonQuery(Buffer.SB.ToString());
-                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                      "\" очищен признак DEFAULT");
+                  errors.AddInfo(DBxUITools.UpdateMsg.ColumnDefaultSet(table, colDef, null));
                 }
                 if (wantedDefExpr.Length > 0)
                 {
@@ -1721,8 +1716,7 @@ namespace FreeLibSet.Data.SqlClient
                   Buffer.FormatColumnName(colDef.ColumnName);
                   SQLExecuteNonQuery(Buffer.SB.ToString());
 
-                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                    "\" установлен признак DEFAULT " + wantedDefExpr);
+                  errors.AddInfo(DBxUITools.UpdateMsg.ColumnDefaultSet(table, colDef, wantedDefExpr));
                 }
                 modified = true;
               }
@@ -1754,7 +1748,7 @@ namespace FreeLibSet.Data.SqlClient
 
               if (colDef.Nullable != realNullable)
               {
-                if (DeleteAllIndices(table.TableName, splash, errors))
+                if (DeleteAllIndices(table, splash, errors))
                   modified = true;
 
                 #region Замена NULL'ов на DEFAULT
@@ -1774,8 +1768,7 @@ namespace FreeLibSet.Data.SqlClient
                   Buffer.FormatColumnName(colDef.ColumnName);
                   Buffer.SB.Append(" IS NULL");
                   SQLExecuteNonQuery(Buffer.SB.ToString());
-                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                    "\" значения NULL заменены на значение по умолчанию");
+                  errors.AddInfo(DBxUITools.UpdateMsg.NullToDefaultValue(table, colDef));
                 }
 
                 #endregion
@@ -1783,8 +1776,7 @@ namespace FreeLibSet.Data.SqlClient
                 // Делаем поле NULLABLE
                 AlterColumn(table, colDef);
                 if (colDef.Nullable != realNullable)
-                  errors.AddInfo("Для поля \"" + colDef.ColumnName + "\"в таблице \"" + table.TableName +
-                    "\" установлен признак " + (colDef.Nullable ? "\"NULL\"" : "\"NOT NULL\""));
+                  errors.AddInfo(DBxUITools.UpdateMsg.NullChanged(table, colDef));
                 modified = true;
               }
 
@@ -1914,7 +1906,7 @@ namespace FreeLibSet.Data.SqlClient
 
       if (options.ForeignKeys)
       {
-        splash.PhaseText = "Проверка внешних ключей";
+        splash.PhaseText = DBxUITools.PhaseText.FKVerification();
         foreach (DBxTableStruct table in DB.Struct.Tables)
         {
           if (UpdateForeignKeys(table, dvForeignKeys, splash, errors))
@@ -1978,7 +1970,7 @@ namespace FreeLibSet.Data.SqlClient
             }
             break;
           default:
-            throw new NotImplementedException("Не реализованы таблицы с составным первичным ключом");
+            throw new NotImplementedException("Multi-column primary keys are not implemented");
         }
       }
       Buffer.SB.Append(")");
@@ -2031,7 +2023,7 @@ namespace FreeLibSet.Data.SqlClient
     private bool CorrectPrimaryKey(DBxTableStruct table, DataView dvIndexColumns, ErrorMessageList errors)
     {
       if (table.PrimaryKey.Count > 1)
-        throw new NotSupportedException("Составные первичные ключи не поддерживаются");
+        throw new NotImplementedException("Multi-column primary keys are not implemented");
 
       if (table.PrimaryKey.Count == 0)
         return false; // TODO: пока не сделано до конца (28.04.2020)
@@ -2052,7 +2044,7 @@ namespace FreeLibSet.Data.SqlClient
           if (indexName.StartsWith("Index", StringComparison.Ordinal))
             continue; // составной пользовательский индекс, в который входит поле "Id"
           SQLExecuteNonQuery("ALTER TABLE [" + table.TableName + "] DROP CONSTRAINT [" + indexName + "]");
-          errors.AddInfo("Удалено неправильное ограничение первичного ключа \"" + indexName + "\" в таблице \"" + table.TableName + "\"");
+          errors.AddInfo(DBxUITools.UpdateMsg.PKRemovedWrong(table, indexName));
           modified = true;
         }
       }
@@ -2063,7 +2055,7 @@ namespace FreeLibSet.Data.SqlClient
         {
           string pkName = "PK_" + table.TableName;
           SQLExecuteNonQuery("ALTER TABLE [" + table.TableName + "] ADD CONSTRAINT [" + pkName + "] PRIMARY KEY ([" + table.PrimaryKey[0] + "])");
-          errors.AddInfo("Добавлено ограничение первичного ключа \"" + pkName + "\" в таблице \"" + table.TableName + "\"");
+          errors.AddInfo(DBxUITools.UpdateMsg.PKAdded(table, pkName));
           modified = true;
         }
       }
@@ -2072,7 +2064,7 @@ namespace FreeLibSet.Data.SqlClient
         if (found)
         {
           SQLExecuteNonQuery("ALTER TABLE [" + table.TableName + "] DROP CONSTRAINT [" + pkIndexName + "]");
-          errors.AddInfo("Удалено ограничение первичного ключа \"" + pkIndexName + "\", так как таблица \"" + table.TableName + "\" не содержит первичного ключа");
+          errors.AddInfo(DBxUITools.UpdateMsg.PKRemovedNoPK(table, pkIndexName));
           modified = true;
         }
       }
@@ -2102,7 +2094,7 @@ namespace FreeLibSet.Data.SqlClient
         }
 
         // Создаем внешний ключ
-        splash.PhaseText = "Создание внешнего ключа " + fkName;
+        splash.PhaseText = DBxUITools.PhaseText.FKCreation(fkName);
 
         Buffer.Clear();
         Buffer.SB.Append("ALTER TABLE ");
@@ -2117,7 +2109,7 @@ namespace FreeLibSet.Data.SqlClient
         BaseDBxSqlFormatter.FormatRefColumnDeleteAction(Buffer, colDef.RefType);
 
         SQLExecuteNonQuery(Buffer.SB.ToString());
-        errors.AddInfo("Создан внешний ключ \"" + fkName + "\" в таблице \"" + table.TableName + "\"");
+        errors.AddInfo(DBxUITools.UpdateMsg.FKCreated(table, fkName, colDef));
         modified = true;
       }
 
@@ -2142,9 +2134,9 @@ namespace FreeLibSet.Data.SqlClient
           // Лишний индекс
           if (drop)
           {
-            splash.PhaseText = "Удаление индекса " + indexName;
+            splash.PhaseText = DBxUITools.PhaseText.IndexRemoving(indexName);
             DropIndex(table.TableName, indexName);
-            errors.AddInfo("Удален лишний индекс \"" + indexName + "\" в таблице \"" + table.TableName + "\"");
+            errors.AddInfo(DBxUITools.UpdateMsg.IndexRemovedExcess(table, indexName));
           }
           continue;
         }
@@ -2155,9 +2147,9 @@ namespace FreeLibSet.Data.SqlClient
         if (!CheckIndexColumns(indexDef, tableIndexColumns))
         {
           // Описание индекса не соответствует
-          splash.PhaseText = "Удаление индекса " + indexName;
+          splash.PhaseText = DBxUITools.PhaseText.IndexRemoving(indexName);
           DropIndex(table.TableName, indexName);
-          errors.AddInfo("Удален индекс \"" + indexName + "\" в таблице \"" + table.TableName + "\", т.к. он не соответствует объявленному в структуре данных");
+          errors.AddInfo(DBxUITools.UpdateMsg.IndexRemovedWrong(table, indexName));
           continue;
         }
 
@@ -2204,9 +2196,9 @@ namespace FreeLibSet.Data.SqlClient
         if (goodIndices.Contains(indexDef.IndexName))
           continue;
 
-        splash.PhaseText = "Создание индекса таблицы \"" + table.TableName + "\" для полей \"" + indexDef.Columns.ToString() + "\"";
+        splash.PhaseText = DBxUITools.PhaseText.IndexCreation(table, indexDef);
         CreateIndex(table.TableName, indexDef.IndexName, indexDef.Columns);
-        errors.AddInfo("Создан индекс \"" + indexDef.IndexName + "\" в таблице \"" + table.TableName + "\" с полями \"" + indexDef.Columns.ToString() + "\"");
+        errors.AddInfo(DBxUITools.UpdateMsg.IndexCreated(table, indexDef));
       }
     }
 
@@ -2265,14 +2257,14 @@ namespace FreeLibSet.Data.SqlClient
     }
 #endif
 
-    private bool DeleteAllIndices(string tableName, ISimpleSplash splash, ErrorMessageList errors)
+    private bool DeleteAllIndices(DBxTableStruct table, ISimpleSplash splash, ErrorMessageList errors)
     {
       // Перебираем все существующие индексы
       // Один индекс может занимать несколько строк
       // Создаем список индексов для удаления
       List<string> indexNames = null;
 
-      DataTable tableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, tableName });
+      DataTable tableIndexes = Connection.GetSchema("Indexes", new string[] { null, null, table.TableName });
       foreach (DataRow indexRow in tableIndexes.Rows)
       {
         string indexName = DataTools.GetString(indexRow, "INDEX_NAME");
@@ -2291,18 +2283,18 @@ namespace FreeLibSet.Data.SqlClient
       if (indexNames == null)
         return false;
 
-      splash.PhaseText = "Удаление индексов таблицы \"" + tableName + "\"";
       for (int i = 0; i < indexNames.Count; i++)
       {
+        splash.PhaseText = DBxUITools.PhaseText.IndexRemoving(indexNames[i]);
         Buffer.Clear();
         Buffer.SB.Append("DROP INDEX [");
         Buffer.SB.Append(indexNames[i]);
         Buffer.SB.Append("] ON [");
-        Buffer.SB.Append(tableName);
+        Buffer.SB.Append(table.TableName);
         Buffer.SB.Append("]");
 
         SQLExecuteNonQuery(Buffer.SB.ToString());
-        errors.AddInfo("Удален индекс \"" + indexNames[i] + "\" в таблице \"" + tableName + "\"");
+        errors.AddInfo(DBxUITools.UpdateMsg.IndexRemovedExcess(table, indexNames[i]));
       }
       return true;
     }
@@ -2409,7 +2401,7 @@ namespace FreeLibSet.Data.SqlClient
         if (_TempTableDict.TryGetValue(tableName, out res))
           return res;
         else
-          throw new ArgumentException("Неизвестное имя временной таблицы \"" + tableName + "\"", "tableName");
+          throw ExceptionFactory.KeyNotFound(tableName);
       }
 
       return base.GetTableStruct(tableName);

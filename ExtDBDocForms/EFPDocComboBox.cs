@@ -266,10 +266,10 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        Control.Text = "!!! Ошибка !!! " + e.Message;
+        Control.Text = String.Format(Res.EFPComboBox_Msg_ErrorText, e.Message);
         if (EFPApp.ShowListImages)
           Control.Image = EFPApp.MainImages.Images["Error"];
-        EFPApp.ShowTempMessage("Ошибка при получении текста: " + e.Message);
+        EFPApp.ShowTempMessage(String.Format(Res.EFPComboBox_Err_GetText, e.Message));
       }
       if (UI.DebugShowIds)
         Control.Text = "Id=" + Id.ToString() + " " + Control.Text;
@@ -385,15 +385,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (Id == 0)
       {
-        switch (CanBeEmptyMode)
-        {
-          case UIValidateState.Error:
-            SetError("Значение \"" + DisplayName + "\" должно быть выбрано из списка");
-            break;
-          case UIValidateState.Warning:
-            SetWarning("Значение \"" + DisplayName + "\", вероятно, должно быть выбрано из списка");
-            break;
-        }
+        UITools.ValidateCanBeEmptyMode(CanBeEmptyMode, this, DisplayName);
       }
 
       if (Id != 0 && (!CanBeDeleted))
@@ -565,11 +557,12 @@ namespace FreeLibSet.Forms.Docs
       {
         DBxCommonFilter badFilter;
         if (!TestFilter(out badFilter))
-          SetError("Выбраное значение не проходит фильтр \"" + badFilter.DisplayName + "\" (" + ((IEFPGridFilter)(badFilter)).FilterText + ")");
+          SetError(String.Format(Res.EFPComboBox_Err_FilterNotPassed,
+            badFilter.DisplayName, ((IEFPGridFilter)(badFilter)).FilterText));
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка проверки соответствия значения \"" + DisplayName + "\" фильтру");
+        EFPApp.ShowException(e, String.Format(Res.EFPComboBox_ErrTitle_Filter, DisplayName));
         SetError(e.Message);
       }
     }
@@ -701,7 +694,7 @@ namespace FreeLibSet.Forms.Docs
       control.EditButton = true;
       control.EditClick += new EventHandler(Control_EditClick);
       if (EFPApp.ShowToolTips) // 15.03.2018
-        control.ClearButtonToolTipText = "Очистить поле выбора";
+        control.ClearButtonToolTipText = Res.EFPComboBox_ToolTip_ClearButton;
     }
 
     /// <summary>
@@ -751,9 +744,9 @@ namespace FreeLibSet.Forms.Docs
         if (EFPApp.ShowToolTips)
         {
           if (_DocType != null)
-            Control.PopupButtonToolTipText = "Выбрать: " + _DocType.SingularTitle;
-          else
-            Control.PopupButtonToolTipText = "Выбрать документ";
+            Control.PopupButtonToolTipText = String.Format(Res.EFPComboBox_ToolTip_SelectButton, _DocType.SingularTitle);
+          //else
+          //  Control.PopupButtonToolTipText = "Выбрать документ";
         }
       }
     }
@@ -1047,7 +1040,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_DocType == null)
       {
-        EFPApp.ShowTempMessage("Тип документа не задан");
+        EFPApp.ShowTempMessage(Res.Common_Err_NoDocType);
         return;
       }
       DocSelectDialog dlg = new DocSelectDialog(DocTypeUI);
@@ -1103,7 +1096,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (DocId == 0)
         {
-          EFPApp.ShowTempMessage("Документ не выбран");
+          EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
           return;
         }
         UI.DocTypes[DocType.Name].PerformEditing(DocId, Control.EditButtonKind == UserComboBoxEditButtonKind.View);
@@ -1114,7 +1107,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка редактирования документа");
+        EFPApp.ShowException(e, Res.Common_ErrTitle_DocEdit);
       }
     }
 
@@ -1132,7 +1125,7 @@ namespace FreeLibSet.Forms.Docs
           Control.EditButtonKind = UserComboBoxEditButtonKind.Edit;
         else
           Control.EditButtonKind = UserComboBoxEditButtonKind.View;
-        Control.EditButtonToolTipText = "Нельзя редактировать, т.к. нет выбранного документа";
+        Control.EditButtonToolTipText = Res.EFPComboBox_ToolTip_EditButtonNoDoc;
         return;
       }
 
@@ -1143,28 +1136,29 @@ namespace FreeLibSet.Forms.Docs
           if (Selectable)
           {
             Control.EditButtonKind = UserComboBoxEditButtonKind.Edit;
-            Control.EditButtonToolTipText = "Редактировать выбранный документ \"" + DocType.SingularTitle + "\"";
+            Control.EditButtonToolTipText = String.Format(Res.EFPComboBox_ToolTip_EditButtonEditDoc, DocType.SingularTitle);
           }
           else
           {
             // Не стоит вызывать DocType.TestEditable(), т.к. будет медленно
             Control.EditButtonKind = UserComboBoxEditButtonKind.View;
-            Control.EditButtonToolTipText = "Просмотреть выбранный документ \"" + DocType.SingularTitle + "\"";
+            Control.EditButtonToolTipText = String.Format(Res.EFPComboBox_ToolTip_EditButtonViewDoc, DocType.SingularTitle);
           }
           break;
 
         case DBxAccessMode.ReadOnly:
           Control.EditButtonEnabled = true;
           Control.EditButtonKind = UserComboBoxEditButtonKind.View;
-          Control.EditButtonToolTipText = "Просмотреть выбранный документ \"" + DocType.SingularTitle + "\"";
           if (Selectable)
-            Control.EditButtonToolTipText += ". У Вас нет прав для редактирования документов";
+            Control.EditButtonToolTipText = String.Format(Res.EFPComboBox_ToolTip_EditButtonViewDocNoEdit, DocType.SingularTitle);
+          else
+            Control.EditButtonToolTipText = String.Format(Res.EFPComboBox_ToolTip_EditButtonViewDoc, DocType.SingularTitle);
           break;
 
         case DBxAccessMode.None:
           Control.EditButtonEnabled = false;
           Control.EditButtonKind = UserComboBoxEditButtonKind.View;
-          Control.EditButtonToolTipText += "У Вас нет прав для просмотра документов \"" + DocType.PluralTitle + "\"";
+          Control.EditButtonToolTipText += String.Format(Res.Common_Err_DocTypeAccessDenied, DocType.PluralTitle);
           break;
       }
     }
@@ -1184,7 +1178,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(DocId, "Deleted")))
       {
-        message = "Выбранный документ \"" + DocType.SingularTitle + "\" удален";
+        message = String.Format(Res.Common_Err_SelectedDocDeleted, DocType.SingularTitle);
         return true;
       }
       else
@@ -1232,7 +1226,7 @@ namespace FreeLibSet.Forms.Docs
       if (FixedDocIds != null && DocId != 0)
       {
         if (!FixedDocIds.Contains(DocId))
-          base.SetError("Выбранного документа нет в списке допустимых");
+          base.SetError(Res.Common_Err_DocNotInFixedList);
       }
     }
 
@@ -1279,7 +1273,7 @@ namespace FreeLibSet.Forms.Docs
       //  DocSel.Normalize(AccDepClientExec.BufTables);
       Int32 newId = docSel.GetSingleId(DocTypeName);
       if (newId == 0)
-        EFPApp.ShowTempMessage("В буфере обмена нет ссылки на документ \"" + DocType.SingularTitle + "\"");
+        EFPApp.ShowTempMessage(String.Format(Res.Clipboard_Err_NoDocType, DocType.SingularTitle));
       else
         Id = newId;
     }
@@ -1326,7 +1320,7 @@ namespace FreeLibSet.Forms.Docs
           return true;
         }
 
-        message = "Не задан идентификатор документа";
+        message = Res.Common_Err_NoSelectedDoc;
         return false;
       }
       UI.DocProvider.CheckIsRealDocId(docId);
@@ -1337,7 +1331,7 @@ namespace FreeLibSet.Forms.Docs
         {
           if (!(CanBeDeleted))
           {
-            message = "Документ \"" + DocType.SingularTitle + "\" удален";
+            message = String.Format(Res.EFPComboBox_Err_DocDeleted, DocType.SingularTitle);
             return false;
           }
         }
@@ -1346,7 +1340,7 @@ namespace FreeLibSet.Forms.Docs
       DBxCommonFilter badFilter;
       if (!DoTestFilter(docId, out badFilter))
       {
-        message = "Документ не проходит фильтр \"" + badFilter.DisplayName + "\"";
+        message = String.Format(Res.EFPComboBox_Err_DocFilterMismatch, badFilter.DisplayName);
         return false;
       }
 
@@ -1388,14 +1382,15 @@ namespace FreeLibSet.Forms.Docs
       for (int i = 0; i < docTypeNames.Length; i++)
       {
         _DocTypeUIs[i] = ui.DocTypes[docTypeNames[i]];
-        if (_DocTypeUIs[i] == null)
-          throw new ArgumentException("Неизвестный тип документа \"" + docTypeNames[i] + "\"", "docTypeNames");
+        // не нужно, исключение уже выброшено
+        //if (_DocTypeUIs[i] == null)
+        //  throw new ArgumentException("Неизвестный тип документа \"" + docTypeNames[i] + "\"", "docTypeNames");
         pluralTitles[i] = _DocTypeUIs[i].DocType.PluralTitle;
       }
       control.Items.AddRange(pluralTitles);
       Codes = docTypeNames;
 
-      _EmptyText = "[ Нет ]";
+      _EmptyText = Res.EFPComboBox_Msg_Empty;
       _EmptyImageKey = "No";
 
       if (EFPApp.ShowListImages)
@@ -1633,8 +1628,8 @@ namespace FreeLibSet.Forms.Docs
 
       if (EFPApp.ShowToolTips)
       {
-        Control.PopupButtonToolTipText = "Выбрать: " + _SubDocTypeUI.SubDocType.SingularTitle;
-        control.ClearButtonToolTipText = "Очистить поле выбора";
+        Control.PopupButtonToolTipText = String.Format(Res.EFPComboBox_ToolTip_SelectButton, _SubDocTypeUI.SubDocType.SingularTitle);
+        control.ClearButtonToolTipText = Res.EFPComboBox_ToolTip_ClearButton;
       }
 
       _DocId = 0;
@@ -1658,7 +1653,7 @@ namespace FreeLibSet.Forms.Docs
     private static SubDocTypeUI GetSubDocTypeUI(EFPDocComboBox docComboBoxProvider, string subDocTypeName)
     {
       if (String.IsNullOrEmpty(subDocTypeName))
-        throw new ArgumentNullException("subDocTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("subDocTypeName");
       return docComboBoxProvider.DocTypeUI.SubDocTypes[subDocTypeName];
     }
 
@@ -2047,8 +2042,10 @@ namespace FreeLibSet.Forms.Docs
       {
         Int32 docId2 = SubDocTypeUI.TableCache.GetInt(SubDocId, "DocId");
         if (docId2 != DocId)
-          SetError("Выбранный поддокумент \"" + SubDocTypeUI.SubDocType.SingularTitle + "\" относится к документу \"" +
-            SubDocTypeUI.DocTypeUI.GetTextValue(docId2) + "\", а не \"" + SubDocTypeUI.DocTypeUI.GetTextValue(DocId) + "\"");
+          SetError(String.Format(Res.EFPComboBox_Err_AnotherDoc,
+            SubDocTypeUI.SubDocType.SingularTitle,
+            SubDocTypeUI.DocTypeUI.GetTextValue(docId2),
+            SubDocTypeUI.DocTypeUI.GetTextValue(DocId)));
       }
     }
 
@@ -2119,7 +2116,7 @@ namespace FreeLibSet.Forms.Docs
       //}
       if (DocId == 0)
       {
-        EFPApp.ShowTempMessage("Не задан документ \"" + DocType.SingularTitle + "\", из которого можно выбирать");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPComboBox_Err_NoOwnerDoc, DocType.SingularTitle));
         return;
       }
 
@@ -2148,7 +2145,7 @@ namespace FreeLibSet.Forms.Docs
       DBxMultiSubDocs mSubDocs = doc.SubDocs[SubDocTypeName].SubDocs;
 #if DEBUG
       if (!Object.ReferenceEquals(mSubDocs.SubDocType, SubDocTypeUI.SubDocType))
-        throw new BugException("Объекты DBxMultiSubDocs и SubDocTypeUI содержат ссылки на разные объекты SubDocType");
+        throw new BugException("DBxMultiSubDocs & SubDocTypeUI have references to different SubDocType");
 #endif
 
       SubDocSelectDialog dlg = new SubDocSelectDialog(SubDocTypeUI, mSubDocs);
@@ -2199,7 +2196,7 @@ namespace FreeLibSet.Forms.Docs
       object[] a = SubDocTypeUI.GetValues(SubDocId, "Deleted,DocId");
       if (DataTools.GetBool(a[0]))
       {
-        message = "Выбранный поддокумент \"" + SubDocType.SingularTitle + "\" удален";
+        message = String.Format(Res.Common_Err_SelectedSubDocDeleted, SubDocType.SingularTitle);
         return true; // удален поддокумент
       }
       Int32 docId = DataTools.GetInt(a[1]);
@@ -2212,9 +2209,10 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          docText = "Id=" + docId.ToString() + ". Ошибка получения текста: " + e.Message;
+          docText = "Id=" + docId.ToString() + ". "+String.Format(Res.EFPComboBox_Err_GetText, e.Message);
         }
-        message = "Документ \"" + DocType.SingularTitle + "\" (" + docText + "), к которому относится выбранный поддокумент, удален";
+        message = String.Format(Res.EFPComboBox_Msg_OwnerDocDeleted,
+          DocType.SingularTitle, docText);
         return true;
       }
       else
@@ -2296,8 +2294,8 @@ namespace FreeLibSet.Forms.Docs
       //  throw new ArgumentException("SubDocTypeUI и SubDocs относятся к разным объектам SubDocType", "subDocs");
 
 
-      control.PopupButtonToolTipText = "Выбрать: " + subDocs.SubDocType.SingularTitle; // 13.06.2021
-      control.ClearButtonToolTipText = "Очистить поле выбора";
+      control.PopupButtonToolTipText = String.Format(Res.EFPComboBox_ToolTip_SelectButton, subDocs.SubDocType.SingularTitle); // 13.06.2021
+      control.ClearButtonToolTipText = Res.EFPComboBox_ToolTip_ClearButton;
 
       _SubDocIndex = -1; // нет выбранного поддокумента
 
@@ -2512,12 +2510,13 @@ namespace FreeLibSet.Forms.Docs
           DBxSubDoc subDoc = _SubDocs[_SubDocIndex];
           if (subDoc.SubDocState == DBxDocState.Delete)
           {
-            message = "Выбранный поддокумент \"" + subDoc.SubDocType.SingularTitle + "\" удален";
+            message = String.Format(Res.Common_Err_SelectedSubDocDeleted,  subDoc.SubDocType.SingularTitle);
             return true;
           }
           if (subDoc.Doc.DocState == DBxDocState.Delete)
           {
-            message = "Документ \"" + subDoc.DocType.SingularTitle + "\", к которому относится выбранный поддокумент, удален";
+            message = String.Format(Res.EFPComboBox_Msg_OwnerDocDeleted,
+              subDoc.DocType.SingularTitle, "");
             return true;
           }
         }

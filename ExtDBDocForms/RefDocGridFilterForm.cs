@@ -33,13 +33,13 @@ namespace FreeLibSet.Forms.Docs
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
       List<string> modeNames = new List<string>();
-      modeNames.Add("Нет фильтра");
-      modeNames.Add("Выбранные документы");
-      modeNames.Add("Кроме выбранных документов");
+      modeNames.Add(Res.RefDocFilterMode_Msg_NoFilter);
+      modeNames.Add(Res.RefDocFilterMode_Msg_Include);
+      modeNames.Add(Res.RefDocFilterMode_Msg_Exclude);
       if (nullable)
       {
-        modeNames.Add("Ссылка на любой документ");
-        modeNames.Add("Ссылка не задана");
+        modeNames.Add(Res.RefDocFilterMode_Msg_NotNull);
+        modeNames.Add(Res.RefDocFilterMode_Msg_Null);
       }
       cbMode.Items.AddRange(modeNames.ToArray());
       if (EFPApp.ShowListImages)
@@ -67,11 +67,11 @@ namespace FreeLibSet.Forms.Docs
       switch (Mode)
       {
         case RefDocFilterMode.Include:
-          grpDocs.Text = "Ссылки на документы \"" + DocTypeUI.DocType.PluralTitle + "\"";
+          grpDocs.Text = String.Format(Res.RefDocGridFilter_Msg_RefsToIncluded, DocTypeUI.DocType.PluralTitle);
           useDocs = true;
           break;
         case RefDocFilterMode.Exclude:
-          grpDocs.Text = "Ссылки на документы  \"" + DocTypeUI.DocType.PluralTitle + "\", которые надо исключить";
+          grpDocs.Text = String.Format(Res.RefDocGridFilter_Msg_RefsToExcluded, DocTypeUI.DocType.PluralTitle);
           useDocs = true;
           break;
         default:
@@ -122,9 +122,9 @@ namespace FreeLibSet.Forms.Docs
     //  return PerformEdit(title, docTypeUI, nullable, ref mode, ref ids, null, null);
     //}
 
-    public static bool PerformEdit(string title, DocTypeUI docTypeUI, bool nullable, 
+    public static bool PerformEdit(string title, DocTypeUI docTypeUI, bool nullable,
       ref RefDocFilterMode mode, ref Int32[] ids,
-      EFPDBxGridFilters docFilters, 
+      EFPDBxGridFilters docFilters,
       EFPDialogPosition dialogPosition, MultiSelectEmptyEditMode emptyEditMode)
     {
 #if DEBUG
@@ -351,54 +351,46 @@ namespace FreeLibSet.Forms.Docs
 
     private void InitFilterText()
     {
-      StringBuilder sb = new StringBuilder();
       switch (Mode)
       {
         case RefDocFilterMode.NoFilter:
           _FilterText = String.Empty;
-          return;
-        case RefDocFilterMode.Include:
-          if (DocIds.Count == 0)
-          {
-            _FilterText = "Нет ни одной ссылки на документы \"" + DocTypeUI.DocType.PluralTitle + "\""; // 24.07.2019
-            return;
-          }
           break;
+        case RefDocFilterMode.Include:
         case RefDocFilterMode.Exclude:
           if (DocIds.Count == 0)
           {
-            _FilterText = "Фиктивное значение фильтра - все ссылки"; // 24.07.2019
-            return;
+            if (Mode == RefDocFilterMode.Include)
+              _FilterText = String.Format(Res.RefDocGridFilter_Msg_TextIncludeNoDocs, DocTypeUI.DocType.PluralTitle); // 24.07.2019
+            else
+              _FilterText = Res.RefDocGridFilter_Msg_TextExcludeNoDocs; // 24.07.2019
           }
-          sb.Append("Кроме ");
+          else
+          {
+            List<string> lst = new List<string>(DocIds.Count);
+            foreach (Int32 id in DocIds)
+            {
+              string s = UI.TextHandlers.GetTextValue(DocTypeName, id);
+              if (UI.DebugShowIds)
+                s += " (Id=" + id.ToString() + ")";
+              lst.Add(s);
+            }
+            string sDocs = String.Join(", ", lst.ToArray());
+            if (Mode == RefDocFilterMode.Include)
+              _FilterText = sDocs;
+            else
+              _FilterText = String.Format(Res.RefDocGridFilter_Msg_TextExcludeDocs, sDocs);
+          }
           break;
         case RefDocFilterMode.NotNull:
-          _FilterText = "Ссылка на любой документ \"" + DocTypeUI.DocType.SingularTitle + "\"";
-          return;
+          _FilterText = String.Format(Res.RefDocFilterMode_Msg_TextNotNull, DocTypeUI.DocType.SingularTitle);
+          break;
         case RefDocFilterMode.Null:
-          _FilterText = "Ссылка не задана";
-          return;
+          _FilterText = Res.RefDocFilterMode_Msg_TextNull;
+          break;
         default:
-          throw new BugException("Неизвестный режим " + Mode.ToString());
+          throw new BugException("Unknown mode " + Mode.ToString());
       }
-
-
-      bool isFirst = true;
-      foreach (Int32 id in DocIds)
-      {
-        if (isFirst)
-          isFirst = false;
-        else
-          sb.Append(", ");
-        sb.Append(UI.TextHandlers.GetTextValue(DocTypeName, id));
-        if (UI.DebugShowIds)
-        {
-          sb.Append(" (Id=)");
-          sb.Append(id);
-          sb.Append(")");
-        }
-      }
-      _FilterText = sb.ToString();
     }
 
 
@@ -556,7 +548,7 @@ namespace FreeLibSet.Forms.Docs
       if (docTypeUI == null)
         throw new ArgumentNullException("docTypeUI");
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       if (docTypeUI.GroupDocType != null)
       {
@@ -591,13 +583,13 @@ namespace FreeLibSet.Forms.Docs
     /// Если вид документов, на которое ссылается поле, не использует группы, свойство возвращает null.
     /// </summary>
     public RefDocGridFilter GroupFilter { get { return _GroupFilter; } }
-    private RefDocGridFilter _GroupFilter;
+    private readonly RefDocGridFilter _GroupFilter;
 
     /// <summary>
     /// Основной фильтр
     /// </summary>
     public RefDocGridFilter DocFilter { get { return _DocFilter; } }
-    private RefDocGridFilter _DocFilter;
+    private readonly RefDocGridFilter _DocFilter;
 
     /// <summary>
     /// Дублирует свойство <see cref="DocFilter"/>.DisplayName.
@@ -709,9 +701,9 @@ namespace FreeLibSet.Forms.Docs
           for (int i = 0; i < value.Length; i++)
           {
             if (value[i] == null)
-              throw new ArgumentException("Элемент с индексом " + i.ToString() + " имеет значение null");
+              throw ExceptionFactory.ArgInvalidEnumerableItem("value", value, null);
             if (value[i].UI != _UI)
-              throw new ArgumentException("Элемент с индексом " + i.ToString() + " относится к другому объекту DBUI");
+              throw new ArgumentException(String.Format(Res.DocTableIdGridFilter_Arg_AlienDBUI, i));
           }
         }
         _DocTypeUIs = value;
@@ -743,8 +735,9 @@ namespace FreeLibSet.Forms.Docs
           for (int i = 0; i < value.Length; i++)
           {
             a[i] = UI.DocTypes[value[i]];
-            if (a[i] == null)
-              throw new ArgumentException("Неизвестный вид документа \"" + value[i] + "\"");
+            // не требуется, т.к. проверяется в предыдущей строке
+            //if (a[i] == null)
+            //  throw new ArgumentException("Неизвестный вид документа \"" + value[i] + "\"");
           }
           DocTypeUIs = a;
         }
@@ -815,7 +808,7 @@ namespace FreeLibSet.Forms.Docs
         else
         {
           if (CurrentDocTypeUI == null)
-            return "Неизвестный тип документа TableId=" + CurrentTableId.ToString();
+            return String.Format(Res.DocTableIdGridFilter_Msg_TextUnknownTableId, CurrentTableId);
           else
           {
             string s = CurrentDocTypeUI.DocType.PluralTitle;
@@ -851,7 +844,7 @@ namespace FreeLibSet.Forms.Docs
       dlg.Title = DisplayName;
       dlg.ImageKey = "Filter";
       dlg.Items = new string[DocTypeUIs.Length + 1];
-      dlg.Items[0] = "Нет фильтра";
+      dlg.Items[0] = Res.DocTableIdGridFilter_Msg_NoFilter;
       dlg.ImageKeys[0] = EFPGridFilterTools.NoFilterImageKey;
       if (CurrentTableId == 0)
         dlg.SelectedIndex = 0;
@@ -890,7 +883,7 @@ namespace FreeLibSet.Forms.Docs
       {
         DBxDocType docType = UI.DocProvider.DocTypes.FindByTableId(thisTableId);
         if (docType == null)
-          s = "Неизвестный тип документа с TableId=" + thisTableId.ToString();
+          s = String.Format(Res.DocTableIdGridFilter_Msg_TextUnknownTableId, thisTableId);
         else
         {
           s = docType.PluralTitle;

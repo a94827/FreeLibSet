@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using FreeLibSet.Data;
 
 namespace FreeLibSet.Models.Tree
 {
@@ -767,12 +768,12 @@ namespace FreeLibSet.Models.Tree
   }
 
   /// <summary>
-  /// Источник просмотра древовидной структуры из таблицы DataTable.
+  /// Источник просмотра древовидной структуры из таблицы <see cref="DataTable"/>.
   /// Предполагается, что имеется поле (IdColumnName) типа <typeparamref name="T"/>, идентифицирующее строки (обычно поле является первичным ключом,
   /// но это не является обязательным условием). Также имеется ссылочное поле (ParentColumnName), используемое для построения дерева.
   /// Поле ParentColumnName тоже должно иметь тип <typeparamref name="T"/> и обязательно поддерживать значение NULL, которое идентифицирует строки верхнего уровня.
   /// </summary>
-  /// <typeparam name="T">Тип идентификатора (числовой, String, DateTime, Guid)</typeparam>
+  /// <typeparam name="T">Тип идентификатора (числовой, <see cref="String"/>, <see cref="DateTime"/>, <see cref="Guid"/>)</typeparam>
   public class DataTableTreeModelWithIds<T> : DataTableTreeModel, ITreeModelWithIds<T>
     where T : IEquatable<T>
   {
@@ -957,6 +958,173 @@ namespace FreeLibSet.Models.Tree
       for (int i = 0; i < childRows.Length; i++)
         DoAddIdWithChildren(ids, childRows[i]);
     }
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Расширение табличной модели установкой дополнительного фильтра <see cref="DBxFilter"/>.
+  /// </summary>
+  /// <typeparam name="T">Тип идентификатора (числовой, <see cref="String"/>, <see cref="DateTime"/>, <see cref="Guid"/>)</typeparam>
+  public class FilteredDataTableTreeModelWithIds<T> : DataTableTreeModelWithIds<T>
+    where T : IEquatable<T>
+  {
+    #region Конструкторы
+
+    /// <summary>
+    /// Создает модель, основанную на существующей
+    /// </summary>
+    /// <param name="sourceModel">Исходная модель</param>
+    /// <param name="filter">Накладываемый фильтр на таблицу</param>
+    public FilteredDataTableTreeModelWithIds(DataTableTreeModel sourceModel, DBxFilter filter)
+      : this(sourceModel, filter, String.Empty)
+    {
+    }
+
+    /// <summary>
+    /// Создает модель, основанную на существующей
+    /// </summary>
+    /// <param name="sourceModel">Исходная модель</param>
+    /// <param name="filter">Накладываемый фильтр на таблицу</param>
+    /// <param name="sourceIntegrityFlagColumnName">Имя логического поля в исходной таблице, которое определяет узлы, добавленные исключительно из-за необходимости соблюдения целостности дерева.</param>
+    public FilteredDataTableTreeModelWithIds(DataTableTreeModel sourceModel, DBxFilter filter, string sourceIntegrityFlagColumnName)
+      : base(CreateTable(sourceModel, filter, sourceIntegrityFlagColumnName),
+      sourceModel.IdColumnName, sourceModel.ParentColumnName)
+    {
+      base.Sort = sourceModel.Sort;
+      _SourceModel = sourceModel;
+      _Filter = filter;
+      if (String.IsNullOrEmpty(sourceIntegrityFlagColumnName))
+        _IntegrityFlagColumnName = DefIntegrityFlagColumnName;
+      else
+        _IntegrityFlagColumnName = sourceIntegrityFlagColumnName;
+    }
+
+    private static DataTable CreateTable(DataTableTreeModel sourceModel, DBxFilter filter, string sourceIntegrityFlagColumnName)
+    {
+#if DEBUG
+      if (sourceModel == null)
+        throw new ArgumentNullException("sourceModel");
+#endif
+
+      string pk = DataTools.GetPrimaryKey(sourceModel.Table);
+
+      DataTable resTable = sourceModel.Table.Clone();
+      string integrityFlagColumnName;
+      if (String.IsNullOrEmpty(sourceIntegrityFlagColumnName))
+      {
+        integrityFlagColumnName = DefIntegrityFlagColumnName;
+        resTable.Columns.Add(integrityFlagColumnName, typeof(bool));
+      }
+      else
+      {
+        if (!sourceModel.Table.Columns.Contains(sourceIntegrityFlagColumnName))
+          throw ExceptionFactory.DataColumnNotFound(sourceModel.Table, sourceIntegrityFlagColumnName);
+        DataTools.SetPrimaryKey(resTable, pk);
+
+        integrityFlagColumnName = sourceIntegrityFlagColumnName;
+        ValueFilter filter2 = new ValueFilter(sourceIntegrityFlagColumnName, false);
+        if (filter == null)
+          filter = filter2;
+        else
+          filter = AndFilter.FromArray(new DBxFilter[2] { filter, filter2 });
+      }
+
+      // Лучше сделать отдельный DataView, а не использовать DefaultView. 
+      // Вдруг исходная модель сейчас используется.
+      using (DataView dv = new DataView(sourceModel.Table))
+      {
+        if (filter == null)
+          dv.RowFilter = sourceModel.Table.DefaultView.RowFilter;
+        else
+          dv.RowFilter = filter.AddToDataViewRowFilter(sourceModel.Table.DefaultView.RowFilter);
+        dv.Sort = sourceModel.Table.DefaultView.Sort;
+        //Int32 [] aaa=DataTools.GetIdsFromField(SourceModel.Table, "GroupId");
+
+        foreach (DataRowView drv in dv)
+          resTable.Rows.Add(drv.Row.ItemArray);
+      }
+
+      #region Добавление недостающих строк
+
+      int pParentId = resTable.Columns.IndexOf(sourceModel.ParentColumnName);
+      if (pParentId < 0)
+        throw ExceptionFactory.DataColumnNotFound(resTable, sourceModel.ParentColumnName);
+
+      bool needsResort = false;
+
+      while (true)
+      {
+        IdList missingIds = new IdList();
+        foreach (DataRow row in resTable.Rows)
+        {
+          Int32 parentId = DataTools.GetInt(row[pParentId]);
+          if (parentId == 0)
+            continue;
+          if (resTable.Rows.Find(parentId) == null)
+            missingIds.Add(parentId);
+        }
+
+        if (missingIds.Count == 0)
+          break;
+
+        // Требуется догрузить недостающие строки
+        foreach (Int32 id in missingIds)
+        {
+          DataRow srcRow = sourceModel.Table.Rows.Find(id);
+          if (srcRow == null)
+            throw ExceptionFactory.DataRowNotFound(sourceModel.Table, new object[] { id });
+          DataRow resRow = resTable.Rows.Add(srcRow.ItemArray);
+          resRow[integrityFlagColumnName] = true;
+        }
+
+        needsResort = true;
+      }
+
+      #endregion
+
+      #region Пересортировка
+
+      if (needsResort)
+      {
+        resTable.DefaultView.Sort = sourceModel.Table.DefaultView.Sort;
+        resTable = resTable.DefaultView.ToTable();
+        DataTools.SetPrimaryKey(resTable, pk);
+        resTable.AcceptChanges();
+      }
+
+      #endregion
+
+      return resTable;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    /// <summary>
+    /// Базовая модель, на которую накладываются фильтры
+    /// </summary>
+    public DataTableTreeModel SourceModel { get { return _SourceModel; } }
+    private readonly DataTableTreeModel _SourceModel;
+
+    /// <summary>
+    /// Накладываемый фильтр
+    /// </summary>
+    public DBxFilter Filter { get { return _Filter; } }
+    private readonly DBxFilter _Filter;
+
+
+    private const string DefIntegrityFlagColumnName = "__Integrity";
+
+    /// <summary>
+    /// Имя логического поля, используемого для индикации узлов, которые не прошли условие фильтра,
+    /// но были добавлены, чтобы обеспечить целостность дерева.
+    /// Пустая строка означает, что все узлы прошли фильтр (или фильтр не задан).
+    /// Это свойство не обязано совпадать с аргументом SourceIntegrityFlagColumnName, заданном в конструкторе
+    /// </summary>
+    public string IntegrityFlagColumnName { get { return _IntegrityFlagColumnName; } }
+    private readonly string _IntegrityFlagColumnName;
 
     #endregion
   }

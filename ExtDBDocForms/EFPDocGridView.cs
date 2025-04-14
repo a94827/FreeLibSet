@@ -181,8 +181,7 @@ namespace FreeLibSet.Forms.Docs
       if (docTypeUI.UI.DocProvider.DocTypes.UseDeleted)
       {
         ciShowDeleted = new EFPCommandItem("View", "ShowHiddenDocs");
-        ciShowDeleted.MenuText = "Показывать удаленные записи";
-        ciShowDeleted.ToolTipText = "Показывать удаленные записи";
+        ciShowDeleted.MenuText = Res.Cmd_Menu_View_ShowHiddenDocs;
         ciShowDeleted.Parent = CommandItems.MenuFilter;
         ciShowDeleted.ImageKey = "ShowHiddenDocs";
         ciShowDeleted.Click += new EventHandler(ShowDeletedClick);
@@ -250,7 +249,7 @@ namespace FreeLibSet.Forms.Docs
       {
         CheckHasNotBeenCreated();
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         if (value == int.MaxValue)
           value = 0;
         _MaxRecordCount = value;
@@ -318,7 +317,7 @@ namespace FreeLibSet.Forms.Docs
         if (ciShowDeleted == null)
         {
           if (value)
-            throw new InvalidOperationException("Просмотр удаленных документов не поддерживается");
+            throw new InvalidOperationException(Res.EFPDataView_ShowHiddenDocsNotSupported);
         }
         else
           ciShowDeleted.Visible = value;
@@ -342,9 +341,9 @@ namespace FreeLibSet.Forms.Docs
     protected override void OnRefreshData(EventArgs args)
     {
       if (SourceAsDataTable == null)
-        EFPApp.BeginWait("Загрузка данных", DocTypeUI.TableImageKey);
+        EFPApp.BeginWait(Res.Common_Phase_DataLoad, DocTypeUI.TableImageKey);
       else
-        EFPApp.BeginWait("Обновление данных", "Refresh");
+        EFPApp.BeginWait(Res.Common_Phase_Refresh, "Refresh");
       try
       {
         if (SourceAsDataView != null)
@@ -413,7 +412,7 @@ namespace FreeLibSet.Forms.Docs
     {
       try
       {
-        Exception e = new Exception("Количество строк в просмотре было ограничено");
+        Exception e = new Exception(Res.EFPDataView_ErrTitle_RowCountLimited);
         e.Data["UsedColumnNames"] = UsedColumnNames;
         e.Data["SqlFilter"] = sqlFilter;
 
@@ -441,9 +440,9 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        LogoutTools.LogoutException(e, "Количество строк в просмотре было ограничено");
+        LogoutTools.LogoutException(e, Res.EFPDataView_ErrTitle_RowCountLimited);
       }
-      EFPApp.WarningMessageBox("Количество строк в просмотре было ограничено до " + MaxRecordCount.ToString() + ". Используйте фильтрацию документов", DisplayName);
+      EFPApp.WarningMessageBox(String.Format(Res.EFPDataView_Err_RowCountLimited, MaxRecordCount), DisplayName);
     }
 
 #if DEBUG_FILTERS
@@ -581,7 +580,7 @@ namespace FreeLibSet.Forms.Docs
       set
       {
         if (value != null && DocTypeUI.GroupDocType == null)
-          throw new InvalidOperationException("Нельзя устанавливать свойство AuxFilterGroupIds для просмотра документов \"" + DocTypeUI.DocType.PluralTitle + "\"");
+          throw new InvalidOperationException(String.Format(Res.EFPDataView_Err_AuxFilterGroupIds, DocTypeUI.DocType.PluralTitle));
 
         _AuxFilterGroupIds = value;
         if (SourceAsDataView != null)
@@ -1015,7 +1014,7 @@ namespace FreeLibSet.Forms.Docs
           }
           catch
           {
-            EFPApp.ErrorMessageBox("Не удалось активировать добавленные строки в табличном просмотре");
+            EFPApp.ErrorMessageBox(Res.EFPDataView_Err_ActivatingNewRows);
           }
         }
       }
@@ -1127,7 +1126,7 @@ namespace FreeLibSet.Forms.Docs
               value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
             }
             else
-              throw new BugException("Не найдено поле \"" + mainColName + "\"");
+              throw new BugException("Column not found: \"" + mainColName + "\"");
           }
           else
             value = srcRow[colName, rowVer];
@@ -1151,7 +1150,7 @@ namespace FreeLibSet.Forms.Docs
       public override string ToString()
       {
         if (Owner == null)
-          return "[ Отключен от просмотра ]";
+          return "[ Disconnected ]";
         else
           return Owner.ToString();
       }
@@ -1269,7 +1268,7 @@ namespace FreeLibSet.Forms.Docs
         catch (Exception e)
         {
           AddExceptionInfo(e);
-          EFPApp.ShowException(e, DisplayName + " - ошибка загрузки данных");
+          EFPApp.ShowException(e, String.Format(Res.EFPDataView_ErrTitle_DataViewDataLoading, DisplayName));
         }
       }
     }
@@ -1299,7 +1298,7 @@ namespace FreeLibSet.Forms.Docs
 
 #if DEBUG
       if (UsedColumnNames == null)
-        throw new NullReferenceException("Свойство UsedColumnNames не инициализировано");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "UsedColumnNames");
 #endif
     }
 

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.Collections;
@@ -28,11 +31,11 @@ namespace FreeLibSet.Reporting
     public BRColor(int r, int g, int b)
     {
       if (r < 0 || r > 255)
-        throw new ArgumentOutOfRangeException("r");
+        throw ExceptionFactory.ArgOutOfRange("r", r, 0, 255);
       if (g < 0 || g > 255)
-        throw new ArgumentOutOfRangeException("g");
+        throw ExceptionFactory.ArgOutOfRange("g", g, 0, 255);
       if (b < 0 || b > 255)
-        throw new ArgumentOutOfRangeException("b");
+        throw ExceptionFactory.ArgOutOfRange("b", b, 0, 255);
       _Value = (1 << 24 | (r & 0xFF) << 16 | (g & 0xFF) << 8 | (b & 0xFF));
     }
 
@@ -1484,7 +1487,7 @@ namespace FreeLibSet.Reporting
     public void SetSize(int value)
     {
       if ((value & (~SizeMask)) != 0)
-        throw new ArgumentOutOfRangeException("value");
+        throw ExceptionFactory.ArgOutOfRange("value", value, 0, SizeMask);
 
       _Value = (_Value & (~SizeMask)) | value;
     }
@@ -1551,20 +1554,21 @@ namespace FreeLibSet.Reporting
       }
     }
 
-    const int Hidden_Flag = 0x01000000;
+    //const int Hidden_Flag = 0x01000000;
     const int Repeatable_Flag = 0x02000000;
     const int KeepWithNext_Flag = 0x04000000;
     const int KeepWithPrev_Flag = 0x08000000;
     const int AutoGrow_Flag = 0x10000000;
 
-    /// <summary>
-    /// True (по умолчанию) - строка является видимой
-    /// </summary>
-    public bool Visible
-    {
-      get { return !GetFlag(Hidden_Flag); }
-      set { SetFlag(Hidden_Flag, !value); }
-    }
+    ///// <summary>
+    ///// True (по умолчанию) - строка является видимой.
+    ///// В текущей реализации свойство не работает при экспорте в файлы.
+    ///// </summary>
+    //public bool Visible
+    //{
+    //  get { return !GetFlag(Hidden_Flag); }
+    //  set { SetFlag(Hidden_Flag, !value); }
+    //}
 
     /// <summary>
     /// Признак повторения строки большой таблицы, которая размещается на нескольких листах по высоте.
@@ -1591,9 +1595,6 @@ namespace FreeLibSet.Reporting
     /// Игнорируется для последней строки полосы. Чтобы запретить разрыв со следующей полосой, используйте свойство <see cref="BRBand.KeepWithNext"/>.
     /// Свойство игнорируется, пока остается установленным свойство <see cref="BRBand.KeepWhole"/>, которое запрещает разрыв между любыми строками таблицы.
     /// Установка свойства <see cref="KeepWithNext"/> для строки эквивалентно установке <see cref="KeepWithPrev"/> для следующей строки.
-    /// 
-    /// Если свойство <see cref="KeepWithNext"/> установлено, а у следующей строки задано <see cref="Visible"/>=false, то проверяется свойство <see cref="KeepWithNext"/> у скрытой строки.
-    /// Сцепление действует, если оно установлено. Аналогично, если скрыто несколько строк, то проверяется наличие сцепления у каждой из них, в противном случае, сцепка разрывается.
     /// </summary>
     public bool KeepWithNext
     {
@@ -1607,7 +1608,7 @@ namespace FreeLibSet.Reporting
     /// Используйте для строки итогов.
     /// Игнорируется для первой строки полосы. Чтобы запретить разрыв с предыдущей полосой, используйте свойство <see cref="BRBand.KeepWithPrev"/>.
     /// 
-    /// О взаимодействии с друними свойствами см. в пояснениях к свойству <see cref="KeepWithNext"/>.
+    /// О взаимодействии с другими свойствами см. в пояснениях к свойству <see cref="KeepWithNext"/>.
     /// </summary>
     public bool KeepWithPrev
     {
@@ -1719,18 +1720,19 @@ namespace FreeLibSet.Reporting
       }
     }
 
-    const int Hidden_Flag = 0x01000000;
+    //const int Hidden_Flag = 0x01000000;
     const int Repeatable_Flag = 0x02000000;
     const int NoAutoGrow_Flag = 0x10000000;
 
-    /// <summary>
-    /// Если true (по умолчанию), то столбец является видимым
-    /// </summary>
-    public bool Visible
-    {
-      get { return !GetFlag(Hidden_Flag); }
-      set { SetFlag(Hidden_Flag, !value); }
-    }
+    ///// <summary>
+    ///// Если true (по умолчанию), то столбец является видимым.
+    ///// В текущей реализации свойство не работает при экспорте в файлы.
+    ///// </summary>
+    //public bool Visible
+    //{
+    //  get { return !GetFlag(Hidden_Flag); }
+    //  set { SetFlag(Hidden_Flag, !value); }
+    //}
 
     /// <summary>
     /// Если true, то столбец будет повторяться на каждой странице при печати таблицы, если таблица не помещается на одну страницу по ширине.

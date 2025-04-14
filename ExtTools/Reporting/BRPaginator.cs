@@ -1,4 +1,7 @@
-﻿#define NEW_ROW_STRIPES
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+#define NEW_ROW_STRIPES
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -634,8 +637,8 @@ namespace FreeLibSet.Reporting
       for (int i = 0; i < band.ColumnCount; i++)
       {
         sel.ColumnIndex = i;
-        if (!sel.ColumnInfo.Visible)
-          continue;
+        //if (!sel.ColumnInfo.Visible)
+        //  continue;
         int w = sel.ColumnInfo.Width;
         if (w > maxW)
           w = maxW;
@@ -793,7 +796,7 @@ namespace FreeLibSet.Reporting
     {
 #if DEBUG
       if (bandIndex < 0 || bandIndex >= section.Bands.Count)
-        throw new ArgumentOutOfRangeException("bandIndex");
+        throw ExceptionFactory.ArgOutOfRange("bandIndex", bandIndex, 0, section.Bands.Count - 1);
 #endif
       if (bandIndex == 0)
         return 0;
@@ -869,8 +872,8 @@ namespace FreeLibSet.Reporting
           for (int j = 0; j < band.RowCount; j++)
           {
             sel.RowIndex = j;
-            if (!sel.RowInfo.Visible)
-              continue;
+            //if (!sel.RowInfo.Visible)
+            //  continue;
 
             if (sel.RowInfo.Repeatable)
               lstRRI.Add(sel.RowIndex);
@@ -1195,16 +1198,17 @@ namespace FreeLibSet.Reporting
           int lastRowIndex = lastInfo.BR.RowIndex;
           if (lastRowIndex < lastBand.RowCount - 1)
           {
-            BRSelector sel = lastBand.CreateSelector();
-            for (int iRow = lastRowIndex + 1; iRow < lastBand.RowCount; iRow++)
-            {
-              sel.RowIndex = iRow;
-              if (sel.RowInfo.Visible)
-              {
-                flags[lst.Count - 1] = true;
-                break;
-              }
-            }
+            //BRSelector sel = lastBand.CreateSelector();
+            //for (int iRow = lastRowIndex + 1; iRow < lastBand.RowCount; iRow++)
+            //{
+            //  sel.RowIndex = iRow;
+            //  if (sel.RowInfo.Visible)
+            //  {
+            //    flags[lst.Count - 1] = true;
+            //    break;
+            //  }
+            //}
+            flags[lst.Count - 1] = true;
           }
         }
       }
@@ -1414,8 +1418,8 @@ namespace FreeLibSet.Reporting
       for (int iCol = 0; iCol < sel.Band.ColumnCount; iCol++)
       {
         sel.ColumnIndex = iCol;
-        if (!sel.ColumnInfo.Visible)
-          continue;
+        //if (!sel.ColumnInfo.Visible)
+        //  continue;
 
 #if DEBUG
         if (realColWidthArray[iCol] < BRReport.MinColumnWidth)
@@ -1445,13 +1449,13 @@ namespace FreeLibSet.Reporting
           if (iRow == currRowIndex)
             continue;
           sel.RowIndex = iRow;
-          if (sel.RowInfo.Visible)
-          {
+          //if (sel.RowInfo.Visible)
+          //{
             if (sel.RowInfo.Height == BRReport.AutoRowHeight)
               cnt++;
-            else
-              h1 -= sel.RowInfo.Height;
-          }
+          //  else
+           //   h1 -= sel.RowInfo.Height;
+          //}
         }
         sel.RowIndex = currRowIndex;
 

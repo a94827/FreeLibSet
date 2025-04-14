@@ -334,9 +334,9 @@ namespace FreeLibSet.Reporting
     public void GetMergeArea(int rowIndex, int columnIndex, out int firstRowIndex, out int firstColumnIndex, out int rowCount, out int columnCount)
     {
       if (rowIndex < 0 || rowIndex >= this.RowCount)
-        throw new ArgumentOutOfRangeException("rowIndex");
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, this.RowCount - 1);
       if (columnIndex < 0 || columnIndex >= this.ColumnCount)
-        throw new ArgumentOutOfRangeException("columnIndex");
+        throw ExceptionFactory.ArgOutOfRange("columnIndex", columnIndex, 0, this.ColumnCount - 1);
 
       firstRowIndex = BaseCells[rowIndex, columnIndex].RowIndex;
       firstColumnIndex = BaseCells[rowIndex, columnIndex].ColumnIndex;

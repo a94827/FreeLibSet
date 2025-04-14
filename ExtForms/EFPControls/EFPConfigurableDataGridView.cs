@@ -1198,8 +1198,6 @@ namespace FreeLibSet.Forms
       // Может быть пусто
       if (dbIdentity == null)
         dbIdentity = String.Empty;
-      //if (String.IsNullOrEmpty(DBIdentity))
-      //  throw new ArgumentNullException("DBIdentity");
 
       _DBIdentity = dbIdentity;
       _Names = names;

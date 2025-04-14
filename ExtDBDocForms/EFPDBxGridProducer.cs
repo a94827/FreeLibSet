@@ -96,7 +96,7 @@ namespace FreeLibSet.Forms.Docs
       if (cache == null)
         throw new ArgumentNullException("cache");
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
       if (_Cache != null)
         throw new InvalidOperationException("Повторный вызов метода");
 
@@ -152,7 +152,7 @@ namespace FreeLibSet.Forms.Docs
       public DocRefInfo(string refColumnName, DocTypeUIBase masterUI)
       {
         if (String.IsNullOrEmpty(refColumnName))
-          throw new ArgumentNullException("refColumnName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("refColumnName");
         if (masterUI == null)
           throw new ArgumentNullException("masterUI");
         _RefColumnName = refColumnName;
@@ -169,16 +169,14 @@ namespace FreeLibSet.Forms.Docs
         : this(refColumnName, masterUI)
       {
         if (String.IsNullOrEmpty(valueColumnName))
-          throw new ArgumentNullException("valueColumnName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("valueColumnName");
         string columnName1;
         int p = valueColumnName.IndexOf('.');
         if (p >= 0)
           columnName1 = valueColumnName.Substring(0, p);
         else
           columnName1 = valueColumnName;
-        if (!masterUI.DocTypeBase.Struct.Columns.Contains(columnName1))
-          throw new ArgumentException("Описание структуры " + (masterUI.DocTypeBase.IsSubDoc ? "поддокумента" : "документа") +
-            " \"" + masterUI.DocTypeBase.Name + "\" не содержит поля \"" + columnName1 + "\"", "valueColumnName");
+        masterUI.DocTypeBase.Struct.Columns.GetRequired(columnName1);
 
         _ValueColumnName = valueColumnName;
       }
@@ -194,16 +192,14 @@ namespace FreeLibSet.Forms.Docs
         : this(refColumnName, masterUI, valueColumnName)
       {
         if (String.IsNullOrEmpty(valueColumnName2))
-          throw new ArgumentNullException("valueColumnName2");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("valueColumnName2");
         string columnName2;
         int p = valueColumnName2.IndexOf('.');
         if (p >= 0)
           columnName2 = valueColumnName2.Substring(0, p);
         else
           columnName2 = valueColumnName2;
-        if (!masterUI.DocTypeBase.Struct.Columns.Contains(columnName2))
-          throw new ArgumentException("Описание структуры " + (masterUI.DocTypeBase.IsSubDoc ? "поддокумента" : "документа") +
-            " \"" + masterUI.DocTypeBase.Name + "\" не содержит поля \"" + columnName2 + "\"", "valueColumnName2");
+        masterUI.DocTypeBase.Struct.Columns.GetRequired(columnName2);
 
         _ValueColumnName2 = valueColumnName2;
       }
@@ -426,11 +422,11 @@ namespace FreeLibSet.Forms.Docs
       string headerText, int textWidth, int minTextWidth)
     {
       if (String.IsNullOrEmpty(tableIdColumnName))
-        throw new ArgumentNullException("tableIdColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableIdColumnName");
       if (String.IsNullOrEmpty(refColumnName))
-        throw new ArgumentNullException("refColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("refColumnName");
       if (String.Compare(tableIdColumnName, refColumnName, StringComparison.OrdinalIgnoreCase) == 0)
-        throw new ArgumentException("Имена исходных столбцов не могут совпадать");
+        throw ExceptionFactory.ArgAreSame("tableIdColumnName", "refColumnName");
       return AddUserText(refColumnName + "_Text", tableIdColumnName + "," + refColumnName, new EFPGridProducerValueNeededEventHandler(VTRefDocTextColumn_ValueNeeded),
         headerText, textWidth, minTextWidth);
     }
@@ -494,8 +490,8 @@ namespace FreeLibSet.Forms.Docs
     public void AddRefDocTextAndImage(string refColumnName, DocTypeUIBase masterUI,
       string headerText, int textWidth, int minTextWidth)
     {
-      AddRefDocText(refColumnName, masterUI, headerText, textWidth, minTextWidth).DisplayName = headerText + " (текст)";
-      AddRefDocImage(refColumnName, masterUI).DisplayName = headerText + " (значок)";
+      AddRefDocText(refColumnName, masterUI, headerText, textWidth, minTextWidth).DisplayName = String.Format(Res.EFPDBxGridProducer_Name_RefDocText, headerText);
+      AddRefDocImage(refColumnName, masterUI).DisplayName = String.Format(Res.EFPDBxGridProducer_Name_RefDocImage, headerText);
     }
 
     /// <summary>
@@ -512,12 +508,14 @@ namespace FreeLibSet.Forms.Docs
       string headerText)
     {
       if (String.IsNullOrEmpty(tableIdColumnName))
-        throw new ArgumentNullException("tableIdColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableIdColumnName");
       if (String.IsNullOrEmpty(refColumnName))
-        throw new ArgumentNullException("refColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("refColumnName");
       if (String.Compare(tableIdColumnName, refColumnName, StringComparison.OrdinalIgnoreCase) == 0)
-        throw new ArgumentException("Имена исходных столбцов не могут совпадать");
-      return AddUserImage(refColumnName + "_Image", tableIdColumnName + "," + refColumnName, new EFPGridProducerValueNeededEventHandler(VTRefDocImageColumn_ValueNeeded),
+        throw ExceptionFactory.ArgAreSame("tableIdColumnName", "refColumnName");
+      return AddUserImage(refColumnName + "_Image", 
+        tableIdColumnName + "," + refColumnName, 
+        new EFPGridProducerValueNeededEventHandler(VTRefDocImageColumn_ValueNeeded),
         headerText);
     }
 
@@ -1233,11 +1231,11 @@ namespace FreeLibSet.Forms.Docs
       string prefixText)
     {
       if (String.IsNullOrEmpty(tableIdColumnName))
-        throw new ArgumentNullException("tableIdColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableIdColumnName");
       if (String.IsNullOrEmpty(refColumnName))
-        throw new ArgumentNullException("refColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("refColumnName");
       if (String.Compare(tableIdColumnName, refColumnName, StringComparison.OrdinalIgnoreCase) == 0)
-        throw new ArgumentException("Имена исходных столбцов не могут совпадать");
+        throw ExceptionFactory.ArgAreSame("tableIdColumnName", "refColumnName");
       return AddUserItem(refColumnName + "_Text", tableIdColumnName + "," + refColumnName, new EFPGridProducerValueNeededEventHandler(VTRefDocTextColumn_ValueNeeded),
         prefixText);
     }
@@ -1273,7 +1271,7 @@ namespace FreeLibSet.Forms.Docs
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
       if (String.IsNullOrEmpty(nodeControl.DataPropertyName))
-        throw new ArgumentException("Свойство BaseTextControl.DataPropertyName не установлено");
+        throw ExceptionFactory.ArgProperty("nodeControl", nodeControl, "DataPropertyName", nodeControl.DataPropertyName, null);
 
 
       _ControlProvider = controlProvider;
@@ -1327,8 +1325,9 @@ namespace FreeLibSet.Forms.Docs
           {
             int p = nodeControl.DataPropertyName.IndexOf('.');
             if (p < 0)
-              throw new InvalidOperationException("Таблица \"" + row.Table.TableName + "\" не содержит столбца \"" +
-                nodeControl.DataPropertyName + "\"");
+              throw new InvalidOperationException(String.Format(Res.Common_Arg_UnknownColumn,
+                row.Table.TableName, nodeControl.DataPropertyName));
+
             _ColumnName = nodeControl.DataPropertyName.Substring(0, p);
             _TableName = row.Table.TableName;
             _UseCache = true;
@@ -1388,10 +1387,10 @@ namespace FreeLibSet.Forms.Docs
         BindableControl bc = nc as BindableControl;
         if (bc != null)
         {
-          EFPGridProducerColumn Column = gridProducer.Columns[bc.DataPropertyName];
-          if (Column == null)
+          EFPGridProducerColumn columnProducer = gridProducer.Columns[bc.DataPropertyName];
+          if (columnProducer == null)
             continue; // неизвестно что
-          new TreeViewCachedValueAdapter(controlProvider, bc, cache, Column);
+          new TreeViewCachedValueAdapter(controlProvider, bc, cache, columnProducer);
         }
       }
     }

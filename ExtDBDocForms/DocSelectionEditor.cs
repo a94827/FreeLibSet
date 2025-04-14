@@ -57,12 +57,12 @@ namespace FreeLibSet.Forms.Docs
     #region Свойства
 
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
 
-    private TabControl _TheTabControl;
+    private readonly TabControl _TheTabControl;
 
-    private EFPBaseProvider _BaseProvider;
+    private readonly EFPBaseProvider _BaseProvider;
 
     /// <summary>
     /// Для встраивания в редактор документа
@@ -181,8 +181,9 @@ namespace FreeLibSet.Forms.Docs
         return gh;
 
       DBxDocType docType = UI.DocTypes[tableName].DocType;
-      if (docType == null)
-        throw new ArgumentException("Тип документа \"" + tableName + "\" не найден", "tableName");
+      // не нужно, и так будет исключнение
+      //if (docType == null)
+      //  throw new ArgumentException("Тип документа \"" + tableName + "\" не найден", "tableName");
 
       // Добавляем новую вкладку
       _TheTabControl.TabPages.Add(docType.PluralTitle);
@@ -319,12 +320,12 @@ namespace FreeLibSet.Forms.Docs
         base.CommandItems.AddSeparator();
 
         ci = new EFPCommandItem("Edit", "CopyDocSel");
-        ci.MenuText = "Скопировать всю выборку документов";
+        ci.MenuText = Res.DocSel_Menu_Edit_CopyDocSel;
         ci.Click += new EventHandler(ciCopyDocSel_Click);
         base.CommandItems.Add(ci);
 
         ci = new EFPCommandItem("View", "CloneDocSel");
-        ci.MenuText = "Открыть копию выборки";
+        ci.MenuText = Res.DocSel_Menu_View_CloneDocSel;
         ci.Click += new EventHandler(ciCloneView_Click);
         base.CommandItems.Add(ci);
 
@@ -359,18 +360,18 @@ namespace FreeLibSet.Forms.Docs
       /// Редактор - владелец
       /// </summary>
       public DocSelectionEditor Editor { get { return _Editor; } }
-      private DocSelectionEditor _Editor;
+      private readonly DocSelectionEditor _Editor;
 
       /// <summary>
       /// Родительский управляющий элемент
       /// </summary>
       public TabPage Page { get { return _Page; } }
-      private TabPage _Page;
+      private readonly TabPage _Page;
 
       /// <summary>
       /// Таблица с отображаемыми полями
       /// </summary>
-      public DataTable BufTable;
+      public /* readonly */ DataTable BufTable;
 
       #endregion
 
@@ -408,14 +409,14 @@ namespace FreeLibSet.Forms.Docs
             docIds = base.SelectedIds;
             if (docIds.Length == 0)
             {
-              EFPApp.ShowTempMessage("Строки не выбраны");
+              EFPApp.ShowTempMessage(Res.DocSel_Err_NoSelRows);
               return true;
             }
             if (!DocTypeUI.CanMultiEdit)
             {
               if (docIds.Length > 1)
               {
-                EFPApp.ShowTempMessage("Множественное редактирование документов \"" + DocType.PluralTitle + "\" не разрешено");
+                EFPApp.ShowTempMessage(String.Format(Res.Common_Err_NoMultiEdit, DocType.PluralTitle));
                 return true;
               }
             }
@@ -430,7 +431,7 @@ namespace FreeLibSet.Forms.Docs
             DoDelete();
             return true;
           default:
-            EFPApp.ShowTempMessage("Неподдерживаемый режим редактирования");
+            EFPApp.ShowTempMessage("Unsupported editing mode "+State.ToString());
             return true;
         }
       }
@@ -481,17 +482,17 @@ namespace FreeLibSet.Forms.Docs
         DataRow[] rows = base.SelectedDataRows;
         if (rows.Length == 0)
         {
-          EFPApp.ShowTempMessage("Нет выбранных документов");
+          EFPApp.ShowTempMessage(Res.DocSel_Err_NoSelRows);
           return;
         }
 
         RadioSelectDialog dlg = new RadioSelectDialog();
-        dlg.Title = "Удаление строк документов \"" + DocTypeUI.DocType.PluralTitle + "\" (" + rows.Length + ")";
+        dlg.Title = String.Format(Res.DocSel_Title_Delete, DocTypeUI.DocType.PluralTitle, rows.Length);
         dlg.ImageKey = "Delete";
-        dlg.GroupTitle = "Что требуется удалить";
+        dlg.GroupTitle = Res.DocSel_Title_DeleteGroupTitle;
         dlg.Items = new string[]{
-              "Ссылки из этой выборки документов (документы останутся)",
-              "Сами документы"};
+              Res.DocSel_Msg_DeleteRefs,
+              Res.DocSel_Msg_DeleteDocs };
         dlg.ImageKeys = new string[] { "DBxDocSelection", "Delete" };
         dlg.SelectedIndex = Editor._DeleteRowsMode;
         //if (DocTypeUI.DocTypePermissionMode != DBxAccessMode.Full)
@@ -652,20 +653,22 @@ namespace FreeLibSet.Forms.Docs
       {
         if (sel2 == null)
         {
-          EFPApp.ShowTempMessage("Буфер обмена не содержит выборки документов");
+          EFPApp.ShowTempMessage(Res.Clipboard_Err_NoDocSel);
           return;
         }
         // TODO: Sel2.Normalize(AccDepClientExec.BufTables);
 
+        // TODO: Использовать команды режима вставки (кнопка с уголком)
+
         RadioSelectDialog dlg = new RadioSelectDialog();
-        dlg.Title = "Вставка выборки документов";
+        dlg.Title = Res.DocSel_Title_Paste;
         dlg.ImageKey = "Paste";
+        dlg.GroupTitle = Res.DocSel_Title_PasteGroupTitle;
         dlg.Items = new string[] {
-          "Добавить ссылки (объединение выборок)",
-          "Удалить ссылки (разность выборок)",
-          "Оставить общие (пересечение выборок)"};
+          Res.DocSel_Msg_PasteAdd,
+          Res.DocSel_Msg_PasteRemove,
+          Res.DocSel_Msg_PasteCross};
         dlg.ImageKeys = new string[] { "Insert", "Delete", "SignMultiply" };
-        dlg.GroupTitle = "Действие с выборкой";
         dlg.SelectedIndex = _PasteMode;
         if (dlg.ShowDialog() != DialogResult.OK)
           return;
@@ -680,21 +683,21 @@ namespace FreeLibSet.Forms.Docs
             if (cnt > 0)
               Editor.DocSel = docSel1;
             else
-              EFPApp.ShowTempMessage("Новых ссылок не добавлено");
+              EFPApp.ShowTempMessage(Res.DocSel_Err_NothingAdded);
             break;
           case 1:
             cnt = docSel1.Remove(sel2);
             if (cnt > 0)
               Editor.DocSel = docSel1;
             else
-              EFPApp.ShowTempMessage("Ни одной ссылки не удалено");
+              EFPApp.ShowTempMessage(Res.DocSel_Err_NothingRemoved);
             break;
           case 2:
             cnt = docSel1.RemoveNeg(sel2);
             if (cnt > 0)
               Editor.DocSel = docSel1;
             else
-              EFPApp.ShowTempMessage("Ни одной ссылки не удалено");
+              EFPApp.ShowTempMessage(Res.DocSel_Err_NothingRemoved);
             break;
           default:
             throw new BugException();
@@ -712,7 +715,7 @@ namespace FreeLibSet.Forms.Docs
 
       void ciCloneView_Click(object sender, EventArgs args)
       {
-        UI.ShowDocSel(Editor.DocSel, "Копия выборки");
+        UI.ShowDocSel(Editor.DocSel, Res.DocSel_Title_Clone);
       }
 
       public void InitTitle()

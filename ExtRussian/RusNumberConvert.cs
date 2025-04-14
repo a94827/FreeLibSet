@@ -1115,7 +1115,7 @@ namespace FreeLibSet.Russian
     {
       // Проверка аргументов
       if (maxDecimalPlaces < 0 || maxDecimalPlaces > 11)
-        throw new ArgumentOutOfRangeException("maxDecimalPlaces", maxDecimalPlaces, "Максимальное число цифр после запятой может быть от 0 до 11");
+        throw ExceptionFactory.ArgOutOfRange("maxDecimalPlaces", maxDecimalPlaces, 0, 11);
       if (gender == RusGender.Undefined)
         gender = RusGender.Masculine;
       if (theCase == RusCase.Undefined)
@@ -1291,7 +1291,7 @@ namespace FreeLibSet.Russian
         case CountForm.Count0:
           return genitivePlural;
         default:
-          throw new BugException("Неправильная форма числа");
+          throw new BugException("CountForm="+cntform.ToString());
       }
     }
 

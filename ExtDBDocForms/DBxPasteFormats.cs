@@ -35,7 +35,7 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("ui");
       _UI = ui;
 
-      DisplayName = "Выборка документов";
+      DisplayName = Res.DBxDocSelectionPasteFormat_Name_Default;
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ namespace FreeLibSet.Forms.Docs
     {
       _DocTypeName = docTypeName;
       if (!String.IsNullOrEmpty(docTypeName))
-        DisplayName = "Документы \"" + DocType.DocType.PluralTitle + "\"";
+        DisplayName = String.Format(Res.DBxDocSelectionPasteFormat_Name_DocType, DocTypeUI.DocType.PluralTitle);
     }
 
     /// <summary>
@@ -80,10 +80,10 @@ namespace FreeLibSet.Forms.Docs
     private readonly string _DocTypeName;
 
     /// <summary>
-    /// Интерфейс доступа к документам выбранного вида, если свойство DocTypeName установлено.
+    /// Интерфейс доступа к документам выбранного вида, если свойство <see cref="DocTypeName"/> установлено.
     /// Иначе null.
     /// </summary>
-    public DocTypeUI DocType
+    public DocTypeUI DocTypeUI
     {
       get
       {
@@ -124,7 +124,7 @@ namespace FreeLibSet.Forms.Docs
       _DocSel = (DBxDocSelection)(args.Data.GetData(typeof(DBxDocSelection)));
       if (_DocSel == null)
       {
-        args.DataInfoText = "Буфер обмена не содержит выборки документов";
+        args.DataInfoText = Res.Clipboard_Err_NoDocSel;
         args.DataImageKey = "No";
         args.Appliable=false;
         return;
@@ -132,7 +132,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (_DocSel.DBIdentity != _UI.DocProvider.DBIdentity)
       {
-        args.DataInfoText = "Выборка документов относится к другой базе данных";
+        args.DataInfoText = Res.Clipboard_Err_DocSelDiffDB;
         args.DataImageKey = "DifferentDatabase";
         //DataImageKey = "Error";
         args.Appliable = false;
@@ -148,7 +148,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (_DocSel.GetCount(_DocTypeName) == 0)
         {
-          args.DataInfoText = "Буфер обмена не содержит выборки документов \"" + DocType.DocType.PluralTitle + "\"";
+          args.DataInfoText = String.Format(Res.Clipboard_Err_NoDocType, DocTypeUI.DocType.PluralTitle);
           args.DataImageKey = "No";
           args.Appliable = false;
           return;
@@ -159,13 +159,13 @@ namespace FreeLibSet.Forms.Docs
         int cnt = _DocSel.GetCount(DocTypeName);
         if (cnt == 1)
         {
-          args.DataInfoText = "Документ \"" + DocType.DocType.SingularTitle + "\"";
-          args.DataImageKey = DocType.GetImageKey(_DocId);
+          args.DataInfoText = String.Format(Res.DBxDocSelectionPasteFormat_Name_SingleDoc, DocTypeUI.DocType.SingularTitle);
+          args.DataImageKey = DocTypeUI.GetImageKey(_DocId);
         }
         else
         {
-          args.DataInfoText = "Документы \"" + DocType.DocType.PluralTitle + "\"";
-          args.DataImageKey = DocType.TableImageKey;
+          args.DataInfoText = String.Format(Res.DBxDocSelectionPasteFormat_Name_DocType, DocTypeUI.DocType.PluralTitle);
+          args.DataImageKey = DocTypeUI.TableImageKey;
         }
       }
 
@@ -209,7 +209,7 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("ui");
       _UI = ui;
 
-      DisplayName = "Таблицы данных";
+      DisplayName = Res.DBxDataSetPasteFormat_Name_Default;
     }
 
     /// <summary>
@@ -223,10 +223,8 @@ namespace FreeLibSet.Forms.Docs
       _TableName = tableName;
       if (!String.IsNullOrEmpty(tableName))
       {
-        _UIBase = _UI.DocTypes.FindByTableName(tableName);
-        if (_UIBase == null)
-          throw new ArgumentException("Таблица \"" + tableName + "\" не соответствует документу или поддокументу", "tableName");
-        DisplayName = "Таблица \"" + _UIBase.DocTypeBase.PluralTitle + "\"";
+        _UIBase = _UI.DocTypes.GetByTableName(tableName);
+        DisplayName = GetTableDisplayName();
       }
     }
 
@@ -252,6 +250,12 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public DocTypeUIBase UIBase { get { return _UIBase; } }
     private readonly DocTypeUIBase _UIBase;
+
+    private string GetTableDisplayName()
+    {
+      return String.Format(_UIBase.DocTypeBase.IsSubDoc ? Res.DBxDataSetPasteFormat_Name_SubDocTable : Res.DBxDataSetPasteFormat_Name_DocTable,
+        _UIBase.DocTypeBase.PluralTitle);
+    }
 
     #endregion
 
@@ -282,7 +286,7 @@ namespace FreeLibSet.Forms.Docs
       _DataSet = (DataSet)(args.Data.GetData(typeof(DataSet)));
       if (_DataSet == null)
       {
-        args.DataInfoText = "Буфер обмена не содержит набора данных DataSet";
+        args.DataInfoText = Res.Clipboard_Err_NoDataSet;
         args.DataImageKey = "No";
         args.Appliable = false;
         return;
@@ -299,7 +303,7 @@ namespace FreeLibSet.Forms.Docs
         if (dbIdentity != _UI.DocProvider.DBIdentity)
         {
           _DataSet = null;
-          args.DataInfoText = "Таблица в буфере обмена относится к другой базе данных";
+          args.DataInfoText = Res.Clipboard_Err_DocSelDiffDB;
           args.DataImageKey = "DifferentDatabase";
           args.Appliable = false;
           return;
@@ -315,7 +319,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (!_DataSet.Tables.Contains(_TableName))
         {
-          args.DataInfoText = "Буфер обмена не содержит таблицы \"" + UIBase.DocTypeBase.PluralTitle + "\"";
+          args.DataInfoText = String.Format(Res.Clipboard_Err_NoTable, UIBase.DocTypeBase.PluralTitle);
           args.DataImageKey = "No";
           args.Appliable = false;
           return;
@@ -325,15 +329,13 @@ namespace FreeLibSet.Forms.Docs
 
         if (_Table.Rows.Count == 0)
         {
-          args.DataInfoText = (UIBase.DocTypeBase.IsSubDoc ? "Таблица поддокументов \"" : "Таблица документов \"") + UIBase.DocTypeBase.PluralTitle + "\" не содержит строк";
+          args.DataInfoText = String.Format(Res.DBxDataSetPasteFormat_Msg_NoRows, GetTableDisplayName());
           args.DataImageKey = "No";
           args.Appliable = false;
           return;
         }
 
-        args.DataInfoText = (UIBase.DocTypeBase.IsSubDoc ? "Таблица поддокументов \"" : "Таблица документов \"") + UIBase.DocTypeBase.PluralTitle + "\" (" +
-          " строк(и))";
-
+        args.DataInfoText = String.Format(Res.DBxDataSetPasteFormat_Msg_RowCount, GetTableDisplayName(), _Table.Rows.Count);
         args.DataImageKey = UI.ImageHandlers.GetImageKey(UIBase.DocTypeBase.Name);
       }
 

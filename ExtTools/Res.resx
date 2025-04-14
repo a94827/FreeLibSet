@@ -483,7 +483,7 @@
   <data name="Common_Arg_AreSame" xml:space="preserve">
     <value>Arguments '{0}' and '{1}' are same</value>
   </data>
-  <data name="Common_Arg_BadChar" xml:space="preserve">
+  <data name="UITools_Err_InvalidChar" xml:space="preserve">
     <value>String '{0}' contains invalid char '{1}' at position {2}</value>
   </data>
   <data name="Common_Arg_DataTablePrimaryKeyWrongType" xml:space="preserve">
@@ -1472,5 +1472,74 @@
   </data>
   <data name="ZipFileTools_Err_ArcIsEmpty" xml:space="preserve">
     <value>Archive contains no files</value>
+  </data>
+  <data name="UITools_Msg_ListIsEmpty" xml:space="preserve">
+    <value>[ List is empty ]</value>
+  </data>
+  <data name="CommandLineParser_Arg_AddOptionWithValues" xml:space="preserve">
+    <value>Use overload without value list when ValueMode=None</value>
+  </data>
+  <data name="CommandLineParser_Arg_BadActionFormat" xml:space="preserve">
+    <value>Bad action format {0}</value>
+  </data>
+  <data name="CommandLineParser_Arg_BadOptionFormat" xml:space="preserve">
+    <value>Bad option format {0}</value>
+  </data>
+  <data name="CommandLineParser_Err_ActionDisabled" xml:space="preserve">
+    <value>Action disabled</value>
+  </data>
+  <data name="CommandLineParser_Err_ActionModeNone" xml:space="preserve">
+    <value>Property ActionMode must be set when ActionDefs list is not empty</value>
+  </data>
+  <data name="CommandLineParser_Err_CommonArgsErrorMessage" xml:space="preserve">
+    <value>Command line argument, except options, are not allowed</value>
+  </data>
+  <data name="CommandLineParser_Err_MisplacedOption" xml:space="preserve">
+    <value>Option '{0}' misplaced. {1}</value>
+  </data>
+  <data name="CommandLineParser_Err_NoValueAfterEq" xml:space="preserve">
+    <value>There must be a value after the  '=' sign for the option '{0}'</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionDisabled" xml:space="preserve">
+    <value>Option disabled</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionTwice" xml:space="preserve">
+    <value>Option '{0}' can be placed only once in command line</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionUnknownValue" xml:space="preserve">
+    <value>Unknown value {0} for the option {1}. Available values are: {2}</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionValueRequired" xml:space="preserve">
+    <value>Option '{0}' requires a value</value>
+  </data>
+  <data name="CommandLineParser_Err_OptionValueUnwanted" xml:space="preserve">
+    <value>Option '{0}' cannot have a value</value>
+  </data>
+  <data name="CommandLineParser_Err_UnknownAction" xml:space="preserve">
+    <value>Unknown action '{0}'</value>
+  </data>
+  <data name="CommandLineParser_Err_UnknownOption" xml:space="preserve">
+    <value>Unknown option '{0}'</value>
+  </data>
+  <data name="Common_Err_ObjectMethodNotCalled" xml:space="preserve">
+    <value>Method {0} of object {1} has not been called</value>
+  </data>
+  <data name="Common_Err_DataColumnNotFound" xml:space="preserve">
+    <value>Table '{0}' does not contain column '{1}'</value>
+  </data>
+  <data name="Common_Err_DataReaderColumnNotFound" xml:space="preserve">
+    <value>Data reader does not contain column with name '{0}'</value>
+  </data>
+  <data name="Common_Err_ConstructorAlreadyCalled" xml:space="preserve">
+    <value>Constructor of object of type '{0}' has already been called</value>
+  </data>
+  <data name="BRBookmark_Err_NameIsEmpty" xml:space="preserve">
+    <value>Bookmark name is empty</value>
+  </data>
+  <data name="BRBookmark_Err_NameIsInvalid" xml:space="preserve">
+    <value>Invalid bookmark name '{0}'. Name must consist of latin letters, digits and underscore character. It must start with a letter.</value>
+  </data>
+  <data name="BRBookmark_Err_NameUnderscore" xml:space="preserve">
+    <value>Invalid bookmark name '{0}'. Name should not end with an underscore character nor contains two characters together.</value>
   </data>
 </root>

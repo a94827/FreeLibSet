@@ -31,6 +31,7 @@
  */
 #endregion
 
+using FreeLibSet.Core;
 using System;
 using System.Collections;
 using System.Drawing;
@@ -326,7 +327,7 @@ namespace FreeLibSet.Drawing
       if ((n >= 0) && (n < frameCount))
         return (GifFrame)frames[n];
       else
-        throw new ArgumentOutOfRangeException();
+        throw ExceptionFactory.ArgOutOfRange("n", n, 0, frameCount - 1);
     }
 
     /**

@@ -37,27 +37,63 @@ namespace ExtTools_tests.Models.SpreadsheetBase
 
     #endregion
 
+    #region Преобразование в строку
+
+    [TestCase(2, 1, CellRefFormat.A1, "A2")]
+    [TestCase(2, 1, CellRefFormat.Abs, "$A$2")]
+    [TestCase(2, 1, CellRefFormat.R1C1, "R2C1")]
+    public void ToString(int row, int column, CellRefFormat format, string wantedText)
+    {
+      CellRef sut = new CellRef(row, column);
+      string res = sut.ToString(format);
+      Assert.AreEqual(wantedText, res);
+    }
+
+    #endregion
+
     #region Преобразование из строки
 
-    [TestCase("A1", true)]
-    [TestCase("A0", false)]
-    [TestCase("123", false)]
-    [TestCase("ABC", false)]
-    [TestCase("1A", false)]
-    [TestCase("A1B", false)]
-    [TestCase("XFD1048576", true)]
-    [TestCase("", true)]
-    public void Parse_TryParse(string s, bool wantedRes)
+    [TestCase("A1", true, "A1")]
+    [TestCase("A0", false, "")]
+    [TestCase("123", false, "")]
+    [TestCase("ABC", false, "")]
+    [TestCase("1A", false, "")]
+    [TestCase("A1B", false, "")]
+    [TestCase("XFD1048576", true, "XFD1048576")]
+
+    [TestCase("$A$1", true, "A1")]
+    [TestCase("$A$0", false, "")]
+    [TestCase("$A", false, "")]
+    [TestCase("$0", false, "")]
+    [TestCase("$$A$1", false, "")]
+    [TestCase("$A$$1", false, "")]
+
+    [TestCase("$A1", true, "A1")]
+    [TestCase("A$1", true, "A1")]
+    [TestCase("A1$", false, "")]
+
+    [TestCase("R5C4", true, "D5")]
+    [TestCase("R123C28", true, "AB123")]
+    [TestCase("R0C4", false, "")]
+    [TestCase("R5C0", false, "")]
+    [TestCase("R0C", false, "")]
+    [TestCase("RR5C4", false, "")]
+    [TestCase("R5CC4", false, "")]
+    [TestCase("$R5C4", false, "")]
+    [TestCase("R5$C4", false, "")]
+
+    [TestCase("", true, "")]
+    public void Parse_TryParse(string s, bool wantedRes, string wantedValue)
     {
       CellRef value1;
       bool res = CellRef.TryParse(s, out value1);
       Assert.AreEqual(wantedRes, res, "TryParse() result");
       if (res)
       {
-        Assert.AreEqual(s, value1.ToString(), "TryParse() value");
+        Assert.AreEqual(wantedValue, value1.ToString(), "TryParse() value");
 
         CellRef value2 = CellRef.Parse(s);
-        Assert.AreEqual(s, value2.ToString(), "Parse() result");
+        Assert.AreEqual(wantedValue, value2.ToString(), "Parse() result");
       }
       else
       {
@@ -110,6 +146,9 @@ namespace ExtTools_tests.Models.SpreadsheetBase
     {
       Assert.IsTrue(CellRef.Empty.IsEmpty);
       Assert.AreEqual("", CellRef.Empty.ToString(), "ToString()");
+      Assert.AreEqual("", CellRef.Empty.ToString(CellRefFormat.A1), "ToString(A1)");
+      Assert.AreEqual("", CellRef.Empty.ToString(CellRefFormat.Abs), "ToString(Abs)");
+      Assert.AreEqual("", CellRef.Empty.ToString(CellRefFormat.R1C1), "ToString(R1C1)");
     }
 
     #endregion

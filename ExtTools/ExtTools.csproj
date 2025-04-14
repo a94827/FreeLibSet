@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Calendar\YearMonthDayAge.cs" />
     <Compile Include="Collections\NumericStringComparer.cs" />
+    <Compile Include="CommandLine\CommandLineParser.cs" />
     <Compile Include="Core\DataTools.Arrays.cs" />
     <Compile Include="Core\DataTools.Math.cs" />
     <Compile Include="Core\ExceptionFactory.cs" />
@@ -217,6 +218,9 @@
     <EmbeddedResource Include="Res.ru.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ageyev_test.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

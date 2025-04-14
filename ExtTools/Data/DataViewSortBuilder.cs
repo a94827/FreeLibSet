@@ -85,7 +85,7 @@ namespace FreeLibSet.Data
 
       int pBad = DataTools.IndexOfAny(name, _BadChars);
       if (pBad >= 0)
-        throw ExceptionFactory.ArgBadChar("name", name, pBad);
+        throw ExceptionFactory.ArgInvalidChar("name", name, pBad);
 
       if (name[0] == '.' || name[name.Length - 1] == '.')
         throw new ArgumentException(Res.DataViewSortBuilder_Arg_NameStartsOrEndsWithDot, "name");

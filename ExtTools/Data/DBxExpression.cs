@@ -121,7 +121,7 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(columnName))
         throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
       if (columnName.IndexOf(',') >= 0)
-        throw ExceptionFactory.ArgBadChar("columnName", columnName, ",");
+        throw ExceptionFactory.ArgInvalidChar("columnName", columnName, ",");
 
       _ColumnName = columnName;
     }

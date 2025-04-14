@@ -1373,7 +1373,7 @@ namespace FreeLibSet.Forms
     public DataGridViewTextBoxColumn AddText(string columnName, bool isDataColumn, string headerText, int textWidth, int minTextWidth, DataGridViewContentAlignment alignment)
     {
       if (textWidth < 1)
-        throw new ArgumentOutOfRangeException("textWidth");
+        throw ExceptionFactory.ArgOutOfRange("textWidth", textWidth, 1, null);
 
       if (minTextWidth < 1 || minTextWidth > textWidth)
         throw ExceptionFactory.ArgOutOfRange("minTextWidth", minTextWidth, 1, textWidth);

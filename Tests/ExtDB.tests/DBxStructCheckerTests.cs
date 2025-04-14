@@ -12,7 +12,6 @@ namespace ExtDB_tests.Data
   [TestFixture]
   public class DBxStructCheckerTests : FixtureWithSetUp
   {
-
     #region CheckStruct()
 
     protected override void OnOneTimeSetUp()

@@ -387,7 +387,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _FillWeight = value;
       }
     }
@@ -1002,7 +1002,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (index < 0 || index >= ControlProvider.Columns.Count)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("index", index, 0, ControlProvider.Columns.Count-1);
         return this[ControlProvider.Control.Columns[index]];
       }
     }

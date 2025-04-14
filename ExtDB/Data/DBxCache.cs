@@ -61,7 +61,7 @@ namespace FreeLibSet.Data
         if (_IndividualColumnFlags._Flags != null)
         {
           if (_IndividualColumnFlags._Flags.Length != value.Columns.Count)
-            throw new BugException("Количество полей не соответствует структуре таблицы");
+            throw new BugException("Column count is wrong");
         }
         _TableStruct = value;
       }
@@ -162,7 +162,9 @@ namespace FreeLibSet.Data
       {
         int colIndex = _Owner._TableStruct.Columns.IndexOf(columnName);
         if (colIndex < 0)
-          throw new ArgumentException("Поля \"" + columnName + "\" нет в описании структуры таблицы \"" + _Owner._TableStruct.TableName + "\"", "columnName");
+          throw new ArgumentException(String.Format(Res.DBxCache_Arg_UnknownColumn, 
+            columnName, 
+            _Owner._TableStruct.TableName), "columnName");
         return colIndex;
       }
 
@@ -446,7 +448,7 @@ namespace FreeLibSet.Data
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _RepeatCount = value;
       }
     }
@@ -462,7 +464,7 @@ namespace FreeLibSet.Data
       set
       {
         if (value < 0)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 0, null);
         _RepeatDelay = value;
       }
     }
@@ -585,7 +587,7 @@ namespace FreeLibSet.Data
     public void Clear(string tableName)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       DBxTableCache tc = GetIfExists(tableName);
       if (tc != null)
@@ -808,7 +810,7 @@ namespace FreeLibSet.Data
             DBxCacheLoadRequest.PageInfo pi = request2.TablePages[i];
             DBxCacheTablePage page = response4.TablePages[pi.InternalKey];
             if (page == null)
-              throw new NullReferenceException("Не получена страница для " + pi.InternalKey);
+              throw new NullReferenceException(String.Format(Res.DBxCache_Err_TablePageNotReturned, pi.InternalKey));
             response.TablePages[pi.InternalKey] = page;
           }
         }
@@ -820,7 +822,7 @@ namespace FreeLibSet.Data
             DBxCacheLoadRequest.IndividualInfo ii = request2.IndividualValues[i];
             DBxCacheIndividualValue page = response4.IndividualValues[ii.InternalKey];
             if (page == null)
-              throw new NullReferenceException("Не получено индивидуальное значение для " + ii.InternalKey);
+              throw new NullReferenceException(String.Format(Res.DBxCache_Err_IndividualValueNotReturned, ii.InternalKey));
             response.IndividualValues[ii.InternalKey] = page;
           }
         }
@@ -873,12 +875,12 @@ namespace FreeLibSet.Data
           e.Data["DBxCache.RepeatCount"] = RepeatCount;
 
           if (i == 0 && RepeatCount > 1) // 17.04.2018. Выводим в log-файл, только если обработка ошибок соединений с сервером не обрабатывается в пользовательском коде
-            FreeLibSet.Logging.LogoutTools.LogoutException(e, "Ошибка получения страницы DBxCache");
+            FreeLibSet.Logging.LogoutTools.LogoutException(e, Res.DBxCache_ErrTitle_Load);
 
           e2 = e;
         }
       }
-      throw new DBxCacheLoadException("Не удалось получить данные из источника", request, e2);
+      throw new DBxCacheLoadException(Res.DBxCache_Err_Load, request, e2);
     }
 
     /// <summary>
@@ -965,7 +967,7 @@ namespace FreeLibSet.Data
     /// Управляет трассировкой вызовов <see cref="DBxClearCacheBuffer.Swap()"/>
     /// </summary>
     public static readonly BooleanSwitch TraceSwitch = new BooleanSwitch("TraceDBxCache",
-      "Трассировка кэша базы данных DBxCache");
+      Res.DBxCache_TraceSwitch_Default);
 
     internal string GetTracePrefix()
     {
@@ -1114,7 +1116,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
       int p = columnName.IndexOf('.');
       if (p < 0)
@@ -1124,7 +1126,7 @@ namespace FreeLibSet.Data
         {
           if (CacheInfo.IndividualColumnFlags[columnName])
             return GetIndividualValue(id, columnName);
-          throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит поля \"" + columnName + "\", или нет прав для просмотра поля", "columnName");
+          throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
         }
         object v = row[columnName];
         string s = v as string;
@@ -1138,15 +1140,16 @@ namespace FreeLibSet.Data
         string refColumnName = columnName.Substring(0, p);
 #if DEBUG
         if (!row.Table.Columns.Contains(refColumnName))
-          throw new ArgumentException("Таблица \"" + row.Table.TableName + "\" не содержит поля \"" + refColumnName + "\", или нет прав для просмотра поля", "columnName");
+          throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, refColumnName);
 #endif
         Int32 refId = DataTools.GetInt(row, refColumnName);
         if (refId == 0)
           return null; // пустая ссылка
 
+        
         string extTableName = TableStruct.Columns[refColumnName].MasterTableName;
         if (String.IsNullOrEmpty(extTableName))
-          throw new ArgumentException("Поле \"" + extTableName + "\" таблицы \"" + TableName + "\" не является ссылочным", "columnName");
+          throw new InvalidOperationException(String.Format(Res.Common_Err_ColumnIsNotRef, refColumnName, TableName));
 
         string extColumnName = columnName.Substring(p + 1);
 
@@ -1182,20 +1185,20 @@ namespace FreeLibSet.Data
 
 #if DEBUG
       if (String.IsNullOrEmpty(refColumnName))
-        throw new ArgumentNullException("refColumnName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("refColumnName");
 #endif
 
       int p = refColumnName.IndexOf('.');
 #if DEBUG
       if (p < 0)
-        throw new ArgumentException("Поле \"" + refColumnName + "\" не является ссылочным, так как не содержить точки", "refColumnName");
+        throw new ArgumentException(String.Format(Res.DBxCache_Arg_RefColumnHasNoDot, refColumnName), "refColumnName");
 #endif
       string thisColumnName = refColumnName.Substring(0, p);
       string extColumnName = refColumnName.Substring(p + 1);
 
       string extTableName = TableStruct.Columns[thisColumnName].MasterTableName;
       if (String.IsNullOrEmpty(extTableName))
-        throw new ArgumentException("Поле \"" + extTableName + "\" таблицы \"" + TableName + "\" не является ссылочным", "refColumnName");
+        throw new InvalidOperationException(String.Format(Res.Common_Err_ColumnIsNotRef, thisColumnName, TableName));
 
       return Owner[extTableName].GetValue(refId, extColumnName, primaryDS);
     }
@@ -1526,7 +1529,7 @@ namespace FreeLibSet.Data
       {
         DBxColumnStruct colStr = GetColumnStruct(columnNames[i]); // рекурсивная процедура
         if (colStr == null)
-          throw new ArgumentException("Неизвестное имя столбца \"" + columnNames[i] + "\"", "columnNames");
+          throw new ArgumentException(String.Format(Res.DBxCache_Arg_UnknownColumn, columnNames[i], TableStruct.TableName), "columnNames");
         DataColumn col = colStr.CreateDataColumn(columnNames[i]);
         col.AllowDBNull = true; // для ссылочных полей может быть не задана ссылка
         table.Columns.Add(col);
@@ -1540,7 +1543,7 @@ namespace FreeLibSet.Data
       for (int i = 0; i < ids.Length; i++)
       {
         if (ids[i] == 0)
-          throw new ArgumentException("Не задан идентификатор строки в массиве в позиции " + i.ToString(), "ids");
+          throw ExceptionFactory.ArgInvalidEnumerableItem("ids", ids, 0);
 
         DataRow srcRow = GetRow(ids[i], null);
         DataRow newRow = table.NewRow();
@@ -1667,7 +1670,7 @@ namespace FreeLibSet.Data
 
         row = page.Table.Rows.Find(id);
         if (row == null)
-          throw new ArgumentException("Таблица \"" + TableName + "\" не содержит строки с идентификатором Id=" + id.ToString());
+          throw ExceptionFactory.DataRowNotFound(page.Table, new object[] { id });
       }
 
       /*
@@ -1689,7 +1692,7 @@ namespace FreeLibSet.Data
     internal static Int32 GetFirstPageId(Int32 id)
     {
       if (id <= 0)
-        throw new ArgumentException("Неправильный идентификатор: " + id.ToString() + ". Иденификатор должен быть больше 0", "id");
+        throw ExceptionFactory.ArgOutOfRange("id", id, 0, null);
       return ((id - 1) / DBxCache.PageRowCount) * DBxCache.PageRowCount + 1;
     }
 
@@ -1843,7 +1846,7 @@ namespace FreeLibSet.Data
     {
 #if DEBUG
       if ((firstId % DBxCache.PageRowCount) != 1)
-        throw new ArgumentException("Неправильный firstId=" + firstId.ToString());
+        throw new ArgumentException("firstId=" + firstId.ToString());
 #endif
 
       string[] searchPageKeys = new string[4] { _Owner.DBIdentityMD5, TableName, firstId.ToString(), _ColumnsMD5 };
@@ -1858,7 +1861,7 @@ namespace FreeLibSet.Data
         DBxCacheLoadResponse response = _Owner.LoadCachePages(request);
         page = response.TablePages[pi.InternalKey];
         if (page == null)
-          throw new NullReferenceException("Не получена страница для " + pi.InternalKey);
+          throw new NullReferenceException(String.Format(Res.DBxCache_Err_TablePageNotReturned, pi.InternalKey));
       }
 
       return page;
@@ -1883,7 +1886,7 @@ namespace FreeLibSet.Data
         DBxCacheLoadResponse response = _Owner.LoadCachePages(request);
         page = response.IndividualValues[ii.InternalKey];
         if (page == null)
-          throw new NullReferenceException("Не получена страница индивидуального значения для " + ii.InternalKey);
+          throw new NullReferenceException(String.Format(Res.DBxCache_Err_IndividualValueNotReturned, ii.InternalKey));
       }
       return page.Value;
     }
@@ -1976,7 +1979,7 @@ namespace FreeLibSet.Data
     internal DBxCacheTablePage GetCachePage(DBxColumns columnNames, Int32 firstId)
     {
       if ((firstId % DBxCache.PageRowCount) != 1)
-        throw new ArgumentException("Идентификатор должен быть на границе страницы", "firstId");
+        throw new ArgumentException("firstId="+firstId.ToString(), "firstId");
 
       DBxCacheTablePage page = DoGetPage(firstId);
       DBxColumns orgColumnNames = DBxColumns.FromColumns(page.Table.Columns);
@@ -2032,7 +2035,7 @@ namespace FreeLibSet.Data
 
       int pId = rows[0].Table.Columns.IndexOf("Id");
       if (pId < 0)
-        throw new ArgumentException("Таблица " + rows[0].Table.TableName + " не содержит поля \"Id\"", "rows");
+        throw ExceptionFactory.DataColumnNotFound(rows[0].Table, "Id");
 
       #region Постраничная обработка
 
@@ -2092,7 +2095,7 @@ namespace FreeLibSet.Data
                 continue;
 #if DEBUG
               if (pCache < 0)
-                throw new BugException("Не найден индекс поля \"" + ColumnNames[iCol] + "\" в таблице кэша \"" + TableName + "\"");
+                throw new BugException("Index of column \"" + ColumnNames[iCol] + "\" not found in cache table \"" + TableName + "\"");
 #endif
               if (pSrc == pId)
                 continue; // идентификатор нельзя перезаписывать
@@ -2277,9 +2280,9 @@ Exception rethrown at [0]:
       if (table == null)
         throw new ArgumentNullException("table");
       if (String.IsNullOrEmpty(primaryKeyColumn))
-        throw new ArgumentNullException("primaryKeyColumn");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("primaryKeyColumn");
       if (primaryKeyColumn.IndexOf(',') >= 0)
-        throw new ArgumentException("Первичный ключ не может быть составным");
+        throw ExceptionFactory.ArgInvalidChar("primaryKeyColumn", primaryKeyColumn, ",");
 #endif
 
       //table.RemotingFormat = SerializationFormat.Binary;
@@ -2307,25 +2310,25 @@ Exception rethrown at [0]:
     /// Идентификатор базы данных - сумма MD5 (первый ключ кэширования)
     /// </summary>
     public string DBIdentityMD5 { get { return _DBIdentityMD5; } }
-    private string _DBIdentityMD5;
+    private readonly string _DBIdentityMD5;
 
     /// <summary>
     /// Имя таблицы (второй ключ кэширования)
     /// </summary>
     public string TableName { get { return _TableName; } }
-    private string _TableName;
+    private readonly string _TableName;
 
     /// <summary>
     /// Первый идентификатор для страницы (третий ключ кэширования)
     /// </summary>
     public Int32 FirstId { get { return _FirstId; } }
-    private Int32 _FirstId;
+    private readonly Int32 _FirstId;
 
     /// <summary>
     /// Имена столбцов - сумма MD5 (четвертый ключ кэширования)
     /// </summary>
     public string ColumnsMD5 { get { return _ColumnsMD5; } }
-    private string _ColumnsMD5;
+    private readonly string _ColumnsMD5;
 
     #endregion
 
@@ -2354,7 +2357,7 @@ Exception rethrown at [0]:
     private void OnDeserializedMethod(StreamingContext context)
     {
       if (TableBytes == null)
-        throw new NullReferenceException("Поле TableBytes не было десериализовано");
+        throw new NullReferenceException("TableBytes==null");
 
       using (MemoryStream ms = new MemoryStream(TableBytes))
       {
@@ -2408,25 +2411,25 @@ Exception rethrown at [0]:
     /// Идентификатор базы данных - сумма MD5 (первый ключ кэширования)
     /// </summary>
     public string DBIdentityMD5 { get { return _DBIdentityMD5; } }
-    private string _DBIdentityMD5;
+    private readonly string _DBIdentityMD5;
 
     /// <summary>
     /// Имя таблицы (второй ключ кэширования)
     /// </summary>
     public string TableName { get { return _TableName; } }
-    private string _TableName;
+    private readonly string _TableName;
 
     /// <summary>
     /// Идентификатор строки (третий ключ кэширования)
     /// </summary>
     public Int32 Id { get { return _Id; } }
-    private Int32 _Id;
+    private readonly Int32 _Id;
 
     /// <summary>
     /// Имя столбца (четвертый ключ кэширования)
     /// </summary>
     public string ColumnName { get { return _ColumnName; } }
-    private string _ColumnName;
+    private readonly string _ColumnName;
 
     #endregion
 
@@ -2469,11 +2472,11 @@ Exception rethrown at [0]:
       {
 #if DEBUG
         if (String.IsNullOrEmpty(tableName))
-          throw new ArgumentNullException("tableName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
         if (columnNames == null)
           throw new ArgumentNullException("columnNames");
         if (firstId <= 0)
-          throw new ArgumentOutOfRangeException("firstId");
+          throw ExceptionFactory.ArgOutOfRange("firstId", firstId, 0, null);
 #endif
         _TableName = tableName;
         _ColumnNames = columnNames;
@@ -2485,13 +2488,13 @@ Exception rethrown at [0]:
       #region Свойства
 
       public string TableName { get { return _TableName; } }
-      private string _TableName;
+      private readonly string _TableName;
 
       public DBxColumns ColumnNames { get { return _ColumnNames; } }
-      private DBxColumns _ColumnNames;
+      private readonly DBxColumns _ColumnNames;
 
       public Int32 FirstId { get { return _FirstId; } }
-      private Int32 _FirstId;
+      private readonly Int32 _FirstId;
 
       [EditorBrowsable(EditorBrowsableState.Never)]
       public string InternalKey { get { return _TableName + "|" + _ColumnNames.AsString + "|" + _FirstId.ToString(); } }
@@ -2553,11 +2556,11 @@ Exception rethrown at [0]:
       {
 #if DEBUG
         if (String.IsNullOrEmpty(tableName))
-          throw new ArgumentNullException("tableName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
         if (id <= 0)
-          throw new ArgumentOutOfRangeException("id");
+          throw ExceptionFactory.ArgOutOfRange("id", id, 1, null);
         if (String.IsNullOrEmpty(columnName))
-          throw new ArgumentNullException("columnName");
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 #endif
         _TableName = tableName;
         _Id = id;
@@ -2569,13 +2572,13 @@ Exception rethrown at [0]:
       #region Свойства
 
       public string TableName { get { return _TableName; } }
-      private string _TableName;
+      private readonly string _TableName;
 
       public Int32 Id { get { return _Id; } }
-      private Int32 _Id;
+      private readonly Int32 _Id;
 
       public string ColumnName { get { return _ColumnName; } }
-      private string _ColumnName;
+      private readonly string _ColumnName;
 
       public string InternalKey
       {
@@ -2948,7 +2951,7 @@ Exception rethrown at [0]:
     #region Конструкторы
 
     internal DBxCacheLoadException(string message, DBxCacheLoadRequest request, Exception innerException)
-      : base(message + ". Запрос DBxCache: " + request.ToString(), innerException)
+      : base(String.Format(Res.DBxCacheLoadException_Error_Nessage, message, request.ToString()), innerException)
     {
       if (request == null)
         throw new ArgumentNullException("request");
@@ -3032,14 +3035,14 @@ Exception rethrown at [0]:
     public new object GetValue(string name)
     {
       if (CurrentRow == null)
-        throw new NullReferenceException("Свойство CurrentRow не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CurrentRow");
 
       int p = ColumnNameIndexer.IndexOf(name);
       if (p >= 0)
         return CurrentRow[p];
 
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
       int p1 = name.IndexOf('.');
       if (p1 < 0)

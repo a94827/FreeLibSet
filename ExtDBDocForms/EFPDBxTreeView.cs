@@ -154,11 +154,11 @@ namespace FreeLibSet.Forms.Docs
     protected ITreeModelWithIds<Int32> GetModelWithIdsWithCheck()
     {
       if (Control.Model == null)
-        throw new NullReferenceException("Свойство TreeViewAdv.Model не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(Control, "Model");
 
       ITreeModelWithIds<Int32> model = Control.Model as ITreeModelWithIds<Int32>;
       if (model == null)
-        throw new NullReferenceException("Присоединенная модель не реализует ITreeModelWithIds<Int32>");
+        throw ExceptionFactory.ObjectProperty(Control, "Model", Control.Model, new object[] { typeof(ITreeModelWithIds<Int32>) });
 
       return model;
     }
@@ -508,14 +508,14 @@ namespace FreeLibSet.Forms.Docs
       IDBxDocSelectionFilter item2 = item as IDBxDocSelectionFilter;
       if (item2 == null)
       {
-        EFPApp.ShowTempMessage("Фильтр \"" + item.DisplayName + "\" не поддерживает вставку выборки документов");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDBxFilterGrid_Err_NotSupportedFilter, item.DisplayName));
         return;
       }
 
       if (item2.ApplyDocSel(fmtDocSel.DocSel))
         efpFilterGrid.PerformRefresh();
       else
-        EFPApp.ShowTempMessage("Выборка документов в буфере обмена не подходит фильтру \"" + item.DisplayName + "\"");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDBxFilterGrid_Err_DocSelMismatch, item.DisplayName));
     }
 
     #endregion
@@ -894,7 +894,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = null;
       try
       {
-        EFPApp.BeginWait("Создание выборки документов", "Выборка");
+        EFPApp.BeginWait(Res.Common_Phase_DocSelCreation, "DBxDocSelection");
         try
         {
           EFPDBxTreeViewDocSelEventArgs args = new EFPDBxTreeViewDocSelEventArgs(this, reason, nodes);
@@ -909,7 +909,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка создания выборки документов для иерархического просмотра");
+        EFPApp.ShowException(e);
       }
       return docSel;
     }
@@ -1023,8 +1023,8 @@ namespace FreeLibSet.Forms.Docs
 
       #region Отправить
 
-      ciSendTo = new EFPCommandItem("Send", "DocSel");
-      ciSendTo.MenuText = "Выборка документов";
+      ciSendTo = new EFPCommandItem("SendTo", "DocSel");
+      ciSendTo.MenuText = Res.Cmd_Menu_SendTo_DocSel;
       ciSendTo.ImageKey = "DBxDocSelection";
       ciSendTo.Parent = base.MenuSendTo;
       ciSendTo.Click += ciSendToDocSel_Click;
@@ -1088,7 +1088,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Выборка не содержит документов");
+        EFPApp.ShowTempMessage(Res.DocSel_Msg_IsEmpty);
         return;
       }
       ControlProvider.UI.ShowDocSel(docSel);

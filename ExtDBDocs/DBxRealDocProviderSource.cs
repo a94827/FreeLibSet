@@ -12,7 +12,7 @@ namespace FreeLibSet.Data.Docs
   #region Делегаты
 
   /// <summary>
-  /// Аргументы события DBxRealDocProviderSource.BeforeApplyChanges
+  /// Аргументы события <see cref="DBxRealDocProviderSource.BeforeApplyChanges"/>
   /// </summary>
   public class DBxBeforeApplyChangesEventArgs : EventArgs
   {
@@ -22,7 +22,7 @@ namespace FreeLibSet.Data.Docs
     /// Аргументы события не создаются в пользовательском коде
     /// </summary>
     /// <param name="docSet">Набор данных</param>
-    public DBxBeforeApplyChangesEventArgs(DBxDocSet docSet)
+    internal DBxBeforeApplyChangesEventArgs(DBxDocSet docSet)
     {
 #if DEBUG
       if (docSet == null)
@@ -40,15 +40,15 @@ namespace FreeLibSet.Data.Docs
     /// Набор данных, обновления из которого применяются
     /// </summary>
     public DBxDocSet DocSet { get { return _DocSet; } }
-    private DBxDocSet _DocSet;
+    private readonly DBxDocSet _DocSet;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события DBxRealDocProviderSource.BeforeApplyChanges
+  /// Делегат события <see cref="DBxRealDocProviderSource.BeforeApplyChanges"/>
   /// </summary>
-  /// <param name="sender">Ссылка на DBxRealDocProviderSource</param>
+  /// <param name="sender">Ссылка на <see cref="DBxRealDocProviderSource"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void DBxBeforeApplyChangesEventHandler(object sender,
     DBxBeforeApplyChangesEventArgs args);
@@ -56,18 +56,18 @@ namespace FreeLibSet.Data.Docs
   #endregion
 
   /// <summary>
-  /// Потокобезопасный (в режиме ReadOnly) класс, хранящий общие данные для одного или нескольких DBxRealDocProvider 
-  /// Объект хранит настройки разрешений для пользователя
+  /// Потокобезопасный (в режиме ReadOnly) класс, хранящий общие данные для одного или нескольких <see cref="DBxRealDocProvider"/>.
+  /// Объект хранит настройки разрешений для пользователя.
   /// Этот класс не сериализуется и существует только на стороне сервера, 
-  /// т.к. через свойство GlobalData содержит точки подключения к базе данных без ограничения доступа
+  /// т.к. через свойство GlobalData содержит точки подключения к базе данных без ограничения доступа.
   /// </summary>
   public class DBxRealDocProviderSource : IReadOnlyObject, IDBxCacheSource
   {
     #region Конструктор
 
     /// <summary>
-    /// Создает объект DBxRealDocProviderSource.
-    /// Для переданного <paramref name="globalData"/> будет вызван SetReadOnly().
+    /// Создает объект <see cref="DBxRealDocProviderSource"/>.
+    /// Для переданного <paramref name="globalData"/> будет вызван <see cref="DBxRealDocProviderGlobal.SetReadOnly()"/>.
     /// </summary>
     /// <param name="globalData">Общие данные по системе документов без выделения прав отдельных пользователей</param>
     public DBxRealDocProviderSource(DBxRealDocProviderGlobal globalData)
@@ -82,8 +82,8 @@ namespace FreeLibSet.Data.Docs
       _MainDBEntry = globalData.MainDBEntry;
 
       _UserPermissions = UserPermissions.Empty;
-
-      _DisplayName = "[ Без имени ]";
+           
+      _DisplayName = Res.DBxRealDocProviderSource_Name_Default;
 
       _SyncRoot = new object();
 
@@ -98,7 +98,7 @@ namespace FreeLibSet.Data.Docs
     /// Общие данные для всех пользователей
     /// </summary>
     public DBxRealDocProviderGlobal GlobalData { get { return _GlobalData; } }
-    private DBxRealDocProviderGlobal _GlobalData;
+    private readonly DBxRealDocProviderGlobal _GlobalData;
 
     /// <summary>
     /// Настраиваемые разрешения, назначенные пользователю
@@ -189,7 +189,7 @@ namespace FreeLibSet.Data.Docs
       {
         CheckNotReadOnly();
         if (String.IsNullOrEmpty(value))
-          throw new ArgumentNullException();
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
         _DisplayName = value;
       }
     }
@@ -211,7 +211,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Использовать в качестве блокируемого объекта GlobalData или typeof() не стоит
     /// </summary>
-    private object _SyncRoot;
+    private readonly object _SyncRoot;
 
     /// <summary>
     /// Потокобезопасный кэш данных на стороне сервера
@@ -416,7 +416,7 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          return "Id=" + id.ToString() + ". Ошибка. " + e.Message;
+          return String.Format(Res.DBxRealDocProviderSource_Err_GetTextValue, id, e.Message);
         }
       }
     }
@@ -521,16 +521,16 @@ namespace FreeLibSet.Data.Docs
     #region Свойства
 
     public bool UseBinData { get { return _UseBinData; } }
-    private bool _UseBinData;
+    private readonly bool _UseBinData;
 
     public bool UseFiles { get { return _UseFiles; } }
-    private bool _UseFiles;
+    private readonly bool _UseFiles;
 
     public DBxTableStruct BinDataTableStruct { get { return _BinDataTableStruct; } }
-    private DBxTableStruct _BinDataTableStruct;
+    private readonly DBxTableStruct _BinDataTableStruct;
 
     public DBxTableStruct FileNamesTableStruct { get { return _FileNamesTableStruct; } }
-    private DBxTableStruct _FileNamesTableStruct;
+    private readonly DBxTableStruct _FileNamesTableStruct;
 
     #endregion
 
@@ -556,9 +556,9 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Реализация свойств DBxDocProvider и DBxRealDocProviderSource.StructSource
+  /// Реализация свойств <see cref="DBxDocProvider.StructSource"/> и DBxRealDocProviderSource.StructSource.
   /// Получение "урезанных" структур, в соответствии с правами пользователя.
-  /// Класс является потокобезопасным
+  /// Класс является потокобезопасным.
   /// </summary>
   internal class DBxDocStructSource : IDBxStructSource
   {
@@ -577,9 +577,9 @@ namespace FreeLibSet.Data.Docs
 
     #region Исходные данные
 
-    DBxDocTypes _DocTypes;
-    DBxPermissions _DBPermissions;
-    DBxBinDataHandlerInfo _BinDataInfo;
+    private readonly DBxDocTypes _DocTypes;
+    private readonly DBxPermissions _DBPermissions;
+    private readonly DBxBinDataHandlerInfo _BinDataInfo;
 
     /// <summary>
     /// Объект для синхронизации во всех операциях.
@@ -701,7 +701,7 @@ namespace FreeLibSet.Data.Docs
     private DBxTableStruct DoGetTableStruct(string tableName)
     {
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       DBxTableStruct ts = _BinDataInfo.GetTableStruct(tableName);
       if (ts != null)
@@ -709,10 +709,10 @@ namespace FreeLibSet.Data.Docs
 
       DBxTableStruct ts1 = MainDBstruct.Tables[tableName];
       if (ts1 == null)
-        throw new ArgumentException("Неизвестная таблица \"" + tableName + "\"", "tableName");
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownTable, tableName), "tableName");
 
       if (_DBPermissions.TableModes[tableName] == DBxAccessMode.None)
-        throw new DBxAccessException("Доступ к таблице \"" + tableName + "\" запрещен");
+        throw new DBxAccessException(String.Format(Res.DBxDocStructSource_Err_AccessDenied, tableName));
 
       // Создаем "урезанную" копию, проверяя права пользователя.
       DBxTableStruct ts2 = new DBxTableStruct(tableName);
@@ -747,7 +747,7 @@ namespace FreeLibSet.Data.Docs
         {
           DBxTableStruct ts = GetTableStruct(tableName);
           if (ts == null)
-            throw new ArgumentException("Неизвестное имя таблицы \"" + tableName + "\"", "tableName");
+            throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownTable, tableName), "tableName");
           info = new DBxTableCacheInfo(ts);
 
           DBxDocTypeBase docTypeBase;

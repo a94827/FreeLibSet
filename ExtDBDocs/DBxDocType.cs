@@ -41,7 +41,7 @@ namespace FreeLibSet.Data.Docs
     /// Обрабатываемый документ
     /// </summary>
     public DBxSingleDoc Doc { get { return _Doc; } }
-    private DBxSingleDoc _Doc;
+    private readonly DBxSingleDoc _Doc;
 
     /// <summary>
     /// Доступ к кэшированным данным других документов.
@@ -91,7 +91,7 @@ namespace FreeLibSet.Data.Docs
   #region ServerDocTypeBeforeInsertEventHandler
 
   /// <summary>
-  /// Аргументы события DBxDocType.BeforeInsert
+  /// Аргументы события <see cref="DBxDocType.BeforeInsert"/>
   /// </summary>
   public class ServerDocTypeBeforeInsertEventArgs : ServerDocTypeDocEventArgs
   {
@@ -102,7 +102,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="doc">Обрабатываемый документ</param>
     /// <param name="restoreDeleted">true, если событие вызвано при восстановлении удаленного документа</param>
-    public ServerDocTypeBeforeInsertEventArgs(DBxSingleDoc doc, bool restoreDeleted)
+    internal ServerDocTypeBeforeInsertEventArgs(DBxSingleDoc doc, bool restoreDeleted)
       : base(doc)
     {
       _RestoreDeleted = restoreDeleted;
@@ -117,15 +117,15 @@ namespace FreeLibSet.Data.Docs
     /// и false, если создается новый документ
     /// </summary>
     public bool RestoreDeleted { get { return _RestoreDeleted; } }
-    private bool _RestoreDeleted;
+    private readonly bool _RestoreDeleted;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события DBxDocType.BeforeInsert
+  /// Делегат события <see cref="DBxDocType.BeforeInsert"/>
   /// </summary>
-  /// <param name="sender">Объект DBxDocType</param>
+  /// <param name="sender">Объект <see cref="DBxDocType"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void ServerDocTypeBeforeInsertEventHandler(object sender,
     ServerDocTypeBeforeInsertEventArgs args);
@@ -135,7 +135,7 @@ namespace FreeLibSet.Data.Docs
   #region ServerDocTypeBeforeWriteEventHandler
 
   /// <summary>
-  /// Аргументы события DBxDocType.BeforeWrite
+  /// Аргументы события <see cref="DBxDocType.BeforeWrite"/>
   /// </summary>
   public class ServerDocTypeBeforeWriteEventArgs : ServerDocTypeDocEventArgs
   {
@@ -147,7 +147,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="doc">Обрабатываемый документ</param>
     /// <param name="append">True, если вызов идет перед первым добавлением документа</param>
     /// <param name="recalcColumnsOnly">True, если вызвано из команды пересчета вычисляемых полей</param>
-    public ServerDocTypeBeforeWriteEventArgs(DBxSingleDoc doc, bool append, bool recalcColumnsOnly)
+    internal ServerDocTypeBeforeWriteEventArgs(DBxSingleDoc doc, bool append, bool recalcColumnsOnly)
       : base(doc)
     {
       _Append = append;
@@ -162,7 +162,7 @@ namespace FreeLibSet.Data.Docs
     /// True, если вызов идет перед первым добавлением документа, false - перед записью
     /// </summary>
     public bool Append { get { return _Append; } }
-    private bool _Append;
+    private readonly bool _Append;
 
     /// <summary>
     /// Возвращает true, если событие вызвано из команды пересчета вычисляемых полей.
@@ -170,15 +170,15 @@ namespace FreeLibSet.Data.Docs
     /// такая проверка не должна выполняться
     /// </summary>
     public bool RecalcColumnsOnly { get { return _RecalcColumnsOnly; } }
-    private bool _RecalcColumnsOnly;
+    private readonly bool _RecalcColumnsOnly;
 
     #endregion
   }
 
   /// <summary>
-  /// Делегат события DBxDocType.BeforeWrite
+  /// Делегат события <see cref="DBxDocType.BeforeWrite"/>
   /// </summary>
-  /// <param name="sender">Объект DBxDocType</param>
+  /// <param name="sender">Объект <see cref="DBxDocType"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void ServerDocTypeBeforeWriteEventHandler(object sender,
     ServerDocTypeBeforeWriteEventArgs args);
@@ -188,17 +188,17 @@ namespace FreeLibSet.Data.Docs
   #region ServerDocTypeAfterWriteEventHandler
 
   /// <summary>
-  /// Аргументы события DBxDocType.AfterWrite
+  /// Аргументы события <see cref="DBxDocType.AfterChange"/>
   /// </summary>
   public class ServerDocTypeAfterChangeEventArgs : ServerDocTypeDocEventArgs
   {
     #region Конструктор
 
     /// <summary>
-    /// Аргументы создаются в DBxDocType, а не в пользовательском коде
+    /// Аргументы создаются в <see cref="DBxDocType"/>, а не в пользовательском коде
     /// </summary>
     /// <param name="doc">Обрабатываемый документ</param>
-    public ServerDocTypeAfterChangeEventArgs(DBxSingleDoc doc)
+    internal ServerDocTypeAfterChangeEventArgs(DBxSingleDoc doc)
       : base(doc)
     {
     }
@@ -209,9 +209,9 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Делегат события DBxDocType.AfterWrite
+  /// Делегат события <see cref="DBxDocType.AfterChange"/>
   /// </summary>
-  /// <param name="sender">Объект DBxDocType</param>
+  /// <param name="sender">Объект <see cref="DBxDocType"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void ServerDocTypeAfterChangeEventHandler(object sender,
     ServerDocTypeAfterChangeEventArgs args);
@@ -221,7 +221,7 @@ namespace FreeLibSet.Data.Docs
   #region ServerDocTypeBeforeDeleteEventHandler
 
   /// <summary>
-  /// Аргументы события DBxDocType.BeforeDelete
+  /// Аргументы события <see cref="DBxDocType.BeforeDelete"/>
   /// </summary>
   public class ServerDocTypeBeforeDeleteEventArgs : ServerDocTypeDocEventArgs
   {
@@ -231,7 +231,7 @@ namespace FreeLibSet.Data.Docs
     /// Аргументы создаются в DBxDocType, а не в пользовательском коде
     /// </summary>
     /// <param name="doc">Обрабатываемый документ</param>
-    public ServerDocTypeBeforeDeleteEventArgs(DBxSingleDoc doc)
+    internal ServerDocTypeBeforeDeleteEventArgs(DBxSingleDoc doc)
       : base(doc)
     {
     }
@@ -240,9 +240,9 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Делегат события DBxDocType.BeforeDelete
+  /// Делегат события <see cref="DBxDocType.BeforeDelete"/>
   /// </summary>
-  /// <param name="sender">Объект DBxDocType</param>
+  /// <param name="sender">Объект <see cref="DBxDocType"/></param>
   /// <param name="args">Аргументы события</param>
   public delegate void ServerDocTypeBeforeDeleteEventHandler(object sender,
     ServerDocTypeBeforeDeleteEventArgs args);
@@ -1005,8 +1005,8 @@ namespace FreeLibSet.Data.Docs
 
   /// <summary>
   /// Описание способов буферизации полей таблицы документа / поддокумента.
-  /// Представляет собой набор флажков для полей из списка DBxDocTypeBase.Struct.
-  /// На основании полей этого класса создается DBxTableCacheInfo.
+  /// Представляет собой набор флажков для полей из списка <see cref="DBxDocTypeBase.Struct"/>.
+  /// На основании полей этого класса создается <see cref="DBxTableCacheInfo"/>.
   /// </summary>
   [Serializable]
   public sealed class DBxDocTypeIndividualCacheColumns
@@ -1023,7 +1023,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Свойства
 
-    private DBxDocTypeBase _Owner;
+    private readonly DBxDocTypeBase _Owner;
 
     /// <summary>
     /// Чтение / запись флажка для столбца
@@ -1039,14 +1039,7 @@ namespace FreeLibSet.Data.Docs
           return res;
         else
         {
-          DBxColumnStruct col = _Owner.Struct.Columns[columnName];
-          if (col == null)
-          {
-            if (String.IsNullOrEmpty(columnName))
-              throw new ArgumentNullException("columnName");
-            else
-              throw new ArgumentException("Структура таблицы не содержит объявления поля \"" + columnName + "\"", "columnName");
-          }
+          DBxColumnStruct col = _Owner.Struct.Columns.GetRequired(columnName);
           return DBxTableCacheInfo.IsIndividualByDefault(col);
         }
       }
@@ -1073,7 +1066,7 @@ namespace FreeLibSet.Data.Docs
 
 
   /// <summary>
-  /// Базовый класс для DBxDocType и DBxSubDocType
+  /// Базовый класс для <see cref="DBxDocType"/> и <see cref="DBxSubDocType"/>
   /// </summary>
   [Serializable]
   public abstract class DBxDocTypeBase : IObjectWithCode, IReadOnlyObject
@@ -1087,7 +1080,7 @@ namespace FreeLibSet.Data.Docs
     public DBxDocTypeBase(string name)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       _Struct = new DBxTableStruct(name);
       _FileRefs = new DBxDocTypeFileRefs(_Struct);
       _BinDataRefs = new DBxDocTypeBinDataRefs(_Struct);
@@ -1102,7 +1095,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Имя вида документа.
-    /// Совпадает с именем таблицы в базе данных
+    /// Совпадает с именем таблицы в базе данных.
     /// </summary>
     public string Name { get { return Struct.TableName; } }
 
@@ -1114,7 +1107,7 @@ namespace FreeLibSet.Data.Docs
       get
       {
         if (_SingularTitle == null)
-          return "Объект \"" + PluralTitle + "\"";
+          return String.Format(Res.DBxDocTypes_Msg_SingularTitleDefault, PluralTitle);
         return _SingularTitle;
       }
       set
@@ -1126,7 +1119,8 @@ namespace FreeLibSet.Data.Docs
     private string _SingularTitle;
 
     /// <summary>
-    /// Название нескольких документов ("Люди") для вывода пользователю
+    /// Название нескольких документов ("Люди") для вывода пользователю.
+    /// Если не установлено в явном виде, свойство возвращает <see cref="Name"/>.
     /// </summary>
     public string PluralTitle
     {
@@ -1154,8 +1148,8 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// True, если текущий объект DBxSubDocType.
-    /// False, если DBxDocType
+    /// True, если текущий объект <see cref="DBxSubDocType"/>.
+    /// False, если <see cref="DBxDocType"/>.
     /// </summary>
     public abstract bool IsSubDoc { get; }
 
@@ -1164,8 +1158,8 @@ namespace FreeLibSet.Data.Docs
     #region Древовидный просмотр
 
     /// <summary>
-    /// Имя столбца (обычно, "ParentId"), используемое для организации древовидной структуры документов и поддокументов
-    /// Если свойство не установлено (по умолчанию), древовидный просмотр не предусмотрен
+    /// Имя столбца (обычно, "ParentId"), используемое для организации древовидной структуры документов и поддокументов.
+    /// Если свойство не установлено (по умолчанию), древовидный просмотр не предусмотрен.
     /// </summary>
     public string TreeParentColumnName
     {
@@ -1188,33 +1182,33 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Структура таблицы документа
     /// Структура является неполной, т.к. не содержит объявлений служебных полей "Id", "Deleted" и прочих.
-    /// В структуре есть поля, создаваемые при добавлении записей в коллекции VTRefs, FileRefs и BinDataRefs.
+    /// В структуре есть поля, создаваемые при добавлении записей в коллекции <see cref="VTRefs"/>, <see cref="FileRefs"/> и <see cref="BinDataRefs"/>.
     /// Эти поля добавляются автоматически
     /// </summary>
     public DBxTableStruct Struct { get { return _Struct; } }
-    private DBxTableStruct _Struct;
+    private readonly DBxTableStruct _Struct;
 
     /// <summary>
     /// Объявления переменных ссылок
     /// </summary>
     public DBxVTReferenceList VTRefs { get { return _VTRefs; } }
-    private DBxVTReferenceList _VTRefs;
+    private readonly DBxVTReferenceList _VTRefs;
 
     /// <summary>
     /// Объявления полей, ссылающиеся на файлы, хранящиеся в базе данных
     /// </summary>
     public DBxDocTypeFileRefs FileRefs { get { return _FileRefs; } }
-    private DBxDocTypeFileRefs _FileRefs;
+    private readonly DBxDocTypeFileRefs _FileRefs;
 
     /// <summary>
     /// Объявляения полей, ссылающихся на двоичные файлы, хранящиеся в отдельной таблице
     /// </summary>
     public DBxDocTypeBinDataRefs BinDataRefs { get { return _BinDataRefs; } }
-    private DBxDocTypeBinDataRefs _BinDataRefs;
+    private readonly DBxDocTypeBinDataRefs _BinDataRefs;
 
     /// <summary>
-    /// Порядок сортировки документов по умолчанию
-    /// Если свойство не установлено, возвращается порядок сортировки по идентификатору Id
+    /// Порядок сортировки документов по умолчанию.
+    /// Если свойство не установлено, возвращается порядок сортировки по идентификатору "Id".
     /// </summary>
     public DBxOrder DefaultOrder
     {
@@ -1235,17 +1229,17 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Список вычисляемых полей.
-    /// В этот список поля должны добавляться вручную, после того, как они добавлены в список Struct
+    /// В этот список поля должны добавляться вручную, после того, как они добавлены в список <see cref="Struct"/>
     /// </summary>
     public DBxColumnList CalculatedColumns { get { return _CalculatedColumns; } }
-    private DBxColumnList _CalculatedColumns;
+    private readonly DBxColumnList _CalculatedColumns;
 
     /// <summary>
     /// Признаки индивидуальной буферизации значений полей.
     /// В этот список поля должны добавляться вручную, после того, как они добавлены в список Struct
     /// </summary>
     public DBxDocTypeIndividualCacheColumns IndividualCacheColumns { get { return _IndividualCacheColumns; } }
-    private DBxDocTypeIndividualCacheColumns _IndividualCacheColumns;
+    private readonly DBxDocTypeIndividualCacheColumns _IndividualCacheColumns;
 
     #endregion
 
@@ -1264,7 +1258,7 @@ namespace FreeLibSet.Data.Docs
     public bool IsReadOnly { get { return Struct.IsReadOnly; } }
 
     /// <summary>
-    /// Генерирует исключение, если IsReadOnly=true
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -1290,13 +1284,15 @@ namespace FreeLibSet.Data.Docs
       // Вызывается в DBxDocTypes Struct.CheckStruct();
       string pk = DBxStructChecker.CheckTablePrimaryKeyInt32(realStruct);
       if (pk != "Id")
-        throw new DBxDocTypeStructException("Описание таблицы \"" + realStruct.TableName + "\" имеет неправильный первичный ключ по полю \"" + pk + "\", а не \"Id\"");
+        throw new DBxDocTypeStructException(String.Format(Res.DBxDocTypes_Err_InvaldidPK,
+          realStruct.TableName, pk));
 
       // Проверяем список CalculatedColumns
       for (int i = 0; i < CalculatedColumns.Count; i++)
       {
         if (!realStruct.Columns.Contains(CalculatedColumns[i]))
-          throw new DBxDocTypeStructException("Описание таблицы \"" + realStruct.TableName + "\" не содержит описания вычисляемого поля \"" + CalculatedColumns[i] + "\"");
+          throw new DBxDocTypeStructException(String.Format(Res.DBxDocTypes_Err_NoCalcCalumn,
+            realStruct.TableName, CalculatedColumns[i]));
       }
 
       // 14.02.2022
@@ -1308,9 +1304,11 @@ namespace FreeLibSet.Data.Docs
           DBxVTReference vtr = VTRefs[i];
           // Основная часть проверок выполнена конструктором VTReference.
           if (usedCols.Contains(vtr.TableIdColumn))
-            throw new DBxDocTypeStructException("Для таблицы \"" + Name + "\" в переменной ссылке \"" + vtr.Name + "\" используется поле \"" + vtr.TableIdColumn.ColumnName + "\", которое уже используется в другой ссылке");
+            throw new DBxDocTypeStructException(String.Format(Res.DBxDocTypes_Err_VTRefColumnUsed,
+              Name, vtr.Name, vtr.TableIdColumn.ColumnName));
           if (usedCols.Contains(vtr.DocIdColumn))
-            throw new DBxDocTypeStructException("Для таблицы \"" + Name + "\" в переменной ссылке \"" + vtr.Name + "\" используется поле \"" + vtr.DocIdColumn.ColumnName + "\", которое уже используется в другой ссылке");
+            throw new DBxDocTypeStructException(String.Format(Res.DBxDocTypes_Err_VTRefColumnUsed,
+              Name, vtr.Name, vtr.DocIdColumn.ColumnName));
           usedCols.Add(vtr.TableIdColumn);
           usedCols.Add(vtr.DocIdColumn);
         }
@@ -1356,7 +1354,7 @@ namespace FreeLibSet.Data.Docs
     /// Коллекция видов поддокументов для данного вида документов
     /// </summary>
     public DBxSubDocTypes SubDocs { get { return _SubDocs; } }
-    private DBxSubDocTypes _SubDocs;
+    private readonly DBxSubDocTypes _SubDocs;
 
     /// <summary>
     /// Возвращает false
@@ -1441,10 +1439,10 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Событие вызывается на стороне сервера перед добавлением документа (Insert) и
     /// при восстановлении документа из удаленных (Edit).
-    /// После этого события вызывается основное событие BeforeWrite.
-    /// При повторном вызове ApplyChanges() для этого документа событие не вызывается.
+    /// После этого события вызывается основное событие <see cref="BeforeWrite"/>.
+    /// При повторном вызове <see cref="DBxDocProvider.ApplyChanges(DataSet, bool)"/> для этого документа событие не вызывается.
     /// Обработчик может, например, заполнить недостающие поля. 
-    /// Для этого следует изменить текущие значения, которые доступны через аргументы события (свойство ServerDocTypeBeforeWriteEventArgs.Doc.Values).
+    /// Для этого следует изменить текущие значения, которые доступны через аргументы события (свойство <see cref="ServerDocTypeDocEventArgs.Doc"/>.Values).
     /// </summary>
     public event ServerDocTypeBeforeInsertEventHandler BeforeInsert
     {
@@ -1478,9 +1476,9 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Вызывается на стороне сервера непосредственно перед записью документа в базу данных в режимах Insert и Edit.
     /// Обработчик может, например, заполнить вычисляемые поля. 
-    /// Для этого следует изменить текущие значения, которые доступны через аргументы события (свойство ServerDocTypeBeforeWriteEventArgs.Doc.Values).
+    /// Для этого следует изменить текущие значения, которые доступны через аргументы события (свойство <see cref="ServerDocTypeDocEventArgs.Doc"/>.Values).
     /// Не вызывается перед удалением документа.
-    /// Для нового или восстанавливаемого документа сначала вызывается событие BeforeInsert.
+    /// Для нового или восстанавливаемого документа сначала вызывается событие <see cref="BeforeInsert"/>.
     /// </summary>
     public event ServerDocTypeBeforeWriteEventHandler BeforeWrite
     {
@@ -1620,7 +1618,7 @@ namespace FreeLibSet.Data.Docs
     /// Имя таблицы "Users".
     /// По умолчанию задает имя таблицы "Users".
     /// Если свойство установлено равным пустой строке, то в документах не будет служебных полей
-    /// "CreateUserId", и "ChangeUserId". При этом, однако, может вестить история изменения документов
+    /// "CreateUserId", и "ChangeUserId". При этом, однако, может вестить история изменения документов.
     /// </summary>
     public string UsersTableName
     {
@@ -1643,8 +1641,6 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public bool UseUsers { get { return _UsersTableName.Length > 0; } }
 
-
-
     /// <summary>
     /// Длина поля "ActionInfo" в таблице "UserActions".
     /// По умолчанию - 60 символов
@@ -1656,7 +1652,7 @@ namespace FreeLibSet.Data.Docs
       {
         CheckNotReadOnly();
         if (value < 30 || value > 255)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 30, 255);
         _ActionInfoMaxLength = value;
       }
     }
@@ -1681,7 +1677,7 @@ namespace FreeLibSet.Data.Docs
     private bool _UseDeleted;
 
     /// <summary>
-    /// Если true (по умолчанию), то в документах присутствует служебное поле Version, которое
+    /// Если true (по умолчанию), то в документах присутствует служебное поле "Version", которое
     /// имеет значение 1 при создании документа, а затем увеличивается при изменениях.
     /// Если свойство сброшено в false, то служебного поля нет.
     /// Этот режим несовместим с ведением истории.
@@ -1698,7 +1694,7 @@ namespace FreeLibSet.Data.Docs
     private bool _UseVersions;
 
     /// <summary>
-    /// Если true (по умолчанию), то в документах присутствуют служебные поля CreateTime и ChangeTime, 
+    /// Если true (по умолчанию), то в документах присутствуют служебные поля "CreateTime" и "ChangeTime", 
     /// которые хранят время создания и последнего изменения документв.
     /// Если свойство сброшено в false, то служебных полей нет.
     /// Этот режим несовместим с ведением истории.
@@ -1715,15 +1711,15 @@ namespace FreeLibSet.Data.Docs
     private bool _UseTime;
 
     /// <summary>
-    /// Если свойство установить в true, то в таблице UserActions будет добавлено числовое поле "SessionId".
+    /// Если свойство установить в true, то в таблице "UserActions" будет добавлено числовое поле "SessionId".
     /// Это поле можно использовать при просмотре истории документа вместе или вместо поля "UserId"
     /// для учета сеансов работы клиента.
-    /// В отличие от "UserId", для поля не "SessionId" в ExtDBDocs не обеспечивается ссылочная целостность.
+    /// В отличие от поля "UserId", для поля не "SessionId" не обеспечивается ссылочная целостность.
     /// Ведение таблице сеансов клиентов возлагается на программу.
-    /// Также, сеанс работы не записывается в основую базу данных, а есть только в UserActions,
+    /// Также, сеанс работы не записывается в основую базу данных, а есть только в "UserActions",
     /// поэтому установка свойства допускается, если ведется база данных истории, то есть при
-    /// UseDeleted=true, UseVersions=true и UseTime=true.
-    /// По умолчанию свойство UseSessionId=false.
+    /// <see cref="UseDeleted"/>=true, <see cref="UseVersions"/>=true и <see cref="UseTime"/>=true.
+    /// По умолчанию свойство <see cref="UseSessionId"/>=false.
     /// </summary>
     public bool UseSessionId
     {
@@ -1741,7 +1737,7 @@ namespace FreeLibSet.Data.Docs
     #region Группы документов
 
     /// <summary>
-    /// Возвращает массив описаний видов документов-деревьев групп, на которые есть ссылки в DBxDocType.GroupRefColumnName.
+    /// Возвращает массив описаний видов документов-деревьев групп, на которые есть ссылки в <see cref="DBxDocType.GroupRefColumnName"/>.
     /// Массив каждый раз собирается заново.
     /// В случае несогласованности объявлений возникает исключение.
     /// </summary>
@@ -1780,9 +1776,9 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает описание вида документов-дерева групп для заданного основного вида документов.
-    /// Если вид документа не использует группы, возвращается null
+    /// Если вид документа не использует группы, возвращается null.
     /// </summary>
-    /// <param name="docType">Основной вид документо</param>
+    /// <param name="docType">Основной вид документов</param>
     /// <returns>Вид документов дерева групп</returns>
     public DBxDocType GetGroupDocType(DBxDocType docType)
     {
@@ -1791,14 +1787,11 @@ namespace FreeLibSet.Data.Docs
       if (String.IsNullOrEmpty(docType.GroupRefColumnName))
         return null;
 
-      DBxColumnStruct colDef = docType.Struct.Columns[docType.GroupRefColumnName];
-      if (colDef == null)
-        throw new BugException("Неизвестное имя столбца \"" + docType.GroupRefColumnName + "\" в документе \"" + docType.Name + "\", которое задается свойством GroupRefColumnName");
+      DBxColumnStruct colDef = docType.Struct.Columns.GetRequired(docType.GroupRefColumnName);
       if (String.IsNullOrEmpty(colDef.MasterTableName))
-        throw new BugException("Столбец \"" + docType.GroupRefColumnName + "\" документа \"" + docType.Name + " не является ссылочным");
-      DBxDocType dt2 = this[colDef.MasterTableName];
-      if (dt2 == null)
-        throw new BugException("Неизвестный вид документов \"" + colDef.MasterTableName + "\" в документе \"" + docType.Name + "\" для группировки");
+        throw new InvalidOperationException(String.Format(Res.DBxDocTypes_Err_NoRefColumn,
+          docType.GroupRefColumnName, docType.Name));
+      DBxDocType dt2 = this.GetRequired(colDef.MasterTableName);
       return dt2;
     }
 
@@ -2074,7 +2067,7 @@ namespace FreeLibSet.Data.Docs
       for (int i = 0; i < Count; i++)
       {
         if (this[i].TableId == 0)
-          throw new InvalidOperationException("Поиск по идентифиатору TableId возможен только после обновления структуры базы данных. До этого момента свойство DBxDocType.TableId не определено");
+          throw new InvalidOperationException(Res.DBxDocTypes_Err_FindByTableIdBeforeUpdate);
         if (this[i].TableId == tableId)
           return this[i];
       }
@@ -2121,21 +2114,40 @@ namespace FreeLibSet.Data.Docs
       return _TableIdDict;
     }
 
+    /// <summary>
+    /// Поиск описания документа по идентификатору в таблице "DocTypes".
+    /// В текущей реализации, только описания документов, но не поддокументов, имеют идентификаторы.
+    /// Если задан недействительный идентификатор, возвращается null.
+    /// </summary>
+    /// <param name="tableId">Идентификатор в таблице "DocTypes"</param>
+    /// <returns>Описание документа или null</returns>
+    public DBxDocType GetByTableId(Int32 tableId)
+    {
+      DBxDocType dt = FindByTableId(tableId);
+      if (dt == null)
+      {
+        if (tableId == 0)
+          throw new ArgumentException(Res.DBxDocTypes_Arg_ZeroTableId, "tableId");
+        else
+          throw new ArgumentException(String.Format(Res.DBxDocTypes_Arg_UnknownTableId, tableId), "tableId");
+      }
+      return dt;
+    }
     #endregion
 
-    #region FindByTableName
+      #region FindByTableName
 
-    /// <summary>
-    /// Поиск документа или поддокумента по имени таблицы.
-    /// Эта версия метода возвращает описание и документа и поддокумента. Если предполагается использовать
-    /// обобщенный класс DBxDocTypeBase, используйте другие перегрузки метода.
-    /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="docType">Сюда помещается описание документа, если описание найдено.
-    /// Если таблица соответствует поддокумеенту, то описание документа-владельца</param>
-    /// <param name="subDocType">Сюда помещается описание документа, если описание найдено, и
-    /// таблица соответствует поддокументу. Если таблица соответствует документу, то сюда записывается null</param>
-    /// <returns>true, если описание найдено</returns>
+      /// <summary>
+      /// Поиск документа или поддокумента по имени таблицы.
+      /// Эта версия метода возвращает описание и документа и поддокумента. Если предполагается использовать
+      /// обобщенный класс DBxDocTypeBase, используйте другие перегрузки метода.
+      /// </summary>
+      /// <param name="tableName">Имя таблицы</param>
+      /// <param name="docType">Сюда помещается описание документа, если описание найдено.
+      /// Если таблица соответствует поддокумеенту, то описание документа-владельца</param>
+      /// <param name="subDocType">Сюда помещается описание документа, если описание найдено, и
+      /// таблица соответствует поддокументу. Если таблица соответствует документу, то сюда записывается null</param>
+      /// <returns>true, если описание найдено</returns>
     public bool FindByTableName(string tableName, out DBxDocType docType, out DBxSubDocType subDocType)
     {
       docType = null;
@@ -2155,7 +2167,7 @@ namespace FreeLibSet.Data.Docs
             docType = subDocType.DocType;
 #if DEBUG
             if (docType == null)
-              throw new BugException("Потеряли DocType");
+              throw new BugException("DocType is lost");
 #endif
           }
           else
@@ -2191,6 +2203,28 @@ namespace FreeLibSet.Data.Docs
       return false;
 
       #endregion
+    }
+
+    /// <summary>
+    /// Поиск документа или поддокумента по имени таблицы.
+    /// Эта версия метода возвращает описание и документа и поддокумента. Если предполагается использовать
+    /// обобщенный класс <see cref="DBxDocTypeBase"/>, используйте другие перегрузки метода.
+    /// Если документ или поддокумент не найден, выбрасывается исключение.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="docType">Сюда помещается описание документа, если описание найдено.
+    /// Если таблица соответствует поддокументу, то описание документа-владельца.</param>
+    /// <param name="subDocType">Сюда помещается описание документа, если описание найдено, и
+    /// таблица соответствует поддокументу. Если таблица соответствует документу, то сюда записывается null</param>
+    public void GetByTableName(string tableName, out DBxDocType docType, out DBxSubDocType subDocType)
+    {
+      if (!FindByTableName(tableName, out docType, out subDocType))
+      {
+        if (String.IsNullOrEmpty(tableName))
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
+        else
+          throw new ArgumentException(String.Format(Res.DBxDocTypes_Arg_UnknownTableName, "tableName"));
+      }
     }
 
     /// <summary>
@@ -2278,7 +2312,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Поиск документа или поддокумента по имени таблицы.
-    /// Если имя таблицы не соответствует ни одному описанию, возвращается null
+    /// Если имя таблицы не соответствует ни одному описанию, возвращается null.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Описание или null</returns>
@@ -2291,13 +2325,32 @@ namespace FreeLibSet.Data.Docs
         return null;
     }
 
+    /// <summary>
+    /// Поиск документа или поддокумента по имени таблицы.
+    /// Если имя таблицы не соответствует ни одному описанию, выбрасывается исключение.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>Описание</returns>
+    public DBxDocTypeBase GetByTableName(string tableName)
+    {
+      DBxDocTypeBase dtb = FindByTableName(tableName);
+      if (dtb == null)
+      {
+        if (String.IsNullOrEmpty(tableName))
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
+        else
+          throw new ArgumentException(String.Format(Res.DBxDocTypes_Arg_UnknownTableName, "tableName"));
+      }
+      return dtb;
+    }
+
     #endregion
 
     /// <summary>
     /// Возвращает имена всех объявленных документов в виде массива.
     /// Имена документов совпадают с именами таблицы в базе данных.
     /// Имена поддокументов не возвращаются.
-    /// При каждом вызове создается новая копия массива
+    /// При каждом вызове создается новая копия массива.
     /// </summary>
     /// <returns>Массив имен таблиц</returns>
     public string[] GetDocTypeNames()
@@ -2308,8 +2361,8 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Возвращает имя таблицы документа по идентификатору таблицы.
     /// Возвращает пустую строку, если идентификатор таблицы не найден.
-    /// Этот метод может быть удобнее, чем FindByTableId(), если дальше идет выбор действия, в зависимости
-    /// от вида документа
+    /// Этот метод может быть удобнее, чем <see cref="FindByTableId(int)"/>, если дальше идет выбор действия, в зависимости
+    /// от вида документа.
     /// </summary>
     /// <param name="tableId">Идентификатор таблицы документа</param>
     /// <returns>Имя таблицы или пустая строка</returns>
@@ -2338,7 +2391,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает true, если хотя бы для одного документа или поддокумента есть ссылочное поле
-    /// в BinDataRefs.
+    /// в <see cref="DBxDocTypeBase.BinDataRefs"/>.
     /// </summary>
     /// <remarks>Получение значения свойства выполняет перебор всех документов</remarks>
     public bool HasBinDataRefs
@@ -2362,7 +2415,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Возвращает true, если хотя бы для одного документа или поддокумента есть ссылочное поле
-    /// в FileRefs.
+    /// в <see cref="DBxDocTypeBase.FileRefs"/>.
     /// </summary>
     /// <remarks>Получение значения свойства выполняет перебор всех документов</remarks>
     public bool HasFileRefs
@@ -2385,7 +2438,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Возвращает true, если хотя бы для одного документа или поддокумента есть переменные ссылки VTRefs
+    /// Возвращает true, если хотя бы для одного документа или поддокумента есть переменные ссылки <see cref="DBxDocTypeBase.VTRefs"/>
     /// </summary>
     /// <remarks>Получение значения свойства выполняет перебор всех документов</remarks>
     public bool HasVTRefs
@@ -2412,8 +2465,8 @@ namespace FreeLibSet.Data.Docs
     #region InitDocTableIds
 
     /// <summary>
-    /// Инициализация значений DBxDocType.TableIds.
-    /// Обычно этот метод вызывается из класса DBxConnectionHelper.
+    /// Инициализация значений <see cref="DBxDocType.TableId"/>.
+    /// Обычно этот метод вызывается из класса <see cref="DBxDocDBConnectionHelper"/>.
     /// </summary>
     /// <param name="mainEntry">Точка входя в основную базу данных</param>
     public void InitDocTableIds(DBxEntry mainEntry)
@@ -2438,7 +2491,8 @@ namespace FreeLibSet.Data.Docs
           {
             DBxDocType dt = this[tableName];
             if (dt.TableId != 0)
-              throw new BugException("Ошибка в таблице DocTables. Повторное вхождение документа \"" + tableName + "\"");
+              throw new InvalidOperationException(String.Format(Res.DBxDocTypes_Err_DocTableNameTwice,
+                tableName));
             dt.TableId = tableId;
           }
         }
@@ -2553,7 +2607,7 @@ namespace FreeLibSet.Data.Docs
       if (!String.IsNullOrEmpty(UsersTableName))
       {
         if (this[UsersTableName] == null)
-          throw new DBxDocTypeStructException("Свойство \"UsersTableName\" ссылается на несуществующую таблицу документов \"" + UsersTableName + "\"");
+          throw new DBxDocTypeStructException(String.Format(Res.DBxDocTypes_Err_UnknownUsersDocType, UsersTableName));
       }
     }
 

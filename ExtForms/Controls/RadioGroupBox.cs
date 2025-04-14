@@ -282,7 +282,7 @@ namespace FreeLibSet.Controls
         if (value == this.SelectedIndex)
           return;
         if (value < -1 || value >= ItemCount)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, -1, ItemCount - 1);
 
         for (int i = 0; i < _Buttons.Length; i++)
         {

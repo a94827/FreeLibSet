@@ -404,6 +404,29 @@ namespace FreeLibSet.Forms
     private bool[] _DefaultItemFlags;
 
     #endregion
+
+    #region Проверка
+
+    /// <summary>
+    /// Добавляет текущий введенный текст в начало списка <see cref="HistList"/>, если нет ошибок
+    /// </summary>
+    protected override void OnValidate()
+    {
+      base.OnValidate();
+      if (ValidateState == UIValidateState.Error)
+        return;
+
+      switch (BaseProvider.ValidateReason)
+      {
+        case EFPFormValidateReason.Closing:
+        case EFPFormValidateReason.ValidateForm:
+          if (!String.IsNullOrEmpty(Text))
+            HistList = HistList.Add(Text); // 03.04.2025
+          break;
+      }
+    }
+
+    #endregion
   }
 
   /// <summary>

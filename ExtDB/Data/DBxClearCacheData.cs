@@ -44,7 +44,7 @@ namespace FreeLibSet.Data
       CheckNotReadOnly();
 
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       if (AreAllTables)
         return;
@@ -85,7 +85,7 @@ namespace FreeLibSet.Data
       CheckNotReadOnly();
 
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       if (id == 0)
         return;
@@ -114,7 +114,7 @@ namespace FreeLibSet.Data
       CheckNotReadOnly();
 
       if (String.IsNullOrEmpty(tableName))
-        throw new ArgumentNullException("tableName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       if (AreAllTables)
         return;
@@ -468,7 +468,7 @@ namespace FreeLibSet.Data
     public DBxClearCacheBuffer(int bufferSize)
     {
       if (bufferSize < 2 || bufferSize > 1000)
-        throw new ArgumentOutOfRangeException();
+        throw ExceptionFactory.ArgOutOfRange("bufferSize", bufferSize, 2, 1000);
 
       _Holder = new DBxClearCacheHolder();
       _Items = new RingBuffer<BufferItem>(bufferSize);
@@ -626,7 +626,8 @@ namespace FreeLibSet.Data
         else
         {
           if (version > _LastVersion)
-            throw new ArgumentException("Переданное исходное значение Version=" + version.ToString() + " превышает последнюю существующую версию буфера");
+            throw new ArgumentException(String.Format(Res.DBxClearCacheBuffer_Arg_VersionTooBig,
+              version, _LastVersion), "version");
 
           // Все в порядке.
           // В кольцевом буфере есть элементы и с номером Version, и более новые
@@ -640,7 +641,7 @@ namespace FreeLibSet.Data
             }
           }
           if (startPos < 0)
-            throw new BugException("В кольцевом буфере не нашли элемент с версией " + version.ToString());
+            throw new BugException("Item with version " + version.ToString()+" not found in the ring buffer");
 
           res = new DBxClearCacheData[_Items.Count - startPos - 1];
           // Нельзя использовать CopyTo(), т.к. в списке у нас структура BufferItem
@@ -693,7 +694,7 @@ namespace FreeLibSet.Data
         lock (_Items)
         {
           if (String.IsNullOrEmpty(value))
-            throw new ArgumentNullException();
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("value");
           _DisplayName = value;
         }
       }

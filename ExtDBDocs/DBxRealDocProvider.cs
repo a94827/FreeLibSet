@@ -27,7 +27,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Создает провайдер.
-    /// Для <paramref name="source"/> вызывается SetReadOnly()
+    /// Для <paramref name="source"/> вызывается <see cref="DBxRealDocProviderSource.SetReadOnly()"/>.
     /// </summary>
     /// <param name="source">Источник с назначенными правами пользователя</param>
     /// <param name="userId">Идентификатор пользователя. Может быть 0</param>
@@ -39,7 +39,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Создает провайдер.
-    /// Для <paramref name="source"/> вызывается SetReadOnly()
+    /// Для <paramref name="source"/> вызывается <see cref="DBxRealDocProviderSource.SetReadOnly()"/>.
     /// </summary>
     /// <param name="source">Источник с назначенными правами пользователя</param>
     /// <param name="userId">Идентификатор пользователя. Может быть 0</param>
@@ -57,7 +57,7 @@ namespace FreeLibSet.Data.Docs
       {
         CheckIsRealDocId(userId);
         if (!source.GlobalData.DocTypes.UseUsers)
-          throw new ArgumentException("UserId не может быть задан, т.к. DBxDocTypes.UseUsers=false", "userId");
+          throw new ArgumentException(Res.DBxDocProvider_Arg_UserIdNoUsers, "userId");
       }
 #endif
 
@@ -117,11 +117,11 @@ namespace FreeLibSet.Data.Docs
     #region Свойства
 
     /// <summary>
-    /// Источник данных
+    /// Источник данных.
     /// Источник данных недоступен как public, т.к. DocProvider может передаваться клиенту по ссылке
     /// </summary>
     internal DBxRealDocProviderSource Source { get { return _Source; } }
-    private DBxRealDocProviderSource _Source;
+    private readonly DBxRealDocProviderSource _Source;
 
     /// <summary>
     /// Данные о сессии (подключенном пользователе) произвольного типа
@@ -148,10 +148,10 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Отладочное свойство.
-    /// Не использовать в пользовательском коде
+    /// Не использовать в пользовательском коде.
     /// </summary>
     public Guid DebugGuid { get { return _DebugGuid; } }
-    private Guid _DebugGuid;
+    private readonly Guid _DebugGuid;
 
 #endif
 
@@ -842,7 +842,7 @@ namespace FreeLibSet.Data.Docs
     private void CheckBinDataHandler()
     {
       if (_Source.GlobalData.BinDataHandler == null)
-        throw new NullReferenceException("Обработчик двоичных данных не установлен");
+        throw new NullReferenceException(Res.DBxDocProvider_Err_NoBinDataHandler);
     }
 
     /// <summary>
@@ -983,7 +983,7 @@ namespace FreeLibSet.Data.Docs
         if (String.IsNullOrEmpty(tableName))
           throw new ArgumentNullException("tableName");
         else
-          throw new ArgumentException("Неизвестная таблица \"" + tableName + "\"", "tableName");
+          throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownTable, tableName), "tableName");
       }
 
       // 25.04.2020
@@ -992,7 +992,7 @@ namespace FreeLibSet.Data.Docs
       if (sdt == null)
       {
         if (subDocId != 0)
-          throw new ArgumentException("Задан ненулевой subDocId, хотя таблица \"" + tableName + "\" является документом", "subDocId");
+          throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_SubDocIdForDoc, tableName), "subDocId");
       }
       //else
       //{
@@ -1074,7 +1074,7 @@ namespace FreeLibSet.Data.Docs
       public RealDocProviderExecProc(DBxRealDocProvider docProvider)
       {
         _DocProvider = docProvider;
-        this.DisplayName = "RealDocProviderExecProc для " + docProvider.ToString();
+        this.DisplayName = "RealDocProviderExecProc for " + docProvider.ToString();
         base.SetContext(NamedValues.Empty);
       }
 
@@ -1134,7 +1134,7 @@ namespace FreeLibSet.Data.Docs
             break;
 
           default:
-            throw new ArgumentException("Неизвестный Action=" + action.ToString(), "args");
+            throw new ArgumentException("Unknown Action=" + action.ToString(), "args");
         }
         return dispRes;
       }
@@ -1226,7 +1226,8 @@ namespace FreeLibSet.Data.Docs
           throw new ArgumentNullException("ds");
 #endif
         if (ds.Tables.Count != _TableProps.Length)
-          throw new ArgumentException("Набор данных имеет другое количество таблиц: " + ds.Tables.Count.ToString() + ". Ожидалось: " + _TableProps.Length.ToString(), "ds"); // 20.06.2021
+          throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_WrongTableCount,
+            ds.Tables.Count, _TableProps.Length), "ds"); // 20.06.2021
 
         for (int i = 0; i < ds.Tables.Count; i++)
         {
@@ -1282,7 +1283,7 @@ namespace FreeLibSet.Data.Docs
       // Извлекаем параметры
       DBxDocSet docSet = new DBxDocSet(this, ds);
       if (this.UserId == 0 && DocTypes.UseUsers)
-        throw new InvalidOperationException("Не задан идентификатор пользователя, выполняющего запись данных");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "UserId");
 
       RestoreAddedState(ds); // 19.03.2016
 
@@ -1320,7 +1321,7 @@ namespace FreeLibSet.Data.Docs
           {
 #if DEBUG
             if (docs.DocType.TableId == 0)
-              throw new BugException("Для документов " + docs.DocType.ToString() + " не установлено свойство TableId");
+              throw new BugException("For documents of type " + docs.DocType.ToString() + ", property TableId is not set");
 #endif
 
             for (int i = 0; i < docs.DocCount; i++)
@@ -1423,46 +1424,36 @@ namespace FreeLibSet.Data.Docs
       StringBuilder sb = new StringBuilder();
       foreach (DBxMultiDocs docs in docSet)
       {
-        int pos = sb.Length;
+        string actName;
         switch (docSet.DocStateNoView)
         {
           case DBxDocState.Insert:
-            sb.Append("Создание");
+            actName = Res.DBxDocProvider_Msg_ActionInfoInsert;
             break;
           case DBxDocState.Edit:
-            sb.Append("Изменение");
+            actName = Res.DBxDocProvider_Msg_ActionInfoEdit;
             break;
           case DBxDocState.Delete:
-            sb.Append("Удаление");
+            actName = Res.DBxDocProvider_Msg_ActionInfoDelete;
             break;
           case DBxDocState.Mixed:
-            sb.Append("Обработка");
+            actName = Res.DBxDocProvider_Msg_ActionInfoMixed;
             break;
           default:
             continue;
         }
 
-        if (pos > 0)
-          sb.Insert(pos, ", ");
+        if (sb.Length > 0)
+          sb.Append(", ");
 
         if (docs.DocCount == 1)
-        {
-          sb.Append(" д-та \"");
-          sb.Append(docs.DocType.SingularTitle);
-          sb.Append("\"");
-        }
+          sb.Append(String.Format(Res.DBxDocProvider_Msg_ActionInfoSingleDoc,actName, docs.DocType.SingularTitle));
         else
-        {
-          sb.Append(" д-тов \"");
-          sb.Append(docs.DocType.PluralTitle);
-          sb.Append("\" (");
-          sb.Append(docs.DocCount.ToString());
-          sb.Append(")");
-        }
+          sb.Append(String.Format(Res.DBxDocProvider_Msg_ActionInfoMultiDocs, actName, docs.DocType.PluralTitle, docs.DocCount));
       }
 
       if (sb.Length == 0)
-        sb.Append("Нет действий");
+        sb.Append(Res.DBxDocProvider_Msg_ActionInfoEmpty);
       return sb.ToString();
     }
 
@@ -1498,7 +1489,7 @@ namespace FreeLibSet.Data.Docs
 
 #if DEBUG
       if (_Source.GlobalData.BinDataHandler == null)
-        throw new NullReferenceException("Обработчик BinDataHandler не присоединен");
+        throw new NullReferenceException(Res.DBxDocProvider_Err_NoBinDataHandler);
 #endif
 
       Dictionary<Int32, Int32> dict = new Dictionary<Int32, Int32>();
@@ -1507,7 +1498,7 @@ namespace FreeLibSet.Data.Docs
         Int32 oldId = (Int32)(row["Id"]);
 #if DEBUG
         if (oldId >= 0)
-          throw new BugException("В таблице BinData присутствует строка с Id=" + oldId.ToString() + ". Ожидался отрицательный идентификатор");
+          throw new BugException("In the 'BinData' there is a row with Id=" + oldId.ToString() + ". Negative identifier expected");
 #endif
         byte[] binData = (byte[])(row["Contents"]);
         Int32 newId = _Source.GlobalData.BinDataHandler.AppendBinData(binData);
@@ -1572,7 +1563,7 @@ namespace FreeLibSet.Data.Docs
 
 #if DEBUG
       if (_Source.GlobalData.BinDataHandler == null)
-        throw new NullReferenceException("Обработчик BinDataHandler не присоединен");
+        throw new NullReferenceException(Res.DBxDocProvider_Err_NoBinDataHandler);
 #endif
 
       Dictionary<Int32, Int32> dict = new Dictionary<Int32, Int32>();
@@ -1581,7 +1572,7 @@ namespace FreeLibSet.Data.Docs
         Int32 oldId = (Int32)(row["Id"]);
 #if DEBUG
         if (oldId >= 0)
-          throw new BugException("В таблице FileNames присутствует строка с Id=" + oldId.ToString() + ". Ожидался отрицательный идентификатор");
+          throw new BugException("In the table 'FileNames' there is a row with Id=" + oldId.ToString() + ". Negative identifier expected");
 #endif
         Int32 dataId = DataTools.GetInt(row, "Data");
         if (dataId <= 0)
@@ -1662,7 +1653,7 @@ namespace FreeLibSet.Data.Docs
 #if DEBUG
         this.CheckIsRealDocId(doc.DocId);
         if (orgDoc.MultiDocs == null)
-          throw new NullReferenceException("Неинициализированный orgDoc для DocId=" + doc.DocId.ToString());
+          throw new NullReferenceException("Uninitialized orgDoc for DocId=" + doc.DocId.ToString());
 #endif
 
         if (DocTypes.UseDeleted)
@@ -1687,7 +1678,7 @@ namespace FreeLibSet.Data.Docs
 #if DEBUG
         this.CheckIsRealDocId(doc.DocId);
         if (orgDoc.MultiDocs == null)
-          throw new NullReferenceException("Неинициализированный orgDoc для DocId=" + doc.DocId.ToString());
+          throw new NullReferenceException("Uninitialized orgDoc for DocId=" + doc.DocId.ToString());
 #endif
 
         this.TestDocument(orgDoc, DBxDocPermissionReason.ApplyDelete);
@@ -1884,7 +1875,7 @@ namespace FreeLibSet.Data.Docs
 
             if (currVersion != 1)
             {
-              Exception e = new BugException("При создании документа должна быть версия 1, а не " + currVersion.ToString());
+              Exception e = new BugException("When document is created, it must have Version=1, but it is " + currVersion.ToString());
               e.Data["FirstCall"] = firstCall;
               e.Data["DocRealAdded"] = docRealAdded;
               AddExceptionInfo(e, doc);
@@ -1896,7 +1887,7 @@ namespace FreeLibSet.Data.Docs
         {
           if (currVersion < 2)
           {
-            Exception e = new BugException("При изменении/удалении документа должна быть версия, больше 1, а не " + currVersion.ToString());
+            Exception e = new BugException("When document is changed or removed it must have Version greater than 1, but it is " + currVersion.ToString());
             AddExceptionInfo(e, doc);
             e.Data["FirstCall"] = firstCall;
             e.Data["DocRealAdded"] = docRealAdded;
@@ -2120,7 +2111,7 @@ namespace FreeLibSet.Data.Docs
         Int32 id = (Int32)(row["Id"]);
 #if DEBUG
         if (id <= 0)
-          throw new BugException("Неправильное значение идентификатора Id=" + id.ToString());
+          throw new BugException("Wrong Id=" + id.ToString());
 #endif
         object[] orgValues = mainConUser.GetValues(row.Table.TableName, id, usedColumnNames);
 
@@ -2138,8 +2129,8 @@ namespace FreeLibSet.Data.Docs
           {
             if (dbPermissions.ColumnModes[row.Table.TableName, usedColumnNames[i]] != DBxAccessMode.Full)
             {
-              DBxAccessException e = new DBxAccessException("Невозможно изменить значения поля \"" + usedColumnNames[i] + "\" таблицы \"" + row.Table.TableName +
-                "\", т.к. нет прав на изменение значения");
+              DBxAccessException e = new DBxAccessException(String.Format(Res.DBxDocPrivider_Err_SetValueDenied,
+                usedColumnNames[i], row.Table.TableName));
               e.Data["TableName"] = row.Table.TableName;
               e.Data["Id"] = row["Id"];
               e.Data["ColumnnNane"] = usedColumnNames[i];
@@ -2343,8 +2334,8 @@ namespace FreeLibSet.Data.Docs
             {
               // Не хватает
               realIds.Remove(wantedIds);
-              throw new InvalidOperationException("Имеются ссылки на таблицу \"" + pair.Key + "\" для идентификаторов " +
-                DataTools.ToStringJoin<Int32>(", ", realIds.ToArray()) + ", которых нет в базе данных");
+              throw new InvalidOperationException(String.Format(Res.DBxDocPrivider_Err_RefIdsNotInDB,
+                pair.Key, UICore.UITools.ValueListToString(realIds)));
             }
           }
         }
@@ -2378,7 +2369,8 @@ namespace FreeLibSet.Data.Docs
                 case DataRowState.Modified:
                   Int32 refId = DataTools.GetInt(row[pCol]);
                   if (refId < 0)
-                    throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для ссылочного поля \"" + col.ColumnName + "\" задан фиктивный идентификатор " + refId.ToString() + ", для которого не была найдена запись в наборе данных");
+                    throw new InvalidOperationException(String.Format(Res.DBxDocPrivider_Err_WrongFictiveRefId,
+                      table.TableName, col.ColumnName, refId));
                   if (refId > 0)
                   {
                     IdList ids;
@@ -2408,7 +2400,7 @@ namespace FreeLibSet.Data.Docs
         if (pTableIdCol < 0 && pDocIdCol < 0)
           continue;
         if (pTableIdCol < 0 || pDocIdCol < 0)
-          throw new InvalidOperationException("В таблице \"" + table.TableName + "\" присутствуют некомплектные поля для переменной ссылки \"" + vtr.Name + "\"");
+          throw new InvalidOperationException(String.Format(Res.DBxDocPrivider_Err_IncompleteVTRef, table.TableName, vtr.Name));
 
         foreach (DataRow row in table.Rows)
         {
@@ -2421,28 +2413,26 @@ namespace FreeLibSet.Data.Docs
               if (refTableId == 0 && refDocId == 0)
                 continue;
               if (refTableId == 0 || refDocId == 0)
-                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
-                  "\" заданы некомплектные идентификаторы. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refTableId.ToString() + ", а \"" + vtr.DocIdColumn.ColumnName + "\"=" + refDocId.ToString());
+                throw new InvalidOperationException(String.Format(Res.DBxDocPrivider_Err_VTRefIncompleteIds,
+                  table.TableName, vtr.Name, vtr.TableIdColumn.ColumnName, refTableId, vtr.DocIdColumn.ColumnName, refDocId));
 
               if (refTableId < 0)
-                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
-                  "\" задан фиктивный идентификатор таблицы. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refTableId.ToString());
+                throw new InvalidOperationException(String.Format(Res.DBxDocPrivider_Err_VTRefFictiveTable,
+                  table.TableName, vtr.Name, vtr.TableIdColumn.ColumnName, refTableId));
 
               DBxDocType masterDT = DocTypes.FindByTableId(refTableId);
               if (masterDT == null)
-                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
-                  "\" задан фиктивный идентификатор таблицы. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refTableId.ToString() + ", которому не соответствует никакой вид документа");
+                throw new InvalidOperationException(String.Format(Res.DBxDocPrivider_Err_VTRefUnknownDocType,
+                  table.TableName, vtr.Name, vtr.TableIdColumn.ColumnName, refTableId));
 
               if (!vtr.MasterTableNames.Contains(masterDT.Name))
-                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
-                  "\" задан фиктивный идентификатор таблицы. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refTableId.ToString() + ". Ему соответствует вид документа \"" + masterDT.PluralTitle +
-                  "\", который нельзя использовать в этой ссылке. Допускаются только таблицы: " +
-                  DataTools.JoinNotEmptyStrings(", ", vtr.MasterTableNames));
+                throw new InvalidOperationException(String.Format(Res.DBxDocPrivider_Err_VTRefDisabledDocType,
+                  table.TableName, vtr.Name, vtr.TableIdColumn.ColumnName, refTableId, masterDT.PluralTitle,
+                  DataTools.JoinNotEmptyStrings(", ", vtr.MasterTableNames)));
 
               if (refDocId < 0)
-                throw new InvalidOperationException("В таблице \"" + table.TableName + "\" для переменной ссылки \"" + vtr.Name +
-                  "\" задан фиктивный идентификатор документа. \"" + vtr.TableIdColumn.ColumnName + "\"=" + refDocId.ToString() +
-                  ", для которого не была найдена запись в наборе данных");
+                throw new InvalidOperationException(String.Format(Res.DBxDocPrivider_Err_VTRefUnknownDocId,
+                  table.TableName, vtr.Name, vtr.TableIdColumn.ColumnName, refDocId));
 
               IdList ids;
               if (!refDict.TryGetValue(masterDT.Name, out ids))
@@ -2646,7 +2636,7 @@ namespace FreeLibSet.Data.Docs
       {
         DBxExtRefs.VTRefInfo refInfo = extRefList.VTRefs[i];
         if (delType.IsSubDoc)
-          throw new BugException("Не может быть VTReference на поддокумент");
+          throw new BugException("VTReference to subdocument is not possible");
         ApplyDocsDelete1CheckVTRef(mainCon, docSet, (DBxDocType)delType, delFltGen, refInfo);
       }
 
@@ -2684,11 +2674,8 @@ namespace FreeLibSet.Data.Docs
         }
         catch (Exception e)
         {
-          string s = "Ошибка при запросе таблицы \"" + refInfo.DetailsTableName + "\". ";
-          s += "Удаляемые документы/поддокументы: \"" + delType.PluralTitle + "\"";
-          s += ". Проверяемое ссылочное поле: \"" + refInfo.ColumnDef.ColumnName + "\"";
-          s += ". " + e.Message;
-          e.Data["RefColumnInfo"] = s;
+          e.Data["RefColumnInfo"] = String.Format(Res.DBxDocPrivider_Err_DelRefColumnInfo,
+            refInfo.DetailsTableName, delType.PluralTitle, refInfo.ColumnDef.ColumnName, e.Message);
 
           throw;
         }
@@ -2875,80 +2862,63 @@ namespace FreeLibSet.Data.Docs
 
       #region Выбрасывание DBxDocCannotDeleteException
 
+      string txtChk;
+      if (chkType.IsSubDoc)
+      {
+        Int32 chkSubDocId = DataTools.GetInt(chkRow, "Id");
+        txtChk = String.Format(Res.DBxDocProvider_Msg_SingleSubDoc, GetDocOrSubDocText(chkType, chkSubDocId), GetDocOrSubDocText(chkDocType, chkDocId));
+      }
+      else
+        txtChk = String.Format(Res.DBxDocProvider_Msg_SingleDoc, GetDocOrSubDocText(chkDocType, chkDocId));
+
       StringBuilder sb = new StringBuilder();
       if (delIds.Length == 1)
       {
+        string txtMain;
         if (delType.IsSubDoc)
         {
           DBxDocType delDocType = ((DBxSubDocType)delType).DocType;
           Int32 delDocId = DataTools.GetInt(mainCon.GetValue(delType.Name, delIds[0], "DocId"));
-          sb.Append("Нельзя удалить поддокумент ");
-          AddDocOrSubDocText(sb, delType, delIds[0]);
-          sb.Append(" документа ");
-          AddDocOrSubDocText(sb, delDocType, delDocId);
+          txtMain = String.Format(Res.DBxDocProvider_Msg_SingleSubDoc, GetDocOrSubDocText(delType, delIds[0]), GetDocOrSubDocText(delDocType, delDocId));
         }
         else
-        {
-          sb.Append("Нельзя удалить документ \"");
-          AddDocOrSubDocText(sb, delType, delIds[0]);
-        }
+          txtMain = GetDocOrSubDocText(delType, delIds[0]);
+
+        throw new DBxDocCannotDeleteException(String.Format(Res.DBxDocProvider_Err_DelMulti, txtMain, txtChk));
+
       }
       else
       {
+        string txtMain;
         if (delType.IsSubDoc)
         {
-          //DBxDocType DelDocType = ((DBxSubDocType)delType).DocType;
-          sb.Append("Нельзя удалить поддокументы \"");
-          sb.Append(delType.PluralTitle);
-          sb.Append("\" документа \"");
-          sb.Append(delType.SingularTitle);
-          sb.Append("\"");
+          DBxDocType delDocType = ((DBxSubDocType)delType).DocType;
+          txtMain = String.Format(Res.DBxDocProvider_Msg_MultiSubDocs, delType.PluralTitle, delDocType.SingularTitle);
         }
         else
-        {
-          sb.Append("Нельзя удалить документы \"");
-          sb.Append(delType.PluralTitle);
-          sb.Append("\"");
-        }
+          txtMain = String.Format(Res.DBxDocProvider_Msg_MultiDocs, delType.PluralTitle);
+        throw new DBxDocCannotDeleteException(String.Format(Res.DBxDocProvider_Err_DelMulti, txtMain, txtChk));
       }
-
-      sb.Append(", потому что ");
-      if (delIds.Length == 1)
-        sb.Append("на него");
-      else
-        sb.Append("на один из них");
-      sb.Append(" есть ссылка в документе ");
-      AddDocOrSubDocText(sb, chkDocType, chkDocId);
-      if (chkType.IsSubDoc)
-      {
-        Int32 chkSubDocId = DataTools.GetInt(chkRow, "Id");
-        sb.Append(", поддокумент ");
-        AddDocOrSubDocText(sb, chkType, chkSubDocId);
-      }
-      throw new DBxDocCannotDeleteException(sb.ToString());
 
       #endregion
     }
 
-    private void AddDocOrSubDocText(StringBuilder sb, DBxDocTypeBase dtb, Int32 id)
+    private string GetDocOrSubDocText(DBxDocTypeBase dtb, Int32 id)
     {
-      sb.Append("\"");
-      sb.Append(dtb.SingularTitle);
-      sb.Append("\" (");
+      string docText;
       if (IsRealDocId(id))
-      {
-        sb.Append('\"');
-        sb.Append(Source.GlobalData.TextHandlers.GetTextValue(dtb.Name, id));
-        sb.Append('\"');
-      }
+        docText = Source.GlobalData.TextHandlers.GetTextValue(dtb.Name, id);
       else
-        sb.Append("[ Новый ]");
+        docText = Res.DBxDocProvider_Msg_NewDocSubDoc;
+
+      string idText;
       if (dtb.IsSubDoc)
-        sb.Append(", SubDocId=");
+        idText=", SubDocId=";
       else
-        sb.Append(", DocId=");
-      sb.Append(id.ToString());
-      sb.Append(")");
+        idText=", DocId=";
+      idText += id.ToString();
+
+      return String.Format(Res.DBxDocProvider_Msg_DocSubDocText, dtb.SingularTitle, docText, idText);
     }
 
     #endregion
@@ -2972,7 +2942,7 @@ namespace FreeLibSet.Data.Docs
       /// <summary>
       /// Информация по одной таблице
       /// </summary>
-      public struct TableInfo
+      internal struct TableInfo
       {
         #region Поля
 
@@ -3175,24 +3145,24 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
 
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
       DBxDocType docType = DocTypes[docTypeName];
       if (docType == null)
-        throw new ArgumentException("Неизвестный тип документов \"" + docTypeName + "\"", "docTypeName");
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownDocType, docTypeName), "docTypeName");
       CheckIsRealDocId(docId);
 
       if (Source.GlobalData.UndoDBEntry == null)
-        throw new NullReferenceException("Не установлено свойство DBxRealDocProviderGlobal.UndoDBEntry");
+        throw ExceptionFactory.ObjectPropertyNotSet(Source.GlobalData, "UndoDBEntry");
 
       #region Проверка прав доступа к истории
 
       // 1. Проверяем разрешение на просмотр таблицы документов
       if (DBPermissions.TableModes[docTypeName] == DBxAccessMode.None)
-        throw new DBxAccessException("Нет доступа на просмотр документов \"" + DocTypes[docTypeName].PluralTitle + "\"");
+        throw DBxDocPermissions.GetException(DocTypes[docTypeName], DBxDocPermissionReason.View);
 
       // 2. Проверяем разрешение DocTypeViewHistoryPermission
       if (!DocTypeViewHistoryPermission.GetAllowed(UserPermissions, docTypeName))
-        throw new DBxAccessException("Нет доступа на просмотр истории документов \"" + DocTypes[docTypeName].PluralTitle + "\"");
+        throw DBxDocPermissions.GetException(DocTypes[docTypeName], DBxDocPermissionReason.ViewHistory);
 
       // 3. Проверяем право на просмотр конкретного документа
       DBxDocSet docSet = new DBxDocSet(this);
@@ -3209,7 +3179,7 @@ namespace FreeLibSet.Data.Docs
         {
           // Актуальная строка данных
           if (mainCon.FindRecord(docTypeName, "Id", docId) == 0)
-            throw new BugException("Не нашли строку документа DocId=" + docId.ToString());
+            throw new BugException("Document row not found. DocId=" + docId.ToString());
 
           DBxColumns columns = new DBxColumns(
             "Id,UserActionId,Version,Action,UserActionId.StartTime,UserActionId.ActionTime,UserActionId.ActionInfo,UserActionId.ApplyChangesTime,UserActionId.ApplyChangesCount");
@@ -3224,7 +3194,7 @@ namespace FreeLibSet.Data.Docs
           // Добавляем текст
           DataRow[] baseRows = tblDocActions.Select("Action=" + ((int)(UndoAction.Base)));
           for (int i = 0; i < baseRows.Length; i++)
-            baseRows[i]["UserActionId.ActionInfo"] = "Исходное состояние документа";
+            baseRows[i]["UserActionId.ActionInfo"] = Res.UndoAction_Msg_Base;
 
           return tblDocActions;
 
@@ -3319,16 +3289,16 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
 
       if (Source.GlobalData.UndoDBEntry == null)
-        throw new NullReferenceException("Не установлено свойство DBxRealDocProviderGlobal.UndoDBEntry");
+        throw ExceptionFactory.ObjectPropertyNotSet(Source.GlobalData, "UndoDBEntry");
 
       if (DocTypes.UseUsers) // 21.05.2019
       {
         if (this.UserId == 0)
-          throw new InvalidOperationException("Не установлено свойство DBxDocProvider.UserId");
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "UserId");
         if (userId != this.UserId)
         {
           if (!ViewOtherUsersActionPermission)
-            throw new DBxAccessException("Запрещен доступ на просмотр действий, выполненных другими пользователями");
+            throw new DBxAccessException(Res.DBxDocProvider_Err_ViewOtherUsersAction);
         }
       }
 
@@ -3395,7 +3365,7 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
 
       if (actionId <= 0)
-        throw new ArgumentException("Недопустимый идентификатор действия пользователя " + actionId.ToString());
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_ActionId, actionId));
 
       DataTable resTable;
       using (DBxCon undoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
@@ -3427,14 +3397,14 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
 
       if (Source.GlobalData.UndoDBEntry == null)
-        throw new NullReferenceException("Не установлено свойство DBxRealDocProviderGlobal.UndoDBEntry");
+        throw ExceptionFactory.ObjectPropertyNotSet(Source.GlobalData, "UndoDBEntry");
 
       if (this.UserId == 0)
-        throw new InvalidOperationException("Не установлено свойство DBxDocProvider.UserId");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "UserId");
       if (userId != this.UserId)
       {
         if (!ViewOtherUsersActionPermission)
-          throw new DBxAccessException("Запрещен доступ на просмотр действий, выполненных другими пользователями");
+          throw new DBxAccessException(Res.DBxDocProvider_Err_ViewOtherUsersAction);
       }
 
       object v;
@@ -3470,14 +3440,14 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
 
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
 
       if (Source.GlobalData.UndoDBEntry == null)
-        throw new InvalidOperationException("История не ведется");
+        throw ExceptionFactory.ObjectPropertyNotSet(Source.GlobalData, "UndoDBEntry");
 
       CheckIsRealDocId(docId);
       if (wantedDocVersion < 1 || wantedDocVersion >= short.MaxValue)
-        throw new ArgumentOutOfRangeException("wantedDocVersion", wantedDocVersion, "Недопустимый номер версии документа");
+        throw ExceptionFactory.ArgOutOfRange("wantedDocVersion", wantedDocVersion, 1, short.MaxValue);
 
       using (DBxCon undoCon = new DBxCon(Source.GlobalData.UndoDBEntry))
       {
@@ -3510,11 +3480,11 @@ namespace FreeLibSet.Data.Docs
               DBxColumns.Id, "Version2", new AndFilter(
               new ValueFilter("DocId", docId), new ValueFilter("Version2", wantedDocVersion, CompareKind.LessOrEqualThan)))[0]);
             if (lastCopyId == 0)
-              throw new BugException("В базе данных Undo в таблице \"" + docTypeName + "\" не найдена запись для DocId=" + docId.ToString() + " и Version2=" + version2.ToString());
+              throw new BugException("Record not found in the Undo db in table \"" + docTypeName + "\", DocId=" + docId.ToString() + " и Version2=" + version2.ToString());
 
             DataTable table1 = undoCon.FillSelect(docTypeName, columns2, new IdsFilter(lastCopyId));
             if (table1.Rows.Count != 1)
-              throw new BugException("В базе данных Undo в таблице \"" + docTypeName + "\" для ключевого поля Id=" + lastCopyId.ToString() + " возвращено неправильное число строк данных (" + table1.Rows.Count.ToString() + ")");
+              throw new BugException("In the Undo db in table \"" + docTypeName + "\" for key Id=" + lastCopyId.ToString() + " returned wrong number of rows (" + table1.Rows.Count.ToString() + ")");
 
             table = GetTemplate(docTypeName, null);
             DataTools.CopyRowsToRows(table1, table, true, true);
@@ -3542,16 +3512,16 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
 
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
       if (String.IsNullOrEmpty(subDocTypeName))
-        throw new ArgumentNullException("subDocTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("subDocTypeName");
 
       if (Source.GlobalData.UndoDBEntry == null)
-        throw new InvalidOperationException("История не ведется");
+        throw ExceptionFactory.ObjectPropertyNotSet(Source.GlobalData, "UndoDBEntry");
 
       CheckIsRealDocId(docId);
       if (wantedDocVersion < 1 || wantedDocVersion >= short.MaxValue)
-        throw new ArgumentOutOfRangeException("wantedDocVersion", wantedDocVersion, "Недопустимый номер версии документа");
+        throw ExceptionFactory.ArgOutOfRange("wantedDocVersion", wantedDocVersion, 1, short.MaxValue);
 
       DataTable table;
       using (DBxCon mainCon = new DBxCon(_Source.MainDBEntry))
@@ -3611,7 +3581,7 @@ namespace FreeLibSet.Data.Docs
 
           DataTable table1 = undoCon.FillSelect(subDocTypeName, columns2, new IdsFilter(lastCopyId));
           if (table1.Rows.Count != 1)
-            throw new BugException("В базе данных Undo в таблице \"" + subDocTypeName + "\" для ключевого поля Id=" + lastCopyId.ToString() + " возвращено неправильное число строк данных (" + table1.Rows.Count.ToString() + ")");
+            throw new BugException("In the Undo databse, in table \"" + subDocTypeName + "\" for key Id=" + lastCopyId.ToString() + " returned wrong number of rows (" + table1.Rows.Count.ToString() + ")");
 
           DataTools.CopyRowValues(table1.Rows[0], row, true);
           table.Rows[0]["DocId"] = docId;
@@ -3633,7 +3603,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxDocType docType = DocTypes[docTypeName];
       if (docType == null)
-        throw new ArgumentException("Неизвестный тип документов \"" + docTypeName + "\"");
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownDocType, docTypeName), "docTypeName");
 
       CheckIsRealDocId(docId);
 
@@ -3645,8 +3615,8 @@ namespace FreeLibSet.Data.Docs
 
       Int32 docActionId = undoCon.FindRecord("DocActions", new AndFilter(filters));
       if (docActionId == 0)
-        throw new BugException("В таблице DocActions не найдена запись для документа \"" + docType.SingularTitle +
-          "\" с DocId=" + docId.ToString() + " для версии " + docVersion.ToString());
+        throw new BugException("In the table 'DocActions' record is found for document type \"" + docType.SingularTitle +
+          "\", DocId=" + docId.ToString() + ", Version=" + docVersion.ToString());
 
       UndoAction currAction = (UndoAction)DataTools.GetInt(undoCon.GetValue("DocActions", docActionId, "Action"));
       return currAction;
@@ -3667,10 +3637,10 @@ namespace FreeLibSet.Data.Docs
       CheckThread();
 
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
       DBxDocType docType = DocTypes[docTypeName];
       if (docType == null)
-        throw new ArgumentException("Неизвестный вид документа \"" + docTypeName + "\"", "docTypeName");
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownDocType, docTypeName), "docTypeName");
 
       CheckIsRealDocId(docId);
 
@@ -3768,24 +3738,24 @@ namespace FreeLibSet.Data.Docs
     #region Клонирование
 
     /// <summary>
-    /// Создает копию DBxRealDocProvider, если это разрешено свойством CloningAllowed
-    /// Этот метод является потокобезопасным
+    /// Разрешение на клонирование провайдера.
+    /// По умолчанию клонирование запрещено.
+    /// </summary>
+    public bool CloningAllowed { get { return _CloningAllowed; } set { _CloningAllowed = value; } }
+    private bool _CloningAllowed;
+
+    /// <summary>
+    /// Создает копию <see cref="DBxRealDocProvider"/>, если это разрешено свойством <see cref="CloningAllowed"/>.
+    /// Этот метод является потокобезопасным.
     /// </summary>
     /// <returns>Новый провайдер</returns>
     protected override DBxDocProvider DoClone()
     {
       if (!_CloningAllowed)
-        throw new InvalidOperationException("Клонирование DBxRealDocProvider запрещено, т.к. свойство CloningAllowed не установлено");
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "CloningAllowed");
 
       return new DBxRealDocProvider(Source, UserId, CurrentThreadOnly, SessionId);
     }
-
-    /// <summary>
-    /// Разрешение на клонирование провайдера
-    /// По умолчанию клонирование запрещено
-    /// </summary>
-    public bool CloningAllowed { get { return _CloningAllowed; } set { _CloningAllowed = value; } }
-    private bool _CloningAllowed;
 
     #endregion
 
@@ -3808,7 +3778,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxDocType docType = DocTypes[docTypeName];
       if (docType == null)
-        throw new ArgumentException("Неизвестный вид документов \"" + docTypeName + "\"", "docTypeName");
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownDocType, docTypeName), "docTypeName");
 
       RecalcColumnsPermission perm = Source.UserPermissions.GetLast<RecalcColumnsPermission>();
       if (perm != null)
@@ -3816,10 +3786,10 @@ namespace FreeLibSet.Data.Docs
         switch (perm.Mode)
         {
           case RecalcColumnsPermissionMode.Disabled:
-            throw new DBxAccessException("Запрещен пересчет вычисляемых полей");
+            throw new DBxAccessException(Res.RecalcColumnsPermissionMode_Err_Disabled);
           case RecalcColumnsPermissionMode.Selected:
             if (docIds == null)
-              throw new DBxAccessException("Запрещен пересчет вычисляемых полей, если не указаны идентификаторы документов");
+              throw new DBxAccessException(Res.RecalcColumnsPermissionMode_Err_Selected);
             break;
         }
       }
@@ -3837,7 +3807,7 @@ namespace FreeLibSet.Data.Docs
           lastId = DataTools.GetInt(mainCon.GetMaxValue(docType.Name, "Id", null));
         }
 
-        ISplash spl = ExecProc.CurrentProc.BeginSplash("Пересчет документов \"" + docType.PluralTitle + "\" (" + lastId.ToString() + " шт.)");
+        ISplash spl = ExecProc.CurrentProc.BeginSplash(String.Format(Res.DBxDocProvider_Phase_DocumentRecalc, docType.PluralTitle, lastId));
         spl.PercentMax = lastId;
         spl.AllowCancel = true;
         for (Int32 firstId = 1; firstId <= lastId; firstId += 100)
@@ -3853,7 +3823,7 @@ namespace FreeLibSet.Data.Docs
       }
       else
       {
-        ISplash spl = ExecProc.CurrentProc.BeginSplash("Пересчет документов \"" + docType.PluralTitle + "\" (" + docIds.Length.ToString() + " шт.)");
+        ISplash spl = ExecProc.CurrentProc.BeginSplash(String.Format(Res.DBxDocProvider_Phase_DocumentRecalc, docType.PluralTitle, docIds.Length));
         spl.PercentMax = docIds.Length;
         spl.AllowCancel = true;
         Int32[][] ids2 = DataTools.GetBlockedArray<Int32>(docIds, 100);
@@ -3875,7 +3845,7 @@ namespace FreeLibSet.Data.Docs
 
       // Проверяем права на запись документов этого вида
       if (DBPermissions.TableModes[docType.Name] != DBxAccessMode.Full)
-        throw new DBxAccessException("Нет прав на запись документов \"" + docType.PluralTitle + "\"");
+        throw DBxDocPermissions.GetException(docType, DBxDocPermissionReason.BeforeEdit);
 
       // Загружаем существующие данные
       DBxDocSet docSet = new DBxDocSet(this);
@@ -3989,21 +3959,21 @@ namespace FreeLibSet.Data.Docs
     {
       DBxDocType toDT = DocTypes[docTypeName];
       if (toDT == null)
-        throw new ArgumentException("Неизвестный вид документа \"" + docTypeName + "\", на ссылки на который должны быть найдены", "docTypeName");
+        throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownDocType, docTypeName), "docTypeName");
 
       DBxDocType fromSingleDT = null;
       if (!String.IsNullOrEmpty(fromSingleDocTypeName))
       {
         fromSingleDT = DocTypes[fromSingleDocTypeName];
         if (fromSingleDT == null)
-          throw new ArgumentException("Неизвестный вид документа \"" + fromSingleDocTypeName + "\", на ссылки c которых должны быть найдены", "fromSingleDocTypeName");
+          throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownDocType, fromSingleDocTypeName), "fromSingleDocTypeName");
       }
 
       CheckIsRealDocId(docId);
       if (fromSingleDocId != 0)
       {
         if (fromSingleDT == null)
-          throw new ArgumentException("Идентификатор единственного документа, ссылки в котором ищутся, не может задаваться без вида документов", "fromSingleDocId");
+          throw new ArgumentException(Res.DBxDocProvider_NoSingleDocType, "fromSingleDocId");
         CheckIsRealDocId(fromSingleDocId);
       }
 
@@ -4073,28 +4043,28 @@ namespace FreeLibSet.Data.Docs
       #region Внешние параметры
 
       public DBxRealDocProvider Owner { get { return _Owner; } }
-      private DBxRealDocProvider _Owner;
+      private readonly DBxRealDocProvider _Owner;
 
       public DBxDocType ToDT { get { return _ToDT; } }
-      private DBxDocType _ToDT;
+      private readonly DBxDocType _ToDT;
 
       public Int32 DocId { get { return _DocId; } }
-      private Int32 _DocId;
+      private readonly Int32 _DocId;
 
       public bool ShowDeleted { get { return _ShowDeleted; } }
-      private bool _ShowDeleted;
+      private readonly bool _ShowDeleted;
 
       public bool Unique { get { return _Unique; } }
-      private bool _Unique;
+      private readonly bool _Unique;
 
       public DBxDocType FromSingleDT { get { return _FromSingleDT; } }
-      private DBxDocType _FromSingleDT;
+      private readonly DBxDocType _FromSingleDT;
 
       public Int32 FromSingleDocId { get { return _FromSingleDocId; } }
-      private Int32 _FromSingleDocId;
+      private readonly Int32 _FromSingleDocId;
 
       public DBxCon Con { get { return _Con; } }
-      private DBxCon _Con;
+      private readonly DBxCon _Con;
 
       #endregion
 
@@ -4140,7 +4110,7 @@ namespace FreeLibSet.Data.Docs
               AddForVTRef(refInfos[i], toIds);
               break;
             default:
-              throw new NotImplementedException("Неизвестный тип ссылки: " + refInfos[i].RefType);
+              throw new NotImplementedException("Unknown reference type: " + refInfos[i].RefType);
           }
         }
 

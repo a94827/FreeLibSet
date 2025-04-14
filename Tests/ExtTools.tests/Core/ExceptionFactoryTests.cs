@@ -192,7 +192,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void ArgBadChar_pos()
     {
-      ArgumentException res = ExceptionFactory.ArgBadChar(ParamName1, "ABCDEF", 3);
+      ArgumentException res = ExceptionFactory.ArgInvalidChar(ParamName1, "ABCDEF", 3);
       Assert.AreEqual(ParamName1, res.ParamName);
       StringAssert.Contains("D", res.Message);
       StringAssert.Contains("4", res.Message); // +1 для номера позиции
@@ -201,7 +201,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void ArgBadChar_char()
     {
-      ArgumentException res = ExceptionFactory.ArgBadChar(ParamName1, "ABCDEF", "D");
+      ArgumentException res = ExceptionFactory.ArgInvalidChar(ParamName1, "ABCDEF", "D");
       Assert.AreEqual(ParamName1, res.ParamName);
       StringAssert.Contains("D", res.Message);
       StringAssert.Contains("4", res.Message); // +1 для номера позиции
@@ -480,7 +480,6 @@ namespace ExtTools_tests.Core
       StringAssert.Contains("null", res.Message);
     }
 
-
     [Test]
     public void ObjectPropertyNotSet()
     {
@@ -513,6 +512,16 @@ namespace ExtTools_tests.Core
       StringAssert.Contains("Code", res.Message);
       StringAssert.Contains("XXX", res.Message);
       StringAssert.Contains("YYY", res.Message);
+    }
+
+    [Test]
+    public void ObjectMethodNotCalled()
+    {
+      DummyObjectWithCode obj = new DummyObjectWithCode();
+
+      InvalidOperationException res = ExceptionFactory.ObjectMethodNotCalled(obj, "MyMethod()");
+      StringAssert.Contains("DummyObjectWithCode", res.Message);
+      StringAssert.Contains("MyMethod", res.Message);
     }
 
     private class DummyObjectWithEvent
@@ -655,6 +664,13 @@ namespace ExtTools_tests.Core
       StringAssert.Contains("BeginSomething()", res.Message);
     }
 
+    [Test]
+    public void ConstructorAlreadyCalled()
+    {
+      InvalidOperationException res = ExceptionFactory.ConstructorAlreadyCalled(typeof(TestBE));
+      StringAssert.Contains("TestBE", res.Message);
+    }
+
     #endregion
 
     #region Путь к файлу
@@ -791,6 +807,15 @@ namespace ExtTools_tests.Core
       Exception res = ExceptionFactory.DataRowNotFound(table, new object[] { "AAA" });
       StringAssert.Contains(table.TableName, res.Message);
       StringAssert.Contains("F1", res.Message);
+    }
+
+    [Test]
+    public void DataColumnNotFound()
+    {
+      DataTable table = CreateTestTable();
+      Exception res = ExceptionFactory.DataColumnNotFound(table, "F666");
+      StringAssert.Contains(table.TableName, res.Message);
+      StringAssert.Contains("F666", res.Message);
     }
 
     #endregion

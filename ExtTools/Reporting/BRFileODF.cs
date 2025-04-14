@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Part of FreeLibSet.
+// See copyright notices in "license" file in the FreeLibSet root directory.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -8,13 +11,14 @@ using FreeLibSet.Collections;
 using FreeLibSet.Core;
 using FreeLibSet.IO;
 using FreeLibSet.Shell;
+using FreeLibSet.Models.SpreadsheetBase;
 
 namespace FreeLibSet.Reporting
 {
   /// <summary>
   /// Базовый класс для создание файла ODS и ODT
   /// </summary>
-  public abstract class BRFileODFBase: BRFileCreator
+  public abstract class BRFileODFBase : BRFileCreator
   {
     #region Статическое свойство
 
@@ -23,6 +27,27 @@ namespace FreeLibSet.Reporting
     /// Наличие установленного OpenOffice не требуется.
     /// </summary>
     public static bool IsSupported { get { return ZipFileTools.ZipLibAvailable; } }
+
+    #endregion
+
+    #region Конструктор
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="measurer"></param>
+    public BRFileODFBase(IBRMeasurer measurer)
+    {
+      if (measurer == null)
+        throw new ArgumentNullException("measurer");
+      _Measurer = measurer;
+    }
+
+    /// <summary>
+    /// Объект для измерения текста. Задается в конструкторе
+    /// </summary>
+    protected IBRMeasurer Measurer { get { return _Measurer; } }
+    private readonly IBRMeasurer _Measurer;
 
     #endregion
 
@@ -69,6 +94,17 @@ namespace FreeLibSet.Reporting
 
       XmlDocument xmlDocCnt, xmlDocStl;
       CreateContent(report, out xmlDocCnt, out xmlDocStl);
+
+      // 09.04.2025
+      // Пробелы имеют значение.
+      // Без этого выполняется форматирование xml-файла с выравниванием.
+      // В Writer'е всё в порядке, а в Calc'е неправильно записываются ссылки:
+      // <text:p>
+      //   <text:a атрибуты>Текст ссылки</<text:a>
+      // </text:p>
+      // В ячейку почему-то попадают два переноса строки и пробелы-отступы.
+      xmlDocCnt.PreserveWhitespace = true;
+
       zf.AddXmlFile("content.xml", xmlDocCnt);
       zf.AddXmlFile("styles.xml", xmlDocStl);
 
@@ -202,10 +238,10 @@ namespace FreeLibSet.Reporting
     internal const string nmspcTable = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
     internal const string nmspcFo = "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0";
     internal const string nmspcNumber = "urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0";
+    internal const string nmspcXLink = "http://www.w3.org/1999/xlink";
     internal const string nmspcLoext = "urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0";
 
     #endregion
-
 
     #region Границы ячеек
 
@@ -264,6 +300,92 @@ namespace FreeLibSet.Reporting
 
     #endregion
 
+    #region Текст
+
+    /// <summary>
+    /// Заполнение тега <see cref="XmlElement"/>, обычно "text:p", текстовым значением.
+    /// Если текст не содержит особенностей, создается единственный <see cref="XmlText"/>, который добавляется к элементу.
+    /// Если текст содержит двойные пробелы или символы перевода строки, то, кроме текста, создаются дополнительные элементы.
+    /// </summary>
+    /// <param name="elTextOwner">Элемент, который будет содержать текст</param>
+    /// <param name="s">Строка</param>
+    protected static void WriteTextValue(XmlElement elTextOwner, string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return;
+
+      if (s.IndexOf(Environment.NewLine) < 0 && s.IndexOf("  ") < 0)
+      {
+        #region Простой режим
+
+        XmlText text = elTextOwner.OwnerDocument.CreateTextNode(s);
+        elTextOwner.AppendChild(text);
+
+        #endregion
+      }
+      else
+      {
+        #region Сложный режим
+
+        // Для многострочного текста используется странная конструкция в XML-файле.
+        // В теге <text:p> идет текст, разделяемый тегами <text:line-break />:
+        // <text:p text:style-name="P1">AAA<text:line-break />BBB<text:line-break />CCC</text:p>
+
+        // Если в тексте есть два или более пробела подряд, тогда также нужен дополнительный тег <text:s>
+
+        string[] a = s.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+        for (int i = 0; i < a.Length; i++)
+        {
+          if (i > 0)
+          {
+            XmlElement elLineBreak = elTextOwner.OwnerDocument.CreateElement("text:line-break", nmspcText);
+            elTextOwner.AppendChild(elLineBreak);
+          }
+
+          if (a[i].IndexOf("  ") >= 0)
+          {
+            int currCount = 0;
+            while (true)
+            {
+              int p = a[i].IndexOf("  ", currCount);
+              if (p < 0)
+                break;
+
+              string s2 = a[i].Substring(currCount, p - currCount + 1); // захватили один пробел
+              XmlText text = elTextOwner.OwnerDocument.CreateTextNode(s2);
+              elTextOwner.AppendChild(text);
+              currCount = p + 1;
+              for (int j = currCount; j < a[i].Length; j++)
+              {
+                if (a[i][j] == ' ')
+                {
+                  XmlElement elS = elTextOwner.OwnerDocument.CreateElement("text:s", nmspcText);
+                  elTextOwner.AppendChild(elS);
+                  currCount++;
+                }
+                else
+                  break;
+              }
+            }
+            if (currCount < a[i].Length) // остаток строки
+            {
+              XmlText text = elTextOwner.OwnerDocument.CreateTextNode(a[i].Substring(currCount));
+              elTextOwner.AppendChild(text);
+            }
+          }
+          else
+          {
+            XmlText text = elTextOwner.OwnerDocument.CreateTextNode(a[i]);
+            elTextOwner.AppendChild(text);
+          }
+        }
+
+        #endregion
+      }
+    }
+
+    #endregion
+
     #region Вспомогательные методы
 
     internal static void SetAttr(XmlElement el, string name, string value, string nmspc)
@@ -285,6 +407,19 @@ namespace FreeLibSet.Reporting
   /// </summary>
   public sealed class BRFileODS : BRFileODFBase
   {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает конвертер
+    /// </summary>
+    /// <param name="measurer">Объект для измерения текста. Не может быть null</param>
+    public BRFileODS(IBRMeasurer measurer)
+      : base(measurer)
+    {
+    }
+
+    #endregion
+
     /// <summary>
     /// 
     /// </summary>
@@ -323,7 +458,9 @@ namespace FreeLibSet.Reporting
       SetAttr(elRootCnt, "xmlns:table", nmspcTable, String.Empty);
       SetAttr(elRootCnt, "xmlns:fo", nmspcFo, String.Empty);
       SetAttr(elRootCnt, "xmlns:number", nmspcNumber, String.Empty);
+      SetAttr(elRootCnt, "xmlns:xlink", nmspcXLink, String.Empty);
       SetAttr(elRootCnt, "xmlns:loext", nmspcLoext, String.Empty);
+      SetAttr(elRootCnt, "xmlns:svg", nmspcSvg, String.Empty);
       SetAttr(elRootCnt, "office:version", "1.2", String.Empty);
 
       XmlElement elRootStl = xmlDocStl.CreateElement("office:document-styles", nmspcOffice);
@@ -334,6 +471,8 @@ namespace FreeLibSet.Reporting
       SetAttr(elRootStl, "xmlns:table", nmspcTable, String.Empty);
       SetAttr(elRootStl, "xmlns:fo", nmspcFo, String.Empty);
       SetAttr(elRootStl, "xmlns:number", nmspcNumber, String.Empty);
+      SetAttr(elRootStl, "xmlns:xlink", nmspcXLink, String.Empty);
+      SetAttr(elRootStl, "xmlns:svg", nmspcSvg, String.Empty);
       SetAttr(elRootStl, "xmlns:svg", nmspcSvg, String.Empty);
       SetAttr(elRootStl, "office:version", "1.2", nmspcOffice);
 
@@ -355,12 +494,12 @@ namespace FreeLibSet.Reporting
         XmlElement elFontFaceCnt = xmlDocCnt.CreateElement("style:font-face", nmspcStyle);
         elFontFaceDeclsCnt.AppendChild(elFontFaceCnt);
         SetAttr(elFontFaceCnt, "style:name", aFontNames[i], nmspcStyle);
-        SetAttr(elFontFaceCnt, "svg:font-family", "\'" + aFontNames[i] + "\'", nmspcSvg);
+        SetAttr(elFontFaceCnt, "svg:font-family", aFontNames[i], nmspcSvg);
 
         XmlElement elFontFaceStl = xmlDocStl.CreateElement("style:font-face", nmspcStyle);
         elFontFaceDeclsStl.AppendChild(elFontFaceStl);
         SetAttr(elFontFaceStl, "style:name", aFontNames[i], nmspcStyle);
-        SetAttr(elFontFaceStl, "svg:font-family", "\'" + aFontNames[i] + "\'", nmspcSvg);
+        SetAttr(elFontFaceStl, "svg:font-family", aFontNames[i], nmspcSvg);
       }
 
       #endregion
@@ -394,6 +533,9 @@ namespace FreeLibSet.Reporting
 
       XmlElement elSpreadSheet = xmlDocCnt.CreateElement("office:spreadsheet", nmspcOffice); // только один тег на весь документ
       elBody.AppendChild(elSpreadSheet);
+
+      // Имена ячеек, относящиеся к книге. Потом добавим к ekSpreadSheet 
+      XmlElement elNamedExpressions = xmlDocCnt.CreateElement("table:named-expressions", nmspcTable);
 
       #endregion
 
@@ -474,6 +616,7 @@ namespace FreeLibSet.Reporting
 
         #region Перебор полос
 
+        int rowCount = 0;
         for (int j = 0; j < section.Bands.Count; j++)
         {
           #region Зазор между полосами
@@ -486,6 +629,7 @@ namespace FreeLibSet.Reporting
             XmlElement elGapRow = xmlDocCnt.CreateElement("table:table-row", nmspcTable);
             elTable.AppendChild(elGapRow);
             SetAttr(elGapRow, "table:style-name", Get_ro_style(ro_styles, elAutoStylesCnt, gap), nmspcTable); // 17.07.2019
+            rowCount++;
           }
 
           #endregion
@@ -502,6 +646,7 @@ namespace FreeLibSet.Reporting
             XmlElement elRow = xmlDocCnt.CreateElement("table:table-row", nmspcTable);
             elTable.AppendChild(elRow);
             SetAttr(elRow, "table:style-name", Get_ro_style(ro_styles, elAutoStylesCnt, sel.RowInfo.Height), nmspcTable);
+            rowCount++;
 
             for (int l = 0; l < band.ColumnCount; l++)
             {
@@ -546,7 +691,8 @@ namespace FreeLibSet.Reporting
                   XmlElement elParProps = xmlDocCnt.CreateElement("style:paragraph-properties", nmspcStyle);
                   elStyle.AppendChild(elParProps);
 
-                  SetAttr(elParProps, "fo:line-height", sel.CellStyle.LineHeightPt.ToString("0.0", StdConvert.NumberFormat) + "pt", nmspcFo);
+                  if (sel.CellStyle.LineHeightTwip > 0)
+                    SetAttr(elParProps, "fo:line-height", sel.CellStyle.LineHeightPt.ToString("0.0", StdConvert.NumberFormat) + "pt", nmspcFo);
 
                   if (sel.CellStyle.AreaAllBordersSame)
                     // Все границы одинаковые
@@ -572,8 +718,7 @@ namespace FreeLibSet.Reporting
                     case BRHAlign.Right: ha = "end"; break;
                     default: throw new BugException("Unknown horizontal alignment");
                   }
-                  if (ha.Length > 0)
-                    SetAttr(elParProps, "fo:text-align", ha, nmspcFo);
+                  SetAttr(elParProps, "fo:text-align", ha, nmspcFo);
 
                   switch (sel.CellStyle.VAlign)
                   {
@@ -608,12 +753,14 @@ namespace FreeLibSet.Reporting
                     SetAttr(elTextProps, "fo:font-weight", "bold", nmspcFo);
                   if (sel.CellStyle.Italic)
                     SetAttr(elTextProps, "fo:font-style", "italic", nmspcFo);
-                  if (sel.CellStyle.Underline)
+                  if (sel.CellStyle.Underline || sel.HasLink)
                     SetAttr(elTextProps, "style:text-underline-style", "solid", nmspcStyle);
                   if (sel.CellStyle.Strikeout)
                     SetAttr(elTextProps, "style:text-line-through-style", "solid", nmspcStyle);
                   if (sel.CellStyle.ForeColor != BRColor.Auto)
                     SetAttr(elTextProps, "fo:color", MyColorStr(sel.CellStyle.ForeColor), nmspcFo);
+                  else if (sel.HasLink)
+                    SetAttr(elTextProps, "fo:color", MyColorStr(BRFileTools.LinkForeColor), nmspcFo);
 
                   if (sel.CellStyle.BackColor != BRColor.Auto)
                     SetAttr(elCellProps, "fo:background-color", MyColorStr(sel.CellStyle.BackColor), nmspcFo);
@@ -627,34 +774,40 @@ namespace FreeLibSet.Reporting
 
                 #region Значение ячейки
 
-                #region Текстовое представление
+                #region Текстовое представление и гиперссылка
 
-                string s = sel.AsString;
-
-                if (s.Length > 0)
+                XmlElement elP = xmlDocCnt.CreateElement("text:p", nmspcText);
+                elCell.AppendChild(elP);
+                XmlElement elTextOwner = elP;
+                if (sel.HasLink)
                 {
-                  string[] a = s.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
-                  for (int m = 0; m < a.Length; m++)
+                  XmlElement elA = elP.OwnerDocument.CreateElement("text:a", nmspcText);
+                  elP.AppendChild(elA);
+                  SetAttr(elA, "xlink:type", "simple", nmspcXLink);
+                  if (sel.LinkData[0] == '#')
                   {
-                    XmlElement elP = xmlDocCnt.CreateElement("text:p", nmspcText);
-                    elCell.AppendChild(elP);
-                    s = a[m];
-                    s = DataTools.ReplaceAny(s, BRFileTools.BadValueChars, ' ');
-                    XmlText txt = xmlDocCnt.CreateTextNode(s);
-                    elP.AppendChild(txt);
+                    string name = BRFileTools.GetExcelBookmarkName(sel.LinkData.Substring(1));
+                    SetAttr(elA, "xlink:href", "#" + name, nmspcXLink);
                   }
+                  else
+                    SetAttr(elA, "xlink:href", sel.LinkData, nmspcXLink);
+                  //SetAttr(elA, "text:style-name", "HL1", nmspcText);
+                  //SetAttr(elA, "text:visited-style-name", "HL2", nmspcText);
+                  elTextOwner = elA;
                 }
+                string s = sel.AsString;
+                s = DataTools.ReplaceAny(s, BRFileTools.BadValueChars, ' ');
+                s = s.Replace(DataTools.SoftHyphenStr, String.Empty); // не работают в Calc
+                WriteTextValue(elTextOwner, s);
 
                 #endregion
 
                 #region Типизированное значение
 
-                object cellValue = sel.Value;
+                object cellValue = sel.ActualValue;
                 if (cellValue != null)
                 {
-                  if (cellValue is string)
-                    SetAttr(elCell, "office:value-type", "string", nmspcOffice);
-                  else if (cellValue is Boolean)
+                  if (cellValue is Boolean)
                   {
                     SetAttr(elCell, "office:value-type", "boolean", nmspcOffice);
                     SetAttr(elCell, "office:boolean-value", (bool)(cellValue) ? "true" : "false", nmspcOffice);
@@ -671,6 +824,10 @@ namespace FreeLibSet.Reporting
                     SetAttr(elCell, "office:value-type", "float", nmspcOffice);
                     SetAttr(elCell, "office:value", Convert.ToString(cellValue, StdConvert.NumberFormat), nmspcOffice);
                   }
+                  else
+                  {
+                    SetAttr(elCell, "office:value-type", "string", nmspcOffice);
+                  }
                 }
 
                 #endregion
@@ -681,7 +838,8 @@ namespace FreeLibSet.Reporting
 
                 int xlsColumn1 = leftCols[merge.FirstColumnIndex];
                 int xlsColumn2 = rightCols[merge.LastColumnIndex];
-
+                CellRef cell = new CellRef(rowCount, xlsColumn1+1);
+                RangeRef range = new RangeRef(cell, cell);
 
                 if (merge.RowCount > 1 || xlsColumn2 > xlsColumn1)
                 {
@@ -694,6 +852,24 @@ namespace FreeLibSet.Reporting
                     XmlElement elCoveredCell = xmlDocCnt.CreateElement("table:covered-table-cell", nmspcTable);
                     elRow.AppendChild(elCoveredCell);
                   }
+                  range = new RangeRef(rowCount, xlsColumn1+1, rowCount + merge.RowCount - 1, xlsColumn2+1);
+                }
+
+                #endregion
+
+                #region Имена ячеек
+
+                foreach (BRBookmark bm in sel.Bookmarks.ToArray())
+                {
+                  XmlElement elNamedRange = xmlDocCnt.CreateElement("table:named-range", nmspcTable);
+                  elNamedExpressions.AppendChild(elNamedRange);
+
+                  string name = BRFileTools.GetExcelBookmarkName(bm.Name);
+                  SetAttr(elNamedRange, "table:name", name, nmspcTable);
+
+                  string sheetPrefix = SpreadsheetTools.GetQuotedSheetName(section.Name) + "."; // а не "!", как в Excel
+                  SetAttr(elNamedRange, "table:base-cell-address", sheetPrefix + cell.ToString(CellRefFormat.Abs), nmspcTable);
+                  SetAttr(elNamedRange, "table:cell-range-address", sheetPrefix + range.ToString(CellRefFormat.Abs), nmspcTable);
                 }
 
                 #endregion
@@ -715,10 +891,15 @@ namespace FreeLibSet.Reporting
 
         #endregion
       }
+
+      if (elNamedExpressions.HasChildNodes)
+        elSpreadSheet.AppendChild(elNamedExpressions);
     }
 
     private static string Get_ro_style(SingleScopeList<int> ro_styles, XmlElement elAutoStyles, int h)
     {
+      // TODO: Чтобы LibreOffice 4 правильно показывал строки с автоподбором высоты, нужно задавать атрибут "style:row-height", а для этого - сначала вычислить эту высоту.
+
       int p = ro_styles.IndexOf(h);
       if (p < 0)
       {
@@ -729,7 +910,7 @@ namespace FreeLibSet.Reporting
 
         XmlElement elTRP = elAutoStyles.OwnerDocument.CreateElement("style:table-row-properties", nmspcStyle);
         elRowStyle.AppendChild(elTRP);
-        if (h == 0)
+        if (h == BRReport.AutoRowHeight)
           SetAttr(elTRP, "style:use-optimal-row-height", "true", nmspcStyle);
         else
           SetAttr(elTRP, "style:row-height", (h / 100.0).ToString("0.000", StdConvert.NumberFormat) + "cm", nmspcStyle);
@@ -759,19 +940,15 @@ namespace FreeLibSet.Reporting
     #region Конструктор
 
     /// <summary>
-    /// 
+    /// Создает конвертер
     /// </summary>
-    /// <param name="measurer"></param>
+    /// <param name="measurer">Объект для измерения текста. Не может быть null</param>
     public BRFileODT(IBRMeasurer measurer)
+      : base(measurer)
     {
-      if (measurer == null)
-        throw new ArgumentNullException("measurer");
-      _Measurer = measurer;
     }
 
     #endregion
-
-    private IBRMeasurer _Measurer;
 
     /// <summary>
     /// 
@@ -826,6 +1003,7 @@ namespace FreeLibSet.Reporting
       SetAttr(elRootCnt, "xmlns:table", nmspcTable, String.Empty);
       SetAttr(elRootCnt, "xmlns:fo", nmspcFo, String.Empty);
       SetAttr(elRootCnt, "xmlns:number", nmspcNumber, String.Empty);
+      SetAttr(elRootCnt, "xmlns:xlink", nmspcXLink, String.Empty);
       SetAttr(elRootCnt, "xmlns:loext", nmspcLoext, String.Empty);
       SetAttr(elRootCnt, "office:version", "1.2", String.Empty);
 
@@ -837,6 +1015,7 @@ namespace FreeLibSet.Reporting
       SetAttr(elRootStl, "xmlns:table", nmspcTable, String.Empty);
       SetAttr(elRootStl, "xmlns:fo", nmspcFo, String.Empty);
       SetAttr(elRootStl, "xmlns:number", nmspcNumber, String.Empty);
+      SetAttr(elRootStl, "xmlns:xlink", nmspcXLink, String.Empty);
       SetAttr(elRootStl, "xmlns:svg", nmspcSvg, String.Empty);
       SetAttr(elRootStl, "office:version", "1.2", nmspcOffice);
 
@@ -872,6 +1051,27 @@ namespace FreeLibSet.Reporting
 
       XmlElement elAutoStylesCnt = xmlDocCnt.CreateElement("office:automatic-styles", nmspcOffice);
       elRootCnt.AppendChild(elAutoStylesCnt); // будем заполнять по мере необходимости
+
+      //if (report.HasLinks)
+      //{
+      //  XmlElement elStyle = xmlDocCnt.CreateElement("style:style", nmspcStyle);
+      //  elAutoStylesCnt.AppendChild(elStyle);
+      //  SetAttr(elStyle, "style:name", "HL1", nmspcStyle);
+      //  SetAttr(elStyle, "style:family", "text", nmspcStyle);
+      //  XmlElement elTP = xmlDocCnt.CreateElement("style:text-properties", nmspcStyle);
+      //  elStyle.AppendChild(elTP);
+      //  SetAttr(elTP, "fo:color", "#FF0000", nmspcFo);
+      //  SetAttr(elTP, "style:text-underline-style", "solid", nmspcStyle);
+
+      //  elStyle = xmlDocCnt.CreateElement("style:style", nmspcStyle);
+      //  elAutoStylesCnt.AppendChild(elStyle);
+      //  SetAttr(elStyle, "style:name", "HL2", nmspcStyle);
+      //  SetAttr(elStyle, "style:family", "text", nmspcStyle);
+      //  elTP = xmlDocCnt.CreateElement("style:text-properties", nmspcStyle);
+      //  elStyle.AppendChild(elTP);
+      //  SetAttr(elTP, "fo:color", "#FFFF00", nmspcFo);
+      //  SetAttr(elTP, "style:text-underline-style", "solid", nmspcStyle);
+      //}
 
       //XmlElement elUnusedStylesStl = xmlDocStl.CreateElement("office:styles", nmspcOffice);
       //elRootStl.AppendChild(elUnusedStylesStl);
@@ -1095,7 +1295,7 @@ namespace FreeLibSet.Reporting
 
 
                 XmlElement elRow = xmlDocCnt.CreateElement("table:table-row", nmspcTable);
-                elRowParentElement.AppendChild(elRow); 
+                elRowParentElement.AppendChild(elRow);
                 SetAttr(elRow, "table:style-name", rowStyleName, nmspcTable);
 
 
@@ -1214,76 +1414,34 @@ namespace FreeLibSet.Reporting
 
     private void WriteTextValue(BRSelector sel, XmlElement elP, bool isSimpleBand)
     {
-      string s = sel.AsString;
-      if (s.Length == 0)
-        return;
-      if (s.IndexOf(Environment.NewLine) < 0 && s.IndexOf("  ") < 0)
+      BRBookmark[] abm = sel.Bookmarks.ToArray();
+      foreach (BRBookmark bm in abm)
       {
-        #region Простой режим
-
-        XmlText text = elP.OwnerDocument.CreateTextNode(s);
-        elP.AppendChild(text);
-
-        #endregion
+        XmlElement elBookmarkStart = elP.OwnerDocument.CreateElement("text:bookmark-start",nmspcText);
+        elP.AppendChild(elBookmarkStart);
+        SetAttr(elBookmarkStart, "text:name", bm.Name, nmspcText);
       }
-      else
+
+      XmlElement elTextOwner = elP;
+      if (sel.HasLink)
       {
-        #region Сложный режим
+        XmlElement elA = elP.OwnerDocument.CreateElement("text:a", nmspcText);
+        elP.AppendChild(elA);
+        SetAttr(elA, "xlink:type", "simple", nmspcXLink);
+        SetAttr(elA, "xlink:href", sel.LinkData, nmspcXLink); // ссылка "#Имя" проходит
+        //SetAttr(elA, "text:style-name", "HL1", nmspcText);
+        //SetAttr(elA, "text:visited-style-name", "HL2", nmspcText);
+        elTextOwner = elA;
+      }
 
-        // Для многострочного текста используется странная конструкция в XML-файле.
-        // В теге <text:p> идет текст, разделяемый тегами <text:line-break />:
-        // <text:p text:style-name="P1">AAA<text:line-break />BBB<text:line-break />CCC</text:p>
+      string s = sel.AsString;
+      WriteTextValue(elTextOwner, s);
 
-        // Если в тексте есть два или более пробела подряд, тогда также нужен дополнительный тег <text:s>
-
-        string[] a = s.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
-        for (int i = 0; i < a.Length; i++)
-        {
-          if (i > 0)
-          {
-            XmlElement elLineBreak = elP.OwnerDocument.CreateElement("text:line-break", nmspcText);
-            elP.AppendChild(elLineBreak);
-          }
-
-          if (a[i].IndexOf("  ") >= 0)
-          {
-            int currCount = 0;
-            while (true)
-            {
-              int p = a[i].IndexOf("  ", currCount);
-              if (p < 0)
-                break;
-
-              string s2 = a[i].Substring(currCount, p - currCount + 1); // захватили один пробел
-              XmlText text = elP.OwnerDocument.CreateTextNode(s2);
-              elP.AppendChild(text);
-              currCount = p + 1;
-              for (int j = currCount; j < a[i].Length; j++)
-              {
-                if (a[i][j] == ' ')
-                {
-                  XmlElement elS = elP.OwnerDocument.CreateElement("text:s", nmspcText);
-                  elP.AppendChild(elS);
-                  currCount++;
-                }
-                else
-                  break;
-              }
-            }
-            if (currCount < a[i].Length) // остаток строки
-            {
-              XmlText text = elP.OwnerDocument.CreateTextNode(a[i].Substring(currCount));
-              elP.AppendChild(text);
-            }
-          }
-          else
-          {
-            XmlText text = elP.OwnerDocument.CreateTextNode(a[i]);
-            elP.AppendChild(text);
-          }
-        }
-
-        #endregion
+      foreach (BRBookmark bm in abm)
+      {
+        XmlElement elBookmarkEnd = elP.OwnerDocument.CreateElement("text:bookmark-end", nmspcText);
+        elP.AppendChild(elBookmarkEnd);
+        SetAttr(elBookmarkEnd, "text:name", bm.Name, nmspcText);
       }
     }
 
@@ -1296,7 +1454,7 @@ namespace FreeLibSet.Reporting
     /// </summary>
     private void InitPStyle(XmlElement elP, BRSelector sel, XmlElement elAutoStyles, int columnWidth, string pageStyleName, bool keepWithNext)
     {
-      int widthPercent = BRFileTools.GetFontWidthPercent(sel, _Measurer, columnWidth);
+      int widthPercent = BRFileTools.GetFontWidthPercent(sel, Measurer, columnWidth);
       widthPercent = Math.Max(widthPercent, MinFontWidthPercent);
       widthPercent = Math.Min(widthPercent, MaxFontWidthPercent);
 
@@ -1342,7 +1500,7 @@ namespace FreeLibSet.Reporting
 
         if (sel.CellStyle.IndentLevel > 0)
         {
-          int indentOffset = BRFileTools.GetIndentWidth(sel.CellStyle, _Measurer); // в единицах 0.1мм
+          int indentOffset = BRFileTools.GetIndentWidth(sel.CellStyle, Measurer); // в единицах 0.1мм
           switch (sel.ActualHAlign)
           {
             case BRHAlign.Left:
@@ -1469,7 +1627,7 @@ namespace FreeLibSet.Reporting
     private static XmlText GetLastTextNode(XmlElement el)
     {
       XmlNodeList nodes = el.ChildNodes;
-      for (int i = nodes.Count-1; i >= 0; i++)
+      for (int i = nodes.Count - 1; i >= 0; i++)
       {
         XmlText res = nodes[i] as XmlText;
         if (res != null)

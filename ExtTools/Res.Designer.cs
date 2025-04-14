@@ -79,6 +79,33 @@ namespace FreeLibSet.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bookmark name is empty.
+        /// </summary>
+        internal static string BRBookmark_Err_NameIsEmpty {
+            get {
+                return ResourceManager.GetString("BRBookmark_Err_NameIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid bookmark name &apos;{0}&apos;. Name must consist of latin letters, digits and underscore character. It must start with a letter..
+        /// </summary>
+        internal static string BRBookmark_Err_NameIsInvalid {
+            get {
+                return ResourceManager.GetString("BRBookmark_Err_NameIsInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid bookmark name &apos;{0}&apos;. Name should not end with an underscore character nor contains two characters together..
+        /// </summary>
+        internal static string BRBookmark_Err_NameUnderscore {
+            get {
+                return ResourceManager.GetString("BRBookmark_Err_NameUnderscore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Selector belongs to another band.
         /// </summary>
         internal static string BRPaginator_Arg_SelectorForAnotherBand {
@@ -232,20 +259,146 @@ namespace FreeLibSet.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use overload without value list when ValueMode=None.
+        /// </summary>
+        internal static string CommandLineParser_Arg_AddOptionWithValues {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Arg_AddOptionWithValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad action format {0}.
+        /// </summary>
+        internal static string CommandLineParser_Arg_BadActionFormat {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Arg_BadActionFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad option format {0}.
+        /// </summary>
+        internal static string CommandLineParser_Arg_BadOptionFormat {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Arg_BadOptionFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action disabled.
+        /// </summary>
+        internal static string CommandLineParser_Err_ActionDisabled {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_ActionDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property ActionMode must be set when ActionDefs list is not empty.
+        /// </summary>
+        internal static string CommandLineParser_Err_ActionModeNone {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_ActionModeNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command line argument, except options, are not allowed.
+        /// </summary>
+        internal static string CommandLineParser_Err_CommonArgsErrorMessage {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_CommonArgsErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; misplaced. {1}.
+        /// </summary>
+        internal static string CommandLineParser_Err_MisplacedOption {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_MisplacedOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There must be a value after the  &apos;=&apos; sign for the option &apos;{0}&apos;.
+        /// </summary>
+        internal static string CommandLineParser_Err_NoValueAfterEq {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_NoValueAfterEq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option disabled.
+        /// </summary>
+        internal static string CommandLineParser_Err_OptionDisabled {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_OptionDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; can be placed only once in command line.
+        /// </summary>
+        internal static string CommandLineParser_Err_OptionTwice {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_OptionTwice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown value {0} for the option {1}. Available values are: {2}.
+        /// </summary>
+        internal static string CommandLineParser_Err_OptionUnknownValue {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_OptionUnknownValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; requires a value.
+        /// </summary>
+        internal static string CommandLineParser_Err_OptionValueRequired {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_OptionValueRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; cannot have a value.
+        /// </summary>
+        internal static string CommandLineParser_Err_OptionValueUnwanted {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_OptionValueUnwanted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown action &apos;{0}&apos;.
+        /// </summary>
+        internal static string CommandLineParser_Err_UnknownAction {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_UnknownAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown option &apos;{0}&apos;.
+        /// </summary>
+        internal static string CommandLineParser_Err_UnknownOption {
+            get {
+                return ResourceManager.GetString("CommandLineParser_Err_UnknownOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Arguments &apos;{0}&apos; and &apos;{1}&apos; are same.
         /// </summary>
         internal static string Common_Arg_AreSame {
             get {
                 return ResourceManager.GetString("Common_Arg_AreSame", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to String &apos;{0}&apos; contains invalid char &apos;{1}&apos; at position {2}.
-        /// </summary>
-        internal static string Common_Arg_BadChar {
-            get {
-                return ResourceManager.GetString("Common_Arg_BadChar", resourceCulture);
             }
         }
         
@@ -538,6 +691,33 @@ namespace FreeLibSet.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Constructor of object of type &apos;{0}&apos; has already been called.
+        /// </summary>
+        internal static string Common_Err_ConstructorAlreadyCalled {
+            get {
+                return ResourceManager.GetString("Common_Err_ConstructorAlreadyCalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table &apos;{0}&apos; does not contain column &apos;{1}&apos;.
+        /// </summary>
+        internal static string Common_Err_DataColumnNotFound {
+            get {
+                return ResourceManager.GetString("Common_Err_DataColumnNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data reader does not contain column with name &apos;{0}&apos;.
+        /// </summary>
+        internal static string Common_Err_DataReaderColumnNotFound {
+            get {
+                return ResourceManager.GetString("Common_Err_DataReaderColumnNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to For the table &apos;{0}&apos; there is no row with the primary key ({1})={2}.
         /// </summary>
         internal static string Common_Err_DataRowNotFound {
@@ -642,6 +822,15 @@ namespace FreeLibSet.Core {
         internal static string Common_Err_ObjectEventHandlerNotSet {
             get {
                 return ResourceManager.GetString("Common_Err_ObjectEventHandlerNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method {0} of object {1} has not been called.
+        /// </summary>
+        internal static string Common_Err_ObjectMethodNotCalled {
+            get {
+                return ResourceManager.GetString("Common_Err_ObjectMethodNotCalled", resourceCulture);
             }
         }
         
@@ -3922,6 +4111,15 @@ namespace FreeLibSet.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to String &apos;{0}&apos; contains invalid char &apos;{1}&apos; at position {2}.
+        /// </summary>
+        internal static string UITools_Err_InvalidChar {
+            get {
+                return ResourceManager.GetString("UITools_Err_InvalidChar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value {0} must be in range {1}.
         /// </summary>
         internal static string UITools_Err_OutOfRange {
@@ -4008,6 +4206,15 @@ namespace FreeLibSet.Core {
         internal static string UITools_Msg_Int {
             get {
                 return ResourceManager.GetString("UITools_Msg_Int", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [ List is empty ].
+        /// </summary>
+        internal static string UITools_Msg_ListIsEmpty {
+            get {
+                return ResourceManager.GetString("UITools_Msg_ListIsEmpty", resourceCulture);
             }
         }
         

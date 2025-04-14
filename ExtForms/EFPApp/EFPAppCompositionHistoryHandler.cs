@@ -496,7 +496,7 @@ namespace FreeLibSet.Forms
     public static EFPAppCompositionHistoryItem SaveUser(string name, CfgPart cfg, Bitmap snapshot)
     {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentNullException("name");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
       if (cfg == null)
         throw new ArgumentNullException("cfg");
       if (cfg.IsEmpty)

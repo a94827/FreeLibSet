@@ -45,9 +45,10 @@ namespace FreeLibSet.Forms.Docs
       if (ui == null)
         throw new ArgumentNullException("ui");
       if (String.IsNullOrEmpty(docTypeName))
-        throw new ArgumentNullException("docTypeName");
-      if (!ui.DocProvider.DocTypes.Contains(docTypeName))
-        throw new ArgumentException("Неизвестный тип документа \"" + docTypeName + "\"", "docTypeName");
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("docTypeName");
+      // лишняя проверка
+      //if (!ui.DocProvider.DocTypes.Contains(docTypeName))
+      //  throw new ArgumentException("Неизвестный тип документа \"" + docTypeName + "\"", "docTypeName");
 #endif
       _UI = ui;
       _State = state;
@@ -58,7 +59,7 @@ namespace FreeLibSet.Forms.Docs
       switch (accessMode)
       {
         case DBxAccessMode.None:
-          EFPApp.ErrorMessageBox("У Вас нет права доступа к документам \"" + docType.PluralTitle + "\"");
+          EFPApp.ErrorMessageBox(String.Format(Res.Common_Err_DocTypeAccessDenied, docType.PluralTitle));
           return;
         case DBxAccessMode.ReadOnly:
           switch (_State)
@@ -69,7 +70,8 @@ namespace FreeLibSet.Forms.Docs
               _State = UIDataState.View;
               break;
             default:
-              EFPApp.ErrorMessageBox("У Вас нет права добавлять, удалять или редактировать документы \"" + docType.PluralTitle + "\". Есть право только на просмотр", "Доступ запрещен");
+              EFPApp.ErrorMessageBox(String.Format(Res.Common_Err_DocTypeReadOnly, docType.PluralTitle),
+                Res.Common_ErrTitle_AccessDenied);
               return;
           }
           break;
@@ -126,7 +128,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (DBxAccessException e)
       {
-        EFPApp.ErrorMessageBox(e.Message, "Доступ запрещен");
+        EFPApp.ErrorMessageBox(e.Message, Res.Common_ErrTitle_AccessDenied);
         _Documents = null;
         return;
       }
@@ -154,10 +156,10 @@ namespace FreeLibSet.Forms.Docs
       if (documents == null)
         throw new ArgumentNullException("documents");
       if (documents.Count == 0)
-        throw new ArgumentException("Не задано ни одного типа документов", "documents");
+        throw ExceptionFactory.ArgIsEmpty("documents");
 
       if (documents.DocProvider != ui.DocProvider)
-        throw new ArgumentException("Используются разные объекты DocProvider");
+        throw ExceptionFactory.ArgProperty("documents", documents, "DocProvider", documents.DocProvider, new object[] { ui.DocProvider });
 #endif
 
       _UI = ui;
@@ -176,7 +178,8 @@ namespace FreeLibSet.Forms.Docs
           _State = UIDataState.View;
           break;
         default:
-          throw new ArgumentException("Загруженные документы " + _Documents[0].ToString() + " находятся в недопустимом состоянии");
+          throw ExceptionFactory.ObjectProperty(_Documents[0], "State", _Documents[0].DocState,
+            new object[] { DBxDocState.Edit, DBxDocState.Insert, DBxDocState.View });
       }
 
       _DataChanged = false;
@@ -193,6 +196,7 @@ namespace FreeLibSet.Forms.Docs
     private void InitActionInfo()
     {
       DBxMultiDocs mainDocs = _Documents[0];
+      string text1;
       switch (_State)
       {
         case UIDataState.Edit:
@@ -206,48 +210,41 @@ namespace FreeLibSet.Forms.Docs
               hasEdit = true;
           }
 
-          string text1;
           if (hasRestore)
           {
             if (hasEdit)
-              text1 = "Редактирование / восстановление";
+              text1 = Res.Editor_Msg_TitleEditRestore;
             else
-              text1 = "Восстановление";
+              text1 = Res.Editor_Msg_TitleRestore;
           }
           else
-            text1 = "Редактирование";
+            text1 = Res.Editor_Msg_TitleEdit;
 
           // 05.11.2015
           // UI.Text.GetTextValue(MainDocs[0]) не будет работать правильно, если текстовое представление документа
           // зависит от вычисляемых полей. Вычисление выполняется на стороне сервера.
           // Можно в ActionInfo сделать что-нибудь вроде %DOCTEXT% для подстановки на стороне сервера
 
-          if (mainDocs.DocCount == 1)
-            _Documents.ActionInfo = text1 + " документа \"" + mainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
-          else
-            //FDocuments.ActionInfo = Text1 + " " + RusNumberConvert.IntWithNoun(MainDocs.Count,
-            //  "документа", "документов", "документов") + " \"" + DocType.PluralTitle + "\"";
-            _Documents.ActionInfo = text1 + " документов \"" + mainDocs.DocType.PluralTitle + "\"";
           break;
         case UIDataState.Insert:
-          _Documents.ActionInfo = "Создание документа \"" + mainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
+          text1 = Res.Editor_Msg_TitleInsert;
           break;
         case UIDataState.InsertCopy:
-          _Documents.ActionInfo = "Копирование документа \"" + mainDocs.DocType.SingularTitle + "\""; // "\": "+UI.Text.GetTextValue(MainDocs[0]);
-          break;
-        case UIDataState.View:
+          text1 = Res.Editor_Msg_TitleInsertCopy;
           break;
         case UIDataState.Delete:
-          if (mainDocs.DocCount == 1)
-            _Documents.ActionInfo = "Удаление документа \"" + mainDocs.DocType.SingularTitle + "\"";
-          else
-            //FDocuments.ActionInfo = "Удаление " + RusNumberConvert.IntWithNoun(MainDocs.Count,
-            //  "документа", "документов", "документов") + " \"" + DocType.PluralTitle + "\"";
-            _Documents.ActionInfo = "Удаление документов \"" + mainDocs.DocType.PluralTitle + "\"";
+          text1 = Res.Editor_Msg_TitleDelete;
           break;
+        case UIDataState.View:
+          return;
         default:
-          throw new BugException("Неизвестное значение State=" + State.ToString());
+          throw new BugException("State=" + State.ToString());
       }
+
+      if (mainDocs.DocCount == 1)
+        _Documents.ActionInfo = String.Format(Res.Editor_Msg_ActionSingle, text1, mainDocs.DocType.SingularTitle);
+      else
+        _Documents.ActionInfo = String.Format(Res.Editor_Msg_ActionMulti, text1, mainDocs.DocType.PluralTitle, mainDocs.DocCount);
     }
 
     #endregion
@@ -369,7 +366,7 @@ namespace FreeLibSet.Forms.Docs
         //if (IsExecuting)
         //  throw new InvalidOperationException("Свойство \"StartWithChanges\" должно устанавливаться до запуска редактора");
         if (value && State == UIDataState.View)
-          throw new InvalidOperationException("Нельзя устанавливать свойство \"StartWithChanges\" в режиме просмотра");
+          throw new InvalidOperationException(Res.Editor_Err_StartWithChangesInView);
         _StartWithChanges = value;
       }
     }
@@ -553,7 +550,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch { } // вложенные ошибки проглатываем
 
-        EFPApp.ShowException(e, "Ошибка запуска редактора");
+        EFPApp.ShowException(e, Res.Editor_ErrTitle_Run);
       }
     }
 
@@ -642,7 +639,7 @@ namespace FreeLibSet.Forms.Docs
         string errorText;
         if (!_Documents.DocProvider.DocPermissions.TestDocuments(_Documents, DBxDocPermissionReason.BeforeDelete, out errorText))
         {
-          EFPApp.ErrorMessageBox(errorText, "Нельзя удалить документ");
+          EFPApp.ErrorMessageBox(errorText, Res.Common_ErrTitle_CannotDeleteDoc);
           return;
         }
 
@@ -650,54 +647,26 @@ namespace FreeLibSet.Forms.Docs
 
         #region Запрос подтверждения
 
-        StringBuilder sb = new StringBuilder();
-        sb.Append("Удалить ");
+        String msg;
         if (Documents.Count == 1 && Documents[0].DocCount == 1)
         {
-          sb.Append("документ \"");
-          sb.Append(Documents[0].DocType.SingularTitle);
-          sb.Append("\"");
-
-          // 25.11.2015
-          sb.Append(" (");
+          string docText;
           try
           {
-            sb.Append(UI.TextHandlers.GetTextValue(Documents[0][0]));
+            docText = UI.TextHandlers.GetTextValue(Documents[0][0]);
           }
-          catch { } // на всякий случай
-          sb.Append(")");
+          catch (Exception e) // на всякий случай
+          {
+            docText = e.Message;
+          }
+          msg = String.Format(Res.Editor_Msg_DeleteSingleDoc, Documents[0].DocType.SingularTitle, docText);
         }
         else
         {
-          for (int i = 0; i < Documents.Count; i++)
-          {
-            //if (Documents[i].Mode != DocMode.Delete)
-            //  continue; проверка не действует
-
-            if (i > 0)
-            {
-              if (i == Documents.Count - 1)
-                sb.Append(" и ");
-              else
-                sb.Append(", ");
-            }
-            if (Documents[i].DocCount == 1)
-            {
-              sb.Append("1 документ \"");
-              sb.Append(Documents[i].DocType.SingularTitle);
-              sb.Append("\"");
-            }
-            else
-            {
-              sb.Append(Documents[i].DocCount.ToString());
-              sb.Append(" документа(ов) \"");
-              sb.Append(Documents[i].DocType.PluralTitle);
-              sb.Append("\"");
-            }
-          }
+          string docText = Documents.DocTypeAndCountToString();
+          msg = String.Format(Res.Editor_Msg_DeleteMultiDocs, docText);
         }
-        sb.Append("?");
-        if (EFPApp.MessageBox(sb.ToString(), "Подтверждение удаления",
+        if (EFPApp.MessageBox(msg, Res.Common_Title_ConfirmDelete,
           MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
           return;
 
@@ -717,23 +686,18 @@ namespace FreeLibSet.Forms.Docs
           }
           catch (DBxDocsLockException e)
           {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Не удалось установить блокировку для редактирования. ");
-            sb.Append("Документ заблокирован");
+            List<string> msgs = new List<string>();
+            msgs.Add(Res.Editor_Err_LockForEdit);
             if (e.OldLock.UserId != 0)
-            {
-              sb.Append(" пользователем ");
-              sb.Append(UI.GetUserName(e.OldLock.UserId));
-            }
-            sb.Append(". Документ будет открыт для просмотра");
-            EFPApp.MessageBox(sb.ToString(),
-              "Нельзя редактировать документ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+              msgs.Add(String.Format(Res.Editor_Err_LockedByUser, UI.GetUserName(e.OldLock.UserId)));
+            EFPApp.MessageBox(String.Join(Environment.NewLine, msgs.ToArray()),
+              Res.Editor_ErrTitle_LockForEdit, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             Documents.ChangeDocState(DBxDocState.Edit, DBxDocState.View);
             _State = UIDataState.View;
           }
         }
 
-        EFPApp.BeginWait("Открытие редактора");
+        EFPApp.BeginWait(Res.Editor_Phase_EditorOpen);
         try
         {
           _Dialog = new DataEditDialog();
@@ -744,11 +708,11 @@ namespace FreeLibSet.Forms.Docs
           #region Список изменений
 
           _SubDocsChangeInfo = new DepChangeInfoItem();
-          _SubDocsChangeInfo.DisplayName = "Изменения в поддокументах";
+          _SubDocsChangeInfo.DisplayName = Res.Editor_Name_SubDocsChangeInfo;
           ChangeInfo.Add(_SubDocsChangeInfo);
 
           _ExternalChangeInfo = new DepChangeInfoItem();
-          _ExternalChangeInfo.DisplayName = "Внешние изменения";
+          _ExternalChangeInfo.DisplayName = Res.Editor_Name_ExternalChangeInfo;
           ChangeInfo.Add(_ExternalChangeInfo);
           _ExternalChangeInfo.Changed = StartWithChanges;
 
@@ -781,25 +745,25 @@ namespace FreeLibSet.Forms.Docs
           switch (State)
           {
             case UIDataState.Edit:
-              _Dialog.OKButtonToolTipText = "Закончить редактирование, сохранив внесенные изменения";
-              _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения внесенных изменений";
-              _Dialog.ApplyButtonToolTipText = "Сохранить внесенные изменения и продолжить редактирование";
+              _Dialog.OKButtonToolTipText = Res.DocumentEditor_ToolTip_OkEdit;
+              _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelEditInsert;
+              _Dialog.ApplyButtonToolTipText = Res.DocumentEditor_ToolTip_ApplyEdit;
               break;
             case UIDataState.Insert:
             case UIDataState.InsertCopy:
-              _Dialog.OKButtonToolTipText = "Создать новую запись и закончить редактирование";
-              _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения введенных значений";
-              _Dialog.ApplyButtonToolTipText = "Создать новую запись и продолжить ее редактирование";
+              _Dialog.OKButtonToolTipText = Res.DocumentEditor_ToolTip_OkInsert;
+              _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelEditInsert;
+              _Dialog.ApplyButtonToolTipText = Res.DocumentEditor_ToolTip_ApplyInsert;
               break;
             case UIDataState.Delete:
-              _Dialog.OKButtonToolTipText = "Удалить просматриваемую запись";
-              _Dialog.CancelButtonToolTipText = "Закрыть просмотр, не удаляя запись";
+              _Dialog.OKButtonToolTipText = Res.DocumentEditor_ToolTip_OkDelete;
+              _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelDelete;
               break;
             case UIDataState.View:
-              _Dialog.OKButtonToolTipText = "Закрыть просмотр";
+              _Dialog.OKButtonToolTipText = Res.DocumentEditor_ToolTip_OkView;
               break;
           }
-          _Dialog.MoreButtonToolTipText = "Дополнительные команды редактора";
+          _Dialog.MoreButtonToolTipText = Res.DocumentEditor_ToolTip_More;
 
           // Инициализируем значения
           DocEditItems.ReadValues();
@@ -874,7 +838,7 @@ namespace FreeLibSet.Forms.Docs
           }
           catch (Exception e)
           {
-            EFPApp.ShowException(e, "Ошибка при инициализации новых значений документа \"" + thisType.DocType.SingularTitle + "\" в редакторе");
+            EFPApp.ShowException(e, String.Format(Res.DocumentEditor_ErrTitle_InitNewValues, thisType.DocType.SingularTitle));
           }
           initNewDocTypes.Add(thisType.DocType.Name);
         }
@@ -920,7 +884,7 @@ namespace FreeLibSet.Forms.Docs
             displayName = item.ToString();
           else
             displayName = item.ChangeInfo.DisplayName;
-          EFPApp.ShowException(e, "Ошибка при считывании значения \"" + displayName + "\"");
+          EFPApp.ShowException(e, String.Format(Res.DocumentEditor_ErrTitle_ReloadValue, displayName));
         }
       }
       foreach (IUIExtEditItem item in DocEditItems)
@@ -957,7 +921,7 @@ namespace FreeLibSet.Forms.Docs
 
         if (_Dialog != null)
         {
-          if (_Dialog.FormState!=ExtEditDialogState.Initialization)
+          if (_Dialog.FormState != ExtEditDialogState.Initialization)
             InitFormTitle();
         }
       }
@@ -1045,21 +1009,21 @@ namespace FreeLibSet.Forms.Docs
           if (isSingle)
           {
             if (Documents[0][0].Deleted)
-              s2 = "(Восстановление)";
+              s2 = Res.Editor_Msg_TitleRestore;
             else
-              s2 = "(Редактирование)";
+              s2 = Res.Editor_Msg_TitleEdit;
           }
           else
-            s2 = "(Редактирование)";
+            s2 = Res.Editor_Msg_TitleEdit;
           break;
         case UIDataState.Insert:
-          s2 = "(Создание)";
+          s2 = Res.Editor_Msg_TitleInsert;
           break;
         case UIDataState.InsertCopy:
-          s2 = "(Создание копии)";
+          s2 = Res.Editor_Msg_TitleInsertCopy;
           break;
         case UIDataState.Delete:
-          s2 = "(Удаление)";
+          s2 = Res.Editor_Msg_TitleDelete;
           break;
         case UIDataState.View:
           if (Documents.VersionView)
@@ -1067,10 +1031,10 @@ namespace FreeLibSet.Forms.Docs
             if (isSingle)
             {
               int version = Documents[0][0].Version;
-              s2 = "(Просмотр версии " + version.ToString() + ")";
+              s2 = String.Format(Res.Editor_Msg_TitleViewVersion, version.ToString());
             }
             else
-              s2 = "(Просмотр предыдущих версий)";
+              s2 = Res.Editor_Msg_TitleViewPrevVersions;
           }
           else
           {
@@ -1078,23 +1042,23 @@ namespace FreeLibSet.Forms.Docs
             if (isSingle)
             {
               if (Documents[0][0].Deleted)
-                s2 = "(Просмотр удаленного документа)";
+                s2 = Res.Editor_Msg_TitleViewDeleted;
               else
-                s2 = "(Просмотр)";
+                s2 = Res.Editor_Msg_TitleView;
             }
             else
               //FForm.Text = DocType.PluralTitle + " (Просмотр " + RusNumberConvert.IntWithNoun(Documents[0].Count,
               //  "записи", "записей", "записей") + ")";
-              s2 = "(Просмотр)";
+              s2 = Res.Editor_Msg_TitleView;
           }
           break;
         default:
-          throw new BugException("Неизвестное значение State=" + State.ToString());
+          throw new BugException("State=" + State.ToString());
       }
 
       #endregion
 
-      _Dialog.Title = s1 + " " + s2;
+      _Dialog.Title = String.Format(Res.Editor_Msg_Title, s1, s2);
       if (UI.DebugShowIds && State != UIDataState.Insert && isSingle)
         _Dialog.Title += " Id=" + Documents[0][0].DocId.ToString();
     }
@@ -1134,7 +1098,7 @@ namespace FreeLibSet.Forms.Docs
         DocEditCancelEventArgs args2 = new DocEditCancelEventArgs(this);
         BeforeWrite(this, args2);
         if (args2.Cancel)
-          args.SetError("Отменено");
+          args.SetError(Res.Common_Err_Cancelled);
       }
     }
 
@@ -1152,7 +1116,7 @@ namespace FreeLibSet.Forms.Docs
       if (!UI.DocTypes[DocTypeName].DoWriting(this))
       {
         args.Cancel = false;
-          return;
+        return;
       }
 
 
@@ -1187,14 +1151,14 @@ namespace FreeLibSet.Forms.Docs
         {
           case UIDataState.Edit:
             //FLastForm.OKButtonProvider.ToolTipText = "Закончить редактирование, сохранив внесенные изменения";
-            _Dialog.CancelButtonToolTipText = "Закончить редактирование без сохранения изменений, внесенных после нажатия кнопки \"Запись\"";
+            _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelEditApplied;
             //FLastForm.ApplyButtonProvider.ToolTipText = "Сохранить внесенные изменения и продолжить редактирование";
             break;
           case UIDataState.Insert:
           case UIDataState.InsertCopy:
-            _Dialog.OKButtonToolTipText = "Закончить редактирование созданной записи, сохранив изменения, внесенных после нажатия кнопки \"Запись\"";
-            _Dialog.CancelButtonToolTipText = "Закончить редактирование созданной записи, без сохранения изменений, внесенных после нажатия кнопки \"Запись\"";
-            _Dialog.ApplyButtonToolTipText = "Сохранить внесенные изменения и продолжить редактирование созданной записи";
+            _Dialog.OKButtonToolTipText = Res.DocumentEditor_ToolTip_OkInsertApplied;
+            _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelInsertApplied;
+            _Dialog.ApplyButtonToolTipText = Res.DocumentEditor_ToolTip_ApplyInsertApplied;
             break;
         }
 
@@ -1267,7 +1231,7 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_InsideDoWrite)
       {
-        EFPApp.ShowTempMessage("Предыдущая запись еще не закончена");
+        EFPApp.ShowTempMessage(Res.DocumentEditor_Err_NestedWriting);
         return false;
       }
       _InsideDoWrite = true;
@@ -1304,7 +1268,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Редактор документа. Ошибка удаления данных на сервере");
+          EFPApp.ShowException(e, Res.DocumentEditor_ErrTitle_Deleting);
           return false;
         }
 
@@ -1361,20 +1325,17 @@ namespace FreeLibSet.Forms.Docs
             }
             catch (DBxDocsLockException e)
             {
-              StringBuilder sb = new StringBuilder();
-              sb.Append("Не удалось установить блокировку для созданных документов. Документ заблокирован");
+              List<string> msgs = new List<string>();
+              msgs.Add(Res.Editor_Err_LockForInsert);
               if (e.OldLock.UserId != 0)
-              {
-                sb.Append(" пользователем ");
-                sb.Append(UI.GetUserName(e.OldLock.UserId));
-              }
-              EFPApp.MessageBox(sb.ToString(),
-                "Ошибка установки блокировки",
+                msgs.Add(String.Format(Res.Editor_Err_LockedByUser, UI.GetUserName(e.OldLock.UserId)));
+              EFPApp.MessageBox(String.Join(Environment.NewLine, msgs.ToArray()),
+                Res.Editor_ErrTitle_LockForInsert,
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception e)
             {
-              EFPApp.ShowException(e, "Ошибка блокировки созданных документов");
+              EFPApp.ShowException(e, Res.Editor_ErrTitle_LockForInsert);
             }
           }
 
@@ -1393,7 +1354,7 @@ namespace FreeLibSet.Forms.Docs
           DebugTools.ShowException(e, "Ошибка записи данных на сервере");
          * */
 
-        EFPApp.ShowException(e, "Ошибка записи данных на сервере");
+        EFPApp.ShowException(e, Res.Editor_ErrTitle_Writing);
 
         return false;
       }
@@ -1409,8 +1370,8 @@ namespace FreeLibSet.Forms.Docs
       // Уведомление о выполнении записи
       if (AfterWrite != null)
       {
-        DocEditEventArgs Args = new DocEditEventArgs(this);
-        AfterWrite(this, Args);
+        DocEditEventArgs args = new DocEditEventArgs(this);
+        AfterWrite(this, args);
       }
 
       // Уведомление табличным просмотрам
@@ -1431,7 +1392,7 @@ namespace FreeLibSet.Forms.Docs
         }
         catch (Exception e)
         {
-          EFPApp.ShowException(e, "Ошибка сохранения копий значений документа \"" + thisType.DocType.SingularTitle + "\" для будущего использования");
+          EFPApp.ShowException(e, String.Format(Res.DocumentEditor_ErrTitle_SaveColumnValues, thisType.DocType.SingularTitle));
         }
       }
 
@@ -1568,7 +1529,7 @@ namespace FreeLibSet.Forms.Docs
       if ((!MultiDocMode) && (!Documents.VersionView /* 09.09.2019 */))
       {
         ciShowDocInfo = new EFPCommandItem("View", "DocInfo");
-        ciShowDocInfo.MenuText = "Информация о документе";
+        ciShowDocInfo.MenuText = Res.Cmd_Menu_DocInfo;
         //ciDebugChanges.ToolTipText = "Информация о документе";
         //ciShowDocInfo.ShortCut = Keys.F12;
         ciShowDocInfo.ImageKey = "Information";
@@ -1594,9 +1555,9 @@ namespace FreeLibSet.Forms.Docs
 
       ciCopyDocRef = new EFPCommandItem("Edit", "CopyDocRec");
       if (MultiDocMode || Documents.Count > 1)
-        ciCopyDocRef.MenuText = "Копировать ссылки на документы";
+        ciCopyDocRef.MenuText = Res.Cmd_Menu_Edit_CopyMultiDocRefs;
       else
-        ciCopyDocRef.MenuText = "Копировать ссылку на документ";
+        ciCopyDocRef.MenuText = Res.Cmd_Menu_Edit_CopySingleDocRef;
       ciCopyDocRef.ImageKey = "Copy";
       ciCopyDocRef.Click += new EventHandler(ciCopyDocRef_Click);
       if (State == UIDataState.Insert || State == UIDataState.InsertCopy)
@@ -1605,9 +1566,9 @@ namespace FreeLibSet.Forms.Docs
 
       ciSendDocSel = new EFPCommandItem("File", "SendToDocSel");
       if (MultiDocMode || Documents.Count > 1)
-        ciSendDocSel.MenuText = "Открыть выборку документов";
+        ciSendDocSel.MenuText = Res.Cmd_Menu_File_SendToDocSelMultiDocs;
       else
-        ciSendDocSel.MenuText = "Открыть выборку с документом";
+        ciSendDocSel.MenuText = Res.Cmd_Menu_File_SendToDocSelSingleDoc;
       ciSendDocSel.ImageKey = "DBxDocSelection";
       ciSendDocSel.Click += new EventHandler(ciSendDocSel_Click);
       if (State == UIDataState.Insert || State == UIDataState.InsertCopy)
@@ -1623,7 +1584,7 @@ namespace FreeLibSet.Forms.Docs
         (!Documents.VersionView /* 09.09.2019 */))
       {
         EFPCommandItem ciOpenEdit = new EFPCommandItem("Edit", "ReopenForEdit");
-        ciOpenEdit.MenuText = "Переоткрыть для редактирования";
+        ciOpenEdit.MenuText = Res.Cmd_Menu_Edit_ReopenForEdit;
         ciOpenEdit.ImageKey = "Edit";
         ciOpenEdit.Click += ciOpenEdit_Click;
         ciOpenEdit.Enabled = UI.DocProvider.DBPermissions.TableModes[DocTypeName] == DBxAccessMode.Full;
@@ -1632,7 +1593,7 @@ namespace FreeLibSet.Forms.Docs
       if (State == UIDataState.InsertCopy)
       {
         EFPCommandItem ciViewSrcDoc = new EFPCommandItem("Edit", "ViewSourceDoc");
-        ciViewSrcDoc.MenuText = "Просмотр исходного документа";
+        ciViewSrcDoc.MenuText = Res.Cmd_Menu_View_ViewSourceDoc;
         ciViewSrcDoc.ImageKey = "View";
         ciViewSrcDoc.Click += ciViewSrcDoc_Click;
         Dialog.MoreCommandItems.Add(ciViewSrcDoc);
@@ -1643,9 +1604,9 @@ namespace FreeLibSet.Forms.Docs
       {
         EFPCommandItem ciDeleteThis = new EFPCommandItem("Edit", "DeleteDoc");
         if (MultiDocMode)
-          ciDeleteThis.MenuText = "Удалить эти документы";
+          ciDeleteThis.MenuText = Res.Cmd_Menu_Edit_DeleteMultiDocs;
         else
-          ciDeleteThis.MenuText = "Удалить этот документ";
+          ciDeleteThis.MenuText = Res.Cmd_Menu_Edit_DeleteSingleDoc;
         ciDeleteThis.ImageKey = "Delete";
         ciDeleteThis.Click += ciDeleteThis_Click;
         ciDeleteThis.Enabled = UI.DocProvider.DBPermissions.TableModes[DocTypeName] == DBxAccessMode.Full;
@@ -1670,9 +1631,9 @@ namespace FreeLibSet.Forms.Docs
       else
       {
         RadioSelectDialog dlg = new RadioSelectDialog();
-        dlg.Title = "Информация о документе";
+        dlg.Title = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_DocInfo);
         dlg.ImageKey = "Information";
-        dlg.GroupTitle = "Документ";
+        dlg.GroupTitle = Res.DocInfo_Title_SelectDoc;
         dlg.Items = new string[Documents.Count];
         for (int i = 0; i < Documents.Count; i++)
         {
@@ -1694,7 +1655,7 @@ namespace FreeLibSet.Forms.Docs
       Int32 docId = Documents[docTypeIndex][0].RealDocId;
       if (docId == 0)
       {
-        EFPApp.ShowTempMessage("Документ \"" + Documents[docTypeIndex].DocType.SingularTitle + "\" не был записан");
+        EFPApp.ShowTempMessage(String.Format(Res.Editor_Err_DocNotWritten, Documents[docTypeIndex].DocType.SingularTitle));
         return;
       }
       UI.DocTypes[Documents[docTypeIndex].DocType.Name].ShowDocInfo(docId);

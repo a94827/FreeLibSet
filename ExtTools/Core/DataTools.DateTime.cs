@@ -394,7 +394,7 @@ namespace FreeLibSet.Core
     public static DateTime CreateDateTime(int year, int month, int day)
     {
       if (year < DateTime.MinValue.Year || year > DateTime.MaxValue.Year)
-        throw new ArgumentOutOfRangeException("Year");
+        throw ExceptionFactory.ArgOutOfRange("year", year, DateTime.MinValue.Year, DateTime.MaxValue.Year);
 
       if (month < 1)
         month = 1;

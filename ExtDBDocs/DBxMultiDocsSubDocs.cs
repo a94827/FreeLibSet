@@ -42,8 +42,8 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        string SubDocTypeName = _Owner.DocType.SubDocs[index].Name;
-        return this[SubDocTypeName];
+        string subDocTypeName = _Owner.DocType.SubDocs[index].Name;
+        return this[subDocTypeName];
       }
     }
 
@@ -67,16 +67,8 @@ namespace FreeLibSet.Data.Docs
         DBxMultiSubDocs res;
         if (!_Items.TryGetValue(subDocTypeName, out res))
         {
-          DBxSubDocType sdt = _Owner.DocType.SubDocs[subDocTypeName];
-          if (sdt == null)
-          {
-            if (String.IsNullOrEmpty(subDocTypeName))
-              throw new ArgumentNullException("subDocTypeName");
-            else
-              throw new ArgumentException("Неизвестный вид поддокумента \"" + subDocTypeName + "\"", "subDocTypeName");
-          }
+          DBxSubDocType sdt = _Owner.DocType.SubDocs.GetRequired(subDocTypeName);
           DBxMultiSubDocs res2 = new DBxMultiSubDocs(_Owner, sdt);
-
           if (!_Items.TryGetValue(subDocTypeName, out res)) // 22.01.2019
           {
             res = res2;
@@ -124,7 +116,7 @@ namespace FreeLibSet.Data.Docs
     /// Документы одного вида
     /// </summary>
     public DBxMultiDocs Owner { get { return _Owner; } }
-    private DBxMultiDocs _Owner;
+    private readonly DBxMultiDocs _Owner;
 
     /// <summary>
     /// Для отладки
@@ -132,7 +124,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>текстовое представление</returns>
     public override string ToString()
     {
-      return "Поддокументы для " + _Owner.DocType.PluralTitle;
+      return "Subdocuments for documents " + _Owner.DocType.PluralTitle;
     }
 
     /// <summary>
@@ -166,7 +158,6 @@ namespace FreeLibSet.Data.Docs
         return false;
       return res.ContainsModified;
     }
-
 
     /// <summary>
     /// Возвращает число поддокументов в заданном состоянии

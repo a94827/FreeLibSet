@@ -320,7 +320,7 @@ namespace FreeLibSet.Forms.Docs
       : base(baseProvider, parentControl, false)
     {
       if (parentControl.HasChildren)
-        throw new ArgumentException("В панели не должно быть управляющих элементов", "parentControl");
+        throw new ArgumentException(Res.Form_Arg_ParentIsNotEmpty, "parentControl");
 
       SubDocTableViewForm dummyForm = new SubDocTableViewForm();
 
@@ -358,7 +358,7 @@ namespace FreeLibSet.Forms.Docs
         _TheTabControl.ImageList = EFPApp.MainImages.ImageList;
         form.MainPanel.Controls.Add(_TheTabControl);
 
-        TabPage tpTree = new TabPage("Дерево");
+        TabPage tpTree = new TabPage(Res.Form_Prompt_Tree);
         _TheTabControl.Controls.Add(tpTree);
         tpTree.ImageKey = "TreeView";
 
@@ -371,7 +371,7 @@ namespace FreeLibSet.Forms.Docs
         _SubDocTreeSpeedPanel.Dock = DockStyle.Top;
         tpTree.Controls.Add(_SubDocTreeSpeedPanel);
 
-        TabPage tpTable = new TabPage("Таблица");
+        TabPage tpTable = new TabPage(Res.Form_Prompt_Table);
         _TheTabControl.Controls.Add(tpTable);
         tpTable.ImageKey = "Table";
 
@@ -400,11 +400,13 @@ namespace FreeLibSet.Forms.Docs
       if (!String.IsNullOrEmpty(subDocTypeUI.SubDocType.TreeParentColumnName))
       {
         _SubDocTreeView = new EFPSubDocTreeView(baseProvider, _SubDocTree, subDocs, subDocTypeUI.UI);
+        _SubDocTreeView.DisplayName = Res.EFPSubDocTableView_Name_Tree;
         _SubDocTreeView.CommandItems.EnterAsOk = (mode != DocTableViewMode.Browse);
         _SubDocTreeView.ToolBarPanel = _SubDocTreeSpeedPanel;
       }
 
       _SubDocGridView = new EFPSubDocGridView(baseProvider, _SubDocGrid, subDocs, subDocTypeUI.UI);
+      _SubDocGridView.DisplayName = Res.EFPSubDocTableView_Name_Grid;
       _SubDocGridView.CommandItems.EnterAsOk = (mode != DocTableViewMode.Browse);
       _SubDocGridView.ToolBarPanel = _SubDocGridSpeedPanel;
 
@@ -543,7 +545,7 @@ namespace FreeLibSet.Forms.Docs
         {
           case DocViewFormActiveTab.Tree:
             if (_SubDocTreeView == null)
-              throw new InvalidOperationException("Форма не содержит вкладки иерархического просмотра");
+              throw new InvalidOperationException(Res.Form_Err_NoTreeTab);
             else
               _TheTabControl.SelectedIndex = 0;
             break;
@@ -556,7 +558,6 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-
 
     /// <summary>
     /// Идентификатор текущего поддокумента
@@ -582,7 +583,6 @@ namespace FreeLibSet.Forms.Docs
       }
     }
 
-
     /// <summary>
     /// Идентификаторы выбранных поддокументов
     /// </summary>
@@ -607,6 +607,15 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
+
+    /// <summary>
+    /// Возвращает название для отладки
+    /// </summary>
+    protected override string DefaultDisplayName
+    {
+      get { return Res.EFPSubDocTableView_Name_Default; }
+    }
+
     #endregion
 
     #region Обработчики формы
@@ -684,7 +693,7 @@ namespace FreeLibSet.Forms.Docs
           if (!CanBeEmpty)
           {
             if (CurrentSubDocId == 0)
-              base.SetError("Поддокумент не выбран");
+              base.SetError(Res.Common_Err_NoSelectedSubDoc);
           }
           break;
       }

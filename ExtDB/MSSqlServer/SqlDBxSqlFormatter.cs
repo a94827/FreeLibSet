@@ -294,7 +294,7 @@ namespace FreeLibSet.Data.SqlClient
           break;
 
         default:
-          throw new BugException("Неизвестный тип поля " + column.ColumnType.ToString());
+          throw new BugException("Unknown coluumn type " + column.ColumnType.ToString());
       }
     }
 

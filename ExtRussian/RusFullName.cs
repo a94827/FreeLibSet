@@ -341,7 +341,7 @@ namespace FreeLibSet.Russian
           case RusFullNamePart.Name: return Name;
           case RusFullNamePart.Patronymic: return Patronymic;
           default:
-            throw new ArgumentOutOfRangeException("part");
+            throw ExceptionFactory.ArgUnknownValue("part", part);
         }
       }
     }
@@ -1447,7 +1447,7 @@ namespace FreeLibSet.Russian
         case RusFullNamePart.Surname: return "Фамилия";
         case RusFullNamePart.Name: return "Имя";
         case RusFullNamePart.Patronymic: return "Отчество";
-        default: throw new ArgumentOutOfRangeException("Part");
+        default: throw ExceptionFactory.ArgUnknownValue("part", part);
       }
     }
 

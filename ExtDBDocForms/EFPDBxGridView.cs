@@ -146,10 +146,7 @@ namespace FreeLibSet.Forms.Docs
       Int32[] ids = DataTools.GetIdsFromColumn(DataRows, columnName);
       if (useHandler)
       {
-        DocTypeUIBase dtb = ControlProvider.UI.DocTypes.FindByTableName(tableName);
-        if (dtb == null)
-          throw new ArgumentException("Неизвестный вид документа или поддокумента \"" + tableName + "\"", "tableName");
-
+        DocTypeUIBase dtb = ControlProvider.UI.DocTypes.GetByTableName(tableName);
         dtb.PerformGetDocSel(DocSel, ids, Reason);
       }
       else
@@ -169,7 +166,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Загрузить из полей переменной ссылки "TableId" и "DocId" (имена полей задаются).
-    /// Если UseHandler=true, то используется обработчик <see cref="DocTypeUIBase.GetDocSel"/>,
+    /// Если <paramref name="useHandler"/>=true, то используется обработчик <see cref="DocTypeUIBase.GetDocSel"/>,
     /// при этом могут быть добавлены дополнительные ссылки. Если <paramref name="useHandler"/>=false,
     /// то добавляется только ссылка на документ.
     /// </summary>
@@ -731,7 +728,7 @@ namespace FreeLibSet.Forms.Docs
         {
           DataView dv = SourceAsDataView;
           if (dv == null)
-            throw new InvalidOperationException("Табличный просмотр не присоединен к DataView");
+            throw new InvalidOperationException(Res.EFPDataView_Err_NoData);
           rows = DataTools.GetDataViewRows(dv);
         }
         else
@@ -795,7 +792,7 @@ namespace FreeLibSet.Forms.Docs
         return; // 03.04.2020
 
       if (SourceAsDataView == null)
-        throw new InvalidOperationException("Просмотр не связан с DataView");
+        throw new InvalidOperationException(Res.EFPDataView_Err_NoData);
 
       if (IsPrimaryKeyById)
       {
@@ -958,14 +955,14 @@ namespace FreeLibSet.Forms.Docs
       IDBxDocSelectionFilter item2 = item as IDBxDocSelectionFilter;
       if (item2 == null)
       {
-        EFPApp.ShowTempMessage("Фильтр \"" + item.DisplayName + "\" не поддерживает вставку выборки документов");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDBxFilterGrid_Err_NotSupportedFilter, item.DisplayName));
         return;
       }
 
       if (item2.ApplyDocSel(fmtDocSel.DocSel))
         efpFilterGrid.PerformRefresh();
       else
-        EFPApp.ShowTempMessage("Выборка документов в буфере обмена не подходит фильтру \"" + item.DisplayName + "\"");
+        EFPApp.ShowTempMessage(String.Format(Res.EFPDBxFilterGrid_Err_DocSelMismatch, item.DisplayName));
     }
 
     #endregion
@@ -1205,7 +1202,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection DocSel = null;
       try
       {
-        EFPApp.BeginWait("Создание выборки документов", "Выборка");
+        EFPApp.BeginWait(Res.Common_Phase_DocSelCreation, "DBxDocSelection");
         try
         {
           EFPDBxGridViewDocSelEventArgs args = new EFPDBxGridViewDocSelEventArgs(this, reason, rowIndices);
@@ -1220,7 +1217,7 @@ namespace FreeLibSet.Forms.Docs
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка создания выборки документов для табличного просмотра");
+        EFPApp.ShowException(e);
       }
       return DocSel;
     }
@@ -1319,12 +1316,12 @@ namespace FreeLibSet.Forms.Docs
               MarkRowIds.Remove(currId);
           }
           else
-            throw new InvalidOperationException("Для строки нет идентификатора");
+            throw new InvalidOperationException(Res.EFPDataView_Err_RowWithoutId);
         }
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка установки маркировки строки");
+        EFPApp.ShowException(e);
       }
     }
 
@@ -1420,8 +1417,8 @@ namespace FreeLibSet.Forms.Docs
 
       #region Отправить
 
-      ciSendTo = new EFPCommandItem("Send", "DocSel");
-      ciSendTo.MenuText = "Выборка документов";
+      ciSendTo = new EFPCommandItem("SendTo", "DocSel");
+      ciSendTo.MenuText = Res.Cmd_Menu_SendTo_DocSel;
       ciSendTo.ImageKey = "DBxDocSelection";
       ciSendTo.Parent = base.MenuSendTo;
       ciSendTo.Click += ciSendToDocSel_Click;
@@ -1484,7 +1481,7 @@ namespace FreeLibSet.Forms.Docs
       DBxDocSelection docSel = ControlProvider.CreateDocSel(EFPDBxViewDocSelReason.SendTo);
       if (docSel == null || docSel.IsEmpty)
       {
-        EFPApp.ShowTempMessage("Выборка не содержит документов");
+        EFPApp.ShowTempMessage(Res.DocSel_Msg_IsEmpty);
         return;
       }
       ControlProvider.UI.ShowDocSel(docSel);

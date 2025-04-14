@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 namespace FreeLibSet.Data.Docs
 {
   /// <summary>
-  /// Реализация свойства DBxSingleDoc.SubDocs
+  /// Реализация свойства <see cref="DBxSingleDoc.SubDocs"/>
   /// </summary>
   public struct DBxSingleDocSubDocs
   {
@@ -28,7 +28,7 @@ namespace FreeLibSet.Data.Docs
     /// Документ, к которому относятся поддокументы
     /// </summary>
     public DBxSingleDoc Owner { get { return _Owner; } }
-    private DBxSingleDoc _Owner;
+    private readonly DBxSingleDoc _Owner;
 
     /// <summary>
     /// Возвращает количество видов поддокументов, определенных в DBxDocType.SubDocs
@@ -52,7 +52,7 @@ namespace FreeLibSet.Data.Docs
           if (String.IsNullOrEmpty(subDocTypeName))
             throw new ArgumentNullException("subDocTypeName");
           else
-            throw new ArgumentException("Неизвестный вид поддокументов \"" + subDocTypeName + "\"", "subDocTypeName");
+            throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_UnknownSubDocType, subDocTypeName), "subDocTypeName");
         }
         return new DBxSingleSubDocs(_Owner, subDocs);
       }
@@ -78,7 +78,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      return "Поддокументы для " + Owner.ToString();
+      return "Subdocuments for " + Owner.ToString();
     }
 
     #endregion

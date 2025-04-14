@@ -1,0 +1,729 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DBxBinDataHandler_Arg_BinDataId" xml:space="preserve">
+    <value>Wrong identifier Id={0} for table 'BinData' </value>
+  </data>
+  <data name="DBxBinDataHandler_Arg_FileNameId" xml:space="preserve">
+    <value>Wrong identifier Id={0} for table 'FileNames'</value>
+  </data>
+  <data name="DBxBinDataHandler_Arg_FileTooLong" xml:space="preserve">
+    <value>File is too long</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataBlokReading" xml:space="preserve">
+    <value>Table 'BinData', Id={0}. Block reading error. {1}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataLength" xml:space="preserve">
+    <value>Block length mismatch in 'BinData' table. For block with Id={0} the stored in database value is {1}, but queried length is {2}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataNoReplays" xml:space="preserve">
+    <value>There are no replays found in table 'BinData' ('{0}')</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataReplayMD5" xml:space="preserve">
+    <value>Replay in table 'BinData'. For Id={0} and Id={1} there is same MD5 checksum ='{2}'</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageDiffSection" xml:space="preserve">
+    <value>Database '{0}', table 'BinDataStorage', Id={1}. In the main table 'BinData' for this Id section #{2} is required, but #{3} really used</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageError" xml:space="preserve">
+    <value>Database '{0}', table 'BinDataStorage'. Unhandled error: {1}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageHasWarnings" xml:space="preserve">
+    <value>Database '{0}', table 'BinDataStorage' (section #{1}). Warnings found.</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageNoErrors" xml:space="preserve">
+    <value>Database '{0}', table 'BinDataStorage' (section #{1}). No errors</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataStorageUnknownId" xml:space="preserve">
+    <value>Database '{0}', table 'BinDataStorage', Id={1}. There is no such Id in main table 'BinData'</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataTotalInfo" xml:space="preserve">
+    <value>Total record count in table 'BinData' ({0}): {1}, with errors: {2}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataWrongBlockLength" xml:space="preserve">
+    <value>Table 'BinData', Id={0}. Wrong data block length. Expected: {1}, read: {2}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataWrongMD5" xml:space="preserve">
+    <value>Table 'BinData', Id={0}. Wrong data block MD5-checksum</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_BinDataZeroMD5" xml:space="preserve">
+    <value>Table 'BinData', Id={0}. MD5 is zero. Validation skipped.</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_DocRefUnknown" xml:space="preserve">
+    <value>{0}. Id={1}. Wrong reference {2}. Table '{3}' does not contain a record with such identifier.</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_ImportToNotEmptyTable" xml:space="preserve">
+    <value>Table '{0}' already contains rows. Import is possible when the table is empty.</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_InsufficientEntryCount" xml:space="preserve">
+    <value>Insufficient entry count ({0}) to fragmented databases. Table 'BinData' uses section with numbeк {1}</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_NoSectionEntries" xml:space="preserve">
+    <value>There are no section entries added</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_NoUsBinDataUseFiles" xml:space="preserve">
+    <value>At least one of propertiesUseBinData or UseFiles must be set to true. If application does not store such data, the object DBxBinDataHandler should not be created</value>
+  </data>
+  <data name="DBxBinDataHandler_Err_SectionEntriesWithoutFragmentation" xml:space="preserve">
+    <value>Cannot add entries to SectionEntries if UseFragmentation=false</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_BinDataReplaySearch" xml:space="preserve">
+    <value>Replays in binary data searching</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_BinDataStorage" xml:space="preserve">
+    <value>'BinDataStorage' validation in database '{0}'</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_BinDataValidation" xml:space="preserve">
+    <value>Binary data validation</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_DBValidation" xml:space="preserve">
+    <value>Database '{0}' validation</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_DocRefValidation" xml:space="preserve">
+    <value>Document references validation</value>
+  </data>
+  <data name="DBxBinDataHandler_Phase_RefSearching" xml:space="preserve">
+    <value>Reference searching. {0}</value>
+  </data>
+  <data name="DBxDocConnectionHelper_Err_DBxManagerListEmpty" xml:space="preserve">
+    <value>Database manager list DBxManager.Managers is empty</value>
+  </data>
+  <data name="DBxDocConnectionHelper_Err_StructUpdatingPrefix" xml:space="preserve">
+    <value>Struct {0} updating. </value>
+  </data>
+  <data name="DBxDocConnectionHelper_Err_UndoNotAppliable" xml:space="preserve">
+    <value>History is not appliable with given settings of DBxDocTypes object</value>
+  </data>
+  <data name="DBxDocConnectionHelper_Err_UnknownProviderName" xml:space="preserve">
+    <value>ProviderName property has unknown value '{0}'. Available values are: {1}</value>
+  </data>
+  <data name="DBxDocConnectionHelper_Phase_DBUpdating" xml:space="preserve">
+    <value>Updating database '{0}'</value>
+  </data>
+  <data name="DBxDocPermissions_Arg_DocProviderIsProxy" xml:space="preserve">
+    <value>docProvider cannot be a remote object (transparent proxy) beacause object UserPermissions is not serializable</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDenied" xml:space="preserve">
+    <value>There is no acccess rights {0} document '{1}' '{2}'. {3}</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedDelete" xml:space="preserve">
+    <value>to delete</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedEdit" xml:space="preserve">
+    <value>to edit</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedNew" xml:space="preserve">
+    <value>to create</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedRestore" xml:space="preserve">
+    <value>to restore</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedView" xml:space="preserve">
+    <value>to view</value>
+  </data>
+  <data name="DBxDocPermissions_Err_AccessDeniedViewHistory" xml:space="preserve">
+    <value>to view history of</value>
+  </data>
+  <data name="DBxDocPermissions_Err_DocProviderWithoutUserPermissions" xml:space="preserve">
+    <value>docProvider does not return UserPermissions property.  Context switch is probably appear and UserPermissions object is not serializable. DBxDocProvider with its own permission copy should be used.</value>
+  </data>
+  <data name="DBxDocPermissions_Err_DocSetAccessDenied" xml:space="preserve">
+    <value>There is no acccess rights {0} documents. {1}</value>
+  </data>
+  <data name="DBxDocProviderIdReplacer_Err_NoDocIdColumn" xml:space="preserve">
+    <value>Invalid data set. In the table '{0}' there is a variable reference column {1} with a table identifier, but column '{2}' with document identifier is missed</value>
+  </data>
+  <data name="DBxDocProviderIdReplacer_Err_NoTableIdColumn" xml:space="preserve">
+    <value>Invalid data set. In the table '{0}' there is a variable reference column '{1}' with a document identifier, but column '{2}' with a table identifier is missed</value>
+  </data>
+  <data name="DBxDocProviderIdReplacer_Err_UnknownTableId" xml:space="preserve">
+    <value>While adding row to table '{0}', column '{1}' contains identifier {2} of referenced table, but there is no document table with such an identifier</value>
+  </data>
+  <data name="DBxDocProvider_Arg_UnknownDocType" xml:space="preserve">
+    <value>Unknown document type '{0}'</value>
+  </data>
+  <data name="DBxDocProvider_Arg_WrongId" xml:space="preserve">
+    <value>Wrong identifier {0}</value>
+  </data>
+  <data name="DBxDocProvider_Arg_WrongIdInTable" xml:space="preserve">
+    <value>Wrong identifier {0} in table '{1}'</value>
+  </data>
+  <data name="DBxDocProvider_Name_NoUser" xml:space="preserve">
+    <value>No user</value>
+  </data>
+  <data name="DBxDocSelection_Msg_Empty" xml:space="preserve">
+    <value>No documents</value>
+  </data>
+  <data name="DBxDocSet_Arg_ProviderIsProxy" xml:space="preserve">
+    <value>DBxDocProvider is a remote object (TransparentProxy). To correct work it should be created in the current context. Use object of type DBxChainDocProvider</value>
+  </data>
+  <data name="DBxDocSet_Err_DocSubDocStateMismatch" xml:space="preserve">
+    <value>Subdocument '{0}' with identifier SubDocId={1} has state '{2}', but document '{3}' with identifier DocId={4}, that own the subdocument, has state '{5}'</value>
+  </data>
+  <data name="DBxDocSet_Err_FicvtiveIdInUnchangedRow" xml:space="preserve">
+    <value>{0}, Id={1}. Data row has state 'Unchanged' but identifier is fictive.</value>
+  </data>
+  <data name="DBxDocSet_Err_NoBinDataTable" xml:space="preserve">
+    <value>Binary data with temporary identifier queried, but thete is no 'BinData' table in the data set</value>
+  </data>
+  <data name="DBxDocSet_Err_NoDocForSubDoc" xml:space="preserve">
+    <value>Subdocument '{0}' with identifier SubDocId={1} belongs to doucment '{2}' with identifier DocId={3} that misses in data set</value>
+  </data>
+  <data name="DBxDocSet_Err_NoFileNameTable" xml:space="preserve">
+    <value>File with temporary identifier queried, but thete is no 'FileNames' table in the data set</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToDeletedInDB" xml:space="preserve">
+    <value>{0}, Id={1}, column '{2}'. There is a reference to document or subdocument '{3}' with Id={4}, which is marked as deleted in database</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToDocDeletedInDB" xml:space="preserve">
+    <value>{0}, Id={1}, column '{2}'. There is a reference to subdocument '{3}' с Id={4} of document '{5}' with DocId={6}, which is marked as deleted in database</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNewButNoTable" xml:space="preserve">
+    <value>{0}, Id={1}, column '{2}'. There is a reference to new document or subdocument RefId={3}, but there is no table '{4}' in the data set.</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNewDeleted" xml:space="preserve">
+    <value>{0}, Id={1}, column '{2}'. There is a reference to new document or subdocument  RefId={3}, but the row in table '{4}' is marked for deletion</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNewInUnchangedRow" xml:space="preserve">
+    <value>{0}, Id={1}, column '{2}'. There is a reference to new document or subdocument RefId={3}, but the row is in view mode.</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNewUnknown" xml:space="preserve">
+    <value>{0}, Id={1}, column '{2}'.  There is a reference to new document or subdocument  RefId={3}, but there is no row in table'{4}' with such an identifier.</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToNotInDB" xml:space="preserve">
+    <value>{0}, Id={1}, column '{2}'. There is a reference to document or subdocument '{3}' with invalid Id={4} not exist in database</value>
+  </data>
+  <data name="DBxDocSet_Err_RefToOldDeleted" xml:space="preserve">
+    <value>{0}, Id={1}, column '{2}'. There is a reference to exist document or subdocument  RefId={3}, but the row in table '{4}' is marked for deletion</value>
+  </data>
+  <data name="DBxDocSet_Err_UnknownBinDataId" xml:space="preserve">
+    <value>Binary data queried for unknown temporary identifier Id={0}</value>
+  </data>
+  <data name="DBxDocSet_Err_UnknownFileNameId" xml:space="preserve">
+    <value>File queried for unknown temporary identifier Id={0}</value>
+  </data>
+  <data name="DBxDocSet_Msg_DocWithType" xml:space="preserve">
+    <value>Document '{0}'</value>
+  </data>
+  <data name="DBxDocSet_Msg_SubDocWithType" xml:space="preserve">
+    <value>Subdocument '{0}'</value>
+  </data>
+  <data name="DBxDocsLockException_Err_Default" xml:space="preserve">
+    <value>Cannot set the lock '{0}' because it conflicts with the lock '{1}'</value>
+  </data>
+  <data name="DBxDocsLockException_Err_DocText" xml:space="preserve">
+    <value>Cannot get a text representation of the document {0}</value>
+  </data>
+  <data name="DBxDocsLockException_Err_SameUser" xml:space="preserve">
+    <value>Cannot set the lock '{0}' because it conflicts with another lock '{1}' set by same user</value>
+  </data>
+  <data name="DBxDocsLock_Msg_IsEmpty" xml:space="preserve">
+    <value>(No documents)</value>
+  </data>
+  <data name="DBxDocsLock_Msg_LockAdd" xml:space="preserve">
+    <value>(Document creation)</value>
+  </data>
+  <data name="DBxDocTextHandlers_Arg_NotRefColumn" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' is not a reference column</value>
+  </data>
+  <data name="DBxDocTextHandlers_Arg_UnknownColumnName" xml:space="preserve">
+    <value>Column '{0}' has not been added to required list for text representation for table '{1}'. Acceptable columns are{2}</value>
+  </data>
+  <data name="DBxDocTextHandlers_Err_NoTextForGroupTrese" xml:space="preserve">
+    <value>Documents '{0}' does not have any text column. These documents cannot be used as a group tree</value>
+  </data>
+  <data name="DBxDocTextHandlers_Err_RefTextValue" xml:space="preserve">
+    <value>Error. {0}</value>
+  </data>
+  <data name="DBxDocTextHandlers_Err_TextValue" xml:space="preserve">
+    <value>Id={0}. Error. {1}</value>
+  </data>
+  <data name="DBxDocTextHandlers_Err_VTTextValue" xml:space="preserve">
+    <value>TableId={0}, DocId={1}. Error. {2}</value>
+  </data>
+  <data name="DBxDocTextHandlers_Msg_Deleted" xml:space="preserve">
+    <value>(deleted)</value>
+  </data>
+  <data name="DBxDocTextHandlers_Msg_DocDeleted" xml:space="preserve">
+    <value>(in the deleted document)</value>
+  </data>
+  <data name="DBxDocTypes_Arg_UnknownTableName" xml:space="preserve">
+    <value>Unknown table name '{0}'. It must be a documemt or subdocument name</value>
+  </data>
+  <data name="DBxDocTypes_Err_DocTableNameTwice" xml:space="preserve">
+    <value>Error in table 'DocTables'. Document name '{0}' presented twice.</value>
+  </data>
+  <data name="DBxDocTypes_Err_FindByTableIdBeforeUpdate" xml:space="preserve">
+    <value>Search by an identifier TableId can be performed only after database structure is updated. Property DBxDocType.TableId is unknown before update.</value>
+  </data>
+  <data name="DBxDocTypes_Err_InvaldidPK" xml:space="preserve">
+    <value>Table '{0}' structure has an invalid primary key by '{1}' column, but 'Id' column required</value>
+  </data>
+  <data name="DBxDocTypes_Err_NoCalcCalumn" xml:space="preserve">
+    <value>Table '{0}' structure does not contain the calculated column '{1}'</value>
+  </data>
+  <data name="DBxDocTypes_Err_NoRefColumn" xml:space="preserve">
+    <value>Column '{0}' of table '{1}' is not a reference column</value>
+  </data>
+  <data name="DBxDocTypes_Err_UnknownUsersDocType" xml:space="preserve">
+    <value>Property UsersTableName references to unknown document table '{0}'</value>
+  </data>
+  <data name="DBxDocTypes_Err_VTRefColumnUsed" xml:space="preserve">
+    <value>For table '{0}' in the VT-reference '{1}' column '{2}' used that already used in another reference</value>
+  </data>
+  <data name="DBxDocTypes_Msg_SingularTitleDefault" xml:space="preserve">
+    <value>Item of '{0}'</value>
+  </data>
+  <data name="DBxShortDocsLock_Name_Default" xml:space="preserve">
+    <value>Writing ro database</value>
+  </data>
+  <data name="DBxExtRefs_Name_PluralDoc" xml:space="preserve">
+    <value>Documents '{0}'</value>
+  </data>
+  <data name="DBxExtRefs_Name_PluralSubDoc" xml:space="preserve">
+    <value>Documents '{0}', subdocuments '{1}'</value>
+  </data>
+  <data name="DBxExtRefs_Name_SingularDoc" xml:space="preserve">
+    <value>Document '{0}'</value>
+  </data>
+  <data name="DBxExtRefs_Name_SingularSubDoc" xml:space="preserve">
+    <value>Document '{0}', subdocument '{1}'</value>
+  </data>
+  <data name="DBxDocPermissions_Err_DocTypeAccessDenied" xml:space="preserve">
+    <value>There is no acccess rights {0} to documents of type {1}</value>
+  </data>
+  <data name="DBxDocProvider_Err_DocInDocSet" xml:space="preserve">
+    <value>Document '{0}' with identifier {1} is already in document set</value>
+  </data>
+  <data name="DBxDocProvider_Err_LoadDocRowCount" xml:space="preserve">
+    <value>Cannot load all required rows from document table '{0}'. Queried row count: {1}, given: {2}</value>
+  </data>
+  <data name="DBxMultiDocs_Arg_UnknownColumn" xml:space="preserve">
+    <value>Column '{0}' does not belong to document '{1}'</value>
+  </data>
+  <data name="DBxMultiDocs_Err_DocNotFound" xml:space="preserve">
+    <value>Document of type '{0}' with identifier {1} not found</value>
+  </data>
+  <data name="DBxMultiDocs_Err_IsEmpty" xml:space="preserve">
+    <value>There is no open documents of type '{0}'</value>
+  </data>
+  <data name="DBxMultiDocs_Err_IsReadOnly" xml:space="preserve">
+    <value>Value editing is not allowed</value>
+  </data>
+  <data name="DBxMultiDocs_Err_SetDocState" xml:space="preserve">
+    <value>Cannot set document '{0}' with DocId={1} to state '{2}' since it's current state is '{3}'</value>
+  </data>
+  <data name="DBxMultiDocs_Err_StateRequired" xml:space="preserve">
+    <value>All docuiments of type '{0}' must be in state {1}</value>
+  </data>
+  <data name="DBxMultiDocs_Err_AccessDenied" xml:space="preserve">
+    <value>User has no access rights to documens of type '{0}'</value>
+  </data>
+  <data name="DBxMultiDocs_Err_AccessReadOnly" xml:space="preserve">
+    <value>User cannot create, modify nor delete documens of type  '{0}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Arg_MergeAlienSubSet" xml:space="preserve">
+    <value>Attachin child subset was created from another subdocument set</value>
+  </data>
+  <data name="DBxMultiSubDocs_Arg_MergeSubSetRowState" xml:space="preserve">
+    <value>Attempt to append subdocument of type '{0}' row with SubDocId={1}. The row is in state '{2}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_AccessDenied" xml:space="preserve">
+    <value>User has no access rights to subdocumens of type '{0}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_AccessReadOnly" xml:space="preserve">
+    <value>User cannot create, modify nor delete subdocumens of type  '{0}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_InsertDocState" xml:space="preserve">
+    <value>Cannot add a subdocument since owner document '{0}' with DocId={1} is in state '{2}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_InsertMultiDocs" xml:space="preserve">
+    <value>Cannot detect the document of type'{0}' which is supposed to be the owner of new subdocument since there are more than one ({1}) document of this type exist in the doc set. Use Insert() method overload with a reference to an owner document</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_InsertNoDocuments" xml:space="preserve">
+    <value>Cannot create subdocument of type '{0}' since there are no documents of type '{1}' in doc set</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_IsEmpty" xml:space="preserve">
+    <value>There is no open subdocuments of type '{0}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_SetAllState" xml:space="preserve">
+    <value>Cannot set all the subdocuments of type '{0}' to state '{1}' since current state is '{2}'</value>
+  </data>
+  <data name="DBxMultiSubDocs_Err_StateRequired" xml:space="preserve">
+    <value>All subdocuiments of type '{0}' must be in state {1}</value>
+  </data>
+  <data name="DBxMultiSubDoc_Err_ResetTableForSubSet" xml:space="preserve">
+    <value>Table reset is not allowed for the subset</value>
+  </data>
+  <data name="DBxMultiSubDoc_Err_RowNotFound" xml:space="preserve">
+    <value>Row for subdocument with identifier {0} not found</value>
+  </data>
+  <data name="DBxDocPrivider_Err_DelRefColumnInfo" xml:space="preserve">
+    <value>Error when table '{0}' queried. Deleting document/subdocuments are '{1}'. Validable reference column is '{2}'. {3}</value>
+  </data>
+  <data name="DBxDocPrivider_Err_IncompleteVTRef" xml:space="preserve">
+    <value>In the table '{0}' there are incomplete columns for a variable-table reference '{1}'</value>
+  </data>
+  <data name="DBxDocPrivider_Err_RefIdsNotInDB" xml:space="preserve">
+    <value>There are references to table '{0}' for identifiers {1}, which are not in database</value>
+  </data>
+  <data name="DBxDocPrivider_Err_SetValueDenied" xml:space="preserve">
+    <value>Cannot set the column '{0}' value of table '{1}' since there is no rights to change value</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefDisabledDocType" xml:space="preserve">
+    <value>In the table '{0}' for variable-table reference '{1}' there is a fictive table id. Column '{2}'={3}, which match the document type '{4}'. These documents are not allowed for this reference. Allowed document types are: {5}</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefFictiveTable" xml:space="preserve">
+    <value>In the table '{0}' for variable-table reference '{1}' there is a fictive table id. Column '{2}'={3}</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefIncompleteIds" xml:space="preserve">
+    <value>In the table '{0}' for variable-table reference '{1}' there are incomplete identifiers. Column '{2}'={3}, and column '{4}'={5}.</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefUnknownDocId" xml:space="preserve">
+    <value>In the table '{0}' for variable-table reference '{1}' there is a fictive document id. Column '{2}'={3}, which not found in table '{4}'</value>
+  </data>
+  <data name="DBxDocPrivider_Err_VTRefUnknownDocType" xml:space="preserve">
+    <value>In the table '{0}' for variable-table reference '{1}' there is a fictive table id. Column '{2}'={3}, which does not match any document type</value>
+  </data>
+  <data name="DBxDocPrivider_Err_WrongFictiveRefId" xml:space="preserve">
+    <value>In the table '{0}' for reference column '{1}' there is a fictive identifier {2}, which has no record in docset</value>
+  </data>
+  <data name="DBxDocProvider_Arg_SubDocIdForDoc" xml:space="preserve">
+    <value>Non-zero subdocument identifier given while table '{0}' is a document</value>
+  </data>
+  <data name="DBxDocProvider_Arg_UnknownTable" xml:space="preserve">
+    <value>Unknown table '{0}'</value>
+  </data>
+  <data name="DBxDocProvider_Arg_UserIdNoUsers" xml:space="preserve">
+    <value>UserId cannot be set since DBxDocTypes.UseUsers=false</value>
+  </data>
+  <data name="DBxDocProvider_Arg_WrongTableCount" xml:space="preserve">
+    <value>Data set contains different number of tables: '{0}'. Expected: '{1}'</value>
+  </data>
+  <data name="DBxDocProvider_Err_NoBinDataHandler" xml:space="preserve">
+    <value>DBxBinDataHandler object not set</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoDelete" xml:space="preserve">
+    <value>Removing</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoEdit" xml:space="preserve">
+    <value>Changing</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoEmpty" xml:space="preserve">
+    <value>No action</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoInsert" xml:space="preserve">
+    <value>Creation</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoMixed" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoMultiDocs" xml:space="preserve">
+    <value>{0} docs '{1}' ({2})</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionInfoSingleDoc" xml:space="preserve">
+    <value>{0} of doc '{1}'</value>
+  </data>
+  <data name="DBxExtRefs_Err_RefToUnknownTable" xml:space="preserve">
+    <value>Table '{0}' declaration contains a reference column '{1}' definition, which refers to unknown table '{2}'</value>
+  </data>
+  <data name="DBxDocProvider_Err_DelMulti" xml:space="preserve">
+    <value>Cannot delete {0} because one of it is referenced by {1}</value>
+  </data>
+  <data name="DBxDocProvider_Err_DelSingle" xml:space="preserve">
+    <value>Cannot delete {0} because it referenced by {1}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_MultiDocs" xml:space="preserve">
+    <value>documents {0}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_MultiSubDocs" xml:space="preserve">
+    <value>subdocuments {0} of document {1}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_SingleDoc" xml:space="preserve">
+    <value>document {0}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_SingleSubDoc" xml:space="preserve">
+    <value>subdocument {0} of document {0}</value>
+  </data>
+  <data name="DBxDocProvider_Arg_ActionId" xml:space="preserve">
+    <value>Invalid user action identifier ActionId={0}</value>
+  </data>
+  <data name="DBxDocProvider_Arg_UnknownSubDocType" xml:space="preserve">
+    <value>Unknown subdocument type '{0}'</value>
+  </data>
+  <data name="DBxDocProvider_Err_ViewOtherUsersAction" xml:space="preserve">
+    <value>Viewing other users actions is not allowed</value>
+  </data>
+  <data name="DBxDocProvider_Msg_DocSubDocText" xml:space="preserve">
+    <value>'{0}' ({1}), {2}</value>
+  </data>
+  <data name="DBxDocProvider_Msg_NewDocSubDoc" xml:space="preserve">
+    <value>[ New ]</value>
+  </data>
+  <data name="DBxDocProvider_NoSingleDocType" xml:space="preserve">
+    <value>Identifier of the single document to search refeneces, cannot be given wihout the docuemnt type</value>
+  </data>
+  <data name="DBxDocProvider_Phase_DocumentRecalc" xml:space="preserve">
+    <value>Document recalculating '{0}' ({1} doc(s).)</value>
+  </data>
+  <data name="DBxDocStructSource_Err_AccessDenied" xml:space="preserve">
+    <value>Table '{0}' access denied</value>
+  </data>
+  <data name="DBxRealDocProviderGlobal_Arg_BinDataHandlerIsNull" xml:space="preserve">
+    <value>Since binary data used in DocTypes, value of BinDataHandler argument must be given</value>
+  </data>
+  <data name="DBxRealDocProviderGlobal_Arg_CannotUseHistory" xml:space="preserve">
+    <value>History usage is not possible if property {0}={1}</value>
+  </data>
+  <data name="DBxRealDocProviderGlobal_Arg_CannotUseSessionId" xml:space="preserve">
+    <value>Property DBxDocTypes.UseSessionId cannot be set if the history is not used</value>
+  </data>
+  <data name="DBxRealDocProviderSource_Err_GetTextValue" xml:space="preserve">
+    <value>Id={0}. Error. {1}</value>
+  </data>
+  <data name="DBxRealDocProviderSource_Name_Default" xml:space="preserve">
+    <value>[ No name ]</value>
+  </data>
+  <data name="DBxSingleDoc_Err_DelSubDoc" xml:space="preserve">
+    <value>Cannot delete a subdocument since it belongs to the docuement {0}. Document should be in state Edit or Insert</value>
+  </data>
+  <data name="DBxSingleSubDocs_Arg_SubDocDiffDoc" xml:space="preserve">
+    <value>Subdocument of type '{0}' with SubDocId={1} belongs to document of type '{2}' with DocId={3}, but DocId={4} expected</value>
+  </data>
+  <data name="DBxSingleSubDocs_Err_RowDetached" xml:space="preserve">
+    <value>Cannot get access to subdocument with index {0} since its data row has been removed from the subdocument table (RowState=Detached)</value>
+  </data>
+  <data name="DBxSubDoc_Arg_WrongState" xml:space="preserve">
+    <value>Subdocument must be in state {0}, but actually it's in state {1}</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Err_Disabled" xml:space="preserve">
+    <value>Calcuated column re-evaluating is not allowed</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Err_Selected" xml:space="preserve">
+    <value>Calcuated column re-evaluating is not allowed if there are no document identifiers given</value>
+  </data>
+  <data name="UndoAction_Msg_Base" xml:space="preserve">
+    <value>Original state</value>
+  </data>
+  <data name="Allowed_Msg_False" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Allowed_Msg_True" xml:space="preserve">
+    <value>Allowed</value>
+  </data>
+  <data name="DBxDocProvider_ErrTitle_AddFakeUserAction" xml:space="preserve">
+    <value>Error occurred when adding fake record to table 'UserActions'</value>
+  </data>
+  <data name="DBxDocProvider_Err_AddFakeUserAction" xml:space="preserve">
+    <value>For document of type '{0}' with DocId={1} cannot get curret values of user id and time from main document table.</value>
+  </data>
+  <data name="DBxDocProvider_Err_DocActionLimitExceeded" xml:space="preserve">
+    <value>Cannot created next version for document '{0}' with DocId={1} because it exceed maximum possible value {2}</value>
+  </data>
+  <data name="DBxDocProvider_Err_VersionMismatch" xml:space="preserve">
+    <value>For document of type '{0}' with DocId={1} vesrion mismatch detected. In main document table it is ({2}), but in table 'DocActions' it is ({3}). Version vill be updated in main dicument table</value>
+  </data>
+  <data name="DBxDocProvider_Msg_ActionAutoRecover" xml:space="preserve">
+    <value>[ State auto recover from version {0} ]</value>
+  </data>
+  <data name="DBxVTReference_Arg_ColumnIsRef" xml:space="preserve">
+    <value>Columns '{0}' must not be a reference column</value>
+  </data>
+  <data name="DBxVTReference_Arg_ColumnNoInt" xml:space="preserve">
+    <value>Column '{0}' must be integer</value>
+  </data>
+  <data name="DBxVTReference_Arg_NoColumn" xml:space="preserve">
+    <value>Table '{0}' does not contain column '{1}'</value>
+  </data>
+  <data name="DBxVTReference_Arg_NullableDiff" xml:space="preserve">
+    <value>Nullable attribute must be same</value>
+  </data>
+  <data name="DocTypePermission_Arg_NoDocTypes" xml:space="preserve">
+    <value>At least one document type must be given</value>
+  </data>
+  <data name="DocTypePermission_Msg_AllDocTypes" xml:space="preserve">
+    <value>All the documents</value>
+  </data>
+  <data name="DocTypePermission_Msg_ObjectText" xml:space="preserve">
+    <value>Documents {0}</value>
+  </data>
+  <data name="DocTypePermission_Msg_ObjectTextNoDocTypes" xml:space="preserve">
+    <value>Document type list is not set</value>
+  </data>
+  <data name="DocTypeViewHistoryPermission_Msg_ObjectText" xml:space="preserve">
+    <value>History view for {0}</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Msg_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Msg_Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="RecalcColumnsPermissionMode_Msg_Selected" xml:space="preserve">
+    <value>Selected in data view</value>
+  </data>
+  <data name="RecalcColumnsPermission_Msg_ObjectText" xml:space="preserve">
+    <value>Calculated column re</value>
+  </data>
+  <data name="RefDocCommonFilterSet_Arg_GroupIdColumnIsNotRef" xml:space="preserve">
+    <value>Wrong declaration of document type '{0}'. Column '{1}' is not a reference column.</value>
+  </data>
+  <data name="RefDocCommonFilterSet_Arg_NoGroupIdColumn" xml:space="preserve">
+    <value>Wrong declaration of document type '{0}'. There is no column '{1}'</value>
+  </data>
+  <data name="RefDocCommonFilterSet_Err_UnknownMasterTable" xml:space="preserve">
+    <value>Documents for master table '{0}' not found</value>
+  </data>
+  <data name="RefGroupDocCommonFilter_Arg_NoTreeParentColumnName" xml:space="preserve">
+    <value>For document type '{0}' the property TreeParentColumnName. is not set. Then these documents cannot produce a group tree.</value>
+  </data>
+  <data name="ViewOtherUsersActionPermission_Msg_ObjectText" xml:space="preserve">
+    <value>View actions of other users</value>
+  </data>
+  <data name="UndoAction_Msg_Delete" xml:space="preserve">
+    <value>Deletion</value>
+  </data>
+  <data name="UndoAction_Msg_Edit" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="UndoAction_Msg_Insert" xml:space="preserve">
+    <value>Creation</value>
+  </data>
+  <data name="UndoAction_Msg_Redo" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="UndoAction_Msg_Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="UndoAction_Msg_Unknown" xml:space="preserve">
+    <value>Unknown action {0}</value>
+  </data>
+  <data name="DBxDocTypes_Arg_UnknownTableId" xml:space="preserve">
+    <value>Unknown document table identifier {0}</value>
+  </data>
+  <data name="DBxDocTypes_Arg_ZeroTableId" xml:space="preserve">
+    <value>Document table identifier cannot be 0</value>
+  </data>
+  <data name="DBxDocSet_Msg_MultiDocsOfType" xml:space="preserve">
+    <value>{0} documents of type '{1}'</value>
+  </data>
+  <data name="DBxDocSet_Msg_SingleDocOfType" xml:space="preserve">
+    <value>1 document of type '{0}'</value>
+  </data>
+</root>

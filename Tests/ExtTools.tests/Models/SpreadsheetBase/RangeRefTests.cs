@@ -72,12 +72,47 @@ namespace ExtTools_tests.Models.SpreadsheetBase
 
     #endregion
 
+    #region Преобразование в строку
+
+    [TestCase("A1", "A1", CellRefFormat.A1, "A1")]
+    [TestCase("A1", "A1", CellRefFormat.Abs, "$A$1")]
+    [TestCase("A1", "A1", CellRefFormat.R1C1, "R1C1")]
+    [TestCase("A1", "B1", CellRefFormat.A1, "A1:B1")]
+    [TestCase("A1", "B1", CellRefFormat.Abs, "$A$1:$B$1")]
+    [TestCase("A1", "B1", CellRefFormat.R1C1, "R1C1:R1C2")]
+    public void ToString(string s1, string s2, CellRefFormat format, string wantedRes)
+    {
+      CellRef cell1 = CellRef.Parse(s1);
+      CellRef cell2 = CellRef.Parse(s2);
+      RangeRef sut = new RangeRef(cell1, cell2);
+
+      string res = sut.ToString(format);
+
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    #endregion
+
     #region Преобразование из строки
 
     [TestCase("A1", true, "A1")]
     [TestCase("B3:A1", true, "A1:B3")]
     [TestCase("A0", false, "")]
     [TestCase("B3:A0", false, "")]
+
+    [TestCase("$A$1", true, "A1")]
+    [TestCase("$A1", true, "A1")]
+    [TestCase("A$1", true, "A1")]
+    [TestCase("$B$3:$A$1", true, "A1:B3")]
+    [TestCase("$B$3:$A1", true, "A1:B3")]
+    [TestCase("$B$3:A$1", true, "A1:B3")]
+    [TestCase("$B3:$A$1", true, "A1:B3")]
+    [TestCase("B$3:$A$1", true, "A1:B3")]
+    [TestCase("$A$0", false, "")]
+
+    [TestCase("R3C2:R1C1", true, "A1:B3")]
+    [TestCase("R3C2:R0C1", false, "")]
+
     [TestCase("", true, "")]
     public void Parse_TryParse(string s, bool wantedRes, string wantedValue)
     {
@@ -253,6 +288,12 @@ namespace ExtTools_tests.Models.SpreadsheetBase
       Assert.AreEqual("", RangeRef.Empty.ToString(), "ToString()");
       Assert.AreEqual(0, RangeRef.Empty.RowCount, "RowCount");
       Assert.AreEqual(0, RangeRef.Empty.ColumnCount, "ColumnCount");
+
+      Assert.AreEqual("", RangeRef.Empty.ToString(CellRefFormat.A1), "ToString(A1)");
+      Assert.AreEqual("", RangeRef.Empty.ToString(CellRefFormat.Abs), "ToString(Abs)");
+      Assert.AreEqual("", RangeRef.Empty.ToString(CellRefFormat.R1C1), "ToString(R1C1)");
+
+      Assert.IsFalse(RangeRef.Empty.IsSingleCell, "IsSingleCell");
     }
 
     [TestCase("B2:F4", 3)]
@@ -282,6 +323,19 @@ namespace ExtTools_tests.Models.SpreadsheetBase
       RangeRef sut = RangeRef.Parse(sSUT);
       Assert.AreEqual(wantedRes, sut.CellCount);
     }
+
+
+    [TestCase("B2:F4", false)]
+    [TestCase("B2:B4", false)]
+    [TestCase("B2", true)]
+    [TestCase("", false)]
+    public void IsSingleCell(string sSUT, bool wantedRes)
+    {
+      RangeRef sut = RangeRef.Parse(sSUT);
+      Assert.AreEqual(wantedRes, sut.IsSingleCell);
+    }
+
+
 
     #endregion
   }

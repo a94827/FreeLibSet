@@ -87,7 +87,7 @@ namespace FreeLibSet.Data.Docs
 
       int pParentId = table.Columns.IndexOf(docType.TreeParentColumnName);
       if (pParentId < 0)
-        throw new BugException("Таблица \"" + table.TableName + "\" не содержит столбца \"" + docType.TreeParentColumnName + "\"");
+        throw new BugException("Table \"" + table.TableName + "\" does not contain column \"" + docType.TreeParentColumnName + "\"");
 
       bool needsResort = false;
 
@@ -112,7 +112,7 @@ namespace FreeLibSet.Data.Docs
           new IdsFilter(missingIds), docType.DefaultOrder);
 
         if (table2.Rows.Count != missingIds.Count)
-          throw new BugException("При попытке загрузить строки таблицы \"" + docType.Name + "\" для Id=" + missingIds.ToString() + ", получено строк: " + table2.Rows.Count.ToString());
+          throw new BugException("When loading rows of table \"" + docType.Name + "\" for Id=" + missingIds.ToString() + " has been taken rows: " + table2.Rows.Count.ToString());
 
         if (!needsResort)
         {
@@ -154,13 +154,13 @@ namespace FreeLibSet.Data.Docs
     /// Провайдер для доступа к документам
     /// </summary>
     public DBxDocProvider DocProvider { get { return _DocProvider; } }
-    private DBxDocProvider _DocProvider;
+    private readonly DBxDocProvider _DocProvider;
 
     /// <summary>
     /// Описание вида документа
     /// </summary>
     public DBxDocType DocType { get { return _DocType; } }
-    private DBxDocType _DocType;
+    private readonly DBxDocType _DocType;
 
     private const string DefIntegrityFlagColumnName = "__Integrity";
 
@@ -170,7 +170,7 @@ namespace FreeLibSet.Data.Docs
     /// Пустая строка означает, что все узлы прошли фильтр (или фильтр не задан).
     /// </summary>
     public string IntegrityFlagColumnName { get { return _IntegrityFlagColumnName; } }
-    private string _IntegrityFlagColumnName;
+    private readonly string _IntegrityFlagColumnName;
 
     #endregion
   }
@@ -186,7 +186,7 @@ namespace FreeLibSet.Data.Docs
     /// Создает модель
     /// </summary>
     /// <param name="subDocs">Объект для доступа к поддокументам одного вида</param>
-    /// <param name="repeaterTable">Ссылка на таблицу-повторитель, если она должна использоваться вместо DBxMultiSubDocs.SubDocsView.
+    /// <param name="repeaterTable">Ссылка на таблицу-повторитель, если она должна использоваться вместо <see cref="DBxMultiSubDocs.SubDocsView"/>.
     /// Null, если должна использоваться основная таблица</param>
     public DBxSubDocTreeModel(DBxMultiSubDocs subDocs, DataTable repeaterTable)
       : base(repeaterTable??subDocs.SubDocsView.Table,
@@ -205,7 +205,7 @@ namespace FreeLibSet.Data.Docs
     /// Объект для доступа к поддокументам одного вида
     /// </summary>
     public DBxMultiSubDocs SubDocs { get { return _SubDocs; } }
-    private DBxMultiSubDocs _SubDocs;
+    private readonly DBxMultiSubDocs _SubDocs;
 
     #endregion
 
@@ -234,174 +234,6 @@ namespace FreeLibSet.Data.Docs
       }
     }
 #endif
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Расширение табличной модели установкой дополнительного фильтра
-  /// </summary>
-  public class FilteredDataTableTreeModelWithIds<T> : DataTableTreeModelWithIds<T>
-    where T : IEquatable<T>
-  {
-    // Кандидат на перенос в ExtTools.dll
-
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает модель, основанную на существующей
-    /// </summary>
-    /// <param name="sourceModel">Исходная модель</param>
-    /// <param name="filter">Накладываемый фильтр на таблицу</param>
-    public FilteredDataTableTreeModelWithIds(DataTableTreeModel sourceModel, DBxFilter filter)
-      : this(sourceModel, filter, String.Empty)
-    {
-    }
-
-    /// <summary>
-    /// Создает модель, основанную на существующей
-    /// </summary>
-    /// <param name="sourceModel">Исходная модель</param>
-    /// <param name="filter">Накладываемый фильтр на таблицу</param>
-    /// <param name="sourceIntegrityFlagColumnName">Имя логического поля в исходной таблице, которое определяет узлы, добавленные исключительно из-за необходимости соблюдения целостности дерева.</param>
-    public FilteredDataTableTreeModelWithIds(DataTableTreeModel sourceModel, DBxFilter filter, string sourceIntegrityFlagColumnName)
-      : base(CreateTable(sourceModel, filter, sourceIntegrityFlagColumnName),
-      sourceModel.IdColumnName, sourceModel.ParentColumnName)
-    {
-      base.Sort = sourceModel.Sort;
-      _SourceModel = sourceModel;
-      _Filter = filter;
-      if (String.IsNullOrEmpty(sourceIntegrityFlagColumnName))
-        _IntegrityFlagColumnName = DefIntegrityFlagColumnName;
-      else
-        _IntegrityFlagColumnName = sourceIntegrityFlagColumnName;
-    }
-
-    private static DataTable CreateTable(DataTableTreeModel sourceModel, DBxFilter filter, string sourceIntegrityFlagColumnName)
-    {
-#if DEBUG
-      if (sourceModel == null)
-        throw new ArgumentNullException("sourceModel");
-#endif
-
-      string pk = DataTools.GetPrimaryKey(sourceModel.Table);
-
-      DataTable resTable = sourceModel.Table.Clone();
-      string integrityFlagColumnName;
-      if (String.IsNullOrEmpty(sourceIntegrityFlagColumnName))
-      {
-        integrityFlagColumnName = DefIntegrityFlagColumnName;
-        resTable.Columns.Add(integrityFlagColumnName, typeof(bool));
-      }
-      else
-      {
-        if (!sourceModel.Table.Columns.Contains(sourceIntegrityFlagColumnName))
-          throw new ArgumentException("Таблица \"" + sourceModel.Table.TableName + "\" не содержит столбца \"" + sourceIntegrityFlagColumnName + "\"", "sourceIntegrityFlagColumnName");
-        DataTools.SetPrimaryKey(resTable, pk);
-
-        integrityFlagColumnName = sourceIntegrityFlagColumnName;
-        ValueFilter filter2 = new ValueFilter(sourceIntegrityFlagColumnName, false);
-        if (filter == null)
-          filter = filter2;
-        else
-          filter = AndFilter.FromArray(new DBxFilter[2] { filter, filter2 });
-      }
-
-      // Лучше сделать отдельный DataView, а не использовать DefaultView. 
-      // Вдруг исходная модель сейчас используется.
-      using (DataView dv = new DataView(sourceModel.Table))
-      {
-        if (filter == null)
-          dv.RowFilter = sourceModel.Table.DefaultView.RowFilter;
-        else
-          dv.RowFilter = filter.AddToDataViewRowFilter(sourceModel.Table.DefaultView.RowFilter);
-        dv.Sort = sourceModel.Table.DefaultView.Sort;
-        //Int32 [] aaa=DataTools.GetIdsFromField(SourceModel.Table, "GroupId");
-
-        foreach (DataRowView drv in dv)
-          resTable.Rows.Add(drv.Row.ItemArray);
-      }
-
-      #region Добавление недостающих строк
-
-      int pParentId = resTable.Columns.IndexOf(sourceModel.ParentColumnName);
-      if (pParentId < 0)
-        throw new BugException("Таблица \"" + resTable.TableName + "\" не содержит столбца \"" + sourceModel.ParentColumnName + "\"");
-
-      bool needsResort = false;
-
-      while (true)
-      {
-        IdList missingIds = new IdList();
-        foreach (DataRow row in resTable.Rows)
-        {
-          Int32 parentId = DataTools.GetInt(row[pParentId]);
-          if (parentId == 0)
-            continue;
-          if (resTable.Rows.Find(parentId) == null)
-            missingIds.Add(parentId);
-        }
-
-        if (missingIds.Count == 0)
-          break;
-
-        // Требуется догрузить недостающие строки
-        foreach (Int32 id in missingIds)
-        {
-          DataRow srcRow = sourceModel.Table.Rows.Find(id);
-          if (srcRow == null)
-            throw new ArgumentException("Таблица исходной модели не содержит строки с ключом " + id.ToString() + ". Целостность дерева нарушена", "sourceModel");
-          DataRow resRow = resTable.Rows.Add(srcRow.ItemArray);
-          resRow[integrityFlagColumnName] = true;
-        }
-
-        needsResort = true;
-      }
-
-      #endregion
-
-      #region Пересортировка
-
-      if (needsResort)
-      {
-        resTable.DefaultView.Sort = sourceModel.Table.DefaultView.Sort;
-        resTable = resTable.DefaultView.ToTable();
-        DataTools.SetPrimaryKey(resTable, pk);
-        resTable.AcceptChanges();
-      }
-
-      #endregion
-
-      return resTable;
-    }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Базовая модель, на которую накладываются фильтры
-    /// </summary>
-    public DataTableTreeModel SourceModel { get { return _SourceModel; } }
-    private DataTableTreeModel _SourceModel;
-
-    /// <summary>
-    /// Накладываемый фильтр
-    /// </summary>
-    public DBxFilter Filter { get { return _Filter; } }
-    private DBxFilter _Filter;
-
-
-    private const string DefIntegrityFlagColumnName = "__Integrity";
-
-    /// <summary>
-    /// Имя логического поля, используемого для индикации узлов, которые не прошли условие фильтра,
-    /// но были добавлены, чтобы обеспечить целостность дерева.
-    /// Пустая строка означает, что все узлы прошли фильтр (или фильтр не задан).
-    /// Это свойство не обязано совпадать с аргументом SourceIntegrityFlagColumnName, заданном в конструкторе
-    /// </summary>
-    public string IntegrityFlagColumnName { get { return _IntegrityFlagColumnName; } }
-    private string _IntegrityFlagColumnName;
 
     #endregion
   }

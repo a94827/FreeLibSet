@@ -600,5 +600,49 @@ namespace ExtTools_tests.UICore
     }
 
     #endregion
+
+    #region ValueListToString()
+
+    [Test]
+    public void ValueListToString()
+    {
+      object[] a1 = new object[] { 123, "456", null };
+      string res1 = UITools.ValueListToString(a1);
+      Assert.AreEqual("123, \"456\", null", res1, "#1");
+
+      object[] a2 = new object[] { 123};
+      string res2 = UITools.ValueListToString(a2);
+      Assert.AreEqual("123", res2, "#2");
+
+      object[] a3 = new object[0];
+      string res3 = UITools.ValueListToString(a3);
+      Assert.IsNotEmpty(res3, "#3");
+    }
+
+    #endregion
+
+    #region InvalidCharErrorMessage()
+
+    [Test]
+    public void InvalidCharErrorMessage_pos()
+    {
+      string s = "abcdefgh";
+      int invalidCharPos = 4;
+      string res = UITools.InvalidCharErrorMessage(s, invalidCharPos);
+      StringAssert.Contains("e", res);
+      StringAssert.Contains("5", res);
+    }
+
+    [Test]
+    public void InvalidCharErrorMessage_chars()
+    {
+      string s = "abcdefgh";
+      string invalidChars = "de";
+      string res = UITools.InvalidCharErrorMessage(s, invalidChars);
+      StringAssert.Contains("d", res);
+      StringAssert.Contains("4", res);
+    }
+
+    #endregion
   }
 }

@@ -11,6 +11,7 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Объект, желающий получать сигналы от таймера, должен реализовывать этот интерфейс.
+  /// Альтернативно можно использовать обработчик события <see cref="EFPAppTimers.Tick"/> без реализации класса в прикладном коде.
   /// </summary>
   public interface IEFPAppTimeHandler
   {
@@ -50,7 +51,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Удаляет таймер
     /// </summary>
-    /// <param name="disposing">True, если вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">True, если вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       if (_TheTimer != null)
@@ -72,7 +73,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавить получатель сигналов.
-    /// Этот метод является асинхронным.
+    /// Этот метод может вызываться из любого потока.
+    /// Пользовательский обработчик <see cref="IEFPAppTimeHandler.TimerTick"/> при этом всегда вызывается в основном потоке приложения.
     /// </summary>
     /// <param name="handler">Добавляемый объект-обработчик сигнала</param>
     public void Add(IEFPAppTimeHandler handler)
@@ -239,6 +241,60 @@ namespace FreeLibSet.Forms
     private List<IEFPAppTimeHandler> _ExecutingHandlers;
 
     #endregion
+
+    #region Использование EventHandler
+
+    private class TickHandler : IEFPAppTimeHandler
+    {
+      public TickHandler(EFPAppTimers owner, EventHandler handler)
+      {
+        _Owner = owner;
+        _Handler = handler;
+      }
+
+      private readonly EFPAppTimers _Owner;
+
+      public EventHandler Handler { get { return _Handler; } }
+      private readonly EventHandler _Handler;
+
+      public void TimerTick()
+      {
+        Handler(_Owner, EventArgs.Empty);
+      }
+    }
+
+    /// <summary>
+    /// Альтернативный способ добавления обработчика.
+    /// Вместо создания пользовательского класса, реализующего интерфейс <see cref="IEFPAppTimeHandler"/>,
+    /// можно добавить обработчик события. 
+    /// Ненужный обработчик можно удалить, в том числе и из обработчика события.
+    /// Добавлять/удалять обработчик можно асинхронно.
+    /// </summary>
+    public event EventHandler Tick
+    {
+      add
+      {
+        Add(new TickHandler(this, value));
+      }
+      remove
+      {
+        IEFPAppTimeHandler[] all = ToArray();
+        foreach (IEFPAppTimeHandler item in all)
+        {
+          TickHandler th = item as TickHandler;
+          if (th != null)
+          {
+            if (th.Handler == value)
+            {
+              Remove(th);
+              return;
+            }
+          }
+        }
+      }
+    }
+
+    #endregion
   }
 
   /// <summary>
@@ -249,17 +305,33 @@ namespace FreeLibSet.Forms
   /// 1. Создать EFPDelayedTrigger.
   /// 2. Присоединить обработчик события Tick, который будет обрабатывать событие (сохранять файл).
   /// 3. При получении внешнего события устанавливать свойство Active=true.
-  /// Не надо присоединять этот объект к EFPApp.Timers. Это выполняется автоматически.
   /// </summary>
-  public class EFPDelayedTrigger : IEFPAppTimeHandler, IEFPAppIdleHandler
+  public sealed class EFPDelayedTrigger
   {
-    #region Конструктор
+    #region Конструкторы
 
     /// <summary>
-    /// Создает новый объект с Delay=0
+    /// Создает новый объект с <see cref="Delay"/>=0.
+    /// Свойство <see cref="Active"/>=false.
     /// </summary>
     public EFPDelayedTrigger()
     {
+      _InternalHandler = new InternalHandler(this);
+    }
+
+    /// <summary>
+    /// Создает одноразовый объект <see cref="EFPDelayedTrigger"/> с указанной задержкой и обработчиком события.
+    /// Для объекта устанавливается свойство <see cref="Active"/>=true, поэтому обработчик <paramref name="tick"/>
+    /// будет вызван без дополнительных условий.
+    /// </summary>
+    /// <param name="delay">Задержка в миллисекундах или 0 для Idle</param>
+    /// <param name="tick">Обработчик события</param>
+    public static void Create(int delay, EventHandler tick)
+    {
+      EFPDelayedTrigger obj = new EFPDelayedTrigger();
+      obj.Delay = delay;
+      obj.Tick = tick;
+      obj.Active = true;
     }
 
     #endregion
@@ -267,14 +339,14 @@ namespace FreeLibSet.Forms
     #region Событие Tick
 
     /// <summary>
-    /// Это событие вызывается однократно после установки Active=true.
+    /// Это событие вызывается однократно после установки <see cref="Active"/>=true.
     /// Событие вызывается с некоторой задержкой.
-    /// Обработчик события может снова установить свойство Active=true, например, если в данный момент действие не может быть выполнено.
+    /// Обработчик события может снова установить свойство <see cref="Active"/>=true, например, если в данный момент действие не может быть выполнено.
     /// </summary>
     public event EventHandler Tick;
 
     /// <summary>
-    /// Устанавливает свойство Active=false и Принудительно вызывает событие Tick
+    /// Устанавливает свойство <see cref="Active"/>=false и принудительно вызывает событие <see cref="Tick"/>
     /// </summary>
     public void PerformTick()
     {
@@ -288,7 +360,7 @@ namespace FreeLibSet.Forms
     #region Свойство Active
 
     /// <summary>
-    /// Установка значения true "взводит курок". После этого будет с задержкой вызвано событие Tick,
+    /// Установка значения true "взводит курок". После этого будет с задержкой вызвано событие <see cref="Tick"/>,
     /// после чего свойство будет сброшено в false.
     /// </summary>
     public bool Active
@@ -303,9 +375,9 @@ namespace FreeLibSet.Forms
           {
             _Active = true;
             if (Delay == 0)
-              EFPApp.IdleHandlers.Add(this);
+              EFPApp.IdleHandlers.Add(_InternalHandler);
             else
-              EFPApp.Timers.Add(this);
+              EFPApp.Timers.Add(_InternalHandler);
           }
         }
         else
@@ -313,9 +385,9 @@ namespace FreeLibSet.Forms
           if (_Active)
           {
             if (Delay == 0)
-              EFPApp.IdleHandlers.Remove(this);
+              EFPApp.IdleHandlers.Remove(_InternalHandler);
             else
-              EFPApp.Timers.Remove(this);
+              EFPApp.Timers.Remove(_InternalHandler);
             _Active = false;
           }
         }
@@ -333,8 +405,8 @@ namespace FreeLibSet.Forms
     #region Свойство Delay
 
     /// <summary>
-    /// Минимальная задержка в миллисекуедах между установкой свойство Active=true и приходом
-    /// сигнала Tick.
+    /// Минимальная задержка в миллисекундах между установкой свойство <see cref="Active"/>=true и приходом
+    /// сигнала <see cref="Tick"/>.
     /// Так как используемый таймер в <see cref="EFPAppTimers"/> имеет низкую частоту, реальная задержка может быть
     /// значительно больше.
     /// Значение по умолчанию - 0 - событие <see cref="Tick"/> вызывается при обработке события <see cref="System.Windows.Forms.Application.Idle"/>.
@@ -346,7 +418,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (Active)
-          throw ExceptionFactory.ObjectProperty(this, "Active", Active, new object[] { false});
+          throw ExceptionFactory.ObjectProperty(this, "Active", Active, new object[] { false });
         if (value < 0 || value > 86400000)
           throw ExceptionFactory.ArgOutOfRange("value", value, 0, 86400000);
         _Delay = value;
@@ -359,23 +431,45 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region IEFPAppTimeHandler Members
+    #region Внутренний объект для присоединения к таймерам
 
-    void IEFPAppTimeHandler.TimerTick()
+    private class InternalHandler : IEFPAppTimeHandler, IEFPAppIdleHandler
+    {
+      public InternalHandler(EFPDelayedTrigger owner)
+      {
+        _Owner = owner;
+      }
+
+      private readonly EFPDelayedTrigger _Owner;
+
+      void IEFPAppTimeHandler.TimerTick()
+      {
+        _Owner.DoTimerTick();
+      }
+
+      void IEFPAppIdleHandler.HandleIdle()
+      {
+        _Owner.DoHandleIdle();
+      }
+    }
+
+    private readonly InternalHandler _InternalHandler;
+
+    #endregion
+
+    #region Обработчики сигналов таймера
+
+    private void DoTimerTick()
     {
       _SkipCounter--;
       if (_SkipCounter < 0)
         PerformTick();
     }
 
-    #endregion
-
-    #region IEFPAppIdleHandler Members
-
     /// <summary>
     /// Реализация <see cref="IEFPAppIdleHandler"/>.
     /// </summary>
-    public void HandleIdle()
+    private void DoHandleIdle()
     {
       PerformTick();
     }
@@ -410,7 +504,8 @@ namespace FreeLibSet.Forms
    */
 
   /// <summary>
-  /// Объект, желающий получать сигналы от таймера, должен реализовывать этот интерфейс.
+  /// Объект, желающий получать сигналы Idle, должен реализовывать этот интерфейс.
+  /// Альтернативно можно использовать обработчик события <see cref="EFPAppIdleHandlers.Idle"/> без реализации интерфейса.
   /// </summary>
   public interface IEFPAppIdleHandler
   {
@@ -444,7 +539,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Отключает обработчик события <see cref="System.Windows.Forms.Application.Idle"/>
     /// </summary>
-    /// <param name="disposing">True, если вызван метод Dispose(), а не деструктор</param>
+    /// <param name="disposing">True, если вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       System.Windows.Forms.Application.Idle -= new EventHandler(Application_Idle);
@@ -465,7 +560,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавить получатель сигналов.
-    /// Этот метод является асинхронным.
+    /// Этот метод можно вызывать из любого потока, но обработчик события <see cref="IEFPAppIdleHandler.HandleIdle"/>
+    /// будет вызываться из основного потока приложения.
     /// </summary>
     /// <param name="handler">Добавляемый объект-обработчик сигнала</param>
     public void Add(IEFPAppIdleHandler handler)
@@ -483,9 +579,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Удалить получатель сигналов
-    /// Этот метод является асинхронным, может вызываться из любого потока или
-    /// из обработчика сигнала таймера
+    /// Удалить получатель сигналов.
+    /// Этот метод может вызываться из любого потока или из обработчика сигнала таймера.
     /// </summary>
     /// <param name="handler">Удаляемый объект-обработчик сигнала</param>
     public bool Remove(IEFPAppIdleHandler handler)
@@ -551,12 +646,67 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Idle
+    #region Использование EventHandler
+
+    private class IdleHandler : IEFPAppIdleHandler
+    {
+      public IdleHandler(EFPAppIdleHandlers owner, EventHandler handler)
+      {
+        _Owner = owner;
+        _Handler = handler;
+      }
+
+      private readonly EFPAppIdleHandlers _Owner;
+
+      public EventHandler Handler { get { return _Handler; } }
+      private readonly EventHandler _Handler;
+
+      public void HandleIdle()
+      {
+        Handler(_Owner, EventArgs.Empty);
+      }
+    }
+
+    /// <summary>
+    /// Альтернативный способ добавления обработчика.
+    /// Вместо создания пользовательского класса, реализующего интерфейс <see cref="IEFPAppIdleHandler"/>,
+    /// можно добавить обработчик события. 
+    /// Ненужный обработчик можно удалить, в том числе и из обработчика события.
+    /// Добавлять/удалять обработчик можно асинхронно.
+    /// </summary>
+    public event EventHandler Idle
+    {
+      add
+      {
+        Add(new IdleHandler(this, value));
+      }
+      remove
+      {
+        IEFPAppIdleHandler[] all = ToArray();
+        foreach (IEFPAppIdleHandler item in all)
+        {
+          IdleHandler th = item as IdleHandler;
+          if (th != null)
+          {
+            if (th.Handler == value)
+            {
+              Remove(th);
+              return;
+            }
+          }
+        }
+      }
+    }
+
+    #endregion
+
+
+    #region Application.Idle
 
     /// <summary>
     /// Этот флаг устанавливается при вызове Application_Idle().
     /// Обработчик события таймера проверяет, если флаг не установлен, то вызывает Application_Idle().
-    /// Затем флаг сбрасывается
+    /// Затем флаг сбрасывается.
     /// </summary>
     internal bool IdleCalledFlag;
 
@@ -673,7 +823,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Предотвращение повторного вызова "долгого" обработчика, если пришел повторный сигнал таймера.
-    /// Список содержит элементы, которые сейчас обрабатываются
+    /// Список содержит элементы, которые сейчас обрабатываются.
     /// </summary>
     private List<IEFPAppIdleHandler> _ExecutingHandlers;
 

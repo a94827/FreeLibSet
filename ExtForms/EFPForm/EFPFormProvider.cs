@@ -1120,6 +1120,14 @@ namespace FreeLibSet.Forms
         return; // 16.06.2021
       if (!Visible)
         return; // 07.03.2022. На всякий случай
+      if (Form.WindowState == FormWindowState.Minimized)
+        return; // 27.02.2025
+
+      if (_CommandItems != null)
+      {
+        if (_CommandItems.HasIdle)
+          _CommandItems.HandleIdle(); // 27.02.2025
+      }
 
       if (_ToolTipNestedControls != null)
       {
@@ -2053,19 +2061,20 @@ namespace FreeLibSet.Forms
           bounds.WriteConfig(cfg);
         else
         {
-          EFPFormBoundsPart WantedParts = GetWantedFormBoundsParts(EFPConfigMode.Write);
+          EFPFormBoundsPart wantedParts = GetWantedFormBoundsParts(EFPConfigMode.Write);
           CfgPart cfg2 = cfg.GetChild(Modal ? "Dialog" : "Form", true);
-          if ((WantedParts & EFPFormBoundsPart.WindowState) != 0)
+          if ((wantedParts & EFPFormBoundsPart.WindowState) != 0)
             cfg2.SetEnum<FormWindowState>("State", bounds.WindowState);
-          if (bounds.WindowState != FormWindowState.Maximized) // 13.09.2021
+          //if (bounds.WindowState != FormWindowState.Maximized) // 13.09.2021
+          if (bounds.WindowState == FormWindowState.Normal) // 26.02.2025
           {
             CfgPart cfg3 = cfg2.GetChild(ScreenSubSectionName, true);
-            if ((WantedParts & EFPFormBoundsPart.Size) != 0)
+            if ((wantedParts & EFPFormBoundsPart.Size) != 0)
             {
               cfg3.SetInt("Width", bounds.Bounds.Width);
               cfg3.SetInt("Height", bounds.Bounds.Height);
             }
-            if ((WantedParts & EFPFormBoundsPart.Location) != 0)
+            if ((wantedParts & EFPFormBoundsPart.Location) != 0)
             {
               // Середина окна
               int cx = bounds.Bounds.Left + bounds.Bounds.Width / 2;
@@ -2138,44 +2147,42 @@ namespace FreeLibSet.Forms
               }
             }
             CfgPart cfg3 = cfg2.GetChild(ScreenSubSectionName, false);
+            if (cfg3 != null)
             {
-              if (cfg3 != null)
+              if ((wantedParts & EFPFormBoundsPart.Size) != 0)
               {
-                if ((wantedParts & EFPFormBoundsPart.Size) != 0)
+                int w = cfg3.GetInt("Width");
+                int h = cfg3.GetInt("Height");
+                if (w > 0 && h > 0)
+                  realParts |= EFPFormBoundsPart.Size;
+                else
                 {
-                  int w = cfg3.GetInt("Width");
-                  int h = cfg3.GetInt("Height");
-                  if (w > 0 && h > 0)
-                    realParts |= EFPFormBoundsPart.Size;
-                  else
-                  {
-                    w = bounds.Bounds.Width;
-                    h = bounds.Bounds.Height;
-                  }
+                  w = bounds.Bounds.Width;
+                  h = bounds.Bounds.Height;
+                }
 
-                  if ((wantedParts & EFPFormBoundsPart.Location) != 0) // только если размеры тоже прочитали
-                  {
+                if ((wantedParts & EFPFormBoundsPart.Location) != 0) // только если размеры тоже прочитали
+                {
 
-                    string prefix = EFPApp.MainWindow == null ? "ScreenCenter" : "MainWindowCenter";
-                    Rectangle rect = EFPApp.MainWindow == null ? _DefaultScreen.WorkingArea : EFPApp.MainWindow.Bounds;
-                    int cx0 = rect.Left + rect.Width / 2;
-                    int cy0 = rect.Top + rect.Height / 2;
-                    int dx = cfg3.GetInt(prefix + "DX");
-                    int dy = cfg3.GetInt(prefix + "DY");
+                  string prefix = EFPApp.MainWindow == null ? "ScreenCenter" : "MainWindowCenter";
+                  Rectangle rect = EFPApp.MainWindow == null ? _DefaultScreen.WorkingArea : EFPApp.MainWindow.Bounds;
+                  int cx0 = rect.Left + rect.Width / 2;
+                  int cy0 = rect.Top + rect.Height / 2;
+                  int dx = cfg3.GetInt(prefix + "DX");
+                  int dy = cfg3.GetInt(prefix + "DY");
 
-                    int cx = cx0 + dx;
-                    int cy = cy0 + dy;
+                  int cx = cx0 + dx;
+                  int cy = cy0 + dy;
 
-                    int left = cx - w / 2;
-                    int top = cy - h / 2;
-                    bounds.Bounds = new Rectangle(left, top, w, h);
-                    if (_DialogPosition == null)
-                      realParts |= EFPFormBoundsPart.Location;
-                  }
-                  else // !Location
-                  {
-                    bounds.Bounds = new Rectangle(bounds.Bounds.Left, bounds.Bounds.Top, w, h);
-                  }
+                  int left = cx - w / 2;
+                  int top = cy - h / 2;
+                  bounds.Bounds = new Rectangle(left, top, w, h);
+                  if (_DialogPosition == null)
+                    realParts |= EFPFormBoundsPart.Location;
+                }
+                else // !Location
+                {
+                  bounds.Bounds = new Rectangle(bounds.Bounds.Left, bounds.Bounds.Top, w, h);
                 }
               }
             }
@@ -2508,7 +2515,10 @@ namespace FreeLibSet.Forms
           if (ci.StatusBarUsage)
           {
             if (_InsideOnSetFormVisible_StatusBarNeeded)
-              controlProvider.PrepareCommandItems(); // 02.12.2024
+            {
+              //controlProvider.PrepareCommandItems(); // 02.12.2024
+              controlProvider.FormVisibleChanged(); // 08.04.2025. Вызывает событие Created, а не только итнициализирует команды меню
+            }
             if (ci.Visible /* 21.02.2020 */ &&
               ci.StatusBarUsage) // 03.12.2024 - свойство могло поменяться в EFPCommandItem.OnPrepare()
               return true;
@@ -3139,7 +3149,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value < 1)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
 
         int newPeriodDivider = value / 1000 - 1;
         if (newPeriodDivider < 0)

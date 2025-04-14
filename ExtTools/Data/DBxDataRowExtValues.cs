@@ -377,7 +377,7 @@ namespace FreeLibSet.Data
           throw new ArgumentNullException();
 
         if (!DataTools.AreColumnNamesEqual(_Table, value, false))
-          throw new ArgumentException(String.Format(Res.DBxDataRowExtValues_Arg_TableDiff, value.TableName,_Table.TableName));
+          throw new ArgumentException(String.Format(Res.DBxDataRowExtValues_Arg_TableDiff, value.TableName, _Table.TableName));
 
         // 13.06.2017 Убрано.
         // Так может быть: в первоначальной таблице поле имеет тип Byte, а в новой - Int16
@@ -752,7 +752,7 @@ namespace FreeLibSet.Data
     public object GetRowValue(int valueIndex, int rowIndex)
     {
       if (rowIndex < 0 || rowIndex >= Table.Rows.Count)
-        throw new ArgumentOutOfRangeException("rowIndex");
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, Table.Rows.Count - 1);
 
       object v = Table.Rows[rowIndex][valueIndex];
       return v;
@@ -768,7 +768,7 @@ namespace FreeLibSet.Data
     public void SetRowValue(int valueIndex, int rowIndex, object value)
     {
       if (rowIndex < 0 || rowIndex >= Table.Rows.Count)
-        throw new ArgumentOutOfRangeException("rowIndex");
+        throw ExceptionFactory.ArgOutOfRange("rowIndex", rowIndex, 0, Table.Rows.Count - 1);
 
       CheckNotReadOnly(); // 28.02.2022
 

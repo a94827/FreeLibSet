@@ -4,6 +4,7 @@
 //#define ACTIVEDIALOG_OLD // Если определено, то свойство ActiveDialog определяется по старым правилам до 20.08.2020: до вызова Form.ShowDialog(), а не в обработчике Form.VisibleChanged
 //#define TRACE_DIALOGOWNERWINDOW // Если определено, то выполняется трассировка установки свойства EFPApp.DialogOwnerWindow
 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -3627,12 +3628,12 @@ namespace FreeLibSet.Forms
         case "Image":
           args.Value = EFPApp.GetFormIconImage(form);
           break;
-          //case "Order":
-          //  Args.Value = Args.RowIndex + 1;
-          //  break;
-          //case "Text":
-          //  Args.Value = Form.Text;
-          //  break;
+        //case "Order":
+        //  Args.Value = Args.RowIndex + 1;
+        //  break;
+        //case "Text":
+        //  Args.Value = Form.Text;
+        //  break;
       }
     }
 
@@ -4548,24 +4549,22 @@ namespace FreeLibSet.Forms
     {
       if (IsWebBrowserSupported)
       {
-        using (SimpleForm<XmlViewBox> frm = new SimpleForm<XmlViewBox>())
-        {
-          frm.Text = title;
-          frm.Icon = EFPApp.MainImages.Icons["XML"];
-          // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
-          if (isModal) // 31.08.2016 
-            frm.WindowState = FormWindowState.Maximized;
+        SimpleForm<XmlViewBox> frm = new SimpleForm<XmlViewBox>();
+        frm.Text = title;
+        frm.Icon = EFPApp.MainImages.Icons["XML"];
+        // Убрано 31.08.2016 Form.StartPosition = FormStartPosition.WindowsDefaultBounds;
+        if (isModal) // 31.08.2016 
+          frm.WindowState = FormWindowState.Maximized;
 
-          EFPXmlViewBox efpVB = new EFPXmlViewBox(frm.ControlWithToolBar);
+        EFPXmlViewBox efpVB = new EFPXmlViewBox(frm.ControlWithToolBar);
 
-          efpVB.XmlDocument = xmlDoc;
-          efpVB.FileName = fileName;
+        efpVB.XmlDocument = xmlDoc;
+        efpVB.FileName = fileName;
 
-          if (isModal)
-            ShowDialog(frm, true);
-          else
-            EFPApp.ShowFormOrDialog(frm);
-        }
+        if (isModal)
+          ShowDialog(frm, true);
+        else
+          EFPApp.ShowFormOrDialog(frm);
       }
       else // 09.11.2023
       {
@@ -6118,7 +6117,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value.Width < 16 || value.Height < 16)
-          throw new ArgumentOutOfRangeException();
+          throw ExceptionFactory.ArgOutOfRange("value", value, new Size(16, 16), null);
         _SnapshotSize = value;
       }
     }
