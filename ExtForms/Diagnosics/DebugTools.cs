@@ -318,16 +318,9 @@ namespace FreeLibSet.Forms.Diagnostics
         title = Res.DebugTools_ErrTitle_AppInfo;
 
       string s;
-      if (EFPApp.IsMainThread)
-        EFPApp.BeginWait(Res.DebugTools_Phase_AppInfo, "Debug");
-      try
+      using (Splash spl = new Splash(Res.DebugTools_Phase_AppInfo))
       {
         s = LogoutTools.GetDebugInfo();
-      }
-      finally
-      {
-        if (EFPApp.IsMainThread)
-          EFPApp.EndWait();
       }
 
       EFPApp.ShowTextView(s, title, true);

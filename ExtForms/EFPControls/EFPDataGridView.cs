@@ -1920,7 +1920,7 @@ namespace FreeLibSet.Forms
     public override void HandleIdle()
     {
       base.HandleIdle();
-      
+
       if (_CurrentCellChangedFlag)
       {
         // обязательно до вызова CurrentCellChangedFlag.
@@ -6825,12 +6825,32 @@ namespace FreeLibSet.Forms
       if (args.RowIndex < 0 || args.ColumnIndex < 0)
         return;
 
-      if (Control[args.ColumnIndex, args.RowIndex] is DataGridViewCheckBoxCell)
+      if (Control.Columns[args.ColumnIndex] is DataGridViewCheckBoxColumn)
       {
         string readOnlyMessage;
         bool isRO = GetCellReadOnly(args.RowIndex, args.ColumnIndex, out readOnlyMessage);
         if (isRO && GetCellContentVisible(args.RowIndex, args.ColumnIndex))
           EFPApp.ShowTempMessage(readOnlyMessage);
+      }
+      else if (Control.Columns[args.ColumnIndex] is DataGridViewLinkColumn /*||
+        Control.Columns[args.ColumnIndex] is DataGridViewButtonColumn */) // пока не надо
+      {
+        //BRValueWithLink linkVal = Control[args.ColumnIndex, args.RowIndex].Value as BRValueWithLink;
+        DoGetRowAttributes(args.RowIndex, EFPDataGridViewAttributesReason.View);
+        EFPDataGridViewCellAttributesEventArgs cellArgs = DoGetCellAttributes(args.ColumnIndex);
+        BRValueWithLink value = cellArgs.FormattedValue as BRValueWithLink;
+        if (value == null)
+          value = cellArgs.Value as BRValueWithLink;
+        if (value != null)
+        {
+          if (value.LinkData[0] != '#')
+          {
+            ProcessStartInfo psi = new ProcessStartInfo();
+            psi.FileName = value.LinkData;
+            psi.UseShellExecute = true;
+            Process.Start(psi);
+          }
+        }
       }
     }
 
@@ -9170,7 +9190,7 @@ namespace FreeLibSet.Forms
             StringBuilder sb = new StringBuilder();
             if (errorCount > 0)
             {
-              sb.Append(String.Format(Res.EFPDataView_ToolTip_TopLeftCellErrors,errorCount));
+              sb.Append(String.Format(Res.EFPDataView_ToolTip_TopLeftCellErrors, errorCount));
               sb.Append(Environment.NewLine);
             }
             if (warningCount > 0)
@@ -9690,7 +9710,7 @@ namespace FreeLibSet.Forms
         if (value != null)
         {
           if (value.DataGridView != Control)
-            throw ExceptionFactory.ArgProperty("value", value, "DataGridView", value.DataGridView, new object[] { Control} );
+            throw ExceptionFactory.ArgProperty("value", value, "DataGridView", value.DataGridView, new object[] { Control });
         }
 #endif
         _MarkRowsGridColumn = value;

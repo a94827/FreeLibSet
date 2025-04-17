@@ -1491,6 +1491,55 @@ namespace FreeLibSet.Reporting
     }
 
     #endregion
+
+    #region Статические методы создания
+
+    /// <summary>
+    /// Создает ссылку "file://" на файл или каталог
+    /// </summary>
+    /// <param name="path">Путь к файлу или каталогу</param>
+    /// <param name="text">Текстовое значение. 
+    /// Если не задано, используется имя файла (каталога) из пути<paramref name="path"/>.</param>
+    /// <returns>Ссылочное значение или null</returns>
+    public static BRValueWithLink FromPath(FreeLibSet.IO.AbsPath path, string text)
+    {
+      if (path.IsEmpty)
+        return null;
+      if (String.IsNullOrEmpty(text))
+      {
+        text = path.FileName;
+        if (String.IsNullOrEmpty(text))
+          text = path.Path;
+      }
+
+      return new BRValueWithLink(text, path.UriString);
+    }
+
+    /// <summary>
+    /// Создает ссылку "file://" на файл или каталог.
+    /// В качестве <see cref="BRValueWithLink.Value"/> используется имя файла (каталога) без пути.
+    /// </summary>
+    /// <param name="path">Путь к файлу или каталогу</param>
+    /// <returns>Ссылочное значение или null</returns>
+    public static BRValueWithLink FromPath(FreeLibSet.IO.AbsPath path)
+    {
+      return FromPath(path, String.Empty);
+    }
+
+    /// <summary>
+    /// Возвращает ссылку "mailto://" для адреса электронной почты
+    /// </summary>
+    /// <param name="address">адрес электронной почты</param>
+    /// <returns>Ссылка или null</returns>
+    public static BRValueWithLink FromEMail(string address)
+    {
+      if (String.IsNullOrEmpty(address))
+        return null;
+
+      return new BRValueWithLink(address, "mailto://" + address);
+    }
+
+    #endregion
   }
 
   /// <summary>

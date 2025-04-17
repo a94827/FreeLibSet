@@ -106,7 +106,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
         _PI = pi;
       }
 
-      PropertyInfo _PI;
+      private readonly PropertyInfo _PI;
 
       public object GetValue(object obj)
       {
@@ -156,7 +156,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
         _ColumnName = columnName;
       }
 
-      string _ColumnName;
+      private readonly string _ColumnName;
 
       public object GetValue(object obj)
       {

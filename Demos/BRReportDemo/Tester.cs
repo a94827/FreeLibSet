@@ -12,6 +12,7 @@ using FreeLibSet.Forms.Reporting;
 using FreeLibSet.Models.Tree;
 using FreeLibSet.Reporting;
 using FreeLibSet.UICore;
+using FreeLibSet.IO;
 
 namespace BRReportDemo
 {
@@ -59,6 +60,7 @@ namespace BRReportDemo
         efpTree.Columns.AddInt("Id", true, "Id", 3);
         efpTree.Columns.AddInt("ParentId", true, "ParentId", 3);
         efpTree.Columns.AddBool("Flag", true, "Flag");
+        efpTree.Columns.AddText("Link", true, "Link", 20, 10); // не реализовано
         if (useColumns)
         {
           efpTree.Columns["Id"].SizeGroup = "Id";
@@ -153,12 +155,25 @@ namespace BRReportDemo
       table.Columns.Add("Date1", typeof(DateTime));
       table.Columns.Add("Date2", typeof(DateTime));
       table.Columns.Add("Flag", typeof(bool));
+      table.Columns.Add("Link", typeof(BRValueWithLink));
 
       for (int i = 1; i <= 10; i++)
-        table.Rows.Add(i, DBNull.Value, "Корневой узел №" + i.ToString(), DateTime.Today.AddDays(i - 1), DateTime.Today.AddDays(i + 1), DBNull.Value);
+        table.Rows.Add(i, DBNull.Value, "Корневой узел №" + i.ToString(), DateTime.Today.AddDays(i - 1), DateTime.Today.AddDays(i + 1), DBNull.Value, null);
 
       for (int i = 101; i <= 200; i++)
-        table.Rows.Add(i, (i % 10) + 1, "Дочерний узел №" + i.ToString(), DateTime.Today.AddDays(i - 1), DateTime.Today.AddDays(i + 1), ((i / 10) % 2) == 0);
+      {
+
+        BRValueWithLink link;
+        switch (i % 4)
+        {
+          case 0: link = new BRValueWithLink("https://google.com"); break; // Web
+          case 1: link = BRValueWithLink.FromEMail("xxx@test.com"); break;
+          case 2: link = BRValueWithLink.FromPath(new AbsPath(Environment.SystemDirectory)); break;
+          default: link = null; break;
+        }
+
+        table.Rows.Add(i, (i % 10) + 1, "Дочерний узел №" + i.ToString(), DateTime.Today.AddDays(i - 1), DateTime.Today.AddDays(i + 1), ((i / 10) % 2) == 0, link);
+      }
 
       DataTools.SetPrimaryKey(table, "Id");
       return table;
@@ -189,6 +204,7 @@ namespace BRReportDemo
         efpGrid.Columns["Id"].DisplayName = "Идентификатор узла";
         efpGrid.Columns.LastAdded.ColorType = UIDataViewColorType.Total1;
         efpGrid.Columns.AddBool("Flag", true, "Flag");
+        efpGrid.Columns.AddLink("Link", true, "Link", 20, 10);
 
         if (!removeOutItem)
         {
@@ -321,6 +337,7 @@ namespace BRReportDemo
       table.Columns.Add("Date1", typeof(DateTime));
       table.Columns.Add("Date2", typeof(DateTime));
       table.Columns.Add("Flag", typeof(bool));
+      table.Columns.Add("Link", typeof(BRValueWithLink));
 
       for (int i = 1; i <= 201; i++)
       {
@@ -331,7 +348,17 @@ namespace BRReportDemo
           case 1: flag = false; break;
           default: flag = DBNull.Value; break;
         }
-        table.Rows.Add(i, "Строка №" + i.ToString(), DateTime.Today.AddDays(i - 1), DateTime.Today.AddDays(i + 1), flag);
+
+        BRValueWithLink link;
+        switch (i % 4)
+        {
+          case 0: link = new BRValueWithLink("https://google.com"); break; // Web
+          case 1: link = BRValueWithLink.FromEMail("xxx@test.com"); break;
+          case 2: link = BRValueWithLink.FromPath(new AbsPath(Environment.SystemDirectory)); break;
+          default: link = null; break;
+        }
+
+        table.Rows.Add(i, "Строка №" + i.ToString(), DateTime.Today.AddDays(i - 1), DateTime.Today.AddDays(i + 1), flag, link);
       }
 
       DataTools.SetPrimaryKey(table, "Id");
@@ -355,6 +382,7 @@ namespace BRReportDemo
         producer.Columns["ParentId"].DisplayName = "Идентификатор родительского узла";
       }
       producer.Columns.AddBool("Flag", "Flag");
+      producer.Columns.AddLink("Link", "Link", 20, 10);
 
       if (configMode != DefConfigMode.NotSet)
       {
@@ -366,6 +394,7 @@ namespace BRReportDemo
         producer.Columns["Date2"].PrintWidth = 250;
         producer.Columns["Id"].PrintWidth = 200;
         producer.Columns["Flag"].PrintWidth = 150;
+        producer.Columns["Link"].PrintWidth = 300;
 
         if (configMode == DefConfigMode.Named)
         {

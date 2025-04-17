@@ -3118,4 +3118,7 @@ Select paper orientation before.</value>
   <data name="WinFormsTools_Arg_SystemColor" xml:space="preserve">
     <value>System colors are not allowed</value>
   </data>
+  <data name="EFPGridProducer_Arg_SourceColumnMustBeSingle" xml:space="preserve">
+    <value>There must be single source column</value>
+  </data>
 </root>

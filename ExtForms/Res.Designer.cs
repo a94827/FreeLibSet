@@ -5725,6 +5725,15 @@ namespace FreeLibSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There must be single source column.
+        /// </summary>
+        internal static string EFPGridProducer_Arg_SourceColumnMustBeSingle {
+            get {
+                return ResourceManager.GetString("EFPGridProducer_Arg_SourceColumnMustBeSingle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Item in SourceColumnNames is equal to the calculated column/tooltip name &apos;{0}&apos;.
         /// </summary>
         internal static string EFPGridProducer_Arg_SourceColumnNameIsName {

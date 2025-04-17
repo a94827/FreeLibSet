@@ -3099,4 +3099,7 @@
   <data name="WinFormsTools_Arg_SystemColor" xml:space="preserve">
     <value>Системные цвета недопустимы</value>
   </data>
+  <data name="EFPGridProducer_Arg_SourceColumnMustBeSingle" xml:space="preserve">
+    <value>Должен быть задан единственный исходный столбец</value>
+  </data>
 </root>

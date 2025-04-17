@@ -1057,6 +1057,115 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Столбец ссылок
+
+    /// <summary>
+    /// Добавляет вычисляемый ссылочный столбец
+    /// </summary>
+    /// <param name="name">Условное имя вычисляемого столбца</param>
+    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
+    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
+    /// Вызывается при прорисовке каждой строки просмотра.
+    /// Обработчик должен задавать значение <see cref="EFPGridProducerValueNeededEventArgs.Value"/> как <see cref="FreeLibSet.Reporting.BRValueWithLink"/>
+    /// или оставлять пустое значение, если ссылка недоступна. Установка других типов значений не допускается.
+    /// Разрешаются только Uri-ссылки, #-ссылки не допускаются, так табличный просмотр не поддерживает закладки.</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="textWidth">Ширина в текстовых единицах</param>
+    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
+    /// <returns>Описание столбца</returns>
+    public EFPGridProducerLinkColumn AddUserLink(string name, string sourceColumnNames,
+      EFPGridProducerValueNeededEventHandler valueNeeded,
+      string headerText, int textWidth, int minTextWidth)
+    {
+      if (valueNeeded == null)
+        throw new ArgumentNullException("valueNeeded");
+
+      EFPGridProducerLinkColumn item = new EFPGridProducerLinkColumn(name, GetSourceColumnNameArray(sourceColumnNames));
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Left;
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      item.ValueNeeded += valueNeeded;
+      item.DataType = typeof(string);
+      item.DbfPreliminaryInfo.Type = 'C';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+
+      Add(item);
+      return item;
+    }
+
+    private class LinkWithPrefixHelper
+    {
+      #region Поля
+
+      public string LinkPrefix;
+
+      internal void ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
+      {
+        string v = args.GetString(0);
+        if (v.Length > 0)
+          args.Value = new FreeLibSet.Reporting.BRValueWithLink(v, LinkPrefix + v);
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Добавляет вычисляемый ссылочный столбец, в котором ссылка формируется как "Префикс"+ЗначениеПоля.
+    /// Столбец имеет имя "sourceColumnName_Link".
+    /// </summary>
+    /// <param name="sourceColumnName">Имя поля в таблице данных, на основании которого создается ссылка</param>
+    /// <param name="linkPrefix">Префикс перед значением поля для ссылки, например, "https://" или "mailto://".
+    /// Если <paramref name="sourceColumnName"/> уже содержит префикс, то следует передавать пустую строку.</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="textWidth">Ширина в текстовых единицах</param>
+    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
+    /// <returns>Описание столбца</returns>
+    public EFPGridProducerLinkColumn AddUserLink(string sourceColumnName,
+      string linkPrefix,
+      string headerText, int textWidth, int minTextWidth)
+    {
+      if (String.IsNullOrEmpty(sourceColumnName) || sourceColumnName.IndexOf(',') >= 0)
+        throw new ArgumentException(Res.EFPGridProducer_Arg_SourceColumnMustBeSingle, "sourceColumnName");
+
+      LinkWithPrefixHelper helper = new LinkWithPrefixHelper();
+      helper.LinkPrefix = linkPrefix;
+
+      return AddUserLink(sourceColumnName+"_Link", sourceColumnName, helper.ValueNeeded, headerText, textWidth, minTextWidth);
+    }
+
+
+    /// <summary>
+    /// Добавляет невычисляемый ссылочный столбец.
+    /// Предполагается, что табличные данные уже содержат значения <see cref="FreeLibSet.Reporting.BRValueWithLink"/>,
+    /// что возможно, если таблица создана в программном коде, а не загружена из базы данных.
+    /// Разрешаются только Uri-ссылки, #-ссылки не допускаются, так табличный просмотр не поддерживает закладки.
+    /// </summary>
+    /// <param name="columnName">Имя столбца в таблице данных</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="textWidth">Ширина в текстовых единицах</param>
+    /// <param name="minTextWidth">Минимальная ширина в текстовых единицах</param>
+    /// <returns>Описание столбца</returns>
+    public EFPGridProducerLinkColumn AddLink(string columnName, 
+      string headerText, int textWidth, int minTextWidth)
+    {
+      EFPGridProducerLinkColumn item = new EFPGridProducerLinkColumn(columnName, null);
+      item.HeaderText = headerText;
+      item.TextAlign = HorizontalAlignment.Left;
+      item.TextWidth = textWidth;
+      item.MinTextWidth = minTextWidth;
+      item.DataType = typeof(string);
+      item.DbfPreliminaryInfo.Type = 'C';
+      item.DbfPreliminaryInfo.Length = textWidth;
+      item.DbfPreliminaryInfo.LengthIsDefined = false;
+
+      Add(item);
+      return item;
+    }
+
+    #endregion
+
     #endregion
 
     #region Прочие методы
@@ -2201,7 +2310,7 @@ namespace FreeLibSet.Forms
     /// Текстовые значения для перечисления
     /// </summary>
     public string[] TextValues { get { return _TextValues; } }
-    private string[] _TextValues;
+    private readonly string[] _TextValues;
 
     /// <summary>
     /// Если true (по умолчанию), то значение поля NULL интерпретируется как 0.
@@ -2391,6 +2500,51 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
+  /// Вычисляемый столбец для ссылочных полей, значением которого является <see cref="FreeLibSet.Reporting.BRValueWithLink"/> 
+  /// </summary>
+  public class EFPGridProducerLinkColumn : EFPGridProducerColumn
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает описание столбца
+    /// </summary>
+    /// <param name="columnName">Имя вычисляемого ссылочного столбца</param>
+    /// <param name="sourceColumnNames">Исходные столбцы</param>
+    public EFPGridProducerLinkColumn(string columnName, string[] sourceColumnNames)
+      : base(columnName, sourceColumnNames)
+    {
+    }
+
+    #endregion
+
+    #region Переопределенные методы
+
+    /// <summary>
+    /// Создает столбец табличного просмотра
+    /// </summary>
+    /// <param name="controlProvider">Провайдер табличного просмотра</param>
+    /// <returns>Провайдер столбца</returns>
+    public override EFPDataGridViewColumn CreateGridColumn(EFPDataGridView controlProvider)
+    {
+      controlProvider.Columns.AddLink(Name, false, HeaderText);
+      EFPDataGridViewColumn column = controlProvider.Columns.LastAdded;
+      InitGridColumn(column);
+
+      if (TextRowHeight > 1)
+        column.GridColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+      column.GridColumn.DefaultCellStyle.Format = Format;
+      if (FormatProvider != null)
+        column.GridColumn.DefaultCellStyle.FormatProvider = FormatProvider;
+
+      return column;
+    }
+
+    #endregion
+  }
+
+  /// <summary>
   /// Столбец, содержащий номера строк в табличном просмотре (1,2, ...)
   /// </summary>
   public class EFPGridProducerRowOrderColumn : EFPGridProducerColumn
@@ -2443,17 +2597,17 @@ namespace FreeLibSet.Forms
     /// Иначе нумерация выводится только для строк, проходящих фильтр.
     /// Прочие строки содержат пустое поле. Нумерация НЕ СДВИГАЕТСЯ, поэтому
     /// можно использовать только для пропуска итоговой строки.
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public string FilterColumnName { get { return _FilterColumnName; } }
-    private string _FilterColumnName;
+    private readonly string _FilterColumnName;
 
     /// <summary>
     /// Значение поля для фильтра, заданного <see cref="FilterColumnName"/>
-    /// Задается в конструкторе
+    /// Задается в конструкторе.
     /// </summary>
     public int FilterValue { get { return _FilterValue; } }
-    private int _FilterValue;
+    private readonly int _FilterValue;
 
     #endregion
 
@@ -2468,8 +2622,8 @@ namespace FreeLibSet.Forms
       args.Value = args.RowIndex + 1;
       if (!String.IsNullOrEmpty(FilterColumnName))
       {
-        int Value = args.GetInt(FilterColumnName);
-        if (Value != FilterValue)
+        int value = args.GetInt(FilterColumnName);
+        if (value != FilterValue)
           args.Value = null;
       }
       base.OnValueNeeded(args);
