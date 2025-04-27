@@ -24,7 +24,7 @@ using FreeLibSet.Core;
  * Внесены незначительные исправления в элемент
  */
 
-#pragma warning disable 1591
+//#pragma warning disable 1591
 
 namespace FreeLibSet.Controls
 {
@@ -103,7 +103,7 @@ namespace FreeLibSet.Controls
       ArrangeControls();
 
       _plusMinus = new NodePlusMinus();
-      _controls = new NodeControlsCollection(this);
+      _NodeControls = new NodeControlsCollection(this);
 
       Font = _font;
       ExpandingIcon.IconChanged += ExpandingIconChanged;
@@ -116,6 +116,32 @@ namespace FreeLibSet.Controls
 
     #region Public Events
 
+    ///// <summary>
+    ///// Вызывается при щелчке левой кнопкм мыши по ячейке просмотра.
+    ///// </summary>
+    //[Category("Behavior")]
+    //public event EventHandler<TreeNodeAdvControlEventArgs> NodeControlClick; // 22.04.2025
+    //private void OnNodeControlClick(TreeNodeAdvControlEventArgs args)
+    //{
+    //  if (NodeControlClick != null)
+    //    NodeControlClick(this, args);
+    //}
+
+    /// <summary>
+    /// Вызывается при щелчке левой кнопкм мыши по содержимому ячейки просмотра.
+    /// Должно обрабатываться для гиперссылок
+    /// </summary>
+    [Category("Behavior")]
+    public event EventHandler<TreeNodeAdvControlEventArgs> NodeControlContentClick; // 22.04.2025
+    internal void OnNodeControlContentClick(TreeNodeAdvControlEventArgs args)
+    {
+      if (NodeControlContentClick != null)
+        NodeControlContentClick(this, args);
+    }
+
+    /// <summary>
+    /// Вызывается при начале перетягивания узла с помощью мыши
+    /// </summary>
     [Category("Action")]
     public event ItemDragEventHandler ItemDrag;
     private void OnItemDrag(MouseButtons buttons, object item)
@@ -124,6 +150,9 @@ namespace FreeLibSet.Controls
         ItemDrag(this, new ItemDragEventArgs(buttons, item));
     }
 
+    /// <summary>
+    /// Вызывается при щелчке мышью по узлу дерева
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeNodeAdvMouseEventArgs> NodeMouseClick;
     private void OnNodeMouseClick(TreeNodeAdvMouseEventArgs args)
@@ -132,6 +161,9 @@ namespace FreeLibSet.Controls
         NodeMouseClick(this, args);
     }
 
+    /// <summary>
+    /// Вызывается при двойном щелчке мышью по узлу дерева
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeNodeAdvMouseEventArgs> NodeMouseDoubleClick;
     private void OnNodeMouseDoubleClick(TreeNodeAdvMouseEventArgs args)
@@ -140,6 +172,9 @@ namespace FreeLibSet.Controls
         NodeMouseDoubleClick(this, args);
     }
 
+    /// <summary>
+    /// Вызывается при изменении ширины столбца
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeColumnEventArgs> ColumnWidthChanged;
     internal void OnColumnWidthChanged(TreeColumn column)
@@ -148,6 +183,9 @@ namespace FreeLibSet.Controls
         ColumnWidthChanged(this, new TreeColumnEventArgs(column));
     }
 
+    /// <summary>
+    /// Вызывается при изменении порядка столбцов
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeColumnEventArgs> ColumnReordered;
     internal void OnColumnReordered(TreeColumn column)
@@ -156,6 +194,9 @@ namespace FreeLibSet.Controls
         ColumnReordered(this, new TreeColumnEventArgs(column));
     }
 
+    /// <summary>
+    /// Вызывается при щелчке на заголовке столбца
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeColumnEventArgs> ColumnClicked;
     internal void OnColumnClicked(TreeColumn column)
@@ -164,6 +205,9 @@ namespace FreeLibSet.Controls
         ColumnClicked(this, new TreeColumnEventArgs(column));
     }
 
+    /// <summary>
+    /// Вызывается при изменении текущего узла дерева или при выборе нескольких узлов
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler SelectionChanged;
     internal void OnSelectionChanged()
@@ -178,6 +222,9 @@ namespace FreeLibSet.Controls
       }
     }
 
+    /// <summary>
+    /// Вызывается перед сверткой узла
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeViewAdvEventArgs> Collapsing;
     private void OnCollapsing(TreeNodeAdv node)
@@ -186,6 +233,9 @@ namespace FreeLibSet.Controls
         Collapsing(this, new TreeViewAdvEventArgs(node));
     }
 
+    /// <summary>
+    /// Вызывается при свертке узла
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeViewAdvEventArgs> Collapsed;
     private void OnCollapsed(TreeNodeAdv node)
@@ -194,6 +244,9 @@ namespace FreeLibSet.Controls
         Collapsed(this, new TreeViewAdvEventArgs(node));
     }
 
+    /// <summary>
+    /// Вызывается перед разворачиванием узла
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeViewAdvEventArgs> Expanding;
     private void OnExpanding(TreeNodeAdv node)
@@ -202,6 +255,9 @@ namespace FreeLibSet.Controls
         Expanding(this, new TreeViewAdvEventArgs(node));
     }
 
+    /// <summary>
+    /// Вызывается при разворачивании узла
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeViewAdvEventArgs> Expanded;
     private void OnExpanded(TreeNodeAdv node)
@@ -210,6 +266,9 @@ namespace FreeLibSet.Controls
         Expanded(this, new TreeViewAdvEventArgs(node));
     }
 
+    /// <summary>
+    /// Вызывается при изменении значения свойства <see cref="GridLineStyle"/>
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler GridLineStyleChanged;
     private void OnGridLineStyleChanged()
@@ -218,22 +277,42 @@ namespace FreeLibSet.Controls
         GridLineStyleChanged(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Вызывается при прокрутке окна
+    /// </summary>
     [Category("Behavior")]
     public event ScrollEventHandler Scroll;
-    protected virtual void OnScroll(ScrollEventArgs e)
+
+    /// <summary>
+    /// Вызывает событие <see cref="Scroll"/>
+    /// </summary>
+    /// <param name="args"></param>
+    protected virtual void OnScroll(ScrollEventArgs args)
     {
       if (Scroll != null)
-        Scroll(this, e);
+        Scroll(this, args);
     }
 
+    /// <summary>
+    /// Вызывается при рисовании строки для узла
+    /// </summary>
     [Category("Behavior")]
     public event EventHandler<TreeViewAdvRowDrawEventArgs> RowDraw;
-    protected virtual void OnRowDraw(PaintEventArgs e, TreeNodeAdv node, TreeViewAdvDrawContext context, int row, Rectangle rowRect)
+
+    /// <summary>
+    /// Вызывает событие <see cref="RowDraw"/>
+    /// </summary>
+    /// <param name="args"></param>
+    /// <param name="node"></param>
+    /// <param name="context"></param>
+    /// <param name="row"></param>
+    /// <param name="rowRect"></param>
+    protected virtual void OnRowDraw(PaintEventArgs args, TreeNodeAdv node, TreeViewAdvDrawContext context, int row, Rectangle rowRect)
     {
       if (RowDraw != null)
       {
-        TreeViewAdvRowDrawEventArgs args = new TreeViewAdvRowDrawEventArgs(e.Graphics, e.ClipRectangle, node, context, row, rowRect);
-        RowDraw(this, args);
+        TreeViewAdvRowDrawEventArgs args2 = new TreeViewAdvRowDrawEventArgs(args.Graphics, args.ClipRectangle, node, context, row, rowRect);
+        RowDraw(this, args2);
       }
     }
 
@@ -253,15 +332,27 @@ namespace FreeLibSet.Controls
       OnDrawControl(args);
     }
 
+    /// <summary>
+    /// Вызывает событие <see cref="DrawControl"/>
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnDrawControl(DrawEventArgs args)
     {
       if (DrawControl != null)
         DrawControl(this, args);
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     [Category("Drag Drop")]
     public event EventHandler<TreeViewAdvDropNodeValidatingEventArgs> DropNodeValidating;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="point"></param>
+    /// <param name="node"></param>
     protected virtual void OnDropNodeValidating(Point point, ref TreeNodeAdv node)
     {
       if (DropNodeValidating != null)
@@ -507,11 +598,15 @@ namespace FreeLibSet.Controls
 
     #endregion
 
-    protected override void OnSizeChanged(EventArgs e)
+    /// <summary>
+    /// Коррекция полос прокрутки при изменении размеров элемента
+    /// </summary>
+    /// <param name="args">Не используется</param>
+    protected override void OnSizeChanged(EventArgs args)
     {
       ArrangeControls();
       SafeUpdateScrollBars();
-      base.OnSizeChanged(e);
+      base.OnSizeChanged(args);
     }
 
     private void ArrangeControls()
@@ -562,6 +657,9 @@ namespace FreeLibSet.Controls
       _vScrollBar.Value = Math.Min(_vScrollBar.Value, _vScrollBar.Maximum - _vScrollBar.LargeChange + 1);
     }
 
+    /// <summary>
+    /// Установка рамки управляющего элемента
+    /// </summary>
     protected override CreateParams CreateParams
     {
 #if !NET
@@ -583,22 +681,34 @@ namespace FreeLibSet.Controls
       }
     }
 
-    protected override void OnGotFocus(EventArgs e)
+    /// <summary>
+    /// Обновление изображения и отключение редактора при утере фокуса ввода
+    /// </summary>
+    /// <param name="args">Не используется</param>
+    protected override void OnGotFocus(EventArgs args)
     {
       UpdateView();
       ChangeInput();
-      base.OnGotFocus(e);
+      base.OnGotFocus(args);
     }
 
-    protected override void OnLostFocus(EventArgs e)
+    /// <summary>
+    /// Обновление изображения при получении фокуса ввода
+    /// </summary>
+    /// <param name="args">Не используется</param>
+    protected override void OnLostFocus(EventArgs args)
     {
       UpdateView(); // Агеев А.В., 11.12.2018. Иначе не убирается выделение текущих элементов при переходе на другой элемент мышью.
-      base.OnLostFocus(e);
+      base.OnLostFocus(args);
     }
 
-    protected override void OnFontChanged(EventArgs e)
+    /// <summary>
+    /// Полное обновление при изменении шрифта
+    /// </summary>
+    /// <param name="args">Не используется</param>
+    protected override void OnFontChanged(EventArgs args)
     {
-      base.OnFontChanged(e);
+      base.OnFontChanged(args);
       _measureContext.Font = Font;
       FullUpdate();
     }
@@ -750,9 +860,9 @@ namespace FreeLibSet.Controls
 
     internal void ReadChilds(TreeNodeAdv parentNode, bool performFullUpdate)
     {
-      // 21.02.2022. Очищать нужно в любом случае
+      // 21.02.2022. Очищать нужно в любом случае.
       // Узел мог раньше содержать дочерние узлы, а после изменения структуры - нет.
-      parentNode.Nodes.Clear(); 
+      parentNode.Nodes.Clear();
 
       if (!parentNode.IsLeaf)
       {
@@ -825,7 +935,7 @@ namespace FreeLibSet.Controls
 
       if (AsyncExpanding && LoadOnDemand && !_threadPool.IsMyThread(Thread.CurrentThread))
       {
-        WaitCallback wc = delegate(object argument) { SetIsExpanded((ExpandArgs)argument); };
+        WaitCallback wc = delegate (object argument) { SetIsExpanded((ExpandArgs)argument); };
         _threadPool.QueueUserWorkItem(wc, eargs);
       }
       else
@@ -953,6 +1063,13 @@ namespace FreeLibSet.Controls
       return node.RightBounds.Value;
     }
 
+    /// <summary>
+    /// Возвращает координаты заданного узла дерева.
+    /// Координаты заданы относительно левого верхнего угла управляющего элемента.
+    /// Если узел не показан в окне, возвращается <see cref="Rectangle.Empty"/>.
+    /// </summary>
+    /// <param name="node">Узел</param>
+    /// <returns>Координаты строки узла</returns>
     internal Rectangle GetNodeBounds(TreeNodeAdv node)
     {
       return GetNodeBounds(GetNodeControls(node));
@@ -968,6 +1085,10 @@ namespace FreeLibSet.Controls
         else
           res = Rectangle.Union(res, info.Bounds);
       }
+
+      if (!res.IsEmpty)
+        res.Y += ColumnHeaderHeight; // 23.04.2025
+
       return res;
     }
 
@@ -1164,6 +1285,9 @@ namespace FreeLibSet.Controls
     // Ageyev A.V., 20.05.2015
 
 
+    /// <summary>
+    /// Цвет фона. По умолчанию - <see cref="System.Drawing.SystemColors.Window"/>.
+    /// </summary>
     [DefaultValue(typeof(Color), "Window")]
     public override Color BackColor
     {
@@ -1171,6 +1295,9 @@ namespace FreeLibSet.Controls
       set { base.BackColor = value; }
     }
 
+    /// <summary>
+    /// Цвет текста. По умолчанию - <see cref="System.Drawing.SystemColors.WindowText"/>.
+    /// </summary>
     [DefaultValue(typeof(Color), "WindowText")]
     public override Color ForeColor
     {
@@ -1178,11 +1305,17 @@ namespace FreeLibSet.Controls
       set { base.ForeColor = value; }
     }
 
+    /// <summary>
+    /// Устанавливает цвет фона <see cref="System.Drawing.SystemColors.Window"/>
+    /// </summary>
     public override void ResetBackColor()
     {
       base.BackColor = SystemColors.Window;
     }
 
+    /// <summary>
+    /// Устанавливает цвет текста <see cref="System.Drawing.SystemColors.WindowText"/>
+    /// </summary>
     public override void ResetForeColor()
     {
       base.ForeColor = SystemColors.WindowText;
@@ -1194,6 +1327,9 @@ namespace FreeLibSet.Controls
 
     // Ageyev A.V., 20.05.2015
 
+    /// <summary>
+    /// Размер элемента по умолчанию
+    /// </summary>
     protected override Size DefaultSize
     {
       get
@@ -1206,6 +1342,9 @@ namespace FreeLibSet.Controls
 
     #region Свойство Text
 
+    /// <summary>
+    /// Это свойство не имеет смысла для управляющего элемента
+    /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public override string Text

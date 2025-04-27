@@ -1400,7 +1400,7 @@ namespace FreeLibSet.Reporting
   /// Может использоваться в качестве значения свойства <see cref="BRSelector.Value"/> и связанных методах.
   /// </summary>
   [Serializable]
-  public sealed class BRValueWithLink : IFormattable
+  public sealed class BRValueWithLink : IFormattable, IEquatable<BRValueWithLink>
   {
     // Нет смысла делать структурой, так как всегда будет боксинг
 
@@ -1537,6 +1537,69 @@ namespace FreeLibSet.Reporting
         return null;
 
       return new BRValueWithLink(address, "mailto://" + address);
+    }
+
+    #endregion
+
+    #region IEquatable
+
+    /// <summary>
+    /// Сравнение двух объектов.
+    /// Объекты считаются одинаковыми, если совпадают и значение и ссылка.
+    /// </summary>
+    /// <param name="a">Первое проверяемое значение</param>
+    /// <param name="b">Второе проверяемое значение</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool operator ==(BRValueWithLink a, BRValueWithLink b)
+    {
+      if (Object.ReferenceEquals(a, null) && Object.ReferenceEquals(b, null))
+        return true;
+      if (Object.ReferenceEquals(a, null) || Object.ReferenceEquals(b, null))
+        return false;
+
+      return Object.Equals(a.Value, b.Value) &&
+        String.Equals(a.LinkData, b.LinkData, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Сравнение двух объектов.
+    /// Объекты считаются одинаковыми, если совпадают и значение и ссылка.
+    /// </summary>
+    /// <param name="a">Первое проверяемое значение</param>
+    /// <param name="b">Второе проверяемое значение</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool operator !=(BRValueWithLink a, BRValueWithLink b)
+    {
+      return !(a == b);
+    }
+
+    /// <summary>
+    /// Возвращает true, если у объектов совпадает и текст и ссылка
+    /// </summary>
+    /// <param name="other">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public bool Equals(BRValueWithLink other)
+    {
+      return this == other;
+    }
+
+    /// <summary>
+    /// Возвращает true, если у объектов совпадает и текст и ссылка
+    /// </summary>
+    /// <param name="obj">Второй сравниваемый объект</param>
+    /// <returns>Результат сравнения</returns>
+    public override bool Equals(object obj)
+    {
+      return this == (obj as BRValueWithLink);
+    }
+
+    /// <summary>
+    /// Хэш-код для добавления в коллекцию
+    /// </summary>
+    /// <returns>Хэш-код</returns>
+    public override int GetHashCode()
+    {
+      return _LinkData.GetHashCode();
     }
 
     #endregion

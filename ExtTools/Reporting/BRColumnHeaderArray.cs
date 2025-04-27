@@ -149,7 +149,7 @@ namespace FreeLibSet.Reporting
 
       _BaseCells = new CellAddress[RowCount, ColumnCount];
 #if DEBUG
-      DataTools.FillArray2<CellAddress>(_BaseCells, new CellAddress(-1, -1));
+      DataTools.FillMatrix<CellAddress>(_BaseCells, new CellAddress(-1, -1));
 #endif
 
 
@@ -203,9 +203,9 @@ namespace FreeLibSet.Reporting
       _Text = new string[RowCount, ColumnCount];
       _RowSpan = new int[RowCount, ColumnCount];
       _ColumnSpan = new int[RowCount, ColumnCount];
-      DataTools.FillArray2<string>(_Text, String.Empty);
-      DataTools.FillArray2<int>(_RowSpan, 1);
-      DataTools.FillArray2<int>(_ColumnSpan, 1);
+      DataTools.FillMatrix<string>(_Text, String.Empty);
+      DataTools.FillMatrix<int>(_RowSpan, 1);
+      DataTools.FillMatrix<int>(_ColumnSpan, 1);
 
       _BaseCells = new CellAddress[RowCount, ColumnCount];
       for (int i = 0; i < rowCount; i++)

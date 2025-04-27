@@ -11,11 +11,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Reflection;
 using System.ComponentModel;
 using FreeLibSet.Controls.TreeViewAdvInternal;
-
-#pragma warning disable 1591
+using System.Windows.Forms.VisualStyles;
 
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
@@ -37,7 +35,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     protected BaseTextControl()
     {
       IncrementalSearchEnabled = true;
-      _focusPen = new Pen(Color.Black); 
+      _focusPen = new Pen(Color.Black);
       _focusPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
 
       _format = new StringFormat(StringFormatFlags.LineLimit | StringFormatFlags.NoClip | StringFormatFlags.FitBlackBox | StringFormatFlags.MeasureTrailingSpaces);
@@ -51,6 +49,10 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       LeftMargin = 3;
     }
 
+    /// <summary>
+    /// Удаляет графические примитивы
+    /// </summary>
+    /// <param name="disposing">true, если был вызван метод <see cref="IDisposable.Dispose()"/>, а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
       base.Dispose(disposing);
@@ -97,6 +99,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       return (_font != null);
     }
 
+    /// <summary>
+    /// Отступ от предыдущего элемента в пикселях. По умолчанию - 3.
+    /// </summary>
     [DefaultValue(3)] // Ageyev A.V.
     public new int LeftMargin
     {
@@ -138,6 +143,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       }
     }
 
+    /// <summary>
+    /// ?
+    /// </summary>
     [DefaultValue(true)]
     public bool DisplayHiddenContentInToolTip
     {
@@ -146,6 +154,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     }
     private bool _displayHiddenContentInToolTip = true;
 
+    /// <summary>
+    /// Использование класса <see cref="TextRenderer"/> для вывода текста
+    /// </summary>
     [DefaultValue(false)]
     public bool UseCompatibleTextRendering
     {
@@ -154,6 +165,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     }
     private bool _useCompatibleTextRendering = false;
 
+    /// <summary>
+    /// Если true и в ячейке хранится многострочный текст, то будет выводиться только первая строка, дополненная "..."
+    /// </summary>
     [DefaultValue(false)]
     public bool TrimMultiLine
     {
@@ -173,16 +187,35 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
         | TextHelper.TranslateTrimmingToFlag(Trimming);
     }
 
+    /// <summary>
+    /// Измерение размеров элемента
+    /// </summary>
+    /// <param name="node">Узел</param>
+    /// <param name="context">Контекст измерения</param>
+    /// <returns>Размеры</returns>
     public override Size MeasureSize(TreeNodeAdv node, TreeViewAdvDrawContext context)
     {
       return GetLabelSize(node, context);
     }
 
+    /// <summary>
+    /// Измерение размеров элемента
+    /// </summary>
+    /// <param name="node">Узел</param>
+    /// <param name="context">Контекст измерения</param>
+    /// <returns>Размеры</returns>
     protected Size GetLabelSize(TreeNodeAdv node, TreeViewAdvDrawContext context)
     {
       return GetLabelSize(node, context, GetLabel(node));
     }
 
+    /// <summary>
+    /// Измерение размеров элемента
+    /// </summary>
+    /// <param name="node">Узел</param>
+    /// <param name="context">Контекст измерения</param>
+    /// <param name="label">Текст элемента</param>
+    /// <returns>Размеры</returns>
     protected Size GetLabelSize(TreeNodeAdv node, TreeViewAdvDrawContext context, string label)
     {
       CheckThread();
@@ -202,6 +235,13 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
         return new Size(10, Font.Height);
     }
 
+    /// <summary>
+    /// Получение шрифта для вывода текста
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="context"></param>
+    /// <param name="label"></param>
+    /// <returns></returns>
     protected Font GetDrawingFont(TreeNodeAdv node, TreeViewAdvDrawContext context, string label)
     {
       Font font = context.Font;
@@ -216,7 +256,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     }
 
     /// <summary>
-    /// Устанавливает свойство System.Windows.Forms.Control.Font
+    /// Устанавливает свойство <see cref="System.Windows.Forms.Control.Font"/>
     /// </summary>
     /// <param name="control">Инициализируемый управляющий элемент Windows Forms</param>
     /// <param name="node">Узел дерева</param>
@@ -228,6 +268,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       control.Font = GetDrawingFont(node, context, label);
     }
 
+    /// <summary>
+    /// Рисование элемента
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="context"></param>
     public override void Draw(TreeNodeAdv node, TreeViewAdvDrawContext context)
     {
       if (context.CurrentEditorOwner == this && node == Parent.CurrentNode)
@@ -259,11 +304,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       if (UseCompatibleTextRendering)
         TextRenderer.DrawText(context.Graphics, label, font, bounds, textColor, _formatFlags);
       else
-        context.Graphics.DrawString(label, font, GetFrush(textColor), bounds, _format);
+        context.Graphics.DrawString(label, font, GetBrush(textColor), bounds, _format);
     }
 
     private static Dictionary<Color, Brush> _brushes = new Dictionary<Color, Brush>();
-    private static Brush GetFrush(Color color)
+    private static Brush GetBrush(Color color)
     {
       Brush br;
       if (_brushes.ContainsKey(color))
@@ -315,6 +360,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       }
     }
 
+    /// <summary>
+    /// Получение форматированного текста элемента
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
     public string GetLabel(TreeNodeAdv node)
     {
       if (node != null && node.Tag != null)
@@ -326,6 +376,12 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       return string.Empty;
     }
 
+
+    /// <summary>
+    /// Форматирование значения
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
     protected virtual string FormatLabel(object obj)
     {
       string res = obj.ToString();
@@ -338,6 +394,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       return res;
     }
 
+    /// <summary>
+    /// Установка значения
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="value"></param>
     public void SetLabel(TreeNodeAdv node, string value)
     {
       SetValue(node, value);
@@ -347,6 +408,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     /// Fires when control is going to draw a text. Can be used to change text or back color
     /// </summary>
     public event EventHandler<DrawEventArgs> DrawText;
+
+    /// <summary>
+    /// Вызывает событие <see cref="DrawText"/>
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
     protected virtual void OnDrawText(DrawEventArgs args)
     {
       TreeViewAdv tree = args.Node.Tree;
@@ -356,9 +422,44 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
         DrawText(this, args);
     }
 
+    /// <summary>
+    /// Возвращает true, если должно вызываться событие <see cref="DrawText"/>
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
     protected virtual bool DrawTextMustBeFired(TreeNodeAdv node)
     {
       return DrawText != null || (node.Tree != null && node.Tree.DrawControlMustBeFired());
+    }
+
+    /// <summary>
+    /// Возвращает границы элемента
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    internal protected override Rectangle GetBounds(TreeNodeAdv node, TreeViewAdvDrawContext context)
+    {
+      Rectangle r = context.Bounds;
+      Size s = GetActualSize(node, context);
+      Size bs = new Size(Math.Min(r.Width - LeftMargin, s.Width), Math.Min(r.Height, s.Height));
+
+      int x;
+      switch (TextAlign)
+      {
+        case HorizontalAlignment.Left: x = r.X + LeftMargin; break;
+        case HorizontalAlignment.Right: x = r.Right - bs.Width; break;
+        default: x = r.X + LeftMargin + (r.Right - bs.Width) / 2; break;
+      }
+
+      int y;
+      switch (VerticalAlign)
+      {
+        case VerticalAlignment.Top: y = r.Y; break;
+        case VerticalAlignment.Bottom: y = r.Bottom - bs.Height; break;
+        default: y = r.Y + (r.Height - bs.Height) / 2; break;
+      }
+      return new Rectangle(new Point(x, y), bs);
     }
   }
 }

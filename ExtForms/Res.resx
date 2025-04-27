@@ -2288,8 +2288,8 @@ Text box uses for entering a name for a new user preset.</value>
   <data name="EFPPasteFormat_Err_FormatNotAppliable" xml:space="preserve">
     <value>Format is not aplliable</value>
   </data>
-  <data name="EFPPasteFormat_Err_NoGoodFormat" xml:space="preserve">
-    <value>There is no appliable data in the clipboard. {0}</value>
+  <data name="EFPPasteFormat_Err_FormatError" xml:space="preserve">
+    <value>Format '{0}'. {1}</value>
   </data>
   <data name="EFPPasteFormat_Err_NoPasteFormats" xml:space="preserve">
     <value>There is no paste format handler presented</value>
@@ -3120,5 +3120,11 @@ Select paper orientation before.</value>
   </data>
   <data name="EFPGridProducer_Arg_SourceColumnMustBeSingle" xml:space="preserve">
     <value>There must be single source column</value>
+  </data>
+  <data name="EFPDataView_Err_PasteToColumn" xml:space="preserve">
+    <value>Column '{0}'. {1}</value>
+  </data>
+  <data name="EFPPasteTextMatrixFormat_Name_WithLineSeparator" xml:space="preserve">
+    <value>{0}, row separator: '{1}'</value>
   </data>
 </root>

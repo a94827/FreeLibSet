@@ -107,7 +107,7 @@ namespace FreeLibSet.Core
     /// <typeparam name="T">Тип данных</typeparam>
     /// <param name="a">Массив</param>
     /// <param name="value">Значение, которое получит каждый элемент массива</param>
-    public static void FillArray2<T>(T[,] a, T value)
+    public static void FillMatrix<T>(T[,] a, T value)
     {
       int n1 = a.GetLowerBound(0);
       int n2 = a.GetUpperBound(0);
@@ -703,7 +703,7 @@ namespace FreeLibSet.Core
     /// <param name="a">Исходный двумерный массив</param>
     /// <param name="rowIndex">Индекс строки</param>
     /// <returns>Одномерный массив</returns>
-    public static T[] GetArray2Row<T>(T[,] a, int rowIndex)
+    public static T[] GetMatrixRow<T>(T[,] a, int rowIndex)
     {
 #if DEBUG
       if (a == null)
@@ -729,7 +729,7 @@ namespace FreeLibSet.Core
     /// <param name="a">Исходный двумерный массив</param>
     /// <param name="columnIndex">Индекс столбца</param>
     /// <returns>Одномерный массив</returns>
-    public static T[] GetArray2Column<T>(T[,] a, int columnIndex)
+    public static T[] GetMatrixColumn<T>(T[,] a, int columnIndex)
     {
 #if DEBUG
       if (a == null)
@@ -754,7 +754,7 @@ namespace FreeLibSet.Core
     /// <typeparam name="T">Произвольный тип данных</typeparam>
     /// <param name="a">Двумерный массив</param>
     /// <returns>Одномерный массив</returns>
-    public static T[] ToArray1<T>(T[,] a)
+    public static T[] ToPlainArray<T>(T[,] a)
     {
       int n1 = a.GetLowerBound(0);
       int n2 = a.GetUpperBound(0);
@@ -784,7 +784,7 @@ namespace FreeLibSet.Core
     /// <typeparam name="T">Произвольный тип данных</typeparam>
     /// <param name="a">Двумерный массив</param>
     /// <returns>Одномерный массив</returns>
-    public static T[] ToArray1<T>(T[][] a)
+    public static T[] ToPlainArray<T>(T[][] a)
     {
       int n1 = a.GetLowerBound(0);
       int n2 = a.GetUpperBound(0);
@@ -819,7 +819,7 @@ namespace FreeLibSet.Core
     /// <typeparam name="T">Произвольный тип данных</typeparam>
     /// <param name="a">Двумерный массив</param>
     /// <returns>Одномерный массив</returns>
-    public static T[] ToArray1<T>(T[,][] a)
+    public static T[] ToPlainArray<T>(T[,][] a)
     {
       int n1 = a.GetLowerBound(0);
       int n2 = a.GetUpperBound(0);
@@ -855,31 +855,60 @@ namespace FreeLibSet.Core
     }
 
     /// <summary>
-    /// Преобразование Jagged-массива в прямоугольный двумерный массив.
-    /// Первая размерность результирующего массива (количество строк) равна длине массива <paramref name="a"/>.
-    /// Вторая размерность результирующего массива (количество столбцов) определяется как максимальная длина среди вложенных массивов.
-    /// Если длина вложенных массивов различается, то недостающие элементы результирующего массива будут иметь пустое значение.
-    /// Ссылка на массив <paramref name="a"/> не может быть равна null, то может быть пустым массивом или содержать ссылки null вместо вложенных массивов
+    /// Получение двумерного массива из отдельных массивов, содержащих значение для каждой строки.
+    /// Первая размерность результирующего массива (количество строк) равна количеству параметров <paramref name="rows"/>.
+    /// Вторая размерность результирующего массива (количество столбцов) определяется как максимальная длина среди массивов строк.
+    /// Если длина массивов различается, то недостающие элементы результирующего массива будут иметь пустое значение.
     /// </summary>
     /// <typeparam name="T">Тип элементов массива</typeparam>
-    /// <param name="a">Jagged массив</param>
+    /// <param name="rows">Массивы значений для строк</param>
     /// <returns>Двумерный массив</returns>
-    public static T[,] ToArray2<T>(T[][] a)
+    public static T[,] MatrixFromRows<T>(params T[][] rows)
     {
       int m = 0;
-      for (int i = 0; i < a.Length; i++)
+      for (int i = 0; i < rows.Length; i++)
       {
-        if (a[i] != null)
-          m = Math.Max(m, a[i].Length);
+        if (rows[i] != null)
+          m = Math.Max(m, rows[i].Length);
       }
 
-      T[,] res = new T[a.Length, m];
-      for (int i = 0; i < a.Length; i++)
+      T[,] res = new T[rows.Length, m];
+      for (int i = 0; i < rows.Length; i++)
       {
-        if (a[i] != null)
+        if (rows[i] != null)
         {
-          for (int j = 0; j < a[i].Length; j++)
-            res[i, j] = a[i][j];
+          for (int j = 0; j < rows[i].Length; j++)
+            res[i, j] = rows[i][j];
+        }
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Получение двумерного массива из отдельных массивов, содержащих значение для каждого столбца.
+    /// Первая размерность результирующего массива (количество строк) определяется как максимальная длина среди массивов строк.
+    /// Вторая размерность результирующего массива (количество столбцов) равна количеству параметров <paramref name="columns"/>.
+    /// Если длина массивов различается, то недостающие элементы результирующего массива будут иметь пустое значение.
+    /// </summary>
+    /// <typeparam name="T">Тип элементов массива</typeparam>
+    /// <param name="columns">Массивы значений для строк</param>
+    /// <returns>Двумерный массив</returns>
+    public static T[,] MatrixFromColumns<T>(params T[][] columns)
+    {
+      int m = 0;
+      for (int i = 0; i < columns.Length; i++)
+      {
+        if (columns[i] != null)
+          m = Math.Max(m, columns[i].Length);
+      }
+
+      T[,] res = new T[m, columns.Length];
+      for (int i = 0; i < columns.Length; i++)
+      {
+        if (columns[i] != null)
+        {
+          for (int j = 0; j < columns[i].Length; j++)
+            res[j, i] = columns[i][j];
         }
       }
       return res;

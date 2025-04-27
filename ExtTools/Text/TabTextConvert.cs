@@ -35,7 +35,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Преобразование строки, содержащей значения.
     /// Строка не должна содержать символов переноса строки. Если строка может
-    /// содержать несколько строк, используйте <see cref="ToArray2(string)"/> для преобразования в двумерный массив.
+    /// содержать несколько строк, используйте <see cref="ToMatrix(string)"/> для преобразования в двумерный массив.
     /// Если строка пустая, то возвращается null.
     /// </summary>
     /// <param name="s">Строка</param>
@@ -66,7 +66,7 @@ namespace FreeLibSet.Text
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <returns>Двумерный массив</returns>
-    string[,] ToArray2(string s);
+    string[,] ToMatrix(string s);
 
     #endregion
   }
@@ -78,7 +78,7 @@ namespace FreeLibSet.Text
   /// То есть, внутри полей не должно быть символов табуляции и новой строки.
   /// http://www.iana.org/assignments/media-types/text/tab-separated-values
   /// </summary>
-  public sealed class TabTextConvert: ITextConvert
+  public sealed class TabTextConvert: ITextConvert, ICloneable
   {
     #region Конструктор
 
@@ -113,7 +113,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Нужно ли автоматически определять символы новой строки при преобразовании строки в двумерный массив.
     /// По умолчанию - false - используется текущее значение свойства <see cref="NewLine"/>.
-    /// Если установить в true, то свойство <see cref="NewLine"/> получит новое значение при вызове <see cref="ToArray2(string)"/>.
+    /// Если установить в true, то свойство <see cref="NewLine"/> получит новое значение при вызове <see cref="ToMatrix(string)"/>.
     /// </summary>
     public bool AutoDetectNewLine
     {
@@ -163,7 +163,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Преобразование строки, содержащей значения, разделенные табуляцией.
     /// Строка не должна содержать символов переноса строки. Если строка может
-    /// содержать несколько строк, используйте <see cref="ToArray2(string)"/> для преобразования в двумерный массив.
+    /// содержать несколько строк, используйте <see cref="ToMatrix(string)"/> для преобразования в двумерный массив.
     /// Если строка пустая, то возвращается null.
     /// </summary>
     /// <param name="s">Строка</param>
@@ -233,7 +233,7 @@ namespace FreeLibSet.Text
     /// </summary>
     /// <param name="s">Преобразуемая строка</param>
     /// <returns>Двумерный массив</returns>
-    public string[,] ToArray2(string s)
+    public string[,] ToMatrix(string s)
     {
       if (String.IsNullOrEmpty(s))
         return null;
@@ -252,7 +252,28 @@ namespace FreeLibSet.Text
       string[][] a2 = new string[a1.Length][];
       for (int i = 0; i < a1.Length; i++)
         a2[i] = a1[i].Split('\t');
-      return DataTools.ToArray2<string>(a2);
+      return DataTools.MatrixFromRows<string>(a2);
+    }
+
+    #endregion
+
+    #region ICloneable
+
+    /// <summary>
+    /// Создает копию конвертера с такими же управляющими свойствами
+    /// </summary>
+    /// <returns>Копия конвертера</returns>
+    public TabTextConvert Clone()
+    {
+      TabTextConvert res = new TabTextConvert();
+      res.NewLine = NewLine;
+      res.AutoDetectNewLine = AutoDetectNewLine;
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
     }
 
     #endregion

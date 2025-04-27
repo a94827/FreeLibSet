@@ -10,6 +10,8 @@ namespace ExtTools_tests.Text
   [TestFixture]
   public class TabTextConvertTests
   {
+    #region Конструкторы
+
     [Test]
     public void Constructor()
     {
@@ -17,6 +19,10 @@ namespace ExtTools_tests.Text
       Assert.AreEqual(Environment.NewLine, sut.NewLine, "NewLine");
       Assert.IsFalse(sut.AutoDetectNewLine, "AutoDetectNewLine");
     }
+
+    #endregion
+
+    #region Методы
 
     [TestCase("ABC/DEF", "ABC\tDEF")]
     [TestCase("/ABC/DEF", "\tABC\tDEF")]
@@ -49,7 +55,7 @@ namespace ExtTools_tests.Text
       string[][] a2 = new string[a1.Length][];
       for (int i = 0; i < a1.Length; i++)
         a2[i] = a1[i].Split('/');
-      string[,] a3 = DataTools.ToArray2<string>(a2);
+      string[,] a3 = DataTools.MatrixFromRows<string>(a2);
 
       TabTextConvert sut = new TabTextConvert();
       Assert.AreEqual(wanted.Replace("|", Environment.NewLine), sut.ToString(a3));
@@ -68,6 +74,10 @@ namespace ExtTools_tests.Text
       return sut.ToArray(s);
     }
 
+    #endregion
+
+    #region Управляющие свойства
+
     [Test]
     public void NewLine()
     {
@@ -83,8 +93,8 @@ namespace ExtTools_tests.Text
       string res1 = sut.ToString(a);
       Assert.AreEqual("AAA\tBBB@CCC\tDDD@", res1, "ToString()");
 
-      string[,] res2 = sut.ToArray2("AAA\tBBB@CCC\tDDD@");
-      Assert.AreEqual(a, res2, "ToArray()");
+      string[,] res2 = sut.ToMatrix("AAA\tBBB@CCC\tDDD@");
+      Assert.AreEqual(a, res2, "ToMatrix()");
     }
 
     [Test]
@@ -93,8 +103,39 @@ namespace ExtTools_tests.Text
       TabTextConvert sut = new TabTextConvert();
       sut.AutoDetectNewLine = true;
 
-      string[,] res = sut.ToArray2("AAA,BBB\rCCC,DDD\r");
+      string[,] res = sut.ToMatrix("AAA,BBB\rCCC,DDD\r");
       Assert.AreEqual(2, res.GetLength(0));
     }
+
+    #endregion
+
+    #region Clone()
+
+    [Test]
+    public void Clone()
+    {
+      TabTextConvert sut = new TabTextConvert();
+      for (int i = 0; i <= 3; i++)
+      {
+        Clone_ModifySUT(sut, i);
+
+        TabTextConvert res = sut.Clone();
+
+        Assert.AreEqual(sut.AutoDetectNewLine, res.AutoDetectNewLine, "AutoDetectNewLine");
+        Assert.AreEqual(sut.NewLine, res.NewLine, "NewLine");
+      }
+    }
+
+    private static void Clone_ModifySUT(TabTextConvert sut, int i)
+    {
+      switch (i)
+      {
+        case 1: sut.AutoDetectNewLine = true; break;
+        case 2: sut.NewLine = "\r"; break;
+        case 3: sut.NewLine = "\n"; break;
+      }
+    }
+
+    #endregion
   }
 }

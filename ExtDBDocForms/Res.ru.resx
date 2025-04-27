@@ -879,7 +879,7 @@
   <data name="Common_Err_SingleDocRequired" xml:space="preserve">
     <value>Должен быть выбран единственный документ</value>
   </data>
-  <data name="DocTypeUI)_Msg_NoGroupDisplayName" xml:space="preserve">
+  <data name="DocTypeUI_Msg_NoGroupDisplayName" xml:space="preserve">
     <value>Документы без иерархии</value>
   </data>
   <data name="DocTypeUI_Msg_AllGroupsDisplayName" xml:space="preserve">
@@ -1325,5 +1325,11 @@
   <data name="UserPermissionUI_ToolTip_Image" xml:space="preserve">
     <value>{0}
 Класс разрешения: {1};</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_ExcludeNested" xml:space="preserve">
+    <value>Кроме выбранных документов и вложенных</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_IncludeNested" xml:space="preserve">
+    <value>Выбранные документы, включая вложенные</value>
   </data>
 </root>

@@ -16,7 +16,7 @@ namespace WinFormsDemo.TreeViewDemo
 {
   public partial class TreeViewResultForm : Form
   {
-    public TreeViewResultForm(ITreeModel model, bool showCheckBoxes)
+    public TreeViewResultForm(ITreeModel model, bool showCheckBoxes, bool fullRowSelect, bool hideSelection)
     {
       InitializeComponent();
 
@@ -27,6 +27,8 @@ namespace WinFormsDemo.TreeViewDemo
       EFPControlWithToolBar<TreeView> cwt1 = new EFPControlWithToolBar<TreeView>(efpForm, panel1);
       efp1 = new EFPTreeView(cwt1);
       efp1.Control.ImageList = EFPApp.MainImages.ImageList;
+      efp1.Control.FullRowSelect = fullRowSelect;
+      efp1.Control.HideSelection = hideSelection;
       InitLocalMenu(efp1);
       CreateTreeNodesFromModel(efp1.Control.Nodes, model);
 
@@ -38,6 +40,8 @@ namespace WinFormsDemo.TreeViewDemo
       efp2 = new EFPTreeViewAdv(cwt2);
       efp2.Control.UseColumns = false;
       efp2.CheckBoxStorage = new EFPTreeViewAdvCheckBoxStorage();
+      efp2.Control.FullRowSelect = fullRowSelect;
+      efp2.Control.HideSelection = hideSelection;
       InitLocalMenu(efp2);
       // Инициализация NodeStateIcon и NodeTextBox будет выполнена автоматически
       efp2.Control.Model = model;
@@ -85,6 +89,8 @@ namespace WinFormsDemo.TreeViewDemo
       efp3.Control.NodeControls.Add(cbHidden);
                       
       efp3.CheckBoxStorage = new EFPTreeViewAdvCheckBoxStorage();
+      efp3.Control.FullRowSelect = fullRowSelect;
+      efp3.Control.HideSelection = hideSelection;
       InitLocalMenu(efp3);
       efp3.Control.Model = model;
 
@@ -151,7 +157,7 @@ namespace WinFormsDemo.TreeViewDemo
     private static void CiCurrentPopupPosition_Click(object sender, EventArgs args)
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
-      IEFPTreeView efp = (EFPTreeView)(ci.Tag);
+      IEFPTreeView efp = (IEFPTreeView)(ci.Tag);
       TextInputDialog dlg = new TextInputDialog();
       dlg.Title = "CurrentPopupPosition";
       dlg.Text = "Тест";

@@ -1163,7 +1163,10 @@ namespace FreeLibSet.Data
       if (cfg == null)
         throw new ArgumentNullException("cfg");
 
-      cfg.Clear();
+      // Убрано 19.04.2025
+      // Метод может быть вызван для секции конфигурации, которая используется для хранения и других параметров отчета.
+      // Она не должна их затирать
+      // cfg.Clear();
 
       for (int i = 0; i < Count; i++)
       {

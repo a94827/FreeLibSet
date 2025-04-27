@@ -931,7 +931,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="isOk">true - нажатие кнопки "ОК", false - "Отмена"</param>
     /// <returns>true, если форма успешно закрыта. Возвращает false, если <paramref name="isOk"/>=true но проверка корректности введенных данных или
-    /// обработчик <see cref="Writing"/> отменили закрытие формы</returns>
+    /// обработчик <see cref="Writing"/> отменили закрытие формы.</returns>
     public bool CloseForm(bool isOk)
     {
       switch (FormState)
@@ -939,11 +939,12 @@ namespace FreeLibSet.Forms
         case ExtEditDialogState.Closed:
           return true;
         case ExtEditDialogState.Shown:
-          if (isOk)
+          if (isOk) // 20.04.2025
             _Form.OKButtonProvider.Control.PerformClick();
           else
-            _Form.CancelButtonProvider.Control.PerformClick();
-          return FormState == ExtEditDialogState.Closed;
+            _Form.FormProvider.CloseForm(DialogResult.Cancel); // 20.04.2025
+          //return FormState == ExtEditDialogState.Closed;
+          return !_Form.Visible; // 21.04.2025
         default:
           throw new InvalidOperationException(String.Format(Res.ExtEditDialogForm_Err_InvalidState, FormState.ToString()));
       }

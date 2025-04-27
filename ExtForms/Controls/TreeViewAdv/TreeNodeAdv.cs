@@ -12,8 +12,6 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-#pragma warning disable 1591
-
 namespace FreeLibSet.Controls
 {
   /// <summary>
@@ -244,6 +242,10 @@ namespace FreeLibSet.Controls
     }
     private bool _isLeaf;
 
+    /// <summary>
+    /// Свойство возвращает true, если узел был когда-то развернут, хотя сейчас он может быть и свернутым.
+    /// Если свойство возвращает false, то еще не было обращения к модели для получения дочерних узлов.
+    /// </summary>
     public bool IsExpandedOnce
     {
       get { return _isExpandedOnce; }
@@ -411,12 +413,31 @@ namespace FreeLibSet.Controls
     }
     private bool _isExpandingNow;
 
+    /// <summary>
+    /// Не понимаю, как использовать это свойство
+    /// </summary>
     public bool AutoExpandOnStructureChanged
     {
       get { return _autoExpandOnStructureChanged; }
       set { _autoExpandOnStructureChanged = value; }
     }
     private bool _autoExpandOnStructureChanged = false;
+
+    /// <summary>
+    /// Возвращает координаты прямоугольной области, занимаемые строкой узла.
+    /// Координаты задаются относительно клиентской области <see cref="TreeViewAdv"/>.
+    /// Если текущий узел не отображается в окне (не помещается или свернут), возвращается <see cref="System.Drawing.Rectangle.Empty"/>.
+    /// </summary>
+    public System.Drawing.Rectangle Bounds
+    {
+      get
+      {
+        if (_tree == null)
+          return System.Drawing.Rectangle.Empty;
+        else
+          return _tree.GetNodeBounds(this);
+      }
+    }
 
     #endregion
 
@@ -519,7 +540,7 @@ namespace FreeLibSet.Controls
 #if !NET
     [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 #endif
-    public void GetObjectData(SerializationInfo info, StreamingContext context)
+    void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
     {
       info.AddValue("IsExpanded", IsExpanded);
       info.AddValue("NodesCount", Nodes.Count);

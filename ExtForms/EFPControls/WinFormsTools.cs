@@ -2971,7 +2971,7 @@ namespace FreeLibSet.Forms
       {
         // Стандартный формат RFC-4180
         conv.FieldDelimiter = ',';
-        return conv.ToArray2(s);
+        return conv.ToMatrix(s);
       }
       catch
       {
@@ -2980,7 +2980,7 @@ namespace FreeLibSet.Forms
         if (ls.Length == 1 && ls != ",")
         {
           conv.FieldDelimiter = ls[0];
-          return conv.ToArray2(s);
+          return conv.ToMatrix(s);
         }
         else
           throw;
@@ -2989,13 +2989,13 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Возвращает текстовые данные из объекта <see cref="DataObject"/>, который получен из буфера обмена.
-    /// Проверяется только формат данных <see cref="DataFormats.Text"/>.
+    /// Проверяется только форматы данных <see cref="DataFormats.UnicodeText"/> и <see cref="DataFormats.Text"/>.
     /// В случае отсутствия данных возвращается null.
     /// Если данные имеют некорректный формат, выбрасывается исключение.
     /// </summary>
     /// <param name="dobj">Объект, полученный из буфера обмена</param>
     /// <returns>Матрица текста или null, если нет данных в подходящем формате</returns>
-    public static string[,] GetTextMatrixText(IDataObject dobj)
+    public static string GetText(IDataObject dobj)
     {
       if (dobj == null)
         return null;
@@ -3010,25 +3010,37 @@ namespace FreeLibSet.Forms
       if (obj == null)
         return null;
 
-      string s;
       if (obj is String)
-        s = (string)obj;
+        return (string)obj;
       else if (obj is Stream)
       {
         ((Stream)obj).Position = 0;
         StreamReader rdr = new StreamReader((Stream)obj, Encoding.Default);
-        s = rdr.ReadToEnd();
+        return rdr.ReadToEnd();
       }
       else
         throw new InvalidOperationException(String.Format(Res.Clipboard_Err_UnextpectedType,
           sFormat, obj.GetType().ToString()));
+    }
+
+    /// <summary>
+    /// Возвращает текстовые данные из объекта <see cref="DataObject"/>, который получен из буфера обмена.
+    /// Проверяется только форматы данных <see cref="DataFormats.UnicodeText"/> и <see cref="DataFormats.Text"/>.
+    /// В случае отсутствия данных возвращается null.
+    /// Если данные имеют некорректный формат, выбрасывается исключение.
+    /// </summary>
+    /// <param name="dobj">Объект, полученный из буфера обмена</param>
+    /// <returns>Матрица текста или null, если нет данных в подходящем формате</returns>
+    public static string[,] GetTextMatrixText(IDataObject dobj)
+    {
+      string s = GetText(dobj);
 
       if (String.IsNullOrEmpty(s))
         return null;
 
       TabTextConvert conv = new TabTextConvert();
       conv.AutoDetectNewLine = true;
-      return conv.ToArray2(s);
+      return conv.ToMatrix(s);
     }
 
     #endregion

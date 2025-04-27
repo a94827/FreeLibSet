@@ -16,6 +16,7 @@ using FreeLibSet.UICore;
 using FreeLibSet.Reporting;
 using FreeLibSet.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace FreeLibSet.Forms
 {
@@ -938,6 +939,7 @@ namespace FreeLibSet.Forms
         Control.KeyDown += new KeyEventHandler(Control_KeyDown);
         Control.ModelChanged += Control_ModelChanged;
         Control.SizeChanged += Control_SizeChanged;
+        Control.NodeControlContentClick += Control_NodeControlContentClick;
       }
       Control.UseColumns = true;
       UseIdle = true; // автоподбор размеров столбцов
@@ -1162,6 +1164,32 @@ namespace FreeLibSet.Forms
     void Control_ModelChanged(object sender, EventArgs args)
     {
       ResetDataReorderHelper();
+    }
+
+    #endregion
+
+
+    #region NodeControlClick
+
+    private void Control_NodeControlContentClick(object sender, TreeNodeAdvControlEventArgs args)
+    {
+      NodeLink linkControl = args.Control as NodeLink;
+      if (linkControl!=null)
+      {
+        BRValueWithLink value = linkControl.GetValue(args.Node) as BRValueWithLink;
+        if (value != null)
+        {
+          if (value.LinkData[0] != '#')
+          {
+            linkControl.SetLinkVisited(args.Node);
+
+            ProcessStartInfo psi = new ProcessStartInfo();
+            psi.FileName = value.LinkData;
+            psi.UseShellExecute = true;
+            Process.Start(psi);
+          }
+        }
+      }
     }
 
     #endregion

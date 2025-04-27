@@ -164,18 +164,23 @@
   <ItemGroup>
     <EmbeddedResource Include="DocInfoForm.ru.resx">
       <DependentUpon>DocInfoForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DocTableViewForm.ru.resx">
       <DependentUpon>DocTableViewForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DocTypeUserPermissionUI.ru.resx">
       <DependentUpon>DocTypeUserPermissionUI.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EditGroupDoc.ru.resx">
       <DependentUpon>EditGroupDoc.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EFPDBxTextSearchForm.ru.resx">
       <DependentUpon>EFPDBxTextSearchForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GroupGridFilterForm.resx">
       <SubType>Designer</SubType>
@@ -183,6 +188,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GroupGridFilterForm.ru.resx">
       <DependentUpon>GroupGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MainImagesResource.resx">
       <SubType>Designer</SubType>
@@ -191,12 +197,16 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RefDocGridFilterForm.ru.resx">
       <DependentUpon>RefDocGridFilterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Res.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Res.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Res.ru.resx" />
+    <EmbeddedResource Include="Res.ru.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="SubDocTableViewForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SubDocTableViewForm.cs</DependentUpon>
@@ -231,6 +241,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserActionsReportParamsForm.ru.resx">
       <DependentUpon>UserActionsReportParamsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

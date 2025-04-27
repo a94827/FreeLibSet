@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using FreeLibSet.Config;
 using FreeLibSet.Core;
+using System.Diagnostics;
 
 namespace FreeLibSet.Data.Docs
 {
@@ -115,9 +116,62 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Идентификаторы документов, если установлен фильтр <see cref="RefDocFilterMode.Include"/> или <see cref="RefDocFilterMode.Exclude"/>.
+    /// В список входят только непосредственно выбранные документы.
     /// </summary>
-    public IdList DocIds { get { return _DocIds; } }
+    public IdList SelectedDocIds { get { return _SelectedDocIds; } }
+    private IdList _SelectedDocIds;
+
+    /// <summary>
+    /// Идентификаторы документов, если установлен фильтр <see cref="RefDocFilterMode.Include"/> или <see cref="RefDocFilterMode.Exclude"/>.
+    /// Если вид документов поддерживает иерархию (установлено свойство <see cref="DBxDocTypeBase.TreeParentColumnName"/>), то в список входят как выбранные документы, так и все вложенные.
+    /// Если иерархия не поддерживается, то возвращается <see cref="SelectedDocIds"/>
+    /// </summary>
+    public IdList DocIds 
+    {
+      get
+      {
+        if (_DocIds == null)
+        {
+          if (SelectedDocIds == null)
+            return null;
+
+          if (String.IsNullOrEmpty(DocType.TreeParentColumnName))
+            _DocIds = SelectedDocIds;
+          else
+          {
+            IdList list = new IdList();
+            AddDocIds(list, SelectedDocIds); // рекурсивная процедура
+            list.SetReadOnly();
+            _DocIds = list;
+          }
+          Debug.Assert(_DocIds.Count >= _SelectedDocIds.Count);
+        }
+        return _DocIds;
+      }
+    }
     private IdList _DocIds;
+
+    private void AddDocIds(IdList list, IdList docIds)
+    {
+      IdList newList = new IdList();
+      foreach (Int32 docId in docIds)
+      {
+        if (list.Contains(docId))
+          continue;
+        newList.Add(docId);
+        list.Add(docId);
+      }
+
+      if (newList.Count == 0)
+        return; // нечего больше добавлять
+
+      List<DBxFilter> filters = new List<DBxFilter>();
+      filters.Add(new ValuesFilter(DocType.TreeParentColumnName, newList.ToArray()));
+      if (DocProvider.DocTypes.UseDeleted)
+        filters.Add(DBSDocType.DeletedFalseFilter);
+      IdList children = DocProvider.GetIds(DocType.Name, AndFilter.FromList(filters));
+      AddDocIds(list, children); // рекурсия
+    }
 
     /// <summary>
     /// Установить или очистить фильтр
@@ -163,8 +217,9 @@ namespace FreeLibSet.Data.Docs
           //if (DocIds.Count == 0)
           //  throw new ArgumentException("Не задан список идентификаторов для фильтра", "DocIds");
           _Mode = mode;
-          _DocIds = docIds;
-          _DocIds.SetReadOnly();
+          _SelectedDocIds = docIds;
+          _SelectedDocIds.SetReadOnly();
+          _DocIds = null;
           OnChanged();
           break;
         case RefDocFilterMode.NotNull:
@@ -172,6 +227,7 @@ namespace FreeLibSet.Data.Docs
           if (mode == _Mode)
             return;
           _Mode = mode;
+          _SelectedDocIds = null;
           _DocIds = null;
           OnChanged();
           break;
@@ -192,8 +248,8 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        if (_Mode == RefDocFilterMode.Include && _DocIds.Count == 1)
-          return _DocIds.SingleId;
+        if (_Mode == RefDocFilterMode.Include && _SelectedDocIds.Count == 1)
+          return _SelectedDocIds.SingleId;
         else
           return 0;
       }
@@ -229,6 +285,7 @@ namespace FreeLibSet.Data.Docs
       if (IsEmpty)
         return;
       _Mode = RefDocFilterMode.NoFilter;
+      _SelectedDocIds = null;
       _DocIds = null;
       OnChanged();
     }
@@ -263,15 +320,15 @@ namespace FreeLibSet.Data.Docs
         case RefDocFilterMode.NoFilter:
           return null;
         case RefDocFilterMode.Include:
-          if (_DocIds.Count == 0)
+          if (_SelectedDocIds.Count == 0)
             return DummyFilter.AlwaysFalse; // 24.07.2019
           else
-            return new IdsFilter(ColumnName, _DocIds);
+            return new IdsFilter(ColumnName, DocIds);
         case RefDocFilterMode.Exclude:
-          if (_DocIds.Count == 0)
+          if (_SelectedDocIds.Count == 0)
             return null; // 24.07.2019
           else
-            return new NotFilter(new IdsFilter(ColumnName, _DocIds));
+            return new NotFilter(new IdsFilter(ColumnName, DocIds));
         case RefDocFilterMode.NotNull:
           return new NotNullFilter(ColumnName, typeof(Int32));
         case RefDocFilterMode.Null:
@@ -299,8 +356,8 @@ namespace FreeLibSet.Data.Docs
     public override void WriteConfig(CfgPart config)
     {
       config.SetEnum("Mode", Mode);
-      if (DocIds != null)
-        config.SetString("Ids", StdConvert.ToString(_DocIds.ToArray()));
+      if (SelectedDocIds != null)
+        config.SetString("Ids", StdConvert.ToString(SelectedDocIds.ToArray()));
       else
         config.Remove("Ids");
     }

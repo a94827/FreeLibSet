@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FreeLibSet.Collections;
 using FreeLibSet.Core;
+using FreeLibSet.Text;
 
 namespace FreeLibSet.Forms
 {
@@ -119,6 +120,38 @@ namespace FreeLibSet.Forms
   /// <param name="args">Аргументы события</param>
   public delegate void EFPPasteDataObjectEventHandler(object sender, EFPPasteDataObjectEventArgs args);
 
+  #region EFPTestDataObjectResult
+
+  /// <summary>
+  /// Результаты тестирования данных в буфере обмена
+  /// </summary>
+  public enum EFPTestDataObjectResult
+  {
+    /// <summary>
+    /// В буфере обмена нет данных в подходящем формате
+    /// </summary>
+    NoData,
+
+    /// <summary>
+    /// В буфере обмена есть данные, которые можно вставить
+    /// </summary>
+    Ok,
+
+    /// <summary>
+    /// В буфере обмена есть даные в проверяемом формате, но они содержат ошибки.
+    /// Например, в буфере есть текст, но его нельзя преобразовать в прямоугольный блок.
+    /// </summary>
+    FormatError,
+
+    /// <summary>
+    /// В буфере обмена есть даные в проверяемом формате, но они не могут быть вставлены.
+    /// Например, в буфере есть текст, но его нельзя преобразовать в число.
+    /// </summary>
+    ApplyError,
+  }
+
+  #endregion
+
   /// <summary>
   /// Аргументы события <see cref="EFPPasteFormat.TestFormat"/>
   /// </summary>
@@ -137,18 +170,36 @@ namespace FreeLibSet.Forms
     public EFPTestDataObjectEventArgs(EFPPasteFormat pasteFormat, IDataObject data, EFPPasteReason reason, string actionCode)
       : base(pasteFormat, data, reason, actionCode)
     {
+      _Result = EFPTestDataObjectResult.NoData;
     }
 
     #endregion
 
     #region Свойства
 
+    ///// <summary>
+    ///// Сюда обработчиком события должно быть помещено значение true, если формат применим и false,
+    ///// если данные отсутствуют или не подходят.
+    ///// </summary>
+    //public bool Appliable { get { return _Appliable; } set { _Appliable = value; } }
+    //private bool _Appliable;
+
     /// <summary>
-    /// Сюда обработчиком события должно быть помещено значение true, если формат применим и false,
-    /// если данные отсутствуют или не подходят.
+    /// Результаты тестирования данных.
+    /// По умолчанию - <see cref="EFPTestDataObjectResult.NoData"/>.
     /// </summary>
-    public bool Appliable { get { return _Appliable; } set { _Appliable = value; } }
-    private bool _Appliable;
+    public EFPTestDataObjectResult Result { get { return _Result; } set { _Result = value; } }
+    private EFPTestDataObjectResult _Result;
+
+    /// <summary>
+    /// Дублирует свойство <see cref="Result"/>.
+    /// Сохранено для совместимости.
+    /// </summary>
+    public bool Appliable
+    {
+      get { return Result == EFPTestDataObjectResult.Ok; }
+      set { Result = value ? EFPTestDataObjectResult.Ok : EFPTestDataObjectResult.ApplyError; }
+    }
 
     /// <summary>
     /// Сюда может быть помещен текст сообщения, почему данные не подходят или
@@ -482,7 +533,7 @@ namespace FreeLibSet.Forms
                          // Но если она свернута, то после такого запроса ее нельзя восстановить с помощью мыши.
           }
         }
-        
+
         return Clipboard.GetDataObject();
       }
       catch
@@ -682,7 +733,12 @@ namespace FreeLibSet.Forms
         else
         {
           if (dataInfoText != null)
-            EFPApp.ShowTempMessage(dataInfoText);
+          {
+            if (reason == EFPPasteReason.PasteSpecial)
+              EFPApp.ErrorMessageBox(dataInfoText, EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_PasteSpecial));
+            else
+              EFPApp.ShowTempMessage(dataInfoText);
+          }
         }
       }
       finally
@@ -723,7 +779,7 @@ namespace FreeLibSet.Forms
           {
             EFPTestDataObjectEventArgs args = new EFPTestDataObjectEventArgs(this[i], data, reason, actionCode);
             DoTestFormat(args);
-            if (args.Appliable)
+            if (args.Result == EFPTestDataObjectResult.Ok)
             {
               DoPaste(args);
               return true;
@@ -742,8 +798,7 @@ namespace FreeLibSet.Forms
           List<string> goodActionCodes = new List<string>();
           List<bool> goodValidFlags = new List<bool>();
           int selIdx = 0;
-          string firstErrorMessage = null;
-          bool errorMessagesAreDiff = false;
+          ErrorMessageList errors = new ErrorMessageList();
           for (int i = 0; i < Count; i++)
           {
             if (this[i].HasActions)
@@ -752,22 +807,19 @@ namespace FreeLibSet.Forms
               {
                 EFPTestDataObjectEventArgs args = new EFPTestDataObjectEventArgs(this[i], data, reason, action.Code);
                 DoTestFormat(args);
-                if (args.Appliable || PasteSpecialDebugMode)
+                if (args.Result != EFPTestDataObjectResult.NoData || PasteSpecialDebugMode)
                 {
                   goodNames.Add(action.DisplayName + " - " + args.DataInfoText);
                   goodImageKeys.Add(action.ImageKey);
                   goodFormats.Add(this[i]);
                   goodActionCodes.Add(action.Code);
-                  goodValidFlags.Add(args.Appliable);
+                  goodValidFlags.Add(args.Result != EFPTestDataObjectResult.NoData);
                   if (this[i].DisplayName == _LastSpecialPasteName)
                     selIdx = goodNames.Count - 1;
                 }
                 else
                 {
-                  if (firstErrorMessage == null)
-                    firstErrorMessage = args.DataInfoText;
-                  else if (!String.Equals(args.DataInfoText, firstErrorMessage, StringComparison.Ordinal))
-                    errorMessagesAreDiff = true;
+                  errors.AddError(String.Format(Res.EFPPasteFormat_Err_FormatError, action.DisplayName, args.DataInfoText));
                 }
               }
             }
@@ -775,33 +827,27 @@ namespace FreeLibSet.Forms
             {
               EFPTestDataObjectEventArgs args = new EFPTestDataObjectEventArgs(this[i], data, reason, actionCode);
               DoTestFormat(args);
-              if (args.Appliable || PasteSpecialDebugMode)
+              if (args.Result != EFPTestDataObjectResult.NoData || PasteSpecialDebugMode)
               {
                 string name = args.DataInfoText;
                 goodNames.Add(name);
                 goodImageKeys.Add(args.DataImageKey);
                 goodFormats.Add(this[i]);
                 goodActionCodes.Add(String.Empty);
-                goodValidFlags.Add(args.Appliable);
+                goodValidFlags.Add(args.Result != EFPTestDataObjectResult.NoData);
                 if (this[i].DisplayName == _LastSpecialPasteName)
                   selIdx = goodNames.Count - 1;
               }
               else
               {
-                if (firstErrorMessage == null)
-                  firstErrorMessage = args.DataInfoText;
-                else if (!String.Equals(args.DataInfoText, firstErrorMessage, StringComparison.Ordinal))
-                  errorMessagesAreDiff = true;
+                errors.AddError(String.Format(Res.EFPPasteFormat_Err_FormatError, this[i].DisplayName, args.DataInfoText));
               }
             }
           }
+
           if (goodNames.Count == 0)
           {
-            // 11.06.2024 
-            if (errorMessagesAreDiff)
-              dataInfoText = String.Format(Res.EFPPasteFormat_Err_NoGoodFormat, firstErrorMessage);
-            else
-              dataInfoText = firstErrorMessage;
+            EFPApp.ShowErrorMessageListDialog(errors, EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_PasteSpecial));
             return false;
           }
 
@@ -1043,8 +1089,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Это событие вызывается для проверки, содержит ли буфер обмена данные
     /// в подходящем формате.
-    /// Обрабочик события должен установить свойство <see cref="EFPTestDataObjectEventArgs.Appliable"/>=true,
-    /// если есть подходящие данные.
+    /// Обрабочик события должен установить свойство <see cref="EFPTestDataObjectEventArgs.Result"/>.
     /// Когда выполняется обычная вставка, будет использован первый в списке описатель формата, который сообщил, что данные подходят.
     /// </summary>
     public event EFPTestDataObjectEventHandler TestFormat;
@@ -1065,7 +1110,7 @@ namespace FreeLibSet.Forms
       PerformTestFormat(args);
       dataInfoText = args.DataInfoText;
       dataImageKey = args.DataImageKey;
-      return args.Appliable;
+      return args.Result == EFPTestDataObjectResult.Ok;
     }
 
     /// <summary>
@@ -1080,7 +1125,7 @@ namespace FreeLibSet.Forms
         {
           args.DataInfoText = Res.Clipboard_Err_Empty;
           args.DataImageKey = "No";
-          args.Appliable = false;
+          args.Result = EFPTestDataObjectResult.NoData;
         }
         else
         {
@@ -1090,7 +1135,7 @@ namespace FreeLibSet.Forms
             {
               args.DataInfoText = String.Format(Res.EFPPasteFormat_Err_ActionCode, args.ActionCode);
               args.DataImageKey = "No";
-              args.Appliable = false;
+              args.Result = EFPTestDataObjectResult.ApplyError;
               return;
             }
           }
@@ -1098,13 +1143,26 @@ namespace FreeLibSet.Forms
           args.DataInfoText = DisplayName;
           args.DataImageKey = "Item";
           OnTestFormat(args);
-          if ((!args.Appliable) && (String.IsNullOrEmpty(args.DataInfoText)))
-            args.DataInfoText = Res.EFPPasteFormat_Err_FormatNotAppliable;
+          if (String.IsNullOrEmpty(args.DataInfoText))
+          {
+            switch (args.Result)
+            {
+              case EFPTestDataObjectResult.ApplyError:
+                args.DataInfoText = Res.EFPPasteFormat_Err_FormatNotAppliable;
+                break;
+              case EFPTestDataObjectResult.Ok:
+                args.DataInfoText = DisplayName;
+                break;
+              default:
+                args.DataInfoText = args.Result.ToString();
+                break;
+            }
+          }
         }
       }
       catch (Exception e)
       {
-        args.Appliable = false;
+        args.Result = EFPTestDataObjectResult.FormatError;
         args.DataInfoText = String.Format(Res.EFPPasteFormat_Err_TestError, e.Message);
         args.DataImageKey = "Error";
       }
@@ -1118,9 +1176,11 @@ namespace FreeLibSet.Forms
     /// <param name="args">Аргументы события</param>
     protected virtual void OnTestFormat(EFPTestDataObjectEventArgs args)
     {
-      args.Appliable = args.Data.GetDataPresent(DataFormat, AutoConvert);
-      if (!args.Appliable)
+      if (args.Data.GetDataPresent(DataFormat, AutoConvert))
+        args.Result = EFPTestDataObjectResult.Ok;
+      else
       {
+        args.Result = EFPTestDataObjectResult.NoData;
         args.DataInfoText = String.Format(Res.Clipboard_Err_NoDataFormat, DisplayName);
         args.DataImageKey = "No";
         return;
@@ -1412,6 +1472,8 @@ namespace FreeLibSet.Forms
         DisplayName = Res.EFPPasteTextMatrixFormat_Name_Csv;
       else
         DisplayName = Res.EFPPasteTextMatrixFormat_Name_Text;
+
+      _SingleLineSeparators = DataTools.EmptyStrings;
     }
 
     #endregion
@@ -1435,6 +1497,8 @@ namespace FreeLibSet.Forms
 
     #region Переопределенные методы
 
+    private string _UsedSeparator;
+
     /// <summary>
     /// Выполняет проверку наличия подходящего текста (формат Text или CSV, в зависимости от свойства <see cref="IsCSV"/>) в буфере обмена.
     /// Если все в порядке, то устанавливает свойство <see cref="TextMatrix"/>.
@@ -1445,19 +1509,26 @@ namespace FreeLibSet.Forms
     {
 
       _TextMatrix = null;
-
+      _UsedSeparator = null;
       try
       {
         if (IsCSV)
           _TextMatrix = WinFormsTools.GetTextMatrixCsv(args.Data);
         else
-          _TextMatrix = WinFormsTools.GetTextMatrixText(args.Data);
+        {
+          //_TextMatrix = WinFormsTools.GetTextMatrixText(args.Data);
+          string s = WinFormsTools.GetText(args.Data);
+          if (!String.IsNullOrEmpty(s))
+          {
+            _TextMatrix = ConvertTextToTextMatrix(s);
+          }
+        }
       }
       catch (Exception e)
       {
         args.DataInfoText = String.Format(Res.EFPPasteTextMatrixFormat_Err_ToMatrix, e.Message);
         args.DataImageKey = "Error";
-        args.Appliable = false;
+        args.Result = EFPTestDataObjectResult.FormatError;
         return;
       }
 
@@ -1465,11 +1536,11 @@ namespace FreeLibSet.Forms
       {
         args.DataInfoText = String.Format(Res.Clipboard_Err_NoDataFormat, DisplayName);
         args.DataImageKey = "No";
-        args.Appliable = false;
+        args.Result = EFPTestDataObjectResult.NoData;
         return;
       }
 
-      args.Appliable = true;
+      args.Result = EFPTestDataObjectResult.Ok;
       if (_TextMatrix.GetLength(0) == 1 && _TextMatrix.GetLength(1) == 1)
       {
         args.DataInfoText = DisplayName;
@@ -1478,10 +1549,66 @@ namespace FreeLibSet.Forms
       else
       {
         args.DataInfoText = DisplayName + " (" + _TextMatrix.GetLength(0).ToString() + " x " + _TextMatrix.GetLength(1).ToString() + ")";
+        if (!String.IsNullOrEmpty(_UsedSeparator))
+          args.DataInfoText = String.Format(Res.EFPPasteTextMatrixFormat_Name_WithLineSeparator, args.DataInfoText, _UsedSeparator);
         args.DataImageKey = "Table";
       }
 
       base.OnTestFormatEvent(args);
+    }
+
+    /// <summary>
+    /// Альтернативные разделители строк.
+    /// Используются, если в буфере обмена хранится единственная строка текста и в ней нет символов табуляции.
+    /// Сепараторы просматриваются по очереди и используется первый обнаруженный из них.
+    /// Если сепаратор найден, на выходе получается матрица из одного столбца.
+    /// По умолчанию массив пустой.
+    /// </summary>
+    public string[] SingleLineSeparators
+    {
+      get { return _SingleLineSeparators; }
+      set
+      {
+        if (value == null)
+          _SingleLineSeparators = DataTools.EmptyStrings;
+        else
+          _SingleLineSeparators = value;
+      }
+    }
+    private string[] _SingleLineSeparators;
+
+    /// <summary>
+    /// Преобразование строки текста в текстовую матрицу.
+    /// Вызывается при <see cref="IsCSV"/>=false, когда в буфере обмена есть непустая строка текста.
+    /// Непереопределенный метод использует <see cref="TabTextConvert"/> для преобразования.
+    /// Если получена матрица из одной ячейки, используется свойство <see cref="SingleLineSeparators"/> для
+    /// преобразование в одноколоночную матрицу.
+    ///
+    /// Не используется при <see cref="IsCSV"/>=true.
+    /// </summary>
+    /// <param name="s">Строка из буфера обмена</param>
+    /// <returns>Матрица или null, если преобразование не удалось</returns>
+    protected virtual string[,] ConvertTextToTextMatrix(string s)
+    {
+      TabTextConvert conv = new TabTextConvert();
+      conv.AutoDetectNewLine = true;
+      string[,] matrix = conv.ToMatrix(s); // не может быть null.
+      if (matrix.GetLength(0) == 1 && matrix.GetLength(1) == 1 && _SingleLineSeparators.Length > 0)
+      {
+        // Используем строку из матрицы, а не исходную строку, так как в конце строки могли быть символы
+        // новой строки, которые были убраны TabTextConvert.
+        s = matrix[0, 0];
+        for (int i = 0; i < SingleLineSeparators.Length; i++)
+        {
+          if (s.Contains(SingleLineSeparators[i]))
+          {
+            _UsedSeparator = SingleLineSeparators[i];
+            string[] a = s.Split(new string[1] { SingleLineSeparators[i] }, StringSplitOptions.None);
+            matrix = DataTools.MatrixFromColumns<string>(a);
+          }
+        }
+      }
+      return matrix;
     }
 
     /// <summary>
@@ -1506,19 +1633,24 @@ namespace FreeLibSet.Forms
 
       OKCancelGridForm frm = new OKCancelGridForm();
       frm.Text = PreviewTitle;
-      frm.Control.RowCount = TextMatrix.GetLength(0);
-      frm.Control.ColumnCount = TextMatrix.GetLength(1);
-      for (int i = 0; i < TextMatrix.GetLength(0); i++)
-      {
-        for (int j = 0; j < TextMatrix.GetLength(1); j++)
-          frm.Control[j, i].Value = TextMatrix[i, j];
-      }
-      for (int j = 0; j < TextMatrix.GetLength(1); j++)
-        frm.Control.Columns[j].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-      frm.Control.ReadOnly = true;
+      InitPreviewGrid(frm.Control, TextMatrix);
 
       args.Cancel = EFPApp.ShowDialog(frm, true) != DialogResult.OK;
+    }
+
+    private static void InitPreviewGrid(DataGridView control, string[,] textMatrix)
+    {
+      control.RowCount = textMatrix.GetLength(0);
+      control.ColumnCount = textMatrix.GetLength(1);
+      for (int i = 0; i < textMatrix.GetLength(0); i++)
+      {
+        for (int j = 0; j < textMatrix.GetLength(1); j++)
+          control[j, i].Value = textMatrix[i, j];
+      }
+      for (int j = 0; j < textMatrix.GetLength(1); j++)
+        control.Columns[j].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+      control.ReadOnly = true;
     }
 
     #endregion

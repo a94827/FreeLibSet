@@ -183,8 +183,34 @@ namespace FreeLibSet.Controls
     {
       //TODO: Disable when click on plusminus icon
       TreeNodeAdvMouseEventArgs args = CreateMouseArgs(e);
-      if (args.Node != null)
-        OnNodeMouseClick(args);
+      if (args.Node != null && args.Control != null)
+        args.Control.MouseClick(args); // 22.04.2025
+
+      if (!args.Handled)
+      {
+        if (args.Node != null)
+        {
+          OnNodeMouseClick(args);
+
+          if (!args.Handled && args.Button == MouseButtons.Left && args.ModifierKeys == Keys.None)
+          {
+            TreeNodeAdvControlEventArgs args2 = new TreeNodeAdvControlEventArgs(args.Node, args.Control);
+            //OnNodeControlClick(args2);
+
+            foreach (NodeControlInfo nci in GetNodeControls(args.Node))
+            {
+              if (Object.ReferenceEquals(nci.Control, args.Control))
+              {
+                _measureContext.Bounds = new Rectangle(nci.Bounds.X, nci.Bounds.Y + ColumnHeaderHeight, nci.Bounds.Width, nci.Bounds.Height);
+                Rectangle bounds = args.Control.GetBounds(args.Node, _measureContext);
+                if (bounds.Contains(e.Location))
+                  OnNodeControlContentClick(args2);
+                break;
+              }
+            }
+          }
+        }
+      }
 
       base.OnMouseClick(e);
     }
@@ -272,6 +298,18 @@ namespace FreeLibSet.Controls
       {
         _hotColumn = col;
         UpdateHeaders();
+      }
+
+      if (_innerCursor == null)
+      {
+        NodeControlInfo nci = GetNodeControlInfoAt(e.Location);
+        if (nci.Control != null)
+        {
+          _measureContext.Bounds = new Rectangle( nci.Bounds.X, nci.Bounds.Y+ColumnHeaderHeight, nci.Bounds.Width, nci.Bounds.Height);
+          Rectangle bounds = nci.Control.GetBounds(nci.Node, _measureContext);
+          if (bounds.Contains(e.Location))
+            _innerCursor = nci.Control.GetCursor(nci.Node);
+        }
       }
     }
 

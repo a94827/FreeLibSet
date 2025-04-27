@@ -11,19 +11,27 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
-#pragma warning disable 1591
-
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
+  /// <summary>
+  /// Аргументы события <see cref="NodeComboBox.CreatingEditor"/>
+  /// </summary>
   public class EditEventArgs : NodeEventArgs
   {
-
+    /// <summary>
+    /// Используется <see cref="TreeViewAdv"/>
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="control"></param>
     public EditEventArgs(TreeNodeAdv node, Control control)
       : base(node)
     {
       _control = control;
     }
 
+    /// <summary>
+    /// Управляющий элемент редактора
+    /// </summary>
     public Control Control
     {
       get { return _control; }

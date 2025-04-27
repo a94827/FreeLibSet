@@ -129,7 +129,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       _parent = parent;
     }
 
-    protected virtual Rectangle GetBounds(TreeNodeAdv node, TreeViewAdvDrawContext context)
+    internal protected virtual Rectangle GetBounds(TreeNodeAdv node, TreeViewAdvDrawContext context)
     {
       Rectangle r = context.Bounds;
       Size s = GetActualSize(node, context);
@@ -205,6 +205,10 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     {
     }
 
+    public virtual void MouseClick(TreeNodeAdvMouseEventArgs args) // 22.04.2025
+    {
+    }
+
     public virtual void MouseDoubleClick(TreeNodeAdvMouseEventArgs args)
     {
     }
@@ -222,6 +226,11 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     /// Событие вызывается методом <see cref="IsVisible(TreeNodeAdv)"/>.
     /// </summary>
     public event EventHandler<NodeControlValueEventArgs> IsVisibleValueNeeded;
+
+    internal virtual Cursor GetCursor(TreeNodeAdv node)
+    {
+      return null;
+    }
 
     /// <summary>
     /// Вызывает событие <see cref="IsVisibleValueNeeded"/>.

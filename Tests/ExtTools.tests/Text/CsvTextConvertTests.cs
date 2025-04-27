@@ -10,6 +10,8 @@ namespace ExtTools_tests.Text
   [TestFixture]
   public class CsvTextConvertTests
   {
+    #region Конструктор
+
     [Test]
     public void Constructor()
     {
@@ -20,6 +22,10 @@ namespace ExtTools_tests.Text
       Assert.AreEqual('\"', sut.Quote, "Quote");
       Assert.IsFalse(sut.AlwaysQuote, "AlwaysQuote");
     }
+
+    #endregion
+
+    #region Методы
 
     [TestCase("ABC/DEF", "ABC,DEF")]
     [TestCase("/ABC/DEF", ",ABC,DEF")]
@@ -53,7 +59,7 @@ namespace ExtTools_tests.Text
       string[][] a2 = new string[a1.Length][];
       for (int i = 0; i < a1.Length; i++)
         a2[i] = a1[i].Split('/');
-      string[,] a3 = DataTools.ToArray2<string>(a2);
+      string[,] a3 = DataTools.MatrixFromRows<string>(a2);
 
       CsvTextConvert sut = new CsvTextConvert();
       Assert.AreEqual(wanted.Replace("|", Environment.NewLine), sut.ToString(a3));
@@ -77,6 +83,10 @@ namespace ExtTools_tests.Text
 
       return sut.ToArray(s);
     }
+
+    #endregion
+
+    #region Управляющие свойства
 
     [Test]
     public void FieldDelimiter()
@@ -129,8 +139,8 @@ namespace ExtTools_tests.Text
       string res1 = sut.ToString(a);
       Assert.AreEqual("AAA,BBB@CCC,DDD@", res1, "ToString()");
 
-      string[,] res2 = sut.ToArray2("AAA,BBB@CCC,DDD@");
-      Assert.AreEqual(a, res2, "ToArray()");
+      string[,] res2 = sut.ToMatrix("AAA,BBB@CCC,DDD@");
+      Assert.AreEqual(a, res2, "ToMatrix()");
     }
 
     [Test]
@@ -139,8 +149,45 @@ namespace ExtTools_tests.Text
       CsvTextConvert sut = new CsvTextConvert();
       sut.AutoDetectNewLine = true;
 
-      string[,] res = sut.ToArray2("AAA,BBB\rCCC,DDD\r");
+      string[,] res = sut.ToMatrix("AAA,BBB\rCCC,DDD\r");
       Assert.AreEqual(2, res.GetLength(0));
     }
+
+    #endregion
+
+    #region Clone()
+
+    [Test]
+    public void Clone()
+    {
+      CsvTextConvert sut = new CsvTextConvert();
+      for (int i = 0; i <= 6; i++)
+      {
+        Clone_ModifySUT(sut, i);
+
+        CsvTextConvert res = sut.Clone();
+
+        Assert.AreEqual(sut.AlwaysQuote, res.AlwaysQuote, "AlwaysQuote");
+        Assert.AreEqual(sut.Quote, res.Quote, "Quote");
+        Assert.AreEqual(sut.FieldDelimiter, res.FieldDelimiter, "FieldDelimiter");
+        Assert.AreEqual(sut.AutoDetectNewLine, res.AutoDetectNewLine, "AutoDetectNewLine");
+        Assert.AreEqual(sut.NewLine, res.NewLine, "NewLine");
+      }
+    }
+
+    private static void Clone_ModifySUT(CsvTextConvert sut, int i)
+    {
+      switch (i)
+      {
+        case 1: sut.AlwaysQuote = true;break;
+        case 2: sut.Quote = '\'';break;
+        case 3: sut.FieldDelimiter = ';';break;
+        case 4: sut.AutoDetectNewLine = true;break;
+        case 5: sut.NewLine = "\r"; break;
+        case 6: sut.NewLine = "\n"; break;
+      }
+    }
+
+    #endregion
   }
 }

@@ -34,8 +34,16 @@ namespace FreeLibSet.Forms.Docs
 
       List<string> modeNames = new List<string>();
       modeNames.Add(Res.RefDocFilterMode_Msg_NoFilter);
-      modeNames.Add(Res.RefDocFilterMode_Msg_Include);
-      modeNames.Add(Res.RefDocFilterMode_Msg_Exclude);
+      if (String.IsNullOrEmpty(docTypeUI.DocType.TreeParentColumnName))
+      {
+        modeNames.Add(Res.RefDocFilterMode_Msg_Include);
+        modeNames.Add(Res.RefDocFilterMode_Msg_Exclude);
+      }
+      else
+      {
+        modeNames.Add(Res.RefDocFilterMode_Msg_IncludeNested);
+        modeNames.Add(Res.RefDocFilterMode_Msg_ExcludeNested);
+      }
       if (nullable)
       {
         modeNames.Add(Res.RefDocFilterMode_Msg_NotNull);
@@ -367,8 +375,8 @@ namespace FreeLibSet.Forms.Docs
           }
           else
           {
-            List<string> lst = new List<string>(DocIds.Count);
-            foreach (Int32 id in DocIds)
+            List<string> lst = new List<string>(SelectedDocIds.Count);
+            foreach (Int32 id in SelectedDocIds)
             {
               string s = UI.TextHandlers.GetTextValue(DocTypeName, id);
               if (UI.DebugShowIds)
@@ -446,8 +454,8 @@ namespace FreeLibSet.Forms.Docs
     {
       RefDocFilterMode mode = base.Mode;
       Int32[] ids = null;
-      if (base.DocIds != null)
-        ids = base.DocIds.ToArray();
+      if (base.SelectedDocIds != null)
+        ids = base.SelectedDocIds.ToArray();
 
       bool res = RefDocGridFilterForm.PerformEdit(DisplayName, UI.DocTypes[DocTypeName], Nullable, ref mode, ref ids, DocFilters, dialogPosition, EmptyEditMode);
       if (res)

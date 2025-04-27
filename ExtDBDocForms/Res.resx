@@ -1327,4 +1327,10 @@ Parameter 'Single document type' is ignored.</value>
     <value>{0}
 Permission class: {1};</value>
   </data>
+  <data name="RefDocFilterMode_Msg_ExcludeNested" xml:space="preserve">
+    <value>Except selected documents and nedted</value>
+  </data>
+  <data name="RefDocFilterMode_Msg_IncludeNested" xml:space="preserve">
+    <value>Selected documents and nested</value>
+  </data>
 </root>

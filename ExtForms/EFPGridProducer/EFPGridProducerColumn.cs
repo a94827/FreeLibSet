@@ -2541,6 +2541,27 @@ namespace FreeLibSet.Forms
       return column;
     }
 
+
+    ///// <summary>
+    ///// Создает присоединяемый элемент для столбца <see cref="TreeViewAdv"/>.
+    ///// Непереопределенный метод возвращает <see cref="NodeTextBox"/>.
+    ///// </summary>
+    ///// <returns>Присоединяемый элемент</returns>
+    /// <summary>
+    /// Создает столбец <see cref="EFPDataGridViewColumn"/> и добавляет его в табличный просмотр.
+    /// </summary>
+    /// <param name="controlProvider">Провайдер заполняемого табличного просмотра</param>
+    /// <returns>Объект провайдера столбца, производный от <see cref="EFPDataGridViewColumn"/></returns>
+    public override EFPDataTreeViewColumn CreateTreeColumn(EFPDataTreeView controlProvider)
+    {
+      controlProvider.Columns.AddLink(Name, false, HeaderText, TextWidth, MinTextWidth);
+
+      EFPDataTreeViewColumn column = controlProvider.Columns.LastAdded;
+      InitTreeColumn(column);
+      return column;
+    }
+
+
     #endregion
   }
 

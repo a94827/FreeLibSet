@@ -18,7 +18,7 @@ namespace FreeLibSet.Text
   /// Исключение: свойство NewLine
   /// Класс не является потокобезопасным, т.к. может использовать внутренние поля в процессе преобразования
   /// </summary>
-  public class CsvTextConvert: ITextConvert
+  public class CsvTextConvert: ITextConvert, ICloneable
   {
     #region Конструктор
 
@@ -72,7 +72,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Нужно ли автоматически определять символы новой строки при преобразовании строки CSV в двумерный массив.
     /// По умолчанию - false - используется текущее значение свойства <see cref="NewLine"/>.
-    /// Если установить в true, то свойство <see cref="NewLine"/> получит новое значение при вызове <see cref="ToArray2Internal(string[], bool)"/>.
+    /// Если установить в true, то свойство <see cref="NewLine"/> получит новое значение при вызове <see cref="ToMatrixInternal(string[], bool)"/>.
     /// </summary>
     public bool AutoDetectNewLine
     {
@@ -288,7 +288,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Преобразование строки, содержащей значения, разделенные запятыми или другим разделителем, например, табуляцией.
     /// Строка не должна содержать символов переноса строки (вне поля в кавычках). Если строка может
-    /// содержать несколько строк, используйте <see cref="ToArray2(string)"/> для преобразования в двумерный массив.
+    /// содержать несколько строк, используйте <see cref="ToMatrix(string)"/> для преобразования в двумерный массив.
     /// Концевые пробелы отбрасываются. Также отбрасываются пробелы слева и справа
     /// от каждого разделителя (если они не внутри кавычек). 
     /// Если строка пустая или не содержит ничего, кроме пробелов, то возвращается null.
@@ -445,7 +445,7 @@ namespace FreeLibSet.Text
     /// </summary>
     /// <param name="s">Строка в формате CSV</param>
     /// <returns>Двумерный массив строк</returns>
-    public string[,] ToArray2(string s)
+    public string[,] ToMatrix(string s)
     {
       if (String.IsNullOrEmpty(s))
         return null;
@@ -465,17 +465,17 @@ namespace FreeLibSet.Text
 
       try
       {
-        a2 = ToArray2Internal(a1, false);
+        a2 = ToMatrixInternal(a1, false);
       }
       catch
       {
-        a2 = ToArray2Internal(a1, true);
+        a2 = ToMatrixInternal(a1, true);
       }
 
       return a2;
     }
 
-    private string[,] ToArray2Internal(string[] a1, bool isSimple)
+    private string[,] ToMatrixInternal(string[] a1, bool isSimple)
     {
       string[][] a3 = new string[a1.Length][];
       for (int i = 0; i < a1.Length; i++)
@@ -492,7 +492,7 @@ namespace FreeLibSet.Text
           throw new ParsingException(String.Format(Res.CsvTextConvert_Err_WithLineNumber, i + 1, e.Message));
         }
       }
-      return DataTools.ToArray2<string>(a3);
+      return DataTools.MatrixFromRows<string>(a3);
     }
 
     private string[] SimpleToArray(string s)
@@ -506,13 +506,37 @@ namespace FreeLibSet.Text
     #endregion
 
     #endregion
+
+    #region ICloneable
+
+    /// <summary>
+    /// Создает копию конвертера с такими же управляющими свойствами
+    /// </summary>
+    /// <returns>Копия конвертера</returns>
+    public CsvTextConvert Clone()
+    {
+      CsvTextConvert res = new CsvTextConvert();
+      res.NewLine = NewLine;
+      res.AutoDetectNewLine = AutoDetectNewLine;
+      res.AlwaysQuote = AlwaysQuote;
+      res.Quote = Quote;
+      res.FieldDelimiter = FieldDelimiter;
+      return res;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
+    }
+
+    #endregion
   }
 
 #if XXX // Не реализовано
 
   public struct CsvTextFieldData
   {
-    #region Конструктор
+  #region Конструктор
 
     public CsvTextFieldData(string value, string separator)
     {
@@ -520,9 +544,9 @@ namespace FreeLibSet.Text
       _Separator = separator;
     }
 
-    #endregion
+  #endregion
 
-    #region Свойства
+  #region Свойства
 
     /// <summary>
     /// Значение очередного поля
@@ -538,7 +562,7 @@ namespace FreeLibSet.Text
     public string Separator { get { return _Separator; } }
     private readonly string _Separator;
 
-    #endregion
+  #endregion
   }
 
   /// <summary>
@@ -548,7 +572,7 @@ namespace FreeLibSet.Text
   /// </summary>
   public sealed class CsvTextFieldEnumerable : IEnumerable<CsvTextFieldData>
   {
-    #region Конструктор
+  #region Конструктор
 
     public CsvTextFieldEnumerable(TextReader reader)
     {
@@ -563,9 +587,9 @@ namespace FreeLibSet.Text
 
     private bool _EnumeratorCalled;
 
-    #endregion
+  #endregion
 
-    #region Управляющие свойства
+  #region Управляющие свойства
 
     /// <summary>
     /// Символ-разделитель полей в пределах строки.
@@ -594,13 +618,13 @@ namespace FreeLibSet.Text
     }
     private char _Quote;
 
-    #endregion
+  #endregion
 
-    #region Перечислитель
+  #region Перечислитель
 
     public struct Enumerator : IEnumerator<CsvTextFieldData>
     {
-      #region Защишенный конструктор
+  #region Защишенный конструктор
 
       internal Enumerator(CsvTextFieldEnumerable owner)
       {
@@ -613,9 +637,9 @@ namespace FreeLibSet.Text
 
       private CsvTextFieldEnumerable _Owner;
 
-      #endregion
+  #endregion
 
-      #region Внутренний буфер
+  #region Внутренний буфер
 
       private char[] _Buffer;
       private int _CurrPos;
@@ -650,7 +674,7 @@ namespace FreeLibSet.Text
         _CurrPos++;
       }
 
-      #endregion
+  #endregion
 
       /// <summary>
       /// Текущее поле и сепаратор
@@ -687,7 +711,7 @@ namespace FreeLibSet.Text
         }
 
 
-        #region Чтение поля
+  #region Чтение поля
 
         _SB.Length = 0;
 
@@ -697,7 +721,7 @@ namespace FreeLibSet.Text
             
         }
 
-        #endregion
+  #endregion
       }
 
       void IEnumerator.Reset()
@@ -729,7 +753,7 @@ namespace FreeLibSet.Text
       return GetEnumerator();
     }
 
-    #endregion
+  #endregion
   }
 
   /// <summary>
@@ -737,12 +761,12 @@ namespace FreeLibSet.Text
   /// Для каждой строки возвращается массив значений полей в виде массива строк.
   /// Не гарантируется, что для каждой строки будет возвращено одинаковое количество полей.
   /// Класс разрешает только один проход по файлу. Повторные вызовы метода GetEnumerator() не допускаются, как и вызов <see cref="System.Collections.IEnumerator.Reset()"/>.
-  /// В отличие от методов <see cref="CsvTextConvert.ToArray2(string)"/>, поддерживается наличие символов новой строки внутри полей.
+  /// В отличие от методов <see cref="CsvTextConvert.ToMatrix(string)"/>, поддерживается наличие символов новой строки внутри полей.
   /// Эти символы не преобразуются 
   /// </summary>
   public sealed class CsvTextLineEnumerable : IEnumerable<string[]>
   {
-    #region Конструктор
+  #region Конструктор
 
     public CsvTextLineEnumerable(TextReader reader)
     {
@@ -753,9 +777,9 @@ namespace FreeLibSet.Text
 
     private TextReader _Reader;
 
-    #endregion
+  #endregion
 
-    #region Управляющие свойства
+  #region Управляющие свойства
 
     /// <summary>
     /// Символ-разделитель полей в пределах строки.
@@ -810,7 +834,7 @@ namespace FreeLibSet.Text
     }
     private char _Quote;
 
-    #endregion
+  #endregion
   }
 
 #endif

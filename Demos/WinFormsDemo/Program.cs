@@ -34,10 +34,12 @@ namespace WinFormsDemo
           "EFPTreeView & EFPTreeViewAdv",
           "EFPDBxGridFilters",
           "ManualOrderColumn",
+          "EFPInputDataGridView",
           "Wizard",
           "CultureInfo",
           "EFPApp.ShowAboutDialog()",
           "EFPClipboard",
+          "EFPFormProvider.CloseForm()",
         };
 
         string[] codes = new string[] {
@@ -47,10 +49,12 @@ namespace WinFormsDemo
           "TreeView",
           "EFPDBxGridFilters",
           "ManualOrderColumn",
+          "EFPInputDataGridView",
           "Wizard",
           "Culture",
           "About",
           "EFPClipboard",
+          "CloseForm",
         };
 
         while (dlg.ShowDialog() == DialogResult.OK)
@@ -78,6 +82,9 @@ namespace WinFormsDemo
               case "ManualOrderColumn":
               ManualOrderColumnDemo.ManualOrderColumnParamForm.PerformTest();
               break;
+            case "EFPInputDataGridView":
+              EFPInputDataGridViewDemo.TestEFPInputDataGridView.PerformTest();
+              break;
             case "Wizard":
               WizardDemo.WizardParamForm.PerformTest();
               break;
@@ -86,6 +93,9 @@ namespace WinFormsDemo
               break;
             case "EFPClipboard":
               EFPApp.ShowDialog(new EFPClipboardDemo.EFPClipboardForm(), true);
+              break;
+            case "CloseForm":
+              EFPApp.ShowDialog(new CloseFormDemo.TestCloseForm(), true);
               break;
             default:
               throw new BugException("Unknown mode");

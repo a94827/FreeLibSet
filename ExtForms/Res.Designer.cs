@@ -4914,6 +4914,15 @@ namespace FreeLibSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Column &apos;{0}&apos;. {1}.
+        /// </summary>
+        internal static string EFPDataView_Err_PasteToColumn {
+            get {
+                return ResourceManager.GetString("EFPDataView_Err_PasteToColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error occurred when selected rows restored after the table had been refreshed. {0}.
         /// </summary>
         internal static string EFPDataView_Err_RefreshRestoreSelection {
@@ -6086,20 +6095,20 @@ namespace FreeLibSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Format &apos;{0}&apos;. {1}.
+        /// </summary>
+        internal static string EFPPasteFormat_Err_FormatError {
+            get {
+                return ResourceManager.GetString("EFPPasteFormat_Err_FormatError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Format is not aplliable.
         /// </summary>
         internal static string EFPPasteFormat_Err_FormatNotAppliable {
             get {
                 return ResourceManager.GetString("EFPPasteFormat_Err_FormatNotAppliable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is no appliable data in the clipboard. {0}.
-        /// </summary>
-        internal static string EFPPasteFormat_Err_NoGoodFormat {
-            get {
-                return ResourceManager.GetString("EFPPasteFormat_Err_NoGoodFormat", resourceCulture);
             }
         }
         
@@ -6181,6 +6190,15 @@ namespace FreeLibSet {
         internal static string EFPPasteTextMatrixFormat_Name_Text {
             get {
                 return ResourceManager.GetString("EFPPasteTextMatrixFormat_Name_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}, row separator: &apos;{1}&apos;.
+        /// </summary>
+        internal static string EFPPasteTextMatrixFormat_Name_WithLineSeparator {
+            get {
+                return ResourceManager.GetString("EFPPasteTextMatrixFormat_Name_WithLineSeparator", resourceCulture);
             }
         }
         

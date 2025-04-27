@@ -60,7 +60,7 @@ namespace BRReportDemo
         efpTree.Columns.AddInt("Id", true, "Id", 3);
         efpTree.Columns.AddInt("ParentId", true, "ParentId", 3);
         efpTree.Columns.AddBool("Flag", true, "Flag");
-        efpTree.Columns.AddText("Link", true, "Link", 20, 10); // не реализовано
+        efpTree.Columns.AddLink("Link", true, "Link", 20, 10); 
         if (useColumns)
         {
           efpTree.Columns["Id"].SizeGroup = "Id";
@@ -141,6 +141,8 @@ namespace BRReportDemo
     private static void NcDays_ValueNeeded(object sender, FreeLibSet.Controls.TreeViewAdvNodeControls.NodeControlValueEventArgs args)
     {
       DataRow row = (DataRow)(args.Node.Tag);
+      if (row == null)
+        return;
       DateTime dt1 = DataTools.GetDateTime(row, "Date1");
       DateTime dt2 = DataTools.GetDateTime(row, "Date2");
       args.Value = (dt2 - dt1).Days + 1;

@@ -177,4 +177,36 @@ namespace FreeLibSet.Controls
     string GetToolTip(TreeNodeAdv node, NodeControl nodeControl);
   }
 
+  public class TreeNodeAdvControlEventArgs : EventArgs
+  {
+    #region Конструкторы
+
+    internal TreeNodeAdvControlEventArgs() { }
+
+    public TreeNodeAdvControlEventArgs(TreeNodeAdv node, NodeControl control)
+    {
+      _Node = node;
+      _Control = control;
+    }
+
+    #endregion
+
+    #region Свойства
+
+    public TreeNodeAdv Node
+    {
+      get { return _Node; }
+      internal set { _Node = value; }
+    }
+    private TreeNodeAdv _Node;
+
+    public NodeControl Control
+    {
+      get { return _Control; }
+      internal set { _Control = value; }
+    }
+    private NodeControl _Control;
+
+    #endregion
+  }
 }

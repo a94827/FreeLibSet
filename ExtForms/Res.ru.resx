@@ -2286,8 +2286,8 @@
   <data name="EFPPasteFormat_Err_FormatNotAppliable" xml:space="preserve">
     <value>Формат не применим</value>
   </data>
-  <data name="EFPPasteFormat_Err_NoGoodFormat" xml:space="preserve">
-    <value>В буфере обмена нет данных в подходящем формате. {0}</value>
+  <data name="EFPPasteFormat_Err_FormatError" xml:space="preserve">
+    <value>Формат '{0}'. {1}</value>
   </data>
   <data name="EFPPasteFormat_Err_NoPasteFormats" xml:space="preserve">
     <value>Не задано ни одного обработчика форматов данных</value>
@@ -3101,5 +3101,11 @@
   </data>
   <data name="EFPGridProducer_Arg_SourceColumnMustBeSingle" xml:space="preserve">
     <value>Должен быть задан единственный исходный столбец</value>
+  </data>
+  <data name="EFPDataView_Err_PasteToColumn" xml:space="preserve">
+    <value>Столбец '{0}'. {1}</value>
+  </data>
+  <data name="EFPPasteTextMatrixFormat_Name_WithLineSeparator" xml:space="preserve">
+    <value>{0}, разделитель строк: '{1}'</value>
   </data>
 </root>

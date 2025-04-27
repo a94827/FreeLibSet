@@ -25,7 +25,6 @@ namespace FreeLibSet.Controls
 {
   public partial class TreeViewAdv
   {
-    private Cursor _innerCursor = null;
 
     public override Cursor Cursor
     {
@@ -41,6 +40,7 @@ namespace FreeLibSet.Controls
         base.Cursor = value;
       }
     }
+    private Cursor _innerCursor = null;
 
     #region Internal Properties
 
@@ -226,23 +226,29 @@ namespace FreeLibSet.Controls
 
     #region DesignTime
 
-    private bool _shiftFirstNode;
     [DefaultValue(false), Category("Behavior")]
     public bool ShiftFirstNode
     {
       get { return _shiftFirstNode; }
       set { _shiftFirstNode = value; }
     }
+    private bool _shiftFirstNode;
 
-    private bool _displayDraggingNodes;
     [DefaultValue(false), Category("Behavior")]
     public bool DisplayDraggingNodes
     {
       get { return _displayDraggingNodes; }
       set { _displayDraggingNodes = value; }
     }
+    private bool _displayDraggingNodes;
 
-    private bool _fullRowSelect;
+    /// <summary>
+    /// Управляет подсветкой выбраных узлов.
+    /// Если true, то выделяется вся строка от левого до правого края просмотра.
+    /// Если false (по умолчанию), то выделяются только текстовые ячейки, а пустые места не вылеляются.
+    /// Свойство не влияет на поведение просмотра. Пользователь всегда работает с узлами целиком,
+    /// нет возможности выделения отдельных ячеек.
+    /// </summary>
     [DefaultValue(false), Category("Behavior")]
     public bool FullRowSelect
     {
@@ -253,8 +259,17 @@ namespace FreeLibSet.Controls
         UpdateView();
       }
     }
+    private bool _fullRowSelect;
 
-    private bool _useColumns;
+    /// <summary>
+    /// Если установлено в true, то используется таблице-подобный вид с заголовками столбцов.
+    /// По умолчанию false - использует отображение узлов в виде сплошных строк, при этом элементы из
+    /// <see cref="NodeControls"/> отображаются без выравнивания по столбцам.
+    /// 
+    /// Рекомендуется устанавливать свойство в true, если используется несколько объектов <see cref="NodeControl"/>
+    /// (не считая значка и кнопки разворачивания узла), размешая их в отдельных <see cref="TreeColumn"/>.
+    /// Если же в дереве отображается единственная строка текста для узла, столбцы использовать не следует.
+    /// </summary>
     [DefaultValue(false), Category("Behavior")]
     public bool UseColumns
     {
@@ -265,16 +280,16 @@ namespace FreeLibSet.Controls
         FullUpdate();
       }
     }
+    private bool _useColumns;
 
-    private bool _allowColumnReorder;
     [DefaultValue(false), Category("Behavior")]
     public bool AllowColumnReorder
     {
       get { return _allowColumnReorder; }
       set { _allowColumnReorder = value; }
     }
+    private bool _allowColumnReorder;
 
-    private bool _showLines = true;
     [DefaultValue(true), Category("Behavior")]
     public bool ShowLines
     {
@@ -285,8 +300,8 @@ namespace FreeLibSet.Controls
         UpdateView();
       }
     }
+    private bool _showLines = true;
 
-    private bool _showPlusMinus = true;
     [DefaultValue(true), Category("Behavior")]
     public bool ShowPlusMinus
     {
@@ -297,23 +312,23 @@ namespace FreeLibSet.Controls
         FullUpdate();
       }
     }
+    private bool _showPlusMinus = true;
 
-    private bool _showNodeToolTips = false;
     [DefaultValue(false), Category("Behavior")]
     public bool ShowNodeToolTips
     {
       get { return _showNodeToolTips; }
       set { _showNodeToolTips = value; }
     }
+    private bool _showNodeToolTips = false;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), DefaultValue(true), Category("Behavior"), Obsolete("No longer used")]
-    public bool KeepNodesExpanded
-    {
-      get { return true; }
-      set { }
-    }
+    //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic"), DefaultValue(true), Category("Behavior"), Obsolete("No longer used")]
+    //public bool KeepNodesExpanded
+    //{
+    //  get { return true; }
+    //  set { }
+    //}
 
-    private ITreeModel _model;
     /// <Summary>
     /// The model associated with this <see cref="TreeViewAdv"/>.
     /// </Summary>
@@ -340,14 +355,15 @@ namespace FreeLibSet.Controls
         }
       }
     }
+    private ITreeModel _model;
 
     /// <summary>
-    /// Событие вызывается после установки свойства Model
+    /// Событие вызывается после установки свойства <see cref="Model"/>
     /// </summary>
     public event EventHandler ModelChanged;
 
     /// <summary>
-    /// Вызывает обработчик события ModelChanged, если он установлен.
+    /// Вызывает обработчик события <see cref="ModelChanged"/>, если он установлен.
     /// </summary>
     /// <param name="args">Не используется</param>
     protected virtual void OnModelChanged(EventArgs args)
@@ -391,7 +407,6 @@ namespace FreeLibSet.Controls
     }
     // End font property
 
-    private BorderStyle _borderStyle = BorderStyle.Fixed3D;
     [DefaultValue(BorderStyle.Fixed3D), Category("Appearance")]
     public BorderStyle BorderStyle
     {
@@ -408,8 +423,8 @@ namespace FreeLibSet.Controls
         }
       }
     }
+    private BorderStyle _borderStyle = BorderStyle.Fixed3D;
 
-    private bool _autoRowHeight = false;
     /// <summary>
     /// Set to true to expand each row's height to fit the text of it's largest column.
     /// </summary>
@@ -433,8 +448,8 @@ namespace FreeLibSet.Controls
         FullUpdate();
       }
     }
+    private bool _autoRowHeight = false;
 
-    private TreeViewAdvGridLineStyle _gridLineStyle = TreeViewAdvGridLineStyle.None;
     [DefaultValue(TreeViewAdvGridLineStyle.None), Category("Appearance")]
     public TreeViewAdvGridLineStyle GridLineStyle
     {
@@ -452,8 +467,8 @@ namespace FreeLibSet.Controls
         }
       }
     }
+    private TreeViewAdvGridLineStyle _gridLineStyle = TreeViewAdvGridLineStyle.None;
 
-    private int _rowHeight = 16;
     [DefaultValue(16), Category("Appearance")]
     public int RowHeight
     {
@@ -471,8 +486,8 @@ namespace FreeLibSet.Controls
         FullUpdate();
       }
     }
+    private int _rowHeight = 16;
 
-    private TreeViewAdvSelectionMode _selectionMode = TreeViewAdvSelectionMode.Single;
     /// <summary>
     /// Режим выбора: Один узел, произвольные узлы, несколько узов с общим родителем
     /// </summary>
@@ -482,8 +497,12 @@ namespace FreeLibSet.Controls
       get { return _selectionMode; }
       set { _selectionMode = value; }
     }
+    private TreeViewAdvSelectionMode _selectionMode = TreeViewAdvSelectionMode.Single;
 
-    private bool _hideSelection;
+    /// <summary>
+    /// Нужно ли скрывать подсветку выбранных узлов, когда дерево теряет фокус ввода.
+    /// По умолчанию - false.
+    /// </summary>
     [DefaultValue(false), Category("Behavior")]
     public bool HideSelection
     {
@@ -494,8 +513,8 @@ namespace FreeLibSet.Controls
         UpdateView();
       }
     }
+    private bool _hideSelection;
 
-    private float _topEdgeSensivity = 0.3f;
     [DefaultValue(0.3f), Category("Behavior")]
     public float TopEdgeSensivity
     {
@@ -507,8 +526,8 @@ namespace FreeLibSet.Controls
         _topEdgeSensivity = value;
       }
     }
+    private float _topEdgeSensivity = 0.3f;
 
-    private float _bottomEdgeSensivity = 0.3f;
     [DefaultValue(0.3f), Category("Behavior")]
     public float BottomEdgeSensivity
     {
@@ -520,8 +539,8 @@ namespace FreeLibSet.Controls
         _bottomEdgeSensivity = value;
       }
     }
+    private float _bottomEdgeSensivity = 0.3f;
 
-    private bool _loadOnDemand;
     //[DefaultValue(false)]
     [DefaultValue(true)] // 28.06.2024
     [Category("Behavior")]
@@ -530,16 +549,19 @@ namespace FreeLibSet.Controls
       get { return _loadOnDemand; }
       set { _loadOnDemand = value; }
     }
+    private bool _loadOnDemand;
 
-    private bool _unloadCollapsedOnReload = false;
     [DefaultValue(false), Category("Behavior")]
     public bool UnloadCollapsedOnReload
     {
       get { return _unloadCollapsedOnReload; }
       set { _unloadCollapsedOnReload = value; }
     }
+    private bool _unloadCollapsedOnReload = false;
 
-    private int _indent = 19;
+    /// <summary>
+    /// Величина отступа в пикселях, приходящаяся на один уровень иерархии.
+    /// </summary>
     [DefaultValue(19), Category("Behavior")]
     public int Indent
     {
@@ -550,8 +572,8 @@ namespace FreeLibSet.Controls
         UpdateView();
       }
     }
+    private int _indent = 19;
 
-    private Color _lineColor = SystemColors.ControlDark;
     [Category("Behavior")]
     [DefaultValue(typeof(Color), "ControlDark")]
     public Color LineColor
@@ -564,8 +586,8 @@ namespace FreeLibSet.Controls
         UpdateView();
       }
     }
+    private Color _lineColor = SystemColors.ControlDark;
 
-    private Color _dragDropMarkColor = Color.Black;
     [Category("Behavior")]
     [DefaultValue(typeof(Color), "Black")]
     public Color DragDropMarkColor
@@ -577,8 +599,8 @@ namespace FreeLibSet.Controls
         CreateMarkPen();
       }
     }
+    private Color _dragDropMarkColor = Color.Black;
 
-    private float _dragDropMarkWidth = 3.0f;
     [DefaultValue(3.0f), Category("Behavior")]
     public float DragDropMarkWidth
     {
@@ -589,34 +611,42 @@ namespace FreeLibSet.Controls
         CreateMarkPen();
       }
     }
+    private float _dragDropMarkWidth = 3.0f;
 
-    private bool _highlightDropPosition = true;
     [DefaultValue(true), Category("Behavior")]
     public bool HighlightDropPosition
     {
       get { return _highlightDropPosition; }
       set { _highlightDropPosition = value; }
     }
+    private bool _highlightDropPosition = true;
 
-    private TreeColumnCollection _columns;
+    /// <summary>
+    /// Коллекция столбцов. Используется, если <see cref="UseColumns"/>=true.
+    /// В столбцах отображаются данные из <see cref="NodeControls"/> в соответствии с установкой свойства <see cref="NodeControl.ParentColumn"/>.
+    /// </summary>
     [Category("Behavior"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public Collection<TreeColumn> Columns
     {
       get { return _columns; }
     }
+    private TreeColumnCollection _columns;
 
-    private NodeControlsCollection _controls;
+    /// <summary>
+    /// Коллекция отображаемых элементов для узла (описание ячеек).
+    /// Используется независимо от установки <see cref="UseColumns"/>.
+    /// </summary>
     [Category("Behavior"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [Editor(typeof(NodeControlCollectionEditor), typeof(UITypeEditor))]
     public Collection<NodeControl> NodeControls
     {
       get
       {
-        return _controls;
+        return _NodeControls;
       }
     }
+    private NodeControlsCollection _NodeControls;
 
-    private bool _asyncExpanding;
     /// <summary>
     /// When set to true, node contents will be read in background thread.
     /// </summary>
@@ -626,12 +656,12 @@ namespace FreeLibSet.Controls
       get { return _asyncExpanding; }
       set { _asyncExpanding = value; }
     }
+    private bool _asyncExpanding;
 
     #endregion
 
     #region RunTime
 
-    private ITreeViewAdvToolTipProvider _defaultToolTipProvider = null;
     [Browsable(false)]
     [DefaultValue(null)]
     public ITreeViewAdvToolTipProvider DefaultToolTipProvider
@@ -639,6 +669,7 @@ namespace FreeLibSet.Controls
       get { return _defaultToolTipProvider; }
       set { _defaultToolTipProvider = value; }
     }
+    private ITreeViewAdvToolTipProvider _defaultToolTipProvider = null;
 
     [Browsable(false)]
     public IEnumerable<TreeNodeAdv> AllNodes
@@ -662,16 +693,16 @@ namespace FreeLibSet.Controls
       }
     }
 
-    private TreeViewAdvDropPosition _dropPosition;
     [Browsable(false)]
     public TreeViewAdvDropPosition DropPosition
     {
       get { return _dropPosition; }
       set { _dropPosition = value; }
     }
+    private TreeViewAdvDropPosition _dropPosition;
 
     /// <summary>
-    /// Корневой узел. Имеет путь ""
+    /// Корневой узел. Имеет путь "" и не отображается в дереве
     /// </summary>
     [Browsable(false)]
     public TreeNodeAdv Root
@@ -680,7 +711,6 @@ namespace FreeLibSet.Controls
     }
     private TreeNodeAdv _root;
 
-    private ReadOnlyCollection<TreeNodeAdv> _readonlySelection;
     [Browsable(false)]
     public ReadOnlyCollection<TreeNodeAdv> SelectedNodes
     {
@@ -689,10 +719,11 @@ namespace FreeLibSet.Controls
         return _readonlySelection;
       }
     }
+    private ReadOnlyCollection<TreeNodeAdv> _readonlySelection;
 
     /// <summary>
     /// Текущий выбранный узел.
-    /// В режиме выбора нескольких узлов возвращает либо тот, на котором есть пунктирная рамка (CurrentNode), либо первый из выделенных узлов
+    /// В режиме выбора нескольких узлов возвращает либо тот, на котором есть пунктирная рамка (<see cref="CurrentNode"/>), либо первый из выделенных узлов
     /// </summary>
     [Browsable(false)]
     [DefaultValue(null)]
@@ -776,6 +807,5 @@ namespace FreeLibSet.Controls
     #endregion
 
     #endregion
-
   }
 }

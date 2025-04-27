@@ -33,12 +33,11 @@ namespace WinFormsDemo.TreeViewDemo
       efpDir.EnabledEx = efpModel[0].CheckedEx;
 
       efpCheckBoxes = new EFPCheckBox(efpForm, cbCheckBoxes);
+      efpFullRowSelect = new EFPCheckBox(efpForm, cbFullRowSelect);
+      efpHideSelection = new EFPCheckBox(efpForm, cbHideSelection);
 
       EFPButton efpOk = new EFPButton(efpForm, btnOk);
       efpOk.Click += EfpOk_Click;
-
-
-
     }
 
     #endregion
@@ -49,7 +48,7 @@ namespace WinFormsDemo.TreeViewDemo
 
     public EFPTextBox efpDir;
 
-    public EFPCheckBox efpCheckBoxes;
+    public EFPCheckBox efpCheckBoxes, efpFullRowSelect, efpHideSelection;
 
     #endregion
 
@@ -70,7 +69,7 @@ namespace WinFormsDemo.TreeViewDemo
           throw new BugException();
       }
 
-      TreeViewResultForm form = new TreeViewResultForm(model, efpCheckBoxes.Checked);
+      TreeViewResultForm form = new TreeViewResultForm(model, efpCheckBoxes.Checked, efpFullRowSelect.Checked, efpHideSelection.Checked);
       EFPApp.ShowDialog(form, true);
     }
 

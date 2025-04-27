@@ -12,37 +12,47 @@ using System.Text;
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using System.Drawing;
 
-#pragma warning disable 1591
-
 namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
+  /// <summary>
+  /// Описание положения одной "ячейки" иерархического просмотра <see cref="TreeViewAdv"/>
+  /// </summary>
   public struct NodeControlInfo
   {
-    public static readonly NodeControlInfo Empty = new NodeControlInfo(null, Rectangle.Empty, null);
-
-    private NodeControl _control;
-    public NodeControl Control
-    {
-      get { return _control; }
-    }
-
-    private Rectangle _bounds;
-    public Rectangle Bounds
-    {
-      get { return _bounds; }
-    }
-
-    private TreeNodeAdv _node;
-    public TreeNodeAdv Node
-    {
-      get { return _node; }
-    }
-
+    /// <summary>
+    /// Инициализирует структуру
+    /// </summary>
+    /// <param name="control">Ссылка на элемент <see cref="NodeControl"/></param>
+    /// <param name="bounds">Границы "ячейки"</param>
+    /// <param name="node">Узел в иерархии</param>
     public NodeControlInfo(NodeControl control, Rectangle bounds, TreeNodeAdv node)
     {
       _control = control;
       _bounds = bounds;
       _node = node;
     }
+
+    /// <summary>
+    /// Ссылка на элемент <see cref="NodeControl"/>
+    /// </summary>
+    public NodeControl Control { get { return _control; } }
+    private readonly NodeControl _control;
+
+    /// <summary>
+    /// Границы "ячейки"
+    /// </summary>
+    public Rectangle Bounds { get { return _bounds; } }
+    private readonly Rectangle _bounds;
+
+    /// <summary>
+    /// Узел в иерархии
+    /// </summary>
+    public TreeNodeAdv Node { get { return _node; } }
+    private readonly TreeNodeAdv _node;
+
+    /// <summary>
+    /// Экзмпляр неинициализированной структуры
+    /// </summary>
+    public static readonly NodeControlInfo Empty = new NodeControlInfo(null, Rectangle.Empty, null);
   }
 }

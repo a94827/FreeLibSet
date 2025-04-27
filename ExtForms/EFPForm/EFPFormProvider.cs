@@ -1402,6 +1402,25 @@ namespace FreeLibSet.Forms
     /// <returns>true, если форма была успешно закрыта</returns>
     public bool CloseForm(DialogResult dialogResult)
     {
+      if (_InsideCloseForm)
+        return false;
+      bool res;
+      _InsideCloseForm = true;
+      try
+      {
+        res = DoCloseForm(dialogResult);
+      }
+      finally
+      {
+        _InsideCloseForm = false;
+      }
+      return res;
+    }
+
+    private bool _InsideCloseForm;
+
+    private bool DoCloseForm(DialogResult dialogResult)
+    {
       _Form.DialogResult = dialogResult;
       _TempFormClosingFlag = false;
       // Добавляем временный обработчик FormClosing. Он будет последним в цепочке,
@@ -1421,6 +1440,14 @@ namespace FreeLibSet.Forms
       _Form.FormClosing -= TempFormClosingHandler;
       if (!_TempFormClosingFlag)
         _Form.DialogResult = DialogResult.None;
+
+      if (_Form.Visible)
+      {
+        // 21.04.2025
+        _Form.Visible = false;
+        Application.DoEvents();
+      }
+
       return _TempFormClosingFlag;
     }
 

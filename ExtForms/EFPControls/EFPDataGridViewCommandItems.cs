@@ -1477,19 +1477,19 @@ namespace FreeLibSet.Forms
 
       // Дополнительная проверка применимости.
       // Проверяем, что текущая ячейка просмотра не ReadOnly
-      if (!args.Appliable)
+      if (args.Result!=EFPTestDataObjectResult.Ok)
         return;
 
       if (ControlProvider.Control.ReadOnly)
       {
-        args.Appliable = false;
+        args.Result = EFPTestDataObjectResult.ApplyError;
         args.DataInfoText = Res.EFPDataView_Err_InlineEditNotImplemented;
         return;
       }
 
       if (ControlProvider.Control.CurrentCell == null)
       {
-        args.Appliable = false;
+        args.Result = EFPTestDataObjectResult.ApplyError;
         args.DataInfoText = Res.EFPDataView_Err_NoSelectedCell;
         return;
       }
@@ -1498,7 +1498,7 @@ namespace FreeLibSet.Forms
       //if (Owner.GetCellReadOnly(Owner.Control.CurrentCell, out ErrorText))
       if (!ControlProvider.TestCanPasteText(fmt.TextMatrix, out errorText)) // 24.04.2019
       {
-        args.Appliable = false;
+        args.Result = EFPTestDataObjectResult.ApplyError;
         args.DataInfoText = errorText;
         return;
       }
@@ -1508,7 +1508,15 @@ namespace FreeLibSet.Forms
     {
       EFPPasteTextMatrixFormat fmt = (EFPPasteTextMatrixFormat)sender;
 
-      ControlProvider.PerformPasteText(fmt.TextMatrix);
+      string errorText;
+      bool res=ControlProvider.PerformPasteText(fmt.TextMatrix, out errorText);
+      if (!res)
+      {
+        if (args.Reason == EFPPasteReason.PasteSpecial)
+          EFPApp.ErrorMessageBox(errorText, EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_PasteSpecial));
+        else
+          EFPApp.ShowTempMessage(errorText);
+      }
     }
 
     #endregion

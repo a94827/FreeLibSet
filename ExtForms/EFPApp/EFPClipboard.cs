@@ -851,6 +851,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Извлекает текст из буфера обмена.
     /// Если буфер обмена пуст или не содержит текста, ошибка выдается в зависимости от <see cref="ErrorIfEmpty"/>.
+    /// 
+    /// Если требуется извлечь текст из объекта <see cref="IDataObject"/>, используйте <see cref="WinFormsTools.GetText(IDataObject)"/>.
     /// </summary>
     /// <returns>Текст из буфера обмена или пустая строка</returns>
     public string GetText()
@@ -908,6 +910,9 @@ namespace FreeLibSet.Forms
     /// Используются данные в формате <see cref="TextDataFormat.CommaSeparatedValue"/>, а при отсутствии - в <see cref="TextDataFormat.Text"/>.
     /// Обычно следует использовать объект <see cref="EFPPasteTextMatrixFormat"/> для реализации вставки.
     /// Если буфер обмена пуст или не содержит текста, ошибка выдается в зависимости от <see cref="ErrorIfEmpty"/>.
+    /// 
+    /// Если требуется извлечь текст из объекта <see cref="IDataObject"/>, используйте <see cref="WinFormsTools.GetTextMatrix(IDataObject)"/>, 
+    /// <see cref="WinFormsTools.GetTextMatrixText(IDataObject)"/> или <see cref="WinFormsTools.GetTextMatrixCsv(IDataObject)"/>.
     /// </summary>
     /// <returns>Матрица текста или null, если буфер обмена пуст, или возникла ошибка</returns>
     public string[,] GetTextMatrix()

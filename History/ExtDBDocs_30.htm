@@ -1,100 +1,116 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1251">
-	<TITLE>Изменения в модуле ExtDBDocs.dll</TITLE>
-	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
-	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20250331;182551225000000">
-	<META NAME="created" CONTENT="2017-12-15T18:38:40.447000000">
-	<META NAME="changed" CONTENT="2024-08-12T20:51:55.015000000">
-	<STYLE TYPE="text/css">
-	<!--
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title>Изменения в модуле ExtDBDocs.dll</title>
+	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
+	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
+	<meta name="changed" content="2025-04-19T14:38:35.281000000"/>
+	<style type="text/css">
 		@page { margin: 2cm }
-		P { margin-bottom: 0.25cm; background: transparent; widows: 2; orphans: 2 }
-		TD P { margin-bottom: 0.25cm; background: transparent; widows: 2; orphans: 2 }
-		H1 { margin-bottom: 0.21cm; background: transparent; widows: 2; orphans: 2 }
-		H1.western { font-family: "Liberation Serif", serif }
-		H1.cjk { font-family: "SimSun"; font-size: 24pt }
-		H1.ctl { font-family: "Mangal"; font-size: 24pt }
-		A:link { so-language: zxx }
-		A:visited { color: #800080 }
-	-->
-	</STYLE>
-</HEAD>
-<BODY LANG="ru-RU" VLINK="#800080" DIR="LTR">
-<P><FONT FACE="Lucida Sans"><SPAN LANG="hi-IN">&#65279; </SPAN></FONT>
-</P>
-<H1 CLASS="western">История изменений <BR>Модуль <SPAN LANG="en-US">ExtDBDocs</SPAN>.<SPAN LANG="en-US">dll</SPAN>
-(Доступ к документам в базе данных)</H1>
-<P>Модуль входит в комплект библиотек <SPAN LANG="en-US">FreeLibSet</SPAN>,
-и является свободным программным обеспечением (Free Software)</P>
-<H1 CLASS="western">Версия <SPAN LANG="en-US">3</SPAN>.<SPAN LANG="en-US">0</SPAN></H1>
-<P>Полный номер версии файла, который можно узнать, посмотрев
+		p { margin-bottom: 0.25cm; background: transparent; orphans: 2; widows: 2 }
+		td p { margin-bottom: 0.25cm; background: transparent; orphans: 2; widows: 2 }
+		h1 { margin-bottom: 0.21cm; background: transparent; orphans: 2; widows: 2 }
+		h1.western { font-family: "Liberation Serif", serif }
+		h1.cjk { font-family: "SimSun"; font-size: 24pt }
+		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		a:link { so-language: zxx }
+		a:visited { color: #800080 }
+	</style>
+</head>
+<body lang="ru-RU" vlink="#800080" dir="ltr">
+<p><font face="Lucida Sans"><span lang="hi-IN">&#65279; </span></font>
+</p>
+<h1 class="western">История изменений <br/>
+Модуль <span lang="en-US">ExtDBDocs</span>.<span lang="en-US">dll</span>
+(Доступ к документам в базе данных)</h1>
+<p>Модуль входит в комплект библиотек <span lang="en-US">FreeLibSet</span>,
+и является свободным программным обеспечением (Free Software)</p>
+<h1 class="western">Версия <span lang="en-US">3</span>.<span lang="en-US">0</span></h1>
+<p>Полный номер версии файла, который можно узнать, посмотрев
 свойства файла или в меню &laquo;О программе&raquo;, состоит из
-четырех чисел и имеет вид &laquo;<SPAN LANG="en-US">3</SPAN>.<SPAN LANG="en-US">0</SPAN>.0.<SPAN LANG="en-US">X</SPAN>&raquo;.
-В таблице указано только последнее число &laquo;<SPAN LANG="en-US">X</SPAN>&raquo;</P>
-<TABLE WIDTH=100% CELLPADDING=2 CELLSPACING=0>
-	<COL WIDTH=25*>
-	<COL WIDTH=35*>
-	<COL WIDTH=196*>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border: 1.00pt solid #000000; padding: 0.05cm">
-			<P ALIGN=CENTER>Версия</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>Дата</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>Что сделано</P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>360</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>03<SPAN LANG="en-US">.03.2025-</SPAN><SPAN LANG="en-US">31</SPAN><SPAN LANG="en-US">.03.2025</SPAN></P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">И</SPAN><SPAN LANG="en-US">нтернационализация
-			с использованием строковых ресурсов</SPAN></P>
-			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Вспомогательные
-			методы </SPAN><SPAN LANG="en-US">DBxDocTypes.GetByTableName(),
-			GetByTableId(), DBxDocSet.DocTypeAndCountToString()</SPAN></P>
-			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Статический
-			метод </SPAN><SPAN LANG="en-US">DBxDocProvider.GetUndoActionName()
-			</SPAN><SPAN LANG="ru-RU">(перенесено из класса </SPAN><SPAN LANG="en-US">DBUI,
-			ExtDBDocForms</SPAN><SPAN LANG="ru-RU">)</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>359</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>16.01.2025</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US">1. <SPAN LANG="ru-RU">Свойство
-			DBxDocDBConnectionHelper.</SPAN>Splash <SPAN LANG="ru-RU">имеет
-			тип </SPAN>ISimpleSplash, <SPAN LANG="ru-RU">а не </SPAN>ISplash</P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>35<SPAN LANG="ru-RU">5</SPAN></P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>27.09.2024</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US">1. <SPAN LANG="ru-RU">Множество классов перенесено
-			в </SPAN>ExtTools.dll</P>
-		</TD>
-	</TR>
-</TABLE>
-<P><BR><BR>
-</P>
-</BODY>
-</HTML>
+четырех чисел и имеет вид &laquo;<span lang="en-US">3</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
+В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
+<table width="100%" cellpadding="2" cellspacing="0">
+	<col width="25*">
+	<col width="35*">
+	<col width="196*">
+	<tr valign="top">
+		<td width="10%" style="border: 1.00pt solid #000000; padding: 0.05cm">
+			<p align="center">Версия</p>
+		</td>
+		<td width="14%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Дата</p>
+		</td>
+		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">362</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">19.04.2025</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US"><a name="v362p1"></a>1. <span lang="ru-RU">Свойство
+			</span>RefDocCommonFilter.DocIds (<a href="ExtDBDocs_11.htm#v077p1">v.77
+			<span lang="ru-RU">п.1</span></a>) <span lang="ru-RU">переименовано
+			в </span>SelectedDocIds. <span lang="ru-RU">Свойство </span>DocIds
+			<span lang="ru-RU">содержит расширенный список идентфикаторов
+			документов, когда документы образуют дерево (установлено свойство
+			</span>DBxDocType.TreeParentColumnName<span lang="ru-RU">)</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">360</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">03<span lang="en-US">.03.2025-31.03.2025</span></p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">И</span><span lang="en-US">нтернационализация
+			с использованием строковых ресурсов</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Вспомогательные
+			методы </span><span lang="en-US">DBxDocTypes.GetByTableName(),
+			GetByTableId(), DBxDocSet.DocTypeAndCountToString()</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Статический
+			метод </span><span lang="en-US">DBxDocProvider.GetUndoActionName()
+			</span><span lang="ru-RU">(перенесено из класса </span><span lang="en-US">DBUI,
+			ExtDBDocForms</span><span lang="ru-RU">)</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">359</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">16.01.2025</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Свойство
+			DBxDocDBConnectionHelper.</span>Splash <span lang="ru-RU">имеет
+			тип </span>ISimpleSplash, <span lang="ru-RU">а не </span>ISplash</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">35<span lang="ru-RU">5</span></p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">27.09.2024</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Множество классов перенесено
+			в </span>ExtTools.dll</p>
+		</td>
+	</tr>
+</table>
+<p><br/>
+<br/>
+
+</p>
+</body>
+</html>

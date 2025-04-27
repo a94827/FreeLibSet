@@ -7152,6 +7152,20 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Выполняет вставку текста в прямоугольную область.
+    /// Левая верхняя ячейка области определяется текущем выделением ячейки.
+    /// Эта перегрузка не выводит сообщение об ошибке, а возвращает его в виде строки.
+    /// </summary>
+    /// <param name="textArray">Вставляемый текст (строки и столбцы)</param>
+    /// <param name="errorText">Сюда записывается сообщение об ошибке</param>
+    /// <returns>true, если вставка выполнена</returns>
+    public bool PerformPasteText(string[,] textArray, out string errorText)
+    {
+      return DoPasteText(textArray, false, out errorText);
+    }
+
+
+    /// <summary>
     /// Проверяет возможность вставки текста в прямоугольную область.
     /// Левая верхняя ячейка области определяется текущем выделением ячейки.
     /// </summary>
@@ -7305,7 +7319,10 @@ namespace FreeLibSet.Forms
 
           if (!TrySetTextValue(cell, textArray[i1, j1], out errorText, true, EFPDataGridViewCellFinishedReason.Paste))
           {
-            Control.CurrentCell = cell;
+            // убрано 23.04.2025. Иначе после теста не работает "Специальная вставка"
+            // Control.CurrentCell = cell;
+            EFPDataGridViewColumn col = Columns[cell.ColumnIndex];
+            errorText = String.Format(Res.EFPDataView_Err_PasteToColumn, col.DisplayName, errorText);
             return false;
           }
         }
@@ -7657,9 +7674,19 @@ namespace FreeLibSet.Forms
           return false;
       }
 
+      object v;
       try
       {
-        object v = Convert.ChangeType(textValue, valueType);
+        v = Convert.ChangeType(textValue, valueType);
+      }
+      catch
+      {
+        errorText = UITools.ConvertErrorMessage(textValue, valueType); // 23.04.2025
+        return false;
+      }
+
+      try
+      {
         if (!testOnly)
         {
           if (valueType == typeof(DateTime))

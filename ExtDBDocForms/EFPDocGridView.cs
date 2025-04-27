@@ -154,6 +154,7 @@ namespace FreeLibSet.Forms.Docs
       _DocTypeUI = docTypeUI;
 
       base.UseRowImages = true; // 06.09.2024
+      CommandItems.UseRowErrors = false; // 21.04.2025
       base.GridProducer = docTypeUI.GridProducer; // 25.03.2021
       base.ConfigSectionName = DocType.Name;
       base.ReadOnly = docTypeUI.UI.DocProvider.DBPermissions.TableModes[DocType.Name] != DBxAccessMode.Full;

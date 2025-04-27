@@ -39,6 +39,8 @@
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.rbDummyModel = new System.Windows.Forms.RadioButton();
       this.rbSimpleFileModel = new System.Windows.Forms.RadioButton();
+      this.cbFullRowSelect = new System.Windows.Forms.CheckBox();
+      this.cbHideSelection = new System.Windows.Forms.CheckBox();
       this.panel1.SuspendLayout();
       this.panel2.SuspendLayout();
       this.groupBox1.SuspendLayout();
@@ -49,7 +51,7 @@
       this.panel1.Controls.Add(this.btnCancel);
       this.panel1.Controls.Add(this.btnOk);
       this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel1.Location = new System.Drawing.Point(0, 174);
+      this.panel1.Location = new System.Drawing.Point(0, 215);
       this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(621, 49);
@@ -78,6 +80,8 @@
       // 
       // panel2
       // 
+      this.panel2.Controls.Add(this.cbHideSelection);
+      this.panel2.Controls.Add(this.cbFullRowSelect);
       this.panel2.Controls.Add(this.cbCheckBoxes);
       this.panel2.Controls.Add(this.btnBrowseDir);
       this.panel2.Controls.Add(this.label1);
@@ -87,7 +91,7 @@
       this.panel2.Location = new System.Drawing.Point(0, 0);
       this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(621, 174);
+      this.panel2.Size = new System.Drawing.Size(621, 215);
       this.panel2.TabIndex = 0;
       // 
       // cbCheckBoxes
@@ -168,13 +172,33 @@
       this.rbSimpleFileModel.Text = "SimpleFileModel";
       this.rbSimpleFileModel.UseVisualStyleBackColor = true;
       // 
+      // cbFullRowSelect
+      // 
+      this.cbFullRowSelect.AutoSize = true;
+      this.cbFullRowSelect.Location = new System.Drawing.Point(35, 159);
+      this.cbFullRowSelect.Name = "cbFullRowSelect";
+      this.cbFullRowSelect.Size = new System.Drawing.Size(118, 21);
+      this.cbFullRowSelect.TabIndex = 5;
+      this.cbFullRowSelect.Text = "FullRowSelect";
+      this.cbFullRowSelect.UseVisualStyleBackColor = true;
+      // 
+      // cbHideSelection
+      // 
+      this.cbHideSelection.AutoSize = true;
+      this.cbHideSelection.Location = new System.Drawing.Point(35, 186);
+      this.cbHideSelection.Name = "cbHideSelection";
+      this.cbHideSelection.Size = new System.Drawing.Size(117, 21);
+      this.cbHideSelection.TabIndex = 6;
+      this.cbHideSelection.Text = "HideSelection";
+      this.cbHideSelection.UseVisualStyleBackColor = true;
+      // 
       // TreeViewParamsForm
       // 
       this.AcceptButton = this.btnOk;
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(621, 223);
+      this.ClientSize = new System.Drawing.Size(621, 264);
       this.Controls.Add(this.panel2);
       this.Controls.Add(this.panel1);
       this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -202,5 +226,7 @@
     private System.Windows.Forms.CheckBox cbCheckBoxes;
     private System.Windows.Forms.Button btnBrowseDir;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.CheckBox cbHideSelection;
+    private System.Windows.Forms.CheckBox cbFullRowSelect;
   }
 }

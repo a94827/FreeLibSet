@@ -1483,6 +1483,8 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Числа
+
     /// <summary>
     /// Добавляет столбец <see cref="NodeDecimalEditBox"/> для просмотра числовых значений
     /// </summary>
@@ -1610,6 +1612,10 @@ namespace FreeLibSet.Forms
       return AddInt(columnName, true, columnName, 5);
     }
 
+    #endregion
+
+    #region Boolean
+
     /// <summary>
     /// Добавляет столбец-флажок <see cref="NodeCheckBox"/> для просмотра логических значений.
     /// </summary>
@@ -1647,6 +1653,10 @@ namespace FreeLibSet.Forms
       return AddBool(columnName, true, columnName);
     }
 
+    #endregion
+
+    #region Image
+
     /// <summary>
     /// Добавляет столбец-изображение <see cref="NodeIcon"/> для просмотра значков.
     /// Столбец привязывается к данным.
@@ -1670,6 +1680,9 @@ namespace FreeLibSet.Forms
 
       return nodeControl;
     }
+
+    #endregion
+
 #if XXX
 
     public DataGridViewImageColumn AddImage()
@@ -1725,6 +1738,118 @@ namespace FreeLibSet.Forms
     }
 
 #endif
+
+    #region Ссылки
+
+    /// <summary>
+    /// Создает элемент <see cref="NodeLink"/> для отображения гиперссылки и добавляет его в коллекцию. Если <see cref="TreeViewAdv.UseColumns"/>=true, то также создается столбец <see cref="TreeColumn"/>.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
+    /// <param name="minTextWidth">Минимальная ширина столбца в текстовых единицах</param>
+    /// <returns>Созданный элемент</returns>
+    public NodeLink AddLink(string columnName, bool isDataColumn, string headerText, int textWidth, int minTextWidth)
+    {
+      NodeLink nodeControl = new NodeLink();
+
+      if (isDataColumn)
+        nodeControl.DataPropertyName = columnName;
+
+      AddControl(nodeControl, columnName, headerText, textWidth, minTextWidth);
+      if (_LastAddedColumn != null)
+      {
+        _LastAddedColumn.DbfPreliminaryInfo.Type = 'C';
+        _LastAddedColumn.DbfPreliminaryInfo.Length = textWidth;
+      }
+
+      return nodeControl;
+    }
+
+    /// <summary>
+    /// Создает элемент <see cref="NodeLink"/> для отображения текста и добавляет его в коллекцию. Если <see cref="TreeViewAdv.UseColumns"/>=true, то также создается столбец <see cref="TreeColumn"/>.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// Для столбца (при <see cref="TreeViewAdv.UseColumns"/>=true) используется выравнивание по левому краю.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
+    /// <returns>Созданный элемент</returns>
+    public NodeLink AddLink(string columnName, bool isDataColumn, string headerText, int textWidth)
+    {
+      return AddLink(columnName, isDataColumn, headerText, textWidth, Math.Min(textWidth, 5));
+    }
+
+    /// <summary>
+    /// Создает элемент <see cref="NodeLink"/> для отображения текста и добавляет его в коллекцию. Если <see cref="TreeViewAdv.UseColumns"/>=true, то также создается столбец <see cref="TreeColumn"/>.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// Для столбца (при <see cref="TreeViewAdv.UseColumns"/>=true) используется выравнивание по левому краю и ширина в 10 символов.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <returns>Созданный элемент</returns>
+    public NodeLink AddLink(string columnName, bool isDataColumn, string headerText)
+    {
+      return AddLink(columnName, isDataColumn, headerText, 10);
+    }
+
+    /// <summary>
+    /// Создает элемент <see cref="NodeLink"/> для отображения гиперссылки, занимающий определенную часть свободного места просмотра.
+    /// Задает горизонтальное выравнивание по левому краю.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <param name="fillWeight">Процент свободного места, занимаемый столбцом.
+    /// Не обязательно, чтобы все столбцы занимали ровно 100%.
+    /// См. описание свойства <see cref="EFPDataTreeViewColumn.FillWeight"/>.</param>
+    /// <param name="minTextWidth">Минимальная ширина столбца в текстовых единицах (количество символов средней ширины)</param>
+    /// <returns>Созданный элемент</returns>
+    public NodeLink AddLinkFill(string columnName, bool isDataColumn, string headerText, int fillWeight, int minTextWidth)
+    {
+      NodeLink nodeControl = AddLink(columnName, isDataColumn, headerText, minTextWidth, minTextWidth);
+      if (_LastAddedColumn != null)
+        _LastAddedColumn.FillWeight = fillWeight;
+      return nodeControl;
+    }
+
+    /// <summary>
+    /// Создает элемент <see cref="NodeLink"/> для отображения гиперссылки, занимающий определенную часть свободного места просмотра.
+    /// Устанавливается свойство <see cref="EFPDataTreeViewColumn.FillWeight"/>=100 и <see cref="EFPDataTreeViewColumn.MinTextWidth"/>=5.
+    /// Задает горизонтальное выравнивание по левому краю.
+    /// Созданный объект <see cref="EFPDataTreeViewColumn"/> не возвращается. Для доступа к нему используйте свойство <see cref="LastAdded"/> или одну из перегрузок индексированного свойства, например, <see cref="this[string]"/>.
+    /// </summary>
+    /// <param name="columnName">Имя столбца, которое можно использовать для поиска объекта <see cref="EFPDataTreeViewColumn"/>. 
+    /// Если <paramref name="isDataColumn"/>=true, то также задает свойство данных <see cref="BindableControl.DataPropertyName"/>.</param>
+    /// <param name="isDataColumn">Если true, то элемент будет автоматически извлекать данные из объектов модели. 
+    /// При этом <paramref name="columnName"/> должно указывать на имя свойства или поля объектов узлов модели, или на имя поля, если узлами модели являются <see cref="DataRow"/> или <see cref="DataRowView"/>.
+    /// Если false, то извлечение данных должно выполняться прикладным кодом</param>
+    /// <param name="headerText">Заголовок столбца <see cref="TreeColumn.Header"/></param>
+    /// <returns>Созданный элемент</returns>
+    public NodeLink AddLinkFill(string columnName, bool isDataColumn, string headerText)
+    {
+      return AddLinkFill(columnName, isDataColumn, headerText, 100, 5);
+    }
+
+    #endregion
+
 
     /// <summary>
     /// Возвращает последний столбец <see cref="EFPDataTreeViewColumn"/>, добавленный с помощью методов AddXXX().

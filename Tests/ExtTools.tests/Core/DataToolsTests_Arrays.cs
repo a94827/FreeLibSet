@@ -34,7 +34,7 @@ namespace ExtTools_tests.Core
 
     #endregion
 
-    #region FillArray(), FillArray2()
+    #region FillArray(), FillMatrix()
 
     [Test]
     public void FillArray()
@@ -47,10 +47,10 @@ namespace ExtTools_tests.Core
     }
 
     [Test]
-    public void FillArray2()
+    public void FillMatrix()
     {
       int[,] a = new int[3, 2];
-      DataTools.FillArray2<int>(a, 123);
+      DataTools.FillMatrix<int>(a, 123);
 
       for (int i = 0; i < 3; i++)
       {
@@ -612,62 +612,94 @@ namespace ExtTools_tests.Core
 
     #endregion
 
-    #region GetArray2Row(), GetArray2Column()
+    #region GetMatrixRow(), GetMatrixColumn()
 
     [Test]
-    public void GetArray2Row()
+    public void GetMatrixRow()
     {
       int[,] a = new int[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-      int[] res = DataTools.GetArray2Row<int>(a, 1);
+      int[] res = DataTools.GetMatrixRow<int>(a, 1);
       Assert.AreEqual(new int[] { 4, 5, 6 }, res);
     }
 
     [Test]
-    public void GetArray2Column()
+    public void GetMatrixColumn()
     {
       int[,] a = new int[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-      int[] res = DataTools.GetArray2Column<int>(a, 1);
+      int[] res = DataTools.GetMatrixColumn<int>(a, 1);
       Assert.AreEqual(new int[] { 2, 5, 8 }, res);
     }
 
     #endregion
 
-    #region ToArray1()
+    #region ToPlainArray()
 
     [Test]
-    public void ToArray1_from_2d()
+    public void ToPlainArray_from_2d()
     {
       int[,] a = new int[3, 2] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
-      int[] res = DataTools.ToArray1<int>(a);
+      int[] res = DataTools.ToPlainArray<int>(a);
       Assert.AreEqual(new int[] { 1, 2, 3, 4, 5, 6 }, res);
     }
 
     [Test]
-    public void ToArray1_from_jagged_1d()
+    public void ToPlainArray_from_jagged_1d()
     {
       int[][] a = new int[][] { new int[] { 1, 2, 3 }, null, new int[] { 4, 5 } };
-      int[] res = DataTools.ToArray1<int>(a);
+      int[] res = DataTools.ToPlainArray<int>(a);
       Assert.AreEqual(new int[] { 1, 2, 3, 4, 5 }, res);
     }
 
     [Test]
-    public void ToArray1_from_jagged_2d()
+    public void ToPlainArray_from_jagged_2d()
     {
       int[,][] a = new int[2, 2][] { { new int[] { 1, 2, 3 }, new int[] { 4, 5 } }, { null, new int[] { 6 } } };
-      int[] res = DataTools.ToArray1<int>(a);
+      int[] res = DataTools.ToPlainArray<int>(a);
       Assert.AreEqual(new int[] { 1, 2, 3, 4, 5, 6 }, res);
     }
 
     #endregion
 
-    #region ToArray2()
+    #region ToArrayFromRows/Columns()
 
     [Test]
-    public void ToArray2()
+    public void MatrixFromRows()
     {
-      int[][] a = new int[3][] { new int[] { 1, 2 }, null, new int[] { 3, 4, 5, 6 } };
-      int[,] res = DataTools.ToArray2<int>(a);
+      int[,] res = DataTools.MatrixFromRows<int>(
+        new int[] { 1, 2 }, 
+        null, 
+        new int[] { 3, 4, 5, 6 });
+
       Assert.AreEqual(new int[3, 4] { { 1, 2, 0, 0 }, { 0, 0, 0, 0 }, { 3, 4, 5, 6 } }, res);
+    }
+
+
+    [Test]
+    public void MatrixFromRows_None()
+    {
+      int[,] res = DataTools.MatrixFromRows<int>();
+
+      Assert.AreEqual(new int[0, 0], res);
+    }
+
+
+    [Test]
+    public void MatrixFromColumns()
+    {
+      int[,] res = DataTools.MatrixFromColumns<int>(
+        new int[] { 1, 2 },
+        null,
+        new int[] { 3, 4, 5, 6 });
+
+      Assert.AreEqual(new int[4, 3] { { 1, 0, 3}, { 2, 0, 4 }, { 0, 0, 5 }, {0, 0, 6 } }, res);
+    }
+
+    [Test]
+    public void MatrixFromColumns_None()
+    {
+      int[,] res = DataTools.MatrixFromColumns<int>();
+
+      Assert.AreEqual(new int[0, 0], res);
     }
 
     #endregion

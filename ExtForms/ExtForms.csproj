@@ -75,6 +75,9 @@
     <Compile Include="Controls\TreeViewAdv\NodeControls\NodeDateTimeBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\TreeViewAdv\NodeControls\NodeLink.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\TreeViewAdv\TreeModel.cs" />
     <Compile Include="Data\CodeGridFilterForm.cs">
       <SubType>Form</SubType>

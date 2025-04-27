@@ -741,7 +741,8 @@ namespace FreeLibSet.Forms
     {
       args.DataImageKey = "WindowsExplorer";
       //args.Appliable = true;
-      args.Appliable = args.Data.GetDataPresent(DataFormats.FileDrop, false); // 04.12.2023
+      if (args.Data.GetDataPresent(DataFormats.FileDrop, false)) // 04.12.2023
+        args.Result = EFPTestDataObjectResult.Ok;
     }
 
     private void FmtFileDrop_Paste(object sender, EFPPasteDataObjectEventArgs args)
@@ -1078,7 +1079,8 @@ namespace FreeLibSet.Forms
     private void FmtFileDrop_TestFormat(object sender, EFPTestDataObjectEventArgs args)
     {
       args.DataImageKey = "WindowsExplorer";
-      args.Appliable = args.Data.GetDataPresent(DataFormats.FileDrop, false); // 04.12.2023
+      if (args.Data.GetDataPresent(DataFormats.FileDrop, false)) // 04.12.2023
+        args.Result = EFPTestDataObjectResult.Ok;
     }
 
     private void FmtFileDrop_Paste(object sender, EFPPasteDataObjectEventArgs args)

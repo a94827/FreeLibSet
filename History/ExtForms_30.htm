@@ -5,18 +5,18 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20250416;151732695000000">
+	<META NAME="CHANGED" CONTENT="20250424;164728009000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2025-04-02T21:57:59.921000000">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 2cm }
+		P { margin-bottom: 0.25cm; background: transparent }
 		TD P { margin-bottom: 0.25cm; background: transparent; widows: 0; orphans: 0 }
 		H1 { margin-bottom: 0.21cm; background: transparent }
 		H1.western { font-family: "Liberation Serif", serif }
 		H1.cjk { font-family: "SimSun"; font-size: 24pt }
 		H1.ctl { font-family: "Mangal"; font-size: 24pt }
-		P { margin-bottom: 0.25cm; background: transparent }
 		A:link { so-language: zxx }
 		A:visited { color: #800080 }
 	-->
@@ -44,6 +44,74 @@
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P ALIGN=CENTER>Что сделано</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>363</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>22.04.2025-24.04.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P STYLE="page-break-before: always">Ссылки в иерархическом
+			просмотре <SPAN LANG="en-US">TreeViewAdv</SPAN></P>
+			<P><SPAN LANG="en-US">1. </SPAN>Элемент <SPAN LANG="en-US">NodeLink</SPAN></P>
+			<P><SPAN LANG="en-US">2. </SPAN>Событие
+			<SPAN LANG="en-US">TreeViewAdv.NodeControlContentClick. </SPAN>Метод
+			<SPAN LANG="en-US">NodeControl.GetBounds() </SPAN>сделан <SPAN LANG="en-US">internal
+			protected </SPAN>и переопределен в <SPAN LANG="en-US">BaseTextControl</SPAN></P>
+			<P><SPAN LANG="en-US">3. </SPAN>Получение курсора в
+			<SPAN LANG="en-US">NodeControl.GetCursor() (</SPAN>закрытая
+			реализация<SPAN LANG="en-US">)</SPAN></P>
+			<P><BR><BR>
+			</P>
+			<P><SPAN LANG="en-US">4. </SPAN><SPAN LANG="ru-RU">Улучшен текст
+			сообщения об ошибке в </SPAN><SPAN LANG="en-US">EFPDataGridView.TrySetTextValue(),
+			</SPAN><SPAN LANG="ru-RU">когда строку нельзя преобразовать к типу
+			данных ячейки таблицы</SPAN></P>
+			<P><SPAN LANG="en-US">5. </SPAN><SPAN LANG="ru-RU">Логическое
+			свойство EFPTestDataObjectEventArgs.</SPAN><SPAN LANG="en-US">Appliable
+			(<A HREF="ExtForms_11.htm#v020p5">v.20 </A></SPAN><A HREF="ExtForms_11.htm#v020p5"><SPAN LANG="ru-RU">п.5</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">заменено на перечислимое свойство
+			</SPAN><SPAN LANG="en-US">Result. </SPAN><SPAN LANG="ru-RU">Старое
+			свойство оставлено для совместимости</SPAN></P>
+			<P LANG="en-US">6. <SPAN LANG="ru-RU">Свойство
+			EFPPasteTextMatrixFormat.SingleLineSeparators </SPAN>(<A HREF="ExtForms_11.htm#v020p5">v.20
+			</A><A HREF="ExtForms_11.htm#v020p5"><SPAN LANG="ru-RU">п.5</SPAN></A>)
+						</P>
+			<P><SPAN LANG="en-US">7</SPAN><SPAN LANG="ru-RU">. Выделен метод
+			</SPAN><SPAN LANG="en-US">WinFormsTools.GetText() </SPAN><SPAN LANG="ru-RU">из
+			</SPAN><SPAN LANG="en-US">GetTextMatrixText() (<A HREF="ExtForms_20.htm#v301p23">v.301
+			</A></SPAN><A HREF="ExtForms_20.htm#v301p23"><SPAN LANG="ru-RU">п.23</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P><SPAN LANG="en-US">8</SPAN><SPAN LANG="en-US">. </SPAN><SPAN LANG="ru-RU">Исправлено
+			значение свойства </SPAN><SPAN LANG="en-US">EFPTreeViewAdv.CurrentPopupPosition
+			(</SPAN><SPAN LANG="ru-RU">не учитывалась высота заголовков</SPAN><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_20.htm#v351p45"><SPAN LANG="en-US">v.351
+			</SPAN><SPAN LANG="ru-RU">п.45</SPAN></A><SPAN LANG="ru-RU">).
+			Общедоступное свойство </SPAN><SPAN LANG="en-US">TreeNodeAdv.Bounds</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>362</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>21.04.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US">1. <SPAN LANG="ru-RU">Метод
+			</SPAN>EFPFormProvider.CloseForm() <SPAN LANG="ru-RU">устанавливает
+			</SPAN>Form.Visible=false. <SPAN LANG="ru-RU">Это не приводит к
+			вызову события </SPAN>Form.FormClosed <SPAN LANG="ru-RU">для
+			модальной формы, но убирает форму с экрана. Предотвращается
+			вложенный вызов метода.</SPAN></P>
+			<P><SPAN LANG="en-US">2. ExtEditDialog.CloseForm() (<A HREF="#v355p21">v.355
+			</A></SPAN><A HREF="#v355p21"><SPAN LANG="ru-RU">п.21</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">возвращает </SPAN><SPAN LANG="en-US">true,
+			</SPAN><SPAN LANG="ru-RU">если форма была скрыта с экрана, а не по
+			факту перехода </SPAN><SPAN LANG="en-US">ExtEditDialog.FormState </SPAN><SPAN LANG="ru-RU">в
+			</SPAN><SPAN LANG="en-US">Closed</SPAN></P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>

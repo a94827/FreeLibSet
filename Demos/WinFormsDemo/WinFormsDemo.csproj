@@ -42,6 +42,12 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CloseFormDemo\TestCloseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CloseFormDemo\TestCloseForm.Designer.cs">
+      <DependentUpon>TestCloseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CultureDemo\CultureSelForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +73,7 @@
       <DependentUpon>DateRangeBoxForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EFPDBxGridFiltersDemo\TestEFPDBxGridFilters.cs" />
+    <Compile Include="EFPInputDataGridViewDemo\TestEFPInputDataGridView.cs" />
     <Compile Include="EFPTabControlDemo\EFPTabControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +119,9 @@
     <Compile Include="WizardDemo\WizardTemplateForm.Designer.cs">
       <DependentUpon>WizardTemplateForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CloseFormDemo\TestCloseForm.resx">
+      <DependentUpon>TestCloseForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CultureDemo\CultureSelForm.resx">
       <DependentUpon>CultureSelForm.cs</DependentUpon>
     </EmbeddedResource>

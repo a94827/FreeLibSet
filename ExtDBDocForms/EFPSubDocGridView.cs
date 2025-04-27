@@ -164,6 +164,7 @@ namespace FreeLibSet.Forms.Docs
       Control.AutoGenerateColumns = false;
 
       base.UseRowImages = true; // 06.09.2024
+      CommandItems.UseRowErrors = false; // 21.04.2025
       base.GridProducer = _SubDocTypeUI.GridProducer;
       base.ConfigSectionName = subDocs.SubDocType.Name;
       CommandItems.EnterAsOk = false;
