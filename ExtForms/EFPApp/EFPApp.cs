@@ -1092,6 +1092,14 @@ namespace FreeLibSet.Forms
     private static bool _ShowAutoCalcSums = true;
 
     /// <summary>
+    /// Глобальный флаг использования полосатой раскраски в табличных просмотрах.
+    /// По умолчанию - false.
+    /// Для каждого просмотра можно задавать индивидуальное значение свойства <see cref="EFPDataGridView.UseAlternation"/>.
+    /// </summary>
+    public static bool UseAlternation { get { return _UseAlternation; } set { _UseAlternation = value; } }
+    private static bool _UseAlternation;
+
+    /// <summary>
     /// Нужно ли в комбоблоках "Готовые наборы" (фильтры табличных просмотров, отчеты с <see cref="EFPReportExtParams"/>)
     /// выводить в выпадающем списке дополнительную строку с пояснениями.
     /// Для отчетов требуется переопределение метода <see cref="EFPReportExtParams.GetAuxText()"/>

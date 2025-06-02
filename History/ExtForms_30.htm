@@ -5,18 +5,18 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20250424;164728009000000">
+	<META NAME="CHANGED" CONTENT="20250530;111459432000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2025-04-02T21:57:59.921000000">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 2cm }
-		P { margin-bottom: 0.25cm; background: transparent }
 		TD P { margin-bottom: 0.25cm; background: transparent; widows: 0; orphans: 0 }
 		H1 { margin-bottom: 0.21cm; background: transparent }
 		H1.western { font-family: "Liberation Serif", serif }
 		H1.cjk { font-family: "SimSun"; font-size: 24pt }
 		H1.ctl { font-family: "Mangal"; font-size: 24pt }
+		P { margin-bottom: 0.25cm; background: transparent }
 		A:link { so-language: zxx }
 		A:visited { color: #800080 }
 	-->
@@ -48,14 +48,88 @@
 	</TR>
 	<TR VALIGN=TOP>
 		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>364</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>28.04.2025-30.05.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Изменения в
+			диалоге</SPAN> <SPAN LANG="ru-RU">выбора из списка
+			</SPAN><SPAN LANG="en-US">ListSelectDialog (<A HREF="ExtForms_11.htm#v017p9">v.17
+			</A></SPAN><A HREF="ExtForms_11.htm#v017p9"><SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="en-US">):</SPAN></P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">Используется</SPAN>
+			DataGridView <SPAN LANG="ru-RU">вместо </SPAN>ListView. 
+			</P>
+			<P><SPAN LANG="ru-RU">- Убрана кнопка &laquo;Еще&raquo; с командой
+			&laquo;Копировать весь список&raquo; </SPAN><SPAN LANG="en-US">(<A HREF="ExtForms_11.htm#v258p5">v.258
+			</A></SPAN><A HREF="ExtForms_11.htm#v258p5"><SPAN LANG="ru-RU">п.5</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- Свойства
+			</SPAN>ListSelectDialog.Codes, SelectedCode, SelectedCodes,
+			Images, OutItemTitle.</P>
+			<P><SPAN LANG="ru-RU">- Класс CodesListSelectDialog </SPAN><SPAN LANG="en-US">(<A HREF="ExtForms_11.htm#v017p9">v.17
+			</A></SPAN><A HREF="ExtForms_11.htm#v017p9"><SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="en-US">)
+			</SPAN><SPAN LANG="ru-RU">убран</SPAN></P>
+			<P LANG="en-US">2. <SPAN LANG="ru-RU">Шаг мастера
+			</SPAN>WizardStepWithListSelection. <SPAN LANG="ru-RU">Класс
+			WizardStepWithListView убран</SPAN></P>
+			<P><SPAN LANG="en-US">3</SPAN>. Изменения в поиске по первым
+			буквам в табличном просмотре:</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- В режиме выбора целой строки
+			используется поиск в первом столбце, для которого
+			</SPAN>EFPDataGridViewColumn.CanIncSearch=true (<SPAN LANG="ru-RU">если
+			текущий столбец не поддерживает поиск)</SPAN></P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- Свойство
+			</SPAN>EFPDataGridView.DesiredIncSearchColumn</P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">В режиме выбора целой строки,
+			когда задан столбец </SPAN>MarkRowsColumn, <SPAN LANG="ru-RU">клавиша
+			пробел используется для переключения флажка, а не для поиска.</SPAN></P>
+			<P LANG="en-US">4. <SPAN LANG="ru-RU">Команда &laquo;Вырезать&raquo;
+			табличного просмотра (</SPAN>EFPDataGridViewCommandItems<SPAN LANG="ru-RU">)
+			убирается из меню, если табличный просмотр поддерживает
+			редактирование, но не имеет форматов для копирования текста.</SPAN></P>
+			<P><SPAN LANG="en-US">5. </SPAN><SPAN LANG="ru-RU">Статусная
+			панель &laquo;Редактировать по месту&raquo; табличного просмотра
+			не показывается, если просмотр не содержит редактируемых столбцов,
+			за исключением </SPAN><SPAN LANG="en-US">EFPDataGridView.MarkRowsGridColumn
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v122p6"><SPAN LANG="en-US">v.122
+			</SPAN><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="ru-RU">) </SPAN>
+			</P>
+			<P><SPAN LANG="en-US">6</SPAN><SPAN LANG="ru-RU">. </SPAN><SPAN LANG="en-US">EFPFormProvider
+			</SPAN><SPAN LANG="ru-RU">при </SPAN><SPAN LANG="en-US">OwnStatusBar=true,
+			</SPAN><SPAN LANG="ru-RU">&laquo;поджимает&raquo; управляющие
+			элементы, заякоренные к нижнему краю формы (</SPAN><A HREF="ExtForms_11.htm#v247p12"><SPAN LANG="en-US">v.247
+			</SPAN><SPAN LANG="ru-RU">п.12</SPAN></A><SPAN LANG="ru-RU">).</SPAN></P>
+			<P><SPAN LANG="en-US">7. </SPAN><SPAN LANG="ru-RU">Если поверх
+			формы показывается блок диалога, то статусные панели не убираются
+			для текущей формы, если диалог имеет собственную статусную строку,
+			или она ему не нужна (</SPAN><A HREF="#v357p2"><SPAN LANG="en-US">v.357
+			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">).</SPAN></P>
+			<P LANG="en-US">8. <SPAN LANG="ru-RU">Улучшена обработка
+			</SPAN>shortcut-<SPAN LANG="ru-RU">ов в </SPAN>EFPFormProvider.
+			<SPAN LANG="ru-RU">Если &laquo;комбинация&raquo; клавиш является
+			обычным символом (например, &laquo;*&raquo; для инверсии отметок
+			выбранных строк табличного просмотра), то устанавливается свойство
+			</SPAN>Handled <SPAN LANG="ru-RU">в обработчике события </SPAN>KeyPress.
+			<SPAN LANG="ru-RU">При этом табличный просмотр не обрабатывает
+			символ как часть строки быстрого поиска. Добавлены обработчики
+			событий </SPAN>Form.KeyPress <SPAN LANG="ru-RU">и </SPAN>KeyDown <SPAN LANG="ru-RU">и
+			флажок </SPAN>EFPFormProvider._ShortCutHandled <SPAN LANG="ru-RU">для
+			передачи признака между событиями</SPAN></P>
+			<P LANG="en-US">9. <SPAN LANG="ru-RU">Полосатая раскраска
+			табличных просмотров. Свойства </SPAN>EFPDataGridView <SPAN LANG="ru-RU">и
+			</SPAN>EFPApp.UseAlternating</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>363</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>22.04.2025-24.04.2025</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P STYLE="page-break-before: always">Ссылки в иерархическом
-			просмотре <SPAN LANG="en-US">TreeViewAdv</SPAN></P>
+			<P>Ссылки в иерархическом просмотре <SPAN LANG="en-US">TreeViewAdv</SPAN></P>
 			<P><SPAN LANG="en-US">1. </SPAN>Элемент <SPAN LANG="en-US">NodeLink</SPAN></P>
 			<P><SPAN LANG="en-US">2. </SPAN>Событие
 			<SPAN LANG="en-US">TreeViewAdv.NodeControlContentClick. </SPAN>Метод
@@ -76,15 +150,16 @@
 			</SPAN><SPAN LANG="ru-RU">заменено на перечислимое свойство
 			</SPAN><SPAN LANG="en-US">Result. </SPAN><SPAN LANG="ru-RU">Старое
 			свойство оставлено для совместимости</SPAN></P>
-			<P LANG="en-US">6. <SPAN LANG="ru-RU">Свойство
-			EFPPasteTextMatrixFormat.SingleLineSeparators </SPAN>(<A HREF="ExtForms_11.htm#v020p5">v.20
-			</A><A HREF="ExtForms_11.htm#v020p5"><SPAN LANG="ru-RU">п.5</SPAN></A>)
-						</P>
+			<P><SPAN LANG="en-US">6. </SPAN><SPAN LANG="ru-RU">Свойство
+			EFPPasteTextMatrixFormat.SingleLineSeparators </SPAN><SPAN LANG="en-US">(<A HREF="ExtForms_11.htm#v020p5">v.20
+			</A></SPAN><A HREF="ExtForms_11.htm#v020p5"><SPAN LANG="ru-RU">п.5</SPAN></A><SPAN LANG="en-US">)
+			</SPAN>
+			</P>
 			<P><SPAN LANG="en-US">7</SPAN><SPAN LANG="ru-RU">. Выделен метод
 			</SPAN><SPAN LANG="en-US">WinFormsTools.GetText() </SPAN><SPAN LANG="ru-RU">из
 			</SPAN><SPAN LANG="en-US">GetTextMatrixText() (<A HREF="ExtForms_20.htm#v301p23">v.301
 			</A></SPAN><A HREF="ExtForms_20.htm#v301p23"><SPAN LANG="ru-RU">п.23</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
-			<P><SPAN LANG="en-US">8</SPAN><SPAN LANG="en-US">. </SPAN><SPAN LANG="ru-RU">Исправлено
+			<P><SPAN LANG="en-US">8. </SPAN><SPAN LANG="ru-RU">Исправлено
 			значение свойства </SPAN><SPAN LANG="en-US">EFPTreeViewAdv.CurrentPopupPosition
 			(</SPAN><SPAN LANG="ru-RU">не учитывалась высота заголовков</SPAN><SPAN LANG="en-US">)
 			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_20.htm#v351p45"><SPAN LANG="en-US">v.351
@@ -334,7 +409,7 @@
 			сообщения &laquo;Внутренняя ошибка обработки UnhandledException&raquo;
 			в </SPAN><SPAN LANG="en-US">ApplicationExceptionHandler (<A HREF="ExtForms_11.htm#v017p22">v.17
 			</A></SPAN><A HREF="ExtForms_11.htm#v017p22"><SPAN LANG="ru-RU">п.22</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
-			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">В
+			<P><A NAME="v357p2"></A><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">В
 			</SPAN><SPAN LANG="en-US">EFPControlBase.StatusBarPanelShoudBeDetached()
 			</SPAN><SPAN LANG="ru-RU">возникала ошибка при работе </SPAN><SPAN LANG="en-US">Wizard.</SPAN></P>
 			<P><SPAN LANG="en-US">3. EFPApp.ShowFormOrDialog() </SPAN><SPAN LANG="ru-RU">вызывает

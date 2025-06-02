@@ -127,22 +127,6 @@ namespace FreeLibSet.IO
     /// </summary>
     private static class WindowsNative
     {
-      internal static bool IsWindowsPlatform
-      {
-        get
-        {
-          switch (Environment.OSVersion.Platform)
-          {
-            case PlatformID.Win32NT:
-            case PlatformID.Win32Windows:
-            case PlatformID.Win32S:
-              return true;
-            default:
-              return false;
-          }
-        }
-      }
-
       [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
       internal static extern int GetLongPathName(
               [MarshalAs(UnmanagedType.LPTStr)]
@@ -562,29 +546,23 @@ namespace FreeLibSet.IO
         return false;
       }
 
-      switch (System.Environment.OSVersion.Platform)
+      if (EnvironmentTools.IsWindowsPlatform)
       {
-        case PlatformID.Win32NT:
-        case PlatformID.Win32Windows:
-        case PlatformID.Win32S:
-        case PlatformID.WinCE:
-          if (fileName.EndsWith(":", StringComparison.Ordinal))
+        if (fileName.EndsWith(":", StringComparison.Ordinal))
+        {
+          errorText = Res.FileTools_Msg_WindowsFilePathEndsWithColon;
+          return false;
+        }
+
+        // 31.12.2020
+        if (fileName.StartsWith("\\\\", StringComparison.Ordinal))
+        {
+          if (DataTools.GetCharCount(fileName, '\\') < 4)
           {
-            errorText = Res.FileTools_Msg_WindowsFilePathEndsWithColon;
+            errorText = Res.FileTools_Msg_WindowsNetFilePathFewSeparators;
             return false;
           }
-
-          // 31.12.2020
-          if (fileName.StartsWith("\\\\", StringComparison.Ordinal))
-          {
-            if (DataTools.GetCharCount(fileName, '\\') < 4)
-            {
-              errorText = Res.FileTools_Msg_WindowsNetFilePathFewSeparators;
-              return false;
-            }
-          }
-
-          break;
+        }
       }
 
       return true;
@@ -620,19 +598,15 @@ namespace FreeLibSet.IO
           return false;
         }
 
-        switch (System.Environment.OSVersion.Platform)
+        if (EnvironmentTools.IsWindowsPlatform)
         {
-          case PlatformID.Win32NT:
-          case PlatformID.Win32Windows:
-          case PlatformID.Win32S:
-          case PlatformID.WinCE:
-            if (!TestWindowsChars(name, out errorText))
-              return false;
-            break;
-          case PlatformID.Unix:
-            if (!TestLinuxChars(name, out errorText))
-              return false;
-            break;
+          if (!TestWindowsChars(name, out errorText))
+            return false;
+        }
+        else if (Environment.OSVersion.Platform == PlatformID.Unix)
+        {
+          if (!TestLinuxChars(name, out errorText))
+            return false;
         }
       }
 
@@ -978,7 +952,7 @@ namespace FreeLibSet.IO
         throw ExceptionFactory.ArgIsEmpty("dirPath");
       if (Directory.Exists(dirPath.Path))
       {
-        createdDirs =_EmptyArray;
+        createdDirs = _EmptyArray;
         return;
       }
 
@@ -1241,7 +1215,7 @@ namespace FreeLibSet.IO
       if (shortPath.IsEmpty)
         return AbsPath.Empty;
 
-      if (!WindowsNative.IsWindowsPlatform)
+      if (!EnvironmentTools.IsWindowsPlatform)
         return shortPath;
 
       if (shortPath.Path.Length == 3 && shortPath.Path.EndsWith(":\\", StringComparison.Ordinal))
@@ -1264,7 +1238,7 @@ namespace FreeLibSet.IO
       if (longPath.IsEmpty)
         return AbsPath.Empty;
 
-      if (!WindowsNative.IsWindowsPlatform)
+      if (!EnvironmentTools.IsWindowsPlatform)
         return longPath;
 
       if (longPath.Path.Length == 3 && longPath.Path.EndsWith(":\\", StringComparison.Ordinal))
@@ -1796,7 +1770,7 @@ namespace FreeLibSet.IO
 
     /// <summary>
     /// Получить версию выполняемого файла с заданным путем.
-    /// Если файл не существует, или для него не задана сводка, то возвращается null
+    /// Если файл не существует, или для него не задана сводка, то возвращается null.
     /// </summary>
     /// <param name="filePath">Путь к EXE, DLL или другому файлу</param>
     /// <returns>Версия файла</returns>
@@ -1808,19 +1782,28 @@ namespace FreeLibSet.IO
       if (!File.Exists(filePath.Path))
         return null;
 
-      FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(filePath.Path);
-      return GetFileVersion(fvi);
+      if (EnvironmentTools.IsWindowsPlatform)
+      {
+        System.Diagnostics.FileVersionInfo fvi1 = System.Diagnostics.FileVersionInfo.GetVersionInfo(filePath.Path);
+        return GetFileVersion(fvi1);
+      }
+      else
+      {
+        // 21.05.2025
+        FreeLibSet.Win32.FileVersionInfo fvi2 = FreeLibSet.Win32.FileVersionInfo.GetVersionInfo(filePath);
+        return GetFileVersion(fvi2);
+      }
     }
 
     /// <summary>
-    /// Получить версию в виде объекта <see cref="Version"/> из объекта <see cref="FileVersionInfo"/>.
-    /// Берется поле <see cref="FileVersionInfo.FileVersion"/>, а при его отсутствии - <see cref="FileVersionInfo.ProductVersion"/>.
+    /// Получить версию в виде объекта <see cref="Version"/> из объекта <see cref="System.Diagnostics.FileVersionInfo"/>.
+    /// Берется поле <see cref="System.Diagnostics.FileVersionInfo.FileVersion"/>, а при его отсутствии - <see cref="System.Diagnostics.FileVersionInfo.ProductVersion"/>.
     /// Версия файла задается как строка, поэтому может содержать посторонние 
     /// символы. Эти символы удаляются, пытаемся получить то, что можно.
     /// </summary>
-    /// <param name="fvi">Ссылка на <see cref="FileVersionInfo"/>. Если null, то будет возвращен null</param>
+    /// <param name="fvi">Ссылка на <see cref="System.Diagnostics.FileVersionInfo"/>. Если null, то будет возвращен null</param>
     /// <returns>Версия или null</returns>
-    public static Version GetFileVersion(FileVersionInfo fvi)
+    public static Version GetFileVersion(System.Diagnostics.FileVersionInfo fvi)
     {
       if (fvi == null)
         return null;
@@ -1830,7 +1813,27 @@ namespace FreeLibSet.IO
       if (ver == null)
         ver = GetFileVersion1(fvi.ProductVersion, fvi.ProductMajorPart, fvi.ProductMinorPart, fvi.ProductBuildPart, fvi.ProductPrivatePart);
       return ver;
+    }
 
+
+    /// <summary>
+    /// Получить версию в виде объекта <see cref="Version"/> из объекта <see cref="FreeLibSet.Win32.FileVersionInfo"/>.
+    /// Берется поле <see cref="FreeLibSet.Win32.FileVersionInfo.FileVersion"/>, а при его отсутствии - <see cref="FreeLibSet.Win32.FileVersionInfo.ProductVersion"/>.
+    /// Версия файла задается как строка, поэтому может содержать посторонние 
+    /// символы. Эти символы удаляются, пытаемся получить то, что можно.
+    /// </summary>
+    /// <param name="fvi">Ссылка на <see cref="FreeLibSet.Win32.FileVersionInfo"/>. Если null, то будет возвращен null</param>
+    /// <returns>Версия или null</returns>
+    public static Version GetFileVersion(FreeLibSet.Win32.FileVersionInfo fvi)
+    {
+      if (fvi == null)
+        return null;
+
+      //DebugTools.DebugObject(fvi, "FileVersionInfo");
+      Version ver = GetFileVersion1(fvi.FileVersion, fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart, fvi.FilePrivatePart);
+      if (ver == null)
+        ver = GetFileVersion1(fvi.ProductVersion, fvi.ProductMajorPart, fvi.ProductMinorPart, fvi.ProductBuildPart, fvi.ProductPrivatePart);
+      return ver;
     }
 
     private static Version GetFileVersion1(string str, int majorPart, int minorPart, int buildPart, int privatePart)
@@ -1985,7 +1988,7 @@ namespace FreeLibSet.IO
     /// <returns>true-дискета, false - не дискета</returns>
     public static bool IsFloppyDriveDir(AbsPath path)
     {
-      if (!WindowsNative.IsWindowsPlatform)
+      if (!EnvironmentTools.IsWindowsPlatform)
         return false; // ???
 
       if (path.IsEmpty)
@@ -2030,7 +2033,7 @@ namespace FreeLibSet.IO
     /// <returns>Список машин в сети</returns>
     public static string[] GetNetworkMachineNames()
     {
-      if (!WindowsNative.IsWindowsPlatform)
+      if (!EnvironmentTools.IsWindowsPlatform)
         throw new NotSupportedException();
 
       string[] a = GetServerList(WindowsNative.SV_101_TYPES.SV_TYPE_ALL);

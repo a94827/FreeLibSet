@@ -111,7 +111,9 @@ namespace FreeLibSet.Forms
       }
       _Form.KeyPreview = true;
       // так не работает. _Form.PreviewKeyDown += new PreviewKeyDownEventHandler(Form_PreviewKeyDown); // 04.02.2021
-      _Form.KeyDown += new KeyEventHandler(Form_KeyDown);
+      _Form.KeyDown += Form_KeyDown;
+      _Form.KeyPress += Form_KeyPress;
+      _Form.KeyUp += Form_KeyUp;
 
       _Form.Disposed += new EventHandler(Form_Disposed);
 
@@ -1468,15 +1470,27 @@ namespace FreeLibSet.Forms
 
     #region Обработка нажатия клавиш
 
+    /// <summary>
+    /// Если событие KeyDown обработано как ShortCut, то для события KeyPress следует установить свойство <see cref="KeyPressEventArgs.Handled"/>,
+    /// чтобы управляющий элемент не воспринял его как символ ввода.
+    /// Например, ShortCut'а "*" в табличном просмотре выполняет инверсию отметок строк. При этом символ "*" не должен добавляться к строке быстрого поиска.
+    /// </summary>
+    private bool _ShortCutHandled; // 29.05.2025
+
     void Form_KeyDown(object sender, KeyEventArgs args)
     {
       try
       {
-        EFPCommandItems.PerformKeyDown(sender, args);
-        if (EFPApp.ShowToolTips && _TheToolTip != null)
+        if (!args.Handled)
         {
-          _TheToolTip.Active = false;
-          _TheToolTip.Active = true;
+          EFPCommandItems.PerformKeyDown(sender, args);
+          if (args.Handled)
+            _ShortCutHandled = true;
+          if (EFPApp.ShowToolTips && _TheToolTip != null)
+          {
+            _TheToolTip.Active = false;
+            _TheToolTip.Active = true;
+          }
         }
       }
       catch (Exception e)
@@ -1485,9 +1499,21 @@ namespace FreeLibSet.Forms
       }
     }
 
+    private void Form_KeyPress(object sender, KeyPressEventArgs args)
+    {
+      if (_ShortCutHandled)
+        args.Handled = true;
+    }
+
+    private void Form_KeyUp(object sender, KeyEventArgs args)
+    {
+      _ShortCutHandled = false;
+    }
+
+
     //void Form_PreviewKeyDown(object sender, PreviewKeyDownEventArgs args)
     //{
-    //  // 04.02.2020
+    //  // 04.02.2021
     //  // Комбинации Ctrl-Enter, Shift-Enter, Alt-Enter относятся к управляющему элементу, а не предназначены для нажатия кнопки <ОК>
     //  if (args.KeyCode == Keys.Enter)
     //  {
@@ -2531,7 +2557,7 @@ namespace FreeLibSet.Forms
 
     private bool _InsideOnSetFormVisible_StatusBarNeeded;
 
-    private bool ContainsControlWantedStatusBar()
+    internal bool ContainsControlWantedStatusBar()
     {
       foreach (EFPControlBase controlProvider in GetAllControlProviders())
       {
@@ -2597,7 +2623,21 @@ namespace FreeLibSet.Forms
       if (adjustFormSize)
       {
         if (Form.WindowState == FormWindowState.Normal) // ? более сложная проверка
+        {
           Form.Height += _StatusStripControl.Height;
+        }
+        // 29.04.2025
+        // Если есть управляющие элементы, привязанные к нижней границе формы (как список в ListSelectForm), то их надо уменьшить
+        foreach (Control child in Form.Controls) // только элементы верхнего уровня
+        {
+          if ((child.Anchor & AnchorStyles.Bottom) == AnchorStyles.Bottom)
+          {
+            if ((child.Anchor & AnchorStyles.Top) == AnchorStyles.Top)
+              child.Height -= _StatusStripControl.Height;
+            else
+              child.Top -= _StatusStripControl.Height;
+          }
+        }
       }
     }
 

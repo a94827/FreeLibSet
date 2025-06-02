@@ -621,9 +621,6 @@
   <data name="ListSelectDialog_Err_PasteTextWithCommas" xml:space="preserve">
     <value>В буфере обмена текст содержит запятые, но в списке можно выбрать только одну строку</value>
   </data>
-  <data name="ListSelectDialog_Menu_CopyAllText" xml:space="preserve">
-    <value>Копировать весь список</value>
-  </data>
   <data name="ListSelectDialog_Msg_PasteAdd" xml:space="preserve">
     <value>Добавить к уже отмеченным позициям</value>
   </data>
@@ -3107,5 +3104,11 @@
   </data>
   <data name="EFPPasteTextMatrixFormat_Name_WithLineSeparator" xml:space="preserve">
     <value>{0}, разделитель строк: '{1}'</value>
+  </data>
+  <data name="EFPDataView_Name_CheckBoxColumn" xml:space="preserve">
+    <value>Флажок</value>
+  </data>
+  <data name="BRPageSetupFont_Err_LineHeightFontHeight" xml:space="preserve">
+    <value>Высота строки не может юыть меньше, чем размер шрифта</value>
   </data>
 </root>

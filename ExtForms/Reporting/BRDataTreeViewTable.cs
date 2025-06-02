@@ -549,7 +549,7 @@ namespace FreeLibSet.Forms.Reporting
         #region Заголовки
 
         style.HAlign = BRHAlign.Center;
-        if (_Info.ViewData.BorderStyle != BRDataViewBorderStyle.NoBorders)
+        if (_Info.ViewData.BorderStyle != BRDataViewBorderStyle.None)
           style.AllBorders = BRLine.Thin;
         style.WrapMode = BRWrapMode.WordWrap;
 
@@ -560,7 +560,7 @@ namespace FreeLibSet.Forms.Reporting
         #region Нумерация столбцов
 
         style.HAlign = BRHAlign.Center;
-        if (_Info.ViewData.BorderStyle != BRDataViewBorderStyle.NoBorders)
+        if (_Info.ViewData.BorderStyle != BRDataViewBorderStyle.None)
           style.AllBorders = BRLine.Thin;
 
         #endregion

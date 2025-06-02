@@ -36,6 +36,8 @@ namespace FreeLibSet.Forms.Reporting
       page.ToolTipText = Res.BRDataViewPageSetupAppearance_ToolTip_Tab;
       page.ImageKey = "CircleGreenYellowRed";
 
+      new ListControlImagePainter(cbBorderStyle, BorderStylePainHandler);
+   
       efpBorderStyle = new EFPListComboBox(page.BaseProvider, cbBorderStyle);
 
       efpColorStyle = new EFPListComboBox(page.BaseProvider, cbColorStyle);
@@ -113,6 +115,18 @@ namespace FreeLibSet.Forms.Reporting
 
       page.DataToControls += Page_DataToControls;
       page.DataFromControls += Page_DataFromControls;
+    }
+
+
+    private void BorderStylePainHandler(object sender, ListControlImageEventArgs args)
+    {
+      switch ((BRDataViewBorderStyle)( args.ItemIndex))
+      {
+        case BRDataViewBorderStyle.None: args.Image = BRDataViewImageResource.BRDataViewBorderStyleNone;break;
+        case BRDataViewBorderStyle.Headers: args.Image = BRDataViewImageResource.BRDataViewBorderStyleHeaders; break;
+        case BRDataViewBorderStyle.Vertical: args.Image = BRDataViewImageResource.BRDataViewBorderStyleVertical; break;
+        case BRDataViewBorderStyle.All: args.Image = BRDataViewImageResource.BRDataViewBorderStyleAll; break;
+      }
     }
 
     private IEFPDataView _ControlProvider;

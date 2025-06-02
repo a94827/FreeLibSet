@@ -25,52 +25,106 @@ namespace FreeLibSet.Forms
   {
     #region Конструктор формы
 
-    public ListSelectForm(int itemCount, bool multiSelect, bool canBeEmpty, ListSelectDialogClipboardMode clipboardMode, bool hasSubItems)
+    public ListSelectForm(ListSelectDialog owner)
     {
       InitializeComponent();
 
-      _ClipboardMode = clipboardMode;
-
-      TheLV.CheckBoxes = multiSelect;
-
-      if (hasSubItems)
-        _SubColumn = TheLV.Columns.Add(Res.ListSelectDialog_ColTitle_Sub);
-
-      _CanBeEmpty = canBeEmpty;
-
-      efpForm = new EFPFormProvider(this);
+      EFPFormProvider efpForm = new EFPFormProvider(this);
       efpForm.FormChecks.Add(new UIValidatingEventHandler(ValidateForm));
+      efpForm.OwnStatusBar = true; // удобнее для быстрого поиска
+      efpForm.ConfigSectionName = owner.ConfigSectionName;
+      if (!String.IsNullOrEmpty(owner.HelpContext))
+        efpForm.HelpContext = owner.HelpContext;
+
+      Init(efpForm, owner);
+
+      btnOk.Enabled = _Owner.CanBeEmpty || _Owner.Items.Length > 0;
+    }
+
+    /// <summary>
+    /// Конструктор для WizardStep
+    /// </summary>
+    public ListSelectForm()
+    {
+      InitializeComponent();
+    }
+
+
+    public void Init(EFPBaseProvider baseProvider, IListSelectDialogInternal owner)
+    {
+      _Owner = owner;
+
+      TheGroupBox.Text = _Owner.ListTitle;
+
+      efpGrid = new EFPDataGridView(baseProvider, theGrid);
+      efpGrid.Control.AutoGenerateColumns = false;
+      if (_Owner.MultiSelect)
+        efpGrid.Columns.AddBool("CheckBox", false, String.Empty);
+      if (EFPApp.ShowListImages)
+        efpGrid.Columns.AddImage("Image");
+      efpGrid.Columns.AddText("Item", false, String.Empty);
+      efpGrid.Columns.LastAdded.CanIncSearch = true;
+      if (_Owner.SubItems != null)
+        efpGrid.Columns.AddText("SubItem", false, String.Empty);
+      efpGrid.Control.ColumnHeadersVisible = false;
+      efpGrid.Control.RowHeadersVisible = false;
+      efpGrid.DisableOrdering();
+      efpGrid.ReadOnly = true;
+      efpGrid.Control.ReadOnly = true;
+      efpGrid.CanView = false;
+      efpGrid.Control.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+      efpGrid.GetCellAttributes += EfpGrid_GetCellAttributes;
+      //efpGrid.CommandItems.PasteHandler.Visible = false; // 23.05.2025
+      efpGrid.CommandItems.AddTextPasteFormats();
+      efpGrid.CommandItems.PasteHandler.Clear();
+      if (_Owner.MultiSelect)
+      {
+        CheckMarks = new SelectionFlagList(_Owner.Items.Length);
+        efpGrid.MarkRowsColumnName = "CheckBox";
+        efpGrid.Control.CellValuePushed += Control_CellValuePushed;
+      }
+      efpGrid.Control.VirtualMode = true;
+
+      efpGrid.Control.RowCount = _Owner.Items.Length;
+      efpGrid.CommandItems.EnterAsOk = true;
+      efpGrid.ConfigSectionName = _Owner.ConfigSectionName;
+
+      if (_Owner is WizardStepWithListSelection)
+      {
+        // Для ListSelectDialog это делается в OnLoad()
+        efpGrid.Columns.LastAdded.GridColumn.FillWeight = 100;
+        efpGrid.Columns.LastAdded.GridColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+      }
+      efpGrid.DocumentProperties.Title = owner.OutItemTitle; // продублируется в заголовок таблицы
 
       btnCheckAll.Image = EFPApp.MainImages.Images["CheckListAll"];
       btnCheckAll.ImageAlign = ContentAlignment.MiddleLeft;
-      EFPButton efpCheckAll = new EFPButton(efpForm, btnCheckAll);
+      EFPButton efpCheckAll = new EFPButton(baseProvider, btnCheckAll);
       efpCheckAll.Click += efpCheckAll_Click;
 
       btnUnCheckAll.Image = EFPApp.MainImages.Images["CheckListNone"];
       btnUnCheckAll.ImageAlign = ContentAlignment.MiddleLeft;
-      EFPButton efpUnCheckAll = new EFPButton(efpForm, btnUnCheckAll);
+      EFPButton efpUnCheckAll = new EFPButton(baseProvider, btnUnCheckAll);
       efpUnCheckAll.Click += efpUnCheckAll_Click;
 
-      btnCheckAll.Visible = multiSelect;
-      btnUnCheckAll.Visible = multiSelect;
+      btnCheckAll.Visible = btnUnCheckAll.Visible = _Owner.MultiSelect;
 
       // 25.10.2019 - блокируем бесполезные кнопки
-      btnCheckAll.Enabled = itemCount > 0;
-      btnUnCheckAll.Enabled = itemCount > 0;
-      btnOk.Enabled = canBeEmpty || itemCount > 0;
+      efpCheckAll.Enabled = _Owner.Items.Length > 0;
+      efpUnCheckAll.Enabled = _Owner.Items.Length > 0;
 
-      if (clipboardMode != ListSelectDialogClipboardMode.None)
+      if (_Owner.ClipboardMode != ListSelectDialogClipboardMode.None)
       {
         btnCopy.Image = EFPApp.MainImages.Images["Copy"];
         btnCopy.ImageAlign = ContentAlignment.MiddleCenter;
-        EFPButton efpCopy = new EFPButton(efpForm, btnCopy);
+        EFPButton efpCopy = new EFPButton(baseProvider, btnCopy);
         efpCopy.DisplayName = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_Copy);
         efpCopy.ToolTipText = Res.ListSelectDialog_ToolTip_Copy;
         efpCopy.Click += new EventHandler(efpCopy_Click);
 
         btnPaste.Image = EFPApp.MainImages.Images["Paste"];
         btnPaste.ImageAlign = ContentAlignment.MiddleCenter;
-        EFPButton efpPaste = new EFPButton(efpForm, btnPaste);
+        EFPButton efpPaste = new EFPButton(baseProvider, btnPaste);
         efpPaste.DisplayName = EFPCommandItem.RemoveMnemonic(Res.Cmd_Menu_Edit_Paste);
         efpPaste.ToolTipText = Res.ListSelectDialog_ToolTip_Paste;
         efpPaste.Click += new EventHandler(efpPaste_Click);
@@ -81,58 +135,94 @@ namespace FreeLibSet.Forms
         btnPaste.Visible = false;
       }
 
-      EFPButtonWithMenu efpMore = new EFPButtonWithMenu(efpForm, btnMore);
-      efpMore.DisplayName = Res.Btn_Text_More;
-      efpMore.ToolTipText = Res.Btn_ToolTip_More;
-      //efpMore.Visible = false;
+      if ((_Owner is WizardStepWithListSelection) && 
+        (!_Owner.MultiSelect) && 
+        (_Owner.ClipboardMode == ListSelectDialogClipboardMode.None))
 
-      EFPCommandItem ciCopyAll = new EFPCommandItem("Edit", "CopyAllText");
-      ciCopyAll.MenuText = Res.ListSelectDialog_Menu_CopyAllText;
-      ciCopyAll.Click += new EventHandler(ciCopyAll_Click);
-      ciCopyAll.Enabled = itemCount > 0;
-      efpMore.CommandItems.Add(ciCopyAll);
+        ButtonPanel.Visible = false;
+    }
+
+    protected override void OnLoad(EventArgs args)
+    {
+      base.OnLoad(args);
+
+      // 09.02.2020
+      // Подбор размеров по ширине списка
+      int w = 0;
+      efpGrid.Control.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+      for (int i = 0; i < efpGrid.Columns.Count; i++)
+        w += efpGrid.Columns[i].Width;
+      w += 4 * SystemInformation.BorderSize.Width + SystemInformation.VerticalScrollBarWidth;
+      w = Math.Min(w, SystemInformation.VirtualScreen.Width); // 14.05.2021
+      int dw = w - efpGrid.Control.Width;
+      if (dw > 0)
+        this.Width = Math.Min(this.Width + dw, SystemInformation.VirtualScreen.Width);
+
+      efpGrid.Columns.LastAdded.GridColumn.FillWeight = 100;
+      efpGrid.Columns.LastAdded.GridColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+      // 14.05.2021
+      // Подбор размеров по высоте списка
+      if (_Owner.Items.Length > 0)
+      {
+        int h = efpGrid.Control.Rows[0].Height * _Owner.Items.Length;
+        h += 4 * SystemInformation.BorderSize.Width +
+          SystemInformation.HorizontalScrollBarHeight; /* 14.05.2021 */
+        h = Math.Min(h, SystemInformation.VirtualScreen.Height);
+        int dh = h - efpGrid.Control.Height;
+
+        if (dh > 0)
+          this.Height = Math.Min(this.Height + dh, SystemInformation.VirtualScreen.Height);
+      }
+
+      WinFormsTools.PlaceFormInScreen(this);
     }
 
     #endregion
 
     #region Поля
 
-    public EFPFormProvider efpForm;
+    private IListSelectDialogInternal _Owner;
 
-    /// <summary>
-    /// Если есть подтемы, то они отображаются здесь
-    /// </summary>
-    private ColumnHeader _SubColumn;
-
-    private bool _CanBeEmpty;
-
-    private ListSelectDialogClipboardMode _ClipboardMode;
+    public SelectionFlagList CheckMarks;
 
     #endregion
 
-    #region Изменение размеров формы
+    #region Табличный просмотр
 
-    private bool _InsideResize = false;
-    public void TheLV_Resize(object sender, EventArgs args)
+    public EFPDataGridView efpGrid;
+
+    private void EfpGrid_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
-      if (_InsideResize)
-        return;
+      switch (args.ColumnName)
+      {
+        case "CheckBox":
+          args.Value = CheckMarks[args.RowIndex];
+          break;
+        case "Image":
+          if (_Owner.HasImages && _Owner.Images[args.RowIndex] != null)
+            args.Value = _Owner.Images[args.RowIndex];
+          else if (_Owner.HasImageKeys && (!String.IsNullOrEmpty(_Owner.ImageKeys[args.RowIndex])))
+            args.Value = EFPApp.MainImages.Images[_Owner.ImageKeys[args.RowIndex]];
+          else if (_Owner.Image != null)
+            args.Value = _Owner.Image;
+          else if (!String.IsNullOrEmpty(_Owner.ImageKey))
+            args.Value = EFPApp.MainImages.Images[_Owner.ImageKey];
+          else
+            args.Value = EFPApp.MainImages.Images["Item"];
+          break;
+        case "Item":
+          args.Value = _Owner.Items[args.RowIndex];
+          break;
+        case "SubItem":
+          args.Value = _Owner.SubItems[args.RowIndex];
+          break;
+      }
+    }
 
-      _InsideResize = true;
-      try
-      {
-        if (_SubColumn == null)
-          TheColumn.Width = -2;
-        else
-        {
-          TheColumn.Width = -1;
-          _SubColumn.Width = -2;
-        }
-      }
-      finally
-      {
-        _InsideResize = false;
-      }
+    private void Control_CellValuePushed(object sender, DataGridViewCellValueEventArgs args)
+    {
+      CheckMarks[args.RowIndex] = (bool)(args.Value);
     }
 
     #endregion
@@ -143,30 +233,20 @@ namespace FreeLibSet.Forms
     {
       if (args.ValidateState == UIValidateState.Error)
         return;
-      if (_CanBeEmpty)
+      if (_Owner.CanBeEmpty)
         return;
 
-      if (TheLV.CheckBoxes)
+      if (CheckMarks != null)
       {
-        if (TheLV.CheckedItems.Count == 0)
+        if (CheckMarks.AreAllUnselected)
         {
-          // Если не одной темы не выбрано, то можно использовать текущую тему
-          // 18.03.2016
-          // Так не работает
-          /*
-          if (TheLV.SelectedItems.Count > 0)
-          {
-            TheLV.Items[TheLV.SelectedItems[0].Index].Selected = true;
-            return;
-          }
-           * */
           args.SetError(Res.ListSelectDialog_Err_NoneChecked);
           return;
         }
       }
       else
       {
-        if (TheLV.SelectedItems.Count == 0)
+        if (efpGrid.CurrentGridRow == null)
         {
           args.SetError(Res.ListSelectDialog_Err_NoSelection);
         }
@@ -179,41 +259,12 @@ namespace FreeLibSet.Forms
 
     private void efpCheckAll_Click(object sender, EventArgs args)
     {
-      TheLV.BeginUpdate();
-      try
-      {
-        for (int i = 0; i < TheLV.Items.Count; i++)
-          TheLV.Items[i].Checked = true;
-      }
-      finally
-      {
-        TheLV.EndUpdate();
-      }
+      efpGrid.CheckMarkRows(EFPDataGridViewCheckMarkRows.All, EFPDataGridViewCheckMarkAction.Check);
     }
 
     private void efpUnCheckAll_Click(object sender, EventArgs args)
     {
-      TheLV.BeginUpdate();
-      try
-      {
-        for (int i = 0; i < TheLV.Items.Count; i++)
-          TheLV.Items[i].Checked = false;
-      }
-      finally
-      {
-        TheLV.EndUpdate();
-      }
-    }
-
-    #endregion
-
-    #region Двойной щелчок для нажатия кнопки ОК
-
-    private void TheLV_DoubleClick(object sender, EventArgs args)
-    {
-      if (TheLV.CheckBoxes)
-        return;
-      btnOk.PerformClick();
+      efpGrid.CheckMarkRows(EFPDataGridViewCheckMarkRows.All, EFPDataGridViewCheckMarkAction.Uncheck);
     }
 
     #endregion
@@ -222,17 +273,20 @@ namespace FreeLibSet.Forms
 
     void efpCopy_Click(object sender, EventArgs args)
     {
-      switch (_ClipboardMode)
+      switch (_Owner.ClipboardMode)
       {
         case ListSelectDialogClipboardMode.CommaCodes:
-          if (TheLV.CheckBoxes)
+          if (CheckMarks != null)
           {
             StringBuilder sb = new StringBuilder();
-            foreach (ListViewItem li in TheLV.CheckedItems)
+            for (int i = 0; i < _Owner.Items.Length; i++)
             {
-              if (sb.Length > 0)
-                sb.Append(", ");
-              sb.Append(li.Text);
+              if (CheckMarks[i])
+              {
+                if (sb.Length > 0)
+                  sb.Append(", ");
+                sb.Append(_Owner.Items[i]);
+              }
             }
             if (sb.Length == 0)
             {
@@ -243,24 +297,23 @@ namespace FreeLibSet.Forms
           }
           else
           {
-            if (TheLV.SelectedItems.Count == 1)
-              new EFPClipboard().SetText(TheLV.SelectedItems[0].Text);
+            if (efpGrid.CurrentRowIndex >= 0)
+              new EFPClipboard().SetText(_Owner.Items[efpGrid.CurrentRowIndex]);
             else
               EFPApp.ShowTempMessage(Res.ListSelectDialog_Err_NoSelection);
           }
           break;
 
         default:
-          throw new BugException("ClipboardMode=" + _ClipboardMode.ToString());
+          throw new BugException("ClipboardMode=" + _Owner.ClipboardMode.ToString());
       }
     }
 
     /// <summary>
-    /// Ключ - текст элемента, значение - ссылка на элемент.
+    /// Ключ - текст элемента, значение - индекс элемента.
     /// Используется для вставки ссылок из буфера обмена.
-    /// Можно было бы использовать метод ListView.ListViewItemCollection.Find(), но свойство Name является регистронечувствительным.
     /// </summary>
-    private TypedStringDictionary<ListViewItem> _ItemDict;
+    private TypedStringDictionary<int> _ItemDict;
 
     void efpPaste_Click(object sender, EventArgs args)
     {
@@ -270,14 +323,14 @@ namespace FreeLibSet.Forms
 
       if (_ItemDict == null)
       {
-        _ItemDict = new TypedStringDictionary<ListViewItem>(TheLV.Items.Count, false);
-        foreach (ListViewItem li in TheLV.Items)
-          _ItemDict[li.Text] = li; // вдруг есть одинаковые строки
+        _ItemDict = new TypedStringDictionary<int>(_Owner.Items.Length, false);
+        for (int i = 0; i < _Owner.Items.Length; i++)
+          _ItemDict[_Owner.Items[i]] = i; // вдруг есть одинаковые строки
       }
 
       #endregion
 
-      switch (_ClipboardMode)
+      switch (_Owner.ClipboardMode)
       {
         case ListSelectDialogClipboardMode.CommaCodes:
           EFPClipboard clp = new EFPClipboard();
@@ -286,20 +339,20 @@ namespace FreeLibSet.Forms
           if (String.IsNullOrEmpty(s))
             return;
           string[] a = s.Split(',');
-          if (TheLV.CheckBoxes)
+          if (CheckMarks != null)
           {
-            List<ListViewItem> lst1 = new List<ListViewItem>();
-            List<ListViewItem> lst2 = new List<ListViewItem>();
+            List<int> lst1 = new List<int>();
+            List<int> lst2 = new List<int>();
             for (int i = 0; i < a.Length; i++)
             {
               s = a[i].Trim();
-              ListViewItem li;
-              if (_ItemDict.TryGetValue(s, out li))
+              int itemIndex;
+              if (_ItemDict.TryGetValue(s, out itemIndex))
               {
-                if (li.Checked)
-                  lst1.Add(li);
+                if (CheckMarks[itemIndex])
+                  lst1.Add(itemIndex);
                 else
-                  lst2.Add(li);
+                  lst2.Add(itemIndex);
               }
               else
               {
@@ -308,12 +361,12 @@ namespace FreeLibSet.Forms
               }
             }
             // lst содержит список элементов, которые нужно отметить
-            if (lst2.Count == 0 && lst1.Count == TheLV.CheckedItems.Count)
+            if (lst2.Count == 0 && lst1.Count == a.Length)
             {
               EFPApp.ShowTempMessage(Res.ListSelectDialog_Err_NoChanges);
               return;
             }
-            if (TheLV.CheckedItems.Count > 0)
+            if (!CheckMarks.AreAllUnselected)
             {
               RadioSelectDialog dlg2 = new RadioSelectDialog();
               dlg2.Title = efpPaste.DisplayName;
@@ -327,20 +380,19 @@ namespace FreeLibSet.Forms
               if (dlg2.SelectedIndex == 0)
               {
                 for (int i = 0; i < lst2.Count; i++)
-                  lst2[i].Checked = true;
+                  CheckMarks[lst2[i]] = true;
+                efpGrid.InvalidateColumn("CheckBox");
                 return;
               }
             }
 
             // Режим замены выделения
-            ListViewItem[] a0 = new ListViewItem[TheLV.CheckedItems.Count];
-            TheLV.CheckedItems.CopyTo(a0, 0);
-            for (int i = 0; i < a0.Length; i++)
-              a0[i].Checked = false;
+            CheckMarks.UnselectAll();
             for (int i = 0; i < lst1.Count; i++)
-              lst1[i].Checked = true;
+              CheckMarks[lst1[i]] = true;
             for (int i = 0; i < lst2.Count; i++)
-              lst2[i].Checked = true;
+              CheckMarks[lst2[i]] = true;
+            efpGrid.InvalidateColumn("CheckBox");
           }
           else // ! CheckBoxes
           {
@@ -350,184 +402,20 @@ namespace FreeLibSet.Forms
               return;
             }
             s = a[0].Trim();
-            ListViewItem li;
-            if (_ItemDict.TryGetValue(s, out li))
-              li.Selected = true;
+            int itemIndex;
+            if (_ItemDict.TryGetValue(s, out itemIndex))
+            {
+              CheckMarks[itemIndex] = true;
+              efpGrid.InvalidateCell(itemIndex, "CheckBox");
+            }
             else
               EFPApp.ShowTempMessage(String.Format(Res.ListSelectDialog_Err_ItemNotFound, s));
           }
           break;
 
         default:
-          throw new BugException("ClipboardMode=" + _ClipboardMode.ToString());
+          throw new BugException("ClipboardMode=" + _Owner.ClipboardMode.ToString());
       }
-    }
-
-    void ciCopyAll_Click(object sender, EventArgs args)
-    {
-      EFPCommandItem ciCopyAll = (EFPCommandItem)sender;
-
-      EFPApp.BeginWait(ciCopyAll.MenuText, ciCopyAll.ImageKey);
-      try
-      {
-        string[,] a = new string[TheLV.Items.Count, _SubColumn == null ? 1 : 2];
-        for (int i = 0; i < TheLV.Items.Count; i++)
-        {
-          a[i, 0] = TheLV.Items[i].Text;
-          if (_SubColumn != null)
-            a[i, 1] = TheLV.Items[i].SubItems[1].Text;
-        }
-
-        DataObject dobj = new DataObject();
-
-        WinFormsTools.SetTextMatrix(dobj, a);
-
-        byte[] buffer = CreateHtmlFormat(a);
-        //System.IO.File.WriteAllBytes(@"d:\temp\table.html", Buffer);
-        dobj.SetData(DataFormats.Html, false, new MemoryStream(buffer));
-
-        new EFPClipboard().SetDataObject(dobj, true);
-      }
-      finally
-      {
-        EFPApp.EndWait();
-      }
-    }
-
-    private byte[] CreateHtmlFormat(string[,] a)
-    {
-      const int PosWrStartHtml = 23;
-      const int PosWrEndHtml = 43;
-      const int PosWrStartFragment = 70;
-      const int PosWrEndFragment = 93;
-
-
-      byte[] buffer;
-      using (MemoryStream strm = new MemoryStream())
-      {
-        using (StreamWriter wrt = new StreamWriter(strm, Encoding.UTF8))
-        {
-          // Убираем сигнатуру utf-8: EF BB BF
-          wrt.Write("");
-          wrt.Flush();
-          strm.Flush();
-          strm.SetLength(0);
-
-          int PosOff = 0;
-
-          wrt.WriteLine("Version:1.0");
-          wrt.WriteLine("StartHTML:0000000000");
-          wrt.WriteLine("EndHTML:0000000000");
-          wrt.WriteLine("StartFragment:0000000000");
-          wrt.WriteLine("EndFragment:0000000000");
-          wrt.WriteLine();
-
-          int OffStartHtml = GetHtmlOff(wrt, strm);
-          wrt.WriteLine("<HTML>");
-          wrt.WriteLine("<HEAD>");
-          string CharSetText = wrt.Encoding.WebName;
-          wrt.WriteLine("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=" + CharSetText + "\">");
-          wrt.WriteLine("</HEAD>");
-
-          wrt.WriteLine("<BODY>");
-          wrt.WriteLine("<TABLE BORDER=1 CellPadding=4 CellSpacing=2 COLS=" + a.GetLength(1).ToString() + ">");
-
-          wrt.WriteLine("<!--StartFragment-->");
-          int OffStartFragment = GetHtmlOff(wrt, strm);
-
-          //wrt.WriteLine("<col width=" + Column.Width.ToString() + ">");
-          wrt.WriteLine();
-          for (int i = 0; i < a.GetLength(0); i++)
-          {
-            wrt.WriteLine("<TR>");
-            for (int j = 0; j < a.GetLength(1); j++)
-            {
-              string txt = MakeHtmlSpc(a[i, j]);
-              wrt.WriteLine("<TD>" + txt + "</TD>");
-            }
-            wrt.WriteLine("</TR>");
-          }
-
-          int OffEndFragment = GetHtmlOff(wrt, strm);
-          wrt.WriteLine("<!--EndFragment-->");
-
-          wrt.WriteLine("</TABLE>");
-          wrt.WriteLine("</BODY>");
-          wrt.WriteLine("</HTML>");
-          int OffEndHtml = GetHtmlOff(wrt, strm) - 2; // CRLF
-
-          strm.Flush();
-
-          WriteHtmlOff(strm, PosWrStartHtml + PosOff, OffStartHtml - PosOff);
-          WriteHtmlOff(strm, PosWrEndHtml + PosOff, OffEndHtml - PosOff);
-          WriteHtmlOff(strm, PosWrStartFragment + PosOff, OffStartFragment - PosOff);
-          WriteHtmlOff(strm, PosWrEndFragment + PosOff, OffEndFragment - PosOff);
-
-          buffer = strm.ToArray();
-        }
-      }
-      return buffer;
-    }
-
-
-    /// <summary>
-    /// Замена пробелов. 
-    /// Если в строке более одного пробела подряд, заменяем второй пробел на
-    /// код 160 (неразрывный пробел)
-    /// Также заменяем специальные символы "больше", "меньше" и "амперсанд"
-    /// </summary>
-    /// <param name="txt"></param>
-    /// <returns></returns>
-    internal static string MakeHtmlSpc(string txt)
-    {
-      if (String.IsNullOrEmpty(txt))
-        return txt;
-      StringBuilder sb = new StringBuilder(txt);
-      // Убираем гадкие символы (заменяем их на точки)
-      for (int i = 0; i < sb.Length; i++)
-      {
-        if (sb[i] < ' ' && sb[i] != '\r' && sb[i] != '\n')
-          sb[i] = '.';
-      }
-
-      // Замена второго и далее пробелов на неразрывный пробел
-      // ??? sb.Replace("  ", ???);
-      //txt:=STRTRAN(txt, '  ', CHR(32)+CHR(160))
-
-      // Заменяем плохие символы на комбинации
-      sb.Replace("&", "&amp;");
-      sb.Replace("<", "&lt;");
-      sb.Replace(">", "&gt;");
-
-      return sb.ToString();
-    }
-
-    /// <summary>
-    /// Запись значения смещения в указанную позицию файла
-    /// Позиция записывается в виде десятичного числа в формате 0000000000 (10 разрядов)
-    /// </summary>
-    /// <param name="strm"></param>
-    /// <param name="posWr">Позиция начала заглушки 0000000000</param>
-    /// <param name="value">Записываемое значение</param>
-    private static void WriteHtmlOff(Stream strm, int posWr, int value)
-    {
-      if (!strm.CanSeek)
-        throw ExceptionFactory.ArgProperty("strm", strm, "CanSeek", strm.CanSeek, new object[] { true });
-      string text = value.ToString("d10");
-      strm.Seek(posWr, SeekOrigin.Begin);
-      for (int i = 0; i < text.Length; i++)
-      {
-        byte b = (byte)(text[i]);
-        strm.WriteByte(b);
-      }
-    }
-
-    private static int GetHtmlOff(TextWriter wrt, Stream strm)
-    {
-      wrt.Flush();
-      strm.Flush();
-      strm.Seek(0, SeekOrigin.End);
-      return (int)(strm.Position);
     }
 
     #endregion
@@ -558,10 +446,31 @@ namespace FreeLibSet.Forms
 
   #endregion
 
+  internal interface IListSelectDialogInternal
+  {
+    string ListTitle { get; }
+    string OutItemTitle { get; }
+    ListSelectDialogClipboardMode ClipboardMode { get; }
+    string ConfigSectionName { get; }
+    string[] Items { get; }
+    string[] SubItems { get; }
+    int SelectedIndex { get; set; }
+    bool CanBeEmpty { get; }
+    bool MultiSelect { get; }
+    bool[] Selections { get; set; }
+    string ImageKey { get; }
+    Image Image { get; }
+    string[] ImageKeys { get; }
+    bool HasImageKeys { get; }
+    Image[] Images { get; }
+    bool HasImages { get; }
+  }
+
   /// <summary>
-  /// Диалог выбора одной или нескольких позиций из списка
+  /// Диалог выбора одной или нескольких позиций из списка.
+  /// Для добавления шага мастера с аналогичными возможностями, используйте <see cref="WizardStepWithListSelection"/>.
   /// </summary>
-  public class ListSelectDialog
+  public class ListSelectDialog: IListSelectDialogInternal
   {
     #region Конструктор
 
@@ -570,7 +479,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     public ListSelectDialog()
     {
-      MultiSelect = false;
+      _MultiSelect = false;
       _CanBeEmpty = false;
       _SelectedIndex = -1;
       _DialogPosition = new EFPDialogPosition();
@@ -580,195 +489,9 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Свойства
+    // При добавлении свойств и методов не забыть про WizardStepWithListSelect
 
-    /// <summary>
-    /// Список для выбора
-    /// </summary>
-    public string[] Items
-    {
-      get
-      {
-        return _Items;
-      }
-      set
-      {
-        _Items = value;
-        RecreateSelection();
-      }
-    }
-    private string[] _Items;
-
-    /// <summary>
-    /// Список строк для второго столбца.
-    /// Если свойство равно null (по умолчанию), то второго столбца нет
-    /// </summary>
-    public string[] SubItems
-    {
-      get
-      {
-        return _SubItems;
-      }
-      set
-      {
-        _SubItems = value;
-      }
-    }
-    private string[] _SubItems;
-
-
-
-    /// <summary>
-    /// True, если разрешено выбирать несколько позиций
-    /// </summary>
-    public bool MultiSelect
-    {
-      get
-      {
-        return _MultiSelect;
-      }
-      set
-      {
-        if (value == _MultiSelect)
-          return;
-        _MultiSelect = value;
-        RecreateSelection();
-      }
-    }
-    private bool _MultiSelect;
-
-    /// <summary>
-    /// Флажки выбора в режиме <see cref="MultiSelect"/> 
-    /// </summary>
-    public bool[] Selections
-    {
-      get { return _Selections; }
-      set
-      {
-        if (!MultiSelect)
-          throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, null);
-        value.CopyTo(_Selections, 0);
-      }
-    }
-    private bool[] _Selections;
-
-    /// <summary>
-    /// Текущая позиция при отключенном <see cref="MultiSelect"/> 
-    /// </summary>
-    public int SelectedIndex
-    {
-      get { return _SelectedIndex; }
-      set { _SelectedIndex = value; }
-    }
-    private int _SelectedIndex;
-
-    /// <summary>
-    /// Установка и получение выбранной позиции как строки.
-    /// Выполняет поиск в списке <see cref="Items"/>
-    /// </summary>
-    public string SelectedItem
-    {
-      get
-      {
-        if (Items == null || SelectedIndex < 0)
-          return String.Empty;
-        else
-          return Items[SelectedIndex];
-      }
-      set
-      {
-        if (Items == null)
-          throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
-        SelectedIndex = Array.IndexOf<string>(Items, value);
-      }
-    }
-
-    private void RecreateSelection()
-    {
-      _Selections = null;
-      if (_Items == null || (!_MultiSelect))
-        return;
-      _Selections = new bool[_Items.Length];
-    }
-
-
-    /// <summary>
-    /// True, если пользователь может нажимать "ОК", если нет выбранной позиции в списке (при <see cref="MultiSelect"/>=false)
-    /// или не отмечено ни одного флажка (при <see cref="MultiSelect"/>=true).
-    /// По умолчанию - false.
-    /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
-
-    /// <summary>
-    /// Имя изображения (одного на все элементы). 
-    /// Изображения извлекаются из списка <see cref="EFPApp.MainImages"/>.
-    /// Может перекрываться с помощью массива <see cref="ImageKeys"/> для задания отдельных изображений.
-    /// Также определяет значок формы.
-    /// Можно использовать произвольное изображение <see cref="Image"/>, для значка диалога, но при этом в списке будут отображаться значки "Item" или заданные в <see cref="ImageKeys"/>, так как <see cref="ListView"/> может работать только с <see cref="ImageList"/>, но не отдельными изображениями.
-    /// Свойства <see cref="Image"/> и <see cref="ImageKey"/> являются взаимоисключающими
-    /// </summary>
-    public string ImageKey
-    {
-      get { return _ImageKey??String.Empty; }
-      set
-      {
-        _Image = null;
-        _ImageKey = value;
-      }
-    }
-    private string _ImageKey;
-
-    /// <summary>
-    /// Произвольное изображение, использумое для значка окна.
-    /// Оно не будет использоваться в списке. 
-    /// </summary>
-    public Image Image
-    {
-      get { return _Image; }
-      set
-      {
-        _ImageKey = null;
-        _Image = value;
-      }
-    }
-    private Image _Image;
-
-    /// <summary>
-    /// Имена индивидуальных изображений для каждого элемента списка.
-    /// Изображения извлекаются из списка <see cref="EFPApp.MainImages"/>.
-    /// Свойство действительно и может устанавливаться только после установки свойства <see cref="Items"/>.
-    /// Длина массива совпадает с <see cref="Items"/>.
-    /// Для пустых строк массива используется изображение, задаваемое свойством <see cref="ImageKey"/>.
-    /// Нельзя использовать произвольные пользовательские изображения <see cref="Image"/>, так как <see cref="ListView"/> может работать только с <see cref="ImageList"/>, но не отдельными изображениями.
-    /// </summary>
-    public string[] ImageKeys
-    {
-      get
-      {
-        if (_ImageKeys == null)
-        {
-          if (_Items == null)
-            return null;
-          _ImageKeys = new string[_Items.Length];
-        }
-        return _ImageKeys;
-      }
-      set
-      {
-        if (value == null)
-          _ImageKey = null;
-        else
-        {
-          if (Items == null)
-            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
-          if (value.Length != Items.Length)
-            throw ExceptionFactory.ArgWrongCollectionCount("value", value, Items.Length);
-          _ImageKeys = value;
-        }
-      }
-    }
-    private string[] _ImageKeys;
+    #region Свойства формы
 
     /// <summary>
     /// Заголовок формы.
@@ -807,10 +530,35 @@ namespace FreeLibSet.Forms
     /// </summary>
     public string ListTitle
     {
-      get { return _ListTitle??String.Empty; }
+      get { return _ListTitle ?? String.Empty; }
       set { _ListTitle = value; }
     }
     private string _ListTitle;
+
+    /// <summary>
+    /// Заголовок таблицы при печати списка / экспорте в файл.
+    /// По умолчанию совпадает с <see cref="ListTitle"/>, если он задан, иначе - с <see cref="Title"/>.
+    /// </summary>
+    public string OutItemTitle
+    {
+      get
+      {
+        if (_OutItemTitle == null)
+        {
+          if (String.IsNullOrEmpty(ListTitle))
+            return Title;
+          else
+            return ListTitle;
+        }
+        else
+          return _OutItemTitle;
+      }
+      set
+      {
+        _OutItemTitle = value;
+      }
+    }
+    private string _OutItemTitle;
 
     /// <summary>
     /// Контекст справки, вызываемой по нажатию клавиши F1
@@ -818,107 +566,14 @@ namespace FreeLibSet.Forms
     public string HelpContext { get { return _HelpContext; } set { _HelpContext = value; } }
     private string _HelpContext;
 
-    /// <summary>
-    /// В режиме <see cref="MultiSelect"/> возвращает true, если в <see cref="Selections"/> установлены все флажки
-    /// </summary>
-    public bool AreAllSelected
-    {
-      get
-      {
-        if (_Selections == null)
-          return false;
-        for (int i = 0; i < _Selections.Length; i++)
-        {
-          if (!_Selections[i])
-            return false;
-        }
-        return true;
-      }
-    }
-
-    /// <summary>
-    /// В режиме <see cref="MultiSelect"/> возвращает true, если в <see cref="Selections"/> сброшены все флажки
-    /// </summary>
-    public bool AreAllUnselected
-    {
-      get
-      {
-        if (_Selections == null)
-          return false;
-        for (int i = 0; i < _Selections.Length; i++)
-        {
-          if (_Selections[i])
-            return false;
-        }
-        return true;
-      }
-    }
-
-
-    /// <summary>
-    /// Индексы выбранных строк в режиме <see cref="MultiSelect"/>.
-    /// Если <see cref="MultiSelect"/>=false значение содержит один или ноль элементов.
-    /// </summary>
-    public int[] SelectedIndices
-    {
-      get
-      {
-        if (MultiSelect)
-        {
-          List<int> lst = new List<int>();
-          for (int i = 0; i < _Selections.Length; i++)
-          {
-            if (_Selections[i])
-              lst.Add(i);
-          }
-          return lst.ToArray();
-        }
-        else
-        {
-          if (SelectedIndex >= 0)
-            return new int[1] { SelectedIndex };
-          else
-            return DataTools.EmptyInts;
-        }
-      }
-      set
-      {
-        if (MultiSelect)
-        {
-          DataTools.FillArray<bool>(_Selections, false);
-          if (value != null)
-          {
-            for (int i = 0; i < value.Length; i++)
-            {
-              if (value[i] < 0 || value[i] >= _Selections.Length)
-                throw new ArgumentOutOfRangeException();
-              _Selections[value[i]] = true;
-            }
-          }
-        }
-        else
-        {
-          if (value == null)
-            SelectedIndex = -1;
-          else if (value.Length == 0)
-            SelectedIndex = -1;
-          else if (value.Length == 1)
-          {
-            if (value[0] < 0 || value[0] >= _Items.Length)
-              throw new ArgumentOutOfRangeException();
-            SelectedIndex = value[0];
-          }
-        }
-      }
-    }
 
     /// <summary>
     /// Позиция блока диалога на экране.
     /// По умолчанию блок диалога центрируется относительно <see cref="EFPApp.DefaultScreen"/>.
     /// Можно либо модифицировать свойства существующего объекта, либо присвоить свойству ссылку на новый объект <see cref="EFPDialogPosition"/>.
     /// </summary>
-    public EFPDialogPosition DialogPosition 
-    { 
+    public EFPDialogPosition DialogPosition
+    {
       get { return _DialogPosition; }
       set
       {
@@ -952,164 +607,241 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Методы
+    #region Список элементов
 
     /// <summary>
-    /// Запуск диалога
+    /// Список для выбора.
+    /// Это свойство должно задаваться обязательно и в первую очередь.
+    /// Установка свойства очищает остальные списочные свойства.
     /// </summary>
-    /// <returns>OK, если пользователь сделал выбор</returns>
-    public DialogResult ShowDialog()
+    public string[] Items
     {
-      if (Items == null)
-        throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
-      if (SubItems != null)
+      get
       {
-        if (SubItems.Length != Items.Length)
-          throw ExceptionFactory.ObjectPropertyCount(this, "SubItems", SubItems, Items.Length);
+        return _Items;
       }
+      set
+      {
+        _Items = value;
+        _SubItems = null;
+        _Images = null;
+        _ImageKeys = null;
+        _Selections = null;
+        _Codes = null;
+      }
+    }
+    private string[] _Items;
 
-      ListSelectForm frm = new ListSelectForm(Items.Length, MultiSelect, CanBeEmpty, ClipboardMode, SubItems != null);
-      DialogResult res;
-      try
+    /// <summary>
+    /// Список строк для второго столбца.
+    /// Если свойство равно null (по умолчанию), то второго столбца нет.
+    /// Свойство может устанавливаться только после свойства Items
+    /// </summary>
+    public string[] SubItems
+    {
+      get { return _SubItems; }
+      set
       {
-        res = DoShowDialog(frm);
+        if (value != null)
+        {
+          if (_Items == null)
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+          if (value.Length != _Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
+        }
+        _SubItems = value;
       }
-      finally
+    }
+    private string[] _SubItems;
+
+    #endregion
+
+    #region Текущая позиция
+
+    /// <summary>
+    /// Текущая позиция при отключенном <see cref="MultiSelect"/> 
+    /// </summary>
+    public int SelectedIndex
+    {
+      get { return _SelectedIndex; }
+      set { _SelectedIndex = value; }
+    }
+    private int _SelectedIndex;
+
+    /// <summary>
+    /// Установка и получение выбранной позиции как строки.
+    /// Выполняет поиск в списке <see cref="Items"/>
+    /// </summary>
+    public string SelectedItem
+    {
+      get
       {
-        frm.Dispose();
+        if (Items == null || SelectedIndex < 0)
+          return String.Empty;
+        else
+          return Items[SelectedIndex];
       }
-      return res;
+      set
+      {
+        if (Items == null)
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+        SelectedIndex = Array.IndexOf<string>(Items, value);
+      }
     }
 
     /// <summary>
-    /// Отдельный метод для гарантированного вызова TheForm.Dispose()
+    /// True, если пользователь может нажимать "ОК", если нет выбранной позиции в списке (при <see cref="MultiSelect"/>=false)
+    /// или не отмечено ни одного флажка (при <see cref="MultiSelect"/>=true).
+    /// По умолчанию - false.
     /// </summary>
-    /// <param name="form"></param>
-    /// <returns></returns>
-    private DialogResult DoShowDialog(ListSelectForm form)
+    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
+    private bool _CanBeEmpty;
+
+    #endregion
+
+    #region Выбор нескольких позиций
+
+    /// <summary>
+    /// True, если разрешено выбирать несколько позиций
+    /// </summary>
+    public bool MultiSelect
     {
-      form.Text = Title;
-      form.TheGroupBox.Text = ListTitle;
-      form.efpForm.ConfigSectionName = ConfigSectionName;
-
-      if ((String.IsNullOrEmpty(ImageKey) && ImageKeys==null) || (!EFPApp.ShowListImages))
-        form.TheLV.SmallImageList = null;
-      else
-        form.TheLV.SmallImageList = EFPApp.MainImages.ImageList;
-
-      for (int i = 0; i < Items.Length; i++)
+      get
       {
-        string thisImageKey;
-        if (EFPApp.ShowListImages)
+        return _MultiSelect;
+      }
+      set
+      {
+        if (value == _MultiSelect)
+          return;
+        _MultiSelect = value;
+        _Selections = null;
+      }
+    }
+    private bool _MultiSelect;
+
+    /// <summary>
+    /// Флажки выбора в режиме <see cref="MultiSelect"/> 
+    /// </summary>
+    public bool[] Selections
+    {
+      get
+      {
+        if (_Selections == null)
         {
-          if (Image == null)
-            thisImageKey = ImageKey;
-          else
-            thisImageKey = "Item";
-          if (_ImageKeys != null)
+          if (_Items == null || (!MultiSelect))
+            return null;
+          _Selections = new bool[_Items.Length];
+        }
+        return _Selections;
+      }
+      set
+      {
+        if (!MultiSelect)
+          throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, null);
+        if (_Items == null)
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+        if (value != null)
+        {
+          if (value.Length != _Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
+        }
+        _Selections = value;
+      }
+    }
+    private bool[] _Selections;
+
+    /// <summary>
+    /// В режиме <see cref="MultiSelect"/> возвращает true, если в <see cref="Selections"/> установлены все флажки
+    /// </summary>
+    public bool AreAllSelected
+    {
+      get
+      {
+        if (_Selections == null)
+          return false;
+        for (int i = 0; i < _Selections.Length; i++)
+        {
+          if (!_Selections[i])
+            return false;
+        }
+        return true;
+      }
+    }
+
+    /// <summary>
+    /// В режиме <see cref="MultiSelect"/> возвращает true, если в <see cref="Selections"/> сброшены все флажки
+    /// </summary>
+    public bool AreAllUnselected
+    {
+      get
+      {
+        if (_Selections == null)
+          return true;
+        for (int i = 0; i < _Selections.Length; i++)
+        {
+          if (_Selections[i])
+            return false;
+        }
+        return true;
+      }
+    }
+
+    /// <summary>
+    /// Индексы выбранных строк в режиме <see cref="MultiSelect"/>.
+    /// Если <see cref="MultiSelect"/>=false значение содержит один или ноль элементов.
+    /// </summary>
+    public int[] SelectedIndices
+    {
+      get
+      {
+        if (MultiSelect)
+        {
+          List<int> lst = new List<int>();
+          for (int i = 0; i < Selections.Length; i++)
           {
-            if (!String.IsNullOrEmpty(_ImageKeys[i]))
-              thisImageKey = _ImageKeys[i];
+            if (Selections[i])
+              lst.Add(i);
+          }
+          return lst.ToArray();
+        }
+        else
+        {
+          if (SelectedIndex >= 0)
+            return new int[1] { SelectedIndex };
+          else
+            return DataTools.EmptyInts;
+        }
+      }
+      set
+      {
+        if (MultiSelect)
+        {
+          DataTools.FillArray<bool>(Selections, false);
+          if (value != null)
+          {
+            for (int i = 0; i < value.Length; i++)
+            {
+              if (value[i] < 0 || value[i] >= Selections.Length)
+                throw new ArgumentOutOfRangeException();
+              Selections[value[i]] = true;
+            }
           }
         }
         else
-          thisImageKey = String.Empty;
-        ListViewItem li = form.TheLV.Items.Add(Items[i], thisImageKey);
-        if (SubItems != null)
-          li.SubItems.Add(SubItems[i]);
-        if (MultiSelect)
-          li.Checked = Selections[i];
-      }
-
-      // Значок формы
-      if (Image == null)
-        EFPApp.MainImages.Icons.InitForm(form, ImageKey, true);
-      else
-        WinFormsTools.InitIcon(form, Image);
-
-      #region Активация элемента списка
-
-      // Все очень мерзко работает, пока не создан дескрипор HWND списка
-      // Чтение свойства Control.Handler создает дескриптор. А метод CreateControl()
-      // почему-то это не делает
-      int dummy = (int)form.TheLV.Handle;
-
-      if (SelectedIndex >= 0)
-      {
-        form.TheLV.Items[SelectedIndex].Focused = true;
-        form.TheLV.Items[SelectedIndex].Selected = true;
-        form.TheLV.EnsureVisible(SelectedIndex);
-      }
-      else if (MultiSelect)
-      {
-        // 06.12.2018
-        // Делаем видимым первый флажок, если есть отмеченные
-        for (int i = 0; i < Selections.Length; i++)
         {
-          if (Selections[i])
+          if (value == null)
+            SelectedIndex = -1;
+          else if (value.Length == 0)
+            SelectedIndex = -1;
+          else if (value.Length == 1)
           {
-            form.TheLV.Items[i].Focused = true;
-            form.TheLV.Items[i].Selected = true;
-            form.TheLV.EnsureVisible(i);
-            break;
+            if (value[0] < 0 || value[0] >= _Items.Length)
+              throw new ArgumentOutOfRangeException();
+            SelectedIndex = value[0];
           }
         }
       }
-
-      #endregion
-
-      // 09.02.2020
-      // Подбор размеров по ширине списка
-      int w = 0;
-      for (int i = 0; i < form.TheLV.Columns.Count; i++)
-      {
-        form.TheLV.Columns[i].Width = -1;
-        w += form.TheLV.Columns[i].Width;
-      }
-      w = Math.Min(w,  SystemInformation.VirtualScreen.Width); // 14.05.2021
-      int dw = w +
-        4 * SystemInformation.BorderSize.Width +
-        SystemInformation.VerticalScrollBarWidth -
-        form.TheLV.Width;
-      if (dw > 0)
-        form.Width += dw;
-
-      // 14.05.2021
-      // Подбор размеров по ширине списка
-      if (Items.Length > 0)
-      {
-        int h = form.TheLV.GetItemRect(0).Height * Items.Length;
-        int dh = h +
-          4 * SystemInformation.BorderSize.Width +
-          SystemInformation.HorizontalScrollBarHeight /* 14.05.2021 */ -
-        form.TheLV.Height;
-
-        if (dh > 0)
-          form.Height += dh;
-        h = Math.Min(h, SystemInformation.VirtualScreen.Height);
-      }
-
-      form.TheLV_Resize(null, null);
-
-      if (!String.IsNullOrEmpty(HelpContext))
-        form.efpForm.HelpContext = HelpContext;
-
-
-      if (EFPApp.ShowDialog(form, false, DialogPosition) != DialogResult.OK)
-        return DialogResult.Cancel;
-
-      if (form.TheLV.SelectedItems.Count > 0)
-        SelectedIndex = form.TheLV.SelectedItems[0].Index;
-      else
-        SelectedIndex = -1;
-
-      if (MultiSelect)
-      {
-        for (int i = 0; i < Items.Length; i++)
-          Selections[i] = form.TheLV.Items[i].Checked;
-      }
-
-      return DialogResult.OK;
     }
 
     /// <summary>
@@ -1123,17 +855,17 @@ namespace FreeLibSet.Forms
     public void SetSelectedItems(string[] selectedItems)
     {
       if (!MultiSelect)
-        throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true});
+        throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
       if (Items == null)
         throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
 
-      Array.Clear(_Selections, 0, _Selections.Length);
+      DataTools.FillArray<bool>(Selections, false);
 
       if (selectedItems != null)
       {
         for (int i = 0; i < selectedItems.Length; i++)
         {
-          int p = Array.IndexOf<String>(_Items, selectedItems[i]);
+          int p = Array.IndexOf<String>(Items, selectedItems[i]);
           if (p >= 0)
             Selections[p] = true;
         }
@@ -1185,8 +917,7 @@ namespace FreeLibSet.Forms
       if (!MultiSelect)
         throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
 
-      for (int i = 0; i < Selections.Length; i++)
-        Selections[i] = true;
+      DataTools.FillArray<bool>(Selections, true);
     }
 
 
@@ -1198,141 +929,215 @@ namespace FreeLibSet.Forms
       if (!MultiSelect)
         throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
 
-      for (int i = 0; i < Selections.Length; i++)
-        Selections[i] = false;
+      DataTools.FillArray<bool>(Selections, false);
     }
 
     #endregion
-  }
 
-
-  /// <summary>
-  /// Диалог выбора нескольких позиций из списка с возможностью задания порядка строк
-  /// </summary>
-  public class CodesListSelectDialog
-  {
-    #region Конструктор
+    #region Коды
 
     /// <summary>
-    /// Инициализация диалога значениями по умолчанию
+    /// Полный список возможных кодов строк.
+    /// По умолчанию - null - коды не используются.
     /// </summary>
-    public CodesListSelectDialog()
+    public string[] Codes
     {
-      _CanBeEmpty = false;
-      _DialogPosition = new EFPDialogPosition();
+      get { return _Codes; }
+      set
+      {
+        if (value != null)
+        {
+          if (_Items == null)
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+          if (value.Length != _Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
+
+          _CodeIndexer = new StringArrayIndexer(value, false);
+        }
+        else
+          _CodeIndexer = null;
+        _Codes = value;
+      }
     }
-
-    #endregion
-
-    #region Свойства
-
-    /// <summary>
-    /// Полный список возможных кодов строк
-    /// </summary>
-    public string[] Codes { get { return _Codes; } set { _Codes = value; } }
     private string[] _Codes;
 
-    /// <summary>
-    /// Названия тем, соответствующих кодам <see cref="Codes"/> 
-    /// </summary>
-    public string[] Items { get { return _Items; } set { _Items = value; } }
-    private string[] _Items;
+    private StringArrayIndexer _CodeIndexer;
+
 
     /// <summary>
-    /// Выбранные коды в требуемом порядке
+    /// Текущий код при <see cref="MultiSelect"/>=false
     /// </summary>
-    public string[] SelectedCodes { get { return _SelectedCodes; } set { _SelectedCodes = value; } }
-    private string[] _SelectedCodes;
+    public string SelectedCode
+    {
+      get
+      {
+        if (_Codes == null)
+          return String.Empty;
+        if (SelectedIndex < 0)
+          return String.Empty;
+        return _Codes[SelectedIndex];
+      }
+      set
+      {
+        if (Codes == null)
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
+        if (String.IsNullOrEmpty(value))
+          SelectedIndex = -1;
+        else
+          SelectedIndex = _CodeIndexer.IndexOf(value);
+      }
+    }
 
     /// <summary>
-    /// Необязательный список строк для второго столбца
+    /// Выбранные коды при <see cref="MultiSelect"/>=true
     /// </summary>
-    public string[] SubItems { get { return _SubItems; } set { _SubItems = value; } }
-    private string[] _SubItems;
+    public string[] SelectedCodes
+    {
+      get
+      {
+        if (_Codes == null || (!MultiSelect))
+          return DataTools.EmptyStrings;
+
+        List<string> lst = new List<string>();
+        for (int i = 0; i < Items.Length; i++)
+        {
+          if (Selections[i])
+            lst.Add(Codes[i]);
+        }
+
+        return lst.ToArray();
+      }
+      set
+      {
+        if (Codes == null)
+          throw ExceptionFactory.ObjectEventHandlerNotSet(this, "Codes");
+        if (!MultiSelect)
+          throw ExceptionFactory.ObjectEventHandlerNotSet(this, "MuliSelect");
+        UnselectAll();
+        if (value != null)
+        {
+          foreach (string code in value)
+          {
+            int p = _CodeIndexer.IndexOf(code);
+            if (p >= 0)
+              Selections[p] = true;
+          }
+        }
+      }
+    }
+
+    #endregion
+
+    #region Изображения
 
     /// <summary>
-    /// True, если пользователь может нажимать "ОК", если нет выбранной позиции в списке
-    /// По умолчанию - false.
-    /// </summary>
-    public bool CanBeEmpty { get { return _CanBeEmpty; } set { _CanBeEmpty = value; } }
-    private bool _CanBeEmpty;
-
-    /// <summary>
-    /// Имя изображения (одного на все элементы). Может перекрываться с помощью
-    /// <see cref="ImageKeys"/>.
-    /// Также определяет значок формы
+    /// Имя изображения (одного на все элементы). 
+    /// Изображения извлекаются из списка <see cref="EFPApp.MainImages"/>.
+    /// Может перекрываться с помощью массива <see cref="ImageKeys"/> для задания отдельных изображений.
+    /// Также определяет значок формы.
+    /// Можно использовать произвольное изображение <see cref="Image"/>, для значка диалога, но при этом в списке будут отображаться значки "Item" или заданные в <see cref="ImageKeys"/>, так как <see cref="ListView"/> может работать только с <see cref="ImageList"/>, но не отдельными изображениями.
+    /// Свойства <see cref="Image"/> и <see cref="ImageKey"/> являются взаимоисключающими
     /// </summary>
     public string ImageKey
     {
-      get { return _ImageKey; }
-      set { _ImageKey = value; }
+      get { return _ImageKey ?? String.Empty; }
+      set
+      {
+        _Image = null;
+        _ImageKey = value;
+      }
     }
     private string _ImageKey;
 
     /// <summary>
-    /// Индивидуальные изображения для тем
+    /// Произвольное изображение, использумое для значка окна.
+    /// Свойства <see cref="Image"/> и <see cref="ImageKey"/> являются взаимоисключающими
     /// </summary>
-    public string[] ImageKeys { get { return _ImageKeys; } set { _ImageKeys = value; } }
-    private string[] _ImageKeys;
-
+    public Image Image
+    {
+      get { return _Image; }
+      set
+      {
+        _ImageKey = null;
+        _Image = value;
+      }
+    }
+    private Image _Image;
 
     /// <summary>
-    /// Заголовок формы.
-    /// Если свойство не установлено в явном виде, используется заголовок по умолчанию.
+    /// Имена индивидуальных изображений для каждого элемента списка.
+    /// Изображения извлекаются из списка <see cref="EFPApp.MainImages"/>.
+    /// Свойство действительно и может устанавливаться только после установки свойства <see cref="Items"/>.
+    /// Длина массива совпадает с <see cref="Items"/>.
+    /// Для пустых строк массива используется основное изображение, задаваемое свойствами <see cref="Image"/> или <see cref="ImageKey"/>.
     /// </summary>
-    public string Title
+    public string[] ImageKeys
     {
       get
       {
-        if (_Title == null)
-          return Res.ListSelectDialog_Msg_TitleMultiSelect;
-        else
-          return _Title;
+        if (_ImageKeys == null)
+        {
+          if (_Items == null)
+            return null;
+          _ImageKeys = new string[_Items.Length];
+        }
+        return _ImageKeys;
       }
-      set
-      {
-        _Title = value;
-      }
-    }
-    private string _Title;
-
-    /// <summary>
-    /// Заголовок над списком.
-    /// По умолчанию - пустая строка - нет заголовка
-    /// </summary>
-    public string ListTitle
-    {
-      get { return _ListTitle??String.Empty; }
-      set { _ListTitle = value; }
-    }
-    private string _ListTitle;
-
-    /// <summary>
-    /// Контекст справки, вызываемой по нажатию клавиши F1
-    /// </summary>
-    public string HelpContext { get { return _HelpContext; } set { _HelpContext = value; } }
-    private string _HelpContext;
-
-    /// <summary>
-    /// Позиция блока диалога на экране.
-    /// По умолчанию блок диалога центрируется относительно <see cref="EFPApp.DefaultScreen"/>.
-    /// </summary>
-    public EFPDialogPosition DialogPosition 
-    { 
-      get { return _DialogPosition; }
       set
       {
         if (value == null)
-          _DialogPosition = new EFPDialogPosition();
+          _ImageKeys = null;
         else
-          _DialogPosition = value;
+        {
+          if (Items == null)
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+          if (value.Length != Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, Items.Length);
+          _ImageKeys = value;
+        }
       }
     }
-    private EFPDialogPosition _DialogPosition;
+    private string[] _ImageKeys;
+
+    bool IListSelectDialogInternal.HasImageKeys { get { return _ImageKeys != null; } }
+
+    /// Индивидуальные изображения для каждого элемента списка.
+    /// Свойство действительно и может устанавливаться только после установки свойства <see cref="Items"/>.
+    /// Длина массива совпадает с <see cref="Items"/>.
+    /// Для значений null в массиве используется основное изображение, задаваемое свойствами <see cref="Image"/> или <see cref="ImageKey"/>.
+    public Image[] Images
+    {
+      get
+      {
+        if (_ImageKeys == null)
+        {
+          if (_Items == null)
+            return null;
+          _Images = new Image[_Items.Length];
+        }
+        return _Images;
+      }
+      set
+      {
+        if (value == null)
+          _Images = null;
+        else
+        {
+          if (Items == null)
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+          if (value.Length != Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, Items.Length);
+          _Images = value;
+        }
+      }
+    }
+    private Image[] _Images;
+
+    bool IListSelectDialogInternal.HasImages { get { return _Images != null; } }
 
     #endregion
 
-    #region Методы
+    #region Показ блока диалога
 
     /// <summary>
     /// Запуск диалога
@@ -1340,32 +1145,13 @@ namespace FreeLibSet.Forms
     /// <returns>OK, если пользователь сделал выбор</returns>
     public DialogResult ShowDialog()
     {
-      if (Codes == null)
-        throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
       if (Items == null)
-        Items = Codes;
-      if (Items.Length != Codes.Length)
-        throw ExceptionFactory.ObjectPropertyCount(this, "Codes", Codes, Items.Length);
-      if (SubItems != null)
-      {
-        if (SubItems.Length != Codes.Length)
-          throw ExceptionFactory.ObjectPropertyCount(this, "SubItems", SubItems, Items.Length);
-      }
-      if (ImageKeys != null)
-      {
-        if (ImageKeys.Length != Codes.Length)
-          throw ExceptionFactory.ObjectPropertyCount(this, "ImageKeys", SubItems, Items.Length);
-      }
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
 
-      ListSelectForm frm = new ListSelectForm(Codes.Length, true, CanBeEmpty, ListSelectDialogClipboardMode.CommaCodes, SubItems != null);
       DialogResult res;
-      try
+      using (ListSelectForm form = new ListSelectForm(this))
       {
-        res = DoShowDialog(frm);
-      }
-      finally
-      {
-        frm.Dispose();
+        res = DoShowDialog(form);
       }
       return res;
     }
@@ -1378,79 +1164,739 @@ namespace FreeLibSet.Forms
     private DialogResult DoShowDialog(ListSelectForm form)
     {
       form.Text = Title;
-      form.TheGroupBox.Text = ListTitle;
 
-      if ((String.IsNullOrEmpty(ImageKey) && ImageKeys==null) || (!EFPApp.ShowListImages))
-        form.TheLV.SmallImageList = null;
-      else
-        form.TheLV.SmallImageList = EFPApp.MainImages.ImageList;
-
-      int i;
-      for (i = 0; i < Codes.Length; i++)
-      {
-        string thisImageKey;
-        if (EFPApp.ShowListImages)
-        {
-          thisImageKey = ImageKey;
-          if (_ImageKeys != null)
-          {
-            if (!String.IsNullOrEmpty(_ImageKeys[i]))
-              thisImageKey = _ImageKeys[i];
-          }
-        }
-        else
-          thisImageKey = String.Empty;
-        ListViewItem li = form.TheLV.Items.Add(Items[i], thisImageKey);
-        if (SubItems != null)
-          li.SubItems.Add(SubItems[i]);
-        if (SelectedCodes != null)
-          li.Checked = Array.IndexOf<string>(SelectedCodes, Codes[i]) >= 0;
-        li.Tag = Codes[i];
-      }
+      form.efpGrid.CurrentRowIndex = SelectedIndex;
+      if (MultiSelect)
+        form.CheckMarks.FromArray(Selections);
 
       // Значок формы
-      EFPApp.MainImages.Icons.InitForm(form, ImageKey, true);
+      if (Image == null)
+        EFPApp.MainImages.Icons.InitForm(form, ImageKey, true);
+      else
+        WinFormsTools.InitIcon(form, Image);
 
-      // Все очень мерзко работает, пока не создан дескрипор HWND списка
-      // Чтение свойства Control.Handler создает дескриптор. А метод CreateControl()
-      // почему-то это не делает
-      int dummy = (int)form.TheLV.Handle;
-      if (SelectedCodes != null)
-      {
-        if (SelectedCodes.Length > 0)
-        {
-          // Позионируемся на первый выбранный элемент
-          int startIndex = Array.IndexOf<string>(Codes, SelectedCodes[0]);// !!!
-          if (startIndex >= 0)
-          {
-            form.TheLV.Items[startIndex].Focused = true;
-            form.TheLV.Items[startIndex].Selected = true;
-            form.TheLV.EnsureVisible(startIndex);
-          }
-        }
-      }
-
-      form.TheLV_Resize(null, null); // глюк ?
-
-      if (!String.IsNullOrEmpty(HelpContext))
-        form.efpForm.HelpContext = HelpContext;
 
       if (EFPApp.ShowDialog(form, false, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
-      List<string> lst = new List<string>();
-      foreach (ListViewItem li in form.TheLV.Items)
-      {
-        if (li.Checked)
-        {
-          string scode = (string)(li.Tag);
-          lst.Add(scode);
-        }
-      }
+      SelectedIndex = form.efpGrid.CurrentRowIndex;
 
-      SelectedCodes = lst.ToArray();
+      if (MultiSelect)
+        Selections = form.CheckMarks.ToArray();
 
       return DialogResult.OK;
+    }
+
+
+    #endregion
+  }
+
+  /// <summary>
+  /// Шаг мастера для выбора одной или нескольких позиций из списка.
+  /// Возможности аналогичны классу <see cref="ListSelectDialog"/>.
+  /// Список позиций, начальный выбор и другие свойства могут задаваться после создания шага или
+  /// в обработчике события <see cref="WizardStep.BeginStep"/> при <see cref="WizardBeginStepEventArgs.Forward"/>=true.
+  /// Выбор, сделанный пользователем, доступен в событии <see cref="WizardStep.EndStep"/> при <see cref="WizardEndStepEventArgs.Forward"/>=true и позже.
+  /// </summary>
+  public class WizardStepWithListSelection : ExtWizardStep, IListSelectDialogInternal
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализирует свойства по умолчанию
+    /// </summary>
+    public WizardStepWithListSelection()
+    {
+      _Form = new ListSelectForm();
+      _Form.OkCancelButtonPanel.Visible = false; // кнопки не нужны
+      MainPanel.Controls.Add(_Form.MainPanel);
+
+      _MultiSelect = false;
+      _CanBeEmpty = false;
+      _SelectedIndex = -1;
+      _ClipboardMode = ListSelectDialogClipboardMode.None;
+    }
+
+    private ListSelectForm _Form;
+
+    #endregion
+
+    #region Свойства из ListSelectDialog
+
+    #region Форма
+
+    /// <summary>
+    /// Заголовок над списком.
+    /// По умолчанию - пустая строка - заголовок не выводится
+    /// </summary>
+    public string ListTitle
+    {
+      get { return _ListTitle ?? String.Empty; }
+      set
+      {
+        CheckHasNotBeenInit();
+        _ListTitle = value;
+      }
+    }
+    private string _ListTitle;
+
+    /// <summary>
+    /// Заголовок таблицы при печати / экспорте списка в файл.
+    /// По умолчанию совпадает с <see cref="ListTitle"/>.
+    /// </summary>
+    public string OutItemTitle
+    {
+      get
+      {
+        if (_OutItemTitle == null)
+          return ListTitle;
+        else
+          return _OutItemTitle;
+      }
+      set
+      {
+        _OutItemTitle = value;
+      }
+    }
+    private string _OutItemTitle;
+
+    /// <summary>
+    /// Можно ли использовать команды копирования и вставки из буфера обмена.
+    /// По умолчанию - None - копирование недоступно.
+    /// </summary>
+    public ListSelectDialogClipboardMode ClipboardMode
+    {
+      get { return _ClipboardMode; }
+      set
+      {
+        CheckHasNotBeenInit();
+        _ClipboardMode = value;
+      }
+    }
+    private ListSelectDialogClipboardMode _ClipboardMode;
+
+    string IListSelectDialogInternal.ConfigSectionName { get { return String.Empty; } }
+
+    #endregion
+
+    #region Список элементов
+
+    /// <summary>
+    /// Список для выбора.
+    /// Это свойство должно задаваться обязательно и в первую очередь.
+    /// Установка свойства очищает остальные списочные свойства.
+    /// </summary>
+    public string[] Items
+    {
+      get
+      {
+        return _Items;
+      }
+      set
+      {
+        CheckHasNotBeenInit();
+        _Items = value;
+        _SubItems = null;
+        _Images = null;
+        _ImageKeys = null;
+        _Selections = null;
+        _Codes = null;
+      }
+    }
+    private string[] _Items;
+
+    /// <summary>
+    /// Список строк для второго столбца.
+    /// Если свойство равно null (по умолчанию), то второго столбца нет.
+    /// Свойство может устанавливаться только после свойства Items
+    /// </summary>
+    public string[] SubItems
+    {
+      get { return _SubItems; }
+      set
+      {
+        CheckHasNotBeenInit();
+        if (value != null)
+        {
+          if (_Items == null)
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+          if (value.Length != _Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
+        }
+        _SubItems = value;
+      }
+    }
+    private string[] _SubItems;
+
+    #endregion
+
+    #region Текущая позиция
+
+    /// <summary>
+    /// Текущая позиция при отключенном <see cref="MultiSelect"/> 
+    /// </summary>
+    public int SelectedIndex
+    {
+      get { return _SelectedIndex; }
+      set { _SelectedIndex = value; }
+    }
+    private int _SelectedIndex;
+
+    /// <summary>
+    /// Установка и получение выбранной позиции как строки.
+    /// Выполняет поиск в списке <see cref="Items"/>
+    /// </summary>
+    public string SelectedItem
+    {
+      get
+      {
+        if (Items == null || SelectedIndex < 0)
+          return String.Empty;
+        else
+          return Items[SelectedIndex];
+      }
+      set
+      {
+        if (Items == null)
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+        SelectedIndex = Array.IndexOf<string>(Items, value);
+      }
+    }
+
+    /// <summary>
+    /// True, если пользователь может нажимать "ОК", если нет выбранной позиции в списке (при <see cref="MultiSelect"/>=false)
+    /// или не отмечено ни одного флажка (при <see cref="MultiSelect"/>=true).
+    /// По умолчанию - false.
+    /// </summary>
+    public bool CanBeEmpty
+    {
+      get { return _CanBeEmpty; }
+      set
+      {
+        CheckHasNotBeenInit();
+        _CanBeEmpty = value;
+      }
+    }
+    private bool _CanBeEmpty;
+
+    #endregion
+
+    #region Выбор нескольких позиций
+
+    /// <summary>
+    /// True, если разрешено выбирать несколько позиций
+    /// </summary>
+    public bool MultiSelect
+    {
+      get
+      {
+        return _MultiSelect;
+      }
+      set
+      {
+        CheckHasNotBeenInit();
+        if (value == _MultiSelect)
+          return;
+        _MultiSelect = value;
+        _Selections = null;
+      }
+    }
+    private bool _MultiSelect;
+
+    /// <summary>
+    /// Флажки выбора в режиме <see cref="MultiSelect"/> 
+    /// </summary>
+    public bool[] Selections
+    {
+      get
+      {
+        if (_Selections == null)
+        {
+          if (_Items == null || (!MultiSelect))
+            return null;
+          _Selections = new bool[_Items.Length];
+        }
+        return _Selections;
+      }
+      set
+      {
+        if (!MultiSelect)
+          throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, null);
+        if (_Items == null)
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+        if (value != null)
+        {
+          if (value.Length != _Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
+        }
+        _Selections = value;
+      }
+    }
+    private bool[] _Selections;
+
+    /// <summary>
+    /// В режиме <see cref="MultiSelect"/> возвращает true, если в <see cref="Selections"/> установлены все флажки
+    /// </summary>
+    public bool AreAllSelected
+    {
+      get
+      {
+        if (_Selections == null)
+          return false;
+        for (int i = 0; i < _Selections.Length; i++)
+        {
+          if (!_Selections[i])
+            return false;
+        }
+        return true;
+      }
+    }
+
+    /// <summary>
+    /// В режиме <see cref="MultiSelect"/> возвращает true, если в <see cref="Selections"/> сброшены все флажки
+    /// </summary>
+    public bool AreAllUnselected
+    {
+      get
+      {
+        if (_Selections == null)
+          return true;
+        for (int i = 0; i < _Selections.Length; i++)
+        {
+          if (_Selections[i])
+            return false;
+        }
+        return true;
+      }
+    }
+
+    /// <summary>
+    /// Индексы выбранных строк в режиме <see cref="MultiSelect"/>.
+    /// Если <see cref="MultiSelect"/>=false значение содержит один или ноль элементов.
+    /// </summary>
+    public int[] SelectedIndices
+    {
+      get
+      {
+        if (MultiSelect)
+        {
+          List<int> lst = new List<int>();
+          for (int i = 0; i < Selections.Length; i++)
+          {
+            if (Selections[i])
+              lst.Add(i);
+          }
+          return lst.ToArray();
+        }
+        else
+        {
+          if (SelectedIndex >= 0)
+            return new int[1] { SelectedIndex };
+          else
+            return DataTools.EmptyInts;
+        }
+      }
+      set
+      {
+        if (MultiSelect)
+        {
+          DataTools.FillArray<bool>(Selections, false);
+          if (value != null)
+          {
+            for (int i = 0; i < value.Length; i++)
+            {
+              if (value[i] < 0 || value[i] >= Selections.Length)
+                throw new ArgumentOutOfRangeException();
+              Selections[value[i]] = true;
+            }
+          }
+        }
+        else
+        {
+          if (value == null)
+            SelectedIndex = -1;
+          else if (value.Length == 0)
+            SelectedIndex = -1;
+          else if (value.Length == 1)
+          {
+            if (value[0] < 0 || value[0] >= _Items.Length)
+              throw new ArgumentOutOfRangeException();
+            SelectedIndex = value[0];
+          }
+        }
+      }
+    }
+
+    /// <summary>
+    /// Задать выбранные элементы с помощью списка строк.
+    /// Для строк <see cref="Items"/>, которые будут найдены в переданном аргументе, будет 
+    /// установлена отметка. Для остальных строк отметка будет снята.
+    /// Если в массиве <paramref name="selectedItems"/> есть строки, которых нет в списке <see cref="Items"/>,
+    /// элемент пропускается без возникновения ошибки
+    /// </summary>
+    /// <param name="selectedItems">Значения, которые нужно выбрать</param>
+    public void SetSelectedItems(string[] selectedItems)
+    {
+      if (!MultiSelect)
+        throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
+      if (Items == null)
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+
+      DataTools.FillArray<bool>(Selections, false);
+
+      if (selectedItems != null)
+      {
+        for (int i = 0; i < selectedItems.Length; i++)
+        {
+          int p = Array.IndexOf<String>(Items, selectedItems[i]);
+          if (p >= 0)
+            Selections[p] = true;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Получить список отмеченных строк из массива <see cref="Items"/>
+    /// </summary>
+    /// <returns></returns>
+    public string[] GetSelectedItems()
+    {
+      if (Items == null)
+        throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+
+      if (!MultiSelect)
+      {
+        if (SelectedIndex >= 0)
+          return new string[1] { Items[SelectedIndex] };
+        return DataTools.EmptyStrings;
+      }
+
+      // Придется делать 2 прохода
+      int i;
+      int n = 0;
+      for (i = 0; i < Selections.Length; i++)
+      {
+        if (Selections[i])
+          n++;
+      }
+      string[] a = new string[n];
+      n = 0;
+      for (i = 0; i < Selections.Length; i++)
+      {
+        if (Selections[i])
+        {
+          a[n] = Items[i];
+          n++;
+        }
+      }
+      return a;
+    }
+
+    /// <summary>
+    /// Установить отметки для всех позиций
+    /// </summary>
+    public void SelectAll()
+    {
+      if (!MultiSelect)
+        throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
+
+      DataTools.FillArray<bool>(Selections, true);
+    }
+
+
+    /// <summary>
+    /// Снять отметки для всех позиций
+    /// </summary>
+    public void UnselectAll()
+    {
+      if (!MultiSelect)
+        throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
+
+      DataTools.FillArray<bool>(Selections, false);
+    }
+
+    #endregion
+
+    #region Коды
+
+    /// <summary>
+    /// Полный список возможных кодов строк.
+    /// По умолчанию - null - коды не используются.
+    /// </summary>
+    public string[] Codes
+    {
+      get { return _Codes; }
+      set
+      {
+        CheckHasNotBeenInit();
+        if (value != null)
+        {
+          if (_Items == null)
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+          if (value.Length != _Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, _Items.Length);
+
+          _CodeIndexer = new StringArrayIndexer(value, false);
+        }
+        else
+          _CodeIndexer = null;
+        _Codes = value;
+      }
+    }
+    private string[] _Codes;
+
+    private StringArrayIndexer _CodeIndexer;
+
+
+    /// <summary>
+    /// Текущий код при <see cref="MultiSelect"/>=false
+    /// </summary>
+    public string SelectedCode
+    {
+      get
+      {
+        if (_Codes == null)
+          return String.Empty;
+        if (SelectedIndex < 0)
+          return String.Empty;
+        return _Codes[SelectedIndex];
+      }
+      set
+      {
+        if (Codes == null)
+          throw ExceptionFactory.ObjectPropertyNotSet(this, "Codes");
+        if (String.IsNullOrEmpty(value))
+          SelectedIndex = -1;
+        else
+          SelectedIndex = _CodeIndexer.IndexOf(value);
+      }
+    }
+
+    /// <summary>
+    /// Выбранные коды при <see cref="MultiSelect"/>=true
+    /// </summary>
+    public string[] SelectedCodes
+    {
+      get
+      {
+        if (_Codes == null || (!MultiSelect))
+          return DataTools.EmptyStrings;
+
+        List<string> lst = new List<string>();
+        for (int i = 0; i < Items.Length; i++)
+        {
+          if (Selections[i])
+            lst.Add(Codes[i]);
+        }
+
+        return lst.ToArray();
+      }
+      set
+      {
+        if (Codes == null)
+          throw ExceptionFactory.ObjectEventHandlerNotSet(this, "Codes");
+        if (!MultiSelect)
+          throw ExceptionFactory.ObjectEventHandlerNotSet(this, "MuliSelect");
+        UnselectAll();
+        if (value != null)
+        {
+          foreach (string code in value)
+          {
+            int p = _CodeIndexer.IndexOf(code);
+            if (p >= 0)
+              Selections[p] = true;
+          }
+        }
+      }
+    }
+
+    #endregion
+
+    #region Изображения
+
+    /// <summary>
+    /// Имя изображения (одного на все элементы). 
+    /// Изображения извлекаются из списка <see cref="EFPApp.MainImages"/>.
+    /// Может перекрываться с помощью массива <see cref="ImageKeys"/> для задания отдельных изображений.
+    /// Также определяет значок формы.
+    /// Можно использовать произвольное изображение <see cref="Image"/>, для значка диалога, но при этом в списке будут отображаться значки "Item" или заданные в <see cref="ImageKeys"/>, так как <see cref="ListView"/> может работать только с <see cref="ImageList"/>, но не отдельными изображениями.
+    /// Свойства <see cref="Image"/> и <see cref="ImageKey"/> являются взаимоисключающими
+    /// </summary>
+    public string ImageKey
+    {
+      get { return _ImageKey ?? String.Empty; }
+      set
+      {
+//        CheckHasNotBeenInit();
+        _Image = null;
+        _ImageKey = value;
+      }
+    }
+    private string _ImageKey;
+
+    /// <summary>
+    /// Произвольное изображение, использумое для значка окна.
+    /// Свойства <see cref="Image"/> и <see cref="ImageKey"/> являются взаимоисключающими
+    /// </summary>
+    public Image Image
+    {
+      get { return _Image; }
+      set
+      {
+//        CheckHasNotBeenInit();
+        _ImageKey = null;
+        _Image = value;
+      }
+    }
+    private Image _Image;
+
+    /// <summary>
+    /// Имена индивидуальных изображений для каждого элемента списка.
+    /// Изображения извлекаются из списка <see cref="EFPApp.MainImages"/>.
+    /// Свойство действительно и может устанавливаться только после установки свойства <see cref="Items"/>.
+    /// Длина массива совпадает с <see cref="Items"/>.
+    /// Для пустых строк массива используется основное изображение, задаваемое свойствами <see cref="Image"/> или <see cref="ImageKey"/>.
+    /// </summary>
+    public string[] ImageKeys
+    {
+      get
+      {
+        if (_ImageKeys == null)
+        {
+          if (_Items == null)
+            return null;
+          _ImageKeys = new string[_Items.Length];
+        }
+        return _ImageKeys;
+      }
+      set
+      {
+        if (value == null)
+          _ImageKeys = null;
+        else
+        {
+          if (Items == null)
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+          if (value.Length != Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, Items.Length);
+          _ImageKeys = value;
+        }
+      }
+    }
+    private string[] _ImageKeys;
+
+    bool IListSelectDialogInternal.HasImageKeys { get { return _ImageKeys != null; } }
+
+    /// Индивидуальные изображения для каждого элемента списка.
+    /// Свойство действительно и может устанавливаться только после установки свойства <see cref="Items"/>.
+    /// Длина массива совпадает с <see cref="Items"/>.
+    /// Для значений null в массиве используется основное изображение, задаваемое свойствами <see cref="Image"/> или <see cref="ImageKey"/>.
+    public Image[] Images
+    {
+      get
+      {
+        if (_ImageKeys == null)
+        {
+          if (_Items == null)
+            return null;
+          _Images = new Image[_Items.Length];
+        }
+        return _Images;
+      }
+      set
+      {
+        if (value == null)
+          _Images = null;
+        else
+        {
+          if (Items == null)
+            throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
+          if (value.Length != Items.Length)
+            throw ExceptionFactory.ArgWrongCollectionCount("value", value, Items.Length);
+          _Images = value;
+        }
+      }
+    }
+    private Image[] _Images;
+
+    bool IListSelectDialogInternal.HasImages { get { return _Images != null; } }
+
+    #endregion
+
+
+    #endregion
+
+    #region OnBeginStep() / OnEndStep()
+
+    /// <summary>
+    /// Однократная инициализация
+    /// </summary>
+    /// <param name="action"></param>
+    protected internal override void OnBeginStep(WizardAction action)
+    {
+      base.OnBeginStep(action);
+      if ((!_HasBeenInit) && Wizard.IsForwardAction(action))
+      {
+        _HasBeenInit = true;
+        _Form.Init(BaseProvider, this);
+
+        if (MultiSelect)
+          _Form.CheckMarks.FromArray(Selections);
+        _Form.efpGrid.CurrentRowIndex = SelectedIndex;
+      }
+    }
+
+    private bool _HasBeenInit;
+
+    private void CheckHasNotBeenInit()
+    {
+      if (_HasBeenInit)
+        throw ExceptionFactory.CannotAddItemAgain(this);
+    }
+
+    /// <summary>
+    /// Проверяет свойство <see cref="CanBeEmpty"/>. Заполняет свойства <see cref="SelectedIndex"/>, <see cref="Selections"/>,
+    /// затем вызывает пользовательский обработчик
+    /// </summary>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    protected internal override bool OnEndStep(WizardAction action)
+    {
+      if (Wizard.IsForwardAction(action))
+      {
+        if (!ValidateStep())
+          return false;
+
+        SelectedIndex = _Form.efpGrid.CurrentRowIndex;
+
+        if (MultiSelect)
+          Selections = _Form.CheckMarks.ToArray();
+      }
+      return base.OnEndStep(action);
+    }
+
+    private bool ValidateStep()
+    {
+      if (CanBeEmpty)
+        return true;
+
+      if (MultiSelect)
+      {
+        if (_Form.CheckMarks.AreAllUnselected)
+        {
+          EFPApp.ShowTempMessage(Res.ListSelectDialog_Err_NoneChecked);
+          return false;
+        }
+      }
+      else
+      {
+        if (_Form.efpGrid.CurrentGridRow == null)
+        {
+          EFPApp.ShowTempMessage(Res.ListSelectDialog_Err_NoSelection);
+          return false;
+        }
+      }
+      return true;
     }
 
     #endregion

@@ -131,16 +131,8 @@ namespace FreeLibSet.Win32
       if (path.IsEmpty)
         throw ExceptionFactory.ArgIsEmpty("path");
 
-      switch (Environment.OSVersion.Platform)
-      {
-        case PlatformID.Win32NT:
-        case PlatformID.Win32Windows:
-        case PlatformID.Win32S:
-        case PlatformID.WinCE:
-          break;
-        default:
-          throw new PlatformNotSupportedException();
-      }
+      if (!EnvironmentTools.IsWindowsPlatform)
+        throw new PlatformNotSupportedException();
 
 
       //Convert to the full path.  Because of backward compatibility, 

@@ -57,6 +57,11 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BRDataViewImageResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BRDataViewImageResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Design\DateRangeBoxDesigner.cs" />
     <Compile Include="Controls\Design\MonthDayBoxDesigner.cs" />
     <Compile Include="Controls\Design\NumEditBoxBaseDesigner.cs" />
@@ -656,6 +661,10 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BRDataViewImageResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BRDataViewImageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\DateRangeBox.ru.resx">
       <DependentUpon>DateRangeBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -1781,6 +1790,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Main\Menu\CopySettings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\BRDataView\BRDataViewBorderStyleAll.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\BRDataView\BRDataViewBorderStyleHeaders.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\BRDataView\BRDataViewBorderStyleNone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\BRDataView\BRDataViewBorderStyleVertical.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

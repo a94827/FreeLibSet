@@ -1743,6 +1743,8 @@ namespace FreeLibSet.Forms
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
       ghCol.SizeGroup = "CheckBox";
       ghCol.CustomOrderAllowed = isDataColumn;
+      if (String.IsNullOrEmpty(headerText))
+        ghCol.DisplayName = Res.EFPDataView_Name_CheckBoxColumn; // 29.05.2025
 
       ghCol.DbfPreliminaryInfo.Type = 'L';
 

@@ -103,6 +103,10 @@ namespace FreeLibSet.Forms.Reporting
           }
           break;
 
+        case 1:
+          if (!column.Printable)
+            args.Grayed = true;
+          break;
         case 2:
         case 3:
           if (column.Printable)

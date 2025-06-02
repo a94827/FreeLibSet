@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using FreeLibSet.Core;
 using FreeLibSet.IO;
+using FreeLibSet.Collections;
+using System.Globalization;
 
 namespace FreeLibSet.Win32
 {
@@ -651,6 +653,11 @@ namespace FreeLibSet.Win32
     /// <returns>Массив байтов блока данных</returns>
     public abstract byte[] GetBytes(CPInfo cpi);
 
+    /// <summary>
+    /// Имя файла, к которому относятся ресурсы
+    /// </summary>
+    public abstract AbsPath FilePath { get; }
+
     #endregion
 
     #region Значки
@@ -852,7 +859,8 @@ namespace FreeLibSet.Win32
         if (niIcon == null)
           throw new InvalidOperationException(String.Format(Res.ResourceTable_Err_IconNotFound, iconId2));
 
-        dict.Add(ii, niIcon[0]);
+        if (!dict.ContainsKey(ii))
+          dict.Add(ii, niIcon[0]);
       }
       return dict;
     }
@@ -917,9 +925,9 @@ namespace FreeLibSet.Win32
         w = rdr.ReadInt32();
         h = rdr.ReadInt32() / 2; // удвоенная высота
         if (w < 1 | w > 256)
-          throw new BugException("Width="+w.ToString());
+          throw new BugException("Width=" + w.ToString());
         if (h < 1 | h > 256)
-          throw new BugException("Height="+h.ToString());
+          throw new BugException("Height=" + h.ToString());
 
         planes = rdr.ReadInt16();
         bpp = rdr.ReadInt16();
@@ -1093,5 +1101,668 @@ namespace FreeLibSet.Win32
     }
 
     #endregion
+
+    #region Версия
+
+    /// <summary>
+    /// Возвращает информацию о версии.
+    /// Возвращает незаполненную структуру данных, если информация о версии отсутствует.
+    /// </summary>
+    public FreeLibSet.Win32.FileVersionInfo Version
+    {
+      get
+      {
+        if (_Version == null)
+        {
+          TypeInfo ti = Types[ResourceType.Version];
+          if (ti.Count == 0)
+            _Version = new FileVersionInfo(null, FilePath);
+          else if (ti[0].Count == 0)
+            _Version = new FileVersionInfo(null, FilePath);
+          else
+          {
+            byte[] bytes = GetBytes(ti[0][0]);
+            _Version = new FileVersionInfo(bytes, FilePath);
+          }
+        }
+        return _Version;
+      }
+    }
+    private FreeLibSet.Win32.FileVersionInfo _Version;
+
+    #endregion
   }
+
+  /// <summary>
+  /// Provides version information for a physical file on disk.
+  /// </summary>
+  public sealed class FileVersionInfo
+  {
+    #region FileFlags
+
+    [Flags]
+    private enum FileFlags
+    {
+      /// <summary>
+      ///   The file contains debugging information or is compiled with debugging features enabled.
+      /// </summary>
+      VS_FF_DEBUG = 0x00000001,
+
+      /// <summary>
+      /// The file is a development version, not a commercially released product.
+      /// </summary>
+      VS_FF_PRERELEASE = 0x00000002,
+
+      /// <summary>
+      /// The file has been modified and is not identical to the original shipping file of the same version number.
+      /// </summary>
+      VS_FF_PATCHED = 0x00000004,
+
+      /// <summary>
+      /// The file was not built using standard release procedures.If this flag is set, the StringFileInfo structure should contain a PrivateBuild entry.
+      /// </summary>
+      VS_FF_PRIVATEBUILD = 0x00000008,
+
+      /// <summary>
+      /// The file's version structure was created dynamically; therefore, some of the members in this structure may be empty or incorrect. This flag should never be set in a file's VS_VERSIONINFO data.
+      /// </summary>
+      VS_FF_INFOINFERRED = 0x00000010,
+
+      /// <summary>
+      /// The file was built by the original company using standard release procedures but is a variation of the normal file of the same version number.If this flag is set, the StringFileInfo structure should contain a SpecialBuild entry.     }
+      /// </summary>
+      VS_FF_SPECIALBUILD = 0x00000020,
+    }
+
+    #endregion
+
+    #region Конструктор
+
+    internal FileVersionInfo(byte[] bytes, AbsPath filePath)
+    {
+      _FilePath = filePath;
+      _AllStrings = new AllStringDictionary();
+      _LanguageCode = String.Empty;
+
+      if (bytes != null)
+      {
+        try
+        {
+          MemoryStream ms = new MemoryStream(bytes);
+          BinaryReader rdr = new BinaryReader(ms);
+
+          // VS_VERSIONINFO
+          int wLength1 = rdr.ReadUInt16();
+          long lastPos1 = wLength1;
+          int valueLength = rdr.ReadUInt16(); // 
+          int wType = rdr.ReadUInt16();
+          //bool isBinary;
+          //switch (wType)
+          //{
+          //  case 0: isBinary = true; break;
+          //  case 1: isBinary = false; break;
+          //  default:
+          //    return;
+          //}
+
+          ReadWStringWithCheck(rdr, "VS_VERSION_INFO");
+          ReadPadding(rdr);
+
+          if (valueLength > 0)
+          {
+            // VS_FIXEDFILEINFO
+            uint signature = rdr.ReadUInt32();
+            if (signature != 0xFEEF04BDU)
+              return;
+            rdr.ReadUInt32(); // dwStrucVersion
+            _FileMinorPart = rdr.ReadUInt16();
+            _FileMajorPart = rdr.ReadUInt16();
+            _FilePrivatePart = rdr.ReadUInt16();
+            _FileBuildPart = rdr.ReadUInt16();
+
+            _ProductMinorPart = rdr.ReadUInt16();
+            _ProductMajorPart = rdr.ReadUInt16();
+            _ProductPrivatePart = rdr.ReadUInt16();
+            _ProductBuildPart = rdr.ReadUInt16();
+
+            uint flagMask = rdr.ReadUInt32();
+            uint flags = rdr.ReadUInt32();
+            flags &= flagMask;
+            if ((flags & (int)FileFlags.VS_FF_DEBUG) != 0)
+              _IsDebug = true;
+            if ((flags & (int)FileFlags.VS_FF_PRERELEASE) != 0)
+              _IsPreRelease = true;
+            if ((flags & (int)FileFlags.VS_FF_PATCHED) != 0)
+              _IsPatched = true;
+            if ((flags & (int)FileFlags.VS_FF_PRIVATEBUILD) != 0)
+              _IsPrivateBuild = true;
+            if ((flags & (int)FileFlags.VS_FF_SPECIALBUILD) != 0)
+              _IsSpecialBuild = true;
+
+            uint dwFileOS = rdr.ReadUInt32();
+            rdr.ReadUInt32(); // dwFileType
+            rdr.ReadUInt32(); // dwFileSubType
+            rdr.ReadUInt32(); // dwFileDateMS
+            rdr.ReadUInt32(); // dwFileDateLS
+          } // VS_FIXEDFILEINFO
+          ReadPadding(rdr);
+
+          while (ms.Position < lastPos1)
+          {
+            int wLen = rdr.ReadUInt16(); //wLength
+            if (wLen == 0)
+              break;
+            rdr.ReadUInt16(); //wValueLength
+            wType = rdr.ReadUInt16();
+            /*bool isVarFileInfo;
+            switch (wType)
+            {
+              case 0: isVarFileInfo = true; break;
+              case 1: isVarFileInfo = false; break;
+              default:
+                return;
+            }*/
+            string sInfoType = ReadWString(rdr);
+            if (sInfoType.Length == 0)
+              break;
+            ReadPadding(rdr);
+
+            int wLength2 = rdr.ReadUInt16(); // wLength
+            if (wLength2 < 4)
+              break; // иначе может зациклиться
+            long lastPos2 = ms.Position + wLength2 - 2;
+            rdr.ReadUInt16(); // 0
+            rdr.ReadUInt16(); // wType
+
+            switch (sInfoType)
+            {
+              case "StringFileInfo":
+                _LanguageCode = ReadWString(rdr);
+                if (_LanguageCode.Length != 8)
+                  throw new Exception(String.Format("Wrong language string '{0}'. It must have 8 characters length", _LanguageCode));
+                ReadPadding(rdr);
+
+                while (ms.Position < lastPos2)
+                {
+                  rdr.ReadUInt16(); // wLength
+                  int strValueLength = rdr.ReadUInt16(); 
+                  rdr.ReadUInt16(); // wType
+
+                  string sKey = ReadWString(rdr);
+                  ReadPadding(rdr);
+                  string sValue;
+                  if (strValueLength > 0)
+                  {
+                    sValue = ReadWString(rdr);
+                    ReadPadding(rdr);
+                  }
+                  else
+                    sValue = String.Empty;
+
+                  if (!_AllStrings.ContainsKey(sKey)) // могут быть повторения
+                    _AllStrings.Add(sKey, sValue);
+                }
+                break;
+              case "VarFileInfo":
+              default: // Х.З., что
+                ms.Position = lastPos2;
+                ReadPadding(rdr);
+                break;
+            }
+            ReadPadding(rdr);
+          }
+
+          _IsNotEmpty = true;
+        }
+        catch
+        {
+
+        }
+      }
+
+      _AllStrings.SetReadOnly();
+    }
+
+    private static void ReadWStringWithCheck(BinaryReader rdr, string wanted)
+    {
+      for (int i = 0; i < wanted.Length; i++)
+      {
+        char c = (char)(rdr.ReadInt16());
+        if (c != wanted[i])
+          throw new Exception(String.Format("String '{0}' expected, but wrong char found at position {1}. '{2}' expected, but '{3}' found",
+            wanted, i + 1, wanted[i], c));
+      }
+      int zero = rdr.ReadInt16();
+      if (zero != 0)
+        throw new Exception(String.Format("String '{0}' has been read, but null-terminator char has not been found",
+          wanted));
+    }
+
+
+    private static string ReadWString(BinaryReader rdr)
+    {
+      StringBuilder sb = new StringBuilder();
+      while (true)
+      {
+        char c = (char)(rdr.ReadInt16());
+        if (c == '\0')
+          break;
+        sb.Append(c);
+      }
+      return sb.ToString();
+    }
+
+    private static void ReadPadding(BinaryReader rdr)
+    {
+      if (rdr.BaseStream.Position >= rdr.BaseStream.Length)
+        return;
+      long x = (rdr.BaseStream.Position % 4);
+      switch (x)
+      {
+        case 0:
+          return;
+        case 2:
+          int padding = rdr.ReadUInt16();
+          if (padding != 0)
+            throw new Exception(String.Format("Padding zero-word expected, but {0} found", padding));
+          return;
+        default:
+          throw new Exception("Wrong position for padding");
+      }
+    }
+
+    #endregion
+
+    #region Общие свойства
+
+    /// <summary>
+    /// Возвращает true, если структура не заполнена
+    /// </summary>
+    public bool IsEmpty { get { return !_IsNotEmpty; } }
+    private readonly bool _IsNotEmpty;
+
+    /// <summary>
+    /// Gets the name of the file that this instance of System.Diagnostics.FileVersionInfo describes.
+    /// </summary>
+    public AbsPath FilePath { get { return _FilePath; } }
+    private readonly AbsPath _FilePath;
+
+
+    /// <summary>
+    /// В отличие от <see cref="System.Diagnostics.FileVersionInfo"/>, возвращает только свойство <see cref="FilePath"/>
+    /// </summary>
+    /// <returns>Текстовое представление</returns>
+    public override string ToString()
+    {
+      return _FilePath.Path;
+    }
+
+    #endregion
+
+    #region Флажки из VS_FIXEDFILEINFO
+
+    /// <summary>
+    /// Gets a value that specifies whether the file contains debugging information or
+    /// is compiled with debugging features enabled.
+    /// </summary>
+    public bool IsDebug { get { return _IsDebug; } }
+    private readonly bool _IsDebug;
+
+    /// <summary>
+    /// Gets a value that specifies whether the file has been modified and is not identical
+    ///     to the original shipping file of the same version number.
+    /// </summary>
+    public bool IsPatched { get { return _IsPatched; } }
+    private readonly bool _IsPatched;
+
+    /// <summary>
+    /// Gets a value that specifies whether the file is a development version, rather than a commercially released product. 
+    /// </summary>
+    public bool IsPreRelease { get { return _IsPreRelease; } }
+    private readonly bool _IsPreRelease;
+
+    /// <summary>
+    /// Gets a value that specifies whether the file was built using standard release procedures.
+    /// </summary>
+    public bool IsPrivateBuild { get { return _IsPrivateBuild; } }
+    private readonly bool _IsPrivateBuild;
+
+    /// <summary>
+    /// Gets a value that specifies whether the file is a special build.
+    /// </summary>
+    public bool IsSpecialBuild { get { return _IsSpecialBuild; } }
+    private readonly bool _IsSpecialBuild;
+
+    #endregion
+
+    #region Версия из VS_FIXEDFILEINFO
+
+    #region File
+
+    /// <summary>
+    /// Gets the major part of the version number.
+    /// </summary>
+    public int FileMajorPart { get { return _FileMajorPart; } }
+    private readonly int _FileMajorPart;
+
+    /// <summary>
+    /// Gets the minor part of the version number of the file.
+    /// </summary>
+    public int FileMinorPart { get { return _FileMinorPart; } }
+    private readonly int _FileMinorPart;
+
+
+    /// <summary>
+    /// Gets the build number of the file.
+    /// </summary>
+    public int FileBuildPart { get { return _FileBuildPart; } }
+    private readonly int _FileBuildPart;
+
+    /// <summary>
+    /// Gets the file private part number.
+    /// </summary>
+    public int FilePrivatePart { get { return _FilePrivatePart; } }
+    private readonly int _FilePrivatePart;
+
+    #endregion
+
+    #region Product
+
+    /// <summary>
+    /// Gets the major part of the version number for the product this file is associated with.
+    /// </summary>
+    public int ProductMajorPart { get { return _ProductMajorPart; } }
+    private readonly int _ProductMajorPart;
+
+    /// <summary>
+    /// Gets the minor part of the version number for the product the file is associated with.
+    /// </summary>
+    public int ProductMinorPart { get { return _ProductMinorPart; } }
+    private readonly int _ProductMinorPart;
+
+    /// <summary>
+    /// Gets the build number of the product this file is associated with.
+    /// </summary>
+    public int ProductBuildPart { get { return _ProductBuildPart; } }
+    private readonly int _ProductBuildPart;
+
+    /// <summary>
+    /// Gets the private part number of the product this file is associated with.
+    /// </summary>
+    public int ProductPrivatePart { get { return _ProductPrivatePart; } }
+    private readonly int _ProductPrivatePart;
+
+    #endregion
+
+    #endregion
+
+    #region Строки из StringFileInfo
+
+    /// <summary>
+    /// Код языка в формате "XXXXYYYY", как он задан в ресурсах
+    /// </summary>
+    public string LanguageCode { get { return _LanguageCode; } }
+    private readonly string _LanguageCode;
+
+    /// <summary>
+    /// Культура, соответствующая <see cref="LanguageCode"/>
+    /// </summary>
+    public CultureInfo LanguageCulture
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(LanguageCode))
+          return null;
+        if (!System.Text.RegularExpressions.Regex.IsMatch(LanguageCode, @"[0-9A-Za-z]{8}"))
+          return null;
+        try
+        {
+          int nLanguage = Int32.Parse(LanguageCode.Substring(0, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+          int nCharSet = Int32.Parse(LanguageCode.Substring(4, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+          if (nLanguage == 0)
+            return CultureInfo.InvariantCulture;
+          return CultureInfo.GetCultureInfo(nLanguage);
+        }
+        catch
+        {
+          return null;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets the default language string for the version info block.
+    /// </summary>
+    public string Language
+    {
+      get
+      {
+        // TODO: В .Net используется функция VerLanguageName() из kernel32.dll, которая возвращает для нулевого LanguageStr "Независимо от языка", а не "Нейтральная культура (нейтральная страна)"
+        if (LanguageCulture == null)
+          return String.Empty;
+        else
+          return LanguageCulture.DisplayName;
+      }
+    }
+
+
+    private class AllStringDictionary : DictionaryWithReadOnly<string, string>
+    {
+      internal new void SetReadOnly()
+      {
+        base.SetReadOnly();
+      }
+    }
+
+    /// <summary>
+    /// Доступ ко всем строковым значениям.
+    /// </summary>
+    public IDictionary<string, string> AllStrings { get { return _AllStrings; } }
+    private AllStringDictionary _AllStrings;
+
+    /// <summary>
+    /// Gets the comments associated with the file.
+    /// </summary>
+    public string Comments
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("Comments", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Gets the name of the company that produced the file.
+    /// </summary>
+    public string CompanyName
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("CompanyName", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Gets the description of the file.
+    /// </summary>
+    public string FileDescription
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("FileDescription", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Gets the file version number.
+    /// </summary>
+    public string FileVersion
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("FileVersion", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+
+    /// <summary>
+    /// Gets the internal name of the file, if one exists.
+    /// If none exists, this property will contain the original name of the file without the extension.
+    /// </summary>
+    public string InternalName
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("InternalName", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Gets all copyright notices that apply to the specified file.
+    /// </summary>
+    public string LegalCopyright
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("LegalCopyright", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+
+    /// <summary>
+    /// Gets the trademarks and registered trademarks that apply to the file.
+    /// </summary>
+    public string LegalTrademarks
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("LegalTrademarks", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Gets the name the file was created with.
+    /// </summary>
+    public string OriginalFilename
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("OriginalFilename", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Gets information about a private version of the file.
+    /// </summary>
+    public string PrivateBuild
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("PrivateBuild", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+
+    /// <summary>
+    /// Gets the name of the product this file is distributed with.
+    /// </summary>
+    public string ProductName
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("ProductName", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+    /// <summary>
+    /// Gets the version of the product this file is distributed with.
+    /// </summary>
+    public string ProductVersion
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("ProductVersion", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Gets the special build information for the file.
+    /// </summary>
+    public string SpecialBuild
+    {
+      get
+      {
+        string res;
+        if (_AllStrings.TryGetValue("SpecialBuild", out res))
+          return res;
+        else
+          return String.Empty;
+      }
+    }
+
+    #endregion
+
+    #region Статический метод
+
+    /// <summary>
+    /// Returns a System.Diagnostics.FileVersionInfo representing the version information
+    ///     associated with the specified file
+    /// </summary>
+    /// <param name="filePath">The fully qualified path and name of the file to retrieve the version information for.</param>
+    /// <returns>A System.Diagnostics.FileVersionInfo containing information about the file. If
+    /// the file did not contain version information, the System.Diagnostics.FileVersionInfo
+    /// contains only the name of the file requested.</returns>
+    /// <exception cref="System.IO.FileNotFoundException">The file specified cannot be found</exception>
+    public static FileVersionInfo GetVersionInfo(AbsPath filePath)
+    {
+      ExeFileInfo fi = new ExeFileInfo(filePath);
+      return fi.Resources.Version;
+    }
+
+    #endregion
+  }
+
 }

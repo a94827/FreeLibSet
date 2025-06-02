@@ -15,7 +15,7 @@ namespace FreeLibSet.Forms.Reporting
     public BRDataViewPageSetupCellParamDialog()
     {
       InitializeComponent();
-
+      Icon = EFPApp.MainImages.Icons["Table"];
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
       efpLeftMargin = new EFPDecimalEditBox(efpForm, edLeftMargin);

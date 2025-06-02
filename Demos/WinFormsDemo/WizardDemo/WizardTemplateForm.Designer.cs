@@ -51,6 +51,12 @@
       this.cbFinalStep501 = new System.Windows.Forms.CheckBox();
       this.cbForwardEnabled501 = new System.Windows.Forms.CheckBox();
       this.cbBackEnabled501 = new System.Windows.Forms.CheckBox();
+      this.tp601 = new System.Windows.Forms.TabPage();
+      this.Pan601 = new System.Windows.Forms.Panel();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.cbMultiSelect601 = new System.Windows.Forms.CheckBox();
+      this.cbSubItems601 = new System.Windows.Forms.CheckBox();
+      this.cbCanBeEmpty601 = new System.Windows.Forms.CheckBox();
       this.tp101.SuspendLayout();
       this.Pan101.SuspendLayout();
       this.tabControl1.SuspendLayout();
@@ -59,15 +65,18 @@
       this.tp501.SuspendLayout();
       this.Pan501.SuspendLayout();
       this.groupBox1.SuspendLayout();
+      this.tp601.SuspendLayout();
+      this.Pan601.SuspendLayout();
+      this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
       // tp101
       // 
       this.tp101.Controls.Add(this.Pan101);
       this.tp101.Location = new System.Drawing.Point(4, 25);
-      this.tp101.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tp101.Margin = new System.Windows.Forms.Padding(4);
       this.tp101.Name = "tp101";
-      this.tp101.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tp101.Padding = new System.Windows.Forms.Padding(4);
       this.tp101.Size = new System.Drawing.Size(681, 409);
       this.tp101.TabIndex = 0;
       this.tp101.Text = "101";
@@ -79,7 +88,7 @@
       this.Pan101.Controls.Add(this.label1);
       this.Pan101.Dock = System.Windows.Forms.DockStyle.Fill;
       this.Pan101.Location = new System.Drawing.Point(4, 4);
-      this.Pan101.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.Pan101.Margin = new System.Windows.Forms.Padding(4);
       this.Pan101.Name = "Pan101";
       this.Pan101.Size = new System.Drawing.Size(673, 401);
       this.Pan101.TabIndex = 0;
@@ -87,7 +96,7 @@
       // edTest101
       // 
       this.edTest101.Location = new System.Drawing.Point(168, 46);
-      this.edTest101.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.edTest101.Margin = new System.Windows.Forms.Padding(4);
       this.edTest101.Name = "edTest101";
       this.edTest101.Size = new System.Drawing.Size(473, 22);
       this.edTest101.TabIndex = 1;
@@ -107,9 +116,10 @@
       this.tabControl1.Controls.Add(this.tp101);
       this.tabControl1.Controls.Add(this.tp201);
       this.tabControl1.Controls.Add(this.tp501);
+      this.tabControl1.Controls.Add(this.tp601);
       this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
-      this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
       this.tabControl1.Size = new System.Drawing.Size(689, 438);
@@ -119,9 +129,9 @@
       // 
       this.tp201.Controls.Add(this.Pan201);
       this.tp201.Location = new System.Drawing.Point(4, 25);
-      this.tp201.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tp201.Margin = new System.Windows.Forms.Padding(4);
       this.tp201.Name = "tp201";
-      this.tp201.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tp201.Padding = new System.Windows.Forms.Padding(4);
       this.tp201.Size = new System.Drawing.Size(681, 409);
       this.tp201.TabIndex = 1;
       this.tp201.Text = "201";
@@ -138,7 +148,7 @@
       this.Pan201.Controls.Add(this.cbGroupTitle201);
       this.Pan201.Dock = System.Windows.Forms.DockStyle.Fill;
       this.Pan201.Location = new System.Drawing.Point(4, 4);
-      this.Pan201.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.Pan201.Margin = new System.Windows.Forms.Padding(4);
       this.Pan201.Name = "Pan201";
       this.Pan201.Size = new System.Drawing.Size(673, 401);
       this.Pan201.TabIndex = 0;
@@ -151,7 +161,7 @@
             "Small",
             "Large"});
       this.cbInfoIconSize201.Location = new System.Drawing.Point(192, 154);
-      this.cbInfoIconSize201.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbInfoIconSize201.Margin = new System.Windows.Forms.Padding(4);
       this.cbInfoIconSize201.Name = "cbInfoIconSize201";
       this.cbInfoIconSize201.Size = new System.Drawing.Size(444, 24);
       this.cbInfoIconSize201.TabIndex = 11;
@@ -176,7 +186,7 @@
             "Warning",
             "Error"});
       this.cbInfoIcon201.Location = new System.Drawing.Point(192, 107);
-      this.cbInfoIcon201.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbInfoIcon201.Margin = new System.Windows.Forms.Padding(4);
       this.cbInfoIcon201.Name = "cbInfoIcon201";
       this.cbInfoIcon201.Size = new System.Drawing.Size(444, 24);
       this.cbInfoIcon201.TabIndex = 9;
@@ -200,7 +210,7 @@
             "Короткий текст",
             "Длинный текст"});
       this.cbInfoText201.Location = new System.Drawing.Point(192, 62);
-      this.cbInfoText201.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbInfoText201.Margin = new System.Windows.Forms.Padding(4);
       this.cbInfoText201.Name = "cbInfoText201";
       this.cbInfoText201.Size = new System.Drawing.Size(444, 24);
       this.cbInfoText201.TabIndex = 7;
@@ -219,7 +229,7 @@
       // 
       this.cbGroupTitle201.AutoSize = true;
       this.cbGroupTitle201.Location = new System.Drawing.Point(20, 25);
-      this.cbGroupTitle201.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbGroupTitle201.Margin = new System.Windows.Forms.Padding(4);
       this.cbGroupTitle201.Name = "cbGroupTitle201";
       this.cbGroupTitle201.Size = new System.Drawing.Size(97, 21);
       this.cbGroupTitle201.TabIndex = 5;
@@ -230,9 +240,9 @@
       // 
       this.tp501.Controls.Add(this.Pan501);
       this.tp501.Location = new System.Drawing.Point(4, 25);
-      this.tp501.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tp501.Margin = new System.Windows.Forms.Padding(4);
       this.tp501.Name = "tp501";
-      this.tp501.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tp501.Padding = new System.Windows.Forms.Padding(4);
       this.tp501.Size = new System.Drawing.Size(681, 409);
       this.tp501.TabIndex = 2;
       this.tp501.Text = "501";
@@ -243,7 +253,7 @@
       this.Pan501.Controls.Add(this.groupBox1);
       this.Pan501.Dock = System.Windows.Forms.DockStyle.Fill;
       this.Pan501.Location = new System.Drawing.Point(4, 4);
-      this.Pan501.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.Pan501.Margin = new System.Windows.Forms.Padding(4);
       this.Pan501.Name = "Pan501";
       this.Pan501.Size = new System.Drawing.Size(673, 401);
       this.Pan501.TabIndex = 0;
@@ -258,9 +268,9 @@
       this.groupBox1.Controls.Add(this.cbBackEnabled501);
       this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.groupBox1.Location = new System.Drawing.Point(0, 0);
-      this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
       this.groupBox1.Size = new System.Drawing.Size(673, 401);
       this.groupBox1.TabIndex = 3;
       this.groupBox1.TabStop = false;
@@ -270,7 +280,7 @@
       // 
       this.cbHelpContext501.AutoSize = true;
       this.cbHelpContext501.Location = new System.Drawing.Point(23, 182);
-      this.cbHelpContext501.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbHelpContext501.Margin = new System.Windows.Forms.Padding(4);
       this.cbHelpContext501.Name = "cbHelpContext501";
       this.cbHelpContext501.Size = new System.Drawing.Size(106, 21);
       this.cbHelpContext501.TabIndex = 5;
@@ -281,7 +291,7 @@
       // 
       this.cbTitleForThisStepOnly501.AutoSize = true;
       this.cbTitleForThisStepOnly501.Location = new System.Drawing.Point(23, 154);
-      this.cbTitleForThisStepOnly501.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbTitleForThisStepOnly501.Margin = new System.Windows.Forms.Padding(4);
       this.cbTitleForThisStepOnly501.Name = "cbTitleForThisStepOnly501";
       this.cbTitleForThisStepOnly501.Size = new System.Drawing.Size(163, 21);
       this.cbTitleForThisStepOnly501.TabIndex = 4;
@@ -292,7 +302,7 @@
       // 
       this.cbTitle501.AutoSize = true;
       this.cbTitle501.Location = new System.Drawing.Point(23, 126);
-      this.cbTitle501.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbTitle501.Margin = new System.Windows.Forms.Padding(4);
       this.cbTitle501.Name = "cbTitle501";
       this.cbTitle501.Size = new System.Drawing.Size(57, 21);
       this.cbTitle501.TabIndex = 3;
@@ -303,7 +313,7 @@
       // 
       this.cbFinalStep501.AutoSize = true;
       this.cbFinalStep501.Location = new System.Drawing.Point(23, 41);
-      this.cbFinalStep501.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbFinalStep501.Margin = new System.Windows.Forms.Padding(4);
       this.cbFinalStep501.Name = "cbFinalStep501";
       this.cbFinalStep501.Size = new System.Drawing.Size(89, 21);
       this.cbFinalStep501.TabIndex = 2;
@@ -314,7 +324,7 @@
       // 
       this.cbForwardEnabled501.AutoSize = true;
       this.cbForwardEnabled501.Location = new System.Drawing.Point(23, 69);
-      this.cbForwardEnabled501.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbForwardEnabled501.Margin = new System.Windows.Forms.Padding(4);
       this.cbForwardEnabled501.Name = "cbForwardEnabled501";
       this.cbForwardEnabled501.Size = new System.Drawing.Size(133, 21);
       this.cbForwardEnabled501.TabIndex = 0;
@@ -325,12 +335,75 @@
       // 
       this.cbBackEnabled501.AutoSize = true;
       this.cbBackEnabled501.Location = new System.Drawing.Point(23, 97);
-      this.cbBackEnabled501.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.cbBackEnabled501.Margin = new System.Windows.Forms.Padding(4);
       this.cbBackEnabled501.Name = "cbBackEnabled501";
       this.cbBackEnabled501.Size = new System.Drawing.Size(113, 21);
       this.cbBackEnabled501.TabIndex = 1;
       this.cbBackEnabled501.Text = "BackEnabled";
       this.cbBackEnabled501.UseVisualStyleBackColor = true;
+      // 
+      // tp601
+      // 
+      this.tp601.Controls.Add(this.Pan601);
+      this.tp601.Location = new System.Drawing.Point(4, 25);
+      this.tp601.Name = "tp601";
+      this.tp601.Padding = new System.Windows.Forms.Padding(3);
+      this.tp601.Size = new System.Drawing.Size(681, 409);
+      this.tp601.TabIndex = 3;
+      this.tp601.Text = "601";
+      this.tp601.UseVisualStyleBackColor = true;
+      // 
+      // Pan601
+      // 
+      this.Pan601.Controls.Add(this.groupBox2);
+      this.Pan601.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.Pan601.Location = new System.Drawing.Point(3, 3);
+      this.Pan601.Name = "Pan601";
+      this.Pan601.Size = new System.Drawing.Size(675, 403);
+      this.Pan601.TabIndex = 0;
+      // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.cbCanBeEmpty601);
+      this.groupBox2.Controls.Add(this.cbSubItems601);
+      this.groupBox2.Controls.Add(this.cbMultiSelect601);
+      this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.groupBox2.Location = new System.Drawing.Point(0, 0);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(675, 403);
+      this.groupBox2.TabIndex = 0;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = "WizardStepWithListSelect properties";
+      // 
+      // cbMultiSelect601
+      // 
+      this.cbMultiSelect601.AutoSize = true;
+      this.cbMultiSelect601.Location = new System.Drawing.Point(16, 33);
+      this.cbMultiSelect601.Name = "cbMultiSelect601";
+      this.cbMultiSelect601.Size = new System.Drawing.Size(98, 21);
+      this.cbMultiSelect601.TabIndex = 0;
+      this.cbMultiSelect601.Text = "MultiSelect";
+      this.cbMultiSelect601.UseVisualStyleBackColor = true;
+      // 
+      // cbSubItems601
+      // 
+      this.cbSubItems601.AutoSize = true;
+      this.cbSubItems601.Location = new System.Drawing.Point(16, 60);
+      this.cbSubItems601.Name = "cbSubItems601";
+      this.cbSubItems601.Size = new System.Drawing.Size(88, 21);
+      this.cbSubItems601.TabIndex = 1;
+      this.cbSubItems601.Text = "SubItems";
+      this.cbSubItems601.UseVisualStyleBackColor = true;
+      // 
+      // cbCanBeEmpty601
+      // 
+      this.cbCanBeEmpty601.AutoSize = true;
+      this.cbCanBeEmpty601.Location = new System.Drawing.Point(16, 87);
+      this.cbCanBeEmpty601.Name = "cbCanBeEmpty601";
+      this.cbCanBeEmpty601.Size = new System.Drawing.Size(111, 21);
+      this.cbCanBeEmpty601.TabIndex = 2;
+      this.cbCanBeEmpty601.Text = "CanBeEmpty";
+      this.cbCanBeEmpty601.UseVisualStyleBackColor = true;
       // 
       // WizardTemplateForm
       // 
@@ -338,7 +411,7 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(689, 438);
       this.Controls.Add(this.tabControl1);
-      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.Margin = new System.Windows.Forms.Padding(4);
       this.Name = "WizardTemplateForm";
       this.Text = "TemplateForm";
       this.tp101.ResumeLayout(false);
@@ -352,6 +425,10 @@
       this.Pan501.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      this.tp601.ResumeLayout(false);
+      this.Pan601.ResumeLayout(false);
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -381,5 +458,11 @@
     private System.Windows.Forms.CheckBox cbTitleForThisStepOnly501;
     private System.Windows.Forms.CheckBox cbTitle501;
     private System.Windows.Forms.CheckBox cbHelpContext501;
+    private System.Windows.Forms.TabPage tp601;
+    private System.Windows.Forms.Panel Pan601;
+    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.CheckBox cbSubItems601;
+    private System.Windows.Forms.CheckBox cbMultiSelect601;
+    private System.Windows.Forms.CheckBox cbCanBeEmpty601;
   }
 }

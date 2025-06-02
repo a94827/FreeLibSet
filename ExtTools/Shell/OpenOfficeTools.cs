@@ -108,7 +108,7 @@ namespace FreeLibSet.Shell
       //  return programPath.ParentDir;
 
 
-      if(programPath.ParentDir != new AbsPath("/usr/bin"))
+      if (programPath.ParentDir != new AbsPath("/usr/bin"))
         return programPath.ParentDir;
 
       FileInfo fi = new FileInfo(programPath.Path);
@@ -316,7 +316,7 @@ namespace FreeLibSet.Shell
       {
         AbsPath sofficeBinPath = sofficePath.ChangeExtension(".bin");
         if (!File.Exists(sofficeBinPath.Path))
-          return; 
+          return;
       }
 
       // Во избежание повторов, проверяем наличие в списке такого же пути
@@ -352,16 +352,10 @@ namespace FreeLibSet.Shell
 
     internal static string GetExeExtension()
     {
-      switch (Environment.OSVersion.Platform)
-      {
-        case PlatformID.Win32NT:
-        case PlatformID.Win32Windows:
-        case PlatformID.Win32S:
-        case PlatformID.WinCE: // ???
-          return ".exe";
-        default:
-          return String.Empty;
-      }
+      if (EnvironmentTools.IsWindowsPlatform)
+        return ".exe";
+      else
+        return String.Empty;
     }
 
     /// <summary>
@@ -698,7 +692,7 @@ namespace FreeLibSet.Shell
       // Заменяем стандартные стили
       formatText = Formatting.FormatStringTools.ExpandDateTimeFormat(formatText, formatInfo);
 
-      XmlElement elStyle = elStyles.OwnerDocument.CreateElement(Formatting.FormatStringTools.ContainsDate(formatText) ? "number:date-style": "number:time-style", nmspcNumber);
+      XmlElement elStyle = elStyles.OwnerDocument.CreateElement(Formatting.FormatStringTools.ContainsDate(formatText) ? "number:date-style" : "number:time-style", nmspcNumber);
       elStyles.AppendChild(elStyle);
       SetAttr(elStyle, "style:name", styleName, nmspcStyle);
       SetAttr(elStyle, "number:language", language, nmspcNumber);

@@ -124,6 +124,7 @@ namespace FreeLibSet.Forms.Data
         ListSelectDialog dlg1 = new ListSelectDialog();
         dlg1.Title = DisplayName;
         dlg1.ListTitle = Res.GridFilter_Msg_ListTitle;
+        dlg1.OutItemTitle = DisplayName;
         dlg1.ImageKey = "Filter";
         dlg1.MultiSelect = false;
         dlg1.Items = list2;
@@ -350,6 +351,8 @@ namespace FreeLibSet.Forms.Data
       ListSelectDialog dlg = new ListSelectDialog();
       dlg.MultiSelect = true;
       dlg.Title = DisplayName;
+      dlg.ListTitle = Res.GridFilter_Msg_ListTitle;
+      dlg.OutItemTitle = DisplayName;
       dlg.ImageKey = "Filter";
       dlg.DialogPosition = dialogPosition;
       if (AllValues == null)
@@ -507,6 +510,7 @@ namespace FreeLibSet.Forms.Data
       dlg.Title = DisplayName;
       dlg.ImageKey = "Filter";
       dlg.ListTitle = Res.GridFilter_Msg_ListTitle;
+      dlg.OutItemTitle = DisplayName;
       dlg.Items = TextValues;
       if (_ImageKeys != null)
         dlg.ImageKeys = ImageKeys;

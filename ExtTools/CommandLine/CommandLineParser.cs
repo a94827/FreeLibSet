@@ -368,19 +368,7 @@ namespace FreeLibSet.CommandLine
       _ActionMode = CommandLineActionMode.None;
       _OptionDefs = new OptionCollection();
       _IgnoreCase = false;
-
-      switch (Environment.OSVersion.Platform)
-      {
-        case PlatformID.Win32NT:
-        case PlatformID.Win32Windows:
-        case PlatformID.Win32S:
-        case PlatformID.WinCE:
-          _SlashedOptionsEnabled = true;
-          break;
-        default:
-          _SlashedOptionsEnabled = false;
-          break;
-      }
+      _SlashedOptionsEnabled = EnvironmentTools.IsWindowsPlatform;
     }
 
     #endregion

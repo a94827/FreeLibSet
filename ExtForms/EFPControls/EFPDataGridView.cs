@@ -324,7 +324,10 @@ namespace FreeLibSet.Forms
     {
       _RowIndex = rowIndex;
       _Reason = reason;
-      ColorType = UIDataViewColorType.Normal;
+      if ((RowIndex & 0x1) != 0 && ControlProvider.UseAlternation)
+        _ColorType = UIDataViewColorType.Alter;
+      else
+        _ColorType = UIDataViewColorType.Normal;
       _Grayed = null;
       LeftBorder = UIDataViewBorderStyle.Default;
       TopBorder = UIDataViewBorderStyle.Default;
@@ -1951,7 +1954,7 @@ namespace FreeLibSet.Forms
       // При смене текущего столбца отключаем поиск по первым буквам
       if (CurrentIncSearchColumn != null)
       {
-        if (CurrentIncSearchColumn.GridColumn.Index != Control.CurrentCellAddress.X)
+        if (_CurrentIncSearchColumnIndex != Control.CurrentCellAddress.X)
           CurrentIncSearchColumn = null;
       }
 
@@ -2139,7 +2142,7 @@ namespace FreeLibSet.Forms
       try
       {
         _MouseOrKeyboardFlag = true;
-        DoControl_KeyDown2(args);
+        DoControl_KeyDown(args);
       }
       catch (Exception e)
       {
@@ -3279,8 +3282,9 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Расширение свойства <seealso cref="CurrentGridRow"/>. Вместо объекта <see cref="DataGridViewRow"/>  
-    /// используется индекс строки
+    /// Расширение свойства <see cref="CurrentGridRow"/>. Вместо объекта <see cref="DataGridViewRow"/>  
+    /// используется индекс строки.
+    /// Если нет выбранной строки, возвращается (-1).
     /// </summary>
     public int CurrentRowIndex
     {
@@ -4492,6 +4496,8 @@ namespace FreeLibSet.Forms
       {
         if (value < 0 || value >= Control.ColumnCount)
           return;
+        if (value == _CurrentColumnIndex)
+          return; // 29.04.2025
         if (!Control.Columns[value].Visible)
           return;
         int rowIndex = Control.CurrentCellAddress.Y;
@@ -4869,6 +4875,33 @@ namespace FreeLibSet.Forms
           break;
         }
       }
+    }
+
+    /// <summary>
+    /// Вызывает <see cref="DataGridView.InvalidateColumn(int)"/> для столбца с заданным именем.
+    /// Если столбец не найден, никаких действий не выполняется.
+    /// </summary>
+    /// <param name="columnName">Имя столбца</param>
+    public void InvalidateColumn(string columnName)
+    {
+      int columnIndex = Columns.IndexOf(columnName);
+      if (columnIndex >= 0)
+        Control.InvalidateColumn(columnIndex);
+    }
+
+    /// <summary>
+    /// Вызывает <see cref="DataGridView.InvalidateCell(int, int)"/> для ячейки в заданной строке и заданным именем столбца.
+    /// Если столбец не найден, никаких действий не выполняется.
+    /// 
+    /// Аргументы имеют обратный порядок относительно <see cref="DataGridView.InvalidateCell(int, int)"/>.
+    /// </summary>
+    /// <param name="rowIndex">Индекс строки</param>
+    /// <param name="columnName">Имя столбца</param>
+    public void InvalidateCell(int rowIndex, string columnName)
+    {
+      int columnIndex = Columns.IndexOf(columnName);
+      if (columnIndex >= 0 && rowIndex >= 0)
+        Control.InvalidateCell(columnIndex, rowIndex);
     }
 
     #endregion
@@ -7032,6 +7065,8 @@ namespace FreeLibSet.Forms
     /// <param name="reason">Причина вызова (ручное редактирование, буфер обмена, ...)</param>
     public virtual void OnCellFinished(int rowIndex, int columnIndex, EFPDataGridViewCellFinishedReason reason)
     {
+      CurrentIncSearchColumn = null; // 29.04.2025. Если переключен флажок выбора строк, то надо закончить поиск по первым буквам
+
       if (CellFinished == null)
         return;
 
@@ -7936,6 +7971,31 @@ namespace FreeLibSet.Forms
      * столбца, при необходимости.
      * ValueEx, FormattingApplied - передаются непосредственно из CellFormatting
      */
+
+      /// <summary>
+      /// Использование полосатой раскраски, при которой каждая вторая строка имеет цвет <see cref="UIDataViewColorType.Alter"/>.
+      /// Свойство является амбьентным. Если значение не установлено в явном виде, возвращается глобальное значение
+      /// <see cref="EFPApp.UseAlternation"/>.
+      /// </summary>
+    public bool UseAlternation
+    {
+      get { return _UseAlternation ?? EFPApp.UseAlternation; }
+      set
+      {
+        _UseAlternation = value;
+        Control.Invalidate();
+      }
+    }
+    private bool? _UseAlternation;
+
+    /// <summary>
+    /// Сброс амбьентного свойства <see cref="UseAlternation"/>
+    /// </summary>
+    public void ResetUseAlternation()
+    {
+      _UseAlternation = null;
+      Control.Invalidate();
+    }
 
     #region Событие GetRowAttributes
 
@@ -9275,7 +9335,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Текущий столбец, в котором осуществляется поиск по первым буквам.
     /// Установка свойства в значение, отличное от null начинает поиск. 
-    /// Установка в null завершает поиск по буквам
+    /// Установка в null завершает поиск по буквам.
     /// </summary>
     public EFPDataGridViewColumn CurrentIncSearchColumn
     {
@@ -9289,6 +9349,7 @@ namespace FreeLibSet.Forms
           return;
         _CurrentIncSearchColumn = value;
         _CurrentIncSearchChars = String.Empty;
+        _CurrentIncSearchColumnIndex = Control.CurrentCellAddress.X;
         // FCurrentIncSearchMask = null;
 
         // Некорректно работает при нажатии Backspace (норовит съесть лишнее)
@@ -9314,6 +9375,36 @@ namespace FreeLibSet.Forms
       }
     }
     private EFPDataGridViewColumn _CurrentIncSearchColumn;
+
+    /// <summary>
+    /// Устанавливается вместе с _CurrentIncSearchColumn, но задает номер текущего столбца, который может не совпадать в режиме
+    /// выделения всей строки
+    /// </summary>
+    private int _CurrentIncSearchColumnIndex;
+
+    /// <summary>
+    /// Возвращает столбец, который следует использовать для быстрого поиска.
+    /// Возвращает <see cref="CurrentColumn"/>, если <see cref="EFPDataGridViewColumn.CanIncSearch"/>=true,
+    /// иначе возвращает null.
+    /// Если просмотр находится в режиме выбора целых строк, возвращается первый столбец, поддерживающий поиск
+    /// </summary>
+    public EFPDataGridViewColumn DesiredIncSearchColumn
+    {
+      get
+      {
+        EFPDataGridViewColumn col = CurrentColumn;
+        if (col != null)
+        {
+          if (col.CanIncSearch)
+            return col;
+        }
+
+        if (WholeRowsSelected)
+          return FirstIncSearchColumn;
+
+        return null;
+      }
+    }
 
     //private void ResetCurrentIncSearchColumn(object sender, EventArgs args)
     //{
@@ -9372,18 +9463,26 @@ namespace FreeLibSet.Forms
       if (args.KeyChar < ' ')
         return;
 
-      if (args.KeyChar == ' ' && System.Windows.Forms.Control.ModifierKeys != Keys.None)
-        return; // 31.10.2018 Отсекаем Shift-Space, Ctrl-Space и прочее, так как эти клавиши обрабатываются не как символы для поиска 
+      if (args.KeyChar == ' ')
+      {
+        if (System.Windows.Forms.Control.ModifierKeys != Keys.None)
+          return; // 31.10.2018 Отсекаем Shift-Space, Ctrl-Space и прочее, так как эти клавиши обрабатываются не как символы для поиска 
+
+        if (WholeRowsSelected && MarkRowsGridColumn != null)
+        {
+          // 29.04.2025
+          CurrentColumn = MarkRowsColumn; // переходим на столбец с отметками
+          return;
+        }
+      }
 
       // Нажатие клавиши может начать поиск по первым буквам
       if (CurrentIncSearchColumn == null)
       {
         // Если поиск не начат, пытаемся его начать
-        if (CurrentColumn == null)
+        if (DesiredIncSearchColumn == null)
           return;
-        if (!CurrentColumn.CanIncSearch)
-          return;
-        CurrentIncSearchColumn = CurrentColumn;
+        CurrentIncSearchColumn = DesiredIncSearchColumn;
       }
 
       args.Handled = true;
@@ -9471,7 +9570,7 @@ namespace FreeLibSet.Forms
       return true;
     }
 
-    void DoControl_KeyDown2(KeyEventArgs args)
+    void DoControl_KeyDown(KeyEventArgs args)
     {
       if (args.Handled)
         return; // уже обработано
@@ -9587,6 +9686,24 @@ namespace FreeLibSet.Forms
             return i;
         }
         return -1;
+      }
+    }
+
+    /// <summary>
+    /// Получить первый столбец с установленным <see cref="EFPDataGridViewColumn.CanIncSearch"/> или null, если
+    /// таких столбцов нет.
+    /// Может применяться при инициализации просмотра для определения начального 
+    /// активного столбца.
+    /// </summary>
+    public EFPDataGridViewColumn FirstIncSearchColumn
+    {
+      get
+      {
+        int colIndex = FirstIncSearchColumnIndex;
+        if (colIndex < 0)
+          return null;
+        else
+          return Columns[colIndex];
       }
     }
 
@@ -9711,11 +9828,11 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Столбец <see cref="DataGridViewCheckBoxColumn"/>, с помощью которого устанавливаются отметки для строк
     /// Если свойство установлено, то в локальном меню просмотра появляется
-    /// подменю "Установка отметок для строк"
+    /// подменю "Установка отметок для строк".
     /// Свойство может быть установлено при добавлении столбца с помощью аргумента
-    /// markRows в методе EFPDataGridViewColumns.AddBool()
+    /// markRows в методе <see cref="EFPDataGridViewColumns.AddBool(string)"/>.
     /// Свойство следует устанавливать после добавления всех столбцов в просмотр,
-    /// но перед вызовом SetCommandItems(). Также допускается повторная установка свойства в процессе работы, если столбцы создаются заново.
+    /// но перед показом на экране. Также допускается повторная установка свойства в процессе работы, если столбцы создаются заново.
     /// При установке свойства, если <see cref="DataGridView.ReadOnly"/>=true, устанавливается свойство
     /// <see cref="DataGridViewColumn.ReadOnly"/> для всех столбцов, кроме заданного, а <see cref="DataGridView.ReadOnly"/>  устанавливается в false.
     /// Также устанавливается в true свойство <see cref="DataGridView.MultiSelect"/>.

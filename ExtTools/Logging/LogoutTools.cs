@@ -1020,7 +1020,8 @@ namespace FreeLibSet.Logging
         }
       }
 
-      if (args.Object is FileVersionInfo) // 09.02.2021
+      if (args.Object is System.Diagnostics.FileVersionInfo || // 09.02.2021
+        args.Object is FreeLibSet.Win32.FileVersionInfo) // 07.05.2025
       {
         switch (args.PropertyName)
         {
@@ -1033,6 +1034,8 @@ namespace FreeLibSet.Logging
           case "ProductMinorPart":
           case "ProductBuildPart":
           case "ProductPrivatePart": // дублируются в свойстве "ProductVersion"
+
+          case "LanguageCulture": // дополнительные свойства FreeLibSet.Win32.FileVersionInfo
 
             args.Mode = LogoutPropMode.None;
             break;
@@ -2201,7 +2204,8 @@ namespace FreeLibSet.Logging
             LogoutObject(args, fi);
             args.IndentLevel--;
 
-            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(FileTools.ApplicationPath.Path);
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(FileTools.ApplicationPath.Path);
+            //FreeLibSet.Win32.FileVersionInfo fvi = FreeLibSet.Win32.FileVersionInfo.GetVersionInfo(FileTools.ApplicationPath); // 07.05.2025
             args.WriteLine("FileVersionInfo");
             args.IndentLevel++;
             LogoutObject(args, fvi);

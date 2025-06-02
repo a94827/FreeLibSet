@@ -13,6 +13,7 @@ using System.Drawing.Imaging;
 using FreeLibSet.Controls;
 using System.Text;
 using FreeLibSet.Config;
+using FreeLibSet.Logging;
 
 namespace ExeFileInfoDemo
 {
@@ -161,6 +162,12 @@ namespace ExeFileInfoDemo
       efpRes.Control.ImageList = EFPApp.MainImages.ImageList;
       efpRes.Control.ImageKey = "TreeViewClosedFolder";
       efpRes.Control.SelectedImageKey = "TreeViewOpenFolder";
+      EFPCommandItem ciSaveRes = EFPAppCommandItems.CreateStdCommand(EFPAppStdCommandItems.Save);
+      ciSaveRes.Tag = efpRes;
+      ciSaveRes.Click += CiSaveRes_Click;
+      ciSaveRes.GroupBegin = true;
+      ciSaveRes.GroupEnd = true;
+      efpRes.CommandItems.Add(ciSaveRes);
 
       #endregion
 
@@ -190,6 +197,18 @@ namespace ExeFileInfoDemo
       efpExtIcons.ReadOnly = true;
       efpExtIcons.CanView = false;
 
+
+      #endregion
+
+      #region Вкладка "Version"
+
+      EFPTabPage efpTPVersion = efpTC.TabPages.Add("Version");
+      EFPControlWithToolBar<TextBox> cwtVersion = new EFPControlWithToolBar<TextBox>(efpTPVersion);
+      EFPTextBox efpVersion = new EFPTextBox(cwtVersion);
+      efpVersion.Control.ReadOnly = true;
+      efpVersion.Control.Multiline = true;
+      efpVersion.Control.ScrollBars = ScrollBars.Both;
+      efpVersion.Control.Font = EFPApp.CreateMonospaceFont();
 
       #endregion
 
@@ -287,12 +306,40 @@ namespace ExeFileInfoDemo
           lstExtractInfo.Add(new IconExtractInfo(i, img1, img2));
         }
 
+        try
+        {
+          FreeLibSet.Win32.FileVersionInfo fvi1 = fi.Resources.Version;
+          System.Diagnostics.FileVersionInfo fvi2 = System.Diagnostics.FileVersionInfo.GetVersionInfo(filePath.Path);
+          efpVersion.Text = "ExeFileInfo.Resources.Version:" + Environment.NewLine +
+            LogoutTools.LogoutObjectToString(fvi1) + Environment.NewLine + Environment.NewLine +
+            "System.Diagnostics.FileVersionInfo:" + Environment.NewLine +
+            LogoutTools.LogoutObjectToString(fvi2);
+        }
+        catch (Exception e)
+        {
+          efpVersion.Text = LogoutTools.LogoutExceptionToString(e, "ExeFileInfo.Resources.Version error", false);
+        }
       } // using
       efpIcons.Control.DataSource = lstIcons;
       efpExtIcons.Control.DataSource = lstExtractInfo;
 
-
       EFPApp.ShowDialog(form, true);
+    }
+
+    private static void CiSaveRes_Click(object sender, EventArgs args)
+    {
+      EFPCommandItem ciSaveRes = (EFPCommandItem)sender;
+      EFPTreeView efpRes = (EFPTreeView)(ciSaveRes.Tag);
+      if (efpRes.Control.SelectedNode == null)
+        return;
+      byte[] b = efpRes.Control.SelectedNode.Tag as byte[];
+      if (b == null)
+        return;
+      SaveFileDialog dlg = new SaveFileDialog();
+      if (EFPApp.ShowDialog(dlg) != DialogResult.OK)
+        return;
+
+      System.IO.File.WriteAllBytes(dlg.FileName, b);
     }
 
     static void efpRes_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs args)
@@ -430,7 +477,15 @@ namespace ExeFileInfoDemo
           }
           else
             _IconImage = EFPApp.MainImages.Images["EmptyImage"];
-        }
+
+          if (!fi.Resources.Version.IsEmpty)
+          {
+            if (String.IsNullOrEmpty(fi.Resources.Version.FileDescription))
+              _Description = fi.Resources.Version.ProductName + ", version " + fi.Resources.Version.ProductVersion;
+            else
+              _Description = fi.Resources.Version.FileDescription + ", version " + fi.Resources.Version.FileVersion;
+          }
+        } // using FI
       }
       catch (Exception e)
       {

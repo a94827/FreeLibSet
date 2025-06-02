@@ -4,6 +4,8 @@ using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Data;
 using System.Data;
+using FreeLibSet.Tests;
+using System.Data.Common;
 
 namespace ExtTools_tests.Data
 {
@@ -172,7 +174,7 @@ namespace ExtTools_tests.Data
     /// Создает две таблицы с разной струкурой и несколькими строками. В таблице имеется тестируемое поле "F1".
     /// Выполняет извлечение данных, в том числе, с переключением между таблицами
     /// </summary>
-    /// <typeparam name="TData">Тип данных DataColumn.DataType, который храниться в таблице данных</typeparam>
+    /// <typeparam name="TData">Тип данных DataColumn.DataType, который хранится в таблице данных</typeparam>
     /// <typeparam name="TRes">Тип извлекаемых данных. В частности, может быть nullable-тип и/или тип, к которому может быть выполнено преобразование</typeparam>
     /// <param name="sut">Тестируемый объект</param>
     /// <param name="value1">Первое тестовое значение для размещения в таблице</param>
@@ -211,7 +213,7 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(value2, sut[t2.Rows[1]], sut.GetType().ToString() + " - " + typeof(TData).ToString() + " #5");
 
       TRes dummyRes;
-      Assert.Catch(delegate() { dummyRes = sut[t3.Rows[0]]; }, sut.GetType().ToString() + " - " + typeof(TData).ToString() + " #6");
+      Assert.Catch(delegate () { dummyRes = sut[t3.Rows[0]]; }, sut.GetType().ToString() + " - " + typeof(TData).ToString() + " #6");
     }
 
     #endregion

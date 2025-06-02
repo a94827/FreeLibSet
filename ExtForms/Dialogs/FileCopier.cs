@@ -363,7 +363,7 @@ namespace FreeLibSet.Forms
         if (!fi.Exists)
           throw ExceptionFactory.FileNotFound(thisPath);
 
-        if (IsWindows())
+        if (EnvironmentTools.IsWindowsPlatform)
         {
           if (DstDir.Path.StartsWith("A:\\", StringComparison.OrdinalIgnoreCase) || DstDir.Path.StartsWith("B:\\", StringComparison.OrdinalIgnoreCase))
           {
@@ -447,20 +447,6 @@ namespace FreeLibSet.Forms
       }
 
       CheckPrevFiles();
-    }
-
-    private static bool IsWindows()
-    {
-      switch (Environment.OSVersion.Platform)
-      {
-        case PlatformID.Win32NT:
-        case PlatformID.Win32Windows:
-        case PlatformID.Win32S:
-        case PlatformID.WinCE:
-          return true;
-        default:
-          return false;
-      }
     }
 
     private void CheckPrevFiles()

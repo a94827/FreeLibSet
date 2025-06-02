@@ -47,6 +47,7 @@
     <Compile Include="Core\ExceptionFactoryTests.cs" />
     <Compile Include="Data\AndFilterTests.cs" />
     <Compile Include="Data\CompareFilterTests.cs" />
+    <Compile Include="Data\DbDataReaderValueTests.cs" />
     <Compile Include="Data\DBxDataRowExtValuesTests.cs" />
     <Compile Include="Data\DBxDataTableExtValuesTests.cs" />
     <Compile Include="Data\DateRangeCrossFilterTests.cs" />

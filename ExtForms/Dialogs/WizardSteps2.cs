@@ -355,7 +355,7 @@ namespace FreeLibSet.Forms
     /// Не должно использоваться
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public new Panel MainPanel { get { return base.MainPanel ; } }
+    public new Panel MainPanel { get { return base.MainPanel; } }
 
     #endregion
   }
@@ -512,12 +512,14 @@ namespace FreeLibSet.Forms
 
 #endif
 
+#if XXX //Есть WizardStepWithListSelection
+
   /// <summary>
   /// Шаг мастера со списком для выбора одной строки
   /// </summary>
   public class WizardStepWithListView : ExtWizardStep
   {
-    #region Конструктор
+  #region Конструктор
 
     /// <summary>
     /// Инициализация шага мастера
@@ -546,9 +548,9 @@ namespace FreeLibSet.Forms
     }
 
 
-    #endregion
+  #endregion
 
-    #region Свойства
+  #region Свойства
 
     /// <summary>
     /// Строки для списка.
@@ -620,7 +622,7 @@ namespace FreeLibSet.Forms
     }
     private string[] _SubItems;
 
-    #endregion
+  #endregion
 
     // Убрано 07.05.2022
     //#region Переопределенные методы
@@ -639,7 +641,7 @@ namespace FreeLibSet.Forms
 
     //#endregion
 
-    #region Внутренняя реализация
+  #region Внутренняя реализация
 
     private bool _InsideResize = false;
 
@@ -665,9 +667,9 @@ namespace FreeLibSet.Forms
       }
     }
 
-    #endregion
+  #endregion
 
-    #region Заглушка
+  #region Заглушка
 
     /// <summary>
     /// Не должно использоваться
@@ -675,9 +677,9 @@ namespace FreeLibSet.Forms
     [EditorBrowsable(EditorBrowsableState.Never)]
     public new Panel MainPanel { get { return base.MainPanel; } }
 
-    #endregion
+  #endregion
   }
-
+#endif
 
   /// <summary>
   /// Шаг мастера с табличным просмотром
@@ -713,7 +715,7 @@ namespace FreeLibSet.Forms
     /// Создает шаг мастера с провайдером <see cref="EFPDataGridView"/>.
     /// </summary>
     public WizardStepWithDataGridView()
-      : this(delegate(EFPControlWithToolBar<DataGridView> cwt) { return new EFPDataGridView(cwt); })
+      : this(delegate (EFPControlWithToolBar<DataGridView> cwt) { return new EFPDataGridView(cwt); })
     {
     }
 
@@ -741,7 +743,7 @@ namespace FreeLibSet.Forms
     {
       // Перенесено наверх 26.07.2023
       // Обработчик события BeginStep может присоединить таблицу к просмотру
-      base.OnBeginStep(action); 
+      base.OnBeginStep(action);
 
       //if (_TheControlProvider.UseRowImages &&
       //  (!_TheControlProvider.UseRowImagesDataError) &&

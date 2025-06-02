@@ -239,6 +239,35 @@ namespace FreeLibSet.Tests
     #endregion
 
     #endregion
+
+    #region Guid
+
+    public static Guid? NGuid(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return null;
+      else
+        return new Guid(s);
+    }
+
+    /// <summary>
+    /// Возвращает массив из 16 байт с помощью метода <see cref="Guid.ToByteArray()"/>.
+    /// Для пустой строки возвращает null.
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static byte[] GuidBytes(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return null;
+      else
+      {
+        Guid g = new Guid(s);
+        return g.ToByteArray();
+      }
+    }
+
+    #endregion
   }
 
 }

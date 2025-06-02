@@ -67,6 +67,7 @@
     <Compile Include="Core\ExceptionFactory.cs" />
     <Compile Include="Data\CoreDBxSqlFormatter.cs" />
     <Compile Include="Data\DataEnumerators.cs" />
+    <Compile Include="Data\DbDataReaderValue.cs" />
     <Compile Include="Data\DBxCommonFilter.cs" />
     <Compile Include="Data\DBxDataRowExtValues.cs" />
     <Compile Include="Data\DataViewDBxSqlFormatter.cs" />
@@ -218,9 +219,6 @@
     <EmbeddedResource Include="Res.ru.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ageyev_test.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

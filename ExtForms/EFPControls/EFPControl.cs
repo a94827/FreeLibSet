@@ -366,7 +366,7 @@ namespace FreeLibSet.Forms
 
     void Control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs args)
     {
-      // 04.02.2020
+      // 04.02.2021
       // Комбинации Ctrl-Enter, Shift-Enter, Alt-Enter относятся к управляющему элементу, а не предназначены для нажатия кнопки <ОК>
       if (args.KeyCode == Keys.Enter)
       {
@@ -1707,7 +1707,25 @@ namespace FreeLibSet.Forms
         currForm = BaseProvider.FormProvider.Form;
 
       if (EFPApp.ActiveDialog != null && EFPApp.ActiveDialog != currForm)
-        return true;
+      {
+        // return true;
+
+        // 28.05.2025
+        // Если у блока диалога есть собственная статусная строка или она ему не нужна, 
+        // можно не отсоединять текущие панели
+        EFPFormProvider dlgFormProvider = EFPFormProvider.FindFormProvider(EFPApp.ActiveDialog);
+        if (dlgFormProvider != null)
+        {
+          if (dlgFormProvider.OwnStatusBar)
+            return false;
+          if (!dlgFormProvider.ContainsControlWantedStatusBar())
+            return false;
+
+          return true;
+        }
+        else
+          return false; // не должно быть
+      }
 
       bool wantedHasStatus = (ProviderState == EFPControlProviderState.Attached) &&
           WinFormsTools.ContainsControl(this.Control, BaseProvider.FormProvider.LastFocusedControl);

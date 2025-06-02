@@ -1065,6 +1065,8 @@ namespace FreeLibSet.Forms.Docs
 
     #region Выбор документа
 
+    private static bool _AllDocsForInsertSelected = true; // 01.06.2025
+
     /// <summary>
     /// Выбор документов для добавления поддокумента.
     /// Возможность выбора нескольких документов определяется свойством <see cref="SubDocTypeUI.CanMultiInsert"/>.
@@ -1106,6 +1108,8 @@ namespace FreeLibSet.Forms.Docs
             dlg.Selections[i] = true;
         }
       }
+      if (_AllDocsForInsertSelected && dlg.MultiSelect)
+        dlg.SelectAll();
 
       if (dlg.ShowDialog() != DialogResult.OK)
         return null;
@@ -1118,6 +1122,7 @@ namespace FreeLibSet.Forms.Docs
           if (dlg.Selections[i])
             docIds.Add(controlProvider.SubDocs.Owner[i].DocId);
         }
+        _AllDocsForInsertSelected = dlg.AreAllSelected;
         return docIds.ToArray();
       }
       else
@@ -1502,8 +1507,8 @@ namespace FreeLibSet.Forms.Docs
         }
         else
         {
-          if (EFPApp.MessageBox(String.Format(srcDocTypeBase.DocTypeBase.IsSubDoc ? 
-            Res.SubDocTypeUI_Msg_ConfirmPasteSubDocs: Res.SubDocTypeUI_Msg_ConfirmPasteDocs, subDocs2.SubDocCount),
+          if (EFPApp.MessageBox(String.Format(srcDocTypeBase.DocTypeBase.IsSubDoc ?
+            Res.SubDocTypeUI_Msg_ConfirmPasteSubDocs : Res.SubDocTypeUI_Msg_ConfirmPasteDocs, subDocs2.SubDocCount),
             String.Format(Res.SubDocTypeUI_Title_ConfirmPasteSubDocs, SubDocType.PluralTitle),
             MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
 
@@ -1556,7 +1561,7 @@ namespace FreeLibSet.Forms.Docs
         if (PasteRows != null)
           PasteRows(this, args1);
         if (!args1.Handled)
-        { 
+        {
           allPasteHandled = false;
           for (int i = 0; i < srcRows.Length; i++)
           {

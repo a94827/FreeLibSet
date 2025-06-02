@@ -43,6 +43,7 @@ namespace FreeLibSet.Forms.Diagnostics
       efpTokens.Columns.AddTextFill("Text", false, "Text", 100, 5);
       efpTokens.Columns.AddText("Parser", false, "Parser", 15, 5);
       efpTokens.DisableOrdering();
+      efpTokens.UseAlternation = false;
       efpTokens.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(efpTokens_GetRowAttributes);
       efpTokens.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpTokens_GetCellAttributes);
       efpTokens.UseRowImages = true;

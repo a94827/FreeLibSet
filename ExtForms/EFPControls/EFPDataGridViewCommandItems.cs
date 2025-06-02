@@ -531,6 +531,23 @@ namespace FreeLibSet.Forms
       {
         if (ControlProvider.Control.ReadOnly)
           ciInlineEditStatus.Usage = EFPCommandItemUsage.None;
+        else
+        {
+          // 29.05.2025
+          bool hasEditableColumn = false;
+          foreach (DataGridViewColumn column in ControlProvider.Control.Columns)
+          {
+            if (!column.ReadOnly)
+            {
+              if (column == ControlProvider.MarkRowsGridColumn)
+                continue;
+              hasEditableColumn = true;
+              break;
+            }
+          }
+          if (!hasEditableColumn)
+            ciInlineEditStatus.Usage = EFPCommandItemUsage.None;
+        }
       }
 
       if (UseRefresh)
@@ -542,7 +559,8 @@ namespace FreeLibSet.Forms
       if (ClipboardInToolBar)
         clipboardUsage |= EFPCommandItemUsage.ToolBar;
 
-      if (Cut == null && ControlProvider.Control.ReadOnly)
+      if (Cut == null &&
+        (ControlProvider.Control.ReadOnly || PasteHandler.Count == 0 /* 23.05.2025 */))
       {
         ciCut.Enabled = false;
         ciCut.Usage = EFPCommandItemUsage.None;
@@ -871,18 +889,19 @@ namespace FreeLibSet.Forms
         if (ControlProvider.CanIncSearch)
         {
           menuText = Res.Cmd_Menu_Edit_IncSearch_Start;
-          if (ControlProvider.CurrentColumn == null)
+          EFPDataGridViewColumn column = ControlProvider.DesiredIncSearchColumn;
+          if (column == null)
           {
             isEnabled = false;
-            statusBarText = Res.Cmd_Status_Edit_IncSearch_NoColumn;
+            if (ControlProvider.CurrentColumn == null)
+              statusBarText = Res.Cmd_Status_Edit_IncSearch_NoColumn;
+            else
+              statusBarText = Res.Cmd_Status_Edit_IncSearch_WrongColumn;
           }
           else
           {
-            isEnabled = ControlProvider.CurrentColumn.CanIncSearch;
-            if (isEnabled)
-              statusBarText = Res.Cmd_Status_Edit_IncSearch_NotStarted;
-            else
-              statusBarText = Res.Cmd_Status_Edit_IncSearch_WrongColumn;
+            isEnabled = true;
+            statusBarText = Res.Cmd_Status_Edit_IncSearch_NotStarted;
           }
         }
         else
@@ -1477,7 +1496,7 @@ namespace FreeLibSet.Forms
 
       // Дополнительная проверка применимости.
       // Проверяем, что текущая ячейка просмотра не ReadOnly
-      if (args.Result!=EFPTestDataObjectResult.Ok)
+      if (args.Result != EFPTestDataObjectResult.Ok)
         return;
 
       if (ControlProvider.Control.ReadOnly)
@@ -1509,7 +1528,7 @@ namespace FreeLibSet.Forms
       EFPPasteTextMatrixFormat fmt = (EFPPasteTextMatrixFormat)sender;
 
       string errorText;
-      bool res=ControlProvider.PerformPasteText(fmt.TextMatrix, out errorText);
+      bool res = ControlProvider.PerformPasteText(fmt.TextMatrix, out errorText);
       if (!res)
       {
         if (args.Reason == EFPPasteReason.PasteSpecial)
@@ -1587,17 +1606,16 @@ namespace FreeLibSet.Forms
       // Начать / закончить поиск по первым буквам
       if (ControlProvider.CurrentIncSearchColumn == null)
       {
-        if (ControlProvider.CurrentColumn == null)
+        EFPDataGridViewColumn column = ControlProvider.DesiredIncSearchColumn;
+        if (column == null)
         {
-          EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedColumn);
+          if (ControlProvider.CurrentColumn == null)
+            EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedColumn);
+          else
+            EFPApp.ShowTempMessage(Res.EFPDataView_Err_IncSearchNotSupportedByColumn);
           return;
         }
-        if (!ControlProvider.CurrentColumn.CanIncSearch)
-        {
-          EFPApp.ShowTempMessage(Res.EFPDataView_Err_IncSearchNotSupportedByColumn);
-          return;
-        }
-        ControlProvider.CurrentIncSearchColumn = ControlProvider.CurrentColumn;
+        ControlProvider.CurrentIncSearchColumn = column;
       }
       else
       {
@@ -1944,7 +1962,7 @@ namespace FreeLibSet.Forms
       if (nRows == 1)
         title1 = Res.EFPDataView_Title_RowMessagesForCurrentRow;
       else
-        title1 = String.Format(Res.EFPDataView_Title_RowMessagesForCurrentRow, nRows);
+        title1 = String.Format(Res.EFPDataView_Title_RowMessagesForSelectedRows, nRows);
       string title2 = Res.EFPDataView_Title_RowMessagesForAllRows;
 
       RadioSelectDialog dlg = new RadioSelectDialog();
@@ -1962,12 +1980,12 @@ namespace FreeLibSet.Forms
         if (_ShowRowErrorMessagesRowMode == 1)
         {
           ControlProvider.GetAllRowsErrorMessages(errors);
-          title = title1;
+          title = title2;
         }
         else
         {
           ControlProvider.GetSelectedRowsErrorMessages(errors);
-          title = title2;
+          title = title1;
         }
       }
       finally

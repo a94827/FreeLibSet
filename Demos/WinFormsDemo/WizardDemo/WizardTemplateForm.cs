@@ -18,7 +18,7 @@ namespace WinFormsDemo.WizardDemo
     {
       InitializeComponent();
 
-      Cfg = new RegistryCfg(Program.RegKeyName+@"\Wizard");
+      Cfg = new RegistryCfg(Program.RegKeyName + @"\Wizard");
       InitStep1();
       _TheWizard = new Wizard(Step1);
     }
@@ -44,12 +44,19 @@ namespace WinFormsDemo.WizardDemo
           "WizardStep properties",
           "ExtWizardStep",
           "WizardStepWithTabControl",
+          "WizardStepWithListSelection",
           "TempPage",
         };
 
         Step1 = new WizardStepWithRadioButtons(a);
         Step1.GroupTitle = "Demo mode";
-        Step1.TheButtons.Codes = new string[] { "TemplateForm", "WizardStepProps", "ExtWizardStep", "WizardStepWithTabControl", "TempPage"};
+        Step1.TheButtons.Codes = new string[] {
+          "TemplateForm",
+          "WizardStepProps",
+          "ExtWizardStep",
+          "WizardStepWithTabControl",
+          "WizardStepWithListSelection",
+          "TempPage" };
 
         Step1.EndStep += Step1_EndStep;
         Step1.GetNext += Step1_GetNext;
@@ -83,6 +90,10 @@ namespace WinFormsDemo.WizardDemo
         case "WizardStepWithTabControl":
           InitStep401();
           args.NextStep = Step401;
+          break;
+        case "WizardStepWithListSelection":
+          InitStep601();
+          args.NextStep = Step601;
           break;
         case "TempPage":
           InitStep301();
@@ -159,7 +170,7 @@ namespace WinFormsDemo.WizardDemo
         efpTitleForThisStepOnly501.Checked = Step501.TitleForThisStepOnly;
         efpHelpContext501.Checked = !String.IsNullOrEmpty(Step501.HelpContext);
 
-        efpFinalStep501.CheckedEx.ValueChanged += efpFinalStep501_ValueChanged; 
+        efpFinalStep501.CheckedEx.ValueChanged += efpFinalStep501_ValueChanged;
         efpForwardEnabled501.CheckedEx.ValueChanged += efpForwardEnabled501_ValueChanged;
         efpBackEnabled501.CheckedEx.ValueChanged += efpBackEnabled501_ValueChanged;
         efpTitle501.CheckedEx.ValueChanged += efpTitle501_ValueChanged;
@@ -352,6 +363,83 @@ namespace WinFormsDemo.WizardDemo
         EFPTextBox efp2 = new EFPTextBox(cwt2);
         efp2.CanBeEmpty = false;
       }
+    }
+
+    #endregion
+
+    #region WizardStepWithListSelection
+
+    private WizardStep Step601;
+
+    private EFPCheckBox efpMultiSelect601, efpSubItems601, efpCanBeEmpty601;
+
+    private void InitStep601()
+    {
+      if (Step601 == null)
+      {
+        Step601 = new WizardStep(Pan601);
+        efpMultiSelect601 = new EFPCheckBox(Step601.BaseProvider, cbMultiSelect601);
+        efpSubItems601 = new EFPCheckBox(Step601.BaseProvider, cbSubItems601);
+        efpCanBeEmpty601 = new EFPCheckBox(Step601.BaseProvider, cbCanBeEmpty601);
+
+        Step601.GetNext += Step601_GetNext;
+      }
+    }
+
+    private void Step601_GetNext(object sender, WizardGetNextEventArgs args)
+    {
+      WizardStepWithListSelection step602 = new WizardStepWithListSelection();
+      step602.Items = new string[] { "One", "Two", "Three", "Four", "Five" };
+      step602.MultiSelect = efpMultiSelect601.Checked;
+      if (efpSubItems601.Checked)
+        step602.SubItems = new string[] { "Item #1", "Item #2", "Item #3", "Item #4", "Item #5" };
+      step602.CanBeEmpty = efpCanBeEmpty601.Checked;
+      step602.ImageKeys[0] = "CircleRed";
+      step602.ImageKeys[1] = "CircleYellow";
+      step602.ImageKeys[2] = "CircleGreen";
+
+      step602.BeginStep += Step602_BeginStep;
+      step602.EndStep += Step602_EndStep;
+      step602.GetNext += Step602_GetNext;
+      args.NextStep = step602;
+    }
+
+    private static int _SelectedIndex602 = 0;
+
+    private static bool[] _Selections602 = null;
+
+    private void Step602_BeginStep(object sender, WizardBeginStepEventArgs args)
+    {
+      WizardStepWithListSelection step602 = (WizardStepWithListSelection)sender;
+      if (args.Forward)
+      {
+        if (step602.MultiSelect)
+          step602.Selections = _Selections602;
+        else
+          step602.SelectedIndex = _SelectedIndex602;
+      }
+    }
+
+    private void Step602_EndStep(object sender, WizardEndStepEventArgs args)
+    {
+      WizardStepWithListSelection step602 = (WizardStepWithListSelection)sender;
+      if (args.Forward)
+      {
+        if (step602.MultiSelect)
+          _Selections602 = step602.Selections;
+        else
+          _SelectedIndex602 = step602.SelectedIndex;
+      }
+    }
+
+    private void Step602_GetNext(object sender, WizardGetNextEventArgs args)
+    {
+      WizardStepWithListSelection step602 = (WizardStepWithListSelection)sender;
+      WizardStepWithMessage step603 = new WizardStepWithMessage();
+      if (step602.MultiSelect)
+        step603.Text = "Selected item(s): " + String.Join(", ", step602.GetSelectedItems());
+      step603.FinalStep = true;
+      args.NextStep = step603;
     }
 
     #endregion

@@ -101,6 +101,20 @@ namespace FreeLibSet.Core
     {
       _VersionZero = new Version();
 
+      // Свойство IsWindowPlatform должно быть инициализировано до вызова GetOSVersionText()
+      switch (Environment.OSVersion.Platform)
+      {
+        case PlatformID.Win32NT:
+        case PlatformID.Win32Windows:
+        case PlatformID.Win32S:
+        case PlatformID.WinCE:
+          _IsWindowsPlatform = true;
+          break;
+        default:
+          _IsWindowsPlatform = false;
+          break;
+      }
+
       // 26.03.2018
       // Используем статический конструктор, чтобы поля инициализировались в правильном порядке,
       // а не как придется
@@ -658,6 +672,13 @@ namespace FreeLibSet.Core
 
       return String.Empty;
     }
+
+    /// <summary>
+    /// Возвращает true, если <see cref="Environment.OSVersion"/> возвращает платформу, относящуюся к Windows.
+    /// В том числе, true возвращается при использовании Mono в Wine.
+    /// </summary>
+    public static bool IsWindowsPlatform { get { return _IsWindowsPlatform; } }
+    private static readonly bool _IsWindowsPlatform;
 
     #endregion
 

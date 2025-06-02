@@ -1165,6 +1165,15 @@ namespace FreeLibSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line height cannot be less than font size.
+        /// </summary>
+        internal static string BRPageSetupFont_Err_LineHeightFontHeight {
+            get {
+                return ResourceManager.GetString("BRPageSetupFont_Err_LineHeightFontHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Image drawing error.
         /// </summary>
         internal static string BRPageSetupFont_Err_Sample {
@@ -5085,6 +5094,15 @@ namespace FreeLibSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check box.
+        /// </summary>
+        internal static string EFPDataView_Name_CheckBoxColumn {
+            get {
+                return ResourceManager.GetString("EFPDataView_Name_CheckBoxColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Image.
         /// </summary>
         internal static string EFPDataView_Name_ImageColumn {
@@ -7869,15 +7887,6 @@ namespace FreeLibSet {
         internal static string ListSelectDialog_Err_PasteTextWithCommas {
             get {
                 return ResourceManager.GetString("ListSelectDialog_Err_PasteTextWithCommas", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Copy whole list.
-        /// </summary>
-        internal static string ListSelectDialog_Menu_CopyAllText {
-            get {
-                return ResourceManager.GetString("ListSelectDialog_Menu_CopyAllText", resourceCulture);
             }
         }
         

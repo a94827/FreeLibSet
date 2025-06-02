@@ -23,7 +23,8 @@ namespace FreeLibSet.Win32
     /// </summary>
     /// <param name="stream">Открытый поток</param>
     /// <param name="ownStream">Если true, то <see cref="ExeFileInfo"/> становится владедьцем потока</param>
-    public ExeFileInfo(Stream stream, bool ownStream)
+    /// <param name="filePath">Путь к файлу (значение свойства <see cref="FilePath"/>)</param>
+    public ExeFileInfo(Stream stream, bool ownStream, AbsPath filePath)
     {
       if (stream == null)
         throw new ArgumentNullException("stream");
@@ -34,6 +35,7 @@ namespace FreeLibSet.Win32
       _Stream = stream;
       _Reader = new BinaryReader(_Stream);
       _OwnStream = ownStream;
+      _FilePath = filePath;
     }
 
     /// <summary>
@@ -41,7 +43,7 @@ namespace FreeLibSet.Win32
     /// </summary>
     /// <param name="path">Путь к файлу</param>
     public ExeFileInfo(AbsPath path)
-      : this(CreateFileStream(path), true)
+      : this(CreateFileStream(path), true, path)
     {
     }
 
@@ -67,6 +69,12 @@ namespace FreeLibSet.Win32
     private Stream _Stream;
     private bool _OwnStream;
     private BinaryReader _Reader;
+
+    /// <summary>
+    /// Путь к exe-файлу (задается в конструкторе)
+    /// </summary>
+    public AbsPath FilePath { get { return _FilePath; } }
+    private readonly AbsPath _FilePath;
 
     #endregion
 
@@ -1337,6 +1345,14 @@ namespace FreeLibSet.Win32
       {
         _Owner._Stream.Seek(cpi.Offset, SeekOrigin.Begin);
         return _Owner._Reader.ReadBytes(cpi.Size);
+      }
+
+      public override AbsPath FilePath
+      {
+        get
+        {
+          return _Owner.FilePath;
+        }
       }
     }
 

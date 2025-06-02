@@ -1,678 +1,675 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1251">
-	<TITLE>Изменения в модуле ExtDBDocForms.dll</TITLE>
-	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
-	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20250421;123903990000000">
-	<META NAME="created" CONTENT="2017-12-15T18:35:55.602000000">
-	<META NAME="changed" CONTENT="2023-11-17T22:39:08.852000000">
-	<STYLE TYPE="text/css">
-	<!--
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title>Изменения в модуле ExtDBDocForms.dll</title>
+	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
+	<meta name="created" content="2017-12-15T18:35:55.602000000"/>
+	<meta name="changed" content="2025-06-01T09:18:39.953000000"/>
+	<style type="text/css">
 		@page { margin: 2cm }
-		P { margin-bottom: 0.25cm; background: transparent }
-		TD P { margin-bottom: 0.25cm; background: transparent; widows: 0; orphans: 0 }
-		H1 { margin-bottom: 0.21cm; background: transparent }
-		H1.western { font-family: "Liberation Serif", serif }
-		H1.cjk { font-family: "SimSun"; font-size: 24pt }
-		H1.ctl { font-family: "Mangal"; font-size: 24pt }
-		A:link { so-language: zxx }
-		A:visited { color: #800080 }
-	-->
-	</STYLE>
-</HEAD>
-<BODY LANG="ru-RU" VLINK="#800080" DIR="LTR">
-<H1 CLASS="western">История изменений <BR>Модуль <SPAN LANG="en-US">ExtDBDocForms</SPAN>.<SPAN LANG="en-US">dll
-</SPAN>(Работа с документами в базе данных в <SPAN LANG="en-US">Windows
-Forms</SPAN>)</H1>
-<P>Модуль входит в комплект библиотек <SPAN LANG="en-US">FreeLibSet</SPAN>,
-и является свободным программным обеспечением (Free Software)</P>
-<H1 CLASS="western">Версия <SPAN LANG="en-US">2</SPAN>.<SPAN LANG="en-US">0</SPAN></H1>
-<P>Полный номер версии файла, который можно узнать, посмотрев
+		p { margin-bottom: 0.25cm; background: transparent }
+		td p { margin-bottom: 0.25cm; background: transparent; orphans: 0; widows: 0 }
+		h1 { margin-bottom: 0.21cm; background: transparent }
+		h1.western { font-family: "Liberation Serif", serif }
+		h1.cjk { font-family: "SimSun"; font-size: 24pt }
+		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		a:link { so-language: zxx }
+		a:visited { color: #800080 }
+	</style>
+</head>
+<body lang="ru-RU" vlink="#800080" dir="ltr">
+<h1 class="western">История изменений <br/>
+Модуль <span lang="en-US">ExtDBDocForms</span>.<span lang="en-US">dll
+</span>(Работа с документами в базе данных в <span lang="en-US">Windows
+Forms</span>)</h1>
+<p>Модуль входит в комплект библиотек <span lang="en-US">FreeLibSet</span>,
+и является свободным программным обеспечением (Free Software)</p>
+<h1 class="western">Версия <span lang="en-US">2</span>.<span lang="en-US">0</span></h1>
+<p>Полный номер версии файла, который можно узнать, посмотрев
 свойства файла или в меню &laquo;О программе&raquo;, состоит из
-четырех чисел и имеет вид &laquo;<SPAN LANG="en-US">2</SPAN>.<SPAN LANG="en-US">0</SPAN>.0.<SPAN LANG="en-US">X</SPAN>&raquo;.
-В таблице указано только последнее число &laquo;<SPAN LANG="en-US">X</SPAN>&raquo;</P>
-<TABLE WIDTH=100% CELLPADDING=2 CELLSPACING=0>
-	<COL WIDTH=25*>
-	<COL WIDTH=35*>
-	<COL WIDTH=196*>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border: 1.00pt solid #000000; padding: 0.05cm">
-			<P ALIGN=CENTER>Версия</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>Дата</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>Что сделано</P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>354</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>08.10.2024</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">При внутренней
-			установке свойства </SPAN><SPAN LANG="en-US">EFPDocComboBoxBaseWithFilters,
-			EFPMultiDocComboBoxBaseWithFilters.FilterPassed </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v057p2"><SPAN LANG="en-US">v.57
-			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)
-			вызывается метод </SPAN><SPAN LANG="en-US">Validate(). </SPAN><SPAN LANG="ru-RU">Не
+четырех чисел и имеет вид &laquo;<span lang="en-US">2</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
+В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
+<table width="100%" cellpadding="2" cellspacing="0">
+	<col width="25*">
+	<col width="35*">
+	<col width="196*">
+	<tr valign="top">
+		<td width="10%" style="border: 1.00pt solid #000000; padding: 0.05cm">
+			<p align="center">Версия</p>
+		</td>
+		<td width="14%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Дата</p>
+		</td>
+		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">354</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">08.10.2024</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">При внутренней
+			установке свойства </span><span lang="en-US">EFPDocComboBoxBaseWithFilters,
+			EFPMultiDocComboBoxBaseWithFilters.FilterPassed </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v057p2"><span lang="en-US">v.57
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
+			вызывается метод </span><span lang="en-US">Validate(). </span><span lang="ru-RU">Не
 			обновлялась подсветка ошибки в комбоблоке, если фильтр
-			устанавливается динамически на основании другого поля.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>353</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>06.09.2024-19.09.2024</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US"><A NAME="v353p1"></A>1. EFPDocGridView <SPAN LANG="ru-RU">и
-			</SPAN>EFPSubDocGridView <SPAN LANG="ru-RU">устанавливают
-			</SPAN>EFPDataGridView.UseRowImages=true</P>
-			<P LANG="en-US">2. EFPSubDocGridView, <SPAN LANG="ru-RU">когда
-			отображаются поддокументы для нескольких документов,</SPAN>
-			<SPAN LANG="ru-RU">добавляет столбцы со значком и текстом
-			документа.</SPAN></P>
-			<P LANG="en-US"><SPAN LANG="ru-RU">3. Поддежка группового
-			создания/вставки поддокументов в </SPAN>EFPSubDocGridView <SPAN LANG="ru-RU">и
-			</SPAN>EFPSubDocTreeView<SPAN LANG="ru-RU">, когда редактируется
-			несколько документов.</SPAN></P>
-			<P><SPAN LANG="en-US">4. </SPAN><SPAN LANG="ru-RU">Исправлена
-			ошибка в </SPAN><SPAN LANG="en-US">EFPSubDocGridView.OnRefreshData()
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="#v317p2"><SPAN LANG="en-US">v.317
-			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">.
-			</SPAN><SPAN LANG="ru-RU">Была неправильная сортировка строк при
-			групповом редактировании документов.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>351</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>25.03.2024-<SPAN LANG="ru-RU">11</SPAN>.06.2024</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. EFPGroupDocTreeView </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v062p4"><SPAN LANG="en-US">v.62
-			</SPAN><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="ru-RU">)
-			предотвращает появление команды &laquo;Настройка просмотра&raquo;</SPAN></P>
-			<P LANG="en-US">2. <SPAN LANG="ru-RU">Изменения в
-			StartsWithGridFilter для учета свойства </SPAN>IgnoreCase, <SPAN LANG="ru-RU">как
-			в </SPAN>CommonStartsWithFilter.</P>
-			<P LANG="en-US">3. <SPAN LANG="ru-RU">Изменена реализация
-			YearRangeInclusionGridFilter, </SPAN>DateRangeGridFilter <SPAN LANG="ru-RU">и
-			DateRangeCrossGridFilter.</SPAN></P>
-			<P LANG="en-US">4. <SPAN LANG="ru-RU">Методы
-			</SPAN>Int/Single/Double/DecimalRangeFilter.FilterText <SPAN LANG="ru-RU">учитывают
-			свойства </SPAN>Format <SPAN LANG="ru-RU">и </SPAN>FormatProvider.</P>
-			<P LANG="en-US">5. <SPAN LANG="ru-RU">Фильтры
-			</SPAN>IntRangeCrossGridFilter, SingleRangeCrossGridFilter,
-			DoubleRangeCrossGridFilter, DecimalRangeCrossGridFilter<SPAN LANG="ru-RU">,
-			</SPAN>IntRangeInclusionGridFilter,
+			устанавливается динамически на основании другого поля.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">353</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">06.09.2024-19.09.2024</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US"><a name="v353p1"></a>1. EFPDocGridView <span lang="ru-RU">и
+			</span>EFPSubDocGridView <span lang="ru-RU">устанавливают
+			</span>EFPDataGridView.UseRowImages=true</p>
+			<p lang="en-US">2. EFPSubDocGridView, <span lang="ru-RU">когда
+			отображаются поддокументы для нескольких документов,</span>
+			<span lang="ru-RU">добавляет столбцы со значком и текстом
+			документа.</span></p>
+			<p lang="en-US"><a name="v353p3"></a><span lang="ru-RU">3.
+			Поддежка группового создания/вставки поддокументов в
+			</span>EFPSubDocGridView <span lang="ru-RU">и </span>EFPSubDocTreeView<span lang="ru-RU">,
+			когда редактируется несколько документов.</span></p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">Исправлена
+			ошибка в </span><span lang="en-US">EFPSubDocGridView.OnRefreshData()
+			</span><span lang="ru-RU">(</span><a href="#v317p2"><span lang="en-US">v.317
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Была неправильная сортировка строк при
+			групповом редактировании документов.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">351</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">25.03.2024-<span lang="ru-RU">11</span>.06.2024</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. EFPGroupDocTreeView </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v062p4"><span lang="en-US">v.62
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)
+			предотвращает появление команды &laquo;Настройка просмотра&raquo;</span></p>
+			<p lang="en-US">2. <span lang="ru-RU">Изменения в
+			StartsWithGridFilter для учета свойства </span>IgnoreCase, <span lang="ru-RU">как
+			в </span>CommonStartsWithFilter.</p>
+			<p lang="en-US">3. <span lang="ru-RU">Изменена реализация
+			YearRangeInclusionGridFilter, </span>DateRangeGridFilter <span lang="ru-RU">и
+			DateRangeCrossGridFilter.</span></p>
+			<p lang="en-US">4. <span lang="ru-RU">Методы
+			</span>Int/Single/Double/DecimalRangeFilter.FilterText <span lang="ru-RU">учитывают
+			свойства </span>Format <span lang="ru-RU">и </span>FormatProvider.</p>
+			<p lang="en-US">5. <span lang="ru-RU">Фильтры
+			</span>IntRangeCrossGridFilter, SingleRangeCrossGridFilter,
+			DoubleRangeCrossGridFilter, DecimalRangeCrossGridFilter<span lang="ru-RU">,
+			</span>IntRangeInclusionGridFilter,
 			SingleRangeInclusionGridFilter, DoubleRangeInclusionGridFilter,
-			DecimalRangeInclusionGridFilter</P>
-			<P LANG="en-US">6. <SPAN LANG="ru-RU">Класс </SPAN>DocProviderUI
-			<SPAN LANG="ru-RU">объявлен </SPAN>internal.</P>
-			<P LANG="en-US">7. <SPAN LANG="ru-RU">Перечисление
+			DecimalRangeInclusionGridFilter</p>
+			<p lang="en-US">6. <span lang="ru-RU">Класс </span>DocProviderUI
+			<span lang="ru-RU">объявлен </span>internal.</p>
+			<p lang="en-US">7. <span lang="ru-RU">Перечисление
 			EFPDBxGridViewDocSelReason переименовано в EFPDBxViewDocSelReason.
-			Выделен абстрактный базовый класс EFPDBxViewDocSelEventArgs.</SPAN></P>
-			<P LANG="en-US">8. <SPAN LANG="ru-RU">Устанавливаемое свойство
-			</SPAN>IEFPDocView.Filters <SPAN LANG="ru-RU">перенесено в
-			</SPAN>IEFPDBxView.</P>
-			<P>9. Уточнена установка режима фильтрации в
-			<SPAN LANG="en-US">RefDocGridFilter.ApplyDocSet()</SPAN></P>
-			<P><SPAN LANG="en-US">10. </SPAN><SPAN LANG="ru-RU">Изменены
-			переопределенные методы в </SPAN><SPAN LANG="en-US">EFPDocSelectionPasteFormat,
-			DBxDataSetPasteFormat</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>348</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>13.11.2023</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Настройка
-			параметров для печати таблиц</SPAN> <SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_20.htm#v348p33"><SPAN LANG="en-US">ExtForms,
-			v.348 </SPAN><SPAN LANG="ru-RU">п.33</SPAN></A><SPAN LANG="ru-RU">)</SPAN>
-			<SPAN LANG="ru-RU">в окне &quot;Информация о документе&quot;</SPAN>
-			<SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p12"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.12</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>344</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>24.03.2023</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US">1. EFPSubDocGridView.OnCreated() <SPAN LANG="ru-RU">перехватывает
-			исключения при вызове </SPAN>PerformRefresh()<SPAN LANG="ru-RU">.
-			Выброс исключения мог приводить к повторному вызову </SPAN>OnCreated(),
-			<SPAN LANG="ru-RU">что вызывало наведенное исключение
-			</SPAN>ObjectReadOnlyException <SPAN LANG="ru-RU">для объекта
-			</SPAN>EFPCommandItems <SPAN LANG="ru-RU">для уже
-			инициализированного контекстного меню</SPAN>. <SPAN LANG="ru-RU">Аналогично
-			реализации в </SPAN>EFPDocGridView.</P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>340</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>21.02.2023</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Перегрузки
-			метода </SPAN><SPAN LANG="en-US">DocTypeUIBase.GetRowColor() (<A HREF="ExtDBDocForms_11.htm#v001p1">v.1
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">с аргументом
-			EFPDataGridViewRowAttributesEventArgs</SPAN><SPAN LANG="en-US">.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>337</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>16.01.2023</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">В редакторе
-			выборки документов (</SPAN><A HREF="ExtDBDocForms_11.htm#v017p1"><SPAN LANG="en-US">v.17
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)
+			Выделен абстрактный базовый класс EFPDBxViewDocSelEventArgs.</span></p>
+			<p lang="en-US">8. <span lang="ru-RU">Устанавливаемое свойство
+			</span>IEFPDocView.Filters <span lang="ru-RU">перенесено в
+			</span>IEFPDBxView.</p>
+			<p>9. Уточнена установка режима фильтрации в
+			<span lang="en-US">RefDocGridFilter.ApplyDocSet()</span></p>
+			<p><span lang="en-US">10. </span><span lang="ru-RU">Изменены
+			переопределенные методы в </span><span lang="en-US">EFPDocSelectionPasteFormat,
+			DBxDataSetPasteFormat</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">348</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">13.11.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Настройка
+			параметров для печати таблиц</span> <span lang="ru-RU">(</span><a href="ExtForms_20.htm#v348p33"><span lang="en-US">ExtForms,
+			v.348 </span><span lang="ru-RU">п.33</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">в окне &quot;Информация о документе&quot;</span>
+			<span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p12"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.12</span></a><span lang="ru-RU">)</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">344</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">24.03.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. EFPSubDocGridView.OnCreated() <span lang="ru-RU">перехватывает
+			исключения при вызове </span>PerformRefresh()<span lang="ru-RU">.
+			Выброс исключения мог приводить к повторному вызову </span>OnCreated(),
+			<span lang="ru-RU">что вызывало наведенное исключение
+			</span>ObjectReadOnlyException <span lang="ru-RU">для объекта
+			</span>EFPCommandItems <span lang="ru-RU">для уже
+			инициализированного контекстного меню</span>. <span lang="ru-RU">Аналогично
+			реализации в </span>EFPDocGridView.</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">340</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">21.02.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Перегрузки
+			метода </span><span lang="en-US">DocTypeUIBase.GetRowColor() (<a href="ExtDBDocForms_11.htm#v001p1">v.1
+			</a></span><a href="ExtDBDocForms_11.htm#v001p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">с аргументом
+			EFPDataGridViewRowAttributesEventArgs</span><span lang="en-US">.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">337</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">16.01.2023</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">В редакторе
+			выборки документов (</span><a href="ExtDBDocForms_11.htm#v017p1"><span lang="en-US">v.17
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
 			перестало работать удаление документов из выборки после
-			использования таблицы-повторителя</SPAN> <SPAN LANG="en-US">(<A HREF="ExtDBDocForms_11.htm#v140p3">v.140
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v140p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>334</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>20.12.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Конструктор
-			EFPGroupDocComboBox </SPAN><SPAN LANG="en-US">(<A HREF="ExtDBDocForms_11.htm#v062p3">v.62
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v062p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">устанавливает свойство
-			</SPAN><SPAN LANG="en-US">ComboBox.DropDownStyle=DropDownList</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>332</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>09.12.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Обработчик
-			события </SPAN><SPAN LANG="en-US">DataGridView.CellValueNeeded </SPAN><SPAN LANG="ru-RU">в
-			</SPAN><SPAN LANG="en-US">EFPDocGridView (<A HREF="ExtDBDocForms_11.htm#v001p3">v.1
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">проверяет, что столбец не создан с
-			помощью </SPAN><SPAN LANG="en-US">GridProducer. </SPAN><SPAN LANG="ru-RU">В
-			этом случае не выполняется попытка извлечь данные их </SPAN><SPAN LANG="en-US">DBxCache.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>331</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>05.12.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Перечисление
-			RefDocGridFilterEmptyEditMode (</SPAN><A HREF="ExtDBDocForms_11.htm#v138p3"><SPAN LANG="en-US">v.138
-			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">)
-			переименовано в </SPAN><SPAN LANG="en-US">MultiSelectEmptyEditMode.
-			</SPAN><SPAN LANG="ru-RU">Статическое свойство
-			</SPAN><SPAN LANG="en-US">RefDocGridFilter.EmptyEditMode </SPAN><SPAN LANG="ru-RU">заменено
-			на нестатическое</SPAN><SPAN LANG="en-US">. </SPAN><SPAN LANG="ru-RU">Новое
-			свойство </SPAN><SPAN LANG="en-US">DBUI.DefaultEmptyEditMode</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
-			<P><SPAN LANG="ru-RU">2. Свойство
-			EFPMultiDocComboBox.</SPAN><SPAN LANG="en-US">EmptyEditMode (<A HREF="ExtDBDocForms_11.htm#v071p2">v.71
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v071p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">).</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>322</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>07.07.2022-08.07.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Изменения в
-			переопределении метов </SPAN><SPAN LANG="en-US">DocProviderUI
-			(<A HREF="ExtDBDocs_20.htm#v322p1">ExtDBDocs, v.322 </A></SPAN><A HREF="ExtDBDocs_20.htm#v322p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
-			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Использование
-			SerializationTools.PrepareDataSet() (</SPAN><A HREF="ExtTools_11.htm#v224p10"><SPAN LANG="en-US">ExtTools,
-			v.224 </SPAN><SPAN LANG="ru-RU">п.10</SPAN></A><SPAN LANG="ru-RU">)
-			при копировании наборов данных в буфер обмена</SPAN></P>
-			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Изменения в
-			инициализации значков </SPAN><SPAN LANG="en-US">(<A HREF="ExtForms_20.htm#v322p1">ExtForms,
-			v.322 </A></SPAN><A HREF="ExtForms_20.htm#v322p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">).
-			</SPAN><SPAN LANG="ru-RU">Убран метод </SPAN><SPAN LANG="en-US">DBUI.InitImages().</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>320</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>20.06.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. EFPGroupDocTreeView.OnAttached()
-			</SPAN><SPAN LANG="ru-RU">запоминает текущий выбранный узел на
-			время замены текста корневого узла (</SPAN><A HREF="#v310p2"><SPAN LANG="en-US">v.</SPAN><SPAN LANG="ru-RU">310
-			п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>319</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>17.06.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Метод
-			</SPAN><SPAN LANG="en-US">SubDocTypeUI.InitManualOrderColumnValue()
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="#v318p2"><SPAN LANG="en-US">v.318
-			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)
-			пропускает удаленные поддокументы.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>318</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>29.05.2022-<SPAN LANG="ru-RU">15</SPAN>.0<SPAN LANG="ru-RU">6</SPAN>.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><A NAME="v318p1"></A><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Убраны
-			свойства </SPAN><SPAN LANG="en-US">EFPSubDocGridView </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p3"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
-			EFPSubDocTreeView.ManualOrderColumn </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p4"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="ru-RU">) и
-			события </SPAN><SPAN LANG="en-US">ManualOrderChanged, </SPAN><SPAN LANG="ru-RU">которые
-			теперь дублируются в базовом классе</SPAN> <SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_20.htm#v318p2"><SPAN LANG="en-US">ExtForms,
-			v.318 </SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">.
-			</SPAN><SPAN LANG="ru-RU">Вместо этого добавлено свойство
-			</SPAN><SPAN LANG="en-US">SubDocTypeUI.ManualOrderColumn </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p1"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">.
-			</SPAN><SPAN LANG="ru-RU">Убрано свойство
-			EFPAllSubDocComboBox.</SPAN><SPAN LANG="en-US">ManualOrderColumn
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="#v308p6"><SPAN LANG="en-US">v.308
-			</SPAN><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-			<P><A NAME="v318p2"></A><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Общедоступный
-			метод </SPAN><SPAN LANG="en-US">SubDocTypeUI.InitManualOrderColumnValue()
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p1"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">.</SPAN></P>
-			<P><SPAN LANG="en-US">3</SPAN>. Переопределенный метод
-			<SPAN LANG="en-US">EFPSubDocGridView.CreateDefaulDataReorderHelper()
-			</SPAN>создает DataTableTreeReorderHelper (<A HREF="ExtTools_20.htm#v318p1"><SPAN LANG="en-US">ExtTools,
-			v.318 </SPAN><SPAN LANG="ru-RU">п.1</SPAN></A>), если для
-			поддокумента используется иерархическая структура</P>
-			<P><A NAME="v318p4"></A><SPAN LANG="en-US">4. </SPAN><SPAN LANG="ru-RU">Общедоступный
-			метод </SPAN><SPAN LANG="en-US">SubDocTypeUI.PerformPasteRows.
-			</SPAN><SPAN LANG="ru-RU">Новое событие </SPAN><SPAN LANG="en-US">PasteRows
-			</SPAN><SPAN LANG="ru-RU">для пользовательской вставки строк</SPAN>
-			<SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p1"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">).</SPAN>
-			<SPAN LANG="ru-RU">Новое свойство
-			AdjustPastedSubDocRowEventArgs.</SPAN><SPAN LANG="en-US">ControlProvider.</SPAN></P>
-			<P><SPAN LANG="en-US">5</SPAN><SPAN LANG="ru-RU">. Изменена
-			реализация методов получения значений в DBxDocImageHandlers</SPAN>
-			<SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v033p4"><SPAN LANG="en-US">v.33
-			</SPAN><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
-			</SPAN><SPAN LANG="ru-RU">по аналогии с
-			</SPAN><SPAN LANG="en-US">DBxDocTextHandlers.DoGetTextValue().
-			</SPAN><SPAN LANG="ru-RU">Теперь в комбоблоке
+			использования таблицы-повторителя</span> <span lang="en-US">(<a href="ExtDBDocForms_11.htm#v140p3">v.140
+			</a></span><a href="ExtDBDocForms_11.htm#v140p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)</span><span lang="ru-RU">.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">334</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">20.12.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Конструктор
+			EFPGroupDocComboBox </span><span lang="en-US">(<a href="ExtDBDocForms_11.htm#v062p3">v.62
+			</a></span><a href="ExtDBDocForms_11.htm#v062p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">устанавливает свойство
+			</span><span lang="en-US">ComboBox.DropDownStyle=DropDownList</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">332</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">09.12.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Обработчик
+			события </span><span lang="en-US">DataGridView.CellValueNeeded </span><span lang="ru-RU">в
+			</span><span lang="en-US">EFPDocGridView (<a href="ExtDBDocForms_11.htm#v001p3">v.1
+			</a></span><a href="ExtDBDocForms_11.htm#v001p3"><span lang="ru-RU">п.3</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">проверяет, что столбец не создан с
+			помощью </span><span lang="en-US">GridProducer. </span><span lang="ru-RU">В
+			этом случае не выполняется попытка извлечь данные их </span><span lang="en-US">DBxCache.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">331</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">05.12.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Перечисление
+			RefDocGridFilterEmptyEditMode (</span><a href="ExtDBDocForms_11.htm#v138p3"><span lang="en-US">v.138
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)
+			переименовано в </span><span lang="en-US">MultiSelectEmptyEditMode.
+			</span><span lang="ru-RU">Статическое свойство
+			</span><span lang="en-US">RefDocGridFilter.EmptyEditMode </span><span lang="ru-RU">заменено
+			на нестатическое</span><span lang="en-US">. </span><span lang="ru-RU">Новое
+			свойство </span><span lang="en-US">DBUI.DefaultEmptyEditMode</span><span lang="ru-RU">.</span></p>
+			<p><span lang="ru-RU">2. Свойство
+			EFPMultiDocComboBox.</span><span lang="en-US">EmptyEditMode (<a href="ExtDBDocForms_11.htm#v071p2">v.71
+			</a></span><a href="ExtDBDocForms_11.htm#v071p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">).</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">322</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">07.07.2022-08.07.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменения в
+			переопределении метов </span><span lang="en-US">DocProviderUI
+			(<a href="ExtDBDocs_20.htm#v322p1">ExtDBDocs, v.322 </a></span><a href="ExtDBDocs_20.htm#v322p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">2. </span><span lang="ru-RU">Использование
+			SerializationTools.PrepareDataSet() (</span><a href="ExtTools_11.htm#v224p10"><span lang="en-US">ExtTools,
+			v.224 </span><span lang="ru-RU">п.10</span></a><span lang="ru-RU">)
+			при копировании наборов данных в буфер обмена</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Изменения в
+			инициализации значков </span><span lang="en-US">(<a href="ExtForms_20.htm#v322p1">ExtForms,
+			v.322 </a></span><a href="ExtForms_20.htm#v322p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Убран метод </span><span lang="en-US">DBUI.InitImages().</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">320</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">20.06.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. EFPGroupDocTreeView.OnAttached()
+			</span><span lang="ru-RU">запоминает текущий выбранный узел на
+			время замены текста корневого узла (</span><a href="#v310p2"><span lang="en-US">v.</span><span lang="ru-RU">310
+			п.2</span></a><span lang="ru-RU">)</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">319</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">17.06.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Метод
+			</span><span lang="en-US">SubDocTypeUI.InitManualOrderColumnValue()
+			</span><span lang="ru-RU">(</span><a href="#v318p2"><span lang="en-US">v.318
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)
+			пропускает удаленные поддокументы.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">318</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">29.05.2022-<span lang="ru-RU">15</span>.0<span lang="ru-RU">6</span>.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><a name="v318p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Убраны
+			свойства </span><span lang="en-US">EFPSubDocGridView </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p3"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">)</span><span lang="en-US">,
+			EFPSubDocTreeView.ManualOrderColumn </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p4"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">) и
+			события </span><span lang="en-US">ManualOrderChanged, </span><span lang="ru-RU">которые
+			теперь дублируются в базовом классе</span> <span lang="ru-RU">(</span><a href="ExtForms_20.htm#v318p2"><span lang="en-US">ExtForms,
+			v.318 </span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Вместо этого добавлено свойство
+			</span><span lang="en-US">SubDocTypeUI.ManualOrderColumn </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p1"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Убрано свойство
+			EFPAllSubDocComboBox.</span><span lang="en-US">ManualOrderColumn
+			</span><span lang="ru-RU">(</span><a href="#v308p6"><span lang="en-US">v.308
+			</span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">)</span></p>
+			<p><a name="v318p2"></a><span lang="en-US">2. </span><span lang="ru-RU">Общедоступный
+			метод </span><span lang="en-US">SubDocTypeUI.InitManualOrderColumnValue()
+			</span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p1"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
+			<p><span lang="en-US">3</span>. Переопределенный метод
+			<span lang="en-US">EFPSubDocGridView.CreateDefaulDataReorderHelper()
+			</span>создает DataTableTreeReorderHelper (<a href="ExtTools_20.htm#v318p1"><span lang="en-US">ExtTools,
+			v.318 </span><span lang="ru-RU">п.1</span></a>), если для
+			поддокумента используется иерархическая структура</p>
+			<p><a name="v318p4"></a><span lang="en-US">4. </span><span lang="ru-RU">Общедоступный
+			метод </span><span lang="en-US">SubDocTypeUI.PerformPasteRows.
+			</span><span lang="ru-RU">Новое событие </span><span lang="en-US">PasteRows
+			</span><span lang="ru-RU">для пользовательской вставки строк</span>
+			<span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p1"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">).</span>
+			<span lang="ru-RU">Новое свойство
+			AdjustPastedSubDocRowEventArgs.</span><span lang="en-US">ControlProvider.</span></p>
+			<p><span lang="en-US">5</span><span lang="ru-RU">. Изменена
+			реализация методов получения значений в DBxDocImageHandlers</span>
+			<span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v033p4"><span lang="en-US">v.33
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span><span lang="en-US">,
+			</span><span lang="ru-RU">по аналогии с
+			</span><span lang="en-US">DBxDocTextHandlers.DoGetTextValue().
+			</span><span lang="ru-RU">Теперь в комбоблоке
 			EFPInsideSubDocComboBox правильно отображается значок ссылки на
-			новый поддокумент, а не значок ошибки.</SPAN></P>
-			<P><SPAN LANG="en-US">6. </SPAN><SPAN LANG="ru-RU">После изменения
-			</SPAN><SPAN LANG="en-US">(<A HREF="#v317p1">v.317 </A></SPAN><A HREF="#v317p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">,
+			новый поддокумент, а не значок ошибки.</span></p>
+			<p><span lang="en-US">6. </span><span lang="ru-RU">После изменения
+			</span><span lang="en-US">(<a href="#v317p1">v.317 </a></span><a href="#v317p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)</span><span lang="ru-RU">,
 			при открытии просмотра поддокументов, перестал учитываться порядок
-			сортировки, заданный пользователем. </SPAN>
-			</P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>317</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>02.05.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><A NAME="v317p1"></A><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Просмотр
-			</SPAN><SPAN LANG="en-US">EFPSubDocGridView </SPAN><SPAN LANG="ru-RU">перестал
-			учитывать </SPAN><SPAN LANG="en-US">свойcтво
-			SubDocTypeUI.DefaultOrder </SPAN><SPAN LANG="ru-RU">при
-			использовании таблицы-повторителя (</SPAN><A HREF="ExtDBDocForms_11.htm#v140p1"><SPAN LANG="en-US">v.140
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-			<P><A NAME="v317p2"></A><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Внутреннее
-			изменение. Метод </SPAN><SPAN LANG="en-US">EFPSubDocTreeView.OnRefreshData()
-			</SPAN><SPAN LANG="ru-RU">вместо обработки события </SPAN><SPAN LANG="en-US">(<A HREF="ExtDBDocForms_11.htm#v001p4">v.1
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p4"><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>316</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>28.04.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">В просмотре</SPAN>
-			<SPAN LANG="ru-RU">поддокументов </SPAN><SPAN LANG="en-US">EFPSubDocTreeView
-			(<A HREF="ExtDBDocForms_11.htm#v001p4">v.1 </A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p4"><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">внутри редактора документа</SPAN>
-			<SPAN LANG="ru-RU">выполняется обновление таблицы после нажатия
+			сортировки, заданный пользователем. </span>
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">317</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">02.05.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><a name="v317p1"></a><span lang="en-US">1. </span><span lang="ru-RU">Просмотр
+			</span><span lang="en-US">EFPSubDocGridView </span><span lang="ru-RU">перестал
+			учитывать </span><span lang="en-US">свойcтво
+			SubDocTypeUI.DefaultOrder </span><span lang="ru-RU">при
+			использовании таблицы-повторителя (</span><a href="ExtDBDocForms_11.htm#v140p1"><span lang="en-US">v.140
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p><a name="v317p2"></a><span lang="en-US">2. </span><span lang="ru-RU">Внутреннее
+			изменение. Метод </span><span lang="en-US">EFPSubDocTreeView.OnRefreshData()
+			</span><span lang="ru-RU">вместо обработки события </span><span lang="en-US">(<a href="ExtDBDocForms_11.htm#v001p4">v.1
+			</a></span><a href="ExtDBDocForms_11.htm#v001p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)</span><span lang="ru-RU">.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">316</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">28.04.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">В просмотре</span>
+			<span lang="ru-RU">поддокументов </span><span lang="en-US">EFPSubDocTreeView
+			(<a href="ExtDBDocForms_11.htm#v001p4">v.1 </a></span><a href="ExtDBDocForms_11.htm#v001p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">внутри редактора документа</span>
+			<span lang="ru-RU">выполняется обновление таблицы после нажатия
 			кнопки &quot;Запись&quot; в редакторе. Добавляется обработчик
-			события </SPAN><SPAN LANG="en-US">DocumentEditor.AfterWrite.</SPAN></P>
-			<P>Сценарий, который приводил к возникновению исключения:</P>
-			<P>- Открыть редактор документа, внести какие-нибудь изменения и
-			нажать кнопку &quot;Запись&quot;.</P>
-			<P>- В иерархическом просмотре нажать <SPAN LANG="en-US">[+]</SPAN>
-			для создания поддокумента. Нажать <SPAN LANG="en-US">&lt;</SPAN>ОК<SPAN LANG="en-US">&gt;</SPAN>.
+			события </span><span lang="en-US">DocumentEditor.AfterWrite.</span></p>
+			<p>Сценарий, который приводил к возникновению исключения:</p>
+			<p>- Открыть редактор документа, внести какие-нибудь изменения и
+			нажать кнопку &quot;Запись&quot;.</p>
+			<p>- В иерархическом просмотре нажать <span lang="en-US">[+]</span>
+			для создания поддокумента. Нажать <span lang="en-US">&lt;</span>ОК<span lang="en-US">&gt;</span>.
 			В момент обновления просмотра возникала ошибка, так как модель
 			DBxSubDocTreeModel, на которую ссылается просмотр, использует
 			таблицу, которая была до нажатия кнопки &quot;Запись&quot;, а не
-			полученная от <SPAN LANG="en-US">ApplyChanges()</SPAN>.</P>
-			<P>Аналогичная ошибка была давно исправлена дл<SPAN LANG="ru-RU">я
-			</SPAN><SPAN LANG="en-US">EFPSubDocGridView</SPAN> <SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v014p2"><SPAN LANG="en-US">v.14
-			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-			<P><SPAN LANG="en-US">2. EFPSubDocTableView.Init() </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v085p1"><SPAN LANG="en-US">v.85
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)
+			полученная от <span lang="en-US">ApplyChanges()</span>.</p>
+			<p>Аналогичная ошибка была давно исправлена дл<span lang="ru-RU">я
+			</span><span lang="en-US">EFPSubDocGridView</span> <span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v014p2"><span lang="en-US">v.14
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">2. EFPSubDocTableView.Init() </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v085p1"><span lang="en-US">v.85
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
 			больше не выполняет проверку на равенство ссылок
-			subDocTypeUI.SubDocType и subDocs.SubDocType.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>315</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>15.04.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P>1. <SPAN LANG="ru-RU">Убран переопреленный метод
-			</SPAN><SPAN LANG="en-US">EFPDBxTreeView.PerformRefresh(). </SPAN><SPAN LANG="ru-RU">Метод
-			базового класса в </SPAN><SPAN LANG="en-US">EFPDataTreeView
-			</SPAN><SPAN LANG="ru-RU">самостоятельно восстанавливает текущую
-			выбранную позицию в дереве (</SPAN><A HREF="ExtForms_11.htm#v269p6"><SPAN LANG="en-US">ExtForms,
-			v.269 </SPAN><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="ru-RU">).</SPAN></P>
-			<P><SPAN LANG="en-US">2.</SPAN><SPAN LANG="ru-RU">Внутренний метод
-			</SPAN><SPAN LANG="en-US">EFPDocTableView.InitDelayedProperties()
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v085p1"><SPAN LANG="en-US">v.85
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)
-			проглатывает исключения.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>312</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>09.03.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. EFPDBxTreeView.OnAttached() </SPAN><SPAN LANG="ru-RU">вызывает
-			</SPAN><SPAN LANG="en-US">OnRefreshData() </SPAN><SPAN LANG="ru-RU">при
-			</SPAN><SPAN LANG="en-US">TreeViewAdv.ControlModel=null
-			</SPAN><SPAN LANG="ru-RU">почему-либо (</SPAN><A HREF="ExtDBDocForms_11.htm#v001p4"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>311</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P ALIGN=CENTER>17.02.2022-<SPAN LANG="en-US">24.02.2022</SPAN></P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P>1. <SPAN LANG="ru-RU">Еще раз исправлена установка фокуса ввода
-			в </SPAN><SPAN LANG="en-US">DocTableViewForm (<A HREF="ExtDBDocForms_11.htm#v134p1">v.134
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v134p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">).
-			</SPAN><SPAN LANG="ru-RU">Вызовы </SPAN><SPAN LANG="en-US">SetFocus()</SPAN>
-			<SPAN LANG="ru-RU">(исправлено </SPAN><A HREF="ExtForms_20.htm#v311p2"><SPAN LANG="en-US">ExtForms,
-			v.311 </SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN>
-			<SPAN LANG="ru-RU">выполняются в </SPAN><SPAN LANG="en-US">OnVisibleChanged()</SPAN><SPAN LANG="ru-RU">,
-			а не </SPAN><SPAN LANG="en-US">OnActivated()</SPAN><SPAN LANG="ru-RU">.
+			subDocTypeUI.SubDocType и subDocs.SubDocType.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">315</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">15.04.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>1. <span lang="ru-RU">Убран переопреленный метод
+			</span><span lang="en-US">EFPDBxTreeView.PerformRefresh(). </span><span lang="ru-RU">Метод
+			базового класса в </span><span lang="en-US">EFPDataTreeView
+			</span><span lang="ru-RU">самостоятельно восстанавливает текущую
+			выбранную позицию в дереве (</span><a href="ExtForms_11.htm#v269p6"><span lang="en-US">ExtForms,
+			v.269 </span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">).</span></p>
+			<p><span lang="en-US">2.</span><span lang="ru-RU">Внутренний метод
+			</span><span lang="en-US">EFPDocTableView.InitDelayedProperties()
+			</span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v085p1"><span lang="en-US">v.85
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
+			проглатывает исключения.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">312</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">09.03.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. EFPDBxTreeView.OnAttached() </span><span lang="ru-RU">вызывает
+			</span><span lang="en-US">OnRefreshData() </span><span lang="ru-RU">при
+			</span><span lang="en-US">TreeViewAdv.ControlModel=null
+			</span><span lang="ru-RU">почему-либо (</span><a href="ExtDBDocForms_11.htm#v001p4"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">311</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">17.02.2022-<span lang="en-US">24.02.2022</span></p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>1. <span lang="ru-RU">Еще раз исправлена установка фокуса ввода
+			в </span><span lang="en-US">DocTableViewForm (<a href="ExtDBDocForms_11.htm#v134p1">v.134
+			</a></span><a href="ExtDBDocForms_11.htm#v134p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">).
+			</span><span lang="ru-RU">Вызовы </span><span lang="en-US">SetFocus()</span>
+			<span lang="ru-RU">(исправлено </span><a href="ExtForms_20.htm#v311p2"><span lang="en-US">ExtForms,
+			v.311 </span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">выполняются в </span><span lang="en-US">OnVisibleChanged()</span><span lang="ru-RU">,
+			а не </span><span lang="en-US">OnActivated()</span><span lang="ru-RU">.
 			Предыдущая реализация иногда не срабатывала, зато активировала
-			просмотр таблицы или дерева при переключении окон.</SPAN></P>
-			<P><SPAN LANG="ru-RU">2. Свойство
-			</SPAN><SPAN LANG="en-US">EFPDBxTreeView.SelectedIdsWithChildren
-			(<A HREF="ExtDBDocForms_11.htm#v001p4">v.1 </A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p4"><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
-			<P><SPAN LANG="en-US">3.</SPAN> <SPAN LANG="ru-RU">Изменена
-			реализация чтения свойства </SPAN><SPAN LANG="en-US">EFPDBxTreeView</SPAN><SPAN LANG="ru-RU">.</SPAN><SPAN LANG="en-US">SelectedIds.
-			</SPAN><SPAN LANG="ru-RU">Теперь используется свойство
-			</SPAN><SPAN LANG="en-US">SelectedDataRows. </SPAN><SPAN LANG="ru-RU">В
-			возвращаемом массиве не могут появляться идентификаторы 0.</SPAN></P>
-			<P>4. Изменения в моделях деревьев
-			DataTableTreeModelWithIds&lt;Int32&gt; (<A HREF="ExtTools_20.htm#v311p2"><SPAN LANG="en-US">ExtTools,
-			v.311 </SPAN>п.2</A>).</P>
-			<P><SPAN LANG="ru-RU">5</SPAN><SPAN LANG="en-US">. EFPDocTreeView
-			(<A HREF="ExtDBDocForms_11.htm#v001p4">v.1 </A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p4"><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">в режиме удаления пытается удалять
-			документы вместе</SPAN> <SPAN LANG="ru-RU">со всеми вложенными
+			просмотр таблицы или дерева при переключении окон.</span></p>
+			<p><span lang="ru-RU">2. Свойство
+			</span><span lang="en-US">EFPDBxTreeView.SelectedIdsWithChildren
+			(<a href="ExtDBDocForms_11.htm#v001p4">v.1 </a></span><a href="ExtDBDocForms_11.htm#v001p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">3.</span> <span lang="ru-RU">Изменена
+			реализация чтения свойства </span><span lang="en-US">EFPDBxTreeView</span><span lang="ru-RU">.</span><span lang="en-US">SelectedIds.
+			</span><span lang="ru-RU">Теперь используется свойство
+			</span><span lang="en-US">SelectedDataRows. </span><span lang="ru-RU">В
+			возвращаемом массиве не могут появляться идентификаторы 0.</span></p>
+			<p>4. Изменения в моделях деревьев
+			DataTableTreeModelWithIds&lt;Int32&gt; (<a href="ExtTools_20.htm#v311p2"><span lang="en-US">ExtTools,
+			v.311 </span>п.2</a>).</p>
+			<p><span lang="ru-RU">5</span><span lang="en-US">. EFPDocTreeView
+			(<a href="ExtDBDocForms_11.htm#v001p4">v.1 </a></span><a href="ExtDBDocForms_11.htm#v001p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">в режиме удаления пытается удалять
+			документы вместе</span> <span lang="ru-RU">со всеми вложенными
 			документами. Раньше такая попытка удаления была обречена на
-			провал.</SPAN></P>
-			<P LANG="en-US">6.
-			EFPDocTreeView.IntDocumentViewHandler.ApplyChanges() <SPAN LANG="ru-RU">выполняет
+			провал.</span></p>
+			<p lang="en-US">6.
+			EFPDocTreeView.IntDocumentViewHandler.ApplyChanges() <span lang="ru-RU">выполняет
 			позиционирование после редактирования документов. В процессе
 			редактирования могла поменяться структура дерева. Аналогично,
 			после выполняется позиционирование после редактирования
-			поддокументов в </SPAN>EFPSubDocTreeView.OnEditData().</P>
-			<P><SPAN LANG="en-US">7. </SPAN><SPAN LANG="ru-RU">Метод
+			поддокументов в </span>EFPSubDocTreeView.OnEditData().</p>
+			<p><span lang="en-US">7. </span><span lang="ru-RU">Метод
 			EFPDocTreeView,
-			</SPAN><SPAN LANG="en-US">EFPGroupDocTreeView.IntDocumentViewHandler.CopyRowValues()
-			</SPAN><SPAN LANG="ru-RU">никогда не вызывался (</SPAN><A HREF="ExtDBDocForms_11.htm#v100p6"><SPAN LANG="en-US">v.100
-			</SPAN><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-			<P><SPAN LANG="en-US">8</SPAN><SPAN LANG="ru-RU">. Внутренний
-			метод </SPAN><SPAN LANG="en-US">EFPGroupDocTreeView.AddRootNode()
-			</SPAN><SPAN LANG="ru-RU">сначала добавляет строку в таблицу, а
+			</span><span lang="en-US">EFPGroupDocTreeView.IntDocumentViewHandler.CopyRowValues()
+			</span><span lang="ru-RU">никогда не вызывался (</span><a href="ExtDBDocForms_11.htm#v100p6"><span lang="en-US">v.100
+			</span><span lang="ru-RU">п.6</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">8</span><span lang="ru-RU">. Внутренний
+			метод </span><span lang="en-US">EFPGroupDocTreeView.AddRootNode()
+			</span><span lang="ru-RU">сначала добавляет строку в таблицу, а
 			потом меняет остальные ссылочные поля. Иначе возникает исключение
-			в </SPAN><SPAN LANG="en-US">DataTableTreeModel.</SPAN></P>
-			<P><SPAN LANG="en-US">9. </SPAN><SPAN LANG="ru-RU">Изменения в
-			переходниках </SPAN><SPAN LANG="en-US">DocValueControlBase </SPAN><SPAN LANG="ru-RU">для
-			использования </SPAN><SPAN LANG="en-US">DBxDocValue.ValueArray
-			</SPAN><SPAN LANG="ru-RU">вместо </SPAN><SPAN LANG="en-US">ComplexValue
-			(<A HREF="ExtDBDocs_20.htm#v311p11">ExtDBDocs, v.311 </A></SPAN><A HREF="ExtDBDocs_20.htm#v311p11"><SPAN LANG="ru-RU">п.11</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
-			<P><SPAN LANG="en-US">10. </SPAN><SPAN LANG="ru-RU">Метод
-			InitDocEditFormEventArgs</SPAN><SPAN LANG="en-US">.</SPAN><SPAN LANG="ru-RU">AddRefToParent()</SPAN><SPAN LANG="en-US">,
-			</SPAN><SPAN LANG="ru-RU">который дополнительно добавляет
-			валидатор к </SPAN><SPAN LANG="en-US">EFPDocComboBox </SPAN><SPAN LANG="ru-RU">для
-			предотвращения зацикливания дерева документов.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>310</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>03.02.2022 (<SPAN LANG="ru-RU">вечер)
-			- 04.02.2022</SPAN></P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Методы
-			</SPAN><SPAN LANG="en-US">DBUI.UpdateDBCacheAndRows(),
-			</SPAN><SPAN LANG="ru-RU">DocumentViewHandlerList</SPAN><SPAN LANG="en-US">.UpdateDBCacheAndRows()
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v106p1"><SPAN LANG="en-US">v.106
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">) и
-			DocProviderUI.AfterApplyChanges</SPAN><SPAN LANG="en-US">()
-			</SPAN><SPAN LANG="ru-RU">вызывают
-			</SPAN><SPAN LANG="en-US">DocTypeUI.RefreshBufferedData(). </SPAN><SPAN LANG="ru-RU">Для
+			в </span><span lang="en-US">DataTableTreeModel.</span></p>
+			<p><span lang="en-US">9. </span><span lang="ru-RU">Изменения в
+			переходниках </span><span lang="en-US">DocValueControlBase </span><span lang="ru-RU">для
+			использования </span><span lang="en-US">DBxDocValue.ValueArray
+			</span><span lang="ru-RU">вместо </span><span lang="en-US">ComplexValue
+			(<a href="ExtDBDocs_20.htm#v311p11">ExtDBDocs, v.311 </a></span><a href="ExtDBDocs_20.htm#v311p11"><span lang="ru-RU">п.11</span></a><span lang="en-US">)</span></p>
+			<p><span lang="en-US">10. </span><span lang="ru-RU">Метод
+			InitDocEditFormEventArgs</span><span lang="en-US">.</span><span lang="ru-RU">AddRefToParent()</span><span lang="en-US">,
+			</span><span lang="ru-RU">который дополнительно добавляет
+			валидатор к </span><span lang="en-US">EFPDocComboBox </span><span lang="ru-RU">для
+			предотвращения зацикливания дерева документов.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">310</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">03.02.2022 (<span lang="ru-RU">вечер)
+			- 04.02.2022</span></p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Методы
+			</span><span lang="en-US">DBUI.UpdateDBCacheAndRows(),
+			</span><span lang="ru-RU">DocumentViewHandlerList</span><span lang="en-US">.UpdateDBCacheAndRows()
+			</span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v106p1"><span lang="en-US">v.106
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) и
+			DocProviderUI.AfterApplyChanges</span><span lang="en-US">()
+			</span><span lang="ru-RU">вызывают
+			</span><span lang="en-US">DocTypeUI.RefreshBufferedData(). </span><span lang="ru-RU">Для
 			справочников, с установленным свойством
-			</SPAN><SPAN LANG="en-US">DocTypeUI.DataBuffering=true </SPAN><SPAN LANG="ru-RU">не
+			</span><span lang="en-US">DocTypeUI.DataBuffering=true </span><span lang="ru-RU">не
 			выполнялось обновление буфера справочника при добавлении элементов
 			(и других действиях). При следующем открытии справочника новый
 			элемент не отображался в просмотре до выполнения команды
-			&quot;Обновить&quot;.</SPAN></P>
-			<P><A NAME="v310p2"></A><SPAN LANG="ru-RU">2. EFPGroupDocTreeView
-			обрабатывает </SPAN><SPAN LANG="en-US">OnAttached(), </SPAN><SPAN LANG="ru-RU">где
+			&quot;Обновить&quot;.</span></p>
+			<p><a name="v310p2"></a><span lang="ru-RU">2. EFPGroupDocTreeView
+			обрабатывает </span><span lang="en-US">OnAttached(), </span><span lang="ru-RU">где
 			заново инициализирует текст для корневого узла дерева. Создание
-			модели</SPAN> <SPAN LANG="ru-RU">и корневого узла </SPAN><SPAN LANG="en-US">(<A HREF="ExtDBDocForms_11.htm#v101p4">v.101
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v101p4"><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">может выполняться до инициализации
-			списка столбцов, когда нельзя установить текст.</SPAN></P>
-			<P LANG="en-US">3. EFPDocGridView, EFPDocTreeView.OnCreated()
-			<SPAN LANG="ru-RU">перехватывают ошибки при вызове
-			</SPAN>PerformRefresh(). <SPAN LANG="ru-RU">Если исключение
-			&quot;выпустить&quot; наружу, то метод </SPAN>OnCreated() <SPAN LANG="ru-RU">мог
+			модели</span> <span lang="ru-RU">и корневого узла </span><span lang="en-US">(<a href="ExtDBDocForms_11.htm#v101p4">v.101
+			</a></span><a href="ExtDBDocForms_11.htm#v101p4"><span lang="ru-RU">п.4</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">может выполняться до инициализации
+			списка столбцов, когда нельзя установить текст.</span></p>
+			<p lang="en-US">3. EFPDocGridView, EFPDocTreeView.OnCreated()
+			<span lang="ru-RU">перехватывают ошибки при вызове
+			</span>PerformRefresh(). <span lang="ru-RU">Если исключение
+			&quot;выпустить&quot; наружу, то метод </span>OnCreated() <span lang="ru-RU">мог
 			быть вызван еще раз, что приводило к ошибке повторной
-			инициализации меню.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>308</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>07.01.2022-29.01.2022</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Классы
-			</SPAN><SPAN LANG="en-US">DocValueInt/Single/Double/DecimalEditBox
-			(<A HREF="#v301p2">v.301 </A></SPAN><A HREF="#v301p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">присоединяются к свойству </SPAN><SPAN LANG="en-US">NValue
-			</SPAN><SPAN LANG="ru-RU">управляющего элемента, чтобы
-			поддерживать пустые значения, когда</SPAN>
-			<SPAN LANG="en-US">EFPNumEditBoxBase&lt;T&gt;.CanBeEmpty=true</SPAN></P>
-			<P>2. Свойство InitDocEditFormEventArgsBase.<SPAN LANG="en-US">MainImageKey
-			(<A HREF="ExtDBDocForms_11.htm#v001p10">v.1 </A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p10">п.10</A><SPAN LANG="en-US">)</SPAN>,
-			возвращающий значок для документа/поддокумента<SPAN LANG="en-US">.
-			</SPAN>При добавлении первой страницы, метод <SPAN LANG="en-US">AddPage()
-			</SPAN>устанавливает <SPAN LANG="en-US">DocEditPage.ImageKey. </SPAN>Для
-			второй и последующих страниц используется значок &quot;<SPAN LANG="en-US">Properties</SPAN>&quot;<SPAN LANG="en-US">.</SPAN></P>
-			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Свойства
-			EFPMultiDocComboBox (</SPAN><A HREF="ExtDBDocForms_11.htm#v071p2"><SPAN LANG="en-US">v.71
-			</SPAN><SPAN LANG="ru-RU">п2</SPAN></A><SPAN LANG="ru-RU">),
-			EFPMultiSubDocComboBox.SelectionMode (</SPAN><A HREF="ExtDBDocForms_11.htm#v094p3"><SPAN LANG="en-US">v.94
-			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">, </SPAN><A HREF="ExtDBDocForms_11.htm#v133p4"><SPAN LANG="en-US">v.133
-			</SPAN><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-			<P><SPAN LANG="ru-RU">4. </SPAN><SPAN LANG="en-US">EFPDocTableView.Init()
-			(<A HREF="ExtDBDocForms_11.htm#v085p1">v.85 </A></SPAN><A HREF="ExtDBDocForms_11.htm#v085p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">инициализирует </SPAN><SPAN LANG="en-US">EFPDBxGridView.MarkRowIds
-			</SPAN><SPAN LANG="ru-RU">при
-			</SPAN><SPAN LANG="en-US">Mode=DocTableViewMode.SelectMultiWithFlags.
-			</SPAN><SPAN LANG="ru-RU">Не работал выбор документов с помощью
-			флажков для </SPAN><SPAN LANG="en-US">DocSelectDialog.SelectionMode=MultiCheckBoxes</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
-			<P LANG="en-US">5. <SPAN LANG="ru-RU">Изменения в
-			</SPAN>EFPSubDocGridView, <SPAN LANG="ru-RU">EFPSubDocTreeView:</SPAN></P>
-			<P LANG="en-US"><SPAN LANG="ru-RU">- Установка свойства
-			</SPAN>ValidateBeforeEdit <SPAN LANG="ru-RU">в </SPAN>true <SPAN LANG="ru-RU">не
-			допускается, если просмотр не относится к редактору документа</SPAN></P>
-			<P LANG="en-US"><SPAN LANG="ru-RU">- Обработчик события
-			</SPAN>DocumentEditor.BeforeWrite <SPAN LANG="ru-RU">(только
-			</SPAN>EFPSubDocGridView<SPAN LANG="ru-RU">) присоединяется только
+			инициализации меню.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">308</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">07.01.2022-29.01.2022</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p><span lang="en-US">1. </span><span lang="ru-RU">Классы
+			</span><span lang="en-US">DocValueInt/Single/Double/DecimalEditBox
+			(<a href="#v301p2">v.301 </a></span><a href="#v301p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">присоединяются к свойству </span><span lang="en-US">NValue
+			</span><span lang="ru-RU">управляющего элемента, чтобы
+			поддерживать пустые значения, когда</span>
+			<span lang="en-US">EFPNumEditBoxBase&lt;T&gt;.CanBeEmpty=true</span></p>
+			<p>2. Свойство InitDocEditFormEventArgsBase.<span lang="en-US">MainImageKey
+			(<a href="ExtDBDocForms_11.htm#v001p10">v.1 </a></span><a href="ExtDBDocForms_11.htm#v001p10">п.10</a><span lang="en-US">)</span>,
+			возвращающий значок для документа/поддокумента<span lang="en-US">.
+			</span>При добавлении первой страницы, метод <span lang="en-US">AddPage()
+			</span>устанавливает <span lang="en-US">DocEditPage.ImageKey. </span>Для
+			второй и последующих страниц используется значок &quot;<span lang="en-US">Properties</span>&quot;<span lang="en-US">.</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Свойства
+			EFPMultiDocComboBox (</span><a href="ExtDBDocForms_11.htm#v071p2"><span lang="en-US">v.71
+			</span><span lang="ru-RU">п2</span></a><span lang="ru-RU">),
+			EFPMultiSubDocComboBox.SelectionMode (</span><a href="ExtDBDocForms_11.htm#v094p3"><span lang="en-US">v.94
+			</span><span lang="ru-RU">п.3</span></a><span lang="ru-RU">, </span><a href="ExtDBDocForms_11.htm#v133p4"><span lang="en-US">v.133
+			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="ru-RU">4. </span><span lang="en-US">EFPDocTableView.Init()
+			(<a href="ExtDBDocForms_11.htm#v085p1">v.85 </a></span><a href="ExtDBDocForms_11.htm#v085p1"><span lang="ru-RU">п.1</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">инициализирует </span><span lang="en-US">EFPDBxGridView.MarkRowIds
+			</span><span lang="ru-RU">при
+			</span><span lang="en-US">Mode=DocTableViewMode.SelectMultiWithFlags.
+			</span><span lang="ru-RU">Не работал выбор документов с помощью
+			флажков для </span><span lang="en-US">DocSelectDialog.SelectionMode=MultiCheckBoxes</span><span lang="ru-RU">.</span></p>
+			<p lang="en-US">5. <span lang="ru-RU">Изменения в
+			</span>EFPSubDocGridView, <span lang="ru-RU">EFPSubDocTreeView:</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Установка свойства
+			</span>ValidateBeforeEdit <span lang="ru-RU">в </span>true <span lang="ru-RU">не
+			допускается, если просмотр не относится к редактору документа</span></p>
+			<p lang="en-US"><span lang="ru-RU">- Обработчик события
+			</span>DocumentEditor.BeforeWrite <span lang="ru-RU">(только
+			</span>EFPSubDocGridView<span lang="ru-RU">) присоединяется только
 			на время нахождения на экране, а не в конструкторе, чтобы
 			предотвратить утечку ресурсов при многократном создании
-			просмотров.</SPAN></P>
-			<P LANG="en-US"><A NAME="v308p6"></A>6. <SPAN LANG="ru-RU">Провайдер
-			комбоблока </SPAN>EFPAllSubDocComboBox <SPAN LANG="ru-RU">(черновик,
-			недоделано)</SPAN></P>
-			<P LANG="en-US">7. <SPAN LANG="ru-RU">Исправлена инициализация
-			фокуса ввода в </SPAN>EFPDocTableView. <SPAN LANG="ru-RU">Раньше
+			просмотров.</span></p>
+			<p lang="en-US"><a name="v308p6"></a>6. <span lang="ru-RU">Провайдер
+			комбоблока </span>EFPAllSubDocComboBox <span lang="ru-RU">(черновик,
+			недоделано)</span></p>
+			<p lang="en-US">7. <span lang="ru-RU">Исправлена инициализация
+			фокуса ввода в </span>EFPDocTableView. <span lang="ru-RU">Раньше
 			всегда активировался табличный просмотр, даже если в предыдущем
-			сеансе была выбрана вкладка &quot;Дерево&quot;.</SPAN></P>
-			<P><SPAN LANG="ru-RU">8. Свойства </SPAN><SPAN LANG="en-US">EFPDocGridView,
-			EFPDocTreeView, EFPSubDocGridView </SPAN><SPAN LANG="ru-RU">и
-			</SPAN><SPAN LANG="en-US">EFPSubDocTreeView.DefaultyConfiogName </SPAN><SPAN LANG="ru-RU">и
-			</SPAN><SPAN LANG="en-US">UserInitData </SPAN><SPAN LANG="ru-RU">сделаны
-			устанавливаемыми. Убраны конструкторы с этими аргументами (</SPAN><A HREF="ExtDBDocForms_11.htm#v095p1"><SPAN LANG="en-US">v.95
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN></P>
-			<P><SPAN LANG="en-US">9. DocTypeUI, SubDocTypeUI.PerformInitGrid()
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p1"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)
-			устанавливают для всех столбцов табличного просмотра</SPAN><SPAN LANG="en-US">,
-			</SPAN><SPAN LANG="ru-RU">кроме столбца флажков, если он есть,
-			признак </SPAN><SPAN LANG="en-US">ReadOnly</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
-		</TD>
-	</TR>
-	<TR VALIGN=TOP>
-		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>301</P>
-		</TD>
-		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>21.10.2021-22.11.2021</P>
-		</TD>
-		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US">1. <SPAN LANG="ru-RU">Изменения пространств имен</SPAN></P>
-			<P><A NAME="v301p2"></A><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Методы
-			InitDocEditFormEventArgsBase.</SPAN><SPAN LANG="en-US">AddInt(),
-			AddSingle(), AddDouble(), AddDecimal() (<A HREF="ExtDBDocForms_11.htm#v001p11">v.1
-			</A></SPAN><A HREF="ExtDBDocForms_11.htm#v001p11"><SPAN LANG="ru-RU">п.11</SPAN></A><SPAN LANG="en-US">)
-			</SPAN><SPAN LANG="ru-RU">принимают ссылки на
-			</SPAN><SPAN LANG="en-US">EFPInt/Single/Double/DecimalEditBox
-			(<A HREF="ExtForms_20.htm#v301p12">ExtForms, v.301 п.1</A><A HREF="ExtForms_20.htm#v301p12">2</A>),
-			</SPAN><SPAN LANG="ru-RU">а не на </SPAN><SPAN LANG="en-US">IEFPNumEditBox.</SPAN></P>
-			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Классы
-			</SPAN><SPAN LANG="en-US">EFPSubDocComboBox </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p7"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.7</SPAN></A><SPAN LANG="ru-RU">)</SPAN>
-			<SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">EFPMultiSubDocComboBox
-			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v071p2"><SPAN LANG="en-US">v.71
-			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">)</SPAN>
-			<SPAN LANG="ru-RU">используют </SPAN><SPAN LANG="en-US">DepValueObject
-			</SPAN><SPAN LANG="ru-RU">для реализации свойства </SPAN><SPAN LANG="en-US">DocId,
-			</SPAN><SPAN LANG="ru-RU">вместо </SPAN><SPAN LANG="en-US">DepInputDelayed</SPAN></P>
-			<P><SPAN LANG="en-US">4. </SPAN><SPAN LANG="ru-RU">Свойства
-			</SPAN><SPAN LANG="en-US">EFPAnyDocComboBoxBase.CanBeEmptyMode </SPAN><SPAN LANG="ru-RU">и
-			</SPAN><SPAN LANG="en-US">CanBeDeletedMode </SPAN><SPAN LANG="ru-RU">вместо
-			</SPAN><SPAN LANG="en-US">WarningIfEmpty </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v053p2"><SPAN LANG="en-US">v.53
-			</SPAN><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="ru-RU">) и
-			</SPAN><SPAN LANG="en-US">WarningIfDeleted.</SPAN></P>
-			<P>5. Свойства <SPAN LANG="en-US">DateRangeGridFilter,
-			DateRangeCrossGridFilter.Minimum </SPAN>и <SPAN LANG="en-US">Maximum</SPAN>
-			<SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v101p1"><SPAN LANG="en-US">v.101
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">.</SPAN></P>
-			<P><SPAN LANG="en-US">6. </SPAN>Свойства
-			<SPAN LANG="en-US">Int/Single/Double/DecimalGridFilter.MinValue </SPAN>и
-			<SPAN LANG="en-US">MaxValue </SPAN>заменены на <SPAN LANG="en-US">Minimum
-			</SPAN>и <SPAN LANG="en-US">Maximum. </SPAN>Изменена реализация
-			свойств <SPAN LANG="en-US">Format </SPAN>и <SPAN LANG="en-US">DecimalPlaces.
-			</SPAN>Свойство <SPAN LANG="en-US">FormatProivider. </SPAN>Свойства
-			<SPAN LANG="en-US">Increment</SPAN> <SPAN LANG="ru-RU">и
-			</SPAN><SPAN LANG="en-US">UpDownHandler</SPAN></P>
-			<P><SPAN LANG="ru-RU">7</SPAN><SPAN LANG="en-US">. </SPAN><SPAN LANG="ru-RU">Изменена
-			внутренняя реализация метода </SPAN><SPAN LANG="en-US">CodeGridFilter.ShowFilterDialog</SPAN><SPAN LANG="ru-RU">()</SPAN>
-			<SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v019p1"><SPAN LANG="en-US">v.19
-			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">.
-			</SPAN><SPAN LANG="ru-RU">Используется </SPAN><SPAN LANG="en-US">EFPCsvCodesComboBox.
-			</SPAN><SPAN LANG="ru-RU">Убран метод </SPAN><SPAN LANG="en-US">ShowSelectCodesDialog().</SPAN></P>
-			<P>8. <SPAN LANG="en-US">SubDocumentEditor.Run() </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtDBDocForms_11.htm#v001p10"><SPAN LANG="en-US">v.1
-			</SPAN><SPAN LANG="ru-RU">п.10</SPAN></A><SPAN LANG="ru-RU">)
-			</SPAN>возвращал <SPAN LANG="en-US">DialogResult.Ok </SPAN>а не
-			<SPAN LANG="en-US">Cancel </SPAN>в режиме просмотра поддокумента.
+			сеансе была выбрана вкладка &quot;Дерево&quot;.</span></p>
+			<p><span lang="ru-RU">8. Свойства </span><span lang="en-US">EFPDocGridView,
+			EFPDocTreeView, EFPSubDocGridView </span><span lang="ru-RU">и
+			</span><span lang="en-US">EFPSubDocTreeView.DefaultyConfiogName </span><span lang="ru-RU">и
+			</span><span lang="en-US">UserInitData </span><span lang="ru-RU">сделаны
+			устанавливаемыми. Убраны конструкторы с этими аргументами (</span><a href="ExtDBDocForms_11.htm#v095p1"><span lang="en-US">v.95
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span></p>
+			<p><span lang="en-US">9. DocTypeUI, SubDocTypeUI.PerformInitGrid()
+			</span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p1"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)
+			устанавливают для всех столбцов табличного просмотра</span><span lang="en-US">,
+			</span><span lang="ru-RU">кроме столбца флажков, если он есть,
+			признак </span><span lang="en-US">ReadOnly</span><span lang="ru-RU">.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">301</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">21.10.2021-22.11.2021</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US">1. <span lang="ru-RU">Изменения пространств имен</span></p>
+			<p><a name="v301p2"></a><span lang="en-US">2. </span><span lang="ru-RU">Методы
+			InitDocEditFormEventArgsBase.</span><span lang="en-US">AddInt(),
+			AddSingle(), AddDouble(), AddDecimal() (<a href="ExtDBDocForms_11.htm#v001p11">v.1
+			</a></span><a href="ExtDBDocForms_11.htm#v001p11"><span lang="ru-RU">п.11</span></a><span lang="en-US">)
+			</span><span lang="ru-RU">принимают ссылки на
+			</span><span lang="en-US">EFPInt/Single/Double/DecimalEditBox
+			(<a href="ExtForms_20.htm#v301p12">ExtForms, v.301 п.1</a><a href="ExtForms_20.htm#v301p12">2</a>),
+			</span><span lang="ru-RU">а не на </span><span lang="en-US">IEFPNumEditBox.</span></p>
+			<p><span lang="en-US">3. </span><span lang="ru-RU">Классы
+			</span><span lang="en-US">EFPSubDocComboBox </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p7"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.7</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">и </span><span lang="en-US">EFPMultiSubDocComboBox
+			</span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v071p2"><span lang="en-US">v.71
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">)</span>
+			<span lang="ru-RU">используют </span><span lang="en-US">DepValueObject
+			</span><span lang="ru-RU">для реализации свойства </span><span lang="en-US">DocId,
+			</span><span lang="ru-RU">вместо </span><span lang="en-US">DepInputDelayed</span></p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">Свойства
+			</span><span lang="en-US">EFPAnyDocComboBoxBase.CanBeEmptyMode </span><span lang="ru-RU">и
+			</span><span lang="en-US">CanBeDeletedMode </span><span lang="ru-RU">вместо
+			</span><span lang="en-US">WarningIfEmpty </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v053p2"><span lang="en-US">v.53
+			</span><span lang="ru-RU">п.2</span></a><span lang="ru-RU">) и
+			</span><span lang="en-US">WarningIfDeleted.</span></p>
+			<p>5. Свойства <span lang="en-US">DateRangeGridFilter,
+			DateRangeCrossGridFilter.Minimum </span>и <span lang="en-US">Maximum</span>
+			<span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v101p1"><span lang="en-US">v.101
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">.</span></p>
+			<p><span lang="en-US">6. </span>Свойства
+			<span lang="en-US">Int/Single/Double/DecimalGridFilter.MinValue </span>и
+			<span lang="en-US">MaxValue </span>заменены на <span lang="en-US">Minimum
+			</span>и <span lang="en-US">Maximum. </span>Изменена реализация
+			свойств <span lang="en-US">Format </span>и <span lang="en-US">DecimalPlaces.
+			</span>Свойство <span lang="en-US">FormatProivider. </span>Свойства
+			<span lang="en-US">Increment</span> <span lang="ru-RU">и
+			</span><span lang="en-US">UpDownHandler</span></p>
+			<p><span lang="ru-RU">7</span><span lang="en-US">. </span><span lang="ru-RU">Изменена
+			внутренняя реализация метода </span><span lang="en-US">CodeGridFilter.ShowFilterDialog</span><span lang="ru-RU">()</span>
+			<span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v019p1"><span lang="en-US">v.19
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">.
+			</span><span lang="ru-RU">Используется </span><span lang="en-US">EFPCsvCodesComboBox.
+			</span><span lang="ru-RU">Убран метод </span><span lang="en-US">ShowSelectCodesDialog().</span></p>
+			<p>8. <span lang="en-US">SubDocumentEditor.Run() </span><span lang="ru-RU">(</span><a href="ExtDBDocForms_11.htm#v001p10"><span lang="en-US">v.1
+			</span><span lang="ru-RU">п.10</span></a><span lang="ru-RU">)
+			</span>возвращал <span lang="en-US">DialogResult.Ok </span>а не
+			<span lang="en-US">Cancel </span>в режиме просмотра поддокумента.
 			В результате, в заголовке редактора документа рисовалась
-			звездочка, сигнализирующая, что документ изменен.</P>
-		</TD>
-	</TR>
-</TABLE>
-<P><SPAN LANG="en-US">См. также <A HREF="ExtDBDocForms_11.htm">версию
-1.1</A> и описание <A HREF="Changes11_20.htm">перехода на версию 2.0</A></SPAN></P>
-</BODY>
-</HTML>
+			звездочка, сигнализирующая, что документ изменен.</p>
+		</td>
+	</tr>
+</table>
+<p><span lang="en-US">См. также <a href="ExtDBDocForms_11.htm">версию
+1.1</a> и описание <a href="Changes11_20.htm">перехода на версию 2.0</a></span></p>
+</body>
+</html>

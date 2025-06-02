@@ -43,6 +43,7 @@ namespace FreeLibSet.Forms.Reporting
       efpFontWidthMode.SelectedIndexEx.ValueChanged += new EventHandler(FontChanged);
 
       efpFontWidth = new EFPSingleEditBox(page.BaseProvider, edFontWidth);
+      efpFontWidth.DisplayName = WinFormsTools.RemoveMnemonic(grpFontWidth.Text);
       efpFontWidth.ToolTipText = Res.BRPageSetupFont_ToolTip_FontWidth;
       efpFontWidth.Control.Minimum = BRReport.MinFontWidthTwip / 20f;
       efpFontWidth.Control.Maximum = BRReport.MaxFontWidthTwip / 20f;
@@ -55,6 +56,7 @@ namespace FreeLibSet.Forms.Reporting
       efpLineHeightMode.SelectedIndexEx.ValueChanged += new EventHandler(FontChanged);
 
       efpLineHeight = new EFPSingleEditBox(page.BaseProvider, edLineHeight);
+      efpLineHeight.DisplayName = WinFormsTools.RemoveMnemonic(grLineHeight.Text);
       efpLineHeight.ToolTipText = Res.BRPageSetupFont_ToolTip_LineHeight;
       efpLineHeight.Control.Increment = 1f;
       efpLineHeight.Control.Minimum = BRReport.MinFontHeightTwip / 20f;
@@ -62,6 +64,8 @@ namespace FreeLibSet.Forms.Reporting
       efpLineHeight.ValueEx.ValueChanged += new EventHandler(FontChanged);
       efpLineHeight.EnabledEx = efpLineHeightMode[1].CheckedEx;
       efpLineHeight.AllowDisabledValue = true;
+      efpLineHeight.Validating += EfpLineHeight_Validating;
+      efpFontHeight.ValueEx.ValueChanged += efpLineHeight.Validate;
 
       pbFontSample.Paint += new PaintEventHandler(pbFontSample_Paint);
 
@@ -99,6 +103,14 @@ namespace FreeLibSet.Forms.Reporting
       pbFontSample.Invalidate();
     }
 
+    private void EfpLineHeight_Validating(object sender, UICore.UIValidatingEventArgs args)
+    {
+      if (args.ValidateState == UICore.UIValidateState.Error)
+        return;
+      if (efpLineHeight.Enabled && efpLineHeight.Value < efpFontHeight.Value)
+        args.SetError(Res.BRPageSetupFont_Err_LineHeightFontHeight);
+    }
+
     #endregion
 
     #region Образец
@@ -127,7 +139,9 @@ namespace FreeLibSet.Forms.Reporting
             //}
 
             string s = String.Format(Res.BRPageSetupFont_Msg_Sample,
-              rdr.Font.Name, rdr.FontHeight, rdr.FontWidth);
+              rdr.Font.Name, 
+              Math.Round(rdr.FontHeight,1, MidpointRounding.AwayFromZero), 
+              Math.Round(rdr.FontWidth, 1, MidpointRounding.AwayFromZero));
             string[] a = new string[5];
             DataTools.FillArray<string>(a, s);
             //RectangleF rc = pbFontSample.ClientRectangle;

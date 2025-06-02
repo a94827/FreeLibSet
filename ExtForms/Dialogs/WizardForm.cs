@@ -993,6 +993,20 @@ namespace FreeLibSet.Forms
     }
 
     #endregion
+
+    #region Статические методы
+
+    /// <summary>
+    /// Возвращает true, если действие перечисления <see cref="WizardAction"/> означает движение вперед
+    /// </summary>
+    /// <param name="action">Действие</param>
+    /// <returns>Направление</returns>
+    public static bool IsForwardAction(WizardAction action)
+    {
+      return action == WizardAction.Next || action == WizardAction.Finish || action == WizardAction.CircleNext;
+    }
+
+    #endregion
   }
 
   #region Перечисления
@@ -1113,7 +1127,7 @@ namespace FreeLibSet.Forms
     /// Возвращает true, если выполняемое действие означает движение вперед
     /// (Next или Finish)
     /// </summary>
-    public bool Forward { get { return _Action == WizardAction.Next || _Action == WizardAction.Finish || _Action == WizardAction.CircleNext; } }
+    public bool Forward { get { return Wizard.IsForwardAction(_Action); } }
 
     #endregion
   }
@@ -1164,7 +1178,7 @@ namespace FreeLibSet.Forms
     /// Возвращает true, если выполняемое действие означает движение вперед
     /// (Next или Finish)
     /// </summary>
-    public bool Forward { get { return _Action == WizardAction.Next || _Action == WizardAction.Finish || _Action == WizardAction.CircleNext; } }
+    public bool Forward { get { return Wizard.IsForwardAction(_Action); } }
 
     /// <summary>
     /// Сюда должно быть помещено значение true, чтобы предотвратить переход к
