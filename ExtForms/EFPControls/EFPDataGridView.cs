@@ -2105,7 +2105,11 @@ namespace FreeLibSet.Forms
     {
       CurrentRowIndex = _SavedRowIndex;
       if (args.ListChangedType == ListChangedType.Reset)
-        CurrentColumnIndex = CurrentColumnIndex;
+      {
+        int colIndex= CurrentColumnIndex;
+        _CurrentColumnIndex = -1; // 07.07.2025
+        CurrentColumnIndex = colIndex;
+      }
 
       _CurrentCellChangedFlag = true;
 

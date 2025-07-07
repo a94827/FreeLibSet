@@ -410,7 +410,7 @@ namespace FreeLibSet.Core
     }
 
 
-    #region GetNullableDateTime()
+    #region CreateDateTimeIfValid()
 
     /// <summary>
     /// Создает новый объект <see cref="DateTime"/>, если день, месяц и год содержат допустимое значение.

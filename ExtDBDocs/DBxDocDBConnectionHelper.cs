@@ -13,7 +13,7 @@ namespace FreeLibSet.Data.Docs
   #region InitDBxEventHandler
 
   /// <summary>
-  /// Аргументы события DBxDocDBConnectionHelper.BeforeInitDB
+  /// Аргументы события <see cref="DBxDocDBConnectionHelper.BeforeInitDB"/>
   /// </summary>
   public sealed class DBxDocDBConnectionHelperInitDBxEventArgs : EventArgs
   {
@@ -45,7 +45,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Созданное описание базы данных.
-    /// Свойство DBx.Struct не установлено
+    /// Свойство <see cref="DBx.Struct"/> не установлено.
     /// </summary>
     public DBx DB { get { return _DB; } }
     private readonly DBx _DB;
@@ -58,7 +58,7 @@ namespace FreeLibSet.Data.Docs
     private readonly DBxStruct _Struct;
 
     /// <summary>
-    /// Имя базы данных, переданное при вызове InitDB() ("db", "undo", "files", "files2", ...)
+    /// Имя базы данных, переданное при вызове <see cref="DBxDocDBConnectionHelper.InitDB(string, DBxStruct)"/> ("db", "undo", "files", "files2", ...)
     /// </summary>
     public string DBName { get { return _DBName; } }
     private readonly string _DBName;
@@ -67,7 +67,7 @@ namespace FreeLibSet.Data.Docs
   }
 
   /// <summary>
-  /// Делегат события DBxDocDBConnectionHelper.BeforeInitDB
+  /// Делегат события <see cref="DBxDocDBConnectionHelper.BeforeInitDB"/>
   /// </summary>
   /// <param name="sender">Объект DBxDocDBConnectionHelper</param>
   /// <param name="args">Аргументы события</param>
@@ -77,8 +77,8 @@ namespace FreeLibSet.Data.Docs
   #endregion
 
   /// <summary>
-  /// Вспомогательный класс для создания объектов DBx для поддержки работы с документами.
-  /// После создания экземпляра и настройки управляющих свойств, следует вызвать метод CreateRealDocProviderGlobal().
+  /// Вспомогательный класс для создания объектов <see cref="DBx"/> для поддержки работы с документами.
+  /// После создания экземпляра и настройки управляющих свойств, следует вызвать метод <see cref="DBxDocDBConnectionHelper.CreateRealDocProviderGlobal()"/>.
   /// </summary>
   public class DBxDocDBConnectionHelper
   {
@@ -160,7 +160,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Каталог для размещения баз данных MS SQL Server Express.
-    /// Свойство используется, если не задано ConnectionStringSettings
+    /// Свойство используется, если не задано <see cref="ConnectionString"/>
     /// </summary>
     public AbsPath DBDir { get { return _DBDir; } set { _DBDir = value; } }
     private AbsPath _DBDir;
@@ -175,7 +175,7 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Управление заставкой на время создания/обновления структуры базы данных.
-    /// Может быть не задано
+    /// Может быть не задано.
     /// </summary>
     public ISimpleSplash Splash { get { return _Splash; } set { _Splash = value; } }
     private ISimpleSplash _Splash;
@@ -198,16 +198,16 @@ namespace FreeLibSet.Data.Docs
     #region События
 
     /// <summary>
-    /// Событие вызывается методом InitDB().
-    /// Обработчик события может выполнить дополнительную инициализацию объекта DBx перед его использованием.
-    /// На момент вызова установлены свойства DBx.DisplayName и CommandTimeout,
-    /// но свойство DBStruct не установлено. 
+    /// Событие вызывается методом <see cref="InitDB(string, DBxStruct)"/>.
+    /// Обработчик события может выполнить дополнительную инициализацию объекта <see cref="DBx"/> перед его использованием.
+    /// На момент вызова установлены свойства <see cref="DBx.DisplayName"/> и <see cref="CommandTimeout"/>,
+    /// но свойство <see cref="DBx.Struct"/> не установлено. 
     /// Проверка существования преальной базы данных не выполнена.
     /// </summary>
     public event DBxDocDBConnectionHelperInitDBxEventHandler BeforeInitDB;
 
     /// <summary>
-    /// Вызов события BeforeInitDB
+    /// Вызов события <see cref="BeforeInitDB"/>
     /// </summary>
     /// <param name="args">Аргументы события</param>
     protected void OnBeforeInitDB(DBxDocDBConnectionHelperInitDBxEventArgs args)
@@ -223,7 +223,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Создание произвольной базы данных с заданным именем на основании управляющих параметров.
     /// Если базы данных не существует, она создается. Структура базы данных обновляется для
-    /// добавления недостающих элементов структуры, если она задана
+    /// добавления недостающих элементов структуры, если она задана.
     /// </summary>
     /// <param name="dbName">Имя базы данных, например, "db", "undo"</param>
     /// <param name="dbStruct">Структура базы данных. Если null, то создание базы данных и обновление структуры не выполняется</param>
@@ -334,13 +334,13 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-#endregion
+    #endregion
 
     #region Создание DBxRealDocProviderGlobal
 
     /// <summary>
     /// Сюда должна быть присоединена заполненная структура с объявлениями документов.
-    /// Установка свойства приводит к инициализации свойств MainDBStruct и UndoDBStruct
+    /// Установка свойства приводит к инициализации свойств <see cref="MainDBStruct"/> и <see cref="UndoDBStruct"/>.
     /// </summary>
     public DBxDocTypes DocTypes
     {
@@ -365,7 +365,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Должна ли создаваться база данных истории.
     /// Если свойство не задано в явном виде, значение определяется автоматически, исходя
-    /// из свойств DBxDocTypes
+    /// из свойств <see cref="DBxDocTypes"/>.
     /// </summary>
     public bool UseUndo
     {
@@ -386,8 +386,8 @@ namespace FreeLibSet.Data.Docs
     private bool? _UseUndo;
 
     /// <summary>
-    /// Управление фрагментацией в DBxBinDataHandler.
-    /// Если null (по умолчанию, то определяется автоматически)
+    /// Управление фрагментацией в <see cref="DBxBinDataHandler"/>.
+    /// Если null (по умолчанию, то определяется автоматически).
     /// </summary>
     public bool? UseBinDataFragmentation
     {
@@ -399,23 +399,23 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Структура основной базы данных.
-    /// Свойство инициализируется после установки DocTypes.
-    /// Прикладной код может добавить собственные таблицы, не связанные с документами
+    /// Свойство инициализируется после установки <see cref="DocTypes"/>.
+    /// Прикладной код может добавить собственные таблицы, не связанные с документами.
     /// </summary>
     public DBxStruct MainDBStruct { get { return _MainDBStruct; } }
     private DBxStruct _MainDBStruct;
 
     /// <summary>
     /// Структура базы данных истории.
-    /// Свойство инициализируется после установки DocTypes.
-    /// Может быть null, если история не может вестить
+    /// Свойство инициализируется после установки <see cref="DocTypes"/>.
+    /// Может быть null, если история не может вестить.
     /// </summary>
     public DBxStruct UndoDBStruct { get { return _UndoDBStruct; } }
     private DBxStruct _UndoDBStruct;
 
     /// <summary>
-    /// Управляющее свойство для CreateRealDocProviderGlobal().
-    /// Если true (по умолчанию), то будет выполнен вызов DBxDocTypes.InitDocTableIds()
+    /// Управляющее свойство для <see cref="CreateRealDocProviderGlobal()"/>.
+    /// Если true (по умолчанию), то будет выполнен вызов <see cref="DBxDocTypes.InitDocTableIds(DBxEntry)"/>.
     /// </summary>
     public bool InitDocTableIds { get { return _InitDocTableIds; } set { _InitDocTableIds = value; } }
     private bool _InitDocTableIds;
@@ -423,10 +423,10 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Создает корневой объект для доступа к документам.
     /// Предварительно создаются объекты:
-    /// - BinDataHandler, если есть двоичные данные и/или хранимые файлы
-    /// - Базы данных DBx "db", "undo" (при UseUndo=true) и "files" (при необходимости)
+    /// - <see cref="DBxBinDataHandler"/>, если есть двоичные данные и/или хранимые файлы.
+    /// - Базы данных <see cref="DBx"/> "db", "undo" (при UseUndo=true) и "files" (при необходимости).
     /// </summary>
-    /// <returns>Новый DBxRealDocProviderGlobal</returns>
+    /// <returns>Новый <see cref="DBxRealDocProviderGlobal"/></returns>
     public DBxRealDocProviderGlobal CreateRealDocProviderGlobal()
     {
       if (DocTypes == null)
@@ -524,7 +524,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Обработчик события добавляет базу данных "files2", "files3"
     /// </summary>
-    /// <param name="sender">Объект DBxBinDataHandler</param>
+    /// <param name="sender">Объект <see cref="DBxBinDataHandler"/></param>
     /// <param name="args">Не используется</param>
     void BinDataHandler_DBSizeLimitExceeded(object sender, EventArgs args)
     {

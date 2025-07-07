@@ -37,15 +37,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataRowDocValuesTests.cs" />
-    <Compile Include="DataTableDocValuesTests.cs" />
     <Compile Include="DBxBinDataHandlerTests.cs" />
     <Compile Include="DBxBinDataValidatorTests.cs" />
     <Compile Include="DBxDocPermissionsTests.cs" />
     <Compile Include="DBxDocProviderTests_TimeOut.cs" />
     <Compile Include="DBxDocSetTests.cs" />
     <Compile Include="DBxDocTypesTests.cs" />
-    <Compile Include="DBxArrayExtValuesTests.cs" />
     <Compile Include="DBxMultiSubDocsTests.cs" />
     <Compile Include="DBxRealDocProviderGlobalTests.cs" />
     <Compile Include="DBxDocProviderTests.cs" />
