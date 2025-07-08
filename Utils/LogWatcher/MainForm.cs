@@ -50,6 +50,16 @@ namespace LogWatcher
       ciSetOk.GroupEnd = true;
       efpGr1.CommandItems.Add(ciSetOk);
 
+
+      EFPCommandItem ciAbout = EFPAppCommandItems.CreateStdCommand(EFPAppStdCommandItems.About);
+      ciAbout.Click += Program.CiAbout_Click;
+      efpGr1.CommandItems.Add(ciAbout);
+
+      EFPCommandItem ciExit = EFPAppCommandItems.CreateStdCommand(EFPAppStdCommandItems.Exit);
+      ciExit.Click += Program.CiExit_Click;
+      efpGr1.CommandItems.Add(ciExit);
+
+
       efpGr1.ToolBarPanel = panSpb1;
     }
 
@@ -87,15 +97,28 @@ namespace LogWatcher
     {
       if (args.ColumnIndex == 0)
       {
-        string imageKey;
-        if (DataTools.GetInt(args.DataRow, "NewCount") > 0)
+        if (!args.DataRow.IsNull("IOError"))
         {
-          ErrorMessageKind kind = (ErrorMessageKind)DataTools.GetInt(args.DataRow, "Kind");
-          imageKey = EFPApp.GetErrorImageKey(kind);
+          args.Value = EFPApp.MainImages.Images["Error"];
+          args.ToolTipText = "Ошибка получения списка файлов." + Environment.NewLine + args.DataRow["IOError"].ToString();
+        }
+        else if (DataTools.GetBool(args.DataRow, "NoDir"))
+        {
+          args.Value = EFPApp.MainImages.Images["Warning"];
+          args.ToolTipText = "Каталог не найден";
         }
         else
-          imageKey = "Ok";
-        args.Value = EFPApp.MainImages.Images[imageKey];
+        {
+          string imageKey;
+          if (DataTools.GetInt(args.DataRow, "NewCount") > 0)
+          {
+            ErrorMessageKind kind = (ErrorMessageKind)DataTools.GetInt(args.DataRow, "Kind");
+            imageKey = EFPApp.GetErrorImageKey(kind);
+          }
+          else
+            imageKey = "Ok";
+          args.Value = EFPApp.MainImages.Images[imageKey];
+        }
       }
     }
 

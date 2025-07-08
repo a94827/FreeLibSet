@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Агеев Александр Владимирович")]
 [assembly: AssemblyProduct("Freeware Library Set")]
-[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2024 г. Является свободным программным обеспечением (Free Software)")]
+[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2024-2025 г. Является свободным программным обеспечением (Free Software)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.1")]
+[assembly: AssemblyVersion("1.0.0.2")]

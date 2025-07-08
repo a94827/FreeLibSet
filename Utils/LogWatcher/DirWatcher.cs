@@ -75,12 +75,19 @@ namespace LogWatcher
       int cntInfo = 0;
       foreach (DataRow row in tbl.Rows)
       {
-        int n = DataTools.GetInt(row, "NewCount");
-        switch ((ErrorMessageKind)(DataTools.GetInt(row, "Kind")))
+        if (!row.IsNull("IOError"))
+          cntError++;
+        else if (DataTools.GetBool(row, "NoDir"))
+          cntWarning++;
+        else
         {
-          case ErrorMessageKind.Error: cntError += n; break;
-          case ErrorMessageKind.Warning: cntWarning += n; break;
-          case ErrorMessageKind.Info: cntInfo += n; break;
+          int n = DataTools.GetInt(row, "NewCount");
+          switch ((ErrorMessageKind)(DataTools.GetInt(row, "Kind")))
+          {
+            case ErrorMessageKind.Error: cntError += n; break;
+            case ErrorMessageKind.Warning: cntWarning += n; break;
+            case ErrorMessageKind.Info: cntInfo += n; break;
+          }
         }
       }
       if (cntError > 0)
@@ -100,6 +107,8 @@ namespace LogWatcher
       tbl.Columns.Add("LastTime", typeof(DateTime));
       tbl.Columns.Add("RegTime", typeof(DateTime));
       tbl.Columns.Add("Kind", typeof(int));
+      tbl.Columns.Add("IOError", typeof(string)); // Ошибка при чтении списка файлов
+      tbl.Columns.Add("NoDir", typeof(bool)); // Каталог не существует
       tbl.Columns.Add("NewCount", typeof(int));
       tbl.Columns.Add("OldCount", typeof(int));
       DataTools.SetPrimaryKey(tbl, "Path");
@@ -131,32 +140,41 @@ namespace LogWatcher
       foreach (DataRow row in tbl.Rows)
       {
         AbsPath dir = new AbsPath(DataTools.GetString(row, "Path"));
-        DateTime regTime = DataTools.GetNullableDateTime(row, "RegTime") ?? DateTime.MinValue;
-        regTime = RoundTime(regTime);
-
-        if (System.IO.Directory.Exists(dir.Path))
+        try
         {
-          string[] files = System.IO.Directory.GetFiles(dir.Path, "*.*", System.IO.SearchOption.AllDirectories);
-          DateTime lastTime = DateTime.MinValue;
-          int cntNew = 0;
-          int cntOld = 0;
-          foreach (string file in files)
-          {
-            DateTime tm = System.IO.File.GetLastWriteTime(file);
-            tm = RoundTime(tm);
-            lastTime = DataTools.Max(lastTime, tm);
+          DateTime regTime = DataTools.GetNullableDateTime(row, "RegTime") ?? DateTime.MinValue;
+          regTime = RoundTime(regTime);
 
-            if (tm > regTime)
-              cntNew++;
-            else
-              cntOld++;
-          }
-          if ((cntNew + cntOld) > 0)
+          if (System.IO.Directory.Exists(dir.Path))
           {
-            row["LastTime"] = lastTime;
-            DataTools.SetInt(row, "NewCount", cntNew);
-            DataTools.SetInt(row, "OldCount", cntOld);
+            string[] files = System.IO.Directory.GetFiles(dir.Path, "*.*", System.IO.SearchOption.AllDirectories);
+            DateTime lastTime = DateTime.MinValue;
+            int cntNew = 0;
+            int cntOld = 0;
+            foreach (string file in files)
+            {
+              DateTime tm = System.IO.File.GetLastWriteTime(file);
+              tm = RoundTime(tm);
+              lastTime = DataTools.Max(lastTime, tm);
+
+              if (tm > regTime)
+                cntNew++;
+              else
+                cntOld++;
+            }
+            if ((cntNew + cntOld) > 0)
+            {
+              row["LastTime"] = lastTime;
+              DataTools.SetInt(row, "NewCount", cntNew);
+              DataTools.SetInt(row, "OldCount", cntOld);
+            }
           }
+          else
+            row["NoDir"] = true;
+        }
+        catch (Exception e)
+        {
+          DataTools.SetString(row, "IOError", e.Message);
         }
       }
 

@@ -62,12 +62,12 @@ namespace LogWatcher
       TheForm.Activate();
     }
 
-    private static void CiAbout_Click(object sender, EventArgs args)
+    public static void CiAbout_Click(object sender, EventArgs args)
     {
       EFPApp.ShowAboutDialog();
     }
 
-    private static void CiExit_Click(object sender, EventArgs args)
+    public static void CiExit_Click(object sender, EventArgs args)
     {
       EFPApp.Exit();
     }
