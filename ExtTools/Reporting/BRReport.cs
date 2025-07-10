@@ -1424,8 +1424,9 @@ namespace FreeLibSet.Reporting
         if (!BRBookmark.IsValidBookmarkName(linkData.Substring(1), out errorText))
           throw new ArgumentException(errorText, "linkData");
       }
-      else
-        new Uri(linkData); // проверка значения
+      //else
+      // Убрано 09.07.2025. Выбрасывает исключение для пользовательских нестандартных схем
+      //  new Uri(linkData); // проверка значения
 
       if (value is BRValueWithLink) // попытка вложенного создания
         value = ((BRValueWithLink)value).Value;
