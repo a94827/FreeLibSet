@@ -370,7 +370,7 @@ namespace FreeLibSet.Reporting
     /// <summary>
     /// Измеряет строку <paramref name="s"/>. Строка не содержит символов переноса строки.
     /// Из объекта <paramref name="cellStyle"/> должны быть извлечены параметры шрифта, но не отступы.
-    /// Должны возвращаться размеры в единицах 0.1мм
+    /// Должны возвращаться размеры в единицах 0.1мм.
     /// </summary>
     /// <param name="s">Измеряемая строка</param>
     /// <param name="cellStyle">Отсюда извлекаются параметры шрифта</param>
@@ -379,6 +379,135 @@ namespace FreeLibSet.Reporting
     void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height);
 
     #endregion
+  }
+
+
+  /// <summary>
+  /// Простейший объект для "измерения" размеров шрифта.
+  /// Исходит из того, что шрифты является моноширинными.
+  /// </summary>
+  public sealed class BRSimpleMeasurer : IBRMeasurer
+  {
+    #region Экземпляр
+
+    private BRSimpleMeasurer()
+    {
+    }
+
+    /// <summary>
+    /// Единственный экземпляр объекта.
+    /// </summary>
+    public static readonly BRSimpleMeasurer Default = new BRSimpleMeasurer();
+
+    #endregion
+
+    // Константы подобрал для шрифта Arial
+
+    /// <summary>
+    /// Отношение "Высота строки" / "Размер шрифта" по умолчанию
+    /// </summary>
+    const float mLineHeight = 1.12f;
+
+    /// <summary>
+    /// Отношение "Ширина символа" / "Размер шрифта" по умолчанию
+    /// </summary>
+    const float mFontWidth = 0.56f;
+
+    /// <summary>
+    /// Возвращает высоту и ширину одного символа в пунктах
+    /// </summary>
+    /// <param name="cellStyle"></param>
+    /// <param name="lineHpt"></param>
+    /// <param name="charWpt"></param>
+    private void GetFontSize(BRCellStyle cellStyle, out float lineHpt, out float charWpt)
+    {
+      if (cellStyle.LineHeightPt == 0f)
+        lineHpt = cellStyle.FontHeightPt * mLineHeight;
+      else
+        lineHpt = cellStyle.LineHeightPt;
+
+      if (cellStyle.FontWidthPt == 0f)
+      {
+        charWpt = cellStyle.FontHeightPt * mFontWidth;
+        if (cellStyle.FontWidthPercent > 0)
+          charWpt *= cellStyle.FontWidthPercent / 100f;
+      }
+      else
+        charWpt = cellStyle.FontWidthPt;
+    }
+
+    /// <summary>
+    /// Вычисляет желаемую высоту строки, исходя из содержимого текущей ячейки.
+    /// Метод должен учесть размеры полей, задаваемых <see cref="BRCellStyle.LeftMargin"/>,<see cref="BRCellStyle.RightMargin"/> и <see cref="BRCellStyle.IndentLevel"/>,
+    /// но использовать ширину <paramref name="columnWidth"/>, а не <see cref="BRColumnInfo.Width"/>.
+    /// </summary>
+    /// <param name="sel">Селектор с выбранной ячейкой</param>
+    /// <param name="columnWidth">Ширина столбца в единицах 0.1мм</param>
+    /// <returns>Желаемая высота строки в единицах 0.1мм</returns>
+    public int GetWantedHeight(BRSelector sel, int columnWidth)
+    {
+      float lineHpt, charWpt;
+      GetFontSize(sel.CellStyle, out lineHpt, out charWpt);
+
+      float wPt = (columnWidth - sel.CellStyle.LeftMargin - sel.CellStyle.RightMargin) / 254f * 72f;
+      wPt -= charWpt * sel.CellStyle.IndentLevel;
+
+      string s = sel.AsString;
+      if (String.IsNullOrEmpty(s))// По идее, не должно быть
+        s = " ";
+      // Символы переноса заменяем на одинарный"\n"
+      s = s.Replace("\r\n", "\n");
+      s = s.Replace("\n\r", "\n");
+      s = s.Replace("\r", "\n");
+      s = s.TrimEnd('\n');
+
+      int lineCount;
+      if (wPt < charWpt) // Не помещается даже один символ
+        lineCount = s.Length;
+      else
+      {
+        // Сколько символов входит по ширине
+        int nCharsPerLine = (int)(wPt / charWpt);
+
+        lineCount = 1;
+        int nCh = 0;
+        foreach (char c in s)
+        {
+          if (c == '\n')
+          {
+            lineCount++;
+            nCh = 0;
+          }
+          else if (c == ' ' && nCh >= nCharsPerLine && sel.CellStyle.WrapMode == BRWrapMode.WordWrap)
+          {
+            lineCount++;
+            nCh = 0;
+          }
+          else
+            nCh++;
+        }
+      }
+
+      return (int)Math.Ceiling((lineCount * lineHpt) * 72f / 254f);
+    }
+
+    /// <summary>
+    /// Измеряет строку <paramref name="s"/>. Строка не содержит символов переноса строки.
+    /// Из объекта <paramref name="cellStyle"/> должны быть извлечены параметры шрифта, но не отступы.
+    /// Должны возвращаться размеры в единицах 0.1мм.
+    /// </summary>
+    /// <param name="s">Измеряемая строка</param>
+    /// <param name="cellStyle">Отсюда извлекаются параметры шрифта</param>
+    /// <param name="width">Сюда записывается высота</param>
+    /// <param name="height">Сюда записывается ширина</param>
+    public void MeasureString(string s, BRCellStyle cellStyle, out int width, out int height)
+    {
+      float lineHPt, charWpt;
+      GetFontSize(cellStyle, out lineHPt, out charWpt);
+
+      width = (int)Math.Ceiling(s.Length * (charWpt / 72f * 254f));
+      height = (int)Math.Ceiling((lineHPt / 72f * 254f));
+    }
   }
 
   /// <summary>
@@ -1265,7 +1394,7 @@ namespace FreeLibSet.Reporting
       {
 #if DEBUG
         if (n == 0 || n > lst.Count)
-          throw ExceptionFactory.ArgOutOfRange("n", n, 1, lst.Count-1);
+          throw ExceptionFactory.ArgOutOfRange("n", n, 1, lst.Count - 1);
 #endif
 
         List<RowStripePart> lst2 = new List<RowStripePart>();
@@ -1451,10 +1580,10 @@ namespace FreeLibSet.Reporting
           sel.RowIndex = iRow;
           //if (sel.RowInfo.Visible)
           //{
-            if (sel.RowInfo.Height == BRReport.AutoRowHeight)
-              cnt++;
+          if (sel.RowInfo.Height == BRReport.AutoRowHeight)
+            cnt++;
           //  else
-           //   h1 -= sel.RowInfo.Height;
+          //   h1 -= sel.RowInfo.Height;
           //}
         }
         sel.RowIndex = currRowIndex;
