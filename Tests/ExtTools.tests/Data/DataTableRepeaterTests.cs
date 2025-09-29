@@ -111,7 +111,7 @@ namespace ExtTools_tests.Data
       switch (args.ColumnName)
       {
         case "F4":
-          args.Value = DataTools.GetInt(args.SourceRow, "F3") * 2;
+          args.Value = DataTools.GetInt32(args.SourceRow, "F3") * 2;
           break;
       }
     }

@@ -441,7 +441,7 @@ namespace FreeLibSet.Config
       public string[] GetCodes()
       {
         if (_Items == null)
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
 
         List<string> lst = null;
         foreach (DefaultSettingsDataList item in _Items)
@@ -453,7 +453,7 @@ namespace FreeLibSet.Config
           lst.Add(item.Code);
         }
         if (lst == null)
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
         return lst.ToArray();
       }
 

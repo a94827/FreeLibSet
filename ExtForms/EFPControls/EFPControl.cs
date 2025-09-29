@@ -1840,7 +1840,7 @@ namespace FreeLibSet.Forms
         {
           EFPContextMenu ccm = new EFPContextMenu();
           for (int i = 0; i < list.Count; i++)
-            ccm.Add(list[i]);
+            ccm.AddRange(list[i]);
 
           //if (ToolBarControllable)
           //{
@@ -1921,7 +1921,7 @@ namespace FreeLibSet.Forms
 
         if (CommandItems.IsReadOnly)
         {
-          ToolBar.Add(CommandItems);
+          ToolBar.AddRange(CommandItems);
           ToolBar.ToolBarVisible = ToolBar.Count > 0; // 10.09.2012
         }
       }
@@ -1959,7 +1959,7 @@ namespace FreeLibSet.Forms
 
       if (ToolBar != null)
       {
-        ToolBar.Add(CommandItems);
+        ToolBar.AddRange(CommandItems);
         ToolBar.ToolBarVisible = ToolBar.Count > 0; // 10.09.2012
       }
     }

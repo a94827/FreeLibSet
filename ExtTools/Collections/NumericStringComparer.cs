@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FreeLibSet.Core.Collections
+namespace FreeLibSet.Collections
 {
   /// <summary>
   /// Компаратор для строк, содержащих числовые последовательности.

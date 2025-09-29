@@ -136,6 +136,18 @@ namespace FreeLibSet.Data
         return;
       }
 
+      if (value is StringId)
+      {
+        StringId sId = (StringId)value;
+        if (String.IsNullOrEmpty(sId.Value))
+        {
+          OnFormatNullValue(buffer);
+          return;
+        }
+        else
+          value = sId.Value;
+      }
+
       if (value is String)
       {
         //// Для DataView строка берется в апострофы. Также выполняются замены
@@ -164,9 +176,9 @@ namespace FreeLibSet.Data
         return;
       }
 
-      if (DataTools.IsIntegerType(value.GetType()))
+      if (MathTools.IsIntegerType(value.GetType()))
       {
-        OnFormatIntValue(buffer, DataTools.GetInt(value)); // нельзя использовать преобразование "(int)value", так как byte -> int вызывает исключение
+        OnFormatInt32Value(buffer, DataTools.GetInt32(value)); // нельзя использовать преобразование "(int)value", так как byte -> int вызывает исключение
         return;
       }
 
@@ -237,6 +249,9 @@ namespace FreeLibSet.Data
         return;
       }
 
+      if (value is IComplexId)
+        throw new BugException("ComplexId cannot be used as a single value in SQL query");
+
       throw new NotImplementedException("Value " + value.ToString() + " has unknown type " + value.GetType().ToString());
     }
 
@@ -266,7 +281,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="value">Записываемое значение</param>
-    protected virtual void OnFormatIntValue(DBxSqlBuffer buffer, int value)
+    protected virtual void OnFormatInt32Value(DBxSqlBuffer buffer, int value)
     {
       buffer.SB.Append(StdConvert.ToString(value));
     }
@@ -501,7 +516,7 @@ namespace FreeLibSet.Data
 
         case DBxFunctionKind.Add:
           if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
-            formatInfo.WantedColumnType = DBxColumnType.Int;
+            formatInfo.WantedColumnType = DBxColumnType.Int32;
 
           formatInfo.NoParentheses = true;
           buffer.FormatExpression(function.Arguments[0], formatInfo);
@@ -511,7 +526,7 @@ namespace FreeLibSet.Data
 
         case DBxFunctionKind.Substract:
           if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
-            formatInfo.WantedColumnType = DBxColumnType.Int;
+            formatInfo.WantedColumnType = DBxColumnType.Int32;
 
           formatInfo.NoParentheses = true;
           buffer.FormatExpression(function.Arguments[0], formatInfo);
@@ -523,7 +538,7 @@ namespace FreeLibSet.Data
         case DBxFunctionKind.Multiply:
           formatInfo.NoParentheses = false;
           if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
-            formatInfo.WantedColumnType = DBxColumnType.Int;
+            formatInfo.WantedColumnType = DBxColumnType.Int32;
           buffer.FormatExpression(function.Arguments[0], formatInfo);
           buffer.SB.Append("*");
           buffer.FormatExpression(function.Arguments[1], formatInfo);
@@ -531,7 +546,7 @@ namespace FreeLibSet.Data
 
         case DBxFunctionKind.Divide:
           if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
-            formatInfo.WantedColumnType = DBxColumnType.Int;
+            formatInfo.WantedColumnType = DBxColumnType.Int32;
           formatInfo.NoParentheses = false;
           buffer.FormatExpression(function.Arguments[0], formatInfo);
           buffer.SB.Append("/");
@@ -540,7 +555,7 @@ namespace FreeLibSet.Data
 
         case DBxFunctionKind.Neg:
           if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
-            formatInfo.WantedColumnType = DBxColumnType.Int;
+            formatInfo.WantedColumnType = DBxColumnType.Int32;
           formatInfo.NoParentheses = false;
           buffer.SB.Append("-");
           buffer.FormatExpression(function.Arguments[0], formatInfo);
@@ -575,7 +590,7 @@ namespace FreeLibSet.Data
 
         case DBxFunctionKind.Abs:
           if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
-            formatInfo.WantedColumnType = DBxColumnType.Int;
+            formatInfo.WantedColumnType = DBxColumnType.Int32;
           DoFormatFunction(buffer, function, formatInfo);
           break;
 
@@ -608,10 +623,10 @@ namespace FreeLibSet.Data
           formatInfo.WantedColumnType = DBxColumnType.String;
           buffer.FormatExpression(function.Arguments[0], formatInfo);
           buffer.SB.Append(',');
-          formatInfo.WantedColumnType = DBxColumnType.Int;
+          formatInfo.WantedColumnType = DBxColumnType.Int32;
           buffer.FormatExpression(function.Arguments[1], formatInfo);
           buffer.SB.Append(',');
-          formatInfo.WantedColumnType = DBxColumnType.Int;
+          formatInfo.WantedColumnType = DBxColumnType.Int32;
           buffer.FormatExpression(function.Arguments[2], formatInfo);
           buffer.SB.Append(')');
           break;
@@ -705,7 +720,7 @@ namespace FreeLibSet.Data
     {
       formatInfo.NoParentheses = false;
       if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
-        formatInfo.WantedColumnType = DBxColumnType.Int;
+        formatInfo.WantedColumnType = DBxColumnType.Int32;
 
       buffer.FormatExpression(function.Arguments[0], formatInfo);
       buffer.SB.Append(sign);
@@ -819,10 +834,10 @@ namespace FreeLibSet.Data
     {
       if (filter is CompareFilter)
         OnFormatCompareFilter(buffer, (CompareFilter)filter);
-      else if (filter is IdsFilter)
-        OnFormatIdsFilter(buffer, (IdsFilter)filter);
-      else if (filter is ValuesFilter)
-        OnFormatValuesFilter(buffer, (ValuesFilter)filter);
+      //else if (filter is IdsFilter)
+      //  OnFormatIdsFilter(buffer, (IdsFilter)filter);
+      else if (filter is ValueInListFilter)
+        OnFormatValuesFilter(buffer, (ValueInListFilter)filter);
       else if (filter is StringValueFilter)
         OnFormatStringValueFilter(buffer, (StringValueFilter)filter);
       else if (filter is AndFilter)
@@ -874,6 +889,7 @@ namespace FreeLibSet.Data
 
     #region Фильтры "Выражение IN (Список значений)"
 
+#if XXX
     /// <summary>
     /// Форматирование фильтра.
     /// </summary>
@@ -884,14 +900,14 @@ namespace FreeLibSet.Data
       if (filter.Ids.Count == 1)
       {
         Int32 singleId = filter.Ids.SingleId;
-        CompareFilter Filter2 = new CompareFilter(filter.Expression, new DBxConst(singleId), CompareKind.Equal, singleId == 0, DBxColumnType.Int);
+        CompareFilter Filter2 = new CompareFilter(filter.Expression, new DBxConst(singleId), CompareKind.Equal, singleId == 0, DBxColumnType.Int32);
         buffer.FormatFilter(Filter2);
         return;
       }
 
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
       formatInfo.NullAsDefaultValue = true;
-      formatInfo.WantedColumnType = DBxColumnType.Int;
+      formatInfo.WantedColumnType = DBxColumnType.Int32;
       buffer.FormatExpression(filter.Expression, formatInfo);
       buffer.SB.Append(" IN (");
       bool first = true;
@@ -906,14 +922,14 @@ namespace FreeLibSet.Data
       }
       buffer.SB.Append(')');
     }
-
+#endif
 
     /// <summary>
     /// Форматирование фильтра.
     /// </summary>
     /// <param name="buffer">Буфер для записи</param>
     /// <param name="filter">Фильтр</param>
-    protected virtual void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    protected virtual void OnFormatValuesFilter(DBxSqlBuffer buffer, ValueInListFilter filter)
     {
       // Есть ли в списке значений значение по умолчанию
       if (filter.Values.Length == 1)

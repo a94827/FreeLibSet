@@ -38,6 +38,11 @@ namespace FreeLibSet.Data
     Int32,
 
     /// <summary>
+    /// Целое число
+    /// </summary>
+    Int64,
+
+    /// <summary>
     /// Число с плавающей точкой
     /// </summary>
     Single,
@@ -66,6 +71,11 @@ namespace FreeLibSet.Data
     /// Время
     /// </summary>
     TimeSpan,
+
+    /// <summary>
+    /// Идентификатор
+    /// </summary>
+    Guid,
   }
 
   #endregion
@@ -484,12 +494,27 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Доступ к значению как к числу.
     /// </summary>
-    public int AsInteger
+    public int AsInt32
     {
-      get { return DataTools.GetInt(_Source.GetValue(Index, DBxExtValuePreferredType.Int32)); }
+      get { return DataTools.GetInt32(_Source.GetValue(Index, DBxExtValuePreferredType.Int32)); }
       set
       {
         if (value == 0 && AllowDBNull)
+          SetNull();
+        else
+          _Source.SetValue(Index, value);
+      }
+    }
+
+    /// <summary>
+    /// Доступ к значению как к числу.
+    /// </summary>
+    public long AsInt64
+    {
+      get { return DataTools.GetInt64(_Source.GetValue(Index, DBxExtValuePreferredType.Int64)); }
+      set
+      {
+        if (value == 0L && AllowDBNull)
           SetNull();
         else
           _Source.SetValue(Index, value);
@@ -546,7 +571,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public bool AsBoolean
     {
-      get { return DataTools.GetBool(_Source.GetValue(Index, DBxExtValuePreferredType.Boolean)); }
+      get { return DataTools.GetBoolean(_Source.GetValue(Index, DBxExtValuePreferredType.Boolean)); }
       set
       {
         if ((!value) && AllowDBNull)
@@ -608,13 +633,31 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
+    /// Чтение / запись значения типа <see cref="System.Guid"/>
+    /// </summary>
+    public Guid AsGuid
+    {
+      get
+      {
+        return DataTools.GetGuid(_Source.GetValue(Index, DBxExtValuePreferredType.Guid));
+      }
+      set
+      {
+        if (value == Guid.Empty && AllowDBNull)
+          _Source.IsNull(Index);
+        else
+          _Source.SetValue(Index, value);
+      }
+    }
+
+    /// <summary>
     /// Чтение / запись текстового поля как документа XML. Если строка содержит пустое значение, то возвращается значение null
     /// </summary>
     public XmlDocument AsTextXml
     {
       get
       {
-        return DataTools.XmlDocumentFromString(AsString);
+        return XmlTools.XmlDocumentFromString(AsString);
       }
       set
       {
@@ -676,9 +719,22 @@ namespace FreeLibSet.Data
     /// Если <see cref="AllowDBNull"/>=true, то вместо 0 устанавливается пустое значение вызовом <see cref="SetNull()"/>.
     /// </summary>
     /// <param name="value">Значение</param>
-    public void SetInteger(int value)
+    public void SetInt32(int value)
     {
       if (value == 0 && AllowDBNull)
+        SetNull();
+      else
+        SetValue(value);
+    }
+
+    /// <summary>
+    /// Установить значение поля.
+    /// Если <see cref="AllowDBNull"/>=true, то вместо 0 устанавливается пустое значение вызовом <see cref="SetNull()"/>.
+    /// </summary>
+    /// <param name="value">Значение</param>
+    public void SetInt64(long value)
+    {
+      if (value == 0L && AllowDBNull)
         SetNull();
       else
         SetValue(value);
@@ -905,7 +961,7 @@ namespace FreeLibSet.Data
       if (file == null)
         return null;
       else
-        return DataTools.XmlDocumentFromByteArray(file.Content);
+        return XmlTools.XmlDocumentFromByteArray(file.Content);
     }
 
 
@@ -923,7 +979,7 @@ namespace FreeLibSet.Data
         SetDBFile(null);
       else
       {
-        byte[] contents = DataTools.XmlDocumentToByteArray(xmlDoc);
+        byte[] contents = XmlTools.XmlDocumentToByteArray(xmlDoc);
         FileContainer file = new FileContainer(fileName, contents);
         SetDBFile(file);
       }
@@ -944,7 +1000,7 @@ namespace FreeLibSet.Data
       if (data == null)
         return null;
       else
-        return DataTools.XmlDocumentFromByteArray(data);
+        return XmlTools.XmlDocumentFromByteArray(data);
     }
 
     /// <summary>
@@ -960,7 +1016,7 @@ namespace FreeLibSet.Data
         SetBinData(null);
       else
       {
-        byte[] data = DataTools.XmlDocumentToByteArray(xmlDoc);
+        byte[] data = XmlTools.XmlDocumentToByteArray(xmlDoc);
         SetBinData(data);
       }
     }

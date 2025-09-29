@@ -283,7 +283,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="buffer"></param>
     /// <param name="filter"></param>
-    protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    protected override void OnFormatValuesFilter(DBxSqlBuffer buffer, ValueInListFilter filter)
     {
       if (filter.ColumnTypeInternal == DBxColumnType.Guid && filter.Values.Length > 1)
       {
@@ -298,7 +298,7 @@ namespace FreeLibSet.Data
       base.OnFormatValuesFilter(buffer, filter);
     }
 
-    private void DoFormatGuidValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    private void DoFormatGuidValuesFilter(DBxSqlBuffer buffer, ValueInListFilter filter)
     {
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
       formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;
@@ -318,7 +318,7 @@ namespace FreeLibSet.Data
       buffer.SB.Append(')');
     }
 
-    private void DoFormatTimeSpanValuesFilter(DBxSqlBuffer buffer, ValuesFilter filter)
+    private void DoFormatTimeSpanValuesFilter(DBxSqlBuffer buffer, ValueInListFilter filter)
     {
       DBxFormatExpressionInfo formatInfo = new DBxFormatExpressionInfo();
       formatInfo.NullAsDefaultValue = filter.NullAsDefaultValue;

@@ -4013,7 +4013,7 @@ namespace FreeLibSet.Collections
 
     void ICollection.CopyTo(Array array, int index)
     {
-      DataTools.CopyToArray(_Dict.Values, array, index);
+      ArrayTools.CopyToArray(_Dict.Values, array, index);
     }
 
     bool ICollection.IsSynchronized

@@ -336,7 +336,7 @@ namespace FreeLibSet.Reporting
                 txt = MakeHtmlSpc(sel.AsString);
                 if (txt.IndexOf(Environment.NewLine) >= 0)
                 {
-                  string[] a = txt.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+                  string[] a = txt.Split(StringTools.NewLineSeparators, StringSplitOptions.None);
                   for (int k = 0; k < (a.Length - 1); k++)
                     a[k] += "<BR>";
                   txt = String.Join("", a);
@@ -581,7 +581,7 @@ namespace FreeLibSet.Reporting
       // Атрибут x:num - отдельный, а не в составе style
       if (sel.Value != null)
       {
-        if (DataTools.IsNumericType(sel.Value.GetType()))
+        if (MathTools.IsNumericType(sel.Value.GetType()))
         {
           sb.Append(" x:num=\"");
           sb.Append(((IFormattable)(sel.Value)).ToString("", StdConvert.NumberFormat));
@@ -696,7 +696,7 @@ namespace FreeLibSet.Reporting
         if (sb[i] == ' ')
         {
           if (prevIsSpace)
-            sb[i] = DataTools.NonBreakSpaceChar;
+            sb[i] = StringTools.NonBreakSpaceChar;
           else
             prevIsSpace = true;
         }

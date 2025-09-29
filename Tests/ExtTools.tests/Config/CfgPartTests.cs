@@ -53,68 +53,68 @@ namespace ExtTools_tests.Config
     #region Int32
 
     [Test]
-    public void GetInt_1arg()
+    public void GetInt32_1arg()
     {
       CfgPart sut = Create();
-      Assert.AreEqual(0, sut.GetInt("ABC"), "#1");
-      sut.SetInt("ABC", 123);
-      Assert.AreEqual(123, sut.GetInt("ABC"), "#2");
+      Assert.AreEqual(0, sut.GetInt32("ABC"), "#1");
+      sut.SetInt32("ABC", 123);
+      Assert.AreEqual(123, sut.GetInt32("ABC"), "#2");
     }
 
     [Test]
-    public void GetInt_2args()
+    public void GetInt32_2args()
     {
       CfgPart sut = Create();
 
       int res1 = 444;
-      sut.GetInt("ABC", ref res1);
+      sut.GetInt32("ABC", ref res1);
       Assert.AreEqual(444, res1, "#1");
 
       int res2 = 444;
-      sut.SetInt("ABC", 123);
-      sut.GetInt("ABC", ref res2);
+      sut.SetInt32("ABC", 123);
+      sut.GetInt32("ABC", ref res2);
       Assert.AreEqual(123, res2, "#2");
 
       int res3 = 444;
-      sut.SetInt("ABC", 0);
-      sut.GetInt("ABC", ref res3);
+      sut.SetInt32("ABC", 0);
+      sut.GetInt32("ABC", ref res3);
       Assert.AreEqual(0, res3, "#3");
 
       int res4 = 444;
       sut.SetString("ABC", "");
-      sut.GetInt("ABC", ref res4);
+      sut.GetInt32("ABC", ref res4);
       Assert.AreEqual(444, res4, "#4");
     }
 
     [Test]
-    public void GetIntDef()
+    public void GetInt32Def()
     {
       CfgPart sut = Create();
 
-      int res1 = sut.GetIntDef("ABC", 444);
+      int res1 = sut.GetInt32Def("ABC", 444);
       Assert.AreEqual(444, res1, "#1");
 
-      sut.SetInt("ABC", 123);
-      int res2 = sut.GetIntDef("ABC", 444);
+      sut.SetInt32("ABC", 123);
+      int res2 = sut.GetInt32Def("ABC", 444);
       Assert.AreEqual(123, res2, "#2");
 
-      sut.SetInt("ABC", 0);
-      int res3 = sut.GetIntDef("ABC", 444);
+      sut.SetInt32("ABC", 0);
+      int res3 = sut.GetInt32Def("ABC", 444);
       Assert.AreEqual(0, res3, "#3");
 
       sut.SetString("ABC", "");
-      int res4 = sut.GetIntDef("ABC", 444);
+      int res4 = sut.GetInt32Def("ABC", 444);
       Assert.AreEqual(444, res4, "#4");
     }
 
     [Test]
-    public void SetInt_2args()
+    public void SetInt32_2args()
     {
       CfgPart sut = Create();
-      sut.SetInt("ABC", 0);
-      Assert.AreEqual(0, sut.GetInt("ABC"), "#1");
-      sut.SetInt("ABC", 123);
-      Assert.AreEqual(123, sut.GetInt("ABC"), "#2");
+      sut.SetInt32("ABC", 0);
+      Assert.AreEqual(0, sut.GetInt32("ABC"), "#1");
+      sut.SetInt32("ABC", 123);
+      Assert.AreEqual(123, sut.GetInt32("ABC"), "#2");
     }
 
     [TestCase(123, false, true)]
@@ -124,8 +124,8 @@ namespace ExtTools_tests.Config
     public void SetInt_3args(int value, bool removeEmpty, bool wantedHasValue)
     {
       CfgPart sut = Create();
-      sut.SetInt("ABC", value, removeEmpty);
-      Assert.AreEqual(value, sut.GetInt("ABC"), "GetInt()");
+      sut.SetInt32("ABC", value, removeEmpty);
+      Assert.AreEqual(value, sut.GetInt32("ABC"), "GetInt()");
       Assert.AreEqual(wantedHasValue, sut.HasValue("ABC"), "HasValue()");
     }
 
@@ -459,19 +459,19 @@ namespace ExtTools_tests.Config
     #region Int32-Int64
 
     [Test]
-    public void SetInt_GetInt64()
+    public void SetInt32_GetInt64()
     {
       CfgPart sut = Create();
-      sut.SetInt("ABC", 123);
+      sut.SetInt32("ABC", 123);
       Assert.AreEqual(123L, sut.GetInt64("ABC"));
     }
 
     [Test]
-    public void SetInt64_GetInt()
+    public void SetInt64_GetInt32()
     {
       CfgPart sut = Create();
       sut.SetInt64("ABC", 123L);
-      Assert.AreEqual(123, sut.GetInt("ABC"));
+      Assert.AreEqual(123, sut.GetInt32("ABC"));
     }
 
     #endregion
@@ -479,26 +479,26 @@ namespace ExtTools_tests.Config
     #region Int-Float
 
     [Test]
-    public void SetInt_GetSingle()
+    public void SetInt32_GetSingle()
     {
       CfgPart sut = Create();
-      sut.SetInt("ABC", 123);
+      sut.SetInt32("ABC", 123);
       Assert.AreEqual(123f, sut.GetSingle("ABC"));
     }
 
     [Test]
-    public void SetInt_GetDouble()
+    public void SetInt32_GetDouble()
     {
       CfgPart sut = Create();
-      sut.SetInt("ABC", 123);
+      sut.SetInt32("ABC", 123);
       Assert.AreEqual(123.0, sut.GetDouble("ABC"));
     }
 
     [Test]
-    public void SetInt_GetDecimal()
+    public void SetInt32_GetDecimal()
     {
       CfgPart sut = Create();
-      sut.SetInt("ABC", 123);
+      sut.SetInt32("ABC", 123);
       Assert.AreEqual(123m, sut.GetDecimal("ABC"));
     }
 
@@ -509,83 +509,83 @@ namespace ExtTools_tests.Config
     #region Boolean
 
     [Test]
-    public void GetBool_1arg()
+    public void GetBoolean_1arg()
     {
       CfgPart sut = Create();
-      Assert.AreEqual(false, sut.GetBool("ABC"), "#1");
+      Assert.AreEqual(false, sut.GetBoolean("ABC"), "#1");
 
-      sut.SetBool("ABC", true);
-      Assert.AreEqual(true, sut.GetBool("ABC"), "#2");
+      sut.SetBoolean("ABC", true);
+      Assert.AreEqual(true, sut.GetBoolean("ABC"), "#2");
 
-      sut.SetBool("ABC", false);
-      Assert.AreEqual(false, sut.GetBool("ABC"), "#3");
+      sut.SetBoolean("ABC", false);
+      Assert.AreEqual(false, sut.GetBoolean("ABC"), "#3");
     }
 
     [Test]
-    public void GetBool_2args()
+    public void GetBoolean_2args()
     {
       CfgPart sut = Create();
 
       bool res1 = true;
-      sut.GetBool("ABC", ref res1);
+      sut.GetBoolean("ABC", ref res1);
       Assert.AreEqual(true, res1, "#1");
 
       bool res2 = true;
-      sut.SetBool("ABC", true);
-      sut.GetBool("ABC", ref res2);
+      sut.SetBoolean("ABC", true);
+      sut.GetBoolean("ABC", ref res2);
       Assert.AreEqual(true, res2, "#2");
 
       bool res3 = true;
-      sut.SetBool("ABC", false);
-      sut.GetBool("ABC", ref res3);
+      sut.SetBoolean("ABC", false);
+      sut.GetBoolean("ABC", ref res3);
       Assert.AreEqual(false, res3, "#3");
 
       bool res4 = true;
       sut.SetString("ABC", "");
-      sut.GetBool("ABC", ref res4);
+      sut.GetBoolean("ABC", ref res4);
       Assert.AreEqual(true, res4, "#4");
     }
 
     [Test]
-    public void GetBoolDef()
+    public void GetBooleanDef()
     {
       CfgPart sut = Create();
 
-      bool res1 = sut.GetBoolDef("ABC", true);
+      bool res1 = sut.GetBooleanDef("ABC", true);
       Assert.AreEqual(true, res1, "#1");
 
-      sut.SetBool("ABC", true);
-      bool res2 = sut.GetBoolDef("ABC", true);
+      sut.SetBoolean("ABC", true);
+      bool res2 = sut.GetBooleanDef("ABC", true);
       Assert.AreEqual(true, res2, "#2");
 
-      sut.SetBool("ABC", false);
-      bool res3 = sut.GetBoolDef("ABC", true);
+      sut.SetBoolean("ABC", false);
+      bool res3 = sut.GetBooleanDef("ABC", true);
       Assert.AreEqual(false, res3, "#3");
 
       sut.SetString("ABC", "");
-      bool res4 = sut.GetBoolDef("ABC", true);
+      bool res4 = sut.GetBooleanDef("ABC", true);
       Assert.AreEqual(true, res4, "#4");
     }
 
     [Test]
-    public void SetBool_2args()
+    public void SetBoolean_2args()
     {
       CfgPart sut = Create();
-      sut.SetBool("ABC", false);
-      Assert.AreEqual(false, sut.GetBool("ABC"), "#1");
-      sut.SetBool("ABC", true);
-      Assert.AreEqual(true, sut.GetBool("ABC"), "#2");
+      sut.SetBoolean("ABC", false);
+      Assert.AreEqual(false, sut.GetBoolean("ABC"), "#1");
+      sut.SetBoolean("ABC", true);
+      Assert.AreEqual(true, sut.GetBoolean("ABC"), "#2");
     }
 
     [TestCase(true, false, true)]
     [TestCase(true, true, true)]
     [TestCase(false, false, true)]
     [TestCase(false, true, false)]
-    public void SetBool_3args(bool value, bool removeEmpty, bool wantedHasValue)
+    public void SetBoolean_3args(bool value, bool removeEmpty, bool wantedHasValue)
     {
       CfgPart sut = Create();
-      sut.SetBool("ABC", value, removeEmpty);
-      Assert.AreEqual(value, sut.GetBool("ABC"), "GetBool()");
+      sut.SetBoolean("ABC", value, removeEmpty);
+      Assert.AreEqual(value, sut.GetBoolean("ABC"), "GetBool()");
       Assert.AreEqual(wantedHasValue, sut.HasValue("ABC"), "HasValue()");
     }
 
@@ -596,20 +596,20 @@ namespace ExtTools_tests.Config
     [TestCase(123, true)]
     [TestCase(-1, true)]
     [TestCase(0, false)]
-    public void SetInt_GetBool(int setValue, bool wantedRes)
+    public void SetInt32_GetBoolean(int setValue, bool wantedRes)
     {
       CfgPart sut = Create();
-      sut.SetInt("ABC", setValue);
-      Assert.AreEqual(wantedRes, sut.GetBool("ABC"));
+      sut.SetInt32("ABC", setValue);
+      Assert.AreEqual(wantedRes, sut.GetBoolean("ABC"));
     }
 
     [TestCase(false, 0)]
     [TestCase(true, 1)]
-    public void SetBool_GetInt(bool setValue, int wantedRes)
+    public void SetBoolean_GetInt32(bool setValue, int wantedRes)
     {
       CfgPart sut = Create();
-      sut.SetBool("ABC", setValue);
-      Assert.AreEqual(wantedRes, sut.GetInt("ABC"));
+      sut.SetBoolean("ABC", setValue);
+      Assert.AreEqual(wantedRes, sut.GetInt32("ABC"));
     }
 
     #endregion
@@ -1033,26 +1033,26 @@ namespace ExtTools_tests.Config
     #region Int32
 
     [Test]
-    public void GetNullableInt()
+    public void GetNullableInt32()
     {
       CfgPart sut = Create();
-      Assert.IsNull(sut.GetNullableInt("AAA"), "#1");
+      Assert.IsNull(sut.GetNullableInt32("AAA"), "#1");
 
-      sut.SetInt("AAA", 123);
-      Assert.AreEqual(123, sut.GetNullableInt("AAA"), "#2");
+      sut.SetInt32("AAA", 123);
+      Assert.AreEqual(123, sut.GetNullableInt32("AAA"), "#2");
     }
 
     [Test]
-    public void SetNullableInt()
+    public void SetNullableInt32()
     {
       CfgPart sut = Create();
-      sut.SetNullableInt("AAA", 123);
-      Assert.AreEqual(123, sut.GetInt("AAA"), "#1");
+      sut.SetNullableInt32("AAA", 123);
+      Assert.AreEqual(123, sut.GetInt32("AAA"), "#1");
 
-      sut.SetNullableInt("AAA", null);
+      sut.SetNullableInt32("AAA", null);
       Assert.IsFalse(sut.HasValue("AAA"), "#2");
 
-      sut.SetNullableInt("AAA", 0);
+      sut.SetNullableInt32("AAA", 0);
       Assert.IsTrue(sut.HasValue("AAA"), "#3");
     }
 
@@ -1173,26 +1173,26 @@ namespace ExtTools_tests.Config
     #region Boolean
 
     [Test]
-    public void GetNullableBool()
+    public void GetNullableBoolean()
     {
       CfgPart sut = Create();
-      Assert.IsNull(sut.GetNullableBool("AAA"), "#1");
+      Assert.IsNull(sut.GetNullableBoolean("AAA"), "#1");
 
-      sut.SetBool("AAA", true);
-      Assert.AreEqual(true, sut.GetNullableBool("AAA"), "#2");
+      sut.SetBoolean("AAA", true);
+      Assert.AreEqual(true, sut.GetNullableBoolean("AAA"), "#2");
     }
 
     [Test]
-    public void SetNullableBool()
+    public void SetNullableBoolean()
     {
       CfgPart sut = Create();
-      sut.SetNullableBool("AAA", true);
-      Assert.AreEqual(true, sut.GetBool("AAA"), "#1");
+      sut.SetNullableBoolean("AAA", true);
+      Assert.AreEqual(true, sut.GetBoolean("AAA"), "#1");
 
-      sut.SetNullableBool("AAA", null);
+      sut.SetNullableBoolean("AAA", null);
       Assert.IsFalse(sut.HasValue("AAA"), "#2");
 
-      sut.SetNullableBool("AAA", false);
+      sut.SetNullableBoolean("AAA", false);
       Assert.IsTrue(sut.HasValue("AAA"), "#3");
     }
 
@@ -1311,47 +1311,47 @@ namespace ExtTools_tests.Config
     #region Int32
 
     [Test]
-    public void SetIntCommaString()
+    public void SetInt32CommaString()
     {
       CfgPart sut = Create();
 
       int[] values1 = new int[] { 10, 20, -30, 10 };
-      sut.SetIntCommaString("ABC", values1);
+      sut.SetInt32CommaString("ABC", values1);
 
       string resStr1 = sut.GetString("ABC");
       int[] resArray1 = StdConvert.ToInt32Array(resStr1);
       CollectionAssert.AreEqual(values1, resArray1, "#1");
 
       int[] values2 = new int[] { -30 };
-      sut.SetIntCommaString("ABC", values2);
-      Assert.AreEqual(-30, sut.GetInt("ABC"), "#2");
+      sut.SetInt32CommaString("ABC", values2);
+      Assert.AreEqual(-30, sut.GetInt32("ABC"), "#2");
 
       int[] values3 = null;
-      sut.SetIntCommaString("ABC", values3);
+      sut.SetInt32CommaString("ABC", values3);
       Assert.IsFalse(sut.HasValue("ABC"), "#3");
 
       int[] values4 = new int[] { };
-      sut.SetIntCommaString("ABC", values4);
+      sut.SetInt32CommaString("ABC", values4);
       Assert.IsTrue(sut.HasValue("ABC"), "#4 HasValue()");
       Assert.AreEqual("", sut.GetString("ABC"), "#4 GetString()");
     }
 
     [Test]
-    public void GetIntCommaString()
+    public void GetInt32CommaString()
     {
       CfgPart sut = Create();
 
-      Assert.IsNull(sut.GetIntCommaString("ABC"), "#1");
+      Assert.IsNull(sut.GetInt32CommaString("ABC"), "#1");
 
       sut.SetString("ABC", String.Empty, false);
-      Assert.IsNull(sut.GetIntCommaString("ABC"), "#2");
+      Assert.IsNull(sut.GetInt32CommaString("ABC"), "#2");
 
-      sut.SetInt("ABC", 123);
-      CollectionAssert.AreEqual(new int[] { 123 }, sut.GetIntCommaString("ABC"), "#3");
+      sut.SetInt32("ABC", 123);
+      CollectionAssert.AreEqual(new int[] { 123 }, sut.GetInt32CommaString("ABC"), "#3");
 
       int[] values4 = new int[] { 10, 20, -30, 10 };
       sut.SetString("ABC", StdConvert.ToString(values4));
-      CollectionAssert.AreEqual(values4, sut.GetIntCommaString("ABC"), "#4");
+      CollectionAssert.AreEqual(values4, sut.GetInt32CommaString("ABC"), "#4");
     }
 
     #endregion
@@ -1371,7 +1371,7 @@ namespace ExtTools_tests.Config
 
       long[] values2 = new long[] { -30 };
       sut.SetInt64CommaString("ABC", values2);
-      Assert.AreEqual(-30, sut.GetInt("ABC"), "#2");
+      Assert.AreEqual(-30, sut.GetInt32("ABC"), "#2");
 
       long[] values3 = null;
       sut.SetInt64CommaString("ABC", values3);
@@ -1409,7 +1409,7 @@ namespace ExtTools_tests.Config
     public void SetIntCommaString_GetInt64CommaString()
     {
       CfgPart sut = Create();
-      sut.SetIntCommaString("ABC", new int[] { 10, 20, -30, 10, 0 });
+      sut.SetInt32CommaString("ABC", new int[] { 10, 20, -30, 10, 0 });
       long[] res = sut.GetInt64CommaString("ABC");
       Assert.AreEqual(new long[] { 10L, 20L, -30L, 10L, 0L }, res);
     }
@@ -1419,7 +1419,7 @@ namespace ExtTools_tests.Config
     {
       CfgPart sut = Create();
       sut.SetInt64CommaString("ABC", new long[] { 10L, 20L, -30L, 10L, 0L });
-      int[] res = sut.GetIntCommaString("ABC");
+      int[] res = sut.GetInt32CommaString("ABC");
       Assert.AreEqual(new int[] { 10, 20, -30, 10, 0 }, res);
     }
 
@@ -1572,7 +1572,7 @@ namespace ExtTools_tests.Config
     public void SetIntCommaString_GetSingleCommaString()
     {
       CfgPart sut = Create();
-      sut.SetIntCommaString("ABC", new int[] { 10, 20, -30, 10, 0 });
+      sut.SetInt32CommaString("ABC", new int[] { 10, 20, -30, 10, 0 });
       float[] res = sut.GetSingleCommaString("ABC");
       Assert.AreEqual(new float[] { 10f, 20f, -30f, 10f, 0f }, res);
     }
@@ -1582,7 +1582,7 @@ namespace ExtTools_tests.Config
     {
       CfgPart sut = Create();
       sut.SetSingleCommaString("ABC", new float[] { 10f, 20f, -30f, 10f, 0f });
-      int[] res = sut.GetIntCommaString("ABC");
+      int[] res = sut.GetInt32CommaString("ABC");
       Assert.AreEqual(new int[] { 10, 20, -30, 10, 0 }, res);
     }
 
@@ -1591,7 +1591,7 @@ namespace ExtTools_tests.Config
     public void SetIntCommaString_GetDoubleCommaString()
     {
       CfgPart sut = Create();
-      sut.SetIntCommaString("ABC", new int[] { 10, 20, -30, 10, 0 });
+      sut.SetInt32CommaString("ABC", new int[] { 10, 20, -30, 10, 0 });
       double[] res = sut.GetDoubleCommaString("ABC");
       Assert.AreEqual(new double[] { 10.0, 20.0, -30.0, 10.0, 0.0 }, res);
     }
@@ -1601,7 +1601,7 @@ namespace ExtTools_tests.Config
     {
       CfgPart sut = Create();
       sut.SetDoubleCommaString("ABC", new double[] { 10.0, 20.0, -30.0, 10.0, 0.0 });
-      int[] res = sut.GetIntCommaString("ABC");
+      int[] res = sut.GetInt32CommaString("ABC");
       Assert.AreEqual(new int[] { 10, 20, -30, 10, 0 }, res);
     }
 
@@ -1610,7 +1610,7 @@ namespace ExtTools_tests.Config
     public void SetIntCommaString_GetDecimalCommaString()
     {
       CfgPart sut = Create();
-      sut.SetIntCommaString("ABC", new int[] { 10, 20, -30, 10, 0 });
+      sut.SetInt32CommaString("ABC", new int[] { 10, 20, -30, 10, 0 });
       decimal[] res = sut.GetDecimalCommaString("ABC");
       Assert.AreEqual(new decimal[] { 10m, 20m, -30m, 10m, 0m }, res);
     }
@@ -1620,7 +1620,7 @@ namespace ExtTools_tests.Config
     {
       CfgPart sut = Create();
       sut.SetDecimalCommaString("ABC", new decimal[] { 10m, 20m, -30m, 10m, 0m });
-      int[] res = sut.GetIntCommaString("ABC");
+      int[] res = sut.GetInt32CommaString("ABC");
       Assert.AreEqual(new int[] { 10, 20, -30, 10, 0 }, res);
     }
 
@@ -2057,7 +2057,7 @@ namespace ExtTools_tests.Config
     public void GetChildNames()
     {
       CfgPart sut = Create();
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetChildNames(), "#1");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetChildNames(), "#1");
       InitChildrenAndValues(sut);
       CollectionAssert.AreEquivalent(new string[] { "Sect1", "Sect2" }, sut.GetChildNames(), "#2");
     }
@@ -2066,7 +2066,7 @@ namespace ExtTools_tests.Config
     public void GetValueNames()
     {
       CfgPart sut = Create();
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetValueNames(), "#1");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetValueNames(), "#1");
       InitChildrenAndValues(sut);
       CollectionAssert.AreEquivalent(new string[] { "Value1", "Value2", "Value3" }, sut.GetValueNames(), "#2");
     }
@@ -2075,7 +2075,7 @@ namespace ExtTools_tests.Config
     public void GetChildAndValueNames()
     {
       CfgPart sut = Create();
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetChildAndValueNames(), "#1");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetChildAndValueNames(), "#1");
       InitChildrenAndValues(sut);
       CollectionAssert.AreEquivalent(new string[] { "Sect1", "Sect2", "Value1", "Value2", "Value3" }, sut.GetChildAndValueNames(), "#2");
     }
@@ -2313,8 +2313,8 @@ namespace ExtTools_tests.Config
     public void Empty()
     {
       Assert.IsTrue(CfgPart.Empty.IsEmpty, "IsEmpty");
-      CollectionAssert.AreEqual(DataTools.EmptyStrings, CfgPart.Empty.GetChildNames(), "GetChildNames()");
-      CollectionAssert.AreEqual(DataTools.EmptyStrings, CfgPart.Empty.GetValueNames(), "GetValueNames()");
+      CollectionAssert.AreEqual(EmptyArray<string>.Empty, CfgPart.Empty.GetChildNames(), "GetChildNames()");
+      CollectionAssert.AreEqual(EmptyArray<string>.Empty, CfgPart.Empty.GetValueNames(), "GetValueNames()");
       Assert.AreEqual("", CfgPart.Empty.GetString("ABC"), "GetString()");
       Assert.Catch<ObjectReadOnlyException>(delegate () { CfgPart.Empty.SetString("ABC", "XXX"); }, "SetString()");
 

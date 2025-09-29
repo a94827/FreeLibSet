@@ -83,7 +83,7 @@ namespace FreeLibSet.UICore
     {
       Type resType;
       if (typeof(T) == typeof(Int32))
-        resType = typeof(IntUpDownHandler);
+        resType = typeof(Int32UpDownHandler);
       else if (typeof(T) == typeof(Single))
         resType = typeof(SingleUpDownHandler);
       else if (typeof(T) == typeof(Double))
@@ -253,7 +253,7 @@ namespace FreeLibSet.UICore
   /// Реализация инкремента для числового значения
   /// </summary>
   [Serializable]
-  public sealed class IntUpDownHandler : IncrementUpDownHandler<Int32>
+  public sealed class Int32UpDownHandler : IncrementUpDownHandler<Int32>
   {
     #region Конструктор
 
@@ -262,7 +262,7 @@ namespace FreeLibSet.UICore
     /// </summary>
     /// <param name="increment">Инкремент. Должен быть больше 0</param>
     /// <param name="minMaxSource">Источник диапазона значений</param>
-    public IntUpDownHandler(int increment, IMinMaxSource<Int32?> minMaxSource)
+    public Int32UpDownHandler(int increment, IMinMaxSource<Int32?> minMaxSource)
       : base(increment, minMaxSource)
     {
       if (increment < 1)
@@ -309,7 +309,7 @@ namespace FreeLibSet.UICore
   /// <summary>
   /// Функции для вычисления целочисленного инкремента
   /// </summary>
-  internal static class NumUpDownHandlerFunctions
+  internal static class NumericUpDownHandlerFunctions
   {
     #region Целочисленная реализация
 
@@ -444,7 +444,7 @@ namespace FreeLibSet.UICore
       if (increment <= 0f)
         throw new ArgumentOutOfRangeException("increment");
 
-      _M = (float)NumUpDownHandlerFunctions.CalcM((double)increment);
+      _M = (float)NumericUpDownHandlerFunctions.CalcM((double)increment);
       _Increment2 = (long)Math.Round(increment * _M, 0, MidpointRounding.AwayFromZero);
 #if DEBUG
       if (_Increment2 < 1L)
@@ -467,7 +467,7 @@ namespace FreeLibSet.UICore
     protected override float GetIncrement(float currValue)
     {
       long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
-      long res2 = NumUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
+      long res2 = NumericUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
       return (float)res2 / _M;
     }
 
@@ -479,7 +479,7 @@ namespace FreeLibSet.UICore
     protected override float GetDecrement(float currValue)
     {
       long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
-      long res2 = NumUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
+      long res2 = NumericUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
       return (float)res2 / _M;
     }
 
@@ -505,7 +505,7 @@ namespace FreeLibSet.UICore
       if (increment <= 0.0)
         throw new ArgumentOutOfRangeException("increment");
 
-      _M = NumUpDownHandlerFunctions.CalcM(increment);
+      _M = NumericUpDownHandlerFunctions.CalcM(increment);
       _Increment2 = (long)Math.Round(increment * _M, 0, MidpointRounding.AwayFromZero);
 #if DEBUG
       if (_Increment2 < 1L)
@@ -528,7 +528,7 @@ namespace FreeLibSet.UICore
     protected override double GetIncrement(double currValue)
     {
       long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
-      long res2 = NumUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
+      long res2 = NumericUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
       return (double)res2 / _M;
     }
 
@@ -540,7 +540,7 @@ namespace FreeLibSet.UICore
     protected override double GetDecrement(double currValue)
     {
       long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
-      long res2 = NumUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
+      long res2 = NumericUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
       return (double)res2 / _M;
     }
 
@@ -566,7 +566,7 @@ namespace FreeLibSet.UICore
       if (increment <= 0m)
         throw new ArgumentOutOfRangeException("increment");
 
-      _M = (decimal)NumUpDownHandlerFunctions.CalcM((double)increment);
+      _M = (decimal)NumericUpDownHandlerFunctions.CalcM((double)increment);
       _Increment2 = (long)Math.Round(increment * _M, 0, MidpointRounding.AwayFromZero);
 #if DEBUG
       if (_Increment2 < 1L)
@@ -589,7 +589,7 @@ namespace FreeLibSet.UICore
     protected override decimal GetIncrement(decimal currValue)
     {
       long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
-      long res2 = NumUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
+      long res2 = NumericUpDownHandlerFunctions.GetIncrement(curr2, _Increment2);
       return (decimal)res2 / _M;
     }
 
@@ -601,7 +601,7 @@ namespace FreeLibSet.UICore
     protected override decimal GetDecrement(decimal currValue)
     {
       long curr2 = (long)Math.Round(currValue * _M, 0, MidpointRounding.AwayFromZero);
-      long res2 = NumUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
+      long res2 = NumericUpDownHandlerFunctions.GetDecrement(curr2, _Increment2);
       return (decimal)res2 / _M;
     }
 
@@ -616,7 +616,7 @@ namespace FreeLibSet.UICore
   /// </summary>
   /// <typeparam name="T">Тип данных</typeparam>
   [Serializable]
-  public class NumArrayUpDownHandler<T> : IUpDownHandler<T?>
+  public class NumericArrayUpDownHandler<T> : IUpDownHandler<T?>
     where T : struct
   {
     #region Конструкторы
@@ -631,7 +631,7 @@ namespace FreeLibSet.UICore
     /// </summary>
     /// <param name="items">Массив значений</param>
     /// <param name="performSort">Нужно ли выполнять сортировку массива (true), или массив уже отсортирован (false)</param>
-    public NumArrayUpDownHandler(T[] items, bool performSort)
+    public NumericArrayUpDownHandler(T[] items, bool performSort)
       :this(items, performSort, null)
     {
     }
@@ -643,7 +643,7 @@ namespace FreeLibSet.UICore
     /// <param name="items">Массив значений</param>
     /// <param name="performSort">Нужно ли выполнять сортировку массива (true), или массив уже отсортирован (false)</param>
     /// <param name="comparer">Компаратор для сравнения элементов. Если не задан, используется компаратор по умолчанию</param>
-    public NumArrayUpDownHandler(T[] items, bool performSort, IComparer<T> comparer)
+    public NumericArrayUpDownHandler(T[] items, bool performSort, IComparer<T> comparer)
     {
       if (items == null)
         items = new T[0];
@@ -662,7 +662,7 @@ namespace FreeLibSet.UICore
     /// Для сравнения элементов используется компаратор по умолчанию <see cref="System.Collections.Generic.Comparer{T}.Default"/>.
     /// </summary>
     /// <param name="items">Массив значений</param>
-    public NumArrayUpDownHandler(IEnumerable<T> items)
+    public NumericArrayUpDownHandler(IEnumerable<T> items)
       :this(items, null)
     {
     }
@@ -673,7 +673,7 @@ namespace FreeLibSet.UICore
     /// </summary>
     /// <param name="items">Массив значений</param>
     /// <param name="comparer">Компаратор для сравнения элементов. Если не задан, используется компаратор по умолчанию</param>
-    public NumArrayUpDownHandler(IEnumerable<T> items, IComparer<T>comparer)
+    public NumericArrayUpDownHandler(IEnumerable<T> items, IComparer<T>comparer)
     {
       _Comparer = comparer;
 
@@ -780,7 +780,7 @@ namespace FreeLibSet.UICore
     /// <returns>Текстовое представление</returns>
     public override string ToString()
     {
-      return "{" + DataTools.ToStringJoin<T>(", ", Items) + "}";
+      return "{" + StringTools.ToStringJoin<T>(", ", Items) + "}";
     }
 
     #endregion

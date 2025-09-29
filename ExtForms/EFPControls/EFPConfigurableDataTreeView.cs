@@ -126,7 +126,7 @@ CommandItems.PerformRefreshItems();
         case EFPConfigCategories.TreeConfig:
           if (WantsTreeConfig(EFPConfigMode.Write, actionInfo) && CurrentConfig != null)
           {
-            EFPDataGridViewConfig config2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
+            EFPDataViewConfig config2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
             config2.WriteConfig(cfg);
           }
           break;
@@ -484,7 +484,7 @@ CommandItems.PerformRefreshItems();
       {
         try
         {
-          EFPDataGridViewConfig gridConfig = new EFPDataGridViewConfig();
+          EFPDataViewConfig gridConfig = new EFPDataViewConfig();
           gridConfig.ReadConfig(cfg);
           gridConfig.SetReadOnly();
           base.CurrentConfig = gridConfig;
@@ -582,12 +582,14 @@ CommandItems.PerformRefreshItems();
     }
 
     /// <summary>
-    /// Вызов диалога установки фильтра и обновление просмотра по необходимости
-    /// При показе таблицы фильтров активируется строка фильтра с заданным именем.
-    /// Если <paramref name="startFilter"/> не задан, активируется строка для первого непустого фильтра.
+    /// Вызов диалога установки фильтра и обновление просмотра по необходимости.
+    /// Если задан параметр <paramref name="filterCode"/>, то показывается редактор данного фильтра.
+    /// Это используется при двойном щелчке левой кнопки мыши по табличке установленных фильтров.
+    /// Если фильтр не задан (выполнена команда меню "Установить фильтр"), то вызывается диалог со списком всех фильтров. 
+    /// При этом активируется строка для первого непустого фильтра.
     /// </summary>
-    /// <param name="startFilter">Имя фильтра, который должен быть выбран в таблице</param>
-    public bool ShowFilterDialog(string startFilter)
+    /// <param name="filterCode">Редактируемый фильтр или пустая строка</param>
+    public bool ShowFilterDialog(string filterCode)
     {
       LoadConfig();
 
@@ -605,9 +607,19 @@ CommandItems.PerformRefreshItems();
       Filters.BeginUpdate();
       try
       {
-        GridFilterForm form = new GridFilterForm(this, _DefaultFilterCfg, cfgOriginal);
-        form.SetStartFilter(startFilter);
-        if (EFPApp.ShowDialog(form, true) == DialogResult.OK)
+        IEFPGridFilter singleFilter = Filters[filterCode];
+        if (singleFilter != null)
+        {
+          res = singleFilter.ShowFilterDialog(new EFPDialogPosition());
+        }
+        else
+        {
+          GridFilterForm form = new GridFilterForm(this, _DefaultFilterCfg, cfgOriginal);
+          form.SetStartFilter(filterCode);
+          res = EFPApp.ShowDialog(form, true) == DialogResult.OK;
+        }
+
+        if (res)
         {
           // Вызываем виртуальный метод
           CallOnFilterChanged();

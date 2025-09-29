@@ -17,11 +17,11 @@ namespace ExtTools_tests.Data
     [TestCase(null, DBxColumnType.Unknown)]
     [TestCase(typeof(DBNull), DBxColumnType.Unknown)]
     [TestCase(typeof(String), DBxColumnType.String)]
-    [TestCase(typeof(Int16), DBxColumnType.Int)]
-    [TestCase(typeof(Int32), DBxColumnType.Int)]
-    [TestCase(typeof(Int64), DBxColumnType.Int)]
-    [TestCase(typeof(Single), DBxColumnType.Float)]
-    [TestCase(typeof(Double), DBxColumnType.Float)]
+    [TestCase(typeof(Int16), DBxColumnType.Int16)]
+    [TestCase(typeof(Int32), DBxColumnType.Int32)]
+    [TestCase(typeof(Int64), DBxColumnType.Int64)]
+    [TestCase(typeof(Single), DBxColumnType.Single)]
+    [TestCase(typeof(Double), DBxColumnType.Double)]
     [TestCase(typeof(Decimal), DBxColumnType.Decimal)]
     [TestCase(typeof(Boolean), DBxColumnType.Boolean)]
     [TestCase(typeof(DateTime), DBxColumnType.DateTime)]
@@ -38,7 +38,7 @@ namespace ExtTools_tests.Data
     [TestCase(DBxColumnType.String, typeof(string))]
     [TestCase(DBxColumnType.Memo, typeof(string))]
     // пока не определено [TestCase(DBxColumnType.Int, typeof(string))]
-    [TestCase(DBxColumnType.Float, typeof(Double))]
+    [TestCase(DBxColumnType.Double, typeof(Double))]
     [TestCase(DBxColumnType.Decimal, typeof(Decimal))]
     [TestCase(DBxColumnType.Boolean, typeof(Boolean))]
     [TestCase(DBxColumnType.Date, typeof(DateTime))]
@@ -95,10 +95,10 @@ namespace ExtTools_tests.Data
       new ValueToColumnTypeTestInfo(null, DBxColumnType.Unknown),
       new ValueToColumnTypeTestInfo(DBNull.Value, DBxColumnType.Unknown),
       new ValueToColumnTypeTestInfo("ABC", DBxColumnType.String),
-      new ValueToColumnTypeTestInfo(123, DBxColumnType.Int),
-      new ValueToColumnTypeTestInfo(123L, DBxColumnType.Int),
-      new ValueToColumnTypeTestInfo(123f, DBxColumnType.Float),
-      new ValueToColumnTypeTestInfo(123.0, DBxColumnType.Float),
+      new ValueToColumnTypeTestInfo(123, DBxColumnType.Int32),
+      new ValueToColumnTypeTestInfo(123L, DBxColumnType.Int64),
+      new ValueToColumnTypeTestInfo(123f, DBxColumnType.Single),
+      new ValueToColumnTypeTestInfo(123.0, DBxColumnType.Double),
       new ValueToColumnTypeTestInfo(123m, DBxColumnType.Decimal),
       new ValueToColumnTypeTestInfo(false, DBxColumnType.Boolean),
       new ValueToColumnTypeTestInfo(new DateTime(2023, 5, 17), DBxColumnType.Date),
@@ -106,7 +106,7 @@ namespace ExtTools_tests.Data
       new ValueToColumnTypeTestInfo(DateTime.MinValue +  new TimeSpan(12, 34, 56), DBxColumnType.Time),
       new ValueToColumnTypeTestInfo(new TimeSpan(12, 34, 56), DBxColumnType.Time),
       new ValueToColumnTypeTestInfo(Guid.Empty, DBxColumnType.Guid),
-      new ValueToColumnTypeTestInfo(DataTools.EmptyBytes, DBxColumnType.Binary) };
+      new ValueToColumnTypeTestInfo(EmptyArray<Byte>.Empty, DBxColumnType.Binary) };
 
     [TestCaseSource("ValueToColumnTypeTests")]
     public void ValueToColumnType(ValueToColumnTypeTestInfo info)
@@ -149,14 +149,14 @@ namespace ExtTools_tests.Data
       new GetDefaultValueTestInfo(DBxColumnType.Unknown, null),
       new GetDefaultValueTestInfo(DBxColumnType.String, String.Empty),
       // пока не определено new GetDefaultValueTestInfo(DBxColumnType.Int, 0),
-      new GetDefaultValueTestInfo(DBxColumnType.Float, 0.0),
+      new GetDefaultValueTestInfo(DBxColumnType.Double, 0.0),
       new GetDefaultValueTestInfo(DBxColumnType.Decimal, 0m),
       new GetDefaultValueTestInfo(DBxColumnType.Boolean, false),
       new GetDefaultValueTestInfo(DBxColumnType.Date, DateTime.MinValue),
       new GetDefaultValueTestInfo(DBxColumnType.DateTime, DateTime.MinValue),
       new GetDefaultValueTestInfo(DBxColumnType.Time, TimeSpan.Zero),
       new GetDefaultValueTestInfo(DBxColumnType.Guid, Guid.Empty),
-      new GetDefaultValueTestInfo(DBxColumnType.Binary, DataTools.EmptyBytes) };
+      new GetDefaultValueTestInfo(DBxColumnType.Binary, EmptyArray<Byte>.Empty) };
 
     [TestCaseSource("GetDefaultValueTests")]
     public void GetDefaultValue(GetDefaultValueTestInfo info)
@@ -196,7 +196,7 @@ namespace ExtTools_tests.Data
         else
         {
           if (Source is string)
-            sb.Append(DataTools.StrToCSharpString((string)Source));
+            sb.Append(StringTools.StrToCSharpString((string)Source));
           else
             sb.Append(Source.ToString());
           sb.Append(" (");
@@ -225,44 +225,44 @@ namespace ExtTools_tests.Data
 
       // From null
       new ConvertTestInfo(null, DBxColumnType.String, ""),
-      new ConvertTestInfo(null, DBxColumnType.Int, 0),
-      new ConvertTestInfo(null, DBxColumnType.Float, 0.0),
+      new ConvertTestInfo(null, DBxColumnType.Int32, 0),
+      new ConvertTestInfo(null, DBxColumnType.Double, 0.0),
       new ConvertTestInfo(null, DBxColumnType.Decimal, 0m),
       new ConvertTestInfo(null, DBxColumnType.Boolean, false),
       new ConvertTestInfo(null, DBxColumnType.Date, DateTime.MinValue),
       new ConvertTestInfo(null, DBxColumnType.DateTime, DateTime.MinValue),
       new ConvertTestInfo(null, DBxColumnType.Time, TimeSpan.Zero),
       new ConvertTestInfo(null, DBxColumnType.Guid, Guid.Empty),
-      new ConvertTestInfo(null, DBxColumnType.Binary, DataTools.EmptyBytes),
+      new ConvertTestInfo(null, DBxColumnType.Binary, EmptyArray<Byte>.Empty),
 
       // From DBNull
       new ConvertTestInfo(DBNull.Value, DBxColumnType.String, ""),
-      new ConvertTestInfo(DBNull.Value, DBxColumnType.Int, 0),
-      new ConvertTestInfo(DBNull.Value, DBxColumnType.Float, 0.0),
+      new ConvertTestInfo(DBNull.Value, DBxColumnType.Int32, 0),
+      new ConvertTestInfo(DBNull.Value, DBxColumnType.Double, 0.0),
       new ConvertTestInfo(DBNull.Value, DBxColumnType.Decimal, 0m),
       new ConvertTestInfo(DBNull.Value, DBxColumnType.Boolean, false),
       new ConvertTestInfo(DBNull.Value, DBxColumnType.Date, DateTime.MinValue),
       new ConvertTestInfo(DBNull.Value, DBxColumnType.DateTime, DateTime.MinValue),
       new ConvertTestInfo(DBNull.Value, DBxColumnType.Time, TimeSpan.Zero),
       new ConvertTestInfo(DBNull.Value, DBxColumnType.Guid, Guid.Empty),
-      new ConvertTestInfo(DBNull.Value, DBxColumnType.Binary, DataTools.EmptyBytes),
+      new ConvertTestInfo(DBNull.Value, DBxColumnType.Binary, EmptyArray<Byte>.Empty),
 
       // Из пустой строки
       new ConvertTestInfo("", DBxColumnType.String, ""),
-      new ConvertTestInfo("", DBxColumnType.Int, 0),
-      new ConvertTestInfo("", DBxColumnType.Float, 0.0),
+      new ConvertTestInfo("", DBxColumnType.Int32, 0),
+      new ConvertTestInfo("", DBxColumnType.Double, 0.0),
       new ConvertTestInfo("", DBxColumnType.Decimal, 0m),
       new ConvertTestInfo("", DBxColumnType.Boolean, false),
       new ConvertTestInfo("", DBxColumnType.Date, DateTime.MinValue),
       new ConvertTestInfo("", DBxColumnType.DateTime, DateTime.MinValue),
       new ConvertTestInfo("", DBxColumnType.Time, TimeSpan.Zero),
       new ConvertTestInfo("", DBxColumnType.Guid, Guid.Empty),
-      new ConvertTestInfo("", DBxColumnType.Binary, DataTools.EmptyBytes),
+      new ConvertTestInfo("", DBxColumnType.Binary, EmptyArray<Byte>.Empty),
 
       // Из непустой строки
       new ConvertTestInfo("ABC", DBxColumnType.String, "ABC"),
-      new ConvertTestInfo("123", DBxColumnType.Int, 123),
-      new ConvertTestInfo("123.45", DBxColumnType.Float, 123.45),
+      new ConvertTestInfo("123", DBxColumnType.Int32, 123),
+      new ConvertTestInfo("123.45", DBxColumnType.Double, 123.45),
       new ConvertTestInfo("123.45", DBxColumnType.Decimal, 123.45m),
       new ConvertTestInfo("true", DBxColumnType.Boolean, true),
       new ConvertTestInfo("false", DBxColumnType.Boolean, false),
@@ -289,17 +289,17 @@ namespace ExtTools_tests.Data
 
       // Между числовыми типами
       // Не забываем об ограниченной точности Single и Double
-      new ConvertTestInfo(123, DBxColumnType.Int, 123),
-      new ConvertTestInfo(123L, DBxColumnType.Int, 123),
-      new ConvertTestInfo(1.2f, DBxColumnType.Int, 1),
-      new ConvertTestInfo(1.2, DBxColumnType.Int, 1),
-      new ConvertTestInfo(1.2m, DBxColumnType.Int, 1),
-
-      new ConvertTestInfo(123, DBxColumnType.Float, 123.0),
-      new ConvertTestInfo(123L, DBxColumnType.Float, 123.0),
-      new ConvertTestInfo(1.2f, DBxColumnType.Float, 1.2),
-      new ConvertTestInfo(1.2, DBxColumnType.Float, 1.2),
-      new ConvertTestInfo(1.2m, DBxColumnType.Float, 1.2),
+      new ConvertTestInfo(123, DBxColumnType.Int32, 123),
+      new ConvertTestInfo(123L, DBxColumnType.Int32, 123),
+      new ConvertTestInfo(1.2f, DBxColumnType.Int32, 1),
+      new ConvertTestInfo(1.2, DBxColumnType.Int32, 1),
+      new ConvertTestInfo(1.2m, DBxColumnType.Int32, 1),
+    
+      new ConvertTestInfo(123, DBxColumnType.Double, 123.0),
+      new ConvertTestInfo(123L, DBxColumnType.Double, 123.0),
+      new ConvertTestInfo(1.2f, DBxColumnType.Double, 1.2),
+      new ConvertTestInfo(1.2, DBxColumnType.Double, 1.2),
+      new ConvertTestInfo(1.2m, DBxColumnType.Double, 1.2),
 
       new ConvertTestInfo(123, DBxColumnType.Decimal, 123m),
       new ConvertTestInfo(123L, DBxColumnType.Decimal, 123m),
@@ -350,7 +350,7 @@ namespace ExtTools_tests.Data
       if (Object.ReferenceEquals(x, null))
         return false;
       else
-        return DataTools.IsIntegerType(x.GetType());
+        return MathTools.IsIntegerType(x.GetType());
     }
 
 

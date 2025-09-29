@@ -40,9 +40,9 @@ namespace ExtTools_tests.Data
     private static DBxTableStruct CreateTestObject()
     {
       DBxTableStruct sut = new DBxTableStruct("Test1");
-      sut.Columns.AddId();
+      sut.Columns.AddInt32("Id", false);
       sut.Columns.AddString("F1", 10, false);
-      sut.Columns.AddInt("F2", true);
+      sut.Columns.AddInt32("F2", true);
 
       Assert.AreEqual(3, sut.Columns.Count, "Columns.Count");
 
@@ -60,7 +60,7 @@ namespace ExtTools_tests.Data
 
       DBxColumnStruct res1 = sut.Columns["Id"];
       Assert.AreEqual("Id", res1.ColumnName, "ColumnName #1");
-      Assert.AreEqual(DBxColumnType.Int, res1.ColumnType, "ColumnType #1");
+      Assert.AreEqual(DBxColumnType.Int32, res1.ColumnType, "ColumnType #1");
       Assert.IsFalse(res1.Nullable, "Nullable #1");
       Assert.IsNull(res1.DefaultValue, "DefaultValue #1");
 
@@ -84,7 +84,7 @@ namespace ExtTools_tests.Data
 
       DBxColumnStruct res1 = sut.Columns[0];
       Assert.AreEqual("Id", res1.ColumnName, "ColumnName #1");
-      Assert.AreEqual(DBxColumnType.Int, res1.ColumnType, "ColumnType #1");
+      Assert.AreEqual(DBxColumnType.Int32, res1.ColumnType, "ColumnType #1");
       Assert.IsFalse(res1.Nullable, "Nullable #1");
       Assert.IsNull(res1.DefaultValue, "DefaultValue #1");
 
@@ -125,7 +125,7 @@ namespace ExtTools_tests.Data
       DBxTableStruct sut = new DBxTableStruct("Test1");
       Assert.IsNull(sut.Columns.LastAdded, "#1");
 
-      DBxColumnStruct col = sut.Columns.AddId();
+      DBxColumnStruct col = sut.Columns.AddInt32("Id", false);
       Assert.AreSame(col, sut.Columns.LastAdded, "#2");
     }
 
@@ -135,7 +135,7 @@ namespace ExtTools_tests.Data
       DBxTableStruct sut = new DBxTableStruct("Test1");
       CollectionAssert.AreEqual(new string[] { }, sut.AllColumnNames, "#0");
 
-      sut.Columns.AddId();
+      sut.Columns.AddInt32("Id", false);
       CollectionAssert.AreEqual(new string[] { "Id" }, sut.AllColumnNames, "#1");
 
       sut.Columns.AddString("F1", 10, false);
@@ -146,48 +146,192 @@ namespace ExtTools_tests.Data
 
     #region Методы добавления столбцов
 
-    [Test]
-    public void Columns_AddId()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddId();
-      Assert.AreEqual("Id", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.IsFalse(res.Nullable, "Nullable");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Int32), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
+    #region AddIntXX()
 
     [Test]
-    public void Columns_AddId_withColumnName()
+    public void Columns_AddInt16([Values(false, true)]bool nullable)
     {
       DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddId("F1");
+      DBxColumnStruct res = sut.Columns.AddInt16("F1", nullable);
       Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.IsFalse(res.Nullable, "Nullable");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Int32), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddString([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddString("F1", 123, nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.String, res.ColumnType, "ColumnType");
-      Assert.AreEqual(123, res.MaxLength, "MaxLength");
+      Assert.AreEqual(DBxColumnType.Int16, res.ColumnType, "ColumnType");
       Assert.AreEqual(nullable, res.Nullable, "Nullable");
       Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(String), res.DataType, "DataType");
+      Assert.AreEqual(typeof(Int16), res.DataType, "DataType");
       Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
       Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
     }
+
+    [Test]
+    public void Columns_AddInt32([Values(false, true)]bool nullable)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddInt32("F1", nullable);
+      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
+      Assert.AreEqual(DBxColumnType.Int32, res.ColumnType, "ColumnType");
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
+      Assert.AreEqual(0.0, res.MinValue, "MinValue");
+      Assert.AreEqual(0.0, res.MaxValue, "MaxValue");
+      Assert.IsNull(res.DefaultValue, "DefaultValue");
+      Assert.AreEqual(typeof(Int32), res.DataType, "DataType");
+      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
+      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
+    }
+
+    [Test]
+    public void Columns_AddInt64([Values(false, true)]bool nullable)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddInt64("F1", nullable);
+      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
+      Assert.AreEqual(DBxColumnType.Int64, res.ColumnType, "ColumnType");
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
+      Assert.IsNull(res.DefaultValue, "DefaultValue");
+      Assert.AreEqual(typeof(Int64), res.DataType, "DataType");
+      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
+      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
+    }
+
+    #endregion
+
+    #region AddInteger()
+
+    [TestCase(0, 1, DBxColumnType.Byte, typeof(byte))]
+    [TestCase(0, 255, DBxColumnType.Byte, typeof(byte))]
+    [TestCase(-1, 100, DBxColumnType.SByte, typeof(sbyte))]
+    [TestCase(-128, 127, DBxColumnType.SByte, typeof(sbyte))]
+    [TestCase(0, 256, DBxColumnType.UInt16, typeof(ushort))]
+    [TestCase(0, 65535, DBxColumnType.UInt16, typeof(ushort))]
+    [TestCase(-1, 256, DBxColumnType.Int16, typeof(short))]
+    [TestCase(-32768, 32767, DBxColumnType.Int16, typeof(short))]
+    public void Columns_AddInteger_Int32(int min, int max, DBxColumnType wantedColumnType, Type wantedDataType)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+
+      DBxColumnStruct res1 = sut.Columns.AddInteger("F1", min, max, true);
+      DBxColumnStruct res2 = sut.Columns.AddInteger("F2", new MinMax<Int32>(min, max), true);
+
+      Assert.AreEqual("F1", res1.ColumnName, "ColumnName");
+      Assert.AreEqual("F2", res2.ColumnName, "ColumnName");
+      DoTest_Columns_AddInteger_Int32(res1, min, max, wantedColumnType, wantedDataType);
+      DoTest_Columns_AddInteger_Int32(res1, min, max, wantedColumnType, wantedDataType);
+
+      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
+    }
+
+    private void DoTest_Columns_AddInteger_Int32(DBxColumnStruct res, int min, int max, DBxColumnType wantedColumnType, Type wantedDataType)
+    {
+
+      Assert.AreEqual(wantedColumnType, res.ColumnType, "ColumnType");
+      Assert.AreEqual((double)min, res.MinValue, "MinValue");
+      Assert.AreEqual((double)max, res.MaxValue, "MaxValue");
+      Assert.IsNull(res.DefaultValue, "DefaultValue");
+      Assert.AreEqual(wantedDataType, res.DataType, "DataType");
+      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
+    }
+
+    [TestCase(0L, 1, DBxColumnType.Byte, typeof(byte))]
+    [TestCase(0L, 255, DBxColumnType.Byte, typeof(byte))]
+    [TestCase(-1L, 100, DBxColumnType.SByte, typeof(sbyte))]
+    [TestCase(-128L, 127L, DBxColumnType.SByte, typeof(sbyte))]
+    [TestCase(0L, 256L, DBxColumnType.UInt16, typeof(ushort))]
+    [TestCase(0L, 65535L, DBxColumnType.UInt16, typeof(ushort))]
+    [TestCase(-1L, 256L, DBxColumnType.Int16, typeof(short))]
+    [TestCase(-32768L, 32767L, DBxColumnType.Int16, typeof(short))]
+    [TestCase(0L, 65536L, DBxColumnType.UInt32, typeof(uint))]
+    [TestCase(0L, 4294967295L, DBxColumnType.UInt32, typeof(uint))]
+    [TestCase(-1L, 65536L, DBxColumnType.Int32, typeof(int))]
+    [TestCase(-2147483648L, 2147483647L, DBxColumnType.Int32, typeof(int))]
+    [TestCase(0L, 4294967296L, DBxColumnType.UInt64, typeof(ulong))]
+    [TestCase(-1L, 2147483648L, DBxColumnType.Int64, typeof(long))]
+    public void Columns_AddInteger_Int64(long min, long max, DBxColumnType wantedColumnType, Type wantedDataType)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddInteger("F1", min, max, true);
+      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
+      Assert.AreEqual(wantedColumnType, res.ColumnType, "ColumnType");
+      Assert.AreEqual(min, (Int64)(res.MinValue), "MinValue");
+      Assert.AreEqual(max, (Int64)(res.MaxValue), "MaxValue");
+      Assert.IsNull(res.DefaultValue, "DefaultValue");
+      Assert.AreEqual(wantedDataType, res.DataType, "DataType");
+      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
+      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
+    }
+
+
+    [Test]
+    public void Columns_AddInteger_Int32_Int32_nullable([Values(false, true)]bool nullable)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddInteger("F1", 0, 127, nullable);
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
+    }
+
+    [Test]
+    public void Columns_AddInteger_MinMaxInt32_nullable([Values(false, true)]bool nullable)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddInteger("F1", new MinMax<int>(0, 255), nullable);
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
+    }
+
+    [Test]
+    public void Columns_AddInteger_Int64_Int64_nullable([Values(false, true)]bool nullable)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddInteger("F1", 0L, 10000000000L, nullable);
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
+    }
+
+    #endregion
+
+    #region Числа с плавающей точкой
+
+    [Test]
+    public void Columns_AddSingle([Values(false, true)]bool nullable)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddSingle("F1", nullable);
+      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
+      Assert.AreEqual(DBxColumnType.Single, res.ColumnType, "ColumnType");
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
+      Assert.IsNull(res.DefaultValue, "DefaultValue");
+      Assert.AreEqual(typeof(Single), res.DataType, "DataType");
+      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
+      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
+    }
+
+    [Test]
+    public void Columns_AddDouble([Values(false, true)]bool nullable)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddDouble("F1", nullable);
+      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
+      Assert.AreEqual(DBxColumnType.Double, res.ColumnType, "ColumnType");
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
+      Assert.IsNull(res.DefaultValue, "DefaultValue");
+      Assert.AreEqual(typeof(Double), res.DataType, "DataType");
+      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
+      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
+    }
+
+    [Test]
+    public void Columns_AddDecimal([Values(false, true)]bool nullable)
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddDecimal("F1", nullable);
+      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
+      Assert.AreEqual(DBxColumnType.Decimal, res.ColumnType, "ColumnType");
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
+      Assert.IsNull(res.DefaultValue, "DefaultValue");
+      Assert.AreEqual(typeof(Decimal), res.DataType, "DataType");
+      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
+      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
+    }
+
+    #endregion
+
+    #region Дата/время
 
     [Test]
     public void Columns_AddDate([Values(false, true)]bool nullable)
@@ -231,340 +375,54 @@ namespace ExtTools_tests.Data
       Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
     }
 
-    [Test]
-    public void Columns_AddInt()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt("F1");
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(0.0, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Int32), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
+    #endregion
+
+    #region Прочие
 
     [Test]
-    public void Columns_AddInt_nullable([Values(false, true)]bool nullable)
+    public void Columns_AddId()
     {
       DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt("F1", nullable);
+      DBxColumnStruct res = sut.Columns.AddId("F1");
       Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(0.0, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Int32), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt_int_int()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt("F1", 0, 255);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(255.0, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(byte), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt_int_int_nullable([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt("F1", 0, 127, nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(127.0, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(byte), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt_MinMaxInt()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt("F1", new MinMax<int>(0, 255));
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(255, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(byte), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt_MinMaxInt_nullable([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt("F1", new MinMax<int>(0, 255), nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(255, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(byte), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt_long_long()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt("F1", 0L, 10000000000L);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(1e10, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(long), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt_long_long_nullable([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt("F1", 0L, 10000000000L, nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(1e10, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(long), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt16()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt16("F1");
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual(-32768.0, res.MinValue, "MinValue");
-      Assert.AreEqual(32767.0, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Int16), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt16_nullable([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt16("F1", nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual(-32768.0, res.MinValue, "MinValue");
-      Assert.AreEqual(32767.0, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Int16), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt64()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt64("F1");
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual((double)(Int64.MinValue), res.MinValue, "MinValue");
-      Assert.AreEqual((double)(Int64.MaxValue), res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Int64), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddInt64_nullable([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddInt64("F1", nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual((double)(Int64.MinValue), res.MinValue, "MinValue");
-      Assert.AreEqual((double)(Int64.MaxValue), res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Int64), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddDecimal()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddDecimal("F1");
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Decimal, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(0.0, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Decimal), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddDecimal_nullable([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddDecimal("F1", nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Decimal, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(0.0, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Decimal), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddSingle()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddSingle("F1");
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Float, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual((double)(Single.MinValue), res.MinValue, "MinValue");
-      Assert.AreEqual((double)(Single.MaxValue), res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Single), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddSingle_nullable([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddSingle("F1", nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Float, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual((double)(Single.MinValue), res.MinValue, "MinValue");
-      Assert.AreEqual((double)(Single.MaxValue), res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Single), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddDouble()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddDouble("F1");
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Float, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.AreEqual(Double.MinValue, res.MinValue, "MinValue");
-      Assert.AreEqual(Double.MaxValue, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Double), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddDouble_nullable([Values(false, true)]bool nullable)
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddDouble("F1", nullable);
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Float, res.ColumnType, "ColumnType");
-      Assert.AreEqual(nullable, res.Nullable, "Nullable");
-      Assert.AreEqual(Double.MinValue, res.MinValue, "MinValue");
-      Assert.AreEqual(Double.MaxValue, res.MaxValue, "MaxValue");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Double), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddBoolean()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddBoolean("F1");
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Boolean, res.ColumnType, "ColumnType");
+      Assert.AreEqual(DBxColumnType.Unknown, res.ColumnType, "ColumnType");
       Assert.IsFalse(res.Nullable, "Nullable");
-      Assert.AreEqual(false, res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Boolean), res.DataType, "DataType");
+      Assert.IsNull(res.DefaultValue, "DefaultValue");
+      Assert.IsNull(res.DataType, "DataType");
       Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
       Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
     }
 
     [Test]
-    public void Columns_AddReference()
+    public void Columns_AddString([Values(false, true)]bool nullable)
     {
       DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddReference("F1", "T1");
+      DBxColumnStruct res = sut.Columns.AddString("F1", 123, nullable);
       Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
-      Assert.AreEqual("T1", res.MasterTableName);
-      Assert.IsFalse(res.Nullable, "Nullable");
-      Assert.AreEqual(DBxRefType.Disallow, res.RefType, "RefType");
-      Assert.AreEqual(0.0, res.MinValue, "MinValue");
-      Assert.AreEqual(0.0, res.MaxValue, "MaxValue");
+      Assert.AreEqual(DBxColumnType.String, res.ColumnType, "ColumnType");
+      Assert.AreEqual(123, res.MaxLength, "MaxLength");
+      Assert.AreEqual(nullable, res.Nullable, "Nullable");
       Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(int), res.DataType, "DataType");
+      Assert.AreEqual(typeof(String), res.DataType, "DataType");
       Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
       Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
     }
 
+
     [Test]
-    public void Columns_AddReference_nullable([Values(false, true)]bool nullable)
+    public void Columns_AddReference([Values(false, true)]bool nullable)
     {
       DBxTableStruct sut = new DBxTableStruct("Test1");
       DBxColumnStruct res = sut.Columns.AddReference("F1", "T1", nullable);
       Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
+      Assert.AreEqual(DBxColumnType.Unknown, res.ColumnType, "ColumnType");
       Assert.AreEqual("T1", res.MasterTableName);
       Assert.AreEqual(nullable, res.Nullable, "Nullable");
       Assert.AreEqual(DBxRefType.Disallow, res.RefType, "RefType");
       Assert.AreEqual(0.0, res.MinValue, "MinValue");
       Assert.AreEqual(0.0, res.MaxValue, "MaxValue");
       Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(int), res.DataType, "DataType");
+      Assert.IsNull(res.DataType, "DataType");
       Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
       Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
     }
@@ -576,19 +434,19 @@ namespace ExtTools_tests.Data
     [TestCase(true, DBxRefType.Emulation)]
     [TestCase(false, DBxRefType.Disallow)]
     [TestCase(false, DBxRefType.Emulation)]
-    public void Columns_AddReference_nullable_refType(bool nullable, DBxRefType refType)
+    public void Columns_AddReference_refType(bool nullable, DBxRefType refType)
     {
       DBxTableStruct sut = new DBxTableStruct("Test1");
       DBxColumnStruct res = sut.Columns.AddReference("F1", "T1", nullable, refType);
       Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Int, res.ColumnType, "ColumnType");
+      Assert.AreEqual(DBxColumnType.Unknown, res.ColumnType, "ColumnType");
       Assert.AreEqual("T1", res.MasterTableName);
       Assert.AreEqual(nullable, res.Nullable, "Nullable");
       Assert.AreEqual(refType, res.RefType, "RefType");
       Assert.AreEqual(0.0, res.MinValue, "MinValue");
       Assert.AreEqual(0.0, res.MaxValue, "MaxValue");
       Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(int), res.DataType, "DataType");
+      Assert.IsNull(res.DataType, "DataType");
       Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
     }
 
@@ -604,6 +462,20 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(typeof(String), res.DataType, "DataType");
       Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
       Assert.IsTrue(sut.Columns.ContainsBlob(), "ContainsBlob()");
+    }
+
+    [Test]
+    public void Columns_AddBoolean()
+    {
+      DBxTableStruct sut = new DBxTableStruct("Test1");
+      DBxColumnStruct res = sut.Columns.AddBoolean("F1");
+      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
+      Assert.AreEqual(DBxColumnType.Boolean, res.ColumnType, "ColumnType");
+      Assert.IsFalse(res.Nullable, "Nullable");
+      Assert.AreEqual(false, res.DefaultValue, "DefaultValue");
+      Assert.AreEqual(typeof(Boolean), res.DataType, "DataType");
+      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
+      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
     }
 
     [Test]
@@ -649,21 +521,7 @@ namespace ExtTools_tests.Data
     }
 
     [Test]
-    public void Columns_AddGuid()
-    {
-      DBxTableStruct sut = new DBxTableStruct("Test1");
-      DBxColumnStruct res = sut.Columns.AddGuid("F1");
-      Assert.AreEqual("F1", res.ColumnName, "ColumnName");
-      Assert.AreEqual(DBxColumnType.Guid, res.ColumnType, "ColumnType");
-      Assert.IsTrue(res.Nullable, "Nullable");
-      Assert.IsNull(res.DefaultValue, "DefaultValue");
-      Assert.AreEqual(typeof(Guid), res.DataType, "DataType");
-      Assert.IsFalse(res.IsReadOnly, "IsReadOnly");
-      Assert.IsFalse(sut.Columns.ContainsBlob(), "ContainsBlob()");
-    }
-
-    [Test]
-    public void Columns_AddGuid_nullable([Values(false, true)]bool nullable)
+    public void Columns_AddGuid([Values(false, true)]bool nullable)
     {
       DBxTableStruct sut = new DBxTableStruct("Test1");
       DBxColumnStruct res = sut.Columns.AddGuid("F1", nullable);
@@ -678,6 +536,8 @@ namespace ExtTools_tests.Data
 
     #endregion
 
+    #endregion
+
     #region PrimaryKey
 
     [Test]
@@ -686,7 +546,7 @@ namespace ExtTools_tests.Data
       DBxTableStruct sut = new DBxTableStruct("Test1");
       DoTestPrimaryKey(sut, "", "#0");
 
-      sut.Columns.AddId();
+      sut.Columns.AddId("Id");
       DoTestPrimaryKey(sut, "Id", "#1");
       Assert.AreEqual("Id", sut.PrimaryKey.AsString, "#1");
 
@@ -698,7 +558,7 @@ namespace ExtTools_tests.Data
     {
       Assert.AreEqual(colNames, sut.PrimaryKey.AsString, message + "-PrimaryKey");
 
-      string[] aNames = DataTools.EmptyStrings;
+      string[] aNames = EmptyArray<string>.Empty;
       if (colNames.Length > 0)
         aNames = colNames.Split(',');
       DBxColumnStruct[] wanted = new DBxColumnStruct[aNames.Length];
@@ -976,7 +836,7 @@ namespace ExtTools_tests.Data
       Assert.IsTrue(sut.Columns.IsReadOnly, "Columns.IsReadOnly");
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Columns.AddBoolean("F99"); }, "Columns.Add()");
       Assert.IsTrue(sut.Columns[0].IsReadOnly, "DBxColumnStruct.IsReadOnly");
-      Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Columns[0].Comment="XXX"; }, "DBxColumnStruct.Comment");
+      Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Columns[0].Comment = "XXX"; }, "DBxColumnStruct.Comment");
 
       Assert.IsTrue(sut.Columns.IsReadOnly, "Indexes.IsReadOnly");
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Indexes.Add("F2"); }, "Indexes.Add()");
@@ -1024,7 +884,7 @@ namespace ExtTools_tests.Data
       if (mode == "STRING")
         sut.ColumnType = DBxColumnType.String;
       else
-        sut.ColumnType = DBxColumnType.Int;
+        sut.ColumnType = DBxColumnType.Int32;
       switch (mode)
       {
         case "NOT NULL":

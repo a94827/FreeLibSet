@@ -420,7 +420,7 @@ namespace FreeLibSet.Models.SpreadsheetBase
 
         if (!SpreadsheetTools.TryGetColumnNumber(sCol, out col))
           return false;
-        if (!StdConvert.TryParse(sRow, out row))
+        if (!StdConvert.TryParseInt32(sRow, out row))
           return false;
       }
       else
@@ -431,9 +431,9 @@ namespace FreeLibSet.Models.SpreadsheetBase
           string sRow = m.Groups[1].Value;
           string sCol = m.Groups[2].Value;
 
-          if (!StdConvert.TryParse(sRow, out row))
+          if (!StdConvert.TryParseInt32(sRow, out row))
             return false;
-          if (!StdConvert.TryParse(sCol, out col))
+          if (!StdConvert.TryParseInt32(sCol, out col))
             return false;
         }
         else

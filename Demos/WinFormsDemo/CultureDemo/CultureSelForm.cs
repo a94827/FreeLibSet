@@ -63,49 +63,49 @@ namespace WinFormsDemo.CultureDemo
       #region Таблица параметров
 
       efpInfo = new EFPDataGridView(efpForm, grInfo);
-      efpInfo.Columns.AddText("Param", false, "Param", 20);
-      efpInfo.Columns.AddTextFill("Value", 50);
-      efpInfo.Columns.AddTextFill("Sample", 50);
+      efpInfo.Columns.AddText("Param", false, "Param", 20, 10);
+      efpInfo.Columns.AddTextFill("Value", false, "Value", 50, 10);
+      efpInfo.Columns.AddTextFill("Sample", false, "Sample", 50, 10);
       efpInfo.DisableOrdering();
       efpInfo.ReadOnly = true;
       efpInfo.Control.ReadOnly = true;
       efpInfo.CanView = false;
       grInfo.RowCount = InfoTitles.Length;
       grInfo.VirtualMode = true;
-      efpInfo.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpInfo_GetCellAttributes);
+      efpInfo.CellInfoNeeded += efpInfo_CellInfoNeeded;
 
       #endregion
 
       #region Стандартные форматы
 
       efpFormats = new EFPDataGridView(efpForm, grFormats);
-      efpFormats.Columns.AddText("Format", false, "Format", 6);
-      efpFormats.Columns.AddTextFill("Value");
+      efpFormats.Columns.AddText("Format", false, "Format", 6, 1);
+      efpFormats.Columns.AddTextFill("Value", false, "Value", 100, 10);
       efpFormats.DisableOrdering();
       efpFormats.ReadOnly = true;
       efpFormats.Control.ReadOnly = true;
       efpFormats.CanView = false;
       grFormats.RowCount = FormatTitles.Length;
       grFormats.VirtualMode = true;
-      efpFormats.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpFormats_GetCellAttributes);
+      efpFormats.CellInfoNeeded += efpFormats_CellInfoNeeded;
 
       #endregion
 
       #region EditableDateTimeFormatter
 
       efpEditableDateTimeFormatter = new EFPDataGridView(efpForm, grEditableDateTimeFormatter);
-      efpEditableDateTimeFormatter.Columns.AddText("Kind");
-      efpEditableDateTimeFormatter.Columns.AddText("Format");
-      efpEditableDateTimeFormatter.Columns.AddText("EditMask");
-      efpEditableDateTimeFormatter.Columns.AddInt("TextWidth");
-      efpEditableDateTimeFormatter.Columns.AddBool("DefaultYearSupported");
+      efpEditableDateTimeFormatter.Columns.AddText("Kind", false, "Kind", 10, 1);
+      efpEditableDateTimeFormatter.Columns.AddText("Format", false, "Format", 10, 1);
+      efpEditableDateTimeFormatter.Columns.AddText("EditMask", false, "EditMask", 12, 10);
+      efpEditableDateTimeFormatter.Columns.AddInteger("TextWidth", false, "TextWidth", 4);
+      efpEditableDateTimeFormatter.Columns.AddCheckBox("DefaultYearSupported", false, "DefaultYearSupported");
       efpEditableDateTimeFormatter.DisableOrdering();
       efpEditableDateTimeFormatter.ReadOnly = true;
       efpEditableDateTimeFormatter.Control.ReadOnly = true;
       efpEditableDateTimeFormatter.CanView = false;
       efpEditableDateTimeFormatter.Control.RowCount = DataTools.GetEnumRange(typeof(EditableDateTimeFormatterKind)).MaxValue + 1;
       efpEditableDateTimeFormatter.Control.VirtualMode = true;
-      efpEditableDateTimeFormatter.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpEditableDateTimeFormatter_GetCellAttributes);
+      efpEditableDateTimeFormatter.CellInfoNeeded += efpEditableDateTimeFormatter_CellInfoNeeded;
 
       #endregion
 
@@ -226,7 +226,7 @@ namespace WinFormsDemo.CultureDemo
           "NumberGroupSizes",
           "FormatStringTools.DateFormatOrder"};
 
-    void efpInfo_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void efpInfo_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.ColumnIndex < 0 || args.RowIndex < 0)
         return;
@@ -282,7 +282,7 @@ namespace WinFormsDemo.CultureDemo
 
     private static readonly string[] FormatTitles = new string[] { "d", "D", "t", "T", "f", "F", "g", "G", "M", "Y", "y" };
 
-    void efpFormats_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void efpFormats_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.ColumnIndex < 0 || args.RowIndex < 0)
         return;
@@ -308,7 +308,7 @@ namespace WinFormsDemo.CultureDemo
 
     private EditableDateTimeFormatter[] _Formatters;
 
-    private void efpEditableDateTimeFormatter_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private void efpEditableDateTimeFormatter_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (_Formatters == null)
       {

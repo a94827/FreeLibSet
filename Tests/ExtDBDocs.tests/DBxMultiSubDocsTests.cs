@@ -5,6 +5,7 @@ using NUnit.Framework;
 using FreeLibSet.Data.Docs;
 using System.Data;
 using FreeLibSet.Core;
+using FreeLibSet.Data;
 
 namespace ExtDBDocs_tests.Data_Docs
 {
@@ -93,7 +94,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc = ds["D1"].Insert();
 
-      DBxMultiSubDocs sut = new DBxMultiSubDocs(ds[0].SubDocs["SD11"], DataTools.EmptyIds);
+      DBxMultiSubDocs sut = new DBxMultiSubDocs(ds[0].SubDocs["SD11"], EmptyArray<Int32>.Empty);
       Assert.AreEqual(0, sut.SubDocCount);
     }
 
@@ -110,7 +111,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxSingleDoc doc = ds["D1"].Insert();
       doc.Values["F101"].SetBoolean(false); // обязательное поле
 
-      DBxMultiSubDocs sut = new DBxMultiSubDocs(ds[0].SubDocs["SD11"], DataTools.EmptyIds);
+      DBxMultiSubDocs sut = new DBxMultiSubDocs(ds[0].SubDocs["SD11"], EmptyArray<Int32>.Empty);
       DBxSubDoc sdoc = sut.Insert();
       sut.Values["F111"].SetString("DDD");
 
@@ -133,7 +134,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc = ds["D1"].Edit(docId);
-      Int32[] orgSubDocIds = doc.SubDocs["SD11"].SubDocIds;
+      IdArray<Int32> orgSubDocIds = IdTools.AsIdArray<Int32>(doc.SubDocs["SD11"].SubDocIds);
 
 
       DBxMultiSubDocs sut = new DBxMultiSubDocs(ds[0].SubDocs["SD11"], new DataRow[0]);

@@ -272,8 +272,8 @@ namespace ExtTools_tests.Collections
       byte[] bytes = SerializationTools.SerializeBinary(sut1);
       BidirectionalDictionary<int, string> sut2 = (BidirectionalDictionary<int, string>)(SerializationTools.DeserializeBinary(bytes));
 
-      Assert.AreEqual(DataTools.CreateArray<int>(sut1.Keys), DataTools.CreateArray<int>(sut2.Keys), "Keys");
-      Assert.AreEqual(DataTools.CreateArray<string>(sut1.Values), DataTools.CreateArray<string>(sut2.Values), "Values");
+      Assert.AreEqual(ArrayTools.CreateArray<int>(sut1.Keys), ArrayTools.CreateArray<int>(sut2.Keys), "Keys");
+      Assert.AreEqual(ArrayTools.CreateArray<string>(sut1.Values), ArrayTools.CreateArray<string>(sut2.Values), "Values");
     }
 
     #endregion

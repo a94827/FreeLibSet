@@ -289,7 +289,7 @@ namespace FreeLibSet.Forms
       : base(baseProvider, control)
     {
       _MaxHistLength = DefaultMaxHistLength;
-      _DefaultItems = DataTools.EmptyStrings;
+      _DefaultItems = EmptyArray<string>.Empty;
     }
 
     #endregion
@@ -385,7 +385,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Empty;
         _DefaultItems = value;
         _DefaultItemFlags = new bool[value.Length];
         for (int i = 0; i < value.Length; i++)
@@ -948,7 +948,7 @@ namespace FreeLibSet.Forms
   /// списка или введены вручную. Каждому такому значению соответствует числовой код.
   /// Текущим значением является целочисленное свойство <see cref="Value"/>.
   /// </summary>
-  public class EFPIntEditComboBox : EFPControl<ComboBox>
+  public class EFPInt32EditComboBox : EFPControl<ComboBox>
   {
     #region Конструктор
 
@@ -957,7 +957,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="control">Управляющий элемент</param>
-    public EFPIntEditComboBox(EFPBaseProvider baseProvider, ComboBox control)
+    public EFPInt32EditComboBox(EFPBaseProvider baseProvider, ComboBox control)
       : base(baseProvider, control, true)
     {
       control.DropDownStyle = ComboBoxStyle.DropDown; // редактирование возможно

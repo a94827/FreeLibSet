@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="CultureDemo\CultureSelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="CultureDemo\CultureTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPTabControlDemo\EFPTabControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FileControlsDemo\FileControlsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="TreeViewDemo\TreeViewParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="TreeViewDemo\TreeViewResultForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="WizardDemo\WizardParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="WizardDemo\WizardTemplateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

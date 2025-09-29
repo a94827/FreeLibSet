@@ -301,8 +301,8 @@ namespace FreeLibSet.Data.Docs
         {
           // 08.10.2018
           // Пользовательская инициализация
-          DBxDocDBConnectionHelperInitDBxEventArgs Args = new DBxDocDBConnectionHelperInitDBxEventArgs(db, dbStruct, dbName);
-          OnBeforeInitDB(Args);
+          DBxDocDBConnectionHelperInitDBxEventArgs args = new DBxDocDBConnectionHelperInitDBxEventArgs(db, dbStruct, dbName);
+          OnBeforeInitDB(args);
 
           db.CreateIfRequired();
           db.Struct = dbStruct; // возможно, была изменена пользовательским обработчиком

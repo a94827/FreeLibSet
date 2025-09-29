@@ -90,10 +90,10 @@ namespace FreeLibSet.Forms
 
     private void AfterSetXmlBytes()
     {
-      Encoding enc = DataTools.GetXmlEncoding(_ViewBox.Control.XmlDocument);
+      Encoding enc = XmlTools.GetXmlEncoding(_ViewBox.Control.XmlDocument);
       _EditBox.Control.Text = File.ReadAllText(_ViewBox.Control.XmlFilePath, enc);
       Modified = false;
-      _OrgMD5 = DataTools.MD5Sum(_ViewBox.Control.XmlBytes);
+      _OrgMD5 = MD5Tools.MD5Sum(_ViewBox.Control.XmlBytes);
     }
 
     /// <summary>
@@ -218,10 +218,10 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
+      Encoding enc = XmlTools.GetXmlEncoding(xmlDoc);
       _ViewBox.Control.XmlBytes = enc.GetBytes(_EditBox.Control.Text);
 
-      string newMD5 = DataTools.MD5Sum(_ViewBox.Control.XmlBytes);
+      string newMD5 = MD5Tools.MD5Sum(_ViewBox.Control.XmlBytes);
 
       Modified = (newMD5 != _OrgMD5);
 

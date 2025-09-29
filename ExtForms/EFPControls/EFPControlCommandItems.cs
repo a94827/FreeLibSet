@@ -148,7 +148,7 @@ namespace FreeLibSet.Forms
       if (sbFlag)
       {
         _StatusBarPanels = CreateStatusBarPanels();
-        _StatusBarPanels.Add(this);
+        _StatusBarPanels.AddRange(this);
       }
     }
 

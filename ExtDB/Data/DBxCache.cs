@@ -295,7 +295,7 @@ namespace FreeLibSet.Data
     /// <param name="columnNames">Список столбцов</param>
     /// <param name="firstIds">Первые идентификаторы для страниц</param>
     /// <returns>Загруженный DataTable</returns>
-    void ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds);
+    void ClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstIds);
 
     ///// <summary>
     ///// Получить значения одного поля
@@ -349,7 +349,7 @@ namespace FreeLibSet.Data
 
       _DBIdentity = source.DBIdentity;
       byte[] b = Encoding.Unicode.GetBytes(_DBIdentity);
-      _DBIdentityMD5 = DataTools.MD5Sum(b);
+      _DBIdentityMD5 = MD5Tools.MD5Sum(b);
 
       if (currentThreadOnly)
         _SingleThread = Thread.CurrentThread;
@@ -600,13 +600,13 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="ids">Массив идентификаторов</param>
-    public void Clear(string tableName, Int32[] ids)
+    public void Clear(string tableName, IIdSet<Int32> ids)
     {
       if (ids == null)
         throw new ArgumentNullException("ids");
-      if (ids.Length == 1)
+      if (ids.Count == 1)
       {
-        Clear(tableName, ids[0]);
+        Clear(tableName, ids.SingleId);
         return;
       }
 
@@ -629,19 +629,6 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Очищает буферы для всех объектов <see cref="DBxTableCache"/> для базы данных, задаваемой <see cref="DBIdentityMD5"/>, таблицы <paramref name="tableName"/>
-    /// и массива идентификаторов <paramref name="ids"/>
-    /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="ids">Массив идентификаторов</param>
-    public void Clear(string tableName, IdList ids)
-    {
-      DBxTableCache tc = GetIfExists(tableName);
-      if (tc != null)
-        tc.Clear(ids);
-    }
-
-    /// <summary>
     /// Сброс буферизации на стороне клиента на основании данных, полученных от сервера.
     /// Клиент, время от времени, должен запрашивать у сервера объект <see cref="DBxClearCacheData"/>, и выполнять очистку
     /// </summary>
@@ -655,7 +642,7 @@ namespace FreeLibSet.Data
         Clear(); // запрошена полная очистка
       else
       {
-        foreach (KeyValuePair<string, IdList> pair in clearCacheData)
+        foreach (KeyValuePair<string, IdCollection<Int32>> pair in clearCacheData)
         {
           if (Object.ReferenceEquals(pair.Value, null))
             Clear(pair.Key); // запрошена очистка всей таблицы
@@ -687,7 +674,7 @@ namespace FreeLibSet.Data
     /// <param name="tableName"></param>
     /// <param name="columnNames"></param>
     /// <param name="firstIds"></param>
-    internal void InternalClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
+    internal void InternalClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstIds)
     {
       lock (_Tables)
       {
@@ -741,7 +728,7 @@ namespace FreeLibSet.Data
           string[] searchPageKeys = new string[4] { DBIdentityMD5, 
             pi.TableName, 
             pi.FirstId.ToString(),
-            DataTools.MD5SumFromString(pi.ColumnNames.AsString)};
+            MD5Tools.MD5SumFromString(pi.ColumnNames.AsString)};
 
           DBxCacheTablePage page = Cache.GetItemIfExists<DBxCacheTablePage>(searchPageKeys, DBxTableCache.Persistance);
           if (page == null)
@@ -894,9 +881,9 @@ namespace FreeLibSet.Data
       {
         foreach (KeyValuePair<string, DBxTableCache> pair in _Tables)
         {
-          Int32[] ids = pair.Value.GetPreloadIds();
-          for (int i = 0; i < ids.Length; i++)
-            r.TablePages.Add(new DBxCacheLoadRequest.PageInfo(pair.Key, pair.Value.ColumnNames, ids[i]));
+          IIdSet<Int32> ids = pair.Value.GetPreloadIds();
+          foreach (Int32 id in ids)
+            r.TablePages.Add(new DBxCacheLoadRequest.PageInfo(pair.Key, pair.Value.ColumnNames, id));
         }
       }
 
@@ -905,7 +892,7 @@ namespace FreeLibSet.Data
       return r;
     }
 
-    void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
+    void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstIds)
     {
       CheckThread();
       this[tableName].ClearCachePages(columnNames, firstIds);
@@ -919,21 +906,21 @@ namespace FreeLibSet.Data
     /// Получить страницы кэша для заданных идентификаторов документов.
     /// Этот метод может использоваться в архитектуре клиент-сервер для упреждающей загрузки кэша для документов,
     /// которые скоро понадобятся.
-    /// Клиент определяет, какие документы будут нужны и передает <see cref="TableAndIdList"/> на сервер в составе какого-либо запроса,
+    /// Клиент определяет, какие документы будут нужны и передает <see cref="TableIdCollection{Int32}"/> на сервер в составе какого-либо запроса,
     /// который все равно требуется выполнить. 
-    /// Сервер вызывает метод <see cref="LoadCachePages(TableAndIdList)"/> для списка идентификаторов и возвращает полученный <see cref="DBxCacheLoadResponse"/> клиенту.
+    /// Сервер вызывает метод <see cref="LoadCachePages(TableIdCollection{Int32})"/> для списка идентификаторов и возвращает полученный <see cref="DBxCacheLoadResponse"/> клиенту.
     /// Клиент вызывает <see cref="DBxCacheLoadResponse.ToCache()"/>.
     /// </summary>
     /// <param name="ids">Идентификаторы документов с таблицами</param>
     /// <returns>Кэшированные страницы</returns>
-    public DBxCacheLoadResponse LoadCachePages(TableAndIdList ids)
+    public DBxCacheLoadResponse LoadCachePages(TableIdCollection<Int32> ids)
     {
       if (ids == null)
-        ids = TableAndIdList.Empty;
+        ids = TableIdCollection<Int32>.Empty;
 
       #region Преоборазуем идентификаторы строк в идентификаторы страниц
 
-      TableAndIdList pageIds = new TableAndIdList(); // Первые идентификаторы страниц
+      TableIdCollection<Int32> pageIds = new TableIdCollection<Int32>(); // Первые идентификаторы страниц
       foreach (string tableName in ids.GetTableNames())
       {
         foreach (Int32 id in ids[tableName])
@@ -1001,7 +988,7 @@ namespace FreeLibSet.Data
       cacheInfo.TableStruct.SetReadOnly();
       _CacheInfo = cacheInfo;
 
-      DBxStructChecker.CheckTablePrimaryKeyInt32(_CacheInfo.TableStruct);
+      DBxStructChecker.CheckTablePrimaryKeyInteger(_CacheInfo.TableStruct);
 
       DBxColumnList list = new DBxColumnList(_CacheInfo.TableStruct.Columns.Count);
       _CacheInfo.TableStruct.Columns.GetColumnNames(list);
@@ -1014,7 +1001,7 @@ namespace FreeLibSet.Data
       _ColumnNames = new DBxColumns(list);
 
       byte[] b = Encoding.Unicode.GetBytes(_ColumnNames.AsString);
-      _ColumnsMD5 = DataTools.MD5Sum(b);
+      _ColumnsMD5 = MD5Tools.MD5Sum(b);
 
       /*
       SearchPageKeys = new string[4];
@@ -1142,7 +1129,7 @@ namespace FreeLibSet.Data
         if (!row.Table.Columns.Contains(refColumnName))
           throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, refColumnName);
 #endif
-        Int32 refId = DataTools.GetInt(row, refColumnName);
+        Int32 refId = DataTools.GetInt32(row, refColumnName);
         if (refId == 0)
           return null; // пустая ссылка
 
@@ -1376,9 +1363,9 @@ namespace FreeLibSet.Data
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
-    public int GetInt(Int32 id, string columnName)
+    public int GetInt32(Int32 id, string columnName)
     {
-      return DataTools.GetInt(GetValue(id, columnName, null));
+      return DataTools.GetInt32(GetValue(id, columnName, null));
     }
 
     /// <summary>
@@ -1400,9 +1387,9 @@ namespace FreeLibSet.Data
     /// <param name="id">Значение идентификатора Id</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
-    public bool GetBool(Int32 id, string columnName)
+    public bool GetBoolean(Int32 id, string columnName)
     {
-      return DataTools.GetBool(GetValue(id, columnName, null));
+      return DataTools.GetBoolean(GetValue(id, columnName, null));
     }
 
     /// <summary>
@@ -1516,7 +1503,7 @@ namespace FreeLibSet.Data
     /// Может быть пустой массив, тогда возвращается заготовка таблицы</param>
     /// <param name="columnNames">Имена полей. Имена полей могут содержать точки. Если null, то загружаются все поля текущей таблицы, без ссылочных полей</param>
     /// <returns>Заполненная таблица данных</returns>
-    public DataTable CreateTable(Int32[] ids, DBxColumns columnNames)
+    public DataTable CreateTable(IIdSet<Int32> ids, DBxColumns columnNames)
     {
       // Структура основной таблицы
       if (columnNames == null)
@@ -1540,15 +1527,15 @@ namespace FreeLibSet.Data
 
       #region Цикл по строкам
 
-      for (int i = 0; i < ids.Length; i++)
+      foreach (Int32 id in ids)
       {
-        if (ids[i] == 0)
-          throw ExceptionFactory.ArgInvalidEnumerableItem("ids", ids, 0);
+        //if (ids[i] == 0)
+        //  throw ExceptionFactory.ArgInvalidEnumerableItem("ids", ids, 0);
 
-        DataRow srcRow = GetRow(ids[i], null);
+        DataRow srcRow = GetRow(id, null);
         DataRow newRow = table.NewRow();
         for (int j = 0; j < columnNames.Count; j++)
-          newRow[j] = InternalGetValue(srcRow, ids[i], columnNames[j], null);
+          newRow[j] = InternalGetValue(srcRow, id, columnNames[j], null);
         table.Rows.Add(newRow);
       }
 
@@ -1664,7 +1651,7 @@ namespace FreeLibSet.Data
       {
         // Возможно, база данных содержит новые строки, которые не были загружены
         // Сбрасываем буфер данной страницы  и повторяем попытку
-        ClearCachePages(ColumnNames, new Int32[1] { firstPageId });
+        ClearCachePages(ColumnNames, IdArray<Int32>.FromId(firstPageId));
 
         page = DoGetPage(firstPageId);
 
@@ -1706,7 +1693,7 @@ namespace FreeLibSet.Data
     /// Объект не создается до первого обращения, т.к. для большинства
     /// таблиц предзагрузка не выполняется.
     /// </summary>
-    private IdList _PreloadPageIds;
+    private IdCollection<Int32> _PreloadPageIds;
 
     private static readonly object _SyncRoot = new object();
 
@@ -1715,26 +1702,25 @@ namespace FreeLibSet.Data
     /// Этот метод не выполняет реальную загрузку, а всего лишь учитывает пожелание.
     /// </summary>
     /// <param name="ids">Идентификаторы записей для загрузки</param>
-    public void AddPreloadIds(Int32[] ids)
+    public void AddPreloadIds(IIdSet<Int32> ids)
     {
       if (ids == null)
         return;
-      if (ids.Length == 0)
+      if (ids.Count == 0)
         return;
 
       // Сначала собираем идентификаторы страниц, чтобы не держать блокировку
-      IdList pageIds = new IdList();
-      for (int i = 0; i < ids.Length; i++)
+      IdCollection<Int32> pageIds = new IdCollection<Int32>();
+      foreach (Int32 id in ids)
       {
-        if (ids[i] != 0)
-          pageIds.Add(GetFirstPageId(ids[i]));
+        pageIds.Add(GetFirstPageId(id));
       }
 
       lock (_SyncRoot)
       {
         if (_PreloadPageIds == null)
-          _PreloadPageIds = new IdList();
-        _PreloadPageIds.Add(pageIds);
+          _PreloadPageIds = new IdCollection<Int32>();
+        _PreloadPageIds.AddRange(pageIds);
       }
     }
 
@@ -1743,7 +1729,7 @@ namespace FreeLibSet.Data
     /// Этот метод не выполняет реальную загрузку, а всего лишь учитывает пожелание.
     /// </summary>
     /// <param name="ids">Идентификаторы записей для загрузки</param>
-    public void AddPreloadIds(IdList ids)
+    public void AddPreloadIds(IdCollection<Int32> ids)
     {
       if (ids == null)
         return;
@@ -1751,22 +1737,22 @@ namespace FreeLibSet.Data
         return;
 
       // Сначала собираем идентификаторы страниц, чтобы не держать блокировку
-      IdList pageIds = new IdList();
+      IdCollection<Int32> pageIds = new IdCollection<Int32>();
       foreach (Int32 id in ids)
         pageIds.Add(GetFirstPageId(id));
 
       lock (_SyncRoot)
       {
         if (_PreloadPageIds == null)
-          _PreloadPageIds = new IdList();
-        _PreloadPageIds.Add(pageIds);
+          _PreloadPageIds = new IdCollection<Int32>();
+        _PreloadPageIds.AddRange(pageIds);
       }
     }
 
     /// <summary>
     /// Добавляет указанный идентификатор строки в список для предзагрузки страниц.
     /// Этот метод не выполняет реальную загрузку, а всего лишь учитывает пожелание.
-    /// Используйте <see cref="AddPreloadIds(int[])"/>, если есть несколько идентификаторов.
+    /// Используйте <see cref="AddPreloadIds(IdCollection{int})"/>, если есть несколько идентификаторов.
     /// </summary>
     /// <param name="id">Идентификатор записей для загрузки</param>
     public void AddPreloadId(Int32 id)
@@ -1777,7 +1763,7 @@ namespace FreeLibSet.Data
       lock (_SyncRoot)
       {
         if (_PreloadPageIds == null)
-          _PreloadPageIds = new IdList();
+          _PreloadPageIds = new IdCollection<Int32>();
         _PreloadPageIds.Add(GetFirstPageId(id));
       }
     }
@@ -1787,16 +1773,16 @@ namespace FreeLibSet.Data
     /// При этом текущий список очищается.
     /// </summary>
     /// <returns></returns>
-    internal Int32[] GetPreloadIds()
+    internal IIdSet<Int32> GetPreloadIds()
     {
-      Int32[] ids;
+      IIdSet<Int32> ids;
       lock (_SyncRoot)
       {
         if (_PreloadPageIds == null)
-          ids = DataTools.EmptyIds;
+          ids = IdArray<Int32>.Empty;
         else
         {
-          ids = _PreloadPageIds.ToArray();
+          ids = _PreloadPageIds;
           _PreloadPageIds = null;
         }
       }
@@ -1908,26 +1894,26 @@ namespace FreeLibSet.Data
     /// Сбрасывает сущействующие буферы для выбранных идентификаторов
     /// </summary>
     /// <param name="ids">Массив идентификаторов. Значения 0 пропускаются</param>
-    public void Clear(Int32[] ids)
+    public void Clear(IIdSet<Int32> ids)
     {
-      if (ids.Length == 0)
+      if (ids.Count == 0)
         return;
-      if (ids.Length == 1)
+      if (ids.Count == 1)
       {
-        Clear(ids[0]);
+        Clear(ids.SingleId);
         return;
       }
 
       // Многократно вызывать Cache.Clear() невыгодно
-      IdList firstPageIds = new IdList();
-      for (int i = 0; i < ids.Length; i++)
+      IdCollection<Int32> firstPageIds = new IdCollection<Int32>();
+      foreach (Int32 id in ids)
       {
-        firstPageIds.Add(GetFirstPageId(ids[i]));
-        Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, ids[i].ToString() });
+        firstPageIds.Add(GetFirstPageId(id));
+        Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, StdConvert.ToString(id) });
       }
 
       foreach (Int32 firstPageId in firstPageIds)
-        Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, firstPageId.ToString() });
+        Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, StdConvert.ToString(firstPageId) });
     }
 
     /// <summary>
@@ -1940,29 +1926,8 @@ namespace FreeLibSet.Data
         return;
 
       Int32 firstPageId = GetFirstPageId(id);
-      Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, firstPageId.ToString() });
-      Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, id.ToString() });
-    }
-
-    /// <summary>
-    /// Сбрасывает сушествующие буферы для списка идентификаторов
-    /// </summary>
-    /// <param name="ids">Список идентификаторов</param>
-    public void Clear(IdList ids)
-    {
-      if (ids.Count == 0)
-        return;
-
-      // Многократно вызывать Cache.Clear() невыгодно
-      IdList firstPageIds = new IdList();
-      foreach (Int32 id in ids)
-      {
-        firstPageIds.Add(GetFirstPageId(id));
-        Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, id.ToString() });
-      }
-
-      foreach (Int32 firstPageId in firstPageIds)
-        Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, firstPageId.ToString() });
+      Cache.Clear<DBxCacheTablePage>(new string[] { Owner.DBIdentityMD5, TableName, StdConvert.ToString(firstPageId) });
+      Cache.Clear<DBxCacheIndividualValue>(new string[] { Owner.DBIdentityMD5, TableName, StdConvert.ToString(id) });
     }
 
     #endregion
@@ -1994,17 +1959,17 @@ namespace FreeLibSet.Data
           page.DBIdentityMD5,
           page.TableName,
           page.FirstId,
-          DataTools.MD5SumFromString(columnNames.AsString),
+          MD5Tools.MD5SumFromString(columnNames.AsString),
           table2, page.PrimaryKeyColumn);
       }
     }
 
-    internal void ClearCachePages(DBxColumns columnNames, Int32[] firstIds)
+    internal void ClearCachePages(DBxColumns columnNames, IIdSet<Int32> firstIds)
     {
       // 1. Очищаем собственный кэш
-      for (int i = 0; i < firstIds.Length; i++)
+      foreach (Int32 firstId in firstIds)
       {
-        string[] searchPageKeys = new string[] { Owner.DBIdentityMD5, TableName, firstIds[i].ToString() };
+        string[] searchPageKeys = new string[] { Owner.DBIdentityMD5, TableName, StdConvert.ToString(firstId) };
         Cache.Clear<DBxCacheTablePage>(searchPageKeys);
       }
 
@@ -2172,33 +2137,33 @@ namespace FreeLibSet.Data
     /// <param name="parentColumnName">Имя целочисленного ссылочного столбца, на котором построено дерево, например, "ParentId"</param>
     /// <returns>Цепочки идентификаторов, образующих дерево. Первым элементом массива идет идентификатор корневого узла,
     /// последним - идентификатор <paramref name="id"/>.</returns>
-    public Int32[] GetTreeChainIds(Int32 id, string parentColumnName)
+    public IdList<Int32> GetTreeChainIds(Int32 id, string parentColumnName)
     {
       if (id == 0)
-        return DataTools.EmptyIds;
+        return IdList<Int32>.Empty;
 
-      Int32 parentId = GetInt(id, parentColumnName);
+      Int32 parentId = GetInt32(id, parentColumnName);
       if (parentId == 0)
         // Упрощенный вариант - нет родительской строки
-        return new Int32[1] { id };
+        return IdList<Int32>.FromId(id);
 
       if (parentId == id)
-        return DataTools.EmptyIds; // зациклилось на первом шаге
+        return IdList<Int32>.Empty; // зациклилось на первом шаге
 
-      SingleScopeList<Int32> list = new SingleScopeList<Int32>(); // чтобы Contains() быстро работал.
+      IdList<Int32> list = new IdList<Int32>(); 
       list.Add(parentId);
       list.Add(id); // последний элемент
       while (true)
       {
-        parentId = GetInt(parentId, parentColumnName);
+        parentId = GetInt32(parentId, parentColumnName);
         if (parentId == 0)
           break;
         if (list.Contains(parentId))
-          return DataTools.EmptyIds; // дерево зациклилось
+          return IdList<Int32>.Empty; // дерево зациклилось
         list.Insert(0, parentId);
       }
 
-      return list.ToArray();
+      return list;
     }
 
     #endregion
@@ -2994,10 +2959,10 @@ Exception rethrown at [0]:
   }
 
   /// <summary>
-  /// Расширяет класс <see cref="DataRowValueArray"/>.
+  /// Расширяет класс <see cref="DataRowValues"/>.
   /// Если таблица не содержит запрашиваемого ссылочного поля с точкой, то извлекается значение из кэша.
   /// </summary>
-  public class DBxDataRowValueArrayWithCache : DataRowValueArray, IDataRowNamedValuesAccess
+  public class DBxDataRowValuesWithCache : DataRowValues, IDataRowNamedValuesAccess
   {
     #region Конструктор
 
@@ -3005,7 +2970,7 @@ Exception rethrown at [0]:
     /// Создает объект для доступа к данным
     /// </summary>
     /// <param name="tableCache">Кэш таблицы</param>
-    public DBxDataRowValueArrayWithCache(DBxTableCache tableCache)
+    public DBxDataRowValuesWithCache(DBxTableCache tableCache)
     {
       if (tableCache == null)
         throw new ArgumentNullException("tableCache");
@@ -3048,7 +3013,7 @@ Exception rethrown at [0]:
       if (p1 < 0)
       {
         // обычное поле
-        Int32 Id = DataTools.GetInt(CurrentRow, "Id");
+        Int32 Id = DataTools.GetInt32(CurrentRow, "Id");
         if (Id < 0)
           return null;
         return tableCache.GetValue(Id, name);
@@ -3063,14 +3028,14 @@ Exception rethrown at [0]:
         if (p < 0)
         {
           // ссылочного поля тоже нет
-          Int32 id = DataTools.GetInt(CurrentRow, "Id");
+          Int32 id = DataTools.GetInt32(CurrentRow, "Id");
           if (id < 0)
             return null;
           return tableCache.GetValue(id, name);
         }
         else
         {
-          refId = DataTools.GetInt(CurrentRow[p]);
+          refId = DataTools.GetInt32(CurrentRow[p]);
           if (refId < 0)
             return null;
           return tableCache.GetRefValue(name, refId);
@@ -3140,7 +3105,7 @@ Exception rethrown at [0]:
       if (p >= 0)
       {
         string baseName = args.ColumnName.Substring(0, p);
-        Int32 refId = DataTools.GetInt(args.SourceRow, baseName);
+        Int32 refId = DataTools.GetInt32(args.SourceRow, baseName);
         if (refId >= 0) // 30.06.2021
           args.Value = _TableCache.GetRefValue(args.ColumnName, refId);
       }

@@ -1557,7 +1557,7 @@ namespace FreeLibSet.RI
   /// Поле ввода целого числа
   /// </summary>
   [Serializable]
-  public class IntEditBox : BaseNumEditBox<Int32>
+  public class Int32EditBox : BaseNumEditBox<Int32>
   {
     #region Чтение и запись значений
 
@@ -1587,7 +1587,7 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetNullableInt("Value", NValue);
+      part.SetNullableInt32("Value", NValue);
       OldNValue = NValue;
     }
 
@@ -1600,7 +1600,7 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      NValue = part.GetNullableInt("Value");
+      NValue = part.GetNullableInt32("Value");
       OldNValue = NValue;
     }
 
@@ -1612,7 +1612,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      part.SetNullableInt(Name, NValue);
+      part.SetNullableInt32(Name, NValue);
     }
 
     /// <summary>
@@ -1623,7 +1623,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      NValue = part.GetNullableInt(Name);
+      NValue = part.GetNullableInt32(Name);
     }
 
     #endregion
@@ -2133,7 +2133,7 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetNullableBool("Checked", NChecked);
+      part.SetNullableBoolean("Checked", NChecked);
       _OldNChecked = NChecked;
     }
 
@@ -2146,7 +2146,7 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      NChecked = part.GetNullableBool("Checked");
+      NChecked = part.GetNullableBoolean("Checked");
       _OldNChecked = NChecked;
     }
 
@@ -2172,9 +2172,9 @@ namespace FreeLibSet.RI
       // Для совместимости с предыдущими версиями, NChecked.HasValue=false записывается как "2"
 
       if (NChecked.HasValue)
-        part.SetInt(Name, Checked ? 1 : 0);
+        part.SetInt32(Name, Checked ? 1 : 0);
       else
-        part.SetInt(Name, 2);
+        part.SetInt32(Name, 2);
     }
 
     /// <summary>
@@ -2185,7 +2185,7 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
-      int n = part.GetInt(Name);
+      int n = part.GetInt32(Name);
       if (CanBeEmpty && n == 2)
         NChecked = null;
       else
@@ -2436,7 +2436,7 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetInt("SelectedIndex", SelectedIndex);
+      part.SetInt32("SelectedIndex", SelectedIndex);
       _OldSelectedIndex = SelectedIndex;
     }
 
@@ -2449,7 +2449,7 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      SelectedIndex = part.GetInt("SelectedIndex");
+      SelectedIndex = part.GetInt32("SelectedIndex");
       _OldSelectedIndex = SelectedIndex;
     }
 
@@ -2473,7 +2473,7 @@ namespace FreeLibSet.RI
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
       if (Codes == null)
-        part.SetInt(Name, SelectedIndex);
+        part.SetInt32(Name, SelectedIndex);
       else
         part.SetString(Name, SelectedCode);
     }
@@ -2489,7 +2489,7 @@ namespace FreeLibSet.RI
       if (part.HasValue(Name))
       {
         if (Codes == null)
-          SelectedIndex = part.GetInt(Name);
+          SelectedIndex = part.GetInt32(Name);
         else
           SelectedCode = part.GetString(Name);
       }
@@ -3124,274 +3124,274 @@ namespace FreeLibSet.RI
 
     #region Редактируемое значение
 
-    #region NFirstDate
+    #region NFirstValue
 
     /// <summary>
     /// Начальная дата диапазона с поддержкой значения null
     /// </summary>
-    public DateTime? NFirstDate
+    public DateTime? NFirstValue
     {
-      get { return _NFirstDate; }
+      get { return _NFirstValue; }
       set
       {
         if (value.HasValue)
-          _NFirstDate = value.Value.Date;
+          _NFirstValue = value.Value.Date;
         else
-          _NFirstDate = null;
+          _NFirstValue = null;
 
-        if (_NFirstDateEx != null)
-          _NFirstDateEx.Value = value;
-        if (_FirstDateEx != null)
-          _FirstDateEx.Value = FirstDate;
+        if (_NFirstValueEx != null)
+          _NFirstValueEx.Value = value;
+        if (_FirstValueEx != null)
+          _FirstValueEx.Value = FirstValue;
       }
     }
-    private DateTime? _NFirstDate;
+    private DateTime? _NFirstValue;
 
-    private DateTime? _OldNFirstDate;
+    private DateTime? _OldNFirstValue;
 
     /// <summary>
-    /// Управляемое значение для NFirstDate.
+    /// Управляемое значение для <see cref="NFirstValue"/>.
     /// </summary>
-    public DepValue<DateTime?> NFirstDateEx
+    public DepValue<DateTime?> NFirstValueEx
     {
       get
       {
-        InitNFirstDateEx();
-        return _NFirstDateEx;
+        InitNFirstValueEx();
+        return _NFirstValueEx;
       }
       set
       {
-        InitNFirstDateEx();
-        _NFirstDateEx.Source = value;
+        InitNFirstValueEx();
+        _NFirstValueEx.Source = value;
       }
     }
-    private DepInput<DateTime?> _NFirstDateEx;
+    private DepInput<DateTime?> _NFirstValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства NFirstDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Возвращает true, если обработчик свойства <see cref="NFirstValueEx"/> присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool InternalNFirstDateExConnected
+    public bool InternalNFirstValueExConnected
     {
       get
       {
-        if (_NFirstDateEx == null)
+        if (_NFirstValueEx == null)
           return false;
         else
-          return _NFirstDateEx.IsConnected;
+          return _NFirstValueEx.IsConnected;
       }
     }
 
-    private void InitNFirstDateEx()
+    private void InitNFirstValueEx()
     {
-      if (_NFirstDateEx == null)
+      if (_NFirstValueEx == null)
       {
-        _NFirstDateEx = new DepInput<DateTime?>(NFirstDate, NFirstDateEx_ValueChanged);
-        _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
+        _NFirstValueEx = new DepInput<DateTime?>(NFirstValue, NFirstValueEx_ValueChanged);
+        _NFirstValueEx.OwnerInfo = new DepOwnerInfo(this, "NFirstValueEx");
       }
     }
 
-    private void NFirstDateEx_ValueChanged(object sender, EventArgs args)
+    private void NFirstValueEx_ValueChanged(object sender, EventArgs args)
     {
-      NFirstDate = _NFirstDateEx.Value;
+      NFirstValue = _NFirstValueEx.Value;
     }
 
     #endregion
 
-    #region FirstDate
+    #region FirstValue
 
     /// <summary>
     /// Начальная дата диапазона без значения null
     /// </summary>
-    public DateTime FirstDate
+    public DateTime FirstValue
     {
-      get { return NFirstDate ?? DateRange.Whole.FirstDate; }
-      set { NFirstDate = value; }
+      get { return NFirstValue ?? DateRange.Whole.FirstDate; }
+      set { NFirstValue = value; }
     }
 
     /// <summary>
-    /// Управляемое значение для FirstDate.
+    /// Управляемое значение для <see cref="FirstValue"/>.
     /// </summary>
-    public DepValue<DateTime> FirstDateEx
+    public DepValue<DateTime> FirstValueEx
     {
       get
       {
-        InitFirstDateEx();
-        return _FirstDateEx;
+        InitFirstValueEx();
+        return _FirstValueEx;
       }
       set
       {
-        InitFirstDateEx();
-        _FirstDateEx.Source = value;
+        InitFirstValueEx();
+        _FirstValueEx.Source = value;
       }
     }
-    private DepInput<DateTime> _FirstDateEx;
+    private DepInput<DateTime> _FirstValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства FirstDateEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
+    /// Возвращает true, если обработчик свойства <see cref="FirstValueEx"/> присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool InternalFirstDateExConnected
+    public bool InternalFirstValueExConnected
     {
       get
       {
-        if (_FirstDateEx == null)
+        if (_FirstValueEx == null)
           return false;
         else
-          return _FirstDateEx.IsConnected;
+          return _FirstValueEx.IsConnected;
       }
     }
 
-    private void InitFirstDateEx()
+    private void InitFirstValueEx()
     {
-      if (_FirstDateEx == null)
+      if (_FirstValueEx == null)
       {
-        _FirstDateEx = new DepInput<DateTime>(FirstDate, FirstDateEx_ValueChanged);
-        _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
+        _FirstValueEx = new DepInput<DateTime>(FirstValue, FirstValueEx_ValueChanged);
+        _FirstValueEx.OwnerInfo = new DepOwnerInfo(this, "FirstValueEx");
       }
     }
 
-    private void FirstDateEx_ValueChanged(object sender, EventArgs args)
+    private void FirstValueEx_ValueChanged(object sender, EventArgs args)
     {
-      FirstDate = _FirstDateEx.Value;
+      FirstValue = _FirstValueEx.Value;
     }
 
     #endregion
 
-    #region NLastDate
+    #region NLastValue
 
     /// <summary>
     /// Конечная дата диапазона с поддержкой значения null
     /// </summary>
-    public DateTime? NLastDate
+    public DateTime? NLastValue
     {
-      get { return _NLastDate; }
+      get { return _NLastValue; }
       set
       {
         if (value.HasValue)
-          _NLastDate = value.Value.Date;
+          _NLastValue = value.Value.Date;
         else
-          _NLastDate = null;
+          _NLastValue = null;
 
-        if (_NLastDateEx != null)
-          _NLastDateEx.Value = value;
-        if (_LastDateEx != null)
-          _LastDateEx.Value = LastDate;
+        if (_NLastValueEx != null)
+          _NLastValueEx.Value = value;
+        if (_LastValueEx != null)
+          _LastValueEx.Value = LastValue;
       }
     }
-    private DateTime? _NLastDate;
+    private DateTime? _NLastValue;
 
-    private DateTime? _OldNLastDate;
+    private DateTime? _OldNLastValue;
 
     /// <summary>
-    /// Управляемое значение для NLastDate.
+    /// Управляемое значение для <see cref="NLastValue"/>.
     /// </summary>
-    public DepValue<DateTime?> NLastDateEx
+    public DepValue<DateTime?> NLastValueEx
     {
       get
       {
-        InitNLastDateEx();
-        return _NLastDateEx;
+        InitNLastValueEx();
+        return _NLastValueEx;
       }
       set
       {
-        InitNLastDateEx();
-        _NLastDateEx.Source = value;
+        InitNLastValueEx();
+        _NLastValueEx.Source = value;
       }
     }
-    private DepInput<DateTime?> _NLastDateEx;
+    private DepInput<DateTime?> _NLastValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства NLastDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Возвращает true, если обработчик свойства <see cref="NLastValueEx"/> присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool InternalNLastDateExConnected
+    public bool InternalNLastValueExConnected
     {
       get
       {
-        if (_NLastDateEx == null)
+        if (_NLastValueEx == null)
           return false;
         else
-          return _NLastDateEx.IsConnected;
+          return _NLastValueEx.IsConnected;
       }
     }
 
-    private void InitNLastDateEx()
+    private void InitNLastValueEx()
     {
-      if (_NLastDateEx == null)
+      if (_NLastValueEx == null)
       {
-        _NLastDateEx = new DepInput<DateTime?>(NLastDate, NLastDateEx_ValueChanged);
-        _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
+        _NLastValueEx = new DepInput<DateTime?>(NLastValue, NLastValueEx_ValueChanged);
+        _NLastValueEx.OwnerInfo = new DepOwnerInfo(this, "NLastValueEx");
       }
     }
 
-    private void NLastDateEx_ValueChanged(object sender, EventArgs args)
+    private void NLastValueEx_ValueChanged(object sender, EventArgs args)
     {
-      NLastDate = _NLastDateEx.Value;
+      NLastValue = _NLastValueEx.Value;
     }
 
     #endregion
 
-    #region LastDate
+    #region LastValue
 
     /// <summary>
     /// Конечная дата диапазона без значения null
     /// </summary>
-    public DateTime LastDate
+    public DateTime LastValue
     {
-      get { return NLastDate ?? DateRange.Whole.LastDate; }
-      set { NLastDate = value; }
+      get { return NLastValue ?? DateRange.Whole.LastDate; }
+      set { NLastValue = value; }
     }
 
     /// <summary>
-    /// Управляемое значение для LastDate.
+    /// Управляемое значение для <see cref="LastValue"/>.
     /// </summary>
-    public DepValue<DateTime> LastDateEx
+    public DepValue<DateTime> LastValueEx
     {
       get
       {
-        InitLastDateEx();
-        return _LastDateEx;
+        InitLastValueEx();
+        return _LastValueEx;
       }
       set
       {
-        InitLastDateEx();
-        _LastDateEx.Source = value;
+        InitLastValueEx();
+        _LastValueEx.Source = value;
       }
     }
-    private DepInput<DateTime> _LastDateEx;
+    private DepInput<DateTime> _LastValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства LastDateEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
+    /// Возвращает true, если обработчик свойства <see cref="LastValueEx"/> присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool InternalLastDateExConnected
+    public bool InternalLastValueExConnected
     {
       get
       {
-        if (_LastDateEx == null)
+        if (_LastValueEx == null)
           return false;
         else
-          return _LastDateEx.IsConnected;
+          return _LastValueEx.IsConnected;
       }
     }
 
-    private void InitLastDateEx()
+    private void InitLastValueEx()
     {
-      if (_LastDateEx == null)
+      if (_LastValueEx == null)
       {
-        _LastDateEx = new DepInput<DateTime>(LastDate, LastDateEx_ValueChanged);
-        _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
+        _LastValueEx = new DepInput<DateTime>(LastValue, LastValueEx_ValueChanged);
+        _LastValueEx.OwnerInfo = new DepOwnerInfo(this, "LastValueEx");
       }
     }
 
-    private void LastDateEx_ValueChanged(object sender, EventArgs args)
+    private void LastValueEx_ValueChanged(object sender, EventArgs args)
     {
-      LastDate = _LastDateEx.Value;
+      LastValue = _LastValueEx.Value;
     }
 
     #endregion
@@ -3400,15 +3400,15 @@ namespace FreeLibSet.RI
 
     /// <summary>
     /// Вспомогательное свойство для доступа к интервалу дат.
-    /// Если начальная и/или конечная дата не установлена, свойство возвращает DateRange.Empty.
-    /// Установка значения свойства в DateRange.Empty очищает обе даты
+    /// Если начальная и/или конечная дата не установлена, свойство возвращает <see cref="FreeLibSet.Calendar.DateRange.Empty"/>.
+    /// Установка значения свойства в <see cref="FreeLibSet.Calendar.DateRange.Empty"/> очищает обе даты.
     /// </summary>
     public DateRange DateRange
     {
       get
       {
-        if (NFirstDate.HasValue && NLastDate.HasValue)
-          return new DateRange(NFirstDate.Value, NLastDate.Value);
+        if (NFirstValue.HasValue && NLastValue.HasValue)
+          return new DateRange(NFirstValue.Value, NLastValue.Value);
         else
           return DateRange.Empty;
       }
@@ -3416,13 +3416,13 @@ namespace FreeLibSet.RI
       {
         if (value.IsEmpty)
         {
-          NFirstDate = null;
-          NLastDate = null;
+          NFirstValue = null;
+          NLastValue = null;
         }
         else
         {
-          NFirstDate = value.FirstDate;
-          NLastDate = value.LastDate;
+          NFirstValue = value.FirstDate;
+          NLastValue = value.LastDate;
         }
       }
     }
@@ -3441,7 +3441,7 @@ namespace FreeLibSet.RI
       {
         if (_IsNotEmptyEx == null)
         {
-          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstValueEx, NLastValueEx, CalcIsNotEmptyEx);
           _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
         }
         return _IsNotEmptyEx;
@@ -3505,32 +3505,32 @@ namespace FreeLibSet.RI
     /// По умолчанию ограничение не установлено.
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// </summary>
-    public DateTime? MinimumFirstDate
+    public DateTime? MinimumFirstValue
     {
-      get { return _MinimumFirstDate; }
+      get { return _MinimumFirstValue; }
       set
       {
         CheckNotFixed();
-        _MinimumFirstDate = value;
+        _MinimumFirstValue = value;
       }
     }
-    private DateTime? _MinimumFirstDate;
+    private DateTime? _MinimumFirstValue;
 
     /// <summary>
     /// Максимальное значение, которое можно ввести.
     /// По умолчанию ограничение не установлено.
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// </summary>
-    public DateTime? MaximumFirstDate
+    public DateTime? MaximumFirstValue
     {
-      get { return _MaximumFirstDate; }
+      get { return _MaximumFirstValue; }
       set
       {
         CheckNotFixed();
-        _MaximumFirstDate = value;
+        _MaximumFirstValue = value;
       }
     }
-    private DateTime? _MaximumFirstDate;
+    private DateTime? _MaximumFirstValue;
 
     #endregion
 
@@ -3541,32 +3541,32 @@ namespace FreeLibSet.RI
     /// По умолчанию ограничение не установлено.
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// </summary>
-    public DateTime? MinimumLastDate
+    public DateTime? MinimumLastValue
     {
-      get { return _MinimumLastDate; }
+      get { return _MinimumLastValue; }
       set
       {
         CheckNotFixed();
-        _MinimumLastDate = value;
+        _MinimumLastValue = value;
       }
     }
-    private DateTime? _MinimumLastDate;
+    private DateTime? _MinimumLastValue;
 
     /// <summary>
     /// Максимальное значение, которое можно ввести.
     /// По умолчанию ограничение не установлено.
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// </summary>
-    public DateTime? MaximumLastDate
+    public DateTime? MaximumLastValue
     {
-      get { return _MaximumLastDate; }
+      get { return _MaximumLastValue; }
       set
       {
         CheckNotFixed();
-        _MaximumLastDate = value;
+        _MaximumLastValue = value;
       }
     }
-    private DateTime? _MaximumLastDate;
+    private DateTime? _MaximumLastValue;
 
     #endregion
 
@@ -3575,44 +3575,44 @@ namespace FreeLibSet.RI
     /// <summary>
     /// Минимальное значение, которое можно ввести.
     /// По умолчанию ограничение не установлено.
-    /// Установка этого свойства задает ограничение и для начальной и для конечной даты диапазона (свойства MinimumFirstDate и MinumumLastDate).
+    /// Установка этого свойства задает ограничение и для начальной и для конечной даты диапазона (свойства <see cref="MinimumFirstValue"/> и <see cref="MinimumLastValue"/>).
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// </summary>
     public DateTime? Minimum
     {
       get
       {
-        if (MinimumFirstDate.HasValue && MinimumLastDate.HasValue && MinimumFirstDate == MinimumLastDate)
-          return MinimumFirstDate;
+        if (MinimumFirstValue.HasValue && MinimumLastValue.HasValue && MinimumFirstValue == MinimumLastValue)
+          return MinimumFirstValue;
         else
           return null;
       }
       set
       {
-        MinimumFirstDate = value;
-        MinimumLastDate = value;
+        MinimumFirstValue = value;
+        MinimumLastValue = value;
       }
     }
 
     /// <summary>
     /// Максимальное значение, которое можно ввести.
     /// По умолчанию ограничение не установлено.
-    /// Установка этого свойства задает ограничение и для начально и для конечной даты диапазона (свойства MaximumFirstDate и MaximumLastDate).
+    /// Установка этого свойства задает ограничение и для начально и для конечной даты диапазона (свойства <see cref="MaximumFirstValue"/> и <see cref="MaximumLastValue"/>).
     /// Свойство может устанавливаться только до передачи диалога вызываемой стороне.
     /// </summary>
     public DateTime? Maximum
     {
       get
       {
-        if (MaximumFirstDate.HasValue && MaximumLastDate.HasValue && MaximumFirstDate == MaximumLastDate)
-          return MinimumFirstDate;
+        if (MaximumFirstValue.HasValue && MaximumLastValue.HasValue && MaximumFirstValue == MaximumLastValue)
+          return MinimumFirstValue;
         else
           return null;
       }
       set
       {
-        MaximumFirstDate = value;
-        MaximumLastDate = value;
+        MaximumFirstValue = value;
+        MaximumLastValue = value;
       }
     }
 
@@ -3636,7 +3636,7 @@ namespace FreeLibSet.RI
       {
         if (base.HasChanges)
           return true;
-        return NFirstDate != _OldNFirstDate || NLastDate != _OldNLastDate;
+        return NFirstValue != _OldNFirstValue || NLastValue != _OldNLastValue;
       }
     }
 
@@ -3650,10 +3650,10 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetNullableDate("FirstDate", NFirstDate);
-      part.SetNullableDate("LastDate", NLastDate);
-      _OldNFirstDate = NFirstDate;
-      _OldNLastDate = NLastDate;
+      part.SetNullableDate("FirstValue", NFirstValue);
+      part.SetNullableDate("LastValue", NLastValue);
+      _OldNFirstValue = NFirstValue;
+      _OldNLastValue = NLastValue;
     }
 
     /// <summary>
@@ -3665,10 +3665,10 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      NFirstDate = part.GetNullableDate("FirstDate");
-      NLastDate = part.GetNullableDate("LastDate");
-      _OldNFirstDate = NFirstDate;
-      _OldNLastDate = NLastDate;
+      NFirstValue = part.GetNullableDate("FirstValue");
+      NLastValue = part.GetNullableDate("LastValue");
+      _OldNFirstValue = NFirstValue;
+      _OldNLastValue = NLastValue;
     }
 
     /// <summary>
@@ -3690,13 +3690,13 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      if (NFirstDate.HasValue)
-        part.SetDate(Name + "-First", NFirstDate.Value);
+      if (NFirstValue.HasValue)
+        part.SetDate(Name + "-First", NFirstValue.Value);
       else
         part.SetString(Name + "-First", String.Empty);
 
-      if (NLastDate.HasValue)
-        part.SetDate(Name + "-Last", NLastDate.Value);
+      if (NLastValue.HasValue)
+        part.SetDate(Name + "-Last", NLastValue.Value);
       else
         part.SetString(Name + "-Last", String.Empty);
     }
@@ -3710,9 +3710,9 @@ namespace FreeLibSet.RI
     protected override void OnReadValues(CfgPart part, RIValueCfgType cfgType)
     {
       if (part.HasValue(Name + "-First"))
-        NFirstDate = part.GetNullableDate(Name + "-First");
+        NFirstValue = part.GetNullableDate(Name + "-First");
       if (part.HasValue(Name + "-Last"))
-        NLastDate = part.GetNullableDate(Name + "-Last");
+        NLastValue = part.GetNullableDate(Name + "-Last");
     }
 
     #endregion
@@ -3720,7 +3720,7 @@ namespace FreeLibSet.RI
 
   /// <summary>
   /// Поле ввода одиночной даты или интервала дат.
-  /// Пустой интервал (DateRange.Empty) поддерживается. Полуоткрытые интервалы не поддерживаются.
+  /// Пустой интервал (<see cref="FreeLibSet.Calendar.DateRange.Empty"/> поддерживается. Полуоткрытые интервалы не поддерживаются.
   /// </summary>
   [Serializable]
   public class DateOrRangeBox : Control
@@ -3739,7 +3739,7 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
-    #region Вводимое значение N/FirstDate/LastDate/DateRange
+    #region Вводимое значение N/FirstValue/LastValue/DateRange
 
     #region DateRange
 
@@ -3753,14 +3753,14 @@ namespace FreeLibSet.RI
       set
       {
         _DateRange = value;
-        if (_FirstDateEx != null)
-          _FirstDateEx.Value = FirstDate;
-        if (_LastDateEx != null)
-          _LastDateEx.Value = LastDate;
-        if (_NFirstDateEx != null)
-          _NFirstDateEx.Value = NFirstDate;
-        if (_NLastDateEx != null)
-          _NLastDateEx.Value = NLastDate;
+        if (_FirstValueEx != null)
+          _FirstValueEx.Value = FirstValue;
+        if (_LastValueEx != null)
+          _LastValueEx.Value = LastValue;
+        if (_NFirstValueEx != null)
+          _NFirstValueEx.Value = NFirstValue;
+        if (_NLastValueEx != null)
+          _NLastValueEx.Value = NLastValue;
       }
     }
     private DateRange _DateRange;
@@ -3769,14 +3769,14 @@ namespace FreeLibSet.RI
 
     #endregion
 
-    #region FirstDate
+    #region FirstValue
 
     /// <summary>
     /// Начальная дата диапазона.
-    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается минимально возможная дата.
+    /// Пустой диапазон не поддерживается. Если <see cref="DateRange"/>.IsEmpty=true, возвращается минимально возможная дата.
     /// Установка значения свойства может привести к изменению конечной даты, если задаваемое значение больше, чем текущая конечная дата.
     /// </summary>
-    public DateTime FirstDate
+    public DateTime FirstValue
     {
       get
       {
@@ -3790,68 +3790,68 @@ namespace FreeLibSet.RI
         if (DateRange.IsEmpty)
           DateRange = new DateRange(value, value);
         else
-          DateRange = new DateRange(value, DataTools.Max(DateRange.LastDate, value.Date));
+          DateRange = new DateRange(value, TimeTools.Max(DateRange.LastDate, value.Date));
       }
     }
 
     /// <summary>
-    /// Управляемое значение для FirstDate.
+    /// Управляемое значение для <see cref="FirstValue"/>.
     /// </summary>
-    public DepValue<DateTime> FirstDateEx
+    public DepValue<DateTime> FirstValueEx
     {
       get
       {
-        InitFirstDateEx();
-        return _FirstDateEx;
+        InitFirstValueEx();
+        return _FirstValueEx;
       }
       set
       {
-        InitFirstDateEx();
-        _FirstDateEx.Source = value;
+        InitFirstValueEx();
+        _FirstValueEx.Source = value;
       }
     }
-    private DepInput<DateTime> _FirstDateEx;
+    private DepInput<DateTime> _FirstValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства FirstDateEx присоединен к другим объектам в качестве входа или выхода.
+    /// Возвращает true, если обработчик свойства <see cref="FirstValueEx"/> присоединен к другим объектам в качестве входа или выхода.
     /// Это свойство не предназначено для использования в пользовательском коде
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool InternalFirstDateExConnected
+    public bool InternalFirstValueExConnected
     {
       get
       {
-        if (_FirstDateEx == null)
+        if (_FirstValueEx == null)
           return false;
         else
-          return _FirstDateEx.IsConnected;
+          return _FirstValueEx.IsConnected;
       }
     }
 
-    private void InitFirstDateEx()
+    private void InitFirstValueEx()
     {
-      if (_FirstDateEx == null)
+      if (_FirstValueEx == null)
       {
-        _FirstDateEx = new DepInput<DateTime>(FirstDate, FirstDateEx_ValueChanged);
-        _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
+        _FirstValueEx = new DepInput<DateTime>(FirstValue, FirstValueEx_ValueChanged);
+        _FirstValueEx.OwnerInfo = new DepOwnerInfo(this, "FirstValueEx");
       }
     }
 
-    private void FirstDateEx_ValueChanged(object sender, EventArgs args)
+    private void FirstValueEx_ValueChanged(object sender, EventArgs args)
     {
-      FirstDate = _FirstDateEx.Value;
+      FirstValue = _FirstValueEx.Value;
     }
 
     #endregion
 
-    #region LastDate
+    #region LastValue
 
     /// <summary>
     /// Конечная дата диапазона.
-    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается максимально возможная дата.
+    /// Пустой диапазон не поддерживается. Если <see cref="DateRange"/>.IsEmpty=true, возвращается максимально возможная дата.
     /// Установка значения свойства может привести к изменению начальной даты, если задаваемое значение меньше, чем текущая начальная дата.
     /// </summary>
-    public DateTime LastDate
+    public DateTime LastValue
     {
       get
       {
@@ -3865,56 +3865,56 @@ namespace FreeLibSet.RI
         if (DateRange.IsEmpty)
           DateRange = new DateRange(value, value);
         else
-          DateRange = new DateRange(DataTools.Min(DateRange.FirstDate, value.Date), value);
+          DateRange = new DateRange(TimeTools.Min(DateRange.FirstDate, value.Date), value);
       }
     }
 
     /// <summary>
-    /// Управляемое значение для LastDate.
+    /// Управляемое значение для <see cref="LastValue"/>.
     /// </summary>
-    public DepValue<DateTime> LastDateEx
+    public DepValue<DateTime> LastValueEx
     {
       get
       {
-        InitLastDateEx();
-        return _LastDateEx;
+        InitLastValueEx();
+        return _LastValueEx;
       }
       set
       {
-        InitLastDateEx();
-        _LastDateEx.Source = value;
+        InitLastValueEx();
+        _LastValueEx.Source = value;
       }
     }
-    private DepInput<DateTime> _LastDateEx;
+    private DepInput<DateTime> _LastValueEx;
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства LastDateEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
+    /// Возвращает true, если обработчик свойства <see cref="LastValueEx"/> присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool InternalLastDateExConnected
+    public bool InternalLastValueExConnected
     {
       get
       {
-        if (_LastDateEx == null)
+        if (_LastValueEx == null)
           return false;
         else
-          return _LastDateEx.IsConnected;
+          return _LastValueEx.IsConnected;
       }
     }
 
-    private void InitLastDateEx()
+    private void InitLastValueEx()
     {
-      if (_LastDateEx == null)
+      if (_LastValueEx == null)
       {
-        _LastDateEx = new DepInput<DateTime>(LastDate, LastDateEx_ValueChanged);
-        _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
+        _LastValueEx = new DepInput<DateTime>(LastValue, LastValueEx_ValueChanged);
+        _LastValueEx.OwnerInfo = new DepOwnerInfo(this, "LastValueEx");
       }
     }
 
-    private void LastDateEx_ValueChanged(object sender, EventArgs args)
+    private void LastValueEx_ValueChanged(object sender, EventArgs args)
     {
-      LastDate = _LastDateEx.Value;
+      LastValue = _LastValueEx.Value;
     }
 
     #endregion
@@ -3923,10 +3923,10 @@ namespace FreeLibSet.RI
 
     /// <summary>
     /// Начальная дата диапазона.
-    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается минимально возможная дата.
+    /// Пустой диапазон не поддерживается. Если <see cref="DateRange"/>.IsEmpty=true, возвращается null.
     /// Установка значения свойства может привести к изменению конечной даты, если задаваемое значение больше, чем текущая конечная дата.
     /// </summary>
-    public DateTime? NFirstDate
+    public DateTime? NFirstValue
     {
       get
       {
@@ -3938,70 +3938,70 @@ namespace FreeLibSet.RI
       set
       {
         if (value.HasValue)
-          FirstDate = value.Value;
+          FirstValue = value.Value;
         else
           DateRange = DateRange.Empty;
       }
     }
 
     /// <summary>
-    /// Управляемое значение для NFirstDate.
+    /// Управляемое значение для <see cref="NFirstValue"/>.
     /// </summary>
-    public DepValue<DateTime?> NFirstDateEx
+    public DepValue<DateTime?> NFirstValueEx
     {
       get
       {
-        InitNFirstDateEx();
-        return _NFirstDateEx;
+        InitNFirstValueEx();
+        return _NFirstValueEx;
       }
       set
       {
-        InitNFirstDateEx();
-        _NFirstDateEx.Source = value;
+        InitNFirstValueEx();
+        _NFirstValueEx.Source = value;
       }
     }
-    private DepInput<DateTime?> _NFirstDateEx;
+    private DepInput<DateTime?> _NFirstValueEx;
 
-    private void InitNFirstDateEx()
+    private void InitNFirstValueEx()
     {
-      if (_NFirstDateEx == null)
+      if (_NFirstValueEx == null)
       {
-        _NFirstDateEx = new DepInput<DateTime?>(NFirstDate, NFirstDateEx_ValueChanged);
-        _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
+        _NFirstValueEx = new DepInput<DateTime?>(NFirstValue, NFirstValueEx_ValueChanged);
+        _NFirstValueEx.OwnerInfo = new DepOwnerInfo(this, "NFirstValueEx");
       }
     }
 
-    private void NFirstDateEx_ValueChanged(object sender, EventArgs args)
+    private void NFirstValueEx_ValueChanged(object sender, EventArgs args)
     {
-      NFirstDate = _NFirstDateEx.Value;
+      NFirstValue = _NFirstValueEx.Value;
     }
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства NFirstDateEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
+    /// Возвращает true, если обработчик свойства <see cref="NFirstValueEx"/> присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool InternalNFirstDateExConnected
+    public bool InternalNFirstValueExConnected
     {
       get
       {
-        if (_NFirstDateEx == null)
+        if (_NFirstValueEx == null)
           return false;
         else
-          return _NFirstDateEx.IsConnected;
+          return _NFirstValueEx.IsConnected;
       }
     }
 
     #endregion
 
-    #region NLastDate
+    #region NLastValue
 
     /// <summary>
     /// Конечная дата диапазона.
-    /// Пустой диапазон не поддерживается. Если DateRange.IsEmpty=true, возвращается максимально возможная дата.
+    /// Пустой диапазон не поддерживается. Если <see cref="DateRange"/>.IsEmpty=true, возвращается null.
     /// Установка значения свойства может привести к изменению начальной даты, если задаваемое значение меньше, чем текущая начальная дата.
     /// </summary>
-    public DateTime? NLastDate
+    public DateTime? NLastValue
     {
       get
       {
@@ -4013,57 +4013,57 @@ namespace FreeLibSet.RI
       set
       {
         if (value.HasValue)
-          LastDate = value.Value;
+          LastValue = value.Value;
         else
           DateRange = DateRange.Empty;
       }
     }
 
     /// <summary>
-    /// Управляемое значение для LastDate.
+    /// Управляемое значение для <see cref="LastValue"/>.
     /// </summary>
-    public DepValue<DateTime?> NLastDateEx
+    public DepValue<DateTime?> NLastValueEx
     {
       get
       {
-        InitNLastDateEx();
-        return _NLastDateEx;
+        InitNLastValueEx();
+        return _NLastValueEx;
       }
       set
       {
-        InitNLastDateEx();
-        _NLastDateEx.Source = value;
+        InitNLastValueEx();
+        _NLastValueEx.Source = value;
       }
     }
-    private DepInput<DateTime?> _NLastDateEx;
+    private DepInput<DateTime?> _NLastValueEx;
 
-    private void InitNLastDateEx()
+    private void InitNLastValueEx()
     {
-      if (_NLastDateEx == null)
+      if (_NLastValueEx == null)
       {
-        _NLastDateEx = new DepInput<DateTime?>(NLastDate, NLastDateEx_ValueChanged);
-        _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
+        _NLastValueEx = new DepInput<DateTime?>(NLastValue, NLastValueEx_ValueChanged);
+        _NLastValueEx.OwnerInfo = new DepOwnerInfo(this, "NLastValueEx");
       }
     }
 
-    private void NLastDateEx_ValueChanged(object sender, EventArgs args)
+    private void NLastValueEx_ValueChanged(object sender, EventArgs args)
     {
-      NLastDate = _NLastDateEx.Value;
+      NLastValue = _NLastValueEx.Value;
     }
 
     /// <summary>
-    /// Возвращает true, если обработчик свойства NLastDateEx присоединен к другим объектам в качестве входа или выхода.
-    /// Это свойство не предназначено для использования в пользовательском коде
+    /// Возвращает true, если обработчик свойства <see cref="NLastValueEx"/> присоединен к другим объектам в качестве входа или выхода.
+    /// Это свойство не предназначено для использования в пользовательском коде.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool InternalNLastDateExConnected
+    public bool InternalNLastValueExConnected
     {
       get
       {
-        if (_NLastDateEx == null)
+        if (_NLastValueEx == null)
           return false;
         else
-          return _NLastDateEx.IsConnected;
+          return _NLastValueEx.IsConnected;
       }
     }
 
@@ -4081,7 +4081,7 @@ namespace FreeLibSet.RI
       {
         if (_IsNotEmptyEx == null)
         {
-          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstValueEx, NLastValueEx, CalcIsNotEmptyEx);
           _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
         }
         return _IsNotEmptyEx;
@@ -4202,13 +4202,13 @@ namespace FreeLibSet.RI
       base.WriteChanges(part);
       if (DateRange.IsEmpty)
       {
-        part.Remove("FirstDate");
-        part.Remove("LastDate");
+        part.Remove("FirstValue");
+        part.Remove("LastValue");
       }
       else
       {
-        part.SetNullableDate("FirstDate", DateRange.FirstDate);
-        part.SetNullableDate("LastDate", DateRange.LastDate);
+        part.SetNullableDate("FirstValue", DateRange.FirstDate);
+        part.SetNullableDate("LastValue", DateRange.LastDate);
       }
       _OldDateRange = DateRange;
     }
@@ -4222,8 +4222,8 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      DateTime? FirstDate = part.GetNullableDate("FirstDate");
-      DateTime? LastDate = part.GetNullableDate("LastDate");
+      DateTime? FirstDate = part.GetNullableDate("FirstValue");
+      DateTime? LastDate = part.GetNullableDate("LastValue");
       if (FirstDate.HasValue && LastDate.HasValue)
         DateRange = new DateRange(FirstDate.Value, LastDate.Value);
       else
@@ -4264,7 +4264,7 @@ namespace FreeLibSet.RI
 
     /// <summary>
     /// Считывает значения, сохраняемые между сеансами работы, из заданной секции конфигурации.
-    /// Метод вызывается, только если OnSupportsCfgType() вернул true для заданного типа секции.
+    /// Метод вызывается, только если <see cref="OnSupportsCfgType(RIValueCfgType)"/> вернул true для заданного типа секции.
     /// </summary>
     /// <param name="part">Секция конфигурации для чтения значений</param>
     /// <param name="cfgType">Тип секции конфигурации</param>
@@ -4284,7 +4284,7 @@ namespace FreeLibSet.RI
 
   /// <summary>
   /// Поле выбора месяца и года.
-  /// Выбор пустого значения (YearMonth.Empty) не поддерживается
+  /// Выбор пустого значения (<see cref="FreeLibSet.Calendar.YearMonth.IsEmpty"/> = true) не поддерживается.
   /// </summary>
   [Serializable]
   public class YearMonthBox : Control
@@ -4610,8 +4610,8 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetInt("Year", Year);
-      part.SetInt("Month", Month);
+      part.SetInt32("Year", Year);
+      part.SetInt32("Month", Month);
       _OldYear = Year;
       _OldMonth = Month;
     }
@@ -4625,8 +4625,8 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      Year = part.GetInt("Year");
-      Month = part.GetInt("Month");
+      Year = part.GetInt32("Year");
+      Month = part.GetInt32("Month");
       _OldYear = Year;
       _OldMonth = Month;
     }
@@ -4650,8 +4650,8 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      part.SetInt(Name + "-Year", Year);
-      part.SetInt(Name + "-Month", Month);
+      part.SetInt32(Name + "-Year", Year);
+      part.SetInt32(Name + "-Month", Month);
     }
 
     /// <summary>
@@ -4664,8 +4664,8 @@ namespace FreeLibSet.RI
     {
       if (part.HasValue(Name + "-Year"))
       {
-        Year = part.GetInt(Name + "-Year");
-        Month = part.GetInt(Name + "-Month");
+        Year = part.GetInt32(Name + "-Year");
+        Month = part.GetInt32(Name + "-Month");
       }
     }
 
@@ -5171,9 +5171,9 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetInt("Year", Year);
-      part.SetInt("FirstMonth", FirstMonth);
-      part.SetInt("LastMonth", LastMonth);
+      part.SetInt32("Year", Year);
+      part.SetInt32("FirstMonth", FirstMonth);
+      part.SetInt32("LastMonth", LastMonth);
       _OldYear = _Year;
       _OldFirstMonth = FirstMonth;
       _OldLastMonth = LastMonth;
@@ -5188,9 +5188,9 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      Year = part.GetInt("Year");
-      FirstMonth = part.GetInt("FirstMonth");
-      LastMonth = part.GetInt("LastMonth");
+      Year = part.GetInt32("Year");
+      FirstMonth = part.GetInt32("FirstMonth");
+      LastMonth = part.GetInt32("LastMonth");
       _OldYear = Year;
       _OldFirstMonth = FirstMonth;
       _OldLastMonth = LastMonth;
@@ -5215,9 +5215,9 @@ namespace FreeLibSet.RI
     /// <param name="cfgType">Тип секции конфигурации</param>
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
-      part.SetInt(Name + "-Year", Year);
-      part.SetInt(Name + "-FirstMonth", FirstMonth);
-      part.SetInt(Name + "-LastMonth", LastMonth);
+      part.SetInt32(Name + "-Year", Year);
+      part.SetInt32(Name + "-FirstMonth", FirstMonth);
+      part.SetInt32(Name + "-LastMonth", LastMonth);
     }
 
     /// <summary>
@@ -5230,9 +5230,9 @@ namespace FreeLibSet.RI
     {
       if (part.HasValue(Name + "-Year"))
       {
-        Year = part.GetInt(Name + "-Year");
-        FirstMonth = part.GetInt(Name + "-FirstMonth");
-        LastMonth = part.GetInt(Name + "-LastMonth");
+        Year = part.GetInt32(Name + "-Year");
+        FirstMonth = part.GetInt32(Name + "-FirstMonth");
+        LastMonth = part.GetInt32(Name + "-LastMonth");
       }
     }
 
@@ -5481,7 +5481,7 @@ namespace FreeLibSet.RI
     public override void WriteChanges(CfgPart part)
     {
       base.WriteChanges(part);
-      part.SetInt("SelectedIndex", _SelectedIndex);
+      part.SetInt32("SelectedIndex", _SelectedIndex);
       _OldSelectedIndex = _SelectedIndex;
     }
 
@@ -5494,7 +5494,7 @@ namespace FreeLibSet.RI
     public override void ReadChanges(CfgPart part)
     {
       base.ReadChanges(part);
-      _SelectedIndex = part.GetInt("SelectedIndex");
+      _SelectedIndex = part.GetInt32("SelectedIndex");
       _OldSelectedIndex = SelectedIndex;
     }
 
@@ -5518,7 +5518,7 @@ namespace FreeLibSet.RI
     protected override void OnWriteValues(CfgPart part, RIValueCfgType cfgType)
     {
       if (Codes == null)
-        part.SetInt(Name, SelectedIndex);
+        part.SetInt32(Name, SelectedIndex);
       else
         part.SetString(Name, SelectedCode);
     }
@@ -5534,7 +5534,7 @@ namespace FreeLibSet.RI
       if (part.HasValue(Name))
       {
         if (Codes == null)
-          SelectedIndex = part.GetInt(Name);
+          SelectedIndex = part.GetInt32(Name);
         else
           SelectedCode = part.GetString(Name);
       }
@@ -5835,7 +5835,7 @@ namespace FreeLibSet.RI
     /// </summary>
     public CsvCodesTextBox()
     {
-      _SelectedCodes = DataTools.EmptyStrings;
+      _SelectedCodes = EmptyArray<string>.Empty;
       _OldSelectedCodes = _SelectedCodes;
       _CanBeEmptyMode = UIValidateState.Error;
     }
@@ -5890,7 +5890,7 @@ namespace FreeLibSet.RI
       set
       {
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Empty;
         _SelectedCodes = value;
         if (_SelectedCodesEx != null)
           _SelectedCodesEx.Value = value;
@@ -6145,7 +6145,7 @@ namespace FreeLibSet.RI
       base.ReadChanges(part);
       string s = part.GetString("SelectedCodes");
       if (s.Length == 0)
-        _SelectedCodes = DataTools.EmptyStrings;
+        _SelectedCodes = EmptyArray<string>.Empty;
       else
         _SelectedCodes = s.Split(',');
       _OldSelectedCodes = _SelectedCodes;
@@ -6185,7 +6185,7 @@ namespace FreeLibSet.RI
       {
         string s = part.GetString(Name);
         if (s.Length == 0)
-          _SelectedCodes = DataTools.EmptyStrings;
+          _SelectedCodes = EmptyArray<string>.Empty;
         else
           _SelectedCodes = s.Split(',');
       }
@@ -6212,7 +6212,7 @@ namespace FreeLibSet.RI
       if (codes == null)
         throw new ArgumentNullException("codes");
       _Codes = codes;
-      _SelectedCodes = DataTools.EmptyStrings;
+      _SelectedCodes = EmptyArray<string>.Empty;
       _OldSelectedCodes = _SelectedCodes;
       _CanBeEmptyMode = UIValidateState.Error;
       _UnknownCodeSeverity = UIValidateState.Error;
@@ -6298,7 +6298,7 @@ namespace FreeLibSet.RI
       set
       {
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Empty;
         _SelectedCodes = value;
         if (_SelectedCodesEx != null)
           _SelectedCodesEx.Value = value;
@@ -6574,7 +6574,7 @@ namespace FreeLibSet.RI
       base.ReadChanges(part);
       string s = part.GetString("SelectedCodes");
       if (s.Length == 0)
-        _SelectedCodes = DataTools.EmptyStrings;
+        _SelectedCodes = EmptyArray<string>.Empty;
       else
         _SelectedCodes = s.Split(',');
       _OldSelectedCodes = _SelectedCodes;
@@ -6614,7 +6614,7 @@ namespace FreeLibSet.RI
       {
         string s = part.GetString(Name);
         if (s.Length == 0)
-          _SelectedCodes = DataTools.EmptyStrings;
+          _SelectedCodes = EmptyArray<string>.Empty;
         else
           _SelectedCodes = s.Split(',');
       }

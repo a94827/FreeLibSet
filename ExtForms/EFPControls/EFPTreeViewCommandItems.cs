@@ -209,7 +209,9 @@ namespace FreeLibSet.Forms
 
     #region Копировать
 
-    private EFPCommandItem ciCopy, ciCopySettings;
+    private EFPCommandItem ciCopy;
+
+    internal EFPCommandItem ciCopySettings;
 
     private void DoCopy(object sender, EventArgs args)
     {

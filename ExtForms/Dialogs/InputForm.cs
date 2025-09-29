@@ -558,7 +558,7 @@ namespace FreeLibSet.Forms
       _Text = String.Empty;
       _MaxLength = 0;
       _CanBeEmptyMode = UIValidateState.Error;
-      _Items = DataTools.EmptyStrings;
+      _Items = EmptyArray<string>.Empty;
     }
 
     #endregion
@@ -678,7 +678,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value == null)
-          _Items = DataTools.EmptyStrings;
+          _Items = EmptyArray<string>.Empty;
         else
           _Items = value;
       }
@@ -946,7 +946,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Блок диалога для ввода одного числа.
-  /// Базовый класс для <see cref="IntInputDialog"/>, <see cref="SingleInputDialog"/>, <see cref="DoubleInputDialog"/> и <see cref="DecimalInputDialog"/>.
+  /// Базовый класс для <see cref="Int32InputDialog"/>, <see cref="SingleInputDialog"/>, <see cref="DoubleInputDialog"/> и <see cref="DecimalInputDialog"/>.
   /// </summary>
   public abstract class BaseNumInputDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
@@ -1289,7 +1289,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Блок диалога для ввода целого числа.
   /// </summary>
-  public sealed class IntInputDialog : BaseNumInputDialog<Int32>
+  public sealed class Int32InputDialog : BaseNumInputDialog<Int32>
   {
     #region Переопределенные методы
 
@@ -1300,7 +1300,7 @@ namespace FreeLibSet.Forms
     /// <returns>Провайдер управляющего элемента</returns>
     protected override EFPNumEditBoxBase<int> CreateControlProvider(EFPBaseProvider baseProvider)
     {
-      return new EFPIntEditBox(baseProvider, new IntEditBox());
+      return new EFPIntEditBox(baseProvider, new Int32EditBox());
     }
 
     /// <summary>
@@ -1309,7 +1309,7 @@ namespace FreeLibSet.Forms
     /// <param name="value">Значение</param>
     protected override void WriteConfigValue(int? value)
     {
-      ConfigPart.SetNullableInt(ConfigName, value);
+      ConfigPart.SetNullableInt32(ConfigName, value);
     }
 
     /// <summary>
@@ -1318,7 +1318,7 @@ namespace FreeLibSet.Forms
     /// <returns>Значение</returns>
     protected override int? ReadConfigValue()
     {
-      return ConfigPart.GetNullableInt(ConfigName);
+      return ConfigPart.GetNullableInt32(ConfigName);
     }
 
     /// <summary>

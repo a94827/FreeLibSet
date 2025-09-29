@@ -342,7 +342,7 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=314]"));
+        return DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=314]"));
       }
     }
 
@@ -375,7 +375,7 @@ namespace FreeLibSet.OLE.Excel
     {
       get
       {
-        return DataTools.GetBool(Base.Helper.GetProp(Base.Obj, "[DispID=343]"));
+        return DataTools.GetBoolean(Base.Helper.GetProp(Base.Obj, "[DispID=343]"));
       }
     }
 
@@ -1150,7 +1150,7 @@ namespace FreeLibSet.OLE.Excel
     /// </summary>
     public int Row
     {
-      get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=257]")); }
+      get { return DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=257]")); }
     }
 
 
@@ -1159,7 +1159,7 @@ namespace FreeLibSet.OLE.Excel
     /// </summary>
     public int Column
     {
-      get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=240]")); }
+      get { return DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=240]")); }
     }
 
     /// <summary>
@@ -2662,7 +2662,7 @@ namespace FreeLibSet.OLE.Excel
     /// </summary>
     public int FitToPagesWide
     {
-      get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=1014]")); }
+      get { return DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=1014]")); }
     }
     /// <summary>
     /// Размещение по высоте на заданном числе страниц.
@@ -2670,7 +2670,7 @@ namespace FreeLibSet.OLE.Excel
     /// </summary>
     public int FitToPagesTall
     {
-      get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=1013]")); }
+      get { return DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=1013]")); }
     }
 
     /// <summary>
@@ -2854,7 +2854,7 @@ namespace FreeLibSet.OLE.Excel
     /// </summary>
     public int Count
     {
-      get { return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=118]")); }
+      get { return DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=118]")); }
     }
 
     /// <summary>

@@ -130,7 +130,7 @@ namespace FreeLibSet.Data.SqlClient
     {
       formatInfo.NoParentheses = false;
       if (formatInfo.WantedColumnType == DBxColumnType.Unknown)
-        formatInfo.WantedColumnType = DBxColumnType.Int;
+        formatInfo.WantedColumnType = DBxColumnType.Int32;
 
       buffer.SB.Append("CASE WHEN ");
       buffer.FormatExpression(function.Arguments[0], formatInfo);
@@ -173,8 +173,8 @@ namespace FreeLibSet.Data.SqlClient
       List<DBxExpression> list = new List<DBxExpression>();
       expression.GetAllExpressions(list);
 
-      bool hasInt = false;
-      bool hasNoInt = false;
+      bool hasInteger = false;
+      bool hasNotInteger = false;
       foreach (DBxExpression expr2 in list)
       {
         DBxColumn col = expr2 as DBxColumn;
@@ -183,23 +183,23 @@ namespace FreeLibSet.Data.SqlClient
           DBxColumnStruct colStr;
           if (buffer.ColumnStructs.TryGetValue(col.ColumnName, out colStr))
           {
-            if (colStr.ColumnType == DBxColumnType.Int)
-              hasInt = true;
+            if (DBxTools.IsIntegerType(colStr.ColumnType))
+              hasInteger = true;
             else
-              hasNoInt = true;
+              hasNotInteger = true;
           }
         }
         DBxConst cnst = expr2 as DBxConst;
         if (cnst != null)
         {
-          if (cnst.ColumnType == DBxColumnType.Int)
-            hasInt = true;
+          if (DBxTools.IsIntegerType(cnst.ColumnType))
+            hasInteger = true;
           else
-            hasNoInt = true;
+            hasNotInteger = true;
         }
       }
 
-      return hasInt && (!hasNoInt);
+      return hasInteger && (!hasNotInteger);
     }
 
     #endregion
@@ -227,30 +227,12 @@ namespace FreeLibSet.Data.SqlClient
           buffer.SB.Append("BIT");
           break;
 
-        case DBxColumnType.Int:
-          if (column.MinValue == 0 && column.MaxValue == 0)
-            buffer.SB.Append("INT");
-          else if (column.MinValue >= 0 && column.MaxValue <= 255)
-            buffer.SB.Append("TINYINT");
-          else if (column.MinValue >= Int16.MinValue && column.MaxValue <= Int16.MaxValue)
-            buffer.SB.Append("SMALLINT");
-          else if (column.MinValue >= Int32.MinValue && column.MaxValue <= Int32.MaxValue)
-            buffer.SB.Append("INT");
-          else
-            buffer.SB.Append("BIGINT");
-          break;
-
-        case DBxColumnType.Float:
-          if (column.MinValue == 0 && column.MaxValue == 0)
-            buffer.SB.Append("FLOAT");
-          else if (column.MinValue >= Single.MinValue && column.MaxValue <= Single.MaxValue)
-            buffer.SB.Append("REAL");
-          else
-            buffer.SB.Append("FLOAT");
+        case DBxColumnType.Double:
+          buffer.SB.Append("FLOAT");
           break;
 
         case DBxColumnType.Decimal:
-          buffer.SB.Append("MONEY");
+          buffer.SB.Append("DECIMAL");
           break;
 
         case DBxColumnType.Date:
@@ -294,7 +276,8 @@ namespace FreeLibSet.Data.SqlClient
           break;
 
         default:
-          throw new BugException("Unknown coluumn type " + column.ColumnType.ToString());
+          base.FormatValueType(buffer, column);
+          break;
       }
     }
 

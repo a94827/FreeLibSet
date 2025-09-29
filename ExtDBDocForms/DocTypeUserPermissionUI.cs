@@ -238,7 +238,7 @@ efpMode.Enabled = false;
 
       string[] docTypeNames = GetDocTypeNames(args.Permission);
       if (docTypeNames == null)
-        docTypeNames = DataTools.EmptyStrings;
+        docTypeNames = EmptyArray<string>.Empty;
       if (docTypeNames.Length == 0)
       {
         if (CanBeEmpty)

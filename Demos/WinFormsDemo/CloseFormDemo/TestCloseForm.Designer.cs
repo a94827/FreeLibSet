@@ -35,7 +35,7 @@
       this.cbDialogResult = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.edDelay = new FreeLibSet.Controls.IntEditBox();
+      this.edDelay = new FreeLibSet.Controls.Int32EditBox();
       this.label2 = new System.Windows.Forms.Label();
       this.cbBanner = new System.Windows.Forms.CheckBox();
       this.panel1.SuspendLayout();
@@ -179,7 +179,7 @@
     private System.Windows.Forms.ComboBox cbDialogResult;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.GroupBox groupBox2;
-    private FreeLibSet.Controls.IntEditBox edDelay;
+    private FreeLibSet.Controls.Int32EditBox edDelay;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.CheckBox cbBanner;
   }

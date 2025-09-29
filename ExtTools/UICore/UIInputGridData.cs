@@ -8,33 +8,6 @@ using System.Text;
 
 namespace FreeLibSet.UICore
 {
-  #region UIHorizontalAlignment
-
-  /// <summary>
-  /// Specifies how an object or text in a control is horizontally aligned relative
-  /// to an element of the control.
-  /// </summary>
-  [Serializable]
-  public enum UIHorizontalAlignment
-  {
-    /// <summary>
-    /// The object or text is aligned on the left of the control element.
-    /// </summary>
-    Left = 0,
-
-    /// <summary>
-    /// The object or text is aligned on the right of the control element.
-    /// </summary>
-    Right = 1,
-
-    /// <summary>
-    /// The object or text is aligned in the center of the control element.
-    /// </summary>
-    Center = 2,
-  }
-
-  #endregion
-
   /// <summary>
   /// Табличные данные, форматирование столбцов и валидаторы, используемые просмотром для табличного ввода данных.
   /// </summary>
@@ -295,11 +268,11 @@ namespace FreeLibSet.UICore
         Type t = Column.DataType;
 
         if (t == typeof(DateTime) || t == typeof(bool))
-          _Align = UIHorizontalAlignment.Center;
-        else if (DataTools.IsNumericType(t))
-          _Align = UIHorizontalAlignment.Right;
+          _TextAlign = UIHorizontalAlignment.Center;
+        else if (MathTools.IsNumericType(t))
+          _TextAlign = UIHorizontalAlignment.Right;
         else
-          _Align = UIHorizontalAlignment.Left;
+          _TextAlign = UIHorizontalAlignment.Left;
 
         _Format = String.Empty;
         _CanBeEmptyMode = _Owner.CanBeEmptyMode;
@@ -344,12 +317,12 @@ namespace FreeLibSet.UICore
       /// Если свойство не установлено в явном виде, то определяется по типу данных столбца (<see cref="DataColumn.DataType"/>).
       /// Для числовых типов используется выравнивание по правому краю, для строк - по левому, для даты/времени и логического типа - по центру.
       /// </summary>
-      public UIHorizontalAlignment Align
+      public UIHorizontalAlignment TextAlign
       {
-        get { return _Align; }
-        set { _Align = value; }
+        get { return _TextAlign; }
+        set { _TextAlign = value; }
       }
-      private UIHorizontalAlignment _Align;
+      private UIHorizontalAlignment _TextAlign;
 
       /// <summary>
       /// Формат для числового столбца или столбца даты/времени.

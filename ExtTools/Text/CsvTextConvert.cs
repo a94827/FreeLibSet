@@ -452,7 +452,7 @@ namespace FreeLibSet.Text
 
       if (AutoDetectNewLine)
       {
-        NewLine = DataTools.GetNewLineSeparators(s);
+        NewLine = StringTools.GetNewLineSeparators(s);
         if (String.IsNullOrEmpty(NewLine))
           NewLine = Environment.NewLine;
       }
@@ -492,7 +492,7 @@ namespace FreeLibSet.Text
           throw new ParsingException(String.Format(Res.CsvTextConvert_Err_WithLineNumber, i + 1, e.Message));
         }
       }
-      return DataTools.MatrixFromRows<string>(a3);
+      return ArrayTools.MatrixFromRows<string>(a3);
     }
 
     private string[] SimpleToArray(string s)

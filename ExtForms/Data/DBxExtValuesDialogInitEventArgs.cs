@@ -205,9 +205,9 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueIntMonthDayBox AddInt(EFPMonthDayBox controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueInt32MonthDayBox AddInteger(EFPMonthDayBox controlProvider, string columnName, bool canMultiEdit)
     {
-      ExtValueIntMonthDayBox dvc = new ExtValueIntMonthDayBox(GetExtValue(columnName), controlProvider, canMultiEdit);
+      ExtValueInt32MonthDayBox dvc = new ExtValueInt32MonthDayBox(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }
@@ -221,9 +221,9 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueIntMonthDayTextBox AddInt(EFPMonthDayTextBox controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueInt32MonthDayTextBox AddInteger(EFPMonthDayTextBox controlProvider, string columnName, bool canMultiEdit)
     {
-      ExtValueIntMonthDayTextBox dvc = new ExtValueIntMonthDayTextBox(GetExtValue(columnName), controlProvider, canMultiEdit);
+      ExtValueInt32MonthDayTextBox dvc = new ExtValueInt32MonthDayTextBox(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }
@@ -238,9 +238,9 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueIntCheckBoxWithMonthDayBox AddInt(EFPCheckBox controlProvider1, EFPMonthDayBox controlProvider2, string columnName, bool canMultiEdit)
+    public ExtValueInt32CheckBoxWithMonthDayBox AddInteger(EFPCheckBox controlProvider1, EFPMonthDayBox controlProvider2, string columnName, bool canMultiEdit)
     {
-      ExtValueIntCheckBoxWithMonthDayBox dvc = new ExtValueIntCheckBoxWithMonthDayBox(GetExtValue(columnName), controlProvider1, controlProvider2, canMultiEdit);
+      ExtValueInt32CheckBoxWithMonthDayBox dvc = new ExtValueInt32CheckBoxWithMonthDayBox(GetExtValue(columnName), controlProvider1, controlProvider2, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }
@@ -349,15 +349,15 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueIntEditBox AddInt(EFPIntEditBox controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueInt32EditBox AddInt32(EFPIntEditBox controlProvider, string columnName, bool canMultiEdit)
     {
-      ExtValueIntEditBox dvc = new ExtValueIntEditBox(GetExtValue(columnName), controlProvider, canMultiEdit);
+      ExtValueInt32EditBox dvc = new ExtValueInt32EditBox(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }
 
     /*
-    public DocValueCheckBoxWithIntNumEditBox AddInt(EFPCheckBox ControlProvider1, IEFPNumEditBox ControlProvider2, string ColumnName, bool CanMultiEdit)
+    public DocValueCheckBoxWithIntNumEditBox AddInt32(EFPCheckBox ControlProvider1, IEFPNumEditBox ControlProvider2, string ColumnName, bool CanMultiEdit)
     {
       DocValueCheckBoxWithIntNumEditBox dvc = new DocValueCheckBoxWithIntNumEditBox(GetDocValue(ColumnName), ControlProvider1, ControlProvider2, CanMultiEdit);
       AddDocEditItem(dvc);
@@ -433,9 +433,9 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueIntListControl AddInt(IEFPListControl controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueInt32ListControl AddInt32(IEFPListControl controlProvider, string columnName, bool canMultiEdit)
     {
-      ExtValueIntListControl dvc = new ExtValueIntListControl(GetExtValue(columnName), controlProvider, canMultiEdit);
+      ExtValueInt32ListControl dvc = new ExtValueInt32ListControl(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }
@@ -443,16 +443,16 @@ namespace FreeLibSet.Forms.Data
     /// <summary>
     /// Добавляет связку для редактирования числового поля с помощью <see cref="ComboBox"/>, в котором можно
     /// ввести числовое значение напрямую или выбрать одно из предопределенных значений.
-    /// Значение поля связывается со свойством <see cref="EFPIntEditComboBox.Value"/>.
+    /// Значение поля связывается со свойством <see cref="EFPInt32EditComboBox.Value"/>.
     /// </summary>
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="columnName">Имя поля</param>
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueIntEditComboBox AddInt(EFPIntEditComboBox controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueInt32EditComboBox AddInt32(EFPInt32EditComboBox controlProvider, string columnName, bool canMultiEdit)
     {
-      ExtValueIntEditComboBox dvc = new ExtValueIntEditComboBox(GetExtValue(columnName), controlProvider, canMultiEdit);
+      ExtValueInt32EditComboBox dvc = new ExtValueInt32EditComboBox(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }
@@ -468,10 +468,10 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueIntEnumCodeListControl<T> AddIntEnumCode<T>(EFPListControl controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueInt32EnumCodeListControl<T> AddInt32EnumCode<T>(EFPListControl controlProvider, string columnName, bool canMultiEdit)
       where T : struct
     {
-      ExtValueIntEnumCodeListControl<T> dvc = new ExtValueIntEnumCodeListControl<T>(GetExtValue(columnName), controlProvider, canMultiEdit);
+      ExtValueInt32EnumCodeListControl<T> dvc = new ExtValueInt32EnumCodeListControl<T>(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }
@@ -491,7 +491,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов.
     /// В этом случае <see cref="CheckBox.ThreeState"/> устанавливается в true и значение <see cref="System.Windows.Forms.CheckState.Indeterminate"/> используется для отображения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueCheckBox AddBool(EFPCheckBox controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueCheckBox AddBoolean(EFPCheckBox controlProvider, string columnName, bool canMultiEdit)
     {
       ExtValueCheckBox dvc = new ExtValueCheckBox(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
@@ -508,9 +508,9 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueBoolRadioButtons AddBool(EFPRadioButtons controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueBooleanRadioButtons AddBoolean(EFPRadioButtons controlProvider, string columnName, bool canMultiEdit)
     {
-      ExtValueBoolRadioButtons dvc = new ExtValueBoolRadioButtons(GetExtValue(columnName), controlProvider, canMultiEdit);
+      ExtValueBooleanRadioButtons dvc = new ExtValueBooleanRadioButtons(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }
@@ -527,9 +527,9 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueBoolListControl AddBool(EFPListControl controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueBooleanListControl AddBoolean(EFPListControl controlProvider, string columnName, bool canMultiEdit)
     {
-      ExtValueBoolListControl dvc = new ExtValueBoolListControl(GetExtValue(columnName), controlProvider, canMultiEdit);
+      ExtValueBooleanListControl dvc = new ExtValueBooleanListControl(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
       return dvc;
     }

@@ -45,8 +45,13 @@
     <Compile Include="Collections\NumericStringComparerTests.cs" />
     <Compile Include="CommandLine\CommandLineParserTests.cs" />
     <Compile Include="Core\ExceptionFactoryTests.cs" />
+    <Compile Include="Core\MD5ToolsTests.cs" />
     <Compile Include="Data\AndFilterTests.cs" />
     <Compile Include="Data\CompareFilterTests.cs" />
+    <Compile Include="Data\GroupDbDataReaderWrapperTests.cs" />
+    <Compile Include="Data\IdArrayTests.cs" />
+    <Compile Include="Data\IdCollectionTests.cs" />
+    <Compile Include="Data\DataRowValuesTests.cs" />
     <Compile Include="Data\DbDataReaderValueTests.cs" />
     <Compile Include="Data\DBxDataRowExtValuesTests.cs" />
     <Compile Include="Data\DBxDataTableExtValuesTests.cs" />
@@ -71,7 +76,6 @@
     <Compile Include="Data\DBxToolsTests.cs" />
     <Compile Include="Data\DummyFilterTests.cs" />
     <Compile Include="Data\IdsFilterGeneratorTests.cs" />
-    <Compile Include="Data\IdsFilterTests.cs" />
     <Compile Include="Data\NotFilterTests.cs" />
     <Compile Include="Data\NotNullFilterTests.cs" />
     <Compile Include="Data\NumRangeCrossFilterTests.cs" />
@@ -82,7 +86,7 @@
     <Compile Include="Data\StringValueFilterTests.cs" />
     <Compile Include="Data\SubstringFilterTests.cs" />
     <Compile Include="Data\ValueFilterTests.cs" />
-    <Compile Include="Data\ValuesFilterTests.cs" />
+    <Compile Include="Data\ValueInListFilterTests.cs" />
     <Compile Include="DBF\DbfFieldTypeDetectorTests.cs" />
     <Compile Include="DBF\DbfFieldTypePreliminaryInfoTests.cs" />
     <Compile Include="Formatting\EditableDateTimeFormattersTests.cs" />
@@ -90,6 +94,7 @@
     <Compile Include="Formatting\FormatStringToolsTests.cs" />
     <Compile Include="Formatting\SimpleDigitalMaskProviderTests.cs" />
     <Compile Include="Formatting\StdMaskProviderTests.cs" />
+    <Compile Include="Data\IdToolsTests.cs" />
     <Compile Include="IO\FileBatchHandlerTests.cs" />
     <Compile Include="IO\FileCompressorTests.cs" />
     <Compile Include="IO\IniFileTests.cs" />
@@ -110,11 +115,9 @@
     <Compile Include="Collections\SingleScopeStringListTests.cs" />
     <Compile Include="Config\CfgPartTests.cs" />
     <Compile Include="Config\CfgPart_ConverterTests.cs" />
-    <Compile Include="Core\DataRowValueArrayTests.cs" />
-    <Compile Include="Core\DataTableValueArrayTests.cs" />
     <Compile Include="Core\DataToolsTests_AggregateFunctions.cs" />
-    <Compile Include="Core\DataToolsTests_Arrays.cs" />
-    <Compile Include="Core\DataToolsTests_Xml.cs" />
+    <Compile Include="Core\ArrayToolsTests.cs" />
+    <Compile Include="Core\XmlToolsTests.cs" />
     <Compile Include="Core\DisposableObjectTests.cs" />
     <Compile Include="Core\DummyNamedValuesTests.cs" />
     <Compile Include="Core\EnumerableTests.cs" />
@@ -126,7 +129,7 @@
     <Compile Include="Data\DataRowExtractorTests.cs" />
     <Compile Include="Data\DataViewSortBuilderTests.cs" />
     <Compile Include="Data\IdListTests.cs" />
-    <Compile Include="Data\TableAndIdListTests.cs" />
+    <Compile Include="Data\TableIdCollectionTests.cs" />
     <Compile Include="DBF\DbfFieldInfoTests.cs" />
     <Compile Include="DBF\DbfFileCopierTests.cs" />
     <Compile Include="DBF\DbfFileTests.cs" />
@@ -191,9 +194,9 @@
     <Compile Include="Core\DataToolsTests_DataRow.cs" />
     <Compile Include="Core\DataToolsTests_DataView.cs" />
     <Compile Include="Core\DataToolsTests_Other.cs" />
-    <Compile Include="Core\DataToolsTests_String.cs" />
-    <Compile Include="Core\DataToolsTests_Date.cs" />
-    <Compile Include="Core\DataToolsTests_Math.cs" />
+    <Compile Include="Core\StringToolsTests.cs" />
+    <Compile Include="Core\TimeToolsTests.cs" />
+    <Compile Include="Core\MathToolsTests.cs" />
     <Compile Include="Calendar\DateRangeListTests.cs" />
     <Compile Include="Calendar\DateRangeTests.cs" />
     <Compile Include="Collections\ListWithMRUTests.cs" />
@@ -207,7 +210,7 @@
     <Compile Include="Text\TextWithRowsTests.cs" />
     <Compile Include="UICore\DataTableTreeReorderHelperTests.cs" />
     <Compile Include="UICore\DataTableReorderHelperTests.cs" />
-    <Compile Include="UICore\NumArrayUpDownHandlerTests.cs" />
+    <Compile Include="UICore\NumericArrayUpDownHandlerTests.cs" />
     <Compile Include="UICore\UIInputGridDataTests.cs" />
     <Compile Include="UICore\UIPathInputHandlerTests.cs" />
     <Compile Include="UICore\UISelRCColumnTests.cs" />

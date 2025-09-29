@@ -192,12 +192,12 @@ namespace FreeLibSet.Forms.Reporting
       value = value.Replace('\t', ' ');
       if ((!isCsv) || _Settings.SingleLineField)
       {
-        for (int i = 0; i < DataTools.AllPossibleLineSeparators.Length; i++)
-          value = value.Replace(DataTools.AllPossibleLineSeparators[i], " ");
+        for (int i = 0; i < StringTools.AllPossibleLineSeparators.Length; i++)
+          value = value.Replace(StringTools.AllPossibleLineSeparators[i], " ");
       }
       if (_Settings.RemoveDoubleSpaces)
       {
-        value = DataTools.RemoveDoubleChars(value, ' ');
+        value = StringTools.RemoveDoubleChars(value, ' ');
         value = value.Trim();
       }
       return value;
@@ -242,19 +242,19 @@ namespace FreeLibSet.Forms.Reporting
 
         for (int i = 0; i < controlProvider.Control.RowCount; i++)
         {
-          EFPDataGridViewRowAttributesEventArgs rowArgs = controlProvider.DoGetRowAttributes(i, EFPDataGridViewAttributesReason.View);
+          EFPDataGridViewRowInfoEventArgs rowArgs = controlProvider.GetRowInfo(i, EFPDataViewInfoReason.View);
           lst.Clear();
           for (int j = 0; j < cols.Length; j++)
           {
             if (cols[j].Printable)
             {
-              EFPDataGridViewCellAttributesEventArgs cellArgs = controlProvider.DoGetCellAttributes(cols[j].Index);
+              EFPDataGridViewCellInfoEventArgs cellArgs = controlProvider.GetCellInfo(cols[j].Index);
               string value;
               if (cellArgs.ContentVisible)
               {
                 object v = cellArgs.FormattedValue;
                 if (v is Boolean)
-                  v = _Settings.GetBoolValue((bool)v);
+                  v = _Settings.GetBooleanValue((bool)v);
                 value = DataTools.GetString(v);
               }
               else
@@ -307,7 +307,7 @@ namespace FreeLibSet.Forms.Reporting
             InteractiveControl nc = ctrls[j];
             object v = nc.GetValue(node);
             if (v is Boolean)
-              v = _Settings.GetBoolValue((bool)v);
+              v = _Settings.GetBooleanValue((bool)v);
             string s = null;
             if (v is IFormattable)
             {

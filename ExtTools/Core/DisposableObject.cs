@@ -296,10 +296,10 @@ namespace FreeLibSet.Core
         }
       }
 #else
-      objTypes = DataTools.EmptyStrings;
-      counts = DataTools.EmptyInts;
-      disposeCounts = DataTools.EmptyInt64s;
-      finalizeCounts = DataTools.EmptyInt64s;
+      objTypes = EmptyArray<string>.Empty;
+      counts = EmptyArray<Int32>.Empty;
+      disposeCounts = EmptyArray<Int64>.Empty;
+      finalizeCounts = EmptyArray<Int64>.Empty;
 #endif
     }
 
@@ -326,8 +326,8 @@ namespace FreeLibSet.Core
         }
       }
 #else
-      objTypes = DataTools.EmptyStrings;
-      counts = DataTools.EmptyInts;
+      objTypes = EmptyArray<string>.Empty;
+      counts = EmptyArray<Int32>.Empty;
 #endif
     }
 

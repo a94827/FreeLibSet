@@ -138,10 +138,10 @@ namespace WinFormsDemo.ManualOrderColumnDemo
         }
         if (tv2 != null)
         {
-          tv2.Columns.AddText("Text", true, "Text");
-          tv2.Columns.AddInt("Order", true, "Order", 5);
-          tv2.Columns.AddInt("Id", true, "Id", 5);
-          tv2.Columns.AddInt("ParentId", true, "ParentId", 5);
+          tv2.Columns.AddText("Text", true, "Text", 10, 1);
+          tv2.Columns.AddInt32("Order", true, "Order", 5);
+          tv2.Columns.AddInt32("Id", true, "Id", 5);
+          tv2.Columns.AddInt32("ParentId", true, "ParentId", 5);
 
           tv2.Control.SelectionMode = parForm.efpMultiSelect.Checked ? TreeViewAdvSelectionMode.Multi : TreeViewAdvSelectionMode.Single;
           tv2.ReadOnly = parForm.efpReadOnly.Checked;
@@ -219,14 +219,14 @@ namespace WinFormsDemo.ManualOrderColumnDemo
     private static void InitOrder123(DataTable table)
     {
       for (int i = 0; i < table.Rows.Count; i++)
-        DataTools.SetInt(table.Rows[i], "Order", i + 1);
+        DataTools.SetInt32(table.Rows[i], "Order", i + 1);
     }
 
     private static void InitOrderRandom(DataTable table)
     {
       Random rnd = new Random();
       for (int i = 0; i < table.Rows.Count; i++)
-        DataTools.SetInt(table.Rows[i], "Order", rnd.Next(1, 100));
+        DataTools.SetInt32(table.Rows[i], "Order", rnd.Next(1, 100));
     }
 
     #endregion

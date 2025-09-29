@@ -525,11 +525,11 @@ namespace BRReportDemo
       table.Cells.CellStyle.FontName = "Courier";
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = MakeLongString("Non_breakable_space").Replace('_', DataTools.NonBreakSpaceChar);
+      table.Cells.Value = MakeLongString("Non_breakable_space").Replace('_', StringTools.NonBreakSpaceChar);
       table.Cells.CellStyle.WrapMode = BRWrapMode.WordWrap;
 
       table = sect.Bands.Add(1, 1);
-      table.Cells.Value = MakeLongString("Hyp^he^na^ti^on cha^rac^ters pre^sen^ted").Replace('^', DataTools.SoftHyphenChar);
+      table.Cells.Value = MakeLongString("Hyp^he^na^ti^on cha^rac^ters pre^sen^ted").Replace('^', StringTools.SoftHyphenChar);
       table.Cells.CellStyle.WrapMode = BRWrapMode.WordWrap;
 
       #endregion
@@ -681,7 +681,7 @@ namespace BRReportDemo
     public static string MakeLongString(string s)
     {
       string[] a = new string[20];
-      DataTools.FillArray<string>(a, s);
+      ArrayTools.FillArray<string>(a, s);
       return String.Join(", ", a);
     }
   }

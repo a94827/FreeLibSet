@@ -211,7 +211,7 @@ namespace FreeLibSet.Reporting
 
             XmlElement elT = elR.OwnerDocument.CreateElement("w:t", nmspcW);
             elR.AppendChild(elT);
-            XmlText dummyText = xmlDoc.CreateTextNode(DataTools.NonBreakSpaceStr); // какой-нибудь текст обязательно нужен, иначе размер строки ни на что не повлияет. Обычный пробел не считается.
+            XmlText dummyText = xmlDoc.CreateTextNode(StringTools.NonBreakSpaceStr); // какой-нибудь текст обязательно нужен, иначе размер строки ни на что не повлияет. Обычный пробел не считается.
             elT.AppendChild(dummyText);
 
             prevBandIsSimple = true;
@@ -640,7 +640,7 @@ namespace FreeLibSet.Reporting
       string s = sel.AsString;
       if (s.Length == 0)
         return;
-      string[] a = s.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+      string[] a = s.Split(StringTools.NewLineSeparators, StringSplitOptions.None);
       for (int i = 0; i < a.Length; i++)
       {
         WritePPr(elP, sel, columnWidth, isSimpleBand, keepWithNext);
@@ -676,10 +676,10 @@ namespace FreeLibSet.Reporting
           }
         }
 
-        if (a[i].IndexOf(DataTools.SoftHyphenChar) >= 0)
+        if (a[i].IndexOf(StringTools.SoftHyphenChar) >= 0)
         {
           // Обработка мягких переносов
-          string[] aa = a[i].Split(DataTools.SoftHyphenChar);
+          string[] aa = a[i].Split(StringTools.SoftHyphenChar);
           for (int j = 0; j < aa.Length; j++)
           {
             if (j > 0)
@@ -996,7 +996,7 @@ namespace FreeLibSet.Reporting
           if (sel.Value.ToString().Trim().Length == 0)
             return;
           valueText = sel.Value.ToString();
-          valueText = DataTools.ReplaceAny(valueText, BRFileTools.BadValueChars, ' ');
+          valueText = StringTools.ReplaceAny(valueText, BRFileTools.BadValueChars, ' ');
           typeText = "String";
           break;
         case "Boolean":
@@ -1026,7 +1026,7 @@ namespace FreeLibSet.Reporting
           }
           break;
         default:
-          if (DataTools.IsNumericType(sel.Value.GetType()))
+          if (MathTools.IsNumericType(sel.Value.GetType()))
           {
             valueText = Convert.ToString(sel.Value, StdConvert.NumberFormat);
             typeText = "Number";

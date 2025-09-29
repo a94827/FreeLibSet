@@ -36,8 +36,8 @@ namespace ExtTools_tests.Collections
 
       OrderSortedList<string, int> sut = new OrderSortedList<string, int>(dict);
       Assert.AreEqual(3, sut.Count, "Count");
-      Assert.AreEqual(new string[] { "BBB", "AAA", "aaa" }, DataTools.CreateArray<string>(sut.Keys), "Keys");
-      Assert.AreEqual(new int[] { 777, 222, 333 }, DataTools.CreateArray<int>(sut.Values), "Values");
+      Assert.AreEqual(new string[] { "BBB", "AAA", "aaa" }, ArrayTools.CreateArray<string>(sut.Keys), "Keys");
+      Assert.AreEqual(new int[] { 777, 222, 333 }, ArrayTools.CreateArray<int>(sut.Values), "Values");
     }
 
     [Test]
@@ -53,8 +53,8 @@ namespace ExtTools_tests.Collections
       Assert.Catch(delegate() { sut.Add("aaa", 333); });
 
       Assert.AreEqual(2, sut.Count, "Count");
-      Assert.AreEqual(new string[] { "BBB", "AAA" }, DataTools.CreateArray<string>(sut.Keys), "Keys");
-      Assert.AreEqual(new int[] { 777, 222 }, DataTools.CreateArray<int>(sut.Values), "Values");
+      Assert.AreEqual(new string[] { "BBB", "AAA" }, ArrayTools.CreateArray<string>(sut.Keys), "Keys");
+      Assert.AreEqual(new int[] { 777, 222 }, ArrayTools.CreateArray<int>(sut.Values), "Values");
     }
 
     #endregion
@@ -96,8 +96,8 @@ namespace ExtTools_tests.Collections
     {
       OrderSortedList<string, int> sut = CreateTestObject(false);
       sut["Bbb"] = 444;
-      Assert.AreEqual(new string[] { "CCC", "Bbb", "aaa" }, DataTools.CreateArray<string>(sut.Keys), "Keys");
-      Assert.AreEqual(new int[] { 333, 444, 111 }, DataTools.CreateArray<int>(sut.Values), "Values");
+      Assert.AreEqual(new string[] { "CCC", "Bbb", "aaa" }, ArrayTools.CreateArray<string>(sut.Keys), "Keys");
+      Assert.AreEqual(new int[] { 333, 444, 111 }, ArrayTools.CreateArray<int>(sut.Values), "Values");
     }
 
     [Test]
@@ -105,8 +105,8 @@ namespace ExtTools_tests.Collections
     {
       OrderSortedList<string, int> sut = CreateTestObject(true);
       sut["BBB"] = 444;
-      Assert.AreEqual(new string[] { "CCC", "Bbb", "aaa" }, DataTools.CreateArray<string>(sut.Keys), "Keys");
-      Assert.AreEqual(new int[] { 333, 444, 111 }, DataTools.CreateArray<int>(sut.Values), "Values");
+      Assert.AreEqual(new string[] { "CCC", "Bbb", "aaa" }, ArrayTools.CreateArray<string>(sut.Keys), "Keys");
+      Assert.AreEqual(new int[] { 333, 444, 111 }, ArrayTools.CreateArray<int>(sut.Values), "Values");
     }
 
     [Test]
@@ -114,8 +114,8 @@ namespace ExtTools_tests.Collections
     {
       OrderSortedList<string, int> sut = CreateTestObject(useComparer);
       sut["DDD"] = 444;
-      Assert.AreEqual(new string[] { "CCC", "Bbb", "aaa", "DDD" }, DataTools.CreateArray<string>(sut.Keys), "Keys");
-      Assert.AreEqual(new int[] { 333, 222, 111, 444 }, DataTools.CreateArray<int>(sut.Values), "Values");
+      Assert.AreEqual(new string[] { "CCC", "Bbb", "aaa", "DDD" }, ArrayTools.CreateArray<string>(sut.Keys), "Keys");
+      Assert.AreEqual(new int[] { 333, 222, 111, 444 }, ArrayTools.CreateArray<int>(sut.Values), "Values");
     }
 
     [Test]
@@ -322,8 +322,8 @@ namespace ExtTools_tests.Collections
       sut.Clear();
 
       Assert.AreEqual(0, sut.Count, "Count");
-      Assert.AreEqual(DataTools.EmptyStrings, sut.Keys.ToArray(), "Keys");
-      Assert.AreEqual(DataTools.EmptyInts, sut.Values.ToArray(), "Values");
+      Assert.AreEqual(EmptyArray<string>.Empty, sut.Keys.ToArray(), "Keys");
+      Assert.AreEqual(EmptyArray<Int32>.Empty, sut.Values.ToArray(), "Values");
     }
 
     [TestCase(false, "bbb", false)]

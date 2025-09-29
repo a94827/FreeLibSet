@@ -274,7 +274,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Новый объект для доступа к данным</returns>
     protected override IDataRowNamedValuesAccess CreateRowValueAccessObject()
     {
-      return new DBxDataRowValueArrayWithCache(DocTypeUI.TableCache);
+      return new DBxDataRowValuesWithCache(DocTypeUI.TableCache);
     }
 
     #endregion
@@ -316,7 +316,7 @@ namespace FreeLibSet.Forms.Docs
         throw new NullReferenceException("OriginalModel==null");
 #endif
 
-      Int32[] oldIds = SelectedIds;
+      IIdSet<Int32> oldIds = SelectedIds;
 
       if (AuxFilterGroupIds == null)
         Control.Model = _OriginalModel;
@@ -326,7 +326,7 @@ namespace FreeLibSet.Forms.Docs
         if (AuxFilterGroupIds.Length == 0)
           filter2 = new ValueFilter(DocTypeUI.DocType.GroupRefColumnName, 0);
         else
-          filter2 = new IdsFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
+          filter2 = new ValueInListFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
         Control.Model = new FilteredDataTableTreeModelWithIds<Int32>(_OriginalModel, filter2, _OriginalModel.IntegrityFlagColumnName);
       }
 
@@ -389,7 +389,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Игнорируется</returns>
     protected override bool OnEditData(EventArgs args)
     {
-      Int32[] ids = (State == UIDataState.Delete) ? SelectedIdsWithChildren : SelectedIds; // 17.02.2022
+      IIdSet<Int32> ids = (State == UIDataState.Delete) ? SelectedIdsWithChildren : SelectedIds; // 17.02.2022
       DocTypeUI.PerformEditing(ids, State, Control.FindForm().Modal, ViewHandler);
       return true;
     }
@@ -804,7 +804,7 @@ namespace FreeLibSet.Forms.Docs
             int pCol = srcRow.Table.Columns.IndexOf(mainColName);
             if (pCol >= 0)
             {
-              Int32 refId = DataTools.GetInt(srcRow, mainColName); // в ResRow может не быть базового поля
+              Int32 refId = DataTools.GetInt32(srcRow, mainColName); // в ResRow может не быть базового поля
               object refValue = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
               if (refValue == null)
                 resRow[i] = DBNull.Value; // 26.10.2016
@@ -843,7 +843,7 @@ namespace FreeLibSet.Forms.Docs
             int pCol = srcRow.Table.Columns.IndexOf(mainColName);
             if (pCol >= 0)
             {
-              Int32 refId = DataTools.GetInt(srcRow[mainColName, rowVer]);
+              Int32 refId = DataTools.GetInt32(srcRow[mainColName, rowVer]);
               value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
             }
             else
@@ -868,7 +868,7 @@ namespace FreeLibSet.Forms.Docs
       /// Вызывает EFPDocTreeView.UpdateRowsForIds()
       /// </summary>
       /// <param name="docIds"></param>
-      public override void UpdateRowsForIds(Int32[] docIds)
+      public override void UpdateRowsForIds(IIdSet<Int32> docIds)
       {
         if (Owner != null)
           Owner.UpdateRowsForIds(docIds);
@@ -890,7 +890,7 @@ namespace FreeLibSet.Forms.Docs
             if (Owner.CurrentId != 0)
             {
               if (newDoc.Values.IndexOf(DocTypeUI.DocType.TreeParentColumnName) >= 0)
-                newDoc.Values[DocTypeUI.DocType.TreeParentColumnName].SetInteger(Owner.CurrentId);
+                newDoc.Values[DocTypeUI.DocType.TreeParentColumnName].SetInt32(Owner.CurrentId);
             }
 
             // 10.06.2019

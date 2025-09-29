@@ -80,7 +80,7 @@ namespace ExtTools_tests.DBF
     public void AddBool()
     {
       DbfStruct sut = new DbfStruct();
-      sut.AddBool("F1");
+      sut.AddBoolean("F1");
       Assert.AreEqual(1, sut.Count, "Count");
       Assert.AreEqual("F1", sut[0].Name, "Name");
       Assert.AreEqual('L', sut[0].Type, "Type");
@@ -134,7 +134,7 @@ namespace ExtTools_tests.DBF
       DbfStruct sut = new DbfStruct();
       sut.AddString("F1", 20);
       sut.AddNum("F2", 5);
-      sut.AddBool("F3");
+      sut.AddBoolean("F3");
       Assert.AreEqual(3, sut.Count);
       return sut;
     }

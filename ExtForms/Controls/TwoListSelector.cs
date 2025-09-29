@@ -187,18 +187,18 @@ namespace FreeLibSet.Forms
 
     private void Init()
     {
-      _AllItems = DataTools.EmptyObjects;
+      _AllItems = EmptyArray<object>.Empty;
       _SelectedItemsInternal = null;
       _ItemInfoNeededArgs = new EFPTwoListSelectorItemInfoNeededEventArgs();
       _CanBeEmptyMode = UIValidateState.Error;
 
       if (EFPApp.ShowListImages)
         _AvailableGridViewProvider.Columns.AddImage("Image");
-      _AvailableGridViewProvider.Columns.AddTextFill("Text");
+      _AvailableGridViewProvider.Columns.AddTextFill("Text", true, String.Empty, 100, 1);
       _AvailableGridViewProvider.DisableOrdering();
       _AvailableGridViewProvider.Control.RowHeadersVisible = false;
       _AvailableGridViewProvider.Control.ColumnHeadersVisible = false;
-      _AvailableGridViewProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(AvailableGridViewProvider_GetCellAttributes);
+      _AvailableGridViewProvider.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(AvailableGridViewProvider_CellInfoNeeded);
       _AvailableGridViewProvider.ReadOnly = true;
       _AvailableGridViewProvider.Control.ReadOnly = true;
       _AvailableGridViewProvider.CanView = false;
@@ -213,11 +213,11 @@ namespace FreeLibSet.Forms
      
       if (EFPApp.ShowListImages)
         _SelectedGridViewProvider.Columns.AddImage("Image");
-      _SelectedGridViewProvider.Columns.AddTextFill("Text");
+      _SelectedGridViewProvider.Columns.AddTextFill("Text", false, String.Empty, 100, 1);
       _SelectedGridViewProvider.DisableOrdering();
       _SelectedGridViewProvider.Control.RowHeadersVisible = false;
       _SelectedGridViewProvider.Control.ColumnHeadersVisible = false;
-      _SelectedGridViewProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(SelectedGridViewProvider_GetCellAttributes);
+      _SelectedGridViewProvider.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(SelectedGridViewProvider_CellInfoNeeded);
       _SelectedGridViewProvider.ReadOnly = true;
       _SelectedGridViewProvider.CanInsert = false;
       _SelectedGridViewProvider.CanDelete = false;
@@ -488,7 +488,7 @@ namespace FreeLibSet.Forms
 
     #region Обработчики элементов
 
-    void AvailableGridViewProvider_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void AvailableGridViewProvider_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.RowIndex < 0 || args.RowIndex >= _AvailableGridViewProvider.Control.Rows.Count)
         return;
@@ -542,7 +542,7 @@ namespace FreeLibSet.Forms
       SelectedItems = SelectedItems;
     }
 
-    void SelectedGridViewProvider_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void SelectedGridViewProvider_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.RowIndex < 0 || args.RowIndex >= _SelectedGridViewProvider.Control.Rows.Count)
         return;

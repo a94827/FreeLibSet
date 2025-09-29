@@ -54,18 +54,23 @@ namespace FreeLibSet.Data.SQLite
     {
       switch (column.ColumnType)
       {
-        case DBxColumnType.Int:
-          if (column.MinValue == 0 && column.MaxValue == 0)
-            buffer.SB.Append("INT"); // основной тип
-          else if (column.MinValue >= Byte.MinValue && column.MaxValue <= Byte.MaxValue)
-            buffer.SB.Append("TINYINT");
-          else if (column.MinValue >= Int16.MinValue && column.MaxValue <= Int16.MaxValue)
+        // Для SQLite используется "INT" вместо "INTEGER"
+        case DBxColumnType.UInt16:
+          if (column.IsReplaceableType(DBxColumnType.Int16))
             buffer.SB.Append("SMALLINT");
-          else if (column.MinValue >= Int32.MinValue && column.MaxValue <= Int32.MaxValue)
+          else
+            buffer.SB.Append("INT");
+          break;
+        case DBxColumnType.Int32:
+          buffer.SB.Append("INT");
+          break;
+        case DBxColumnType.UInt32:
+          if (column.IsReplaceableType(DBxColumnType.Int32))
             buffer.SB.Append("INT");
           else
             buffer.SB.Append("BIGINT");
           break;
+
 
         case DBxColumnType.Guid:
           buffer.SB.Append("GUID");
@@ -168,7 +173,7 @@ namespace FreeLibSet.Data.SQLite
       // buffer.SB.Append(value.ToString("N"));
 
       byte[] a = value.ToByteArray();
-      DataTools.BytesToHex(buffer.SB, a, false);
+      StringTools.BytesToHex(buffer.SB, a, false);
 
       buffer.SB.Append(@"'");
     }

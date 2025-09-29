@@ -99,7 +99,7 @@ namespace FreeLibSet.Drawing
           {
             byte[] srcA = new byte[srcData.Height * srcData.Stride];
             byte[] resA = new byte[resData.Height * resData.Stride];
-            DataTools.FillArray<byte>(resA, 0);
+            ArrayTools.FillArray<byte>(resA, 0);
             Marshal.Copy(srcData.Scan0, srcA, 0, srcA.Length);
 
             for (int i = 0; i < source.Height; i++)

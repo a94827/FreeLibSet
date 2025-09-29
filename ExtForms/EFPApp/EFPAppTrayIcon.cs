@@ -401,7 +401,7 @@ namespace FreeLibSet.Forms
       if (CommandItems.Count > 0)
       {
         EFPContextMenu cm = new EFPContextMenu();
-        cm.Add(CommandItems);
+        cm.AddRange(CommandItems);
         cm.DefaultCommandItem = DefaultCommandItem;
         ni.ContextMenuStrip = cm.Menu;
       }

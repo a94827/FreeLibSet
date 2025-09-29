@@ -111,7 +111,7 @@ namespace FreeLibSet.Reporting
                 _Items[i] = BRWordWrapperPosType.Enabled;
             }
             break;
-          case DataTools.SoftHyphenChar:
+          case StringTools.SoftHyphenChar:
             _Items[i] = BRWordWrapperPosType.Hyphen;
             break;
           default:
@@ -348,15 +348,15 @@ namespace FreeLibSet.Reporting
       {
         case BRWordWrapperPosType.Space:
           // Перенос с удалением текущей позиции
-          _WrapString = DataTools.RemoveSoftHyphens(_Text.Substring(firstPos, w - 1));
+          _WrapString = StringTools.RemoveSoftHyphens(_Text.Substring(firstPos, w - 1));
           return lastPos + 1;
         case BRWordWrapperPosType.Hyphen:
           // Добавление знака "-"
-          _WrapString = DataTools.RemoveSoftHyphens(_Text.Substring(firstPos, w)) + "-";
+          _WrapString = StringTools.RemoveSoftHyphens(_Text.Substring(firstPos, w)) + "-";
           return lastPos + 1;
         default:
           // Перенос "по месту" без добавления / удаления символов
-          _WrapString = DataTools.RemoveSoftHyphens(_Text.Substring(firstPos, w));
+          _WrapString = StringTools.RemoveSoftHyphens(_Text.Substring(firstPos, w));
           return lastPos + 1;
       }
 

@@ -150,7 +150,7 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="name">Имя поля</param>
     /// <returns>Описание поля</returns>
-    public static DbfFieldInfo CreateBool(string name)
+    public static DbfFieldInfo CreateBoolean(string name)
     {
       return new DbfFieldInfo(name, 'L', 1, 0);
     }
@@ -583,7 +583,7 @@ namespace FreeLibSet.DBF
     /// Добавить логическое поле типа "L"
     /// </summary>
     /// <param name="name">Имя поля</param>
-    public void AddBool(string name)
+    public void AddBoolean(string name)
     {
       Add(new DbfFieldInfo(name, 'L', 1, 0));
     }
@@ -682,7 +682,7 @@ namespace FreeLibSet.DBF
     public string[] GetNames()
     {
       if (Count == 0)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
 
       string[] a = new string[Count];
       for (int i = 0; i < a.Length; i++)
@@ -1038,7 +1038,7 @@ namespace FreeLibSet.DBF
     //   while (rdr.Read())
     //   {
     //     string s=rdr.GetString("Code");
-    //     int x=rdr.GetInt(2);
+    //     int x=rdr.GetInt32(2);
     //   }
     // }
 
@@ -2164,7 +2164,7 @@ namespace FreeLibSet.DBF
 
         _RecNo = value;
         if (value == 0)
-          DataTools.FillArray<byte>(_RecordBuffer, 0);
+          ArrayTools.FillArray<byte>(_RecordBuffer, 0);
         else
         {
           _fsDBF.Position = _DataOffset + (value - 1) * _RecSize;
@@ -2256,7 +2256,7 @@ namespace FreeLibSet.DBF
     /// Для поля типа 'F' возвращает значение типа <see cref="System.Double"/>.
     /// Для поля типа 'L' возвращает true или false.
     /// Для поля типа 'D' возвращает <see cref="System.DateTime"/>.
-    /// Обычно удобнее использовать методы, возвращающие типизированное значение. Например, метод <see cref="GetInt(string)"/> возвращает числовое значение в том числе и для пустого поля.
+    /// Обычно удобнее использовать методы, возвращающие типизированное значение. Например, метод <see cref="GetInt32(string)"/> возвращает числовое значение в том числе и для пустого поля.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
@@ -2274,7 +2274,7 @@ namespace FreeLibSet.DBF
     /// Для поля типа 'F' возвращает значение типа <see cref="System.Double"/>.
     /// Для поля типа 'L' возвращает true или false.
     /// Для поля типа 'D' возвращает <see cref="System.DateTime"/>.
-    /// Обычно удобнее использовать методы, возвращающие типизированное значение. Например, метод <see cref="GetInt(int)"/> возвращает числовое значение в том числе и для пустого поля.
+    /// Обычно удобнее использовать методы, возвращающие типизированное значение. Например, метод <see cref="GetInt32(int)"/> возвращает числовое значение в том числе и для пустого поля.
     /// </summary>
     /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns>Значение</returns>
@@ -2311,7 +2311,7 @@ namespace FreeLibSet.DBF
             throw new DbfValueFormatException(RecNo, DBStruct[fieldIndex], GetString(fieldIndex), e);
           }
         case 'L':
-          return GetBool(fieldIndex); // 18.03.2017
+          return GetBoolean(fieldIndex); // 18.03.2017
         case 'D':
           return GetNullableDate(fieldIndex);
         default:
@@ -2403,9 +2403,9 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
-    public int GetInt(string fieldName)
+    public int GetInt32(string fieldName)
     {
-      return GetInt(InternalIndexOfField(fieldName));
+      return GetInt32(InternalIndexOfField(fieldName));
     }
 
     /// <summary>
@@ -2415,7 +2415,7 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns></returns>
-    public int GetInt(int fieldIndex)
+    public int GetInt32(int fieldIndex)
     {
 #if DEBUG
       CheckActiveRecord();
@@ -2445,7 +2445,7 @@ namespace FreeLibSet.DBF
               throw;
           }
         case 'L': // 11.03.2024
-          bool vBool = GetBool(fieldIndex);
+          bool vBool = GetBoolean(fieldIndex);
           return vBool ? 1 : 0;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
@@ -2502,7 +2502,7 @@ namespace FreeLibSet.DBF
               throw;
           }
         case 'L': // 11.03.2024
-          bool vBool = GetBool(fieldIndex);
+          bool vBool = GetBoolean(fieldIndex);
           return vBool ? 1L : 0L;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
@@ -2555,7 +2555,7 @@ namespace FreeLibSet.DBF
           }
 
         case 'L': // 11.03.2024
-          bool vBool = GetBool(fieldIndex);
+          bool vBool = GetBoolean(fieldIndex);
           return vBool ? 1f : 0f;
 
         default:
@@ -2608,7 +2608,7 @@ namespace FreeLibSet.DBF
               throw;
           }
         case 'L': // 11.03.2024
-          bool vBool = GetBool(fieldIndex);
+          bool vBool = GetBoolean(fieldIndex);
           return vBool ? 1.0 : 0.0;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
@@ -2660,7 +2660,7 @@ namespace FreeLibSet.DBF
               throw;
           }
         case 'L': // 11.03.2024
-          bool vBool = GetBool(fieldIndex);
+          bool vBool = GetBoolean(fieldIndex);
           return vBool ? 1m : 0m;
         default:
           throw new DbfFieldTypeException(DBStruct[fieldIndex]);
@@ -2673,9 +2673,9 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <returns>Значение</returns>
-    public bool GetBool(string fieldName)
+    public bool GetBoolean(string fieldName)
     {
-      return GetBool(InternalIndexOfField(fieldName));
+      return GetBoolean(InternalIndexOfField(fieldName));
     }
 
     /// <summary>
@@ -2684,7 +2684,7 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <returns>Значение</returns>
-    public bool GetBool(int fieldIndex)
+    public bool GetBoolean(int fieldIndex)
     {
 #if DEBUG
       CheckActiveRecord();
@@ -2697,7 +2697,7 @@ namespace FreeLibSet.DBF
           byte b = _RecordBuffer[_FieldOffsets[fieldIndex]];
           try
           {
-            return BoolFromChar((char)b) ?? false;
+            return BooleanFromChar((char)b) ?? false;
           }
           catch (Exception e)
           {
@@ -2718,7 +2718,7 @@ namespace FreeLibSet.DBF
             return mValue2 != 0m;
           }
           else if (value.Length == 1)
-            return BoolFromChar(value[0]) ?? false;
+            return BooleanFromChar(value[0]) ?? false;
           else
             throw new DbfValueFormatException(RecNo, DBStruct[fieldIndex], GetString(fieldIndex), null);
 
@@ -2732,7 +2732,7 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="ch">Символ из DBF-файла</param>
     /// <returns></returns>
-    internal static bool? BoolFromChar(char ch)
+    internal static bool? BooleanFromChar(char ch)
     {
       switch (ch)
       {
@@ -3091,7 +3091,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
-    /// Выполняет вызов SetNull(), SetString(), SetInt(),..., в зависимости от переданного значения.
+    /// Выполняет вызов SetNull(), SetString(), SetInt32(),..., в зависимости от переданного значения.
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <param name="value">Значение</param>
@@ -3102,7 +3102,7 @@ namespace FreeLibSet.DBF
 
     /// <summary>
     /// Устанавливает значение поля для текущей строки.
-    /// Выполняет вызов SetNull(), SetString(), SetInt(),..., в зависимости от переданного значения.
+    /// Выполняет вызов SetNull(), SetString(), SetInt32(),..., в зависимости от переданного значения.
     /// </summary>
     /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
@@ -3132,7 +3132,7 @@ namespace FreeLibSet.DBF
       }
       if (value is Boolean)
       {
-        SetBool(fieldIndex, (bool)value);
+        SetBoolean(fieldIndex, (bool)value);
         return;
       }
 
@@ -3252,7 +3252,7 @@ namespace FreeLibSet.DBF
               "value", value,
                 String.Format(Res.DbfFile_Arg_StringIsTooLong,
                 value.Length, DBStruct[fieldIndex].Name, fieldLength));
-          value = DataTools.PadRight(value, DBStruct[fieldIndex].Length);
+          value = StringTools.PadRight(value, DBStruct[fieldIndex].Length);
           System.Text.Encoding.ASCII.GetBytes(value, 0, DBStruct[fieldIndex].Length, _RecordBuffer, _FieldOffsets[fieldIndex]);
           break;
       }
@@ -3357,9 +3357,9 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <param name="value">Значение</param>
-    public void SetInt(string fieldName, int value)
+    public void SetInt32(string fieldName, int value)
     {
-      SetInt(InternalIndexOfField(fieldName), value);
+      SetInt32(InternalIndexOfField(fieldName), value);
     }
 
     /// <summary>
@@ -3367,7 +3367,7 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
-    public void SetInt(int fieldIndex, int value)
+    public void SetInt32(int fieldIndex, int value)
     {
       CheckNotReadOnly();
 #if DEBUG
@@ -3565,9 +3565,9 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="fieldName">Имя поля</param>
     /// <param name="value">Значение</param>
-    public void SetBool(string fieldName, bool value)
+    public void SetBoolean(string fieldName, bool value)
     {
-      SetBool(InternalIndexOfField(fieldName), value);
+      SetBoolean(InternalIndexOfField(fieldName), value);
     }
 
     /// <summary>
@@ -3575,7 +3575,7 @@ namespace FreeLibSet.DBF
     /// </summary>
     /// <param name="fieldIndex">Индекс поля от 0 до (<see cref="DBStruct"/>.Count-1)</param>
     /// <param name="value">Значение поля</param>
-    public void SetBool(int fieldIndex, bool value)
+    public void SetBoolean(int fieldIndex, bool value)
     {
       CheckNotReadOnly();
 #if DEBUG
@@ -3728,7 +3728,7 @@ namespace FreeLibSet.DBF
       CheckNotReadOnly();
       FlushRecord();
 
-      DataTools.FillArray<byte>(_RecordBuffer, (byte)' ');
+      ArrayTools.FillArray<byte>(_RecordBuffer, (byte)' ');
       _RecordCount++;
       _RecNo = _RecordCount;
       _IsNewRecord = true;
@@ -4458,7 +4458,7 @@ namespace FreeLibSet.DBF
       if (maxLen > 0)
       {
         _SpaceBuffer = new byte[maxLen];
-        DataTools.FillArray<byte>(_SpaceBuffer, (byte)' ');
+        ArrayTools.FillArray<byte>(_SpaceBuffer, (byte)' ');
       }
 
       #endregion

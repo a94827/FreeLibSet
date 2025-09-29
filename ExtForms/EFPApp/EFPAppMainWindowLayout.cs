@@ -600,7 +600,7 @@ namespace FreeLibSet.Forms
         {
           _MainMenu = new EFPMainMenu();
           _MainMenu.Name = "TheMainMenu";
-          _MainMenu.Add(EFPApp.CommandItems);
+          _MainMenu.AddRange(EFPApp.CommandItems);
           // ???? cmm.InitWindowMenu(MenuWindow);
           _MainMenu.Attach(MainWindow);
         }
@@ -617,7 +617,7 @@ namespace FreeLibSet.Forms
           EFPAppToolBar res = new EFPAppToolBar(src.Name);
           res.Info = new FormToolStripInfo(MainWindow);
           res.DisplayName = src.DisplayName;
-          res.Add(src);
+          res.AddRange(src);
 
           EFPAppToolBar currTB = null;
           if (Interface.CurrentMainWindowLayout != null)
@@ -668,7 +668,7 @@ namespace FreeLibSet.Forms
           _StatusBar.Visible = Interface.CurrentMainWindowLayout.StatusBar.Visible;
 
         EFPStatusBarPanels sbp = new EFPStatusBarPanels(_StatusBar, null);
-        sbp.Add(EFPApp.CommandItems);
+        sbp.AddRange(EFPApp.CommandItems);
         sbp.Attach();
 
         #endregion
@@ -730,24 +730,24 @@ namespace FreeLibSet.Forms
       {
         EFPAppToolBar toolBar = ToolBars[i];
         CfgPart cfgOneTB = cfgToolBars.GetChild(toolBar.Name, true);
-        cfgOneTB.SetBool("Visible", toolBar.Visible);
+        cfgOneTB.SetBoolean("Visible", toolBar.Visible);
         cfgOneTB.SetEnum<DockStyle>("Dock", toolBar.Dock);
         if (toolBar.UseLocation)
         {
-          cfgOneTB.SetInt("Left", toolBar.Location.X);
-          cfgOneTB.SetInt("Top", toolBar.Location.Y);
+          cfgOneTB.SetInt32("Left", toolBar.Location.X);
+          cfgOneTB.SetInt32("Top", toolBar.Location.Y);
           cfgOneTB.Remove("RowIndex");
         }
         else
         {
-          cfgOneTB.SetInt("RowIndex", toolBar.RowIndex);
+          cfgOneTB.SetInt32("RowIndex", toolBar.RowIndex);
           cfgOneTB.Remove("Left");
           cfgOneTB.Remove("Top");
         }
       }
 
       CfgPart cfgStatusBar = cfg.GetChild("StatusBar", true);
-      cfgStatusBar.SetBool("Visible", StatusBar.Visible);
+      cfgStatusBar.SetBoolean("Visible", StatusBar.Visible);
     }
 
     internal void ReadLayoutConfig(CfgPart cfg)
@@ -763,14 +763,14 @@ namespace FreeLibSet.Forms
           CfgPart cfgOneTB = cfgToolBars.GetChild(toolBar.Name, false);
           if (cfgOneTB != null)
           {
-            toolBar.Visible = cfgOneTB.GetBoolDef("Visible", toolBar.Visible);
+            toolBar.Visible = cfgOneTB.GetBooleanDef("Visible", toolBar.Visible);
             toolBar.Dock = cfgOneTB.GetEnumDef<DockStyle>("Dock", toolBar.Dock);
             if (cfgOneTB.HasValue("RowIndex"))
-              toolBar.RowIndex = cfgOneTB.GetInt("RowIndex");
+              toolBar.RowIndex = cfgOneTB.GetInt32("RowIndex");
             else
             {
-              toolBar.Location = new System.Drawing.Point(cfgOneTB.GetInt("Left"),
-                cfgOneTB.GetInt("Top"));
+              toolBar.Location = new System.Drawing.Point(cfgOneTB.GetInt32("Left"),
+                cfgOneTB.GetInt32("Top"));
             }
           }
         }
@@ -778,7 +778,7 @@ namespace FreeLibSet.Forms
 
       CfgPart cfgStatusBar = cfg.GetChild("StatusBar", false);
       if (cfgStatusBar != null)
-        StatusBar.Visible = cfgStatusBar.GetBoolDef("Visible", StatusBar.Visible);
+        StatusBar.Visible = cfgStatusBar.GetBooleanDef("Visible", StatusBar.Visible);
     }
 
     #endregion

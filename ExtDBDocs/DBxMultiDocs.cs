@@ -381,7 +381,7 @@ namespace FreeLibSet.Data.Docs
         {
           case DataRowState.Modified:
           case DataRowState.Unchanged:
-            Int32 docId = DataTools.GetInt(row, "Id");
+            Int32 docId = DataTools.GetInt32(row, "Id");
             docSel.Add(DocType.Name, docId);
             break;
         }
@@ -494,12 +494,12 @@ namespace FreeLibSet.Data.Docs
       if (docId == 0)
         return -1;
 #if DEBUG
-      if (DocIds.Length != DocCount)
+      if (DocIds.Count != DocCount)
         throw new BugException("DocIds length is wrong");
 #endif
 
-      if (DocIds.Length <= 3)
-        return Array.IndexOf<Int32>(DocIds, docId);
+      if (DocIds.Count <= 3)
+        return DocIds.IndexOf(docId);
       else
       {
         if (_DocIdIndexer == null)
@@ -528,16 +528,16 @@ namespace FreeLibSet.Data.Docs
     /// Также доступен в режиме добавления после вызова <see cref="DBxDocProvider.ApplyChanges(DataSet, bool)"/>.
     /// Если есть новые документы, которые не были сохранены, в массиве будут присутствовать фиктивные идентификаторы.
     /// </summary>
-    public Int32[] DocIds
+    public IdList<Int32> DocIds
     {
       get
       {
         if (_DocIds == null)
-          _DocIds = DataTools.GetIds(_Table);
+          _DocIds = (IdList<Int32>)(IdTools.GetIdsFromColumn<Int32>(_Table, DBSDocType.Id, true));
         return _DocIds;
       }
     }
-    private Int32[] _DocIds;
+    private IdList<Int32> _DocIds;
 
     internal void ResetDocIds()
     {
@@ -554,24 +554,24 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="docState">Состояние документов</param>
     /// <returns>Массив идентификаторов документов</returns>
-    public Int32[] GetDocIds(DBxDocState docState)
+    public IIdSet<Int32> GetDocIds(DBxDocState docState)
     {
-      List<Int32> lst = null;
+      IdList<Int32> lst = null;
       foreach (DataRow row in Table.Rows)
       {
         if (DBxDocSet.GetDocState(row) == docState)
         {
           if (lst == null)
-            lst = new List<Int32>();
+            lst = new IdList<Int32>();
 
           lst.Add((Int32)DBxDocSet.GetValue(row, "Id"));
         }
       }
 
       if (lst == null)
-        return DataTools.EmptyIds;
+        return IdList<Int32>.Empty;
       else
-        return lst.ToArray();
+        return lst;
     }
 
     #endregion
@@ -742,7 +742,7 @@ namespace FreeLibSet.Data.Docs
     {
       bool[] a = new bool[_Table.Columns.Count];
       for (int i = 0; i < _Table.Columns.Count; i++)
-        a[i] = DataTools.GetBool(_Table.Columns[i].ExtendedProperties["AllowDBNull"]);
+        a[i] = DataTools.GetBoolean(_Table.Columns[i].ExtendedProperties["AllowDBNull"]);
       _AllowDBNullFlags = a;
     }
 
@@ -1099,7 +1099,7 @@ namespace FreeLibSet.Data.Docs
       if (!DocSet.DocProvider.IsRealDocId(docId))
         return 0;
 
-      return DataTools.GetInt(_Table.ExtendedProperties["DocActionId" + docId.ToString()]);
+      return DataTools.GetInt32(_Table.ExtendedProperties["DocActionId" + docId.ToString()]);
     }
 
     internal void SetDocIdActionId(Int32 docId, Int32 actionId)
@@ -1130,7 +1130,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docId">Идентификатор добавляемого документа</param>
     public DBxSingleDoc View(Int32 docId)
     {
-      View(new Int32[] { docId });
+      View(IdArray<Int32>.FromId(docId));
       //return this[DocCount - 1];
       return GetDocById(docId); // 15.10.2015
     }
@@ -1140,35 +1140,22 @@ namespace FreeLibSet.Data.Docs
     /// документов В списке ранее открытых документов не должно быть документов с этим идентификатором
     /// </summary>
     /// <param name="docIds">Массив идентификаторов</param>
-    public void View(Int32[] docIds)
+    public void View(IEnumerable<Int32> docIds)
     {
-      if (docIds == null)
-        throw new ArgumentNullException("docIds");
-      if (docIds.Length < 1)
+      IIdSet<Int32> docIds2 = IdTools.AsIdSet<Int32>(docIds);
+      if (docIds2.Count < 1)
         throw ExceptionFactory.ArgIsEmpty("docIds");
-      for (int i = 0; i < docIds.Length; i++)
+      foreach (Int32 docId in docIds2)
       {
-        DocProvider.CheckIsRealDocId(docIds[i]); 
+        DocProvider.CheckIsRealDocId(docId); 
       }
 
       // 15.10.2015 CheckNotInTable(DocIds);
 
       ResetDocIds();
 
-      DataTable table2 = DocProvider.LoadDocData(DocType.Name, docIds);
+      DataTable table2 = DocProvider.LoadDocData(DocType.Name, docIds2);
       DoView(table2);
-    }
-
-    /// <summary>
-    /// Открывает документ с заданными идентификаторами на просмотр и добавляет его в список открытых
-    /// документов В списке ранее открытых документов не должно быть документов с этим идентификатором
-    /// </summary>
-    /// <param name="docIds">Список идентификаторов</param>
-    public void View(IdList docIds)
-    {
-      if (docIds == null)
-        throw new ArgumentNullException("docIds");
-      View(docIds.ToArray());
     }
 
     /// <summary>
@@ -1189,10 +1176,10 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="filter">Фильтр по таблице документов</param>
     /// <param name="docIds">Массив добавленных документов</param>
-    public void View(DBxFilter filter, out Int32[] docIds)
+    public void View(DBxFilter filter, out IIdSet<Int32> docIds)
     {
       DataTable table2 = DocProvider.LoadDocData(DocType.Name, filter);
-      docIds = DataTools.GetIds(table2);
+      docIds = IdTools.GetIdsFromColumn<Int32>(table2, DBSDocType.Id, true);
 
       DoView(table2);
     }
@@ -1314,12 +1301,14 @@ namespace FreeLibSet.Data.Docs
     /// на редактирование. В списке ранее открытых документов не должно быть документов с этими идентификаторами
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов</param>
-    public void Edit(Int32[] docIds)
+    public void Edit(IEnumerable<Int32> docIds)
     {
       CheckCanModify();
 
+      IIdSet<Int32> docIds2 = IdTools.AsIdSet<Int32>(docIds);
+
       //int OldDocCount = DocCount;
-      View(docIds);
+      View(docIds2);
       /*
       for (int i = OldDocCount; i < FTable.Rows.Count; i++)
       {
@@ -1330,16 +1319,16 @@ namespace FreeLibSet.Data.Docs
 
       // 15.10.2015
       // Может быть, часть строк были уже открыты на просмотр или на редактирование
-      SetEditState(docIds);
+      SetEditState(docIds2);
     }
 
-    private void SetEditState(Int32[] docIds)
+    private void SetEditState(IIdSet<Int32> docIds)
     {
-      for (int i = 0; i < docIds.Length; i++)
+      foreach (Int32 docId in docIds)
       {
-        DataRow row = _Table.Rows.Find(docIds[i]);
+        DataRow row = _Table.Rows.Find(docId);
         if (row == null)
-          throw new BugException("DataRow is lost for DocId=" + docIds[i].ToString());
+          throw new BugException("DataRow is lost for DocId=" + docId.ToString());
         int rowIndex = _Table.Rows.IndexOf(row);
         DBxSingleDoc doc = new DBxSingleDoc(this, rowIndex);
         switch (row.RowState)
@@ -1357,24 +1346,10 @@ namespace FreeLibSet.Data.Docs
             break;
           default:
             throw new InvalidOperationException(String.Format(Res.DBxMultiDocs_Err_SetDocState, 
-              DocType.SingularTitle, docIds[i], "Edit", doc.DocState));
+              DocType.SingularTitle, docId, "Edit", doc.DocState));
         }
       }
     }
-
-
-    /// <summary>
-    /// Добавляет в таблицу открытых документов документы с заданными идентификаторами и переводит их состояние
-    /// на редактирование. В списке ранее открытых документов не должно быть документов с этими идентификаторами
-    /// </summary>
-    /// <param name="docIds">Список идентификаторов документов</param>
-    public void Edit(IdList docIds)
-    {
-      if (docIds == null)
-        throw new ArgumentNullException("docIds");
-      Edit(docIds.ToArray());
-    }
-
 
     /// <summary>
     /// Открывает документ с заданным идентификатором на редактирование и добавляет его в список открытых
@@ -1385,7 +1360,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Объект доступа к документу</returns>
     public DBxSingleDoc Edit(Int32 docId)
     {
-      Edit(new Int32[] { docId });
+      Edit(IdArray<Int32>.FromId(docId));
       //return this[DocCount - 1];
       return GetDocById(docId); // 15.10.2015
     }
@@ -1397,7 +1372,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="filter">Фильтр по таблице документов</param>
     public void Edit(DBxFilter filter)
     {
-      Int32[] DocIds;
+      IIdSet<Int32> DocIds;
       Edit(filter, out DocIds);
     }
 
@@ -1407,7 +1382,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="filter">Фильтр по таблице документов</param>
     /// <param name="docIds">Массив идентификаторов добавленных документов</param>
-    public void Edit(DBxFilter filter, out Int32[] docIds)
+    public void Edit(DBxFilter filter, out IIdSet<Int32> docIds)
     {
       View(filter, out docIds);
       SetEditState(docIds);
@@ -1484,17 +1459,19 @@ namespace FreeLibSet.Data.Docs
     /// добавляет документы в список открытых. Документы получают состояние Insert
     /// В списке могут быть другие документы в состоянии View, Edit и Insert
     /// </summary>
-    public void InsertCopy(Int32[] docIds)
+    public void InsertCopy(IEnumerable<Int32> docIds)
     {
       CheckCanModify();
 
+      IIdSet<Int32> docIds2 = IdTools.AsIdSet<Int32>(docIds);
+
       //int OldDocCount = DocCount;
-      View(docIds);
+      View(docIds2);
 
       DataSet tempDS = new DataSet();
 
-      for (int i = 0; i < docIds.Length; i++)
-        DoInsertCopy1(tempDS, docIds[i]);
+      foreach (Int32 docId in docIds2)
+        DoInsertCopy1(tempDS, docId);
 
       DBxDocSet.DoInsertCopy2(tempDS, Table.DataSet, DocSet.DocProvider);
 
@@ -1506,21 +1483,6 @@ namespace FreeLibSet.Data.Docs
     }
 
     /// <summary>
-    /// Открывает для просмотра документы с заданными идентификаторами, заменяет идентификаторы на временные и
-    /// добавляет документы в список открытых. Документы получают состояние Insert
-    /// В списке могут быть другие документы в состоянии View, Edit и Insert
-    /// </summary>
-    /// <param name="docIds">Список идентификаторов документов</param>
-    public void InsertCopy(IdList docIds)
-    {
-      if (docIds == null)
-        throw new ArgumentNullException("docIds");
-      InsertCopy(docIds.ToArray());
-    }
-
-
-
-    /// <summary>
     /// Открывает для просмотра документ с заданным идентификатором, заменяет идентификатор на временный и
     /// добавляет документ в список открытых. Документ получает состояние Insert
     /// В списке могут быть другие документы в состоянии View, Edit и Insert
@@ -1528,7 +1490,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docId">Идентификатор оригинального документа</param>
     public DBxSingleDoc InsertCopy(Int32 docId)
     {
-      InsertCopy(new Int32[] { docId });
+      InsertCopy(IdArray<Int32>.FromId(docId));
       //return this[DocCount - 1];
       return GetDocById(docId); // 15.10.2015
     }
@@ -1552,9 +1514,9 @@ namespace FreeLibSet.Data.Docs
       CheckCanModify();
 
       DataSet tempDS = new DataSet();
-      Int32[] viewDocIds = GetDocIds(DBxDocState.View);
-      for (int i = 0; i < viewDocIds.Length; i++)
-        DoInsertCopy1(tempDS, viewDocIds[i]);
+      IIdSet<Int32> viewDocIds = GetDocIds(DBxDocState.View);
+      foreach(Int32 viewDocId in viewDocIds)
+        DoInsertCopy1(tempDS, viewDocId);
 
       DBxDocSet.DoInsertCopy2(tempDS, Table.DataSet, DocSet.DocProvider);
 
@@ -1604,12 +1566,12 @@ namespace FreeLibSet.Data.Docs
     /// Помещает документы с заданными идентификаторами в список на удаление
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов</param>
-    public void Delete(Int32[] docIds)
+    public void Delete(IEnumerable<Int32> docIds)
     {
       CheckCanModify();
 
-      if (docIds == null)
-        throw new ArgumentNullException("docIds");
+      IIdSet<Int32> docIds2 = IdTools.AsIdSet<Int32>(docIds);
+
       //if (docIds.Length < 1)
       //  throw new ArgumentException("Массив идентификаторов нулевой длины", "docIds");
       //for (int i = 0; i < docIds.Length; i++)
@@ -1618,16 +1580,16 @@ namespace FreeLibSet.Data.Docs
       //    throw new ArgumentException("В позиции " + i.ToString() + " задан недопустимый идентификатор документа " + docIds[i].ToString());
       //}
 
-      CheckNotInTable(docIds);
+      CheckNotInTable(docIds2);
 
       ResetDocIds();
 
       int oldDocCount = DocCount;
 
-      DataTable table2 = DocProvider.LoadDocData(DocType.Name, docIds);
+      DataTable table2 = DocProvider.LoadDocData(DocType.Name, docIds2);
       DoView(table2);
 
-      if (DocCount != oldDocCount + docIds.Length)
+      if (DocCount != oldDocCount + docIds2.Count)
         throw new BugException("Invalid DocCount");
 
       if (DocSet.UseTestDocument)
@@ -1678,25 +1640,13 @@ namespace FreeLibSet.Data.Docs
       _DocValues.ResetBuffer();
     }
 
-
-    /// <summary>
-    /// Помещает документы с заданными идентификаторами в список на удаление
-    /// </summary>
-    /// <param name="docIds">Список идентификаторов документов</param>
-    public void Delete(IdList docIds)
-    {
-      if (docIds == null)
-        throw new ArgumentNullException("docIds");
-      Delete(docIds.ToArray());
-    }
-
     /// <summary>
     /// Помещает документ с заданным идентификатором в список на удаление
     /// </summary>
     /// <param name="docId">Идентификатор удаляемого документа</param>
     public void Delete(Int32 docId)
     {
-      Delete(new Int32[] { docId });
+      Delete(IdArray<Int32>.FromId(docId));
     }
 
     /// <summary>
@@ -1773,13 +1723,13 @@ namespace FreeLibSet.Data.Docs
 
     #region Проверочные методы
 
-    private void CheckNotInTable(Int32[] docIds)
+    private void CheckNotInTable(IIdSet<Int32> docIds)
     {
-      for (int i = 0; i < docIds.Length; i++)
+      foreach (Int32 docId in docIds)
       {
-        if (_Table.Rows.Contains(docIds[i]))
+        if (_Table.Rows.Contains(docId))
           throw new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_DocInDocSet, 
-            DocType.SingularTitle, docIds[i]));
+            DocType.SingularTitle, docId));
       }
     }
 

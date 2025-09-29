@@ -22,7 +22,7 @@ namespace FreeLibSet.Parsing
     /// "возврат каретки" и "табуляция"
     /// </summary>
     public SpaceParser()
-      : this(' ', DataTools.NonBreakSpaceChar, '\r', '\n', 't')
+      : this(' ', StringTools.NonBreakSpaceChar, '\r', '\n', 't')
     {
     }
 

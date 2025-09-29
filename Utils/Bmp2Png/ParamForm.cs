@@ -50,63 +50,63 @@ namespace Bmp2Png
     {
       #region Запрос параметров
 
-      RegistryCfg Cfg = new RegistryCfg(@"HKEY_CURRENT_USER\Software\FreeLibSet\Bmp2Png");
+      RegistryCfg cfg = new RegistryCfg(@"HKEY_CURRENT_USER\Software\FreeLibSet\Bmp2Png");
       ParamForm frm = new ParamForm();
-      frm.efpSrcDir.Text = Cfg.GetString("SourceDir");
-      frm.efpResDir.Text = Cfg.GetString("ResDir");
-      frm.efpSubDirs.Checked = Cfg.GetBool("SubDirs");
+      frm.efpSrcDir.Text = cfg.GetString("SourceDir");
+      frm.efpResDir.Text = cfg.GetString("ResDir");
+      frm.efpSubDirs.Checked = cfg.GetBoolean("SubDirs");
       if (EFPApp.ShowDialog(frm, true) != DialogResult.OK)
         return;
-      Cfg.SetString("SourceDir", frm.efpSrcDir.Text);
-      Cfg.SetString("ResDir", frm.efpResDir.Text);
-      Cfg.SetBool("SubDirs", frm.efpSubDirs.Checked);
+      cfg.SetString("SourceDir", frm.efpSrcDir.Text);
+      cfg.SetString("ResDir", frm.efpResDir.Text);
+      cfg.SetBoolean("SubDirs", frm.efpSubDirs.Checked);
 
       #endregion
 
       int cnt = 0;
-      int InvalidFFCount = 0;
+      int invalidFFCount = 0;
       using (Splash spl = new Splash(new string[] { "Поиск файлов", "Преобразование" }))
       {
-        AbsPath SrcDir = new AbsPath(frm.efpSrcDir.Text);
-        AbsPath ResDir = new AbsPath(frm.efpResDir.Text);
-        string[] aFiles1 = System.IO.Directory.GetFiles(SrcDir.Path, "*.bmp",
+        AbsPath srcDir = new AbsPath(frm.efpSrcDir.Text);
+        AbsPath resDir = new AbsPath(frm.efpResDir.Text);
+        string[] aFiles1 = System.IO.Directory.GetFiles(srcDir.Path, "*.bmp",
           frm.efpSubDirs.Checked ? System.IO.SearchOption.AllDirectories : System.IO.SearchOption.AllDirectories);
-        string[] aFiles2 = System.IO.Directory.GetFiles(SrcDir.Path, "*.ico",
+        string[] aFiles2 = System.IO.Directory.GetFiles(srcDir.Path, "*.ico",
           frm.efpSubDirs.Checked ? System.IO.SearchOption.AllDirectories : System.IO.SearchOption.AllDirectories);
-        string[] aFiles = DataTools.MergeArrays<string>(aFiles1, aFiles2);
+        string[] aFiles = ArrayTools.MergeArrays<string>(aFiles1, aFiles2);
         spl.Complete();
         spl.PercentMax = aFiles.Length;
         spl.AllowCancel = true;
         for (int i = 0; i < aFiles.Length; i++)
         {
-          AbsPath SrcFile = new AbsPath(aFiles[i]);
-          string diff = aFiles[i].Substring(SrcDir.SlashedPath.Length);
-          AbsPath ResFile = new AbsPath(ResDir, diff).ChangeExtension(".png");
-          if (ConvertOneFile(SrcFile, ResFile))
+          AbsPath srcFile = new AbsPath(aFiles[i]);
+          string diff = aFiles[i].Substring(srcDir.SlashedPath.Length);
+          AbsPath resFile = new AbsPath(resDir, diff).ChangeExtension(".png");
+          if (ConvertOneFile(srcFile, resFile))
             cnt++;
           else
-            InvalidFFCount++;
+            invalidFFCount++;
           spl.IncPercent();
         }
       }
 
-      EFPApp.MessageBox("Преобразовано файлов: " + cnt.ToString() + ". Имеют неподходящий формат: " + InvalidFFCount.ToString());
+      EFPApp.MessageBox("Преобразовано файлов: " + cnt.ToString() + ". Имеют неподходящий формат: " + invalidFFCount.ToString());
     }
 
     #endregion
 
     #region Преобразование одного файла
 
-    private static bool ConvertOneFile(AbsPath SrcFile, AbsPath ResFile)
+    private static bool ConvertOneFile(AbsPath srcFile, AbsPath resFile)
     {
-      Bitmap bmp = Image.FromFile(SrcFile.Path) as Bitmap;
+      Bitmap bmp = Image.FromFile(srcFile.Path) as Bitmap;
       //if (bmp.PixelFormat != System.Drawing.Imaging.PixelFormat.Format4bppIndexed)
       //  return false;
 
-      if (String.Equals(SrcFile.Extension, ".bmp", StringComparison.OrdinalIgnoreCase))
+      if (String.Equals(srcFile.Extension, ".bmp", StringComparison.OrdinalIgnoreCase))
         bmp.MakeTransparent(Color.Magenta);
-      FileTools.ForceDirs(ResFile.ParentDir);
-      bmp.Save(ResFile.Path);
+      FileTools.ForceDirs(resFile.ParentDir);
+      bmp.Save(resFile.Path);
       return true;
     }
 

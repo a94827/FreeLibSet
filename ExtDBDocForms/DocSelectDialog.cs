@@ -63,7 +63,7 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("docTypeUI");
       _DocTypeUI = docTypeUI;
       _SelectionMode = DocSelectionMode.Single;
-      _DocIds = DataTools.EmptyIds;
+      _DocIds = IdArray<Int32>.Empty;
       _CanBeEmpty = false;
       _DialogPosition = new EFPDialogPosition();
 
@@ -128,37 +128,25 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public Int32 DocId
     {
-      get
-      {
-        if (_DocIds.Length == 0)
-          return 0;
-        else
-          return _DocIds[0];
-      }
-      set
-      {
-        if (value == 0)
-          _DocIds = DataTools.EmptyIds;
-        else
-          _DocIds = new Int32[1] { value };
-      }
+      get { return _DocIds.SingleId; }
+      set { _DocIds = IdArray<Int32>.FromId(value); }
     }
 
     /// <summary>
     /// Вход-выход. Идентификаторы выбранных документов при <see cref="MultiSelect"/>=true.
     /// </summary>
-    public Int32[] DocIds
+    public IIdSet<Int32> DocIds
     {
       get { return _DocIds; }
       set
       {
         if (value == null)
-          _DocIds = DataTools.EmptyIds;
+          _DocIds = IdArray<Int32>.Empty;
         else
           _DocIds = value;
       }
     }
-    private Int32[] _DocIds;
+    private IIdSet<Int32> _DocIds;
 
     /// <summary>
     /// Заголовок блока диалога.
@@ -212,12 +200,12 @@ namespace FreeLibSet.Forms.Docs
     /// Если null (по умолчанию), то выбор осуществляется с помощью формы <see cref="DocTableViewForm"/>, включая табличку фильтров.
     /// Если свойство установлено, то выбор осуществляется с помощью упрощенной формы.
     /// </summary>
-    public IdList FixedDocIds
+    public IIdSet<Int32> FixedDocIds
     {
       get { return _FixedDocIds; }
       set { _FixedDocIds = value; }
     }
-    private IdList _FixedDocIds;
+    private IIdSet<Int32> _FixedDocIds;
 
     /// <summary>
     /// Внешний объект, определяющий начальные значения при создании документа внутри этого диалога.
@@ -373,7 +361,7 @@ namespace FreeLibSet.Forms.Docs
           gh.Filters = Filters;
         gh.CommandItems.CanEditFilters = false; // 09.07.2019
         gh.ExternalEditorCaller = EditorCaller;
-        gh.Ids = DocIds;
+        gh.Ids = IdTools.AsIdArray<Int32>(DocIds);
 
         gh.CanBeEmpty = CanBeEmpty;
         gh.OrderMode = EFPDocSelGridViewOrderMode.Manual;
@@ -466,7 +454,7 @@ namespace FreeLibSet.Forms.Docs
         return false;
       if (SelectionMode != DocSelectionMode.MultiSelect)
         return false;
-      if (DocIds.Length > 0)
+      if (DocIds.Count > 0)
         return false; // ?? может быть, можно выбрать группу
       if (_Filters != null)
       {
@@ -483,11 +471,11 @@ namespace FreeLibSet.Forms.Docs
 
       if (!GroupGridFilterForm.PerformEdit(docTypeUI2, Title, docTypeUI2.ImageKey, ref docTypeUI2.LastGroupId, ref docTypeUI2.LastIncludeNestedGroups, CanBeEmpty, DialogPosition))
         return DialogResult.Cancel;
-      IdList groupIds = docTypeUI2.GetAuxFilterGroupIdList(docTypeUI2.LastGroupId, docTypeUI2.LastIncludeNestedGroups);
+      IdCollection<Int32> groupIds = docTypeUI2.GetAuxFilterGroupIdList(docTypeUI2.LastGroupId, docTypeUI2.LastIncludeNestedGroups);
       if (groupIds != null)
-        DocIds = groupIds.ToArray();
+        DocIds = groupIds;
       else
-        DocIds = DataTools.EmptyIds;
+        DocIds = IdArray<Int32>.Empty;
 
       return DialogResult.OK;
     }
@@ -520,7 +508,7 @@ namespace FreeLibSet.Forms.Docs
       _SubDocTypeUI = subDocTypeUI;
       _SubDocs = subDocs;
       _SelectionMode = DocSelectionMode.Single;
-      _SubDocIds = DataTools.EmptyIds;
+      _SubDocIds = IdArray<Int32>.Empty;
       _CanBeEmpty = false;
       _DialogPosition = new EFPDialogPosition();
     }
@@ -590,37 +578,25 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public Int32 SubDocId
     {
-      get
-      {
-        if (_SubDocIds.Length == 0)
-          return 0;
-        else
-          return _SubDocIds[0];
-      }
-      set
-      {
-        if (value == 0)
-          _SubDocIds = DataTools.EmptyIds;
-        else
-          _SubDocIds = new Int32[1] { value };
-      }
+      get { return _SubDocIds.SingleId; }
+      set { _SubDocIds = IdArray<Int32>.FromId(value); }
     }
 
     /// <summary>
     /// Вход-выход. Идентификаторы выбранных документов при <see cref="MultiSelect"/>=true.
     /// </summary>
-    public Int32[] SubDocIds
+    public IIdSet<Int32> SubDocIds
     {
       get { return _SubDocIds; }
       set
       {
         if (value == null)
-          _SubDocIds = DataTools.EmptyIds;
+          _SubDocIds = IdArray<Int32>.Empty;
         else
           _SubDocIds = value;
       }
     }
-    private Int32[] _SubDocIds;
+    private IIdSet<Int32> _SubDocIds;
 
     /// <summary>
     /// Заголовок блока диалога.

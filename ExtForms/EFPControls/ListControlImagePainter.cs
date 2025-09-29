@@ -356,7 +356,7 @@ namespace FreeLibSet.Forms
     /// <param name="control">Управляющий элемент</param>
     /// <param name="imageKey">Имя изображения в <see cref="EFPApp.MainImages"/></param>
     public ListControlImagePainter(ComboBox control, string imageKey)
-      : this(control, DataTools.EmptyStrings, null)
+      : this(control, EmptyArray<string>.Empty, null)
     {
 #if DEBUG
       if (String.IsNullOrEmpty(imageKey))
@@ -371,7 +371,7 @@ namespace FreeLibSet.Forms
     /// <param name="control">Управляющий элемент</param>
     /// <param name="imageKey">Имя изображения в <see cref="EFPApp.MainImages"/></param>
     public ListControlImagePainter(ListBox control, string imageKey)
-      : this(control, DataTools.EmptyStrings, null)
+      : this(control, EmptyArray<string>.Empty, null)
     {
 #if DEBUG
       if (String.IsNullOrEmpty(imageKey))

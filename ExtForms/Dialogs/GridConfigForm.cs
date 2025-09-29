@@ -168,7 +168,7 @@ namespace FreeLibSet.Forms
         return; // 25.11.2015
 
       string[] defaultConfigCodes;
-      EFPDataGridViewConfig[] defaultConfigs;
+      EFPDataViewConfig[] defaultConfigs;
       Editor.GetDefaultConfigs(out defaultConfigCodes, out defaultConfigs);
       for (int i = 0; i < defaultConfigCodes.Length; i++)
       {
@@ -199,7 +199,7 @@ namespace FreeLibSet.Forms
     void efpDefault_Click(object sender, EventArgs args)
     {
       string[] defaultConfigCodes;
-      EFPDataGridViewConfig[] defaultConfigs;
+      EFPDataViewConfig[] defaultConfigs;
       Editor.GetDefaultConfigs(out defaultConfigCodes, out defaultConfigs);
       switch (defaultConfigCodes.Length)
       {
@@ -242,7 +242,7 @@ namespace FreeLibSet.Forms
 
     private void efpCopy_Click(object sender, EventArgs args)
     {
-      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      EFPDataViewConfig config = new EFPDataViewConfig();
       string errorText;
       if (!Editor.ReadFormValues(config, out errorText))
       {
@@ -264,7 +264,7 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      EFPDataGridViewConfig config = dobj.GetData(typeof(EFPDataGridViewConfig)) as EFPDataGridViewConfig;
+      EFPDataViewConfig config = dobj.GetData(typeof(EFPDataViewConfig)) as EFPDataViewConfig;
       if (config == null)
       {
         // string txtFormats = String.Join(", ", dobj.GetFormats());
@@ -280,14 +280,14 @@ namespace FreeLibSet.Forms
 
     public void ConfigToControls(CfgPart cfgData)
     {
-      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      EFPDataViewConfig config = new EFPDataViewConfig();
       config.ReadConfig(cfgData);
       Editor.WriteFormValues(config);
     }
 
     public void ConfigFromControls(CfgPart cfgData)
     {
-      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      EFPDataViewConfig config = new EFPDataViewConfig();
       string errorText;
       Editor.ReadFormValues(config, out errorText);
       config.WriteConfig(cfgData);
@@ -300,15 +300,15 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Конфигурация, созданная при нажатии кнопки "ОК".
     /// </summary>
-    public EFPDataGridViewConfig ResultConfig { get { return _ResultConfig; } }
-    private EFPDataGridViewConfig _ResultConfig;
+    public EFPDataViewConfig ResultConfig { get { return _ResultConfig; } }
+    private EFPDataViewConfig _ResultConfig;
 
     private void FormCheck(object sender, UIValidatingEventArgs args)
     {
       if (_FormProvider.ValidateReason == EFPFormValidateReason.Shown)
         return;
 
-      _ResultConfig = new EFPDataGridViewConfig();
+      _ResultConfig = new EFPDataViewConfig();
       string errorText;
       if (!Editor.ReadFormValues(_ResultConfig, out errorText))
       {

@@ -340,7 +340,7 @@ namespace FreeLibSet.Collections
     public string[] ToArray()
     {
       if (_Items == null)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
       {
         string[] a = new string[_Items.Length];
@@ -410,7 +410,7 @@ namespace FreeLibSet.Collections
     public ArrayEnumerable<string>.Enumerator GetEnumerator()
     {
       if (_Items == null)
-        return new ArrayEnumerable<string>.Enumerator(DataTools.EmptyStrings);
+        return new ArrayEnumerable<string>.Enumerator(EmptyArray<string>.Empty);
       else
         return new ArrayEnumerable<string>.Enumerator(_Items);
     }

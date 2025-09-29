@@ -803,8 +803,8 @@ namespace FreeLibSet.Data
         return false;
 
       int res;
-      if (DataTools.IsNumericType(v1.GetType()) && DataTools.IsNumericType(v2.GetType()))
-        res = DataTools.CompareNumbers(v1, v2);
+      if (MathTools.IsNumericType(v1.GetType()) && MathTools.IsNumericType(v2.GetType()))
+        res = MathTools.CompareNumbers(v1, v2);
       else
         res = Comparer.DefaultInvariant.Compare(v1, v2);
       switch (kind)
@@ -1077,6 +1077,8 @@ namespace FreeLibSet.Data
     #endregion
   }
 
+#if XXX
+
   /// <summary>
   /// Фильтр по значению поля идентификатора "Id" или другого целочисленного поля ColumnName.
   /// Задается список из одного или нескольких идентификатов.
@@ -1086,9 +1088,9 @@ namespace FreeLibSet.Data
   [Serializable]
   public class IdsFilter : DBxOneExpressionFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
-    #region С DBxExpression
+#region С DBxExpression
 
     /// <summary>
     /// Создает фильтр для выражения.
@@ -1097,7 +1099,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="expression">Выражение, возвращающее числовой идентификатор</param>
     /// <param name="ids">Список идентификаторов. Не может быть пустым</param>
-    public IdsFilter(DBxExpression expression, IdList ids)
+    public IdsFilter(DBxExpression expression, IdList<Int32> ids)
       : base(expression)
     {
 #if DEBUG
@@ -1118,7 +1120,7 @@ namespace FreeLibSet.Data
     /// <param name="expression">Выражение, возвращающее числовой идентификатор</param>
     /// <param name="ids">Массив идентификаторов</param>
     public IdsFilter(DBxExpression expression, Int32[] ids)
-      : this(expression, new IdList(ids))
+      : this(expression, new IdList<Int32>(ids))
     {
     }
 
@@ -1129,7 +1131,7 @@ namespace FreeLibSet.Data
     /// <param name="expression">Выражение, возвращающее числовой идентификатор</param>
     /// <param name="id">Идентификатор</param>
     public IdsFilter(DBxExpression expression, Int32 id)
-      : this(expression, new IdList(new Int32[1] { CheckNotZero(id) }))
+      : this(expression, new IdList<Int32>(new Int32[1] { CheckNotZero(id) }))
     {
     }
 
@@ -1140,9 +1142,9 @@ namespace FreeLibSet.Data
       return id;
     }
 
-    #endregion
+#endregion
 
-    #region С заданным именем поля
+#region С заданным именем поля
 
     /// <summary>
     /// Создает фильтр для заданного поля.
@@ -1151,7 +1153,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnName">Имя числового столбца</param>
     /// <param name="ids">Список идентификаторов. Не может быть пустым</param>
-    public IdsFilter(string columnName, IdList ids)
+    public IdsFilter(string columnName, IdList<Int32> ids)
       : this(new DBxColumn(columnName), ids)
     {
     }
@@ -1163,7 +1165,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя числового столбца</param>
     /// <param name="ids">Массив идентификаторов</param>
     public IdsFilter(string columnName, Int32[] ids)
-      : this(new DBxColumn(columnName), new IdList(ids))
+      : this(new DBxColumn(columnName), new IdList<Int32>(ids))
     {
     }
 
@@ -1174,13 +1176,13 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя числового столбца</param>
     /// <param name="id">Идентификатор</param>
     public IdsFilter(string columnName, Int32 id)
-      : this(new DBxColumn(columnName), new IdList(new Int32[1] { CheckNotZero(id) }))
+      : this(new DBxColumn(columnName), new IdList<Int32>(new Int32[1] { CheckNotZero(id) }))
     {
     }
 
-    #endregion
+#endregion
 
-    #region Для поля "Id"
+#region Для поля "Id"
 
     /// <summary>
     /// Создает фильтр для поля "Id".
@@ -1188,7 +1190,7 @@ namespace FreeLibSet.Data
     /// Список <paramref name="ids"/> переводится в режим "Только чтение"
     /// </summary>
     /// <param name="ids">Список идентификаторов</param>
-    public IdsFilter(IdList ids)
+    public IdsFilter(IdList<Int32> ids)
       : this("Id", ids)
     {
     }
@@ -1213,38 +1215,38 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Массив идентификаторов.
     /// Не может быть пустым и содержать значения 0.
     /// </summary>
-    public IdList Ids { get { return _Ids; } }
-    private readonly IdList _Ids;
+    public IdList<Int32> Ids { get { return _Ids; } }
+    private readonly IdList<Int32> _Ids;
 
-    #endregion
+#endregion
 
-    #region Переопределенные методы
+#region Переопределенные методы
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод <see cref="IdList"/>.Contains().
+    /// Вызывает метод <see cref="IdList{Int32}"/>.Contains().
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
-      Int32 v = DataTools.GetInt(Expression.GetValue(rowValues));
+      Int32 v = DataTools.GetInt32(Expression.GetValue(rowValues));
       return Ids.Contains(v);
     }
 
-    #endregion
+#endregion
 
-    #region Статический метод
+#region Статический метод
 
 #if XXX
     /// <summary>
@@ -1288,18 +1290,19 @@ namespace FreeLibSet.Data
     }
 #endif
 
-    #endregion
+#endregion
   }
+
+#endif
 
   /// <summary>
   /// Фильтр по массиву значений произвольного типа вида "Поле/Выражение IN (Значение1, Значение2, ...)".
-  /// Для числовых полей идентификаторов используйте <see cref="IdsFilter"/>.
   /// При сравнении считается, что значение поля NULL эквивалентно нулевому значению, если оно присутствует в списке значений.
   /// </summary>
   [Serializable]
-  public class ValuesFilter : DBxOneExpressionFilter
+  public class ValueInListFilter : DBxOneExpressionFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
     /// <summary>
     /// Создает фильтр
@@ -1307,7 +1310,7 @@ namespace FreeLibSet.Data
     /// <param name="expression">Выражение</param>
     /// <param name="values">Допустимые значения. Не может быть пустым массивом. Не может содержать значения null. Значения должны быть одного типа</param>
     /// <param name="columnType">Тип данных</param>
-    public ValuesFilter(DBxExpression expression, Array values, DBxColumnType columnType)
+    public ValueInListFilter(DBxExpression expression, Array values, DBxColumnType columnType)
       : base(expression)
     {
 #if DEBUG
@@ -1336,7 +1339,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="expression">Выражение</param>
     /// <param name="values">Допустимые значения. Не может быть пустым массивом</param>
-    public ValuesFilter(DBxExpression expression, Array values)
+    public ValueInListFilter(DBxExpression expression, Array values)
       : this(expression, values, DBxColumnType.Unknown)
     {
     }
@@ -1346,7 +1349,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnName">Имя столбца таблицы данных</param>
     /// <param name="values">Допустимые значения. Не может быть пустым массивом</param>
-    public ValuesFilter(string columnName, Array values)
+    public ValueInListFilter(string columnName, Array values)
       : this(new DBxColumn(columnName), values)
     {
     }
@@ -1357,7 +1360,49 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя столбца таблицы данных</param>
     /// <param name="values">Допустимые значения. Не может быть пустым массивом</param>
     /// <param name="columnType">Тип данных</param>
-    public ValuesFilter(string columnName, Array values, DBxColumnType columnType)
+    public ValueInListFilter(string columnName, Array values, DBxColumnType columnType)
+      : this(new DBxColumn(columnName), values, columnType)
+    {
+    }
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="expression">Выражение</param>
+    /// <param name="values">Допустимые значения. Не может быть пустым массивом. Не может содержать значения null. Значения должны быть одного типа</param>
+    /// <param name="columnType">Тип данных</param>
+    public ValueInListFilter(DBxExpression expression, IEnumerable values, DBxColumnType columnType)
+      : this(expression, ArrayTools.CreateObjectArray(values), columnType)
+    {
+    }
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="expression">Выражение</param>
+    /// <param name="values">Допустимые значения. Не может быть пустым массивом</param>
+    public ValueInListFilter(DBxExpression expression, IEnumerable values)
+      : this(expression, values, DBxColumnType.Unknown)
+    {
+    }
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="columnName">Имя столбца таблицы данных</param>
+    /// <param name="values">Допустимые значения. Не может быть пустым массивом</param>
+    public ValueInListFilter(string columnName, IEnumerable values)
+      : this(new DBxColumn(columnName), values)
+    {
+    }
+
+    /// <summary>
+    /// Создает фильтр
+    /// </summary>
+    /// <param name="columnName">Имя столбца таблицы данных</param>
+    /// <param name="values">Допустимые значения. Не может быть пустым массивом</param>
+    /// <param name="columnType">Тип данных</param>
+    public ValueInListFilter(string columnName, IEnumerable values, DBxColumnType columnType)
       : this(new DBxColumn(columnName), values, columnType)
     {
     }
@@ -1375,7 +1420,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Тип данных.
     /// Имеет смысл задавать только в случае, когда тип данных в массиве не соответствует типу данных столбца,
-    /// например, для столбца типа Guid, а Values содержит строки
+    /// например, для столбца типа <see cref="System.Guid"/>, а свойство <see cref="Values"/> содержит строки.
     /// </summary>
     public DBxColumnType ColumnType { get { return _ColumnType; } }
     private readonly DBxColumnType _ColumnType;
@@ -1406,9 +1451,9 @@ namespace FreeLibSet.Data
       }
     }
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы
+#region Переопределяемые методы
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
@@ -1437,7 +1482,7 @@ namespace FreeLibSet.Data
         throw new NullReferenceException("DBxTools.Convert() returned null");
 #endif
 
-      bool isNumeric = DataTools.IsNumericType(v.GetType()) && DataTools.IsNumericType(values.GetValue(0).GetType());
+      bool isNumeric = MathTools.IsNumericType(v.GetType()) && MathTools.IsNumericType(values.GetValue(0).GetType());
       bool isTypeDiff = v.GetType() != values.GetValue(0).GetType();
 
       for (int i = 0; i < values.Length; i++)
@@ -1448,7 +1493,7 @@ namespace FreeLibSet.Data
 
         int res;
         if (isNumeric)
-          res = DataTools.CompareNumbers(v, thisV);
+          res = MathTools.CompareNumbers(v, thisV);
         else
           res = Comparer.DefaultInvariant.Compare(v, thisV);
         if (res == 0)
@@ -1458,7 +1503,7 @@ namespace FreeLibSet.Data
       return false;
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -1467,7 +1512,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class AndFilter : DBxFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
     /// <summary>
     /// Создает AND-фильтр для двух условий
@@ -1537,9 +1582,9 @@ namespace FreeLibSet.Data
       _Filters = filters;
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Список фильтров
@@ -1547,9 +1592,9 @@ namespace FreeLibSet.Data
     public DBxFilter[] Filters { get { return _Filters; } }
     private readonly DBxFilter[] _Filters;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы и свойства
+#region Переопределяемые методы и свойства
 
     /// <summary>
     /// Признак вырождения фильтра.
@@ -1617,9 +1662,9 @@ namespace FreeLibSet.Data
       return true;
     }
 
-    #endregion
+#endregion
 
-    #region Статические методы
+#region Статические методы
 
     /// <summary>
     /// Создание AND-фильтра из массива фильтров по необходимости, если число
@@ -1721,7 +1766,7 @@ namespace FreeLibSet.Data
       }
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -1730,7 +1775,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class OrFilter : DBxFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
     /// <summary>
     /// Создает фильтр на основании двух существующих.
@@ -1800,9 +1845,9 @@ namespace FreeLibSet.Data
       _Filters = filters;
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Список фильтров, входлящих в объединение
@@ -1810,9 +1855,9 @@ namespace FreeLibSet.Data
     public DBxFilter[] Filters { get { return _Filters; } }
     private readonly DBxFilter[] _Filters;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы и свойства
+#region Переопределяемые методы и свойства
 
     /// <summary>
     /// Добавляет в список поля входящих фильтров, используя рекурсивный вызов
@@ -1881,9 +1926,9 @@ namespace FreeLibSet.Data
       return false;
     }
 
-    #endregion
+#endregion
 
-    #region Статические методы
+#region Статические методы
 
     /// <summary>
     /// Создание OR-фильтра из массива фильтров по необходимости, если число
@@ -1989,7 +2034,7 @@ namespace FreeLibSet.Data
       }
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -1998,7 +2043,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class NotFilter : DBxFilter
   {
-    #region Конструктор
+#region Конструктор
 
     /// <summary>
     /// Создает фильтр "NOT".
@@ -2012,9 +2057,9 @@ namespace FreeLibSet.Data
       _BaseFilter = baseFilter;
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Основновной фильтр, результат которого инвертируется
@@ -2022,9 +2067,9 @@ namespace FreeLibSet.Data
     public DBxFilter BaseFilter { get { return _BaseFilter; } }
     private readonly DBxFilter _BaseFilter;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы и свойства
+#region Переопределяемые методы и свойства
 
     /// <summary>
     /// Добавляет в список поля из <see cref="BaseFilter"/>
@@ -2075,20 +2120,20 @@ namespace FreeLibSet.Data
       }
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
   /// Фильтр числового поля по диапазону значений.
   /// Поддерживаются полуоткрытые интервалы.
-  /// Поддерживаются поля и выражения типа <see cref="DBxColumnType.Int"/>, <see cref="DBxColumnType.Float"/> и <see cref="DBxColumnType.Decimal"/>.
+  /// Поддерживаются поля и выражения числовых типов.
   /// Диапазон задается как константные выражения типа <see cref="Decimal"/>.
   /// Если значение поля равно NULL, то оно считается равным 0.
   /// </summary>
   [Serializable]
   public class NumRangeFilter : DBxOneExpressionFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
     /// <summary>
     /// Конструктор диапазона значений поля. Если <paramref name="minValue"/> или <paramref name="maxValue"/> равны
@@ -2153,9 +2198,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Минимальное значение или null
@@ -2169,9 +2214,9 @@ namespace FreeLibSet.Data
     public decimal? MaxValue { get { return _MaxValue; } }
     private readonly decimal? _MaxValue;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы и свойства
+#region Переопределяемые методы и свойства
 
     /// <summary>
     /// Если не задано ни <see cref="MinValue"/> ни <see cref="MaxValue"/>, то возвращает AlwaysTrue.
@@ -2217,7 +2262,7 @@ namespace FreeLibSet.Data
       return true;
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -2228,9 +2273,9 @@ namespace FreeLibSet.Data
   [Serializable]
   public class NumRangeInclusionFilter : DBxTwoExpressionsFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
-    #region Decimal
+#region Decimal
 
     /// <summary>
     /// Создает фильтр
@@ -2255,9 +2300,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Double
+#region Double
 
     /// <summary>
     /// Создает фильтр
@@ -2282,9 +2327,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Single
+#region Single
 
     /// <summary>
     /// Создает фильтр
@@ -2309,9 +2354,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Int32
+#region Int32
 
     /// <summary>
     /// Создает фильтр
@@ -2336,11 +2381,11 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Число, попадание которого в диапазон проверяется
@@ -2348,13 +2393,13 @@ namespace FreeLibSet.Data
     public decimal Value { get { return _Value; } }
     private readonly decimal _Value;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы
+#region Переопределяемые методы
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод <see cref="DataTools.IsInRange{Decimal}(Decimal, Nullable{Decimal}, Nullable{Decimal})"/>.
+    /// Вызывает метод <see cref="MathTools.IsInRange{Decimal}(Decimal, Nullable{Decimal}, Nullable{Decimal})"/>.
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
@@ -2363,10 +2408,10 @@ namespace FreeLibSet.Data
       decimal? v1 = DataTools.GetNullableDecimal(Expression1.GetValue(rowValues));
       decimal? v2 = DataTools.GetNullableDecimal(Expression2.GetValue(rowValues));
 
-      return DataTools.IsInRange<decimal>(Value, v1, v2);
+      return MathTools.IsInRange<decimal>(Value, v1, v2);
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -2377,9 +2422,9 @@ namespace FreeLibSet.Data
   [Serializable]
   public class NumRangeCrossFilter : DBxTwoExpressionsFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
-    #region Decimal
+#region Decimal
 
     /// <summary>
     /// Создает фильтр.
@@ -2407,9 +2452,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Double
+#region Double
 
     /// <summary>
     /// Создает фильтр.
@@ -2437,9 +2482,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Single
+#region Single
 
     /// <summary>
     /// Создает фильтр.
@@ -2467,9 +2512,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Int32
+#region Int32
 
     /// <summary>
     /// Создает фильтр.
@@ -2497,11 +2542,11 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Проверяемый диапазон - начальное значение
@@ -2515,13 +2560,13 @@ namespace FreeLibSet.Data
     public decimal? MaxValue { get { return _MaxValue; } }
     private readonly decimal? _MaxValue;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы
+#region Переопределяемые методы
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод <see cref="DataTools.AreRangesCrossed{Decimal}(Nullable{Decimal}, Nullable{Decimal}, Nullable{Decimal}, Nullable{Decimal})"/>.
+    /// Вызывает метод <see cref="MathTools.AreRangesCrossed{Decimal}(Nullable{Decimal}, Nullable{Decimal}, Nullable{Decimal}, Nullable{Decimal})"/>.
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
@@ -2530,7 +2575,7 @@ namespace FreeLibSet.Data
       decimal? v1 = DataTools.GetNullableDecimal(Expression1.GetValue(rowValues));
       decimal? v2 = DataTools.GetNullableDecimal(Expression2.GetValue(rowValues));
 
-      return DataTools.AreRangesCrossed<decimal>(v1, v2, MinValue, MaxValue);
+      return MathTools.AreRangesCrossed<decimal>(v1, v2, MinValue, MaxValue);
     }
 
 
@@ -2553,7 +2598,7 @@ namespace FreeLibSet.Data
       }
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -2564,7 +2609,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class DateRangeFilter : DBxOneExpressionFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
     /// <summary>
     /// Конструктор диапазона значений поля. Если <paramref name="minValue"/> или <paramref name="maxValue"/> равны
@@ -2608,7 +2653,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя столбца</param>
     /// <param name="year">Год</param>
     public DateRangeFilter(string columnName, int year)
-      : this(columnName, DataTools.BottomOfYear(year), DataTools.EndOfYear(year))
+      : this(columnName, TimeTools.BottomOfYear(year), TimeTools.EndOfYear(year))
     {
     }
 
@@ -2619,7 +2664,7 @@ namespace FreeLibSet.Data
     /// <param name="year">Год</param>
     /// <param name="month">Месяц (1-12)</param>
     public DateRangeFilter(string columnName, int year, int month)
-      : this(columnName, DataTools.BottomOfMonth(year, month), DataTools.EndOfMonth(year, month))
+      : this(columnName, TimeTools.BottomOfMonth(year, month), TimeTools.EndOfMonth(year, month))
     {
     }
 
@@ -2669,9 +2714,9 @@ namespace FreeLibSet.Data
       return range.LastDate;
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Минимальное значение диапазона или null
@@ -2685,9 +2730,9 @@ namespace FreeLibSet.Data
     public DateTime? MaxValue { get { return _MaxValue; } }
     private readonly DateTime? _MaxValue;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы
+#region Переопределяемые методы
 
     /// <summary>
     /// Если не задано ни <see cref="MinValue"/> ни <see cref="MaxValue"/>, то возвращает AlwaysTrue.
@@ -2723,12 +2768,12 @@ namespace FreeLibSet.Data
         if (!v.HasValue)
           return false;
 
-        return DataTools.DateInRange(v.Value.Date, _MinValue, _MaxValue);
+        return TimeTools.DateInRange(v.Value.Date, _MinValue, _MaxValue);
       }
       return true;
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -2741,7 +2786,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class DateRangeInclusionFilter : DBxTwoExpressionsFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
     /// <summary>
     /// Создает фильтр
@@ -2766,9 +2811,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Дата, попадание которой в диапазон проверяется
@@ -2776,13 +2821,13 @@ namespace FreeLibSet.Data
     public DateTime Value { get { return _Value; } }
     private readonly DateTime _Value;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы
+#region Переопределяемые методы
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Вызывает метод <see cref="DataTools.DateInRange(DateTime, DateTime?, DateTime?)"/>.
+    /// Вызывает метод <see cref="TimeTools.DateInRange(DateTime, DateTime?, DateTime?)"/>.
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - <see cref="DBxColumnValueArray"/>.</param>
     /// <returns>true, если условие фильтра выполняется</returns>
@@ -2791,10 +2836,10 @@ namespace FreeLibSet.Data
       DateTime? v1 = DataTools.GetNullableDateTime(Expression1.GetValue(rowValues));
       DateTime? v2 = DataTools.GetNullableDateTime(Expression2.GetValue(rowValues));
 
-      return DataTools.DateInRange(Value, v1, v2);
+      return TimeTools.DateInRange(Value, v1, v2);
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -2806,7 +2851,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class DateRangeCrossFilter : DBxTwoExpressionsFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
     /// <summary>
     /// Создает фильтр.
@@ -2878,9 +2923,9 @@ namespace FreeLibSet.Data
       return range.LastDate;
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Проверяемый диапазон дат - начальная дата
@@ -2894,9 +2939,9 @@ namespace FreeLibSet.Data
     public DateTime? LastDate { get { return _LastDate; } }
     private readonly DateTime? _LastDate;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы
+#region Переопределяемые методы
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
@@ -2909,7 +2954,7 @@ namespace FreeLibSet.Data
       DateTime? v1 = DataTools.GetNullableDateTime(Expression1.GetValue(rowValues));
       DateTime? v2 = DataTools.GetNullableDateTime(Expression2.GetValue(rowValues));
 
-      return DataTools.DateRangesCrossed(v1, v2, FirstDate, LastDate);
+      return TimeTools.DateRangesCrossed(v1, v2, FirstDate, LastDate);
     }
 
 
@@ -2927,7 +2972,7 @@ namespace FreeLibSet.Data
       }
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -2938,7 +2983,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class NotNullFilter : /*ValueFilter*/ CompareFilter /* 14.11.2019 */
   {
-    #region Конструктор
+#region Конструктор
 
     /// <summary>
     /// Создает фильтр
@@ -2970,7 +3015,7 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
   }
 
 #if XXXXXXX
@@ -2984,7 +3029,7 @@ namespace FreeLibSet.Data
   /// </summary>
   public class LikeFilter : DataFilter
   {
-  #region Конструктор
+#region Конструктор
 
     public LikeFilter(string ColumnName, string Template)
     {
@@ -2995,9 +3040,9 @@ namespace FreeLibSet.Data
       FTemplate = Template;
     }
 
-  #endregion
+#endregion
 
-  #region Свойства
+#region Свойства
 
     public string ColumnName { get { return FColumnName; } }
     private string FColumnName;
@@ -3005,9 +3050,9 @@ namespace FreeLibSet.Data
     public string Template { get { return FTemplate; } }
     private string FTemplate;
 
-  #endregion
+#endregion
 
-  #region Переопределяемые методы
+#region Переопределяемые методы
 
     public override string GetSQL(DataSQLFormatInfo Format)
     {
@@ -3017,7 +3062,7 @@ namespace FreeLibSet.Data
         return Format.GetColumnName(ColumnName) + " LIKE \"" + Template + "\"";
     }
 
-  #endregion
+#endregion
   }
 #endif
 
@@ -3029,7 +3074,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class StringValueFilter : DBxOneExpressionFilter
   {
-    #region Конструктор
+#region Конструктор
 
     /// <summary>
     /// Эта версия конструктора может создать фильтр с учетом регистра или без учета
@@ -3069,9 +3114,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Сравниваемое значение.
@@ -3086,9 +3131,9 @@ namespace FreeLibSet.Data
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private readonly bool _IgnoreCase;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы
+#region Переопределяемые методы
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
@@ -3102,7 +3147,7 @@ namespace FreeLibSet.Data
       return String.Equals(v, Value, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -3119,7 +3164,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class StartsWithFilter : DBxOneExpressionFilter
   {
-    #region Конструктор
+#region Конструктор
 
     /// <summary>
     /// Эта версия конструктора может создать фильтр с учетом регистра или без учета
@@ -3158,9 +3203,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Строка, с которой должно начинаться значение поля
@@ -3174,9 +3219,9 @@ namespace FreeLibSet.Data
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private readonly bool _IgnoreCase;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы и свойства
+#region Переопределяемые методы и свойства
 
     /// <summary>
     /// Возвращает AlwaysTrue, если Value не задано
@@ -3206,7 +3251,7 @@ namespace FreeLibSet.Data
       return v.StartsWith(Value, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -3219,7 +3264,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class SubstringFilter : DBxOneExpressionFilter
   {
-    #region Конструкторы
+#region Конструкторы
 
     /// <summary>
     /// Конструктор фильтра.
@@ -3264,9 +3309,9 @@ namespace FreeLibSet.Data
     {
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Начальная позиция. Первая позиция имеет индекс 0, а не 1
@@ -3286,24 +3331,24 @@ namespace FreeLibSet.Data
     public bool IgnoreCase { get { return _IgnoreCase; } }
     private readonly bool _IgnoreCase;
 
-    #endregion
+#endregion
 
-    #region Переопределяемые методы
+#region Переопределяемые методы
 
     /// <summary>
     /// Проверка условия фильтра для строки данных.
-    /// Использует метод <see cref="DataTools.Substring(string, int, int)"/> для извлечения подстроки.
+    /// Использует метод <see cref="StringTools.Substring(string, int, int)"/> для извлечения подстроки.
     /// </summary>
     /// <param name="rowValues">Объект доступа к списку именованных значений. Обычно - DBxColumnValueArray</param>
     /// <returns>true, если условие фильтра выполняется</returns>
     public override bool TestFilter(INamedValuesAccess rowValues)
     {
       string src = DataTools.GetString(Expression.GetValue(rowValues));
-      string substr = DataTools.Substring(src, StartIndex, Value.Length);
+      string substr = StringTools.Substring(src, StartIndex, Value.Length);
       return String.Equals(substr, Value, IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture);
     }
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -3312,7 +3357,7 @@ namespace FreeLibSet.Data
   [Serializable]
   public class DummyFilter : DBxFilter
   {
-    #region Конструктор
+#region Конструктор
 
     /// <summary>
     /// Создает фильтр
@@ -3324,9 +3369,9 @@ namespace FreeLibSet.Data
       _IsTrue = isTrue;
     }
 
-    #endregion
+#endregion
 
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Если true, то условие фильтра всегда выполняется.
@@ -3335,9 +3380,9 @@ namespace FreeLibSet.Data
     public bool IsTrue { get { return _IsTrue; } }
     private readonly bool _IsTrue;
 
-    #endregion
+#endregion
 
-    #region Переопределенные методы
+#region Переопределенные методы
 
     /// <summary>
     /// Ничего не делает
@@ -3372,9 +3417,9 @@ namespace FreeLibSet.Data
       }
     }
 
-    #endregion
+#endregion
 
-    #region Статические экземпляры
+#region Статические экземпляры
 
     /// <summary>
     /// Статический экземпляр фиктивного фильтра, пропускающего все строки без фильтрации
@@ -3386,7 +3431,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public static readonly DummyFilter AlwaysFalse = new DummyFilter(false);
 
-    #endregion
+#endregion
   }
 
   /// <summary>
@@ -3400,16 +3445,18 @@ namespace FreeLibSet.Data
   /// Существует некоторое оптимальное количество идентификаторов в предложении IN.
   /// Если исходный массив идентификаторов не длинный, выгодно выполнить один запрос.
   /// Иначе лучше выполнить два или более запросов с подмассивами идентификаторов.
-  /// Для разбиения массивов применяется <see cref="IdsFilterGenerator"/>.
+  /// Для разбиения массивов применяется <see cref="IdsFilterGenerator{T}"/>.
   /// Конструктор получает исходный массив идентификаторов. 
   /// Он делит исходный массив идентификаторов на подмассивы и запоминает их.
-  /// Затем вызывается метод <see cref="IdsFilterGenerator.CreateFilters(string)"/>, которому передается имя ссылочного поля
-  /// или "Id". Метод создает один или несколько объектов <see cref="IdsFilter"/>, которые доступны
+  /// Затем вызывается метод <see cref="IdsFilterGenerator{T}.CreateFilters(string)"/>, которому передается имя ссылочного поля
+  /// или "Id". Метод создает один или несколько объектов <see cref="ValueInListFilter"/>, которые доступны
   /// через индексированное свойство.
   /// </summary>
-  public class IdsFilterGenerator : IEnumerable<DBxFilter>
+  /// <typeparam name="T">Тип идентификатора (<see cref="System.Int32"/>, <see cref="System.Int64"/>, <see cref="System.Guid"/>)</typeparam>
+  public class IdsFilterGenerator<T> : IEnumerable<DBxFilter>
+    where T : struct, IEquatable<T>
   {
-    #region Конструкторы
+#region Конструкторы
 
     // TODO: Пока никак не определяем оптимальное число идентификаторов
 
@@ -3419,7 +3466,7 @@ namespace FreeLibSet.Data
     /// <param name="allIds">Полный список идентификаторов. 
     /// Массив может иметь любую длину, включая нулевую.
     /// Массив не может содержать значения 0</param>
-    public IdsFilterGenerator(Int32[] allIds)
+    public IdsFilterGenerator(T[] allIds)
       : this(allIds, 100)
     {
     }
@@ -3429,7 +3476,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="allIds">Полный список идентификаторов. 
     /// Список может иметь любую длину, включая нулевую.</param>
-    public IdsFilterGenerator(IdList allIds)
+    public IdsFilterGenerator(IIdSet<T> allIds)
       : this(allIds.ToArray())
     {
     }
@@ -3441,19 +3488,19 @@ namespace FreeLibSet.Data
     /// Массив может иметь любую длину, включая нулевую.
     /// Массив не может содержать значения 0</param>
     /// <param name="maxCount">Количество элементов в группе (не меньше 1)</param>
-    public IdsFilterGenerator(Int32[] allIds, int maxCount)
+    public IdsFilterGenerator(T[] allIds, int maxCount)
     {
       if (maxCount < 1)
         throw ExceptionFactory.ArgOutOfRange("maxCount", maxCount, 1, null);
 
       // Число групп
       int n1 = (allIds.Length + maxCount - 1) / maxCount;
-      _IdArrays = new Int32[n1][];
+      _IdArrays = new T[n1][];
       for (int i = 0; i < n1; i++)
       {
         int startIndex = i * maxCount;
         int n2 = Math.Min(maxCount, allIds.Length - startIndex);
-        _IdArrays[i] = new Int32[n2];
+        _IdArrays[i] = new T[n2];
         Array.Copy(allIds, startIndex, _IdArrays[i], 0, n2);
       }
     }
@@ -3464,14 +3511,14 @@ namespace FreeLibSet.Data
     /// <param name="allIds">Полный список идентификаторов. 
     /// Список может иметь любую длину, включая нулевую.</param>
     /// <param name="maxCount">Количество элементов в группе (не меньше 1)</param>
-    public IdsFilterGenerator(IdList allIds, int maxCount)
+    public IdsFilterGenerator(IIdSet<T> allIds, int maxCount)
       : this(allIds.ToArray(), maxCount)
     {
     }
 
-    #endregion
+#endregion
 
-    #region CreateFilters
+#region CreateFilters
 
     /// <summary>
     /// Создает фильтры для заданного имени столбца
@@ -3479,31 +3526,23 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя числового столбца</param>
     public void CreateFilters(string columnName)
     {
-      DBxFilter[] a = new DBxFilter[_IdArrays.Length];
+      ValueInListFilter[] a = new ValueInListFilter[_IdArrays.Length];
       for (int i = 0; i < _IdArrays.Length; i++)
-        a[i] = new IdsFilter(columnName, _IdArrays[i]);
+        a[i] = new ValueInListFilter(columnName, _IdArrays[i]);
 
       _Filters = a;
     }
 
-    /// <summary>
-    /// Создает фильтры для столбца "Id"
-    /// </summary>
-    public void CreateFilters()
-    {
-      CreateFilters("Id");
-    }
+#endregion
 
-    #endregion
-
-    #region Свойства
+#region Свойства
 
     /// <summary>
     /// Возвращает массив идентификаторов для одной группы
     /// </summary>
     /// <param name="index">Индекс очередной группы от 0 до (<see cref="Count"/>-1)</param>
     /// <returns>Массив идентификаторов. Не может быть пустым</returns>
-    public Int32[] GetIds(int index)
+    public T[] GetIds(int index)
     {
       return _IdArrays[index];
     }
@@ -3511,7 +3550,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Массивы идентификаторов, разбитые на группы подходящего размера
     /// </summary>
-    private readonly Int32[][] _IdArrays;
+    private readonly T[][] _IdArrays;
 
     /// <summary>
     /// Возвращает количество групп
@@ -3523,23 +3562,23 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="index">Индекс группы в диапазоне от 0 до (<see cref="Count"/>-1)</param>
     /// <returns>Фильтр</returns>
-    public DBxFilter this[int index]
+    public ValueInListFilter this[int index]
     {
       get
       {
 #if DEBUG
         if (_Filters == null)
-          throw new InvalidOperationException("CreateFilters() has not been called");
+          throw ExceptionFactory.ObjectMethodNotCalled(this, "CreateFilters()");
 #endif
         return _Filters[index];
       }
     }
 
-    private DBxFilter[] _Filters;
+    private ValueInListFilter[] _Filters;
 
-    #endregion
+#endregion
 
-    #region IEnumerable<DBxFilter> Members
+#region IEnumerable<DBxFilter> Members
 
     /// <summary>
     /// Возвращает перечислитель по фильтрам.
@@ -3564,19 +3603,19 @@ namespace FreeLibSet.Data
       return new ArrayEnumerable<DBxFilter>.Enumerator(_Filters);
     }
 
-    #endregion
+#endregion
 
-    #region Методы для восстановления полного списка
+#region Методы для восстановления полного списка
 
     /// <summary>
     /// Возвращает список идентификаторов во всех группах
     /// </summary>
     /// <returns>Список идентификаторов</returns>
-    public IdList GetWholeIdList()
+    public IdCollection<T> GetWholeIdList()
     {
-      IdList list = new IdList();
+      IdCollection<T> list = new IdCollection<T>();
       for (int i = 0; i < _IdArrays.Length; i++)
-        list.Add(GetIds(i));
+        list.AddRange(GetIds(i));
       return list;
     }
 
@@ -3598,9 +3637,9 @@ namespace FreeLibSet.Data
     /// Возвращает массив, содержащий все идентификаторы во всех группах
     /// </summary>
     /// <returns>Полный массив идентификаторов</returns>
-    public Int32[] GetAllIds()
+    public T[] GetAllIds()
     {
-      Int32[] a = new Int32[AllIdCount];
+      T[] a = new T[AllIdCount];
       int cnt = 0;
       for (int i = 0; i < _IdArrays.Length; i++)
       {
@@ -3610,9 +3649,9 @@ namespace FreeLibSet.Data
       return a;
     }
 
-    #endregion
+#endregion
 
-    #region Текстовое представление
+#region Текстовое представление
 
     /// <summary>
     /// Возвращает количество групп и общее количество идентификаторов (для отладки)
@@ -3623,6 +3662,6 @@ namespace FreeLibSet.Data
       return "Group Count=" + Count.ToString() + ", All Id Count=" + AllIdCount.ToString();
     }
 
-    #endregion
+#endregion
   }
 }

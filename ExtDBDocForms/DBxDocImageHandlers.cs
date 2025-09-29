@@ -30,7 +30,7 @@ namespace FreeLibSet.Forms.Docs
     ToolTipText,
 
     /// <summary>
-    /// Определить цвет строки (вызван <see cref="DocTypeUIBase.GetRowColor(int, EFPDataGridViewRowAttributesEventArgs)"/>)
+    /// Определить цвет строки (вызван <see cref="DocTypeUIBase.GetRowColor(int, EFPDataGridViewRowInfoEventArgs)"/>)
     /// </summary>
     RowColor,
   }
@@ -373,7 +373,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (row.RowState == DataRowState.Deleted)
           return "Cancel";
-        Int32 Id = DataTools.GetInt(row, "Id");
+        Int32 Id = DataTools.GetInt32(row, "Id");
         return DoGetImageKey(tableName, Id, row.Table.DataSet, row);
       }
       catch
@@ -441,12 +441,12 @@ namespace FreeLibSet.Forms.Docs
         {
           if (handler.SubDocType == null)
           {
-            if (_Args.GetBool("Deleted"))
+            if (_Args.GetBoolean("Deleted"))
               return "Cancel";
           }
           else
           {
-            if (_Args.GetBool("Deleted"))
+            if (_Args.GetBoolean("Deleted"))
               return "Cancel";
             if (GetDocIdDeleted(handler))
               return "Cancel";
@@ -472,11 +472,11 @@ namespace FreeLibSet.Forms.Docs
 
     private bool GetDocIdDeleted(TableHandler handler)
     {
-      Int32 docId = _Args.GetInt("DocId");
+      Int32 docId = _Args.GetInt32("DocId");
       if (docId <= 0)
         return false;
 
-      return _DBCache[handler.DocType.Name].GetBool(docId, "Deleted");
+      return _DBCache[handler.DocType.Name].GetBoolean(docId, "Deleted");
     }
 
     #endregion
@@ -534,7 +534,7 @@ namespace FreeLibSet.Forms.Docs
       else
       {
         string refColumnName = columnName.Substring(0, p);
-        Int32 refId = DataTools.GetInt(InternalGetValue(row, tableName, refColumnName, primaryDS));
+        Int32 refId = DataTools.GetInt32(InternalGetValue(row, tableName, refColumnName, primaryDS));
         if (refId == 0)
           return null; // пустая ссылка
 
@@ -796,7 +796,7 @@ namespace FreeLibSet.Forms.Docs
           // Вызываем пользовательский обработчик и для удаленного документа
           if (handler.SubDocType == null)
           {
-            if (_Args.GetBool("Deleted"))
+            if (_Args.GetBoolean("Deleted"))
             {
               grayed = true;
               // return;
@@ -804,7 +804,7 @@ namespace FreeLibSet.Forms.Docs
           }
           else
           {
-            if (_Args.GetBool("Deleted") || GetDocIdDeleted(handler))
+            if (_Args.GetBoolean("Deleted") || GetDocIdDeleted(handler))
             {
               grayed = true;
               //return;
@@ -852,7 +852,7 @@ namespace FreeLibSet.Forms.Docs
           return;
         }
 
-        Int32 id = DataTools.GetInt(row, "Id");
+        Int32 id = DataTools.GetInt32(row, "Id");
         DoGetRowColor(tableName, id, row.Table.DataSet, row, out colorType, out grayed);
       }
       catch
@@ -942,7 +942,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (row.RowState == DataRowState.Deleted)
           return Res.DBxDocImageHandler_Msg_RowDeleted;
-        Int32 id = DataTools.GetInt(row, "Id");
+        Int32 id = DataTools.GetInt32(row, "Id");
         return DoGetToolTipText(tableName, id, row.Table.DataSet, row);
       }
       catch (Exception e)
@@ -1010,12 +1010,12 @@ namespace FreeLibSet.Forms.Docs
         {
           if (handler.SubDocType == null)
           {
-            if (_Args.GetBool("Deleted"))
+            if (_Args.GetBoolean("Deleted"))
               return Res.DBxDocImageHandler_Msg_DocDeleted;
           }
           else
           {
-            if (_Args.GetBool("Deleted"))
+            if (_Args.GetBoolean("Deleted"))
               return Res.DBxDocImageHandler_Msg_SubDocDeleted;
             if (GetDocIdDeleted(handler))
               return Res.DBxDocImageHandler_Msg_MainDocDeleted;

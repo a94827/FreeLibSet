@@ -1012,9 +1012,9 @@ namespace FreeLibSet.CommandLine
       CommandLineOption optDef = _OptionDefs.GetRequired(code);
       string value;
       if (!_OptionValues.TryGetValue(code, out value))
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       if (String.IsNullOrEmpty(value))
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
 
       if (optDef.ValueMode == CommandLineOptionValueMode.Multi)
         return value.Split(optDef.MultiValueSeparator);

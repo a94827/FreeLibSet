@@ -312,16 +312,42 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Проверяет, что первичным ключом таблицы является единственное целочисленное поле.
-    /// Если это не так, генерируется <see cref="DBxPrimaryKeyException"/>.
+    /// Если это не так, генерируется <see cref="PrimaryKeyException"/>.
     /// Предполагается, что проверка <see cref="CheckTableName"/> уже выполнена.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Имя поля первичного ключа</returns>
-    public string CheckTablePrimaryKeyInt32(string tableName)
+    public string CheckTablePrimaryKeyInteger(string tableName)
     {
-      DBxTableStruct ts = Con.GetTableStruct(tableName);
-      return DBxStructChecker.CheckTablePrimaryKeyInt32(ts);
+      DBxTableStruct ts = Con.GetTableStructRequired(tableName);
+      return DBxStructChecker.CheckTablePrimaryKeyInteger(ts);
     }
+
+    /// <summary>
+    /// Проверяет, что первичным ключом таблицы является единственное поле.
+    /// Если это не так, генерируется <see cref="PrimaryKeyException"/>.
+    /// Предполагается, что проверка <see cref="CheckTableName"/> уже выполнена.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <returns>Имя поля первичного ключа</returns>
+    public string CheckTablePrimaryKeySimple(string tableName)
+    {
+      DBxTableStruct ts = Con.GetTableStructRequired(tableName);
+      return DBxStructChecker.CheckTablePrimaryKeySimple(ts);
+    }
+
+    /// <summary>
+    /// Проверяет, что у таблицы есть первичный ключ, возможно, составной.
+    /// Если это не так, генерируется <see cref="PrimaryKeyException"/>.
+    /// Предполагается, что проверка <see cref="CheckTableName"/> уже выполнена.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    public void CheckTablePrimaryKeyExists(string tableName)
+    {
+      DBxTableStruct ts = Con.GetTableStructRequired(tableName);
+      DBxStructChecker.CheckTablePrimaryKeyExists(ts);
+    }
+
 
     /// <summary>
     /// Возвращает индекс поля первичного ключа в списке столбцов <paramref name="columnNames"/>
@@ -329,14 +355,14 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список столбцов для поиска</param>
     /// <returns>Индекс столбца или (-1), если столбец не найден</returns>
-    public int GetPrimaryKeyInt32ColumnIndex(string tableName, DBxColumns columnNames)
+    internal int GetPrimaryKeyInt32ColumnIndex(string tableName, DBxColumns columnNames)
     {
-      DBxTableStruct ts = Con.GetTableStruct(tableName);
+      DBxTableStruct ts = Con.GetTableStructRequired(tableName);
       if (ts.PrimaryKey.Count != 1)
         return -1;
 
       DBxColumnStruct cs = ts.Columns[ts.PrimaryKey[0]];
-      if (cs.ColumnType != DBxColumnType.Int)
+      if (!DBxTools.IsIntegerType(cs.ColumnType))
         return -1;
 
       return columnNames.IndexOf(cs.ColumnName);

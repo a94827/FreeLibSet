@@ -112,9 +112,9 @@ namespace ExtTools_tests.DBF
     }
 
     [Test]
-    public void CreateBool()
+    public void CreateBoolean()
     {
-      DbfFieldInfo sut = DbfFieldInfo.CreateBool("F1");
+      DbfFieldInfo sut = DbfFieldInfo.CreateBoolean("F1");
       Assert.AreEqual("F1", sut.Name, "Name");
       Assert.AreEqual('L', sut.Type, "Type");
       Assert.AreEqual(1, sut.Length, "Length");

@@ -379,7 +379,7 @@ namespace FreeLibSet.Parsing
       else
       {
         if (item is Int32 && resValue is Int32)
-          resValue = DataTools.GetInt(item) + DataTools.GetInt(resValue);
+          resValue = DataTools.GetInt32(item) + DataTools.GetInt32(resValue);
         else if (item is Single && resValue is Single)
           resValue = DataTools.GetSingle(item) + DataTools.GetSingle(resValue);
         else if (item is Double && resValue is Double)
@@ -399,7 +399,7 @@ namespace FreeLibSet.Parsing
         return Math.Sign((float)args[0]);
       if (args[0] is DateTime)
         return Math.Sign(((DateTime)args[0]).ToOADate());
-      return Math.Sign(DataTools.GetInt(args[0]));
+      return Math.Sign(DataTools.GetInt32(args[0]));
     }
 
     private static object CalcAbs(FunctionExpression expression, object[] args)
@@ -410,7 +410,7 @@ namespace FreeLibSet.Parsing
         return Math.Abs((double)args[0]);
       if (args[0] is float)
         return Math.Abs((float)args[0]);
-      return Math.Abs(DataTools.GetInt(args[0]));
+      return Math.Abs(DataTools.GetInt32(args[0]));
     }
 
     private static object CalcRound(FunctionExpression expression, object[] args)
@@ -418,7 +418,7 @@ namespace FreeLibSet.Parsing
       object value = args[0];
       int decimals = 0;
       if (args.Length >= 2)
-        decimals = DataTools.GetInt(args[1]);
+        decimals = DataTools.GetInt32(args[1]);
 
       /*
       switch (name)
@@ -442,10 +442,10 @@ namespace FreeLibSet.Parsing
         decimal v = (decimal)value;
         switch (expression.Function.Name)
         {
-          case "FLOOR": return DataTools.Floor(v, decimals);
-          case "CEILING": return DataTools.Ceiling(v, decimals);
-          case "ROUND": return DataTools.Round(v, decimals);
-          case "TRUNC": return DataTools.Truncate(v, decimals);
+          case "FLOOR": return MathTools.Floor(v, decimals);
+          case "CEILING": return MathTools.Ceiling(v, decimals);
+          case "ROUND": return MathTools.Round(v, decimals);
+          case "TRUNC": return MathTools.Truncate(v, decimals);
           default: throw new BugException();
         }
       }
@@ -456,10 +456,10 @@ namespace FreeLibSet.Parsing
         double res;
         switch (expression.Function.Name)
         {
-          case "FLOOR": res = DataTools.Floor(v, decimals); break;
-          case "CEILING": res = DataTools.Ceiling(v, decimals); break;
-          case "ROUND": res = DataTools.Round(v, decimals); break;
-          case "TRUNC": res = DataTools.Truncate(v, decimals); break;
+          case "FLOOR": res = MathTools.Floor(v, decimals); break;
+          case "CEILING": res = MathTools.Ceiling(v, decimals); break;
+          case "ROUND": res = MathTools.Round(v, decimals); break;
+          case "TRUNC": res = MathTools.Truncate(v, decimals); break;
           default: throw new BugException();
         }
 
@@ -565,9 +565,9 @@ namespace FreeLibSet.Parsing
       if (a is float || b is float)
         return System.Collections.Comparer.Default.Compare(DataTools.GetSingle(a), DataTools.GetSingle(b));
       else
-        return System.Collections.Comparer.Default.Compare(DataTools.GetInt(a), DataTools.GetInt(b));
+        return System.Collections.Comparer.Default.Compare(DataTools.GetInt32(a), DataTools.GetInt32(b));
 #endif
-      return DataTools.CompareNumbers(a, b); // 23.05.2023
+      return MathTools.CompareNumbers(a, b); // 23.05.2023
     }
 
 #if XXX
@@ -827,21 +827,21 @@ namespace FreeLibSet.Parsing
       CheckArgCount(expression, args, 1, 2);
       int len = 1;
       if (args.Length >= 2)
-        len = DataTools.GetInt(args[1]);
+        len = DataTools.GetInt32(args[1]);
       if (len < 0)
         throw ExceptionFactory.ArgOutOfRange("Len", len, 0, null);
 
       if (expression.Function.Name == "LEFT")
-        return DataTools.StrLeft(GetStr(args[0]), len);
+        return StringTools.StrLeft(GetStr(args[0]), len);
       else
-        return DataTools.StrRight(GetStr(args[0]), len);
+        return StringTools.StrRight(GetStr(args[0]), len);
     }
 
     private static object CalcMid(FunctionExpression expression, object[] args)
     {
       CheckArgCount(expression, args, 3);
-      int start = DataTools.GetInt(args[1]); // Помним, что нумерация символов с 1, а не с 0 
-      int len = DataTools.GetInt(args[2]);
+      int start = DataTools.GetInt32(args[1]); // Помним, что нумерация символов с 1, а не с 0 
+      int len = DataTools.GetInt32(args[2]);
       if (start < 1)
         throw ExceptionFactory.ArgOutOfRange("start", start, 1, null);
       if (len < 0)
@@ -882,8 +882,8 @@ namespace FreeLibSet.Parsing
     private static object CalcReplace(FunctionExpression expression, object[] args)
     {
       string s1 = DataTools.GetString(args[0]);
-      int start = DataTools.GetInt(args[1]); // нумерация начинается с 1
-      int n = DataTools.GetInt(args[2]);
+      int start = DataTools.GetInt32(args[1]); // нумерация начинается с 1
+      int n = DataTools.GetInt32(args[2]);
       string s2 = DataTools.GetString(args[3]);
 
       StringBuilder sb = new StringBuilder();
@@ -904,7 +904,7 @@ namespace FreeLibSet.Parsing
         return s1.Replace(s2, s3);
 
       // Замена только для заданного вхождения
-      int nReplace = DataTools.GetInt(args[3]);
+      int nReplace = DataTools.GetInt32(args[3]);
 
       int startIndex = 0;
       for (int i = 1; i <= nReplace; i++)
@@ -935,11 +935,11 @@ namespace FreeLibSet.Parsing
       {
         case "DATE":
           CheckArgCount(expression, args, 3);
-          return new DateTime(DataTools.GetInt(args[0]), DataTools.GetInt(args[1]), DataTools.GetInt(args[2]), 0, 0, 0, 0, DateTimeKind.Unspecified);
+          return new DateTime(DataTools.GetInt32(args[0]), DataTools.GetInt32(args[1]), DataTools.GetInt32(args[2]), 0, 0, 0, 0, DateTimeKind.Unspecified);
 
         case "TIME":
           CheckArgCount(expression, args, 3);
-          return new TimeSpan(DataTools.GetInt(args[0]), DataTools.GetInt(args[1]), DataTools.GetInt(args[2]));
+          return new TimeSpan(DataTools.GetInt32(args[0]), DataTools.GetInt32(args[1]), DataTools.GetInt32(args[2]));
 
         case "NOW":
           CheckArgCount(expression, args, 0);
@@ -988,7 +988,7 @@ namespace FreeLibSet.Parsing
 
       if (arg is DateTime)
         return DateTime.SpecifyKind((DateTime)arg, DateTimeKind.Unspecified);
-      else if (DataTools.IsIntegerType(arg.GetType()) || DataTools.IsFloatType(arg.GetType()))
+      else if (MathTools.IsNumericType(arg.GetType()))
       {
         double v = DataTools.GetDouble(arg);
         return DateTime.SpecifyKind(DateTime.FromOADate(v), DateTimeKind.Unspecified);
@@ -1058,7 +1058,7 @@ namespace FreeLibSet.Parsing
 
     private static object CalcIf(FunctionExpression expression, object[] args)
     {
-      if (GetBool(args[0]))
+      if (GetBoolean(args[0]))
         return args[1];
       else
         return args[2];
@@ -1068,7 +1068,7 @@ namespace FreeLibSet.Parsing
     {
       for (int i = 0; i < args.Length; i++)
       {
-        if (!GetBool(args[i]))
+        if (!GetBoolean(args[i]))
           return false;
       }
       return true;
@@ -1078,7 +1078,7 @@ namespace FreeLibSet.Parsing
     {
       for (int i = 0; i < args.Length; i++)
       {
-        if (GetBool(args[i]))
+        if (GetBoolean(args[i]))
           return true;
       }
       return false;
@@ -1086,7 +1086,7 @@ namespace FreeLibSet.Parsing
 
     private static object CalcNot(FunctionExpression expression, object[] args)
     {
-      return !GetBool(args[0]);
+      return !GetBoolean(args[0]);
     }
 
     private static object CalcTrueFalse(FunctionExpression expression, object[] args)
@@ -1100,12 +1100,12 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static bool GetBool(object value)
+    private static bool GetBoolean(object value)
     {
       if (value is DateTime)
         return true;
       else
-        return DataTools.GetBool(value);
+        return DataTools.GetBoolean(value);
     }
 
     #endregion
@@ -1114,7 +1114,7 @@ namespace FreeLibSet.Parsing
 
     private static object CalcChoose(FunctionExpression expression, object[] args)
     {
-      int index = DataTools.GetInt(args[0]);
+      int index = DataTools.GetInt32(args[0]);
       if (index < 1 || index >= args.Length)
         throw ExceptionFactory.ArgOutOfRange("index", index, 1, args.Length - 1);
       //return args[index - 1];

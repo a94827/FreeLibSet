@@ -18,8 +18,8 @@ namespace ExtTools_tests.Data
     public void Constructor_1()
     {
       DoConstrcuctor_1("ABC", DBxColumnType.String);
-      DoConstrcuctor_1(1, DBxColumnType.Int);
-      DoConstrcuctor_1(123.4, DBxColumnType.Float);
+      DoConstrcuctor_1(1, DBxColumnType.Int32);
+      DoConstrcuctor_1(123.4, DBxColumnType.Double);
       DoConstrcuctor_1(123m, DBxColumnType.Decimal);
       DoConstrcuctor_1(true, DBxColumnType.Boolean);
       DoConstrcuctor_1(new DateTime(2023, 4, 27), DBxColumnType.Date);
@@ -88,13 +88,13 @@ namespace ExtTools_tests.Data
     [TestCase(123, 456, false)]
     public void Equals_sameType(int v1, int v2, bool wantedRes)
     {
-      DoEquals(new DBxConst(v1, DBxColumnType.Int), new DBxConst(v2, DBxColumnType.Int), wantedRes);
+      DoEquals(new DBxConst(v1, DBxColumnType.Int32), new DBxConst(v2, DBxColumnType.Int32), wantedRes);
     }
 
     [Test]
     public void Equals_diffType()
     {
-      DoEquals(new DBxConst(0, DBxColumnType.Int), new DBxConst(0, DBxColumnType.Float), false);
+      DoEquals(new DBxConst(0, DBxColumnType.Int32), new DBxConst(0, DBxColumnType.Double), false);
     }
 
     private static void DoEquals(DBxConst obj1, DBxConst obj2, bool wantedRes)
@@ -126,7 +126,7 @@ namespace ExtTools_tests.Data
     public void GetValue(object value, object wantedValue)
     {
       DummyNamedValues dummy = new DummyNamedValues();
-      DBxConst sut = new DBxConst(value, DBxColumnType.Int);
+      DBxConst sut = new DBxConst(value, DBxColumnType.Int32);
       object res = sut.GetValue(dummy);
       Assert.AreEqual(wantedValue, res);
     }

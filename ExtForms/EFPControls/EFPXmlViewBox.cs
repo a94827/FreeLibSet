@@ -422,7 +422,7 @@ namespace FreeLibSet.Forms
           if (Control.XmlDocument == null)
             throw new BugException("Control.XmlDocument==null");
 #endif
-          FileTools.WriteXmlDocument(res, Control.XmlDocument);
+          XmlTools.WriteXmlDocument(res, Control.XmlDocument);
           break;
 
         default:

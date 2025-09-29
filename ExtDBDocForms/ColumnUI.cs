@@ -227,7 +227,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public bool AsBoolean
     {
-      get { return DataTools.GetBool(Value); }
+      get { return DataTools.GetBoolean(Value); }
       set { Value = value; }
     }
 
@@ -237,7 +237,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public int AsInteger
     {
-      get { return DataTools.GetInt(Value); }
+      get { return DataTools.GetInt32(Value); }
       set
       {
         if (value == 0)
@@ -411,7 +411,7 @@ namespace FreeLibSet.Forms.Docs
         if (this[i].NewMode == ColumnNewMode.Saved || this[i].NewMode == ColumnNewMode.SavedIfChangedElseDefault)
         {
           CfgPart Part2 = Part.GetChild(this[i].ColumnName, true);
-          Part2.SetBool("HasValue", this[i].HasSavedValue);
+          Part2.SetBoolean("HasValue", this[i].HasSavedValue);
           if (this[i].HasSavedValue)
           {
             object v = this[i].SavedValue;
@@ -454,11 +454,11 @@ namespace FreeLibSet.Forms.Docs
             if (v is bool)
             {
               Part2.SetString("Type", "Boolean");
-              Part2.SetBool("Value", (bool)v);
+              Part2.SetBoolean("Value", (bool)v);
               continue;
             }
-            Part2.SetString("Type", "Int");
-            Part2.SetInt("Value", DataTools.GetInt(v));
+            Part2.SetString("Type", "Int32");
+            Part2.SetInt32("Value", DataTools.GetInt32(v));
           }
         }
       }
@@ -473,7 +473,7 @@ namespace FreeLibSet.Forms.Docs
           CfgPart Part2 = Part.GetChild(this[i].ColumnName, false);
           if (Part2 == null)
             continue;
-          this[i].HasSavedValue = Part2.GetBool("HasValue");
+          this[i].HasSavedValue = Part2.GetBoolean("HasValue");
           if (this[i].HasSavedValue)
           {
             this[i].SavedValue = null;
@@ -492,10 +492,10 @@ namespace FreeLibSet.Forms.Docs
                 this[i].SavedValue = Part2.GetDecimal("Value");
                 break;
               case "Boolean":
-                this[i].SavedValue = Part2.GetBool("Value");
+                this[i].SavedValue = Part2.GetBoolean("Value");
                 break;
-              case "Int":
-                this[i].SavedValue = Part2.GetInt("Value");
+              case "Int32":
+                this[i].SavedValue = Part2.GetInt32("Value");
                 break;
             }
           }

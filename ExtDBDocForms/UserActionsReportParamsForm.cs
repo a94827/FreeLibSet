@@ -226,7 +226,7 @@ namespace FreeLibSet.Forms.Docs
       FirstDate = cfg.GetNullableDate("FirstDate");
       LastDate = cfg.GetNullableDate("LastDate");
       if (UI.DocProvider.DocTypes.UseUsers)
-        UserId = cfg.GetInt("UserId");
+        UserId = cfg.GetInt32("UserId");
       SingleDocTypeName = cfg.GetString("DocType");
     }
 
@@ -239,7 +239,7 @@ namespace FreeLibSet.Forms.Docs
       cfg.SetNullableDate("FirstDate", FirstDate);
       cfg.SetNullableDate("LastDate", LastDate);
       if (UI.DocProvider.DocTypes.UseUsers)
-        cfg.SetInt("UserId", UserId);
+        cfg.SetInt32("UserId", UserId);
       cfg.SetString("DocType", SingleDocTypeName);
     }
 
@@ -340,26 +340,26 @@ namespace FreeLibSet.Forms.Docs
 
     void MainPage_InitGrid(object sender, EventArgs args)
     {
-      _MainPage.ControlProvider.Columns.AddInt("Id", true, "UserActionId", 5);
+      _MainPage.ControlProvider.Columns.AddInteger("Id", true, "UserActionId", 5);
       _MainPage.ControlProvider.Columns.AddDateTime("StartTime", true, Res.Common_ColTitle_ActionStartTime);
       _MainPage.ControlProvider.Columns.AddDateTime("ActionTime", true, Res.Common_ColTitle_ActionTime);
-      _MainPage.ControlProvider.Columns.AddInt("ApplyChangesCount", true, Res.Common_ColTitle_ApplyChangesCount, 4);
+      _MainPage.ControlProvider.Columns.AddInteger("ApplyChangesCount", true, Res.Common_ColTitle_ApplyChangesCount, 4);
       _MainPage.ControlProvider.Columns.AddDateTime("ApplyChangesTime", true, Res.Common_ColTitle_ApplyChangesTime);
-      _MainPage.ControlProvider.Columns.AddText("EditTime", false, Res.Common_ColTitle_EditTime, 10);
+      _MainPage.ControlProvider.Columns.AddText("EditTime", false, Res.Common_ColTitle_EditTime, 10, 5);
       _MainPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
       {
         if (UI.DebugShowIds)
-          _MainPage.ControlProvider.Columns.AddInt("UserId", true, "UserId", 5);
+          _MainPage.ControlProvider.Columns.AddInteger("UserId", true, "UserId", 5);
         _MainPage.ControlProvider.Columns.AddText("UserId.UserName", false, Res.Common_ColTitle_UserName, 15, 5);
       }
       if (UI.DocProvider.DocTypes.UseSessionId)
-        _MainPage.ControlProvider.Columns.AddInt("SessionId", true, "SessionId", 5);
+        _MainPage.ControlProvider.Columns.AddInteger("SessionId", true, "SessionId", 5);
       _MainPage.ControlProvider.Columns.AddTextFill("ActionInfo", true, Res.Common_ColTitle_ActionInfo, 100, 20);
       _MainPage.ControlProvider.DisableOrdering();
 
-      _MainPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(MainGridHandler_GetRowAttributes);
-      _MainPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(MainGridHandler_GetCellAttributes);
+      _MainPage.ControlProvider.RowInfoNeeded += new EFPDataGridViewRowInfoEventHandler(MainGridHandler_RowInfoNeeded);
+      _MainPage.ControlProvider.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(MainGridHandler_CellInfoNeeded);
 
       _MainPage.ControlProvider.ConfigSectionName = ConfigSectionName;
 
@@ -373,18 +373,18 @@ namespace FreeLibSet.Forms.Docs
 
     }
 
-    private static void MainGridHandler_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    private static void MainGridHandler_RowInfoNeeded(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
     }
 
-    private static void MainGridHandler_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private static void MainGridHandler_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       EFPDBxGridView ControlProvider = (EFPDBxGridView)sender;
 
       switch (args.ColumnName)
       {
         case "UserId.UserName":
-          Int32 userId = DataTools.GetInt(args.DataRow, "UserId");
+          Int32 userId = DataTools.GetInt32(args.DataRow, "UserId");
           if (userId != 0)
             args.Value = ControlProvider.UI.TextHandlers.GetTextValue(ControlProvider.UI.DocProvider.DocTypes.UsersTableName, userId);
           break;
@@ -413,7 +413,7 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      Int32 actionId = DataTools.GetInt(row, "Id");
+      Int32 actionId = DataTools.GetInt32(row, "Id");
 
       if (Pages.FindAndActivate(actionId.ToString()))
         return; // Уже была закладка
@@ -429,11 +429,11 @@ namespace FreeLibSet.Forms.Docs
 
       if (UI.DocProvider.DocTypes.UseUsers) // 21.05.2019
       {
-        Int32 userId = DataTools.GetInt(row, "UserId");
+        Int32 userId = DataTools.GetInt32(row, "UserId");
         string userName = UI.DocTypes[UI.DocProvider.DocTypes.UsersTableName].GetTextValue(userId);
         Int32 sessionId = 0;
         if (UI.DocProvider.DocTypes.UseSessionId)
-          sessionId = DataTools.GetInt(row, "SessionId");
+          sessionId = DataTools.GetInt32(row, "SessionId");
         actionPage.FilterInfo.Add(Res.UserActionReport_Name_UserFilter, userName + " (UserId=" + userId.ToString() + ")" +
           (sessionId == 0 ? String.Empty : (" (SessionId=" + sessionId.ToString() + ")")));
         if (EFPApp.ShowListImages)
@@ -462,15 +462,15 @@ namespace FreeLibSet.Forms.Docs
           spl.AllowCancel = true;
           for (int i = 0; i < args.DataRows.Length; i++)
           {
-            Int32 actionId = DataTools.GetInt(args.DataRows[i], "Id");
+            Int32 actionId = DataTools.GetInt32(args.DataRows[i], "Id");
             DataTable table = UI.DocProvider.GetUserActionDocTable(actionId); // не оптимально
             foreach (DataRow row in table.Rows)
             {
-              Int32 docTableId = DataTools.GetInt(row, "DocTableId");
+              Int32 docTableId = DataTools.GetInt32(row, "DocTableId");
               DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(docTableId);
               if (dt == null)
                 continue;
-              Int32 DocId = DataTools.GetInt(row, "DocId");
+              Int32 DocId = DataTools.GetInt32(row, "DocId");
               args.DocSel.Add(dt.Name, DocId);
             }
             spl.IncPercent();
@@ -496,23 +496,23 @@ namespace FreeLibSet.Forms.Docs
 
       actionPage.ControlProvider.Columns.AddImage("Image1");
       if (UI.DebugShowIds)
-        actionPage.ControlProvider.Columns.AddInt("DocTableId", true, "DocTableId", 5);
+        actionPage.ControlProvider.Columns.AddInteger("DocTableId", true, "DocTableId", 5);
       actionPage.ControlProvider.Columns.AddText("DocType", false, Res.Common_ColTitle_DocType, 10, 5);
 
       actionPage.ControlProvider.Columns.AddImage("Image2");
       if (UI.DebugShowIds)
-        actionPage.ControlProvider.Columns.AddInt("Action", true, "Action", 5);
+        actionPage.ControlProvider.Columns.AddInteger("Action", true, "Action", 5);
       actionPage.ControlProvider.Columns.AddText("ActionInfo", false, Res.Common_ColTitle_ActionInfo, 10, 5);
 
-      actionPage.ControlProvider.Columns.AddInt("DocId", true, "DocId", 5);
+      actionPage.ControlProvider.Columns.AddInteger("DocId", true, "DocId", 5);
       actionPage.ControlProvider.Columns.AddTextFill("DocText", false, Res.Common_ColTitle_DocText, 100, 30);
-      actionPage.ControlProvider.Columns.AddInt("Id", true, "DocActionId", 5);
+      actionPage.ControlProvider.Columns.AddInteger("Id", true, "DocActionId", 5);
 
       actionPage.ControlProvider.DisableOrdering();
       actionPage.ControlProvider.ConfigSectionName = "OneActionView";
 
-      actionPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ActionGridHandler_GetRowAttributes);
-      actionPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ActionGridHandler_GetCellAttributes);
+      actionPage.ControlProvider.RowInfoNeeded += new EFPDataGridViewRowInfoEventHandler(ActionGridHandler_RowInfoNeeded);
+      actionPage.ControlProvider.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(ActionGridHandler_CellInfoNeeded);
       actionPage.ControlProvider.ShowRowCountInTopLeftCell = true;
 
 
@@ -539,12 +539,12 @@ namespace FreeLibSet.Forms.Docs
     private DocTypeUI _CurrDocType;
     private DataRow _CurrRow;
 
-    void ActionGridHandler_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    void ActionGridHandler_RowInfoNeeded(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
       _CurrRow = args.DataRow;
       if (_CurrRow == null)
         return;
-      Int32 docTableId = DataTools.GetInt(_CurrRow, "DocTableId");
+      Int32 docTableId = DataTools.GetInt32(_CurrRow, "DocTableId");
       DBxDocType docType = UI.DocProvider.DocTypes.FindByTableId(docTableId);
       if (docType == null)
         _CurrDocType = null;
@@ -552,7 +552,7 @@ namespace FreeLibSet.Forms.Docs
         _CurrDocType = UI.DocTypes[docType.Name];
     }
 
-    void ActionGridHandler_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void ActionGridHandler_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       UndoAction action;
       string imageKey;
@@ -574,21 +574,21 @@ namespace FreeLibSet.Forms.Docs
           break;
         case "DocType":
           if (_CurrDocType == null)
-            args.Value = "?? " + DataTools.GetInt(_CurrRow, "DocTableId").ToString();
+            args.Value = "?? " + DataTools.GetInt32(_CurrRow, "DocTableId").ToString();
           else
             args.Value = _CurrDocType.DocType.SingularTitle;
           break;
         case "Image2":
-          action = (UndoAction)(DataTools.GetInt(_CurrRow, "Action"));
+          action = (UndoAction)(DataTools.GetInt32(_CurrRow, "Action"));
           imageKey = DBUI.GetUndoActionImageKey(action);
           args.Value = EFPApp.MainImages.Images[imageKey];
           break;
         case "ActionInfo":
-          action = (UndoAction)(DataTools.GetInt(_CurrRow, "Action"));
+          action = (UndoAction)(DataTools.GetInt32(_CurrRow, "Action"));
           args.Value = DBxDocProvider.GetUndoActionName((UndoAction)action);
           break;
         case "DocText":
-          Int32 docId = DataTools.GetInt(_CurrRow, "DocId");
+          Int32 docId = DataTools.GetInt32(_CurrRow, "DocId");
           if (_CurrDocType == null)
             args.Value = "DocId=" + docId.ToString();
           else
@@ -605,7 +605,7 @@ namespace FreeLibSet.Forms.Docs
       if (!controlProvider.CheckSingleRow())
         return;
       DataRow row = controlProvider.CurrentDataRow;
-      Int32 docTableId = DataTools.GetInt(_CurrRow, "DocTableId");
+      Int32 docTableId = DataTools.GetInt32(_CurrRow, "DocTableId");
       DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(docTableId);
       if (dt == null)
       {
@@ -613,7 +613,7 @@ namespace FreeLibSet.Forms.Docs
         Res.UserActionReport_ErrTitle_UnknownDocType, MessageBoxButtons.OK, MessageBoxIcon.Error);
         return;
       }
-      Int32 docId = DataTools.GetInt(_CurrRow, "DocId");
+      Int32 docId = DataTools.GetInt32(_CurrRow, "DocId");
       if (docId == 0)
       {
         EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
@@ -624,7 +624,7 @@ namespace FreeLibSet.Forms.Docs
 
       //dt2.PerformEditing(DocId, true);
       // Просмотр истории
-      int version = DataTools.GetInt(row, "Version");
+      int version = DataTools.GetInt32(row, "Version");
 
       DBxDocSet docSet = new DBxDocSet(UI.DocProvider);
       docSet[dt.Name].ViewVersion(docId, version);
@@ -644,7 +644,7 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedRow);
         return;
       }
-      Int32 docTableId = DataTools.GetInt(_CurrRow, "DocTableId");
+      Int32 docTableId = DataTools.GetInt32(_CurrRow, "DocTableId");
       DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(docTableId);
       if (dt == null)
       {
@@ -652,7 +652,7 @@ namespace FreeLibSet.Forms.Docs
         Res.UserActionReport_ErrTitle_UnknownDocType, MessageBoxButtons.OK, MessageBoxIcon.Error);
         return;
       }
-      Int32 docId = DataTools.GetInt(_CurrRow, "DocId");
+      Int32 docId = DataTools.GetInt32(_CurrRow, "DocId");
       if (docId == 0)
       {
         EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
@@ -667,11 +667,11 @@ namespace FreeLibSet.Forms.Docs
     {
       for (int i = 0; i < args.DataRows.Length; i++)
       {
-        Int32 docTableId = DataTools.GetInt(args.DataRows[i], "DocTableId");
+        Int32 docTableId = DataTools.GetInt32(args.DataRows[i], "DocTableId");
         DBxDocType dt = UI.DocProvider.DocTypes.FindByTableId(docTableId);
         if (dt == null)
           continue;
-        Int32 docId = DataTools.GetInt(args.DataRows[i], "DocId");
+        Int32 docId = DataTools.GetInt32(args.DataRows[i], "DocId");
         args.DocSel.Add(dt.Name, docId);
       }
     }

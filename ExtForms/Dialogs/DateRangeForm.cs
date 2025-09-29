@@ -42,8 +42,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public DateRangeDialog()
     {
-      _NFirstDate = null;
-      _NLastDate = null;
+      _NFirstValue = null;
+      _NLastValue = null;
       _CanBeEmptyMode = UIValidateState.Error;
       _CanBeHalfEmpty = true;
     }
@@ -64,159 +64,159 @@ namespace FreeLibSet.Forms
 
     #region Текущее значение
 
-    #region NFirstDate
+    #region NFirstValue
 
     /// <summary>
     /// Вход и выход: Начальная дата диапазона.
     /// Значение null после завершения диалога может быть только при <see cref="CanBeEmpty"/>=true.
     /// </summary>
-    public DateTime? NFirstDate
+    public DateTime? NFirstValue
     {
-      get { return _NFirstDate; }
+      get { return _NFirstValue; }
       set
       {
         if (value.HasValue)
-          _NFirstDate = value.Value.Date;
+          _NFirstValue = value.Value.Date;
         else
-          _NFirstDate = null;
-        if (_NFirstDateEx != null)
-          _NFirstDateEx.OwnerSetValue(NFirstDate);
-        if (_FirstDateEx != null)
-          _FirstDateEx.OwnerSetValue(FirstDate);
+          _NFirstValue = null;
+        if (_NFirstValueEx != null)
+          _NFirstValueEx.OwnerSetValue(NFirstValue);
+        if (_FirstValueEx != null)
+          _FirstValueEx.OwnerSetValue(FirstValue);
       }
     }
-    private DateTime? _NFirstDate;
+    private DateTime? _NFirstValue;
 
     /// <summary>
-    /// Управляемое свойство для <see cref="NFirstDate"/>.
+    /// Управляемое свойство для <see cref="NFirstValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
-    public DepValue<DateTime?> NFirstDateEx
+    public DepValue<DateTime?> NFirstValueEx
     {
       get
       {
-        if (_NFirstDateEx == null)
+        if (_NFirstValueEx == null)
         {
-          _NFirstDateEx = new DepOutput<DateTime?>(NFirstDate);
-          _NFirstDateEx.OwnerInfo = new DepOwnerInfo(this, "NFirstDateEx");
+          _NFirstValueEx = new DepOutput<DateTime?>(NFirstValue);
+          _NFirstValueEx.OwnerInfo = new DepOwnerInfo(this, "NFirstValueEx");
         }
-        return _NFirstDateEx;
+        return _NFirstValueEx;
       }
     }
-    private DepOutput<DateTime?> _NFirstDateEx;
+    private DepOutput<DateTime?> _NFirstValueEx;
 
     #endregion
 
-    #region NLastDate
+    #region NLastValue
 
     /// <summary>
     /// Вход и выход: Конечная дата диапазона.
     /// Значение null после завершения диалога может быть только при <see cref="CanBeEmpty"/>=true.
     /// </summary>
-    public DateTime? NLastDate
+    public DateTime? NLastValue
     {
-      get { return _NLastDate; }
+      get { return _NLastValue; }
       set
       {
         if (value.HasValue)
-          _NLastDate = value.Value.Date;
+          _NLastValue = value.Value.Date;
         else
-          _NLastDate = null;
+          _NLastValue = null;
 
-        if (_NLastDateEx != null)
-          _NLastDateEx.OwnerSetValue(NLastDate);
-        if (_LastDateEx != null)
-          _LastDateEx.OwnerSetValue(LastDate);
+        if (_NLastValueEx != null)
+          _NLastValueEx.OwnerSetValue(NLastValue);
+        if (_LastValueEx != null)
+          _LastValueEx.OwnerSetValue(LastValue);
       }
     }
-    private DateTime? _NLastDate;
+    private DateTime? _NLastValue;
 
     /// <summary>
-    /// Управляемое свойство для <see cref="NLastDate"/>.
+    /// Управляемое свойство для <see cref="NLastValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
-    public DepValue<DateTime?> NLastDateEx
+    public DepValue<DateTime?> NLastValueEx
     {
       get
       {
-        if (_NLastDateEx == null)
+        if (_NLastValueEx == null)
         {
-          _NLastDateEx = new DepOutput<DateTime?>(NLastDate);
-          _NLastDateEx.OwnerInfo = new DepOwnerInfo(this, "NLastDateEx");
+          _NLastValueEx = new DepOutput<DateTime?>(NLastValue);
+          _NLastValueEx.OwnerInfo = new DepOwnerInfo(this, "NLastValueEx");
         }
-        return _NLastDateEx;
+        return _NLastValueEx;
       }
     }
-    private DepOutput<DateTime?> _NLastDateEx;
+    private DepOutput<DateTime?> _NLastValueEx;
 
     #endregion
 
-    #region FirstDate
+    #region FirstValue
 
     /// <summary>
     /// Первое редактируемое значение. Пустое значение заменяется на минимально возможную дату.
     /// </summary>
-    public DateTime FirstDate
+    public DateTime FirstValue
     {
-      get { return NFirstDate ?? DateRange.Whole.FirstDate; }
-      set { NFirstDate = value; }
+      get { return NFirstValue ?? DateRange.Whole.FirstDate; }
+      set { NFirstValue = value; }
     }
 
     /// <summary>
-    /// Управляемое свойство для <see cref="FirstDate"/>.
+    /// Управляемое свойство для <see cref="FirstValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
-    public DepValue<DateTime> FirstDateEx
+    public DepValue<DateTime> FirstValueEx
     {
       get
       {
-        if (_FirstDateEx == null)
+        if (_FirstValueEx == null)
         {
-          _FirstDateEx = new DepOutput<DateTime>(FirstDate);
-          _FirstDateEx.OwnerInfo = new DepOwnerInfo(this, "FirstDateEx");
+          _FirstValueEx = new DepOutput<DateTime>(FirstValue);
+          _FirstValueEx.OwnerInfo = new DepOwnerInfo(this, "FirstValueEx");
         }
-        return _FirstDateEx;
+        return _FirstValueEx;
       }
     }
-    private DepOutput<DateTime> _FirstDateEx;
+    private DepOutput<DateTime> _FirstValueEx;
 
     #endregion
 
-    #region LastDate
+    #region LastValue
 
     /// <summary>
     /// Второе редактируемое значение. Пустое значение заменяется на максимально возможную дату.
     /// </summary>
-    public DateTime LastDate
+    public DateTime LastValue
     {
-      get { return NLastDate ?? DateRange.Whole.LastDate; }
-      set { NLastDate = value; }
+      get { return NLastValue ?? DateRange.Whole.LastDate; }
+      set { NLastValue = value; }
     }
 
     /// <summary>
-    /// Управляемое свойство для <see cref="LastDate"/>.
+    /// Управляемое свойство для <see cref="LastValue"/>.
     /// Только для чтения. Может использоваться в валидаторах.
     /// </summary>
-    public DepValue<DateTime> LastDateEx
+    public DepValue<DateTime> LastValueEx
     {
       get
       {
-        if (_LastDateEx == null)
+        if (_LastValueEx == null)
         {
-          _LastDateEx = new DepOutput<DateTime>(LastDate);
-          _LastDateEx.OwnerInfo = new DepOwnerInfo(this, "LastDateEx");
+          _LastValueEx = new DepOutput<DateTime>(LastValue);
+          _LastValueEx.OwnerInfo = new DepOwnerInfo(this, "LastValueEx");
         }
-        return _LastDateEx;
+        return _LastValueEx;
       }
     }
-    private DepOutput<DateTime> _LastDateEx;
+    private DepOutput<DateTime> _LastValueEx;
 
     #endregion
 
     #region IsNotEmptyEx
 
     /// <summary>
-    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (<see cref="NFirstDate"/>.HasValue=true и <see cref="NLastDate"/>.HasValue=true).
+    /// Управляемое свойство возвращает true, если обе даты диапазона заполнены (<see cref="NFirstValue"/>.HasValue=true и <see cref="NLastValue"/>.HasValue=true).
     /// Может использоваться в валидаторах.
     /// </summary>
     public DepValue<bool> IsNotEmptyEx
@@ -225,7 +225,7 @@ namespace FreeLibSet.Forms
       {
         if (_IsNotEmptyEx == null)
         {
-          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstDateEx, NLastDateEx, CalcIsNotEmptyEx);
+          _IsNotEmptyEx = new DepExpr2<bool, DateTime?, DateTime?>(NFirstValueEx, NLastValueEx, CalcIsNotEmptyEx);
           _IsNotEmptyEx.OwnerInfo = new DepOwnerInfo(this, "IsNotEmptyEx");
         }
         return _IsNotEmptyEx;
@@ -318,12 +318,12 @@ namespace FreeLibSet.Forms
 
       if (HasConfig)
       {
-        _NFirstDate = ConfigPart.GetNullableDate(ConfigName + "-FirstDate");
-        _NLastDate = ConfigPart.GetNullableDate(ConfigName + "-LastDate");
+        _NFirstValue = ConfigPart.GetNullableDate(ConfigName + "-FirstValue");
+        _NLastValue = ConfigPart.GetNullableDate(ConfigName + "-LastValue");
       }
 
-      frm.TheDateRangeBox.First.NValue = _NFirstDate;
-      frm.TheDateRangeBox.Last.NValue = _NLastDate;
+      frm.TheDateRangeBox.First.NValue = _NFirstValue;
+      frm.TheDateRangeBox.Last.NValue = _NLastValue;
 
       EFPFormCheck fc = new EFPFormCheck();
       frm.FormProvider.FormChecks.Add(fc);
@@ -333,13 +333,13 @@ namespace FreeLibSet.Forms
       if (EFPApp.ShowDialog(frm, true, DialogPosition) != DialogResult.OK)
         return DialogResult.Cancel;
 
-      _NFirstDate = frm.TheDateRangeBox.First.NValue;
-      _NLastDate = frm.TheDateRangeBox.Last.NValue;
+      _NFirstValue = frm.TheDateRangeBox.First.NValue;
+      _NLastValue = frm.TheDateRangeBox.Last.NValue;
 
       if (HasConfig)
       {
-        ConfigPart.SetNullableDate(ConfigName + "-FirstDate", _NFirstDate);
-        ConfigPart.SetNullableDate(ConfigName + "-LastDate", _NLastDate);
+        ConfigPart.SetNullableDate(ConfigName + "-FirstValue", _NFirstValue);
+        ConfigPart.SetNullableDate(ConfigName + "-LastValue", _NLastValue);
       }
 
       return DialogResult.OK;
@@ -349,8 +349,8 @@ namespace FreeLibSet.Forms
     {
       EFPFormCheck formCheck = (EFPFormCheck)sender;
       DateRangeForm form = (DateRangeForm)(formCheck.Tag);
-      NFirstDate = form.TheDateRangeBox.First.NValue;
-      NLastDate = form.TheDateRangeBox.Last.NValue;
+      NFirstValue = form.TheDateRangeBox.First.NValue;
+      NLastValue = form.TheDateRangeBox.Last.NValue;
 
       if (HasValidators)
         Validators.Validate(args);

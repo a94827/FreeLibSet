@@ -32,7 +32,7 @@
       this.lblMonth = new System.Windows.Forms.Label();
       this.cbMonth = new System.Windows.Forms.ComboBox();
       this.lblYear = new System.Windows.Forms.Label();
-      this.edYear = new FreeLibSet.Controls.IntEditBox();
+      this.edYear = new FreeLibSet.Controls.Int32EditBox();
       this.SuspendLayout();
       // 
       // lblMonth
@@ -78,6 +78,6 @@
     private System.Windows.Forms.Label lblMonth;
     internal System.Windows.Forms.ComboBox cbMonth;
     private System.Windows.Forms.Label lblYear;
-    internal FreeLibSet.Controls.IntEditBox edYear;
+    internal FreeLibSet.Controls.Int32EditBox edYear;
   }
 }

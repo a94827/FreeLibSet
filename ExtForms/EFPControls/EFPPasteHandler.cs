@@ -1095,25 +1095,6 @@ namespace FreeLibSet.Forms
     public event EFPTestDataObjectEventHandler TestFormat;
 
     /// <summary>
-    /// Проверить наличие данных подходящего формата
-    /// </summary>
-    /// <param name="data">Объект данных в буфере обмена</param>
-    /// <param name="reason">Обычная или специальная вставка</param>
-    /// <param name="dataInfoText">Сюда записывается описание формата или сообщение об ошибке</param>
-    /// <param name="dataImageKey">Сюда записывается код значка</param>
-    /// <returns>true, если формат подходит</returns>
-    [Obsolete("Use method overload with EFPTestDataObjectEventArgs", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool PerformTestFormat(IDataObject data, EFPPasteReason reason, out string dataInfoText, out string dataImageKey)
-    {
-      EFPTestDataObjectEventArgs args = new EFPTestDataObjectEventArgs(this, data, reason, String.Empty);
-      PerformTestFormat(args);
-      dataInfoText = args.DataInfoText;
-      dataImageKey = args.DataImageKey;
-      return args.Result == EFPTestDataObjectResult.Ok;
-    }
-
-    /// <summary>
     /// Проверить наличие данных подходящего формата.
     /// </summary>
     /// <param name="args">Аргументы события</param>
@@ -1214,21 +1195,6 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Выполнить предварительный просмотр.
     /// </summary>
-    /// <param name="data"></param>
-    /// <param name="reason"></param>
-    /// <returns></returns>
-    [Obsolete("Используйте method overload with EFPPreviewDataObjectEventArgs", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool PerformPreview(IDataObject data, EFPPasteReason reason)
-    {
-      EFPPreviewDataObjectEventArgs args = new EFPPreviewDataObjectEventArgs(this, data, reason, String.Empty);
-      PerformPreview(args);
-      return !args.Cancel;
-    }
-
-    /// <summary>
-    /// Выполнить предварительный просмотр.
-    /// </summary>
     /// <param name="args">Аргументы события</param>
     public void PerformPreview(EFPPreviewDataObjectEventArgs args)
     {
@@ -1271,19 +1237,6 @@ namespace FreeLibSet.Forms
     /// Обработчик должен быть обязательно установлен, если метод <see cref="OnPaste"/> не переопределен.
     /// </summary>
     public event EFPPasteDataObjectEventHandler Paste;
-
-    /// <summary>
-    /// Выполнить вставку
-    /// </summary>
-    /// <param name="data">Данные из буфера обмена</param>
-    /// <param name="reason">Обычная или специальная вставка</param>
-    [Obsolete("Use overload method with EFPPasteDataObjectEventArgs", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public void PerformPaste(IDataObject data, EFPPasteReason reason)
-    {
-      EFPPasteDataObjectEventArgs args = new EFPPasteDataObjectEventArgs(this, data, reason, String.Empty);
-      PerformPaste(args);
-    }
 
     /// <summary>
     /// Выполнить вставку
@@ -1473,7 +1426,7 @@ namespace FreeLibSet.Forms
       else
         DisplayName = Res.EFPPasteTextMatrixFormat_Name_Text;
 
-      _SingleLineSeparators = DataTools.EmptyStrings;
+      _SingleLineSeparators = EmptyArray<string>.Empty;
     }
 
     #endregion
@@ -1570,7 +1523,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value == null)
-          _SingleLineSeparators = DataTools.EmptyStrings;
+          _SingleLineSeparators = EmptyArray<string>.Empty;
         else
           _SingleLineSeparators = value;
       }
@@ -1604,7 +1557,7 @@ namespace FreeLibSet.Forms
           {
             _UsedSeparator = SingleLineSeparators[i];
             string[] a = s.Split(new string[1] { SingleLineSeparators[i] }, StringSplitOptions.None);
-            matrix = DataTools.MatrixFromColumns<string>(a);
+            matrix = ArrayTools.MatrixFromColumns<string>(a);
           }
         }
       }

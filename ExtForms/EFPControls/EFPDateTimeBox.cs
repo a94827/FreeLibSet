@@ -796,7 +796,7 @@ namespace FreeLibSet.Forms
     {
       if (NValue.HasValue)
       {
-        if (!DataTools.DateInRange(NValue.Value, Minimum, Maximum))
+        if (!TimeTools.DateInRange(NValue.Value, Minimum, Maximum))
           SetError(String.Format(Res.DateTimeBox_Err_DateMustBeInRange, DateRangeFormatter.Default.ToString(Minimum, Maximum, true)));
       }
       else
@@ -1237,7 +1237,7 @@ namespace FreeLibSet.Forms
       if (ValidateState == UIValidateState.Error)
         return;
 
-      if (!DataTools.DateInRange(Value, Minimum, Maximum))
+      if (!TimeTools.DateInRange(Value, Minimum, Maximum))
           SetError(String.Format(Res.DateTimeBox_Err_DateMustBeInRange, DateRangeFormatter.Default.ToString(Minimum, Maximum, true)));
 
       base.OnValidate();

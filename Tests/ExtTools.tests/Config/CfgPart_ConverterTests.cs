@@ -26,12 +26,12 @@ namespace ExtTools_tests.Config
         return "[I4]" + StdConvert.ToString(value);
       }
 
-      public override bool TryParse(string s, out int value)
+      public override bool TryParseInt32(string s, out int value)
       {
         value = 0;
         if (s.Length < 5)
           return false;
-        return StdConvert.TryParse(s.Substring(4), out value);
+        return StdConvert.TryParseInt32(s.Substring(4), out value);
       }
 
       #endregion
@@ -43,12 +43,12 @@ namespace ExtTools_tests.Config
         return "[I8]" + StdConvert.ToString(value);
       }
 
-      public override bool TryParse(string s, out long value)
+      public override bool TryParseInt64(string s, out long value)
       {
         value = 0L;
         if (s.Length < 5)
           return false;
-        return StdConvert.TryParse(s.Substring(4), out value);
+        return StdConvert.TryParseInt64(s.Substring(4), out value);
       }
 
       #endregion
@@ -60,12 +60,12 @@ namespace ExtTools_tests.Config
         return "[F4]" + StdConvert.ToString(value);
       }
 
-      public override bool TryParse(string s, out float value)
+      public override bool TryParseSingle(string s, out float value)
       {
         value = 0f;
         if (s.Length < 5)
           return false;
-        return StdConvert.TryParse(s.Substring(4), out value);
+        return StdConvert.TryParseSingle(s.Substring(4), out value);
       }
 
       #endregion
@@ -77,12 +77,12 @@ namespace ExtTools_tests.Config
         return "[F8]" + StdConvert.ToString(value);
       }
 
-      public override bool TryParse(string s, out double value)
+      public override bool TryParseDouble(string s, out double value)
       {
         value = 0.0;
         if (s.Length < 5)
           return false;
-        return StdConvert.TryParse(s.Substring(4), out value);
+        return StdConvert.TryParseDouble(s.Substring(4), out value);
       }
 
       #endregion
@@ -94,12 +94,12 @@ namespace ExtTools_tests.Config
         return "[DC]" + StdConvert.ToString(value);
       }
 
-      public override bool TryParse(string s, out decimal value)
+      public override bool TryParseDecimal(string s, out decimal value)
       {
         value = 0m;
         if (s.Length < 5)
           return false;
-        return StdConvert.TryParse(s.Substring(4), out value);
+        return StdConvert.TryParseDecimal(s.Substring(4), out value);
       }
 
       #endregion
@@ -111,7 +111,7 @@ namespace ExtTools_tests.Config
         return "[BL]" + (value ? "YES" : "NO");
       }
 
-      public override bool TryParse(string s, out bool value)
+      public override bool TryParseBoolean(string s, out bool value)
       {
         value = false;
         if (s.Length < 5)
@@ -122,7 +122,7 @@ namespace ExtTools_tests.Config
           case "[BL]NO": value = false; return true;
           default:
             int v;
-            if (StdConvert.TryParse(s.Substring(4), out v))
+            if (StdConvert.TryParseInt32(s.Substring(4), out v))
             {
               value = v != 0;
               return true;
@@ -141,12 +141,12 @@ namespace ExtTools_tests.Config
         return (useTime ? "[TM]" : "[DT]") + StdConvert.ToString(value, useTime);
       }
 
-      public override bool TryParse(string s, out DateTime value, bool useTime)
+      public override bool TryParseDateTime(string s, out DateTime value, bool useTime)
       {
         value = DateTime.MinValue;
         if (s.Length < 5)
           return false;
-        return StdConvert.TryParse(s.Substring(4), out value, useTime);
+        return StdConvert.TryParseDateTime(s.Substring(4), out value, useTime);
       }
 
       #endregion
@@ -158,12 +158,12 @@ namespace ExtTools_tests.Config
         return "[TS]" + StdConvert.ToString(value);
       }
 
-      public override bool TryParse(string s, out TimeSpan value)
+      public override bool TryParseTimeSpan(string s, out TimeSpan value)
       {
         value = TimeSpan.Zero;
         if (s.Length < 5)
           return false;
-        return StdConvert.TryParse(s.Substring(4), out value);
+        return StdConvert.TryParseTimeSpan(s.Substring(4), out value);
       }
 
       #endregion
@@ -175,7 +175,7 @@ namespace ExtTools_tests.Config
         return "[GU]" + value.ToString("N");
       }
 
-      public override bool TryParse(string s, out Guid value)
+      public override bool TryParseGuid(string s, out Guid value)
       {
         value = Guid.Empty;
         if (s.Length < 5)
@@ -205,19 +205,19 @@ namespace ExtTools_tests.Config
     #region Int32
 
     [Test]
-    public void SetInt()
+    public void SetInt32()
     {
       CfgPart sut = Create();
-      sut.SetInt("ABC", 123);
+      sut.SetInt32("ABC", 123);
       Assert.AreEqual("[I4]123", sut.GetString("ABC"));
     }
 
     [Test]
-    public void GetInt()
+    public void GetInt32()
     {
       CfgPart sut = Create();
       sut.SetString("ABC", "[I4]12345");
-      Assert.AreEqual(12345, sut.GetInt("ABC"));
+      Assert.AreEqual(12345, sut.GetInt32("ABC"));
     }
 
     #endregion
@@ -305,19 +305,19 @@ namespace ExtTools_tests.Config
     #region Boolean
 
     [Test]
-    public void SetBool()
+    public void SetBoolean()
     {
       CfgPart sut = Create();
-      sut.SetBool("ABC", false);
+      sut.SetBoolean("ABC", false);
       Assert.AreEqual("[BL]NO", sut.GetString("ABC"));
     }
 
     [Test]
-    public void GetBool()
+    public void GetBoolean()
     {
       CfgPart sut = Create();
       sut.SetString("ABC", "[BL]YES");
-      Assert.AreEqual(true, sut.GetBool("ABC"));
+      Assert.AreEqual(true, sut.GetBoolean("ABC"));
     }
 
     #endregion
@@ -411,25 +411,25 @@ namespace ExtTools_tests.Config
     #region Int32
 
     [Test]
-    public void SetNullableInt()
+    public void SetNullableInt32()
     {
       CfgPart sut = Create();
-      sut.SetNullableInt("ABC", 123);
+      sut.SetNullableInt32("ABC", 123);
       Assert.AreEqual("[I4]123", sut.GetString("ABC"), "#1");
 
-      sut.SetNullableInt("ABC", null);
+      sut.SetNullableInt32("ABC", null);
       Assert.IsFalse(sut.HasValue("ABC"), "#2");
     }
 
     [Test]
-    public void GetNullableInt()
+    public void GetNullableInt32()
     {
       CfgPart sut = Create();
       sut.SetString("ABC", "");
-      Assert.IsNull(sut.GetNullableInt("ABC"), "#1");
+      Assert.IsNull(sut.GetNullableInt32("ABC"), "#1");
 
       sut.SetString("ABC", "[I4]123");
-      Assert.AreEqual(123, sut.GetNullableInt("ABC"), "#2");
+      Assert.AreEqual(123, sut.GetNullableInt32("ABC"), "#2");
     }
 
     #endregion

@@ -54,12 +54,12 @@ namespace BRReportDemo
         efpTree.Columns.AddText("Name", true, "Название", 50, 10);
         efpTree.Columns.AddDate("Date1", true, "Начало");
         efpTree.Columns.AddDate("Date2", true, "Окончание");
-        FreeLibSet.Controls.TreeViewAdvNodeControls.NodeIntEditBox ncDays = efpTree.Columns.AddInt("Days", false, "Дни", 3); // вычисляемое поле
+        FreeLibSet.Controls.TreeViewAdvNodeControls.NodeInt32EditBox ncDays = efpTree.Columns.AddInt32("Days", false, "Дни", 3); // вычисляемое поле
         ncDays.VirtualMode = true;
         ncDays.ValueNeeded += NcDays_ValueNeeded;
-        efpTree.Columns.AddInt("Id", true, "Id", 3);
-        efpTree.Columns.AddInt("ParentId", true, "ParentId", 3);
-        efpTree.Columns.AddBool("Flag", true, "Flag");
+        efpTree.Columns.AddInt32("Id", true, "Id", 3);
+        efpTree.Columns.AddInt32("ParentId", true, "ParentId", 3);
+        efpTree.Columns.AddCheckBox("Flag", true, "Flag");
         efpTree.Columns.AddLink("Link", true, "Link", 20, 10); 
         if (useColumns)
         {
@@ -200,12 +200,12 @@ namespace BRReportDemo
         efpGrid.Columns.AddTextFill("Name", true, "Название", 50, 10);
         efpGrid.Columns.AddDate("Date1", true, "Начало");
         efpGrid.Columns.AddDate("Date2", true, "Окончание");
-        efpGrid.Columns.AddInt("Id", true, "Id", 3);
+        efpGrid.Columns.AddInteger("Id", true, "Id", 3);
         efpGrid.Columns.LastAdded.SizeGroup = "Id";
         efpGrid.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
         efpGrid.Columns["Id"].DisplayName = "Идентификатор узла";
         efpGrid.Columns.LastAdded.ColorType = UIDataViewColorType.Total1;
-        efpGrid.Columns.AddBool("Flag", true, "Flag");
+        efpGrid.Columns.AddCheckBox("Flag", true, "Flag");
         efpGrid.Columns.AddLink("Link", true, "Link", 20, 10);
 
         if (!removeOutItem)
@@ -232,8 +232,8 @@ namespace BRReportDemo
         efpGrid.DisableOrdering();
       }
 
-      efpGrid.GetRowAttributes += EfpGrid_GetRowAttributes;
-      efpGrid.GetCellAttributes += EfpGrid_GetCellAttributes;
+      efpGrid.RowInfoNeeded += EfpGrid_RowInfoNeeded;
+      efpGrid.CellInfoNeeded += EfpGrid_CellInfoNeeded;
       efpGrid.Control.MultiSelect = multiSelect;
       efpGrid.ReadOnly = true;
       efpGrid.CanView = false;
@@ -255,9 +255,9 @@ namespace BRReportDemo
       EFPApp.ShowFormOrDialog(form);
     }
 
-    private static void EfpGrid_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    private static void EfpGrid_RowInfoNeeded(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
-      int id = DataTools.GetInt(args.DataRow, "Id");
+      int id = DataTools.GetInt32(args.DataRow, "Id");
       if (id == 201)
       {
         args.ColorType = UIDataViewColorType.TotalRow;
@@ -286,9 +286,9 @@ namespace BRReportDemo
       }
     }
 
-    private static void EfpGrid_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private static void EfpGrid_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
-      int id = DataTools.GetInt(args.DataRow, "Id");
+      int id = DataTools.GetInt32(args.DataRow, "Id");
       switch (args.ColumnName)
       {
         case "Date1":
@@ -372,18 +372,18 @@ namespace BRReportDemo
       producer.Columns.AddText("Name", "Название", 50, 10);
       producer.Columns.AddDate("Date1", "Начало");
       producer.Columns.AddDate("Date2", "Окончание");
-      producer.Columns.AddInt("Id", "Id", 3);
+      producer.Columns.AddInteger("Id", "Id", 3);
       producer.Columns.LastAdded.SizeGroup = "Id";
       producer.Columns.LastAdded.ColorType = UIDataViewColorType.Total1;
       producer.Columns["Id"].PrintHeadersSpec = "Идентификатор|Id";
       producer.Columns["Id"].DisplayName = "Идентификатор узла";
       if (isTree)
       {
-        producer.Columns.AddInt("ParentId", "ParentId", 3);
+        producer.Columns.AddInteger("ParentId", "ParentId", 3);
         producer.Columns.LastAdded.SizeGroup = "Id";
         producer.Columns["ParentId"].DisplayName = "Идентификатор родительского узла";
       }
-      producer.Columns.AddBool("Flag", "Flag");
+      producer.Columns.AddCheckBox("Flag", "Flag");
       producer.Columns.AddLink("Link", "Link", 20, 10);
 
       if (configMode != DefConfigMode.NotSet)

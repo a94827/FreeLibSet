@@ -118,36 +118,36 @@ namespace FreeLibSet.Forms
       grid.AllowUserToDeleteRows = false;
       grid.AutoGenerateColumns = false;
       EFPDataGridView gh = new EFPDataGridView(baseProvider, grid);
-      gh.Columns.AddInt("Order2", false, Res.AboutDialog_ColTitle_AsmOrder, 3);
+      gh.Columns.AddInteger("Order2", false, Res.AboutDialog_ColTitle_AsmOrder, 3);
       gh.Columns.LastAdded.PrintWidth = 100;
       gh.Columns.LastAdded.Printed = false;
-      gh.Columns.AddText("Name", true, Res.AboutDialog_ColTitle_AsmName, 20);
+      gh.Columns.AddText("Name", true, Res.AboutDialog_ColTitle_AsmName, 20, 1);
       gh.Columns.LastAdded.CanIncSearch = true;
       gh.Columns.LastAdded.PrintWidth = 500;
-      gh.Columns.AddText("Version", true, Res.AboutDialog_ColTitle_AsmVersion, 12);
+      gh.Columns.AddText("Version", true, Res.AboutDialog_ColTitle_AsmVersion, 12, 1);
       gh.Columns.LastAdded.PrintWidth = 250;
       gh.Columns.AddDateTime("CreationTime", true, Res.AboutDialog_ColTitle_AsmCreatied);
       gh.Columns.LastAdded.PrintWidth = 300;
       gh.Columns.LastAdded.Printed = false;
-      gh.Columns.AddBool("Debug", true, Res.AboutDialog_ColTitle_AsmDebug);
+      gh.Columns.AddCheckBox("Debug", true, Res.AboutDialog_ColTitle_AsmDebug);
       gh.Columns.LastAdded.GridColumn.ToolTipText = Res.AboutDialog_ToolTip_AsmDebug;
       gh.Columns.LastAdded.PrintWidth = 100;
       gh.Columns.LastAdded.Printed = false;
-      gh.Columns.AddText("Description", true, Res.AboutDialog_ColTitle_AsmDescription, 40);
+      gh.Columns.AddText("Description", true, Res.AboutDialog_ColTitle_AsmDescription, 40, 1);
       gh.Columns.LastAdded.PrintWidth = 1050;
-      gh.Columns.AddText("Copyright", true, Res.AboutDialog_ColTitle_AsmCopyright, 40);
+      gh.Columns.AddText("Copyright", true, Res.AboutDialog_ColTitle_AsmCopyright, 40, 1);
       gh.Columns.LastAdded.PrintWidth = 500;
       gh.Columns.LastAdded.Printed = false;
-      gh.Columns.AddText("ProcessorArchitecture", true, Res.AboutDialog_ColTitle_AsmArchitecture, 7);
+      gh.Columns.AddText("ProcessorArchitecture", true, Res.AboutDialog_ColTitle_AsmArchitecture, 7, 1);
       gh.Columns.LastAdded.GridColumn.ToolTipText = Res.AboutDialog_ToolTip_AsmArchitecture;
       gh.Columns.LastAdded.PrintWidth = 200;
       gh.Columns.LastAdded.Printed = false;
-      gh.Columns.AddText("Location", true, Res.AboutDialog_ColTitle_AsmLocation, 40);
+      gh.Columns.AddText("Location", true, Res.AboutDialog_ColTitle_AsmLocation, 40, 1);
       gh.Columns.LastAdded.PrintWidth = 500;
       gh.Columns.LastAdded.Printed = false;
       gh.DisableOrdering();
       gh.FrozenColumns = 1;
-      gh.GetCellAttributes += ghModules_GetCellAttributes;
+      gh.CellInfoNeeded += ghModules_CellInfoNeeded;
 
       gh.Orders.Add("Order", Res.AboutDialog_Order_AsmOrder, new EFPDataGridViewSortInfo("Order2", ListSortDirection.Ascending)); // сортировка выполняется по DataColumn, а не по виртуальному столбцу
       gh.Orders.Add("Name", Res.AboutDialog_Order_AsmName);
@@ -164,7 +164,7 @@ namespace FreeLibSet.Forms
       return gh;
     }
 
-    private static void ghModules_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private static void ghModules_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       switch (args.ColumnName)
       {

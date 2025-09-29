@@ -389,7 +389,7 @@ namespace FreeLibSet.Data.Docs
 #if DEBUG
       if (_Args.Values == null)
         throw new BugException("Args.Values=null");
-      Int32 dummyDocId = _Args.Values["Id"].AsInteger; // пытаемся прочитать
+      Int32 dummyDocId = _Args.Values["Id"].AsInt32; // пытаемся прочитать
 #endif
 
       _Args.ErrorMessages.Clear();

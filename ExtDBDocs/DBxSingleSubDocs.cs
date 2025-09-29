@@ -229,13 +229,13 @@ namespace FreeLibSet.Data.Docs
     /// Возвращает массив идентификаторов поддокументов.
     /// В массиве могут быть фиктивные идентификаторы, если есть были созданы поддокументы
     /// </summary>
-    public Int32[] SubDocIds
+    public IIdSet<Int32> SubDocIds
     {
       get
       {
         DataRow[] subDocRows = _SubDocs.GetRowsForDocRow(Doc.Row);
         if (subDocRows.Length == 0)
-          return DataTools.EmptyIds;
+          return IdArray<Int32>.Empty;
         int pId = subDocRows[0].Table.Columns.IndexOf("Id");
 #if DEBUG
         if (pId < 0)
@@ -244,7 +244,7 @@ namespace FreeLibSet.Data.Docs
         Int32[] ids = new Int32[subDocRows.Length];
         for (int i = 0; i < ids.Length; i++)
           ids[i] = (Int32)(subDocRows[i][pId]);
-        return ids;
+        return new IdArray<Int32>(ids);
       }
     }
 

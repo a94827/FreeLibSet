@@ -118,7 +118,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = ExtValue.AsInteger;
+      CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ namespace FreeLibSet.Forms.Docs
       if (CurrentValueEx.Value == 0)
         ExtValue.SetNull();
       else
-        ExtValue.SetInteger(CurrentValueEx.Value);
+        ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     #endregion
@@ -164,7 +164,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = ExtValue.AsInteger;
+      CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ namespace FreeLibSet.Forms.Docs
       if (CurrentValueEx.Value == 0)
         ExtValue.SetNull();
       else
-        ExtValue.SetInteger(CurrentValueEx.Value);
+        ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     #endregion
@@ -346,7 +346,7 @@ namespace FreeLibSet.Forms.Docs
       //CurrentValueEx.Value = DocValue.AsInteger;
 
       // Так не будет бяки
-      ControlProvider.SubDocId = ExtValue.AsInteger;
+      ControlProvider.SubDocId = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -354,7 +354,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueFromControl()
     {
-      ExtValue.SetInteger(CurrentValueEx.Value);
+      ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     #endregion
@@ -390,7 +390,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = ExtValue.AsInteger;
+      CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -398,7 +398,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void ValueFromControl()
     {
-      ExtValue.SetInteger(CurrentValueEx.Value);
+      ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     #endregion

@@ -224,7 +224,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], UIDataState, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(IEnumerable{Int32}, UIDataState, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
@@ -260,7 +260,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификаторы выбранных документов
     /// </summary>
-    public Int32[] SelectedDocIds
+    public IIdSet<Int32> SelectedDocIds
     {
       get { return ViewProvider.SelectedDocIds; }
       set { ViewProvider.SelectedDocIds = value; }
@@ -529,7 +529,7 @@ namespace FreeLibSet.Forms.Docs
       }
       else if (mode == DocTableViewMode.SelectMultiWithFlags)
       {
-        _DocGridView.MarkRowIds = IdList.Empty; // 13.01.2022
+        _DocGridView.MarkRowIds = IdCollection<Int32>.Empty; // 13.01.2022
         //if (_DocTreeView!=null)
         // TODO: _DocTreeView.MarkRowIds = IdList.Empty; 
       }
@@ -698,7 +698,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], UIDataState, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент Caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(IEnumerable{Int32}, UIDataState, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров.
     /// </summary>
     public DocumentViewHandler ExternalEditorCaller
@@ -805,7 +805,7 @@ namespace FreeLibSet.Forms.Docs
     private void SetCurrentDocId(Int32 value)
     {
       if (value != 0)
-        CorrectGroupForDocIds(new Int32[1] { value });
+        CorrectGroupForDocIds(IdArray<Int32>.FromId(value));
 
       // 16.11.2017
       DocGridView.CurrentId = value;
@@ -816,7 +816,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификаторы выбранных документов
     /// </summary>
-    public Int32[] SelectedDocIds
+    public IIdSet<Int32> SelectedDocIds
     {
       get
       {
@@ -826,7 +826,7 @@ namespace FreeLibSet.Forms.Docs
           {
             case DocViewFormActiveTab.Grid:
               if (Mode == DocTableViewMode.SelectMultiWithFlags)
-                return DocGridView.MarkRowIds.ToArray();
+                return DocGridView.MarkRowIds;
               else
                 return DocGridView.SelectedIds;
             case DocViewFormActiveTab.Tree:
@@ -850,9 +850,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Запоминаем SelectedDocIds, если форма еще не была выведена на экран
     /// </summary>
-    private Int32[] _DelayedSelectedDocIds;
+    private IIdSet<Int32> _DelayedSelectedDocIds;
 
-    private void SetSelectedDocIds(Int32[] value)
+    private void SetSelectedDocIds(IIdSet<Int32> value)
     {
       if (value != null)
         CorrectGroupForDocIds(value);
@@ -861,9 +861,9 @@ namespace FreeLibSet.Forms.Docs
       {
         case DocViewFormActiveTab.Grid:
           if (value == null)
-            value = DataTools.EmptyIds;
+            value = IdArray<Int32>.Empty;
           if (Mode == DocTableViewMode.SelectMultiWithFlags)
-            DocGridView.MarkRowIds = new IdList(value);
+            DocGridView.MarkRowIds = new IdCollection<Int32>(value);
           DocGridView.SelectedIds = value;
           break;
         case DocViewFormActiveTab.Tree:
@@ -1021,9 +1021,9 @@ namespace FreeLibSet.Forms.Docs
     /// Корректировка текущей выбранной группы перед выбором документа или документов
     /// </summary>
     /// <param name="docIds">Идентификаторы выбираемых документов</param>
-    private void CorrectGroupForDocIds(Int32[] docIds)
+    private void CorrectGroupForDocIds(IIdSet<Int32> docIds)
     {
-      if (docIds.Length == 0)
+      if (docIds.Count == 0)
         return;
 
       // лишняя проверка
@@ -1034,8 +1034,8 @@ namespace FreeLibSet.Forms.Docs
         return; // выбраны все группы или работа с группами не выполняется
 
       SingleScopeList<Int32> wantedGroupIds = new SingleScopeList<Int32>(); // нельзя использовать IdList, т.к. идентификатор группы 0 может встретиться
-      for (int i = 0; i < docIds.Length; i++)
-        wantedGroupIds.Add(DocTypeUI.TableCache.GetInt(docIds[i], DocTypeUI.DocType.GroupRefColumnName));
+      foreach (Int32 docId in docIds)
+        wantedGroupIds.Add(DocTypeUI.TableCache.GetInt32(docId, DocTypeUI.DocType.GroupRefColumnName));
 
       if (wantedGroupIds.Count == 1)
       {
@@ -1079,7 +1079,7 @@ namespace FreeLibSet.Forms.Docs
           if (IncludeNestedGroups)
             return null;
           else
-            return DataTools.EmptyIds;
+            return EmptyArray<Int32>.Empty;
         }
         else
         {
@@ -1492,18 +1492,18 @@ namespace FreeLibSet.Forms.Docs
 
       if (GroupAllowed)
       {
-        cfg.SetBool("GroupTreeVisible", GroupTreeVisible);
-        cfg.SetInt("GroupTreePercent", GroupTreePercent);
-        cfg.SetBool("GroupCBVisible", GroupCBVisible);
+        cfg.SetBoolean("GroupTreeVisible", GroupTreeVisible);
+        cfg.SetInt32("GroupTreePercent", GroupTreePercent);
+        cfg.SetBoolean("GroupCBVisible", GroupCBVisible);
         if (GroupTreeVisible || GroupCBVisible)
         {
-          cfg.SetInt("CurrentGroupId", GroupComboBox.DocId); // 18.11.2017
-          cfg.SetBool("HideNestedGroups", !GroupComboBox.IncludeNested); // 17.11.2017
+          cfg.SetInt32("CurrentGroupId", GroupComboBox.DocId); // 18.11.2017
+          cfg.SetBoolean("HideNestedGroups", !GroupComboBox.IncludeNested); // 17.11.2017
         }
         else
         {
-          cfg.SetInt("CurrentGroupId", 0); // 18.11.2017
-          cfg.SetBool("HideNestedGroups", false);
+          cfg.SetInt32("CurrentGroupId", 0); // 18.11.2017
+          cfg.SetBoolean("HideNestedGroups", false);
         }
       }
 
@@ -1533,15 +1533,15 @@ namespace FreeLibSet.Forms.Docs
 
       if (GroupAllowed)
       {
-        GroupTreeVisible = cfg.GetBool("GroupTreeVisible");
-        int prc = cfg.GetInt("GroupTreePercent");
+        GroupTreeVisible = cfg.GetBoolean("GroupTreeVisible");
+        int prc = cfg.GetInt32("GroupTreePercent");
         if (prc > 0)
           GroupTreePercent = prc;
-        GroupCBVisible = cfg.GetBool("GroupCBVisible");
+        GroupCBVisible = cfg.GetBoolean("GroupCBVisible");
         if (GroupTreeVisible || GroupCBVisible)
         {
-          GroupComboBox.DocId = cfg.GetInt("CurrentGroupId"); // 18.11.2017
-          GroupComboBox.IncludeNested = !cfg.GetBool("HideNestedGroups"); // 17.11.2017
+          GroupComboBox.DocId = cfg.GetInt32("CurrentGroupId"); // 18.11.2017
+          GroupComboBox.IncludeNested = !cfg.GetBoolean("HideNestedGroups"); // 17.11.2017
         }
       }
       else

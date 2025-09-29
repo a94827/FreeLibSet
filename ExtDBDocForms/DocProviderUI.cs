@@ -293,7 +293,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docTypeName">Имя таблицы документов</param>
     /// <param name="docIds">Массив идентификаторов</param>
     /// <returns>Таблица документов</returns>
-    protected override DataTable DoLoadDocData(string docTypeName, Int32[] docIds)
+    protected override DataTable DoLoadDocData(string docTypeName, IIdSet<Int32> docIds)
     {
       DataTable table;
       BeginWait(String.Format(Res.Common_Phase_LoadDocData, DocTypes[docTypeName].PluralTitle), GetTableImageKey(docTypeName));
@@ -310,7 +310,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
     /// <param name="docIds">Массив идентификаторов документов, для которых загружаются поддокументы</param>
     /// <returns>Таблица поддокументов</returns>
-    protected override DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
+    protected override DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, IIdSet<Int32> docIds)
     {
       DataTable table;
       BeginWait(Res.Common_Phase_LoadSubDocData, GetTableImageKey(subDocTypeName));
@@ -350,7 +350,7 @@ namespace FreeLibSet.Forms.Docs
       if (dataSet == null)
         throw new ArgumentNullException("dataSet");
 
-      bool UseAsyncCall = DataTools.GetBool(dataSet.ExtendedProperties["UseAsyngWriting"]);
+      bool UseAsyncCall = DataTools.GetBoolean(dataSet.ExtendedProperties["UseAsyngWriting"]);
 
       DataSet dataSet2;
       if (UseAsyncCall)

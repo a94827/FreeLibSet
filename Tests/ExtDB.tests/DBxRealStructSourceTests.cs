@@ -111,12 +111,12 @@ namespace ExtDB_tests.Data_SQLite
 
       DBxTableStruct ts = TestStruct.Tables.Add("T1");
       DBxColumnStruct cs;
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", false);
       ts.Columns.AddString("F1", 20, true);
       ts.Columns.AddString("F2", 30, false);
-      ts.Columns.AddInt("F3", true);
+      ts.Columns.AddInt32("F3", true);
       ts.Columns.AddInt16("F4", true);
-      ts.Columns.AddInt("F5", 0, 255, true);
+      ts.Columns.AddInteger("F5", 0, 255, true);
       ts.Columns.AddDouble("F6", true);
       ts.Columns.AddDecimal("F7", true);
       //ts.Columns.AddBoolean("F8");

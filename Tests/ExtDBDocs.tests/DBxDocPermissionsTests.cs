@@ -80,7 +80,7 @@ namespace ExtDBDocs_tests.Data_Docs
         DBxDocSet ds = new DBxDocSet(provider);
 
         DBxSingleDoc doc = ds["TestDocs"].Insert();
-        doc.Values["F2"].SetInteger(1);
+        doc.Values["F2"].SetInt32(1);
         TestWithTrace.AssertValues("Insert()");
 
         ds.ApplyChanges(false);
@@ -111,7 +111,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
         PerformSideChange(docId, sideChange);
 
-        doc.Values["F2"].SetInteger(2);
+        doc.Values["F2"].SetInt32(2);
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
           new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, sideChange ? 99 : 1),
@@ -136,7 +136,7 @@ namespace ExtDBDocs_tests.Data_Docs
           new OneCallInfo(DBxDocPermissionReason.BeforeRestore, 1),
           new OneCallInfo(DBxDocPermissionReason.BeforeEdit, 1));
 
-        doc.Values["F2"].SetInteger(2);
+        doc.Values["F2"].SetInt32(2);
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
           new OneCallInfo(DBxDocPermissionReason.ApplyRestore, 2),
@@ -165,7 +165,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
         PerformSideChange(docId, sideChange);
 
-        doc.Values["F2"].SetInteger(2);
+        doc.Values["F2"].SetInt32(2);
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
           new OneCallInfo(DBxDocPermissionReason.ApplyEditOrg, sideChange ? 99 : 1),
@@ -192,7 +192,7 @@ namespace ExtDBDocs_tests.Data_Docs
           new OneCallInfo(DBxDocPermissionReason.BeforeRestore, 1),
           new OneCallInfo(DBxDocPermissionReason.BeforeEdit, 1));
 
-        doc.Values["F2"].SetInteger(2);
+        doc.Values["F2"].SetInt32(2);
         ds.ApplyChanges(false);
         TestWithTrace.AssertValues("ApplyChanges()",
           new OneCallInfo(DBxDocPermissionReason.ApplyRestore, 2),
@@ -318,7 +318,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId = Create1Doc(1);
       DBxDocProvider provider0 = new DBxRealDocProvider(_SourceAdm, 0, true);
       DBxDocSet ds0 = new DBxDocSet(provider0);
-      ds0["TestDocs"].Edit(docId).Values["F2"].SetInteger(2);
+      ds0["TestDocs"].Edit(docId).Values["F2"].SetInt32(2);
       ds0.ApplyChanges(false);
 
       using (new TestWithTrace())
@@ -364,7 +364,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(provider);
 
       DBxSingleDoc doc = ds["TestDocs"].Insert();
-      doc.Values["F2"].SetInteger(valueF2);
+      doc.Values["F2"].SetInt32(valueF2);
       ds.ApplyChanges(true);
       return ds["TestDocs"][0].DocId;
     }
@@ -391,7 +391,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocProvider provider = new DBxRealDocProvider(_SourceAdm, 0, true);
       DBxDocSet ds = new DBxDocSet(provider);
       DBxSingleDoc doc = ds["TestDocs"].Edit(docId);
-      doc.Values["F2"].SetInteger(99);
+      doc.Values["F2"].SetInt32(99);
       ds.ApplyChanges(false);
     }
 
@@ -415,7 +415,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.Catch<DBxAccessException>(delegate () { ds["TestDocs"].Edit(docId1); });
 
       DBxSingleDoc doc2 = ds["TestDocs"].Edit(docId2);
-      Assert.AreEqual(2, doc2.Values["F2"].AsInteger, "F2 read #2");
+      Assert.AreEqual(2, doc2.Values["F2"].AsInt32, "F2 read #2");
     }
 
     [Test]
@@ -430,10 +430,10 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(provider);
 
       DBxSingleDoc doc1 = ds["TestDocs"].View(docId1);
-      Assert.AreEqual(1, doc1.Values["F2"].AsInteger, "F2 read #1");
+      Assert.AreEqual(1, doc1.Values["F2"].AsInt32, "F2 read #1");
 
       DBxSingleDoc doc2 = ds["TestDocs"].Edit(docId2);
-      Assert.AreEqual(2, doc2.Values["F2"].AsInteger, "F2 read #2");
+      Assert.AreEqual(2, doc2.Values["F2"].AsInt32, "F2 read #2");
     }
 
     [Test]
@@ -530,11 +530,11 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxSingleDoc doc1 = ds["TestDocs"].Insert();
       doc1.Values["F1"].SetBoolean(false);
-      doc1.Values["F2"].SetInteger(1);
+      doc1.Values["F2"].SetInt32(1);
 
       DBxSingleDoc doc2 = ds["TestDocs"].Insert();
       doc2.Values["F1"].SetBoolean(true);
-      doc2.Values["F2"].SetInteger(2);
+      doc2.Values["F2"].SetInt32(2);
 
       ds.ActionInfo = "Create2Docs";
       ds.ApplyChanges(true);
@@ -543,9 +543,9 @@ namespace ExtDBDocs_tests.Data_Docs
       doc2 = ds["TestDocs"][1];
 
       Assert.IsTrue(provider.IsRealDocId(doc1.DocId), "IsRealDocId() #1");
-      Assert.AreEqual(1, doc1.Values["F2"].AsInteger, "F2 written #1");
+      Assert.AreEqual(1, doc1.Values["F2"].AsInt32, "F2 written #1");
       Assert.IsTrue(provider.IsRealDocId(doc2.DocId), "IsRealDocId() #2");
-      Assert.AreEqual(2, doc2.Values["F2"].AsInteger, "F2 written #2");
+      Assert.AreEqual(2, doc2.Values["F2"].AsInt32, "F2 written #2");
 
       docId1 = doc1.DocId;
       docId2 = doc2.DocId;
@@ -565,46 +565,46 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds1 = new DBxDocSet(providerLim);
       DBxSingleDoc doc1 = ds1["TestDocs"].Insert();
       doc1.Values["F1"].SetBoolean(true);
-      doc1.Values["F2"].SetInteger(1);
+      doc1.Values["F2"].SetInt32(1);
       ds1.ApplyChanges(true);
 
       Int32 docId = ds1["TestDocs"].DocIds[0];
       ds1 = null;
       Assert.IsTrue(providerLim.IsRealDocId(doc1.DocId), "IsRealDocId()");
-      Assert.AreEqual(1, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #1");
+      Assert.AreEqual(1, providerLim.GetValueById("TestDocs", docId, "F2"), "F2 #1");
 
       // 2. Открываем документ на редактирование, устанавливаем блокировку. Запись документа возможна.
       DBxDocSet ds2 = new DBxDocSet(providerLim);
       Guid lockGuid2 = ds2.AddLongLock();
       DBxSingleDoc doc2 = ds2["TestDocs"].Edit(docId);
-      doc2.Values["F2"].SetInteger(2);
+      doc2.Values["F2"].SetInt32(2);
       ds2.ApplyChanges(true);
-      Assert.AreEqual(2, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #2");
+      Assert.AreEqual(2, providerLim.GetValueById("TestDocs", docId, "F2"), "F2 #2");
 
       // 3. Снимаем блокировку от имени пользователя-"администратора"
       providerAdm.RemoveLongLock(lockGuid2); // в реальном коде еще нужно и найти идентификатор блокировки
-      Assert.AreEqual(2, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #3");
+      Assert.AreEqual(2, providerLim.GetValueById("TestDocs", docId, "F2"), "F2 #3");
 
       // 4. Обычный пользователь ничего не подозревает и продолжает редактирование, еще раз сохраняет документ, хотя блокировка уже утеряна
-      doc2.Values["F2"].SetInteger(4);
+      doc2.Values["F2"].SetInt32(4);
       ds2.ApplyChanges(true);
-      Assert.AreEqual(4, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #4");
+      Assert.AreEqual(4, providerLim.GetValueById("TestDocs", docId, "F2"), "F2 #4");
 
 
       // 5. Администратор меняет документ, делая его недоступным для изменения обычным пользователем
       DBxDocSet ds5 = new DBxDocSet(providerAdm);
       DBxSingleDoc doc5 = ds5["TestDocs"].Edit(docId);
       doc5.Values["F1"].SetBoolean(false);
-      doc5.Values["F2"].SetInteger(5);
+      doc5.Values["F2"].SetInt32(5);
       ds5.ApplyChanges(false);
-      Assert.AreEqual(5, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #5");
+      Assert.AreEqual(5, providerLim.GetValueById("TestDocs", docId, "F2"), "F2 #5");
 
       // 6.Обычный пользователь опять пытается сохранить документ
-      doc2.Values["F2"].SetInteger(6);
+      doc2.Values["F2"].SetInt32(6);
       Assert.Catch<DBxAccessException>(delegate () { ds2.ApplyChanges(true); }, "Save #6");
 
       // Проверяем, что ничего не испортилось
-      Assert.AreEqual(5, providerLim.GetValue("TestDocs", docId, "F2"), "F2 #6");
+      Assert.AreEqual(5, providerLim.GetValueById("TestDocs", docId, "F2"), "F2 #6");
     }
 
     #endregion
@@ -715,7 +715,7 @@ namespace ExtDBDocs_tests.Data_Docs
         if (TestWithTrace.LogValues == null)
           throw new NullReferenceException("Bug in a test. Log=null.");
 
-        TestWithTrace.LogValues.Add(new OneCallInfo(args.Reason, args.Values["F2"].AsInteger));
+        TestWithTrace.LogValues.Add(new OneCallInfo(args.Reason, args.Values["F2"].AsInt32));
       }
 
       #endregion
@@ -831,7 +831,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       dt = new DBxDocType("TestDocs");
       dt.Struct.Columns.AddBoolean("F1");
-      dt.Struct.Columns.AddInt("F2");
+      dt.Struct.Columns.AddInt32("F2", true);
       dts.Add(dt);
 
       DBxDocDBConnectionHelper conHelper = new DBxDocDBConnectionHelper();

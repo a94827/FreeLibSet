@@ -366,7 +366,7 @@ namespace FreeLibSet.Forms.Docs
           return FOwner.TableCache.GetValue(Id, ColumnName);
         }
         string RefColName = ColumnName.Substring(0, p);
-        Int32 RefId = DataTools.GetInt(Row, RefColName);
+        Int32 RefId = DataTools.GetInt32(Row, RefColName);
         return FOwner.TableCache.GetRefValue(RefColName, RefId);
       }
 
@@ -521,7 +521,7 @@ namespace FreeLibSet.Forms.Docs
 
       //if (showDocId)
       //{
-      //  controlProvider.Columns.AddInt("DocId", true, "DocId", 5);
+      //  controlProvider.Columns.AddInt32("DocId", true, "DocId", 5);
       //  controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
       //}
 
@@ -558,13 +558,13 @@ namespace FreeLibSet.Forms.Docs
       {
         if (!controlProvider.CurrentConfig.Columns.Contains("Id")) // 16.09.2021
         {
-          controlProvider.Columns.AddInt("Id");
+          controlProvider.Columns.AddInteger("Id", true, "Id", 5);
           controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
           controlProvider.Columns.LastAdded.CanIncSearch = true;
         }
         if (!showDocId)
         {
-          controlProvider.Columns.AddInt("DocId");
+          controlProvider.Columns.AddInteger("DocId", true, "DocId", 5);
           controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
           controlProvider.Columns.LastAdded.CanIncSearch = true;
         }
@@ -576,10 +576,10 @@ namespace FreeLibSet.Forms.Docs
         //  columns.Add("StartVersion");
         //  columns.Add("Version2");
 
-        //  controlProvider.Columns.AddInt("StartVersion");
+        //  controlProvider.Columns.AddInt32("StartVersion");
         //  controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
 
-        //  controlProvider.Columns.AddInt("Version2");
+        //  controlProvider.Columns.AddInt32("Version2");
         //  controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
         //}
       }
@@ -595,9 +595,9 @@ namespace FreeLibSet.Forms.Docs
       if (!reInit)
       {
         controlProvider.Control.VirtualMode = true;
-        controlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ControlProvider_GetRowAttributes);
+        controlProvider.RowInfoNeeded += new EFPDataGridViewRowInfoEventHandler(ControlProvider_RowInfoNeeded);
         if (EFPApp.ShowListImages)
-          controlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ControlProvider_GetCellAttributes);
+          controlProvider.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(ControlProvider_CellInfoNeeded);
 
         if (HasGetDocSel)
         {
@@ -649,7 +649,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Оформление просмотра
 
-    void ControlProvider_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    void ControlProvider_RowInfoNeeded(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
       DataRow row = args.DataRow;
 
@@ -657,7 +657,7 @@ namespace FreeLibSet.Forms.Docs
         return;
       // 24.11.2017
       // Вызываем пользовательский обработчик и для удаленных документов
-      //if (DataTools.GetBool(Row, "Deleted"))
+      //if (DataTools.GetBoolean(Row, "Deleted"))
       //  Args.Grayed = true;
       //else
       //{
@@ -669,7 +669,7 @@ namespace FreeLibSet.Forms.Docs
       //}
     }
 
-    void ControlProvider_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void ControlProvider_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.ColumnName == "Image")
       {
@@ -679,18 +679,18 @@ namespace FreeLibSet.Forms.Docs
 
         switch (args.Reason)
         {
-          case EFPDataGridViewAttributesReason.View:
+          case EFPDataViewInfoReason.View:
             args.Value = GetImageValue(row);
             break;
 
-          case EFPDataGridViewAttributesReason.ToolTip:
-            EFPDataGridViewConfig cfg = ((EFPDBxGridView)args.ControlProvider).CurrentConfig;
+          case EFPDataViewInfoReason.ToolTip:
+            EFPDataViewConfig cfg = ((EFPDBxGridView)args.ControlProvider).CurrentConfig;
             if (cfg != null)
             {
               if (cfg.CurrentCellToolTip)
               {
                 string s1 = GetToolTipText(row);
-                args.ToolTipText = DataTools.JoinNotEmptyStrings(Environment.NewLine, new string[] { s1, args.ToolTipText }); // 06.02.2018
+                args.ToolTipText = StringTools.JoinNotEmptyStrings(Environment.NewLine, new string[] { s1, args.ToolTipText }); // 06.02.2018
               }
             }
             if (args.ControlProvider.CurrentConfig.ToolTips.Count > 0)
@@ -698,9 +698,9 @@ namespace FreeLibSet.Forms.Docs
               string s2 = null;
               try
               {
-                EFPDataViewRowInfo rowInfo = args.ControlProvider.GetRowInfo(args.RowIndex);
-                s2 = GridProducer.ToolTips.GetToolTipText(args.ControlProvider.CurrentConfig, rowInfo);
-                args.ControlProvider.FreeRowInfo(rowInfo);
+                EFPDataViewRowValues rowValues = args.ControlProvider.GetRowValues(args.RowIndex);
+                s2 = GridProducer.ToolTips.GetToolTipText(args.ControlProvider.CurrentConfig, rowValues);
+                args.ControlProvider.FreeRowValues(rowValues);
               }
               catch (Exception e)
               {
@@ -720,7 +720,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     void ImgCol_CellToopTextNeeded(object sender, EFPDataGridViewCellToolTipTextNeededEventArgs args)
     {
-      // TODO: Int32 Id = DataTools.GetInt(Args.Row, "Id");
+      // TODO: Int32 Id = DataTools.GetInt32(Args.Row, "Id");
       // TODO: Args.ToolTipText = GetImageCellToolTipText(Id);
     }
 
@@ -735,8 +735,8 @@ namespace FreeLibSet.Forms.Docs
 
     void SubDocGrid_GetDocSelWithIds(object sender, EFPDBxGridViewDocSelEventArgs args)
     {
-      Int32[] Ids = DataTools.GetIds(args.DataRows);
-      PerformGetDocSel(args.DocSel, Ids, args.Reason);
+      IIdSet<Int32> docIds = IdTools.GetIds<Int32>(args.DataRows);
+      PerformGetDocSel(args.DocSel, docIds, args.Reason);
     }
 
     #endregion
@@ -751,7 +751,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="columns">Заполняемый список столбцов</param>
     /// <param name="config">Конфигурация табличного просмотра. Если null, то используется конфигурация по умолчанию</param>
-    public void GetColumnNames(DBxColumnList columns, EFPDataGridViewConfig config)
+    public void GetColumnNames(DBxColumnList columns, EFPDataViewConfig config)
     {
       columns.Add("Id");
       columns.Add("DocId");
@@ -858,10 +858,10 @@ namespace FreeLibSet.Forms.Docs
       if (UI.DebugShowIds &&
         (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
       {
-        controlProvider.Columns.AddInt("Id", true, "Id", 6);
+        controlProvider.Columns.AddInt32("Id", true, "Id", 6);
         //ControlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
         //ControlProvider.Columns.LastAdded.CanIncSearch = true;
-        controlProvider.Columns.AddInt("DocId", true, "DocId", 6);
+        controlProvider.Columns.AddInt32("DocId", true, "DocId", 6);
         //ControlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
       }
 
@@ -915,7 +915,7 @@ namespace FreeLibSet.Forms.Docs
 
     void SubDocTree_GetDocSelWithIds(object sender, EFPDBxTreeViewDocSelEventArgs args)
     {
-      Int32[] subDocIds = DataTools.GetIds(args.DataRows);
+      IIdSet<Int32> subDocIds = IdTools.GetIds<Int32>(args.DataRows);
       PerformGetDocSel(args.DocSel, subDocIds, args.Reason);
     }
 
@@ -929,7 +929,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="docId">Идентификатор основного документа. Не может быть 0</param>
     /// <returns>Массив идентификаторов поддокументов</returns>
-    public Int32[] GetSubDocIds(Int32 docId)
+    public IIdSet<Int32> GetSubDocIds(Int32 docId)
     {
       if (docId == 0)
         throw ExceptionFactory.ArgIsEmpty("docId");
@@ -944,7 +944,7 @@ namespace FreeLibSet.Forms.Docs
 
         int[] SubDocIds = new int[dv.Count];
         for (int i = 0; i < SubDocIds.Length; i++)
-          SubDocIds[i] = DataTools.GetInt(dv[i]["Id"]);
+          SubDocIds[i] = DataTools.GetInt32(dv[i]["Id"]);
         return SubDocIds;
       }
       else 
@@ -1044,7 +1044,7 @@ namespace FreeLibSet.Forms.Docs
     /// Также в диалоге присутствует кнопка "Нет".
     /// Если false, то пользователь должен выбрать хотя бы один поддокумент из списка</param>
     /// <returns>True, если пользователь выбрал поддокументы и нажал "ОК" или "Нет"</returns>
-    public bool SelectSubDocs(DBxMultiSubDocs subDocs, ref Int32[] subDocIds, string title, bool canBeEmpty)
+    public bool SelectSubDocs(DBxMultiSubDocs subDocs, ref IIdSet<Int32> subDocIds, string title, bool canBeEmpty)
     {
       SubDocSelectDialog dlg = new SubDocSelectDialog(this, subDocs);
       dlg.SelectionMode = DocSelectionMode.MultiSelect;
@@ -1075,17 +1075,17 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="controlProvider">Просмотр, в котором выполняется редактирование</param>
     /// <returns>Массив идентификаторов <see cref="DBxSingleDoc.DocId"/>, если выбор сделан или null, если пользователь нажал "Отмена" в блоке диалога</returns>
-    internal Int32[] SelectDocsForInsert(IEFPSubDocView controlProvider)
+    internal IIdSet<Int32> SelectDocsForInsert(IEFPSubDocView controlProvider)
     {
       if (controlProvider.SubDocs.Owner.DocCount == 1)
       {
         Int32 docId = controlProvider.SubDocs.Owner[0].DocId;
-        return new Int32[1] { docId };
+        return IdArray<Int32>.FromId(docId);
       }
 
       Int32 currDocId = 0;
       if (controlProvider.CurrentDataRow != null)
-        currDocId = DataTools.GetInt(controlProvider.CurrentDataRow, "DocId");
+        currDocId = DataTools.GetInt32(controlProvider.CurrentDataRow, "DocId");
 
       ListSelectDialog dlg = new ListSelectDialog();
       dlg.Title = String.Format(Res.SubDocTypeUI_Title_SelectDocsForInsert, SubDocType.SingularTitle);
@@ -1116,19 +1116,19 @@ namespace FreeLibSet.Forms.Docs
 
       if (dlg.MultiSelect)
       {
-        List<Int32> docIds = new List<int>();
+        IdList<Int32> docIds = new IdList<Int32>();
         for (int i = 0; i < controlProvider.SubDocs.Owner.DocCount; i++)
         {
           if (dlg.Selections[i])
             docIds.Add(controlProvider.SubDocs.Owner[i].DocId);
         }
         _AllDocsForInsertSelected = dlg.AreAllSelected;
-        return docIds.ToArray();
+        return docIds;
       }
       else
       {
         Int32 docId = controlProvider.SubDocs.Owner[dlg.SelectedIndex].DocId;
-        return new Int32[1] { docId };
+        return IdArray<Int32>.FromId(docId);
       }
     }
 
@@ -1235,12 +1235,13 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docSel">Выборка, в которую выполняется добавление документов</param>
     /// <param name="subDocIds">Идентификаторы поддокументов</param>
     /// <param name="reason">Причина создания выборки</param>
-    public override void PerformGetDocSel(DBxDocSelection docSel, Int32[] subDocIds, EFPDBxViewDocSelReason reason)
+    public override void PerformGetDocSel(DBxDocSelection docSel, IEnumerable<Int32> subDocIds, EFPDBxViewDocSelReason reason)
     {
-      if (subDocIds == null || subDocIds.Length == 0)
+      IIdSet<Int32> subDocIds2 = IdTools.AsIdSet<Int32>(subDocIds);
+      if (subDocIds2.Count == 0)
         return;
 
-      base.OnGetDocSel(docSel, subDocIds, reason);
+      base.OnGetDocSel(docSel, subDocIds2, reason);
     }
 
 
@@ -1317,7 +1318,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (sd.SubDocState == DBxDocState.Delete)
           continue; // 17.06.2022
-        if (sd.Values[pOrderCol].AsInteger == 0)
+        if (sd.Values[pOrderCol].AsInt32 == 0)
         {
           DataRow row = subDocs.SubDocsView.Table.Rows.Find(sd.SubDocId);
           if (row == null)
@@ -1359,7 +1360,7 @@ namespace FreeLibSet.Forms.Docs
       List<DataRow> lstRows1 = null;
       foreach (DBxSubDoc sd2 in subDocs2)
       {
-        if (sd2.Values[ManualOrderColumn].AsInteger == 0)
+        if (sd2.Values[ManualOrderColumn].AsInt32 == 0)
         {
           DataRow row1 = mainSubDocs.SubDocsView.Table.Rows.Find(sd2.SubDocId);
           if (row1 == null)
@@ -1446,7 +1447,7 @@ namespace FreeLibSet.Forms.Docs
         return null;
 
       // Нельзя использовать в качестве оригинала полученную строку, т.к. таблица в буфере обмена может быть неполной
-      DBxMultiSubDocs subDocs2 = new DBxMultiSubDocs(subDocs.SubDocs, DataTools.EmptyIds);
+      DBxMultiSubDocs subDocs2 = new DBxMultiSubDocs(subDocs.SubDocs, EmptyArray<Int32>.Empty);
 
       int orgSubDocCount = subDocs.SubDocs.SubDocCount;
 
@@ -1540,23 +1541,25 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="controlProvider">Табличный или иерархический просмотр, для которого выполняется вставка.
     /// Ссылка передается обработчикам событий. Может быть null.</param>
     /// <returns>Массив созданных документов или null, если вставка не выполнена</returns>
-    public DBxSubDoc[] PerformPasteRows(DBxMultiSubDocs mSubDocs, Int32[] docIds, DataRow[] srcRows, DocTypeUIBase srcDocTypeBase, IEFPSubDocView controlProvider)
+    public DBxSubDoc[] PerformPasteRows(DBxMultiSubDocs mSubDocs, IEnumerable<Int32> docIds, DataRow[] srcRows, DocTypeUIBase srcDocTypeBase, IEFPSubDocView controlProvider)
     {
       if (srcRows.Length == 0)
         return null;
       if (docIds == null)
         docIds = mSubDocs.Owner.DocIds;
+      IIdSet<Int32> docIds2 = IdTools.AsIdSet<Int32>(docIds);
 
       // Нельзя использовать в качестве оригинала полученную строку, т.к. таблица в буфере обмена может быть неполной
-      DBxMultiSubDocs subDocs2 = new DBxMultiSubDocs(mSubDocs, DataTools.EmptyIds);
+      DBxMultiSubDocs subDocs2 = new DBxMultiSubDocs(mSubDocs, EmptyArray<Int32>.Empty);
 
       int orgSubDocCount = mSubDocs.SubDocCount;
       int cntCancelled = 0;
       bool allPasteHandled = true;
       ErrorMessageList errors = new ErrorMessageList();
-      for (int j = 0; j < docIds.Length; j++)
+      int cntDoc = 0;
+      foreach (Int32 docId in docIds2)
       {
-        DBxSingleDoc doc = mSubDocs.Owner.GetDocById(docIds[j]);
+        DBxSingleDoc doc = mSubDocs.Owner.GetDocById(docId);
         PasteSubDocRowsEventArgs args1 = new PasteSubDocRowsEventArgs(doc.SubDocs[mSubDocs.SubDocType.Name], srcRows, srcDocTypeBase.DocTypeBase.Name, controlProvider);
         if (PasteRows != null)
           PasteRows(this, args1);
@@ -1571,7 +1574,7 @@ namespace FreeLibSet.Forms.Docs
               subDoc2.Values[ManualOrderColumn].SetNull(); // до пользовательского обработчика
 
             // Вызываем пользовательский обработчик
-            AdjustPastedSubDocRowEventArgs args2 = new AdjustPastedSubDocRowEventArgs(doc, subDoc2, srcRows[i], srcDocTypeBase.DocTypeBase.Name, i == 0 && j == 0, controlProvider);
+            AdjustPastedSubDocRowEventArgs args2 = new AdjustPastedSubDocRowEventArgs(doc, subDoc2, srcRows[i], srcDocTypeBase.DocTypeBase.Name, i == 0 && cntDoc == 0, controlProvider);
             if (AdjustPastedRow != null)
               AdjustPastedRow(this, args2);
 
@@ -1585,6 +1588,7 @@ namespace FreeLibSet.Forms.Docs
             }
           }
         }
+        cntDoc++;
       } // цикл по документам
 
       if (!allPasteHandled)

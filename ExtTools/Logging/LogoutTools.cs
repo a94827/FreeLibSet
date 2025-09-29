@@ -87,7 +87,7 @@ namespace FreeLibSet.Logging
       {
         // 09.06.2015
         // Выводим каждую строку отдельно, чтобы не потерять отступы
-        string[] a = text.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+        string[] a = text.Split(StringTools.NewLineSeparators, StringSplitOptions.None);
         for (int i = 0; i < a.Length; i++)
           _Listener.WriteLine(CorrectText(a[i]));
       }
@@ -180,7 +180,12 @@ namespace FreeLibSet.Logging
       else if (text.Length > 58)
         WriteLine(text);
       else
-        WriteLine(DataTools.PadCenter(" " + text + " ", 60, '='));
+        WriteLine(StringTools.PadCenter(" " + text + " ", 60, '='));
+
+      // 11.09.2025
+      // Если при выводе log-файла возникнет исключение, хотя бы будет известно, в каком разделе.
+      // Сбрасываем запись после заголовка, а не до него.
+      _Listener.Flush();
     }
 
     /// <summary>
@@ -199,7 +204,7 @@ namespace FreeLibSet.Logging
       {
         // 12.05.2016
         // Если значение содержит символ новой строки, то выводим несколько строк
-        string[] a = value.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+        string[] a = value.Split(StringTools.NewLineSeparators, StringSplitOptions.None);
         WriteLine(name.PadRight(25) + " = " + a[0]);
         string spc = new string(' ', 25 + 3);
         for (int i = 1; i < a.Length; i++)
@@ -1073,7 +1078,7 @@ namespace FreeLibSet.Logging
     private static void LogoutXmlDocument(LogoutInfoNeededEventArgs args, object obj)
     {
       XmlDocument xml = (XmlDocument)obj;
-      string s = DataTools.XmlDocumentToString(xml);
+      string s = XmlTools.XmlDocumentToString(xml);
       args.WriteLine(s);
     }
 
@@ -1401,13 +1406,18 @@ namespace FreeLibSet.Logging
     /// </summary>
     /// <param name="skipFrames">Количество фреймов, которые нужно пропустить.
     /// Если 0, то возвращается метод, непосредственно вызвавший этот метод</param>
-    /// <returns></returns>
+    /// <returns>Заголовок сообщения об ошибке</returns>
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static string GetDefaultTitle(int skipFrames)
     {
       StackFrame fr = new StackFrame(skipFrames + 1);
       MethodBase mb = fr.GetMethod();
-      return String.Format(Res.LogoutTools_ErrTitle_Default, mb.DeclaringType.Name + "." + mb.Name);
+
+      string sTemplate;
+      try { sTemplate = Res.LogoutTools_ErrTitle_Default; }
+      catch { sTemplate = "Error in {0}"; }
+
+      return String.Format(sTemplate, mb.DeclaringType.Name + "." + mb.Name);
     }
 
     /// <summary>
@@ -1420,7 +1430,12 @@ namespace FreeLibSet.Logging
     {
       StackFrame fr = new StackFrame(1);
       MethodBase mb = fr.GetMethod();
-      return String.Format(Res.LogoutTools_ErrTitle_Default, mb.DeclaringType.Name + "." + mb.Name);
+
+      string sTemplate;
+      try { sTemplate = Res.LogoutTools_ErrTitle_Default; }
+      catch { sTemplate = "Error in {0}"; }
+
+      return String.Format(sTemplate, mb.DeclaringType.Name + "." + mb.Name);
     }
 
     /// <summary>
@@ -1434,7 +1449,11 @@ namespace FreeLibSet.Logging
       if (String.IsNullOrEmpty(methodName))
         throw ExceptionFactory.ArgStringIsNullOrEmpty("methodName");
 
-      return String.Format(Res.LogoutTools_ErrTitle_WhenMethodCalled, methodName);
+      string sTemplate;
+      try { sTemplate = Res.LogoutTools_ErrTitle_WhenMethodCalled; }
+      catch { sTemplate = "Error when {0} called"; }
+
+      return String.Format(sTemplate, methodName);
     }
 
     #endregion
@@ -1833,8 +1852,9 @@ namespace FreeLibSet.Logging
     [DebuggerStepThrough]
     private static void DoLogoutEnumerable(LogoutInfoNeededEventArgs args, IEnumerable obj, Stack objStack)
     {
-      if (obj is IdList)
-        return;
+      // TODO: 12.06.2025
+      //if (obj is IdList<T>)
+      //  return;
 
       if (obj is Array)
       {
@@ -2224,7 +2244,7 @@ namespace FreeLibSet.Logging
       WriteDirectoryPathPair(args, "ApplicationBaseDir", FileTools.ApplicationBaseDir.Path);
       args.WritePair("ApplicationName", EnvironmentTools.ApplicationName);
       args.WritePair("EntryAssemblyDescriptionAndVersion", EnvironmentTools.EntryAssemblyDescriptionAndVersion);
-      args.WritePair("Environment.NewLine", DataTools.StrToCSharpString(Environment.NewLine));
+      args.WritePair("Environment.NewLine", StringTools.StrToCSharpString(Environment.NewLine));
       try
       {
         args.WritePair("CurrentProcessSessionId", EnvironmentTools.CurrentProcessSessionId.ToString());
@@ -2424,7 +2444,7 @@ namespace FreeLibSet.Logging
       args.WritePair("BodyName", LogEncoding.BodyName);
       try
       {
-        args.WritePair("GetPreamble()", DataTools.BytesToHex(LogEncoding.GetPreamble(), true));
+        args.WritePair("GetPreamble()", StringTools.BytesToHex(LogEncoding.GetPreamble(), true));
       }
       catch { }
       args.IndentLevel--;
@@ -2676,7 +2696,7 @@ namespace FreeLibSet.Logging
       PropertyInfo pi = typeof(GCSettings).GetProperty("LatencyMode", BindingFlags.Public | BindingFlags.Static);
       if (pi == null)
         return;
-      object x = pi.GetValue(null, DataTools.EmptyObjects);
+      object x = pi.GetValue(null, EmptyArray<object>.Empty);
       if (x != null)
         args.WritePair("GCSettings.LatencyMode", x.ToString());
     }

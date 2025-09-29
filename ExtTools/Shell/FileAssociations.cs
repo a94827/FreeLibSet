@@ -845,7 +845,7 @@ namespace FreeLibSet.Shell
 
           return new FileAssociationItem(progId, path, "\"%1\"", String.Empty,
             path, 0,
-            tree.GetBool(keyName, "useURL"),
+            tree.GetBoolean(keyName, "useURL"),
             infoSourceString + Environment.NewLine + keyName);
         }
         catch // System.Security.SecurityException

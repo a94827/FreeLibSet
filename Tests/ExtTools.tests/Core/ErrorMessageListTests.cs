@@ -174,7 +174,7 @@ namespace ExtTools_tests.Core
     }
 
     [Test]
-    public void Add_list_with_suffix_and_prefix()
+    public void AddRange_list_with_suffix_and_prefix()
     {
       ErrorMessageList sut = new ErrorMessageList();
 
@@ -184,7 +184,7 @@ namespace ExtTools_tests.Core
       list.AddInfo("Text3", "C3", "Tag3");
       list.SetReadOnly();
 
-      sut.Add(list, "P1", "S1");
+      sut.AddRange(list, "P1", "S1");
 
       Assert.AreEqual(3, sut.Count, "Count");
 
@@ -477,45 +477,6 @@ namespace ExtTools_tests.Core
       Assert.AreEqual("C3", sut[2].Code, "Code 3");
       Assert.AreEqual("Tag3", sut[2].Tag, "Tag 3");
     }
-
-
-#pragma warning disable 0618 // Obsolete
-
-    [TestCase(ErrorMessageKind.Error, ErrorMessageKind.Error, ErrorMessageKind.Warning, ErrorMessageKind.Info)]
-    [TestCase(ErrorMessageKind.Warning, ErrorMessageKind.Warning, ErrorMessageKind.Warning, ErrorMessageKind.Info)]
-    [TestCase(ErrorMessageKind.Info, ErrorMessageKind.Info, ErrorMessageKind.Info, ErrorMessageKind.Info)]
-    public void LimitKind(ErrorMessageKind maxKind, ErrorMessageKind wanted1, ErrorMessageKind wanted2, ErrorMessageKind wanted3)
-    {
-      ErrorMessageList list = new ErrorMessageList();
-      list.AddError("Text1", "C1", "Tag1");
-      list.AddWarning("Text2", "C2", "Tag2");
-      list.AddInfo("Text3", "C3", "Tag3");
-      list.SetReadOnly();
-      string s1 = list.AllText;
-
-      ErrorMessageList sut = list.LimitKind(maxKind);
-      Assert.AreNotSame(list, sut, "Cloned");
-      Assert.AreEqual(s1, list.AllText, "Original is not changed");
-
-      Assert.AreEqual(3, sut.Count, "Count");
-
-      Assert.AreEqual(wanted1, sut[0].Kind, "Kind 1");
-      Assert.AreEqual("Text1", sut[0].Text, "Text 1");
-      Assert.AreEqual("C1", sut[0].Code, "Code 1");
-      Assert.AreEqual("Tag1", sut[0].Tag, "Tag 1");
-
-      Assert.AreEqual(wanted2, sut[1].Kind, "Kind 2");
-      Assert.AreEqual("Text2", sut[1].Text, "Text 2");
-      Assert.AreEqual("C2", sut[1].Code, "Code 2");
-      Assert.AreEqual("Tag2", sut[1].Tag, "Tag 2");
-
-      Assert.AreEqual(wanted3, sut[2].Kind, "Kind 3");
-      Assert.AreEqual("Text3", sut[2].Text, "Text 3");
-      Assert.AreEqual("C3", sut[2].Code, "Code 3");
-      Assert.AreEqual("Tag3", sut[2].Tag, "Tag 3");
-    }
-
-#pragma warning restore 0618 
 
     #endregion
 

@@ -1076,7 +1076,7 @@ namespace FreeLibSet.UICore
           else
           {
             int n = Math.Min(value.Length, _Items.Length);
-            DataTools.FillArray<bool>(_Items, false);
+            ArrayTools.FillArray<bool>(_Items, false);
             Array.Copy(value, _Items, n);
             _Data.CallChanged();
           }
@@ -1111,7 +1111,7 @@ namespace FreeLibSet.UICore
       {
         if (IsEmpty)
           return;
-        DataTools.FillArray<bool>(_Items, false);
+        ArrayTools.FillArray<bool>(_Items, false);
         _Data.CallChanged();
       }
 
@@ -1246,7 +1246,7 @@ namespace FreeLibSet.UICore
         set
         {
           if (value == null)
-            value = DataTools.EmptyStrings;
+            value = EmptyArray<string>.Empty;
 
           _Data.BeginUpdate();
           try
@@ -1338,7 +1338,7 @@ namespace FreeLibSet.UICore
               }
             }
             if (lst == null)
-              return DataTools.EmptyStrings;
+              return EmptyArray<string>.Empty;
             else
               return lst.ToArray();
           }
@@ -1585,7 +1585,7 @@ namespace FreeLibSet.UICore
       {
         if (IsEmpty)
           return;
-        DataTools.FillArray<UISelRCColumn>(_Items, null);
+        ArrayTools.FillArray<UISelRCColumn>(_Items, null);
         ResetPositions();
         _Data.CallChanged();
       }
@@ -1696,7 +1696,7 @@ namespace FreeLibSet.UICore
             }
           }
           if (lst == null)
-            return DataTools.EmptyIds;
+            return EmptyArray<Int32>.Empty;
           else
             return lst.ToArray();
         }
@@ -1732,7 +1732,7 @@ namespace FreeLibSet.UICore
             return lst.ToArray();
           }
           else
-            return DataTools.EmptyInts;
+            return EmptyArray<Int32>.Empty;
         }
       }
 
@@ -1775,7 +1775,7 @@ namespace FreeLibSet.UICore
         {
           PreparePositions();
           if (_Repeats == null)
-            return DataTools.EmptyStrings;
+            return EmptyArray<string>.Empty;
 
           SingleScopeStringList lst = new SingleScopeStringList(false);
           foreach (KeyValuePair<int, object> pair in _Repeats)
@@ -2000,9 +2000,9 @@ namespace FreeLibSet.UICore
     /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
     /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Типизированное значение ячейки</returns>
-    public int GetInt(int rowIndex, string columnCode)
+    public int GetInt32(int rowIndex, string columnCode)
     {
-      return DataTools.GetInt(this[rowIndex, columnCode]);
+      return DataTools.GetInt32(this[rowIndex, columnCode]);
     }
 
     /// <summary>
@@ -2059,9 +2059,9 @@ namespace FreeLibSet.UICore
     /// <param name="rowIndex">Индекс строки в массиве <see cref="SourceData"/></param>
     /// <param name="columnCode">Код описания столбца в массиве <see cref="AvailableColumns"/></param>
     /// <returns>Типизированное значение ячейки</returns>
-    public bool GetBool(int rowIndex, string columnCode)
+    public bool GetBoolean(int rowIndex, string columnCode)
     {
-      return DataTools.GetBool(this[rowIndex, columnCode]);
+      return DataTools.GetBoolean(this[rowIndex, columnCode]);
     }
 
     #endregion

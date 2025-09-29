@@ -492,10 +492,13 @@ namespace FreeLibSet.Core
 
     #region Свойства
 
-    /// <summary>
-    /// Массив, по которому будет выполняться перечисление
-    /// </summary>
-    public T[] Array { get { return _Array; } }
+    // 10.09.2025. Свойство скрыто.
+    // Если перечислитель возвращается из библиотечного кода, то массив может быть внутренним для этого кода и не должен
+    // быть доступен для изменения из прикаладного кода
+    // /// <summary>
+    // /// Массив, по которому будет выполняться перечисление
+    // /// </summary>
+    // public T[] Array { get { return _Array; } }
     private readonly T[] _Array;
 
     #endregion
@@ -1030,6 +1033,160 @@ namespace FreeLibSet.Core
     IEnumerator IEnumerable.GetEnumerator()
     {
       return new Enumerator(_Enumerable.GetEnumerator());
+    }
+
+    #endregion
+  }
+
+
+  /// <summary>
+  /// Перечислитель, выполняющий преобразование типа данных.
+  /// Получает на входе нетипизированный перечислитель и использует его для перебора элементов.
+  /// При запросе очередного элемента выполняется его преобразование в тип <typeparamref name="TOutput"/>
+  /// с помощью оператора "as". Если преобразование невозможно, элемент перечисления пропускается.
+  /// </summary>
+  /// <typeparam name="TInput">Тип данных исходного перечислителя</typeparam>
+  /// <typeparam name="TOutput">Тип данных, которые требуется перечислять</typeparam>
+  [Serializable]
+  public struct ConvertEnumerable<TInput, TOutput> : IEnumerable<TOutput>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает перечислитель
+    /// </summary>
+    /// <param name="enumerable">Исходный перечислитель</param>
+    /// <param name="converter">Делегат, который вызывается для каждого элемента в исходном перечислителе.
+    /// Он должен вернуть данные конечного типа.</param>
+    public ConvertEnumerable(IEnumerable<TInput> enumerable, Converter<TInput, TOutput> converter)
+    {
+      if (enumerable == null)
+        throw new ArgumentNullException("enumerable");
+      _Enumerable = enumerable;
+      _Converter = converter;
+    }
+
+    #endregion
+
+    #region Поля
+
+    private readonly IEnumerable<TInput> _Enumerable;
+    private readonly Converter<TInput, TOutput> _Converter;
+
+    #endregion
+
+    /// <summary>
+    /// Перечислитель, выполняющий преобразование типа данных.
+    /// Получает на входе перечислитель и использует его для перебора элементов.
+    /// При запросе очередного элемента выполняется его преобразование в тип <typeparamref name="TOutput"/>
+    /// с помощью оператора "as". Если преобразование невозможно, элемент перечисления пропускается.
+    /// </summary>
+    [Serializable]
+    public struct Enumerator : IEnumerator<TOutput>
+    {
+      #region Конструктор
+
+      /// <summary>
+      /// Создает перечислитель
+      /// </summary>
+      /// <param name="enumerator">Исходный перечислитель.</param>
+      /// <param name="converter">Конвертер элементов</param>
+      public Enumerator(IEnumerator<TInput> enumerator, Converter<TInput, TOutput> converter)
+      {
+        if (enumerator == null)
+          throw new ArgumentNullException("enumerator");
+        _Enumerator = enumerator;
+        _Converter = converter;
+        _Current = default(TOutput);
+      }
+
+      #endregion
+
+      #region Поля
+
+      /// <summary>
+      /// Оригинальный перечислитель
+      /// </summary>
+      private /*readonly*/ IEnumerator<TInput> _Enumerator;
+      private readonly Converter<TInput, TOutput> _Converter;
+
+      /// <summary>
+      /// Сохраняем текущий элемент, чтобы избежать повторного преобразования
+      /// </summary>
+      private TOutput _Current;
+
+      #endregion
+
+      #region IEnumerator<T> Members
+
+      /// <summary>
+      /// Возвращает текущий элемент перечисления
+      /// </summary>
+      public TOutput Current { get { return _Current; } }
+
+      /// <summary>
+      /// Уничтожает перечислитель.
+      /// Вызывает для исходного перечислителя метод <see cref="IDisposable.Dispose()"/>.
+      /// </summary>
+      public void Dispose()
+      {
+        IDisposable srcDisposable = _Enumerator as IDisposable;
+        if (srcDisposable != null)
+          srcDisposable.Dispose();
+        _Enumerator = null;
+        _Current = default(TOutput);
+      }
+
+      #endregion
+
+      #region IEnumerator Members
+
+      object IEnumerator.Current { get { return _Current; } }
+
+      /// <summary>
+      /// Переход к очередному элементу перечисления.
+      /// </summary>
+      /// <returns>true, если есть следующий элемент</returns>
+      public bool MoveNext()
+      {
+        while (_Enumerator.MoveNext())
+        {
+          _Current = _Converter(_Enumerator.Current);
+          return true;
+        }
+        return false;
+      }
+
+      /// <summary>
+      /// Перезапуск перечислителя
+      /// </summary>
+      void IEnumerator.Reset()
+      {
+        _Enumerator.Reset();
+      }
+
+      #endregion
+    }
+
+    #region IEnumerable<T> members
+
+    /// <summary>
+    /// Создает новый перечислитель
+    /// </summary>
+    /// <returns>Перечислитель</returns>
+    public Enumerator GetEnumerator()
+    {
+      return new Enumerator(_Enumerable.GetEnumerator(), _Converter);
+    }
+
+    IEnumerator<TOutput> IEnumerable<TOutput>.GetEnumerator()
+    {
+      return new Enumerator(_Enumerable.GetEnumerator(), _Converter);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return new Enumerator(_Enumerable.GetEnumerator(), _Converter);
     }
 
     #endregion

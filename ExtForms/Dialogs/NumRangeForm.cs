@@ -61,7 +61,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Диалог для ввода диапазона целых чисел.
-  /// Базовый класс для <see cref="IntRangeDialog"/>, <see cref="SingleRangeDialog"/>, <see cref="DoubleRangeDialog"/> и <see cref="DecimalRangeDialog"/>.
+  /// Базовый класс для <see cref="Int32RangeDialog"/>, <see cref="SingleRangeDialog"/>, <see cref="DoubleRangeDialog"/> и <see cref="DecimalRangeDialog"/>.
   /// </summary>
   public abstract class BaseNumRangeDialog<T> : BaseInputDialog, IMinMaxSource<T?>
     where T : struct, IFormattable, IComparable<T>
@@ -579,7 +579,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Диалог для ввода диапазона целых чисел
   /// </summary>
-  public sealed class IntRangeDialog : BaseNumRangeDialog<Int32>
+  public sealed class Int32RangeDialog : BaseNumRangeDialog<Int32>
   {
     #region Переопределенные методы
 
@@ -590,7 +590,7 @@ namespace FreeLibSet.Forms
     /// <returns>Провайдер управляющего элемента</returns>
     protected override EFPNumEditBoxBase<int> CreateControlProvider(EFPBaseProvider baseProvider)
     {
-      return new EFPIntEditBox(baseProvider, new IntEditBox());
+      return new EFPIntEditBox(baseProvider, new Int32EditBox());
     }
 
     /// <summary>
@@ -600,7 +600,7 @@ namespace FreeLibSet.Forms
     /// <param name="value">Значение</param>
     protected override void WriteConfigValue(string name, int? value)
     {
-      ConfigPart.SetNullableInt(name, value);
+      ConfigPart.SetNullableInt32(name, value);
     }
 
     /// <summary>
@@ -610,7 +610,7 @@ namespace FreeLibSet.Forms
     /// <returns>Значение</returns>
     protected override int? ReadConfigValue(string name)
     {
-      return ConfigPart.GetNullableInt(name);
+      return ConfigPart.GetNullableInt32(name);
     }
 
     /// <summary>

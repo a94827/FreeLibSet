@@ -417,7 +417,7 @@ namespace FreeLibSet.DBF
           case 'D':
             return DbfFieldInfo.CreateDate(ColumnName);
           case 'L':
-            return DbfFieldInfo.CreateBool(ColumnName);
+            return DbfFieldInfo.CreateBoolean(ColumnName);
           case 'M':
             return DbfFieldInfo.CreateMemo(ColumnName);
           case ' ':
@@ -447,9 +447,9 @@ namespace FreeLibSet.DBF
         ApplyBoolean();
       else if (value is DateTime)
         ApplyDateTime((DateTime)value);
-      else if (DataTools.IsIntegerType(value.GetType()))
+      else if (MathTools.IsIntegerType(value.GetType()))
         ApplyNumeric(((IFormattable)value).ToString("0", StdConvert.NumberFormat));
-      else if (DataTools.IsFloatType(value.GetType()))
+      else if (MathTools.IsFloatType(value.GetType()))
       {
         if (_PreliminaryInfo.PrecisionIsDefined)
         {

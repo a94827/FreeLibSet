@@ -296,7 +296,7 @@ namespace FreeLibSet.Forms.Data
     public ExtValueDateOrRangeBox(DBxExtValue extValueFirst, DBxExtValue extValueLast, EFPDateOrRangeBox controlProvider, bool canMultiEdit)
       : base(extValueFirst, extValueLast, controlProvider, true, canMultiEdit)
     {
-      SetCurrentValueEx(controlProvider.NFirstDateEx, controlProvider.NLastDateEx);
+      SetCurrentValueEx(controlProvider.NFirstValueEx, controlProvider.NLastValueEx);
       DepOr.AttachInput(controlProvider.ReadOnlyEx, DepNot.NotOutput(EnabledEx));
     }
 
@@ -338,7 +338,7 @@ namespace FreeLibSet.Forms.Data
   /// <summary>
   /// Переходник для <see cref="FreeLibSet.Controls.MonthDayBox"/> для числового значения, которое хранит номер дня как число в диапазоне от 1 до 365.
   /// </summary>
-  public class ExtValueIntMonthDayBox : ExtValueControl<int, EFPMonthDayBox>/*, IDocValueNullableControl*/
+  public class ExtValueInt32MonthDayBox : ExtValueControl<int, EFPMonthDayBox>/*, IDocValueNullableControl*/
   {
     #region Конструктор
 
@@ -349,7 +349,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueIntMonthDayBox(DBxExtValue extValue, EFPMonthDayBox controlProvider, bool canMultiEdit)
+    public ExtValueInt32MonthDayBox(DBxExtValue extValue, EFPMonthDayBox controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, true, canMultiEdit)
     {
       SetCurrentValueEx(controlProvider.DayOfYearEx);
@@ -365,8 +365,8 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueToControl()
     {
-      if (ExtValue.AsInteger > 0)
-        CurrentValueEx.Value = ExtValue.AsInteger;
+      if (ExtValue.AsInt32 > 0)
+        CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -374,7 +374,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueFromControl()
     {
-      ExtValue.SetInteger(CurrentValueEx.Value);
+      ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     #endregion
@@ -384,7 +384,7 @@ namespace FreeLibSet.Forms.Data
   /// Переходник для <see cref="MaskedTextBox"/> и числового значения, которое хранит номер дня как число в диапазоне от 1 до 365.
   /// 0 задает пустое значение.
   /// </summary>
-  public class ExtValueIntMonthDayTextBox : ExtValueControl<int, EFPMonthDayTextBox>/*, IDocValueNullableControl*/
+  public class ExtValueInt32MonthDayTextBox : ExtValueControl<int, EFPMonthDayTextBox>/*, IDocValueNullableControl*/
   {
     #region Конструктор
 
@@ -395,7 +395,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueIntMonthDayTextBox(DBxExtValue extValue, EFPMonthDayTextBox controlProvider, bool canMultiEdit)
+    public ExtValueInt32MonthDayTextBox(DBxExtValue extValue, EFPMonthDayTextBox controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, true, canMultiEdit)
     {
       SetCurrentValueEx(controlProvider.DayOfYearEx);
@@ -411,8 +411,8 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueToControl()
     {
-      if (ExtValue.AsInteger > 0)
-        CurrentValueEx.Value = ExtValue.AsInteger;
+      if (ExtValue.AsInt32 > 0)
+        CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -420,7 +420,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueFromControl()
     {
-      ExtValue.SetInteger(CurrentValueEx.Value);
+      ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     #endregion
@@ -519,7 +519,7 @@ namespace FreeLibSet.Forms.Data
   /// Переходник для <see cref="ComboBox"/> со стилем <see cref="ComboBoxStyle.DropDownList"/> для числового поля,
   /// которое хранит индекс выбранной позиции в выпадающем списке.
   /// </summary>
-  public class ExtValueIntListControl : ExtValueControl<int, IEFPListControl>
+  public class ExtValueInt32ListControl : ExtValueControl<int, IEFPListControl>
   {
     #region Конструктор
 
@@ -530,7 +530,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueIntListControl(DBxExtValue extValue, IEFPListControl controlProvider, bool canMultiEdit)
+    public ExtValueInt32ListControl(DBxExtValue extValue, IEFPListControl controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, true, canMultiEdit)
     {
       SetCurrentValueEx(controlProvider.SelectedIndexEx);
@@ -546,7 +546,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = ExtValue.AsInteger;
+      CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -554,7 +554,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueFromControl()
     {
-      ExtValue.SetInteger(CurrentValueEx.Value);
+      ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     #endregion
@@ -608,9 +608,9 @@ namespace FreeLibSet.Forms.Data
   }
 
   /// <summary>
-  /// Переходник для <see cref="EFPIntEditComboBox"/>, предназначенного для ввода целых чисел.
+  /// Переходник для <see cref="EFPInt32EditComboBox"/>, предназначенного для ввода целых чисел.
   /// </summary>
-  public class ExtValueIntEditComboBox : ExtValueControl<int, EFPIntEditComboBox>
+  public class ExtValueInt32EditComboBox : ExtValueControl<int, EFPInt32EditComboBox>
   {
     #region Конструктор
 
@@ -621,7 +621,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueIntEditComboBox(DBxExtValue extValue, EFPIntEditComboBox controlProvider, bool canMultiEdit)
+    public ExtValueInt32EditComboBox(DBxExtValue extValue, EFPInt32EditComboBox controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, true, canMultiEdit)
     {
       SetCurrentValueEx(controlProvider.ValueEx);
@@ -637,7 +637,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = ExtValue.AsInteger;
+      CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -645,7 +645,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueFromControl()
     {
-      ExtValue.SetInteger(CurrentValueEx.Value);
+      ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     #endregion
@@ -655,15 +655,15 @@ namespace FreeLibSet.Forms.Data
   /// Переходник между числовым полем, в котором хранится перечислимое значение, и свойством SelectedCodeEx управляющего элемента
   /// </summary>
   /// <typeparam name="T"></typeparam>
-  internal sealed class IntEnumCodeProxy<T>
+  internal sealed class Int32EnumCodeProxy<T>
     where T : struct
   {
     #region Конструктор
 
-    public IntEnumCodeProxy()
+    public Int32EnumCodeProxy()
     {
-      _IntValueEx = new DepInput<int>(0, IntValueEx_ValueChanged);
-      _IntValueEx.OwnerInfo = new DepOwnerInfo(this, "IntValueEx");
+      _Int32ValueEx = new DepInput<int>(0, Int32ValueEx_ValueChanged);
+      _Int32ValueEx.OwnerInfo = new DepOwnerInfo(this, "Int32ValueEx");
 
       _CodeValueEx = new DepInput<string>(String.Empty, CodeValueEx_ValueChanged);
       _CodeValueEx.OwnerInfo = new DepOwnerInfo(this, "CodeValueEx");
@@ -692,23 +692,23 @@ namespace FreeLibSet.Forms.Data
 
     #region Вход для числового значения CurrentValueEx
 
-    public DepValue<int> IntValueEx
+    public DepValue<int> Int32ValueEx
     {
-      get { return _IntValueEx; }
-      set { _IntValueEx.Source = value; }
+      get { return _Int32ValueEx; }
+      set { _Int32ValueEx.Source = value; }
     }
-    private DepInput<int> _IntValueEx;
+    private DepInput<int> _Int32ValueEx;
 
-    void IntValueEx_ValueChanged(object sender, EventArgs args)
+    void Int32ValueEx_ValueChanged(object sender, EventArgs args)
     {
-      T value = (T)Enum.ToObject(typeof(T), _IntValueEx.Value);
+      T value = (T)Enum.ToObject(typeof(T), _Int32ValueEx.Value);
       _CodeValueEx.Value = value.ToString();
     }
 
-    public int IntValue
+    public int Int32Value
     {
-      get { return _IntValueEx.Value; }
-      set { _IntValueEx.Value = value; }
+      get { return _Int32ValueEx.Value; }
+      set { _Int32ValueEx.Value = value; }
     }
 
     /// <summary>
@@ -716,8 +716,8 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     public T CurrentValue
     {
-      get { return (T)Enum.ToObject(typeof(T), _IntValueEx.Value); }
-      set { _IntValueEx.Value = Convert.ToInt32(value); }
+      get { return (T)Enum.ToObject(typeof(T), _Int32ValueEx.Value); }
+      set { _Int32ValueEx.Value = Convert.ToInt32(value); }
     }
 
     #endregion
@@ -738,7 +738,7 @@ namespace FreeLibSet.Forms.Data
         value = DefaultValue;
       else
         value = StdConvert.ToEnum<T>(_CodeValueEx.Value);
-      _IntValueEx.Value = Convert.ToInt32(value);
+      _Int32ValueEx.Value = Convert.ToInt32(value);
     }
 
     #endregion
@@ -749,8 +749,8 @@ namespace FreeLibSet.Forms.Data
   /// Числовое поле содержит перечислимое значение, но значения не обязаны следовать по порядку.
   /// Значение поля связывается со свойством <see cref="IEFPListControl.SelectedCode"/>, в котором хранится текстовое значение для <see cref="Enum"/>.
   /// </summary>
-  /// <typeparam name="T"></typeparam>
-  public class ExtValueIntEnumCodeListControl<T> : ExtValueControl<int, IEFPListControl>
+  /// <typeparam name="T">Тип значения</typeparam>
+  public class ExtValueInt32EnumCodeListControl<T> : ExtValueControl<int, IEFPListControl>
     where T : struct
   {
     #region Конструктор
@@ -762,13 +762,13 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueIntEnumCodeListControl(DBxExtValue extValue, IEFPListControl controlProvider, bool canMultiEdit)
+    public ExtValueInt32EnumCodeListControl(DBxExtValue extValue, IEFPListControl controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, true, canMultiEdit)
     {
       if (controlProvider.Codes == null)
         throw ExceptionFactory.ArgProperty("controlProvider", controlProvider, "Codes", controlProvider.Codes, null);
 
-      _ValueProxy = new IntEnumCodeProxy<T>();
+      _ValueProxy = new Int32EnumCodeProxy<T>();
 
       if (controlProvider.Codes.Length == 0)
         _ValueProxy.DefaultValue = default(T);
@@ -777,7 +777,7 @@ namespace FreeLibSet.Forms.Data
       controlProvider.SelectedCodeEx = _ValueProxy.CodeValueEx;
       _ValueProxy.CodeValueEx = controlProvider.SelectedCodeEx;
 
-      SetCurrentValueEx(_ValueProxy.IntValueEx);
+      SetCurrentValueEx(_ValueProxy.Int32ValueEx);
       DepAnd.AttachInput(controlProvider.EnabledEx, EnabledEx);
     }
 
@@ -785,7 +785,7 @@ namespace FreeLibSet.Forms.Data
 
     #region IntEnumCodeProxy
 
-    private IntEnumCodeProxy<T> _ValueProxy;
+    private Int32EnumCodeProxy<T> _ValueProxy;
 
     #endregion
 
@@ -813,7 +813,7 @@ namespace FreeLibSet.Forms.Data
       if (ExtValue.IsNull)
         _ValueProxy.CurrentValue = _ValueProxy.DefaultValue;
       else
-        _ValueProxy.IntValue = ExtValue.AsInteger;
+        _ValueProxy.Int32Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -821,7 +821,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueFromControl()
     {
-      ExtValue.SetInteger(_ValueProxy.IntValueEx.Value);
+      ExtValue.SetInt32(_ValueProxy.Int32ValueEx.Value);
     }
 
     #endregion
@@ -832,7 +832,7 @@ namespace FreeLibSet.Forms.Data
   /// Предполагается, что есть две радиокнопки в группе. Первая из них - для
   /// значения false, вторая - для true
   /// </summary>
-  public class ExtValueBoolRadioButtons : ExtValueControl<bool, EFPRadioButtons>
+  public class ExtValueBooleanRadioButtons : ExtValueControl<bool, EFPRadioButtons>
   {
     #region Конструктор
 
@@ -843,7 +843,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueBoolRadioButtons(DBxExtValue extValue, EFPRadioButtons controlProvider, bool canMultiEdit)
+    public ExtValueBooleanRadioButtons(DBxExtValue extValue, EFPRadioButtons controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, false, canMultiEdit)
     {
       if (controlProvider.Controls.Length != 2)
@@ -925,7 +925,7 @@ namespace FreeLibSet.Forms.Data
   /// Предполагается, что в списке есть две позиции. Первая из них - для
   /// значения false, вторая - для true.
   /// </summary>
-  public class ExtValueBoolListControl : ExtValueControl<bool, EFPListControl>
+  public class ExtValueBooleanListControl : ExtValueControl<bool, EFPListControl>
   {
     #region Конструктор
 
@@ -936,7 +936,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueBoolListControl(DBxExtValue extValue, EFPListControl controlProvider, bool canMultiEdit)
+    public ExtValueBooleanListControl(DBxExtValue extValue, EFPListControl controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, false, canMultiEdit)
     {
 

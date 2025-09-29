@@ -657,7 +657,7 @@ namespace FreeLibSet.Win32
           WTSNativeMethods.WtsInfoClass.WTSIsRemoteSession, out dummyBuffer, out dummyCount);
       }
     }
-    // не так работает public bool IsRemoteSession { get { return DataTools.GetBool(GetInfoValue(NativeMethods.WtsInfoClass.WTSIsRemoteSession)); } }
+    // не так работает public bool IsRemoteSession { get { return DataTools.GetBoolean(GetInfoValue(NativeMethods.WtsInfoClass.WTSIsRemoteSession)); } }
 
     [DebuggerStepThrough]
     private object GetInfoValue(WTSNativeMethods.WtsInfoClass infoClass)

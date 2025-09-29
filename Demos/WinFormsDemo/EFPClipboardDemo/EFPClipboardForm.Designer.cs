@@ -44,9 +44,9 @@
       this.cbErrorIfEmpty = new System.Windows.Forms.CheckBox();
       this.cbErrorHandling = new System.Windows.Forms.ComboBox();
       this.label4 = new System.Windows.Forms.Label();
-      this.edRepeatDelay = new FreeLibSet.Controls.IntEditBox();
+      this.edRepeatDelay = new FreeLibSet.Controls.Int32EditBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.edRepeatCount = new FreeLibSet.Controls.IntEditBox();
+      this.edRepeatCount = new FreeLibSet.Controls.Int32EditBox();
       this.label2 = new System.Windows.Forms.Label();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
       this.btnExceptionView = new System.Windows.Forms.Button();
@@ -416,9 +416,9 @@
     private System.Windows.Forms.Button btnSetData;
     private System.Windows.Forms.Button btnGetDataObject;
     private System.Windows.Forms.Button btnSetDataObject;
-    private FreeLibSet.Controls.IntEditBox edRepeatDelay;
+    private FreeLibSet.Controls.Int32EditBox edRepeatDelay;
     private System.Windows.Forms.Label label3;
-    private FreeLibSet.Controls.IntEditBox edRepeatCount;
+    private FreeLibSet.Controls.Int32EditBox edRepeatCount;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.CheckBox cbErrorIfEmpty;
     private System.Windows.Forms.ComboBox cbErrorHandling;

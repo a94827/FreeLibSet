@@ -126,12 +126,12 @@ namespace TestCache
 
       ObjTypeSettings Settings = new ObjTypeSettings();
       Settings.Persistance = (CachePersistance)(int.Parse(s));
-      Settings.AllowDelete = DataTools.GetBool(Row, "AllowDelete");
+      Settings.AllowDelete = DataTools.GetBoolean(Row, "AllowDelete");
 
-      Settings.Size = DataTools.GetInt(Row, "Size");
-      Settings.KeyCount = DataTools.GetInt(Row, "KeyCount");
+      Settings.Size = DataTools.GetInt32(Row, "Size");
+      Settings.KeyCount = DataTools.GetInt32(Row, "KeyCount");
 
-      Settings.ValueCount = DataTools.GetInt(Row, "ValueCount");
+      Settings.ValueCount = DataTools.GetInt32(Row, "ValueCount");
 
 
       if (Cache.Params.PersistDir.IsEmpty)

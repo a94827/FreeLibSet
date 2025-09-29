@@ -106,9 +106,9 @@ namespace FreeLibSet.Remoting
     /// </summary>
     /// <param name="name">Имя</param>
     /// <returns>Значение</returns>
-    public int GetInt(string name)
+    public int GetInt32(string name)
     {
-      return DataTools.GetInt(this[name]);
+      return DataTools.GetInt32(this[name]);
     }
 
     /// <summary>
@@ -126,9 +126,9 @@ namespace FreeLibSet.Remoting
     /// </summary>
     /// <param name="name">Имя</param>
     /// <returns>Значение</returns>
-    public bool GetBool(string name)
+    public bool GetBoolean(string name)
     {
-      return DataTools.GetBool(this[name]);
+      return DataTools.GetBoolean(this[name]);
     }
 
     /// <summary>
@@ -264,7 +264,7 @@ namespace FreeLibSet.Remoting
       if (ci == null)
         throw new ArgumentException(String.Format(Res.NamedValues_Arg_ConstructorNeeded, objType.ToString()));
 
-      res = ci.Invoke(DataTools.EmptyObjects);
+      res = ci.Invoke(EmptyArray<object>.Empty);
       _Items.Add(name, res);
       return res;
     }
@@ -279,9 +279,9 @@ namespace FreeLibSet.Remoting
     /// </summary>
     /// <param name="name">Имя</param>
     /// <param name="delta">На сколько нужно увеличить значение</param>
-    public void IncInt(string name, int delta)
+    public void IncInt32(string name, int delta)
     {
-      this[name] = GetInt(name) + delta;
+      this[name] = GetInt32(name) + delta;
     }
 
     /// <summary>
@@ -464,7 +464,7 @@ namespace FreeLibSet.Remoting
     /// Если в текущем объекте есть элементы с совпадающими именами, то значения заменяются на переданные.
     /// </summary>
     /// <param name="source">Исходный набор. Не может быть null</param>
-    public void Add(IDictionary<string, object> source)
+    public void AddRange(IDictionary<string, object> source)
     {
 #if DEBUG
       if (source == null)

@@ -140,7 +140,7 @@ namespace FreeLibSet.Models.Tree
       get
       {
         if (Object.ReferenceEquals(_FullPath, null))
-          return DataTools.EmptyObjects;
+          return EmptyArray<object>.Empty;
         else
           return _FullPath;
       }

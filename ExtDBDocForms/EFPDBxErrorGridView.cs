@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -204,8 +205,8 @@ namespace FreeLibSet.Forms.Docs
             {
               // Всегда берем первую таблицу для редактирования
               string docTypeName = docSel.TableNames[0];
-              Int32[] docIds = docSel[docTypeName];
-              if (docIds.Length > 1 && (!UI.DocTypes[docTypeName].CanMultiEdit))
+              IIdSet<Int32> docIds = docSel[docTypeName];
+              if (docIds.Count > 1 && (!UI.DocTypes[docTypeName].CanMultiEdit))
                 UI.ShowDocSel(docSel); // групповое редактирование запрещено
               else
                 UI.DocTypes[docTypeName].PerformEditing(docIds, State, false);

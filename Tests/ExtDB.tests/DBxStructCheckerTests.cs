@@ -41,7 +41,7 @@ namespace ExtDB_tests.Data
     {
       DBxStruct dbs = DBxStructTests.CreateTestObject(false);
       DBxTableStruct ts = dbs.Tables.Add("===");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", false);
       Assert.Catch<DBxStructException>(delegate () { DBxStructChecker.CheckStruct(dbs, _CheckStructDB); });
     }
 
@@ -90,7 +90,7 @@ namespace ExtDB_tests.Data
       DBxStruct dbs = DBxStructTests.CreateTestObject(false);
       DBxTableStruct ts = dbs.Tables.GetRequired("Test1");
       DBxColumnStruct cs = new DBxColumnStruct("XXX");
-      cs.ColumnType = DBxColumnType.Int;
+      cs.ColumnType = DBxColumnType.Int32;
       cs.MinValue = 10;
       cs.MaxValue = 5;
       ts.Columns.Add(cs);
@@ -101,7 +101,8 @@ namespace ExtDB_tests.Data
     public void CheckStruct_refCol_invalidMasterTableName()
     {
       DBxStruct dbs = DBxStructTests.CreateTestObject(false);
-      dbs.Tables["Test2"].Columns.AddReference("RR", "T666");
+      dbs.Tables["Test2"].Columns.AddReference("RR", "T666", true)
+        .ColumnType = DBxColumnType.Int32;
       Assert.Catch<DBxStructException>(delegate () { DBxStructChecker.CheckStruct(dbs, null); });
     }
 
@@ -121,7 +122,8 @@ namespace ExtDB_tests.Data
     {
       DBxStruct dbs = DBxStructTests.CreateTestObject(false);
       dbs.Tables["Test1"].PrimaryKey = DBxColumns.Empty;
-      dbs.Tables["Test2"].Columns.AddReference("RR", "Test1");
+      dbs.Tables["Test2"].Columns.AddReference("RR", "Test1", true)
+        .ColumnType = DBxColumnType.Int32;
       Assert.Catch<DBxStructException>(delegate () { DBxStructChecker.CheckStruct(dbs, null); });
     }
 

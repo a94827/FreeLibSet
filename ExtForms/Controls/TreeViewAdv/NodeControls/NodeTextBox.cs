@@ -74,7 +74,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     protected override void DisposeEditor(Control editor)
     {
-      TextBox textBox = editor as TextBox;
+      TextBox textBox = (TextBox)editor;
       textBox.TextChanged -= EditorTextChanged;
       textBox.KeyDown -= EditorKeyDown;
     }
@@ -98,7 +98,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     protected override void DoApplyChanges(TreeNodeAdv node, Control editor)
     {
-      string label = (editor as TextBox).Text;
+      string label = ((TextBox)editor).Text;
       string oldLabel = GetLabel(node);
       if (oldLabel != label)
       {
@@ -109,22 +109,22 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     public override void Cut(Control control)
     {
-      (control as TextBox).Cut();
+      ((TextBox)control).Cut();
     }
 
     public override void Copy(Control control)
     {
-      (control as TextBox).Copy();
+      ((TextBox)control).Copy();
     }
 
     public override void Paste(Control control)
     {
-      (control as TextBox).Paste();
+      ((TextBox)control).Paste();
     }
 
     public override void Delete(Control control)
     {
-      TextBox textBox = control as TextBox;
+      TextBox textBox = (TextBox)control;
       int len = Math.Max(textBox.SelectionLength, 1);
       if (textBox.SelectionStart < textBox.Text.Length)
       {

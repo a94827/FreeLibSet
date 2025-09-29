@@ -50,7 +50,7 @@ namespace FreeLibSet.Data.Docs
   public abstract class DBxDocProvider:
     MarshalByRefSponsoredObject,
     IDBxCacheSource,
-    IDBxConReadOnlyPKInt32,
+    IDBxConReadOnlyBase,
     ICloneable
   {
     #region Конструктор
@@ -64,7 +64,7 @@ namespace FreeLibSet.Data.Docs
       if (currentThreadOnly)
         _SingleThread = Thread.CurrentThread;
 
-      _FirstCacheKey = DataTools.MD5SumFromString(DBIdentity + "|" + UserPermissionsAsXmlString);
+      _FirstCacheKey = MD5Tools.MD5SumFromString(DBIdentity + "|" + UserPermissionsAsXmlString);
 
 #if DEBUG
       _DebugCreateTime = DateTime.Now;
@@ -109,13 +109,13 @@ namespace FreeLibSet.Data.Docs
     /// Идентификатор пользователя.
     /// Может быть 0
     /// </summary>
-    public Int32 UserId { get { return _FixedInfo.GetInt("UserId"); } }
+    public Int32 UserId { get { return _FixedInfo.GetInt32("UserId"); } }
 
     /// <summary>
     /// Идентификатор сессии клиента.
     /// Может быть 0
     /// </summary>
-    public Int32 SessionId { get { return _FixedInfo.GetInt("SessionId"); } }
+    public Int32 SessionId { get { return _FixedInfo.GetInt32("SessionId"); } }
 
     /// <summary>
     /// Идентификатор базы данных для выборки документов DBxDocSelection
@@ -140,7 +140,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Свойство возвращает true, если существует база данных истории документов
     /// </summary>
-    public bool UseDocHist { get { return _FixedInfo.GetBool("UseDocHist"); } }
+    public bool UseDocHist { get { return _FixedInfo.GetBoolean("UseDocHist"); } }
 
     /// <summary>
     /// Служебные поля в начале таблицы документов, загружаемых в таблицу DBxMultiDocs.
@@ -241,7 +241,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Вид документа</param>
     /// <param name="docIds">Массив идентификаторов документов</param>
     /// <returns>Идентификатор установленной блокировки</returns>
-    public Guid AddLongLock(string docTypeName, Int32[] docIds)
+    public Guid AddLongLock(string docTypeName, IIdSet<Int32> docIds)
     {
       DBxDocSelection docSel = new DBxDocSelection(DBIdentity);
       docSel.Add(docTypeName, docIds);
@@ -255,7 +255,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Вид документа</param>
     /// <param name="docIds">Массив идентификаторов документов</param>
     /// <returns>Идентификатор установленной блокировки</returns>
-    public Guid AddLongLock(string docTypeName, IdList docIds)
+    public Guid AddLongLock(string docTypeName, IdCollection<Int32> docIds)
     {
       DBxDocSelection docSel = new DBxDocSelection(DBIdentity);
       docSel.Add(docTypeName, docIds);
@@ -303,7 +303,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя вида документов</param>
     /// <param name="docIds">Массив идентификаторов.
     /// null означает пересчет всех документов. Пересчету подлежат в том числе и удаленные документы</param>
-    public void RecalcColumns(string docTypeName, Int32[] docIds)
+    public void RecalcColumns(string docTypeName, IIdSet<Int32> docIds)
     {
       DoRecalcColumns(docTypeName, docIds);
     }
@@ -314,7 +314,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя вида документов</param>
     /// <param name="docIds">Массив идентификаторов.
     /// null означает пересчет всех документов. Пересчету подлежат в том числе и удаленные документы</param>
-    protected abstract void DoRecalcColumns(string docTypeName, Int32[] docIds);
+    protected abstract void DoRecalcColumns(string docTypeName, IIdSet<Int32> docIds);
 
     #endregion
 
@@ -329,7 +329,7 @@ namespace FreeLibSet.Data.Docs
     {
       get
       {
-        return DataTools.XmlDocumentFromString(UserPermissionsAsXmlString);
+        return XmlTools.XmlDocumentFromString(UserPermissionsAsXmlString);
       }
     }
 
@@ -782,15 +782,16 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя таблицы документов</param>
     /// <param name="docIds">Массив идентификаторов</param>
     /// <returns>Таблица документов</returns>
-    public DataTable LoadDocData(string docTypeName, Int32[] docIds)
+    public DataTable LoadDocData(string docTypeName, IIdSet<Int32> docIds)
     {
       DataTable table = DoLoadDocData(docTypeName, docIds);
-      if (table.Rows.Count != docIds.Length)
+      if (table.Rows.Count != docIds.Count)
       {
         InvalidOperationException ex = new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_LoadDocRowCount,
-          docTypeName, docIds.Length, table.Rows.Count));
-        ex.Data["WantedDocIds"] = docIds;
-        ex.Data["LoadedDocIds"] = DataTools.GetIds(table);
+          docTypeName, docIds.Count, table.Rows.Count));
+        ex.Data["WantedDocIds"] = docIds.ToArray();
+        ex.Data["LoadedDocIds"] = IdTools.GetIds<Int32>(table).ToArray();
+        throw ex;
       }
       return table;
     }
@@ -801,7 +802,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя таблицы документов</param>
     /// <param name="docIds">Массив идентификаторов</param>
     /// <returns>Таблица документов</returns>
-    protected abstract DataTable DoLoadDocData(string docTypeName, Int32[] docIds);
+    protected abstract DataTable DoLoadDocData(string docTypeName, IIdSet<Int32> docIds);
 
     /// <summary>
     /// Загрузить документы (без поддокументов)
@@ -830,7 +831,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
     /// <param name="docIds">Массив идентификаторов документов, для которых загружаются поддокументы</param>
     /// <returns>Таблица поддокументов</returns>
-    public DataTable LoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
+    public DataTable LoadSubDocData(string docTypeName, string subDocTypeName, IIdSet<Int32> docIds)
     {
       return DoLoadSubDocData(docTypeName, subDocTypeName, docIds);
     }
@@ -843,7 +844,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
     /// <param name="docIds">Массив идентификаторов документов, для которых загружаются поддокументы</param>
     /// <returns>Таблица поддокументов</returns>
-    protected abstract DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds);
+    protected abstract DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, IIdSet<Int32> docIds);
 
     /// <summary>
     /// Применение изменений.
@@ -1329,21 +1330,21 @@ namespace FreeLibSet.Data.Docs
       if (fromCache)
         values = DBCache[docTypeName].GetValues(docId, cols);
       else
-        values = GetValues(docTypeName, docId, cols);
+        values = GetValuesById(docTypeName, docId, cols);
 
       DBxDocServiceInfo info = new DBxDocServiceInfo();
 
       if (DocTypes.UseVersions)
-        info.Version = DataTools.GetInt(values[cols.IndexOf("Version")]);
+        info.Version = DataTools.GetInt32(values[cols.IndexOf("Version")]);
       if (DocTypes.UseDeleted)
-        info.Deleted = DataTools.GetBool(values[cols.IndexOf("Deleted")]);
+        info.Deleted = DataTools.GetBoolean(values[cols.IndexOf("Deleted")]);
 
       if (DocTypeViewHistoryPermission.GetAllowed(this.UserPermissions, docTypeName))
       {
         if (DocTypes.UseUsers)
         {
-          info.CreateUserId = DataTools.GetInt(values[cols.IndexOf("CreateUserId")]);
-          info.ChangeUserId = DataTools.GetInt(values[cols.IndexOf("ChangeUserId")]);
+          info.CreateUserId = DataTools.GetInt32(values[cols.IndexOf("CreateUserId")]);
+          info.ChangeUserId = DataTools.GetInt32(values[cols.IndexOf("ChangeUserId")]);
           if (info.ChangeUserId == 0)
             info.ChangeUserId = info.CreateUserId;
         }
@@ -1416,7 +1417,7 @@ namespace FreeLibSet.Data.Docs
     {
       DBxSelectInfo info = new DBxSelectInfo();
       info.TableName = tableName;
-      info.Expressions.Add(columnNames);
+      info.Expressions.AddRange(columnNames);
       info.Where = where;
       info.OrderBy = orderBy;
       return FillSelect(info);
@@ -1694,7 +1695,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="id">Идентификатор строки. Может быть 0</param>
     /// <param name="columnName">Имя поля (может быть с точками)</param>
     /// <returns>Значение</returns>
-    public object GetValue(string tableName, Int32 id, string columnName)
+    public object GetValueById(string tableName, object id, string columnName)
     {
       object value;
       DoGetValue(tableName, id, columnName, out value);
@@ -1712,7 +1713,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя поля (может быть с точками)</param>
     /// <param name="value">Сюда по ссылке записывается значение</param>
     /// <returns>true, если поле было найдено</returns>
-    public bool GetValue(string tableName, Int32 id, string columnName, out object value)
+    public bool GetValueById(string tableName, object id, string columnName, out object value)
     {
       return DoGetValue(tableName, id, columnName, out value);
     }
@@ -1728,11 +1729,11 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя поля (может быть с точками)</param>
     /// <param name="value">Сюда по ссылке записывается значение</param>
     /// <returns>true, если поле было найдено</returns>
-    protected abstract bool DoGetValue(string tableName, Int32 id, string columnName, out object value);
+    protected abstract bool DoGetValue(string tableName, object id, string columnName, out object value);
 
     /// <summary>
     /// Получить значения для заданного списка полей.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ по целочисленному полю или Guid.
     /// Если <paramref name="id"/>=0, возвращается массив значений null подходящей длины.
     /// Выбрасывает исключение DBxRecordNotFoundException, если задан идентификатор несуществующей записи.
     /// Имена полей могут содержать точки для получения значений ссылочных полей с помощью INNER JOIN.
@@ -1741,14 +1742,14 @@ namespace FreeLibSet.Data.Docs
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <returns>Массив значений полей строки</returns>
-    public object[] GetValues(string tableName, Int32 id, DBxColumns columnNames)
+    public object[] GetValuesById(string tableName, object id, DBxColumns columnNames)
     {
       return DoGetValues(tableName, id, columnNames);
     }
 
     /// <summary>
     /// Получить значения для заданного списка полей.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ по целочисленному полю или Guid.
     /// Если <paramref name="id"/>=0, возвращается массив значений null подходящей длины.
     /// Выбрасывает исключение DBxRecordNotFoundException, если задан идентификатор несуществующей записи.
     /// Имена полей могут содержать точки для получения значений ссылочных полей с помощью INNER JOIN.
@@ -1757,7 +1758,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <returns>Массив значений полей строки</returns>
-    protected abstract object[] DoGetValues(string tableName, Int32 id, DBxColumns columnNames);
+    protected abstract object[] DoGetValues(string tableName, object id, DBxColumns columnNames);
 
     /// <summary>
     /// Получить значения для заданного списка полей.
@@ -1770,7 +1771,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNames">Список имен столбцов, разделенных запятыми</param>
     /// <returns>Массив значений полей строки</returns>
-    public object[] GetValues(string tableName, Int32 id, string columnNames)
+    public object[] GetValuesById(string tableName, object id, string columnNames)
     {
       DBxColumns columnNames2 = new DBxColumns(columnNames);
       return DoGetValues(tableName, id, columnNames2);
@@ -1787,10 +1788,16 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтры</param>
     /// <returns>Список идентификаторов</returns>
-    public IdList GetIds(string tableName, DBxFilter where)
+    public IIdSet<Int32> GetIds(string tableName, DBxFilter where)
     {
       return DoGetIds(tableName, where);
     }
+
+    IIdSet IDBxConReadOnlyBase.GetIds(string tableName, DBxFilter where)
+    {
+      return GetIds(tableName, where);
+    }
+
 
     /// <summary>
     /// Получить список идентификаторов в таблице для строк, соответствующих заданному фильтру.
@@ -1799,7 +1806,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтры</param>
     /// <returns>Список идентификаторов</returns>
-    protected abstract IdList DoGetIds(string tableName, DBxFilter where);
+    protected abstract IIdSet<Int32> DoGetIds(string tableName, DBxFilter where);
 
     /// <summary>
     /// Получить массив идентификаторов строк с заданным значением поля
@@ -1808,11 +1815,15 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя поля условия</param>
     /// <param name="value">Значение поля условия</param>
     /// <returns>Массив идентификаторов</returns>
-    public IdList GetIds(string tableName, string columnName, object value)
+    public IIdSet<Int32> GetIds(string tableName, string columnName, object value)
     {
       return DoGetIds(tableName, new ValueFilter(columnName, value));
     }
 
+    //IIdSet IDBxConReadOnlyBase.GetIds(string tableName, string columnName, object value)
+    //{
+    //  return GetIds(tableName, columnName, value);
+    //}
 
     /// <summary>
     /// Получить массив идентификаторов строк с заданными значениями полей
@@ -1820,12 +1831,17 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
     /// <returns>Массив идентификаторов строк</returns>
-    public IdList GetIds(string tableName, System.Collections.IDictionary columnNamesAndValues)
+    public IIdSet<Int32> GetIds(string tableName, System.Collections.IDictionary columnNamesAndValues)
     {
       string[] columnNames;
       object[] values;
       DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
       return GetIds(tableName, new DBxColumns(columnNames), values);
+    }
+
+    IIdSet IDBxConReadOnlyBase.GetIds(string tableName, System.Collections.IDictionary columnNamesAndValues)
+    {
+      return GetIds(tableName, columnNamesAndValues);
     }
 
     /// <summary>
@@ -1835,7 +1851,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
     /// <returns>Массив идентификаторов</returns>
-    public IdList GetIds(string tableName, DBxColumns columnNames, object[] values)
+    public IIdSet<Int32> GetIds(string tableName, DBxColumns columnNames, object[] values)
     {
 #if DEBUG
       if (columnNames == null)
@@ -1847,6 +1863,38 @@ namespace FreeLibSet.Data.Docs
       DBxFilter filter = ValueFilter.CreateFilter(columnNames, values);
       return DoGetIds(tableName, filter);
     }
+
+    IIdSet IDBxConReadOnlyBase.GetIds(string tableName, DBxColumns columnNames, object[] values)
+    {
+      return GetIds(tableName, columnNames, values);
+    }
+
+    /// <summary>
+    /// Получение набора значений ссылочного поля для всех строк, удовлетворяющих условию.
+    /// Порядок возвращаемых идентикаторов не определен.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="refColumnName">Имя поля, значения которого извлекаются</param>
+    /// <param name="where">Условие (фильтр)</param>
+    /// <returns>Массив идентификаторов (значений поля "Id")</returns>
+    public IIdSet<Int32> GetRefIds(string tableName, string refColumnName, DBxFilter where)
+    {
+      return DoGetRefIds(tableName, refColumnName, where);
+    }
+
+    IIdSet IDBxConReadOnlyBase.GetRefIds(string tableName, string refColumnName, DBxFilter where)
+    {
+      return GetRefIds(tableName, refColumnName, where);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tableName"></param>
+    /// <param name="refColumnName"></param>
+    /// <param name="where"></param>
+    /// <returns></returns>
+    protected abstract IIdSet<Int32> DoGetRefIds(string tableName, string refColumnName, DBxFilter where);
 
     #endregion
 
@@ -1861,8 +1909,8 @@ namespace FreeLibSet.Data.Docs
     /// больше одной записи, удовлетворяющей условию <paramref name="where"/>.
     /// Будет возвращена первая из записей, в соответствии с порядком.
     /// Если порядок не задан, какая запись будет возвращена, не определено</param>
-    /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    public Int32 FindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
+    /// <returns>Идентификатор найденной записи или null, если запись не найдена</returns>
+    public object FindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
     {
       return DoFindRecord(tableName, where, orderBy);
     }
@@ -1876,8 +1924,8 @@ namespace FreeLibSet.Data.Docs
     /// больше одной записи, удовлетворяющей условию <paramref name="where"/>.
     /// Будет возвращена первая из записей, в соответствии с порядком.
     /// Если порядок не задан, какая запись будет возвращена, не определено</param>
-    /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    protected abstract Int32 DoFindRecord(string tableName, DBxFilter where, DBxOrder orderBy);
+    /// <returns>Идентификатор найденной записи или null, если запись не найдена</returns>
+    protected abstract object DoFindRecord(string tableName, DBxFilter where, DBxOrder orderBy);
 
     /// <summary>
     /// Найти запись
@@ -1886,8 +1934,8 @@ namespace FreeLibSet.Data.Docs
     /// <param name="where">Условие отбора</param>
     /// <param name="singleOnly">Если true и найдено больше одной записи, удовлетворяющей условию
     /// <paramref name="where"/>, то возвращается 0</param>
-    /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    public Int32 FindRecord(string tableName, DBxFilter where, bool singleOnly)
+    /// <returns>Идентификатор найденной записи или null, если запись не найдена</returns>
+    public object FindRecord(string tableName, DBxFilter where, bool singleOnly)
     {
       return DoFindRecord(tableName, where, singleOnly);
     }
@@ -1898,9 +1946,9 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Условие отбора</param>
     /// <param name="singleOnly">Если true и найдено больше одной записи, удовлетворяющей условию
-    /// <paramref name="where"/>, то возвращается 0</param>
-    /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    protected abstract Int32 DoFindRecord(string tableName, DBxFilter where, bool singleOnly);
+    /// <paramref name="where"/>, то возвращается null</param>
+    /// <returns>Идентификатор найденной записи или null, если запись не найдена</returns>
+    protected abstract object DoFindRecord(string tableName, DBxFilter where, bool singleOnly);
 
     /// <summary>
     /// Найти строку с заданным значением поля
@@ -1909,8 +1957,8 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя поля условия</param>
     /// <param name="value">Значение поля условия</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, string columnName, object value)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, string columnName, object value)
     {
       return DoFindRecord(tableName, new ValueFilter(columnName, value), false);
     }
@@ -1921,8 +1969,8 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, System.Collections.IDictionary columnNamesAndValues)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, System.Collections.IDictionary columnNamesAndValues)
     {
       string[] columnNames;
       object[] values;
@@ -1937,8 +1985,8 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, DBxColumns columnNames, object[] values)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, DBxColumns columnNames, object[] values)
     {
       return FindRecord(tableName, columnNames, values, (DBxOrder)null);
     }
@@ -1946,15 +1994,15 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Найти строку с заданными значениями полей. 
     /// Если задан порядок сортировки, то отыскиваются все строки с заданными значениями, 
-    /// они упорядочиваются и возвращается идентификатор первой строки. Если OrderBy=null,
-    /// то возвращается идентификатор первой попавшейся строки
+    /// они упорядочиваются и возвращается идентификатор первой строки. Если <paramref name="orderBy"/>=null,
+    /// то возвращается идентификатор первой попавшейся строки.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
     /// <param name="orderBy">Порядок сортировки (может быть null)</param>
     /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, DBxColumns columnNames, object[] values, DBxOrder orderBy)
+    public object FindRecord(string tableName, DBxColumns columnNames, object[] values, DBxOrder orderBy)
     {
 #if DEBUG
       if (columnNames == null)
@@ -1968,23 +2016,13 @@ namespace FreeLibSet.Data.Docs
       return FindRecord(tableName, filter, orderBy);
     }
 
-    ///// <summary>
-    ///// Поиск любой строки таблицы без всяких условий.
-    ///// </summary>
-    ///// <param name="tableName">Имя таблицы</param>
-    ///// <returns>Идентификатор первой попавшейся записи или 0, если таблица не содержит записей</returns>
-    //public Int32 FindRecord(string tableName)
-    //{
-    //  return FindRecord(tableName, (DBxFilter)null, (DBxOrder)null);
-    //}
-
     /// <summary>
     /// Поиск первой строки, удовлетворяющей условию.
     /// Если есть несколько подходящих строк, то возвращается идентификатор первой попавшейся строки
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр</param>
-    public Int32 FindRecord(string tableName, DBxFilter where)
+    public object FindRecord(string tableName, DBxFilter where)
     {
       return DoFindRecord(tableName, where, false);
     }
@@ -2029,9 +2067,9 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public int[] GetUniqueIntValues(string tableName, string columnName, DBxFilter where)
+    public int[] GetUniqueInt32Values(string tableName, string columnName, DBxFilter where)
     {
-      return DoGetUniqueIntValues(tableName, columnName, where);
+      return DoGetUniqueInt32Values(tableName, columnName, where);
     }
 
     /// <summary>
@@ -2043,7 +2081,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    protected abstract int[] DoGetUniqueIntValues(string tableName, string columnName, DBxFilter where);
+    protected abstract int[] DoGetUniqueInt32Values(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить числовые значения поля без повторов.
@@ -2208,12 +2246,11 @@ namespace FreeLibSet.Data.Docs
     /// <param name="subDocTypeName">Имя таблицы поддокумента</param>
     /// <param name="docId">Идентификатор документа</param>
     /// <returns>Массив идентификаторов</returns>
-    public Int32[] GetSubDocIds(string docTypeName, string subDocTypeName, Int32 docId)
+    public IIdSet<Int32> GetSubDocIds(string docTypeName, string subDocTypeName, Int32 docId)
     {
       CheckIsRealDocId(docId);
       AndFilter filter = new AndFilter(new ValueFilter("DocId", docId), DBSSubDocType.DeletedFalseFilter);
-      DataTable table = FillSelect(subDocTypeName, DBSSubDocType.IdColumns, filter);
-      return DataTools.GetIds(table);
+      return GetIds(subDocTypeName, filter);
     }
 
     #region GetInheritorIds
@@ -2230,7 +2267,7 @@ namespace FreeLibSet.Data.Docs
     /// идентификаторы строк узлов верхнего уровня или всех строк (при <paramref name="nested"/>=true)</param>
     /// <param name="nested">true, если требуется рекурсивный поиск. false, если требуется вернуть только непосредственные дочерние элементы</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested)
+    public IIdSet<Int32> GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested)
     {
       Int32 loopedId;
       return DoGetInheritorIds(tableName, parentIdColumnName, parentId, nested, null, out loopedId);
@@ -2249,7 +2286,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="nested">true, если требуется рекурсивный поиск. false, если требуется вернуть только непосредственные дочерние элементы</param>
     /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where)
+    public IIdSet<Int32> GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where)
     {
       Int32 loopedId;
       return DoGetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
@@ -2271,7 +2308,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
     /// <param name="loopedId">Сюда записывается идентификатор "зацикленного" узла</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId)
+    public IIdSet<Int32> GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId)
     {
       return DoGetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
     }
@@ -2292,7 +2329,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
     /// <param name="loopedId">Сюда записывается идентификатор "зацикленного" узла</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    protected abstract IdList DoGetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId);
+    protected abstract IIdSet<Int32> DoGetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId);
 
     #endregion
 
@@ -2407,15 +2444,15 @@ namespace FreeLibSet.Data.Docs
 
       if (subDocType == null)
       {
-        Int32 binDataId = DataTools.GetInt(GetValue(tableName, id, columnName));
+        Int32 binDataId = DataTools.GetInt32(GetValueById(tableName, id, columnName));
         return InternalGetBinData1(tableName, columnName, new DocSubDocDataId(id, 0, binDataId), 0, dummyIds);
       }
       else
       {
         // Поддокумент
-        object[] values = GetValues(tableName, id, new DBxColumns(new string[] { columnName, "DocId" }));
-        Int32 binDataId = DataTools.GetInt(values[0]);
-        Int32 docId = DataTools.GetInt(values[1]);
+        object[] values = GetValuesById(tableName, id, new DBxColumns(new string[] { columnName, "DocId" }));
+        Int32 binDataId = DataTools.GetInt32(values[0]);
+        Int32 docId = DataTools.GetInt32(values[1]);
         return InternalGetBinData1(tableName, columnName, new DocSubDocDataId(docId, id, binDataId), 0, dummyIds);
       }
     }
@@ -2436,7 +2473,7 @@ namespace FreeLibSet.Data.Docs
       if (data == null)
         return null;
       else
-        return DataTools.XmlDocumentFromByteArray(data);
+        return XmlTools.XmlDocumentFromByteArray(data);
     }
 
     /// <summary>
@@ -2605,7 +2642,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Длина блока данных</returns>
     public int GetBinDataLength(Int32 binDataId)
     {
-      return DBCache["BinData"].GetInt(binDataId, "Length");
+      return DBCache["BinData"].GetInt32(binDataId, "Length");
     }
 
     #endregion
@@ -2633,7 +2670,7 @@ namespace FreeLibSet.Data.Docs
 
       object[] a = DBCache["FileNames"].GetValues(fileId, new DBxColumns("Name,Data.Length,CreationTime,LastWriteTime"));
       StoredFileInfo fi = new StoredFileInfo(DataTools.GetString(a[0]),
-        DataTools.GetInt(a[1]),
+        DataTools.GetInt32(a[1]),
         DataTools.GetNullableDateTime(a[2]),
         DataTools.GetNullableDateTime(a[3]));
       return fi;
@@ -2654,7 +2691,7 @@ namespace FreeLibSet.Data.Docs
         return StoredFileInfo.Empty;
       CheckIsRealDocId(id);
 
-      Int32 fileId = DataTools.GetInt(GetValue(tableName, id, columnName));
+      Int32 fileId = DataTools.GetInt32(GetValueById(tableName, id, columnName));
       return GetDBFileInfo(fileId);
     }
 
@@ -2685,15 +2722,15 @@ namespace FreeLibSet.Data.Docs
 
       if (subDocType == null)
       {
-        Int32 fileId = DataTools.GetInt(GetValue(tableName, id, columnName));
+        Int32 fileId = DataTools.GetInt32(GetValueById(tableName, id, columnName));
         return InternalGetDBFile1(tableName, columnName, new DocSubDocDataId(id, 0, fileId), 0, dummyIds);
       }
       else
       {
         // Поддокумент
-        object[] values = GetValues(tableName, id, new DBxColumns(new string[] { columnName, "DocId" }));
-        Int32 fileId = DataTools.GetInt(values[0]);
-        Int32 docId = DataTools.GetInt(values[1]);
+        object[] values = GetValuesById(tableName, id, new DBxColumns(new string[] { columnName, "DocId" }));
+        Int32 fileId = DataTools.GetInt32(values[0]);
+        Int32 docId = DataTools.GetInt32(values[1]);
         return InternalGetDBFile1(tableName, columnName, new DocSubDocDataId(docId, id, fileId), 0, dummyIds);
       }
     }
@@ -2903,7 +2940,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <param name="firstIds">Начальные идентификаторы страниц</param>
-    public void ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
+    public void ClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstIds)
     {
       DoClearCachePages(tableName, columnNames, firstIds);
     }
@@ -2914,7 +2951,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <param name="firstIds">Начальные идентификаторы страниц</param>
-    protected abstract void DoClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds);
+    protected abstract void DoClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstIds);
 
     /// <summary>
     /// Получение текстового представления для документа / поддокумента
@@ -2945,16 +2982,14 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы. Должно быть задано имя существующего документа или поддокумента</param>
     /// <param name="ids">Массив идентификаторов. Может быть null или пустым массивом</param>
     /// <returns>Текстовое представление</returns>
-    public string[] GetTextValues(string tableName, Int32[] ids)
+    public string[] GetTextValues(string tableName, IIndexedIdSet<Int32> ids)
     {
       // Пока нет смысла делать методы GetTextValues() виртуальными.
 
-      if (ids == null)
-        return DataTools.EmptyStrings;
-      if (ids.Length == 0)
-        return DataTools.EmptyStrings;
-      string[] a = new string[ids.Length];
-      for (int i = 0; i < ids.Length; i++)
+      if (ids == null || ids.Count==0)
+        return EmptyArray<string>.Empty;
+      string[] a = new string[ids.Count];
+      for (int i = 0; i < ids.Count; i++)
         a[i] = GetTextValue(tableName, ids[i]);
       return a;
     }
@@ -2968,14 +3003,14 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы. Должно быть задано имя существующего документа или поддокумента</param>
     /// <param name="ids">Список идентификаторов. Может быть null или пустым списком</param>
     /// <returns>Текстовое представление</returns>
-    public string[] GetTextValues(string tableName, IdList ids)
+    public string[] GetTextValues(string tableName, IdCollection<Int32> ids)
     {
       // Пока нет смысла делать методы GetTextValues() виртуальными.
 
       if (ids == null)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       if (ids.Count == 0)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       string[] a = new string[ids.Count];
       int cnt = 0;
       foreach (Int32 id in ids)
@@ -3153,45 +3188,12 @@ namespace FreeLibSet.Data.Docs
           if (row.RowState == DataRowState.Deleted)
             continue;
 
-          Int32 id = DataTools.GetInt(row[pId]);
+          Int32 id = DataTools.GetInt32(row[pId]);
           if (id <= 0)
             throw new ArgumentException(String.Format(Res.DBxDocProvider_Arg_WrongIdInTable, id, table.TableName), "ds");
         }
       }
     }
-
-#if XXX
-    /// <summary>
-    /// Список из одного столбца "Id"
-    /// </summary>
-    [Obsolete("Используйте поле класса DBSDocType или DBSSubDocType", false)]
-    public static DBxColumns IdColumns { get { return DBxColumns.Id; } }
-
-    /// <summary>
-    /// Список из одного столбца "DocId"
-    /// </summary>
-    [Obsolete("Используйте поле класса DBSSubDocType", false)]
-    public static readonly DBxColumns DocIdColumns = new DBxColumns("DocId");
-
-    /// <summary>
-    /// Фильтр по полю "Deleted" для отмены загрузки удаленных документов или поддокументов
-    /// </summary>
-    [Obsolete("Используйте поле класса DBSDocType или DBSSubDocType", false)]
-    public static readonly ValueFilter DeletedFalseFilter = new ValueFilter("Deleted", false);
-
-    /// <summary>
-    /// Фильтр по полю "DocId.Deleted" для отмены загрузки поддокументов для удаленных документов
-    /// </summary>
-    [Obsolete("Используйте поле класса DBSSubDocType", false)]
-    public static readonly ValueFilter DocIdDeletedFalseFilter = new ValueFilter("DocId.Deleted", false);
-
-    /// <summary>
-    /// Порядок сортировки по полю "Id"
-    /// </summary>
-    [Obsolete("Используйте поле класса DBSDocType или DBSSubDocType", false)]
-    public static DBxOrder OrderById { get { return DBxOrder.ById; } }
-
-#endif
 
     /// <summary>
     /// Очистка кэша.
@@ -3216,7 +3218,7 @@ namespace FreeLibSet.Data.Docs
 
         // Не выгодно выполнять сброс по одной строке, т.к. будет выполняться обращение к системе кэширования,
         // в том числе, обращение к диску
-        IdList ids = new IdList();
+        IdCollection<Int32> ids = new IdCollection<Int32>();
         foreach (DataRow row in table.Rows)
         {
           switch (row.RowState)
@@ -3319,7 +3321,7 @@ namespace FreeLibSet.Data.Docs
         e.Data["DBxDocProvider.UseDocHist"] = UseDocHist;
         try
         {
-          e.Data["DBxDocProvider.UserPermissionsAsXml"] = DataTools.XmlDocumentToString(UserPermissionsAsXml);
+          e.Data["DBxDocProvider.UserPermissionsAsXml"] = XmlTools.XmlDocumentToString(UserPermissionsAsXml);
         }
         catch { }
         e.Data["DBxDocProvider.ViewOtherUsersActionPermission"] = ViewOtherUsersActionPermission;

@@ -135,16 +135,16 @@ namespace FreeLibSet.Forms
           title = col.ColumnName;
 
         if (col.DataType == typeof(Boolean))
-          Columns.AddBool(col.ColumnName, true, title);
+          Columns.AddCheckBox(col.ColumnName, true, title);
         else if (col.DataType == typeof(DateTime))
         {
           if (String.IsNullOrEmpty(colInfo.Format))
             Columns.AddDate(col.ColumnName, true, title);
           else
-            Columns.AddText(col.ColumnName, true, title);
+            Columns.AddText(col.ColumnName, true, title, 10, 1);
         }
         else
-          Columns.AddText(col.ColumnName, true, title);
+          Columns.AddText(col.ColumnName, true, title, 10, 1);
 
         if (colInfo.TextWidth > 0)
           Columns.LastAdded.TextWidth = colInfo.TextWidth;
@@ -153,7 +153,7 @@ namespace FreeLibSet.Forms
           Columns.LastAdded.GridColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
           Columns.LastAdded.GridColumn.FillWeight = colInfo.FillWeight;
         }
-        switch (colInfo.Align)
+        switch (colInfo.TextAlign)
         {
           case UIHorizontalAlignment.Left: Columns.LastAdded.TextAlign = HorizontalAlignment.Left; break;
           case UIHorizontalAlignment.Center: Columns.LastAdded.TextAlign = HorizontalAlignment.Center; break;
@@ -393,9 +393,9 @@ namespace FreeLibSet.Forms
     /// Получение списка сообщений для строки.
     /// </summary>
     /// <param name="args">Аргументы события</param>
-    protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
+    protected override void OnRowInfoNeeded(EFPDataGridViewRowInfoEventArgs args)
     {
-      base.OnGetRowAttributes(args);
+      base.OnRowInfoNeeded(args);
       if (Data == null)
         return;
       if (args.RowIndex < 0 || args.RowIndex >= Data.Table.DefaultView.Count)

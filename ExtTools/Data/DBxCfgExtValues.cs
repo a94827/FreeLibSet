@@ -159,13 +159,15 @@ namespace FreeLibSet.Data
     {
       switch (preferredType)
       {
-        case DBxExtValuePreferredType.Int32: return Part.GetNullableInt(GetName(Index));
+        case DBxExtValuePreferredType.Int32: return Part.GetNullableInt32(GetName(Index));
+        case DBxExtValuePreferredType.Int64: return Part.GetNullableInt64(GetName(Index));
         case DBxExtValuePreferredType.Single: return Part.GetNullableSingle(GetName(Index));
         case DBxExtValuePreferredType.Double: return Part.GetNullableDouble(GetName(Index));
         case DBxExtValuePreferredType.Decimal: return Part.GetNullableDecimal(GetName(Index));
-        case DBxExtValuePreferredType.Boolean: return Part.GetNullableBool(GetName(Index));
+        case DBxExtValuePreferredType.Boolean: return Part.GetNullableBoolean(GetName(Index));
         case DBxExtValuePreferredType.DateTime: return Part.GetNullableDateTime(GetName(Index));
         case DBxExtValuePreferredType.TimeSpan: return Part.GetNullableTimeSpan(GetName(Index));
+        case DBxExtValuePreferredType.Guid: return Part.GetNullableGuid(GetName(Index));
         default: return Part.GetString(GetName(Index));
       }
     }
@@ -175,7 +177,7 @@ namespace FreeLibSet.Data
       if (value == null || value is DBNull)
         Part.Remove(GetName(index));
       else if (value is Int32)
-        Part.SetInt(GetName(index), DataTools.GetInt(value));
+        Part.SetInt32(GetName(index), DataTools.GetInt32(value));
       else if (value is Single)
         Part.SetSingle(GetName(index), DataTools.GetSingle(value));
       else if (value is Double)
@@ -183,7 +185,7 @@ namespace FreeLibSet.Data
       else if (value is Decimal)
         Part.SetDecimal(GetName(index), DataTools.GetDecimal(value));
       else if (value is Boolean)
-        Part.SetBool(GetName(index), DataTools.GetBool(value));
+        Part.SetBoolean(GetName(index), DataTools.GetBoolean(value));
       else if (value is DateTime)
         Part.SetNullableDateTime(GetName(index), DataTools.GetNullableDateTime(value));
       else if (value is TimeSpan)

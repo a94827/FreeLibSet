@@ -231,7 +231,7 @@ namespace FreeLibSet.UICore
       bool changed = false;
       for (int i = 0; i < rows2.Length; i++)
       {
-        if (DataTools.GetInt(rows2[i][_OrderColumnPos]) != (i + 1))
+        if (DataTools.GetInt32(rows2[i][_OrderColumnPos]) != (i + 1))
         {
           rows2[i][_OrderColumnPos] = i + 1;
           changed = true;
@@ -302,7 +302,7 @@ namespace FreeLibSet.UICore
       int maxVal = -1; // пока не определено
       for (int i = 0; i < rows.Length; i++)
       {
-        if (DataTools.GetInt(rows[i][_OrderColumnPos]) == 0)
+        if (DataTools.GetInt32(rows[i][_OrderColumnPos]) == 0)
         {
           changed = true;
           if (maxVal < 0)
@@ -313,12 +313,12 @@ namespace FreeLibSet.UICore
                 // Строки может и не быть пока в просмотре, поэтому вполне допускается DataView.Count=0.
                 maxVal = 0;
               else
-                maxVal = DataTools.GetInt(_DV[_DV.Count - 1].Row[_OrderColumnPos]);
+                maxVal = DataTools.GetInt32(_DV[_DV.Count - 1].Row[_OrderColumnPos]);
             }
             else
             {
               // Нет смысла создавать одноразовый DataView, чтобы найти максимальное значение
-              maxVal = DataTools.MaxInt(_DV, OrderColumnName, true) ?? 0;
+              maxVal = DataTools.MaxInt32(_DV, OrderColumnName, true) ?? 0;
             }
           }
 
@@ -354,7 +354,7 @@ namespace FreeLibSet.UICore
       bool changed = false;
       for (int i = 0; i < desiredOrder.Length; i++)
       {
-        if (DataTools.GetInt(desiredOrder[i][_OrderColumnPos]) != i + 1)
+        if (DataTools.GetInt32(desiredOrder[i][_OrderColumnPos]) != i + 1)
         {
           changed = true;
           desiredOrder[i][_OrderColumnPos] = i + 1;
@@ -546,7 +546,7 @@ namespace FreeLibSet.UICore
       bool changed = false;
       for (int i = 0; i < rows2.Length; i++)
       {
-        if (DataTools.GetInt(rows2[i][_OrderColumnPos]) != (i + 1))
+        if (DataTools.GetInt32(rows2[i][_OrderColumnPos]) != (i + 1))
         {
           rows2[i][_OrderColumnPos] = i + 1;
           changed = true;
@@ -582,7 +582,7 @@ namespace FreeLibSet.UICore
       bool changed = false;
       for (int i = 0; i < rows.Length; i++)
       {
-        if (DataTools.GetInt(rows[i][_OrderColumnPos]) == 0)
+        if (DataTools.GetInt32(rows[i][_OrderColumnPos]) == 0)
         {
           changed = true;
           if (maxVal < 0)
@@ -593,12 +593,12 @@ namespace FreeLibSet.UICore
                 // Строки может и не быть пока в просмотре, поэтому вполне допускается DataView.Count=0.
                 maxVal = 0;
               else
-                maxVal = DataTools.GetInt(Model.DataView[Model.DataView.Count - 1].Row[_OrderColumnPos]);
+                maxVal = DataTools.GetInt32(Model.DataView[Model.DataView.Count - 1].Row[_OrderColumnPos]);
             }
             else
             {
               // Нет смысла создавать одноразовый DataView, чтобы найти максимальное значение
-              maxVal = DataTools.MaxInt(Model.Table.DefaultView, OrderColumnName, true) ?? 0;
+              maxVal = DataTools.MaxInt32(Model.Table.DefaultView, OrderColumnName, true) ?? 0;
             }
           }
 
@@ -626,7 +626,7 @@ namespace FreeLibSet.UICore
       //{
       //  cnt++;
       //  DataRow row = _Model.TreePathToDataRow(path);
-      //  if (DataTools.GetInt(row[_OrderColumnPos]) != cnt)
+      //  if (DataTools.GetInt32(row[_OrderColumnPos]) != cnt)
       //  {
       //    changed = true;
       //    row[_OrderColumnPos] = cnt;
@@ -647,7 +647,7 @@ namespace FreeLibSet.UICore
       for (int i = 0; i < lst.Count; i++)
       {
         DataRow row = lst[i];
-        if (DataTools.GetInt(row[_OrderColumnPos]) != (i+1))
+        if (DataTools.GetInt32(row[_OrderColumnPos]) != (i+1))
         {
           changed = true;
           row[_OrderColumnPos] = i+1;
@@ -681,7 +681,7 @@ namespace FreeLibSet.UICore
             areSame = false;
             break;
           }
-          if (DataTools.GetInt(rows1[i][_OrderColumnPos]) != (i + 1))
+          if (DataTools.GetInt32(rows1[i][_OrderColumnPos]) != (i + 1))
           {
             // строки требуется перенумеровать
             areSame = false;

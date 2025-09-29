@@ -160,7 +160,7 @@ namespace FreeLibSet.Forms
     /// а создание объектов <see cref="ToolStripMenuItem"/> откладывается до реального открытия меню пользователем.
     /// </summary>
     /// <param name="items">Заполненный список команд</param>
-    public void Add(EFPCommandItems items)
+    public void AddRange(EFPCommandItems items)
     {
       if (_DelayedAdd)
       {
@@ -554,7 +554,7 @@ namespace FreeLibSet.Forms
           if (Item.Checked)
             _MenuItem.Text = MarkerChar + " " + Item.MenuText;
           else
-            _MenuItem.Text = new string(DataTools.NonBreakSpaceChar, 3) + Item.MenuText;
+            _MenuItem.Text = new string(StringTools.NonBreakSpaceChar, 3) + Item.MenuText;
         }
         else
           _MenuItem.Text = Item.MenuText;

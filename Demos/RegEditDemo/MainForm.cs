@@ -160,7 +160,7 @@ namespace RegeditDemo
         Array.Sort<string>(aNames, StringComparer.OrdinalIgnoreCase);
         bool hasDefVal = (aNames.Length > 0 && aNames[0].Length == 0);
         if (!hasDefVal)
-          aNames = DataTools.MergeArrays<string>(new string[1] { String.Empty }, aNames);
+          aNames = ArrayTools.MergeArrays<string>(new string[1] { String.Empty }, aNames);
         efpValues.Control.RowCount = aNames.Length;
         for (int i = 0; i < aNames.Length; i++)
           InitValueRow(efpValues.Control.Rows[i], aNames[i], key);
@@ -217,7 +217,7 @@ namespace RegeditDemo
             row.Cells[3].Value = "0x" + ((IFormattable)value).ToString("x16", null) + " (" + value.ToString() + ")";
             break;
           case RegistryValueKind.Binary:
-            row.Cells[3].Value = DataTools.BytesToHex((byte[])value, false, " ");
+            row.Cells[3].Value = StringTools.BytesToHex((byte[])value, false, " ");
             break;
           default:
             row.Cells[3].Value = DataTools.GetString(value);
@@ -390,10 +390,12 @@ namespace RegeditDemo
 
     #region События
 
+#pragma warning disable 0067
     public event EventHandler<TreePathEventArgs> StructureChanged;
     public event EventHandler<TreeModelEventArgs> NodesChanged;
     public event EventHandler<TreeModelEventArgs> NodesInserted;
     public event EventHandler<TreeModelEventArgs> NodesRemoved;
+#pragma warning restore 0067
 
     #endregion
 

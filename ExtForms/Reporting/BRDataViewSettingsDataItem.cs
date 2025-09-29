@@ -116,7 +116,7 @@ namespace FreeLibSet.Forms.Reporting
   /// <summary>
   /// Значения свойства EFPDataGridViewExpExcelSettings.BoolMode
   /// </summary>
-  public enum BRDataViewBoolMode
+  public enum BRDataViewBooleanMode
   {
     // Члены не переименовывать!
     // Используются при записи конфигурации
@@ -168,9 +168,9 @@ namespace FreeLibSet.Forms.Reporting
       _UseColorStyle = true;
       _UseBoolMode = true;
 
-      _BoolMode = BRDataViewBoolMode.Text;
-      _BoolTextTrue = "[X]";
-      _BoolTextFalse = "[ ]";
+      _BooleanMode = BRDataViewBooleanMode.Text;
+      _BooleanTextTrue = "[X]";
+      _BooleanTextFalse = "[ ]";
       _ColorStyle = BRDataViewColorStyle.NoColors;
       _BorderStyle = BRDataViewBorderStyle.All;
 
@@ -528,42 +528,42 @@ namespace FreeLibSet.Forms.Reporting
 
     /// <summary>
     /// Режим вывода логических значений.
-    /// По умолчанию - <see cref="BRDataViewBoolMode.Text"/>.
+    /// По умолчанию - <see cref="BRDataViewBooleanMode.Text"/>.
     /// </summary>
-    public BRDataViewBoolMode BoolMode { get { return _BoolMode; } set { _BoolMode = value; } }
-    private BRDataViewBoolMode _BoolMode;
+    public BRDataViewBooleanMode BooleanMode { get { return _BooleanMode; } set { _BooleanMode = value; } }
+    private BRDataViewBooleanMode _BooleanMode;
 
     /// <summary>
-    /// Замещающий текст для логического значения true при <see cref="BoolMode"/>=Text.
+    /// Замещающий текст для логического значения true при <see cref="BooleanMode"/>=Text.
     /// По умолчанию - "[X]".
     /// </summary>
-    public string BoolTextTrue { get { return _BoolTextTrue; } set { _BoolTextTrue = value; } }
-    private string _BoolTextTrue;
+    public string BooleanTextTrue { get { return _BooleanTextTrue; } set { _BooleanTextTrue = value; } }
+    private string _BooleanTextTrue;
 
     /// <summary>
-    /// Замещающий текст для логического значения false при <see cref="BoolMode"/>=Text.
+    /// Замещающий текст для логического значения false при <see cref="BooleanMode"/>=Text.
     /// По умолчанию - "[ ]".
     /// </summary>
-    public string BoolTextFalse { get { return _BoolTextFalse; } set { _BoolTextFalse = value; } }
-    private string _BoolTextFalse;
+    public string BooleanTextFalse { get { return _BooleanTextFalse; } set { _BooleanTextFalse = value; } }
+    private string _BooleanTextFalse;
 
     /// <summary>
-    /// Возвращает преобразованное логическое значение в соответствии со значением свойства <see cref="BoolMode"/>
+    /// Возвращает преобразованное логическое значение в соответствии со значением свойства <see cref="BooleanMode"/>
     /// </summary>
     /// <param name="value">Значение в таблице данных</param>
     /// <returns>Преобразованное значение</returns>
-    public object GetBoolValue(bool value)
+    public object GetBooleanValue(bool value)
     {
-      switch (BoolMode)
+      switch (BooleanMode)
       {
-        case BRDataViewBoolMode.Boolean:
+        case BRDataViewBooleanMode.Boolean:
           return value;
-        case BRDataViewBoolMode.Text:
-          return value ? BoolTextTrue : BoolTextFalse;
-        case BRDataViewBoolMode.Integer:
+        case BRDataViewBooleanMode.Text:
+          return value ? BooleanTextTrue : BooleanTextFalse;
+        case BRDataViewBooleanMode.Integer:
           return value ? 1 : 0;
         default:
-          throw new BugException("BoolMode=" + BoolMode.ToString());
+          throw new BugException("BooleanMode=" + BooleanMode.ToString());
       }
     }
 
@@ -864,7 +864,7 @@ namespace FreeLibSet.Forms.Reporting
       if (String.IsNullOrEmpty(s))
         return String.Empty;
 
-      s = DataTools.Substring(s.ToUpperInvariant(), 0, 10);
+      s = StringTools.Substring(s.ToUpperInvariant(), 0, 10);
       if (s[0] < 'A' || s[0] > 'Z')
         return String.Empty;
 
@@ -912,12 +912,12 @@ namespace FreeLibSet.Forms.Reporting
           CfgPart cfg3 = cfg2.GetChild(pair.Key, true);
           cfg3.Clear();
           if (!pair.Value.Print)
-            cfg3.SetBool("Print", false);
+            cfg3.SetBoolean("Print", false);
           else
           {
-            cfg3.SetInt("Width", pair.Value.PrintWidth);
+            cfg3.SetInt32("Width", pair.Value.PrintWidth);
             if (pair.Value.AutoGrow)
-              cfg3.SetBool("AutoGrow", true);
+              cfg3.SetBoolean("AutoGrow", true);
           }
 
           if (pair.Value.DbfExported)
@@ -926,7 +926,7 @@ namespace FreeLibSet.Forms.Reporting
               cfg3.SetString(pair.Value.IsManualDbfName ? "DbfName" : "AutoDbfName", pair.Value.DbfFieldName);
           }
           else
-            cfg3.SetBool("Dbf", false);
+            cfg3.SetBoolean("Dbf", false);
         }
 
         if (_SizeGroupDict.Count > 0)
@@ -936,12 +936,12 @@ namespace FreeLibSet.Forms.Reporting
           {
             CfgPart cfg3 = cfg2.GetChild(pair.Key, true);
             cfg3.Clear();
-            cfg3.SetInt("Width", pair.Value.PrintWidth);
+            cfg3.SetInt32("Width", pair.Value.PrintWidth);
             if (pair.Value.AutoGrow)
-              cfg3.SetBool("AutoGrow", true);
+              cfg3.SetBoolean("AutoGrow", true);
           }
         }
-        cfg.SetInt("RepeatedColumnCount", RepeatedColumnCount);
+        cfg.SetInt32("RepeatedColumnCount", RepeatedColumnCount);
         cfg.SetEnum<BRDataViewColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers", ColumnSubHeaderNumbers);
 
         #endregion
@@ -954,14 +954,14 @@ namespace FreeLibSet.Forms.Reporting
         //cfg.SetEnum<PrintGridRowSpacing>("RowSpacing", RowSpacing);
         if (UseBoolMode)
         {
-          cfg.SetEnum<BRDataViewBoolMode>("BoolMode", BoolMode);
-          cfg.SetString("BoolTextTrue", BoolTextTrue);
-          cfg.SetString("BoolTextFalse", BoolTextFalse);
+          cfg.SetEnum<BRDataViewBooleanMode>("BoolMode", BooleanMode);
+          cfg.SetString("BoolTextTrue", BooleanTextTrue);
+          cfg.SetString("BoolTextFalse", BooleanTextFalse);
         }
-        cfg.SetInt("CellLeftMargin", CellLeftMargin);
-        cfg.SetInt("CellTopMargin", CellTopMargin);
-        cfg.SetInt("CellRightMargin", CellRightMargin);
-        cfg.SetInt("CellBottomMargin", CellBottomMargin);
+        cfg.SetInt32("CellLeftMargin", CellLeftMargin);
+        cfg.SetInt32("CellTopMargin", CellTopMargin);
+        cfg.SetInt32("CellRightMargin", CellRightMargin);
+        cfg.SetInt32("CellBottomMargin", CellBottomMargin);
 
         #endregion
 
@@ -969,25 +969,25 @@ namespace FreeLibSet.Forms.Reporting
 
         cfg.SetEnum<EFPDataViewExpRange>("ExpRange", ExpRange);
         // Не используем свойства UseXXX
-        cfg.SetBool("ExpTableHeader", ExpTableHeader);
-        cfg.SetBool("ExpTableFilters", ExpTableFilters);
-        cfg.SetBool("ExpColumnHeaders", ExpColumnHeaders);
+        cfg.SetBoolean("ExpTableHeader", ExpTableHeader);
+        cfg.SetBoolean("ExpTableFilters", ExpTableFilters);
+        cfg.SetBoolean("ExpColumnHeaders", ExpColumnHeaders);
 
         #endregion
 
         #region Экспорт в текстовый файл
 
-        cfg.SetInt("CodePage", CodePage);
+        cfg.SetInt32("CodePage", CodePage);
         cfg.SetString("FieldDelimiter", FieldDelimiterStr);
         cfg.SetString("Quote", QuoteStr);
-        cfg.SetBool("SingleLineField", SingleLineField);
-        cfg.SetBool("RemoveDoubleSpaces", RemoveDoubleSpaces);
+        cfg.SetBoolean("SingleLineField", SingleLineField);
+        cfg.SetBoolean("RemoveDoubleSpaces", RemoveDoubleSpaces);
 
         #endregion
 
         #region Экспорт в DBF
 
-        cfg.SetInt("DbfCodePage", DbfCodePage);
+        cfg.SetInt32("DbfCodePage", DbfCodePage);
         // Остальные параметры относятся к столбцам
 
         #endregion
@@ -1013,14 +1013,14 @@ namespace FreeLibSet.Forms.Reporting
           {
             CfgPart cfg3 = cfg2.GetChild(colName, false);
             ColumnInfo ci = new ColumnInfo();
-            ci.Print = cfg3.GetBoolDef("Print", true);
+            ci.Print = cfg3.GetBooleanDef("Print", true);
             if (ci.Print)
             {
-              ci.PrintWidth = cfg3.GetInt("Width");
-              ci.AutoGrow = cfg3.GetBool("AutoGrow");
+              ci.PrintWidth = cfg3.GetInt32("Width");
+              ci.AutoGrow = cfg3.GetBoolean("AutoGrow");
             }
 
-            ci.DbfExported = cfg3.GetBoolDef("Dbf", true);
+            ci.DbfExported = cfg3.GetBooleanDef("Dbf", true);
             ci.DbfFieldName = cfg3.GetString("DbfName");
             if (String.IsNullOrEmpty(ci.DbfFieldName))
               ci.DbfFieldName = cfg3.GetString("AutoDbfName");
@@ -1039,12 +1039,12 @@ namespace FreeLibSet.Forms.Reporting
           {
             CfgPart cfg3 = cfg2.GetChild(grpName, false);
             SizeGroupInfo szi = new SizeGroupInfo();
-            szi.PrintWidth = cfg3.GetInt("Width");
-            szi.AutoGrow = cfg3.GetBool("AutoGrow");
+            szi.PrintWidth = cfg3.GetInt32("Width");
+            szi.AutoGrow = cfg3.GetBoolean("AutoGrow");
           }
         }
 
-        RepeatedColumnCount = cfg.GetInt("RepeatedColumnCount");
+        RepeatedColumnCount = cfg.GetInt32("RepeatedColumnCount");
         ColumnSubHeaderNumbers = cfg.GetEnum<BRDataViewColumnSubHeaderNumbersMode>("ColumnSubHeaderNumbers");
 
         #endregion
@@ -1057,14 +1057,14 @@ namespace FreeLibSet.Forms.Reporting
         //RowSpacing = cfg.GetEnum<PrintGridRowSpacing>("RowSpacing");
         if (UseBoolMode)
         {
-          BoolMode = cfg.GetEnumDef<BRDataViewBoolMode>("BoolMode", BRDataViewBoolMode.Text);
-          BoolTextTrue = cfg.GetStringDef("BoolTextTrue", "[X]");
-          BoolTextFalse = cfg.GetStringDef("BoolTextFalse", "[ ]");
+          BooleanMode = cfg.GetEnumDef<BRDataViewBooleanMode>("BoolMode", BRDataViewBooleanMode.Text);
+          BooleanTextTrue = cfg.GetStringDef("BoolTextTrue", "[X]");
+          BooleanTextFalse = cfg.GetStringDef("BoolTextFalse", "[ ]");
         }
-        CellLeftMargin = cfg.GetIntDef("CellLeftMargin", BRReport.AppDefaultCellStyle.LeftMargin);
-        CellTopMargin = cfg.GetIntDef("CellTopMargin", BRReport.AppDefaultCellStyle.TopMargin);
-        CellRightMargin = cfg.GetIntDef("CellRightMargin", BRReport.AppDefaultCellStyle.RightMargin);
-        CellBottomMargin = cfg.GetIntDef("CellBottomMargin", BRReport.AppDefaultCellStyle.BottomMargin);
+        CellLeftMargin = cfg.GetInt32Def("CellLeftMargin", BRReport.AppDefaultCellStyle.LeftMargin);
+        CellTopMargin = cfg.GetInt32Def("CellTopMargin", BRReport.AppDefaultCellStyle.TopMargin);
+        CellRightMargin = cfg.GetInt32Def("CellRightMargin", BRReport.AppDefaultCellStyle.RightMargin);
+        CellBottomMargin = cfg.GetInt32Def("CellBottomMargin", BRReport.AppDefaultCellStyle.BottomMargin);
 
         #endregion
 
@@ -1072,25 +1072,25 @@ namespace FreeLibSet.Forms.Reporting
 
         ExpRange = cfg.GetEnumDef<EFPDataViewExpRange>("ExpRange", EFPDataViewExpRange.All);
         // Не используем свойства UseXXX
-        ExpTableHeader = cfg.GetBoolDef("ExpTableHeader", true);
-        ExpTableFilters = cfg.GetBoolDef("ExpTableFilters", true);
-        ExpColumnHeaders = cfg.GetBoolDef("ExpColumnHeaders", true);
+        ExpTableHeader = cfg.GetBooleanDef("ExpTableHeader", true);
+        ExpTableFilters = cfg.GetBooleanDef("ExpTableFilters", true);
+        ExpColumnHeaders = cfg.GetBooleanDef("ExpColumnHeaders", true);
 
         #endregion
 
         #region Экспорт в текстовый файл
 
-        CodePage = cfg.GetIntDef("CodePage", Encoding.UTF8.CodePage);
+        CodePage = cfg.GetInt32Def("CodePage", Encoding.UTF8.CodePage);
         FieldDelimiterStr = cfg.GetStringDef("FieldDelimiter", ",");
         QuoteStr = cfg.GetStringDef("Quote", "\"");
-        SingleLineField = cfg.GetBoolDef("SingleLineField", true);
-        RemoveDoubleSpaces = cfg.GetBoolDef("RemoveDoubleSpaces", false);
+        SingleLineField = cfg.GetBooleanDef("SingleLineField", true);
+        RemoveDoubleSpaces = cfg.GetBooleanDef("RemoveDoubleSpaces", false);
 
         #endregion
 
         #region Экспорт в DBF
 
-        DbfCodePage = cfg.GetIntDef("DbfCodePage", Encoding.Default.CodePage);
+        DbfCodePage = cfg.GetInt32Def("DbfCodePage", Encoding.Default.CodePage);
         // Остальные параметры относятся к столбцам
 
         #endregion

@@ -15,6 +15,7 @@ using FreeLibSet.Controls;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Forms.Data;
+using FreeLibSet.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -170,7 +171,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификаторы выбранных поддокументов
     /// </summary>
-    public Int32[] SelectedSubDocIds
+    public IIdSet<Int32> SelectedSubDocIds
     {
       get { return ViewProvider.SelectedSubDocIds; }
       set { ViewProvider.SelectedSubDocIds = value; }
@@ -586,7 +587,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификаторы выбранных поддокументов
     /// </summary>
-    public Int32[] SelectedSubDocIds
+    public IIdSet<Int32> SelectedSubDocIds
     {
       get
       {

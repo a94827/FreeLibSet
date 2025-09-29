@@ -283,13 +283,13 @@ namespace FreeLibSet.Forms
       // 2. Убираем двойные пробелы и крайние пробелы
       //while (s.IndexOf("  ") >= 0)
       //  s = s.Replace("  ", " ");
-      s = DataTools.RemoveDoubleChars(s, ' '); // 25.11.2016
+      s = StringTools.RemoveDoubleChars(s, ' '); // 25.11.2016
       s = s.Trim();
 
       if (!CaseSensitive)
         s = s.ToUpperInvariant();
       if (!SimilarCharsDiff)
-        s = DataTools.ReplaceChars(s, SimilarCharDict);
+        s = StringTools.ReplaceChars(s, SimilarCharDict);
 
       return s;
     }
@@ -439,7 +439,7 @@ namespace FreeLibSet.Forms
       if (!SearchInfo.CaseSensitive)
         _SearchCopy = _SearchCopy.ToUpperInvariant();
       if (!SearchInfo.SimilarCharsDiff)
-        _SearchCopy = DataTools.ReplaceChars(_SearchCopy, EFPTextSearchInfo.SimilarCharDict);
+        _SearchCopy = StringTools.ReplaceChars(_SearchCopy, EFPTextSearchInfo.SimilarCharDict);
 
       int startPos;
       if (SearchInfo.FromCurrent)
@@ -507,7 +507,7 @@ namespace FreeLibSet.Forms
         if (!SearchInfo.CaseSensitive)
           _TextCopy = _TextCopy.ToUpperInvariant();
         if (!SearchInfo.SimilarCharsDiff)
-          _TextCopy = DataTools.ReplaceChars(_TextCopy, EFPTextSearchInfo.SimilarCharDict);
+          _TextCopy = StringTools.ReplaceChars(_TextCopy, EFPTextSearchInfo.SimilarCharDict);
       }
 
       #endregion
@@ -701,7 +701,7 @@ namespace FreeLibSet.Forms
         else
           spl.SetPercent(0, Owner.Control.RowCount - row.Index);
 
-        Owner.DoGetRowAttributes(row.Index, EFPDataGridViewAttributesReason.View);
+        Owner.GetRowInfo(row.Index, EFPDataViewInfoReason.View);
       }
       try
       {
@@ -721,7 +721,7 @@ namespace FreeLibSet.Forms
           {
             spl.IncPercent();
             if (row != null)
-              Owner.DoGetRowAttributes(row.Index, EFPDataGridViewAttributesReason.View);
+              Owner.GetRowInfo(row.Index, EFPDataViewInfoReason.View);
           }
         }
       }
@@ -752,7 +752,7 @@ namespace FreeLibSet.Forms
       // 25.03.2015
       // Не работал поиск по вычисляемым полям
 
-      EFPDataGridViewCellAttributesEventArgs cellArgs = Owner.DoGetCellAttributes(columnIndex);
+      EFPDataGridViewCellInfoEventArgs cellArgs = Owner.GetCellInfo(columnIndex);
       object v = cellArgs.FormattedValue;
       string s;
       if (v == null)
@@ -862,7 +862,7 @@ namespace FreeLibSet.Forms
 
         for (int i = 0; i < Owner.Control.RowCount; i++)
         {
-          Owner.DoGetRowAttributes(i, EFPDataGridViewAttributesReason.View);
+          Owner.GetRowInfo(i, EFPDataViewInfoReason.View);
           bool flag;
           if (SearchInfo.CurrentColumn)
             flag = TestCell(Owner.Control.Rows[i], Owner.CurrentColumnIndex);

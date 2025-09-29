@@ -9,6 +9,9 @@ using System.Globalization;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Forms.Reporting;
+using FreeLibSet.Controls.TreeViewAdvNodeControls;
+using FreeLibSet.Controls;
+using FreeLibSet.Reporting;
 
 namespace FreeLibSet.Forms
 {
@@ -31,11 +34,26 @@ namespace FreeLibSet.Forms
       UseEditView = true;
       UseRefresh = true;
       UseSelectAll = true;
+      _CopyHyperlinkUsage = EFPDataViewCopyHyperlinkCommandUsage.Auto;
 
       #endregion
 
       #region Создание команд
 
+      #region Буфер обмена
+
+      ciCopyHyperlink = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.CopyHyperlink);
+      ciCopyHyperlink.Click += CopyHyperlink_Click;
+      ciCopyHyperlink.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
+      Add(ciCopyHyperlink);
+      SetAfter(ciCopyHyperlink, base.ciCopySettings);
+      if (base.ciCopySettings.GroupEnd)
+      {
+        base.ciCopySettings.GroupEnd = false;
+        ciCopyHyperlink.GroupEnd = true;
+      }
+
+      #endregion
 
 #if XXX
       #region Установка отметок
@@ -176,6 +194,21 @@ namespace FreeLibSet.Forms
     {
       base.OnPrepare();
 
+      switch (CopyHyperlinkUsage)
+      {
+        case EFPDataViewCopyHyperlinkCommandUsage.Auto:
+          ciCopyHyperlink.Visible = CopyHyperlinkDefaultVisible;
+          break;
+        case EFPDataViewCopyHyperlinkCommandUsage.Unused:
+          ciCopyHyperlink.Usage = EFPCommandItemUsage.None;
+          break;
+      }
+
+      if (!ClipboardInToolBar)
+      {
+        ciCopyHyperlink.Usage = EFPCommandItemUsage.Menu;
+      }
+
       if (ControlProvider.ManualOrderSupported)
       {
         ciSortMoveDown.Usage = EFPCommandItemUsage.Everywhere;
@@ -236,6 +269,94 @@ namespace FreeLibSet.Forms
         */
       //ciSendToMicrosoftExcel.Visible = false;
       //ciSendToOpenOfficeCalc.Visible = false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override void OnRefreshItems()
+    {
+      base.OnRefreshItems();
+
+      UISelectedRowsState selState = ControlProvider.SelectedRowsState;
+
+      if (ciCopyHyperlink != null && ciCopyHyperlink.Visible)
+      {
+        if (selState == UISelectedRowsState.NoSelection)
+          ciCopyHyperlink.Enabled = false;
+        else
+          ciCopyHyperlink.Enabled = true;
+      }
+    }
+
+    #endregion
+
+
+    #region Копировать гиперссылку
+
+    EFPCommandItem ciCopyHyperlink;
+
+    /// <summary>
+    /// Использование команды "Копировать гиперссылку".
+    /// По умолчанию - <see cref="EFPDataViewCopyHyperlinkCommandUsage.Auto"/>. Видимость команды определяется автоматически по наличию столбцов <see cref="DataGridViewLinkColumn"/>
+    /// или по наличию ссылочных столбцов в <see cref="IEFPGridProducer"/>.
+    /// Свойство может устанавливаться только до вывода просмотра на экран.
+    /// </summary>
+    public EFPDataViewCopyHyperlinkCommandUsage CopyHyperlinkUsage
+    {
+      get { return _CopyHyperlinkUsage; }
+      set
+      {
+        ControlProvider.CheckHasNotBeenCreated();
+        _CopyHyperlinkUsage = value;
+      }
+    }
+    private EFPDataViewCopyHyperlinkCommandUsage _CopyHyperlinkUsage;
+
+    private bool CopyHyperlinkDefaultVisible
+    {
+      get
+      {
+        foreach (NodeControl nc in ControlProvider.Control.NodeControls)
+        {
+          if (nc is NodeLink)
+            return true;
+        }
+        return false;
+      }
+    }
+
+    private void CopyHyperlink_Click(object sender, EventArgs args)
+    {
+      if (ControlProvider.Control.SelectedNodes.Count==0)
+      {
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedRow);
+        return;
+      }
+
+      NodeLink[] nodeControls = ControlProvider.GetNodeControls<NodeLink>();
+      if (nodeControls.Length == 0)
+      {
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedLinkColumn);
+        return;
+      }
+
+      string[,] a = new string[ControlProvider.Control.SelectedNodes.Count, nodeControls.Length];
+      int i = 0;
+      foreach (TreeNodeAdv node in ControlProvider.Control.SelectedNodes)
+      {
+        for (int j = 0; j < nodeControls.Length; j++)
+        {
+          BRValueWithLink value = (nodeControls[j].GetValue(node) as BRValueWithLink);
+          if (value != null)
+            a[i, j] = value.LinkData;
+          else
+            a[i, j] = String.Empty;
+        }
+        i++;
+      }
+
+      new EFPClipboard().SetTextMatrix(a);
     }
 
     #endregion

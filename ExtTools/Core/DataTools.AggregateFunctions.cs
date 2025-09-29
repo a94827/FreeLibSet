@@ -15,7 +15,7 @@ namespace FreeLibSet.Core
   {
     #region Суммирование полей и массивов
 
-    #region Int
+    #region Int32
 
     /// <summary>
     /// Получить сумму значений поля для всех строк в просмотре
@@ -23,7 +23,7 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Сумма значений для всех строк</returns>
-    public static int SumInt(DataView dv, string columnName)
+    public static int SumInt32(DataView dv, string columnName)
     {
       if (dv == null)
         return 0;
@@ -32,7 +32,7 @@ namespace FreeLibSet.Core
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       int s = 0;
       foreach (DataRowView drv in dv)
-        checked { s += DataTools.GetInt(drv.Row[p]); }
+        checked { s += DataTools.GetInt32(drv.Row[p]); }
       return s;
     }
 
@@ -42,7 +42,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Сумма значений для всех строк</returns>
-    public static int SumInt(DataTable table, string columnName)
+    public static int SumInt32(DataTable table, string columnName)
     {
       if (table == null)
         return 0;
@@ -54,7 +54,7 @@ namespace FreeLibSet.Core
       {
         if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += DataTools.GetInt(row[p]); }
+        checked { s += DataTools.GetInt32(row[p]); }
       }
       return s;
     }
@@ -65,12 +65,12 @@ namespace FreeLibSet.Core
     /// <param name="rows">Массив строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Сумма значений для всех строк</returns>
-    public static int SumInt(IEnumerable<DataRow> rows, string columnName)
+    public static int SumInt32(IEnumerable<DataRow> rows, string columnName)
     {
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowIntExtractor xtr = new DataRowIntExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int s = 0;
       foreach (DataRow row in rows)
       {
@@ -78,7 +78,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += xtr[row]; }
+        rowVals.CurrentRow = row;
+        checked { s += rowVals[columnName].AsInt32; }
       }
       return s;
     }
@@ -93,9 +94,9 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="totalRow">Итоговая строка в процессе заполнения</param>
     /// <param name="columnName">Имя суммируемого поля</param>
-    public static void SumInt(DataRow totalRow, string columnName)
+    public static void SumInt32(DataRow totalRow, string columnName)
     {
-      totalRow[columnName] = SumInt(totalRow.Table, columnName);
+      totalRow[columnName] = SumInt32(totalRow.Table, columnName);
     }
 
     /// <summary>
@@ -103,7 +104,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="items">Коллекция (может быть null)</param>
     /// <returns>Сумма элементов</returns>
-    public static int SumInt(IEnumerable<int> items)
+    public static int SumInt32(IEnumerable<int> items)
     {
       if (items == null)
         return 0;
@@ -171,7 +172,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowInt64Extractor xtr = new DataRowInt64Extractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       long s = 0;
       foreach (DataRow row in rows)
       {
@@ -179,7 +180,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += xtr[row]; }
+        rowVals.CurrentRow = row;
+        checked { s += rowVals[columnName].AsInt64; }
       }
       return s;
     }
@@ -272,7 +274,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0f;
       // Строки могут относиться к разным таблицам
-      DataRowSingleExtractor Extr = new DataRowSingleExtractor(columnName);
+      DataRowValues values = new DataRowValues();
       float s = 0f;
       foreach (DataRow row in rows)
       {
@@ -280,7 +282,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += Extr[row]; }
+        values.CurrentRow = row;
+        checked { s += values[columnName].AsSingle; }
       }
       return s;
     }
@@ -374,7 +377,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0.0;
       // Строки могут относиться к разным таблицам
-      DataRowDoubleExtractor xtr = new DataRowDoubleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       double s = 0.0;
       foreach (DataRow row in rows)
       {
@@ -382,7 +385,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += xtr[row]; }
+        rowVals.CurrentRow = row;
+        checked { s += rowVals[columnName].AsDouble; }
       }
       return s;
     }
@@ -475,7 +479,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return 0m;
       // Строки могут относиться к разным таблицам
-      DataRowDecimalExtractor xtr = new DataRowDecimalExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       decimal s = 0m;
       foreach (DataRow row in rows)
       {
@@ -483,7 +487,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        checked { s += xtr[row]; }
+        rowVals.CurrentRow = row;
+        checked { s += rowVals[columnName].AsDecimal; }
       }
       return s;
     }
@@ -576,7 +581,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return TimeSpan.Zero;
       // Строки могут относиться к разным таблицам
-      DataRowTimeSpanExtractor xtr = new DataRowTimeSpanExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       TimeSpan s = TimeSpan.Zero;
       foreach (DataRow row in rows)
       {
@@ -584,7 +589,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        s += xtr[row];
+        rowVals.CurrentRow = row;
+        s += rowVals[columnName].AsTimeSpan;
       }
       return s;
     }
@@ -625,49 +631,6 @@ namespace FreeLibSet.Core
     #region Внутренние функции для методов XxxValue
 
     /// <summary>
-    /// Типы для суммирования.
-    /// В перечислении они располагаются в порядке "возрастания" типа
-    /// </summary>
-    private enum SumType { None, Int, Int64, Single, Double, Decimal, DateTime, TimeSpan };
-
-    private static readonly Dictionary<Type, SumType> _SumTypeDict = CreateSumTypeDict();
-
-    private static Dictionary<Type, SumType> CreateSumTypeDict()
-    {
-      Dictionary<Type, SumType> Dict = new Dictionary<Type, SumType>();
-      Dict.Add(typeof(Byte), SumType.Int);
-      Dict.Add(typeof(SByte), SumType.Int);
-      Dict.Add(typeof(Int16), SumType.Int);
-      Dict.Add(typeof(UInt16), SumType.Int);
-      Dict.Add(typeof(Int32), SumType.Int);
-      Dict.Add(typeof(UInt32), SumType.Int);
-      Dict.Add(typeof(Int64), SumType.Int64);
-      Dict.Add(typeof(UInt64), SumType.Int64);
-
-      Dict.Add(typeof(Single), SumType.Single);
-      Dict.Add(typeof(Double), SumType.Double);
-      Dict.Add(typeof(Decimal), SumType.Decimal);
-      Dict.Add(typeof(DateTime), SumType.DateTime);
-      Dict.Add(typeof(TimeSpan), SumType.TimeSpan);
-
-      return Dict;
-    }
-
-    private static SumType GetSumType(Type typ)
-    {
-#if DEBUG
-      if (typ == null)
-        throw new ArgumentNullException("typ");
-#endif
-
-      SumType res;
-      if (_SumTypeDict.TryGetValue(typ, out res))
-        return res;
-      else
-        return SumType.None;
-    }
-
-    /// <summary>
     /// Получить тип данных для столбца в массиве строк.
     /// Извлекается DataType для столбца в первой строке массива, в которой хранится не ссылка null.
     /// Если массив пустой или содержит только ссылки null, возвращается null
@@ -693,46 +656,6 @@ namespace FreeLibSet.Core
       return null; // Нет ни одной строки
     }
 
-    private static object ConvertValue(object v, SumType st)
-    {
-      switch (st)
-      {
-        case SumType.Int: return DataTools.GetInt(v);
-        case SumType.Int64: return DataTools.GetInt64(v);
-        case SumType.Single: return DataTools.GetSingle(v);
-        case SumType.Double: return DataTools.GetDouble(v);
-        case SumType.Decimal: return DataTools.GetDecimal(v);
-        case SumType.TimeSpan: return DataTools.GetTimeSpan(v);
-        case SumType.DateTime: return DataTools.GetNullableDateTime(v);
-        case SumType.None: return null;
-        default:
-          throw ExceptionFactory.ArgUnknownValue("st", st);
-      }
-    }
-
-    /// <summary>
-    /// Возвращает более общий из двух типов.
-    /// Если типы не совместимы, генерируется исключение
-    /// </summary>
-    /// <param name="st1">Первый тип</param>
-    /// <param name="st2">Второй тип</param>
-    /// <returns></returns>
-    private static SumType GetLargestSumType(SumType st1, SumType st2)
-    {
-      if (st1 == st2)
-        return st1;
-      if (st1 == SumType.None)
-        return st2;
-      if (st2 == SumType.None)
-        return st1;
-
-      if (st1 == SumType.TimeSpan || st2 == SumType.TimeSpan ||
-        st1 == SumType.DateTime || st2 == SumType.DateTime)
-        throw new InvalidCastException(Res.DataTools_Err_IncompatibleTypes);
-
-      return (SumType)Math.Max((int)st1, (int)st2);
-    }
-
     /// <summary>
     /// Возвращает индекс столбца в таблице.
     /// Если столбца нет, генерируется исключение.
@@ -740,7 +663,7 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Индекс столбца</returns>
-    private static int GetColumnPosWithCheck(DataTable table, string columnName)
+    internal static int GetColumnPosWithCheck(DataTable table, string columnName)
     {
 #if DEBUG
       if (table == null)
@@ -769,7 +692,7 @@ namespace FreeLibSet.Core
     private static int[] GetColumnPosArrayWithCheck(DataTable table, string columnNames)
     {
       if (String.IsNullOrEmpty(columnNames))
-        return DataTools.EmptyInts;
+        return EmptyArray<Int32>.Empty;
 
       string[] aColumnNames = columnNames.Split(',');
       int[] aPos = new int[aColumnNames.Length];
@@ -869,14 +792,14 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: return SumInt(dv, columnName);
-        case SumType.Int64: return SumInt64(dv, columnName);
-        case SumType.Single: return SumSingle(dv, columnName);
-        case SumType.Double: return SumDouble(dv, columnName);
-        case SumType.Decimal: return SumDecimal(dv, columnName);
-        case SumType.TimeSpan: return SumTimeSpan(dv, columnName);
+        case MathTools.SumType.Int32: return SumInt32(dv, columnName);
+        case MathTools.SumType.Int64: return SumInt64(dv, columnName);
+        case MathTools.SumType.Single: return SumSingle(dv, columnName);
+        case MathTools.SumType.Double: return SumDouble(dv, columnName);
+        case MathTools.SumType.Decimal: return SumDecimal(dv, columnName);
+        case MathTools.SumType.TimeSpan: return SumTimeSpan(dv, columnName);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -902,14 +825,14 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: return SumInt(table, columnName);
-        case SumType.Int64: return SumInt64(table, columnName);
-        case SumType.Single: return SumSingle(table, columnName);
-        case SumType.Double: return SumDouble(table, columnName);
-        case SumType.Decimal: return SumDecimal(table, columnName);
-        case SumType.TimeSpan: return SumTimeSpan(table, columnName);
+        case MathTools.SumType.Int32: return SumInt32(table, columnName);
+        case MathTools.SumType.Int64: return SumInt64(table, columnName);
+        case MathTools.SumType.Single: return SumSingle(table, columnName);
+        case MathTools.SumType.Double: return SumDouble(table, columnName);
+        case MathTools.SumType.Decimal: return SumDecimal(table, columnName);
+        case MathTools.SumType.TimeSpan: return SumTimeSpan(table, columnName);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -928,14 +851,14 @@ namespace FreeLibSet.Core
       if (t == null)
         return null;
 
-      switch (GetSumType(t))
+      switch (MathTools.GetSumType(t))
       {
-        case SumType.Int: return SumInt(rows, columnName);
-        case SumType.Int64: return SumInt64(rows, columnName);
-        case SumType.Single: return SumSingle(rows, columnName);
-        case SumType.Double: return SumDouble(rows, columnName);
-        case SumType.Decimal: return SumDecimal(rows, columnName);
-        case SumType.TimeSpan: return SumTimeSpan(rows, columnName);
+        case MathTools.SumType.Int32: return SumInt32(rows, columnName);
+        case MathTools.SumType.Int64: return SumInt64(rows, columnName);
+        case MathTools.SumType.Single: return SumSingle(rows, columnName);
+        case MathTools.SumType.Double: return SumDouble(rows, columnName);
+        case MathTools.SumType.Decimal: return SumDecimal(rows, columnName);
+        case MathTools.SumType.TimeSpan: return SumTimeSpan(rows, columnName);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -965,14 +888,14 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName); ;
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: SumInt(row, columnName); break;
-        case SumType.Int64: SumInt64(row, columnName); break;
-        case SumType.Single: SumSingle(row, columnName); break;
-        case SumType.Double: SumDouble(row, columnName); break;
-        case SumType.Decimal: SumDecimal(row, columnName); break;
-        case SumType.TimeSpan: SumTimeSpan(row, columnName); break;
+        case MathTools.SumType.Int32: SumInt32(row, columnName); break;
+        case MathTools.SumType.Int64: SumInt64(row, columnName); break;
+        case MathTools.SumType.Single: SumSingle(row, columnName); break;
+        case MathTools.SumType.Double: SumDouble(row, columnName); break;
+        case MathTools.SumType.Decimal: SumDecimal(row, columnName); break;
+        case MathTools.SumType.TimeSpan: SumTimeSpan(row, columnName); break;
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -997,25 +920,25 @@ namespace FreeLibSet.Core
       CorrectAggregateEnumerable(ref items);
 
       object res = null;
-      SumType st = SumType.None;
+      MathTools.SumType st = MathTools.SumType.None;
       foreach (object vx in items)
       {
         if (vx == null)
           continue;
-        SumType st2 = GetSumType(vx.GetType());
-        st = GetLargestSumType(st, st2);
-        res = ConvertValue(res, st);
-        object v = ConvertValue(vx, st);
+        MathTools.SumType st2 = MathTools.GetSumType(vx.GetType());
+        st = MathTools.GetLargestSumType(st, st2);
+        res = MathTools.ConvertValue(res, st);
+        object v = MathTools.ConvertValue(vx, st);
         checked
         {
           switch (st)
           {
-            case SumType.Int: res = (int)res + (int)v; break;
-            case SumType.Int64: res = (long)res + (long)v; break;
-            case SumType.Single: res = (float)res + (float)v; break;
-            case SumType.Double: res = (double)res + (double)v; break;
-            case SumType.Decimal: res = (decimal)res + (decimal)v; break;
-            case SumType.TimeSpan: res = (TimeSpan)res + (TimeSpan)v; break;
+            case MathTools.SumType.Int32: res = (int)res + (int)v; break;
+            case MathTools.SumType.Int64: res = (long)res + (long)v; break;
+            case MathTools.SumType.Single: res = (float)res + (float)v; break;
+            case MathTools.SumType.Double: res = (double)res + (double)v; break;
+            case MathTools.SumType.Decimal: res = (decimal)res + (decimal)v; break;
+            case MathTools.SumType.TimeSpan: res = (TimeSpan)res + (TimeSpan)v; break;
             default:
               throw ExceptionFactory.ArgInvalidEnumerableType("items", items);
           }
@@ -1031,7 +954,7 @@ namespace FreeLibSet.Core
 
     #region Минимальное значение
 
-    #region Int
+    #region Int32
 
     /// <summary>
     /// Получить минимальное значение поля для всех строк в просмотре.
@@ -1041,7 +964,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? MinInt(DataView dv, string columnName, bool skipNulls)
+    public static int? MinInt32(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
         return null;
@@ -1057,9 +980,9 @@ namespace FreeLibSet.Core
             continue;
         }
         if (s.HasValue)
-          s = Math.Min(s.Value, DataTools.GetInt(drv.Row[p]));
+          s = Math.Min(s.Value, DataTools.GetInt32(drv.Row[p]));
         else
-          s = DataTools.GetInt(drv.Row[p]);
+          s = DataTools.GetInt32(drv.Row[p]);
       }
       return s;
     }
@@ -1072,7 +995,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? MinInt(DataTable table, string columnName, bool skipNulls)
+    public static int? MinInt32(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
         return null;
@@ -1090,9 +1013,9 @@ namespace FreeLibSet.Core
             continue;
         }
         if (s.HasValue)
-          s = Math.Min(s.Value, DataTools.GetInt(row[p]));
+          s = Math.Min(s.Value, DataTools.GetInt32(row[p]));
         else
-          s = DataTools.GetInt(row[p]);
+          s = DataTools.GetInt32(row[p]);
       }
       return s;
     }
@@ -1105,12 +1028,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? MinInt(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static int? MinInt32(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int? s = null;
       foreach (DataRow row in rows)
       {
@@ -1119,7 +1042,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        int? v = xtr[row];
+        rowVals.CurrentRow = row;
+        int? v = rowVals[columnName].AsNullableInt32;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1145,9 +1069,9 @@ namespace FreeLibSet.Core
     /// <param name="totalRow">Итоговая строка в процессе заполнения</param>
     /// <param name="columnName">Имя суммируемого поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    public static void MinInt(DataRow totalRow, string columnName, bool skipNulls)
+    public static void MinInt32(DataRow totalRow, string columnName, bool skipNulls)
     {
-      int? v = MinInt(totalRow.Table, columnName, skipNulls);
+      int? v = MinInt32(totalRow.Table, columnName, skipNulls);
       if (v.HasValue)
         totalRow[columnName] = v.Value;
       else
@@ -1159,7 +1083,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="items">Массив (может быть null)</param>
     /// <returns>Найденное значение или null, если коллекция</returns>
-    public static int? MinInt(IEnumerable<int> items)
+    public static int? MinInt32(IEnumerable<int> items)
     {
       if (items == null)
         return null;
@@ -1256,7 +1180,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       long? s = null;
       foreach (DataRow row in rows)
       {
@@ -1264,7 +1188,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        long? v = xtr[row];
+        rowVals.CurrentRow = row;
+        long? v = rowVals[columnName].AsNullableInt64;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1401,7 +1326,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       float? s = null;
       foreach (DataRow row in rows)
       {
@@ -1409,7 +1334,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        float? v = xtr[row];
+        rowVals.CurrentRow = row;
+        float? v = rowVals[columnName].AsNullableSingle;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1546,7 +1472,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       double? s = null;
       foreach (DataRow row in rows)
       {
@@ -1554,7 +1480,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        double? v = xtr[row];
+        rowVals.CurrentRow = row;
+        double? v = rowVals[columnName].AsNullableDouble;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1691,7 +1618,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       decimal? s = null;
       foreach (DataRow row in rows)
       {
@@ -1699,7 +1626,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        decimal? v = xtr[row];
+        rowVals.CurrentRow = row;
+        decimal? v = rowVals[columnName].AsNullableDecimal;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -1783,7 +1711,7 @@ namespace FreeLibSet.Core
         //    continue;
         //}
         if (s.HasValue)
-          s = DataTools.Min(s.Value, DataTools.GetNullableDateTime(drv.Row[p]));
+          s = TimeTools.Min(s.Value, DataTools.GetNullableDateTime(drv.Row[p]));
         else
           s = DataTools.GetNullableDateTime(drv.Row[p]);
       }
@@ -1816,7 +1744,7 @@ namespace FreeLibSet.Core
         //    continue;
         //}
         if (s.HasValue)
-          s = DataTools.Min(s.Value, DataTools.GetNullableDateTime(row[p]));
+          s = TimeTools.Min(s.Value, DataTools.GetNullableDateTime(row[p]));
         else
           s = DataTools.GetNullableDateTime(row[p]);
       }
@@ -1836,7 +1764,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor xtr = new DataRowNullableDateTimeExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       DateTime? s = null;
       foreach (DataRow row in rows)
       {
@@ -1844,14 +1772,15 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        DateTime? v = xtr[row];
+        rowVals.CurrentRow = row;
+        DateTime? v = rowVals[columnName].AsNullableDateTime;
         //if (SkipNulls)
         //{
         //  if (!v.HasValue)
         //    continue;
         //}
         if (s.HasValue)
-          s = DataTools.Min(s.Value, v);
+          s = TimeTools.Min(s.Value, v);
         else
           s = v;
       }
@@ -1892,7 +1821,7 @@ namespace FreeLibSet.Core
       foreach (DateTime item in items)
       {
         if (s.HasValue)
-          s = DataTools.Min(s.Value, item);
+          s = TimeTools.Min(s.Value, item);
         else
           s = item;
       }
@@ -1927,7 +1856,7 @@ namespace FreeLibSet.Core
             continue;
         }
         if (s.HasValue)
-          s = DataTools.Min(s.Value, DataTools.GetTimeSpan(drv.Row[p]));
+          s = TimeTools.Min(s.Value, DataTools.GetTimeSpan(drv.Row[p]));
         else
           s = DataTools.GetTimeSpan(drv.Row[p]);
       }
@@ -1960,7 +1889,7 @@ namespace FreeLibSet.Core
             continue;
         }
         if (s.HasValue)
-          s = DataTools.Min(s.Value, DataTools.GetTimeSpan(row[p]));
+          s = TimeTools.Min(s.Value, DataTools.GetTimeSpan(row[p]));
         else
           s = DataTools.GetTimeSpan(row[p]);
       }
@@ -1980,7 +1909,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       TimeSpan? s = null;
       foreach (DataRow row in rows)
       {
@@ -1988,14 +1917,17 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        TimeSpan? v = xtr[row];
+        rowVals.CurrentRow = row;
+        TimeSpan? v = null;
+        if (!rowVals[columnName].IsNull)
+          v = rowVals[columnName].AsTimeSpan;
         if (skipNulls)
         {
           if (!v.HasValue)
             continue;
         }
         if (s.HasValue)
-          s = DataTools.Min(s.Value, v ?? TimeSpan.Zero);
+          s = TimeTools.Min(s.Value, v ?? TimeSpan.Zero);
         else
           s = v ?? TimeSpan.Zero;
       }
@@ -2037,7 +1969,7 @@ namespace FreeLibSet.Core
       foreach (TimeSpan item in items)
       {
         if (s.HasValue)
-          s = DataTools.Min(s.Value, item);
+          s = TimeTools.Min(s.Value, item);
         else
           s = item;
       }
@@ -2069,15 +2001,15 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: return MinInt(dv, columnName, skipNulls);
-        case SumType.Int64: return MinInt64(dv, columnName, skipNulls);
-        case SumType.Single: return MinSingle(dv, columnName, skipNulls);
-        case SumType.Double: return MinDouble(dv, columnName, skipNulls);
-        case SumType.Decimal: return MinDecimal(dv, columnName, skipNulls);
-        case SumType.DateTime: return MinDateTime(dv, columnName);
-        case SumType.TimeSpan: return MinTimeSpan(dv, columnName, skipNulls);
+        case MathTools.SumType.Int32: return MinInt32(dv, columnName, skipNulls);
+        case MathTools.SumType.Int64: return MinInt64(dv, columnName, skipNulls);
+        case MathTools.SumType.Single: return MinSingle(dv, columnName, skipNulls);
+        case MathTools.SumType.Double: return MinDouble(dv, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return MinDecimal(dv, columnName, skipNulls);
+        case MathTools.SumType.DateTime: return MinDateTime(dv, columnName);
+        case MathTools.SumType.TimeSpan: return MinTimeSpan(dv, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -2104,15 +2036,15 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: return MinInt(table, columnName, skipNulls);
-        case SumType.Int64: return MinInt64(table, columnName, skipNulls);
-        case SumType.Single: return MinSingle(table, columnName, skipNulls);
-        case SumType.Double: return MinDouble(table, columnName, skipNulls);
-        case SumType.Decimal: return MinDecimal(table, columnName, skipNulls);
-        case SumType.DateTime: return MinDateTime(table, columnName);
-        case SumType.TimeSpan: return MinTimeSpan(table, columnName, skipNulls);
+        case MathTools.SumType.Int32: return MinInt32(table, columnName, skipNulls);
+        case MathTools.SumType.Int64: return MinInt64(table, columnName, skipNulls);
+        case MathTools.SumType.Single: return MinSingle(table, columnName, skipNulls);
+        case MathTools.SumType.Double: return MinDouble(table, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return MinDecimal(table, columnName, skipNulls);
+        case MathTools.SumType.DateTime: return MinDateTime(table, columnName);
+        case MathTools.SumType.TimeSpan: return MinTimeSpan(table, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -2133,15 +2065,15 @@ namespace FreeLibSet.Core
       if (t == null)
         return null;
 
-      switch (GetSumType(t))
+      switch (MathTools.GetSumType(t))
       {
-        case SumType.Int: return MinInt(rows, columnName, skipNulls);
-        case SumType.Int64: return MinInt64(rows, columnName, skipNulls);
-        case SumType.Single: return MinSingle(rows, columnName, skipNulls);
-        case SumType.Double: return MinDouble(rows, columnName, skipNulls);
-        case SumType.Decimal: return MinDecimal(rows, columnName, skipNulls);
-        case SumType.DateTime: return MinDateTime(rows, columnName);
-        case SumType.TimeSpan: return MinTimeSpan(rows, columnName, skipNulls);
+        case MathTools.SumType.Int32: return MinInt32(rows, columnName, skipNulls);
+        case MathTools.SumType.Int64: return MinInt64(rows, columnName, skipNulls);
+        case MathTools.SumType.Single: return MinSingle(rows, columnName, skipNulls);
+        case MathTools.SumType.Double: return MinDouble(rows, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return MinDecimal(rows, columnName, skipNulls);
+        case MathTools.SumType.DateTime: return MinDateTime(rows, columnName);
+        case MathTools.SumType.TimeSpan: return MinTimeSpan(rows, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -2171,15 +2103,15 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", totalRow.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: MinInt(totalRow, columnName, skipNulls); break;
-        case SumType.Int64: MinInt64(totalRow, columnName, skipNulls); break;
-        case SumType.Single: MinSingle(totalRow, columnName, skipNulls); break;
-        case SumType.Double: MinDouble(totalRow, columnName, skipNulls); break;
-        case SumType.Decimal: MinDecimal(totalRow, columnName, skipNulls); break;
-        case SumType.DateTime: MinDateTime(totalRow, columnName); break;
-        case SumType.TimeSpan: MinTimeSpan(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Int32: MinInt32(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Int64: MinInt64(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Single: MinSingle(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Double: MinDouble(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Decimal: MinDecimal(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.DateTime: MinDateTime(totalRow, columnName); break;
+        case MathTools.SumType.TimeSpan: MinTimeSpan(totalRow, columnName, skipNulls); break;
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -2205,13 +2137,13 @@ namespace FreeLibSet.Core
 
 
       object res = null;
-      SumType st = SumType.None;
+      MathTools.SumType st = MathTools.SumType.None;
       foreach (object vx in items)
       {
         if (vx == null)
           continue;
-        SumType st2 = GetSumType(vx.GetType());
-        object v = ConvertValue(vx, st2);
+        MathTools.SumType st2 = MathTools.GetSumType(vx.GetType());
+        object v = MathTools.ConvertValue(vx, st2);
 
         if (res == null)
         {
@@ -2220,17 +2152,17 @@ namespace FreeLibSet.Core
         }
         else
         {
-          st = GetLargestSumType(st, st2);
-          res = ConvertValue(res, st);
+          st = MathTools.GetLargestSumType(st, st2);
+          res = MathTools.ConvertValue(res, st);
           switch (st)
           {
-            case SumType.Int: res = Math.Min((int)res, (int)v); break;
-            case SumType.Int64: res = Math.Min((long)res, (long)v); break;
-            case SumType.Single: res = Math.Min((float)res, (float)v); break;
-            case SumType.Double: res = Math.Min((double)res, (double)v); break;
-            case SumType.Decimal: res = Math.Min((decimal)res, (decimal)v); break;
-            case SumType.DateTime: res = DataTools.Min((DateTime)res, (DateTime)v); break;
-            case SumType.TimeSpan: res = DataTools.Min((TimeSpan)res, (TimeSpan)v); break;
+            case MathTools.SumType.Int32: res = Math.Min((int)res, (int)v); break;
+            case MathTools.SumType.Int64: res = Math.Min((long)res, (long)v); break;
+            case MathTools.SumType.Single: res = Math.Min((float)res, (float)v); break;
+            case MathTools.SumType.Double: res = Math.Min((double)res, (double)v); break;
+            case MathTools.SumType.Decimal: res = Math.Min((decimal)res, (decimal)v); break;
+            case MathTools.SumType.DateTime: res = TimeTools.Min((DateTime)res, (DateTime)v); break;
+            case MathTools.SumType.TimeSpan: res = TimeTools.Min((TimeSpan)res, (TimeSpan)v); break;
             default:
               throw ExceptionFactory.ArgInvalidEnumerableType("items", items);
           }
@@ -2246,7 +2178,7 @@ namespace FreeLibSet.Core
 
     #region Максимальное значение
 
-    #region Int
+    #region Int32
 
     /// <summary>
     /// Получить максимальное значение поля для всех строк в просмотре.
@@ -2256,7 +2188,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? MaxInt(DataView dv, string columnName, bool skipNulls)
+    public static int? MaxInt32(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
         return null;
@@ -2272,9 +2204,9 @@ namespace FreeLibSet.Core
             continue;
         }
         if (s.HasValue)
-          s = Math.Max(s.Value, DataTools.GetInt(drv.Row[p]));
+          s = Math.Max(s.Value, DataTools.GetInt32(drv.Row[p]));
         else
-          s = DataTools.GetInt(drv.Row[p]);
+          s = DataTools.GetInt32(drv.Row[p]);
       }
       return s;
     }
@@ -2287,7 +2219,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? MaxInt(DataTable table, string columnName, bool skipNulls)
+    public static int? MaxInt32(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
         return null;
@@ -2305,9 +2237,9 @@ namespace FreeLibSet.Core
             continue;
         }
         if (s.HasValue)
-          s = Math.Max(s.Value, DataTools.GetInt(row[p]));
+          s = Math.Max(s.Value, DataTools.GetInt32(row[p]));
         else
-          s = DataTools.GetInt(row[p]);
+          s = DataTools.GetInt32(row[p]);
       }
       return s;
     }
@@ -2320,12 +2252,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? MaxInt(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static int? MaxInt32(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int? s = null;
       foreach (DataRow row in rows)
       {
@@ -2333,7 +2265,9 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        int? v = xtr[row];
+
+        rowVals.CurrentRow = row;
+        int? v = rowVals[columnName].AsInt32;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2359,9 +2293,9 @@ namespace FreeLibSet.Core
     /// <param name="totalRow">Итоговая строка в процессе заполнения</param>
     /// <param name="columnName">Имя суммируемого поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    public static void MaxInt(DataRow totalRow, string columnName, bool skipNulls)
+    public static void MaxInt32(DataRow totalRow, string columnName, bool skipNulls)
     {
-      int? v = MaxInt(totalRow.Table, columnName, skipNulls);
+      int? v = MaxInt32(totalRow.Table, columnName, skipNulls);
       if (v.HasValue)
         totalRow[columnName] = v.Value;
       else
@@ -2373,7 +2307,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="items">Коллекция значений(может быть null)</param>
     /// <returns>Найденное значение или null, если коллекция пустая</returns>
-    public static int? MaxInt(IEnumerable<int> items)
+    public static int? MaxInt32(IEnumerable<int> items)
     {
       if (items == null)
         return null;
@@ -2470,7 +2404,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       long? s = null;
       foreach (DataRow row in rows)
       {
@@ -2478,7 +2412,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        long? v = xtr[row];
+        rowVals.CurrentRow = row;
+        long? v = rowVals[columnName].AsInt64;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2615,7 +2550,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       float? s = null;
       foreach (DataRow row in rows)
       {
@@ -2623,7 +2558,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        float? v = xtr[row];
+        rowVals.CurrentRow = row;
+        float? v = rowVals[columnName].AsNullableSingle;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2760,7 +2696,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       double? s = null;
       foreach (DataRow row in rows)
       {
@@ -2768,7 +2704,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        double? v = xtr[row];
+        rowVals.CurrentRow = row;
+        double? v = rowVals[columnName].AsNullableDouble;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2905,7 +2842,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       decimal? s = null;
       foreach (DataRow row in rows)
       {
@@ -2913,7 +2850,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        decimal? v = xtr[row];
+        rowVals.CurrentRow = row;
+        decimal? v = rowVals[columnName].AsNullableDecimal;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -2997,7 +2935,7 @@ namespace FreeLibSet.Core
         //    continue;
         //}
         if (s.HasValue)
-          s = DataTools.Max(s.Value, DataTools.GetNullableDateTime(drv.Row[p]));
+          s = TimeTools.Max(s.Value, DataTools.GetNullableDateTime(drv.Row[p]));
         else
           s = DataTools.GetNullableDateTime(drv.Row[p]);
       }
@@ -3030,7 +2968,7 @@ namespace FreeLibSet.Core
         //    continue;
         //}
         if (s.HasValue)
-          s = DataTools.Max(s.Value, DataTools.GetNullableDateTime(row[p]));
+          s = TimeTools.Max(s.Value, DataTools.GetNullableDateTime(row[p]));
         else
           s = DataTools.GetNullableDateTime(row[p]);
       }
@@ -3050,7 +2988,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor xtr = new DataRowNullableDateTimeExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       DateTime? s = null;
       foreach (DataRow row in rows)
       {
@@ -3058,14 +2996,15 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        DateTime? v = xtr[row];
+        rowVals.CurrentRow = row;
+        DateTime? v = rowVals[columnName].AsNullableDateTime;
         //if (SkipNulls)
         //{
         //  if (!v.HasValue)
         //    continue;
         //}
         if (s.HasValue)
-          s = DataTools.Max(s.Value, v);
+          s = TimeTools.Max(s.Value, v);
         else
           s = v;
       }
@@ -3107,7 +3046,7 @@ namespace FreeLibSet.Core
       foreach (DateTime item in items)
       {
         if (s.HasValue)
-          s = DataTools.Max(s.Value, item);
+          s = TimeTools.Max(s.Value, item);
         else
           s = item;
       }
@@ -3142,7 +3081,7 @@ namespace FreeLibSet.Core
             continue;
         }
         if (s.HasValue)
-          s = DataTools.Max(s.Value, DataTools.GetTimeSpan(drv.Row[p]));
+          s = TimeTools.Max(s.Value, DataTools.GetTimeSpan(drv.Row[p]));
         else
           s = DataTools.GetTimeSpan(drv.Row[p]);
       }
@@ -3175,7 +3114,7 @@ namespace FreeLibSet.Core
             continue;
         }
         if (s.HasValue)
-          s = DataTools.Max(s.Value, DataTools.GetTimeSpan(row[p]));
+          s = TimeTools.Max(s.Value, DataTools.GetTimeSpan(row[p]));
         else
           s = DataTools.GetTimeSpan(row[p]);
       }
@@ -3195,7 +3134,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       TimeSpan? s = null;
       foreach (DataRow row in rows)
       {
@@ -3203,14 +3142,17 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        TimeSpan? v = xtr[row];
+        rowVals.CurrentRow = row;
+        TimeSpan? v = null;
+        if (!rowVals[columnName].IsNull)
+          v = rowVals[columnName].AsTimeSpan;
         if (skipNulls)
         {
           if (!v.HasValue)
             continue;
         }
         if (s.HasValue)
-          s = DataTools.Max(s.Value, v ?? TimeSpan.Zero);
+          s = TimeTools.Max(s.Value, v ?? TimeSpan.Zero);
         else
           s = v ?? TimeSpan.Zero;
       }
@@ -3252,7 +3194,7 @@ namespace FreeLibSet.Core
       foreach (TimeSpan item in items)
       {
         if (s.HasValue)
-          s = DataTools.Max(s.Value, item);
+          s = TimeTools.Max(s.Value, item);
         else
           s = item;
       }
@@ -3284,15 +3226,15 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: return MaxInt(dv, columnName, skipNulls);
-        case SumType.Int64: return MaxInt64(dv, columnName, skipNulls);
-        case SumType.Single: return MaxSingle(dv, columnName, skipNulls);
-        case SumType.Double: return MaxDouble(dv, columnName, skipNulls);
-        case SumType.Decimal: return MaxDecimal(dv, columnName, skipNulls);
-        case SumType.DateTime: return MaxDateTime(dv, columnName);
-        case SumType.TimeSpan: return MaxTimeSpan(dv, columnName, skipNulls);
+        case MathTools.SumType.Int32: return MaxInt32(dv, columnName, skipNulls);
+        case MathTools.SumType.Int64: return MaxInt64(dv, columnName, skipNulls);
+        case MathTools.SumType.Single: return MaxSingle(dv, columnName, skipNulls);
+        case MathTools.SumType.Double: return MaxDouble(dv, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return MaxDecimal(dv, columnName, skipNulls);
+        case MathTools.SumType.DateTime: return MaxDateTime(dv, columnName);
+        case MathTools.SumType.TimeSpan: return MaxTimeSpan(dv, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -3319,15 +3261,15 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: return MaxInt(table, columnName, skipNulls);
-        case SumType.Int64: return MaxInt64(table, columnName, skipNulls);
-        case SumType.Single: return MaxSingle(table, columnName, skipNulls);
-        case SumType.Double: return MaxDouble(table, columnName, skipNulls);
-        case SumType.Decimal: return MaxDecimal(table, columnName, skipNulls);
-        case SumType.DateTime: return MaxDateTime(table, columnName);
-        case SumType.TimeSpan: return MaxTimeSpan(table, columnName, skipNulls);
+        case MathTools.SumType.Int32: return MaxInt32(table, columnName, skipNulls);
+        case MathTools.SumType.Int64: return MaxInt64(table, columnName, skipNulls);
+        case MathTools.SumType.Single: return MaxSingle(table, columnName, skipNulls);
+        case MathTools.SumType.Double: return MaxDouble(table, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return MaxDecimal(table, columnName, skipNulls);
+        case MathTools.SumType.DateTime: return MaxDateTime(table, columnName);
+        case MathTools.SumType.TimeSpan: return MaxTimeSpan(table, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -3348,15 +3290,15 @@ namespace FreeLibSet.Core
       if (t == null)
         return null;
 
-      switch (GetSumType(t))
+      switch (MathTools.GetSumType(t))
       {
-        case SumType.Int: return MaxInt(rows, columnName, skipNulls);
-        case SumType.Int64: return MaxInt64(rows, columnName, skipNulls);
-        case SumType.Single: return MaxSingle(rows, columnName, skipNulls);
-        case SumType.Double: return MaxDouble(rows, columnName, skipNulls);
-        case SumType.Decimal: return MaxDecimal(rows, columnName, skipNulls);
-        case SumType.DateTime: return MaxDateTime(rows, columnName);
-        case SumType.TimeSpan: return MaxTimeSpan(rows, columnName, skipNulls);
+        case MathTools.SumType.Int32: return MaxInt32(rows, columnName, skipNulls);
+        case MathTools.SumType.Int64: return MaxInt64(rows, columnName, skipNulls);
+        case MathTools.SumType.Single: return MaxSingle(rows, columnName, skipNulls);
+        case MathTools.SumType.Double: return MaxDouble(rows, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return MaxDecimal(rows, columnName, skipNulls);
+        case MathTools.SumType.DateTime: return MaxDateTime(rows, columnName);
+        case MathTools.SumType.TimeSpan: return MaxTimeSpan(rows, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -3386,15 +3328,15 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", totalRow.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: MaxInt(totalRow, columnName, skipNulls); break;
-        case SumType.Int64: MaxInt64(totalRow, columnName, skipNulls); break;
-        case SumType.Single: MaxSingle(totalRow, columnName, skipNulls); break;
-        case SumType.Double: MaxDouble(totalRow, columnName, skipNulls); break;
-        case SumType.Decimal: MaxDecimal(totalRow, columnName, skipNulls); break;
-        case SumType.DateTime: MaxDateTime(totalRow, columnName); break;
-        case SumType.TimeSpan: MaxTimeSpan(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Int32: MaxInt32(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Int64: MaxInt64(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Single: MaxSingle(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Double: MaxDouble(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Decimal: MaxDecimal(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.DateTime: MaxDateTime(totalRow, columnName); break;
+        case MathTools.SumType.TimeSpan: MaxTimeSpan(totalRow, columnName, skipNulls); break;
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -3419,13 +3361,13 @@ namespace FreeLibSet.Core
 
 
       object res = null;
-      SumType st = SumType.None;
+      MathTools.SumType st = MathTools.SumType.None;
       foreach (object vx in items)
       {
         if (vx == null)
           continue;
-        SumType st2 = GetSumType(vx.GetType());
-        object v = ConvertValue(vx, st2);
+        MathTools.SumType st2 = MathTools.GetSumType(vx.GetType());
+        object v = MathTools.ConvertValue(vx, st2);
 
         if (res == null)
         {
@@ -3434,17 +3376,17 @@ namespace FreeLibSet.Core
         }
         else
         {
-          st = GetLargestSumType(st, st2);
-          res = ConvertValue(res, st);
+          st = MathTools.GetLargestSumType(st, st2);
+          res = MathTools.ConvertValue(res, st);
           switch (st)
           {
-            case SumType.Int: res = Math.Max((int)res, (int)v); break;
-            case SumType.Int64: res = Math.Max((long)res, (long)v); break;
-            case SumType.Single: res = Math.Max((float)res, (float)v); break;
-            case SumType.Double: res = Math.Max((double)res, (double)v); break;
-            case SumType.Decimal: res = Math.Max((decimal)res, (decimal)v); break;
-            case SumType.DateTime: res = DataTools.Max((DateTime)res, (DateTime)v); break;
-            case SumType.TimeSpan: res = DataTools.Max((TimeSpan)res, (TimeSpan)v); break;
+            case MathTools.SumType.Int32: res = Math.Max((int)res, (int)v); break;
+            case MathTools.SumType.Int64: res = Math.Max((long)res, (long)v); break;
+            case MathTools.SumType.Single: res = Math.Max((float)res, (float)v); break;
+            case MathTools.SumType.Double: res = Math.Max((double)res, (double)v); break;
+            case MathTools.SumType.Decimal: res = Math.Max((decimal)res, (decimal)v); break;
+            case MathTools.SumType.DateTime: res = TimeTools.Max((DateTime)res, (DateTime)v); break;
+            case MathTools.SumType.TimeSpan: res = TimeTools.Max((TimeSpan)res, (TimeSpan)v); break;
             default:
               throw ExceptionFactory.ArgInvalidEnumerableType("items", items);
           }
@@ -3460,7 +3402,7 @@ namespace FreeLibSet.Core
 
     #region Минимальное и максимальное значение вместе
 
-    #region Int
+    #region Int32
 
     /// <summary>
     /// Получить минимальное и максимальное значение поля для всех строк в просмотре.
@@ -3470,7 +3412,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Диапазон</returns>
-    public static MinMax<Int32> MinMaxInt(DataView dv, string columnName, bool skipNulls)
+    public static MinMax<Int32> MinMaxInt32(DataView dv, string columnName, bool skipNulls)
     {
       MinMax<Int32> res = new MinMax<Int32>();
       if (dv == null)
@@ -3485,7 +3427,7 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        res += DataTools.GetInt(drv.Row[p]);
+        res += DataTools.GetInt32(drv.Row[p]);
       }
       return res;
     }
@@ -3498,7 +3440,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Диапазон</returns>
-    public static MinMax<Int32> MinMaxInt(DataTable table, string columnName, bool skipNulls)
+    public static MinMax<Int32> MinMaxInt32(DataTable table, string columnName, bool skipNulls)
     {
       MinMax<Int32> res = new MinMax<Int32>();
       if (table == null)
@@ -3515,7 +3457,7 @@ namespace FreeLibSet.Core
           if (Row.IsNull(p))
             continue;
         }
-        res += DataTools.GetInt(Row[p]);
+        res += DataTools.GetInt32(Row[p]);
       }
       return res;
     }
@@ -3528,13 +3470,13 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Диапазон</returns>
-    public static MinMax<Int32> MinMaxInt(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static MinMax<Int32> MinMaxInt32(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       MinMax<Int32> res = new MinMax<Int32>();
       if (rows == null)
         return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       foreach (DataRow row in rows)
       {
         if (row == null)
@@ -3542,7 +3484,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        int? v = xtr[row];
+        rowVals.CurrentRow = row;
+        int? v = rowVals[columnName].AsNullableInt32;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -3629,7 +3572,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       foreach (DataRow row in rows)
       {
         if (row == null)
@@ -3637,7 +3580,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        long? v = xtr[row];
+        rowVals.CurrentRow = row;
+        long? v = rowVals[columnName].AsNullableInt64;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -3724,7 +3668,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       foreach (DataRow row in rows)
       {
         if (row == null)
@@ -3732,7 +3676,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        float? v = xtr[row];
+        rowVals.CurrentRow = row;
+        float? v = rowVals[columnName].AsNullableSingle;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -3819,7 +3764,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       foreach (DataRow row in rows)
       {
         if (row == null)
@@ -3827,7 +3772,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        double? v = xtr[row];
+        rowVals.CurrentRow = row;
+        double? v = rowVals[columnName].AsNullableDouble;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -3914,7 +3860,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       foreach (DataRow row in rows)
       {
         if (row == null)
@@ -3922,7 +3868,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        decimal? v = xtr[row];
+        rowVals.CurrentRow = row;
+        decimal? v = rowVals[columnName].AsNullableDecimal;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4009,7 +3956,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor xtr = new DataRowNullableDateTimeExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       foreach (DataRow row in rows)
       {
         if (row == null)
@@ -4017,7 +3964,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        DateTime? v = xtr[row];
+        rowVals.CurrentRow = row;
+        DateTime? v = rowVals[columnName].AsNullableDateTime;
         //if (SkipNulls)
         //{
         //  if (!v.HasValue)
@@ -4104,7 +4052,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return res;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       foreach (DataRow row in rows)
       {
         if (row == null)
@@ -4112,7 +4060,10 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        TimeSpan? v = xtr[row];
+        rowVals.CurrentRow = row;
+        TimeSpan? v = null;
+        if (!rowVals[columnName].IsNull)
+          v = rowVals[columnName].AsTimeSpan;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4129,7 +4080,7 @@ namespace FreeLibSet.Core
 
     #region Среднее значение
 
-    #region Int
+    #region Int32
 
     /// <summary>
     /// Получить среднее значение поля для всех строк в просмотре.
@@ -4140,7 +4091,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? AverageInt(DataView dv, string columnName, bool skipNulls)
+    public static int? AverageInt32(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
         return null;
@@ -4156,11 +4107,11 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        s += DataTools.GetInt(drv.Row[p]);
+        s += DataTools.GetInt32(drv.Row[p]);
         cnt++;
       }
       if (cnt > 0)
-        return DivideWithRounding(s, cnt);
+        return MathTools.DivideWithRounding(s, cnt);
       else
         return null;
     }
@@ -4174,7 +4125,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? AverageInt(DataTable table, string columnName, bool skipNulls)
+    public static int? AverageInt32(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
         return null;
@@ -4192,11 +4143,11 @@ namespace FreeLibSet.Core
           if (row.IsNull(p))
             continue;
         }
-        s += DataTools.GetInt(row[p]);
+        s += DataTools.GetInt32(row[p]);
         cnt++;
       }
       if (cnt > 0)
-        return DivideWithRounding(s, cnt);
+        return MathTools.DivideWithRounding(s, cnt);
       else
         return null;
     }
@@ -4210,12 +4161,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
     /// <returns>Найденное значение или null</returns>
-    public static int? AverageInt(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static int? AverageInt32(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int s = 0;
       int cnt = 0;
       foreach (DataRow row in rows)
@@ -4224,7 +4175,9 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        int? v = xtr[row];
+
+        rowVals.CurrentRow = row;
+        int? v = rowVals[columnName].AsNullableInt32;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4234,7 +4187,7 @@ namespace FreeLibSet.Core
         cnt++;
       }
       if (cnt > 0)
-        return DivideWithRounding(s, cnt);
+        return MathTools.DivideWithRounding(s, cnt);
       else
         return null;
     }
@@ -4252,9 +4205,9 @@ namespace FreeLibSet.Core
     /// <param name="totalRow">Итоговая строка в процессе заполнения</param>
     /// <param name="columnName">Имя суммируемого поля</param>
     /// <param name="skipNulls">Пропускать значения DBNull. Если false, то DBNull будут считаться как 0</param>
-    public static void AverageInt(DataRow totalRow, string columnName, bool skipNulls)
+    public static void AverageInt32(DataRow totalRow, string columnName, bool skipNulls)
     {
-      int? v = AverageInt(totalRow.Table, columnName, skipNulls);
+      int? v = AverageInt32(totalRow.Table, columnName, skipNulls);
       if (v.HasValue)
         totalRow[columnName] = v.Value;
       else
@@ -4267,7 +4220,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="items">Коллекция (может быть null)</param>
     /// <returns>Найденное значение или null, если коллекция пустая</returns>
-    public static int? AverageInt(IEnumerable<int> items)
+    public static int? AverageInt32(IEnumerable<int> items)
     {
       if (items == null)
         return null;
@@ -4282,7 +4235,7 @@ namespace FreeLibSet.Core
       if (cnt == 0)
         return null;
       else
-        return DivideWithRounding(s, cnt);
+        return MathTools.DivideWithRounding(s, cnt);
     }
 
     #endregion
@@ -4318,7 +4271,7 @@ namespace FreeLibSet.Core
         cnt++;
       }
       if (cnt > 0)
-        return DivideWithRounding(s, (long)cnt);
+        return MathTools.DivideWithRounding(s, (long)cnt);
       else
         return null;
     }
@@ -4354,7 +4307,7 @@ namespace FreeLibSet.Core
         cnt++;
       }
       if (cnt > 0)
-        return DivideWithRounding(s, (long)cnt);
+        return MathTools.DivideWithRounding(s, (long)cnt);
       else
         return null;
     }
@@ -4373,7 +4326,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       long s = 0;
       int cnt = 0;
       foreach (DataRow row in rows)
@@ -4382,7 +4335,9 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        long? v = xtr[row];
+
+        rowVals.CurrentRow = row;
+        long? v = rowVals[columnName].AsNullableInt64;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4392,7 +4347,7 @@ namespace FreeLibSet.Core
         cnt++;
       }
       if (cnt > 0)
-        return DivideWithRounding(s, cnt);
+        return MathTools.DivideWithRounding(s, cnt);
       else
         return null;
     }
@@ -4440,7 +4395,7 @@ namespace FreeLibSet.Core
       if (cnt == 0)
         return null;
       else
-        return DivideWithRounding(s, cnt);
+        return MathTools.DivideWithRounding(s, cnt);
     }
 
     #endregion
@@ -4528,7 +4483,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       float s = 0;
       int cnt = 0;
       foreach (DataRow row in rows)
@@ -4537,7 +4492,9 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        float? v = xtr[row];
+
+        rowVals.CurrentRow = row;
+        float? v = rowVals[columnName].AsNullableSingle;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4683,7 +4640,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       double s = 0;
       int cnt = 0;
       foreach (DataRow row in rows)
@@ -4692,7 +4649,9 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        double? v = xtr[row];
+
+        rowVals.CurrentRow = row;
+        double? v = rowVals[columnName].AsNullableDouble;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4838,7 +4797,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       decimal s = 0;
       int cnt = 0;
       foreach (DataRow row in rows)
@@ -4847,7 +4806,9 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        decimal? v = xtr[row];
+
+        rowVals.CurrentRow = row;
+        decimal? v = rowVals[columnName].AsNullableDecimal;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4993,7 +4954,7 @@ namespace FreeLibSet.Core
       if (rows == null)
         return null;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       TimeSpan s = TimeSpan.Zero;
       int cnt = 0;
       foreach (DataRow row in rows)
@@ -5002,7 +4963,11 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        TimeSpan? v = xtr[row];
+
+        rowVals.CurrentRow = row;
+        TimeSpan? v = null;
+        if (!rowVals[columnName].IsNull)
+          v = rowVals[columnName].AsTimeSpan;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -5088,14 +5053,14 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: return AverageInt(dv, columnName, skipNulls);
-        case SumType.Int64: return AverageInt64(dv, columnName, skipNulls);
-        case SumType.Single: return AverageSingle(dv, columnName, skipNulls);
-        case SumType.Double: return AverageDouble(dv, columnName, skipNulls);
-        case SumType.Decimal: return AverageDecimal(dv, columnName, skipNulls);
-        case SumType.TimeSpan: return AverageTimeSpan(dv, columnName, skipNulls);
+        case MathTools.SumType.Int32: return AverageInt32(dv, columnName, skipNulls);
+        case MathTools.SumType.Int64: return AverageInt64(dv, columnName, skipNulls);
+        case MathTools.SumType.Single: return AverageSingle(dv, columnName, skipNulls);
+        case MathTools.SumType.Double: return AverageDouble(dv, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return AverageDecimal(dv, columnName, skipNulls);
+        case MathTools.SumType.TimeSpan: return AverageTimeSpan(dv, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -5122,14 +5087,14 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: return AverageInt(table, columnName, skipNulls);
-        case SumType.Int64: return AverageInt64(table, columnName, skipNulls);
-        case SumType.Single: return AverageSingle(table, columnName, skipNulls);
-        case SumType.Double: return AverageDouble(table, columnName, skipNulls);
-        case SumType.Decimal: return AverageDecimal(table, columnName, skipNulls);
-        case SumType.TimeSpan: return AverageTimeSpan(table, columnName, skipNulls);
+        case MathTools.SumType.Int32: return AverageInt32(table, columnName, skipNulls);
+        case MathTools.SumType.Int64: return AverageInt64(table, columnName, skipNulls);
+        case MathTools.SumType.Single: return AverageSingle(table, columnName, skipNulls);
+        case MathTools.SumType.Double: return AverageDouble(table, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return AverageDecimal(table, columnName, skipNulls);
+        case MathTools.SumType.TimeSpan: return AverageTimeSpan(table, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -5149,14 +5114,14 @@ namespace FreeLibSet.Core
       if (t == null)
         return null;
 
-      switch (GetSumType(t))
+      switch (MathTools.GetSumType(t))
       {
-        case SumType.Int: return AverageInt(rows, columnName, skipNulls);
-        case SumType.Int64: return AverageInt64(rows, columnName, skipNulls);
-        case SumType.Single: return AverageSingle(rows, columnName, skipNulls);
-        case SumType.Double: return AverageDouble(rows, columnName, skipNulls);
-        case SumType.Decimal: return AverageDecimal(rows, columnName, skipNulls);
-        case SumType.TimeSpan: return AverageTimeSpan(rows, columnName, skipNulls);
+        case MathTools.SumType.Int32: return AverageInt32(rows, columnName, skipNulls);
+        case MathTools.SumType.Int64: return AverageInt64(rows, columnName, skipNulls);
+        case MathTools.SumType.Single: return AverageSingle(rows, columnName, skipNulls);
+        case MathTools.SumType.Double: return AverageDouble(rows, columnName, skipNulls);
+        case MathTools.SumType.Decimal: return AverageDecimal(rows, columnName, skipNulls);
+        case MathTools.SumType.TimeSpan: return AverageTimeSpan(rows, columnName, skipNulls);
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -5186,14 +5151,14 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", totalRow.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: AverageInt(totalRow, columnName, skipNulls); break;
-        case SumType.Int64: AverageInt64(totalRow, columnName, skipNulls); break;
-        case SumType.Single: AverageSingle(totalRow, columnName, skipNulls); break;
-        case SumType.Double: AverageDouble(totalRow, columnName, skipNulls); break;
-        case SumType.Decimal: AverageDecimal(totalRow, columnName, skipNulls); break;
-        case SumType.TimeSpan: AverageTimeSpan(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Int32: AverageInt32(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Int64: AverageInt64(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Single: AverageSingle(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Double: AverageDouble(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.Decimal: AverageDecimal(totalRow, columnName, skipNulls); break;
+        case MathTools.SumType.TimeSpan: AverageTimeSpan(totalRow, columnName, skipNulls); break;
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -5218,24 +5183,24 @@ namespace FreeLibSet.Core
       CorrectAggregateEnumerable(ref items);
 
       object res = null;
-      SumType st = SumType.None;
+      MathTools.SumType st = MathTools.SumType.None;
       int cnt = 0;
       foreach (object vx in items)
       {
         if (vx == null)
           continue;
-        SumType st2 = GetSumType(vx.GetType());
-        st = GetLargestSumType(st, st2);
-        res = ConvertValue(res, st);
-        object v = ConvertValue(vx, st);
+        MathTools.SumType st2 = MathTools.GetSumType(vx.GetType());
+        st = MathTools.GetLargestSumType(st, st2);
+        res = MathTools.ConvertValue(res, st);
+        object v = MathTools.ConvertValue(vx, st);
         switch (st)
         {
-          case SumType.Int: res = (int)res + (int)v; break;
-          case SumType.Int64: res = (long)res + (long)v; break;
-          case SumType.Single: res = (float)res + (float)v; break;
-          case SumType.Double: res = (double)res + (double)v; break;
-          case SumType.Decimal: res = (decimal)res + (decimal)v; break;
-          case SumType.TimeSpan: res = (TimeSpan)res + (TimeSpan)v; break;
+          case MathTools.SumType.Int32: res = (int)res + (int)v; break;
+          case MathTools.SumType.Int64: res = (long)res + (long)v; break;
+          case MathTools.SumType.Single: res = (float)res + (float)v; break;
+          case MathTools.SumType.Double: res = (double)res + (double)v; break;
+          case MathTools.SumType.Decimal: res = (decimal)res + (decimal)v; break;
+          case MathTools.SumType.TimeSpan: res = (TimeSpan)res + (TimeSpan)v; break;
           default:
             throw ExceptionFactory.ArgInvalidEnumerableType("items", items);
         }
@@ -5247,12 +5212,12 @@ namespace FreeLibSet.Core
 
       switch (st)
       {
-        case SumType.Int: return DivideWithRounding((int)res, cnt);
-        case SumType.Int64: return DivideWithRounding((long)res, (long)cnt);
-        case SumType.Single: return (float)res / cnt;
-        case SumType.Double: return (double)res / cnt;
-        case SumType.Decimal: return (decimal)res / cnt;
-        case SumType.TimeSpan:
+        case MathTools.SumType.Int32: return MathTools.DivideWithRounding((int)res, cnt);
+        case MathTools.SumType.Int64: return MathTools.DivideWithRounding((long)res, (long)cnt);
+        case MathTools.SumType.Single: return (float)res / cnt;
+        case MathTools.SumType.Double: return (double)res / cnt;
+        case MathTools.SumType.Decimal: return (decimal)res / cnt;
+        case MathTools.SumType.TimeSpan:
           return new TimeSpan(((TimeSpan)res).Ticks / cnt);
         default:
           throw new BugException();
@@ -5265,7 +5230,7 @@ namespace FreeLibSet.Core
 
     #region Подсчет числа строк
 
-    #region Bool
+    #region Int32
 
     /// <summary>
     /// Сосчитать количество строк в просмотре с заданным значением поля 
@@ -5274,7 +5239,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataView dv, string columnName, bool searchValue)
+    public static int GetRowCountWithInt32Value(DataView dv, string columnName, int searchValue)
     {
       if (dv == null)
         return 0;
@@ -5284,7 +5249,7 @@ namespace FreeLibSet.Core
       int cnt = 0;
       foreach (DataRowView drv in dv)
       {
-        if (DataTools.GetBool(drv.Row[p]) == searchValue)
+        if (DataTools.GetInt32(drv.Row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5297,7 +5262,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataTable table, string columnName, bool searchValue)
+    public static int GetRowCountWithInt32Value(DataTable table, string columnName, int searchValue)
     {
       if (table == null)
         return 0;
@@ -5309,7 +5274,7 @@ namespace FreeLibSet.Core
       {
         if (row.RowState == DataRowState.Deleted)
           continue;
-        if (DataTools.GetBool(row[p]) == searchValue)
+        if (DataTools.GetInt32(row[p]) == searchValue)
           cnt++;
       }
       return cnt;
@@ -5322,12 +5287,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(IEnumerable<DataRow> rows, string columnName, bool searchValue)
+    public static int GetRowCountWithInt32Value(IEnumerable<DataRow> rows, string columnName, int searchValue)
     {
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowBoolExtractor xtr = new DataRowBoolExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int cnt = 0;
       foreach (DataRow row in rows)
       {
@@ -5335,85 +5300,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        if (xtr[row] == searchValue)
-          cnt++;
-      }
-      return cnt;
-    }
-
-    #endregion
-
-    #region Int
-
-    /// <summary>
-    /// Сосчитать количество строк в просмотре с заданным значением поля 
-    /// </summary>
-    /// <param name="dv">Просмотр</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="searchValue">Значение поля</param>
-    /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataView dv, string columnName, int searchValue)
-    {
-      if (dv == null)
-        return 0;
-      if (dv.Count == 0)
-        return 0;
-      int p = GetColumnPosWithCheck(dv.Table, columnName);
-      int cnt = 0;
-      foreach (DataRowView drv in dv)
-      {
-        if (DataTools.GetInt(drv.Row[p]) == searchValue)
-          cnt++;
-      }
-      return cnt;
-    }
-
-    /// <summary>
-    /// Сосчитать количество строк в таблице с заданным значением поля 
-    /// </summary>
-    /// <param name="table">Таблица</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="searchValue">Значение поля</param>
-    /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataTable table, string columnName, int searchValue)
-    {
-      if (table == null)
-        return 0;
-      if (table.Rows.Count == 0)
-        return 0;
-      int p = GetColumnPosWithCheck(table, columnName);
-      int cnt = 0;
-      foreach (DataRow row in table.Rows)
-      {
-        if (row.RowState == DataRowState.Deleted)
-          continue;
-        if (DataTools.GetInt(row[p]) == searchValue)
-          cnt++;
-      }
-      return cnt;
-    }
-
-    /// <summary>
-    /// Сосчитать количество строк в коллекции с заданным значением поля 
-    /// </summary>
-    /// <param name="rows">Коллекция строк. В коллекции могут быть ссылки null</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <param name="searchValue">Значение поля</param>
-    /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(IEnumerable<DataRow> rows, string columnName, int searchValue)
-    {
-      if (rows == null)
-        return 0;
-      // Строки могут относиться к разным таблицам
-      DataRowIntExtractor xtr = new DataRowIntExtractor(columnName);
-      int cnt = 0;
-      foreach (DataRow row in rows)
-      {
-        if (row == null)
-          continue;
-        if (row.RowState == DataRowState.Deleted)
-          continue;
-        if (xtr[row] == searchValue)
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsInt32 == searchValue)
           cnt++;
       }
       return cnt;
@@ -5430,7 +5318,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataView dv, string columnName, long searchValue)
+    public static int GetRowCountWithInt64Value(DataView dv, string columnName, long searchValue)
     {
       if (dv == null)
         return 0;
@@ -5453,7 +5341,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataTable table, string columnName, long searchValue)
+    public static int GetRowCountWithInt64Value(DataTable table, string columnName, long searchValue)
     {
       if (table == null)
         return 0;
@@ -5478,12 +5366,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(IEnumerable<DataRow> rows, string columnName, long searchValue)
+    public static int GetRowCountWithInt64Value(IEnumerable<DataRow> rows, string columnName, long searchValue)
     {
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowInt64Extractor xtr = new DataRowInt64Extractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int cnt = 0;
       foreach (DataRow row in rows)
       {
@@ -5491,7 +5379,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        if (xtr[row] == searchValue)
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsInt64 == searchValue)
           cnt++;
       }
       return cnt;
@@ -5508,7 +5397,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataView dv, string columnName, float searchValue)
+    public static int GetRowCountWithSingleValue(DataView dv, string columnName, float searchValue)
     {
       if (dv == null)
         return 0;
@@ -5531,7 +5420,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataTable table, string columnName, float searchValue)
+    public static int GetRowCountWithSingleValue(DataTable table, string columnName, float searchValue)
     {
       if (table == null)
         return 0;
@@ -5556,12 +5445,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(IEnumerable<DataRow> rows, string columnName, float searchValue)
+    public static int GetRowCountWithSingleValue(IEnumerable<DataRow> rows, string columnName, float searchValue)
     {
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowSingleExtractor xtr = new DataRowSingleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int cnt = 0;
       foreach (DataRow row in rows)
       {
@@ -5569,7 +5458,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        if (xtr[row] == searchValue)
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsSingle == searchValue)
           cnt++;
       }
       return cnt;
@@ -5586,7 +5476,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataView dv, string columnName, double searchValue)
+    public static int GetRowCountWithDoubleValue(DataView dv, string columnName, double searchValue)
     {
       if (dv == null)
         return 0;
@@ -5609,7 +5499,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataTable table, string columnName, double searchValue)
+    public static int GetRowCountWithDoubleValue(DataTable table, string columnName, double searchValue)
     {
       if (table == null)
         return 0;
@@ -5634,12 +5524,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(IEnumerable<DataRow> rows, string columnName, double searchValue)
+    public static int GetRowCountWithDoubleValue(IEnumerable<DataRow> rows, string columnName, double searchValue)
     {
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowDoubleExtractor xtr = new DataRowDoubleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int cnt = 0;
       foreach (DataRow row in rows)
       {
@@ -5647,7 +5537,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        if (xtr[row] == searchValue)
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsDouble == searchValue)
           cnt++;
       }
       return cnt;
@@ -5664,7 +5555,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataView dv, string columnName, decimal searchValue)
+    public static int GetRowCountWithDecimalValue(DataView dv, string columnName, decimal searchValue)
     {
       if (dv == null)
         return 0;
@@ -5687,7 +5578,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataTable table, string columnName, decimal searchValue)
+    public static int GetRowCountWithDecimalValue(DataTable table, string columnName, decimal searchValue)
     {
       if (table == null)
         return 0;
@@ -5712,12 +5603,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(IEnumerable<DataRow> rows, string columnName, decimal searchValue)
+    public static int GetRowCountWithDecimalValue(IEnumerable<DataRow> rows, string columnName, decimal searchValue)
     {
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowDecimalExtractor xtr = new DataRowDecimalExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int cnt = 0;
       foreach (DataRow row in rows)
       {
@@ -5725,7 +5616,248 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        if (xtr[row] == searchValue)
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsDecimal == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    #endregion
+
+    #region String
+
+    /// <summary>
+    /// Сосчитать количество строк в просмотре с заданным значением поля.
+    /// Поиск является регистрочувствительным.
+    /// </summary>
+    /// <param name="dv">Просмотр</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithStringValue(DataView dv, string columnName, string searchValue)
+    {
+      if (dv == null)
+        return 0;
+      if (dv.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(dv.Table, columnName);
+      int cnt = 0;
+      foreach (DataRowView drv in dv)
+      {
+        if (DataTools.GetString(drv.Row[p]) == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в таблице с заданным значением поля.
+    /// Поиск является регистрочувствительным.
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithStringValue(DataTable table, string columnName, string searchValue)
+    {
+      if (table == null)
+        return 0;
+      if (table.Rows.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(table, columnName);
+      int cnt = 0;
+      foreach (DataRow row in table.Rows)
+      {
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        if (DataTools.GetString(row[p]) == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в коллекции с заданным значением поля. 
+    /// Поиск является регистрочувствительным.
+    /// </summary>
+    /// <param name="rows">Коллекция строк. В коллекции могут быть ссылки null</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithStringValue(IEnumerable<DataRow> rows, string columnName, string searchValue)
+    {
+      if (rows == null)
+        return 0;
+      // Строки могут относиться к разным таблицам
+      DataRowValues rowVals = new DataRowValues();
+      int cnt = 0;
+      foreach (DataRow row in rows)
+      {
+        if (row == null)
+          continue;
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsString == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    #endregion
+
+    #region Boolean
+
+    /// <summary>
+    /// Сосчитать количество строк в просмотре с заданным значением поля 
+    /// </summary>
+    /// <param name="dv">Просмотр</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithBooleanValue(DataView dv, string columnName, bool searchValue)
+    {
+      if (dv == null)
+        return 0;
+      if (dv.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(dv.Table, columnName);
+      int cnt = 0;
+      foreach (DataRowView drv in dv)
+      {
+        if (DataTools.GetBoolean(drv.Row[p]) == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в таблице с заданным значением поля 
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithBooleanValue(DataTable table, string columnName, bool searchValue)
+    {
+      if (table == null)
+        return 0;
+      if (table.Rows.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(table, columnName);
+      int cnt = 0;
+      foreach (DataRow row in table.Rows)
+      {
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        if (DataTools.GetBoolean(row[p]) == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в коллекции с заданным значением поля 
+    /// </summary>
+    /// <param name="rows">Коллекция строк. В коллекции могут быть ссылки null</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithBooleanValue(IEnumerable<DataRow> rows, string columnName, bool searchValue)
+    {
+      if (rows == null)
+        return 0;
+      // Строки могут относиться к разным таблицам
+      DataRowValues rowVals = new DataRowValues();
+      int cnt = 0;
+      foreach (DataRow row in rows)
+      {
+        if (row == null)
+          continue;
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsBoolean == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    #endregion
+
+    #region DateTime
+
+    /// <summary>
+    /// Сосчитать количество строк в просмотре с заданным значением поля 
+    /// </summary>
+    /// <param name="dv">Просмотр</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithDateTimeValue(DataView dv, string columnName, DateTime searchValue)
+    {
+      if (dv == null)
+        return 0;
+      if (dv.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(dv.Table, columnName);
+      int cnt = 0;
+      foreach (DataRowView drv in dv)
+      {
+        if (DataTools.GetDateTime(drv.Row[p]) == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в таблице с заданным значением поля 
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithDateTimeValue(DataTable table, string columnName, DateTime searchValue)
+    {
+      if (table == null)
+        return 0;
+      if (table.Rows.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(table, columnName);
+      int cnt = 0;
+      foreach (DataRow row in table.Rows)
+      {
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        if (DataTools.GetDateTime(row[p]) == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в коллекции с заданным значением поля 
+    /// </summary>
+    /// <param name="rows">Коллекция строк. В коллекции могут быть ссылки null</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithDateTimeValue(IEnumerable<DataRow> rows, string columnName, DateTime searchValue)
+    {
+      if (rows == null)
+        return 0;
+      // Строки могут относиться к разным таблицам
+      DataRowValues rowVals = new DataRowValues();
+      int cnt = 0;
+      foreach (DataRow row in rows)
+      {
+        if (row == null)
+          continue;
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsDateTime == searchValue)
           cnt++;
       }
       return cnt;
@@ -5742,7 +5874,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataView dv, string columnName, TimeSpan searchValue)
+    public static int GetRowCountWithTimeSpanValue(DataView dv, string columnName, TimeSpan searchValue)
     {
       if (dv == null)
         return 0;
@@ -5765,7 +5897,7 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(DataTable table, string columnName, TimeSpan searchValue)
+    public static int GetRowCountWithTimeSpanValue(DataTable table, string columnName, TimeSpan searchValue)
     {
       if (table == null)
         return 0;
@@ -5790,12 +5922,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="searchValue">Значение поля</param>
     /// <returns>Число строк, удовлетворяющих условию</returns>
-    public static int GetRowCount(IEnumerable<DataRow> rows, string columnName, TimeSpan searchValue)
+    public static int GetRowCountWithTimeSpanValue(IEnumerable<DataRow> rows, string columnName, TimeSpan searchValue)
     {
       if (rows == null)
         return 0;
       // Строки могут относиться к разным таблицам
-      DataRowTimeSpanExtractor xtr = new DataRowTimeSpanExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       int cnt = 0;
       foreach (DataRow row in rows)
       {
@@ -5803,7 +5935,172 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-        if (xtr[row] == searchValue)
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsTimeSpan == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    #endregion
+
+    #region Guid
+
+    /// <summary>
+    /// Сосчитать количество строк в просмотре с заданным значением поля 
+    /// </summary>
+    /// <param name="dv">Просмотр</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithGuidValue(DataView dv, string columnName, Guid searchValue)
+    {
+      if (dv == null)
+        return 0;
+      if (dv.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(dv.Table, columnName);
+      int cnt = 0;
+      foreach (DataRowView drv in dv)
+      {
+        if (DataTools.GetGuid(drv.Row[p]) == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в таблице с заданным значением поля 
+    /// </summary>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithGuidValue(DataTable table, string columnName, Guid searchValue)
+    {
+      if (table == null)
+        return 0;
+      if (table.Rows.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(table, columnName);
+      int cnt = 0;
+      foreach (DataRow row in table.Rows)
+      {
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        if (DataTools.GetGuid(row[p]) == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в коллекции с заданным значением поля 
+    /// </summary>
+    /// <param name="rows">Коллекция строк. В коллекции могут быть ссылки null</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithGuidValue(IEnumerable<DataRow> rows, string columnName, Guid searchValue)
+    {
+      if (rows == null)
+        return 0;
+      // Строки могут относиться к разным таблицам
+      DataRowValues rowVals = new DataRowValues();
+      int cnt = 0;
+      foreach (DataRow row in rows)
+      {
+        if (row == null)
+          continue;
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].AsGuid == searchValue)
+          cnt++;
+      }
+      return cnt;
+    }
+
+    #endregion
+
+    #region Enum
+
+    /// <summary>
+    /// Сосчитать количество строк в просмотре с заданным значением поля 
+    /// </summary>
+    /// <typeparam name="T">Тип перечисления</typeparam>
+    /// <param name="dv">Просмотр</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithEnumValue<T>(DataView dv, string columnName, T searchValue)
+      where T : struct
+    {
+      if (dv == null)
+        return 0;
+      if (dv.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(dv.Table, columnName);
+      int cnt = 0;
+      foreach (DataRowView drv in dv)
+      {
+        if (DataTools.GetEnum<T>(drv.Row[p]).Equals(searchValue))
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в таблице с заданным значением поля 
+    /// </summary>
+    /// <typeparam name="T">Тип перечисления</typeparam>
+    /// <param name="table">Таблица</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithEnumValue<T>(DataTable table, string columnName, T searchValue)
+       where T : struct
+    {
+      if (table == null)
+        return 0;
+      if (table.Rows.Count == 0)
+        return 0;
+      int p = GetColumnPosWithCheck(table, columnName);
+      int cnt = 0;
+      foreach (DataRow row in table.Rows)
+      {
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        if (DataTools.GetEnum<T>(row[p]).Equals(searchValue))
+          cnt++;
+      }
+      return cnt;
+    }
+
+    /// <summary>
+    /// Сосчитать количество строк в коллекции с заданным значением поля 
+    /// </summary>
+    /// <typeparam name="T">Тип перечисления</typeparam>
+    /// <param name="rows">Коллекция строк. В коллекции могут быть ссылки null</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <param name="searchValue">Значение поля</param>
+    /// <returns>Число строк, удовлетворяющих условию</returns>
+    public static int GetRowCountWithEnumValue<T>(IEnumerable<DataRow> rows, string columnName, T searchValue)
+      where T : struct
+    {
+      if (rows == null)
+        return 0;
+      // Строки могут относиться к разным таблицам
+      DataRowValues rowVals = new DataRowValues();
+      int cnt = 0;
+      foreach (DataRow row in rows)
+      {
+        if (row == null)
+          continue;
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        rowVals.CurrentRow = row;
+        if (rowVals[columnName].GetEnum<T>().Equals(searchValue))
           cnt++;
       }
       return cnt;

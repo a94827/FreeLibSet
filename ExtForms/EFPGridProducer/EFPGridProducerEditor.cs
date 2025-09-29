@@ -15,7 +15,7 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Управляющие элементы, встраиваемые в редактор настройки табличного просмотра.
-  /// Сама форма не используется
+  /// Сама форма не используется.
   /// </summary>
   internal partial class EFPGridProducerEditor : Form, IEFPGridProducerEditor, IEFPConfigParamSetAuxTextHandler
   {
@@ -46,7 +46,7 @@ namespace FreeLibSet.Forms
         ghColumns.Columns.AddText("FieldNames", false, "FieldNames", 30, 10);
       } */
       ghColumns.DisableOrdering();
-      ghColumns.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ghColumns_GetCellAttributes);
+      ghColumns.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(ghColumns_CellInfoNeeded);
       ghColumns.ReadOnly = true;
       ghColumns.CanInsert = false; // !!!
       ghColumns.CanDelete = false;
@@ -135,7 +135,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Копия конфигурации до начала редактирования
     /// </summary>
-    private EFPDataGridViewConfig _OrgConfig;
+    private EFPDataViewConfig _OrgConfig;
 
     private EFPDataGridView ghColumns, ghToolTips;
 
@@ -166,7 +166,7 @@ namespace FreeLibSet.Forms
     /// Заполняет таблицу столбцов из заданной конфигурации
     /// </summary>
     /// <param name="config">Конфигурация, откуда берутся размеры столбцов</param>
-    private void WriteFormColumns(EFPDataGridViewConfig config)
+    private void WriteFormColumns(EFPDataViewConfig config)
     {
       // Строки таблицы столбцов, соответствующие объявлениям в GridProducer
       DataGridViewRow[] ordRows = new DataGridViewRow[_GridProducer.Columns.Count];
@@ -184,7 +184,7 @@ namespace FreeLibSet.Forms
         //int cntFrozen = 0;
         for (int i = 0; i < config.Columns.Count; i++)
         {
-          EFPDataGridViewConfigColumn column = config.Columns[i];
+          EFPDataViewConfigColumn column = config.Columns[i];
 
           EFPGridProducerColumn columnProducer = _GridProducer.Columns[column.ColumnName];
           if (columnProducer == null)
@@ -228,7 +228,7 @@ namespace FreeLibSet.Forms
           if (ordRows[i] != null)
             continue; // Столбец уже был добавлен
 
-          EFPDataGridViewConfigColumn columnConfig = null;
+          EFPDataViewConfigColumn columnConfig = null;
           //        if (TheHandler.CurrentGridConfig != null)
           //          ColumnConfig = TheHandler.CurrentGridConfig.Columns[Column.ColumnName];
 
@@ -295,19 +295,19 @@ namespace FreeLibSet.Forms
     /// <param name="config">Заполняемая конфигурация просмотра</param>
     /// <param name="errorText">Сюда помещается сообщение об ошибке</param>
     /// <returns>true, если введенные в табличке значения не содержат ошибок</returns>
-    private bool ReadFormColumns(EFPDataGridViewConfig config, out string errorText)
+    private bool ReadFormColumns(EFPDataViewConfig config, out string errorText)
     {
       grColumns.EndEdit();
 
       for (int i = 0; i < grColumns.Rows.Count; i++)
       {
         DataGridViewRow row = grColumns.Rows[i];
-        if (!DataTools.GetBool(row.Cells[0].Value))
+        if (!DataTools.GetBoolean(row.Cells[0].Value))
           continue;
         EFPGridProducerColumn colDef = GetProducerColumn(row);
-        EFPDataGridViewConfigColumn columnCfg = new EFPDataGridViewConfigColumn(colDef.Name);
-        columnCfg.Width = DataTools.GetInt(row.Cells[2].Value);
-        int percent = DataTools.GetInt(row.Cells[3].Value);
+        EFPDataViewConfigColumn columnCfg = new EFPDataViewConfigColumn(colDef.Name);
+        columnCfg.Width = DataTools.GetInt32(row.Cells[2].Value);
+        int percent = DataTools.GetInt32(row.Cells[3].Value);
         if (percent > 0)
         {
           columnCfg.FillMode = true;
@@ -359,7 +359,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    void ghColumns_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void ghColumns_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       switch (args.ColumnIndex)
       {
@@ -370,7 +370,7 @@ namespace FreeLibSet.Forms
           if (colProd == null)
             return;
 
-          if (!DataTools.GetBool(row.Cells[0].Value))
+          if (!DataTools.GetBoolean(row.Cells[0].Value))
           {
             args.Grayed = true;
             args.ReadOnly = true;
@@ -413,7 +413,7 @@ namespace FreeLibSet.Forms
         for (int i = 0; i < ghColumns.Control.RowCount; i++)
         {
           DataGridViewRow Row = ghColumns.Control.Rows[i];
-          bool Flag = DataTools.GetBool(Row.Cells[0].Value);
+          bool Flag = DataTools.GetBoolean(Row.Cells[0].Value);
           if (Flag)
           {
             GridProducerColumn Col = GetProducerColumn(Row);
@@ -474,7 +474,7 @@ namespace FreeLibSet.Forms
       for (int i = 0; i < ghColumns.Control.RowCount; i++)
       {
         DataGridViewRow row = ghColumns.Control.Rows[i];
-        bool flag = DataTools.GetBool(row.Cells[0].Value);
+        bool flag = DataTools.GetBoolean(row.Cells[0].Value);
         if (flag)
         {
           EFPGridProducerColumn col = GetProducerColumn(row);
@@ -509,7 +509,7 @@ namespace FreeLibSet.Forms
      * Поле Tag каждой строки таблицы grToolTips содержит имя элемента подсказки
      */
 
-    private void WriteFormToolTips(EFPDataGridViewConfig config)
+    private void WriteFormToolTips(EFPDataViewConfig config)
     {
       // Строки таблицы подсказок, соответствующие объявлениям в GridProducer
       DataGridViewRow[] ordRows = new DataGridViewRow[_GridProducer.ToolTips.Count];
@@ -590,7 +590,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private bool ReadFormToolTips(EFPDataGridViewConfig config, out string errorText)
+    private bool ReadFormToolTips(EFPDataViewConfig config, out string errorText)
     {
       if (ghToolTips != null)
       {
@@ -598,7 +598,7 @@ namespace FreeLibSet.Forms
         for (int i = 0; i < grToolTips.Rows.Count; i++)
         {
           DataGridViewRow row = grToolTips.Rows[i];
-          if (!DataTools.GetBool(row.Cells[0].Value))
+          if (!DataTools.GetBoolean(row.Cells[0].Value))
             continue;
           EFPGridProducerToolTip toolTip = (EFPGridProducerToolTip)(row.Tag);
           config.ToolTips.Add(toolTip.Name);
@@ -633,7 +633,7 @@ namespace FreeLibSet.Forms
     /// Перенос из <paramref name="config"/> в управляющие элементы формы
     /// </summary>
     /// <param name="config"></param>
-    public void WriteFormValues(EFPDataGridViewConfig config)
+    public void WriteFormValues(EFPDataViewConfig config)
     {
       WriteFormColumns(config);
 
@@ -653,7 +653,7 @@ namespace FreeLibSet.Forms
     /// <param name="config"></param>
     /// <param name="errorText">Сюда помещается сообщение об ошибке, если метод возвращает false</param>
     /// <returns></returns>
-    public bool ReadFormValues(EFPDataGridViewConfig config, out string errorText)
+    public bool ReadFormValues(EFPDataViewConfig config, out string errorText)
     {
       if (!ReadFormColumns(config, out errorText))
         return false;
@@ -676,11 +676,11 @@ namespace FreeLibSet.Forms
       return true;
     }
 
-    public void GetDefaultConfigs(out string[] defaultConfigCodes, out EFPDataGridViewConfig[] defaultConfigs)
+    public void GetDefaultConfigs(out string[] defaultConfigCodes, out EFPDataViewConfig[] defaultConfigs)
     {
       string[] fixedNames = _GridProducer.GetNamedConfigNames();
       defaultConfigCodes = new string[fixedNames.Length + 1];
-      defaultConfigs = new EFPDataGridViewConfig[fixedNames.Length + 1];
+      defaultConfigs = new EFPDataViewConfig[fixedNames.Length + 1];
       defaultConfigCodes[0] = String.Empty;
       if (_GridProducer.DefaultConfig == null)
         defaultConfigs[0] = _GridProducer.CreateDefaultConfig();
@@ -704,10 +704,10 @@ namespace FreeLibSet.Forms
 
     public string GetAuxText(CfgPart cfg)
     {
-      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      EFPDataViewConfig config = new EFPDataViewConfig();
       config.ReadConfig(cfg);
       StringBuilder sb = new StringBuilder();
-      foreach (EFPDataGridViewConfigColumn cfgCol in config.Columns)
+      foreach (EFPDataViewConfigColumn cfgCol in config.Columns)
       {
         EFPGridProducerColumn prodCol = _GridProducer.Columns[cfgCol.ColumnName];
         if (prodCol != null)
@@ -739,7 +739,7 @@ namespace FreeLibSet.Forms
     /// Метод вызывается при открытии формы, а также при выборе пользователем конфигурации из списка истории
     /// </summary>
     /// <param name="config">Настройка, откуда должны быть извлечены данные</param>
-    void WriteFormValues(EFPDataGridViewConfig config);
+    void WriteFormValues(EFPDataViewConfig config);
 
     /// <summary>
     /// Перенести значения из формы редактора в <paramref name="config"/>.
@@ -749,7 +749,7 @@ namespace FreeLibSet.Forms
     /// <param name="config">Настройка, откуда должны быть извлечены данные</param>
     /// <param name="errorText">Сюда записывается сообщение об ошибке, если результат вызова метода - false</param>
     /// <returns>true, если значения в форме правильные и успешно прочитаны. false, если выбранная настройка является некорректной</returns>
-    bool ReadFormValues(EFPDataGridViewConfig config, out String errorText);
+    bool ReadFormValues(EFPDataViewConfig config, out String errorText);
 
     /// <summary>
     /// Получить список вариантов настроек по умолчанию.
@@ -757,7 +757,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="defaultConfigCodes">Сюда записываются коды</param>
     /// <param name="defaultConfigs">Сюда записываются настройки</param>
-    void GetDefaultConfigs(out string[] defaultConfigCodes, out EFPDataGridViewConfig[] defaultConfigs);
+    void GetDefaultConfigs(out string[] defaultConfigCodes, out EFPDataViewConfig[] defaultConfigs);
   }
 
   #endregion

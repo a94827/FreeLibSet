@@ -342,12 +342,12 @@ namespace FreeLibSet.Data.Docs
       return DataTools.GetString(FieldValues[p]);
     }
 
-    public int GetFieldAsInt(string FieldName)
+    public int GetFieldAsInt32(string FieldName)
     {
       int p = FieldNames.IndexOf(FieldName);
       if (p < 0)
         return 0;
-      return DataTools.GetInt(FieldValues[p]);
+      return DataTools.GetInt32(FieldValues[p]);
     }
 
     public decimal GetFieldAsDecimal(string FieldName)
@@ -358,12 +358,12 @@ namespace FreeLibSet.Data.Docs
       return DataTools.GetDecimal(FieldValues[p]);
     }
 
-    public bool GetFieldAsBool(string FieldName)
+    public bool GetFieldAsBoolean(string FieldName)
     {
       int p = FieldNames.IndexOf(FieldName);
       if (p < 0)
         return false;
-      return DataTools.GetBool(FieldValues[p]);
+      return DataTools.GetBoolean(FieldValues[p]);
     }
 
     public DateTime? GetFieldAsNullableDateTime(string FieldName)
@@ -562,7 +562,7 @@ namespace FreeLibSet.Data.Docs
 #if DEBUG
       if (!FieldNames.Contains("DocId"))
         throw new BugException("Поле DocId отсутствует в списке полей для поиска");
-      if (GetFieldAsInt("DocId") == 0)
+      if (GetFieldAsInt32("DocId") == 0)
         throw new BugException("Попытка поиска поддокумента без заданного идентификатора документа");
 #endif
     }
@@ -583,7 +583,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public Int32 DocId
     {
-      get { return GetFieldAsInt("DocId"); }
+      get { return GetFieldAsInt32("DocId"); }
     }
 
   #endregion
@@ -772,7 +772,7 @@ namespace FreeLibSet.Data.Docs
       return true;
     }
 
-    public void IncInt(string FieldName)
+    public void IncInt32(string FieldName)
     {
       int pSrc, pRes;
       if (GetFieldPos(FieldName, out pSrc, out pRes))
@@ -1236,10 +1236,19 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Признаки индивидуальной буферизации значений полей.
-    /// В этот список поля должны добавляться вручную, после того, как они добавлены в список Struct
+    /// В этот список поля должны добавляться вручную, после того, как они добавлены в список <see cref="Struct"/>
     /// </summary>
     public DBxDocTypeIndividualCacheColumns IndividualCacheColumns { get { return _IndividualCacheColumns; } }
     private readonly DBxDocTypeIndividualCacheColumns _IndividualCacheColumns;
+
+    internal void UpdateIdColumnTypes()
+    {
+      foreach (DBxColumnStruct cs in _Struct.Columns)
+      {
+        if (!String.IsNullOrEmpty(cs.MasterTableName))
+          cs.ColumnType = DBxColumnType.Int32;
+      }
+    }
 
     #endregion
 
@@ -1282,7 +1291,7 @@ namespace FreeLibSet.Data.Docs
     {
       // Проверяем структуру объявления таблицы
       // Вызывается в DBxDocTypes Struct.CheckStruct();
-      string pk = DBxStructChecker.CheckTablePrimaryKeyInt32(realStruct);
+      string pk = DBxStructChecker.CheckTablePrimaryKeyInteger(realStruct);
       if (pk != "Id")
         throw new DBxDocTypeStructException(String.Format(Res.DBxDocTypes_Err_InvaldidPK,
           realStruct.TableName, pk));
@@ -1812,7 +1821,7 @@ namespace FreeLibSet.Data.Docs
 
       // Не-документные таблицы
       DBxTableStruct ts = new DBxTableStruct("DocTables");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", false);
       ts.Columns.AddString("DocTableName", 64, false);
       ts.Indexes.Add("DocTableName");
       dbs.Tables.Add(ts);
@@ -1824,22 +1833,28 @@ namespace FreeLibSet.Data.Docs
         ts = new DBxTableStruct(dt.Name);
 
         // Обязательные столбцы
-        ts.Columns.AddId(DBSDocType.Id);
+        ts.Columns.AddInt32(DBSDocType.Id, false);
         if (UseVersions)
         {
-          ts.Columns.AddInt(DBSDocType.Version, 0, short.MaxValue);
-          ts.Columns.AddInt(DBSDocType.Version2, 0, short.MaxValue);
+          ts.Columns.AddInt16(DBSDocType.Version, true);
+          ts.Columns.AddInt16(DBSDocType.Version2, true);
         }
         if (UseDeleted)
           ts.Columns.AddBoolean(DBSDocType.Deleted);
         if (UseTime)
           ts.Columns.AddDateTime(DBSDocType.CreateTime, true);
         if (UseUsers)
+        {
           ts.Columns.AddReference(DBSDocType.CreateUserId, UsersTableName, true, DBxRefType.Disallow);
+          ts.Columns.LastAdded.ColumnType = DBxColumnType.Int32;
+        }
         if (UseTime)
           ts.Columns.AddDateTime(DBSDocType.ChangeTime, true);
         if (UseUsers)
+        {
           ts.Columns.AddReference(DBSDocType.ChangeUserId, UsersTableName, true, DBxRefType.Disallow);
+          ts.Columns.LastAdded.ColumnType = DBxColumnType.Int32;
+        }
 
         // Копируем прикладные столбцы
         foreach (DBxColumnStruct cs in dt.Struct.Columns)
@@ -1860,14 +1875,15 @@ namespace FreeLibSet.Data.Docs
           ts = new DBxTableStruct(sdt.Name);
 
           // Обязательные столбцы
-          ts.Columns.AddId(DBSSubDocType.Id);
-          ts.Columns.AddReference(DBSSubDocType.DocId, dt.Name, false);
+          ts.Columns.AddInt32(DBSSubDocType.Id, false);
+          ts.Columns.AddReference(DBSSubDocType.DocId, dt.Name, false)
+             .ColumnType = DBxColumnType.Int32;
           if (UseDeleted)
             ts.Columns.AddBoolean(DBSSubDocType.Deleted);
           if (UseVersions)
           {
-            ts.Columns.AddInt(DBSSubDocType.StartVersion, 0, short.MaxValue);
-            ts.Columns.AddInt(DBSSubDocType.Version2, 0, short.MaxValue);
+            ts.Columns.AddInteger(DBSSubDocType.StartVersion, 0, short.MaxValue, true);
+            ts.Columns.AddInteger(DBSSubDocType.Version2, 0, short.MaxValue, true);
           }
 
           // Копируем прикладные столбцы
@@ -1904,15 +1920,15 @@ namespace FreeLibSet.Data.Docs
 
         // Не-документные таблицы
         DBxTableStruct ts = new DBxTableStruct("UserActions");
-        ts.Columns.AddId();
+        ts.Columns.AddInt32("Id", false);
         if (UseUsers)
-          ts.Columns.AddInt("UserId"); // псевдоссылочное поле на таблицу "Пользователи"
+          ts.Columns.AddInt32("UserId", true); // псевдоссылочное поле на таблицу "Пользователи"
         if (UseSessionId)
-          ts.Columns.AddInt("SessionId"); // псевдоссылочное поле "в никуда". Таблица сессий может реализовываться в пользовательском коде
+          ts.Columns.AddInt32("SessionId", true); // псевдоссылочное поле "в никуда". Таблица сессий может реализовываться в пользовательском коде
         ts.Columns.AddDateTime("StartTime", true); // 22.11.2018 Время начала редактирования
         ts.Columns.AddDateTime("ActionTime", false); // Время первого вызова ApplyChanges()
         ts.Columns.AddString("ActionInfo", ActionInfoMaxLength, false);
-        ts.Columns.AddInt("ApplyChangesCount", 0, short.MaxValue); // 22.12.2016 Количество вызовов ApplyChanges() (1,2,3 ...)
+        ts.Columns.AddInt16("ApplyChangesCount", true); // 22.12.2016 Количество вызовов ApplyChanges() (1,2,3 ...)
         ts.Columns.AddDateTime("ApplyChangesTime", true); // 22.12.2016 Время последнего вызова ApplyChanges()
         ts.Indexes.Add(new DBxColumns("ActionTime")); // 15.01.2017
         if (UseUsers)
@@ -1920,12 +1936,12 @@ namespace FreeLibSet.Data.Docs
         dbs.Tables.Add(ts);
 
         ts = new DBxTableStruct("DocActions");
-        ts.Columns.AddId();
+        ts.Columns.AddInt32("Id", false);
         ts.Columns.AddReference("UserActionId", "UserActions", true, DBxRefType.Delete);
-        ts.Columns.AddInt("DocTableId"); // псевдоссылочное поле на таблицу "DocTables"
-        ts.Columns.AddInt("DocId"); // псевдоссылочное поле на прикладную таблицу в db.mdb
-        ts.Columns.AddInt("Version", 0, short.MaxValue);
-        ts.Columns.AddInt("Action", DataTools.GetEnumRange(typeof(UndoAction)));
+        ts.Columns.AddInt32("DocTableId", true); // псевдоссылочное поле на таблицу "DocTables"
+        ts.Columns.AddInt32("DocId", true); // псевдоссылочное поле на прикладную таблицу в db.mdb
+        ts.Columns.AddInt16("Version", true);
+        ts.Columns.AddInteger("Action", DataTools.GetEnumRange(typeof(UndoAction)), false);
         ts.Indexes.Add("DocTableId,DocId,UserActionId");
         dbs.Tables.Add(ts);
 
@@ -1936,9 +1952,9 @@ namespace FreeLibSet.Data.Docs
           ts = new DBxTableStruct(dt.Name);
 
           // Обязательные столбцы
-          ts.Columns.AddId();
-          ts.Columns.AddInt("DocId"); // псевдоссылочное поле на прикладную таблицу в db.mdb
-          ts.Columns.AddInt("Version2", 0, short.MaxValue);
+          ts.Columns.AddInt32("Id", false);
+          ts.Columns.AddInt32("DocId", true); // псевдоссылочное поле на прикладную таблицу в db.mdb
+          ts.Columns.AddInt16("Version2", true);
 
           // Копируем прикладные столбцы
           foreach (DBxColumnStruct cs in dt.Struct.Columns)
@@ -1957,9 +1973,9 @@ namespace FreeLibSet.Data.Docs
             ts = new DBxTableStruct(sdt.Name);
 
             // Обязательные столбцы
-            ts.Columns.AddId();
-            ts.Columns.AddInt("SubDocId"); // псевдоссылочное поле на прикладную таблицу в db.mdb
-            ts.Columns.AddInt("Version2", 0, short.MaxValue);
+            ts.Columns.AddInt32("Id", false);
+            ts.Columns.AddInt32("SubDocId", true); // псевдоссылочное поле на прикладную таблицу в db.mdb
+            ts.Columns.AddInt16("Version2", true);
             ts.Columns.AddBoolean("Deleted");
 
             // Копируем прикладные столбцы
@@ -2023,6 +2039,7 @@ namespace FreeLibSet.Data.Docs
         return;
 
       GetReadySystemDocTypes();
+      UpdateIdColumnTypes();
 
       foreach (DBxDocType dt in this)
         dt.SetReadOnly();
@@ -2460,6 +2477,19 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
+    /// <summary>
+    /// Не предназначен для использования в прикладном коде
+    /// </summary>
+    public void UpdateIdColumnTypes()
+    {
+      foreach (DBxDocType dt in this)
+      {
+        dt.UpdateIdColumnTypes();
+        foreach(DBxSubDocType sdt in dt.SubDocs)
+          sdt.UpdateIdColumnTypes();
+      }
+    }
+
     #endregion
 
     #region InitDocTableIds
@@ -2485,7 +2515,7 @@ namespace FreeLibSet.Data.Docs
         foreach (DataRow srcRow in srcTable.Rows)
         {
           // Int32 Id = (int)SrcRow["Id"];
-          Int32 tableId = DataTools.GetInt(srcRow, "Id"); // 06.12.2017
+          Int32 tableId = DataTools.GetInt32(srcRow, "Id"); // 06.12.2017
           string tableName = DataTools.GetString(srcRow, "DocTableName");
           if (this.Contains(tableName))
           {
@@ -2505,7 +2535,7 @@ namespace FreeLibSet.Data.Docs
         {
           if (dt.TableId == 0)
           {
-            dt.TableId = mainCon.AddRecordWithIdResult("DocTables", "DocTableName", dt.Name);
+            dt.TableId = DataTools.GetInt32(mainCon.AddRecordWithIdResult("DocTables", "DocTableName", dt.Name));
           }
         }
 
@@ -2530,11 +2560,11 @@ namespace FreeLibSet.Data.Docs
     {
       foreach (DBxVTReference vtr in dt.VTRefs)
       {
-        Int32[] tableIds = new Int32[vtr.MasterTableNames.Count];
-        for (int i = 0; i < tableIds.Length; i++)
+        IdCollection<Int32> tableIds = new IdCollection<Int32>();
+        for (int i = 0; i < vtr.MasterTableNames.Count; i++)
         {
           DBxDocType refDT = this.GetRequired(vtr.MasterTableNames[i]);
-          tableIds[i] = refDT.TableId;
+          tableIds.Add(refDT.TableId);
         }
         vtr.MasterTableIds = tableIds;
       }

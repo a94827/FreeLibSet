@@ -63,15 +63,15 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DBxTableStruct ts1 = dbs.Tables["D1"];
       Assert.IsNotNull(ts1, "D1");
-      AssertColumn(ts1.Columns, "Id", DBxColumnType.Int, false, "D1");
+      AssertColumn(ts1.Columns, "Id", DBxColumnType.Int32, false, "D1");
       AssertColumn(ts1.Columns, "F101", DBxColumnType.String, false, "D1");
-      AssertColumn(ts1.Columns, "F102", DBxColumnType.Int, true, "D1");
+      AssertColumn(ts1.Columns, "F102", DBxColumnType.Int32, true, "D1");
       Assert.AreEqual("Id", ts1.PrimaryKey.AsString, "D1 Primary Key");
 
       DBxTableStruct ts11 = dbs.Tables["SD11"];
       Assert.IsNotNull(ts11, "SD11");
-      AssertColumn(ts11.Columns, "Id", DBxColumnType.Int, false, "SD11 table");
-      AssertColumn(ts11.Columns, "DocId", DBxColumnType.Int, false, "SD11 table");
+      AssertColumn(ts11.Columns, "Id", DBxColumnType.Int32, false, "SD11 table");
+      AssertColumn(ts11.Columns, "DocId", DBxColumnType.Int32, false, "SD11 table");
       Assert.AreEqual("D1", ts11.Columns["DocId"].MasterTableName, "SD11 MasterTableName");
       Assert.AreEqual(DBxRefType.Disallow, ts11.Columns["DocId"].RefType, "SD11 DocId RefType");
       AssertColumn(ts11.Columns, "F111", DBxColumnType.String, true, "SD11");
@@ -100,7 +100,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxTableStruct ts1 = dbs.Tables["D1"];
       if (useVersions)
       {
-        AssertColumn(ts1.Columns, "Version", DBxColumnType.Int, true, "D1");
+        AssertColumn(ts1.Columns, "Version", DBxColumnType.Int16, true, "D1");
         // Поле Version2 не проверяем, т.к. оно для внутренних целей
       }
       else
@@ -121,10 +121,10 @@ namespace ExtDBDocs_tests.Data_Docs
       }
       if (useUsers)
       {
-        AssertColumn(ts1.Columns, "CreateUserId", DBxColumnType.Int, null, "D1");
+        AssertColumn(ts1.Columns, "CreateUserId", DBxColumnType.Int32, null, "D1");
         Assert.AreEqual("D1", ts1.Columns["CreateUserId"].MasterTableName, "D1.CreateUserId.MasterTableName");
         Assert.AreEqual(DBxRefType.Disallow, ts1.Columns["CreateUserId"].RefType, "D1.CreateUserId.RefType");
-        AssertColumn(ts1.Columns, "ChangeUserId", DBxColumnType.Int, true, "D1");
+        AssertColumn(ts1.Columns, "ChangeUserId", DBxColumnType.Int32, true, "D1");
         Assert.AreEqual("D1", ts1.Columns["ChangeUserId"].MasterTableName, "D1.ChangeUserId.MasterTableName");
         Assert.AreEqual(DBxRefType.Disallow, ts1.Columns["ChangeUserId"].RefType, "D1.ChangeUserId.RefType");
       }
@@ -162,7 +162,7 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.IsNotNull(ts1, "D1");
       //AssertColumn(ts1.Columns, "Id", DBxColumnType.Int, false, "D1");
       AssertColumn(ts1.Columns, "F101", DBxColumnType.String, false, "D1");
-      AssertColumn(ts1.Columns, "F102", DBxColumnType.Int, true, "D1");
+      AssertColumn(ts1.Columns, "F102", DBxColumnType.Int32, true, "D1");
       //Assert.AreEqual("Id", ts1.PrimaryKey.AsString, "D1 Primary Key");
 
       DBxTableStruct ts11 = dbs.Tables["SD11"];
@@ -218,10 +218,12 @@ namespace ExtDBDocs_tests.Data_Docs
     {
       DBxDocTypes dbs = CreateTestSimpleDocTypes();
       DBxDocType dt = new DBxDocType("G21");
-      dt.Struct.Columns.AddReference("ParentId", "G21", true);
+      dt.Struct.Columns.AddReference("ParentId", "G21", true)
+        .ColumnType = DBxColumnType.Int32;
       dt.Struct.Columns.AddString("Name", 20, false);
       dbs.Add(dt);
-      dbs["D1"].Struct.Columns.AddReference("GroupId", "G21", true);
+      dbs["D1"].Struct.Columns.AddReference("GroupId", "G21", true)
+        .ColumnType = DBxColumnType.Int32;
       dbs["D1"].GroupRefColumnName = "GroupId";
       return dbs;
     }
@@ -254,7 +256,7 @@ namespace ExtDBDocs_tests.Data_Docs
         DocState = args.Doc.DocState;
 
         // Меняем значение
-        args.Doc.Values["F102"].SetInteger(123);
+        args.Doc.Values["F102"].SetInt32(123);
       }
 
       public int BeforeDeleteCount;
@@ -332,7 +334,7 @@ namespace ExtDBDocs_tests.Data_Docs
         tester.AssertCounts(1, 1, 0, 1, "Insert");
         Assert.AreEqual(DBxDocState.Insert, tester.DocState, "Insert - DocState");
         Assert.AreEqual("NEW", doc.Values["F101"].AsString, "Insert - F101"); // заменено BeforeInsert
-        Assert.AreEqual(123, doc.Values["F102"].AsInteger, "Insert - F102"); // заменено BeforeWrite
+        Assert.AreEqual(123, doc.Values["F102"].AsInt32, "Insert - F102"); // заменено BeforeWrite
 
         #endregion
 
@@ -342,12 +344,12 @@ namespace ExtDBDocs_tests.Data_Docs
         ds = new DBxDocSet(provider);
         doc = ds["D1"].Edit(docId);
         doc.Values["F101"].SetString("DEF");
-        doc.Values["F102"].SetInteger(456);
+        doc.Values["F102"].SetInt32(456);
         ds.ApplyChanges(true);
         tester.AssertCounts(0, 1, 0, 1, "Edit");
         Assert.AreEqual(DBxDocState.Edit, tester.DocState, "Edit - DocState");
         Assert.AreEqual("DEF", doc.Values["F101"].AsString, "Edit - F101"); // не поменялся
-        Assert.AreEqual(123, doc.Values["F102"].AsInteger, "Edit - F102");  // заменено BeforeWrite
+        Assert.AreEqual(123, doc.Values["F102"].AsInt32, "Edit - F102");  // заменено BeforeWrite
 
         #endregion
 
@@ -369,14 +371,14 @@ namespace ExtDBDocs_tests.Data_Docs
         doc = ds["D1"].Edit(docId);
         Assert.IsTrue(doc.Deleted, "Is deleted");
         Assert.AreEqual("DEF", doc.Values["F101"].AsString, "Restore - old F101");
-        Assert.AreEqual(123, doc.Values["F102"].AsInteger, "Restore - old F102");
+        Assert.AreEqual(123, doc.Values["F102"].AsInt32, "Restore - old F102");
         doc.Values["F101"].SetString("GHI");
-        doc.Values["F102"].SetInteger(789);
+        doc.Values["F102"].SetInt32(789);
         ds.ApplyChanges(true);
         tester.AssertCounts(1, 1, 0, 1, "Restore");
         Assert.AreEqual(DBxDocState.Edit, tester.DocState, "Restore - DocState");
         Assert.AreEqual("NEW", doc.Values["F101"].AsString, "Resore - F101"); // заменено BeforeInsert
-        Assert.AreEqual(123, doc.Values["F102"].AsInteger, "Edit - F102");  // заменено BeforeWrite
+        Assert.AreEqual(123, doc.Values["F102"].AsInt32, "Edit - F102");  // заменено BeforeWrite
 
         #endregion
       }
@@ -572,8 +574,8 @@ namespace ExtDBDocs_tests.Data_Docs
       dt.VTRefs.Add("V1");
       Assert.IsTrue(dt.Struct.Columns.Contains("V1TableId"));
       Assert.IsTrue(dt.Struct.Columns.Contains("V1DocId"));
-      Assert.AreEqual(DBxColumnType.Int, dt.Struct.Columns["V1TableId"].ColumnType, "V1TableId ColumnType");
-      Assert.AreEqual(DBxColumnType.Int, dt.Struct.Columns["V1DocId"].ColumnType, "V1DocId ColumnType");
+      Assert.AreEqual(DBxColumnType.Int32, dt.Struct.Columns["V1TableId"].ColumnType, "V1TableId ColumnType");
+      Assert.AreEqual(DBxColumnType.Int32, dt.Struct.Columns["V1DocId"].ColumnType, "V1DocId ColumnType");
       Assert.IsTrue(sut.HasVTRefs, "in DBxDocType");
 
       sut = CreateTestSimpleDocTypes();
@@ -723,9 +725,9 @@ namespace ExtDBDocs_tests.Data_Docs
       // Нужно создать столбцы вручную.
 
       DBxDocTypes sut = CreateTestSimpleDocTypes();
-      DBxColumnStruct colTableId = sut["D1"].Struct.Columns.AddInt("TableId", true);
-      DBxColumnStruct colDocId1 = sut["D1"].Struct.Columns.AddInt("DocId1", true);
-      DBxColumnStruct colDocId2 = sut["D1"].Struct.Columns.AddInt("DocId2", true);
+      DBxColumnStruct colTableId = sut["D1"].Struct.Columns.AddInt32("TableId", true);
+      DBxColumnStruct colDocId1 = sut["D1"].Struct.Columns.AddInt32("DocId1", true);
+      DBxColumnStruct colDocId2 = sut["D1"].Struct.Columns.AddInt32("DocId2", true);
 
       sut["D1"].VTRefs.Add(new DBxVTReference("VTR1", sut["D1"].Struct, colTableId, colDocId1));
       sut["D1"].VTRefs.Add(new DBxVTReference("VTR2", sut["D1"].Struct, colTableId, colDocId2));
@@ -736,9 +738,9 @@ namespace ExtDBDocs_tests.Data_Docs
     public void CheckStruct_VTRefs_SameDocIdColumn()
     {
       DBxDocTypes sut = CreateTestSimpleDocTypes();
-      DBxColumnStruct colTableId1 = sut["D1"].Struct.Columns.AddInt("TableId1", true);
-      DBxColumnStruct colTableId2 = sut["D1"].Struct.Columns.AddInt("TableId2", true);
-      DBxColumnStruct colDocId = sut["D1"].Struct.Columns.AddInt("DocId", true);
+      DBxColumnStruct colTableId1 = sut["D1"].Struct.Columns.AddInt32("TableId1", true);
+      DBxColumnStruct colTableId2 = sut["D1"].Struct.Columns.AddInt32("TableId2", true);
+      DBxColumnStruct colDocId = sut["D1"].Struct.Columns.AddInt32("DocId", true);
       sut["D1"].VTRefs.Add(new DBxVTReference("VTR1", sut["D1"].Struct, colTableId1, colDocId));
       sut["D1"].VTRefs.Add(new DBxVTReference("VTR2", sut["D1"].Struct, colTableId2, colDocId));
       Assert.Catch(delegate() { sut.CheckStruct(null); });
@@ -757,7 +759,7 @@ namespace ExtDBDocs_tests.Data_Docs
       dt.SingularTitle = "Test Doc";
       dt.PluralTitle = "Test Docs";
       dt.Struct.Columns.AddString("F101", 10, false);
-      dt.Struct.Columns.AddInt("F102", true);
+      dt.Struct.Columns.AddInt32("F102", true);
       dts.Add(dt);
 
       DBxSubDocType sdt = new DBxSubDocType("SD11");

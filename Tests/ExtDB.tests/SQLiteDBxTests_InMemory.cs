@@ -51,9 +51,10 @@ namespace ExtDB_tests.Data_SQLite
     {
       DBxStruct dbs = new DBxStruct();
       DBxTableStruct ts = dbs.Tables.Add("FirstTable");
-      ts.Columns.AddId();
-      ts.Columns.AddInt("Col1");
-      ts.Columns.AddReference("Col2", "FirstTable", true);
+      ts.Columns.AddInt32("Id", false);
+      ts.Columns.AddInt32("Col1", true);
+      ts.Columns.AddReference("Col2", "FirstTable", true)
+        .ColumnType = DBxColumnType.Int32;
 
       SQLiteDBx db = new SQLiteDBx();
       db.Struct = dbs;
@@ -79,7 +80,7 @@ namespace ExtDB_tests.Data_SQLite
       int sum;
       using (DBxCon con = new DBxCon(db.MainEntry))
       {
-        sum = DataTools.GetInt(con.GetSumValue("FirstTable", "Col1", null));
+        sum = DataTools.GetInt32(con.GetSumValue("FirstTable", "Col1", null));
       }
       return sum;
     }

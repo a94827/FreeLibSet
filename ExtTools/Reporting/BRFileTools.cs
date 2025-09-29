@@ -323,7 +323,7 @@ namespace FreeLibSet.Reporting
       if (String.IsNullOrEmpty(s))
         return;
 
-      string[] a = s.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+      string[] a = s.Split(StringTools.NewLineSeparators, StringSplitOptions.None);
       for (int i = 0; i < a.Length; i++)
       {
         int w1, h1;

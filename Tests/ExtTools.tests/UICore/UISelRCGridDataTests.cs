@@ -290,12 +290,12 @@ namespace ExtTools_tests.UICore
       sut.SelColumns.Codes = new string[] { "", "Col1", "" };
       Assert.AreEqual(new string[] { "", "Col1", "" }, sut.SelColumns.Codes, "#1");
 
-      string[] a2 = DataTools.CreateArray<string>(4, ""); // длинее, чем SourceData
+      string[] a2 = ArrayTools.CreateArray<string>(4, ""); // длинее, чем SourceData
       a2[2] = "Col1";
       sut.SelColumns.Codes = a2;
       Assert.AreEqual(new string[] { "", "", "Col1" }, sut.SelColumns.Codes, "#2");
 
-      string[] a3 = DataTools.CreateArray<string>(2, ""); // короче, чем SourceData
+      string[] a3 = ArrayTools.CreateArray<string>(2, ""); // короче, чем SourceData
       a3[0] = "Col1";
       sut.SelColumns.Codes = a3;
       Assert.AreEqual(new string[] { "Col1", "", "" }, sut.SelColumns.Codes, "#3");

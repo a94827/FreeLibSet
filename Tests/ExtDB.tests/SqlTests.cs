@@ -35,10 +35,10 @@ namespace ExtDB_tests.Data
       const string Guid0 = "00000000-0000-0000-0000-000000000000"; // Guid.Empty
 
       ts = _TestStruct.Tables.Add("Test1");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", false);
       ts.Columns.AddString("ColS", 10, true);
       ts.Columns.AddString("ColS2", 10, true);
-      ts.Columns.AddInt("ColI", true);
+      ts.Columns.AddInt32("ColI", true);
       ts.Columns.AddDouble("ColF", true);
       ts.Columns.AddDouble("ColF2", true);
       ts.Columns.AddBoolean("ColL");
@@ -69,13 +69,13 @@ namespace ExtDB_tests.Data
 
       #region CompareFilter
 
-      filters.Add(new FilterTestInfo(new CompareFilter("Id", "ColI", CompareKind.GreaterThan, false, DBxColumnType.Int), 4, 5));
-      filters.Add(new FilterTestInfo(new CompareFilter("Id", "ColI", CompareKind.GreaterThan, true, DBxColumnType.Int), 3, 4, 5));
-      filters.Add(new FilterTestInfo(new CompareFilter("Id", "ColI", CompareKind.LessThan, false, DBxColumnType.Int), 1, 2));
-      filters.Add(new FilterTestInfo(new CompareFilter("Id", "ColI", CompareKind.LessThan, true, DBxColumnType.Int), 1, 2));
+      filters.Add(new FilterTestInfo(new CompareFilter("Id", "ColI", CompareKind.GreaterThan, false, DBxColumnType.Int32), 4, 5));
+      filters.Add(new FilterTestInfo(new CompareFilter("Id", "ColI", CompareKind.GreaterThan, true, DBxColumnType.Int32), 3, 4, 5));
+      filters.Add(new FilterTestInfo(new CompareFilter("Id", "ColI", CompareKind.LessThan, false, DBxColumnType.Int32), 1, 2));
+      filters.Add(new FilterTestInfo(new CompareFilter("Id", "ColI", CompareKind.LessThan, true, DBxColumnType.Int32), 1, 2));
 
-      filters.Add(new FilterTestInfo(new CompareFilter("ColI", "ColF", CompareKind.Equal, false, DBxColumnType.Int), 4));
-      filters.Add(new FilterTestInfo(new CompareFilter("ColI", "ColF", CompareKind.Equal, true, DBxColumnType.Int), 3, 4));
+      filters.Add(new FilterTestInfo(new CompareFilter("ColI", "ColF", CompareKind.Equal, false, DBxColumnType.Int32), 4));
+      filters.Add(new FilterTestInfo(new CompareFilter("ColI", "ColF", CompareKind.Equal, true, DBxColumnType.Int32), 3, 4));
 
       filters.Add(new FilterTestInfo(new CompareFilter(new DBxFunction(DBxFunctionKind.Multiply, new DBxColumn("Id"), new DBxConst(10)), new DBxColumn("ColI"), CompareKind.Equal), 1, 2));
       filters.Add(new FilterTestInfo(new CompareFilter(new DBxFunction(DBxFunctionKind.Abs, new DBxColumn("ColI")), new DBxConst(10)), 1, 5));
@@ -93,12 +93,12 @@ namespace ExtDB_tests.Data
       filters.Add(new FilterTestInfo(new ValueFilter("Id", 3, CompareKind.LessThan), 1, 2));
       filters.Add(new FilterTestInfo(new ValueFilter("Id", 3, CompareKind.LessOrEqualThan), 1, 2, 3));
 
-      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.Equal, DBxColumnType.Int), 3, 4)); // DBNull считается 0
-      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.NotEqual, DBxColumnType.Int), 1, 2, 5));
-      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.GreaterThan, DBxColumnType.Int), 1, 2));
-      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.GreaterOrEqualThan, DBxColumnType.Int), 1, 2, 3, 4));
-      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.LessThan, DBxColumnType.Int), 5));
-      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.LessOrEqualThan, DBxColumnType.Int), 3, 4, 5));
+      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.Equal, DBxColumnType.Int32), 3, 4)); // DBNull считается 0
+      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.NotEqual, DBxColumnType.Int32), 1, 2, 5));
+      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.GreaterThan, DBxColumnType.Int32), 1, 2));
+      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.GreaterOrEqualThan, DBxColumnType.Int32), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.LessThan, DBxColumnType.Int32), 5));
+      filters.Add(new FilterTestInfo(new ValueFilter("ColI", 0, CompareKind.LessOrEqualThan, DBxColumnType.Int32), 3, 4, 5));
 
       filters.Add(new FilterTestInfo(new ValueFilter("ColF", 0.0, CompareKind.Equal), 2, 3, 4)); // DBNull считается 0
       filters.Add(new FilterTestInfo(new ValueFilter("ColF", 0.0, CompareKind.GreaterThan), 1));
@@ -129,74 +129,63 @@ namespace ExtDB_tests.Data
 
       // сравнение с NULL. Для DataView не работает
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColS", null, CompareKind.Equal, DBxColumnType.String), 3));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColI", null, CompareKind.Equal, DBxColumnType.Int), 3));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColF", null, CompareKind.Equal, DBxColumnType.Float), 2, 3));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColI", null, CompareKind.Equal, DBxColumnType.Int32), 3));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColF", null, CompareKind.Equal, DBxColumnType.Double), 2, 3));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColD", null, CompareKind.Equal, DBxColumnType.Date), 2, 3));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColG", null, CompareKind.Equal, DBxColumnType.Guid), 3));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView | TestCompat.TimeSpan, new ValueFilter("ColT", null, CompareKind.Equal, DBxColumnType.Time), 3));
 
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColS", null, CompareKind.NotEqual, DBxColumnType.String), 1, 2, 4, 5));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColI", null, CompareKind.NotEqual, DBxColumnType.Int), 1, 2, 4, 5));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColF", null, CompareKind.NotEqual, DBxColumnType.Float), 1, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColI", null, CompareKind.NotEqual, DBxColumnType.Int32), 1, 2, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColF", null, CompareKind.NotEqual, DBxColumnType.Double), 1, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColD", null, CompareKind.NotEqual, DBxColumnType.Date), 1, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new ValueFilter("ColG", null, CompareKind.NotEqual, DBxColumnType.Guid), 1, 2, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView | TestCompat.TimeSpan, new ValueFilter("ColT", null, CompareKind.NotEqual, DBxColumnType.Time), 1, 2, 4, 5));
 
       #endregion
 
-      #region IdsFilter
-
-      filters.Add(new FilterTestInfo(new IdsFilter(3), 3));
-      filters.Add(new FilterTestInfo(new IdsFilter(666)));
-      filters.Add(new FilterTestInfo(new IdsFilter(new Int32[] { 4, 666 }), 4));
-      filters.Add(new FilterTestInfo(new IdsFilter(IdList.FromArray(new Int32[] { 4, 666 })), 4));
-      filters.Add(new FilterTestInfo(new IdsFilter("ColI", 10), 1));
-      filters.Add(new FilterTestInfo(new IdsFilter("ColI", 666)));
-
-      #endregion
-
-      #region ValuesFilter
+      #region ValueInListFilter
 
       // Нужно отличать случаи с одним значением в массиве, т.к. они форматируются без использования конструкции "IN"
 
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColS", new string[] { "abcdefghij", "AAA" }), 1, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColS", new string[] { "AAA", "" }), 1, 3, 4));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColS", new string[] { "AAA" }), 1));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColS", new string[] { "" }), 3, 4));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColS", new string[] { "abcdefghij", "AAA" }), 1, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColS", new string[] { "AAA", "" }), 1, 3, 4));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColS", new string[] { "AAA" }), 1));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColS", new string[] { "" }), 3, 4));
 
-      filters.Add(new FilterTestInfo(new ValuesFilter("Id", new Int32[] { 4, 3, 2 }), 2, 3, 4));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColI", new Int32[] { 10, 20 }), 1, 2));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColI", new Int32[] { 0, 10, 20 }), 1, 2, 3, 4));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColI", new Int32[] { 20 }), 2));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColI", new Int32[] { 0 }), 3, 4));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("Id", new Int32[] { 4, 3, 2 }), 2, 3, 4));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColI", new Int32[] { 10, 20 }), 1, 2));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColI", new Int32[] { 0, 10, 20 }), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColI", new Int32[] { 20 }), 2));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColI", new Int32[] { 0 }), 3, 4));
 
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColF", new double[] { -5.0, 5.0 }), 1, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColF", new int[] { -5, 5 }, DBxColumnType.Float), 1, 5)); // Преобразование типа данных
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColF", new int[] { 0, 5 }, DBxColumnType.Float), 1, 2, 3, 4));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColF", new double[] { 5.0 }), 1));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColF", new int[] { 5 }, DBxColumnType.Float), 1)); // Преобразование типа данных
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColF", new int[] { 0 }, DBxColumnType.Float), 2, 3, 4));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColF", new double[] { -5.0, 5.0 }), 1, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColF", new int[] { -5, 5 }, DBxColumnType.Double), 1, 5)); // Преобразование типа данных
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColF", new int[] { 0, 5 }, DBxColumnType.Double), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColF", new double[] { 5.0 }), 1));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColF", new int[] { 5 }, DBxColumnType.Double), 1)); // Преобразование типа данных
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColF", new int[] { 0 }, DBxColumnType.Double), 2, 3, 4));
 
-      // Реально ValuesFilter не используется для Bool
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColL", new bool[] { false }), 2, 3, 4));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColL", new bool[] { true }), 1, 5));
+      // Реально ValueInListFilter не используется для Boolean
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColL", new bool[] { false }), 2, 3, 4));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColL", new bool[] { true }), 1, 5));
 
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColD", new DateTime[] { new DateTime(2023, 1, 1), new DateTime(2023, 1, 2) }), 1, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColD", new DateTime[] { new DateTime(2023, 1, 2) }), 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColD", new DateTime[] { new DateTime(2023, 1, 1), new DateTime(2023, 1, 2) }), 1, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColD", new DateTime[] { new DateTime(2023, 1, 2) }), 5));
 
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new Guid[] { new Guid(Guid1), new Guid(Guid2) }), 1, 4, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new string[] { Guid1, Guid2 }, DBxColumnType.Guid), 1, 4, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new Guid[] { new Guid(Guid1), new Guid(Guid0) }), 1, 2, 3, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new string[] { Guid1, Guid0 }, DBxColumnType.Guid), 1, 2, 3, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new Guid[] { new Guid(Guid1) }, DBxColumnType.Guid), 1, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new string[] { Guid1 }, DBxColumnType.Guid), 1, 5));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new Guid[] { Guid.Empty }, DBxColumnType.Guid), 2, 3));
-      filters.Add(new FilterTestInfo(new ValuesFilter("ColG", new string[] { Guid0 }, DBxColumnType.Guid), 2, 3));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColG", new Guid[] { new Guid(Guid1), new Guid(Guid2) }), 1, 4, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColG", new string[] { Guid1, Guid2 }, DBxColumnType.Guid), 1, 4, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColG", new Guid[] { new Guid(Guid1), new Guid(Guid0) }), 1, 2, 3, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColG", new string[] { Guid1, Guid0 }, DBxColumnType.Guid), 1, 2, 3, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColG", new Guid[] { new Guid(Guid1) }, DBxColumnType.Guid), 1, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColG", new string[] { Guid1 }, DBxColumnType.Guid), 1, 5));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColG", new Guid[] { Guid.Empty }, DBxColumnType.Guid), 2, 3));
+      filters.Add(new FilterTestInfo(new ValueInListFilter("ColG", new string[] { Guid0 }, DBxColumnType.Guid), 2, 3));
 
-      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56), new TimeSpan(12, 34, 57) }), 1, 4, 5));
-      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56), TimeSpan.Zero }), 1, 2, 3, 4));
-      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValuesFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56) }), 1, 4));
-      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValuesFilter("ColT", new TimeSpan[] { TimeSpan.Zero }), 2, 3));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValueInListFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56), new TimeSpan(12, 34, 57) }), 1, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValueInListFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56), TimeSpan.Zero }), 1, 2, 3, 4));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValueInListFilter("ColT", new TimeSpan[] { new TimeSpan(12, 34, 56) }), 1, 4));
+      filters.Add(new FilterTestInfo(TestCompat.All | TestCompat.TimeSpan, new ValueInListFilter("ColT", new TimeSpan[] { TimeSpan.Zero }), 2, 3));
 
       #endregion
 
@@ -205,7 +194,7 @@ namespace ExtDB_tests.Data
       filters.Add(new FilterTestInfo(new AndFilter(new ValueFilter("Id", 2, CompareKind.GreaterOrEqualThan),
         new ValueFilter("Id", 4, CompareKind.LessOrEqualThan)), 2, 3, 4));
       filters.Add(new FilterTestInfo(new AndFilter(new ValueFilter("ColL", true),
-        new OrFilter(new ValueFilter("ColD", new DateTime(2023, 1, 1)), new IdsFilter(new Int32[] { 2, 3 }))), 1));
+        new OrFilter(new ValueFilter("ColD", new DateTime(2023, 1, 1)), new ValueInListFilter("Id", new Int32[] { 2, 3 }))), 1));
       filters.Add(new FilterTestInfo(AndFilter.FromArray(new DBxFilter[] {
         new ValueFilter("Id", 2, CompareKind.GreaterOrEqualThan),
         new ValueFilter("Id", 4, CompareKind.LessOrEqualThan),
@@ -224,7 +213,7 @@ namespace ExtDB_tests.Data
       filters.Add(new FilterTestInfo(new OrFilter(new ValueFilter("Id", 2, CompareKind.LessOrEqualThan),
         new ValueFilter("Id", 4, CompareKind.GreaterOrEqualThan)), 1, 2, 4, 5));
       filters.Add(new FilterTestInfo(new OrFilter(new ValueFilter("ColL", true),
-        new AndFilter(new ValueFilter("ColD", new DateTime(2023, 1, 1)), new IdsFilter(new Int32[] { 1, 2 }))), 1, 5));
+        new AndFilter(new ValueFilter("ColD", new DateTime(2023, 1, 1)), new ValueInListFilter("Id", new Int32[] { 1, 2 }))), 1, 5));
       filters.Add(new FilterTestInfo(OrFilter.FromArray(new DBxFilter[] {
         new ValueFilter("Id", 2, CompareKind.Equal),
         new ValueFilter("Id", 4, CompareKind.GreaterOrEqualThan),
@@ -240,11 +229,11 @@ namespace ExtDB_tests.Data
 
       #region NotFilter
 
-      filters.Add(new FilterTestInfo(new NotFilter(new IdsFilter(new Int32[] { 1, 4 })), 2, 3, 5));
+      filters.Add(new FilterTestInfo(new NotFilter(new ValueInListFilter("Id", new Int32[] { 1, 4 })), 2, 3, 5));
       filters.Add(new FilterTestInfo(new NotFilter(new StartsWithFilter("ColS", "AA")), 2, 3, 4, 5));
 
-      filters.Add(new FilterTestInfo(!new IdsFilter(new Int32[] { 1, 4 }), 2, 3, 5));
-      filters.Add(new FilterTestInfo(!!new IdsFilter(new Int32[] { 1, 4 }), 1, 4));
+      filters.Add(new FilterTestInfo(!new ValueInListFilter("Id", new Int32[] { 1, 4 }), 2, 3, 5));
+      filters.Add(new FilterTestInfo(!!new ValueInListFilter("Id", new Int32[] { 1, 4 }), 1, 4));
 
       #endregion
 
@@ -328,8 +317,8 @@ namespace ExtDB_tests.Data
       #region NotNullFilter
 
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColS", DBxColumnType.String), 1, 2, 4, 5));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColI", DBxColumnType.Int), 1, 2, 4, 5));
-      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColF", DBxColumnType.Float), 1, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColI", DBxColumnType.Int32), 1, 2, 4, 5));
+      filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColF", DBxColumnType.Double), 1, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColD", DBxColumnType.Date), 1, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView, new NotNullFilter("ColDT", DBxColumnType.DateTime), 1, 2, 4, 5));
       filters.Add(new FilterTestInfo(TestCompat.AllButDataView | TestCompat.TimeSpan, new NotNullFilter("ColT", DBxColumnType.Time), 1, 2, 4, 5));
@@ -636,10 +625,10 @@ namespace ExtDB_tests.Data
       #region Тестовая таблица 2 - запросы SELECT с фильтрами и группировками
 
       ts = _TestStruct.Tables.Add("Test2");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", false);
       ts.Columns.AddString("ColS", 10, true);
-      ts.Columns.AddInt("ColI", true);
-      ts.Columns.AddInt("ColI2", false);
+      ts.Columns.AddInt32("ColI", true);
+      ts.Columns.AddInt32("ColI2", false);
 
       tbl = ts.CreateDataTable();
       _TestData.Tables.Add(tbl);
@@ -665,9 +654,10 @@ namespace ExtDB_tests.Data
       #region Тестовые таблицы 3 и 4 - связи между таблицами
 
       ts = _TestStruct.Tables.Add("Test3");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", false);
       ts.Columns.AddString("Name", 10, false);
-      ts.Columns.AddReference("ColR2", "Test2", false);
+      ts.Columns.AddReference("ColR2", "Test2", false)
+         .ColumnType = DBxColumnType.Int32; // иначе возникнет ошибка в CreateDataTable()
 
       tbl = ts.CreateDataTable();
       _TestData.Tables.Add(tbl);
@@ -682,9 +672,10 @@ namespace ExtDB_tests.Data
       tbl.Rows.Add(8, "N308", 5);
 
       ts = _TestStruct.Tables.Add("Test4");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", false);
       ts.Columns.AddString("Name", 10, false);
-      ts.Columns.AddReference("ColR3", "Test3", true);
+      ts.Columns.AddReference("ColR3", "Test3", true)
+         .ColumnType = DBxColumnType.Int32; // иначе возникнет ошибка в CreateDataTable()
 
       tbl = ts.CreateDataTable();
       _TestData.Tables.Add(tbl);
@@ -957,7 +948,7 @@ namespace ExtDB_tests.Data
       DBxSqlBuffer buffer = new DBxSqlBuffer();
       buffer.FormatFilter(info.Filter);
       DataRow[] rows = TestData.Tables["Test1"].Select(buffer.SB.ToString());
-      Int32[] res = DataTools.GetIds(rows);
+      IIdSet<Int32> res = IdTools.GetIdsFromColumn<Int32>(rows, "Id");
       CollectionAssert.AreEquivalent(info.WantedIds, res);
     }
 
@@ -967,18 +958,18 @@ namespace ExtDB_tests.Data
       using (DataView dv = new DataView(TestData.Tables["Test1"]))
       {
         dv.RowFilter = info.Filter.ToString();
-        Int32[] res1 = DataTools.GetIds(dv);
+        IIdSet<Int32> res1 = IdTools.GetIdsFromColumn<Int32>(dv, "Id");
         CollectionAssert.AreEquivalent(info.WantedIds, res1, "ToString()");
 
         dv.RowFilter = "";
         info.Filter.AddToDataViewRowFilter(dv);
-        Int32[] res2 = DataTools.GetIds(dv);
+        IIdSet<Int32> res2 = IdTools.GetIdsFromColumn<Int32>(dv, "Id");
         CollectionAssert.AreEquivalent(info.WantedIds, res2, "AddToDataViewRowFilter(), empty");
 
         dv.RowFilter = "[Id]>2";
         info.Filter.AddToDataViewRowFilter(dv);
-        Int32[] res3 = DataTools.GetIds(dv);
-        IdList wantedIds3 = new IdList(info.WantedIds);
+        IIdSet<Int32> res3 = IdTools.GetIdsFromColumn<Int32>(dv, "Id");
+        IdList<Int32> wantedIds3 = new IdList<Int32>(info.WantedIds);
         wantedIds3.Remove(1);
         wantedIds3.Remove(2);
         CollectionAssert.AreEquivalent(wantedIds3, res3, "AddToDataViewRowFilter(), AND");
@@ -1084,7 +1075,7 @@ namespace ExtDB_tests.Data
     public void TestFilter(FilterTestInfo info)
     {
       PrepareCon();
-      IdList res = Con.GetIds(GetTestTableName("Test1"), info.Filter);
+      IIdSet<Int32> res =IdTools.AsIdSet<Int32> (Con.GetIds(GetTestTableName("Test1"), info.Filter));
       CollectionAssert.AreEquivalent(info.WantedIds, res);
     }
 
@@ -1125,8 +1116,8 @@ namespace ExtDB_tests.Data
           }
           if (wanted is Boolean)
           {
-            if (DataTools.IsIntegerType(res.GetType()))
-              res = DataTools.GetBool(res);
+            if (MathTools.IsIntegerType(res.GetType()))
+              res = DataTools.GetBoolean(res);
           }
           if (wanted is TimeSpan)
           {
@@ -1152,7 +1143,7 @@ namespace ExtDB_tests.Data
       si.Expressions.Add("Id");
       si.Where = new ValueFilter("ColI", 2);
       DataTable resTable = Con.FillSelect(si);
-      Int32[] res = DataTools.GetIdsFromColumn(resTable, "Id");
+      IIdSet<Int32> res = IdTools.GetIdsFromColumn<Int32>(resTable, "Id");
       CollectionAssert.AreEquivalent(new Int32[] { 8, 9, 11, 15 }, res);
     }
 
@@ -1167,7 +1158,7 @@ namespace ExtDB_tests.Data
       si.OrderBy = DBxOrder.FromDataViewSort("Id DESC");
       DataTable resTable = Con.FillSelect(si);
 
-      Int32[] res = DataTools.GetIdsFromColumn(resTable, "Id");
+      IIdSet<Int32> res = IdTools.GetIdsFromColumn<Int32>(resTable, "Id");
       CollectionAssert.AreEqual(new Int32[] { 15, 11, 9, 8 }, res);
     }
 
@@ -1182,7 +1173,7 @@ namespace ExtDB_tests.Data
       si.OrderBy = DBxOrder.FromDataViewSort("ColS,Id");
       DataTable resTable = Con.FillSelect(si);
 
-      Int32[] res = DataTools.GetIdsFromColumn(resTable, "Id");
+      IIdSet<Int32> res = IdTools.GetIdsFromColumn<Int32>(resTable, "Id");
       CollectionAssert.AreEqual(new Int32[] { 9, 15, 8, 11 }, res);
     }
 
@@ -1267,7 +1258,7 @@ namespace ExtDB_tests.Data
       si.MaxRecordCount = 3;
       DataTable resTable = Con.FillSelect(si);
 
-      Int32[] res = DataTools.GetIdsFromColumn(resTable, "Id");
+      IIdSet<Int32> res = IdTools.GetIdsFromColumn<Int32>(resTable, "Id");
       CollectionAssert.AreEqual(new Int32[] { 15, 14, 13 }, res);
     }
 
@@ -1615,12 +1606,16 @@ namespace ExtDB_tests.Data_SqlClient
       {
         if (_Compat == 0)
         {
-          using (SqlDBx db = CreateDB())
+          _Compat = TestCompat.MSSQL;
+          try
           {
-            _Compat = TestCompat.MSSQL;
-            if (db.IsSqlServer2008orNewer)
-              _Compat |= TestCompat.TimeSpan;
+            using (SqlDBx db = CreateDB())
+            {
+              if (db.IsSqlServer2008orNewer)
+                _Compat |= TestCompat.TimeSpan;
+            }
           }
+          catch { }
         }
         return _Compat; 
       }

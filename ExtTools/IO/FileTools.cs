@@ -557,7 +557,7 @@ namespace FreeLibSet.IO
         // 31.12.2020
         if (fileName.StartsWith("\\\\", StringComparison.Ordinal))
         {
-          if (DataTools.GetCharCount(fileName, '\\') < 4)
+          if (StringTools.GetCharCount(fileName, '\\') < 4)
           {
             errorText = Res.FileTools_Msg_WindowsNetFilePathFewSeparators;
             return false;
@@ -1048,7 +1048,7 @@ namespace FreeLibSet.IO
       }
       catch // 27.12.2019. Перехватываем IOException на случай повреждения структуры каталогов
       {
-        a = DataTools.EmptyStrings;
+        a = EmptyArray<string>.Empty;
         allDeleted = false;
       }
       for (int i = 0; i < a.Length; i++)
@@ -1074,7 +1074,7 @@ namespace FreeLibSet.IO
       }
       catch // 27.12.2019. Перехватываем IOException на случай повреждения структуры каталогов
       {
-        a = DataTools.EmptyStrings;
+        a = EmptyArray<string>.Empty;
         allDeleted = false;
       }
       for (int i = 0; i < a.Length; i++)
@@ -1279,19 +1279,6 @@ namespace FreeLibSet.IO
       }
     }
 
-
-    /// <summary>
-    /// Копирование исходного потока <paramref name="srcStream"/> в результирующий <paramref name="dstStream"/>.
-    /// Выполняется позиционирование исходного потока на начало.
-    /// </summary>
-    /// <param name="srcStream">Исходный поток</param>
-    /// <param name="dstStream">Записываемый поток</param>
-    [Obsolete("Используйте перегрузку с 3 аргументами", false)]
-    public static void CopyStream(Stream srcStream, Stream dstStream)
-    {
-      CopyStream(srcStream, dstStream, true);
-    }
-
     /// <summary>
     /// Копирование исходного потока <paramref name="srcStream"/> в результирующий <paramref name="dstStream"/>.
     /// </summary>
@@ -1494,216 +1481,6 @@ namespace FreeLibSet.IO
         }
       }
     }
-
-    #endregion
-
-    #region Чтение и запись XML-документов
-
-    #region Запись
-
-    /// <summary>
-    /// Запись XML-документа в текстовый файл.
-    /// Используется кодировка, заданная в декларации XML-документа или unicode, если декларации нет.
-    /// Выполняется красивое форматирование документа.
-    /// </summary>
-    /// <param name="filePath">Имя файла для записи</param>
-    /// <param name="xmlDoc">Записываемый документ</param>
-    public static void WriteXmlDocument(AbsPath filePath, XmlDocument xmlDoc)
-    {
-      if (filePath.IsEmpty)
-        throw ExceptionFactory.ArgIsEmpty("filePath");
-
-      Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
-      XmlWriterSettings settings = new XmlWriterSettings();
-      settings.NewLineChars = "\r\n";
-      settings.Encoding = enc;
-      settings.Indent = true;
-      settings.IndentChars = "  ";
-      XmlWriter wrt = XmlWriter.Create(filePath.Path, settings);
-      try
-      {
-        xmlDoc.WriteTo(wrt);
-      }
-      finally
-      {
-        wrt.Close();
-      }
-    }
-
-    /// <summary>
-    /// Запись XML-документа в текстовый файл, заданный как поток (например, <see cref="MemoryStream"/>).
-    /// Используется кодировка, заданная в декларации XML-документа или unicode,
-    /// если декларации нет.
-    /// Выполняется красивое форматирование документа.
-    /// </summary>
-    /// <param name="outStream">Поток для записи</param>
-    /// <param name="xmlDoc">Записываемый документ</param>
-    public static void WriteXmlDocument(Stream outStream, XmlDocument xmlDoc)
-    {
-      if (outStream == null)
-        throw new ArgumentNullException("outStream");
-      if (xmlDoc == null)
-        throw new ArgumentNullException("xmlDoc");
-
-      Encoding enc = DataTools.GetXmlEncoding(xmlDoc);
-      XmlWriterSettings settings = new XmlWriterSettings();
-      settings.NewLineChars = "\r\n";
-      settings.Encoding = enc;
-      settings.Indent = true;
-      settings.IndentChars = "  ";
-      StreamWriter wrt1 = new StreamWriter(outStream, enc);
-      XmlWriter wrt2 = XmlWriter.Create(wrt1, settings);
-      try
-      {
-        xmlDoc.WriteTo(wrt2);
-      }
-      finally
-      {
-        wrt2.Close();
-        wrt1.Close();
-      }
-    }
-
-    #endregion
-
-    #region Чтение
-
-    /// <summary>
-    /// Чтение XML-документа.
-    /// Вызывает <see cref="XmlDocument.Load(string)"/>.
-    /// </summary>
-    /// <param name="filePath">Путь к файлу</param>
-    /// <returns>XML-документ</returns>
-    public static XmlDocument ReadXmlDocument(AbsPath filePath)
-    {
-      if (filePath.IsEmpty)
-        throw ExceptionFactory.ArgIsEmpty("filePath");
-
-      XmlDocument xmlDoc = new XmlDocument();
-      xmlDoc.XmlResolver = null; // 16.01.2024
-      xmlDoc.Load(filePath.Path);
-      return xmlDoc;
-    }
-
-    /// <summary>
-    /// Чтение XML-документа.
-    /// Вызывает <see cref="XmlDocument.Load(Stream)"/>.
-    /// </summary>
-    /// <param name="inStream">Поток для загрузки XML-документа</param>
-    /// <returns>XML-документ</returns>
-    public static XmlDocument ReadXmlDocument(Stream inStream)
-    {
-      if (inStream == null)
-        throw new ArgumentNullException("inStream");
-
-      XmlDocument xmlDoc = new XmlDocument();
-      xmlDoc.XmlResolver = null; // 16.01.2024
-      xmlDoc.Load(inStream);
-      return xmlDoc;
-    }
-
-    #endregion
-
-    #region Проверка начала файла
-
-    /// <summary>
-    /// Начало любого XML-файла в однобайтной кодировке (например, 1251 или 866)
-    /// </summary>
-    private static readonly byte[] _XmlStartAnsiBytes = new byte[] { 0x3c, 0x3f, 0x78, 0x6d, 0x6c, 0x20 };
-
-
-    /// <summary>
-    /// Начало любого XML-файла в кодировке utf-8
-    /// </summary>
-    private static readonly byte[] _XmlStartUtf8Bytes = new byte[] { 0xEF, 0xBB, 0xBF, 0x3c, 0x3f, 0x78, 0x6d, 0x6c, 0x20 };
-
-
-    /// <summary>
-    /// Начало любого XML-файла в кодировке utf-16
-    /// </summary>
-    private static readonly byte[] _XmlStartUtf16Bytes = new byte[] { 0xFF, 0xFE, 0x3c, 0x00, 0x3f, 0x00, 0x78, 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20, 0x00 };
-
-    /// <summary>
-    /// Начало любого XML-файла в кодировке utf-16BE
-    /// </summary>
-    private static readonly byte[] _XmlStartUtf16BEBytes = new byte[] { 0xFE, 0xFF, 0x00, 0x3c, 0x00, 0x3f, 0x00, 0x78, 0x00, 0x6d, 0x00, 0x6c, 0x00, 0x20 };
-
-    /// <summary>
-    /// Начало любого XML-файла в кодировке utf-32
-    /// </summary>
-    private static readonly byte[] _XmlStartUtf32Bytes = new byte[] { 0xFF , 0xFE , 0x00 , 0x00 ,
-                                                                     0x3c , 0x00 , 0x00 , 0x00 ,
-                                                                     0x3f, 0x00, 0x00, 0x00,
-                                                                     0x78, 0x00, 0x00, 0x00,
-                                                                     0x6d, 0x00, 0x00, 0x00,
-                                                                     0x6c, 0x00, 0x00, 0x00,
-                                                                     0x20, 0x00, 0x00, 0x00};
-    /// <summary>
-    /// Начало любого XML-файла в кодировке utf-32BE
-    /// </summary>
-    private static readonly byte[] _XmlStartUtf32BEBytes = new byte[] { 0x00, 0x00, 0xFE, 0xFF,
-                                                                       0x00, 0x00, 0x00, 0x3c,
-                                                                       0x00, 0x00, 0x00, 0x3f,
-                                                                       0x00, 0x00, 0x00, 0x78,
-                                                                       0x00, 0x00, 0x00, 0x6d,
-                                                                       0x00, 0x00, 0x00, 0x6c,
-                                                                       0x00, 0x00, 0x00, 0x20};
-
-    /// <summary>
-    /// Массив возможных "начал" файлов
-    /// </summary>
-    private static readonly byte[][] _XmlStartAnyBytes = new byte[][] { _XmlStartAnsiBytes, _XmlStartUtf8Bytes,
-      _XmlStartUtf16Bytes, _XmlStartUtf16BEBytes, _XmlStartUtf32Bytes, _XmlStartUtf32BEBytes };
-
-    /// <summary>
-    /// Возвращает true, если байты потока, начиная с текущей позиции, соответствуют XML-файлу в любой (определяемой) кодировке
-    /// Функция применяется для проверки загруженного в память файла неизвестного
-    /// содержимого перед вызовом <see cref="XmlDocument.Load(Stream)"/>, чтобы избежать лишнего вызова
-    /// исключения, когда файл может быть не-XML документом.
-    /// Проверяется только начало файла, а не корректность всего XML-документа.
-    /// Поток должен поддерживать позиционирование, так как используется свойство <see cref="Stream.Position"/>. 
-    /// В противном случае будет сгенерировано <see cref="NotSupportedException"/>
-    /// </summary>
-    /// <param name="inStream">Открытый на чтение поток</param>
-    /// <returns>true, если есть смысл попытаться преобразовать файл в XML-формат</returns>
-    public static bool IsValidXmlStart(Stream inStream)
-    {
-      if (inStream == null)
-        return false;
-
-      for (int i = 0; i < _XmlStartAnyBytes.Length; i++)
-      {
-        if (StartsWith(inStream, _XmlStartAnyBytes[i]))
-          return true;
-      }
-
-      return false;
-    }
-
-    /// <summary>
-    /// Возвращает true, если байты потока, начиная с текущей позиции, соответствуют XML-файлу в любой (определяемой) кодировке
-    /// Функция применяется для проверки загруженного в память файла неизвестного
-    /// содержимого перед вызовом <see cref="XmlDocument.Load(string)"/>, чтобы избежать лишнего вызова
-    /// исключения, когда файл может быть не-XML документом.
-    /// Проверяется только начало файла, а не корректность всего XML-документа.
-    /// Рекомендуется использовать перегрузку с аргументом <see cref="Stream"/>, во избежание повторного открытия файла, если планируется дальнейшая загрузка документа
-    /// </summary>
-    /// <param name="filePath">Путь к файлу</param>
-    /// <returns>true, если есть смысл попытаться преобразовать файл в XML-формат</returns>
-    public static bool IsValidXmlStart(AbsPath filePath)
-    {
-      if (filePath.IsEmpty)
-        return false;
-      if (!File.Exists(filePath.Path))
-        return false;
-
-      using (FileStream stream = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read))
-      {
-        return IsValidXmlStart(stream);
-      }
-    }
-
-    #endregion
 
     #endregion
 
@@ -2390,53 +2167,6 @@ namespace FreeLibSet.IO
     {
       // Обязательно нужен отдельный метод, чтобы сборка Mono.Posix.dll не пыталась загружаться в Windows
       return new AbsPath(Mono.Unix.UnixPath.GetRealPath(path.Path));
-    }
-
-    #endregion
-
-    #region Вычисление ХЭШ-сумм
-
-    /// <summary>
-    /// Получение хэш-суммы данных из потока по алгоритму MD5.
-    /// Возвращает результат в виде 32-разрядной строки с 16-ричными символами.
-    /// Если <paramref name="stream"/>=null, то возвращается хэш-сумма для массива нулевой длины.
-    /// Для расчета суммы для массива байтов или строки используйте методы в <see cref="DataTools"/>.
-    /// </summary>
-    /// <param name="stream">Поток данных для чтения</param>
-    /// <returns>Строка хэш-суммы</returns>
-    public static string MD5Sum(Stream stream)
-    {
-      if (stream == null)
-        return DataTools.MD5Sum(new byte[0]);
-      System.Security.Cryptography.MD5 md5Hasher = System.Security.Cryptography.MD5.Create();
-      byte[] hashRes = md5Hasher.ComputeHash(stream);
-      return DataTools.BytesToHex(hashRes, false);
-    }
-
-    /// <summary>
-    /// Получение хэш-суммы для файла по алгоритму MD5.
-    /// Возвращает результат в виде 32-разрядной строки с 16-ричными символами.
-    /// Файл должен существовать.
-    /// Для расчета суммы для массива байтов или строки используйте методы в <see cref="DataTools"/>.
-    /// </summary>
-    /// <param name="filePath">Путь к файлу</param>
-    /// <returns>Строка хэш-суммы</returns>
-    public static string MD5Sum(AbsPath filePath)
-    {
-      if (filePath.IsEmpty)
-        throw ExceptionFactory.ArgIsEmpty("filePath");
-
-      string str;
-      FileStream fs = new FileStream(filePath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-      try
-      {
-        str = MD5Sum(fs);
-      }
-      finally
-      {
-        fs.Close();
-      }
-      return str;
     }
 
     #endregion

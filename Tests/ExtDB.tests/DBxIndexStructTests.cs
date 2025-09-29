@@ -48,7 +48,7 @@ namespace ExtDB_tests.Data
       DBxIndexStruct sut = new DBxIndexStruct("Index1", new DBxColumns("F1"));
 
       DBxTableStruct ts = new DBxTableStruct("T1");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", true);
       ts.Columns.AddString("F1", 10, false);
       ts.Indexes.Add(sut);
 
@@ -69,7 +69,7 @@ namespace ExtDB_tests.Data
       DBxIndexStruct sut = new DBxIndexStruct("Index123", new DBxColumns("F1"));
       sut.Comment = "XXX";
       DBxTableStruct ts = new DBxTableStruct("T1");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", true);
       ts.Columns.AddString("F1", 10, false);
       ts.Indexes.Add(sut);
       ts.SetReadOnly();

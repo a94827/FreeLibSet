@@ -373,7 +373,7 @@ namespace FreeLibSet.Data.Docs
       return DBxCacheLoadResponse.Merge(resps.ToArray());
     }
 
-    void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstId)
+    void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstId)
     {
       // Ничего не делаем
     }

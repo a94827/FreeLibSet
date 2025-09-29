@@ -317,7 +317,7 @@ namespace FreeLibSet.Forms
     public const string TreeView = "TreeView";
 
     /// <summary>
-    /// Используется для хранения пользовательских "именных" настроек табличного просмотра (объектов <see cref="EFPDataGridViewConfig"/>)
+    /// Используется для хранения пользовательских "именных" настроек табличного просмотра (объектов <see cref="EFPDataViewConfig"/>)
     /// Имя настройки задается как UserSetName.
     /// Настройки применяются табличными просмотрами <see cref="EFPConfigurableDataGridView"/>.
     /// Текущая выбранная настройка хранится как поле "GridConfig" в отдельной секции <see cref="GridView"/>.
@@ -331,7 +331,7 @@ namespace FreeLibSet.Forms
     public const string GridConfigHistory = "GridConfigHistory";
 
     /// <summary>
-    /// Используется для хранения пользовательских "именных" настроек древовидного просмотра (объектов <see cref="EFPDataGridViewConfig"/>)
+    /// Используется для хранения пользовательских "именных" настроек древовидного просмотра (объектов <see cref="EFPDataViewConfig"/>)
     /// Имя настройки задается как UserSetName.
     /// Настройки применяются древовидными просмотрами <see cref="EFPConfigurableDataTreeView"/>.
     /// Текущая выбранная настройка хранится как поле "GridConfig" в отдельной секции <see cref="TreeView"/>.

@@ -114,7 +114,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить ссылки из поля таблицы.
     /// Проверяется наличие в таблице <see cref="DataRows"/>[0].Table поля <paramref name="columnName"/>; если поля
     /// нет, то ничего не выполняется.
-    /// Для извлечения идентификаторов используется <see cref="DataTools.GetIdsFromColumn(ICollection{DataRow}, string)"/>.
+    /// Для извлечения идентификаторов используется <see cref="IdTools.GetIdsFromColumn{Int32}(IEnumerable{DataRow}, string)"/>.
     /// Добавляется только ссылка на документ, без вызова обработчика <see cref="DocTypeUIBase.GetDocSel"/>.
     /// </summary>
     /// <param name="tableName">Имя таблицы документа <see cref="DocTypeUI"/></param>
@@ -127,7 +127,7 @@ namespace FreeLibSet.Forms.Docs
     /// Добавить ссылки из поля таблицы
     /// Проверяется наличие в таблице <see cref="DataRows"/>[0].Table поля <paramref name="columnName"/>; если поля
     /// нет, то ничего не выполняется.
-    /// Для извлечения идентификаторов используется <see cref="DataTools.GetIdsFromColumn(ICollection{DataRow}, string)"/>.
+    /// Для извлечения идентификаторов используется <see cref="IdTools.GetIdsFromColumn{Int32}(IEnumerable{DataRow}, string)"/>.
     /// Если UseHandler=true, то используется обработчик <see cref="DocTypeUIBase.GetDocSel"/>,
     /// при этом могут быть добавлены дополнительные ссылки. Если <paramref name="useHandler"/>=false,
     /// то добавляется только ссылка на документ.
@@ -143,7 +143,7 @@ namespace FreeLibSet.Forms.Docs
       if (!DataRows[0].Table.Columns.Contains(columnName))
         return;
 
-      Int32[] ids = DataTools.GetIdsFromColumn(DataRows, columnName);
+      IIdSet<Int32> ids = IdTools.GetIdsFromColumn<Int32>(DataRows, columnName);
       if (useHandler)
       {
         DocTypeUIBase dtb = ControlProvider.UI.DocTypes.GetByTableName(tableName);
@@ -184,8 +184,8 @@ namespace FreeLibSet.Forms.Docs
 
       for (int i = 0; i < DataRows.Length; i++)
       {
-        Int32 tableId = DataTools.GetInt(DataRows[i][pTable]);
-        Int32 docId = DataTools.GetInt(DataRows[i][pId]);
+        Int32 tableId = DataTools.GetInt32(DataRows[i][pTable]);
+        Int32 docId = DataTools.GetInt32(DataRows[i][pId]);
         if (tableId != 0 && docId != 0)
         {
           DocTypeUI dtui = ControlProvider.UI.DocTypes.FindByTableId(tableId);
@@ -318,7 +318,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Массив идентификаторов для выбранных строк таблицы или ущлов дерева
     /// </summary>
-    Int32[] SelectedIds { get; set; }
+    IIdSet<Int32> SelectedIds { get; set; }
 
     /// <summary>
     /// Событие вызывается, если пользователь изменяет выбор строк
@@ -348,14 +348,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Пометить на обновление строки с заданными идентификаторами
     /// </summary>
-    /// <param name="ids">Массив идентификаторов документов</param>
-    void UpdateRowsForIds(Int32[] ids);
-
-    /// <summary>
-    /// Пометить на обновление строки с заданными идентификаторами
-    /// </summary>
     /// <param name="ids">Список идентификаторов документов</param>
-    void UpdateRowsForIds(IdList ids);
+    void UpdateRowsForIds(IIdSet<Int32> ids);
 
     /// <summary>
     /// Возвращает фильтры табличного просмотра
@@ -510,7 +504,7 @@ namespace FreeLibSet.Forms.Docs
       {
         case EFPConfigCategories.GridView:
           if (SaveCurrentId && (!String.IsNullOrEmpty(ConfigSectionName)))
-            cfg.SetInt("CurrentId", CurrentId);
+            cfg.SetInt32("CurrentId", CurrentId);
           break;
       }
       base.WriteConfigPart(category, cfg, actionInfo);
@@ -531,7 +525,7 @@ namespace FreeLibSet.Forms.Docs
           {
             try
             {
-              CurrentId = cfg.GetInt("CurrentId");
+              CurrentId = cfg.GetInt32("CurrentId");
             }
             catch { }
           }
@@ -629,7 +623,7 @@ namespace FreeLibSet.Forms.Docs
       int p = row2.Table.Columns.IndexOf("Id");
       if (p < 0) // 10.03.2016
         return 0;
-      return DataTools.GetInt(row2[p]);
+      return DataTools.GetInt32(row2[p]);
     }
 
     /// <summary>
@@ -646,7 +640,7 @@ namespace FreeLibSet.Forms.Docs
       int p = row.Table.Columns.IndexOf("Id");
       if (p < 0) // 10.03.2016
         return 0;
-      return DataTools.GetInt(row[p]);
+      return DataTools.GetInt32(row[p]);
     }
 
 
@@ -658,17 +652,17 @@ namespace FreeLibSet.Forms.Docs
     /// Расширение свойства <see cref="EFPDataGridView.SelectedDataRows"/> для представления выбранных строк в виде
     /// массива идентификаторов "Id".
     /// </summary>
-    public virtual Int32[] SelectedIds
+    public virtual IIdSet<Int32> SelectedIds
     {
       get
       {
         DataRow[] rows = SelectedDataRows;
         // return DataTools.GetIds(Rows);
-        return DataTools.GetIdsFromColumn(rows, "Id"); // 21.01.2016
+        return IdTools.GetIdsFromColumn<Int32>(rows, "Id"); // 21.01.2016
       }
       set
       {
-        DataRow[] rows = DataTools.GetRowsFromIds(SourceAsDataTable, value);
+        DataRow[] rows = IdTools.FindRowsFromColumn<Int32>(SourceAsDataTable, "Id", value);
         SelectedDataRows = rows;
       }
     }
@@ -734,8 +728,8 @@ namespace FreeLibSet.Forms.Docs
         else
           rows = base.GetDataRows(rowIndices);
 
-        Int32[] ids = DataTools.GetIdsFromColumn(rows, "Id");
-        if (ids.Length > 0)
+        IIdSet<Int32> ids = IdTools.GetIdsFromColumn<Int32>(rows, "Id");
+        if (ids.Count > 0)
           ClearCacheForUpdate(ids); // 24.10.2017
 
         for (int i = 0; i < rows.Length; i++)
@@ -753,7 +747,7 @@ namespace FreeLibSet.Forms.Docs
     /// Вызывается однократно перед вызовами <see cref="LoadDataRowForUpdate(DataRow)"/>.
     /// </summary>
     /// <param name="ids">Массив идентификаторов. Длина массива больше 0</param>
-    protected virtual void ClearCacheForUpdate(Int32[] ids)
+    protected virtual void ClearCacheForUpdate(IIdSet<Int32> ids)
     {
     }
 
@@ -766,22 +760,11 @@ namespace FreeLibSet.Forms.Docs
     {
     }
 
-
-    /// <summary>
-    /// Пометить на обновление строки с заданными идентификаторами
-    /// </summary>
-    /// <param name="ids">Массив идентификаторов документов</param>
-    public void UpdateRowsForIds(Int32[] ids)
-    {
-      IdList idList = new IdList(ids);
-      UpdateRowsForIds(idList);
-    }
-
     /// <summary>
     /// Пометить на обновление строки с заданными идентификаторами
     /// </summary>
     /// <param name="ids">Список идентификаторов документов</param>
-    public void UpdateRowsForIds(IdList ids)
+    public void UpdateRowsForIds(IIdSet<Int32> ids)
     {
       if (ids == null)
         return;
@@ -1065,7 +1048,7 @@ namespace FreeLibSet.Forms.Docs
       int p = row.Table.Columns.IndexOf("Id");
       if (p >= 0)
       {
-        return (DataTools.GetInt(row[p]) > 0); // условие добавлено 12.08.2020
+        return (DataTools.GetInt32(row[p]) > 0); // условие добавлено 12.08.2020
       }
       else
       {
@@ -1232,7 +1215,7 @@ namespace FreeLibSet.Forms.Docs
     /// Для собственной реализации класса вызывайте <see cref="AddMarkRowsColumn()"/> для добавления столбца с флажками.
     /// Установка свойства в процессе показа, приводит к обновлению столбца просмотра.
     /// </summary>
-    public IdList MarkRowIds
+    public IdCollection<Int32> MarkRowIds
     {
       get { return _MarkRowIds; }
       set
@@ -1240,7 +1223,7 @@ namespace FreeLibSet.Forms.Docs
         if (_MarkRowIds != null)
         {
           if (value == null)
-            value = new IdList();
+            value = new IdCollection<Int32>();
         }
         _MarkRowIds = value;
         if (base.MarkRowsColumnIndex >= 0)
@@ -1250,7 +1233,7 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-    private IdList _MarkRowIds;
+    private IdCollection<Int32> _MarkRowIds;
 
     /// <summary>
     /// Добавить столбец с флажками для отметки строк.
@@ -1262,10 +1245,10 @@ namespace FreeLibSet.Forms.Docs
     public void AddMarkRowsColumn()
     {
       if (MarkRowIds == null)
-        MarkRowIds = new IdList();
+        MarkRowIds = new IdCollection<Int32>();
 
       bool isFirstCall = base.MarkRowsGridColumn == null;
-      base.MarkRowsGridColumn = base.Columns.AddBool("_MarkRows", false, String.Empty);
+      base.MarkRowsGridColumn = base.Columns.AddCheckBox("_MarkRows", false, String.Empty);
       base.MarkRowsGridColumn.ReadOnly = MarkRowIds.IsReadOnly;
       if (isFirstCall)
       {
@@ -1309,7 +1292,7 @@ namespace FreeLibSet.Forms.Docs
           Int32 currId = this.GetRowId(args.RowIndex);
           if (currId != 0)
           {
-            bool flag = DataTools.GetBool(args.Value);
+            bool flag = DataTools.GetBoolean(args.Value);
             if (flag)
               MarkRowIds.Add(currId);
             else

@@ -597,7 +597,7 @@ namespace FreeLibSet.Data.Npgsql
       Buffer.FormatTableName(tableName);
       Buffer.SB.Append(")");
 
-      return !DataTools.GetBool(SQLExecuteScalar(Buffer.SB.ToString()));
+      return !DataTools.GetBoolean(SQLExecuteScalar(Buffer.SB.ToString()));
     }
 
     #endregion
@@ -612,21 +612,19 @@ namespace FreeLibSet.Data.Npgsql
     /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
     /// <param name="values">Значения. Порядок значений должен соответствовать списку столбцов</param>
     /// <returns>Идентификатор добавленной записи</returns>
-    public override Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
+    public override object AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
     {
       Buffer.Clear();
 
       Validator.CheckTableName(tableName, DBxAccessMode.Full);
       DBxColumnType[] ColumnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
-      string PrimaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
+      string PrimaryKeyColumnName = Validator.CheckTablePrimaryKeyInteger(tableName);
 
       if (columnNames.Count != values.Length)
         throw ExceptionFactory.ArgWrongCollectionCount("values", values, columnNames.Count);
 
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
-
-      Int32 id;
 
       Buffer.SB.Append("INSERT INTO ");
       Buffer.FormatTableName(tableName);
@@ -640,9 +638,9 @@ namespace FreeLibSet.Data.Npgsql
       Buffer.SB.Append(" RETURNING ");
       Buffer.FormatColumnName(PrimaryKeyColumnName);
 
-      id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      object id = SQLExecuteScalar(Buffer.SB.ToString());
 
-      if (id <= 0)
+      if (DataTools.IsEmptyValue(id))
         throw new BugException("Invalid record identifier returned for table \"" + tableName + "\" Id=" + id.ToString());
 
       return id;
@@ -662,7 +660,7 @@ namespace FreeLibSet.Data.Npgsql
       // Корректируем последовательности для первичного ключа
       int seqColumnIndex = Validator.GetPrimaryKeyInt32ColumnIndex(tableName, columnNames);
       if (seqColumnIndex >= 0)
-        CorrectPrimaryKeySequence(tableName, DataTools.GetInt(values[seqColumnIndex]));
+        CorrectPrimaryKeySequence(tableName, DataTools.GetInt32(values[seqColumnIndex]));
     }
 
     /// <summary>
@@ -720,29 +718,31 @@ namespace FreeLibSet.Data.Npgsql
       {
         DBxColumnStruct colDef = ts.Columns[columnNames[i]];
 
-        switch (colDef.ColumnType)
+        if (DBxTools.IsNumericType(colDef.ColumnType))
+          formatModes[i] = CopyFormattingMode.FormatValue;
+        else
         {
-          case DBxColumnType.Int:
-          case DBxColumnType.Float:
-          case DBxColumnType.Date:
-          case DBxColumnType.DateTime:
-          case DBxColumnType.Time:
-          case DBxColumnType.Decimal:
-            formatModes[i] = CopyFormattingMode.FormatValue;
-            break;
-          case DBxColumnType.String:
-          case DBxColumnType.Xml:
-          case DBxColumnType.Memo: // 18.12.2020
-            formatModes[i] = CopyFormattingMode.String;
-            break;
-          case DBxColumnType.Guid: // 08.10.2019 - для GUID'а не нужно добавлять апострофы
-            formatModes[i] = CopyFormattingMode.Guid;
-            break;
-          default:
-            // Неизвестный формат.
-            // Используем построчное добавление
-            base.DoAddRecords(tableName, table); // исправлено 18.12.2020
-            return;
+          switch (colDef.ColumnType)
+          {
+            case DBxColumnType.Date:
+            case DBxColumnType.DateTime:
+            case DBxColumnType.Time:
+              formatModes[i] = CopyFormattingMode.FormatValue;
+              break;
+            case DBxColumnType.String:
+            case DBxColumnType.Xml:
+            case DBxColumnType.Memo: // 18.12.2020
+              formatModes[i] = CopyFormattingMode.String;
+              break;
+            case DBxColumnType.Guid: // 08.10.2019 - для GUID'а не нужно добавлять апострофы
+              formatModes[i] = CopyFormattingMode.Guid;
+              break;
+            default:
+              // Неизвестный формат.
+              // Используем построчное добавление
+              base.DoAddRecords(tableName, table); // исправлено 18.12.2020
+              return;
+          }
         }
       }
 
@@ -804,7 +804,7 @@ namespace FreeLibSet.Data.Npgsql
 
       int seqColumnIndex = Validator.GetPrimaryKeyInt32ColumnIndex(tableName, columnNames);
       if (seqColumnIndex >= 0)
-        CorrectPrimaryKeySequence(tableName, DataTools.MaxInt(table, columnNames[seqColumnIndex], true) ?? 0);
+        CorrectPrimaryKeySequence(tableName, DataTools.MaxInt32(table, columnNames[seqColumnIndex], true) ?? 0);
 #endif // !NET
     }
 
@@ -836,22 +836,22 @@ namespace FreeLibSet.Data.Npgsql
     {
       if (_TablePKSequenceNames == null)
         _TablePKSequenceNames = new Dictionary<string, string>();
-      string SeqName;
-      if (!_TablePKSequenceNames.TryGetValue(tableName, out SeqName))
+      string seqName;
+      if (!_TablePKSequenceNames.TryGetValue(tableName, out seqName))
       {
-        SeqName = GetTablePKSequenceName(tableName);
-        _TablePKSequenceNames.Add(tableName, SeqName);
+        seqName = GetTablePKSequenceName(tableName);
+        _TablePKSequenceNames.Add(tableName, seqName);
       }
 
-      string primaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
-      Int32 lastId = DataTools.GetInt(GetMaxValue(tableName, primaryKeyColumnName, null));
+      string primaryKeyColumnName = Validator.CheckTablePrimaryKeyInteger(tableName);
+      Int32 lastId = DataTools.GetInt32(GetMaxValue(tableName, primaryKeyColumnName, null));
       usedId = Math.Max(lastId, usedId);
 
       StringBuilder sb = new StringBuilder();
       sb.Append("SELECT setval(\'");
-      sb.Append(SeqName);
+      sb.Append(seqName);
       sb.Append("\', ");
-      sb.Append(usedId.ToString());
+      sb.Append(StdConvert.ToString(usedId));
       sb.Append(", true)");
 
       SQLExecuteNonQuery(sb.ToString());
@@ -859,7 +859,7 @@ namespace FreeLibSet.Data.Npgsql
 
     private string GetTablePKSequenceName(string tableName)
     {
-      string primaryKeyColumnName = Validator.CheckTablePrimaryKeyInt32(tableName);
+      string primaryKeyColumnName = Validator.CheckTablePrimaryKeyInteger(tableName);
       StringBuilder sb = new StringBuilder();
 
       // Имя таблицы идет и в апострофах и в кавычках
@@ -964,41 +964,28 @@ namespace FreeLibSet.Data.Npgsql
 
           case "bigint":
           case "int8":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int64.MinValue;
-            colDef.MaxValue = Int64.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int64;
             break;
           case "int":
           case "int4":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int32.MinValue;
-            colDef.MaxValue = Int32.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int32;
             break;
           case "smallint":
           case "int2":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int16.MinValue;
-            colDef.MaxValue = Int16.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int16;
             break;
           case "tinyint":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = 0;
-            colDef.MaxValue = 255;
+            colDef.ColumnType = DBxColumnType.Byte;
             break;
 
           case "float4":
-            colDef.ColumnType = DBxColumnType.Float;
-            // TODO: Использовать длину поля для разделения float/double
-            colDef.MinValue = Single.MinValue;
-            colDef.MaxValue = Single.MaxValue;
+            colDef.ColumnType = DBxColumnType.Single;
             break;
           case "float":
           case "real":
           case "float8":
-            colDef.ColumnType = DBxColumnType.Float;
+            colDef.ColumnType = DBxColumnType.Double;
             // TODO: Использовать длину поля для разделения float/double
-            colDef.MinValue = Double.MinValue;
-            colDef.MaxValue = Double.MaxValue;
             break;
 
           case "money":
@@ -1058,7 +1045,7 @@ namespace FreeLibSet.Data.Npgsql
             break;
         }
 
-        colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
+        colDef.MaxLength = DataTools.GetInt32(drv.Row, "character_maximum_length");
 
         string nullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
         switch (nullableStr) // 01.10.2019
@@ -1084,7 +1071,7 @@ namespace FreeLibSet.Data.Npgsql
           }
         }
 
-        int colIndex = DataTools.GetInt(drv.Row, "ordinal_position");
+        int colIndex = DataTools.GetInt32(drv.Row, "ordinal_position");
 
         colDef.Comment = GetColumnComment(tableOID, colIndex);
 
@@ -1106,11 +1093,11 @@ namespace FreeLibSet.Data.Npgsql
 
       Buffer.Clear();
       Buffer.SB.Append(@"SELECT confrelid,confdeltype,conkey FROM pg_catalog.pg_constraint WHERE contype='f' AND conrelid=");
-      Buffer.FormatValue(tableOID, DBxColumnType.Int);
+      Buffer.FormatValue(tableOID, DBxColumnType.Int32);
       DataTable tbl = SQLExecuteDataTable(Buffer.SB.ToString(), "pg_constraint");
       foreach (DataRow row in tbl.Rows)
       {
-        Int32 refTableOID = DataTools.GetInt(row, "confrelid");
+        Int32 refTableOID = DataTools.GetInt32(row, "confrelid");
         string refTableName = GetTableNameFromOID(refTableOID);
         if (String.IsNullOrEmpty(refTableName))
           throw new BugException("Master-table name with OID=" + refTableOID + " not found");
@@ -1153,7 +1140,7 @@ namespace FreeLibSet.Data.Npgsql
         throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
 
       // Имя таблицы идет в апострофах, а не в кавычках, т.к. это - строка
-      return DataTools.GetInt(SQLExecuteScalar("SELECT oid FROM pg_catalog.pg_class WHERE relname=\'" + tableName + "\' AND relkind=\'r\'"));
+      return DataTools.GetInt32(SQLExecuteScalar("SELECT oid FROM pg_catalog.pg_class WHERE relname=\'" + tableName + "\' AND relkind=\'r\'"));
     }
 
     /// <summary>
@@ -1348,7 +1335,7 @@ namespace FreeLibSet.Data.Npgsql
 
                 if (colDef.ColumnType == DBxColumnType.String)
                 {
-                  int realLen = DataTools.GetInt(columnRow, "CHARACTER_MAXIMUM_LENGTH");
+                  int realLen = DataTools.GetInt32(columnRow, "CHARACTER_MAXIMUM_LENGTH");
                   if (realLen != colDef.MaxLength)
                   {
                     if (realLen > colDef.MaxLength)
@@ -1547,7 +1534,7 @@ namespace FreeLibSet.Data.Npgsql
       {
         switch (column.ColumnType)
         {
-          case DBxColumnType.Int:
+          case DBxColumnType.Int32:
             if (column.MinValue == 0 && column.MaxValue == 0)
               buffer.SB.Append("SERIAL"); // с автоинкрементом
             else if (column.MinValue >= Int32.MinValue && column.MaxValue <= Int32.MaxValue)
@@ -1738,7 +1725,7 @@ namespace FreeLibSet.Data.Npgsql
       Buffer.SB.Append(StdConvert.ToString(tableOID));
       Buffer.SB.Append(" AND attname=");
       Buffer.FormatValue(columnName, DBxColumnType.String);
-      int colIndex = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      int colIndex = DataTools.GetInt32(SQLExecuteScalar(Buffer.SB.ToString()));
       if (colIndex == 0)
         return String.Empty;
       return GetColumnComment(tableOID, colIndex);
@@ -1822,7 +1809,7 @@ namespace FreeLibSet.Data.Npgsql
           tableName = tableName.Substring(1, tableName.Length - 2);
 
         object oColIdx = aColIdxs.GetValue(0);
-        int colIdx = DataTools.GetInt(oColIdx);
+        int colIdx = DataTools.GetInt32(oColIdx);
         int p = dvColumns.Find(new object[2] { tableName, colIdx });
         if (p < 0)
         {

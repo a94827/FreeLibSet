@@ -25,10 +25,10 @@ namespace ExtTools_tests.Data
     {
       DBxTableColumnList sut = new DBxTableColumnList();
 
-      sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F1", "F2" }));
+      sut.Tables["Tab1"].AddRange(new DBxColumnList(new string[] { "F1", "F2" }));
       sut.Tables["Tab2"].Add("F8,F9"); // другая таблица
-      sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F3" }));
-      sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F2" })); // повторное добавление
+      sut.Tables["Tab1"].AddRange(new DBxColumnList(new string[] { "F3" }));
+      sut.Tables["Tab1"].AddRange(new DBxColumnList(new string[] { "F2" })); // повторное добавление
 
       DBxTableColumnName[] wanted = new DBxTableColumnName[]{
         new DBxTableColumnName("Tab1", "F1"),
@@ -45,7 +45,7 @@ namespace ExtTools_tests.Data
     public void Tables_ContainsKey()
     {
       DBxTableColumnList sut = new DBxTableColumnList();
-      sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F1", "F2" }));
+      sut.Tables["Tab1"].AddRange(new DBxColumnList(new string[] { "F1", "F2" }));
 
       Assert.IsTrue(sut.Tables.ContainsKey("Tab1"));
       Assert.IsFalse(sut.Tables.ContainsKey("Tab2"));
@@ -55,7 +55,7 @@ namespace ExtTools_tests.Data
     public void Tables_Keys()
     {
       DBxTableColumnList sut = new DBxTableColumnList();
-      sut.Tables["Tab1"].Add(new DBxColumnList(new string[] { "F1", "F2" }));
+      sut.Tables["Tab1"].AddRange(new DBxColumnList(new string[] { "F1", "F2" }));
       sut.Tables["Tab2"].Add("F9");
 
       string[] res = new string[sut.Tables.Keys.Count];

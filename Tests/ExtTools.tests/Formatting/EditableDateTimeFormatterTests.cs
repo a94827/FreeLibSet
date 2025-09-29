@@ -77,7 +77,7 @@ namespace ExtTools_tests.Formatting
       Assert.AreEqual(kind == EditableDateTimeFormatterKind.Time || kind == EditableDateTimeFormatterKind.DateTime,
         sut.Format.IndexOf("ss", StringComparison.Ordinal) >= 0, "Format - second");
 
-      Assert.AreEqual(wantedDigitCount, DataTools.GetCharCount(sut.EditMask, '0'), "EditMask - digital places");
+      Assert.AreEqual(wantedDigitCount, StringTools.GetCharCount(sut.EditMask, '0'), "EditMask - digital places");
 
       Assert.AreSame(ci.DateTimeFormat, sut.FormatProvider, "FormatProvider");
       Assert.Greater(sut.TextWidth, wantedDigitCount, "TextWidth");

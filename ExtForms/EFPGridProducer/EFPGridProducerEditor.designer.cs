@@ -44,7 +44,7 @@
       this.panel2 = new System.Windows.Forms.Panel();
       this.cbStartColumn = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.edFrozenColumns = new FreeLibSet.Controls.IntEditBox();
+      this.edFrozenColumns = new FreeLibSet.Controls.Int32EditBox();
       this.label1 = new System.Windows.Forms.Label();
       this.TheTabControl = new System.Windows.Forms.TabControl();
       this.colSelColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -256,7 +256,7 @@
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.ComboBox cbStartColumn;
     private System.Windows.Forms.Label label2;
-    private FreeLibSet.Controls.IntEditBox edFrozenColumns;
+    private FreeLibSet.Controls.Int32EditBox edFrozenColumns;
     private System.Windows.Forms.Label label1;
     public System.Windows.Forms.TabControl TheTabControl;
     private System.Windows.Forms.Panel panGrToolTips;

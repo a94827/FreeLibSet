@@ -390,7 +390,7 @@ namespace FreeLibSet.Forms.Docs
       {
         // 16.02.2018 Вместо собственного обработчика
 
-        Int32[] docIds = Editor.DocSel[DocType.Name];
+        IIdSet<Int32> docIds = Editor.DocSel[DocType.Name];
         BufTable = DocTypeUI.TableCache.CreateTable(docIds, base.UsedColumnNames);
         base.InitTableRepeaterForGridProducer(BufTable);
       }
@@ -400,21 +400,21 @@ namespace FreeLibSet.Forms.Docs
         // Базовый метод не вызываем
         // return base.OnEditData(Args);
 
-        Int32[] docIds;
+        IIdSet<Int32> docIds;
         switch (base.State)
         {
           case UIDataState.Edit:
           case UIDataState.View:
 
             docIds = base.SelectedIds;
-            if (docIds.Length == 0)
+            if (docIds.Count == 0)
             {
               EFPApp.ShowTempMessage(Res.DocSel_Err_NoSelRows);
               return true;
             }
             if (!DocTypeUI.CanMultiEdit)
             {
-              if (docIds.Length > 1)
+              if (docIds.Count > 1)
               {
                 EFPApp.ShowTempMessage(String.Format(Res.Common_Err_NoMultiEdit, DocType.PluralTitle));
                 return true;
@@ -431,7 +431,7 @@ namespace FreeLibSet.Forms.Docs
             DoDelete();
             return true;
           default:
-            EFPApp.ShowTempMessage("Unsupported editing mode "+State.ToString());
+            EFPApp.ShowTempMessage("Unsupported editing mode " + State.ToString());
             return true;
         }
       }
@@ -514,7 +514,7 @@ namespace FreeLibSet.Forms.Docs
         {
           for (int i = 0; i < rows.Length; i++)
           {
-            if (!DataTools.GetBool(rows[i], "Deleted"))
+            if (!DataTools.GetBoolean(rows[i], "Deleted"))
             {
               hasNotDeletedDocs = true;
               break;
@@ -585,8 +585,8 @@ namespace FreeLibSet.Forms.Docs
       {
         AccDepFileType FileType = (AccDepFileType)Sender;
 
-        bool ThisDocTypeOnly = Args.Config.GetBool("ТолькоВыбранныйТип");
-        bool AllRows = Args.Config.GetBool("ВсеСтроки"); // для совместимости с основным обработчиом
+        bool ThisDocTypeOnly = Args.Config.GetBoolean("ТолькоВыбранныйТип");
+        bool AllRows = Args.Config.GetBoolean("ВсеСтроки"); // для совместимости с основным обработчиом
 
         AccDepDocSel DocSel = Owner.DocSel;
 
@@ -604,8 +604,8 @@ namespace FreeLibSet.Forms.Docs
         ThisDocTypeOnly = dlg.SelectedIndex > 0;
         if (ThisDocTypeOnly)
           AllRows = dlg.SelectedIndex == 1;
-        Args.Config.SetBool("ТолькоВыбранныйТип", ThisDocTypeOnly);
-        Args.Config.SetBool("ВсеСтроки", AllRows);
+        Args.Config.SetBoolean("ТолькоВыбранныйТип", ThisDocTypeOnly);
+        Args.Config.SetBoolean("ВсеСтроки", AllRows);
 
         DataSet ds;
         if (ThisDocTypeOnly)

@@ -95,8 +95,8 @@ namespace FreeLibSet.Forms
 
     internal static EFPCommandItem AddCommandItem(IEFPDataViewClipboardCommandItems commandItems)
     {
-      EFPCommandItem ci = new EFPCommandItem("Edit", "CopyFormats");
-      ci.MenuText = "Настройка форматов копирования ...";
+      EFPCommandItem ci = new EFPCommandItem("Edit", "CopyFormatSettings");
+      ci.MenuText = Res.Cmd_Menu_Edit_CopyFormatsSettings;
       ci.ImageKey = "CopySettings";
       ci.Tag = commandItems;
       ci.Usage = EFPCommandItemUsage.Menu;

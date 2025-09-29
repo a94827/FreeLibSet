@@ -143,7 +143,7 @@ namespace FreeLibSet.Forms.Reporting
               Math.Round(rdr.FontHeight,1, MidpointRounding.AwayFromZero), 
               Math.Round(rdr.FontWidth, 1, MidpointRounding.AwayFromZero));
             string[] a = new string[5];
-            DataTools.FillArray<string>(a, s);
+            ArrayTools.FillArray<string>(a, s);
             //RectangleF rc = pbFontSample.ClientRectangle;
             //rc.X += SystemInformation.Border3DSize.Width;
             //rc.Y += SystemInformation.Border3DSize.Height;

@@ -135,7 +135,7 @@ namespace ExtTools_tests.Models.Tree
       sut.Clear();
 
       Assert.AreEqual(0, sut.Count, "Count");
-      CollectionAssert.AreEqual(DataTools.EmptyStrings, lst, "List");
+      CollectionAssert.AreEqual(EmptyArray<string>.Empty, lst, "List");
 
       Assert.AreEqual(0, tester.NodesInsertedPaths.Count, "NodesInserted count");
       Assert.AreEqual(0, tester.NodesChangedPaths.Count, "NodesChanged count");
@@ -154,7 +154,7 @@ namespace ExtTools_tests.Models.Tree
       sut.Clear();
 
       Assert.AreEqual(0, sut.Count, "Count");
-      CollectionAssert.AreEqual(DataTools.EmptyStrings, lst, "List");
+      CollectionAssert.AreEqual(EmptyArray<string>.Empty, lst, "List");
 
       Assert.AreEqual(0, tester.NodesInsertedPaths.Count, "NodesInserted count");
       Assert.AreEqual(0, tester.NodesChangedPaths.Count, "NodesChanged count");

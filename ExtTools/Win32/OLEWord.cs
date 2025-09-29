@@ -354,7 +354,7 @@ namespace FreeLibSet.OLE.Word
     /// <param name="x">Полученно от Word'а значение</param>
     /// <param name="value">Возрвращаемый по ссылке результат</param>
     /// <returns>true, если значение получено, false-нет значения</returns>
-    public static bool GetBoolValue(int x, out bool value)
+    public static bool GetBooleanValue(int x, out bool value)
     {
       switch (x)
       {
@@ -370,7 +370,7 @@ namespace FreeLibSet.OLE.Word
       }
     }
 
-    public static bool GetColorIntValue(Int32 x, out Int32 value)
+    public static bool GetColorInt32Value(Int32 x, out Int32 value)
     {
       // ?? Не знаю, как обрабатываются смешанные цвета
       value = x;
@@ -480,7 +480,7 @@ namespace FreeLibSet.OLE.Word
     {
       get
       {
-        return (WdAlertLevel)(DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=94]")));
+        return (WdAlertLevel)(DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=94]")));
       }
     }
 
@@ -1266,7 +1266,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetBold(out bool value)
     {
       int x = (int)(Base.Helper.GetProp(Base.Obj, "[DispID=130]"));
-      return WordHelper.GetBoolValue(x, out value);
+      return WordHelper.GetBooleanValue(x, out value);
     }
 
     public void SetBold(bool value)
@@ -1288,7 +1288,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetItalic(out bool value)
     {
       int x = (int)(Base.Helper.GetProp(Base.Obj, "[DispID=131]"));
-      return WordHelper.GetBoolValue(x, out value);
+      return WordHelper.GetBooleanValue(x, out value);
     }
 
     public void SetItalic(bool value)
@@ -1338,7 +1338,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetStrikeout(out bool value)
     {
       int x = (int)(Base.Helper.GetProp(Base.Obj, "[DispID=135]"));
-      return WordHelper.GetBoolValue(x, out value);
+      return WordHelper.GetBooleanValue(x, out value);
     }
 
     public void SetStrikeout(bool value)
@@ -1370,7 +1370,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetColor(out Int32 value)
     {
       Int32 x = (Int32)(Base.Helper.GetProp(Base.Obj, "[DispID=159]"));
-      return WordHelper.GetColorIntValue(x, out value);
+      return WordHelper.GetColorInt32Value(x, out value);
     }
 
     public void SetColor(Int32 value)
@@ -2475,7 +2475,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetWordWrap(out bool value)
     {
       int x = (int)(Base.Helper.GetProp(Base.Obj, "[DispID=108]"));
-      return WordHelper.GetBoolValue(x, out value);
+      return WordHelper.GetBooleanValue(x, out value);
     }
 
     public void SetWordWrap(bool value)
@@ -3139,7 +3139,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetColor(out Int32 value)
     {
       Int32 x = (Int32)(Base.Helper.GetProp(Base.Obj, "[DispID=7]"));
-      return WordHelper.GetColorIntValue(x, out value);
+      return WordHelper.GetColorInt32Value(x, out value);
     }
 
     public void SetColor(Int32 value)
@@ -3271,7 +3271,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetInsideColor(out Int32 value)
     {
       Int32 x = (Int32)(Base.Helper.GetProp(Base.Obj, "[DispID=32]"));
-      return WordHelper.GetColorIntValue(x, out value);
+      return WordHelper.GetColorInt32Value(x, out value);
     }
 
     public void SetInsideColor(Int32 value)
@@ -3378,7 +3378,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetOutsideColor(out Int32 value)
     {
       Int32 x = (Int32)(Base.Helper.GetProp(Base.Obj, "[DispID=33]"));
-      return WordHelper.GetColorIntValue(x, out value);
+      return WordHelper.GetColorInt32Value(x, out value);
     }
 
     public void SetOutsideColor(Int32 value)
@@ -3433,7 +3433,7 @@ namespace FreeLibSet.OLE.Word
     public bool GetBackgroundPatternColor(out Int32 value)
     {
       Int32 x = (Int32)(Base.Helper.GetProp(Base.Obj, "[DispID=5]"));
-      return WordHelper.GetColorIntValue(x, out value);
+      return WordHelper.GetColorInt32Value(x, out value);
     }
 
     public void SetBackgroundPatternColor(Int32 value)
@@ -3514,7 +3514,7 @@ namespace FreeLibSet.OLE.Word
     public void Replace(string oldText, string newText)
     {
       object[] args = new object[11];
-      DataTools.FillArray<object>(args, Missing.Value);
+      ArrayTools.FillArray<object>(args, Missing.Value);
       args[0] = oldText;
       args[9] = newText;
       args[10] = WdReplace.wdReplaceAll;

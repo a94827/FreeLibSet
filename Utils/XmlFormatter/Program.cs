@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 namespace XmlFormatter
 {
@@ -19,8 +20,8 @@ namespace XmlFormatter
       try
       {
         AbsPath path = new AbsPath(args[0]);
-        XmlDocument xmlDoc = FileTools.ReadXmlDocument(path);
-        FileTools.WriteXmlDocument(path, xmlDoc);
+        XmlDocument xmlDoc = XmlTools.ReadXmlDocument(path);
+        XmlTools.WriteXmlDocument(path, xmlDoc);
       }
       catch (Exception e)
       {

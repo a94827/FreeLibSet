@@ -1,27 +1,21 @@
-﻿// Part of FreeLibSet.
-// See copyright notices in "license" file in the FreeLibSet root directory.
-
+﻿using FreeLibSet.Core;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using System.Runtime.Serialization;
 using System.Data;
-using FreeLibSet.Core;
-using FreeLibSet.Collections;
+using System.Runtime.Serialization;
+using System.Text;
 
 namespace FreeLibSet.Data
 {
+
   /// <summary>
-  /// Список идентификаторов <see cref="Int32"/> с однократным вхождением.
-  /// Значение 0 не сохраняется.
-  /// Отрицательные значения (в ExtDBDocs.dll трактуются как фиктивные идентификаторы)
-  /// обрабатываются как обычные идентификаторы.
-  /// Порядок элементов не сохраняется.
-  /// Класс переопределяет оператор == и связанные с ним
+  /// Список идентификаторов, в котором порядок идентификаторов является значимым
+  /// Значения null не допускаются.
+  /// После установки свойства <see cref="IReadOnlyObject.IsReadOnly"/>=true, список становится потокобезопасным.
   /// </summary>
   [Serializable]
-  public sealed class IdList : ICollection<Int32>, IEnumerable<Int32>, IReadOnlyObject, ICloneable, ISerializable
+  public class IdList<T> : IIndexedIdSet<T>, IList<T>, System.Collections.IList, IReadOnlyObject
+    where T : struct, IEquatable<T>
   {
     #region Конструкторы
 
@@ -30,306 +24,152 @@ namespace FreeLibSet.Data
     /// </summary>
     public IdList()
     {
-      _Items = new Dictionary<Int32, object>();
+      _List = new List<T>();
+      _Dict = new Dictionary<T, object>();
     }
 
     /// <summary>
-    /// Создает список и загружает в него идентификаторы из заданной коллекции.
-    /// Если коллекция <paramref name="source"/> содержит повторяющиеся или нулевые идентификаторы,
-    /// они отбрасываются
+    /// Конструктор списка, заполненного элементами из другого списка.
+    /// Если в исходном списке есть повторяющиеся или нулевые элементы, то они отбрасываются.
     /// </summary>
-    /// <param name="source">Источник идентификаторов для заполнения списка</param>
-    public IdList(ICollection<Int32> source)
+    /// <param name="source">Исходный список. Не может быть null</param>
+    public IdList(IEnumerable<T> source)
     {
-      _Items = new Dictionary<Int32, object>(source.Count);
-      foreach (Int32 id in source)
-        Add(id);
-    }
-
-    /// <summary>
-    /// Создает список и загружает в него идентификаторы из заданного перечислителя.
-    /// Если коллекция <paramref name="source"/> содержит повторяющиеся или нулевые идентификаторы,
-    /// они отбрасываются
-    /// </summary>
-    /// <param name="source">Источник идентификаторов для заполнения списка</param>
-    public IdList(IEnumerable<Int32> source)
-      : this()
-    {
-      foreach (Int32 id in source)
-        Add(id);
-    }
-
-
-    /// <summary>
-    /// Нет открытого конструктора с аргументом Capacity, чтобы не вводить в заблужение, что это одиночный Id
-    /// </summary>
-    /// <param name="dummy">Затычка</param>
-    /// <param name="capacity">Емкость</param>
-    private IdList(bool dummy, int capacity)
-    {
-      _Items = new Dictionary<Int32, object>(capacity);
-    }
-
-    #endregion
-
-    #region ISerializable Members
-
-    private IdList(SerializationInfo info, StreamingContext context)
-    {
-      Int32[] ids = (Int32[])(info.GetValue("Ids", typeof(Int32[])));
-      _Items = new Dictionary<Int32, object>(ids.Length);
-      for (int i = 0; i < ids.Length; i++)
-        _Items.Add(ids[i], null);
-      _IsReadOnly = info.GetBoolean("IsReadOnly");
-    }
-
-    void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-      info.AddValue("Ids", ToArray());
-      info.AddValue("IsReadOnly", IsReadOnly);
-    }
-
-    #endregion
-
-    #region Список идентификаторов
-
-    /// <summary>
-    /// Используем псевдоколлекцию, в которой в качестве значения используется null
-    /// </summary>
-    private Dictionary<Int32, object> _Items;
-
-    #endregion
-
-    #region ICollection<int> Members
-
-    /// <summary>
-    /// Возвращает количество идентификаторов в списке
-    /// </summary>
-    public int Count
-    {
-      get { return _Items.Count; }
-    }
-
-    /// <summary>
-    /// Возвращает true, если идентификатор есть в списке
-    /// </summary>
-    /// <param name="id">Проверяемый идентификатор</param>
-    /// <returns>true, если идентификатор есть в списке</returns>
-    public bool Contains(Int32 id)
-    {
-      return _Items.ContainsKey(id);
-    }
-
-    /// <summary>
-    /// Копирует идентификаторы в массив.
-    /// </summary>
-    /// <param name="array">Заполняемый массив</param>
-    /// <param name="arrayIndex">Первый индекс в массиве, с которого начать заполнение</param>
-    public void CopyTo(Int32[] array, int arrayIndex)
-    {
-      _Items.Keys.CopyTo(array, arrayIndex);
-    }
-
-    /// <summary>
-    /// Возвращает массив идентификаторов
-    /// </summary>
-    /// <returns>Массив - копия</returns>
-    public Int32[] ToArray()
-    {
-      Int32[] ids = new Int32[_Items.Count];
-      _Items.Keys.CopyTo(ids, 0);
-      return ids;
-    }
-
-    /// <summary>
-    /// Добавляет идентификатор в списке.
-    /// Если задано значение 0 или такой идентификатор уже есть в списке, никаких действий не выполняется.
-    /// </summary>
-    /// <param name="id">Добавляемый идентификатор</param>
-    public void Add(Int32 id)
-    {
-      CheckNotReadOnly();
-
-      if (id == 0)
-        return;
-      if (!_Items.ContainsKey(id))
-        _Items.Add(id, null);
-    }
-
-    /// <summary>
-    /// Добавляет все идентификаторы из другого списка.
-    /// Если в текущем списке уже есть такие идентификаторы, то они пропускаются
-    /// </summary>
-    /// <param name="source">Добавляемый список</param>
-    public void Add(IdList source)
-    {
-#if DEBUG
       if (source == null)
-        throw new ArgumentNullException("source");
-#endif
-
-      CheckNotReadOnly();
-
-      foreach (Int32 id in source)
-        Add(id);
-    }
-
-    /// <summary>
-    /// Добавляет все идентификаторы из перечислителя.
-    /// Нулевые идентификаторы пропускаются.
-    /// Если в текущем списке уже есть такие идентификаторы, то они пропускаются
-    /// </summary>
-    /// <param name="source">Добавляемый список</param>
-    public void Add(IEnumerable<Int32> source)
-    {
-#if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-#endif
-
-      CheckNotReadOnly();
-
-      foreach (Int32 id in source)
-        Add(id);
-    }
-
-    /// <summary>
-    /// Очищает список
-    /// </summary>
-    public void Clear()
-    {
-      CheckNotReadOnly();
-
-      _Items.Clear();
-    }
-
-    /// <summary>
-    /// Удаляет идентификатор из списка.
-    /// Если идентификатора нет в списке, никаих действий не выполняется.
-    /// </summary>
-    /// <param name="id">Удаляемый идентификатор.</param>
-    /// <returns>true, если идентификатор найден и удален</returns>
-    public bool Remove(Int32 id)
-    {
-      CheckNotReadOnly();
-
-      return _Items.Remove(id);
-    }
-
-    /// <summary>
-    /// Удаляет из текущего списка все идентификаторы, которые есть в списке <paramref name="source"/>.
-    /// </summary>
-    /// <param name="source">Список удаляемых идентификаторов</param>
-    public void Remove(IdList source)
-    {
-#if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-#endif
-
-      CheckNotReadOnly();
-
-      foreach (Int32 id in source)
-        Remove(id);
-    }
-
-    /// <summary>
-    /// Удаляет из текущего списка все идентификаторы, которые есть в списке <paramref name="source"/>.
-    /// </summary>
-    /// <param name="source">Список удаляемых идентификаторов</param>
-    public void Remove(IEnumerable<Int32> source)
-    {
-#if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-#endif
-
-      CheckNotReadOnly();
-
-      foreach (Int32 id in source)
-        Remove(id);
-    }
-
-    /// <summary>
-    /// Удаляет из текущего списка все идентификаторы, которых нет в списке <paramref name="source"/>.
-    /// </summary>
-    /// <param name="source">Список идентификаторов, которые требуется удалить</param>
-    public void RemoveOthers(IdList source)
-    {
-#if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-#endif
-
-      CheckNotReadOnly();
-
-      Int32[] a = ToArray();
-      for (int i = 0; i < a.Length; i++)
       {
-        if (!source.Contains(a[i]))
-          Remove(a[i]);
+        _List = new List<T>();
+        _Dict = new Dictionary<T, object>();
+      }
+      else if (source is IIdSet<T>)
+      {
+        IIdSet<T> source2 = (IIdSet<T>)source;
+        _List = new List<T>(source2.Count);
+        _Dict = new Dictionary<T, object>(source2.Count);
+        foreach (T id in source2)
+        {
+          _Dict.Add(id, null);
+          _List.Add(id);
+        }
+      }
+      else
+      {
+        _List = new List<T>();
+        _Dict = new Dictionary<T, object>();
+        foreach (T id in source)
+          Add(id);
+      }
+    }
+
+    #endregion
+
+    #region Доступ к элементам
+
+    /// <summary>
+    /// Основной список
+    /// </summary>
+    private List<T> _List;
+
+    /// <summary>
+    /// Коллекция для проверки наличия элементов.
+    /// Ключ - элемент, значение не используется.
+    /// </summary>
+    [NonSerialized]
+    private Dictionary<T, object> _Dict;
+
+    /// <summary>
+    /// Доступ по индексу. 
+    /// Индекс должен быть в диапазоне от 0 до (<see cref="Count"/>-1).
+    /// Установка значения элемента выполняет замену элемента на новый. При этом может возникнуть
+    /// исключение, если новый элемент отличается от старого и такой элемент уже есть в списке.
+    /// </summary>                              
+    /// <param name="index">Индекс элемента</param>
+    /// <returns>Элемент</returns>
+    public T this[int index]
+    {
+      get { return _List[index]; }
+      set
+      {
+        CheckNotReadOnly();
+
+        if (value.Equals(default(T)))
+          throw ExceptionFactory.ArgIsEmpty("value");
+
+        if (_Dict.ContainsKey(value))
+        {
+          if (IndexOf(value) != index)
+            throw ExceptionFactory.KeyAlreadyExists(value);
+        }
+
+        T oldItem = _List[index];
+        _Dict.Remove(oldItem);
+        try
+        {
+          _Dict.Add(value, null);
+        }
+        catch
+        {
+          _Dict.Add(oldItem, null);
+          throw;
+        }
+        _List[index] = value;
       }
     }
 
     /// <summary>
-    /// Удаляет из текущего списка все идентификаторы, которых нет в списке <paramref name="source"/>.
+    /// Возвращает число элементов в списке
     /// </summary>
-    /// <param name="source">Список идентификаторов, которые требуется удалить</param>
-    public void RemoveOthers(IEnumerable<Int32> source)
+    public int Count { get { return _List.Count; } }
+
+    /// <summary>
+    /// Текстовое представление
+    /// </summary>
+    /// <returns>Строка</returns>
+    public override string ToString()
     {
-#if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-#endif
+      string s = "Count=" + Count.ToString();
+      if (IsReadOnly)
+        s += " (ReadOnly)";
+      return s;
+    }
 
-      // Единственный простой способ - создать временный IdList
-      IdList source2 = new IdList();
-      foreach (Int32 id in source)
-        source2.Add(id);
+    Type IIdSet.IdType { get { return typeof(T); } }
 
-      RemoveOthers(source2);
+    /// <summary>
+    /// Возвращает идентификатор, если массив содержит единственный элемент.
+    /// Иначе возвращается пустое значение.
+    /// </summary>
+    public T SingleId
+    {
+      get
+      {
+        if (Count == 1)
+          return _List[0];
+        else
+          return default(T);
+      }
     }
 
     #endregion
 
-    #region IEnumerable<int> Members
+    #region Доступ Только для чтения
 
     /// <summary>
-    /// Возвращает перечислитель по всем идентификаторам в списке
-    /// 
-    /// Тип возвращаемого значения может измениться в будущем, 
-    /// гарантируется только реализация интерфейса перечислителя.
-    /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
-    /// </summary>
-    /// <returns>Перечислитель</returns>
-    public Dictionary<Int32, object>.KeyCollection.Enumerator GetEnumerator()
-    {
-      return _Items.Keys.GetEnumerator();
-    }
-
-    IEnumerator<Int32> IEnumerable<Int32>.GetEnumerator()
-    {
-      return _Items.Keys.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return _Items.Keys.GetEnumerator();
-    }
-
-    #endregion
-
-    #region IReadOnlyObject Members
-
-    /// <summary>
-    /// Возвращает true, если список находися в режиме "только чтение".
+    /// Возвращает true, если список переведен в режим "Только для чтения"
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
     private bool _IsReadOnly;
 
+    /// <summary>
+    /// Перевод списка в режим "Только для чтения".
+    /// Повторные вызовы игнорируются.
+    /// </summary>
+    public void SetReadOnly()
+    {
+      _IsReadOnly = true;
+    }
 
     /// <summary>
-    /// Генерирует исключение, если список находися в режиме "только чтение".
+    /// Вызов исключения <see cref="ObjectReadOnlyException"/>, если <see cref="IsReadOnly"/>=true
     /// </summary>
     public void CheckNotReadOnly()
     {
@@ -337,13 +177,311 @@ namespace FreeLibSet.Data
         throw ExceptionFactory.ObjectReadOnly(this);
     }
 
+    #endregion
+
+    #region IEnumerable<T> Members
+
     /// <summary>
-    /// Переводит список в режим "только чтение".
-    /// Повторный вызов метода не выполняет никаких действий.
+    /// Получить перечислитель.
+    /// 
+    /// Тип возвращаемого значения может измениться в будущем, 
+    /// гарантируется только реализация интерфейса перечислителя.
+    /// Поэтому в прикладном коде метод должен использоваться исключительно для использования в операторе foreach.
     /// </summary>
-    public void SetReadOnly()
+    /// <returns>Перечислитель</returns>
+    public List<T>.Enumerator GetEnumerator()
     {
-      _IsReadOnly = true;
+      return _List.GetEnumerator();
+    }
+
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+      return _List.GetEnumerator();
+    }
+
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+      return _List.GetEnumerator();
+    }
+
+    #endregion
+
+    #region IList<T> Members
+
+    /// <summary>
+    /// Возвращает индекс элемента в массиве.
+    /// Если требуется только проверить наличие элемента, следует использовать <see cref="Contains(T)"/>.
+    /// </summary>
+    /// <param name="id">Искомый элемент</param>
+    /// <returns>Индекс</returns>
+    public int IndexOf(T id)
+    {
+      // Сначала может иметь смысл убедиться в наличии элемента
+      if (_List.Count > 20)
+      {
+        if (!_Dict.ContainsKey(id))
+          return -1;
+      }
+
+      return _List.IndexOf(id);
+    }
+
+    /// <summary>
+    /// Вставить элемент в середину списка.
+    /// Если элемент уже есть в списке, никаких действий не выполняется и текущая позиция не изменяется.
+    /// </summary>
+    /// <param name="index">Индекс для вставки элемента</param>
+    /// <param name="id">Элемент</param>
+    public void Insert(int index, T id)
+    {
+      CheckNotReadOnly();
+
+      if (id.Equals(default(T)))
+        return;
+
+      if (_Dict.ContainsKey(id))
+        return;
+
+      _Dict.Add(id, null);
+      try
+      {
+        _List.Insert(index, id);
+      }
+      catch
+      {
+        _Dict.Remove(id);
+        throw;
+      }
+    }
+
+    /// <summary>
+    /// Удалить элемент в заданной позиции
+    /// </summary>
+    /// <param name="index">Индекс элемента дял удаления</param>
+    public void RemoveAt(int index)
+    {
+      CheckNotReadOnly();
+
+      T id = _List[index];
+      _List.RemoveAt(index);
+      _Dict.Remove(id);
+    }
+
+    #endregion
+
+    #region ICollection<T> Members
+
+    /// <summary>
+    /// Добавляет элемент в конец списке, если его еще нет в списке
+    /// </summary>
+    /// <param name="id">добавляемый элемент</param>
+    public void Add(T id)
+    {
+      CheckNotReadOnly();
+
+      if (id.Equals(default(T)))
+        return;
+
+      if (_Dict.ContainsKey(id))
+        return;
+
+      _Dict.Add(id, null);
+      try
+      {
+        _List.Add(id);
+      }
+      catch
+      {
+        _Dict.Remove(id);
+      }
+    }
+
+    /// <summary>
+    /// Очистить список
+    /// </summary>
+    public void Clear()
+    {
+      CheckNotReadOnly();
+
+      _List.Clear();
+      _Dict.Clear();
+    }
+
+    /// <summary>
+    /// Возвращает true, если элемент есть в списке.
+    /// Для определения позиции элемента в списке, используйте <see cref="IndexOf(T)"/>
+    /// </summary>
+    /// <param name="id">проверяемый элемент</param>
+    /// <returns>true, если элемент есть в списке</returns>
+    public bool Contains(T id)
+    {
+      return _Dict.ContainsKey(id);
+    }
+
+    /// <summary>
+    /// Удаляет элемент, если он есть в списке.
+    /// </summary>
+    /// <param name="id">Удаляемый элемент</param>
+    /// <returns>true, если элемент был в списке</returns>
+    public bool Remove(T id)
+    {
+      CheckNotReadOnly();
+
+      if (_Dict.ContainsKey(id))
+      {
+        _List.Remove(id);
+        _Dict.Remove(id);
+        return true;
+      }
+      else
+        return false;
+    }
+
+    #endregion
+
+    #region Методы, адресуемые внутреннему списку
+
+    ///// <summary>
+    ///// Копирование всех элементов списка в массив, начиная с начала массива
+    ///// </summary>
+    ///// <param name="array">Заполняемый массив элементов</param>
+    //public void CopyTo(T[] array)
+    //{
+    //  _List.CopyTo(array);
+    //}
+
+    /// <summary>
+    /// Копирование всех элементов списка в массив, начиная с указанного индекса
+    /// </summary>
+    /// <param name="array">Заполняемый массив элементов</param>
+    /// <param name="arrayIndex">Индекс в массиве <paramref name="array"/>, куда записывается первый элемент списка</param>
+    public void CopyTo(T[] array, int arrayIndex)
+    {
+      _List.CopyTo(array, arrayIndex);
+    }
+
+    ///// <summary>
+    ///// Копирование всех элементов списка в массив, начиная с указанного индекса
+    ///// </summary>
+    ///// <param name="index">Начальная позиция в текущем списке SingleScopeList, начиная с которой начинать копирование.</param>
+    ///// <param name="array">Заполняемый массив элементов</param>
+    ///// <param name="arrayIndex">Индекс в массиве <paramref name="array"/>, куда записывается первый элемент списка</param>
+    ///// <param name="count">Количество копируемых элементов</param>
+    //public void CopyTo(int index, T[] array, int arrayIndex, int count)
+    //{
+    //  _List.CopyTo(index, array, arrayIndex, count);
+    //}
+
+    #endregion
+
+    #region Дополнительные методы
+
+    IdSetKind IIdSet.Kind { get { return IdSetKind.List; } }
+
+    /// <summary>
+    /// Возвращает массив элементов в списке.
+    /// Всегда создается новый массив.
+    /// </summary>
+    /// <returns>Массив</returns>
+    public T[] ToArray()
+    {
+      return _List.ToArray();
+    }
+
+    /// <summary>
+    /// Групповое добавление элементов списка.
+    /// В исходной коллекции могут быть одинаковые и нулевые элементы, которые пропускаются.
+    /// </summary>
+    /// <param name="source">Исходная коллекция</param>
+    public void AddRange(IEnumerable<T> source)
+    {
+      CheckNotReadOnly();
+      if (source == null)
+        return;
+      if (Object.ReferenceEquals(source, this))
+        throw ExceptionFactory.ArgCollectionSameAsThis("collection");
+
+      IIdSet<T> source2 = source as IIdSet<T>;
+      if (Count == 0 && source2 != null)
+      {
+        // Оптимизированное добавление
+        try
+        {
+          foreach (T id in source2)
+          {
+            _Dict.Add(id, null);
+            _List.Add(id);
+          }
+        }
+        catch
+        {
+          // Нельзя оставлять списки несогласованными
+          _Dict.Clear();
+          _List.Clear();
+          throw;
+        }
+      }
+      else
+      {
+        foreach (T id in source)
+          Add(id);
+      }
+    }
+
+    /// <summary>
+    /// Удаление элементов, которые есть в <paramref name="source"/>
+    /// </summary>
+    /// <param name="source">Коллекция удаляемых идентификаторов. Может содержать пустые и повторяющиеся элементы.</param>
+    public void RemoveRange(IEnumerable<T> source)
+    {
+      CheckNotReadOnly();
+      if (source == null)
+        return;
+
+      foreach (T id in source)
+      {
+        if (_Dict.ContainsKey(id))
+        {
+          _List.Remove(id);
+          _Dict.Remove(id);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Удаление всех элементов, которых нет в <paramref name="source"/>
+    /// </summary>
+    /// <param name="source">Коллекция удаляемых идентификаторов. Может содержать пустые и повторяющиеся элементы.</param>
+    public void RemoveOthers(IEnumerable<T> source)
+    {
+      CheckNotReadOnly();
+
+      if (source == null)
+      {
+        Clear();
+        return;
+      }
+
+      if (_List.Count == 0)
+        return;
+
+      // Единственный простой способ - создать временный IdList
+      IIdSet<T> source2 = source as IIdSet<T>;
+      if (source2 == null || (source2 is IdArray<T>))
+        source2 = new IdCollection<T>(source);
+      if (source2.Count == 0)
+      {
+        Clear();
+        return;
+      }
+
+      T[] a = ToArray();
+      for (int i = 0; i < a.Length; i++)
+      {
+        if (!source2.Contains(a[i]))
+          Remove(a[i]);
+      }
     }
 
     #endregion
@@ -352,91 +490,38 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает true, если есть хотя бы один совпадающий идентификатор.
-    /// Если <paramref name="other"/> задает пустой список, то возвращается false.
+    /// Если <paramref name="others"/> задает пустой список, то возвращается false.
     /// </summary>
-    /// <param name="other">Список проверяемых идентификаторов</param>
+    /// <param name="others">Список проверяемых идентификаторов</param>
     /// <returns>true при наличии пересечения</returns>
-    public bool ContainsAny(IdList other)
+    public bool ContainsAny(IEnumerable<T> others)
     {
-#if DEBUG
-      if (other == null)
-        throw new ArgumentNullException("other");
-#endif
-
-      if (this.Count == 0 || other.Count == 0)
-        return false;
-
-      foreach (Int32 otherId in other)
-      {
-        if (Contains(otherId))
-          return true;
-      }
-      return false;
+      T someMatchedId;
+      return ContainsAny(others, out someMatchedId);
     }
 
     /// <summary>
     /// Возвращает true, если есть хотя бы один совпадающий идентификатор.
-    /// Если <paramref name="other"/> задает пустой список, то возвращается false.
+    /// Если <paramref name="others"/> задает пустой список, то возвращается false.
     /// </summary>
-    /// <param name="other">Список проверяемых идентификаторов</param>
-    /// <param name="firstMatchedId">Сюда помещается первый совпадающий идентификатор</param>
+    /// <param name="others">Список проверяемых идентификаторов</param>
+    /// <param name="someMatchedId">Сюда помещается первый совпадающий идентификатор</param>
     /// <returns>true при наличии пересечения</returns>
-    public bool ContainsAny(IdList other, out Int32 firstMatchedId)
+    public bool ContainsAny(IEnumerable<T> others, out T someMatchedId)
     {
-#if DEBUG
-      if (other == null)
-        throw new ArgumentNullException("other");
-#endif
+      someMatchedId = default(T);
 
-      firstMatchedId = 0;
-      if (this.Count == 0 || other.Count == 0)
+      if (others == null)
         return false;
 
-      foreach (Int32 otherId in other)
+      if (Count == 0)
+        return false;
+
+      foreach (T otherId in others)
       {
         if (Contains(otherId))
         {
-          firstMatchedId = otherId;
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /// <summary>
-    /// Возвращает true, если есть хотя бы один совпадающий идентификатор.
-    /// </summary>
-    /// <param name="ids">Список проверяемых идентификаторов</param>
-    /// <returns>true при наличии пересечения</returns>
-    public bool ContainsAny(Int32[] ids)
-    {
-      Int32 firstMatchedId;
-      return ContainsAny(ids, out firstMatchedId);
-    }
-
-    /// <summary>
-    /// Возвращает true, если есть хотя бы один совпадающий идентификатор.
-    /// Значения 0 в списке <paramref name="ids"/> пропускаются.
-    /// </summary>
-    /// <param name="ids">Список проверяемых идентификаторов</param>
-    /// <param name="firstMatchedId">Сюда помещается первый совпадающий идентификатор</param>
-    /// <returns>true при наличии пересечения</returns>
-    public bool ContainsAny(Int32[] ids, out Int32 firstMatchedId)
-    {
-#if DEBUG
-      if (ids == null)
-        throw new ArgumentNullException("ids");
-#endif
-
-      firstMatchedId = 0;
-
-      for (int i = 0; i < ids.Length; i++)
-      {
-        if (ids[i] == 0)
-          continue;
-        if (Contains(ids[i]))
-        {
-          firstMatchedId = ids[i];
+          someMatchedId = otherId;
           return true;
         }
       }
@@ -445,24 +530,16 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Возвращает true, если в текущем списке есть ВСЕ идентификаторы из второго списка.
-    /// Если <paramref name="other"/> задает пустой список, то возвращается true.
+    /// Если <paramref name="others"/> задает пустой список, то возвращается true.
     /// </summary>
-    /// <param name="other">Список проверяемых идентификаторов</param>
+    /// <param name="others">Список проверяемых идентификаторов</param>
     /// <returns>true при наличии всех идентификаторов</returns>
-    public bool Contains(IdList other)
+    public bool ContainsAll(IEnumerable<T> others)
     {
-#if DEBUG
-      if (other == null)
-        throw new ArgumentNullException("other");
-#endif
-
-      if (other.Count == 0)
+      if (others == null)
         return true;
 
-      if (this.Count == 0)
-        return false;
-
-      foreach (Int32 otherId in other)
+      foreach (T otherId in others)
       {
         if (!Contains(otherId))
           return false;
@@ -471,382 +548,169 @@ namespace FreeLibSet.Data
       return true;
     }
 
-    /// <summary>
-    /// Возвращает true, если в текущем списке есть ВСЕ идентификаторы из второго списка.
-    /// Если <paramref name="ids"/> задает пустой список, то возвращается true.
-    /// Значения 0 в списке <paramref name="ids"/> пропускаются.
-    /// </summary>
-    /// <param name="ids">Список проверяемых идентификаторов</param>
-    /// <returns>true при наличии всех идентификаторов</returns>
-    public bool Contains(Int32[] ids)
+    #endregion
+
+    #region Десериализация
+
+    [OnDeserialized]
+    private void OnDeserializedMethod(StreamingContext context)
     {
-#if DEBUG
-      if (ids == null)
-        throw new ArgumentNullException("ids");
-#endif
-
-      for (int i = 0; i < ids.Length; i++)
-      {
-        if (ids[i] == 0)
-          continue;
-
-        if (!Contains(ids[i]))
-          return false;
-      }
-
-      return true;
+      _Dict = new Dictionary<T, object>(_List.Count);
+      for (int i = 0; i < _List.Count; i++)
+        _Dict.Add(_List[i], null);
     }
 
     #endregion
 
-    #region ICloneable Members
+    #region IList Members
 
-    /// <summary>
-    /// Создает копию списка.
-    /// В новом списке свойство <see cref="IsReadOnly"/> не установлено.
-    /// </summary>
-    /// <returns>Копия списка</returns>
-    public IdList Clone()
+    int System.Collections.IList.Add(object value)
     {
-      return new IdList(this);
-    }
+      T value2 = (T)value;
 
-    object ICloneable.Clone()
-    {
-      return new IdList(this);
-    }
+      if (_Dict.ContainsKey(value2))
+        return IndexOf(value2);
 
-    #endregion
-
-    #region Сравнение
-
-    /// <summary>
-    /// Возвращает true, если оба списка содержат одинаковые идентификаторы (без учета порядка следования).
-    /// Также возвращает true, если обе ссылки равны null
-    /// </summary>
-    /// <param name="a">Первый список для сравнения</param>
-    /// <param name="b">Второй список для сравнения</param>
-    /// <returns>Равенство списков</returns>
-    public static bool operator ==(IdList a, IdList b)
-    {
-      if (Object.ReferenceEquals(a, b))
-        return true;
-      if (Object.ReferenceEquals(a, null) || Object.ReferenceEquals(b, null))
-        return false;
-
-      if (a.Count != b.Count)
-        return false;
-
-      return a.Contains(b);
+      Add(value2);
+      return _List.Count - 1;
     }
 
     /// <summary>
-    /// Возвращает true, если в списках хотя бы один идентификатор не совападает (без учета порядка следования).
-    /// Также возвращает true, если одна из ссылок равна null, а вторая - нет
+    /// Возвращает true, если значение <paramref name="value"/> можно приводить к типу <typeparamref name="T"/>.
+    /// Взято из List.cs в .Net Framework.
     /// </summary>
-    /// <param name="a">Первый список для сравнения</param>
-    /// <param name="b">Второй список для сравнения</param>
-    /// <returns>Равенство списков</returns>
-    public static bool operator !=(IdList a, IdList b)
+    /// <param name="value">Значение, переданное в метод нетипизированного интерфейса IList.</param>
+    /// <returns>true - возможность преобразования</returns>
+    private static bool IsCompatibleObject(object value)
     {
-      return !(a == b);
+      // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
+      // Note that default(T) is not equal to null for value types except when T is Nullable<U>. 
+      return (value is T);
     }
 
-    /// <summary>
-    /// Возвращает true, если <paramref name="obj"/> ссылается на <see cref="IdList"/> и списки совпадают.
-    /// </summary>
-    /// <param name="obj">Сравниваемый список</param>
-    /// <returns>true, если списки совпадают</returns>
-    public override bool Equals(object obj)
+    bool System.Collections.IList.Contains(object value)
     {
-      if (obj is IdList)
-        return this == (IdList)obj;
+      if (IsCompatibleObject(value))
+        return Contains((T)value);
       else
         return false;
     }
 
-    /// <summary>
-    /// Хэш-код списка. Возвращает свойство <see cref="Count"/>.
-    /// </summary>
-    /// <returns>Хэш-код</returns>
-    public override int GetHashCode()
+    int System.Collections.IList.IndexOf(object value)
     {
-      return Count;
+      if (IsCompatibleObject(value))
+        return IndexOf((T)value);
+      else
+        return -1;
     }
 
-    #endregion
-
-    #region Операторы сложения / вычитания
-
-    /// <summary>
-    /// Возвращает массив, содержащий идентификаторы из обоих списков.
-    /// У результирующего списка свойство <see cref="IsReadOnly"/> не установлено.
-    /// Тоже, что и оператор "+"
-    /// </summary>
-    /// <param name="a">Первый список</param>
-    /// <param name="b">Второй список</param>
-    /// <returns>Объединенный список</returns>
-    public static IdList operator |(IdList a, IdList b)
+    void System.Collections.IList.Insert(int index, object value)
     {
-#if DEBUG
-      if (a == null)
-        throw new ArgumentNullException("a");
-      if (b == null)
-        throw new ArgumentNullException("b");
-#endif
-
-      IdList res = a.Clone();
-      foreach (Int32 id in b)
-        res.Add(id);
-      return res;
+      this.Insert(index, (T)value);
     }
 
-    /// <summary>
-    /// Возвращает массив, содержащий идентификаторы, входящие в оба списка.
-    /// У результирующего списка свойство <see cref="IsReadOnly"/> не установлено.
-    /// </summary>
-    /// <param name="a">Первый список</param>
-    /// <param name="b">Второй список</param>
-    /// <returns>Список с общими идентификаторами</returns>
-    public static IdList operator &(IdList a, IdList b)
+    bool System.Collections.IList.IsFixedSize
     {
-#if DEBUG
-      if (a == null)
-        throw new ArgumentNullException("a");
-      if (b == null)
-        throw new ArgumentNullException("b");
-#endif
-
-      IdList res = new IdList();
-      foreach (Int32 id in a)
-      {
-        if (b.Contains(id))
-          res.Add(id);
-      }
-      return res;
+      get { return IsReadOnly; }
     }
 
-    /// <summary>
-    /// Возвращает массив, содержащий идентификаторы из обоих списков.
-    /// У результирующего списка свойство <see cref="IsReadOnly"/> не установлено.
-    /// Тоже, что и оператор "|"
-    /// </summary>
-    /// <param name="a">Первый список</param>
-    /// <param name="b">Второй список</param>
-    /// <returns>Объединенный список</returns>
-    public static IdList operator +(IdList a, IdList b)
+    void System.Collections.IList.Remove(object value)
     {
-#if DEBUG
-      if (a == null)
-        throw new ArgumentNullException("a");
-      if (b == null)
-        throw new ArgumentNullException("b");
-#endif
-
-      IdList Res = a.Clone();
-      foreach (Int32 id in b)
-        Res.Add(id);
-      return Res;
+      if (IsCompatibleObject(value))
+        Remove((T)value);
     }
 
-    /// <summary>
-    /// Возвращает массив, содержащий идентификаторы из первого списка, которых нет во втором списке.
-    /// У результирующего списка свойство <see cref="IsReadOnly"/> не установлено.
-    /// </summary>
-    /// <param name="a">Первый список (большой)</param>
-    /// <param name="b">Второй список (вычитаемый)</param>
-    /// <returns>Разностный список</returns>
-    public static IdList operator -(IdList a, IdList b)
-    {
-#if DEBUG
-      if (a == null)
-        throw new ArgumentNullException("a");
-      if (b == null)
-        throw new ArgumentNullException("b");
-#endif
-
-      IdList res = new IdList();
-      foreach (Int32 id in a)
-      {
-        if (!b.Contains(id))
-          res.Add(id);
-      }
-      return res;
-    }
-
-    #endregion
-
-    #region Прочие методы и свойства
-
-    /// <summary>
-    /// Возвращает список идентификаторов, разделенных запятыми
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString()
-    {
-      return StdConvert.ToString(ToArray());
-    }
-
-    /// <summary>
-    /// Если список содержит единственный идентификатор, свойство возвращает его.
-    /// Иначе возвращается 0.
-    /// Свойство может быть полезно для оптимизации кода, когда список из одного идентификатора обрабатывается особым образом
-    /// </summary>
-    public Int32 SingleId
+    object System.Collections.IList.this[int index]
     {
       get
       {
-        if (_Items.Count == 1)
-        {
-          // Нет более короткого способа
-          Int32[] a1 = new Int32[1];
-          _Items.Keys.CopyTo(a1, 0);
-          return a1[0];
-        }
-        else
-          return 0;
+        return this[index];
+      }
+      set
+      {
+        this[index] = (T)value;
       }
     }
 
     #endregion
 
-    #region Статические методы создания из таблиц
+    #region ICollection Members
 
-    #region FromIds
-
-    /// <summary>
-    /// Создает список из поля "Id", которое является первичным ключом таблицы.
-    /// Аналогично <see cref="DataTools.GetIds(DataTable)"/>.
-    /// </summary>
-    /// <param name="table">Таблица с полем "Id"</param>
-    /// <returns>Список идентификаторов</returns>
-    public static IdList FromIds(DataTable table)
+    void System.Collections.ICollection.CopyTo(Array array, int index)
     {
-      if (table == null)
-        return new IdList(); // 20.08.2019
-
-      int colPos = table.Columns.IndexOf("Id");
-      if (colPos < 0)
-        throw ExceptionFactory.ArgUnknownColumnName("table", table, "Id");
-
-      IdList res = new IdList(false, table.Rows.Count);
-      for (int i = 0; i < table.Rows.Count; i++)
-      {
-        if (table.Rows[i].RowState == DataRowState.Deleted)
-          res._Items.Add((Int32)(table.Rows[i][colPos, DataRowVersion.Original]), null);
-        else
-          res._Items.Add((Int32)(table.Rows[i][colPos]), null);
-      }
-      return res;
+      //((ICollection)_List).CopyTo(array, index);
+      ArrayTools.CopyToArray(_List, array, index);
     }
 
-    /// <summary>
-    /// Получить массив идентификаторов для ключевого поля "Id" в таблице для 
-    /// строк, входящих в просмотр <see cref="DataView"/>
-    /// Порядок полученных идентификаторов соответствует порядку строк в просмотре
-    /// </summary>
-    /// <param name="dv">Просмотр <see cref="DataView"/></param>
-    /// <returns>Массив числовых идентификаторов</returns>
-    public static IdList FromIds(DataView dv)
+    bool System.Collections.ICollection.IsSynchronized
     {
-      if (dv == null)
-        return new IdList(); // 20.08.2019
-
-      int colPos = dv.Table.Columns.IndexOf("Id");
-      if (colPos < 0)
-        throw ExceptionFactory.ArgUnknownColumnName("dv", dv.Table, "Id");
-
-      IdList res = new IdList(false, dv.Count);
-      for (int i = 0; i < dv.Count; i++)
-      {
-        DataRow row = dv[i].Row;
-        if (row.RowState == DataRowState.Deleted)
-          res._Items.Add((Int32)(row[colPos, DataRowVersion.Original]), null);
-        else
-          res._Items.Add((Int32)(row[colPos]), null);
-      }
-      return res;
+      get { return false; }
     }
 
-    /// <summary>
-    /// Получение значений поля "Id" из массива строк. В отличие от <see cref="FromColumn(ICollection{DataRow}, string)"/>,
-    /// не проверяет нулевые значения и не проверяет повторы.
-    /// </summary>
-    /// <param name="rows">Коллекция строк</param>
-    /// <returns>Массив идентификаторов</returns>
-    public static IdList FromIds(ICollection<DataRow> rows)
+    object System.Collections.ICollection.SyncRoot
     {
-      if (rows == null)
-        return new IdList(); // 20.08.2019
-
-      IdList res = new IdList(false, rows.Count);
-
-      int colPos = -1;
-      foreach (DataRow row in rows)
-      {
-        if (colPos < 0)
-        {
-          colPos = row.Table.Columns.IndexOf("Id");
-          if (colPos < 0)
-            throw ExceptionFactory.ArgUnknownColumnName("rows", row.Table, "Id");
-        }
-        if (row.RowState == DataRowState.Deleted)
-          res._Items.Add((Int32)(row[colPos, DataRowVersion.Original]), null);
-        else
-          res._Items.Add((Int32)(row[colPos]), null);
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Получение значений поля "Id" из массива строк <see cref="DataRowView"/>. В отличие от <see cref="FromColumn(ICollection{DataRowView}, string)"/>,
-    /// не проверяет нулевые значения и не проверяет повторы
-    /// </summary>
-    /// <param name="rows">Коллекция строк типа <see cref="DataRowView"/></param>
-    /// <returns>Массив идентификаторов</returns>
-    public static IdList FromIds(ICollection<DataRowView> rows)
-    {
-      if (rows == null)
-        return new IdList(); // 20.08.2019
-
-      IdList res = new IdList(false, rows.Count);
-
-      int colPos = -1;
-      foreach (DataRowView drv in rows)
-      {
-        if (colPos < 0)
-        {
-          colPos = drv.Row.Table.Columns.IndexOf("Id");
-          if (colPos < 0)
-            throw ExceptionFactory.ArgUnknownColumnName("rows", drv.Row.Table, "Id");
-        }
-        if (drv.Row.RowState == DataRowState.Deleted)
-          res._Items.Add((Int32)(drv.Row[colPos, DataRowVersion.Original]), null);
-        else
-          res._Items.Add((Int32)(drv.Row[colPos]), null);
-      }
-
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает список, состоящий из одного идентификатора.
-    /// Если передан нулевой идентификатор, то возвращается пустой список, который, однако, можно редактировать.
-    /// </summary>
-    /// <param name="id">Идентификатор, добавляемый в список</param>
-    /// <returns>Список</returns>
-    public static IdList FromId(Int32 id)
-    {
-      IdList list = new IdList();
-      if (id != 0)
-        list.Add(id);
-      return list;
+      get { return _List; }
     }
 
     #endregion
+
+    #region ICloneable
+
+    /// <summary>
+    /// Создает копию списка.
+    /// Новый список будет иметь свойство <see cref="IsReadOnly"/>=false.
+    /// </summary>
+    /// <returns>Копия списка</returns>
+    public IdList<T> Clone()
+    {
+      return new IdList<T>((IIdSet<T>)this);
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
+    }
+
+    /// <summary>
+    /// Создает копию списка, если свойство <see cref="IsReadOnly"/>=true.
+    /// Новый список будет иметь свойство <see cref="IsReadOnly"/>=false.
+    /// Если <see cref="IsReadOnly"/>=false, возвращается ссылка на текущий список.
+    /// </summary>
+    /// <returns></returns>
+    public IdList<T> CloneIfReadOnly()
+    {
+      if (IsReadOnly)
+        return Clone();
+      else
+        return this;
+    }
+
+    IIdSet<T> ICloneableReadOnlyObject<IIdSet<T>>.Clone()
+    {
+      return Clone();
+    }
+
+    //IIdSet ICloneableReadOnlyObject<IIdSet>.Clone()
+    //{
+    //  return Clone();
+    //}
+
+    IIdSet<T> ICloneableReadOnlyObject<IIdSet<T>>.CloneIfReadOnly()
+    {
+      return CloneIfReadOnly();
+    }
+
+    //IIdSet ICloneableReadOnlyObject<IIdSet>.CloneIfReadOnly()
+    //{
+    //  return CloneIfReadOnly();
+    //}
+
+    #endregion
+
+    #region Статические методы
 
     #region FromColumn
-
+#if XXX
     /// <summary>
     /// Получение списка числовых значений поля (идентификаторов), 
     /// которые принимает ссылочное поле в таблице. 
@@ -855,29 +719,22 @@ namespace FreeLibSet.Data
     /// <param name="table">Таблица данных</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static IdList FromColumn(DataTable table, string columnName)
+    public static IdList<T> FromColumn(DataTable table, string columnName)
     {
       if (table == null)
-        return new IdList(); // 20.08.2019
+        return new IdList<T>();
 
-      if (String.IsNullOrEmpty(columnName))
-        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
-      int colPos = table.Columns.IndexOf(columnName);
-      if (colPos < 0)
-        throw ExceptionFactory.ArgUnknownColumnName("columnName", table, columnName);
+      DataTableValues src = new DataTableValues(table);
+      DataColumnValue cv = src[columnName];
 
-      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
+      IdList<T> res = new IdList<T>();
 
-      foreach (DataRow row in table.Rows)
+      while(src.Read())
       {
-        if (row.IsNull(colPos))
+        if (cv.IsNull)
           continue;
-        Int32 Id = (Int32)(row[colPos]);
-        if (Id == 0)
-          continue;
-
-        if (!res._Items.ContainsKey(Id))
-          res._Items.Add(Id, null);
+        T Id = (T)(cv.Value);
+        res.Add(Id);
       }
 
       return res;
@@ -892,30 +749,22 @@ namespace FreeLibSet.Data
     /// <param name="dv">Коллекция строк таблицы данных</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static IdList FromColumn(DataView dv, string columnName)
+    public static IdList<T> FromColumn(DataView dv, string columnName)
     {
       if (dv == null)
-        return new IdList(); // 20.08.2019
+        return new IdList<T>();
 
-      if (String.IsNullOrEmpty(columnName))
-        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
+      DataViewValues src = new DataViewValues(dv);
+      DataColumnValue cv = src[columnName];
 
-      int colPos = dv.Table.Columns.IndexOf(columnName);
-      if (colPos < 0)
-        throw ExceptionFactory.ArgUnknownColumnName("columnName", dv.Table, columnName);
+      IdList<T> res = new IdList<T>();
 
-      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
-
-      for (int i = 0; i < dv.Count; i++)
+      while (src.Read())
       {
-        if (dv[i].Row.IsNull(colPos))
+        if (cv.IsNull)
           continue;
-        Int32 id = (Int32)(dv[i].Row[colPos]);
-        if (id == 0)
-          continue;
-
-        if (!res._Items.ContainsKey(id))
-          res._Items.Add(id, null);
+        T Id = (T)(cv.Value);
+        res.Add(Id);
       }
 
       return res;
@@ -931,32 +780,24 @@ namespace FreeLibSet.Data
     /// <param name="rows">Массив однотипных строк</param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static IdList FromColumn(ICollection<DataRow> rows, string columnName)
+    public static IdList<T> FromColumn(IEnumerable<DataRow> rows, string columnName)
     {
       if (rows == null)
-        return new IdList(); // 20.08.2019
+        return new IdList<T>();
 
-      if (String.IsNullOrEmpty(columnName))
-        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
+      DataRowArrayValues src = new DataRowArrayValues(rows, null);
+      DataColumnValue cv = null;
 
-      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
-      int colPos = -1;
-      foreach (DataRow row in rows)
+      IdList<T> res = new IdList<T>();
+      while (src.Read())
       {
-        if (colPos < 0)
-        {
-          colPos = row.Table.Columns.IndexOf(columnName);
-          if (colPos < 0)
-            throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
-        }
+        if (cv == null)
+          cv = src[columnName];
 
-        if (row.IsNull(colPos))
+        if (cv.IsNull)
           continue;
-        Int32 id = (Int32)(row[colPos]);
-        if (id == 0)
-          continue;
-        if (!res._Items.ContainsKey(id))
-          res._Items.Add(id, null);
+        T Id = (T)(cv.Value);
+        res.Add(Id);
       }
 
       return res;
@@ -972,864 +813,67 @@ namespace FreeLibSet.Data
     /// <param name="rows">Массив однотипных строк как коллекция <see cref="DataRowView"/></param>
     /// <param name="columnName">Имя числового ссылочного поля</param>
     /// <returns>Массив идентификаторов</returns>
-    public static IdList FromColumn(ICollection<DataRowView> rows, string columnName)
+    public static IdList<T> FromColumn(IEnumerable<DataRowView> rows, string columnName)
     {
       if (rows == null)
-        return new IdList(); // 20.08.2019
+        return new IdList<T>();
 
-      if (String.IsNullOrEmpty(columnName))
-        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
+      DataRowArrayValues src = new DataRowArrayValues(rows, null);
+      DataColumnValue cv = null;
 
-      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
-      int colPos = -1;
-      foreach (DataRowView drv in rows)
+      IdList<T> res = new IdList<T>();
+      while (src.Read())
       {
-        if (colPos < 0)
-        {
-          colPos = drv.Row.Table.Columns.IndexOf(columnName);
-          if (colPos < 0)
-            throw ExceptionFactory.ArgUnknownColumnName("columnName", drv.Row.Table, columnName);
-        }
+        if (cv == null)
+          cv = src[columnName];
 
-        if (drv.Row.IsNull(colPos))
+        if (cv.IsNull)
           continue;
-        Int32 id = (Int32)(drv.Row[colPos]);
-        if (id == 0)
-          continue;
-        if (!res._Items.ContainsKey(id))
-          res._Items.Add(id, null);
+        T Id = (T)(cv.Value);
+        res.Add(Id);
       }
 
       return res;
     }
+#endif
 
     #endregion
 
-    #region FromArray
+    #region FromId()
 
     /// <summary>
-    /// Получить список идентификаторов из другого массива.
-    /// Повторяющиеся и нулевые идентификаторы пропускаются
+    /// Создает список из одного идентификатора.
+    /// Если <paramref name="id"/> задает пустое значение, возвращается пустой массив <see cref="Empty"/>.
+    /// Применение этого метода не очень удобно, так как возвращаемый список может иметь свойство <see cref="IsReadOnly"/>=true.
+    /// Если предполагается дальнейшее изменение списка, удобнее создать пустой список и добавить в него идентификатор.
+    /// Если изменение списка не предполагается, следует использовать <see cref="IdArray{T}.FromId(T)"/> как менее ресурсозатратный.
     /// </summary>
-    /// <param name="ids">Массив идентификаторов</param>
-    /// <returns></returns>
-    public static IdList FromArray(Int32[] ids)
-    {
-      if (ids == null)
-        return new IdList();
-
-      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
-
-      for (int i = 0; i < ids.Length; i++)
-      {
-        if (ids[i] == 0)
-          continue;
-        if (!res._Items.ContainsKey(ids[i]))
-          res._Items.Add(ids[i], null);
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Получить список идентификаторов из другого массива.
-    /// Повторяющиеся и нулевые идентификаторы пропускаются
-    /// </summary>
-    /// <param name="ids">Массив идентификаторов</param>
-    /// <returns></returns>
-    public static IdList FromArray(Int32[,] ids)
-    {
-      if (ids == null)
-        return new IdList();
-
-      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
-
-      int n1 = ids.GetLowerBound(0);
-      int n2 = ids.GetUpperBound(0);
-      int m1 = ids.GetLowerBound(1);
-      int m2 = ids.GetUpperBound(1);
-
-      for (int i = n1; i <= n2; i++)
-      {
-        for (int j = m1; j <= m2; j++)
-        {
-          if (ids[i, j] == 0)
-            continue;
-
-          if (!res._Items.ContainsKey(ids[i, j]))
-            res._Items.Add(ids[i, j], null);
-        }
-      }
-
-      return res;
-    }
-
-    /// <summary>
-    /// Получить список идентификаторов из jagged-массива.
-    /// Повторяющиеся и нулевые идентификаторы пропускаются
-    /// </summary>
-    /// <param name="ids">Массив идентификаторов</param>
-    /// <returns></returns>
-    public static IdList FromArray(Int32[][] ids)
-    {
-      if (ids == null)
-        return new IdList();
-
-      IdList res = new IdList(); // не стоит задавать емкость, т.к. реально может быть мало разных значений
-
-      for (int i = 0; i < ids.Length; i++)
-      {
-        if (ids[i] == null)
-          continue;
-        res.Add(ids[i]);
-      }
-      return res;
-    }
-
-    #endregion
-
-    #endregion
-
-    #region Статический экземпляр
-
-    /// <summary>
-    /// Пустой список идентификаторов с установленным значением <see cref="IsReadOnly"/>=true
-    /// </summary>
-    public static readonly IdList Empty = CreateEmpty();
-
-    private static IdList CreateEmpty()
-    {
-      IdList res = new IdList();
-      res.SetReadOnly();
-      return res;
-    }
-
-    #endregion
-  }
-
-  /// <summary>
-  /// Набор списков идентификаторов для нескольких таблиц.
-  /// Реализует словарь, в котором ключом является имя таблицы, а значением - список идентификаторов <see cref="IdList"/>.
-  /// Класс является потокобезопасным после вызова SetReadOnly(). В процессе заполнения класс не является потокобезопасным.
-  /// Можно управлять чувствительностью к регистру для имен таблиц.
-  /// </summary>
-  [Serializable]
-  public sealed class TableAndIdList : IDictionary<string, IdList>, ICloneable, IReadOnlyObject
-  {
-    #region Конструкторы
-
-    /// <summary>
-    /// Создает набор
-    /// </summary>
-    /// <param name="ignoreCase">Должен ли игнорироваться регистр символов в именах таблиц</param>
-    public TableAndIdList(bool ignoreCase)
-    {
-      _Tables = new TableDict(ignoreCase);
-    }
-
-    /// <summary>
-    /// Создает набор.
-    /// Имена таблиц будут чувствительны к регистру
-    /// </summary>
-    public TableAndIdList()
-      : this(false)
-    {
-    }
-
-    private TableAndIdList(int dummy)
-      : this(false)
-    {
-      SetReadOnly();
-    }
-
-    #endregion
-
-    #region Словарь таблиц
-
-    [Serializable]
-    private class TableDict : TypedStringDictionary<IdList>
-    {
-      #region Конструктор
-
-      public TableDict(bool ignoreCase)
-        : base(ignoreCase)
-      {
-      }
-
-      #endregion
-
-      #region SetReadOnly
-
-      public new void SetReadOnly()
-      {
-        base.SetReadOnly();
-      }
-
-      #endregion
-    }
-
-    private TableDict _Tables;
-
-    /// <summary>
-    /// Доступ к списку идентификаторов для таблицы с заданным именем.
-    /// Если таблицы еще не было в списке, то, если свойство <see cref="IsReadOnly"/>=false (список в режиме заполнения), создается
-    /// новый пустой объект <see cref="IdList"/>, в который можно добавлять идентификаторы. Если <see cref="IsReadOnly"/>=true, 
-    /// то возвращается ссылка на <see cref="IdList.Empty"/>.
-    /// Установка свойства очищает существующий список идентификаторов для таблицы и заменяет его новым
-    /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Список идентификаторов</returns>
-    public IdList this[string tableName]
-    {
-      get
-      {
-        IdList list;
-        if (!_Tables.TryGetValue(tableName, out list))
-        {
-          if (String.IsNullOrEmpty(tableName))
-            throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
-
-          if (_Tables.IsReadOnly)
-            return IdList.Empty;
-          else
-          {
-            list = new IdList();
-            _Tables.Add(tableName, list);
-          }
-        }
-        return list;
-      }
-      set
-      {
-        CheckNotReadOnly();
-        if (String.IsNullOrEmpty(tableName))
-          throw ExceptionFactory.ArgStringIsNullOrEmpty("tableName");
-
-        if (value.Count == 0)
-        {
-          if (!_Tables.ContainsKey(tableName))
-            return;
-        }
-
-        IdList lst = this[tableName];
-        lst.Clear();
-        lst.Add(value);
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если есть идентификаторы для указанной таблицы.
-    /// Эквивалентно проверке this[tableName].Count больше 0.
-    /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <returns>Наличие идентификаторов</returns>
-    public bool Contains(string tableName)
-    {
-      if (String.IsNullOrEmpty(tableName))
-        return false;
-
-      IdList lst;
-      if (!_Tables.TryGetValue(tableName, out lst))
-        return false;
-
-      return lst.Count > 0;
-    }
-
-    bool IDictionary<string, IdList>.ContainsKey(string key)
-    {
-      return Contains(key);
-    }
-
-
-    /// <summary>
-    /// Возвращает список идентификаторов для заданной таблицы, если он есть и содержит идентификаторы
-    /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="value">Сюда помещается список идентификаторов или null</param>
-    /// <returns>Наличие идентификаторов. Эквивалентно Contains(<paramref name="tableName"/>).</returns>
-    public bool TryGetValue(string tableName, out IdList value)
-    {
-      if (!_Tables.TryGetValue(tableName, out value))
-        return false;
-
-      if (value.Count == 0)
-      {
-        value = null;
-        return false;
-      }
-
-      return true;
-    }
-
-    #endregion
-
-    #region Альтернативный доступ
-
-    /// <summary>
-    /// Возвращает наличие идентификатора для заданной таблицы в наборе.
-    /// Установка свойства добавляет или удаляет идентификатор из набора, в зависимости от значения.
-    /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор</param>
-    /// <returns>Наличие идентификатора для набора</returns>
-    public bool this[string tableName, Int32 id]
+    /// <returns>Список из одного элемента или пустой список</returns>
+    public static IdList<T> FromId(T id)
     {
-      get
-      {
-        IdList list;
-        if (_Tables.TryGetValue(tableName, out list))
-          return list.Contains(id);
-        else
-          return false;
-      }
-      set
-      {
-        if (value)
-          this[tableName].Add(id);
-        else
-          this[tableName].Remove(id);
-      }
-    }
-
-    #endregion
-
-    #region Общая информация
-
-    /// <summary>
-    /// Возвращает общее количество идентификаторов для всех таблиц
-    /// </summary>
-    public int Count
-    {
-      get
-      {
-        int cnt = 0;
-        foreach (KeyValuePair<string, IdList> pair in _Tables)
-          cnt += pair.Value.Count;
-        return cnt;
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если в списке нет ни одного идентификатора.
-    /// Таблицы без идентификаторов не учитываются
-    /// </summary>
-    public bool IsEmpty
-    {
-      get
-      {
-        foreach (KeyValuePair<string, IdList> pair in _Tables)
-        {
-          if (pair.Value.Count > 0)
-            return false;
-        }
-        return true;
-      }
-    }
-
-    /// <summary>
-    /// Пустой список без возможности изменения
-    /// </summary>
-    public static readonly TableAndIdList Empty = new TableAndIdList(0);
-
-    /// <summary>
-    /// Возвращает список имен таблиц, у которых есть идентификаторы
-    /// </summary>
-    /// <returns></returns>
-    public string[] GetTableNames()
-    {
-      if (IsReadOnly)
-      {
-        // В режиме "только чтение" не может быть пустых списков IdList
-
-        string[] a = new string[_Tables.Count];
-        _Tables.Keys.CopyTo(a, 0);
-        return a;
-      }
+      if (id.Equals(default(T)))
+        return Empty;
       else
       {
-        List<string> lst = new List<string>();
-        foreach (KeyValuePair<string, IdList> pair in _Tables)
-        {
-          if (pair.Value.Count > 0)
-            lst.Add(pair.Key);
-        }
-        return lst.ToArray();
+        IdList<T> lst = new IdList<T>();
+        lst.Add(id);
+        return lst;
       }
     }
 
     #endregion
 
-    #region IReadOnlyObject Members
-
     /// <summary>
-    /// Возвращает true, если набор находится в режиме просмотра
+    /// Список без идентификаторов и установленным признаком <see cref="IsReadOnly"/>=true.
     /// </summary>
-    public bool IsReadOnly { get { return _Tables.IsReadOnly; } }
+    public static readonly IdList<T> Empty = CreateEmpty();
 
-    /// <summary>
-    /// Выбрасывает исключение, если набор находится в режиме просмотра
-    /// </summary>
-    public void CheckNotReadOnly()
+    private static IdList<T> CreateEmpty()
     {
-      _Tables.CheckNotReadOnly();
-    }
-
-    /// <summary>
-    /// Переводит список в режим "Только чтение"
-    /// </summary>
-    public void SetReadOnly()
-    {
-      // Так как операция сложная, предотвращаем асинхронный вызов метода
-      lock (_Tables)
-      {
-        if (!_Tables.IsReadOnly)
-        {
-          #region Вызываем IdList.SetReadOnly() и удаляем таблицы без идентификаторов
-
-          if (_Tables.Count > 0)
-          {
-            string[] allNames = new string[_Tables.Count];
-            _Tables.Keys.CopyTo(allNames, 0);
-            for (int i = 0; i < allNames.Length; i++)
-            {
-              if (_Tables[allNames[i]].Count == 0)
-                _Tables.Remove(allNames[i]);
-              else
-                _Tables[allNames[i]].SetReadOnly();
-            }
-          }
-
-          #endregion
-
-          _Tables.SetReadOnly(); // основной признак
-        }
-      }
-    }
-
-    #endregion
-
-    #region ICloneable Members
-
-    /// <summary>
-    /// Создает копию списка, у которого признак <see cref="IsReadOnly"/> не установлен
-    /// </summary>
-    /// <returns></returns>
-    public TableAndIdList Clone()
-    {
-      TableAndIdList res = new TableAndIdList(_Tables.IgnoreCase);
-      foreach (KeyValuePair<string, IdList> pair in _Tables)
-        res._Tables.Add(pair.Key, pair.Value.Clone());
-      return res;
-    }
-
-    object ICloneable.Clone()
-    {
-      return Clone();
-    }
-
-    #endregion
-
-    #region Сложение и вычитание
-
-    #region Методы модификации текущего списка
-
-    /// <summary>
-    /// Добавляет все идентификаторы из другого списка.
-    /// Если в текущем списке уже есть такие идентификаторы, то они пропускаются
-    /// </summary>
-    /// <param name="source">Добавляемый список</param>
-    public void Add(TableAndIdList source)
-    {
-#if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-#endif
-
-      CheckNotReadOnly();
-
-      foreach (string tableName in source.GetTableNames())
-        this[tableName].Add(source[tableName]);
-    }
-
-
-    /// <summary>
-    /// Удаляет все идентификаторы для заданной таблицы.
-    /// Эквивалентно this[<paramref name="tableName"/>].Clear().
-    /// </summary>
-    /// <param name="tableName">Имя очищаемой таблицы</param>
-    /// <returns></returns>
-    public bool Remove(string tableName)
-    {
-      CheckNotReadOnly();
-      IdList lst;
-      if (!_Tables.TryGetValue(tableName, out lst))
-        return false;
-      lst.CheckNotReadOnly(); // на всякий случай
-      _Tables.Remove(tableName);
-      return lst.Count > 0; // а не true
-    }
-
-    /// <summary>
-    /// Удаляет из текущего списка идентификаторы, которые есть в другом списке.
-    /// Если в текущем списке нет некоторых идентификаторов, то они пропускаются.
-    /// </summary>
-    /// <param name="source">Вычитаемый список</param>
-    public void Remove(TableAndIdList source)
-    {
-#if DEBUG
-      if (source == null)
-        throw new ArgumentNullException("source");
-#endif
-
-      CheckNotReadOnly();
-
-      foreach (string tableName in source.GetTableNames())
-      {
-        IdList list;
-        if (_Tables.TryGetValue(tableName, out list))
-          list.Remove(source[tableName]);
-      }
-    }
-
-    /// <summary>
-    /// Очищает коллекцию
-    /// </summary>
-    public void Clear()
-    {
-      CheckNotReadOnly();
-
-      _Tables.Clear();
-    }
-
-    #endregion
-
-    #region Операторы
-
-    /// <summary>
-    /// Возвращает массив, содержащий идентификаторы из обоих списков.
-    /// У результирующего списка свойство <see cref="IsReadOnly"/> не установлено.
-    /// Тоже, что и оператор "+".
-    /// </summary>
-    /// <param name="a">Первый список</param>
-    /// <param name="b">Второй список</param>
-    /// <returns>Объединенный список</returns>
-    public static TableAndIdList operator |(TableAndIdList a, TableAndIdList b)
-    {
-#if DEBUG
-      if (a == null)
-        throw new ArgumentNullException("a");
-      if (b == null)
-        throw new ArgumentNullException("b");
-#endif
-
-      TableAndIdList res = a.Clone();
-      res.Add(b);
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает массив, содержащий идентификаторы из обоих списков.
-    /// У результирующего списка свойство <see cref="IsReadOnly"/> не установлено.
-    /// Тоже, что и оператор "+".
-    /// </summary>
-    /// <param name="a">Первый список</param>
-    /// <param name="b">Второй список</param>
-    /// <returns>Объединенный список</returns>
-    public static TableAndIdList operator +(TableAndIdList a, TableAndIdList b)
-    {
-#if DEBUG
-      if (a == null)
-        throw new ArgumentNullException("a");
-      if (b == null)
-        throw new ArgumentNullException("b");
-#endif
-
-      TableAndIdList res = a.Clone();
-      res.Add(b);
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает массив, содержащий идентификаторы из первого списка, которых нет во втором списке.
-    /// У результирующего списка свойство <see cref="IsReadOnly"/> не установлено.
-    /// </summary>
-    /// <param name="a">Первый список (большой)</param>
-    /// <param name="b">Второй список (вычитаемый)</param>
-    /// <returns>Разностный список</returns>
-    public static TableAndIdList operator -(TableAndIdList a, TableAndIdList b)
-    {
-#if DEBUG
-      if (a == null)
-        throw new ArgumentNullException("a");
-      if (b == null)
-        throw new ArgumentNullException("b");
-#endif
-
-      TableAndIdList res = a.Clone();
-      res.Remove(b);
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает массив, содержащий идентификаторы, входящие в оба списка.
-    /// У результирующего списка свойство <see cref="IsReadOnly"/> не установлено.
-    /// </summary>
-    /// <param name="a">Первый список</param>
-    /// <param name="b">Второй список</param>
-    /// <returns>Список с общими идентификаторами</returns>
-    public static TableAndIdList operator &(TableAndIdList a, TableAndIdList b)
-    {
-#if DEBUG
-      if (a == null)
-        throw new ArgumentNullException("a");
-      if (b == null)
-        throw new ArgumentNullException("b");
-#endif
-
-      TableAndIdList res = new TableAndIdList();
-      foreach (string tableName in a.GetTableNames())
-      {
-        IdList resList = a[tableName] & b[tableName];
-        if (resList.Count > 0)
-          res[tableName].Add(resList);
-      }
-      return res;
-    }
-
-    #endregion
-
-    #endregion
-
-    #region Сравнение
-
-    /// <summary>
-    /// Возвращает true, если два списка полностью совпадают
-    /// </summary>
-    /// <param name="a">Первый сравниваемый список</param>
-    /// <param name="b">Второй сравниваемый список</param>
-    /// <returns>Результат сравнения</returns>
-    public static bool operator ==(TableAndIdList a, TableAndIdList b)
-    {
-      if (Object.ReferenceEquals(a, null) && Object.ReferenceEquals(b, null))
-        return true;
-      if (Object.ReferenceEquals(a, null) || Object.ReferenceEquals(b, null))
-        return false;
-
-      string[] tableNamesA = a.GetTableNames();
-      string[] tableNamesB = b.GetTableNames();
-      if (tableNamesA.Length != tableNamesB.Length)
-        return false; // Проверка нужна, чтобы не оказалось в списке b таблиц, которых нет в списке a.
-
-      foreach (string tableName in tableNamesA)
-      {
-        IdList listA = a[tableName];
-        IdList listB = b[tableName];
-        if (listA != listB)
-          return false;
-      }
-
-      return true;
-    }
-
-    /// <summary>
-    /// Возвращает true, если два списка отличаются
-    /// </summary>
-    /// <param name="a">Первый сравниваемый список</param>
-    /// <param name="b">Второй сравниваемый список</param>
-    /// <returns>Результат сравнения</returns>
-    public static bool operator !=(TableAndIdList a, TableAndIdList b)
-    {
-      return !(a == b);
-    }
-
-    /// <summary>
-    /// Возвращает true, если текущий список полностью совпадает с <paramref name="obj"/>.
-    /// </summary>
-    /// <param name="obj">Второй сравниваемый список</param>
-    /// <returns>Результат сравнения</returns>
-    public override bool Equals(object obj)
-    {
-      TableAndIdList b = obj as TableAndIdList;
-      return (this == b);
-    }
-
-    /// <summary>
-    /// Хэш-код для коллекций.
-    /// Так как <see cref="TableAndIdList"/> не предназначен для использования в качестве ключа коллекции,
-    /// метод возвращает 0.
-    /// </summary>
-    /// <returns>Хэш-код</returns>
-    public override int GetHashCode()
-    {
-      return 0;
-    }
-
-    #endregion
-
-    #region Текстовое представление
-
-    /// <summary>
-    /// Для отладки
-    /// </summary>
-    /// <returns>Текстовое представление</returns>
-    public override string ToString()
-    {
-      return "Count=" + Count.ToString() + (IsReadOnly ? " (ReadOnly)" : String.Empty);
-    }
-
-    #endregion
-
-    #region IEnumerable<KeyValuePair<string,IdList>> Members
-
-    /// <summary>
-    /// Перечислитель по именам таблиц и их идентификаторам
-    /// </summary>
-    public struct Enumerator : IEnumerator<KeyValuePair<string, IdList>>
-    {
-      #region Защищенный конструктор
-
-      internal Enumerator(TableAndIdList owner)
-      {
-        _Owner = owner;
-        _BaseEnumerator = owner._Tables.GetEnumerator();
-      }
-
-      #endregion
-
-      #region Поля
-
-      private TableAndIdList _Owner;
-
-      private IEnumerator<KeyValuePair<string, IdList>> _BaseEnumerator;
-
-      #endregion
-
-      #region IEnumerator<KeyValuePair<string,IdList>> Members
-
-      /// <summary>
-      /// Возвращает текущую пару
-      /// </summary>
-      public KeyValuePair<string, IdList> Current { get { return _BaseEnumerator.Current; } }
-
-      /// <summary>
-      /// Завершает перечисление
-      /// </summary>
-      public void Dispose()
-      {
-        _BaseEnumerator.Dispose();
-      }
-
-      object IEnumerator.Current { get { return _BaseEnumerator.Current; } }
-
-      /// <summary>
-      /// Переходит к следующей таблице, у которой есть идентификаторы
-      /// </summary>
-      /// <returns></returns>
-      public bool MoveNext()
-      {
-        do
-        {
-          if (!_BaseEnumerator.MoveNext())
-            return false;
-        } while (_BaseEnumerator.Current.Value.Count == 0);
-
-        return true;
-      }
-
-      void IEnumerator.Reset()
-      {
-        _BaseEnumerator.Dispose();
-        _BaseEnumerator = _Owner._Tables.GetEnumerator();
-      }
-
-      #endregion
-    }
-
-    /// <summary>
-    /// Возвращает перечислитель по парам "Имя таблицы - список идентификаторов".
-    /// Порядок перечисления таблиц не гарантируется.
-    /// Перечисляются только таблицы, по которым есть идентификаторы.
-    /// </summary>
-    /// <returns></returns>
-    public Enumerator GetEnumerator()
-    {
-      return new Enumerator(this);
-    }
-
-    IEnumerator<KeyValuePair<string, IdList>> IEnumerable<KeyValuePair<string, IdList>>.GetEnumerator()
-    {
-      return new Enumerator(this);
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return new Enumerator(this);
-    }
-
-    #endregion
-
-    #region IDictionary<string,IdList> Members
-
-    void IDictionary<string, IdList>.Add(string key, IdList value)
-    {
-      this[key].Add(value);
-    }
-
-    ICollection<string> IDictionary<string, IdList>.Keys
-    {
-      get { throw new NotImplementedException(); }
-    }
-
-    ICollection<IdList> IDictionary<string, IdList>.Values
-    {
-      get { throw new NotImplementedException(); }
-    }
-
-    #endregion
-
-    #region ICollection<KeyValuePair<string,IdList>> Members
-
-    int ICollection<KeyValuePair<string, IdList>>.Count
-    {
-      get
-      {
-        int cnt = 0;
-        foreach (KeyValuePair<string, IdList> pair in this)
-          cnt++;
-        return cnt;
-      }
-    }
-
-    void ICollection<KeyValuePair<string, IdList>>.Add(KeyValuePair<string, IdList> item)
-    {
-      this[item.Key].Add(item.Value);
-    }
-
-    bool ICollection<KeyValuePair<string, IdList>>.Contains(KeyValuePair<string, IdList> item)
-    {
-      return this[item.Key].Contains(item.Value);
-    }
-
-    void ICollection<KeyValuePair<string, IdList>>.CopyTo(KeyValuePair<string, IdList>[] array, int arrayIndex)
-    {
-      List<KeyValuePair<string, IdList>> lst = new List<KeyValuePair<string, IdList>>();
-      foreach (KeyValuePair<string, IdList> pair in this)
-        lst.Add(pair);
-      lst.CopyTo(array, arrayIndex);
-    }
-
-    bool ICollection<KeyValuePair<string, IdList>>.Remove(KeyValuePair<string, IdList> item)
-    {
-      IdList lst;
-      if (!TryGetValue(item.Key, out lst))
-        return false;
-
-      bool res = false;
-      foreach (Int32 id in item.Value)
-      {
-        if (lst.Remove(id))
-          res = true;
-      }
-      return res;
+      IdList<T> lst = new IdList<T>();
+      lst.SetReadOnly();
+      return lst;
     }
 
     #endregion

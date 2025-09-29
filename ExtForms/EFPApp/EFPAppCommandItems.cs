@@ -152,6 +152,11 @@ namespace FreeLibSet.Forms
     Copy,
 
     /// <summary>
+    /// Правка-Копировать гиперссылку
+    /// </summary>
+    CopyHyperlink,
+
+    /// <summary>
     /// Правка-Вставить
     /// </summary>
     Paste,
@@ -313,24 +318,6 @@ namespace FreeLibSet.Forms
         return new EFPCommandItem(this[stdItem]);
     }
 
-#if XXX
-    /// <summary>
-    /// Создание стандартной команды.
-    /// Команда создается, но ни к чему не присоединяется.
-    /// Устанавливаются свойства Category, Name, MenuText, ToolTipText, ShortCut и ImageKey
-    /// Обработчик Click не устанавливается. Сепараторы и свойство Enabled не задаются
-    /// </summary>
-    /// <param name="stdItem">Перечислимое значение для стандартной команды</param>
-    /// <returns>Созданная команда без обработчика</returns>
-    [Browsable(false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("Используйте статический метод CreateStdCommand() или перегрузку EFPCommandItems.Add()", false)]
-    public EFPCommandItem CreateCommand(EFPAppStdCommandItems stdItem)
-    {
-      return CreateStdCommand(stdItem);
-    }
-#endif
-
     /// <summary>
     /// Создание стандартной команды.
     /// <para>
@@ -485,6 +472,11 @@ namespace FreeLibSet.Forms
           ci.ShortCut = Keys.Control | Keys.C;
           //ci.MenuRightText = "Ctrl+С";
           ci.ImageKey = "Copy";
+          break;
+
+        case EFPAppStdCommandItems.CopyHyperlink:
+          ci.MenuText = Res.Cmd_Menu_Edit_CopyHyperlink;
+          ci.ImageKey = "CopyHyperlink";
           break;
 
         case EFPAppStdCommandItems.Paste:
@@ -673,137 +665,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    #region Обработчики для стандартных команд
-
-#if XXX
-
-    #region Файл
-
-    /// <summary>
-    /// Вызывает EFPApp.Exit()
-    /// </summary>
-    /// <param name="sender">Не используется</param>
-    /// <param name="args">Не используется</param>
-    public void Exit_Click(object sender, EventArgs args)
-    {
-      EFPApp.Exit();
-    }
-
-    #endregion
-
-    #region Окно
-
-#pragma warning disable 0618 // обход [Obsolete]
-
-    /// <summary>
-    /// Обработка команды "Сверху вниз"
-    /// </summary>
-    /// <param name="sender">Не используется</param>
-    /// <param name="args">Не используется</param>
-    [Obsolete("Используйте класс EFPAppCommandItemHelpers", false)]
-    public void TileHorizontal_Click(object sender, EventArgs args)
-    {
-      EFPApp.LayoutMdiChildren(MdiLayout.TileHorizontal);
-    }
-
-    /// <summary>
-    /// Обработка команды "Слева направо"
-    /// </summary>
-    /// <param name="sender">Не используется</param>
-    /// <param name="args">Не используется</param>
-    [Obsolete("Используйте класс EFPAppCommandItemHelpers", false)]
-    public void TileVertical_Click(object sender, EventArgs args)
-    {
-      EFPApp.LayoutMdiChildren(MdiLayout.TileVertical);
-    }
-
-    /// <summary>
-    /// Обработка команды "Каскадом"
-    /// </summary>
-    /// <param name="sender">Не используется</param>
-    /// <param name="args">Не используется</param>
-    [Obsolete("Используйте класс EFPAppCommandItemHelpers", false)]
-    public void Cascade_Click(object sender, EventArgs args)
-    {
-      EFPApp.LayoutMdiChildren(MdiLayout.Cascade);
-    }
-
-    /// <summary>
-    /// Обработка команды "Упорядочить значки"
-    /// </summary>
-    /// <param name="sender">Не используется</param>
-    /// <param name="args">Не используется</param>
-    [Obsolete("Используйте класс EFPAppCommandItemHelpers", false)]
-    public void ArrangeIcons_Click(object sender, EventArgs args)
-    {
-      EFPApp.LayoutMdiChildren(MdiLayout.ArrangeIcons);
-    }
-
-    /// <summary>
-    /// Обработка команды "Закрыть все"
-    /// </summary>
-    /// <param name="sender">Не используется</param>
-    /// <param name="args">Не используется</param>
-    [Obsolete("Используйте класс EFPAppCommandItemHelpers", false)]
-    public void CloseAll_Click(object sender, EventArgs args)
-    {
-      EFPApp.CloseAllMdiChildren();
-    }
-
-    /// <summary>
-    /// Добавляет команды меню "Окно" интерфейса MDI.
-    /// Создаются команды упорядочивания и закрыть все. Устанавливаются
-    /// обработчики команд. Отслеживается открытие / закрытие окон для 
-    /// определения видимости команд. 
-    /// После команды "Закрыть все" обычно должен быть присоединен список окон с помощью EFPMainMenu.InitWindowMenu
-    /// список окон
-    /// </summary>
-    /// <param name="menuWindow"></param>
-    [Obsolete("Используйте класс EFPAppCommandItemHelpers", false)]
-    public void AddMdiWindowCommands(EFPCommandItem menuWindow)
-    {
-      Add(EFPAppStdCommandItems.TileHorizontal, menuWindow);
-      this[EFPAppStdCommandItems.TileHorizontal].GroupBegin = true;
-      this[EFPAppStdCommandItems.TileHorizontal].Click += new EventHandler(TileHorizontal_Click);
-
-      Add(EFPAppStdCommandItems.TileVertical, menuWindow);
-      this[EFPAppStdCommandItems.TileVertical].Click += new EventHandler(TileVertical_Click);
-
-      Add(EFPAppStdCommandItems.Cascade, menuWindow);
-      this[EFPAppStdCommandItems.Cascade].Click += new EventHandler(Cascade_Click);
-
-      Add(EFPAppStdCommandItems.ArrangeIcons, menuWindow);
-      this[EFPAppStdCommandItems.ArrangeIcons].GroupEnd = true;
-      this[EFPAppStdCommandItems.ArrangeIcons].Click += new EventHandler(ArrangeIcons_Click);
-
-      Add(EFPAppStdCommandItems.CloseAll, menuWindow);
-      this[EFPAppStdCommandItems.CloseAll].GroupBegin = true;
-      this[EFPAppStdCommandItems.CloseAll].GroupEnd = true; // 21.01.2012 - не работает
-      this[EFPAppStdCommandItems.CloseAll].Click += new EventHandler(CloseAll_Click);
-
-      MdiCildrenChanged += new EventHandler(This_MdiCildrenChanged);
-      This_MdiCildrenChanged(null, null);
-
-    }
-
-    private void This_MdiCildrenChanged(object sender, EventArgs args)
-    {
-      bool HasWindows = EFPApp.MdiChildren.Length > 0;
-
-      this[EFPAppStdCommandItems.TileHorizontal].Enabled = HasWindows;
-      this[EFPAppStdCommandItems.TileVertical].Enabled = HasWindows;
-      this[EFPAppStdCommandItems.Cascade].Enabled = HasWindows;
-      this[EFPAppStdCommandItems.ArrangeIcons].Enabled = HasWindows;
-      this[EFPAppStdCommandItems.CloseAll].Enabled = HasWindows;
-    }
-
-#pragma warning restore 0618
-
-    #endregion
-#endif
-
-    #endregion
-
     #endregion
 
     #region Коды для стандартных команд
@@ -901,6 +762,7 @@ namespace FreeLibSet.Forms
         "Edit|Redo",
         "Edit|Cut",
         "Edit|Copy",
+        "Edit|CopyHyperlink",
         "Edit|Paste",
         "Edit|PasteSpecial",
         "Edit|Find",

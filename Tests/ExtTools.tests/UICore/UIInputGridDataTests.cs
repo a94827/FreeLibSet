@@ -39,17 +39,17 @@ namespace ExtTools_tests.UICore
       Assert.AreEqual("F1", sut.Columns[0].ColumnName, "Columns[0].ColumnName");
       Assert.AreSame(tbl.Columns[0], sut.Columns[0].Column, "Columns[0].Column");
       Assert.AreSame(tbl.Columns[0], sut.Columns["F1"].Column, "Columns[F1].Column");
-      Assert.AreEqual(UIHorizontalAlignment.Left, sut.Columns[0].Align, "Columns[0].Align");
+      Assert.AreEqual(UIHorizontalAlignment.Left, sut.Columns[0].TextAlign, "Columns[0].TextAlign");
 
       Assert.AreEqual("F2", sut.Columns[1].ColumnName, "Columns[1].ColumnName");
       Assert.AreSame(tbl.Columns[1], sut.Columns[1].Column, "Columns[1].Column");
       Assert.AreSame(tbl.Columns[1], sut.Columns["F2"].Column, "Columns[F2].Column");
-      Assert.AreEqual(UIHorizontalAlignment.Right, sut.Columns[1].Align, "Columns[1].Align");
+      Assert.AreEqual(UIHorizontalAlignment.Right, sut.Columns[1].TextAlign, "Columns[1].TextAlign");
 
       Assert.AreEqual("F3", sut.Columns[2].ColumnName, "Columns[2].ColumnName");
       Assert.AreSame(tbl.Columns[2], sut.Columns[2].Column, "Columns[2].Column");
       Assert.AreSame(tbl.Columns[2], sut.Columns["F3"].Column, "Columns[F3].Column");
-      Assert.AreEqual(UIHorizontalAlignment.Center, sut.Columns[2].Align, "Columns[2].Align");
+      Assert.AreEqual(UIHorizontalAlignment.Center, sut.Columns[2].TextAlign, "Columns[2].TextAlign");
     }
 
 
@@ -125,7 +125,7 @@ namespace ExtTools_tests.UICore
       data.Table.Columns.Add("F1", typeof(string));
       UIInputGridData.ColumnInfo sut = data.Columns[0];
 
-      Assert.AreEqual(UIHorizontalAlignment.Left, sut.Align, "Align");
+      Assert.AreEqual(UIHorizontalAlignment.Left, sut.TextAlign, "TextAlign");
       Assert.AreEqual("F1", sut.ColumnName, "ColumnName");
       Assert.AreEqual("", sut.Format, "Format");
       Assert.AreEqual(UIValidateState.Error, sut.CanBeEmptyMode, "CanBeEmptyMode");
@@ -140,15 +140,15 @@ namespace ExtTools_tests.UICore
     [TestCase(typeof(Decimal), UIHorizontalAlignment.Right)]
     [TestCase(typeof(DateTime), UIHorizontalAlignment.Center)]
     [TestCase(typeof(bool), UIHorizontalAlignment.Center)]
-    public void ColumnInfo_Align(Type colType, UIHorizontalAlignment wantedAlign)
+    public void ColumnInfo_TextAlign(Type colType, UIHorizontalAlignment wantedAlign)
     {
       UIInputGridData data = new UIInputGridData();
       data.Table.Columns.Add("F1", colType);
       UIInputGridData.ColumnInfo sut = data.Columns[0];
-      Assert.AreEqual(wantedAlign, sut.Align, "Align #1");
+      Assert.AreEqual(wantedAlign, sut.TextAlign, "TextAlign #1");
 
-      sut.Align = UIHorizontalAlignment.Center;
-      Assert.AreEqual(UIHorizontalAlignment.Center, sut.Align, "Align #2");
+      sut.TextAlign = UIHorizontalAlignment.Center;
+      Assert.AreEqual(UIHorizontalAlignment.Center, sut.TextAlign, "TextAlign #2");
     }
 
     #endregion

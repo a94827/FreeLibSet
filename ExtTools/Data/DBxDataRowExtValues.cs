@@ -393,7 +393,7 @@ namespace FreeLibSet.Data
 
         _Table = value;
         // Сброс буфера
-        DataTools.FillArray<bool>(_BufFlags, false);
+        ArrayTools.FillArray<bool>(_BufFlags, false);
         _DummyRow = _Table.NewRow(); // добавлять в таблицу не будем
       }
     }
@@ -481,7 +481,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public void ResetBuffer()
     {
-      DataTools.FillArray<bool>(_BufFlags, false);
+      ArrayTools.FillArray<bool>(_BufFlags, false);
     }
 
     /// <summary>

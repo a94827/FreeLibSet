@@ -51,7 +51,7 @@ namespace ExtRussian_tests
     [TestCase("", "", "", "")]
     public void NameWithInitials(string surname, string name, string patronymic, string wantedRes)
     {
-      wantedRes = wantedRes.Replace('_', DataTools.NonBreakSpaceChar);
+      wantedRes = wantedRes.Replace('_', StringTools.NonBreakSpaceChar);
 
       RusFullName sut = new RusFullName(surname, name, patronymic);
       Assert.AreEqual(wantedRes, sut.NameWithInitials);
@@ -90,7 +90,7 @@ namespace ExtRussian_tests
     [TestCase("", "", "", "")]
     public void InvNameWithInitials(string surname, string name, string patronymic, string wantedRes)
     {
-      wantedRes = wantedRes.Replace('_', DataTools.NonBreakSpaceChar);
+      wantedRes = wantedRes.Replace('_', StringTools.NonBreakSpaceChar);
 
       RusFullName sut = new RusFullName(surname, name, patronymic);
       Assert.AreEqual(wantedRes, sut.InvNameWithInitials);

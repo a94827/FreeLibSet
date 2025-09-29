@@ -5,6 +5,7 @@ using NUnit.Framework;
 using FreeLibSet.Data.SQLite;
 using FreeLibSet.Data;
 using FreeLibSet.IO;
+using FreeLibSet.Core;
 
 namespace ExtDB_tests.Data_SQLite
 {
@@ -93,10 +94,11 @@ namespace ExtDB_tests.Data_SQLite
     {
       DBxStruct dbs = new DBxStruct();
       DBxTableStruct ts = dbs.Tables.Add("Table1");
-      ts.Columns.AddId();
+      ts.Columns.AddInt32("Id", false);
       ts.Columns.AddString("F1", 20, false);
-      ts.Columns.AddInt("F2");
-      ts.Columns.AddReference("F3", "Table1", true); // для проверки дерева
+      ts.Columns.AddInt32("F2", true);
+      ts.Columns.AddReference("F3", "Table1", true) // для проверки дерева
+        .ColumnType = DBxColumnType.Int32;
       return dbs;
     }
 
@@ -114,8 +116,8 @@ namespace ExtDB_tests.Data_SQLite
 
       using (DBxCon con = new DBxCon(_DB.MainEntry))
       {
-        Int32 id1 = con.AddRecordWithIdResult("Table1", new DBxColumns("F1,F2"), new object[] { "AAA", 1 });
-        Int32 id2 = con.AddRecordWithIdResult("Table1", new DBxColumns("F1,F2,F3"), new object[] { "BBB", 2, id1 });
+        Int32 id1 = DataTools.GetInt32(con.AddRecordWithIdResult("Table1", new DBxColumns("F1,F2"), new object[] { "AAA", 1 }));
+        Int32 id2 = DataTools.GetInt32(con.AddRecordWithIdResult("Table1", new DBxColumns("F1,F2,F3"), new object[] { "BBB", 2, id1 }));
 
         Assert.Catch(delegate() { con.Delete("Table1", id1); });
       }

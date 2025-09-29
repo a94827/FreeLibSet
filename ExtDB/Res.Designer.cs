@@ -790,24 +790,6 @@ namespace FreeLibSet.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Identifier not given.
-        /// </summary>
-        internal static string DBxNoIdArgumentException_Err_Message {
-            get {
-                return ResourceManager.GetString("DBxNoIdArgumentException_Err_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid primary key.
-        /// </summary>
-        internal static string DBxPrimaryKeyException_Err_Message {
-            get {
-                return ResourceManager.GetString("DBxPrimaryKeyException_Err_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Record in table &apos;{0}&apos; with identifier {1} not found.
         /// </summary>
         internal static string DBxRecordNotFoundException_Err_Message {

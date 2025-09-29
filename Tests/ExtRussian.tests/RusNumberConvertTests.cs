@@ -56,8 +56,8 @@ namespace ExtRussian_tests
       [Values(RusNumberConvert.CopecksFormat.Digits, RusNumberConvert.CopecksFormat.String)]RusNumberConvert.CopecksFormat copecksFormat)
     {
       string s = RusNumberConvert.MoneyStr(1234.56m, copecksFormat, RusCase.Nominative, specChars);
-      Assert.AreEqual(specChars, s.IndexOf(DataTools.NonBreakSpaceChar) >= 0, "NonBreakSpace");
-      Assert.AreEqual(specChars, s.IndexOf(DataTools.SoftHyphenChar) >= 0, "SoftHyphenChar");
+      Assert.AreEqual(specChars, s.IndexOf(StringTools.NonBreakSpaceChar) >= 0, "NonBreakSpace");
+      Assert.AreEqual(specChars, s.IndexOf(StringTools.SoftHyphenChar) >= 0, "SoftHyphenChar");
       Assert.IsFalse(s.IndexOf('-') >= 0, "Minus char");
     }
 
@@ -151,17 +151,17 @@ namespace ExtRussian_tests
     {
       string res1 = RusNumberConvert.ToString(value, gender, theCase);
       Assert.AreEqual(wantedRes, res1, "3-args result");
-      Assert.IsFalse(res1.Contains(DataTools.NonBreakSpaceStr), "3-args NonBreakSpace");
-      Assert.IsFalse(res1.Contains(DataTools.SoftHyphenStr), "3-args SoftHyphen");
+      Assert.IsFalse(res1.Contains(StringTools.NonBreakSpaceStr), "3-args NonBreakSpace");
+      Assert.IsFalse(res1.Contains(StringTools.SoftHyphenStr), "3-args SoftHyphen");
 
       string res2 = RusNumberConvert.ToString(value, gender, theCase, false);
       Assert.AreEqual(wantedRes, res2, "specChars=false result");
-      Assert.IsFalse(res2.Contains(DataTools.NonBreakSpaceStr), "specChars=false NonBreakSpace");
-      Assert.IsFalse(res2.Contains(DataTools.SoftHyphenStr), "specChars=false SoftHyphen");
+      Assert.IsFalse(res2.Contains(StringTools.NonBreakSpaceStr), "specChars=false NonBreakSpace");
+      Assert.IsFalse(res2.Contains(StringTools.SoftHyphenStr), "specChars=false SoftHyphen");
 
       string res3 = RusNumberConvert.ToString(value, gender, theCase, true);
-      res3 = res3.Replace(DataTools.NonBreakSpaceChar, ' ');
-      res3 = res3.Replace(DataTools.SoftHyphenStr, "");
+      res3 = res3.Replace(StringTools.NonBreakSpaceChar, ' ');
+      res3 = res3.Replace(StringTools.SoftHyphenStr, "");
       Assert.AreEqual(wantedRes, res3, "specChars=true result");
     }
 
@@ -171,17 +171,17 @@ namespace ExtRussian_tests
     {
       string res1 = RusNumberConvert.ToString(value, gender, theCase);
       Assert.AreEqual(wantedRes, res1, "3-args result");
-      Assert.IsFalse(res1.Contains(DataTools.NonBreakSpaceStr), "3-args NonBreakSpace");
-      Assert.IsFalse(res1.Contains(DataTools.SoftHyphenStr), "3-args SoftHyphen");
+      Assert.IsFalse(res1.Contains(StringTools.NonBreakSpaceStr), "3-args NonBreakSpace");
+      Assert.IsFalse(res1.Contains(StringTools.SoftHyphenStr), "3-args SoftHyphen");
 
       string res2 = RusNumberConvert.ToString(value, gender, theCase, false);
       Assert.AreEqual(wantedRes, res2, "specChars=false result");
-      Assert.IsFalse(res2.Contains(DataTools.NonBreakSpaceStr), "specChars=false NonBreakSpace");
-      Assert.IsFalse(res2.Contains(DataTools.SoftHyphenStr), "specChars=false SoftHyphen");
+      Assert.IsFalse(res2.Contains(StringTools.NonBreakSpaceStr), "specChars=false NonBreakSpace");
+      Assert.IsFalse(res2.Contains(StringTools.SoftHyphenStr), "specChars=false SoftHyphen");
 
       string res3 = RusNumberConvert.ToString(value, gender, theCase, true);
-      res3 = res3.Replace(DataTools.NonBreakSpaceChar, ' ');
-      res3 = res3.Replace(DataTools.SoftHyphenStr, "");
+      res3 = res3.Replace(StringTools.NonBreakSpaceChar, ' ');
+      res3 = res3.Replace(StringTools.SoftHyphenStr, "");
       Assert.AreEqual(wantedRes, res3, "specChars=true result");
     }
 
@@ -218,17 +218,17 @@ namespace ExtRussian_tests
 
       string res1 = RusNumberConvert.ToString(value, maxDecimalPlaces, gender, theCase);
       Assert.AreEqual(wantedRes, res1, "4-args result");
-      Assert.IsFalse(res1.Contains(DataTools.NonBreakSpaceStr), "4-args NonBreakSpace");
-      Assert.IsFalse(res1.Contains(DataTools.SoftHyphenStr), "4-args SoftHyphen");
+      Assert.IsFalse(res1.Contains(StringTools.NonBreakSpaceStr), "4-args NonBreakSpace");
+      Assert.IsFalse(res1.Contains(StringTools.SoftHyphenStr), "4-args SoftHyphen");
 
       string res2 = RusNumberConvert.ToString(value, maxDecimalPlaces, gender, theCase, false);
       Assert.AreEqual(wantedRes, res2, "specChars=false result");
-      Assert.IsFalse(res2.Contains(DataTools.NonBreakSpaceStr), "specChars=false NonBreakSpace");
-      Assert.IsFalse(res2.Contains(DataTools.SoftHyphenStr), "specChars=false SoftHyphen");
+      Assert.IsFalse(res2.Contains(StringTools.NonBreakSpaceStr), "specChars=false NonBreakSpace");
+      Assert.IsFalse(res2.Contains(StringTools.SoftHyphenStr), "specChars=false SoftHyphen");
 
       string res3 = RusNumberConvert.ToString(value, maxDecimalPlaces, gender, theCase, true);
-      res3 = res3.Replace(DataTools.NonBreakSpaceChar, ' ');
-      res3 = res3.Replace(DataTools.SoftHyphenStr, "");
+      res3 = res3.Replace(StringTools.NonBreakSpaceChar, ' ');
+      res3 = res3.Replace(StringTools.SoftHyphenStr, "");
       Assert.AreEqual(wantedRes, res3, "specChars=true result");
     }
 
@@ -241,10 +241,10 @@ namespace ExtRussian_tests
     [TestCase(5, "кошка", "кошки", "кошек", "5 кошек")]
     [TestCase(0, "кошка", "кошки", "кошек", "0 кошек")]
     [TestCase(-3, "кошка", "кошки", "кошек", "-3 кошки")]
-    public void IntWithNoun(int value, string nominativeSingular,
+    public void Int32WithNoun(int value, string nominativeSingular,
       string genitiveSingular, string genitivePlural, string wantedRes)
     {
-      string res = RusNumberConvert.IntWithNoun(value, nominativeSingular, genitiveSingular, genitivePlural);
+      string res = RusNumberConvert.Int32WithNoun(value, nominativeSingular, genitiveSingular, genitivePlural);
       Assert.AreEqual(wantedRes, res);
     }
 
@@ -275,9 +275,9 @@ namespace ExtRussian_tests
     [TestCase(-3, 2)]
     [TestCase(-4, 2)]
     [TestCase(-5, 3)]
-    public void NounForInt(int value, int wantedForm)
+    public void NounForInt32(int value, int wantedForm)
     {
-      string res = RusNumberConvert.NounForInt(value, "1", "2", "3");
+      string res = RusNumberConvert.NounForInt32(value, "1", "2", "3");
       Assert.AreEqual(StdConvert.ToString(wantedForm), res);
     }
 

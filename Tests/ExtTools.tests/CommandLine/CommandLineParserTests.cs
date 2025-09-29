@@ -125,7 +125,7 @@ namespace ExtTools_tests.CommandLine
     public void Parse_Option_noargs()
     {
       CommandLineParser sut = CreateTestParserWithOptions();
-      string[] args = DataTools.EmptyStrings;
+      string[] args = EmptyArray<string>.Empty;
       bool res = sut.Parse(args, false);
 
       Assert.IsTrue(res, "Result");

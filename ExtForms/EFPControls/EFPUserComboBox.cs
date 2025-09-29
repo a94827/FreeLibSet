@@ -992,7 +992,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (Codes == null)
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
 
         int[] a1 = Selections.SelectedIndices;
         string[] a2 = new string[a1.Length];
@@ -1005,7 +1005,7 @@ namespace FreeLibSet.Forms
         if (Codes == null)
           return;
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Empty;
         int[] a1 = new int[value.Length];
         for (int i = 0; i < value.Length; i++)
           a1[i] = Array.IndexOf<string>(Codes, value[i]);
@@ -1348,7 +1348,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (String.IsNullOrEmpty(base.Text))
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
 
         string[] a = base.Text.Split(',');
         List<string> lst = new List<string>(a.Length);
@@ -1363,7 +1363,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Empty;
         base.Text = String.Join(_UseSpace ? ", " : ",", value);
       }
     }
@@ -1838,7 +1838,7 @@ namespace FreeLibSet.Forms
       : base(baseProvider, control, true)
     {
       _MainControlProvider = new EFPDataGridView(baseProvider, control.MainControl);
-      _MainControlProvider.GetCellAttributes += MainControlProvider_GetCellAttributes;
+      _MainControlProvider.CellInfoNeeded += MainControlProvider_CellInfoNeeded;
       _MainControlProvider.HideSelection = true;
       _MainControlProvider.GrayWhenDisabled = true;
       _MainControlProvider.Control.ShowCellToolTips = false; // включилось в конструкторе EFPDataGridView
@@ -1854,19 +1854,19 @@ namespace FreeLibSet.Forms
     /// Событие вызывается при прорисовке элемента.
     /// Пользовательский обработчик может установить значение и задать форматирование ячейки способом, обычным для EFPDataGridView.
     /// </summary>
-    public event EFPDataGridViewCellAttributesEventHandler GetCellAttributes;
+    public event EFPDataGridViewCellInfoEventHandler GetCellAttributes;
 
     /// <summary>
     /// Вызывает событие GetCellAttributes
     /// </summary>
     /// <param name="args">Аргументы события</param>
-    protected virtual void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
+    protected virtual void OnGetCellAttributes(EFPDataGridViewCellInfoEventArgs args)
     {
       if (GetCellAttributes != null)
         OnGetCellAttributes(args);
     }
 
-    void MainControlProvider_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void MainControlProvider_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       OnGetCellAttributes(args);
     }

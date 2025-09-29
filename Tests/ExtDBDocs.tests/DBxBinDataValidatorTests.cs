@@ -6,6 +6,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.IO;
 using FreeLibSet.Data;
 using FreeLibSet.Core;
+using System.Diagnostics;
 
 namespace ExtDBDocs_tests.Data_Docs
 {
@@ -245,7 +246,7 @@ namespace ExtDBDocs_tests.Data_Docs
     private byte[] CreateArray()
     {
       _DataGenCounter++;
-      return DataTools.CreateArray<byte>(_DataGenCounter * 10, (byte)_DataGenCounter);
+      return ArrayTools.CreateArray<byte>(_DataGenCounter * 10, (byte)_DataGenCounter);
     }
 
     private FileContainer CreateFile()
@@ -411,7 +412,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       using (DBxCon con = new DBxCon(GlobalData.MainDBEntry))
       {
-        con.SetValue("BinData", 1, "Length", 1000);
+        con.SetValueById("BinData", 1, "Length", 1000);
       }
 
       Validator.Validate();
@@ -425,7 +426,7 @@ namespace ExtDBDocs_tests.Data_Docs
 
       using (DBxCon con = new DBxCon(GlobalData.MainDBEntry))
       {
-        con.SetValue("BinData", 1, "MD5", new string('6', 20));
+        con.SetValueById("BinData", 1, "MD5", new string('6', 20));
       }
 
       Validator.Validate();
@@ -442,10 +443,10 @@ namespace ExtDBDocs_tests.Data_Docs
 
       using (DBxCon con = new DBxCon(GlobalData.MainDBEntry))
       {
-        object[] a = con.GetValues("BinData", 1, new DBxColumns("MD5,Length"));
+        object[] a = con.GetValuesById("BinData", 1, new DBxColumns("MD5,Length"));
         byte[] b = con.ReadBlob("BinData", 1, "Contents");
 
-        Int32 binDataId = con.AddRecordWithIdResult("BinData", new DBxColumns("MD5,Length"), a);
+        Int32 binDataId = DataTools.GetInt32(con.AddRecordWithIdResult("BinData", new DBxColumns("MD5,Length"), a));
         con.WriteBlob("BinData", binDataId, "Contents", b);
       }
 
@@ -462,7 +463,7 @@ namespace ExtDBDocs_tests.Data_Docs
       // Портим Undo
       using (DBxCon con = new DBxCon(GlobalData.UndoDBEntry))
       {
-        con.SetValue("Doc1", 1, "B", 666);
+        con.SetValueById("Doc1", 1, "B", 666);
       }
 
       Validator.Validate();
@@ -478,7 +479,7 @@ namespace ExtDBDocs_tests.Data_Docs
       // Портим Undo
       using (DBxCon con = new DBxCon(GlobalData.UndoDBEntry))
       {
-        con.SetValue("SubDoc4", 1, "F", 666);
+        con.SetValueById("SubDoc4", 1, "F", 666);
       }
 
       Validator.Validate();
@@ -508,6 +509,7 @@ namespace ExtDBDocs_tests.Data_Docs
       {
         con.NameCheckingEnabled = false;
         con.AddRecord("ExtraDoc11", "B", 666);
+        Trace.WriteLine("AllTableNames are: " + String.Join(", ", con.DB.Struct.AllTableNames));
       }
 
       Validator.Validate();

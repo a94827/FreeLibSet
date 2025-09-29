@@ -240,7 +240,7 @@ namespace FreeLibSet.Text
 
       if (AutoDetectNewLine)
       {
-        NewLine = DataTools.GetNewLineSeparators(s);
+        NewLine = StringTools.GetNewLineSeparators(s);
         if (String.IsNullOrEmpty(NewLine))
           NewLine = Environment.NewLine;
       }
@@ -252,7 +252,7 @@ namespace FreeLibSet.Text
       string[][] a2 = new string[a1.Length][];
       for (int i = 0; i < a1.Length; i++)
         a2[i] = a1[i].Split('\t');
-      return DataTools.MatrixFromRows<string>(a2);
+      return ArrayTools.MatrixFromRows<string>(a2);
     }
 
     #endregion

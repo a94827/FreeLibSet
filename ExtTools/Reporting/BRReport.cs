@@ -732,9 +732,9 @@ namespace FreeLibSet.Reporting
       if (s == null)
         return String.Empty;
       s = s.Replace(Environment.NewLine, " ");
-      s = DataTools.ReplaceCharRange(s, (char)0, (char)31, ' ');
-      s = s.Replace(DataTools.SoftHyphenStr, "");
-      s = s.Replace(DataTools.NonBreakSpaceChar, ' ');
+      s = StringTools.ReplaceCharRange(s, (char)0, (char)31, ' ');
+      s = s.Replace(StringTools.SoftHyphenStr, "");
+      s = s.Replace(StringTools.NonBreakSpaceChar, ' ');
       return s;
     }
 
@@ -1892,7 +1892,7 @@ namespace FreeLibSet.Reporting
     //  get
     //  {
     //    if (Value == null)
-    //      return DataTools.EmptyStrings;
+    //      return EmptyArray<string>.Value;
 
     //    IFormattable v2 = Value as IFormattable;
     //    string s;
@@ -1901,7 +1901,7 @@ namespace FreeLibSet.Reporting
     //    else
     //      s = v2.ToString(CellStyle.Format, CellStyle.FormatProvider);
     //    if (s.Length == 0)
-    //      return DataTools.EmptyStrings;
+    //      return EmptyArray<string>.Value;
 
     //    if (s.IndexOf(Environment.NewLine) < 0)
     //    {
@@ -1989,7 +1989,7 @@ namespace FreeLibSet.Reporting
         if (v == null)
           return BRHAlign.Left;
         Type t = v.GetType();
-        if (DataTools.IsNumericType(t))
+        if (MathTools.IsNumericType(t))
           return BRHAlign.Right;
         if (t == typeof(DateTime) || t == typeof(bool))
           return BRHAlign.Center;
@@ -2371,16 +2371,16 @@ namespace FreeLibSet.Reporting
     {
       if (part == SettingsPart.User)
       {
-        cfg.SetBool("Landscape", _PageSetup.Orientation == BROrientation.Landscape);
-        cfg.SetInt("PaperWidth", _PageSetup.PaperWidth);
-        cfg.SetInt("PaperHeight", _PageSetup.PaperHeight);
-        cfg.SetBool("CenterVertical", _PageSetup.CenterVertical);
-        cfg.SetBool("CenterHorizontal", _PageSetup.CenterHorizontal);
-        cfg.SetInt("LeftMargin", _PageSetup.LeftMargin);
-        cfg.SetInt("TopMargin", _PageSetup.TopMargin);
-        cfg.SetInt("RightMargin", _PageSetup.RightMargin);
-        cfg.SetInt("BottomMargin", _PageSetup.BottomMargin);
-        cfg.SetBool("DuplexNewPage", _PageSetup.DuplexNewPage);
+        cfg.SetBoolean("Landscape", _PageSetup.Orientation == BROrientation.Landscape);
+        cfg.SetInt32("PaperWidth", _PageSetup.PaperWidth);
+        cfg.SetInt32("PaperHeight", _PageSetup.PaperHeight);
+        cfg.SetBoolean("CenterVertical", _PageSetup.CenterVertical);
+        cfg.SetBoolean("CenterHorizontal", _PageSetup.CenterHorizontal);
+        cfg.SetInt32("LeftMargin", _PageSetup.LeftMargin);
+        cfg.SetInt32("TopMargin", _PageSetup.TopMargin);
+        cfg.SetInt32("RightMargin", _PageSetup.RightMargin);
+        cfg.SetInt32("BottomMargin", _PageSetup.BottomMargin);
+        cfg.SetBoolean("DuplexNewPage", _PageSetup.DuplexNewPage);
       }
     }
 
@@ -2393,16 +2393,16 @@ namespace FreeLibSet.Reporting
     {
       if (part == SettingsPart.User)
       {
-        _PageSetup.Orientation = cfg.GetBoolDef("Landscape", BRReport.AppDefaultPageSetup.Orientation == BROrientation.Landscape) ? BROrientation.Landscape : BROrientation.Portrait;
-        _PageSetup.PaperWidth = cfg.GetIntDef("PaperWidth", BRReport.AppDefaultPageSetup.PaperWidth);
-        _PageSetup.PaperHeight = cfg.GetIntDef("PaperHeight", BRReport.AppDefaultPageSetup.PaperHeight);
-        _PageSetup.CenterVertical = cfg.GetBoolDef("CenterVertical", BRReport.AppDefaultPageSetup.CenterVertical);
-        _PageSetup.CenterHorizontal = cfg.GetBoolDef("CenterHorizontal", BRReport.AppDefaultPageSetup.CenterHorizontal);
-        _PageSetup.LeftMargin = cfg.GetIntDef("LeftMargin", BRReport.AppDefaultPageSetup.LeftMargin);
-        _PageSetup.TopMargin = cfg.GetIntDef("TopMargin", BRReport.AppDefaultPageSetup.TopMargin);
-        _PageSetup.RightMargin = cfg.GetIntDef("RightMargin", BRReport.AppDefaultPageSetup.RightMargin);
-        _PageSetup.BottomMargin = cfg.GetIntDef("BottomMargin", BRReport.AppDefaultPageSetup.BottomMargin);
-        _PageSetup.DuplexNewPage = cfg.GetBoolDef("DuplexNewPage", BRReport.AppDefaultPageSetup.DuplexNewPage);
+        _PageSetup.Orientation = cfg.GetBooleanDef("Landscape", BRReport.AppDefaultPageSetup.Orientation == BROrientation.Landscape) ? BROrientation.Landscape : BROrientation.Portrait;
+        _PageSetup.PaperWidth = cfg.GetInt32Def("PaperWidth", BRReport.AppDefaultPageSetup.PaperWidth);
+        _PageSetup.PaperHeight = cfg.GetInt32Def("PaperHeight", BRReport.AppDefaultPageSetup.PaperHeight);
+        _PageSetup.CenterVertical = cfg.GetBooleanDef("CenterVertical", BRReport.AppDefaultPageSetup.CenterVertical);
+        _PageSetup.CenterHorizontal = cfg.GetBooleanDef("CenterHorizontal", BRReport.AppDefaultPageSetup.CenterHorizontal);
+        _PageSetup.LeftMargin = cfg.GetInt32Def("LeftMargin", BRReport.AppDefaultPageSetup.LeftMargin);
+        _PageSetup.TopMargin = cfg.GetInt32Def("TopMargin", BRReport.AppDefaultPageSetup.TopMargin);
+        _PageSetup.RightMargin = cfg.GetInt32Def("RightMargin", BRReport.AppDefaultPageSetup.RightMargin);
+        _PageSetup.BottomMargin = cfg.GetInt32Def("BottomMargin", BRReport.AppDefaultPageSetup.BottomMargin);
+        _PageSetup.DuplexNewPage = cfg.GetBooleanDef("DuplexNewPage", BRReport.AppDefaultPageSetup.DuplexNewPage);
       }
     }
 

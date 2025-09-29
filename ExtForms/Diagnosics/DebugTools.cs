@@ -708,15 +708,15 @@ namespace FreeLibSet.Forms.Diagnostics
       EFPControlWithToolBar<TreeViewAdv> cwtTree = new EFPControlWithToolBar<TreeViewAdv>(efpTPTree);
       EFPDataTreeView efpTree = new EFPDataTreeView(cwtTree);
       efpTree.Columns.AddText("CategoryAndName", true, "CategoryAndName", 30, 10);
-      efpTree.Columns.AddInt("ItemId", true, "ItemId", 4);
+      efpTree.Columns.AddInt32("ItemId", true, "ItemId", 4);
       efpTree.Columns.AddText("Usage", true, "Usage", 20, 10);
-      efpTree.Columns.AddBool("MenuUsage", true, "MenuUsage");
-      efpTree.Columns.AddBool("ToolBarUsage", true, "ToolBarUsage");
-      efpTree.Columns.AddBool("IsInToolBarDropDown", true, "IsInToolBarDropDown");
-      efpTree.Columns.AddBool("StatusBarUsage", true, "StatusBarUsage");
-      efpTree.Columns.AddBool("ShortCutUsage", true, "ShortCutUsage");
+      efpTree.Columns.AddCheckBox("MenuUsage", true, "MenuUsage");
+      efpTree.Columns.AddCheckBox("ToolBarUsage", true, "ToolBarUsage");
+      efpTree.Columns.AddCheckBox("IsInToolBarDropDown", true, "IsInToolBarDropDown");
+      efpTree.Columns.AddCheckBox("StatusBarUsage", true, "StatusBarUsage");
+      efpTree.Columns.AddCheckBox("ShortCutUsage", true, "ShortCutUsage");
       efpTree.Columns.AddText("MenuText", true, "MenuText", 20, 10);
-      //efpTree.Columns.AddBool("HasImage", true, "HasImage");
+      //efpTree.Columns.AddCheckBox("HasImage", true, "HasImage");
       Controls.TreeViewAdvNodeControls.NodeIcon niImage = efpTree.Columns.AddImage("Image");
       niImage.VirtualMode = true;
       niImage.ValueNeeded += CommandItemNode_Image_ValueNeeded;
@@ -725,11 +725,11 @@ namespace FreeLibSet.Forms.Diagnostics
       efpTree.Columns.AddText("MenuRightText", true, "MenuRightText", 10, 5);
       efpTree.Columns.AddText("StatusBarText", true, "StatusBarText", 15, 5);
       efpTree.Columns.AddText("DisplayName", true, "DisplayName", 20, 10);
-      efpTree.Columns.AddBool("Visible", true, "Visible");
-      efpTree.Columns.AddBool("Enabled", true, "Enabled");
-      efpTree.Columns.AddBool("Checked", true, "Checked");
-      efpTree.Columns.AddBool("GroupBegin", true, "GroupBegin");
-      efpTree.Columns.AddBool("GroupEnd", true, "GroupEnd");
+      efpTree.Columns.AddCheckBox("Visible", true, "Visible");
+      efpTree.Columns.AddCheckBox("Enabled", true, "Enabled");
+      efpTree.Columns.AddCheckBox("Checked", true, "Checked");
+      efpTree.Columns.AddCheckBox("GroupBegin", true, "GroupBegin");
+      efpTree.Columns.AddCheckBox("GroupEnd", true, "GroupEnd");
 
       Controls.TreeViewAdvNodeControls.NodeTextBox ntbUIObjects = efpTree.Columns.AddText("UIObjects", false, "UIObjects", 40, 10);
       ntbUIObjects.VirtualMode = true;
@@ -1530,7 +1530,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
             string s = ctrl.Text;
             // 27.07.2022. Если элемент - многострочный TextBox, то надо выводить только первую строку, да и ту не целиком
-            int p = DataTools.IndexOfAny(s, "\r\n\t");
+            int p = StringTools.IndexOfAny(s, "\r\n\t");
             if (p >= 0)
               s = s.Substring(0, p) + " ...";
             if (s.Length > 40)

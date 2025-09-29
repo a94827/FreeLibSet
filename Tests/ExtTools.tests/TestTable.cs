@@ -37,7 +37,7 @@ namespace ExtTools_tests
 
       public const decimal VDecimal = 5.5m;
 
-      public const bool VBool = true;
+      public const bool VBoolean = true;
 
       public static readonly DateTime VDateTime = new DateTime(2021, 12, 15);
 
@@ -46,6 +46,22 @@ namespace ExtTools_tests
       public static readonly Guid VGuid = new Guid("2c0dfea6-8326-44e4-ba55-a994e0bedd10");
 
       public const TestEnum VEnum = TestEnum.Two;
+
+      public static readonly byte[] VBytes = new byte[] { 1, 2, 3 };
+
+      public const string StrInt32 = "1";
+      public const string StrInt64 = "2";
+      public const string StrSingle = "3.5";
+      public const string StrDouble = "4.5";
+      public const string StrDecimal = "5.5";
+      public const string StrDateTime = "20211215";
+      public const string StrTimeSpan = "01:02:03";
+      public const string StrGuid = "2c0dfea6-8326-44e4-ba55-a994e0bedd10";
+      public const string StrEnumString = "Two";
+      public const string StrEnumInt32 = "2";
+      public const int RoundedSingle = 4;
+      public const int RoundedDouble = 5;
+      public const int RoundedDecimal = 6;
     }
 
 
@@ -67,7 +83,7 @@ namespace ExtTools_tests
 
       public const decimal VDecimal = 50m;
 
-      public const bool VBool = false;
+      public const bool VBoolean = false;
 
       public static readonly DateTime VDateTime = new DateTime(2021, 12, 17);
 
@@ -76,6 +92,21 @@ namespace ExtTools_tests
       public static readonly Guid VGuid = new Guid("a4ae45d5-42cf-41ec-af62-e44155698f48");
 
       public const TestEnum VEnum = TestEnum.Three;
+      public static readonly byte[] VBytes = new byte[] { 4, 5, 6, 0 };
+
+      public const string StrInt32 = "10";
+      public const string StrInt64 = "20";
+      public const string StrSingle = "30";
+      public const string StrDouble = "40";
+      public const string StrDecimal = "50";
+      public const string StrDateTime = "20211217";
+      public const string StrTimeSpan = "04:05:06";
+      public const string StrGuid = "a4ae45d5-42cf-41ec-af62-e44155698f48";
+      public const string StrEnumString = "Three";
+      public const string StrEnumInt32 = "3";
+      public const int RoundedSingle = 30;
+      public const int RoundedDouble = 40;
+      public const int RoundedDecimal = 50;
     }
 
     /// <summary>
@@ -121,12 +152,12 @@ namespace ExtTools_tests
 
     /// <summary>
     /// Возвращает тестовую таблицу с тремя строками:
-    /// [0] - содержит DBNull во всех полях
-    /// [1] - содежит значения
-    /// [2] - содержит такие же значения
+    /// [0] - содержит DBNull во всех Nullable-полях и значение по умолчанию в полях "NN".
+    /// [1] - содержит значения <see cref="Row1"/>
+    /// [2] - содержит значения <see cref="Row2"/>
     /// </summary>
     /// <returns></returns>
-    public static DataTable CreateTestDataTable()
+    public static DataTable Create()
     {
       DataTable tbl = new DataTable();
       tbl.Columns.Add("FString", typeof(string));
@@ -139,7 +170,21 @@ namespace ExtTools_tests
       tbl.Columns.Add("FDateTime", typeof(DateTime));
       tbl.Columns.Add("FTimeSpan", typeof(TimeSpan));
       tbl.Columns.Add("FGuid", typeof(Guid));
-      tbl.Columns.Add("FEnum", typeof(int));
+      tbl.Columns.Add("FEnumInt32", typeof(int));
+      tbl.Columns.Add("FEnumString", typeof(string));
+      tbl.Columns.Add("FBytes", typeof(byte[]));
+      DataColumn col;
+      col = tbl.Columns.Add("FStringNN", typeof(string));
+      col.AllowDBNull = false;
+      col.DefaultValue = String.Empty;
+
+      col = tbl.Columns.Add("FInt32NN", typeof(Int32));
+      col.AllowDBNull = false;
+      col.DefaultValue = 0;
+
+      col = tbl.Columns.Add("FBooleanNN", typeof(Boolean));
+      col.AllowDBNull = false;
+      col.DefaultValue = false;
 
       tbl.Rows.Add(); // [0]
 
@@ -151,11 +196,16 @@ namespace ExtTools_tests
       row["FSingle"] = Row1.VSingle;
       row["FDouble"] = Row1.VDouble;
       row["FDecimal"] = Row1.VDecimal;
-      row["FBoolean"] = Row1.VBool;
+      row["FBoolean"] = Row1.VBoolean;
       row["FDateTime"] = Row1.VDateTime;
       row["FTimeSpan"] = Row1.VTimeSpan;
       row["FGuid"] = Row1.VGuid;
-      row["FEnum"] = Row1.VEnum;
+      row["FEnumInt32"] = Row1.VEnum;
+      row["FEnumString"] = Row1.VEnum.ToString();
+      row["FBytes"] = Row1.VBytes;
+      row["FStringNN"] = Row1.VString;
+      row["FInt32NN"] = Row1.VInt32;
+      row["FBooleanNN"] = Row1.VBoolean;
       tbl.Rows.Add(row); // [1]
 
       row = tbl.NewRow();
@@ -165,15 +215,32 @@ namespace ExtTools_tests
       row["FSingle"] = Row2.VSingle;
       row["FDouble"] = Row2.VDouble;
       row["FDecimal"] = Row2.VDecimal;
-      row["FBoolean"] = Row2.VBool;
+      row["FBoolean"] = Row2.VBoolean;
       row["FDateTime"] = Row2.VDateTime;
       row["FTimeSpan"] = Row2.VTimeSpan;
       row["FGuid"] = Row2.VGuid;
-      row["FEnum"] = Row2.VEnum;
+      row["FEnumInt32"] = Row2.VEnum;
+      row["FEnumString"] = Row2.VEnum.ToString();
+      row["FBytes"] = Row2.VBytes;
+      row["FStringNN"] = Row2.VString;
+      row["FInt32NN"] = Row2.VInt32;
+      row["FBooleanNN"] = Row2.VBoolean;
       tbl.Rows.Add(row); // [2]
+
+      tbl.AcceptChanges();
+
+      if (ColumnNames.Length != tbl.Columns.Count)
+        throw new BugException("ColumnNames");
 
       return tbl;
     }
+
+    /// <summary>
+    /// Имена столбцов таблицы <see cref="Create()"/>
+    /// </summary>
+    public static string[] ColumnNames = new string[] { "FString",
+      "FInt32", "FInt64", "FSingle", "FDouble", "FDecimal",
+      "FBoolean", "FDateTime", "FTimeSpan", "FGuid", "FEnumInt32", "FEnumString", "FBytes", "FStringNN", "FInt32NN", "FBooleanNN" };
 
     #endregion
   }
@@ -209,9 +276,9 @@ namespace ExtTools_tests
         return "null";
       StringBuilder sb = new StringBuilder();
       if (_Source is string)
-        sb.Append(DataTools.StrToCSharpString((string)_Source));
+        sb.Append(StringTools.StrToCSharpString((string)_Source));
       else if (_Source is byte[])
-        sb.Append(DataTools.BytesToHex((byte[])_Source, false));
+        sb.Append(StringTools.BytesToHex((byte[])_Source, false));
       else
         sb.Append(_Source.ToString());
 

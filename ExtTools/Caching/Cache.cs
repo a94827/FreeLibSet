@@ -1288,7 +1288,7 @@ namespace FreeLibSet.Caching
       internal CacheSetVersionResult SetVersion(Type objType, string[] keys, string version)
       {
         if (keys == null)
-          keys = DataTools.EmptyStrings;
+          keys = EmptyArray<string>.Empty;
 
         string oldVersion = DoSetVersion(objType, keys, version, true);
         bool changed = !String.Equals(version, oldVersion, StringComparison.Ordinal);
@@ -1319,7 +1319,7 @@ namespace FreeLibSet.Caching
       internal string GetVesion(Type objType, string[] keys)
       {
         if (keys == null)
-          keys = DataTools.EmptyStrings;
+          keys = EmptyArray<string>.Empty;
 
         string version = String.Empty;
         lock (_TheTypeDict)
@@ -1508,7 +1508,7 @@ namespace FreeLibSet.Caching
       internal void Clear(Type objType, string[] keys, bool clearPersist)
       {
         if (keys == null)
-          keys = DataTools.EmptyStrings; // запрошено удаление всех объектов
+          keys = EmptyArray<string>.Empty; // запрошено удаление всех объектов
 
         DoClear(objType, keys, clearPersist);
 
@@ -4893,7 +4893,7 @@ namespace FreeLibSet.Caching
       internal CacheSetVersionResult SetVersion(Type objType, string[] keys, string version)
       {
         if (keys == null)
-          keys = DataTools.EmptyStrings;
+          keys = EmptyArray<string>.Value;
 
         string oldVersion = DoSetVersion(objType, keys, version, true);
         bool changed = !String.Equals(version, oldVersion, StringComparison.Ordinal);
@@ -4924,7 +4924,7 @@ namespace FreeLibSet.Caching
       internal string GetVesion(Type objType, string[] keys)
       {
         if (keys == null)
-          keys = DataTools.EmptyStrings;
+          keys = EmptyArray<string>.Value;
 
         string version = String.Empty;
         lock (_TheTypeDict)
@@ -5132,7 +5132,7 @@ namespace FreeLibSet.Caching
       internal void Clear(Type objType, string[] keys, bool clearPersist)
       {
         if (keys == null)
-          keys = DataTools.EmptyStrings; // запрошено удаление всех объектов
+          keys = EmptyArray<string>.Value; // запрошено удаление всех объектов
 
         DoClear(objType, keys, clearPersist);
 

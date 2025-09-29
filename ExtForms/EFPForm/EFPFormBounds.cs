@@ -272,10 +272,10 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("cfg");
 #endif
 
-      cfg.SetInt("Left", Bounds.Left);
-      cfg.SetInt("Top", Bounds.Top);
-      cfg.SetInt("Width", Bounds.Width);
-      cfg.SetInt("Height", Bounds.Height);
+      cfg.SetInt32("Left", Bounds.Left);
+      cfg.SetInt32("Top", Bounds.Top);
+      cfg.SetInt32("Width", Bounds.Width);
+      cfg.SetInt32("Height", Bounds.Height);
       cfg.SetEnum<FormWindowState>("State", WindowState);
     }
 
@@ -291,10 +291,10 @@ namespace FreeLibSet.Forms
         throw new ArgumentNullException("cfg");
 #endif
 
-      int l = cfg.GetInt("Left");
-      int t = cfg.GetInt("Top");
-      int w = cfg.GetInt("Width");
-      int h = cfg.GetInt("Height");
+      int l = cfg.GetInt32("Left");
+      int t = cfg.GetInt32("Top");
+      int w = cfg.GetInt32("Width");
+      int h = cfg.GetInt32("Height");
       this.Bounds = new Rectangle(l, t, w, h);
       WindowState = cfg.GetEnumDef<FormWindowState>("State", this.WindowState);
     }

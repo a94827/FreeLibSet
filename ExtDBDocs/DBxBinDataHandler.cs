@@ -46,9 +46,9 @@ namespace FreeLibSet.Data.Docs
       _DBSizeLimitExceededHandlerEnabled = true;
 
       _BinDataCacheTableStruct = new DBxTableStruct("BinData");
-      _BinDataCacheTableStruct.Columns.AddId();
+      _BinDataCacheTableStruct.Columns.AddInt32("Id", false);
       _BinDataCacheTableStruct.Columns.AddString("MD5", 32, false);
-      _BinDataCacheTableStruct.Columns.AddInt("Length", 0, Int32.MaxValue);
+      _BinDataCacheTableStruct.Columns.AddInt32("Length", false);
     }
 
     #endregion
@@ -122,15 +122,13 @@ namespace FreeLibSet.Data.Docs
       if (UseBinData || UseFiles)
       {
         ts = new DBxTableStruct("BinData");
-        ts.Columns.AddId();
+        ts.Columns.AddInt32("Id", false);
         ts.Columns.AddString("MD5", 32, false); // Сумма MD5
-        ts.Columns.AddInt("Length", 0, Int32.MaxValue); // Размер блока в байтах
-        ts.Columns.LastAdded.Nullable = false; // 20.07.2021
+        ts.Columns.AddInt32("Length", false); // Размер блока в байтах
 
         if (UseFragmentation)
         {
-          ts.Columns.AddInt("Section", 0, Int16.MaxValue);
-          ts.Columns.LastAdded.Nullable = false; // 20.07.2021
+          ts.Columns.AddInt16("Section", false);
         }
         else
           ts.Columns.AddBinary("Contents"); // Содержимое блока
@@ -152,9 +150,10 @@ namespace FreeLibSet.Data.Docs
         // Путь к файлу не хранится. Если требуется хранить каталог, то следует использовать отдельное 
         // текстовое поле
         ts = new DBxTableStruct("FileNames");
-        ts.Columns.AddId();
+        ts.Columns.AddInt32("Id", false);
         ts.Columns.AddString("Name", 160, false); // Имя файла без пути
-        ts.Columns.AddReference("Data", "BinData", false);
+        ts.Columns.AddReference("Data", "BinData", false)
+          .ColumnType = DBxColumnType.Int32;
         ts.Columns.AddDateTime("CreationTime", true); // Время создания файла
         ts.Columns.AddDateTime("LastWriteTime", true); // Время изменения файла
 
@@ -177,7 +176,7 @@ namespace FreeLibSet.Data.Docs
       if (UseBinData || UseFiles)
       {
         DBxTableStruct ts = new DBxTableStruct("BinDataStorage");
-        ts.Columns.AddId();
+        ts.Columns.AddInt32("Id", false);
         ts.Columns.AddBinary("Contents"); // Содержимое блока
         dbStruct.Tables.Add(ts);
       }
@@ -304,7 +303,7 @@ namespace FreeLibSet.Data.Docs
       int maxSection;
       using (DBxCon con = new DBxCon(MainEntry))
       {
-        maxSection = DataTools.GetInt(con.GetMaxValue("BinData", "Section", null));
+        maxSection = DataTools.GetInt32(con.GetMaxValue("BinData", "Section", null));
       }
 
       if (maxSection > SectionEntryCount)
@@ -389,7 +388,7 @@ namespace FreeLibSet.Data.Docs
 
       using (DBxCon con = new DBxCon(MainEntry))
       {
-        return con.FindRecord("BinData", "MD5", md5);
+        return DataTools.GetInt32(con.FindRecord("BinData", "MD5", md5));
       }
     }
 
@@ -410,10 +409,10 @@ namespace FreeLibSet.Data.Docs
 
       using (DBxCon con = new DBxCon(MainEntry))
       {
-        Int32 id = con.FindRecord("BinData", "MD5", md5);
+        Int32 id = DataTools.GetInt32(con.FindRecord("BinData", "MD5", md5));
         if (id != 0)
         {
-          Int32 realLength = DataTools.GetInt(con.GetValue("BinData", id, "Length"));
+          Int32 realLength = DataTools.GetInt32(con.GetValueById("BinData", id, "Length"));
           if (realLength != length)
             throw new DBxConsistencyException(String.Format(Res.DBxBinDataHandler_Err_BinDataLength,
               id, realLength, length));
@@ -443,14 +442,14 @@ namespace FreeLibSet.Data.Docs
         return 0;
 
       Int32 id;
-      string md5 = DataTools.MD5Sum(contents);
+      string md5 = MD5Tools.MD5Sum(contents);
 
       // Для предотвращения ошибки одновременного добавления нескольких блоков, выполняем блокировку
       lock (_AppendBinDataLockObj)
       {
         using (DBxCon con = new DBxCon(MainEntry))
         {
-          id = con.FindRecord("BinData", "MD5", md5);
+          id = DataTools.GetInt32(con.FindRecord("BinData", "MD5", md5));
           if (id == 0)
           {
             if (UseFragmentation)
@@ -484,7 +483,7 @@ namespace FreeLibSet.Data.Docs
             else // Фрагментация не используется.
             {
               con.TransactionBegin();
-              id = con.AddRecordWithIdResult("BinData", _AppendBinDataColumns1, new object[] { md5, contents.Length });
+              id = DataTools.GetInt32(con.AddRecordWithIdResult("BinData", _AppendBinDataColumns1, new object[] { md5, contents.Length }));
               con.WriteBlob("BinData", id, "Contents", contents);
               con.TransactionCommit();
             }
@@ -522,7 +521,7 @@ namespace FreeLibSet.Data.Docs
       if (binDataId == 0)
       {
         // Основной вариант вызова метода - AppendBinData()
-        binDataId = con.AddRecordWithIdResult("BinData", _AppendBinDataColumns2, new object[] { EmptyMD5, contents.Length, section });
+        binDataId = DataTools.GetInt32(con.AddRecordWithIdResult("BinData", _AppendBinDataColumns2, new object[] { EmptyMD5, contents.Length, section }));
         if (binDataId == 0)
           throw new BugException("Id=0");
       }
@@ -554,7 +553,7 @@ namespace FreeLibSet.Data.Docs
         }
 
         // Только в случае успеха заменяем MD5
-        con.SetValue("BinData", binDataId, "MD5", md5);
+        con.SetValueById("BinData", binDataId, "MD5", md5);
       }
       catch (Exception e)
       {
@@ -622,7 +621,7 @@ namespace FreeLibSet.Data.Docs
         if (UseFragmentation)
         {
           // Сначала требуется определить секцию для хранения данных
-          int section = DataTools.GetInt(con.GetValue("BinData", binDataId, "Section"));
+          int section = DataTools.GetInt32(con.GetValueById("BinData", binDataId, "Section"));
           if (section == 0)
             throw new ArgumentException(String.Format(Res.DBxBinDataHandler_Arg_BinDataId, binDataId), "binDataId");
 
@@ -714,7 +713,7 @@ namespace FreeLibSet.Data.Docs
 
       using (DBxCon con = new DBxCon(MainEntry))
       {
-        return con.FindRecord("FileNames", new AndFilter(filters));
+        return DataTools.GetInt32(con.FindRecord("FileNames", new AndFilter(filters)));
       }
     }
 
@@ -758,7 +757,7 @@ namespace FreeLibSet.Data.Docs
       if (fileInfo.IsEmpty)
         throw ExceptionFactory.ArgIsEmpty("fileInfo");
       if (binDataId <= 0)
-        throw new DBxNoIdArgumentException(String.Format(Res.DBxBinDataHandler_Arg_BinDataId, binDataId), "binDataId");
+        throw new NoIdArgumentException(String.Format(Res.DBxBinDataHandler_Arg_BinDataId, binDataId), "binDataId");
 
       DBxFilter[] filters = new DBxFilter[4];
       filters[0] = new ValueFilter("Data", binDataId);
@@ -773,10 +772,10 @@ namespace FreeLibSet.Data.Docs
         // К тому же значения null правильно не обрабатываются
         lock (_AppendDBFileLockObj)
         {
-          Int32 fileId = con.FindRecord("FileNames", new AndFilter(filters));
+          Int32 fileId = DataTools.GetInt32(con.FindRecord("FileNames", new AndFilter(filters)));
           if (fileId == 0)
-            fileId = con.AddRecordWithIdResult("FileNames", _FindDBFileColumns,
-              new object[] { binDataId, fileInfo.Name, fileInfo.CreationTime, fileInfo.LastWriteTime });
+            fileId = DataTools.GetInt32(con.AddRecordWithIdResult("FileNames", _FindDBFileColumns,
+              new object[] { binDataId, fileInfo.Name, fileInfo.CreationTime, fileInfo.LastWriteTime }));
           return fileId;
         }
       }
@@ -796,14 +795,14 @@ namespace FreeLibSet.Data.Docs
       object[] values;
       using (DBxCon con = new DBxCon(MainEntry))
       {
-        values = con.GetValues("FileNames", fileId, _GetDBFileInfoColumns);
+        values = con.GetValuesById("FileNames", fileId, _GetDBFileInfoColumns);
       }
 
       string name = DataTools.GetString(values[0]);
       if (name.Length == 0)
         throw new ArgumentException(String.Format(Res.DBxBinDataHandler_Arg_FileNameId, fileId));
 
-      return new StoredFileInfo(name, DataTools.GetInt(values[1]), DataTools.GetNullableDateTime(values[2]), DataTools.GetNullableDateTime(values[3]));
+      return new StoredFileInfo(name, DataTools.GetInt32(values[1]), DataTools.GetNullableDateTime(values[2]), DataTools.GetNullableDateTime(values[3]));
     }
 
     private static readonly DBxColumns _GetDBFileColumns = new DBxColumns("Name,Data.Length,CreationTime,LastWriteTime,Data");
@@ -823,16 +822,16 @@ namespace FreeLibSet.Data.Docs
       object[] values;
       using (DBxCon con = new DBxCon(MainEntry))
       {
-        values = con.GetValues("FileNames", fileId, _GetDBFileColumns);
+        values = con.GetValuesById("FileNames", fileId, _GetDBFileColumns);
       }
 
       string name = DataTools.GetString(values[0]);
       if (name.Length == 0)
         throw new ArgumentException(String.Format(Res.DBxBinDataHandler_Arg_FileNameId, fileId)); // это никогда не возникнет
 
-      StoredFileInfo fileInfo = new StoredFileInfo(name, DataTools.GetInt(values[1]), DataTools.GetNullableDateTime(values[2]), DataTools.GetNullableDateTime(values[3]));
+      StoredFileInfo fileInfo = new StoredFileInfo(name, DataTools.GetInt32(values[1]), DataTools.GetNullableDateTime(values[2]), DataTools.GetNullableDateTime(values[3]));
 
-      Int32 binDataId = DataTools.GetInt(values[4]);
+      Int32 binDataId = DataTools.GetInt32(values[4]);
       byte[] contents = GetBinData(binDataId);
       if (contents == null)
         throw new BugException("GetBinData() returned null");
@@ -1214,7 +1213,7 @@ namespace FreeLibSet.Data.Docs
         if (UseTrace)
           Trace.WriteLine(refText + "...");
 
-        Int32 lastId = DataTools.GetInt(detCon.GetMaxValue(tc.TableName, "Id", null));
+        Int32 lastId = DataTools.GetInt32(detCon.GetMaxValue(tc.TableName, "Id", null));
         spl.PercentMax = lastId;
         spl.AllowCancel = true;
         for (Int32 firstId = 1; firstId <= lastId; firstId += 1000)
@@ -1226,28 +1225,26 @@ namespace FreeLibSet.Data.Docs
           DBxFilter[] filters = new DBxFilter[3];
           filters[0] = new ValueFilter("Id", firstId, CompareKind.GreaterOrEqualThan);
           filters[1] = new ValueFilter("Id", thisLastId, CompareKind.LessOrEqualThan);
-          filters[2] = new NotNullFilter(tc.ColumnName, DBxColumnType.Int);
-          Int32[] refIds = detCon.GetUniqueIntValues(tc.TableName,
+          filters[2] = new NotNullFilter(tc.ColumnName, DBxColumnType.Int32);
+          IIdSet<Int32> refIds = IdTools.AsIdSet<Int32>(detCon.GetRefIds(tc.TableName,
             tc.ColumnName,
-            new AndFilter(filters));
-          if (refIds.Length > 0)
+            new AndFilter(filters)));
+          if (refIds.Count > 0)
           {
-            Int32[] realIds = masterCon.GetUniqueIntValues(masterTableName, "Id", new IdsFilter(refIds));
-            if (realIds.Length != refIds.Length)
+            IIdSet<Int32> realIds = IdTools.AsIdSet<Int32>(masterCon.GetRefIds(masterTableName, "Id", new ValueInListFilter("Id", refIds)));
+            if (realIds.Count != refIds.Count)
             {
-              ArrayIndexer<Int32> realIdIndexer = new ArrayIndexer<Int32>(realIds);
-
               // Есть ошибки. Нужен детальный поиск
               DataTable table = detCon.FillSelect(tc.TableName,
                 new DBxColumns(new string[] { "Id", tc.ColumnName }),
                 new AndFilter(filters));
               foreach (DataRow row in table.Rows)
               {
-                Int32 id = DataTools.GetInt(row, "Id");
-                Int32 refId = DataTools.GetInt(row, tc.ColumnName);
+                Int32 id = DataTools.GetInt32(row, "Id");
+                Int32 refId = DataTools.GetInt32(row, tc.ColumnName);
                 if (refId == 0)
                   throw new BugException("RefId=0");
-                if (!realIdIndexer.Contains(refId))
+                if (!realIds.Contains(refId))
                 {
                   Errors.AddError(String.Format(Res.DBxBinDataHandler_Err_DocRefUnknown,
                     refText, id, refId, masterTableName));
@@ -1317,7 +1314,7 @@ namespace FreeLibSet.Data.Docs
                 }
                 else
                 {
-                  string realMD5 = DataTools.MD5Sum(data);
+                  string realMD5 = MD5Tools.MD5Sum(data);
                   if (md5 != realMD5)
                   {
                     Errors.AddError(String.Format(Res.DBxBinDataHandler_Err_BinDataWrongMD5,id));
@@ -1415,9 +1412,9 @@ namespace FreeLibSet.Data.Docs
               try
               {
                 Int32 id = rdr.GetInt32(0);
-                //int WantedSection = DataTools.GetInt(Con1.GetValue("BinData", Id, "Section"));
+                //int WantedSection = DataTools.GetInt32(Con1.GetValue("BinData", Id, "Section"));
                 object oWantedSection;
-                if (!con1.GetValue("BinData", id, "Section", out oWantedSection)) // 04.06.2020
+                if (!con1.GetValueById("BinData", id, "Section", out oWantedSection)) // 04.06.2020
                 {
                   Errors.AddWarning(String.Format(Res.DBxBinDataHandler_Err_BinDataStorageUnknownId,
                     entry2.DB.DisplayName, id));
@@ -1427,7 +1424,7 @@ namespace FreeLibSet.Data.Docs
                 }
                 else
                 {
-                  int wantedSection = DataTools.GetInt(oWantedSection);
+                  int wantedSection = DataTools.GetInt32(oWantedSection);
                   if (wantedSection != section)
                   {
                     // Это считается предупреждением а не ошибкой.

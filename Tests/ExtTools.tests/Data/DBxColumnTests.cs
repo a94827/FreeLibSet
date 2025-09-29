@@ -73,7 +73,7 @@ namespace ExtTools_tests.Data
       table.Columns.Add("F3", typeof(bool));
       table.Rows.Add("AAA", 222, true);
       table.Rows.Add();
-      DataTableValueArray va = new DataTableValueArray(table);
+      DataTableValues va = new DataTableValues(table);
       va.CurrentRow = table.Rows[srcNull ? 1 : 0];
 
       DBxColumn sut = new DBxColumn(columnName);

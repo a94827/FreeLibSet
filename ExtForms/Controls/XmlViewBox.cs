@@ -160,7 +160,7 @@ namespace FreeLibSet.Controls
           if (!String.IsNullOrEmpty(_XmlFilePath))
             _XmlBytes = File.ReadAllBytes(_XmlFilePath);
           else if (_XmlDocument != null)
-            _XmlBytes = DataTools.XmlDocumentToByteArray(_XmlDocument);
+            _XmlBytes = XmlTools.XmlDocumentToByteArray(_XmlDocument);
         }
         return _XmlBytes;
       }
@@ -214,9 +214,9 @@ namespace FreeLibSet.Controls
         if (_XmlDocument == null)
         {
           if (!String.IsNullOrEmpty(_XmlFilePath))
-            _XmlDocument = FileTools.ReadXmlDocument(new AbsPath(_XmlFilePath));
+            _XmlDocument = XmlTools.ReadXmlDocument(new AbsPath(_XmlFilePath));
           else if (_XmlBytes != null)
-            _XmlDocument = DataTools.XmlDocumentFromByteArray(_XmlBytes);
+            _XmlDocument = XmlTools.XmlDocumentFromByteArray(_XmlBytes);
         }
         return _XmlDocument;
       }
@@ -312,14 +312,14 @@ namespace FreeLibSet.Controls
     {
       get
       {
-        return DataTools.XmlDocumentToString(XmlDocument);
+        return XmlTools.XmlDocumentToString(XmlDocument);
       }
       set
       {
         if (String.IsNullOrEmpty(value))
           ClearXml();
         else
-          XmlDocument = DataTools.XmlDocumentFromString(value);
+          XmlDocument = XmlTools.XmlDocumentFromString(value);
       }
     }
 

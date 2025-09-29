@@ -164,7 +164,7 @@ namespace FreeLibSet.Forms
     /// <see cref="EFPCommandItemUsage.ToolBarDropDown"/>. См. свойство <see cref="EFPCommandItem.ToolBarUsage"/>.
     /// </summary>
     /// <param name="items">Список команд</param>
-    public void Add(EFPCommandItems items)
+    public void AddRange(EFPCommandItems items)
     {
       foreach (EFPCommandItem item in items)
       {
@@ -200,7 +200,7 @@ namespace FreeLibSet.Forms
     /// <see cref="EFPCommandItemUsage.ToolBarDropDown"/>. См. свойство <see cref="EFPCommandItem.ToolBarUsage"/>.
     /// </summary>
     /// <param name="items">Список команд</param>
-    public void Add(List<EFPCommandItem> items)
+    public void AddRange(List<EFPCommandItem> items)
     {
       for (int i = 0; i < items.Count; i++)
       {
@@ -230,7 +230,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (_Bar == null)
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
 
         string[] a = new string[_Bar.Items.Count];
         for (int i = 0; i < _Bar.Items.Count; i++)
@@ -953,7 +953,7 @@ namespace FreeLibSet.Forms
         _PanelCommandItems = new DockCommandItems(this);
 
         EFPContextMenu ccm = new EFPContextMenu();
-        ccm.Add(PanelCommandItems);
+        ccm.AddRange(PanelCommandItems);
         ccm.Attach(userPanel);
       }
     }

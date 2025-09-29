@@ -21,11 +21,11 @@ namespace ExtTools_tests.Data
     public void Constructor_Expression()
     {
       DBxExpression expr = new DBxColumn("F1");
-      NotNullFilter sut = new NotNullFilter(expr, DBxColumnType.Int);
+      NotNullFilter sut = new NotNullFilter(expr, DBxColumnType.Int32);
       Assert.AreSame(expr, sut.Expression1, "Expression1");
       Assert.IsInstanceOf<DBxConst>(sut.Expression2, "Expression2.GetType()");
       Assert.IsNull(sut.Expression2.GetConst().Value, "Expression2.value");
-      Assert.AreEqual(DBxColumnType.Int, sut.Expression2.GetConst().ColumnType, "Expression2.ColumnType");
+      Assert.AreEqual(DBxColumnType.Int32, sut.Expression2.GetConst().ColumnType, "Expression2.ColumnType");
       Assert.IsTrue(sut.ComparisionToNull, "ComparisionToNull");
       Assert.AreEqual(DBxFilterDegeneration.None, sut.Degeneration, "Degeneration");
       Assert.IsFalse(sut.NullAsDefaultValue, "NullAsDefaultValue");
@@ -34,12 +34,12 @@ namespace ExtTools_tests.Data
     [Test]
     public void Constructor_ColumnName()
     {
-      NotNullFilter sut = new NotNullFilter("F1", DBxColumnType.Int);
+      NotNullFilter sut = new NotNullFilter("F1", DBxColumnType.Int32);
       Assert.IsInstanceOf<DBxColumn>(sut.Expression1, "Expression1.GetType()");
       Assert.AreEqual("F1", ((DBxColumn)(sut.Expression1)).ColumnName, "Expression1.ColumnName");
       Assert.IsInstanceOf<DBxConst>(sut.Expression2, "Expression2.GetType()");
       Assert.IsNull(sut.Expression2.GetConst().Value, "Expression2.value");
-      Assert.AreEqual(DBxColumnType.Int, sut.Expression2.GetConst().ColumnType, "Expression2.ColumnType");
+      Assert.AreEqual(DBxColumnType.Int32, sut.Expression2.GetConst().ColumnType, "Expression2.ColumnType");
       Assert.IsTrue(sut.ComparisionToNull, "ComparisionToNull");
       Assert.AreEqual(DBxFilterDegeneration.None, sut.Degeneration, "Degeneration");
       Assert.IsFalse(sut.NullAsDefaultValue, "NullAsDefaultValue");
@@ -53,7 +53,7 @@ namespace ExtTools_tests.Data
       Assert.AreEqual("F1", ((DBxColumn)(sut.Expression1)).ColumnName, "Expression1.ColumnName");
       Assert.IsInstanceOf<DBxConst>(sut.Expression2, "Expression2.GetType()");
       Assert.IsNull(sut.Expression2.GetConst().Value, "Expression2.value");
-      Assert.AreEqual(DBxColumnType.Int, sut.Expression2.GetConst().ColumnType, "Expression2.ColumnType");
+      Assert.AreEqual(DBxColumnType.Int32, sut.Expression2.GetConst().ColumnType, "Expression2.ColumnType");
       Assert.IsTrue(sut.ComparisionToNull, "ComparisionToNull");
       Assert.AreEqual(DBxFilterDegeneration.None, sut.Degeneration, "Degeneration");
       Assert.IsFalse(sut.NullAsDefaultValue, "NullAsDefaultValue");
@@ -67,7 +67,7 @@ namespace ExtTools_tests.Data
     public void GetColumnNames()
     {
       DBxExpression expr = new DBxColumn("F1");
-      NotNullFilter sut = new NotNullFilter(expr, DBxColumnType.Int);
+      NotNullFilter sut = new NotNullFilter(expr, DBxColumnType.Int32);
 
       DBxColumnList lst = new DBxColumnList();
       sut.GetColumnNames(lst);
@@ -84,7 +84,7 @@ namespace ExtTools_tests.Data
     [TestCase(null, false)]
     public void TestFilter(object colValue, bool wantedRes)
     {
-      NotNullFilter sut = new NotNullFilter("F1", DBxColumnType.Int);
+      NotNullFilter sut = new NotNullFilter("F1", DBxColumnType.Int32);
 
       TypedStringDictionary<object> vals = new TypedStringDictionary<object>(false);
       vals.Add("F1", colValue);
@@ -100,7 +100,7 @@ namespace ExtTools_tests.Data
     [Test]
     public void Serialization()
     {
-      NotNullFilter sut = new NotNullFilter("F1", DBxColumnType.Int);
+      NotNullFilter sut = new NotNullFilter("F1", DBxColumnType.Int32);
       byte[] b = SerializationTools.SerializeBinary(sut);
       NotNullFilter res = (NotNullFilter)(SerializationTools.DeserializeBinary(b));
       Assert.AreEqual(sut.ToString(), res.ToString(), "ToString()");

@@ -32,14 +32,14 @@ namespace ExtTools_tests.UICore
     public void TextToLines_empty()
     {
       string[] res = UITools.TextToLines(String.Empty);
-      Assert.AreEqual(DataTools.EmptyStrings, res);
+      Assert.AreEqual(EmptyArray<string>.Empty, res);
     }
 
     [Test]
     public void TextToLines_null()
     {
       string[] res = UITools.TextToLines(null);
-      Assert.AreEqual(DataTools.EmptyStrings, res);
+      Assert.AreEqual(EmptyArray<string>.Empty, res);
     }
 
 
@@ -54,7 +54,7 @@ namespace ExtTools_tests.UICore
     [Test]
     public void LinesToText_empty()
     {
-      string res = UITools.LinesToText(DataTools.EmptyStrings);
+      string res = UITools.LinesToText(EmptyArray<string>.Empty);
       Assert.AreEqual(String.Empty, res);
     }
 

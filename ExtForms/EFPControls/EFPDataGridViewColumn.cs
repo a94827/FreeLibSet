@@ -474,8 +474,8 @@ namespace FreeLibSet.Forms
             tempTable.Columns.Add(Name, typeof(string));
             for (int i = 0; i < ControlProvider.Control.RowCount; i++)
             {
-              ControlProvider.DoGetRowAttributes(i, EFPDataGridViewAttributesReason.View);
-              EFPDataGridViewCellAttributesEventArgs CellArgs = ControlProvider.DoGetCellAttributes(GridColumn.Index);
+              ControlProvider.GetRowInfo(i, EFPDataViewInfoReason.View);
+              EFPDataGridViewCellInfoEventArgs CellArgs = ControlProvider.GetCellInfo(GridColumn.Index);
               object v = CellArgs.Value;
               if (v == null || v is DBNull)
                 tempTable.Rows.Add(String.Empty);
@@ -719,8 +719,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Цвет столбца. Используется, если для текущей строки в событии 
-    /// <see cref="EFPDataGridView.GetRowAttributes"/> не определен более приоритетный цвет
-    /// На момент вызова обработчика <see cref="EFPDataGridView.GetCellAttributes"/>, если он задан,
+    /// <see cref="EFPDataGridView.RowInfoNeeded"/> не определен более приоритетный цвет
+    /// На момент вызова обработчика <see cref="EFPDataGridView.CellInfoNeeded"/>, если он задан,
     /// цвет уже применен
     /// </summary>
     public UIDataViewColorType ColorType { get { return _ColorType; } set { _ColorType = value; } }
@@ -734,7 +734,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Рамка для левой границы столбца.
-    /// На момент вызова обработчика <see cref="EFPDataGridView.GetCellAttributes"/>, если он задан,
+    /// На момент вызова обработчика <see cref="EFPDataGridView.CellInfoNeeded"/>, если он задан,
     /// стиль рамки уже применен
     /// </summary>
     public UIDataViewBorderStyle LeftBorder { get { return _LeftBorder; } set { _LeftBorder = value; } }
@@ -742,7 +742,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Рамка для правой границы столбца.
-    /// На момент вызова обработчика <see cref="EFPDataGridView.GetCellAttributes"/>, если он задан,
+    /// На момент вызова обработчика <see cref="EFPDataGridView.CellInfoNeeded"/>, если он задан,
     /// стиль рамки уже применен
     /// </summary>
     public UIDataViewBorderStyle RightBorder { get { return _RightBorder; } set { _RightBorder = value; } }
@@ -781,8 +781,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public string PrintHeadersSpec
     {
-      get { return DataTools.StrFromSpecCharsArray(PrintHeaders); }
-      set { PrintHeaders = DataTools.StrToSpecCharsArray(value); }
+      get { return StringTools.StrFromSpecCharsArray(PrintHeaders); }
+      set { PrintHeaders = StringTools.StrToSpecCharsArray(value); }
     }
 
     /// <summary>
@@ -901,7 +901,7 @@ namespace FreeLibSet.Forms
     /// Признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца в настройках по умолчанию.
     /// Если true, то <see cref="PrintWidth"/> задает минимальную ширину столбца.
     /// По умолчанию свойство возвращает true, если <see cref="DataGridViewColumn.AutoSizeMode"/>=<see cref="DataGridViewAutoSizeColumnMode.Fill"/>, 
-    /// например, если столбец был создан с помощью <see cref="EFPDataGridViewColumns.AddTextFill(string)"/>.
+    /// например, если столбец был создан с помощью <see cref="EFPDataGridViewColumns.AddTextFill(string, bool, string, int, int)"/>.
     /// </summary>
     public bool PrintAutoGrow
     {
@@ -1022,7 +1022,7 @@ namespace FreeLibSet.Forms
     private DbfFieldInfo CreateDefaultDbfInfo()
     {
       if (GridColumn is DataGridViewCheckBoxColumn)
-        return DbfFieldInfo.CreateBool(DefaultDbfName);
+        return DbfFieldInfo.CreateBoolean(DefaultDbfName);
 
       if (GridColumn is DataGridViewTextBoxColumn)
       {
@@ -1091,8 +1091,8 @@ namespace FreeLibSet.Forms
       {
         for (int i = 0; i < ControlProvider.Control.RowCount; i++)
         {
-          ControlProvider.DoGetRowAttributes(i, EFPDataGridViewAttributesReason.View);
-          EFPDataGridViewCellAttributesEventArgs CellArgs = ControlProvider.DoGetCellAttributes(GridColumn.Index);
+          ControlProvider.GetRowInfo(i, EFPDataViewInfoReason.View);
+          EFPDataGridViewCellInfoEventArgs CellArgs = ControlProvider.GetCellInfo(GridColumn.Index);
           if (CellArgs.Value != null)
           {
             w = Math.Max(w, CellArgs.Value.ToString().Length);
@@ -1160,8 +1160,8 @@ namespace FreeLibSet.Forms
       {
         get
         {
-          _Column.ControlProvider.DoGetRowAttributes(_CurrentRowIndex, EFPDataGridViewAttributesReason.View);
-          EFPDataGridViewCellAttributesEventArgs cellArgs = _Column.ControlProvider.DoGetCellAttributes(_Column.Index);
+          _Column.ControlProvider.GetRowInfo(_CurrentRowIndex, EFPDataViewInfoReason.View);
+          EFPDataGridViewCellInfoEventArgs cellArgs = _Column.ControlProvider.GetCellInfo(_Column.Index);
           return cellArgs.Value; // ?
         }
       }
@@ -1369,9 +1369,8 @@ namespace FreeLibSet.Forms
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах (количество символов средней ширины)</param>
     /// <param name="minTextWidth">Минимальная ширина столбца в текстовых единицах</param>
-    /// <param name="alignment">Горизонтальное выравнивание</param>
     /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddText(string columnName, bool isDataColumn, string headerText, int textWidth, int minTextWidth, DataGridViewContentAlignment alignment)
+    public DataGridViewTextBoxColumn AddText(string columnName, bool isDataColumn, string headerText, int textWidth, int minTextWidth)
     {
       if (textWidth < 1)
         throw ExceptionFactory.ArgOutOfRange("textWidth", textWidth, 1, null);
@@ -1408,11 +1407,7 @@ namespace FreeLibSet.Forms
       }
 
       ControlProvider.Control.Columns.Add(col);
-      col.DefaultCellStyle.Alignment = alignment;
       //col.DefaultCellStyle.WrapMode = DataGridViewTriState.False; // 23.03.2018
-
-      //GridHandlerColumn ghCol = GridHandler.Columns[col];
-      //ghCol.DefaultDbfInfo = DbfFieldInfo.CreateString(ghCol.DefaultDbfName, TextWidth);
 
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
       ghCol.CustomOrderAllowed = isDataColumn;
@@ -1421,66 +1416,51 @@ namespace FreeLibSet.Forms
       return col;
     }
 
+
     /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn.
-    /// Задает горизонтальное выравнивание по левому краю.
+    /// Добавляет текстовый столбец <see cref="DataGridViewTextBoxColumn"/>.
     /// </summary>
-    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
+    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца <see cref="DataColumn.ColumnName"/></param>
+    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство <see cref="DataGridViewColumn.DataPropertyName"/>).
     /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
     /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина столбца в текстовых единицах (количество символов средней ширины)</param>
-    /// <param name="minTextWidth">Минимальная ширина столбца в текстовых единицах</param>
+    /// <param name="columnFormat">Формат столбца</param>
     /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddText(string columnName, bool isDataColumn, string headerText, int textWidth, int minTextWidth)
+    public DataGridViewTextBoxColumn AddText(string columnName, bool isDataColumn, string headerText, UITextColumnFormat columnFormat)
     {
-      return AddText(columnName, isDataColumn, headerText, textWidth, minTextWidth, DataGridViewContentAlignment.MiddleLeft);
-    }
+#if DEBUG
+      if (columnFormat == null)
+        throw new ArgumentNullException("columnFormat");
+#endif
 
-    /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn.
-    /// Задает горизонтальное выравнивание по левому краю.
-    /// Задает минимальную ширину столбца равной 5 символам, если меньшее значение не задано в параметре <paramref name="textWidth"/>.
-    /// </summary>
-    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
-    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина столбца в текстовых единицах (количество символов средней ширины)</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddText(string columnName, bool isDataColumn, string headerText, int textWidth)
-    {
-      return AddText(columnName, isDataColumn, headerText, textWidth, Math.Min(textWidth, 5));
-    }
+      DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
+      col.Name = columnName;
+      if (isDataColumn)
+        col.DataPropertyName = columnName;
+      col.HeaderText = headerText;
+      col.Width = columnFormat.TextWidth * 8 + 10; // !!!
+      col.MinimumWidth = columnFormat.MinTextWidth * 8 + 10; // !!!
+      col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+      col.DefaultCellStyle.Alignment = WinFormsTools.GetCellAlign((HorizontalAlignment)(int)(columnFormat.TextAlign));
+      col.FillWeight = 1; 
+      col.DefaultCellStyle.Format = columnFormat.Format;
 
+      switch (ControlProvider.Control.SelectionMode)
+      {
+        case DataGridViewSelectionMode.ColumnHeaderSelect:
+        case DataGridViewSelectionMode.FullColumnSelect:
+          col.SortMode = DataGridViewColumnSortMode.Programmatic; 
+          break;
+      }
 
-    /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn.
-    /// Задает горизонтальное выравнивание по левому краю.
-    /// Задает ширину столбца равной 10 символам, а минимальную - 5 символам.
-    /// </summary>
-    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
-    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddText(string columnName, bool isDataColumn, string headerText)
-    {
-      return AddText(columnName, isDataColumn, headerText, 10);
-    }
+      ControlProvider.Control.Columns.Add(col);
 
-    /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn.
-    /// Столбец привязывается к полю данных <paramref name="columnName"/>.
-    /// Заголовок столбца совпадает с именем поля.
-    /// Задает горизонтальное выравнивание по левому краю.
-    /// Задает ширину столбца равной 10 символам, а минимальную - 5 символам.
-    /// </summary>
-    /// <param name="columnName">Имя столбца, столбца DataColumn и заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddText(string columnName)
-    {
-      return AddText(columnName, true, columnName, 10);
+      EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
+      ghCol.CustomOrderAllowed = isDataColumn;
+      ghCol.SizeGroup = columnFormat.SizeGroup;
+      columnFormat.InitDbfPreliminaryInfo(ghCol.DbfPreliminaryInfo);
+
+      return col;
     }
 
     /// <summary>
@@ -1504,56 +1484,6 @@ namespace FreeLibSet.Forms
       col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
       col.FillWeight = fillWeight;
       return col;
-    }
-
-    /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn,
-    /// занимающий все свободное места табличного просмотра (FillWeight=100).
-    /// Минимальная ширина столбца равна 5 символам.
-    /// Задает горизонтальное выравнивание по левому краю.
-    /// </summary>
-    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
-    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddTextFill(string columnName, bool isDataColumn, string headerText)
-    {
-      return AddTextFill(columnName, isDataColumn, headerText, 100, 5);
-    }
-
-    /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn,
-    /// занимающий все свободное места табличного просмотра (FillWeight=100).
-    /// Столбец привязывается к полю данных <paramref name="columnName"/>.
-    /// Заголовок столбца совпадает с именем поля.
-    /// Минимальная ширина столбца равна 5 символам.
-    /// Задает горизонтальное выравнивание по левому краю.
-    /// </summary>
-    /// <param name="columnName">Имя столбца, столбца DataColumn и заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddTextFill(string columnName)
-    {
-      return AddTextFill(columnName, true, columnName, 100, 5);
-    }
-
-    /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn,
-    /// занимающий определенную часть свободного места табличного просмотра.
-    /// Столбец привязывается к полю данных <paramref name="columnName"/>.
-    /// Заголовок столбца совпадает с именем поля.
-    /// Минимальная ширина столбца равна 5 символам.
-    /// Задает горизонтальное выравнивание по левому краю.
-    /// </summary>
-    /// <param name="columnName">Имя столбца, столбца DataColumn и заголовок столбца</param>
-    /// <param name="fillWeight">Процент свободного места, занимаемый столбцом.
-    /// Не обязательно, чтобы все столбцы занимали ровно 100%.
-    /// См. описание свойства DataGridViewColumn.FillWeight при AutoSizeMode=Fill.
-    /// В отличие от DataGridViewColumn.FillWeight, параметр имеет целочисленный тип.</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddTextFill(string columnName, int fillWeight)
-    {
-      return AddTextFill(columnName, true, columnName, fillWeight, 5);
     }
 
     #endregion
@@ -1599,18 +1529,6 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn для отображения даты и времени.
-    /// Столбец привязывается к полю данных <paramref name="columnName"/>.
-    /// Заголовок столбца совпадает с именем поля.
-    /// </summary>
-    /// <param name="columnName">Имя столбца, столбца DataColumn и заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddDateTime(string columnName)
-    {
-      return AddDateTime(columnName, true, columnName, EditableDateTimeFormatterKind.DateTime);
-    }
-
-    /// <summary>
     /// Добавляет текстовый столбец DataGridViewTextBoxColumn для отображения даты и/или времени.
     /// </summary>
     /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
@@ -1648,7 +1566,7 @@ namespace FreeLibSet.Forms
     #region Числа
 
     /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn для отображения числа с фиксированной точкой.
+    /// Добавляет текстовый столбец <see cref="DataGridViewTextBoxColumn"/> для отображения числа с фиксированной точкой.
     /// </summary>
     /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
     /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
@@ -1689,9 +1607,9 @@ namespace FreeLibSet.Forms
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах, включая знак числа</param>
     /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddInt(string columnName, bool isDataColumn, string headerText, int textWidth)
+    public DataGridViewTextBoxColumn AddInteger(string columnName, bool isDataColumn, string headerText, int textWidth)
     {
-      DataGridViewTextBoxColumn col = AddText(columnName, isDataColumn, headerText, textWidth);
+      DataGridViewTextBoxColumn col = AddText(columnName, isDataColumn, headerText, textWidth, 1);
       col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
       //DocGridHandler.Columns[col].SizeGroup = "Int";
       EFPDataGridViewColumn ghCol = ControlProvider.Columns[col];
@@ -1701,19 +1619,6 @@ namespace FreeLibSet.Forms
       ghCol.DbfPreliminaryInfo.LengthIsDefined = false; // длина может быть больше
       ghCol.DbfPreliminaryInfo.PrecisionIsDefined = true;
       return col;
-    }
-
-    /// <summary>
-    /// Добавляет текстовый столбец DataGridViewTextBoxColumn для отображения целого числа.
-    /// Столбец привязывается к полю данных <paramref name="columnName"/>.
-    /// Заголовок столбца совпадает с именем поля.
-    /// Ширина столбца устанавливается равной 5 символам
-    /// </summary>
-    /// <param name="columnName">Имя столбца, столбца DataColumn и заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewTextBoxColumn AddInt(string columnName)
-    {
-      return AddInt(columnName, true, columnName, 5);
     }
 
     #endregion
@@ -1729,7 +1634,7 @@ namespace FreeLibSet.Forms
     /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewCheckBoxColumn AddBool(string columnName, bool isDataColumn, string headerText)
+    public DataGridViewCheckBoxColumn AddCheckBox(string columnName, bool isDataColumn, string headerText)
     {
       ExtDataGridViewCheckBoxColumn col = new ExtDataGridViewCheckBoxColumn();
       col.Name = columnName;
@@ -1749,19 +1654,6 @@ namespace FreeLibSet.Forms
       ghCol.DbfPreliminaryInfo.Type = 'L';
 
       return col;
-    }
-
-    /// <summary>
-    /// Добавляет столбец-флажок DataGridViewCheckBoxColumn.
-    /// Столбец привязывается к полю данных <paramref name="columnName"/>.
-    /// Заголовок столбца совпадает с именем поля.
-    /// Свойство EFPDataGridViewColumn.SizeGroup устанавливается равным "CheckBox".
-    /// </summary>
-    /// <param name="columnName">Имя столбца, столбца DataColumn и заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewCheckBoxColumn AddBool(string columnName)
-    {
-      return AddBool(columnName, true, columnName);
     }
 
     #endregion
@@ -1888,21 +1780,6 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Добавляет текстовый столбец с выпадающим списком DataGridViewComboBoxColumn,
-    /// занимающий все свободное места табличного просмотра (FillWeight=100).
-    /// Столбец привязывается к полю данных <paramref name="columnName"/>.
-    /// Заголовок столбца совпадает с именем поля.
-    /// Минимальная ширина столбца равна 5 символам.
-    /// Задает горизонтальное выравнивание по левому краю.
-    /// </summary>
-    /// <param name="columnName">Имя столбца, столбца DataColumn и заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewComboBoxColumn AddComboFill(string columnName)
-    {
-      return AddComboFill(columnName, true, columnName, 100, 5);
-    }
-
-    /// <summary>
-    /// Добавляет текстовый столбец с выпадающим списком DataGridViewComboBoxColumn,
     /// занимающий определенную часть свободного места табличного просмотра.
     /// Столбец привязывается к полю данных <paramref name="columnName"/>.
     /// Заголовок столбца совпадает с именем поля.
@@ -1928,7 +1805,7 @@ namespace FreeLibSet.Forms
     /// Добавляет ссылочный столбец <see cref="DataGridViewLinkColumn"/>.
     /// 
     /// Для автоматической обработки ссылок используйте <see cref="BRValueWithLink"/> в качестве значения ячейки.
-    /// Значение можно установливать в обработчике события <see cref="EFPDataGridView.GetCellAttributes"/>, задавать
+    /// Значение можно установливать в обработчике события <see cref="EFPDataGridView.CellInfoNeeded"/>, задавать
     /// как для ячейки таблицы <see cref="DataTable"/> или в <see cref="DataGridViewCell.Value"/>.
     /// Допускаются только url-ссылки, а не #-ссылки, так как просмотр не поддерживает закладки.
     /// Также ссылки могут обрабатываться в прикладном коде в обработчике события <see cref="DataGridView.CellContentClick"/>,
@@ -1979,54 +1856,11 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Добавляет ссылочный столбец <see cref="DataGridViewLinkColumn"/>.
-    /// Задает минимальную ширину столбца равной 5 символам, если меньшее значение не задано в параметре <paramref name="textWidth"/>.
-    /// 
-    /// Для автоматической обработки ссылок используйте <see cref="BRValueWithLink"/> в качестве значения ячейки.
-    /// Значение можно установливать в обработчике события <see cref="EFPDataGridView.GetCellAttributes"/>, задавать
-    /// как для ячейки таблицы <see cref="DataTable"/> или в <see cref="DataGridViewCell.Value"/>.
-    /// Допускаются только url-ссылки, а не #-ссылки, так как просмотр не поддерживает закладки.
-    /// Также ссылки могут обрабатываться в прикладном коде в обработчике события <see cref="DataGridView.CellContentClick"/>,
-    /// в этом случае нет ограничения на тип данных.
-    /// </summary>
-    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
-    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="textWidth">Ширина столбца в текстовых единицах (количество символов средней ширины)</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewLinkColumn AddLink(string columnName, bool isDataColumn, string headerText, int textWidth)
-    {
-      return AddLink(columnName, isDataColumn, headerText, textWidth, Math.Min(textWidth, 5));
-    }
-
-    /// <summary>
-    /// Добавляет ссылочный столбец <see cref="DataGridViewLinkColumn"/>.
-    /// Задает ширину столбца равной 10 символам, а минимальную - 5 символам.
-    /// 
-    /// Для автоматической обработки ссылок используйте <see cref="BRValueWithLink"/> в качестве значения ячейки.
-    /// Значение можно установливать в обработчике события <see cref="EFPDataGridView.GetCellAttributes"/>, задавать
-    /// как для ячейки таблицы <see cref="DataTable"/> или в <see cref="DataGridViewCell.Value"/>.
-    /// Допускаются только url-ссылки, а не #-ссылки, так как просмотр не поддерживает закладки.
-    /// Также ссылки могут обрабатываться в прикладном коде в обработчике события <see cref="DataGridView.CellContentClick"/>,
-    /// в этом случае нет ограничения на тип данных.
-    /// </summary>
-    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
-    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewLinkColumn AddLink(string columnName, bool isDataColumn, string headerText)
-    {
-      return AddLink(columnName, isDataColumn, headerText, 10);
-    }
-
-    /// <summary>
     /// Добавляет ссылочный столбец <see cref="DataGridViewLinkColumn"/>,
     /// занимающий определенную часть свободного места табличного просмотра.
     /// 
     /// Для автоматической обработки ссылок используйте <see cref="BRValueWithLink"/> в качестве значения ячейки.
-    /// Значение можно установливать в обработчике события <see cref="EFPDataGridView.GetCellAttributes"/>, задавать
+    /// Значение можно установливать в обработчике события <see cref="EFPDataGridView.CellInfoNeeded"/>, задавать
     /// как для ячейки таблицы <see cref="DataTable"/> или в <see cref="DataGridViewCell.Value"/>.
     /// Допускаются только url-ссылки, а не #-ссылки, так как просмотр не поддерживает закладки.
     /// Также ссылки могут обрабатываться в прикладном коде в обработчике события <see cref="DataGridView.CellContentClick"/>,
@@ -2048,28 +1882,6 @@ namespace FreeLibSet.Forms
       col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
       col.FillWeight = fillWeight;
       return col;
-    }
-
-    /// <summary>
-    /// Добавляет ссылочный столбец <see cref="DataGridViewLinkColumn"/>,
-    /// занимающий все свободное места табличного просмотра (FillWeight=100).
-    /// Минимальная ширина столбца равна 5 символам.
-    /// 
-    /// Для автоматической обработки ссылок используйте <see cref="BRValueWithLink"/> в качестве значения ячейки.
-    /// Значение можно установливать в обработчике события <see cref="EFPDataGridView.GetCellAttributes"/>, задавать
-    /// как для ячейки таблицы <see cref="DataTable"/> или в <see cref="DataGridViewCell.Value"/>.
-    /// Допускаются только url-ссылки, а не #-ссылки, так как просмотр не поддерживает закладки.
-    /// Также ссылки могут обрабатываться в прикладном коде в обработчике события <see cref="DataGridView.CellContentClick"/>,
-    /// в этом случае нет ограничения на тип данных.
-    /// </summary>
-    /// <param name="columnName">Имя столбца. Если столбец привязывается к данным, то должно совпадать с именем столбца DataColumn.</param>
-    /// <param name="isDataColumn">True, если столбец будет привязан к данным (нужно установить свойство DataGridViewColumn.DataPropertyName).
-    /// False - если столбец не привязывается к данным (например, вычисляемый столбец) или сам просмотр не связан с набором данных</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Объект столбца табличного просмотра (а не <see cref="EFPDataGridViewColumn"/>)</returns>
-    public DataGridViewLinkColumn AddLinkFill(string columnName, bool isDataColumn, string headerText)
-    {
-      return AddLinkFill(columnName, isDataColumn, headerText, 100, 5);
     }
 
     #endregion
@@ -2102,9 +1914,9 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Удаление всех столбцов табличного просмотра
-    /// Вызывает метод DataGridViewColumnCollection.Clear(), предварительно вызвав CancelEdit() и временно отключив присоединенный источник 
+    /// Вызывает метод <see cref="DataGridViewColumnCollection.Clear()"/>, предварительно вызвав <see cref="DataGridView.CancelEdit()"/> и временно отключив присоединенный источник 
     /// данных.
-    /// Метод предназначен, чтобы предотвратить появление ошибки NullReferenceException
+    /// Метод предназначен, чтобы предотвратить появление ошибки <see cref="NullReferenceException"/>.
     /// </summary>
     public virtual void Clear()
     {

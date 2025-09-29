@@ -125,8 +125,8 @@ namespace ExtTools_tests.Calendar
 
       DateRangeList list2 = new DateRangeList();
       list2.Append(new DateRange(2021));
-      Assert.Catch<ObjectReadOnlyException>(delegate() { sut.Add(list2); }, "Add(DateRangeList)");
-      Assert.Catch<ObjectReadOnlyException>(delegate() { sut.Remove(list2); }, "Remove(DateRangeList)");
+      Assert.Catch<ObjectReadOnlyException>(delegate() { sut.AddRange(list2); }, "AddRange(DateRangeList)");
+      Assert.Catch<ObjectReadOnlyException>(delegate() { sut.RemoveRange(list2); }, "RemoveRange(DateRangeList)");
 
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.Split(new DateTime(2021, 7, 1)); }, "Split(DateTime)");
       Assert.Catch<ObjectReadOnlyException>(delegate() { sut.Split(new DateTime[] { new DateTime(2021, 7, 1) }); }, "Split(DateTime[])");
@@ -241,7 +241,7 @@ namespace ExtTools_tests.Calendar
       sut1.Merge(); // иначе пересечения интервалов могут зависеть от реализации
       CollectionAssert.AreEqual(wantedRes, sut1);
 
-      sut2.Add(list2);
+      sut2.AddRange(list2);
       sut2.Merge(); // иначе пересечения интервалов могут зависеть от реализации
       CollectionAssert.AreEqual(wantedRes, sut2);
     }
@@ -271,7 +271,7 @@ namespace ExtTools_tests.Calendar
       sut1.Merge(); // иначе пересечения интервалов могут зависеть от реализации
       CollectionAssert.AreEqual(wantedRes, sut1);
 
-      sut2.Remove(list2);
+      sut2.RemoveRange(list2);
       sut2.Merge(); // иначе пересечения интервалов могут зависеть от реализации
       CollectionAssert.AreEqual(wantedRes, sut2);
     }
@@ -331,8 +331,8 @@ namespace ExtTools_tests.Calendar
       Assert.AreEqual(12, sut.Count, "Count");
       for (int i = 0; i < 12; i++)
       {
-        Assert.AreEqual(DataTools.BottomOfMonth(2021, i + 1), sut[i].FirstDate, "[0].FirstDate");
-        Assert.AreEqual(DataTools.EndOfMonth(2021, i + 1), sut[i].LastDate, "[0].LastDate");
+        Assert.AreEqual(TimeTools.BottomOfMonth(2021, i + 1), sut[i].FirstDate, "[0].FirstDate");
+        Assert.AreEqual(TimeTools.EndOfMonth(2021, i + 1), sut[i].LastDate, "[0].LastDate");
       }
     }
 

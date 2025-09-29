@@ -24,21 +24,21 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32 docId2 = CreateTestDoc(info, false, 7);
       DBxDocSet ds = new DBxDocSet(info.Provider);
       ds["D1"].View(new Int32[] { docId1, docId2 });
-      Assert.AreEqual(5 * 2, ds["D1"][0].Values["F107"].AsInteger, "original calculated value #1");
-      Assert.AreEqual(7 * 2, ds["D1"][1].Values["F107"].AsInteger, "original calculated value #2");
+      Assert.AreEqual(5 * 2, ds["D1"][0].Values["F107"].AsInt32, "original calculated value #1");
+      Assert.AreEqual(7 * 2, ds["D1"][1].Values["F107"].AsInt32, "original calculated value #2");
 
       // Портим вычисляемые поля
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
-        con.SetValue("D1", docId1, "F107", 1);
-        con.SetValue("D1", docId2, "F107", 2);
+        con.SetValueById("D1", docId1, "F107", 1);
+        con.SetValueById("D1", docId2, "F107", 2);
       }
 
       info.Provider.RecalcColumns("D1", null);
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
-        Assert.AreEqual(5 * 2, con.GetValue("D1", docId1, "F107"), "recalculated #1");
-        Assert.AreEqual(7 * 2, con.GetValue("D1", docId2, "F107"), "recalculated #2");
+        Assert.AreEqual(5 * 2, con.GetValueById("D1", docId1, "F107"), "recalculated #1");
+        Assert.AreEqual(7 * 2, con.GetValueById("D1", docId2, "F107"), "recalculated #2");
       }
     }
 
@@ -52,15 +52,15 @@ namespace ExtDBDocs_tests.Data_Docs
       // Портим вычисляемые поля
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
-        con.SetValue("D1", docId1, "F107", 1);
-        con.SetValue("D1", docId2, "F107", 2);
+        con.SetValueById("D1", docId1, "F107", 1);
+        con.SetValueById("D1", docId2, "F107", 2);
       }
 
-      info.Provider.RecalcColumns("D1", new Int32[1] { docId2 });
+      info.Provider.RecalcColumns("D1", IdArray<Int32>.FromId(docId2));
       using (DBxCon con = new DBxCon(info.GlobalData.MainDBEntry))
       {
-        Assert.AreEqual(1, con.GetValue("D1", docId1, "F107"), "not recalculated #1");
-        Assert.AreEqual(7 * 2, con.GetValue("D1", docId2, "F107"), "recalculated #2");
+        Assert.AreEqual(1, con.GetValueById("D1", docId1, "F107"), "not recalculated #1");
+        Assert.AreEqual(7 * 2, con.GetValueById("D1", docId2, "F107"), "recalculated #2");
       }
     }
 
@@ -199,36 +199,36 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.IsTrue(cols.Contains("UserActionId,Version,Action,UserActionId.StartTime,UserActionId.ActionTime,UserActionId.ActionInfo,UserActionId.ApplyChangesTime,UserActionId.ApplyChangesCount"), "Table columns");
       Assert.AreEqual(1, table.Rows.Count, "#1 Rows.Count");
       Assert.AreEqual(UndoAction.Insert, DataTools.GetEnum<UndoAction>(table.Rows[0], "Action"), "#1 Action");
-      Assert.AreEqual(1, DataTools.GetInt(table.Rows[0], "Version"), "#1 Version");
-      Assert.AreEqual(1, DataTools.GetInt(table.Rows[0], "UserActionId.ApplyChangesCount"), "# ApplyChangesCount");
-      Int32 userActionId1 = DataTools.GetInt(table.Rows[0], "UserActionId");
+      Assert.AreEqual(1, DataTools.GetInt32(table.Rows[0], "Version"), "#1 Version");
+      Assert.AreEqual(1, DataTools.GetInt32(table.Rows[0], "UserActionId.ApplyChangesCount"), "# ApplyChangesCount");
+      Int32 userActionId1 = DataTools.GetInt32(table.Rows[0], "UserActionId");
       Assert.GreaterOrEqual(1, userActionId1, "#1 UserActionId");
 
       // 2. Изменение документа
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc = ds["D1"].Edit(docId);
-      doc.Values["F102"].SetInteger(11);
+      doc.Values["F102"].SetInt32(11);
       ds.ApplyChanges(true);
 
       table = info.Provider.GetDocHistTable("D1", docId);
       Assert.AreEqual(2, table.Rows.Count, "#2 Rows.Count");
       Assert.AreEqual(UndoAction.Edit, DataTools.GetEnum<UndoAction>(table.Rows[1], "Action"), "#2 Action");
-      Assert.AreEqual(2, DataTools.GetInt(table.Rows[1], "Version"), "#2 Version");
-      Assert.AreEqual(1, DataTools.GetInt(table.Rows[1], "UserActionId.ApplyChangesCount"), "#2 ApplyChangesCount");
-      Int32 userActionId2 = DataTools.GetInt(table.Rows[1], "UserActionId");
+      Assert.AreEqual(2, DataTools.GetInt32(table.Rows[1], "Version"), "#2 Version");
+      Assert.AreEqual(1, DataTools.GetInt32(table.Rows[1], "UserActionId.ApplyChangesCount"), "#2 ApplyChangesCount");
+      Int32 userActionId2 = DataTools.GetInt32(table.Rows[1], "UserActionId");
       Assert.Greater(userActionId2, userActionId1, "#2 UserActionId");
 
       // 3. Повторная запись документа в том же сеансе - нет новой версии
       doc = ds["D1"][0];
-      doc.Values["F102"].SetInteger(12);
+      doc.Values["F102"].SetInt32(12);
       ds.ApplyChanges(true);
 
       table = info.Provider.GetDocHistTable("D1", docId);
       Assert.AreEqual(2, table.Rows.Count, "#3 Rows.Count");
       Assert.AreEqual(UndoAction.Edit, DataTools.GetEnum<UndoAction>(table.Rows[1], "Action"), "#3 Action");
-      Assert.AreEqual(2, DataTools.GetInt(table.Rows[1], "Version"), "#3 Version");
-      Assert.AreEqual(2, DataTools.GetInt(table.Rows[1], "UserActionId.ApplyChangesCount"), "#3 ApplyChangesCount");
-      Int32 userActionId3 = DataTools.GetInt(table.Rows[1], "UserActionId");
+      Assert.AreEqual(2, DataTools.GetInt32(table.Rows[1], "Version"), "#3 Version");
+      Assert.AreEqual(2, DataTools.GetInt32(table.Rows[1], "UserActionId.ApplyChangesCount"), "#3 ApplyChangesCount");
+      Int32 userActionId3 = DataTools.GetInt32(table.Rows[1], "UserActionId");
       Assert.AreEqual(userActionId2, userActionId3, "#3 UserActionId");
 
       // 4. Удаление документа в том же сеансе - создается новая версия
@@ -239,9 +239,9 @@ namespace ExtDBDocs_tests.Data_Docs
       table = info.Provider.GetDocHistTable("D1", docId);
       Assert.AreEqual(3, table.Rows.Count, "#4 Rows.Count");
       Assert.AreEqual(UndoAction.Delete, DataTools.GetEnum<UndoAction>(table.Rows[2], "Action"), "#4 Action");
-      Assert.AreEqual(3, DataTools.GetInt(table.Rows[2], "Version"), "#4 Version");
-      Assert.AreEqual(3, DataTools.GetInt(table.Rows[2], "UserActionId.ApplyChangesCount"), "#4 ApplyChangesCount");
-      Int32 userActionId4 = DataTools.GetInt(table.Rows[2], "UserActionId");
+      Assert.AreEqual(3, DataTools.GetInt32(table.Rows[2], "Version"), "#4 Version");
+      Assert.AreEqual(3, DataTools.GetInt32(table.Rows[2], "UserActionId.ApplyChangesCount"), "#4 ApplyChangesCount");
+      Int32 userActionId4 = DataTools.GetInt32(table.Rows[2], "UserActionId");
       Assert.AreEqual(userActionId2, userActionId4, "#4 UserActionId");
 
       // 5. Восстановление документа
@@ -252,9 +252,9 @@ namespace ExtDBDocs_tests.Data_Docs
       table = info.Provider.GetDocHistTable("D1", docId);
       Assert.AreEqual(4, table.Rows.Count, "#5 Rows.Count");
       Assert.AreEqual(UndoAction.Edit, DataTools.GetEnum<UndoAction>(table.Rows[3], "Action"), "#5 Action");
-      Assert.AreEqual(4, DataTools.GetInt(table.Rows[3], "Version"), "#5 Version");
-      Assert.AreEqual(1, DataTools.GetInt(table.Rows[3], "UserActionId.ApplyChangesCount"), "#5 ApplyChangesCount");
-      Int32 userActionId5 = DataTools.GetInt(table.Rows[3], "UserActionId");
+      Assert.AreEqual(4, DataTools.GetInt32(table.Rows[3], "Version"), "#5 Version");
+      Assert.AreEqual(1, DataTools.GetInt32(table.Rows[3], "UserActionId.ApplyChangesCount"), "#5 ApplyChangesCount");
+      Int32 userActionId5 = DataTools.GetInt32(table.Rows[3], "UserActionId");
       Assert.Greater(userActionId5, userActionId4, "#5 UserActionId");
 
       // 6. Удаление документа
@@ -265,9 +265,9 @@ namespace ExtDBDocs_tests.Data_Docs
       table = info.Provider.GetDocHistTable("D1", docId);
       Assert.AreEqual(5, table.Rows.Count, "#5 Rows.Count");
       Assert.AreEqual(UndoAction.Delete, DataTools.GetEnum<UndoAction>(table.Rows[4], "Action"), "#6 Action");
-      Assert.AreEqual(5, DataTools.GetInt(table.Rows[4], "Version"), "#6 Version");
-      Assert.AreEqual(1, DataTools.GetInt(table.Rows[4], "UserActionId.ApplyChangesCount"), "#6 ApplyChangesCount");
-      Int32 userActionId6 = DataTools.GetInt(table.Rows[4], "UserActionId");
+      Assert.AreEqual(5, DataTools.GetInt32(table.Rows[4], "Version"), "#6 Version");
+      Assert.AreEqual(1, DataTools.GetInt32(table.Rows[4], "UserActionId.ApplyChangesCount"), "#6 ApplyChangesCount");
+      Int32 userActionId6 = DataTools.GetInt32(table.Rows[4], "UserActionId");
       Assert.Greater(userActionId6, userActionId5, "#6 UserActionId");
     }
 
@@ -302,11 +302,11 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc1 = ds["D1"].Insert();
       doc1.Values["F101"].SetBoolean(false);
-      doc1.Values["F102"].SetInteger(1);
+      doc1.Values["F102"].SetInt32(1);
 
       DBxSingleDoc doc2 = ds["D2"].Insert();
       doc2.Values["F201"].SetString("123");
-      doc2.Values["F202"].SetInteger(doc1.DocId);
+      doc2.Values["F202"].SetInt32(doc1.DocId);
 
       DBxSingleDoc doc3 = ds["D3"].Insert();
 
@@ -321,7 +321,7 @@ namespace ExtDBDocs_tests.Data_Docs
       TestDBInfo info = this[true, true, true, true];
       Int32 docId = CreateTestDoc(info);
       DataTable histTable = info.Provider.GetDocHistTable("D1", docId);
-      Int32 userActionId = DataTools.GetInt(histTable.Rows[0], "UserActionId");
+      Int32 userActionId = DataTools.GetInt32(histTable.Rows[0], "UserActionId");
 
       DataTable uaTable = info.Provider.GetUserActionsTable(null, null, info.Provider.UserId, "D1");
       DBxColumns cols = DBxColumns.FromColumns(uaTable.Columns);
@@ -338,16 +338,16 @@ namespace ExtDBDocs_tests.Data_Docs
       TestDBInfo info = this[true, true, true, true];
       Int32 docId = CreateTestDoc(info);
       DataTable histTable = info.Provider.GetDocHistTable("D1", docId);
-      Int32 userActionId = DataTools.GetInt(histTable.Rows[0], "UserActionId");
+      Int32 userActionId = DataTools.GetInt32(histTable.Rows[0], "UserActionId");
 
       DataTable docTable = info.Provider.GetUserActionDocTable(userActionId);
       DBxColumns cols = DBxColumns.FromColumns(docTable.Columns);
       Assert.IsTrue(cols.Contains("DocTableId,DocId,Version,Action"), "Table columns");
 
       Assert.AreEqual(1, docTable.Rows.Count, "Rows.Count");
-      Assert.AreEqual(info.GlobalData.DocTypes["D1"].TableId, DataTools.GetInt(docTable.Rows[0], "DocTableId"), "DocTableId");
-      Assert.AreEqual(docId, DataTools.GetInt(docTable.Rows[0], "DocId"), "DocId");
-      Assert.AreEqual(1, DataTools.GetInt(docTable.Rows[0], "Version"), "Version");
+      Assert.AreEqual(info.GlobalData.DocTypes["D1"].TableId, DataTools.GetInt32(docTable.Rows[0], "DocTableId"), "DocTableId");
+      Assert.AreEqual(docId, DataTools.GetInt32(docTable.Rows[0], "DocId"), "DocId");
+      Assert.AreEqual(1, DataTools.GetInt32(docTable.Rows[0], "Version"), "Version");
     }
 
     [Test]
@@ -361,18 +361,18 @@ namespace ExtDBDocs_tests.Data_Docs
       Assert.IsTrue(cols.Contains("FromDocTableId,FromDocId,FromDocDeleted,FromSubDocName,FromSubDocId,FromSubDocDeleted,FromDeleted,FromColumnName,ToSubDocName,ToSubDocId,ToSubDocDeleted,IsSameDoc"), "Table columns");
 
       Assert.AreEqual(1, table.Rows.Count, "Rows.Count");
-      Assert.AreEqual(info.GlobalData.DocTypes["D2"].TableId, DataTools.GetInt(table.Rows[0], "FromDocTableId"), "FromDocTableId");
-      Assert.AreEqual(docIds[1], DataTools.GetInt(table.Rows[0], "FromDocId"), "FromDocId");
-      Assert.IsFalse(DataTools.GetBool(table.Rows[0], "FromDocDeleted"), "FromDocDeleted");
+      Assert.AreEqual(info.GlobalData.DocTypes["D2"].TableId, DataTools.GetInt32(table.Rows[0], "FromDocTableId"), "FromDocTableId");
+      Assert.AreEqual(docIds[1], DataTools.GetInt32(table.Rows[0], "FromDocId"), "FromDocId");
+      Assert.IsFalse(DataTools.GetBoolean(table.Rows[0], "FromDocDeleted"), "FromDocDeleted");
       Assert.AreEqual("", DataTools.GetString(table.Rows[0], "FromSubDocName"), "FromSubDocName");
-      Assert.AreEqual(0, DataTools.GetInt(table.Rows[0], "FromSubDocId"), "FromSubDocId");
-      Assert.IsFalse(DataTools.GetBool(table.Rows[0], "FromSubDocDeleted"), "FromSubDocDeleted");
-      Assert.IsFalse(DataTools.GetBool(table.Rows[0], "FromDeleted"), "FromDeleted");
+      Assert.AreEqual(0, DataTools.GetInt32(table.Rows[0], "FromSubDocId"), "FromSubDocId");
+      Assert.IsFalse(DataTools.GetBoolean(table.Rows[0], "FromSubDocDeleted"), "FromSubDocDeleted");
+      Assert.IsFalse(DataTools.GetBoolean(table.Rows[0], "FromDeleted"), "FromDeleted");
       Assert.AreEqual("F202", DataTools.GetString(table.Rows[0], "FromColumnName"), "FromColumnName");
       Assert.AreEqual("", DataTools.GetString(table.Rows[0], "ToSubDocName"), "ToSubDocName");
-      Assert.AreEqual(0, DataTools.GetInt(table.Rows[0], "ToSubDocId"), "ToSubDocId");
-      Assert.IsFalse(DataTools.GetBool(table.Rows[0], "ToSubDocDeleted"), "ToSubDocDeleted");
-      Assert.IsFalse(DataTools.GetBool(table.Rows[0], "IsSameDoc"), "IsSameDoc");
+      Assert.AreEqual(0, DataTools.GetInt32(table.Rows[0], "ToSubDocId"), "ToSubDocId");
+      Assert.IsFalse(DataTools.GetBoolean(table.Rows[0], "ToSubDocDeleted"), "ToSubDocDeleted");
+      Assert.IsFalse(DataTools.GetBoolean(table.Rows[0], "IsSameDoc"), "IsSameDoc");
     }
 
     [Test]
@@ -388,11 +388,11 @@ namespace ExtDBDocs_tests.Data_Docs
 
       DataTable table1 = info.Provider.GetDocRefTable("D1", docIds[0], true, false);
       Assert.AreEqual(1, table1.Rows.Count, "Rows.Count #1");
-      Assert.AreEqual(info.GlobalData.DocTypes["D2"].TableId, DataTools.GetInt(table1.Rows[0], "FromDocTableId"), "FromDocTableId");
-      Assert.AreEqual(docIds[1], DataTools.GetInt(table1.Rows[0], "FromDocId"), "FromDocId");
-      Assert.IsTrue(DataTools.GetBool(table1.Rows[0], "FromDocDeleted"), "FromDocDeleted");
-      Assert.IsFalse(DataTools.GetBool(table1.Rows[0], "FromSubDocDeleted"), "FromSubDocDeleted");
-      Assert.IsTrue(DataTools.GetBool(table1.Rows[0], "FromDeleted"), "FromDeleted");
+      Assert.AreEqual(info.GlobalData.DocTypes["D2"].TableId, DataTools.GetInt32(table1.Rows[0], "FromDocTableId"), "FromDocTableId");
+      Assert.AreEqual(docIds[1], DataTools.GetInt32(table1.Rows[0], "FromDocId"), "FromDocId");
+      Assert.IsTrue(DataTools.GetBoolean(table1.Rows[0], "FromDocDeleted"), "FromDocDeleted");
+      Assert.IsFalse(DataTools.GetBoolean(table1.Rows[0], "FromSubDocDeleted"), "FromSubDocDeleted");
+      Assert.IsTrue(DataTools.GetBoolean(table1.Rows[0], "FromDeleted"), "FromDeleted");
 
       DataTable table2 = info.Provider.GetDocRefTable("D1", docIds[0], false, false);
       Assert.AreEqual(0, table2.Rows.Count, "Rows.Count #2");
@@ -422,15 +422,15 @@ namespace ExtDBDocs_tests.Data_Docs
       // Документ D3 ссылается на D1
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc3 = ds["D3"].Insert();
-      doc3.Values["F301TableId"].SetInteger(info.GlobalData.DocTypes["D1"].TableId);
-      doc3.Values["F301DocId"].SetInteger(docId1);
+      doc3.Values["F301TableId"].SetInt32(info.GlobalData.DocTypes["D1"].TableId);
+      doc3.Values["F301DocId"].SetInt32(docId1);
       ds.ApplyChanges(true);
       Int32 docId3 = ds["D3"][0].DocId;
 
       DataTable table1 = info.Provider.GetDocRefTable("D1", docId1, false, false);
       Assert.AreEqual(1, table1.Rows.Count, "Rows.Count #1");
-      Assert.AreEqual(info.GlobalData.DocTypes["D3"].TableId, DataTools.GetInt(table1.Rows[0], "FromDocTableId"), "FromDocTableId");
-      Assert.AreEqual(docId3, DataTools.GetInt(table1.Rows[0], "FromDocId"), "FromDocId");
+      Assert.AreEqual(info.GlobalData.DocTypes["D3"].TableId, DataTools.GetInt32(table1.Rows[0], "FromDocTableId"), "FromDocTableId");
+      Assert.AreEqual(docId3, DataTools.GetInt32(table1.Rows[0], "FromDocId"), "FromDocId");
       Assert.AreEqual("F301DocId", DataTools.GetString(table1.Rows[0], "FromColumnName"), "FromColumnName");
 
       // Убираем ссылку
@@ -452,21 +452,21 @@ namespace ExtDBDocs_tests.Data_Docs
       Int32[] docIds = CreateTest3Docs(info);
       DBxDocSet ds = new DBxDocSet(info.Provider);
       DBxSingleDoc doc3 = ds["D3"].Edit(docIds[2]);
-      doc3.Values["F301TableId"].SetInteger(info.GlobalData.DocTypes["D2"].TableId);
-      doc3.Values["F301DocId"].SetInteger(docIds[1]);
+      doc3.Values["F301TableId"].SetInt32(info.GlobalData.DocTypes["D2"].TableId);
+      doc3.Values["F301DocId"].SetInt32(docIds[1]);
       ds.ApplyChanges(false);
 
       DataTable table1 = info.Provider.GetDocRefTable("D2", docIds[1], false, false);
       Assert.AreEqual(1, table1.Rows.Count, "Rows.Count #1");
-      Assert.AreEqual(info.GlobalData.DocTypes["D3"].TableId, DataTools.GetInt(table1.Rows[0], "FromDocTableId"), "FromDocTableId");
-      Assert.AreEqual(docIds[2], DataTools.GetInt(table1.Rows[0], "FromDocId"), "FromDocId");
+      Assert.AreEqual(info.GlobalData.DocTypes["D3"].TableId, DataTools.GetInt32(table1.Rows[0], "FromDocTableId"), "FromDocTableId");
+      Assert.AreEqual(docIds[2], DataTools.GetInt32(table1.Rows[0], "FromDocId"), "FromDocId");
       Assert.AreEqual("F301DocId", DataTools.GetString(table1.Rows[0], "FromColumnName"), "FromColumnName");
 
       // 1. Документ D3 ссылается на D1, а не D2
       ds = new DBxDocSet(info.Provider);
       doc3 = ds["D3"].Edit(docIds[2]);
-      doc3.Values["F301TableId"].SetInteger(info.GlobalData.DocTypes["D1"].TableId);
-      doc3.Values["F301DocId"].SetInteger(docIds[0]);
+      doc3.Values["F301TableId"].SetInt32(info.GlobalData.DocTypes["D1"].TableId);
+      doc3.Values["F301DocId"].SetInt32(docIds[0]);
       ds.ApplyChanges(false);
 
       DataTable table2 = info.Provider.GetDocRefTable("D2", docIds[1], false, false);

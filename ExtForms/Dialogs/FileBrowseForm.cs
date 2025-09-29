@@ -310,7 +310,7 @@ namespace FreeLibSet.Forms
           if (histList2.Count > 0)
             HistList = histList2;
           if (ShowSubFoldersButton)
-            SubFolders = cfg.GetBoolDef("SubDirs", SubFolders);
+            SubFolders = cfg.GetBooleanDef("SubDirs", SubFolders);
         }
       }
 
@@ -367,7 +367,7 @@ namespace FreeLibSet.Forms
             {
               cfg.SetHist("Directory", HistList);
               if (ShowSubFoldersButton)
-                cfg.SetBool("SubDirs", SubFolders);
+                cfg.SetBoolean("SubDirs", SubFolders);
             }
           }
         }

@@ -73,7 +73,7 @@ namespace NormTextFile
         using (EFPApp.ConfigManager.GetConfig(new EFPConfigSectionInfo("Settings", EFPConfigCategories.UserParams), EFPConfigMode.Read, out cfg))
         {
           efpDir.HistList = cfg.GetHist("Directory");
-          efpNested.Checked = cfg.GetBool("Nested");
+          efpNested.Checked = cfg.GetBoolean("Nested");
           efpMask.HistList = cfg.GetHist("Mask");
           efpCodePage.SelectedCode = cfg.GetString("DefaultCodePage");
         }
@@ -126,7 +126,7 @@ namespace NormTextFile
         using (EFPApp.ConfigManager.GetConfig(new EFPConfigSectionInfo("Settings", EFPConfigCategories.UserParams), EFPConfigMode.Write, out cfg))
         {
           cfg.SetHist("Directory", efpDir.HistList);
-          cfg.SetBool("Nested", efpNested.Checked);
+          cfg.SetBoolean("Nested", efpNested.Checked);
           cfg.SetHist("Mask", efpMask.HistList);
           cfg.SetString("DefaultCodePage", efpCodePage.SelectedCode);
         }
@@ -180,7 +180,7 @@ namespace NormTextFile
       byte[] b1 = System.IO.File.ReadAllBytes(file.Path);
 
       Encoding enc;
-      if (DataTools.ArrayStartsWith<byte>(b1, Encoding.UTF8.GetPreamble()))
+      if (ArrayTools.ArrayStartsWith<byte>(b1, Encoding.UTF8.GetPreamble()))
         enc = Encoding.UTF8;
       else
         enc = defEnc;
@@ -209,7 +209,7 @@ namespace NormTextFile
         b2 = ms2.ToArray();
       }
 
-      if (DataTools.AreArraysEqual<byte>(b2, b1))
+      if (ArrayTools.AreArraysEqual<byte>(b2, b1))
         return String.Empty;
 
       System.IO.File.WriteAllBytes(file.Path, b2);

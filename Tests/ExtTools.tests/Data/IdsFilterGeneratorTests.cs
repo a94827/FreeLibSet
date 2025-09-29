@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using FreeLibSet.Data;
+using FreeLibSet.Core;
 
 namespace ExtTools_tests.Data
 {
@@ -21,16 +22,16 @@ namespace ExtTools_tests.Data
     [TestCase(1001)]
     public void Constructors_1arg(int count)
     {
-      Int32[] aIds = new Int32[count];
+      Int64[] aIds = new Int64[count];
       for (int i = 0; i < count; i++)
         aIds[i] = i * 3 + 1;
-      IdList lstIds = new IdList(aIds);
+      IdList<Int64> lstIds = new IdList<Int64>(aIds);
 
-      IdsFilterGenerator sut1 = new IdsFilterGenerator(aIds);
-      DoTestObject(sut1, aIds, "Array");
+      IdsFilterGenerator<Int64> sut1 = new IdsFilterGenerator<Int64>(aIds);
+      DoTestObject<Int64>(sut1, aIds, "Array");
 
-      IdsFilterGenerator sut2 = new IdsFilterGenerator(lstIds);
-      DoTestObject(sut2, aIds, "IdList");
+      IdsFilterGenerator<Int64> sut2 = new IdsFilterGenerator<Int64>(lstIds);
+      DoTestObject<Int64>(sut2, aIds, "IdList");
     }
 
     [TestCase(0, 50)]
@@ -44,12 +45,12 @@ namespace ExtTools_tests.Data
     public void Constructors_2arg(int count, int maxCount)
     {
       int[] aIds = CreateIdArray(count);
-      IdList lstIds = new IdList(aIds);
+      IdList<Int32> lstIds = new IdList<Int32>(aIds);
 
-      IdsFilterGenerator sut1 = new IdsFilterGenerator(aIds, maxCount);
+      IdsFilterGenerator<Int32> sut1 = new IdsFilterGenerator<Int32>(aIds, maxCount);
       DoTestObject(sut1, aIds, "Array");
 
-      IdsFilterGenerator sut2 = new IdsFilterGenerator(lstIds, maxCount);
+      IdsFilterGenerator<Int32> sut2 = new IdsFilterGenerator<Int32>(lstIds, maxCount);
       DoTestObject(sut2, aIds, "IdList");
     }
 
@@ -61,15 +62,16 @@ namespace ExtTools_tests.Data
       return aIds;
     }
 
-    private static void DoTestObject(IdsFilterGenerator sut, Int32[] aIds, string messagePrefix)
+    private static void DoTestObject<T>(IdsFilterGenerator<T> sut, T[] aIds, string messagePrefix)
+      where T : struct, IEquatable<T>
     {
       Assert.AreEqual(aIds.Length, sut.AllIdCount, messagePrefix + "AllIdsCount");
       CollectionAssert.AreEquivalent(aIds, sut.GetAllIds(), "GetAllIds()");
       CollectionAssert.AreEquivalent(aIds, sut.GetWholeIdList(), "GetWholeIdList()");
 
-      IdList resList = new IdList();
+      IdList<T> resList = new IdList<T>();
       for (int i = 0; i < sut.Count; i++)
-        resList.Add(sut.GetIds(i));
+        resList.AddRange(sut.GetIds(i));
       CollectionAssert.AreEquivalent(aIds, resList, "GetIds()");
     }
 
@@ -82,17 +84,17 @@ namespace ExtTools_tests.Data
     {
       Int32[] aIds = CreateIdArray(299);
 
-      IdsFilterGenerator sut = new IdsFilterGenerator(aIds, 50);
+      IdsFilterGenerator<Int32> sut = new IdsFilterGenerator<Int32>(aIds, 50);
       sut.CreateFilters("F1");
 
-      IdList resList = new IdList();
+      IdList<Int32> resList = new IdList<Int32>();
       int cnt = 0;
 
-      foreach (IdsFilter filter in sut)
+      foreach (ValueInListFilter filter in sut)
       {
         Assert.IsInstanceOf<DBxColumn>(filter.Expression, "Expression.GetType()");
         Assert.AreEqual("F1", ((DBxColumn)(filter.Expression)).ColumnName, "ColumnName");
-        resList.Add(filter.Ids);
+        resList.AddRange(ArrayTools.CreateArray<Int32>(filter.Values));
         cnt++;
       }
       Assert.AreEqual(sut.Count, cnt, "Count");
@@ -104,17 +106,17 @@ namespace ExtTools_tests.Data
     {
       Int32[] aIds = CreateIdArray(299);
 
-      IdsFilterGenerator sut = new IdsFilterGenerator(aIds, 50);
-      sut.CreateFilters();
+      IdsFilterGenerator<Int32> sut = new IdsFilterGenerator<Int32>(aIds, 50);
+      sut.CreateFilters("Id");
 
-      IdList resList = new IdList();
+      IdList<Int32> resList = new IdList<Int32>();
       int cnt = 0;
 
-      foreach (IdsFilter filter in sut)
+      foreach (ValueInListFilter filter in sut)
       {
         Assert.IsInstanceOf<DBxColumn>(filter.Expression, "Expression.GetType()");
         Assert.AreEqual("Id", ((DBxColumn)(filter.Expression)).ColumnName, "ColumnName");
-        resList.Add(filter.Ids);
+        resList.AddRange(ArrayTools.CreateArray<Int32>(filter.Values));
         cnt++;
       }
       Assert.AreEqual(sut.Count, cnt, "Count");

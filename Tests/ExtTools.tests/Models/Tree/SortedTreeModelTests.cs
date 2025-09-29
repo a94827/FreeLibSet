@@ -57,7 +57,7 @@ namespace ExtTools_tests.Models.Tree
 
       List<Int32> lst = new List<int>();
       foreach (DataRow row in sut.GetChildren(parent))
-        lst.Add(DataTools.GetInt(row, "Id"));
+        lst.Add(DataTools.GetInt32(row, "Id"));
       CollectionAssert.AreEqual(wantedChildIds, lst, "ParentId=" + parentId.ToString());
     }
 

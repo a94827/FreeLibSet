@@ -442,27 +442,27 @@ namespace FreeLibSet {
         /// <summary>
         ///   Looks up a localized string similar to Properties FilterTextTrue and FilterTextFalse cannot be cleared at the same time.
         /// </summary>
-        internal static string BoolValueGridFilter_Err_NoText {
+        internal static string BooleanValueGridFilter_Err_NoText {
             get {
-                return ResourceManager.GetString("BoolValueGridFilter_Err_NoText", resourceCulture);
+                return ResourceManager.GetString("BooleanValueGridFilter_Err_NoText", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Value is false.
         /// </summary>
-        internal static string BoolValueGridFilter_Msg_FilterTextFalse {
+        internal static string BooleanValueGridFilter_Msg_FilterTextFalse {
             get {
-                return ResourceManager.GetString("BoolValueGridFilter_Msg_FilterTextFalse", resourceCulture);
+                return ResourceManager.GetString("BooleanValueGridFilter_Msg_FilterTextFalse", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Value is true.
         /// </summary>
-        internal static string BoolValueGridFilter_Msg_FilterTextTrue {
+        internal static string BooleanValueGridFilter_Msg_FilterTextTrue {
             get {
-                return ResourceManager.GetString("BoolValueGridFilter_Msg_FilterTextTrue", resourceCulture);
+                return ResourceManager.GetString("BooleanValueGridFilter_Msg_FilterTextTrue", resourceCulture);
             }
         }
         
@@ -1778,6 +1778,24 @@ namespace FreeLibSet {
         internal static string Cmd_Menu_Edit_Copy {
             get {
                 return ResourceManager.GetString("Cmd_Menu_Edit_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy format settings ....
+        /// </summary>
+        internal static string Cmd_Menu_Edit_CopyFormatsSettings {
+            get {
+                return ResourceManager.GetString("Cmd_Menu_Edit_CopyFormatsSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy hyperlink.
+        /// </summary>
+        internal static string Cmd_Menu_Edit_CopyHyperlink {
+            get {
+                return ResourceManager.GetString("Cmd_Menu_Edit_CopyHyperlink", resourceCulture);
             }
         }
         
@@ -4847,6 +4865,15 @@ namespace FreeLibSet {
         internal static string EFPDataView_Err_NoSelectedColumn {
             get {
                 return ResourceManager.GetString("EFPDataView_Err_NoSelectedColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no selected link column in the view.
+        /// </summary>
+        internal static string EFPDataView_Err_NoSelectedLinkColumn {
+            get {
+                return ResourceManager.GetString("EFPDataView_Err_NoSelectedLinkColumn", resourceCulture);
             }
         }
         

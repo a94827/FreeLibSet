@@ -41,8 +41,9 @@ namespace EFPCommandItemsDemo
 
     void step3_GetNext(object sender, WizardGetNextEventArgs args)
     {
-      WizardStepWithListView step4 = new WizardStepWithListView(new string[] { "One", "Two", "Three" });
-      step4.Title = "WizardStepWithListView";
+      WizardStepWithListSelection step4 = new WizardStepWithListSelection();
+      step4.Items = new string[] { "One", "Two", "Three" };
+      step4.Title = "WizardStepWithListSelection";
       step4.GetNext += new WizardGetNextEventHandler(step4_GetNext);
       args.NextStep = step4;
     }

@@ -230,7 +230,7 @@ namespace FreeLibSet.Forms
           if (_Items == null)
             return null;
           _EnabledItemFlags = new bool[_Items.Length];
-          DataTools.FillArray<bool>(_EnabledItemFlags, true);
+          ArrayTools.FillArray<bool>(_EnabledItemFlags, true);
         }
         return _EnabledItemFlags;
       }
@@ -261,7 +261,7 @@ namespace FreeLibSet.Forms
           if (_Items == null)
             return null;
           _ImageKeys = new string[_Items.Length];
-          DataTools.FillArray<string>(_ImageKeys, String.Empty);
+          ArrayTools.FillArray<string>(_ImageKeys, String.Empty);
         }
         return _ImageKeys;
       }

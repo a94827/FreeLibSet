@@ -72,7 +72,7 @@ namespace ExtTools_tests.DBF
       dbs.AddNum("F21", 3); // Int32
       dbs.AddNum("F22", 10); // Int64
       dbs.AddNum("F23", 12, 2); // Decimal
-      dbs.AddBool("F3");
+      dbs.AddBoolean("F3");
 
       if (fileFormat == DbfFileFormat.dBase3 || fileFormat == DbfFileFormat.dBase4)
       {
@@ -473,7 +473,7 @@ namespace ExtTools_tests.DBF
         for (int i = 1; i <= 3; i++)
         {
           wrapper.SUT.RecNo = i;
-          Assert.AreEqual(111 * i, wrapper.SUT.GetInt("F21"), "Value #" + i);
+          Assert.AreEqual(111 * i, wrapper.SUT.GetInt32("F21"), "Value #" + i);
           Assert.AreEqual(i, wrapper.SUT.RecNo, "RecNo get()");
         }
 
@@ -495,7 +495,7 @@ namespace ExtTools_tests.DBF
       {
         int res = 0;
         while (wrapper.SUT.Read())
-          res += wrapper.SUT.GetInt("F21");
+          res += wrapper.SUT.GetInt32("F21");
         Assert.AreEqual(111 + 222 + 333, res);
       }
     }
@@ -559,10 +559,10 @@ namespace ExtTools_tests.DBF
         wrapper.SUT.RecNo = 1;
 
         Assert.AreEqual("ABC", wrapper.SUT.GetString("F1"), "F1");
-        Assert.AreEqual(66, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(77, wrapper.SUT.GetInt("F22"), "F22");
+        Assert.AreEqual(66, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(77, wrapper.SUT.GetInt32("F22"), "F22");
         Assert.AreEqual(12.34m, wrapper.SUT.GetDecimal("F23"), "F23");
-        Assert.IsTrue(wrapper.SUT.GetBool("F3"), "F3");
+        Assert.IsTrue(wrapper.SUT.GetBoolean("F3"), "F3");
         if (wrapper.SUT.DBStruct.IndexOf("F4") >= 0)
           Assert.AreEqual(new DateTime(2023, 3, 21), wrapper.SUT.GetNullableDate("F4"), "F4");
         if (wrapper.SUT.DBStruct.IndexOf("F5") >= 0)
@@ -590,8 +590,8 @@ namespace ExtTools_tests.DBF
         wrapper.SUT.RecNo = 1;
 
         //Assert.AreEqual("12", wrapper.SUT.GetString("F1"), "F1");
-        Assert.AreEqual(34, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(56, wrapper.SUT.GetInt("F22"), "F22");
+        Assert.AreEqual(34, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(56, wrapper.SUT.GetInt32("F22"), "F22");
         Assert.AreEqual(78.00m, wrapper.SUT.GetDecimal("F23"), "F23");
         //Assert.IsTrue(wrapper.SUT.GetBool("F4"), "F4");
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
@@ -617,7 +617,7 @@ namespace ExtTools_tests.DBF
         wrapper.SUT.RecNo = 1;
 
         //Assert.AreEqual("12", wrapper.SUT.GetString("F1"), "F1");
-        Assert.AreEqual(12, wrapper.SUT.GetInt("F21"), "F21");
+        Assert.AreEqual(12, wrapper.SUT.GetInt32("F21"), "F21");
         Assert.AreEqual(34, wrapper.SUT.GetInt64("F22"), "F22");
         Assert.AreEqual(56.00m, wrapper.SUT.GetDecimal("F23"), "F23");
         //Assert.IsTrue(wrapper.SUT.GetBool("F4"), "F4");
@@ -637,7 +637,7 @@ namespace ExtTools_tests.DBF
         wrapper.Reload();
         wrapper.SUT.RecNo = 1;
 
-        Assert.IsTrue(wrapper.SUT.GetBool("F3"), "F3");
+        Assert.IsTrue(wrapper.SUT.GetBoolean("F3"), "F3");
       }
     }
 
@@ -662,7 +662,7 @@ namespace ExtTools_tests.DBF
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3m", false))
       {
         byte[] wantedValue = new byte[wrapper.SUT.DBStruct.RecordSize];
-        DataTools.FillArray<byte>(wantedValue, 32); // пробелы
+        ArrayTools.FillArray<byte>(wantedValue, 32); // пробелы
 
         wrapper.SUT.RecNo = 1;
         for (int i = 0; i < wrapper.SUT.DBStruct.Count; i++)
@@ -727,10 +727,10 @@ namespace ExtTools_tests.DBF
         wrapper.SUT.RecNo = 1;
 
         Assert.AreEqual("ABC", wrapper.SUT.GetString("F1"), "F1");
-        Assert.AreEqual(66, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(77, wrapper.SUT.GetInt("F22"), "F22");
+        Assert.AreEqual(66, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(77, wrapper.SUT.GetInt32("F22"), "F22");
         Assert.AreEqual(12.34m, wrapper.SUT.GetDecimal("F23"), "F23");
-        Assert.IsTrue(wrapper.SUT.GetBool("F3"), "F3");
+        Assert.IsTrue(wrapper.SUT.GetBoolean("F3"), "F3");
         if (wrapper.SUT.DBStruct.IndexOf("F4") >= 0)
           Assert.AreEqual(new DateTime(2023, 3, 21), wrapper.SUT.GetNullableDate("F4"), "F4");
         if (wrapper.SUT.DBStruct.IndexOf("F5") >= 0)
@@ -746,7 +746,7 @@ namespace ExtTools_tests.DBF
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3m", false))
       {
         byte[] wantedValue = new byte[wrapper.SUT.DBStruct.RecordSize];
-        DataTools.FillArray<byte>(wantedValue, 32); // пробелы
+        ArrayTools.FillArray<byte>(wantedValue, 32); // пробелы
 
         wrapper.SUT.RecNo = 1;
         for (int i = 0; i < wrapper.SUT.DBStruct.Count; i++)
@@ -773,60 +773,60 @@ namespace ExtTools_tests.DBF
 
     #endregion
 
-    #region GetSetInt()
+    #region Get/SetInt()
 
     [Test]
-    public void GetInt([ValueSource("TestFormatCodes")]string formatCode)
+    public void GetInt32([ValueSource("TestFormatCodes")]string formatCode)
     {
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper(formatCode, false))
       {
         wrapper.SUT.RecNo = 1;
-        Assert.AreEqual(111, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(111, wrapper.SUT.GetInt("F22"), "F22");
-        Assert.AreEqual(111, wrapper.SUT.GetInt("F23"), "F23");
+        Assert.AreEqual(111, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(111, wrapper.SUT.GetInt32("F22"), "F22");
+        Assert.AreEqual(111, wrapper.SUT.GetInt32("F23"), "F23");
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
-          Assert.AreEqual(111, wrapper.SUT.GetInt("F21"), "F6");
+          Assert.AreEqual(111, wrapper.SUT.GetInt32("F21"), "F6");
 
         wrapper.SUT.AppendRecord();
-        Assert.AreEqual(0, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(0, wrapper.SUT.GetInt("F22"), "F22");
-        Assert.AreEqual(0, wrapper.SUT.GetInt("F23"), "F3");
+        Assert.AreEqual(0, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(0, wrapper.SUT.GetInt32("F22"), "F22");
+        Assert.AreEqual(0, wrapper.SUT.GetInt32("F23"), "F3");
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
-          Assert.AreEqual(0, wrapper.SUT.GetInt("F23"), "F6");
+          Assert.AreEqual(0, wrapper.SUT.GetInt32("F23"), "F6");
       }
     }
 
     [Test]
-    public void GetInt_outOfRange()
+    public void GetInt32_outOfRange()
     {
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3", true))
       {
         wrapper.SUT.AppendRecord();
         wrapper.SUT.SetInt64("F22", 2000000000L);
-        Assert.DoesNotThrow(delegate () { wrapper.SUT.GetInt("F22"); }, "2000000000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.GetInt32("F22"); }, "2000000000");
 
         wrapper.SUT.SetInt64("F22", 3000000000L);
-        Assert.Catch(delegate () { wrapper.SUT.GetInt("F22"); }, "3000000000");
+        Assert.Catch(delegate () { wrapper.SUT.GetInt32("F22"); }, "3000000000");
       }
     }
 
     [Test]
-    public void SetInt([ValueSource("TestFormatCodes")]string formatCode)
+    public void SetInt32([ValueSource("TestFormatCodes")]string formatCode)
     {
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper(formatCode, true))
       {
         wrapper.SUT.AppendRecord();
-        wrapper.SUT.SetInt("F21", 123);
-        wrapper.SUT.SetInt("F22", 456);
-        wrapper.SUT.SetInt("F23", 789);
+        wrapper.SUT.SetInt32("F21", 123);
+        wrapper.SUT.SetInt32("F22", 456);
+        wrapper.SUT.SetInt32("F23", 789);
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
-          wrapper.SUT.SetInt("F6", 333);
+          wrapper.SUT.SetInt32("F6", 333);
 
         wrapper.Reload();
         wrapper.SUT.RecNo = 1;
 
-        Assert.AreEqual(123, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(456, wrapper.SUT.GetInt("F22"), "F22");
+        Assert.AreEqual(123, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(456, wrapper.SUT.GetInt32("F22"), "F22");
         Assert.AreEqual(789m, wrapper.SUT.GetDecimal("F23"), "F23");
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
           Assert.AreEqual(333.0, wrapper.SUT.GetDouble("F6"), "F6");
@@ -834,15 +834,15 @@ namespace ExtTools_tests.DBF
     }
 
     [Test]
-    public void SetInt_outOfRange()
+    public void SetInt32_outOfRange()
     {
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3", true))
       {
         wrapper.SUT.AppendRecord();
-        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetInt("F21", 999); }, "999");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetInt("F21", 1000); }, "1000");
-        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetInt("F21", -99); }, "-99");
-        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetInt("F21", -100); }, "-100");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetInt32("F21", 999); }, "999");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetInt32("F21", 1000); }, "1000");
+        Assert.DoesNotThrow(delegate () { wrapper.SUT.SetInt32("F21", -99); }, "-99");
+        Assert.Catch<ArgumentOutOfRangeException>(delegate () { wrapper.SUT.SetInt32("F21", -100); }, "-100");
       }
     }
 
@@ -886,8 +886,8 @@ namespace ExtTools_tests.DBF
         wrapper.Reload();
         wrapper.SUT.RecNo = 1;
 
-        Assert.AreEqual(123, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(456, wrapper.SUT.GetInt("F22"), "F22");
+        Assert.AreEqual(123, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(456, wrapper.SUT.GetInt32("F22"), "F22");
         Assert.AreEqual(789m, wrapper.SUT.GetDecimal("F23"), "F23");
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
           Assert.AreEqual(444.0, wrapper.SUT.GetDouble("F6"), "F6");
@@ -947,8 +947,8 @@ namespace ExtTools_tests.DBF
         wrapper.Reload();
         wrapper.SUT.RecNo = 1;
 
-        Assert.AreEqual(123, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(456, wrapper.SUT.GetInt("F22"), "F22");
+        Assert.AreEqual(123, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(456, wrapper.SUT.GetInt32("F22"), "F22");
         Assert.AreEqual(789.5m, wrapper.SUT.GetDecimal("F23"), "F23");
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
           Assert.AreEqual(222.5, wrapper.SUT.GetDouble("F6"), "F6");
@@ -1009,8 +1009,8 @@ namespace ExtTools_tests.DBF
         wrapper.Reload();
         wrapper.SUT.RecNo = 1;
 
-        Assert.AreEqual(123, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(456, wrapper.SUT.GetInt("F22"), "F22");
+        Assert.AreEqual(123, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(456, wrapper.SUT.GetInt32("F22"), "F22");
         Assert.AreEqual(789.5m, wrapper.SUT.GetDecimal("F23"), "F23");
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
           Assert.AreEqual(222.2, wrapper.SUT.GetDouble("F6"), "F6");
@@ -1071,8 +1071,8 @@ namespace ExtTools_tests.DBF
         wrapper.Reload();
         wrapper.SUT.RecNo = 1;
 
-        Assert.AreEqual(123, wrapper.SUT.GetInt("F21"), "F21");
-        Assert.AreEqual(456, wrapper.SUT.GetInt("F22"), "F22");
+        Assert.AreEqual(123, wrapper.SUT.GetInt32("F21"), "F21");
+        Assert.AreEqual(456, wrapper.SUT.GetInt32("F22"), "F22");
         Assert.AreEqual(789.5m, wrapper.SUT.GetDecimal("F23"), "F23");
         if (wrapper.SUT.DBStruct.IndexOf("F6") >= 0)
           Assert.AreEqual(555.5, wrapper.SUT.GetDouble("F6"), "F6");
@@ -1094,21 +1094,21 @@ namespace ExtTools_tests.DBF
 
     #endregion
 
-    #region GetSetBool()
+    #region Get/SetBoolean()
 
     [Test]
-    public void GetBool()
+    public void GetBoolean()
     {
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3m", false))
       {
         wrapper.SUT.RecNo = 1;
-        Assert.IsTrue(wrapper.SUT.GetBool("F3"), "#1");
+        Assert.IsTrue(wrapper.SUT.GetBoolean("F3"), "#1");
 
         wrapper.SUT.RecNo = 2;
-        Assert.IsFalse(wrapper.SUT.GetBool("F3"), "#2");
+        Assert.IsFalse(wrapper.SUT.GetBoolean("F3"), "#2");
 
         wrapper.SUT.AppendRecord();
-        Assert.IsFalse(wrapper.SUT.GetBool("F3"), "new");
+        Assert.IsFalse(wrapper.SUT.GetBoolean("F3"), "new");
       }
     }
 
@@ -1118,15 +1118,15 @@ namespace ExtTools_tests.DBF
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3m", true))
       {
         wrapper.SUT.AppendRecord();
-        wrapper.SUT.SetBool("F3", false);
+        wrapper.SUT.SetBoolean("F3", false);
         wrapper.SUT.AppendRecord();
-        wrapper.SUT.SetBool("F3", true);
+        wrapper.SUT.SetBoolean("F3", true);
 
         wrapper.Reload();
         wrapper.SUT.RecNo = 1;
-        Assert.IsFalse(wrapper.SUT.GetBool("F3"), "#1");
+        Assert.IsFalse(wrapper.SUT.GetBoolean("F3"), "#1");
         wrapper.SUT.RecNo = 2;
-        Assert.IsTrue(wrapper.SUT.GetBool("F3"), "#2");
+        Assert.IsTrue(wrapper.SUT.GetBoolean("F3"), "#2");
       }
     }
 
@@ -1209,7 +1209,7 @@ namespace ExtTools_tests.DBF
       using (DbfFileTestWrapper wrapper = new DbfFileTestWrapper("dbase3m", false))
       {
         byte[] wantedValue = new byte[wrapper.SUT.DBStruct.RecordSize];
-        DataTools.FillArray<byte>(wantedValue, 32); // пробелы
+        ArrayTools.FillArray<byte>(wantedValue, 32); // пробелы
 
         wrapper.SUT.RecNo = 1;
         for (int i = 0; i < wrapper.SUT.DBStruct.Count; i++)
@@ -1474,7 +1474,7 @@ namespace ExtTools_tests.DBF
         for (int i = 1; i <= 500; i++)
         {
           wrapper.SUT.AppendRecord(); // чтобы была пустая строка
-          wrapper.SUT.SetInt("F21", i);
+          wrapper.SUT.SetInt32("F21", i);
         }
         wrapper.Reload();
         Assert.AreEqual(500, wrapper.SUT.RecordCount);
@@ -1526,7 +1526,7 @@ namespace ExtTools_tests.DBF
         for (int i = 1; i <= 100; i++)
         {
           wrapper.SUT.AppendRecord(); // чтобы была пустая строка
-          wrapper.SUT.SetInt("F21", i);
+          wrapper.SUT.SetInt32("F21", i);
         }
         wrapper.Reload();
 
@@ -1552,7 +1552,7 @@ namespace ExtTools_tests.DBF
         for (int i = 1; i <= 200; i++)
         {
           wrapper.SUT.AppendRecord(); // чтобы была пустая строка
-          wrapper.SUT.SetInt("F21", i);
+          wrapper.SUT.SetInt32("F21", i);
         }
         wrapper.Reload();
 
@@ -1678,7 +1678,7 @@ namespace ExtTools_tests.DBF
       DbfStruct dbs = new DbfStruct();
       dbs.AddString("F1", 13); // удваивается количество символов плюс 1 пробел
       dbs.AddNum("F2", 4, 2);
-      dbs.AddBool("F3");
+      dbs.AddBoolean("F3");
       dbs.AddDate("F4");
       dbs.AddMemo("F5");
 
@@ -1691,7 +1691,7 @@ namespace ExtTools_tests.DBF
       dbf.AppendRecord();
       dbf.SetString("F5", "Привет");
       dbf.SetDate("F4", new DateTime(2024, 3, 31));
-      dbf.SetBool("F3", true);
+      dbf.SetBoolean("F3", true);
       dbf.SetDouble("F2", 1.23);
       dbf.SetString("F1", "Привет");
 
@@ -1711,7 +1711,7 @@ namespace ExtTools_tests.DBF
         // Типизированное
         Assert.AreEqual("Привет", dbf.GetString("F1"), "F1" + suffix);
         Assert.AreEqual(1.23, dbf.GetDouble("F2"), "F2 typed" + suffix);
-        Assert.AreEqual(true, dbf.GetBool("F3"), "F3 typed" + suffix);
+        Assert.AreEqual(true, dbf.GetBoolean("F3"), "F3 typed" + suffix);
         Assert.AreEqual(new DateTime(2024, 3, 31), dbf.GetNullableDate("F4"), "F4 typed" + suffix);
         Assert.AreEqual("Привет", dbf.GetString("F5"), "F5" + suffix);
 
@@ -1871,12 +1871,12 @@ namespace ExtTools_tests.DBF
           sut.RecNo = 1;
           Assert.Catch(delegate () { sut.SetValue("F1", "X"); }, "SetValue()");
           Assert.Catch(delegate () { sut.SetString("F1", "X", true); }, "SetString()");
-          Assert.Catch(delegate () { sut.SetInt("F21", 1); }, "SetInt()");
+          Assert.Catch(delegate () { sut.SetInt32("F21", 1); }, "SetInt()");
           Assert.Catch(delegate () { sut.SetInt64("F22", 1); }, "SetInt64()");
           Assert.Catch(delegate () { sut.SetSingle("F23", 1f); }, "SetSingle()");
           Assert.Catch(delegate () { sut.SetDouble("F23", 1.0); }, "SetDouble()");
           Assert.Catch(delegate () { sut.SetDecimal("F23", 1m); }, "SetDecimal()");
-          Assert.Catch(delegate () { sut.SetBool("F3", true); }, "SetBool()");
+          Assert.Catch(delegate () { sut.SetBoolean("F3", true); }, "SetBool()");
           Assert.Catch(delegate () { sut.SetNullableDate("F4", null); }, "SetNullableDate()");
           Assert.Catch(delegate () { sut.SetDate("F4", new DateTime(2023, 3, 23)); }, "SetDate()");
           Assert.Catch(delegate () { sut.SetNull("F11"); }, "SetNull()");
@@ -1916,7 +1916,7 @@ namespace ExtTools_tests.DBF
 
           List<int> lst21 = new List<int>();
           while (sut.Read())
-            lst21.Add(sut.GetInt("F21"));
+            lst21.Add(sut.GetInt32("F21"));
           Assert.AreEqual(new int[] { 111, 222, 333 }, lst21.ToArray(), "Read()");
 
           sut.RecNo = 1;

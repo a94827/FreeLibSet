@@ -39,6 +39,29 @@ namespace FreeLibSet.Core
     void CheckNotReadOnly();
   }
 
+  /// <summary>
+  /// Объединение интерфейсов <see cref="ICloneable"/> и <see cref="IReadOnlyObject"/>.
+  /// Определяет типизированную операцию клонирования и условного клонирования объкта только для чтения
+  /// </summary>
+  /// <typeparam name="T">Тип объекта, к которому применяется интерфейс</typeparam>
+  public interface ICloneableReadOnlyObject<T> : ICloneable, IReadOnlyObject
+  {
+    /// <summary>
+    /// Безусловное создание копии объекта.
+    /// Типизированная версия <see cref="ICloneable.Clone()"/>
+    /// </summary>
+    /// <returns>Копия объекта</returns>
+    new T Clone();
+
+    /// <summary>
+    /// Создает копию объекта, если свойство <see cref="IReadOnlyObject.IsReadOnly"/> возвращает true.
+    /// В противном случае возвращает ссылку на текущий объект
+    /// </summary>
+    /// <returns>Копия объекта или ссылка на текущий экземпляр объекта</returns>
+    T CloneIfReadOnly();
+  }
+
+
   #endregion
 }
 
@@ -685,7 +708,7 @@ namespace FreeLibSet.Collections
 
       void ICollection.CopyTo(Array array, int index)
       {
-        DataTools.CopyToArray(this, array, index);
+        ArrayTools.CopyToArray(this, array, index);
       }
 
       bool ICollection.IsSynchronized
@@ -1831,7 +1854,7 @@ namespace FreeLibSet.Collections
       {
         // ((ICollection)_Source).CopyTo(array, index);
         // Источник может и не реализовывать интерфейс ICollection
-        DataTools.CopyToArray(_Source, array, index);
+        ArrayTools.CopyToArray(_Source, array, index);
       }
     }
 
@@ -3098,7 +3121,7 @@ namespace FreeLibSet.Collections
     {
       // ((ICollection)_Source).CopyTo(array, index);
       // Источник может и не реализовывать ICollection
-      DataTools.CopyToArray(_Source, array, index);
+      ArrayTools.CopyToArray(_Source, array, index);
     }
 
     bool ICollection.IsSynchronized
@@ -3808,7 +3831,7 @@ namespace FreeLibSet.Collections
     {
       //((IList)_Source).CopyTo(array, index); 
       //_Source может и не реализовывать IList
-      DataTools.CopyToArray(_Source, array, index);
+      ArrayTools.CopyToArray(_Source, array, index);
     }
 
     bool ICollection.IsSynchronized
@@ -4197,7 +4220,7 @@ namespace FreeLibSet.Collections
     void ICollection.CopyTo(Array array, int index)
     {
       //((ICollection)_Source).CopyTo(array, index);
-      DataTools.CopyToArray(_Source, array, index);
+      ArrayTools.CopyToArray(_Source, array, index);
     }
 
     bool ICollection.IsSynchronized
@@ -4832,7 +4855,7 @@ namespace FreeLibSet.Collections
     void ICollection.CopyTo(Array array, int index)
     {
       //((ICollection)_List).CopyTo(array, index);
-      DataTools.CopyToArray(_List, array, index);
+      ArrayTools.CopyToArray(_List, array, index);
     }
 
     bool ICollection.IsSynchronized
@@ -5336,7 +5359,7 @@ namespace FreeLibSet.Collections
     void ICollection.CopyTo(Array array, int index)
     {
       //((ICollection)(_List.Keys)).CopyTo(array, index);
-      DataTools.CopyToArray(_List.Keys, array, index);
+      ArrayTools.CopyToArray(_List.Keys, array, index);
     }
 
     bool ICollection.IsSynchronized

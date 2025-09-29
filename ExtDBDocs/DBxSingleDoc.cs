@@ -107,7 +107,7 @@ namespace FreeLibSet.Data.Docs
       get
       {
         if (DocProvider.DocTypes.UseDeleted)
-          return DataTools.GetBool(DBxDocSet.GetValue(Row, "Deleted"));
+          return DataTools.GetBoolean(DBxDocSet.GetValue(Row, "Deleted"));
         else
           return false;
       }
@@ -151,7 +151,7 @@ namespace FreeLibSet.Data.Docs
       get
       {
         if (DocProvider.DocTypes.UseVersions)
-          return DataTools.GetInt(DBxDocSet.GetValue(Row, "Version"));
+          return DataTools.GetInt32(DBxDocSet.GetValue(Row, "Version"));
         else
           return 0;
       }
@@ -168,7 +168,7 @@ namespace FreeLibSet.Data.Docs
       get
       {
         if (DocProvider.DocTypes.UseUsers)
-          return DataTools.GetInt(DBxDocSet.GetValue(Row, "CreateUserId"));
+          return DataTools.GetInt32(DBxDocSet.GetValue(Row, "CreateUserId"));
         else
           return 0;
       }
@@ -185,7 +185,7 @@ namespace FreeLibSet.Data.Docs
       get
       {
         if (DocProvider.DocTypes.UseUsers)
-          return DataTools.GetInt(DBxDocSet.GetValue(Row, "ChangeUserId"));
+          return DataTools.GetInt32(DBxDocSet.GetValue(Row, "ChangeUserId"));
         else
           return 0;
       }
@@ -204,11 +204,11 @@ namespace FreeLibSet.Data.Docs
       {
         if (DocProvider.DocTypes.UseUsers)
         {
-          Int32 UserId = DataTools.GetInt(DBxDocSet.GetValue(Row, "ChangeUserId"));
+          Int32 UserId = DataTools.GetInt32(DBxDocSet.GetValue(Row, "ChangeUserId"));
           if (UserId != 0)
             return UserId;
           else
-            return DataTools.GetInt(DBxDocSet.GetValue(Row, "CreateUserId"));
+            return DataTools.GetInt32(DBxDocSet.GetValue(Row, "CreateUserId"));
         }
         else
           return 0;

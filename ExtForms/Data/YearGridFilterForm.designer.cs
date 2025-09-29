@@ -30,7 +30,7 @@
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YearGridFilterForm));
       this.grpMain = new System.Windows.Forms.GroupBox();
-      this.edYear = new FreeLibSet.Controls.IntEditBox();
+      this.edYear = new FreeLibSet.Controls.Int32EditBox();
       this.panel1 = new System.Windows.Forms.Panel();
       this.rbFilter = new System.Windows.Forms.RadioButton();
       this.rbNoFilter = new System.Windows.Forms.RadioButton();
@@ -143,7 +143,7 @@
     #endregion
 
     private System.Windows.Forms.GroupBox grpMain;
-    private FreeLibSet.Controls.IntEditBox edYear;
+    private FreeLibSet.Controls.Int32EditBox edYear;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.RadioButton rbFilter;
     private System.Windows.Forms.RadioButton rbNoFilter;

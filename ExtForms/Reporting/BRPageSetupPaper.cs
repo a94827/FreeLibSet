@@ -142,8 +142,8 @@ namespace FreeLibSet.Forms.Reporting
         if (efpPageSize.SelectedIndex >= 0 && efpPageSize.SelectedIndex < (_DVByName.Count - 1))
         {
           DataRow row = _DVByName[efpPageSize.SelectedIndex].Row;
-          int h = DataTools.GetInt(row, "Height"); // в единицах 1мм
-          int w = DataTools.GetInt(row, "Width");
+          int h = DataTools.GetInt32(row, "Height"); // в единицах 1мм
+          int w = DataTools.GetInt32(row, "Width");
           if (efpOrientation.SelectedIndex == 1)
             DataTools.Swap<int>(ref h, ref w);
           efpPaperHeight.Value = h / 10m;

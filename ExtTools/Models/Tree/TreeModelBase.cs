@@ -488,9 +488,9 @@ namespace FreeLibSet.Models.Tree
           isLeaf = _Model.IsLeaf(parentPath);
 
         if (isLeaf)
-          level.Nodes = DataTools.EmptyObjects;
+          level.Nodes = EmptyArray<object>.Empty;
         else
-          level.Nodes = DataTools.CreateObjectArray(_Model.GetChildren(parentPath));
+          level.Nodes = ArrayTools.CreateObjectArray(_Model.GetChildren(parentPath));
         _Stack.Push(level);
         _GetChildRequired = false;
       }

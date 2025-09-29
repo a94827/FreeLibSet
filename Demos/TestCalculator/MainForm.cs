@@ -166,7 +166,7 @@ namespace TestCalculator
       {
         if (res is Boolean)
           res = (bool)res ? 1 : 0;
-        if (res is Int32 || DataTools.IsFloatType(res.GetType()))
+        if (res is Int32 || MathTools.IsFloatType(res.GetType()))
         {
           string expr2 = expr.Replace(',', '.'); // вычислитель использует точку, а не запятую
           expr2 = expr2.Replace(" ", ""); // пробелы недопустимы

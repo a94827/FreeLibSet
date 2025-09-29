@@ -91,7 +91,7 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentNullException("subDocs");
 #endif
       if (String.IsNullOrEmpty(subDocs.SubDocType.TreeParentColumnName))
-        throw new ArgumentException(String.Format(Res.EFPSubDocTreeView_Arg_NoTreeParentColumnName, 
+        throw new ArgumentException(String.Format(Res.EFPSubDocTreeView_Arg_NoTreeParentColumnName,
           subDocs.SubDocType.PluralTitle), "subDocs");
 
       _MainEditor = mainEditor;
@@ -476,7 +476,7 @@ namespace FreeLibSet.Forms.Docs
 
       for (int i = 0; i < Rows.Length; i++)
       {
-        int ThisN = DataTools.GetInt(Rows[i], ManualOrderColumn);
+        int ThisN = DataTools.GetInt32(Rows[i], ManualOrderColumn);
         if (ThisN != (i + 1)) // присваиваем только если не совпадает
         {
           Rows[i][ManualOrderColumn] = i + 1;
@@ -496,12 +496,12 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Создает объект <see cref="DBxDataRowValueArrayWithCache"/>
+    /// Создает объект <see cref="DBxDataRowValuesWithCache"/>
     /// </summary>
     /// <returns>Новый объект для доступа к данным</returns>
     protected override IDataRowNamedValuesAccess CreateRowValueAccessObject()
     {
-      return new DBxDataRowValueArrayWithCache(SubDocTypeUI.TableCache);
+      return new DBxDataRowValuesWithCache(SubDocTypeUI.TableCache);
     }
 
     #endregion
@@ -575,10 +575,10 @@ namespace FreeLibSet.Forms.Docs
       DataRow[] rows = null;
       if (this.State == UIDataState.Insert)
       {
-        Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
+        IIdSet<Int32> docIds = SubDocTypeUI.SelectDocsForInsert(this);
         if (docIds == null)
           return true;
-        subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
+        subDocs2 = new DBxMultiSubDocs(SubDocs, EmptyArray<Int32>.Empty);
         foreach (Int32 docId in docIds)
         {
           DBxSingleDoc doc = SubDocs.Owner.GetDocById(docId);
@@ -781,22 +781,22 @@ namespace FreeLibSet.Forms.Docs
     void fmtDocSel_PasteSubDocs(object sender, EFPPasteDataObjectEventArgs args)
     {
       DBxDocSelectionPasteFormat fmtDocSel = (DBxDocSelectionPasteFormat)sender;
-      Int32[] docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
+      IIdSet<Int32> docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
       //if (DocIds.Length < 0)
-      if (docIds.Length <= 0) // 28.12.2020
+      if (docIds.Count == 0) // 28.12.2020
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSelectedDocs, fmtDocSel.DocTypeUI.DocType.PluralTitle));
         return;
       }
 
-      if (docIds.Length > 100)
+      if (docIds.Count > 100)
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_TooManyDocsToInsertSubDocs,
-          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Length, 100));
+          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Count, 100));
         return;
       }
 
-      DBxFilter filter = new IdsFilter("DocId", docIds);
+      DBxFilter filter = new ValueInListFilter("DocId", docIds);
       if (UI.DocProvider.DocTypes.UseDeleted) // 23.05.2021
         filter = new AndFilter(filter, DBSSubDocType.DeletedFalseFilter);
 
@@ -807,7 +807,7 @@ namespace FreeLibSet.Forms.Docs
       if (table.Rows.Count == 0)
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSubDocsInSelectedDocs,
-          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Length, sdt.SubDocType.SingularTitle));
+          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Count, sdt.SubDocType.SingularTitle));
         return;
       }
 
@@ -817,30 +817,32 @@ namespace FreeLibSet.Forms.Docs
     void fmtDocSel_PasteDocs(object sender, EFPPasteDataObjectEventArgs args)
     {
       DBxDocSelectionPasteFormat fmtDocSel = (DBxDocSelectionPasteFormat)sender;
-      Int32[] docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
+      IIdSet<Int32> docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
       // if (DocIds.Length < 0)
-      if (docIds.Length == 0) // 28.12.2020
+      if (docIds.Count == 0) // 28.12.2020
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSelectedDocs, fmtDocSel.DocTypeUI.DocType.PluralTitle));
         return;
       }
 
-      DataTable table = DocProvider.FillSelect(fmtDocSel.DocTypeName, null, new IdsFilter(docIds));
+      DataTable table = DocProvider.FillSelect(fmtDocSel.DocTypeName, null, new ValueInListFilter("Id", docIds));
 
       // DoPasteTable(Table, fmtDocSel.DocType);
       // 22.08.2016
       // Вставляем строки в том порядке, как заданы идентификаторы
       DataTools.SetPrimaryKey(table, "Id");
-      DataRow[] srcRows = new DataRow[docIds.Length];
-      for (int i = 0; i < docIds.Length; i++)
+      DataRow[] srcRows = new DataRow[docIds.Count];
+      int cnt = 0;
+      foreach (Int32 docId in docIds)
       {
-        DataRow row = table.Rows.Find(docIds[i]);
+        DataRow row = table.Rows.Find(docId);
         if (row == null)
         {
-          EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_DocRowLoad, fmtDocSel.DocTypeUI.DocType.SingularTitle, docIds[i]));
+          EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_DocRowLoad, fmtDocSel.DocTypeUI.DocType.SingularTitle, docId));
           return;
         }
-        srcRows[i] = row;
+        srcRows[cnt] = row;
+        cnt++;
       }
 
       DoPasteRows(srcRows, fmtDocSel.DocTypeUI);
@@ -861,7 +863,7 @@ namespace FreeLibSet.Forms.Docs
           return;
       }
 
-      Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
+      IIdSet<Int32> docIds = SubDocTypeUI.SelectDocsForInsert(this);
       if (docIds == null)
         return;
 
@@ -996,7 +998,7 @@ namespace FreeLibSet.Forms.Docs
       object BaseValue = Row[base.TextColumnName];
       if (this.TextColumnName.IndexOf('.') >= 0)
       {
-        object v = SubDocTypeUI.TableCache.GetRefValue(this.TextColumnName, DataTools.GetInt(BaseValue));
+        object v = SubDocTypeUI.TableCache.GetRefValue(this.TextColumnName, DataTools.GetInt32(BaseValue));
         return DataTools.GetString(v);
       }
       else

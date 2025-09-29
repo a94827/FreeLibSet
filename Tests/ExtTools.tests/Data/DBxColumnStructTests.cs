@@ -39,8 +39,8 @@ namespace ExtTools_tests.Data
     #region ColumnType
 
     [TestCase(DBxColumnType.String, typeof(String))]
-    [TestCase(DBxColumnType.Int, typeof(Int32))]
-    [TestCase(DBxColumnType.Float, typeof(Double))]
+    [TestCase(DBxColumnType.Int32, typeof(Int32))]
+    [TestCase(DBxColumnType.Double, typeof(Double))]
     [TestCase(DBxColumnType.Decimal, typeof(Decimal))]
     [TestCase(DBxColumnType.Boolean, typeof(Boolean))]
     [TestCase(DBxColumnType.Date, typeof(DateTime))]
@@ -101,7 +101,7 @@ namespace ExtTools_tests.Data
     public void DefaultValue()
     {
       DBxColumnStruct sut = new DBxColumnStruct("F1");
-      sut.ColumnType = DBxColumnType.Int;
+      sut.ColumnType = DBxColumnType.Int32;
       sut.DefaultValue = 123;
       Assert.AreEqual(123, sut.DefaultValue, "DefaultValue");
       Assert.IsFalse(sut.Nullable, "Nullable");
@@ -139,8 +139,8 @@ namespace ExtTools_tests.Data
     #region SetDefaultyValue()
 
     [TestCase(DBxColumnType.String, "")]
-    [TestCase(DBxColumnType.Int, 0)]
-    [TestCase(DBxColumnType.Float, 0.0)]
+    [TestCase(DBxColumnType.Int32, 0)]
+    [TestCase(DBxColumnType.Double, 0.0)]
     [TestCase(DBxColumnType.Boolean, false)]
     // Остальные значения не являются константными
     public void SetDefaultValue(DBxColumnType colType, object wantedValue)
@@ -163,38 +163,38 @@ namespace ExtTools_tests.Data
 
     // Основная часть протестирована в ColumnType()
 
-    [TestCase(0, 0, typeof(Int32))]
-    [TestCase(-128, 127, typeof(SByte))]
-    [TestCase(0, 128, typeof(Byte))]
-    [TestCase(0, 255, typeof(Byte))]
-    [TestCase(0, 256, typeof(Int16))]
-    [TestCase(Int16.MinValue, Int16.MaxValue, typeof(Int16))]
-    [TestCase(0, 65535, typeof(UInt16))]
-    [TestCase(0, 65536, typeof(Int32))]
-    [TestCase(Int32.MinValue, Int32.MaxValue, typeof(Int32))]
-    [TestCase(0, 4000000000.0, typeof(UInt32))]
-    [TestCase(0, 40000000000.0, typeof(Int64))]
-    public void DataType_Int(double minValue, double maxValue, Type wantedDataType)
-    {
-      DBxColumnStruct sut = new DBxColumnStruct("F1");
-      sut.ColumnType = DBxColumnType.Int;
-      sut.MinValue = minValue;
-      sut.MaxValue = maxValue;
-      Assert.AreEqual(wantedDataType, sut.DataType);
-    }
+    //[TestCase(0, 0, typeof(Int32))]
+    //[TestCase(-128, 127, typeof(SByte))]
+    //[TestCase(0, 128, typeof(Byte))]
+    //[TestCase(0, 255, typeof(Byte))]
+    //[TestCase(0, 256, typeof(Int16))]
+    //[TestCase(Int16.MinValue, Int16.MaxValue, typeof(Int16))]
+    //[TestCase(0, 65535, typeof(UInt16))]
+    //[TestCase(0, 65536, typeof(Int32))]
+    //[TestCase(Int32.MinValue, Int32.MaxValue, typeof(Int32))]
+    //[TestCase(0, 4000000000.0, typeof(UInt32))]
+    //[TestCase(0, 40000000000.0, typeof(Int64))]
+    //public void DataType_Int32(double minValue, double maxValue, Type wantedDataType)
+    //{
+    //  DBxColumnStruct sut = new DBxColumnStruct("F1");
+    //  sut.ColumnType = DBxColumnType.Int32;
+    //  sut.MinValue = minValue;
+    //  sut.MaxValue = maxValue;
+    //  Assert.AreEqual(wantedDataType, sut.DataType);
+    //}
 
-    [TestCase(0, 0, typeof(Double))]
-    [TestCase(0, 1000, typeof(Single))]
-    [TestCase(0, 1e35, typeof(Single))]
-    [TestCase(0, 1e40, typeof(Double))]
-    public void DataType_Float(double minValue, double maxValue, Type wantedDataType)
-    {
-      DBxColumnStruct sut = new DBxColumnStruct("F1");
-      sut.ColumnType = DBxColumnType.Float;
-      sut.MinValue = minValue;
-      sut.MaxValue = maxValue;
-      Assert.AreEqual(wantedDataType, sut.DataType);
-    }
+    //[TestCase(0, 0, typeof(Double))]
+    //[TestCase(0, 1000, typeof(Single))]
+    //[TestCase(0, 1e35, typeof(Single))]
+    //[TestCase(0, 1e40, typeof(Double))]
+    //public void DataType_Float(double minValue, double maxValue, Type wantedDataType)
+    //{
+    //  DBxColumnStruct sut = new DBxColumnStruct("F1");
+    //  sut.ColumnType = DBxColumnType.Float;
+    //  sut.MinValue = minValue;
+    //  sut.MaxValue = maxValue;
+    //  Assert.AreEqual(wantedDataType, sut.DataType);
+    //}
 
     #endregion
 

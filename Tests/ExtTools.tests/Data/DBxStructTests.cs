@@ -24,7 +24,7 @@ namespace ExtTools_tests.Data
       public DBxTableStruct GetTableStruct(string tableName)
       {
         DBxTableStruct ts = new DBxTableStruct(tableName);
-        ts.Columns.AddId();
+        ts.Columns.AddInt32("Id", false);
         switch (tableName)
         {
           case "Test1":
@@ -262,8 +262,8 @@ namespace ExtTools_tests.Data
       CollectionAssert.AreEqual(new string[] { "Test1", "Test2" }, sut.AllTableNames, "AllTableNames #0");
 
       DBxTableStruct ts1 = new DBxTableStruct("TestXXX");
-      ts1.Columns.AddId();
-      ts1.Columns.AddReference("F101", "Test1");
+      ts1.Columns.AddInt32("Id", false);
+      ts1.Columns.AddReference("F101", "Test1", true);
 
       sut.Tables.Add(ts1);
       CollectionAssert.AreEqual(new string[] { "Test1", "Test2", "TestXXX" }, sut.AllTableNames, "AllTableNames #1");
@@ -272,7 +272,7 @@ namespace ExtTools_tests.Data
       Assert.AreSame(ts1, sut.Tables.LastAdded, "LastAdded");
 
       DBxTableStruct ts2 = new DBxTableStruct("TestXXX");
-      ts2.Columns.AddId();
+      ts2.Columns.AddInt32("Id", false);
       Assert.Catch(delegate () { sut.Tables.Add(ts2); }, "Name already exists");
       CollectionAssert.AreEqual(new string[] { "Test1", "Test2", "TestXXX" }, sut.AllTableNames, "AllTableNames #2");
     }
@@ -284,8 +284,8 @@ namespace ExtTools_tests.Data
       CollectionAssert.AreEqual(new string[] { "Test1", "Test2" }, sut.AllTableNames, "AllTableNames #0");
 
       DBxTableStruct ts1 = sut.Tables.Add("TestXXX");
-      ts1.Columns.AddId();
-      ts1.Columns.AddReference("F101", "Test1");
+      ts1.Columns.AddInt32("Id", false);
+      ts1.Columns.AddReference("F101", "Test1", true);
       CollectionAssert.AreEqual(new string[] { "Test1", "Test2", "TestXXX" }, sut.AllTableNames, "AllTableNames #1");
 
       Assert.Catch(delegate () { sut.Tables.Add("TestXXX"); }, "Name already exists");
@@ -299,8 +299,8 @@ namespace ExtTools_tests.Data
       CollectionAssert.AreEqual(new string[] { "Test1", "Test2" }, sut.AllTableNames, "AllTableNames #0");
 
       DBxTableStruct ts1 = new DBxTableStruct("TestXXX");
-      ts1.Columns.AddId();
-      ts1.Columns.AddReference("F101", "Test1");
+      ts1.Columns.AddInt32("Id", false);
+      ts1.Columns.AddReference("F101", "Test1", true);
 
       sut.Tables.Insert(1, ts1);
       CollectionAssert.AreEqual(new string[] { "Test1", "TestXXX", "Test2" }, sut.AllTableNames, "AllTableNames #1");
@@ -308,7 +308,7 @@ namespace ExtTools_tests.Data
       Assert.AreSame(ts1, res1, "Tables[]");
 
       DBxTableStruct ts2 = new DBxTableStruct("TestXXX");
-      ts2.Columns.AddId();
+      ts2.Columns.AddInt32("Id", false);
       Assert.Catch(delegate () { sut.Tables.Insert(0, ts2); }, "Name already exists");
       CollectionAssert.AreEqual(new string[] { "Test1", "TestXXX", "Test2" }, sut.AllTableNames, "AllTableNames #2");
     }
@@ -425,7 +425,7 @@ namespace ExtTools_tests.Data
     {
       DBxStruct sut = new DBxStruct();
       DBxTableStruct ts1 = new DBxTableStruct("Test1");
-      ts1.Columns.AddId();
+      ts1.Columns.AddInt32("Id", false);
       ts1.Columns.AddString("F1", 10, true);
       sut.Tables.Add(ts1);
       sut.SetReadOnly();
@@ -438,7 +438,7 @@ namespace ExtTools_tests.Data
 
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Add("Test2"); }, "Tables.Add(tableName)");
       DBxTableStruct ts3 = new DBxTableStruct("Test3");
-      ts3.Columns.AddId();
+      ts3.Columns.AddInt32("Id", false);
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Add(ts3); }, "Tables.Add(DBxTableStruct)");
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Insert(0, ts3); }, "Tables.Insert()");
       Assert.Catch<ObjectReadOnlyException>(delegate () { sut.Tables.Remove(ts1); }, "Tables.Remove(DBxTableStruct)");
@@ -461,7 +461,7 @@ namespace ExtTools_tests.Data
     {
       DBxStruct sut = new DBxStruct();
       DBxTableStruct ts1 = new DBxTableStruct("Test1");
-      ts1.Columns.AddId();
+      ts1.Columns.AddInt32("Id", false);
       sut.Tables.Add(ts1);
       sut.SetReadOnly();
 
@@ -492,7 +492,7 @@ namespace ExtTools_tests.Data
     {
       DBxStruct sut = new DBxStruct();
       DBxTableStruct ts1 = new DBxTableStruct("Test1");
-      ts1.Columns.AddId();
+      ts1.Columns.AddInt32("Id", false);
       if (setReadOnly)
         sut.SetReadOnly();
 

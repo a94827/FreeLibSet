@@ -52,17 +52,17 @@ namespace ExtTools_tests.IO
       FileTools.ForceDirs(new AbsPath(_TempDir.Dir, "D1", "D12"));
       FileTools.ForceDirs(new AbsPath(_TempDir.Dir, "D1.1"));
       FileTools.ForceDirs(new AbsPath(_TempDir.Dir, "D2"));
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "D111", "f1111.txt").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "D111", "f1112.xml").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "D111", "f1113.txt").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "D112", "f1121.txt").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "f113.txt").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D12", "f121.txt").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "f13.txt").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D2", "f21.txt").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D2", "f22.txt").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "f3.xml").Path, DataTools.EmptyBytes);
-      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "f4.txt").Path, DataTools.EmptyBytes);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "D111", "f1111.txt").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "D111", "f1112.xml").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "D111", "f1113.txt").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "D112", "f1121.txt").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D11", "f113.txt").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "D12", "f121.txt").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D1", "f13.txt").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D2", "f21.txt").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "D2", "f22.txt").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "f3.xml").Path, EmptyArray<byte>.Empty);
+      File.WriteAllBytes(new AbsPath(_TempDir.Dir, "f4.txt").Path, EmptyArray<byte>.Empty);
     }
 
     protected override void OnOneTimeTearDown()
@@ -241,7 +241,7 @@ namespace ExtTools_tests.IO
 
       public void Validate(string sWanted)
       {
-        string[] a = DataTools.EmptyStrings;
+        string[] a = EmptyArray<string>.Empty;
         if (!String.IsNullOrEmpty(sWanted))
           a = sWanted.Split(',');
 
@@ -484,7 +484,7 @@ namespace ExtTools_tests.IO
 
     protected override void DoTestEnumerator(PathEnumerableBase sut, string sNames, bool isSorted)
     {
-      string[] a = DataTools.EmptyStrings;
+      string[] a = EmptyArray<string>.Empty;
       if (sNames.Length > 0)
         a = sNames.Split(',');
 
@@ -555,7 +555,7 @@ namespace ExtTools_tests.IO
 
     protected override void DoTestEnumerator(PathEnumerableBase sut, string sNames, bool isSorted)
     {
-      string[] a = DataTools.EmptyStrings;
+      string[] a = EmptyArray<string>.Empty;
       if (sNames.Length > 0)
         a = sNames.Split(',');
 

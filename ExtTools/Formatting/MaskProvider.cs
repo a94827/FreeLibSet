@@ -200,7 +200,7 @@ namespace FreeLibSet.Formatting
     {
       if (String.IsNullOrEmpty(mask))
         throw ExceptionFactory.ArgStringIsNullOrEmpty("mask");
-      int p = DataTools.IndexOfAnyOther(mask, ValidMaskChars);
+      int p = StringTools.IndexOfAnyOther(mask, ValidMaskChars);
       if (p >= 0)
         throw ExceptionFactory.ArgInvalidChar("mask", mask, p);
       if (mask.IndexOf('0') < 0)

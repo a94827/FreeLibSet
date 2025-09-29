@@ -9,15 +9,14 @@ using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms
 {
-
   /// <summary>
   /// Структура, содержащая информацию о строке <see cref="EFPDataGridView"/> или <see cref="EFPDataTreeView"/>,
   /// которая используется для вызова событий объектов <see cref="EFPGridProducer"/>.
-  /// Для получения заполненной структуры используйте методы <see cref="EFPDataGridView.GetRowInfo(int)"/> и
-  /// <see cref="EFPDataTreeView.GetRowInfo(FreeLibSet.Controls.TreeNodeAdv)"/>.
+  /// Для получения заполненной структуры используйте методы <see cref="EFPDataGridView.GetRowValues(int)"/> и
+  /// <see cref="EFPDataTreeView.GetRowValues(FreeLibSet.Controls.TreeNodeAdv)"/>.
   /// Структура однократной записи.
   /// </summary>
-  public struct EFPDataViewRowInfo
+  public struct EFPDataViewRowValues
   {
     #region Конструктор
 
@@ -28,7 +27,7 @@ namespace FreeLibSet.Forms
     /// <param name="dataBoundItem">Ссылка на строку данных</param>
     /// <param name="values">Интерфейс доступа к значениям</param>
     /// <param name="rowIndex">Индекс строки</param>
-    public EFPDataViewRowInfo(IEFPDataView controlProvider, object dataBoundItem, INamedValuesAccess values, int rowIndex)
+    public EFPDataViewRowValues(IEFPDataView controlProvider, object dataBoundItem, INamedValuesAccess values, int rowIndex)
     {
       _ControlProvider = controlProvider;
       _DataBoundItem = dataBoundItem;
@@ -115,31 +114,31 @@ namespace FreeLibSet.Forms
     public string[] SourceColumnNames { get { return _SourceColumnNames; } }
     private readonly string[] _SourceColumnNames;
 
-    internal EFPDataViewRowInfo RowInfo { get { return _RowInfo; } set { _RowInfo = value; } }
-    private EFPDataViewRowInfo _RowInfo;
+    internal EFPDataViewRowValues RowValues { get { return _RowValues; } set { _RowValues = value; } }
+    private EFPDataViewRowValues _RowValues;
 
     /// <summary>
     /// Провайдер табличного или иерархического просмотра
     /// </summary>
-    public IEFPDataView ControlProvider { get { return _RowInfo.ControlProvider; } }
+    public IEFPDataView ControlProvider { get { return _RowValues.ControlProvider; } }
 
     /// <summary>
     /// Объект, связанный с текущей строкой просмотра.
     /// Обычно, это строка данных <see cref="System.Data.DataRow"/>.
     /// Используйте свойство <see cref="Values"/> или типизированные методы для извлечения данных.
     /// </summary>
-    public object DataBoundItem { get { return _RowInfo.DataBoundItem; } }
+    public object DataBoundItem { get { return _RowValues.DataBoundItem; } }
 
     /// <summary>
     /// Интерфейс для извлечения значений полей из строки данных
     /// </summary>
-    public INamedValuesAccess Values { get { return _RowInfo.Values; } }
+    public INamedValuesAccess Values { get { return _RowValues.Values; } }
 
     /// <summary>
     /// Индекс строки табличного просмотра.
     /// Для иерархического просмотра возвращает свойство <see cref="FreeLibSet.Controls.TreeNodeAdv.Row"/>.
     /// </summary>
-    public int RowIndex { get { return _RowInfo.RowIndex; } }
+    public int RowIndex { get { return _RowValues.RowIndex; } }
 
     /// <summary>
     /// Произвольные пользовательские данные, присоединенные к объекту
@@ -167,9 +166,20 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
-    public int GetInt(string columnName)
+    public int GetInt32(string columnName)
     {
-      return DataTools.GetInt(Values.GetValue(columnName));
+      return DataTools.GetInt32(Values.GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение</returns>
+    public int? GetNullableInt32(string columnName)
+    {
+      return DataTools.GetNullableInt32(Values.GetValue(columnName));
     }
 
     /// <summary>
@@ -189,9 +199,31 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
+    public long? GetNullableInt64(string columnName)
+    {
+      return DataTools.GetNullableInt64(Values.GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение</returns>
     public float GetSingle(string columnName)
     {
       return DataTools.GetSingle(Values.GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение</returns>
+    public float? GetNullableSingle(string columnName)
+    {
+      return DataTools.GetNullableSingle(Values.GetValue(columnName));
     }
 
     /// <summary>
@@ -211,9 +243,31 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
+    public double? GetNullableDouble(string columnName)
+    {
+      return DataTools.GetNullableDouble(Values.GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение</returns>
     public decimal GetDecimal(string columnName)
     {
       return DataTools.GetDecimal(Values.GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение</returns>
+    public decimal? GetNullableDecimal(string columnName)
+    {
+      return DataTools.GetNullableDecimal(Values.GetValue(columnName));
     }
 
     /// <summary>
@@ -222,9 +276,9 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение</returns>
-    public bool GetBool(string columnName)
+    public bool GetBoolean(string columnName)
     {
-      return DataTools.GetBool(Values.GetValue(columnName));
+      return DataTools.GetBoolean(Values.GetValue(columnName));
     }
 
     /// <summary>
@@ -276,18 +330,6 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает true, если поле содержит значение null или <see cref="DBNull"/>.
-    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
-    /// </summary>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Признак пустого значения</returns>
-    public bool IsNull(string columnName)
-    {
-      object v = Values.GetValue(columnName);
-      return (v == null) || (v is DBNull);
-    }
-
-    /// <summary>
     /// Получить значение перечислимого типа.
     /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
     /// </summary>
@@ -298,6 +340,18 @@ namespace FreeLibSet.Forms
       where T : struct
     {
       return DataTools.GetEnum<T>(Values.GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Возвращает true, если поле содержит значение null или <see cref="DBNull"/>.
+    /// Имя поля должно быть в списке исходных столбцов <see cref="SourceColumnNames"/>, заданных при объявлении вычисляемого столбца.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Признак пустого значения</returns>
+    public bool IsNull(string columnName)
+    {
+      object v = Values.GetValue(columnName);
+      return (v == null) || (v is DBNull);
     }
 
     #endregion
@@ -321,9 +375,20 @@ namespace FreeLibSet.Forms
     /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
-    public int GetInt(int sourceColumnIndex)
+    public int GetInt32(int sourceColumnIndex)
     {
-      return DataTools.GetInt(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
+      return DataTools.GetInt32(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// </summary>
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
+    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
+    /// <returns>Значение</returns>
+    public int? GetNullableInt32(int sourceColumnIndex)
+    {
+      return DataTools.GetNullableInt32(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
@@ -343,9 +408,31 @@ namespace FreeLibSet.Forms
     /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
+    public long? GetNullableInt64(int sourceColumnIndex)
+    {
+      return DataTools.GetNullableInt64(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// </summary>
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
+    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
+    /// <returns>Значение</returns>
     public float GetSingle(int sourceColumnIndex)
     {
       return DataTools.GetSingle(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// </summary>
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
+    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
+    /// <returns>Значение</returns>
+    public float? GetNullableSingle(int sourceColumnIndex)
+    {
+      return DataTools.GetNullableSingle(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
@@ -365,9 +452,31 @@ namespace FreeLibSet.Forms
     /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
+    public double? GetNullableDouble(int sourceColumnIndex)
+    {
+      return DataTools.GetNullableDouble(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// </summary>
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
+    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
+    /// <returns>Значение</returns>
     public decimal GetDecimal(int sourceColumnIndex)
     {
       return DataTools.GetDecimal(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
+    }
+
+    /// <summary>
+    /// Получить числовое значение поля.
+    /// </summary>
+    /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
+    /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
+    /// <returns>Значение</returns>
+    public decimal? GetNullableDecimal(int sourceColumnIndex)
+    {
+      return DataTools.GetNullableDecimal(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
@@ -376,9 +485,9 @@ namespace FreeLibSet.Forms
     /// <param name="sourceColumnIndex">Индекс исходного столбца в массиве <see cref="SourceColumnNames"/>.
     /// Если столбец не является вычисляемым, то допускается только значение 0, чтобы получить значение поля</param>
     /// <returns>Значение</returns>
-    public bool GetBool(int sourceColumnIndex)
+    public bool GetBoolean(int sourceColumnIndex)
     {
-      return DataTools.GetBool(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
+      return DataTools.GetBoolean(Values.GetValue(SourceColumnNames[sourceColumnIndex]));
     }
 
     /// <summary>
@@ -712,7 +821,7 @@ namespace FreeLibSet.Forms
     private readonly EFPGridProducerValueNeededEventArgs _ValueNeededArgs;
 
 
-    internal void DoGetValue(EFPGridProducerValueReason reason, EFPDataViewRowInfo rowInfo, out object value, out string toolTipText)
+    internal void DoGetValue(EFPGridProducerValueReason reason, EFPDataViewRowValues rowValues, out object value, out string toolTipText)
     {
 #if DEBUG
       EFPApp.CheckMainThread();
@@ -721,18 +830,18 @@ namespace FreeLibSet.Forms
 
       if (IsCalculated)
       {
-        _ValueNeededArgs.RowInfo = rowInfo;
+        _ValueNeededArgs.RowValues = rowValues;
         _ValueNeededArgs.Reason = reason;
         _ValueNeededArgs.Value = null;
         _ValueNeededArgs.ToolTipText = null;
         OnValueNeeded(_ValueNeededArgs);
-        _ValueNeededArgs.RowInfo = new EFPDataViewRowInfo(); // освобождаем память
+        _ValueNeededArgs.RowValues = new EFPDataViewRowValues(); // освобождаем память
         value = _ValueNeededArgs.Value;
         toolTipText = _ValueNeededArgs.ToolTipText;
       }
       else
       {
-        value = rowInfo.Values.GetValue(Name);
+        value = rowValues.Values.GetValue(Name);
         toolTipText = null;
       }
 

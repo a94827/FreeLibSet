@@ -244,7 +244,7 @@ namespace FreeLibSet.Forms.Docs
           if (IncludeNested)
             return null;
           else
-            return DataTools.EmptyIds;
+            return EmptyArray<Int32>.Empty;
         }
         else
         {
@@ -611,7 +611,7 @@ namespace FreeLibSet.Forms.Docs
           if (Owner != null)
           {
             if (Owner.DocId != 0)
-              newDoc.Values[Owner.DocTypeUI.DocType.GroupRefColumnName].SetInteger(Owner.DocId);
+              newDoc.Values[Owner.DocTypeUI.DocType.GroupRefColumnName].SetInt32(Owner.DocId);
           }
         }
         else
@@ -813,8 +813,8 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      Int32[] ids = docSel[ControlProvider.DocTypeUI.DocType.Name];
-      if (ids.Length == 0)
+      IdArray<Int32> ids = IdTools.AsIdArray<Int32>(docSel[ControlProvider.DocTypeUI.DocType.Name]);
+      if (ids.Count == 0)
       {
         EFPApp.ShowTempMessage(String.Format(Res.Clipboard_Err_NoDocType, ControlProvider.DocTypeUI.DocType.PluralTitle));
         return;

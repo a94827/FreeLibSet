@@ -507,7 +507,7 @@ namespace FreeLibSet.Shell
       if (String.IsNullOrEmpty(formatText))
         return false;
 
-      if (DataTools.IndexOfAny(formatText, "yMdhHmsDtTfFgGRruUY") >= 0)
+      if (StringTools.IndexOfAny(formatText, "yMdhHmsDtTfFgGRruUY") >= 0)
         return ODFAddDateTimeFormat(elStyles, formatText, styleName,
           dateTimeFormat, language, country);
 

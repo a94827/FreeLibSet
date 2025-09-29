@@ -645,7 +645,7 @@ namespace FreeLibSet.Forms.Docs
 
         for (int i = 0; i < rows.Length; i++)
         {
-          int thisN = DataTools.GetInt(rows[i], SubDocTypeUI.ManualOrderColumn);
+          int thisN = DataTools.GetInt32(rows[i], SubDocTypeUI.ManualOrderColumn);
           if (thisN != (i + 1)) // присваиваем только если не совпадает
           {
             rows[i][SubDocTypeUI.ManualOrderColumn] = i + 1;
@@ -665,24 +665,24 @@ namespace FreeLibSet.Forms.Docs
     #region Значения для ссылочных полей
 
     /// <summary>
-    /// Создает объект <see cref="DBxDataRowValueArrayWithCache"/>
+    /// Создает объект <see cref="DBxDataRowValuesWithCache"/>
     /// </summary>
     /// <returns>Новый объект для доступа к данным</returns>
     protected override IDataRowNamedValuesAccess CreateRowValueAccessObject()
     {
-      return new DBxDataRowValueArrayWithCache(SubDocTypeUI.TableCache);
+      return new DBxDataRowValuesWithCache(SubDocTypeUI.TableCache);
     }
 
     /// <summary>
     /// Текстовое представление для документа
     /// </summary>
     /// <param name="args">Аргументы события ячейки</param>
-    protected override void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
+    protected override void OnCellInfoNeeded(EFPDataGridViewCellInfoEventArgs args)
     {
-      base.OnGetCellAttributes(args);
+      base.OnCellInfoNeeded(args);
       if (args.ColumnName == "DocId_Text")
       {
-        Int32 docId = DataTools.GetInt(args.DataRow, "DocId");
+        Int32 docId = DataTools.GetInt32(args.DataRow, "DocId");
         int pDoc = _SubDocs.Owner.IndexOfDocId(docId);
         if (pDoc >= 0)
         {
@@ -692,17 +692,17 @@ namespace FreeLibSet.Forms.Docs
       }
       else if (args.ColumnName == "DocId_Image")
       {
-        Int32 docId = DataTools.GetInt(args.DataRow, "DocId");
+        Int32 docId = DataTools.GetInt32(args.DataRow, "DocId");
         int pDoc = _SubDocs.Owner.IndexOfDocId(docId);
         if (pDoc >= 0)
         {
           DBxSingleDoc doc = _SubDocs.Owner[pDoc];
           switch (args.Reason)
           {
-            case EFPDataGridViewAttributesReason.View:
+            case EFPDataViewInfoReason.View:
               args.Value = EFPApp.MainImages.Images[UI.ImageHandlers.GetImageKey(doc)];
               break;
-            case EFPDataGridViewAttributesReason.ToolTip:
+            case EFPDataViewInfoReason.ToolTip:
               args.ToolTipText = UI.ImageHandlers.GetToolTipText(doc);
               break;
           }
@@ -878,10 +878,10 @@ namespace FreeLibSet.Forms.Docs
       DBxMultiSubDocs subDocs2;
       if (this.State == UIDataState.Insert)
       {
-        Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
+        IIdSet<Int32> docIds = SubDocTypeUI.SelectDocsForInsert(this);
         if (docIds == null)
           return true;
-        subDocs2 = new DBxMultiSubDocs(SubDocs, DataTools.EmptyIds);
+        subDocs2 = new DBxMultiSubDocs(SubDocs, EmptyArray<Int32>.Empty);
         foreach (Int32 docId in docIds)
         {
           DBxSingleDoc doc = SubDocs.Owner.GetDocById(docId);
@@ -897,7 +897,7 @@ namespace FreeLibSet.Forms.Docs
           return true;
         }
 
-        //docId = DataTools.GetInt(rows[0], "DocId"); // TODO: Не обязательно. Документы могут быть разными
+        //docId = DataTools.GetInt32(rows[0], "DocId"); // TODO: Не обязательно. Документы могут быть разными
         subDocs2 = new DBxMultiSubDocs(SubDocs, rows);
         if (this.State == UIDataState.Delete)
         {
@@ -949,7 +949,7 @@ namespace FreeLibSet.Forms.Docs
         if (this.State == UIDataState.Insert || this.State == UIDataState.InsertCopy)
         {
           if (!String.IsNullOrEmpty(SubDocTypeUI.ManualOrderColumn))
-            lastOrder = DataTools.MaxInt(SubDocs.SubDocsView, SubDocTypeUI.ManualOrderColumn, true) ?? 0;
+            lastOrder = DataTools.MaxInt32(SubDocs.SubDocsView, SubDocTypeUI.ManualOrderColumn, true) ?? 0;
         }
 
         SubDocs.MergeSubSet(subDocs2);
@@ -1069,22 +1069,22 @@ namespace FreeLibSet.Forms.Docs
     void fmtDocSel_PasteSubDocs(object sender, EFPPasteDataObjectEventArgs args)
     {
       DBxDocSelectionPasteFormat fmtDocSel = (DBxDocSelectionPasteFormat)sender;
-      Int32[] docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
+      IIdSet<Int32> docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
       //if (DocIds.Length < 0)
-      if (docIds.Length <= 0) // 28.12.2020
+      if (docIds.Count==0) // 28.12.2020
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSelectedDocs, fmtDocSel.DocTypeUI.DocType.PluralTitle));
         return;
       }
 
-      if (docIds.Length > 100)
+      if (docIds.Count > 100)
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_TooManyDocsToInsertSubDocs,
-          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Length, 100));
+          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Count, 100));
         return;
       }
 
-      DBxFilter filter = new IdsFilter("DocId", docIds);
+      DBxFilter filter = new ValueInListFilter("DocId", docIds);
       if (UI.DocProvider.DocTypes.UseDeleted) // 23.05.2021
         filter = new AndFilter(filter, DBSSubDocType.DeletedFalseFilter);
 
@@ -1095,7 +1095,7 @@ namespace FreeLibSet.Forms.Docs
       if (Table.Rows.Count == 0)
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSubDocsInSelectedDocs,
-          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Length, sdt.SubDocType.SingularTitle));
+          fmtDocSel.DocTypeUI.DocType.PluralTitle, docIds.Count, sdt.SubDocType.SingularTitle));
         return;
       }
 
@@ -1105,31 +1105,33 @@ namespace FreeLibSet.Forms.Docs
     void fmtDocSel_PasteDocs(object sender, EFPPasteDataObjectEventArgs args)
     {
       DBxDocSelectionPasteFormat fmtDocSel = (DBxDocSelectionPasteFormat)sender;
-      Int32[] docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
+      IIdSet<Int32> docIds = fmtDocSel.DocSel[fmtDocSel.DocTypeName];
       // if (DocIds.Length < 0)
-      if (docIds.Length == 0) // 28.12.2020
+      if (docIds.Count == 0) // 28.12.2020
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_NoSelectedDocs, fmtDocSel.DocTypeUI.DocType.PluralTitle));
         return;
       }
 
-      DataTable table = DocProvider.FillSelect(fmtDocSel.DocTypeName, null, new IdsFilter(docIds));
+      DataTable table = DocProvider.FillSelect(fmtDocSel.DocTypeName, null, new ValueInListFilter("Id", docIds));
 
       // DoPasteTable(Table, fmtDocSel.DocType);
       // 22.08.2016
       // Вставляем строки в том порядке, как заданы идентификаторы
       DataTools.SetPrimaryKey(table, "Id");
-      DataRow[] srcRows = new DataRow[docIds.Length];
-      for (int i = 0; i < docIds.Length; i++)
+      DataRow[] srcRows = new DataRow[docIds.Count];
+      int cnt = 0;
+      foreach (Int32 docId in docIds)
       {
-        DataRow row = table.Rows.Find(docIds[i]);
+        DataRow row = table.Rows.Find(docId);
         if (row == null)
         {
           EFPApp.ErrorMessageBox(String.Format(Res.EFPDataView_Err_DocRowLoad,
-            fmtDocSel.DocTypeUI.DocType.SingularTitle, docIds[i]));
+            fmtDocSel.DocTypeUI.DocType.SingularTitle, docId));
           return;
         }
-        srcRows[i] = row;
+        srcRows[cnt] = row;
+        cnt++;
       }
 
       DoPasteRows(srcRows, fmtDocSel.DocTypeUI);
@@ -1150,13 +1152,17 @@ namespace FreeLibSet.Forms.Docs
           return;
       }
 
-      Int32[] docIds = SubDocTypeUI.SelectDocsForInsert(this);
+      IIdSet<Int32> docIds = SubDocTypeUI.SelectDocsForInsert(this);
       if (docIds == null)
         return;
 
       //DBxSingleDoc mainDoc = MainEditor.Documents[SubDocType.DocType.Name].GetDocById(docId);
 
-      DBxSubDoc[] newSubDocs = SubDocTypeUI.PerformPasteRows(MainEditor.Documents[SubDocType.DocType.Name].SubDocs[SubDocType.Name], docIds, srcRows, docTypeBase, this);
+      DBxSubDoc[] newSubDocs = SubDocTypeUI.PerformPasteRows(MainEditor.Documents[SubDocType.DocType.Name].SubDocs[SubDocType.Name], 
+        docIds, 
+        srcRows, 
+        docTypeBase, 
+        this);
       if (newSubDocs == null)
         return;
 

@@ -36,23 +36,6 @@ namespace FreeLibSet.Forms
         ownerControl.Disposed += new EventHandler(OwnerControl_Disposed);
     }
 
-#if XXX
-
-#pragma warning disable 0618 // обход [Obsolete]
-
-    /// <summary>
-    /// Эта версия конструктора предназначена для создания панелей на уровне приложения
-    /// </summary>
-    [Obsolete("Создавать объекты EFPStatusBarPanels из приложения не следует. Используйте EFPApp.Interface", false)]
-    public EFPStatusBarPanels()
-      : this(EFPApp.StatusBar, null)
-    {
-    }
-
-#pragma warning restore 0618
-
-#endif
-
     /// <summary>
     /// Вызывает метод <see cref="Detach()"/>
     /// </summary>
@@ -95,7 +78,7 @@ namespace FreeLibSet.Forms
     /// Используются только команды с установленным свойством <see cref="EFPCommandItem.StatusBarUsage"/>.
     /// </summary>
     /// <param name="items">Список команд</param>
-    public void Add(EFPCommandItems items)
+    public void AddRange(EFPCommandItems items)
     {
       foreach (EFPCommandItem item in items)
       {
@@ -756,7 +739,6 @@ namespace FreeLibSet.Forms
       return ci;
     }
 
-#pragma warning disable 0618 // обход [Obsolete]
     private class VisibleCommandItem : EFPCommandItem
     {
       #region Конструкторы
@@ -791,7 +773,6 @@ namespace FreeLibSet.Forms
 
       #endregion
     }
-#pragma warning restore 0618 
 
     #endregion
 

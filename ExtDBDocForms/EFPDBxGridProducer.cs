@@ -15,6 +15,7 @@ using FreeLibSet.Formatting;
 using FreeLibSet.Controls.TreeViewAdvNodeControls;
 using FreeLibSet.Calendar;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -132,7 +133,7 @@ namespace FreeLibSet.Forms.Docs
       if (_Cache == null)
         return null;
       else
-        return _Cache[_TableName].GetValue(DataTools.GetInt(row, "Id"), columnName);
+        return _Cache[_TableName].GetValue(DataTools.GetInt32(row, "Id"), columnName);
     }
 #endif
 
@@ -231,13 +232,13 @@ namespace FreeLibSet.Forms.Docs
 
       public void RefDocTextColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
       {
-        Int32 id = args.GetInt(_RefColumnName);
+        Int32 id = args.GetInt32(_RefColumnName);
         args.Value = _MasterUI.GetTextValue(id);
       }
 
       public void RefDocImageColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
       {
-        Int32 id = args.GetInt(_RefColumnName);
+        Int32 id = args.GetInt32(_RefColumnName);
         switch (args.Reason)
         {
           case EFPGridProducerValueReason.Value:
@@ -252,13 +253,13 @@ namespace FreeLibSet.Forms.Docs
 
       public void RefValueColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
       {
-        Int32 id = args.GetInt(_RefColumnName);
+        Int32 id = args.GetInt32(_RefColumnName);
         args.Value = _MasterUI.TableCache.GetValue(id, _ValueColumnName);
       }
 
       public object GetRefValue(EFPGridProducerValueNeededEventArgs args)
       {
-        Int32 id = args.GetInt(_RefColumnName);
+        Int32 id = args.GetInt32(_RefColumnName);
         return _MasterUI.TableCache.GetValue(id, _ValueColumnName);
       }
 
@@ -280,7 +281,7 @@ namespace FreeLibSet.Forms.Docs
 
       private void DateRangeColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
       {
-        Int32 id = args.GetInt(0);
+        Int32 id = args.GetInt32(0);
         DateTime? firstDate = _MasterUI.TableCache.GetNullableDateTime(id, _ValueColumnName);
         DateTime? lastDate = _MasterUI.TableCache.GetNullableDateTime(id, _ValueColumnName2);
         if (firstDate.HasValue || lastDate.HasValue)
@@ -303,8 +304,8 @@ namespace FreeLibSet.Forms.Docs
 
       private void MonthDayColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
       {
-        Int32 id = args.GetInt(0);
-        int v = _MasterUI.TableCache.GetInt(id, _ValueColumnName);
+        Int32 id = args.GetInt32(0);
+        int v = _MasterUI.TableCache.GetInt32(id, _ValueColumnName);
         if (v == 0)
           return;
         else if (v < 1 || v > 365)
@@ -332,9 +333,9 @@ namespace FreeLibSet.Forms.Docs
 
       private void MonthDayRangeColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
       {
-        Int32 id = args.GetInt(0);
-        int v1 = _MasterUI.TableCache.GetInt(id, _ValueColumnName);
-        int v2 = _MasterUI.TableCache.GetInt(id, _ValueColumnName2);
+        Int32 id = args.GetInt32(0);
+        int v1 = _MasterUI.TableCache.GetInt32(id, _ValueColumnName);
+        int v2 = _MasterUI.TableCache.GetInt32(id, _ValueColumnName2);
         if (v1 == 0 && v2 == 0)
           return;
         else if (v1 < 1 || v1 > 365 || v2 < 1 || v2 > 365)
@@ -433,8 +434,8 @@ namespace FreeLibSet.Forms.Docs
 
     private void VTRefDocTextColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 tableId = args.GetInt(0);
-      Int32 docId = args.GetInt(1);
+      Int32 tableId = args.GetInt32(0);
+      Int32 docId = args.GetInt32(1);
       args.Value = GridProducer.UI.TextHandlers.GetTextValue(tableId, docId);
     }
 
@@ -536,8 +537,8 @@ namespace FreeLibSet.Forms.Docs
 
     private void VTRefDocImageColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 tableId = args.GetInt(0);
-      Int32 docId = args.GetInt(1);
+      Int32 tableId = args.GetInt32(0);
+      Int32 docId = args.GetInt32(1);
       switch (args.Reason)
       {
         case EFPGridProducerValueReason.Value:
@@ -584,6 +585,31 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
+    /// Добавляет текстовый столбец для ссылочного поля.
+    /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
+    /// ссылочного поля с именем <paramref name="refColumnName"/>.
+    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
+    /// и имя поля <paramref name="valueColumnName"/>.
+    /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
+    /// </summary>
+    /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа или поддокумента.
+    /// Это поле должно присутствовать в таблице.</param>
+    /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
+    /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
+    /// Имя поля может содержать точку, если само является ссылочным. 
+    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="columnFormat">Формат столбца</param>
+    /// <returns>Описание столбца</returns>
+    public EFPGridProducerColumn AddRefText(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
+      string headerText, UITextColumnFormat columnFormat)
+    {
+      EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, valueColumnName);
+      return AddUserText(dri.ResName, refColumnName,
+        new EFPGridProducerValueNeededEventHandler(dri.RefValueColumn_ValueNeeded), headerText, columnFormat);
+    }
+
+    /// <summary>
     /// Добавить столбец для отображения числового поля.
     /// Значения должны быть целочисленными.
     /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
@@ -601,11 +627,11 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
     /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddRefInt(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
+    public EFPGridProducerColumn AddRefInteger(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
       string headerText, int textWidth)
     {
       EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, valueColumnName);
-      return AddUserInt(dri.ResName, refColumnName, dri.RefValueColumn_ValueNeeded, headerText, textWidth);
+      return AddUserInteger(dri.ResName, refColumnName, dri.RefValueColumn_ValueNeeded, headerText, textWidth);
     }
 
     /// <summary>
@@ -704,53 +730,53 @@ namespace FreeLibSet.Forms.Docs
       return AddUserDateTime(dri.ResName, refColumnName, dri.RefValueColumn_ValueNeeded, headerText, kind);
     }
 
-    /// <summary>
-    /// Добавить столбец для отображения денежных сумм.
-    /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
-    /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
-    /// и имя поля <paramref name="valueColumnName"/>.
-    /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
-    /// </summary>
-    /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа или поддокумента.
-    /// Это поле должно присутствовать в таблице.</param>
-    /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
-    /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
-    /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddRefMoney(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
-      string headerText)
-    {
-      return AddRefMoney(refColumnName, masterUI, valueColumnName, headerText, false);
-    }
+    ///// <summary>
+    ///// Добавить столбец для отображения денежных сумм.
+    ///// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
+    ///// ссылочного поля с именем <paramref name="refColumnName"/>.
+    ///// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
+    ///// и имя поля <paramref name="valueColumnName"/>.
+    ///// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
+    ///// </summary>
+    ///// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа или поддокумента.
+    ///// Это поле должно присутствовать в таблице.</param>
+    ///// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
+    ///// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
+    ///// Имя поля может содержать точку, если само является ссылочным. 
+    ///// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
+    ///// <param name="headerText">Заголовок столбца</param>
+    ///// <returns>Описание столбца</returns>
+    //public EFPGridProducerColumn AddRefMoney(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
+    //  string headerText)
+    //{
+    //  return AddRefMoney(refColumnName, masterUI, valueColumnName, headerText, false);
+    //}
 
-    /// <summary>
-    /// Добавить столбец для отображения денежных сумм.
-    /// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
-    /// ссылочного поля с именем <paramref name="refColumnName"/>.
-    /// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
-    /// и имя поля <paramref name="valueColumnName"/>.
-    /// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
-    /// </summary>
-    /// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа или поддокумента.
-    /// Это поле должно присутствовать в таблице.</param>
-    /// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
-    /// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
-    /// Имя поля может содержать точку, если само является ссылочным. 
-    /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="showPlusSign">Если true, то для положительных числовых значений будет
-    /// отображаться знак "+". 
-    /// Может быть удобно для столбцов, содержащих разности</param>
-    /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddRefMoney(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
-      string headerText, bool showPlusSign)
-    {
-      EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, valueColumnName);
-      return AddUserMoney(dri.ResName, refColumnName, dri.RefValueColumn_ValueNeeded, headerText, showPlusSign);
-    }
+    ///// <summary>
+    ///// Добавить столбец для отображения денежных сумм.
+    ///// Для получения значения, сначала извлекается идентификатор документа или поддокумента из
+    ///// ссылочного поля с именем <paramref name="refColumnName"/>.
+    ///// Далее вызывается метод <see cref="DBxTableCache.GetValue(int, string)"/> для получения значения. Методу передается идентификатор
+    ///// и имя поля <paramref name="valueColumnName"/>.
+    ///// Добавляемый столбец будет иметь имя "<paramref name="refColumnName"/>.<paramref name="valueColumnName"/>".
+    ///// </summary>
+    ///// <param name="refColumnName">Имя числового столбца, содержащего идентификатор документа или поддокумента.
+    ///// Это поле должно присутствовать в таблице.</param>
+    ///// <param name="masterUI">Интерфейс документа или поддокумента, на который ссылается поле</param>
+    ///// <param name="valueColumnName">Имя поля в структуре документа/поддокумента, которое требуется выводить.
+    ///// Имя поля может содержать точку, если само является ссылочным. 
+    ///// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
+    ///// <param name="headerText">Заголовок столбца</param>
+    ///// <param name="showPlusSign">Если true, то для положительных числовых значений будет
+    ///// отображаться знак "+". 
+    ///// Может быть удобно для столбцов, содержащих разности</param>
+    ///// <returns>Описание столбца</returns>
+    //public EFPGridProducerColumn AddRefMoney(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
+    //  string headerText, bool showPlusSign)
+    //{
+    //  EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, valueColumnName);
+    //  return AddUserMoney(dri.ResName, refColumnName, dri.RefValueColumn_ValueNeeded, headerText, showPlusSign);
+    //}
 
     #endregion
 
@@ -926,8 +952,8 @@ namespace FreeLibSet.Forms.Docs
       // TODO:
       /*
       GridProducerUserColumn Col = (GridProducerUserColumn)Sender;
-      int Year = DataTools.GetInt(Args.Row, Col.FieldNames[0]);
-      int Month = DataTools.GetInt(Args.Row, Col.FieldNames[1]);
+      int Year = DataTools.GetInt32(Args.Row, Col.FieldNames[0]);
+      int Month = DataTools.GetInt32(Args.Row, Col.FieldNames[1]);
       if (Year != 0)
         Args.Value = DataConv.DateLongStr(Year, Month);
        * */
@@ -1130,11 +1156,11 @@ namespace FreeLibSet.Forms.Docs
     /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Описание столбца</returns>
-    public EFPGridProducerCheckBoxColumn AddRefBool(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
+    public EFPGridProducerCheckBoxColumn AddRefCheckBox(string refColumnName, DocTypeUIBase masterUI, string valueColumnName,
       string headerText)
     {
       EFPDBxGridProducer.DocRefInfo dri = new EFPDBxGridProducer.DocRefInfo(refColumnName, masterUI, valueColumnName);
-      return AddUserBool(dri.ResName, refColumnName, dri.RefValueColumn_ValueNeeded, headerText);
+      return AddUserCheckBox(dri.ResName, refColumnName, dri.RefValueColumn_ValueNeeded, headerText);
     }
 
     /// <summary>
@@ -1152,9 +1178,9 @@ namespace FreeLibSet.Forms.Docs
     /// Имя поля может содержать точку, если само является ссылочным. 
     /// Это поле не относится к таблице, для которой создается просмотр. Оно передается методу <see cref="DBxTableCache.GetValue(int, string)"/>.</param>
     /// <returns>Описание столбца</returns>
-    public EFPGridProducerCheckBoxColumn AddRefBool(string refColumnName, DocTypeUIBase masterUI, string valueColumnName)
+    public EFPGridProducerCheckBoxColumn AddRefCheckBox(string refColumnName, DocTypeUIBase masterUI, string valueColumnName)
     {
-      return AddRefBool(refColumnName, masterUI, valueColumnName, String.Empty);
+      return AddRefCheckBox(refColumnName, masterUI, valueColumnName, String.Empty);
     }
 
     #endregion
@@ -1242,8 +1268,8 @@ namespace FreeLibSet.Forms.Docs
 
     private void VTRefDocTextColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 tableId = args.GetInt(0);
-      Int32 docId = args.GetInt(1);
+      Int32 tableId = args.GetInt32(0);
+      Int32 docId = args.GetInt32(1);
       args.Value = _GridProducer.UI.TextHandlers.GetTextValue(tableId, docId);
     }
 
@@ -1340,7 +1366,7 @@ namespace FreeLibSet.Forms.Docs
         {
           if (_UseCache)
           {
-            Int32 refId = DataTools.GetInt(row, _ColumnName);
+            Int32 refId = DataTools.GetInt32(row, _ColumnName);
             args.Value = Cache[_TableName].GetRefValue(nodeControl.DataPropertyName, refId, row.Table.DataSet);
           }
           else
@@ -1354,14 +1380,14 @@ namespace FreeLibSet.Forms.Docs
     private void NodeControl_ValueNeeded_WithProducer(object sender, NodeControlValueEventArgs args)
     {
       //BindableControl NodeControl = (BindableControl)sender;
-      EFPDataViewRowInfo rowInfo = _ControlProvider.GetRowInfo(args.Node);
-      if (rowInfo.DataBoundItem != null)
+      EFPDataViewRowValues rowValues = _ControlProvider.GetRowValues(args.Node);
+      if (rowValues.DataBoundItem != null)
       {
         //if (Row.RowState == DataRowState.Deleted)
         //  args.Value = "Строка удалена";
         //else
         //{
-        args.Value = _ColumnProducer.GetValue(rowInfo);
+        args.Value = _ColumnProducer.GetValue(rowValues);
         //}
       }
       else

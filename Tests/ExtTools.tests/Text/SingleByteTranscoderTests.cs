@@ -77,10 +77,10 @@ namespace ExtTools_tests.Text
       sut.Transcode(src1, res1);
       CollectionAssert.AreEqual(wantedRes1, res1, "#1");
 
-      byte[] src2 = DataTools.MergeArrays<byte>(new byte[] { 1, 2, 3 }, src1, new byte[] { 4, 5 });
+      byte[] src2 = ArrayTools.MergeArrays<byte>(new byte[] { 1, 2, 3 }, src1, new byte[] { 4, 5 });
       byte[] res2 = new byte[2 + testStr.Length + 1];
-      DataTools.FillArray<byte>(res2, 6);
-      byte[] wantedRes2 = DataTools.MergeArrays<byte>(new byte[] { 6, 6 }, wantedRes1, new byte[] { 6 });
+      ArrayTools.FillArray<byte>(res2, 6);
+      byte[] wantedRes2 = ArrayTools.MergeArrays<byte>(new byte[] { 6, 6 }, wantedRes1, new byte[] { 6 });
       sut.Transcode(src2, 3, res2, 2, testStr.Length);
       CollectionAssert.AreEqual(wantedRes2, res2, "#2");
     }

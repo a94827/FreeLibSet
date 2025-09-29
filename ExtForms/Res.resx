@@ -207,13 +207,13 @@
   <data name="ParamSetComboBox_Err_UnknownName" xml:space="preserve">
     <value>There is no preset with given name. Select a preset from the drop-down list</value>
   </data>
-  <data name="BoolValueGridFilter_Err_NoText" xml:space="preserve">
+  <data name="BooleanValueGridFilter_Err_NoText" xml:space="preserve">
     <value>Properties FilterTextTrue and FilterTextFalse cannot be cleared at the same time</value>
   </data>
-  <data name="BoolValueGridFilter_Msg_FilterTextFalse" xml:space="preserve">
+  <data name="BooleanValueGridFilter_Msg_FilterTextFalse" xml:space="preserve">
     <value>Value is false</value>
   </data>
-  <data name="BoolValueGridFilter_Msg_FilterTextTrue" xml:space="preserve">
+  <data name="BooleanValueGridFilter_Msg_FilterTextTrue" xml:space="preserve">
     <value>Value is true</value>
   </data>
   <data name="ExtValueControl_Name_GroupCheckBox" xml:space="preserve">
@@ -3129,5 +3129,14 @@ Select paper orientation before.</value>
   </data>
   <data name="BRPageSetupFont_Err_LineHeightFontHeight" xml:space="preserve">
     <value>Line height cannot be less than font size</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopyFormatsSettings" xml:space="preserve">
+    <value>Copy format settings ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopyHyperlink" xml:space="preserve">
+    <value>Copy hyperlink</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedLinkColumn" xml:space="preserve">
+    <value>There is no selected link column in the view</value>
   </data>
 </root>

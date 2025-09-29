@@ -30,11 +30,11 @@ namespace WinFormsDemo.WizardDemo
         CfgPart cfg;
         using (EFPApp.ConfigManager.GetConfig(new EFPConfigSectionInfo("TestParams", EFPConfigCategories.UserParams), EFPConfigMode.Read, out cfg))
         {
-          efpTitle.Checked = cfg.GetBoolDef("UseTitle", true);
-          efpImageKey.Checked = cfg.GetBoolDef("UseImageKey", true);
-          efpSizeable.Checked = cfg.GetBoolDef("Sizeable", true);
-          efpConfigSectionName.Checked = cfg.GetBoolDef("UseConfigSectionName", true);
-          efpHelpContext.Checked = cfg.GetBoolDef("UseHelpContext", false);
+          efpTitle.Checked = cfg.GetBooleanDef("UseTitle", true);
+          efpImageKey.Checked = cfg.GetBooleanDef("UseImageKey", true);
+          efpSizeable.Checked = cfg.GetBooleanDef("Sizeable", true);
+          efpConfigSectionName.Checked = cfg.GetBooleanDef("UseConfigSectionName", true);
+          efpHelpContext.Checked = cfg.GetBooleanDef("UseHelpContext", false);
         }
       }
       catch { }
@@ -47,11 +47,11 @@ namespace WinFormsDemo.WizardDemo
         CfgPart cfg;
         using (EFPApp.ConfigManager.GetConfig(new EFPConfigSectionInfo("TestParams", EFPConfigCategories.UserParams), EFPConfigMode.Write, out cfg))
         {
-          cfg.SetBool("UseTitle", efpTitle.Checked);
-          cfg.SetBool("UseImageKey", efpImageKey.Checked);
-          cfg.SetBool("Sizeable", efpSizeable.Checked);
-          cfg.SetBool("UseConfigSectionName", efpConfigSectionName.Checked);
-          cfg.SetBool("UseHelpContext", efpHelpContext.Checked);
+          cfg.SetBoolean("UseTitle", efpTitle.Checked);
+          cfg.SetBoolean("UseImageKey", efpImageKey.Checked);
+          cfg.SetBoolean("Sizeable", efpSizeable.Checked);
+          cfg.SetBoolean("UseConfigSectionName", efpConfigSectionName.Checked);
+          cfg.SetBoolean("UseHelpContext", efpHelpContext.Checked);
         }
       }
     }

@@ -126,9 +126,9 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
-    public int GetInt(string columnName)
+    public int GetInt32(string columnName)
     {
-      return DataTools.GetInt(GetValue(columnName));
+      return DataTools.GetInt32(GetValue(columnName));
     }
 
     /// <summary>
@@ -136,9 +136,73 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
-    public int GetInt(int columnIndex)
+    public int GetInt32(int columnIndex)
     {
-      return DataTools.GetInt(GetValue(columnIndex));
+      return DataTools.GetInt32(GetValue(columnIndex));
+    }
+
+    /// <summary>
+    /// Получить значение поля по имени.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public int? GetNullableInt32(string columnName)
+    {
+      return DataTools.GetNullableInt32(GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить значение по индексу поля
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
+    /// <returns>Значение поля</returns>
+    public int? GetNullableInt32(int columnIndex)
+    {
+      return DataTools.GetNullableInt32(GetValue(columnIndex));
+    }
+
+
+    /// <summary>
+    /// Получить значение поля по имени.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public long GetInt64(string columnName)
+    {
+      return DataTools.GetInt64(GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить значение по индексу поля
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
+    /// <returns>Значение поля</returns>
+    public long GetInt64(int columnIndex)
+    {
+      return DataTools.GetInt64(GetValue(columnIndex));
+    }
+
+    /// <summary>
+    /// Получить значение поля по имени.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public long? GetNullableInt64(string columnName)
+    {
+      return DataTools.GetNullableInt64(GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить значение по индексу поля
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
+    /// <returns>Значение поля</returns>
+    public long? GetNullableInt64(int columnIndex)
+    {
+      return DataTools.GetNullableInt64(GetValue(columnIndex));
     }
 
 
@@ -163,6 +227,27 @@ namespace FreeLibSet.Data.Docs
       return DataTools.GetSingle(GetValue(columnIndex));
     }
 
+    /// <summary>
+    /// Получить значение поля по имени.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public float? GetNullableSingle(string columnName)
+    {
+      return DataTools.GetNullableSingle(GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить значение по индексу поля
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
+    /// <returns>Значение поля</returns>
+    public float? GetNullableSingle(int columnIndex)
+    {
+      return DataTools.GetNullableSingle(GetValue(columnIndex));
+    }
+
 
     /// <summary>
     /// Получить значение поля по имени.
@@ -183,6 +268,27 @@ namespace FreeLibSet.Data.Docs
     public double GetDouble(int columnIndex)
     {
       return DataTools.GetDouble(GetValue(columnIndex));
+    }
+
+    /// <summary>
+    /// Получить значение поля по имени.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public double? GetNullableDouble(string columnName)
+    {
+      return DataTools.GetNullableDouble(GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить значение по индексу поля
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
+    /// <returns>Значение поля</returns>
+    public double? GetNullableDouble(int columnIndex)
+    {
+      return DataTools.GetNullableDouble(GetValue(columnIndex));
     }
 
 
@@ -207,16 +313,15 @@ namespace FreeLibSet.Data.Docs
       return DataTools.GetDecimal(GetValue(columnIndex));
     }
 
-
     /// <summary>
     /// Получить значение поля по имени.
     /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
     /// </summary>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
-    public bool GetBool(string columnName)
+    public decimal? GetNullableDecimal(string columnName)
     {
-      return DataTools.GetBool(GetValue(columnName));
+      return DataTools.GetNullableDecimal(GetValue(columnName));
     }
 
     /// <summary>
@@ -224,9 +329,31 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
     /// <returns>Значение поля</returns>
-    public bool GetBool(int columnIndex)
+    public decimal? GetNullableDecimal(int columnIndex)
     {
-      return DataTools.GetBool(GetValue(columnIndex));
+      return DataTools.GetNullableDecimal(GetValue(columnIndex));
+    }
+
+
+    /// <summary>
+    /// Получить значение поля по имени.
+    /// Если в списке <see cref="ColumnNames"/> нет поля <paramref name="columnName"/>, генерируется исключение.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public bool GetBoolean(string columnName)
+    {
+      return DataTools.GetBoolean(GetValue(columnName));
+    }
+
+    /// <summary>
+    /// Получить значение по индексу поля
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля от 0 до (<see cref="ColumnNames"/>.Count-1)</param>
+    /// <returns>Значение поля</returns>
+    public bool GetBoolean(int columnIndex)
+    {
+      return DataTools.GetBoolean(GetValue(columnIndex));
     }
 
 
@@ -732,7 +859,7 @@ namespace FreeLibSet.Data.Docs
         {
           if (handler.SubDocType == null)
           {
-            if (_Args.GetBool("Deleted"))
+            if (_Args.GetBoolean("Deleted"))
             {
               _Args.Text.Append(" ");
               _Args.Text.Append(Res.DBxDocTextHandlers_Msg_Deleted);
@@ -740,7 +867,7 @@ namespace FreeLibSet.Data.Docs
           }
           else
           {
-            if (_Args.GetBool("Deleted"))
+            if (_Args.GetBoolean("Deleted"))
             {
               _Args.Text.Append(" ");
               _Args.Text.Append(Res.DBxDocTextHandlers_Msg_Deleted);
@@ -760,11 +887,11 @@ namespace FreeLibSet.Data.Docs
 
     private bool GetDocIdDeleted(TableHandler handler)
     {
-      Int32 docId = _Args.GetInt("DocId");
+      Int32 docId = _Args.GetInt32("DocId");
       if (docId <= 0)
         return false;
 
-      return _DBCache[handler.DocType.Name].GetBool(docId, "Deleted");
+      return _DBCache[handler.DocType.Name].GetBoolean(docId, "Deleted");
     }
 
 
@@ -819,7 +946,7 @@ namespace FreeLibSet.Data.Docs
       else
       {
         string refColumnName = columnName.Substring(0, p);
-        Int32 refId = DataTools.GetInt(InternalGetValue(row, tableName, refColumnName, primaryDS));
+        Int32 refId = DataTools.GetInt32(InternalGetValue(row, tableName, refColumnName, primaryDS));
         if (refId == 0)
           return null; // пустая ссылка
 
@@ -890,7 +1017,7 @@ namespace FreeLibSet.Data.Docs
     {
       try
       {
-        Int32 refId = DataTools.GetInt(row, refColumnName);
+        Int32 refId = DataTools.GetInt32(row, refColumnName);
         if (refId == 0)
           return String.Empty;
         else

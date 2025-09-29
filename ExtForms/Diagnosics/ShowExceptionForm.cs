@@ -355,7 +355,7 @@ namespace FreeLibSet.Forms.Diagnostics
               frm1.grStack.Rows.Add(Res.ShowExceptionForm_Msg_NoStackTrace);
             else
             {
-              string[] a = e.StackTrace.Split(DataTools.NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
+              string[] a = e.StackTrace.Split(StringTools.NewLineSeparators, StringSplitOptions.RemoveEmptyEntries);
               for (int i = 0; i < a.Length; i++)
                 frm1.grStack.Rows.Add(a[i]);
             }

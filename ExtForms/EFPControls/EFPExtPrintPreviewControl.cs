@@ -169,12 +169,12 @@ namespace FreeLibSet.Forms
       base.WriteConfigPart(category, cfg, actionInfo);
       if (category == EFPConfigCategories.PageSetup)
       {
-        cfg.SetInt("PreviewPageRows", Control.Rows);
-        cfg.SetInt("PreviewPageColumns", Control.Columns);
+        cfg.SetInt32("PreviewPageRows", Control.Rows);
+        cfg.SetInt32("PreviewPageColumns", Control.Columns);
         if (Control.AutoZoom)
-          cfg.SetInt("PreviewZoom", 0);
+          cfg.SetInt32("PreviewZoom", 0);
         else
-          cfg.SetInt("PreviewZoom", (int)(Control.Zoom * 100));
+          cfg.SetInt32("PreviewZoom", (int)(Control.Zoom * 100));
       }
     }
 
@@ -190,9 +190,9 @@ namespace FreeLibSet.Forms
 
       try
       {
-        Control.Rows = cfg.GetIntDef("PreviewPageRows", 1);
-        Control.Columns = cfg.GetIntDef("PreviewPageColumns", 1);
-        int zoom = cfg.GetIntDef("PreviewZoom", 100);
+        Control.Rows = cfg.GetInt32Def("PreviewPageRows", 1);
+        Control.Columns = cfg.GetInt32Def("PreviewPageColumns", 1);
+        int zoom = cfg.GetInt32Def("PreviewZoom", 100);
         if (zoom == 0)
           Control.AutoZoom = true;
         else
@@ -549,7 +549,7 @@ namespace FreeLibSet.Forms
     {
       EFPCommandItem ci = (EFPCommandItem)sender;
       int prc = (int)(Math.Round(ControlProvider.Control.Zoom * 100));
-      IntInputDialog dlg = new IntInputDialog();
+      Int32InputDialog dlg = new Int32InputDialog();
       dlg.Title = ci.MenuTextWithoutMnemonic;
       dlg.Value = prc;
       dlg.Prompt = Res.ExtPrintPreviewControl_Msg_PercentPrompt;
@@ -701,7 +701,7 @@ namespace FreeLibSet.Forms
         return;
       }
       int p = ControlProvider.Control.StartPage + 1;
-      IntInputDialog dlg = new IntInputDialog();
+      Int32InputDialog dlg = new Int32InputDialog();
       dlg.Title = ci.MenuTextWithoutMnemonic;
       dlg.Prompt = Res.ExtPrintPreviewControl_Msg_PagePrompt;
       dlg.Minimum = 1;

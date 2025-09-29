@@ -86,7 +86,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (_ClickableColumnNames == null)
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
         else
           return _ClickableColumnNames;
       }
@@ -736,7 +736,7 @@ namespace FreeLibSet.Forms.Data
           buf2.FormatExpression(Order.Parts[i].Expression, new DBxFormatExpressionInfo());
           string expr = buf2.SB.ToString();
           // Имя столбца
-          string exprColName = "$$Sort_" + DataTools.MD5SumFromString(expr);
+          string exprColName = "$$Sort_" + MD5Tools.MD5SumFromString(expr);
 
           // 16.10.2019
           // Тип данных для столбца проверяем по другому

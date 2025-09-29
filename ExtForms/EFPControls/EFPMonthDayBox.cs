@@ -353,7 +353,7 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if (DataTools.ReplaceDigits(Control.Text, '0').IndexOf('0') >= 0)
+          if (StringTools.ReplaceDigits(Control.Text, '0').IndexOf('0') >= 0)
             _ParseError = true;
           Value = MonthDay.Empty;
         }

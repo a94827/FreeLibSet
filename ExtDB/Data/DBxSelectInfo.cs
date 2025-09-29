@@ -231,7 +231,7 @@ namespace FreeLibSet.Data
     /// Создает несколько выражений <see cref="DBxColumn"/> и добавляет их в список.
     /// </summary>
     /// <param name="columnNames">Список имен полей. Если null, то никаких действий не выполняется</param>
-    public void Add(DBxColumns columnNames)
+    public void AddRange(DBxColumns columnNames)
     {
       if (columnNames == null)
         return;

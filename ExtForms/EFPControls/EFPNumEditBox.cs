@@ -687,7 +687,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер. Должен быть задан</param>
     /// <param name="control">Управляющий элемент</param>
-    public EFPIntEditBox(EFPBaseProvider baseProvider, IntEditBox control)
+    public EFPIntEditBox(EFPBaseProvider baseProvider, Int32EditBox control)
       : base(baseProvider, control)
     {
     }

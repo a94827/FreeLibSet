@@ -675,7 +675,7 @@ namespace ExtTools_tests.IO
     private static void DoTestEndsWith(string ssut, string sRelParts, bool wantedRes)
     {
       AbsPath sut = new AbsPath(ssut);
-      string[] relParts = DataTools.EmptyStrings;
+      string[] relParts = EmptyArray<string>.Empty;
       if (sRelParts.Length > 0)
         relParts = sRelParts.Split('|');
 
@@ -700,7 +700,7 @@ namespace ExtTools_tests.IO
       AbsPath basePath = new AbsPath(Environment.CurrentDirectory);
       AbsPath sut = new AbsPath(basePath, "AAA", "BBB");
 
-      string[] relParts = DataTools.EmptyStrings;
+      string[] relParts = EmptyArray<string>.Empty;
       if (sRelParts.Length > 0)
         relParts = sRelParts.Split('|');
 
@@ -753,13 +753,13 @@ namespace ExtTools_tests.IO
     public void Split_emptyPath()
     {
       string[] res = AbsPath.Empty.Split();
-      CollectionAssert.AreEqual(DataTools.EmptyStrings, res);
+      CollectionAssert.AreEqual(EmptyArray<string>.Empty, res);
     }
 
     [Test]
     public void Join_emptyStrings()
     {
-      AbsPath res = AbsPath.Join(DataTools.EmptyStrings);
+      AbsPath res = AbsPath.Join(EmptyArray<string>.Empty);
       Assert.IsTrue(res.IsEmpty);
     }
 

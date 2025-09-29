@@ -23,7 +23,7 @@ namespace FreeLibSet.Forms.Data
   /// <summary>
   /// Переходник для числового поля
   /// </summary>
-  public class ExtValueIntEditBox : ExtValueControlBase2<int?>
+  public class ExtValueInt32EditBox : ExtValueControlBase2<int?>
   {
     #region Конструктор
 
@@ -34,7 +34,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueIntEditBox(DBxExtValue extValue, EFPIntEditBox controlProvider, bool canMultiEdit)
+    public ExtValueInt32EditBox(DBxExtValue extValue, EFPIntEditBox controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, true, canMultiEdit)
     {
       SetCurrentValueEx(controlProvider.NValueEx);
@@ -62,7 +62,7 @@ namespace FreeLibSet.Forms.Data
       if (this.ControlProvider.CanBeEmpty && ExtValue.IsNull)
         CurrentValueEx.Value = null;
       else
-        CurrentValueEx.Value = ExtValue.AsInteger;
+        CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ namespace FreeLibSet.Forms.Data
       if (this.ControlProvider.CanBeEmpty && (!CurrentValueEx.Value.HasValue))
         ExtValue.SetNull();
       else
-        ExtValue.SetInteger(CurrentValueEx.Value ?? 0);
+        ExtValue.SetInt32(CurrentValueEx.Value ?? 0);
     }
 
     #endregion
@@ -113,7 +113,7 @@ namespace FreeLibSet.Forms.Data
 
     protected override int GetControlValue2()
     {
-      return ControlProvider2.IntValue;
+      return ControlProvider2.Int32Value;
     }
 
     protected override void ValueToControl()
@@ -121,7 +121,7 @@ namespace FreeLibSet.Forms.Data
       int v = DocValue.AsInteger;
       CurrentValue.Value = v;
       if (v != 0)
-        ControlProvider2.IntValue = v;
+        ControlProvider2.Int32Value = v;
     }
 
     protected override void ValueFromControl()

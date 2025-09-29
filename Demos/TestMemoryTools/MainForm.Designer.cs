@@ -39,10 +39,10 @@
       this.btnInfo = new System.Windows.Forms.Button();
       this.btnFree = new System.Windows.Forms.Button();
       this.label6 = new System.Windows.Forms.Label();
-      this.edSize = new FreeLibSet.Controls.IntEditBox();
+      this.edSize = new FreeLibSet.Controls.Int32EditBox();
       this.label5 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
-      this.edCount = new FreeLibSet.Controls.IntEditBox();
+      this.edCount = new FreeLibSet.Controls.Int32EditBox();
       this.btnAlloc = new System.Windows.Forms.Button();
       this.lb1 = new System.Windows.Forms.ListBox();
       this.lblTotalSize = new System.Windows.Forms.Label();
@@ -307,10 +307,10 @@
     private System.Windows.Forms.ListBox lb1;
     private System.Windows.Forms.Button btnFree;
     private System.Windows.Forms.Label label6;
-    private FreeLibSet.Controls.IntEditBox edSize;
+    private FreeLibSet.Controls.Int32EditBox edSize;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Label label4;
-    private FreeLibSet.Controls.IntEditBox edCount;
+    private FreeLibSet.Controls.Int32EditBox edCount;
     private System.Windows.Forms.Button btnInfo;
     private System.Windows.Forms.Label lblTotalPhysicalMemory;
     private System.Windows.Forms.Label label7;

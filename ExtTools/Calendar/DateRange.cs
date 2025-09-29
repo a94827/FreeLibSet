@@ -69,8 +69,8 @@ namespace FreeLibSet.Calendar
     /// <param name="year">Год</param>
     public DateRange(int year)
     {
-      _FirstDate = DataTools.BottomOfYear(year);
-      _LastDate = DataTools.EndOfYear(year);
+      _FirstDate = TimeTools.BottomOfYear(year);
+      _LastDate = TimeTools.EndOfYear(year);
       _Tag = null;
     }
 
@@ -81,8 +81,8 @@ namespace FreeLibSet.Calendar
     /// <param name="month">Месяц</param>
     public DateRange(int year, int month)
     {
-      _FirstDate = DataTools.BottomOfMonth(year, month);
-      _LastDate = DataTools.EndOfMonth(year, month);
+      _FirstDate = TimeTools.BottomOfMonth(year, month);
+      _LastDate = TimeTools.EndOfMonth(year, month);
       _Tag = null;
     }
 
@@ -201,8 +201,8 @@ namespace FreeLibSet.Calendar
 
           // Число месяцев, в предположении полных месяцев
           int m = (LastDate.Year - FirstDate.Year) * 12 + (LastDate.Month - FirstDate.Month) + 1;
-          bool wholeFirstMonth = DataTools.IsBottomOfMonth(FirstDate);
-          bool wholeLastMonth = DataTools.IsEndOfMonth(LastDate);
+          bool wholeFirstMonth = TimeTools.IsBottomOfMonth(FirstDate);
+          bool wholeLastMonth = TimeTools.IsEndOfMonth(LastDate);
           if (!wholeFirstMonth)
           {
             m--;
@@ -241,7 +241,7 @@ namespace FreeLibSet.Calendar
     {
       get
       {
-        return DataTools.IsBottomOfMonth(FirstDate) && DataTools.IsEndOfMonth(LastDate);
+        return TimeTools.IsBottomOfMonth(FirstDate) && TimeTools.IsEndOfMonth(LastDate);
       }
     }
 
@@ -253,7 +253,7 @@ namespace FreeLibSet.Calendar
     {
       get
       {
-        return DataTools.IsBottomOfYear(FirstDate) && DataTools.IsEndOfYear(LastDate);
+        return TimeTools.IsBottomOfYear(FirstDate) && TimeTools.IsEndOfYear(LastDate);
       }
     }
 
@@ -551,15 +551,15 @@ namespace FreeLibSet.Calendar
       if (AreWholeMonths)
       {
         DateTime dt1 = FirstDate.AddMonths(months);
-        DateTime dt2 = DataTools.EndOfMonth(dt1.AddMonths(this.Months /* число месяцев в интервале */ - 1));
+        DateTime dt2 = TimeTools.EndOfMonth(dt1.AddMonths(this.Months /* число месяцев в интервале */ - 1));
         return new DateRange(dt1, dt2, Tag);
       }
       else
       {
-        DateTime dt1 = DataTools.BottomOfMonth(FirstDate).AddMonths(months);
-        DateTime dt2 = DataTools.BottomOfMonth(LastDate).AddMonths(months);
-        dt1 = DataTools.CreateDateTime(dt1, FirstDate.Day);
-        dt2 = DataTools.CreateDateTime(dt2, LastDate.Day);
+        DateTime dt1 = TimeTools.BottomOfMonth(FirstDate).AddMonths(months);
+        DateTime dt2 = TimeTools.BottomOfMonth(LastDate).AddMonths(months);
+        dt1 = TimeTools.SetDateDay(dt1, FirstDate.Day);
+        dt2 = TimeTools.SetDateDay(dt2, LastDate.Day);
         return new DateRange(dt1, dt2, Tag);
       }
     }
@@ -720,8 +720,8 @@ namespace FreeLibSet.Calendar
       DateRangeList lst = new DateRangeList();
       for (int y = FirstDate.Year; y <= LastDate.Year; y++) // исправлено 16.08.2021
       {
-        DateTime dt1 = DataTools.BottomOfYear(y);
-        DateTime dt2 = DataTools.EndOfYear(y);
+        DateTime dt1 = TimeTools.BottomOfYear(y);
+        DateTime dt2 = TimeTools.EndOfYear(y);
         if (dt1 < FirstDate)
           dt1 = FirstDate;
         if (dt2 > LastDate)
@@ -741,10 +741,10 @@ namespace FreeLibSet.Calendar
       DateRangeList lst = new DateRangeList();
       //int x1 = FirstDate.Year * 12 + FirstDate.Month - 1;
       //int x2 = LastDate.Year * 12 + LastDate.Month - 1;
-      for (DateTime dt = DataTools.BottomOfMonth(FirstDate); dt <= LastDate; dt = dt.AddMonths(1))
+      for (DateTime dt = TimeTools.BottomOfMonth(FirstDate); dt <= LastDate; dt = dt.AddMonths(1))
       {
         DateTime dt1 = dt;
-        DateTime dt2 = DataTools.EndOfMonth(dt);
+        DateTime dt2 = TimeTools.EndOfMonth(dt);
         if (dt1 < FirstDate)
           dt1 = FirstDate;
         if (dt2 > LastDate)
@@ -1278,7 +1278,7 @@ namespace FreeLibSet.Calendar
     /// Добавляет к текущему списку все диапазоны из другого списка
     /// </summary>
     /// <param name="rangeList">Добавляемый список</param>
-    public void Add(DateRangeList rangeList)
+    public void AddRange(DateRangeList rangeList)
     {
       CheckNotReadOnly();
 
@@ -1290,7 +1290,7 @@ namespace FreeLibSet.Calendar
     /// Вычитает из текущего списка все диапазоны из другого списка
     /// </summary>
     /// <param name="rangeList">Вычитаемый список</param>
-    public void Remove(DateRangeList rangeList)
+    public void RemoveRange(DateRangeList rangeList)
     {
       CheckNotReadOnly();
 
@@ -1357,7 +1357,7 @@ namespace FreeLibSet.Calendar
       int firstYear = FirstDate.Value.Year;
       int lastYear = LastDate.Value.Year;
       for (int y = firstYear; y < lastYear; y++)
-        Split(DataTools.EndOfYear(y)); // 23.07.2021
+        Split(TimeTools.EndOfYear(y)); // 23.07.2021
     }
 
     /// <summary>
@@ -1370,8 +1370,8 @@ namespace FreeLibSet.Calendar
       if (Count == 0)
         return;
 
-      DateTime dt1 = DataTools.BottomOfMonth(FirstDate.Value);
-      DateTime dt2 = DataTools.BottomOfMonth(LastDate.Value);
+      DateTime dt1 = TimeTools.BottomOfMonth(FirstDate.Value);
+      DateTime dt2 = TimeTools.BottomOfMonth(LastDate.Value);
 
       for (DateTime dt = dt1.AddMonths(1); dt <= dt2; dt = dt.AddMonths(1))
         Split(dt.AddDays(-1)); // 23.07.2021

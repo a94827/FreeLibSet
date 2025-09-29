@@ -93,10 +93,10 @@ namespace FreeLibSet.Data.Docs
 
       while (true)
       {
-        IdList missingIds = new IdList();
+        IdCollection<Int32> missingIds = new IdCollection<Int32>();
         foreach (DataRow row in table.Rows)
         {
-          Int32 parentId = DataTools.GetInt(row[pParentId]);
+          Int32 parentId = DataTools.GetInt32(row[pParentId]);
           if (parentId == 0)
             continue;
           if (table.Rows.Find(parentId) == null)
@@ -109,7 +109,7 @@ namespace FreeLibSet.Data.Docs
         // Требуется догрузить недостающие строки
         DataTable table2 = docProvider.FillSelect(docType.Name,
           columns,
-          new IdsFilter(missingIds), docType.DefaultOrder);
+          new ValueInListFilter("Id", missingIds), docType.DefaultOrder);
 
         if (table2.Rows.Count != missingIds.Count)
           throw new BugException("When loading rows of table \"" + docType.Name + "\" for Id=" + missingIds.ToString() + " has been taken rows: " + table2.Rows.Count.ToString());

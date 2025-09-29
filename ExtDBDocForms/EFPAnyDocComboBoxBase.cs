@@ -613,7 +613,7 @@ namespace FreeLibSet.Forms.Docs
 
       // Наш тип документа - первый в списке
       string docTypeName = docSel.TableNames[0];
-      Int32 docId = docSel[docTypeName][0];
+      Int32 docId = docSel[docTypeName].SingleId;
 
       DocTypeUI dtui = ControlProvider.UI.DocTypes[docTypeName];
       dtui.ShowDocInfo(docId);

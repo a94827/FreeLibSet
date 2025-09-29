@@ -66,7 +66,7 @@ namespace ExtDBDocs_tests.Data_Docs
       DBxDocSet docSet = new DBxDocSet(provider);
       DBxSingleDoc doc = docSet["D1"].Insert();
       doc.Values["F101"].SetBoolean(false);
-      doc.Values["F102"].SetInteger(1);
+      doc.Values["F102"].SetInt32(1);
       DBxSubDoc sd = doc.SubDocs["SD11"].Insert();
       sd.Values["F111"].SetString("ABC");
       sd.Values["F112"].SetString("XYZ");

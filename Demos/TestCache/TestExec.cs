@@ -233,7 +233,7 @@ namespace TestCache
       _Data = new byte[size];
       rnd.NextBytes(_Data);
 
-      _MD5 = DataTools.MD5Sum(_Data);
+      _MD5 = MD5Tools.MD5Sum(_Data);
     }
 
     #endregion
@@ -246,8 +246,8 @@ namespace TestCache
 
     public void TestValid(Dictionary<string, Guid> objGuids)
     {
-      string NewMD5 = DataTools.MD5Sum(_Data);
-      if (NewMD5 != _MD5)
+      string newMD5 = MD5Tools.MD5Sum(_Data);
+      if (newMD5 != _MD5)
         throw new Exception("Объект поврежден. Неправильная контрольная сумма");
 
       if (objGuids != null)

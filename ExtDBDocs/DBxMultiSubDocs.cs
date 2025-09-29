@@ -105,31 +105,29 @@ namespace FreeLibSet.Data.Docs
     /// <param name="mainObj">Основной набор поддокументов, присоединенный к DBxDocSet</param>
     /// <param name="subDocIds">Идентификаторы поддокументов, которые должны попасть в подмножество. 
     /// Могут быть фиктивные идентификаторы для несохраненных поддокументов</param>
-    public DBxMultiSubDocs(DBxMultiSubDocs mainObj, Int32[] subDocIds)
-      : this(mainObj, GetSrcSubDocRows(mainObj, subDocIds))
+    public DBxMultiSubDocs(DBxMultiSubDocs mainObj, IEnumerable<Int32> subDocIds)
+      : this(mainObj, GetSrcSubDocRows(mainObj, IdTools.AsIdSet<Int32>(subDocIds)))
     {
     }
 
-    private static DataRow[] GetSrcSubDocRows(DBxMultiSubDocs mainObj, Int32[] subDocIds)
+    private static DataRow[] GetSrcSubDocRows(DBxMultiSubDocs mainObj, IIdSet<Int32> subDocIds)
     {
       if (mainObj == null)
         throw new ArgumentNullException("mainObj");
       if (mainObj._MainObj != null)
         mainObj = mainObj._MainObj;
-      if (subDocIds == null)
-        throw new ArgumentNullException("subDocIds");
+      //if (subDocIds == null)
+      //  throw new ArgumentNullException("subDocIds");
 
       mainObj.GetTableReady();
-      DataRow[] srcSubDocRows = new DataRow[subDocIds.Length];
-      for (int i = 0; i < subDocIds.Length; i++)
+      DataRow[] srcSubDocRows = new DataRow[subDocIds.Count];
+      int cnt = 0;
+      foreach (Int32 subDocId in subDocIds)
       {
-        if (subDocIds[i] == 0)
-          throw ExceptionFactory.ArgInvalidEnumerableItem("subDocIds", subDocIds, 0);
-        // Фиктивные идентификаторы могут быть
-
-        srcSubDocRows[i] = mainObj._Table.Rows.Find(subDocIds[i]);
-        if (srcSubDocRows[i] == null)
-          throw new ArgumentException(String.Format(Res.DBxMultiSubDoc_Err_RowNotFound, subDocIds[i]), "subDocIds");
+        srcSubDocRows[cnt] = mainObj._Table.Rows.Find(subDocId);
+        if (srcSubDocRows[cnt] == null)
+          throw new ArgumentException(String.Format(Res.DBxMultiSubDoc_Err_RowNotFound, subDocId), "subDocIds");
+        cnt++;
       }
 
       return srcSubDocRows;
@@ -323,13 +321,13 @@ namespace FreeLibSet.Data.Docs
 
       #region Создание списка документов, для которых нужны поддокументы
 
-      List<Int32> docIds = new List<Int32>();
+      IdList<Int32> docIds = new IdList<Int32>();
       for (int docIndex = 0; docIndex < Owner.DocCount; docIndex++)
       {
         DataRow row = Owner.GetDocRow(docIndex);
         if (_DocRowDict.ContainsKey(row))
           continue;
-        Int32 docId = DataTools.GetInt(DBxDocSet.GetValue(row, "Id"));
+        Int32 docId = DataTools.GetInt32(DBxDocSet.GetValue(row, "Id"));
         if (DocSet.DocProvider.IsRealDocId(docId))
           docIds.Add(docId);
       }
@@ -377,7 +375,7 @@ namespace FreeLibSet.Data.Docs
 
     private bool _TableIsReady;
 
-    private void DoInitTable(List<Int32> docIds)
+    private void DoInitTable(IdList<Int32> docIds)
     {
       if (_Table == null)
       {
@@ -401,7 +399,7 @@ namespace FreeLibSet.Data.Docs
         if (DocSet.VersionView)
           table2 = DoInitVersionTable(docIds);
         else
-          table2 = DocSet.DocProvider.LoadSubDocData(Owner.DocType.Name, SubDocType.Name, docIds.ToArray());
+          table2 = DocSet.DocProvider.LoadSubDocData(Owner.DocType.Name, SubDocType.Name, docIds);
 
         bool tableIsEmpty;
         if (_Table == null)
@@ -461,7 +459,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="docIds"></param>
     /// <returns></returns>
-    private DataTable DoInitVersionTable(List<Int32> docIds)
+    private DataTable DoInitVersionTable(IdList<Int32> docIds)
     {
       DataTable resTable = null;
       for (int i = 0; i < docIds.Count; i++)
@@ -733,14 +731,14 @@ namespace FreeLibSet.Data.Docs
       DataRow[] res;
       if (!_DocRowDict.TryGetValue(docRow, out res))
       {
-        Int32 DocId = DataTools.GetInt(docRow, "Id");
+        Int32 DocId = DataTools.GetInt32(docRow, "Id");
         throw new BugException("Subdocument table for document with DocId=" + DocId.ToString() + " has not been loaded");
       }
 
       if (res == null)
       {
         // Загружаем список поддокументов для документа
-        Int32 docId = DataTools.GetInt(docRow, "Id");
+        Int32 docId = DataTools.GetInt32(docRow, "Id");
         DataView dv = new DataView(_Table); // DefaultView использовать нельзя использовать, т.к. оно используется в просмотре таблицы поддокументов
         try
         {
@@ -930,7 +928,7 @@ namespace FreeLibSet.Data.Docs
       GetTableReady();
       for (int i = 0; i < Table.Rows.Count; i++)
       {
-        Int32 ThisId = DataTools.GetInt(DBxDocSet.GetValue(Table.Rows[i], "Id"));
+        Int32 ThisId = DataTools.GetInt32(DBxDocSet.GetValue(Table.Rows[i], "Id"));
         if (ThisId == subDocId)
           return i;
       }
@@ -1533,34 +1531,34 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="docIds">Идентификаторы документов. Могут быть фиктивные идентификаторы для новых документов, но не может быть нулевого значения</param>
     /// <returns>Новые поддокументы в состоянии <see cref="DBxDocState.Insert"/></returns>
-    public DBxSubDoc[] InsertForDocIds(Int32[] docIds)
+    public DBxSubDoc[] InsertForDocIds(IEnumerable<Int32> docIds)
     {
-#if DEBUG
-      if (docIds == null)
-        throw new ArgumentNullException("docIds");
-#endif
+      IIdSet<Int32> docIds2 = IdTools.AsIdSet<Int32>(docIds);
+
       GetTableReady();
       CheckCanModify();
 
       // На первом проходе проверяем права доступа, а на втором - добавляем строки в таблицу
-      DBxSingleDoc[] docs = new DBxSingleDoc[docIds.Length];
-      for (int i = 0; i < docIds.Length; i++)
+      DBxSingleDoc[] docs = new DBxSingleDoc[docIds2.Count];
+      int cnt = 0;
+      foreach (Int32 docId in docIds2)
       {
-        docs[i] = Owner.GetDocById(docIds[i]);
+        docs[cnt] = Owner.GetDocById(docId);
 
-        switch (docs[i].DocState)
+        switch (docs[cnt].DocState)
         {
           case DBxDocState.Insert:
           case DBxDocState.Edit:
             break;
           default:
             throw new InvalidOperationException(String.Format(Res.DBxMultiSubDocs_Err_InsertDocState,
-              docs[i].DocType.SingularTitle, docs[i].DocId, docs[i].DocState));
+              docs[cnt].DocType.SingularTitle, docs[cnt].DocId, docs[cnt].DocState));
         }
+        cnt++;
       }
 
-      DBxSubDoc[] subDocs = new DBxSubDoc[docIds.Length];
-      for (int i = 0; i < docIds.Length; i++)
+      DBxSubDoc[] subDocs = new DBxSubDoc[docs.Length];
+      for (int i = 0; i < docs.Length; i++)
       {
         DataRow row = _Table.NewRow();
         row["Id"] = NextFictiveId();
@@ -1640,11 +1638,11 @@ namespace FreeLibSet.Data.Docs
 
 
       // При удалении нужно сбрасывать списки поддокументов, т.к. строки в состоянии Added удаляются из списка
-      Int32[] docIds = DataTools.GetIdsFromColumn(_Table, "DocId");
-      for (int i = 0; i < docIds.Length; i++)
+      IIdSet<Int32> docIds = IdTools.GetIdsFromColumn<Int32>(_Table, "DocId", false);
+      foreach (Int32 docId in docIds)
       {
-        ResetRowsForDocId(docIds[i]);
-        DBxSingleDoc doc = Owner.GetDocById(docIds[i]);
+        ResetRowsForDocId(docId);
+        DBxSingleDoc doc = Owner.GetDocById(docId);
         doc.CheckCanDeleteSubDocs(); // 03.02.2022
       }
 
@@ -1660,13 +1658,15 @@ namespace FreeLibSet.Data.Docs
     /// Удаляет все поддокументы с задаными идентификаторами
     /// </summary>
     /// <param name="subDocIds">Идентификаторы поддокументов</param>
-    public void Delete(Int32[] subDocIds)
+    public void Delete(IEnumerable<Int32> subDocIds)
     {
-      IdList docIds = new IdList();
+      IIdSet<Int32> subDocIds2 = IdTools.AsIdSet<Int32>(subDocIds);
 
-      for (int i = 0; i < subDocIds.Length; i++)
+      IdCollection<Int32> docIds = new IdCollection<Int32>();
+
+      foreach (Int32 subDocId in subDocIds2)
       {
-        DBxSubDoc subDoc = GetSubDocById(subDocIds[i]);
+        DBxSubDoc subDoc = GetSubDocById(subDocId);
         docIds.Add(subDoc.DocId);
         subDoc.Doc.CheckCanDeleteSubDocs(); // 03.02.2022
         subDoc.Delete();
@@ -1695,7 +1695,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Подмножество поддокументов</returns>
     public DBxMultiSubDocs CreateSubSet(Int32 subDocId)
     {
-      return CreateSubSet(new Int32[] { subDocId });
+      return CreateSubSet(IdArray<Int32>.FromId(subDocId));
     }
 
     /// <summary>
@@ -1707,7 +1707,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="subDocIds">Идентификаторы поддокументов, которые должны попасть в подмножество. 
     /// Могут быть фиктивные идентификаторы для несохраненных поддокументов</param>
     /// <returns>Подмножество поддокументов</returns>
-    public DBxMultiSubDocs CreateSubSet(Int32[] subDocIds)
+    public DBxMultiSubDocs CreateSubSet(IEnumerable<Int32> subDocIds)
     {
       return new DBxMultiSubDocs(this, subDocIds);
     }
@@ -1759,10 +1759,10 @@ namespace FreeLibSet.Data.Docs
         if (srcRow.RowState == DataRowState.Unchanged)
           continue;
 
-        Int32 docId = DataTools.GetInt(DBxDocSet.GetValue(srcRow, "DocId"));
+        Int32 docId = DataTools.GetInt32(DBxDocSet.GetValue(srcRow, "DocId"));
         ResetRowsForDocId(docId);
 
-        Int32 id = DataTools.GetInt(DBxDocSet.GetValue(srcRow, "Id"));
+        Int32 id = DataTools.GetInt32(DBxDocSet.GetValue(srcRow, "Id"));
         DataRow resRow = _Table.Rows.Find(id);
         if (resRow == null)
         {

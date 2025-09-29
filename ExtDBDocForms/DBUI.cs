@@ -190,7 +190,7 @@ namespace FreeLibSet.Forms.Docs
       {
         GroupDocTypeUI dtui = (GroupDocTypeUI)(DocTypes[nm]);
         dtui.GridProducer.Columns.AddText(dtui.NameColumnName, Res.Common_ColTitle_GroupName, 30, 5);
-        dtui.GridProducer.DefaultConfig = new EFPDataGridViewConfig();
+        dtui.GridProducer.DefaultConfig = new EFPDataViewConfig();
         dtui.GridProducer.DefaultConfig.Columns.AddFill(dtui.NameColumnName);
         dtui.ImageKey = "TreeViewClosedFolder";
         dtui.InitEditForm += new InitDocEditFormEventHandler(EditGroupDoc.InitDocEditForm);
@@ -669,7 +669,7 @@ namespace FreeLibSet.Forms.Docs
       {
         if (!dt.GridProducer.Columns.Contains("Id"))
         {
-          EFPGridProducerColumn idCol = dt.GridProducer.Columns.AddInt("Id", "Id", 6);
+          EFPGridProducerColumn idCol = dt.GridProducer.Columns.AddInteger("Id", "Id", 6);
           idCol.DisplayName = Res.Common_Name_DocId;
           idCol.CanIncSearch = true;
           // Делаем первым в списке
@@ -778,16 +778,16 @@ namespace FreeLibSet.Forms.Docs
 
     private void CreateUserNameColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      args.Value = GetUserName(args.GetInt("CreateUserId"));
+      args.Value = GetUserName(args.GetInt32("CreateUserId"));
     }
 
     private void ChangeUserNameColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
-      Int32 changeUserId = args.GetInt("ChangeUserId");
+      Int32 changeUserId = args.GetInt32("ChangeUserId");
       if (changeUserId != 0)
         args.Value = GetUserName(changeUserId);
       else
-        args.Value = GetUserName(args.GetInt("CreateUserId"));
+        args.Value = GetUserName(args.GetInt32("CreateUserId"));
     }
 
     private void ChangeTimeColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
@@ -809,7 +809,7 @@ namespace FreeLibSet.Forms.Docs
     {
       // Гарантировано, что DocProvider.DocTypes.UseUsers.UseTime=true
 
-      Int32 docId = args.GetInt("Id");
+      Int32 docId = args.GetInt32("Id");
       if (docId == 0)
       {
         args.Value = Res.Common_ToolTipText_NoDoc;
@@ -822,12 +822,12 @@ namespace FreeLibSet.Forms.Docs
       List<string> lst = new List<string>();
       lst.Add(String.Format(Res.AboutDoc_ToolTip_Main, dt.DocType.SingularTitle, docId));
       if (DocProvider.DocTypes.UseVersions)
-        lst.Add(String.Format(Res.AboutDoc_ToolTip_Version, args.GetInt("Version")));
+        lst.Add(String.Format(Res.AboutDoc_ToolTip_Version, args.GetInt32("Version")));
 
       DateTime? createTime = args.GetNullableDateTime("CreateTime");
       if (DocProvider.DocTypes.UseUsers)
       {
-        string userName = TextHandlers.GetTextValue(DocProvider.DocTypes.UsersTableName, args.GetInt("CreateUserId"));
+        string userName = TextHandlers.GetTextValue(DocProvider.DocTypes.UsersTableName, args.GetInt32("CreateUserId"));
         lst.Add(String.Format(Res.AboutDoc_ToolTip_ActionTimeAndUser, Res.AboutDoc_ToolTip_Created, createTime, userName));
       }
       else
@@ -838,12 +838,12 @@ namespace FreeLibSet.Forms.Docs
       {
         bool isDeleted = false;
         if (DocProvider.DocTypes.UseDeleted)
-          isDeleted = args.GetBool("Deleted");
+          isDeleted = args.GetBoolean("Deleted");
         string actName = isDeleted ? Res.AboutDoc_ToolTip_Deleted : Res.AboutDoc_ToolTip_Changed;
 
         if (DocProvider.DocTypes.UseUsers)
         {
-          string userName = TextHandlers.GetTextValue(DocProvider.DocTypes.UsersTableName, args.GetInt("ChangeUserId"));
+          string userName = TextHandlers.GetTextValue(DocProvider.DocTypes.UsersTableName, args.GetInt32("ChangeUserId"));
           lst.Add(String.Format(Res.AboutDoc_ToolTip_ActionTimeAndUser, actName, changeTime, userName));
         }
         else
@@ -1059,7 +1059,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docTypeName">Вид документов. Если заданое неправильное значение, генерируется исключение</param>
     /// <param name="docIds">Массив идентификаторов документов. Фиктивные и нулевые идентификаторы игнорируются</param>
     /// <returns>Выборка документов одного вида</returns>
-    public DBxDocSelection CreateDocSelection(string docTypeName, Int32[] docIds)
+    public DBxDocSelection CreateDocSelection(string docTypeName, IIdSet<Int32> docIds)
     {
 #if DEBUG
       if (String.IsNullOrEmpty(docTypeName))
@@ -1071,11 +1071,11 @@ namespace FreeLibSet.Forms.Docs
         throw new ArgumentException(String.Format(Res.Common_Arg_UnknownDocType, docTypeName), "docTypeName");
 
       DBxDocSelection docSel = new DBxDocSelection(DocProvider.DBIdentity);
-      for (int i = 0; i < docIds.Length; i++)
+      foreach (Int32 docId in docIds)
       {
-        if (!DocProvider.IsRealDocId(docIds[i]))
+        if (!DocProvider.IsRealDocId(docId))
           continue;
-        docSel.Add(docTypeName, docIds[i]);
+        docSel.Add(docTypeName, docId);
       }
       return docSel;
     }
@@ -1375,8 +1375,8 @@ namespace FreeLibSet.Forms.Docs
         dtui.Browsers.UpdateDBCacheAndRows(docSet);
         dtui.RefreshBufferedData(); // 03.02.2022
 
-        Int32[] docIds = docSet[i].DocIds;
-        if (docIds.Length > 0)
+        IIdSet<Int32> docIds = docSet[i].DocIds;
+        if (docIds.Count > 0)
           dtui.Browsers.UpdateRowsForIds(docIds);
       }
     }

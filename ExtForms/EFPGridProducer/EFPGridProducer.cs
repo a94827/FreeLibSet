@@ -73,17 +73,17 @@ namespace FreeLibSet.Forms
     /// Если следует выполнить обычные действия по редактированию, в частности, вызвать событие <see cref="EFPDataGridView.EditData"/>,
     /// следует вернуть false.
     /// </summary>
-    /// <param name="rowInfo">Информация о текущей строки в табличном просмотре</param>
+    /// <param name="rowValues">Информация о текущей строки в табличном просмотре</param>
     /// <param name="columnName">Имя столбца</param>
     /// <returns>true, если обработка выполнена</returns>
-    bool PerformCellEdit(EFPDataViewRowInfo rowInfo, string columnName);
+    bool PerformCellEdit(EFPDataViewRowValues rowValues, string columnName);
 
     /// <summary>
     /// Методы вызывается при щелчке мыши на ячейке
     /// </summary>
-    /// <param name="rowInfo">Информация о текущей строки в табличном просмотре</param>
+    /// <param name="rowValues">Информация о текущей строки в табличном просмотре</param>
     /// <param name="columnName">Имя столбца</param>
-    void PerformCellClick(EFPDataViewRowInfo rowInfo, string columnName);
+    void PerformCellClick(EFPDataViewRowValues rowValues, string columnName);
   }
 
   #endregion
@@ -93,7 +93,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Интерфейс настраиваемого генератора табличного просмотра Реализуется классом <see cref="EFPGridProducer"/>.
   /// В отличие от <see cref="IEFPGridProducer"/>, предполагает возможность пользователя настраивать индивидуальные столбцы
-  /// на уровне <see cref="EFPDataGridViewConfig"/>.
+  /// на уровне <see cref="EFPDataViewConfig"/>.
   /// Интерфейс используется на уровне <see cref="EFPConfigurableDataGridView"/> и <see cref="EFPConfigurableDataTreeView"/>, а не <see cref="EFPDataGridView"/>.
   /// </summary>
   public interface IEFPConfigurableGridProducer : IEFPGridProducer
@@ -253,8 +253,8 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Список имен "обязательных" полей, которые всегда добавляются в список usedColumns
-    /// при вызове <see cref="InitGridView(EFPConfigurableDataGridView, bool, EFPDataGridViewConfig, IList{string})"/> и 
-    /// <see cref="InitTreeView(EFPConfigurableDataTreeView, bool, EFPDataGridViewConfig, IList{string})"/>.
+    /// при вызове <see cref="InitGridView(EFPConfigurableDataGridView, bool, EFPDataViewConfig, IList{string})"/> и 
+    /// <see cref="InitTreeView(EFPConfigurableDataTreeView, bool, EFPDataViewConfig, IList{string})"/>.
     /// По умолчанию - список пуст.
     /// </summary>
     public IList<string> FixedColumns
@@ -275,7 +275,7 @@ namespace FreeLibSet.Forms
     public string[] GetFixedColumnArray()
     {
       if (_FixedColumns == null)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
         return _FixedColumns.ToArray();
     }
@@ -289,7 +289,7 @@ namespace FreeLibSet.Forms
     /// Если конфигурация не была задана в явном виде, она создается автоматически при
     /// каждом обращении к свойству.
     /// </summary>
-    public EFPDataGridViewConfig DefaultConfig
+    public EFPDataViewConfig DefaultConfig
     {
       get
       {
@@ -304,12 +304,12 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private EFPDataGridViewConfig _DefaultConfig;
+    private EFPDataViewConfig _DefaultConfig;
 
     /// <summary>
     /// Именованные секции конфигурации
     /// </summary>
-    private Dictionary<string, EFPDataGridViewConfig> _NamedConfigs;
+    private Dictionary<string, EFPDataViewConfig> _NamedConfigs;
 
     #endregion
 
@@ -337,7 +337,7 @@ namespace FreeLibSet.Forms
     /// <param name="reInit"></param>
     /// <param name="config">Конфигурация или null для использования конфигурации по умолчанию</param>
     /// <param name="usedColumns">Сюда добавляются имена полей, которые должны быть в наборе данных</param>
-    public void InitGridView(EFPConfigurableDataGridView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
+    public void InitGridView(EFPConfigurableDataGridView controlProvider, bool reInit, EFPDataViewConfig config, IList<string> usedColumns)
     {
 #if DEBUG
       if (_InsideInitViewFlag)
@@ -355,7 +355,7 @@ namespace FreeLibSet.Forms
       }
 #endif
     }
-    private void DoInitGridView(EFPConfigurableDataGridView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
+    private void DoInitGridView(EFPConfigurableDataGridView controlProvider, bool reInit, EFPDataViewConfig config, IList<string> usedColumns)
     {
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
@@ -422,6 +422,7 @@ namespace FreeLibSet.Forms
       #region Добавление столбцов в просмотр
 
       int maxTextRowHeight = 1;
+      bool hasLinkColumn = false;
       for (int i = 0; i < config.Columns.Count; i++)
       {
         string columnName = config.Columns[i].ColumnName;
@@ -433,6 +434,8 @@ namespace FreeLibSet.Forms
         {
           EFPDataGridViewColumn column = colDef.CreateGridColumn(controlProvider);
           colDef.ApplyConfig(column.GridColumn, config.Columns[i], controlProvider);
+          if (colDef is EFPGridProducerLinkColumn)
+            hasLinkColumn = true;
 
           // Запоминаем поля, которые нужны
           colDef.GetColumnNames(usedColumns);
@@ -468,6 +471,9 @@ namespace FreeLibSet.Forms
       else
         controlProvider.SaveCurrentColumnAllowed = true;
 
+      if (controlProvider.CommandItems.CopyHyperlinkUsage == EFPDataViewCopyHyperlinkCommandUsage.Auto)
+        controlProvider.CommandItems[EFPAppStdCommandItems.CopyHyperlink].Visible = hasLinkColumn;
+
       // 16.07.2021
       // При добавлении порядков сортировки больше не будем использовать поля, которые нужны только для всплывающих подсказок
       SingleScopeList<string> usedColumnsForOrders = new SingleScopeList<string>(usedColumns);
@@ -487,7 +493,7 @@ namespace FreeLibSet.Forms
       #endregion
 
       if (!reInit)
-        controlProvider.GetCellAttributes += EFPDataGridView_GetCellAttributes;
+        controlProvider.CellInfoNeeded += EFPDataGridView_CellInfoNeeded;
 
       #region Доступные порядки сортировки
 
@@ -512,7 +518,7 @@ namespace FreeLibSet.Forms
         OutItem.SettingsData.CopyTo(controlProvider.DefaultOutItem.SettingsData);
     }
 
-    private void EFPDataGridView_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private void EFPDataGridView_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       EFPDataGridView controlProvider = (EFPDataGridView)sender;
 
@@ -520,15 +526,13 @@ namespace FreeLibSet.Forms
       if (colDef == null)
         return;
 
-      colDef.OnGetCellAttributes(args);
-
       switch (args.Reason)
       {
-        case EFPDataGridViewAttributesReason.View:
-        case EFPDataGridViewAttributesReason.Print:
+        case EFPDataViewInfoReason.View:
+        case EFPDataViewInfoReason.Print:
           DoGetValue(controlProvider, args, colDef);
           break;
-        case EFPDataGridViewAttributesReason.ToolTip:
+        case EFPDataViewInfoReason.ToolTip:
           try
           {
             DoGetToolTipText(controlProvider, args, colDef);
@@ -539,9 +543,13 @@ namespace FreeLibSet.Forms
           }
           break;
       }
+
+      // 25.09.2025
+      // Перенесено вниз, чтобы обработчик имел доступ к текущему значению
+      colDef.OnCellInfoNeeded(args);
     }
 
-    private void DoGetValue(EFPDataGridView controlProvider, EFPDataGridViewCellAttributesEventArgs args, EFPGridProducerColumn colDef)
+    private void DoGetValue(EFPDataGridView controlProvider, EFPDataGridViewCellInfoEventArgs args, EFPGridProducerColumn colDef)
     {
       if (args.Value != null)
         return; // уже определено
@@ -550,9 +558,9 @@ namespace FreeLibSet.Forms
 
       try
       {
-        EFPDataViewRowInfo rowInfo = controlProvider.GetRowInfo(args.RowIndex);
-        args.Value = colDef.GetValue(rowInfo);
-        controlProvider.FreeRowInfo(rowInfo);
+        EFPDataViewRowValues rowValues = controlProvider.GetRowValues(args.RowIndex);
+        args.Value = colDef.GetValue(rowValues);
+        controlProvider.FreeRowValues(rowValues);
       }
       catch
       {
@@ -560,7 +568,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private void DoGetToolTipText(EFPDataGridView controlProvider, EFPDataGridViewCellAttributesEventArgs args, EFPGridProducerColumn colDef)
+    private void DoGetToolTipText(EFPDataGridView controlProvider, EFPDataGridViewCellInfoEventArgs args, EFPGridProducerColumn colDef)
     {
 #if DEBUG
       if (controlProvider.CurrentConfig == null)
@@ -571,9 +579,9 @@ namespace FreeLibSet.Forms
         args.ToolTipText = String.Empty;
       else
       {
-        EFPDataViewRowInfo rowInfo = controlProvider.GetRowInfo(args.RowIndex);
-        string s2 = colDef.GetCellToolTipText(rowInfo, args.ColumnName);
-        controlProvider.FreeRowInfo(rowInfo);
+        EFPDataViewRowValues rowValues = controlProvider.GetRowValues(args.RowIndex);
+        string s2 = colDef.GetCellToolTipText(rowValues, args.ColumnName);
+        controlProvider.FreeRowValues(rowValues);
         if (s2.Length > 0)
           args.ToolTipText = s2;
       }
@@ -597,9 +605,9 @@ namespace FreeLibSet.Forms
         string s;
         try
         {
-          EFPDataViewRowInfo rowInfo = controlProvider.GetRowInfo(args.RowIndex);
-          s = toolTip.GetToolTipText(rowInfo);
-          controlProvider.FreeRowInfo(rowInfo);
+          EFPDataViewRowValues rowValues = controlProvider.GetRowValues(args.RowIndex);
+          s = toolTip.GetToolTipText(rowValues);
+          controlProvider.FreeRowValues(rowValues);
         }
         catch (Exception e)
         {
@@ -643,7 +651,7 @@ namespace FreeLibSet.Forms
     /// <param name="reInit"></param>
     /// <param name="config">Конфигурация или null для использования конфигурации по умолчанию</param>
     /// <param name="usedColumns">Сюда добавляются имена полей, которые должны быть в наборе данных</param>
-    public void InitTreeView(EFPConfigurableDataTreeView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
+    public void InitTreeView(EFPConfigurableDataTreeView controlProvider, bool reInit, EFPDataViewConfig config, IList<string> usedColumns)
     {
 #if DEBUG
       if (_InsideInitViewFlag)
@@ -661,7 +669,7 @@ namespace FreeLibSet.Forms
       }
 #endif
     }
-    private void DoInitTreeView(EFPConfigurableDataTreeView controlProvider, bool reInit, EFPDataGridViewConfig config, IList<string> usedColumns)
+    private void DoInitTreeView(EFPConfigurableDataTreeView controlProvider, bool reInit, EFPDataViewConfig config, IList<string> usedColumns)
     {
       if (controlProvider == null)
         throw new ArgumentNullException("controlProvider");
@@ -827,26 +835,26 @@ namespace FreeLibSet.Forms
     /// имеющимися столбцами <see cref="Columns"/> и подсказками <see cref="ToolTips"/>'.
     /// Добавляются только столбцы и подсказки, которые существуют на момент вызова; затем могут быть добавлены столбцы и подсказки, которые не входят в конфигурацию по умолчанию.
     /// </summary>
-    /// <param name="addAll">Если true, то будут заполнены списки <see cref="EFPDataGridViewConfig.Columns"/> и <see cref="EFPDataGridViewConfig.ToolTips"/>.
+    /// <param name="addAll">Если true, то будут заполнены списки <see cref="EFPDataViewConfig.Columns"/> и <see cref="EFPDataViewConfig.ToolTips"/>.
     /// Если false, то списки останутся пустыми</param>
     public void NewDefaultConfig(bool addAll)
     {
-      DefaultConfig = new EFPDataGridViewConfig();
+      DefaultConfig = new EFPDataViewConfig();
       if (addAll)
         DefaultConfig = CreateDefaultConfig();
       else
-        DefaultConfig = new EFPDataGridViewConfig();
+        DefaultConfig = new EFPDataViewConfig();
     }
 
 
     /// <summary>
-    /// Создает новый объект конфигурации и заполняет списки <see cref="EFPDataGridViewConfig.Columns"/> и <see cref="EFPDataGridViewConfig.ToolTips"/>
+    /// Создает новый объект конфигурации и заполняет списки <see cref="EFPDataViewConfig.Columns"/> и <see cref="EFPDataViewConfig.ToolTips"/>
     /// вcеми существующими столбцами <see cref="Columns"/> и подсказками <see cref="ToolTips"/>.
     /// </summary>
     /// <returns>Новая конфигурация</returns>
-    public EFPDataGridViewConfig CreateDefaultConfig()
+    public EFPDataViewConfig CreateDefaultConfig()
     {
-      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+      EFPDataViewConfig config = new EFPDataViewConfig();
       for (int i = 0; i < Columns.Count; i++)
         config.Columns.Add(Columns[i].Name);
       for (int i = 0; i < ToolTips.Count; i++)
@@ -860,7 +868,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="fixedName">Имя настройки</param>
     /// <returns>Пустая конфигурация, которую нужно заполнить</returns>
-    public EFPDataGridViewConfig NewNamedConfig(string fixedName)
+    public EFPDataViewConfig NewNamedConfig(string fixedName)
     {
 #if DEBUG
       if (String.IsNullOrEmpty(fixedName))
@@ -868,8 +876,8 @@ namespace FreeLibSet.Forms
 #endif
 
       if (_NamedConfigs == null)
-        _NamedConfigs = new Dictionary<string, EFPDataGridViewConfig>();
-      EFPDataGridViewConfig config = new EFPDataGridViewConfig();
+        _NamedConfigs = new Dictionary<string, EFPDataViewConfig>();
+      EFPDataViewConfig config = new EFPDataViewConfig();
       _NamedConfigs.Add(fixedName, config);
       return config;
     }
@@ -880,7 +888,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="fixedName">Имя настройки</param>
     /// <returns></returns>
-    public EFPDataGridViewConfig GetNamedConfig(string fixedName)
+    public EFPDataViewConfig GetNamedConfig(string fixedName)
     {
 #if DEBUG
       if (String.IsNullOrEmpty(fixedName))
@@ -889,7 +897,7 @@ namespace FreeLibSet.Forms
       if (_NamedConfigs == null)
         return null;
 
-      EFPDataGridViewConfig config;
+      EFPDataViewConfig config;
       if (_NamedConfigs.TryGetValue(fixedName, out config))
         return config;
       else
@@ -904,7 +912,7 @@ namespace FreeLibSet.Forms
     public string[] GetNamedConfigNames()
     {
       if (_NamedConfigs == null)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
       {
         string[] a = new string[_NamedConfigs.Count];
@@ -922,7 +930,7 @@ namespace FreeLibSet.Forms
     /// <param name="defaulConfigName">Имя фиксированной настройки или пустая строка, если используется настройка по умолчанию</param>
     /// <param name="cfgName">Имя сохраненной секции</param>
     /// <returns></returns>
-    public EFPDataGridViewConfig LoadConfig(string configSectionName, string defaulConfigName, string cfgName)
+    public EFPDataViewConfig LoadConfig(string configSectionName, string defaulConfigName, string cfgName)
     {
       if (String.IsNullOrEmpty(cfgName))
       {
@@ -946,10 +954,10 @@ namespace FreeLibSet.Forms
     /// <param name="configSectionName">Имя секции конфигурации, используемое табличным просмотром</param>
     /// <param name="defaultConfigName">Имя фиксированной настройки или пустая строка, если используется настройка по умолчанию</param>
     /// <returns>Загруженная секция или <see cref="DefaultConfig"/></returns>
-    public EFPDataGridViewConfig LoadConfig(string configSectionName, string defaultConfigName)
+    public EFPDataViewConfig LoadConfig(string configSectionName, string defaultConfigName)
     {
       string cfgName = GetCurrentConfigName(configSectionName);
-      EFPDataGridViewConfig config = LoadConfig(configSectionName, defaultConfigName, cfgName);
+      EFPDataViewConfig config = LoadConfig(configSectionName, defaultConfigName, cfgName);
       if (config == null)
         config = DefaultConfig;
       return config;
@@ -977,7 +985,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="config">Конфигурация. Если null, то возвращается <see cref="FixedColumns"/>.</param>
     /// <param name="usedColumns">Сюда добавляются имена полей</param>
-    public void GetColumnNames(EFPDataGridViewConfig config, IList<string> usedColumns)
+    public void GetColumnNames(EFPDataViewConfig config, IList<string> usedColumns)
     {
       if (usedColumns == null)
         throw new ArgumentNullException("usedColumns");
@@ -1025,12 +1033,12 @@ namespace FreeLibSet.Forms
       GetColumnNames(LoadConfig(configSectioName, defaultConfigName), usedColumns);
     }
 
-    private EFPDataGridViewConfig MakeDefaultConfig()
+    private EFPDataViewConfig MakeDefaultConfig()
     {
-      EFPDataGridViewConfig res = new EFPDataGridViewConfig();
+      EFPDataViewConfig res = new EFPDataViewConfig();
       for (int i = 0; i < Columns.Count; i++)
       {
-        res.Columns.Add(new EFPDataGridViewConfigColumn(Columns[i].Name));
+        res.Columns.Add(new EFPDataViewConfigColumn(Columns[i].Name));
         // Если определен только один столбец - делаем его с заполнением
         if (Columns.Count == 1)
           res.Columns[0].FillMode = true;
@@ -1210,7 +1218,7 @@ namespace FreeLibSet.Forms
         return false;
       }
 
-      int pBadChar = DataTools.IndexOfAny(columnName, " ,");
+      int pBadChar = StringTools.IndexOfAny(columnName, " ,");
       if (pBadChar  >= 0)
       {
         errorText = String.Format(Res.EFPGridProducer_Err_NameBadChar, columnName[pBadChar]);

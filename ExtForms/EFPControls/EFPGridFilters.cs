@@ -103,7 +103,9 @@ namespace FreeLibSet.Forms
     int IndexOf(string code);
 
     /// <summary>
-    /// Поиск фильтра по имени
+    /// Поиск фильтра <see cref="IEFPGridFilter"/> по имени.
+    /// Возвращает найденный фильтр или null, если фильтр не найден.
+    /// Имеет ли фильтр установленное значение или фильтр пустой - не имеет значения.
     /// </summary>
     /// <param name="code">Имя для сохранения конфигурации, а не <see cref="IEFPGridFilter.DisplayName"/>.
     /// Определяется свойством <see cref="IObjectWithCode.Code"/>.</param>

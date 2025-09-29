@@ -49,7 +49,6 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Базовый интерфейс только для запросов SELECT.
-  /// Запросы, связанные с идентификаторами записи типа <see cref="Int32"/> выделены в интерфейс <see cref="IDBxConReadOnlyPKInt32"/>.
   /// </summary>
   public interface IDBxConReadOnlyBase
   {
@@ -263,7 +262,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    int[] GetUniqueIntValues(string tableName, string columnName, DBxFilter where);
+    int[] GetUniqueInt32Values(string tableName, string columnName, DBxFilter where);
 
     /// <summary>
     /// Получить числовые значения поля без повторов.
@@ -332,14 +331,7 @@ namespace FreeLibSet.Data
     Guid[] GetUniqueGuidValues(string tableName, string columnName, DBxFilter where);
 
     #endregion
-  }
 
-  /// <summary>
-  /// Расширение интерфейса <see cref="IDBxConReadOnlyBase"/> на запросы, принимающие целочисленные идентификаторы первичного ключа.
-  /// Этот интерфейс реализуется также классом DBxDocProvider в ExtDBDocs.dll
-  /// </summary>
-  public interface IDBxConReadOnlyPKInt32 : IDBxConReadOnlyBase
-  {
     #region FindRecord
 
     /// <summary>
@@ -349,8 +341,8 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя поля условия</param>
     /// <param name="value">Значение поля условия</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    Int32 FindRecord(string tableName, string columnName, object value);
+    /// <returns>Идентификатор строки или null</returns>
+    object FindRecord(string tableName, string columnName, object value);
 
     /// <summary>
     /// Найти строку с заданными значениями полей.
@@ -358,8 +350,8 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    Int32 FindRecord(string tableName, IDictionary columnNamesAndValues);
+    /// <returns>Идентификатор строки или null</returns>
+    object FindRecord(string tableName, IDictionary columnNamesAndValues);
 
     /// <summary>
     /// Найти строку с заданными значениями полей.
@@ -368,8 +360,8 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    Int32 FindRecord(string tableName, DBxColumns columnNames, object[] values);
+    /// <returns>Идентификатор строки или null</returns>
+    object FindRecord(string tableName, DBxColumns columnNames, object[] values);
 
     /// <summary>
     /// Найти строку с заданными значениями полей. 
@@ -381,15 +373,8 @@ namespace FreeLibSet.Data
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
     /// <param name="orderBy">Порядок сортировки (может быть null)</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    Int32 FindRecord(string tableName, DBxColumns columnNames, object[] values, DBxOrder orderBy);
-
-    ///// <summary>
-    ///// Поиск любой строки таблицы без всяких условий.
-    ///// </summary>
-    ///// <param name="tableName">Имя таблицы</param>
-    ///// <returns>Идентификатор первой попавшейся записи или 0, если таблица не содержит записей</returns>
-    //Int32 FindRecord(string tableName);
+    /// <returns>Идентификатор строки или null</returns>
+    object FindRecord(string tableName, DBxColumns columnNames, object[] values, DBxOrder orderBy);
 
     /// <summary>
     /// Поиск первой строки, удовлетворяющей условию при заданном порядке строк.
@@ -400,8 +385,8 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр</param>
     /// <param name="orderBy">Порядок сортировки, при котором нужна первая строка. Может быть null</param>
-    /// <returns>Идентификатор первой записи, удовлетворяющей условию</returns>
-    Int32 FindRecord(string tableName, DBxFilter where, DBxOrder orderBy);
+    /// <returns>Идентификатор первой записи, удовлетворяющей условию, или null</returns>
+    object FindRecord(string tableName, DBxFilter where, DBxOrder orderBy);
 
     /// <summary>
     /// Поиск первой строки, удовлетворяющей условию.
@@ -409,7 +394,8 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр</param>
-    Int32 FindRecord(string tableName, DBxFilter where);
+    /// <returns>Идентификатор строки или null</returns>
+    object FindRecord(string tableName, DBxFilter where);
 
     /// <summary>
     /// Поиск записи в таблице.
@@ -417,53 +403,57 @@ namespace FreeLibSet.Data
     /// Возвращает идентификатор строки (значение первичного ключа), если запись найдена.
     /// Возвращает 0, если запись не найдена.
     /// Можно задать дополнительное ограничение на уникальнойсть найденной записи.
-    /// Если огранчиение указано и найдено больше одной строки, возвращается 0.
+    /// Если ограничение указано и найдено больше одной строки, возвращается 0.
     /// Имена полей в фильтрах <paramref name="where"/> могут содержать точки (ссылочные поля).
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Условие поиска</param>
     /// <param name="singleOnly">Если true, то найденная запись должна быть уникальной</param>
-    /// <returns>Имя столбца (обычно, "Id")</returns>
-    Int32 FindRecord(string tableName, DBxFilter where, bool singleOnly);
+    /// <returns>Идентификатор строки или null</returns>
+    object FindRecord(string tableName, DBxFilter where, bool singleOnly);
 
     #endregion
 
-    #region GetIds
+    #region GetIds()
 
     /// <summary>
-    /// Получить массив идентификаторов строк с заданным значением поля
-    /// </summary>
-    /// <param name="tableName">Имя таблицы</param>
-    /// <param name="columnName">Имя поля условия</param>
-    /// <param name="value">Значение поля условия</param>
-    /// <returns>Массив идентификаторов</returns>
-    IdList GetIds(string tableName, string columnName, object value);
-
-    /// <summary>
-    /// Получить массив идентификаторов строк с заданными значениями полей
+    /// Получить массив идентификаторов строк с заданными значениями полей.
+    /// Порядок возвращаемых идентикаторов не определен.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
     /// <returns>Массив идентификаторов строк</returns>
-    IdList GetIds(string tableName, IDictionary columnNamesAndValues);
+    IIdSet GetIds(string tableName, IDictionary columnNamesAndValues);
 
     /// <summary>
-    /// Получить массив идентификаторов строк таблицы с заданными значениями полей
+    /// Получить набор идентификаторов строк таблицы с заданными значениями полей.
+    /// Порядок возвращаемых идентикаторов не определен.
     /// </summary>
     /// <param name="tableName">Таблица</param>
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
     /// <returns>Массив идентификаторов</returns>
-    IdList GetIds(string tableName, DBxColumns columnNames, object[] values);
+    IIdSet GetIds(string tableName, DBxColumns columnNames, object[] values);
 
     /// <summary>
-    /// Получение массива идентификаторов первичного ключа (обычно, поля "Id") для всех строк, удовлетворяющих
+    /// Получение набора идентификаторов первичного ключа (обычно, поля "Id") для всех строк, удовлетворяющих
     /// условию.
+    /// Порядок возвращаемых идентикаторов не определен.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Условие (фильтр)</param>
     /// <returns>Массив идентификаторов (значений поля "Id")</returns>
-    IdList GetIds(string tableName, DBxFilter where);
+    IIdSet GetIds(string tableName, DBxFilter where);
+
+    /// <summary>
+    /// Получение набора значений ссылочного поля для всех строк, удовлетворяющих условию.
+    /// Порядок возвращаемых идентикаторов не определен.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="refColumnName">Имя ссылочного поля</param>
+    /// <param name="where">Условие (фильтр)</param>
+    /// <returns>Массив идентификаторов (значений поля "Id")</returns>
+    IIdSet GetRefIds(string tableName, string refColumnName, DBxFilter where);
 
     #endregion
 
@@ -472,7 +462,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получение значения для одного поля. Имя поля может содержать точки для
     /// извлечения значения из зависимой таблицы. 
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ.
     /// Имя поля может содержать точки для получения значения ссылочного поля с помощью INNER JOIN.
     /// Если <paramref name="id"/>=0, возвращает null.
     /// Выбрасывает исключение DBxRecordNotFoundException, если задан идентификатор несуществующей записи.
@@ -481,14 +471,14 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор строки. Может быть 0</param>
     /// <param name="columnName">Имя поля (может быть с точками)</param>
     /// <returns>Значение</returns>
-    object GetValue(string tableName, Int32 id, string columnName);
+    object GetValueById(string tableName, object id, string columnName);
 
     /// <summary>
     /// Получение значения для одного поля. Имя поля может содержать точки для
     /// извлечения значения из зависимой таблицы. Расширенная версия возвращает
     /// значение поля по ссылке, а как результат возвращается признак того, что
     /// строка найдена.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ.
     /// Имя поля может содержать точки для получения значения ссылочного поля с помощью INNER JOIN.
     /// </summary>
     /// <param name="tableName">Имя таблицы, в которой выполняется поиск</param>
@@ -496,11 +486,11 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя поля (может быть с точками)</param>
     /// <param name="value">Сюда по ссылке записывается значение</param>
     /// <returns>true, если поле было найдено</returns>
-    bool GetValue(string tableName, Int32 id, string columnName, out object value);
+    bool GetValueById(string tableName, object id, string columnName, out object value);
 
     /// <summary>
     /// Получить значения для заданного списка полей.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ.
     /// Если <paramref name="id"/>=0, возвращается массив значений null подходящей длины.
     /// Выбрасывает исключение DBxRecordNotFoundException, если задан идентификатор несуществующей записи.
     /// Имена полей могут содержать точки для получения значений ссылочных полей с помощью INNER JOIN.
@@ -509,11 +499,11 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <returns>Массив значений полей строки</returns>
-    object[] GetValues(string tableName, Int32 id, DBxColumns columnNames);
+    object[] GetValuesById(string tableName, object id, DBxColumns columnNames);
 
     /// <summary>
     /// Получить значения для заданного списка полей.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ.
     /// Если <paramref name="id"/>=0, возвращается массив значений null подходящей длины.
     /// Выбрасывает исключение DBxRecordNotFoundException, если задан идентификатор несуществующей записи.
     /// Имена полей могут содержать точки для получения значений ссылочных полей с помощью INNER JOIN.
@@ -522,7 +512,7 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <returns>Массив значений полей строки</returns>
-    object[] GetValues(string tableName, Int32 id, string columnNames);
+    object[] GetValuesById(string tableName, object id, string columnNames);
 
     #endregion
   }
@@ -530,7 +520,7 @@ namespace FreeLibSet.Data
   /// <summary>
   /// Общий интерфейс для <see cref="DBxConBase"/> и <see cref="DBxCon"/>
   /// </summary>
-  public interface IDBxCon : IDBxConTransactions, IDBxConReadOnlyPKInt32
+  public interface IDBxCon : IDBxConTransactions, IDBxConReadOnlyBase
   {
     #region Свойства
 
@@ -636,14 +626,14 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Установить значения одного поля для одной строки.
-    /// Таблица должна иметь первичный ключ по целочисленному (<see cref="Int32"/>) полю.
+    /// Таблица должна иметь первичный ключ.
     /// Если задан идентификатор <paramref name="id"/>=0 или недействительный идентификатор записи, выбрасывается исключение.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор строки (значение первичного ключа)</param>
     /// <param name="columnName">Имя устанавливаемого поля</param>
     /// <param name="value">Значение</param>
-    void SetValue(string tableName, Int32 id, string columnName, object value);
+    void SetValueById(string tableName, object id, string columnName, object value);
 
     /// <summary>
     /// Установить значение одного поля для нескольких строк таблицы.
@@ -664,7 +654,7 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор записи</param>
     /// <param name="columnNames">Имена устанавливаемых полей</param>
     /// <param name="values">Записываемые значения полей</param>
-    void SetValues(string tableName, Int32 id, DBxColumns columnNames, object[] values);
+    void SetValuesById(string tableName, object id, DBxColumns columnNames, object[] values);
 
     /// <summary>
     /// Установка значений нескольких полей для нескольких строк таблицы
@@ -677,13 +667,13 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Установка значений нескольких полей для одной таблицы.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю.
+    /// Таблица должна иметь первичный ключ.
     /// Если задан идентификатор <paramref name="id"/>=0 или недействительный идентификатор записи, выбрасывается исключение.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNamesAndValues">Имена устанавливаемых столбцов и значения</param>
-    void SetValues(string tableName, Int32 id, IDictionary columnNamesAndValues);
+    void SetValuesById(string tableName, object id, IDictionary columnNamesAndValues);
 
     /// <summary>
     /// Установка значений нескольких полей для нескольких строк таблицы
@@ -709,7 +699,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя устанавливаемого столбца</param>
     /// <param name="value">Значение поля</param>
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
-    Int32 AddRecordWithIdResult(string tableName, string columnName, object value);
+    object AddRecordWithIdResult(string tableName, string columnName, object value);
 
     /// <summary>
     /// Добавляет новую строку в таблицу и возвращает ее идентификатор (поле Id).
@@ -718,7 +708,7 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Имена устанавливаемых полей и значения</param>
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
-    Int32 AddRecordWithIdResult(string tableName, IDictionary columnNamesAndValues);
+    object AddRecordWithIdResult(string tableName, IDictionary columnNamesAndValues);
 
     /// <summary>
     /// Добавляет новую строку в таблицу и возвращает ее идентификатор (поле Id).
@@ -728,7 +718,7 @@ namespace FreeLibSet.Data
     /// <param name="columnNames">Имена устанавливаемых столбцов</param>
     /// <param name="values">Устанавливаемые значения. Длина массива должна совпадать с ColumnNames</param>
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
-    Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values);
+    object AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values);
 
     #endregion
 
@@ -916,7 +906,7 @@ namespace FreeLibSet.Data
     /// <param name="ColumnNamesAndValues">Имена и значения полей</param>
     /// <param name="Id">Возвращается идентификатор Id найденной или новой записи. Не может быть 0</param>
     /// <returns>true, если была добавлена новая запись, false-если найдена существующая</returns>
-    bool FindOrAddRecord(string TableName, IDictionary ColumnNamesAndValues, out Int32 Id);
+    bool FindOrAddRecord(string TableName, IDictionary ColumnNamesAndValues, out object Id);
 
     /// <summary>
     /// Поиск строки по значениям полей. Если запись
@@ -930,7 +920,7 @@ namespace FreeLibSet.Data
     /// <param name="Values">Значения полей</param>
     /// <param name="Id">Возвращается идентификатор Id найденной или новой записи. Не может быть 0</param>
     /// <returns>true, если была добавлена новая запись, false-если найдена существующая</returns>
-    bool FindOrAddRecord(string TableName, DBxColumns ColumnNames, object[] Values, out Int32 Id);
+    bool FindOrAddRecord(string TableName, DBxColumns ColumnNames, object[] Values, out object Id);
 
     /// <summary>
     /// Поиск строки по значениям полей, заданным в виде списка пар. Если запись
@@ -942,7 +932,7 @@ namespace FreeLibSet.Data
     /// <param name="TableName">Имя таблицы</param>
     /// <param name="ColumnNamesAndValues">Имена и значения полей</param>
     /// <returns>Возвращается идентификатор Id найденной или новой записи. Не может быть 0</returns>
-    Int32 FindOrAddRecord(string TableName, IDictionary ColumnNamesAndValues);
+    object FindOrAddRecord(string TableName, IDictionary ColumnNamesAndValues);
 
     /// <summary>
     /// Поиск строки по значениям полей. Если запись
@@ -955,7 +945,7 @@ namespace FreeLibSet.Data
     /// <param name="columnNames">Имена полей</param>
     /// <param name="values">Значения полей</param>
     /// <returns>Возвращается идентификатор Id найденной или новой записи. Не может быть 0</returns>
-    Int32 FindOrAddRecord(string tableName, DBxColumns columnNames, object[] values);
+    object FindOrAddRecord(string tableName, DBxColumns columnNames, object[] values);
 
     /// <summary>
     /// Групповой поиск или добавление множества записей в таблицу базы данных.
@@ -970,7 +960,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="table">Строки для поиска. Этот объект не меняется</param>
     /// <returns>Идентификаторы строк</returns>
-    Int32[] FindOrAddRecords(DataTable table);
+    object[] FindOrAddRecords(DataTable table);
 
     /// <summary>
     /// Групповой поиск или добавление множества записей в таблицу базы данных.
@@ -985,7 +975,7 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="table">Строки для поиска. Этот объект не меняется</param>
     /// <returns>Идентификаторы строк</returns>
-    Int32[] FindOrAddRecords(string tableName, DataTable table);
+    object[] FindOrAddRecords(string tableName, DataTable table);
 
     #endregion
 
@@ -1151,16 +1141,16 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Время выполнения запроса (для отладки)
     /// </summary>
-    public TimeSpan ExecutingTime 
-    { 
-      get 
+    public TimeSpan ExecutingTime
+    {
+      get
       {
         long delta = Stopwatch.GetTimestamp() - _StartTicks;
         if (delta <= 0L)
           return TimeSpan.Zero; // на случай сбоя
         else
           return TimeSpan.FromSeconds((double)delta / Stopwatch.Frequency);
-      } 
+      }
     }
 
     /// <summary>
@@ -1488,7 +1478,7 @@ namespace FreeLibSet.Data
         throw new ArgumentNullException("request");
 
       DBxCacheLoadResponse response = new DBxCacheLoadResponse();
-      string dbIdentityMD5 = DataTools.MD5SumFromString(Source.DB.DBIdentity);
+      string dbIdentityMD5 = MD5Tools.MD5SumFromString(Source.DB.DBIdentity);
 
       #region Страницы таблиц
 
@@ -1499,7 +1489,7 @@ namespace FreeLibSet.Data
         {
           DBxCacheLoadRequest.PageInfo pi = request.TablePages[i];
 
-          string idColumnName = _Source.Validator.CheckTablePrimaryKeyInt32(pi.TableName);
+          string idColumnName = _Source.Validator.CheckTablePrimaryKeyInteger(pi.TableName);
           NumRangeFilter filter = new NumRangeFilter(idColumnName, pi.FirstId, pi.FirstId + DBxCache.PageRowCount - 1);
           DataTable table = FillSelect(pi.TableName, pi.ColumnNames, filter);
 
@@ -1507,7 +1497,7 @@ namespace FreeLibSet.Data
             dbIdentityMD5,
             pi.TableName,
             pi.FirstId,
-            DataTools.MD5SumFromString(pi.ColumnNames.AsString),
+            MD5Tools.MD5SumFromString(pi.ColumnNames.AsString),
             table, _Source.Entry.DB.Struct.Tables[pi.TableName].PrimaryKey.AsString);
 
           response.TablePages.Add(pi.InternalKey, page);
@@ -1524,9 +1514,9 @@ namespace FreeLibSet.Data
         {
           DBxCacheLoadRequest.IndividualInfo ii = request.IndividualValues[i];
 
-          _Source.Validator.CheckTablePrimaryKeyInt32(ii.TableName);
+          _Source.Validator.CheckTablePrimaryKeyInteger(ii.TableName);
 
-          object v = GetValue(ii.TableName, ii.Id, ii.ColumnName);
+          object v = GetValueById(ii.TableName, ii.Id, ii.ColumnName);
 
           DBxCacheIndividualValue page = new DBxCacheIndividualValue(
             dbIdentityMD5,
@@ -1554,7 +1544,7 @@ namespace FreeLibSet.Data
       return null;
     }
 
-    void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
+    void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstIds)
     {
       // Ничего не делаем
     }
@@ -1572,8 +1562,8 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnName">Имя поля условия</param>
     /// <param name="value">Значение поля условия</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, string columnName, object value)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, string columnName, object value)
     {
       return _Source.FindRecord(tableName, columnName, value);
     }
@@ -1584,8 +1574,8 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, IDictionary columnNamesAndValues)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, IDictionary columnNamesAndValues)
     {
       string[] columnNames;
       object[] values;
@@ -1600,8 +1590,8 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, DBxColumns columnNames, object[] values)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, DBxColumns columnNames, object[] values)
     {
       return _Source.FindRecord(tableName, columnNames, values);
     }
@@ -1616,21 +1606,11 @@ namespace FreeLibSet.Data
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
     /// <param name="orderBy">Порядок сортировки (может быть null)</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public Int32 FindRecord(string tableName, DBxColumns columnNames, object[] values, DBxOrder orderBy)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, DBxColumns columnNames, object[] values, DBxOrder orderBy)
     {
       return _Source.FindRecord(tableName, columnNames, values, orderBy);
     }
-
-    ///// <summary>
-    ///// Поиск любой строки таблицы без всяких условий
-    ///// </summary>
-    ///// <param name="tableName">Имя таблицы</param>
-    ///// <returns>Идентификатор первой попавшейся записи или 0, если таблица не содержит записей</returns>
-    //public Int32 FindRecord(string tableName)
-    //{
-    //  return FindRecord(tableName, (DBxFilter)null, (DBxOrder)null);
-    //}
 
     /// <summary>
     /// Поиск первой строки, удовлетворяющей условию при заданном порядке строк
@@ -1641,8 +1621,8 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр</param>
     /// <param name="orderBy">Порядок сортировки, при котором нужна первая строка. Может быть null</param>
-    /// <returns>Идентификатор первой записи, удовлетворяющей условию</returns>
-    public Int32 FindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
+    /// <returns>Идентификатор первой записи, удовлетворяющей условию, или null</returns>
+    public object FindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
     {
       return _Source.FindRecord(tableName, where, orderBy);
     }
@@ -1653,7 +1633,8 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтр</param>
-    public Int32 FindRecord(string tableName, DBxFilter where)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, DBxFilter where)
     {
       return FindRecord(tableName, where, false);
     }
@@ -1664,14 +1645,14 @@ namespace FreeLibSet.Data
     /// Возвращает идентификатор строки (значение первичного ключа), если запись найдена.
     /// Возвращает 0, если запись не найдена.
     /// Можно задать дополнительное ограничение на уникальнойсть найденной записи.
-    /// Если огранчиение указано и найдено больше одной строки, возвращается 0.
+    /// Если ограничение указано и найдено больше одной строки, возвращается 0.
     /// Имена полей в фильтрах <paramref name="where"/> могут содержать точки (ссылочные поля).
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Условие поиска</param>
     /// <param name="singleOnly">Если true, то найденная запись должна быть уникальной</param>
-    /// <returns>Имя столбца (обычно, "Id")</returns>
-    public Int32 FindRecord(string tableName, DBxFilter where, bool singleOnly)
+    /// <returns>Идентификатор строки или null</returns>
+    public object FindRecord(string tableName, DBxFilter where, bool singleOnly)
     {
       return _Source.FindRecord(tableName, where, singleOnly);
     }
@@ -1727,7 +1708,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя поля условия</param>
     /// <param name="value">Значение поля условия</param>
     /// <returns>Массив идентификаторов</returns>
-    public IdList GetIds(string tableName, string columnName, object value)
+    public IIdSet GetIds(string tableName, string columnName, object value)
     {
       return _Source.GetIds(tableName, columnName, value);
     }
@@ -1738,7 +1719,7 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Пары ИмяПоля-Значение</param>
     /// <returns>Массив идентификаторов строк</returns>
-    public IdList GetIds(string tableName, IDictionary columnNamesAndValues)
+    public IIdSet GetIds(string tableName, IDictionary columnNamesAndValues)
     {
       string[] columnNames;
       object[] values;
@@ -1753,7 +1734,7 @@ namespace FreeLibSet.Data
     /// <param name="columnNames">Имена полей условия</param>
     /// <param name="values">Значения полей условия</param>
     /// <returns>Массив идентификаторов</returns>
-    public IdList GetIds(string tableName, DBxColumns columnNames, object[] values)
+    public IIdSet GetIds(string tableName, DBxColumns columnNames, object[] values)
     {
       return _Source.GetIds(tableName, columnNames, values);
     }
@@ -1765,9 +1746,22 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Условие (фильтр)</param>
     /// <returns>Массив идентификаторов (значений поля "Id")</returns>
-    public IdList GetIds(string tableName, DBxFilter where)
+    public IIdSet GetIds(string tableName, DBxFilter where)
     {
       return _Source.GetIds(tableName, where);
+    }
+
+    /// <summary>
+    /// Получение набора значений ссылочного поля для всех строк, удовлетворяющих условию.
+    /// Порядок возвращаемых идентикаторов не определен.
+    /// </summary>
+    /// <param name="tableName">Имя таблицы</param>
+    /// <param name="refColumnName">Имя ссылочного поля</param>
+    /// <param name="where">Условие (фильтр)</param>
+    /// <returns>Массив идентификаторов (значений поля "Id")</returns>
+    public IIdSet GetRefIds(string tableName, string refColumnName, DBxFilter where)
+    {
+      return _Source.GetRefIds(tableName, refColumnName, where);
     }
 
     #endregion
@@ -1786,10 +1780,11 @@ namespace FreeLibSet.Data
     /// идентификаторы строк узлов верхнего уровня или всех строк (при <paramref name="nested"/>=true)</param>
     /// <param name="nested">true, если требуется рекурсивный поиск. false, если требуется вернуть только непосредственные дочерние элементы</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested)
+    public IIdSet<T> GetInheritorIds<T>(string tableName, string parentIdColumnName, T parentId, bool nested)
+      where T : struct, IEquatable<T>
     {
-      Int32 loopedId;
-      return GetInheritorIds(tableName, parentIdColumnName, parentId, nested, null, out loopedId);
+      T loopedId;
+      return GetInheritorIds<T>(tableName, parentIdColumnName, parentId, nested, null, out loopedId);
     }
 
     /// <summary>
@@ -1805,10 +1800,11 @@ namespace FreeLibSet.Data
     /// <param name="nested">true, если требуется рекурсивный поиск. false, если требуется вернуть только непосредственные дочерние элементы</param>
     /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where)
+    public IIdSet<T> GetInheritorIds<T>(string tableName, string parentIdColumnName, T parentId, bool nested, DBxFilter where)
+      where T : struct, IEquatable<T>
     {
-      Int32 loopedId;
-      return GetInheritorIds(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
+      T loopedId;
+      return GetInheritorIds<T>(tableName, parentIdColumnName, parentId, nested, where, out loopedId);
     }
 
     /// <summary>
@@ -1827,21 +1823,22 @@ namespace FreeLibSet.Data
     /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
     /// <param name="loopedId">Сюда записывается идентификатор "зацикленного" узла</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    public IdList GetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId)
+    public IIdSet<T> GetInheritorIds<T>(string tableName, string parentIdColumnName, T parentId, bool nested, DBxFilter where, out T loopedId)
+      where T : struct, IEquatable<T>
     {
       _Source.Validator.CheckTableName(tableName, DBxAccessMode.ReadOnly);
-      _Source.Validator.CheckTablePrimaryKeyInt32(tableName);
+      _Source.Validator.CheckTablePrimaryKeyInteger(tableName);
       _Source.Validator.CheckTableColumnName(tableName, parentIdColumnName, false, DBxAccessMode.ReadOnly);
 
-      loopedId = 0;
+      loopedId = default(T);
 
       DBxFilter srcFilter;
-      if (parentId == 0)
-        srcFilter = new ValueFilter(parentIdColumnName, null, typeof(Int32));
+      if (parentId.Equals(default(T)))
+        srcFilter = new ValueFilter(parentIdColumnName, null, typeof(T));
       else
         srcFilter = new ValueFilter(parentIdColumnName, parentId);
 
-      IdList resIds = new IdList();
+      IdCollection<T> resIds = new IdCollection<T>();
 
       while (true)
       {
@@ -1851,14 +1848,14 @@ namespace FreeLibSet.Data
         else
           filter2 = new AndFilter(srcFilter, where);
 
-        IdList resIds2 = GetIds(tableName, filter2);
+        IIdSet<T> resIds2 = IdTools.AsIdSet<T>(GetIds(tableName, filter2)).CloneIfReadOnly();
         if (resIds2.Count == 0)
           return resIds; // рекурсия закончилась нормально
 
         if (resIds.Count == 0)
         {
           // Первый такт
-          if (parentId != 0)
+          if (!parentId.Equals(default(T)))
           {
             if (resIds2.Contains(parentId))
             {
@@ -1874,19 +1871,19 @@ namespace FreeLibSet.Data
         {
           // второй и далее уровень
 
-          Int32 loopedId2; // отдельная переменная нужна, чтобы не заменить найденный ранее LoopedId на 0
+          T loopedId2; // отдельная переменная нужна, чтобы не заменить найденный ранее LoopedId на 0
           if (resIds2.ContainsAny(resIds, out loopedId2))
           {
             // Зациклилось
             loopedId = loopedId2;
-            resIds2.Remove(resIds);
+            resIds2.RemoveRange(resIds);
             if (resIds2.Count == 0)
               return resIds; // найден только зацилившийся узел
           }
         }
 
-        resIds.Add(resIds2);
-        srcFilter = new IdsFilter(parentIdColumnName, resIds2);
+        resIds.AddRange(resIds2);
+        srcFilter = new ValueInListFilter(parentIdColumnName, resIds2);
       }
     }
 
@@ -2007,9 +2004,9 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор строки. Может быть 0</param>
     /// <param name="columnName">Имя поля (может быть с точками)</param>
     /// <returns>Значение</returns>
-    public object GetValue(string tableName, Int32 id, string columnName)
+    public object GetValueById(string tableName, object id, string columnName)
     {
-      return _Source.GetValue(tableName, id, columnName);
+      return _Source.GetValueById(tableName, id, columnName);
     }
 
     /// <summary>
@@ -2025,9 +2022,9 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя поля (может быть с точками)</param>
     /// <param name="value">Сюда по ссылке записывается значение</param>
     /// <returns>true, если поле было найдено</returns>
-    public bool GetValue(string tableName, Int32 id, string columnName, out object value)
+    public bool GetValueById(string tableName, object id, string columnName, out object value)
     {
-      return _Source.GetValue(tableName, id, columnName, out value);
+      return _Source.GetValueById(tableName, id, columnName, out value);
     }
 
     /// <summary>
@@ -2041,9 +2038,9 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <returns>Массив значений полей строки</returns>
-    public object[] GetValues(string tableName, Int32 id, DBxColumns columnNames)
+    public object[] GetValuesById(string tableName, object id, DBxColumns columnNames)
     {
-      return _Source.GetValues(tableName, id, columnNames);
+      return _Source.GetValuesById(tableName, id, columnNames);
     }
 
     /// <summary>
@@ -2057,10 +2054,10 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <returns>Массив значений полей строки</returns>
-    public object[] GetValues(string tableName, Int32 id, string columnNames)
+    public object[] GetValuesById(string tableName, object id, string columnNames)
     {
       DBxColumns columnNames2 = new DBxColumns(columnNames);
-      return GetValues(tableName, id, columnNames2);
+      return GetValuesById(tableName, id, columnNames2);
     }
 
     /// <summary>
@@ -2213,9 +2210,9 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    public int[] GetUniqueIntValues(string tableName, string columnName, DBxFilter where)
+    public int[] GetUniqueInt32Values(string tableName, string columnName, DBxFilter where)
     {
-      return _Source.GetUniqueIntValues(tableName, columnName, where);
+      return _Source.GetUniqueInt32Values(tableName, columnName, where);
     }
 
     /// <summary>
@@ -2314,9 +2311,9 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор строки (значение первичного ключа)</param>
     /// <param name="columnName">Имя устанавливаемого поля</param>
     /// <param name="value">Значение</param>
-    public void SetValue(string tableName, Int32 id, string columnName, object value)
+    public void SetValueById(string tableName, object id, string columnName, object value)
     {
-      _Source.SetValue(tableName, id, columnName, value);
+      _Source.SetValueById(tableName, id, columnName, value);
     }
 
     /// <summary>
@@ -2341,13 +2338,13 @@ namespace FreeLibSet.Data
     /// <param name="id">Идентификатор записи</param>
     /// <param name="columnNames">Имена устанавливаемых полей</param>
     /// <param name="values">Записываемые значения полей</param>
-    public void SetValues(string tableName, Int32 id, DBxColumns columnNames, object[] values)
+    public void SetValuesById(string tableName, object id, DBxColumns columnNames, object[] values)
     {
       for (int i = 0; i < 5; i++)
       {
         try
         {
-          _Source.SetValues(tableName, id, columnNames, values);
+          _Source.SetValuesById(tableName, id, columnNames, values);
           break; // 22.06.2016
         }
         catch
@@ -2378,12 +2375,12 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="id">Идентификатор строки таблицы (значение первичного ключа)</param>
     /// <param name="columnNamesAndValues">Имена устанавливаемых столбцов и значения</param>
-    public void SetValues(string tableName, Int32 id, IDictionary columnNamesAndValues)
+    public void SetValuesById(string tableName, object id, IDictionary columnNamesAndValues)
     {
       string[] columnNames;
       object[] values;
       DataTools.PairsToNamesAndValues(columnNamesAndValues, out columnNames, out values);
-      SetValues(tableName, id, new DBxColumns(columnNames), values);
+      SetValuesById(tableName, id, new DBxColumns(columnNames), values);
     }
 
     /// <summary>
@@ -2441,7 +2438,7 @@ namespace FreeLibSet.Data
     /// <param name="columnName">Имя устанавливаемого столбца</param>
     /// <param name="value">Значение поля</param>
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
-    public Int32 AddRecordWithIdResult(string tableName, string columnName, object value)
+    public object AddRecordWithIdResult(string tableName, string columnName, object value)
     {
       object[] values = new object[1];
       values[0] = value;
@@ -2455,7 +2452,7 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Имена устанавливаемых полей и значения</param>
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
-    public Int32 AddRecordWithIdResult(string tableName, IDictionary columnNamesAndValues)
+    public object AddRecordWithIdResult(string tableName, IDictionary columnNamesAndValues)
     {
       string[] columnNames;
       object[] values;
@@ -2471,7 +2468,7 @@ namespace FreeLibSet.Data
     /// <param name="columnNames">Имена устанавливаемых столбцов</param>
     /// <param name="values">Устанавливаемые значения. Длина массива должна совпадать с ColumnNames</param>
     /// <returns>Идентификатор строки таблицы (значение первичного ключа)</returns>
-    public Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
+    public object AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
     {
       return _Source.AddRecordWithIdResult(tableName, columnNames, values);
     }
@@ -2707,13 +2704,13 @@ namespace FreeLibSet.Data
     /// с подходящими значениями не найдена, то добавляется новая запись
     /// На время выполнения запроса база данных блокируется во избежание двойного
     /// добавления.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному полю или Guid.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Имена и значения полей</param>
     /// <param name="id">Возвращается идентификатор Id найденной или новой записи. Не может быть 0</param>
     /// <returns>true, если была добавлена новая запись, false-если найдена существующая</returns>
-    public bool FindOrAddRecord(string tableName, IDictionary columnNamesAndValues, out Int32 id)
+    public bool FindOrAddRecord(string tableName, IDictionary columnNamesAndValues, out object id)
     {
       string[] columnNames;
       object[] values;
@@ -2726,14 +2723,14 @@ namespace FreeLibSet.Data
     /// с подходящими значениями не найдена, то добавляется новая запись
     /// На время выполнения запроса база данных блокируется во избежание двойного
     /// добавления.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному полю или Guid.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей</param>
     /// <param name="values">Значения полей</param>
     /// <param name="id">Возвращается идентификатор Id найденной или новой записи. Не может быть 0</param>
     /// <returns>true, если была добавлена новая запись, false-если найдена существующая</returns>
-    public bool FindOrAddRecord(string tableName, DBxColumns columnNames, object[] values, out int id)
+    public bool FindOrAddRecord(string tableName, DBxColumns columnNames, object[] values, out object id)
     {
       return _Source.FindOrAddRecord(tableName, columnNames, values, out id);
     }
@@ -2743,14 +2740,14 @@ namespace FreeLibSet.Data
     /// с подходящими значениями не найдена, то добавляется новая запись
     /// На время выполнения запроса база данных блокируется во избежание двойного
     /// добавления.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному полю или Guid.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNamesAndValues">Имена и значения полей</param>
     /// <returns>Возвращается идентификатор Id найденной или новой записи. Не может быть 0</returns>
-    public Int32 FindOrAddRecord(string tableName, IDictionary columnNamesAndValues)
+    public object FindOrAddRecord(string tableName, IDictionary columnNamesAndValues)
     {
-      Int32 id;
+      object id;
       FindOrAddRecord(tableName, columnNamesAndValues, out id);
       return id;
     }
@@ -2760,13 +2757,13 @@ namespace FreeLibSet.Data
     /// с подходящими значениями не найдена, то добавляется новая запись
     /// На время выполнения запроса база данных блокируется во избежание двойного
     /// добавления.
-    /// Таблица должна иметь первичный ключ по целочисленному (Int32) полю
+    /// Таблица должна иметь первичный ключ по целочисленному полю или Guid.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Имена полей</param>
     /// <param name="values">Значения полей</param>
     /// <returns>Возвращается идентификатор Id найденной или новой записи. Не может быть 0</returns>
-    public Int32 FindOrAddRecord(string tableName, DBxColumns columnNames, object[] values)
+    public object FindOrAddRecord(string tableName, DBxColumns columnNames, object[] values)
     {
       return _Source.FindOrAddRecord(tableName, columnNames, values);
     }
@@ -2776,7 +2773,7 @@ namespace FreeLibSet.Data
     /// Искомые строки передаются в таблице DataTable. В таблице должно быть одно или несколько полей, на основании
     /// которых выполняется поиск. Эта таблица НЕ ДОЛЖНА иметь поля идентификатора.
     /// Имя таблицы, в которую выполняется добавление строк, извлекается из свойства <see cref="System.Data.DataTable.TableName"/>
-    /// Таблица в базе данных должна иметь первичный ключ типа Int32.
+    /// Таблица должна иметь первичный ключ по целочисленному полю или Guid.
     /// Предполагается, что в базе данных имеется индекс по полям, по которым выполняется поиск, иначе будет медленно.
     /// Должно быть разрешение на запись таблицы.
     /// Возвращает массив идентификаторов найденных или созданных строк. Длина массива и порядок элемента совпадает
@@ -2784,7 +2781,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="table">Строки для поиска. Этот объект не меняется</param>
     /// <returns>Идентификаторы строк</returns>
-    public Int32[] FindOrAddRecords(DataTable table)
+    public object[] FindOrAddRecords(DataTable table)
     {
       return _Source.FindOrAddRecords(table);
     }
@@ -2793,7 +2790,7 @@ namespace FreeLibSet.Data
     /// Групповой поиск или добавление множества записей в таблицу базы данных.
     /// Искомые строки передаются в таблице DataTable. В таблице должно быть одно или несколько полей, на основании
     /// которых выполняется поиск. Эта таблица НЕ ДОЛЖНА иметь поля идентификатора.
-    /// Таблица в базе данных должна иметь первичный ключ типа Int32.
+    /// Таблица должна иметь первичный ключ по целочисленному полю или Guid.
     /// Предполагается, что в базе данных имеется индекс по полям, по которым выполняется поиск, иначе будет медленно.
     /// Должно быть разрешение на запись таблицы.
     /// Возвращает массив идентификаторов найденных или созданных строк. Длина массива и порядок элемента совпадает
@@ -2802,7 +2799,7 @@ namespace FreeLibSet.Data
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="table">Строки для поиска. Этот объект не меняется</param>
     /// <returns>Идентификаторы строк</returns>
-    public Int32[] FindOrAddRecords(string tableName, DataTable table)
+    public object[] FindOrAddRecords(string tableName, DataTable table)
     {
       return _Source.FindOrAddRecords(tableName, table);
     }

@@ -39,7 +39,7 @@ namespace ExtTools_tests.UICore
     {
       TestMinMaxSource<Int32?> minmax = new TestMinMaxSource<Int32?>(-30, 30);
       IncrementUpDownHandler<Int32> res = IncrementUpDownHandler<Int32>.Create(3, minmax);
-      Assert.IsInstanceOf<IntUpDownHandler>(res, "ResultType");
+      Assert.IsInstanceOf<Int32UpDownHandler>(res, "ResultType");
       Assert.AreEqual(3, res.Increment, "Increment");
       Assert.AreEqual(-30, res.Minimum, "Minimum");
       Assert.AreEqual(30, res.Maximum, "Maximum");
@@ -82,7 +82,7 @@ namespace ExtTools_tests.UICore
   }
 
   [TestFixture]
-  public class IntUpDownHandlerTests
+  public class Int32UpDownHandlerTests
   {
     #region Конструктор
 
@@ -90,7 +90,7 @@ namespace ExtTools_tests.UICore
     public void Constructor()
     {
       TestMinMaxSource<int?> minmax = new TestMinMaxSource<int?>(-5, 10);
-      IntUpDownHandler sut = new IntUpDownHandler(5, minmax);
+      Int32UpDownHandler sut = new Int32UpDownHandler(5, minmax);
       Assert.AreEqual(5, sut.Increment, "Increment");
       Assert.AreEqual(-5, sut.Minimum, "Minimum");
       Assert.AreEqual(10, sut.Maximum, "Maximum");
@@ -142,7 +142,7 @@ namespace ExtTools_tests.UICore
       }
 
       TestMinMaxSource<int?> minmax = new TestMinMaxSource<int?>(minimum, maximum);
-      IntUpDownHandler sut = new IntUpDownHandler(increment, minmax);
+      Int32UpDownHandler sut = new Int32UpDownHandler(increment, minmax);
 
       bool hasNext, hasPrev;
       int? nextValue, prevValue;
@@ -271,8 +271,8 @@ namespace ExtTools_tests.UICore
     [Test]
     public void Constructor()
     {
-      TestMinMaxSource<int?> minmax = new TestMinMaxSource<int?>(-5, 10);
-      IntUpDownHandler sut = new IntUpDownHandler(5, minmax);
+      TestMinMaxSource<double?> minmax = new TestMinMaxSource<double?>(-5, 10);
+      DoubleUpDownHandler sut = new DoubleUpDownHandler(5, minmax);
       Assert.AreEqual(5, sut.Increment, "Increment");
       Assert.AreEqual(-5, sut.Minimum, "Minimum");
       Assert.AreEqual(10, sut.Maximum, "Maximum");

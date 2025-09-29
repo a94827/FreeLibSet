@@ -55,12 +55,13 @@ namespace FreeLibSet.Forms
       Control.ScrollBars = ScrollBars.Vertical;
 
       //TheHandler.Columns.AddImage();
-      Columns.AddInt("Order", false, Res.EFPErrorDataGridView_ColTitle_Order, 4);
+      Columns.AddInteger("Order", false, Res.EFPErrorDataGridView_ColTitle_Order, 4);
       DataGridViewTextBoxColumn col;
-      col = Columns.AddText("Kind", false, Res.EFPErrorDataGridView_ColTitle_Kind, 4);
+      col = Columns.AddText("Kind", false, Res.EFPErrorDataGridView_ColTitle_Kind, 4, 2);
       col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-      col = Columns.AddText("Code", false, Res.EFPErrorDataGridView_ColTitle_Code, 1, 1, DataGridViewContentAlignment.MiddleCenter);
+      col = Columns.AddText("Code", false, Res.EFPErrorDataGridView_ColTitle_Code, 1, 1);
+      col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
       col.Visible = false;
       col = Columns.AddTextFill("Text", false, Res.EFPErrorDataGridView_ColTitle_Message, 100, 20);
       col.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
@@ -264,8 +265,8 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Добавляет значки в заголовок строки
     /// </summary>
-    /// <param name="args">Аргументы события <see cref="EFPDataGridView.GetRowAttributes"/></param>
-    protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
+    /// <param name="args">Аргументы события <see cref="EFPDataGridView.RowInfoNeeded"/></param>
+    protected override void OnRowInfoNeeded(EFPDataGridViewRowInfoEventArgs args)
     {
       DataGridViewRow row = args.Control.Rows[args.RowIndex];
       if (row.Tag != null)
@@ -275,7 +276,7 @@ namespace FreeLibSet.Forms
         args.AddRowErrorMessage(kind, UITools.ToString(kind));
       }
 
-      base.OnGetRowAttributes(args);
+      base.OnRowInfoNeeded(args);
     }
 
     /// <summary>

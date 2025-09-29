@@ -283,8 +283,8 @@ namespace FreeLibSet.Data.Docs
           {
             if (row.RowState == DataRowState.Deleted)
               continue;
-            Int32 refDocId = DataTools.GetInt(row[docIdColumnPos]);
-            Int32 tableId = DataTools.GetInt(row[tableIdColumnPos]);
+            Int32 refDocId = DataTools.GetInt32(row[docIdColumnPos]);
+            Int32 tableId = DataTools.GetInt32(row[tableIdColumnPos]);
 
             if (refDocId == 0 && tableId == 0)
               continue;
@@ -326,7 +326,7 @@ namespace FreeLibSet.Data.Docs
                 _DelayedList = new List<DelayedFieldInfo>();
               DelayedFieldInfo info = new DelayedFieldInfo();
               info.TableName = table.TableName;
-              info.Id = DataTools.GetInt(row, "Id");
+              info.Id = DataTools.GetInt32(row, "Id");
               info.ColumnName = vtr.DocIdColumn.ColumnName;
               info.Value = newRefId;
               _DelayedList.Add(info);
@@ -349,7 +349,7 @@ namespace FreeLibSet.Data.Docs
       int pIdColumn = table.Columns.IndexOf("Id");
       foreach (DataRow row in table.Rows)
       {
-        int oldRefId = DataTools.GetInt(DBxDocSet.GetValue(row, columnPos));
+        int oldRefId = DataTools.GetInt32(DBxDocSet.GetValue(row, columnPos));
         if (oldRefId == 0)
           continue;
         int newRefId;
@@ -366,7 +366,7 @@ namespace FreeLibSet.Data.Docs
               _DelayedList = new List<DelayedFieldInfo>();
             DelayedFieldInfo info = new DelayedFieldInfo();
             info.TableName = table.TableName;
-            info.Id = DataTools.GetInt(row[pIdColumn]);
+            info.Id = DataTools.GetInt32(row[pIdColumn]);
             info.ColumnName = table.Columns[columnPos].ColumnName;
             info.Value = newRefId;
             _DelayedList.Add(info);

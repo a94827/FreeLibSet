@@ -68,7 +68,7 @@ namespace FreeLibSet.Forms.Docs
     /// в <see cref="DocTypeUIBase.TableCache"/>.Clear(<paramref name="docIds"/>).
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов</param>
-    public virtual void UpdateRowsForIds(Int32[] docIds)
+    public virtual void UpdateRowsForIds(IIdSet<Int32> docIds)
     {
     }
 
@@ -156,7 +156,7 @@ namespace FreeLibSet.Forms.Docs
     /// в <see cref="DocTypeUIBase.TableCache"/>.Clear(<paramref name="docIds"/>)
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов</param>
-    public void UpdateRowsForIds(Int32[] docIds)
+    public void UpdateRowsForIds(IIdSet<Int32> docIds)
     {
       if (Count == 0)
         return;
@@ -199,8 +199,8 @@ namespace FreeLibSet.Forms.Docs
         return;
 
       documents.DocProvider.UpdateDBCache(documents.DataSet);
-      Int32[] docIds = documents[_DocTypeUI.DocType.Name].DocIds;
-      if (docIds.Length > 0)
+      IIdSet<Int32> docIds = documents[_DocTypeUI.DocType.Name].DocIds;
+      if (docIds.Count > 0)
         UpdateRowsForIds(docIds);
       _DocTypeUI.RefreshBufferedData(); // 03.02.2022
     }
@@ -506,7 +506,7 @@ namespace FreeLibSet.Forms.Docs
           int pCol = srcRow.Table.Columns.IndexOf(mainColName);
           if (pCol >= 0)
           {
-            Int32 refId = DataTools.GetInt(srcRow, mainColName); // в ResRow может не быть базового поля
+            Int32 refId = DataTools.GetInt32(srcRow, mainColName); // в ResRow может не быть базового поля
             object refValue = Owner.UI.TextHandlers.DBCache[DocTypeUI.DocType.Name].GetRefValue(colName, refId);
             if (refValue == null)
               resRow[i] = DBNull.Value; // 26.10.2016
@@ -545,7 +545,7 @@ namespace FreeLibSet.Forms.Docs
           int pCol = srcRow.Table.Columns.IndexOf(mainColName);
           if (pCol >= 0)
           {
-            Int32 refId = DataTools.GetInt(srcRow[mainColName, rowVer]);
+            Int32 refId = DataTools.GetInt32(srcRow[mainColName, rowVer]);
             value = Owner.UI.TextHandlers.DBCache[DocTypeUI.DocType.Name].GetRefValue(colName, refId);
           }
           else
@@ -580,10 +580,10 @@ namespace FreeLibSet.Forms.Docs
 
 
     /// <summary>
-    /// Вызывает <see cref="IEFPDBxView.UpdateRowsForIds(int[])"/>
+    /// Вызывает <see cref="IEFPDBxView.UpdateRowsForIds(IIdSet{Int32})"/>
     /// </summary>
     /// <param name="docIds">Идентификаторы обновляемых документов</param>
-    public override void UpdateRowsForIds(Int32[] docIds)
+    public override void UpdateRowsForIds(IIdSet<Int32> docIds)
     {
       if (Owner != null)
         Owner.UpdateRowsForIds(docIds);

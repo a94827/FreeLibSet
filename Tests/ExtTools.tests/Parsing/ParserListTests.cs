@@ -27,7 +27,7 @@ namespace ExtTools_tests.Parsing
 
       NumConstParser ncp = new NumConstParser();
       ncp.NumberFormat = StdConvert.NumberFormat;
-      ncp.AllowInt = true;
+      ncp.AllowInt32 = true;
       ncp.AllowSingle = false;
       ncp.AllowDouble = false;
       ncp.AllowDecimal = false;

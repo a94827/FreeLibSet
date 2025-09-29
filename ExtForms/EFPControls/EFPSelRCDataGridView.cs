@@ -58,7 +58,7 @@ namespace FreeLibSet.Forms
       base.UseRowImages = true; // 12.01.2022
 
       // 12.01.2022
-      Columns.AddBool("RowFlag", false, String.Empty); // будет удален при установке SourceData
+      Columns.AddCheckBox("RowFlag", false, String.Empty); // будет удален при установке SourceData
       base.MarkRowsColumnIndex = 0;
 
       _AutoSelect = true;
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      Columns.AddBool("RowFlag", false, String.Empty);
+      Columns.AddCheckBox("RowFlag", false, String.Empty);
       Columns.LastAdded.GridColumn.ToolTipText = Res.EFPSelRCDataGridView_ToolTip_RowFlag;
       Columns.LastAdded.GridColumn.DividerWidth = 1; // 12.01.2022
 
@@ -252,7 +252,7 @@ namespace FreeLibSet.Forms
         {
           if (args.RowIndex == 0)
             return;
-          Data.SelRows[args.RowIndex - 1] = DataTools.GetBool(args.Value);
+          Data.SelRows[args.RowIndex - 1] = DataTools.GetBoolean(args.Value);
           Control.InvalidateRow(args.RowIndex);
           base.Validate();
         }
@@ -292,7 +292,7 @@ namespace FreeLibSet.Forms
     /// Получение списка ошибок и предупреждений для строки, если есть ячейки с неправильным форматированием
     /// </summary>
     /// <param name="args">Аргументы события</param>
-    protected override void OnGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args)
+    protected override void OnRowInfoNeeded(EFPDataGridViewRowInfoEventArgs args)
     {
       if (Data == null)
         return;
@@ -317,14 +317,14 @@ namespace FreeLibSet.Forms
           }
         }
       }
-      base.OnGetRowAttributes(args);
+      base.OnRowInfoNeeded(args);
     }
 
     /// <summary>
     /// Раскраска серых ячеек
     /// </summary>
     /// <param name="args">Аргументы события</param>
-    protected override void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
+    protected override void OnCellInfoNeeded(EFPDataGridViewCellInfoEventArgs args)
     {
       if (Data == null)
         return;
@@ -369,7 +369,7 @@ namespace FreeLibSet.Forms
         // Ячейка с флажком никогда не делается серой
       }
 
-      base.OnGetCellAttributes(args);
+      base.OnCellInfoNeeded(args);
     }
 
     #endregion

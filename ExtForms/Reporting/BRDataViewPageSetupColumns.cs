@@ -28,11 +28,11 @@ namespace FreeLibSet.Forms.Reporting
       SettingsDialogPage page = dialog.Pages.Add(MainPanel);
 
       ghColumns = new EFPDataGridView(page.BaseProvider, grColumns);
-      ghColumns.Columns.AddBool("Flag", false, Res.BRDataViewPageSetupColumns_ColTitle_Flag);
+      ghColumns.Columns.AddCheckBox("Flag", false, Res.BRDataViewPageSetupColumns_ColTitle_Flag);
       ghColumns.Columns.LastAdded.DisplayName = Res.BRDataViewPageSetupColumns_Name_Flag;
       ghColumns.Columns.AddTextFill("Name", false, Res.BRDataViewPageSetupColumns_ColTitle_Name, 100, 15);
       ghColumns.Columns.AddFixedPoint("Width", false, Res.BRDataViewPageSetupColumns_ColTitle_Width, 10, 2, null);
-      ghColumns.Columns.AddBool("AutoGrow", false, Res.BRDataViewPageSetupColumns_ColTitle_AutoGrow);
+      ghColumns.Columns.AddCheckBox("AutoGrow", false, Res.BRDataViewPageSetupColumns_ColTitle_AutoGrow);
       ghColumns.Columns.LastAdded.DisplayName = Res.BRDataViewPageSetupColumns_Name_AutoGrow;
 
       grColumns.Columns[0].ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_Flag;
@@ -47,7 +47,7 @@ namespace FreeLibSet.Forms.Reporting
       ghColumns.CanView = false;
       ghColumns.MarkRowsColumnIndex = 0;
       grColumns.VirtualMode = false;
-      ghColumns.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ghColumns_GetCellAttributes);
+      ghColumns.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(ghColumns_CellInfoNeeded);
       grColumns.CellValueChanged += GrColumns_CellValueChanged;
       ghColumns.MenuOutItems.Clear(); // иначе будут параметры страницы в параметрах страницы :)
       ghColumns.ToolBarPanel = panSpbColumns;
@@ -89,7 +89,7 @@ namespace FreeLibSet.Forms.Reporting
 
     public EFPDataGridView ghColumns;
 
-    void ghColumns_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void ghColumns_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       IEFPDataViewColumn column = args.GetGridRow().Tag as IEFPDataViewColumn;
 
@@ -111,7 +111,7 @@ namespace FreeLibSet.Forms.Reporting
         case 3:
           if (column.Printable)
           {
-            bool flag = DataTools.GetBool(grColumns.Rows[args.RowIndex].Cells[0].Value);
+            bool flag = DataTools.GetBoolean(grColumns.Rows[args.RowIndex].Cells[0].Value);
             if (!flag)
             {
               args.Grayed = true;
@@ -142,13 +142,13 @@ namespace FreeLibSet.Forms.Reporting
         switch (args.ColumnIndex)
         {
           case 0:
-            _ViewData.SetColumnPrinted(column, DataTools.GetBool(gridRow.Cells[0].Value));
+            _ViewData.SetColumnPrinted(column, DataTools.GetBoolean(gridRow.Cells[0].Value));
             break;
           case 2:
             _ViewData.SetColumnPrintWidth(column, (int)Math.Round(DataTools.GetDouble(gridRow.Cells[2].Value) * 100.0, 0, MidpointRounding.AwayFromZero));
             break;
           case 3:
-            _ViewData.SetColumnAutoGrow(column, DataTools.GetBool(gridRow.Cells[3].Value));
+            _ViewData.SetColumnAutoGrow(column, DataTools.GetBoolean(gridRow.Cells[3].Value));
             break;
         }
         InitColumnWidths();
@@ -174,7 +174,7 @@ namespace FreeLibSet.Forms.Reporting
       double w = 0.0;
       for (int i = 0; i < grColumns.Rows.Count; i++)
       {
-        if (DataTools.GetBool(grColumns.Rows[i].Cells[0].Value))
+        if (DataTools.GetBoolean(grColumns.Rows[i].Cells[0].Value))
         {
           n++;
           w += DataTools.GetDouble(grColumns.Rows[i].Cells[2].Value);
@@ -245,9 +245,9 @@ namespace FreeLibSet.Forms.Reporting
         IEFPDataViewColumn column = columns[i];
         DataGridViewRow gridRow = grColumns.Rows[i];
 
-        _ViewData.SetColumnAutoGrow(column, DataTools.GetBool(gridRow.Cells[3].Value));
+        _ViewData.SetColumnAutoGrow(column, DataTools.GetBoolean(gridRow.Cells[3].Value));
         _ViewData.SetColumnPrintWidth(column, (int)Math.Round(DataTools.GetDouble(gridRow.Cells[2].Value) * 100.0, 0, MidpointRounding.AwayFromZero));
-        _ViewData.SetColumnPrinted(column, DataTools.GetBool(gridRow.Cells[0].Value));
+        _ViewData.SetColumnPrinted(column, DataTools.GetBoolean(gridRow.Cells[0].Value));
       }
 
       _ViewData.RepeatedColumnCount = efpRepeatedColumns.Value;

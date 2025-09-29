@@ -167,7 +167,7 @@ namespace FreeLibSet.Core
   /// Список сообщений об ошибках, предупреждениях и информационных сообщениях
   /// </summary>
   [Serializable]
-  public class ErrorMessageList : ListWithReadOnly<ErrorMessageItem>, ICloneable
+  public class ErrorMessageList : ListWithReadOnly<ErrorMessageItem>, ICloneableReadOnlyObject<ErrorMessageList>
   {
     #region Конструкторы
 
@@ -627,7 +627,7 @@ namespace FreeLibSet.Core
     /// <param name="source">Исходный список сообщений</param>
     /// <param name="prefixText">Текст перед каждым сообщением</param>
     /// <param name="suffixText">Текст после каждого сообщения</param>
-    public void Add(ErrorMessageList source, string prefixText, string suffixText)
+    public void AddRange(ErrorMessageList source, string prefixText, string suffixText)
     {
       for (int i = 0; i < source.Count; i++)
         Add(source[i], prefixText, suffixText);
@@ -637,7 +637,7 @@ namespace FreeLibSet.Core
     /// Добавить копии сушествующих сообщений из другого списка
     /// </summary>
     /// <param name="source">Исходный список сообщений</param>
-    public void Add(ErrorMessageList source)
+    public void AddRange(ErrorMessageList source)
     {
       for (int i = 0; i < source.Count; i++)
         Add(source[i]);
@@ -668,26 +668,6 @@ namespace FreeLibSet.Core
           thisKind = maxKind;
         this[i] = new ErrorMessageItem(thisKind, this[i]);
       }
-    }
-
-
-    /// <summary>
-    /// Создает копию списка сообщений, в котором уровень серьезности сообщений
-    /// понижен до <paramref name="maxKind"/>.
-    /// То есть, если <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Warning"/>, то ошибки заменяются на предупреждения,
-    /// а предупреждения и информационные сообщения оставляются без изменений.
-    /// Если же <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Info"/>, то все сообщения копируются как информационные.
-    /// Если <paramref name="maxKind"/>=<see cref="ErrorMessageKind.Error"/>, то возвращается немодифицированная копия списка, как в методе <see cref="Clone()"/>.
-    /// </summary>
-    /// <param name="maxKind">Ограничитель уровня (<see cref="ErrorMessageKind.Warning"/> или <see cref="ErrorMessageKind.Info"/>)</param>
-    /// <returns>Копия списка</returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("Используйте Clone() и SetMaxSeverity()", false)]
-    public ErrorMessageList LimitKind(ErrorMessageKind maxKind)
-    {
-      ErrorMessageList list2 = Clone();
-      list2.SetMaxSeverity(maxKind);
-      return list2;
     }
 
     #endregion
@@ -1022,7 +1002,7 @@ namespace FreeLibSet.Core
       if (e2 == null)
         Add(new ErrorMessageItem(ErrorMessageKind.Error, e.Message), prefixText, suffixText);
       else
-        Add(e2.Errors, prefixText, suffixText);
+        AddRange(e2.Errors, prefixText, suffixText);
     }
 
     #endregion

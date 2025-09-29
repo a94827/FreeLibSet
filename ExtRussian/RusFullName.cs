@@ -213,7 +213,7 @@ namespace FreeLibSet.Russian
         if (Name.Length > 0)
         {
           //sb.Append(" ");
-          sb.Append(DataTools.NonBreakSpaceChar); // 06.06.2024
+          sb.Append(StringTools.NonBreakSpaceChar); // 06.06.2024
           sb.Append(Name, 0, 1);
           sb.Append(".");
 
@@ -249,7 +249,7 @@ namespace FreeLibSet.Russian
             sb.Append(Patronymic, 0, 1);
             sb.Append(".");
           }
-          sb.Append(DataTools.NonBreakSpaceChar); // 06.06.2024
+          sb.Append(StringTools.NonBreakSpaceChar); // 06.06.2024
         }
         sb.Append(Surname);
         return sb.ToString();
@@ -568,7 +568,7 @@ namespace FreeLibSet.Russian
         }
       }
       // Исправляем регистр
-      return DataTools.ToUpperWordsInvariant(s);
+      return StringTools.ToUpperWordsInvariant(s);
     }
 
     /// <summary>
@@ -580,15 +580,15 @@ namespace FreeLibSet.Russian
     private static string CorrectText(string s)
     {
       // Заменяем неразрывные пробелы (10.06.2024)
-      s = s.Replace(DataTools.NonBreakSpaceChar, ' ');
+      s = s.Replace(StringTools.NonBreakSpaceChar, ' ');
       // Убираем точки
       s = s.Replace(".", " ");
       // Убираем пробелы вокруг дефиса
       s = s.Replace(" -", "-");
       s = s.Replace("- ", "-");
-      s = DataTools.RemoveDoubleChars(s, '-');
+      s = StringTools.RemoveDoubleChars(s, '-');
       // Убираем двойные и концевые пробелы
-      s = DataTools.RemoveDoubleChars(s, ' ');
+      s = StringTools.RemoveDoubleChars(s, ' ');
       s = s.Trim();
       return s;
     }

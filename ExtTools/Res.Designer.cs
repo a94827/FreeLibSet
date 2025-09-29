@@ -808,6 +808,15 @@ namespace FreeLibSet.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Method {0} of object {1} has already been called.
+        /// </summary>
+        internal static string Common_Err_MethodAlreadyCalled {
+            get {
+                return ResourceManager.GetString("Common_Err_MethodAlreadyCalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Метод/свойство {0} должно быть переопределено для класса {1}.
         /// </summary>
         internal static string Common_Err_MustBeReimplemented {
@@ -993,6 +1002,42 @@ namespace FreeLibSet.Core {
         internal static string CompareFilter_Arg_NullAsDefaultValueWithNull {
             get {
                 return ResourceManager.GetString("CompareFilter_Arg_NullAsDefaultValueWithNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key parts are partially empty: {0}. All part mus be either presented or empty.
+        /// </summary>
+        internal static string ComplexId_Arg_PartialEmpty {
+            get {
+                return ResourceManager.GetString("ComplexId_Arg_PartialEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ({0}, {1}).
+        /// </summary>
+        internal static string ComplexId_Msg_ToString2 {
+            get {
+                return ResourceManager.GetString("ComplexId_Msg_ToString2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ({0}, {1}, {2}).
+        /// </summary>
+        internal static string ComplexId_Msg_ToString3 {
+            get {
+                return ResourceManager.GetString("ComplexId_Msg_ToString3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ().
+        /// </summary>
+        internal static string ComplexId_Msg_ToStringEmpty {
+            get {
+                return ResourceManager.GetString("ComplexId_Msg_ToStringEmpty", resourceCulture);
             }
         }
         
@@ -1258,7 +1303,7 @@ namespace FreeLibSet.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to till {1}.
+        ///   Looks up a localized string similar to till {0}.
         /// </summary>
         internal static string DateRangeFormatter_Msg_RangeMax {
             get {
@@ -1893,6 +1938,15 @@ namespace FreeLibSet.Core {
         internal static string DBxStruct_Err_TableNotFound {
             get {
                 return ResourceManager.GetString("DBxStruct_Err_TableNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error in table &apos;{0}&apos; struct declaration. {1}.
+        /// </summary>
+        internal static string DBxStructException_Err_Message {
+            get {
+                return ResourceManager.GetString("DBxStructException_Err_Message", resourceCulture);
             }
         }
         
@@ -3391,6 +3445,15 @@ namespace FreeLibSet.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Identifier not given.
+        /// </summary>
+        internal static string NoIdArgumentException_Err_Message {
+            get {
+                return ResourceManager.GetString("NoIdArgumentException_Err_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Constant should not follow another expression. Operation expected..
         /// </summary>
         internal static string NumConstParser_Err_AfterOtherExpr {
@@ -3603,6 +3666,15 @@ namespace FreeLibSet.Core {
         internal static string PasswordInputDialog_Msg_Title {
             get {
                 return ResourceManager.GetString("PasswordInputDialog_Msg_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid primary key.
+        /// </summary>
+        internal static string PrimaryKeyException_Err_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyException_Err_Message", resourceCulture);
             }
         }
         

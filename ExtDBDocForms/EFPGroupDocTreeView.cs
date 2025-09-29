@@ -11,6 +11,7 @@ using FreeLibSet.Logging;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Controls;
 using FreeLibSet.Core;
+using FreeLibSet.Data;
 
 namespace FreeLibSet.Forms.Docs
 {
@@ -71,25 +72,20 @@ namespace FreeLibSet.Forms.Docs
     /// массив, состояший из одного идентификатора или пустой массив.
     /// Попытка установки свойства как массива с несколькими элементами, приводит к выбросу исключения.
     /// </summary>
-    public override Int32[] SelectedIds
+    public override IIdSet<Int32> SelectedIds
     {
       get
       {
-        if (CurrentId == 0)
-          return DataTools.EmptyIds;
-        else
-          return new Int32[1] { CurrentId };
+        return IdArray<Int32>.FromId(CurrentId);
       }
       set
       {
         if (value == null)
-          value = DataTools.EmptyIds;
-        if (value.Length == 0)
-          CurrentId = 0;
-        else if (value.Length > 1)
+          value = IdArray<Int32>.Empty;
+        if (value.Count > 1)
           throw new ArgumentException(Res.EFPGroupDocTreeView_Arg_MultiSelect);
         else
-          CurrentId = value[0];
+          CurrentId = value.SingleId;
       }
     }
 
@@ -156,7 +152,7 @@ namespace FreeLibSet.Forms.Docs
       if (row == null)
         return base.GetNodeImageKey(node);
 
-      Int32 docId = DataTools.GetInt(row, "Id");
+      Int32 docId = DataTools.GetInt32(row, "Id");
       if (docId == RootNodeDocId)
         return RootNodeImageKey;
       else if (node.IsLeaf)
@@ -311,7 +307,7 @@ namespace FreeLibSet.Forms.Docs
         {
           if (!Object.ReferenceEquals(row, _RootNodeDataRow))
           {
-            if (DataTools.GetInt(row, model.ParentColumnName) == 0)
+            if (DataTools.GetInt32(row, model.ParentColumnName) == 0)
               row[model.ParentColumnName] = RootNodeDocId;
           }
         }

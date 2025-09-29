@@ -501,7 +501,7 @@ namespace FreeLibSet.IO
 
       IniSection sect = _Sections[sectionName];
       if (sect == null)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
         return sect.GetCodes();
     }

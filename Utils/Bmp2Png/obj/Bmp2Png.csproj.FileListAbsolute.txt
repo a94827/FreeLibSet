@@ -1,0 +1,16 @@
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\Bmp2Png.exe
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\Bmp2Png.pdb
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\ExtForms.dll
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\ExtTools.dll
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\ExtForms.pdb
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\ExtForms.xml
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\ExtTools.pdb
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\ExtTools.xml
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\ru\ExtForms.resources.dll
+D:\a94827\FreeLibSet\Utils\Bmp2Png\bin\Debug\ru\ExtTools.resources.dll
+D:\a94827\FreeLibSet\Utils\Bmp2Png\obj\Debug\ResolveAssemblyReference.cache
+D:\a94827\FreeLibSet\Utils\Bmp2Png\obj\Debug\Bmp2Png.ParamForm.resources
+D:\a94827\FreeLibSet\Utils\Bmp2Png\obj\Debug\Bmp2Png.Properties.Resources.resources
+D:\a94827\FreeLibSet\Utils\Bmp2Png\obj\Debug\Bmp2Png.csproj.GenerateResource.Cache
+D:\a94827\FreeLibSet\Utils\Bmp2Png\obj\Debug\Bmp2Png.exe
+D:\a94827\FreeLibSet\Utils\Bmp2Png\obj\Debug\Bmp2Png.pdb

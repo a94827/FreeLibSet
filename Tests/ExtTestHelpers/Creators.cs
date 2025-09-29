@@ -11,6 +11,18 @@ namespace FreeLibSet.Tests
   /// </summary>
   public static class Creators
   {
+    #region Числа
+
+    public static decimal? NDecimal(string s)
+    {
+      if (String.IsNullOrEmpty(s))
+        return null;
+      else
+        return StdConvert.ToDecimal(s);
+    }
+
+    #endregion
+
     #region Объекты даты и времени
 
     #region DateTime
@@ -45,6 +57,21 @@ namespace FreeLibSet.Tests
       else
         return DateTime(s);
     }
+
+    /// <summary>
+    /// Строка, которая преобразуется вызовом <see cref="DateTime(string)"/> в <see cref="System.DateTime.MinValue"/>
+    /// </summary>
+    public const string StrDateMinValue = "00010101";
+
+    /// <summary>
+    /// Строка, которая преобразуется вызовом <see cref="DateTime(string)"/> в <see cref="System.DateTime.MaxValue"/>.Date
+    /// </summary>
+    public const string StrDateMaxValue = "99991231";
+
+    ///// <summary>
+    ///// Строка, которая преобразуется вызовом <see cref="DateTime(string)"/> в <see cref="System.DateTime.MaxValue"/>
+    ///// </summary>
+    //public const string StrDateTimeMaxValue = "99991231235959";
 
     /// <summary>
     /// Создает объект DateRange из строки в формате "ГГГГММДД-ГГГГММДД".
@@ -98,6 +125,11 @@ namespace FreeLibSet.Tests
       else
         return TimeSpan.Parse(s);
     }
+
+    /// <summary>
+    /// Строка, которая преобразуется вызовом <see cref="NTimeSpan(string)"/> в <see cref="System.TimeSpan.Zero"/>
+    /// </summary>
+    public const string StrTimeSpanZeroValue = "00:00:00";
 
     #endregion
 
@@ -267,7 +299,8 @@ namespace FreeLibSet.Tests
       }
     }
 
+    public const string StrGuidEmpty= "00000000-0000-0000-0000-000000000000";
+
     #endregion
   }
-
 }

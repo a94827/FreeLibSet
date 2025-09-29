@@ -22,7 +22,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Если true, то при извлечении значения поля, которое может принимать значение NULL, требуется заменять значения NULL 
     /// на значение поля по умолчанию с помощью функции COALESCE() или ISNULL().
-    /// Используется фильтрами <see cref="CompareFilter"/>, <see cref="IdsFilter"/>, <see cref="ValuesFilter"/>.
+    /// Используется фильтрами <see cref="CompareFilter"/>, <see cref="ValueInListFilter"/>.
     /// </summary>
     public bool NullAsDefaultValue
     {

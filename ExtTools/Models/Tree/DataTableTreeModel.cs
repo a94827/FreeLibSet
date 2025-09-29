@@ -245,7 +245,7 @@ namespace FreeLibSet.Models.Tree
         if (value == null)
           throw new ArgumentNullException();
         if (value.Length == 0)
-          _SortColumnPositions = DataTools.EmptyInts;
+          _SortColumnPositions = EmptyArray<Int32>.Empty;
         else
         {
           string[] aColNames = DataTools.GetDataViewSortColumnNames(value);
@@ -311,7 +311,7 @@ namespace FreeLibSet.Models.Tree
       {
         DataRow parentRow = TreePathToDataRow(treePath);
         if (parentRow == null)
-          return new DataRow[0]; // 27.12.2020
+          return EmptyArray<DataRow>.Empty; // 27.12.2020
         object parentValue = parentRow[IdColumnPosition];
         DataRow[] rows = _Table.Select(GetEqExpression(ParentColumnName, parentValue), Sort);
         return rows;
@@ -740,7 +740,7 @@ namespace FreeLibSet.Models.Tree
     protected DataRow[] GetRowsWithChildren(object treeItem)
     {
       if (treeItem == null)
-        return new DataRow[0];
+        return EmptyArray<DataRow>.Empty;
 
       List<DataRow> lst = new List<DataRow>();
       lst.Add(GetDataRowWithCheck(treeItem));
@@ -1055,10 +1055,10 @@ namespace FreeLibSet.Models.Tree
 
       while (true)
       {
-        IdList missingIds = new IdList();
+        IdCollection<Int32> missingIds = new IdCollection<Int32>();
         foreach (DataRow row in resTable.Rows)
         {
-          Int32 parentId = DataTools.GetInt(row[pParentId]);
+          Int32 parentId = DataTools.GetInt32(row[pParentId]);
           if (parentId == 0)
             continue;
           if (resTable.Rows.Find(parentId) == null)

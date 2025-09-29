@@ -92,7 +92,7 @@ namespace FreeLibSet.Reporting
     /// Представление в виде целого числа.
     /// Не предназначено для использования в прикладном коде.
     /// </summary>
-    public int IntValue { get { return _Value; } }
+    public int Int32Value { get { return _Value; } }
     private readonly Int32 _Value;
 
     /// <summary>

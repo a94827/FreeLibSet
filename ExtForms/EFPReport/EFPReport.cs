@@ -743,7 +743,7 @@ namespace FreeLibSet.Forms
 
           //TheForm.StartPosition = FormStartPosition.WindowsDefaultLocation;
 
-          // Убрано 14.09.2021 _TheForm.WindowState = cfg.GetBool("Maximized") ? FormWindowState.Maximized : FormWindowState.Normal;
+          // Убрано 14.09.2021 _TheForm.WindowState = cfg.GetBoolean("Maximized") ? FormWindowState.Maximized : FormWindowState.Normal;
         }
 
         _TheOwnerControl = _TheForm;
@@ -813,7 +813,7 @@ namespace FreeLibSet.Forms
 
 
         dstItems.AddSeparator();
-        dstItems.Add(ReportCommandItems); // 28.01.2021
+        dstItems.AddRange(ReportCommandItems); // 28.01.2021
       }
       finally
       {
@@ -1058,7 +1058,7 @@ namespace FreeLibSet.Forms
       CfgPart cfg;
       using (ConfigManager.GetConfig(configInfo, EFPConfigMode.Write, out cfg))
       {
-        // Убрано 14.09.2021. cfg.SetBool("Maximized", _TheForm.WindowState == FormWindowState.Maximized);
+        // Убрано 14.09.2021. cfg.SetBoolean("Maximized", _TheForm.WindowState == FormWindowState.Maximized);
         for (int i = 0; i < Pages.Count; i++)
         {
           if (!Pages[i].SaveViewConfig(cfg))
@@ -1486,20 +1486,20 @@ namespace FreeLibSet.Forms
             {
               TempCfg cfg = new TempCfg();
               ep.WriteConfig(cfg, SettingsPart.User);
-              e.Data["EFPReport.ReportParams.CfgPartUser"] = DataTools.XmlDocumentToString(cfg.Document);
+              e.Data["EFPReport.ReportParams.CfgPartUser"] = XmlTools.XmlDocumentToString(cfg.Document);
             }
             if ((ep.UsedParts & SettingsPart.Machine) != 0)
             {
               TempCfg cfg = new TempCfg();
               ep.WriteConfig(cfg, SettingsPart.Machine);
-              e.Data["EFPReport.ReportParams.CfgPartFiles"] = DataTools.XmlDocumentToString(cfg.Document);
+              e.Data["EFPReport.ReportParams.CfgPartFiles"] = XmlTools.XmlDocumentToString(cfg.Document);
             }
           }
           else
           {
             TempCfg cfg = new TempCfg();
             ReportParams.WriteConfig(cfg);
-            e.Data["EFPReport.ReportParams.CfgPart"] = DataTools.XmlDocumentToString(cfg.Document);
+            e.Data["EFPReport.ReportParams.CfgPart"] = XmlTools.XmlDocumentToString(cfg.Document);
           }
         }
         e.Data["EFPReport.ReportCreated"] = ReportCreated;

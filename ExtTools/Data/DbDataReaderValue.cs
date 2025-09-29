@@ -15,7 +15,7 @@ namespace FreeLibSet.Data
   /// Если <see cref="DbDataReader"/> предназначен для чтения нескольких таблиц с разными списками полей, следует создавать отдельные
   /// экземпляры структуры для каждой таблицы.
   /// </summary>
-  public struct DbDataReaderValue /*: IObjectWithCode*/
+  public struct DbDataReaderValue :IDataColumnValue  /*: IObjectWithCode*/
   {
     #region Конструкторы
 
@@ -70,6 +70,10 @@ namespace FreeLibSet.Data
 
     private readonly int _ColumnIndex;
 
+    /// <summary>
+    /// Возвращает тип поля <see cref="DbDataReader.GetFieldType(int)"/>.
+    /// </summary>
+    public Type ColumnType { get { return _ColumnType; } }
     private readonly Type _ColumnType;
 
     /// <summary>
@@ -109,7 +113,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Вызывает <see cref="DbDataReader.IsDBNull(int)"/>
     /// </summary>
-    public bool IsDBNull { get { return _Reader.IsDBNull(_ColumnIndex); } }
+    public bool IsNull { get { return _Reader.IsDBNull(_ColumnIndex); } }
 
     /// <summary>
     /// Возвращает текущее значение поля <see cref="DbDataReader.GetValue(int)"/>.
@@ -143,7 +147,7 @@ namespace FreeLibSet.Data
             return _Reader.GetInt32(_ColumnIndex);
         }
         else
-          return DataTools.GetInt(_Reader.GetValue(_ColumnIndex));
+          return DataTools.GetInt32(_Reader.GetValue(_ColumnIndex));
       }
     }
 
@@ -163,7 +167,7 @@ namespace FreeLibSet.Data
             return _Reader.GetInt32(_ColumnIndex);
         }
         else
-          return DataTools.GetNullableInt(_Reader.GetValue(_ColumnIndex));
+          return DataTools.GetNullableInt32(_Reader.GetValue(_ColumnIndex));
       }
     }
 
@@ -348,7 +352,7 @@ namespace FreeLibSet.Data
             return _Reader.GetBoolean(_ColumnIndex);
         }
         else
-          return DataTools.GetBool(_Reader.GetValue(_ColumnIndex));
+          return DataTools.GetBoolean(_Reader.GetValue(_ColumnIndex));
       }
     }
 
@@ -367,7 +371,7 @@ namespace FreeLibSet.Data
     //      if (_ColumnType == typeof(Boolean))
     //        return _Reader.GetBoolean(_ColumnIndex);
     //      else
-    //        return DataTools.GetBool(_Reader.GetValue(_ColumnIndex));
+    //        return DataTools.GetBoolean(_Reader.GetValue(_ColumnIndex));
     //    }
     //  }
     //}
@@ -491,62 +495,180 @@ namespace FreeLibSet.Data
       }
     }
 
+    // Нельзя создать свойство для шаблонного типа AsEnum
+    // Придется делать метод
+
     /// <summary>
     /// Возвращает текущее значение поля. Проверяется наличие значение поля <see cref="DbDataReader.IsDBNull(int)"/> и преобразование
     /// значения в нужный тип при необходимости.
     /// </summary>
-    public TimeSpan? AsNullableTimeSpan
+    public T GetEnum<T>()
+      where T:struct
     {
-      get
-      {
-        if (_Reader.IsDBNull(_ColumnIndex))
-          return null;
-        else
-          return DataTools.GetTimeSpan(_Reader.GetValue(_ColumnIndex));
-      }
+      if (_Reader.IsDBNull(_ColumnIndex))
+        return default(T);
+      else
+        return DataTools.GetEnum<T>(_Reader.GetValue(_ColumnIndex));
     }
 
     #endregion
 
     #region Статические методы
 
-    /// <summary>
-    /// Создает словарь объектов доступа к значениям по именам полей для инициализированного <see cref="DbDataReader"/>.
-    /// Словарь не чувствителен к регистру имен полей.
-    /// </summary>
-    /// <param name="reader">Ссылка на <see cref="DbDataReader"/></param>
-    /// <returns>Словарь</returns>
-    public static IDictionary<string, DbDataReaderValue> CreateDict(DbDataReader reader)
-    {
-#if DEBUG
-      if (reader == null)
-        throw new ArgumentNullException("reader");
-#endif
+    //    /// <summary>
+    //    /// Создает словарь объектов доступа к значениям по именам полей для инициализированного <see cref="DbDataReader"/>.
+    //    /// Словарь не чувствителен к регистру имен полей.
+    //    /// </summary>
+    //    /// <param name="reader">Ссылка на <see cref="DbDataReader"/></param>
+    //    /// <returns>Словарь</returns>
+    //    public static IDictionary<string, DbDataReaderValue> CreateDict(DbDataReader reader)
+    //    {
+    //#if DEBUG
+    //      if (reader == null)
+    //        throw new ArgumentNullException("reader");
+    //#endif
 
-      Collections.TypedStringDictionary<DbDataReaderValue> dict = new Collections.TypedStringDictionary<DbDataReaderValue>(reader.FieldCount, true);
-      for (int i = 0; i < reader.FieldCount; i++)
-        dict.Add(reader.GetName(i), new DbDataReaderValue(reader, i));
-      return dict;
-    }
+    //      Collections.TypedStringDictionary<DbDataReaderValue> dict = new Collections.TypedStringDictionary<DbDataReaderValue>(reader.FieldCount, true);
+    //      for (int i = 0; i < reader.FieldCount; i++)
+    //        dict.Add(reader.GetName(i), new DbDataReaderValue(reader, i));
+    //      return dict;
+    //    }
 
     #endregion
   }
 
-#if XXX
-  public sealed class DbDataReaderValueList : NamedList<DbDataReaderValue>
+  /// <summary>
+  /// Коллекция для доступа к <see cref="DbDataReaderValue"/>, связанных с заданным <see cref="DbDataReader"/>
+  /// </summary>
+  public sealed class DbDataReaderValues : IDataRowValues
   {
-  #region Конструктор
+    #region Конструктор
 
-    public DbDataReaderValueList(DbDataReader reader)
-      :base(reader.FieldCount, true)
+    /// <summary>
+    /// Создает коллекцию
+    /// </summary>
+    /// <param name="reader">Объект для чтения данных</param>
+    public DbDataReaderValues(DbDataReader reader)
     {
-      for (int i = 0; i < reader.FieldCount; i++)
-        Add(new DbDataReaderValue(reader, i));
-
-      SetReadOnly();
+      if (reader == null)
+        throw new ArgumentNullException("reader");
+      _Reader = reader;
     }
 
-  #endregion
+
+    #endregion
+
+    #region Основные свойства
+
+    /// <summary>
+    /// Объект для чтения значений. Задается в конструкторе
+    /// </summary>
+    public DbDataReader Reader { get { return _Reader; } }
+    private readonly DbDataReader _Reader;
+
+    /// <summary>
+    /// Список имен полей в <see cref="DbDataReader"/>.
+    /// </summary>
+    public string[] ColumnNames
+    {
+      get
+      {
+        if (_ColumnNames == null)
+        {
+          _ColumnNames = new string[_Reader.FieldCount];
+          for (int i = 0; i < _ColumnNames.Length; i++)
+            _ColumnNames[i] = _Reader.GetName(i);
+        }
+        return _ColumnNames;
+      }
+    }
+    private string[] _ColumnNames;
+
+    string[] INamedValuesAccess.GetNames()
+    {
+      return ColumnNames;
+    }
+
+    private StringArrayIndexer ColumnNameIndexer
+    {
+      get
+      {
+        if (_ColumnNameIndexer == null)
+          _ColumnNameIndexer = new StringArrayIndexer(ColumnNames, true);
+        return _ColumnNameIndexer;
+      }
+    }
+    private StringArrayIndexer _ColumnNameIndexer;
+
+    bool INamedValuesAccess.Contains(string name)
+    {
+      return ColumnNameIndexer.Contains(name);
+    }
+
+    #endregion
+
+    #region Доступ к значениям
+
+    /// <summary>
+    /// Доступ к <see cref="DbDataReaderValue"/> по индексу поля
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля. Должен быть в диапазоне от 0 до (<see cref="DbDataReader.FieldCount"/>-1)</param>
+    /// <returns>Объект для извлечения значений</returns>
+    public DbDataReaderValue this[int columnIndex]
+    {
+      get
+      {
+        return new DbDataReaderValue(_Reader, columnIndex);
+      }
+    }
+
+    /// <summary>
+    /// Доступ к <see cref="DbDataReaderValue"/> по имени поля
+    /// </summary>
+    /// <param name="columnName">Имя поля. Если задана несуществующее имя, выбрасывается исключение</param>
+    /// <returns>Объект для извлечения значений</returns>
+    public DbDataReaderValue this[string columnName]
+    {
+      get
+      {
+        int columnIndex = ColumnNameIndexer.IndexOf(columnName);
+        if (columnIndex < 0)
+        {
+          if (String.IsNullOrEmpty(columnName))
+            throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
+          else
+            throw ExceptionFactory.ArgUnknownValue("columnName", columnName);
+        }
+
+        return new DbDataReaderValue(_Reader, columnIndex);
+      }
+    }
+
+    IDataColumnValue IDataRowValues.this[string columnName]
+    {
+      get { return this[columnName]; }
+    }
+
+    /// <summary>
+    /// Возвращает неформатированное значение по имени поля.
+    /// Если задано неправильное имя поля, выбрасывается исключение.
+    /// </summary>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public object GetValue(string columnName)
+    {
+      int columnIndex = ColumnNameIndexer.IndexOf(columnName);
+      if (columnIndex < 0)
+      {
+        if (String.IsNullOrEmpty(columnName))
+          throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
+        else
+          throw ExceptionFactory.ArgUnknownValue("columnName", columnName);
+      }
+
+      return _Reader.GetValue(columnIndex);
+    }
+
+    #endregion
   }
-#endif
 }

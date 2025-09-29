@@ -148,7 +148,7 @@ namespace FreeLibSet.Data
       string dir = oldItem.Substring(0, p + 1); // включая символ каталога
       string fileName = oldItem.Substring(p + 1); // без пути
 
-      if (DataTools.IndexOfAny(fileName, InvalidFileNameChars) >= 0)
+      if (StringTools.IndexOfAny(fileName, InvalidFileNameChars) >= 0)
         throw new ArgumentException(String.Format(Res.DBxManager_Arg_FileNameBadChars,
           fileName), "oldItem");
       // Путь dir не проверяем

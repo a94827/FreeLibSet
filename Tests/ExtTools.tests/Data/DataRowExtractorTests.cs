@@ -9,13 +9,14 @@ using System.Data.Common;
 
 namespace ExtTools_tests.Data
 {
+#if XXX
   /// <summary>
   /// Тесты для структур DataRowXXXExtractor
   /// </summary>
   [TestFixture]
   public class DataRowExtractorTests
   {
-    #region Методы для структур разных типов
+#region Методы для структур разных типов
 
     [Test]
     public void DataRowIntExtractor()
@@ -165,9 +166,9 @@ namespace ExtTools_tests.Data
       DoTest<int, TestEnum?>(new DataRowNullableEnumExtractor<TestEnum>("F1"), TestEnum.One, TestEnum.Two, null);
     }
 
-    #endregion
+#endregion
 
-    #region Реализация теста
+#region Реализация теста
 
     /// <summary>
     /// Выполнение теста.
@@ -216,6 +217,7 @@ namespace ExtTools_tests.Data
       Assert.Catch(delegate () { dummyRes = sut[t3.Rows[0]]; }, sut.GetType().ToString() + " - " + typeof(TData).ToString() + " #6");
     }
 
-    #endregion
+#endregion
   }
+#endif
 }

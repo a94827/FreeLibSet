@@ -139,7 +139,7 @@ namespace ExtTools_tests.IO
     public void Constructor_SubDir_exception(string subDir)
     {
       subDir = subDir.Replace('/', System.IO.Path.DirectorySeparatorChar);
-      Assert.Catch<ArgumentException>(delegate () { new FileContainer("test.bin", DataTools.EmptyBytes, subDir); });
+      Assert.Catch<ArgumentException>(delegate() { new FileContainer("test.bin", EmptyArray<byte>.Empty, subDir); });
     }
 
     #endregion

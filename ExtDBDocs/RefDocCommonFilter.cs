@@ -73,6 +73,8 @@ namespace FreeLibSet.Data.Docs
       _DocProvider = docProvider;
       _DocType = docType;
       _Mode = RefDocFilterMode.NoFilter;
+      _SelectedDocIds = new IdCollection<Int32>();
+      _SelectedDocIdsWrapper = new IdSetReadOnlyWrapper<Int32>(_SelectedDocIds);
     }
 
     /// <summary>
@@ -118,15 +120,16 @@ namespace FreeLibSet.Data.Docs
     /// Идентификаторы документов, если установлен фильтр <see cref="RefDocFilterMode.Include"/> или <see cref="RefDocFilterMode.Exclude"/>.
     /// В список входят только непосредственно выбранные документы.
     /// </summary>
-    public IdList SelectedDocIds { get { return _SelectedDocIds; } }
-    private IdList _SelectedDocIds;
+    public IIdSet<Int32> SelectedDocIds { get { return _SelectedDocIdsWrapper; } }
+    private readonly IdSetReadOnlyWrapper<Int32> _SelectedDocIdsWrapper;
+    private readonly IdCollection<Int32> _SelectedDocIds;
 
     /// <summary>
     /// Идентификаторы документов, если установлен фильтр <see cref="RefDocFilterMode.Include"/> или <see cref="RefDocFilterMode.Exclude"/>.
     /// Если вид документов поддерживает иерархию (установлено свойство <see cref="DBxDocTypeBase.TreeParentColumnName"/>), то в список входят как выбранные документы, так и все вложенные.
     /// Если иерархия не поддерживается, то возвращается <see cref="SelectedDocIds"/>
     /// </summary>
-    public IdList DocIds 
+    public IIdSet<Int32> DocIds
     {
       get
       {
@@ -136,10 +139,10 @@ namespace FreeLibSet.Data.Docs
             return null;
 
           if (String.IsNullOrEmpty(DocType.TreeParentColumnName))
-            _DocIds = SelectedDocIds;
+            _DocIds = _SelectedDocIdsWrapper;
           else
           {
-            IdList list = new IdList();
+            IdCollection<Int32> list = new IdCollection<Int32>();
             AddDocIds(list, SelectedDocIds); // рекурсивная процедура
             list.SetReadOnly();
             _DocIds = list;
@@ -149,11 +152,11 @@ namespace FreeLibSet.Data.Docs
         return _DocIds;
       }
     }
-    private IdList _DocIds;
+    private IIdSet<Int32> _DocIds;
 
-    private void AddDocIds(IdList list, IdList docIds)
+    private void AddDocIds(IdCollection<Int32> list, IIdSet<Int32> docIds)
     {
-      IdList newList = new IdList();
+      IdCollection<Int32> newList = new IdCollection<Int32>();
       foreach (Int32 docId in docIds)
       {
         if (list.Contains(docId))
@@ -166,25 +169,11 @@ namespace FreeLibSet.Data.Docs
         return; // нечего больше добавлять
 
       List<DBxFilter> filters = new List<DBxFilter>();
-      filters.Add(new ValuesFilter(DocType.TreeParentColumnName, newList.ToArray()));
+      filters.Add(new ValueInListFilter(DocType.TreeParentColumnName, newList.ToArray()));
       if (DocProvider.DocTypes.UseDeleted)
         filters.Add(DBSDocType.DeletedFalseFilter);
-      IdList children = DocProvider.GetIds(DocType.Name, AndFilter.FromList(filters));
+      IdCollection<Int32> children = new IdCollection<Int32>(DocProvider.GetIds(DocType.Name, AndFilter.FromList(filters)));
       AddDocIds(list, children); // рекурсия
-    }
-
-    /// <summary>
-    /// Установить или очистить фильтр
-    /// </summary>
-    /// <param name="mode">Режим фильтра</param>
-    /// <param name="docIds">Массив идентификаторов выбранных документов, если применимо к выбранному режиму.
-    /// Если неприменимо, аргумент игнорируется</param>
-    public void SetFilter(RefDocFilterMode mode, Int32[] docIds)
-    {
-      IdList docIds2 = null;
-      if (docIds != null)
-        docIds2 = new IdList(docIds);
-      SetFilter(mode, docIds2);
     }
 
     /// <summary>
@@ -194,7 +183,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="mode">Режим фильтра</param>
     public void SetFilter(RefDocFilterMode mode)
     {
-      SetFilter(mode, (IdList)null);
+      SetFilter(mode, (IEnumerable<Int32>)null);
     }
 
     /// <summary>
@@ -202,7 +191,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="mode">Режим фильтра</param>
     /// <param name="docIds">Список идентификаторов выбранных документов, если фильтр устанавливается</param>
-    public void SetFilter(RefDocFilterMode mode, IdList docIds)
+    public void SetFilter(RefDocFilterMode mode, IEnumerable<Int32> docIds)
     {
       switch (mode)
       {
@@ -217,8 +206,8 @@ namespace FreeLibSet.Data.Docs
           //if (DocIds.Count == 0)
           //  throw new ArgumentException("Не задан список идентификаторов для фильтра", "DocIds");
           _Mode = mode;
-          _SelectedDocIds = docIds;
-          _SelectedDocIds.SetReadOnly();
+          _SelectedDocIds.Clear();
+          _SelectedDocIds.AddRange(docIds);
           _DocIds = null;
           OnChanged();
           break;
@@ -227,7 +216,7 @@ namespace FreeLibSet.Data.Docs
           if (mode == _Mode)
             return;
           _Mode = mode;
-          _SelectedDocIds = null;
+          _SelectedDocIds.Clear();
           _DocIds = null;
           OnChanged();
           break;
@@ -260,7 +249,7 @@ namespace FreeLibSet.Data.Docs
         if (value == 0)
           Clear();
         else
-          SetFilter(RefDocFilterMode.Include, new Int32[1] { value });
+          SetFilter(RefDocFilterMode.Include, IdArray<Int32>.FromId(value));
       }
     }
 
@@ -285,7 +274,7 @@ namespace FreeLibSet.Data.Docs
       if (IsEmpty)
         return;
       _Mode = RefDocFilterMode.NoFilter;
-      _SelectedDocIds = null;
+      _SelectedDocIds.Clear();
       _DocIds = null;
       OnChanged();
     }
@@ -306,7 +295,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      Int32 id = DataTools.GetInt(rowValues.GetValue(ColumnName));
+      Int32 id = DataTools.GetInt32(rowValues.GetValue(ColumnName));
       return TestValue(id);
     }
 
@@ -323,12 +312,12 @@ namespace FreeLibSet.Data.Docs
           if (_SelectedDocIds.Count == 0)
             return DummyFilter.AlwaysFalse; // 24.07.2019
           else
-            return new IdsFilter(ColumnName, DocIds);
+            return new ValueInListFilter(ColumnName, DocIds);
         case RefDocFilterMode.Exclude:
           if (_SelectedDocIds.Count == 0)
             return null; // 24.07.2019
           else
-            return new NotFilter(new IdsFilter(ColumnName, DocIds));
+            return new NotFilter(new ValueInListFilter(ColumnName, DocIds));
         case RefDocFilterMode.NotNull:
           return new NotNullFilter(ColumnName, typeof(Int32));
         case RefDocFilterMode.Null:
@@ -374,7 +363,7 @@ namespace FreeLibSet.Data.Docs
         case RefDocFilterMode.Include:
           Int32 id = SingleDocId;
           if (id != 0)
-            docValue.SetInteger(id);
+            docValue.SetInt32(id);
           break;
         case RefDocFilterMode.Null:
           docValue.SetNull();
@@ -386,7 +375,7 @@ namespace FreeLibSet.Data.Docs
 
     public override bool CanAsCurrRow(DataRow row)
     {
-      Int32 thisId = DataTools.GetInt(row, ColumnName);
+      Int32 thisId = DataTools.GetInt32(row, ColumnName);
       if (thisId == 0 || thisId == SingleDocId)
         return false;
       return true;
@@ -394,7 +383,7 @@ namespace FreeLibSet.Data.Docs
 
     public override void SetAsCurrRow(DataRow row)
     {
-      Int32 thisId = DataTools.GetInt(row, ColumnName);
+      Int32 thisId = DataTools.GetInt32(row, ColumnName);
       SingleDocId = thisId;
     }
 
@@ -407,7 +396,7 @@ namespace FreeLibSet.Data.Docs
     ///// <returns>Текстовые представления значений</returns>
     //protected override string[] GetColumnStrValues(object[] ColumnValues)
     //{
-    //  return new string[] { UI.TextHandlers.GetTextValue(DocTypeName, DataTools.GetInt(ColumnValues[0])) };
+    //  return new string[] { UI.TextHandlers.GetTextValue(DocTypeName, DataTools.GetInt32(ColumnValues[0])) };
     //}
 
     #endregion
@@ -522,7 +511,7 @@ namespace FreeLibSet.Data.Docs
   /// <item><description>Для выбранной группы и вложенных групп</description></item>
   /// <item><description>Для выбранной группы без вложенных групп</description></item>
   /// <item><description>Для документов без группы</description></item>
-  /// Использует SQL-фильтр <see cref="IdsFilter"/> (по списку идентификаторов групп, если выбраны вложенные группы) или
+  /// Использует SQL-фильтр <see cref="ValueInListFilter"/> (по списку идентификаторов групп, если выбраны вложенные группы) или
   /// <see cref="ValueFilter"/> (если фильтр по одной группе).
   /// </list>
   /// </summary>
@@ -647,7 +636,7 @@ namespace FreeLibSet.Data.Docs
     /// Если есть выбранная группа, возвращает массив из одного или нескольких элементов,
     /// в зависимости от <see cref="IncludeNestedGroups"/>.
     /// </summary>
-    public IdList AuxFilterGroupIdList
+    public IdCollection<Int32> AuxFilterGroupIdList
     {
       get
       {
@@ -660,21 +649,21 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-    private IdList _AuxFilterGroupIdList;
+    private IdCollection<Int32> _AuxFilterGroupIdList;
 
     /// <summary>
     /// Флажок устанавливается в true, если <see cref="AuxFilterGroupIdList"/> содержит корректное значение
     /// </summary>
     private bool _AuxFilterGroupIdsReady;
 
-    private IdList GetAuxFilterGroupIdList()
+    private IdCollection<Int32> GetAuxFilterGroupIdList()
     {
       if (GroupId == 0)
       {
         if (IncludeNestedGroups)
           return null;
         else
-          return IdList.Empty;
+          return IdCollection<Int32>.Empty;
       }
       else
       {
@@ -684,10 +673,10 @@ namespace FreeLibSet.Data.Docs
             GroupDocType,
             new DBxColumns(new string[] { "Id", GroupDocType.TreeParentColumnName }));
 
-          return new IdList(model.GetIdWithChildren(GroupId));
+          return new IdCollection<Int32>(model.GetIdWithChildren(GroupId));
         }
         else
-          return IdList.FromId(GroupId);
+          return IdCollection<Int32>.FromId(GroupId);
       }
     }
 
@@ -734,7 +723,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      Int32 id = DataTools.GetInt(rowValues.GetValue(ColumnName));
+      Int32 id = DataTools.GetInt32(rowValues.GetValue(ColumnName));
       return TestValue(id);
     }
 
@@ -766,7 +755,7 @@ namespace FreeLibSet.Data.Docs
         if (GroupId == 0)
           return null;
         else
-          return new IdsFilter(ColumnName, AuxFilterGroupIdList);
+          return new ValueInListFilter(ColumnName, AuxFilterGroupIdList);
       }
       else
         return new ValueFilter(ColumnName, GroupId);
@@ -778,8 +767,8 @@ namespace FreeLibSet.Data.Docs
     /// <param name="config">Секция конфигурации</param>
     public override void ReadConfig(CfgPart config)
     {
-      GroupId = config.GetInt("GroupId");
-      IncludeNestedGroups = config.GetBoolDef("IncludeNestedGroups", true);
+      GroupId = config.GetInt32("GroupId");
+      IncludeNestedGroups = config.GetBooleanDef("IncludeNestedGroups", true);
     }
 
     /// <summary>
@@ -788,8 +777,8 @@ namespace FreeLibSet.Data.Docs
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
     {
-      config.SetInt("GroupId", GroupId);
-      config.SetBool("IncludeNestedGroups", IncludeNestedGroups);
+      config.SetInt32("GroupId", GroupId);
+      config.SetBoolean("IncludeNestedGroups", IncludeNestedGroups);
     }
 
     /// <summary>
@@ -802,7 +791,7 @@ namespace FreeLibSet.Data.Docs
       if (IncludeNestedGroups)
         return;
 
-      docValue.SetInteger(GroupId);
+      docValue.SetInt32(GroupId);
     }
 
     #endregion
@@ -889,7 +878,7 @@ namespace FreeLibSet.Data.Docs
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      int v = DataTools.GetInt(rowValues.GetValue(ColumnName));
+      int v = DataTools.GetInt32(rowValues.GetValue(ColumnName));
       return v == CurrentTableId;
     }
 
@@ -899,7 +888,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="config">Секция конфигурации</param>
     public override void ReadConfig(CfgPart config)
     {
-      CurrentTableId = config.GetInt("TableId");
+      CurrentTableId = config.GetInt32("TableId");
     }
 
     /// <summary>
@@ -908,7 +897,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
     {
-      config.SetInt("TableId", CurrentTableId);
+      config.SetInt32("TableId", CurrentTableId);
     }
 
     ///// <summary>
@@ -919,7 +908,7 @@ namespace FreeLibSet.Data.Docs
     //protected override string[] GetColumnStrValues(object[] ColumnValues)
     //{
     //  string s;
-    //  Int32 ThisTableId = DataTools.GetInt(ColumnValues[0]);
+    //  Int32 ThisTableId = DataTools.GetInt32(ColumnValues[0]);
     //  if (ThisTableId == 0)
     //    s = "Нет";
     //  else

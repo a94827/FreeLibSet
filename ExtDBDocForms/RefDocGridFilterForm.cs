@@ -131,7 +131,7 @@ namespace FreeLibSet.Forms.Docs
     //}
 
     public static bool PerformEdit(string title, DocTypeUI docTypeUI, bool nullable,
-      ref RefDocFilterMode mode, ref Int32[] ids,
+      ref RefDocFilterMode mode, ref IIdSet<Int32> ids,
       EFPDBxGridFilters docFilters,
       EFPDialogPosition dialogPosition, MultiSelectEmptyEditMode emptyEditMode)
     {
@@ -172,7 +172,8 @@ namespace FreeLibSet.Forms.Docs
         dlg2.Icon = EFPApp.MainImages.Icons["Filter"];
         if ((int)mode >= 0 && (int)mode < dlg2.cbMode.Items.Count)
           dlg2.efpMode.SelectedIndex = (int)(mode);
-        dlg2.efpDocSel.Ids = ids;
+        if (ids != null)
+          dlg2.efpDocSel.Ids = IdTools.AsIdArray<Int32>(ids);
         dlg2.efpDocSel.Filters = docFilters;
         dlg2.efpDocSel.CommandItems.CanEditFilters = false; // 09.07.2019
 
@@ -453,9 +454,9 @@ namespace FreeLibSet.Forms.Docs
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
       RefDocFilterMode mode = base.Mode;
-      Int32[] ids = null;
+      IIdSet<Int32> ids = null;
       if (base.SelectedDocIds != null)
-        ids = base.SelectedDocIds.ToArray();
+        ids = base.SelectedDocIds;
 
       bool res = RefDocGridFilterForm.PerformEdit(DisplayName, UI.DocTypes[DocTypeName], Nullable, ref mode, ref ids, DocFilters, dialogPosition, EmptyEditMode);
       if (res)
@@ -465,7 +466,7 @@ namespace FreeLibSet.Forms.Docs
 
     //    public override bool CanAsCurrRow(DataRow Row)
     //    {
-    //      Int32 ThisId = DataTools.GetInt(Row, ColumnName);
+    //      Int32 ThisId = DataTools.GetInt32(Row, ColumnName);
     //      if (ThisId == 0 || ThisId == SingleDocId)
     //        return false;
     //      return true;
@@ -473,7 +474,7 @@ namespace FreeLibSet.Forms.Docs
 
     //    public override void SetAsCurrRow(DataRow Row)
     //    {
-    //      Int32 ThisId = DataTools.GetInt(Row, ColumnName);
+    //      Int32 ThisId = DataTools.GetInt32(Row, ColumnName);
     //      SingleDocId = ThisId;
     //    }
 
@@ -484,7 +485,7 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      return new string[] { UI.TextHandlers.GetTextValue(DocTypeName, DataTools.GetInt(columnValues[0])) };
+      return new string[] { UI.TextHandlers.GetTextValue(DocTypeName, DataTools.GetInt32(columnValues[0])) };
     }
 
     #endregion
@@ -494,7 +495,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Добавляет в выборку ссылки на выбранные документы.
     /// Действует и в режимах <see cref="RefDocCommonFilter.Mode"/>=<see cref="RefDocFilterMode.Include"/> и <see cref="RefDocFilterMode.Exclude"/>.
-    /// Использует вызов <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> в режиме <see cref="EFPDBxViewDocSelReason.Copy"/>.
+    /// Использует вызов <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, IEnumerable{Int32}, EFPDBxViewDocSelReason)"/> в режиме <see cref="EFPDBxViewDocSelReason.Copy"/>.
     /// В выборку могут быть добавлены ссылки на связанные документы, если есть обработчик события
     /// <see cref="DocTypeUIBase.GetDocSel"/>
     /// </summary>
@@ -517,8 +518,8 @@ namespace FreeLibSet.Forms.Docs
     /// False, если в выборке нет ссылок на документы подходящего вида</returns>
     public bool ApplyDocSel(DBxDocSelection docSel)
     {
-      Int32[] newIds = docSel[DocType.Name];
-      if (newIds.Length == 0)
+      IIdSet<Int32> newIds = docSel[DocType.Name];
+      if (newIds.Count == 0)
         return false;
       RefDocFilterMode newMode;
       //if (Mode == RefDocFilterMode.NoFilter)
@@ -884,7 +885,7 @@ namespace FreeLibSet.Forms.Docs
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
       string s;
-      Int32 thisTableId = DataTools.GetInt(columnValues[0]);
+      Int32 thisTableId = DataTools.GetInt32(columnValues[0]);
       if (thisTableId == 0)
         s = "Нет";
       else

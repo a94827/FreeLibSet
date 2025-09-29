@@ -196,7 +196,7 @@ namespace FreeLibSet.Controls
     //  base.OnSizeChanged(args);
     //  if (IsHandleCreated)
     //  {
-    //    int h1=DataTools.SumInt(base.GetRowHeights());
+    //    int h1=DataTools.SumInt32(base.GetRowHeights());
     //    int h2 = base.ClientSize.Height;
     //    FindForm().Text = "h1=" + h1.ToString() + ", h2=" + h2.ToString();
     //  }

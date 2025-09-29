@@ -49,7 +49,7 @@ namespace ExtTools_tests.Collections
 
       string[] items = new CsvTextConvert().ToArray(sItems);
       if (items == null)
-        items = DataTools.EmptyStrings;
+        items = EmptyArray<string>.Empty;
 
       Assert.AreEqual(wanted, sut.ContainsAll(items));
     }
@@ -67,7 +67,7 @@ namespace ExtTools_tests.Collections
 
       string[] items = new CsvTextConvert().ToArray(sItems);
       if (items == null)
-        items = DataTools.EmptyStrings;
+        items = EmptyArray<string>.Empty;
 
       Assert.AreEqual(wanted, sut.ContainsAny(items));
     }
@@ -206,7 +206,7 @@ namespace ExtTools_tests.Collections
       TestObject[] a = CreateTestObjectArray("3,4,1");
       Array.Sort<TestObject>(a, sut);
 
-      Assert.AreEqual(sWanted, DataTools.ToStringJoin<TestObject>(",", a));
+      Assert.AreEqual(sWanted, StringTools.ToStringJoin<TestObject>(",", a));
     }
 
     #endregion

@@ -16,7 +16,7 @@ namespace ExtTools_tests.IO
     public void Constructor_default()
     {
       IniFile sut = new IniFile();
-      CollectionAssert.AreEqual(DataTools.EmptyStrings, sut.GetSectionNames(), "GetSectionNames()");
+      CollectionAssert.AreEqual(EmptyArray<string>.Empty, sut.GetSectionNames(), "GetSectionNames()");
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
     }
 
@@ -24,7 +24,7 @@ namespace ExtTools_tests.IO
     public void Constructor_default([Values(false, true)]bool isReadOnly)
     {
       IniFile sut = new IniFile(isReadOnly);
-      CollectionAssert.AreEqual(DataTools.EmptyStrings, sut.GetSectionNames(), "GetSectionNames()");
+      CollectionAssert.AreEqual(EmptyArray<string>.Empty, sut.GetSectionNames(), "GetSectionNames()");
       Assert.AreEqual(isReadOnly, sut.IsReadOnly, "IsReadOnly");
     }
 
@@ -175,7 +175,7 @@ namespace ExtTools_tests.IO
         string s = a[i];
         if (s.Length == 0)
           continue;
-        s = DataTools.RemoveChars(s, " ");
+        s = StringTools.RemoveChars(s, " ");
         lines.Add(s);
       }
 
@@ -218,7 +218,7 @@ namespace ExtTools_tests.IO
         string s = a[i];
         if (s.Length == 0)
           continue;
-        s = DataTools.RemoveChars(s, " ");
+        s = StringTools.RemoveChars(s, " ");
         lines.Add(s);
       }
 
@@ -307,7 +307,7 @@ namespace ExtTools_tests.IO
     public void GetSectionNames()
     {
       IniFile sut = new IniFile();
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetSectionNames(), "#1");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetSectionNames(), "#1");
 
       sut["Секция1", "Имя1"] = "";
       CollectionAssert.AreEquivalent(new string[] { "Секция1" }, sut.GetSectionNames(), "#2");
@@ -338,11 +338,11 @@ namespace ExtTools_tests.IO
     public void GetKeyNames()
     {
       IniFile sut = new IniFile();
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetKeyNames("Секция1"), "#1");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetKeyNames("Секция1"), "#1");
 
       sut["Секция1", "Имя1"] = "";
       CollectionAssert.AreEquivalent(new string[] { "Имя1" }, sut.GetKeyNames("Секция1"), "#2");
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetKeyNames("Секция2"), "#3");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetKeyNames("Секция2"), "#3");
 
       sut["Секция1", "Имя1"] = "Значение1";
       CollectionAssert.AreEquivalent(new string[] { "Имя1" }, sut.GetKeyNames("Секция1"), "#4");
@@ -359,7 +359,7 @@ namespace ExtTools_tests.IO
       CollectionAssert.AreEquivalent(new string[] { "Имя2" }, sut.GetKeyNames("Секция1"), "#8");
 
       sut.DeleteSection("Секция1");
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetKeyNames("Секция1"), "#9");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetKeyNames("Секция1"), "#9");
       CollectionAssert.AreEquivalent(new string[] { "Имя3" }, sut.GetKeyNames("Секция2"), "#10");
     }
 
@@ -372,7 +372,7 @@ namespace ExtTools_tests.IO
     {
       IniFile sut = new IniFile();
       sut.DeleteSection("Секция1");
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetSectionNames(), "#1");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetSectionNames(), "#1");
 
       sut["Секция1", "Имя1"] = "Значение1";
       sut["Секция2", "Имя2"] = "Значение2";
@@ -383,7 +383,7 @@ namespace ExtTools_tests.IO
       CollectionAssert.AreEquivalent(new string[] { "Секция2" }, sut.GetSectionNames(), "#3");
 
       sut.DeleteSection("Секция2");
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetSectionNames(), "#4");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetSectionNames(), "#4");
     }
 
     #endregion
@@ -395,7 +395,7 @@ namespace ExtTools_tests.IO
     {
       IniFile sut = new IniFile();
       sut.DeleteKey("Секция1", "Имя1");
-      CollectionAssert.AreEquivalent(DataTools.EmptyStrings, sut.GetKeyNames("Секция1"), "#1");
+      CollectionAssert.AreEquivalent(EmptyArray<string>.Empty, sut.GetKeyNames("Секция1"), "#1");
 
       sut["Секция1", "Имя1"] = "Значение1";
       sut["Секция1", "Имя2"] = "Значение2";

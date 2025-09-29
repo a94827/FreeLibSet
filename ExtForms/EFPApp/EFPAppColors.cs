@@ -286,4 +286,123 @@ namespace FreeLibSet.Forms
 
     #endregion
   }
+
+  #region EFPDataViewExcelCellStyle
+
+  /// <summary>
+  /// В MS Excel нельзя использовать те же цвета, что и в табличном просмотре
+  /// на экране. Вместо этого можно использовать атрибуты шрифта.
+  /// </summary>
+  public struct EFPDataViewExcelCellStyle
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Получить атрибуты ячейки для передачи в Excel, соответствующие атрибутам ячейки табличного просмотра.
+    /// Инициализируются цвета, совместимые с Microsoft Excel
+    /// </summary>
+    /// <param name="colorType">Цвет ячейки</param>
+    /// <param name="grayed">true, если текст выделяется серым цветом</param>
+    /// <returns>Атрибуты ячейки для передачи в Excel</returns>
+    public EFPDataViewExcelCellStyle(UIDataViewColorType colorType, bool grayed)
+    {
+      BackColor = Color.Empty;
+      ForeColor = Color.Empty;
+      Bold = false;
+      Italic = false;
+      Underline = false;
+
+      switch (colorType)
+      {
+        case UIDataViewColorType.Header:
+          ForeColor = Color.Navy;
+          BackColor = Color.White;
+          Bold = true;
+          //Attr.Underline = true;
+          Italic = true;
+          break;
+        case UIDataViewColorType.Special:
+          BackColor = Color.FromArgb(255, 255, 204);
+          break;
+        case UIDataViewColorType.Total1:
+          BackColor = Color.FromArgb(204, 255, 204);
+          Bold = true;
+          break;
+        case UIDataViewColorType.Total2:
+          //Attr.BackColor = Color.FromArgb(255, 0, 255); // менее яркого нет
+          // 22.06.2016
+          BackColor = Color.FromArgb(0xFF, 0x99, 0xCC); // ColorIndex=38
+          Bold = true;
+          break;
+        case UIDataViewColorType.TotalRow:
+          BackColor = Color.FromArgb(204, 204, 204);
+          Bold = true;
+          break;
+        case UIDataViewColorType.Error:
+          BackColor = Color.Red;
+          Bold = true;
+          break;
+        case UIDataViewColorType.Warning:
+          BackColor = Color.Yellow;
+          ForeColor = Color.Red;
+          Bold = true;
+          break;
+        case UIDataViewColorType.Alter:
+          BackColor = Color.FromArgb(0xCC, 0xFF, 0xFF); // ColorIndex=34
+          break;
+      }
+      if (grayed)
+        ForeColor = Color.Gray;
+    }
+
+    #endregion
+
+    #region Поля
+
+    /// <summary>
+    /// Цвет фона ячейки.
+    /// Значение <see cref="Color.Empty"/> означает использование цвета фона по умолчанию ("Авто")
+    /// </summary>
+    public Color BackColor;
+
+    /// <summary>
+    /// Цвет текста.
+    /// Значение <see cref="Color.Empty"/> означает использование цвета шрифта по умолчанию ("Авто")
+    /// </summary>
+    public Color ForeColor;
+
+    /// <summary>
+    /// Использовать жирный шрифт
+    /// </summary>
+    public bool Bold;
+
+    /// <summary>
+    /// Использовать наклонный шрифт
+    /// </summary>
+    public bool Italic;
+
+    /// <summary>
+    /// Использовать подчеркнутый шрифт
+    /// </summary>
+    public bool Underline;
+
+    #endregion
+
+    #region Дополнительные свойства
+
+    /// <summary>
+    /// Возвращает true, если никакие атрибуты не установлены
+    /// </summary>
+    public bool IsEmpty
+    {
+      get
+      {
+        return (!BackColor.IsEmpty) && (!ForeColor.IsEmpty) && (!Bold) && (!Italic) && (!Underline);
+      }
+    }
+
+    #endregion
+  }
+
+  #endregion
 }

@@ -59,7 +59,7 @@ namespace ExtTools_tests.Text
       string[][] a2 = new string[a1.Length][];
       for (int i = 0; i < a1.Length; i++)
         a2[i] = a1[i].Split('/');
-      string[,] a3 = DataTools.MatrixFromRows<string>(a2);
+      string[,] a3 = ArrayTools.MatrixFromRows<string>(a2);
 
       CsvTextConvert sut = new CsvTextConvert();
       Assert.AreEqual(wanted.Replace("|", Environment.NewLine), sut.ToString(a3));

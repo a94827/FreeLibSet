@@ -1232,10 +1232,10 @@ namespace FreeLibSet.Russian
     /// <param name="genitivePlural">Форма родительного падежа множественного числа.
     /// Используется, если число заканчивается на 0,5,6,7,8,9</param>
     /// <returns>Строка, состоящая из числа, пробела и одной из трех форм слова</returns>
-    public static string IntWithNoun(int value, string nominativeSingular,
+    public static string Int32WithNoun(int value, string nominativeSingular,
       string genitiveSingular, string genitivePlural)
     {
-      return value.ToString() + " " + NounForInt(value, nominativeSingular,
+      return value.ToString() + " " + NounForInt32(value, nominativeSingular,
         genitiveSingular, genitivePlural);
     }
 
@@ -1254,20 +1254,20 @@ namespace FreeLibSet.Russian
     /// Используется, если число заканчивается на 2, 3 или 4</param>
     /// <param name="genitivePlural">Форма родительного падежа множественного числа.
     /// Используется, если число заканчивается на 0,5,6,7,8,9</param>
-    public static void IntWithNoun(StringBuilder sb, int value, string nominativeSingular,
+    public static void Int32WithNoun(StringBuilder sb, int value, string nominativeSingular,
       string genitiveSingular, string genitivePlural)
     {
       sb.Append(value);
       sb.Append(" ");
-      sb.Append(NounForInt(value, nominativeSingular,
+      sb.Append(NounForInt32(value, nominativeSingular,
         genitiveSingular, genitivePlural));
     }
 
     /// <summary>
     /// Сопряжение существительного с числительным в именительном падеже. 
-    /// То же, что и IntWithNoun(), но без вывода самого числа.
+    /// То же, что и Int32WithNoun(), но без вывода самого числа.
     /// Например, вызов 
-    /// string s = NounForInt(3, "кошка", "кошки", "кошек")
+    /// string s = NounForInt32(3, "кошка", "кошки", "кошек")
     /// вернет s = "кошки"
     /// </summary>
     /// <param name="value">Числовое значение</param>
@@ -1278,7 +1278,7 @@ namespace FreeLibSet.Russian
     /// <param name="genitivePlural">Форма родительного падежа множественного числа.
     /// Используется, если число заканчивается на 0,5,6,7,8,9</param>
     /// <returns>Строка, состоящая из числа, пробела и одной из трех форм слова</returns>
-    public static string NounForInt(int value, string nominativeSingular,
+    public static string NounForInt32(int value, string nominativeSingular,
       string genitiveSingular, string genitivePlural)
     {
       CountForm cntform = GetC100(value);

@@ -133,7 +133,7 @@ namespace FreeLibSet.Parsing
       _ReplaceChars = new Dictionary<string, string>();
       _ValidChars = null;
 
-      AllowInt = true;
+      AllowInt32 = true;
       AllowSingle = true;
       AllowDouble = true;
       AllowDecimal = true;
@@ -170,7 +170,7 @@ namespace FreeLibSet.Parsing
     /// <summary>
     /// Если true (по умолчанию), разрешается получение констант типа Int32
     /// </summary>
-    public bool AllowInt { get { return _AllowInt; } set { _AllowInt = value; } }
+    public bool AllowInt32 { get { return _AllowInt; } set { _AllowInt = value; } }
     private bool _AllowInt;
 
     /// <summary>
@@ -282,7 +282,7 @@ namespace FreeLibSet.Parsing
       for (int len2 = len; len2 > 0; len2--)
       {
         string s2 = s.Substring(0, len2);
-        if (AllowInt)
+        if (AllowInt32)
         {
           int v;
           if (Int32.TryParse(s2, ns, NumberFormat, out v))
@@ -1759,13 +1759,13 @@ namespace FreeLibSet.Parsing
         return CalcSingle(op, DataTools.GetSingle(arg1), DataTools.GetSingle(arg2));
 
       if (arg1 is int || arg2 is int)
-        return CalcInt(op, DataTools.GetInt(arg1), DataTools.GetInt(arg2));
+        return CalcInt32(op, DataTools.GetInt32(arg1), DataTools.GetInt32(arg2));
 
       if (arg1 is string || arg2 is string)
         //throw new NotSupportedException("Математические операции над строками не поддерживаются. Используйте функции");
         return CalcString(op, DataTools.GetString(arg1), DataTools.GetString(arg2));
       if (arg1 is bool && arg2 is bool)
-        return CalcBool(op, DataTools.GetBool(arg1), DataTools.GetBool(arg2));
+        return CalcBoolean(op, DataTools.GetBoolean(arg1), DataTools.GetBoolean(arg2));
 
       throw new NotImplementedException(String.Format(Res.MathOpParser_Err_NotImplementedForTypes,
         arg1.GetType().ToString(),arg2.GetType().ToString()));
@@ -1889,7 +1889,7 @@ namespace FreeLibSet.Parsing
     /// <param name="arg1">Первый аргумент</param>
     /// <param name="arg2">Второй аргумент</param>
     /// <returns>Результат операции</returns>
-    public static object CalcInt(string op, int arg1, int arg2)
+    public static object CalcInt32(string op, int arg1, int arg2)
     {
       // 01.03.2017
       // Сначала пытаемся вычислить для целочисленного аргумента
@@ -1955,7 +1955,7 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static object CalcBool(string op, bool arg1, bool arg2)
+    private static object CalcBoolean(string op, bool arg1, bool arg2)
     {
       switch (op)
       {
@@ -2107,7 +2107,7 @@ namespace FreeLibSet.Parsing
         return CalcSingle(op, (float)arg);
 
       if (arg is int)
-        return CalcInt(op, (int)arg);
+        return CalcInt32(op, (int)arg);
 
       if (arg is TimeSpan)
         return CalcTimeSpan(op, (TimeSpan)arg);
@@ -2148,7 +2148,7 @@ namespace FreeLibSet.Parsing
       }
     }
 
-    private static object CalcInt(string op, int arg)
+    private static object CalcInt32(string op, int arg)
     {
       switch (op)
       {
@@ -2293,7 +2293,7 @@ namespace FreeLibSet.Parsing
         if (endTokens == null)
           endTokens = _EndTokensDict[thisPriority];
         else
-          endTokens = DataTools.MergeArrays<string>(_EndTokensDict[thisPriority], endTokens);
+          endTokens = ArrayTools.MergeArrays<string>(_EndTokensDict[thisPriority], endTokens);
       }
 
       IExpression rightExpession = data.Parsers.CreateSubExpression(data, endTokens); // получение правого выражения

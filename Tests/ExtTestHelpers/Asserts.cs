@@ -29,7 +29,7 @@ namespace FreeLibSet.Tests
     /// <param name="args">Аргументы для форматирования сообщения</param>
     public static void AreEqual(object expected, object actual)
     {
-      AreEqual(expected, actual, String.Empty, DataTools.EmptyObjects);
+      AreEqual(expected, actual, String.Empty, EmptyArray<Object>.Empty);
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ namespace FreeLibSet.Tests
     /// <param name="message">Сообщение</param>
     public static void AreEqual(object expected, object actual, string message)
     {
-      AreEqual(expected, actual, message, DataTools.EmptyObjects);
+      AreEqual(expected, actual, message, EmptyArray<Object>.Empty);
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ namespace FreeLibSet.Tests
     /// <param name="args">Аргументы для форматирования сообщения</param>
     public static void AreEqual(object expected, object actual, string message, params object[] args)
     {
-      AreEqualExcept(expected, actual, DataTools.EmptyStrings, message, args);
+      AreEqualExcept(expected, actual, EmptyArray<string>.Empty, message, args);
     }
 
     #endregion
@@ -78,7 +78,7 @@ namespace FreeLibSet.Tests
     /// <param name="args">Аргументы для форматирования сообщения</param>
     public static void AreEqualExcept(object expected, object actual, string[] exceptedProperties)
     {
-      AreEqualExcept(expected, actual, exceptedProperties, String.Empty, DataTools.EmptyObjects);
+      AreEqualExcept(expected, actual, exceptedProperties, String.Empty, EmptyArray<Object>.Empty);
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ namespace FreeLibSet.Tests
     /// <param name="message">Сообщение</param>
     public static void AreEqualExcept(object expected, object actual, string[] exceptedProperties, string message)
     {
-      AreEqualExcept(expected, actual, exceptedProperties, message, DataTools.EmptyObjects);
+      AreEqualExcept(expected, actual, exceptedProperties, message, EmptyArray<Object>.Empty);
     }
 
     /// <summary>
@@ -123,7 +123,7 @@ namespace FreeLibSet.Tests
       }
 
       if (exceptedProperties == null)
-        exceptedProperties = DataTools.EmptyStrings;
+        exceptedProperties = EmptyArray<string>.Empty;
       StringArrayIndexer exPropIndexer = new StringArrayIndexer(exceptedProperties);
 
       PropertyInfo[] aProps = t1.GetProperties(BindingFlags.Instance | BindingFlags.Public);
@@ -168,7 +168,7 @@ namespace FreeLibSet.Tests
       ex = null;
       try
       {
-        v = propertyInfo.GetValue(obj, DataTools.EmptyObjects);
+        v = propertyInfo.GetValue(obj, EmptyArray<Object>.Empty);
       }
       catch (Exception e)
       {

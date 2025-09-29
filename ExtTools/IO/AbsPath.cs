@@ -766,35 +766,6 @@ namespace FreeLibSet.IO
 
     #endregion
 
-    #region Определение типа пути
-
-    /// <summary>
-    /// Возвращает true, если путь начинается с @"\\" (Windows)
-    /// </summary>
-    [Obsolete("Использование свойства не оправдано. Например, в Windows оно не позволяет отличить подключенные сетевые диски от обычных", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool IsNetwork
-    {
-      get
-      {
-        if (IsEmpty)
-          return false;
-        if (System.IO.Path.DirectorySeparatorChar == '\\')
-        {
-          return _Path.StartsWith("\\\\", StringComparison.Ordinal);
-        }
-        else
-        {
-          if (_Path.StartsWith("smb://", StringComparison.Ordinal))
-            return true;
-          // !!! Для Unix - не знаю других вариантов, кроме Самбы
-        }
-        return false;
-      }
-    }
-
-    #endregion
-
     #region Split() / Join()
 
     /// <summary>

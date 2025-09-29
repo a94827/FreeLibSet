@@ -177,7 +177,7 @@ namespace FreeLibSet.Forms
 
       public void ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
       {
-        int srcVal = args.GetInt(0);
+        int srcVal = args.GetInt32(0);
         if (srcVal < 0 || srcVal >= TextValues.Length)
           args.Value = "?? " + srcVal.ToString();
         else
@@ -201,7 +201,7 @@ namespace FreeLibSet.Forms
     {
       string[] aNames;
       if (String.IsNullOrEmpty(sourceColumnNames))
-        aNames = DataTools.EmptyStrings; // 14.06.2024
+        aNames = EmptyArray<string>.Empty; // 14.06.2024
       else
         aNames = sourceColumnNames.Split(',');
       EFPGridProducerToolTip item = new EFPGridProducerToolTip(name, aNames);
@@ -258,9 +258,9 @@ namespace FreeLibSet.Forms
     /// Возвращает текст высплывающей подсказки
     /// </summary>
     /// <param name="gridConfig">Используемая конфигурация табличного просмотра. Используется для определения списка подсказок, выбранных пользователем</param>
-    /// <param name="rowInfo">Данные строки табличного просмотра</param>
+    /// <param name="rowValues">Данные строки табличного просмотра</param>
     /// <returns>Текст всплывающей подсказки</returns>
-    public string GetToolTipText(EFPDataGridViewConfig gridConfig, EFPDataViewRowInfo rowInfo)
+    public string GetToolTipText(EFPDataViewConfig gridConfig, EFPDataViewRowValues rowValues)
     {
       if (gridConfig == null)
         throw new ArgumentNullException("grifConfig");
@@ -284,7 +284,7 @@ namespace FreeLibSet.Forms
         string s;
         try
         {
-          s = toolTip.GetToolTipText(rowInfo);
+          s = toolTip.GetToolTipText(rowValues);
         }
         catch (Exception e)
         {
@@ -415,14 +415,14 @@ namespace FreeLibSet.Forms
     /// <see cref="IFormattable.ToString(string, IFormatProvider)"/>, с использование свойств <see cref="Format"/> и <see cref="FormatProvider"/>.
     /// К полученному тексту слева добавляется <see cref="PrefixText"/>.
     /// </summary>
-    /// <param name="rowInfo">Информация о строке</param>
+    /// <param name="rowValues">Информация о строке</param>
     /// <returns>Текст всплывающей подсказки</returns>
-    public string GetToolTipText(EFPDataViewRowInfo rowInfo)
+    public string GetToolTipText(EFPDataViewRowValues rowValues)
     {
       object value;
       string toolTipText;
 
-      base.DoGetValue(EFPGridProducerValueReason.ToolTipText, rowInfo, out value, out toolTipText);
+      base.DoGetValue(EFPGridProducerValueReason.ToolTipText, rowValues, out value, out toolTipText);
       if (toolTipText != null)
         return toolTipText;
 
@@ -462,7 +462,7 @@ namespace FreeLibSet.Forms
       _Producer = producer;
       _ToolTips = toolTips;
 
-      _RVA = new DataRowValueArray();
+      _RVA = new DataRowValues();
       _SB = new StringBuilder();
     }
 
@@ -471,12 +471,12 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="producer">Генератор табличного просмотра</param>
     /// <param name="config">Настройка табличного просмотра</param>
-    public GridProducerToolTipExtractor(EFPGridProducer producer, EFPDataGridViewConfig config)
+    public GridProducerToolTipExtractor(EFPGridProducer producer, EFPDataViewConfig config)
       : this(producer, GetToolTips(producer, config))
     {
     }
 
-    private static IEnumerable<EFPGridProducerToolTip> GetToolTips(EFPGridProducer producer, EFPDataGridViewConfig config)
+    private static IEnumerable<EFPGridProducerToolTip> GetToolTips(EFPGridProducer producer, EFPDataViewConfig config)
     {
       List<EFPGridProducerToolTip> toolTips = new List<EFPGridProducerToolTip>();
       for (int i = 0; i < config.ToolTips.Count; i++)
@@ -539,7 +539,7 @@ namespace FreeLibSet.Forms
 
     #region Получение подсказки
 
-    private readonly DataRowValueArray _RVA;
+    private readonly DataRowValues _RVA;
     private readonly StringBuilder _SB;
 
     /// <summary>
@@ -558,13 +558,13 @@ namespace FreeLibSet.Forms
       _RVA.CurrentRow = row;
       _SB.Length = 0;
 
-      EFPDataViewRowInfo ri = new EFPDataViewRowInfo(null, row, _RVA, -1);
+      EFPDataViewRowValues rowValues = new EFPDataViewRowValues(null, row, _RVA, -1);
 
       foreach (EFPGridProducerToolTip toolTip in ToolTips)
       {
         try
         {
-          string s = toolTip.GetToolTipText(ri);
+          string s = toolTip.GetToolTipText(rowValues);
           if (String.IsNullOrEmpty(s))
             continue;
           if (_SB.Length > 0)

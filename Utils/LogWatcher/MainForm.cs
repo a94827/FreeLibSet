@@ -28,10 +28,10 @@ namespace LogWatcher
       efpGr1.Columns.AddImage();
       efpGr1.Columns.AddTextFill("Path", true, "Путь", 100, 10);
       efpGr1.Columns.AddDateTime("LastTime", true, "Время");
-      efpGr1.Columns.AddInt("NewCount", true, "Новых", 3);
-      efpGr1.Columns.AddInt("OldCount", true, "Старых", 3);
+      efpGr1.Columns.AddInteger("NewCount", true, "Новых", 3);
+      efpGr1.Columns.AddInteger("OldCount", true, "Старых", 3);
       efpGr1.DisableOrdering();
-      efpGr1.GetCellAttributes += EfpGr1_GetCellAttributes;
+      efpGr1.CellInfoNeeded += EfpGr1_CellInfoNeeded;
       efpGr1.Control.MultiSelect = true;
       efpGr1.ReadOnly = true;
       efpGr1.Control.ReadOnly = true;
@@ -93,7 +93,7 @@ namespace LogWatcher
       efpGr1.Selection = oldSel;
     }
 
-    private void EfpGr1_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private void EfpGr1_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.ColumnIndex == 0)
       {
@@ -102,7 +102,7 @@ namespace LogWatcher
           args.Value = EFPApp.MainImages.Images["Error"];
           args.ToolTipText = "Ошибка получения списка файлов." + Environment.NewLine + args.DataRow["IOError"].ToString();
         }
-        else if (DataTools.GetBool(args.DataRow, "NoDir"))
+        else if (DataTools.GetBoolean(args.DataRow, "NoDir"))
         {
           args.Value = EFPApp.MainImages.Images["Warning"];
           args.ToolTipText = "Каталог не найден";
@@ -110,9 +110,9 @@ namespace LogWatcher
         else
         {
           string imageKey;
-          if (DataTools.GetInt(args.DataRow, "NewCount") > 0)
+          if (DataTools.GetInt32(args.DataRow, "NewCount") > 0)
           {
-            ErrorMessageKind kind = (ErrorMessageKind)DataTools.GetInt(args.DataRow, "Kind");
+            ErrorMessageKind kind = DataTools.GetEnum<ErrorMessageKind>(args.DataRow, "Kind");
             imageKey = EFPApp.GetErrorImageKey(kind);
           }
           else
@@ -135,7 +135,7 @@ namespace LogWatcher
       foreach (DataRow row in efpGr1.SelectedDataRows)
       {
         row["RegTime"] = row["LastTime"];
-        DataTools.IncInt(row, "OldCount", DataTools.GetInt(row, "NewCount"));
+        DataTools.IncInt32(row, "OldCount", DataTools.GetInt32(row, "NewCount"));
         row["NewCount"] = DBNull.Value;
       }
 

@@ -109,7 +109,12 @@ namespace FreeLibSet.Forms
     private void btnOK_Click(object sender, EventArgs args)
     {
       if (_Owner.ReadOnly)
+      {
+        // 29.09.2025
+        this.DialogResult = DialogResult.Cancel; 
+        this.Close();
         return;
+      }
 
       if (!_Owner.DoWrite(ExtEditDialogState.OKClicked))
         return;

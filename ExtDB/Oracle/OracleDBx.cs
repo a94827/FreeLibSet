@@ -592,7 +592,7 @@ namespace FreeLibSet.Data.OracleClient
     /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
     /// <param name="values">Значения. Порядок значений должен соответствовать списку столбцов</param>
     /// <returns>Идентификатор добавленной записи</returns>
-    public override Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
+    public override object AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
     {
       throw new NotImplementedException();
 
@@ -620,7 +620,7 @@ namespace FreeLibSet.Data.OracleClient
       Buffer.SB.Append("; SELECT @@IDENTITY");
 
 
-      Id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      Id = DataTools.GetInt32(SQLExecuteScalar(Buffer.SB.ToString()));
 
       if (Id <= 0)
         throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + TableName + "\" Id=" + Id.ToString());
@@ -690,7 +690,7 @@ namespace FreeLibSet.Data.OracleClient
         a2[i] = MakeObjName(DataTools.GetString(row, "OWNER"), DataTools.GetString(row, "VIEW_NAME"));
       }
 
-      return DataTools.MergeArrays<string>(a1, a2);
+      return ArrayTools.MergeArrays<string>(a1, a2);
     }
 
     private string MakeObjName(string owner, string name)
@@ -738,9 +738,9 @@ namespace FreeLibSet.Data.OracleClient
         p = colTypeString.IndexOf('(');
         if (p >= 0)
           colTypeString = colTypeString.Substring(0, p); // Может быть "TIMESTAMP(6)"
-        int len = DataTools.GetInt(drv.Row, "LENGTH"); // это в байтах
-        int prec = DataTools.GetInt(drv.Row, "PRECISION"); // на самом деле имеет тип decimal
-        int scale = DataTools.GetInt(drv.Row, "SCALE"); // на самом деле имеет тип decimal
+        int len = DataTools.GetInt32(drv.Row, "LENGTH"); // это в байтах
+        int prec = DataTools.GetInt32(drv.Row, "PRECISION"); // на самом деле имеет тип decimal
+        int scale = DataTools.GetInt32(drv.Row, "SCALE"); // на самом деле имеет тип decimal
 
         switch (colTypeString.ToUpperInvariant())
         {
@@ -756,11 +756,11 @@ namespace FreeLibSet.Data.OracleClient
             if (prec == 0)
             {
               // Тип NUMBER - хранение числа с максимальной точностью
-              colDef.ColumnType = DBxColumnType.Float;
+              colDef.ColumnType = DBxColumnType.Double;
             }
             else if (scale == 0) // Тип NUMBER(p)
             {
-              colDef.ColumnType = DBxColumnType.Int;
+              colDef.ColumnType = DBxColumnType.Int64; // TODO: могут быть меньшие тиаы
               if (prec > 0 && prec<=18)
               {
                 colDef.MaxValue = Math.Pow(10.0, prec) - 1;
@@ -769,28 +769,21 @@ namespace FreeLibSet.Data.OracleClient
             }
             else // Тип NUMBER(p,s)
             {
-              colDef.ColumnType = DBxColumnType.Float; // TODO: При некоторых значениях может быть и Int
-              // TODO: 
+              colDef.ColumnType = DBxColumnType.Double; // TODO: При некоторых значениях может быть и Int
             }
             break;
 
           case "FLOAT":
-            colDef.ColumnType = DBxColumnType.Float;
+            colDef.ColumnType = DBxColumnType.Double;
             // TODO: Использовать длину поля для разделения float/double
-            colDef.MinValue = Double.MinValue;
-            colDef.MaxValue = Double.MaxValue;
             break;
 
           case "BINARY_FLOAT":
-            colDef.ColumnType = DBxColumnType.Float;
-            colDef.MinValue = Single.MinValue;
-            colDef.MaxValue = Single.MaxValue;
+            colDef.ColumnType = DBxColumnType.Single;
             break;
 
           case "BINARY_DOUBLE":
-            colDef.ColumnType = DBxColumnType.Float;
-            colDef.MinValue = Double.MinValue;
-            colDef.MaxValue = Double.MaxValue;
+            colDef.ColumnType = DBxColumnType.Double;
             break;
 
           case "DATE":
@@ -841,8 +834,8 @@ namespace FreeLibSet.Data.OracleClient
       DataTable tbl = SQLExecuteDataTable(Buffer.SB.ToString(), "sys.foreign_keys");
       foreach (DataRow Row in tbl.Rows)
       {
-        int FKObjId = DataTools.GetInt(Row, "object_id");
-        int RefTableObjId = DataTools.GetInt(Row, "referenced_object_id");
+        int FKObjId = DataTools.GetInt32(Row, "object_id");
+        int RefTableObjId = DataTools.GetInt32(Row, "referenced_object_id");
 
       Buffer.Clear();
         Buffer.SB.Append("SELECT [parent_column_id] FROM sys.foreign_key_columns WHERE constraint_object_id=");
@@ -853,7 +846,7 @@ namespace FreeLibSet.Data.OracleClient
           throw new BugException("Не найдено ни одно столбца для ограничения с constraint_object_id=" + FKObjId.ToString());
         if (tbl2.Rows.Count > 1)
           throw new BugException("Ограничение с constraint_object_id=" + FKObjId.ToString() + " содержит несколько столбцов (" + tbl2.Rows.Count.ToString() + ")");
-        int ParentColumnId = DataTools.GetInt(tbl2.Rows[0], "parent_column_id");
+        int ParentColumnId = DataTools.GetInt32(tbl2.Rows[0], "parent_column_id");
 
       Buffer.Clear();
         Buffer.SB.Append("SELECT [name] FROM sys.columns WHERE object_id=");
@@ -874,7 +867,7 @@ namespace FreeLibSet.Data.OracleClient
         DBxColumnStruct ColStr = TableStr.Columns[ParentColumnName];
         ColStr.MasterTableName = RefTableName;
 
-        int RefTypeCode = DataTools.GetInt(Row, "delete_referential_action");
+        int RefTypeCode = DataTools.GetInt32(Row, "delete_referential_action");
         switch (RefTypeCode)
         {
           case 0: ColStr.RefType = DBxRefType.Disallow; break;
@@ -897,7 +890,7 @@ namespace FreeLibSet.Data.OracleClient
       Buffer.Clear();
       Buffer.SB.Append("SELECT [object_id] FROM sys.tables WHERE [Name]=");
       Buffer.FormatValue(tableName, DBxColumnType.String);
-      return DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      return DataTools.GetInt32(SQLExecuteScalar(Buffer.SB.ToString()));
     }
 #endif
 
@@ -1025,7 +1018,7 @@ namespace FreeLibSet.Data.OracleClient
 
                 if (Column.ColumnType == DBxColumnType.String)
                 {
-                  int RealLen = DataTools.GetInt(ColumnRow, "CHARACTER_MAXIMUM_LENGTH");
+                  int RealLen = DataTools.GetInt32(ColumnRow, "CHARACTER_MAXIMUM_LENGTH");
                   if (RealLen != Column.MaxLength)
                   {
                     if (RealLen > Column.MaxLength)

@@ -83,7 +83,7 @@ namespace FreeLibSet.Data
       if (String.IsNullOrEmpty(name))
         throw ExceptionFactory.ArgStringIsNullOrEmpty("name");
 
-      int pBad = DataTools.IndexOfAny(name, _BadChars);
+      int pBad = StringTools.IndexOfAny(name, _BadChars);
       if (pBad >= 0)
         throw ExceptionFactory.ArgInvalidChar("name", name, pBad);
 

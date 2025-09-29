@@ -198,7 +198,7 @@ namespace FreeLibSet.Forms
         case EFPConfigCategories.GridConfig:
           if (WantsGridConfig(EFPConfigMode.Write, actionInfo) && CurrentConfig != null)
           {
-            EFPDataGridViewConfig gridConfig2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
+            EFPDataViewConfig gridConfig2 = CurrentConfig.Clone(this); // с учетом реальных размеров столбцов
             gridConfig2.WriteConfig(cfg);
           }
           break;
@@ -217,7 +217,7 @@ namespace FreeLibSet.Forms
           WriteSelectionMode(cfg); // режим выбора целой строки
 
           if (CustomOrderAllowed)
-            cfg.SetBool("CustomOrderActive", CustomOrderActive); // Независимо от Orders.Count
+            cfg.SetBoolean("CustomOrderActive", CustomOrderActive); // Независимо от Orders.Count
 
           if (CustomOrderActive)
             cfg.SetString("CustomOrder", CurrentOrderName);
@@ -268,7 +268,7 @@ namespace FreeLibSet.Forms
           ReadSelectionMode(cfg); // режим выбора целой строки
 
           if (CustomOrderAllowed)
-            CustomOrderActive = cfg.GetBoolDef("CustomOrderActive", CustomOrderActive); // 06.07.2021. Если параметр не сохранен, то сохраняем существующее значение.
+            CustomOrderActive = cfg.GetBooleanDef("CustomOrderActive", CustomOrderActive); // 06.07.2021. Если параметр не сохранен, то сохраняем существующее значение.
           if (CustomOrderActive)
             CurrentOrderName = cfg.GetString("CustomOrder");
           else if (Orders.Count > 1)
@@ -569,7 +569,7 @@ namespace FreeLibSet.Forms
       {
         try
         {
-          EFPDataGridViewConfig gridConfig = new EFPDataGridViewConfig();
+          EFPDataViewConfig gridConfig = new EFPDataViewConfig();
           gridConfig.ReadConfig(cfg);
           gridConfig.SetReadOnly();
           base.CurrentConfig = gridConfig;
@@ -668,12 +668,14 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Вызов диалога установки фильтра и обновление просмотра по необходимости
-    /// При показе таблицы фильтров активируется строка фильтра с заданным именем.
-    /// Если <paramref name="startFilter"/> не задан, активируется строка для первого непустого фильтра
+    /// Вызов диалога установки фильтра и обновление просмотра по необходимости.
+    /// Если задан параметр <paramref name="filterCode"/>, то показывается редактор данного фильтра.
+    /// Это используется при двойном щелчке левой кнопки мыши по табличке установленных фильтров.
+    /// Если фильтр не задан (выполнена команда меню "Установить фильтр"), то вызывается диалог со списком всех фильтров. 
+    /// При этом активируется строка для первого непустого фильтра.
     /// </summary>
-    /// <param name="startFilter">Активируемый фильтр</param>
-    public bool ShowFilterDialog(string startFilter)
+    /// <param name="filterCode">Редактируемый фильтр или пустая строка</param>
+    public bool ShowFilterDialog(string filterCode)
     {
       LoadConfig();
 
@@ -691,22 +693,29 @@ namespace FreeLibSet.Forms
       Filters.BeginUpdate();
       try
       {
-        GridFilterForm form = new GridFilterForm(this, _DefaultFilterCfg, originalConfigSection);
-        form.SetStartFilter(startFilter);
-        if (EFPApp.ShowDialog(form, true) == DialogResult.OK)
+        IEFPGridFilter singleFilter = Filters[filterCode];
+        if (singleFilter!=null)
+        {
+          res = singleFilter.ShowFilterDialog(new EFPDialogPosition());
+        }
+        else
+        {
+          GridFilterForm form = new GridFilterForm(this, _DefaultFilterCfg, originalConfigSection);
+          form.SetStartFilter(filterCode);
+          res = EFPApp.ShowDialog(form, true) == DialogResult.OK;
+        }
+
+        if (res)
         {
           // 04.10.2017
           // Вызываем виртуальный метод
           CallOnFilterChanged();
-
-          res = true;
         }
         else
         {
           // Выполняем откат редактирования
           Filters.ClearAllFilters();
           Filters.ReadConfig(originalConfigSection);
-          res = false;
         }
       }
       finally
@@ -829,18 +838,18 @@ namespace FreeLibSet.Forms
       switch (Control.SelectionMode)
       {
         case DataGridViewSelectionMode.RowHeaderSelect:
-          cfg.SetBool("WholeRowSelection", Control.SelectedRows.Count > 0);
+          cfg.SetBoolean("WholeRowSelection", Control.SelectedRows.Count > 0);
           break;
         case DataGridViewSelectionMode.ColumnHeaderSelect:
-          cfg.SetBool("WholeColumnSelection", Control.SelectedColumns.Count > 0);
+          cfg.SetBoolean("WholeColumnSelection", Control.SelectedColumns.Count > 0);
           break;
       }
     }
 
     private void ReadSelectionMode(CfgPart cfg)
     {
-      _SavedWholeRowSelection = cfg.GetBool("WholeRowSelection");
-      _SavedWholeColumnSelection = cfg.GetBool("WholeColumnSelection");
+      _SavedWholeRowSelection = cfg.GetBoolean("WholeRowSelection");
+      _SavedWholeColumnSelection = cfg.GetBoolean("WholeColumnSelection");
       _DelayedSavedSelection = true;
       if (Control.RowCount > 0)
         FlushDelayedSavedSelection();
@@ -1100,15 +1109,15 @@ namespace FreeLibSet.Forms
       {
         ciScrollFilterPrev.Enabled = sf.CanScrollUp && CanEditFilters;
         ciScrollFilterNext.Enabled = sf.CanScrollDown && CanEditFilters;
-        ciScrollFilterPrev.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForFilter, ciScrollFilterPrev.MenuText, ((IEFPGridFilter)sf).DisplayName);
-        ciScrollFilterNext.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForFilter, ciScrollFilterNext.MenuText, ((IEFPGridFilter)sf).DisplayName);
+        ciScrollFilterPrev.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForFilter, ciScrollFilterPrev.MenuTextWithoutMnemonic, ((IEFPGridFilter)sf).DisplayName);
+        ciScrollFilterNext.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForFilter, ciScrollFilterNext.MenuTextWithoutMnemonic, ((IEFPGridFilter)sf).DisplayName);
       }
       else
       {
         ciScrollFilterPrev.Enabled = false;
         ciScrollFilterNext.Enabled = false;
-        ciScrollFilterPrev.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForNoActiveFilter, ciScrollFilterPrev.MenuText);
-        ciScrollFilterNext.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForNoActiveFilter, ciScrollFilterNext.MenuText);
+        ciScrollFilterPrev.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForNoActiveFilter, ciScrollFilterPrev.MenuTextWithoutMnemonic);
+        ciScrollFilterNext.ToolTipText = String.Format(Res.EFPConfigurableDataView_ToolTip_ForNoActiveFilter, ciScrollFilterNext.MenuTextWithoutMnemonic);
       }
     }
 

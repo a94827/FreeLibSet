@@ -167,7 +167,7 @@ namespace FreeLibSet.Forms.Docs
     /// Идентификаторы выбранных узлов.
     /// Вложенные узлы не возвращаются.
     /// </summary>
-    public virtual Int32[] SelectedIds
+    public virtual IIdSet<Int32> SelectedIds
     {
       get
       {
@@ -181,7 +181,7 @@ namespace FreeLibSet.Forms.Docs
           return null;
 
         DataRow[] rows = SelectedDataRows;
-        return DataTools.GetIdsFromColumn(rows, "Id");
+        return IdTools.GetIdsFromColumn<Int32>(rows, "Id");
       }
       set
       {
@@ -189,7 +189,7 @@ namespace FreeLibSet.Forms.Docs
 
         if (value == null)
           return;
-        if (value.Length == 0)
+        if (value.Count == 0)
           return;
 
         if (Control.Model == null)
@@ -201,9 +201,9 @@ namespace FreeLibSet.Forms.Docs
           try
           {
             Control.ClearSelection();
-            for (int i = 0; i < value.Length; i++)
+            foreach (Int32 id in value)
             {
-              TreePath path = model.TreePathFromId(value[i]);
+              TreePath path = model.TreePathFromId(id);
               TreeNodeAdv node = Control.FindNode(path, true);
               if (node != null)
                 node.IsSelected = true;
@@ -218,7 +218,7 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-    private Int32[] _DelayedSelectedIds;
+    private IIdSet<Int32> _DelayedSelectedIds;
 
     /// <summary>
     /// Идентификатор документа, поддокумента или записи в какой-либо другой таблице для текущего выбранного узла
@@ -268,19 +268,19 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Возвращает идентификаторы выбранных узлов вместе со всеми их дочерними узлами
     /// </summary>
-    public Int32[] SelectedIdsWithChildren
+    public IIdSet<Int32> SelectedIdsWithChildren
     {
       get
       {
-        Int32[] ids = SelectedIds;
+        IIdSet<Int32> ids = SelectedIds;
         ITreeModelWithIds<Int32> model = Control.Model as ITreeModelWithIds<Int32>;
-        if (model == null || ids.Length == 0)
+        if (model == null || ids.Count == 0)
           return ids;
 
-        IdList idList = new IdList();
-        for (int i = 0; i < ids.Length; i++)
-          idList.Add(model.GetIdWithChildren(ids[i]));
-        return idList.ToArray();
+        IdCollection<Int32> idList = new IdCollection<Int32>();
+        foreach (Int32 id in ids)
+          idList.AddRange(model.GetIdWithChildren(id));
+        return idList;
       }
     }
 
@@ -335,7 +335,7 @@ namespace FreeLibSet.Forms.Docs
       switch (category)
       {
         case EFPConfigCategories.TreeView:
-          cfg.SetInt("CurrentId", CurrentId);
+          cfg.SetInt32("CurrentId", CurrentId);
           break;
         default:
           base.WriteConfigPart(category, cfg, actionInfo);
@@ -355,7 +355,7 @@ namespace FreeLibSet.Forms.Docs
       {
         case EFPConfigCategories.TreeView:
           if (/*CurrentId*/_DelayedCurrentId /*23.11.2017*/ == 0)
-            CurrentId = cfg.GetInt("CurrentId");
+            CurrentId = cfg.GetInt32("CurrentId");
           break;
         default:
           base.ReadConfigPart(category, cfg, actionInfo);
@@ -921,18 +921,8 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Пометить на обновление строки с заданными идентификаторами
     /// </summary>
-    /// <param name="ids">Массив идентификаторов документов</param>
-    public void UpdateRowsForIds(Int32[] ids)
-    {
-      IdList idList = new IdList(ids);
-      UpdateRowsForIds(idList);
-    }
-
-    /// <summary>
-    /// Пометить на обновление строки с заданными идентификаторами
-    /// </summary>
     /// <param name="ids">Список идентификаторов документов</param>
-    public void UpdateRowsForIds(IdList ids)
+    public void UpdateRowsForIds(IIdSet<Int32> ids)
     {
       if (ids == null)
         return;

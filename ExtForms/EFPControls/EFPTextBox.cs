@@ -1197,13 +1197,13 @@ namespace FreeLibSet.Forms
       while (p < pos)
       {
         bool Found = false;
-        for (int i = 0; i < DataTools.AllPossibleLineSeparators.Length; i++)
+        for (int i = 0; i < StringTools.AllPossibleLineSeparators.Length; i++)
         {
-          int p2 = text.IndexOf(DataTools.AllPossibleLineSeparators[i], p, pos - p, StringComparison.Ordinal);
+          int p2 = text.IndexOf(StringTools.AllPossibleLineSeparators[i], p, pos - p, StringComparison.Ordinal);
           if (p2 < 0)
             continue;
           row++;
-          p = p2 + DataTools.AllPossibleLineSeparators[i].Length;
+          p = p2 + StringTools.AllPossibleLineSeparators[i].Length;
           Found = true;
           break;
         }
@@ -1785,7 +1785,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (String.IsNullOrEmpty(base.Text))
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
 
         string[] a = base.Text.Split(',');
         List<string> lst = new List<string>(a.Length);
@@ -1800,7 +1800,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Empty;
         base.Text = String.Join(_UseSpace ? ", " : ",", value);
       }
     }
@@ -2644,7 +2644,7 @@ namespace FreeLibSet.Forms
         case 2:
           return s.ToLower();
         case 3:
-          return DataTools.ChangeUpperLowerInvariant(s);
+          return StringTools.ChangeUpperLowerInvariant(s);
         case 4:
           return WinFormsTools.ChangeRusLat(s);
         default:

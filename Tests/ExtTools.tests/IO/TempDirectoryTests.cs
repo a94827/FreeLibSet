@@ -21,7 +21,7 @@ namespace ExtTools_tests.IO
         Assert.IsTrue(System.IO.Directory.Exists(dir.Path), "Directory created");
         Assert.IsTrue(sut.DeleteOnDispose, "DeleteOnDispose");
 
-        System.IO.File.WriteAllBytes(new AbsPath(dir, "test1.bin").Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(new AbsPath(dir, "test1.bin").Path, EmptyArray<byte>.Empty);
 
         AbsPath dir2 = new AbsPath(dir, "SubDir1", "SubDir2");
         FileTools.ForceDirs(dir2);

@@ -392,7 +392,7 @@ namespace FreeLibSet.Win32
     /// <param name="keyName">Путь к узлу реестра</param>
     /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
     /// <returns>Значение</returns>
-    public int GetInt(string keyName, string valueName)
+    public int GetInt32(string keyName, string valueName)
     {
       string s = GetString(keyName, valueName);
       if (s.Length == 0)
@@ -472,9 +472,9 @@ namespace FreeLibSet.Win32
     /// <param name="keyName">Путь к узлу реестра</param>
     /// <param name="valueName">Имя значения. Для получения значения по умолчанию задайте пустую стрку</param>
     /// <returns>Значение</returns>
-    public bool GetBool(string keyName, string valueName)
+    public bool GetBoolean(string keyName, string valueName)
     {
-      return GetInt(keyName, valueName) != 0;
+      return GetInt32(keyName, valueName) != 0;
     }
 
     #endregion

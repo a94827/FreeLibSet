@@ -170,7 +170,7 @@ namespace FreeLibSet.Data.Docs
       Int32 docActionId;
 
       // Уже было проверено раньше
-      //Int32 UndoDocVersion = DataTools.GetInt(UndoCon.GetMaxValue("DocActions", "Version",
+      //Int32 UndoDocVersion = DataTools.GetInt32(UndoCon.GetMaxValue("DocActions", "Version",
       //  new AndFilter(new ValueFilter("DocTableId", docType.TableId), new ValueFilter("DocId", docId))));
       // DoValidateDocVersion(DocType, DocId, UndoDocVersion, ref DocVersion);
 
@@ -180,7 +180,7 @@ namespace FreeLibSet.Data.Docs
       fieldPairs.Add("DocId", docId);
       fieldPairs.Add("Version", docVersion);
       fieldPairs.Add("Action", (int)action);
-      docActionId = _UndoCon.AddRecordWithIdResult("DocActions", fieldPairs);
+      docActionId = DataTools.GetInt32(_UndoCon.AddRecordWithIdResult("DocActions", fieldPairs));
 
       return docActionId;
     }
@@ -214,7 +214,7 @@ namespace FreeLibSet.Data.Docs
         fieldPairs.Add("ActionInfo", ActionInfo);
         fieldPairs.Add("ApplyChangesCount", 1);
         fieldPairs.Add("ApplyChangesTime", ActionTime);
-        _UserActionId = UndoCon.AddRecordWithIdResult("UserActions", fieldPairs);
+        _UserActionId = DataTools.GetInt32(UndoCon.AddRecordWithIdResult("UserActions", fieldPairs));
 
         #endregion
       }
@@ -222,7 +222,7 @@ namespace FreeLibSet.Data.Docs
       {
         #region Повторный вызов
 
-        int applyChangesCount = DataTools.GetInt(UndoCon.GetValue("UserActions", _UserActionId, "ApplyChangesCount"));
+        int applyChangesCount = DataTools.GetInt32(UndoCon.GetValueById("UserActions", _UserActionId, "ApplyChangesCount"));
         if (applyChangesCount <= 0)
           throw new BugException("Current value of ApplyChangesCount=" + applyChangesCount.ToString());
 
@@ -233,7 +233,7 @@ namespace FreeLibSet.Data.Docs
           fieldPairs.Add("SessionId", _SessionId);
         fieldPairs.Add("ApplyChangesCount", applyChangesCount + 1);
         fieldPairs.Add("ApplyChangesTime", ActionTime);
-        UndoCon.SetValues("UserActions", _UserActionId, fieldPairs);
+        UndoCon.SetValuesById("UserActions", _UserActionId, fieldPairs);
 
         #endregion
       }
@@ -247,9 +247,9 @@ namespace FreeLibSet.Data.Docs
     {
       CheckIsRealDocId(docType, docId);
 
-      Int32 docVersion = DataTools.GetInt(MainConGlobal.GetValue(docType.Name, docId, "Version"));
+      Int32 docVersion = DataTools.GetInt32(MainConGlobal.GetValueById(docType.Name, docId, "Version"));
 
-      Int32 undoDocVersion = DataTools.GetInt(UndoCon.GetMaxValue("DocActions", "Version",
+      Int32 undoDocVersion = DataTools.GetInt32(UndoCon.GetMaxValue("DocActions", "Version",
         new AndFilter(new ValueFilter("DocTableId", docType.TableId), new ValueFilter("DocId", docId))));
 
       DoValidateDocVersion(docType, docId, undoDocVersion, docVersion);
@@ -301,15 +301,15 @@ namespace FreeLibSet.Data.Docs
 
         #region Добавляем псевдозапись в UserActions
 
-        object[] aMainValues = MainConGlobal.GetValues(docType.Name, docId,
+        object[] aMainValues = MainConGlobal.GetValuesById(docType.Name, docId,
           new DBxColumns("ChangeTime,ChangeUserId,CreateTime,CreateUserId"));
 
         DateTime? fakeTime = DataTools.GetNullableDateTime(aMainValues[0]);
-        Int32 fakeUserId = DataTools.GetInt(aMainValues[1]);
+        Int32 fakeUserId = DataTools.GetInt32(aMainValues[1]);
         if (fakeUserId == 0)
         {
           fakeTime = DataTools.GetNullableDateTime(aMainValues[2]);
-          fakeUserId = DataTools.GetInt(aMainValues[3]);
+          fakeUserId = DataTools.GetInt32(aMainValues[3]);
         }
 
         Int32 fakeUserActionId = 0;
@@ -319,7 +319,7 @@ namespace FreeLibSet.Data.Docs
           fieldPairs.Add("UserId", fakeUserId);
           fieldPairs.Add("ActionTime", fakeTime);
           fieldPairs.Add("ActionInfo", String.Format(Res.DBxDocProvider_Msg_ActionAutoRecover, undoDocVersion));
-          fakeUserActionId = _UndoCon.AddRecordWithIdResult("UserActions", fieldPairs);
+          fakeUserActionId = DataTools.GetInt32(_UndoCon.AddRecordWithIdResult("UserActions", fieldPairs));
         }
         else
         {
@@ -379,7 +379,7 @@ namespace FreeLibSet.Data.Docs
           LogoutTools.LogoutException(e, Res.DBxDocProvider_ErrTitle_AddFakeUserAction);
         }
 
-        MainConGlobal.SetValue(docType.Name, docId, "Version", undoDocVersion); // транзакция не нужна
+        MainConGlobal.SetValueById(docType.Name, docId, "Version", undoDocVersion); // транзакция не нужна
       }
     }
 
@@ -407,7 +407,7 @@ namespace FreeLibSet.Data.Docs
         _DocActionDocVersions = docActionDocVersions;
       }
 
-      #endregion
+    #endregion
 
     #region Свойства
 
@@ -426,7 +426,7 @@ namespace FreeLibSet.Data.Docs
       public Int32[] DocActionDocVersions { get { return _DocActionDocVersions; } }
       private Int32[] _DocActionDocVersions;
 
-      #endregion
+    #endregion
     }
 #endif
 
@@ -441,9 +441,9 @@ namespace FreeLibSet.Data.Docs
       ActualizeMainDoc(docType, docId, docVersion);
       foreach (DBxSubDocType sdt in docType.SubDocs)
       {
-        IdList subDocIds = MainConGlobal.GetIds(sdt.Name, new IdsFilter("DocId", docId)); // включая deleted
-        foreach (Int32 SubDocId in subDocIds)
-          ActualizeSubDoc(sdt, SubDocId, docVersion);
+        IIdSet subDocIds=MainConGlobal.GetIds(sdt.Name, new ValueFilter("DocId", docId)); // включая deleted
+        foreach (Int32 subDocId in IdTools.AsEnumerable<Int32>(subDocIds))
+          ActualizeSubDoc(sdt, subDocId, docVersion);
       }
     }
 
@@ -455,21 +455,21 @@ namespace FreeLibSet.Data.Docs
       if (docVersion < 1 || docVersion > short.MaxValue)
         throw new ArgumentOutOfRangeException("docVersion", docVersion, "Неправильная существующая версия документа\"" + docType.SingularTitle + "\" DocId=" + docId.ToString());
 
-      Int32 version2 = DataTools.GetInt(MainConGlobal.GetValue(docType.Name, docId, "Version2"));
+      Int32 version2 = DataTools.GetInt32(MainConGlobal.GetValueById(docType.Name, docId, "Version2"));
       //if (Version2 == DocVersion)
       //  return;  // актуальная версия
       if (version2 == 0)
         // Исправляем
         version2 = docVersion;
 
-      Int32 undoId = UndoCon.FindRecord(docType.Name, new AndFilter(new ValueFilter("DocId", docId),
-        new ValueFilter("Version2", version2)));
+      Int32 undoId = DataTools.GetInt32(UndoCon.FindRecord(docType.Name, new AndFilter(new ValueFilter("DocId", docId),
+        new ValueFilter("Version2", version2))));
       if (undoId != 0)
         return; // уже вызывалось
 
       DBxColumnList colNames = new DBxColumnList();
       docType.Struct.Columns.GetColumnNames(colNames);
-      object[] fieldValues = MainConGlobal.GetValues(docType.Name, docId, new DBxColumns(colNames));
+      object[] fieldValues = MainConGlobal.GetValuesById(docType.Name, docId, new DBxColumns(colNames));
 
       Hashtable fieldPairs = DataTools.NamesAndValuesToPairs(colNames.ToArray(), fieldValues);
       fieldPairs.Add("DocId", docId);
@@ -496,22 +496,22 @@ namespace FreeLibSet.Data.Docs
       if (docVersion < 1 || docVersion > Int16.MaxValue)
         throw ExceptionFactory.ArgOutOfRange("docVersion", docVersion, 1, Int16.MaxValue);
 
-      Int32 version2 = DataTools.GetInt(MainConGlobal.GetValue(subDocType.Name, subDocId, "Version2"));
+      Int32 version2 = DataTools.GetInt32(MainConGlobal.GetValueById(subDocType.Name, subDocId, "Version2"));
       //if (Version2 == DocVersion)
       //  return;  // актуальная версия
       if (version2 == 0)
         // Исправляем
         version2 = docVersion;
 
-      Int32 undoId = UndoCon.FindRecord(subDocType.Name, new AndFilter(new ValueFilter("SubDocId", subDocId),
-        new ValueFilter("Version2", version2)));
+      Int32 undoId = DataTools.GetInt32(UndoCon.FindRecord(subDocType.Name, new AndFilter(new ValueFilter("SubDocId", subDocId),
+        new ValueFilter("Version2", version2))));
       if (undoId != 0)
         return; // уже вызывалось
 
       DBxColumnList colNames = new DBxColumnList();
       colNames.Add("Deleted");
       subDocType.Struct.Columns.GetColumnNames(colNames);
-      object[] fieldValues = MainConGlobal.GetValues(subDocType.Name, subDocId, new DBxColumns(colNames));
+      object[] fieldValues = MainConGlobal.GetValuesById(subDocType.Name, subDocId, new DBxColumns(colNames));
 
       Hashtable fieldPairs = DataTools.NamesAndValuesToPairs(colNames.ToArray(), fieldValues);
       fieldPairs.Add("SubDocId", subDocId);
@@ -544,7 +544,7 @@ namespace FreeLibSet.Data.Docs
       CheckIsRealDocId(docType, docId);
 
       object o = _MainConGlobal.GetValue(docType.Name, docId, "Version");
-      return DataTools.GetInt(o);
+      return DataTools.GetInt32(o);
     }
 #endif
 

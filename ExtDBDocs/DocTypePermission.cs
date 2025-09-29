@@ -311,7 +311,7 @@ namespace FreeLibSet.Data.Docs
 
         if (!String.IsNullOrEmpty(docTypeName))
         {
-          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
+          if (StringTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
             return p;
         }
       }
@@ -493,7 +493,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="part">Секция конфигурации</param>
     public override void Write(CfgPart part)
     {
-      part.SetBool("Allowed", Allowed);
+      part.SetBoolean("Allowed", Allowed);
       DocTypePermission.WriteDocTypes(part, DocTypeNames);
     }
 
@@ -503,7 +503,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="part">Секция конфигурации</param>
     public override void Read(CfgPart part)
     {
-      Allowed = part.GetBool("Allowed");
+      Allowed = part.GetBoolean("Allowed");
       DocTypeNames = DocTypePermission.ReadDocTypes(part);
     }
 
@@ -558,7 +558,7 @@ namespace FreeLibSet.Data.Docs
 
         if (!String.IsNullOrEmpty(docTypeName))
         {
-          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
+          if (StringTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
             return p;
         }
       }
@@ -588,7 +588,7 @@ namespace FreeLibSet.Data.Docs
 
         if (!String.IsNullOrEmpty(docTypeName))
         {
-          if (DataTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
+          if (StringTools.IndexOf(p.DocTypeNames, docTypeName, StringComparison.OrdinalIgnoreCase) >= 0)
             return p.Allowed;
         }
       }
@@ -881,7 +881,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="part">Секция конфигурации</param>
     public override void Write(CfgPart part)
     {
-      part.SetBool("Allowed", Allowed);
+      part.SetBoolean("Allowed", Allowed);
     }
 
     /// <summary>
@@ -890,7 +890,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="part">Секция конфигурации</param>
     public override void Read(CfgPart part)
     {
-      Allowed = part.GetBool("Allowed");
+      Allowed = part.GetBoolean("Allowed");
     }
 
     /// <summary>

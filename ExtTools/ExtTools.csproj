@@ -62,11 +62,13 @@
     <Compile Include="Calendar\YearMonthDayAge.cs" />
     <Compile Include="Collections\NumericStringComparer.cs" />
     <Compile Include="CommandLine\CommandLineParser.cs" />
-    <Compile Include="Core\DataTools.Arrays.cs" />
-    <Compile Include="Core\DataTools.Math.cs" />
+    <Compile Include="Core\ArrayTools.cs" />
+    <Compile Include="Core\MathTools.cs" />
     <Compile Include="Core\ExceptionFactory.cs" />
     <Compile Include="Data\CoreDBxSqlFormatter.cs" />
     <Compile Include="Data\DataEnumerators.cs" />
+    <Compile Include="Data\DataExceptions.cs" />
+    <Compile Include="Data\DataRowValues.cs" />
     <Compile Include="Data\DbDataReaderValue.cs" />
     <Compile Include="Data\DBxCommonFilter.cs" />
     <Compile Include="Data\DBxDataRowExtValues.cs" />
@@ -82,15 +84,21 @@
     <Compile Include="Data\DBxTableStruct.cs" />
     <Compile Include="Data\DBxTools.cs" />
     <Compile Include="Data\DBxCfgExtValues.cs" />
+    <Compile Include="Data\GroupDbDataReaderWrapper.cs" />
+    <Compile Include="Data\IdArray.cs" />
+    <Compile Include="Data\IdList.cs" />
+    <Compile Include="Data\IdSetReadOnlyWrapper.cs" />
+    <Compile Include="Data\IdTools.cs" />
+    <Compile Include="Data\StringId.cs" />
+    <Compile Include="Data\TableIdCollection.cs" />
     <Compile Include="DBF\DbfFieldTypeDetector.cs" />
     <Compile Include="DependedValues\DepFromArray.cs" />
     <Compile Include="IO\AbsPath.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Config\Cfg.cs" />
     <Compile Include="Data\DataTableRepeater.cs" />
-    <Compile Include="Core\DataTools.Xml.cs" />
+    <Compile Include="Core\XmlTools.cs" />
     <Compile Include="Data\DataViewSortBuilder.cs" />
-    <Compile Include="Data\DataRowValueExtractor.cs" />
     <Compile Include="Core\DataTools.cs" />
     <Compile Include="Calendar\DateRange.cs" />
     <Compile Include="Calendar\DateRangeFormatter.cs" />
@@ -136,7 +144,7 @@
     <Compile Include="IO\FileTools.cs" />
     <Compile Include="Formatting\FormatStringTools.cs" />
     <Compile Include="Collections\HistoryList.cs" />
-    <Compile Include="Data\IdList.cs" />
+    <Compile Include="Data\IdCollection.cs" />
     <Compile Include="Core\INamedValuesAccess.cs" />
     <Compile Include="Reporting\BRCellStyle.cs" />
     <Compile Include="Reporting\BRPaginator.cs" />
@@ -193,8 +201,8 @@
     <Compile Include="IO\ZipFileCreator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\DataTools.DateTime.cs" />
-    <Compile Include="Core\DataTools.String.cs" />
+    <Compile Include="Core\TimeTools.cs" />
+    <Compile Include="Core\StringTools.cs" />
     <Compile Include="Text\CsvTextConvert.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +214,7 @@
   <ItemGroup>
     <Compile Include="Config\SettingsDataList.cs" />
     <Compile Include="Core\DataTools.AggregateFunctions.cs" />
+    <Compile Include="Core\MD5Tools.cs" />
     <Compile Include="Models\SpreadsheetBase\CellRef.cs" />
     <Compile Include="Models\Tree\ListTreeModel.cs" />
     <Compile Include="UICore\IDataReorderHelper.cs" />

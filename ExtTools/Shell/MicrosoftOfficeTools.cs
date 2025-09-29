@@ -473,7 +473,7 @@ namespace FreeLibSet.Shell
       {
         get
         {
-          return (WdAlertLevel)(DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=94]")));
+          return (WdAlertLevel)(DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=94]")));
         }
       }
 
@@ -828,7 +828,7 @@ namespace FreeLibSet.Shell
       {
         get
         {
-          return DataTools.GetInt(Base.Helper.GetProp(Base.Obj, "[DispID=314]"));
+          return DataTools.GetInt32(Base.Helper.GetProp(Base.Obj, "[DispID=314]"));
         }
       }
 
@@ -861,7 +861,7 @@ namespace FreeLibSet.Shell
       {
         get
         {
-          return DataTools.GetBool(Base.Helper.GetProp(Base.Obj, "[DispID=343]"));
+          return DataTools.GetBoolean(Base.Helper.GetProp(Base.Obj, "[DispID=343]"));
         }
       }
 

@@ -56,7 +56,7 @@ namespace FreeLibSet.Russian
         // Нет объединения
         return ToString(firstDate.Value, isLong) + " - " + ToString(lastDate.Value, isLong);
 
-      if (DataTools.IsBottomOfYear(firstDate.Value) && DataTools.IsEndOfYear(lastDate.Value))
+      if (TimeTools.IsBottomOfYear(firstDate.Value) && TimeTools.IsEndOfYear(lastDate.Value))
       { 
         // 31.08.2018 - целый год
         if (isLong)
@@ -74,7 +74,7 @@ namespace FreeLibSet.Russian
           return firstDate.Value.ToString(@"dd\.MM", FormatProvider) + "-" + lastDate.Value.ToString(@"dd\.MM\.yyyy", FormatProvider);
       }
 
-      if (DataTools.IsBottomOfMonth(firstDate.Value) && DataTools.IsEndOfMonth(lastDate.Value))
+      if (TimeTools.IsBottomOfMonth(firstDate.Value) && TimeTools.IsEndOfMonth(lastDate.Value))
       { 
         // 31.08.2018 - целый месяц
         if (isLong)

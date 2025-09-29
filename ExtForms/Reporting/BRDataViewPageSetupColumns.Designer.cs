@@ -40,7 +40,7 @@
       this.lblWorkWidth = new System.Windows.Forms.Label();
       this.lblWholeWidthValueText = new System.Windows.Forms.Label();
       this.lblWorkWidthValueText = new System.Windows.Forms.Label();
-      this.edRepeatColumns = new FreeLibSet.Controls.IntEditBox();
+      this.edRepeatColumns = new FreeLibSet.Controls.Int32EditBox();
       this.cbColumnSubHeaderNumbers = new System.Windows.Forms.ComboBox();
       this.MainPanel.SuspendLayout();
       this.panel1.SuspendLayout();
@@ -171,7 +171,7 @@
     public System.Windows.Forms.Label lblWorkWidth;
     public System.Windows.Forms.Label lblWholeWidthValueText;
     public System.Windows.Forms.Label lblWorkWidthValueText;
-    private Controls.IntEditBox edRepeatColumns;
+    private Controls.Int32EditBox edRepeatColumns;
     private System.Windows.Forms.Label lblColumnSubHeaderNumbers;
     private System.Windows.Forms.ComboBox cbColumnSubHeaderNumbers;
   }

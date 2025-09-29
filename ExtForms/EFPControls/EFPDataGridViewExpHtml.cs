@@ -319,11 +319,11 @@ namespace FreeLibSet.Forms
     private static void WriteHtmlRow(TextWriter wrt, int rowIndex, EFPDataGridView controlProvider, EFPDataGridViewRectArea area/*, EFPDataGridViewExpHtmlSettings settings*/)
     {
       wrt.WriteLine("<TR>");
-      controlProvider.DoGetRowAttributes(rowIndex, EFPDataGridViewAttributesReason.View);
+      controlProvider.GetRowInfo(rowIndex, EFPDataViewInfoReason.View);
       for (int j = 0; j < area.ColumnCount; j++)
       {
         int columnIndex = area.ColumnIndices[j];
-        EFPDataGridViewCellAttributesEventArgs cellArgs = controlProvider.DoGetCellAttributes(columnIndex);
+        EFPDataGridViewCellInfoEventArgs cellArgs = controlProvider.GetCellInfo(columnIndex);
 
         // 06.01.2014 - убрано
         // if (Selection && !GridHandler.IsCellSelected(RowIndex, ColumnIndex))
@@ -364,8 +364,7 @@ namespace FreeLibSet.Forms
               {
                 if (cellArgs.OriginalValue is String)
                   sFormat = " STYLE=\"vnd.ms-excel.numberformat:@\"";
-                if (DataTools.IsIntegerType(cellArgs.OriginalValue.GetType()) ||
-                  DataTools.IsFloatType(cellArgs.OriginalValue.GetType()))
+                if (MathTools.IsNumericType(cellArgs.OriginalValue.GetType()))
                   sNum = " x:num=\"" + Convert.ToString(cellArgs.OriginalValue, StdConvert.NumberFormat) + "\"";
               }
             }

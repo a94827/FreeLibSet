@@ -168,7 +168,7 @@ namespace FreeLibSet.Forms.Data
   /// Строка проходит фильтр, если заданный в фильтре год (Value) попадает в диапазон.
   /// Обрабатываются значения типа NULL, задающие открытые интервалы.
   /// </summary>
-  public class YearRangeInclusionGridFilter : IntRangeInclusionCommonFilter, IEFPGridFilter, IEFPScrollableGridFilter
+  public class YearRangeInclusionGridFilter : Int32RangeInclusionCommonFilter, IEFPGridFilter, IEFPScrollableGridFilter
   {
     #region Конструкторы
 

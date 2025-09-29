@@ -253,7 +253,7 @@
     <value>Incompatible data types</value>
   </data>
   <data name="DateRangeFormatter_Msg_RangeMax" xml:space="preserve">
-    <value>till {1}</value>
+    <value>till {0}</value>
   </data>
   <data name="DateRangeFormatter_Msg_RangeMin" xml:space="preserve">
     <value>since {0}</value>
@@ -1541,5 +1541,29 @@
   </data>
   <data name="BRBookmark_Err_NameUnderscore" xml:space="preserve">
     <value>Invalid bookmark name '{0}'. Name should not end with an underscore character nor contains two characters together.</value>
+  </data>
+  <data name="DBxStructException_Err_Message" xml:space="preserve">
+    <value>Error in table '{0}' struct declaration. {1}</value>
+  </data>
+  <data name="NoIdArgumentException_Err_Message" xml:space="preserve">
+    <value>Identifier not given</value>
+  </data>
+  <data name="PrimaryKeyException_Err_Message" xml:space="preserve">
+    <value>Invalid primary key</value>
+  </data>
+  <data name="ComplexId_Arg_PartialEmpty" xml:space="preserve">
+    <value>Key parts are partially empty: {0}. All part mus be either presented or empty</value>
+  </data>
+  <data name="ComplexId_Msg_ToString2" xml:space="preserve">
+    <value>({0}, {1})</value>
+  </data>
+  <data name="ComplexId_Msg_ToString3" xml:space="preserve">
+    <value>({0}, {1}, {2})</value>
+  </data>
+  <data name="ComplexId_Msg_ToStringEmpty" xml:space="preserve">
+    <value>()</value>
+  </data>
+  <data name="Common_Err_MethodAlreadyCalled" xml:space="preserve">
+    <value>Method {0} of object {1} has already been called</value>
   </data>
 </root>

@@ -59,8 +59,8 @@ namespace FreeLibSet.Forms.Reporting
         efpTextFalse.Validating += EfpTextTrueFalse_Validating;
         efpTextTrue.TextEx.ValueChanged += efpTextFalse.Validate;
         efpTextFalse.TextEx.ValueChanged += efpTextTrue.Validate;
-        efpTextTrue.EnabledEx = new DepEqual<int>(efpBoolMode.SelectedIndexEx, (int)(BRDataViewBoolMode.Text));
-        efpTextFalse.EnabledEx = new DepEqual<int>(efpBoolMode.SelectedIndexEx, (int)(BRDataViewBoolMode.Text));
+        efpTextTrue.EnabledEx = new DepEqual<int>(efpBoolMode.SelectedIndexEx, (int)(BRDataViewBooleanMode.Text));
+        efpTextFalse.EnabledEx = new DepEqual<int>(efpBoolMode.SelectedIndexEx, (int)(BRDataViewBooleanMode.Text));
 
         _TrueTextValues = new List<string>();
         _FalseTextValues = new List<string>();
@@ -222,9 +222,9 @@ namespace FreeLibSet.Forms.Reporting
         }
         if (_ViewData.UseBoolMode)
         {
-          efpBoolMode.SelectedIndex = (int)(_ViewData.BoolMode);
-          efpTextTrue.Text = _ViewData.BoolTextTrue;
-          efpTextFalse.Text = _ViewData.BoolTextFalse;
+          efpBoolMode.SelectedIndex = (int)(_ViewData.BooleanMode);
+          efpTextTrue.Text = _ViewData.BooleanTextTrue;
+          efpTextFalse.Text = _ViewData.BooleanTextFalse;
         }
       }
       catch { }
@@ -250,9 +250,9 @@ namespace FreeLibSet.Forms.Reporting
       }
       if (_ViewData.UseBoolMode)
       {
-        _ViewData.BoolMode = (BRDataViewBoolMode)(efpBoolMode.SelectedIndex);
-        _ViewData.BoolTextTrue = efpTextTrue.Text;
-        _ViewData.BoolTextFalse = efpTextFalse.Text;
+        _ViewData.BooleanMode = (BRDataViewBooleanMode)(efpBoolMode.SelectedIndex);
+        _ViewData.BooleanTextTrue = efpTextTrue.Text;
+        _ViewData.BooleanTextFalse = efpTextFalse.Text;
       }
 
       if (!_TextOnly)

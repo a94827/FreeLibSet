@@ -208,13 +208,13 @@
   <data name="ParamSetComboBox_Err_UnknownName" xml:space="preserve">
     <value>Нет такой строки в списке. Выберите набор из выпадающего списка</value>
   </data>
-  <data name="BoolValueGridFilter_Err_NoText" xml:space="preserve">
+  <data name="BooleanValueGridFilter_Err_NoText" xml:space="preserve">
     <value>Одновременная очистка свойств FilterTextTrue и FilterTextFalse не допускается</value>
   </data>
-  <data name="BoolValueGridFilter_Msg_FilterTextFalse" xml:space="preserve">
+  <data name="BooleanValueGridFilter_Msg_FilterTextFalse" xml:space="preserve">
     <value>Значение сброшено</value>
   </data>
-  <data name="BoolValueGridFilter_Msg_FilterTextTrue" xml:space="preserve">
+  <data name="BooleanValueGridFilter_Msg_FilterTextTrue" xml:space="preserve">
     <value>Значение установлено</value>
   </data>
   <data name="DateRangeDialog_Msg_Prompt" xml:space="preserve">
@@ -3110,5 +3110,14 @@
   </data>
   <data name="BRPageSetupFont_Err_LineHeightFontHeight" xml:space="preserve">
     <value>Высота строки не может юыть меньше, чем размер шрифта</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopyFormatsSettings" xml:space="preserve">
+    <value>Настройка форматов копирования ...</value>
+  </data>
+  <data name="Cmd_Menu_Edit_CopyHyperlink" xml:space="preserve">
+    <value>Копировать гиперссылку</value>
+  </data>
+  <data name="EFPDataView_Err_NoSelectedLinkColumn" xml:space="preserve">
+    <value>В просмотре не выбран столбец с гиперссылкой</value>
   </data>
 </root>

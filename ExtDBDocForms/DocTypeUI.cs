@@ -115,7 +115,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="editIds"></param>
     /// <param name="modal"></param>
     /// <param name="caller"></param>
-    internal DocTypeEditingEventArgs(DocTypeUI docType, UIDataState state, Int32[] editIds, bool modal, DocumentViewHandler caller)
+    internal DocTypeEditingEventArgs(DocTypeUI docType, UIDataState state, IdArray<Int32> editIds, bool modal, DocumentViewHandler caller)
     {
       _DocType = docType;
       _State = state;
@@ -151,8 +151,8 @@ namespace FreeLibSet.Forms.Docs
     /// Список идентификаторов редактируемых, просматриваемых или
     /// удаляемых документов
     /// </summary>
-    public Int32[] EditIds { get { return _EditIds; } }
-    private readonly Int32[] _EditIds;
+    public IdArray<Int32> EditIds { get { return _EditIds; } }
+    private readonly IdArray<Int32> _EditIds;
 
     /// <summary>
     /// True, если окно редактирования следует показать в модальном
@@ -212,7 +212,7 @@ namespace FreeLibSet.Forms.Docs
             Caller.InitNewDocValues(mDocs[0]);
           break;
         case UIDataState.InsertCopy:
-          if (EditIds.Length != 1)
+          if (EditIds.Count != 1)
             throw new InvalidOperationException(Res.Common_Err_SingleDocRequired);
           mDocs.InsertCopy(EditIds[0]);
           break;
@@ -392,7 +392,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="tableName"></param>
     /// <param name="ids"></param>
     /// <param name="reason"></param>
-    internal DocTypeDocSelEventArgs(DBUI ui, DBxDocSelection docSel, string tableName, Int32[] ids, EFPDBxViewDocSelReason reason)
+    internal DocTypeDocSelEventArgs(DBUI ui, DBxDocSelection docSel, string tableName, IdArray<Int32> ids, EFPDBxViewDocSelReason reason)
     {
       _UI = ui;
       _DocSel = docSel;
@@ -415,7 +415,7 @@ namespace FreeLibSet.Forms.Docs
       _DocSel = docSel;
       _TableName = tableName;
       _Rows = rows;
-      _Ids = DataTools.GetIds(rows);
+      _Ids = IdTools.AsIdArray<Int32>(IdTools.GetIds<Int32>(rows));
       _Reason = reason;
     }
 
@@ -430,8 +430,7 @@ namespace FreeLibSet.Forms.Docs
     private readonly DBUI _UI;
 
     /// <summary>
-    /// Имя таблицы документа или поддокумента (к которому присоединен обработчик
-    /// события)
+    /// Имя таблицы документа или поддокумента (к которому присоединен обработчик события)
     /// </summary>
     public string TableName { get { return _TableName; } }
     private readonly string _TableName;
@@ -440,8 +439,8 @@ namespace FreeLibSet.Forms.Docs
     /// Массив идентификаторов выбранных документов или поддокументов, для которых
     /// требуется построить выборку документов
     /// </summary>
-    public Int32[] Ids { get { return _Ids; } }
-    private readonly Int32[] _Ids;
+    public IdArray<Int32> Ids { get { return _Ids; } }
+    private readonly IdArray<Int32> _Ids;
 
     /// <summary>
     /// Массив строк выбранных поддокументов, для которых требуется построить
@@ -476,9 +475,9 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="refColumnName">Имя ссылочного поля. Может содержать точки</param>
     public void AddFromColumn(string refTableName, string refColumnName)
     {
-      for (int i = 0; i < Ids.Length; i++)
+      for (int i = 0; i < Ids.Count; i++)
       {
-        Int32 refId = DataTools.GetInt(GetRowValue(i, refColumnName));
+        Int32 refId = DataTools.GetInt32(GetRowValue(i, refColumnName));
         DocSel.Add(refTableName, refId);
       }
     }
@@ -513,7 +512,7 @@ namespace FreeLibSet.Forms.Docs
           return BaseValue;
 
         // Ссылочное поле с точкой
-        Int32 refId = DataTools.GetInt(BaseValue);
+        Int32 refId = DataTools.GetInt32(BaseValue);
         if (refId < 0)
           return null; // тоже фиктивный идентификатор
         return _UI.TextHandlers.DBCache[TableName].GetRefValue(columnName, refId);
@@ -542,8 +541,8 @@ namespace FreeLibSet.Forms.Docs
     {
       for (int i = 0; i < Ids.Length; i++)
       {
-        Int32 TableId = DataTools.GetInt(GetRowValue(i, prefix + "Таблица"));
-        Int32 DocId = DataTools.GetInt(GetRowValue(i, prefix + "Идентификатор"));
+        Int32 TableId = DataTools.GetInt32(GetRowValue(i, prefix + "Таблица"));
+        Int32 DocId = DataTools.GetInt32(GetRowValue(i, prefix + "Идентификатор"));
         if (TableId != 0 && DocId != 0)
         {
           DBxDocType dt = _UI.DocProvider.DocTypes.FindByTableId(TableId);
@@ -862,11 +861,11 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Получить раскраску строки документа или поддокумента с заданным идентификатором 
-    /// и применить ее при обработке события <see cref="EFPDataGridView.GetRowAttributes"/>.
+    /// и применить ее при обработке события <see cref="EFPDataGridView.RowInfoNeeded"/>.
     /// </summary>
     /// <param name="id">Идентификатор документа или поддокумента</param>
     /// <param name="args">Аргументы события, в которых заполняются поля</param>
-    public void GetRowColor(Int32 id, EFPDataGridViewRowAttributesEventArgs args)
+    public void GetRowColor(Int32 id, EFPDataGridViewRowInfoEventArgs args)
     {
       UIDataViewColorType colorType;
       bool grayed;
@@ -876,15 +875,15 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Получить раскраску строки документа или поддокумента и применить ее при обработке события <see cref="EFPDataGridView.GetRowAttributes"/>.
+    /// Получить раскраску строки документа или поддокумента и применить ее при обработке события <see cref="EFPDataGridView.RowInfoNeeded"/>.
     /// Идентификатор документа или поддокумента извлекается из <paramref name="args"/>.DataRow из поля "Id".
     /// </summary>
     /// <param name="args">Аргументы события, в которых заполняются поля</param>
-    public void GetRowColor(EFPDataGridViewRowAttributesEventArgs args)
+    public void GetRowColor(EFPDataGridViewRowInfoEventArgs args)
     {
       if (args.DataRow == null)
         return;
-      GetRowColor(DataTools.GetInt(args.DataRow, "Id"), args);
+      GetRowColor(DataTools.GetInt32(args.DataRow, "Id"), args);
     }
 
     /// <summary>
@@ -967,7 +966,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="ids">Идентификаторы выбранных документов или поддокументов</param>
     /// <param name="reason">Причина построения выборки</param>
     /// <returns>Выборка</returns>
-    public abstract void PerformGetDocSel(DBxDocSelection docSel, Int32[] ids, EFPDBxViewDocSelReason reason);
+    public abstract void PerformGetDocSel(DBxDocSelection docSel, IEnumerable<Int32> ids, EFPDBxViewDocSelReason reason);
 
     /// <summary>
     /// Вызывает обработчик события <see cref="GetDocSel"/>, если он установлен.
@@ -975,12 +974,16 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docSel">Заполняемая выборка документов</param>
     /// <param name="ids">Идентификаторы выбранных документов или поддокументов</param>
     /// <param name="reason">Причина построения выборки</param>
-    protected void OnGetDocSel(DBxDocSelection docSel, Int32[] ids, EFPDBxViewDocSelReason reason)
+    protected void OnGetDocSel(DBxDocSelection docSel, IIdSet<Int32> ids, EFPDBxViewDocSelReason reason)
     {
       if (GetDocSel != null)
       {
         // Есть обработчик события
-        DocTypeDocSelEventArgs args = new DocTypeDocSelEventArgs(_UI, docSel, _DocTypeBase.Name, ids, reason);
+        DocTypeDocSelEventArgs args = new DocTypeDocSelEventArgs(_UI, 
+          docSel, 
+          _DocTypeBase.Name,  
+          IdTools.AsIdArray<Int32>(ids), 
+          reason);
         try
         {
           GetDocSel(this, args);
@@ -1035,7 +1038,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docSel">Заполняемая выборка документов</param>
     /// <param name="ids">Список идентификаторов документа или поддокумента</param>
     /// <param name="reason">Причина построения выборки</param>
-    public void PerformGetDocSel(DBxDocSelection docSel, IdList ids, EFPDBxViewDocSelReason reason)
+    public void PerformGetDocSel(DBxDocSelection docSel, IdCollection<Int32> ids, EFPDBxViewDocSelReason reason)
     {
       if (ids != null)
         PerformGetDocSel(docSel, ids.ToArray(), reason);
@@ -1491,7 +1494,7 @@ namespace FreeLibSet.Forms.Docs
       // 27.11.2019
       DBxSelectInfo info = new DBxSelectInfo();
       info.TableName = DocType.Name;
-      info.Expressions.Add(columns);
+      info.Expressions.AddRange(columns);
       info.Where = filter;
       info.OrderBy = orderBy;
       info.MaxRecordCount = MaxRecordCount2;
@@ -1531,7 +1534,7 @@ namespace FreeLibSet.Forms.Docs
         {
           // Некоторых полей не хватает
           _BufferedData = null;
-          colLst.Add(_BufferedColumns);
+          colLst.AddRange(_BufferedColumns);
         }
       }
 
@@ -1640,12 +1643,12 @@ namespace FreeLibSet.Forms.Docs
         (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
       {
         //Columns += "CreateTime,ChangeTime";
-        controlProvider.Columns.AddInt("Id");
+        controlProvider.Columns.AddInteger("Id", true, String.Empty, 5);
         controlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
         controlProvider.Columns.LastAdded.CanIncSearch = true;
         //TODO: if (UseHieView)
         //TODO: {
-        //TODO:   ControlProvider.Columns.AddInt("GroupId");
+        //TODO:   ControlProvider.Columns.AddInt32("GroupId");
         //TODO:   ControlProvider.Columns.LastAdded.GridColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
         //TODO: }
 
@@ -1692,11 +1695,11 @@ namespace FreeLibSet.Forms.Docs
       {
         controlProvider.Control.VirtualMode = true;
         // значков состояния документа нет. ControlProvider.UseRowImages = true; 
-        controlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ControlProvider_GetRowAttributes);
+        controlProvider.RowInfoNeeded += new EFPDataGridViewRowInfoEventHandler(ControlProvider_RowInfoNeeded);
         //if (CondFields != null)
         //  ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(GridHandler_GetRowAttributesForCond);
         if (EFPApp.ShowListImages)
-          controlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ControlProvider_GetCellAttributes);
+          controlProvider.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(ControlProvider_CellInfoNeeded);
         //DocGridHandler.MainGrid.CellPainting += new DataGridViewCellPaintingEventHandler(TheGrid_CellPainting);
         //DocGridHandler.MainGrid.CellToolTipTextNeeded += new DataGridViewCellToolTipTextNeededEventHandler(TheGrid_CellToolTipTextNeeded);
 
@@ -1776,7 +1779,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Оформление просмотра
 
-    void ControlProvider_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    void ControlProvider_RowInfoNeeded(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
       DataRow row = args.DataRow;
       if (row == null)
@@ -1784,7 +1787,7 @@ namespace FreeLibSet.Forms.Docs
 
       // 24.11.2017
       // Вызываем пользовательский обработчик и для удаленных документов
-      //if (DataTools.GetBool(Row, "Deleted"))
+      //if (DataTools.GetBoolean(Row, "Deleted"))
       //  Args.Grayed = true;
       //else
       //{
@@ -1795,7 +1798,7 @@ namespace FreeLibSet.Forms.Docs
       args.Grayed = grayed;
       //}
 #if XXX
-      int CheckState = DataTools.GetInt(Row, "CheckState");
+      int CheckState = DataTools.GetInt32(Row, "CheckState");
       switch (CheckState)
       {
         case DocumentCheckState.Unchecked:
@@ -1842,7 +1845,7 @@ namespace FreeLibSet.Forms.Docs
 #endif
     }
 
-    void ControlProvider_GetRowAttributesForCond(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    void ControlProvider_GetRowAttributesForCond(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
       // TODO: 
 #if XXX
@@ -1863,7 +1866,7 @@ namespace FreeLibSet.Forms.Docs
 #endif
     }
 
-    void ControlProvider_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void ControlProvider_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.ColumnName == "Image")
       {
@@ -1873,16 +1876,16 @@ namespace FreeLibSet.Forms.Docs
 
         switch (args.Reason)
         {
-          case EFPDataGridViewAttributesReason.View:
+          case EFPDataViewInfoReason.View:
             args.Value = GetImageValue(row);
             break;
-          case EFPDataGridViewAttributesReason.ToolTip:
+          case EFPDataViewInfoReason.ToolTip:
             if (args.ControlProvider.CurrentConfig != null)
             {
               if (args.ControlProvider.CurrentConfig.CurrentCellToolTip)
               {
                 string s1 = GetToolTipText(row);
-                args.ToolTipText = DataTools.JoinNotEmptyStrings(Environment.NewLine, new string[] { s1, args.ToolTipText }); // 06.02.2018
+                args.ToolTipText = StringTools.JoinNotEmptyStrings(Environment.NewLine, new string[] { s1, args.ToolTipText }); // 06.02.2018
               }
 
               if (args.ControlProvider.CurrentConfig.ToolTips.Count > 0)
@@ -1890,15 +1893,15 @@ namespace FreeLibSet.Forms.Docs
                 string s2 = null;
                 try
                 {
-                  EFPDataViewRowInfo rowInfo = args.ControlProvider.GetRowInfo(args.RowIndex);
-                  s2 = GridProducer.ToolTips.GetToolTipText(args.ControlProvider.CurrentConfig, rowInfo);
-                  args.ControlProvider.FreeRowInfo(rowInfo);
+                  EFPDataViewRowValues rowValues = args.ControlProvider.GetRowValues(args.RowIndex);
+                  s2 = GridProducer.ToolTips.GetToolTipText(args.ControlProvider.CurrentConfig, rowValues);
+                  args.ControlProvider.FreeRowValues(rowValues);
                 }
                 catch (Exception e)
                 {
                   s2 = String.Format(Res.Common_Err_ErrorMessage, e.Message);
                 }
-                args.ToolTipText = DataTools.JoinNotEmptyStrings(EFPGridProducerToolTips.ToolTipTextSeparator, new string[] { args.ToolTipText, s2 });
+                args.ToolTipText = StringTools.JoinNotEmptyStrings(EFPGridProducerToolTips.ToolTipTextSeparator, new string[] { args.ToolTipText, s2 });
               }
             }
             break;
@@ -1929,7 +1932,7 @@ namespace FreeLibSet.Forms.Docs
       DataGridView Grid = (DataGridView)Sender;
 
       DataRow Row = GridHandler.GetDataRow(Grid, Args.RowIndex);
-      int CheckState = DataTools.GetInt(Row, "CheckState");
+      int CheckState = DataTools.GetInt32(Row, "CheckState");
       if (CheckState == 0)
         Args.ToolTipText = "Проверка не выполнялась. Выполните команду проверки документа";
       else
@@ -1970,7 +1973,7 @@ namespace FreeLibSet.Forms.Docs
 
       DataGridView Grid = (DataGridView)Sender;
       DataRow Row = GridHandler.GetDataRow(Grid, Args.RowIndex);
-      int CheckState = DataTools.GetInt(Row, "CheckState");
+      int CheckState = DataTools.GetInt32(Row, "CheckState");
       Image img = null;
       switch (CheckState)
       {
@@ -2008,7 +2011,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     private void ImgCol_CellToopTextNeeded(object sender, EFPDataGridViewCellToolTipTextNeededEventArgs args)
     {
-      //Int32 Id = DataTools.GetInt(Args.Row, "Id");
+      //Int32 Id = DataTools.GetInt32(Args.Row, "Id");
       //Args.ToolTipText = GetToolTipText(Id);
     }
 
@@ -2024,7 +2027,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="columns">Заполняемый список столбцов</param>
     /// <param name="config">Конфигурация табличного просмотра. Если null, то используется конфигурация по умолчанию</param>
-    public void GetColumnNames(DBxColumnList columns, EFPDataGridViewConfig config)
+    public void GetColumnNames(DBxColumnList columns, EFPDataViewConfig config)
     {
       columns.Add("Id");
       if (UI.DocProvider.DocTypes.UseDeleted) // 16.05.2018
@@ -2099,7 +2102,7 @@ namespace FreeLibSet.Forms.Docs
       if (UI.DebugShowIds &&
         (!controlProvider.CurrentConfig.Columns.Contains("Id"))) // 16.09.2021
       {
-        controlProvider.Columns.AddInt("Id", true, "Id", 6);
+        controlProvider.Columns.AddInt32("Id", true, "Id", 6);
         controlProvider.Columns.LastAdded.TreeColumn.Sortable = false;
         controlProvider.Columns.LastAdded.CanIncSearch = true;
       }
@@ -2159,7 +2162,7 @@ namespace FreeLibSet.Forms.Docs
 
     void DocTree_GetDocSel(object sender, EFPDBxTreeViewDocSelEventArgs args)
     {
-      Int32[] docIds = DataTools.GetIdsFromColumn(args.DataRows, "Id");
+      IIdSet<Int32> docIds = IdTools.GetIdsFromColumn<Int32>(args.DataRows, "Id");
       PerformGetDocSel(args.DocSel, docIds, args.Reason);
     }
 
@@ -2278,8 +2281,8 @@ namespace FreeLibSet.Forms.Docs
       EFPCommandItem ci = (EFPCommandItem)sender;
       IEFPDBxView ControlProvider = (IEFPDBxView)(ci.Tag);
 
-      Int32[] DocIds = ControlProvider.SelectedIds;
-      this.RecalcColumns(DocIds, new PerformRefreshDelegate(ControlProvider.PerformRefresh));
+      IIdSet<Int32> docIds = ControlProvider.SelectedIds;
+      this.RecalcColumns(docIds, new PerformRefreshDelegate(ControlProvider.PerformRefresh));
     }
 
     void RecalcViewDocuments_Click(object sender, EventArgs args)
@@ -2293,7 +2296,7 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      Int32[] docIds = DataTools.GetIdsFromColumn(ControlProvider.SourceAsDataView, "Id");
+      IIdSet<Int32> docIds = IdTools.GetIdsFromColumn<Int32>(ControlProvider.SourceAsDataView, "Id");
       this.RecalcColumns(docIds, new PerformRefreshDelegate(ControlProvider.PerformRefresh));
     }
 
@@ -2339,7 +2342,7 @@ namespace FreeLibSet.Forms.Docs
 
     void DocGrid_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
     {
-      Int32[] docIds = DataTools.GetIdsFromColumn(args.DataRows, "Id");
+      IIdSet<Int32> docIds = IdTools.GetIdsFromColumn<Int32>(args.DataRows, "Id");
       PerformGetDocSel(args.DocSel, docIds, args.Reason);
     }
 
@@ -2349,7 +2352,7 @@ namespace FreeLibSet.Forms.Docs
       AccDepFileType FileType = (AccDepFileType)Sender;
       EFPAccDepIdGrid DocGridHandler = (EFPAccDepIdGrid)(FileType.Tag);
 
-      bool AllRows = Args.Config.GetBool("ВсеСтроки");
+      bool AllRows = Args.Config.GetBoolean("ВсеСтроки");
       RadioSelectDialog dlg = new RadioSelectDialog();
       dlg.Title = "Сохранение данных для экспорта";
       dlg.ImageKey = "XMLDataSet";
@@ -2361,7 +2364,7 @@ namespace FreeLibSet.Forms.Docs
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
       AllRows = dlg.SelectedIndex == 0;
-      Args.Config.SetBool("ВсеСтроки", AllRows);
+      Args.Config.SetBoolean("ВсеСтроки", AllRows);
 
       Int32[] DocIds;
       if (AllRows)
@@ -2458,7 +2461,7 @@ namespace FreeLibSet.Forms.Docs
             accessMode = dtp.Mode;
             break;
           }
-          else if (DataTools.IndexOf(dtp.DocTypeNames, DocType.Name, StringComparison.OrdinalIgnoreCase) >= 0)
+          else if (StringTools.IndexOf(dtp.DocTypeNames, DocType.Name, StringComparison.OrdinalIgnoreCase) >= 0)
           {
             accessMode = dtp.Mode;
             break;
@@ -2705,7 +2708,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="title">Заголовок формы выбора документа</param>
     /// <param name="canBeEmpty">Возможность выбора пустого документа (кнопка "Нет")</param>
     /// <param name="fixedDocIds">Массив идентификаторов документов, из которого можно выбирать</param>
-    public bool SelectDoc(ref Int32 docId, string title, bool canBeEmpty, IdList fixedDocIds)
+    public bool SelectDoc(ref Int32 docId, string title, bool canBeEmpty, IdCollection<Int32> fixedDocIds)
     {
       DocSelectDialog dlg = new DocSelectDialog(this);
       if (!String.IsNullOrEmpty(title))
@@ -2730,7 +2733,7 @@ namespace FreeLibSet.Forms.Docs
     /// Используются текущие настройки фильтров, которые пользователь может менять.
     /// </summary>
     /// <returns>Массив идентификаторов выбранных документов или пустой массив, если выбор не сделан</returns>
-    public Int32[] SelectDocs()
+    public IIdSet<Int32> SelectDocs()
     {
       return SelectDocs(null, (EFPDBxGridFilters)null);
     }
@@ -2741,7 +2744,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="title">Заголовок формы выбора документа</param>
     /// <returns>Массив идентификаторов выбранных документов или пустой массив, если выбор не сделан</returns>
-    public Int32[] SelectDocs(string title)
+    public IIdSet<Int32> SelectDocs(string title)
     {
       return SelectDocs(title, (EFPDBxGridFilters)null);
     }
@@ -2750,13 +2753,13 @@ namespace FreeLibSet.Forms.Docs
     /// Выбор одного или нескольких документов из справочника документов с использованием заданного набора фильтров просмотра,
     /// переопределяющего текущие установки пользователя. Пользователь может выбирать только подходящие
     /// документы, проходящие фильтр, т.к. не может его редактировать.
-    /// Испольщуйте класс <see cref="DocSelectDialog"/> для задания дополнительных параметров.
+    /// Используйте класс <see cref="DocSelectDialog"/> для задания дополнительных параметров.
     /// </summary>
     /// <param name="title">Заголовок формы выбора документа</param>
     /// <param name="filters">Фиксированный набор фильтров. Значение null приводит к использованию текущего набора
     /// установленных пользователем фильтров</param>
     /// <returns>Массив идентификаторов выбранных документов или пустой массив, если выбор не сделан</returns>
-    public Int32[] SelectDocs(string title, EFPDBxGridFilters filters)
+    public IIdSet<Int32> SelectDocs(string title, EFPDBxGridFilters filters)
     {
       // Переопределяется в GroupDocTypeUI
 
@@ -2769,7 +2772,7 @@ namespace FreeLibSet.Forms.Docs
       if (dlg.ShowDialog() == DialogResult.OK)
         return dlg.DocIds;
       else
-        return DataTools.EmptyIds;
+        return IdArray<Int32>.Empty;
     }
 
     #endregion
@@ -2788,14 +2791,16 @@ namespace FreeLibSet.Forms.Docs
     /// Если он задан, то в режиме создания документа будут использованы установленные в просмотре
     /// фильтры для инициализации полей документа.</param>
     /// <returns>True, если выполнялось редактирование и документ был сохранен (свойство <see cref="DocumentEditor.DataChanged"/>)</returns>
-    public bool PerformEditing(Int32[] editIds, UIDataState state, bool modal, DocumentViewHandler caller)
+    public bool PerformEditing(IEnumerable<Int32> editIds, UIDataState state, bool modal, DocumentViewHandler caller)
     {
+      IdArray<Int32> editIds2 = IdTools.AsIdArray<Int32>(editIds);
+
       switch (state)
       {
         case UIDataState.Insert:
           break;
         case UIDataState.InsertCopy:
-          if (editIds.Length != 1)
+          if (editIds2.Count != 1)
           {
             EFPApp.ShowTempMessage(Res.Common_Err_SingleDocRequired);
             return false;
@@ -2803,7 +2808,7 @@ namespace FreeLibSet.Forms.Docs
           break;
 
         case UIDataState.Delete: // 19.08.2016
-          if (editIds.Length < 1)
+          if (editIds2.Count < 1)
           {
             EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
             return false;
@@ -2811,12 +2816,12 @@ namespace FreeLibSet.Forms.Docs
           break;
 
         default:
-          if (editIds.Length < 1)
+          if (editIds2.Count < 1)
           {
             EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
             return false;
           }
-          if (editIds.Length > 1 && (!CanMultiEdit))
+          if (editIds2.Count > 1 && (!CanMultiEdit))
           {
             EFPApp.ShowTempMessage(String.Format(Res.Common_Err_NoMultiEdit, DocType.PluralTitle));
             return false;
@@ -2827,7 +2832,7 @@ namespace FreeLibSet.Forms.Docs
       bool fixedResult = false;
       if (Editing != null)
       {
-        DocTypeEditingEventArgs args = new DocTypeEditingEventArgs(this, state, editIds, modal, caller);
+        DocTypeEditingEventArgs args = new DocTypeEditingEventArgs(this, state, editIds2, modal, caller);
         Editing(this, args);
         if (args.Handled)
           return args.HandledResult;
@@ -2839,7 +2844,7 @@ namespace FreeLibSet.Forms.Docs
       // Активируем уже открытый редактор документов
       if (state != UIDataState.Insert && state != UIDataState.InsertCopy)
       {
-        DBxDocSelection docSel = UI.CreateDocSelection(DocType.Name, editIds);
+        DBxDocSelection docSel = UI.CreateDocSelection(DocType.Name, editIds2);
         DocumentEditor oldDE = DocumentEditor.FindEditor(docSel);
         if (oldDE != null)
         {
@@ -2864,7 +2869,7 @@ namespace FreeLibSet.Forms.Docs
         }
       }
 
-      DocumentEditor de = new DocumentEditor(UI, DocType.Name, state, editIds);
+      DocumentEditor de = new DocumentEditor(UI, DocType.Name, state, editIds2);
       de.Modal = modal;
       de.Caller = caller;
       de.Run();
@@ -2879,7 +2884,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="state">Требуемый режим</param>
     /// <param name="modal">True для запуска в модальном режиме</param>
     /// <returns>True, если выполнялось редактирование и документ был сохранен (свойство <see cref="DocumentEditor.DataChanged"/>)</returns>
-    public bool PerformEditing(Int32[] editIds, UIDataState state, bool modal)
+    public bool PerformEditing(IEnumerable<Int32> editIds, UIDataState state, bool modal)
     {
       return PerformEditing(editIds, state, modal, null);
     }
@@ -2957,7 +2962,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docIds">Массив идентификаторов документов</param>
     /// <param name="readOnly">true - режим просмотра, а не редактирования.
     /// Игнорируется в режиме просмотра выборки документов</param>
-    public void PerformEditingOrShowDocSel(Int32[] docIds, bool readOnly)
+    public void PerformEditingOrShowDocSel(IEnumerable<Int32> docIds, bool readOnly)
     {
       PerformEditingOrShowDocSel(docIds, readOnly, (DocumentViewHandler)null);
     }
@@ -2971,22 +2976,21 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="readOnly">true - режим просмотра, а не редактирования.
     /// Игнорируется в режиме просмотра выборки документов</param>
     /// <param name="caller"></param>
-    public void PerformEditingOrShowDocSel(Int32[] docIds, bool readOnly, DocumentViewHandler caller)
+    public void PerformEditingOrShowDocSel(IEnumerable<Int32> docIds, bool readOnly, DocumentViewHandler caller)
     {
-      if (docIds == null)
-        docIds = DataTools.EmptyIds;
+      IIdSet<Int32> docIds2=IdTools.AsIdSet<Int32>(docIds);
 
-      switch (docIds.Length)
+      switch (docIds2.Count)
       {
         case 0:
           EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_NoSelectedDocs, DocType.PluralTitle));
           break;
         case 1:
-          PerformEditing(docIds[0], readOnly, caller);
+          PerformEditing(docIds2.SingleId, readOnly, caller);
           break;
         default:
           // Показываем как выборку документов
-          DBxDocSelection docSel2 = new DBxDocSelection(UI.DocProvider.DBIdentity, DocType.Name, docIds);
+          DBxDocSelection docSel2 = new DBxDocSelection(UI.DocProvider.DBIdentity, DocType.Name, docIds2);
           UI.ShowDocSel(docSel2, String.Format(Res.DocSel_Title_SelectedDocs, DocType.PluralTitle));
           break;
       }
@@ -3043,14 +3047,14 @@ namespace FreeLibSet.Forms.Docs
         // В режиме, когда в фильре выбрана единственная группа (то есть группа самого вложенного уровня
         // или включен флажок "Скрыть документы во вложенных группах"
         Int32 GroupId = auxFilterGroupIds[0];
-        value.SetInteger(GroupId);
+        value.SetInt32(GroupId);
       }
       else
       {
         // 10.06.2019
         // В режиме фильтра, когда выбрано несколько групп, или выбран режим "Документы без групп" проверяем,
         // что текущая выбранная в документе группа есть в списке. Если выбрана группа не в фильтре, значение очищается
-        Int32 CurrGroupId = value.AsInteger;
+        Int32 CurrGroupId = value.AsInt32;
         if (CurrGroupId != 0 && Array.IndexOf<Int32>(auxFilterGroupIds, CurrGroupId) < 0)
           value.SetNull();
       }
@@ -3177,7 +3181,7 @@ namespace FreeLibSet.Forms.Docs
     /// После пересчета полей никаких действий не выполняется. Используйте перегрузки с аргументом "AfterRecalc"
     /// </summary>
     /// <param name="docIds">Идентификаторы документов для пересчета.</param>
-    public void RecalcColumns(Int32[] docIds)
+    public void RecalcColumns(IIdSet<Int32> docIds)
     {
       RecalcColumns(docIds, null, null);
     }
@@ -3190,7 +3194,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docIds">Идентификаторы документов для пересчета.</param>
     /// <param name="afterRecalc">Пользовательский метод вызывается, когда пересчет полей выполнен.
     /// Метод вызывается в основном потоке приложения</param>
-    public void RecalcColumns(Int32[] docIds, Delegate afterRecalc)
+    public void RecalcColumns(IIdSet<Int32> docIds, Delegate afterRecalc)
     {
       RecalcColumns(docIds, afterRecalc, null);
     }
@@ -3204,7 +3208,7 @@ namespace FreeLibSet.Forms.Docs
     /// Метод вызывается в основном потоке приложения.</param>
     /// <param name="afterRecalcParams">Параметры, которые передаются пользовательскому методу <paramref name="afterRecalc"/>.
     /// Значение null задает пересчет всех существующих документов.</param>
-    public void RecalcColumns(Int32[] docIds, Delegate afterRecalc, params object[] afterRecalcParams)
+    public void RecalcColumns(IIdSet<Int32> docIds, Delegate afterRecalc, params object[] afterRecalcParams)
     {
       NamedValues dispArgs = new NamedValues();
       dispArgs["Action"] = "RecalcColumns";
@@ -3242,22 +3246,23 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docIds">Массив идентификаторов документов. 
     /// Если null или пустой массив, никаких действий не выполняется</param>
     /// <param name="reason">Причина создания выборки</param>
-    public override void PerformGetDocSel(DBxDocSelection docSel, Int32[] docIds, EFPDBxViewDocSelReason reason)
+    public override void PerformGetDocSel(DBxDocSelection docSel, IEnumerable<Int32> docIds, EFPDBxViewDocSelReason reason)
     {
-      if (docIds == null || docIds.Length == 0)
+      IIdSet<Int32> docIds2 = IdTools.AsIdSet<Int32>(docIds);
+      if (docIds2.Count == 0)
         return;
 
       // Ссылки на выбранные документы
-      docSel.Add(DocType.Name, docIds);
+      docSel.Add(DocType.Name, docIds2);
 
-      base.OnGetDocSel(docSel, docIds, reason);
+      base.OnGetDocSel(docSel, docIds2, reason);
 
       // 18.11.2017 Ссылку на группу добавляем в конце выборки
       if (this.GroupDocType != null)
       {
-        IdList groupIds = new IdList();
-        for (int i = 0; i < docIds.Length; i++)
-          groupIds.Add(TableCache.GetInt(docIds[i], DocType.GroupRefColumnName));
+        IdCollection<Int32> groupIds = new IdCollection<Int32>();
+        foreach (Int32 docId in docIds2)
+          groupIds.Add(TableCache.GetInt32(docId, DocType.GroupRefColumnName));
         docSel.Add(this.GroupDocType.DocType.Name, groupIds);
       }
     }
@@ -3268,19 +3273,16 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="docIds">Массив идентификаторов документов. Фиктивные и нулевые идентификаторы игнорируются</param>
     /// <returns>Выборка документов одного вида</returns>
-    public DBxDocSelection CreateDocSelection(Int32[] docIds)
+    public DBxDocSelection CreateDocSelection(IEnumerable<Int32> docIds)
     {
-#if DEBUG
-      if (docIds == null)
-        throw new ArgumentNullException("docIds");
-#endif
+      IIdSet<Int32> docIds2 = IdTools.AsIdSet<Int32>(docIds);
 
       DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
-      for (int i = 0; i < docIds.Length; i++)
+      foreach (Int32 docId in docIds2)
       {
-        if (!UI.DocProvider.IsRealDocId(docIds[i]))
+        if (!UI.DocProvider.IsRealDocId(docId))
           continue;
-        docSel.Add(DocType.Name, docIds[i]);
+        docSel.Add(DocType.Name, docIds);
       }
       return docSel;
     }
@@ -3398,14 +3400,14 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="groupId">Идентификатор узла группы. 0 задает "Все документы" или "Документы без групп"</param>
     /// <param name="includeNestedGroups">Признак "Включать вложенные группы"</param>
-    public IdList GetAuxFilterGroupIdList(Int32 groupId, bool includeNestedGroups)
+    public IdCollection<Int32> GetAuxFilterGroupIdList(Int32 groupId, bool includeNestedGroups)
     {
       if (groupId == 0)
       {
         if (includeNestedGroups)
           return null;
         else
-          return IdList.Empty;
+          return IdCollection<Int32>.Empty;
       }
       else
       {
@@ -3415,10 +3417,10 @@ namespace FreeLibSet.Forms.Docs
             DocType,
             new DBxColumns(new string[] { "Id", DocType.TreeParentColumnName }));
 
-          return new IdList(model.GetIdWithChildren(groupId));
+          return new IdCollection<Int32>(model.GetIdWithChildren(groupId));
         }
         else
-          return IdList.FromId(groupId);
+          return IdCollection<Int32>.FromId(groupId);
       }
     }
 

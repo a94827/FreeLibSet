@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using FreeLibSet.Core;
 using NUnit.Framework;
+using FreeLibSet.Data;
 
 namespace ExtTools_tests.Core
 {
@@ -88,8 +89,8 @@ namespace ExtTools_tests.Core
           sb.Append("null");
         else
         {
-          Int32[] ids = DataTools.GetIds(rows[i]);
-          sb.Append(StdConvert.ToString(ids));
+          IIdSet<Int32> ids = IdTools.GetIdsFromColumn<Int32>(rows[i], "Id");
+          sb.Append(StdConvert.ToString(ids.ToArray()));
         }
         sb.Append("}");
       }

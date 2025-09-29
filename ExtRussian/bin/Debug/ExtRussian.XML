@@ -1,0 +1,1580 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ExtRussian</name>
+    </assembly>
+    <members>
+        <member name="T:FreeLibSet.Russian.RusGender">
+            <summary>
+            Род имени существительного
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusGender.Masculine">
+            <summary>
+            Мужской род
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusGender.Feminine">
+            <summary>
+            Женский род
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusGender.Newter">
+            <summary>
+            Средний род
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusGender.Undefined">
+            <summary>
+            Род не определен
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusCase">
+            <summary>
+            Падеж имени существительного
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusCase.Nominative">
+            <summary>
+            именительный падеж
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusCase.Genitive">
+            <summary>
+            родительный падеж
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusCase.Dative">
+            <summary>
+            дательный падеж
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusCase.Accusative">
+            <summary>
+            винительный падеж
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusCase.Instrumental">
+            <summary>
+            творительный падеж
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusCase.Locative">
+            <summary>
+            предложный падеж
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusCase.Undefined">
+            <summary>
+            Падеж не определен
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusNumber">
+            <summary>
+            Число имени сущесвтительного
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumber.Singular">
+            <summary>
+            Единственное число
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumber.Plural">
+            <summary>
+            Множественное число
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumber.Undefined">
+            <summary>
+            Не определено
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusDeclension">
+            <summary>
+            Склонение существительного
+            https://ru.wikipedia.org/wiki/%D0%A1%D0%BA%D0%BB%D0%BE%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5_(%D0%BB%D0%B8%D0%BD%D0%B3%D0%B2%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B0)#%D0%A1%D0%BA%D0%BB%D0%BE%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B8%D0%BC%D1%91%D0%BD_%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusDeclension.First">
+            <summary>
+            I склонение — имена существительные женского, мужского рода, 
+            имеющие в именительном падеже единственного числа окончание -а (-я).
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusDeclension.Second">
+            <summary>
+            II склонение — имена существительные мужского рода с нулевым окончанием или окончанием -о (-е) и 
+            имена существительные среднего рода с окончанием -о (-е) в именительном падеже единственного числа.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusDeclension.Third">
+            <summary>
+            III склонение — имена существительные женского рода с окончанием -ь в именительном падеже единственного числа, 
+            с основой на мягкий знак.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusDeclension.Undefined">
+            <summary>
+            Не определено или несклоняемое
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusFormArrayGetCasesOptions">
+            <summary>
+            Опции для метода RusFormArray.GetCases()
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFormArrayGetCasesOptions.None">
+            <summary>
+            Режим по умолчанию
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFormArrayGetCasesOptions.Which">
+            <summary>
+            Cклонять слова на "ова"/"ева"
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFormArrayGetCasesOptions.NoPlural">
+            <summary>
+            не склонять слова на "ы"
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFormArrayGetCasesOptions.Name">
+            <summary>
+            Задается для имен, чтобы правильно склонялись имена типа "Дмитрий", "Василий"
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFormArrayGetCasesOptions.Animacy">
+            <summary>
+            Одушевленность.
+            Определяет винительный падеж во втором склонении:
+            Есть чебурек - вижу чебурек.
+            Есть человек - вижу человека.
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusNounFormArray">
+            <summary>
+            Массив для хранения 12 форм имени существительного (6 падежей для единственного и множественного чисел).
+            Используйте метод <see cref="M:FreeLibSet.Russian.RusNounFormArray.Fill(System.String,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusFormArrayGetCasesOptions)"/> для заполнения массива. 
+            Допускается изменение элементов после заполнения.
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNounFormArray.#ctor">
+            <summary>
+            Создает пустой объект
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNounFormArray.#ctor(System.String)">
+            <summary>
+            Создает объект. Все элементы получают одинаковые значения.
+            Аналогично вызову метода <see cref="M:FreeLibSet.Russian.RusNounFormArray.Fill(System.String)"/>.
+            </summary>
+            <param name="mainForm">Используемое значение</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNounFormArray.Fill(System.String)">
+            <summary>
+            Заполняет все элементы массива одинаковым значением
+            </summary>
+            <param name="baseForm">Значение</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNounFormArray.Fill(System.String,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusFormArrayGetCasesOptions)">
+            <summary>
+            Основной метод.
+            Заполняет все элементы массива на основании исходной формы.
+            Первый элемент массива получает значение <paramref name="baseForm"/>. 
+            Остальные элементы получают элементы с измененными окончаниями в соответствии с правилами русского языка.
+            </summary>
+            <param name="baseForm">Базовая форма слова (именительный падеж единственного числа)</param>
+            <param name="gender">Род слова</param>
+            <param name="options">Параметры</param>
+            <returns>True, если склонение слова выполнено успешно</returns>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusNounFormArray.Item(FreeLibSet.Russian.RusCase,FreeLibSet.Russian.RusNumber)">
+            <summary>
+            Чтение или запись одного значения
+            </summary>
+            <param name="theCase">Падеж</param>
+            <param name="theNumber">Число (единственное или множественное)</param>
+            <returns>Значение</returns>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusNounFormArray.Items">
+            <summary>
+            Чтение или запись массива значений.
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RussianTools">
+            <summary>
+            Разнообразные статические функции для русского языка
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.UpperRussianChars">
+            <summary>
+            33 буквы русского алфавита в верхнем регистре от "А" до "Я"
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.LowerRussianChars">
+            <summary>
+            33 буквы русского алфавита в нижнем регистре от "а" до "я"
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.UpperRussianCharIndexer">
+            <summary>
+            Индексатор для UpperRussianChars 
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.LowerRussianCharIndexer">
+            <summary>
+            Индексатор для LowerRussianChars 
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.RussianCharIndexer">
+            <summary>
+            Индексатор для букв русского алфавита в верхнем и нижнем регистрах
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.ContainsUpperRussianChar(System.String)">
+            <summary>
+            Функция возвращает true, если строка содержит хотя бы одну русскую букву в верхнем регистре.
+            Если строка пустая, возвращается false
+            </summary>
+            <param name="s">Проверяемая строка</param>
+            <returns>Результат проверки</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.ContainsLowerRussianChar(System.String)">
+            <summary>
+            Функция возвращает true, если строка содержит хотя бы одну русскую букву в нижнем регистре.
+            Если строка пустая, возвращается false
+            </summary>
+            <param name="s">Проверяемая строка</param>
+            <returns>Результат проверки</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.ContainsRussianChar(System.String)">
+            <summary>
+            Функция возвращает true, если строка содержит хотя бы одну русскую букву в верхнем или нижнем регистре.
+            Если строка пустая, возвращается false
+            </summary>
+            <param name="s">Проверяемая строка</param>
+            <returns>Результат проверки</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.ContainsUpperLatinChar(System.String)">
+            <summary>
+            Функция возвращает true, если строка содержит хотя бы одну букву латинского алфавита в верхнем регистре.
+            Если строка пустая, возвращается false
+            </summary>
+            <param name="s">Проверяемая строка</param>
+            <returns>Результат проверки</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.ContainsLowerLatinChar(System.String)">
+            <summary>
+            Функция возвращает true, если строка содержит хотя бы одну букву латинского алфавита в нижнем регистре.
+            Если строка пустая, возвращается false
+            </summary>
+            <param name="s">Проверяемая строка</param>
+            <returns>Результат проверки</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.ContainsLatinChar(System.String)">
+            <summary>
+            Функция возвращает true, если строка содержит хотя бы одну букву латинского алфавита в верхнем или нижнем регистре.
+            Если строка пустая, возвращается false
+            </summary>
+            <param name="s">Проверяемая строка</param>
+            <returns>Результат проверки</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.IsUpperRussianChar(System.Char)">
+            <summary>
+            Возвращает true, если символ является заглавной русской буквой
+            </summary>
+            <param name="c">Проверяемый символ</param>
+            <returns>Принадлежность символа к диапазону</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.IsLowerRussianChar(System.Char)">
+            <summary>
+            Возвращает true, если символ является строчной русской буквой
+            </summary>
+            <param name="c">Проверяемый символ</param>
+            <returns>Принадлежность символа к диапазону</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.IsRussianChar(System.Char)">
+            <summary>
+            Возвращает true, если символ является русской буквой в любом регистре
+            </summary>
+            <param name="c">Проверяемый символ</param>
+            <returns>Принадлежность символа к диапазону</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.IsUpperLatinChar(System.Char)">
+            <summary>
+            Возвращает true, если символ является заглавной буквой английского алфавита
+            </summary>
+            <param name="c">Проверяемый символ</param>
+            <returns>Принадлежность символа к диапазону</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.IsLowerLatinChar(System.Char)">
+            <summary>
+            Возвращает true, если символ является строочной буквой английского алфавита
+            </summary>
+            <param name="c">Проверяемый символ</param>
+            <returns>Принадлежность символа к диапазону</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.IsLatinChar(System.Char)">
+            <summary>
+            Возвращает true, если символ является буквой английского алфавита в любом регистре
+            </summary>
+            <param name="c">Проверяемый символ</param>
+            <returns>Принадлежность символа к диапазону</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.AndList(System.Text.StringBuilder,System.Collections.Generic.List{System.String})">
+            <summary>
+            Получить строку, содержащую выражение "и", например, "Иванов, Петров и Сидоров".
+            В строку добавляются все выражения из списка Strings, разделенные запятыми и союзом "и"
+            по правилам грамматики русского языка.
+            Если список пустой, то возвращается пустая строка. Если список содержит одну
+            строку, то она и возвращается.
+            Данная версия метода использует аргумент StringBuilder, куда дописывается строка-результат
+            </summary>
+            <param name="sb">Буфер, в котором формируется строка</param>
+            <param name="strings">Массив строк, которые входят в список</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.AndList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Получить строку, содержащую выражение "и", например, "Иванов, Петров и Сидоров".
+            В строку добавляются все выражения из списка Strings, разделенные запятыми и союзом "и"
+            по правилам грамматики русского языка.
+            Если список пустой, то возвращается пустая строка. Если список содержит одну
+            строку, то она и возвращается.
+            </summary>
+            <param name="strings">Массив строк, которые входят в список</param>
+            <returns>Созданная строка</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.OrList(System.Text.StringBuilder,System.Collections.Generic.List{System.String})">
+            <summary>
+            Получить строку, содержащую выражение "или", например, "Иванов, Петров или Сидоров".
+            В строку добавляются все выражения из списка Strings, разделенные запятыми и союзом "или"
+            по правилам грамматики русского языка.
+            Если список пустой, то возвращается пустая строка. Если список содержит одну
+            строку, то она и возвращается.
+            Данная версия метода использует аргумент StringBuilder, куда дописывается строка-результат
+            </summary>
+            <param name="sb">Буфер, в котором формируется строка</param>
+            <param name="strings">Массив строк, которые входят в список</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.OrList(System.Collections.Generic.List{System.String})">
+            <summary>
+            Получить строку, содержащую выражение "или", например, "Иванов, Петров или Сидоров".
+            В строку добавляются все выражения из списка Strings, разделенные запятыми и союзом "или"
+            по правилам грамматики русского языка.
+            Если список пустой, то возвращается пустая строка. Если список содержит одну
+            строку, то она и возвращается.
+            </summary>
+            <param name="strings">Массив строк, которые входят в список</param>
+            <returns>Созданная строка</returns>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.MonthNames">
+            <summary>
+            Массив названий месяцев в именительном падеже с заглавной буквы
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.MonthNamesGenitive">
+            <summary>
+            Массив нахваний месяцев в родительном падеже
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.MonthNames3">
+            <summary>
+            Массив сокращений названий месяцев из трех букв ("янв", "фев", ...)
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.GetMonthName(System.Int32)">
+            <summary>
+            Получить текстовое название месяца с заглавной буквы: "Январь", "Февраль", ...
+            </summary>
+            <param name="month">Номер месяца от 1 до 12.
+            Если задано значение вне диапазона, возвращается пустая строка</param>
+            <returns>Название месяца</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.GetMonthNameGenitive(System.Int32)">
+            <summary>
+            Получить текстовое название месяца в родительном падеже: "января", "февраля", ...
+            </summary>
+            <param name="month">Номер месяца от 1 до 12.
+            Если задано значение вне диапазона, возвращается пустая строка</param>
+            <returns>Название месяца</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RussianTools.GetMonthName3(System.Int32)">
+            <summary>
+            Получить трехбуквенное название месяца: "янв", "фев", ...
+            </summary>
+            <param name="month">Номер месяца от 1 до 12.
+            Если задано значение вне диапазона, возвращается пустая строка</param>
+            <returns>Название месяца</returns>
+        </member>
+        <member name="F:FreeLibSet.Russian.RussianTools.CaseNames4">
+            <summary>
+            Падежи в сокращенной форме ("И.П.", "Р.П.", ..., "П.П.")
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex">
+            <summary>
+            Daitch–Mokotoff Soundex.
+            Используйте метод <see cref="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.Calculate(System.String)"/> для получения кодов.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex._ValidChars">
+            <summary>
+            Полный список допустимых символов
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex._Generic">
+            <summary>
+            Общие коды.
+            Ключ: символ или комбинация символов, подлежащая кодированию.
+            Значение: массив строк, как правило, из одного элемента.
+            Элемент массива содержит строку из, как правило, одного символа, задающих коды.
+            Если массив содержит пустую строку, последовательность не кодируется.
+            Если массив содержит несколько элементов, происходит "ветвление", и в результате 
+            будет несколько кодов.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex._Beginning">
+            <summary>
+            Коды, когда комбинация находится в начале слова
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex._BeforeVowel">
+            <summary>
+            Коды, если следующий символ является гласной
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex._MaxSeqLength">
+            <summary>
+            Максимальная длина кодируемой последовательности символов в исходной строке
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex._Vowels">
+            <summary>
+            Гласные буквы.
+            Ключ - символ буквы
+            Значение - null (не используется)
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.#cctor">
+            <summary>
+            Статический конструктор инициализирует таблицы
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex._Codes2Dict">
+            <summary>
+            Используется только в процессе инициализации.
+            На нужно получить мнжество маленьких массивов, вида {"1"}.
+            Было бы плохо использовать отдельные экземпляры для одинаковых массивов
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex._NonCodedCodes">
+            <summary>
+            Коды для некодируемой последовательности символов "NC"
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.Calculate(System.String)">
+            <summary>
+            Вычисляет функцию Daitch–Mokotoff Soundex.
+            Возвращает список 6-символьных кодов, представляемых в текстовом формате.
+            Обычно возвращается единственный код, но некоторые комбинации символов могут
+            порождать несколько вариантов.
+            </summary>
+            <param name="s">Преобразуемая строка </param>
+            <returns>Массив кодов DM-Soundex</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.Calculate(System.String,FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart[]@)">
+            <summary>
+            Вычисляет функцию Daitch–Mokotoff Soundex.
+            Возвращает список 6-символьных кодов, представляемых в текстовом формате.
+            Обычно возвращается единственный код, но некоторые комбинации символов могут
+            порождать несколько вариантов.
+            Версия, выдающая отладочную информацию.
+            </summary>
+            <param name="s">Преобразуемая строка</param>
+            <param name="debugInfo">Сюда помещается отладочная информация</param>
+            <returns>Массив кодов DM-Soundex</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.CalculateInt32(System.String)">
+            <summary>
+            Вычисляет функцию Daitch–Mokotoff Soundex.
+            Возвращает список числовых кодов в диапазоне от 0 до 999999.
+            Обычно возвращается единственный код, но некоторые комбинации символов могут
+            порождать несколько вариантов.
+            </summary>
+            <param name="s">Преобразуемая строка </param>
+            <returns>Массив кодов DM-Soundex</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.PrepareString(System.String)">
+            <summary>
+            Удаление всех символов, кроме ValidChars.
+            Преведение к нижнему регистру.
+            Замена "ё"
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.CodeAccumulator.op_Addition(FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.CodeAccumulator,System.Char)">
+            <summary>
+            Добавление одного кода.
+            Добавление более, чем шестого символа, отбрпасывается
+            </summary>
+            <param name="curr">Текущее накопленное значение</param>
+            <param name="ch">Символ в диапазоне от '0' до '9' </param>
+            <returns>Новое накопленное значение</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.CodeAccumulator.op_Addition(FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.CodeAccumulator,System.String)">
+            <summary>
+            Добавление нескольких кода.
+            Добавление более, чем шестого символа, отбрпасывается
+            </summary>
+            <param name="curr">Текущее накопленное значение</param>
+            <param name="chars">Символы в диапазоне от '0' до '9' </param>
+            <returns>Новое накопленное значение</returns>
+        </member>
+        <member name="P:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.CodeAccumulator.Value">
+            <summary>
+            Число в диапазоне от 0 до 999999 в процессе накопления
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundex.CodeAccumulator.Count">
+            <summary>
+            Количество накопленных значений в диапазоне от 0 до 6
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart">
+            <summary>
+            Отладочная информация о разбиении строки на коды DM-Soundex.
+            Для строки может быть получен массив таких структур.
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart.#ctor(System.String,System.String[])">
+            <summary>
+            Создает объект
+            </summary>
+            <param name="sequence">Последовательность символов в исходной строке</param>
+            <param name="codes">Примененные коды</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart.ToString">
+            <summary>
+            Возвращает текстовое представление в виде "Sequence"=Codes
+            </summary>
+            <returns>Текстовое представление</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart.ToString(System.Text.StringBuilder)">
+            <summary>
+            Возвращает текстовое представление в виде "Sequence"=Codes
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart.ToString(FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart[])">
+            <summary>
+            Выводит части через запятую
+            </summary>
+            <param name="info">Массив частей</param>
+            <returns>Текстовое представление</returns>
+        </member>
+        <member name="P:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart.Sequence">
+            <summary>
+            Последовательность символов в исходной строке
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.PhoneticAlgorithms.DMSoundexCodingPart.Codes">
+            <summary>
+            Примененные коды.
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RoublesAndCopecks">
+            <summary>
+            Получение рублей и копеек из суммы.
+            Используется в методах <see cref="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(FreeLibSet.Russian.RoublesAndCopecks,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase,System.Boolean)"/>.
+            Обычно нет причин использовать структуру в прикладном коде, так как есть перегрузки <see cref="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Text.StringBuilder,System.Decimal,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase,System.Boolean)"/> 
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RoublesAndCopecks.#ctor(System.Decimal)">
+            <summary>
+            Инициализирует структуру заданным значением в рублях с копейками
+            </summary>
+            <param name="value">Числовое значение в рублях</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RoublesAndCopecks.ToString">
+            <summary>
+            Значение в рублях и копейках
+            </summary>
+            <returns>Текстовое представление</returns>
+        </member>
+        <member name="P:FreeLibSet.Russian.RoublesAndCopecks.Negative">
+            <summary>
+            True, если значение меньше нуля
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RoublesAndCopecks.Roubles">
+            <summary>
+            Рубли (целое число без знака)
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RoublesAndCopecks.Copecks">
+            <summary>
+            Копейки (от 0 до 99)
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RoublesAndCopecks.AsDecimal">
+            <summary>
+            Возвращает значение в рублях
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RoublesAndCopecks.RoublesStr">
+            <summary>
+            Возвращает рубли со знаком (-5.65  -> "-5")
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RoublesAndCopecks.CopecksStr">
+            <summary>
+            Возвращает копейки
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusNumberConvert">
+            <summary>
+            Преобразование чисел в строки прописью
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.SoftHyphenChar">
+            <summary>
+            Символ "мягкого" переноса
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.NonBreakSpaceChar">
+            <summary>
+            Символ неразрывного пробела
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.MaxInt">
+            <summary>
+            Максимальное число, которое можно преобразовать в строку
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Decimal)">
+            <summary>
+            Получение денежной суммы прописью в именительном падеже.
+            Копейки выводятся как две цифры.
+            Специальные символы не используются.
+            Первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="value">Денежная сумма</param>
+            <returns>Текстовое представление суммы</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Text.StringBuilder,System.Decimal)">
+            <summary>
+            Получение денежной суммы прописью в именительном падеже.
+            Копейки выводятся как две цифры.
+            Специальные символы не используются.
+            Первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="value">Денежная сумма (в рублях)</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Decimal,FreeLibSet.Russian.RusNumberConvert.CopecksFormat)">
+            <summary>
+            Получение денежной суммы прописью в именительном падеже.
+            Специальные символы не используются.
+            Первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="value">Денежная сумма</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <returns>Текстовое представление суммы</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Text.StringBuilder,System.Decimal,FreeLibSet.Russian.RusNumberConvert.CopecksFormat)">
+            <summary>
+            Получение денежной суммы прописью в именительном падеже.
+            Специальные символы не используются.
+            Первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="value">Денежная сумма (в рублях)</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Decimal,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Получение денежной суммы прописью.
+            Специальные символы не используются.
+            В именительном падеже (<paramref name="theCase"/>=<see cref="F:FreeLibSet.Russian.RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="value">Денежная сумма</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <param name="theCase">В каком падеже выводить</param>
+            <returns>Текстовое представление суммы</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Decimal,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Получение денежной суммы прописью.
+            В именительном падеже (<paramref name="theCase"/>=<see cref="F:FreeLibSet.Russian.RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="value">Денежная сумма (в рублях)</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <param name="theCase">В каком падеже выводить</param>
+            <param name="specChars">Если true, то будут использованы специальные символы - "мягкий" перенос и неразрывный пробел.
+            Если false, то символов переноса не будет в тексте, и будет использован обычный пробел</param>
+            <returns>Текстовое представление суммы</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Text.StringBuilder,System.Decimal,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Получение денежной суммы прописью.
+            Специальные символы не используются.
+            В именительном падеже (<paramref name="theCase"/>=<see cref="F:FreeLibSet.Russian.RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="value">Денежная сумма (в рублях)</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <param name="theCase">В каком падеже выводить</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Text.StringBuilder,System.Decimal,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Получение денежной суммы прописью.
+            В именительном падеже (<paramref name="theCase"/>=<see cref="F:FreeLibSet.Russian.RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="value">Денежная сумма (в рублях)</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <param name="theCase">В каком падеже выводить</param>
+            <param name="specChars">Если true, то будут использованы специальные символы - "мягкий" перенос и неразрывный пробел.
+            Если false, то символов переноса не будет в тексте, и будет использован обычный пробел</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(FreeLibSet.Russian.RoublesAndCopecks,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Получение денежной суммы прописью.
+            Специальные символы не используются.
+            В именительном падеже (<paramref name="theCase"/>=<see cref="F:FreeLibSet.Russian.RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="value">Денежная сумма</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <param name="theCase">В каком падеже выводить</param>
+            <returns>Текстовое представление суммы</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(FreeLibSet.Russian.RoublesAndCopecks,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Получение денежной суммы прописью.
+            В именительном падеже (<paramref name="theCase"/>=<see cref="F:FreeLibSet.Russian.RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="value">Денежная сумма</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <param name="theCase">В каком падеже выводить</param>
+            <param name="specChars">Если true, то будут использованы специальные символы - "мягкий" перенос и неразрывный пробел.
+            Если false, то символов переноса не будет в тексте, и будет использован обычный пробел</param>
+            <returns>Текстовое представление суммы</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Text.StringBuilder,FreeLibSet.Russian.RoublesAndCopecks,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Получение денежной суммы прописью.
+            Специальные символы не используются.
+            В именительном падеже (<paramref name="theCase"/>=<see cref="F:FreeLibSet.Russian.RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="value">Денежная сумма</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <param name="theCase">В каком падеже выводить</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MoneyStr(System.Text.StringBuilder,FreeLibSet.Russian.RoublesAndCopecks,FreeLibSet.Russian.RusNumberConvert.CopecksFormat,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Получение денежной суммы прописью.
+            В именительном падеже (<paramref name="theCase"/>=<see cref="F:FreeLibSet.Russian.RusCase.Nominative"/>) первая буква заглавная, остальная часть строки - в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="value">Денежная сумма</param>
+            <param name="copecksFormat">Формат отображения копеек</param>
+            <param name="theCase">В каком падеже выводить</param>
+            <param name="specChars">Если true, то будут использованы специальные символы - "мягкий" перенос и неразрывный пробел.
+            Если false, то символов переноса не будет в тексте, и будет использован обычный пробел</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Int64,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Преобразование целого числа в строку прописью.
+            Специальные символы не используются.
+            Возвращается строка в нижнем регистре.
+            </summary>
+            <param name="x">Преобразуемое значение</param>
+            <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
+            <param name="theCase">Падеж ("одна (кошка)", "одной (кошки)", "одну (кошку)" ...)</param>
+            <returns>Текстовое представление числа</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Int64,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Преобразование целого числа в строку прописью.
+            Возвращается строка в нижнем регистре.
+            </summary>
+            <param name="x">Преобразуемое значение</param>
+            <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
+            <param name="theCase">Падеж ("одна (кошка)", "одной (кошки)", "одну (кошку)" ...)</param>
+            <param name="specChars">Если true, то в тексте будут использованы символы "мягкого" переноса.
+            Если false, то специальные символы не используются</param>
+            <returns>Текстовое представление числа</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.Int64,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Преобразование целого числа в строку прописью.
+            Специальные символы не используются.
+            Записывается строка в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое значение</param>
+            <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
+            <param name="theCase">Падеж ("одна (кошка)", "одной (кошки)", "одну (кошку)" ...)</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.Int64,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Преобразование целого числа в строку прописью.
+            Записывается строка в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое значение</param>
+            <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
+            <param name="theCase">Падеж ("одна (кошка)", "одной (кошки)", "одну (кошку)" ...)</param>
+            <param name="specChars">Если true, то в тексте будут использованы символы "мягкого" переноса.
+            Если false, то специальные символы не используются</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.UInt64,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Преобразование целого числа в строку прописью.
+            Специальные символы не используются.
+            Возвращается строка в нижнем регистре.
+            </summary>
+            <param name="x">Преобразуемое значение</param>
+            <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
+            <param name="theCase">Падеж ("одна (кошка)", "одной (кошки)", "одну (кошку)" ...)</param>
+            <returns>Текстовое представление числа</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.UInt64,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Преобразование целого числа в строку прописью.
+            Возвращается строка в нижнем регистре.
+            </summary>
+            <param name="x">Преобразуемое значение</param>
+            <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
+            <param name="theCase">Падеж ("одна (кошка)", "одной (кошки)", "одну (кошку)" ...)</param>
+            <param name="specChars">Если true, то в тексте будут использованы символы "мягкого" переноса.
+            Если false, то специальные символы не используются</param>
+            <returns>Текстовое представление числа</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.UInt64,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Преобразование целого числа в строку прописью.
+            Специальные символы не используются.
+            Записывается строка в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое значение</param>
+            <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
+            <param name="theCase">Падеж ("одна (кошка)", "одной (кошки)", "одну (кошку)" ...)</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.UInt64,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Преобразование целого числа в строку прописью.
+            Записывается строка в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое значение</param>
+            <param name="gender">Род существительного, к которому относится число для определения варианта "один", "одна" или "одно"</param>
+            <param name="theCase">Падеж ("одна (кошка)", "одной (кошки)", "одну (кошку)" ...)</param>
+            <param name="specChars">Если true, то в тексте будут использованы символы "мягкого" переноса.
+            Если false, то специальные символы не используются</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.SpecAppend(System.Text.StringBuilder,System.String,System.Boolean)">
+            <summary>
+            Добавление строки к буферу
+            Если SpecChars=true, то обычные символы "-" переноса заменяются на символы
+            "мягкого" переноса. Иначе они удаляются
+            </summary>
+            <param name="sb"></param>
+            <param name="s"></param>
+            <param name="specChars"></param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.GetCF(FreeLibSet.Russian.RusCase@,FreeLibSet.Russian.RusNumber@,System.UInt64,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Получить падеж и число существительного, идущего после числительного.
+            </summary>
+            <param name="resCase">Падеж</param>
+            <param name="resNumber">Число</param>
+            <param name="x">Числительное, с которым согласуется существительное</param>
+            <param name="theCase">Падеж, в котором идет вся сборка</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.GetCF(FreeLibSet.Russian.RusCase@,FreeLibSet.Russian.RusNumber@,System.Decimal,System.Int32,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Получить падеж и число существительного, идущего после числительного.
+            </summary>
+            <param name="resCase">Падеж</param>
+            <param name="resNumber">Число</param>
+            <param name="x">Числительное, с которым согласуется существительное</param>
+            <param name="maxDecimals">Количество знаков после запятой, до которого нужно округлить <paramref name="x"/>,
+            чтобы определить, является ли число целым</param>
+            <param name="theCase">Падеж, в котором идет вся сборка</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.GetCF(FreeLibSet.Russian.RusCase@,FreeLibSet.Russian.RusNumber@,System.Int32,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Получить падеж и число существительного, идущего после числительного.
+            </summary>
+            <param name="resCase">Падеж</param>
+            <param name="resNumber">Число</param>
+            <param name="x">Числительное, с которым согласуется существительное</param>
+            <param name="theCase">Падеж, в котором идет вся сборка</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.GetC100(System.Int64)">
+            <summary>
+            Определение правильного способа склонения имени существительного,
+            идущего после числа по двум последним десятичным разрядам.
+            Существует три варианта склонения существительного:
+            - для чисел, оканчивающихся на 1 (кроме 11) - rusCount1
+            - для чисел, оканчивающихся на 2,3,4 (кроме 12-14) - rusCount2
+            - для чисел, оканчивающихся на 5,6,7,8,9,0 и 11-14 - rusCount5
+            </summary>
+            <param name="x">Число</param>
+            <returns>Форма счета</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Decimal)">
+            <summary>
+            Преобразование числа с плавающей точкой в строку в именительном падеже.
+            Количество действующих десятичных разрядов определяется автоматически.
+            Возвращается строка в нижнем регистре.
+            </summary>
+            <param name="x">Преобразуемое число</param>
+            <returns>Текстовое представление</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.Decimal)">
+            <summary>
+            Преобразование числа в строку прописью с указанием всех параметров.
+            Первая буква не делается прописной.
+            Выводится оптимальное количество знаков после запятой, но не более 11.
+            Записывается строка в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое число</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Decimal,FreeLibSet.Russian.RusGender)">
+            <summary>
+            Преобразование числа в строку прописью.
+            Первая буква не делается прописной.
+            Выводится оптимальное количество знаков после запятой, но не более 11.
+            Возвращается строка в нижнем регистре.
+            </summary>
+            <param name="x">Преобразуемое число</param>
+            <param name="gender">Род существительного, согласуемого с числительным</param>
+            <returns>Текстовое представление</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.Decimal,FreeLibSet.Russian.RusGender)">
+            <summary>
+            Преобразование числа в строку прописью.
+            Первая буква не делается прописной.
+            Выводится оптимальное количество знаков после запятой, но не более 11.
+            Записывается строка в нижнем регистре.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое число</param>
+            <param name="gender">Род существительного, согласуемого с числительным</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.MyGetDecimalPlaces(System.Decimal)">
+            <summary>
+            Получение оптимального числа максимального числа цифр после запятой
+            </summary>
+            <param name="x">Преобразуемое число</param>
+            <returns>Число знаков после запятой от 0 до 11</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Decimal,System.Int32,FreeLibSet.Russian.RusGender)">
+            <summary>
+            Преобразование числа в строку прописью.
+            Первая буква не делается прописной.
+            </summary>
+            <param name="x">Преобразуемое число</param>
+            <param name="maxDecimalPlaces">Максимальное число знаков после запятой. Реально может быть выведено меньше знаков (включая 0)
+            Допускаются значения от 0 до 11 включительно</param>
+            <param name="gender">Род существительного, согласуемого с числительным</param>
+            <returns>Текстовое представление</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.Decimal,System.Int32,FreeLibSet.Russian.RusGender)">
+            <summary>
+            Преобразование числа в строку прописью.
+            Первая буква не делается прописной.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое число</param>
+            <param name="maxDecimalPlaces">Максимальное число знаков после запятой. Реально может быть выведено меньше знаков (включая 0)
+            Допускаются значения от 0 до 11 включительно</param>
+            <param name="gender">Род существительного, согласуемого с числительным</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Decimal,System.Int32,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Преобразование числа в строку прописью с указанием всех параметров.
+            Первая буква не делается прописной
+            </summary>
+            <param name="x">Преобразуемое число</param>
+            <param name="maxDecimalPlaces">Максимальное число знаков после запятой. Реально может быть выведено меньше знаков (включая 0)
+            Допускаются значения от 0 до 11 включительно</param>
+            <param name="gender">Род существительного, согласуемого с числительным</param>
+            <param name="theCase">Падеж, в котором идет числительное и существительное</param>
+            <returns>Строка, содержащая числительное прописью</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Decimal,System.Int32,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Преобразование числа в строку прописью с указанием всех параметров.
+            Первая буква не делается прописной.
+            </summary>
+            <param name="x">Преобразуемое число</param>
+            <param name="maxDecimalPlaces">Максимальное число знаков после запятой. Реально может быть выведено меньше знаков (включая 0)
+            Допускаются значения от 0 до 11 включительно</param>
+            <param name="gender">Род существительного, согласуемого с числительным</param>
+            <param name="theCase">Падеж, в котором идет числительное и существительное</param>
+            <param name="specChars">Если true, то будут использованы специальные символы - "мягкий" перенос и неразрывный пробел.
+            Если false, то символов переноса не будет в тексте, и будет использован обычный пробел</param>
+            <returns>Строка, содержащая числительное прописью</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.Decimal,System.Int32,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase)">
+            <summary>
+            Преобразование числа в строку прописью.
+            Первая буква не делается прописной.
+            Специальные символы не используются
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое число</param>
+            <param name="maxDecimalPlaces">Максимальное число знаков после запятой. Реально может быть выведено меньше знаков (включая 0)
+            Допускаются значения от 0 до 11 включительно</param>
+            <param name="gender">Род существительного, согласуемого с числительным</param>
+            <param name="theCase">Падеж, в котором идет числительное и существительное</param>
+            <returns>Строка, содержащая числительное прописью</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.ToString(System.Text.StringBuilder,System.Decimal,System.Int32,FreeLibSet.Russian.RusGender,FreeLibSet.Russian.RusCase,System.Boolean)">
+            <summary>
+            Преобразование числа в строку прописью с указанием всех параметров.
+            Первая буква не делается прописной.
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="x">Преобразуемое число</param>
+            <param name="maxDecimalPlaces">Максимальное число знаков после запятой. Реально может быть выведено меньше знаков (включая 0)
+            Допускаются значения от 0 до 11 включительно</param>
+            <param name="gender">Род существительного, согласуемого с числительным</param>
+            <param name="theCase">Падеж, в котором идет числительное и существительное</param>
+            <param name="specChars">Если true, то будут использованы специальные символы - "мягкий" перенос и неразрывный пробел.
+            Если false, то символов переноса не будет в тексте, и будет использован обычный пробел</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.Int32WithNoun(System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Сопряжение существительного с числительным в именительном падеже. 
+            Число выводится цифрой.
+            Например, вызов 
+            string s = "У меня есть "+IntWithNoun(3, "кошка", "кошки", "кошек")
+            вернет s = "У меня есть 3 кошки"
+            </summary>
+            <param name="value">Числовое значение</param>
+            <param name="nominativeSingular">Форма именительного падежа единственного числа.
+            Используется, если число заканчивается на 1</param>
+            <param name="genitiveSingular">Форма родительного падежа единственного  числа. 
+            Используется, если число заканчивается на 2, 3 или 4</param>
+            <param name="genitivePlural">Форма родительного падежа множественного числа.
+            Используется, если число заканчивается на 0,5,6,7,8,9</param>
+            <returns>Строка, состоящая из числа, пробела и одной из трех форм слова</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.Int32WithNoun(System.Text.StringBuilder,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Сопряжение существительного с числительным в именительном падеже. 
+            Число выводится цифрой.
+            Например, вызов 
+            string s = "У меня есть "+IntWithNoun(3, "кошка", "кошки", "кошек")
+            вернет s = "У меня есть 3 кошки"
+            </summary>
+            <param name="sb">Буфер для заполнения</param>
+            <param name="value">Числовое значение</param>
+            <param name="nominativeSingular">Форма именительного падежа единственного числа.
+            Используется, если число заканчивается на 1</param>
+            <param name="genitiveSingular">Форма родительного падежа единственного  числа. 
+            Используется, если число заканчивается на 2, 3 или 4</param>
+            <param name="genitivePlural">Форма родительного падежа множественного числа.
+            Используется, если число заканчивается на 0,5,6,7,8,9</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusNumberConvert.NounForInt32(System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Сопряжение существительного с числительным в именительном падеже. 
+            То же, что и Int32WithNoun(), но без вывода самого числа.
+            Например, вызов 
+            string s = NounForInt32(3, "кошка", "кошки", "кошек")
+            вернет s = "кошки"
+            </summary>
+            <param name="value">Числовое значение</param>
+            <param name="nominativeSingular">Форма именительного падежа единственного числа.
+            Используется, если число заканчивается на 1</param>
+            <param name="genitiveSingular">Форма родительного падежа единственного  числа. 
+            Используется, если число заканчивается на 2, 3 или 4</param>
+            <param name="genitivePlural">Форма родительного падежа множественного числа.
+            Используется, если число заканчивается на 0,5,6,7,8,9</param>
+            <returns>Строка, состоящая из числа, пробела и одной из трех форм слова</returns>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusNumberConvert.CopecksFormat">
+            <summary>
+            Способ преобразования копеек в MoneyStr()
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.CopecksFormat.Digits">
+            <summary>
+            Цифрами ("пять рублей 15 копеек")
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.CopecksFormat.String">
+            <summary>
+            Прописью ("пять рублей пятнадцать копеек")
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.CopecksFormat.NoneIfZero">
+            <summary>
+            Цифрами, если есть, и пусто, если 0 копеек 
+            ("пять рублей 15 копеек", но "пять рублей")
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.CopecksFormat.None">
+            <summary>
+            Отбросить копейки, сумма в целых рублях
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusNumberConvert.CountForm">
+            <summary>
+            Формы счета
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.CountForm.Count1">
+            <summary>
+            1 рубль
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.CountForm.Count2">
+            <summary>
+            2 рубля
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusNumberConvert.CountForm.Count0">
+            <summary>
+            5 рублей
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusFullNamePart">
+            <summary>
+            Один из трех компонентов Ф.И.О.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullNamePart.Surname">
+            <summary>
+            Фамилия
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullNamePart.Name">
+            <summary>
+            Имя
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullNamePart.Patronymic">
+            <summary>
+            Отчество
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.SexOfPerson">
+            <summary>
+            Пол человека
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.SexOfPerson.Male">
+            <summary>
+            Мужской
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.SexOfPerson.Female">
+            <summary>
+            Женский                                 
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.SexOfPerson.Undefined">
+            <summary>
+            Неизвестный
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusFullNameValidateOptions">
+            <summary>
+            Опции проверки корректности Ф.И.О.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullNameValidateOptions.Default">
+            <summary>
+            Режим проверки по умолчанию.
+            Имя и отчество должны быть заданы полностью, а не инициалами.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullNameValidateOptions.InitialsAllowed">
+            <summary>
+            Если флаг задан, то имя и отчество могут быть заданы одной буквой, но могут быть заданы и полностью
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullNameValidateOptions.InitialsOnly">
+            <summary>
+            Допускаются только инициалы вместо имени и отчества
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullNameValidateOptions.IgnoreCases">
+            <summary>
+            Если флаг установлен, то будет игнорироваться регистр при проверке символов
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Russian.RusFullName">
+            <summary>
+            Фамилия, Имя и Отчество человека.
+            Обычно хранит полное Ф.И.О., но может использоваться и для хранения фамилии и инициалов (по одному символу).
+            Поддерживаются компоненты с дефисом, а также с окончаниями "ОГЛЫ", "КЫЗЫ" через пробел.
+            Позволяет определить пол по отчеству (и по имени, если есть окончание "ОГЛЫ", "КЫЗЫ").
+            Умеет склонять Ф.И.О. по падежам.
+            Структура однократной записи.
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Инициализирует структуры заданными Ф.И.О.
+            Компоненты не проверяются и не модифицируются.
+            </summary>
+            <param name="surname">Фамилия</param>
+            <param name="name">Имя</param>
+            <param name="patronymic">Отчество</param>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.ToString">
+            <summary>
+            Возвращает свойство <see cref="P:FreeLibSet.Russian.RusFullName.FullName"/> или <see cref="P:FreeLibSet.Russian.RusFullName.NameWithInitials"/>.
+            </summary>
+            <returns>Текстовое представление</returns>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullName.Empty">
+            <summary>
+            Пустой объект
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.Parse(System.String)">
+            <summary>
+            Извлечение компонентов Ф.И.О. из строки в максимально возможной степени.
+            Если <paramref name="s"/> - пустая строка, возвращается <see cref="F:FreeLibSet.Russian.RusFullName.Empty"/>.
+            </summary>
+            <param name="s">Строка для преобразования</param>
+            <returns>Заполненная структура <see cref="T:FreeLibSet.Russian.RusFullName"/></returns>
+            <exception cref="T:System.InvalidCastException">Если не удалось распознать Ф.И.О.</exception>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.Parse(System.String,System.Boolean)">
+            <summary>
+            Извлечение компонентов Ф.И.О. из строки.
+            Если <paramref name="s"/> -пустая строка, возвращается <see cref="F:FreeLibSet.Russian.RusFullName.Empty"/>.
+            </summary>
+            <param name="s">Строка для преобразования</param>
+            <param name="autoCorrect">Если true, то будет выполнена попытка автокоррекции строки</param>
+            <returns>Заполненная структура <see cref="T:FreeLibSet.Russian.RusFullName"/></returns>
+            <exception cref="T:System.InvalidCastException">Если не удалось распознать Ф.И.О.</exception>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.TryParse(System.String,FreeLibSet.Russian.RusFullName@,System.String@,System.Boolean)">
+            <summary>
+            Выполняет попытку извлечения компонентов Ф.И.О. из строки.
+            Если <paramref name="s"/> -пустая строка, возвращается <paramref name="res"/>=<see cref="F:FreeLibSet.Russian.RusFullName.Empty"/> и значение true.
+            </summary>
+            <param name="s">Преобразуемая строка</param>
+            <param name="res">Сюда записывается преобразованное значение</param>
+            <param name="errorText">Сюда записывается сообщение об ошибке</param>
+            <param name="autoCorrect">Если true, то будет выполнена попытка автокоррекции строки</param>
+            <returns>true, если преобразование успешно выполнено</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.TryParse(System.String,FreeLibSet.Russian.RusFullName@,System.String@)">
+            <summary>
+            Выполняет попытку извлечения компонентов Ф.И.О. из строки.
+            Выполняется попытка автокоррекции строки.
+            Если <paramref name="s"/> -пустая строка, возвращается <paramref name="res"/>=<see cref="F:FreeLibSet.Russian.RusFullName.Empty"/> и значение true.
+            </summary>
+            <param name="s">Преобразуемая строка</param>
+            <param name="res">Сюда записывается преобразованное значение</param>
+            <param name="errorText">Сюда записывается сообщение об ошибке</param>
+            <returns>true, если преобразование успешно выполнено</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.TryParse(System.String,FreeLibSet.Russian.RusFullName@)">
+            <summary>
+            Выполняет попытку извлечения компонентов Ф.И.О. из строки.
+            Выполняется попытка автокоррекции строки.
+            Если <paramref name="s"/> -пустая строка, возвращается <paramref name="res"/>=<see cref="F:FreeLibSet.Russian.RusFullName.Empty"/> и значение true.
+            </summary>
+            <param name="s">Преобразуемая строка</param>
+            <param name="res">Сюда записывается преобразованное значение</param>
+            <returns>true, если преобразование успешно выполнено</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.CorrectText(System.String)">
+            <summary>
+            Убирает концевые и двойные пробелы, точки, неправильные сочетания "-".
+            Регистр символов не меняется
+            </summary>
+            <param name="s">Корректируемая строка</param>
+            <returns>Исправленная строка</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.SetSurname(System.String)">
+            <summary>
+            Возвращает новый объект Ф.И.О. с замененной фамилией
+            </summary>
+            <param name="newSurname">Новая фамилия</param>
+            <returns>Копия объекта с заменой</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.SetName(System.String)">
+            <summary>
+            Возвращает новый объект Ф.И.О. с замененным именем
+            </summary>
+            <param name="newName">Новое имя</param>
+            <returns>Копия объекта с заменой</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.SetPatronymic(System.String)">
+            <summary>
+            Возвращает новый объект Ф.И.О. с замененным отчеством
+            </summary>
+            <param name="newPatronymic">Новое отчество</param>
+            <returns>Копия объекта с заменой</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.GetCases(FreeLibSet.Russian.SexOfPerson)">
+            <summary>
+            Получение 12 склонений
+            </summary>
+            <param name="sex">Пол человека. Если Undefined, то определяется автоматически исходя из отчества</param>
+            <returns>Массив из 12 элементов</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.GetCases(FreeLibSet.Russian.SexOfPerson,FreeLibSet.Russian.RusFullName[]@)">
+            <summary>
+            Получение 12 склонений.
+            </summary>
+            <param name="sex">Пол человека. Если Undefined, то определяется автоматически исходя из отчества</param>
+            <param name="forms">По ссылке возвращается массив из 12 элементов</param>
+            <returns>В текущей реализации всегда возвращается true</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.GetSexFromPatronymic(System.String)">
+            <summary>
+            Возвращает пол на основании отчества
+            </summary>
+            <param name="patronymic">Отчество</param>
+            <returns>Пол</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.Equals(FreeLibSet.Russian.RusFullName)">
+            <summary>
+            Сравнивает с другим Ф.И.О.
+            Регистр символов игнорируется.
+            Считаются одинаковыми Ф.И.О., если в одном объекте имя и отчество заданы полностью, а в другом - только сокращение.
+            Например, "Иванов Иван Иванович"=="Иванов И.И."
+            </summary>
+            <param name="obj">Второй сравниваемый объект</param>
+            <returns>Результат сравнения</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.Equals(System.Object)">
+            <summary>
+            Сравнивает с другим Ф.И.О.
+            Регистр символов игнорируется.
+            Считаются одинаковыми Ф.И.О., если в одном объекте имя и отчество заданы полностью, а в другом - только сокращение.
+            Например, "Иванов Иван Иванович"=="Иванов И.И."
+            </summary>
+            <param name="obj">Второй сравниваемый объект</param>
+            <returns>Результат сравнения</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.op_Equality(FreeLibSet.Russian.RusFullName,FreeLibSet.Russian.RusFullName)">
+            <summary>
+            Сравнивает два Ф.И.О.
+            Регистр символов игнорируется.
+            Буквы "Е" и "Ё" считаются одинаковыми.
+            Считаются одинаковыми Ф.И.О., если в одном объекте имя и отчество заданы полностью, а в другом - только сокращение.
+            Например, "Иванов Иван Иванович"=="Иванов И.И."
+            </summary>
+            <param name="obj1">Первый сравниваемый объект</param>
+            <param name="obj2">Второй сравниваемый объект</param>
+            <returns>Результат сравнения</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.op_Inequality(FreeLibSet.Russian.RusFullName,FreeLibSet.Russian.RusFullName)">
+            <summary>
+            Сравнивает два Ф.И.О.
+            Регистр символов игнорируется.
+            Считаются одинаковыми Ф.И.О., если в одном объекте имя и отчество заданы полностью, а в другом - только сокращение.
+            Например, "Иванов Иван Иванович"=="Иванов И.И."
+            </summary>
+            <param name="obj1">Первый сравниваемый объект</param>
+            <param name="obj2">Второй сравниваемый объект</param>
+            <returns>Результат сравнения</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.GetHashCode">
+            <summary>
+            Возвращает хэш-код из фамилии.
+            Требуется для работы коллекций
+            </summary>
+            <returns>Хэш код</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValid(FreeLibSet.Russian.RusFullNameValidateOptions,System.String@)">
+            <summary>
+            Выполнить проверку фамилии, имени и отчества.
+            Требуется, чтобы фамилия и имя были заданы. Пустой объект (<see cref="P:FreeLibSet.Russian.RusFullName.IsEmpty"/>=true) считается неправильным.
+            </summary>
+            <param name="options">Опции проверки</param>
+            <param name="errorText">Сюда записывается сообщение об ошибке</param>
+            <returns>true, если все компоненты корректны</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValid(FreeLibSet.Russian.RusFullNameValidateOptions)">
+            <summary>
+            Выполнить проверку фамилии, имени и отчества.
+            Требуется, чтобы фамилия и имя были заданы. Пустой объект (<see cref="P:FreeLibSet.Russian.RusFullName.IsEmpty"/>=true) считается неправильным.
+            </summary>
+            <param name="options">Опции проверки</param>
+            <returns>true, если все компоненты корректны</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValid(System.String,FreeLibSet.Russian.RusFullNameValidateOptions,System.String@)">
+            <summary>
+            Проверка корректности строки, содержащей фамилию, имени и отчество, или содержащей фамилию с инициалами
+            (в зависимости от параметра <paramref name="options"/>).
+            Требуется, чтобы фамилия и имя были заданы. Пустая строка считается неправильной.
+            </summary>
+            <param name="s">Проверяемая строка</param>
+            <param name="options">Режимы проверки</param>
+            <param name="errorText">Сюда записывается сообщение об ошибке</param>
+            <returns>True, если проверка выполнена успешно</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValid(System.String,FreeLibSet.Russian.RusFullNameValidateOptions)">
+            <summary>
+            Проверка корректности строки, содержащей фамилию, имени и отчество, или содержащей фамилию с инициалами
+            (в зависимости от параметра <paramref name="options"/>).
+            Требуется, чтобы фамилия и имя были заданы. Пустая строка считается неправильной.
+            </summary>
+            <param name="s">Проверяемая строка</param>
+            <param name="options">Режимы проверки</param>
+            <returns>True, если проверка выполнена успешно</returns>
+        </member>
+        <member name="F:FreeLibSet.Russian.RusFullName._SpacedSuffixMaleIndexer">
+            <summary>
+            Суффиксы, которые могут идти после пробела
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValidSurname(System.String,FreeLibSet.Russian.RusFullNameValidateOptions,System.String@)">
+            <summary>
+            Выполнить проверку фамилии
+            </summary>
+            <param name="surname">Проверяемое значение</param>
+            <param name="options">Опции проверки</param>
+            <param name="errorText">Сюда записывается сообщение об ошибке</param>
+            <returns>true, если значение корректно</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValidSurname(System.String,FreeLibSet.Russian.RusFullNameValidateOptions)">
+            <summary>
+            Выполнить проверку фамилии
+            </summary>
+            <param name="surname">Проверяемое значение</param>
+            <param name="options">Опции проверки</param>
+            <returns>true, если значение корректно</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValidName(System.String,FreeLibSet.Russian.RusFullNameValidateOptions,System.String@)">
+            <summary>
+            Выполнить проверку имени
+            </summary>
+            <param name="name">Проверяемое значение</param>
+            <param name="options">Опции проверки</param>
+            <param name="errorText">Сюда записывается сообщение об ошибке</param>
+            <returns>true, если значение корректно</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValidName(System.String,FreeLibSet.Russian.RusFullNameValidateOptions)">
+            <summary>
+            Выполнить проверку имени
+            </summary>
+            <param name="name">Проверяемое значение</param>
+            <param name="options">Опции проверки</param>
+            <returns>true, если значение корректно</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValidPatronymic(System.String,FreeLibSet.Russian.RusFullNameValidateOptions,System.String@)">
+            <summary>
+            Выполнить проверку отчества.
+            Пустое отчество считается корректным значением
+            </summary>
+            <param name="patronymic">Проверяемое значение</param>
+            <param name="options">Опции проверки</param>
+            <param name="errorText">Сюда записывается сообщение об ошибке</param>
+            <returns>true, если значение корректно</returns>
+        </member>
+        <member name="M:FreeLibSet.Russian.RusFullName.IsValidPatronymic(System.String,FreeLibSet.Russian.RusFullNameValidateOptions)">
+            <summary>
+            Выполнить проверку отчества.
+            Пустое отчество считается корректным значением
+            </summary>
+            <param name="patronymic">Проверяемое значение</param>
+            <param name="options">Опции проверки</param>
+            <returns>true, если значение корректно</returns>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.Surname">
+            <summary>
+            Фамилия
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.Name">
+            <summary>
+            Имя
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.Patronymic">
+            <summary>
+            Отчество
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.FullName">
+            <summary>
+            Полное имя в виде "Иванов Иван Иванович"
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.NameWithInitials">
+            <summary>
+            Строка в виде "Иванов И.И."
+            Фамилия отделяется от иницалов неразрывным пробелом.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.InvNameWithInitials">
+            <summary>
+            Строка в обратном порядке "И.И. Иванов".
+            Инициалы от фамилии отделяются неразрывным пробелом.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.IsEmpty">
+            <summary>
+            Возвращает true, если фамилия не заполнена
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.NameWithInitalsObj">
+            <summary>
+            Получить структуру Ф.И.О. с сокращенным именем и отчеством.
+            То есть, если текущее Ф.И.О. - "Иванов Иван Иванович", то будет
+            возвращена структура "Иванов И И"
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.IsInitials">
+            <summary>
+            Возвращает true, если заданы только инициалы
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.Item(FreeLibSet.Russian.RusFullNamePart)">
+            <summary>
+            Возвращает требуемый компонент Ф.И.О.
+            </summary>
+            <param name="part">Требуемый компонент</param>
+            <returns>Значение свойства</returns>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.Normalized">
+            <summary>
+            Преобразование регистров Ф.И.О., удаление точек и лишних символов.
+            Буква "Ё" сохраняется.
+            Пробелы заменяются на "-", кроме окончаний "Кызы", "Гызы" и "Оглы"
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.NormalCased">
+            <summary>
+            Преобразование регистров Ф.И.О без преобразования символов
+            ("ИВАНОВ ИВАН ИВАНОВИЧ" -> "Иванов Иван Иванович")
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.UpperCased">
+            <summary>
+            Преобразование к верхнему регистру
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.YoReplaced">
+            <summary>
+            Замена букв "Ё" на "Е"
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Russian.RusFullName.Sex">
+            <summary>
+            Определение пола человека по Ф.И.О.
+            </summary>
+        </member>
+    </members>
+</doc>

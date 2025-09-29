@@ -120,11 +120,11 @@ namespace FreeLibSet.Drawing.Reporting
     {
       string s = sel.AsString;
       if (String.IsNullOrEmpty(s))
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
 
       if (sel.CellStyle.WrapMode == BRWrapMode.NoWrap)
-        s = DataTools.RemoveSoftHyphens(s);
-      string[] a = s.Split(DataTools.NewLineSeparators, StringSplitOptions.None); // Разбиение на строки, заданное в исходном значении
+        s = StringTools.RemoveSoftHyphens(s);
+      string[] a = s.Split(StringTools.NewLineSeparators, StringSplitOptions.None); // Разбиение на строки, заданное в исходном значении
 
       if (sel.CellStyle.WrapMode == BRWrapMode.NoWrap)
         // Перенос запрещен
@@ -243,7 +243,7 @@ namespace FreeLibSet.Drawing.Reporting
       _SB.Append('|');
       _SB.Append((int)(sel.CellStyle.WrapMode));
       _SB.Append('|');
-      _SB.Append(sel.CellStyle.ForeColor.IntValue);
+      _SB.Append(sel.CellStyle.ForeColor.Int32Value);
       _SB.Append('|');
       _SB.Append(sel.HasLink ? '1' : '0');
 

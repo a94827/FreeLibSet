@@ -500,10 +500,25 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
-            ControlProvider.CanView
-            /*|| (!Handler.MainGrid.ReadOnly)*/)
-            ciEdit_Click(null, null);
+          //if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
+          //  ControlProvider.CanView
+          //  /*|| (!Handler.MainGrid.ReadOnly)*/)
+          //  ciEdit_Click(null, null);
+
+          // 29.08.2025
+          // Перехватываем исключения при выполнении команды
+          // 04.09.2025
+          // Проверяем, что предыдущий вызов команды уже завершился
+          if (ciEdit.Visible && ciEdit.Enabled)
+          {
+            if (!ciEdit.InsideClick)
+              ciEdit.PerformClick();
+          }
+          else if (ciView.Visible && ciView.Enabled)
+          {
+            if (!ciView.InsideClick)
+              ciView.PerformClick();
+          }
         }
       }
     }

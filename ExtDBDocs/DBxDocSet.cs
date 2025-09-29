@@ -258,7 +258,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public Int32 UserActionId
     {
-      get { return DataTools.GetInt(_DataSet.ExtendedProperties["UserActionId"]); }
+      get { return DataTools.GetInt32(_DataSet.ExtendedProperties["UserActionId"]); }
       internal set { _DataSet.ExtendedProperties["UserActionId"] = value.ToString(); }
     }
 
@@ -285,7 +285,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public bool CheckDocs
     {
-      get { return DataTools.GetBool(_DataSet.ExtendedProperties["CheckDocs"]); }
+      get { return DataTools.GetBoolean(_DataSet.ExtendedProperties["CheckDocs"]); }
       set
       {
         if (UserActionId != 0)
@@ -301,7 +301,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public bool WriteIfNotChanged
     {
-      get { return DataTools.GetBool(_DataSet.ExtendedProperties["WriteIfNotChanged"]); }
+      get { return DataTools.GetBoolean(_DataSet.ExtendedProperties["WriteIfNotChanged"]); }
       set
       {
         if (UserActionId != 0)
@@ -491,7 +491,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public bool VersionView
     {
-      get { return DataTools.GetBool(_DataSet.ExtendedProperties["VersionView"]); }
+      get { return DataTools.GetBoolean(_DataSet.ExtendedProperties["VersionView"]); }
       internal set
       {
         _DataSet.ExtendedProperties["VersionView"] = value ? "1" : "0";
@@ -591,9 +591,9 @@ namespace FreeLibSet.Data.Docs
       DataSet tempDS = new DataSet();
       foreach (DBxMultiDocs mDocs in _MultiDocs)
       {
-        Int32[] docIds = mDocs.GetDocIds(DBxDocState.View);
-        for (int i = 0; i < docIds.Length; i++)
-          mDocs.DoInsertCopy1(tempDS, docIds[i]);
+        IIdSet<Int32> docIds = mDocs.GetDocIds(DBxDocState.View);
+        foreach (Int32 docId in docIds)
+          mDocs.DoInsertCopy1(tempDS, docId);
       }
 
       DBxDocSet.DoInsertCopy2(tempDS, DataSet, DocProvider);
@@ -700,7 +700,7 @@ namespace FreeLibSet.Data.Docs
             if (String.IsNullOrEmpty(colStr.MasterTableName))
               continue;
 
-            Int32 refId = DataTools.GetInt(mainRow[i]);
+            Int32 refId = DataTools.GetInt32(mainRow[i]);
             if (refId == 0)
               continue;
 
@@ -1027,7 +1027,7 @@ namespace FreeLibSet.Data.Docs
 
       #region Первый проход
 
-      Dictionary<string, IdList> queryIds = new Dictionary<string, IdList>();
+      Dictionary<string, IdCollection<Int32>> queryIds = new Dictionary<string, IdCollection<Int32>>();
 
       foreach (DBxMultiDocs mDocs in _MultiDocs)
       {
@@ -1048,11 +1048,11 @@ namespace FreeLibSet.Data.Docs
             if (subDocRow.RowState == DataRowState.Deleted)
               continue; // 19.03.2016
 
-            Int32 thisDocId = DataTools.GetInt(subDocRow, "DocId");
+            Int32 thisDocId = DataTools.GetInt32(subDocRow, "DocId");
             DataRow docRow = mDocs.Table.Rows.Find(thisDocId);
             if (docRow == null)
               errors.AddError(String.Format(Res.DBxDocSet_Err_NoDocForSubDoc,
-                sdt.SingularTitle, DataTools.GetInt(subDocRow, "Id"),
+                sdt.SingularTitle, DataTools.GetInt32(subDocRow, "Id"),
                 mDocs.DocType.SingularTitle, thisDocId));
             else
             {
@@ -1067,7 +1067,7 @@ namespace FreeLibSet.Data.Docs
                     continue;
                   default:
                     errors.AddError(String.Format(Res.DBxDocSet_Err_DocSubDocStateMismatch,
-                      sdt.SingularTitle, DataTools.GetInt(subDocRow, "Id"), subDocRow.RowState,
+                      sdt.SingularTitle, DataTools.GetInt32(subDocRow, "Id"), subDocRow.RowState,
                       mDocs.DocType.SingularTitle, thisDocId, docRow.RowState));
                     break;
                 }
@@ -1082,7 +1082,7 @@ namespace FreeLibSet.Data.Docs
       #region Запрос удаленных документов
 
       Dictionary<string, DataTable> queryTables = new Dictionary<string, DataTable>(queryIds.Count);
-      foreach (KeyValuePair<string, IdList> pair in queryIds)
+      foreach (KeyValuePair<string, IdCollection<Int32>> pair in queryIds)
       {
         if (!IsValidableTable(pair.Key))
           continue;
@@ -1103,7 +1103,7 @@ namespace FreeLibSet.Data.Docs
           else
             cols = DBSDocType.IdColumns;
         }
-        DataTable table = DocProvider.FillSelect(pair.Key, cols, new IdsFilter(pair.Value));
+        DataTable table = DocProvider.FillSelect(pair.Key, cols, new ValueInListFilter("Id", pair.Value));
         DataTools.SetPrimaryKey(table, "Id");
         queryTables.Add(pair.Key, table);
       }
@@ -1147,7 +1147,7 @@ namespace FreeLibSet.Data.Docs
     }
 
     private void ValidateTable1(ErrorMessageList errors, DataTable table, DBxDocTypeBase docType, string prefix,
-      Dictionary<string, IdList> queryIds)
+      Dictionary<string, IdCollection<Int32>> queryIds)
     {
       DBxTableStruct ts = this.DocProvider.StructSource.GetTableStruct(docType.Name);
       foreach (DataRow row in table.Rows)
@@ -1155,9 +1155,9 @@ namespace FreeLibSet.Data.Docs
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        if (DataTools.GetInt(row, "Id") < 0 && row.RowState == DataRowState.Unchanged)
+        if (DataTools.GetInt32(row, "Id") < 0 && row.RowState == DataRowState.Unchanged)
           errors.AddError(String.Format(Res.DBxDocSet_Err_FicvtiveIdInUnchangedRow,
-            prefix, DataTools.GetInt(row, "Id")));
+            prefix, DataTools.GetInt32(row, "Id")));
 
         for (int i = 0; i < ts.Columns.Count; i++)
         {
@@ -1172,29 +1172,29 @@ namespace FreeLibSet.Data.Docs
             }
 
 
-            Int32 refId = DataTools.GetInt(row, ts.Columns[i].ColumnName);
+            Int32 refId = DataTools.GetInt32(row, ts.Columns[i].ColumnName);
             if (refId == 0)
               continue;
             if (refId < 0)
             {
               if (row.RowState == DataRowState.Unchanged)
                 errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNewInUnchangedRow,
-                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId));
+                  prefix, DataTools.GetInt32(row, "Id"), ts.Columns[i].ColumnName, refId));
 
               if (!_DataSet.Tables.Contains(refTableName))
               {
                 errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNewButNoTable,
-                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
+                  prefix, DataTools.GetInt32(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
                 continue;
               }
 
               DataRow refRow = _DataSet.Tables[refTableName].Rows.Find(refId);
               if (refRow == null)
                 errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNewUnknown,
-                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
+                  prefix, DataTools.GetInt32(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
               else if (refRow.RowState == DataRowState.Deleted)
                 errors.AddError(String.Format(Res.DBxDocSet_Err_RefToOldDeleted,
-                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
+                  prefix, DataTools.GetInt32(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
             }
             else // RefId>0
             {
@@ -1205,15 +1205,15 @@ namespace FreeLibSet.Data.Docs
                 {
                   if (refRow.RowState == DataRowState.Deleted)
                     errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNewDeleted,
-                      prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
+                      prefix, DataTools.GetInt32(row, "Id"), ts.Columns[i].ColumnName, refId, refTableName));
                   continue;
                 }
               }
 
-              IdList refIds;
+              IdCollection<Int32> refIds;
               if (!queryIds.TryGetValue(refTableName, out refIds))
               {
-                refIds = new IdList();
+                refIds = new IdCollection<Int32>();
                 queryIds.Add(refTableName, refIds);
               }
               refIds.Add(refId);
@@ -1247,7 +1247,7 @@ namespace FreeLibSet.Data.Docs
                 continue;
             }
 
-            Int32 refId = DataTools.GetInt(row, ts.Columns[i].ColumnName);
+            Int32 refId = DataTools.GetInt32(row, ts.Columns[i].ColumnName);
             if (refId > 0)
             {
               if (_DataSet.Tables.Contains(refTableName))
@@ -1261,22 +1261,22 @@ namespace FreeLibSet.Data.Docs
               DataRow refRow = refTable.Rows.Find(refId);
               if (refRow == null)
                 errors.AddError(String.Format(Res.DBxDocSet_Err_RefToNotInDB,
-                  prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName,
+                  prefix, DataTools.GetInt32(row, "Id"), ts.Columns[i].ColumnName,
                   refTableName, refId));
               else if (DocProvider.DocTypes.UseDeleted)
               {
-                if (DataTools.GetBool(refRow, "Deleted"))
+                if (DataTools.GetBoolean(refRow, "Deleted"))
                   errors.AddError(String.Format(Res.DBxDocSet_Err_RefToDeletedInDB,
-                    prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName,
+                    prefix, DataTools.GetInt32(row, "Id"), ts.Columns[i].ColumnName,
                     refTableName, refId));
                 else if (refTable.Columns.Contains("DocId.Deleted"))
                 {
                   DBxDocType refDoc = DocProvider.DocTypes[refTableName];
-                  if (DataTools.GetBool(refRow, "DocId.Deleted"))
+                  if (DataTools.GetBoolean(refRow, "DocId.Deleted"))
                     errors.AddError(String.Format(Res.DBxDocSet_Err_RefToDocDeletedInDB,
-                      prefix, DataTools.GetInt(row, "Id"), ts.Columns[i].ColumnName +
+                      prefix, DataTools.GetInt32(row, "Id"), ts.Columns[i].ColumnName +
                       refTableName, refId,
-                       refDoc.SingularTitle, DataTools.GetInt(refRow, "Docid")));
+                       refDoc.SingularTitle, DataTools.GetInt32(refRow, "Docid")));
                 }
               }
             }
@@ -1296,7 +1296,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public bool IgnoreAllLocks
     {
-      get { return DataTools.GetBool(_DataSet.ExtendedProperties["IgnoreAllLocks"]); }
+      get { return DataTools.GetBoolean(_DataSet.ExtendedProperties["IgnoreAllLocks"]); }
       set
       {
         if (UserActionId != 0)
@@ -1383,7 +1383,7 @@ namespace FreeLibSet.Data.Docs
       if (data == null)
         return DBNull.Value;
 
-      string md5 = DataTools.MD5Sum(data);
+      string md5 = MD5Tools.MD5Sum(data);
       DataTable tblBinData = DataSet.Tables["BinData"];
       if (tblBinData != null)
       {
@@ -1427,8 +1427,8 @@ namespace FreeLibSet.Data.Docs
       if (tblBinData == null && tblFileNames == null)
         return; // нет новых данных
 
-      IdList binDataIds = new IdList();
-      IdList fileNameIds = new IdList();
+      IdCollection<Int32> binDataIds = new IdCollection<Int32>();
+      IdCollection<Int32> fileNameIds = new IdCollection<Int32>();
 
       #region Список используемых фиктивных идентификаторов
 
@@ -1453,7 +1453,7 @@ namespace FreeLibSet.Data.Docs
           {
             if (table.Rows[j].RowState == DataRowState.Deleted)
               continue;
-            Int32 id = DataTools.GetInt(table.Rows[j][p]);
+            Int32 id = DataTools.GetInt32(table.Rows[j][p]);
             if (id < 0)
               binDataIds.Add(id);
           }
@@ -1471,7 +1471,7 @@ namespace FreeLibSet.Data.Docs
           {
             if (table.Rows[j].RowState == DataRowState.Deleted)
               continue;
-            Int32 id = DataTools.GetInt(table.Rows[j][p]);
+            Int32 id = DataTools.GetInt32(table.Rows[j][p]);
             if (id < 0)
               fileNameIds.Add(id);
           }
@@ -1486,7 +1486,7 @@ namespace FreeLibSet.Data.Docs
       {
         foreach (DataRow row in tblFileNames.Rows)
         {
-          Int32 dataId = DataTools.GetInt(row, "Data");
+          Int32 dataId = DataTools.GetInt32(row, "Data");
           if (dataId < 0)
             binDataIds.Add(dataId);
         }
@@ -1552,7 +1552,7 @@ namespace FreeLibSet.Data.Docs
 
     internal byte[] InternalGetBinData(object binDataId, string docTypeName, Int32 docId, string subDocTypeName, Int32 subDocId, string columnName)
     {
-      Int32 binDataId2 = DataTools.GetInt(binDataId);
+      Int32 binDataId2 = DataTools.GetInt32(binDataId);
       if (binDataId2 == 0)
         return null;
 
@@ -1589,7 +1589,7 @@ namespace FreeLibSet.Data.Docs
         return DBNull.Value;
 
       Int32 dataId;
-      string md5 = DataTools.MD5Sum(file.Content);
+      string md5 = MD5Tools.MD5Sum(file.Content);
 
       #region Проверка повторного вызова
 
@@ -1679,7 +1679,7 @@ namespace FreeLibSet.Data.Docs
 
     internal FreeLibSet.IO.StoredFileInfo InternalGetDBFileInfo(object fileId, string docTypeName, Int32 docId, string subDocTypeName, Int32 subDocId, string columnName)
     {
-      Int32 fileId2 = DataTools.GetInt(fileId);
+      Int32 fileId2 = DataTools.GetInt32(fileId);
       if (fileId2 == 0)
         return FreeLibSet.IO.StoredFileInfo.Empty;
 
@@ -1705,7 +1705,7 @@ namespace FreeLibSet.Data.Docs
 
     internal FreeLibSet.IO.FileContainer InternalGetDBFile(object fileId, string docTypeName, Int32 docId, string subDocTypeName, Int32 subDocId, string columnName)
     {
-      Int32 fileId2 = DataTools.GetInt(fileId);
+      Int32 fileId2 = DataTools.GetInt32(fileId);
       if (fileId2 == 0)
         return null;
 
@@ -1801,13 +1801,13 @@ namespace FreeLibSet.Data.Docs
 
       // Требуется перестроение списка
       info = new DataIdInfo();
-      IdList tempIds = new IdList();
+      IdCollection<Int32> tempIds = new IdCollection<Int32>();
       foreach (DataRow row in _DataSet.Tables[tableName].Rows)
       {
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        Int32 binDataId = DataTools.GetInt(row, columnName);
+        Int32 binDataId = DataTools.GetInt32(row, columnName);
         if (binDataId <= 0)
           continue;
         if (tempIds.Contains(binDataId))
@@ -1816,12 +1816,12 @@ namespace FreeLibSet.Data.Docs
         Int32 docId, subDocId;
         if (isSubDoc)
         {
-          docId = DataTools.GetInt(row, "DocId");
-          subDocId = DataTools.GetInt(row, "Id");
+          docId = DataTools.GetInt32(row, "DocId");
+          subDocId = DataTools.GetInt32(row, "Id");
         }
         else
         {
-          docId = DataTools.GetInt(row, "Id");
+          docId = DataTools.GetInt32(row, "Id");
           subDocId = 0;
         }
         //if (docId < 0 || subDocId < 0)

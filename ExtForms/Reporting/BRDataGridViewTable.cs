@@ -649,7 +649,7 @@ namespace FreeLibSet.Forms.Reporting
           else if (!String.IsNullOrEmpty(efpCol.GridColumn.HeaderText))
             headList.Add(new string[1] { efpCol.GridColumn.HeaderText });
           else
-            headList.Add(DataTools.EmptyStrings);
+            headList.Add(EmptyArray<string>.Empty);
           headList2.Add(new string[1] { (cntCol + 1).ToString() });
 
           cntCol++;
@@ -742,8 +742,8 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Переход к строке/столбцу
 
-    private EFPDataGridViewRowAttributesEventArgs _RowArgs;
-    private EFPDataGridViewCellAttributesEventArgs _CellArgs;
+    private EFPDataGridViewRowInfoEventArgs _RowArgs;
+    private EFPDataGridViewCellInfoEventArgs _CellArgs;
 
     private void GotoCell(int rowIndex, int columnIndex)
     {
@@ -756,11 +756,11 @@ namespace FreeLibSet.Forms.Reporting
     {
       if (_RowArgs == null || rowIndex != _RowArgs.RowIndex)
       {
-        _RowArgs = _Info.ControlProvider.DoGetRowAttributes(rowIndex, EFPDataGridViewAttributesReason.Print);
+        _RowArgs = _Info.ControlProvider.GetRowInfo(rowIndex, EFPDataViewInfoReason.Print);
         _CellArgs = null;
       }
       if (columnIndex >= 0 && (_CellArgs == null || columnIndex != _CellArgs.ColumnIndex))
-        _CellArgs = _Info.ControlProvider.DoGetCellAttributes(columnIndex);
+        _CellArgs = _Info.ControlProvider.GetCellInfo(columnIndex);
     }
 
     #endregion
@@ -791,7 +791,7 @@ namespace FreeLibSet.Forms.Reporting
 
       object v = _CellArgs.Value;
       if (v is Boolean)
-        v = _Info.ViewData.GetBoolValue((bool)v);
+        v = _Info.ViewData.GetBooleanValue((bool)v);
       return v;
     }
 
@@ -828,25 +828,25 @@ namespace FreeLibSet.Forms.Reporting
 
         if (_Info.ViewData.ColorStyle != BRDataViewColorStyle.NoColors)
         {
-          EFPDataGridViewExcelCellAttributes excelAttrs = EFPDataGridView.GetExcelCellAttr(_CellArgs);
+          EFPDataViewExcelCellStyle excelStyle = new EFPDataViewExcelCellStyle(_CellArgs.ColorType, _CellArgs.Grayed);
           if (_Info.ViewData.ColorStyle == BRDataViewColorStyle.Gray)
           {
-            if (!excelAttrs.BackColor.IsEmpty)
+            if (!excelStyle.BackColor.IsEmpty)
             {
-              int v3 = (excelAttrs.BackColor.R + excelAttrs.BackColor.G + excelAttrs.BackColor.B) / 3;
+              int v3 = (excelStyle.BackColor.R + excelStyle.BackColor.G + excelStyle.BackColor.B) / 3;
               style.BackColor = new BRColor(v3, v3, v3);
             }
           }
           else
           {
-            style.ForeColor = FromColor(excelAttrs.ForeColor);
-            style.BackColor = FromColor(excelAttrs.BackColor);
+            style.ForeColor = FromColor(excelStyle.ForeColor);
+            style.BackColor = FromColor(excelStyle.BackColor);
           }
           if (!(_CellArgs.Value is bool)) // CheckBox курсивом - это что-то
           {
-            style.Bold = excelAttrs.Bold;
-            style.Italic = excelAttrs.Italic;
-            style.Underline = excelAttrs.Underline;
+            style.Bold = excelStyle.Bold;
+            style.Italic = excelStyle.Italic;
+            style.Underline = excelStyle.Underline;
           }
         }
 

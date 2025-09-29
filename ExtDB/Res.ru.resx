@@ -291,17 +291,8 @@
   <data name="DBxNameValidator_Err_TableWrite" xml:space="preserve">
     <value>Нет разрешения на запись в таблицу '{0}'</value>
   </data>
-  <data name="DBxNoIdArgumentException_Err_Message" xml:space="preserve">
-    <value>Не задан идентификатор</value>
-  </data>
-  <data name="DBxPrimaryKeyException_Err_Message" xml:space="preserve">
-    <value>Неправильный первичный ключ</value>
-  </data>
   <data name="DBxRecordNotFoundException_Err_Message" xml:space="preserve">
     <value>Не найдена запись в таблице '{0}' с идентификатором {1}</value>
-  </data>
-  <data name="DBxStructException_Err_Message" xml:space="preserve">
-    <value>Ошибка в описании структуры таблицы '{0}'. {1}</value>
   </data>
   <data name="DBxAccessException_Err_Message" xml:space="preserve">
     <value>У Вас нет прав для выполнения действия</value>

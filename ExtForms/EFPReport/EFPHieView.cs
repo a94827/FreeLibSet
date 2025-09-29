@@ -35,7 +35,7 @@ namespace FreeLibSet.Forms
     {
       FHideExtraSumRows = false;
       FTotalSumRowCount = 1;
-      FSumColumnNames = DataTools.EmptyStrings;
+      FSumColumnNames = EmptyArray<string>.Value;
     }
 
 #endregion
@@ -108,7 +108,7 @@ namespace FreeLibSet.Forms
       {
         CheckNotReadOnly();
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Value;
 
         FSumColumnNames = value;
       }
@@ -592,26 +592,26 @@ namespace FreeLibSet.Forms
       // Используем таблицу, а не DataView, т.к порядок строк меняемся
       foreach (DataRow Row in FDataView.Table.Rows)
       {
-        //if (DataTools.GetInt(Row, "Hie_Level")==0)
+        //if (DataTools.GetInt32(Row, "Hie_Level")==0)
         //  continue;
-        if (!DataTools.GetBool(Row, "Hie_Sum"))
+        if (!DataTools.GetBoolean(Row, "Hie_Sum"))
           continue;
         //for (int i = 0; i < Levels.Length; i++)
         //{
         //  if (Levels[i].SubTotalRowFirst)
         //  {
         //    string ColName = "Hie_Order" + (Levels.Length - i - 1).ToString();
-        //    if (DataTools.GetInt(Row[ColName]) == int.MaxValue)
+        //    if (DataTools.GetInt32(Row[ColName]) == int.MaxValue)
         //      Row[ColName.ToString()] = -2;
         //  }
         //}
-        int Level = DataTools.GetInt(Row, "Hie_Level");
+        int Level = DataTools.GetInt32(Row, "Hie_Level");
         if (Level < 1 || Level >= Levels.Length)
           continue;
         if (Levels[Level].SubTotalRowFirst)
         {
           string ColName = "Hie_Order" + (Level - 1).ToString();
-          int CurrOrder = DataTools.GetInt(Row[ColName]);
+          int CurrOrder = DataTools.GetInt32(Row[ColName]);
           if (CurrOrder == int.MaxValue)
             Row[ColName] = -2;
         }
@@ -628,7 +628,7 @@ namespace FreeLibSet.Forms
     {
       for (int i = Table.Rows.Count - 1; i >= 0; i--)
       {
-        if (DataTools.GetBool(Table.Rows[i], "Hie_Hidden"))
+        if (DataTools.GetBoolean(Table.Rows[i], "Hie_Hidden"))
           Table.Rows[i].Delete();
       }
       Table.AcceptChanges();
@@ -710,7 +710,7 @@ namespace FreeLibSet.Forms
       CheckRow(Row);
 #endif
 
-      int Level = DataTools.GetInt(Row, "Hie_Level");
+      int Level = DataTools.GetInt32(Row, "Hie_Level");
       if (Level >= Levels.Length)
         return String.Empty;
       return Levels[Level].Name;
@@ -731,7 +731,7 @@ namespace FreeLibSet.Forms
       CheckRow(Row);
 #endif
 
-      int Level = DataTools.GetInt(Row, "Hie_Level");
+      int Level = DataTools.GetInt32(Row, "Hie_Level");
       if (Level >= Levels.Length)
         return -1;
       return Level;
@@ -752,9 +752,9 @@ namespace FreeLibSet.Forms
 #endif
 
 
-      int Level = DataTools.GetInt(Row, "Hie_Level");
+      int Level = DataTools.GetInt32(Row, "Hie_Level");
       if (Level > 0)
-        return DataTools.GetBool(Row, "Hie_Sum");
+        return DataTools.GetBoolean(Row, "Hie_Sum");
       else
         return false;
     }
@@ -773,9 +773,9 @@ namespace FreeLibSet.Forms
       CheckRow(Row);
 #endif
 
-      int Level = DataTools.GetInt(Row, "Hie_Level");
+      int Level = DataTools.GetInt32(Row, "Hie_Level");
       if (Level > 0)
-        return !DataTools.GetBool(Row, "Hie_Sum");
+        return !DataTools.GetBoolean(Row, "Hie_Sum");
       else
         return false;
     }
@@ -814,7 +814,7 @@ namespace FreeLibSet.Forms
       }
       if (Level < 0)
         return false; // Уровень иерархии не найден
-      int ThisLevel = DataTools.GetInt(Row, "Hie_Level");
+      int ThisLevel = DataTools.GetInt32(Row, "Hie_Level");
       if (ThisLevel > Level)
         return false;
       if (ColumnName.IndexOf(',') >= 0)
@@ -839,11 +839,11 @@ namespace FreeLibSet.Forms
       return DataTools.GetString(Value);
     }
 
-    public bool GetLevelAsBool(DataRow Row, string FieldName)
+    public bool GetLevelAsBoolean(DataRow Row, string FieldName)
     {
       object Value;
       GetLevelValue(Row, FieldName, out Value);
-      return DataTools.GetBool(Value);
+      return DataTools.GetBoolean(Value);
     }
 
     public DateTime?GetLevelAsNullableDateTime(DataRow Row, string FieldName)
@@ -853,11 +853,11 @@ namespace FreeLibSet.Forms
       return DataTools.GetNullableDateTime(Value);
     }
 
-    public int GetLevelAsInt(DataRow Row, string FieldName)
+    public int GetLevelAsInt32(DataRow Row, string FieldName)
     {
       object Value;
       GetLevelValue(Row, FieldName, out Value);
-      return DataTools.GetInt(Value);
+      return DataTools.GetInt32(Value);
     }
 
     public float GetLevelAsSingle(DataRow Row, string FieldName)
@@ -898,7 +898,7 @@ namespace FreeLibSet.Forms
 #endif
 
       object[] Keys = new object[Levels.Length];
-      //int RowLevel=DataTools.GetInt(Row, "Hie_Level");
+      //int RowLevel=DataTools.GetInt32(Row, "Hie_Level");
       for (int i = 0; i < Levels.Length; i++)
       {
         object k;
@@ -953,7 +953,7 @@ namespace FreeLibSet.Forms
 #endif
 
       object[] Keys = new object[Levels.Length];
-      int Level = DataTools.GetInt(Row, "Hie_Level");
+      int Level = DataTools.GetInt32(Row, "Hie_Level");
       for (int i = 0; i < Levels.Length; i++)
       {
         object k;
@@ -989,7 +989,7 @@ namespace FreeLibSet.Forms
             bool Found = true;
             for (int j = 0; j < Level; j++)
             {
-              int ord = DataTools.GetInt(Row2, "Hie_Order" + j.ToString());
+              int ord = DataTools.GetInt32(Row2, "Hie_Order" + j.ToString());
               if (ord <= 0 || ord == int.MaxValue)
               {
                 Found = false;

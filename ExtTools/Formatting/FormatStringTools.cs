@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Globalization;
+using FreeLibSet.UICore;
 
 namespace FreeLibSet.Formatting
 {
@@ -769,6 +770,18 @@ namespace FreeLibSet.Formatting
       _MaskProvider = new StdMaskProvider(_EditMask, cultureInfo);
 
       #endregion
+
+      #region ColumnFormat
+
+      _ColunmFormat = new UITextColumnFormat();
+      _ColunmFormat.DataType = typeof(DateTime);
+      _ColunmFormat.TextAlign = UIHorizontalAlignment.Center;
+      _ColunmFormat.MinTextWidth = _ColunmFormat.TextWidth = TextWidth;
+      _ColunmFormat.SizeGroup = kind.ToString();
+      _ColunmFormat.Format = Format;
+      _ColunmFormat.SetReadOnly();
+
+      #endregion
     }
 
     /// <summary>
@@ -919,6 +932,12 @@ namespace FreeLibSet.Formatting
         }
       }
     }
+
+    /// <summary>
+    /// Формат столбца табличного просмотра
+    /// </summary>
+    public UITextColumnFormat ColunmFormat { get { return _ColunmFormat; } }
+    private readonly UITextColumnFormat _ColunmFormat;
 
     #endregion
 

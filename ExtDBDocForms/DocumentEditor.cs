@@ -39,7 +39,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docTypeName">Имя типа документа</param>
     /// <param name="state">Режим редактирования</param>
     /// <param name="docIds">Список идентификаторов документов для редактирования, просмотра, удаления или копирования</param>
-    public DocumentEditor(DBUI ui, string docTypeName, UIDataState state, Int32[] docIds)
+    public DocumentEditor(DBUI ui, string docTypeName, UIDataState state, IIdSet<Int32> docIds)
     {
 #if DEBUG
       if (ui == null)
@@ -101,7 +101,7 @@ namespace FreeLibSet.Forms.Docs
               // В большинстве случаев, при этой ошибке документы находятся в режиме View,
               // но теоретически может быть, что часть документов перешло в режим Edit, а часть - нет.
               // Или, документы вообще не загрузились
-              if (mDocs.DocCount != docIds.Length || mDocs.DocState != DBxDocState.View)
+              if (mDocs.DocCount != docIds.Count || mDocs.DocState != DBxDocState.View)
               {
                 mDocs.ClearList();
                 mDocs.View(docIds);
@@ -1811,7 +1811,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docTypeName">Имя вида документов</param>
     /// <param name="docIds">Массив идентификаторов</param>
     /// <returns>Найденный редактор или null, если редактор еще не открыт.</returns>
-    public static DocumentEditor FindEditor(DBUI ui, string docTypeName, Int32[] docIds)
+    public static DocumentEditor FindEditor(DBUI ui, string docTypeName, IIdSet<Int32> docIds)
     {
 #if DEBUG
       if (ui == null)

@@ -63,7 +63,7 @@ namespace ExtTools_tests.Collections
     {
       Assert.AreEqual(0, sut.Count, "Count");
       //Assert.IsFalse(sut.DisposeOnDestuction, "DisposeOnDestruction");
-      CollectionAssert.AreEqual(DataTools.EmptyInts, sut.Keys, "Keys");
+      CollectionAssert.AreEqual(EmptyArray<Int32>.Empty, sut.Keys, "Keys");
       CollectionAssert.AreEqual(EmptyTestValues, sut.Values, "Values");
       Assert.IsFalse(sut.IsReadOnly, "IsReadOnly");
       Assert.DoesNotThrow(delegate () { sut.CheckNotDisposed(); }, "CheckNotDisposed");
@@ -283,7 +283,7 @@ namespace ExtTools_tests.Collections
       sut.Clear();
 
       Assert.AreEqual(0, sut.Count, "Count");
-      CollectionAssert.AreEqual(DataTools.EmptyInts, sut.Keys, "Keys");
+      CollectionAssert.AreEqual(EmptyArray<Int32>.Empty, sut.Keys, "Keys");
       CollectionAssert.AreEquivalent(EmptyTestValues, sut.Values, "Values");
 
       Assert.IsTrue(v1.IsDisposed, "Disposed() #1");

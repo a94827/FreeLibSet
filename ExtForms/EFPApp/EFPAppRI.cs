@@ -738,8 +738,8 @@ namespace FreeLibSet.Forms.RI
         return new TextBoxItem((FreeLibSet.RI.TextBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.MaskedTextBox)
         return new MaskedTextBoxItem((FreeLibSet.RI.MaskedTextBox)riItem, baseProvider);
-      if (riItem is FreeLibSet.RI.IntEditBox)
-        return new IntEditBoxItem((FreeLibSet.RI.IntEditBox)riItem, baseProvider);
+      if (riItem is FreeLibSet.RI.Int32EditBox)
+        return new IntEditBoxItem((FreeLibSet.RI.Int32EditBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.SingleEditBox)
         return new SingleEditBoxItem((FreeLibSet.RI.SingleEditBox)riItem, baseProvider);
       if (riItem is FreeLibSet.RI.DoubleEditBox)
@@ -977,14 +977,14 @@ namespace FreeLibSet.Forms.RI
     {
       #region Конструктор
 
-      public IntEditBoxItem(FreeLibSet.RI.IntEditBox riItem, EFPBaseProvider baseProvider)
-        : base(baseProvider, new FreeLibSet.Controls.IntEditBox())
+      public IntEditBoxItem(FreeLibSet.RI.Int32EditBox riItem, EFPBaseProvider baseProvider)
+        : base(baseProvider, new FreeLibSet.Controls.Int32EditBox())
       {
         _RIItem = riItem;
         InitEFPNumEditBox<Int32>(this, riItem);
       }
 
-      private readonly FreeLibSet.RI.IntEditBox _RIItem;
+      private readonly FreeLibSet.RI.Int32EditBox _RIItem;
 
       #endregion
 
@@ -1347,46 +1347,46 @@ namespace FreeLibSet.Forms.RI
         _RIItem = riItem;
         base.First.CanBeEmptyMode = riItem.CanBeEmptyMode;
         base.Last.CanBeEmptyMode = riItem.CanBeEmptyMode;
-        base.First.Minimum = riItem.MinimumFirstDate;
-        base.First.Maximum = riItem.MaximumFirstDate;
-        base.Last.Minimum = riItem.MinimumLastDate;
-        base.Last.Maximum = riItem.MaximumLastDate;
+        base.First.Minimum = riItem.MinimumFirstValue;
+        base.First.Maximum = riItem.MaximumFirstValue;
+        base.Last.Minimum = riItem.MinimumLastValue;
+        base.Last.Maximum = riItem.MaximumLastValue;
         EFPAppRITools.InitControlItem(this, riItem);
 
-        base.First.NValue = riItem.NFirstDate; // обязательное присвоение, иначе свойство обнулится
-        base.Last.NValue = riItem.NLastDate; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.InternalNFirstDateExConnected)
+        base.First.NValue = riItem.NFirstValue; // обязательное присвоение, иначе свойство обнулится
+        base.Last.NValue = riItem.NLastValue; // обязательное присвоение, иначе свойство обнулится
+        if (riItem.InternalNFirstValueExConnected)
         {
-          if (riItem.NFirstDateEx.HasSource)
+          if (riItem.NFirstValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.First.NValueEx = riItem.NFirstDateEx;
+            base.First.NValueEx = riItem.NFirstValueEx;
           else
-            riItem.NFirstDateEx = base.First.NValueEx;
+            riItem.NFirstValueEx = base.First.NValueEx;
         }
-        if (riItem.InternalFirstDateExConnected)
+        if (riItem.InternalFirstValueExConnected)
         {
-          if (riItem.FirstDateEx.HasSource)
+          if (riItem.FirstValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.First.ValueEx = riItem.FirstDateEx;
+            base.First.ValueEx = riItem.FirstValueEx;
           else
-            riItem.FirstDateEx = base.First.ValueEx;
+            riItem.FirstValueEx = base.First.ValueEx;
         }
 
-        if (riItem.InternalNLastDateExConnected)
+        if (riItem.InternalNLastValueExConnected)
         {
-          if (riItem.NLastDateEx.HasSource)
+          if (riItem.NLastValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.Last.NValueEx = riItem.NLastDateEx;
+            base.Last.NValueEx = riItem.NLastValueEx;
           else
-            riItem.NLastDateEx = base.Last.NValueEx;
+            riItem.NLastValueEx = base.Last.NValueEx;
         }
-        if (riItem.InternalLastDateExConnected)
+        if (riItem.InternalLastValueExConnected)
         {
-          if (riItem.LastDateEx.HasSource)
+          if (riItem.LastValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.Last.ValueEx = riItem.LastDateEx;
+            base.Last.ValueEx = riItem.LastValueEx;
           else
-            riItem.LastDateEx = base.Last.ValueEx;
+            riItem.LastValueEx = base.Last.ValueEx;
         }
       }
 
@@ -1398,15 +1398,15 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        base.First.NValue = _RIItem.NFirstDate;
-        base.Last.NValue = _RIItem.NLastDate;
+        base.First.NValue = _RIItem.NFirstValue;
+        base.Last.NValue = _RIItem.NLastValue;
         base.Validate();
       }
 
       public void ReadValues()
       {
-        _RIItem.NFirstDate = base.First.NValue;
-        _RIItem.NLastDate = base.Last.NValue;
+        _RIItem.NFirstValue = base.First.NValue;
+        _RIItem.NLastValue = base.Last.NValue;
       }
 
       #endregion
@@ -1431,37 +1431,37 @@ namespace FreeLibSet.Forms.RI
         EFPAppRITools.InitControlItem(this, riItem);
 
         base.DateRange = riItem.DateRange; // обязательное присвоение, иначе свойство обнулится
-        if (riItem.InternalFirstDateExConnected)
+        if (riItem.InternalFirstValueExConnected)
         {
-          if (riItem.FirstDateEx.HasSource)
+          if (riItem.FirstValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.FirstDateEx = riItem.FirstDateEx;
+            base.FirstValueEx = riItem.FirstValueEx;
           else
-            riItem.FirstDateEx = base.FirstDateEx;
+            riItem.FirstValueEx = base.FirstValueEx;
         }
-        if (riItem.InternalLastDateExConnected)
+        if (riItem.InternalLastValueExConnected)
         {
-          if (riItem.LastDateEx.HasSource)
+          if (riItem.LastValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.LastDateEx = riItem.LastDateEx;
+            base.LastValueEx = riItem.LastValueEx;
           else
-            riItem.LastDateEx = base.LastDateEx;
+            riItem.LastValueEx = base.LastValueEx;
         }
-        if (riItem.InternalNFirstDateExConnected)
+        if (riItem.InternalNFirstValueExConnected)
         {
-          if (riItem.NFirstDateEx.HasSource)
+          if (riItem.NFirstValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.NFirstDateEx = riItem.NFirstDateEx;
+            base.NFirstValueEx = riItem.NFirstValueEx;
           else
-            riItem.NFirstDateEx = base.NFirstDateEx;
+            riItem.NFirstValueEx = base.NFirstValueEx;
         }
-        if (riItem.InternalNLastDateExConnected)
+        if (riItem.InternalNLastValueExConnected)
         {
-          if (riItem.NLastDateEx.HasSource)
+          if (riItem.NLastValueEx.HasSource)
             // Анализируем свойство "Source", а присвоение выполняем для самого свойства, т.к. там есть дополнительная обработка
-            base.NLastDateEx = riItem.NLastDateEx;
+            base.NLastValueEx = riItem.NLastValueEx;
           else
-            riItem.NLastDateEx = base.NLastDateEx;
+            riItem.NLastValueEx = base.NLastValueEx;
         }
       }
 
@@ -2188,8 +2188,8 @@ namespace FreeLibSet.Forms.RI
         return new TextInputDialogItem((FreeLibSet.RI.TextInputDialog)riItem);
       if (riItem is FreeLibSet.RI.TextComboInputDialog)
         return new TextComboInputDialogItem((FreeLibSet.RI.TextComboInputDialog)riItem);
-      if (riItem is FreeLibSet.RI.IntInputDialog)
-        return new IntInputDialogItem((FreeLibSet.RI.IntInputDialog)riItem);
+      if (riItem is FreeLibSet.RI.Int32InputDialog)
+        return new IntInputDialogItem((FreeLibSet.RI.Int32InputDialog)riItem);
       if (riItem is FreeLibSet.RI.SingleInputDialog)
         return new SingleInputDialogItem((FreeLibSet.RI.SingleInputDialog)riItem);
       if (riItem is FreeLibSet.RI.DoubleInputDialog)
@@ -2205,8 +2205,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Диапазон значений
 
-      if (riItem is FreeLibSet.RI.IntRangeDialog)
-        return new IntRangeDialogItem((FreeLibSet.RI.IntRangeDialog)riItem);
+      if (riItem is FreeLibSet.RI.Int32RangeDialog)
+        return new IntRangeDialogItem((FreeLibSet.RI.Int32RangeDialog)riItem);
       if (riItem is FreeLibSet.RI.SingleRangeDialog)
         return new SingleRangeDialogItem((FreeLibSet.RI.SingleRangeDialog)riItem);
       if (riItem is FreeLibSet.RI.DoubleRangeDialog)
@@ -2495,10 +2495,10 @@ namespace FreeLibSet.Forms.RI
     {
       #region Конструктор
 
-      public IntInputDialogItem(FreeLibSet.RI.IntInputDialog riDialog)
+      public IntInputDialogItem(FreeLibSet.RI.Int32InputDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new FreeLibSet.Forms.IntInputDialog();
+        _WinDlg = new FreeLibSet.Forms.Int32InputDialog();
         InitNumInputDialog<Int32>(_WinDlg, riDialog);
       }
 
@@ -2506,8 +2506,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private readonly FreeLibSet.RI.IntInputDialog _RIDialog;
-      private readonly FreeLibSet.Forms.IntInputDialog _WinDlg;
+      private readonly FreeLibSet.RI.Int32InputDialog _RIDialog;
+      private readonly FreeLibSet.Forms.Int32InputDialog _WinDlg;
 
       #endregion
 
@@ -2787,10 +2787,10 @@ namespace FreeLibSet.Forms.RI
     {
       #region Конструктор
 
-      public IntRangeDialogItem(FreeLibSet.RI.IntRangeDialog riDialog)
+      public IntRangeDialogItem(FreeLibSet.RI.Int32RangeDialog riDialog)
       {
         _RIDialog = riDialog;
-        _WinDlg = new FreeLibSet.Forms.IntRangeDialog();
+        _WinDlg = new FreeLibSet.Forms.Int32RangeDialog();
         _WinDlg.Title = riDialog.Title;
         _WinDlg.Prompt = riDialog.Prompt;
         _WinDlg.CanBeEmpty = riDialog.CanBeEmpty;
@@ -2804,8 +2804,8 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private readonly FreeLibSet.RI.IntRangeDialog _RIDialog;
-      private readonly FreeLibSet.Forms.IntRangeDialog _WinDlg;
+      private readonly FreeLibSet.RI.Int32RangeDialog _RIDialog;
+      private readonly FreeLibSet.Forms.Int32RangeDialog _WinDlg;
 
       #endregion
 
@@ -3017,16 +3017,16 @@ namespace FreeLibSet.Forms.RI
         _WinDlg.Minimum = riDialog.Minimum;
         _WinDlg.Maximum = riDialog.Maximum;
 
-        _WinDlg.NFirstDate = riDialog.NFirstDate; // обязательное присвоение, иначе свойство обнулится
-        if (riDialog.InternalNFirstDateExConnected)
-          riDialog.NFirstDateEx = _WinDlg.NFirstDateEx;
-        if (riDialog.InternalFirstDateExConnected)
-          riDialog.FirstDateEx = _WinDlg.FirstDateEx;
-        _WinDlg.NLastDate = riDialog.NLastDate; // обязательное присвоение, иначе свойство обнулится
-        if (riDialog.InternalNLastDateExConnected)
-          riDialog.NLastDateEx = _WinDlg.NLastDateEx;
-        if (riDialog.InternalLastDateExConnected)
-          riDialog.LastDateEx = _WinDlg.LastDateEx;
+        _WinDlg.NFirstValue = riDialog.NFirstValue; // обязательное присвоение, иначе свойство обнулится
+        if (riDialog.InternalNFirstValueExConnected)
+          riDialog.NFirstValueEx = _WinDlg.NFirstValueEx;
+        if (riDialog.InternalFirstValueExConnected)
+          riDialog.FirstValueEx = _WinDlg.FirstValueEx;
+        _WinDlg.NLastValue = riDialog.NLastValue; // обязательное присвоение, иначе свойство обнулится
+        if (riDialog.InternalNLastValueExConnected)
+          riDialog.NLastValueEx = _WinDlg.NLastValueEx;
+        if (riDialog.InternalLastValueExConnected)
+          riDialog.LastValueEx = _WinDlg.LastValueEx;
 
         if (riDialog.HasValidators)
           _WinDlg.Validators.AddRange(riDialog.Validators);
@@ -3045,14 +3045,14 @@ namespace FreeLibSet.Forms.RI
 
       public void WriteValues()
       {
-        _WinDlg.NFirstDate = _RIDialog.NFirstDate;
-        _WinDlg.NLastDate = _RIDialog.NLastDate;
+        _WinDlg.NFirstValue = _RIDialog.NFirstValue;
+        _WinDlg.NLastValue = _RIDialog.NLastValue;
       }
 
       public void ReadValues()
       {
-        _RIDialog.NFirstDate = _WinDlg.NFirstDate;
-        _RIDialog.NLastDate = _WinDlg.NLastDate;
+        _RIDialog.NFirstValue = _WinDlg.NFirstValue;
+        _RIDialog.NLastValue = _WinDlg.NLastValue;
       }
 
       public DialogResult ShowDialog()

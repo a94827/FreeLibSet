@@ -333,7 +333,7 @@ namespace FreeLibSet.Reporting
 
         // Если в тексте есть два или более пробела подряд, тогда также нужен дополнительный тег <text:s>
 
-        string[] a = s.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+        string[] a = s.Split(StringTools.NewLineSeparators, StringSplitOptions.None);
         for (int i = 0; i < a.Length; i++)
         {
           if (i > 0)
@@ -796,8 +796,8 @@ namespace FreeLibSet.Reporting
                   elTextOwner = elA;
                 }
                 string s = sel.AsString;
-                s = DataTools.ReplaceAny(s, BRFileTools.BadValueChars, ' ');
-                s = s.Replace(DataTools.SoftHyphenStr, String.Empty); // не работают в Calc
+                s = StringTools.ReplaceAny(s, BRFileTools.BadValueChars, ' ');
+                s = s.Replace(StringTools.SoftHyphenStr, String.Empty); // не работают в Calc
                 WriteTextValue(elTextOwner, s);
 
                 #endregion
@@ -819,7 +819,7 @@ namespace FreeLibSet.Reporting
                     SetAttr(elCell, "office:value-type", "date", nmspcOffice);
                     SetAttr(elCell, "office:date-value", dt.ToString("s"), nmspcOffice);
                   }
-                  else if (DataTools.IsIntegerType(cellValue.GetType()) || DataTools.IsFloatType(cellValue.GetType()))
+                  else if (MathTools.IsNumericType(cellValue.GetType()))
                   {
                     SetAttr(elCell, "office:value-type", "float", nmspcOffice);
                     SetAttr(elCell, "office:value", Convert.ToString(cellValue, StdConvert.NumberFormat), nmspcOffice);

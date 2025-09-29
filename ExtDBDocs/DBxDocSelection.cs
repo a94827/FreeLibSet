@@ -55,7 +55,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="dbIdentity">Идентификатор базы данных (см. описание свойства)</param>
     /// <param name="tableName">Имя таблицы документа DBxDocType.Name</param>
     /// <param name="ids">Идентификаторы документов</param>
-    public DBxDocSelection(string dbIdentity, string tableName, Int32[] ids)
+    public DBxDocSelection(string dbIdentity, string tableName, IEnumerable<Int32> ids)
       : this(dbIdentity)
     {
       Add(tableName, ids);
@@ -121,20 +121,19 @@ namespace FreeLibSet.Data.Docs
 
     /// <summary>
     /// Получить массив идентификаторов заданной таблицы, входящих в выборку.
-    /// Если нет идентификаторов для таблицы <paramref name="tableName"/>, то возвращается пустой
-    /// массив.
+    /// Если нет идентификаторов для таблицы <paramref name="tableName"/>, то возвращается пустой массив.
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Массив идентификаторов</returns>
-    public Int32[] this[string tableName]
+    public IIdSet<Int32> this[string tableName]
     {
       get
       {
         int p = _Data.Tables.IndexOf(tableName);
         if (p < 0)
-          return DataTools.EmptyIds;
+          return IdList<Int32>.Empty;
         else
-          return DataTools.GetIds(_Data.Tables[p]);
+          return IdTools.GetIds<Int32>(_Data.Tables[p]);
       }
     }
 
@@ -220,9 +219,9 @@ namespace FreeLibSet.Data.Docs
     {
       if (id == 0)
         return 0;
-      DataTable table = ReadyTable(tableName, true);
+      DataTable resTable = ReadyTable(tableName, true);
       DataRow dummyRow;
-      return DataTools.FindOrAddPrimaryKeyRow(table, id, out dummyRow) ? 1 : 0;
+      return DataTools.FindOrAddPrimaryKeyRow(resTable, id, out dummyRow) ? 1 : 0;
     }
 
     /// <summary>
@@ -231,43 +230,19 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы документов</param>
     /// <param name="ids">Идентификаторы документов для добавления</param>
     /// <returns>Количество добавленных документов</returns>
-    public int Add(string tableName, Int32[] ids)
+    public int Add(string tableName, IEnumerable<Int32> ids)
     {
       if (ids == null)
         return 0;
-      if (ids.Length == 0)
-        return 0;
-      DataTable table = ReadyTable(tableName, true);
-      int cnt = 0;
-      for (int i = 0; i < ids.Length; i++)
-      {
-        if (ids[i] == 0)
-          continue;
-        DataRow dummyRow;
-        if (DataTools.FindOrAddPrimaryKeyRow(table, ids[i], out dummyRow))
-          cnt++;
-      }
-      return cnt;
-    }
-
-    /// <summary>
-    /// Добавить несколько документов в выборку
-    /// </summary>
-    /// <param name="tableName">Имя таблицы документов</param>
-    /// <param name="ids">Идентификаторы документов для добавления</param>
-    /// <returns>Количество добавленных документов</returns>
-    public int Add(string tableName, IdList ids)
-    {
-      if (Object.ReferenceEquals(ids, null))
-        return 0;
-      if (ids.Count == 0)
-        return 0;
-      DataTable table = ReadyTable(tableName, true);
+      DataTable resTable = null;
       int cnt = 0;
       foreach (Int32 id in ids)
       {
+        if (id == 0)
+          continue;
+        resTable = ReadyTable(tableName, true);
         DataRow dummyRow;
-        if (DataTools.FindOrAddPrimaryKeyRow(table, id, out dummyRow))
+        if (DataTools.FindOrAddPrimaryKeyRow(resTable, id, out dummyRow))
           cnt++;
       }
       return cnt;
@@ -352,13 +327,13 @@ namespace FreeLibSet.Data.Docs
     {
       if (id == 0)
         return 0;
-      DataTable table = ReadyTable(tableName, false);
-      if (table == null)
+      DataTable resTable = ReadyTable(tableName, false);
+      if (resTable == null)
         return 0;
-      DataRow row = table.Rows.Find(id);
+      DataRow row = resTable.Rows.Find(id);
       if (row != null)
       {
-        table.Rows.Remove(row);
+        resTable.Rows.Remove(row);
         return 1;
       }
       else
@@ -371,53 +346,21 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы документов</param>
     /// <param name="ids">Идентификаторы удаляемых документов</param>
     /// <returns>Количество удаленных документов</returns>
-    public int Remove(string tableName, Int32[] ids)
+    public int Remove(string tableName, IEnumerable<Int32> ids)
     {
       if (ids == null)
         return 0;
-      if (ids.Length == 0)
-        return 0;
-      DataTable table = ReadyTable(tableName, false);
-      if (table == null)
-        return 0;
-
-      int cnt = 0;
-      for (int i = 0; i < ids.Length; i++)
-      {
-        DataRow row = table.Rows.Find(ids[i]);
-        if (row != null)
-        {
-          table.Rows.Remove(row);
-          cnt++;
-        }
-      }
-
-      return cnt;
-    }
-
-    /// <summary>
-    /// Удалить документы из выборки
-    /// </summary>
-    /// <param name="tableName">Имя таблицы документов</param>
-    /// <param name="ids">Идентификаторы удаляемых документов</param>
-    /// <returns>Количество удаленных документов</returns>
-    public int Remove(string tableName, IdList ids)
-    {
-      if (ids == null)
-        return 0;
-      if (ids.Count == 0)
-        return 0;
-      DataTable table = ReadyTable(tableName, false);
-      if (table == null)
+      DataTable resTable = ReadyTable(tableName, false);
+      if (resTable == null)
         return 0;
 
       int cnt = 0;
       foreach (Int32 id in ids)
       {
-        DataRow row = table.Rows.Find(id);
+        DataRow row = resTable.Rows.Find(id);
         if (row != null)
         {
-          table.Rows.Remove(row);
+          resTable.Rows.Remove(row);
           cnt++;
         }
       }
@@ -463,11 +406,11 @@ namespace FreeLibSet.Data.Docs
     /// <returns>Количество удаленных документов</returns>
     public int Remove(string tableName)
     {
-      DataTable table = ReadyTable(tableName, false);
-      if (table == null)
+      DataTable resTable = ReadyTable(tableName, false);
+      if (resTable == null)
         return 0;
-      int cnt = table.Rows.Count;
-      _Data.Tables.Remove(table);
+      int cnt = resTable.Rows.Count;
+      _Data.Tables.Remove(resTable);
       _TableNames = null;
       return cnt;
     }
@@ -598,7 +541,7 @@ namespace FreeLibSet.Data.Docs
         if (_Data.Tables[p].Rows.Count == 0)
           return 0;
         else
-          return DataTools.GetInt(_Data.Tables[p].Rows[0], "Id");
+          return DataTools.GetInt32(_Data.Tables[p].Rows[0], "Id");
       }
     }
 
@@ -624,39 +567,9 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы документов</param>
     /// <param name="ids">Идентификаторы документов для поиска</param>
     /// <returns>true, если документ найден</returns>
-    public bool ContainsAny(string tableName, Int32[] ids)
+    public bool ContainsAny(string tableName, IEnumerable<Int32> ids)
     {
       if (ids == null)
-        return false; // 19.01.2021
-      if (ids.Length == 0)
-        return false; // 19.01.2021
-
-      int p = _Data.Tables.IndexOf(tableName);
-      if (p < 0)
-        return false;
-      else
-      {
-        for (int i = 0; i < ids.Length; i++)
-        {
-          if (_Data.Tables[p].Rows.Find(ids[i]) != null)
-            return true;
-        }
-        return false;
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если в выборке есть хотя бы один документ из списка.
-    /// Если список идентификаторов пуст, возвращает false.
-    /// </summary>
-    /// <param name="tableName">Имя таблицы документов</param>
-    /// <param name="ids">Идентификаторы документов для поиска</param>
-    /// <returns>true, если документ найден</returns>
-    public bool ContainsAny(string tableName, IdList ids)
-    {
-      if (ids == null)
-        return false; // 19.01.2021
-      if (ids.Count == 0)
         return false; // 19.01.2021
 
       int p = _Data.Tables.IndexOf(tableName);
@@ -709,39 +622,9 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы документов</param>
     /// <param name="ids">Идентификаторы документов для поиска</param>
     /// <returns>true, если документы найдены</returns>
-    public bool ContainsAll(string tableName, Int32[] ids)
+    public bool ContainsAll(string tableName, IEnumerable<Int32> ids)
     {
       if (ids == null)
-        return true;
-      if (ids.Length == 0)
-        return true;
-
-      int p = _Data.Tables.IndexOf(tableName);
-      if (p < 0)
-        return false;
-      else
-      {
-        for (int i = 0; i < ids.Length; i++)
-        {
-          if (_Data.Tables[p].Rows.Find(ids[i]) == null)
-            return false;
-        }
-        return true;
-      }
-    }
-
-    /// <summary>
-    /// Возвращает true, если в выборке есть все документы из списка.
-    /// Если список идентификаторов пустой, возвращается true.
-    /// </summary>
-    /// <param name="tableName">Имя таблицы документов</param>
-    /// <param name="ids">Идентификаторы документов для поиска</param>
-    /// <returns>true, если документы найдены</returns>
-    public bool ContainsAll(string tableName, IdList ids)
-    {
-      if (ids == null)
-        return true;
-      if (ids.Count == 0)
         return true;
 
       int p = _Data.Tables.IndexOf(tableName);
@@ -829,11 +712,11 @@ namespace FreeLibSet.Data.Docs
         part2.Clear();
         for (int i = 0; i < TableNames.Length; i++)
         {
-          Int32[] ids = this[TableNames[i]];
-          if (ids.Length == 0)
+          IIdSet<Int32> ids = this[TableNames[i]];
+          if (ids.Count == 0)
             continue;
           CfgPart part3 = part2.GetChild(TableNames[i], true);
-          string s = StdConvert.ToString(ids);
+          string s = StdConvert.ToString(ids.ToArray());
           part3.SetString("Ids", s);
         }
       }
@@ -988,7 +871,7 @@ namespace FreeLibSet.Data.Docs
       {
         DBxDocType docType = textHandlers.DocTypes[_Data.Tables[0].TableName];
         string sDTN = docType.SingularTitle;
-        Int32 docId = this[docType.Name][0];
+        Int32 docId = this[docType.Name].SingleId;
         return sDTN + " " + textHandlers.GetTextValue(docType.Name, docId);
       }
 

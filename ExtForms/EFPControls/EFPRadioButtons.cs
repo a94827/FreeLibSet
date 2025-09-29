@@ -27,7 +27,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер</param>
     /// <param name="controls">Массив кнопок. Не может быть пустым или содержать значения null</param>
-    public EFPRadioButtons(EFPBaseProvider baseProvider, RadioButton[] controls)
+    public EFPRadioButtons(EFPBaseProvider baseProvider, params RadioButton[] controls)
       : base(baseProvider, controls[0], true)
     {
       _Controls = controls;

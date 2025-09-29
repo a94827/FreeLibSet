@@ -284,7 +284,7 @@ namespace FreeLibSet.Data.Docs
         {
           using (DBxCon Con = new DBxCon(mainDBEntry))
           {
-            lastId = DataTools.GetInt(Con.GetMaxValue(tableName, "Id", null));
+            lastId = DataTools.GetInt32(Con.GetMaxValue(tableName, "Id", null));
           }
           _LastUsedTableIds.Add(tableName, lastId);
         }
@@ -465,7 +465,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     /// <param name="tableName">Имя таблицы базы данных</param>
     /// <param name="ids">Список идентификаторов</param>
-    public void ClearCache(string tableName, IdList ids)
+    public void ClearCache(string tableName, IdCollection<Int32> ids)
     {
       DBCache.Clear(tableName, ids);
       ClearCacheBuffer.Holder.Add(tableName);
@@ -483,7 +483,7 @@ namespace FreeLibSet.Data.Docs
         if (table.Rows.Count == 0)
           continue;
 
-        IdList ids = new IdList();
+        IdCollection<Int32> ids = new IdCollection<Int32>();
         foreach (DataRow row in table.Rows)
         {
           switch (row.RowState)
@@ -602,7 +602,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-    void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
+    void IDBxCacheSource.ClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstIds)
     {
       // Ничего не делаем
     }

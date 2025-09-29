@@ -1,0 +1,308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1251">
+	<TITLE>Изменения в модуле ExtTools.dll</TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGED" CONTENT="20250929;185641775000000">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="changed" CONTENT="2025-09-17T10:27:06.449000000">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<META NAME="created" CONTENT="00:00:00">
+	<STYLE TYPE="text/css">
+	<!--
+		P { margin-bottom: 0.25cm; background: transparent; color: #000000 }
+		TD P { margin-bottom: 0.25cm; background: transparent; color: #000000; widows: 0; orphans: 0 }
+		H1 { margin-bottom: 0.21cm; background: transparent; color: #000000 }
+		H1.western { font-family: "Liberation Serif", serif }
+		H1.cjk { font-family: "NSimSun"; font-size: 24pt }
+		H1.ctl { font-family: "Mangal"; font-size: 24pt }
+		A:link { color: #0000ff; so-language: zxx }
+		A:visited { color: #800080 }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="ru-RU" TEXT="#000000" LINK="#0000ff" VLINK="#800080" DIR="LTR">
+<H1 CLASS="western">История изменений <BR>Модуль <SPAN LANG="en-US">Ext</SPAN>Tools.<SPAN LANG="en-US">dll</SPAN>
+(Функции общего назначения)</H1>
+<P>Модуль входит в комплект библиотек <SPAN LANG="en-US">FreeLibSet</SPAN>,
+и является свободным программным обеспечением (Free Software)</P>
+<H1 CLASS="western">Версия <SPAN LANG="en-US">4</SPAN>.<SPAN LANG="en-US">0</SPAN></H1>
+<P>Полный номер версии файла, который можно узнать, посмотрев
+свойства файла или в меню &laquo;О программе&raquo;, состоит из
+четырех чисел и имеет вид &laquo;<SPAN LANG="en-US">4</SPAN>.<SPAN LANG="en-US">0</SPAN>.0.<SPAN LANG="en-US">X</SPAN>&raquo;.
+В таблице указано только последнее число &laquo;<SPAN LANG="en-US">X</SPAN>&raquo;</P>
+<TABLE WIDTH=100% CELLPADDING=2 CELLSPACING=0>
+	<COL WIDTH=25*>
+	<COL WIDTH=35*>
+	<COL WIDTH=196*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border: 1.00pt solid #000000; padding: 0.05cm">
+			<P ALIGN=CENTER>Версия</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P ALIGN=CENTER>Дата</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P ALIGN=CENTER>Что сделано</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>366</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>11.06.2025-2<SPAN LANG="ru-RU">9</SPAN>.09.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">1. </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Рефакторинг</SPAN></SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">-
+			Методы </SPAN></SPAN><SPAN STYLE="text-decoration: none">XxxInt()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименованы
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none">XxxInt32(),
+			XxxBool() - </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">XxxBoolean()</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">-
+			DataTools.GetRowCount() </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименованы
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none">GetRowCountWithXxxValue().
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Добавлены
+			недостающие методы для </SPAN></SPAN><SPAN STYLE="text-decoration: none">String,
+			DateTime, Guid </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">и
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">Enum&lt;T&gt;</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">- </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Методы
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">DataTools.GetUniqueXxxs()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">GetUniqueXxxValues()</SPAN></P>
+			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">- Методы
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">StdConvert.</SPAN></SPAN><SPAN LANG="ru-RU">TryParse()
+			переименованы </SPAN>в <SPAN LANG="ru-RU">TryParseX</SPAN><SPAN LANG="en-US">xx</SPAN><SPAN LANG="ru-RU">()
+			</SPAN>
+			</P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">-
+			CfgConverter.TryParse() </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименованы
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none">TryParseXxx()</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN>Классы NumArrayUpDownHandler&lt;T&gt;
+			в <SPAN LANG="en-US">NumericArrayUpDownHandler</SPAN>&lt;T&gt;,
+			IntUpDownHandler в Int32UpDownHandler</P>
+			<P>- <SPAN LANG="en-US">IntValueCommonFilter </SPAN><SPAN LANG="ru-RU">в
+			</SPAN><SPAN LANG="en-US">Int32ValueCommonFilter</SPAN></P>
+			<P>- <SPAN LANG="en-US">IntRangeCommonFilter</SPAN> <SPAN LANG="ru-RU">в
+			</SPAN><SPAN LANG="en-US">Int32RangeCommonFilter</SPAN></P>
+			<P>- <SPAN LANG="en-US">IntRangeCrossCommonFilter </SPAN><SPAN LANG="ru-RU">в
+			</SPAN><SPAN LANG="en-US">Int32CrossRangeCommonFilter</SPAN></P>
+			<P>- <SPAN LANG="en-US">IntRangeInclusionCommonFilter </SPAN><SPAN LANG="ru-RU">в
+			</SPAN><SPAN LANG="en-US">Int32RangeInclusionCommonFilter</SPAN></P>
+			<P><SPAN LANG="en-US">- IntNamedDictionary </SPAN><SPAN LANG="ru-RU">в
+			Int32NamedDictionary</SPAN></P>
+			<P><SPAN LANG="ru-RU">- </SPAN><SPAN LANG="en-US">RI\IntEditBox </SPAN><SPAN LANG="ru-RU">в
+			Int32EditBox</SPAN></P>
+			<P><SPAN LANG="ru-RU">- </SPAN><SPAN LANG="en-US">RI\IntInputDialog
+			</SPAN><SPAN LANG="ru-RU">в </SPAN><SPAN LANG="en-US">Int32InputDialog</SPAN></P>
+			<P><SPAN LANG="ru-RU">- </SPAN><SPAN LANG="en-US">RI\IntRangeDialog
+			</SPAN><SPAN LANG="ru-RU">в </SPAN><SPAN LANG="en-US">Int32RangeDialog</SPAN></P>
+			<P>- <SPAN LANG="ru-RU">Методы коллекций </SPAN><SPAN LANG="en-US">Add()
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">Remove(),
+			</SPAN><SPAN LANG="ru-RU">обрабатывающие списки элементов,
+			переименованы в </SPAN><SPAN LANG="en-US">AddRange() </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">RemoveRange().</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">UIInputGridData.ColumnInfo.Align -&gt;
+			TextAlign</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Убраны методы и
+			свойства, помеченные</SPAN> <SPAN LANG="en-US">[Obsolete] </SPAN>
+			</P>
+			<P LANG="en-US">2. <SPAN LANG="ru-RU">Статический класс
+			</SPAN>EmptyArray&lt;T&gt; <SPAN LANG="ru-RU">с единственным полем
+			E</SPAN>mpty. <SPAN LANG="ru-RU">Убраны</SPAN> <SPAN LANG="ru-RU">массивы</SPAN>
+			DataTools.EmptyXXX.</P>
+			<P LANG="en-US">3. <SPAN LANG="ru-RU">Статический класс
+			</SPAN>ZeroValue&lt;T&gt; <SPAN LANG="ru-RU">с единственным полем
+			</SPAN>Object</P>
+			<P LANG="en-US">4. <SPAN LANG="ru-RU">Из </SPAN>DataTools <SPAN LANG="ru-RU">и
+			</SPAN>FileTools <SPAN LANG="ru-RU">выделен класс </SPAN>MD5Tools</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">5</SPAN>. <SPAN LANG="ru-RU">Из
+			</SPAN>DataTools <SPAN LANG="ru-RU">выделен класс </SPAN>StringTools</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">6</SPAN>. <SPAN LANG="ru-RU">Из
+			</SPAN>DataTools <SPAN LANG="ru-RU">выделен класс </SPAN>ArrayTools.
+			<SPAN LANG="ru-RU">Убран метод </SPAN>CreateDBNullArray().
+			<SPAN LANG="ru-RU">Перегрузка метода </SPAN>CreateArray&lt;T&gt;()
+			<SPAN LANG="ru-RU">с нетипизированным перечислителем </SPAN>IEnumerable.</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">7</SPAN>. <SPAN LANG="ru-RU">Из
+			</SPAN>DataTools <SPAN LANG="ru-RU">выделен класс </SPAN>TimeTools.
+						</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- Один из методов</SPAN>
+			CreateDateTime() <SPAN LANG="ru-RU">переименован в </SPAN>SetDateDay()
+						</P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">Убрана перегрузка
+			</SPAN>DateInRange() <SPAN LANG="ru-RU">с </SPAN>bool-<SPAN LANG="ru-RU">аргументами
+			</SPAN>hasFirstDate <SPAN LANG="ru-RU">и </SPAN>hasLastDate</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">8</SPAN>. <SPAN LANG="ru-RU">Из
+			</SPAN>DataTools <SPAN LANG="ru-RU">выделен класс </SPAN>MathTools</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">9</SPAN>. <SPAN LANG="ru-RU">Из
+			</SPAN>DataTools <SPAN LANG="ru-RU">и </SPAN>FileTools <SPAN LANG="ru-RU">выделен
+			класс </SPAN>XmlTools</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">10</SPAN>. <SPAN LANG="ru-RU">Из
+			</SPAN>DataTools <SPAN LANG="ru-RU">выделен класс </SPAN>IdTools. 
+			</P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">Методы </SPAN>GetIdsFromColumn<SPAN LANG="ru-RU">()</SPAN>
+			<SPAN LANG="ru-RU">используют </SPAN>DataTools.GetInt32() <SPAN LANG="ru-RU">вместо
+			прямого извлечения значений</SPAN></P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- </SPAN>GetIds(),
+			GetBlockedIds(), GetRowsFromIds() <SPAN LANG="ru-RU">используют
+			ключевое или первое поле таблицы, а не &laquo;</SPAN>Id<SPAN LANG="ru-RU">&raquo;</SPAN></P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- </SPAN>TableFromIds() <SPAN LANG="ru-RU">требует
+			аргумент </SPAN>columnName</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- Убраны методы </SPAN>GetFirstId()
+			<SPAN LANG="ru-RU">и </SPAN>GetLastId()</P>
+			<P LANG="en-US">11. <SPAN LANG="ru-RU">Методы </SPAN>DataTools.GetXXX()
+			<SPAN LANG="ru-RU">для </SPAN>DataRow <SPAN LANG="ru-RU">возвращают
+			значения при </SPAN>RowState=Deleted. <SPAN LANG="ru-RU">Недостающие
+			методы </SPAN>DataTools.GetNullableXXX()</P>
+			<P LANG="en-US">12. DataTools.GetNullable/Int32/Int64() <SPAN LANG="ru-RU">выполняют
+			округление чисел с плавающей по математическим правилам, а не как
+			это делают </SPAN>Convert.ToInt32()/ToInt64()</P>
+			<P LANG="en-US">13. <SPAN LANG="ru-RU">Изменены методы
+			</SPAN>DataTools.SetXXX() д<SPAN LANG="ru-RU">ля записи полей не
+			своих типов с выполнением преобразований.</SPAN></P>
+			<P LANG="en-US">14. <SPAN LANG="ru-RU">Метод
+			</SPAN>DataTools.GetDataRowViewRows()</P>
+			<P><SPAN LANG="en-US">15. </SPAN><SPAN LANG="ru-RU">Методы
+			</SPAN><SPAN LANG="en-US">DataTools.SumXXX(), MinXXX(), MaxXXX(),
+			MinMaxXXX(), AverageXXX(), GetRowCountWithXXXValue(),
+			GetUniqueXXXValues()</SPAN> <SPAN LANG="ru-RU">с аргументом
+			</SPAN><SPAN LANG="en-US">Enumerable&lt;DataRow&gt; </SPAN><SPAN LANG="ru-RU">используют
+			</SPAN><SPAN LANG="en-US">DataRowValues</SPAN></P>
+			<P LANG="en-US">16. <SPAN LANG="ru-RU">Класс </SPAN>UITextColumnFormat.
+			<SPAN LANG="ru-RU">Свойство </SPAN>EditableDateTimeFormatter.ColumnFormat</P>
+			<P LANG="en-US">17. Интерфейс ICloneableReadOnlyObject</P>
+			<P LANG="en-US">18. <SPAN LANG="ru-RU">Перенесено из </SPAN>ExtDB:</P>
+			<P LANG="en-US">- NoIdArgumentException (<SPAN LANG="ru-RU">был
+			</SPAN>DBxNoIdArgumentException)</P>
+			<P LANG="en-US">- PrimaryKeyException <SPAN LANG="ru-RU">(был
+			DBxPrimaryKeyException)</SPAN></P>
+			<P>- DBxStructException</P>
+			<P LANG="en-US">19. <SPAN LANG="ru-RU">Вместо обычного класса
+			</SPAN>IdList<SPAN LANG="ru-RU">, который поддерживал только
+			неупорядоченные идентификаторы </SPAN>Int32, <SPAN LANG="ru-RU">сделана
+			поддержка идентификаторов произвольных типов:</SPAN></P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- интерфейсы </SPAN>IIdSet <SPAN LANG="ru-RU">и
+			</SPAN>IIdSet&lt;T&gt;</P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">класс </SPAN>IdCollection&lt;T&gt;
+			<SPAN LANG="ru-RU">(бывший </SPAN>IdList)</P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">новый класс </SPAN>IdList&lt;T&gt;
+			<SPAN LANG="ru-RU">с упорядоченными идентификаторами</SPAN></P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">- новый класс </SPAN>IdArray&lt;&gt;</P>
+			<P LANG="en-US">- <SPAN LANG="ru-RU">Методы </SPAN>IdList.FromIds()
+			<SPAN LANG="ru-RU">и </SPAN>FromColumns() <SPAN LANG="ru-RU">убраны.</SPAN></P>
+			<P LANG="en-US">20. TableAndIdList <SPAN LANG="ru-RU">заменен на
+			</SPAN>TableIdCollection&lt;T&gt;. <SPAN LANG="ru-RU">Интерфейсы
+			</SPAN>ITableIdSet <SPAN LANG="ru-RU">и </SPAN>ITableIdSet&lt;T&gt;.
+			<SPAN LANG="ru-RU">Наборы </SPAN>TableIdList&lt;T&gt; <SPAN LANG="ru-RU">и
+			</SPAN>TableIdArray&lt;T&gt; <SPAN LANG="ru-RU">пока не
+			реализованы.</SPAN></P>
+			<P><SPAN LANG="en-US">21</SPAN>. <SPAN LANG="ru-RU">В перечислении
+			</SPAN><SPAN LANG="en-US">DBxColumnType о</SPAN><SPAN LANG="ru-RU">бобщенные
+			числовые типы </SPAN><SPAN LANG="en-US">Integer,</SPAN> <SPAN LANG="en-US">Float
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">Money
+			</SPAN><SPAN LANG="ru-RU">заменены на точные </SPAN><SPAN LANG="en-US">SByte
+			.. Decimal </SPAN>
+			</P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Методы
+			</SPAN><SPAN LANG="en-US">DBxTools.IsXxxType().</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">Изменены методы
+			добавления столбцов </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">DBxTableStruct.ColumnCollection.AddXXX().
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Убраны
+			перегрузки, кроме </SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">AddId(),
+			AddBoolean(),</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">без
+			указания признака </SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">nullable,
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">так
+			как правило по умолчанию не очевидно.</SPAN></SPAN></P>
+			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">22.
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Метод
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">DBxStruct.UpdateColumnTypes().
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Методы
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">DBxTableStruct.ColumnCollection.AddId()
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">и
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">AddReference()
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">устанавливают
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">DBxColumnStruct.ColumnType
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">DBxColumnType.Unknown.</SPAN></SPAN></P>
+			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">23.
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Метод
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">DBxColumnStruct.IsReplaceableType()</SPAN></SPAN></P>
+			<P LANG="en-US">24. <SPAN LANG="ru-RU">Свойство
+			</SPAN>StdConvert.FormatProvider <SPAN LANG="ru-RU">и метод
+			</SPAN>ChangeType()</P>
+			<P><SPAN LANG="en-US">25. </SPAN><SPAN LANG="ru-RU">Классы доступа
+			к значениям </SPAN><SPAN LANG="en-US">DataTable: DataRowValues,
+			DataColumnValue, DataTableValues, DataViewValues </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">DataRowArrayValues.</SPAN></P>
+			<P><SPAN LANG="ru-RU">2</SPAN><SPAN LANG="en-US">6</SPAN><SPAN LANG="ru-RU">.
+			Коллекция </SPAN><SPAN LANG="en-US">DbDataReaderValues. </SPAN><SPAN LANG="ru-RU">Убран
+			статический метод </SPAN><SPAN LANG="en-US">DbDataReaderValue.CreateDict()
+			(<A HREF="ExtTools_30.htm#v364p4">v.364 </A></SPAN><A HREF="ExtTools_30.htm#v364p4"><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P>2<SPAN LANG="en-US">7</SPAN>. Интерфейсы <SPAN LANG="en-US">IDataRowValues
+			</SPAN>и <SPAN LANG="en-US">IDataColumnValues </SPAN>для
+			унификации чтения из <SPAN LANG="en-US">DataTable </SPAN>и
+			<SPAN LANG="en-US">DbDataReader</SPAN></P>
+			<P><SPAN LANG="en-US">28. </SPAN><SPAN LANG="ru-RU">Убраны
+			структуры </SPAN><SPAN LANG="en-US">DataRowXXXExtractor, </SPAN><SPAN LANG="ru-RU">классы
+			</SPAN><SPAN LANG="en-US">DataTableValueArray </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">DataRowValueArray</SPAN></P>
+			<P>2<SPAN LANG="en-US">9</SPAN>. Класс <SPAN LANG="en-US">ValuesFilter
+			</SPAN><SPAN LANG="ru-RU">переименован в </SPAN><SPAN LANG="en-US">ValueInListFilter.
+			</SPAN>Перегрузки конструкторов с аргументом <SPAN LANG="en-US">IEnumerable
+			</SPAN>для списка значений</P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">30</SPAN>. <SPAN LANG="ru-RU">Убран
+			класс </SPAN>IdsFilter. <SPAN LANG="ru-RU">Вместо него
+			используются </SPAN>ValueInListFilter <SPAN LANG="ru-RU">или
+			</SPAN>ValueFilter.</P>
+			<P><SPAN LANG="en-US">3</SPAN><SPAN LANG="ru-RU">1</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">Класс </SPAN><SPAN LANG="en-US">IdsFilterGenerator
+			</SPAN><SPAN LANG="ru-RU">сделан шаблонным </SPAN><SPAN LANG="en-US">IdsFilterGenerator&lt;T&gt;.
+			</SPAN><SPAN LANG="ru-RU">Возвращает фильтры </SPAN><SPAN LANG="en-US">ValueInListFilter
+			</SPAN><SPAN LANG="ru-RU">вместо </SPAN><SPAN LANG="en-US">IdsFilter</SPAN></P>
+			<P><SPAN LANG="en-US">3</SPAN><SPAN LANG="ru-RU">2</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">Убрано </SPAN><SPAN LANG="en-US">public-</SPAN><SPAN LANG="ru-RU">свойство
+			</SPAN><SPAN LANG="en-US">ArrayEnumerable&lt;T&gt;.Array</SPAN></P>
+			<P>3<SPAN LANG="ru-RU">3</SPAN>. Структура-шаблон
+			<SPAN LANG="en-US">ConvretEnumerable&lt;TInput, TOutput&gt;,
+			</SPAN>использующая делегат для преобразования</P>
+			<P LANG="en-US">3<SPAN LANG="ru-RU">4</SPAN>. DBxColumns <SPAN LANG="ru-RU">реализует
+			интерфейсы </SPAN>IList&lt;string&gt; <SPAN LANG="ru-RU">и </SPAN>IList,
+			<SPAN LANG="ru-RU">а не только </SPAN>IEnumerable&lt;string&gt;.
+			<SPAN LANG="ru-RU">Метод </SPAN>AreEqual().</P>
+			<P LANG="en-US">3<SPAN LANG="ru-RU">5</SPAN>. <SPAN LANG="ru-RU">Фильтры,
+			производные от RangeCommonFilterBase</SPAN>&lt;T&gt;
+			(DateRangeFilter, Int32RangeCommonFilter, SingleRangeCommonFilter,
+			DoubleRangeCommonFilter <SPAN LANG="ru-RU">и
+			</SPAN>DecimalRangeCommonFilter) <SPAN LANG="ru-RU">поддерживают
+			свойство </SPAN>Mode, <SPAN LANG="ru-RU">которое дополнительно
+			позволяет задать режимы фильтрации </SPAN>NotNull <SPAN LANG="ru-RU">и
+			</SPAN>Null.</P>
+			<P LANG="en-US">3<SPAN LANG="ru-RU">6</SPAN>. <SPAN LANG="ru-RU">Класс
+			GroupDbDataReaderWrapper</SPAN></P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+</BODY>
+</HTML>

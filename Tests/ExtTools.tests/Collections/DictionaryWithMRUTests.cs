@@ -373,7 +373,7 @@ namespace ExtTools_tests.Collections
     {
       DictionaryWithMRU<string, int> sut = CreateTestObject();
       string[] res = new string[5];
-      DataTools.FillArray<string>(res, "XXX");
+      ArrayTools.FillArray<string>(res, "XXX");
       sut.Keys.CopyTo(res, 1);
 
       string[] wanted = new string[] { "XXX", "DDD", "CCC", "AAA", "XXX" };
@@ -436,7 +436,7 @@ namespace ExtTools_tests.Collections
     {
       DictionaryWithMRU<string, int> sut = CreateTestObject();
       int[] res = new int[5];
-      DataTools.FillArray<int>(res, 666);
+      ArrayTools.FillArray<int>(res, 666);
       sut.Values.CopyTo(res, 1);
 
       int[] wanted = new int[] { 666, 4, 3, 1, 666 };

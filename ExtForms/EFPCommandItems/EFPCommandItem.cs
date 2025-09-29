@@ -2463,9 +2463,9 @@ namespace FreeLibSet.Forms
     /// Каждая команда клонируется.
     /// </summary>
     /// <param name="source">Исходный набор команд</param>
-    public void Add(EFPCommandItems source)
+    public void AddRange(EFPCommandItems source)
     {
-      Add(source, null);
+      AddRange(source, null);
     }
 
     /// <summary>
@@ -2474,7 +2474,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="source">Исходный набор команд</param>
     /// <param name="parent">Команда, относящаяся к текущему набору, которая будет родительской</param>
-    public void Add(EFPCommandItems source, EFPCommandItem parent)
+    public void AddRange(EFPCommandItems source, EFPCommandItem parent)
     {
       if (source == null)
         throw new ArgumentNullException("source");

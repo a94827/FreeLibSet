@@ -287,9 +287,9 @@ namespace FreeLibSet.Forms.Data
 
   /// <summary>
   /// Переходник для флажка <see cref="CheckBox"/> и поля выбора месяца и дня <see cref="FreeLibSet.Controls.MonthDayBox"/>.
-  /// В отличие от <see cref="ExtValueIntMonthDayBox"/>, разрешает запись нулевого значения.
+  /// В отличие от <see cref="ExtValueInt32MonthDayBox"/>, разрешает запись нулевого значения.
   /// </summary>
-  public class ExtValueIntCheckBoxWithMonthDayBox : ExtValueCheckBoxWithControl<int, EFPMonthDayBox>
+  public class ExtValueInt32CheckBoxWithMonthDayBox : ExtValueCheckBoxWithControl<int, EFPMonthDayBox>
   {
     #region Конструктор
 
@@ -300,7 +300,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider1">Провайдер переключателя CheckBox</param>
     /// <param name="controlProvider2">Провайдер основного управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирование (разрешаются "серые" значения)</param>
-    public ExtValueIntCheckBoxWithMonthDayBox(DBxExtValue extValue, EFPCheckBox controlProvider1, EFPMonthDayBox controlProvider2, bool canMultiEdit)
+    public ExtValueInt32CheckBoxWithMonthDayBox(DBxExtValue extValue, EFPCheckBox controlProvider1, EFPMonthDayBox controlProvider2, bool canMultiEdit)
       : base(extValue, controlProvider1, controlProvider2, canMultiEdit)
     {
       controlProvider2.DayOfYearEx.ValueChanged += new EventHandler(base.ControlChanged2);
@@ -315,7 +315,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueToControl()
     {
-      CurrentValueEx.Value = ExtValue.AsInteger;
+      CurrentValueEx.Value = ExtValue.AsInt32;
     }
 
     /// <summary>
@@ -323,20 +323,20 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     protected override void ValueFromControl()
     {
-      ExtValue.SetInteger(CurrentValueEx.Value);
+      ExtValue.SetInt32(CurrentValueEx.Value);
     }
 
     /// <summary>
-    /// Получение EFPMonthDayBox.IntValue.
+    /// Получение <see cref="EFPMonthDayBox.DayOfYear"/>.
     /// </summary>
     /// <returns>Значение</returns>
     protected override Int32 GetControlValue2()
     {
       return ControlProvider2.DayOfYear;
     }
-                         
+
     /// <summary>
-    /// Установка EFPMonthDayBox.IntValue.
+    /// Установка <see cref="EFPMonthDayBox.DayOfYear"/>.
     /// </summary>
     /// <param name="value">Значение</param>
     protected override void SetControlValue2(Int32 value)

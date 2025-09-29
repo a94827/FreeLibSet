@@ -74,24 +74,44 @@ namespace FreeLibSet.Data
 
         #region Числа
 
-        case DBxColumnType.Int:
-          if (column.MinValue == 0 && column.MaxValue == 0)
-            buffer.SB.Append("INTEGER"); // основной тип
-          else if (column.MinValue >= Int16.MinValue && column.MaxValue <= Int16.MaxValue)
+        case DBxColumnType.SByte:
+          if (column.IsReplaceableType(DBxColumnType.Byte))
+            buffer.SB.Append("TINYINT"); 
+          else
             buffer.SB.Append("SMALLINT");
-          else if (column.MinValue >= Int32.MinValue && column.MaxValue <= Int32.MaxValue)
+          break;
+        case DBxColumnType.Byte:
+          buffer.SB.Append("TINYINT");
+          break;
+        case DBxColumnType.Int16:
+          buffer.SB.Append("SMALLINT");
+          break;
+        case DBxColumnType.UInt16:
+          if (column.IsReplaceableType(DBxColumnType.Int16))
+            buffer.SB.Append("SMALLINT");
+          else
+            buffer.SB.Append("INTEGER"); 
+          break;
+        case DBxColumnType.Int32:
+          buffer.SB.Append("INTEGER");
+          break;
+        case DBxColumnType.UInt32:
+          if (column.IsReplaceableType(DBxColumnType.Int32))
             buffer.SB.Append("INTEGER");
           else
             buffer.SB.Append("BIGINT");
           break;
+        case DBxColumnType.Int64:
+        case DBxColumnType.UInt64:
+          buffer.SB.Append("BIGINT");
+          break;
 
-        case DBxColumnType.Float:
-          if (column.MinValue == 0 && column.MaxValue == 0)
-            buffer.SB.Append("DOUBLE PRECISION");
-          else if (column.MinValue >= Single.MinValue && column.MaxValue <= Single.MaxValue)
-            buffer.SB.Append("REAL");
-          else
-            buffer.SB.Append("DOUBLE PRECISION");
+        case DBxColumnType.Single:
+          buffer.SB.Append("REAL");
+          break;
+
+        case DBxColumnType.Double:
+          buffer.SB.Append("DOUBLE PRECISION");
           break;
 
         case DBxColumnType.Decimal: // Отдельного денежного типа нет

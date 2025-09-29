@@ -1722,7 +1722,7 @@ namespace FreeLibSet.Forms
       if (args.Value is CheckState)
         this[args.Node.Tag] = (CheckState)(args.Value);
       else
-        this[args.Node.Tag] = DataTools.GetBool(args.Value) ? CheckState.Checked : CheckState.Unchecked; // 09.02.2023
+        this[args.Node.Tag] = DataTools.GetBoolean(args.Value) ? CheckState.Checked : CheckState.Unchecked; // 09.02.2023
     }
 
     #endregion

@@ -6,7 +6,7 @@
     <ProjectGuid>{5AA9F43F-C1D1-47BD-B83D-E11CD90CFA08}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreeLibSet.Data</RootNamespace>
+    <RootNamespace>FreeLibSet.Data.Docs</RootNamespace>
     <AssemblyName>ExtDBDocs</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />

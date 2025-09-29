@@ -895,7 +895,7 @@ namespace FreeLibSet.Data.SQLite
       Buffer.FormatTableName(tableName);
       Buffer.SB.Append(")");
 
-      return !DataTools.GetBool(SQLExecuteScalar(Buffer.SB.ToString()));
+      return !DataTools.GetBoolean(SQLExecuteScalar(Buffer.SB.ToString()));
     }
 
     #endregion
@@ -910,21 +910,19 @@ namespace FreeLibSet.Data.SQLite
     /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
     /// <param name="values">Значения. Порядок значений должен соответствовать списку столбцов</param>
     /// <returns>Идентификатор добавленной записи</returns>
-    public override Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
+    public override object AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
     {
       Buffer.Clear();
       Validator.CheckTableName(tableName, DBxAccessMode.Full);
       DBxColumnType[] columnTypes = Validator.CheckTableColumnNames(tableName, columnNames, false, DBxAccessMode.Full);
       /*string PrimaryKeyColumnName = */
-      Validator.CheckTablePrimaryKeyInt32(tableName);
+      Validator.CheckTablePrimaryKeyInteger(tableName);
 
       if (columnNames.Count != values.Length)
         throw ExceptionFactory.ArgWrongCollectionCount("values", values, columnNames.Count);
 
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
-
-      Int32 id;
 
       Buffer.SB.Append("INSERT INTO ");
       Buffer.FormatTableName(tableName);
@@ -936,10 +934,10 @@ namespace FreeLibSet.Data.SQLite
 
       Buffer.SB.Append("; SELECT last_insert_rowid()");
 
-      id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      object id = SQLExecuteScalar(Buffer.SB.ToString());
 
-      if (id <= 0)
-        throw new BugException("Invalid record identifier returned for table \"" + tableName + "\" Id=" + id.ToString());
+      if (DataTools.IsEmptyValue(id))
+        throw new BugException("Invalid record identifier returned for table \"" + tableName + "\" Id=" + DataTools.GetString(id));
 
       return id;
     }
@@ -1003,22 +1001,16 @@ namespace FreeLibSet.Data.SQLite
         switch (colTypeString)
         {
           case "tinyint":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = 0;
-            colDef.MaxValue = 255;
+            colDef.ColumnType = DBxColumnType.Byte;
             break;
 
           case "smallint":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int16.MinValue;
-            colDef.MaxValue = Int16.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int16;
             break;
 
           case "int":
           case "integer": // По идее, это Int64, но этот тип используется для идентификаторов
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int32.MinValue;
-            colDef.MaxValue = Int32.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int32;
             break;
 
           case "counter": // ?? Надо?
@@ -1026,23 +1018,18 @@ namespace FreeLibSet.Data.SQLite
           case "identity": // ?? Надо?
           case "long":
           case "bigint":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int64.MinValue;
-            colDef.MaxValue = Int64.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int64;
             break;
 
           case "single":
-            colDef.ColumnType = DBxColumnType.Float;
-            colDef.MinValue = Single.MinValue;
-            colDef.MaxValue = Single.MaxValue;
+            colDef.ColumnType = DBxColumnType.Single;
             break;
 
           case "real":
           case "float":
           case "double":
-            colDef.ColumnType = DBxColumnType.Float;
-            colDef.MinValue = Double.MinValue;
-            colDef.MaxValue = Double.MaxValue;
+          case "double precision": // 05.09.2025
+            colDef.ColumnType = DBxColumnType.Double;
             break;
 
           case "money":
@@ -1115,7 +1102,7 @@ namespace FreeLibSet.Data.SQLite
         }
 
         if (colDef.ColumnType == DBxColumnType.String) // 08.06.2023
-          colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
+          colDef.MaxLength = DataTools.GetInt32(drv.Row, "character_maximum_length");
 
         string nullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
         switch (nullableStr)
@@ -1528,7 +1515,7 @@ namespace FreeLibSet.Data.SQLite
           string realType = DataTools.GetString(columnRow, "type").ToUpperInvariant();
           int realLength;
           SplitColumnType(ref realType, out realLength);
-          bool realIsPK = DataTools.GetBool(columnRow, "pk");
+          bool realIsPK = DataTools.GetBoolean(columnRow, "pk");
           if (realIsPK)
           {
             if (realType == "INTEGER")
@@ -1590,7 +1577,7 @@ namespace FreeLibSet.Data.SQLite
           #region Проверка признака Nullable
 
           // Проверяем Nullable
-          bool realNullable = !DataTools.GetBool(columnRow, "notnull");
+          bool realNullable = !DataTools.GetBoolean(columnRow, "notnull");
 
           if (colDef.Nullable != realNullable)
           {
@@ -1671,7 +1658,7 @@ namespace FreeLibSet.Data.SQLite
       {
         case 1:
           pPrimaryKey = table.Columns.IndexOf(table.PrimaryKey[0]);
-          withoutRowId = table.PrimaryKeyColumns[0].ColumnType != DBxColumnType.Int && (!table.Columns.ContainsBlob());
+          withoutRowId = table.PrimaryKeyColumns[0].ColumnType != DBxColumnType.Int32 && (!table.Columns.ContainsBlob());
           break;
         case 0:
           pPrimaryKey = -1;
@@ -1748,7 +1735,7 @@ namespace FreeLibSet.Data.SQLite
     {
       if (isPrimaryKey)
       {
-        if (column.ColumnType == DBxColumnType.Int)
+        if (DBxTools.IsIntegerType(column.ColumnType))
         {
           buffer.SB.Append("INTEGER"); // всегда используем основной тип данных для первичного ключа
           return;
@@ -1880,7 +1867,7 @@ namespace FreeLibSet.Data.SQLite
       {
         foreach (DataRow idxRow in tblIndices.Rows)
         {
-          if (!DataTools.GetBool(idxRow, "Flag"))
+          if (!DataTools.GetBoolean(idxRow, "Flag"))
           {
             string indexName = DataTools.GetString(idxRow, "IndexName");
             splash.PhaseText = DBxUITools.PhaseText.IndexRemoving(indexName);

@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms.Docs
     /// Задает фиксированный список идентификаторов документов, которые можно просматривать.
     /// Свойство <see cref="EFPDocGridView.FixedDocIds"/>.
     /// </summary>
-    public IdList FixedDocIds
+    public IdCollection<Int32> FixedDocIds
     {
       get
       {
@@ -63,7 +63,7 @@ namespace FreeLibSet.Forms.Docs
           ControlProvider.FixedDocIds = value;
       }
     }
-    private IdList _FixedDocIds;
+    private IdCollection<Int32> _FixedDocIds;
 
     #endregion
 

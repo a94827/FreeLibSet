@@ -33,8 +33,8 @@ namespace FreeLibSet.Data.Docs
       public RefColumnInfo(DBxDocType detailsDocType, DBxSubDocType detailsSubDocType, DBxColumnStruct columnDef)
       {
 #if DEBUG
-        if (columnDef.ColumnType != DBxColumnType.Int)
-          throw ExceptionFactory.ArgProperty("columnDef", columnDef, "ColumnType", columnDef.ColumnType, new object[] { DBxColumnType.Int });
+        if (columnDef.ColumnType != DBxColumnType.Int32)
+          throw ExceptionFactory.ArgProperty("columnDef", columnDef, "ColumnType", columnDef.ColumnType, new object[] { DBxColumnType.Int32 });
         if (detailsDocType == null)
           throw new ArgumentNullException("detailsDocType");
         if (detailsSubDocType != null)

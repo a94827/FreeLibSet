@@ -1548,4 +1548,19 @@
   <data name="BRBookmark_Err_NameUnderscore" xml:space="preserve">
     <value>Неправильное имя закладки '{0}'. Имя не должно зваканчиваться подчеркиванием или содержать два символа подчеркивания подряд.</value>
   </data>
+  <data name="DBxStructException_Err_Message" xml:space="preserve">
+    <value>Ошибка в описании структуры таблицы '{0}'. {1}</value>
+  </data>
+  <data name="NoIdArgumentException_Err_Message" xml:space="preserve">
+    <value>Не задан идентификатор</value>
+  </data>
+  <data name="PrimaryKeyException_Err_Message" xml:space="preserve">
+    <value>Неправильный первичный ключ</value>
+  </data>
+  <data name="ComplexId_Arg_PartialEmpty" xml:space="preserve">
+    <value>Не все части ключа заполнены: {0}. Ключ должен быть либо задан целиком, либо все части пустые</value>
+  </data>
+  <data name="Common_Err_MethodAlreadyCalled" xml:space="preserve">
+    <value>Метод {0} объекта {1} уже был вызван</value>
+  </data>
 </root>

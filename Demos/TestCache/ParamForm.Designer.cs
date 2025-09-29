@@ -35,15 +35,15 @@
       this.panel2 = new System.Windows.Forms.Panel();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label7 = new System.Windows.Forms.Label();
-      this.eCheckMemoryInterval = new FreeLibSet.Controls.IntEditBox();
+      this.eCheckMemoryInterval = new FreeLibSet.Controls.Int32EditBox();
       this.label8 = new System.Windows.Forms.Label();
       this.label5 = new System.Windows.Forms.Label();
-      this.edCriticalMemoryLoad = new FreeLibSet.Controls.IntEditBox();
+      this.edCriticalMemoryLoad = new FreeLibSet.Controls.Int32EditBox();
       this.label6 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
-      this.edLowMemorySize = new FreeLibSet.Controls.IntEditBox();
+      this.edLowMemorySize = new FreeLibSet.Controls.Int32EditBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.edCapacity = new FreeLibSet.Controls.IntEditBox();
+      this.edCapacity = new FreeLibSet.Controls.Int32EditBox();
       this.label1 = new System.Windows.Forms.Label();
       this.panel3 = new System.Windows.Forms.Panel();
       this.panel1 = new System.Windows.Forms.Panel();
@@ -51,7 +51,7 @@
       this.btnOk = new System.Windows.Forms.Button();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.grObjs = new System.Windows.Forms.DataGridView();
-      this.edThreads = new FreeLibSet.Controls.IntEditBox();
+      this.edThreads = new FreeLibSet.Controls.Int32EditBox();
       this.label2 = new System.Windows.Forms.Label();
       this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colPersistance = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -365,16 +365,16 @@
 
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.GroupBox groupBox1;
-    private FreeLibSet.Controls.IntEditBox edCapacity;
+    private FreeLibSet.Controls.Int32EditBox edCapacity;
     private System.Windows.Forms.Label label1;
-    private FreeLibSet.Controls.IntEditBox edLowMemorySize;
+    private FreeLibSet.Controls.Int32EditBox edLowMemorySize;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label5;
-    private FreeLibSet.Controls.IntEditBox edCriticalMemoryLoad;
+    private FreeLibSet.Controls.Int32EditBox edCriticalMemoryLoad;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label7;
-    private FreeLibSet.Controls.IntEditBox eCheckMemoryInterval;
+    private FreeLibSet.Controls.Int32EditBox eCheckMemoryInterval;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Panel panel3;
     private System.Windows.Forms.Panel panel1;
@@ -382,7 +382,7 @@
     private System.Windows.Forms.Button btnOk;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.DataGridView grObjs;
-    private FreeLibSet.Controls.IntEditBox edThreads;
+    private FreeLibSet.Controls.Int32EditBox edThreads;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.DataGridViewTextBoxColumn colType;
     private System.Windows.Forms.DataGridViewComboBoxColumn colPersistance;

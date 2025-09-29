@@ -26,11 +26,11 @@ namespace ExtDB_tests.Data
     {
       _TestStruct = new DBxStruct();
       DBxTableStruct ts = _TestStruct.Tables.Add("Test1");
-      ts.Columns.AddId(); // Первичный ключ, не используется для поиска записей
+      ts.Columns.AddInt32("Id", false); // Первичный ключ, не используется для поиска записей
       ts.Columns.AddString("F1", 10, false);
-      ts.Columns.AddInt("F2", false);
+      ts.Columns.AddInt32("F2", false);
       ts.Columns.AddString("F3", 10, true);
-      ts.Columns.AddInt("F4", true);
+      ts.Columns.AddInt32("F4", true);
     }
 
     #endregion
@@ -252,9 +252,9 @@ namespace ExtDB_tests.Data
           CollectionAssert.AreEqual(new object[4], sut.Values, "Values #1");
 
           sut.SetString("F1", "X" + StdConvert.ToString(i));
-          sut.SetInt("F2", 10000 + i);
+          sut.SetInt32("F2", 10000 + i);
           sut.SetString("F3", "Y" + StdConvert.ToString(i));
-          sut.SetInt("F4", 20000 + i);
+          sut.SetInt32("F4", 20000 + i);
           CollectionAssert.AreEqual(new object[4] {
               "X" + StdConvert.ToString(i),
               10000+i,
@@ -311,10 +311,10 @@ namespace ExtDB_tests.Data
           int i2 = i * 2;
           // Поисковые ключи
           sut.SetString("F1", "X" + StdConvert.ToString(i2));
-          sut.SetInt("F2", 10000 + i2);
+          sut.SetInt32("F2", 10000 + i2);
           // Изменяемые данные
           sut.SetString("F3", "Z" + StdConvert.ToString(i2));
-          sut.SetInt("F4", 12345);
+          sut.SetInt32("F4", 12345);
           calc.ApplyRow(sut);
           sut.Write();
         }
@@ -355,10 +355,10 @@ namespace ExtDB_tests.Data
           int i2 = i * 2;
           // Поисковые ключи
           sut.SetString("F1", "X" + StdConvert.ToString(i2));
-          sut.SetInt("F2", 10000 + i2);
+          sut.SetInt32("F2", 10000 + i2);
           // Изменяемые данные
           sut.SetString("F3", "Z" + StdConvert.ToString(i2));
-          sut.SetInt("F4", 12345);
+          sut.SetInt32("F4", 12345);
           calc.ApplyRow(sut);
           sut.Write();
         }
@@ -392,10 +392,10 @@ namespace ExtDB_tests.Data
           int i2 = i * 2;
           // Поисковые ключи
           sut.SetString("F1", "X" + StdConvert.ToString(i2));
-          sut.SetInt("F2", 10000 + i2);
+          sut.SetInt32("F2", 10000 + i2);
           // Изменяемые данные
           sut.SetString("F3", "Z" + StdConvert.ToString(i2));
-          sut.SetInt("F4", 12345);
+          sut.SetInt32("F4", 12345);
           calc.ApplyRow(sut);
           sut.Write();
         }
@@ -438,9 +438,9 @@ namespace ExtDB_tests.Data
         for (int i = 0; i < 500; i++)
         {
           sut.SetString("F1", "X" + StdConvert.ToString(i));
-          sut.SetInt("F2", 10000 + i);
+          sut.SetInt32("F2", 10000 + i);
           sut.SetString("F3", "Y" + StdConvert.ToString(i));
-          sut.SetInt("F4", 20000 + i);
+          sut.SetInt32("F4", 20000 + i);
 
           calc.ApplyRow(sut);
           sut.Write();
@@ -478,9 +478,9 @@ namespace ExtDB_tests.Data
         for (int i = 0; i < 500; i++)
         {
           sut.SetString("F1", "X" + StdConvert.ToString(i));
-          sut.SetInt("F2", 12000 + i);
+          sut.SetInt32("F2", 12000 + i);
           sut.SetString("F3", "Y" + StdConvert.ToString(i));
-          sut.SetInt("F4", 12000 + i);
+          sut.SetInt32("F4", 12000 + i);
 
           calc.ApplyRow(sut);
           sut.Write();
@@ -517,9 +517,9 @@ namespace ExtDB_tests.Data
         for (int i = 0; i < 200; i++)
         {
           sut.SetString("F1", "X" + StdConvert.ToString(i * 10));
-          sut.SetInt("F2", 10000 + i * 10);
+          sut.SetInt32("F2", 10000 + i * 10);
           sut.SetString("F3", "Z" + StdConvert.ToString(i * 10));
-          sut.SetInt("F4", 11111);
+          sut.SetInt32("F4", 11111);
           calc.ApplyRow(sut);
           sut.Write();
         }
@@ -556,9 +556,9 @@ namespace ExtDB_tests.Data
         for (int i = 0; i < 200; i++)
         {
           sut.SetString("F1", "X" + StdConvert.ToString(i * 11));
-          sut.SetInt("F2", 10000 + i * 10);
+          sut.SetInt32("F2", 10000 + i * 10);
           sut.SetString("F3", "Z" + StdConvert.ToString(i * 11));
-          sut.SetInt("F4", 33333);
+          sut.SetInt32("F4", 33333);
           calc.ApplyRow(sut);
           sut.Write();
         }

@@ -196,8 +196,8 @@ namespace FreeLibSet.Forms
       }
 
       // Нет ничего
-      _RowIndices = DataTools.EmptyInts;
-      _ColumnIndices = DataTools.EmptyInts;
+      _RowIndices = EmptyArray<Int32>.Empty;
+      _ColumnIndices = EmptyArray<Int32>.Empty;
     }
 
     private void InitVisible()

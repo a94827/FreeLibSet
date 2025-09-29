@@ -527,7 +527,7 @@ namespace FreeLibSet.Reporting
           }
           break;
         default:
-          if (DataTools.IsNumericType(sel.ActualValue.GetType()))
+          if (MathTools.IsNumericType(sel.ActualValue.GetType()))
           {
             valueText = Convert.ToString(sel.ActualValue, StdConvert.NumberFormat);
             typeText = "Number";
@@ -540,7 +540,7 @@ namespace FreeLibSet.Reporting
             if (Environment.NewLine != "\r")
               valueText = valueText.Replace(Environment.NewLine, "\r");
             //valueText = DataTools.ReplaceAny(valueText, BRFileTools.BadValueChars, ' ');
-            valueText = valueText.Replace(DataTools.SoftHyphenStr, String.Empty);
+            valueText = valueText.Replace(StringTools.SoftHyphenStr, String.Empty);
             typeText = "String";
           }
           break;

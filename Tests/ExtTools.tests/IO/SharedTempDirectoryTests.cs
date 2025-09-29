@@ -36,7 +36,7 @@ namespace ExtTools_tests.IO
 
         testFilePath = new AbsPath(sut.Dir, "SD", "1.txt");
         FileTools.ForceDirs(testFilePath.ParentDir);
-        System.IO.File.WriteAllBytes(testFilePath.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(testFilePath.Path, EmptyArray<byte>.Empty);
         Assert.IsTrue(System.IO.File.Exists(testFilePath.Path), "Before dispose");
       }
       Assert.IsFalse(System.IO.File.Exists(testFilePath.Path), "After dispose");
@@ -55,8 +55,8 @@ namespace ExtTools_tests.IO
         AbsPath testPath1 = new AbsPath(sut.Dir, "SD", "1.txt");
         AbsPath testPath2 = new AbsPath(sut.Dir, "SD", "2.txt");
         FileTools.ForceDirs(testPath1.ParentDir);
-        System.IO.File.WriteAllBytes(testPath1.Path, DataTools.EmptyBytes);
-        System.IO.File.WriteAllBytes(testPath2.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(testPath1.Path, EmptyArray<byte>.Empty);
+        System.IO.File.WriteAllBytes(testPath2.Path, EmptyArray<byte>.Empty);
         System.IO.FileStream fs2 = new System.IO.FileStream(testPath2.Path, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite);
         Assert.IsTrue(System.IO.File.Exists(testPath1.Path), "#1 Before");
         Assert.IsTrue(System.IO.File.Exists(testPath2.Path), "#2 Before");

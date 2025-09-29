@@ -350,7 +350,7 @@ namespace FreeLibSet.Data
         case DBxDataWriterMode.Update:
         case DBxDataWriterMode.InsertOrUpdate:
           if (_SearchColumns.Count == 0)
-            throw new ArgumentException(String.Format(Res.DBxDataWriter_Arg_SearchColumnRequired, 
+            throw new ArgumentException(String.Format(Res.DBxDataWriter_Arg_SearchColumnRequired,
               writerInfo.Mode), "writerInfo");
           if (_OtherColumns.Count == 0)
             throw new ArgumentException(String.Format(Res.DBxDataWriter_Arg_OtherColumnRequired,
@@ -517,28 +517,7 @@ namespace FreeLibSet.Data
       if (value.Length == 0 && _ColumnDefs[columnIndex].Nullable)
         _Values[columnIndex] = null;
       else
-      {
-        switch (_ColumnDefs[columnIndex].ColumnType)
-        {
-          case DBxColumnType.Int:
-            _Values[columnIndex] = StdConvert.ToInt64(value);
-            break;
-          case DBxColumnType.Float:
-            _Values[columnIndex] = StdConvert.ToDouble(value);
-            break;
-          case DBxColumnType.Decimal:
-            _Values[columnIndex] = StdConvert.ToDecimal(value);
-            break;
-          case DBxColumnType.Boolean:
-            _Values[columnIndex] = StdConvert.ToInt32(value) != 0;
-            break;
-          case DBxColumnType.String:
-            _Values[columnIndex] = value;
-            break;
-          default:
-            throw CreateColumnTypeException(columnIndex, typeof(Int32));
-        }
-      }
+        _Values[columnIndex] = DBxTools.Convert(value, _ColumnDefs[columnIndex].ColumnType);
     }
 
 
@@ -547,23 +526,23 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
-    public int GetInt(string columnName) { return DataTools.GetInt(this[columnName]); }
+    public int GetInt32(string columnName) { return DataTools.GetInt32(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
     /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
-    public int GetInt(int columnIndex) { return DataTools.GetInt(this[columnIndex]); }
+    public int GetInt32(int columnIndex) { return DataTools.GetInt32(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
     /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
-    public void SetInt(string columnName, int value)
+    public void SetInt32(string columnName, int value)
     {
-      SetInt(GetColumnIndex(columnName), value);
+      SetInt32(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
@@ -571,25 +550,16 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
-    public void SetInt(int columnIndex, int value)
+    public void SetInt32(int columnIndex, int value)
     {
       if (value == 0 && _ColumnDefs[columnIndex].Nullable)
         _Values[columnIndex] = null;
       else
       {
-        switch (_ColumnDefs[columnIndex].ColumnType)
-        {
-          case DBxColumnType.Int:
-          case DBxColumnType.Float:
-          case DBxColumnType.Decimal:
-            _Values[columnIndex] = value;
-            break;
-          case DBxColumnType.String:
-            _Values[columnIndex] = StdConvert.ToString(value);
-            break;
-          default:
-            throw CreateColumnTypeException(columnIndex, typeof(Int32));
-        }
+        if (DBxTools.IsNumericType(_ColumnDefs[columnIndex].ColumnType))
+          _Values[columnIndex] = value;
+        else
+          _Values[columnIndex] = DBxTools.Convert(value, _ColumnDefs[columnIndex].ColumnType);
       }
     }
 
@@ -628,19 +598,10 @@ namespace FreeLibSet.Data
         _Values[columnIndex] = null;
       else
       {
-        switch (_ColumnDefs[columnIndex].ColumnType)
-        {
-          case DBxColumnType.Int:
-          case DBxColumnType.Float:
-          case DBxColumnType.Decimal:
-            _Values[columnIndex] = value;
-            break;
-          case DBxColumnType.String:
-            _Values[columnIndex] = StdConvert.ToString(value);
-            break;
-          default:
-            throw CreateColumnTypeException(columnIndex, typeof(Int64));
-        }
+        if (DBxTools.IsNumericType(_ColumnDefs[columnIndex].ColumnType))
+          _Values[columnIndex] = value;
+        else
+          _Values[columnIndex] = DBxTools.Convert(value, _ColumnDefs[columnIndex].ColumnType);
       }
     }
 
@@ -680,19 +641,10 @@ namespace FreeLibSet.Data
         _Values[columnIndex] = null;
       else
       {
-        switch (_ColumnDefs[columnIndex].ColumnType)
-        {
-          case DBxColumnType.Int:
-          case DBxColumnType.Float:
-          case DBxColumnType.Decimal:
-            _Values[columnIndex] = value;
-            break;
-          case DBxColumnType.String:
-            _Values[columnIndex] = StdConvert.ToString(value);
-            break;
-          default:
-            throw CreateColumnTypeException(columnIndex, typeof(Single));
-        }
+        if (DBxTools.IsNumericType(_ColumnDefs[columnIndex].ColumnType))
+          _Values[columnIndex] = value;
+        else
+          _Values[columnIndex] = DBxTools.Convert(value, _ColumnDefs[columnIndex].ColumnType);
       }
     }
 
@@ -732,19 +684,10 @@ namespace FreeLibSet.Data
         _Values[columnIndex] = null;
       else
       {
-        switch (_ColumnDefs[columnIndex].ColumnType)
-        {
-          case DBxColumnType.Int:
-          case DBxColumnType.Float:
-          case DBxColumnType.Decimal:
-            _Values[columnIndex] = value;
-            break;
-          case DBxColumnType.String:
-            _Values[columnIndex] = StdConvert.ToString(value);
-            break;
-          default:
-            throw CreateColumnTypeException(columnIndex, typeof(Double));
-        }
+        if (DBxTools.IsNumericType(_ColumnDefs[columnIndex].ColumnType))
+          _Values[columnIndex] = value;
+        else
+          _Values[columnIndex] = DBxTools.Convert(value, _ColumnDefs[columnIndex].ColumnType);
       }
     }
 
@@ -784,19 +727,10 @@ namespace FreeLibSet.Data
         _Values[columnIndex] = null;
       else
       {
-        switch (_ColumnDefs[columnIndex].ColumnType)
-        {
-          case DBxColumnType.Int:
-          case DBxColumnType.Float:
-          case DBxColumnType.Decimal:
-            _Values[columnIndex] = value;
-            break;
-          case DBxColumnType.String:
-            _Values[columnIndex] = StdConvert.ToString(value);
-            break;
-          default:
-            throw CreateColumnTypeException(columnIndex, typeof(Decimal));
-        }
+        if (DBxTools.IsNumericType(_ColumnDefs[columnIndex].ColumnType))
+          _Values[columnIndex] = value;
+        else
+          _Values[columnIndex] = DBxTools.Convert(value, _ColumnDefs[columnIndex].ColumnType);
       }
     }
 
@@ -805,23 +739,23 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
-    public bool GetBool(string columnName) { return DataTools.GetBool(this[columnName]); }
+    public bool GetBoolean(string columnName) { return DataTools.GetBoolean(this[columnName]); }
 
     /// <summary>
     /// Получить ранее записанное значение из буфера заполняемой строки.
     /// </summary>
     /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
-    public bool GetBool(int columnIndex) { return DataTools.GetBool(this[columnIndex]); }
+    public bool GetBoolean(int columnIndex) { return DataTools.GetBoolean(this[columnIndex]); }
 
     /// <summary>
     /// Записать значение в буфер строки.
     /// </summary>
     /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
-    public void SetBool(string columnName, bool value)
+    public void SetBoolean(string columnName, bool value)
     {
-      SetBool(GetColumnIndex(columnName), value);
+      SetBoolean(GetColumnIndex(columnName), value);
     }
 
     /// <summary>
@@ -829,7 +763,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <param name="value">Устанавливаемое значение</param>
-    public void SetBool(int columnIndex, bool value)
+    public void SetBoolean(int columnIndex, bool value)
     {
       if (value == false && _ColumnDefs[columnIndex].Nullable)
         _Values[columnIndex] = null;
@@ -939,6 +873,47 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
     /// <returns>Значение в буфере</returns>
+    public TimeSpan GetTimeSpan(string columnName) { return DataTools.GetTimeSpan(this[columnName]); }
+
+    /// <summary>
+    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
+    /// <returns>Значение в буфере</returns>
+    public TimeSpan GetTimeSpan(int columnIndex) { return DataTools.GetTimeSpan(this[columnIndex]); }
+
+    /// <summary>
+    /// Записать значение в буфер строки.
+    /// </summary>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
+    /// <param name="value">Устанавливаемое значение</param>
+    public void SetTimeSpan(string columnName, TimeSpan value)
+    {
+      SetTimeSpan(GetColumnIndex(columnName), value);
+    }
+
+    /// <summary>
+    /// Записать значение в буфер строки.
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
+    /// <param name="value">Устанавливаемое значение</param>
+    public void SetTimeSpan(int columnIndex, TimeSpan value)
+    {
+      switch (_ColumnDefs[columnIndex].ColumnType)
+      {
+        case DBxColumnType.Time:
+          _Values[columnIndex] = value;
+          break;
+        default:
+          throw CreateColumnTypeException(columnIndex, typeof(Decimal));
+      }
+    }
+
+    /// <summary>
+    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// </summary>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
+    /// <returns>Значение в буфере</returns>
     public Guid GetGuid(string columnName) { return DataTools.GetGuid(this[columnName]); }
 
     /// <summary>
@@ -983,6 +958,57 @@ namespace FreeLibSet.Data
           default:
             throw CreateColumnTypeException(columnIndex, typeof(Decimal));
         }
+      }
+    }
+
+
+    /// <summary>
+    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// </summary>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
+    /// <returns>Значение в буфере</returns>
+    public T GetEnum<T>(string columnName)
+      where T : struct
+    { return DataTools.GetEnum<T>(this[columnName]); }
+
+    /// <summary>
+    /// Получить ранее записанное значение из буфера заполняемой строки.
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
+    /// <returns>Значение в буфере</returns>
+    public T GetEnum<T>(int columnIndex)
+      where T : struct
+    { return DataTools.GetEnum<T>(this[columnIndex]); }
+
+    /// <summary>
+    /// Записать значение в буфер строки.
+    /// </summary>
+    /// <param name="columnName">Имя поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
+    /// <param name="value">Устанавливаемое значение</param>
+    public void SetEnum<T>(string columnName, T value)
+      where T : struct
+    {
+      SetEnum<T>(GetColumnIndex(columnName), value);
+    }
+
+    /// <summary>
+    /// Записать значение в буфер строки.
+    /// </summary>
+    /// <param name="columnIndex">Индекс поля из списка <see cref="DBxDataWriterInfo.Columns"/></param>
+    /// <param name="value">Устанавливаемое значение</param>
+    public void SetEnum<T>(int columnIndex, T value)
+      where T : struct
+    {
+      if (_ColumnDefs[columnIndex].Nullable && Convert.ToInt32(value) == 0)
+        _Values[columnIndex] = null;
+      else
+      {
+        if (DBxTools.IsIntegerType(_ColumnDefs[columnIndex].ColumnType))
+          _Values[columnIndex] = Convert.ToInt32(value);
+        else if (_ColumnDefs[columnIndex].ColumnType == DBxColumnType.String)
+          _Values[columnIndex] = value.ToString();
+        else
+          throw CreateColumnTypeException(columnIndex, typeof(Decimal));
       }
     }
 
@@ -1114,8 +1140,8 @@ namespace FreeLibSet.Data
         case DBxDataWriterState.Writing:
           break;
         default:
-          throw ExceptionFactory.ObjectProperty(this, "State", State, 
-            new object[] { DBxDataWriterState.Created , DBxDataWriterState.Writing });
+          throw ExceptionFactory.ObjectProperty(this, "State", State,
+            new object[] { DBxDataWriterState.Created, DBxDataWriterState.Writing });
       }
     }
 

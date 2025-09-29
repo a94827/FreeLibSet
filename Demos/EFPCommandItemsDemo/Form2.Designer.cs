@@ -31,7 +31,7 @@
       this.label1 = new System.Windows.Forms.Label();
       this.ed1 = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.ed2 = new FreeLibSet.Controls.IntEditBox();
+      this.ed2 = new FreeLibSet.Controls.Int32EditBox();
       this.label3 = new System.Windows.Forms.Label();
       this.ed3 = new FreeLibSet.Controls.DateTimeBox();
       this.btnCancel = new System.Windows.Forms.Button();
@@ -145,7 +145,7 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox ed1;
     private System.Windows.Forms.Label label2;
-    private FreeLibSet.Controls.IntEditBox ed2;
+    private FreeLibSet.Controls.Int32EditBox ed2;
     private System.Windows.Forms.Label label3;
     private FreeLibSet.Controls.DateTimeBox ed3;
     private System.Windows.Forms.Button btnCancel;

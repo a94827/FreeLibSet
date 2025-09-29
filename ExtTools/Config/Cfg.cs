@@ -43,7 +43,7 @@ namespace FreeLibSet.Config
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
-    public virtual bool TryParse(string s, out int value)
+    public virtual bool TryParseInt32(string s, out int value)
     {
       return int.TryParse(s, NumberStyles.Integer, NumberFormat, out value);
     }
@@ -54,10 +54,10 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <returns>Преобразованное значение</returns>
-    public int ParseInt(string s)
+    public int ParseInt32(string s)
     {
       int value;
-      if (TryParse(s, out value))
+      if (TryParseInt32(s, out value))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Int32));
@@ -83,7 +83,7 @@ namespace FreeLibSet.Config
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
-    public virtual bool TryParse(string s, out Int64 value)
+    public virtual bool TryParseInt64(string s, out Int64 value)
     {
       return Int64.TryParse(s, NumberStyles.Integer, NumberFormat, out value);
     }
@@ -97,7 +97,7 @@ namespace FreeLibSet.Config
     public Int64 ParseInt64(string s)
     {
       Int64 value;
-      if (TryParse(s, out value))
+      if (TryParseInt64(s, out value))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Int64));
@@ -123,7 +123,7 @@ namespace FreeLibSet.Config
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
-    public virtual bool TryParse(string s, out float value)
+    public virtual bool TryParseSingle(string s, out float value)
     {
       return float.TryParse(s, NumberStyles.Float, NumberFormat, out value);
     }
@@ -137,7 +137,7 @@ namespace FreeLibSet.Config
     public float ParseSingle(string s)
     {
       float value;
-      if (TryParse(s, out value))
+      if (TryParseSingle(s, out value))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Single));
@@ -163,7 +163,7 @@ namespace FreeLibSet.Config
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
-    public virtual bool TryParse(string s, out double value)
+    public virtual bool TryParseDouble(string s, out double value)
     {
       return double.TryParse(s, NumberStyles.Float, NumberFormat, out value);
     }
@@ -177,7 +177,7 @@ namespace FreeLibSet.Config
     public double ParseDouble(string s)
     {
       double value;
-      if (TryParse(s, out value))
+      if (TryParseDouble(s, out value))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Double));
@@ -203,7 +203,7 @@ namespace FreeLibSet.Config
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
-    public virtual bool TryParse(string s, out decimal value)
+    public virtual bool TryParseDecimal(string s, out decimal value)
     {
       return decimal.TryParse(s, NumberStyles.Float, NumberFormat, out value);
     }
@@ -217,7 +217,7 @@ namespace FreeLibSet.Config
     public decimal ParseDecimal(string s)
     {
       decimal value;
-      if (TryParse(s, out value))
+      if (TryParseDecimal(s, out value))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Decimal));
@@ -240,15 +240,15 @@ namespace FreeLibSet.Config
 
     /// <summary>
     /// Попытка преобразование строки в значение.
-    /// Использует <see cref="TryParse(string, out int)"/>. Затем числовое значение преобразуется в логическое.
+    /// Использует <see cref="TryParseInt32(string, out int)"/>. Затем числовое значение преобразуется в логическое.
     /// </summary>
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
-    public virtual bool TryParse(string s, out bool value)
+    public virtual bool TryParseBoolean(string s, out bool value)
     {
       int value2;
-      if (TryParse(s, out value2))
+      if (TryParseInt32(s, out value2))
       {
         value = value2 != 0;
         return true;
@@ -266,10 +266,10 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <returns>Преобразованное значение</returns>
-    public bool ParseBool(string s)
+    public bool ParseBoolean(string s)
     {
       bool value;
-      if (TryParse(s, out value))
+      if (TryParseBoolean(s, out value))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Boolean));
@@ -300,7 +300,7 @@ namespace FreeLibSet.Config
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <param name="useTime">true - использовать компонент времени</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
-    public virtual bool TryParse(string s, out DateTime value, bool useTime)
+    public virtual bool TryParseDateTime(string s, out DateTime value, bool useTime)
     {
       if (DateTime.TryParseExact(s,
         new string[] { "s", "yyyy\\-MM\\-dd" },
@@ -324,7 +324,7 @@ namespace FreeLibSet.Config
     public DateTime ParseDateTime(string s, bool useTime)
     {
       DateTime value;
-      if (TryParse(s, out value, useTime))
+      if (TryParseDateTime(s, out value, useTime))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(DateTime));
@@ -350,7 +350,7 @@ namespace FreeLibSet.Config
     /// <param name="s">Текстовое представление, используемое для хранения значения</param>
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
-    public virtual bool TryParse(string s, out TimeSpan value)
+    public virtual bool TryParseTimeSpan(string s, out TimeSpan value)
     {
       return TimeSpan.TryParse(s, out value);
     }
@@ -364,7 +364,7 @@ namespace FreeLibSet.Config
     public TimeSpan ParseTimeSpan(string s)
     {
       TimeSpan value;
-      if (TryParse(s, out value))
+      if (TryParseTimeSpan(s, out value))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(TimeSpan));
@@ -391,7 +391,7 @@ namespace FreeLibSet.Config
     /// <param name="value">Сюда помещается значение, если преобразование успешно выполнено</param>
     /// <returns>true, если преобразование выполнено, false, если строку нельзя преобразовать в значение</returns>
     [DebuggerStepThrough]
-    public virtual bool TryParse(string s, out Guid value)
+    public virtual bool TryParseGuid(string s, out Guid value)
     {
       try
       {
@@ -417,7 +417,7 @@ namespace FreeLibSet.Config
       // может быть переопределен
 
       Guid value;
-      if (TryParse(s, out value))
+      if (TryParseGuid(s, out value))
         return value;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Guid));
@@ -570,13 +570,13 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <returns>Значение</returns>
-    public int GetInt(string name)
+    public int GetInt32(string name)
     {
       string s = GetString(name);
 
       int value;
 
-      if (Converter.TryParse(s, out value))
+      if (Converter.TryParseInt32(s, out value))
         return value;
       else
         return 0;
@@ -590,11 +590,11 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Сюда будет помещено прочитанное значение в случае успеха</param>
     /// <returns>true, если значение было прочитано, false в случае неудачи</returns>
-    public bool GetInt(string name, ref int value)
+    public bool GetInt32(string name, ref int value)
     {
       string s = GetString(name);
       int x2;
-      if (Converter.TryParse(s, out x2))
+      if (Converter.TryParseInt32(s, out x2))
       {
         value = x2;
         return true;
@@ -611,9 +611,9 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя</param>
     /// <param name="defValue">Значение по умолчанию</param>
     /// <returns>Прочитанное значение или значение по умолчанию</returns>
-    public int GetIntDef(string name, int defValue)
+    public int GetInt32Def(string name, int defValue)
     {
-      GetInt(name, ref defValue);
+      GetInt32(name, ref defValue);
       return defValue;
     }
 
@@ -623,9 +623,9 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя</param>
     /// <param name="value">Записываемое значение</param>
-    public void SetInt(string name, int value)
+    public void SetInt32(string name, int value)
     {
-      SetInt(name, value, false);
+      SetInt32(name, value, false);
     }
 
     /// <summary>
@@ -634,7 +634,7 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Значение</param>
     /// <param name="removeEmpty">Если true и <paramref name="value"/> задает нулевое значение, то запись удаляется из хранилища.</param>
-    public void SetInt(string name, int value, bool removeEmpty)
+    public void SetInt32(string name, int value, bool removeEmpty)
     {
       if (removeEmpty && value == 0)
       {
@@ -661,7 +661,7 @@ namespace FreeLibSet.Config
 
       long value;
 
-      if (Converter.TryParse(s, out value))
+      if (Converter.TryParseInt64(s, out value))
         return value;
       else
         return 0L;
@@ -679,7 +679,7 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
       long x2;
-      if (Converter.TryParse(s, out x2))
+      if (Converter.TryParseInt64(s, out x2))
       {
         value = x2;
         return true;
@@ -741,13 +741,13 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя</param>
     /// <returns>Значение</returns>
-    public bool GetBool(string name)
+    public bool GetBoolean(string name)
     {
       string s = GetString(name);
 
       bool value;
 
-      if (Converter.TryParse(s, out value))
+      if (Converter.TryParseBoolean(s, out value))
         return value;
       else
         return false;
@@ -763,11 +763,11 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя</param>
     /// <param name="value">Сюда будет помещено прочитанное значение в случае успеха</param>
     /// <returns>true, если значение было прочитано, false в случае неудачи</returns>
-    public bool GetBool(string name, ref bool value)
+    public bool GetBoolean(string name, ref bool value)
     {
       string s = GetString(name);
       bool x2;
-      if (Converter.TryParse(s, out x2))
+      if (Converter.TryParseBoolean(s, out x2))
       {
         value = x2;
         return true;
@@ -785,9 +785,9 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя</param>
     /// <param name="defValue">Значение по умолчанию</param>
     /// <returns>Прочитанное значение или значение по умолчанию</returns>
-    public bool GetBoolDef(string name, bool defValue)
+    public bool GetBooleanDef(string name, bool defValue)
     {
-      GetBool(name, ref defValue);
+      GetBoolean(name, ref defValue);
       return defValue;
     }
 
@@ -798,9 +798,9 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя</param>
     /// <param name="value">Записываемое значение</param>
-    public void SetBool(string name, bool value)
+    public void SetBoolean(string name, bool value)
     {
-      SetBool(name, value, false);
+      SetBoolean(name, value, false);
     }
 
     /// <summary>
@@ -810,7 +810,7 @@ namespace FreeLibSet.Config
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Значение</param>
     /// <param name="removeEmpty">Если true и <paramref name="value"/> задает значение false, то запись удаляется из хранилища.</param>
-    public void SetBool(string name, bool value, bool removeEmpty)
+    public void SetBoolean(string name, bool value, bool removeEmpty)
     {
       if (removeEmpty && (!value))
       {
@@ -848,7 +848,7 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
       float x2;
-      if (Converter.TryParse(s, out x2))
+      if (Converter.TryParseSingle(s, out x2))
       {
         value = x2;
         return true;
@@ -925,7 +925,7 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
       double x2;
-      if (Converter.TryParse(s, out x2))
+      if (Converter.TryParseDouble(s, out x2))
       {
         value = x2;
         return true;
@@ -1002,7 +1002,7 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
       decimal x2;
-      if (Converter.TryParse(s, out x2))
+      if (Converter.TryParseDecimal(s, out x2))
       {
         value = x2;
         return true;
@@ -1069,7 +1069,7 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
       DateTime value;
-      Converter.TryParse(s, out value, false);
+      Converter.TryParseDateTime(s, out value, false);
       return value;
     }
 
@@ -1089,7 +1089,7 @@ namespace FreeLibSet.Config
         return false;
 
       DateTime x2;
-      if (Converter.TryParse(s, out x2, false))
+      if (Converter.TryParseDateTime(s, out x2, false))
       {
         value = x2;
         return true;
@@ -1139,7 +1139,7 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
       DateTime value;
-      Converter.TryParse(s, out value, true);
+      Converter.TryParseDateTime(s, out value, true);
       return value;
     }
 
@@ -1155,7 +1155,7 @@ namespace FreeLibSet.Config
       if (String.IsNullOrEmpty(s))
         return false;
       DateTime x2;
-      if (Converter.TryParse(s, out x2, true))
+      if (Converter.TryParseDateTime(s, out x2, true))
       {
         value = x2;
         return true;
@@ -1217,7 +1217,7 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
       TimeSpan x2;
-      if (Converter.TryParse(s, out x2))
+      if (Converter.TryParseTimeSpan(s, out x2))
       {
         value = x2;
         return true;
@@ -1275,7 +1275,7 @@ namespace FreeLibSet.Config
     /// Предполагается, что значение хранится как строка.
     /// Если нет сохраненного значения с заданным именем <paramref name="name"/>, то будет возвращено 
     /// перечислимое значение, соответствующее числовому значению 0 (даже если в перечислении нет такого элемента)
-    /// Если препочтительнее хранить числовые значения, используйте <see cref="GetInt(string)"/>.
+    /// Если препочтительнее хранить числовые значения, используйте <see cref="GetInt32(string)"/>.
     /// </summary>
     /// <typeparam name="T">Тип перечисления. Если T не является перечислением, возникнет ошибка времени выполнения</typeparam>
     /// <param name="name">Имя</param>
@@ -1293,7 +1293,7 @@ namespace FreeLibSet.Config
     /// Предполагается, что значение хранится как строка.
     /// Если нет сохраненного значения с заданным именем <paramref name="name"/>, то текущее значение,
     /// переданное по ссылке не изменяется
-    /// Если препочтительнее хранить числовые значения, используйте <see cref="GetInt(string, ref int)"/>.
+    /// Если препочтительнее хранить числовые значения, используйте <see cref="GetInt32(string, ref int)"/>.
     /// </summary>
     /// <typeparam name="T">Тип перечисления. Если T не является перечислением, возникнет ошибка времени выполнения</typeparam>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
@@ -1373,7 +1373,7 @@ namespace FreeLibSet.Config
     {
       string s = GetString(name);
       Guid x2;
-      if (Converter.TryParse(s, out x2))
+      if (Converter.TryParseGuid(s, out x2))
       {
         value = x2;
         return true;
@@ -1479,7 +1479,7 @@ namespace FreeLibSet.Config
         return a2;
       if (a2.Length == 0)
         return a1;
-      return DataTools.MergeArraysOnce<string>(a1, a2);
+      return ArrayTools.MergeArraysOnce<string>(a1, a2);
     }
 
     /// <summary>
@@ -1605,7 +1605,7 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <returns>Nullable-значение</returns>
-    public Nullable<int> GetNullableInt(string name)
+    public Nullable<int> GetNullableInt32(string name)
     {
       string s = GetString(name);
       if (String.IsNullOrEmpty(s))
@@ -1613,7 +1613,7 @@ namespace FreeLibSet.Config
       else
       {
         int res;
-        if (Converter.TryParse(s, out res))
+        if (Converter.TryParseInt32(s, out res))
           return res;
         else
           return null;
@@ -1627,7 +1627,7 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Nullable-значение</param>
-    public void SetNullableInt(string name, Nullable<int> value)
+    public void SetNullableInt32(string name, Nullable<int> value)
     {
       if (value.HasValue)
         SetString(name, Converter.ToString(value.Value));
@@ -1651,7 +1651,7 @@ namespace FreeLibSet.Config
       else
       {
         long res;
-        if (Converter.TryParse(s, out res))
+        if (Converter.TryParseInt64(s, out res))
           return res;
         else
           return null;
@@ -1681,7 +1681,7 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя</param>
     /// <returns>Nullable-значение</returns>
-    public Nullable<bool> GetNullableBool(string name)
+    public Nullable<bool> GetNullableBoolean(string name)
     {
       string s = GetString(name);
       if (String.IsNullOrEmpty(s))
@@ -1689,7 +1689,7 @@ namespace FreeLibSet.Config
       else
       {
         bool res;
-        if (Converter.TryParse(s, out res))
+        if (Converter.TryParseBoolean(s, out res))
           return res;
         else
           return null;
@@ -1703,7 +1703,7 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="value">Nullable-значение</param>
-    public void SetNullableBool(string name, Nullable<bool> value)
+    public void SetNullableBoolean(string name, Nullable<bool> value)
     {
       if (value.HasValue)
         SetString(name, Converter.ToString(value.Value));
@@ -1727,7 +1727,7 @@ namespace FreeLibSet.Config
       else
       {
         float res;
-        if (Converter.TryParse(s, out res))
+        if (Converter.TryParseSingle(s, out res))
           return res;
         else
           return null;
@@ -1765,7 +1765,7 @@ namespace FreeLibSet.Config
       else
       {
         double res;
-        if (Converter.TryParse(s, out res))
+        if (Converter.TryParseDouble(s, out res))
           return res;
         else
           return null;
@@ -1803,7 +1803,7 @@ namespace FreeLibSet.Config
       else
       {
         decimal res;
-        if (Converter.TryParse(s, out res))
+        if (Converter.TryParseDecimal(s, out res))
           return res;
         else
           return null;
@@ -1842,7 +1842,7 @@ namespace FreeLibSet.Config
       else
       {
         DateTime value;
-        if (Converter.TryParse(s, out value, false))
+        if (Converter.TryParseDateTime(s, out value, false))
           return value;
         else
           return null;
@@ -1880,7 +1880,7 @@ namespace FreeLibSet.Config
       else
       {
         DateTime value;
-        if (Converter.TryParse(s, out value, true))
+        if (Converter.TryParseDateTime(s, out value, true))
           return value;
         else
           return null;
@@ -1916,7 +1916,7 @@ namespace FreeLibSet.Config
       else
       {
         TimeSpan value;
-        if (Converter.TryParse(s, out value))
+        if (Converter.TryParseTimeSpan(s, out value))
           return value;
         else
           return null;
@@ -1954,7 +1954,7 @@ namespace FreeLibSet.Config
       else
       {
         Guid res;
-        if (Converter.TryParse(s, out res))
+        if (Converter.TryParseGuid(s, out res))
           return res;
         else
           return null;
@@ -1986,7 +1986,7 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <param name="values">Массив записываемых значений</param>
-    public void SetIntCommaString(string name, int[] values)
+    public void SetInt32CommaString(string name, int[] values)
     {
       // Нельзя использовать DataTools.CommaStringFromIds(), т.к. он не учитывает объект Converter
       //if (Values == null)
@@ -2012,7 +2012,7 @@ namespace FreeLibSet.Config
     /// </summary>
     /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
     /// <returns>Массив прочитанных значений или null</returns>
-    public int[] GetIntCommaString(string name)
+    public int[] GetInt32CommaString(string name)
     {
       // Нельзя использовать DataTools.CommaStringToIds(), т.к. он не учитывает объект Converter
       // return DataTools.CommaStringToIds(GetString(Name));
@@ -2023,7 +2023,7 @@ namespace FreeLibSet.Config
       string[] a = s.Split(new string[] { Converter.ListSeparator }, StringSplitOptions.None);
       int[] values = new int[a.Length];
       for (int i = 0; i < values.Length; i++)
-        values[i] = Converter.ParseInt(a[i].Trim());
+        values[i] = Converter.ParseInt32(a[i].Trim());
 
       return values;
     }
@@ -2187,43 +2187,6 @@ namespace FreeLibSet.Config
 
       return values;
     }
-
-
-    /// <summary>
-    /// Записывает массив дат в виде одной строки, разделенной запятыми.
-    /// Если задано значение null, то записывается пустая строка.
-    /// </summary>
-    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
-    /// <param name="values">Массив записываемых значений</param>
-    /// <param name="useTime">true - использовать компонент времени</param>
-    [Obsolete("Используйте перегрузку без аргумента useTime или метод SetDateCommaString()", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public void SetDateTimeCommaString(string name, DateTime[] values, bool useTime)
-    {
-      if (useTime)
-        SetDateTimeCommaString(name, values);
-      else
-        SetDateCommaString(name, values);
-    }
-
-    /// <summary>
-    /// Считывает строку как массив дат.
-    /// Если строка пустая, возвращается null, а не пустой массив.
-    /// Если строка имеет неправильный формат, генерируется исключение
-    /// </summary>
-    /// <param name="name">Имя параметра. Не может быть пустой строкой</param>
-    /// <param name="useTime">true - использовать компонент времени</param>
-    /// <returns>Массив прочитанных значений или null</returns>
-    [Obsolete("Используйте перегрузку без аргумента useTime или метод GetDateCommaString()", false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public DateTime[] GetDateTimeCommaString(string name, bool useTime)
-    {
-      if (useTime)
-        return GetDateTimeCommaString(name);
-      else
-        return GetDateCommaString(name);
-    }
-
 
     /// <summary>
     /// Записывает массив дат в виде одной строки, разделенной запятыми.
@@ -2566,12 +2529,12 @@ namespace FreeLibSet.Config
 
       public override string[] GetChildNames()
       {
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       }
 
       public override string[] GetValueNames()
       {
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       }
 
       protected override void DoRemove(string name)
@@ -3059,7 +3022,7 @@ namespace FreeLibSet.Config
     public override string MD5Sum()
     {
       byte[] bytes = Encoding.Unicode.GetBytes(RootNode.OuterXml);
-      return DataTools.MD5Sum(bytes);
+      return MD5Tools.MD5Sum(bytes);
     }
 
     #endregion
@@ -3135,7 +3098,7 @@ namespace FreeLibSet.Config
           base.RootNode = Document.CreateElement("Config");
           Document.AppendChild(base.RootNode);
         }
-        if (!DataTools.GetXmlEncoding(Document, out _Encoding))
+        if (!XmlTools.GetXmlEncoding(Document, out _Encoding))
           _Encoding = DefaultEncoding;
       }
     }
@@ -3213,7 +3176,7 @@ namespace FreeLibSet.Config
       XmlDeclaration xmldecl = Document.CreateXmlDeclaration("1.0", Encoding.WebName, null);
       Document.InsertBefore(xmldecl, Document.DocumentElement);
 
-      FileTools.WriteXmlDocument(FilePath, Document);
+      XmlTools.WriteXmlDocument(FilePath, Document);
     }
 
     #endregion
@@ -3433,7 +3396,7 @@ namespace FreeLibSet.Config
       if (Tree.Exists(KeyName))
         return Tree[KeyName].GetSubKeyNames();
       else
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
     }
 
     /// <summary>
@@ -3446,7 +3409,7 @@ namespace FreeLibSet.Config
       if (Tree.Exists(KeyName))
         return Tree[KeyName].GetValueNames();
       else
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
     }
 
     /// <summary>
@@ -3782,7 +3745,7 @@ namespace FreeLibSet.Config
       if (Tree.Exists(KeyName))
         return Tree[KeyName].GetSubKeyNames();
       else
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
     }
 
     /// <summary>
@@ -3795,7 +3758,7 @@ namespace FreeLibSet.Config
       if (Tree.Exists(KeyName))
         return Tree[KeyName].GetValueNames();
       else
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
     }
 
     /// <summary>
@@ -4255,7 +4218,7 @@ namespace FreeLibSet.Config
       }
 
       if (subNames == null)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
       {
         subNames.Sort();

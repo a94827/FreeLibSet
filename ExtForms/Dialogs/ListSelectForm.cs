@@ -59,13 +59,13 @@ namespace FreeLibSet.Forms
       efpGrid = new EFPDataGridView(baseProvider, theGrid);
       efpGrid.Control.AutoGenerateColumns = false;
       if (_Owner.MultiSelect)
-        efpGrid.Columns.AddBool("CheckBox", false, String.Empty);
+        efpGrid.Columns.AddCheckBox("CheckBox", false, String.Empty);
       if (EFPApp.ShowListImages)
         efpGrid.Columns.AddImage("Image");
-      efpGrid.Columns.AddText("Item", false, String.Empty);
+      efpGrid.Columns.AddText("Item", false, String.Empty, 10, 1);
       efpGrid.Columns.LastAdded.CanIncSearch = true;
       if (_Owner.SubItems != null)
-        efpGrid.Columns.AddText("SubItem", false, String.Empty);
+        efpGrid.Columns.AddText("SubItem", false, String.Empty, 10, 1);
       efpGrid.Control.ColumnHeadersVisible = false;
       efpGrid.Control.RowHeadersVisible = false;
       efpGrid.DisableOrdering();
@@ -73,7 +73,7 @@ namespace FreeLibSet.Forms
       efpGrid.Control.ReadOnly = true;
       efpGrid.CanView = false;
       efpGrid.Control.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-      efpGrid.GetCellAttributes += EfpGrid_GetCellAttributes;
+      efpGrid.CellInfoNeeded += EfpGrid_CellInfoNeeded;
       //efpGrid.CommandItems.PasteHandler.Visible = false; // 23.05.2025
       efpGrid.CommandItems.AddTextPasteFormats();
       efpGrid.CommandItems.PasteHandler.Clear();
@@ -192,7 +192,7 @@ namespace FreeLibSet.Forms
 
     public EFPDataGridView efpGrid;
 
-    private void EfpGrid_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private void EfpGrid_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       switch (args.ColumnName)
       {
@@ -810,14 +810,14 @@ namespace FreeLibSet.Forms
           if (SelectedIndex >= 0)
             return new int[1] { SelectedIndex };
           else
-            return DataTools.EmptyInts;
+            return EmptyArray<Int32>.Empty;
         }
       }
       set
       {
         if (MultiSelect)
         {
-          DataTools.FillArray<bool>(Selections, false);
+          ArrayTools.FillArray<bool>(Selections, false);
           if (value != null)
           {
             for (int i = 0; i < value.Length; i++)
@@ -859,7 +859,7 @@ namespace FreeLibSet.Forms
       if (Items == null)
         throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
 
-      DataTools.FillArray<bool>(Selections, false);
+      ArrayTools.FillArray<bool>(Selections, false);
 
       if (selectedItems != null)
       {
@@ -885,7 +885,7 @@ namespace FreeLibSet.Forms
       {
         if (SelectedIndex >= 0)
           return new string[1] { Items[SelectedIndex] };
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       }
 
       // Придется делать 2 прохода
@@ -917,7 +917,7 @@ namespace FreeLibSet.Forms
       if (!MultiSelect)
         throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
 
-      DataTools.FillArray<bool>(Selections, true);
+      ArrayTools.FillArray<bool>(Selections, true);
     }
 
 
@@ -929,7 +929,7 @@ namespace FreeLibSet.Forms
       if (!MultiSelect)
         throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
 
-      DataTools.FillArray<bool>(Selections, false);
+      ArrayTools.FillArray<bool>(Selections, false);
     }
 
     #endregion
@@ -996,7 +996,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (_Codes == null || (!MultiSelect))
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
 
         List<string> lst = new List<string>();
         for (int i = 0; i < Items.Length; i++)
@@ -1493,14 +1493,14 @@ namespace FreeLibSet.Forms
           if (SelectedIndex >= 0)
             return new int[1] { SelectedIndex };
           else
-            return DataTools.EmptyInts;
+            return EmptyArray<Int32>.Empty;
         }
       }
       set
       {
         if (MultiSelect)
         {
-          DataTools.FillArray<bool>(Selections, false);
+          ArrayTools.FillArray<bool>(Selections, false);
           if (value != null)
           {
             for (int i = 0; i < value.Length; i++)
@@ -1542,7 +1542,7 @@ namespace FreeLibSet.Forms
       if (Items == null)
         throw ExceptionFactory.ObjectPropertyNotSet(this, "Items");
 
-      DataTools.FillArray<bool>(Selections, false);
+      ArrayTools.FillArray<bool>(Selections, false);
 
       if (selectedItems != null)
       {
@@ -1568,7 +1568,7 @@ namespace FreeLibSet.Forms
       {
         if (SelectedIndex >= 0)
           return new string[1] { Items[SelectedIndex] };
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       }
 
       // Придется делать 2 прохода
@@ -1600,7 +1600,7 @@ namespace FreeLibSet.Forms
       if (!MultiSelect)
         throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
 
-      DataTools.FillArray<bool>(Selections, true);
+      ArrayTools.FillArray<bool>(Selections, true);
     }
 
 
@@ -1612,7 +1612,7 @@ namespace FreeLibSet.Forms
       if (!MultiSelect)
         throw ExceptionFactory.ObjectProperty(this, "MultiSelect", MultiSelect, new object[] { true });
 
-      DataTools.FillArray<bool>(Selections, false);
+      ArrayTools.FillArray<bool>(Selections, false);
     }
 
     #endregion
@@ -1680,7 +1680,7 @@ namespace FreeLibSet.Forms
       get
       {
         if (_Codes == null || (!MultiSelect))
-          return DataTools.EmptyStrings;
+          return EmptyArray<string>.Empty;
 
         List<string> lst = new List<string>();
         for (int i = 0; i < Items.Length; i++)

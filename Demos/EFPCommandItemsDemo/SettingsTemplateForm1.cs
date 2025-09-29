@@ -35,14 +35,14 @@ namespace EFPCommandItemsDemo
 
       public override void ReadConfig(CfgPart cfg, SettingsPart part)
       {
-        Option1 = cfg.GetBool("Option1");
-        Option2 = cfg.GetBool("Option2");
+        Option1 = cfg.GetBoolean("Option1");
+        Option2 = cfg.GetBoolean("Option2");
       }
 
       public override void WriteConfig(CfgPart cfg, SettingsPart part)
       {
-        cfg.SetBool("Option1", Option1);
-        cfg.SetBool("Option2", Option2);
+        cfg.SetBoolean("Option1", Option1);
+        cfg.SetBoolean("Option2", Option2);
       }
     }
 

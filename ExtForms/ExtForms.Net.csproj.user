@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="Controls\BandPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\ColorComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\ControlRightButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\DateRangeBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\DateTimeBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\InfoLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\MessageBoxIconBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\MonthDayBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\NumEditBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ParamSetComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\RadioGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\BaseTextControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\BindableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\EditableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\ExpandingIcon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\InteractiveControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodeCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodeComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodeControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodeDateTimeBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodeIcon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodeNumEditBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodePlusMinus.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodeStateIcon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\NodeControls\NodeTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\TreeColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\TreeViewAdv.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\TreeViewAdv.Draw.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\TreeViewAdv.Editor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\TreeViewAdv.Input.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TreeViewAdv\TreeViewAdv.Properties.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\TwoListSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\UserComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\XmlViewBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\YearMonthBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\YearMonthRangeBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Data\CodeGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Data\DateRangeInclusionGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Data\YearGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Diagnosics\DebugParsingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Diagnosics\ShowExceptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Diagnosics\ShowExceptionMsgBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\DateRangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\EFPDataViewCopyFormatsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\EFPTextSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\ExtEditDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\FileBrowseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\FileCopier.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\GridConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\GridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\ListSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\NumRangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\OKCancelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\RadioSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\SelectCompositionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\SettingsDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\SimpleAboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\SimpleGridForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\WizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPApp\EFPAppRemoteExitHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPApp\TempBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPApp\TempMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPApp\TempWaitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPControls\EFPDataGridViewOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPForm\EFPToolWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPGridProducer\EFPGridProducerEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPReport\EFPReportExtParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPReport\EFPReportExtParamsTwoPageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRDataViewPageSetupAppearance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRDataViewPageSetupCellParamDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRDataViewPageSetupColumns.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRDataViewPageSetupDbf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRDataViewPageSetupSendTo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRDataViewPageSetupText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRPageSetupBitmap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRPageSetupFont.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRPageSetupMargins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRPageSetupPaper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Reporting\BRPageSetupPrinter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Splash\SplashForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Controls\ComboBoxImagesResource.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Controls\DateRangeBox.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="MainImagesResource.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

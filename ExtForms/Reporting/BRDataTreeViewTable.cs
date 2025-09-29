@@ -288,7 +288,7 @@ namespace FreeLibSet.Forms.Reporting
               else if (!String.IsNullOrEmpty(efpCol.TreeColumn.Header))
                 headList.Add(new string[1] { efpCol.TreeColumn.Header });
               else
-                headList.Add(DataTools.EmptyStrings);
+                headList.Add(EmptyArray<string>.Empty);
               headList2.Add(new string[1] { (cntCol + 1).ToString() });
             }
 
@@ -459,7 +459,7 @@ namespace FreeLibSet.Forms.Reporting
     {
       object v = nc.GetValue(node);
       if (v is Boolean)
-        v = _Info.ViewData.GetBoolValue((bool)v);
+        v = _Info.ViewData.GetBooleanValue((bool)v);
       return v;
     }
 

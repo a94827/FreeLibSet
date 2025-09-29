@@ -44,7 +44,7 @@ namespace FreeLibSet.Forms.Data
     /// Свойство используется только при показе диалога фильтра. Перед этим 
     /// вызывается событие <see cref="AllValuesNeeded"/>, которое может использоваться для
     /// динамической установки списка.
-    /// Значения null и <see cref="DataTools.EmptyStrings"/> отличаются. Во втором случае показывается пустой диалог выбора из списка
+    /// Значения null и <see cref="EmptyArray{String}.Empty"/> отличаются. Во втором случае показывается пустой диалог выбора из списка
     /// </summary>
     public string[] AllValues { get { return _AllValues; } set { _AllValues = value; } }
     private string[] _AllValues;
@@ -356,7 +356,7 @@ namespace FreeLibSet.Forms.Data
       dlg.ImageKey = "Filter";
       dlg.DialogPosition = dialogPosition;
       if (AllValues == null)
-        dlg.Items = DataTools.EmptyStrings;
+        dlg.Items = EmptyArray<string>.Empty;
       else
         dlg.Items = AllValues;
       int emptyStringPos = Array.IndexOf<string>(AllValues, String.Empty);
@@ -538,7 +538,7 @@ namespace FreeLibSet.Forms.Data
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      int value = DataTools.GetInt(columnValues[0]);
+      int value = DataTools.GetInt32(columnValues[0]);
       string s;
       if (value < 0 || value >= TextValues.Length)
         s = "Value # " + value.ToString();
@@ -553,10 +553,10 @@ namespace FreeLibSet.Forms.Data
   /// <summary>
   /// Простой фильтр по логическому полю.
   /// В обычном режиме возможен выбор из 3 вариантов: "Нет фильтра", "Значение установлено" и "Значение сброшено".
-  /// Очистив одно из свойств <see cref="BoolValueGridFilter.FilterTextTrue"/> или <see cref="BoolValueGridFilter.FilterTextFalse"/>, можно использовать фильтр в упрощенном режиме на 2 положения,
+  /// Очистив одно из свойств <see cref="BooleanValueGridFilter.FilterTextTrue"/> или <see cref="BooleanValueGridFilter.FilterTextFalse"/>, можно использовать фильтр в упрощенном режиме на 2 положения,
   /// что может быть полезно в отчетах.
   /// </summary>
-  public class BoolValueGridFilter : BoolValueCommonFilter, IEFPGridFilterWithImageKey
+  public class BooleanValueGridFilter : BooleanValueCommonFilter, IEFPGridFilterWithImageKey
   {
     #region Конструктор
 
@@ -564,11 +564,11 @@ namespace FreeLibSet.Forms.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя поля</param>
-    public BoolValueGridFilter(string columnName)
+    public BooleanValueGridFilter(string columnName)
       : base(columnName)
     {
-      _FilterTextTrue = Res.BoolValueGridFilter_Msg_FilterTextTrue;
-      _FilterTextFalse = Res.BoolValueGridFilter_Msg_FilterTextFalse;
+      _FilterTextTrue = Res.BooleanValueGridFilter_Msg_FilterTextTrue;
+      _FilterTextFalse = Res.BooleanValueGridFilter_Msg_FilterTextFalse;
     }
 
     #endregion
@@ -659,7 +659,7 @@ namespace FreeLibSet.Forms.Data
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
       if (String.IsNullOrEmpty(FilterTextTrue) && String.IsNullOrEmpty(FilterTextFalse))
-        throw new NullReferenceException(Res.BoolValueGridFilter_Err_NoText);
+        throw new NullReferenceException(Res.BooleanValueGridFilter_Err_NoText);
 
       RadioSelectDialog dlg = new RadioSelectDialog();
       dlg.Title = DisplayName;
@@ -785,7 +785,7 @@ namespace FreeLibSet.Forms.Data
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      bool value = DataTools.GetBool(columnValues[0]);
+      bool value = DataTools.GetBoolean(columnValues[0]);
       return new string[] { value ? FilterTextTrue : FilterTextFalse };
     }
 
@@ -797,7 +797,7 @@ namespace FreeLibSet.Forms.Data
   /// Если поле может принимать фиксированный набор значений, то следует использовать
   /// фильтр <see cref="EnumGridFilter"/>.
   /// </summary>
-  public class IntValueGridFilter : IntValueCommonFilter, IEFPGridFilter
+  public class Int32ValueGridFilter : Int32ValueCommonFilter, IEFPGridFilter
   {
     #region Конструктор
 
@@ -805,7 +805,7 @@ namespace FreeLibSet.Forms.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя поля</param>
-    public IntValueGridFilter(string columnName)
+    public Int32ValueGridFilter(string columnName)
       : base(columnName)
     {
     }
@@ -821,7 +821,7 @@ namespace FreeLibSet.Forms.Data
     /// <returns>Значение</returns>
     protected override int DoReadConfigValue(CfgPart cfg)
     {
-      return cfg.GetInt("Value");
+      return cfg.GetInt32("Value");
     }
 
     /// <summary>
@@ -831,7 +831,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="value">Значение</param>
     protected override void DoWriteConfigValue(CfgPart cfg, int value)
     {
-      cfg.SetInt("Value", value);
+      cfg.SetInt32("Value", value);
     }
 
     /// <summary>
@@ -841,7 +841,7 @@ namespace FreeLibSet.Forms.Data
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      IntInputDialog dlg = new IntInputDialog();
+      Int32InputDialog dlg = new Int32InputDialog();
       dlg.CanBeEmpty = true;
       dlg.NValue = Value;
       dlg.Title = DisplayName;
@@ -878,7 +878,7 @@ namespace FreeLibSet.Forms.Data
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      int value = DataTools.GetInt(columnValues[0]);
+      int value = DataTools.GetInt32(columnValues[0]);
       return new string[] { value.ToString() };
     }
 

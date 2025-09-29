@@ -2435,28 +2435,6 @@ namespace FreeLibSet.Forms
 
     #region Немодальные формы
 
-#if XXX
-    /// <summary>
-    /// Возвращает список открытых дочерних MDI-форм.
-    /// </summary>
-    [Obsolete("Это свойство является устаревшим и предназначено только для программ, поддерживающих единственное окно MDI. " +
-       "В новых программах используйте метод Interface.GetChildForms()", false)]
-    internal static Form[] MdiChildren
-    {
-      get
-      {
-#if DEBUG
-        CheckMainThread();
-#endif
-
-        if (MainWindow == null)
-          return new Form[0];
-        else
-          return MainWindow.MdiChildren;
-      }
-    }
-#endif
-
     /// <summary>
     /// Выводит дочернюю форму.
     /// Вызывает <see cref="EFPAppInterface.ShowChildForm(Form)"/>.
@@ -2486,161 +2464,6 @@ namespace FreeLibSet.Forms
         SystemMethods.Show(form, null);
       }
     }
-
-#if XXX
-    /// <summary>
-    /// Вывод формы со встраиванием в интерфейс MDI
-    /// Может быть добавлено несколько одинаковых форм.
-    /// </summary>
-    /// <param name="form">Добавляемая форма</param>
-    [Obsolete("Этот метод является устаревшим. Используйте ShowChildForm().", false)]
-    public static void ShowMdiChild(Form form)
-    {
-      ShowChildForm(form);
-    }
-#endif
-
-#if XXX
-    /// <summary>
-    /// Вывод формы со встраиванием в интерфейс MDI
-    /// Можно запретить добавление, если такая форма уже есть.
-    /// </summary>
-    /// <param name="form">Добавляемая форма</param>
-    /// <param name="singleInstance">Если true, то просматривается список существующих MDI-окон. Если
-    /// среди них есть форма с тем же GetType(), то она активируется</param>
-    [Obsolete("Этот метод является устаревшим. Вместо этого метода с SingleInstance=true, " +
-      "предпочтительнее использовать типизированный метод ShowSingleInstanceForm(). " +
-      "В этом случае не требуется создания экземпляра формы, если она не будет выводится на экран", false)]
-    public static void ShowMdiChild(Form form, bool singleInstance)
-    {
-#if DEBUG
-      CheckMainThread();
-
-      if (form == null)
-        throw new ArgumentNullException("form");
-      if (form.IsDisposed)
-        throw new ObjectDisposedException("form");
-#endif
-
-      if (singleInstance && Interface != null)
-      {
-        Form[] Forms = Interface.GetChildForms(false);
-
-        for (int i = 0; i < Forms.Length; i++)
-        {
-          if (Forms[i].GetType() == form.GetType())
-          {
-            Activate(Forms[i]);// 07.06.2021
-
-            // Уничтожаем новую форму
-            form.Dispose();
-            return;
-          }
-        }
-      }
-
-      // Надо добавить форму
-      ShowChildForm(form);
-    }
-#endif
-
-#if XXX
-    /// <summary>
-    /// Делает попытку закрыть все открытые формы
-    /// </summary>
-    [Obsolete("Этот метод является устаревшим. Используйте Interface.CloseAllChildren()", false)]
-    public static void CloseAllMdiChildren()
-    {
-#if DEBUG
-      CheckMainThread();
-#endif
-
-#pragma warning disable 0618 // обход [Obsolete]
-      Form[] Forms = EFPApp.MdiChildren; // 04.04.2012. Если не сохранить массив, то
-#pragma warning restore 0618
-
-      // оригинальный Forms будет укорачиваться в процессе удаления
-
-      for (int i = 0; i < Forms.Length; i++)
-      {
-        Forms[i].Close();
-        if (Forms[i].Visible)
-          break;
-      }
-    }
-#endif
-
-#if XXX
-    /// <summary>
-    /// Найти MDI-форму заданного класса.
-    /// Возвращает первую найденную форму или null
-    /// </summary>
-    /// <param name="formType">Тип формы</param>
-    /// <returns>Найденная форма или null</returns>
-    [Obsolete("Этот метод устарел. Используйте Interface.FindChildForm()", false)]
-    public static Form FindMdiChild(Type formType)
-    {
-#if DEBUG
-      CheckMainThread();
-#endif
-
-#pragma warning disable 0618 // обход [Obsolete]
-
-      for (int i = 0; i < MdiChildren.Length; i++)
-      {
-        if (MdiChildren[i].GetType() == formType)
-          return MdiChildren[i];
-      }
-      return null;
-
-#pragma warning restore 0618
-    }
-#endif
-
-#if XXX
-/// <summary>
-    /// Найти и активировать форму заданного класса.
-    /// Возвращает true в случае успеха
-    /// </summary>
-    /// <param name="formType">Тип формы</param>
-    /// <returns>true, если форма найдена и активирована. false, если форма не найдена</returns>
-    [Obsolete("Этот метод устарел. Используйте Interface.FindAndActivateChildForm()", false)]
-    public static bool FindAndActivateMdiChild(Type formType)
-    {
-#if DEBUG
-      CheckMainThread();
-#endif
-
-#pragma warning disable 0618 // обход [Obsolete]
-      Form frm = FindMdiChild(formType);
-#pragma warning restore 0618
-
-      if (frm == null)
-        return false;
-      if (frm.WindowState == FormWindowState.Minimized)
-        frm.WindowState = FormWindowState.Normal; // 21.09.2017
-      frm.Activate();
-      return true;
-    }
-#endif
-
-
-#if XXX
-    /// <summary>
-    /// Выполнение команд меню "Окно"
-    /// </summary>
-    /// <param name="layout"></param>
-    [Obsolete("Этот метод устарел. Упорядочение окон должно выполняться для определенного главного окна " +
-      "вызовом Interface.CurrentMainWindowLayout.LayoutChildForms()", false)]
-    public static void LayoutMdiChildren(MdiLayout layout)
-    {
-#if DEBUG
-      CheckMainThread();
-#endif
-
-      EFPApp.MainWindow.LayoutMdi(layout);
-    }
-#endif
 
     #endregion
 
@@ -3578,7 +3401,7 @@ namespace FreeLibSet.Forms
         gh.Control.AutoGenerateColumns = false;
         if (EFPApp.ShowListImages)
           gh.Columns.AddImage("Image");
-        gh.Columns.AddInt("Order", false, String.Empty, 3);
+        gh.Columns.AddInteger("Order", false, String.Empty, 3);
         gh.Columns.LastAdded.CanIncSearch = true;
         gh.Columns.AddTextFill("Text", false, String.Empty, 100, 20);
         gh.Columns.LastAdded.CanIncSearch = true;
@@ -3588,7 +3411,7 @@ namespace FreeLibSet.Forms
           gh.Columns.AddText("MainWindow", false, String.Empty, 3, 2);
 
         if (EFPApp.ShowListImages)
-          gh.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(ChildFormList_GetCellAttributes);
+          gh.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(ChildFormList_CellInfoNeeded);
         gh.DisableOrdering();
         gh.Control.ColumnHeadersVisible = false;
         gh.ReadOnly = true;
@@ -3622,7 +3445,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    static void ChildFormList_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    static void ChildFormList_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       EFPDataGridView gh = (EFPDataGridView)sender;
       if (args.RowIndex < 0)
@@ -4106,7 +3929,10 @@ namespace FreeLibSet.Forms
       }
       catch (Exception e2)
       {
-        DebugTools.ShowException(e2, Res.EFPApp_ErrTitle_ShowExceptionInternal);
+        string sTemplate;
+        try { sTemplate = Res.EFPApp_ErrTitle_ShowExceptionInternal; }
+        catch { sTemplate = "Error when show exception message"; }
+        DebugTools.ShowException(e2, sTemplate);
       }
     }
 
@@ -4576,7 +4402,7 @@ namespace FreeLibSet.Forms
       }
       else // 09.11.2023
       {
-        string text = DataTools.XmlDocumentToString(xmlDoc);
+        string text = XmlTools.XmlDocumentToString(xmlDoc);
         ShowTextView(text, title, isModal /*,fileName*/);
       }
     }

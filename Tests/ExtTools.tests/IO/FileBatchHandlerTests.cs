@@ -333,7 +333,7 @@ namespace ExtTools_tests.IO
     private static string[] GetWantedNames(string wantedNames)
     {
       if (String.IsNullOrEmpty(wantedNames))
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       string[] a = wantedNames.Split(',');
       for (int i = 0; i < a.Length; i++)
         a[i] = a[i].Trim();
@@ -342,14 +342,14 @@ namespace ExtTools_tests.IO
 
     private static byte[] GetBytes(string fileName)
     {
-      string s = DataTools.MD5SumFromString(fileName.ToUpperInvariant());
+      string s = MD5Tools.MD5SumFromString(fileName.ToUpperInvariant());
       return Encoding.ASCII.GetBytes(s);
     }
 
     private static void CreateBadFile(AbsPath filePath)
     {
       FileTools.ForceDirs(filePath.ParentDir);
-      File.WriteAllBytes(filePath.Path, DataTools.CreateArray<byte>(1000, 66));
+      File.WriteAllBytes(filePath.Path, ArrayTools.CreateArray<byte>(1000, 66));
     }
 
     #endregion

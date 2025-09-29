@@ -38,7 +38,7 @@ namespace EFPAppRemoteExitDemo
       ciExit.Click += new EventHandler(ciExit_Click);
 
       EFPMainMenu MainMenu = new EFPMainMenu();
-      MainMenu.Add(EFPApp.CommandItems);
+      MainMenu.AddRange(EFPApp.CommandItems);
       MainMenu.Attach();
 
       

@@ -497,7 +497,7 @@ namespace FreeLibSet.Russian.PhoneticAlgorithms
     /// </summary>
     /// <param name="s">Преобразуемая строка </param>
     /// <returns>Массив кодов DM-Soundex</returns>
-    public static int[] CalculateInt(string s)
+    public static int[] CalculateInt32(string s)
     {
       CodeAccumulator[] a = DoCalculate(s, null);
       if (a.Length == 0)

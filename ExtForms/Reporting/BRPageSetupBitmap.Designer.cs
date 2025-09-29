@@ -34,7 +34,7 @@
       this.cbClipMargins = new System.Windows.Forms.CheckBox();
       this.cbColorFormat = new System.Windows.Forms.ComboBox();
       this.lblColorFormat = new System.Windows.Forms.Label();
-      this.edResolution = new FreeLibSet.Controls.IntEditBox();
+      this.edResolution = new FreeLibSet.Controls.Int32EditBox();
       this.lblResolution = new System.Windows.Forms.Label();
       this.MainPanel.SuspendLayout();
       this.grpMain.SuspendLayout();
@@ -105,7 +105,7 @@
     private System.Windows.Forms.CheckBox cbClipMargins;
     private System.Windows.Forms.ComboBox cbColorFormat;
     private System.Windows.Forms.Label lblColorFormat;
-    private Controls.IntEditBox edResolution;
+    private Controls.Int32EditBox edResolution;
     private System.Windows.Forms.Label lblResolution;
   }
 }

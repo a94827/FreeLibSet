@@ -162,7 +162,7 @@ namespace ExtTools_tests.IO
         System.IO.Directory.CreateDirectory(dirName1.Path);
         AbsPath dirName2 = new AbsPath(dir.Dir, "2"); // несуществующий каталог
         AbsPath dirName3 = new AbsPath(dir.Dir, "3");
-        System.IO.File.WriteAllBytes(dirName3.Path, DataTools.EmptyBytes); // файл вместо каталога
+        System.IO.File.WriteAllBytes(dirName3.Path, EmptyArray<byte>.Empty); // файл вместо каталога
 
         Console.WriteLine("dirName1=" + dirName1.Path);
         Console.WriteLine("dirName1.RootDir=" + dirName1.RootDir.Path);
@@ -248,7 +248,7 @@ namespace ExtTools_tests.IO
         AbsPath fileName2 = new AbsPath(dir.Dir, "1", "2.txt"); // файл не существует
         AbsPath fileName3 = new AbsPath(dir.Dir, "2", "1.txt"); // Каталог не существует
         System.IO.Directory.CreateDirectory(fileName1.ParentDir.Path);
-        System.IO.File.WriteAllBytes(fileName1.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName1.Path, EmptyArray<byte>.Empty);
         AbsPath fileName4 = new AbsPath(dir.Dir, "1", "4.txt"); // Каталог вместо файла
         System.IO.Directory.CreateDirectory(fileName4.Path);
 
@@ -292,7 +292,7 @@ namespace ExtTools_tests.IO
         AbsPath dirName2 = new AbsPath(dir.Dir, "2");
         AbsPath dirName3 = new AbsPath(dir.Dir, "3");
         System.IO.Directory.CreateDirectory(dirName1.Path);
-        System.IO.File.WriteAllBytes(dirName3.Path, DataTools.EmptyBytes); // файл вместо каталога
+        System.IO.File.WriteAllBytes(dirName3.Path, EmptyArray<byte>.Empty); // файл вместо каталога
 
         Assert.DoesNotThrow(delegate () { FileTools.CheckDirectoryExists(dirName1); }, "#1");
         Assert.Catch<System.IO.DirectoryNotFoundException>(delegate () { FileTools.CheckDirectoryExists(dirName2); }, "#2");
@@ -310,7 +310,7 @@ namespace ExtTools_tests.IO
         AbsPath fileName3 = new AbsPath(dir.Dir, "2", "1.txt");
         AbsPath fileName4 = new AbsPath(dir.Dir, "1", "4.txt"); // каталог вместо файла
         System.IO.Directory.CreateDirectory(fileName1.ParentDir.Path);
-        System.IO.File.WriteAllBytes(fileName1.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName1.Path, EmptyArray<byte>.Empty);
         System.IO.Directory.CreateDirectory(fileName4.Path);
 
         Assert.DoesNotThrow(delegate () { FileTools.CheckFileExists(fileName1); }, "#1");
@@ -332,12 +332,12 @@ namespace ExtTools_tests.IO
       using (TempDirectory dir = new TempDirectory())
       {
         AbsPath path1 = new AbsPath(dir.Dir, "aaa");
-        System.IO.File.WriteAllBytes(path1.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(path1.Path, EmptyArray<byte>.Empty);
         AbsPath path2 = new AbsPath(dir.Dir, "bbb");
         FileTools.ForceDirs(path2);
         AbsPath path3 = new AbsPath(dir.Dir, "SD", "ccc");
         FileTools.ForceDirs(path3.ParentDir);
-        System.IO.File.WriteAllBytes(path3.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(path3.Path, EmptyArray<byte>.Empty);
 
         bool res = FileTools.IsAnyFileExist(dir.Dir, template);
         Assert.AreEqual(wantedRes, res);
@@ -371,7 +371,7 @@ namespace ExtTools_tests.IO
       {
         AbsPath fileName1 = new AbsPath(dir.Dir, "1.txt");
         AbsPath fileName2 = new AbsPath(dir.Dir, "2.txt");
-        System.IO.File.WriteAllBytes(fileName1.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName1.Path, EmptyArray<byte>.Empty);
         System.IO.File.SetAttributes(fileName1.Path, System.IO.FileAttributes.ReadOnly);
         Assert.IsTrue(System.IO.File.Exists(fileName1.Path), "#1 before");
 
@@ -390,12 +390,12 @@ namespace ExtTools_tests.IO
         AbsPath fileName1 = new AbsPath(dir.Dir, "1.txt");
         AbsPath fileName2 = new AbsPath(dir.Dir, "1", "2.txt");
         AbsPath fileName3 = new AbsPath(dir.Dir, "1.doc");
-        System.IO.File.WriteAllBytes(fileName1.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName1.Path, EmptyArray<byte>.Empty);
         System.IO.File.SetAttributes(fileName1.Path, System.IO.FileAttributes.ReadOnly);
         System.IO.Directory.CreateDirectory(fileName2.ParentDir.Path);
-        System.IO.File.WriteAllBytes(fileName2.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName2.Path, EmptyArray<byte>.Empty);
         System.IO.File.SetAttributes(fileName2.Path, System.IO.FileAttributes.ReadOnly);
-        System.IO.File.WriteAllBytes(fileName3.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName3.Path, EmptyArray<byte>.Empty);
         System.IO.File.SetAttributes(fileName3.Path, System.IO.FileAttributes.ReadOnly);
         Assert.IsTrue(System.IO.Directory.Exists(fileName2.ParentDir.Path), "Dir before");
         Assert.IsTrue(System.IO.File.Exists(fileName1.Path), "#1 before");
@@ -419,12 +419,12 @@ namespace ExtTools_tests.IO
         AbsPath fileName1 = new AbsPath(dir.Dir, "1.txt");
         AbsPath fileName2 = new AbsPath(dir.Dir, "1", "2.txt");
         AbsPath fileName3 = new AbsPath(dir.Dir, "1.doc");
-        System.IO.File.WriteAllBytes(fileName1.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName1.Path, EmptyArray<byte>.Empty);
         System.IO.File.SetAttributes(fileName1.Path, System.IO.FileAttributes.ReadOnly);
         System.IO.Directory.CreateDirectory(fileName2.ParentDir.Path);
-        System.IO.File.WriteAllBytes(fileName2.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName2.Path, EmptyArray<byte>.Empty);
         System.IO.File.SetAttributes(fileName2.Path, System.IO.FileAttributes.ReadOnly);
-        System.IO.File.WriteAllBytes(fileName3.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(fileName3.Path, EmptyArray<byte>.Empty);
         System.IO.File.SetAttributes(fileName3.Path, System.IO.FileAttributes.ReadOnly);
         Assert.IsTrue(System.IO.Directory.Exists(fileName2.ParentDir.Path), "Dir before");
         Assert.IsTrue(System.IO.File.Exists(fileName1.Path), "#1 before");
@@ -503,9 +503,9 @@ namespace ExtTools_tests.IO
         AbsPath file1 = new AbsPath(dir1, "1.txt");
         AbsPath file2 = new AbsPath(dir2, "2.txt");
         AbsPath file3 = new AbsPath(dir3, "3.txt");
-        System.IO.File.WriteAllBytes(file1.Path, DataTools.EmptyBytes);
-        System.IO.File.WriteAllBytes(file2.Path, DataTools.EmptyBytes);
-        System.IO.File.WriteAllBytes(file3.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(file1.Path, EmptyArray<byte>.Empty);
+        System.IO.File.WriteAllBytes(file2.Path, EmptyArray<byte>.Empty);
+        System.IO.File.WriteAllBytes(file3.Path, EmptyArray<byte>.Empty);
 
         FileTools.ForceDirsAndClear(dir2);
 
@@ -549,8 +549,8 @@ namespace ExtTools_tests.IO
         AbsPath file1 = new AbsPath(dir1, "1.txt");
         AbsPath file2 = new AbsPath(dir1, "2.txt");
         FileTools.ForceDirs(dir2);
-        System.IO.File.WriteAllBytes(file1.Path, DataTools.EmptyBytes);
-        System.IO.File.WriteAllBytes(file2.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(file1.Path, EmptyArray<byte>.Empty);
+        System.IO.File.WriteAllBytes(file2.Path, EmptyArray<byte>.Empty);
         System.IO.FileStream fs1 = null;
         System.IO.FileStream fs2 = null;
         bool res;
@@ -604,8 +604,8 @@ namespace ExtTools_tests.IO
         AbsPath file1 = new AbsPath(dir1, "1.txt");
         AbsPath file2 = new AbsPath(dir1, "2.txt");
         FileTools.ForceDirs(dir2);
-        System.IO.File.WriteAllBytes(file1.Path, DataTools.EmptyBytes);
-        System.IO.File.WriteAllBytes(file2.Path, DataTools.EmptyBytes);
+        System.IO.File.WriteAllBytes(file1.Path, EmptyArray<byte>.Empty);
+        System.IO.File.WriteAllBytes(file2.Path, EmptyArray<byte>.Empty);
         System.IO.FileStream fs1 = null;
         System.IO.FileStream fs2 = null;
         bool res;
@@ -659,13 +659,13 @@ namespace ExtTools_tests.IO
         FileTools.ForceDirs(dir3);
         FileTools.ForceDirs(dir4);
         if (createFile1)
-          System.IO.File.WriteAllBytes(file1.Path, DataTools.EmptyBytes);
+          System.IO.File.WriteAllBytes(file1.Path, EmptyArray<byte>.Empty);
         if (createFile2)
-          System.IO.File.WriteAllBytes(file2.Path, DataTools.EmptyBytes);
+          System.IO.File.WriteAllBytes(file2.Path, EmptyArray<byte>.Empty);
         if (createFile3)
-          System.IO.File.WriteAllBytes(file3.Path, DataTools.EmptyBytes);
+          System.IO.File.WriteAllBytes(file3.Path, EmptyArray<byte>.Empty);
         if (createFile4)
-          System.IO.File.WriteAllBytes(file4.Path, DataTools.EmptyBytes);
+          System.IO.File.WriteAllBytes(file4.Path, EmptyArray<byte>.Empty);
 
         FileTools.DeleteEmptyDirs(dir1, deleteRootDir);
 
@@ -848,9 +848,9 @@ namespace ExtTools_tests.IO
     [TestCase("", "", true)]
     public void StartsWith(string sStream, string sBytes, bool wantedRes)
     {
-      byte[] b1 = DataTools.HexToBytes(sStream);
+      byte[] b1 = StringTools.HexToBytes(sStream);
       System.IO.MemoryStream strm = new System.IO.MemoryStream(b1);
-      byte[] bytes = DataTools.HexToBytes(sBytes);
+      byte[] bytes = StringTools.HexToBytes(sBytes);
 
       bool res = FileTools.StartsWith(strm, bytes);
       Assert.AreEqual(wantedRes, res);
@@ -864,198 +864,6 @@ namespace ExtTools_tests.IO
     public void TextFileEncoding()
     {
       Assert.IsNotNull(FileTools.TextFileEncoding); // А что еще можно проверить
-    }
-
-    #endregion
-
-    #region Read/WriteXmlDocument()
-
-    [TestCase("windows-1251", 1251)]
-    [TestCase("utf-8", 65001)]
-    public void WriteXmlDocument(string encodingStr, int codePage)
-    {
-      XmlDocument xmlDoc = new XmlDocument();
-      XmlElement elMain = xmlDoc.CreateElement("Эл1");
-      xmlDoc.AppendChild(elMain);
-      XmlElement el2 = xmlDoc.CreateElement("Эл2");
-      elMain.AppendChild(el2);
-      XmlAttribute attr = xmlDoc.CreateAttribute("Атр3");
-      attr.Value = "ABC";
-      el2.Attributes.Append(attr);
-      XmlDeclaration decl = xmlDoc.CreateXmlDeclaration("1.0", encodingStr, "yes");
-      xmlDoc.InsertBefore(decl, elMain);
-
-      // <?xml version="1.0" encoding="xxx" standalone="yes"?>
-      // <Эл1>
-      //   <Эл2 Атр3="ABC"/>
-      // </Эл1>
-
-      using (TempDirectory dir = new TempDirectory())
-      {
-        AbsPath file1 = new AbsPath(dir.Dir, "test1.xml");
-        FileTools.WriteXmlDocument(file1, xmlDoc);
-        DoTestWriteXmlDocument(file1, codePage, "#1");
-
-        System.IO.MemoryStream ms2 = new System.IO.MemoryStream();
-        FileTools.WriteXmlDocument(ms2, xmlDoc);
-        ms2.Flush();
-        byte[] b2 = ms2.ToArray();
-        AbsPath file2 = new AbsPath(dir.Dir, "test2.xml");
-        System.IO.File.WriteAllBytes(file2.Path, b2);
-        DoTestWriteXmlDocument(file2, codePage, "#2");
-      }
-    }
-
-    private static void DoTestWriteXmlDocument(AbsPath file, int codePage, string messagePrefix)
-    {
-      Assert.IsTrue(System.IO.File.Exists(file.Path), messagePrefix + ". File exists");
-      Encoding enc = Encoding.GetEncoding(codePage);
-      string[] lines = System.IO.File.ReadAllLines(file.Path, enc);
-      Assert.AreEqual(4, lines.Length, messagePrefix + ". Line count");
-      Assert.IsTrue(lines[0].StartsWith("<?xml version=\"1.0\"", StringComparison.Ordinal), messagePrefix + ". Line 1");
-      // Мало просто использовать Trim(), т.к. пробелы могут быть вставлены в середину строки без определенных правил
-      Assert.AreEqual("<Эл1>", DataTools.RemoveChars(lines[1], " "), messagePrefix + ". Line 2");
-      Assert.AreEqual("<Эл2Атр3=\"ABC\"/>", DataTools.RemoveChars(lines[2], " "), messagePrefix + ". Line 3");
-      Assert.AreEqual("</Эл1>", DataTools.RemoveChars(lines[3], " "), messagePrefix + ". Line 4");
-    }
-
-    [Test]
-    public void ReadXmlDocument()
-    {
-      string[] lines = new string[] {
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
-        "<Эл1>",
-        "<Эл2 Атр3=\"ABC\"/>",
-        "</Эл1>" };
-
-      using (TempDirectory dir = new TempDirectory())
-      {
-        AbsPath file1 = new AbsPath(dir.Dir, "test1.xml");
-        System.IO.File.WriteAllLines(file1.Path, lines, Encoding.UTF8);
-
-        XmlDocument xmlDoc1 = FileTools.ReadXmlDocument(file1);
-        DoTestReadXmlDocument(xmlDoc1, "#1");
-
-        byte[] b2 = System.IO.File.ReadAllBytes(file1.Path);
-        System.IO.MemoryStream ms2 = new System.IO.MemoryStream(b2);
-        XmlDocument xmlDoc2 = FileTools.ReadXmlDocument(ms2);
-        DoTestReadXmlDocument(xmlDoc2, "#2");
-      }
-    }
-
-    private static void DoTestReadXmlDocument(XmlDocument xmlDoc, string messagePrefix)
-    {
-      Assert.AreEqual(2, xmlDoc.ChildNodes.Count, messagePrefix + ". ChildNodeCount");
-      Assert.IsInstanceOf<XmlDeclaration>(xmlDoc.ChildNodes[0], messagePrefix + ". Declaration type");
-      Assert.IsInstanceOf<XmlElement>(xmlDoc.ChildNodes[1], messagePrefix + ". Root Element type");
-      Assert.AreEqual("Эл1", xmlDoc.DocumentElement.Name, messagePrefix + ". Root Element name");
-    }
-
-    #endregion
-
-    #region IsValidXmlStart()
-
-    [Test]
-    public void IsValidXmlStart_FileName()
-    {
-      // Условный xml-файл из одной строки
-      string sGood = "<?xml version =\"1.0\"?>";
-      string sBad = "<XXX>";
-
-      // проверяем только одну кодировку, чтобы не записывать много файлов
-
-      using (TempDirectory dir = new TempDirectory())
-      {
-        AbsPath file1 = new AbsPath(dir.Dir, "test1.xml");
-        System.IO.File.WriteAllText(file1.Path, sGood, Encoding.UTF8);
-        Assert.IsTrue(FileTools.IsValidXmlStart(file1), "#1");
-
-        AbsPath file2 = new AbsPath(dir.Dir, "test2.xml");
-        System.IO.File.WriteAllText(file2.Path, sBad, Encoding.UTF8);
-        Assert.IsFalse(FileTools.IsValidXmlStart(file2), "#2");
-      }
-    }
-
-    /// <summary>
-    /// Расширение класса EncodingInfo методом ToString() для отображения в списке тестов
-    /// </summary>
-    public struct EncodingInfo2
-    {
-      public EncodingInfo2(EncodingInfo info)
-      {
-        _Info = info;
-      }
-
-      public EncodingInfo Info { get { return _Info; } }
-      private EncodingInfo _Info;
-
-      public override string ToString()
-      {
-        if (_Info == null)
-          return "Empty";
-        else
-          return _Info.DisplayName + ", CodePage=" + _Info.CodePage;
-      }
-    }
-
-    public EncodingInfo2[] IsValidXmlStart_Encodings
-    {
-      get
-      {
-        List<EncodingInfo2> lst = new List<EncodingInfo2>();
-        foreach (EncodingInfo ei in Encoding.GetEncodings())
-        {
-          if (ei.DisplayName.StartsWith("IBM EBCDIC"))
-            continue; // может быть, и нужно делать для этих кодировок
-
-          switch (ei.CodePage)
-          {
-            //case 20924: // IBM Латиница-1 на Windows-XP
-            case 1047: // IBM Латиница-1 на Windows-7
-            case 65000: // UTF-7
-            case 500: // 03.09.2023: Эти кодировки не проходят тест в Linux
-            case 870:
-            case 875:
-            case 1026:
-            case 37:
-              continue;
-          }
-          // 03.09.2023: Пропускаем все кодировки EBCDIC и IBB. Под Linux тесты не проходят
-          if (ei.CodePage >= 20000 && ei.CodePage <= 29999)
-            continue;
-          if (ei.CodePage >= 1140 && ei.CodePage <= 1149)
-            continue;
-
-
-          lst.Add(new EncodingInfo2(ei));
-        }
-        return lst.ToArray();
-      }
-    }
-
-    [TestCaseSource("IsValidXmlStart_Encodings")]
-    public void IsValidXmlStart_Stream(EncodingInfo2 ei2)
-    {
-      // Условный xml-файл из одной строки
-      string sGood = "<?xml version =\"1.0\"?>";
-      string sBad = "<XXX>";
-      DoTestIsValidXmlStart(ei2.Info, sGood, true, "#1");
-      DoTestIsValidXmlStart(ei2.Info, sBad, false, "#2");
-    }
-
-    private static void DoTestIsValidXmlStart(EncodingInfo ei, string s, bool wantedRes, string message)
-    {
-      Encoding enc = ei.GetEncoding();
-
-      System.IO.MemoryStream ms = new System.IO.MemoryStream();
-      System.IO.TextWriter wrt = new System.IO.StreamWriter(ms, enc);
-      wrt.Write(s);
-      wrt.Flush();
-      string sHexBytes = DataTools.BytesToHex(ms.ToArray(), false);
-      ms.Position = 0;
-
-      bool res = FileTools.IsValidXmlStart(ms);
-      Assert.AreEqual(wantedRes, res, message /*+ ", Stream="+sHexBytes*/);
     }
 
     #endregion
@@ -1331,33 +1139,6 @@ namespace ExtTools_tests.IO
     {
       Assert.IsFalse(FileTools.UserProfileDir.IsEmpty, "IsEmpty");
       Assert.IsTrue(System.IO.Directory.Exists(FileTools.UserProfileDir.Path), "DirectoryExists");
-    }
-
-    #endregion
-
-    #region MD5Sum()
-
-    public void MD5Sum([Values(0, 100, 123456)]int len)
-    {
-      byte[] b = new byte[len];
-      for (int i = 0; i < b.Length; i++)
-        b[i] = (byte)(i % 100);
-
-      string wantedRes = DataTools.MD5Sum(b);
-
-      System.IO.MemoryStream ms1 = new System.IO.MemoryStream(b);
-      ms1.Position = 0;
-      string res1 = FileTools.MD5Sum(ms1);
-      Assert.AreEqual(wantedRes, res1, "Stream");
-
-      using (TempDirectory dir = new TempDirectory())
-      {
-        AbsPath file2 = new AbsPath(dir.Dir, "test.bin");
-        System.IO.File.WriteAllBytes(file2.Path, b);
-
-        string res2 = FileTools.MD5Sum(file2);
-        Assert.AreEqual(wantedRes, res2, "File");
-      }
     }
 
     #endregion

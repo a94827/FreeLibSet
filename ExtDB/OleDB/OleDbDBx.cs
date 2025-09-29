@@ -601,7 +601,7 @@ namespace FreeLibSet.Data.OleDb
     /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
     /// <param name="values">Значения. Порядок значений должен соответствовать списку столбцов</param>
     /// <returns>Идентификатор добавленной записи</returns>
-    public override Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
+    public override object AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
     {
       throw new NotImplementedException();
       /*
@@ -627,7 +627,7 @@ namespace FreeLibSet.Data.OleDb
       Buffer.SB.Append("; SELECT @@IDENTITY");
 
 
-      Id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      Id = DataTools.GetInt32(SQLExecuteScalar(Buffer.SB.ToString()));
 
       if (Id <= 0)
         throw new BugException("Получен неправильный идентификатор для добавленной записи в таблице \"" + TableName + "\" Id=" + Id.ToString());
@@ -701,260 +701,127 @@ namespace FreeLibSet.Data.OleDb
         string columnName = DataTools.GetString(drv.Row, "column_name");
         DBxColumnStruct colDef = new DBxColumnStruct(columnName);
 
-        OleDbType colType = (OleDbType)(DataTools.GetInt(drv.Row, "data_type"));
+        OleDbType colType = (OleDbType)(DataTools.GetInt32(drv.Row, "data_type"));
         switch (colType)
         {
-          // Summary:
-          //     A 16-bit signed integer (DBTYPE_I2). This maps to System.Int16.
-          case OleDbType.SmallInt:
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int16.MinValue;
-            colDef.MaxValue = Int16.MaxValue;
-            break;
-
-          //
-          // Summary:
-          //     A 32-bit signed integer (DBTYPE_I4). This maps to System.Int32.
-          case OleDbType.Integer:
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int32.MinValue;
-            colDef.MaxValue = Int32.MaxValue;
-            break;
-          //
-          // Summary:
-          //     A floating-point number within the range of -3.40E +38 through 3.40E +38
-          //     (DBTYPE_R4). This maps to System.Single.
-          case OleDbType.Single:
-            colDef.ColumnType = DBxColumnType.Float;
-            colDef.MinValue = Single.MinValue;
-            colDef.MaxValue = Single.MaxValue;
-            break;
-          //
-          // Summary:
-          //     A floating-point number within the range of -1.79E +308 through 1.79E +308
-          //     (DBTYPE_R8). This maps to System.Double.
-          case OleDbType.Double:
-            colDef.ColumnType = DBxColumnType.Float;
-            colDef.MinValue = Double.MinValue;
-            colDef.MaxValue = Double.MaxValue;
-            break;
-          //
-          // Summary:
-          //     A currency value ranging from -2 63 (or -922,337,203,685,477.5808) to 2 63
-          //     -1 (or +922,337,203,685,477.5807) with an accuracy to a ten-thousandth of
-          //     a currency unit (DBTYPE_CY). This maps to System.Decimal.
-          case OleDbType.Currency:
-            colDef.ColumnType = DBxColumnType.Decimal;
-            //ColStr.MinValue = Int16.MinValue;
-            //ColStr.MaxValue = Int16.MaxValue;
-            break;
-          //
-          // Summary:
-          //     Date data, stored as a double (DBTYPE_DATE). The whole portion is the number
-          //     of days since December 30, 1899, and the fractional portion is a fraction
-          //     of a day. This maps to System.DateTime.
-          case OleDbType.Date:
-            colDef.ColumnType = DBxColumnType.Date;
-            break;
-          //
-          // Summary:
-          //     A null-terminated character string of Unicode characters (DBTYPE_BSTR). This
-          //     maps to System.String.
-          case OleDbType.BSTR:
+          case OleDbType.BSTR: // A null-terminated character string of Unicode characters (DBTYPE_BSTR). This maps to System.String.
+          case OleDbType.Char: // A character string (DBTYPE_STR). This maps to System.String.
+          case OleDbType.WChar: // A null - terminated stream of Unicode characters (DBTYPE_WSTR).This maps to System.String.
             colDef.ColumnType = DBxColumnType.String;
             break;
-          //
-          // Summary:
-          //     A pointer to an IDispatch interface (DBTYPE_IDISPATCH). This maps to System.Object.
-          //case OleDbType.IDispatch:
-          //
-          // Summary:
-          //     A 32-bit error code (DBTYPE_ERROR). This maps to System.Exception.
-          //case OleDbType.Error:
-          //
-          // Summary:
-          //     A Boolean value (DBTYPE_BOOL). This maps to System.Boolean.
-          case OleDbType.Boolean:
-            colDef.ColumnType = DBxColumnType.Boolean;
+
+          case OleDbType.TinyInt: // A 8-bit signed integer (DBTYPE_I1). This maps to System.SByte.
+            colDef.ColumnType = DBxColumnType.SByte;
             break;
-          //
-          // Summary:
-          //     A special data type that can contain numeric, string, binary, or date data,
-          //     and also the special values Empty and Null (DBTYPE_VARIANT). This type is
-          //     assumed if no other is specified. This maps to System.Object.
-          //case OleDbType.Variant:
-          //
-          // Summary:
-          //     A pointer to an IUnknown interface (DBTYPE_UNKNOWN). This maps to System.Object.
-          //case OleDbType.IUnknown:
-          //
-          // Summary:
-          //     A fixed precision and scale numeric value between -10 38 -1 and 10 38 -1
-          //     (DBTYPE_DECIMAL). This maps to System.Decimal.
-          case OleDbType.Decimal:
-            colDef.ColumnType = DBxColumnType.Decimal;
+          case OleDbType.UnsignedTinyInt: // A 8-bit unsigned integer (DBTYPE_UI1). This maps to System.Byte.
+            colDef.ColumnType = DBxColumnType.Byte;
             break;
-          //
-          // Summary:
-          //     A 8-bit signed integer (DBTYPE_I1). This maps to System.SByte.
-          case OleDbType.TinyInt:
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = SByte.MinValue;
-            colDef.MaxValue = SByte.MaxValue;
+          case OleDbType.SmallInt:
+            colDef.ColumnType = DBxColumnType.Int16; // A 16-bit signed integer (DBTYPE_I2). This maps to System.Int16.
             break;
-          //
-          // Summary:
-          //     A 8-bit unsigned integer (DBTYPE_UI1). This maps to System.Byte.
-          case OleDbType.UnsignedTinyInt:
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Byte.MinValue;
-            colDef.MaxValue = Byte.MaxValue;
+          case OleDbType.UnsignedSmallInt: // A 16-bit unsigned integer (DBTYPE_UI2). This maps to System.UInt16.
+            colDef.ColumnType = DBxColumnType.UInt16;
             break;
-          //
-          // Summary:
-          //     A 16-bit unsigned integer (DBTYPE_UI2). This maps to System.UInt16.
-          case OleDbType.UnsignedSmallInt:
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = UInt16.MinValue;
-            colDef.MaxValue = UInt16.MaxValue;
+          case OleDbType.Integer: // A 32-bit signed integer (DBTYPE_I4). This maps to System.Int32.
+            colDef.ColumnType = DBxColumnType.Int32;
             break;
-          //
-          // Summary:
-          //     A 32-bit unsigned integer (DBTYPE_UI4). This maps to System.UInt32.
-          case OleDbType.UnsignedInt:
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = UInt32.MinValue;
-            colDef.MaxValue = UInt32.MaxValue;
+          case OleDbType.UnsignedInt: // A 32-bit unsigned integer (DBTYPE_UI4). This maps to System.UInt32.
+            colDef.ColumnType = DBxColumnType.UInt32;
             break;
-          //
-          // Summary:
-          //     A 64-bit signed integer (DBTYPE_I8). This maps to System.Int64.
-          case OleDbType.BigInt:
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int64.MinValue;
-            colDef.MaxValue = Int64.MaxValue;
+          case OleDbType.BigInt: // A 64-bit signed integer (DBTYPE_I8). This maps to System.Int64.
+            colDef.ColumnType = DBxColumnType.Int64;
             break;
-          //
-          // Summary:
-          //     A 64-bit unsigned integer (DBTYPE_UI8). This maps to System.UInt64.
-          case OleDbType.UnsignedBigInt:
-            colDef.ColumnType = DBxColumnType.Int;
+          case OleDbType.UnsignedBigInt: // A 64-bit unsigned integer (DBTYPE_UI8). This maps to System.UInt64.
+            colDef.ColumnType = DBxColumnType.UInt64;
             colDef.MinValue = UInt64.MinValue;
             colDef.MaxValue = UInt64.MaxValue;
             break;
-          //
-          // Summary:
-          //     A 64-bit unsigned integer representing the number of 100-nanosecond intervals
-          //     since January 1, 1601 (DBTYPE_FILETIME). This maps to System.DateTime.
-          //case OleDbType.Filetime:
-          //
-          // Summary:
-          //     A globally unique identifier (or GUID) (DBTYPE_GUID). This maps to System.Guid.
-          case OleDbType.Guid:
-            colDef.ColumnType = DBxColumnType.Guid;
+
+          case OleDbType.Single: // A floating-point number within the range of -3.40E +38 through 3.40E +38 (DBTYPE_R4). This maps to System.Single.
+            colDef.ColumnType = DBxColumnType.Single;
             break;
-          //
-          // Summary:
-          //     A stream of binary data (DBTYPE_BYTES). This maps to an System.Array of type
-          //     System.Byte.
-          case OleDbType.Binary:
-            colDef.ColumnType = DBxColumnType.Binary;
+          case OleDbType.Double: // A floating-point number within the range of -1.79E +308 through 1.79E +308 (DBTYPE_R8). This maps to System.Double.
+            colDef.ColumnType = DBxColumnType.Double; 
+            break;
+          case OleDbType.Decimal: // A fixed precision and scale numeric value between -10 38 -1 and 10 38 -1  (DBTYPE_DECIMAL). This maps to System.Decimal.
+          case OleDbType.Currency: // A currency value ranging from -2 63 (or -922,337,203,685,477.5808) to 2 63. -1 (or +922,337,203,685,477.5807) with an accuracy to a ten-thousandth of a currency unit (DBTYPE_CY). This maps to System.Decimal.
+          case OleDbType.Numeric: // An exact numeric value with a fixed precision and scale (DBTYPE_NUMERIC).This maps to System.Decimal.
+          case OleDbType.VarNumeric: // A variable-length numeric value (System.Data.OleDb.OleDbParameter only). This maps to System.Decimal.
+            colDef.ColumnType = DBxColumnType.Decimal;
             break;
 
           //
           // Summary:
-          //     A character string (DBTYPE_STR). This maps to System.String.
-          case OleDbType.Char:
-          //
-          // Summary:
-          //     A null-terminated stream of Unicode characters (DBTYPE_WSTR). This maps to
-          //     System.String.
-          case OleDbType.WChar:
-            //
-            // Summary:
-            //     An exact numeric value with a fixed precision and scale (DBTYPE_NUMERIC).
-            //     This maps to System.Decimal.
-            colDef.ColumnType = DBxColumnType.String;
-            break;
-
-          //
-          // Summary:
-          //     An exact numeric value with a fixed precision and scale (DBTYPE_NUMERIC).
-          //     This maps to System.Decimal.
-          case OleDbType.Numeric:
-            colDef.ColumnType = DBxColumnType.Float; // !! диапазон
-            break;
-
-          //
-          // Summary:
-          //     Date data in the format yyyymmdd (DBTYPE_DBDATE). This maps to System.DateTime.
-          case OleDbType.DBDate:
+          case OleDbType.Date: // Date data, stored as a double (DBTYPE_DATE). The whole portion is the number of days since December 30, 1899, and the fractional portion is a fraction of a day. This maps to System.DateTime.
+          case OleDbType.DBDate: // Date data in the format yyyymmdd (DBTYPE_DBDATE). This maps to System.DateTime.
             colDef.ColumnType = DBxColumnType.Date;
             break;
-          //
-          // Summary:
-          //     Time data in the format hhmmss (DBTYPE_DBTIME). This maps to System.TimeSpan.
-          case OleDbType.DBTime:
+          case OleDbType.DBTime: // Time data in the format hhmmss (DBTYPE_DBTIME). This maps to System.TimeSpan.
             colDef.ColumnType = DBxColumnType.Time;
             break;
-          //
-          // Summary:
-          //     Data and time data in the format yyyymmddHHmmss (DBTYPE_DBTIMESTAMP). This
-          //     maps to System.DateTime.
-          case OleDbType.DBTimeStamp:
+          case OleDbType.DBTimeStamp: // Data and time data in the format yyyymmddHHmmss (DBTYPE_DBTIMESTAMP). This maps to System.DateTime.
+          case OleDbType.Filetime: // A 64-bit unsigned integer representing the number of 100-nanosecond intervals since January 1, 1601 (DBTYPE_FILETIME). This maps to System.DateTime.
             colDef.ColumnType = DBxColumnType.DateTime;
             break;
-          //
-          // Summary:
-          //     An automation PROPVARIANT (DBTYPE_PROP_VARIANT). This maps to System.Object.
-          //case OleDbType.PropVariant:
-          //
-          // Summary:
-          //     A variable-length numeric value (System.Data.OleDb.OleDbParameter only).
-          //     This maps to System.Decimal.
-          //case OleDbType.VarNumeric:
-          //
-          // Summary:
-          //     A variable-length stream of non-Unicode characters (System.Data.OleDb.OleDbParameter
-          //     only). This maps to System.String.
-          case OleDbType.VarChar:
-          //
-          // Summary:
-          //     A long string value (System.Data.OleDb.OleDbParameter only). This maps to
-          //     System.String.
-          case OleDbType.LongVarChar:
-          //
-          // Summary:
-          //     A variable-length, null-terminated stream of Unicode characters (System.Data.OleDb.OleDbParameter
-          //     only). This maps to System.String.
-          case OleDbType.VarWChar:
-          //
-          // Summary:
-          //     A long null-terminated Unicode string value (System.Data.OleDb.OleDbParameter
-          //     only). This maps to System.String.
-          case OleDbType.LongVarWChar:
-            colDef.ColumnType = DBxColumnType.String;
+
+
+          case OleDbType.Boolean: // A Boolean value (DBTYPE_BOOL). This maps to System.Boolean.
+            colDef.ColumnType = DBxColumnType.Boolean;
             break;
-          //
-          // Summary:
-          //     A variable-length stream of binary data (System.Data.OleDb.OleDbParameter
-          //     only). This maps to an System.Array of type System.Byte.
-          case OleDbType.VarBinary:
-          //
-          // Summary:
-          //     A long binary value (System.Data.OleDb.OleDbParameter only). This maps to
-          //     an System.Array of type System.Byte.
-          case OleDbType.LongVarBinary:
+
+          case OleDbType.Guid: // A globally unique identifier (or GUID) (DBTYPE_GUID). This maps to System.Guid.
+            colDef.ColumnType = DBxColumnType.Guid;
+            break;
+
+          case OleDbType.Binary: // A stream of binary data(DBTYPE_BYTES).This maps to an System.Array of type System.Byte.
+          case OleDbType.VarBinary: // A variable-length stream of binary data (System.Data.OleDb.OleDbParameter only). This maps to an System.Array of type System.Byte.
+          case OleDbType.LongVarBinary: // A long binary value (System.Data.OleDb.OleDbParameter only). This maps to an System.Array of type System.Byte.
             colDef.ColumnType = DBxColumnType.Binary;
             break;
+
+
+          case OleDbType.VarChar:// A variable-length stream of non - Unicode characters(System.Data.OleDb.OleDbParameter only). This maps to System.String.
+          case OleDbType.LongVarChar: //A long string value (System.Data.OleDb.OleDbParameter only). This maps to System.String.
+          case OleDbType.VarWChar:// A variable-length, null-terminated stream of Unicode characters (System.Data.OleDb.OleDbParameter only). This maps to System.String.
+          case OleDbType.LongVarWChar: // A long null-terminated Unicode string value (System.Data.OleDb.OleDbParameter only). This maps to System.String.
+            colDef.ColumnType = DBxColumnType.Memo;
+            break;
+          
+
+            //
+            // Summary:
+            //     A pointer to an IDispatch interface (DBTYPE_IDISPATCH). This maps to System.Object.
+            //case OleDbType.IDispatch:
+            //
+            // Summary:
+            //     A 32-bit error code (DBTYPE_ERROR). This maps to System.Exception.
+            //case OleDbType.Error:
+            //
+            // Summary:
+            //     A special data type that can contain numeric, string, binary, or date data,
+            //     and also the special values Empty and Null (DBTYPE_VARIANT). This type is
+            //     assumed if no other is specified. This maps to System.Object.
+            //case OleDbType.Variant:
+            //
+            // Summary:
+            //     A pointer to an IUnknown interface (DBTYPE_UNKNOWN). This maps to System.Object.
+            //case OleDbType.IUnknown:
+            //
+            //
+            //
+            // Summary:
+            //     An automation PROPVARIANT (DBTYPE_PROP_VARIANT). This maps to System.Object.
+            //case OleDbType.PropVariant:
+            //
+            // Summary:
 
 
         }
 
-        colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
-        colDef.Nullable = DataTools.GetBool(drv.Row, "is_nullable");
+        colDef.MaxLength = DataTools.GetInt32(drv.Row, "character_maximum_length");
+        colDef.Nullable = DataTools.GetBoolean(drv.Row, "is_nullable");
 
-        if ((!colDef.Nullable) && DataTools.GetBool(drv.Row, "column_hasdefault"))
+        if ((!colDef.Nullable) && DataTools.GetBoolean(drv.Row, "column_hasdefault"))
         {
           try
           {
@@ -999,8 +866,8 @@ namespace FreeLibSet.Data.OleDb
       DataTable tbl = SQLExecuteDataTable(Buffer.SB.ToString(), "sys.foreign_keys");
       foreach (DataRow Row in tbl.Rows)
       {
-        int FKObjId = DataTools.GetInt(Row, "object_id");
-        int RefTableObjId = DataTools.GetInt(Row, "referenced_object_id");
+        int FKObjId = DataTools.GetInt32(Row, "object_id");
+        int RefTableObjId = DataTools.GetInt32(Row, "referenced_object_id");
 
       Buffer.Clear();
         Buffer.SB.Append("SELECT [parent_column_id] FROM sys.foreign_key_columns WHERE constraint_object_id=");
@@ -1011,7 +878,7 @@ namespace FreeLibSet.Data.OleDb
           throw new BugException("Не найдено ни одно столбца для ограничения с constraint_object_id=" + FKObjId.ToString());
         if (tbl2.Rows.Count > 1)
           throw new BugException("Ограничение с constraint_object_id=" + FKObjId.ToString() + " содержит несколько столбцов (" + tbl2.Rows.Count.ToString() + ")");
-        int ParentColumnId = DataTools.GetInt(tbl2.Rows[0], "parent_column_id");
+        int ParentColumnId = DataTools.GetInt32(tbl2.Rows[0], "parent_column_id");
 
       Buffer.Clear();
         Buffer.SB.Append("SELECT [name] FROM sys.columns WHERE object_id=");
@@ -1032,7 +899,7 @@ namespace FreeLibSet.Data.OleDb
         DBxColumnStruct ColStr = TableStr.Columns[ParentColumnName];
         ColStr.MasterTableName = RefTableName;
 
-        int RefTypeCode = DataTools.GetInt(Row, "delete_referential_action");
+        int RefTypeCode = DataTools.GetInt32(Row, "delete_referential_action");
         switch (RefTypeCode)
         {
           case 0: ColStr.RefType = DBxRefType.Disallow; break;
@@ -1053,7 +920,7 @@ namespace FreeLibSet.Data.OleDb
     //  Buffer.Clear();
     //  Buffer.SB.Append("SELECT [object_id] FROM sys.tables WHERE [Name]=");
     //  Buffer.FormatValue(TableName, DBxColumnType.String);
-    //  return DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+    //  return DataTools.GetInt32(SQLExecuteScalar(Buffer.SB.ToString()));
     //}
 
     #endregion
@@ -1176,7 +1043,7 @@ namespace FreeLibSet.Data.OleDb
 
                 if (column.ColumnType == DBxColumnType.String)
                 {
-                  int realLen = DataTools.GetInt(columnRow, "CHARACTER_MAXIMUM_LENGTH");
+                  int realLen = DataTools.GetInt32(columnRow, "CHARACTER_MAXIMUM_LENGTH");
                   if (realLen != column.MaxLength)
                   {
                     if (realLen > column.MaxLength)

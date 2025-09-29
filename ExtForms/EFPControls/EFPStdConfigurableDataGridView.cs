@@ -259,7 +259,7 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Повторитель таблицы, вычисляющий поля с помощью EFPGridProducerColumn.GetValue()
+  /// Повторитель таблицы, вычисляющий поля с помощью <see cref="EFPGridProducerColumn.GetValue(EFPDataViewRowValues)"/>
   /// </summary>
   public class EFPGridProducerDataTableRepeater : DataTableRepeater
   {
@@ -306,7 +306,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     private Dictionary<string, EFPGridProducerColumn> _ColumnDict;
 
-    private DataTableValueArray _VA;
+    private DataTableValues _VA;
 
     /// <summary>
     /// Создает внутренний словарь вычисляемых полей
@@ -345,7 +345,7 @@ namespace FreeLibSet.Forms
           if (allPresents)
             _ColumnDict.Add(col1.ColumnName, col2);
         }
-        _VA = new DataTableValueArray(MasterTable);
+        _VA = new DataTableValues(MasterTable);
       }
     }
 
@@ -363,8 +363,8 @@ namespace FreeLibSet.Forms
       if (_ColumnDict.TryGetValue(args.ColumnName, out col))
       {
         _VA.CurrentRow = args.SourceRow;
-        EFPDataViewRowInfo rowInfo = new EFPDataViewRowInfo(_ControlProvider, args.SourceRow, _VA, -1);
-        args.Value = col.GetValue(rowInfo);
+        EFPDataViewRowValues rowValues = new EFPDataViewRowValues(_ControlProvider, args.SourceRow, _VA, -1);
+        args.Value = col.GetValue(rowValues);
       }
 
       base.OnValueNeeded(args);

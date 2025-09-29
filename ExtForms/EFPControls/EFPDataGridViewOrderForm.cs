@@ -43,9 +43,9 @@ namespace FreeLibSet.Forms
         grFixed.RowHeadersVisible = false;
         grFixed.ColumnHeadersVisible = false;
         efpFixed.Columns.AddImage("Image");
-        efpFixed.Columns.AddTextFill("DisplayName");
+        efpFixed.Columns.AddTextFill("DisplayName", false, String.Empty, 100, 1);
         efpFixed.DisableOrdering();
-        efpFixed.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpFixed_GetCellAttributes);
+        efpFixed.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(efpFixed_CellInfoNeeded);
         grFixed.RowCount = controlProvider.Orders.Count;
         efpFixed.ReadOnly = true;
         efpFixed.Control.ReadOnly = true;
@@ -137,6 +137,7 @@ namespace FreeLibSet.Forms
           LogoutTools.LogoutException(e, Res.EFPDataGridViewOrderForm_ErrTitle_CreateList);
         }
 
+        efpCustom.CanBeEmpty = true; // 04.09.2025
         efpCustom.Validators.AddError(efpCustom.IsNotEmptyEx,
           Res.EFPDataGridViewOrderForm_Err_EmptyCustomList,
           efpTabControl.TabPages[tpCustom].SelectedEx);
@@ -155,7 +156,7 @@ namespace FreeLibSet.Forms
 
     EFPDataGridView efpFixed;
 
-    void efpFixed_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void efpFixed_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.RowIndex < 0)
         return;

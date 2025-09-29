@@ -196,9 +196,9 @@ namespace ExtTools_tests.IO
     private static void TestFileSignature(FileComressorArchiveType wantedType, byte[] bArc)
     {
       FileComressorArchiveType realType;
-      if (DataTools.ArrayStartsWith(bArc, new byte[] { 0x37, 0x7a })) // "7z"
+      if (ArrayTools.ArrayStartsWith(bArc, new byte[] { 0x37, 0x7a })) // "7z"
         realType = FileComressorArchiveType.SevenZip;
-      else if (DataTools.ArrayStartsWith(bArc, new byte[] { 0x50, 0x4b })) // "PK"
+      else if (ArrayTools.ArrayStartsWith(bArc, new byte[] { 0x50, 0x4b })) // "PK"
         realType = FileComressorArchiveType.Zip;
       else
         realType = FileComressorArchiveType.Unknown;

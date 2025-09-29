@@ -113,7 +113,7 @@ namespace FreeLibSet.Data.Docs
     /// </summary>
     public bool Deleted 
     {
-      get { return DataTools.GetBool(FRow, "Deleted"); }
+      get { return DataTools.GetBoolean(FRow, "Deleted"); }
     }
 #endif
 

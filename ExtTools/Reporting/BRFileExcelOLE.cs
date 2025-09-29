@@ -145,7 +145,7 @@ namespace FreeLibSet.Reporting
       for (int k = 0; k < colBounds.WidthArray.Length; k++)
       {
         double wPt = colBounds.WidthArray[k] / 254.0 * 72.0;
-        double colWidth = DataTools.Truncate(cws.PtToColumnWidth(wPt), 1);
+        double colWidth = MathTools.Truncate(cws.PtToColumnWidth(wPt), 1);
         sheet.Columns[k + 1].SetColumnWidth(colWidth);
         //if (sheet.Columns[k + 1].Width > wPt)
         //{
@@ -164,7 +164,7 @@ namespace FreeLibSet.Reporting
 
       // Не получается точно задать размеры. Тут ширина в пунктах получается нормальная, а после показа Excel на экране становится больше.
       // Исправляем: Если секция должна быть на одной странице по ширине, задаем это в явном виде
-      if (DataTools.SumInt(colBounds.WidthArray) <= section.PageSetup.PrintAreaWidth)
+      if (DataTools.SumInt32(colBounds.WidthArray) <= section.PageSetup.PrintAreaWidth)
         sheet.PageSetup.SetFitToPages(1, 0);
 
       #endregion
@@ -236,8 +236,8 @@ namespace FreeLibSet.Reporting
               if (value is String)
               {
                 string s = (string)value;
-                s = DataTools.ReplaceAny(s, BRFileTools.BadValueChars, ' ');
-                s = s.Replace(DataTools.SoftHyphenStr, String.Empty); // 08.04.2025, как и в BRFileExcel2003Xml
+                s = StringTools.ReplaceAny(s, BRFileTools.BadValueChars, ' ');
+                s = s.Replace(StringTools.SoftHyphenStr, String.Empty); // 08.04.2025, как и в BRFileExcel2003Xml
 
                 // Длинные строки будем передавать поштучно
                 // Excel 2003 [иногда] начинает глючить, если строка длинная.
@@ -507,7 +507,7 @@ End Sub
     }
 
     /// <summary>
-    /// В Excel цвет кодируется в обратном порядке относительно <see cref="BRColor.IntValue"/>
+    /// В Excel цвет кодируется в обратном порядке относительно <see cref="BRColor.Int32Value"/>
     /// </summary>
     /// <param name="color"></param>
     /// <returns></returns>
@@ -756,7 +756,7 @@ End Sub
         ws[i] = sel.ColumnInfo.Width;
         grows[i] = /* sel.ColumnInfo.Visible && */ sel.ColumnInfo.AutoGrow;
       }
-      int wholeW = DataTools.SumInt(ws);
+      int wholeW = DataTools.SumInt32(ws);
       if (wholeW < printAreaWidth)
       {
         int gw = 0;

@@ -21,7 +21,7 @@ namespace FreeLibSet.Data
   /// Массив может быть пустым.
   /// </summary>
   [Serializable]
-  public class DBxColumns : IEnumerable<string>
+  public class DBxColumns : IList<string>, System.Collections.IList
   {
     #region Конструкторы
 
@@ -37,7 +37,7 @@ namespace FreeLibSet.Data
     private static string[] CreateArrayFromString(string columnNames)
     {
       if (String.IsNullOrEmpty(columnNames))
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
       {
         if (columnNames.IndexOf(',') >= 0)
@@ -85,9 +85,9 @@ namespace FreeLibSet.Data
     public DBxColumns(ICollection<string> list)
     {
       if (list == null)
-        _Items = DataTools.EmptyStrings;
+        _Items = EmptyArray<string>.Empty;
       else if (list.Count == 0)
-        _Items = DataTools.EmptyStrings;
+        _Items = EmptyArray<string>.Empty;
       else
       {
         _Items = new string[list.Count];
@@ -137,6 +137,24 @@ namespace FreeLibSet.Data
     public static DBxColumns FromNames(string[] columnNames)
     {
       return FromNames(columnNames, true);
+    }
+
+    /// <summary>
+    /// Создает список имен полей из массива <see cref="DataColumn"/>
+    /// </summary>
+    /// <param name="columns">Столбцы</param>
+    /// <returns>Список имен</returns>
+    public static DBxColumns FromColumns(DataColumn[] columns)
+    {
+      if (columns == null || columns.Length == 0 /* 01.05.2023 */)
+        return null;
+
+      string[] items = new String[columns.Length];
+
+      for (int i = 0; i < columns.Length; i++)
+        items[i] = columns[i].ColumnName;
+
+      return new DBxColumns(items);
     }
 
     /// <summary>
@@ -986,7 +1004,7 @@ namespace FreeLibSet.Data
       if (arg2.Count == 0)
         return arg1;
 
-      return new DBxColumns(DataTools.MergeArraysOnce<string>(arg1.AsArray, arg2.AsArray));
+      return new DBxColumns(ArrayTools.MergeArraysOnce<string>(arg1.AsArray, arg2.AsArray));
     }
 
     /// <summary>
@@ -1040,7 +1058,7 @@ namespace FreeLibSet.Data
         return arg1;
 
       DBxColumnList list = new DBxColumnList(arg1);
-      list.Remove(arg2);
+      list.RemoveRange(arg2);
 
       return new DBxColumns(list);
     }
@@ -1138,6 +1156,56 @@ namespace FreeLibSet.Data
 
     #endregion
 
+    #region Сравнение
+
+    /// <summary>
+    /// Сравнение двух списков имен полей
+    /// </summary>
+    /// <param name="a">Первый список</param>
+    /// <param name="b">Второй список</param>
+    /// <param name="ignoreCase">Если true, то имена будут сравниваться без учета регистра</param>
+    /// <param name="ignoreOrder">Если true, то имена будут сравниваться без учета порядка следования</param>
+    /// <returns>Результат сравнения</returns>
+    public static bool AreEqual(DBxColumns a, DBxColumns b, bool ignoreCase, bool ignoreOrder)
+    {
+      if (a == null && b == null)
+        return true;
+      if (a == null || b == null)
+        return false;
+
+      if (a.Count != b.Count)
+        return false;
+
+      switch (a.Count)
+      {
+        case 0:
+          return true;
+        case 1:
+          return String.Equals(a[0], b[0], ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+        default:
+          if (ignoreOrder)
+          {
+            StringArrayIndexer indexerB = new StringArrayIndexer(b.AsArray, ignoreCase);
+            for (int i = 0; i < a.Count; i++)
+            {
+              if (!indexerB.Contains(a[i]))
+                return false;
+            }
+          }
+          else
+          {
+            for (int i = 0; i < a.Count; i++)
+            {
+              if (!String.Equals(a[i], b[i], ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                return false;
+            }
+          }
+          return true;
+      }
+    }
+
+    #endregion
+
     #region IEnumerable<string> Members
 
     /// <summary>
@@ -1170,12 +1238,132 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Пустой список полей
     /// </summary>
-    public static readonly DBxColumns Empty = new DBxColumns(DataTools.EmptyStrings);
+    public static readonly DBxColumns Empty = new DBxColumns(EmptyArray<string>.Empty);
 
     /// <summary>
     /// Список из одного поля "Id"
     /// </summary>
     public static readonly DBxColumns Id = new DBxColumns("Id");
+
+    #endregion
+
+    #region ICollection stubs
+
+    void ICollection<string>.Add(string item)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICollection<string>.Clear()
+    {
+      throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Копирование имен в массив
+    /// </summary>
+    /// <param name="array">Заполняемый массив</param>
+    /// <param name="arrayIndex">Начальная позиция в заполняемом массиве</param>
+    public void CopyTo(string[] array, int arrayIndex)
+    {
+      _Items.CopyTo(array, arrayIndex);
+    }
+
+    bool ICollection<string>.IsReadOnly { get { return true; } }
+
+    bool ICollection<string>.Remove(string item)
+    {
+      throw new NotImplementedException();
+    }
+
+    void System.Collections.ICollection.CopyTo(Array array, int index)
+    {
+      Array.Copy(_Items, 0, array, index, _Items.Length);
+    }
+
+    bool System.Collections.ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object System.Collections.ICollection.SyncRoot
+    {
+      get { return _Items; }
+    }
+
+    int System.Collections.IList.Add(object value)
+    {
+      throw new NotImplementedException();
+    }
+
+    void System.Collections.IList.Clear()
+    {
+      throw new NotImplementedException();
+    }
+
+    bool System.Collections.IList.Contains(object value)
+    {
+      return Contains(value as string);
+    }
+
+    int System.Collections.IList.IndexOf(object value)
+    {
+      return IndexOf(value as string);
+    }
+
+    void System.Collections.IList.Insert(int index, object value)
+    {
+      throw new NotImplementedException();
+    }
+
+    bool System.Collections.IList.IsFixedSize
+    {
+      get { return true; }
+    }
+
+    bool System.Collections.IList.IsReadOnly
+    {
+      get { return true; }
+    }
+
+    void System.Collections.IList.Remove(object value)
+    {
+      throw new NotImplementedException();
+    }
+
+    void System.Collections.IList.RemoveAt(int index)
+    {
+      throw new NotImplementedException();
+    }
+
+    object System.Collections.IList.this[int index]
+    {
+      get { return this[index]; }
+      set { throw new NotImplementedException(); }
+    }
+
+    #endregion
+
+    #region IList stubs
+
+    void IList<string>.Insert(int index, string item)
+    {
+      throw new NotImplementedException();
+    }
+
+    void IList<string>.RemoveAt(int index)
+    {
+      throw new NotImplementedException();
+    }
+
+    string IList<string>.this[int index]
+    {
+      get { return this[index]; }
+      set
+      {
+        throw new NotImplementedException();
+      }
+    }
 
     #endregion
   }
@@ -1267,7 +1455,7 @@ namespace FreeLibSet.Data
     /// Добавляет столбцы из другого списка
     /// </summary>
     /// <param name="сolumns">Добавляемый список</param>
-    public void Add(DBxColumns сolumns)
+    public void AddRange(DBxColumns сolumns)
     {
       if (сolumns != null)
         base.AddRange(сolumns);
@@ -1277,7 +1465,7 @@ namespace FreeLibSet.Data
     /// Добавляет столбцы из другого списка
     /// </summary>
     /// <param name="сolumns">Добавляемый список</param>
-    public void Add(DBxColumnList сolumns)
+    public void AddRange(DBxColumnList сolumns)
     {
       if (сolumns != null)
         base.AddRange(сolumns);
@@ -1308,7 +1496,7 @@ namespace FreeLibSet.Data
     /// Удалить столбцы из списка.
     /// </summary>
     /// <param name="сolumns">Удаляемые имена столбцов</param>
-    public void Remove(DBxColumns сolumns)
+    public void RemoveRange(DBxColumns сolumns)
     {
       if (сolumns == null)
         return;
@@ -1320,7 +1508,7 @@ namespace FreeLibSet.Data
     /// Удалить столбцы из списка.
     /// </summary>
     /// <param name="сolumns">Удаляемые имена столбцов</param>
-    public void Remove(DBxColumnList сolumns)
+    public void RemoveRange(DBxColumnList сolumns)
     {
       if (сolumns == null)
         return;
@@ -1878,7 +2066,7 @@ namespace FreeLibSet.Data
           ti = new TableItem(tableName);
           _Owner._List.Add(ti);
         }
-        ti.Columns.Add(columnNames);
+        ti.Columns.AddRange(columnNames);
       }
 
       /// <summary>
@@ -1984,7 +2172,7 @@ namespace FreeLibSet.Data
             _Owner._List.Add(ti);
           }
           ti.Columns.Clear();
-          ti.Columns.Add(value);
+          ti.Columns.AddRange(value);
         }
       }
 
@@ -2052,7 +2240,7 @@ namespace FreeLibSet.Data
         if (ti == null)
           return false;
         int oldN = ti.Columns.Count;
-        ti.Columns.Remove(item.Value);
+        ti.Columns.RemoveRange(item.Value);
         return oldN > ti.Columns.Count;
       }
 

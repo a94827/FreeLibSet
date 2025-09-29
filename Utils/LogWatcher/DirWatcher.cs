@@ -77,12 +77,12 @@ namespace LogWatcher
       {
         if (!row.IsNull("IOError"))
           cntError++;
-        else if (DataTools.GetBool(row, "NoDir"))
+        else if (DataTools.GetBoolean(row, "NoDir"))
           cntWarning++;
         else
         {
-          int n = DataTools.GetInt(row, "NewCount");
-          switch ((ErrorMessageKind)(DataTools.GetInt(row, "Kind")))
+          int n = DataTools.GetInt32(row, "NewCount");
+          switch (DataTools.GetEnum<ErrorMessageKind>(row, "Kind"))
           {
             case ErrorMessageKind.Error: cntError += n; break;
             case ErrorMessageKind.Warning: cntWarning += n; break;
@@ -155,7 +155,7 @@ namespace LogWatcher
             {
               DateTime tm = System.IO.File.GetLastWriteTime(file);
               tm = RoundTime(tm);
-              lastTime = DataTools.Max(lastTime, tm);
+              lastTime = TimeTools.Max(lastTime, tm);
 
               if (tm > regTime)
                 cntNew++;
@@ -165,8 +165,8 @@ namespace LogWatcher
             if ((cntNew + cntOld) > 0)
             {
               row["LastTime"] = lastTime;
-              DataTools.SetInt(row, "NewCount", cntNew);
-              DataTools.SetInt(row, "OldCount", cntOld);
+              DataTools.SetInt32(row, "NewCount", cntNew);
+              DataTools.SetInt32(row, "OldCount", cntOld);
             }
           }
           else

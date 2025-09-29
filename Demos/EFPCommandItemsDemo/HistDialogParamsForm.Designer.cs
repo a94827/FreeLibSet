@@ -54,7 +54,7 @@
       this.cbSetSelectedPath = new System.Windows.Forms.CheckBox();
       this.edHistList = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
-      this.edMaxHistLength = new FreeLibSet.Controls.IntEditBox();
+      this.edMaxHistLength = new FreeLibSet.Controls.Int32EditBox();
       this.edFilter = new System.Windows.Forms.TextBox();
       this.panel1.SuspendLayout();
       this.groupBox1.SuspendLayout();
@@ -434,7 +434,7 @@
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.TextBox edCongfigSectionName;
     private System.Windows.Forms.Label label1;
-    private FreeLibSet.Controls.IntEditBox edMaxHistLength;
+    private FreeLibSet.Controls.Int32EditBox edMaxHistLength;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.ComboBox cbPathValidateMode;
     private System.Windows.Forms.Label label3;

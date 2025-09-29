@@ -42,7 +42,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Выбранные идентификаторы
     /// </summary>
-    public Int32[] Ids { get { return _Owner.Ids; } }
+    public IdArray<Int32> Ids { get { return _Owner.Ids; } }
 
     private readonly EFPMultiDocComboBoxBase _Owner;
 
@@ -64,7 +64,7 @@ namespace FreeLibSet.Forms.Docs
   /// Реализует свойство Ids как массив идентификаторов.
   /// </summary>
   /// <remarks>
-  /// Нельзя использовать <see cref="IdList"/>, т.к. порядок поддокументов важен.
+  /// Нельзя использовать <see cref="IdCollection{Int32}"/>, т.к. порядок поддокументов важен.
   /// </remarks>
   public abstract class EFPMultiDocComboBoxBase : EFPAnyDocComboBoxBase, IDepSyncObject
   {
@@ -80,7 +80,7 @@ namespace FreeLibSet.Forms.Docs
       : base(baseProvider, control, ui)
     {
       _TextValueNeededArgs = new EFPMultiDocComboBoxTextValueNeededEventArgs(this);
-      _Ids = DataTools.EmptyIds;
+      _Ids = IdArray<Int32>.Empty;
 
       _MaxTextItemCount = 1;
     }
@@ -99,7 +99,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если документ не выбран, свойство содержит пустой массив.
     /// В классах-наследниках свойство переименовывается.
     /// </summary>
-    internal protected virtual Int32[] Ids
+    internal protected virtual IdArray<Int32> Ids
     {
       get { return _Ids; }
       set
@@ -108,15 +108,9 @@ namespace FreeLibSet.Forms.Docs
           return;
 
         if (value == null)
-          value = DataTools.EmptyIds;
+          value = IdArray<Int32>.Empty;
         if (Object.ReferenceEquals(value, _Ids))
           return;
-
-        for (int i = 0; i < value.Length; i++)
-        {
-          if (value[i] == 0)
-            throw ExceptionFactory.ArgInvalidEnumerableItem("value", value, 0);
-        }
 
         _InsideSetIds = true;
         try
@@ -130,7 +124,7 @@ namespace FreeLibSet.Forms.Docs
           if (_DeletedEx != null)
             _DeletedEx.SetDelayed();
           InitTextAndImage();
-          ClearButtonEnabled = (_Ids.Length > 0);
+          ClearButtonEnabled = (_Ids.Count > 0);
           //if (IdValueChangedBeforeValidate != null)
           //  IdValueChangedBeforeValidate(this, EventArgs.Empty);
           Validate();
@@ -145,13 +139,13 @@ namespace FreeLibSet.Forms.Docs
         }
       }
     }
-    private Int32[] _Ids;
+    private IdArray<Int32> _Ids;
 
     /// <summary>
     /// Управляемое свойство для <see cref="Ids"/>. 
     /// В классах-наследниках свойство переименовывается.
     /// </summary>
-    internal protected DepValue<Int32[]> IdsEx
+    internal protected DepValue<IdArray<Int32>> IdsEx
     {
       get
       {
@@ -169,11 +163,11 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_IdsEx == null)
       {
-        _IdsEx = new DepInput<Int32[]>(Ids, IdsEx_ValueChanged);
+        _IdsEx = new DepInput<IdArray<Int32>>(Ids, IdsEx_ValueChanged);
         _IdsEx.OwnerInfo = new DepOwnerInfo(this, "IdsEx");
       }
     }
-    private DepInput<Int32[]> _IdsEx;
+    private DepInput<IdArray<Int32>> _IdsEx;
 
     ///// <summary>
     ///// Это событие вызывается при изменении текущего значения идентификатора, но
@@ -189,7 +183,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Возвращает true при непустом списке идентификаторов
     /// </summary>
-    public override bool IsNotEmpty { get { return Ids.Length > 0; } }
+    public override bool IsNotEmpty { get { return Ids.Count > 0; } }
 
     /// <summary>
     /// Управляемое свойство для <see cref="IsNotEmpty"/>.
@@ -201,15 +195,15 @@ namespace FreeLibSet.Forms.Docs
       get
       {
         if (_IsNotEmptyEx == null)
-          _IsNotEmptyEx = new DepExpr1<bool, Int32[]>(IdsEx, CalcIsNotEmpty);
+          _IsNotEmptyEx = new DepExpr1<bool, IdArray<Int32>>(IdsEx, CalcIsNotEmpty);
         return _IsNotEmptyEx;
       }
     }
     private DepValue<bool> _IsNotEmptyEx;
 
-    private static bool CalcIsNotEmpty(Int32[] ids)
+    private static bool CalcIsNotEmpty(IdArray<Int32> ids)
     {
-      return ids.Length > 0;
+      return ids.Count > 0;
     }
 
     #endregion
@@ -222,22 +216,13 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected Int32 SingleId
     {
-      get
-      {
-        if (Ids.Length == 1)
-          return Ids[0];
-        else
-          return 0;
-      }
+      get      {        return Ids.SingleId;      }
       set
       {
         if (_InsideSetIds)
           return;
 
-        if (value == 0)
-          Ids = DataTools.EmptyIds;
-        else
-          Ids = new Int32[] { value };
+        Ids = IdArray<Int32>.FromId(value);
       }
     }
 
@@ -326,7 +311,7 @@ namespace FreeLibSet.Forms.Docs
       {
         _TextValueNeededArgs.Clear();
         // Стандартные значения текста, подсказки и изображения
-        if (Ids.Length == 0)
+        if (Ids.Count == 0)
         {
           _TextValueNeededArgs.TextValue = EmptyText;
           _TextValueNeededArgs.ImageKey = EmptyImageKey;
@@ -375,7 +360,7 @@ namespace FreeLibSet.Forms.Docs
         EFPApp.ShowTempMessage(String.Format(Res.EFPComboBox_Err_GetText, e.Message));
       }
       if (UI.DebugShowIds)
-        Control.Text = "Id=" + StdConvert.ToString(Ids) + " " + Control.Text;
+        Control.Text = "Id=" + Ids.ToString() + " " + Control.Text;
     }
 
     /// <summary>
@@ -449,10 +434,10 @@ namespace FreeLibSet.Forms.Docs
     {
       get
       {
-        for (int i = 0; i < Ids.Length; i++)
+        foreach (Int32 id in Ids)
         {
           string message;
-          if (GetDeletedValue(Ids[i], out message))
+          if (GetDeletedValue(id, out message))
             return true;
         }
         return false;
@@ -509,16 +494,16 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     protected override void OnValidate()
     {
-      if (Ids.Length == 0)
+      if (Ids.Count == 0)
       {
         UITools.ValidateCanBeEmptyMode(CanBeEmptyMode, this, DisplayName);
       }
       else if (!CanBeDeleted)
       {
-        for (int i = 0; i < Ids.Length; i++)
+        foreach (Int32 id in Ids)
         {
           string message;
-          if (GetDeletedValue(Ids[i], out message))
+          if (GetDeletedValue(id, out message))
           {
             if (CanBeDeletedMode == UIValidateState.Warning)
               SetWarning(message);
@@ -535,7 +520,11 @@ namespace FreeLibSet.Forms.Docs
     public override object SyncValue
     {
       get { return Ids; }
-      set { Ids = (Int32[])value; }
+      set 
+      {
+        IEnumerable<Int32> value2 = value as IEnumerable<Int32>;
+        Ids = IdTools.AsIdArray<Int32>(value2); 
+      }
     }
 
     /// <summary>
@@ -543,7 +532,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public override void Clear()
     {
-      Ids = DataTools.EmptyIds;
+      Ids = IdArray<Int32>.Empty;
     }
 
     #endregion
@@ -633,7 +622,7 @@ namespace FreeLibSet.Forms.Docs
       if (ClearByFilter)
       {
         if (!FilterPassed)
-          Ids = DataTools.EmptyIds;
+          Ids = IdArray<Int32>.Empty;
       }
     }
 
@@ -664,11 +653,11 @@ namespace FreeLibSet.Forms.Docs
       if (_Filters.IsEmpty)
         return true;
 
-      for (int i = 0; i < Ids.Length; i++)
+      foreach (Int32 id in Ids)
       {
-        if (!DoTestFilter(Ids[i], out badFilter))
+        if (!DoTestFilter(id, out badFilter))
         {
-          badId = Ids[i];
+          badId = id;
           return false;
         }
       }
@@ -884,7 +873,7 @@ namespace FreeLibSet.Forms.Docs
         if (value == _DocType)
           return;
         _DocType = value;
-        DocIds = DataTools.EmptyIds;
+        DocIds = IdArray<Int32>.Empty;
         if (_DocTableIdEx != null)
           _DocTableIdEx.Value = DocTableId;
         if (_DocTypeNameEx != null)
@@ -1016,7 +1005,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификаторы выбранных документов
     /// </summary>
-    public virtual Int32[] DocIds
+    public virtual IdArray<Int32> DocIds
     {
       get { return base.Ids; }
       set { base.Ids = value; }
@@ -1026,7 +1015,7 @@ namespace FreeLibSet.Forms.Docs
     /// Управляемое свойство для <see cref="DocIds"/>.
     /// Идентификаторы выбранных документов.
     /// </summary>
-    public DepValue<Int32[]> DocIdsEx
+    public DepValue<IdArray<Int32>> DocIdsEx
     {
       get { return base.IdsEx; }
       set { base.IdsEx = value; }
@@ -1123,11 +1112,11 @@ namespace FreeLibSet.Forms.Docs
       DBxFilter filter = Filters.GetSqlFilter();
       if (UI.DocProvider.DocTypes.UseDeleted) // 23.05.2021
         filter &= DBSDocType.DeletedFalseFilter;
-      Int32 newId = UI.DocProvider.FindRecord(DocTypeName, filter, true);
+      Int32 newId = DataTools.GetInt32(UI.DocProvider.FindRecord(DocTypeName, filter, true));
       if (newId == 0)
         return false;
 
-      DocIds = new Int32[] { newId };
+      DocIds = IdArray<Int32>.FromId(newId);
       return true;
     }
 
@@ -1144,17 +1133,17 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Текст для комбоблока</returns>
     protected override string DoGetText()
     {
-      if (DocIds.Length == 1)
+      if (DocIds.Count == 1)
         return UI.TextHandlers.GetTextValue(DocType.Name, DocIds[0]);
-      else if (DocIds.Length <= MaxTextItemCount)
+      else if (DocIds.Count <= MaxTextItemCount)
       {
-        string[] a = new string[DocIds.Length];
-        for (int i = 0; i < DocIds.Length; i++)
-          a[i] = UI.TextHandlers.GetTextValue(DocType.Name, DocIds[i]);
-        return String.Join(", ", a);
+        List<string> lst = new List<string>(DocIds.Count);
+        foreach (Int32 docId in DocIds)
+          lst.Add(UI.TextHandlers.GetTextValue(DocType.Name, docId));
+        return String.Join(", ", lst.ToArray());
       }
       else
-        return DocType.PluralTitle + " (" + DocIds.Length.ToString() + ")";
+        return DocType.PluralTitle + " (" + DocIds.Count.ToString() + ")";
     }
 
     /// <summary>
@@ -1166,12 +1155,12 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Имя изображения</returns>
     protected override string DoGetImageKey()
     {
-      if (DocIds.Length < 1)
+      if (DocIds.Count < 1)
         return "UnknownState"; // ошибка
       string imageKey = UI.DocTypes[DocTypeName].GetImageKey(DocIds[0]);
-      for (int i = 1; i < DocIds.Length; i++)
+      foreach (Int32 docId in DocIds)
       {
-        string imageKey2 = UI.DocTypes[DocTypeName].GetImageKey(DocIds[i]);
+        string imageKey2 = UI.DocTypes[DocTypeName].GetImageKey(docId);
         if (imageKey2 != imageKey)
           return "DBxDocSelection";
       }
@@ -1188,7 +1177,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="grayed">Сюда записывается true, если документ выделяется серым цветом</param>
     protected override void DoGetValueColor(out UIDataViewColorType colorType, out bool grayed)
     {
-      if (DocIds.Length == 1)
+      if (DocIds.Count == 1)
         UI.DocTypes[DocTypeName].GetRowColor(DocIds[0], out colorType, out grayed);
       else
         base.DoGetValueColor(out colorType, out grayed);
@@ -1202,10 +1191,10 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Текст для всплывающей подсказки</returns>
     protected override string DoGetValueToolTipText()
     {
-      if (DocIds.Length == 1)
+      if (DocIds.Count == 1)
         return UI.DocTypes[DocTypeName].GetToolTipText(DocIds[0]);
       else
-        return String.Format(Res.EFPMultiDocComboBox_ToolTip_Multi, DocIds.Length);
+        return String.Format(Res.EFPMultiDocComboBox_ToolTip_Multi, DocIds.Count);
     }
 
     /// <summary>
@@ -1215,7 +1204,7 @@ namespace FreeLibSet.Forms.Docs
     {
       base.InitTextAndImage();
 
-      if (DocType == null || DocIds.Length != 1)
+      if (DocType == null || DocIds.Count != 1)
       {
         Control.EditButtonEnabled = false;
         if (Selectable)
@@ -1310,7 +1299,8 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      if (DocIds.Length == 0 && SelectionMode == DocSelectionMode.MultiList && EmptyEditMode != MultiSelectEmptyEditMode.EmptyList)
+      if (DocIds.Count == 0 && SelectionMode == DocSelectionMode.MultiList && 
+        EmptyEditMode != MultiSelectEmptyEditMode.EmptyList)
       {
         // 05.12.2022
 
@@ -1323,7 +1313,7 @@ namespace FreeLibSet.Forms.Docs
           dlg1.Filters = Filters;
         if (dlg1.ShowDialog() == DialogResult.OK)
         {
-          DocIds = dlg1.DocIds;
+          DocIds = IdTools.AsIdArray<Int32>(dlg1.DocIds);
           if (EmptyEditMode == MultiSelectEmptyEditMode.Select)
             return;
         }
@@ -1341,7 +1331,7 @@ namespace FreeLibSet.Forms.Docs
       dlg2.DialogPosition.PopupOwnerControl = Control;
       if (dlg2.ShowDialog() != DialogResult.OK)
         return;
-      DocIds = dlg2.DocIds;
+      DocIds = IdTools.AsIdArray<Int32>(dlg2.DocIds);
     }
 
     ///// <summary>
@@ -1366,7 +1356,7 @@ namespace FreeLibSet.Forms.Docs
     {
       try
       {
-        switch (DocIds.Length)
+        switch (DocIds.Count)
         {
           case 0:
             EFPApp.ShowTempMessage(Res.Common_Err_NoSelectedDoc);
@@ -1415,7 +1405,7 @@ namespace FreeLibSet.Forms.Docs
         return false;
       }
 
-      if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(id, "Deleted")))
+      if (DataTools.GetBoolean(UI.TextHandlers.DBCache[DocType.Name].GetBoolean(id, "Deleted")))
       {
         message = String.Format(Res.Common_Err_SelectedDocDeleted, DocType.SingularTitle);
         return true;
@@ -1470,7 +1460,7 @@ namespace FreeLibSet.Forms.Docs
     protected override DBxDocSelection OnGetDocSel(EFPDBxViewDocSelReason reason)
     {
       DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
-      if (DocType != null && DocIds.Length > 0)
+      if (DocType != null && DocIds.Count > 0)
         UI.DocTypes[DocType.Name].PerformGetDocSel(docSel, DocIds, reason);
       return docSel;
     }
@@ -1484,11 +1474,11 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="docSel">Выборка документов</param>
     protected override void OnSetDocSel(DBxDocSelection docSel)
     {
-      Int32[] newIds = docSel[DocTypeName];
-      if (newIds.Length == 0)
+      IIdSet<Int32> newIds = docSel[DocTypeName];
+      if (newIds.Count == 0)
         EFPApp.ShowTempMessage(String.Format(Res.Clipboard_Err_NoDocType, DocType.PluralTitle));
       else
-        DocIds = newIds;
+        DocIds = IdTools.AsIdArray<Int32>(newIds);
     }
 
     /// <summary>
@@ -1538,7 +1528,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (UI.DocProvider.DocTypes.UseDeleted)
       {
-        if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(docId, "Deleted")))
+        if (DataTools.GetBoolean(UI.TextHandlers.DBCache[DocType.Name].GetBoolean(docId, "Deleted")))
         {
           if (!(CanBeDeleted))
           {
@@ -1632,7 +1622,7 @@ namespace FreeLibSet.Forms.Docs
         if (value == _SubDocTypeUI)
           return;
         _SubDocTypeUI = value;
-        SubDocIds = DataTools.EmptyIds;
+        SubDocIds = IdArray<Int32>.Empty;
         InitTextAndImage();
       }
     }
@@ -1711,7 +1701,7 @@ namespace FreeLibSet.Forms.Docs
           // после редактирования основного объекта, выполненного пользователем
           // Возможно, появился поддокумент, из которого можно выбрать; 
           // например, расчетный счет организации
-          if (SubDocIds.Length == 0)
+          if (SubDocIds.Count == 0)
             InitSubDocIdsOnDocId();
         }
 
@@ -1752,12 +1742,12 @@ namespace FreeLibSet.Forms.Docs
     {
       if (_InsideSetSubDocIds)
         return;
-      SubDocIds = DataTools.EmptyIds;
+      SubDocIds = IdArray<Int32>.Empty;
       if ((DocId != 0) && (SubDocTypeUI != null))
       {
         if (AutoSetAll)
         {
-          SubDocIds = SubDocTypeUI.GetSubDocIds(DocId);
+          SubDocIds = IdTools.AsIdArray<Int32>(SubDocTypeUI.GetSubDocIds(DocId));
           return;
         }
 
@@ -1843,7 +1833,7 @@ namespace FreeLibSet.Forms.Docs
     /// Текущие выбранные поддокументы.
     /// Если нет ни одного выбранного поддокумента, возвращается пустой массив.
     /// </summary>
-    public virtual Int32[] SubDocIds
+    public virtual IdArray<Int32> SubDocIds
     {
       // Нужно обязательно использовать базовое свойство Id, т.к. к нему приделана обработка свойства IdEx
       get { return Ids; }
@@ -1855,7 +1845,7 @@ namespace FreeLibSet.Forms.Docs
     /// Массив выбранных идентификаторов поддокументов.
     /// При установке свойства вызывается <see cref="InternalSetDocId(int)"/>, так как выбранный документ мог тоже измениться.
     /// </summary>
-    protected internal override Int32[] Ids
+    protected internal override IdArray<Int32> Ids
     {
       get { return base.Ids; }
       set
@@ -1864,17 +1854,17 @@ namespace FreeLibSet.Forms.Docs
           return;
 
         if (value == null)
-          value = DataTools.EmptyIds;
+          value = IdArray<Int32>.Empty;
 
-        if (DataTools.AreArraysEqual<Int32>(value, base.Ids))
+        if (IdTools.AreEqual<Int32>(value, base.Ids))
           return;
 
         _InsideSetSubDocIds = true;
         try
         {
           base.Ids = value;
-          if (value.Length > 0)
-            InternalSetDocId(SubDocTypeUI.TableCache.GetInt(value[0], "DocId"));
+          if (value.Count > 0)
+            InternalSetDocId(SubDocTypeUI.TableCache.GetInt32(value[0], "DocId"));
           else
             InternalSetDocId(0);
         }
@@ -1893,7 +1883,7 @@ namespace FreeLibSet.Forms.Docs
     /// Идентификаторы выбранных поддокументов.
     /// Управляемое свойство для <see cref="SubDocIds"/>.
     /// </summary>
-    public DepValue<Int32[]> SubDocIdsEx
+    public DepValue<IdArray<Int32>> SubDocIdsEx
     {
       get { return base.IdsEx; }
       set { base.IdsEx = value; }
@@ -1921,10 +1911,10 @@ namespace FreeLibSet.Forms.Docs
         if (_AutoSetAllEx != null)
           _AutoSetAllEx.Value = value;
 
-        if (value && (DocId != 0) && (SubDocIds.Length == 0) &&
+        if (value && (DocId != 0) && (SubDocIds.Count== 0) &&
           (SubDocTypeUI != null))
         {
-          SubDocIds = SubDocTypeUI.GetSubDocIds(DocId);
+          SubDocIds = IdTools.AsIdArray<Int32>(SubDocTypeUI.GetSubDocIds(DocId));
         }
 
         Validate(); // 29.08.2016
@@ -1984,9 +1974,9 @@ namespace FreeLibSet.Forms.Docs
 
       // Проверяем, что поддокумент относится к выбранному документу
       Int32 dummyDocId = 0;
-      for (int i = 0; i < SubDocIds.Length; i++)
+      for (int i = 0; i < SubDocIds.Count; i++)
       {
-        Int32 docId2 = SubDocTypeUI.TableCache.GetInt(SubDocIds[i], "DocId");
+        Int32 docId2 = SubDocTypeUI.TableCache.GetInt32(SubDocIds[i], "DocId");
         if (DocId != 0)
         {
           if (docId2 != DocId)
@@ -2028,17 +2018,17 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Строка для комбоблока</returns>
     protected override string DoGetText()
     {
-      if (SubDocIds.Length == 1)
+      if (SubDocIds.Count == 1)
         return SubDocTypeUI.GetTextValue(SubDocIds[0]);
-      else if (SubDocIds.Length <= MaxTextItemCount)
+      else if (SubDocIds.Count <= MaxTextItemCount)
       {
-        string[] a = new string[SubDocIds.Length];
-        for (int i = 0; i < SubDocIds.Length; i++)
+        string[] a = new string[SubDocIds.Count];
+        for (int i = 0; i < SubDocIds.Count; i++)
           a[i] = SubDocTypeUI.GetTextValue(SubDocIds[i]);
         return String.Join(", ", a);
       }
       else
-        return SubDocType.PluralTitle + " (" + SubDocIds.Length.ToString() + ")";
+        return SubDocType.PluralTitle + " (" + SubDocIds.Count.ToString() + ")";
     }
 
     /// <summary>
@@ -2051,10 +2041,10 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Значок для комбоблока</returns>
     protected override string DoGetImageKey()
     {
-      if (SubDocIds.Length < 1)
+      if (SubDocIds.Count < 1)
         return "UnknownState"; // ошибка
       string imageKey = SubDocTypeUI.GetImageKey(SubDocIds[0]);
-      for (int i = 1; i < SubDocIds.Length; i++)
+      for (int i = 1; i < SubDocIds.Count; i++)
       {
         string imageKey2 = SubDocTypeUI.GetImageKey(SubDocIds[i]);
         if (imageKey2 != imageKey)
@@ -2071,7 +2061,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="grayed">Получает значение True, если поддокумент выделяется серым цветом</param>
     protected override void DoGetValueColor(out UIDataViewColorType colorType, out bool grayed)
     {
-      if (SubDocIds.Length == 1)
+      if (SubDocIds.Count == 1)
         SubDocTypeUI.GetRowColor(SubDocIds[0], out colorType, out grayed);
       else
         base.DoGetValueColor(out colorType, out grayed);
@@ -2084,10 +2074,10 @@ namespace FreeLibSet.Forms.Docs
     /// <returns>Текст всплывающей подсказки</returns>
     protected override string DoGetValueToolTipText()
     {
-      if (SubDocIds.Length == 1)
+      if (SubDocIds.Count == 1)
         return SubDocTypeUI.GetToolTipText(SubDocIds[0]);
       else
-        return String.Format(Res.EFPMultiSubDocComboBox_ToolTip_Multi, SubDocIds.Length);
+        return String.Format(Res.EFPMultiSubDocComboBox_ToolTip_Multi, SubDocIds.Count);
     }
 
     #endregion
@@ -2130,7 +2120,7 @@ namespace FreeLibSet.Forms.Docs
         return;
       }
 
-      Int32[] thisSubDocIds = SubDocIds;
+      IdArray<Int32> thisSubDocIds = SubDocIds;
 
       DBxDocSet docSet = new DBxDocSet(UI.DocProvider);
       DBxSingleDoc doc = docSet[DocType.Name].View(DocId);
@@ -2146,10 +2136,10 @@ namespace FreeLibSet.Forms.Docs
       if (dlg.ShowDialog() != DialogResult.OK)
         return;
 
-      if (DataTools.AreArraysEqual<Int32>(dlg.SubDocIds, SubDocIds))
+      if (IdTools.AreEqual<Int32>(dlg.SubDocIds, SubDocIds))
         InitTextAndImage();
       else
-        SubDocIds = dlg.SubDocIds;
+        SubDocIds = IdTools.AsIdArray<Int32>(dlg.SubDocIds);
     }
 
     #endregion
@@ -2180,13 +2170,13 @@ namespace FreeLibSet.Forms.Docs
       }
 
       object[] a = SubDocTypeUI.GetValues(subDocId, "Deleted,DocId");
-      if (DataTools.GetBool(a[0]))
+      if (DataTools.GetBoolean(a[0]))
       {
         message = String.Format(Res.Common_Err_SelectedSubDocDeleted, SubDocType.SingularTitle);
         return true; // удален поддокумент
       }
-      Int32 docId = DataTools.GetInt(a[1]);
-      if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(docId, "Deleted")))
+      Int32 docId = DataTools.GetInt32(a[1]);
+      if (DataTools.GetBoolean(UI.TextHandlers.DBCache[DocType.Name].GetBoolean(docId, "Deleted")))
       {
         string docText;
         try
@@ -2220,14 +2210,14 @@ namespace FreeLibSet.Forms.Docs
     public override bool GetDocSelSupported { get { return SubDocTypeUI.HasGetDocSel; } }
 
     /// <summary>
-    /// Вызывает <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> для всех выбранных поддокументов.
+    /// Вызывает <see cref="FreeLibSet.Forms.Docs.SubDocTypeUI.PerformGetDocSel(DBxDocSelection, IEnumerable{Int32}, EFPDBxViewDocSelReason)"/> для всех выбранных поддокументов.
     /// </summary>
     /// <param name="reason">Причина создания выборки</param>
     /// <returns>Выборка документов</returns>
     protected override DBxDocSelection OnGetDocSel(EFPDBxViewDocSelReason reason)
     {
       DBxDocSelection docSel = new DBxDocSelection(UI.DocProvider.DBIdentity);
-      for (int i = 0; i < SubDocIds.Length; i++)
+      for (int i = 0; i < SubDocIds.Count; i++)
       {
         SubDocTypeUI.PerformGetDocSel(docSel, SubDocIds[i], reason);
       }

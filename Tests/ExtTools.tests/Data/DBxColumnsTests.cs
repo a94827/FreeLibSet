@@ -35,7 +35,7 @@ namespace ExtTools_tests.Data
       List<string> src = new List<string>();
       DBxColumns sut = new DBxColumns(src);
       Assert.AreEqual("", sut.AsString, "AsString");
-      Assert.AreEqual(DataTools.EmptyStrings, sut.AsArray, "AsArray");
+      Assert.AreEqual(EmptyArray<string>.Empty, sut.AsArray, "AsArray");
       Assert.IsTrue(sut.IsEmpty, "IsEmpty");
       Assert.AreEqual(0, sut.Count, "Count");
     }
@@ -120,7 +120,7 @@ namespace ExtTools_tests.Data
       DBxColumns sut1 = DBxColumns.FromNames("AAA,BBB,CCC".Split(','));
       Assert.AreEqual("AAA,BBB,CCC", sut1.AsString, "#1");
 
-      DBxColumns sut2 = DBxColumns.FromNames(DataTools.EmptyStrings);
+      DBxColumns sut2 = DBxColumns.FromNames(EmptyArray<string>.Empty);
       Assert.IsNull(sut2, "#2");
     }
 
@@ -132,7 +132,7 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(src1, sut1.AsArray, "Equal #1");
       Assert.AreNotSame(src1, sut1.AsArray, "Same #1");
 
-      DBxColumns sut2 = DBxColumns.FromNames(DataTools.EmptyStrings, true);
+      DBxColumns sut2 = DBxColumns.FromNames(EmptyArray<string>.Empty, true);
       Assert.IsNull(sut2, "#2");
     }
 
@@ -144,7 +144,7 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(src1, sut1.AsArray, "Equal #1");
       Assert.AreSame(src1, sut1.AsArray, "Same #1");
 
-      DBxColumns sut2 = DBxColumns.FromNames(DataTools.EmptyStrings, false);
+      DBxColumns sut2 = DBxColumns.FromNames(EmptyArray<string>.Empty, false);
       Assert.IsNull(sut2, "#2");
     }
 
@@ -683,7 +683,7 @@ namespace ExtTools_tests.Data
       DBxColumns res2 = arg1 + names2;
       Assert.AreEqual(wantedRes, res2.AsString, "string");
 
-      string[] aNames2 = String.IsNullOrEmpty(names2) ? DataTools.EmptyStrings : names2.Split(',');
+      string[] aNames2 = String.IsNullOrEmpty(names2) ? EmptyArray<string>.Empty : names2.Split(',');
       DBxColumns res3 = arg1 + aNames2;
       Assert.AreEqual(wantedRes, res3.AsString, "string[]");
     }
@@ -706,7 +706,7 @@ namespace ExtTools_tests.Data
       DBxColumns res2 = arg1 - names2;
       Assert.AreEqual(wantedRes, res2.AsString, "string");
 
-      string[] aNames2 = String.IsNullOrEmpty(names2) ? DataTools.EmptyStrings : names2.Split(',');
+      string[] aNames2 = String.IsNullOrEmpty(names2) ? EmptyArray<string>.Empty : names2.Split(',');
       DBxColumns res3 = arg1 - aNames2;
       Assert.AreEqual(wantedRes, res3.AsString, "string[]");
     }
@@ -728,7 +728,7 @@ namespace ExtTools_tests.Data
       DBxColumns res2 = arg1 & names2;
       Assert.AreEqual(wantedRes, res2.AsString, "string");
 
-      string[] aNames2 = String.IsNullOrEmpty(names2) ? DataTools.EmptyStrings : names2.Split(',');
+      string[] aNames2 = String.IsNullOrEmpty(names2) ? EmptyArray<string>.Empty : names2.Split(',');
       DBxColumns res3 = arg1 & aNames2;
       Assert.AreEqual(wantedRes, res3.AsString, "string[]");
     }
@@ -758,7 +758,7 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(0, DBxColumns.Empty.Count, "Count");
       Assert.IsTrue(DBxColumns.Empty.IsEmpty, "IsEmpty");
       Assert.AreEqual("", DBxColumns.Empty.AsString, "AsString");
-      Assert.AreEqual(DataTools.EmptyStrings, DBxColumns.Empty.AsArray, "AsArray");
+      Assert.AreEqual(EmptyArray<string>.Empty, DBxColumns.Empty.AsArray, "AsArray");
 
       int cnt = 0;
       foreach (string name in DBxColumns.Empty)

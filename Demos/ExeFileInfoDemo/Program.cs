@@ -377,7 +377,7 @@ namespace ExeFileInfoDemo
         AddPair(lstInfo, "Machine", fi.PE.Machine.ToString(), 1);
         AddPair(lstInfo, "Creation Time", fi.PE.CreationTime.ToString(), 1);
         AddPair(lstInfo, "Characteristics", fi.PE.Characteristics.ToString(), 1);
-        AddPair(lstInfo, "Sections", DataTools.ToStringJoin(", ", fi.PE.Sections), 1);
+        AddPair(lstInfo, "Sections", StringTools.ToStringJoin(", ", fi.PE.Sections), 1);
 
         if (fi.PE.OptionalHeader != null)
         {

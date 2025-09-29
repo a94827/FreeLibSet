@@ -69,6 +69,9 @@
     <Compile Include="Controls\Design\UserComboBoxDesigner.cs" />
     <Compile Include="Controls\Design\YearMonthBoxDesigner.cs" />
     <Compile Include="Controls\Design\YearMonthRangeBoxDesigner.cs" />
+    <Compile Include="Controls\MessageBoxButtonsBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\NumEditBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -89,6 +92,12 @@
     </Compile>
     <Compile Include="Data\CodeGridFilterForm.designer.cs">
       <DependentUpon>CodeGridFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DateRangeGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Data\DateRangeGridFilterForm.Designer.cs">
+      <DependentUpon>DateRangeGridFilterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\DateRangeInclusionGridFilterForm.cs">
       <SubType>Form</SubType>
@@ -292,7 +301,9 @@
     <Compile Include="EFPControls\EFPXmlViewBox.cs" />
     <Compile Include="EFPControls\EFPYearMonthBox.cs" />
     <Compile Include="Controls\ExtDataGridViewCheckBoxColumn.cs" />
-    <Compile Include="Controls\ExtPrintPreviewControl.cs" />
+    <Compile Include="Controls\ExtPrintPreviewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Drawing\ExtTextRenderer.cs" />
     <Compile Include="Dialogs\FileBrowseForm.cs">
       <SubType>Form</SubType>
@@ -309,7 +320,7 @@
     <Compile Include="EFPApp\FileEditorFormHandler.cs" />
     <Compile Include="EFPControls\EFPDataGridViewMeasures.cs" />
     <Compile Include="EFPGridProducer\EFPDataViewOrder.cs" />
-    <Compile Include="EFPControls\EFPDataGridViewConfig.cs" />
+    <Compile Include="EFPControls\EFPDataViewConfig.cs" />
     <Compile Include="Dialogs\GridConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -641,7 +652,9 @@
       <DependentUpon>WizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WizardSteps2.cs" />
-    <Compile Include="EFPControls\XmlEditor.cs" />
+    <Compile Include="EFPControls\XmlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Controls\XmlViewBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -683,6 +696,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Data\CodeGridFilterForm.ru.resx">
       <DependentUpon>CodeGridFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\DateRangeGridFilterForm.resx">
+      <DependentUpon>DateRangeGridFilterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Data\DateRangeInclusionGridFilterForm.resx">
       <DependentUpon>DateRangeInclusionGridFilterForm.cs</DependentUpon>
@@ -1802,6 +1818,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\BRDataView\BRDataViewBorderStyleVertical.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Main\Menu\CopyHyperlink.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

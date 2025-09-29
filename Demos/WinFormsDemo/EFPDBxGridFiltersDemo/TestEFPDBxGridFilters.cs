@@ -35,7 +35,7 @@ namespace WinFormsDemo.EFPDBxGridFiltersDemo
       for (int i = 0; i < 1000; i++)
       {
         object[] a = new object[6];
-        DataTools.FillArray<object>(a, DBNull.Value);
+        ArrayTools.FillArray<object>(a, DBNull.Value);
 
         a[0] = aS[i % aS.Length];
         int i1 = i % 37;
@@ -83,7 +83,7 @@ namespace WinFormsDemo.EFPDBxGridFiltersDemo
       DateRangeCrossGridFilter filtD12 = new DateRangeCrossGridFilter("D1", "D2");
       filters.Add(filtD12);
 
-      BoolValueGridFilter filtL1 = new BoolValueGridFilter("L1");
+      BooleanValueGridFilter filtL1 = new BooleanValueGridFilter("L1");
       filters.Add(filtL1);
 
       NullNotNullGridFilter filtL1nn = new NullNotNullGridFilter("L1", typeof(bool));
@@ -111,7 +111,7 @@ namespace WinFormsDemo.EFPDBxGridFiltersDemo
 
       #endregion
 
-      efpGrid.GetCellAttributes += EfpGrid_GetCellAttributes;
+      efpGrid.CellInfoNeeded += EfpGrid_CellInfoNeeded;
       efpGrid.Control.ReadOnly = true;
       efpGrid.CanView = false;
 
@@ -125,7 +125,7 @@ namespace WinFormsDemo.EFPDBxGridFiltersDemo
       return form;
     }
 
-    private static void EfpGrid_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private static void EfpGrid_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.ColumnName == "L1")
       {

@@ -17,9 +17,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void SumXXX_DataTable()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
-      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumInt(tbl, "FInt32"), "SumInt()");
+      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumInt32(tbl, "FInt32"), "SumInt32()");
       Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, DataTools.SumInt64(tbl, "FInt64"), "SumInt64()");
       Assert.AreEqual(TestTable.Row1.VSingle + TestTable.Row2.VSingle, DataTools.SumSingle(tbl, "FSingle"), "SumSingle()");
       Assert.AreEqual(TestTable.Row1.VDouble + TestTable.Row2.VDouble, DataTools.SumDouble(tbl, "FDouble"), "SumDouble()");
@@ -30,7 +30,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void SumValue_DataTable()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
       Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumValue(tbl, "FInt32"), "Int32");
       Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, DataTools.SumValue(tbl, "FInt64"), "Int64");
@@ -47,9 +47,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void SumXXX_DataView()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
-      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumInt(dv, "FInt32"), "SumInt()");
+      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumInt32(dv, "FInt32"), "SumInt32()");
       Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, DataTools.SumInt64(dv, "FInt64"), "SumInt64()");
       Assert.AreEqual(TestTable.Row1.VSingle + TestTable.Row2.VSingle, DataTools.SumSingle(dv, "FSingle"), "SumSingle()");
       Assert.AreEqual(TestTable.Row1.VDouble + TestTable.Row2.VDouble, DataTools.SumDouble(dv, "FDouble"), "SumDouble()");
@@ -60,7 +60,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void SumValue_DataView()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
       Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumValue(dv, "FInt32"), "Int32");
       Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, DataTools.SumValue(dv, "FInt64"), "Int64");
@@ -77,9 +77,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void SumXXX_DataRowEnumerable()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
-      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumInt(en, "FInt32"), "SumInt()");
+      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumInt32(en, "FInt32"), "SumInt32()");
       Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, DataTools.SumInt64(en, "FInt64"), "SumInt64()");
       Assert.AreEqual(TestTable.Row1.VSingle + TestTable.Row2.VSingle, DataTools.SumSingle(en, "FSingle"), "SumSingle()");
       Assert.AreEqual(TestTable.Row1.VDouble + TestTable.Row2.VDouble, DataTools.SumDouble(en, "FDouble"), "SumDouble()");
@@ -90,7 +90,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void SumValue_DataRowEnumerable()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
       Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, DataTools.SumValue(en, "FInt32"), "Int32");
       Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, DataTools.SumValue(en, "FInt64"), "Int64");
@@ -107,10 +107,10 @@ namespace ExtTools_tests.Core
     [Test]
     public void SumXXX_TotalRow()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
-      DataTools.SumInt(row, "FInt32");
-      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, row["FInt32"], "SumInt()");
+      DataTools.SumInt32(row, "FInt32");
+      Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, row["FInt32"], "SumInt32()");
 
       DataTools.SumInt64(row, "FInt64");
       Assert.AreEqual(TestTable.Row1.VInt64 + TestTable.Row2.VInt64, row["FInt64"], "SumInt64()");
@@ -131,7 +131,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void SumValue_TotalRow()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
       DataTools.SumValue(row, "FInt32");
       Assert.AreEqual(TestTable.Row1.VInt32 + TestTable.Row2.VInt32, row["FInt32"], "Int32");
@@ -157,10 +157,10 @@ namespace ExtTools_tests.Core
     #region Enumerable
 
     [Test]
-    public void SumInt_Enumerable()
+    public void SumInt32_Enumerable()
     {
       int[] a = new int[] { 1, 2, 3, 4 };
-      Assert.AreEqual(10, DataTools.SumInt(a));
+      Assert.AreEqual(10, DataTools.SumInt32(a));
     }
 
     [Test]
@@ -230,9 +230,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinXXX_DataTable_skipNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
-      Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinInt(tbl, "FInt32", true), "MinInt()");
+      Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinInt32(tbl, "FInt32", true), "MinInt32()");
       Assert.AreEqual(TestTable.Row1.VInt64, DataTools.MinInt64(tbl, "FInt64", true), "MinInt64()");
       Assert.AreEqual(TestTable.Row1.VSingle, DataTools.MinSingle(tbl, "FSingle", true), "MinSingle()");
       Assert.AreEqual(TestTable.Row1.VDouble, DataTools.MinDouble(tbl, "FDouble", true), "MinDouble()");
@@ -244,9 +244,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinXXX_DataTable_withNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
-      Assert.AreEqual(0, DataTools.MinInt(tbl, "FInt32", false), "MinInt()");
+      Assert.AreEqual(0, DataTools.MinInt32(tbl, "FInt32", false), "MinInt32()");
       Assert.AreEqual(0L, DataTools.MinInt64(tbl, "FInt64", false), "MinInt64()");
       Assert.AreEqual(0f, DataTools.MinSingle(tbl, "FSingle", false), "MinSingle()");
       Assert.AreEqual(0.0, DataTools.MinDouble(tbl, "FDouble", false), "MinDouble()");
@@ -258,7 +258,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinValue_DataTable_skipNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
       Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinValue(tbl, "FInt32", true), "Int32");
       Assert.AreEqual(TestTable.Row1.VInt64, DataTools.MinValue(tbl, "FInt64", true), "Int64");
@@ -272,7 +272,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinValue_DataTable_withNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
       Assert.AreEqual(0, DataTools.MinValue(tbl, "FInt32", false), "Int32");
       Assert.AreEqual(0L, DataTools.MinValue(tbl, "FInt64", false), "Int64");
@@ -290,9 +290,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinXXX_DataView_skipNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
-      Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinInt(dv, "FInt32", true), "MinInt()");
+      Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinInt32(dv, "FInt32", true), "MinInt32()");
       Assert.AreEqual(TestTable.Row1.VInt64, DataTools.MinInt64(dv, "FInt64", true), "MinInt64()");
       Assert.AreEqual(TestTable.Row1.VSingle, DataTools.MinSingle(dv, "FSingle", true), "MinSingle()");
       Assert.AreEqual(TestTable.Row1.VDouble, DataTools.MinDouble(dv, "FDouble", true), "MinDouble()");
@@ -304,9 +304,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinXXX_DataView_withNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
-      Assert.AreEqual(0, DataTools.MinInt(dv, "FInt32", false), "MinInt()");
+      Assert.AreEqual(0, DataTools.MinInt32(dv, "FInt32", false), "MinInt32()");
       Assert.AreEqual(0L, DataTools.MinInt64(dv, "FInt64", false), "MinInt64()");
       Assert.AreEqual(0f, DataTools.MinSingle(dv, "FSingle", false), "MinSingle()");
       Assert.AreEqual(0.0, DataTools.MinDouble(dv, "FDouble", false), "MinDouble()");
@@ -319,7 +319,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinValue_DataView_skipNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
       Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinValue(dv, "FInt32", true), "Int32");
       Assert.AreEqual(TestTable.Row1.VInt64, DataTools.MinValue(dv, "FInt64", true), "Int64");
@@ -333,7 +333,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinValue_DataView_withNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
       Assert.AreEqual(0, DataTools.MinValue(dv, "FInt32", false), "Int32");
       Assert.AreEqual(0L, DataTools.MinValue(dv, "FInt64", false), "Int64");
@@ -351,9 +351,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinXXX_DataRowEnumerable_skipNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
-      Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinInt(en, "FInt32", true), "MinInt()");
+      Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinInt32(en, "FInt32", true), "MinInt32()");
       Assert.AreEqual(TestTable.Row1.VInt64, DataTools.MinInt64(en, "FInt64", true), "MinInt64()");
       Assert.AreEqual(TestTable.Row1.VSingle, DataTools.MinSingle(en, "FSingle", true), "MinSingle()");
       Assert.AreEqual(TestTable.Row1.VDouble, DataTools.MinDouble(en, "FDouble", true), "MinDouble()");
@@ -365,9 +365,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinXXX_DataRowEnumerable_withNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
-      Assert.AreEqual(0, DataTools.MinInt(en, "FInt32", false), "MinInt()");
+      Assert.AreEqual(0, DataTools.MinInt32(en, "FInt32", false), "MinInt32()");
       Assert.AreEqual(0L, DataTools.MinInt64(en, "FInt64", false), "MinInt64()");
       Assert.AreEqual(0f, DataTools.MinSingle(en, "FSingle", false), "MinSingle()");
       Assert.AreEqual(0.0, DataTools.MinDouble(en, "FDouble", false), "MinDouble()");
@@ -379,7 +379,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinValue_DataRowEnumerable_skipNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
       Assert.AreEqual(TestTable.Row1.VInt32, DataTools.MinValue(en, "FInt32", true), "Int32");
       Assert.AreEqual(TestTable.Row1.VInt64, DataTools.MinValue(en, "FInt64", true), "Int64");
@@ -393,7 +393,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinValue_DataRowEnumerable_withNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
       Assert.AreEqual(0, DataTools.MinValue(en, "FInt32", false), "Int32");
       Assert.AreEqual(0L, DataTools.MinValue(en, "FInt64", false), "Int64");
@@ -411,10 +411,10 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinXXX_TotalRow_skipNulls()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
-      DataTools.MinInt(row, "FInt32", true);
-      Assert.AreEqual(TestTable.Row1.VInt32, row["FInt32"], "MinInt()");
+      DataTools.MinInt32(row, "FInt32", true);
+      Assert.AreEqual(TestTable.Row1.VInt32, row["FInt32"], "MinInt32()");
 
       DataTools.MinInt64(row, "FInt64", true);
       Assert.AreEqual(TestTable.Row1.VInt64, row["FInt64"], "MinInt64()");
@@ -438,10 +438,10 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinXXX_TotalRow_withNulls()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
-      DataTools.MinInt(row, "FInt32", false);
-      Assert.AreEqual(0, row["FInt32"], "MinInt()");
+      DataTools.MinInt32(row, "FInt32", false);
+      Assert.AreEqual(0, row["FInt32"], "MinInt32()");
 
       DataTools.MinInt64(row, "FInt64", false);
       Assert.AreEqual(0L, row["FInt64"], "MinInt64()");
@@ -465,7 +465,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinValue_TotalRow_skipNulls()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
       DataTools.MinValue(row, "FInt32", true);
       Assert.AreEqual(TestTable.Row1.VInt32, row["FInt32"], "Int32");
@@ -492,7 +492,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinValue_TotalRow_withNulls()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
       DataTools.MinValue(row, "FInt32", false);
       Assert.AreEqual(0, row["FInt32"], "Int32");
@@ -521,10 +521,10 @@ namespace ExtTools_tests.Core
     #region Enumerable
 
     [Test]
-    public void MinInt_Enumerable()
+    public void MinInt32_Enumerable()
     {
       int[] a = new int[] { 1, 2, 3, 4 };
-      Assert.AreEqual(1, DataTools.MinInt(a));
+      Assert.AreEqual(1, DataTools.MinInt32(a));
     }
 
     [Test]
@@ -604,9 +604,9 @@ namespace ExtTools_tests.Core
     [TestCase(false)]
     public void MaxXXX_DataTable(bool skipNulls)
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
-      Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxInt(tbl, "FInt32", skipNulls), "MaxInt()");
+      Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxInt32(tbl, "FInt32", skipNulls), "MaxInt32()");
       Assert.AreEqual(TestTable.Row2.VInt64, DataTools.MaxInt64(tbl, "FInt64", skipNulls), "MaxInt64()");
       Assert.AreEqual(TestTable.Row2.VSingle, DataTools.MaxSingle(tbl, "FSingle", skipNulls), "MaxSingle()");
       Assert.AreEqual(TestTable.Row2.VDouble, DataTools.MaxDouble(tbl, "FDouble", skipNulls), "MaxDouble()");
@@ -619,7 +619,7 @@ namespace ExtTools_tests.Core
     [TestCase(false)]
     public void MaxValue_DataTable(bool skipNulls)
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
       Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxValue(tbl, "FInt32", skipNulls), "Int32");
       Assert.AreEqual(TestTable.Row2.VInt64, DataTools.MaxValue(tbl, "FInt64", skipNulls), "Int64");
@@ -638,9 +638,9 @@ namespace ExtTools_tests.Core
     [TestCase(false)]
     public void MaxXXX_DataView(bool skipNulls)
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
-      Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxInt(dv, "FInt32", skipNulls), "MaxInt()");
+      Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxInt32(dv, "FInt32", skipNulls), "MaxInt32()");
       Assert.AreEqual(TestTable.Row2.VInt64, DataTools.MaxInt64(dv, "FInt64", skipNulls), "MaxInt64()");
       Assert.AreEqual(TestTable.Row2.VSingle, DataTools.MaxSingle(dv, "FSingle", skipNulls), "MaxSingle()");
       Assert.AreEqual(TestTable.Row2.VDouble, DataTools.MaxDouble(dv, "FDouble", skipNulls), "MaxDouble()");
@@ -653,7 +653,7 @@ namespace ExtTools_tests.Core
     [TestCase(false)]
     public void MaxValue_DataView(bool skipNulls)
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
       Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxValue(dv, "FInt32", skipNulls), "Int32");
       Assert.AreEqual(TestTable.Row2.VInt64, DataTools.MaxValue(dv, "FInt64", skipNulls), "Int64");
@@ -672,9 +672,9 @@ namespace ExtTools_tests.Core
     [TestCase(false)]
     public void MaxXXX_DataRowEnumerable(bool skipNulls)
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
-      Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxInt(en, "FInt32", skipNulls), "MaxInt()");
+      Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxInt32(en, "FInt32", skipNulls), "MaxInt32()");
       Assert.AreEqual(TestTable.Row2.VInt64, DataTools.MaxInt64(en, "FInt64", skipNulls), "MaxInt64()");
       Assert.AreEqual(TestTable.Row2.VSingle, DataTools.MaxSingle(en, "FSingle", skipNulls), "MaxSingle()");
       Assert.AreEqual(TestTable.Row2.VDouble, DataTools.MaxDouble(en, "FDouble", skipNulls), "MaxDouble()");
@@ -687,7 +687,7 @@ namespace ExtTools_tests.Core
     [TestCase(false)]
     public void MaxValue_DataRowEnumerable(bool skipNulls)
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
       Assert.AreEqual(TestTable.Row2.VInt32, DataTools.MaxValue(en, "FInt32", skipNulls), "Int32");
       Assert.AreEqual(TestTable.Row2.VInt64, DataTools.MaxValue(en, "FInt64", skipNulls), "Int64");
@@ -706,10 +706,10 @@ namespace ExtTools_tests.Core
     [TestCase(false)]
     public void MaxXXX_TotalRow(bool skipNulls)
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
-      DataTools.MaxInt(row, "FInt32", skipNulls);
-      Assert.AreEqual(TestTable.Row2.VInt32, row["FInt32"], "MaxInt()");
+      DataTools.MaxInt32(row, "FInt32", skipNulls);
+      Assert.AreEqual(TestTable.Row2.VInt32, row["FInt32"], "MaxInt32()");
 
       DataTools.MaxInt64(row, "FInt64", skipNulls);
       Assert.AreEqual(TestTable.Row2.VInt64, row["FInt64"], "MaxInt64()");
@@ -734,7 +734,7 @@ namespace ExtTools_tests.Core
     [TestCase(false)]
     public void MaxValue_TotalRow(bool skipNulls)
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
       DataTools.MaxValue(row, "FInt32", skipNulls);
       Assert.AreEqual(TestTable.Row2.VInt32, row["FInt32"], "Int32");
@@ -763,10 +763,10 @@ namespace ExtTools_tests.Core
     #region Enumerable
 
     [Test]
-    public void MaxInt_Enumerable()
+    public void MaxInt32_Enumerable()
     {
       int[] a = new int[] { 1, 2, 3, 4 };
-      Assert.AreEqual(4, DataTools.MaxInt(a));
+      Assert.AreEqual(4, DataTools.MaxInt32(a));
     }
 
     [Test]
@@ -843,9 +843,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinMaxXXX_DataTable_skipNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
-      Assert.AreEqual(new MinMax<Int32>(TestTable.Row1.VInt32, TestTable.Row2.VInt32), DataTools.MinMaxInt(tbl, "FInt32", true), "MinInt()");
+      Assert.AreEqual(new MinMax<Int32>(TestTable.Row1.VInt32, TestTable.Row2.VInt32), DataTools.MinMaxInt32(tbl, "FInt32", true), "MinInt32()");
       Assert.AreEqual(new MinMax<Int64>(TestTable.Row1.VInt64, TestTable.Row2.VInt64), DataTools.MinMaxInt64(tbl, "FInt64", true), "MinMaxInt64()");
       Assert.AreEqual(new MinMax<Single>(TestTable.Row1.VSingle, TestTable.Row2.VSingle), DataTools.MinMaxSingle(tbl, "FSingle", true), "MinMaxSingle()");
       Assert.AreEqual(new MinMax<Double>(TestTable.Row1.VDouble, TestTable.Row2.VDouble), DataTools.MinMaxDouble(tbl, "FDouble", true), "MinMaxDouble()");
@@ -857,9 +857,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinMaxXXX_DataTable_withNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
-      Assert.AreEqual(new MinMax<Int32>(0, TestTable.Row2.VInt32), DataTools.MinMaxInt(tbl, "FInt32", false), "MinInt()");
+      Assert.AreEqual(new MinMax<Int32>(0, TestTable.Row2.VInt32), DataTools.MinMaxInt32(tbl, "FInt32", false), "MinInt32()");
       Assert.AreEqual(new MinMax<Int64>(0, TestTable.Row2.VInt64), DataTools.MinMaxInt64(tbl, "FInt64", false), "MinMaxInt64()");
       Assert.AreEqual(new MinMax<Single>(0, TestTable.Row2.VSingle), DataTools.MinMaxSingle(tbl, "FSingle", false), "MinMaxSingle()");
       Assert.AreEqual(new MinMax<Double>(0, TestTable.Row2.VDouble), DataTools.MinMaxDouble(tbl, "FDouble", false), "MinMaxDouble()");
@@ -875,9 +875,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinMaxXXX_DataView_skipNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
-      Assert.AreEqual(new MinMax<Int32>(TestTable.Row1.VInt32, TestTable.Row2.VInt32), DataTools.MinMaxInt(dv, "FInt32", true), "MinInt()");
+      Assert.AreEqual(new MinMax<Int32>(TestTable.Row1.VInt32, TestTable.Row2.VInt32), DataTools.MinMaxInt32(dv, "FInt32", true), "MinMaxInt32()");
       Assert.AreEqual(new MinMax<Int64>(TestTable.Row1.VInt64, TestTable.Row2.VInt64), DataTools.MinMaxInt64(dv, "FInt64", true), "MinMaxInt64()");
       Assert.AreEqual(new MinMax<Single>(TestTable.Row1.VSingle, TestTable.Row2.VSingle), DataTools.MinMaxSingle(dv, "FSingle", true), "MinMaxSingle()");
       Assert.AreEqual(new MinMax<Double>(TestTable.Row1.VDouble, TestTable.Row2.VDouble), DataTools.MinMaxDouble(dv, "FDouble", true), "MinMaxDouble()");
@@ -889,9 +889,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinMaxXXX_DataView_withNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
-      Assert.AreEqual(new MinMax<Int32>(0, TestTable.Row2.VInt32), DataTools.MinMaxInt(dv, "FInt32", false), "MinInt()");
+      Assert.AreEqual(new MinMax<Int32>(0, TestTable.Row2.VInt32), DataTools.MinMaxInt32(dv, "FInt32", false), "MinMaxInt32()");
       Assert.AreEqual(new MinMax<Int64>(0, TestTable.Row2.VInt64), DataTools.MinMaxInt64(dv, "FInt64", false), "MinMaxInt64()");
       Assert.AreEqual(new MinMax<Single>(0, TestTable.Row2.VSingle), DataTools.MinMaxSingle(dv, "FSingle", false), "MinMaxSingle()");
       Assert.AreEqual(new MinMax<Double>(0, TestTable.Row2.VDouble), DataTools.MinMaxDouble(dv, "FDouble", false), "MinMaxDouble()");
@@ -907,9 +907,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinMaxXXX_DataRowEnumerable_skipNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
-      Assert.AreEqual(new MinMax<Int32>(TestTable.Row1.VInt32, TestTable.Row2.VInt32), DataTools.MinMaxInt(en, "FInt32", true), "MinInt()");
+      Assert.AreEqual(new MinMax<Int32>(TestTable.Row1.VInt32, TestTable.Row2.VInt32), DataTools.MinMaxInt32(en, "FInt32", true), "MinMaxInt32()");
       Assert.AreEqual(new MinMax<Int64>(TestTable.Row1.VInt64, TestTable.Row2.VInt64), DataTools.MinMaxInt64(en, "FInt64", true), "MinMaxInt64()");
       Assert.AreEqual(new MinMax<Single>(TestTable.Row1.VSingle, TestTable.Row2.VSingle), DataTools.MinMaxSingle(en, "FSingle", true), "MinMaxSingle()");
       Assert.AreEqual(new MinMax<Double>(TestTable.Row1.VDouble, TestTable.Row2.VDouble), DataTools.MinMaxDouble(en, "FDouble", true), "MinMaxDouble()");
@@ -921,9 +921,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void MinMaxXXX_DataRowEnumerable_withNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
-      Assert.AreEqual(new MinMax<Int32>(0, TestTable.Row2.VInt32), DataTools.MinMaxInt(en, "FInt32", false), "MinInt()");
+      Assert.AreEqual(new MinMax<Int32>(0, TestTable.Row2.VInt32), DataTools.MinMaxInt32(en, "FInt32", false), "MinInt32()");
       Assert.AreEqual(new MinMax<Int64>(0, TestTable.Row2.VInt64), DataTools.MinMaxInt64(en, "FInt64", false), "MinMaxInt64()");
       Assert.AreEqual(new MinMax<Single>(0, TestTable.Row2.VSingle), DataTools.MinMaxSingle(en, "FSingle", false), "MinMaxSingle()");
       Assert.AreEqual(new MinMax<Double>(0, TestTable.Row2.VDouble), DataTools.MinMaxDouble(en, "FDouble", false), "MinMaxDouble()");
@@ -945,9 +945,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageXXX_DataTable_skipNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
-      Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageInt(tbl, "FInt32", true), "AverageInt()");
+      Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageInt32(tbl, "FInt32", true), "AverageInt()");
       Assert.AreEqual(TestTable.AvgRes2.VInt64, DataTools.AverageInt64(tbl, "FInt64", true), "AverageInt64()");
       Assert.AreEqual(TestTable.AvgRes2.VSingle, DataTools.AverageSingle(tbl, "FSingle", true), "AverageSingle()");
       Assert.AreEqual(TestTable.AvgRes2.VDouble, DataTools.AverageDouble(tbl, "FDouble", true), "AverageDouble()");
@@ -959,9 +959,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageXXX_DataTable_withNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
-      Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageInt(tbl, "FInt32", false), "AverageInt()");
+      Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageInt32(tbl, "FInt32", false), "AverageInt()");
       Assert.AreEqual(TestTable.AvgRes3.VInt64, DataTools.AverageInt64(tbl, "FInt64", false), "AverageInt64()");
       Assert.AreEqual(TestTable.AvgRes3.VSingle, DataTools.AverageSingle(tbl, "FSingle", false), "AverageSingle()");
       Assert.AreEqual(TestTable.AvgRes3.VDouble, DataTools.AverageDouble(tbl, "FDouble", false), "AverageDouble()");
@@ -973,7 +973,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageValue_DataTable_skipNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
       Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageValue(tbl, "FInt32", true), "Int32");
       Assert.AreEqual(TestTable.AvgRes2.VInt64, DataTools.AverageValue(tbl, "FInt64", true), "Int64");
@@ -987,7 +987,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageValue_DataTable_withNulls()
     {
-      DataTable tbl = TestTable.CreateTestDataTable();
+      DataTable tbl = TestTable.Create();
 
       Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageValue(tbl, "FInt32", false), "Int32");
       Assert.AreEqual(TestTable.AvgRes3.VInt64, DataTools.AverageValue(tbl, "FInt64", false), "Int64");
@@ -1005,9 +1005,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageXXX_DataView_skipNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
-      Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageInt(dv, "FInt32", true), "AverageInt()");
+      Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageInt32(dv, "FInt32", true), "AverageInt()");
       Assert.AreEqual(TestTable.AvgRes2.VInt64, DataTools.AverageInt64(dv, "FInt64", true), "AverageInt64()");
       Assert.AreEqual(TestTable.AvgRes2.VSingle, DataTools.AverageSingle(dv, "FSingle", true), "AverageSingle()");
       Assert.AreEqual(TestTable.AvgRes2.VDouble, DataTools.AverageDouble(dv, "FDouble", true), "AverageDouble()");
@@ -1019,9 +1019,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageXXX_DataView_withNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
-      Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageInt(dv, "FInt32", false), "AverageInt()");
+      Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageInt32(dv, "FInt32", false), "AverageInt()");
       Assert.AreEqual(TestTable.AvgRes3.VInt64, DataTools.AverageInt64(dv, "FInt64", false), "AverageInt64()");
       Assert.AreEqual(TestTable.AvgRes3.VSingle, DataTools.AverageSingle(dv, "FSingle", false), "AverageSingle()");
       Assert.AreEqual(TestTable.AvgRes3.VDouble, DataTools.AverageDouble(dv, "FDouble", false), "AverageDouble()");
@@ -1033,7 +1033,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageValue_DataView_skipNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
       Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageValue(dv, "FInt32", true), "Int32");
       Assert.AreEqual(TestTable.AvgRes2.VInt64, DataTools.AverageValue(dv, "FInt64", true), "Int64");
@@ -1047,7 +1047,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageValue_DataView_withNulls()
     {
-      DataView dv = TestTable.CreateTestDataTable().DefaultView;
+      DataView dv = TestTable.Create().DefaultView;
 
       Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageValue(dv, "FInt32", false), "Int32");
       Assert.AreEqual(TestTable.AvgRes3.VInt64, DataTools.AverageValue(dv, "FInt64", false), "Int64");
@@ -1065,9 +1065,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageXXX_EnumerableDataRow_skipNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
-      Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageInt(en, "FInt32", true), "AverageInt()");
+      Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageInt32(en, "FInt32", true), "AverageInt()");
       Assert.AreEqual(TestTable.AvgRes2.VInt64, DataTools.AverageInt64(en, "FInt64", true), "AverageInt64()");
       Assert.AreEqual(TestTable.AvgRes2.VSingle, DataTools.AverageSingle(en, "FSingle", true), "AverageSingle()");
       Assert.AreEqual(TestTable.AvgRes2.VDouble, DataTools.AverageDouble(en, "FDouble", true), "AverageDouble()");
@@ -1079,9 +1079,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageXXX_EnumerableDataRow_withNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
-      Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageInt(en, "FInt32", false), "AverageInt()");
+      Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageInt32(en, "FInt32", false), "AverageInt32()");
       Assert.AreEqual(TestTable.AvgRes3.VInt64, DataTools.AverageInt64(en, "FInt64", false), "AverageInt64()");
       Assert.AreEqual(TestTable.AvgRes3.VSingle, DataTools.AverageSingle(en, "FSingle", false), "AverageSingle()");
       Assert.AreEqual(TestTable.AvgRes3.VDouble, DataTools.AverageDouble(en, "FDouble", false), "AverageDouble()");
@@ -1093,7 +1093,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageValue_EnumerableDataRow_skipNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
       Assert.AreEqual(TestTable.AvgRes2.VInt32, DataTools.AverageValue(en, "FInt32", true), "Int32");
       Assert.AreEqual(TestTable.AvgRes2.VInt64, DataTools.AverageValue(en, "FInt64", true), "Int64");
@@ -1107,7 +1107,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageValue_EnumerableDataRow_withNulls()
     {
-      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.CreateTestDataTable());
+      IEnumerable<DataRow> en = DataTools.GetDataTableRows(TestTable.Create());
 
       Assert.AreEqual(TestTable.AvgRes3.VInt32, DataTools.AverageValue(en, "FInt32", false), "Int32");
       Assert.AreEqual(TestTable.AvgRes3.VInt64, DataTools.AverageValue(en, "FInt64", false), "Int64");
@@ -1125,10 +1125,10 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageXXX_TotalRow_skipNulls()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
-      DataTools.AverageInt(row, "FInt32", true);
-      Assert.AreEqual(TestTable.AvgRes2.VInt32, row["FInt32"], "AverageInt()");
+      DataTools.AverageInt32(row, "FInt32", true);
+      Assert.AreEqual(TestTable.AvgRes2.VInt32, row["FInt32"], "AverageInt32()");
 
       DataTools.AverageInt64(row, "FInt64", true);
       Assert.AreEqual(TestTable.AvgRes2.VInt64, row["FInt64"], "AverageInt64()");
@@ -1152,9 +1152,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageXXX_TotalRow_withNulls()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
-      DataTools.AverageInt(row, "FInt32", false);
+      DataTools.AverageInt32(row, "FInt32", false);
       Assert.AreEqual(TestTable.AvgRes3.VInt32, row["FInt32"], "AverageInt()");
 
       DataTools.AverageInt64(row, "FInt64", false);
@@ -1179,7 +1179,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageValue_TotalRow_skipNulls()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
       DataTools.AverageValue(row, "FInt32", true);
       Assert.AreEqual(TestTable.AvgRes2.VInt32, row["FInt32"], "Int32");
@@ -1206,7 +1206,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void AverageValue_TotalRow_withNulls()
     {
-      DataRow row = TestTable.CreateTestDataTable().NewRow();
+      DataRow row = TestTable.Create().NewRow();
 
       DataTools.AverageValue(row, "FInt32", false);
       Assert.AreEqual(TestTable.AvgRes3.VInt32, row["FInt32"], "Int32");
@@ -1235,10 +1235,10 @@ namespace ExtTools_tests.Core
     #region Enumerable
 
     [Test]
-    public void AverageInt_Enumerable()
+    public void AverageInt32_Enumerable()
     {
       int[] a = new int[] { 1, 2, 3, 4 };
-      Assert.AreEqual(3, DataTools.AverageInt(a));
+      Assert.AreEqual(3, DataTools.AverageInt32(a));
     }
 
     [Test]

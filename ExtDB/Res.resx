@@ -291,12 +291,6 @@
   <data name="DBxNameValidator_Err_TableWrite" xml:space="preserve">
     <value>There is no writing permission for table'{0}'</value>
   </data>
-  <data name="DBxNoIdArgumentException_Err_Message" xml:space="preserve">
-    <value>Identifier not given</value>
-  </data>
-  <data name="DBxPrimaryKeyException_Err_Message" xml:space="preserve">
-    <value>Invalid primary key</value>
-  </data>
   <data name="DBxRecordNotFoundException_Err_Message" xml:space="preserve">
     <value>Record in table '{0}' with identifier {1} not found</value>
   </data>

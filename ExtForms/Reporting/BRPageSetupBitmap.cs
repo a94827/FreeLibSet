@@ -27,7 +27,7 @@ namespace FreeLibSet.Forms.Reporting
       efpResolution = new EFPIntEditBox(page.BaseProvider, edResolution);
       efpResolution.Minimum = BRBitmapSettingsDataItem.MinResolution;
       efpResolution.Maximum = BRBitmapSettingsDataItem.MaxResolution;
-      efpResolution.Control.UpDownHandler = new NumArrayUpDownHandler<int>(BRBitmapSettingsDataItem.RecommendedResolutions);
+      efpResolution.Control.UpDownHandler = new NumericArrayUpDownHandler<int>(BRBitmapSettingsDataItem.RecommendedResolutions);
 
       cbColorFormat.Items.AddRange(BRBitmapSettingsDataItem.ColorFormatNames);
       efpColorFormat = new EFPListComboBox(page.BaseProvider, cbColorFormat);
@@ -223,9 +223,9 @@ namespace FreeLibSet.Reporting
     {
       if (part == SettingsPart.User)
       {
-        cfg.SetInt("Resolution", Resolution);
+        cfg.SetInt32("Resolution", Resolution);
         cfg.SetString("ColorFormat", ColorFormat);
-        cfg.SetBool("ClipMargins", ClipMargins);
+        cfg.SetBoolean("ClipMargins", ClipMargins);
       }
     }
 
@@ -238,9 +238,9 @@ namespace FreeLibSet.Reporting
     {
       if (part == SettingsPart.User)
       {
-        Resolution = cfg.GetIntDef("Resolution", DefaultResolution);
+        Resolution = cfg.GetInt32Def("Resolution", DefaultResolution);
         ColorFormat = cfg.GetStringDef("ColorFormat", DefaultColorFormat);
-        ClipMargins = cfg.GetBoolDef("ClipMargins", false);
+        ClipMargins = cfg.GetBooleanDef("ClipMargins", false);
       }
     }
 

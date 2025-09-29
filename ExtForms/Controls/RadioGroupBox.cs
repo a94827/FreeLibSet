@@ -110,7 +110,7 @@ namespace FreeLibSet.Controls
       set
       {
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Empty;
 
         _Panel.SuspendLayout();
         try

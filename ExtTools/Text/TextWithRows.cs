@@ -40,7 +40,7 @@ namespace FreeLibSet.Text
     /// </summary>
     /// <param name="text">Текст</param>
     public TextWithRows(string text)
-      : this(text, DataTools.NewLineSeparators)
+      : this(text, StringTools.NewLineSeparators)
     {
     }
 
@@ -59,9 +59,9 @@ namespace FreeLibSet.Text
       switch (lineSeparators)
       { 
         case TextWithRowsLineSeparators.Default:
-          return DataTools.NewLineSeparators;
+          return StringTools.NewLineSeparators;
         case TextWithRowsLineSeparators.AllPosible:
-          return DataTools.AllPossibleLineSeparators;
+          return StringTools.AllPossibleLineSeparators;
         default:
           throw ExceptionFactory.ArgUnknownValue("lineSeparators", lineSeparators);
       }
@@ -84,7 +84,7 @@ namespace FreeLibSet.Text
       _RowLengths = new List<int>();
 
       if (lineSeparators == null)
-        lineSeparators = DataTools.EmptyStrings;
+        lineSeparators = EmptyArray<string>.Empty;
       if (lineSeparators.Length == 0)
       {
         _RowStarts = new List<int>(1);

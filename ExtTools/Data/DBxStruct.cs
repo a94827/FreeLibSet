@@ -167,7 +167,7 @@ namespace FreeLibSet.Data
   /// Все обращения к присоединенной к базе данных структуре являются потокобезопасными. 
   /// В процессе ручного заполнения обращения не являются потокобезопасными.
   /// </summary>
-  public sealed class DBxStruct : IReadOnlyObject, ICloneable
+  public sealed class DBxStruct : ICloneableReadOnlyObject<DBxStruct>
   {
     #region Вложенный класс
 
@@ -338,7 +338,7 @@ namespace FreeLibSet.Data
 
       #endregion
 
-      #region IList<DBxRealTableStruct> Members
+      #region IList<DBxTableStruct> Members
 
       /// <summary>
       /// Реализация интерфейса IList
@@ -425,7 +425,7 @@ namespace FreeLibSet.Data
 
       #endregion
 
-      #region ICollection<DBxRealTableStruct> Members
+      #region ICollection<DBxTableStruct> Members
 
       /// <summary>
       /// Добавляет описание таблицы в описание базы данных
@@ -577,7 +577,7 @@ namespace FreeLibSet.Data
 
       #endregion
 
-      #region IEnumerable<DBxRealTableStruct> Members
+      #region IEnumerable<DBxTableStruct> Members
 
       #region Собственный класс перебора
 
@@ -741,6 +741,8 @@ namespace FreeLibSet.Data
       _Source = source;
       if (source != null)
         _IsReadOnly = true;
+
+      _DefaultIdColumnType = DBxColumnType.Int32;
     }
 
     ///// <summary>
@@ -824,12 +826,82 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Переводит описание структуры в режим просмотра.
     /// Повторные вызовы метода игнорируются.
+    /// Вызывается метод <see cref="UpdateColumnTypes()"/>.
     /// </summary>
     public void SetReadOnly()
     {
       if (!_IsReadOnly)
+      {
+        UpdateColumnTypes();
         _Tables.SetReadOnly(); // 07.06.2023
+      }
       _IsReadOnly = true;
+    }
+
+    #endregion
+
+    #region UpdateColumnTypes()
+
+    /// <summary>
+    /// Тип ключевых полей таблиц по умолчанию.
+    /// Используется в <see cref="UpdateColumnTypes()"/>, если в таблицу добавлено ключевое поле с помощью метода <see cref="DBxTableStruct.ColumnCollection.AddId(string)"/>,
+    /// который не определяет тип поля.
+    /// По умолчанию - <see cref="DBxColumnType.Int32"/>.
+    /// </summary>
+    public DBxColumnType DefaultIdColumnType
+    {
+      get { return _DefaultIdColumnType; }
+      set
+      {
+        CheckNotReadOnly();
+        if (!DBxTools.IsValidIdColumnType(value))
+          throw ExceptionFactory.ArgUnknownValue("value", value);
+        _DefaultIdColumnType = value;
+      }
+    }
+    private DBxColumnType _DefaultIdColumnType;
+
+    /// <summary>
+    /// Устанавливает <see cref="DBxColumnStruct.ColumnType"/> для столбцов первичного ключа и ссылочных полей,
+    /// если тип данных не был задан в явном виде при объявлении столбцов.
+    /// </summary>
+    public void UpdateColumnTypes()
+    {
+      CheckNotReadOnly();
+
+      #region Поля первичного ключа
+
+      foreach (DBxTableStruct ts in Tables)
+      {
+        if (ts.PrimaryKey.Count == 1)
+        {
+          DBxColumnStruct cs = ts.Columns[ts.PrimaryKey[0]];
+          if (cs.ColumnType == DBxColumnType.Unknown)
+            cs.ColumnType = DefaultIdColumnType;
+        }
+      }
+
+      #endregion
+
+      #region Ссылочные поля
+
+      foreach (DBxTableStruct ts in Tables)
+      {
+        foreach (DBxColumnStruct cs in ts.Columns)
+        {
+          if ((!String.IsNullOrEmpty(cs.MasterTableName)) && cs.ColumnType == DBxColumnType.Unknown)
+          {
+            DBxTableStruct ts2 = Tables[cs.MasterTableName];
+            if (ts2.PrimaryKey.Count == 1)
+            {
+              DBxColumnStruct cs2 = ts2.Columns[ts2.PrimaryKey[0]];
+              cs.ColumnType = cs2.ColumnType;
+            }
+          }
+        }
+      }
+
+      #endregion
     }
 
     #endregion

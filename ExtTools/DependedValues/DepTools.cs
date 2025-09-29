@@ -598,7 +598,7 @@ namespace FreeLibSet.DependedValues
     private static bool IsBottomOfYear(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.IsBottomOfYear(dt.Value);
+        return TimeTools.IsBottomOfYear(dt.Value);
       else
         return false;
     }
@@ -620,7 +620,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<bool> IsBottomOfYearEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfYear);
+      return new DepExpr1<bool, DateTime>(dt, TimeTools.IsBottomOfYear);
     }
 
     /// <summary>
@@ -631,7 +631,7 @@ namespace FreeLibSet.DependedValues
     private static bool IsEndOfYear(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.IsEndOfYear(dt.Value);
+        return TimeTools.IsEndOfYear(dt.Value);
       else
         return false;
     }
@@ -653,7 +653,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<bool> IsEndOfYearEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfYear);
+      return new DepExpr1<bool, DateTime>(dt, TimeTools.IsEndOfYear);
     }
 
     /// <summary>
@@ -665,7 +665,7 @@ namespace FreeLibSet.DependedValues
     private static DateTime? BottomOfYear(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.BottomOfYear(dt.Value);
+        return TimeTools.BottomOfYear(dt.Value);
       else
         return null;
     }
@@ -688,7 +688,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<DateTime> BottomOfYearEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfYear);
+      return new DepExpr1<DateTime, DateTime>(dt, TimeTools.BottomOfYear);
     }
 
     /// <summary>
@@ -700,7 +700,7 @@ namespace FreeLibSet.DependedValues
     private static DateTime? EndOfYear(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.EndOfYear(dt.Value);
+        return TimeTools.EndOfYear(dt.Value);
       else
         return null;
     }
@@ -724,7 +724,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<DateTime> EndOfYearEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfYear);
+      return new DepExpr1<DateTime, DateTime>(dt, TimeTools.EndOfYear);
     }
 
     #endregion
@@ -739,7 +739,7 @@ namespace FreeLibSet.DependedValues
     private static bool IsBottomOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.IsBottomOfQuarter(dt.Value);
+        return TimeTools.IsBottomOfQuarter(dt.Value);
       else
         return false;
     }
@@ -761,7 +761,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<bool> IsBottomOfQuarterEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfQuarter);
+      return new DepExpr1<bool, DateTime>(dt, TimeTools.IsBottomOfQuarter);
     }
 
     /// <summary>
@@ -772,7 +772,7 @@ namespace FreeLibSet.DependedValues
     private static bool IsEndOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.IsEndOfQuarter(dt.Value);
+        return TimeTools.IsEndOfQuarter(dt.Value);
       else
         return false;
     }
@@ -794,7 +794,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<bool> IsEndOfQuarterEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfQuarter);
+      return new DepExpr1<bool, DateTime>(dt, TimeTools.IsEndOfQuarter);
     }
 
     /// <summary>
@@ -806,7 +806,7 @@ namespace FreeLibSet.DependedValues
     private static DateTime? BottomOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.BottomOfQuarter(dt.Value);
+        return TimeTools.BottomOfQuarter(dt.Value);
       else
         return null;
     }
@@ -829,7 +829,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepExpr1<DateTime, DateTime> BottomOfQuarterEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfQuarter);
+      return new DepExpr1<DateTime, DateTime>(dt, TimeTools.BottomOfQuarter);
     }
 
     /// <summary>
@@ -841,7 +841,7 @@ namespace FreeLibSet.DependedValues
     private static DateTime? EndOfQuarter(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.EndOfQuarter(dt.Value);
+        return TimeTools.EndOfQuarter(dt.Value);
       else
         return null;
     }
@@ -864,7 +864,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<DateTime> EndOfQuarterEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfQuarter);
+      return new DepExpr1<DateTime, DateTime>(dt, TimeTools.EndOfQuarter);
     }
 
     #endregion
@@ -879,7 +879,7 @@ namespace FreeLibSet.DependedValues
     private static bool IsBottomOfMonth(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.IsBottomOfMonth(dt.Value);
+        return TimeTools.IsBottomOfMonth(dt.Value);
       else
         return false;
     }
@@ -901,7 +901,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<bool> IsBottomOfMonthEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<bool, DateTime>(dt, DataTools.IsBottomOfMonth);
+      return new DepExpr1<bool, DateTime>(dt, TimeTools.IsBottomOfMonth);
     }
 
     /// <summary>
@@ -912,7 +912,7 @@ namespace FreeLibSet.DependedValues
     private static bool IsEndOfMonth(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.IsEndOfMonth(dt.Value);
+        return TimeTools.IsEndOfMonth(dt.Value);
       else
         return false;
     }
@@ -934,7 +934,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<bool> IsEndOfMonthEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<bool, DateTime>(dt, DataTools.IsEndOfMonth);
+      return new DepExpr1<bool, DateTime>(dt, TimeTools.IsEndOfMonth);
     }
 
     /// <summary>
@@ -946,7 +946,7 @@ namespace FreeLibSet.DependedValues
     private static DateTime? BottomOfMonth(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.BottomOfMonth(dt.Value);
+        return TimeTools.BottomOfMonth(dt.Value);
       else
         return null;
     }
@@ -969,7 +969,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<DateTime> BottomOfMonthEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<DateTime, DateTime>(dt, DataTools.BottomOfMonth);
+      return new DepExpr1<DateTime, DateTime>(dt, TimeTools.BottomOfMonth);
     }
 
     /// <summary>
@@ -981,7 +981,7 @@ namespace FreeLibSet.DependedValues
     private static DateTime? EndOfMonth(DateTime? dt)
     {
       if (dt.HasValue)
-        return DataTools.EndOfMonth(dt.Value);
+        return TimeTools.EndOfMonth(dt.Value);
       else
         return null;
     }
@@ -1004,7 +1004,7 @@ namespace FreeLibSet.DependedValues
     /// <returns>Вычисляемое выражение</returns>
     public static DepValue<DateTime> EndOfMonthEx(DepValue<DateTime> dt)
     {
-      return new DepExpr1<DateTime, DateTime>(dt, DataTools.EndOfMonth);
+      return new DepExpr1<DateTime, DateTime>(dt, TimeTools.EndOfMonth);
     }
 
     #endregion
@@ -2244,7 +2244,7 @@ namespace FreeLibSet.DependedValues
 
       Type t2 = typeof(DepOutput<>).MakeGenericType(valueType);
       ConstructorInfo ci = t2.GetConstructor(new Type[0]);
-      return (IDepOutput)(ci.Invoke(DataTools.EmptyObjects));
+      return (IDepOutput)(ci.Invoke(EmptyArray<object>.Empty));
     }
 
     /// <summary>
@@ -2260,7 +2260,7 @@ namespace FreeLibSet.DependedValues
 
       Type t2 = typeof(DepInput<>).MakeGenericType(valueType);
       ConstructorInfo ci = t2.GetConstructor(new Type[0]);
-      return (IDepInput)(ci.Invoke(DataTools.EmptyObjects));
+      return (IDepInput)(ci.Invoke(EmptyArray<object>.Empty));
     }
 
     /// <summary>

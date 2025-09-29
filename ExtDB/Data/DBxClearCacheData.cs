@@ -16,7 +16,7 @@ namespace FreeLibSet.Data
   /// Этот класс НЕ ЯВЛЯЕТСЯ потокобезопасным в режиме записи (пока <see cref="DBxClearCacheData.IsReadOnly"/>=false).
   /// </summary>
   [Serializable]
-  public sealed class DBxClearCacheData : IReadOnlyObject, IEnumerable<KeyValuePair<string, IdList>>
+  public sealed class DBxClearCacheData : IReadOnlyObject, IEnumerable<KeyValuePair<string, IdCollection<Int32>>>
   {
     #region Конструктор
 
@@ -26,7 +26,7 @@ namespace FreeLibSet.Data
     public DBxClearCacheData()
     {
       _AreAllTables = false;
-      _Items = new Dictionary<string, IdList>();
+      _Items = new Dictionary<string, IdCollection<Int32>>();
     }
 
     #endregion
@@ -52,10 +52,10 @@ namespace FreeLibSet.Data
       if (ids.Length == 0)
         return;
 
-      IdList lst;
+      IdCollection<Int32> lst;
       if (!_Items.TryGetValue(tableName, out lst))
       {
-        lst = new IdList();
+        lst = new IdCollection<Int32>();
         _Items.Add(tableName, lst);
       }
       else if (Object.ReferenceEquals(lst, null))
@@ -65,7 +65,7 @@ namespace FreeLibSet.Data
         DoAdd(lst, ids[i]);
     }
 
-    private void DoAdd(IdList lst, Int32 Id)
+    private void DoAdd(IdCollection<Int32> lst, Int32 Id)
     {
       if (Id <= 0) // 25.06.2021 - Фиктивные идентификаторы пропускаются
         return;
@@ -93,10 +93,10 @@ namespace FreeLibSet.Data
       if (AreAllTables)
         return;
 
-      IdList lst;
+      IdCollection<Int32> lst;
       if (!_Items.TryGetValue(tableName, out lst))
       {
-        lst = new IdList();
+        lst = new IdCollection<Int32>();
         _Items.Add(tableName, lst);
       }
       else if (Object.ReferenceEquals(lst, null))
@@ -119,7 +119,7 @@ namespace FreeLibSet.Data
       if (AreAllTables)
         return;
 
-      IdList lst;
+      IdCollection<Int32> lst;
       if (!_Items.TryGetValue(tableName, out lst))
         _Items.Add(tableName, null);
       else
@@ -144,7 +144,7 @@ namespace FreeLibSet.Data
 
     #region Свойства
 
-    private readonly Dictionary<string, IdList> _Items;
+    private readonly Dictionary<string, IdCollection<Int32>> _Items;
 
     /// <summary>
     /// Возвращает true, ели был вызов AddAllTables()
@@ -200,12 +200,12 @@ namespace FreeLibSet.Data
     /// Не предназначено для использования в пользовательском коде.
     /// </summary>
     /// <returns>Перечислитель</returns>
-    public Dictionary<string, IdList>.Enumerator GetEnumerator()
+    public Dictionary<string, IdCollection<Int32>>.Enumerator GetEnumerator()
     {
       return _Items.GetEnumerator();
     }
 
-    IEnumerator<KeyValuePair<string, IdList>> IEnumerable<KeyValuePair<string, IdList>>.GetEnumerator()
+    IEnumerator<KeyValuePair<string, IdCollection<Int32>>> IEnumerable<KeyValuePair<string, IdCollection<Int32>>>.GetEnumerator()
     {
       return _Items.GetEnumerator();
     }
@@ -240,15 +240,15 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="tableName">Имя таблицы</param>
     /// <returns>Cписок идентификаторов или null</returns>
-    public IdList this[string tableName]
+    public IdCollection<Int32> this[string tableName]
     {
       get
       {
-        IdList res;
+        IdCollection<Int32> res;
         if (AreAllTables)
           res = null;
         else if (!_Items.TryGetValue(tableName, out res))
-          res = IdList.Empty;
+          res = IdCollection<Int32>.Empty;
         return res;
       }
     }
@@ -266,7 +266,7 @@ namespace FreeLibSet.Data
       {
         if (id == 0)
           return false;
-        IdList lst = this[tableName];
+        IdCollection<Int32> lst = this[tableName];
         if (Object.ReferenceEquals(lst, null))
           return true;
         Int32 firstId = DBxTableCache.GetFirstPageId(id);
@@ -290,7 +290,7 @@ namespace FreeLibSet.Data
         return "All tables";
 
       StringBuilder sb = new StringBuilder();
-      foreach (KeyValuePair<string, IdList> pair in _Items)
+      foreach (KeyValuePair<string, IdCollection<Int32>> pair in _Items)
       {
         if (sb.Length > 0)
           sb.Append(", ");

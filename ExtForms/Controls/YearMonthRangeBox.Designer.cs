@@ -31,7 +31,7 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YearMonthRangeBox));
       this.lblFrom = new System.Windows.Forms.Label();
       this.cbMonth1 = new System.Windows.Forms.ComboBox();
-      this.edYear = new FreeLibSet.Controls.IntEditBox();
+      this.edYear = new FreeLibSet.Controls.Int32EditBox();
       this.cbMonth2 = new System.Windows.Forms.ComboBox();
       this.lblTill = new System.Windows.Forms.Label();
       this.lblYear = new System.Windows.Forms.Label();
@@ -103,7 +103,7 @@
 
     private System.Windows.Forms.Label lblFrom;
     internal System.Windows.Forms.ComboBox cbMonth1;
-    internal FreeLibSet.Controls.IntEditBox edYear;
+    internal FreeLibSet.Controls.Int32EditBox edYear;
     internal System.Windows.Forms.ComboBox cbMonth2;
     private System.Windows.Forms.Label lblTill;
     private System.Windows.Forms.Label lblYear;

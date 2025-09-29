@@ -694,7 +694,7 @@ namespace FreeLibSet.Forms
       {
         // Главные окна
         layouts = GetMainWindowLayouts(false); // в том порядке, как открыты
-        cfg.SetInt("MainWindowCount", layouts.Length);
+        cfg.SetInt32("MainWindowCount", layouts.Length);
         currWindowIndex = -1;
         for (int i = 0; i < layouts.Length; i++)
         {
@@ -708,12 +708,12 @@ namespace FreeLibSet.Forms
             currWindowIndex = i;
         }
         if (currWindowIndex >= 0)
-          cfg.SetInt("CurrentMainWindow", currWindowIndex + 1);
+          cfg.SetInt32("CurrentMainWindow", currWindowIndex + 1);
       }
 
       Form[] childForms = GetChildForms(false); // в порядке создания, а не Z-Order
-      //Part.SetInt("FormCount", ChildForms.Length);
-      cfg.SetInt("FormCount", 0); // резервируем место 
+      //Part.SetInt32("FormCount", ChildForms.Length);
+      cfg.SetInt32("FormCount", 0); // резервируем место 
       int cnt = 0; // некоторые окна могут не сохраняться
       currWindowIndex = -1;
       Form currForm = this.CurrentChildForm;
@@ -734,7 +734,7 @@ namespace FreeLibSet.Forms
           //          if (Layout != null)
           //          {
           int p = Array.IndexOf<EFPAppMainWindowLayout>(layouts, layout);
-          cfgForm.SetInt("MainWindow", p + 1);
+          cfgForm.SetInt32("MainWindow", p + 1);
           //          }
         }
         else
@@ -747,9 +747,9 @@ namespace FreeLibSet.Forms
           currWindowIndex = cnt - 1;
       }
 
-      cfg.SetInt("FormCount", cnt);
+      cfg.SetInt32("FormCount", cnt);
       if (currWindowIndex >= 0)
-        cfg.SetInt("CurrentForm", currWindowIndex + 1);
+        cfg.SetInt32("CurrentForm", currWindowIndex + 1);
 
       //// Превью
       //try
@@ -818,8 +818,8 @@ namespace FreeLibSet.Forms
 
       if (!IsSDI)
       {
-        int mainWindowCount = cfg.GetInt("MainWindowCount");
-        int currMainWindowIndex = cfg.GetInt("CurrentMainWindow") - 1;
+        int mainWindowCount = cfg.GetInt32("MainWindowCount");
+        int currMainWindowIndex = cfg.GetInt32("CurrentMainWindow") - 1;
         for (int i = 0; i < mainWindowCount; i++)
         {
           EFPAppMainWindowLayout mwl = ShowMainWindow();
@@ -852,8 +852,8 @@ namespace FreeLibSet.Forms
           mwls[currMainWindowIndex].MainWindow.Select();
       }
 
-      int childFormCount = cfg.GetInt("FormCount");
-      int currChildFormIndex = cfg.GetInt("CurrentForm") - 1;
+      int childFormCount = cfg.GetInt32("FormCount");
+      int currChildFormIndex = cfg.GetInt32("CurrentForm") - 1;
       Form currForm = null;
       for (int i = 0; i < childFormCount; i++)
       {
@@ -883,7 +883,7 @@ namespace FreeLibSet.Forms
             if (!IsSDI)
             {
               EFPAppMainWindowLayout mwl = mwls[0];
-              int mainWindow = cfgForm.GetInt("MainWindow");
+              int mainWindow = cfgForm.GetInt32("MainWindow");
               if (mainWindow > 0 && mainWindow <= mwls.Count)
                 mwl = mwls[mainWindow - 1];
 

@@ -18,7 +18,7 @@ using System.Windows.Forms.VisualStyles;
 namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   /// <summary>
-  /// Базовый класс для <see cref="NodeTextBox"/>, <see cref="NodeComboBox"/>, <see cref="NodeIntEditBox"/>, <see cref="NodeSingleEditBox"/>, <see cref="NodeDoubleEditBox"/>,<see cref="NodeDecimalEditBox"/>
+  /// Базовый класс для <see cref="NodeTextBox"/>, <see cref="NodeComboBox"/>, <see cref="NodeInt32EditBox"/>, <see cref="NodeSingleEditBox"/>, <see cref="NodeDoubleEditBox"/>,<see cref="NodeDecimalEditBox"/>
   /// </summary>
   public abstract class BaseTextControl : EditableControl
   {

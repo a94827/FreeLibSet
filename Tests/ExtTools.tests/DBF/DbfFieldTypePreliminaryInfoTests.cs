@@ -66,7 +66,7 @@ namespace ExtTools_tests.DBF
     [Test]
     public void Constructor_DbfFieldInfo_L()
     {
-      DbfFieldInfo fi = DbfFieldInfo.CreateBool("F1");
+      DbfFieldInfo fi = DbfFieldInfo.CreateBoolean("F1");
       DbfFieldTypePreliminaryInfo sut = new DbfFieldTypePreliminaryInfo(fi);
       Assert.AreEqual('L', sut.Type, "Type");
     }

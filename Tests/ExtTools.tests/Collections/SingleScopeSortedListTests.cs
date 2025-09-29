@@ -181,7 +181,7 @@ namespace ExtTools_tests.Collections
     public void ContainsAll_EmptyLlst()
     {
       SingleScopeSortedList<int> sut = new SingleScopeSortedList<int>();
-      Assert.IsTrue(sut.ContainsAll(DataTools.EmptyInts), "{}");
+      Assert.IsTrue(sut.ContainsAll(EmptyArray<Int32>.Empty), "{}");
       Assert.IsFalse(sut.ContainsAll(new int[] { 1 }), "{1}");
     }
 
@@ -201,7 +201,7 @@ namespace ExtTools_tests.Collections
     public void ContainsAny_EmptyLlst()
     {
       SingleScopeSortedList<int> sut = new SingleScopeSortedList<int>();
-      Assert.IsFalse(sut.ContainsAny(DataTools.EmptyInts), "{}");
+      Assert.IsFalse(sut.ContainsAny(EmptyArray<Int32>.Empty), "{}");
       Assert.IsFalse(sut.ContainsAny(new int[] { 1 }), "{1}");
     }
 
@@ -221,7 +221,7 @@ namespace ExtTools_tests.Collections
     public void ContainsSame_EmptyLlst()
     {
       SingleScopeSortedList<int> sut = new SingleScopeSortedList<int>();
-      Assert.IsTrue(sut.ContainsSame(DataTools.EmptyInts), "{}");
+      Assert.IsTrue(sut.ContainsSame(EmptyArray<Int32>.Empty), "{}");
       Assert.IsFalse(sut.ContainsSame(new int[] { 1 }), "{1}");
     }
 

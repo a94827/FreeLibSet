@@ -44,8 +44,8 @@
       this.btnInfo = new System.Windows.Forms.Button();
       this.btnGCCollect = new System.Windows.Forms.Button();
       this.label6 = new System.Windows.Forms.Label();
-      this.edSyncTime = new FreeLibSet.Controls.IntEditBox();
-      this.edCopies = new FreeLibSet.Controls.IntEditBox();
+      this.edSyncTime = new FreeLibSet.Controls.Int32EditBox();
+      this.edCopies = new FreeLibSet.Controls.Int32EditBox();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.SuspendLayout();
@@ -289,7 +289,7 @@
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.ComboBox cbProcType;
     private System.Windows.Forms.Label label1;
-    private FreeLibSet.Controls.IntEditBox edCopies;
+    private FreeLibSet.Controls.Int32EditBox edCopies;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Button btnStart;
@@ -302,7 +302,7 @@
     private System.Windows.Forms.Button btnDebug;
     private System.Windows.Forms.ComboBox cbFromThread;
     private System.Windows.Forms.Label label5;
-    private FreeLibSet.Controls.IntEditBox edSyncTime;
+    private FreeLibSet.Controls.Int32EditBox edSyncTime;
     private System.Windows.Forms.Label label6;
   }
 }

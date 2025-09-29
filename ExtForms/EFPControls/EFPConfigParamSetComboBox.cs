@@ -900,7 +900,7 @@ namespace FreeLibSet.Forms
         if (DataTools.GetString(drv.Row, "MD5") == md5Sum)
         {
           drv.Row["Time"] = DateTime.Now;
-          // drv.Row["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
+          // drv.Row["Order"] = DataTools.GetInt32(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
           found = true;
           break;
         }
@@ -924,7 +924,7 @@ namespace FreeLibSet.Forms
         resRow["Time"] = DateTime.Now;
         resRow["MD5"] = md5Sum;
         //if (_TableHist.Rows.Count > 0)
-        //  resRow["Order"] = DataTools.GetInt(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
+        //  resRow["Order"] = DataTools.GetInt32(_TableHist.DefaultView[_TableHist.DefaultView.Count - 1].Row, "Order") + 1;
         //else
         //  resRow["Order"] = 1;
 

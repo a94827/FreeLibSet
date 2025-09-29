@@ -55,7 +55,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Идентификаторы документов, существующих в таблице
     /// </summary>
-    Int32[] Ids { get; set;}
+    IIdSet<Int32> Ids { get; set;}
 
     /// <summary>
     /// Добавляет одну строку в таблицу.
@@ -71,7 +71,7 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="ids">Идентификаторы добавляемых документов</param>
     /// <returns>Количество документов, которые добавлены</returns>
-    int AddIds(Int32[] ids);
+    int AddIds(IEnumerable<Int32> ids);
 
     /// <summary>
     /// Может ли в в списке не быть ни одного документа?
@@ -156,13 +156,13 @@ namespace FreeLibSet.Forms.Docs
       if (EFPApp.ShowListImages) // 14.09.2016
       {
         Columns.AddImage();
-        GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(GridHandler_GetCellAttributes);
+        CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(ControlProvider_CellInfoNeeded);
       }
       Columns.AddTextFill("Text", true, DocType.SingularTitle, 100, 15);
       Columns.LastAdded.CanIncSearch = true;
       if (UI.DebugShowIds)
       {
-        Columns.AddInt("Id", true, "Id", 5);
+        Columns.AddInteger("Id", true, "Id", 5);
         Columns.LastAdded.CanIncSearch = true;
       }
       CurrentColumnIndex = 1;
@@ -194,25 +194,31 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     private DataTable _Table;
 
+    IIdSet<Int32> IEFPDocSelView.Ids 
+    {
+      get { return Ids; }
+      set { Ids = IdTools.AsIdArray<Int32>(value); }
+    }
+
     /// <summary>
     /// Идентификаторы документов, существующих в таблице
     /// </summary>
-    public Int32[] Ids
+    public IdArray<Int32> Ids
     {
       get
       {
-        return DataTools.GetIds(_Table.DefaultView);
+        return IdTools.AsIdArray<Int32>(IdTools.GetIds<Int32>(_Table.DefaultView));
       }
       set
       {
         if (value == null)
-          value = DataTools.EmptyIds;
+          value = IdArray<Int32>.Empty;
 
         _Table.BeginLoadData();
         try
         {
           _Table.Rows.Clear();
-          for (int i = 0; i < value.Length; i++)
+          for (int i = 0; i < value.Count; i++)
           {
             UI.DocProvider.CheckIsRealDocId(value[i]);
             _Table.Rows.Add(value[i], DocTypeUI.GetTextValue(value[i]), i + 1);
@@ -241,7 +247,7 @@ namespace FreeLibSet.Forms.Docs
       DataRow NewRow = _Table.NewRow();
       NewRow["Id"] = id;
       NewRow["Text"] = DocTypeUI.GetTextValue(id);
-      NewRow["Order"] = (DataTools.MaxInt(_Table, "Order", false) ?? 0) + 1;
+      NewRow["Order"] = (DataTools.MaxInt32(_Table, "Order", false) ?? 0) + 1;
       _Table.Rows.Add(NewRow);
       Validate(); // 08.07.2019
       return true;
@@ -253,12 +259,12 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     /// <param name="ids">Идентификаторы добавляемых документов</param>
     /// <returns>Количество документов, которые добавлены</returns>
-    public int AddIds(Int32[] ids)
+    public int AddIds(IEnumerable<Int32> ids)
     {
       int cnt = 0;
-      for (int i = 0; i < ids.Length; i++)
+      foreach (Int32 id in ids)
       {
-        if (AddId(ids[i]))
+        if (AddId(id))
           cnt++;
       }
       return cnt;
@@ -412,13 +418,13 @@ namespace FreeLibSet.Forms.Docs
 
     #region Оформление просмотра
 
-    void GridHandler_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void ControlProvider_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.ColumnIndex != 0)
         return;
       if (args.DataRow == null)
         return;
-      Int32 Id = DataTools.GetInt(args.DataRow, "Id");
+      Int32 Id = DataTools.GetInt32(args.DataRow, "Id");
       args.Value = DocTypeUI.GetImageValue(Id);
     }
 
@@ -439,12 +445,12 @@ namespace FreeLibSet.Forms.Docs
       switch (State)
       {
         case UIDataState.Insert:
-          Int32[] selIds = DocTypeUI.SelectDocs(String.Format(Res.EFPDataView_Title_AddDocs,
+          IIdSet<Int32> selIds = DocTypeUI.SelectDocs(String.Format(Res.EFPDataView_Title_AddDocs,
             DocType.PluralTitle), this.Filters);
-          if (selIds.Length == 0)
+          if (selIds.Count == 0)
             return true;
-          for (int i = 0; i < selIds.Length; i++)
-            AddId(selIds[i]);
+          foreach (Int32 docId in selIds)
+            AddId(docId);
           SelectedIds = selIds;
           break;
         case UIDataState.Delete:
@@ -476,7 +482,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Внешний инициализатор для новых документов.
     /// Если свойство установлено, то при создании нового документа в качестве
-    /// инициализатора значений полей (аргумент caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(int[], UIDataState, bool, DocumentViewHandler)"/>) 
+    /// инициализатора значений полей (аргумент caller при вызове <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformEditing(IEnumerable{Int32}, UIDataState, bool, DocumentViewHandler)"/>) 
     /// будет использован этот инициализатор вместо текущих фильтров (<see cref="EFPDBxGridView.Filters"/>.
     /// Свойство может устанавливаться только до вывода просмотра на экран.
     /// </summary>
@@ -501,13 +507,13 @@ namespace FreeLibSet.Forms.Docs
     public override bool HasGetDocSelHandler { get { return true; } }
 
     /// <summary>
-    /// Вызывает <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/> для идентификаторов документов в просмотре.
+    /// Вызывает <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, IEnumerable{Int32}, EFPDBxViewDocSelReason)"/> для идентификаторов документов в просмотре.
     /// Затем вызывает обработчик события <see cref="EFPDBxGridView.GetDocSel"/>, если он установлен.
     /// </summary>
     /// <param name="args">Аргументы события <see cref="EFPDBxGridView.GetDocSel"/></param>
     protected override void OnGetDocSel(EFPDBxGridViewDocSelEventArgs args)
     {
-      Int32[] ids = DataTools.GetIds(args.DataRows);
+      IIdSet<Int32> ids = IdTools.GetIds<Int32>(args.DataRows);
       DocTypeUI.PerformGetDocSel(args.DocSel, ids, args.Reason);
 
       base.OnGetDocSel(args); // если есть пользовательский обработчик
@@ -531,17 +537,17 @@ namespace FreeLibSet.Forms.Docs
     void fmtDocSel_Paste(object sender, EFPPasteDataObjectEventArgs args)
     {
       DBxDocSelectionPasteFormat fmtDocSel = (DBxDocSelectionPasteFormat)sender;
-      Int32[] ids = fmtDocSel.DocSel[DocTypeName];
+      IIdSet<Int32> ids = fmtDocSel.DocSel[DocTypeName];
 
       int cnt = 0;
-      for (int i = 0; i < ids.Length; i++)
+      foreach (Int32 id in ids)
       {
-        if (AddId(ids[i]))
+        if (AddId(id))
           cnt++;
       }
       if (cnt == 0)
         EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_PasteNoNewDocs,
-          DocType.PluralTitle, ids.Length));
+          DocType.PluralTitle, ids.Count));
     }
 
     #endregion
@@ -621,7 +627,7 @@ namespace FreeLibSet.Forms.Docs
 
 #pragma warning restore 0219
 
-      public override void UpdateRowsForIds(Int32[] docIds)
+      public override void UpdateRowsForIds(IIdSet<Int32> docIds)
       {
         if (Owner != null)
           Owner.UpdateRowsForIds(docIds);
@@ -722,7 +728,7 @@ namespace FreeLibSet.Forms.Docs
       if (Filters.IsEmpty)
         return;
 
-      IdList badIds;
+      IdCollection<Int32> badIds;
       EFPApp.BeginWait(Res.Common_Phase_ValidateSelDocs, "Filter");
       try
       {
@@ -732,16 +738,16 @@ namespace FreeLibSet.Forms.Docs
         Filters.GetColumnNames(colList);
         // Загружаем значения
         DataTable table2 = DocTypeUI.TableCache.CreateTable(this.Ids, new DBxColumns(colList));
-        DataTableValueArray va = new DataTableValueArray(table2);
+        DataTableValues va = new DataTableValues(table2);
 
         // Проверяем попадание
-        badIds = new IdList();
+        badIds = new IdCollection<Int32>();
         foreach (DataRow row in table2.Rows)
         {
           va.CurrentRow = row;
           DBxCommonFilter BadFilter;
           if (!Filters.TestValues(va, out BadFilter))
-            badIds.Add(DataTools.GetInt(row, "Id"));
+            badIds.Add(DataTools.GetInt32(row, "Id"));
         }
       }
       finally
@@ -751,7 +757,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (badIds.Count > 0)
       {
-        this.SelectedIds = badIds.ToArray();
+        this.SelectedIds = badIds;
         SetError(String.Format(Res.EFPDataView_Err_DocsMismatchFilters,
           badIds.Count, Control.RowCount));
       }

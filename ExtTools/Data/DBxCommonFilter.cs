@@ -1572,7 +1572,7 @@ namespace FreeLibSet.Data
     {
       _CanBeEmpty = canBeEmpty;
       _Mode = CodeFilterMode.NoFilter;
-      _Codes = DataTools.EmptyStrings;
+      _Codes = EmptyArray<string>.Empty;
       _EmptyCode = false;
     }
 
@@ -1617,7 +1617,7 @@ namespace FreeLibSet.Data
       }
 
       if (codes == null)
-        codes = DataTools.EmptyStrings;
+        codes = EmptyArray<string>.Empty;
 
       if (codes.Length == 0 && (!emptyCode))
       {
@@ -1655,7 +1655,7 @@ namespace FreeLibSet.Data
       if (IsEmpty)
         return;
       _Mode = CodeFilterMode.NoFilter;
-      _Codes = DataTools.EmptyStrings;
+      _Codes = EmptyArray<string>.Empty;
       _EmptyCode = false;
       OnChanged();
     }
@@ -1672,7 +1672,7 @@ namespace FreeLibSet.Data
     {
       List<DBxFilter> filters = new List<DBxFilter>();
       if (Codes.Length > 0)
-        filters.Add(new ValuesFilter(Code, Codes));
+        filters.Add(new ValueInListFilter(Code, Codes));
       if (EmptyCode)
         filters.Add(new ValueFilter(Code, String.Empty, typeof(string)));
 
@@ -1708,7 +1708,7 @@ namespace FreeLibSet.Data
       string[] codes = cfg.GetString("Codes").Split(',');
       bool emptyCode = false;
       if (CanBeEmpty)
-        emptyCode = cfg.GetBool("EmptyCode");
+        emptyCode = cfg.GetBoolean("EmptyCode");
       SetFilter(mode, codes, emptyCode);
     }
 
@@ -1737,7 +1737,7 @@ namespace FreeLibSet.Data
         cfg.SetString("Codes", String.Join(",", Codes));
 
       if (CanBeEmpty)
-        cfg.SetBool("EmptyCode", EmptyCode);
+        cfg.SetBoolean("EmptyCode", EmptyCode);
     }
 
     #endregion
@@ -1921,7 +1921,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Абстрактный метод, который должен прочитать параметр "Value" из секции конфигурации.
-    /// Например, с помощью вызова return cfg.GetInt("Value").
+    /// Например, с помощью вызова return cfg.GetInt32("Value").
     /// </summary>
     /// <param name="cfg">Секция конфигурации для чтения фильтра</param>
     /// <returns>Прочитанное значение</returns>
@@ -1941,7 +1941,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Абстрактный метод, который должен записывать параметр "Value" в секцию конфигурации.
-    /// Например, с помощью вызова cfg.SetInt("Value", Value).
+    /// Например, с помощью вызова cfg.SetInt32("Value", Value).
     /// </summary>
     /// <param name="cfg">Секция конфигурации для записи фильтра</param>
     /// <param name="value">Записываемое значение</param>
@@ -1974,7 +1974,7 @@ namespace FreeLibSet.Data
   /// <summary>
   /// Простой фильтр по логическому полю (SQL-фильтр <see cref="ValueFilter"/>).
   /// </summary>
-  public class BoolValueCommonFilter : ValueCommonFilterBase<bool>
+  public class BooleanValueCommonFilter : ValueCommonFilterBase<bool>
   {
     #region Конструктор
 
@@ -1982,7 +1982,7 @@ namespace FreeLibSet.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя поля</param>
-    public BoolValueCommonFilter(string columnName)
+    public BooleanValueCommonFilter(string columnName)
       : base(columnName)
     {
     }
@@ -1992,23 +1992,23 @@ namespace FreeLibSet.Data
     #region Переопределяемые методы
 
     /// <summary>
-    /// Вызывает <see cref="CfgPart.GetBool(string)"/>
+    /// Вызывает <see cref="CfgPart.GetBoolean(string)"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <returns>Значение</returns>
     protected override bool DoReadConfigValue(CfgPart cfg)
     {
-      return cfg.GetBool("Value");
+      return cfg.GetBoolean("Value");
     }
 
     /// <summary>
-    /// Вызывает <see cref="CfgPart.SetBool(string, bool)"/>
+    /// Вызывает <see cref="CfgPart.SetBoolean(string, bool)"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <param name="value">Значение</param>
     protected override void DoWriteConfigValue(CfgPart cfg, bool value)
     {
-      cfg.SetBool("Value", value);
+      cfg.SetBoolean("Value", value);
     }
 
     ///// <summary>
@@ -2018,7 +2018,7 @@ namespace FreeLibSet.Data
     ///// <returns>Текстовые представления значений</returns>
     //protected override string[] GetColumnStrValues(object[] ColumnValues)
     //{
-    //  bool Value = DataTools.GetBool(ColumnValues[0]);
+    //  bool Value = DataTools.GetBoolean(ColumnValues[0]);
     //  return new string[] { Value ? FilterTextTrue : FilterTextFalse };
     //}
 
@@ -2030,7 +2030,7 @@ namespace FreeLibSet.Data
   /// Если поле может принимать фиксированный набор значений, то следует использовать
   /// фильтр <see cref="EnumCommonFilter"/>.
   /// </summary>
-  public class IntValueCommonFilter : ValueCommonFilterBase<Int32>
+  public class Int32ValueCommonFilter : ValueCommonFilterBase<Int32>
   {
     #region Конструктор
 
@@ -2038,7 +2038,7 @@ namespace FreeLibSet.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя поля</param>
-    public IntValueCommonFilter(string columnName)
+    public Int32ValueCommonFilter(string columnName)
       : base(columnName)
     {
     }
@@ -2048,23 +2048,23 @@ namespace FreeLibSet.Data
     #region Переопределяемые свойства
 
     /// <summary>
-    /// Вызывает <see cref="CfgPart.GetInt(string)"/>
+    /// Вызывает <see cref="CfgPart.GetInt32(string)"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <returns>Значение</returns>
     protected override int DoReadConfigValue(CfgPart cfg)
     {
-      return cfg.GetInt("Value");
+      return cfg.GetInt32("Value");
     }
 
     /// <summary>
-    /// Вызывает <see cref="CfgPart.SetBool(string, bool)"/>
+    /// Вызывает <see cref="CfgPart.SetBoolean(string, bool)"/>
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
     /// <param name="value">Значение</param>
     protected override void DoWriteConfigValue(CfgPart cfg, int value)
     {
-      cfg.SetInt("Value", value);
+      cfg.SetInt32("Value", value);
     }
 
     /// <summary>
@@ -2074,7 +2074,7 @@ namespace FreeLibSet.Data
     /// <returns>Текстовые представления значений</returns>
     protected override string[] GetColumnStrValues(object[] columnValues)
     {
-      int value = DataTools.GetInt(columnValues[0]);
+      int value = DataTools.GetInt32(columnValues[0]);
       return new string[] { value.ToString() };
     }
 
@@ -2085,7 +2085,7 @@ namespace FreeLibSet.Data
   /// <summary>
   /// Фильтр по году для числового поля или поля типа "Дата" (SQL-фильтр <see cref="ValueFilter"/>)
   /// </summary>
-  public class YearCommonFilter : IntValueCommonFilter
+  public class YearCommonFilter : Int32ValueCommonFilter
   {
     #region Конструкторы
 
@@ -2146,7 +2146,7 @@ namespace FreeLibSet.Data
   #region Фильтры ValuesFilter
 
   /// <summary>
-  /// Базовый класс для построения IN-фильтров по значению поля (SQL-фильтр <see cref="ValuesFilter"/>).
+  /// Базовый класс для построения IN-фильтров по значению поля (SQL-фильтр <see cref="ValueInListFilter"/>).
   /// </summary>
   /// <typeparam name="T">Тип значения поля </typeparam>
   public abstract class ValuesCommonFilterBase<T> : OneColumnCommonFilter
@@ -2222,7 +2222,7 @@ namespace FreeLibSet.Data
     {
       object v = rowValues.GetValue(ColumnName);
 
-      return ValuesFilter.TestFilter(v, Values, DBxColumnType.Unknown);
+      return ValueInListFilter.TestFilter(v, Values, DBxColumnType.Unknown);
     }
 
     /// <summary>
@@ -2230,7 +2230,7 @@ namespace FreeLibSet.Data
     /// </summary>
     public override DBxFilter GetSqlFilter()
     {
-      return new ValuesFilter(ColumnName, Values);
+      return new ValueInListFilter(ColumnName, Values);
     }
 
     /// <summary>
@@ -2253,7 +2253,7 @@ namespace FreeLibSet.Data
       cfg.Clear();
       if (Values != null)
       {
-        cfg.SetInt("Count", Values.Length);
+        cfg.SetInt32("Count", Values.Length);
         for (int i = 0; i < Values.Length; i++)
           cfg.SetString("Value" + StdConvert.ToString(i + 1), ToCfgText(Values[i]));
       }
@@ -2272,7 +2272,7 @@ namespace FreeLibSet.Data
     /// <param name="cfg">Секция конфигурации</param>
     public override void ReadConfig(CfgPart cfg)
     {
-      int n = cfg.GetInt("Count");
+      int n = cfg.GetInt32("Count");
       if (n == 0)
         Values = null;
       else
@@ -2310,7 +2310,7 @@ namespace FreeLibSet.Data
       if (IsEmpty)
         return true;
 
-      return ValuesFilter.TestFilter(rowValue, Values, DBxColumnType.Unknown);
+      return ValueInListFilter.TestFilter(rowValue, Values, DBxColumnType.Unknown);
     }
 
     #endregion
@@ -2365,6 +2365,29 @@ namespace FreeLibSet.Data
   #region Фильтры по диапазонам значений
 
   /// <summary>
+  /// Режимы работы фильтров по диапазону значений.
+  /// Значения свойства <see cref="RangeCommonFilterBase{T}.Mode"/>.
+  /// </summary>
+  public enum RangeCommonFilterMode
+  {
+    /// <summary>
+    /// Основной режим. Значение должно быть в диапазоне от <see cref="RangeCommonFilterBase{T}.FirstValue"/> до <see cref="RangeCommonFilterBase{T}.LastValue"/>.
+    /// Поддерживаются полуоткрытые интервалы, а если обе границы не заданы, то фильтр не установлен.
+    /// </summary>
+    Range,
+
+    /// <summary>
+    /// Поле проходит фильтр, если содержит какое-либо значение, отличное от NULL.
+    /// </summary>
+    NotNull,
+
+    /// <summary>
+    /// Поле содержит значение NULL
+    /// </summary>
+    Null,
+  }
+
+  /// <summary>
   /// Базовый класс фильтра для одного поля, в котором можно задавать диапазон значений.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
@@ -2381,11 +2404,34 @@ namespace FreeLibSet.Data
       : base(columnName)
     {
       _NullIsZero = true;
+      _Mode = RangeCommonFilterMode.Range;
     }
 
     #endregion
 
     #region Свойства
+
+    /// <summary>
+    /// Текущий режим работы.
+    /// По умолчанию - <see cref="RangeCommonFilterMode.Range"/>.
+    /// </summary>
+    public RangeCommonFilterMode Mode
+    {
+      get { return _Mode; }
+      set
+      {
+        if (value == _Mode)
+          return;
+        _Mode = value;
+        if (_Mode != RangeCommonFilterMode.Range)
+        {
+          _FirstValue = null;
+          _LastValue = null;
+        }
+        OnChanged();
+      }
+    }
+    private RangeCommonFilterMode _Mode;
 
     /// <summary>
     /// Текущее значение фильтра - начальное значение диапазона или null
@@ -2398,6 +2444,8 @@ namespace FreeLibSet.Data
         if (Object.Equals(value, _FirstValue))
           return;
         _FirstValue = value;
+        if (value.HasValue)
+          _Mode = RangeCommonFilterMode.Range;
         OnChanged();
       }
     }
@@ -2414,13 +2462,17 @@ namespace FreeLibSet.Data
         if (Object.Equals(value, _LastValue))
           return;
         _LastValue = value;
+        if (value.HasValue)
+          _Mode = RangeCommonFilterMode.Range;
         OnChanged();
       }
     }
     private T? _LastValue;
 
     /// <summary>
-    /// Если true (по умолчанию, то значения NULL трактуются как 0)
+    /// Если true (по умолчанию, то значения NULL трактуются как 0).
+    /// Не используется в <see cref="DateRangeCommonFilter"/>.
+    /// Свойство действует только при <see cref="Mode"/>=<see cref="RangeCommonFilterMode.Range"/>.
     /// </summary>
     public bool NullIsZero { get { return _NullIsZero; } set { _NullIsZero = value; } }
     private bool _NullIsZero;
@@ -2443,6 +2495,7 @@ namespace FreeLibSet.Data
       if (IsEmpty)
         return;
 
+      _Mode = RangeCommonFilterMode.Range;
       _FirstValue = null;
       _LastValue = null;
       OnChanged();
@@ -2455,9 +2508,113 @@ namespace FreeLibSet.Data
     {
       get
       {
-        return !(FirstValue.HasValue || LastValue.HasValue);
+        return (Mode == RangeCommonFilterMode.Range) &&
+          (!(FirstValue.HasValue || LastValue.HasValue));
       }
     }
+
+    /// <summary>
+    /// Запись состояния фильтра в секцию конфигурации.
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации для записи фильтра</param>
+    public override sealed void WriteConfig(CfgPart cfg)
+    {
+      if (Mode == RangeCommonFilterMode.Range)
+      {
+        WriteConfigRange(cfg);
+        cfg.Remove("Mode");
+      }
+      else
+        cfg.SetEnum<RangeCommonFilterMode>("Mode", Mode);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cfg"></param>
+    protected abstract void WriteConfigRange(CfgPart cfg);
+
+
+    /// <summary>
+    /// Чтерие состояния фильтра из секции конфигурации.
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации для записи фильтра</param>
+    public override sealed void ReadConfig(CfgPart cfg)
+    {
+      Mode = cfg.GetEnum<RangeCommonFilterMode>("Mode");
+      if (Mode == RangeCommonFilterMode.Range)
+        ReadConfigRange(cfg);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cfg"></param>
+    protected abstract void ReadConfigRange(CfgPart cfg);
+
+
+    /// <summary>
+    /// Получение фильтра для фильтрации строк таблицы данных
+    /// </summary>
+    public override sealed DBxFilter GetSqlFilter()
+    {
+      switch (Mode)
+      {
+        case RangeCommonFilterMode.Range:
+          return GetSqlFilterRange();
+        case RangeCommonFilterMode.NotNull:
+          return new NotNullFilter(ColumnName, typeof(T));
+        case RangeCommonFilterMode.Null:
+          return new ValueFilter(ColumnName, null, CompareKind.Equal, typeof(T));
+        default:
+          throw new BugException();
+      }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    protected abstract DBxFilter GetSqlFilterRange();
+
+    /// <summary>
+    /// Непосредственное тестирование фильтра исходя из переданных значений.
+    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// </summary>
+    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
+    /// <returns>True, если строка проходит условия фильтра</returns>
+    protected override sealed bool OnTestValues(INamedValuesAccess rowValues)
+    {
+      object v1 = rowValues.GetValue(ColumnName);
+      switch (Mode)
+      {
+        case RangeCommonFilterMode.Range:
+          if (v1 == null || (v1 is DBNull))
+          {
+            if (NullIsZero)
+              v1 = default(T);
+            else
+              return false;
+          }
+          return TestValueInRange(v1);
+
+        case RangeCommonFilterMode.NotNull:
+          return !(v1 == null || (v1 is DBNull));
+
+        case RangeCommonFilterMode.Null:
+          return (v1 == null || (v1 is DBNull));
+        default:
+          throw new BugException();
+      }
+    }
+
+    /// <summary>
+    /// Вызывается методом <see cref="OnTestValues(INamedValuesAccess)"/> в режиме <see cref="Mode"/>==<see cref="RangeCommonFilterMode.Range"/>.
+    /// Свойство <see cref="NullIsZero"/> уже обработано.
+    /// </summary>
+    /// <param name="v">Проверяемое значение. Его нужно привести к типу <typeparamref name="T"/>.</param>
+    /// <returns>Попадание в диапазон</returns>
+    protected abstract bool TestValueInRange(object v);
 
     /// <summary>
     /// Если <see cref="FirstValue"/> и <see cref="LastValue"/> установлены в одно и то же значение, отличное от null, то значение поля документа инициализируется выбранным значением.
@@ -2465,7 +2622,7 @@ namespace FreeLibSet.Data
     /// <param name="docValue"></param>
     protected override void OnInitNewValue(DBxExtValue docValue)
     {
-      if (FirstValue.HasValue && LastValue.HasValue && Object.Equals(FirstValue, LastValue))
+      if (Mode==RangeCommonFilterMode.Range && FirstValue.HasValue && LastValue.HasValue && Object.Equals(FirstValue, LastValue))
       {
         if (NullIsZero && FirstValue.Value.Equals(default(T)))
           docValue.SetNull();
@@ -2482,7 +2639,7 @@ namespace FreeLibSet.Data
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
   /// </summary>
-  public class IntRangeCommonFilter : RangeCommonFilterBase<int>
+  public class Int32RangeCommonFilter : RangeCommonFilterBase<int>
   {
     #region Конструктор
 
@@ -2490,7 +2647,7 @@ namespace FreeLibSet.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя столбца</param>
-    public IntRangeCommonFilter(string columnName)
+    public Int32RangeCommonFilter(string columnName)
       : base(columnName)
     {
     }
@@ -2500,36 +2657,23 @@ namespace FreeLibSet.Data
     #region Переопределяемые методы
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// 
     /// </summary>
-    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
-    /// <returns>True, если строка проходит условия фильтра</returns>
-    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    /// <param name="v"></param>
+    /// <returns></returns>
+    protected override bool TestValueInRange(object v)
     {
-      object v1 = rowValues.GetValue(ColumnName);
-      int v2;
-      if (v1 == null || (v1 is DBNull))
-      {
-        if (NullIsZero)
-          v2 = 0;
-        else
-          return false;
-      }
-      else
-        v2 = DataTools.GetInt(v1);
-
-      return DataTools.IsInRange<Int32>(v2, FirstValue, LastValue);
+      return MathTools.IsInRange<Int32>(DataTools.GetInt32(v), FirstValue, LastValue);
     }
 
     /// <summary>
     /// Получение фильтра для фильтрации строк таблицы данных
     /// </summary>
-    public override DBxFilter GetSqlFilter()
+    protected override DBxFilter GetSqlFilterRange()
     {
       DBxFilter filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
-      if (NullIsZero && DataTools.IsInRange<Int32>(0, FirstValue, LastValue))
+      if (NullIsZero && MathTools.IsInRange<Int32>(0, FirstValue, LastValue))
         filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(int)), filter);
       return filter;
     }
@@ -2538,20 +2682,20 @@ namespace FreeLibSet.Data
     /// Прочитать значение фильтра из секции конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart cfg)
+    protected override void ReadConfigRange(CfgPart cfg)
     {
-      FirstValue = cfg.GetNullableInt("FirstValue");
-      LastValue = cfg.GetNullableInt("LastValue");
+      FirstValue = cfg.GetNullableInt32("FirstValue");
+      LastValue = cfg.GetNullableInt32("LastValue");
     }
 
     /// <summary>
     /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
-    public override void WriteConfig(CfgPart cfg)
+    protected override void WriteConfigRange(CfgPart cfg)
     {
-      cfg.SetNullableInt("FirstValue", FirstValue);
-      cfg.SetNullableInt("LastValue", LastValue);
+      cfg.SetNullableInt32("FirstValue", FirstValue);
+      cfg.SetNullableInt32("LastValue", LastValue);
     }
 
     #endregion
@@ -2580,58 +2724,45 @@ namespace FreeLibSet.Data
     #region Переопределяемые методы
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// 
     /// </summary>
-    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
-    /// <returns>True, если строка проходит условия фильтра</returns>
-    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    /// <param name="v"></param>
+    /// <returns></returns>
+    protected override bool TestValueInRange(object v)
     {
-      object v1 = rowValues.GetValue(ColumnName);
-      float v2;
-      if (v1 == null || (v1 is DBNull))
-      {
-        if (NullIsZero)
-          v2 = 0f;
-        else
-          return false;
-      }
-      else
-        v2 = DataTools.GetSingle(v1);
-
-      return DataTools.IsInRange<Single>(v2, FirstValue, LastValue);
+      return MathTools.IsInRange<Single>(DataTools.GetSingle(v), FirstValue, LastValue);
     }
 
     /// <summary>
     /// Получение фильтра для фильтрации строк таблицы данных
     /// </summary>
-    public override DBxFilter GetSqlFilter()
+    protected override DBxFilter GetSqlFilterRange()
     {
       DBxFilter filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
-      if (NullIsZero && DataTools.IsInRange<Single>(0, FirstValue, LastValue))
+      if (NullIsZero && MathTools.IsInRange<Single>(0, FirstValue, LastValue))
         filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(float)), filter);
       return filter;
-    }
-
-    /// <summary>
-    /// Прочитать значение фильтра из секции конфигурации
-    /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart cfg)
-    {
-      FirstValue = cfg.GetNullableSingle("FirstValue");
-      LastValue = cfg.GetNullableSingle("LastValue");
     }
 
     /// <summary>
     /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
-    public override void WriteConfig(CfgPart cfg)
+    protected override void WriteConfigRange(CfgPart cfg)
     {
       cfg.SetNullableSingle("FirstValue", FirstValue);
       cfg.SetNullableSingle("LastValue", LastValue);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    protected override void ReadConfigRange(CfgPart cfg)
+    {
+      FirstValue = cfg.GetNullableSingle("FirstValue");
+      LastValue = cfg.GetNullableSingle("LastValue");
     }
 
     #endregion
@@ -2660,58 +2791,45 @@ namespace FreeLibSet.Data
     #region Переопределяемые методы
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// 
     /// </summary>
-    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
-    /// <returns>True, если строка проходит условия фильтра</returns>
-    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    /// <param name="v"></param>
+    /// <returns></returns>
+    protected override bool TestValueInRange(object v)
     {
-      object v1 = rowValues.GetValue(ColumnName);
-      double v2;
-      if (v1 == null || (v1 is DBNull))
-      {
-        if (NullIsZero)
-          v2 = 0.0;
-        else
-          return false;
-      }
-      else
-        v2 = DataTools.GetDouble(v1);
-
-      return DataTools.IsInRange<Double>(v2, FirstValue, LastValue);
+      return MathTools.IsInRange<Double>(DataTools.GetDouble(v), FirstValue, LastValue);
     }
 
     /// <summary>
     /// Получение фильтра для фильтрации строк таблицы данных
     /// </summary>
-    public override DBxFilter GetSqlFilter()
+    protected override DBxFilter GetSqlFilterRange()
     {
       DBxFilter Filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
-      if (NullIsZero && DataTools.IsInRange<Double>(0, FirstValue, LastValue))
+      if (NullIsZero && MathTools.IsInRange<Double>(0, FirstValue, LastValue))
         Filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(double)), Filter);
       return Filter;
-    }
-
-    /// <summary>
-    /// Прочитать значение фильтра из секции конфигурации
-    /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart cfg)
-    {
-      FirstValue = cfg.GetNullableDouble("FirstValue");
-      LastValue = cfg.GetNullableDouble("LastValue");
     }
 
     /// <summary>
     /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
-    public override void WriteConfig(CfgPart cfg)
+    protected override void WriteConfigRange(CfgPart cfg)
     {
       cfg.SetNullableDouble("FirstValue", FirstValue);
       cfg.SetNullableDouble("LastValue", LastValue);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    protected override void ReadConfigRange(CfgPart cfg)
+    {
+      FirstValue = cfg.GetNullableDouble("FirstValue");
+      LastValue = cfg.GetNullableDouble("LastValue");
     }
 
     #endregion
@@ -2740,58 +2858,45 @@ namespace FreeLibSet.Data
     #region Переопределяемые методы
 
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// 
     /// </summary>
-    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
-    /// <returns>True, если строка проходит условия фильтра</returns>
-    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    /// <param name="v"></param>
+    /// <returns></returns>
+    protected override bool TestValueInRange(object v)
     {
-      object v1 = rowValues.GetValue(ColumnName);
-      decimal v2;
-      if (v1 == null || (v1 is DBNull))
-      {
-        if (NullIsZero)
-          v2 = 0m;
-        else
-          return false;
-      }
-      else
-        v2 = DataTools.GetDecimal(v1);
-
-      return DataTools.IsInRange<Decimal>(v2, FirstValue, LastValue);
+      return MathTools.IsInRange<Decimal>(DataTools.GetDecimal(v), FirstValue, LastValue);
     }
 
     /// <summary>
     /// Получение фильтра для фильтрации строк таблицы данных
     /// </summary>
-    public override DBxFilter GetSqlFilter()
+    protected override DBxFilter GetSqlFilterRange()
     {
       DBxFilter filter = new NumRangeFilter(ColumnName, FirstValue, LastValue);
 
-      if (NullIsZero && DataTools.IsInRange<Decimal>(0, FirstValue, LastValue))
+      if (NullIsZero && MathTools.IsInRange<Decimal>(0, FirstValue, LastValue))
         filter = new OrFilter(new ValueFilter(ColumnName, null, typeof(float)), filter);
       return filter;
-    }
-
-    /// <summary>
-    /// Прочитать значение фильтра из секции конфигурации
-    /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart cfg)
-    {
-      FirstValue = cfg.GetNullableDecimal("FirstValue");
-      LastValue = cfg.GetNullableDecimal("LastValue");
     }
 
     /// <summary>
     /// Записать параметры фильтра в секцию конфигурации
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
-    public override void WriteConfig(CfgPart cfg)
+    protected override void WriteConfigRange(CfgPart cfg)
     {
       cfg.SetNullableDecimal("FirstValue", FirstValue);
       cfg.SetNullableDecimal("LastValue", LastValue);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    protected override void ReadConfigRange(CfgPart cfg)
+    {
+      FirstValue = cfg.GetNullableDecimal("FirstValue");
+      LastValue = cfg.GetNullableDecimal("LastValue");
     }
 
     #endregion
@@ -2813,24 +2918,23 @@ namespace FreeLibSet.Data
     public DateRangeCommonFilter(string columnName)
       : base(columnName)
     {
+      base.NullIsZero = false;
     }
 
     #endregion
 
     #region Переопределяемые методы
 
-
     /// <summary>
-    /// Непосредственное тестирование фильтра исходя из переданных значений.
-    /// Объект <paramref name="rowValues"/> должен содержать поле <see cref="OneColumnCommonFilter.ColumnName"/>, иначе будет сгенерирована ошибка.
+    /// 
     /// </summary>
-    /// <param name="rowValues">Интерфейc доступа к значениям полей.</param>
-    /// <returns>True, если строка проходит условия фильтра</returns>
-    protected override bool OnTestValues(INamedValuesAccess rowValues)
+    /// <param name="v"></param>
+    /// <returns></returns>
+    protected override bool TestValueInRange(object v)
     {
-      DateTime? v = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName));
-      if (v.HasValue)
-        return DataTools.DateInRange(v.Value, FirstValue, LastValue);
+      DateTime? v2 = DataTools.GetNullableDateTime(v);
+      if (v2.HasValue)
+        return TimeTools.DateInRange(v2.Value, FirstValue, LastValue);
       else
         return false;
     }
@@ -2838,30 +2942,30 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получение фильтра для фильтрации строк таблицы данных
     /// </summary>
-    public override DBxFilter GetSqlFilter()
+    protected override DBxFilter GetSqlFilterRange()
     {
       return new DateRangeFilter(ColumnName, FirstValue, LastValue);
 
     }
 
     /// <summary>
-    /// Прочитать значение фильтра из секции конфигурации
-    /// </summary>
-    /// <param name="cfg">Секция конфигурации</param>
-    public override void ReadConfig(CfgPart cfg)
-    {
-      FirstValue = cfg.GetNullableDate("FirstValue");
-      LastValue = cfg.GetNullableDate("LastValue");
-    }
-
-    /// <summary>
     /// Записать параметры фильтра в секцию конфигурации.
     /// </summary>
     /// <param name="cfg">Секция конфигурации</param>
-    public override void WriteConfig(CfgPart cfg)
+    protected override void WriteConfigRange(CfgPart cfg)
     {
       cfg.SetNullableDate("FirstValue", FirstValue);
       cfg.SetNullableDate("LastValue", LastValue);
+    }
+
+    /// <summary>
+    /// Прочитать значение фильтра из секции конфигурации
+    /// </summary>
+    /// <param name="cfg">Секция конфигурации</param>
+    protected override void ReadConfigRange(CfgPart cfg)
+    {
+      FirstValue = cfg.GetNullableDate("FirstValue");
+      LastValue = cfg.GetNullableDate("LastValue");
     }
 
     /// <summary>
@@ -2883,7 +2987,7 @@ namespace FreeLibSet.Data
 
   /// <summary>
   /// Фильтр по одному или нескольким значениям числового поля, каждому из
-  /// которых соответствует текстовое представление. Используется SQL-фильтр <see cref="ValuesFilter"/> (фильтр "IN ()").
+  /// которых соответствует текстовое представление. Используется SQL-фильтр <see cref="ValueInListFilter"/> (фильтр "IN ()").
   /// Предполагается, что элементы перечисления имеют последовательные значения 0,1,2,...
   /// Каждое значение проходит или не проходит фильтр, что определяется массивом флагов <see cref="EnumCommonFilter.FilterFlags"/>.
   /// Если фильтр установлен, то значения поля, выходящие за диапазон значений, считаются не проходящими фильтр.
@@ -2965,7 +3069,7 @@ namespace FreeLibSet.Data
         else
         {
           bool[] a = new bool[ItemCount];
-          DataTools.FillArray<bool>(a, false);
+          ArrayTools.FillArray<bool>(a, false);
           a[value] = true;
           FilterFlags = a;
         }
@@ -3006,7 +3110,7 @@ namespace FreeLibSet.Data
         if (FilterFlags[i])
           values.Add(i);
       }
-      DBxFilter filter = new ValuesFilter(ColumnName, values.ToArray());
+      DBxFilter filter = new ValueInListFilter(ColumnName, values.ToArray());
       // 18.10.2019
       // Форматировщик OnFormatValuesFilter() теперь сам учитывает наличие пустого значения среди Values и дополнительная проверка на NULL не нужна
       //if (FilterFlags[0])
@@ -3022,7 +3126,7 @@ namespace FreeLibSet.Data
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      int value = DataTools.GetInt(rowValues.GetValue(ColumnName));
+      int value = DataTools.GetInt32(rowValues.GetValue(ColumnName));
       if (value < 0 || value > FilterFlags.Length)
         return false;
       else
@@ -3077,7 +3181,7 @@ namespace FreeLibSet.Data
     protected override void OnInitNewValue(DBxExtValue docValue)
     {
       if (SingleFilterItemIndex >= 0)
-        docValue.SetInteger(SingleFilterItemIndex);
+        docValue.SetInt32(SingleFilterItemIndex);
     }
 
     #endregion
@@ -3462,7 +3566,7 @@ namespace FreeLibSet.Data
   /// Поддерживаются полуоткрытые интервалы.
   /// Используется SQL-фильтр <see cref="NumRangeInclusionFilter"/>.
   /// </summary>
-  public class IntRangeInclusionCommonFilter : RangeInclusionCommonFilterBase<Int32>
+  public class Int32RangeInclusionCommonFilter : RangeInclusionCommonFilterBase<Int32>
   {
     #region Конструктор
 
@@ -3471,7 +3575,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="columnName1">Имя первого поля. Должно быть задано</param>
     /// <param name="columnName2">Имя второго поля. Должно быть задано</param>
-    public IntRangeInclusionCommonFilter(string columnName1, string columnName2)
+    public Int32RangeInclusionCommonFilter(string columnName1, string columnName2)
       : base(columnName1, columnName2)
     {
     }
@@ -3488,9 +3592,9 @@ namespace FreeLibSet.Data
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      int? v1 = DataTools.GetNullableInt(rowValues.GetValue(ColumnName1));
-      int? v2 = DataTools.GetNullableInt(rowValues.GetValue(ColumnName1));
-      return DataTools.IsInRange<Int32>(Value.Value, v1, v2);
+      int? v1 = DataTools.GetNullableInt32(rowValues.GetValue(ColumnName1));
+      int? v2 = DataTools.GetNullableInt32(rowValues.GetValue(ColumnName1));
+      return MathTools.IsInRange<Int32>(Value.Value, v1, v2);
     }
 
     /// <summary>
@@ -3508,7 +3612,7 @@ namespace FreeLibSet.Data
     /// <param name="cfg">Секция конфигурации</param>
     public override void ReadConfig(CfgPart cfg)
     {
-      Value = cfg.GetNullableInt("Value");
+      Value = cfg.GetNullableInt32("Value");
     }
 
     /// <summary>
@@ -3517,7 +3621,7 @@ namespace FreeLibSet.Data
     /// <param name="cfg">Секция конфигурации</param>
     public override void WriteConfig(CfgPart cfg)
     {
-      cfg.SetNullableInt("Value", Value);
+      cfg.SetNullableInt32("Value", Value);
     }
 
     #endregion
@@ -3556,7 +3660,7 @@ namespace FreeLibSet.Data
     {
       float? v1 = DataTools.GetNullableSingle(rowValues.GetValue(ColumnName1));
       float? v2 = DataTools.GetNullableSingle(rowValues.GetValue(ColumnName1));
-      return DataTools.IsInRange<Single>(Value.Value, v1, v2);
+      return MathTools.IsInRange<Single>(Value.Value, v1, v2);
     }
 
     /// <summary>
@@ -3622,7 +3726,7 @@ namespace FreeLibSet.Data
     {
       double? v1 = DataTools.GetNullableDouble(rowValues.GetValue(ColumnName1));
       double? v2 = DataTools.GetNullableDouble(rowValues.GetValue(ColumnName1));
-      return DataTools.IsInRange<Double>(Value.Value, v1, v2);
+      return MathTools.IsInRange<Double>(Value.Value, v1, v2);
     }
 
     /// <summary>
@@ -3688,7 +3792,7 @@ namespace FreeLibSet.Data
     {
       decimal? v1 = DataTools.GetNullableDecimal(rowValues.GetValue(ColumnName1));
       decimal? v2 = DataTools.GetNullableDecimal(rowValues.GetValue(ColumnName1));
-      return DataTools.IsInRange<Decimal>(Value.Value, v1, v2);
+      return MathTools.IsInRange<Decimal>(Value.Value, v1, v2);
     }
 
     /// <summary>
@@ -3806,8 +3910,8 @@ namespace FreeLibSet.Data
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      int year1 = DataTools.GetInt(rowValues.GetValue(ColumnName1));
-      int year2 = DataTools.GetInt(rowValues.GetValue(ColumnName2));
+      int year1 = DataTools.GetInt32(rowValues.GetValue(ColumnName1));
+      int year2 = DataTools.GetInt32(rowValues.GetValue(ColumnName2));
 
       if (year1 > 0 && Value < year1)
         return false;
@@ -3822,7 +3926,7 @@ namespace FreeLibSet.Data
     /// <param name="config">Секция конфигурации</param>
     public override void ReadConfig(CfgPart config)
     {
-      Value = config.GetInt("Value");
+      Value = config.GetInt32("Value");
     }
 
     /// <summary>
@@ -3831,7 +3935,7 @@ namespace FreeLibSet.Data
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
     {
-      config.SetInt("Value", Value);
+      config.SetInt32("Value", Value);
     }
 
   #endregion
@@ -3980,7 +4084,7 @@ namespace FreeLibSet.Data
     {
       Nullable<DateTime> dt1 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName1));
       Nullable<DateTime> dt2 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName2));
-      return DataTools.DateInRange(Value.Value, dt1, dt2);
+      return TimeTools.DateInRange(Value.Value, dt1, dt2);
     }
 
     /// <summary>
@@ -3990,7 +4094,7 @@ namespace FreeLibSet.Data
     public override void ReadConfig(CfgPart config)
     {
       Value = config.GetNullableDate("Date");
-      UseWorkDate = config.GetBool("UseWorkDate");
+      UseWorkDate = config.GetBoolean("UseWorkDate");
     }
 
     /// <summary>
@@ -4000,7 +4104,7 @@ namespace FreeLibSet.Data
     public override void WriteConfig(CfgPart config)
     {
       config.SetNullableDate("Date", Value);
-      config.SetBool("UseWorkDate", UseWorkDate);
+      config.SetBoolean("UseWorkDate", UseWorkDate);
     }
 
     #endregion
@@ -4018,7 +4122,7 @@ namespace FreeLibSet.Data
     {
       if (IsEmpty)
         return true;
-      return DataTools.DateInRange(Value.Value, rowValue1, rowValue2);
+      return TimeTools.DateInRange(Value.Value, rowValue1, rowValue2);
     }
 
     #endregion
@@ -4134,7 +4238,7 @@ namespace FreeLibSet.Data
   /// Компоненты времени не поддерживаются.
   /// Используется SQL-фильтр <see cref="NumRangeCrossFilter"/>.
   /// </summary>
-  public class IntRangeCrossCommonFilter : RangeCrossCommonFilterBase<Int32>
+  public class Int32RangeCrossCommonFilter : RangeCrossCommonFilterBase<Int32>
   {
     #region Конструктор
 
@@ -4143,7 +4247,7 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <param name="firstColumnName">Имя числового поля , задающего начало диапазона</param>
     /// <param name="lastColumnName">Имя числового поля, задающего конец диапазона</param>
-    public IntRangeCrossCommonFilter(string firstColumnName, string lastColumnName)
+    public Int32RangeCrossCommonFilter(string firstColumnName, string lastColumnName)
       : base(firstColumnName, lastColumnName)
     {
       DisplayName = "Диапазон";
@@ -4169,9 +4273,9 @@ namespace FreeLibSet.Data
     /// <returns>True, если строка проходит условия фильтра</returns>
     protected override bool OnTestValues(INamedValuesAccess rowValues)
     {
-      Nullable<Int32> v1 = DataTools.GetNullableInt(rowValues.GetValue(ColumnName1));
-      Nullable<Int32> v2 = DataTools.GetNullableInt(rowValues.GetValue(ColumnName2));
-      return DataTools.AreRangesCrossed<Int32>(FirstValue, LastValue, v1, v2);
+      Nullable<Int32> v1 = DataTools.GetNullableInt32(rowValues.GetValue(ColumnName1));
+      Nullable<Int32> v2 = DataTools.GetNullableInt32(rowValues.GetValue(ColumnName2));
+      return MathTools.AreRangesCrossed<Int32>(FirstValue, LastValue, v1, v2);
     }
 
     /// <summary>
@@ -4180,8 +4284,8 @@ namespace FreeLibSet.Data
     /// <param name="config">Секция конфигурации</param>
     public override void ReadConfig(CfgPart config)
     {
-      FirstValue = config.GetNullableInt("FirstValue");
-      LastValue = config.GetNullableInt("LastValue");
+      FirstValue = config.GetNullableInt32("FirstValue");
+      LastValue = config.GetNullableInt32("LastValue");
     }
 
     /// <summary>
@@ -4190,8 +4294,8 @@ namespace FreeLibSet.Data
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
     {
-      config.SetNullableInt("FirstValue", FirstValue);
-      config.SetNullableInt("LastValue", LastValue);
+      config.SetNullableInt32("FirstValue", FirstValue);
+      config.SetNullableInt32("LastValue", LastValue);
     }
 
     #endregion
@@ -4240,7 +4344,7 @@ namespace FreeLibSet.Data
     {
       Nullable<Single> v1 = DataTools.GetNullableSingle(rowValues.GetValue(ColumnName1));
       Nullable<Single> v2 = DataTools.GetNullableSingle(rowValues.GetValue(ColumnName2));
-      return DataTools.AreRangesCrossed<Single>(FirstValue, LastValue, v1, v2);
+      return MathTools.AreRangesCrossed<Single>(FirstValue, LastValue, v1, v2);
     }
 
     /// <summary>
@@ -4309,7 +4413,7 @@ namespace FreeLibSet.Data
     {
       Nullable<Double> v1 = DataTools.GetNullableDouble(rowValues.GetValue(ColumnName1));
       Nullable<Double> v2 = DataTools.GetNullableDouble(rowValues.GetValue(ColumnName2));
-      return DataTools.AreRangesCrossed<Double>(FirstValue, LastValue, v1, v2);
+      return MathTools.AreRangesCrossed<Double>(FirstValue, LastValue, v1, v2);
     }
 
     /// <summary>
@@ -4378,7 +4482,7 @@ namespace FreeLibSet.Data
     {
       Nullable<Decimal> v1 = DataTools.GetNullableDecimal(rowValues.GetValue(ColumnName1));
       Nullable<Decimal> v2 = DataTools.GetNullableDecimal(rowValues.GetValue(ColumnName2));
-      return DataTools.AreRangesCrossed<Decimal>(FirstValue, LastValue, v1, v2);
+      return MathTools.AreRangesCrossed<Decimal>(FirstValue, LastValue, v1, v2);
     }
 
     /// <summary>
@@ -4448,7 +4552,7 @@ namespace FreeLibSet.Data
     {
       Nullable<DateTime> dt1 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName1));
       Nullable<DateTime> dt2 = DataTools.GetNullableDateTime(rowValues.GetValue(ColumnName2));
-      return DataTools.DateRangesCrossed(FirstValue, LastValue, dt1, dt2);
+      return TimeTools.DateRangesCrossed(FirstValue, LastValue, dt1, dt2);
     }
 
     /// <summary>
@@ -4574,7 +4678,7 @@ namespace FreeLibSet.Data
     /// <param name="config">Секция конфигурации</param>
     public override void WriteConfig(CfgPart config)
     {
-      config.SetBool("Value", IsTrue);
+      config.SetBoolean("Value", IsTrue);
     }
 
     /// <summary>
@@ -4583,7 +4687,7 @@ namespace FreeLibSet.Data
     /// <param name="config">Секция конфигурации</param>
     public override void ReadConfig(CfgPart config)
     {
-      IsTrue = config.GetBool("Value");
+      IsTrue = config.GetBoolean("Value");
     }
 
     #endregion

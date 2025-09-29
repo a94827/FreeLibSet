@@ -130,11 +130,9 @@ namespace FreeLibSet.Data.Docs
       for (int i = 0; i < docSel.TableNames.Length; i++)
       {
         string tableName = docSel.TableNames[i];
-        Int32[] ids = docSel[tableName];
-        if (ids.Length == 0)
-          continue;
-        for (int j = 0; j < ids.Length; j++)
-          this[tableName].LockIds.Add(ids[j]);
+        IIdSet<Int32> ids = docSel[tableName];
+        foreach (Int32 id in ids)
+          this[tableName].LockIds.Add(id);
       }
     }
 
@@ -330,7 +328,7 @@ namespace FreeLibSet.Data.Docs
       _Owner = owner;
       _TableName = tableName;
 
-      _LockIds = new IdList();
+      _LockIds = new IdCollection<Int32>();
       if (owner.IsReadOnly)
         _LockIds.SetReadOnly();
     }
@@ -368,8 +366,8 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Идентификаторы блокируемых документов
     /// </summary>
-    public IdList LockIds { get { return _LockIds; } }
-    private readonly IdList _LockIds;
+    public IdCollection<Int32> LockIds { get { return _LockIds; } }
+    private readonly IdCollection<Int32> _LockIds;
 
     /// <summary>
     /// Текстовое представление.

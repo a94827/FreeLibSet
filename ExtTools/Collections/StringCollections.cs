@@ -43,7 +43,7 @@ namespace FreeLibSet.Collections
     public SingleScopeStringList(StringComparer comparer)
       : base(comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ namespace FreeLibSet.Collections
     public SingleScopeStringList(int capacity, StringComparer comparer)
       : base(capacity, comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -89,7 +89,7 @@ namespace FreeLibSet.Collections
     public SingleScopeStringList(ICollection<string> src, StringComparer comparer)
       : base(src, comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ namespace FreeLibSet.Collections
     public SingleScopeStringList(IEnumerable<string> src, StringComparer comparer)
       : base(src, comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     #endregion
@@ -154,7 +154,7 @@ namespace FreeLibSet.Collections
     public TypedStringDictionary(StringComparer comparer)
       : base(comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -176,7 +176,7 @@ namespace FreeLibSet.Collections
     public TypedStringDictionary(int capacity, StringComparer comparer)
       : base(capacity, comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -199,7 +199,7 @@ namespace FreeLibSet.Collections
     public TypedStringDictionary(IDictionary<string, TValue> dictionary, StringComparer comparer)
       : this(dictionary.Count, comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
 
       foreach (KeyValuePair<string, TValue> pair in dictionary)
         Add(pair.Key, pair.Value);
@@ -268,7 +268,7 @@ namespace FreeLibSet.Collections
     public BidirectionalTypedStringDictionary(StringComparer comparer)
       : base(comparer, null)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
         
     /// <summary>
@@ -290,7 +290,7 @@ namespace FreeLibSet.Collections
     public BidirectionalTypedStringDictionary(int capacity, StringComparer comparer)
       : base(capacity, comparer, null)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -396,7 +396,7 @@ namespace FreeLibSet.Collections
     public StringArrayIndexer(string[] source, StringComparer comparer)
       : base(source, comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     /// <summary>
@@ -428,7 +428,7 @@ namespace FreeLibSet.Collections
     public StringArrayIndexer(ICollection<string> source, StringComparer comparer)
       : base(source, comparer)
     {
-      _IgnoreCase = DataTools.GetIgnoreCase(comparer);
+      _IgnoreCase = StringTools.GetIgnoreCase(comparer);
     }
 
     #endregion
@@ -449,7 +449,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Пустой список - индексатор
     /// </summary>
-    public static readonly StringArrayIndexer Empty = new StringArrayIndexer(DataTools.EmptyStrings, false);
+    public static readonly StringArrayIndexer Empty = new StringArrayIndexer(EmptyArray<string>.Empty, false);
 
     #endregion
   }
@@ -794,7 +794,7 @@ namespace FreeLibSet.Collections
   /// Словарь может быть не чувствителен к регистру ключа (определяется в конструкторе).
   /// </summary>
   [Serializable]
-  public class IntNamedDictionary : TypedStringDictionary<int>
+  public class Int32NamedDictionary : TypedStringDictionary<int>
   {
     #region Конструкторы
 
@@ -802,7 +802,7 @@ namespace FreeLibSet.Collections
     /// Основная версия конструктора.
     /// Создает словарь с ключом, чувствительным к регистру.
     /// </summary>
-    public IntNamedDictionary()
+    public Int32NamedDictionary()
       : this(false)
     {
     }
@@ -811,7 +811,7 @@ namespace FreeLibSet.Collections
     /// Создает словарь с указанием чувствительности к регистру
     /// </summary>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
-    public IntNamedDictionary(bool ignoreCase)
+    public Int32NamedDictionary(bool ignoreCase)
       : base(ignoreCase)
     {
     }
@@ -821,7 +821,7 @@ namespace FreeLibSet.Collections
     /// Эту версию следует использовать, если заранее известно, сколько будет элементов в словаре.
     /// </summary>
     /// <param name="capacity">Начальная емкость коллекции</param>
-    public IntNamedDictionary(int capacity)
+    public Int32NamedDictionary(int capacity)
       : this(capacity, false)
     {
     }
@@ -832,7 +832,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="capacity">Начальная емкость коллекции</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
-    public IntNamedDictionary(int capacity, bool ignoreCase)
+    public Int32NamedDictionary(int capacity, bool ignoreCase)
       : base(capacity, ignoreCase)
     {
     }
@@ -841,7 +841,7 @@ namespace FreeLibSet.Collections
     /// Создает словарь с ключом, чувствительным к регистру и заполняет его значениями.
     /// </summary>
     /// <param name="dictionary">Источник, откуда берутся значения</param>
-    public IntNamedDictionary(IDictionary<string, int> dictionary)
+    public Int32NamedDictionary(IDictionary<string, int> dictionary)
       : this(dictionary, false)
     {
     }
@@ -851,7 +851,7 @@ namespace FreeLibSet.Collections
     /// </summary>
     /// <param name="dictionary">Источник, откуда берутся значения</param>
     /// <param name="ignoreCase">Нужно ли игнорировать регистр ключа</param>
-    public IntNamedDictionary(IDictionary<string, int> dictionary, bool ignoreCase)
+    public Int32NamedDictionary(IDictionary<string, int> dictionary, bool ignoreCase)
       : base(dictionary, ignoreCase)
     {
     }
@@ -926,9 +926,9 @@ namespace FreeLibSet.Collections
     /// <param name="a">Первая исходная коллекция</param>
     /// <param name="b">Вторая исходная коллекция</param>
     /// <returns>Новая коллекция</returns>
-    public static IntNamedDictionary operator +(IntNamedDictionary a, IDictionary<string, int> b)
+    public static Int32NamedDictionary operator +(Int32NamedDictionary a, IDictionary<string, int> b)
     {
-      IntNamedDictionary res = new IntNamedDictionary(a, a.IgnoreCase);
+      Int32NamedDictionary res = new Int32NamedDictionary(a, a.IgnoreCase);
       res.Add(b);
       return res;
     }
@@ -942,9 +942,9 @@ namespace FreeLibSet.Collections
     /// <param name="a">Первая исходная коллекция</param>
     /// <param name="b">Вторая исходная коллекция</param>
     /// <returns>Новая коллекция</returns>
-    public static IntNamedDictionary operator -(IntNamedDictionary a, IDictionary<string, int> b)
+    public static Int32NamedDictionary operator -(Int32NamedDictionary a, IDictionary<string, int> b)
     {
-      IntNamedDictionary res = new IntNamedDictionary(a, a.IgnoreCase);
+      Int32NamedDictionary res = new Int32NamedDictionary(a, a.IgnoreCase);
       res.Substract(b);
       return res;
     }

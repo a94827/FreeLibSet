@@ -26,9 +26,9 @@ namespace TestCache
       EFPFormProvider efpForm = new EFPFormProvider(this);
 
       efpThreads = new EFPDataGridView(efpForm, grThreads);
-      efpThreads.Columns.AddInt("Id", false, "№ потока", 3);
-      efpThreads.Columns.AddInt("AccessCount", false, "Число обращений", 8);
-      efpThreads.Columns.AddInt("DelCount", false, "Число удалений", 8);
+      efpThreads.Columns.AddInteger("Id", false, "№ потока", 3);
+      efpThreads.Columns.AddInteger("AccessCount", false, "Число обращений", 8);
+      efpThreads.Columns.AddInteger("DelCount", false, "Число удалений", 8);
       efpThreads.Columns.AddText("ThreadState", false, "Thread.State", 20, 5);
       efpThreads.ReadOnly = false;
       efpThreads.CanView = false;
@@ -45,18 +45,18 @@ namespace TestCache
       {
         CacheStatParam sp = ((CacheStatParam)i);
         string Title = sp.ToString();
-        efpStat.Columns.AddInt(Title, false, Title, 8);
+        efpStat.Columns.AddInteger(Title, false, Title, 8);
         efpStat.Columns.LastAdded.Tag = sp;
       }
       efpStat.Columns.AddText("Persistance", false, "Persistance", 15, 5);
-      efpStat.Columns.AddBool("AllowDelete", false, "AllowDelete");
-      efpStat.Columns.AddInt("MaxCount", false, "Вариантов значений", 7);
+      efpStat.Columns.AddCheckBox("AllowDelete", false, "AllowDelete");
+      efpStat.Columns.AddInteger("MaxCount", false, "Вариантов значений", 7);
 
       efpStat.ReadOnly = false;
       efpStat.CanView = false;
       efpStat.Control.ReadOnly = true;
       efpStat.DisableOrdering();
-      efpStat.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(efpStat_GetRowAttributes);
+      efpStat.RowInfoNeeded += efpStat_RowInfoNeeded;
       //efpStat.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpStat_GetCellAttributes);
 
       EFPTextBox efpTempDir = new EFPTextBox(efpForm, edTempDir);
@@ -88,7 +88,7 @@ namespace TestCache
       GC.Collect();
     }
 
-    void efpStat_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    void efpStat_RowInfoNeeded(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
       if (args.RowIndex == grStat.RowCount - 1)
         args.ColorType = UIDataViewColorType.TotalRow;

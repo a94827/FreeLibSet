@@ -5,8 +5,6 @@ using System;
 using System.Data;
 using System.Collections.Generic;
 using System.Text;
-using System.Security.Cryptography;
-using System.Security.AccessControl;
 using System.Reflection;
 using System.Diagnostics;
 using System.ComponentModel;
@@ -19,6 +17,20 @@ using System.Globalization;
 namespace FreeLibSet.Core
 {
   /// <summary>
+  /// Шаблонный класс, предназначенный для избегания боксинга структур.
+  /// Содержит статическую ссылку на boxed-структуру, содержащую нулевое (дефолтное) значение.
+  /// </summary>
+  /// <typeparam name="T">Тип структуры</typeparam>
+  public static class ZeroValue<T>
+    where T : new()
+  {
+    /// <summary>
+    /// boxed-объект с экземпляром структуры
+    /// </summary>
+    public static object Object = (object)(new T());
+  }
+
+  /// <summary>
   /// Вспомогательные функции при работе с данными
   /// </summary>
   public static partial class DataTools
@@ -27,16 +39,17 @@ namespace FreeLibSet.Core
 
     #region GetXXX()
 
-    #region GetInt()
+    #region GetInt32()
 
     /// <summary>
     /// Возвращает значение поля как число.
     /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
-    public static int GetInt(DataRow row, string columnName)
+    public static int GetInt32(DataRow row, string columnName)
     {
 #if DEBUG
       try
@@ -47,7 +60,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return 0;
         //else
-        return GetInt(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetInt32(row[columnName, DataRowVersion.Original]);
+        else
+          return GetInt32(row[columnName]);
 
 #if DEBUG
       }
@@ -117,10 +133,11 @@ namespace FreeLibSet.Core
     /// Тоже, что и <see cref="Convert.ToInt32(object)"/>, но <see cref="DBNull"/> и пустая строка преобразуются в 0, а не выбрасывают исключение.
     /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
     /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToInt32(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
+    /// Остальные типы преобразуются с помощью <see cref="Convert.ToInt32(object)"/>.
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Значение типа <see cref="Int32"/></returns>
-    public static int GetInt(object value)
+    public static int GetInt32(object value)
     {
       if (value is DBNull)
         return 0;
@@ -140,6 +157,26 @@ namespace FreeLibSet.Core
         else
           return 0;
 
+      // 26.06.2025
+      if (value is Single)
+      {
+        float v2 = (float)value;
+        double v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt32(v3);
+      }
+      if (value is Double)
+      {
+        double v2 = (double)value;
+        double v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt32(v3);
+      }
+      if (value is Decimal)
+      {
+        decimal v2 = (decimal)value;
+        decimal v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt32(v3);
+      }
+
       return Convert.ToInt32(value); // преобразуется, в том числе, значение null
     }
 
@@ -151,12 +188,12 @@ namespace FreeLibSet.Core
     /// <param name="propName">Имя свойства</param>
     /// <param name="value">Значение</param>
     /// <returns>True, если значение прочитано, false, если оставлено без изменений</returns>
-    public static bool GetInt(PropertyCollection collection, string propName, ref int value)
+    public static bool GetInt32(PropertyCollection collection, string propName, ref int value)
     {
       object x = collection[propName];
       if (x == null)
         return false;
-      value = GetInt(x);
+      value = GetInt32(x);
       return true;
     }
 
@@ -167,9 +204,9 @@ namespace FreeLibSet.Core
     /// <param name="collection">Коллекция свойств</param>
     /// <param name="propName">Имя свойства</param>
     /// <returns>Значение свойства</returns>
-    public static int GetInt(PropertyCollection collection, string propName)
+    public static int GetInt32(PropertyCollection collection, string propName)
     {
-      return GetInt(collection[propName]);
+      return GetInt32(collection[propName]);
     }
 
     /// <summary>
@@ -179,7 +216,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Число или null</returns>
-    public static int? GetNullableInt(object value)
+    public static int? GetNullableInt32(object value)
     {
       if (Object.ReferenceEquals(value, null))
         return null;
@@ -201,7 +238,56 @@ namespace FreeLibSet.Core
         else
           return 0;
 
+      // 26.06.2025
+      if (value is Single)
+      {
+        float v2 = (float)value;
+        double v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt32(v3);
+      }
+      if (value is Double)
+      {
+        double v2 = (double)value;
+        double v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt32(v3);
+      }
+      if (value is Decimal)
+      {
+        decimal v2 = (decimal)value;
+        decimal v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt32(v3);
+      }
+
       return Convert.ToInt32(value);
+    }
+
+    /// <summary>
+    /// Возвращает значение поля как число.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается null.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
+    /// </summary>
+    /// <param name="row">Строка</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public static int? GetNullableInt32(DataRow row, string columnName)
+    {
+#if DEBUG
+      try
+      {
+#endif
+
+        if (row.RowState == DataRowState.Deleted)
+          return GetNullableInt32(row[columnName, DataRowVersion.Original]);
+        else
+          return GetNullableInt32(row[columnName]);
+
+#if DEBUG
+      }
+      catch (Exception e)
+      {
+        throw RecreateDataRowConvertException(e, row, columnName, typeof(int));
+      }
+#endif
     }
 
     #endregion
@@ -211,6 +297,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает значение поля как число.
     /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -226,7 +313,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return 0;
         //else
-        return GetInt64(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetInt64(row[columnName, DataRowVersion.Original]);
+        else
+          return GetInt64(row[columnName]);
 
 #if DEBUG
       }
@@ -264,6 +354,26 @@ namespace FreeLibSet.Core
           return 1L;
         else
           return 0L;
+
+      // 26.06.2025
+      if (value is Single)
+      {
+        float v2 = (float)value;
+        double v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt64(v3);
+      }
+      if (value is Double)
+      {
+        double v2 = (double)value;
+        double v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt64(v3);
+      }
+      if (value is Decimal)
+      {
+        decimal v2 = (decimal)value;
+        decimal v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt64(v3);
+      }
 
       return Convert.ToInt64(value); // преобразуется, в том числе, значение null
     }
@@ -326,199 +436,58 @@ namespace FreeLibSet.Core
         else
           return 0L;
 
+      // 26.06.2025
+      if (value is Single)
+      {
+        float v2 = (float)value;
+        double v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt64(v3);
+      }
+      if (value is Double)
+      {
+        double v2 = (double)value;
+        double v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt64(v3);
+      }
+      if (value is Decimal)
+      {
+        decimal v2 = (decimal)value;
+        decimal v3 = (Math.Round(v2, 0, MidpointRounding.AwayFromZero));
+        return Convert.ToInt64(v3);
+      }
+
       return Convert.ToInt64(value);
     }
 
-    #endregion
-
-    #region GetDecimal()
-
     /// <summary>
     /// Возвращает значение поля как число.
-    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается null.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
-    public static decimal GetDecimal(DataRow row, string columnName)
+    public static long? GetNullableInt64(DataRow row, string columnName)
     {
 #if DEBUG
       try
       {
 #endif
 
-        // Убрано 29.06.2020
-        //if (row.IsNull(columnName))
-        //  return 0;
-        //else
-        return GetDecimal(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetNullableInt64(row[columnName, DataRowVersion.Original]);
+        else
+          return GetNullableInt64(row[columnName]);
 
 #if DEBUG
       }
       catch (Exception e)
       {
-        throw RecreateDataRowConvertException(e, row, columnName, typeof(decimal));
+        throw RecreateDataRowConvertException(e, row, columnName, typeof(int));
       }
 #endif
     }
 
-    /// <summary>
-    /// Тоже, что и <see cref="Convert.ToDecimal(object)"/>, но пустая строка и <see cref="DBNull"/> преобразуются в 0m, а не выбрасывают исключение.
-    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
-    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToDecimal(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
-    /// </summary>
-    /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа <see cref="Decimal"/></returns>
-    public static decimal GetDecimal(object value)
-    {
-      if (value is Boolean)
-        if ((bool)value)
-          return 1m;
-        else
-          return 0m;
-
-      if (value is DBNull)
-        return 0m;
-
-      string s = value as string;
-      if (!Object.ReferenceEquals(s, null))
-      {
-        if (s.Length == 0)
-          return 0m;
-        else
-          return StdConvert.ToDecimal(s);
-      }
-
-      return Convert.ToDecimal(value); // преобразуется, в том числе, значение null
-    }
-
-    /// <summary>
-    /// Преобразование значения в число или null.
-    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
-    /// Для других значений выполняется попытка преобразования.
-    /// </summary>
-    /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Число или null</returns>
-    public static decimal? GetNullableDecimal(object value)
-    {
-      if (Object.ReferenceEquals(value, null))
-        return null;
-      if (value is DBNull)
-        return null;
-
-      string s = value as string;
-      if (!Object.ReferenceEquals(s, null))
-      {
-        if (s.Length == 0)
-          return null;
-        else
-          return StdConvert.ToDecimal(s);
-      }
-
-      if (value is Boolean)
-        if ((bool)value)
-          return 1m;
-        else
-          return 0m;
-
-      return Convert.ToDecimal(value);
-    }
-
-    #endregion
-
-    #region GetDouble()
-
-    /// <summary>
-    /// Возвращает значение поля как число.
-    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
-    /// </summary>
-    /// <param name="row">Строка</param>
-    /// <param name="columnName">Имя поля</param>
-    /// <returns>Значение поля</returns>
-    public static double GetDouble(DataRow row, string columnName)
-    {
-#if DEBUG
-      try
-      {
-#endif
-
-        // Убрано 29.06.2020
-        //if (row.IsNull(columnName))
-        //  return 0.0;
-        //else
-        return GetDouble(row[columnName]);
-
-#if DEBUG
-      }
-      catch (Exception e)
-      {
-        throw RecreateDataRowConvertException(e, row, columnName, typeof(double));
-      }
-#endif
-    }
-
-
-    /// <summary>
-    /// Тоже, что и <see cref="Convert.ToDouble(object)"/>, но пустая строка и <see cref="DBNull"/> преобразуются в 0, а не выбрасывают исключение.
-    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
-    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToDouble(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
-    /// </summary>
-    /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Значение типа <see cref="Double"/></returns>
-    public static double GetDouble(object value)
-    {
-      if (value is Boolean)
-        if ((bool)value)
-          return 1.0;
-        else
-          return 0.0;
-
-      if (value is DBNull)
-        return 0.0;
-
-      string s = value as string;
-      if (!Object.ReferenceEquals(s, null))
-      {
-        if (s.Length == 0)
-          return 0.0;
-        else
-          return StdConvert.ToDouble(s);
-      }
-
-      return Convert.ToDouble(value); // преобразуется, в том числе, значение null
-    }
-
-    /// <summary>
-    /// Преобразование значения в число или null.
-    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
-    /// Для других значений выполняется попытка преобразования.
-    /// </summary>
-    /// <param name="value">Преобразуемое значение</param>
-    /// <returns>Число или null</returns>
-    public static double? GetNullableDouble(object value)
-    {
-      if (Object.ReferenceEquals(value, null))
-        return null;
-      if (value is DBNull)
-        return null;
-
-      string s = value as string;
-      if (!Object.ReferenceEquals(s, null))
-      {
-        if (s.Length == 0)
-          return null;
-        else
-          return StdConvert.ToDouble(s);
-      }
-
-      if (value is Boolean)
-        if ((bool)value)
-          return 1.0;
-        else
-          return 0.0;
-
-      return Convert.ToDouble(value);
-    }
 
     #endregion
 
@@ -527,6 +496,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает значение поля как число.
     /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -542,7 +512,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return 0f;
         //else
-        return GetSingle(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetSingle(row[columnName, DataRowVersion.Original]);
+        else
+          return GetSingle(row[columnName]);
 
 #if DEBUG
       }
@@ -616,18 +589,306 @@ namespace FreeLibSet.Core
       return Convert.ToSingle(value);
     }
 
-    #endregion
-
-    #region GetBool()
-
     /// <summary>
-    /// Возвращает значение поля как значение <see cref="Boolean"/>.
-    /// Если поле содержит <see cref="DBNull"/>, возвращается false.
+    /// Возвращает значение поля как число.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается null.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Значение поля</returns>
-    public static bool GetBool(DataRow row, string columnName)
+    public static float? GetNullableSingle(DataRow row, string columnName)
+    {
+#if DEBUG
+      try
+      {
+#endif
+
+        if (row.RowState == DataRowState.Deleted)
+          return GetNullableSingle(row[columnName, DataRowVersion.Original]);
+        else
+          return GetNullableSingle(row[columnName]);
+
+#if DEBUG
+      }
+      catch (Exception e)
+      {
+        throw RecreateDataRowConvertException(e, row, columnName, typeof(int));
+      }
+#endif
+    }
+
+
+    #endregion
+
+    #region GetDouble()
+
+    /// <summary>
+    /// Возвращает значение поля как число.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
+    /// </summary>
+    /// <param name="row">Строка</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public static double GetDouble(DataRow row, string columnName)
+    {
+#if DEBUG
+      try
+      {
+#endif
+
+        // Убрано 29.06.2020
+        //if (row.IsNull(columnName))
+        //  return 0.0;
+        //else
+        if (row.RowState == DataRowState.Deleted)
+          return GetDouble(row[columnName, DataRowVersion.Original]);
+        else
+          return GetDouble(row[columnName]);
+
+#if DEBUG
+      }
+      catch (Exception e)
+      {
+        throw RecreateDataRowConvertException(e, row, columnName, typeof(double));
+      }
+#endif
+    }
+
+
+    /// <summary>
+    /// Тоже, что и <see cref="Convert.ToDouble(object)"/>, но пустая строка и <see cref="DBNull"/> преобразуются в 0, а не выбрасывают исключение.
+    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
+    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToDouble(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
+    /// </summary>
+    /// <param name="value">Преобразуемое значение</param>
+    /// <returns>Значение типа <see cref="Double"/></returns>
+    public static double GetDouble(object value)
+    {
+      if (value is Boolean)
+        if ((bool)value)
+          return 1.0;
+        else
+          return 0.0;
+
+      if (value is DBNull)
+        return 0.0;
+
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
+      {
+        if (s.Length == 0)
+          return 0.0;
+        else
+          return StdConvert.ToDouble(s);
+      }
+
+      return Convert.ToDouble(value); // преобразуется, в том числе, значение null
+    }
+
+    /// <summary>
+    /// Преобразование значения в число или null.
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
+    /// Для других значений выполняется попытка преобразования.
+    /// </summary>
+    /// <param name="value">Преобразуемое значение</param>
+    /// <returns>Число или null</returns>
+    public static double? GetNullableDouble(object value)
+    {
+      if (Object.ReferenceEquals(value, null))
+        return null;
+      if (value is DBNull)
+        return null;
+
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
+      {
+        if (s.Length == 0)
+          return null;
+        else
+          return StdConvert.ToDouble(s);
+      }
+
+      if (value is Boolean)
+        if ((bool)value)
+          return 1.0;
+        else
+          return 0.0;
+
+      return Convert.ToDouble(value);
+    }
+
+    /// <summary>
+    /// Возвращает значение поля как число.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается null.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
+    /// </summary>
+    /// <param name="row">Строка</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public static double? GetNullableDouble(DataRow row, string columnName)
+    {
+#if DEBUG
+      try
+      {
+#endif
+
+        if (row.RowState == DataRowState.Deleted)
+          return GetNullableDouble(row[columnName, DataRowVersion.Original]);
+        else
+          return GetNullableDouble(row[columnName]);
+
+#if DEBUG
+      }
+      catch (Exception e)
+      {
+        throw RecreateDataRowConvertException(e, row, columnName, typeof(int));
+      }
+#endif
+    }
+
+    #endregion
+
+    #region GetDecimal()
+
+    /// <summary>
+    /// Возвращает значение поля как число.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается 0.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
+    /// </summary>
+    /// <param name="row">Строка</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public static decimal GetDecimal(DataRow row, string columnName)
+    {
+#if DEBUG
+      try
+      {
+#endif
+
+        // Убрано 29.06.2020
+        //if (row.IsNull(columnName))
+        //  return 0;
+        //else
+        if (row.RowState == DataRowState.Deleted)
+          return GetDecimal(row[columnName, DataRowVersion.Original]);
+        else
+          return GetDecimal(row[columnName]);
+
+#if DEBUG
+      }
+      catch (Exception e)
+      {
+        throw RecreateDataRowConvertException(e, row, columnName, typeof(decimal));
+      }
+#endif
+    }
+
+    /// <summary>
+    /// Тоже, что и <see cref="Convert.ToDecimal(object)"/>, но пустая строка и <see cref="DBNull"/> преобразуются в 0m, а не выбрасывают исключение.
+    /// Тип <see cref="Boolean"/> преобразуется в значение 0 или 1.
+    /// Строковый тип преобразуется с использованием <see cref="StdConvert.ToDecimal(string)"/> и не зависит от <see cref="CultureInfo.CurrentCulture"/>.
+    /// </summary>
+    /// <param name="value">Преобразуемое значение</param>
+    /// <returns>Значение типа <see cref="Decimal"/></returns>
+    public static decimal GetDecimal(object value)
+    {
+      if (value is Boolean)
+        if ((bool)value)
+          return 1m;
+        else
+          return 0m;
+
+      if (value is DBNull)
+        return 0m;
+
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
+      {
+        if (s.Length == 0)
+          return 0m;
+        else
+          return StdConvert.ToDecimal(s);
+      }
+
+      return Convert.ToDecimal(value); // преобразуется, в том числе, значение null
+    }
+
+    /// <summary>
+    /// Преобразование значения в число или null.
+    /// Для значений null, <see cref="DBNull"/> и пустой строки возвращается null. 
+    /// Для других значений выполняется попытка преобразования.
+    /// </summary>
+    /// <param name="value">Преобразуемое значение</param>
+    /// <returns>Число или null</returns>
+    public static decimal? GetNullableDecimal(object value)
+    {
+      if (Object.ReferenceEquals(value, null))
+        return null;
+      if (value is DBNull)
+        return null;
+
+      string s = value as string;
+      if (!Object.ReferenceEquals(s, null))
+      {
+        if (s.Length == 0)
+          return null;
+        else
+          return StdConvert.ToDecimal(s);
+      }
+
+      if (value is Boolean)
+        if ((bool)value)
+          return 1m;
+        else
+          return 0m;
+
+      return Convert.ToDecimal(value);
+    }
+
+    /// <summary>
+    /// Возвращает значение поля как число.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается null.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
+    /// </summary>
+    /// <param name="row">Строка</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public static decimal? GetNullableDecimal(DataRow row, string columnName)
+    {
+#if DEBUG
+      try
+      {
+#endif
+
+        if (row.RowState == DataRowState.Deleted)
+          return GetNullableDecimal(row[columnName, DataRowVersion.Original]);
+        else
+          return GetNullableDecimal(row[columnName]);
+
+#if DEBUG
+      }
+      catch (Exception e)
+      {
+        throw RecreateDataRowConvertException(e, row, columnName, typeof(int));
+      }
+#endif
+    }
+
+    #endregion
+
+    #region GetBoolean()
+
+    /// <summary>
+    /// Возвращает значение поля как значение <see cref="Boolean"/>.
+    /// Если поле содержит <see cref="DBNull"/>, возвращается false.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
+    /// </summary>
+    /// <param name="row">Строка</param>
+    /// <param name="columnName">Имя поля</param>
+    /// <returns>Значение поля</returns>
+    public static bool GetBoolean(DataRow row, string columnName)
     {
 #if DEBUG
       try
@@ -638,7 +899,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return false;
         //else
-        return GetBool(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetBoolean(row[columnName, DataRowVersion.Original]);
+        else
+          return GetBoolean(row[columnName]);
 
 #if DEBUG
       }
@@ -656,7 +920,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="value">Преобразуемое значение</param>
     /// <returns>Значение типа <see cref="Boolean"/></returns>
-    public static bool GetBool(object value)
+    public static bool GetBoolean(object value)
     {
       if (value is DBNull)
         return false;
@@ -677,6 +941,18 @@ namespace FreeLibSet.Core
       return Convert.ToBoolean(value); // преобразуется, в том числе, значение null
     }
 
+    // Без боксинга. Не уверен, что нужен такой метод
+    internal static readonly object TrueObject = true;
+    internal static readonly object FalseObject = false;
+
+    internal static object GetBooleanObject(object value)
+    {
+      if (GetBoolean(value))
+        return TrueObject;
+      else
+        return FalseObject;
+    }
+
     #endregion
 
     #region GetString()
@@ -685,6 +961,7 @@ namespace FreeLibSet.Core
     /// Возвращает значение поля как строку.
     /// Если поле содержит <see cref="DBNull"/>, возвращается пустая строка.
     /// Подробности см. в описании перегрузки <see cref="GetString(Object)"/>.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -700,7 +977,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return String.Empty;
         //else
-        return GetString(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetString(row[columnName, DataRowVersion.Original]);
+        else
+          return GetString(row[columnName]);
 
 #if DEBUG
       }
@@ -815,6 +1095,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает значение поля как <see cref="DateTime"/>.
     /// Если поле содержит <see cref="DBNull"/>, возвращается неинициализированная дата.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -830,7 +1111,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return new DateTime();
         //else
-        return GetDateTime((row[columnName])); // исправлено 15.12.2021
+        if (row.RowState == DataRowState.Deleted)
+          return GetDateTime(row[columnName, DataRowVersion.Original]);
+        else
+          return GetDateTime((row[columnName])); // исправлено 15.12.2021
 
 #if DEBUG
       }
@@ -871,6 +1155,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает значение поля как <see cref="Nullable{DateTime}"/>.
     /// Если поле содержит <see cref="DBNull"/>, возвращается null.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -886,7 +1171,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return null;
         //else
-        return GetNullableDateTime(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetNullableDateTime(row[columnName, DataRowVersion.Original]);
+        else
+          return GetNullableDateTime(row[columnName]);
 
 #if DEBUG
       }
@@ -935,6 +1223,7 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает значение поля как интервал времени.
     /// Если поле содержит <see cref="DBNull"/>, возвращается <see cref="TimeSpan.Zero"/>.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -950,7 +1239,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return TimeSpan.Zero;
         //else
-        return GetTimeSpan(row[columnName]); // исправлено 15.12.2021
+        if (row.RowState == DataRowState.Deleted)
+          return GetTimeSpan(row[columnName, DataRowVersion.Original]);
+        else
+          return GetTimeSpan(row[columnName]); // исправлено 15.12.2021
 
 #if DEBUG
       }
@@ -969,6 +1261,7 @@ namespace FreeLibSet.Core
     /// Возвращает значение поля как <see cref="Guid"/>.
     /// Если поле содержит <see cref="DBNull"/>, возвращается <see cref="Guid.Empty"/>.
     /// Поле может содержать <see cref="Guid"/>, строку или массив байт.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя поля</param>
@@ -984,7 +1277,10 @@ namespace FreeLibSet.Core
         //if (row.IsNull(columnName))
         //  return Guid.Empty;
         //else
-        return GetGuid(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetGuid(row[columnName, DataRowVersion.Original]);
+        else
+          return GetGuid(row[columnName]);
 
 #if DEBUG
       }
@@ -1062,7 +1358,8 @@ namespace FreeLibSet.Core
     /// <summary>
     /// Возвращает значение поля как значение перечисления.
     /// Если поле содержит <see cref="DBNull"/>, возвращается нулевое значение для перечисления (default).
-    /// Поле может содержать целочисленное значение или строку
+    /// Поле может содержать целочисленное значение или строку.
+    /// Поддерживаются строки в состоянии <see cref="DataRow.RowState"/>=<see cref="DataRowState.Deleted"/>.
     /// </summary>
     /// <typeparam name="T">Тип перечисления</typeparam>
     /// <param name="row">Строка</param>
@@ -1076,7 +1373,10 @@ namespace FreeLibSet.Core
       {
 #endif
 
-        return GetEnum<T>(row[columnName]);
+        if (row.RowState == DataRowState.Deleted)
+          return GetEnum<T>(row[columnName, DataRowVersion.Original]);
+        else
+          return GetEnum<T>(row[columnName]);
 
 #if DEBUG
       }
@@ -1113,7 +1413,7 @@ namespace FreeLibSet.Core
           return StdConvert.ToEnum<T>(s);
       }
 
-      int v2 = GetInt(value);
+      int v2 = GetInt32(value);
       return (T)Enum.ToObject(typeof(T), v2);
     }
 
@@ -1158,8 +1458,10 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Установка строки в поле. При этом выполняется обрезка строки
-    /// до длины <see cref="DataColumn.MaxLength"/>. Также выполняется преобразование в <see cref="DBNull"/> для пустой
-    /// строки, если <see cref="DataColumn.AllowDBNull"/>=true.
+    /// до длины <see cref="DataColumn.MaxLength"/>. 
+    /// Для пустой строки <paramref name="value"/> выполняется преобразование в <see cref="DBNull"/> 
+    /// строки, если <see cref="DataColumn.AllowDBNull"/>=true. Если <see cref="DataColumn.AllowDBNull"/>=false,
+    /// записывается значение по умолчанию для заданного типа.
     /// </summary>
     /// <param name="row">Строка данных, куда выполняется запись</param>
     /// <param name="columnName">Имя столбца</param>
@@ -1179,25 +1481,49 @@ namespace FreeLibSet.Core
 #endif
 
       if (String.IsNullOrEmpty(value))
-      {
-        if (col.AllowDBNull)
-          row[columnName] = DBNull.Value;
-        else
-          row[columnName] = "";
-      }
+        DoClearColumnValue(row, col);
       else
       {
-        int l = col.MaxLength;
-        if (l >= 0 && l < value.Length)
-          row[columnName] = value.Substring(0, l);
+        //int l = col.MaxLength;
+        //if (l >= 0 && l < value.Length)
+        //  row[columnName] = value.Substring(0, l);
+        //else
+        //  row[columnName] = value;
+
+        // 20.06.2025
+        object value2 = value;
+        if (col.DataType == typeof(string) || col.DataType == null)
+        {
+          int l = col.MaxLength;
+          if (l >= 0 && l < value.Length)
+            value2 = value.Substring(0, l);
+        }
         else
-          row[columnName] = value;
+          value2 = StdConvert.ChangeType(value, col.DataType);
+        row[columnName] = value2;
+      }
+    }
+
+    private static void DoClearColumnValue(DataRow row, DataColumn col)
+    {
+      if (col.AllowDBNull)
+        row[col] = DBNull.Value;
+      else if (col.DefaultValue != null)
+        row[col] = col.DefaultValue; // 24.06.2025
+      else
+      {
+        // row[columnName] = "";
+        // 20.06.2025
+        object v0 = DataTools.GetEmptyValue(col.DataType);
+        if (v0 == null)
+          v0 = String.Empty;
+        row[col] = v0;
       }
     }
 
     #endregion
 
-    #region SetInt()
+    #region SetInt32()
 
     /// <summary>
     /// Установка числового значения поля. Выполняет преобразование значения в
@@ -1207,7 +1533,7 @@ namespace FreeLibSet.Core
     /// <param name="row">Строка</param>
     /// <param name="columnName">Имя записываемого поля</param>
     /// <param name="value">Записываемое значение</param>
-    public static void SetInt(DataRow row, string columnName, int value)
+    public static void SetInt32(DataRow row, string columnName, int value)
     {
 #if DEBUG
       if (row == null)
@@ -1221,29 +1547,13 @@ namespace FreeLibSet.Core
         throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
 
-      if (IsIntegerType(col.DataType))
+      if (value == 0)
+        DoClearColumnValue(row, col);
+      else
       {
-        if (value == 0)
-        {
-          if (col.AllowDBNull)
-          {
-            row[columnName] = DBNull.Value;
-            return;
-          }
-        }
-        row[columnName] = value;
-        return;
+        Type t = col.DataType ?? typeof(string);
+        row[columnName] = StdConvert.ChangeType(value, t);
       }
-      if (col.DataType == typeof(String))
-      {
-        // Для текстового столбца выполняем преобразование, кроме нулевого значения
-        if (value == 0)
-          SetString(row, columnName, null);
-        else
-          SetString(row, columnName, StdConvert.ToString(value));
-        return;
-      }
-      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1272,29 +1582,13 @@ namespace FreeLibSet.Core
         throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
 
-      if (IsIntegerType(col.DataType))
+      if (value == 0L)
+        DoClearColumnValue(row, col);
+      else
       {
-        if (value == 0L)
-        {
-          if (col.AllowDBNull)
-          {
-            row[columnName] = DBNull.Value;
-            return;
-          }
-        }
-        row[columnName] = value;
-        return;
+        Type t = col.DataType ?? typeof(string);
+        row[columnName] = StdConvert.ChangeType(value, t);
       }
-      if (col.DataType == typeof(String))
-      {
-        // Для текстового столбца выполняем преобразование, кроме нулевого значения
-        if (value == 0)
-          SetString(row, columnName, null);
-        else
-          SetString(row, columnName, StdConvert.ToString(value));
-        return;
-      }
-      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1323,42 +1617,13 @@ namespace FreeLibSet.Core
         throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
 
-      if (col.DataType == typeof(float) || col.DataType == typeof(double))
+      if (value == 0f)
+        DoClearColumnValue(row, col);
+      else
       {
-        if (value == 0)
-        {
-          if (col.AllowDBNull)
-          {
-            row[columnName] = DBNull.Value;
-            return;
-          }
-        }
-        row[columnName] = value;
-        return;
+        Type t = col.DataType ?? typeof(string);
+        row[columnName] = StdConvert.ChangeType(value, t);
       }
-      if (col.DataType == typeof(decimal))
-      {
-        if (value == 0)
-        {
-          if (col.AllowDBNull)
-          {
-            row[columnName] = DBNull.Value;
-            return;
-          }
-        }
-        row[columnName] = (decimal)value;
-        return;
-      }
-      if (col.DataType == typeof(String))
-      {
-        // Для текстового столбца выполняем преобразование, кроме нулевого значения
-        if (value == 0f)
-          SetString(row, columnName, null);
-        else
-          SetString(row, columnName, StdConvert.ToString(value));
-        return;
-      }
-      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1387,42 +1652,13 @@ namespace FreeLibSet.Core
         throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
 
-      if (col.DataType == typeof(float) || col.DataType == typeof(double))
+      if (value == 0.0)
+        DoClearColumnValue(row, col);
+      else
       {
-        if (value == 0)
-        {
-          if (col.AllowDBNull)
-          {
-            row[columnName] = DBNull.Value;
-            return;
-          }
-        }
-        row[columnName] = value;
-        return;
+        Type t = col.DataType ?? typeof(string);
+        row[columnName] = StdConvert.ChangeType(value, t);
       }
-      if (col.DataType == typeof(decimal))
-      {
-        if (value == 0)
-        {
-          if (col.AllowDBNull)
-          {
-            row[columnName] = DBNull.Value;
-            return;
-          }
-        }
-        row[columnName] = (decimal)value;
-        return;
-      }
-      if (col.DataType == typeof(String))
-      {
-        // Для текстового столбца выполняем преобразование, кроме нулевого значения
-        if (value == 0.0)
-          SetString(row, columnName, null);
-        else
-          SetString(row, columnName, StdConvert.ToString(value));
-        return;
-      }
-      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1451,42 +1687,13 @@ namespace FreeLibSet.Core
         throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
 
-      if (col.DataType == typeof(decimal))
+      if (value == 0m)
+        DoClearColumnValue(row, col);
+      else
       {
-        if (value == 0)
-        {
-          if (col.AllowDBNull)
-          {
-            row[columnName] = DBNull.Value;
-            return;
-          }
-        }
-        row[columnName] = value;
-        return;
+        Type t = col.DataType ?? typeof(string);
+        row[columnName] = StdConvert.ChangeType(value, t);
       }
-      if (col.DataType == typeof(float) || col.DataType == typeof(double))
-      {
-        if (value == 0)
-        {
-          if (col.AllowDBNull)
-          {
-            row[columnName] = DBNull.Value;
-            return;
-          }
-        }
-        row[columnName] = (double)value;
-        return;
-      }
-      if (col.DataType == typeof(String))
-      {
-        // Для текстового столбца выполняем преобразование, кроме нулевого значения
-        if (value == 0m)
-          SetString(row, columnName, null);
-        else
-          SetString(row, columnName, StdConvert.ToString(value));
-        return;
-      }
-      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1559,24 +1766,23 @@ namespace FreeLibSet.Core
         throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 #endif
 
-      if (col.DataType == typeof(TimeSpan))
+      if (value.Ticks == 0L)
+        DoClearColumnValue(row, col);
+      else
       {
-        if (value.Ticks == 0L)
-          row[columnName] = DBNull.Value;
-        else
+        if (col.DataType == typeof(TimeSpan))
+        {
           row[columnName] = value;
-        return;
-      }
-      if (col.DataType == typeof(String))
-      {
-        // Для текстового столбца выполняем преобразование, кроме нулевого значения
-        if (value.Ticks == 0L)
-          SetString(row, columnName, null);
-        else
+          return;
+        }
+        if (col.DataType == typeof(String))
+        {
+          // Для текстового столбца выполняем преобразование, кроме нулевого значения
           SetString(row, columnName, StdConvert.ToString(value));
-        return;
+          return;
+        }
+        throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
-      throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
     }
 
     #endregion
@@ -1629,7 +1835,7 @@ namespace FreeLibSet.Core
     // Не стоит все методы называть одинаково ("Inc"), т.к. легко перепутать тип
     // и получить ошибку округления
 
-    #region IncInt
+    #region IncInt32
 
     /// <summary>
     /// Увеличение значения поля типа <see cref="Int32"/>
@@ -1637,11 +1843,11 @@ namespace FreeLibSet.Core
     /// <param name="row">Изменяемая строка (объект <see cref="DataRow"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
-    public static void IncInt(DataRow row, string columnName, int delta)
+    public static void IncInt32(DataRow row, string columnName, int delta)
     {
       if (delta == 0)
         return;
-      int v = GetInt(row, columnName);
+      int v = GetInt32(row, columnName);
       checked { v += delta; }
       row[columnName] = v;
     }
@@ -1653,10 +1859,10 @@ namespace FreeLibSet.Core
     /// <param name="srcRow">Строка, содержащее прибавляемое значение</param>
     /// <param name="dstRow">Изменяемая (итоговая) строка</param>
     /// <param name="columnName">Имя поля</param>
-    public static void IncInt(DataRow srcRow, DataRow dstRow, string columnName)
+    public static void IncInt32(DataRow srcRow, DataRow dstRow, string columnName)
     {
-      int v = GetInt(srcRow, columnName);
-      IncInt(dstRow, columnName, v);
+      int v = GetInt32(srcRow, columnName);
+      IncInt32(dstRow, columnName, v);
     }
 
     /// <summary>
@@ -1665,11 +1871,11 @@ namespace FreeLibSet.Core
     /// <param name="drv">Изменяемая строка (объект <see cref="DataRowView"/>)</param>
     /// <param name="columnName">Имя поля, которое будет изменено</param>
     /// <param name="delta">Прибавляемое значение</param>
-    public static void IncInt(DataRowView drv, string columnName, int delta)
+    public static void IncInt32(DataRowView drv, string columnName, int delta)
     {
       if (delta == 0)
         return;
-      int v = GetInt(drv[columnName]);
+      int v = GetInt32(drv[columnName]);
       checked { v += delta; }
       drv[columnName] = v;
     }
@@ -1943,14 +2149,14 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", row.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: IncInt(row, columnName, DataTools.GetInt(delta)); break;
-        case SumType.Int64: IncInt64(row, columnName, DataTools.GetInt(delta)); break;
-        case SumType.Single: IncSingle(row, columnName, DataTools.GetSingle(delta)); break;
-        case SumType.Double: IncDouble(row, columnName, DataTools.GetDouble(delta)); break;
-        case SumType.Decimal: IncDecimal(row, columnName, DataTools.GetDecimal(delta)); break;
-        case SumType.TimeSpan: IncTimeSpan(row, columnName, DataTools.GetTimeSpan(delta)); break;
+        case MathTools.SumType.Int32: IncInt32(row, columnName, DataTools.GetInt32(delta)); break;
+        case MathTools.SumType.Int64: IncInt64(row, columnName, DataTools.GetInt32(delta)); break;
+        case MathTools.SumType.Single: IncSingle(row, columnName, DataTools.GetSingle(delta)); break;
+        case MathTools.SumType.Double: IncDouble(row, columnName, DataTools.GetDouble(delta)); break;
+        case MathTools.SumType.Decimal: IncDecimal(row, columnName, DataTools.GetDecimal(delta)); break;
+        case MathTools.SumType.TimeSpan: IncTimeSpan(row, columnName, DataTools.GetTimeSpan(delta)); break;
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -1982,14 +2188,14 @@ namespace FreeLibSet.Core
       if (col == null)
         throw ExceptionFactory.ArgUnknownColumnName("columnName", srcRow.Table, columnName);
 
-      switch (GetSumType(col.DataType))
+      switch (MathTools.GetSumType(col.DataType))
       {
-        case SumType.Int: IncInt(srcRow, dstRow, columnName); break;
-        case SumType.Int64: IncInt64(srcRow, dstRow, columnName); break;
-        case SumType.Single: IncSingle(srcRow, dstRow, columnName); break;
-        case SumType.Double: IncDouble(srcRow, dstRow, columnName); break;
-        case SumType.Decimal: IncDecimal(srcRow, dstRow, columnName); break;
-        case SumType.TimeSpan: IncTimeSpan(srcRow, dstRow, columnName); break;
+        case MathTools.SumType.Int32: IncInt32(srcRow, dstRow, columnName); break;
+        case MathTools.SumType.Int64: IncInt64(srcRow, dstRow, columnName); break;
+        case MathTools.SumType.Single: IncSingle(srcRow, dstRow, columnName); break;
+        case MathTools.SumType.Double: IncDouble(srcRow, dstRow, columnName); break;
+        case MathTools.SumType.Decimal: IncDecimal(srcRow, dstRow, columnName); break;
+        case MathTools.SumType.TimeSpan: IncTimeSpan(srcRow, dstRow, columnName); break;
         default:
           throw ExceptionFactory.ArgInvalidColumnType("columnName", col);
       }
@@ -2384,7 +2590,7 @@ namespace FreeLibSet.Core
       table.PrimaryKey = cols;
     }
 
-    private static int GetPrimaryKeyLength(DataTable table)
+    internal static int GetPrimaryKeyLength(DataTable table)
     {
       if (table.PrimaryKey == null)
         return 0;
@@ -2759,89 +2965,6 @@ namespace FreeLibSet.Core
         return CloneTableForSelectedRows(table, flags);
     }
 
-    /// <summary>
-    /// Создать копию таблицы <paramref name="table"/>, содержащую строки с идентификаторами <paramref name="ids"/>.
-    /// Создается копия таблицы, даже если исходная таблица уже содержит все строки
-    /// в нужном порядке.
-    /// Исходная таблица должна быть проиндексирована по числовому полю.
-    /// если какой-либо ключ из массива <paramref name="ids"/> не будет найден в таблице, то будет 
-    /// сгенерировано исключение.
-    /// </summary>
-    /// <param name="table">Исходная таблица</param>
-    /// <param name="ids">Массив значений ключаевого поля. Не должен содержать
-    /// повторяющихся значений</param>
-    /// <returns>Копия таблицы, содержащая <paramref name="ids"/>.Length строк</returns>
-    public static DataTable CloneTableForSelectedIds(DataTable table, Int32[] ids)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-      if (ids == null)
-        throw new ArgumentNullException("ids");
-#endif
-
-      string sPK = GetPrimaryKey(table);
-      if (sPK.Length == 0 || sPK.IndexOf(',') >= 0)
-        throw ExceptionFactory.ArgDataTableMustHaveSingleColumnPrimaryKey("table", table);
-
-      DataTable table2 = table.Clone();
-      for (int i = 0; i < ids.Length; i++)
-      {
-        DataRow row1 = table.Rows.Find(ids[i]);
-        if (row1 == null)
-          throw ExceptionFactory.DataRowNotFound(table, new object[1] { ids[i] });
-        table2.Rows.Add(row1.ItemArray);
-      }
-      return table2;
-    }
-
-    /// <summary>
-    /// Создать копию таблицы <paramref name="table"/>, содержащую строки с идентификаторами <paramref name="ids"/>.
-    /// Если исходная таблица уже содержит все строки в нужном порядке, то копирование
-    /// не выполняется, а возвращается исходная таблица.
-    /// Исходная таблица должна быть проиндексирована по числовому полю.
-    /// если какой-либо ключ из массива <paramref name="ids"/> не будет найден в таблице, то будет 
-    /// сгенерировано исключение.
-    /// </summary>
-    /// <param name="table">Исходная таблица</param>
-    /// <param name="ids">Массив значений ключаевого поля. Не должен содержать
-    /// повторяющихся значений</param>
-    /// <returns>Копия таблицы, содержащая Values.Length строк</returns>
-    public static DataTable CloneOrSameTableForSelectedIds(DataTable table, Int32[] ids)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-      if (ids == null)
-        throw new ArgumentNullException("ids");
-#endif
-
-      string sPK = GetPrimaryKey(table);
-      if (sPK.Length == 0 || sPK.IndexOf(',') >= 0)
-        throw ExceptionFactory.ArgDataTableMustHaveSingleColumnPrimaryKey("table", table);
-
-      // Сначала пытаемся проверить, не подойдет ли исходная таблица
-      if (table.Rows.Count == ids.Length)
-      {
-        DataRowInt64Extractor extId = new DataRowInt64Extractor(sPK); // исправлено 17.12.2021
-
-        bool isGood = true;
-        for (int i = 0; i < ids.Length; i++)
-        {
-          if (extId[table.Rows[i]] != ids[i])
-          {
-            isGood = false;
-            break;
-          }
-        }
-        if (isGood)
-          return table;
-      }
-
-      // Возвращаем копию таблицы
-      return CloneTableForSelectedIds(table, ids);
-    }
-
     #endregion
 
     #region Вспомогательные функции для работы с DataSet'ом
@@ -2945,756 +3068,7 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region GetIdsFromColumn
-
-    /// <summary>
-    /// Получение списка числовых значений поля (идентификаторов), 
-    /// которые принимает ссылочное поле в таблице. 
-    /// Нулевые значение отбрасывается и повторы отбрасываются.
-    /// </summary>
-    /// <param name="table">Таблица данных</param>
-    /// <param name="columnName">Имя числового ссылочного поля</param>
-    /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIdsFromColumn(DataTable table, string columnName)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-      if (String.IsNullOrEmpty(columnName))
-        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
-#endif
-      int colPos = GetColumnPosWithCheck(table, columnName);
-      DataColumn col = table.Columns[colPos];
-
-      SingleScopeList<Int32> ids = null;
-      foreach (DataRow row in table.Rows)
-      {
-        Int32 id;
-        if (row.RowState == DataRowState.Deleted)
-        {
-          if (row.IsNull(col, DataRowVersion.Original))
-            continue;
-          id = (Int32)(row[colPos, DataRowVersion.Original]);
-        }
-        else
-        {
-          if (row.IsNull(colPos))
-            continue;
-          id = (Int32)(row[colPos]);
-        }
-        if (id == 0)
-          continue;
-
-        if (ids == null)
-          ids = new SingleScopeList<Int32>();
-        ids.Add(id);
-      }
-
-      if (ids == null)
-        return EmptyIds;
-      else
-        return ids.ToArray();
-    }
-
-    /// <summary>
-    /// Получение списка числовых значений поля (идентификаторов), 
-    /// которые принимает ссылочное поле в таблице для строк, относящихся к 
-    /// объекту <see cref="DataView"/>.
-    /// Нулевые значение отбрасывается и повторы отбрасываются
-    /// </summary>
-    /// <param name="dv">Коллекция строк таблицы данных</param>
-    /// <param name="columnName">Имя числового ссылочного поля</param>
-    /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIdsFromColumn(DataView dv, string columnName)
-    {
-      if (dv == null)
-        throw new ArgumentNullException("dv");
-      if (String.IsNullOrEmpty(columnName))
-        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
-
-      if (dv.Count == 0)
-        return EmptyIds;
-
-      int colPos = GetColumnPosWithCheck(dv.Table, columnName);
-      DataColumn col = dv.Table.Columns[colPos];
-
-      SingleScopeList<Int32> ids = null;
-      for (int i = 0; i < dv.Count; i++)
-      {
-        Int32 id;
-        if (dv[i].Row.RowState == DataRowState.Deleted)
-        {
-          if (dv[i].Row.IsNull(col, DataRowVersion.Original))
-            continue;
-          id = (int)(dv[i].Row[colPos, DataRowVersion.Original]);
-        }
-        else
-        {
-          if (dv[i].Row.IsNull(colPos))
-            continue;
-          id = (int)(dv[i].Row[colPos]);
-        }
-        if (id == 0)
-          continue;
-
-        if (ids == null)
-          ids = new SingleScopeList<Int32>();
-        ids.Add(id);
-      }
-
-      if (ids == null)
-        return EmptyIds;
-      else
-        return ids.ToArray();
-    }
-
-    /// <summary>
-    /// Получение списка числовых значений поля (идентификаторов), 
-    /// которые принимает ссылочное поле для строк таблицы в массиве. 
-    /// Нулевые значение отбрасывается и повторы отбрасываются.
-    /// Строки в массиве должны относиться либо к одной таблице, либо к таблицам,
-    /// имеющим одинаковую структуру.
-    /// </summary>
-    /// <param name="rows">Массив однотипных строк</param>
-    /// <param name="columnName">Имя числового ссылочного поля</param>
-    /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIdsFromColumn(ICollection<DataRow> rows, string columnName)
-    {
-#if DEBUG
-      if (rows == null)
-        throw new ArgumentNullException("rows");
-      if (String.IsNullOrEmpty(columnName))
-        throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
-#endif
-
-      if (rows.Count == 0)
-        return EmptyIds;
-
-      SingleScopeList<Int32> ids = null;
-      int colPos = -1;
-      DataColumn col = null;
-
-      foreach (DataRow row in rows)
-      {
-        if (colPos < 0)
-        {
-          colPos = GetColumnPosWithCheck(row.Table, columnName);
-          col = row.Table.Columns[colPos];
-        }
-
-        Int32 id;
-        if (row.RowState == DataRowState.Deleted)
-        {
-          if (row.IsNull(col, DataRowVersion.Original))
-            continue;
-          id = (Int32)(row[colPos, DataRowVersion.Original]);
-        }
-        else
-        {
-          if (row.IsNull(colPos))
-            continue;
-          id = (Int32)(row[colPos]);
-        }
-        if (id == 0)
-          continue;
-        if (ids == null)
-          ids = new SingleScopeList<Int32>();
-        ids.Add(id);
-      }
-      if (ids == null)
-        return EmptyIds;
-      else
-        return ids.ToArray();
-    }
-
-    /// <summary>
-    /// Получение списка числовых значений поля (идентификаторов), 
-    /// которые принимает ссылочное поле для строк таблицы в массиве. 
-    /// Нулевые значение отбрасывается и повторы отбрасываются.
-    /// Строки в массиве должны относиться либо к одной таблице, либо к таблицам,
-    /// имеющим одинаковую структуру
-    /// </summary>
-    /// <param name="rows">Массив однотипных строк как коллекция <see cref="DataRowView"/></param>
-    /// <param name="columnName">Имя числового ссылочного поля</param>
-    /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIdsFromColumn(ICollection<DataRowView> rows, string columnName)
-    {
-#if DEBUG
-      if (rows == null)
-        throw new ArgumentNullException("rows");
-      if (String.IsNullOrEmpty(columnName))
-        throw new ArgumentNullException("columnName");
-#endif
-
-      if (rows.Count == 0)
-        return EmptyIds;
-
-      SingleScopeList<Int32> ids = null;
-      int colPos = -1;
-      DataColumn col = null;
-      foreach (DataRowView drv in rows)
-      {
-        if (colPos < 0)
-        {
-          colPos = GetColumnPosWithCheck(drv.Row.Table, columnName);
-          col = drv.Row.Table.Columns[colPos];
-        }
-
-        Int32 id;
-        if (drv.Row.RowState == DataRowState.Deleted)
-        {
-          if (drv.Row.IsNull(col, DataRowVersion.Original))
-            continue;
-          id = (Int32)(drv.Row[colPos, DataRowVersion.Original]);
-        }
-        else
-        {
-          if (drv.Row.IsNull(colPos))
-            continue;
-          id = (Int32)(drv.Row[colPos]);
-        }
-        if (id == 0)
-          continue;
-        if (ids == null)
-          ids = new SingleScopeList<Int32>();
-        ids.Add(id);
-      }
-      if (ids == null)
-        return EmptyIds;
-      else
-        return ids.ToArray();
-    }
-
-    #endregion
-
-    #region GetIds
-
-    /// <summary>
-    /// Получить массив идентификаторов для ключевого поля "Id" в таблице.
-    /// Обрабатываются все строки, включая удаленные.
-    /// </summary>
-    /// <param name="table">Таблица</param>
-    /// <returns>Массив числовых идентификаторов</returns>
-    public static Int32[] GetIds(DataTable table)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-#endif
-
-      int colPos = GetColumnPosWithCheck(table, "Id");
-
-      if (table.Rows.Count == 0)
-        return EmptyIds;
-
-      Int32[] res = new Int32[table.Rows.Count];
-      for (int i = 0; i < res.Length; i++)
-      {
-        if (table.Rows[i].RowState == DataRowState.Deleted)
-          res[i] = (Int32)(table.Rows[i][colPos, DataRowVersion.Original]);
-        else
-          res[i] = (Int32)(table.Rows[i][colPos]);
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Получить массив идентификаторов для ключевого поля "Id" в таблице для 
-    /// строк, входящих в просмотр <see cref="DataView"/>.
-    /// Порядок полученных идентификаторов соответствует порядку строк в просмотре.
-    /// Обрабатываются все строки, включая удаленные, если они входят в просмотр.
-    /// </summary>
-    /// <param name="dv">Просмотр <see cref="DataView"/></param>
-    /// <returns>Массив числовых идентификаторов</returns>
-    public static Int32[] GetIds(DataView dv)
-    {
-#if DEBUG
-      if (dv == null)
-        throw new ArgumentNullException("dv");
-#endif
-
-      int colPos = GetColumnPosWithCheck(dv.Table, "Id");
-
-      if (dv.Count == 0)
-        return EmptyIds;
-
-      Int32[] res = new Int32[dv.Count];
-      for (int i = 0; i < res.Length; i++)
-      {
-        DataRow Row = dv[i].Row;
-        if (Row.RowState == DataRowState.Deleted)
-          res[i] = (Int32)(Row[colPos, DataRowVersion.Original]);
-        else
-          res[i] = (Int32)(Row[colPos]);
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Получение значений поля "Id" из массива строк. В отличие от <see cref="GetIdsFromColumn(ICollection{DataRow}, string)"/>
-    /// не проверяет нулевые значения и не проверяет повторы.
-    /// Обрабатываются все строки, включая удаленные.
-    /// </summary>
-    /// <param name="rows">Массив строк</param>
-    /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIds(ICollection<DataRow> rows)
-    {
-#if DEBUG
-      if (rows == null)
-        throw new ArgumentNullException("rows");
-#endif
-
-      if (rows.Count == 0)
-        return EmptyIds;
-
-      Int32[] res = new Int32[rows.Count];
-      int index = 0;
-      int colPos = -1;
-      foreach (DataRow row in rows)
-      {
-        if (index == 0)
-          colPos = GetColumnPosWithCheck(row.Table, "Id");
-
-        if (row.RowState == DataRowState.Deleted)
-          res[index] = (Int32)(row[colPos, DataRowVersion.Original]);
-        else
-          res[index] = (Int32)(row[colPos]);
-        index++;
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Получение значений поля "Id" из коллекции строк <see cref="DataRowView"/>. В отличие от <see cref="GetIdsFromColumn(ICollection{DataRowView}, string)"/>,
-    /// не проверяет нулевые значения и не проверяет повторы.
-    /// Обрабатываются все строки, включая удаленные.
-    /// </summary>
-    /// <param name="rows">Коллекция строк типа <see cref="DataRowView"/></param>
-    /// <returns>Массив идентификаторов</returns>
-    public static Int32[] GetIds(ICollection<DataRowView> rows)
-    {
-#if DEBUG
-      if (rows == null)
-        throw new ArgumentNullException("rows");
-#endif
-
-      if (rows.Count == 0)
-        return EmptyIds;
-
-      Int32[] res = new Int32[rows.Count];
-      int index = 0;
-      int colPos = -1;
-      foreach (DataRowView drv in rows)
-      {
-        if (index == 0)
-          colPos = GetColumnPosWithCheck(drv.Row.Table, "Id");
-
-        if (drv.Row.RowState == DataRowState.Deleted)
-          res[index] = (Int32)(drv.Row[colPos, DataRowVersion.Original]);
-        else
-          res[index] = (Int32)(drv.Row[colPos]);
-        index++;
-      }
-      return res;
-    }
-
-    #endregion
-
-    #region GetFirstId, GetLastId
-
-    /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из первой строки таблицы.
-    /// Возвращает 0, если таблица не содержит строк.
-    /// </summary>
-    /// <param name="table">Таблица</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public static Int32 GetFirstId(DataTable table)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-#endif
-
-      if (table.Rows.Count == 0)
-        return 0;
-
-      DataRow row = table.Rows[0];
-      return DataTools.GetInt(row, "Id");
-    }
-
-    /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из последней строки таблицы.
-    /// Возвращает 0, если таблица не содержит строк.
-    /// </summary>
-    /// <param name="table">Таблица</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public static Int32 GetLastId(DataTable table)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-#endif
-
-      if (table.Rows.Count == 0)
-        return 0;
-
-      DataRow row = table.Rows[table.Rows.Count - 1];
-      return DataTools.GetInt(row, "Id");
-    }
-
-    /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из первой строки просмотра таблицы.
-    /// Возвращает 0, если <see cref="DataView"/> не содержит строк.
-    /// </summary>
-    /// <param name="dv">Просмотр <see cref="DataView"/></param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public static Int32 GetFirstId(DataView dv)
-    {
-#if DEBUG
-      if (dv == null)
-        throw new ArgumentNullException("dv");
-#endif
-
-      if (dv.Count == 0)
-        return 0;
-
-      DataRow row = dv[0].Row;
-      return DataTools.GetInt(row, "Id");
-    }
-
-    /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из последней строки просмотра таблицы
-    /// Возвращает 0, если <see cref="DataView"/> не содержит строк
-    /// </summary>
-    /// <param name="dv">Просмотр <see cref="DataView"/></param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public static Int32 GetLastId(DataView dv)
-    {
-#if DEBUG
-      if (dv == null)
-        throw new ArgumentNullException("dv");
-#endif
-
-      if (dv.Count == 0)
-        return 0;
-
-      DataRow row = dv[dv.Count - 1].Row;
-      return DataTools.GetInt(row, "Id");
-    }
-
-    /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из первой строки в массиве строк.
-    /// Возвращает 0, если массив пустой.
-    /// </summary>
-    /// <param name="rows">Массив строк</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public static Int32 GetFirstId(IList<DataRow> rows)
-    {
-#if DEBUG
-      if (rows == null)
-        throw new ArgumentNullException("rows");
-#endif
-
-      if (rows.Count == 0)
-        return 0;
-
-      DataRow row = rows[0];
-      return DataTools.GetInt(row, "Id");
-    }
-
-    /// <summary>
-    /// Получить идентификатор для ключевого поля "Id" из последней строки в массиве строк.
-    /// Возвращает 0, если массив пустой.
-    /// </summary>
-    /// <param name="rows">Массив строк</param>
-    /// <returns>Идентификатор строки или 0</returns>
-    public static Int32 GetLastId(IList<DataRow> rows)
-    {
-#if DEBUG
-      if (rows == null)
-        throw new ArgumentNullException("rows");
-#endif
-
-      if (rows.Count == 0)
-        return 0;
-
-      DataRow row = rows[rows.Count - 1];
-      return DataTools.GetInt(row, "Id");
-    }
-
-    #endregion
-
-    #region GetBlockedIds
-
-    /// <summary>
-    /// Получить массив идентификаторов для ключевого поля "Id" в таблице.
-    /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
-    /// не больше <paramref name="n"/> элементов.
-    /// </summary>
-    /// <param name="table">Таблица</param>
-    /// <param name="n"></param>
-    /// <returns>Массив числовых идентификаторов</returns>
-    public static Int32[][] GetBlockedIds(DataTable table, int n)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-#endif
-
-      int colPos = GetColumnPosWithCheck(table, "Id");
-
-      if (n < 1)
-        throw ExceptionFactory.ArgOutOfRange("n", n, 1, null);
-
-      int nn = ((table.Rows.Count + (n - 1))) / n;
-      Int32[][] res = new Int32[nn][];
-
-      for (int i = 0; i < nn; i++)
-      {
-        if (i == (nn - 1))
-          res[i] = new Int32[table.Rows.Count - (nn - 1) * n];
-        else
-          res[i] = new Int32[n];
-      }
-
-      for (int index = 0; index < table.Rows.Count; index++)
-      {
-        int idx1 = index / n;
-        int idx2 = index - (idx1 * n);
-
-        if (table.Rows[index].RowState == DataRowState.Deleted)
-          res[idx1][idx2] = GetInt(table.Rows[index][colPos, DataRowVersion.Original]);
-        else
-          res[idx1][idx2] = GetInt(table.Rows[index][colPos]);
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Получить массив идентификаторов для ключевого поля "Id" в таблице для 
-    /// строк, входящих в просмотр <see cref="DataView"/>.
-    /// Порядок полученных идентификаторов соответствует порядку строк в просмотре.
-    /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
-    /// не больше <paramref name="n"/> элементов.
-    /// </summary>
-    /// <param name="dv">Просмотр <see cref="DataView"/></param>
-    /// <param name="n">Количество строк в блоке</param>
-    /// <returns>Массив числовых идентификаторов</returns>
-    public static Int32[][] GetBlockedIds(DataView dv, int n)
-    {
-#if DEBUG
-      if (dv == null)
-        throw new ArgumentNullException("dv");
-#endif
-
-      int colPos = GetColumnPosWithCheck(dv.Table, "Id");
-
-      if (n < 1)
-        throw ExceptionFactory.ArgOutOfRange("n", n, 1, null);
-
-      int nn = ((dv.Count + (n - 1))) / n;
-
-      Int32[][] res = new Int32[nn][];
-      for (int i = 0; i < nn; i++)
-      {
-        if (i == (nn - 1))
-          res[i] = new Int32[dv.Count - (nn - 1) * n];
-        else
-          res[i] = new Int32[n];
-      }
-
-      for (int index = 0; index < dv.Count; index++)
-      {
-        int idx1 = index / n;
-        int idx2 = index - (idx1 * n);
-        DataRow row = dv[index].Row;
-        if (row.RowState == DataRowState.Deleted)
-          res[idx1][idx2] = GetInt(row[colPos, DataRowVersion.Original]);
-        else
-          res[idx1][idx2] = GetInt(row[colPos]);
-      }
-      return res;
-    }
-
-    /// <summary>
-    /// Получение значений поля "Id" из массива строк.
-    /// Возвращается двумерный jagged-массив идентификаторов, в каждом из которых
-    /// не больше <paramref name="n"/> элементов.
-    /// </summary>
-    /// <param name="rows">Массив строк</param>
-    /// <param name="n">Количество элементов в результирующих массивах</param>
-    /// <returns>Массив идентификаторов</returns>
-    public static Int32[][] GetBlockedIds(ICollection<DataRow> rows, int n)
-    {
-#if DEBUG
-      if (rows == null)
-        throw new ArgumentNullException("Rows");
-#endif
-      if (n < 1)
-        throw ExceptionFactory.ArgOutOfRange("n", n, 1, null);
-
-      int nn = ((rows.Count + (n - 1))) / n;
-
-      Int32[][] res = new Int32[nn][];
-      if (rows.Count == 0)
-        return res;
-
-      for (int i = 0; i < nn; i++)
-      {
-        if (i == (nn - 1))
-          res[i] = new Int32[rows.Count - (nn - 1) * n];
-        else
-          res[i] = new Int32[n];
-      }
-
-      int index = 0;
-      int colPos = -1;
-      foreach (DataRow row in rows)
-      {
-        if (index == 0)
-          colPos = GetColumnPosWithCheck(row.Table, "Id");
-
-        int idx1 = index / n;
-        int idx2 = index - (idx1 * n);
-        if (row.RowState == DataRowState.Deleted)
-          res[idx1][idx2] = GetInt(row[colPos, DataRowVersion.Original]);
-        else
-          res[idx1][idx2] = GetInt(row[colPos]);
-        index++;
-      }
-      return res;
-    }
-
-    #endregion
-
-    #region GetRowsFromIds
-
-    /// <summary>
-    /// Получить массив строк <see cref="DataRow"/> из таблицы для массива идентификаторов Id.
-    /// Результирующий массив будет содержать значения null для ненайденных или
-    /// нулевых идентификаторов.
-    /// </summary>
-    /// <param name="table">Таблица, содержащая поле "Id"</param>
-    /// <param name="ids">Массив идентификаторов</param>
-    /// <returns>Массив строк</returns>
-    public static DataRow[] GetRowsFromIds(DataTable table, Int32[] ids)
-    {
-#if DEBUG
-      if (table == null)
-        throw new ArgumentNullException("table");
-#endif
-
-      if (ids.Length == 0)
-        return new DataRow[0];
-
-      /*
-      string CurrKey = GetPrimaryKey(Table);
-      bool ValidKey = (CurrKey == "Id");
-      if (!ValidKey)
-        SetPrimaryKey(Table, "Id");
-
-      DataRow[] res = new DataRow[Ids.Length];
-      for (int i = 0; i < Ids.Length; i++)
-      {
-        if (Ids[i] == 0)
-          continue;
-        res[i] = Table.Rows.Find(Ids[i]);
-      }
-
-      if (!ValidKey)
-        SetPrimaryKey(Table, CurrKey);
-      return res;
-       * */
-
-      // Не стоит переключать первичный ключ таблицы. Это вызовет ошибку, если в столбце Id есть 
-      // DBNull или повторы (нули)
-
-      DataRow[] res = new DataRow[ids.Length];
-      if (IsPrimaryIdKey(table))
-      {
-        // Простой поиск по первичному ключу
-        for (int i = 0; i < ids.Length; i++)
-        {
-          if (ids[i] == 0)
-            continue;
-          res[i] = table.Rows.Find(ids[i]);
-        }
-      }
-      else
-      {
-#if DEBUG
-        GetColumnPosWithCheck(table, "Id");
-#endif
-
-        if (ids.Length == 1)
-        {
-          // Нет смиысла создавать DataView на один раз
-          if (ids[0] != 0)
-          {
-            DataRow[] row2 = table.Select("Id=" + ids[0]);
-            if (row2.Length > 0)
-              res[0] = row2[0];
-          }
-        }
-        else
-        {
-          // Создаем временный DataView
-          using (DataView dv = new DataView(table))
-          {
-            dv.Sort = "Id";
-            for (int i = 0; i < ids.Length; i++)
-            {
-              if (ids[i] == 0)
-                continue;
-              int p = dv.Find(ids[i]);
-              if (p >= 0)
-                res[i] = dv[p].Row;
-            }
-          }
-        }
-      }
-
-      return res;
-    }
-
-    /// <summary>
-    /// Возвращает true, если таблица содержит первичный ключ по полю "Id"
-    /// </summary>
-    /// <param name="table"></param>
-    /// <returns>Наличие ключа</returns>
-    private static bool IsPrimaryIdKey(DataTable table)
-    {
-      if (GetPrimaryKeyLength(table) == 1)
-        return String.Equals(table.PrimaryKey[0].ColumnName, "Id", StringComparison.OrdinalIgnoreCase);
-      else
-        return false;
-    }
-
-    #endregion
-
-    #region TableFromIds()
-
-    /// <summary>
-    /// Создает таблицу, содержащую единственный столбец "Id"
-    /// </summary>
-    /// <param name="ids">Массив идентификаторов. 
-    /// Если null, то будет возвращен пустой массив</param>
-    /// <returns>Таблица со столбцом "Id"</returns>
-    public static DataTable TableFromIds(Int32[] ids)
-    {
-      DataTable table = new DataTable();
-      table.Columns.Add("Id", typeof(Int32));
-      if (ids != null)
-      {
-        for (int i = 0; i < ids.Length; i++)
-          table.Rows.Add(ids[i]);
-      }
-      return table;
-    }
-
-    #endregion
-
-    #region GetDataTableRows
+    #region GetDataTableRows()
 
     /// <summary>
     /// Копирование строк таблицы <see cref="DataTable"/> в массив.
@@ -3705,8 +3079,8 @@ namespace FreeLibSet.Core
     /// <seealso cref="GetDataViewRows(DataView)"/>
     public static DataRow[] GetDataTableRows(DataTable table)
     {
-      if (table == null)
-        return new DataRow[0];
+      if (table == null || table.Rows.Count == 0)
+        return EmptyArray<DataRow>.Empty;
 
       DataRow[] res = new DataRow[table.Rows.Count];
       table.Rows.CopyTo(res, 0);
@@ -3938,7 +3312,7 @@ namespace FreeLibSet.Core
       }
 
       if (values == null)
-        return EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
       {
         string[] a = values.ToArray();
@@ -3966,7 +3340,7 @@ namespace FreeLibSet.Core
 #endif
 
       if (dv.Count == 0)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
 
       int colPos = GetColumnPosWithCheck(dv.Table, columnName);
 
@@ -3983,7 +3357,7 @@ namespace FreeLibSet.Core
       }
 
       if (values == null)
-        return EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
       {
         string[] a = values.ToArray();
@@ -4011,7 +3385,7 @@ namespace FreeLibSet.Core
 #endif
 
       if (rows.Count == 0)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
 
       SingleScopeList<string> values = null;
       int colPos = -1;
@@ -4029,7 +3403,7 @@ namespace FreeLibSet.Core
         values.Add(s);
       }
       if (values == null)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
       {
         string[] a = values.ToArray();
@@ -4046,7 +3420,7 @@ namespace FreeLibSet.Core
     /// Получить значения поля для всех строк таблицы в виде массива.
     /// Повторы и пустые значения не отбрасываются. Количество и порядок элементов в массиве соответствуют строкам в таблице
     /// Хранящиеся в таблице значения <see cref="DBNull"/> заменяются на default/null.
-    /// Если тип массива <typeparamref name="T"/> не совпадает с типом данных в столбце таблицы, используется метод <see cref="Convert.ChangeType(object, Type)"/>(). Методы типа GetInt() не применяются
+    /// Если тип массива <typeparamref name="T"/> не совпадает с типом данных в столбце таблицы, используется метод <see cref="Convert.ChangeType(object, Type)"/>(). Методы типа GetXxx() не применяются
     /// 
     /// Замечания для строковых полей:
     /// - Не выполняется обрезка концевых пробелов, как для <see cref="DataTools.GetString(DataRow, string)"/>.
@@ -4163,12 +3537,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static int[] GetUniqueInts(DataView dv, string columnName, bool skipNulls)
+    public static int[] GetUniqueInt32Values(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
-        return EmptyInts;
+        return EmptyArray<Int32>.Empty;
       if (dv.Count == 0)
-        return EmptyInts;
+        return EmptyArray<Int32>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       SingleScopeList<int> lst = new SingleScopeList<int>();
       foreach (DataRowView drv in dv)
@@ -4178,7 +3552,7 @@ namespace FreeLibSet.Core
           if (drv.Row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetInt(drv.Row[p]));
+        lst.Add(DataTools.GetInt32(drv.Row[p]));
       }
       return lst.ToArray();
     }
@@ -4191,12 +3565,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static int[] GetUniqueInts(DataTable table, string columnName, bool skipNulls)
+    public static int[] GetUniqueInt32Values(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
-        return EmptyInts;
+        return EmptyArray<Int32>.Empty;
       if (table.Rows.Count == 0)
-        return EmptyInts;
+        return EmptyArray<Int32>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<int> lst = new SingleScopeList<int>();
@@ -4209,7 +3583,7 @@ namespace FreeLibSet.Core
           if (row.IsNull(p))
             continue;
         }
-        lst.Add(DataTools.GetInt(row[p]));
+        lst.Add(DataTools.GetInt32(row[p]));
       }
 
       return lst.ToArray();
@@ -4223,12 +3597,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static int[] GetUniqueInts(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static int[] GetUniqueInt32Values(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
-        return EmptyInts;
+        return EmptyArray<Int32>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableIntExtractor xtr = new DataRowNullableIntExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<int> lst = new SingleScopeList<int>();
       foreach (DataRow row in rows)
       {
@@ -4236,8 +3610,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-
-        int? v = xtr[row];
+        rowVals.CurrentRow = row;
+        int? v = rowVals[columnName].AsNullableInt32;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4260,12 +3634,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static long[] GetUniqueInt64s(DataView dv, string columnName, bool skipNulls)
+    public static long[] GetUniqueInt64Values(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
-        return EmptyInt64s;
+        return EmptyArray<Int64>.Empty;
       if (dv.Count == 0)
-        return EmptyInt64s;
+        return EmptyArray<Int64>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
 
       SingleScopeList<long> lst = new SingleScopeList<long>();
@@ -4289,12 +3663,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static long[] GetUniqueInt64s(DataTable table, string columnName, bool skipNulls)
+    public static long[] GetUniqueInt64Values(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
-        return EmptyInt64s;
+        return EmptyArray<Int64>.Empty;
       if (table.Rows.Count == 0)
-        return EmptyInt64s;
+        return EmptyArray<Int64>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<long> lst = new SingleScopeList<long>();
@@ -4321,12 +3695,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static long[] GetUniqueInt64s(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static long[] GetUniqueInt64Values(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
-        return EmptyInt64s;
+        return EmptyArray<Int64>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableInt64Extractor xtr = new DataRowNullableInt64Extractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<long> lst = new SingleScopeList<long>();
       foreach (DataRow row in rows)
       {
@@ -4335,7 +3709,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        long? v = xtr[row];
+        rowVals.CurrentRow = row;
+        long? v = rowVals[columnName].AsNullableInt64;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4358,12 +3733,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static float[] GetUniqueSingles(DataView dv, string columnName, bool skipNulls)
+    public static float[] GetUniqueSingleValues(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
-        return EmptySingles;
+        return EmptyArray<Single>.Empty;
       if (dv.Count == 0)
-        return EmptySingles;
+        return EmptyArray<Single>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       SingleScopeList<float> lst = new SingleScopeList<float>();
       foreach (DataRowView drv in dv)
@@ -4386,12 +3761,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static float[] GetUniqueSingles(DataTable table, string columnName, bool skipNulls)
+    public static float[] GetUniqueSingleValues(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
-        return EmptySingles;
+        return EmptyArray<Single>.Empty;
       if (table.Rows.Count == 0)
-        return EmptySingles;
+        return EmptyArray<Single>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
       SingleScopeList<float> lst = new SingleScopeList<float>();
       foreach (DataRow row in table.Rows)
@@ -4417,12 +3792,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static float[] GetUniqueSingles(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static float[] GetUniqueSingleValues(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
-        return EmptySingles;
+        return EmptyArray<Single>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableSingleExtractor xtr = new DataRowNullableSingleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<float> lst = new SingleScopeList<float>();
       foreach (DataRow row in rows)
       {
@@ -4431,7 +3806,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        float? v = xtr[row];
+        rowVals.CurrentRow = row;
+        float? v = rowVals[columnName].AsNullableSingle;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4454,12 +3830,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static double[] GetUniqueDoubles(DataView dv, string columnName, bool skipNulls)
+    public static double[] GetUniqueDoubleValues(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
-        return EmptyDoubles;
+        return EmptyArray<Double>.Empty;
       if (dv.Count == 0)
-        return EmptyDoubles;
+        return EmptyArray<Double>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       SingleScopeList<double> lst = new SingleScopeList<double>();
       foreach (DataRowView drv in dv)
@@ -4482,12 +3858,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static double[] GetUniqueDoubles(DataTable table, string columnName, bool skipNulls)
+    public static double[] GetUniqueDoubleValues(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
-        return EmptyDoubles;
+        return EmptyArray<Double>.Empty;
       if (table.Rows.Count == 0)
-        return EmptyDoubles;
+        return EmptyArray<Double>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
       SingleScopeList<double> lst = new SingleScopeList<double>();
       foreach (DataRow row in table.Rows)
@@ -4513,12 +3889,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static double[] GetUniqueDoubles(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static double[] GetUniqueDoubleValues(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
-        return EmptyDoubles;
+        return EmptyArray<Double>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDoubleExtractor xtr = new DataRowNullableDoubleExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<double> lst = new SingleScopeList<double>();
       foreach (DataRow row in rows)
       {
@@ -4527,7 +3903,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        double? v = xtr[row];
+        rowVals.CurrentRow = row;
+        double? v = rowVals[columnName].AsNullableDouble;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4550,12 +3927,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static decimal[] GetUniqueDecimals(DataView dv, string columnName, bool skipNulls)
+    public static decimal[] GetUniqueDecimalValues(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
-        return EmptyDecimals;
+        return EmptyArray<Decimal>.Empty;
       if (dv.Count == 0)
-        return EmptyDecimals;
+        return EmptyArray<Decimal>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
 
       SingleScopeList<decimal> lst = new SingleScopeList<decimal>();
@@ -4579,12 +3956,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static decimal[] GetUniqueDecimals(DataTable table, string columnName, bool skipNulls)
+    public static decimal[] GetUniqueDecimalValues(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
-        return EmptyDecimals;
+        return EmptyArray<Decimal>.Empty;
       if (table.Rows.Count == 0)
-        return EmptyDecimals;
+        return EmptyArray<Decimal>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<decimal> lst = new SingleScopeList<decimal>();
@@ -4611,12 +3988,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static decimal[] GetUniqueDecimals(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static decimal[] GetUniqueDecimalValues(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
-        return EmptyDecimals;
+        return EmptyArray<Decimal>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDecimalExtractor xtr = new DataRowNullableDecimalExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<decimal> lst = new SingleScopeList<decimal>();
       foreach (DataRow row in rows)
       {
@@ -4624,8 +4001,8 @@ namespace FreeLibSet.Core
           continue;
         if (row.RowState == DataRowState.Deleted)
           continue;
-
-        decimal? v = xtr[row];
+        rowVals.CurrentRow = row;
+        decimal? v = rowVals[columnName].AsNullableDecimal;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4648,12 +4025,12 @@ namespace FreeLibSet.Core
     /// <param name="dv">Просмотр</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static DateTime[] GetUniqueDateTimes(DataView dv, string columnName)
+    public static DateTime[] GetUniqueDateTimeValues(DataView dv, string columnName)
     {
       if (dv == null)
-        return EmptyDateTimes;
+        return EmptyArray<DateTime>.Empty;
       if (dv.Count == 0)
-        return EmptyDateTimes;
+        return EmptyArray<DateTime>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
       SingleScopeList<DateTime> lst = new SingleScopeList<DateTime>();
       foreach (DataRowView drv in dv)
@@ -4673,12 +4050,12 @@ namespace FreeLibSet.Core
     /// <param name="table">Таблица</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static DateTime[] GetUniqueDateTimes(DataTable table, string columnName)
+    public static DateTime[] GetUniqueDateTimeValues(DataTable table, string columnName)
     {
       if (table == null)
-        return EmptyDateTimes;
+        return EmptyArray<DateTime>.Empty;
       if (table.Rows.Count == 0)
-        return EmptyDateTimes;
+        return EmptyArray<DateTime>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<DateTime> lst = new SingleScopeList<DateTime>();
@@ -4702,12 +4079,12 @@ namespace FreeLibSet.Core
     /// <param name="rows">Коллекция строк. В массиве могут быть ссылки null</param>
     /// <param name="columnName">Имя поля</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static DateTime[] GetUniqueDateTimes(IEnumerable<DataRow> rows, string columnName)
+    public static DateTime[] GetUniqueDateTimeValues(IEnumerable<DataRow> rows, string columnName)
     {
       if (rows == null)
-        return EmptyDateTimes;
+        return EmptyArray<DateTime>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableDateTimeExtractor xtr = new DataRowNullableDateTimeExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<DateTime> lst = new SingleScopeList<DateTime>();
       foreach (DataRow row in rows)
       {
@@ -4716,7 +4093,8 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        DateTime? v = xtr[row];
+        rowVals.CurrentRow = row;
+        DateTime? v = rowVals[columnName].AsNullableDateTime;
         if (v.HasValue)
           lst.Add(v.Value);
       }
@@ -4735,12 +4113,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static TimeSpan[] GetUniqueTimeSpans(DataView dv, string columnName, bool skipNulls)
+    public static TimeSpan[] GetUniqueTimeSpanValues(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
-        return EmptyTimeSpans;
+        return EmptyArray<TimeSpan>.Empty;
       if (dv.Count == 0)
-        return EmptyTimeSpans;
+        return EmptyArray<TimeSpan>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
 
       SingleScopeList<TimeSpan> lst = new SingleScopeList<TimeSpan>();
@@ -4764,12 +4142,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static TimeSpan[] GetUniqueTimeSpans(DataTable table, string columnName, bool skipNulls)
+    public static TimeSpan[] GetUniqueTimeSpanValues(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
-        return EmptyTimeSpans;
+        return EmptyArray<TimeSpan>.Empty;
       if (table.Rows.Count == 0)
-        return EmptyTimeSpans;
+        return EmptyArray<TimeSpan>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<TimeSpan> lst = new SingleScopeList<TimeSpan>();
@@ -4796,12 +4174,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как 0</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static TimeSpan[] GetUniqueTimeSpans(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static TimeSpan[] GetUniqueTimeSpanValues(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
-        return EmptyTimeSpans;
+        return EmptyArray<TimeSpan>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableTimeSpanExtractor xtr = new DataRowNullableTimeSpanExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<TimeSpan> lst = new SingleScopeList<TimeSpan>();
       foreach (DataRow row in rows)
       {
@@ -4810,7 +4188,10 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-        TimeSpan? v = xtr[row];
+        rowVals.CurrentRow = row;
+        TimeSpan? v = null;
+        if (!rowVals[columnName].IsNull)
+          v = rowVals[columnName].AsTimeSpan;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4833,12 +4214,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как <see cref="Guid.Empty"/></param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static Guid[] GetUniqueGuids(DataView dv, string columnName, bool skipNulls)
+    public static Guid[] GetUniqueGuidValues(DataView dv, string columnName, bool skipNulls)
     {
       if (dv == null)
-        return EmptyGuids;
+        return EmptyArray<Guid>.Empty;
       if (dv.Count == 0)
-        return EmptyGuids;
+        return EmptyArray<Guid>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
 
       SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
@@ -4862,12 +4243,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как Guid.Empty</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static Guid[] GetUniqueGuids(DataTable table, string columnName, bool skipNulls)
+    public static Guid[] GetUniqueGuidValues(DataTable table, string columnName, bool skipNulls)
     {
       if (table == null)
-        return EmptyGuids;
+        return EmptyArray<Guid>.Empty;
       if (table.Rows.Count == 0)
-        return EmptyGuids;
+        return EmptyArray<Guid>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
@@ -4894,12 +4275,12 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как <see cref="Guid.Empty"/></param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static Guid[] GetUniqueGuids(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static Guid[] GetUniqueGuidValues(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
     {
       if (rows == null)
-        return EmptyGuids;
+        return EmptyArray<Guid>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableGuidExtractor xtr = new DataRowNullableGuidExtractor(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<Guid> lst = new SingleScopeList<Guid>();
       foreach (DataRow row in rows)
       {
@@ -4908,8 +4289,10 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-
-        Guid? v = xtr[row];
+        rowVals.CurrentRow = row;
+        Guid? v = null;
+        if (!rowVals[columnName].IsNull)
+          v = rowVals[columnName].AsGuid;
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -4932,13 +4315,13 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как значение default</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static T[] GetUniqueEnums<T>(DataView dv, string columnName, bool skipNulls)
+    public static T[] GetUniqueEnumValues<T>(DataView dv, string columnName, bool skipNulls)
       where T : struct
     {
       if (dv == null)
-        return new T[0];
+        return EmptyArray<T>.Empty;
       if (dv.Count == 0)
-        return new T[0];
+        return EmptyArray<T>.Empty;
       int p = GetColumnPosWithCheck(dv.Table, columnName);
 
       SingleScopeList<T> lst = new SingleScopeList<T>();
@@ -4962,13 +4345,13 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как значение default</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static T[] GetUniqueEnums<T>(DataTable table, string columnName, bool skipNulls)
+    public static T[] GetUniqueEnumValues<T>(DataTable table, string columnName, bool skipNulls)
       where T : struct
     {
       if (table == null)
-        return new T[0];
+        return EmptyArray<T>.Empty;
       if (table.Rows.Count == 0)
-        return new T[0];
+        return EmptyArray<T>.Empty;
       int p = GetColumnPosWithCheck(table, columnName);
 
       SingleScopeList<T> lst = new SingleScopeList<T>();
@@ -4995,13 +4378,13 @@ namespace FreeLibSet.Core
     /// <param name="columnName">Имя поля</param>
     /// <param name="skipNulls">Пропускать значения <see cref="DBNull"/>. Если false, то <see cref="DBNull"/> будут считаться как значение default</param>
     /// <returns>Массив уникальных значений или пустой массив</returns>
-    public static T[] GetUniqueEnums<T>(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
+    public static T[] GetUniqueEnumValues<T>(IEnumerable<DataRow> rows, string columnName, bool skipNulls)
       where T : struct
     {
       if (rows == null)
-        return new T[0];
+        return EmptyArray<T>.Empty;
       // Строки могут относиться к разным таблицам
-      DataRowNullableEnumExtractor<T> xtr = new DataRowNullableEnumExtractor<T>(columnName);
+      DataRowValues rowVals = new DataRowValues();
       SingleScopeList<T> lst = new SingleScopeList<T>();
       foreach (DataRow row in rows)
       {
@@ -5010,8 +4393,10 @@ namespace FreeLibSet.Core
         if (row.RowState == DataRowState.Deleted)
           continue;
 
-
-        T? v = xtr[row];
+        rowVals.CurrentRow = row;
+        T? v = null;
+        if (!rowVals[columnName].IsNull)
+          v = rowVals[columnName].GetEnum<T>();
         if (skipNulls)
         {
           if (!v.HasValue)
@@ -5073,7 +4458,7 @@ namespace FreeLibSet.Core
 #if DEBUG
       if (table1 == null)
         throw new ArgumentNullException("table1");
-      if (table2==null)
+      if (table2 == null)
         throw new ArgumentNullException("table2");
 #endif
 
@@ -5335,7 +4720,7 @@ namespace FreeLibSet.Core
       int orderColumnPos = GetColumnPosWithCheck(table, orderColumnName);
 
 #if DEBUG
-      if (!IsIntegerType(table.Columns[orderColumnPos].DataType))
+      if (!MathTools.IsIntegerType(table.Columns[orderColumnPos].DataType))
         throw ExceptionFactory.ArgInvalidColumnType("orderColumnName", table.Columns[orderColumnPos]);
 #endif
 
@@ -5380,7 +4765,7 @@ namespace FreeLibSet.Core
       int orderColumnPos = GetColumnPosWithCheck(dv.Table, orderColumnName);
 
 #if DEBUG
-      if (!IsIntegerType(dv.Table.Columns[orderColumnPos].DataType))
+      if (!MathTools.IsIntegerType(dv.Table.Columns[orderColumnPos].DataType))
         throw ExceptionFactory.ArgInvalidColumnType("orderColumnName", dv.Table.Columns[orderColumnPos]);
 #endif
 
@@ -5602,7 +4987,7 @@ namespace FreeLibSet.Core
     /// </summary>
     /// <param name="table">Таблица</param>
     /// <returns>Идентификатор для новой строки</returns>
-    public static Int32 GetRandomId(DataTable table)
+    public static Int32 GetRandomInt32Id(DataTable table)
     {
 #if DEBUG
       if (table == null)
@@ -7248,12 +6633,29 @@ namespace FreeLibSet.Core
     /// <seealso cref="GetDataTableRows(DataTable)"/>
     public static DataRow[] GetDataViewRows(DataView dv)
     {
-      if (dv == null)
-        return new DataRow[0];
+      if (dv == null || dv.Count == 0)
+        return EmptyArray<DataRow>.Empty;
       DataRow[] res = new DataRow[dv.Count];
       for (int i = 0; i < dv.Count; i++)
         res[i] = dv[i].Row;
       return res;
+    }
+
+    /// <summary>
+    /// Преобразует массив <see cref="DataRowView"/> в массив <see cref="DataRow"/>.
+    /// Может быть полезно при обработке результатов вызова метода <see cref="DataView.FindRows(object)"/>.
+    /// </summary>
+    /// <param name="drvs">Массив <see cref="DataRowView"/></param>
+    /// <returns>Массив строк таблицы</returns>
+    public static DataRow[] GetDataRowViewRows(DataRowView[] drvs)
+    {
+      if (drvs == null || drvs.Length == 0)
+        return EmptyArray<DataRow>.Empty;
+
+      DataRow[] a = new DataRow[drvs.Length];
+      for (int i = 0; i < drvs.Length; i++)
+        a[i] = drvs[i].Row;
+      return a;
     }
 
 #if XXXXXXXXXXXXXXX
@@ -7339,8 +6741,8 @@ namespace FreeLibSet.Core
     {
       if (String.IsNullOrEmpty(sort))
       {
-        columnNames = EmptyStrings;
-        directions = EmptySortDirections;
+        columnNames = EmptyArray<string>.Empty;
+        directions = EmptyArray<ListSortDirection>.Empty;
         return;
       }
 
@@ -7566,7 +6968,7 @@ namespace FreeLibSet.Core
         throw ExceptionFactory.ArgProperty("dv", dv, "DataView.Sort", dv.Sort, null);
 #endif
       if (dv.Sort.IndexOf(',') >= 0)
-        throw ExceptionFactory.ArgInvalidChar("dv",dv.Sort, ",");
+        throw ExceptionFactory.ArgInvalidChar("dv", dv.Sort, ",");
 
       int p = dv.Find(searchValue);
       if (p < 0)
@@ -7818,42 +7220,6 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region Вычисление ХЭШ-сумм
-
-    /// <summary>
-    /// Получение хэш-суммы массива байтов по алгоритму MD5.
-    /// Возвращает результат в виде 32-разрядной строки с 16-ричными символами.
-    /// Если <paramref name="bytes"/>=null, то возвращается хэш-сумма для массива нулевой длины.
-    /// Для расчета суммы для <see cref="System.IO.Stream"/> или файла, используйте методы в <see cref="FreeLibSet.IO.FileTools"/>.
-    /// </summary>
-    /// <param name="bytes">Исходный массив байт</param>
-    /// <returns>Строка хэш-суммы</returns>
-    public static string MD5Sum(byte[] bytes)
-    {
-      if (bytes == null)
-        bytes = DataTools.EmptyBytes;
-      MD5 md5Hasher = MD5.Create();
-      byte[] HashRes = md5Hasher.ComputeHash(bytes);
-      return DataTools.BytesToHex(HashRes, false);
-    }
-
-    /// <summary>
-    /// Получение суммы MD5 для строки.
-    /// Строка представляется в кодировке Unicode.
-    /// Для расчета суммы для <see cref="System.IO.Stream"/> или файла, используйте методы в <see cref="FreeLibSet.IO.FileTools"/>.
-    /// </summary>
-    /// <param name="s">Строка, для которой вычисляется сумма. Может быть пустой строкой.
-    /// Null считается пустой строкой</param>
-    /// <returns>Сумма MD5</returns>
-    public static string MD5SumFromString(string s)
-    {
-      if (s == null)
-        s = String.Empty;
-      byte[] b = Encoding.Unicode.GetBytes(s);
-      return MD5Sum(b);
-    }
-
-    #endregion
 
     #region Прочие функции
 
@@ -8102,6 +7468,18 @@ namespace FreeLibSet.Core
         refValue = default(T); // обычно, null
       }
     }
+
+    ///// <summary>
+    ///// Возвращает код типа для заданного типа <see cref=" System.Type"/>.
+    ///// Для получения кода типа для значения используется <see cref="System.Convert.GetTypeCode(object)"/>.
+    ///// Для не-примитивных типов возвращается <see cref="TypeCode.Object"/>.
+    ///// Если <paramref name="typ"/>==null, возвращается <see cref="TypeCode.Empty"/>.
+    ///// </summary>
+    ///// <param name="typ">Тип данных</param>
+    ///// <returns>Код типа</returns>
+    //public static TypeCode GetTypeCode(Type typ)
+    //{
+    //}
 
     #endregion
 

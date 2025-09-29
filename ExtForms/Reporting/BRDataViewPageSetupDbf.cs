@@ -45,7 +45,7 @@ namespace FreeLibSet.Forms.Reporting
 
       ghColumns = new EFPDataGridView(page.BaseProvider, grColumns);
       ghColumns.Control.AutoGenerateColumns = false;
-      ghColumns.Columns.AddBool("Exported", true, "");
+      ghColumns.Columns.AddCheckBox("Exported", true, "");
       ghColumns.Columns.LastAdded.DisplayName = Res.BRDataViewPageSetupDbf_Name_Exported;
       ghColumns.Columns.AddTextFill("DisplayName", true, Res.BRDataViewPageSetupDbf_ColTitle_DisplayName, 100, 10);
       ghColumns.Columns.LastAdded.CanIncSearch = true;
@@ -59,8 +59,8 @@ namespace FreeLibSet.Forms.Reporting
       ghColumns.Columns["Exported"].GridColumn.ReadOnly = false;
       ghColumns.Columns["DbfName"].GridColumn.ReadOnly = false;
       ghColumns.CommandItems.OutHandler.Items.Clear(); // избегаем вложенного показа
-      ghColumns.GetRowAttributes += GhColumns_GetRowAttributes;
-      ghColumns.GetCellAttributes += GhColumns_GetCellAttributes;
+      ghColumns.RowInfoNeeded += GhColumns_RowInfoNeeded;
+      ghColumns.CellInfoNeeded += GhColumns_CellInfoNeeded;
       ghColumns.Validating += GhColumns_Validating;
       ghColumns.CellFinished += GhColumns_CellFinished;
       ghColumns.ToolBarPanel = panSpbColumns;
@@ -115,18 +115,18 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Проверка столбцов
 
-    private void GhColumns_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    private void GhColumns_RowInfoNeeded(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
       if (args.DataRow == null)
         return;
 
-      if (DataTools.GetBool(args.DataRow, "ErrorDbfName"))
+      if (DataTools.GetBoolean(args.DataRow, "ErrorDbfName"))
         args.AddRowError(Res.BRDataViewPageSetupDbf_Err_BadFieldName, "DbfName");
-      if (DataTools.GetBool(args.DataRow, "RepeatedDbfName"))
+      if (DataTools.GetBoolean(args.DataRow, "RepeatedDbfName"))
         args.AddRowError(Res.BRDataViewPageSetupDbf_Err_RepeatedFieldName, "DbfName");
     }
 
-    private void GhColumns_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private void GhColumns_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (args.DataRow == null)
         return;
@@ -134,7 +134,7 @@ namespace FreeLibSet.Forms.Reporting
       {
         case "DbfName":
         case "Format":
-          if (!DataTools.GetBool(args.DataRow, "Exported"))
+          if (!DataTools.GetBoolean(args.DataRow, "Exported"))
             args.Grayed = true;
           break;
       }
@@ -152,7 +152,7 @@ namespace FreeLibSet.Forms.Reporting
       for (int i = 0; i < lstColumns.Count; i++)
       {
         DataRow row = tblColumns.Rows[i];
-        if (!DataTools.GetBool(row, "Exported"))
+        if (!DataTools.GetBoolean(row, "Exported"))
           continue;
 
         string nm = row["DbfName"].ToString();
@@ -215,7 +215,7 @@ namespace FreeLibSet.Forms.Reporting
       for (int i = 0; i < lstColumns.Count; i++)
       {
         DataRow row = tblColumns.Rows[i];
-        _ViewData.SetDbfExported(lstColumns[i], DataTools.GetBool(row, "Exported"));
+        _ViewData.SetDbfExported(lstColumns[i], DataTools.GetBoolean(row, "Exported"));
         string newName = row["DbfName"].ToString();
         string orgName = row["OrgDbfName"].ToString();
         if (newName != orgName)

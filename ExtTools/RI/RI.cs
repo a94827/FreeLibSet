@@ -665,8 +665,8 @@ namespace FreeLibSet.RI
     protected void WriteChangeLines(CfgPart part, string name, string[] lines)
     {
       if (lines == null)
-        lines = DataTools.EmptyStrings;
-      part.SetInt(name + "_Count", lines.Length);
+        lines = EmptyArray<string>.Empty;
+      part.SetInt32(name + "_Count", lines.Length);
       for (int i = 0; i < lines.Length; i++)
         part.SetString(name + "_" + i.ToString(), lines[i]);
     }
@@ -679,9 +679,9 @@ namespace FreeLibSet.RI
     /// <returns>Массив строк</returns>
     protected string[] ReadChangeLines(CfgPart part, string name)
     {
-      int n = part.GetInt(name + "_Count");
+      int n = part.GetInt32(name + "_Count");
       if (n == 0)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       string[] lines = new string[n];
       for (int i = 0; i < n; i++)
         lines[i] = part.GetString(name + "_" + i.ToString());

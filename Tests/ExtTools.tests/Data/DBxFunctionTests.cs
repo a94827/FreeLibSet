@@ -148,7 +148,7 @@ namespace ExtTools_tests.Data
       for (int i = 0; i < nArgs; i++)
       {
         if (i < nNulls)
-          args[i] = new DBxConst(null, DBxColumnType.Int);
+          args[i] = new DBxConst(null, DBxColumnType.Int32);
         else
           args[i] = new DBxConst(i + 1);
       }

@@ -131,6 +131,33 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Добавляет текстовый столбец
+    /// </summary>
+    /// <param name="columnName">Имя столбца</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="columnFormat">Параметры столбца</param>
+    /// <returns>Описание столбца</returns>
+    public EFPGridProducerColumn AddText(string columnName, string headerText, UITextColumnFormat columnFormat)
+    {
+#if DEBUG
+      if (columnFormat == null)
+        throw new ArgumentNullException("columnFormat");
+#endif
+      EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
+      item.HeaderText = headerText;
+      item.TextAlign = (HorizontalAlignment)(int)(columnFormat.TextAlign);
+      item.TextWidth = columnFormat.TextWidth;
+      item.MinTextWidth = columnFormat.MinTextWidth;
+      item.Format = columnFormat.Format;
+      item.SizeGroup = columnFormat.SizeGroup;
+      item.DataType = columnFormat.DataType;
+      columnFormat.InitDbfPreliminaryInfo(item.DbfPreliminaryInfo);
+
+      Add(item);
+      return item;
+    }
+
+    /// <summary>
     /// Добавляет вычисляемый текстовый столбец
     /// </summary>
     /// <param name="name">Условное имя вычисляемого столбца</param>
@@ -166,10 +193,47 @@ namespace FreeLibSet.Forms
     private static string[] GetSourceColumnNameArray(string sourceColumnNames)
     {
       if (String.IsNullOrEmpty(sourceColumnNames))
-        return DataTools.EmptyStrings; // 14.06.2024
+        return EmptyArray<string>.Empty; // 14.06.2024
       else
         return sourceColumnNames.Split(',');
     }
+
+    /// <summary>
+    /// Добавляет вычисляемый текстовый столбец
+    /// </summary>
+    /// <param name="name">Условное имя вычисляемого столбца</param>
+    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
+    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
+    /// Вызывается при прорисовке каждой строки просмотра</param>
+    /// <param name="headerText">Заголовок столбца</param>
+    /// <param name="columnFormat">Параметры столбца</param>
+    /// <returns>Описание столбца</returns>
+    public EFPGridProducerColumn AddUserText(string name, string sourceColumnNames,
+      EFPGridProducerValueNeededEventHandler valueNeeded,
+      string headerText, UITextColumnFormat columnFormat)
+    {
+      if (valueNeeded == null)
+        throw new ArgumentNullException("valueNeeded");
+#if DEBUG
+      if (columnFormat == null)
+        throw new ArgumentNullException("columnFormat");
+#endif
+
+      EFPGridProducerColumn item = new EFPGridProducerColumn(name, GetSourceColumnNameArray(sourceColumnNames));
+      item.HeaderText = headerText;
+      item.TextAlign = (HorizontalAlignment)(int)(columnFormat.TextAlign);
+      item.TextWidth = columnFormat.TextWidth;
+      item.MinTextWidth = columnFormat.MinTextWidth;
+      item.Format = columnFormat.Format;
+      item.SizeGroup = columnFormat.SizeGroup;
+      item.ValueNeeded += valueNeeded;
+      item.DataType = columnFormat.DataType;
+      columnFormat.InitDbfPreliminaryInfo(item.DbfPreliminaryInfo);
+
+      Add(item);
+      return item;
+    }
+
 
     /// <summary>
     /// Добавить столбец для отображения числового поля.
@@ -179,7 +243,7 @@ namespace FreeLibSet.Forms
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
     /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddInt(string columnName, string headerText, int textWidth)
+    public EFPGridProducerColumn AddInteger(string columnName, string headerText, int textWidth)
     {
       EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
       item.HeaderText = headerText;
@@ -208,7 +272,7 @@ namespace FreeLibSet.Forms
     /// <param name="headerText">Заголовок столбца</param>
     /// <param name="textWidth">Ширина столбца в текстовых единицах</param>
     /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddUserInt(string name, string sourceColumnNames,
+    public EFPGridProducerColumn AddUserInteger(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText, int textWidth)
     {
@@ -477,146 +541,146 @@ namespace FreeLibSet.Forms
       return item;
     }
 
-    /// <summary>
-    /// Добавить столбец для отображения денежных сумм
-    /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddMoney(string columnName, string headerText)
-    {
-      return AddMoney(columnName, headerText, false);
-    }
+    ///// <summary>
+    ///// Добавить столбец для отображения денежных сумм
+    ///// </summary>
+    ///// <param name="columnName">Имя столбца</param>
+    ///// <param name="headerText">Заголовок столбца</param>
+    ///// <returns>Описание столбца</returns>
+    //public EFPGridProducerColumn AddMoney(string columnName, string headerText)
+    //{
+    //  return AddMoney(columnName, headerText, false);
+    //}
 
-    /// <summary>
-    /// Добавить столбец для отображения денежных сумм
-    /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="showPlusSign">Если true, то для положительных числовых значений будет
-    /// отображаться знак "+". 
-    /// Может быть удобно для столбцов, содержащих разности</param>
-    /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddMoney(string columnName, string headerText, bool showPlusSign)
-    {
-      EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
-      item.HeaderText = headerText;
-      item.TextAlign = HorizontalAlignment.Right;
-      item.TextWidth = 12;
-      item.MinTextWidth = 8;
-      if (showPlusSign)
-        item.Format = "+0.00;-0.00;0.00";
-      else
-        item.Format = "0.00";
-      item.SizeGroup = "Money";
-      item.DataType = typeof(Decimal);
-      item.Summable = true;
-      item.DbfPreliminaryInfo.Type = 'N';
-      item.DbfPreliminaryInfo.Length = 12;
-      item.DbfPreliminaryInfo.LengthIsDefined = false;
-      item.DbfPreliminaryInfo.Precision = 2;
-      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
-      Add(item);
-      return item;
-    }
+    ///// <summary>
+    ///// Добавить столбец для отображения денежных сумм
+    ///// </summary>
+    ///// <param name="columnName">Имя столбца</param>
+    ///// <param name="headerText">Заголовок столбца</param>
+    ///// <param name="showPlusSign">Если true, то для положительных числовых значений будет
+    ///// отображаться знак "+". 
+    ///// Может быть удобно для столбцов, содержащих разности</param>
+    ///// <returns>Описание столбца</returns>
+    //public EFPGridProducerColumn AddMoney(string columnName, string headerText, bool showPlusSign)
+    //{
+    //  EFPGridProducerColumn item = new EFPGridProducerColumn(columnName);
+    //  item.HeaderText = headerText;
+    //  item.TextAlign = HorizontalAlignment.Right;
+    //  item.TextWidth = 12;
+    //  item.MinTextWidth = 8;
+    //  if (showPlusSign)
+    //    item.Format = "+0.00;-0.00;0.00";
+    //  else
+    //    item.Format = "0.00";
+    //  item.SizeGroup = "Money";
+    //  item.DataType = typeof(Decimal);
+    //  item.Summable = true;
+    //  item.DbfPreliminaryInfo.Type = 'N';
+    //  item.DbfPreliminaryInfo.Length = 12;
+    //  item.DbfPreliminaryInfo.LengthIsDefined = false;
+    //  item.DbfPreliminaryInfo.Precision = 2;
+    //  item.DbfPreliminaryInfo.PrecisionIsDefined = true;
+    //  Add(item);
+    //  return item;
+    //}
 
-    /// <summary>
-    /// Добавить столбец для отображения денежных сумм.
-    /// Заголовок столбца равен <paramref name="columnName"/>.
-    /// </summary>
-    /// <param name="columnName">Имя столбца</param>
-    /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddMoney(string columnName)
-    {
-      return AddMoney(columnName, columnName);
-    }
+    ///// <summary>
+    ///// Добавить столбец для отображения денежных сумм.
+    ///// Заголовок столбца равен <paramref name="columnName"/>.
+    ///// </summary>
+    ///// <param name="columnName">Имя столбца</param>
+    ///// <returns>Описание столбца</returns>
+    //public EFPGridProducerColumn AddMoney(string columnName)
+    //{
+    //  return AddMoney(columnName, columnName);
+    //}
 
-    /// <summary>
-    /// Добавить вычисляемый столбец для отображения денежных сумм.
-    /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddUserMoney(string name, string sourceColumnNames,
-      EFPGridProducerValueNeededEventHandler valueNeeded,
-      string headerText)
-    {
-      return AddUserMoney(name, sourceColumnNames, valueNeeded, headerText, false);
-    }
+    ///// <summary>
+    ///// Добавить вычисляемый столбец для отображения денежных сумм.
+    ///// </summary>
+    ///// <param name="name">Условное имя вычисляемого столбца</param>
+    ///// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
+    ///// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
+    ///// Вызывается при прорисовке каждой строки просмотра</param>
+    ///// <param name="headerText">Заголовок столбца</param>
+    ///// <returns>Описание столбца</returns>
+    //public EFPGridProducerColumn AddUserMoney(string name, string sourceColumnNames,
+    //  EFPGridProducerValueNeededEventHandler valueNeeded,
+    //  string headerText)
+    //{
+    //  return AddUserMoney(name, sourceColumnNames, valueNeeded, headerText, false);
+    //}
 
-    /// <summary>
-    /// Добавить вычисляемый столбец для отображения денежных сумм.
-    /// </summary>
-    /// <param name="name">Условное имя вычисляемого столбца</param>
-    /// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
-    /// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
-    /// Вызывается при прорисовке каждой строки просмотра</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <param name="showPlusSign">Если true, то для положительных числовых значений будет
-    /// отображаться знак "+". 
-    /// Может быть удобно для столбцов, содержащих разности</param>
-    /// <returns>Описание столбца</returns>
-    public EFPGridProducerColumn AddUserMoney(string name, string sourceColumnNames,
-      EFPGridProducerValueNeededEventHandler valueNeeded,
-      string headerText, bool showPlusSign)
-    {
-      if (valueNeeded == null)
-        throw new ArgumentNullException("valueNeeded");
+    ///// <summary>
+    ///// Добавить вычисляемый столбец для отображения денежных сумм.
+    ///// </summary>
+    ///// <param name="name">Условное имя вычисляемого столбца</param>
+    ///// <param name="sourceColumnNames">Список имен полей, на основании которых вычисляются значения полей</param>
+    ///// <param name="valueNeeded">Пользовательский обработчик, выполняющий расчет значений.
+    ///// Вызывается при прорисовке каждой строки просмотра</param>
+    ///// <param name="headerText">Заголовок столбца</param>
+    ///// <param name="showPlusSign">Если true, то для положительных числовых значений будет
+    ///// отображаться знак "+". 
+    ///// Может быть удобно для столбцов, содержащих разности</param>
+    ///// <returns>Описание столбца</returns>
+    //public EFPGridProducerColumn AddUserMoney(string name, string sourceColumnNames,
+    //  EFPGridProducerValueNeededEventHandler valueNeeded,
+    //  string headerText, bool showPlusSign)
+    //{
+    //  if (valueNeeded == null)
+    //    throw new ArgumentNullException("valueNeeded");
 
-      EFPGridProducerColumn item = new EFPGridProducerColumn(name, GetSourceColumnNameArray(sourceColumnNames));
-      item.HeaderText = headerText;
-      item.TextAlign = HorizontalAlignment.Right;
-      item.TextWidth = 12;
-      item.MinTextWidth = 8;
-      if (showPlusSign)
-        item.Format = "+0.00;-0.00;0.00";
-      else
-        item.Format = "0.00";
-      item.SizeGroup = "Money";
-      item.ValueNeeded += valueNeeded;
-      item.DataType = typeof(Decimal);
-      item.Summable = true;
-      item.DbfPreliminaryInfo.Type = 'N';
-      item.DbfPreliminaryInfo.Length = 12;
-      item.DbfPreliminaryInfo.LengthIsDefined = false;
-      item.DbfPreliminaryInfo.Precision = 2;
-      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
-      Add(item);
-      return item;
-    }
+    //  EFPGridProducerColumn item = new EFPGridProducerColumn(name, GetSourceColumnNameArray(sourceColumnNames));
+    //  item.HeaderText = headerText;
+    //  item.TextAlign = HorizontalAlignment.Right;
+    //  item.TextWidth = 12;
+    //  item.MinTextWidth = 8;
+    //  if (showPlusSign)
+    //    item.Format = "+0.00;-0.00;0.00";
+    //  else
+    //    item.Format = "0.00";
+    //  item.SizeGroup = "Money";
+    //  item.ValueNeeded += valueNeeded;
+    //  item.DataType = typeof(Decimal);
+    //  item.Summable = true;
+    //  item.DbfPreliminaryInfo.Type = 'N';
+    //  item.DbfPreliminaryInfo.Length = 12;
+    //  item.DbfPreliminaryInfo.LengthIsDefined = false;
+    //  item.DbfPreliminaryInfo.Precision = 2;
+    //  item.DbfPreliminaryInfo.PrecisionIsDefined = true;
+    //  Add(item);
+    //  return item;
+    //}
 
-    /// <summary>
-    /// Добавить денежный столбец, являющийся суммой двух или более других столбцов
-    /// типа decimal. Если все столбцы в строке имеют значение <see cref="DBNull"/>, то значение
-    /// не выводится
-    /// </summary>
-    /// <param name="name">Условное имя столбца</param>
-    /// <param name="sourceColumnNames">Имена исходных (суммируемых) столбцов</param>
-    /// <param name="headerText">Заголовок столбца</param>
-    /// <returns>Описание столбца</returns>
-    public EFPGridProducerSumColumn AddSumMoney(string name, string sourceColumnNames,
-      string headerText)
-    {
-      EFPGridProducerSumColumn item = new EFPGridProducerSumColumn(name, GetSourceColumnNameArray(sourceColumnNames));
-      item.HeaderText = headerText;
-      item.TextAlign = HorizontalAlignment.Right;
-      item.TextWidth = 12;
-      item.MinTextWidth = 8;
-      item.Format = "0.00";
-      item.SizeGroup = "Money";
-      item.DataType = typeof(Decimal);
-      item.Summable = true;
-      item.DbfPreliminaryInfo.Type = 'N';
-      item.DbfPreliminaryInfo.Length = 12;
-      item.DbfPreliminaryInfo.LengthIsDefined = false;
-      item.DbfPreliminaryInfo.Precision = 2;
-      item.DbfPreliminaryInfo.PrecisionIsDefined = true;
-      Add(item);
-      return item;
-    }
+    ///// <summary>
+    ///// Добавить денежный столбец, являющийся суммой двух или более других столбцов
+    ///// типа decimal. Если все столбцы в строке имеют значение <see cref="DBNull"/>, то значение
+    ///// не выводится
+    ///// </summary>
+    ///// <param name="name">Условное имя столбца</param>
+    ///// <param name="sourceColumnNames">Имена исходных (суммируемых) столбцов</param>
+    ///// <param name="headerText">Заголовок столбца</param>
+    ///// <returns>Описание столбца</returns>
+    //public EFPGridProducerSumColumn AddSumMoney(string name, string sourceColumnNames,
+    //  string headerText)
+    //{
+    //  EFPGridProducerSumColumn item = new EFPGridProducerSumColumn(name, GetSourceColumnNameArray(sourceColumnNames));
+    //  item.HeaderText = headerText;
+    //  item.TextAlign = HorizontalAlignment.Right;
+    //  item.TextWidth = 12;
+    //  item.MinTextWidth = 8;
+    //  item.Format = "0.00";
+    //  item.SizeGroup = "Money";
+    //  item.DataType = typeof(Decimal);
+    //  item.Summable = true;
+    //  item.DbfPreliminaryInfo.Type = 'N';
+    //  item.DbfPreliminaryInfo.Length = 12;
+    //  item.DbfPreliminaryInfo.LengthIsDefined = false;
+    //  item.DbfPreliminaryInfo.Precision = 2;
+    //  item.DbfPreliminaryInfo.PrecisionIsDefined = true;
+    //  Add(item);
+    //  return item;
+    //}
 
     #endregion
 
@@ -721,8 +785,8 @@ namespace FreeLibSet.Forms
       // TODO:
       /*
       GridProducerUserColumn Col = (GridProducerUserColumn)Sender;
-      int Year = DataTools.GetInt(Args.Row, Col.FieldNames[0]);
-      int Month = DataTools.GetInt(Args.Row, Col.FieldNames[1]);
+      int Year = DataTools.GetInt32(Args.Row, Col.FieldNames[0]);
+      int Month = DataTools.GetInt32(Args.Row, Col.FieldNames[1]);
       if (Year != 0)
         Args.Value = DataConv.DateLongStr(Year, Month);
        * */
@@ -876,7 +940,7 @@ namespace FreeLibSet.Forms
     private static void MonthDayColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
     {
       EFPGridProducerItemBase item = (EFPGridProducerItemBase)sender;
-      int v = args.GetInt(item.SourceColumnNames[0]);
+      int v = args.GetInt32(item.SourceColumnNames[0]);
       if (v == 0)
         return;
       else if (v < 1 || v > 365)
@@ -954,8 +1018,8 @@ namespace FreeLibSet.Forms
     private static void MonthDayRangeColumn_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args, bool longFormat)
     {
       EFPGridProducerItemBase item = (EFPGridProducerItemBase)sender;
-      int v1 = args.GetInt(item.SourceColumnNames[0]);
-      int v2 = args.GetInt(item.SourceColumnNames[1]);
+      int v1 = args.GetInt32(item.SourceColumnNames[0]);
+      int v2 = args.GetInt32(item.SourceColumnNames[1]);
       if (v1 == 0 && v2 == 0)
         return;
       else if (v1 < 1 || v1 > 365 || v2 < 1 || v2 > 365)
@@ -977,7 +1041,7 @@ namespace FreeLibSet.Forms
     /// <param name="columnName">Имя столбца</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Описание столбца</returns>
-    public EFPGridProducerCheckBoxColumn AddBool(string columnName, string headerText)
+    public EFPGridProducerCheckBoxColumn AddCheckBox(string columnName, string headerText)
     {
       EFPGridProducerCheckBoxColumn item = new EFPGridProducerCheckBoxColumn(columnName);
       item.HeaderText = headerText;
@@ -996,7 +1060,7 @@ namespace FreeLibSet.Forms
     /// Вызывается при прорисовке каждой строки просмотра</param>
     /// <param name="headerText">Заголовок столбца</param>
     /// <returns>Описание столбца</returns>
-    public EFPGridProducerCheckBoxColumn AddUserBool(string name, string sourceColumnNames,
+    public EFPGridProducerCheckBoxColumn AddUserCheckBox(string name, string sourceColumnNames,
       EFPGridProducerValueNeededEventHandler valueNeeded,
       string headerText)
     {
@@ -1292,13 +1356,13 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Создание вычисляемого столбца.
     /// Если <paramref name="sourceColumnNames"/> задано, то столбец будет вычисляемым.
-    /// Если столбец извлекает данные не из источника данных, то следует задать пустой массив <paramref name="sourceColumnNames"/>=DataTools.EmptyStrings.
+    /// Если столбец извлекает данные не из источника данных, то следует задать пустой массив <paramref name="sourceColumnNames"/>=<see cref="EmptyArray{String}.Empty"/>.
     /// </summary>
     /// <param name="name">Условное имя этого столбца</param>
     /// <param name="sourceColumnNames">Имена столбцов, на основании которых производится вычисления.
     /// Если null, то столбец является обычным, а невычисляемым.
     /// Для создания вычисляемого столбца, не использующего данные других столбцов (например для нумерации строк),
-    /// задайте пустой массив <see cref="DataTools.EmptyStrings"/></param>
+    /// задайте пустой массив <see cref="FreeLibSet.Core.EmptyArray{T}.Empty"/></param>
     public EFPGridProducerColumn(string name, string[] sourceColumnNames)
       : base(name, sourceColumnNames)
     {
@@ -1354,7 +1418,7 @@ namespace FreeLibSet.Forms
       if (String.IsNullOrEmpty(HeaderText))
         return base.GetDefaultDisplayName();
       else
-        return DataTools.RemoveDoubleChars(DataTools.ReplaceAny(HeaderText, "\r\n", ' '), ' ');
+        return StringTools.RemoveDoubleChars(StringTools.ReplaceAny(HeaderText, "\r\n", ' '), ' ');
     }
 
     /// <summary>
@@ -1500,7 +1564,6 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Может ли для столбца выполняться суммирование.
     /// По умолчанию - false - суммирование не выполняется.
-    /// Если столбец создан с помощью методов <see cref="EFPGridProducerColumns.AddMoney(string)"/> или <see cref="EFPGridProducerColumns.AddUserMoney(string, string, EFPGridProducerValueNeededEventHandler, string)"/>, то устанавливается начальное значение true.
     /// </summary>
     public bool Summable { get { return _Summable; } set { _Summable = value; } }
     private bool _Summable;
@@ -1573,7 +1636,7 @@ namespace FreeLibSet.Forms
     /// <returns>Объект провайдера столбца, производный от <see cref="EFPDataGridViewColumn"/></returns>
     public virtual EFPDataGridViewColumn CreateGridColumn(EFPDataGridView controlProvider)
     {
-      controlProvider.Columns.AddText(Name, false, HeaderText);
+      controlProvider.Columns.AddText(Name, false, HeaderText, 10, 1);
       EFPDataGridViewColumn column = controlProvider.Columns.LastAdded;
       InitGridColumn(column);
 
@@ -1635,7 +1698,7 @@ namespace FreeLibSet.Forms
     /// <param name="column">Столбец <see cref="DataGridViewColumn"/></param>
     /// <param name="config">Конфигурация столбца</param>
     /// <param name="controlProvider">Провайдер табличного просмотра</param>
-    public virtual void ApplyConfig(DataGridViewColumn column, EFPDataGridViewConfigColumn config, EFPDataGridView controlProvider)
+    public virtual void ApplyConfig(DataGridViewColumn column, EFPDataViewConfigColumn config, EFPDataGridView controlProvider)
     {
       bool isImgColumn = column is DataGridViewImageColumn || column is DataGridViewCheckBoxColumn;
       if (config.FillMode)
@@ -1690,8 +1753,8 @@ namespace FreeLibSet.Forms
         controlProvider.Columns.AddDouble(Name, false, HeaderText, TextWidth, FormatStringTools.DecimalPlacesFromNumberFormat(Format), SizeGroup);
       else if (DataType == typeof(Single))
         controlProvider.Columns.AddSingle(Name, false, HeaderText, TextWidth, FormatStringTools.DecimalPlacesFromNumberFormat(Format), SizeGroup);
-      else if (DataTools.IsIntegerType(DataType))
-        controlProvider.Columns.AddInt(Name, false, HeaderText, TextWidth);
+      else if (MathTools.IsIntegerType(DataType))
+        controlProvider.Columns.AddInt32(Name, false, HeaderText, TextWidth);
       else if (DataType == typeof(DateTime))
         controlProvider.Columns.AddDateTime(Name, false, HeaderText, FormatStringTools.GetEditableDateTimeFormatterKind(Format));
       else
@@ -1744,7 +1807,7 @@ namespace FreeLibSet.Forms
     /// <param name="column">Столбец <see cref="EFPDataTreeViewColumn"/></param>
     /// <param name="config">Конфигурация столбца</param>
     /// <param name="controlProvider">Провайдер табличного просмотра</param>
-    public virtual void ApplyConfig(EFPDataTreeViewColumn column, EFPDataGridViewConfigColumn config, EFPDataTreeView controlProvider)
+    public virtual void ApplyConfig(EFPDataTreeViewColumn column, EFPDataViewConfigColumn config, EFPDataTreeView controlProvider)
     {
       bool isImgColumn = column.NodeControl is NodeIcon;
       if (config.FillMode)
@@ -1782,15 +1845,15 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Получение значение вычисляемого поля. Вызывает виртуальный метод <see cref="EFPGridProducerItemBase.OnValueNeeded(EFPGridProducerValueNeededEventArgs)"/>.
-    /// Если столбец/подсказка не являются вычисляемым, возвращается значение <paramref name="rowInfo"/>.Values.GetValue(Name).
+    /// Если столбец/подсказка не являются вычисляемым, возвращается значение <paramref name="rowValues"/>.Values.GetValue(Name).
     /// </summary>
-    /// <param name="rowInfo">Информация о строке</param>
+    /// <param name="rowValues">Информация о строке</param>
     /// <returns>Вычисленное значение</returns>
-    public object GetValue(EFPDataViewRowInfo rowInfo)
+    public object GetValue(EFPDataViewRowValues rowValues)
     {
       object value;
       string toolTipText;
-      base.DoGetValue(EFPGridProducerValueReason.Value, rowInfo, out value, out toolTipText);
+      base.DoGetValue(EFPGridProducerValueReason.Value, rowValues, out value, out toolTipText);
       return value;
     }
 
@@ -1799,14 +1862,14 @@ namespace FreeLibSet.Forms
     /// Вызывается при необходимости получения всплывающей подсказки для данной ячейки
     /// при наведении курсора. Если возвращается пустая строка, то нет дополнительной подсказки для ячейки.
     /// </summary>
-    /// <param name="rowInfo">Информация о строке</param>
+    /// <param name="rowValues">Информация о строке</param>
     /// <param name="columnName">Игнорируется. Сделано для симметрии с остальными обработчиками</param>
     /// <returns>Текст подсказки</returns>
-    public string GetCellToolTipText(EFPDataViewRowInfo rowInfo, string columnName)
+    public string GetCellToolTipText(EFPDataViewRowValues rowValues, string columnName)
     {
       object value;
       string toolTipText;
-      base.DoGetValue(EFPGridProducerValueReason.ToolTipText, rowInfo, out value, out toolTipText);
+      base.DoGetValue(EFPGridProducerValueReason.ToolTipText, rowValues, out value, out toolTipText);
 
       if (toolTipText == null)
         return String.Empty;
@@ -1822,7 +1885,7 @@ namespace FreeLibSet.Forms
     /// Событие вызывается при форматировании ячейки с возможностью задания 
     /// цветовых атрибутов и отформатированного значения
     /// </summary>
-    public event EFPDataGridViewCellAttributesEventHandler GetCellAttributes;
+    public event EFPDataGridViewCellInfoEventHandler CellInfoNeeded;
 
     ///// <summary>
     ///// Возвращает true, если для столбца заданы форматирующие обработчики
@@ -1833,13 +1896,13 @@ namespace FreeLibSet.Forms
     //}
 
     /// <summary>
-    /// Вызов события <see cref="GetCellAttributes"/> из <see cref="EFPDataGridView"/>
+    /// Вызов события <see cref="CellInfoNeeded"/> из <see cref="EFPDataGridView"/>
     /// </summary>
     /// <param name="args">Аргументы, передаваемые обработчику</param>
-    internal void OnGetCellAttributes(EFPDataGridViewCellAttributesEventArgs args)
+    internal void OnCellInfoNeeded(EFPDataGridViewCellInfoEventArgs args)
     {
-      if (GetCellAttributes != null)
-        GetCellAttributes(this, args);
+      if (CellInfoNeeded != null)
+        CellInfoNeeded(this, args);
     }
 
     #endregion
@@ -1868,12 +1931,12 @@ namespace FreeLibSet.Forms
     /// Используется для столбцов CheckBox.
     /// Вызывает виртуальный метод <see cref="OnCellClick(EFPGridProducerCellClickEventArgs)"/>.
     /// </summary>
-    /// <param name="rowInfo">Информация о строке</param>
+    /// <param name="rowValues">Информация о строке</param>
     /// <param name="columnName">Игнорируется, т.к. <see cref="EFPGridProducerColumn"/> всегда относится к единственному столбцу просмотра</param>
-    public void PerformCellClick(EFPDataViewRowInfo rowInfo, string columnName)
+    public void PerformCellClick(EFPDataViewRowValues rowValues, string columnName)
     {
       EFPGridProducerCellClickEventArgs args = new EFPGridProducerCellClickEventArgs(this);
-      args.RowInfo = rowInfo;
+      args.RowValues = rowValues;
       OnCellClick(args);
     }
 
@@ -1901,13 +1964,13 @@ namespace FreeLibSet.Forms
     /// Вызывается при попытке редактирования ячейки, связанной со столбцом.
     /// Метод вызывается до стандартной обработки, например, посылки извещения <see cref="EFPDataGridView.EditData"/>.
     /// </summary>
-    /// <param name="rowInfo">Информация о строке просмотра</param>
+    /// <param name="rowValues">Информация о строке просмотра</param>
     /// <param name="columnName">Игнорируется, т.к. <see cref="EFPGridProducerColumn"/> всегда относится к единственному столбцу просмотра</param>
     /// <returns>true, если редактирование выполнено и дальнейшее редактирование не должно выполняться</returns>
-    public bool PerformCellEdit(EFPDataViewRowInfo rowInfo, string columnName)
+    public bool PerformCellEdit(EFPDataViewRowValues rowValues, string columnName)
     {
       EFPGridProducerCellEditEventArgs args = new EFPGridProducerCellEditEventArgs(this);
-      args.RowInfo = rowInfo;
+      args.RowValues = rowValues;
       OnCellEdit(args);
       return args.Handled;
     }
@@ -1931,8 +1994,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     public string PrintHeadersSpec
     {
-      get { return DataTools.StrFromSpecCharsArray(PrintHeaders); }
-      set { PrintHeaders = DataTools.StrToSpecCharsArray(value); }
+      get { return StringTools.StrFromSpecCharsArray(PrintHeaders); }
+      set { PrintHeaders = StringTools.StrToSpecCharsArray(value); }
     }
 
     /// <summary>
@@ -2057,7 +2120,7 @@ namespace FreeLibSet.Forms
     /// Признак автоматического увеличения ширины столбца при печати для заполнения ширины столбца в настройках по умолчанию.
     /// Если true, то <see cref="PrintWidth"/> задает минимальную ширину столбца.
     /// По умолчанию свойство возвращает true, если <see cref="DataGridViewColumn.AutoSizeMode"/>=<see cref="DataGridViewAutoSizeColumnMode.Fill"/>, 
-    /// например, если столбец был создан с помощью <see cref="EFPDataGridViewColumns.AddTextFill(string)"/>.
+    /// например, если столбец был создан с помощью <see cref="EFPDataGridViewColumns.AddTextFill(string, bool, string, int, int)"/>.
     /// </summary>
     public bool PrintAutoGrow
     {
@@ -2158,7 +2221,7 @@ namespace FreeLibSet.Forms
     /// <returns>Объект провайдера столбца, производный от <see cref="EFPDataGridViewColumn"/></returns>
     public override EFPDataGridViewColumn CreateGridColumn(EFPDataGridView controlProvider)
     {
-      controlProvider.Columns.AddBool(Name, false, HeaderText);
+      controlProvider.Columns.AddCheckBox(Name, false, HeaderText);
       EFPDataGridViewColumn column = controlProvider.Columns.LastAdded;
       InitGridColumn(column);
       return column;
@@ -2171,7 +2234,7 @@ namespace FreeLibSet.Forms
     /// <returns></returns>
     public override EFPDataTreeViewColumn CreateTreeColumn(EFPDataTreeView controlProvider)
     {
-      controlProvider.Columns.AddBool(Name, false, HeaderText);
+      controlProvider.Columns.AddCheckBox(Name, false, HeaderText);
       EFPDataTreeViewColumn column = controlProvider.Columns.LastAdded;
       InitTreeColumn(column);
       return column;
@@ -2334,7 +2397,7 @@ namespace FreeLibSet.Forms
         args.Value = String.Empty;
       else
       {
-        int srcVal = DataTools.GetInt(val);
+        int srcVal = DataTools.GetInt32(val);
         if (srcVal < 0 || srcVal >= TextValues.Length)
           args.Value = "?? " + srcVal.ToString();
         else
@@ -2467,7 +2530,7 @@ namespace FreeLibSet.Forms
       }
       else
       {
-        int srcVal = DataTools.GetInt(val);
+        int srcVal = DataTools.GetInt32(val);
         if (srcVal < 0 || srcVal >= ImageKeys.Length)
         {
           imageKey = ErrorImageKey;
@@ -2527,7 +2590,7 @@ namespace FreeLibSet.Forms
     /// <returns>Провайдер столбца</returns>
     public override EFPDataGridViewColumn CreateGridColumn(EFPDataGridView controlProvider)
     {
-      controlProvider.Columns.AddLink(Name, false, HeaderText);
+      controlProvider.Columns.AddLink(Name, false, HeaderText, 10, 1);
       EFPDataGridViewColumn column = controlProvider.Columns.LastAdded;
       InitGridColumn(column);
 
@@ -2587,7 +2650,7 @@ namespace FreeLibSet.Forms
     private static string[] GetSourceColumnNames(string filterColumnName)
     {
       if (String.IsNullOrEmpty(filterColumnName))
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
         return new string[] { filterColumnName };
     }
@@ -2643,7 +2706,7 @@ namespace FreeLibSet.Forms
       args.Value = args.RowIndex + 1;
       if (!String.IsNullOrEmpty(FilterColumnName))
       {
-        int value = args.GetInt(FilterColumnName);
+        int value = args.GetInt32(FilterColumnName);
         if (value != FilterValue)
           args.Value = null;
       }
@@ -2827,7 +2890,7 @@ namespace FreeLibSet.Forms
 
     public override object GetValue(DataGridView Grid, int RowIndex, DataRow Row)
     {
-      Int32 FileId = DataTools.GetInt(Row, FSourceColumnName);
+      Int32 FileId = DataTools.GetInt32(Row, FSourceColumnName);
       if (FileId == 0)
         return DBNull.Value;
       else

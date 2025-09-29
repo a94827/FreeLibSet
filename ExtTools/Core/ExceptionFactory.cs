@@ -237,6 +237,8 @@ namespace FreeLibSet.Core
     /// <returns>Объект исключения</returns>
     public static ArgumentException ArgWrongCollectionCount(string paramName, System.Collections.ICollection value, int wantedCount)
     {
+      if (value == null)
+        throw new ArgumentNullException("value");
       return new ArgumentException(String.Format(Res.Common_Arg_WrongCollectionCount, value.Count, wantedCount), paramName);
     }
 
@@ -343,6 +345,9 @@ namespace FreeLibSet.Core
     /// <returns>Объект исключения</returns>
     public static ArgumentException ArgInvalidEnumerableType(string paramName, System.Collections.IEnumerable enumerable)
     {
+      if (enumerable == null)
+        throw new ArgumentNullException("enumerable"); 
+
       string typeName = "null";
       foreach (object obj in enumerable)
       {
@@ -365,6 +370,9 @@ namespace FreeLibSet.Core
     /// <returns>Объект исключения</returns>
     public static ArgumentException ArgInvalidListItem(string paramName, System.Collections.IList collection, int itemIndex)
     {
+      if (collection == null)
+        throw new ArgumentNullException("collection");
+
       object itemValue = collection[itemIndex];
       if (itemValue == null)
         itemValue = "null";
@@ -383,6 +391,9 @@ namespace FreeLibSet.Core
     /// <returns>Объект исключения</returns>
     public static ArgumentException ArgInvalidEnumerableItem(string paramName, System.Collections.IEnumerable collection, object itemValue)
     {
+      if (collection == null)
+        throw new ArgumentNullException("collection");
+
       int idx = 0;
       int foundIndex = -1;
       foreach (object item in collection)
@@ -495,7 +506,7 @@ namespace FreeLibSet.Core
 
     #endregion
 
-    #region InvalidOperationException 
+    #region InvalidOperationException
 
     /// <summary>
     /// Возвращает исключение, если структура не была инициализирована, то есть для нее не был вызван конструктор в явном виде
@@ -663,7 +674,7 @@ namespace FreeLibSet.Core
       if (key == null)
         return "null"; // не должно быть
       if (key is Array)
-        return DataTools.ToStringJoin(",", (Array)key);
+        return StringTools.ToStringJoin(",", (Array)key);
       else
         return key.ToString();
     }
@@ -746,6 +757,23 @@ namespace FreeLibSet.Core
       return new InvalidOperationException(String.Format(Res.Common_Err_ConstructorAlreadyCalled, typ));
     }
 
+
+    /// <summary>
+    /// Возвращает исключение, когда метод уже был вызван.
+    /// </summary>
+    /// <param name="obj">Объект. Для статического свойства передается ссылка на <see cref="System.Type"/>.</param>
+    /// <param name="methodName">Имя метода</param>
+    /// <returns>Объект исключения</returns>
+    public static InvalidOperationException MethodAlreadyCalled(object obj, string methodName)
+    {
+      if (obj == null)
+        throw new ArgumentNullException("obj");
+      if (String.IsNullOrEmpty(methodName))
+        throw ExceptionFactory.ArgStringIsNullOrEmpty("methodName");
+
+      return new InvalidOperationException(String.Format(Res.Common_Err_MethodAlreadyCalled, methodName, obj.ToString()));
+    }
+
     #endregion
 
     #region Путь к файлу
@@ -783,7 +811,23 @@ namespace FreeLibSet.Core
     /// <returns>Объект исключения</returns>
     public static ArgumentException ArgUnknownColumnName(string paramName, System.Data.DataTable table, string columnName)
     {
+      if (table == null)
+        throw new ArgumentNullException("table");
       return new ArgumentException(String.Format(Res.Common_Arg_DataTableHasNoColumn, table.TableName, columnName), paramName);
+    }
+
+    /// <summary>
+    /// Возвращает <see cref="ArgumentException"/> для аргумента, задающего имя столбца, когда <see cref="System.Data.Common.DbDataReader"/> не содержит столбца с таким именем
+    /// </summary>
+    /// <param name="paramName">Имя параметра метода</param>
+    /// <param name="reader">Объект доступа к данным</param>
+    /// <param name="columnName">Имя ненайденного столбца</param>
+    /// <returns>Объект исключения</returns>
+    public static ArgumentException ArgUnknownColumnName(string paramName, System.Data.Common.DbDataReader reader, string columnName)
+    {
+      if (reader == null)
+        throw new ArgumentNullException("reader");
+      return new ArgumentException(String.Format(Res.Common_Arg_DataTableHasNoColumn, reader.ToString(), columnName), paramName);
     }
 
     /// <summary>
@@ -794,6 +838,9 @@ namespace FreeLibSet.Core
     /// <returns>Объект исключения</returns>
     public static ArgumentException ArgInvalidColumnType(string paramName, System.Data.DataColumn column)
     {
+      if (column == null)
+        throw new ArgumentNullException("column");
+
       string tableName;
       if (column.Table != null)
         tableName = column.Table.TableName;
@@ -859,7 +906,7 @@ namespace FreeLibSet.Core
         Type[] aPK = new Type[table.PrimaryKey.Length];
         for (int i = 0; i < aPK.Length; i++)
           aPK[i] = table.PrimaryKey[i].DataType;
-        sPKType = DataTools.ToStringJoin<Type>(",", aPK);
+        sPKType = StringTools.ToStringJoin<Type>(",", aPK);
       }
 
       return new ArgumentException(String.Format(Res.Common_Arg_DataTablePrimaryKeyWrongType,
@@ -905,10 +952,14 @@ namespace FreeLibSet.Core
     /// <returns>Объект исключения</returns>
     public static InvalidOperationException DataRowNotFound(System.Data.DataTable table, object[] keyValues)
     {
+      if (table == null)
+        throw new ArgumentNullException("table");
+      if (keyValues == null)
+        throw new ArgumentNullException("keyValues");
       //int nPK = 0;
       //if (table.PrimaryKey != null)
       //  nPK = table.PrimaryKey.Length;
-      string sKeyValues = DataTools.ToStringJoin(", ", keyValues);
+      string sKeyValues = StringTools.ToStringJoin(", ", keyValues);
       return new InvalidOperationException(String.Format(Res.Common_Err_DataRowNotFound,
         table.TableName, DataTools.GetPrimaryKey(table), sKeyValues));
     }

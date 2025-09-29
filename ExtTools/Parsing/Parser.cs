@@ -240,7 +240,7 @@ namespace FreeLibSet.Parsing
 
       data.InitCurrPos();
 
-      DoParse(data, DataTools.EmptyStrings);
+      DoParse(data, EmptyArray<string>.Empty);
 
       #region Проверяем перекрытие лексем
 
@@ -345,7 +345,7 @@ namespace FreeLibSet.Parsing
         throw new InvalidOperationException(Res.ParserList_Err_SubParseCalled);
 
       if (endTokens == null)
-        endTokens = DataTools.EmptyStrings;
+        endTokens = EmptyArray<string>.Empty;
       data.InitCurrPos();
       DoParse(data, endTokens);
     }
@@ -463,7 +463,7 @@ namespace FreeLibSet.Parsing
       {
         data.State = ParsingState.ExpressionCreating;
         data.InternalTokenIndex = 0;
-        data.EndTokens = DataTools.EmptyStrings;
+        data.EndTokens = EmptyArray<string>.Empty;
         try
         {
           resExpr = CreateSubExpression(data, null);
@@ -1678,7 +1678,7 @@ namespace FreeLibSet.Parsing
     private int GetNextTokenIndex(int currTokenIndex, string[] skipTokens)
     {
       if (skipTokens == null)
-        skipTokens = DataTools.EmptyStrings;
+        skipTokens = EmptyArray<string>.Empty;
       for (int index = currTokenIndex + 1; index < Tokens.Count; index++)
       {
         if (Array.IndexOf<string>(skipTokens, Tokens[index].TokenType) < 0)
@@ -1707,7 +1707,7 @@ namespace FreeLibSet.Parsing
     private int GetPrevTokenIndex(int currTokenIndex, string[] skipTokens)
     {
       if (skipTokens == null)
-        skipTokens = DataTools.EmptyStrings;
+        skipTokens = EmptyArray<string>.Empty;
 
       int startIndex;
       if (currTokenIndex >= 0)

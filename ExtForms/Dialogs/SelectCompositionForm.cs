@@ -284,7 +284,7 @@ namespace FreeLibSet.Forms
     void efpXml_Click(object sender, EventArgs args)
     {
       if (SelectedItem == null)
-        EFPApp.ShowTextView(DataTools.XmlDocumentToString(_CurrPart.Document), "Текущая композиция");
+        EFPApp.ShowTextView(XmlTools.XmlDocumentToString(_CurrPart.Document), "Текущая композиция");
       else
       {
         CfgPart cfg;
@@ -293,7 +293,7 @@ namespace FreeLibSet.Forms
         {
           TempCfg cfg2 = new TempCfg();
           cfg.CopyTo(cfg2);
-          EFPApp.ShowTextView(DataTools.XmlDocumentToString(cfg2.Document), SelectedItem.DisplayName);
+          EFPApp.ShowTextView(XmlTools.XmlDocumentToString(cfg2.Document), SelectedItem.DisplayName);
         }
       }
     }

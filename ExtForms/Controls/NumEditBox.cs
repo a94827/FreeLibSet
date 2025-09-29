@@ -990,10 +990,10 @@ namespace FreeLibSet.Controls
   /// Поле ввода числового значения типа Double
   /// </summary>
   [Description("Text box for input an integer value with null support")]
-  [ToolboxBitmap(typeof(IntEditBox), "NumEditBox.bmp")]
+  [ToolboxBitmap(typeof(Int32EditBox), "NumEditBox.bmp")]
   [ToolboxItem(true)]
   [DesignerSerializer("System.Windows.Forms.Design.ControlCodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", "System.ComponentModel.Design.Serialization.CodeDomSerializer, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
-  public class IntEditBox : NumEditBoxBase<Int32>
+  public class Int32EditBox : NumEditBoxBase<Int32>
   {
     #region Переопределенные методы
 

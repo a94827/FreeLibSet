@@ -125,6 +125,31 @@ namespace FreeLibSet.Forms
 
   #endregion
 
+  #region Перечисление EFPDataViewCopyHyperlinkCommandUsage
+
+  /// <summary>
+  /// Доступность команды "Копировать гиперссылку" в табличном просмотре
+  /// </summary>
+  public enum EFPDataViewCopyHyperlinkCommandUsage
+  {
+    /// <summary>
+    /// Определяется автоматически по факту наличия столбцов со ссылками
+    /// </summary>
+    Auto,
+
+    /// <summary>
+    /// Команда видима всегда
+    /// </summary>
+    AlwaysVisible,
+
+    /// <summary>
+    /// Команда не используется
+    /// </summary>
+    Unused
+  }
+
+  #endregion
+
   /// <summary>
   /// Список команд локального меню табличного просмотра
   /// </summary>
@@ -149,6 +174,7 @@ namespace FreeLibSet.Forms
       _GotoErrorEnabled = true;
       _UseRowErrorsListView = true;
       _CopyFormats = EFPDataViewCopyFormats.All;
+      _CopyHyperlinkUsage = EFPDataViewCopyHyperlinkCommandUsage.Auto;
 
       #endregion
 
@@ -226,12 +252,17 @@ namespace FreeLibSet.Forms
 
       ciCopySettings = EFPDataViewCopyFormatsForm.AddCommandItem(this);
 
+      ciCopyHyperlink = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.CopyHyperlink);
+      ciCopyHyperlink.Click += CopyHyperlink_Click;
+      ciCopyHyperlink.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
+      Add(ciCopyHyperlink);
+
       if (EFPApp.ShowToolTips)
       {
         ciCopyToolTip = new EFPCommandItem("Edit", "CopyToolTip");
         ciCopyToolTip.MenuText = Res.Cmd_Menu_Edit_CopyToolTip;
         ciCopyToolTip.ImageKey = "CopyToolTip";
-        ciCopyToolTip.Click += new EventHandler(DoCopyToolTip);
+        ciCopyToolTip.Click += new EventHandler(CopyToolTip_Click);
         ciCopyToolTip.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
         Add(ciCopyToolTip);
       }
@@ -571,10 +602,20 @@ namespace FreeLibSet.Forms
       ciCopy.Usage = clipboardUsage;
       if (!ClipboardInToolBar)
       {
+        ciCopyHyperlink.Usage = EFPCommandItemUsage.Menu;
         ciCopySettings.Usage = EFPCommandItemUsage.Menu;
         ciCopyToolTip.Usage = EFPCommandItemUsage.Menu;
       }
 
+      switch (CopyHyperlinkUsage)
+      {
+        case EFPDataViewCopyHyperlinkCommandUsage.Auto:
+          ciCopyHyperlink.Visible = CopyHyperlinkDefaultVisible;
+          break;
+        case EFPDataViewCopyHyperlinkCommandUsage.Unused:
+          ciCopyHyperlink.Usage = EFPCommandItemUsage.None;
+          break;
+      }
 
       _PasteHandler.PasteApplied += new EventHandler(PasteHandler_PasteApplied);
 
@@ -810,6 +851,17 @@ namespace FreeLibSet.Forms
         ciCopy.Enabled = selState != UISelectedRowsState.NoSelection; // 17.06.2024
         if (ciCopyToolTip != null)
           ciCopyToolTip.Enabled = selState != UISelectedRowsState.NoSelection;
+        if (ciCopyHyperlink != null && ciCopyHyperlink.Visible)
+        {
+          if (selState == UISelectedRowsState.NoSelection)
+            ciCopyHyperlink.Enabled = false;
+          else
+          {
+            // TODO: Определение выбранных столбцов
+            ciCopyHyperlink.Enabled = true;
+          }
+        }
+
         if (!PasteHandler.AlwaysEnabled) // 27.11.2017
         {
           if (HasTextPasteFormats)
@@ -1081,11 +1133,26 @@ namespace FreeLibSet.Forms
         }
         else
         {
-          if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
-            ControlProvider.CanView
-            /*|| (!Handler.MainGrid.ReadOnly)*/)
+          //if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
+          //  ControlProvider.CanView
+          //  /*|| (!Handler.MainGrid.ReadOnly)*/)
+          //{
+          //  ciEdit_Click(null, null);
+          //}
+
+          // 29.08.2025
+          // Перехватываем исключения при выполнении команды
+          // 04.09.2025
+          // Проверяем, что предыдущий вызов команды уже завершился
+          if (ciEdit.Visible && ciEdit.Enabled)
           {
-            ciEdit_Click(null, null);
+            if (!ciEdit.InsideClick)
+              ciEdit.PerformClick();
+          }
+          else if (ciView.Visible && ciView.Enabled)
+          {
+            if (!ciView.InsideClick)
+              ciView.PerformClick();
           }
         }
       }
@@ -1378,11 +1445,115 @@ namespace FreeLibSet.Forms
 
     #endregion
 
+    #region Копировать гиперссылку
+
+    EFPCommandItem ciCopyHyperlink;
+
+    ///// <summary>
+    ///// Использование команды "Копировать гиперссылку".
+    ///// Если свойство не установлено в явном виде, определяется автоматически по наличию столбцов <see cref="DataGridViewLinkColumn"/>
+    ///// или по наличию ссылочных столбцов в <see cref="IEFPGridProducer"/>.
+    ///// Свойство может устанавливаться только до вывода просмотра на экран
+    ///// </summary>
+    //public bool UseCopyHyperlink
+    //{
+    //  get
+    //  {
+    //    if (_UseCopyHyperlink.HasValue)
+    //      return _UseCopyHyperlink.HasValue;
+    //    else
+    //    {
+    //      foreach (DataGridViewColumn column in ControlProvider.Control.Columns)
+    //      {
+    //        if (column is DataGridViewLinkColumn)
+    //          return true;
+    //      }
+    //      return false;
+    //    }
+    //  }
+    //  set
+    //  {
+    //    ControlProvider.CheckHasNotBeenCreated();
+    //    _UseCopyHyperlink = value;
+    //  }
+    //}
+    //private bool? _UseCopyHyperlink;
+
+    /// <summary>
+    /// Использование команды "Копировать гиперссылку".
+    /// По умолчанию - <see cref="EFPDataViewCopyHyperlinkCommandUsage.Auto"/>. Видимость команды определяется автоматически по наличию столбцов <see cref="DataGridViewLinkColumn"/>
+    /// или по наличию ссылочных столбцов в <see cref="IEFPGridProducer"/>.
+    /// Свойство может устанавливаться только до вывода просмотра на экран.
+    /// </summary>
+    public EFPDataViewCopyHyperlinkCommandUsage CopyHyperlinkUsage
+    {
+      get { return _CopyHyperlinkUsage; }
+      set
+      {
+        ControlProvider.CheckHasNotBeenCreated();
+        _CopyHyperlinkUsage = value;
+      }
+    }
+    private EFPDataViewCopyHyperlinkCommandUsage _CopyHyperlinkUsage;
+
+    private bool CopyHyperlinkDefaultVisible
+    {
+      get
+      {
+        foreach (DataGridViewColumn column in ControlProvider.Control.Columns)
+        {
+          if (column is DataGridViewLinkColumn)
+            return true;
+        }
+        return false;
+      }
+    }
+
+    private void CopyHyperlink_Click(object sender, EventArgs args)
+    {
+      List<EFPDataGridViewColumn> lstCols = new List<EFPDataGridViewColumn>();
+      foreach (EFPDataGridViewColumn col in ControlProvider.SelectedColumns)
+      {
+        if (col.GridColumn is DataGridViewLinkColumn)
+          lstCols.Add(col);
+      }
+      if (lstCols.Count == 0)
+      {
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedLinkColumn);
+        return;
+      }
+      int[] ridxs = ControlProvider.SelectedRowIndices;
+      if (ridxs.Length == 0)
+      {
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedRow);
+        return;
+      }
+
+      string[,] a = new string[ridxs.Length, lstCols.Count];
+      for (int i = 0; i < ridxs.Length; i++)
+      {
+        ControlProvider.GetRowInfo(ridxs[i], EFPDataViewInfoReason.View);
+        for (int j = 0; j < lstCols.Count; j++)
+        {
+          EFPDataGridViewCellInfoEventArgs ci = ControlProvider.GetCellInfo(lstCols[j].Index);
+          BRValueWithLink value = (ci.Value as BRValueWithLink);
+          if (value != null)
+            a[i, j] = value.LinkData;
+          else
+            a[i, j] = String.Empty;
+        }
+      }
+
+      new EFPClipboard().SetTextMatrix(a);
+    }
+
+    #endregion
+
     #region Копировать подсказку
 
     internal EFPCommandItem ciCopyToolTip;
 
-    private void DoCopyToolTip(object sender, EventArgs args)
+    private void CopyToolTip_Click(object sender, EventArgs args)
     {
       //*** Owner.CurrentIncSearchColumn = null;
 
@@ -2014,7 +2185,7 @@ namespace FreeLibSet.Forms
     /// <param name="args">Аргументы события</param>
     protected void EditRowForErrorMessage(object sender, ErrorMessageItemEventArgs args)
     {
-      int rowIndex = DataTools.GetInt(args.Item.Tag);
+      int rowIndex = DataTools.GetInt32(args.Item.Tag);
       if (rowIndex >= 0 && rowIndex < ControlProvider.Control.RowCount)
         ControlProvider.SelectRowIndex(rowIndex);
     }
@@ -2178,7 +2349,7 @@ namespace FreeLibSet.Forms
           {
             ciStatSum.StatusBarText = /*Math.Round(*/_CurrStatCellSumma.Value/*, CurrStatCellSummaDigits, MidpointRounding.AwayFromZero)*/.ToString();
             ciStatSum.ImageKey = "Sum";
-            ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatSum + Environment.NewLine + Res.Cmd_ToolTip_View_StatMouseInfo;
+            ciStatSum.ToolTipText = Res.Cmd_ToolTip_View_StatSum + Environment.NewLine + Res.Cmd_ToolTip_View_StatMouseInfo;
           }
           else
           {
@@ -2192,7 +2363,7 @@ namespace FreeLibSet.Forms
           ciStatCount.StatusBarText = EmptyStatCountText;
           ciStatCount.ImageKey = String.Empty;
           ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatCount + Environment.NewLine + Res.Cmd_ToolTip_View_StatError + Environment.NewLine + errorMessage;
-          ciStatSum.ImageKey = "Error";
+          ciStatCount.ImageKey = "Error";
           ciStatCount.ToolTipText = Res.Cmd_ToolTip_View_StatSum + Environment.NewLine + Res.Cmd_ToolTip_View_StatError + Environment.NewLine + errorMessage;
           break;
 
@@ -2233,8 +2404,8 @@ namespace FreeLibSet.Forms
         }
 
         _CurrStatCellIndex++;
-        ControlProvider.DoGetRowAttributes(cell.RowIndex, EFPDataGridViewAttributesReason.View);
-        EFPDataGridViewCellAttributesEventArgs args = ControlProvider.DoGetCellAttributes(cell.ColumnIndex);
+        ControlProvider.GetRowInfo(cell.RowIndex, EFPDataViewInfoReason.View);
+        EFPDataGridViewCellInfoEventArgs args = ControlProvider.GetCellInfo(cell.ColumnIndex);
         decimal x;
         if (!TryGetCellValue(args.FormattedValue, out x))
         {
@@ -2335,6 +2506,7 @@ namespace FreeLibSet.Forms
         _UseSelectAll = value;
       }
     }
+
     private bool _UseSelectAll;
 
     EFPCommandItem ciSelectAll, ciRefresh;

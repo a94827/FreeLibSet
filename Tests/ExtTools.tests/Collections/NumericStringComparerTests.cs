@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FreeLibSet.Core.Collections;
+using FreeLibSet.Collections;
 using NUnit.Framework;
 
 namespace ExtTools_tests.Collections

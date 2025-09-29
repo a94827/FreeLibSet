@@ -21,9 +21,9 @@ namespace FreeLibSet.Forms.Data
   /// Фильтр табличного просмотра для одного поля, содержащего целочисленное значение.
   /// Можно задавать диапазон значений, которые должны проходить фильтр.
   /// Допускаются полуоткрытые интервалы.
-  /// Для установки фильтра используется <see cref="IntRangeDialog"/>.
+  /// Для установки фильтра используется <see cref="Int32RangeDialog"/>.
   /// </summary>
-  public class IntRangeGridFilter : IntRangeCommonFilter, IEFPGridFilter, IMinMaxSource<int?>
+  public class Int32RangeGridFilter : Int32RangeCommonFilter, IEFPGridFilter, IMinMaxSource<int?>
   {
     #region Конструктор
 
@@ -31,7 +31,7 @@ namespace FreeLibSet.Forms.Data
     /// Создает фильтр
     /// </summary>
     /// <param name="columnName">Имя числового поля</param>
-    public IntRangeGridFilter(string columnName)
+    public Int32RangeGridFilter(string columnName)
       : base(columnName)
     {
     }
@@ -138,7 +138,7 @@ namespace FreeLibSet.Forms.Data
         if (value == 0)
           UpDownHandler = null;
         else
-          UpDownHandler = new IntUpDownHandler(value, this);
+          UpDownHandler = new Int32UpDownHandler(value, this);
       }
     }
 
@@ -160,16 +160,16 @@ namespace FreeLibSet.Forms.Data
 
     /// <summary>
     /// Показывает блок диалога для редактирования фильтра.
-    /// Используется <see cref="IntRangeDialog"/>.
+    /// Используется <see cref="Int32RangeDialog"/>.
     /// </summary>
     /// <param name="dialogPosition">Передается в блок диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      IntRangeDialog dlg = new IntRangeDialog();
+      Int32RangeDialog dlg = new Int32RangeDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NFirstValue = FirstValue;
       dlg.NLastValue = LastValue;
       dlg.CanBeEmpty = true;
@@ -359,8 +359,8 @@ namespace FreeLibSet.Forms.Data
     {
       SingleRangeDialog dlg = new SingleRangeDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NFirstValue = FirstValue;
       dlg.NLastValue = LastValue;
       dlg.CanBeEmpty = true;
@@ -550,8 +550,8 @@ namespace FreeLibSet.Forms.Data
     {
       DoubleRangeDialog dlg = new DoubleRangeDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NFirstValue = FirstValue;
       dlg.NLastValue = LastValue;
       dlg.CanBeEmpty = true;
@@ -741,8 +741,8 @@ namespace FreeLibSet.Forms.Data
     {
       DecimalRangeDialog dlg = new DecimalRangeDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NFirstValue = FirstValue;
       dlg.NLastValue = LastValue;
       dlg.CanBeEmpty = true;
@@ -808,6 +808,87 @@ namespace FreeLibSet.Forms.Data
 
     #endregion
 
+    #region Текст и значки для режимов NotNull и Null
+
+    /// <summary>
+    /// Если true, то в диалоге установки фильтра дополнительно доступны режимы <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.NotNull"/> и <see cref="RangeCommonFilterMode.Null"/>.
+    /// Если false (по умолчанию), то доступен только режим <see cref="RangeCommonFilterMode.Range"/>.
+    /// </summary>
+    public bool Nullable { get { return _Nullable; } set { _Nullable = value; } }
+    private bool _Nullable;
+
+    /// <summary>
+    /// Текстовое описание фильтра для значения <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.NotNull"/>.
+    /// По умолчанию - "Значение установлено".
+    /// </summary>
+    public string FilterTextNotNull
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_FilterTextNotNull))
+          return Res.NullNotNullGridFilter_MsgNotNull;
+        else
+          return _FilterTextNotNull;
+      }
+      set { _FilterTextNotNull = value; }
+    }
+    private string _FilterTextNotNull;
+
+    /// <summary>
+    /// Текстовое описание фильтра для значения <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.Null"/>.
+    /// По умолчанию - "Значение не установлено".
+    /// </summary>
+    public string FilterTextNull
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_FilterTextNull))
+          return Res.NullNotNullGridFilter_MsgNull;
+        else
+          return _FilterTextNull;
+      }
+      set { _FilterTextNull = value; }
+    }
+    private string _FilterTextNull;
+
+#if XXX
+    /// <summary>
+    /// Значок для значения <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.NotNull"/>.
+    /// Если свойство не установлено, используется стандартный значок фильтра.
+    /// </summary>
+    public string FilterImageKeyNotNull
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_FilterImageKeyNotNull))
+          return EFPGridFilterTools.DefaultFilterImageKey;
+        else
+          return _FilterImageKeyNotNull;
+      }
+      set { _FilterImageKeyNotNull = value; }
+    }
+    private string _FilterImageKeyNotNull;
+
+    /// <summary>
+    /// Значок для значения <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.Null"/>.
+    /// Если свойство не установлено, используется стандартный значок фильтра.
+    /// </summary>
+    public string FilterImageKeyNull
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_FilterImageKeyNull))
+          return EFPGridFilterTools.DefaultFilterImageKey;
+        else
+          return _FilterImageKeyNull;
+      }
+      set { _FilterImageKeyNull = value; }
+    }
+    private string _FilterImageKeyNull;
+#endif
+
+    #endregion
+
     #region Переопределяемые свойства
 
     /// <summary>
@@ -818,10 +899,17 @@ namespace FreeLibSet.Forms.Data
     {
       get
       {
-        if (FirstValue.HasValue || LastValue.HasValue)
-          return DateRangeFormatter.Default.ToString(FirstValue, LastValue, true);
-        else
-          return String.Empty;
+        switch (Mode)
+        {
+          case RangeCommonFilterMode.Range:
+            if (FirstValue.HasValue || LastValue.HasValue)
+              return DateRangeFormatter.Default.ToString(FirstValue, LastValue, true);
+            else
+              return String.Empty;
+          case RangeCommonFilterMode.NotNull: return FilterTextNotNull;
+          case RangeCommonFilterMode.Null: return FilterTextNull;
+          default: throw new BugException();
+        }
       }
     }
 
@@ -832,24 +920,64 @@ namespace FreeLibSet.Forms.Data
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
+      if (Nullable)
+        return ShowNullableFilterDialog(dialogPosition);
+      else
+        return ShowDateRangeDialog(dialogPosition);
+    }
+
+    private bool ShowDateRangeDialog(EFPDialogPosition dialogPosition)
+    {
       DateRangeDialog dlg = new DateRangeDialog();
       dlg.Title = DisplayName;
+      dlg.ImageKey = "Filter";
       dlg.CanBeEmpty = true;
       dlg.Minimum = Minimum;
       dlg.Maximum = Maximum;
 
-      dlg.NFirstDate = FirstValue;
-      dlg.NLastDate = LastValue;
+      dlg.NFirstValue = FirstValue;
+      dlg.NLastValue = LastValue;
 
       dlg.DialogPosition = dialogPosition;
 
       if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
         return false;
 
-      FirstValue = dlg.NFirstDate;
-      LastValue = dlg.NLastDate;
+      FirstValue = dlg.NFirstValue;
+      LastValue = dlg.NLastValue;
 
       return true;
+    }
+
+    private bool ShowNullableFilterDialog(EFPDialogPosition dialogPosition)
+    {
+      DateRangeGridFilterForm form = new DateRangeGridFilterForm();
+      form.Text = DisplayName;
+      form.Icon = EFPApp.MainImages.Icons["Filter"];
+      form.ModeButtons[0].Control.Text = Res.DateRangeDialog_Msg_Prompt;
+      form.ModeButtons[1].Control.Text = Res.NullNotNullGridFilter_MsgNotNull;
+      form.ModeButtons[2].Control.Text = Res.NullNotNullGridFilter_MsgNull;
+
+      form.ModeButtons.SelectedIndex = (int)Mode;
+      form.TheDateRangeBox.First.NValue = FirstValue;
+      form.TheDateRangeBox.Last.NValue = LastValue;
+
+      switch (EFPApp.ShowDialog(form, true, dialogPosition))
+      {
+        case System.Windows.Forms.DialogResult.OK:
+          Mode = (RangeCommonFilterMode)(form.ModeButtons.SelectedIndex);
+          if (Mode == RangeCommonFilterMode.Range)
+          {
+            FirstValue = form.TheDateRangeBox.First.NValue;
+            LastValue = form.TheDateRangeBox.Last.NValue;
+          }
+          return true;
+        case System.Windows.Forms.DialogResult.No:
+          Clear();
+          return true;
+        default:
+          return false;
+      }
     }
 
     /// <summary>
@@ -923,9 +1051,9 @@ namespace FreeLibSet.Forms.Data
   /// Фильтр табличного просмотра по двум полям, содержащих числовые значения.
   /// В фильтр входят строки, в диапазон значений которых попадает выбранное значение.
   /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
-  /// Для установки фильтра используется <see cref="IntInputDialog"/>.
+  /// Для установки фильтра используется <see cref="Int32InputDialog"/>.
   /// </summary>
-  public class IntRangeInclusionGridFilter : IntRangeInclusionCommonFilter, IEFPGridFilter, IMinMaxSource<int?>
+  public class Int32RangeInclusionGridFilter : Int32RangeInclusionCommonFilter, IEFPGridFilter, IMinMaxSource<int?>
   {
     #region Конструктор
 
@@ -934,7 +1062,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     /// <param name="firstColumnName">Имя числового поля, задающего начало диапазона</param>
     /// <param name="lastColumnName">Имя числового поля, задающего конец диапазона</param>
-    public IntRangeInclusionGridFilter(string firstColumnName, string lastColumnName)
+    public Int32RangeInclusionGridFilter(string firstColumnName, string lastColumnName)
       : base(firstColumnName, lastColumnName)
     {
     }
@@ -1041,7 +1169,7 @@ namespace FreeLibSet.Forms.Data
         if (value == 0)
           UpDownHandler = null;
         else
-          UpDownHandler = new IntUpDownHandler(value, this);
+          UpDownHandler = new Int32UpDownHandler(value, this);
       }
     }
 
@@ -1066,16 +1194,16 @@ namespace FreeLibSet.Forms.Data
 
     /// <summary>
     /// Показывает блок диалога для редактирования фильтра.
-    /// Используется <see cref="IntInputDialog"/>.
+    /// Используется <see cref="Int32InputDialog"/>.
     /// </summary>
     /// <param name="dialogPosition">Передается в блок диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      IntInputDialog dlg = new IntInputDialog();
+      Int32InputDialog dlg = new Int32InputDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NValue = Value;
       dlg.CanBeEmpty = true;
       dlg.Minimum = Minimum;
@@ -1256,8 +1384,8 @@ namespace FreeLibSet.Forms.Data
     {
       SingleInputDialog dlg = new SingleInputDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NValue = Value;
       dlg.CanBeEmpty = true;
       dlg.Minimum = Minimum;
@@ -1438,8 +1566,8 @@ namespace FreeLibSet.Forms.Data
     {
       DoubleInputDialog dlg = new DoubleInputDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NValue = Value;
       dlg.CanBeEmpty = true;
       dlg.Minimum = Minimum;
@@ -1620,8 +1748,8 @@ namespace FreeLibSet.Forms.Data
     {
       DecimalInputDialog dlg = new DecimalInputDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NValue = Value;
       dlg.CanBeEmpty = true;
       dlg.Minimum = Minimum;
@@ -1658,9 +1786,9 @@ namespace FreeLibSet.Forms.Data
   /// Фильтр табличного просмотра по двум полям, содержащих числовые значения.
   /// В фильтр входят строки, в диапазон значений которых попадает любое из значений в указанном диапазоне.
   /// Поддерживаются полуоткрытые интервалы и в базе данных, и в проверяемом интервале.
-  /// Для установки фильтра используется <see cref="IntRangeDialog"/>.
+  /// Для установки фильтра используется <see cref="Int32RangeDialog"/>.
   /// </summary>
-  public class IntRangeCrossGridFilter : IntRangeCrossCommonFilter, IEFPGridFilter, IMinMaxSource<int?>
+  public class Int32RangeCrossGridFilter : Int32RangeCrossCommonFilter, IEFPGridFilter, IMinMaxSource<int?>
   {
     #region Конструктор
 
@@ -1669,7 +1797,7 @@ namespace FreeLibSet.Forms.Data
     /// </summary>
     /// <param name="firstColumnName">Имя числового поля, задающего начало диапазона</param>
     /// <param name="lastColumnName">Имя числового поля, задающего конец диапазона</param>
-    public IntRangeCrossGridFilter(string firstColumnName, string lastColumnName)
+    public Int32RangeCrossGridFilter(string firstColumnName, string lastColumnName)
       : base(firstColumnName, lastColumnName)
     {
     }
@@ -1776,7 +1904,7 @@ namespace FreeLibSet.Forms.Data
         if (value == 0)
           UpDownHandler = null;
         else
-          UpDownHandler = new IntUpDownHandler(value, this);
+          UpDownHandler = new Int32UpDownHandler(value, this);
       }
     }
 
@@ -1798,16 +1926,16 @@ namespace FreeLibSet.Forms.Data
 
     /// <summary>
     /// Показывает блок диалога для редактирования фильтра.
-    /// Используется <see cref="IntRangeDialog"/>.
+    /// Используется <see cref="Int32RangeDialog"/>.
     /// </summary>
     /// <param name="dialogPosition">Передается в блок диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
     {
-      IntRangeDialog dlg = new IntRangeDialog();
+      Int32RangeDialog dlg = new Int32RangeDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NFirstValue = FirstValue;
       dlg.NLastValue = LastValue;
       dlg.CanBeEmpty = true;
@@ -1988,8 +2116,8 @@ namespace FreeLibSet.Forms.Data
     {
       SingleRangeDialog dlg = new SingleRangeDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NFirstValue = FirstValue;
       dlg.NLastValue = LastValue;
       dlg.CanBeEmpty = true;
@@ -2170,8 +2298,8 @@ namespace FreeLibSet.Forms.Data
     {
       DoubleRangeDialog dlg = new DoubleRangeDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NFirstValue = FirstValue;
       dlg.NLastValue = LastValue;
       dlg.CanBeEmpty = true;
@@ -2352,8 +2480,8 @@ namespace FreeLibSet.Forms.Data
     {
       DecimalRangeDialog dlg = new DecimalRangeDialog();
       dlg.Title = DisplayName;
-      dlg.CanBeEmpty = true;
       dlg.ImageKey = "Filter";
+      dlg.CanBeEmpty = true;
       dlg.NFirstValue = FirstValue;
       dlg.NLastValue = LastValue;
       dlg.CanBeEmpty = true;
@@ -2448,20 +2576,21 @@ namespace FreeLibSet.Forms.Data
     {
       DateRangeDialog dlg = new DateRangeDialog();
       dlg.Title = DisplayName;
+      dlg.ImageKey = "Filter";
       dlg.CanBeEmpty = true;
       dlg.Minimum = Minimum;
       dlg.Maximum = Maximum;
 
-      dlg.NFirstDate = FirstValue;
-      dlg.NLastDate = LastValue;
+      dlg.NFirstValue = FirstValue;
+      dlg.NLastValue = LastValue;
 
       dlg.DialogPosition = dialogPosition;
 
       if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
         return false;
 
-      FirstValue = dlg.NFirstDate;
-      LastValue = dlg.NLastDate;
+      FirstValue = dlg.NFirstValue;
+      LastValue = dlg.NLastValue;
 
       return true;
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeLibSet.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -31,36 +32,48 @@ namespace FreeLibSet.Data
     /// <param name="db">База данных для проверки корректности имен полей или null</param>
     public static void CheckStruct(DBxStruct dbs, DBx db)
     {
-      foreach (DBxTableStruct table in dbs.Tables)
+      try
       {
-        CheckTableStruct(table, db);
+        if (!dbs.IsReadOnly)
+          dbs.UpdateColumnTypes();
 
-        foreach (DBxColumnStruct col in table.Columns)
+        foreach (DBxTableStruct table in dbs.Tables)
         {
-          if (!String.IsNullOrEmpty(col.MasterTableName))
+          CheckTableStruct(table, db);
+
+          foreach (DBxColumnStruct col in table.Columns)
           {
-            DBxTableStruct masterTable = dbs.Tables[col.MasterTableName];
-            if (masterTable == null)
-              throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToUnknownTable,
-                table.TableName, col.ColumnName, col.MasterTableName));
-            switch (masterTable.PrimaryKey.Count)
+            if (!String.IsNullOrEmpty(col.MasterTableName))
             {
-              case 0:
-                throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToTableNoPK,
-                  table.TableName, col.ColumnName, masterTable.TableName));
-              case 1:
-                DBxColumnStruct pkCol = masterTable.Columns[masterTable.PrimaryKey[0]];
-                if (pkCol.ColumnType != col.ColumnType)
-                  throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefColumnTypeMismatch,
-                    table.TableName, col.ColumnName, col.ColumnType.ToString(),
-                    masterTable.TableName, pkCol.ColumnName, pkCol.ColumnType));
-                break;
-              default:
-                throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToTableComplexPK,
-                  table.TableName, col.ColumnName, masterTable.TableName));
+              DBxTableStruct masterTable = dbs.Tables[col.MasterTableName];
+              if (masterTable == null)
+                throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToUnknownTable,
+                  table.TableName, col.ColumnName, col.MasterTableName));
+              switch (masterTable.PrimaryKey.Count)
+              {
+                case 0:
+                  throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToTableNoPK,
+                    table.TableName, col.ColumnName, masterTable.TableName));
+                case 1:
+                  DBxColumnStruct pkCol = masterTable.Columns[masterTable.PrimaryKey[0]];
+                  if (pkCol.ColumnType != col.ColumnType)
+                    throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefColumnTypeMismatch,
+                      table.TableName, col.ColumnName, col.ColumnType.ToString(),
+                      masterTable.TableName, pkCol.ColumnName, pkCol.ColumnType));
+                  break;
+                default:
+                  throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_RefToTableComplexPK,
+                    table.TableName, col.ColumnName, masterTable.TableName));
+              }
             }
           }
         }
+      }
+      catch (Exception e)
+      {
+        if (db != null)
+          e.Data["DBx.DatabaseName"] = db.DatabaseName;
+        throw;
       }
     }
 
@@ -128,44 +141,80 @@ namespace FreeLibSet.Data
             throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_StringColumnWithoutLen,
               column.ColumnName));
           break;
-        case DBxColumnType.Int:
-        case DBxColumnType.Float:
-        case DBxColumnType.Decimal:
-          if (column.MinValue != 0.0 || column.MaxValue != 0.0)
-          {
-            if (column.MinValue > column.MaxValue)
-              throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_InvNumRange,
-                column.ColumnName, column.MinValue, column.MaxValue));
-          }
-          break;
         case DBxColumnType.Unknown:
           throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_UnknownColumnType,
             column.ColumnName));
+        default:
+          if (DBxTools.IsNumericType(column.ColumnType))
+          {
+            if (column.MinValue != 0.0 || column.MaxValue != 0.0)
+            {
+              if (column.MinValue > column.MaxValue)
+                throw new DBxStructException(table, String.Format(Res.DBxStructChecker_Err_InvNumRange,
+                  column.ColumnName, column.MinValue, column.MaxValue));
+            }
+          }
+          break;
       }
     }
 
 
     /// <summary>
-    /// Проверяет, что первичным ключом таблицы является единственное целочисленное поле.
-    /// Если это не так, генерируется <see cref="DBxPrimaryKeyException"/>.
+    /// Проверяет, что у таблицы есть первичный ключ.
+    /// Если это не так, генерируется <see cref="PrimaryKeyException"/>.
     /// </summary>
     /// <param name="table">Проверяемая структура таблицы</param>
     /// <returns>Имя поля первичного ключа</returns>
-    public static string CheckTablePrimaryKeyInt32(DBxTableStruct table)
+    public static void CheckTablePrimaryKeyExists(DBxTableStruct table)
+    {
+      if (table.PrimaryKey.Count==0)
+        throw new PrimaryKeyException(String.Format(Res.DBxStructChecker_Err_NoPK,
+          table.TableName, "Any type"));
+    }
+
+    /// <summary>
+    /// Проверяет, что первичным ключом таблицы является единственное поле.
+    /// Если это не так, генерируется <see cref="PrimaryKeyException"/>.
+    /// </summary>
+    /// <param name="table">Проверяемая структура таблицы</param>
+    /// <returns>Имя поля первичного ключа</returns>
+    public static string CheckTablePrimaryKeySimple(DBxTableStruct table)
     {
       switch (table.PrimaryKey.Count)
       {
         case 1:
           DBxColumnStruct column = table.Columns[table.PrimaryKey[0]];
-          if (column.DataType != typeof(Int32))
-            throw new DBxPrimaryKeyException(String.Format(Res.DBxStructChecker_Err_PKWrongType,
+          return column.ColumnName;
+        case 0:
+          throw new PrimaryKeyException(String.Format(Res.DBxStructChecker_Err_NoPK,
+            table.TableName, "Any type"));
+        default:
+          throw new PrimaryKeyException(String.Format(Res.DBxStructChecker_Err_ComplexPK,
+            table.TableName, "Any type"));
+      }
+    }
+
+    /// <summary>
+    /// Проверяет, что первичным ключом таблицы является единственное целочисленное поле.
+    /// Если это не так, генерируется <see cref="PrimaryKeyException"/>.
+    /// </summary>
+    /// <param name="table">Проверяемая структура таблицы</param>
+    /// <returns>Имя поля первичного ключа</returns>
+    public static string CheckTablePrimaryKeyInteger(DBxTableStruct table)
+    {
+      switch (table.PrimaryKey.Count)
+      {
+        case 1:
+          DBxColumnStruct column = table.Columns[table.PrimaryKey[0]];
+          if (!MathTools.IsIntegerType(column.DataType))
+            throw new PrimaryKeyException(String.Format(Res.DBxStructChecker_Err_PKWrongType,
               table.TableName, column.ColumnName, column.ColumnType, "Int32"));
           return column.ColumnName;
         case 0:
-          throw new DBxPrimaryKeyException(String.Format(Res.DBxStructChecker_Err_NoPK,
+          throw new PrimaryKeyException(String.Format(Res.DBxStructChecker_Err_NoPK,
             table.TableName, "Int32"));
         default:
-          throw new DBxPrimaryKeyException(String.Format(Res.DBxStructChecker_Err_ComplexPK,
+          throw new PrimaryKeyException(String.Format(Res.DBxStructChecker_Err_ComplexPK,
             table.TableName, "Int32"));
       }
     }

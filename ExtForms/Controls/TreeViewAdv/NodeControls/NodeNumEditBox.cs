@@ -243,20 +243,20 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     #endregion
   }
 
-  public class NodeIntEditBox : NodeNumEditBoxBase<Int32>
+  public class NodeInt32EditBox : NodeNumEditBoxBase<Int32>
   {
     #region Переопределенные методы
 
     protected override NumEditBoxBase<int> DoCreateEditor(TreeNodeAdv node)
     {
-      IntEditBox control = new IntEditBox();
+      Int32EditBox control = new Int32EditBox();
       control.NValue = (int?)GetValue(node);
       return control;
     }
 
     protected override void DoApplyChanges(TreeNodeAdv node, Control editor)
     {
-      SetValue(node, (editor as FreeLibSet.Controls.IntEditBox).NValue);
+      SetValue(node, (editor as FreeLibSet.Controls.Int32EditBox).NValue);
     }
 
     #endregion

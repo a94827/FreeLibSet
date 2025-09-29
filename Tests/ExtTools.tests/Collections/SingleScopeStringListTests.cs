@@ -66,11 +66,11 @@ namespace ExtTools_tests.Collections
     [Test]
     public void Constructor_Collection_Empty([Values(true, false)] bool ignoreCase)
     {
-      ICollection<string> source1 = new List<String>(DataTools.EmptyStrings);
+      ICollection<string> source1 = new List<String>(EmptyArray<string>.Empty);
       SingleScopeStringList sut1 = new SingleScopeStringList(source1, ignoreCase);
       Assert.AreEqual(0, sut1.Count, "#1");
 
-      IEnumerable<string> source2 = new ArrayEnumerable<string>(DataTools.EmptyStrings);
+      IEnumerable<string> source2 = new ArrayEnumerable<string>(EmptyArray<string>.Empty);
       SingleScopeStringList sut2 = new SingleScopeStringList(source2, ignoreCase);
       Assert.AreEqual(0, sut2.Count, "#2");
     }
@@ -458,7 +458,7 @@ namespace ExtTools_tests.Collections
       if (s == null)
         return null;
       if (s.Length == 0)
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
 
       return s.Split(',');
     }

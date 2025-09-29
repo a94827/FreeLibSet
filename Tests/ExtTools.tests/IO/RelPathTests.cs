@@ -59,7 +59,7 @@ namespace ExtTools_tests.IO
     [TestCase(@"", "AAA", @"AAA")]
     public void Constructor_basePath_windows(string sBasePath, string sSubNames, string wantedPath)
     {
-      string[] subNames = DataTools.EmptyStrings;
+      string[] subNames = EmptyArray<string>.Empty;
       if (sSubNames.Length > 0)
         subNames = sSubNames.Split('|');
       RelPath basePath = new RelPath(sBasePath);
@@ -76,7 +76,7 @@ namespace ExtTools_tests.IO
     [TestCase(@"", "AAA", @"AAA")]
     public void Constructor_basePath_linux(string sBasePath, string sSubNames, string wantedPath)
     {
-      string[] subNames = DataTools.EmptyStrings;
+      string[] subNames = EmptyArray<string>.Empty;
       if (sSubNames.Length > 0)
         subNames = sSubNames.Split('|');
       RelPath basePath = new RelPath(sBasePath);

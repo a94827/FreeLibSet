@@ -36,16 +36,16 @@ namespace FreeLibSet.Forms.Diagnostics
       tpTokens.ImageKey = "Table";
 
       efpTokens = new EFPDataGridView(efpForm, grTokens);
-      efpTokens.Columns.AddInt("NPop", false, "# token", 2);
-      efpTokens.Columns.AddInt("Start", false, "Start", 3);
-      efpTokens.Columns.AddInt("Length", false, "Length", 3);
+      efpTokens.Columns.AddInteger("NPop", false, "# token", 2);
+      efpTokens.Columns.AddInteger("Start", false, "Start", 3);
+      efpTokens.Columns.AddInteger("Length", false, "Length", 3);
       efpTokens.Columns.AddText("TokenType", false, "Token type", 10, 5);
       efpTokens.Columns.AddTextFill("Text", false, "Text", 100, 5);
       efpTokens.Columns.AddText("Parser", false, "Parser", 15, 5);
       efpTokens.DisableOrdering();
       efpTokens.UseAlternation = false;
-      efpTokens.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(efpTokens_GetRowAttributes);
-      efpTokens.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(efpTokens_GetCellAttributes);
+      efpTokens.RowInfoNeeded += new EFPDataGridViewRowInfoEventHandler(efpTokens_RowInfoNeeded);
+      efpTokens.CellInfoNeeded += new EFPDataGridViewCellInfoEventHandler(efpTokens_CellInfoNeeded);
       efpTokens.UseRowImages = true;
       efpTokens.ShowErrorCountInTopLeftCell = true;
 
@@ -153,7 +153,7 @@ namespace FreeLibSet.Forms.Diagnostics
     }
 
 
-    void efpTokens_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    void efpTokens_RowInfoNeeded(object sender, EFPDataGridViewRowInfoEventArgs args)
     {
       InitCurrToken(args.RowIndex);
       if (_CurrToken == null)
@@ -166,7 +166,7 @@ namespace FreeLibSet.Forms.Diagnostics
         args.AddRowErrorMessage(_CurrToken.ErrorMessage.Value);
     }
 
-    void efpTokens_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    void efpTokens_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       if (_CurrToken == null)
         return;

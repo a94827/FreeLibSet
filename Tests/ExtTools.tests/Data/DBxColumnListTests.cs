@@ -86,11 +86,11 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(expected, sut1.AsString, "String");
 
       DBxColumnList sut2 = new DBxColumnList(original);
-      sut2.Add(new DBxColumns(removed));
+      sut2.AddRange(new DBxColumns(removed));
       Assert.AreEqual(expected, sut2.AsString, "DBxColumns");
 
       DBxColumnList sut3 = new DBxColumnList(original);
-      sut3.Add(new DBxColumnList(removed));
+      sut3.AddRange(new DBxColumnList(removed));
       Assert.AreEqual(expected, sut3.AsString, "DBxColumnList");
     }
 
@@ -112,11 +112,11 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(expected, sut1.AsString, "String");
 
       DBxColumnList sut2 = new DBxColumnList(original);
-      sut2.Remove(new DBxColumns(removed));
+      sut2.RemoveRange(new DBxColumns(removed));
       Assert.AreEqual(expected, sut2.AsString, "DBxColumns");
 
       DBxColumnList sut3 = new DBxColumnList(original);
-      sut3.Remove(new DBxColumnList(removed));
+      sut3.RemoveRange(new DBxColumnList(removed));
       Assert.AreEqual(expected, sut3.AsString, "DBxColumnList");
     }
 
@@ -524,11 +524,11 @@ namespace ExtTools_tests.Data
 
       Assert.Throws<ObjectReadOnlyException>(delegate() { sut.CheckNotReadOnly(); });
       Assert.Throws<ObjectReadOnlyException>(delegate() { sut.Add("F4"); });
-      Assert.Throws<ObjectReadOnlyException>(delegate() { sut.Add(new DBxColumns("F4")); });
-      Assert.Throws<ObjectReadOnlyException>(delegate() { sut.Add(new DBxColumnList("F4")); });
+      Assert.Throws<ObjectReadOnlyException>(delegate() { sut.AddRange(new DBxColumns("F4")); });
+      Assert.Throws<ObjectReadOnlyException>(delegate() { sut.AddRange(new DBxColumnList("F4")); });
       Assert.Throws<ObjectReadOnlyException>(delegate() { sut.Remove("F1"); });
-      Assert.Throws<ObjectReadOnlyException>(delegate() { sut.Remove(new DBxColumns("F1")); });
-      Assert.Throws<ObjectReadOnlyException>(delegate() { sut.Remove(new DBxColumnList("F1")); });
+      Assert.Throws<ObjectReadOnlyException>(delegate() { sut.RemoveRange(new DBxColumns("F1")); });
+      Assert.Throws<ObjectReadOnlyException>(delegate() { sut.RemoveRange(new DBxColumnList("F1")); });
       Assert.Throws<ObjectReadOnlyException>(delegate() { sut.Clear(); });
     }
 

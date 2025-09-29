@@ -90,7 +90,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       : base(type)
     {
       _types = new Type[] { typeof(NodeTextBox), 
-        typeof(NodeIntEditBox), typeof(NodeSingleEditBox), typeof(NodeDoubleEditBox), typeof(NodeDecimalEditBox), 
+        typeof(NodeInt32EditBox), typeof(NodeSingleEditBox), typeof(NodeDoubleEditBox), typeof(NodeDecimalEditBox), 
 				typeof(NodeComboBox), typeof(NodeCheckBox),
 				typeof(NodeStateIcon), typeof(NodeIcon), typeof(ExpandingIcon)  };
     }

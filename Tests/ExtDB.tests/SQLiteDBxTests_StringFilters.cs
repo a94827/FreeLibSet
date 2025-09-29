@@ -76,15 +76,16 @@ namespace ExtDB_tests.Data_SQLite
     [TestCase("аБв", true, "4,5,6")]
     [TestCase("123", false, "10")]
     [TestCase("123", true, "10")]
-    public void StringValueFilter(string value, bool ignoreCase, string sIds)
+    public void StringValueFilter(string value, bool ignoreCase, string sWantedIds)
     {
+
       using (SQLiteDBx db = CreateSampleDB())
       {
         using (DBxConBase con = db.MainEntry.CreateCon())
         {
           con.SQLExecuteNonQuery("PRAGMA case_sensitive_like = OFF");
-          IdList ids = con.GetIds("Tab1", new StringValueFilter("Col2", value, ignoreCase));
-          Assert.AreEqual(sIds, GetResultIdsString(ids), "\"" + value + "\", IgnoreCase=" + ignoreCase.ToString());
+          IIdSet<Int32> ids = IdTools.AsIdSet<Int32>(con.GetIds("Tab1", new StringValueFilter("Col2", value, ignoreCase)));
+          CollectionAssert.AreEquivalent(GetResultIds(sWantedIds), ids, "\"" + value + "\", IgnoreCase=" + ignoreCase.ToString());
         }
       }
     }
@@ -97,19 +98,18 @@ namespace ExtDB_tests.Data_SQLite
     [TestCase("Бв", true, "4,5,6")]
     [TestCase("23", false, "7,8,9,10")]
     [TestCase("23", true, "7,8,9,10")]
-    public void SubstringFilter(string value, bool ignoreCase, string sIds)
+    public void SubstringFilter(string value, bool ignoreCase, string sWantedIds)
     {
       using (SQLiteDBx db = CreateSampleDB())
       {
         using (DBxConBase con = db.MainEntry.CreateCon())
         {
           con.SQLExecuteNonQuery("PRAGMA case_sensitive_like = OFF");
-          IdList ids = con.GetIds("Tab1", new SubstringFilter("Col2", 1, value, ignoreCase));
-          Assert.AreEqual(sIds, GetResultIdsString(ids), "\"" + value + "\", IgnoreCase=" + ignoreCase.ToString());
+          IIdSet<Int32> ids = IdTools.AsIdSet<Int32> (con.GetIds("Tab1", new SubstringFilter("Col2", 1, value, ignoreCase)));
+          CollectionAssert.AreEquivalent(GetResultIds(sWantedIds), ids, "\"" + value + "\", IgnoreCase=" + ignoreCase.ToString());
         }
       }
     }
-
 
     [TestCase("AB", false, "1")]
     [TestCase("aB", false, "2")]
@@ -119,15 +119,15 @@ namespace ExtDB_tests.Data_SQLite
     [TestCase("аБ", true, "4,5,6")]
     [TestCase("12", false, "7,8,9,10,11")]
     [TestCase("12", true, "7,8,9,10,11")]
-    public void StartsWithFilter(string value, bool ignoreCase, string sIds)
+    public void StartsWithFilter(string value, bool ignoreCase, string sWantedIds)
     {
       using (SQLiteDBx db = CreateSampleDB())
       {
         using (DBxConBase con = db.MainEntry.CreateCon())
         {
           con.SQLExecuteNonQuery("PRAGMA case_sensitive_like = OFF");
-          IdList ids = con.GetIds("Tab1", new StartsWithFilter("Col2", value, ignoreCase));
-          Assert.AreEqual(sIds, GetResultIdsString(ids), "\"" + value + "\", IgnoreCase=" + ignoreCase.ToString());
+          IIdSet<Int32> ids = IdTools.AsIdSet<Int32> (con.GetIds("Tab1", new StartsWithFilter("Col2", value, ignoreCase)));
+          Assert.AreEqual(GetResultIds(sWantedIds), ids, "\"" + value + "\", IgnoreCase=" + ignoreCase.ToString());
         }
       }
     }
@@ -172,11 +172,10 @@ namespace ExtDB_tests.Data_SQLite
       return db;
     }
 
-    private static string GetResultIdsString(IdList ids)
+    private static IIdSet<Int32> GetResultIds(string sIds)
     {
-      Int32[] aIds = ids.ToArray();
-      Array.Sort<Int32>(aIds);
-      return StdConvert.ToString(aIds);
+      Int32[] aIds = StdConvert.ToInt32Array(sIds);
+      return new IdList<Int32>(aIds);
     }
   }
 }

@@ -326,7 +326,7 @@ namespace FreeLibSet.Calendar
       if (IsEmpty)
         throw ExceptionFactory.StructureNotInit(typeof(MonthDay));
       if (february29 && DayOfYear == DayFeb28)
-        return DataTools.EndOfMonth(year, 2);
+        return TimeTools.EndOfMonth(year, 2);
       else
         return new DateTime(year, Month, Day);
     }

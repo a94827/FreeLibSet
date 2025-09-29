@@ -581,7 +581,7 @@ namespace FreeLibSet.Drawing.Reporting
     {
       if (String.IsNullOrEmpty(lines))
         return;
-      string[] a = lines.Split(DataTools.CRLFSeparators, StringSplitOptions.None);
+      string[] a = lines.Split(StringTools.CRLFSeparators, StringSplitOptions.None);
       DrawLines(a, rc);
     }
 
@@ -597,7 +597,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// <returns>Размеры в единицах, установленных в Graphics</returns>
     public XSize MeasureString(string text)
     {
-      text = DataTools.RemoveSoftHyphens(text);
+      text = StringTools.RemoveSoftHyphens(text);
       return MeasureScale(Graphics.MeasureString(text, Font));
     }
 

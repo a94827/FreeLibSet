@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="DocInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="DocTableViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="DocTypeUserPermissionUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EditGroupDoc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="EFPDBxTextSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="GroupGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="RefDocGridFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="SubDocTableViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UserActionsReportParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

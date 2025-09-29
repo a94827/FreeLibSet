@@ -36,7 +36,7 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="value">Сюда записывается преобразованное значение</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out int value)
+    public static bool TryParseInt32(string s, out int value)
     {
       return int.TryParse(s, NumberStyles.Integer, NumberFormat, out value);
     }
@@ -72,7 +72,7 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="value">Сюда записывается преобразованное значение</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out long value)
+    public static bool TryParseInt64(string s, out long value)
     {
       return long.TryParse(s, NumberStyles.Integer, NumberFormat, out value);
     }
@@ -110,7 +110,7 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="value">Сюда записывается преобразованное значение</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out float value)
+    public static bool TryParseSingle(string s, out float value)
     {
       return float.TryParse(s, NumberStyles.Float, NumberFormat, out value);
     }
@@ -149,7 +149,7 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="value">Сюда записывается преобразованное значение</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out double value)
+    public static bool TryParseDouble(string s, out double value)
     {
       return double.TryParse(s, NumberStyles.Float, NumberFormat, out value);
     }
@@ -188,7 +188,7 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="value">Сюда записывается преобразованное значение</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out decimal value)
+    public static bool TryParseDecimal(string s, out decimal value)
     {
       return decimal.TryParse(s, NumberStyles.Float, NumberFormat, out value);
     }
@@ -232,7 +232,7 @@ namespace FreeLibSet.Core
     /// <param name="value">Сюда записывается преобразованное значение</param>
     /// <param name="useTime">Нужно ли использовать компонент времени</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out DateTime value, bool useTime)
+    public static bool TryParseDateTime(string s, out DateTime value, bool useTime)
     {
       if (DateTime.TryParseExact(s,
         new string[] { "s", "yyyy\\-MM\\-dd" },
@@ -282,7 +282,7 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="value">Сюда записывается преобразованное значение</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out TimeSpan value)
+    public static bool TryParseTimeSpan(string s, out TimeSpan value)
     {
       return TimeSpan.TryParse(s, out value);
     }
@@ -423,7 +423,7 @@ namespace FreeLibSet.Core
     /// <param name="value">Сюда записывается преобразованное значение</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
     [DebuggerStepThrough]
-    public static bool TryParse(string s, out Guid value)
+    public static bool TryParseGuid(string s, out Guid value)
     {
       try
       {
@@ -453,6 +453,39 @@ namespace FreeLibSet.Core
 
     #endregion
 
+    #region Произвольный тип
+
+    /// <summary>
+    /// Преобразование значение любого типа 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    internal static string ToString<T>(T value)
+    {
+      IFormattable fvalue = value as IFormattable;
+      if (fvalue != null)
+      {
+        if (typeof(T) == typeof(DateTime))
+          return fvalue.ToString("yyyy\\-MM\\-dd", DateTimeFormat);
+        else if (MathTools.IsNumericType(typeof(T)))
+          return fvalue.ToString(String.Empty, NumberFormat);
+        else
+          return fvalue.ToString(String.Empty, CultureInfo.InvariantCulture);
+      }
+      else
+      {
+        if (typeof(T).IsClass)
+        {
+          if ((Object)value == null)
+            return String.Empty;
+        }
+        return value.ToString();
+      }
+    }
+
+    #endregion
+
     #region Свойства
 
     /// <summary>
@@ -465,7 +498,7 @@ namespace FreeLibSet.Core
     {
       NumberFormatInfo fi = (NumberFormatInfo)(CultureInfo.InvariantCulture.NumberFormat.Clone());
       fi.NumberGroupSeparator = String.Empty;
-      fi.NumberGroupSizes = DataTools.EmptyInts;
+      fi.NumberGroupSizes = EmptyArray<Int32>.Empty;
       return fi;
     }
 
@@ -482,7 +515,113 @@ namespace FreeLibSet.Core
       return fi;
     }
 
+    private class InternalFormatProvider : IFormatProvider
+    {
+      object IFormatProvider.GetFormat(Type formatType)
+      {
+        if (formatType == typeof(NumberFormatInfo))
+          return StdConvert.NumberFormat;
+        if (formatType == typeof(DateTimeFormatInfo))
+          return StdConvert.DateTimeFormat;
+        return null;
+      }
+    }
+
+    /// <summary>
+    /// Реализация интерфейса <see cref="IFormatProvider"/>, который возвращает <see cref="NumberFormat"/> и <see cref="DateTimeFormat"/>.
+    /// </summary>
+    public static IFormatProvider FormatProvider { get { return _FormatProvider; } }
+    private static InternalFormatProvider _FormatProvider = new InternalFormatProvider();
+
+
     #endregion
+
+    #region ChangeType()
+
+    /// <summary>
+    /// Преобразование типа значений.
+    /// Использует вызов <see cref="System.Convert.ChangeType(object, Type, IFormatProvider)"/> со следующими изменениям:
+    /// - Для строк используется форматизатор <see cref="StdConvert.FormatProvider"/>.
+    /// - Когда число с плавающей точкой преобразуется в целое число, выполняется математическое округление, а не округление до четного.
+    /// - Строки "0" и "1" можно преобразовать в логические значения.
+    /// - null и пустая строка преобразуются в нулевое значение (<see cref="System.Convert"/> не преобразует пустые строки).
+    /// - Поддерживается преобразование из <see cref="Guid"/> в массив <see cref="byte"/> и обратно.
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <param name="conversionType">Тип, в который требуется выполнить преобразование</param>
+    /// <returns></returns>
+    public static object ChangeType(object value, Type conversionType)
+    {
+      if (value == null)
+        return DataTools.GetEmptyValue(conversionType);
+      if (MathTools.IsIntegerType(conversionType))
+      {
+        if (value.GetType() == typeof(Single))
+        {
+          double v = Math.Round((float)value, 0, MidpointRounding.AwayFromZero);
+          return Convert.ChangeType(v, conversionType);
+        }
+        if (value.GetType() == typeof(Double))
+        {
+          double v = Math.Round((double)value, 0, MidpointRounding.AwayFromZero);
+          return Convert.ChangeType(v, conversionType);
+        }
+        if (value.GetType() == typeof(Decimal))
+        {
+          decimal v = Math.Round((decimal)value, 0, MidpointRounding.AwayFromZero);
+          return Convert.ChangeType(v, conversionType);
+        }
+      }
+
+      string sValue = value as string;
+      if (sValue != null)
+      {
+        if (sValue.Length == 0)
+          return DataTools.GetEmptyValue(conversionType);
+
+        if (conversionType == typeof(Boolean))
+        {
+          switch (sValue)
+          {
+            case "0": return DataTools.FalseObject;
+            case "1": return DataTools.TrueObject;
+          }
+        }
+        if (conversionType == typeof(TimeSpan))
+          return TimeSpan.Parse(sValue);
+        if (conversionType == typeof(Guid))
+          return new Guid(sValue);
+        if (conversionType.IsEnum)
+          return Enum.Parse(conversionType, sValue);
+      }
+
+      if (conversionType.IsEnum)
+      {
+        if (MathTools.IsNumericType(value.GetType()))
+        {
+          int intValue = Convert.ToInt32(value);
+          return Enum.ToObject(conversionType, intValue);
+        }
+      }
+      if (conversionType == typeof(string))
+      {
+        if (value is DateTime)
+          return ToString((DateTime)value, true);
+        if (value is TimeSpan)
+          return ToString((TimeSpan)value);
+        if (value is Guid)
+          return ToString((Guid)value);
+      }
+      if (value is byte[] && conversionType == typeof(Guid))
+        return new Guid((byte[])value);
+      if (value is Guid && conversionType == typeof(byte[]))
+        return ((Guid)value).ToByteArray();
+
+      return Convert.ChangeType(value, conversionType, StdConvert.FormatProvider);
+    }
+
+    #endregion
+
 
     #region Методы преобразования значений через запятую
 
@@ -514,17 +653,17 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out int[] values)
+    public static bool TryParseInt32Array(string s, out int[] values)
     {
       if (s == null)
       {
-        values = DataTools.EmptyInts;
+        values = EmptyArray<Int32>.Empty;
         return true;
       }
       s = s.Trim();
       if (s.Length == 0)
       {
-        values = DataTools.EmptyInts;
+        values = EmptyArray<Int32>.Empty;
         return true;
       }
 
@@ -533,7 +672,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < a.Length; i++)
       {
         int v;
-        if (TryParse(a[i].Trim(), out v))
+        if (TryParseInt32(a[i].Trim(), out v))
           values[i] = v;
         else
           return false;
@@ -554,7 +693,7 @@ namespace FreeLibSet.Core
     public static int[] ToInt32Array(string s)
     {
       int[] values;
-      if (TryParse(s, out values))
+      if (TryParseInt32Array(s, out values))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Int32[]));
@@ -590,17 +729,17 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out long[] values)
+    public static bool TryParseInt64Array(string s, out long[] values)
     {
       if (s == null)
       {
-        values = DataTools.EmptyInt64s;
+        values = EmptyArray<Int64>.Empty;
         return true;
       }
       s = s.Trim();
       if (s.Length == 0)
       {
-        values = DataTools.EmptyInt64s;
+        values = EmptyArray<Int64>.Empty;
         return true;
       }
 
@@ -609,7 +748,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < a.Length; i++)
       {
         long v;
-        if (TryParse(a[i].Trim(), out v))
+        if (TryParseInt64(a[i].Trim(), out v))
           values[i] = v;
         else
           return false;
@@ -630,7 +769,7 @@ namespace FreeLibSet.Core
     public static long[] ToInt64Array(string s)
     {
       long[] values;
-      if (TryParse(s, out values))
+      if (TryParseInt64Array(s, out values))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Int64[]));
@@ -666,17 +805,17 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out float[] values)
+    public static bool TryParseSingleArray(string s, out float[] values)
     {
       if (s == null)
       {
-        values = DataTools.EmptySingles;
+        values = EmptyArray<Single>.Empty;
         return true;
       }
       s = s.Trim();
       if (s.Length == 0)
       {
-        values = DataTools.EmptySingles;
+        values = EmptyArray<Single>.Empty;
         return true;
       }
 
@@ -685,7 +824,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < a.Length; i++)
       {
         float v;
-        if (TryParse(a[i].Trim(), out v))
+        if (TryParseSingle(a[i].Trim(), out v))
           values[i] = v;
         else
           return false;
@@ -706,7 +845,7 @@ namespace FreeLibSet.Core
     public static float[] ToSingleArray(string s)
     {
       float[] values;
-      if (TryParse(s, out values))
+      if (TryParseSingleArray(s, out values))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Single[]));
@@ -742,17 +881,17 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out double[] values)
+    public static bool TryParseDoubleArray(string s, out double[] values)
     {
       if (s == null)
       {
-        values = DataTools.EmptyDoubles;
+        values = EmptyArray<Double>.Empty;
         return true;
       }
       s = s.Trim();
       if (s.Length == 0)
       {
-        values = DataTools.EmptyDoubles;
+        values = EmptyArray<Double>.Empty;
         return true;
       }
 
@@ -761,7 +900,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < a.Length; i++)
       {
         double v;
-        if (TryParse(a[i].Trim(), out v))
+        if (TryParseDouble(a[i].Trim(), out v))
           values[i] = v;
         else
           return false;
@@ -782,7 +921,7 @@ namespace FreeLibSet.Core
     public static double[] ToDoubleArray(string s)
     {
       double[] values;
-      if (TryParse(s, out values))
+      if (TryParseDoubleArray(s, out values))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Double[]));
@@ -818,17 +957,17 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out decimal[] values)
+    public static bool TryParseDecimalArray(string s, out decimal[] values)
     {
       if (s == null)
       {
-        values = DataTools.EmptyDecimals;
+        values = EmptyArray<Decimal>.Empty;
         return true;
       }
       s = s.Trim();
       if (s.Length == 0)
       {
-        values = DataTools.EmptyDecimals;
+        values = EmptyArray<Decimal>.Empty;
         return true;
       }
 
@@ -837,7 +976,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < a.Length; i++)
       {
         decimal v;
-        if (TryParse(a[i].Trim(), out v))
+        if (TryParseDecimal(a[i].Trim(), out v))
           values[i] = v;
         else
           return false;
@@ -858,7 +997,7 @@ namespace FreeLibSet.Core
     public static decimal[] ToDecimalArray(string s)
     {
       decimal[] values;
-      if (TryParse(s, out values))
+      if (TryParseDecimalArray(s, out values))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Decimal[]));
@@ -896,17 +1035,17 @@ namespace FreeLibSet.Core
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <param name="useTime">Нужно ли использовать компонент времени</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out DateTime[] values, bool useTime)
+    public static bool TryParseDateTimeArray(string s, out DateTime[] values, bool useTime)
     {
       if (s == null)
       {
-        values = DataTools.EmptyDateTimes;
+        values = EmptyArray<DateTime>.Empty;
         return true;
       }
       s = s.Trim();
       if (s.Length == 0)
       {
-        values = DataTools.EmptyDateTimes;
+        values = EmptyArray<DateTime>.Empty;
         return true;
       }
 
@@ -915,7 +1054,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < a.Length; i++)
       {
         DateTime v;
-        if (TryParse(a[i].Trim(), out v, useTime))
+        if (TryParseDateTime(a[i].Trim(), out v, useTime))
           values[i] = v;
         else
           return false;
@@ -937,7 +1076,7 @@ namespace FreeLibSet.Core
     public static DateTime[] ToDateTimeArray(string s, bool useTime)
     {
       DateTime[] values;
-      if (TryParse(s, out values, useTime))
+      if (TryParseDateTimeArray(s, out values, useTime))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(DateTime[]));
@@ -973,17 +1112,17 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out TimeSpan[] values)
+    public static bool TryParseTimeSpanArray(string s, out TimeSpan[] values)
     {
       if (s == null)
       {
-        values = DataTools.EmptyTimeSpans;
+        values = EmptyArray<TimeSpan>.Empty;
         return true;
       }
       s = s.Trim();
       if (s.Length == 0)
       {
-        values = DataTools.EmptyTimeSpans;
+        values = EmptyArray<TimeSpan>.Empty;
         return true;
       }
 
@@ -992,7 +1131,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < a.Length; i++)
       {
         TimeSpan v;
-        if (TryParse(a[i].Trim(), out v))
+        if (TryParseTimeSpan(a[i].Trim(), out v))
           values[i] = v;
         else
           return false;
@@ -1013,7 +1152,7 @@ namespace FreeLibSet.Core
     public static TimeSpan[] ToTimeSpanArray(string s)
     {
       TimeSpan[] values;
-      if (TryParse(s, out values))
+      if (TryParseTimeSpanArray(s, out values))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(TimeSpan[]));
@@ -1052,7 +1191,7 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParseEnum<T>(string s, out T[] values)
+    public static bool TryParseEnumArray<T>(string s, out T[] values)
       where T : struct
     {
       if (s == null)
@@ -1095,7 +1234,7 @@ namespace FreeLibSet.Core
       where T : struct
     {
       T[] values;
-      if (TryParseEnum<T>(s, out values))
+      if (TryParseEnumArray<T>(s, out values))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(T[]));
@@ -1131,17 +1270,17 @@ namespace FreeLibSet.Core
     /// <param name="s">Преобразуемая строка</param>
     /// <param name="values">Сюда записываются преобразованные значения</param>
     /// <returns>true, если преобразование успешно выполнено</returns>
-    public static bool TryParse(string s, out Guid[] values)
+    public static bool TryParseGuidArray(string s, out Guid[] values)
     {
       if (s == null)
       {
-        values = DataTools.EmptyGuids;
+        values = EmptyArray<Guid>.Empty;
         return true;
       }
       s = s.Trim();
       if (s.Length == 0)
       {
-        values = DataTools.EmptyGuids;
+        values = EmptyArray<Guid>.Empty;
         return true;
       }
 
@@ -1150,7 +1289,7 @@ namespace FreeLibSet.Core
       for (int i = 0; i < a.Length; i++)
       {
         Guid v;
-        if (TryParse(a[i].Trim(), out v))
+        if (TryParseGuid(a[i].Trim(), out v))
           values[i] = v;
         else
           return false;
@@ -1171,7 +1310,7 @@ namespace FreeLibSet.Core
     public static Guid[] ToGuidArray(string s)
     {
       Guid[] values;
-      if (TryParse(s, out values))
+      if (TryParseGuidArray(s, out values))
         return values;
       else
         throw ExceptionFactory.Inconvertible(s, typeof(Guid[]));

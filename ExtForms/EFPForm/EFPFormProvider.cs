@@ -449,7 +449,7 @@ namespace FreeLibSet.Forms
           if (CommandItems.Count > 0)
           {
             EFPContextMenu ccm = new EFPContextMenu();
-            ccm.Add(CommandItems);
+            ccm.AddRange(CommandItems);
             ccm.Attach(_Form);
           }
         }
@@ -2124,8 +2124,8 @@ namespace FreeLibSet.Forms
             CfgPart cfg3 = cfg2.GetChild(ScreenSubSectionName, true);
             if ((wantedParts & EFPFormBoundsPart.Size) != 0)
             {
-              cfg3.SetInt("Width", bounds.Bounds.Width);
-              cfg3.SetInt("Height", bounds.Bounds.Height);
+              cfg3.SetInt32("Width", bounds.Bounds.Width);
+              cfg3.SetInt32("Height", bounds.Bounds.Height);
             }
             if ((wantedParts & EFPFormBoundsPart.Location) != 0)
             {
@@ -2139,8 +2139,8 @@ namespace FreeLibSet.Forms
                 int cx0 = _DefaultScreen.WorkingArea.X + _DefaultScreen.WorkingArea.Width / 2;
                 int cy0 = _DefaultScreen.WorkingArea.Y + _DefaultScreen.WorkingArea.Height / 2;
 
-                cfg3.SetInt("ScreenCenterDX", cx - cx0);
-                cfg3.SetInt("ScreenCenterDY", cy - cy0);
+                cfg3.SetInt32("ScreenCenterDX", cx - cx0);
+                cfg3.SetInt32("ScreenCenterDY", cy - cy0);
               }
               else
               {
@@ -2148,8 +2148,8 @@ namespace FreeLibSet.Forms
                 int cx0 = EFPApp.MainWindow.Bounds.Left + EFPApp.MainWindow.Bounds.Width / 2;
                 int cy0 = EFPApp.MainWindow.Bounds.Top + EFPApp.MainWindow.Bounds.Height / 2;
 
-                cfg3.SetInt("MainWindowCenterDX", cx - cx0);
-                cfg3.SetInt("MainWindowCenterDY", cy - cy0);
+                cfg3.SetInt32("MainWindowCenterDX", cx - cx0);
+                cfg3.SetInt32("MainWindowCenterDY", cy - cy0);
               }
             }
           }
@@ -2204,8 +2204,8 @@ namespace FreeLibSet.Forms
             {
               if ((wantedParts & EFPFormBoundsPart.Size) != 0)
               {
-                int w = cfg3.GetInt("Width");
-                int h = cfg3.GetInt("Height");
+                int w = cfg3.GetInt32("Width");
+                int h = cfg3.GetInt32("Height");
                 if (w > 0 && h > 0)
                   realParts |= EFPFormBoundsPart.Size;
                 else
@@ -2221,8 +2221,8 @@ namespace FreeLibSet.Forms
                   Rectangle rect = EFPApp.MainWindow == null ? _DefaultScreen.WorkingArea : EFPApp.MainWindow.Bounds;
                   int cx0 = rect.Left + rect.Width / 2;
                   int cy0 = rect.Top + rect.Height / 2;
-                  int dx = cfg3.GetInt(prefix + "DX");
-                  int dy = cfg3.GetInt(prefix + "DY");
+                  int dx = cfg3.GetInt32(prefix + "DX");
+                  int dy = cfg3.GetInt32(prefix + "DY");
 
                   int cx = cx0 + dx;
                   int cy = cy0 + dy;
@@ -2956,7 +2956,7 @@ namespace FreeLibSet.Forms
       {
         Exception e = new NullReferenceException(String.Format(Res.EFPFormProvider_Err_FormProviderNotFound, form.ToString()));
         e.Data["FormClass"] = form.GetType().ToString();
-        e.Data["AvailableFormProviders"] = DataTools.ToStringArray<EFPFormProvider>(_ProviderList.ToArray());
+        e.Data["AvailableFormProviders"] = StringTools.ToStringArray<EFPFormProvider>(_ProviderList.ToArray());
         throw e;
       }
       return res;

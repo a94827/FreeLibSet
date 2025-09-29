@@ -1264,6 +1264,7 @@ namespace FreeLibSet.Forms
         case DataGridViewContentAlignment.TopLeft:
         case DataGridViewContentAlignment.MiddleLeft:
         case DataGridViewContentAlignment.BottomLeft:
+        case DataGridViewContentAlignment.NotSet: // 19.09.2025
           return HorizontalAlignment.Left;
 
         case DataGridViewContentAlignment.TopCenter:
@@ -1290,6 +1291,9 @@ namespace FreeLibSet.Forms
     /// <returns>Выравнивание ячейки</returns>
     public static DataGridViewContentAlignment GetCellAlign(HorizontalAlignment textAlign, DataGridViewContentAlignment cellAlign)
     {
+      if (cellAlign == DataGridViewContentAlignment.NotSet)
+        cellAlign = DataGridViewContentAlignment.MiddleCenter; // 19.09.2025
+
       switch (textAlign)
       {
         case HorizontalAlignment.Left:

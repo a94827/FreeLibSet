@@ -1361,7 +1361,7 @@ namespace FreeLibSet.Forms
 
     IEFPDataViewColumn[] IEFPDataView.VisibleColumns { get { return VisibleColumns; } }
 
-    bool IEFPDataView.InitColumnConfig(EFPDataGridViewConfigColumn configColumn)
+    bool IEFPDataView.InitColumnConfig(EFPDataViewConfigColumn configColumn)
     {
       EFPDataTreeViewColumn col = Columns[configColumn.ColumnName];
       if (col == null)
@@ -1475,7 +1475,7 @@ namespace FreeLibSet.Forms
     /// Если свойство <see cref="GridProducer"/> не установлено, должен быть задан обработчик <see cref="CurrentConfigChanged"/>,
     /// который выполнит реальную настройку просмотра.
     /// </summary>
-    public EFPDataGridViewConfig CurrentConfig
+    public EFPDataViewConfig CurrentConfig
     {
       get { return _CurrentConfig; }
       set
@@ -1512,7 +1512,7 @@ namespace FreeLibSet.Forms
         _CurrentConfigHasBeenSet = true;
       }
     }
-    private EFPDataGridViewConfig _CurrentConfig;
+    private EFPDataViewConfig _CurrentConfig;
 
     /// <summary>
     /// Флажок нахождения в пределах сеттера свойства <see cref="CurrentConfig"/>.
@@ -3458,7 +3458,7 @@ return true;                          */
 
     #region Получение EFPDataViewRowInfo
 
-    private DataRowValueArray _RowValueArray;
+    private DataRowValues _RowValues;
 
     /// <summary>
     /// Получить объект EFPDataViewRowInfo для узла.
@@ -3466,32 +3466,32 @@ return true;                          */
     /// </summary>
     /// <param name="node">Узел дерева</param>
     /// <returns>Информация о строке</returns>
-    public EFPDataViewRowInfo GetRowInfo(TreeNodeAdv node)
+    public EFPDataViewRowValues GetRowValues(TreeNodeAdv node)
     {
-      IDataRowNamedValuesAccess rwa = _RowValueArray;
+      IDataRowNamedValuesAccess rwa = _RowValues;
       if (rwa == null) // Первый вызов или вложенный
         rwa = CreateRowValueAccessObject();
       rwa.CurrentRow = node.Tag as DataRow;
-      return new EFPDataViewRowInfo(this, rwa.CurrentRow, rwa, node.Row);
+      return new EFPDataViewRowValues(this, rwa.CurrentRow, rwa, node.Row);
     }
 
     /// <summary>
     /// Создает объект DataRowValueArray для доступа к данным.
-    /// Класс-наследник может создавать объект, который, например, использует буферизацию данных
+    /// Класс-наследник может создавать объект, который, например, использует буферизацию данных.
     /// </summary>
     /// <returns>Объект для доступа к данным</returns>
     protected virtual IDataRowNamedValuesAccess CreateRowValueAccessObject()
     {
-      return new DataRowValueArray();
+      return new DataRowValues();
     }
 
     /// <summary>
-    /// Освободить данные, полученные GetRowInfo().
+    /// Освободить данные, полученные <see cref="GetRowValues(TreeNodeAdv)"/>.
     /// </summary>
-    /// <param name="rowInfo"></param>
-    public void FreeRowInfo(EFPDataViewRowInfo rowInfo)
+    /// <param name="rowValues"></param>
+    public void FreeRowValues(EFPDataViewRowValues rowValues)
     {
-      _RowValueArray = rowInfo.Values as DataRowValueArray; // для повторного использования.
+      _RowValues = rowValues.Values as DataRowValues; // для повторного использования.
     }
 
     #endregion

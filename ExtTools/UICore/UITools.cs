@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Text;
 using System.ComponentModel;
 using FreeLibSet.Formatting;
+using FreeLibSet.DBF;
 
 namespace FreeLibSet.UICore
 {
@@ -28,9 +29,9 @@ namespace FreeLibSet.UICore
     public static string[] TextToLines(string text)
     {
       if (String.IsNullOrEmpty(text))
-        return DataTools.EmptyStrings;
+        return EmptyArray<string>.Empty;
       else
-        return text.Split(DataTools.NewLineSeparators, StringSplitOptions.None);
+        return text.Split(StringTools.NewLineSeparators, StringSplitOptions.None);
     }
 
     /// <summary>
@@ -219,19 +220,19 @@ namespace FreeLibSet.UICore
       bool isWholeMonth = false;
       if (firstDate.HasValue && lastDate.HasValue)
       {
-        if (DataTools.IsBottomOfMonth(firstDate.Value) && DataTools.IsEndOfMonth(lastDate.Value))
+        if (TimeTools.IsBottomOfMonth(firstDate.Value) && TimeTools.IsEndOfMonth(lastDate.Value))
           isWholeMonth = true;
       }
 
       if (firstDate.HasValue)
       {
-        firstDate = DataTools.CreateDateTime(firstDate.Value.Year + (forward ? +1 : -1), firstDate.Value.Month, firstDate.Value.Day);
+        firstDate = TimeTools.CreateDateTime(firstDate.Value.Year + (forward ? +1 : -1), firstDate.Value.Month, firstDate.Value.Day);
         res = true;
       }
 
       if (lastDate.HasValue)
       {
-        lastDate = DataTools.CreateDateTime(lastDate.Value.Year + (forward ? +1 : -1), lastDate.Value.Month,
+        lastDate = TimeTools.CreateDateTime(lastDate.Value.Year + (forward ? +1 : -1), lastDate.Value.Month,
           isWholeMonth ? 31 : lastDate.Value.Day);
         res = true;
       }
@@ -306,7 +307,7 @@ namespace FreeLibSet.UICore
     /// <param name="format">Формат. Используется, если <typeparamref name="T"/> реализует интерфейс <see cref="IFormattable"/>.</param>
     /// <param name="formatProvider">Провайдер форматирования. Используется, если <typeparamref name="T"/> реализует интерфейс <see cref="IFormattable"/>.</param>
     public static void ValidateInRange<T>(T value, T? minimum, T? maximum, IUIValidableObject obj, string displayName, bool isError, string format, IFormatProvider formatProvider)
-      where T:struct, IComparable<T>
+      where T : struct, IComparable<T>
     {
       if (obj == null)
         throw new ArgumentNullException("obj");
@@ -357,7 +358,7 @@ namespace FreeLibSet.UICore
     /// <param name="isError">True - устанавливать ошибку, false - предупреждение</param>
     public static void ValidateInRange(DateTime value, DateTime? minimum, DateTime? maximum, IUIValidableObject obj, string displayName, bool isError)
     {
-      if (!DataTools.DateInRange(value, minimum, maximum))
+      if (!TimeTools.DateInRange(value, minimum, maximum))
       {
         string message = String.Format(Res.UITools_Err_OutOfRange, displayName, DateRangeFormatter.Default.ToString(minimum, maximum, true));
         if (isError)
@@ -487,7 +488,7 @@ namespace FreeLibSet.UICore
       }
 
       s = s.Replace(" ", "");
-      s = s.Replace(DataTools.NonBreakSpaceStr, "");
+      s = s.Replace(StringTools.NonBreakSpaceStr, "");
     }
 
     /// <summary>
@@ -708,9 +709,9 @@ namespace FreeLibSet.UICore
     {
       if (typ == null || typ == typeof(DBNull))
         return Res.UITools_Msg_Null;
-      if (DataTools.IsIntegerType(typ))
+      if (MathTools.IsIntegerType(typ))
         return Res.UITools_Msg_Int;
-      if (DataTools.IsFloatType(typ))
+      if (MathTools.IsFloatType(typ))
         return Res.UITools_Msg_Float;
       if (typ == typeof(DateTime))
         return Res.UITools_Msg_DateTime;
@@ -925,7 +926,7 @@ namespace FreeLibSet.UICore
       if (String.IsNullOrEmpty(invalidChars))
         throw ExceptionFactory.ArgStringIsNullOrEmpty("invalidChars");
 
-      int charIndex = DataTools.IndexOfAny(s, invalidChars);
+      int charIndex = StringTools.IndexOfAny(s, invalidChars);
       if (charIndex < 0)
         throw new BugException("String does not contain invalid chars");
 
@@ -1117,6 +1118,273 @@ namespace FreeLibSet.UICore
 
   #endregion
 
+  #region UIHorizontalAlignment
+
+  /// <summary>
+  /// Specifies how an object or text in a control is horizontally aligned relative
+  /// to an element of the control.
+  /// Числовые значения совпадают с System.Windows.Forms.HorizontalAlignment
+  /// </summary>
+  [Serializable]
+  public enum UIHorizontalAlignment
+  {
+    /// <summary>
+    /// The object or text is aligned on the left of the control element.
+    /// </summary>
+    Left = 0,
+
+    /// <summary>
+    /// The object or text is aligned on the right of the control element.
+    /// </summary>
+    Right = 1,
+
+    /// <summary>
+    /// The object or text is aligned in the center of the control element.
+    /// </summary>
+    Center = 2,
+  }
+
   #endregion
 
+  #endregion
+
+  /// <summary>
+  /// Размеры и форматирование столбца табличного просмотра
+  /// </summary>
+  public class UITextColumnFormat : ICloneableReadOnlyObject<UITextColumnFormat>
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Инициализация значений по умолчанию
+    /// </summary>
+    public UITextColumnFormat()
+    {
+      _TextAlign = UIHorizontalAlignment.Left;
+      _TextWidth = 10;
+      _MinTextWidth = 1;
+      _Format = String.Empty;
+      _SizeGroup = String.Empty;
+    }
+
+    #endregion
+
+    #region Основные свойства
+
+    /// <summary>
+    /// Горизонтальное выравнивание.
+    /// </summary>
+    public UIHorizontalAlignment TextAlign
+    {
+      get { return _TextAlign; }
+      set { _TextAlign = value; }
+    }
+    private UIHorizontalAlignment _TextAlign;
+
+    /// <summary>
+    /// Формат для числового столбца или столбца даты/времени.
+    /// </summary>
+    public string Format
+    {
+      get { return _Format; }
+      set
+      {
+        _Format = value ?? String.Empty;
+      }
+    }
+    private string _Format;
+
+    /// <summary>
+    /// Ширина столбца как количество символов.
+    /// </summary>
+    public int TextWidth
+    {
+      get { return _TextWidth; }
+      set
+      {
+        if (value < 1)
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, null);
+        _TextWidth = value;
+        _MinTextWidth = Math.Min(_MinTextWidth, value);
+      }
+    }
+    private int _TextWidth;
+
+    /// <summary>
+    /// Минимальная ширина столбца как количество символов.
+    /// </summary>
+    public int MinTextWidth
+    {
+      get { return _MinTextWidth; }
+      set
+      {
+        if (value < 1 || value>_TextWidth)
+          throw ExceptionFactory.ArgOutOfRange("value", value, 1, _TextWidth);
+        _MinTextWidth = value;
+      }
+    }
+    private int _MinTextWidth;
+
+    /// <summary>
+    /// Имя группы столбцов, синхронно изменяющих свои размеры, когда пользователь меняет размеры одного из столбцов
+    /// </summary>
+    public string SizeGroup
+    {
+      get { return _SizeGroup; }
+      set { _SizeGroup = value ?? String.Empty; }
+    }
+    private string _SizeGroup;
+
+    #endregion
+
+    #region Дополнительные свойства
+
+    /// <summary>
+    /// Тип данных.
+    /// Если не задан в явном виде, определяется из свойства <see cref="Format"/>, а если формат не задан, то возвращается <see cref="System.String"/>.
+    /// </summary>
+    public Type DataType
+    {
+      get
+      {
+        if (_DataType != null)
+          return _DataType;
+        if (String.IsNullOrEmpty(Format))
+          return typeof(String);
+        bool containsDate, containsTime;
+        FormatStringTools.ContainsDateTime(Format, out containsDate, out containsTime);
+        if (containsDate || containsTime)
+          return typeof(DateTime);
+        if (Format.IndexOf('0') >= 0)
+        {
+          if (FormatStringTools.DecimalPlacesFromNumberFormat(Format) > 0)
+            return typeof(double);
+          else
+            return typeof(Int32);
+        }
+        return typeof(String);
+      }
+      set { _DataType = value; }
+    }
+    private Type _DataType;
+
+    #endregion
+
+    #region DBF
+
+    /// <summary>
+    /// Инициализация описателя <see cref="DbfFieldTypePreliminaryInfo"/>.
+    /// </summary>
+    /// <param name="dbf">Инициализируемый объект</param>
+    public void InitDbfPreliminaryInfo(DbfFieldTypePreliminaryInfo dbf)
+    {
+      Type typ = this.DataType;
+      if (typ == typeof(DateTime))
+      {
+        if (FormatStringTools.ContainsTime(Format))
+        {
+          dbf.Type = 'C';
+          dbf.Length = TextWidth;
+          dbf.LengthIsDefined = true;
+        }
+        else
+          dbf.Type = 'D';
+      }
+      else if (MathTools.IsIntegerType(typ))
+      {
+        dbf.Type = 'N';
+        dbf.Length = TextWidth;
+        dbf.LengthIsDefined = false;
+        dbf.Precision = 0;
+        dbf.PrecisionIsDefined = true;
+      }
+      else if (MathTools.IsNumericType(typ))
+      {
+        dbf.Type = 'N';
+        dbf.Length = TextWidth;
+        dbf.LengthIsDefined = false;
+        int decimalPlaces = FormatStringTools.DecimalPlacesFromNumberFormat(Format);
+        if (decimalPlaces > 0)
+        {
+          dbf.Precision = decimalPlaces;
+          dbf.PrecisionIsDefined = true;
+        }
+      }
+      else
+      {
+        dbf.Type = 'C';
+        dbf.Length = TextWidth;
+        dbf.LengthIsDefined = false;
+      }
+    }
+
+    #endregion
+
+    #region ICloneableReadOnlyObject<UITextColumnFormat> Members
+
+    /// <summary>
+    /// Создает копию описателя.
+    /// У копии <see cref="IsReadOnly"/>=false.
+    /// </summary>
+    /// <returns>Копия объекта</returns>
+    public UITextColumnFormat Clone()
+    {
+      UITextColumnFormat res = new UITextColumnFormat();
+      res._TextAlign = _TextAlign;
+      res._Format = _Format;
+      res._TextWidth = _TextWidth;
+      res._MinTextWidth = _MinTextWidth;
+      res._SizeGroup = _SizeGroup;
+      return res;
+    }
+
+    /// <summary>
+    /// Создает копию объекта, если <see cref="IsReadOnly"/>=true.
+    /// Иначе возвращается ссылка на текущий объект.
+    /// </summary>
+    /// <returns></returns>
+    public UITextColumnFormat CloneIfReadOnly()
+    {
+      if (IsReadOnly)
+        return Clone();
+      else
+        return this;
+    }
+
+    object ICloneable.Clone()
+    {
+      return Clone();
+    }
+
+    #endregion
+
+    #region IReadOnlyObject Members
+
+    /// <summary>
+    /// Возвращает true, если описатель защищен от изменений.
+    /// Не имеет отношения к возможности пользователя вводить данные в ячейку таблицы.
+    /// </summary>
+    public bool IsReadOnly { get { return _IsReadOnly; } }
+    private bool _IsReadOnly;
+
+    /// <summary>
+    /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.
+    /// </summary>
+    public void CheckNotReadOnly()
+    {
+      if (IsReadOnly)
+        throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
+    /// <summary>
+    /// Устанавливает свойство <see cref="IsReadOnly"/>=true.
+    /// Повторные вызовы игнорируются.
+    /// </summary>
+    public void SetReadOnly()
+    {
+      _IsReadOnly = true;
+    }
+
+    #endregion
+  }
 }

@@ -62,12 +62,12 @@ namespace TestFileAssociations
       efpGr.Columns.AddText("ProgramPath", true, "ProgramPath", 40, 10);
       efpGr.Columns.AddText("Arguments", true, "Arguments", 10, 5);
       efpGr.Columns.AddText("IconPath", true, "IconPath", 40, 10);
-      efpGr.Columns.AddInt("IconIndex", true, "IconIndex", 4);
-      efpGr.Columns.AddBool("UseURL", true, "UseURL");
+      efpGr.Columns.AddInteger("IconIndex", true, "IconIndex", 4);
+      efpGr.Columns.AddCheckBox("UseURL", true, "UseURL");
       efpGr.Columns.AddText("InfoSourceString", true, "InfoSourceString", 50, 10); // Только в отладочном режиме
       efpGr.DisableOrdering();
       efpGr.FrozenColumns = 2;
-      efpGr.GetCellAttributes += EfpGr_GetCellAttributes;
+      efpGr.CellInfoNeeded += EfpGr_CellInfoNeeded;
       efpGr.Control.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
       efpGr.Control.ReadOnly = true;
       efpGr.ReadOnly = true;
@@ -76,7 +76,7 @@ namespace TestFileAssociations
       Application.Run(form);
     }
 
-    private static void EfpGr_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
+    private static void EfpGr_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
       FileAssociationItem fa = args.DataBoundItem as FileAssociationItem;
       if (fa == null)

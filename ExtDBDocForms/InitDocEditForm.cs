@@ -657,21 +657,21 @@ namespace FreeLibSet.Forms.Docs
         if (args.ValidateState == FreeLibSet.UICore.UIValidateState.Error)
           return;
 
-        Int32[] chain = ControlProvider.DocTypeUI.TableCache.GetTreeChainIds(ControlProvider.DocId, ParentColumnName);
-        if (chain.Length == 0) // либо DocId=0, либо дерево уже зациклено.
+        IIdSet<Int32> chain = ControlProvider.DocTypeUI.TableCache.GetTreeChainIds(ControlProvider.DocId, ParentColumnName);
+        if (chain.Count == 0) // либо DocId=0, либо дерево уже зациклено.
           return;
 
-        IdList chain2 = new IdList(chain); // чтобы быстрее работало
+        IdCollection<Int32> chain2 = new IdCollection<Int32>(chain); // чтобы быстрее работало
 
-        Int32[] currIds = Docs.DocIds;
-        for (int i = 0; i < currIds.Length; i++)
+        IIdSet<Int32> currIds = Docs.DocIds;
+        foreach (Int32 currId in currIds)
         {
-          if (currIds[i] <= 0)
+          if (currId <= 0)
             continue;
 
-          if (chain2.Contains(currIds[i]))
+          if (chain2.Contains(currId))
           {
-            args.SetError(String.Format(Res.Editor_Err_DocTreeLoop, ControlProvider.DocTypeUI.GetTextValue(currIds[i])));
+            args.SetError(String.Format(Res.Editor_Err_DocTreeLoop, ControlProvider.DocTypeUI.GetTextValue(currId)));
             return;
           }
         }

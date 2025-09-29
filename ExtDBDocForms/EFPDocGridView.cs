@@ -381,7 +381,7 @@ namespace FreeLibSet.Forms.Docs
           _ShowDeleted,
           DocType.DefaultOrder, MaxRecordCount))
         {
-          if (DataTools.GetBool(dv.Table.ExtendedProperties["Limited"]))
+          if (DataTools.GetBoolean(dv.Table.ExtendedProperties["Limited"]))
           {
             LogoutRowCountLimited(sqlFilter);
           }
@@ -398,7 +398,7 @@ namespace FreeLibSet.Forms.Docs
       else
       {
         // Получаем данные для просмотра по фиксированному списку документов
-        masterTable = DocTypeUI.TableCache.CreateTable(FixedDocIds.ToArray(), this.UsedColumnNames);
+        masterTable = DocTypeUI.TableCache.CreateTable(FixedDocIds, this.UsedColumnNames);
       }
       DataTools.CheckPrimaryKey(masterTable, "Id");
 
@@ -544,7 +544,7 @@ namespace FreeLibSet.Forms.Docs
         if (row.Table.Columns.Contains(propName))
           return;
 
-        Int32 docId = DataTools.GetInt(row, "Id");
+        Int32 docId = DataTools.GetInt32(row, "Id");
         args.Value = DocTypeUI.TableCache.GetValue(docId, propName, row.Table.DataSet);
       }
       catch (Exception e)
@@ -554,12 +554,12 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Создает объект <see cref="DBxDataRowValueArrayWithCache"/>.
+    /// Создает объект <see cref="DBxDataRowValuesWithCache"/>.
     /// </summary>
     /// <returns>Новый объект для доступа к данным</returns>
     protected override IDataRowNamedValuesAccess CreateRowValueAccessObject()
     {
-      return new DBxDataRowValueArrayWithCache(DocTypeUI.TableCache);
+      return new DBxDataRowValuesWithCache(DocTypeUI.TableCache);
     }
 
     #endregion
@@ -598,7 +598,7 @@ namespace FreeLibSet.Forms.Docs
             }
             else
             {
-              IdsFilter filter2 = new IdsFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
+              ValueInListFilter filter2 = new ValueInListFilter(DocTypeUI.DocType.GroupRefColumnName, AuxFilterGroupIds);
               SourceAsDataView.RowFilter = filter2.AddToDataViewRowFilter(_OriginalRowFilter);
             }
           }
@@ -635,7 +635,7 @@ namespace FreeLibSet.Forms.Docs
     /// Если свойство устанавливается первый раз, то блокируется список фильтров, команды добавления и удаления строк.
     /// Порядок строк в списке не имеет значения, т.к. сортировка выполняется в соответствии с настройками просмотра.
     /// </summary>
-    public IdList FixedDocIds
+    public IIdSet<Int32> FixedDocIds
     {
       get { return _FixedDocIds; }
       set
@@ -653,7 +653,7 @@ namespace FreeLibSet.Forms.Docs
           OnInitSourceDataView(); // 06.07.2021
       }
     }
-    private IdList _FixedDocIds;
+    private IIdSet<Int32> _FixedDocIds;
 
     #endregion
 
@@ -680,8 +680,7 @@ namespace FreeLibSet.Forms.Docs
 
     private void MyEdit(object sender, EventArgs args)
     {
-      Int32[] editIds = SelectedIds;
-      DocTypeUI.PerformEditing(editIds, State, Control.FindForm().Modal, _ViewHandler);
+      DocTypeUI.PerformEditing(SelectedIds, State, Control.FindForm().Modal, _ViewHandler);
     }
 
     #endregion
@@ -1064,7 +1063,7 @@ namespace FreeLibSet.Forms.Docs
             case "CreateUserId":
             case "ChangeTime":
             case "ChangeUserId":
-              object value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetValue(DataTools.GetInt(resRow, "Id"), colName);
+              object value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetValue(DataTools.GetInt32(resRow, "Id"), colName);
               if (value == null)
                 resRow[i] = DBNull.Value;
               else
@@ -1083,7 +1082,7 @@ namespace FreeLibSet.Forms.Docs
               int pCol = srcRow.Table.Columns.IndexOf(mainColName);
               if (pCol >= 0)
               {
-                Int32 refId = DataTools.GetInt(srcRow, mainColName); // в ResRow может не быть базового поля
+                Int32 refId = DataTools.GetInt32(srcRow, mainColName); // в ResRow может не быть базового поля
                 object refValue = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
                 if (refValue == null)
                   resRow[i] = DBNull.Value; // 26.10.2016
@@ -1123,7 +1122,7 @@ namespace FreeLibSet.Forms.Docs
             int pCol = srcRow.Table.Columns.IndexOf(mainColName);
             if (pCol >= 0)
             {
-              Int32 refId = DataTools.GetInt(srcRow[mainColName, rowVer]);
+              Int32 refId = DataTools.GetInt32(srcRow[mainColName, rowVer]);
               value = Owner.UI.TextHandlers.DBCache[Owner.DocType.Name].GetRefValue(colName, refId);
             }
             else
@@ -1157,10 +1156,10 @@ namespace FreeLibSet.Forms.Docs
       }
 
       /// <summary>
-      /// Вызывает <see cref="EFPDBxGridView.UpdateRowsForIds(int[])"/>
+      /// Вызывает <see cref="EFPDBxGridView.UpdateRowsForIds(IIdSet{Int32})"/>
       /// </summary>
       /// <param name="docIds">Идентификаторы обновляемых документов</param>
-      public override void UpdateRowsForIds(Int32[] docIds)
+      public override void UpdateRowsForIds(IIdSet<Int32> docIds)
       {
         if (Owner != null)
           Owner.UpdateRowsForIds(docIds);
@@ -1326,7 +1325,7 @@ namespace FreeLibSet.Forms.Docs
     /// Вызывается однократно перед вызовами <see cref="EFPDataGridView.UpdateDataRows(DataRow[])"/>
     /// </summary>
     /// <param name="docIds">Массив идентификаторов. Длина массива больше 0</param>
-    protected override void ClearCacheForUpdate(Int32[] docIds)
+    protected override void ClearCacheForUpdate(IIdSet<Int32> docIds)
     {
       if (!Object.ReferenceEquals(this.GridProducer, DocTypeUI.GridProducer))
         return; // 25.03.2021. Если заменен GridProducer, то обновление невозможно
@@ -1340,7 +1339,7 @@ namespace FreeLibSet.Forms.Docs
     /// <param name="row">Строка данных. Не может быть null</param>
     protected override void LoadDataRowForUpdate(DataRow row)
     {
-      Int32 docId = DataTools.GetInt(row, "Id");
+      Int32 docId = DataTools.GetInt32(row, "Id");
       if (docId == 0)
         return;
 

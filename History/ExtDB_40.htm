@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title>Изменения в модуле ExtDB.dll</title>
+	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2025-09-12T21:42:18.908000000"/>
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<style type="text/css">
+		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; background: transparent }
+		td p { margin-bottom: 0.25cm; background: transparent }
+		h1 { margin-bottom: 0.21cm; background: transparent }
+		h1.western { font-family: "Liberation Serif", serif }
+		h1.cjk { font-family: "SimSun"; font-size: 24pt }
+		h1.ctl { font-family: "Mangal"; font-size: 24pt }
+		a:link { so-language: zxx }
+		a:visited { color: #800080 }
+	</style>
+</head>
+<body lang="ru-RU" vlink="#800080" dir="ltr">
+<h1 class="western">История изменений <br/>
+Модуль <span lang="en-US">ExtDB</span>.<span lang="en-US">dll</span>
+(Доступ к базам данных)</h1>
+<p>Модуль входит в комплект библиотек <span lang="en-US">FreeLibSet</span>,
+и является свободным программным обеспечением (Free Software)</p>
+<h1 class="western">Версия <span lang="en-US">4</span>.<span lang="en-US">0</span></h1>
+<p>Полный номер версии файла, который можно узнать, посмотрев
+свойства файла или в меню &laquo;О программе&raquo;, состоит из
+четырех чисел и имеет вид &laquo;<span lang="en-US">4</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
+В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
+<table width="100%" cellpadding="2" cellspacing="0" style="page-break-before: always">
+	<col width="25*">
+	<col width="35*">
+	<col width="196*">
+	<tr valign="top">
+		<td width="10%" style="border: 1.00pt solid #000000; padding: 0.05cm">
+			<p align="center">Версия</p>
+		</td>
+		<td width="14%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Дата</p>
+		</td>
+		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">Что сделано</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">366</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US" align="center">11.06.2025-<span lang="ru-RU">12</span>.0<span lang="ru-RU">5</span>.2025</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p lang="en-US"><span style="text-decoration: none">1. </span><span style="text-decoration: none"><span lang="ru-RU">Рефакторинг</span></span></p>
+			<p lang="en-US"><span style="text-decoration: none"><span lang="ru-RU">-
+			Методы </span></span><span style="text-decoration: none">XxxInt()
+			</span><span style="text-decoration: none"><span lang="ru-RU">переименованы
+			в </span></span><span style="text-decoration: none">XxxInt32(),
+			XxxBool() - </span><span style="text-decoration: none"><span lang="ru-RU">в
+			</span></span><span style="text-decoration: none">XxxBoolean()</span></p>
+			<p lang="en-US"><span style="text-decoration: none"><span lang="ru-RU">2.</span></span><span style="text-decoration: none">
+			</span><span style="text-decoration: none"><span lang="ru-RU">Недостающие
+			методы </span></span><span style="text-decoration: none">DBxDataWriter.Get/SetTimeSpan()
+			</span><span style="text-decoration: none"><span lang="ru-RU">и
+			</span></span><span style="text-decoration: none">Get/SetEnum&lt;T&gt;()</span></p>
+			<p lang="en-US"><span style="text-decoration: none">3. </span><span style="text-decoration: none"><span lang="ru-RU">Класс
+			DBxDataRowValueArrayWithCache переименован в
+			DBxDataRowValuesWithCache и наследует </span></span><span style="text-decoration: none">DataRowValues,
+			</span><span style="text-decoration: none"><span lang="ru-RU">а не
+			</span></span><span style="text-decoration: none">DataRowValueArray</span></p>
+			<p><span lang="en-US">4. </span><span lang="ru-RU">Убран интерфейс
+			IDBxConReadOnlyPKInt32. Его методы (с изменениями) перенесены в
+			IDBxConReadOnlyBase. Методы </span><span lang="en-US">GetIds</span><span lang="ru-RU">()
+			возвращают нетипизированный интерфейс </span><span lang="en-US">IIdSet
+			</span><span lang="ru-RU">вместо </span><span lang="en-US">Int32[].
+			</span><span lang="ru-RU">Реализация </span><span lang="en-US">DBxConBase.GetIds()
+			</span><span lang="ru-RU">использует </span><span lang="en-US">IdTools.Read()
+			</span><span lang="ru-RU">для получения массива идентификаторов.</span></p>
+			<p lang="en-US">5. <span lang="ru-RU">Метод
+			IDBxConReadOnlyBase.</span>GetRefIds()</p>
+		</td>
+	</tr>
+</table>
+<p style="margin-bottom: 0cm; background: transparent"><br/>
+
+</p>
+</body>
+</html>

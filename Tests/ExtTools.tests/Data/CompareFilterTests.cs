@@ -20,13 +20,13 @@ namespace ExtTools_tests.Data
     {
       DBxExpression expr1 = new DBxColumn("F1");
       DBxExpression expr2 = new DBxColumn("F2");
-      CompareFilter sut = new CompareFilter(expr1, expr2, CompareKind.GreaterThan, true, DBxColumnType.Int);
+      CompareFilter sut = new CompareFilter(expr1, expr2, CompareKind.GreaterThan, true, DBxColumnType.Int32);
       Assert.AreSame(expr1, sut.Expression1, "Expression1");
       Assert.AreSame(expr2, sut.Expression2, "Expression2");
       Assert.AreEqual(CompareKind.GreaterThan, sut.Kind, "Kind");
       Assert.IsTrue(sut.NullAsDefaultValue, "NullAsDefaultValue");
       Assert.IsFalse(sut.ComparisionToNull, "ComparisionToNull");
-      Assert.AreEqual(DBxColumnType.Int, sut.ColumnType, "ColumnType");
+      Assert.AreEqual(DBxColumnType.Int32, sut.ColumnType, "ColumnType");
       Assert.AreEqual(DBxFilterDegeneration.None, sut.Degeneration, "ColumnType");
     }
 
@@ -82,13 +82,13 @@ namespace ExtTools_tests.Data
     [Test]
     public void Constructor_NULL_1()
     {
-      DoConstructor_NULL(new DBxConst(null, DBxColumnType.Int), new DBxColumn("F1"));
+      DoConstructor_NULL(new DBxConst(null, DBxColumnType.Int32), new DBxColumn("F1"));
     }
 
     [Test]
     public void Constructor_NULL_2()
     {
-      DoConstructor_NULL(new DBxColumn("F1"), new DBxConst(null, DBxColumnType.Int));
+      DoConstructor_NULL(new DBxColumn("F1"), new DBxConst(null, DBxColumnType.Int32));
     }
 
     private void DoConstructor_NULL(DBxExpression expr1, DBxExpression expr2)
@@ -117,7 +117,7 @@ namespace ExtTools_tests.Data
     [Test]
     public void Constructor_colName_5args()
     {
-      CompareFilter sut = new CompareFilter("F1", "F2", CompareKind.GreaterThan, true, DBxColumnType.Int);
+      CompareFilter sut = new CompareFilter("F1", "F2", CompareKind.GreaterThan, true, DBxColumnType.Int32);
       Assert.IsInstanceOf<DBxColumn>(sut.Expression1, "Expression1 type");
       Assert.IsInstanceOf<DBxColumn>(sut.Expression2, "Expression2 type");
       Assert.AreSame("F1", ((DBxColumn)(sut.Expression1)).ColumnName, "ColumnName1");
@@ -125,7 +125,7 @@ namespace ExtTools_tests.Data
       Assert.AreEqual(CompareKind.GreaterThan, sut.Kind, "Kind");
       Assert.IsTrue(sut.NullAsDefaultValue, "NullAsDefaultValue");
       Assert.IsFalse(sut.ComparisionToNull, "ComparisionToNull");
-      Assert.AreEqual(DBxColumnType.Int, sut.ColumnType, "ColumnType");
+      Assert.AreEqual(DBxColumnType.Int32, sut.ColumnType, "ColumnType");
       Assert.AreEqual(DBxFilterDegeneration.None, sut.Degeneration, "ColumnType");
     }
 
@@ -237,13 +237,13 @@ namespace ExtTools_tests.Data
       TypedStringDictionary<object> vals = new TypedStringDictionary<object>(false);
       vals.Add("F1", v1);
       vals.Add("F2", v2);
-      CompareFilter sut = new CompareFilter("F1", "F2", kind, nullAsDefaultValue, DBxColumnType.Int);
+      CompareFilter sut = new CompareFilter("F1", "F2", kind, nullAsDefaultValue, DBxColumnType.Int32);
       bool res = sut.TestFilter(vals);
       Assert.AreEqual(wantedRes, res);
     }
 
     [TestCase(0, null, CompareKind.Equal, DBxColumnType.Unknown, false)]
-    [TestCase(0, null, CompareKind.Equal, DBxColumnType.Int, true)]
+    [TestCase(0, null, CompareKind.Equal, DBxColumnType.Int32, true)]
     public void TestFilter_CompareKind(object v1, object v2, CompareKind kind, DBxColumnType columnType, bool wantedRes)
     {
       TypedStringDictionary<object> vals = new TypedStringDictionary<object>(false);
@@ -261,7 +261,7 @@ namespace ExtTools_tests.Data
     [Test]
     public void Serialization()
     {
-      CompareFilter sut = new CompareFilter("F1", "F2", CompareKind.GreaterThan, true, DBxColumnType.Int);
+      CompareFilter sut = new CompareFilter("F1", "F2", CompareKind.GreaterThan, true, DBxColumnType.Int32);
       byte[] b = SerializationTools.SerializeBinary(sut);
       CompareFilter res = (CompareFilter)(SerializationTools.DeserializeBinary(b));
       Assert.AreEqual(sut.ToString(), res.ToString(), "ToString()");

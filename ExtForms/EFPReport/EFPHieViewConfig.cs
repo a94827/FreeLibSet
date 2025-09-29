@@ -142,9 +142,9 @@ namespace FreeLibSet.Forms
         List<EFPHieViewLevel> lst = new List<EFPHieViewLevel>();
         foreach (DataRowView drv in View)
         {
-          if (DataTools.GetBool(drv.Row, "Flag"))
+          if (DataTools.GetBoolean(drv.Row, "Flag"))
           {
-            int LevelIndex = DataTools.GetInt(drv.Row, "LevelIndex");
+            int LevelIndex = DataTools.GetInt32(drv.Row, "LevelIndex");
             lst.Insert(0, FAllLevels[LevelIndex]);
           }
         }
@@ -180,9 +180,9 @@ namespace FreeLibSet.Forms
         List<string> lst = new List<string>();
         foreach (DataRowView drv in View)
         {
-          if (DataTools.GetBool(drv.Row, "Flag"))
+          if (DataTools.GetBoolean(drv.Row, "Flag"))
           {
-            int LevelIndex = DataTools.GetInt(drv.Row, "LevelIndex");
+            int LevelIndex = DataTools.GetInt32(drv.Row, "LevelIndex");
             lst.Insert(0, FAllLevels[LevelIndex].Name);
           }
         }
@@ -191,7 +191,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (value == null)
-          value = DataTools.EmptyStrings;
+          value = EmptyArray<string>.Value;
         for (int i = 0; i < FTable.Rows.Count; i++)
         {
           int Index = Array.IndexOf<string>(value, AllLevels[i].Name);
@@ -220,7 +220,7 @@ namespace FreeLibSet.Forms
       set
       {
         if (String.IsNullOrEmpty(value))
-          SelectedNames = DataTools.EmptyStrings;
+          SelectedNames = EmptyArray<string>.Value;
         else
           SelectedNames = value.Split(',');
       }
@@ -241,9 +241,9 @@ namespace FreeLibSet.Forms
         List<string> lst = new List<string>();
         foreach (DataRowView drv in View)
         {
-          if (DataTools.GetBool(drv.Row, "Flag"))
+          if (DataTools.GetBoolean(drv.Row, "Flag"))
           {
-            int LevelIndex = DataTools.GetInt(drv.Row, "LevelIndex");
+            int LevelIndex = DataTools.GetInt32(drv.Row, "LevelIndex");
             lst.Add(FAllLevels[LevelIndex].DisplayName);
           }
         }
@@ -262,7 +262,7 @@ namespace FreeLibSet.Forms
         int cnt = 0;
         foreach (DataRowView drv in View)
         {
-          if (DataTools.GetBool(drv.Row, "Flag"))
+          if (DataTools.GetBoolean(drv.Row, "Flag"))
             cnt++;
         }
         return cnt;
@@ -306,13 +306,13 @@ namespace FreeLibSet.Forms
         List<EFPHieViewLevel> lvls = new List<EFPHieViewLevel>();
         foreach (DataRowView drv in View)
         {
-          if (DataTools.GetBool(drv.Row, "Visible") &&
-            DataTools.GetBool(drv.Row, "FlagIsFixed"))
+          if (DataTools.GetBoolean(drv.Row, "Visible") &&
+            DataTools.GetBoolean(drv.Row, "FlagIsFixed"))
           {
-            if (DataTools.GetBool(drv.Row, "Flag"))
+            if (DataTools.GetBoolean(drv.Row, "Flag"))
               continue;
 
-            int LevelIndex = DataTools.GetInt(drv.Row, "LevelIndex");
+            int LevelIndex = DataTools.GetInt32(drv.Row, "LevelIndex");
             lvls.Add(FAllLevels[LevelIndex]);
           }
         }
@@ -381,13 +381,13 @@ namespace FreeLibSet.Forms
         OrderRules[i].FViolated = false;
         DataRow Row1 = FTable.Rows.Find(OrderRules[i].UpperLevelIndex);
         DataRow Row2 = FTable.Rows.Find(OrderRules[i].LowerLevelIndex);
-        if (!DataTools.GetBool(Row1, "Flag"))
+        if (!DataTools.GetBoolean(Row1, "Flag"))
           continue;
-        if (!DataTools.GetBool(Row2, "Flag"))
+        if (!DataTools.GetBoolean(Row2, "Flag"))
           continue;
 
-        int RowOrder1 = DataTools.GetInt(Row1, "RowOrder");
-        int RowOrder2 = DataTools.GetInt(Row2, "RowOrder");
+        int RowOrder1 = DataTools.GetInt32(Row1, "RowOrder");
+        int RowOrder2 = DataTools.GetInt32(Row2, "RowOrder");
 
         if (RowOrder1 < RowOrder2)
           continue;
@@ -633,7 +633,7 @@ namespace FreeLibSet.Forms
       if (LevelIndex < 0)
         return false;
       DataRow Row = FTable.Rows.Find(LevelIndex);
-      return DataTools.GetBool(Row, "Flag");
+      return DataTools.GetBoolean(Row, "Flag");
     }
 
 #endregion
@@ -673,10 +673,10 @@ namespace FreeLibSet.Forms
         if (AllLevels[i].Visible)
         {
           DataRow Row = FTable.Rows[i];
-          bool Flag = DataTools.GetBool(Row, "Flag");
-          int Order = DataTools.GetInt(Row, "RowOrder");
-          PartFlag.SetBool(AllLevels[i].Name, Flag);
-          PartOrd.SetInt(AllLevels[i].Name, Order);
+          bool Flag = DataTools.GetBoolean(Row, "Flag");
+          int Order = DataTools.GetInt32(Row, "RowOrder");
+          PartFlag.SetBoolean(AllLevels[i].Name, Flag);
+          PartOrd.SetInt32(AllLevels[i].Name, Order);
           if (AllLevels[i].ParamEditor != null)
           {
             CfgPart PartParam = PartParams.GetChild(AllLevels[i].Name, true);
@@ -686,7 +686,7 @@ namespace FreeLibSet.Forms
       }
 
       if (!HideExtraSumRowsFixed)
-        Config.SetBool("HideExtraSubTotals", HideExtraSumRows);
+        Config.SetBoolean("HideExtraSubTotals", HideExtraSumRows);
     }
 
     public void ReadConfig(CfgPart Config)
@@ -704,12 +704,12 @@ namespace FreeLibSet.Forms
         if (AllLevels[i].Visible)
         {
           DataRow Row = FTable.Rows[i];
-          bool Flag = DataTools.GetBool(Row, "Flag");
-          int Order = DataTools.GetInt(Row, "RowOrder");
+          bool Flag = DataTools.GetBoolean(Row, "Flag");
+          int Order = DataTools.GetInt32(Row, "RowOrder");
           if (PartFlag != null)
-            PartFlag.GetBool(AllLevels[i].Name, ref Flag);
+            PartFlag.GetBoolean(AllLevels[i].Name, ref Flag);
           if (PartOrd != null)
-            PartOrd.GetInt(AllLevels[i].Name, ref Order);
+            PartOrd.GetInt32(AllLevels[i].Name, ref Order);
           Row["Flag"] = Flag;
           Row["RowOrder"] = Order;
           if (AllLevels[i].ParamEditor != null)
@@ -727,7 +727,7 @@ namespace FreeLibSet.Forms
       }
 
       if (!HideExtraSumRowsFixed)
-        HideExtraSumRows = Config.GetBool("HideExtraSubTotals");
+        HideExtraSumRows = Config.GetBoolean("HideExtraSubTotals");
 
       RefreshTable(); // мог поменяться текст для поля "Название"
     }

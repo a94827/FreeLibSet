@@ -270,7 +270,7 @@ namespace FreeLibSet.Data
       if (value == null)
         return;
 
-      if (DataTools.IsNumericType(value.GetType()))
+      if (MathTools.IsNumericType(value.GetType()))
         return;
       if (value is String)
         return;
@@ -737,13 +737,13 @@ namespace FreeLibSet.Data
       switch (_Function)
       {
         case DBxFunctionKind.Add:
-          return DataTools.SumValues(a[0], a[1]);
+          return MathTools.SumValues(a[0], a[1]);
         case DBxFunctionKind.Substract:
-          return DataTools.SubstractValues(a[0], a[1]);
+          return MathTools.SubstractValues(a[0], a[1]);
         case DBxFunctionKind.Multiply:
-          return DataTools.MultiplyValues(a[0], a[1]);
+          return MathTools.MultiplyValues(a[0], a[1]);
         case DBxFunctionKind.Divide:
-          return DataTools.DivideValues(a[0], a[1]);
+          return MathTools.DivideValues(a[0], a[1]);
         case DBxFunctionKind.Equal:
           return CompareFilter.TestFilter(a[0], a[1], CompareKind.Equal);
         case DBxFunctionKind.LessThan:
@@ -758,9 +758,9 @@ namespace FreeLibSet.Data
           return CompareFilter.TestFilter(a[0], a[1], CompareKind.NotEqual);
 
         case DBxFunctionKind.Neg:
-          return DataTools.NegValue(a[0]);
+          return MathTools.NegValue(a[0]);
         case DBxFunctionKind.Abs:
-          return DataTools.AbsValue(a[0]);
+          return MathTools.AbsValue(a[0]);
         case DBxFunctionKind.Coalesce:
           for (int i = 0; i < a.Length; i++)
           {
@@ -770,7 +770,7 @@ namespace FreeLibSet.Data
           return null;
 
         case DBxFunctionKind.IIf:
-          if (DataTools.GetBool(a[0]))
+          if (DataTools.GetBoolean(a[0]))
             return a[1];
           else
             return a[2];
@@ -782,8 +782,8 @@ namespace FreeLibSet.Data
         case DBxFunctionKind.Upper:
           return DataTools.GetString(a[0]).ToUpperInvariant();
         case DBxFunctionKind.Substring:
-          //return DataTools.GetString(a[0]).Substring(DataTools.GetInt(a[1]) - 1, DataTools.GetInt(a[2]));
-          return DataTools.Substring(DataTools.GetString(a[0]), DataTools.GetInt(a[1]) - 1, DataTools.GetInt(a[2])); // 12.05.2023
+          //return DataTools.GetString(a[0]).Substring(DataTools.GetInt32(a[1]) - 1, DataTools.GetInt32(a[2]));
+          return StringTools.Substring(DataTools.GetString(a[0]), DataTools.GetInt32(a[1]) - 1, DataTools.GetInt32(a[2])); // 12.05.2023
         default:
           throw new BugException("Unknown function " + _Function.ToString());
       }

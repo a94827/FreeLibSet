@@ -909,12 +909,12 @@ namespace FreeLibSet.Forms.Docs
     /// По умолчанию - null - выбор осуществляется из обычной формы с использованием таблички фильтров.
     /// В текущей реализации можно использовать только одно из свойств <see cref="EFPDocComboBoxBaseWithFilters.Filters"/> или <see cref="FixedDocIds"/>.
     /// </summary>
-    public IdList FixedDocIds
+    public IIdSet<Int32> FixedDocIds
     {
       get { return _FixedDocIds; }
       set { _FixedDocIds = value; }
     }
-    private IdList _FixedDocIds;
+    private IIdSet<Int32> _FixedDocIds;
 
     #endregion
 
@@ -976,7 +976,7 @@ namespace FreeLibSet.Forms.Docs
       DBxFilter filter = Filters.GetSqlFilter();
       if (UI.DocProvider.DocTypes.UseDeleted) // 23.05.2021
         filter &= DBSDocType.DeletedFalseFilter;
-      Int32 newId = UI.DocProvider.FindRecord(DocTypeName, filter, true);
+      Int32 newId = DataTools.GetInt32(UI.DocProvider.FindRecord(DocTypeName, filter, true));
       if (newId == 0)
         return false;
 
@@ -1015,7 +1015,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     /// <summary>
-    /// Вызывает <see cref="DocTypeUIBase.GetRowColor(EFPDataGridViewRowAttributesEventArgs)"/>.
+    /// Вызывает <see cref="DocTypeUIBase.GetRowColor(EFPDataGridViewRowInfoEventArgs)"/>.
     /// </summary>
     /// <param name="colorType">Сюда помещается цвет строки в справочнике</param>
     /// <param name="grayed">Сюда помещается true, если запись должна быть отмечена серым цветом</param>
@@ -1176,7 +1176,7 @@ namespace FreeLibSet.Forms.Docs
         return false;
       }
 
-      if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(DocId, "Deleted")))
+      if (DataTools.GetBoolean(UI.TextHandlers.DBCache[DocType.Name].GetBoolean(DocId, "Deleted")))
       {
         message = String.Format(Res.Common_Err_SelectedDocDeleted, DocType.SingularTitle);
         return true;
@@ -1246,7 +1246,7 @@ namespace FreeLibSet.Forms.Docs
 
     /// <summary>
     /// Возвращает выборку, состоящую из единственного выбранного документа.
-    /// В выборке могут быть дополнительные документы, добавляемые <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, int[], EFPDBxViewDocSelReason)"/>.
+    /// В выборке могут быть дополнительные документы, добавляемые <see cref="FreeLibSet.Forms.Docs.DocTypeUI.PerformGetDocSel(DBxDocSelection, IEnumerable{Int32}, EFPDBxViewDocSelReason)"/>.
     /// </summary>
     /// <param name="reason">Причина построения выборки</param>
     /// <returns>Выборка документов</returns>
@@ -1327,7 +1327,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (UI.DocProvider.DocTypes.UseDeleted)
       {
-        if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(docId, "Deleted")))
+        if (DataTools.GetBoolean(UI.TextHandlers.DBCache[DocType.Name].GetBoolean(docId, "Deleted")))
         {
           if (!(CanBeDeleted))
           {
@@ -1810,10 +1810,10 @@ namespace FreeLibSet.Forms.Docs
       {
         if (AutoSetIfSingle)
         {
-          Int32[] ids = SubDocTypeUI.GetSubDocIds(DocId);
-          if (ids.Length == 1)
+          IIdSet<Int32> ids = SubDocTypeUI.GetSubDocIds(DocId);
+          if (ids.Count == 1)
           {
-            SubDocId = ids[0];
+            SubDocId = ids.SingleId;
             return;
           }
         }
@@ -1929,7 +1929,7 @@ namespace FreeLibSet.Forms.Docs
         {
           base.Id = value;
           if (value != 0)
-            InternalSetDocId(SubDocTypeUI.TableCache.GetInt(value, "DocId"));
+            InternalSetDocId(SubDocTypeUI.TableCache.GetInt32(value, "DocId"));
           else
             InternalSetDocId(0);
         }
@@ -1980,9 +1980,9 @@ namespace FreeLibSet.Forms.Docs
         if (value && (DocId != 0) && (SubDocId == 0) &&
           (SubDocTypeUI != null))
         {
-          Int32[] ids = SubDocTypeUI.GetSubDocIds(DocId);
-          if (ids.Length == 1)
-            SubDocId = ids[0];
+          IIdSet<Int32> ids = SubDocTypeUI.GetSubDocIds(DocId);
+          if (ids.Count == 1)
+            SubDocId = ids.SingleId;
         }
 
         Validate(); // 29.08.2016
@@ -2040,7 +2040,7 @@ namespace FreeLibSet.Forms.Docs
       // Проверяем, что поддокумент относится к выбранному документу
       if (SubDocId != 0 && DocId != 0)
       {
-        Int32 docId2 = SubDocTypeUI.TableCache.GetInt(SubDocId, "DocId");
+        Int32 docId2 = SubDocTypeUI.TableCache.GetInt32(SubDocId, "DocId");
         if (docId2 != DocId)
           SetError(String.Format(Res.EFPComboBox_Err_AnotherDoc,
             SubDocTypeUI.SubDocType.SingularTitle,
@@ -2194,13 +2194,13 @@ namespace FreeLibSet.Forms.Docs
       }
 
       object[] a = SubDocTypeUI.GetValues(SubDocId, "Deleted,DocId");
-      if (DataTools.GetBool(a[0]))
+      if (DataTools.GetBoolean(a[0]))
       {
         message = String.Format(Res.Common_Err_SelectedSubDocDeleted, SubDocType.SingularTitle);
         return true; // удален поддокумент
       }
-      Int32 docId = DataTools.GetInt(a[1]);
-      if (DataTools.GetBool(UI.TextHandlers.DBCache[DocType.Name].GetBool(docId, "Deleted")))
+      Int32 docId = DataTools.GetInt32(a[1]);
+      if (DataTools.GetBoolean(UI.TextHandlers.DBCache[DocType.Name].GetBoolean(docId, "Deleted")))
       {
         string docText;
         try

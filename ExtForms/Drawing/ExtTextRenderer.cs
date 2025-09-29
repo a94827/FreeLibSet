@@ -878,7 +878,7 @@ namespace FreeLibSet.Drawing
     {
       if (String.IsNullOrEmpty(lines))
         return;
-      string[] a = lines.Split(DataTools.CRLFSeparators, StringSplitOptions.None);
+      string[] a = lines.Split(StringTools.CRLFSeparators, StringSplitOptions.None);
       DrawLines(a, rc);
     }
 
@@ -917,7 +917,7 @@ namespace FreeLibSet.Drawing
 #if DEBUG
       CheckNotDisposed();
 #endif
-      text = DataTools.RemoveSoftHyphens(text);
+      text = StringTools.RemoveSoftHyphens(text);
       return MeasureScale(Graphics.MeasureString(text, Font, new SizeF(float.MaxValue, float.MaxValue), CalcDefaultFontWidthStringFormat));
     }
 

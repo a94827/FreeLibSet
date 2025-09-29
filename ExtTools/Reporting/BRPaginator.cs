@@ -38,7 +38,7 @@ namespace FreeLibSet.Reporting
 
     public override string ToString()
     {
-      return DataTools.ToStringJoin<int>(",", Indexes);
+      return StringTools.ToStringJoin<int>(",", Indexes);
     }
 
     #endregion
@@ -176,8 +176,8 @@ namespace FreeLibSet.Reporting
     public override string ToString()
     {
       return "BandIndex=" + Band.BandIndex.ToString() +
-        ", RowIndexes=" + DataTools.ToStringJoin<int>(",", RowIndexes) +
-        ", ColumnIndexes=" + DataTools.ToStringJoin<int>(",", ColumnIndexes);
+        ", RowIndexes=" + StringTools.ToStringJoin<int>(",", RowIndexes) +
+        ", ColumnIndexes=" + StringTools.ToStringJoin<int>(",", ColumnIndexes);
     }
 
     #endregion
@@ -731,7 +731,7 @@ namespace FreeLibSet.Reporting
       {
         int maxW = 0;
         foreach (BRPaginatiorBlockInfo blk in blks)
-          maxW = Math.Max(maxW, DataTools.SumInt(blk.ColumnWidths));
+          maxW = Math.Max(maxW, DataTools.SumInt32(blk.ColumnWidths));
 
         int leftOffset = (section.PageSetup.PrintAreaWidth - maxW) / 2;
         foreach (BRPaginatiorBlockInfo blk in blks)
@@ -740,7 +740,7 @@ namespace FreeLibSet.Reporting
       if (section.PageSetup.CenterVertical)
       {
         BRPaginatiorBlockInfo lastBlk = blks[blks.Count - 1];
-        int totalH = lastBlk.TopOffset + DataTools.SumInt(lastBlk.RowHeights);
+        int totalH = lastBlk.TopOffset + DataTools.SumInt32(lastBlk.RowHeights);
         int topOffset = (section.PageSetup.PrintAreaHeight - totalH) / 2;
         foreach (BRPaginatiorBlockInfo blk in blks)
           blk.TopOffset += topOffset;
@@ -849,7 +849,7 @@ namespace FreeLibSet.Reporting
 
       public override string ToString()
       {
-        return "BandIndex=" + Band.BandIndex + ", Rows=" + DataTools.ToStringJoin<int>(",", Rows.Indexes);
+        return "BandIndex=" + Band.BandIndex + ", Rows=" + StringTools.ToStringJoin<int>(",", Rows.Indexes);
       }
 
       #endregion
@@ -1015,7 +1015,7 @@ namespace FreeLibSet.Reporting
             _RowHeightArrays[i][j] = h;
           } // цикл по строкам
           if (lstRRI.Count == 0)
-            _RowRepeatableIndexes[i] = DataTools.EmptyInts;
+            _RowRepeatableIndexes[i] = EmptyArray<Int32>.Empty;
           else
             _RowRepeatableIndexes[i] = lstRRI.ToArray();
         } // цикл по Band
@@ -1615,7 +1615,7 @@ namespace FreeLibSet.Reporting
       #region Ширина
 
       int maxW = band.Section.PageSetup.PrintAreaWidth;
-      int wholeW = DataTools.SumInt(items.Sizes);
+      int wholeW = DataTools.SumInt32(items.Sizes);
       if (wholeW < maxW)
       {
         int cnt = 0;
@@ -1644,7 +1644,7 @@ namespace FreeLibSet.Reporting
             }
           }
           // Устраняем ошибку округления
-          items.Sizes[lastIndex] += (maxW - DataTools.SumInt(items.Sizes));
+          items.Sizes[lastIndex] += (maxW - DataTools.SumInt32(items.Sizes));
         }
       }
 
@@ -1688,8 +1688,8 @@ namespace FreeLibSet.Reporting
     /// <returns>Строка для передачи в <see cref="IBRMeasurer.MeasureString(string, BRCellStyle, out int, out int)"/></returns>
     public static string PrepareStringForMeasure(string s)
     {
-      s = s.Replace(DataTools.NonBreakSpaceChar, ' ');
-      s = s.Replace(DataTools.SoftHyphenStr, "");
+      s = s.Replace(StringTools.NonBreakSpaceChar, ' ');
+      s = s.Replace(StringTools.SoftHyphenStr, "");
       return s;
     }
 

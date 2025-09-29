@@ -68,9 +68,9 @@ namespace FreeLibSet.Data.Docs
       if (Object.ReferenceEquals(tableIdColumn, docIdColumn))
         throw ExceptionFactory.ArgAreSame("tableIdColumn", "docIdColumn");
 
-      if (tableIdColumn.ColumnType != DBxColumnType.Int)
+      if (tableIdColumn.ColumnType != DBxColumnType.Int32)
         throw new ArgumentException(String.Format(Res.DBxVTReference_Arg_ColumnNoInt, tableIdColumn.ColumnName), "tableIdColumn");
-      if (docIdColumn.ColumnType != DBxColumnType.Int)
+      if (docIdColumn.ColumnType != DBxColumnType.Int32)
         throw new ArgumentException(String.Format(Res.DBxVTReference_Arg_ColumnNoInt, docIdColumn.ColumnName), "docIdColumn");
       if (tableIdColumn.Nullable != docIdColumn.Nullable)
         throw new ArgumentException(Res.DBxVTReference_Arg_NullableDiff);
@@ -137,8 +137,8 @@ namespace FreeLibSet.Data.Docs
     /// значений для поля TableColumn. Свойство становится доступно
     /// после инициализации БД
     /// </summary>
-    internal Int32[] MasterTableIds { get { return _MasterTableIds; } /*internal*/ set { _MasterTableIds = value; } }
-    private Int32[] _MasterTableIds;
+    internal IIdSet<Int32> MasterTableIds { get { return _MasterTableIds; } /*internal*/ set { _MasterTableIds = value; } }
+    private IIdSet<Int32> _MasterTableIds;
 
     #endregion
 
@@ -211,8 +211,8 @@ namespace FreeLibSet.Data.Docs
         throw ExceptionFactory.ArgStringIsNullOrEmpty("vtName");
       Owner.CheckNotReadOnly();
 #endif
-      DBxColumnStruct tableIdColumn = Owner.Struct.Columns.AddInt(tableIdColumnName); 
-      DBxColumnStruct idColumn = Owner.Struct.Columns.AddInt(docIdColumnName);
+      DBxColumnStruct tableIdColumn = Owner.Struct.Columns.AddInt32(tableIdColumnName, true); 
+      DBxColumnStruct idColumn = Owner.Struct.Columns.AddInt32(docIdColumnName, true);
       DBxVTReference item = new DBxVTReference(vtName, Owner.Struct, tableIdColumn, idColumn);
       base.Add(item);
       return item;

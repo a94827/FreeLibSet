@@ -164,7 +164,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя таблицы документов</param>
     /// <param name="docIds">Массив идентификаторов</param>
     /// <returns>Таблица документов</returns>
-    protected override DataTable DoLoadDocData(string docTypeName, Int32[] docIds)
+    protected override DataTable DoLoadDocData(string docTypeName, IIdSet<Int32> docIds)
     {
       CheckThread();
 
@@ -214,7 +214,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="subDocTypeName">Имя таблицы поддокументов</param>
     /// <param name="docIds">Массив идентификаторов документов, для которых загружаются поддокументы</param>
     /// <returns>Таблица поддокументов</returns>
-    protected override DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, Int32[] docIds)
+    protected override DataTable DoLoadSubDocData(string docTypeName, string subDocTypeName, IIdSet<Int32> docIds)
     {
       CheckThread();
 
@@ -364,7 +364,7 @@ namespace FreeLibSet.Data.Docs
     /// Будет возвращена первая из записей, в соответствии с порядком.
     /// Если порядок не задан, какая запись будет возвращена, не определено</param>
     /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    protected override Int32 DoFindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
+    protected override object DoFindRecord(string tableName, DBxFilter where, DBxOrder orderBy)
     {
       CheckThread();
 
@@ -390,7 +390,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="singleOnly">Если true и найдено больше одной записи, удовлетворяющей условию
     /// <paramref name="where"/>, то возвращается 0</param>
     /// <returns>Идентификатор найденной записи или 0, если запись не найдена</returns>
-    protected override Int32 DoFindRecord(string tableName, DBxFilter where, bool singleOnly)
+    protected override object DoFindRecord(string tableName, DBxFilter where, bool singleOnly)
     {
       CheckThread();
 
@@ -419,7 +419,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя поля (может быть с точками)</param>
     /// <param name="value">Сюда по ссылке записывается значение</param>
     /// <returns>true, если поле было найдено</returns>
-    protected override bool DoGetValue(string tableName, Int32 id, string columnName, out object value)
+    protected override bool DoGetValue(string tableName, object id, string columnName, out object value)
     {
       CheckThread();
 
@@ -428,7 +428,7 @@ namespace FreeLibSet.Data.Docs
       {
         try
         {
-          return Source.GetValue(tableName, id, columnName, out value);
+          return Source.GetValueById(tableName, id, columnName, out value);
         }
         catch (Exception e)
         {
@@ -446,7 +446,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="id">Идентификатор строки</param>
     /// <param name="columnNames">Имена столбцов, значения которых нужно получить</param>
     /// <returns>Массив значений</returns>
-    protected override object[] DoGetValues(string tableName, Int32 id, DBxColumns columnNames)
+    protected override object[] DoGetValues(string tableName, object id, DBxColumns columnNames)
     {
       CheckThread();
 
@@ -455,7 +455,7 @@ namespace FreeLibSet.Data.Docs
       {
         try
         {
-          return Source.GetValues(tableName, id, columnNames);
+          return Source.GetValuesById(tableName, id, columnNames);
         }
         catch (Exception e)
         {
@@ -471,7 +471,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="where">Фильтры</param>
     /// <returns>Список идентификаторов</returns>
-    protected override IdList DoGetIds(string tableName, DBxFilter where)
+    protected override IIdSet<Int32> DoGetIds(string tableName, DBxFilter where)
     {
       CheckThread();
 
@@ -488,6 +488,32 @@ namespace FreeLibSet.Data.Docs
         }
       }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tableName"></param>
+    /// <param name="refColumnName"></param>
+    /// <param name="where"></param>
+    /// <returns></returns>
+    protected override IIdSet<Int32> DoGetRefIds(string tableName, string refColumnName, DBxFilter where)
+    {
+      CheckThread();
+
+      int repeatCount = 0;
+      while (true)
+      {
+        try
+        {
+          return Source.GetRefIds(tableName, refColumnName, where);
+        }
+        catch (Exception e)
+        {
+          CatchException(e, ref repeatCount);
+        }
+      }
+    }
+
 
     /// <summary>
     /// Получить минимальное значение числового поля.
@@ -696,7 +722,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="columnName">Имя строкового поля. Может содержать точки, если требуется получить значения ссылочного поля</param>
     /// <param name="where">Фильтр. Если null, то просматриваются все строки таблицы</param>
     /// <returns>Массив значений</returns>
-    protected override int[] DoGetUniqueIntValues(string tableName, string columnName, DBxFilter where)
+    protected override int[] DoGetUniqueInt32Values(string tableName, string columnName, DBxFilter where)
     {
       CheckThread();
 
@@ -705,7 +731,7 @@ namespace FreeLibSet.Data.Docs
       {
         try
         {
-          return Source.GetUniqueIntValues(tableName, columnName, where);
+          return Source.GetUniqueInt32Values(tableName, columnName, where);
         }
         catch (Exception e)
         {
@@ -943,7 +969,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="tableName">Имя таблицы</param>
     /// <param name="columnNames">Список столбцов</param>
     /// <param name="firstIds">Начальные идентификаторы страниц</param>
-    protected override void DoClearCachePages(string tableName, DBxColumns columnNames, Int32[] firstIds)
+    protected override void DoClearCachePages(string tableName, DBxColumns columnNames, IIdSet<Int32> firstIds)
     {
       _Source.ClearCachePages(tableName, columnNames, firstIds);
     }
@@ -1175,7 +1201,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="docTypeName">Имя вида документв</param>
     /// <param name="docIds">Массив идентификаторов.
     /// null означает пересчет всех документов. Пересчету подлежат в том числе и удаленные документы</param>
-    protected override void DoRecalcColumns(string docTypeName, Int32[] docIds)
+    protected override void DoRecalcColumns(string docTypeName, IIdSet<Int32> docIds)
     {
       CheckThread();
       _Source.RecalcColumns(docTypeName, docIds);
@@ -1228,7 +1254,7 @@ namespace FreeLibSet.Data.Docs
     /// <param name="where">Дополнительный фильтр. Может быть null, если фильтра нет</param>
     /// <param name="loopedId">Сюда записывается идентификатор "зацикленного" узла</param>
     /// <returns>Список идентификаторов дочерних элементов</returns>
-    protected override IdList DoGetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId)
+    protected override IIdSet<Int32> DoGetInheritorIds(string tableName, string parentIdColumnName, Int32 parentId, bool nested, DBxFilter where, out Int32 loopedId)
     {
       CheckThread();
 

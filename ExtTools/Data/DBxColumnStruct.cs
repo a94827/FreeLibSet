@@ -10,7 +10,8 @@ namespace FreeLibSet.Data
   #region Перечисление DBxColumnType
 
   /// <summary>
-  /// Возможные типы полей
+  /// Возможные типы полей.
+  /// Похоже на перечисление <see cref="System.Data.DbType"/>, но некоторые типы отличаются.
   /// </summary>
   public enum DBxColumnType
   {
@@ -25,19 +26,77 @@ namespace FreeLibSet.Data
     /// </summary>
     String,
 
+    // Порядок элементов важен, так как используется в DBxTools
+
     /// <summary>
     /// Целочисленное поле.
     /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
     /// поля в базе данных
     /// </summary>
-    Int,
+    SByte,
+
+    /// <summary>
+    /// Целочисленное поле.
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
+    /// поля в базе данных
+    /// </summary>
+    Byte,
+
+    /// <summary>
+    /// Целочисленное поле.
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
+    /// поля в базе данных
+    /// </summary>
+    Int16,
+
+    /// <summary>
+    /// Целочисленное поле.
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
+    /// поля в базе данных
+    /// </summary>
+    UInt16,
+
+    /// <summary>
+    /// Целочисленное поле.
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
+    /// поля в базе данных
+    /// </summary>
+    Int32,
+
+    /// <summary>
+    /// Целочисленное поле.
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
+    /// поля в базе данных
+    /// </summary>
+    UInt32,
+
+    /// <summary>
+    /// Целочисленное поле.
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
+    /// поля в базе данных
+    /// </summary>
+    Int64,
+
+    /// <summary>
+    /// Целочисленное поле.
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
+    /// поля в базе данных
+    /// </summary>
+    UInt64,
 
     /// <summary>
     /// Число с плавающей точкой
     /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
     /// поля в базе данных
     /// </summary>
-    Float,
+    Single,
+
+    /// <summary>
+    /// Число с плавающей точкой
+    /// При определении поля могут быть заданы свойства <see cref="DBxColumnStruct.MinValue"/> и <see cref="DBxColumnStruct.MaxValue"/> для определения наиболее подходящего типа
+    /// поля в базе данных
+    /// </summary>
+    Double,
 
     /// <summary>
     ///  Денежный тип
@@ -72,7 +131,7 @@ namespace FreeLibSet.Data
     Guid,
 
     /// <summary>
-    /// Длинный текст
+    /// Длинный текст, возможно, многострочный
     /// </summary>
     Memo,
 
@@ -364,6 +423,8 @@ namespace FreeLibSet.Data
     }
     private double _MaxValue;
 
+    private bool HasRange { get { return MinValue != 0 || MaxValue != 0; } }
+
     /// <summary>
     /// Для отладки
     /// </summary>
@@ -501,75 +562,7 @@ namespace FreeLibSet.Data
     {
       get
       {
-        switch (ColumnType)
-        {
-          case DBxColumnType.Unknown:
-            return null;
-
-          case DBxColumnType.String:
-            return typeof(string);
-
-          case DBxColumnType.Int:
-            if (MinValue == 0 && MaxValue == 0)
-              return typeof(Int32);
-            else if (MinValue >= Byte.MinValue && MaxValue <= Byte.MaxValue)
-              return typeof(Byte);
-            else if (MinValue >= SByte.MinValue && MaxValue <= SByte.MaxValue)
-              return typeof(SByte);
-            else if (MinValue >= Int16.MinValue && MaxValue <= Int16.MaxValue)
-              return typeof(Int16);
-            else if (MinValue >= UInt16.MinValue && MaxValue <= UInt16.MaxValue)
-              return typeof(UInt16);
-            else if (MinValue >= Int32.MinValue && MaxValue <= Int32.MaxValue)
-              return typeof(Int32);
-            else if (MinValue >= UInt32.MinValue && MaxValue <= UInt32.MaxValue)
-              return typeof(UInt32);
-            else if (MinValue >= Int64.MinValue && MaxValue <= Int64.MaxValue)
-              return typeof(Int64);
-            else if (MinValue >= UInt64.MinValue && MaxValue <= UInt64.MaxValue)
-              return typeof(UInt64);
-            else
-              return null; // не знаю, что вернуть
-
-          case DBxColumnType.Float:
-            if (MinValue == 0 && MaxValue == 0)
-              return typeof(Double); // 07.06.2023
-            else if (MinValue >= Single.MinValue && MaxValue <= Single.MaxValue)
-              return typeof(Single);
-            else
-              return typeof(Double);
-
-          case DBxColumnType.Decimal:
-            return typeof(Decimal);
-
-          case DBxColumnType.Boolean:
-            return typeof(Boolean);
-
-          case DBxColumnType.Date:
-          case DBxColumnType.DateTime:
-            return typeof(DateTime);
-
-          case DBxColumnType.Time:
-            return typeof(TimeSpan);
-
-          case DBxColumnType.Guid:
-            //return typeof(string); // Guid храниться не может
-            // 28.04.2020. 
-            // Нет, может. Это во встроенной справке VS 2005 для DataColumn.DataType почему-то не указан тип System.Guid.
-            // Проверено на начальной, без service pack, версии Net Framework 2.0.50727.42
-            // Работает сортировка DataView.Sort, DataView.Find(), Primary key и DataTable.Rows.Find().
-            return typeof(Guid);
-
-          case DBxColumnType.Memo:
-          case DBxColumnType.Xml:
-            return typeof(string);
-
-          case DBxColumnType.Binary:
-            return typeof(byte[]);
-
-          default:
-            throw new NotSupportedException("Unknown column type " + ColumnType.ToString());
-        }
+        return DBxTools.ColumnTypeToDataType(ColumnType);
       }
     }
 
@@ -639,5 +632,149 @@ namespace FreeLibSet.Data
     //}
 
     #endregion
+
+    #region IsReplaceableType()
+
+    /// <summary>
+    /// Возвращает true, если текущий тип столбца <see cref="ColumnType"/> может быть заменен на <paramref name="wantedType"/>
+    /// </summary>
+    /// <param name="wantedType">Тип, на который пытаемся заменить</param>
+    /// <returns>Возможность замены</returns>
+    public bool IsReplaceableType(DBxColumnType wantedType)
+    {
+      if (wantedType == DBxColumnType.Unknown)
+        return false;
+      if (wantedType == ColumnType)
+        return true;
+
+      switch (wantedType)
+      {
+        case DBxColumnType.String:
+          switch (ColumnType)
+          {
+            case DBxColumnType.Guid:
+              return MaxLength >= 36;
+            default:
+              return false;
+          }
+        case DBxColumnType.SByte:
+          return DBxTools.IsIntegerType(ColumnType) && HasRange && MinValue >= SByte.MinValue && MaxValue <= SByte.MaxValue;
+        case DBxColumnType.Byte:
+          return DBxTools.IsIntegerType(ColumnType) && HasRange && MinValue >= Byte.MinValue && MaxValue <= Byte.MaxValue;
+        case DBxColumnType.Int16:
+          switch (ColumnType)
+          {
+            case DBxColumnType.SByte:
+            case DBxColumnType.Byte:
+              return true;
+            default:
+              return DBxTools.IsIntegerType(ColumnType) && HasRange && MinValue >= Int16.MinValue && MaxValue <= Int16.MaxValue;
+          }
+        case DBxColumnType.UInt16:
+          switch (ColumnType)
+          {
+            case DBxColumnType.Byte:
+              return true;
+            default:
+              return DBxTools.IsIntegerType(ColumnType) && HasRange && MinValue >= UInt16.MinValue && MaxValue <= UInt16.MaxValue;
+          }
+        case DBxColumnType.Int32:
+          switch (ColumnType)
+          {
+            case DBxColumnType.SByte:
+            case DBxColumnType.Byte:
+            case DBxColumnType.Int16:
+            case DBxColumnType.UInt16:
+              return true;
+            default:
+              return DBxTools.IsIntegerType(ColumnType) && HasRange && MinValue >= Int32.MinValue && MaxValue <= Int32.MaxValue;
+          }
+        case DBxColumnType.UInt32:
+          switch (ColumnType)
+          {
+            case DBxColumnType.Byte:
+            case DBxColumnType.UInt16:
+              return true;
+            default:
+              return DBxTools.IsIntegerType(ColumnType) && HasRange && MinValue >= UInt32.MinValue && MaxValue <= UInt32.MaxValue;
+          }
+        case DBxColumnType.Int64:
+          switch (ColumnType)
+          {
+            case DBxColumnType.SByte:
+            case DBxColumnType.Byte:
+            case DBxColumnType.Int16:
+            case DBxColumnType.UInt16:
+            case DBxColumnType.Int32:
+            case DBxColumnType.UInt32:
+              return true;
+            default:
+              return DBxTools.IsIntegerType(ColumnType) && HasRange && MinValue >= Int64.MinValue && MaxValue <= Int64.MaxValue;
+          }
+        case DBxColumnType.UInt64:
+          switch (ColumnType)
+          {
+            case DBxColumnType.Byte:
+            case DBxColumnType.UInt16:
+            case DBxColumnType.UInt32:
+              return true;
+            default:
+              return DBxTools.IsIntegerType(ColumnType) && HasRange && MinValue >= UInt64.MinValue && MaxValue <= UInt64.MaxValue;
+          }
+
+        case DBxColumnType.Single:
+          switch (ColumnType)
+          {
+            case DBxColumnType.SByte:
+            case DBxColumnType.Byte:
+            case DBxColumnType.Int16:
+            case DBxColumnType.UInt16:
+              return true;
+            default:
+              return false;
+          }
+
+        case DBxColumnType.Double:
+          switch (ColumnType)
+          {
+            case DBxColumnType.SByte:
+            case DBxColumnType.Byte:
+            case DBxColumnType.Int16:
+            case DBxColumnType.UInt16:
+            case DBxColumnType.Single:
+              return true;
+            default:
+              return false;
+          }
+
+        case DBxColumnType.Decimal:
+          switch (ColumnType)
+          {
+            case DBxColumnType.SByte:
+            case DBxColumnType.Byte:
+            case DBxColumnType.Int16:
+            case DBxColumnType.UInt16:
+            case DBxColumnType.Int32:
+            case DBxColumnType.UInt32:
+              return true;
+            default:
+              return false;
+          }
+
+        case DBxColumnType.Memo:
+          switch (ColumnType)
+          {
+            case DBxColumnType.String:
+              return true;
+            default:
+              return false;
+          }
+
+        default:
+          return false;
+      }
+
+      #endregion
+    }
   }
 }

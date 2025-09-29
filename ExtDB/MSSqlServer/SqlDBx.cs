@@ -170,11 +170,11 @@ namespace FreeLibSet.Data.SqlClient
           using (SqlDBxCon con = new SqlDBxCon(MainEntry, true))
           {
             _ServerVersionText = DataTools.GetString(con.SQLExecuteScalar("SELECT @@VERSION"));
-            int p = DataTools.IndexOfAny(_ServerVersionText, "\n\r\t");
+            int p = StringTools.IndexOfAny(_ServerVersionText, "\n\r\t");
             if (p >= 0)
               _ServerVersionText = _ServerVersionText.Substring(0, p);
             _ServerVersionText = _ServerVersionText.Trim();
-            _EngineEdition = (SqlServerEngineEdition)DataTools.GetInt(con.SQLExecuteScalar(@"SELECT SERVERPROPERTY('EngineEdition')"));
+            _EngineEdition = (SqlServerEngineEdition)DataTools.GetInt32(con.SQLExecuteScalar(@"SELECT SERVERPROPERTY('EngineEdition')"));
 
             string sServerVesrion = con.Connection.ServerVersion; // в последнюю очередь
             if (String.IsNullOrEmpty(sServerVesrion))
@@ -299,18 +299,53 @@ namespace FreeLibSet.Data.SqlClient
           p.SqlDbType = SqlDbType.NChar;
           p.Size = colDef.MaxLength;
           break;
-        case DBxColumnType.Int:
-          p.SqlDbType = SqlDbType.Int; // TODO:
+
+        case DBxColumnType.Byte:
+          p.SqlDbType = SqlDbType.TinyInt; 
           break;
-        case DBxColumnType.Float:
-          p.SqlDbType = SqlDbType.Float; // TODO:
+        case DBxColumnType.SByte:
+          if (colDef.IsReplaceableType(DBxColumnType.Byte))
+            p.SqlDbType = SqlDbType.TinyInt;
+          else
+            p.SqlDbType = SqlDbType.SmallInt;
+          break;
+        case DBxColumnType.Int16:
+          p.SqlDbType = SqlDbType.SmallInt;
+          break;
+        case DBxColumnType.UInt16:
+          if (colDef.IsReplaceableType(DBxColumnType.Int16))
+            p.SqlDbType = SqlDbType.SmallInt;
+          else
+            p.SqlDbType = SqlDbType.Int;
+          break;
+        case DBxColumnType.Int32:
+          p.SqlDbType = SqlDbType.Int;
+          break;
+        case DBxColumnType.UInt32:
+          if (colDef.IsReplaceableType(DBxColumnType.Int32))
+            p.SqlDbType = SqlDbType.Int;
+          else
+            p.SqlDbType = SqlDbType.BigInt;
+          break;
+        case DBxColumnType.Int64:
+        case DBxColumnType.UInt64: // некуда засунуть
+          p.SqlDbType = SqlDbType.BigInt; 
+          break;
+
+        case DBxColumnType.Single:
+          p.SqlDbType = SqlDbType.Real;
+          break;
+        case DBxColumnType.Double:
+          p.SqlDbType = SqlDbType.Float; 
           break;
         case DBxColumnType.Decimal:
           p.SqlDbType = SqlDbType.Decimal;
           break;
+
         case DBxColumnType.Boolean:
           p.SqlDbType = SqlDbType.Bit;
           break;
+
         case DBxColumnType.Date:
           p.SqlDbType = SqlDbType.Date;
           break;
@@ -321,9 +356,11 @@ namespace FreeLibSet.Data.SqlClient
         case DBxColumnType.Time:
           p.SqlDbType = SqlDbType.Time;
           break;
+
         case DBxColumnType.Guid:
-          p.SqlDbType = SqlDbType.NChar;
-          p.Size = 36;//?
+          //p.SqlDbType = SqlDbType.NChar;
+          //p.Size = 36;//?
+          p.SqlDbType = SqlDbType.UniqueIdentifier;
           break;
         case DBxColumnType.Memo:
           p.SqlDbType = SqlDbType.NVarChar;
@@ -976,7 +1013,7 @@ namespace FreeLibSet.Data.SqlClient
       Buffer.FormatTableName(tableName);
       Buffer.SB.Append(") SELECT 1 ELSE SELECT 0");
 
-      return !DataTools.GetBool(SQLExecuteScalar(Buffer.SB.ToString()));
+      return !DataTools.GetBoolean(SQLExecuteScalar(Buffer.SB.ToString()));
     }
 
     #endregion
@@ -991,7 +1028,7 @@ namespace FreeLibSet.Data.SqlClient
     /// <param name="columnNames">Имена столбцов. В списке не должно быть поля первичного ключа</param>
     /// <param name="values">Значения. Порядок значений должен соответствовать списку столбцов</param>
     /// <returns>Идентификатор добавленной записи</returns>
-    public override Int32 AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
+    public override object AddRecordWithIdResult(string tableName, DBxColumns columnNames, object[] values)
     {
       Buffer.Clear();
 
@@ -1004,8 +1041,6 @@ namespace FreeLibSet.Data.SqlClient
       if (TrimValues)
         PerformTrimValues(tableName, columnNames, values);
 
-      Int32 id;
-
       Buffer.SB.Append("INSERT INTO [");
       Buffer.SB.Append(tableName);
       Buffer.SB.Append("] (");
@@ -1016,9 +1051,9 @@ namespace FreeLibSet.Data.SqlClient
       Buffer.SB.Append("; SELECT @@IDENTITY");
 
 
-      id = DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      object id = SQLExecuteScalar(Buffer.SB.ToString());
 
-      if (id <= 0)
+      if (DataTools.IsEmptyValue(id))
         throw new BugException("Wrong identifier has been returned when record added to the table \"" + tableName + "\" Id=" + id.ToString());
 
       return id;
@@ -1282,45 +1317,30 @@ namespace FreeLibSet.Data.SqlClient
         string colTypeString = DataTools.GetString(drv.Row, "data_type");
         switch (colTypeString)
         {
-          // TODO: Сделать все типы
-
           case "char":
           case "nchar":
             colDef.ColumnType = DBxColumnType.String;
             break;
 
-          case "bigint":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int64.MinValue;
-            colDef.MaxValue = Int64.MaxValue;
-            break;
-          case "int":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int32.MinValue;
-            colDef.MaxValue = Int32.MaxValue;
+          case "tinyint":
+            colDef.ColumnType = DBxColumnType.Byte;
             break;
           case "smallint":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = Int16.MinValue;
-            colDef.MaxValue = Int16.MaxValue;
+            colDef.ColumnType = DBxColumnType.Int16;
             break;
-          case "tinyint":
-            colDef.ColumnType = DBxColumnType.Int;
-            colDef.MinValue = 0;
-            colDef.MaxValue = 255;
+          case "int":
+            colDef.ColumnType = DBxColumnType.Int32;
+            break;
+          case "bigint":
+            colDef.ColumnType = DBxColumnType.Int64;
+            break;
+
+          case "real":
+            colDef.ColumnType = DBxColumnType.Single;
             break;
 
           case "float":
-            colDef.ColumnType = DBxColumnType.Float;
-            // TODO: Использовать длину поля для разделения float/double
-            colDef.MinValue = Double.MinValue;
-            colDef.MaxValue = Double.MaxValue;
-            break;
-          case "real":
-            colDef.ColumnType = DBxColumnType.Float;
-            // TODO: Использовать длину поля для разделения float/double
-            colDef.MinValue = Single.MinValue;
-            colDef.MaxValue = Single.MaxValue;
+            colDef.ColumnType = DBxColumnType.Double;
             break;
 
           case "money":
@@ -1365,9 +1385,13 @@ namespace FreeLibSet.Data.SqlClient
           case "xml":
             colDef.ColumnType = DBxColumnType.Xml;
             break;
+
+          case "uniqueidentifier":
+            colDef.ColumnType = DBxColumnType.Guid;
+            break;
         }
 
-        colDef.MaxLength = DataTools.GetInt(drv.Row, "character_maximum_length");
+        colDef.MaxLength = DataTools.GetInt32(drv.Row, "character_maximum_length");
 
         string nullableStr = DataTools.GetString(drv.Row, "is_nullable").ToUpperInvariant();
         //if (NullableStr == "YES")
@@ -1418,36 +1442,36 @@ namespace FreeLibSet.Data.SqlClient
 
       Buffer.Clear();
       Buffer.SB.Append("SELECT [name],[object_id],[referenced_object_id],[delete_referential_action] FROM sys.foreign_keys WHERE parent_object_id=");
-      Buffer.FormatValue(tableObjId, DBxColumnType.Int);
+      Buffer.FormatValue(tableObjId, DBxColumnType.Int32);
       DataTable tbl = SQLExecuteDataTable(Buffer.SB.ToString(), "sys.foreign_keys");
       foreach (DataRow row in tbl.Rows)
       {
-        int fkObjId = DataTools.GetInt(row, "object_id");
-        int refTableObjId = DataTools.GetInt(row, "referenced_object_id");
+        int fkObjId = DataTools.GetInt32(row, "object_id");
+        int refTableObjId = DataTools.GetInt32(row, "referenced_object_id");
 
         Buffer.Clear();
         Buffer.SB.Append("SELECT [parent_column_id] FROM sys.foreign_key_columns WHERE constraint_object_id=");
-        Buffer.FormatValue(fkObjId, DBxColumnType.Int);
+        Buffer.FormatValue(fkObjId, DBxColumnType.Int32);
         // TODO: Нужно сделать метод SQLExecuteScalarSingle(), который будет работать как ExecuteScalar(), но с проверкой количества данных в DataReader'е
         DataTable tbl2 = SQLExecuteDataTable(Buffer.SB.ToString(), "sys.foreign_key_columns");
         if (tbl2.Rows.Count == 0)
           throw new BugException("No column found for a foreign key with constraint_object_id=" + fkObjId.ToString());
         if (tbl2.Rows.Count > 1)
           throw new BugException("Foreign key with constraint_object_id=" + fkObjId.ToString() + " has more than one column (" + tbl2.Rows.Count.ToString() + ")");
-        int ParentColumnId = DataTools.GetInt(tbl2.Rows[0], "parent_column_id");
+        int ParentColumnId = DataTools.GetInt32(tbl2.Rows[0], "parent_column_id");
 
         Buffer.Clear();
         Buffer.SB.Append("SELECT [name] FROM sys.columns WHERE object_id=");
-        Buffer.FormatValue(tableObjId, DBxColumnType.Int);
+        Buffer.FormatValue(tableObjId, DBxColumnType.Int32);
         Buffer.SB.Append(" AND column_id=");
-        Buffer.FormatValue(ParentColumnId, DBxColumnType.Int);
+        Buffer.FormatValue(ParentColumnId, DBxColumnType.Int32);
         string parentColumnName = DataTools.GetString(SQLExecuteScalar(Buffer.SB.ToString()));
         if (String.IsNullOrEmpty(parentColumnName))
           throw new BugException("Cannot define the reference column name");
 
         Buffer.Clear();
         Buffer.SB.Append("SELECT [name] FROM sys.tables WHERE object_id=");
-        Buffer.FormatValue(refTableObjId, DBxColumnType.Int);
+        Buffer.FormatValue(refTableObjId, DBxColumnType.Int32);
         string RefTableName = DataTools.GetString(SQLExecuteScalar(Buffer.SB.ToString()));
         if (String.IsNullOrEmpty(RefTableName))
           throw new BugException("Cannot define the reference table name for RefTableId=" + refTableObjId.ToString());
@@ -1455,7 +1479,7 @@ namespace FreeLibSet.Data.SqlClient
         DBxColumnStruct colDef = tableStr.Columns[parentColumnName];
         colDef.MasterTableName = RefTableName;
 
-        int refTypeCode = DataTools.GetInt(row, "delete_referential_action");
+        int refTypeCode = DataTools.GetInt32(row, "delete_referential_action");
         switch (refTypeCode)
         {
           case 0: colDef.RefType = DBxRefType.Disallow; break;
@@ -1476,7 +1500,7 @@ namespace FreeLibSet.Data.SqlClient
       Buffer.Clear();
       Buffer.SB.Append("SELECT [object_id] FROM sys.tables WHERE [Name]=");
       Buffer.FormatValue(tableName, DBxColumnType.String);
-      return DataTools.GetInt(SQLExecuteScalar(Buffer.SB.ToString()));
+      return DataTools.GetInt32(SQLExecuteScalar(Buffer.SB.ToString()));
     }
 
     #endregion
@@ -1634,7 +1658,7 @@ namespace FreeLibSet.Data.SqlClient
 
               if (colDef.ColumnType == DBxColumnType.String)
               {
-                int realLen = DataTools.GetInt(columnRow, "CHARACTER_MAXIMUM_LENGTH");
+                int realLen = DataTools.GetInt32(columnRow, "CHARACTER_MAXIMUM_LENGTH");
                 if (realLen != colDef.MaxLength)
                 {
                   if (realLen > colDef.MaxLength)
