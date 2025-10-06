@@ -1,0 +1,670 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 6.2.2.2 (Windows)"/>
+	<meta name="created" content="2020-02-06T10:42:53.080000000"/>
+	<meta name="changed" content="2020-02-06T12:32:48.015000000"/>
+	<style type="text/css">
+		@page { margin: 2cm }
+		td p { margin-bottom: 0.25cm; background: transparent; line-height: 115% }
+		h1 { margin-bottom: 0.21cm; background: transparent }
+		h1.western { font-family: "Liberation Sans", sans-serif; font-size: 18pt }
+		h1.cjk { font-family: "Microsoft YaHei"; font-size: 18pt }
+		h1.ctl { font-family: "Mangal"; font-size: 18pt }
+		p { margin-bottom: 0.25cm; background: transparent; line-height: 115% }
+		a:link { so-language: zxx }
+	</style>
+</head>
+<body lang="ru-RU" dir="ltr"><h1 class="western">Методы выполнения
+запросов в DBxCon.doc</h1>
+<table width="803" cellpadding="5" cellspacing="0">
+	<col width="184"/>
+
+	<col width="387"/>
+
+	<col width="99"/>
+
+	<col width="94"/>
+
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Имя
+			метода</font></font></font></p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Описание</font></font></font></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Первичный
+			ключ</font></font></font></p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Ссылочные
+			поля</font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			<br/>
+
+			</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Чтение</font></font></font></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<br/>
+
+			</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">FillSelect</font></font></font></p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">SELECT.
+			<span lang="ru-RU">Результат как </span>DataTable</font></font></font></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">-</font></font></font></p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">да</font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">ReaderSelect</font></font></font></p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">SELECT.
+			<span lang="ru-RU">Возвращается </span>DbDataReader.</font></font></font></p>
+			<p align="left" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Используется,
+			когда набор данных боль<span lang="ru-RU">шой</span></font></font></font></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">-</font></font></font></p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">да</font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			FindRecord</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Поиск строки.</p>
+			<p align="left">Возвращает значение первичного ключа найденной
+			строки или 0</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			FindRecordValue</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Поиск строки.</p>
+			<p align="left">Возвращает значение указанного поля</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			GetIds</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Поиск строк</p>
+			<p align="left">Возвращает список значений первичного ключа для
+			найденных строк</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			GetRecordCount</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			SELECT COUNT(*)</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			GetValue</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Получить значение поля строки с заданным идентификатором</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			GetValues</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Получить значение <span lang="ru-RU">нескольких </span>полей
+			строки с заданным идентификатором</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			GetMaxValue</p>
+			<p lang="en-US" align="left">GetMinValue</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Получить максимальное / минимальное значение поля</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			поле: нет</p>
+			<p align="center">фильтр: да 
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			GetValuesForMax</p>
+			<p lang="en-US" align="left">GetValuesForMin</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Получить значения нескольких полей из строки таблицы, в которой
+			указанное поле имеет максимальное/ минимальное</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			поле <span lang="en-US">min/max: </span><span lang="ru-RU">нет</span></p>
+			<p align="center"><span lang="ru-RU">запрашиваемые поля: да</span></p>
+			<p align="center"><span lang="ru-RU">фильтр: да</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			GetSumValue</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			SELECT SUM(<span lang="ru-RU">поле</span>)</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			поле: нет</p>
+			<p align="center">фильтр: да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			GetUnuqueXxxValues</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			SELECT DISTINCT</p>
+			<p lang="en-US" align="left"><br/>
+
+			</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2" width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			ReadBlob</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Получить значение большого <span lang="en-US">BLOB-</span>поля для
+			строки с заданным идентификатором</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Получить значение большого <span lang="en-US">BLOB-</span>поля для
+			строки, проходящей условие фильтра.</p>
+			<p align="left"><font color="#c9211e">Этот метод не рекомендуется,
+			так как если фильтр вернет несколько строк, результат
+			непредсказуем</font></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			поле: нет</p>
+			<p align="center">фильтр: да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			<br/>
+
+			</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			<br/>
+
+			</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			<br/>
+
+			</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			<br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			<br/>
+
+			</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Запись</font></font></font></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<br/>
+
+			</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center" style="font-variant: normal; font-style: normal; font-weight: normal; text-decoration: none">
+			<br/>
+
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2" width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			SetValue</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			UPDATE</p>
+			<p align="left">Записать значение поля для одной строки с заданным
+			идентификатором</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет 
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			UPDATE</p>
+			<p align="left">Записать значение поля для строк с фильтром</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			поле: нет</p>
+			<p align="center">фильтр: да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2" width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			SetValues</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			UPDATE</p>
+			<p align="left">Записать значения полей для одной строки с
+			заданным идентификатором</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет 
+			</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			UPDATE</p>
+			<p align="left">Записать значения полей для строк по фильтру</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			поля: нет</p>
+			<p align="center">фильтр: да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			AddRecordWithIdResult</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			INSERT</p>
+			<p align="left">Добавить одну строку и вернуть идентификатор. В
+			списке полей не может быть первичного ключа</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32 <span lang="ru-RU">автоинкрементный</span></p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			AddRecord</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			INSERT</p>
+			<p align="left">Добавить одну строку. В списке полей может быть, а
+			может и не быть первичного ключа. Идентификатор новой строки не
+			возвращается</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			AddRecords</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Добавление множества строк из таблицы <span lang="en-US">DataTable
+			</span>или источника <span lang="en-US">DbDataReader</span></p>
+			<p align="left"><span lang="en-US">В списке полей может быть, а
+			может и не быть первичного ключа. Идентификатор</span>ы<span lang="en-US">
+			новы</span>х<span lang="en-US"> строк не </span>возвращаются.</p>
+			<p align="left">Если в базе данных реализован режим <span lang="en-US">BULK
+			INSERT, </span>то он используется. Иначе выполняется множество
+			вызовов <span lang="en-US">INSERT INTO</span></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			UpdateRecords</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Обновление множества строк из таблицы <span lang="en-US">DataTable.
+			</span>В исходной таблице должны быть все поля первичного ключа и
+			одно или несколько заменяемых полей</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			любой тип, включая составной</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			AddOrUpdateRecords</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Добавление или обновление множества строк из таблицы <span lang="en-US">DataTable.
+			</span>В исходной таблице должны быть все поля первичного ключа и
+			одно или несколько заменяемых полей</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			любой тип, включая составной</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			FindOrAddRecord</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Поиск или добавление строки, если она не найдена. Возвращает
+			идентификатор строки</p>
+			<p align="left">Комбинация методов <span lang="en-US">FindRecord </span>и
+			<span lang="en-US">AddRecord()</span></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			FindOrAddRecords</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Поиск или добавление недостающих строк из таблицы <span lang="en-US">DataTable</span>.
+			Возвращает массив идентификаторов строк, соответствующий строкам
+			<span lang="en-US">DataTable</span></p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2" width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			Delete</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Удаление строки с заданным идентификатором</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Удаление строк по фильтру</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			DeleteAll</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			TRUNCATE</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			-</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2" width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			WriteBlob</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Запись большого поля для существующей строки с заданным
+			идентификатором</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			Int32</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			нет</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			Запись большого поля для существующих строк по фильтру (одинаковое
+			значение для нескольких строк)</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			-</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			поле: нет</p>
+			<p align="center">фильтр: да</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="184" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="left">
+			<br/>
+
+			</p>
+		</td>
+		<td width="387" style="background: transparent" style="border: none; padding: 0cm"><p align="left">
+			<br/>
+
+			</p>
+		</td>
+		<td width="99" style="background: transparent" style="border: none; padding: 0cm"><p lang="en-US" align="center">
+			<br/>
+
+			</p>
+		</td>
+		<td width="94" style="background: transparent" style="border: none; padding: 0cm"><p align="center">
+			<br/>
+
+			</p>
+		</td>
+	</tr>
+</table>
+<p><br/>
+<br/>
+
+</p>
+<p>Комментарии к таблице</p>
+<p>В колонке &laquo;Первичный ключ&raquo; указано требование на
+наличие первичного ключа в таблице. Возможные значения:</p>
+<table width="803" cellpadding="5" cellspacing="0">
+	<col width="150"/>
+
+	<col width="631"/>
+
+	<tr valign="top">
+		<td width="150" style="background: transparent" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm"><p align="center" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">Первичный
+			ключ</span></font></font></font></p>
+		</td>
+		<td width="631" style="background: transparent" style="border: 1px solid #000000; padding: 0.1cm"><p align="center" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">Пояснение</span></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="150" style="background: transparent" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm"><p align="center" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">-</span></font></font></font></p>
+		</td>
+		<td width="631" style="background: transparent" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm"><p align="left" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">Первичный
+			ключ может быть любым или вообще отсутствовать.</span></font></font></font></p>
+			<p align="left" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">Если
+			используются ссылочные поля, то таблица, с которой выполняется
+			объединение <span lang="en-US">JOIN, </span><span lang="ru-RU">должна
+			иметь подходящий первичный ключ. В текущей реализации ссылочные
+			поля могут иметь только тип </span><span lang="en-US">Int32.</span></span></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="150" style="background: transparent" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm"><p lang="en-US" align="center" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">Int32</span></font></font></font></p>
+		</td>
+		<td width="631" style="background: transparent" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm"><p align="left" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">Таблица
+			должна иметь первичный ключ, состоящий из одного поля типа <span lang="en-US">Int32
+			(</span>идентификатора записи<span lang="en-US">)</span></span></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="150" style="background: transparent" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm"><p align="center" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">любой
+			тип, включая составной</span></font></font></font></p>
+		</td>
+		<td width="631" style="background: transparent" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm"><p align="left" style="font-style: normal; font-weight: normal; text-decoration: none">
+			<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="text-decoration: none">Первичный
+			ключ должен быть в таблице, но может быть произвольным</span></font></font></font></p>
+		</td>
+	</tr>
+</table>
+<p><br/>
+<br/>
+
+</p>
+<p><span lang="ru-RU">В колонке &laquo;Ссылочные поля&raquo; указано,
+можно ли использовать ссылочные поля с точками. Если у метода есть
+несколько перегрузок, то указаны значения для самой &laquo;продвинутой&raquo;
+перегрузки метода.  Упрощенные версии метода могут не поддерживать
+ссылки.</span></p>
+<p><span lang="ru-RU">Возможные значения: да, нет. Указано, если для
+некоторые параметров можно использовать поля с точками, а для других
+нет.</span></p>
+</body>
+</html>

@@ -155,6 +155,7 @@ namespace FreeLibSet.Logging
     /// </summary>
     public int IndentSize { get { return _Listener.IndentSize; } }
 
+    internal TraceListener Listener { get { return _Listener; } }
     private readonly TraceListener _Listener;
 
     #endregion
@@ -2272,7 +2273,14 @@ namespace FreeLibSet.Logging
       #region Environment.StackTrace
 
       args.WriteLine("Environment.StackTrace");
-      args.WriteLine(Environment.StackTrace); // 05.06.2017
+      try
+      {
+        args.WriteLine(Environment.StackTrace); // 05.06.2017
+      }
+      catch
+      {
+        args.WriteLine("*** Error when stack trace taken ***");
+      }
       args.WriteLine();
 
       #endregion
@@ -2639,6 +2647,8 @@ namespace FreeLibSet.Logging
       args.WriteLine();
 
       #endregion
+
+      args.Listener.Flush();
     }
 
     /// <summary>

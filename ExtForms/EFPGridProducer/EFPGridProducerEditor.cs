@@ -59,6 +59,7 @@ namespace FreeLibSet.Forms
       ghColumns.MarkRowsColumnIndex = 0;
       ghColumns.CellFinished += new EFPDataGridViewCellFinishedEventHandler(ghColumns_CellFinished);
       ghColumns.MenuOutItems.Clear();
+      ghColumns.CommandItems.UseGotoRowWithDifferentCellText = false;
       ghColumns.ToolBarPanel = panSpbColumns;
 
       #endregion
@@ -106,6 +107,7 @@ namespace FreeLibSet.Forms
         ghToolTips.ManualOrderRows = true;
         ghToolTips.MarkRowsColumnIndex = 0;
         ghToolTips.MenuOutItems.Clear();
+        ghToolTips.CommandItems.UseGotoRowWithDifferentCellText = false;
         ghToolTips.ToolBarPanel = panSpbToolTips;
       }
       else

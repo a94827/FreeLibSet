@@ -3120,4 +3120,20 @@
   <data name="EFPDataView_Err_NoSelectedLinkColumn" xml:space="preserve">
     <value>В просмотре не выбран столбец с гиперссылкой</value>
   </data>
+  <data name="Cmd_Menu_Clipboard" xml:space="preserve">
+    <value>Буфер обмена</value>
+  </data>
+  <data name="Cmd_Menu_Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="Cmd_Menu_Edit_GotoRowWithDiffTextDown" xml:space="preserve">
+    <value>Перейти вниз к строке с другим значением</value>
+  </data>
+  <data name="Cmd_Menu_Edit_GotoRowWithDiffTextUp" xml:space="preserve">
+    <value>Перейти вверх к строке с другим значением</value>
+  </data>
+  <data name="EFPDataView_Err_NoRowWithDiffText" xml:space="preserve">
+    <value>Не найдена строка с отличающимся текстом</value>
+    <comment>_</comment>
+  </data>
 </root>

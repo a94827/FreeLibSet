@@ -406,7 +406,7 @@ namespace FreeLibSet.Forms
       _MasterActive = false;
 
       _MenuText = master._MenuText;
-      _ShortCut = master._ShortCut;
+      master.ShortCuts.CopyTo(ShortCuts);
       _MenuRightText = master._MenuRightText;
       _Visible = true;
       _Enabled = true;
@@ -458,7 +458,7 @@ namespace FreeLibSet.Forms
       this._MenuRightText = source.MenuRightText;
       this._Image = source.Image;
       this._ImageKey = source.ImageKey;
-      this._ShortCut = source.ShortCut;
+      source.ShortCuts.CopyTo(this.ShortCuts);
       this._StatusBarText = source.StatusBarText;
       this._Master = source.Master;
       this._Visible = source.Visible;
@@ -1282,28 +1282,298 @@ namespace FreeLibSet.Forms
 
     #region ShortCut
 
+    // 05.10.2025
+    // У команды может быть несколько сочетаний клавиш.
+    // Если есть несколько сочетаний, используется поля _ShortCutList.
+    // Если есть только одно сочетание - то _SingleShortCut
+
+    private Keys _SingleShortCut;
+    private List<Keys> _ShortCuts;
+
+    /// <summary>
+    /// Реализация свойства <see cref="ShortCuts"/>
+    /// </summary>
+    public struct ShortCutCollection : ICollection<Keys>
+    {
+      #region Конструктор
+
+      internal ShortCutCollection(EFPCommandItem owner)
+      {
+        _Owner = owner;
+      }
+
+      private readonly EFPCommandItem _Owner;
+
+      #endregion
+
+      #region Коллекция
+
+      /// <summary>
+      /// Добавляет комбинацию клавиш к команде.
+      /// Повторы отбрасываются.
+      /// </summary>
+      /// <param name="item">Комбинация</param>
+      public void Add(Keys item)
+      {
+        _Owner.CheckNoRun();
+
+        if (item == Keys.None)
+          return;
+        if (Contains(item))
+          return;
+
+        if (_Owner._ShortCuts == null)
+        {
+          if (_Owner._SingleShortCut == Keys.None) // добавление первой комбинации
+            _Owner.ShortCut = item;
+          else // добавление второй комбинации
+          {
+            _Owner._ShortCuts = new List<Keys>();
+            _Owner._ShortCuts.Add(_Owner._SingleShortCut);
+            _Owner._SingleShortCut = Keys.None;
+            _Owner._ShortCuts.Add(item);
+          }
+        }
+        else // добавление третьей и более комбинации
+          _Owner._ShortCuts.Add(item);
+      }
+
+      /// <summary>
+      /// Очищает список комбинаций
+      /// </summary>
+      public void Clear()
+      {
+        _Owner.CheckNoRun();
+        _Owner._ShortCuts = null;
+        _Owner._SingleShortCut = Keys.None;
+      }
+
+      /// <summary>
+      /// Возвращает true, если комбинация назначена команде
+      /// </summary>
+      /// <param name="item">Комбинация</param>
+      /// <returns>True, если есть такая комбинация</returns>
+      public bool Contains(Keys item)
+      {
+        if (item == Keys.None)
+          return false;
+        if (_Owner._ShortCuts == null)
+          return item == _Owner._SingleShortCut;
+        else
+          return _Owner._ShortCuts.Contains(item);
+      }
+
+      /// <summary>
+      /// Копирует назначенные комбинации в массив
+      /// </summary>
+      /// <param name="array">Заполняемый массив</param>
+      /// <param name="arrayIndex">Первый заполняемый элемент</param>
+      public void CopyTo(Keys[] array, int arrayIndex)
+      {
+        if (_Owner._ShortCuts == null)
+        {
+          if (_Owner._SingleShortCut != Keys.None)
+            array[arrayIndex] = _Owner._SingleShortCut;
+        }
+        else
+          _Owner._ShortCuts.CopyTo(array, arrayIndex);
+      }
+
+      /// <summary>
+      /// Копирует все сочетаний клавиш в другую коллекцию.
+      /// Все существующие сочетания в коллекции <paramref name="other"/> удаляются
+      /// </summary>
+      /// <param name="other">Заполняемая коллекция</param>
+      public void CopyTo(ShortCutCollection other)
+      {
+        if (other._Owner == _Owner)
+          throw ExceptionFactory.ArgCollectionSameAsThis("other");
+        other._Owner.CheckNoRun();
+
+        other._Owner._SingleShortCut = _Owner._SingleShortCut;
+        if (_Owner._ShortCuts == null)
+          other._Owner._ShortCuts = null;
+        else
+        {
+          other._Owner._ShortCuts = new List<Keys>(_Owner._ShortCuts.Count);
+          other._Owner._ShortCuts.AddRange(_Owner._ShortCuts);
+        }
+      }
+
+      /// <summary>
+      /// Возвращает новый массив с назначенными комбинациями.
+      /// Если не задано ни одной комбинации, возвращается пустой массив
+      /// </summary>
+      /// <returns>Массив</returns>
+      public Keys[] ToArray()
+      {
+        if (_Owner._ShortCuts == null)
+        {
+          if (_Owner._SingleShortCut == Keys.None)
+            return EmptyArray<Keys>.Empty;
+          else
+            return new Keys[1] { _Owner._SingleShortCut };
+        }
+        else
+          return _Owner._ShortCuts.ToArray();
+      }
+
+      /// <summary>
+      /// Возвращает количество назначенных комбинаций
+      /// </summary>
+      public int Count
+      {
+        get
+        {
+          if (_Owner._ShortCuts == null)
+          {
+            if (_Owner._SingleShortCut == Keys.None)
+              return 0;
+            else
+              return 1;
+          }
+          else
+            return _Owner._ShortCuts.Count;
+        }
+      }
+
+      /// <summary>
+      /// Возвращает true, если для списка команд уже были созданы визуальные элементы и нельзя изменять сочетания клавиш
+      /// </summary>
+      public bool IsReadOnly
+      {
+        get { return _Owner._FirstUIObj != null; }
+      }
+
+      /// <summary>
+      /// Удаляет сочетание клавиш
+      /// </summary>
+      /// <param name="item">Комбинация</param>
+      /// <returns>True, если комбинация ранее была назначена и теперь удалена. 
+      /// False, если нет такой комбинации клавиш</returns>
+      public bool Remove(Keys item)
+      {
+        _Owner.CheckNoRun();
+        if (item == Keys.None)
+          return false;
+        if (_Owner._ShortCuts == null)
+        {
+          if (item == _Owner._SingleShortCut)
+          {
+            _Owner._SingleShortCut = Keys.None;
+            return true;
+          }
+          else
+            return false;
+        }
+        else
+        {
+          if (_Owner._ShortCuts.Remove(item))
+          {
+            if (_Owner._ShortCuts.Count == 1) // удалена предпоследняя комбинация
+            {
+              _Owner._SingleShortCut = _Owner._ShortCuts[0];
+              _Owner._ShortCuts = null;
+            }
+            return true;
+          }
+          else
+            return false;
+        }
+      }
+
+      #endregion
+
+      #region Перечислитель
+
+      /// <summary>
+      /// Возвращает перечислитель по назначенным комбинациям клавиш
+      /// </summary>
+      /// <returns></returns>
+      public IEnumerator<Keys> GetEnumerator()
+      {
+        if (_Owner._ShortCuts == null)
+        {
+          if (_Owner._SingleShortCut == Keys.None)
+            return new DummyEnumerable<Keys>.Enumerator();
+          else
+            return new SingleObjectEnumerable<Keys>.Enumerator(_Owner._SingleShortCut);
+        }
+        else
+          return _Owner._ShortCuts.GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+        return GetEnumerator();
+      }
+
+      #endregion
+
+      #region Внутренние методы
+
+      internal void AddCommandToDictionaryMain(IDictionary<Keys, EFPCommandItem> dict)
+      {
+        if (_Owner._ShortCuts == null)
+        {
+          if (_Owner._SingleShortCut != Keys.None)
+          {
+            if (!dict.ContainsKey(_Owner._SingleShortCut))
+              dict.Add(_Owner._SingleShortCut, _Owner);
+          }
+        }
+        else
+        {
+          if (!dict.ContainsKey(_Owner._ShortCuts[0]))
+            dict.Add(_Owner._ShortCuts[0], _Owner);
+        }
+      }
+
+      internal void AddCommandToDictionaryAux(IDictionary<Keys, EFPCommandItem> dict)
+      {
+        if (_Owner._ShortCuts != null)
+        {
+          for (int i = 1; i < _Owner._ShortCuts.Count; i++)
+          {
+            if (!dict.ContainsKey(_Owner._ShortCuts[i]))
+              dict.Add(_Owner._ShortCuts[i], _Owner);
+          }
+        }
+      }
+
+      #endregion
+    }
+
+    /// <summary>
+    /// Коллекция сочетаний клавиш, назначенных команде
+    /// </summary>
+    public ShortCutCollection ShortCuts { get { return new ShortCutCollection(this); } }
+
     /// <summary>
     /// Сочетание клавиш, нажатие которых приводит к выполнению команды.
     /// По умолчанию содержит значение <see cref="Keys.None"/>.
+    /// Используйте коллекцию <see cref="ShortCuts"/> для доступа к нескольким назначенным комбинациям.
+    /// Если назначено несколько комбинаций, возвращается первая из них.
+    /// Установка свойства назначает единственную комбинацию, все ранее назначенные комбинации удаляются.
     /// </summary>
     public Keys ShortCut
     {
       get
       {
-        // ShortCut'ы берем из главного меню
-        //     if (Master != null)
-        //       return Master.ShortCut;
-        return _ShortCut;
+        if (_ShortCuts == null)
+          return _SingleShortCut;
+        else
+          return _ShortCuts[0];
       }
       set
       {
         CheckNoRun();
-        _ShortCut = value;
+        _SingleShortCut = value;
+        _ShortCuts = null;
       }
     }
-    private Keys _ShortCut;
 
-
+    /*
     internal Keys AlternativeShortCut
     {
       get
@@ -1326,6 +1596,7 @@ namespace FreeLibSet.Forms
         }
       }
     }
+     * */
 
     /// <summary>
     /// Маска, используемая при сравнении нажатой комбинации клавиш с ShortCut'ом
@@ -1354,68 +1625,7 @@ namespace FreeLibSet.Forms
       // 17.06.2024
       // Еще оптимизация
       value &= KeyCompareMask;
-      if (value == ShortCut || value == AlternativeShortCut)
-        return true;
-
-      return false;
-
-#if XXX
-      // 10.11.2012 Альтернативные комбинации для меню "Правка"
-      switch (value)
-      {
-        case Keys.Alt | Keys.Back:
-          if (ShortCut == (Keys.Control | Keys.Z))
-            return true;
-          break;
-        case Keys.Alt | Keys.Shift | Keys.Back:
-          if (ShortCut == (Keys.Control | Keys.Y))
-            return true;
-          break;
-        case Keys.Control | Keys.Insert:
-          if (ShortCut == (Keys.Control | Keys.C))
-            return true;
-          break;
-        case Keys.Shift | Keys.Insert:
-          if (ShortCut == (Keys.Control | Keys.V))
-            return true;
-          break;
-        case Keys.Shift | Keys.Delete:
-          if (ShortCut == (Keys.Control | Keys.X))
-            return true;
-          break;
-      }
-
-#endif
-      // Сравниваем Ctrl, Alt и Shift
-#if XXX
-      bool hasAlt1 = (value & Keys.Alt) != Keys.None;
-      bool hasAlt2 = (myKey & Keys.Alt) != Keys.None;
-
-      bool hasCtrl1 = (value & Keys.Control) != Keys.None;
-      bool hasCtrl2 = (myKey & Keys.Control) != Keys.None;
-
-      bool hasShift1 = (value & Keys.Shift) != Keys.None;
-      bool hasShift2 = (myKey & Keys.Shift) != Keys.None;
-
-      if (!(hasAlt1 == hasAlt2 && hasCtrl1 == hasCtrl2 && hasShift1 == hasShift2))
-        return false;
-#endif
-
-#if XXX
-      // 17.03.2022. Оптимизация
-      Keys modifiers1 = value & (Keys.Alt | Keys.Control | Keys.Shift);
-      Keys modifiers2 = ShortCut & (Keys.Alt | Keys.Control | Keys.Shift);
-      if (modifiers1 != modifiers2)
-        return false;
-
-
-      // Сравниваем код клавиши
-      Keys code1 = value & Keys.KeyCode;
-      Keys code2 = ShortCut & Keys.KeyCode;
-      return code1 == code2;
-
-#endif
-
+      return ShortCuts.Contains(value);
     }
 
 
@@ -1612,7 +1822,7 @@ namespace FreeLibSet.Forms
       {
         if (!Visible)
         {
-          EFPApp.ShowTempMessage(String.Format(Res.EFPCommandItem_Err_Hidden,DisplayName));
+          EFPApp.ShowTempMessage(String.Format(Res.EFPCommandItem_Err_Hidden, DisplayName));
           return;
         }
         if (!Enabled)
@@ -2826,7 +3036,7 @@ namespace FreeLibSet.Forms
     {
       if (Idle != null)
         Idle(this, EventArgs.Empty);
-      
+
       if (_ItemsWithIdle != null)
       {
         for (int i = 0; i < _ItemsWithIdle.Count; i++)
@@ -2910,13 +3120,16 @@ namespace FreeLibSet.Forms
         {
           if ((ci.Usage & EFPCommandItemUsage.ShortCut) == EFPCommandItemUsage.None)
             continue;
-          if (ci.ShortCut != Keys.None)
-          {
-            _ShortCutDict[ci.ShortCut] = ci;
-            Keys altShortCut = ci.AlternativeShortCut;
-            if (altShortCut != Keys.None)
-              _ShortCutDict[altShortCut] = ci;
-          }
+
+          //foreach(Keys oneShortCut in ci.ShortCuts)
+          //  _ShortCutDict[oneShortCut] = ci;
+          ci.ShortCuts.AddCommandToDictionaryMain(_ShortCutDict);
+        }
+        foreach (EFPCommandItem ci in this)
+        {
+          if ((ci.Usage & EFPCommandItemUsage.ShortCut) == EFPCommandItemUsage.None)
+            continue;
+          ci.ShortCuts.AddCommandToDictionaryAux(_ShortCutDict);
         }
       }
 

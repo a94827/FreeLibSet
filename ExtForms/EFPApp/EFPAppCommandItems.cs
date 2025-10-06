@@ -40,6 +40,16 @@ namespace FreeLibSet.Forms
     MenuEdit,
 
     /// <summary>
+    /// Меню "Буфер обмена". Используется в локальном меню табличного просмотра для уменьшения длины меню
+    /// </summary>
+    MenuClipboard,
+
+    /// <summary>
+    /// Меню "Поиск". Используется в локальном меню табличного просмотра для уменьшения длины меню
+    /// </summary>
+    MenuSearch,
+
+    /// <summary>
     /// Меню "Вид"
     /// </summary>
     MenuView,
@@ -371,6 +381,7 @@ namespace FreeLibSet.Forms
 
         case EFPAppStdCommandItems.SaveAs:
           ci.MenuText = Res.Cmd_Menu_File_SaveAs;
+          ci.ShortCut = Keys.Control | Keys.Shift | Keys.S; // 03.10.2025
           break;
 
         case EFPAppStdCommandItems.PageSetup:
@@ -448,40 +459,54 @@ namespace FreeLibSet.Forms
           ci.MenuText = Res.Cmd_Menu_Edit;
           break;
 
+        case EFPAppStdCommandItems.MenuClipboard:
+          ci.MenuText = Res.Cmd_Menu_Clipboard;
+          break;
+
+        case EFPAppStdCommandItems.MenuSearch:
+          ci.MenuText = Res.Cmd_Menu_Search;
+          break;
+
         case EFPAppStdCommandItems.Undo:
           ci.MenuText = Res.Cmd_Menu_Edit_Undo;
           ci.ImageKey = "Undo";
-          ci.ShortCut = Keys.Control | Keys.Z;
+          ci.ShortCuts.Add(Keys.Control | Keys.Z);
+          ci.ShortCuts.Add(Keys.Alt | Keys.Back);
           break;
 
         case EFPAppStdCommandItems.Redo:
           ci.MenuText = Res.Cmd_Menu_Edit_Redo;
           ci.ImageKey = "Redo";
-          ci.ShortCut = Keys.Control | Keys.Y;
+          ci.ShortCuts.Add(Keys.Control | Keys.Y);
+          ci.ShortCuts.Add(Keys.Alt | Keys.Shift | Keys.Back);
           break;
 
         case EFPAppStdCommandItems.Cut:
           ci.MenuText = Res.Cmd_Menu_Edit_Cut;
-          ci.ShortCut = Keys.Control | Keys.X;
+          ci.ShortCuts.Add(Keys.Control | Keys.X);
+          ci.ShortCuts.Add(Keys.Shift | Keys.Delete);
           //ci.MenuRightText = "Ctrl+X";
           ci.ImageKey = "Cut";
           break;
 
         case EFPAppStdCommandItems.Copy:
           ci.MenuText = Res.Cmd_Menu_Edit_Copy;
-          ci.ShortCut = Keys.Control | Keys.C;
+          ci.ShortCuts.Add(Keys.Control | Keys.C);
+          ci.ShortCuts.Add(Keys.Control | Keys.Insert);
           //ci.MenuRightText = "Ctrl+С";
           ci.ImageKey = "Copy";
           break;
 
         case EFPAppStdCommandItems.CopyHyperlink:
           ci.MenuText = Res.Cmd_Menu_Edit_CopyHyperlink;
+          ci.ShortCut = Keys.Control | Keys.Shift | Keys.H;
           ci.ImageKey = "CopyHyperlink";
           break;
 
         case EFPAppStdCommandItems.Paste:
           ci.MenuText = Res.Cmd_Menu_Edit_Paste;
-          ci.ShortCut = Keys.Control | Keys.V;
+          ci.ShortCuts.Add(Keys.Control | Keys.V);
+          ci.ShortCuts.Add(Keys.Shift | Keys.Insert);
           //ci.MenuRightText = "Ctrl+V";
           ci.ImageKey = "Paste";
           break;
@@ -710,7 +735,7 @@ namespace FreeLibSet.Forms
         return false;
       }
     }
-    
+
     /// <summary>
     /// Найти значение перечисления <see cref="EFPAppStdCommandItems"/> для стандартной команды по категории и имени.
     /// Если переданные аргументы не соответствуют стандартной команде, то генерируется исключение.
@@ -737,6 +762,8 @@ namespace FreeLibSet.Forms
         "|File",
         "|SendTo",
         "|Edit",
+        "|Clipboard",
+        "|Search",
         "|View",
         "|Window",
         "|Help",

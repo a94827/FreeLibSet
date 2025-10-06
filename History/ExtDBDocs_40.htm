@@ -5,7 +5,7 @@
 	<title>Изменения в модуле ExtDBDocs.dll</title>
 	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
 	<meta name="created" content="2017-12-15T18:38:40.447000000"/>
-	<meta name="changed" content="2025-09-12T22:44:31.683000000"/>
+	<meta name="changed" content="2025-10-04T23:58:42.221000000"/>
 	<style type="text/css">
 		@page { margin: 2cm }
 		p { margin-bottom: 0.25cm; background: transparent; orphans: 2; widows: 2 }
@@ -48,6 +48,26 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<p align="center">367</p>
+		</td>
+		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p align="center">04.10.2025</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<p>1. <span lang="en-US">DBxMultiSubDocs </span><span lang="ru-RU">и
+			</span><span lang="en-US">DBxSingleSubDocs.CreateSubDocsData()
+			</span><span lang="ru-RU">ошибочно возвращали строки для удаленных
+			поддокументов</span></p>
+			<p><span lang="ru-RU">2. Пересчет вычисляемых полей </span><span lang="ru-RU">(</span><a href="ExtDBDocs_11.htm#v043p1"><span lang="en-US">v.43
+			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">) </span><span lang="ru-RU">для
+			всех документов в базе данных
+			(</span><span lang="en-US">DBxRealDocProvider.DocRecalcColumns() </span><span lang="ru-RU">)
+			выбрасывал исключение, если в таблице есть пропущенные
+			идентификаторы</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<p lang="en-US" align="center">366</p>
 		</td>
 		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -56,11 +76,11 @@
 		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<p><span lang="en-US">1. </span><span lang="ru-RU">Изменения в
 			</span><span lang="en-US">DBxDocProvider </span><span lang="ru-RU">в
-			связи с изменениями в интерфейсе </span><span lang="ru-RU">IDBxConReadOnlyBase</span></p>
-			<p><span lang="ru-RU">2. </span><span lang="ru-RU">Использование
-			</span><span lang="en-US">IIdSet&lt;Int32&gt; </span><span lang="ru-RU">вместо
-			массивов </span><span lang="en-US">Int32[] </span><span lang="ru-RU">для
-			задания идентификаторов документов и поддокументов</span></p>
+			связи с изменениями в интерфейсе IDBxConReadOnlyBase</span></p>
+			<p><span lang="ru-RU">2. Использование </span><span lang="en-US">IIdSet&lt;Int32&gt;
+			</span><span lang="ru-RU">вместо массивов </span><span lang="en-US">Int32[]
+			</span><span lang="ru-RU">для задания идентификаторов документов и
+			поддокументов</span></p>
 		</td>
 	</tr>
 </table>

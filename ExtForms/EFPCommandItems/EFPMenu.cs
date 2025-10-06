@@ -145,11 +145,21 @@ namespace FreeLibSet.Forms
     /// <param name="item">Добавляемая команда меню</param>
     public EFPUIObjBase Add(EFPCommandItem item)
     {
+      return Add(item, false);
+    }
+
+    internal EFPUIObjBase Add(EFPCommandItem item, bool ignoreParent)
+    {
       EFPCommandItem parent = item.Parent;
       if (parent != null)
       {
         if (!ItemDict.ContainsKey(parent.CategoryAndName))
-          Add(parent);
+        {
+          if (ignoreParent)
+            parent = null;
+          else
+            Add(parent);
+        }
       }
       return Add(item, parent);
     }

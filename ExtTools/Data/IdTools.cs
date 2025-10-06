@@ -754,21 +754,23 @@ namespace FreeLibSet.Data
     /// Эта версия используется для составных ключей
     /// </summary>
     /// <param name="table">Таблица</param>
-    /// <param name="columns">Имена столбцов, образующих ссылку</param>
+    /// <param name="columnNames">Имена столбцов, образующих ссылку</param>
     /// <returns>Тип идентификатора</returns>
-    public static Type GetIdType(DataTable table, DBxColumns columns)
+    public static Type GetIdType(DataTable table, DBxColumns columnNames)
     {
       if (table == null)
         throw new ArgumentNullException("table");
-      if (columns.IsEmpty)
-        throw ExceptionFactory.ArgIsEmpty("columns");
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
+      if (columnNames.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("columnNames");
 
-      Type[] dataTypes = new Type[columns.Count];
-      for (int i = 0; i < columns.Count; i++)
+      Type[] dataTypes = new Type[columnNames.Count];
+      for (int i = 0; i < columnNames.Count; i++)
       {
-        DataColumn col = table.Columns[columns[i]];
+        DataColumn col = table.Columns[columnNames[i]];
         if (col == null)
-          throw ExceptionFactory.ArgUnknownColumnName("columns", table, columns[i]);
+          throw ExceptionFactory.ArgUnknownColumnName("columns", table, columnNames[i]);
         dataTypes[i] = col.DataType;
       }
       return GetIdType(dataTypes);
@@ -785,28 +787,30 @@ namespace FreeLibSet.Data
       if (table == null)
         throw new ArgumentNullException("table");
 
-      DBxColumns columns = DBxColumns.FromColumns(table.PrimaryKey);
-      if (columns.IsEmpty || columns.Count > MaxKeyColumnCount)
+      DBxColumns columnNames = DBxColumns.FromColumns(table.PrimaryKey);
+      if (columnNames.IsEmpty || columnNames.Count > MaxKeyColumnCount)
         throw new PrimaryKeyException();
-      return GetIdType(table, columns);
+      return GetIdType(table, columnNames);
     }
 
     /// <summary>
     /// Определение типа идентификаторов для описания структуры данных
     /// </summary>
     /// <param name="table">Описание таблицы</param>
-    /// <param name="columns">Имена столбцов, образующих ссылку</param>
+    /// <param name="columnNames">Имена столбцов, образующих ссылку</param>
     /// <returns>Тип идентификатора</returns>
-    public static Type GetIdType(DBxTableStruct table, DBxColumns columns)
+    public static Type GetIdType(DBxTableStruct table, DBxColumns columnNames)
     {
       if (table == null)
         throw new ArgumentNullException("table");
-      if (columns.IsEmpty)
-        throw ExceptionFactory.ArgIsEmpty("columns");
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
+      if (columnNames.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("columnNames");
 
-      Type[] dataTypes = new Type[columns.Count];
-      for (int i = 0; i < columns.Count; i++)
-        dataTypes[i] = table.Columns[columns[i]].DataType;
+      Type[] dataTypes = new Type[columnNames.Count];
+      for (int i = 0; i < columnNames.Count; i++)
+        dataTypes[i] = table.Columns[columnNames[i]].DataType;
       return GetIdType(dataTypes);
     }
 
@@ -821,31 +825,33 @@ namespace FreeLibSet.Data
       if (table == null)
         throw new ArgumentNullException("table");
 
-      DBxColumns columns = table.PrimaryKey;
-      if (columns.IsEmpty || columns.Count > MaxKeyColumnCount)
+      DBxColumns columnNames = table.PrimaryKey;
+      if (columnNames.IsEmpty || columnNames.Count > MaxKeyColumnCount)
         throw new PrimaryKeyException();
-      return GetIdType(table, columns);
+      return GetIdType(table, columnNames);
     }
 
     /// <summary>
     /// Определение типов идентификаторов ссылочных полей для <see cref="DbDataReader"/>.
     /// </summary>
     /// <param name="reader">Объект для считывания значений</param>
-    /// <param name="columns">Имена столбцов, образующих ссылку</param>
+    /// <param name="columnNames">Имена столбцов, образующих ссылку</param>
     /// <returns>Тип идентификатора</returns>
-    public static Type GetIdType(DbDataReader reader, DBxColumns columns)
+    public static Type GetIdType(DbDataReader reader, DBxColumns columnNames)
     {
       if (reader == null)
         throw new ArgumentNullException("table");
-      if (columns.IsEmpty)
-        throw ExceptionFactory.ArgIsEmpty("columns");
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
+      if (columnNames.IsEmpty)
+        throw ExceptionFactory.ArgIsEmpty("columnNames");
 
-      Type[] dataTypes = new Type[columns.Count];
-      for (int i = 0; i < columns.Count; i++)
+      Type[] dataTypes = new Type[columnNames.Count];
+      for (int i = 0; i < columnNames.Count; i++)
       {
-        int colPos = reader.GetOrdinal(columns[i]);
+        int colPos = reader.GetOrdinal(columnNames[i]);
         if (colPos < 0)
-          throw ExceptionFactory.ArgUnknownColumnName("columns", reader, columns[i]);
+          throw ExceptionFactory.ArgUnknownColumnName("columns", reader, columnNames[i]);
         dataTypes[i] = reader.GetFieldType(colPos);
       }
       return GetIdType(dataTypes);
@@ -1093,6 +1099,8 @@ namespace FreeLibSet.Data
 #if DEBUG
       if (source == null)
         throw new ArgumentNullException("source");
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
       if (columnNames.IsEmpty)
         throw ExceptionFactory.ArgIsEmpty("columnNames");
 #endif
@@ -1664,6 +1672,13 @@ namespace FreeLibSet.Data
     public static IIdSet<T> GetIds<T>(DataTable table, bool saveOrder)
       where T : struct, IEquatable<T>
     {
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+#endif
+      if (table.PrimaryKey.Length == 0)
+        throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("table", table);
+
       if (table.Rows.Count == 0)
         return IdArray<T>.Empty;
 
@@ -1780,6 +1795,13 @@ namespace FreeLibSet.Data
     public static IIndexedIdSet<T> GetIds<T>(DataView dv)
       where T : struct, IEquatable<T>
     {
+#if DEBUG
+      if (dv == null)
+        throw new ArgumentNullException("dv");
+#endif
+      if (dv.Table.PrimaryKey.Length == 0)
+        throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("dv", dv.Table);
+
       if (dv.Count == 0)
         return IdArray<T>.Empty;
 
@@ -1863,6 +1885,13 @@ namespace FreeLibSet.Data
     private static IIndexedIdSet<T> GetIds<T>(IEnumerable<DataRow> rows, DataTable table)
       where T : struct, IEquatable<T>
     {
+#if DEBUG
+      if (table == null)
+        throw new ArgumentNullException("table");
+#endif
+      if (table.PrimaryKey.Length == 0)
+        throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("table", table);
+
       DataRowValues src = new DataRowValues();
       src.Table = table;
       IdExtractor<T> extractor = CreateExtractor<T>(src, DBxColumns.FromColumns(table.PrimaryKey));
@@ -1906,6 +1935,10 @@ namespace FreeLibSet.Data
       }
       if (n == 0)
         return IdArray<T>.Empty;
+
+      if (table.PrimaryKey.Length == 0)
+        throw ExceptionFactory.ArgDataTableWithoutPrimaryKey("rows", table);
+
 
       DataRowValues src = new DataRowValues();
       IdExtractor<T> extractor = CreateExtractor<T>(src, DBxColumns.FromColumns(table.PrimaryKey));
@@ -2106,6 +2139,8 @@ namespace FreeLibSet.Data
 #if DEBUG
       if (table == null)
         throw new ArgumentNullException("table");
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
 #endif
       if (columnNames.IsEmpty)
         throw ExceptionFactory.ArgIsEmpty("columnNames");
@@ -2243,6 +2278,8 @@ namespace FreeLibSet.Data
 #if DEBUG
       if (table == null)
         throw new ArgumentNullException("table");
+      if (columnNames == null)
+        throw new ArgumentNullException("columnNames");
 #endif
       if (columnNames.IsEmpty)
         throw ExceptionFactory.ArgIsEmpty("columnNames");

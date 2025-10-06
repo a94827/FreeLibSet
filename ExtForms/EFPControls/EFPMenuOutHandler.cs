@@ -512,30 +512,46 @@ namespace FreeLibSet.Forms
     /// <param name="commandItems">Описания команд локального меню</param>
     public EFPMenuOutHandler(EFPContextCommandItems commandItems)
     {
+      if (commandItems == null)
+        throw new ArgumentNullException("commandItems");
+
+      _MenuFile = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuFile);
+      _MenuFile.GroupBegin = true;
+      commandItems.Add(_MenuFile);
+
       ciPrintDefault = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PrintDefault);
+      ciPrintDefault.Parent = _MenuFile;
       ciPrintDefault.Click += PrintDefault_Click;
       commandItems.Add(ciPrintDefault);
 
       ciPrint = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Print);
+      ciPrint.Parent = _MenuFile;
       ciPrint.Usage &= (~EFPCommandItemUsage.ToolBar); // два значка с принтерами не нужны :)
       ciPrint.Click += Print_Click;
+      ciPrint.GroupBegin = true;
       commandItems.Add(ciPrint);
 
       ciPageSetup = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PageSetup);
+      ciPageSetup.Parent = _MenuFile;
       ciPageSetup.Click += PageSetup_Click;
       commandItems.Add(ciPageSetup);
 
       ciPrintPreview = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PrintPreview);
+      ciPrintPreview.Parent = _MenuFile;
       ciPrintPreview.Click += PrintPreview_Click;
+      ciPrintPreview.GroupEnd = true;
       commandItems.Add(ciPrintPreview);
 
       ciExportFile = new EFPCommandItem("File", "ExportFile");
+      ciExportFile.Parent = _MenuFile;
       ciExportFile.MenuText = Res.Cmd_Menu_File_ExportFile;
       ciExportFile.Click += ExportFile_Click;
       commandItems.Add(ciExportFile);
 
       _MenuSendTo = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSendTo);
+      _MenuSendTo.Parent = null; // не используем подменю "Файл"
       _MenuSendTo.Usage = EFPCommandItemUsage.Menu;
+      _MenuSendTo.GroupEnd = true;
       commandItems.Add(_MenuSendTo);
       // Заполнение подменю выполняется в обработчике Prepare. Прикладной код может добавлять свои команды "Отправить", не связанные с отчетом
       _SendToCommands = new List<EFPCommandItem>();
@@ -748,6 +764,13 @@ namespace FreeLibSet.Forms
     private readonly EFPCommandItem ciPrintDefault, ciPrint, ciPageSetup, ciPrintPreview;
     private readonly EFPCommandItem ciExportFile;
     private readonly List<EFPCommandItem> _SendToCommands;
+
+    /// <summary>
+    /// Подменю "Файл".
+    /// В него добавляются команды "Печать", "Параметры страницы", "Предварительный просмотр" и "Экспорт в файл".
+    /// </summary>
+    public EFPCommandItem MenuFile { get { return _MenuFile; } }
+    private readonly EFPCommandItem _MenuFile;
 
     /// <summary>
     /// Подменю "Отправить".

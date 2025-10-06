@@ -291,7 +291,6 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-
     #region Копировать гиперссылку
 
     EFPCommandItem ciCopyHyperlink;

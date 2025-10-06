@@ -955,8 +955,8 @@ namespace FreeLibSet.Forms.Data
       form.Text = DisplayName;
       form.Icon = EFPApp.MainImages.Icons["Filter"];
       form.ModeButtons[0].Control.Text = Res.DateRangeDialog_Msg_Prompt;
-      form.ModeButtons[1].Control.Text = Res.NullNotNullGridFilter_MsgNotNull;
-      form.ModeButtons[2].Control.Text = Res.NullNotNullGridFilter_MsgNull;
+      form.ModeButtons[1].Control.Text = FilterTextNotNull;
+      form.ModeButtons[2].Control.Text = FilterTextNull;
 
       form.ModeButtons.SelectedIndex = (int)Mode;
       form.TheDateRangeBox.First.NValue = FirstValue;
@@ -2550,6 +2550,87 @@ namespace FreeLibSet.Forms.Data
 
     #endregion
 
+    #region Текст и значки для режимов NotNull и Null
+
+    /// <summary>
+    /// Если true, то в диалоге установки фильтра дополнительно доступны режимы <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.NotNull"/> и <see cref="RangeCommonFilterMode.Null"/>.
+    /// Если false (по умолчанию), то доступен только режим <see cref="RangeCommonFilterMode.Range"/>.
+    /// </summary>
+    public bool Nullable { get { return _Nullable; } set { _Nullable = value; } }
+    private bool _Nullable;
+
+    /// <summary>
+    /// Текстовое описание фильтра для значения <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.NotNull"/>.
+    /// По умолчанию - "Значение установлено".
+    /// </summary>
+    public string FilterTextNotNull
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_FilterTextNotNull))
+          return Res.NullNotNullGridFilter_MsgNotNull;
+        else
+          return _FilterTextNotNull;
+      }
+      set { _FilterTextNotNull = value; }
+    }
+    private string _FilterTextNotNull;
+
+    /// <summary>
+    /// Текстовое описание фильтра для значения <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.Null"/>.
+    /// По умолчанию - "Значение не установлено".
+    /// </summary>
+    public string FilterTextNull
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_FilterTextNull))
+          return Res.NullNotNullGridFilter_MsgNull;
+        else
+          return _FilterTextNull;
+      }
+      set { _FilterTextNull = value; }
+    }
+    private string _FilterTextNull;
+
+#if XXX
+    /// <summary>
+    /// Значок для значения <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.NotNull"/>.
+    /// Если свойство не установлено, используется стандартный значок фильтра.
+    /// </summary>
+    public string FilterImageKeyNotNull
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_FilterImageKeyNotNull))
+          return EFPGridFilterTools.DefaultFilterImageKey;
+        else
+          return _FilterImageKeyNotNull;
+      }
+      set { _FilterImageKeyNotNull = value; }
+    }
+    private string _FilterImageKeyNotNull;
+
+    /// <summary>
+    /// Значок для значения <see cref="RangeCommonFilterBase{T}.Mode"/>=<see cref="RangeCommonFilterMode.Null"/>.
+    /// Если свойство не установлено, используется стандартный значок фильтра.
+    /// </summary>
+    public string FilterImageKeyNull
+    {
+      get
+      {
+        if (String.IsNullOrEmpty(_FilterImageKeyNull))
+          return EFPGridFilterTools.DefaultFilterImageKey;
+        else
+          return _FilterImageKeyNull;
+      }
+      set { _FilterImageKeyNull = value; }
+    }
+    private string _FilterImageKeyNull;
+#endif
+
+    #endregion
+
     #region Переопределенные методы и свойства
 
     /// <summary>
@@ -2560,19 +2641,34 @@ namespace FreeLibSet.Forms.Data
     {
       get
       {
-        if (IsEmpty)
-          return String.Empty;
-        else
-          return DateRangeFormatter.Default.ToString(FirstValue, LastValue, true);
+        switch (Mode)
+        {
+          case RangeCommonFilterMode.Range:
+            if (FirstValue.HasValue || LastValue.HasValue)
+              return DateRangeFormatter.Default.ToString(FirstValue, LastValue, true);
+            else
+              return String.Empty;
+          case RangeCommonFilterMode.NotNull: return FilterTextNotNull;
+          case RangeCommonFilterMode.Null: return FilterTextNull;
+          default: throw new BugException();
+        }
       }
     }
 
     /// <summary>
-    /// Показывает блок диалога для редактирования фильтра
+    /// Показывает блок диалога для редактирования фильтра.
     /// </summary>
     /// <param name="dialogPosition">Передается в блок диалога</param>
     /// <returns>True, если пользователь установил фильтр</returns>
     public virtual bool ShowFilterDialog(EFPDialogPosition dialogPosition)
+    {
+      if (Nullable)
+        return ShowNullableFilterDialog(dialogPosition);
+      else
+        return ShowDateRangeDialog(dialogPosition);
+    }
+
+    private bool ShowDateRangeDialog(EFPDialogPosition dialogPosition)
     {
       DateRangeDialog dlg = new DateRangeDialog();
       dlg.Title = DisplayName;
@@ -2593,6 +2689,37 @@ namespace FreeLibSet.Forms.Data
       LastValue = dlg.NLastValue;
 
       return true;
+    }
+
+    private bool ShowNullableFilterDialog(EFPDialogPosition dialogPosition)
+    {
+      DateRangeGridFilterForm form = new DateRangeGridFilterForm();
+      form.Text = DisplayName;
+      form.Icon = EFPApp.MainImages.Icons["Filter"];
+      form.ModeButtons[0].Control.Text = Res.DateRangeDialog_Msg_Prompt;
+      form.ModeButtons[1].Control.Text = FilterTextNotNull;
+      form.ModeButtons[2].Control.Text = FilterTextNull;
+
+      form.ModeButtons.SelectedIndex = (int)Mode;
+      form.TheDateRangeBox.First.NValue = FirstValue;
+      form.TheDateRangeBox.Last.NValue = LastValue;
+
+      switch (EFPApp.ShowDialog(form, true, dialogPosition))
+      {
+        case System.Windows.Forms.DialogResult.OK:
+          Mode = (RangeCommonFilterMode)(form.ModeButtons.SelectedIndex);
+          if (Mode == RangeCommonFilterMode.Range)
+          {
+            FirstValue = form.TheDateRangeBox.First.NValue;
+            LastValue = form.TheDateRangeBox.Last.NValue;
+          }
+          return true;
+        case System.Windows.Forms.DialogResult.No:
+          Clear();
+          return true;
+        default:
+          return false;
+      }
     }
 
     #endregion

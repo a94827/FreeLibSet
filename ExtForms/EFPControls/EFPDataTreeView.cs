@@ -1237,6 +1237,12 @@ namespace FreeLibSet.Forms
 
     bool IEFPDataView.UseRefresh { get { return CommandItems.UseRefresh; } }
 
+    EFPDataViewEnterKeyMode IEFPDataView.EnterKeyMode
+    {
+      get { return CommandItems.EnterKeyMode; }
+      set { CommandItems.EnterKeyMode = value; }
+    }
+
     #endregion
 
     #region Управление поведением просмотра

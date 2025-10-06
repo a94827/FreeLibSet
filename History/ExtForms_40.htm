@@ -1,213 +1,281 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
-	<title>Изменения в доп. управляющих элементах ExtForms.dll</title>
-	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
-	<meta name="created" content="2017-12-15T19:02:08.448000000"/>
-	<meta name="changed" content="2025-09-29T20:56:47.994000000"/>
-	<style type="text/css">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1251">
+	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGED" CONTENT="20251006;170256062000000">
+	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
+	<META NAME="changed" CONTENT="2025-10-05T16:56:52.207000000">
+	<STYLE TYPE="text/css">
+	<!--
 		@page { margin: 2cm }
-		p { margin-bottom: 0.25cm; background: transparent }
-		td p { margin-bottom: 0.25cm; background: transparent; orphans: 0; widows: 0 }
-		h1 { margin-bottom: 0.21cm; background: transparent }
-		h1.western { font-family: "Liberation Serif", serif }
-		h1.cjk { font-family: "SimSun"; font-size: 24pt }
-		h1.ctl { font-family: "Mangal"; font-size: 24pt }
-		a:link { so-language: zxx }
-		a:visited { color: #800080 }
-	</style>
-</head>
-<body lang="ru-RU" vlink="#800080" dir="ltr">
-<h1 class="western">История изменений в программе<br/>
-Модуль
-<span lang="en-US">ExtForms</span>.<span lang="en-US">dll </span>(Расширение
-пользовательского интерфейса)</h1>
-<h1 class="western">Версия <span lang="en-US">4</span>.<span lang="en-US">0</span></h1>
-<p>Полный номер версии файла, который можно узнать, посмотрев
+		P { margin-bottom: 0.25cm; background: transparent }
+		TD P { margin-bottom: 0.25cm; background: transparent; widows: 0; orphans: 0 }
+		H1 { margin-bottom: 0.21cm; background: transparent }
+		H1.western { font-family: "Liberation Serif", serif }
+		H1.cjk { font-family: "SimSun"; font-size: 24pt }
+		H1.ctl { font-family: "Mangal"; font-size: 24pt }
+		A:link { so-language: zxx }
+		A:visited { color: #800080 }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="ru-RU" VLINK="#800080" DIR="LTR">
+<H1 CLASS="western">История изменений в программе<BR>Модуль
+<SPAN LANG="en-US">ExtForms</SPAN>.<SPAN LANG="en-US">dll </SPAN>(Расширение
+пользовательского интерфейса)</H1>
+<H1 CLASS="western">Версия <SPAN LANG="en-US">4</SPAN>.<SPAN LANG="en-US">0</SPAN></H1>
+<P>Полный номер версии файла, который можно узнать, посмотрев
 свойства файла или в меню &laquo;О программе&raquo;, состоит из
-четырех чисел и имеет вид &laquo;<span lang="en-US">4</span>.<span lang="en-US">0</span>.0.<span lang="en-US">X</span>&raquo;.
-В таблице указано только последнее число &laquo;<span lang="en-US">X</span>&raquo;</p>
-<table width="100%" cellpadding="2" cellspacing="0" style="page-break-before: always">
-	<col width="25*">
-	<col width="35*">
-	<col width="196*">
-	<tr valign="top">
-		<td width="10%" style="border: 1.00pt solid #000000; padding: 0.05cm">
-			<p align="center">Версия</p>
-		</td>
-		<td width="14%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p align="center">Дата</p>
-		</td>
-		<td width="77%" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p align="center">Что сделано</p>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td width="10%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">366</p>
-		</td>
-		<td width="14%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US" align="center">11.06.2025-29<span lang="ru-RU">.</span>09.2025</p>
-		</td>
-		<td width="77%" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<p lang="en-US"><span style="text-decoration: none">1. </span><span style="text-decoration: none"><span lang="ru-RU">Рефакторинг</span></span></p>
-			<p lang="en-US"><span style="text-decoration: none"><span lang="ru-RU">-
-			Методы </span></span><span style="text-decoration: none">XxxInt()
-			</span><span style="text-decoration: none"><span lang="ru-RU">переименованы
-			в </span></span><span style="text-decoration: none">XxxInt32(),
-			XxxBool() - </span><span style="text-decoration: none"><span lang="ru-RU">в
-			</span></span><span style="text-decoration: none">XxxBoolean()</span></p>
-			<p lang="en-US"><span style="text-decoration: none">- </span><span style="text-decoration: none"><span lang="ru-RU">Методы
-			</span></span><span style="text-decoration: none">DBxExtValuesDialogInitEventArgs.AddInt()
-			</span><span style="text-decoration: none"><span lang="ru-RU">в
-			</span></span><span style="text-decoration: none">AddInteger(). </span>
-			</p>
-			<p><span style="text-decoration: none"><span lang="en-US">-
-			</span></span><span style="text-decoration: none"><span lang="ru-RU">Структура
-			</span></span><span style="text-decoration: none"><span lang="en-US">EFPDataViewRowInfo
-			(<a href="ExtForms_11.htm#v276p10">v.276 </a></span></span><a href="ExtForms_11.htm#v276p10"><span style="text-decoration: none"><span lang="ru-RU">п.10</span></span></a><span style="text-decoration: none"><span lang="en-US">)
-			</span></span><span style="text-decoration: none"><span lang="ru-RU">в
-			</span></span><span style="text-decoration: none"><span lang="en-US">EFPDataViewRowValues.
-			</span></span><span style="text-decoration: none"><span lang="ru-RU">Методы
-			</span></span><span style="text-decoration: none"><span lang="en-US">EFPDataGridView,
-			EFPDataTreeView.GetRowInfo()/FreeRowInfo</span></span><span style="text-decoration: none"><span lang="ru-RU">()
-			в </span></span><span style="text-decoration: none"><span lang="en-US">GetRowValues()/FreeRowValues()</span></span></p>
-			<p lang="en-US"><span style="text-decoration: none">- События
-			EFPDataGridView.GetRowAttributes </span><span style="text-decoration: none"><span lang="ru-RU">в</span></span><span style="text-decoration: none">
-			RowInfoNeeded. GetCellAttributes </span><span style="text-decoration: none"><span lang="ru-RU">в</span></span><span style="text-decoration: none">
-			CellInfoNeeded, </span><span style="text-decoration: none"><span lang="ru-RU">методы
-			</span></span><span style="text-decoration: none">DoGetRowCellAttributes()
-			</span><span style="text-decoration: none"><span lang="ru-RU">в</span></span><span style="text-decoration: none">
-			GetRowCellInfo(), </span><span style="text-decoration: none"><span lang="ru-RU">перечисление
-			EFPDataGridViewAttributesReason в</span></span><span style="text-decoration: none">
-			EFPDataViewInfoReason</span></p>
-			<p><span style="text-decoration: none"><span lang="en-US">-
-			</span></span><span style="text-decoration: none"><span lang="ru-RU">Событие
-			</span></span><span style="text-decoration: none"><span lang="en-US">EFPGridProducerColumn.GetCellAttributes
-			</span></span><span style="text-decoration: none"><span lang="ru-RU">(</span></span><a href="ExtForms_11.htm#v276p9"><span style="text-decoration: none"><span lang="en-US">v.276
-			</span></span><span style="text-decoration: none"><span lang="ru-RU"><span style="text-decoration: none"><span style="text-decoration: none">п.9</span></span></span></span></a><span style="text-decoration: none"><span lang="ru-RU"><span style="text-decoration: none"><span style="text-decoration: none">)
-			в </span></span></span></span><span style="text-decoration: none"><span lang="en-US">CellInfoNeeded</span></span></p>
-			<p lang="en-US" style="text-decoration: none">- IntEditBox <span lang="ru-RU">в</span>
-			Int32EditBox</p>
-			<p lang="en-US" style="text-decoration: none">- IntInputDialog <span lang="ru-RU">в
-			Int32InputDialog</span></p>
-			<p lang="en-US" style="text-decoration: none">- IntRangeDialog <span lang="ru-RU">в
-			</span>Int32RangeDialog</p>
-			<p lang="en-US" style="text-decoration: none">- NodeIntEditBox <span lang="ru-RU">в</span>
-			NodeInt32EditBox</p>
-			<p lang="en-US" style="text-decoration: none">- IntRangeGridFilter
-			<span lang="ru-RU">в Int32RangeGridFilter</span></p>
-			<p lang="en-US" style="text-decoration: none">-
-			IntRangeCrossGridFilter <span lang="ru-RU">в
-			</span>Int32RangeCrossGridFilter</p>
-			<p lang="en-US" style="text-decoration: none">-
-			IntRangeInclusionGridFilter <span lang="ru-RU">в
-			</span>Int32RangeInclusionGridFilter</p>
-			<p lang="en-US" style="text-decoration: none">- ExtValueIntEditBox
-			<span lang="ru-RU">в ExtValueInt32EditBox</span></p>
-			<p style="text-decoration: none">-
+четырех чисел и имеет вид &laquo;<SPAN LANG="en-US">4</SPAN>.<SPAN LANG="en-US">0</SPAN>.0.<SPAN LANG="en-US">X</SPAN>&raquo;.
+В таблице указано только последнее число &laquo;<SPAN LANG="en-US">X</SPAN>&raquo;</P>
+<TABLE WIDTH=100% CELLPADDING=2 CELLSPACING=0 STYLE="page-break-before: always">
+	<COL WIDTH=25*>
+	<COL WIDTH=35*>
+	<COL WIDTH=196*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border: 1.00pt solid #000000; padding: 0.05cm">
+			<P ALIGN=CENTER>Версия</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P ALIGN=CENTER>Дата</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P ALIGN=CENTER>Что сделано</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>367</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>02.10.2025-06.10.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">IControlBase.DefaultButton (<A HREF="ExtForms_20.htm#v351p46">v.351
+			</A></SPAN><A HREF="ExtForms_20.htm#v351p46"><SPAN LANG="ru-RU">п.46</SPAN></A><SPAN LANG="en-US">).
+			</SPAN><SPAN LANG="ru-RU">Конструкторы EFPFolderBrowserButton и
+			EFPFileDialogButton устанавливают его</SPAN></P>
+			<P><SPAN LANG="en-US">2. EFPAppCommandItems.CreateStdCommand()
+			</SPAN><SPAN LANG="ru-RU">добавляет комбинации клавиш к
+			стандартным командам </SPAN><SPAN LANG="en-US">SaveAs
+			(Ctrl+Shift+S), CopyHyperlink (<A HREF="#v366p9">v.366 </A></SPAN><A HREF="#v366p9"><SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="en-US">)
+			(Ctrl+Shift+H)</SPAN></P>
+			<P><SPAN LANG="en-US">3. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">EFPCommandItems.ShortCuts </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v017p6"><SPAN LANG="en-US">v.17
+			</SPAN><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="ru-RU">)</SPAN>
+			<SPAN LANG="ru-RU">для поддержки нескольких комбинаций клавиш на
+			команду. </SPAN><SPAN LANG="en-US">Internal-</SPAN><SPAN LANG="ru-RU">свойство
+			</SPAN><SPAN LANG="en-US">AlternativeShortCuts </SPAN><SPAN LANG="ru-RU">больше
+			не используется.</SPAN></P>
+			<P><SPAN LANG="en-US">4. EFPToolBarBase.Add() </SPAN><SPAN LANG="ru-RU">не
+			добавляет родительские команды для команд с флагом
+			EFPCommandItemUsage.ToolBarAux (</SPAN><A HREF="ExtForms_30.htm#v355p20"><SPAN LANG="en-US">v.355
+			</SPAN><SPAN LANG="ru-RU">п.20</SPAN></A><SPAN LANG="ru-RU">) в
+			выпадающее меню панели инструментов</SPAN></P>
+			<P><SPAN LANG="en-US">5</SPAN><SPAN LANG="ru-RU">. В локальном
+			меню табличного (</SPAN><SPAN LANG="en-US">EFPDataGridViewCommandItems</SPAN><SPAN LANG="ru-RU">)
+			и иерархического (EFPTreeViewCommandItemsBase, </SPAN><A HREF="ExtForms_11.htm#v167p3"><SPAN LANG="en-US">v.167
+			</SPAN><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="ru-RU">)
+			просмотров выделены подменю &laquo;Правка&raquo;,</SPAN> <SPAN LANG="ru-RU">&laquo;Буфер
+			обмена&raquo; и &laquo;Поиск&raquo;</SPAN></P>
+			<P><SPAN LANG="ru-RU">6. Для команд &laquo;Предыдущий/следующий
+			период времени&raquo; фильтра табличного просмотра назначены
+			комбинации клавиш &laquo;</SPAN><SPAN LANG="en-US">Ctrl+[&lt;]</SPAN><SPAN LANG="ru-RU">&raquo;
+			и &laquo;</SPAN><SPAN LANG="en-US">Ctrl+[&gt;]</SPAN><SPAN LANG="ru-RU">&raquo;,
+			как в </SPAN><SPAN LANG="en-US">DateRangeBox, </SPAN><SPAN LANG="ru-RU">Старые
+			комбинации &laquo;</SPAN><SPAN LANG="en-US">Alt+</SPAN><SPAN LANG="ru-RU">Стрелка
+			вверх&raquo; и &laquo;</SPAN><SPAN LANG="en-US">Alt+</SPAN><SPAN LANG="ru-RU">Стрелка
+			вниз&raquo; сохранены для совместимости</SPAN></P>
+			<P><SPAN LANG="ru-RU">7. EFPMenuOutHandler (</SPAN><A HREF="ExtForms_20.htm#v348p31"><SPAN LANG="en-US">v.348
+			</SPAN><SPAN LANG="ru-RU">п.31</SPAN></A><SPAN LANG="ru-RU">)
+			создает подменю &laquo;Файл&raquo;, в котором размещает команды
+			&laquo;Печать&raquo;, &laquo;Параметры страницы&raquo;,
+			&laquo;Предварительный просмотр&raquo; и &laquo;Экспорт в файл&raquo;</SPAN></P>
+			<P LANG="en-US"><SPAN LANG="ru-RU">8</SPAN>. <SPAN LANG="ru-RU">В
+			табличном просмотре </SPAN>EFPDataGridView &ndash; <SPAN LANG="ru-RU">команды
+			локального меню &laquo;Перейти вниз/вверх к строке с другим
+			значением&raquo; (комбинации клавиш </SPAN>Alt+PageUp <SPAN LANG="ru-RU">и
+			</SPAN>Alt+PageDown<SPAN LANG="ru-RU">)</SPAN></P>
+			<P LANG="en-US">9. <SPAN LANG="ru-RU">Перечислимое свойство
+			</SPAN>IEFPDataView, EFPDataGridViewCommandItems,
+			EFPTreeViewAdvCommandItems.EnterKeyMode, <SPAN LANG="ru-RU">расширяющее
+			</SPAN>EnterAsOk. <SPAN LANG="ru-RU">Старое свойство сохранено для
+			совместимости.</SPAN></P>
+			<P><SPAN LANG="en-US">10</SPAN><SPAN LANG="ru-RU">. Свойство
+			</SPAN><SPAN LANG="en-US">DateRangeCrossGridFilter.Nullable </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="#v366p8"><SPAN LANG="en-US">v.366
+			</SPAN><SPAN LANG="ru-RU">п.8</SPAN></A><SPAN LANG="ru-RU">) для
+			поддержки режимов </SPAN><SPAN LANG="en-US">NULL </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">NOT NULL (<A HREF="ExtTools_40.htm#v367p1">ExtTools.
+			v.367 </A></SPAN><A HREF="ExtTools_40.htm#v367p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>366</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>11.06.2025-29<SPAN LANG="ru-RU">.</SPAN>09.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">1. </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Рефакторинг</SPAN></SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">-
+			Методы </SPAN></SPAN><SPAN STYLE="text-decoration: none">XxxInt()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименованы
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none">XxxInt32(),
+			XxxBool() - </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">XxxBoolean()</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">- </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Методы
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">DBxExtValuesDialogInitEventArgs.AddInt()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">AddInteger(). </SPAN>
+			</P>
+			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">-
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Структура
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">EFPDataViewRowInfo
+			(<A HREF="ExtForms_11.htm#v276p10">v.276 </A></SPAN></SPAN><A HREF="ExtForms_11.htm#v276p10"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">п.10</SPAN></SPAN></A><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">)
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">EFPDataViewRowValues.
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Методы
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">EFPDataGridView,
+			EFPDataTreeView.GetRowInfo()/FreeRowInfo</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">()
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">GetRowValues()/FreeRowValues()</SPAN></SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">- События
+			EFPDataGridView.GetRowAttributes </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			RowInfoNeeded. GetCellAttributes </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			CellInfoNeeded, </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">методы
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">DoGetRowCellAttributes()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			GetRowCellInfo(), </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">перечисление
+			EFPDataGridViewAttributesReason в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			EFPDataViewInfoReason</SPAN></P>
+			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">-
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Событие
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">EFPGridProducerColumn.GetCellAttributes
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">(</SPAN></SPAN><A HREF="ExtForms_11.htm#v276p9"><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">v.276
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU"><SPAN STYLE="text-decoration: none"><SPAN STYLE="text-decoration: none">п.9</SPAN></SPAN></SPAN></SPAN></A><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU"><SPAN STYLE="text-decoration: none"><SPAN STYLE="text-decoration: none">)
+			в </SPAN></SPAN></SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">CellInfoNeeded</SPAN></SPAN></P>
+			<P LANG="en-US" STYLE="text-decoration: none">- IntEditBox <SPAN LANG="ru-RU">в</SPAN>
+			Int32EditBox</P>
+			<P LANG="en-US" STYLE="text-decoration: none">- IntInputDialog <SPAN LANG="ru-RU">в
+			Int32InputDialog</SPAN></P>
+			<P LANG="en-US" STYLE="text-decoration: none">- IntRangeDialog <SPAN LANG="ru-RU">в
+			</SPAN>Int32RangeDialog</P>
+			<P LANG="en-US" STYLE="text-decoration: none">- NodeIntEditBox <SPAN LANG="ru-RU">в</SPAN>
+			NodeInt32EditBox</P>
+			<P LANG="en-US" STYLE="text-decoration: none">- IntRangeGridFilter
+			<SPAN LANG="ru-RU">в Int32RangeGridFilter</SPAN></P>
+			<P LANG="en-US" STYLE="text-decoration: none">-
+			IntRangeCrossGridFilter <SPAN LANG="ru-RU">в
+			</SPAN>Int32RangeCrossGridFilter</P>
+			<P LANG="en-US" STYLE="text-decoration: none">-
+			IntRangeInclusionGridFilter <SPAN LANG="ru-RU">в
+			</SPAN>Int32RangeInclusionGridFilter</P>
+			<P LANG="en-US" STYLE="text-decoration: none">- ExtValueIntEditBox
+			<SPAN LANG="ru-RU">в ExtValueInt32EditBox</SPAN></P>
+			<P STYLE="text-decoration: none">-
 			ExtValueIntCheckBoxWithMonthDayBox в
-			ExtValueInt32CheckBoxWithMonthDayBox</p>
-			<p lang="en-US" style="text-decoration: none">- <span lang="ru-RU">В
-			</span>RI.DateRangeBox, DateOrRangeBox, DateRangeDialog <span lang="ru-RU">свойства
-			</span>XxxDate <span lang="ru-RU">переименованы в </span>XxxValue</p>
-			<p lang="en-US"><span style="text-decoration: none">2. </span><span style="text-decoration: none"><span lang="ru-RU">Структура
-			EFPDataGridViewExcelCellAttributes переименована в</span></span><span style="text-decoration: none">
-			EFPDataViewExcelCellStyle, </span><span style="text-decoration: none"><span lang="ru-RU">инициализация
-			выполняется в конструкторе, а не в методах </span></span><span style="text-decoration: none">EFPDataGridView.
-			</span><span style="text-decoration: none"><span lang="ru-RU">В
-			</span></span><font color="#ff3333"><span style="text-decoration: none">BRDataGridViewTable
-			</span></font><font color="#ff3333"><span style="text-decoration: none"><span lang="ru-RU">м.б.
-			надо проверять, что экспорт в </span></span></font><font color="#ff3333"><span style="text-decoration: none">Excel/Calc</span></font><span style="text-decoration: none">?</span></p>
-			<p lang="en-US"><span style="text-decoration: none">3. </span><span style="text-decoration: none"><span lang="ru-RU">Изменения
-			в инициализации столбцов</span></span></p>
-			<p lang="en-US"><span style="text-decoration: none"><span lang="ru-RU">-
-			Добавлены перегрузки </span></span><span style="text-decoration: none">EFPGridProducerColumns.AddText/AddUserText()
-			</span><span style="text-decoration: none"><span lang="ru-RU">с
-			аргументом </span></span><span style="text-decoration: none">UITextColumnInfo</span></p>
-			<p lang="en-US"><span style="text-decoration: none">-
-			EFPGridProducerColumns</span><span style="text-decoration: none"><span lang="ru-RU">.</span></span><span style="text-decoration: none">AddInt()
-			</span><span style="text-decoration: none"><span lang="ru-RU">переименованы
-			в </span></span><span style="text-decoration: none">AddInteger()</span></p>
-			<p lang="en-US"><span style="text-decoration: none">- </span><span style="text-decoration: none"><span lang="ru-RU">Убраны
-			</span></span><span style="text-decoration: none">EFPGridProducerColumns.AddMoney()</span></p>
-			<p lang="en-US"><span style="text-decoration: none"><span lang="ru-RU">-
-			Добавлены перегрузки </span></span><span style="text-decoration: none">EFPDataGridViewColumns.AddText()
-			</span><span style="text-decoration: none"><span lang="ru-RU">с
-			аргументом </span></span><span style="text-decoration: none">UITextColumnInfo</span></p>
-			<p lang="en-US"><span style="text-decoration: none">- </span><span style="text-decoration: none"><span lang="ru-RU">Убрано
+			ExtValueInt32CheckBoxWithMonthDayBox</P>
+			<P LANG="en-US" STYLE="text-decoration: none">- <SPAN LANG="ru-RU">В
+			</SPAN>RI.DateRangeBox, DateOrRangeBox, DateRangeDialog <SPAN LANG="ru-RU">свойства
+			</SPAN>XxxDate <SPAN LANG="ru-RU">переименованы в </SPAN>XxxValue</P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">2. </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Структура
+			EFPDataGridViewExcelCellAttributes переименована в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			EFPDataViewExcelCellStyle, </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">инициализация
+			выполняется в конструкторе, а не в методах </SPAN></SPAN><SPAN STYLE="text-decoration: none">EFPDataGridView.
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">В
+			</SPAN></SPAN><FONT COLOR="#ff3333"><SPAN STYLE="text-decoration: none">BRDataGridViewTable
+			</SPAN></FONT><FONT COLOR="#ff3333"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">м.б.
+			надо проверять, что экспорт в </SPAN></SPAN></FONT><FONT COLOR="#ff3333"><SPAN STYLE="text-decoration: none">Excel/Calc</SPAN></FONT><SPAN STYLE="text-decoration: none">?</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">3. </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Изменения
+			в инициализации столбцов</SPAN></SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">-
+			Добавлены перегрузки </SPAN></SPAN><SPAN STYLE="text-decoration: none">EFPGridProducerColumns.AddText/AddUserText()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">с
+			аргументом </SPAN></SPAN><SPAN STYLE="text-decoration: none">UITextColumnInfo</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">-
+			EFPGridProducerColumns</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">.</SPAN></SPAN><SPAN STYLE="text-decoration: none">AddInt()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименованы
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none">AddInteger()</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">- </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Убраны
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">EFPGridProducerColumns.AddMoney()</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">-
+			Добавлены перегрузки </SPAN></SPAN><SPAN STYLE="text-decoration: none">EFPDataGridViewColumns.AddText()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">с
+			аргументом </SPAN></SPAN><SPAN STYLE="text-decoration: none">UITextColumnInfo</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">- </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Убрано
 			множество &laquo;укороченных&raquo; перегрузок
-			</span></span><span style="text-decoration: none">EFPDataGridViewColumns.AddXXX()</span></p>
-			<p lang="en-US"><span style="text-decoration: none">-
-			EFPDataGridViewColumns</span><span style="text-decoration: none"><span lang="ru-RU">.</span></span><span style="text-decoration: none">AddInt()
-			</span><span style="text-decoration: none"><span lang="ru-RU">переименован
-			в </span></span><span style="text-decoration: none">AddInteger()</span></p>
-			<p lang="en-US"><span style="text-decoration: none">-
-			EFPDataGridViewColumns</span><span style="text-decoration: none"><span lang="ru-RU">.</span></span><span style="text-decoration: none">AddBool()
-			</span><span style="text-decoration: none"><span lang="ru-RU">переименован
-			в </span></span><span style="text-decoration: none">AddCheckBox()</span></p>
-			<p lang="en-US"><span style="text-decoration: none"><span lang="ru-RU">-
-			Добавлены перегрузки </span></span><span style="text-decoration: none">EFPDataTreeViewColumns.AddText()
-			</span><span style="text-decoration: none"><span lang="ru-RU">с
-			аргументом </span></span><span style="text-decoration: none">UITextColumnInfo</span></p>
-			<p lang="en-US"><span style="text-decoration: none">- </span><span style="text-decoration: none"><span lang="ru-RU">Убрано
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">EFPDataGridViewColumns.AddXXX()</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">-
+			EFPDataGridViewColumns</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">.</SPAN></SPAN><SPAN STYLE="text-decoration: none">AddInt()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименован
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none">AddInteger()</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">-
+			EFPDataGridViewColumns</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">.</SPAN></SPAN><SPAN STYLE="text-decoration: none">AddBool()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименован
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none">AddCheckBox()</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">-
+			Добавлены перегрузки </SPAN></SPAN><SPAN STYLE="text-decoration: none">EFPDataTreeViewColumns.AddText()
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">с
+			аргументом </SPAN></SPAN><SPAN STYLE="text-decoration: none">UITextColumnInfo</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">- </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Убрано
 			множество &laquo;укороченных&raquo; перегрузок
-			</span></span><span style="text-decoration: none">EFPDataTreeViewColumns.AddXXX()</span></p>
-			<p lang="en-US"><span style="text-decoration: none">-
-			EFPDataTreeViewColumns.AddInt() </span><span style="text-decoration: none"><span lang="ru-RU">переименован
-			в </span></span><span style="text-decoration: none">AddInt32()</span></p>
-			<p><span style="text-decoration: none"><span lang="en-US">-
-			EFPDataTreeViewColumns.AddBool() </span></span><span style="text-decoration: none"><span lang="ru-RU">переименован
-			в </span></span><span style="text-decoration: none"><span lang="en-US">AddCheckBox()</span></span></p>
-			<p><span style="text-decoration: none"><span lang="en-US">4.
-			</span></span><span style="text-decoration: none"><span lang="ru-RU">Событие
-			</span></span><span style="text-decoration: none"><span lang="en-US">EFPGridProducerColumn.CellInfoNeeded
-			</span></span><span style="text-decoration: none"><span lang="ru-RU">вызывается
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none">EFPDataTreeViewColumns.AddXXX()</SPAN></P>
+			<P LANG="en-US"><SPAN STYLE="text-decoration: none">-
+			EFPDataTreeViewColumns.AddInt() </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименован
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none">AddInt32()</SPAN></P>
+			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">-
+			EFPDataTreeViewColumns.AddBool() </SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименован
+			в </SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">AddCheckBox()</SPAN></SPAN></P>
+			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">4.
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Событие
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">EFPGridProducerColumn.CellInfoNeeded
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">вызывается
 			после получения значения, а не до этого, чтобы обработчик события
 			имел доступ к актуальному значению свойства
-			EFPDataGridViewCellInfoEventArgs.</span></span><span style="text-decoration: none"><span lang="en-US">Value</span></span></p>
-			<p><span lang="en-US">5. </span><span lang="ru-RU">В
-			</span><span lang="en-US">EFPDateRangeBoxCheck, EFPDateOrRangeBox
-			(<a href="ExtForms_11.htm#v197p2">v.197 </a></span><a href="ExtForms_11.htm#v197p2"><span lang="ru-RU">п.2</span></a><span lang="en-US">),
-			DateRangeBox </span><span lang="ru-RU">свойства </span><span lang="en-US">XxxDate
-			</span><span lang="ru-RU">переименованы в </span><span lang="en-US">XxxValue</span></p>
-			<p lang="en-US">6. <span lang="ru-RU">Методы
-			</span>WinFormsTools.GetTextAlign(), GetCellAlign() <span lang="ru-RU">обрабатывают
-			значение DataGridViewContentAlignment.NotSet</span></p>
-			<p lang="en-US">7. EFPConfigurableDataGridView,
-			EFPConfigurableDataTreeView.ShowFilterDialog() <span lang="ru-RU">при
+			EFPDataGridViewCellInfoEventArgs.</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">Value</SPAN></SPAN></P>
+			<P><SPAN LANG="en-US">5. </SPAN><SPAN LANG="ru-RU">В
+			</SPAN><SPAN LANG="en-US">EFPDateRangeBoxCheck, EFPDateOrRangeBox
+			(<A HREF="ExtForms_11.htm#v197p2">v.197 </A></SPAN><A HREF="ExtForms_11.htm#v197p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">),
+			DateRangeBox </SPAN><SPAN LANG="ru-RU">свойства </SPAN><SPAN LANG="en-US">XxxDate
+			</SPAN><SPAN LANG="ru-RU">переименованы в </SPAN><SPAN LANG="en-US">XxxValue</SPAN></P>
+			<P LANG="en-US">6. <SPAN LANG="ru-RU">Методы
+			</SPAN>WinFormsTools.GetTextAlign(), GetCellAlign() <SPAN LANG="ru-RU">обрабатывают
+			значение DataGridViewContentAlignment.NotSet</SPAN></P>
+			<P LANG="en-US">7. EFPConfigurableDataGridView,
+			EFPConfigurableDataTreeView.ShowFilterDialog() <SPAN LANG="ru-RU">при
 			заданном коде фильтра (при двойном щелчке мыши на табличке
 			фильтров) показывает диалог редактрования одного фильтра, а не
-			полный диалог</span></p>
-			<p lang="en-US">8. <span lang="ru-RU">Свойство
-			</span>DateRangeGridFilter.Nullable <span lang="ru-RU">для
-			поддержки режимов </span>NotNull <span lang="ru-RU">и </span>Null
-			<span lang="ru-RU">в </span>RangeCommonFilterBase&lt;T&gt;.Mode.
-			<span lang="ru-RU">Для остальных фильтров пока не реализовано</span></p>
-			<p><span lang="en-US">9. </span><span lang="ru-RU">Команда
+			полный диалог</SPAN></P>
+			<P LANG="en-US"><A NAME="v366p8"></A>8. <SPAN LANG="ru-RU">Свойство
+			</SPAN>DateRangeGridFilter.Nullable <SPAN LANG="ru-RU">для
+			поддержки режимов </SPAN>NotNull <SPAN LANG="ru-RU">и </SPAN>Null
+			<SPAN LANG="ru-RU">в </SPAN>RangeCommonFilterBase&lt;T&gt;.Mode.
+			<SPAN LANG="ru-RU">Для остальных фильтров пока не реализовано</SPAN></P>
+			<P><A NAME="v366p9"></A><SPAN LANG="en-US">9. </SPAN><SPAN LANG="ru-RU">Команда
 			&laquo;Копировать гиперссылку&raquo; в табличном и иерархическом
 			просмотрах. Элемент перечисления
-			EFPAppStdCommandItems.CopyHyperlink </span><span lang="en-US">(<a href="ExtForms_11.htm#v017p6">v.17
-			</a></span><a href="ExtForms_11.htm#v017p6"><span lang="ru-RU">п.6</span></a><span lang="en-US">)</span><span lang="ru-RU">.
-			Свойство </span><span lang="en-US">EFPDataGridViewCommandItems
-			</span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v054p1"><span lang="en-US">v.54
-			</span><span lang="ru-RU">п.1</span></a><span lang="ru-RU">)</span><span lang="en-US">,
-			EFPDataTreeViewCommandItems.CopyHyperlinkUsage </span><span lang="ru-RU">(</span><a href="ExtForms_11.htm#v092p4"><span lang="en-US">v.92
-			</span><span lang="ru-RU">п.4</span></a><span lang="ru-RU">)</span><span lang="en-US">.
-			</span>
-			</p>
-			<p><span lang="en-US">10. </span><span lang="ru-RU">Не работала
-			кнопка &quot;ОК&quot; в диалоге </span><span lang="en-US">ExtEditDialog</span><span lang="ru-RU">
-			(</span><a href="ExtForms_30.htm#v355p21"><span lang="en-US">v.355
-			</span><span lang="ru-RU">п.21</span></a><span lang="ru-RU">)</span><span lang="en-US">,
-			</span><span lang="ru-RU">при </span><span lang="en-US">ExtEditDialog</span><span lang="ru-RU">.</span><span lang="en-US">ReadOnly</span><span lang="ru-RU">=</span><span lang="en-US">true</span></p>
-		</td>
-	</tr>
-</table>
-<p><br/>
-<br/>
-
-</p>
-</body>
-</html>
+			EFPAppStdCommandItems.CopyHyperlink </SPAN><SPAN LANG="en-US">(<A HREF="ExtForms_11.htm#v017p6">v.17
+			</A></SPAN><A HREF="ExtForms_11.htm#v017p6"><SPAN LANG="ru-RU">п.6</SPAN></A><SPAN LANG="en-US">)</SPAN><SPAN LANG="ru-RU">.
+			Свойство </SPAN><SPAN LANG="en-US">EFPDataGridViewCommandItems
+			</SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v054p1"><SPAN LANG="en-US">v.54
+			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
+			EFPDataTreeViewCommandItems.CopyHyperlinkUsage </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v092p4"><SPAN LANG="en-US">v.92
+			</SPAN><SPAN LANG="ru-RU">п.4</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">.
+			</SPAN>
+			</P>
+			<P><SPAN LANG="en-US">10. </SPAN><SPAN LANG="ru-RU">Не работала
+			кнопка &quot;ОК&quot; в диалоге </SPAN><SPAN LANG="en-US">ExtEditDialog</SPAN>
+			<SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_30.htm#v355p21"><SPAN LANG="en-US">v.355
+			</SPAN><SPAN LANG="ru-RU">п.21</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
+			</SPAN><SPAN LANG="ru-RU">при </SPAN><SPAN LANG="en-US">ExtEditDialog</SPAN><SPAN LANG="ru-RU">.</SPAN><SPAN LANG="en-US">ReadOnly</SPAN><SPAN LANG="ru-RU">=</SPAN><SPAN LANG="en-US">true</SPAN></P>
+		</TD>
+	</TR>
+</TABLE>
+<P><BR><BR>
+</P>
+</BODY>
+</HTML>

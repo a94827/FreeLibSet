@@ -1604,6 +1604,12 @@ namespace FreeLibSet.Forms
     event EventHandler EditData;
 
     /// <summary>
+    /// Режим работы клавиши "Enter" и двойного щелчка мыши.
+    /// По умолчанию - <see cref="EFPDataViewEnterKeyMode.EditOrView"/>.
+    /// </summary>
+    EFPDataViewEnterKeyMode EnterKeyMode { get; set; }
+
+    /// <summary>
     /// Текущее состояние просмотра.
     /// Если в данный момент не обрабатывается событие <see cref="EditData"/>, возвращается <see cref="UIDataState.View"/>.
     /// </summary>
@@ -7414,6 +7420,12 @@ namespace FreeLibSet.Forms
 
     bool IEFPDataView.UseRefresh { get { return CommandItems.UseRefresh; } }
 
+    EFPDataViewEnterKeyMode IEFPDataView.EnterKeyMode
+    {
+      get { return CommandItems.EnterKeyMode; }
+      set { CommandItems.EnterKeyMode = value; }
+    }
+
     /// <summary>
     /// Событие вызывается при выполнении метода <see cref="PerformRefresh()"/> после отработки основного события.
     /// В отличие от события <see cref="RefreshData"/>, наличие обработчика этого события не влияет на <see cref="HasRefreshDataHandler"/> и на наличие команды "Обновить".
@@ -9433,6 +9445,7 @@ namespace FreeLibSet.Forms
         }
       }
 
+
 #if XXXXX
       // Обработка сочетаний для буфера обмена
       if (Args.Modifiers == Keys.Control)
@@ -9523,6 +9536,66 @@ namespace FreeLibSet.Forms
         else
           return Columns[colIndex];
       }
+    }
+
+    #endregion
+
+    #region Поиск ячейки по содержимому
+
+    /// <summary>
+    /// Переход к следующей или предыдущей строке, содержимое ячейки в которой отличиается от содержимого текущей ячейки
+    /// </summary>
+    /// <param name="forward">True - переход к следующей строке, false - к предыдущей</param>
+    public void GotoRowWithDifferentText(bool forward)
+    {
+      if (Control.CurrentCell == null)
+      {
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoSelectedCell);
+        return;
+      }
+
+      int gotoRowIndex = FindRowWithDifferentText(Control.CurrentCell.RowIndex, Control.CurrentCell.ColumnIndex, forward);
+      if (gotoRowIndex < 0)
+      {
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoRowWithDiffText);
+        return;
+      }
+      CurrentRowIndex = gotoRowIndex;
+    }
+
+    /// <summary>
+    /// Возвращает номер строки, больший или меньший <paramref name="startRowIndex"/>, в которой значение ячейки отличается
+    /// от значения в ячейке текущей строки.
+    /// Если <paramref name="startRowIndex"/> равен первой или последней строке просмотра (в зависимости от <paramref name="forward"/>), возвращается (-1).
+    /// Если все строки до начала/конца таблицы содержат одинаковые значения, также возвращается (-1).
+    /// </summary>
+    /// <param name="startRowIndex">Индекс текущей строки</param>
+    /// <param name="columnIndex">Индекс столбца со значением ячейки</param>
+    /// <param name="forward">true - поиск строк вниз таблицы, false - вверх</param>
+    /// <returns>Индекс найденной строки или (-1)</returns>
+    public int FindRowWithDifferentText(int startRowIndex, int columnIndex, bool forward)
+    {
+      if (startRowIndex < 0 || columnIndex < 0)
+        return -1;
+
+      string text = GetCellTextValue(startRowIndex, columnIndex);
+      if (forward)
+      {
+        for (int iRow = startRowIndex + 1; iRow < Control.RowCount; iRow++)
+        {
+          if (!String.Equals(GetCellTextValue(iRow, columnIndex), text, StringComparison.OrdinalIgnoreCase))
+            return iRow;
+        }
+      }
+      else
+      {
+        for (int iRow = startRowIndex - 1; iRow >=0; iRow--)
+        {
+          if (!String.Equals(GetCellTextValue(iRow, columnIndex), text, StringComparison.OrdinalIgnoreCase))
+            return iRow;
+        }
+      }
+      return -1;
     }
 
     #endregion

@@ -34,6 +34,7 @@ namespace WinFormsDemo
           "EFPTreeView & EFPTreeViewAdv",
           "EFPDBxGridFilters",
           "ManualOrderColumn",
+          "EFPDataGridView & EFPDataTreeView",
           "EFPInputDataGridView",
           "Wizard",
           "CultureInfo",
@@ -49,6 +50,7 @@ namespace WinFormsDemo
           "TreeView",
           "EFPDBxGridFilters",
           "ManualOrderColumn",
+          "EFPDataView",
           "EFPInputDataGridView",
           "Wizard",
           "Culture",
@@ -81,6 +83,9 @@ namespace WinFormsDemo
               break;
               case "ManualOrderColumn":
               ManualOrderColumnDemo.ManualOrderColumnParamForm.PerformTest();
+              break;
+            case "EFPDataView":
+              EFPDataViewDemo.EFPDataViewParamsForm.PerformTest();
               break;
             case "EFPInputDataGridView":
               EFPInputDataGridViewDemo.TestEFPInputDataGridView.PerformTest();

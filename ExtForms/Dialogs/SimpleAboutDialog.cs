@@ -160,6 +160,7 @@ namespace FreeLibSet.Forms
 
       gh.ReadOnly = true;
       gh.CanView = false;
+      gh.CommandItems.UseGotoRowWithDifferentCellText = false;
 
       return gh;
     }

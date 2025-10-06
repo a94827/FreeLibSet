@@ -150,6 +150,44 @@ namespace FreeLibSet.Forms
 
   #endregion
 
+  #region Перечисление EFPDataViewEnterKeyMode
+
+  /// <summary>
+  /// Какое действие выполняет нажатие клавиши "Enter" и двойной щелчок мыши в табличном просмотре
+  /// </summary>
+  public enum EFPDataViewEnterKeyMode
+  {
+    /// <summary>
+    /// Если <see cref="IEFPDataView.ReadOnly"/>=false, то Enter или Ctrl+Enter - редактирование записи, Shift+Enter - просмотр записи
+    /// Если <see cref="IEFPDataView.ReadOnly"/>=true, то Enter или Shift+Enter - просмотр записи, Ctrl+Enter - редактирование
+    /// Этот режим используется по умолчанию.
+    /// </summary>
+    EditOrView,
+
+    /// <summary>
+    /// Enter или Ctrl+Enter - Выполняется редактирование. Shift+Enter - просмотр.
+    /// </summary>
+    Edit,
+
+    /// <summary>
+    /// Enter или Shift+Enter - выполняется просмотр. Ctrl+Enter - редактирование
+    /// </summary>
+    View,
+
+    /// <summary>
+    /// Нажимается кнопка по умолчанию для блока диалога <see cref="Form.AcceptButton"/> или назначенная свойством <see cref="IEFPControl.DefaultButton"/>.
+    /// Ctrl+Enter - редактирование. Просмотр запускается комбинацией клавиш Shift+Enter.
+    /// </summary>
+    DefaultButton,
+
+    /// <summary>
+    /// Комбинации клавиш для редактирования и просмотра не назначаются. Допускается возможность их установки из прикладного кода
+    /// </summary>
+    None,
+  }
+
+  #endregion
+
   /// <summary>
   /// Список команд локального меню табличного просмотра
   /// </summary>
@@ -166,7 +204,7 @@ namespace FreeLibSet.Forms
     {
       #region Начальные значения свойств
 
-      _EnterAsOk = false;
+      _EnterKeyMode = EFPDataViewEnterKeyMode.EditOrView;
       _UseEditView = true;
       _UseRefresh = true;
       _UseSelectAll = true;
@@ -175,6 +213,7 @@ namespace FreeLibSet.Forms
       _UseRowErrorsListView = true;
       _CopyFormats = EFPDataViewCopyFormats.All;
       _CopyHyperlinkUsage = EFPDataViewCopyHyperlinkCommandUsage.Auto;
+      _UseGotoRowWithDifferentCellText = true;
 
       #endregion
 
@@ -182,20 +221,19 @@ namespace FreeLibSet.Forms
 
       #region Редактирование
 
+      MenuEdit = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuEdit);
+      Add(MenuEdit);
+
       ciEdit = new EFPCommandItem("Edit", "Edit");
+      ciEdit.Parent = MenuEdit;
       ciEdit.MenuText = Res.Cmd_Menu_Edit_Edit;
       ciEdit.ImageKey = "Edit";
       ciEdit.GroupBegin = true;
       ciEdit.Click += new EventHandler(ciEdit_Click);
       Add(ciEdit);
 
-      // Фиктивная тема, для которой нет команды меню или кнопки
-      ciEdit2 = new EFPCommandItem("Edit", "Edit2");
-      ciEdit2.Usage = EFPCommandItemUsage.ShortCut;
-      ciEdit2.Click += new EventHandler(ClickOKButton);
-      Add(ciEdit2);
-
       ciInsert = new EFPCommandItem("Edit", "Insert");
+      ciInsert.Parent = MenuEdit;
       ciInsert.MenuText = Res.Cmd_Menu_Edit_Insert;
       ciInsert.ImageKey = "Insert";
       ciInsert.ShortCut = Keys.Insert;
@@ -203,6 +241,7 @@ namespace FreeLibSet.Forms
       Add(ciInsert);
 
       ciInsertCopy = new EFPCommandItem("Edit", "InsertCopy");
+      ciInsertCopy.Parent = MenuEdit;
       ciInsertCopy.MenuText = Res.Cmd_Menu_Edit_InsertCopy;
       ciInsertCopy.ImageKey = "InsertCopy";
       ciInsertCopy.ToolTipText = Res.Cmd_Menu_ToolTip_InsertCopy;
@@ -211,6 +250,7 @@ namespace FreeLibSet.Forms
       Add(ciInsertCopy);
 
       ciDelete = new EFPCommandItem("Edit", "Delete");
+      ciDelete.Parent = MenuEdit;
       ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete;
       ciDelete.ImageKey = "Delete";
       ciDelete.ShortCut = Keys.Delete;
@@ -218,16 +258,23 @@ namespace FreeLibSet.Forms
       Add(ciDelete);
 
       ciView = new EFPCommandItem("Edit", "View");
+      ciView.Parent = MenuEdit;
       ciView.MenuText = Res.Cmd_Menu_Edit_View;
       ciView.ImageKey = "View";
       ciView.GroupEnd = true;
-      ciView.ShortCut = Keys.Shift | Keys.Return;
       ciView.Click += new EventHandler(ciView_Click);
       Add(ciView);
+
+      ciOkButton = new EFPCommandItem("Edit", "OKButton");
+      //ciOkButton.Parent = MenuEdit;
+      ciOkButton.Usage = EFPCommandItemUsage.ShortCut;
+      ciOkButton.Click += ciOkButton_Click;
+      Add(ciOkButton);
 
       if (!EFPApp.EasyInterface)
       {
         ciInlineEditStatus = new EFPCommandItem("Edit", "EditInline");
+        ciInlineEditStatus.Parent = MenuEdit;
         ciInlineEditStatus.MenuText = Res.Cmd_Menu_Edit_EditInline;
         ciInlineEditStatus.ImageKey = "EmptyImage";
         ciInlineEditStatus.StatusBarText = EFPCommandItem.EmptyStatusBarText;
@@ -240,35 +287,40 @@ namespace FreeLibSet.Forms
 
       #region Буфер обмена
 
+      MenuClipboard = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuClipboard);
+      Add(MenuClipboard);
+
       ciCut = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Cut);
+      ciCut.Parent = MenuClipboard;
       ciCut.Click += new EventHandler(DoCut);
       ciCut.GroupBegin = true;
       Add(ciCut);
 
       ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
+      ciCopy.Parent = MenuClipboard;
       ciCopy.Enabled = true;
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
 
       ciCopySettings = EFPDataViewCopyFormatsForm.AddCommandItem(this);
+      ciCopySettings.Parent = MenuClipboard;
 
       ciCopyHyperlink = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.CopyHyperlink);
+      ciCopyHyperlink.Parent = MenuClipboard;
       ciCopyHyperlink.Click += CopyHyperlink_Click;
-      ciCopyHyperlink.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
       Add(ciCopyHyperlink);
 
       if (EFPApp.ShowToolTips)
       {
         ciCopyToolTip = new EFPCommandItem("Edit", "CopyToolTip");
+        ciCopyToolTip.Parent = MenuClipboard;
         ciCopyToolTip.MenuText = Res.Cmd_Menu_Edit_CopyToolTip;
         ciCopyToolTip.ImageKey = "CopyToolTip";
         ciCopyToolTip.Click += new EventHandler(CopyToolTip_Click);
-        ciCopyToolTip.Usage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ToolBarAux;
         Add(ciCopyToolTip);
       }
-      AddSeparator();
-
-      _PasteHandler = new EFPPasteHandler(this);
+      MenuClipboard.Children.AddSeparator();
+      _PasteHandler = new EFPPasteHandler(this, MenuClipboard);
       _PasteHandler.UseToolBar = false; // по умолчанию кнопок нет в буфере обмена
 
       #endregion
@@ -343,20 +395,46 @@ namespace FreeLibSet.Forms
 
       #region Поиск
 
+      MenuSearch = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSearch);
+      Add(MenuSearch);
+
       ciFind = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Find);
+      ciFind.Parent = MenuSearch;
       ciFind.Click += new EventHandler(Find);
       ciFind.GroupBegin = true;
       Add(ciFind);
 
       ciIncSearch = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.IncSearch);
+      ciIncSearch.Parent = MenuSearch;
       ciIncSearch.Click += new EventHandler(IncSearch);
       ciIncSearch.StatusBarText = "??????????????????????";
       Add(ciIncSearch);
 
       ciFindNext = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.FindNext);
+      ciFindNext.Parent = MenuSearch;
       ciFindNext.Click += new EventHandler(FindNext);
       ciFindNext.GroupEnd = true;
       Add(ciFindNext);
+
+      #endregion
+
+      #region Дополнительные команды навигации
+
+      ciGotoRowWithDiffTextUp = new EFPCommandItem("Edit", "GotoRowWithDiffTextUp");
+      ciGotoRowWithDiffTextUp.Parent = MenuSearch;
+      ciGotoRowWithDiffTextUp.MenuText = Res.Cmd_Menu_Edit_GotoRowWithDiffTextUp;
+      ciGotoRowWithDiffTextUp.ShortCut = Keys.Alt | Keys.PageUp;
+      ciGotoRowWithDiffTextUp.Click += CiGotoRowWithDiffTextUp_Click;
+      ciGotoRowWithDiffTextUp.GroupBegin = true;
+      Add(ciGotoRowWithDiffTextUp);
+
+      ciGotoRowWithDiffTextDown = new EFPCommandItem("Edit", "GotoRowWithDiffTextDown");
+      ciGotoRowWithDiffTextDown.Parent = MenuSearch;
+      ciGotoRowWithDiffTextDown.MenuText = Res.Cmd_Menu_Edit_GotoRowWithDiffTextDown;
+      ciGotoRowWithDiffTextDown.ShortCut = Keys.Alt | Keys.PageDown;
+      ciGotoRowWithDiffTextDown.Click += CiGotoRowWithDiffTextDown_Click;
+      ciGotoRowWithDiffTextDown.GroupEnd = true;
+      Add(ciGotoRowWithDiffTextDown);
 
       #endregion
 
@@ -548,16 +626,51 @@ namespace FreeLibSet.Forms
 
       base.OnPrepare();
 
-      // Отключаем ненужные команды
-      if (!UseEditView)
+      if (UseEditView)
       {
+        // Назначаем горячие клавиши в зависимости от свойства EnterKeyMode
+        if (EnterKeyMode != EFPDataViewEnterKeyMode.None)
+        {
+          switch (EnterKeyMode)
+          {
+            case EFPDataViewEnterKeyMode.EditOrView:
+              if (ControlProvider.ReadOnly)
+                ciView.ShortCuts.Add(Keys.Return);
+              else
+                ciEdit.ShortCuts.Add(Keys.Return);
+              ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
+              ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
+              break;
+            case EFPDataViewEnterKeyMode.Edit:
+              ciEdit.ShortCuts.Add(Keys.Return);
+              ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
+              ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
+              break;
+            case EFPDataViewEnterKeyMode.View:
+              ciView.ShortCuts.Add(Keys.Return);
+              ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
+              ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
+              break;
+            case EFPDataViewEnterKeyMode.DefaultButton:
+              ciEdit.ShortCuts.Add(Keys.Control | Keys.Return);
+              ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
+              ciOkButton.ShortCuts.Add(Keys.Return);
+              break;
+          }
+        }
+      }
+      else
+      {
+        // Отключаем ненужные команды
         ciEdit.Usage = EFPCommandItemUsage.None;
-        ciEdit2.Usage = EFPCommandItemUsage.None;
         ciInsert.Usage = EFPCommandItemUsage.None;
         ciInsertCopy.Usage = EFPCommandItemUsage.None;
         ciDelete.Usage = EFPCommandItemUsage.None;
         ciView.Usage = EFPCommandItemUsage.None;
+        ciOkButton.Usage = EFPCommandItemUsage.None;
       }
+      MenuEdit.InitMenuVisible();
+
       if ((!ForceInlineEditStatusPanel) && ciInlineEditStatus != null)
       {
         if (ControlProvider.Control.ReadOnly)
@@ -586,9 +699,15 @@ namespace FreeLibSet.Forms
       else
         ciRefresh.Usage = EFPCommandItemUsage.None;
 
-      EFPCommandItemUsage clipboardUsage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
+      #region Буфер обмена
+
+
+      EFPCommandItemUsage clipboardUsage1 = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
       if (ClipboardInToolBar)
-        clipboardUsage |= EFPCommandItemUsage.ToolBar;
+        clipboardUsage1 |= EFPCommandItemUsage.ToolBar;
+      EFPCommandItemUsage clipboardUsage2 = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
+      if (ClipboardInToolBar)
+        clipboardUsage2 |= EFPCommandItemUsage.ToolBarAux;
 
       if (Cut == null &&
         (ControlProvider.Control.ReadOnly || PasteHandler.Count == 0 /* 23.05.2025 */))
@@ -597,15 +716,13 @@ namespace FreeLibSet.Forms
         ciCut.Usage = EFPCommandItemUsage.None;
       }
       else
-        ciCut.Usage = clipboardUsage;
+        ciCut.Usage = clipboardUsage1;
 
-      ciCopy.Usage = clipboardUsage;
-      if (!ClipboardInToolBar)
-      {
-        ciCopyHyperlink.Usage = EFPCommandItemUsage.Menu;
-        ciCopySettings.Usage = EFPCommandItemUsage.Menu;
-        ciCopyToolTip.Usage = EFPCommandItemUsage.Menu;
-      }
+      ciCopy.Usage = clipboardUsage1;
+
+      ciCopyHyperlink.Usage = clipboardUsage2;
+      ciCopySettings.Usage = clipboardUsage2;
+      ciCopyToolTip.Usage = clipboardUsage2;
 
       switch (CopyHyperlinkUsage)
       {
@@ -619,8 +736,16 @@ namespace FreeLibSet.Forms
 
       _PasteHandler.PasteApplied += new EventHandler(PasteHandler_PasteApplied);
 
+      #endregion
+
       if (!UseSelectAll)
         ciSelectAll.Usage = EFPCommandItemUsage.None;
+
+      if (!UseGotoRowWithDifferentCellText)
+      {
+        ciGotoRowWithDiffTextUp.Usage = EFPCommandItemUsage.None;
+        ciGotoRowWithDiffTextDown.Usage = EFPCommandItemUsage.None;
+      }
 
       if (ControlProvider.ManualOrderSupported)
       {
@@ -736,20 +861,6 @@ namespace FreeLibSet.Forms
           ciIncSearch.Usage &= (~EFPCommandItemUsage.StatusBar);
       }
 
-      // Доназначаем обработчики и горячие клавиши в зависимости от свойства EnterAsOk
-      if (EnterAsOk)
-      {
-        ciEdit.ShortCut = Keys.Control | Keys.Return;
-
-        ciEdit2.ShortCut = Keys.Return;
-      }
-      else
-      {
-        ciEdit.ShortCut = Keys.Return;
-
-        ciEdit2.ShortCut = Keys.Control | Keys.Return;
-      }
-
       if (ciStatCount != null)
       {
         if (!(ControlProvider.Control.MultiSelect && (ControlProvider.Control.SelectionMode == DataGridViewSelectionMode.CellSelect ||
@@ -791,6 +902,8 @@ namespace FreeLibSet.Forms
     {
       UISelectedRowsState selState = ControlProvider.SelectedRowsState;
 
+      #region Правка
+
       if (UseEditView)
       {
 #if XXX
@@ -815,6 +928,7 @@ namespace FreeLibSet.Forms
           ciView.Enabled = false;
 #else
         // 21.08.2019
+
         ciEdit.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanEdit;
         ciInsert.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanInsert;
         ciInsertCopy.Visible = (!ControlProvider.ReadOnly) && ControlProvider.CanInsertCopy;
@@ -904,6 +1018,8 @@ namespace FreeLibSet.Forms
         }
       }
 
+      #endregion
+
       if (ciSelectAll != null)
       {
         ciSelectAll.Enabled = (selState != UISelectedRowsState.NoSelection) && ControlProvider.Control.MultiSelect;
@@ -911,6 +1027,21 @@ namespace FreeLibSet.Forms
 
       ciFind.Enabled = ControlProvider.Control.RowCount > 0 && ControlProvider.Control.ColumnCount > 0; // 17.06.2024
       RefreshIncSearchItems();
+
+      if (UseGotoRowWithDifferentCellText)
+      {
+        if (selState == UISelectedRowsState.SingleRow && ControlProvider.CurrentColumnIndex >= 0)
+        {
+          ciGotoRowWithDiffTextUp.Enabled = ControlProvider.CurrentRowIndex > 0;
+          ciGotoRowWithDiffTextDown.Enabled = ControlProvider.CurrentRowIndex < (ControlProvider.Control.RowCount - 1);
+        }
+        else
+        {
+          ciGotoRowWithDiffTextUp.Enabled = false;
+          ciGotoRowWithDiffTextDown.Enabled = false;
+        }
+      }
+
       RefreshRowErrorsItems();
     }
 
@@ -998,25 +1129,41 @@ namespace FreeLibSet.Forms
     #region Команды редактирования
 
     /// <summary>
+    /// Режим работы клавиши "Enter" и двойного щелчка мыши.
+    /// По умолчанию - <see cref="EFPDataViewEnterKeyMode.EditOrView"/>.
+    /// </summary>
+    public EFPDataViewEnterKeyMode EnterKeyMode
+    {
+      get { return _EnterKeyMode; }
+      set
+      {
+        CheckNotReadOnly();
+        _EnterKeyMode = value;
+      }
+    }
+    private EFPDataViewEnterKeyMode _EnterKeyMode;
+
+    /// <summary>
     /// true, если нажатие клавиши Enter не обрабатывается, а передается
     /// форме для нажатия кнопки по умолчанию.
     /// false, если нажатие Enter выполняет редактирование ячейки таблицы.
     /// По умолчанию - false.
+    /// Дублирует свойство <see cref="EnterKeyMode"/>
     /// </summary>
     public bool EnterAsOk
     {
       get
       {
-        return _EnterAsOk;
+        return EnterKeyMode == EFPDataViewEnterKeyMode.DefaultButton;
       }
       set
       {
-        CheckNotReadOnly();
-        _EnterAsOk = value;
+        if (value)
+          EnterKeyMode = EFPDataViewEnterKeyMode.DefaultButton;
+        else
+          EnterKeyMode = EFPDataViewEnterKeyMode.EditOrView;
       }
     }
-    private bool _EnterAsOk;
-
 
     /// <summary>
     /// True, если есть команды "Редактировать", "Создать", "Удалить", "Просмотр"
@@ -1034,7 +1181,7 @@ namespace FreeLibSet.Forms
     private bool _UseEditView;
 
 
-    private EFPCommandItem ciEdit, ciEdit2, ciInsert, ciInsertCopy, ciDelete, ciView;
+    private EFPCommandItem MenuEdit, ciEdit, ciInsert, ciInsertCopy, ciDelete, ciView, ciOkButton;
 
     /// <summary>
     /// Доступ к командам редактирования записей
@@ -1082,7 +1229,7 @@ namespace FreeLibSet.Forms
     private bool _ForceInlineEditStatusPanel;
 
 
-    private void ClickOKButton(object sender, EventArgs args)
+    private void ciOkButton_Click(object sender, EventArgs args)
     {
       // Нажимаем в блоке диалога кнопку по умолчанию
       Form frm = ControlProvider.Control.FindForm();
@@ -1117,43 +1264,58 @@ namespace FreeLibSet.Forms
       {
         _CellDoubleClicked = false;
 
-        if (EnterAsOk)
+        switch (EnterKeyMode)
         {
-          // 16.08.2012
-          // Если текущая ячейка допускает inline-редактирование, то нажимать кнопку
-          // по умолчанию - неправильно
-          if (ControlProvider.Control.CurrentCell != null)
-          {
-            string ReadOnlyMessage;
-            if (!ControlProvider.GetCellReadOnly(ControlProvider.Control.CurrentCell, out ReadOnlyMessage))
-              return;
-          }
+          case EFPDataViewEnterKeyMode.DefaultButton:
+            // 16.08.2012
+            // Если текущая ячейка допускает inline-редактирование, то нажимать кнопку
+            // по умолчанию - неправильно
+            if (ControlProvider.Control.CurrentCell != null)
+            {
+              string ReadOnlyMessage;
+              if (!ControlProvider.GetCellReadOnly(ControlProvider.Control.CurrentCell, out ReadOnlyMessage))
+                return;
+            }
 
-          ClickOKButton(null, null);
-        }
-        else
-        {
-          //if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
-          //  ControlProvider.CanView
-          //  /*|| (!Handler.MainGrid.ReadOnly)*/)
-          //{
-          //  ciEdit_Click(null, null);
-          //}
+            ciOkButton_Click(null, null);
+            break;
+          case EFPDataViewEnterKeyMode.EditOrView:
+            //if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
+            //  ControlProvider.CanView
+            //  /*|| (!Handler.MainGrid.ReadOnly)*/)
+            //{
+            //  ciEdit_Click(null, null);
+            //}
 
-          // 29.08.2025
-          // Перехватываем исключения при выполнении команды
-          // 04.09.2025
-          // Проверяем, что предыдущий вызов команды уже завершился
-          if (ciEdit.Visible && ciEdit.Enabled)
-          {
-            if (!ciEdit.InsideClick)
-              ciEdit.PerformClick();
-          }
-          else if (ciView.Visible && ciView.Enabled)
-          {
-            if (!ciView.InsideClick)
-              ciView.PerformClick();
-          }
+            // 29.08.2025
+            // Перехватываем исключения при выполнении команды
+            // 04.09.2025
+            // Проверяем, что предыдущий вызов команды уже завершился
+            if (ciEdit.Visible && ciEdit.Enabled)
+            {
+              if (!ciEdit.InsideClick)
+                ciEdit.PerformClick();
+            }
+            else if (ciView.Visible && ciView.Enabled)
+            {
+              if (!ciView.InsideClick)
+                ciView.PerformClick();
+            }
+            break;
+          case EFPDataViewEnterKeyMode.Edit:
+            if (ciEdit.Visible && ciEdit.Enabled)
+            {
+              if (!ciEdit.InsideClick)
+                ciEdit.PerformClick();
+            }
+            break;
+          case EFPDataViewEnterKeyMode.View:
+            if (ciView.Visible && ciView.Enabled)
+            {
+              if (!ciView.InsideClick)
+                ciView.PerformClick();
+            }
+            break;
         }
       }
     }
@@ -1165,7 +1327,7 @@ namespace FreeLibSet.Forms
 
     private void ciEdit_Click(object sender, EventArgs args)
     {
-      ControlProvider.PerformEditData(ControlProvider.ReadOnly ? UIDataState.View : UIDataState.Edit);
+      ControlProvider.PerformEditData(UIDataState.Edit);
     }
 
     private void ciInsert_Click(object sender, EventArgs args)
@@ -1210,6 +1372,8 @@ namespace FreeLibSet.Forms
       get { return _PasteHandler.UseToolBar; }
       set { _PasteHandler.UseToolBar = value; }
     }
+
+    private EFPCommandItem MenuClipboard;
 
     #region Вырезать
 
@@ -1752,7 +1916,7 @@ namespace FreeLibSet.Forms
 
     #region Команды поиска
 
-    EFPCommandItem ciIncSearch, ciFind, ciFindNext;
+    EFPCommandItem MenuSearch, ciIncSearch, ciFind, ciFindNext;
 
     /// <summary>
     /// Если установить в true, то в статусной строке будет присутствовать панель поиска по первым буквам,
@@ -1812,6 +1976,38 @@ namespace FreeLibSet.Forms
         if (!ControlProvider.CurrentIncSearchColumn.PerformIncSearch(ControlProvider.CurrentIncSearchChars.ToUpper(), true))
           EFPApp.ShowTempMessage(String.Format(Res.EFPDataView_Err_IncSearchNoMoreRows, ControlProvider.CurrentIncSearchChars));
       }
+    }
+
+    #endregion
+
+    #region Дополнительные команды навигации
+
+    /// <summary>
+    /// Если установлено в true (по умолчанию), то доступны команды перехода вверх/вниз к строке с отличающимся текстом ячейки.
+    /// Свойство следует сбрасывать в false для просмотров, в котором все строки содержат завдомо разный текст, например, как
+    /// в диалоге <see cref="ListSelectDialog"/>.
+    /// </summary>
+    public bool UseGotoRowWithDifferentCellText
+    {
+      get { return _UseGotoRowWithDifferentCellText; }
+      set
+      {
+        CheckNotReadOnly();
+        _UseGotoRowWithDifferentCellText = value;
+      }
+    }
+    private bool _UseGotoRowWithDifferentCellText;
+
+    private EFPCommandItem ciGotoRowWithDiffTextUp, ciGotoRowWithDiffTextDown;
+
+    private void CiGotoRowWithDiffTextUp_Click(object sender, EventArgs args)
+    {
+      ControlProvider.GotoRowWithDifferentText(false);
+    }
+
+    private void CiGotoRowWithDiffTextDown_Click(object sender, EventArgs args)
+    {
+      ControlProvider.GotoRowWithDifferentText(true);
     }
 
     #endregion

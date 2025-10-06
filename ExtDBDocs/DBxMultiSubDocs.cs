@@ -510,6 +510,8 @@ namespace FreeLibSet.Data.Docs
       DataTable table;
       using(DataView dv = new DataView(Table)) // DefaultView использовать нельзя использовать, т.к. оно используется в просмотре таблицы поддокументов
       {
+        if (DocSet.DocProvider.DocTypes.UseDeleted)
+          dv.RowFilter = DBSSubDocType.DeletedFalseFilter.ToString(); // 04.10.2025
         string s = SubDocType.DefaultOrder.ToString();
         if (String.IsNullOrEmpty(s))
           dv.Sort = "DocId";

@@ -149,6 +149,8 @@ namespace FreeLibSet.Forms
       //FCurrentIncSearchMask = null;
       _TextSearchContext = null;
       _TextSearchEnabled = true;
+
+      Control.PreviewKeyDown += new PreviewKeyDownEventHandler(Control_PreviewKeyDown);
     }
 
     #endregion
@@ -225,6 +227,19 @@ namespace FreeLibSet.Forms
       else
         args.Value = args.Node.Tag.ToString();
     }
+
+    void Control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs args)
+    {
+      // 06.10.2025
+      // Требуется обработка клавиши Enter и всех ее комбинаций
+      // EFPControlBase не добавляет IsInputKey для одиночной <Enter>.
+      if (args.KeyCode == Keys.Enter)
+      {
+        args.IsInputKey = true;
+      }
+    }
+
+
 
     #endregion
 

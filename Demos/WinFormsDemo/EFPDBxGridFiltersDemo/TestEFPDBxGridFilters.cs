@@ -77,7 +77,7 @@ namespace WinFormsDemo.EFPDBxGridFiltersDemo
       StringValueGridFilter filtS1 = new StringValueGridFilter("S1");
       filters.Add(filtS1);
 
-      IntRangeInclusionGridFilter filtI12 = new IntRangeInclusionGridFilter("I1", "I2");
+      Int32RangeInclusionGridFilter filtI12 = new Int32RangeInclusionGridFilter("I1", "I2");
       filters.Add(filtI12);
 
       DateRangeCrossGridFilter filtD12 = new DateRangeCrossGridFilter("D1", "D2");

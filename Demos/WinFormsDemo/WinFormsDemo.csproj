@@ -84,6 +84,12 @@
     <Compile Include="EFPClipboardDemo\EFPClipboardForm.Designer.cs">
       <DependentUpon>EFPClipboardForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EFPDataViewDemo\EFPDataViewParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EFPDataViewDemo\EFPDataViewParamsForm.Designer.cs">
+      <DependentUpon>EFPDataViewParamsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EFPDateRangeBoxDemo\DateRangeBoxForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EFPClipboardDemo\EFPClipboardForm.resx">
       <DependentUpon>EFPClipboardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EFPDataViewDemo\EFPDataViewParamsForm.resx">
+      <DependentUpon>EFPDataViewParamsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EFPDateRangeBoxDemo\DateRangeBoxForm.resx">
       <DependentUpon>DateRangeBoxForm.cs</DependentUpon>

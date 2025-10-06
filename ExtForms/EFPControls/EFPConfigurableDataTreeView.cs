@@ -790,7 +790,8 @@ CommandItems.PerformRefreshItems();
       ciScrollFilterPrev = new EFPCommandItem("View", "PrevDateFilter");
       ciScrollFilterPrev.Parent = _MenuFilter;
       ciScrollFilterPrev.MenuText = Res.Cmd_Menu_Filter_PrevDateFilter;
-      ciScrollFilterPrev.ShortCut = Keys.Alt | Keys.Up;
+      ciScrollFilterPrev.ShortCuts.Add(Keys.Control | Keys.Oemcomma); // 05.10.2025, как в DateRangeBox
+      ciScrollFilterPrev.ShortCuts.Add(Keys.Alt | Keys.Up);
       ciScrollFilterPrev.ImageKey = "ArrowUp";
       ciScrollFilterPrev.GroupBegin = true;
       ciScrollFilterPrev.Usage = EFPCommandItemUsage.None;
@@ -800,7 +801,8 @@ CommandItems.PerformRefreshItems();
       ciScrollFilterNext = new EFPCommandItem("View", "NextDateFilter");
       ciScrollFilterNext.Parent = _MenuFilter;
       ciScrollFilterNext.MenuText = Res.Cmd_Menu_Filter_NextDateFilter;
-      ciScrollFilterNext.ShortCut = Keys.Alt | Keys.Down;
+      ciScrollFilterNext.ShortCuts.Add(Keys.Control | Keys.OemPeriod); // 05.10.2025, как в DateRangeBox
+      ciScrollFilterNext.ShortCuts.Add(Keys.Alt | Keys.Down);
       ciScrollFilterNext.ImageKey = "ArrowDown";
       ciScrollFilterNext.GroupEnd = true;
       ciScrollFilterNext.Usage = EFPCommandItemUsage.None;

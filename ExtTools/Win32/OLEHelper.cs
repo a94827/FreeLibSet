@@ -59,7 +59,7 @@ namespace FreeLibSet.OLE
 
     /// <summary>
     /// Основной объект (например, "Word.Application"). 
-    /// Инициализируется вызовом CreateMainObj() или GetActivemainObj()
+    /// Инициализируется вызовом CreateMainObj() или GetActiveMainObj()
     /// </summary>
     public object MainObj { get { return _MainObj; } }
     private object _MainObj;

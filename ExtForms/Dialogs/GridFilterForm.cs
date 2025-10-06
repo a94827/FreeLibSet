@@ -48,6 +48,7 @@ namespace FreeLibSet.Forms
         //if (callerControlProvider.out)
       FilterGridProvider.DefaultOutItem.Title = String.Format(Res.EFPGridFilterEditorGridView_Name_Default, baseTitle);
       FilterGridProvider.CommandItems.ClipboardInToolBar = true;
+      FilterGridProvider.CommandItems.UseGotoRowWithDifferentCellText = false;
 
       FilterGridProvider.ToolBarPanel = panSpb;
 

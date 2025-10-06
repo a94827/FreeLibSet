@@ -3830,10 +3830,16 @@ namespace FreeLibSet.Data.Docs
         {
           spl.Percent = firstId - 1;
           Int32 lastId2 = Math.Min(lastId, firstId + 99);
-          Int32[] ids = new Int32[lastId2 - firstId + 1];
-          for (int i = 0; i < ids.Length; i++)
-            ids[i] = firstId + i;
-          RecalcColumns3(docType, new IdArray<Int32>(ids));
+
+          // 04.10.2025
+          // В базе данных могут быть пропущенные идентификаторы
+          //Int32[] ids = new Int32[lastId2 - firstId + 1];
+          //for (int i = 0; i < ids.Length; i++)
+          //  ids[i] = firstId + i;
+          IIdSet<Int32> ids = GetIds(docTypeName, new AndFilter(new ValueFilter("Id", firstId, CompareKind.GreaterOrEqualThan),
+            new ValueFilter("Id", lastId2, CompareKind.LessOrEqualThan)));
+          if (ids.Count > 0)
+            RecalcColumns3(docType, ids);
         }
         ExecProc.CurrentProc.EndSplash();
       }
@@ -4103,7 +4109,7 @@ namespace FreeLibSet.Data.Docs
 
           IIdSet<Int32> toIds;
           if (refInfos[i].ToSubDocType == null)
-             toIds = IdCollection<Int32>.FromId(DocId);
+            toIds = IdCollection<Int32>.FromId(DocId);
           else
           {
             List<DBxFilter> filters = new List<DBxFilter>();

@@ -790,7 +790,7 @@ namespace FreeLibSet.Data.Docs
         InvalidOperationException ex = new InvalidOperationException(String.Format(Res.DBxDocProvider_Err_LoadDocRowCount,
           docTypeName, docIds.Count, table.Rows.Count));
         ex.Data["WantedDocIds"] = docIds.ToArray();
-        ex.Data["LoadedDocIds"] = IdTools.GetIds<Int32>(table).ToArray();
+        ex.Data["LoadedDocIds"] = IdTools.GetIdsFromColumn<Int32>(table, "Id").ToArray();
         throw ex;
       }
       return table;

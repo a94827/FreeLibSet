@@ -392,6 +392,22 @@ namespace FreeLibSet.Forms
     #region Переопределенные методы
 
     /// <summary>
+    /// Доинициализирует всплывающие подсказки для кнопок 
+    /// </summary>
+    protected override void OnCreated()
+    {
+      // 05.10.2025
+      EFPCommandItem ci1 = CommandItems["Edit", "PrevPeriod"];
+      if (ci1.ShortCut != Keys.None)
+        Control.TheLeftButton.ToolTipText += " (" + ci1.ShortCutText + ")";
+      EFPCommandItem ci2 = CommandItems["Edit", "NextPeriod"];
+      if (ci2.ShortCut != Keys.None)
+        Control.TheRightButton.ToolTipText += " (" + ci2.ShortCutText + ")";
+
+      base.OnCreated();
+    }
+
+    /// <summary>
     /// Всплывающая подсказка.
     /// Для элементов задаются подсказки "ToolTipText - начальная дата" и "ToolTipText - конечная дата".
     /// </summary>

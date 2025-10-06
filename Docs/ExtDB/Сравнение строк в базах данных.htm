@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1251"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 5.4.7.2 (Windows)"/>
+	<meta name="created" content="2022-04-12T12:52:27.620000000"/>
+	<meta name="changed" content="2022-04-13T12:11:27.582000000"/>
+	<style type="text/css">
+		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; line-height: 120% }
+		h1 { margin-bottom: 0.21cm }
+		h1.western { font-family: "Liberation Sans", sans-serif; font-size: 18pt }
+		h1.cjk { font-family: "Microsoft YaHei"; font-size: 18pt }
+		h1.ctl { font-family: "Mangal"; font-size: 18pt }
+		h2.western { font-family: "Liberation Sans", sans-serif; font-size: 16pt }
+		h2.cjk { font-family: "Microsoft YaHei"; font-size: 16pt }
+		h2.ctl { font-family: "Mangal"; font-size: 16pt }
+		td p { margin-bottom: 0cm }
+		a:link { so-language: zxx }
+	</style>
+</head>
+<body lang="ru-RU" dir="ltr">
+<h1 class="western">Сравнение строк в базах данных</h1>
+<p>В разных базах данных сравнение строк и оператор <span lang="en-US">LIKE
+</span><span lang="ru-RU">по-разному учитывают регистр символов. Это
+влияет на работу фильтров </span><span lang="en-US">DBxFilter.</span></p>
+<p>В библиотеке <span lang="en-US">ExtDB </span>принимаются следующие
+правила.</p>
+<p>1. Фильтры <span lang="en-US">ValueFilter, CompareFilter,
+ValuesFilter </span>и <span lang="en-US">(InSelectFIlter, </span>если
+будет реализован) используют правила по умолчанию, предусмотренные в
+базе данных. То есть сравнение может выполняться и с учетом регистра
+и без учета.</p>
+<p>2. Фильтры <span lang="en-US">StringValueFilter, SubStringFilter </span>и
+<span lang="en-US">StartsWithFilter, </span>у которых есть свойство
+<span lang="en-US">IgnoreCase </span>выполняют сравнение в
+зависимости от заданного значения свойства.<span lang="en-US">
+</span>Обобщенная реализация использует функцию <span lang="en-US">UPPER().
+</span>Если свойство <span lang="en-US">Value </span>не имеет
+буквенных символов, то можно выполнять сравнение, не указывая явно
+режим сравнения.</p>
+<h2 class="western">Правила сравнения для разных баз данных</h2>
+<table width="100%" cellpadding="5" cellspacing="0">
+	<col width="59*">
+	<col width="197*">
+	<tr valign="top">
+		<td width="23%" style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0.1cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p align="center">База данных</p>
+		</td>
+		<td width="77%" style="border: 1px solid #000000; padding: 0.1cm">
+			<p align="center">Описание</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="23%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">MS SQL</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Сравнение выполняется в зависимости от режима <span lang="en-US">COLLATE,
+			</span><span lang="ru-RU">заданного для столбца или для базы
+			данных в-целом.</span></p>
+			<p><span lang="ru-RU">Можно задать режим </span><span lang="en-US">COLLATE
+			</span><span lang="ru-RU">непосредственно рядом с текстовым
+			выражением:</span></p>
+			<p lang="en-US">WHERE [<span lang="ru-RU">ИмяПоля</span>]<span lang="ru-RU">
+			</span>COLLATE Latin1_General_CI_AS = '<span lang="ru-RU">значение</span>'</p>
+			<p>или</p>
+			<p lang="en-US">WHERE [<span lang="ru-RU">ИмяПоля</span>]<span lang="ru-RU">
+			</span>COLLATE Latin1_General_CS_AS = '<span lang="ru-RU">значение</span>'</p>
+			<p lang="en-US">&quot;CI&quot; <span lang="ru-RU">задает
+			игнорирование регистра, &quot;</span>CS<span lang="ru-RU">&quot;</span>
+			- <span lang="ru-RU">учет регистра. Кодировка </span>Latin1_General<span lang="ru-RU">
+			пригодна, в том числе и для кириллицы.</span></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="23%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">PostgreSQL</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Оператор сравнения &quot;=&quot;является чувствительным к
+			регистру.</p>
+			<p>Оператор <span lang="en-US">LIKE </span><span lang="ru-RU">является
+			регистрочувствительным. Нестандартный оператор </span><span lang="en-US">ILIKE
+			</span><span lang="ru-RU">игнорирует регистр.</span></p>
+			<p><br/>
+
+			</p>
+			<p>Для фильтров <span lang="en-US">StringValueFilter</span> и<span lang="en-US">
+			SubStringFilter </span>используется обобщенная реализация с
+			функцией <span lang="en-US">UPPER()</span>. Для <span lang="en-US">StartsWithFilter
+			</span>используется оператор <span lang="en-US">ILIKE, </span>хотя
+			можно было бы использовать и обобщенную реализацию.</p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="23%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0cm">
+			<p lang="en-US">SQLite</p>
+		</td>
+		<td width="77%" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding-top: 0cm; padding-bottom: 0.1cm; padding-left: 0.1cm; padding-right: 0.1cm">
+			<p>Оператор сравнения &quot;=&quot;является чувствительным к
+			регистру.</p>
+			<p>Функции <span lang="en-US">UPPER() </span>и <span lang="en-US">LOWER()
+			р</span>аботают только с латиницей, остальные символы не
+			преобразуются. 
+			</p>
+			<p>Оператор <span lang="en-US">LIKE и</span>гнорирует регистр
+			латинских символов, но учитывает символ для латиницы. Можно
+			использовать команду &quot;PRAGMA case_sensitive_like=1&quot;, но
+			она работает как-то неправильно (в используемой сборке <span lang="en-US">SQLite)</span></p>
+			<p><br/>
+
+			</p>
+			<p>Реализация:</p>
+			<p>1. Заменяются встроенные функции <span lang="en-US">UPPER() </span>и
+			<span lang="en-US">LOWER() </span>на собственные
+			&quot;пользовательские&quot; функции. Они вызывают методы
+			<span lang="en-US">String.ToUpperInvariant() </span>и
+			<span lang="en-US">ToLowerInvariant(). </span>После этого начинают
+			правильно работать обобщенные реализации фильтров
+			<span lang="en-US">StringValueFilter</span> и<span lang="en-US">
+			SubStringFilter</span>.</p>
+			<p>2. Фильтр <span lang="en-US">StartsWithFilter ф</span>орматируется
+			как <span lang="en-US">SubstringFilter. </span>&quot;Подозрительный&quot;
+			<span lang="en-US">sql-</span>оператор <span lang="en-US">LIKE
+			</span>больше не используется</p>
+		</td>
+	</tr>
+</table>
+<p><br/>
+<br/>
+
+</p>
+</body>
+</html>

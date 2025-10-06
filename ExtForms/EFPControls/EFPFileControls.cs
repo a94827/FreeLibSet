@@ -412,6 +412,8 @@ namespace FreeLibSet.Forms
         fmtFileDrop.Paste += FmtFileDrop_Paste;
         mainProvider.CommandItems.PasteHandler.Insert(0, fmtFileDrop); // должно быть до текста
       }
+
+      mainProvider.DefaultButton = control;
     }
 
     #endregion
@@ -712,6 +714,8 @@ namespace FreeLibSet.Forms
         fmtFileDrop.Paste += FmtFileDrop_Paste;
         mainProvider.CommandItems.PasteHandler.Insert(0, fmtFileDrop); // должно быть до текста
       }
+
+      mainProvider.DefaultButton = control;
     }
 
     #endregion

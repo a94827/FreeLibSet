@@ -1701,6 +1701,15 @@ namespace FreeLibSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clipboard.
+        /// </summary>
+        internal static string Cmd_Menu_Clipboard {
+            get {
+                return ResourceManager.GetString("Cmd_Menu_Clipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug changes.
         /// </summary>
         internal static string Cmd_Menu_Debug_Changes {
@@ -1904,6 +1913,24 @@ namespace FreeLibSet {
         internal static string Cmd_Menu_Edit_Goto {
             get {
                 return ResourceManager.GetString("Cmd_Menu_Edit_Goto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to the row down with the different value.
+        /// </summary>
+        internal static string Cmd_Menu_Edit_GotoRowWithDiffTextDown {
+            get {
+                return ResourceManager.GetString("Cmd_Menu_Edit_GotoRowWithDiffTextDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to the row up with the different value.
+        /// </summary>
+        internal static string Cmd_Menu_Edit_GotoRowWithDiffTextUp {
+            get {
+                return ResourceManager.GetString("Cmd_Menu_Edit_GotoRowWithDiffTextUp", resourceCulture);
             }
         }
         
@@ -2507,6 +2534,15 @@ namespace FreeLibSet {
         internal static string Cmd_Menu_Scale_ZoomOut {
             get {
                 return ResourceManager.GetString("Cmd_Menu_Scale_ZoomOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string Cmd_Menu_Search {
+            get {
+                return ResourceManager.GetString("Cmd_Menu_Search", resourceCulture);
             }
         }
         
@@ -4847,6 +4883,15 @@ namespace FreeLibSet {
         internal static string EFPDataView_Err_NoRowToolTip {
             get {
                 return ResourceManager.GetString("EFPDataView_Err_NoRowToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row with the different value not found.
+        /// </summary>
+        internal static string EFPDataView_Err_NoRowWithDiffText {
+            get {
+                return ResourceManager.GetString("EFPDataView_Err_NoRowWithDiffText", resourceCulture);
             }
         }
         

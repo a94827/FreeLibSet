@@ -3139,4 +3139,19 @@ Select paper orientation before.</value>
   <data name="EFPDataView_Err_NoSelectedLinkColumn" xml:space="preserve">
     <value>There is no selected link column in the view</value>
   </data>
+  <data name="Cmd_Menu_Clipboard" xml:space="preserve">
+    <value>Clipboard</value>
+  </data>
+  <data name="Cmd_Menu_Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Cmd_Menu_Edit_GotoRowWithDiffTextDown" xml:space="preserve">
+    <value>Go to the row down with the different value</value>
+  </data>
+  <data name="Cmd_Menu_Edit_GotoRowWithDiffTextUp" xml:space="preserve">
+    <value>Go to the row up with the different value</value>
+  </data>
+  <data name="EFPDataView_Err_NoRowWithDiffText" xml:space="preserve">
+    <value>Row with the different value not found</value>
+  </data>
 </root>

@@ -393,7 +393,11 @@ namespace FreeLibSet.Data.Docs
       DataView dv = new DataView(SubDocs.Table); // DefaultView нельзя использовать, т.к. оно используется в просмотре таблицы поддокументов
       try
       {
-        dv.RowFilter = "DocId=" + Doc.DocId.ToString();
+        //dv.RowFilter = "DocId=" + Doc.DocId.ToString();
+        DBxFilter filter = new ValueFilter("DocId", Doc.DocId);
+        if (DocSet.DocProvider.DocTypes.UseDeleted)
+          filter = new AndFilter(DBSSubDocType.DeletedFalseFilter, filter); // 04.10.2025
+        dv.RowFilter = filter.ToString();
         dv.Sort = SubDocs.SubDocType.DefaultOrder.ToString();
         return dv.ToTable();
       }

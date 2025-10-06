@@ -646,7 +646,7 @@ namespace FreeLibSet.Forms
               name = Res.ParamSetComboBox_Msg_Hist1;
               break;
             default:
-              name = String.Format(Res.ParamSetComboBox_Msg_Hist0, cnt);
+              name = String.Format(Res.ParamSetComboBox_Msg_HistN, cnt);
               break;
           }
 

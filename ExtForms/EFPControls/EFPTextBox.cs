@@ -2091,9 +2091,9 @@ namespace FreeLibSet.Forms
 
       if (!alwaysReadOnly)
       {
-        _PasteHandler = new EFPPasteHandler(this);
-        //this[EFPAppStdCommandItems.Paste].ShortCutToRightText();
-        this[EFPAppStdCommandItems.PasteSpecial].GroupEnd = true;
+        _PasteHandler = new EFPPasteHandler(this, null);
+        //this[EFPAppStdCommandItems.Paste].ShortCutToRightText(); 
+        this[EFPAppStdCommandItems.PasteSpecial].ShortCut = Keys.None;// 05.10.2025 Иначе вставка задваивается
         _PasteHandler.PasteApplied += InitEnabled; // не уверен, что нужно
 
         EFPPasteFormat fmtText = new EFPPasteFormat(DataFormats.UnicodeText);
@@ -2103,9 +2103,7 @@ namespace FreeLibSet.Forms
         fmtText.Paste += new EFPPasteDataObjectEventHandler(fmtText_Paste);
         _PasteHandler.Add(fmtText);
       }
-      //ciDelete=new VisinleClientItem(MainMenu.Delete);
-      //ciDelete.Click+=new EventHandler(Delete);
-      //Add(ciDelete);
+      AddSeparator();
 
       #endregion
 

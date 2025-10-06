@@ -110,12 +110,12 @@ namespace FreeLibSet.Forms
           cddm = new EFPDropDownMenu();
           cddm.Name = "DropDownAux_" + item.Name;
           Bar.Items.Add(tdd);
-          cddm.Attach(tdd);
+          //cddm.Attach(tdd);
         }
         else
           cddm = tdd.DropDown.Tag as EFPDropDownMenu;
 
-        EFPUIObjBase uiObj = cddm.Add(item);
+        EFPUIObjBase uiObj = cddm.Add(item, true); // 03.10.2025
         //if (cddm.Count == 0)
         //  uiObj.DropDownMenu = cddm; // чтобы было разрушено
         uiObj.SetAll();

@@ -301,7 +301,8 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="commandItems">Список команд, куда будут добавлены команды "Вставить" и "Специальная вставка".
     /// Не может быть null</param>
-    public EFPPasteHandler(EFPCommandItems commandItems)
+    /// <param name="parent">Родительское подменю или null</param>
+    public EFPPasteHandler(EFPCommandItems commandItems, EFPCommandItem parent)
     {
 #if DEBUG
       if (commandItems == null)
@@ -310,15 +311,18 @@ namespace FreeLibSet.Forms
       _CommandItems = commandItems;
 
       ciPaste = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Paste);
+      ciPaste.Parent = parent;
       ciPaste.Click += new EventHandler(PasteClick);
       _CommandItems.Add(ciPaste);
 
       menuPasteAux = new EFPCommandItem("Edit", "PasteAuxMenu");
+      menuPasteAux.Parent = parent;
       menuPasteAux.MenuText = Res.Cmd_Menu_Edit_PasteAuxMenu;
       menuPasteAux.Usage = EFPCommandItemUsage.None;
       _CommandItems.Add(menuPasteAux);
 
       ciPasteSpecial = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.PasteSpecial);
+      ciPasteSpecial.Parent = parent;
       ciPasteSpecial.Click += new EventHandler(PasteSpecialClick);
       _CommandItems.Add(ciPasteSpecial);
 

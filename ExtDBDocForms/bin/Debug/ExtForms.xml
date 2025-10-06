@@ -1650,6 +1650,14 @@
             Возвращает true, если список <see cref="P:FreeLibSet.Forms.IEFPControl.Validators"/> содержит элементы
             </summary>
         </member>
+        <member name="P:FreeLibSet.Forms.IEFPControl.DefaultButton">
+            <summary>
+            Если свойство установлено, то у управляющего элемента будет собственная кнопка по умолчанию.
+            Когда элемент получает фокус ввода, то свойство <see cref="P:System.Windows.Forms.Form.AcceptButton"/> временно переключается
+            на указанную кнопку, а после утери фокуса восстанавливается на предыдущее значение (кнопку "ОК" в диалоге).
+            Свойство можно устанавливать только до вывода формы на экран.
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Forms.IEFPControl.UpdateByTimeHandlers">
             <summary>
             Сюда можно добавить обработчик для обновления данных по таймеру.
@@ -6679,6 +6687,11 @@
               Looks up a localized string similar to Set marks for selected rows.
             </summary>
         </member>
+        <member name="P:FreeLibSet.Res.Cmd_Menu_Clipboard">
+            <summary>
+              Looks up a localized string similar to Clipboard.
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Res.Cmd_Menu_Debug_Changes">
             <summary>
               Looks up a localized string similar to Debug changes.
@@ -6792,6 +6805,16 @@
         <member name="P:FreeLibSet.Res.Cmd_Menu_Edit_Goto">
             <summary>
               Looks up a localized string similar to Go to ....
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Res.Cmd_Menu_Edit_GotoRowWithDiffTextDown">
+            <summary>
+              Looks up a localized string similar to Go to the row down with the different value.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Res.Cmd_Menu_Edit_GotoRowWithDiffTextUp">
+            <summary>
+              Looks up a localized string similar to Go to the row up with the different value.
             </summary>
         </member>
         <member name="P:FreeLibSet.Res.Cmd_Menu_Edit_IncSearch">
@@ -7127,6 +7150,11 @@
         <member name="P:FreeLibSet.Res.Cmd_Menu_Scale_ZoomOut">
             <summary>
               Looks up a localized string similar to Soom Out.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Res.Cmd_Menu_Search">
+            <summary>
+              Looks up a localized string similar to Search.
             </summary>
         </member>
         <member name="P:FreeLibSet.Res.Cmd_Menu_SendTo">
@@ -8427,6 +8455,11 @@
         <member name="P:FreeLibSet.Res.EFPDataView_Err_NoRowToolTip">
             <summary>
               Looks up a localized string similar to There is no tooltip for the row header.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Res.EFPDataView_Err_NoRowWithDiffText">
+            <summary>
+              Looks up a localized string similar to Row with the different value not found.
             </summary>
         </member>
         <member name="P:FreeLibSet.Res.EFPDataView_Err_NoSelectedCell">
@@ -13443,12 +13476,19 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
+        <member name="P:FreeLibSet.Forms.EFPTreeViewAdvCommandItems.EnterKeyMode">
+            <summary>
+            Режим работы клавиши "Enter" и двойного щелчка мыши.
+            По умолчанию - <see cref="F:FreeLibSet.Forms.EFPDataViewEnterKeyMode.EditOrView"/>.
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Forms.EFPTreeViewAdvCommandItems.EnterAsOk">
             <summary>
             true, если нажатие клавиши Enter не обрабатывается, а передается
             форме для нажатия кнопки по умолчанию.
-            false, если нажатие Enter выполняет редактирование ячейки таблицы
-            По умолчанию - false
+            false, если нажатие Enter выполняет редактирование ячейки таблицы.
+            По умолчанию - false.
+            Дублирует свойство <see cref="P:FreeLibSet.Forms.EFPTreeViewAdvCommandItems.EnterKeyMode"/>
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPTreeViewAdvCommandItems.UseEditView">
@@ -15812,10 +15852,18 @@
             Возвращает true, если установлено свойство <see cref="P:FreeLibSet.Forms.EFPCommandItem.ImageKey"/> или <see cref="P:FreeLibSet.Forms.EFPCommandItem.Image"/>.
             </summary>
         </member>
+        <member name="P:FreeLibSet.Forms.EFPCommandItem.ShortCuts">
+            <summary>
+            Коллекция сочетаний клавиш, назначенных команде
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Forms.EFPCommandItem.ShortCut">
             <summary>
             Сочетание клавиш, нажатие которых приводит к выполнению команды.
             По умолчанию содержит значение <see cref="F:System.Windows.Forms.Keys.None"/>.
+            Используйте коллекцию <see cref="P:FreeLibSet.Forms.EFPCommandItem.ShortCuts"/> для доступа к нескольким назначенным комбинациям.
+            Если назначено несколько комбинаций, возвращается первая из них.
+            Установка свойства назначает единственную комбинацию, все ранее назначенные комбинации удаляются.
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPCommandItem.ShortCutText">
@@ -15913,6 +15961,75 @@
             <summary>
             Строка в виде "<see cref="P:FreeLibSet.Forms.EFPCommandItem.Category"/>|<see cref="P:FreeLibSet.Forms.EFPCommandItem.Name"/>".
             Используется при добавлении в <see cref="T:FreeLibSet.Collections.NamedList`1"/>.
+            </summary>
+        </member>
+        <member name="T:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection">
+            <summary>
+            Реализация свойства <see cref="P:FreeLibSet.Forms.EFPCommandItem.ShortCuts"/>
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.Add(System.Windows.Forms.Keys)">
+            <summary>
+            Добавляет комбинацию клавиш к команде.
+            Повторы отбрасываются.
+            </summary>
+            <param name="item">Комбинация</param>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.Clear">
+            <summary>
+            Очищает список комбинаций
+            </summary>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.Contains(System.Windows.Forms.Keys)">
+            <summary>
+            Возвращает true, если комбинация назначена команде
+            </summary>
+            <param name="item">Комбинация</param>
+            <returns>True, если есть такая комбинация</returns>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.CopyTo(System.Windows.Forms.Keys[],System.Int32)">
+            <summary>
+            Копирует назначенные комбинации в массив
+            </summary>
+            <param name="array">Заполняемый массив</param>
+            <param name="arrayIndex">Первый заполняемый элемент</param>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.CopyTo(FreeLibSet.Forms.EFPCommandItem.ShortCutCollection)">
+            <summary>
+            Копирует все сочетаний клавиш в другую коллекцию.
+            Все существующие сочетания в коллекции <paramref name="other"/> удаляются
+            </summary>
+            <param name="other">Заполняемая коллекция</param>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.ToArray">
+            <summary>
+            Возвращает новый массив с назначенными комбинациями.
+            Если не задано ни одной комбинации, возвращается пустой массив
+            </summary>
+            <returns>Массив</returns>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.Remove(System.Windows.Forms.Keys)">
+            <summary>
+            Удаляет сочетание клавиш
+            </summary>
+            <param name="item">Комбинация</param>
+            <returns>True, если комбинация ранее была назначена и теперь удалена. 
+            False, если нет такой комбинации клавиш</returns>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.GetEnumerator">
+            <summary>
+            Возвращает перечислитель по назначенным комбинациям клавиш
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.Count">
+            <summary>
+            Возвращает количество назначенных комбинаций
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.EFPCommandItem.ShortCutCollection.IsReadOnly">
+            <summary>
+            Возвращает true, если для списка команд уже были созданы визуальные элементы и нельзя изменять сочетания клавиш
             </summary>
         </member>
         <member name="T:FreeLibSet.Forms.EFPCommandItemUsage">
@@ -16181,6 +16298,39 @@
             Команда не используется
             </summary>
         </member>
+        <member name="T:FreeLibSet.Forms.EFPDataViewEnterKeyMode">
+            <summary>
+            Какое действие выполняет нажатие клавиши "Enter" и двойной щелчок мыши в табличном просмотре
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Forms.EFPDataViewEnterKeyMode.EditOrView">
+            <summary>
+            Если <see cref="P:FreeLibSet.Forms.IEFPDataView.ReadOnly"/>=false, то Enter или Ctrl+Enter - редактирование записи, Shift+Enter - просмотр записи
+            Если <see cref="P:FreeLibSet.Forms.IEFPDataView.ReadOnly"/>=true, то Enter или Shift+Enter - просмотр записи, Ctrl+Enter - редактирование
+            Этот режим используется по умолчанию.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Forms.EFPDataViewEnterKeyMode.Edit">
+            <summary>
+            Enter или Ctrl+Enter - Выполняется редактирование. Shift+Enter - просмотр.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Forms.EFPDataViewEnterKeyMode.View">
+            <summary>
+            Enter или Shift+Enter - выполняется просмотр. Ctrl+Enter - редактирование
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Forms.EFPDataViewEnterKeyMode.DefaultButton">
+            <summary>
+            Нажимается кнопка по умолчанию для блока диалога <see cref="P:System.Windows.Forms.Form.AcceptButton"/> или назначенная свойством <see cref="P:FreeLibSet.Forms.IEFPControl.DefaultButton"/>.
+            Ctrl+Enter - редактирование. Просмотр запускается комбинацией клавиш Shift+Enter.
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Forms.EFPDataViewEnterKeyMode.None">
+            <summary>
+            Комбинации клавиш для редактирования и просмотра не назначаются. Допускается возможность их установки из прикладного кода
+            </summary>
+        </member>
         <member name="T:FreeLibSet.Forms.EFPDataGridViewCommandItems">
             <summary>
             Список команд локального меню табличного просмотра
@@ -16364,12 +16514,19 @@
             Задается в конструкторе.
             </summary>
         </member>
+        <member name="P:FreeLibSet.Forms.EFPDataGridViewCommandItems.EnterKeyMode">
+            <summary>
+            Режим работы клавиши "Enter" и двойного щелчка мыши.
+            По умолчанию - <see cref="F:FreeLibSet.Forms.EFPDataViewEnterKeyMode.EditOrView"/>.
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Forms.EFPDataGridViewCommandItems.EnterAsOk">
             <summary>
             true, если нажатие клавиши Enter не обрабатывается, а передается
             форме для нажатия кнопки по умолчанию.
             false, если нажатие Enter выполняет редактирование ячейки таблицы.
             По умолчанию - false.
+            Дублирует свойство <see cref="P:FreeLibSet.Forms.EFPDataGridViewCommandItems.EnterKeyMode"/>
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPDataGridViewCommandItems.UseEditView">
@@ -16447,6 +16604,13 @@
             Это может потребоваться, если столбцы добавляются динамически.
             По умолчанию - false, панель отображается, только если есть хотя бы один столбец, поддерживающий поиск.
             Свойство можно устанавливать только до вызова события <see cref="E:FreeLibSet.Forms.EFPControlBase.Created"/>.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.EFPDataGridViewCommandItems.UseGotoRowWithDifferentCellText">
+            <summary>
+            Если установлено в true (по умолчанию), то доступны команды перехода вверх/вниз к строке с отличающимся текстом ячейки.
+            Свойство следует сбрасывать в false для просмотров, в котором все строки содержат завдомо разный текст, например, как
+            в диалоге <see cref="T:FreeLibSet.Forms.ListSelectDialog"/>.
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPDataGridViewCommandItems.UseRowErrors">
@@ -20779,6 +20943,16 @@
             Меню "Правка"
             </summary>
         </member>
+        <member name="F:FreeLibSet.Forms.EFPAppStdCommandItems.MenuClipboard">
+            <summary>
+            Меню "Буфер обмена". Используется в локальном меню табличного просмотра для уменьшения длины меню
+            </summary>
+        </member>
+        <member name="F:FreeLibSet.Forms.EFPAppStdCommandItems.MenuSearch">
+            <summary>
+            Меню "Поиск". Используется в локальном меню табличного просмотра для уменьшения длины меню
+            </summary>
+        </member>
         <member name="F:FreeLibSet.Forms.EFPAppStdCommandItems.MenuView">
             <summary>
             Меню "Вид"
@@ -23779,6 +23953,12 @@
             Вызывается для редактирования записей
             </summary>
         </member>
+        <member name="P:FreeLibSet.Forms.IEFPDataView.EnterKeyMode">
+            <summary>
+            Режим работы клавиши "Enter" и двойного щелчка мыши.
+            По умолчанию - <see cref="F:FreeLibSet.Forms.EFPDataViewEnterKeyMode.EditOrView"/>.
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Forms.IEFPDataView.State">
             <summary>
             Текущее состояние просмотра.
@@ -24791,6 +24971,24 @@
             а не на исходные данные просмотра. Свойство устанавливается в момент 
             инициализации IncSearchDataView
             </summary>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPDataGridView.GotoRowWithDifferentText(System.Boolean)">
+            <summary>
+            Переход к следующей или предыдущей строке, содержимое ячейки в которой отличиается от содержимого текущей ячейки
+            </summary>
+            <param name="forward">True - переход к следующей строке, false - к предыдущей</param>
+        </member>
+        <member name="M:FreeLibSet.Forms.EFPDataGridView.FindRowWithDifferentText(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Возвращает номер строки, больший или меньший <paramref name="startRowIndex"/>, в которой значение ячейки отличается
+            от значения в ячейке текущей строки.
+            Если <paramref name="startRowIndex"/> равен первой или последней строке просмотра (в зависимости от <paramref name="forward"/>), возвращается (-1).
+            Если все строки до начала/конца таблицы содержат одинаковые значения, также возвращается (-1).
+            </summary>
+            <param name="startRowIndex">Индекс текущей строки</param>
+            <param name="columnIndex">Индекс столбца со значением ячейки</param>
+            <param name="forward">true - поиск строк вниз таблицы, false - вверх</param>
+            <returns>Индекс найденной строки или (-1)</returns>
         </member>
         <member name="F:FreeLibSet.Forms.EFPDataGridView.InsideSetCurrentConfig">
             <summary>
@@ -32880,6 +33078,11 @@
             <param name="baseProvider">Базовый провайдер</param>
             <param name="control">Управляющий элемент</param>
         </member>
+        <member name="M:FreeLibSet.Forms.EFPDateRangeBox.OnCreated">
+            <summary>
+            Доинициализирует всплывающие подсказки для кнопок 
+            </summary>
+        </member>
         <member name="M:FreeLibSet.Forms.EFPDateRangeBox.OnValidate">
             <summary>
             Проверка корректности.
@@ -38204,7 +38407,7 @@
         </member>
         <member name="M:FreeLibSet.Forms.Data.DateRangeCrossGridFilter.ShowFilterDialog(FreeLibSet.Forms.EFPDialogPosition)">
             <summary>
-            Показывает блок диалога для редактирования фильтра
+            Показывает блок диалога для редактирования фильтра.
             </summary>
             <param name="dialogPosition">Передается в блок диалога</param>
             <returns>True, если пользователь установил фильтр</returns>
@@ -38237,6 +38440,24 @@
             <summary>
             Мaксимальное значение, которое можно задавать в блоке диалога.
             По умолчанию - null - нет ограничения.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.Data.DateRangeCrossGridFilter.Nullable">
+            <summary>
+            Если true, то в диалоге установки фильтра дополнительно доступны режимы <see cref="P:FreeLibSet.Data.RangeCommonFilterBase`1.Mode"/>=<see cref="F:FreeLibSet.Data.RangeCommonFilterMode.NotNull"/> и <see cref="F:FreeLibSet.Data.RangeCommonFilterMode.Null"/>.
+            Если false (по умолчанию), то доступен только режим <see cref="F:FreeLibSet.Data.RangeCommonFilterMode.Range"/>.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.Data.DateRangeCrossGridFilter.FilterTextNotNull">
+            <summary>
+            Текстовое описание фильтра для значения <see cref="P:FreeLibSet.Data.RangeCommonFilterBase`1.Mode"/>=<see cref="F:FreeLibSet.Data.RangeCommonFilterMode.NotNull"/>.
+            По умолчанию - "Значение установлено".
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.Data.DateRangeCrossGridFilter.FilterTextNull">
+            <summary>
+            Текстовое описание фильтра для значения <see cref="P:FreeLibSet.Data.RangeCommonFilterBase`1.Mode"/>=<see cref="F:FreeLibSet.Data.RangeCommonFilterMode.Null"/>.
+            По умолчанию - "Значение не установлено".
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.Data.DateRangeCrossGridFilter.FilterText">
@@ -52862,13 +53083,14 @@
             </para>
             </summary>
         </member>
-        <member name="M:FreeLibSet.Forms.EFPPasteHandler.#ctor(FreeLibSet.Forms.EFPCommandItems)">
+        <member name="M:FreeLibSet.Forms.EFPPasteHandler.#ctor(FreeLibSet.Forms.EFPCommandItems,FreeLibSet.Forms.EFPCommandItem)">
             <summary>
             Создает объект обработчика.
             Добавляет команды <see cref="T:FreeLibSet.Forms.EFPCommandItem"/> к локальному меню.
             </summary>
             <param name="commandItems">Список команд, куда будут добавлены команды "Вставить" и "Специальная вставка".
             Не может быть null</param>
+            <param name="parent">Родительское подменю или null</param>
         </member>
         <member name="M:FreeLibSet.Forms.EFPPasteHandler.CommandItems_Idle(System.Object,System.EventArgs)">
             <summary>
@@ -54487,6 +54709,12 @@
         <member name="P:FreeLibSet.Forms.EFPMenuOutHandler.Enabled">
             <summary>
             Блокирование всех команд локального меню
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.EFPMenuOutHandler.MenuFile">
+            <summary>
+            Подменю "Файл".
+            В него добавляются команды "Печать", "Параметры страницы", "Предварительный просмотр" и "Экспорт в файл".
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPMenuOutHandler.MenuSendTo">

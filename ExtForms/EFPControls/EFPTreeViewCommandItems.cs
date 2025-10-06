@@ -38,18 +38,22 @@ namespace FreeLibSet.Forms
     {
       #region Буфер обмена
 
-      AddSeparator();
+      MenuClipboard = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuClipboard);
+      Add(MenuClipboard);
 
       ciCut = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Cut);
+      ciCut.Parent = MenuClipboard;
       ciCut.Click += new EventHandler(DoCut);
       Add(ciCut);
 
       ciCopy = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Copy);
+      ciCopy.Parent = MenuClipboard;
       ciCopy.Enabled = true;
       ciCopy.Click += new EventHandler(DoCopy);
       Add(ciCopy);
 
       ciCopySettings = EFPDataViewCopyFormatsForm.AddCommandItem(this);
+      ciCopySettings.Parent = MenuClipboard;
 
       /*
       if (EFPApp.ShowToolTips)
@@ -61,26 +65,29 @@ namespace FreeLibSet.Forms
       } */
       AddSeparator();
 
-      _PasteHandler = new EFPPasteHandler(this);
+      _PasteHandler = new EFPPasteHandler(this, MenuClipboard);
       _PasteHandler.UseToolBar = false; // по умолчанию - кнопки не нужны
 
       #endregion
 
       #region Поиск
 
-      AddSeparator();
-
+      MenuSearch = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.MenuSearch);
+      Add(MenuSearch);
 
       ciFind = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.Find);
+      ciFind.Parent = MenuSearch;
       ciFind.Click += new EventHandler(Find);
       Add(ciFind);
 
       ciIncSearch = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.IncSearch);
+      ciIncSearch.Parent = MenuSearch;
       ciIncSearch.Click += new EventHandler(IncSearch);
       ciIncSearch.StatusBarText = "??????????????????????";
       Add(ciIncSearch);
 
       ciFindNext = EFPApp.CommandItems.CreateContext(EFPAppStdCommandItems.FindNext);
+      ciFindNext.Parent = MenuSearch;
       ciFindNext.Click += new EventHandler(FindNext);
       Add(ciFindNext);
 
@@ -144,9 +151,14 @@ namespace FreeLibSet.Forms
 
       base.OnPrepare();
 
-      EFPCommandItemUsage clipboardUsage = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
+      #region буфер обмена
+
+      EFPCommandItemUsage clipboardUsage1 = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
       if (ClipboardInToolBar)
-        clipboardUsage |= EFPCommandItemUsage.ToolBar;
+        clipboardUsage1 |= EFPCommandItemUsage.ToolBar;
+      EFPCommandItemUsage clipboardUsage2 = EFPCommandItemUsage.Menu | EFPCommandItemUsage.ShortCut;
+      if (ClipboardInToolBar)
+        clipboardUsage2 |= EFPCommandItemUsage.ToolBarAux;
 
       if (Cut == null)
       {
@@ -154,15 +166,14 @@ namespace FreeLibSet.Forms
         ciCut.Usage = EFPCommandItemUsage.None;
       }
       else
-        ciCut.Usage = clipboardUsage;
+        ciCut.Usage = clipboardUsage1;
 
-      ciCopy.Usage = clipboardUsage;
-      if (!ClipboardInToolBar)
-      {
-        ciCopySettings.Usage = EFPCommandItemUsage.Menu;
-        //ciCopyToolTip.Usage = EFPCommandItemUsage.Menu;
-      }
+      ciCopy.Usage = clipboardUsage1;
 
+      ciCopySettings.Usage = clipboardUsage2;
+      //ciCopyToolTip.Usage = clipboardUsage2;
+
+      #endregion
 
       ciIncSearch.Usage = EFPCommandItemUsage.None; // TODO: Команды поиска по первым буквам
       if (Owner.TextSearchContext == null)
@@ -176,6 +187,7 @@ namespace FreeLibSet.Forms
 
     #region Буфер обмена
 
+
     /// <summary>
     /// Нужно ли показывать кнопки "Вырезать", "Копировать" и "Вставить" в панели
     /// инструментов (если она есть).
@@ -186,6 +198,8 @@ namespace FreeLibSet.Forms
       get { return _PasteHandler.UseToolBar; }
       set { _PasteHandler.UseToolBar = value; }
     }
+
+    private EFPCommandItem MenuClipboard;
 
     #region Вырезать
 
@@ -331,7 +345,7 @@ namespace FreeLibSet.Forms
 
     #region Команды поиска
 
-    EFPCommandItem ciIncSearch, ciFind, ciFindNext;
+    EFPCommandItem MenuSearch, ciIncSearch, ciFind, ciFindNext;
 
     private void IncSearch(object sender, EventArgs args)
     {
