@@ -778,25 +778,12 @@ namespace FreeLibSet.Forms
       return new EFPTreeViewAdvCommandItems(this);
     }
 
-    /// <summary>
-    /// Делает командой, выделенной по умолчанию, команду "Edit" или "View"
-    /// </summary>
-    protected override void OnBeforePrepareCommandItems()
-    {
-      base.OnBeforePrepareCommandItems();
-      if ((!CommandItems.EnterAsOk) && CommandItems.DefaultCommandItem == null)
-      {
-        EFPCommandItem ci = CommandItems["Edit", "Edit"];
-        if (ci.Visible)
-          CommandItems.DefaultCommandItem = ci;
-        else
-        {
-          ci = CommandItems["Edit", "View"];
-          if (ci.Visible)
-            CommandItems.DefaultCommandItem = ci;
-        }
-      }
-    }
+    ///// <summary>
+    ///// </summary>
+    //protected override void OnBeforePrepareCommandItems()
+    //{
+    //  base.OnBeforePrepareCommandItems();
+    //}
 
     #endregion
 

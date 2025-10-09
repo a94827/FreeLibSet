@@ -635,9 +635,15 @@ namespace FreeLibSet.Forms
           {
             case EFPDataViewEnterKeyMode.EditOrView:
               if (ControlProvider.ReadOnly)
+              {
                 ciView.ShortCuts.Add(Keys.Return);
+                DefaultCommandItem = ciView;
+              }
               else
+              {
                 ciEdit.ShortCuts.Add(Keys.Return);
+                DefaultCommandItem = ciEdit;
+              }
               ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
               ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
               break;
@@ -645,11 +651,13 @@ namespace FreeLibSet.Forms
               ciEdit.ShortCuts.Add(Keys.Return);
               ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
               ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
+              DefaultCommandItem = ciEdit;
               break;
             case EFPDataViewEnterKeyMode.View:
               ciView.ShortCuts.Add(Keys.Return);
               ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
               ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
+              DefaultCommandItem = ciView;
               break;
             case EFPDataViewEnterKeyMode.DefaultButton:
               ciEdit.ShortCuts.Add(Keys.Control | Keys.Return);
@@ -669,7 +677,6 @@ namespace FreeLibSet.Forms
         ciView.Usage = EFPCommandItemUsage.None;
         ciOkButton.Usage = EFPCommandItemUsage.None;
       }
-      MenuEdit.InitMenuVisible();
 
       if ((!ForceInlineEditStatusPanel) && ciInlineEditStatus != null)
       {
@@ -958,6 +965,8 @@ namespace FreeLibSet.Forms
           ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete_SingleRow;
           ciView.MenuText = Res.Cmd_Menu_Edit_View_SingleRow;
         }
+        MenuEdit.InitMenuVisible();
+
 
         //if (ciCut.Usage != EFPCommandItemUsage.None)
         ciCut.Enabled = (selState != UISelectedRowsState.NoSelection) &&

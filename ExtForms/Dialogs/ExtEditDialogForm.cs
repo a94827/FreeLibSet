@@ -915,9 +915,26 @@ namespace FreeLibSet.Forms
     public ExtEditDialogState FormState { get { return _FormState; } }
     private ExtEditDialogState _FormState;
 
+
+    /*
+    /// Выполняемые действия:
+    /// <list type="number">
+    /// <item><term>1</term><description>Вызов <see cref="EFPFormProvider.ValidateForm()"/> с проверкой корректности введенных значений на уровне управляющих элементов.
+    /// Также выполняется проверка с помощью <see cref="FormChecks"/>.
+    /// Возвращается false, если проверка закончилась неудачей.</description></item>
+    /// <item><term>2</term><description>Вызывается событие <see cref="BeforeWriteValues"/>. Обработчик события может выполнить комплексную проверку значений управляющих
+    /// элементов (того же можно добиться, используя <see cref="FormChecks"/>) и также выставить признак ошибки</description></item>
+    /// <item><term>3</term><description>Для списка <see cref="EditItems"/> вызывается <see cref="UIExtEditItemList.WriteValues()"/>. Записывается каждое значение.</description></item>
+    /// <item><term>4</term><description>Вызывается событие <see cref="Writing"/>. Обработчик может использовать сохраненные значения <see cref="UIExtEditItem"/> и также
+    /// отменить действие.</description>description></item>
+    /// </list>
+     */
+
     /// <summary>
     /// Выполняет внеплановую запись данных. 
-    /// При записи свойство <see cref="FormState"/> устанавливается равным <see cref="ExtEditDialogState.WriteData"/>
+    /// При записи свойство <see cref="FormState"/> устанавливается равным <see cref="ExtEditDialogState.WriteData"/>.
+    /// Если на каком-либо шаге возникает исключение, выдается сообщение с помощью <see cref="EFPApp.ShowException(Exception)"/>,
+    /// дальнейшие шаги не выполняются и возвращается false.
     /// </summary>
     /// <returns>Возвращает true, если форма содержит корректные данные и обработчик события <see cref="Writing"/> не установил
     /// <see cref="CancelEventArgs.Cancel"/>=true.</returns>

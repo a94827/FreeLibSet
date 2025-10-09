@@ -249,9 +249,15 @@ namespace FreeLibSet.Forms
           {
             case EFPDataViewEnterKeyMode.EditOrView:
               if (ControlProvider.ReadOnly)
+              {
                 ciView.ShortCuts.Add(Keys.Return);
+                DefaultCommandItem = ciView;
+              }
               else
+              {
                 ciEdit.ShortCuts.Add(Keys.Return);
+                DefaultCommandItem = ciEdit;
+              }
               ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
               ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
               break;
@@ -259,11 +265,13 @@ namespace FreeLibSet.Forms
               ciEdit.ShortCuts.Add(Keys.Return);
               ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
               ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
+              DefaultCommandItem = ciEdit;
               break;
             case EFPDataViewEnterKeyMode.View:
               ciView.ShortCuts.Add(Keys.Return);
               ciView.ShortCuts.Add(Keys.Shift | Keys.Return);
               ciOkButton.ShortCuts.Add(Keys.Control | Keys.Return);
+              DefaultCommandItem = ciView;
               break;
             case EFPDataViewEnterKeyMode.DefaultButton:
               ciEdit.ShortCuts.Add(Keys.Control | Keys.Return);
@@ -283,7 +291,6 @@ namespace FreeLibSet.Forms
         ciView.Usage = EFPCommandItemUsage.None;
         ciOkButton.Usage = EFPCommandItemUsage.None;
       }
-      MenuEdit.InitMenuVisible();
 
       if ((!ForceInlineEditStatusPanel) && ciInlineEditStatus != null)
       {
@@ -367,10 +374,11 @@ namespace FreeLibSet.Forms
           ciDelete.MenuText = Res.Cmd_Menu_Edit_Delete_SingleRow;
           ciView.MenuText = Res.Cmd_Menu_Edit_View_SingleRow;
         }
-
       } // UseEditView
-        // 16.01.2023
-        //if (this[EFPAppStdCommandItems.Cut].Usage != EFPCommandItemUsage.None)
+      MenuEdit.InitMenuVisible();
+
+      // 16.01.2023
+      //if (this[EFPAppStdCommandItems.Cut].Usage != EFPCommandItemUsage.None)
       this[EFPAppStdCommandItems.Cut].Enabled = selState != UISelectedRowsState.NoSelection &&
         (!ControlProvider.ReadOnly);
       this[EFPAppStdCommandItems.Copy].Enabled = selState != UISelectedRowsState.NoSelection; // 17.06.2024
@@ -529,42 +537,58 @@ namespace FreeLibSet.Forms
       {
         _NodeDoubleClicked = false;
 
-
-        if (EnterAsOk)
+        switch (EnterKeyMode)
         {
-          // 16.08.2012
-          // Если текущая ячейка допускает inline-редактирование, то нажимать кнопку
-          // по умолчанию - неправильно
-          if (ControlProvider.Control.SelectedNode != null)
-          {
-            // TODO: string ReadOnlyMessage;
-            // TODO: if (!Owner.GetCellReadOnly(Owner.Control.CurrentCell, out ReadOnlyMessage))
-            // TODO: return;
-          }
+          case EFPDataViewEnterKeyMode.DefaultButton:
+            //// 16.08.2012
+            //// Если текущая ячейка допускает inline-редактирование, то нажимать кнопку
+            //// по умолчанию - неправильно
+            //if (ControlProvider.Control.SelectedNode != null)
+            //{
+            //  string ReadOnlyMessage;
+            //  if (!ControlProvider.GetCellReadOnly(ControlProvider.Control.CurrentCell, out ReadOnlyMessage))
+            //    return;
+            //}
 
-          ClickOKButton(null, null);
-        }
-        else
-        {
-          //if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
-          //  ControlProvider.CanView
-          //  /*|| (!Handler.MainGrid.ReadOnly)*/)
-          //  ciEdit_Click(null, null);
+            ciOkButton_Click(null, null);
+            break;
+          case EFPDataViewEnterKeyMode.EditOrView:
+            //if (((!ControlProvider.ReadOnly) && ControlProvider.CanEdit /* 19.07.2024 */) ||
+            //  ControlProvider.CanView
+            //  /*|| (!Handler.MainGrid.ReadOnly)*/)
+            //{
+            //  ciEdit_Click(null, null);
+            //}
 
-          // 29.08.2025
-          // Перехватываем исключения при выполнении команды
-          // 04.09.2025
-          // Проверяем, что предыдущий вызов команды уже завершился
-          if (ciEdit.Visible && ciEdit.Enabled)
-          {
-            if (!ciEdit.InsideClick)
-              ciEdit.PerformClick();
-          }
-          else if (ciView.Visible && ciView.Enabled)
-          {
-            if (!ciView.InsideClick)
-              ciView.PerformClick();
-          }
+            // 29.08.2025
+            // Перехватываем исключения при выполнении команды
+            // 04.09.2025
+            // Проверяем, что предыдущий вызов команды уже завершился
+            if (ciEdit.Visible && ciEdit.Enabled)
+            {
+              if (!ciEdit.InsideClick)
+                ciEdit.PerformClick();
+            }
+            else if (ciView.Visible && ciView.Enabled)
+            {
+              if (!ciView.InsideClick)
+                ciView.PerformClick();
+            }
+            break;
+          case EFPDataViewEnterKeyMode.Edit:
+            if (ciEdit.Visible && ciEdit.Enabled)
+            {
+              if (!ciEdit.InsideClick)
+                ciEdit.PerformClick();
+            }
+            break;
+          case EFPDataViewEnterKeyMode.View:
+            if (ciView.Visible && ciView.Enabled)
+            {
+              if (!ciView.InsideClick)
+                ciView.PerformClick();
+            }
+            break;
         }
       }
     }

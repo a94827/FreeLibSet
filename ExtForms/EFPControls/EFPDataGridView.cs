@@ -6450,29 +6450,15 @@ namespace FreeLibSet.Forms
       return new EFPDataGridViewCommandItems(this);
     }
 
-    /// <summary>
-    /// Делает командой, выделенной по умолчанию, команду "Edit" или "View"
-    /// </summary>
-    protected override void OnBeforePrepareCommandItems()
-    {
-      base.OnBeforePrepareCommandItems();
-      if ((!CommandItems.EnterAsOk) && CommandItems.DefaultCommandItem == null)
-      {
-        EFPCommandItem ci = CommandItems["Edit", "Edit"];
-        if (ci.Visible)
-          CommandItems.DefaultCommandItem = ci;
-        else
-        {
-          ci = CommandItems["Edit", "View"];
-          if (ci.Visible)
-            CommandItems.DefaultCommandItem = ci;
-        }
-      }
-
-      //// 01.12.2020
-      //// При выполнением 
-      //CommandItems.AddClickHandler(ResetCurrentIncSearchColumn);
-    }
+    ///// <summary>
+    ///// </summary>
+    //protected override void OnBeforePrepareCommandItems()
+    //{
+    //  base.OnBeforePrepareCommandItems();
+    //  //// 01.12.2020
+    //  //// При выполнением 
+    //  //CommandItems.AddClickHandler(ResetCurrentIncSearchColumn);
+    //}
 
     /// <summary>
     /// Возвращает список для добавления пользовательских вариантов печати/экспорта.

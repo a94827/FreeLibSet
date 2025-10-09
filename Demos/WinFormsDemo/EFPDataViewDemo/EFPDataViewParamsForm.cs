@@ -27,6 +27,8 @@ namespace WinFormsDemo.EFPDataViewDemo
       efpCanDelete = new EFPCheckBox(efpForm, cbCanDelete);
       efpCanEdit = new EFPCheckBox(efpForm, cbCanEdit);
       efpCanView = new EFPCheckBox(efpForm, cbCanView);
+      efpMultiSelect = new EFPCheckBox(efpForm, cbMultiSelect);
+      efpCanMultiEdit = new EFPCheckBox(efpForm, cbCanMultiEdit);
       efpEnterKeyMode = new EFPListComboBox(efpForm, cbEnterKeyMode);
       efpEnterKeyMode.Control.Items.AddRange(Enum.GetNames(typeof(EFPDataViewEnterKeyMode)));
 
@@ -41,6 +43,8 @@ namespace WinFormsDemo.EFPDataViewDemo
       efpCanDelete.Checked = CanDelete;
       efpCanEdit.Checked = CanEdit;
       efpCanView.Checked = CanView;
+      efpMultiSelect.Checked = MultiSelect;
+      efpCanMultiEdit.Checked = CanMultiEdit;
       efpEnterKeyMode.SelectedIndex = (int)EnterKeyMode;
     }
 
@@ -52,6 +56,8 @@ namespace WinFormsDemo.EFPDataViewDemo
       CanDelete = efpCanDelete.Checked;
       CanEdit = efpCanEdit.Checked;
       CanView = efpCanView.Checked;
+      MultiSelect = efpMultiSelect.Checked;
+      CanMultiEdit = efpCanMultiEdit.Checked;
       EnterKeyMode = (EFPDataViewEnterKeyMode)(efpEnterKeyMode.SelectedIndex);
     }
 
@@ -59,7 +65,7 @@ namespace WinFormsDemo.EFPDataViewDemo
 
     #region Поля
 
-    private EFPCheckBox efpReadOnly, efpCanInsert, efpCanInsertCopy, efpCanDelete, efpCanEdit, efpCanView;
+    private EFPCheckBox efpReadOnly, efpCanInsert, efpCanInsertCopy, efpCanDelete, efpCanEdit, efpCanView, efpMultiSelect, efpCanMultiEdit;
     private EFPListComboBox efpEnterKeyMode;
 
     #endregion
@@ -72,6 +78,8 @@ namespace WinFormsDemo.EFPDataViewDemo
     private static bool CanDelete = true;
     private static bool CanEdit = true;
     private static bool CanView = true;
+    private static bool MultiSelect = false;
+    private static bool CanMultiEdit = false;
     private static EFPDataViewEnterKeyMode EnterKeyMode = EFPDataViewEnterKeyMode.EditOrView;
 
     public static void PerformTest()
@@ -125,7 +133,9 @@ namespace WinFormsDemo.EFPDataViewDemo
       controlProvider.CanDelete = CanDelete;
       controlProvider.CanEdit = CanEdit;
       controlProvider.CanView = CanView;
-      controlProvider.EnterKeyMode = EnterKeyMode; 
+      controlProvider.MultiSelect = MultiSelect;
+      controlProvider.CanMultiEdit = CanMultiEdit;
+      controlProvider.EnterKeyMode = EnterKeyMode;
       controlProvider.EditData += ControlProvider_EditData;
     }
 
