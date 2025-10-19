@@ -34,7 +34,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="controlProvider">Провайдер управляющего элемента</param>
     /// <param name="canMultiEdit">Если true, то разрешается групповое редактирования для нескольких документов сразу.
     /// Если false, то при групповом редактировании поле скрывается</param>
-    public ExtValueInt32EditBox(DBxExtValue extValue, EFPIntEditBox controlProvider, bool canMultiEdit)
+    public ExtValueInt32EditBox(DBxExtValue extValue, EFPInt32EditBox controlProvider, bool canMultiEdit)
       : base(extValue, controlProvider, true, canMultiEdit)
     {
       SetCurrentValueEx(controlProvider.NValueEx);
@@ -48,7 +48,7 @@ namespace FreeLibSet.Forms.Data
     /// <summary>
     /// Провайдер управляющего элемента
     /// </summary>
-    public new EFPIntEditBox ControlProvider { get { return (EFPIntEditBox)(base.ControlProvider); } }
+    public new EFPInt32EditBox ControlProvider { get { return (EFPInt32EditBox)(base.ControlProvider); } }
 
     #endregion
 

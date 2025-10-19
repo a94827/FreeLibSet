@@ -60,7 +60,7 @@ namespace FreeLibSet.Forms.Reporting
       efpWorkWidthValueText.DisplayName = WinFormsTools.RemoveMnemonic(lblWorkWidth.Text);
       efpWorkWidthValueText.ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_WorkWidth;
 
-      efpRepeatedColumns = new EFPIntEditBox(page.BaseProvider, edRepeatColumns);
+      efpRepeatedColumns = new EFPInt32EditBox(page.BaseProvider, edRepeatColumns);
       efpRepeatedColumns.ToolTipText = Res.BRDataViewPageSetupColumns_ToolTip_RepeatedColumns;
       efpRepeatedColumns.Control.Minimum = 0;
 
@@ -188,7 +188,7 @@ namespace FreeLibSet.Forms.Reporting
 
     #endregion
 
-    public EFPIntEditBox efpRepeatedColumns;
+    public EFPInt32EditBox efpRepeatedColumns;
 
     public EFPListComboBox efpColumnSubHeaderNumbers;
 

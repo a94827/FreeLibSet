@@ -104,6 +104,12 @@
     <Compile Include="EFPTabControlDemo\EFPTabControlForm.Designer.cs">
       <DependentUpon>EFPTabControlForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataTableEditDialog\TestDataTableEditDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataTableEditDialog\TestDataTableEditDialogForm.Designer.cs">
+      <DependentUpon>TestDataTableEditDialogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileControlsDemo\FileControlsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,6 +169,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EFPTabControlDemo\EFPTabControlForm.resx">
       <DependentUpon>EFPTabControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataTableEditDialog\TestDataTableEditDialogForm.resx">
+      <DependentUpon>TestDataTableEditDialogForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FileControlsDemo\FileControlsForm.resx">
       <DependentUpon>FileControlsForm.cs</DependentUpon>

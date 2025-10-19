@@ -24,7 +24,7 @@ namespace FreeLibSet.Forms.Reporting
       _BitmapSettings = dialog.Data.GetRequired<BRBitmapSettingsDataItem>();
       SettingsDialogPage page = dialog.Pages.Add(MainPanel);
 
-      efpResolution = new EFPIntEditBox(page.BaseProvider, edResolution);
+      efpResolution = new EFPInt32EditBox(page.BaseProvider, edResolution);
       efpResolution.Minimum = BRBitmapSettingsDataItem.MinResolution;
       efpResolution.Maximum = BRBitmapSettingsDataItem.MaxResolution;
       efpResolution.Control.UpDownHandler = new NumericArrayUpDownHandler<int>(BRBitmapSettingsDataItem.RecommendedResolutions);
@@ -49,7 +49,7 @@ namespace FreeLibSet.Forms.Reporting
 
     BRBitmapSettingsDataItem _BitmapSettings;
 
-    EFPIntEditBox efpResolution;
+    EFPInt32EditBox efpResolution;
 
     EFPListComboBox efpColorFormat;
 

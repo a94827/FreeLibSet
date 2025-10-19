@@ -63,11 +63,11 @@ namespace WinFormsDemo.EFPClipboardDemo
 
       #region Управляющие свойства
 
-      efpRepeatCount = new EFPIntEditBox(efpForm, edRepeatCount);
+      efpRepeatCount = new EFPInt32EditBox(efpForm, edRepeatCount);
       efpRepeatCount.Value = _TestObj.RepeatCount;
       efpRepeatCount.ValueEx.ValueChanged += efpRepeatCount_ValueChanged;
 
-      efpRepeatDelay = new EFPIntEditBox(efpForm, edRepeatDelay);
+      efpRepeatDelay = new EFPInt32EditBox(efpForm, edRepeatDelay);
       efpRepeatDelay.Value = _TestObj.RepeatDelay;
       efpRepeatDelay.ValueEx.ValueChanged += efpRepeatDelay_ValueChanged;
 
@@ -200,7 +200,7 @@ namespace WinFormsDemo.EFPClipboardDemo
 
     #region Управляющие свойства
 
-    EFPIntEditBox efpRepeatCount, efpRepeatDelay;
+    EFPInt32EditBox efpRepeatCount, efpRepeatDelay;
 
     EFPListComboBox efpErrorHandling;
 

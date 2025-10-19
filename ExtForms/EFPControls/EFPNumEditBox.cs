@@ -678,7 +678,7 @@ namespace FreeLibSet.Forms
   /// <summary>
   /// Провайдер управляющего элемента для ввода числа.
   /// </summary>
-  public class EFPIntEditBox : EFPNumEditBoxBase<Int32>
+  public class EFPInt32EditBox : EFPNumEditBoxBase<Int32>
   {
     #region Конструктор
 
@@ -687,7 +687,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="baseProvider">Базовый провайдер. Должен быть задан</param>
     /// <param name="control">Управляющий элемент</param>
-    public EFPIntEditBox(EFPBaseProvider baseProvider, Int32EditBox control)
+    public EFPInt32EditBox(EFPBaseProvider baseProvider, Int32EditBox control)
       : base(baseProvider, control)
     {
     }

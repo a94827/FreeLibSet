@@ -87,7 +87,7 @@ namespace FreeLibSet.Forms
 
       efpGrid.Control.RowCount = _Owner.Items.Length;
       efpGrid.CommandItems.EnterAsOk = true;
-      efpGrid.CommandItems.UseGotoRowWithDifferentCellText = false;
+      efpGrid.CommandItems.UseGotoRowWithDiffValue = false;
 
       efpGrid.ConfigSectionName = _Owner.ConfigSectionName;
 

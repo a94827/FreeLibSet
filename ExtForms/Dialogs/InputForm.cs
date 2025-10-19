@@ -1300,7 +1300,7 @@ namespace FreeLibSet.Forms
     /// <returns>Провайдер управляющего элемента</returns>
     protected override EFPNumEditBoxBase<int> CreateControlProvider(EFPBaseProvider baseProvider)
     {
-      return new EFPIntEditBox(baseProvider, new Int32EditBox());
+      return new EFPInt32EditBox(baseProvider, new Int32EditBox());
     }
 
     /// <summary>

@@ -3126,14 +3126,38 @@
   <data name="Cmd_Menu_Search" xml:space="preserve">
     <value>Поиск</value>
   </data>
-  <data name="Cmd_Menu_Edit_GotoRowWithDiffTextDown" xml:space="preserve">
+  <data name="Cmd_Menu_Edit_GotoRowWithDiffValueDown" xml:space="preserve">
     <value>Перейти вниз к строке с другим значением</value>
   </data>
-  <data name="Cmd_Menu_Edit_GotoRowWithDiffTextUp" xml:space="preserve">
+  <data name="Cmd_Menu_Edit_GotoRowWithDiffValueUp" xml:space="preserve">
     <value>Перейти вверх к строке с другим значением</value>
   </data>
-  <data name="EFPDataView_Err_NoRowWithDiffText" xml:space="preserve">
-    <value>Не найдена строка с отличающимся текстом</value>
+  <data name="EFPDataView_Err_NoRowWithDiffValue" xml:space="preserve">
+    <value>Не найдена строка с отличающимся значением</value>
     <comment>_</comment>
+  </data>
+  <data name="DBxDataTableExtEditor_Msg_TitleRecord" xml:space="preserve">
+    <value>Запись</value>
+  </data>
+  <data name="DBxDataTableExtEditor_Msg_TitleRecords" xml:space="preserve">
+    <value>Записи ({0})</value>
+  </data>
+  <data name="Editor_Msg_Title" xml:space="preserve">
+    <value>{0} - ({1})</value>
+  </data>
+  <data name="Editor_Msg_TitleDelete" xml:space="preserve">
+    <value>Удаление</value>
+  </data>
+  <data name="Editor_Msg_TitleEdit" xml:space="preserve">
+    <value>Редактирование</value>
+  </data>
+  <data name="Editor_Msg_TitleInsert" xml:space="preserve">
+    <value>Создание</value>
+  </data>
+  <data name="Editor_Msg_TitleInsertCopy" xml:space="preserve">
+    <value>Создание копии</value>
+  </data>
+  <data name="Editor_Msg_TitleView" xml:space="preserve">
+    <value>Просмотр</value>
   </data>
 </root>

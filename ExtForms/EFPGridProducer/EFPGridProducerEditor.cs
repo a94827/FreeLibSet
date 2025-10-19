@@ -59,7 +59,7 @@ namespace FreeLibSet.Forms
       ghColumns.MarkRowsColumnIndex = 0;
       ghColumns.CellFinished += new EFPDataGridViewCellFinishedEventHandler(ghColumns_CellFinished);
       ghColumns.MenuOutItems.Clear();
-      ghColumns.CommandItems.UseGotoRowWithDifferentCellText = false;
+      ghColumns.CommandItems.UseGotoRowWithDiffValue = false;
       ghColumns.ToolBarPanel = panSpbColumns;
 
       #endregion
@@ -68,7 +68,7 @@ namespace FreeLibSet.Forms
       // например, картинка
       //edFrozenColumns.ValueEx = TheHandler.FrozenColumns;
 
-      efpFrozenColumns = new EFPIntEditBox(baseProvider, edFrozenColumns);
+      efpFrozenColumns = new EFPInt32EditBox(baseProvider, edFrozenColumns);
 
 
       // Список выбора активного столбца
@@ -107,7 +107,7 @@ namespace FreeLibSet.Forms
         ghToolTips.ManualOrderRows = true;
         ghToolTips.MarkRowsColumnIndex = 0;
         ghToolTips.MenuOutItems.Clear();
-        ghToolTips.CommandItems.UseGotoRowWithDifferentCellText = false;
+        ghToolTips.CommandItems.UseGotoRowWithDiffValue = false;
         ghToolTips.ToolBarPanel = panSpbToolTips;
       }
       else
@@ -392,7 +392,7 @@ namespace FreeLibSet.Forms
 
     #region Замороженные столбцы
 
-    EFPIntEditBox efpFrozenColumns;
+    EFPInt32EditBox efpFrozenColumns;
 
     #endregion
 

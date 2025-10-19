@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.DependedValues;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.UICore
 {
@@ -52,46 +53,86 @@ namespace FreeLibSet.UICore
   /// <summary>
   /// Список объектов <see cref="IUIExtEditItem"/> с дополнительными методами чтения и записи значений.
   /// </summary>
-  public class UIExtEditItemList : List<IUIExtEditItem>
+  public class UIExtEditList : List<IUIExtEditItem>
   {
     #region Чтение и запись значений
 
     /// <summary>
     /// Вызов методов <see cref="IUIExtEditItem.BeforeReadValues()"/>, <see cref="IUIExtEditItem.ReadValues()"/> и <see cref="IUIExtEditItem.AfterReadValues()"/> с перехватом ошибок.
+    /// Если в <see cref="IUIExtEditItem.ReadValues()"/> возникает исключение, то методы <see cref="IUIExtEditItem.AfterReadValues()"/> все равно вызываются, прежде чем перевыбросить исключение.
+    /// Если исключение возникает в <see cref="IUIExtEditItem.BeforeReadValues()"/> или <see cref="IUIExtEditItem.AfterReadValues()"/>, то оно не перехватывается.
     /// </summary>
     public void ReadValues()
     {
+      ReadValues(true);
+    }
+
+    /// <summary>
+    /// Вызов методов <see cref="IUIExtEditItem.BeforeReadValues()"/>, <see cref="IUIExtEditItem.ReadValues()"/> и <see cref="IUIExtEditItem.AfterReadValues()"/> с перехватом ошибок.
+    /// Если в <see cref="IUIExtEditItem.ReadValues()"/> возникает исключение, то методы <see cref="IUIExtEditItem.AfterReadValues()"/> все равно вызываются, прежде чем перевыбросить исключение.
+    /// Если исключение возникает в <see cref="IUIExtEditItem.BeforeReadValues()"/> или <see cref="IUIExtEditItem.AfterReadValues()"/>, то оно не перехватывается.
+    /// </summary>
+    /// <param name="throwException">
+    /// <para>
+    /// Если true, то при первой ошибке вызова <see cref="IUIExtEditItem.ReadValues()"/> оставшиеся
+    /// значения не считываются и исключение выбрасывается в вызывающий код. Результат не возвращается.
+    /// </para>
+    /// <para>
+    /// Если false, то исключение перехватывается и помещается в список, чтение продолжается. 
+    /// Собранный список исключений возвращается для обработки вызывающим кодом.
+    /// </para>
+    /// </param>
+    /// <returns>
+    /// Если <paramref name="throwException"/>=false - то массив возникших исключений. 
+    /// Если ошибок не возникло, то возвращается пустой массив.
+    /// Если <paramref name="throwException"/>=true, то возвращается null.
+    /// </returns>
+    public Exception[] ReadValues(bool throwException)
+    {
       foreach (IUIExtEditItem item in this)
         item.BeforeReadValues();
+
+      List<Exception> lstEx = null;
 
       try
       {
         foreach (IUIExtEditItem item in this)
         {
-          // TODO: Перехват исключений ReadValues() в обработчик вызывающего кода
-          //try
-          //{
-          item.ReadValues();
-          //}
-          //catch (Exception e)
-          //{
-          //  string displayName;
-          //  if (item.ChangeInfo == null)
-          //    displayName = item.ToString();
-          //  else
-          //    displayName = item.ChangeInfo.DisplayName;
-          //  EFPApp.ShowException(e, "Ошибка при считывании значения \"" + displayName + "\"");
-          //}
+          try
+          {
+            item.ReadValues();
+          }
+          catch (Exception e)
+          {
+            if (item.ChangeInfo == null)
+              e.Data["DisplayName"] = item.ToString();
+            else
+              e.Data["DisplayName"] = item.ChangeInfo.DisplayName;
+            if (throwException)
+              throw;
+            else
+            {
+              if (lstEx == null)
+                lstEx = new List<Exception>();
+              lstEx.Add(e);
+            }
+          }
         }
       }
       finally
       {
         foreach (IUIExtEditItem item in this)
-        {
           item.AfterReadValues();
-          //Item.ChangeInfo = new DepChangeInfoItem(FChangeInfo);
-          //Item.ChangeInfo.DisplayName = Item.DisplayName;
-        }
+      }
+
+      if (throwException)
+        return null;
+      else
+      {
+        if (lstEx == null)
+          return EmptyArray<Exception>.Empty;
+        else
+          return lstEx.ToArray();
       }
     }
 

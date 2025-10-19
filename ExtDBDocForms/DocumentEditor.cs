@@ -392,7 +392,7 @@ namespace FreeLibSet.Forms.Docs
       }
     }
 
-    internal UIExtEditItemList DocEditItems { get { return _Dialog.EditItems; } }
+    internal UIExtEditList DocEditItems { get { return _Dialog.EditItems; } }
 
     /// <summary>
     /// Устанавливается после закрытия редактора в true, если данные
@@ -765,21 +765,10 @@ namespace FreeLibSet.Forms.Docs
           }
           _Dialog.MoreButtonToolTipText = Res.DocumentEditor_ToolTip_More;
 
-          // Инициализируем значения
-          DocEditItems.ReadValues();
-
-          if (AfterReadValues != null)
-          {
-            DocEditEventArgs Args = new DocEditEventArgs(this);
-            AfterReadValues(this, Args);
-          }
-
-          ChangeInfo.ResetChanges(); // 12.08.2015
-
-          InitFormTitle(); // после вызова ReadValues, т.к. заголовок может быть другим
-
+          // Обработчики событий
+          _Dialog.AfterReadData += Dialog_AfterReadData;
           _Dialog.FormChecks.Add(Dialog_FormCheck);
-          _Dialog.Writing += Dialog_Writing;
+          _Dialog.AfterWriteData += Dialog_AfterWriteData;
           _Dialog.FormShown += Dialog_FormShown;
           _Dialog.FormClosed += new EventHandler(Dialog_FormClosed);
 
@@ -810,6 +799,58 @@ namespace FreeLibSet.Forms.Docs
           DoWrite(false);
         if (Executed != null)
           Executed(this, null);
+      }
+    }
+
+
+    private void Dialog_AfterReadData(object sender, CancelEventArgs args)
+    {
+      if (AfterReadValues != null)
+      {
+        DocEditEventArgs args2 = new DocEditEventArgs(this);
+        AfterReadValues(this, args2);
+      }
+      InitFormTitle(); // после вызова ReadValues, т.к. заголовок может быть другим
+    }
+
+    private void Dialog_AfterWriteData(object sender, CancelEventArgs args)
+    {
+      // Пользовательская коррекция данных перед записью
+      if (!UI.DocTypes[DocTypeName].DoWriting(this))
+      {
+        args.Cancel = false;
+        return;
+      }
+
+      if (!DoWrite(false))
+      {
+        args.Cancel = true;
+        return;
+      }
+
+      if (_Dialog.FormState == ExtEditDialogState.ApplyClicked)
+      {
+        // Передаем изменение, возможно внесенные сервером, в управляющие элементы
+        _Dialog.ReadData();
+        Dialog.CancelButtonAsClose = true;
+
+        // Изменяем подсказки для кнопок
+        switch (State)
+        {
+          case UIDataState.Edit:
+            //FLastForm.OKButtonProvider.ToolTipText = "Закончить редактирование, сохранив внесенные изменения";
+            _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelEditApplied;
+            //FLastForm.ApplyButtonProvider.ToolTipText = "Сохранить внесенные изменения и продолжить редактирование";
+            break;
+          case UIDataState.Insert:
+          case UIDataState.InsertCopy:
+            _Dialog.OKButtonToolTipText = Res.DocumentEditor_ToolTip_OkInsertApplied;
+            _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelInsertApplied;
+            _Dialog.ApplyButtonToolTipText = Res.DocumentEditor_ToolTip_ApplyInsertApplied;
+            break;
+        }
+
+        InitFormTitle();
       }
     }
 
@@ -857,215 +898,8 @@ namespace FreeLibSet.Forms.Docs
 
     #endregion
 
-    #region Перезагрузка
 
-    /// <summary>
-    /// Повторная загрузка значений в редактор.
-    /// Метод может вызываться только в процессе редактирования.
-    /// Сначала должен вызываться <see cref="WriteData()"/>, затем выполняются манипуляции
-    /// с <see cref="Documents"/>, затем вызывается <see cref="ReloadData()"/>.
-    /// 
-    /// Вызывает события чтения для элементов в <see cref="DocEditItems"/>, а также событие <see cref="AfterReadValues"/>.
-    /// </summary>
-    public void ReloadData()
-    {
-      foreach (IUIExtEditItem item in DocEditItems)
-        item.BeforeReadValues();
-      foreach (IUIExtEditItem item in DocEditItems)
-      {
-        try
-        {
-          item.ReadValues();
-        }
-        catch (Exception e)
-        {
-          string displayName;
-          if (item.ChangeInfo == null)
-            displayName = item.ToString();
-          else
-            displayName = item.ChangeInfo.DisplayName;
-          EFPApp.ShowException(e, String.Format(Res.DocumentEditor_ErrTitle_ReloadValue, displayName));
-        }
-      }
-      foreach (IUIExtEditItem item in DocEditItems)
-        item.AfterReadValues();
-
-      if (AfterReadValues != null)
-      {
-        DocEditEventArgs args = new DocEditEventArgs(this);
-        AfterReadValues(this, args);
-      }
-    }
-
-    #endregion
-
-    #region Заголовок окна
-
-    /// <summary>
-    /// Статическое управление заголовком окна редактора.
-    /// Если свойство установлено, то заголовок редактора будет иметь вид "Вид документа: DocumentTextValue (Редактирование)".
-    /// Эту возможность следует использовать, если текстовое представление документа является слишком длинным.
-    /// Обычно используется свойство <see cref="DocumentTextValueEx"/> (см. описание) для динамического управления заголовком.
-    /// В заголовок не входит описание операции и признак наличия изменений (звездочка). Эти части присоединяются к заголовку автоматически.
-    /// </summary>
-    public string DocumentTextValue
-    {
-      get { return _DocumentTextValue; }
-      set
-      {
-        if (value == null)
-          value = String.Empty;
-        if (value == _DocumentTextValue)
-          return;
-        _DocumentTextValue = value;
-
-        if (_Dialog != null)
-        {
-          if (_Dialog.FormState != ExtEditDialogState.Initialization)
-            InitFormTitle();
-        }
-      }
-    }
-    private string _DocumentTextValue;
-
-    /// <summary>
-    /// Динамическое управление заголовком окна редактора.
-    /// Если, например, есть поле для ввода наименования документа <see cref="EFPTextBox"/>, то можно присоединить свойство
-    /// Editor.DocumentTextValueEx=efpName.TextEx. При этом заголовок окна будет меняться синхронно с вводом пользователя.
-    /// Можно использовать вычисляемые функции, если требуется собрать наименование из нескольких полей или, если "идентифицирующее" поле не является текстовым.
-    /// Если свойство не установлено, то будет использоваться текстовое представление документа, но заголовок окна
-    /// будет меняться только при нажатии кнопки "Запись".
-    /// Если текстовое представление документа тоже не определено, используется <see cref="DBxDocTypeBase.SingularTitle"/>.
-    /// Свойство игнорируется, если выполняется групповое редактирование.
-    /// В заголовок не входит описание операции и признак наличия изменений (звездочка). Эти части присоединяются к заголовку автоматически.
-    /// </summary>
-    public DepValue<string> DocumentTextValueEx
-    {
-      get
-      {
-        InitDocumentTextValueEx();
-        return _DocumentTextValueEx;
-      }
-      set
-      {
-        InitDocumentTextValueEx();
-        _DocumentTextValueEx.Source = value;
-      }
-    }
-    private DepInput<string> _DocumentTextValueEx;
-
-    private void InitDocumentTextValueEx()
-    {
-      if (_DocumentTextValueEx == null)
-      {
-        _DocumentTextValueEx = new DepInput<string>(DocumentTextValue, DocumentTextValueEx_ValueChanged);
-        _DocumentTextValueEx.OwnerInfo = new DepOwnerInfo(this, "DocumentTextValueEx");
-      }
-    }
-
-    void DocumentTextValueEx_ValueChanged(object sender, EventArgs args)
-    {
-      this.DocumentTextValue = _DocumentTextValueEx.Value;
-    }
-
-    /// <summary>
-    /// Инициализация заголовка формы
-    /// Заголовок окна имеет формат: "(*) Имя-документа (Действие)"
-    /// </summary>
-    private void InitFormTitle()
-    {
-      #region 1. Название документа
-
-      string s1;
-
-      bool isSingle = Documents[0].DocCount == 1;
-      DBxDocType docType = Documents[0].DocType;
-
-      if (isSingle)
-      {
-        if (String.IsNullOrEmpty(DocumentTextValue))
-        {
-          Int32 docId = Documents[0][0].DocId;
-          if (this.UI.TextHandlers.Contains(this.DocTypeUI.DocType.Name) && this.UI.DocProvider.IsRealDocId(docId))
-            s1 = docType.SingularTitle + ": " + this.DocTypeUI.GetTextValue(docId);
-          else
-            s1 = docType.SingularTitle;
-        }
-        else
-          s1 = docType.SingularTitle + ": " + DocumentTextValue;
-      }
-      else
-        s1 = docType.PluralTitle + ": " + Documents[0].DocCount.ToString();
-
-      #endregion
-
-      #region 2. Операция
-
-      string s2;
-
-      switch (State)
-      {
-        case UIDataState.Edit:
-          if (isSingle)
-          {
-            if (Documents[0][0].Deleted)
-              s2 = Res.Editor_Msg_TitleRestore;
-            else
-              s2 = Res.Editor_Msg_TitleEdit;
-          }
-          else
-            s2 = Res.Editor_Msg_TitleEdit;
-          break;
-        case UIDataState.Insert:
-          s2 = Res.Editor_Msg_TitleInsert;
-          break;
-        case UIDataState.InsertCopy:
-          s2 = Res.Editor_Msg_TitleInsertCopy;
-          break;
-        case UIDataState.Delete:
-          s2 = Res.Editor_Msg_TitleDelete;
-          break;
-        case UIDataState.View:
-          if (Documents.VersionView)
-          {
-            if (isSingle)
-            {
-              int version = Documents[0][0].Version;
-              s2 = String.Format(Res.Editor_Msg_TitleViewVersion, version.ToString());
-            }
-            else
-              s2 = Res.Editor_Msg_TitleViewPrevVersions;
-          }
-          else
-          {
-            // Обычный просмотр
-            if (isSingle)
-            {
-              if (Documents[0][0].Deleted)
-                s2 = Res.Editor_Msg_TitleViewDeleted;
-              else
-                s2 = Res.Editor_Msg_TitleView;
-            }
-            else
-              //FForm.Text = DocType.PluralTitle + " (Просмотр " + RusNumberConvert.IntWithNoun(Documents[0].Count,
-              //  "записи", "записей", "записей") + ")";
-              s2 = Res.Editor_Msg_TitleView;
-          }
-          break;
-        default:
-          throw new BugException("State=" + State.ToString());
-      }
-
-      #endregion
-
-      _Dialog.Title = String.Format(Res.Editor_Msg_Title, s1, s2);
-      if (UI.DebugShowIds && State != UIDataState.Insert && isSingle)
-        _Dialog.Title += " Id=" + Documents[0][0].DocId.ToString();
-    }
-
-    #endregion
-
-    #region Внутренняя реализация
+    #region Обработчики событий ExtEditDialog
 
     /// <summary>
     /// Список просмотров для данного документа
@@ -1104,94 +938,6 @@ namespace FreeLibSet.Forms.Docs
 
 
 
-    private void Dialog_Writing(object sender, CancelEventArgs args)
-    {
-      if (args.Cancel)
-        return;
-
-      // Записываем редактируемые значения в dataset
-      DocEditItems.WriteValues();
-
-      // Пользовательская коррекция данных перед записью
-      if (!UI.DocTypes[DocTypeName].DoWriting(this))
-      {
-        args.Cancel = false;
-        return;
-      }
-
-
-      //if (!WriteData())
-      //{
-      //  args.Cancel = true;
-      //  return;
-      //}
-      //DebugTools.DebugDataSet(FDocuments.DebugDataSet, "перед записью");
-
-      if (!DoWrite(false))
-      {
-        args.Cancel = true;
-        return;
-      }
-
-      if (_Dialog.FormState == ExtEditDialogState.ApplyClicked)
-      {
-        // Передаем изменение, возможно внесенные сервером, в управляющие элементы
-        foreach (IUIExtEditItem item in DocEditItems)
-          item.BeforeReadValues();
-        foreach (IUIExtEditItem item in DocEditItems)
-          item.ReadValues();
-        foreach (IUIExtEditItem item in DocEditItems)
-          item.AfterReadValues();
-
-        Dialog.CancelButtonAsClose = true;
-        ChangeInfo.ResetChanges();
-
-        // Изменяем подсказки для кнопок
-        switch (State)
-        {
-          case UIDataState.Edit:
-            //FLastForm.OKButtonProvider.ToolTipText = "Закончить редактирование, сохранив внесенные изменения";
-            _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelEditApplied;
-            //FLastForm.ApplyButtonProvider.ToolTipText = "Сохранить внесенные изменения и продолжить редактирование";
-            break;
-          case UIDataState.Insert:
-          case UIDataState.InsertCopy:
-            _Dialog.OKButtonToolTipText = Res.DocumentEditor_ToolTip_OkInsertApplied;
-            _Dialog.CancelButtonToolTipText = Res.DocumentEditor_ToolTip_CancelInsertApplied;
-            _Dialog.ApplyButtonToolTipText = Res.DocumentEditor_ToolTip_ApplyInsertApplied;
-            break;
-        }
-
-        InitFormTitle();
-      }
-    }
-
-
-    /// <summary>
-    /// Проверка корректности введенных данных и копирование их из полей ввода
-    /// редактора в редактируемый документ (<see cref="Documents"/>)
-    /// Выполняемые действия:
-    /// <list type="bullet">
-    /// <item><description>1. Событие <see cref="FreeLibSet.Forms.Docs.DocumentEditor.BeforeWrite"/></description></item>
-    /// <item><description>2. Проверка корректности значений полей <see cref="EFPFormProvider.ValidateForm()"/></description></item>
-    /// <item><description>3. Запись полей в документ <see cref="FreeLibSet.UICore.IUIExtEditItem.WriteValues()"/></description></item>
-    /// <item><description>4. Событие <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/></description></item>
-    /// </list>
-    /// На шаге 1, 2 и 4 могут быть обнаружены ошибки. В этом случае дальнейшие
-    /// действия не выполняются и возвращается false
-    /// Обработчики событий <see cref="FreeLibSet.Forms.Docs.DocumentEditor.BeforeWrite"/> и <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/> не
-    /// должны вызывать метод <see cref="WriteData()"/>.
-    /// Если редактор документа находится в режиме просмотра или удаления
-    /// (<see cref="FreeLibSet.Forms.Docs.DocumentEditor.IsReadOnly"/>=true), то никакие действия не выполняются и
-    /// возвращается true.
-    /// </summary>
-    /// <returns>true, если форма содержит корректные значения и обработчики не
-    /// установили свойство Cancel</returns>
-    public bool WriteData()
-    {
-      return _Dialog.WriteData();
-    }
-
     ///// <summary>
     ///// Копирование данных из полей ввода в редактируемый документ (<see cref="Documents"/>)
     ///// без проверки корректности данных.
@@ -1207,17 +953,17 @@ namespace FreeLibSet.Forms.Docs
     //  ValidateData2(false);
     //}
 
-    private void ApplyClick2()
-    {
-      //DBxDocState DocState1 = Documents[0][0].DocState;
+    //private void ApplyClick2()
+    //{
+    //  //DBxDocState DocState1 = Documents[0][0].DocState;
 
-      if (!WriteData())
-        return;
-      DoWrite(true);
+    //  if (!WriteData())
+    //    return;
+    //  DoWrite(true);
 
-      //DBxDocState DocState2 = Documents[0][0].DocState;
+    //  //DBxDocState DocState2 = Documents[0][0].DocState;
 
-    }
+    //}
 
     /// <summary>
     /// Выполняем запись значений из управляющих элементов в документ,
@@ -1493,6 +1239,48 @@ namespace FreeLibSet.Forms.Docs
     }
 
 
+    #endregion
+
+    #region Методы, которые можно вызывать при работе диалога
+
+    /// <summary>
+    /// Проверка корректности введенных данных и копирование их из полей ввода
+    /// редактора в редактируемый документ (<see cref="Documents"/>)
+    /// Выполняемые действия:
+    /// <list type="bullet">
+    /// <item><description>1. Событие <see cref="FreeLibSet.Forms.Docs.DocumentEditor.BeforeWrite"/></description></item>
+    /// <item><description>2. Проверка корректности значений полей <see cref="EFPFormProvider.ValidateForm()"/></description></item>
+    /// <item><description>3. Запись полей в документ <see cref="FreeLibSet.UICore.IUIExtEditItem.WriteValues()"/></description></item>
+    /// <item><description>4. Событие <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/></description></item>
+    /// </list>
+    /// На шаге 1, 2 и 4 могут быть обнаружены ошибки. В этом случае дальнейшие
+    /// действия не выполняются и возвращается false
+    /// Обработчики событий <see cref="FreeLibSet.Forms.Docs.DocumentEditor.BeforeWrite"/> и <see cref="FreeLibSet.Forms.Docs.DocTypeUI.Writing"/> не
+    /// должны вызывать метод <see cref="WriteData()"/>.
+    /// Если редактор документа находится в режиме просмотра или удаления
+    /// (<see cref="FreeLibSet.Forms.Docs.DocumentEditor.IsReadOnly"/>=true), то никакие действия не выполняются и
+    /// возвращается true.
+    /// </summary>
+    /// <returns>true, если форма содержит корректные значения и обработчики не
+    /// установили свойство Cancel</returns>
+    public bool WriteData()
+    {
+      return _Dialog.WriteData();
+    }
+
+    /// <summary>
+    /// Повторная загрузка значений в редактор.
+    /// Метод может вызываться только в процессе редактирования.
+    /// Сначала должен вызываться <see cref="WriteData()"/>, затем выполняются манипуляции
+    /// с <see cref="Documents"/>, затем вызывается <see cref="ReloadData()"/>.
+    /// 
+    /// Вызывает события чтения для элементов в <see cref="DocEditItems"/>, а также событие <see cref="AfterReadValues"/>.
+    /// </summary>
+    public void ReloadData()
+    {
+      Dialog.ReadData();
+    }
+
     /// <summary>
     /// Закрыть окно редактора.
     /// На момент вызова окно редактора должно быть открыто.
@@ -1505,6 +1293,172 @@ namespace FreeLibSet.Forms.Docs
     public bool CloseForm(bool isOk)
     {
       return _Dialog.CloseForm(isOk);
+    }
+
+    #endregion
+
+    #region Заголовок окна
+
+    /// <summary>
+    /// Статическое управление заголовком окна редактора.
+    /// Если свойство установлено, то заголовок редактора будет иметь вид "Вид документа: DocumentTextValue (Редактирование)".
+    /// Эту возможность следует использовать, если текстовое представление документа является слишком длинным.
+    /// Обычно используется свойство <see cref="DocumentTextValueEx"/> (см. описание) для динамического управления заголовком.
+    /// В заголовок не входит описание операции и признак наличия изменений (звездочка). Эти части присоединяются к заголовку автоматически.
+    /// </summary>
+    public string DocumentTextValue
+    {
+      get { return _DocumentTextValue; }
+      set
+      {
+        if (value == null)
+          value = String.Empty;
+        if (value == _DocumentTextValue)
+          return;
+        _DocumentTextValue = value;
+
+        if (_Dialog != null)
+        {
+          if (_Dialog.FormState != ExtEditDialogState.Initialization)
+            InitFormTitle();
+        }
+      }
+    }
+    private string _DocumentTextValue;
+
+    /// <summary>
+    /// Динамическое управление заголовком окна редактора.
+    /// Если, например, есть поле для ввода наименования документа <see cref="EFPTextBox"/>, то можно присоединить свойство
+    /// Editor.DocumentTextValueEx=efpName.TextEx. При этом заголовок окна будет меняться синхронно с вводом пользователя.
+    /// Можно использовать вычисляемые функции, если требуется собрать наименование из нескольких полей или, если "идентифицирующее" поле не является текстовым.
+    /// Если свойство не установлено, то будет использоваться текстовое представление документа, но заголовок окна
+    /// будет меняться только при нажатии кнопки "Запись".
+    /// Если текстовое представление документа тоже не определено, используется <see cref="DBxDocTypeBase.SingularTitle"/>.
+    /// Свойство игнорируется, если выполняется групповое редактирование.
+    /// В заголовок не входит описание операции и признак наличия изменений (звездочка). Эти части присоединяются к заголовку автоматически.
+    /// </summary>
+    public DepValue<string> DocumentTextValueEx
+    {
+      get
+      {
+        InitDocumentTextValueEx();
+        return _DocumentTextValueEx;
+      }
+      set
+      {
+        InitDocumentTextValueEx();
+        _DocumentTextValueEx.Source = value;
+      }
+    }
+    private DepInput<string> _DocumentTextValueEx;
+
+    private void InitDocumentTextValueEx()
+    {
+      if (_DocumentTextValueEx == null)
+      {
+        _DocumentTextValueEx = new DepInput<string>(DocumentTextValue, DocumentTextValueEx_ValueChanged);
+        _DocumentTextValueEx.OwnerInfo = new DepOwnerInfo(this, "DocumentTextValueEx");
+      }
+    }
+
+    void DocumentTextValueEx_ValueChanged(object sender, EventArgs args)
+    {
+      this.DocumentTextValue = _DocumentTextValueEx.Value;
+    }
+
+    /// <summary>
+    /// Инициализация заголовка формы
+    /// Заголовок окна имеет формат: "(*) Имя-документа (Действие)"
+    /// </summary>
+    private void InitFormTitle()
+    {
+      #region 1. Название документа
+
+      string s1;
+
+      bool isSingle = Documents[0].DocCount == 1;
+      DBxDocType docType = Documents[0].DocType;
+
+      if (isSingle)
+      {
+        if (String.IsNullOrEmpty(DocumentTextValue))
+        {
+          Int32 docId = Documents[0][0].DocId;
+          if (this.UI.TextHandlers.Contains(this.DocTypeUI.DocType.Name) && this.UI.DocProvider.IsRealDocId(docId))
+            s1 = docType.SingularTitle + ": " + this.DocTypeUI.GetTextValue(docId);
+          else
+            s1 = docType.SingularTitle;
+        }
+        else
+          s1 = docType.SingularTitle + ": " + DocumentTextValue;
+      }
+      else
+        s1 = docType.PluralTitle + ": " + Documents[0].DocCount.ToString();
+
+      #endregion
+
+      #region 2. Операция
+
+      string s2;
+
+      switch (State)
+      {
+        case UIDataState.Edit:
+          if (isSingle)
+          {
+            if (Documents[0][0].Deleted)
+              s2 = Res.Editor_Msg_TitleRestore;
+            else
+              s2 = Res.Editor_Msg_TitleEdit;
+          }
+          else
+            s2 = Res.Editor_Msg_TitleEdit;
+          break;
+        case UIDataState.Insert:
+          s2 = Res.Editor_Msg_TitleInsert;
+          break;
+        case UIDataState.InsertCopy:
+          s2 = Res.Editor_Msg_TitleInsertCopy;
+          break;
+        case UIDataState.Delete:
+          s2 = Res.Editor_Msg_TitleDelete;
+          break;
+        case UIDataState.View:
+          if (Documents.VersionView)
+          {
+            if (isSingle)
+            {
+              int version = Documents[0][0].Version;
+              s2 = String.Format(Res.Editor_Msg_TitleViewVersion, version.ToString());
+            }
+            else
+              s2 = Res.Editor_Msg_TitleViewPrevVersions;
+          }
+          else
+          {
+            // Обычный просмотр
+            if (isSingle)
+            {
+              if (Documents[0][0].Deleted)
+                s2 = Res.Editor_Msg_TitleViewDeleted;
+              else
+                s2 = Res.Editor_Msg_TitleView;
+            }
+            else
+              //FForm.Text = DocType.PluralTitle + " (Просмотр " + RusNumberConvert.IntWithNoun(Documents[0].Count,
+              //  "записи", "записей", "записей") + ")";
+              s2 = Res.Editor_Msg_TitleView;
+          }
+          break;
+        default:
+          throw new BugException("State=" + State.ToString());
+      }
+
+      #endregion
+
+      _Dialog.Title = String.Format(Res.Editor_Msg_Title, s1, s2);
+      if (UI.DebugShowIds && State != UIDataState.Insert && isSingle)
+        _Dialog.Title += " Id=" + Documents[0][0].DocId.ToString();
     }
 
     #endregion

@@ -1919,18 +1919,18 @@ namespace FreeLibSet {
         /// <summary>
         ///   Looks up a localized string similar to Go to the row down with the different value.
         /// </summary>
-        internal static string Cmd_Menu_Edit_GotoRowWithDiffTextDown {
+        internal static string Cmd_Menu_Edit_GotoRowWithDiffValueDown {
             get {
-                return ResourceManager.GetString("Cmd_Menu_Edit_GotoRowWithDiffTextDown", resourceCulture);
+                return ResourceManager.GetString("Cmd_Menu_Edit_GotoRowWithDiffValueDown", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Go to the row up with the different value.
         /// </summary>
-        internal static string Cmd_Menu_Edit_GotoRowWithDiffTextUp {
+        internal static string Cmd_Menu_Edit_GotoRowWithDiffValueUp {
             get {
-                return ResourceManager.GetString("Cmd_Menu_Edit_GotoRowWithDiffTextUp", resourceCulture);
+                return ResourceManager.GetString("Cmd_Menu_Edit_GotoRowWithDiffValueUp", resourceCulture);
             }
         }
         
@@ -3591,6 +3591,24 @@ namespace FreeLibSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Record.
+        /// </summary>
+        internal static string DBxDataTableExtEditor_Msg_TitleRecord {
+            get {
+                return ResourceManager.GetString("DBxDataTableExtEditor_Msg_TitleRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Records ({0}).
+        /// </summary>
+        internal static string DBxDataTableExtEditor_Msg_TitleRecords {
+            get {
+                return ResourceManager.GetString("DBxDataTableExtEditor_Msg_TitleRecords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error reading filter &apos;{0}&apos; state.
         /// </summary>
         internal static string DBxGridFilters_ErrTitle_ReadConfig {
@@ -3614,6 +3632,60 @@ namespace FreeLibSet {
         internal static string DebugTools_Phase_AppInfo {
             get {
                 return ResourceManager.GetString("DebugTools_Phase_AppInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - ({1}).
+        /// </summary>
+        internal static string Editor_Msg_Title {
+            get {
+                return ResourceManager.GetString("Editor_Msg_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting.
+        /// </summary>
+        internal static string Editor_Msg_TitleDelete {
+            get {
+                return ResourceManager.GetString("Editor_Msg_TitleDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        internal static string Editor_Msg_TitleEdit {
+            get {
+                return ResourceManager.GetString("Editor_Msg_TitleEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creation.
+        /// </summary>
+        internal static string Editor_Msg_TitleInsert {
+            get {
+                return ResourceManager.GetString("Editor_Msg_TitleInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy creation.
+        /// </summary>
+        internal static string Editor_Msg_TitleInsertCopy {
+            get {
+                return ResourceManager.GetString("Editor_Msg_TitleInsertCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        internal static string Editor_Msg_TitleView {
+            get {
+                return ResourceManager.GetString("Editor_Msg_TitleView", resourceCulture);
             }
         }
         
@@ -4889,9 +4961,9 @@ namespace FreeLibSet {
         /// <summary>
         ///   Looks up a localized string similar to Row with the different value not found.
         /// </summary>
-        internal static string EFPDataView_Err_NoRowWithDiffText {
+        internal static string EFPDataView_Err_NoRowWithDiffValue {
             get {
-                return ResourceManager.GetString("EFPDataView_Err_NoRowWithDiffText", resourceCulture);
+                return ResourceManager.GetString("EFPDataView_Err_NoRowWithDiffValue", resourceCulture);
             }
         }
         

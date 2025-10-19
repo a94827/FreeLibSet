@@ -111,12 +111,12 @@ namespace FreeLibSet.Forms
       if (_Owner.ReadOnly)
       {
         // 29.09.2025
-        this.DialogResult = DialogResult.Cancel; 
+        this.DialogResult = DialogResult.Cancel;
         this.Close();
         return;
       }
 
-      if (!_Owner.DoWrite(ExtEditDialogState.OKClicked))
+      if (!_Owner.DoWriteData(ExtEditDialogState.OKClicked))
         return;
 
       this.DialogResult = DialogResult.No; // Чтобы не вызывалась еще раз проверка данных
@@ -126,7 +126,7 @@ namespace FreeLibSet.Forms
 
     private void btnApply_Click(object sender, EventArgs args)
     {
-      _Owner.DoWrite(ExtEditDialogState.ApplyClicked);
+      _Owner.DoWriteData(ExtEditDialogState.ApplyClicked);
     }
 
     private void btnCancel_Click(object sender, EventArgs args)
@@ -238,14 +238,19 @@ namespace FreeLibSet.Forms
     Shown,
 
     /// <summary>
-    /// Нажата кнопка "Запись" (выполняется проверка корректности значений полей или выполняется обработчик <see cref="ExtEditDialog.Writing"/>).
+    /// Нажата кнопка "Запись" (выполняется проверка корректности значений полей или выполняется запись значений).
     /// </summary>
     ApplyClicked,
 
     /// <summary>
-    /// Нажата кнопка "ОК" (выполняется проверка корректности значений полей или выполняется обработчик <see cref="ExtEditDialog.Writing"/>).
+    /// Нажата кнопка "ОК" (выполняется проверка корректности значений полей или выполняется запись значений).
     /// </summary>
     OKClicked,
+
+    /// <summary>
+    /// Из прикладного кода вызван метод <see cref="ExtEditDialog.ReadData()"/>.
+    /// </summary>
+    ReadData,
 
     /// <summary>
     /// Из прикладного кода вызван метод <see cref="ExtEditDialog.WriteData()"/>.
@@ -268,7 +273,7 @@ namespace FreeLibSet.Forms
   /// Поддерживаются модальный и немодальный режимы работы.
   /// При нажатии кнопок "ОК" или "Запись" выполняется проверка полей формы, а затем вызывается событие записи.
   /// Прикладной код имеет возможность отменить закрытие формы или запись данных, либо используя проверку данных (на уровне управляющих
-  /// элементов или с помощью объекта <see cref="EFPFormCheck"/>, либо в обработчике события <see cref="ExtEditDialog.Writing"/>.
+  /// элементов или с помощью объекта <see cref="EFPFormCheck"/>, либо в обработчике событий <see cref="ExtEditDialog.BeforeWriteData"/> или <see cref="ExtEditDialog.AfterWriteData"/>.
   /// Объект является "одноразовым", повторный показ закрытой формы не допускается.
   /// </summary>
   public class ExtEditDialog
@@ -284,7 +289,7 @@ namespace FreeLibSet.Forms
       _Form.FormProvider.FormClosing += FormProvider_FormClosing;
       _Form.FormProvider.FormClosed += FormProvider_FormClosed;
       _Pages = new PageCollection(this);
-      _EditItems = new UIExtEditItemList();
+      _EditItems = new UIExtEditList();
       _ChangeInfoList = new DepChangeInfoList();
       _ChangeInfoList.DisplayName = Res.ExtEditDialogForm_Name_ChangedInfoList;
       _Form.FormProvider.ChangeInfo = _ChangeInfoList;
@@ -292,6 +297,7 @@ namespace FreeLibSet.Forms
       _CheckUnsavedChanges = true;
       _ReadOnly = false;
       _ShowApplyButton = true;
+      _UseDataWriting = true;
       _FormState = ExtEditDialogState.Initialization;
     }
 
@@ -350,12 +356,6 @@ namespace FreeLibSet.Forms
       }
     }
     private Image _Image;
-
-    /// <summary>
-    /// Сюда добавляются объекты, реализующие интерфейс <see cref="IUIExtEditItem"/>.
-    /// </summary>
-    public UIExtEditItemList EditItems { get { return _EditItems; } }
-    private readonly UIExtEditItemList _EditItems;
 
     /// <summary>
     /// Отслеживаемые изменения. 
@@ -666,18 +666,19 @@ namespace FreeLibSet.Forms
     #region События
 
     /// <summary>
-    /// Событие вызывается при нажатии кнопки "ОК" (<see cref="FormState"/>=<see cref="ExtEditDialogState.OKClicked"/>) или "Запись" (<see cref="ExtEditDialogState.ApplyClicked"/>).
-    /// Обработчик должен сохранить введенные данные.
-    /// Если обработчик события установит <see cref="CancelEventArgs.Cancel"/>=true, то форма не будет закрыта.
-    /// Событие не вызывается при <see cref="ReadOnly"/>=true.
-    /// На момент вызова уже успешно выполнена проверка корректности введенных значений.
-    /// </summary>
-    public event CancelEventHandler Writing;
-
-    /// <summary>
     /// Вызывается после закрытия формы
     /// </summary>
     public event EventHandler FormClosed;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="FormClosed"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnFormClosed(EventArgs args)
+    {
+      if (FormClosed != null)
+        FormClosed(this, args);
+    }
 
     #endregion
 
@@ -743,10 +744,19 @@ namespace FreeLibSet.Forms
     /// </summary>
     public event EventHandler FormShown;
 
-    internal void CallFormShown()
+    /// <summary>
+    /// Вызывает обработчик события <see cref="FormShown"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnFormShown(EventArgs args)
     {
       if (FormShown != null)
-        FormShown(this, EventArgs.Empty);
+        FormShown(this, args);
+    }
+
+    internal void CallFormShown()
+    {
+      OnFormShown(EventArgs.Empty);
     }
 
 
@@ -757,14 +767,22 @@ namespace FreeLibSet.Forms
     /// </summary>
     public event ExtEditPageEventHandler PageShow;
 
-    internal void OnPageShow(ExtEditPage page)
+    /// <summary>
+    /// Вызывает обработчик события <see cref="PageShow"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnPageShow(ExtEditPageEventArgs args)
     {
-      if (PageShow == null)
-        return;
+      if (PageShow != null)
+        PageShow(this, args);
+    }
+
+    internal void CallPageShow(ExtEditPage page)
+    {
       ExtEditPageEventArgs args = new ExtEditPageEventArgs(page);
       try
       {
-        PageShow(this, args);
+        OnPageShow(args);
       }
       catch (Exception e)
       {
@@ -803,6 +821,287 @@ namespace FreeLibSet.Forms
     /// </summary>
     public List<Form> DisposeFormList { get { return _DisposeFormList; } }
     private readonly List<Form> _DisposeFormList;
+
+    #endregion
+
+    #region EditItems
+
+    /// <summary>
+    /// Сюда добавляются объекты, реализующие интерфейс <see cref="IUIExtEditItem"/>.
+    /// </summary>
+    public UIExtEditList EditItems { get { return _EditItems; } }
+    private readonly UIExtEditList _EditItems;
+
+
+    #region Загрузка в форму
+
+    /// <summary>
+    /// Выполняет внеплановое чтение данных в процессе показа формы. 
+    /// При чтении свойство <see cref="FormState"/> устанавливается равным <see cref="ExtEditDialogState.ReadData"/>.
+    /// <para>
+    /// Выполняемые действия:
+    /// </para>
+    /// <list type="number">
+    /// <item><term>1</term><description>Событие <see cref="BeforeReadData"/></description></item>
+    /// <item><term>2</term><description>Вызов <see cref="UIExtEditList.ReadValues()"/></description></item>
+    /// <item><term>2.1</term><description>Вызовы <see cref="UIExtEditItem.BeforeReadValues()"/></description></item>
+    /// <item><term>2.2</term><description>Вызовы <see cref="UIExtEditItem.ReadValues()"/></description></item>
+    /// <item><term>2.3</term><description>Вызовы <see cref="UIExtEditItem.AfterReadValues()"/></description></item>
+    /// <item><term>4</term><description>Событие <see cref="AfterReadData"/></description></item>
+    /// <item><term>5</term><description>Вызывается <see cref="DepChangeInfoList.ResetChanges()"/></description></item>
+    /// </list>
+    /// Если на каком-либо шаге возникает исключение, выводится сообщение об ошибке <see cref="EFPApp.ShowException(Exception)"/>.
+    /// Оставшиеся шаги не выполняются и возвращается false.
+    /// </summary>
+    /// <returns></returns>
+    public bool ReadData()
+    {
+      return DoReadData(ExtEditDialogState.ReadData);
+    }
+
+    internal bool DoReadData(ExtEditDialogState state)
+    {
+      switch (FormState)
+      {
+        case ExtEditDialogState.Initialization:
+        case ExtEditDialogState.Shown:
+          break;
+        default:
+          EFPApp.ShowTempMessage(Res.ExtEditDialogForm_Err_WritingInProgress);
+          return false;
+      }
+
+      bool res = true;
+
+      ExtEditDialogState oldState = FormState;
+      _FormState = state;
+      try
+      {
+        try
+        {
+          CancelEventArgs args = new CancelEventArgs();
+          OnBeforeReadData(args);
+          res = !args.Cancel;
+        }
+        catch (Exception e)
+        {
+          EFPApp.ShowException(e);
+          res = false;
+        }
+
+        if (res)
+        {
+          try
+          {
+            EditItems.ReadValues();
+          }
+          catch (Exception e)
+          {
+            EFPApp.ShowException(e);
+            res = false;
+          }
+        }
+
+        if (res)
+        {
+          try
+          {
+            CancelEventArgs args = new CancelEventArgs();
+            OnAfterReadData(args);
+            res = !args.Cancel;
+          }
+          catch (Exception e)
+          {
+            EFPApp.ShowException(e);
+            res = false;
+          }
+        }
+        if (res)
+          ChangeInfoList.ResetChanges();
+      }
+      finally
+      {
+        _FormState = oldState;
+      }
+      return res;
+    }
+
+    /// <summary>
+    /// Событие вызывается при загрузке значений в форму перед вызовом <see cref="UIExtEditList.ReadValues()"/>.
+    /// Если обработчик установит свойство <see cref="CancelEventArgs.Cancel"/>=true, то форма не будет выведена на экран.
+    /// </summary>
+    public event CancelEventHandler BeforeReadData;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="BeforeReadData"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnBeforeReadData(CancelEventArgs args)
+    {
+      if (BeforeReadData != null)
+        BeforeReadData(this, args);
+    }
+
+    /// <summary>
+    /// Событие вызывается при загрузке значений в форму после вызова <see cref="UIExtEditList.ReadValues()"/>.
+    /// Если обработчик установит свойство <see cref="CancelEventArgs.Cancel"/>=true, то форма не будет выведена на экран.
+    /// </summary>
+    public event CancelEventHandler AfterReadData;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="AfterReadData"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnAfterReadData(CancelEventArgs args)
+    {
+      if (AfterReadData != null)
+        AfterReadData(this, args);
+    }
+
+
+    #endregion
+
+    #region Выгрузка из формы
+
+    /// <summary>
+    /// Выполняет внеплановую запись данных в процессе показа формы. 
+    /// При записи свойство <see cref="FormState"/> устанавливается равным <see cref="ExtEditDialogState.WriteData"/>.
+    /// Выполняются следующие действия:
+    /// 1. Вызывается <see cref="EFPFormProvider.ValidateForm()"/>.
+    /// 2. Событие <see cref="BeforeWriteData"/> (если <see cref="UseDataWriting"/>=true).
+    /// 3. Вызывается <see cref="UIExtEditList.WriteValues()"/> (если <see cref="UseDataWriting"/>=true).
+    /// 4. Вызывается событие <see cref="AfterWriteData"/> (если <see cref="UseDataWriting"/>=true).
+    /// 5. Вызывается событие <see cref="Applying"/>.
+    /// Если какой-либо из шагов завершается неудачей (возникает исключение или обработчик события устанавливает <see cref="CancelEventArgs.Cancel"/>=true),
+    /// оставшиеся шаги не выполняются. Для исключения выводится сообщение с помощью <see cref="EFPApp.ShowException(Exception)"/>.
+    /// </summary>
+    /// <returns>Возвращает true, если форма содержит корректные данные и все шаги успешно выполнены</returns>
+    public bool WriteData()
+    {
+      if (FormState != ExtEditDialogState.Shown)
+        throw new InvalidOperationException(Res.ExtEditDialogForm_Err_WriteDataCall);
+      return DoWriteData(ExtEditDialogState.WriteData);
+    }
+
+    internal bool DoWriteData(ExtEditDialogState state)
+    {
+      if (FormState != ExtEditDialogState.Shown)
+      {
+        EFPApp.ShowTempMessage(Res.ExtEditDialogForm_Err_WritingInProgress);
+        return false;
+      }
+      _FormState = state;
+      bool res;
+      try
+      {
+        res = _Form.FormProvider.ValidateForm();
+        if (UseDataWriting)
+        {
+          if (res)
+          {
+            CancelEventArgs args = new CancelEventArgs();
+            OnBeforeWriteData(args);
+            res = !args.Cancel;
+          }
+          if (res)
+            EditItems.WriteValues();
+          if (res)
+          {
+            CancelEventArgs args = new CancelEventArgs();
+            OnAfterWriteData(args);
+            res = !args.Cancel;
+          }
+        }
+        if (res)
+        {
+          CancelEventArgs args = new CancelEventArgs();
+          OnApplying(args);
+          res = !args.Cancel;
+        }
+      }
+      catch (Exception e)
+      {
+        EFPApp.ShowException(e, Res.ExtEditDialogForm_ErrTitle_Writing);
+        res = false;
+      }
+      _FormState = ExtEditDialogState.Shown;
+      return res;
+    }
+
+    /// <summary>
+    /// Если true (по умолчанию), то выполняется вызов <see cref="UIExtEditList.WriteValues()"/> и события <see cref="BeforeWriteData"/>/<see cref="AfterWriteData"/>.
+    /// Событие <see cref="Applying"/> вызывается в любом случае.
+    /// </summary>
+    public bool UseDataWriting
+    {
+      get { return _UseDataWriting; }
+      set
+      {
+        _Form.FormProvider.CheckHasNotBeenShown();
+        _UseDataWriting = value;
+      }
+    }
+    private bool _UseDataWriting;
+
+    /// <summary>
+    /// Событие вызывается после того, как управляющие элементы прошли валидацию и выполнена проверка формы с помощью <see cref="FormChecks"/>,
+    /// но до того, как редактируемые данные записаны с помощью <see cref="UIExtEditList.WriteValues()"/>.
+    /// Если обработчик события установит <see cref="CancelEventArgs.Cancel"/>=true, то данные не будут записаны и форма не будет закрыта.
+    /// Вызывается при нажатии кнопки "ОК" (<see cref="FormState"/>=<see cref="ExtEditDialogState.OKClicked"/>) или "Запись" (<see cref="ExtEditDialogState.ApplyClicked"/>).
+    /// На момент вызова уже успешно выполнена проверка корректности введенных значений.
+    /// Если свойство <see cref="UseDataWriting"/>=false, то событие не вызывается.
+    /// </summary>
+    public event CancelEventHandler BeforeWriteData;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="BeforeWriteData"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnBeforeWriteData(CancelEventArgs args)
+    {
+      if (BeforeWriteData != null)
+        BeforeWriteData(this, args);
+    }
+
+
+    /// <summary>
+    /// Событие вызывается после того, как редактируемые данные записаны с помощью <see cref="UIExtEditList.WriteValues()"/>.
+    /// Если обработчик события установит <see cref="CancelEventArgs.Cancel"/>=true, то форма не будет закрыта.
+    /// Вызывается при нажатии кнопки "ОК" (<see cref="FormState"/>=<see cref="ExtEditDialogState.OKClicked"/>) или "Запись" (<see cref="ExtEditDialogState.ApplyClicked"/>).
+    /// На момент вызова уже успешно выполнена проверка корректности введенных значений.
+    /// Если свойство <see cref="UseDataWriting"/>=false, то событие не вызывается.
+    /// </summary>
+    public event CancelEventHandler AfterWriteData;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="AfterWriteData"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnAfterWriteData(CancelEventArgs args)
+    {
+      if (AfterWriteData != null)
+        AfterWriteData(this, args);
+    }
+
+    /// <summary>
+    /// Событие вызывается после <see cref="AfterWriteData"/> при нажатии кнопок "ОК" или "Применить".
+    /// Если обработчик события установит <see cref="CancelEventArgs.Cancel"/>=true, то форма не будет закрыта.
+    /// Вызывается при нажатии кнопки "ОК" (<see cref="FormState"/>=<see cref="ExtEditDialogState.OKClicked"/>) или "Запись" (<see cref="ExtEditDialogState.ApplyClicked"/>).
+    /// Вызов события не зависит от свойства <see cref="UseDataWriting"/>.
+    /// </summary>
+    public event CancelEventHandler Applying;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="Applying"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Аргументы события</param>
+    protected virtual void OnApplying(CancelEventArgs args)
+    {
+      if (Applying != null)
+        Applying(this, args);
+    }
+
+    #endregion
 
     #endregion
 
@@ -876,6 +1175,8 @@ namespace FreeLibSet.Forms
     public DialogResult ShowDialog()
     {
       PrepareForm();
+      if (!ReadData())
+        return DialogResult.Cancel;
       return EFPApp.ShowDialog(_Form, true, DialogPosition);
     }
 
@@ -886,12 +1187,17 @@ namespace FreeLibSet.Forms
     public void Show()
     {
       PrepareForm();
+      if (!ReadData())
+        return;
       EFPApp.ShowFormOrDialog(_Form);
     }
+
 
     private void PrepareForm()
     {
       _Form.FormProvider.CheckHasNotBeenShown();
+
+      OnLoad(EventArgs.Empty);
 
       if (ReadOnly)
       {
@@ -910,40 +1216,26 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
+    /// Событие вызывается однократно в самом начале вызова методов <see cref="Show()"/> или <see cref="ShowDialog()"/>.
+    /// Обработчик события может выполнить недостающую инициализацию формы.
+    /// </summary>
+    public event EventHandler Load;
+
+    /// <summary>
+    /// Вызывает обработчик события <see cref="Load"/>, если он установлен
+    /// </summary>
+    /// <param name="args">Ссылка на <see cref="EventArgs.Empty"/></param>
+    protected virtual void OnLoad(EventArgs args)
+    {
+      if (Load != null)
+        Load(this, args);
+    }
+
+    /// <summary>
     /// Текущее состояние формы
     /// </summary>
     public ExtEditDialogState FormState { get { return _FormState; } }
     private ExtEditDialogState _FormState;
-
-
-    /*
-    /// Выполняемые действия:
-    /// <list type="number">
-    /// <item><term>1</term><description>Вызов <see cref="EFPFormProvider.ValidateForm()"/> с проверкой корректности введенных значений на уровне управляющих элементов.
-    /// Также выполняется проверка с помощью <see cref="FormChecks"/>.
-    /// Возвращается false, если проверка закончилась неудачей.</description></item>
-    /// <item><term>2</term><description>Вызывается событие <see cref="BeforeWriteValues"/>. Обработчик события может выполнить комплексную проверку значений управляющих
-    /// элементов (того же можно добиться, используя <see cref="FormChecks"/>) и также выставить признак ошибки</description></item>
-    /// <item><term>3</term><description>Для списка <see cref="EditItems"/> вызывается <see cref="UIExtEditItemList.WriteValues()"/>. Записывается каждое значение.</description></item>
-    /// <item><term>4</term><description>Вызывается событие <see cref="Writing"/>. Обработчик может использовать сохраненные значения <see cref="UIExtEditItem"/> и также
-    /// отменить действие.</description>description></item>
-    /// </list>
-     */
-
-    /// <summary>
-    /// Выполняет внеплановую запись данных. 
-    /// При записи свойство <see cref="FormState"/> устанавливается равным <see cref="ExtEditDialogState.WriteData"/>.
-    /// Если на каком-либо шаге возникает исключение, выдается сообщение с помощью <see cref="EFPApp.ShowException(Exception)"/>,
-    /// дальнейшие шаги не выполняются и возвращается false.
-    /// </summary>
-    /// <returns>Возвращает true, если форма содержит корректные данные и обработчик события <see cref="Writing"/> не установил
-    /// <see cref="CancelEventArgs.Cancel"/>=true.</returns>
-    public bool WriteData()
-    {
-      if (FormState != ExtEditDialogState.Shown)
-        throw new InvalidOperationException(Res.ExtEditDialogForm_Err_WriteDataCall);
-      return DoWrite(ExtEditDialogState.WriteData);
-    }
 
 
     /// <summary>
@@ -953,7 +1245,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     /// <param name="isOk">true - нажатие кнопки "ОК", false - "Отмена"</param>
     /// <returns>true, если форма успешно закрыта. Возвращает false, если <paramref name="isOk"/>=true но проверка корректности введенных данных или
-    /// обработчик <see cref="Writing"/> отменили закрытие формы.</returns>
+    /// обработчик <see cref="BeforeWriteData"/>или <see cref="AfterWriteData"/> отменили закрытие формы.</returns>
     public bool CloseForm(bool isOk)
     {
       switch (FormState)
@@ -990,41 +1282,9 @@ namespace FreeLibSet.Forms
       }
     }
 
-    internal bool DoWrite(ExtEditDialogState state)
-    {
-      if (FormState != ExtEditDialogState.Shown)
-      {
-        EFPApp.ShowTempMessage(Res.ExtEditDialogForm_Err_WritingInProgress);
-        return false;
-      }
-      _FormState = state;
-      bool res;
-      try
-      {
-        res = _Form.FormProvider.ValidateForm();
-        if (res)
-        {
-          if (Writing != null)
-          {
-            CancelEventArgs args = new CancelEventArgs();
-            Writing(this, args);
-            res = !args.Cancel;
-          }
-        }
-      }
-      catch (Exception e)
-      {
-        EFPApp.ShowException(e, Res.ExtEditDialogForm_ErrTitle_Writing);
-        res = false;
-      }
-      _FormState = ExtEditDialogState.Shown;
-      return res;
-    }
-
     private void FormProvider_FormClosed(object sender, FormClosedEventArgs args)
     {
-      if (FormClosed != null)
-        FormClosed(this, args);
+      OnFormClosed(EventArgs.Empty);
       _FormState = ExtEditDialogState.Closed;
     }
 
@@ -1332,7 +1592,7 @@ namespace FreeLibSet.Forms
         }
       }
       // Событие у объекта-владельца
-      _Owner.OnPageShow(this);
+      _Owner.CallPageShow(this);
     }
 
     private void TabPageResize(object sender, EventArgs args)

@@ -9532,7 +9532,7 @@ namespace FreeLibSet.Forms
     /// Переход к следующей или предыдущей строке, содержимое ячейки в которой отличиается от содержимого текущей ячейки
     /// </summary>
     /// <param name="forward">True - переход к следующей строке, false - к предыдущей</param>
-    public void GotoRowWithDifferentText(bool forward)
+    public void GotoRowWithDiffValue(bool forward)
     {
       if (Control.CurrentCell == null)
       {
@@ -9540,10 +9540,10 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      int gotoRowIndex = FindRowWithDifferentText(Control.CurrentCell.RowIndex, Control.CurrentCell.ColumnIndex, forward);
+      int gotoRowIndex = FindRowWithDiffValue(Control.CurrentCell.RowIndex, Control.CurrentCell.ColumnIndex, forward);
       if (gotoRowIndex < 0)
       {
-        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoRowWithDiffText);
+        EFPApp.ShowTempMessage(Res.EFPDataView_Err_NoRowWithDiffValue);
         return;
       }
       CurrentRowIndex = gotoRowIndex;
@@ -9559,30 +9559,70 @@ namespace FreeLibSet.Forms
     /// <param name="columnIndex">Индекс столбца со значением ячейки</param>
     /// <param name="forward">true - поиск строк вниз таблицы, false - вверх</param>
     /// <returns>Индекс найденной строки или (-1)</returns>
-    public int FindRowWithDifferentText(int startRowIndex, int columnIndex, bool forward)
+    public int FindRowWithDiffValue(int startRowIndex, int columnIndex, bool forward)
     {
       if (startRowIndex < 0 || columnIndex < 0)
         return -1;
 
-      string text = GetCellTextValue(startRowIndex, columnIndex);
-      if (forward)
+      if (Control.Columns[columnIndex] is DataGridViewImageColumn)
       {
-        for (int iRow = startRowIndex + 1; iRow < Control.RowCount; iRow++)
+        // 10.10.2025. Сравнение значков
+
+        object value = InternalGetCellValue(startRowIndex, columnIndex);
+        if (forward)
         {
-          if (!String.Equals(GetCellTextValue(iRow, columnIndex), text, StringComparison.OrdinalIgnoreCase))
-            return iRow;
+          for (int iRow = startRowIndex + 1; iRow < Control.RowCount; iRow++)
+          {
+            if (!Object.ReferenceEquals(InternalGetCellValue(iRow, columnIndex), value))
+              return iRow;
+          }
+        }
+        else
+        {
+          for (int iRow = startRowIndex - 1; iRow >= 0; iRow--)
+          {
+            if (!Object.ReferenceEquals(InternalGetCellValue(iRow, columnIndex), value))
+              return iRow;
+          }
         }
       }
       else
       {
-        for (int iRow = startRowIndex - 1; iRow >=0; iRow--)
+        string text = GetCellTextValue(startRowIndex, columnIndex);
+        if (forward)
         {
-          if (!String.Equals(GetCellTextValue(iRow, columnIndex), text, StringComparison.OrdinalIgnoreCase))
-            return iRow;
+          for (int iRow = startRowIndex + 1; iRow < Control.RowCount; iRow++)
+          {
+            if (!String.Equals(GetCellTextValue(iRow, columnIndex), text, StringComparison.OrdinalIgnoreCase))
+              return iRow;
+          }
+        }
+        else
+        {
+          for (int iRow = startRowIndex - 1; iRow >= 0; iRow--)
+          {
+            if (!String.Equals(GetCellTextValue(iRow, columnIndex), text, StringComparison.OrdinalIgnoreCase))
+              return iRow;
+          }
         }
       }
       return -1;
     }
+
+
+    /// <summary>
+    /// Получение текстового значения для одной ячейки
+    /// </summary>
+    /// <param name="rowIndex">Индекс строки в просмотре</param>
+    /// <param name="columnIndex">Индекс столбца в просмотре</param>
+    /// <returns>Текстовое значение</returns>
+    private object InternalGetCellValue(int rowIndex, int columnIndex)
+    {
+      GetRowInfo(rowIndex, EFPDataViewInfoReason.View);
+      EFPDataGridViewCellInfoEventArgs cellArgs = GetCellInfo(columnIndex);
+      return cellArgs.FormattedValue;
+    }
+
 
     #endregion
 

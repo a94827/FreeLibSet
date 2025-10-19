@@ -31,7 +31,7 @@ namespace WinFormsDemo.CloseFormDemo
       efpBanner = new EFPCheckBox(efpForm, cbBanner);
       efpBanner.Validating += EfpBanner_Validating;
 
-      efpDelay = new EFPIntEditBox(efpForm, edDelay);
+      efpDelay = new EFPInt32EditBox(efpForm, edDelay);
 
       EFPButton efpAction = new EFPButton(efpForm, btnAction);
       efpAction.Click += EfpAction_Click;
@@ -44,7 +44,7 @@ namespace WinFormsDemo.CloseFormDemo
     EFPFormProvider efpForm;
     public EFPListComboBox efpDialogResult;
     public EFPCheckBox efpBanner;
-    public EFPIntEditBox efpDelay;
+    public EFPInt32EditBox efpDelay;
 
     private void EfpBanner_Validating(object sender, FreeLibSet.UICore.UIValidatingEventArgs args)
     {

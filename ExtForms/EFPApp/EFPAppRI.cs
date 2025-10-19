@@ -973,7 +973,7 @@ namespace FreeLibSet.Forms.RI
     /// Поле ввода целого числа.
     /// Версия без стрелочек
     /// </summary>
-    private class IntEditBoxItem : FreeLibSet.Forms.EFPIntEditBox, IEFPAppRIItem
+    private class IntEditBoxItem : FreeLibSet.Forms.EFPInt32EditBox, IEFPAppRIItem
     {
       #region Конструктор
 

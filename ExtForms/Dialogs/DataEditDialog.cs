@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FreeLibSet.UICore;
+using FreeLibSet.Core;
 
 namespace FreeLibSet.Forms.Data
 {
@@ -26,7 +27,7 @@ namespace FreeLibSet.Forms.Data
 
     /// <summary>
     /// Текущее состояние (по умолчанию - <see cref="UIDataState.Edit"/>).
-    /// Установка свойства меняет значение <see cref="ExtEditDialog.ImageKey"/>.
+    /// Установка свойства меняет значение свойств <see cref="ExtEditDialog.ReadOnly"/>, <see cref="ExtEditDialog.ShowApplyButton"/>, <see cref="ExtEditDialog.UseDataWriting"/> и <see cref="ExtEditDialog.ImageKey"/>.
     /// </summary>
     public UIDataState DataState
     {
@@ -45,10 +46,64 @@ namespace FreeLibSet.Forms.Data
             base.SaveCurrentPage = true;
             break;
         }
-        ReadOnly = (DataState == UIDataState.View);
+
+        ReadOnly = (value == UIDataState.View);
+
+        switch (value)
+        {
+          case UIDataState.Edit:
+          case UIDataState.Insert:
+          case UIDataState.InsertCopy:
+            ShowApplyButton = true;
+            UseDataWriting = true;
+            break;
+          default:
+            ShowApplyButton = false;
+            UseDataWriting = false;
+            InitTitle();
+            break;
+        }
       }
     }
     private UIDataState _DataState;
+
+    /// <summary>
+    /// Заголовок документа.
+    /// Если свойство установлено, то устанавливается заголовок формы в виде "(*) DocumentTitle (Действие)".
+    /// Заголовок также меняется при установке свойства <see cref="DataState"/>.
+    /// Если свойство не установлено (по умолчанию), то управление заголовком должно выполняться вызывающим кодом.
+    /// </summary>
+    public string DocumentTitle
+    {
+      get { return _DocumentTitle ?? String.Empty; }
+      set
+      {
+        _DocumentTitle = value;
+        InitTitle();
+      }
+    }
+    private string _DocumentTitle;
+
+    private void InitTitle()
+    {
+      if (String.IsNullOrEmpty(DocumentTitle))
+        return;
+
+      string s2;
+
+      switch (DataState)
+      {
+        case UIDataState.Edit: s2 = Res.Editor_Msg_TitleEdit; break;
+        case UIDataState.Insert: s2 = Res.Editor_Msg_TitleInsert; break;
+        case UIDataState.InsertCopy: s2 = Res.Editor_Msg_TitleInsertCopy; break;
+        case UIDataState.Delete: s2 = Res.Editor_Msg_TitleDelete; break;
+        case UIDataState.View: s2 = Res.Editor_Msg_TitleView; break;
+        default:
+          throw new BugException("State=" + DataState.ToString());
+      }
+
+      Title = String.Format(Res.Editor_Msg_Title, DocumentTitle, s2);
+    }
 
     #endregion
   }

@@ -14,7 +14,10 @@ using FreeLibSet.Core;
 namespace FreeLibSet.Forms.Data
 {
   /// <summary>
-  /// 
+  /// Аргументы события, предназначенного для инициализации редактора <see cref="ExtEditDialog"/>,
+  /// когда он используется для редактирования записи с доступам к значениям с помощью <see cref="IDBxExtValues"/>.
+  /// Содержит методы для создания объектов-переходников
+  /// Используется в <see cref="DataTableEditDialog"/> и библиотеке ExtDBDocForms.
   /// </summary>
   public class DBxExtValuesDialogInitEventArgs : EventArgs
   {
@@ -87,7 +90,7 @@ namespace FreeLibSet.Forms.Data
         throw ExceptionFactory.ArgStringIsNullOrEmpty("columnName");
 
       if (Values.IndexOf(columnName) < 0)
-        throw ExceptionFactory.ArgUnknownType("columnName", columnName);
+        throw ExceptionFactory.ArgUnknownValue("columnName", columnName);
 
       return Values[columnName];
     }
@@ -100,10 +103,10 @@ namespace FreeLibSet.Forms.Data
     {
       get
       {
-        if (Dialog.Pages.Count==0)
+        if (Dialog.Pages.Count == 0)
           return Dialog.ChangeInfoList;
         else
-          return Dialog.Pages[Dialog.Pages.Count-1].ChangeInfoList;
+          return Dialog.Pages[Dialog.Pages.Count - 1].ChangeInfoList;
       }
     }
 
@@ -349,7 +352,7 @@ namespace FreeLibSet.Forms.Data
     /// <param name="canMultiEdit">Если true, то допускается редактирование для нескольких документов или поддокументов.
     /// В этом случае на форму может быть добавлен <see cref="CheckBox"/> (обычно взамен метки поля) для изменения "серых" значений.</param>
     /// <returns>Переходник, реализующий интерфейс <see cref="IUIExtEditItem"/></returns>
-    public ExtValueInt32EditBox AddInt32(EFPIntEditBox controlProvider, string columnName, bool canMultiEdit)
+    public ExtValueInt32EditBox AddInt32(EFPInt32EditBox controlProvider, string columnName, bool canMultiEdit)
     {
       ExtValueInt32EditBox dvc = new ExtValueInt32EditBox(GetExtValue(columnName), controlProvider, canMultiEdit);
       AddEditItem(dvc);
@@ -558,4 +561,11 @@ namespace FreeLibSet.Forms.Data
 
     #endregion
   }
+
+  /// <summary>
+  /// Делегат события <see cref="DataTableEditDialog.InitEditForm"/>
+  /// </summary>
+  /// <param name="sender">Ссылка на <see cref="DataTableEditDialog"/></param>
+  /// <param name="args">Аргументы события</param>
+  public delegate void DBxExtValuesDialogInitEventHandler(object sender, DBxExtValuesDialogInitEventArgs args);
 }

@@ -121,6 +121,7 @@
       <DependentUpon>YearGridFilterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DataEditDialog.cs" />
+    <Compile Include="Dialogs\DataTableEditDialog.cs" />
     <Compile Include="Dialogs\EFPDataViewCopyFormatsForm.cs">
       <SubType>Form</SubType>
     </Compile>

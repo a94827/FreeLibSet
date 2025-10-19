@@ -213,7 +213,7 @@ namespace FreeLibSet.Forms
       _UseRowErrorsListView = true;
       _CopyFormats = EFPDataViewCopyFormats.All;
       _CopyHyperlinkUsage = EFPDataViewCopyHyperlinkCommandUsage.Auto;
-      _UseGotoRowWithDifferentCellText = true;
+      _UseGotoRowWithDiffValue = true;
 
       #endregion
 
@@ -420,21 +420,21 @@ namespace FreeLibSet.Forms
 
       #region Дополнительные команды навигации
 
-      ciGotoRowWithDiffTextUp = new EFPCommandItem("Edit", "GotoRowWithDiffTextUp");
-      ciGotoRowWithDiffTextUp.Parent = MenuSearch;
-      ciGotoRowWithDiffTextUp.MenuText = Res.Cmd_Menu_Edit_GotoRowWithDiffTextUp;
-      ciGotoRowWithDiffTextUp.ShortCut = Keys.Alt | Keys.PageUp;
-      ciGotoRowWithDiffTextUp.Click += CiGotoRowWithDiffTextUp_Click;
-      ciGotoRowWithDiffTextUp.GroupBegin = true;
-      Add(ciGotoRowWithDiffTextUp);
+      ciGotoRowWithDiffValueUp = new EFPCommandItem("Edit", "GotoRowWithDiffValueUp");
+      ciGotoRowWithDiffValueUp.Parent = MenuSearch;
+      ciGotoRowWithDiffValueUp.MenuText = Res.Cmd_Menu_Edit_GotoRowWithDiffValueUp;
+      ciGotoRowWithDiffValueUp.ShortCut = Keys.Alt | Keys.PageUp;
+      ciGotoRowWithDiffValueUp.Click += CiGotoRowWithDiffValueUp_Click;
+      ciGotoRowWithDiffValueUp.GroupBegin = true;
+      Add(ciGotoRowWithDiffValueUp);
 
-      ciGotoRowWithDiffTextDown = new EFPCommandItem("Edit", "GotoRowWithDiffTextDown");
-      ciGotoRowWithDiffTextDown.Parent = MenuSearch;
-      ciGotoRowWithDiffTextDown.MenuText = Res.Cmd_Menu_Edit_GotoRowWithDiffTextDown;
-      ciGotoRowWithDiffTextDown.ShortCut = Keys.Alt | Keys.PageDown;
-      ciGotoRowWithDiffTextDown.Click += CiGotoRowWithDiffTextDown_Click;
-      ciGotoRowWithDiffTextDown.GroupEnd = true;
-      Add(ciGotoRowWithDiffTextDown);
+      ciGotoRowWithDiffValueDown = new EFPCommandItem("Edit", "GotoRowWithDiffValueDown");
+      ciGotoRowWithDiffValueDown.Parent = MenuSearch;
+      ciGotoRowWithDiffValueDown.MenuText = Res.Cmd_Menu_Edit_GotoRowWithDiffValueDown;
+      ciGotoRowWithDiffValueDown.ShortCut = Keys.Alt | Keys.PageDown;
+      ciGotoRowWithDiffValueDown.Click += CiGotoRowWithDiffValueDown_Click;
+      ciGotoRowWithDiffValueDown.GroupEnd = true;
+      Add(ciGotoRowWithDiffValueDown);
 
       #endregion
 
@@ -748,10 +748,10 @@ namespace FreeLibSet.Forms
       if (!UseSelectAll)
         ciSelectAll.Usage = EFPCommandItemUsage.None;
 
-      if (!UseGotoRowWithDifferentCellText)
+      if (!UseGotoRowWithDiffValue)
       {
-        ciGotoRowWithDiffTextUp.Usage = EFPCommandItemUsage.None;
-        ciGotoRowWithDiffTextDown.Usage = EFPCommandItemUsage.None;
+        ciGotoRowWithDiffValueUp.Usage = EFPCommandItemUsage.None;
+        ciGotoRowWithDiffValueDown.Usage = EFPCommandItemUsage.None;
       }
 
       if (ControlProvider.ManualOrderSupported)
@@ -1037,17 +1037,17 @@ namespace FreeLibSet.Forms
       ciFind.Enabled = ControlProvider.Control.RowCount > 0 && ControlProvider.Control.ColumnCount > 0; // 17.06.2024
       RefreshIncSearchItems();
 
-      if (UseGotoRowWithDifferentCellText)
+      if (UseGotoRowWithDiffValue)
       {
         if (selState == UISelectedRowsState.SingleRow && ControlProvider.CurrentColumnIndex >= 0)
         {
-          ciGotoRowWithDiffTextUp.Enabled = ControlProvider.CurrentRowIndex > 0;
-          ciGotoRowWithDiffTextDown.Enabled = ControlProvider.CurrentRowIndex < (ControlProvider.Control.RowCount - 1);
+          ciGotoRowWithDiffValueUp.Enabled = ControlProvider.CurrentRowIndex > 0;
+          ciGotoRowWithDiffValueDown.Enabled = ControlProvider.CurrentRowIndex < (ControlProvider.Control.RowCount - 1);
         }
         else
         {
-          ciGotoRowWithDiffTextUp.Enabled = false;
-          ciGotoRowWithDiffTextDown.Enabled = false;
+          ciGotoRowWithDiffValueUp.Enabled = false;
+          ciGotoRowWithDiffValueDown.Enabled = false;
         }
       }
 
@@ -1996,27 +1996,27 @@ namespace FreeLibSet.Forms
     /// Свойство следует сбрасывать в false для просмотров, в котором все строки содержат завдомо разный текст, например, как
     /// в диалоге <see cref="ListSelectDialog"/>.
     /// </summary>
-    public bool UseGotoRowWithDifferentCellText
+    public bool UseGotoRowWithDiffValue
     {
-      get { return _UseGotoRowWithDifferentCellText; }
+      get { return _UseGotoRowWithDiffValue; }
       set
       {
         CheckNotReadOnly();
-        _UseGotoRowWithDifferentCellText = value;
+        _UseGotoRowWithDiffValue = value;
       }
     }
-    private bool _UseGotoRowWithDifferentCellText;
+    private bool _UseGotoRowWithDiffValue;
 
-    private EFPCommandItem ciGotoRowWithDiffTextUp, ciGotoRowWithDiffTextDown;
+    private EFPCommandItem ciGotoRowWithDiffValueUp, ciGotoRowWithDiffValueDown;
 
-    private void CiGotoRowWithDiffTextUp_Click(object sender, EventArgs args)
+    private void CiGotoRowWithDiffValueUp_Click(object sender, EventArgs args)
     {
-      ControlProvider.GotoRowWithDifferentText(false);
+      ControlProvider.GotoRowWithDiffValue(false);
     }
 
-    private void CiGotoRowWithDiffTextDown_Click(object sender, EventArgs args)
+    private void CiGotoRowWithDiffValueDown_Click(object sender, EventArgs args)
     {
-      ControlProvider.GotoRowWithDifferentText(true);
+      ControlProvider.GotoRowWithDiffValue(true);
     }
 
     #endregion

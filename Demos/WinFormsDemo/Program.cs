@@ -37,6 +37,7 @@ namespace WinFormsDemo
           "EFPDataGridView & EFPDataTreeView",
           "EFPInputDataGridView",
           "Wizard",
+          "DataTableEditDialog",
           "CultureInfo",
           "EFPApp.ShowAboutDialog()",
           "EFPClipboard",
@@ -53,6 +54,7 @@ namespace WinFormsDemo
           "EFPDataView",
           "EFPInputDataGridView",
           "Wizard",
+          "DataTableEditDialog",
           "Culture",
           "About",
           "EFPClipboard",
@@ -92,6 +94,9 @@ namespace WinFormsDemo
               break;
             case "Wizard":
               WizardDemo.WizardParamForm.PerformTest();
+              break;
+            case "DataTableEditDialog":
+              DataTableEditDialogDemo.TestDataTableEditDialogForm.PerformTest();
               break;
             case "About":
               EFPApp.ShowAboutDialog();

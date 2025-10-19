@@ -134,7 +134,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Список переходников для полей
     /// </summary>
-    internal UIExtEditItemList EditItems { get { return _Dialog.EditItems; } }
+    internal UIExtEditList EditItems { get { return _Dialog.EditItems; } }
 
     /// <summary>
     /// Отслеживание изменений для рисования звездочки в заголовке формы.
@@ -310,7 +310,8 @@ namespace FreeLibSet.Forms.Docs
         _Dialog.ShowApplyButton = false;
         _Dialog.MoreButtonToolTipText = Res.SubDocumentEditor_ToolTip_More;
 
-        _Dialog.Writing += Dialog_Writing;
+        _Dialog.BeforeWriteData += Dialog_BeforeWriteData;
+        _Dialog.AfterWriteData += Dialog_AfterWriteData;
         _Dialog.FormClosed += new EventHandler(Dialog_FormClosed);
         if (_Dialog.ShowDialog() != DialogResult.OK)
           return false;
@@ -402,31 +403,23 @@ namespace FreeLibSet.Forms.Docs
       return _Dialog.WriteData();
     }
 
-
-    private void Dialog_Writing(object sender, CancelEventArgs args)
+    private void Dialog_BeforeWriteData(object sender, CancelEventArgs args)
     {
-      if (IsReadOnly)
-        return;
-
       // Посылаем сообщение
       if (BeforeWrite != null)
       {
         SubDocEditCancelEventArgs args2 = new SubDocEditCancelEventArgs(this);
         BeforeWrite(this, args2);
         args.Cancel = args2.Cancel;
-        if (args.Cancel)
-          return;
       }
+    }
 
-      // Записываем редактируемые значения в однострочный dataset
-      EditItems.WriteValues();
 
+    private void Dialog_AfterWriteData(object sender, CancelEventArgs args)
+    {
       // Пользовательская коррекция данных перед записью
       if (!SubDocTypeUI.DoWriting(this))
-      {
         args.Cancel = true;
-        return;
-      }
     }
 
     /// <summary>

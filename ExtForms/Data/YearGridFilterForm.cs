@@ -20,7 +20,7 @@ namespace FreeLibSet.Forms.Data
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpMode = new EFPRadioButtons(efpForm, rbNoFilter);
-      efpYear = new EFPIntEditBox(efpForm, edYear);
+      efpYear = new EFPInt32EditBox(efpForm, edYear);
       efpYear.Control.Increment = 1;
       efpYear.Minimum = DateTime.MinValue.Year;
       efpYear.Maximum = DateTime.MaxValue.Year;
@@ -33,7 +33,7 @@ namespace FreeLibSet.Forms.Data
 
     public EFPRadioButtons efpMode;
 
-    public EFPIntEditBox efpYear;
+    public EFPInt32EditBox efpYear;
 
     #endregion
   }

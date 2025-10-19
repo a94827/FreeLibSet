@@ -1,0 +1,12 @@
+D:\a94827\FreeLibSet\ExtTools\bin\Debug\ExtTools.XML
+D:\a94827\FreeLibSet\ExtTools\bin\Debug\ExtTools.dll
+D:\a94827\FreeLibSet\ExtTools\bin\Debug\ExtTools.pdb
+D:\a94827\FreeLibSet\ExtTools\bin\Debug\ru\ExtTools.resources.dll
+D:\a94827\FreeLibSet\ExtTools\obj\Debug\ExtTools.csproj.AssemblyReference.cache
+D:\a94827\FreeLibSet\ExtTools\obj\Debug\FreeLibSet.Core.Res.resources
+D:\a94827\FreeLibSet\ExtTools\obj\Debug\FreeLibSet.Core.Res.ru.resources
+D:\a94827\FreeLibSet\ExtTools\obj\Debug\ExtTools.csproj.GenerateResource.cache
+D:\a94827\FreeLibSet\ExtTools\obj\Debug\ExtTools.csproj.CoreCompileInputs.cache
+D:\a94827\FreeLibSet\ExtTools\obj\Debug\ru\ExtTools.resources.dll
+D:\a94827\FreeLibSet\ExtTools\obj\Debug\ExtTools.dll
+D:\a94827\FreeLibSet\ExtTools\obj\Debug\ExtTools.pdb
