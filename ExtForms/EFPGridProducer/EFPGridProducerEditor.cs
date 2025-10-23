@@ -128,7 +128,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Если true, то не поддерживаются замороженные столбцы и активируемый столбец
     /// </summary>
-    private bool _IsTreeView;
+    private readonly bool _IsTreeView;
 
     #endregion
 
@@ -137,18 +137,18 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Копия конфигурации до начала редактирования
     /// </summary>
-    private EFPDataViewConfig _OrgConfig;
+    private readonly EFPDataViewConfig _OrgConfig;
 
-    private EFPDataGridView ghColumns, ghToolTips;
+    private readonly EFPDataGridView ghColumns, ghToolTips;
 
-    private EFPGridProducer _GridProducer;
-    private IEFPDataView _TheControlProvider;
+    private readonly EFPGridProducer _GridProducer;
+    private readonly IEFPDataView _TheControlProvider;
 
     /// <summary>
     /// Список "Активировать при открытии".
     /// Кодами являются коды столбцов, текстом - названия. Пустой код - "Нет"
     /// </summary>
-    private EFPListComboBox efpStartColumn;
+    private readonly EFPListComboBox efpStartColumn;
 
     //private string StartColumnName;
 
@@ -392,7 +392,7 @@ namespace FreeLibSet.Forms
 
     #region Замороженные столбцы
 
-    EFPInt32EditBox efpFrozenColumns;
+    private readonly EFPInt32EditBox efpFrozenColumns;
 
     #endregion
 

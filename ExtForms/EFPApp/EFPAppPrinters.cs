@@ -281,7 +281,7 @@ namespace FreeLibSet.Forms
 
     #region Поля
 
-    private ComboBox _Control;
+    private readonly ComboBox _Control;
     private int _PrevVersion;
 
     #endregion

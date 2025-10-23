@@ -1054,7 +1054,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-    private Dictionary<string, bool> _Items;
+    private readonly Dictionary<string, bool> _Items;
 
     /// <summary>
     /// Возвращает true, если не было установлено вручную ни одного флажка
@@ -1467,7 +1467,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
     [field: NonSerialized]
-    private event ServerDocTypeBeforeInsertEventHandler _BeforeInsert;
+    private ServerDocTypeBeforeInsertEventHandler _BeforeInsert;
 
     internal void PerformBeforeInsert(DBxSingleDoc doc, bool restoreDeleted)
     {
@@ -1503,7 +1503,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
     [field: NonSerialized]
-    private event ServerDocTypeBeforeWriteEventHandler _BeforeWrite;
+    private ServerDocTypeBeforeWriteEventHandler _BeforeWrite;
 
     internal void PerformBeforeWrite(DBxSingleDoc doc, bool append, bool recalcColumnsOnly)
     {
@@ -1548,7 +1548,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
     [field: NonSerialized]
-    private event ServerDocTypeBeforeDeleteEventHandler _BeforeDelete;
+    private ServerDocTypeBeforeDeleteEventHandler _BeforeDelete;
 
     internal void PerformBeforeDelete(DBxSingleDoc doc)
     {
@@ -1583,7 +1583,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
     [field: NonSerialized]
-    private event ServerDocTypeAfterChangeEventHandler _AfterChange;
+    private ServerDocTypeAfterChangeEventHandler _AfterChange;
 
     internal void PerformAfterChange(DBxSingleDoc doc)
     {
@@ -2698,7 +2698,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Свойства
 
-    private DBxDocType _Owner;
+    private readonly DBxDocType _Owner;
 
     /// <summary>
     /// Для отладки

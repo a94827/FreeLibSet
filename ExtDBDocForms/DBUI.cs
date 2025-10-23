@@ -283,7 +283,7 @@ namespace FreeLibSet.Forms.Docs
     /// По умолчанию в списке присутствуют стандартные классы разрешений.
     /// </summary>
     public UserPermissionsUI UserPermissionsUI { get { return _UserPermissionsUI; } }
-    private UserPermissionsUI _UserPermissionsUI;
+    private readonly UserPermissionsUI _UserPermissionsUI;
 
 
     /// <summary>

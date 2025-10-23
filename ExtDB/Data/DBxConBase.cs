@@ -3843,7 +3843,7 @@ namespace FreeLibSet.Data
     /// Выполняет заполнение списка <see cref="DBxSqlBuffer.ColumnStructs"/>.
     /// </summary>
     public DBxNameValidator Validator { get { return _Validator; } }
-    private DBxNameValidator _Validator;
+    private readonly DBxNameValidator _Validator;
 
     /// <summary>
     /// Если свойство установлено (по умолчанию), то выполняется проверка существования

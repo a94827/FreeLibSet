@@ -42,7 +42,7 @@ namespace FreeLibSet.Drawing
 
     #region Конструктор и Dispose
 
-    private static string _DefaultFontName { get { return FontFamily.GenericSansSerif.Name; } } // "Arial";
+    private static string DefaultFontName { get { return FontFamily.GenericSansSerif.Name; } } // "Arial";
 
 
     /// <summary>
@@ -64,7 +64,7 @@ namespace FreeLibSet.Drawing
         _IsForPaint = true;
       }
 
-      _FontName = _DefaultFontName;
+      _FontName = DefaultFontName;
       _FontHeight = 10;
       _FontWidth = 0; // признак необходимости вычислить ширину
       _Bold = false;
@@ -461,7 +461,7 @@ namespace FreeLibSet.Drawing
       catch
       {
         // Используем стандартный шрифт
-        _Font = new Font(_DefaultFontName, _FontHeight * _FontScale, st);
+        _Font = new Font(DefaultFontName, _FontHeight * _FontScale, st);
       }
     }
 
@@ -831,7 +831,7 @@ namespace FreeLibSet.Drawing
       return sz2;
     }
 
-    private PointF[] _Point1Array;
+    private readonly PointF[] _Point1Array;
 
     /// <summary>
     /// Преобразование координат из пунктов в текущие единицы PageUnit
@@ -1042,7 +1042,7 @@ namespace FreeLibSet.Drawing
       _CoordMatrix.Scale(1.0f / scaleX, 1.0f / scaleY);
     }
 
-    private PointF[] _Point2Array; // чтобы не создавать каждый раз
+    private readonly PointF[] _Point2Array; // чтобы не создавать каждый раз
 
     private RectangleF BackTransform(RectangleF rc)
     {

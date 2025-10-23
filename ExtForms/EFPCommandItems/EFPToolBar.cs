@@ -309,7 +309,7 @@ namespace FreeLibSet.Forms
         get { return (EFPToolBarBase)(base.Owner); }
       }
 
-      private ToolStripItem _Button;
+      private readonly ToolStripItem _Button;
 
       /// <summary>
       /// Присоединенное выпадающее меню. Его может потребоваться разрушить
@@ -674,7 +674,7 @@ namespace FreeLibSet.Forms
         Checked = _ToolBar.Visible;
       }
 
-      private EFPAppToolBar _ToolBar;
+      private readonly EFPAppToolBar _ToolBar;
 
       private void VisibleClick(object sender, EventArgs args)
       {
@@ -866,7 +866,7 @@ namespace FreeLibSet.Forms
     /// Локальное меню для панелей
     /// </summary>
     public EFPContextMenu ContextMenu { get { return _ContextMenu; } }
-    private EFPContextMenu _ContextMenu;
+    private readonly EFPContextMenu _ContextMenu;
 
     private void AttachContextMenu(FormToolStripInfo info)
     {

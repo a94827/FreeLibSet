@@ -63,7 +63,7 @@ namespace FreeLibSet.Forms.Diagnostics
     }
     private object _SelectedObject;
 
-    private TreeView _TheTV;
+    private readonly TreeView _TheTV;
 
     #endregion
 
@@ -419,12 +419,12 @@ namespace FreeLibSet.Forms.Diagnostics
     /// <summary>
     /// Заголовки закладок
     /// </summary>
-    private List<string> _Titles;
+    private readonly List<string> _Titles;
 
     /// <summary>
     /// Отлаживаемые объекты или типы объектов
     /// </summary>
-    private List<object> _Objects;
+    private readonly List<object> _Objects;
 
     #endregion
 

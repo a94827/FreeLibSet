@@ -1529,7 +1529,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-    private event DBxRetriableExceptionEventHandler _ExceptionCaught;
+    private DBxRetriableExceptionEventHandler _ExceptionCaught;
 
     /// <summary>
     /// Метод вызывается, если при вызове метода в <see cref="Source"/> возникло исключение.

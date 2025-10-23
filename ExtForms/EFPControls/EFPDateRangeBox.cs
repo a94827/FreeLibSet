@@ -607,7 +607,7 @@ namespace FreeLibSet.Forms
 
     #region Команды установки значений
 
-    EFPCommandItem ciToday, ci1To2, ci2To1;
+    private readonly EFPCommandItem ciToday, ci1To2, ci2To1;
 
     private void ciToday_Click(object sender, EventArgs args)
     {
@@ -629,7 +629,7 @@ namespace FreeLibSet.Forms
 
     #region Команды установки диапазонов
 
-    EFPCommandItem ciMonth, ciQuarter, ciYear;
+    private readonly EFPCommandItem ciMonth, ciQuarter, ciYear;
 
     private void ciMonth_Click(object sender, EventArgs args)
     {
@@ -691,7 +691,7 @@ namespace FreeLibSet.Forms
 
     #region Следующий / предыдущий период
 
-    EFPCommandItem ciNextPeriod, ciPrevPeriod, ciNextYear, ciPrevYear;
+    private readonly EFPCommandItem ciNextPeriod, ciPrevPeriod, ciNextYear, ciPrevYear;
 
     void ciNextYear_Click(object sender, EventArgs args)
     {
@@ -1993,8 +1993,8 @@ namespace FreeLibSet.Forms
 
     #region Команды установки значений
 
-    EFPCommandItem ciToday;
-    EFPCommandItem ciMonth, ciQuarter, ciYear;
+    private readonly EFPCommandItem ciToday;
+    private readonly EFPCommandItem ciMonth, ciQuarter, ciYear;
 
     private void ciToday_Click(object sender, EventArgs args)
     {

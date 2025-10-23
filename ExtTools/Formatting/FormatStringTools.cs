@@ -847,37 +847,37 @@ namespace FreeLibSet.Formatting
     /// Тип форматизатора.
     /// </summary>
     public EditableDateTimeFormatterKind Kind { get { return _kind; } }
-    private EditableDateTimeFormatterKind _kind;
+    private readonly EditableDateTimeFormatterKind _kind;
 
     /// <summary>
     /// Формат
     /// </summary>
     public string Format { get { return _Format; } }
-    private string _Format;
+    private readonly string _Format;
 
     /// <summary>
     /// Провайдер для форматирования
     /// </summary>
     public IFormatProvider FormatProvider { get { return _FormatInfo; } }
-    private DateTimeFormatInfo _FormatInfo;
+    private readonly DateTimeFormatInfo _FormatInfo;
 
     /// <summary>
     /// Маска, которую нужно использовать в поле ввода, например, MaskedTextBox
     /// </summary>
     public string EditMask { get { return _EditMask; } }
-    private string _EditMask;
+    private readonly string _EditMask;
 
     /// <summary>
     /// Ширина текстового поля (количество знаков в поле ввода)
     /// </summary>
     public int TextWidth { get { return _TextWidth; } }
-    private int _TextWidth;
+    private readonly int _TextWidth;
 
     /// <summary>
     /// Провайдер для обслуживания маски ввода
     /// </summary>
     public IMaskProvider MaskProvider { get { return _MaskProvider; } }
-    private StdMaskProvider _MaskProvider;
+    private readonly StdMaskProvider _MaskProvider;
 
     /// <summary>
     /// Возвращает true, если методы <see cref="Parse(string, int)"/> и <see cref="TryParse(string, out DateTime, int)"/> могут обрабатывать аргумент defaultYear, когда

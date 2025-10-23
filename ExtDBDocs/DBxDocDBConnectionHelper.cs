@@ -185,13 +185,13 @@ namespace FreeLibSet.Data.Docs
     /// После обноввления структуры баз данных, программа может выгрузить список сообщений в log-файл или отправить администратору
     /// </summary>
     public ErrorMessageList Errors { get { return _Errors; } }
-    private ErrorMessageList _Errors;
+    private readonly ErrorMessageList _Errors;
 
     /// <summary>
     /// Параметры обновления структуры баз данных.
     /// </summary>
     public DBxUpdateStructOptions UpdateStructOptions { get { return _UpdateStructOptions; } }
-    private DBxUpdateStructOptions _UpdateStructOptions;
+    private readonly DBxUpdateStructOptions _UpdateStructOptions;
 
     #endregion
 

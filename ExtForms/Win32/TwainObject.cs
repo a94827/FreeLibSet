@@ -385,8 +385,8 @@ namespace FreeLibSet.Win32.Twain
     }
 
     private IntPtr hwnd;
-    private TwIdentity appid;
-    private TwIdentity srcds;
+    private readonly TwIdentity appid;
+    private readonly TwIdentity srcds;
     private TwEvent evtmsg;
     private WINMSG winmsg;
 

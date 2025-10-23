@@ -90,7 +90,7 @@ namespace FreeLibSet.Data.OleDb
     /// Путь к mdb-файлу
     /// </summary>
     public AbsPath DataSource { get { return _DataSource; } }
-    private AbsPath _DataSource;
+    private readonly AbsPath _DataSource;
 
     /// <summary>
     /// Объект для синхронизации
@@ -308,10 +308,10 @@ namespace FreeLibSet.Data.OleDb
     // Свойство ConnectionString не стоит делать public. Там может быть пароль
 
     internal OleDbConnectionStringBuilder ConnectionStringBuilder { get { return _ConnectionStringBuilder; } }
-    private OleDbConnectionStringBuilder _ConnectionStringBuilder;
+    private readonly OleDbConnectionStringBuilder _ConnectionStringBuilder;
 
     internal string ConnectionString { get { return _ConnectionString; } }
-    private string _ConnectionString;
+    private readonly string _ConnectionString;
 
     #endregion
 

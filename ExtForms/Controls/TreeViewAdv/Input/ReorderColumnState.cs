@@ -24,7 +24,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
       get { return _location; }
     }
 
-    private Bitmap _ghostImage;
+    private readonly Bitmap _ghostImage;
     public Bitmap GhostImage
     {
       get { return _ghostImage; }
@@ -36,7 +36,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
       get { return _dropColumn; }
     }
 
-    private int _dragOffset;
+    private readonly int _dragOffset;
     public int DragOffset
     {
       get { return _dragOffset; }

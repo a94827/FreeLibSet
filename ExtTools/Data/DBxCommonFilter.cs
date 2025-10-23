@@ -4876,7 +4876,7 @@ namespace FreeLibSet.Data
     /// SQL-фильтр. Задается в конструкторе
     /// </summary>
     public DBxFilter Filter { get { return _Filter; } }
-    private DBxFilter _Filter;
+    private readonly DBxFilter _Filter;
 
     #endregion
 

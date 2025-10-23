@@ -8,3 +8,12 @@ D:\a94827\FreeLibSet4\ExtRussian\bin\Debug\ru\ExtTools.resources.dll
 D:\a94827\FreeLibSet4\ExtRussian\obj\Debug\ExtRussian.dll
 D:\a94827\FreeLibSet4\ExtRussian\obj\Debug\ExtRussian.pdb
 D:\a94827\FreeLibSet4\ExtRussian\bin\Debug\ExtRussian.XML
+D:\a94827\FreeLibSet\ExtRussian\bin\Debug\ExtRussian.dll
+D:\a94827\FreeLibSet\ExtRussian\bin\Debug\ExtRussian.pdb
+D:\a94827\FreeLibSet\ExtRussian\bin\Debug\ExtTools.dll
+D:\a94827\FreeLibSet\ExtRussian\bin\Debug\ExtTools.pdb
+D:\a94827\FreeLibSet\ExtRussian\bin\Debug\ExtTools.xml
+D:\a94827\FreeLibSet\ExtRussian\bin\Debug\ru\ExtTools.resources.dll
+D:\a94827\FreeLibSet\ExtRussian\obj\Debug\ResolveAssemblyReference.cache
+D:\a94827\FreeLibSet\ExtRussian\obj\Debug\ExtRussian.dll
+D:\a94827\FreeLibSet\ExtRussian\obj\Debug\ExtRussian.pdb

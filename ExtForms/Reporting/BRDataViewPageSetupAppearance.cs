@@ -129,9 +129,9 @@ namespace FreeLibSet.Forms.Reporting
       }
     }
 
-    private IEFPDataView _ControlProvider;
-    private BRDataViewSettingsDataItem _ViewData;
-    private bool _TextOnly;
+    private readonly IEFPDataView _ControlProvider;
+    private readonly BRDataViewSettingsDataItem _ViewData;
+    private readonly bool _TextOnly;
 
     #endregion
 
@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms.Reporting
     public EFPListComboBox efpBoolMode;
     public EFPTextBox efpTextTrue, efpTextFalse;
 
-    private List<string> _TrueTextValues, _FalseTextValues;
+    private readonly List<string> _TrueTextValues, _FalseTextValues;
 
     private void SelBoolText_Click(object sender, EventArgs args)
     {

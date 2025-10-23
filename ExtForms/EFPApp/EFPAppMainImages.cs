@@ -314,7 +314,7 @@ namespace FreeLibSet.Forms
       /// Значение - созданный и заполненный список изображений.
       /// При доступе к словарю объект словаря блокируется.
       /// </summary>
-      private Dictionary<int, System.Windows.Forms.ImageList> _ThreadImageListDict;
+      private readonly Dictionary<int, System.Windows.Forms.ImageList> _ThreadImageListDict;
 
       internal System.Windows.Forms.ImageList GetImageList()
       {

@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms
         _Owner = owner;
       }
 
-      private EFPDataViewConfig _Owner;
+      private readonly EFPDataViewConfig _Owner;
 
       #endregion
 
@@ -192,7 +192,7 @@ namespace FreeLibSet.Forms
         _Owner = owner;
       }
 
-      private EFPDataViewConfig _Owner;
+      private readonly EFPDataViewConfig _Owner;
 
       #endregion
 

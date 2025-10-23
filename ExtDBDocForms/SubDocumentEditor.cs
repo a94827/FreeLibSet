@@ -112,11 +112,11 @@ namespace FreeLibSet.Forms.Docs
     public DBUI UI { get { return _SubDocTypeUI.UI; } }
 
     /// <summary>
-    /// Текущие режим редактирования поддокумента.
+    /// Текущий режим редактирования поддокумента.
     /// Он может не совпадать с режимом основного редактора.
     /// </summary>
     public UIDataState State { get { return _State; } }
-    private UIDataState _State;
+    private readonly UIDataState _State;
 
     /// <summary>
     /// True, если редактируется, просматривается или удаляется сразу

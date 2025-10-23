@@ -44,7 +44,7 @@ namespace FreeLibSet.Parsing
     /// Задаются в конструкторе
     /// </summary>
     public char[] SpaceChars { get { return _SpaceChars; } }
-    private char[] _SpaceChars;
+    private readonly char[] _SpaceChars;
 
     #endregion
 
@@ -163,7 +163,7 @@ namespace FreeLibSet.Parsing
     /// Задаются в конструкторе
     /// </summary>
     public string StartString { get { return _StartString; } }
-    private string _StartString;
+    private readonly string _StartString;
 
     #endregion
 

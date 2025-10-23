@@ -111,12 +111,12 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
 
     /// <summary>
     /// Используются ли готовые наборы
     /// </summary>
-    private bool _UseHistory;
+    private readonly bool _UseHistory;
 
     /// <summary>
     /// Таблица фильтров
@@ -126,14 +126,14 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вызывающий табличный просмотр
     /// </summary>
-    IEFPControlWithFilters _CallerControlProvider;
+    private readonly IEFPControlWithFilters _CallerControlProvider;
 
     IEFPGridFilters Filters { get { return _CallerControlProvider.Filters; } }
 
     /// <summary>
     /// Готовые наборы
     /// </summary>
-    private EFPConfigParamSetComboBox efpParamSet;
+    private readonly EFPConfigParamSetComboBox efpParamSet;
 
     #endregion
 

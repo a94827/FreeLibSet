@@ -279,11 +279,11 @@ namespace FreeLibSet.Forms.Docs
     private static EFPRuntimeOnlyConfigManager _DummyManager = null;
 
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     public UserActionsReportParams Params { get { return (UserActionsReportParams)(base.ReportParams); } }
 
-    private EFPReportDBxGridPage _MainPage;
+    private readonly EFPReportDBxGridPage _MainPage;
 
     #endregion
 

@@ -107,9 +107,9 @@ namespace FreeLibSet.UICore
     /// Всегда больше 0.
     /// </summary>
     public T Increment { get { return _Increment; } }
-    private T _Increment;
+    private readonly T _Increment;
 
-    private IMinMaxSource<T?> _MinMaxSource;
+    private readonly IMinMaxSource<T?> _MinMaxSource;
 
     /// <summary>
     /// Возврашает минимальное значение или null.
@@ -453,7 +453,7 @@ namespace FreeLibSet.UICore
     }
 
     private readonly float _M;
-    private long _Increment2;
+    private readonly long _Increment2;
 
     #endregion
 
@@ -514,7 +514,7 @@ namespace FreeLibSet.UICore
     }
 
     private readonly double _M;
-    private long _Increment2;
+    private readonly long _Increment2;
 
     #endregion
 
@@ -575,7 +575,7 @@ namespace FreeLibSet.UICore
     }
 
     private readonly decimal _M;
-    private long _Increment2;
+    private readonly long _Increment2;
 
     #endregion
 

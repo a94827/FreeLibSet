@@ -116,7 +116,7 @@ namespace FreeLibSet.Data.Docs
       /// Описание ссылочного столбца
       /// </summary>
       public DBxColumnStruct ColumnDef { get { return _ColumnDef; } }
-      private DBxColumnStruct _ColumnDef;
+      private readonly DBxColumnStruct _ColumnDef;
 
       /// <summary>
       /// Текстовое представление для отладки

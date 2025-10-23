@@ -313,7 +313,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Коллекция наборов документов по типам
     /// </summary>
-    private NamedList<DBxMultiDocs> _MultiDocs;
+    private readonly NamedList<DBxMultiDocs> _MultiDocs;
 
     /// <summary>
     /// Состояния документов.
@@ -503,7 +503,7 @@ namespace FreeLibSet.Data.Docs
     /// Используется для записи поля StartTime в истрии действий пользователя
     /// </summary>
     public DateTime StartTime { get { return _StartTime; } }
-    private DateTime _StartTime;
+    private readonly DateTime _StartTime;
 
     /// <summary>
     /// Использование асинхронной записи при вызове ApplyChanges().
@@ -1313,7 +1313,7 @@ namespace FreeLibSet.Data.Docs
     /// Методы Add/RemoveLongLock() этого объекта DBxDocSet() обрабатывают список автоматически
     /// </summary>
     public IList<Guid> IgnoredLocks { get { return _IgnoredLocks; } }
-    private GuidList _IgnoredLocks;
+    private readonly GuidList _IgnoredLocks;
 
     private class GuidList : ListWithReadOnly<Guid>
     {
@@ -1766,7 +1766,7 @@ namespace FreeLibSet.Data.Docs
       #region Поля
 
       public List<DBxDocProvider.DocSubDocDataId> List { get { return _List; } }
-      private List<DBxDocProvider.DocSubDocDataId> _List;
+      private readonly List<DBxDocProvider.DocSubDocDataId> _List;
 
       public int TableRowCount;
 

@@ -83,7 +83,7 @@ namespace FreeLibSet.Forms
     /// Провайдер табличного просмотра, для которого вызвано событие
     /// </summary>
     public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
-    private EFPDataGridView _ControlProvider;
+    private readonly EFPDataGridView _ControlProvider;
 
     /// <summary>
     /// Табличный просмотр
@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms
       return Control.Rows[RowIndex];
     }
 
-    private bool _IsCellAttributes;
+    private readonly bool _IsCellAttributes;
 
     #endregion
 
@@ -3530,7 +3530,7 @@ namespace FreeLibSet.Forms
         _Control = control;
       }
 
-      private DataGridView _Control;
+      private readonly DataGridView _Control;
 
       #endregion
 

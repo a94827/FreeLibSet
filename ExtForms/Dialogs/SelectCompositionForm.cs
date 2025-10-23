@@ -144,7 +144,7 @@ namespace FreeLibSet.Forms
 
     #region Изображение и сообщение об ошибке
 
-    private EFPPictureBox efpPreview;
+    private readonly EFPPictureBox efpPreview;
 
     void SetImage(Image image)
     {
@@ -185,11 +185,11 @@ namespace FreeLibSet.Forms
 
     #region Комбоблок истории
 
-    private EFPTextComboBox efpSelCB;
+    private readonly EFPTextComboBox efpSelCB;
 
-    private EFPButton efpSaveButton;
+    private readonly EFPButton efpSaveButton;
 
-    private EFPButton efpDelButton;
+    private readonly EFPButton efpDelButton;
 
     /// <summary>
     /// Текущая выбранная композиция.

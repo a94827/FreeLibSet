@@ -74,26 +74,26 @@ namespace FreeLibSet.Forms
     /// Провайдер формы
     /// </summary>
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
 
     /// <summary>
     /// Провайдер кнопки "ОК"
     /// </summary>
     public EFPButton OKButtonProvider { get { return _OKButtonProvider; } }
-    private EFPButton _OKButtonProvider;
+    private readonly EFPButton _OKButtonProvider;
 
     /// <summary>
     /// Провайдер кнопки "Отмена"
     /// </summary>
     public EFPButton CancelButtonProvider { get { return _CancelButtonProvider; } }
-    private EFPButton _CancelButtonProvider;
+    private readonly EFPButton _CancelButtonProvider;
 
     /// <summary>
     /// Провайдер кнопки "Нет".
     /// По умолчанию эта кнопка невидима
     /// </summary>
     public EFPButton NoButtonProvider { get { return _NoButtonProvider; } }
-    private EFPButton _NoButtonProvider;
+    private readonly EFPButton _NoButtonProvider;
 
     #endregion
 
@@ -488,13 +488,13 @@ namespace FreeLibSet.Forms
     /// Если использован конструктор, не создающий рамку, то свойство возвращает null.
     /// </summary>
     public GroupBox GroupBox { get { return _GroupBox; } }
-    private GroupBox _GroupBox;
+    private readonly GroupBox _GroupBox;
 
     /// <summary>
     /// Управляющий элемент и панель инструментов
     /// </summary>
     public EFPControlWithToolBar<T> ControlWithToolBar { get { return _ControlWithToolBar; } }
-    private EFPControlWithToolBar<T> _ControlWithToolBar;
+    private readonly EFPControlWithToolBar<T> _ControlWithToolBar;
 
     #endregion
 

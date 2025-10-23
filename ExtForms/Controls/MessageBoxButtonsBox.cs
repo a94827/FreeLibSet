@@ -117,7 +117,7 @@ namespace FreeLibSet.Controls
         PlaceControls();
       }
     }
-    private MessageBoxButtons _Buttons;
+    private readonly MessageBoxButtons _Buttons;
 
     public Orientation Orientation
     {
@@ -129,7 +129,7 @@ namespace FreeLibSet.Controls
         PlaceControls();
       }
     }
-    private Orientation _Orientation;
+    private readonly Orientation _Orientation;
 
     public bool UseDialogResult
     {
@@ -140,7 +140,7 @@ namespace FreeLibSet.Controls
           return;
       }
     }
-    private bool _UseDialogResult;
+    private readonly bool _UseDialogResult;
 
     #endregion
 
@@ -151,7 +151,7 @@ namespace FreeLibSet.Controls
     /// Индексом в массиве является перечисление <see cref="DialogResult"/>.
     /// Элемент с индексом 0 (<see cref="DialogResult.None"/>) не используется.
     /// </summary>
-    private Button[] _ButtonControls;
+    private readonly Button[] _ButtonControls;
 
     public Button this[DialogResult button]
     {

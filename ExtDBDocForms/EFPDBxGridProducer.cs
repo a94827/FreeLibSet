@@ -210,16 +210,16 @@ namespace FreeLibSet.Forms.Docs
       #region Поля
 
       public DocTypeUIBase MasterUI { get { return _MasterUI; } }
-      private DocTypeUIBase _MasterUI;
+      private readonly DocTypeUIBase _MasterUI;
 
       public string RefColumnName { get { return _RefColumnName; } }
-      private string _RefColumnName;
+      private readonly string _RefColumnName;
 
       public string ValueColumnName { get { return _ValueColumnName; } }
-      private string _ValueColumnName;
+      private readonly string _ValueColumnName;
 
       public string ValueColumnName2 { get { return _ValueColumnName2; } }
-      private string _ValueColumnName2;
+      private readonly string _ValueColumnName2;
 
       /// <summary>
       /// Возвращает имя результирующего столбца
@@ -833,7 +833,7 @@ namespace FreeLibSet.Forms.Docs
 
       #region Переопределенные методы
 
-      private EFPDBxGridProducer.DocRefInfo _RefInfo;
+      private readonly EFPDBxGridProducer.DocRefInfo _RefInfo;
 
       protected override object GetSourceValue(EFPGridProducerValueNeededEventArgs args)
       {
@@ -889,7 +889,7 @@ namespace FreeLibSet.Forms.Docs
 
       #region Переопределенные методы
 
-      private EFPDBxGridProducer.DocRefInfo _RefInfo;
+      private readonly EFPDBxGridProducer.DocRefInfo _RefInfo;
 
       protected override object GetSourceValue(EFPGridProducerValueNeededEventArgs args)
       {

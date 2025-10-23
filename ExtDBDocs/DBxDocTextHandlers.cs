@@ -726,7 +726,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Используем единственный экземпляр объекта, т.к. при запросе выполняется блокировка
     /// </summary>
-    private DBxTextValueNeededEventArgs _Args;
+    private readonly DBxTextValueNeededEventArgs _Args;
 
     /// <summary>
     /// Получить текстовое представление документа или поддокумента
@@ -1141,7 +1141,7 @@ namespace FreeLibSet.Data.Docs
       #endregion
     }
 
-    private Dictionary<string, TableHandler> _TableItems;
+    private readonly Dictionary<string, TableHandler> _TableItems;
 
     #endregion
 

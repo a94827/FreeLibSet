@@ -50,7 +50,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     public ZoomDirection Direction { get { return _Direction; } }
-    private ZoomDirection _Direction;
+    private readonly ZoomDirection _Direction;
 
     #endregion
   }

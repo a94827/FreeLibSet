@@ -89,9 +89,9 @@ namespace FreeLibSet.Forms
       #endregion
     }
 
-    EFPFormProvider efpForm;
+    private readonly EFPFormProvider efpForm;
 
-    int _PrevActivePageIndex = -1;
+    private int _PrevActivePageIndex = -1;
 
     /// <summary>
     /// Запоминаем текущую страницу между сеансами работы
@@ -117,19 +117,19 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    SettingsDialog _Owner;
+    private readonly SettingsDialog _Owner;
 
-    private EFPTabControl efpTabControl;
+    private readonly EFPTabControl efpTabControl;
 
     /// <summary>
     /// Используются ли готовые наборы
     /// </summary>
-    private bool _UseHistory;
+    private readonly bool _UseHistory;
 
     /// <summary>
     /// Готовые наборы
     /// </summary>
-    private EFPConfigParamSetComboBox efpParamSet;
+    private readonly EFPConfigParamSetComboBox efpParamSet;
 
     #endregion
 
@@ -164,7 +164,7 @@ namespace FreeLibSet.Forms
 
     #region IEFPConfigParamSetAuxTextHandler Members
 
-    private TempCfg _AuxTextTempCfg;
+    private readonly TempCfg _AuxTextTempCfg;
 
     public void BeginGetAuxText()
     {

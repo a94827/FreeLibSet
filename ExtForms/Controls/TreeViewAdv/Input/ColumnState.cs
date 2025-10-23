@@ -14,7 +14,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal abstract class ColumnState : InputState
   {
-    private TreeColumn _column;
+    private readonly TreeColumn _column;
     public TreeColumn Column
     {
       get { return _column; }

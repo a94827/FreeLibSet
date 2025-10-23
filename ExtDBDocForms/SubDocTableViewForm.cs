@@ -261,7 +261,7 @@ namespace FreeLibSet.Forms.Docs
         _Form = form;
       }
 
-      private SubDocTableViewForm _Form;
+      private readonly SubDocTableViewForm _Form;
 
       #endregion
 

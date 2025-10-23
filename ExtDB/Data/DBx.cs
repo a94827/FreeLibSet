@@ -843,7 +843,7 @@ namespace FreeLibSet.Data
     /// Ключ - имя таблицы
     /// Значение - объект, для которого вызывается Monitor.Enter() и Exit().
     /// </summary>
-    private Dictionary<string, object> _UpdateTableLockObjects;
+    private readonly Dictionary<string, object> _UpdateTableLockObjects;
 
     /// <summary>
     /// Получить объект, используемый для блокировки таблиц.

@@ -2580,7 +2580,7 @@ namespace FreeLibSet.Config
     /// <summary>
     /// Символы, которые можно использовать в именах, кроме букв и цифр
     /// </summary>
-    private static CharArrayIndexer _ValidNameCharIndexer = new CharArrayIndexer("_.-");
+    private static readonly CharArrayIndexer _ValidNameCharIndexer = new CharArrayIndexer("_.-");
 
     /// <summary>
     /// Проверка корректности имени.

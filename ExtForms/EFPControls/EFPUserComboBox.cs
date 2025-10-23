@@ -14,8 +14,8 @@ using FreeLibSet.UICore;
 namespace FreeLibSet.Forms
 {
   /// <summary>
-  /// Провайдер для UserComboBox, предназначенного для выбора значения с помощью кнопки выбора
-  /// Элемент всегда имеет свойство ReadOnly=true
+  /// Провайдер для <see cref="UserSelComboBox"/>, предназначенного для выбора значения с помощью кнопки выбора
+  /// Элемент всегда имеет свойство ReadOnly=true.
   /// </summary>
   public class EFPUserSelComboBox : EFPTextViewControl<UserSelComboBox>, IDepSyncObject
   {
@@ -386,7 +386,7 @@ namespace FreeLibSet.Forms
 
   /// <summary>
   /// Комбоблок выбора одного или нескольких перечислимых значений.
-  /// Выбор осуществляется с помощью ListSelectDialog
+  /// Выбор осуществляется с помощью <see cref="ListSelectDialog"/>.
   /// </summary>
   public class EFPListMultiSelComboBox : EFPUserSelComboBox
   {
@@ -453,7 +453,7 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе
     /// </summary>
     public string[] Items { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
 
     /// <summary>
@@ -796,7 +796,7 @@ namespace FreeLibSet.Forms
         _Owner = owner;
       }
 
-      private EFPListMultiSelComboBox _Owner;
+      private readonly EFPListMultiSelComboBox _Owner;
 
       #endregion
 
@@ -815,7 +815,7 @@ namespace FreeLibSet.Forms
     /// Флажки выбора.
     /// </summary>
     public SelectionFlagList Selections { get { return _Selections; } }
-    private SelList _Selections;
+    private readonly SelList _Selections;
 
     internal void OnSelectionChanged()
     {
@@ -874,7 +874,7 @@ namespace FreeLibSet.Forms
 
     #region Текст, подсказка и значок
 
-    private EFPComboBoxTextValueNeededEventArgs _TextValueNeededArgs; // чтобы не создавать каждый раз
+    private readonly EFPComboBoxTextValueNeededEventArgs _TextValueNeededArgs; // чтобы не создавать каждый раз
 
     /// <summary>
     /// Событие вызывается при текстового поля.
@@ -1105,9 +1105,9 @@ namespace FreeLibSet.Forms
   }
 
   /// <summary>
-  /// Провайдер для UserComboBox, предназначенного для ввода текста.
+  /// Провайдер для <see cref="UserTextComboBox"/>, предназначенного для ввода текста.
   /// Расширяет EFPUserComboBox, синхронизируя разрешение для кнопки выбора из списка
-  /// со свойством ReadOnly
+  /// со свойством ReadOnly.
   /// </summary>
   public class EFPUserTextComboBox : EFPTextBoxControlWithReadOnly<UserTextComboBox>
   {
@@ -1457,7 +1457,7 @@ namespace FreeLibSet.Forms
         _SelectedCodesEx.Value = SelectedCodes;
     }
 
-    private EFPCodeValidatingEventArgs _CodeValidatingEventArgs;
+    private readonly EFPCodeValidatingEventArgs _CodeValidatingEventArgs;
 
     /// <summary>
     /// Проверка корректности значения.
@@ -1724,9 +1724,9 @@ namespace FreeLibSet.Forms
     /// Список доступных кодов. Задается в конструкторе
     /// </summary>
     public string[] Codes { get { return _Codes; } }
-    private string[] _Codes;
+    private readonly string[] _Codes;
 
-    private StringArrayIndexer _CodeIndexer;
+    private readonly StringArrayIndexer _CodeIndexer;
 
     /// <summary>
     /// Описания, соответствующие кодам Codes.
@@ -1848,7 +1848,7 @@ namespace FreeLibSet.Forms
 
     #region Табличный просмотр
 
-    private EFPDataGridView _MainControlProvider;
+    private readonly EFPDataGridView _MainControlProvider;
 
     /// <summary>
     /// Событие вызывается при прорисовке элемента.

@@ -134,9 +134,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     #endregion
 
-      #region Посещенные ссылки
+    #region Посещенные ссылки
 
-    private Dictionary<object, object> _VisitedLinks;
+    private readonly Dictionary<object, object> _VisitedLinks;
 
     /// <summary>
     /// Помечает значение, возвращаемое для узла <paramref name="node"/>, как посещенную ссылку

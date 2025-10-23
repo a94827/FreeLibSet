@@ -33,7 +33,7 @@ namespace FreeLibSet.Forms
 
     #region Флажки
 
-    private EFPCheckBox efpText, efpCsv, efpHtml;
+    private readonly EFPCheckBox efpText, efpCsv, efpHtml;
 
     private void ValidateForm(object sender, UIValidatingEventArgs args)
     {

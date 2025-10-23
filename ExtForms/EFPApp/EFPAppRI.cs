@@ -463,7 +463,7 @@ namespace FreeLibSet.Forms.RI
 
       #region Свойства
 
-      private BandPanelItem _BandPanel;
+      private readonly BandPanelItem _BandPanel;
 
       #endregion
 
@@ -504,7 +504,7 @@ namespace FreeLibSet.Forms.RI
 
       #region Список элементов
 
-      private List<IEFPAppRIItem> _Children;
+      private readonly List<IEFPAppRIItem> _Children;
 
       internal void Add(Control ctrl, EFPBaseProvider baseProvider)
       {

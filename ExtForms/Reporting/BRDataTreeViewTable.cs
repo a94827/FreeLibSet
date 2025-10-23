@@ -340,10 +340,10 @@ namespace FreeLibSet.Forms.Reporting
 
 
       public EFPDataTreeView ControlProvider { get { return _ControlProvider; } }
-      private EFPDataTreeView _ControlProvider;
+      private readonly EFPDataTreeView _ControlProvider;
 
       public BRDataViewSettingsDataItem ViewData { get { return _ViewData; } }
-      private BRDataViewSettingsDataItem _ViewData;
+      private readonly BRDataViewSettingsDataItem _ViewData;
 
       public TreeNodeAdv[] RowNodes { get { return _RowNodes; } }
       private TreeNodeAdv[] _RowNodes;
@@ -353,7 +353,7 @@ namespace FreeLibSet.Forms.Reporting
       /// Индекс первой строки данных, с учетом заголовков
       /// </summary>
       public int FirstDataRow { get { return _FirstDataRow; } }
-      private int _FirstDataRow;
+      private readonly int _FirstDataRow;
 
       public ColumnInfo[] Columns { get { return _Columns; } }
       private ColumnInfo[] _Columns;
@@ -373,7 +373,7 @@ namespace FreeLibSet.Forms.Reporting
       /// Если нумерация не используется, то возвращает (-1).
       /// </summary>
       public int SubHeaderNumberRowIndex { get { return _SubHeaderNumberRowIndex; } }
-      private int _SubHeaderNumberRowIndex;
+      private readonly int _SubHeaderNumberRowIndex;
 
       #endregion
     }

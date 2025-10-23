@@ -48,7 +48,7 @@ namespace FreeLibSet.UICore
     /// Набор данных, для которых выполняется проверка.
     /// </summary>
     public UISelRCGridData Data { get { return _Data; } }
-    private UISelRCGridData _Data;
+    private readonly UISelRCGridData _Data;
 
     /// <summary>
     /// Строка матрицы <see cref="UISelRCGridData.SourceData"/>, для которой выполняется проверка
@@ -876,7 +876,7 @@ namespace FreeLibSet.UICore
     /// Список задается в конструкторе.
     /// </summary>
     public TypedStringDictionary<T> TextValues { get { return _TextValues; } }
-    private TypedStringDictionary<T> _TextValues;
+    private readonly TypedStringDictionary<T> _TextValues;
 
     #endregion
 
@@ -1015,7 +1015,7 @@ namespace FreeLibSet.UICore
 
       #region Свойства
 
-      private UISelRCGridData _Data;
+      private readonly UISelRCGridData _Data;
 
       /// <summary>
       /// Возвращает или устанавливает отметку для строки
@@ -1033,7 +1033,7 @@ namespace FreeLibSet.UICore
           _Data.CallChanged();
         }
       }
-      private bool[] _Items;
+      private readonly bool[] _Items;
 
 
       /// <summary>
@@ -1168,7 +1168,7 @@ namespace FreeLibSet.UICore
 
       #region Свойства
 
-      private UISelRCGridData _Data;
+      private readonly UISelRCGridData _Data;
 
       /// <summary>
       /// Возвращает или назначает выбранное описание для столбца.
@@ -1188,7 +1188,7 @@ namespace FreeLibSet.UICore
           _Data.CallChanged();
         }
       }
-      private UISelRCColumn[] _Items;
+      private readonly UISelRCColumn[] _Items;
 
       /// <summary>
       /// Возвращает true, если нет ни одного назначенного описания столбца,
@@ -1887,7 +1887,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Единственный экземпляр аргументов события
     /// </summary>
-    private UISelRCValidatingEventArgs _ValidatingArgs;
+    private readonly UISelRCValidatingEventArgs _ValidatingArgs;
 
     /// <summary>
     /// Выполнить проверку значения.

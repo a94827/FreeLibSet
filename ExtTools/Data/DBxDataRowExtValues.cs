@@ -910,7 +910,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Получение "пустых" значений, когда таблица не содержит строк
     /// </summary>
-    private DataRow _DummyRow;
+    private readonly DataRow _DummyRow;
 
     private void GetReadyBuffer(int index)
     {

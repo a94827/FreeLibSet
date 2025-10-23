@@ -53,7 +53,7 @@ namespace FreeLibSet.Models.Tree
         set { _model = value; }
       }
 
-      private NodeCollection _nodes;
+      private readonly NodeCollection _nodes;
       public Collection<Node> Nodes { get { return _nodes; } }
 
       internal Node _parent;
@@ -229,7 +229,7 @@ namespace FreeLibSet.Models.Tree
 
       #region Свойства
 
-      private Node _owner;
+      private readonly Node _owner;
 
       #endregion
 
@@ -291,7 +291,7 @@ namespace FreeLibSet.Models.Tree
     #endregion
 
 
-    private Node _root;
+    private readonly Node _root;
     public Node Root
     {
       get { return _root; }

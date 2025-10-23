@@ -419,7 +419,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -536,7 +536,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     public Application Application
     {
@@ -741,7 +741,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -791,7 +791,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1166,7 +1166,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1397,7 +1397,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1468,7 +1468,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1716,7 +1716,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1778,7 +1778,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1895,7 +1895,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2080,7 +2080,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2221,7 +2221,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2400,7 +2400,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2620,7 +2620,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2742,7 +2742,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -3040,7 +3040,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -3162,7 +3162,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -3405,7 +3405,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -3463,7 +3463,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -3542,7 +3542,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -3594,7 +3594,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -3638,7 +3638,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -3674,7 +3674,7 @@ namespace FreeLibSet.OLE.Word
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 

@@ -1660,7 +1660,7 @@ namespace FreeLibSet.Forms
 
     #region Хранилище данных
 
-    private Dictionary<object, CheckState> _Dict;
+    private readonly Dictionary<object, CheckState> _Dict;
 
     /// <summary>
     /// Основное свойство.

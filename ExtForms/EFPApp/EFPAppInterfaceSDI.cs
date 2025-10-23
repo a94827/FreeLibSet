@@ -86,7 +86,7 @@ namespace FreeLibSet.Forms
     }
 
 
-    private FormStartPositionCascadeHelper _CascadeHelper;
+    private readonly FormStartPositionCascadeHelper _CascadeHelper;
 
     private class PreparationData
     {

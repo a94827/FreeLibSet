@@ -710,7 +710,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Устанавливается для списка Empty
     /// </summary>
-    private bool _IsReadOnly;
+    private readonly bool _IsReadOnly;
 
     /// <summary>
     /// Положение ненайденных элементов при сортировке с помощью метода <see cref="Compare(char, char)"/>.

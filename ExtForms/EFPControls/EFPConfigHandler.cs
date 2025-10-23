@@ -186,7 +186,7 @@ namespace FreeLibSet.Forms
     /// <see cref="EFPControlBase"/> и <see cref="EFPFormProvider"/> добавляют себя в этот список сразу после создания <see cref="EFPConfigHandler"/>.
     /// </summary>
     public IList<IEFPConfigurable> Sources { get { return _Sources; } }
-    private List<IEFPConfigurable> _Sources;
+    private readonly List<IEFPConfigurable> _Sources;
 
     #endregion
 

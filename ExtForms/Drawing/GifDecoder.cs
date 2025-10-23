@@ -44,13 +44,13 @@ namespace FreeLibSet.Drawing
 {
   public class GifFrame
   {
-    private Image _image;
+    private readonly Image _image;
     public Image Image
     {
       get { return _image; }
     }
 
-    private int _delay;
+    private readonly int _delay;
     public int Delay
     {
       get { return _delay; }
@@ -97,7 +97,7 @@ namespace FreeLibSet.Drawing
     private Bitmap bitmap;
     private Image lastImage; // previous frame
 
-    private byte[] block = new byte[256]; // current data block
+    private readonly byte[] block = new byte[256]; // current data block
     private int blockSize = 0; // block size
 
     // last graphic control extension info
@@ -119,7 +119,7 @@ namespace FreeLibSet.Drawing
 
     private ArrayList frames; // frames read from current file
     private int frameCount;
-    private bool _makeTransparent;
+    private readonly bool _makeTransparent;
 
     /**
      * Gets the number of frames read from file.

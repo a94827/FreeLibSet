@@ -780,7 +780,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Команды буфера обмена
 
-    private EFPCommandItem ciCut, ciCopy, ciPaste;
+    private readonly EFPCommandItem ciCut, ciCopy, ciPaste;
 
     void ciCut_Click(object sender, EventArgs args)
     {
@@ -827,7 +827,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Информация о документе
 
-    EFPCommandItem ciShowDocInfo;
+    private readonly EFPCommandItem ciShowDocInfo;
 
     void ciShowDocInfo_Click(object sender, EventArgs args)
     {

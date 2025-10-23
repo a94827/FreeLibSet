@@ -1219,7 +1219,7 @@ namespace FreeLibSet.Forms
       _ClipboardMode = ListSelectDialogClipboardMode.None;
     }
 
-    private ListSelectForm _Form;
+    private readonly ListSelectForm _Form;
 
     #endregion
 

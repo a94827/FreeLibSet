@@ -282,7 +282,7 @@ namespace FreeLibSet.Forms
         _Owner = owner;
       }
 
-      private EFPConfigParamSetComboBox _Owner;
+      private readonly EFPConfigParamSetComboBox _Owner;
 
       #endregion
 

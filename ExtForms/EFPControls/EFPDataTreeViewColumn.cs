@@ -740,7 +740,7 @@ namespace FreeLibSet.Forms
     /// Если столбец не может быть экспортирован, свойство возвращает null.
     /// </summary>
     public DbfFieldTypePreliminaryInfo DbfPreliminaryInfo { get { return _DbfPreliminaryInfo; } }
-    private DbfFieldTypePreliminaryInfo _DbfPreliminaryInfo;
+    private readonly DbfFieldTypePreliminaryInfo _DbfPreliminaryInfo;
 
     #endregion
 
@@ -757,8 +757,8 @@ namespace FreeLibSet.Forms
           _ModelEnumerable = new TreePathEnumerable(column.ControlProvider.Control.Model);
       }
 
-      private EFPDataTreeViewColumn _Column;
-      private IEnumerable<TreePath> _ModelEnumerable;
+      private readonly EFPDataTreeViewColumn _Column;
+      private readonly IEnumerable<TreePath> _ModelEnumerable;
 
       #endregion
 
@@ -786,8 +786,8 @@ namespace FreeLibSet.Forms
         _ModelEnumerator = modelEnumerator;
       }
 
-      private EFPDataTreeViewColumn _Column;
-      private IEnumerator<TreePath> _ModelEnumerator;
+      private readonly EFPDataTreeViewColumn _Column;
+      private readonly IEnumerator<TreePath> _ModelEnumerator;
 
       #endregion
 
@@ -862,7 +862,7 @@ namespace FreeLibSet.Forms
     /// Объект - владелец
     /// </summary>
     public EFPDataTreeView ControlProvider { get { return _ControlProvider; } }
-    private EFPDataTreeView _ControlProvider;
+    private readonly EFPDataTreeView _ControlProvider;
 
     #endregion
 
@@ -877,7 +877,7 @@ namespace FreeLibSet.Forms
     /// Нет возможности хранить в TreeColumn ссылку на EFPDataTreeViewColumn.
     /// Используем словарь, который надо периодически проверять на актуальность
     /// </summary>
-    private Dictionary<TreeColumn, EFPDataTreeViewColumn> _ColumnDict;
+    private readonly Dictionary<TreeColumn, EFPDataTreeViewColumn> _ColumnDict;
 
     //private Dictionary<string, EFPDataTreeViewColumn> _NameDict;
 

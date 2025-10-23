@@ -74,7 +74,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    private TableLayoutPanel _Panel;
+    private readonly TableLayoutPanel _Panel;
 
     /// <summary>
     /// Массив радиокнопок.
@@ -382,7 +382,7 @@ namespace FreeLibSet.Controls
           _Items[i] = new RadioGroupBoxItemImage(owner, owner._ImageLabels[i]);
       }
 
-      private RadioGroupBoxItemImage[] _Items;
+      private readonly RadioGroupBoxItemImage[] _Items;
 
       #endregion
 
@@ -615,8 +615,8 @@ namespace FreeLibSet.Controls
       _Label = label;
     }
 
-    private RadioGroupBox _Owner;
-    private Label _Label;
+    private readonly RadioGroupBox _Owner;
+    private readonly Label _Label;
 
     #endregion
 

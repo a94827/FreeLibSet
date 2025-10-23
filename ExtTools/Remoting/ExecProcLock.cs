@@ -466,7 +466,7 @@ namespace FreeLibSet.Remoting
     /// Для множественных блокировок процедура попадает только в список для блокировки верхнего уровня, то есть той, для которой был вызван Lock()
     /// </summary>
     public SyncCollection<ExecProcLockLogger> Waiters { get { return _Waiters; } }
-    private SyncCollection<ExecProcLockLogger> _Waiters;
+    private readonly SyncCollection<ExecProcLockLogger> _Waiters;
 
     /// <summary>
     /// Пустой массив блокировок
@@ -592,7 +592,7 @@ namespace FreeLibSet.Remoting
     /// Объект, блокировка которого ожидается
     /// </summary>
     public ExecProcLock Lock { get { return _Lock; } }
-    private ExecProcLock _Lock;
+    private readonly ExecProcLock _Lock;
 
     /// <summary>
     /// Процедура, которая ожидает блокировку

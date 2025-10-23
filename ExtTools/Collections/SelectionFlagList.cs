@@ -47,7 +47,7 @@ namespace FreeLibSet.Collections
 
     #region Флажки
 
-    private bool[] _Flags;
+    private readonly bool[] _Flags;
 
     /// <summary>
     /// Получение / установка значения одного флажка по индексу.

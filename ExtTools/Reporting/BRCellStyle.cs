@@ -1418,7 +1418,7 @@ namespace FreeLibSet.Reporting
       _Parent = parent;
     }
 
-    private BRCellStyle _Parent;
+    private readonly BRCellStyle _Parent;
 
     private object[] _Data;
 
@@ -1685,7 +1685,7 @@ namespace FreeLibSet.Reporting
     }
 
     internal override BRReport Report { get { return _Report; } }
-    private BRReport _Report;
+    private readonly BRReport _Report;
 
     #endregion
   }
@@ -1812,7 +1812,7 @@ namespace FreeLibSet.Reporting
     }
 
     internal override BRReport Report { get { return _Report; } }
-    private BRReport _Report;
+    private readonly BRReport _Report;
 
     #endregion
   }

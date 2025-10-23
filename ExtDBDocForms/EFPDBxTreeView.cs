@@ -1071,7 +1071,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Отправить
 
-    EFPCommandItem ciSendTo;
+    private readonly EFPCommandItem ciSendTo;
 
     private void ciSendToDocSel_Click(object sender, EventArgs args)
     {

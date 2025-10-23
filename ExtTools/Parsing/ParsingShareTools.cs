@@ -84,8 +84,8 @@ namespace FreeLibSet.Parsing
 
       #region Свойства
 
-      private System.Collections.ArrayList _List;
-      private Dictionary<T, int> _Positions;
+      private readonly System.Collections.ArrayList _List;
+      private readonly Dictionary<T, int> _Positions;
 
       public object this[T value]
       {

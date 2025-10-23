@@ -59,6 +59,6 @@ namespace FreeLibSet.Forms.Reporting
       ps.BottomMargin = (int)(Math.Round(efpBottomMargin.Value * 100m, 0, MidpointRounding.AwayFromZero));
     }
 
-    EFPDecimalEditBox efpLeftMargin, efpTopMargin, efpRightMargin, efpBottomMargin;
+    private readonly EFPDecimalEditBox efpLeftMargin, efpTopMargin, efpRightMargin, efpBottomMargin;
   }
 }

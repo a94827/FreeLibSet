@@ -37,7 +37,7 @@ namespace FreeLibSet.Forms.Docs
     }
 
     public DocInfoReport Report { get { return _Report; } }
-    private DocInfoReport _Report;
+    private readonly DocInfoReport _Report;
 
     public DocInfoReportParams Params { get { return _Report.Params; } }
 
@@ -629,7 +629,7 @@ namespace FreeLibSet.Forms.Docs
     #region Свойства
 
     public DBUI UI { get { return _UI; } }
-    private DBUI _UI;
+    private readonly DBUI _UI;
 
     public string DocTypeName
     {
@@ -753,9 +753,9 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Форма, из которой используются элементы Panel1 и Panel2
     /// </summary>
-    private DocInfoForm _ReportForm;
+    private readonly DocInfoForm _ReportForm;
 
-    private EFPReportControlPage _MainPage;
+    private readonly EFPReportControlPage _MainPage;
 
     void MainPage_DataQuery(object sender, EventArgs args)
     {
@@ -849,7 +849,7 @@ namespace FreeLibSet.Forms.Docs
 
     #region Вкладка "Ссылки"
 
-    private EFPReportControlPage _RefPage;
+    private readonly EFPReportControlPage _RefPage;
 
     void RefPage_DataQuery(object sender, EventArgs args)
     {

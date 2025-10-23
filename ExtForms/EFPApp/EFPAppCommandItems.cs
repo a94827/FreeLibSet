@@ -754,7 +754,7 @@ namespace FreeLibSet.Forms
         throw new ArgumentException(String.Format(Res.EFPApp_Arg_UnknownStdCommandCategoryAndName, category, name));
     }
 
-    private static BidirectionalDictionary<EFPAppStdCommandItems, string> _StdCommandDict = InitCommandDict();
+    private static readonly BidirectionalDictionary<EFPAppStdCommandItems, string> _StdCommandDict = InitCommandDict();
 
     private static BidirectionalDictionary<EFPAppStdCommandItems, string> InitCommandDict()
     {
@@ -875,7 +875,7 @@ namespace FreeLibSet.Forms
     /// Например, можно добавить сочетание клавиш для вызова окна калькулятора.
     /// </summary>
     public List<EFPCommandItem> GlobalShortCuts { get { return _GlobalShortCuts; } }
-    private List<EFPCommandItem> _GlobalShortCuts;
+    private readonly List<EFPCommandItem> _GlobalShortCuts;
 
     #endregion
   }

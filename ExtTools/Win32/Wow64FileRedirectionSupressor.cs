@@ -72,7 +72,7 @@ namespace FreeLibSet.Win32
     public bool Active { get { return _Active; } }
     private bool _Active;
 
-    private IntPtr _OldValue;
+    private readonly IntPtr _OldValue;
 
     #endregion
 

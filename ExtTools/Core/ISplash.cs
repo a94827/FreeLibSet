@@ -493,7 +493,7 @@ namespace FreeLibSet.Core
         return a;
       }
     }
-    private SplashPhaseState[] _PhaseStates;
+    private readonly SplashPhaseState[] _PhaseStates;
 
     /// <summary>
     /// Индекс текущей фазы в диапазоне от 0 до <see cref="Phases"/>.Length включительно.
@@ -696,7 +696,7 @@ namespace FreeLibSet.Core
 
     #region Поля
 
-    private Stack<MemorySplash> _Stack;
+    private readonly Stack<MemorySplash> _Stack;
 
     private int _StackVersion;
 
@@ -1022,17 +1022,17 @@ namespace FreeLibSet.Core
 
     private ISplash _Splash;
 
-    private bool _EndSplashRequired;
+    private readonly bool _EndSplashRequired;
 
-    private bool _ShouldRestore;
+    private readonly bool _ShouldRestore;
 
-    private string _OldPhaseText;
+    private readonly string _OldPhaseText;
 
-    private int _OldPercent;
+    private readonly int _OldPercent;
 
-    private int _OldPercentMax;
+    private readonly int _OldPercentMax;
 
-    private bool _OldAllowCancel;
+    private readonly bool _OldAllowCancel;
 
     #endregion
 
@@ -1128,7 +1128,7 @@ namespace FreeLibSet.Core
 
 #if DEBUG
 
-    private Thread _TheThread;
+    private readonly Thread _TheThread;
 
     private void CheckThread()
     {

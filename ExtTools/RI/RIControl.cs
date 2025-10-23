@@ -205,7 +205,7 @@ namespace FreeLibSet.RI
     /// Текст метки. Может содержать символ "амперсанд" для выделения "горячей клавиши"
     /// </summary>
     public string Text { get { return _Text; } }
-    private string _Text;
+    private readonly string _Text;
 
     #endregion
   }
@@ -1905,7 +1905,7 @@ namespace FreeLibSet.RI
     /// Задается в конструкторе и не может быть изменено.
     /// </summary>
     public string Text { get { return _Text; } }
-    private string _Text;
+    private readonly string _Text;
 
     #endregion
 
@@ -2226,7 +2226,7 @@ namespace FreeLibSet.RI
     /// Задаются в конструкторе и не могут быть изменены в дальнейшем
     /// </summary>
     public string[] Items { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
     #endregion
 
@@ -5275,7 +5275,7 @@ namespace FreeLibSet.RI
     /// Задается в конструкторе.
     /// </summary>
     public string[] Items { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
     #endregion
 
@@ -5578,7 +5578,7 @@ namespace FreeLibSet.RI
     /// Задается в конструкторе.
     /// </summary>
     public string[] Items { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
     #endregion
 
@@ -6228,7 +6228,7 @@ namespace FreeLibSet.RI
     /// Список доступных кодов. Задается в конструкторе
     /// </summary>
     public string[] Codes { get { return _Codes; } }
-    private string[] _Codes;
+    private readonly string[] _Codes;
 
     /// <summary>
     /// Описания, соответствующие кодам AvailableCodes.
@@ -6689,7 +6689,7 @@ namespace FreeLibSet.RI
     /// Задается в конструкторе.
     /// </summary>
     public string[] Lines { get { return _Lines; } }
-    private string[] _Lines;
+    private readonly string[] _Lines;
 
     /// <summary>
     /// Тип цветового оформления.
@@ -7503,14 +7503,14 @@ namespace FreeLibSet.RI
     /// Метка. Создается в конструкторе.
     /// </summary>
     public Label Label { get { return _Label; } }
-    private Label _Label;
+    private readonly Label _Label;
 
     /// <summary>
     /// Основной элемент.
     /// Задается в конструкторе.
     /// </summary>
     public Control MainControl { get { return _MainControl; } }
-    private Control _MainControl;
+    private readonly Control _MainControl;
 
     #endregion
 
@@ -7661,7 +7661,7 @@ namespace FreeLibSet.RI
 
     #region Список управляющих элементов
 
-    private List<Control> _Items;
+    private readonly List<Control> _Items;
 
     /// <summary>
     /// Доступ к дочерим элементам по индексу
@@ -7943,7 +7943,7 @@ namespace FreeLibSet.RI
     /// Задается в конструкторе.
     /// </summary>
     public string Title { get { return _Title; } }
-    private string _Title;
+    private readonly string _Title;
 
     #endregion
 
@@ -7953,7 +7953,7 @@ namespace FreeLibSet.RI
     /// Полоса управляющих элементов
     /// </summary>
     public Band Controls { get { return _Controls; } }
-    private Band _Controls;
+    private readonly Band _Controls;
 
     #endregion
 

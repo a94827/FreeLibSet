@@ -455,7 +455,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Объект отчета (для доступа к параметрам и именам секции конфигурации)
     /// </summary>
-    private EFPReport _Owner;
+    private readonly EFPReport _Owner;
 
     /// <summary>
     /// Используется ли строка дополнительного текста

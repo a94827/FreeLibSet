@@ -437,7 +437,7 @@ namespace FreeLibSet.DBF
 
     #region Свойства
 
-    private List<DbfFieldInfo> _Items;
+    private readonly List<DbfFieldInfo> _Items;
 
     /// <summary>
     /// Возвращает описание поля по индексу
@@ -917,13 +917,13 @@ namespace FreeLibSet.DBF
     /// Имя поля
     /// </summary>
     public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    private readonly string _FieldName;
 
     /// <summary>
     /// Тип поля (буква)
     /// </summary>
     public char FieldType { get { return _FieldType; } }
-    private char _FieldType;
+    private readonly char _FieldType;
 
     #endregion
   }
@@ -994,25 +994,25 @@ namespace FreeLibSet.DBF
     /// Номер строки. Нумерация начинается с 1.
     /// </summary>
     public int RecNo { get { return _RecNo; } }
-    private int _RecNo;
+    private readonly int _RecNo;
 
     /// <summary>
     /// Имя поля, в котором произошла ошибка
     /// </summary>
     public string FieldName { get { return _FieldName; } }
-    private string _FieldName;
+    private readonly string _FieldName;
 
     /// <summary>
     /// Тип поля
     /// </summary>
     public char FieldType { get { return _FieldType; } }
-    private char _FieldType;
+    private readonly char _FieldType;
 
     /// <summary>
     /// Буфер строки
     /// </summary>
     public string StringBuffer { get { return _StringBuffer; } }
-    private string _StringBuffer;
+    private readonly string _StringBuffer;
 
     #endregion
   }
@@ -1916,7 +1916,7 @@ namespace FreeLibSet.DBF
     /// <summary>
     /// Нужно ли закрывать потоки при вызове Dispose()
     /// </summary>
-    private bool _ShouldDisposeStreams;
+    private readonly bool _ShouldDisposeStreams;
 
     /// <summary>
     /// Выполняет сброс на диск незаписанных данных, вызывая <see cref="System.IO.Stream.Flush()"/>
@@ -3046,7 +3046,7 @@ namespace FreeLibSet.DBF
     /// Возвращает true, если не допускается добавление или изменение записей
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
+    private readonly bool _IsReadOnly;
 
     /// <summary>
     /// Генерирует исключение, если <see cref="IsReadOnly"/>=true.

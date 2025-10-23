@@ -28,7 +28,7 @@ namespace FreeLibSet.Data.SQLite
     /// <summary>
     /// Доступ к базе данных нужен для определения формата даты и времени
     /// </summary>
-    private SQLiteDBx _DB;
+    private readonly SQLiteDBx _DB;
 
     #endregion
 

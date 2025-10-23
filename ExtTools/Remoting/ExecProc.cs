@@ -328,7 +328,7 @@ namespace FreeLibSet.Remoting
     /// Время, когда объект был создан (для отладочных целей)
     /// </summary>
     public DateTime CreationTime { get { return _CreationTime; } }
-    private DateTime _CreationTime;
+    private readonly DateTime _CreationTime;
 
     /// <summary>
     /// Время существования процедуры (для отладки)
@@ -558,7 +558,7 @@ namespace FreeLibSet.Remoting
     /// Объект синхронизации для ExecProc
     /// </summary>
     internal object SyncRoot { get { return _SyncRoot; } }
-    private object _SyncRoot;
+    private readonly object _SyncRoot;
 
     #endregion
 
@@ -1550,7 +1550,7 @@ namespace FreeLibSet.Remoting
       return _AllProcs.ToArray();
     }
 
-    private static WeakReferenceCollection<ExecProc> _AllProcs = new WeakReferenceCollection<ExecProc>();
+    private static readonly WeakReferenceCollection<ExecProc> _AllProcs = new WeakReferenceCollection<ExecProc>();
 
     /// <summary>
     /// Возвращает массив объектов ExecProcInfo для всех процедур ExecProc, для которых не было вызова Dispose().
@@ -1605,7 +1605,7 @@ namespace FreeLibSet.Remoting
       return _ExecutingProcs.ToArray();
     }
 
-    private static SyncCollection<ExecProc> _ExecutingProcs = new SyncCollection<ExecProc>();
+    private static readonly SyncCollection<ExecProc> _ExecutingProcs = new SyncCollection<ExecProc>();
 
     /// <summary>
     /// Возвращает количество процедур, выполняющихся в данный момент в текущем AppDomain.
@@ -2368,7 +2368,7 @@ namespace FreeLibSet.Remoting
     /// Копия свойства ExecProc.DisplayName.
     /// </summary>
     public string DisplayName { get { return _DisplayName; } }
-    private string _DisplayName;
+    private readonly string _DisplayName;
 
     // Свойства ActionInfo нет, так как не гарантировано, что на момент создания RemoteSingleAsyncCallData 
     // оно будет установлено в ExecProc, т.к. установка выполняется асинхронно.
@@ -2378,13 +2378,13 @@ namespace FreeLibSet.Remoting
     /// Если процедура выполнилась быстро, но с выбросом исключения, исключение передается клиенту без использования этого объекта
     /// </summary>
     internal NamedValues Results { get { return _Results; } }
-    private NamedValues _Results;
+    private readonly NamedValues _Results;
 
     /// <summary>
     /// Если процедура не успела выполниться быстро, сюда помещается объект для асинхронного управления процедурой
     /// </summary>
     internal ExecProcProxy Proxy { get { return _Proxy; } }
-    private ExecProcProxy _Proxy;
+    private readonly ExecProcProxy _Proxy;
 
     /// <summary>
     /// Возвращает true, если процедура успела завершиться быстро и этот объект содержит готовые данные.
@@ -2640,7 +2640,7 @@ namespace FreeLibSet.Remoting
       /// Параметры можно менять до вызова InitializeLifetimeService()
       /// </summary>
       public ExecProcLeaseSettings LeaseSettings { get { return _LeaseSettings; } }
-      private ExecProcLeaseSettings _LeaseSettings;
+      private readonly ExecProcLeaseSettings _LeaseSettings;
 
       /// <summary>
       /// Инициализирует объект ILease установками LeaseSettings.
@@ -3306,7 +3306,7 @@ namespace FreeLibSet.Remoting
     /// Информация о процедуре, которую попытались выполнить еще раз
     /// </summary>
     public ExecProcInfo ExecProcInfo { get { return _ExecProcInfo; } }
-    private ExecProcInfo _ExecProcInfo;
+    private readonly ExecProcInfo _ExecProcInfo;
 
     #endregion
   }
@@ -4341,7 +4341,7 @@ namespace FreeLibSet.Remoting
       return _AllProcs.ToArray();
     }
 
-    private static WeakReferenceCollection<RemoteExecProc> _AllProcs = new WeakReferenceCollection<RemoteExecProc>(); // 02.01.2021
+    private static readonly WeakReferenceCollection<RemoteExecProc> _AllProcs = new WeakReferenceCollection<RemoteExecProc>(); // 02.01.2021
 
     /// <summary>
     /// Возвращает массив объектов ExecProcInfo для всех процедур RenoteExecProc, для которых не было вызова Dispose
@@ -4482,7 +4482,7 @@ namespace FreeLibSet.Remoting
     /// Возвращает объект, переданный конструктору
     /// </summary>
     public object AsyncState { get { return _AsyncState; } }
-    private object _AsyncState;
+    private readonly object _AsyncState;
 
     /// <summary>
     /// Возвращает объект сигнализации, который всегда находится в сигнальном состоянии
@@ -4584,7 +4584,7 @@ namespace FreeLibSet.Remoting
     /// Данные вызова ExecProc.StartDistributedCall()
     /// </summary>
     public DistributedCallData StartData { get { return _StartData; } }
-    private DistributedCallData _StartData;
+    private readonly DistributedCallData _StartData;
 
     /// <summary>
     /// Основной объект, занимающийся ожиданием.
@@ -4833,7 +4833,7 @@ namespace FreeLibSet.Remoting
     /// <summary>
     /// Объект для блокировки
     /// </summary>
-    private object _SyncRoot;
+    private readonly object _SyncRoot;
 
     #endregion
 

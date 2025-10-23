@@ -2365,7 +2365,7 @@ namespace FreeLibSet.Forms
     #region Список команд
 
     internal List<EFPCommandItem> Items { get { return _Items; } }
-    private List<EFPCommandItem> _Items;
+    private readonly List<EFPCommandItem> _Items;
 
     /// <summary>
     /// Возвращает количество элементов на этом уровне иерархии.
@@ -2422,7 +2422,7 @@ namespace FreeLibSet.Forms
 
       #region Перебор элементов
 
-      private EFPOneLevelCommandItems _Items;
+      private readonly EFPOneLevelCommandItems _Items;
 
       private static readonly DummyEnumerable<EFPCommandItem>.Enumerator _Dummy = new DummyEnumerable<EFPCommandItem>.Enumerator();
 
@@ -2538,7 +2538,7 @@ namespace FreeLibSet.Forms
     /// Полный список команд.
     /// В этой коллекции элементы располагаются в порядке добавления элементов, без учета иерархии
     /// </summary>
-    private NamedList<EFPCommandItem> _AllItems;
+    private readonly NamedList<EFPCommandItem> _AllItems;
 
     /// <summary>
     /// Возвращает команду с заданной категорией и именем.
@@ -3203,7 +3203,7 @@ namespace FreeLibSet.Forms
       }
     }
 
-    private static List<EFPCommandItems> _FocusedObjects = new List<EFPCommandItems>(); // Нельзя использовать Stack<EFPCommandItems>, т.к. у него нет метода Remove()
+    private static readonly List<EFPCommandItems> _FocusedObjects = new List<EFPCommandItems>(); // Нельзя использовать Stack<EFPCommandItems>, т.к. у него нет метода Remove()
 
     /// <summary>
     /// Используется <see cref="EFPContextCommandItems.SetHasFocus(bool)"/>.
@@ -3398,7 +3398,7 @@ namespace FreeLibSet.Forms
 
       #region Поля
 
-      private ListBox _TheListBox;
+      private readonly ListBox _TheListBox;
 
       #endregion
 

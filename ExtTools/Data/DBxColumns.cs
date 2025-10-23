@@ -2009,10 +2009,10 @@ namespace FreeLibSet.Data
       #region Свойства
 
       internal string TableName { get { return _TableName; } }
-      private string _TableName;
+      private readonly string _TableName;
 
       internal DBxColumnList Columns { get { return _Columns; } }
-      private DBxColumnList _Columns;
+      private readonly DBxColumnList _Columns;
 
       string IObjectWithCode.Code { get { return _TableName; } }
 
@@ -2265,7 +2265,7 @@ namespace FreeLibSet.Data
 
         #region Поля
 
-        DBxTableColumnList _Owner;
+        private readonly DBxTableColumnList _Owner;
 
         private int _TableIndex;
 

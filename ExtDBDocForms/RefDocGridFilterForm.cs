@@ -113,13 +113,13 @@ namespace FreeLibSet.Forms.Docs
     public EFPDocSelTextGridView efpDocSel;
 
     public DocTypeUI DocTypeUI { get { return _DocTypeUI; } }
-    private DocTypeUI _DocTypeUI;
+    private readonly DocTypeUI _DocTypeUI;
 
     /// <summary>
     /// Наличие в списке режимо efpMode вариантов "Ссылка на любой документ" и "Ссылка не задана".
     /// </summary>
     public bool Nullable { get { return _Nullable; } }
-    private bool _Nullable;
+    private readonly bool _Nullable;
 
     #endregion
 

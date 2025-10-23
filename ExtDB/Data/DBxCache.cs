@@ -176,7 +176,7 @@ namespace FreeLibSet.Data
     /// Если флажок для поля установлен, то поле не входит в таблицу буферизации, а щагружается отдельно
     /// </summary>
     public IndividualColumnFlagList IndividualColumnFlags { get { return _IndividualColumnFlags; } }
-    private IndividualColumnFlagList _IndividualColumnFlags;
+    private readonly IndividualColumnFlagList _IndividualColumnFlags;
 
     /// <summary>
     /// Возвращает <see cref="TableStruct"/>.TableName.
@@ -420,7 +420,7 @@ namespace FreeLibSet.Data
     /// Идентификатор базы данных
     /// </summary>
     public string DBIdentity { get { return _DBIdentity; } }
-    private string _DBIdentity;
+    private readonly string _DBIdentity;
 
     /// <summary>
     /// Идентификатор базы данных (первый ключ кэширования)
@@ -428,7 +428,7 @@ namespace FreeLibSet.Data
     /// иметь большую длину. Используем контрольную сумму MD5.
     /// </summary>
     public string DBIdentityMD5 { get { return _DBIdentityMD5; } }
-    private string _DBIdentityMD5;
+    private readonly string _DBIdentityMD5;
 
     /// <summary>
     /// Уникальный идентификатор кэша (для отладки)
@@ -518,7 +518,7 @@ namespace FreeLibSet.Data
       }
     }
 
-    private Dictionary<string, DBxTableCache> _Tables;
+    private readonly Dictionary<string, DBxTableCache> _Tables;
 
     /// <summary>
     /// Доступ к данным для отдельной таблицы.
@@ -2302,7 +2302,7 @@ Exception rethrown at [0]:
     /// <summary>
     /// Сериализуемое представление таблицы
     /// </summary>
-    private byte[] TableBytes;
+    private readonly byte[] TableBytes;
 
     /// <summary>
     /// Таблица данных
@@ -2316,7 +2316,7 @@ Exception rethrown at [0]:
     /// После десериализации первичный ключ восстанавливается
     /// </summary>
     public string PrimaryKeyColumn { get { return _PrimaryKeyColumn; } }
-    private string _PrimaryKeyColumn;
+    private readonly string _PrimaryKeyColumn;
 
     [OnDeserialized]
     private void OnDeserializedMethod(StreamingContext context)
@@ -2404,7 +2404,7 @@ Exception rethrown at [0]:
     /// Значение поля
     /// </summary>
     public object Value { get { return _Value; } }
-    private object _Value;
+    private readonly object _Value;
 
     #endregion
   }
@@ -2953,7 +2953,7 @@ Exception rethrown at [0]:
     /// Параметры запроса
     /// </summary>
     public DBxCacheLoadRequest Request { get { return _Request; } }
-    private DBxCacheLoadRequest _Request;
+    private readonly DBxCacheLoadRequest _Request;
 
     #endregion
   }

@@ -402,7 +402,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -574,7 +574,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -695,7 +695,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1053,7 +1053,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1137,7 +1137,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1728,7 +1728,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -1861,7 +1861,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2019,7 +2019,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2083,7 +2083,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2353,7 +2353,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2386,7 +2386,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2424,7 +2424,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2464,7 +2464,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2779,7 +2779,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2806,7 +2806,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2843,7 +2843,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 
@@ -2883,7 +2883,7 @@ namespace FreeLibSet.OLE.Excel
     }
 
     public ObjBase Base { get { return _Base; } }
-    private ObjBase _Base;
+    private readonly ObjBase _Base;
 
     #endregion
 

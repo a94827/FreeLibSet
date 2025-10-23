@@ -598,7 +598,7 @@ namespace FreeLibSet.Data.Docs
       /// Объект-владелец
       /// Нельзя использовать прямую ссылку на Table, т.к. она может меняться
       /// </summary>
-      private DBxMultiDocs _MultiDocs;
+      private readonly DBxMultiDocs _MultiDocs;
 
       #endregion
 
@@ -781,17 +781,17 @@ namespace FreeLibSet.Data.Docs
       /// Строка документа
       /// </summary>
       public DataRow Row { get { return _MultiDocs.Table.Rows[_RowIndex]; } }
-      private int _RowIndex;
+      private readonly int _RowIndex;
 
       /// <summary>
       /// Объект-владелец
       /// </summary>
-      private DBxMultiDocs _MultiDocs;
+      private readonly DBxMultiDocs _MultiDocs;
 
       /// <summary>
       /// Версия данных для извлечения значений
       /// </summary>
-      private DataRowVersion _RowVersion;
+      private readonly DataRowVersion _RowVersion;
 
       #endregion
 

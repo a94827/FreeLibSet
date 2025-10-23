@@ -24,8 +24,8 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
   {
     private readonly TextFormatFlags _baseFormatFlags;
     private TextFormatFlags _formatFlags;
-    private Pen _focusPen;
-    private StringFormat _format;
+    private readonly Pen _focusPen;
+    private readonly StringFormat _format;
 
     #region Конструктор и Dispose
 
@@ -307,7 +307,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
         context.Graphics.DrawString(label, font, GetBrush(textColor), bounds, _format);
     }
 
-    private static Dictionary<Color, Brush> _brushes = new Dictionary<Color, Brush>();
+    private static readonly Dictionary<Color, Brush> _brushes = new Dictionary<Color, Brush>();
     private static Brush GetBrush(Color color)
     {
       Brush br;

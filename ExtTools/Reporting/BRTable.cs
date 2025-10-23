@@ -42,7 +42,7 @@ namespace FreeLibSet.Reporting
     /// Например, здесь могут быть заданы границы ячеек и отступы
     /// </summary>
     public BRCellStyle DefaultCellStyle { get { return _DefaultCellStyle; } }
-    private BRCellStyleStorage _DefaultCellStyle;
+    private readonly BRCellStyleStorage _DefaultCellStyle;
 
     internal BRRowColumnData[] RowInfoData;
 
@@ -362,7 +362,7 @@ namespace FreeLibSet.Reporting
         _Selector = selector;
       }
 
-      private BRTableCellSelector _Selector;
+      private readonly BRTableCellSelector _Selector;
 
       #endregion
 
@@ -427,7 +427,7 @@ namespace FreeLibSet.Reporting
         _Selector = selector;
       }
 
-      private BRTableCellSelector _Selector;
+      private readonly BRTableCellSelector _Selector;
 
       #endregion
 
@@ -487,14 +487,14 @@ namespace FreeLibSet.Reporting
     /// Используйте для задания высоты строки и других параметров
     /// </summary>
     public override BRRowInfo RowInfo { get { return _RowInfo; } }
-    private BRInternalRowInfo _RowInfo;
+    private readonly BRInternalRowInfo _RowInfo;
 
     /// <summary>
     /// Параметры столбца, задаваемого <see cref="BRSelector.ColumnIndex"/>.
     /// Используйте для задания ширины столбца и других параметров
     /// </summary>
     public override BRColumnInfo ColumnInfo { get { return _ColumnInfo; } }
-    private BRInternalColumnInfo _ColumnInfo;
+    private readonly BRInternalColumnInfo _ColumnInfo;
 
     #endregion
 
@@ -726,7 +726,7 @@ namespace FreeLibSet.Reporting
         return _CellStyle;
       }
     }
-    private BRCellStyleStorage _CellStyle;
+    private readonly BRCellStyleStorage _CellStyle;
     private bool _CellStyleReady;
 
     /// <summary>
@@ -745,7 +745,7 @@ namespace FreeLibSet.Reporting
         return _RowInfo;
       }
     }
-    private BRRowInfoStorage _RowInfo;
+    private readonly BRRowInfoStorage _RowInfo;
     private bool _RowInfoReady;
 
     /// <summary>
@@ -764,7 +764,7 @@ namespace FreeLibSet.Reporting
         return _ColumnInfo;
       }
     }
-    private BRColumnInfoStorage _ColumnInfo;
+    private readonly BRColumnInfoStorage _ColumnInfo;
     private bool _ColumnInfoReady;
 
     /// <summary>

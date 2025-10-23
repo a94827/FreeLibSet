@@ -251,7 +251,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     public XmlEditor Editor { get { return _Editor; } }
-    private XmlEditor _Editor;
+    private readonly XmlEditor _Editor;
 
     #endregion
 

@@ -300,7 +300,7 @@ namespace FreeLibSet.Forms.Docs
     /// Также используем для хранения изображения между вызовом InitText() и
     /// его выводом в комбоблоке
     /// </summary>
-    private EFPMultiDocComboBoxTextValueNeededEventArgs _TextValueNeededArgs;
+    private readonly EFPMultiDocComboBoxTextValueNeededEventArgs _TextValueNeededArgs;
 
     /// <summary>
     /// Установка текста элемента.

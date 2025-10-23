@@ -104,7 +104,7 @@ namespace FreeLibSet.Core
       _Object = singleObject;
     }
 
-    private T _Object;
+    private readonly T _Object;
 
     #endregion
 
@@ -412,7 +412,7 @@ namespace FreeLibSet.Core
 
       #region Список групп
 
-      private IEnumerator<T>[] _Groups;
+      private readonly IEnumerator<T>[] _Groups;
 
       /// <summary>
       /// Возвращает следующую группу из списка

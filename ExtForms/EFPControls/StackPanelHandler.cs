@@ -139,7 +139,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     public EFPGroupBox TheGroupBox { get { return _TheGroupBox; } }
-    private EFPGroupBox _TheGroupBox;
+    private readonly EFPGroupBox _TheGroupBox;
 
     #endregion
   }
@@ -170,7 +170,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     public EFPRadioButtons TheButtons { get { return _TheButtons; } }
-    private EFPRadioButtons _TheButtons;
+    private readonly EFPRadioButtons _TheButtons;
 
     #endregion
   }
@@ -212,10 +212,10 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     public Label TheLabel { get { return _TheLabel; } }
-    private Label _TheLabel;
+    private readonly Label _TheLabel;
 
     public EFPControlBase ControlProvider { get { return _ControlProvider; } }
-    private EFPControlBase _ControlProvider;
+    private readonly EFPControlBase _ControlProvider;
 
     #endregion
   }

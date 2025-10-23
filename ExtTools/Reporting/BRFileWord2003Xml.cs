@@ -18,8 +18,8 @@ namespace FreeLibSet.Reporting
   {
     #region Константы
 
-    private int MinFontWidthPercent = 1;
-    private int MaxFontWidthPercent = 600;
+    private const int MinFontWidthPercent = 1;
+    private const int MaxFontWidthPercent = 600;
 
     #endregion
 
@@ -36,7 +36,7 @@ namespace FreeLibSet.Reporting
       _Measurer = measurer;
     }
 
-    private IBRMeasurer _Measurer;
+    private readonly IBRMeasurer _Measurer;
 
     #endregion
 

@@ -432,7 +432,7 @@ namespace FreeLibSet.Forms
 
     #region Обработчики команд меню
 
-    private EFPCommandItem ciPaste, menuPasteAux, ciPasteSpecial;
+    private readonly EFPCommandItem ciPaste, menuPasteAux, ciPasteSpecial;
 
     private void PasteClick(object sender, EventArgs args)
     {

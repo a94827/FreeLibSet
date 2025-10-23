@@ -109,7 +109,7 @@ namespace FreeLibSet.Forms
     /// Ключ - путь к файлу плюс индекс значка плюс true/false
     /// Значение - значок
     /// </summary>
-    private Dictionary<string, Image> _IconImageDict;
+    private readonly Dictionary<string, Image> _IconImageDict;
 
     /// <summary>
     /// Получить значок из ресурсов файла требуемого размера.

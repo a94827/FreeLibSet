@@ -835,8 +835,8 @@ namespace FreeLibSet.Calendar
 
       #region Поля
 
-      private DateTime _FirstDate;
-      private int _Days;
+      private readonly DateTime _FirstDate;
+      private readonly int _Days;
       private int _Index;
 
       #endregion
@@ -944,7 +944,7 @@ namespace FreeLibSet.Calendar
     /// <returns></returns>
     public DateRange this[int index] { get { return _List[index]; } }
 
-    private List<DateRange> _List;
+    private readonly List<DateRange> _List;
 
     /// <summary>
     /// Начальная дата для первого интервала или null, если список пуст

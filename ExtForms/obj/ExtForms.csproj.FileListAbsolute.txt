@@ -254,3 +254,4 @@ D:\a94827\FreeLibSet\ExtForms\obj\Debug\ru\ExtForms.resources.dll
 D:\a94827\FreeLibSet\ExtForms\obj\Debug\ExtForms.dll
 D:\a94827\FreeLibSet\ExtForms\obj\Debug\ExtForms.pdb
 D:\a94827\FreeLibSet\ExtForms\obj\Debug\FreeLibSet.Data.DateRangeGridFilterForm.resources
+D:\a94827\FreeLibSet\ExtForms\bin\Debug\ExtForms.XML

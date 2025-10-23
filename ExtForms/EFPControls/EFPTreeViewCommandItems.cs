@@ -134,7 +134,7 @@ namespace FreeLibSet.Forms
     /// Провайдер управляющего элемента
     /// </summary>
     public IEFPTreeView Owner { get { return _Owner; } }
-    private IEFPTreeView _Owner;
+    private readonly IEFPTreeView _Owner;
 
     #endregion
 

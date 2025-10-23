@@ -2361,7 +2361,7 @@ namespace FreeLibSet.Collections
 
       #region Поля
 
-      private DictionaryWithMRU<TKey, TValue> _Owner;
+      private readonly DictionaryWithMRU<TKey, TValue> _Owner;
 
       private /*readonly*/ LinkedList<TKey>.Enumerator _En;
 

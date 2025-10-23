@@ -2072,14 +2072,14 @@ namespace FreeLibSet.DependedValues
       /// Null - не задано. "" - инвариантная культура
       /// </summary>
       public string CultureName { get { return _CultureName; } }
-      private string _CultureName;
+      private readonly string _CultureName;
 
       /// <summary>
       /// Пользовательский объект.
       /// Вряд ли будет часто использоваться
       /// </summary>
       public IFormatProvider UserFormatProvider { get { return _UserFormatProvider; } }
-      private IFormatProvider _UserFormatProvider;
+      private readonly IFormatProvider _UserFormatProvider;
 
       public bool IsSameFormatProvider(string cultureName, IFormatProvider userFormatProvider)
       {

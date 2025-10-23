@@ -142,7 +142,7 @@ namespace FreeLibSet.Data
     /// Значение - альяс таблицы.
     /// </summary>
     public IDictionary<string, string> ColumnTableAliases { get { return _ColumnTableAliases; } }
-    private Dictionary<string, string> _ColumnTableAliases;
+    private readonly Dictionary<string, string> _ColumnTableAliases;
 
     /// <summary>
     /// Описания столбцов, используемых в запросе.
@@ -151,7 +151,7 @@ namespace FreeLibSet.Data
     /// Значение - Описание поля из структуры таблицы.
     /// </summary>
     public IDictionary<string, DBxColumnStruct> ColumnStructs { get { return _ColumnStructs; } }
-    private Dictionary<string, DBxColumnStruct> _ColumnStructs;
+    private readonly Dictionary<string, DBxColumnStruct> _ColumnStructs;
 
     #endregion
 

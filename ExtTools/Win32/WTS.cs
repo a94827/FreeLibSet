@@ -262,7 +262,7 @@ namespace FreeLibSet.Win32
       {
         _Server = server;
       }
-      private WTSServer _Server;
+      private readonly WTSServer _Server;
 
       #endregion
 

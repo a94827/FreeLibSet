@@ -66,9 +66,9 @@ namespace FreeLibSet.Win32
       }
     }
 
-    private Stream _Stream;
+    private readonly Stream _Stream;
     private bool _OwnStream;
-    private BinaryReader _Reader;
+    private readonly BinaryReader _Reader;
 
     /// <summary>
     /// Путь к exe-файлу (задается в конструкторе)
@@ -959,8 +959,8 @@ namespace FreeLibSet.Win32
         _SectionAlignement = sectionAlignement;
       }
 
-      private uint _FileAlignment;
-      private uint _SectionAlignement;
+      private readonly uint _FileAlignment;
+      private readonly uint _SectionAlignement;
 
       public uint GetVirtualSize(uint size)
       {

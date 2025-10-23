@@ -19,7 +19,7 @@ namespace FreeLibSet.Controls
 {
   public class TreeViewAdvEventArgs : EventArgs
   {
-    private TreeNodeAdv _node;
+    private readonly TreeNodeAdv _node;
 
     public TreeNodeAdv Node
     {
@@ -51,10 +51,10 @@ namespace FreeLibSet.Controls
 
   public class TreeViewAdvRowDrawEventArgs : PaintEventArgs
   {
-    TreeNodeAdv _node;
-    TreeViewAdvDrawContext _context;
-    int _row;
-    Rectangle _rowRect;
+    private readonly TreeNodeAdv _node;
+    private readonly TreeViewAdvDrawContext _context;
+    private readonly int _row;
+    private readonly Rectangle _rowRect;
 
     public TreeViewAdvRowDrawEventArgs(Graphics graphics, Rectangle clipRectangle, TreeNodeAdv node, TreeViewAdvDrawContext context, int row, Rectangle rowRect)
       : base(graphics, clipRectangle)
@@ -137,7 +137,7 @@ namespace FreeLibSet.Controls
 
   public class TreeColumnEventArgs : EventArgs
   {
-    private TreeColumn _column;
+    private readonly TreeColumn _column;
     public TreeColumn Column
     {
       get { return _column; }

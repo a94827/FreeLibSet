@@ -92,13 +92,13 @@ namespace FreeLibSet.Forms.Data
     /// Провайдер управляющего элемента
     /// </summary>
     public IEFPControl ControlProvider { get { return _ControlProvider; } }
-    private IEFPControl _ControlProvider;
+    private readonly IEFPControl _ControlProvider;
 
     /// <summary>
     /// Значение EnabledEx, зависящее от DocValue и от <see cref="UserEnabledEx"/>.
     /// </summary>
     public DepValue<Boolean> EnabledEx { get { return _EnabledEx; } }
-    private DepOutput<Boolean> _EnabledEx;
+    private readonly DepOutput<Boolean> _EnabledEx;
 
     /// <summary>
     /// Блокировка редактирования поля прикладным модулем.

@@ -733,7 +733,7 @@ namespace FreeLibSet.Forms.Docs
       #endregion
     }
 
-    private Dictionary<string, EFPPageGridView> _TableHandlers;
+    private readonly Dictionary<string, EFPPageGridView> _TableHandlers;
 
     #endregion
   }

@@ -517,7 +517,7 @@ namespace FreeLibSet.DependedValues
     /// Исходные данные для расчета
     /// </summary>
     public DepValue<TArg>[] Args { get { return _Args; } }
-    private DepValue<TArg>[] _Args;
+    private readonly DepValue<TArg>[] _Args;
 
     /// <summary>
     /// Возвращает true, если все аргументы являются константами
@@ -544,7 +544,7 @@ namespace FreeLibSet.DependedValues
       BaseSetValue(Calculate(), false);
     }
 
-    private DepFunctionTA<TResult, TArg> _Function;
+    private readonly DepFunctionTA<TResult, TArg> _Function;
 
     /// <summary>
     /// Вычисление значения.
@@ -638,7 +638,7 @@ namespace FreeLibSet.DependedValues
     /// Исходные данные для расчета
     /// </summary>
     public IDepValue[] Args { get { return _Args; } }
-    private IDepValue[] _Args;
+    private readonly IDepValue[] _Args;
 
     /// <summary>
     /// Возвращает true, если все аргументы являются константами
@@ -665,7 +665,7 @@ namespace FreeLibSet.DependedValues
       BaseSetValue(Calculate(), false);
     }
 
-    private DepFunctionOA<TResult> _Function;
+    private readonly DepFunctionOA<TResult> _Function;
 
     /// <summary>
     /// Вычисление значения.

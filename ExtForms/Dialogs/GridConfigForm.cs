@@ -112,27 +112,27 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Используются ли готовые наборы
     /// </summary>
-    bool _UseHistory;
+    private readonly bool _UseHistory;
 
     /// <summary>
     /// Вызывающий табличный просмотр
     /// </summary>
-    private IEFPControl _CallerControlProvider;
+    private readonly IEFPControl _CallerControlProvider;
 
     /// <summary>
     /// Категория "GridConfig"
     /// </summary>
-    private string _ConfigCategory;
+    private readonly string _ConfigCategory;
 
     /// <summary>
     /// Категория "GridConfigHistory"
     /// </summary>
-    private string _HistoryCategory;
+    private readonly string _HistoryCategory;
 
     /// <summary>
     /// Готовые наборы
     /// </summary>
-    private EFPConfigParamSetComboBox efpParamSet;
+    private readonly EFPConfigParamSetComboBox efpParamSet;
 
     #endregion
 

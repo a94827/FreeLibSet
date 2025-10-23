@@ -74,7 +74,7 @@ namespace FreeLibSet.Forms
 
       #region Поля
 
-      private Panel _ToolBarPanel;
+      private readonly Panel _ToolBarPanel;
 
       private bool _ToolBarPanelAssigned;
 

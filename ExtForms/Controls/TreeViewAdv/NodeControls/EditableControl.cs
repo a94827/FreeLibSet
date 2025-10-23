@@ -48,7 +48,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
     #region Properties
 
-    private Timer _timer;
+    private readonly Timer _timer;
     private bool _editFlag;
 
     /// <summary>

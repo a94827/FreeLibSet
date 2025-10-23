@@ -174,13 +174,13 @@ namespace FreeLibSet.Forms
 
     #region Главное окно
 
-    private bool _ObsoleteMode;
+    private readonly bool _ObsoleteMode;
 
     #endregion
 
     #region Дочерние формы
 
-    private FormStartPositionCascadeHelper _CascadeHelper;
+    private readonly FormStartPositionCascadeHelper _CascadeHelper;
 
     internal new void PrepareChildForm(Form form)
     {

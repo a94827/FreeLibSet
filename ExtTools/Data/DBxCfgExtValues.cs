@@ -68,7 +68,7 @@ namespace FreeLibSet.Data
      * Используем BidirectionalDictionary
      */
 
-    private BidirectionalDictionary<string, int> _Items;
+    private readonly BidirectionalDictionary<string, int> _Items;
 
     /// <summary>
     /// Возвращает структуру для доступа к значению
@@ -272,7 +272,7 @@ namespace FreeLibSet.Data
     /// Возвращает true, если разрешен только просмотр значений, но не изменение
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
+    private readonly bool _IsReadOnly;
 
     /// <summary>
     /// Генерирует исключение, если <see cref="IsReadOnly"/>=true

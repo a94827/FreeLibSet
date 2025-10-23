@@ -41,7 +41,7 @@ namespace FreeLibSet.Parsing
     /// Выражение в скобках
     /// </summary>
     public IExpression Expression { get { return _Expression; } }
-    private IExpression _Expression;
+    private readonly IExpression _Expression;
 
     /// <summary>
     /// Если свойство установить в true, то при получении текстового представления будет выведено
@@ -165,7 +165,7 @@ namespace FreeLibSet.Parsing
     /// По умолчанию, список замен пустой
     /// </summary>
     public Dictionary<string, string> ReplaceChars { get { return _ReplaceChars; } }
-    private Dictionary<string, string> _ReplaceChars;
+    private readonly Dictionary<string, string> _ReplaceChars;
 
     /// <summary>
     /// Если true (по умолчанию), разрешается получение констант типа Int32
@@ -390,7 +390,7 @@ namespace FreeLibSet.Parsing
     /// Задается в конструкторе
     /// </summary>
     public char Separator { get { return _Separator; } }
-    private char _Separator;
+    private readonly char _Separator;
 
     #endregion
 
@@ -585,13 +585,13 @@ namespace FreeLibSet.Parsing
     /// Вычисляемый объект функции
     /// </summary>
     public FunctionExpression Expression { get { return _Expression; } }
-    private FunctionExpression _Expression;
+    private readonly FunctionExpression _Expression;
 
     /// <summary>
     /// Данные парсинга
     /// </summary>
     public ParsingData Data { get { return _Data; } }
-    private ParsingData _Data;
+    private readonly ParsingData _Data;
 
     #endregion
 
@@ -673,7 +673,7 @@ namespace FreeLibSet.Parsing
     /// Метод, используемый для вычисления функции
     /// </summary>
     public FunctionDelegate CalcMethod { get { return _CalcMethod; } }
-    private FunctionDelegate _CalcMethod;
+    private readonly FunctionDelegate _CalcMethod;
 
     /// <summary>
     /// Минимально допустимое число аргументов
@@ -991,7 +991,7 @@ namespace FreeLibSet.Parsing
     /// метод ExcelFunctions.AddFunctions()
     /// </summary>
     public NamedList<FunctionDef> Functions { get { return _Functions; } }
-    private NamedList<FunctionDef> _Functions;
+    private readonly NamedList<FunctionDef> _Functions;
 
     /// <summary>
     /// Добавить локальные имена функций.
@@ -1078,7 +1078,7 @@ namespace FreeLibSet.Parsing
     /// При необходимости, список может быть очищен и заполнен нужным значением
     /// </summary>
     public List<string> ArgSeparators { get { return _ArgSeparators; } }
-    private List<string> _ArgSeparators;
+    private readonly List<string> _ArgSeparators;
 
     /// <summary>
     /// Если свойство установлено в true (по умолчанию), то в разбираемых выражениях разрешено использовать
@@ -1682,13 +1682,13 @@ namespace FreeLibSet.Parsing
     /// Список допустимых бинарных операций
     /// </summary>
     public NamedList<BinaryOpDef> BinaryOps { get { return _BinaryOps; } }
-    private NamedList<BinaryOpDef> _BinaryOps;
+    private readonly NamedList<BinaryOpDef> _BinaryOps;
 
     /// <summary>
     /// Список допустимых унарных операций
     /// </summary>
     public NamedList<UnaryOpDef> UnaryOps { get { return _UnaryOps; } }
-    private NamedList<UnaryOpDef> _UnaryOps;
+    private readonly NamedList<UnaryOpDef> _UnaryOps;
 
     #endregion
 
@@ -2489,7 +2489,7 @@ namespace FreeLibSet.Parsing
     /// Вычисляющий метод
     /// </summary>
     public BinaryOpDelegate CalcMethod { get { return _CalcMethod; } }
-    private BinaryOpDelegate _CalcMethod;
+    private readonly BinaryOpDelegate _CalcMethod;
 
     /// <summary>
     /// Знак операции "+", "-", "*" или "/"

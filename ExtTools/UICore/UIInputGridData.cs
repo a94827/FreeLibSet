@@ -116,7 +116,7 @@ namespace FreeLibSet.UICore
         _CI = columnInfo;
       }
 
-      private ColumnInfo _CI;
+      private readonly ColumnInfo _CI;
 
       #endregion
 

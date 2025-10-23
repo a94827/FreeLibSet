@@ -1068,7 +1068,7 @@ namespace FreeLibSet.Shell
       /// Ключ - расширение файла (с точкой) в верхнем регистре
       /// Значение - тип MIME.
       /// </summary>
-      private static Dictionary<string, string> _FileExtMimeDict = new Dictionary<string, string>();
+      private static readonly Dictionary<string, string> _FileExtMimeDict = new Dictionary<string, string>();
 
       /// <summary>
       /// Возвращает mime-тип для расширения файла.

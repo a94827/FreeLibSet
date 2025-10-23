@@ -150,11 +150,11 @@ namespace FreeLibSet.Forms
 
     #endregion
 
-    private EFPDataGridView _ControlProvider;
+    private readonly EFPDataGridView _ControlProvider;
 
     #region Предопределенные порядки
 
-    EFPDataGridView efpFixed;
+    private readonly EFPDataGridView efpFixed;
 
     void efpFixed_CellInfoNeeded(object sender, EFPDataGridViewCellInfoEventArgs args)
     {
@@ -177,7 +177,7 @@ namespace FreeLibSet.Forms
 
     #region Произвольная сортировка
 
-    EFPTwoListSelector efpCustom;
+    private readonly EFPTwoListSelector efpCustom;
 
     /// <summary>
     /// Пара "ИмяПоля-Порядок сортировки".

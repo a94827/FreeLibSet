@@ -595,7 +595,7 @@ namespace FreeLibSet.Reporting
       _Measurer = measurer;
     }
 
-    private IBRMeasurer _Measurer;
+    private readonly IBRMeasurer _Measurer;
 
     #endregion
 
@@ -1206,8 +1206,8 @@ namespace FreeLibSet.Reporting
           _Start = start;
         }
 
-        private BRSection _Section;
-        private BandAndRow _Start;
+        private readonly BRSection _Section;
+        private readonly BandAndRow _Start;
 
         public SectionRowEnumerator GetEnumerator()
         {
@@ -1234,7 +1234,7 @@ namespace FreeLibSet.Reporting
           _Current = new BandAndRow(start.BandIndex, start.RowIndex - 1); // "минус первая" позиция
         }
 
-        private BRSection _Section;
+        private readonly BRSection _Section;
         public BandAndRow Current { get { return _Current; } }
         private BandAndRow _Current;
 

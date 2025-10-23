@@ -78,10 +78,10 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     public FileCopierForm Form { get { return _Form; } }
-    private FileCopierForm _Form;
+    private readonly FileCopierForm _Form;
 
     public ProgressBar PB { get { return _PB; } }
-    private ProgressBar _PB;
+    private readonly ProgressBar _PB;
 
     public long MaxValue
     {
@@ -189,7 +189,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Список шаблонов имен файлов
     /// </summary>
-    private List<string> _Templates;
+    private readonly List<string> _Templates;
 
     /// <summary>
     /// Добавить шаблон имен файлов для копирования

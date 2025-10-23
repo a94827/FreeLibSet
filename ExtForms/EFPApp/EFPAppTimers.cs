@@ -618,7 +618,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Список однократных действий
     /// </summary>
-    private List<EventHandler> _SingleActionList;
+    private readonly List<EventHandler> _SingleActionList;
 
     /// <summary>
     /// Флаг наличия однократных действий.
@@ -825,7 +825,7 @@ namespace FreeLibSet.Forms
     /// Предотвращение повторного вызова "долгого" обработчика, если пришел повторный сигнал таймера.
     /// Список содержит элементы, которые сейчас обрабатываются.
     /// </summary>
-    private List<IEFPAppIdleHandler> _ExecutingHandlers;
+    private readonly List<IEFPAppIdleHandler> _ExecutingHandlers;
 
     #endregion
   }

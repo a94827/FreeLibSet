@@ -527,7 +527,7 @@ namespace FreeLibSet.Forms
 
     #region Команда очистки
 
-    EFPCommandItem ciClearColumns;
+    private readonly EFPCommandItem ciClearColumns;
 
     void ciClearColumns_Click(object sender, EventArgs args)
     {
@@ -540,7 +540,7 @@ namespace FreeLibSet.Forms
 
     #region Команда заполнения
 
-    EFPCommandItem ciInitColumns;
+    private readonly EFPCommandItem ciInitColumns;
 
     void ciInitColumns_Click(object sender, EventArgs args)
     {

@@ -1894,7 +1894,7 @@ namespace FreeLibSet.Forms
         _SelectedCodesEx.Value = SelectedCodes;
     }
 
-    private EFPCodeValidatingEventArgs _CodeValidatingEventArgs;
+    private readonly EFPCodeValidatingEventArgs _CodeValidatingEventArgs;
 
     /// <summary>
     /// Проверка корректности значения.
@@ -2313,7 +2313,7 @@ namespace FreeLibSet.Forms
 
     #region Внутренняя реализация
 
-    private EFPCommandItem ciUndo, ciCut, ciCopy, /*ciDelete, */ciSelectAll;
+    private readonly EFPCommandItem ciUndo, ciCut, ciCopy, /*ciDelete, */ciSelectAll;
 
     /// <summary>
     /// Обработчик для команды "Вставить".
@@ -2321,11 +2321,11 @@ namespace FreeLibSet.Forms
     /// По умолчанию поддерживается только вставка текста.
     /// </summary>
     public EFPPasteHandler PasteHandler { get { return _PasteHandler; } }
-    private EFPPasteHandler _PasteHandler;
+    private readonly EFPPasteHandler _PasteHandler;
 
-    private EFPCommandItem ciCase;
-    private EFPCommandItem ciUpperCase, ciLowerCase, ciChangeCase, ciRusLat;
-    private EFPCommandItem ciNewLine;
+    private readonly EFPCommandItem ciCase;
+    private readonly EFPCommandItem ciUpperCase, ciLowerCase, ciChangeCase, ciRusLat;
+    private readonly EFPCommandItem ciNewLine;
 
     ///// <summary>
     ///// Возвращает TextBox.AcceptsReturn.
@@ -2545,7 +2545,7 @@ namespace FreeLibSet.Forms
 
     #region Команды поиска
 
-    EFPCommandItem ciFind, ciFindNext;
+    private readonly EFPCommandItem ciFind, ciFindNext;
 
     private void Find(object sender, EventArgs args)
     {
@@ -2658,7 +2658,7 @@ namespace FreeLibSet.Forms
     /// Обработчик команд "Открыть" и "Открыть с помощью"
     /// </summary>
     protected EFPFileAssociationsCommandItemsHandler FileAssociationsHandler { get { return _FileAssociationsHandler; } }
-    private EFPFileAssociationsCommandItemsHandler _FileAssociationsHandler;
+    private readonly EFPFileAssociationsCommandItemsHandler _FileAssociationsHandler;
 
     /// <summary>
     /// Получение файла
@@ -2744,7 +2744,7 @@ namespace FreeLibSet.Forms
     public bool UseStatusBarRC { get { return _UseStatusBarRC; } set { _UseStatusBarRC = value; } }
     private bool _UseStatusBarRC;
 
-    EFPCommandItem ciStatusRow, ciStatusColumn;
+    private readonly EFPCommandItem ciStatusRow, ciStatusColumn;
 
     private void InitStatusBar()
     {

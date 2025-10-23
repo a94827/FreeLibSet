@@ -54,7 +54,7 @@ namespace FreeLibSet.Controls
     /// <summary>
     /// Основная часть метки
     /// </summary>
-    private Label _TheLabel;
+    private readonly Label _TheLabel;
 
     /// <summary>
     /// Значок

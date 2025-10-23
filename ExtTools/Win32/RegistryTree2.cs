@@ -552,13 +552,13 @@ namespace FreeLibSet.Win32
       /// Раздел реестра, который сейчас перебирается
       /// </summary>
       public RegistryKey2 CurrKey { get { return _CurrKey; } }
-      private RegistryKey2 _CurrKey;
+      private readonly RegistryKey2 _CurrKey;
 
       /// <summary>
       /// Список имен дочерних реестров
       /// </summary>
       public string[] SubKeyNames { get { return _SubKeyNames; } }
-      private string[] _SubKeyNames;
+      private readonly string[] _SubKeyNames;
 
       /// <summary>
       /// Индекс текущего дочернего узла
@@ -566,7 +566,7 @@ namespace FreeLibSet.Win32
       public int SubKeyIndex;
 
       public string[] ValueNames { get { return _ValueNames; } }
-      private string[] _ValueNames;
+      private readonly string[] _ValueNames;
 
       public int ValueIndex;
 

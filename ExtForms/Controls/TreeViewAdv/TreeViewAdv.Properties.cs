@@ -108,7 +108,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    private List<TreeNodeAdv> _rowMap;
+    private readonly List<TreeNodeAdv> _rowMap;
     internal List<TreeNodeAdv> RowMap
     {
       get { return _rowMap; }
@@ -214,7 +214,7 @@ namespace FreeLibSet.Controls
       }
     }
 
-    private List<TreeNodeAdv> _selection;
+    private readonly List<TreeNodeAdv> _selection;
     internal List<TreeNodeAdv> Selection
     {
       get { return _selection; }
@@ -373,7 +373,7 @@ namespace FreeLibSet.Controls
     }
 
     // Tahoma is the default font
-    private static Font _font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)), false);
+    private static readonly Font _font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)), false);
     /// <summary>
     /// The font to render <see cref="TreeViewAdv"/> content in.
     /// </summary>
@@ -630,7 +630,7 @@ namespace FreeLibSet.Controls
     {
       get { return _columns; }
     }
-    private TreeColumnCollection _columns;
+    private readonly TreeColumnCollection _columns;
 
     /// <summary>
     /// Коллекция отображаемых элементов для узла (описание ячеек).
@@ -645,7 +645,7 @@ namespace FreeLibSet.Controls
         return _NodeControls;
       }
     }
-    private NodeControlsCollection _NodeControls;
+    private readonly NodeControlsCollection _NodeControls;
 
     /// <summary>
     /// When set to true, node contents will be read in background thread.
@@ -719,7 +719,7 @@ namespace FreeLibSet.Controls
         return _readonlySelection;
       }
     }
-    private ReadOnlyCollection<TreeNodeAdv> _readonlySelection;
+    private readonly ReadOnlyCollection<TreeNodeAdv> _readonlySelection;
 
     /// <summary>
     /// Текущий выбранный узел.

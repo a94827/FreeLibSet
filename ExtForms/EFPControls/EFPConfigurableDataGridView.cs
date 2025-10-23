@@ -1127,7 +1127,7 @@ namespace FreeLibSet.Forms
 
     #region Настройка просмотра
 
-    private EFPCommandItem ciEditConfig;
+    private readonly EFPCommandItem ciEditConfig;
 
     private void ciEditConfig_Click(object sender, EventArgs args)
     {
@@ -1142,11 +1142,11 @@ namespace FreeLibSet.Forms
     /// Подменю "Фильтр". Может использоваться для добавления собственных команд
     /// </summary>
     public EFPCommandItem MenuFilter { get { return _MenuFilter; } }
-    private EFPCommandItem _MenuFilter;
+    private readonly EFPCommandItem _MenuFilter;
 
-    private EFPCommandItem ciSetFilter;
+    private readonly EFPCommandItem ciSetFilter;
 
-    private EFPCommandItem ciScrollFilterNext, ciScrollFilterPrev;
+    private readonly EFPCommandItem ciScrollFilterNext, ciScrollFilterPrev;
 
     void ciSetFilter_Click(object sender, EventArgs args)
     {

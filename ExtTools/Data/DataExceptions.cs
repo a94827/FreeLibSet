@@ -174,7 +174,7 @@ namespace FreeLibSet.Data
     /// Описание структуры таблицы, содержащее ошибку
     /// </summary>
     public DBxTableStruct Table { get { return _Table; } }
-    private DBxTableStruct _Table;
+    private readonly DBxTableStruct _Table;
 
     #endregion
   }

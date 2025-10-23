@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе.
     /// </summary>
     public IEFPSimpleTextBox ControlProvider { get { return _ControlProvider; } }
-    private IEFPSimpleTextBox _ControlProvider;
+    private readonly IEFPSimpleTextBox _ControlProvider;
 
     #endregion
 
@@ -478,7 +478,7 @@ namespace FreeLibSet.Forms
     /// Провайдер основного поля ввода или комбоблока (задается в конструкторе)
     /// </summary>
     public IEFPTextBox MainProvider { get { return _MainProvider; } }
-    private IEFPTextBox _MainProvider;
+    private readonly IEFPTextBox _MainProvider;
 
     /// <summary>
     /// Описание, появляющееся в блоке диалога выбора папки при нажатии кнопки
@@ -516,7 +516,7 @@ namespace FreeLibSet.Forms
 
     #region Проверка введенного текста
 
-    private EFPFolderPathValidator _PathValidator;
+    private readonly EFPFolderPathValidator _PathValidator;
 
     /// <summary>
     /// Режим проверки введенного пути.
@@ -779,7 +779,7 @@ namespace FreeLibSet.Forms
     /// Провайдер основного поля ввода или комбоблока (задается в конструкторе)
     /// </summary>
     public IEFPTextBox MainProvider { get { return _MainProvider; } }
-    private IEFPTextBox _MainProvider;
+    private readonly IEFPTextBox _MainProvider;
 
     /// <summary>
     /// Описание, появляющееся в блоке диалога выбора папки при нажатии кнопки
@@ -837,7 +837,7 @@ namespace FreeLibSet.Forms
 
     #region Проверка введенного текста
 
-    private EFPFilePathValidator _PathValidator;
+    private readonly EFPFilePathValidator _PathValidator;
 
     /// <summary>
     /// Режим проверки введенного пути.
@@ -1150,7 +1150,7 @@ namespace FreeLibSet.Forms
     /// Провайдер основного поля ввода или комбоблока (задается в конструкторе)
     /// </summary>
     public IEFPTextBox MainProvider { get { return _MainProvider; } }
-    private IEFPTextBox _MainProvider;
+    private readonly IEFPTextBox _MainProvider;
 
     /// <summary>
     /// Что вводится в строке: имя файла или имя каталога.

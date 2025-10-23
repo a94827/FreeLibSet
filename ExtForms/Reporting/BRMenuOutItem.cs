@@ -1735,10 +1735,10 @@ namespace FreeLibSet.Forms.Reporting
       SendToItems.AddRange(owner.PreviewSendToItems);
     }
 
-    private BRMenuOutItem _Owner;
-    EFPFormProvider _efpPreviewForm;
-    EFPExtPrintPreviewControl _efpPreview;
-    BRReport _Report;
+    private readonly BRMenuOutItem _Owner;
+    private readonly EFPFormProvider _efpPreviewForm;
+    private readonly EFPExtPrintPreviewControl _efpPreview;
+    private BRReport _Report;
 
     #endregion
 

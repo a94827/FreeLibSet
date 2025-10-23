@@ -532,7 +532,7 @@ namespace FreeLibSet.Forms
       }
 
       public ToolStripMenuItem MenuItem { get { return _MenuItem; } }
-      private ToolStripMenuItem _MenuItem;
+      private readonly ToolStripMenuItem _MenuItem;
 
       #endregion
 
@@ -640,7 +640,7 @@ namespace FreeLibSet.Forms
 
       #region Свойства
 
-      private EFPMenuBase _Owner;
+      private readonly EFPMenuBase _Owner;
 
       /// <summary>
       /// Возвращает <see cref="ToolStripMenuItem"/> для заданной команды.

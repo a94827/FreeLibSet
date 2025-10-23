@@ -369,20 +369,20 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Используем единственный экземпляр аргументов события, чтобы уменьшить количество мусора.
     /// </summary>
-    private DataTableRepeaterValueNeededEventArgs _ValueNeededArgs;
+    private readonly DataTableRepeaterValueNeededEventArgs _ValueNeededArgs;
 
     /// <summary>
     /// Список полей, копируемых из исходной таблицы
     /// Key - индекс столбца в таблице DataSource
     /// Value - индекс столбца в таблице ResultTable
     /// </summary>
-    private List<KeyValuePair<int, int>> _SourceColumnMaps;
+    private readonly List<KeyValuePair<int, int>> _SourceColumnMaps;
 
     /// <summary>
     /// Список полей, для которых вызывается событие ValueNeeded.
     /// Содержит индексы столбцов в таблице ResultTable
     /// </summary>
-    private List<int> _CalculatedColumns;
+    private readonly List<int> _CalculatedColumns;
 
     /// <summary>
     /// Обработка для одной строки

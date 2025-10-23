@@ -259,10 +259,10 @@ namespace FreeLibSet.UICore
 
       #region Свойства
 
-      private UIExtEditItemWithChildren _Owner;
+      private readonly UIExtEditItemWithChildren _Owner;
 
       public List<IUIExtEditItem> Items { get { return _Items; } }
-      private List<IUIExtEditItem> _Items;
+      private readonly List<IUIExtEditItem> _Items;
 
       public override string ToString()
       {

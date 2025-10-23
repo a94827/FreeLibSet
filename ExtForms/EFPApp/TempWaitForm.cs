@@ -147,7 +147,7 @@ namespace FreeLibSet.Forms
     /// <summary>                
     /// Стек вызовов
     /// </summary>
-    private static Stack<WaitInfo> _WaitInfoStack = new Stack<WaitInfo>();
+    private static readonly Stack<WaitInfo> _WaitInfoStack = new Stack<WaitInfo>();
 
     #endregion
   }

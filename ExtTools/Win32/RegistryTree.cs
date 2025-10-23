@@ -32,7 +32,7 @@ namespace FreeLibSet.Win32
     /// Текущий раздел реестра
     /// </summary>
     public RegistryKey Key { get { return _Key; } }
-    private RegistryKey _Key;
+    private readonly RegistryKey _Key;
 
     /// <summary>
     /// Уровень раздела Key относительно раздела, с которого начато перечисление.
@@ -40,7 +40,7 @@ namespace FreeLibSet.Win32
     /// дочерних разделов, то 1, и т.д.
     /// </summary>
     public int EnumKeyLevel { get { return _EnumKeyLevel; } }
-    private int _EnumKeyLevel;
+    private readonly int _EnumKeyLevel;
 
     /// <summary>
     /// Имя текущего значения.
@@ -48,7 +48,7 @@ namespace FreeLibSet.Win32
     /// Затем, если перечисление значений включено, это свойство возвращает имя очередного значения.
     /// </summary>
     public string ValueName { get { return _ValueName; } }
-    private string _ValueName;
+    private readonly string _ValueName;
 
     /// <summary>
     /// Возвращает "Key.Name" или "Key.Name : Value", если сейчас перебирается значение
@@ -517,13 +517,13 @@ namespace FreeLibSet.Win32
       /// Раздел реестра, который сейчас перебирается
       /// </summary>
       public RegistryKey CurrKey { get { return _CurrKey; } }
-      private RegistryKey _CurrKey;
+      private readonly RegistryKey _CurrKey;
 
       /// <summary>
       /// Список имен дочерних реестров
       /// </summary>
       public string[] SubKeyNames { get { return _SubKeyNames; } }
-      private string[] _SubKeyNames;
+      private readonly string[] _SubKeyNames;
 
       /// <summary>
       /// Индекс текущего дочернего узла
@@ -531,7 +531,7 @@ namespace FreeLibSet.Win32
       public int SubKeyIndex;
 
       public string[] ValueNames { get { return _ValueNames; } }
-      private string[] _ValueNames;
+      private readonly string[] _ValueNames;
 
       public int ValueIndex;
 

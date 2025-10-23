@@ -353,7 +353,7 @@ namespace FreeLibSet.Reporting
       #region Свойства 
 
       internal override BRReport Report { get { return _Report; } }
-      private BRReport _Report;
+      private readonly BRReport _Report;
 
       #endregion
 
@@ -410,7 +410,7 @@ namespace FreeLibSet.Reporting
     public BRCellStyle DefaultCellStyle { get { return _DefaultCellStyle; } }
     private readonly BRDefaultCellStyle _DefaultCellStyle;
 
-    private NamedList<BRNamedCellStyle> _NamedCellStyleList;
+    private readonly NamedList<BRNamedCellStyle> _NamedCellStyleList;
 
     /// <summary>
     /// Реализация свойства <see cref="NamedCellStyles"/>.
@@ -428,7 +428,7 @@ namespace FreeLibSet.Reporting
 
       #region Свойства
 
-      private BRReport _Report;
+      private readonly BRReport _Report;
 
       /// <summary>
       /// Количество определенных именных стилей
@@ -620,7 +620,7 @@ namespace FreeLibSet.Reporting
         _Owner = owner;
       }
 
-      private BRReport _Owner;
+      private readonly BRReport _Owner;
 
       #endregion
 
@@ -1459,7 +1459,7 @@ namespace FreeLibSet.Reporting
     /// Ссылка
     /// </summary>
     public string LinkData { get { return _LinkData; } }
-    private string _LinkData;
+    private readonly string _LinkData;
 
     #endregion
 

@@ -149,7 +149,7 @@ namespace FreeLibSet.Forms
 
     #region Команды
 
-    EFPCommandItem ciStart, ciCopy;
+    private readonly EFPCommandItem ciStart, ciCopy;
 
     void ciStart_Click(object sender, EventArgs args)
     {

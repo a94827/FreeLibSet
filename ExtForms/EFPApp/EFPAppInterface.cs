@@ -149,7 +149,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Список с поддержкой для Z-order
     /// </summary>
-    private ListWithMRU<EFPAppMainWindowLayout> _MainWindows;
+    private readonly ListWithMRU<EFPAppMainWindowLayout> _MainWindows;
 
     ///// <summary>
     ///// Создает EFPAppMainWindowLayout 
@@ -1045,31 +1045,31 @@ namespace FreeLibSet.Forms
     /// Объект управления интерфейсом
     /// </summary>
     public EFPAppInterface Interface { get { return _Interface; } }
-    private EFPAppInterface _Interface;
+    private readonly EFPAppInterface _Interface;
 
     /// <summary>
     /// Текущее главное окно (особенно актуально для интерфейса SDI)
     /// </summary>
     public EFPAppMainWindowLayout CurrentMainWindowLayout { get { return _CurrentMainWindowLayout; } }
-    private EFPAppMainWindowLayout _CurrentMainWindowLayout;
+    private readonly EFPAppMainWindowLayout _CurrentMainWindowLayout;
 
     /// <summary>
     /// Количество главных окон (для интерфейса SDI-количество всех окон)
     /// </summary>
     public int MainWindowCount { get { return _MainWindowCount; } }
-    private int _MainWindowCount;
+    private readonly int _MainWindowCount;
 
     /// <summary>
     /// Активное дочернее окно
     /// </summary>
     public Form CurrentChildForm { get { return _CurrentChildForm; } }
-    private Form _CurrentChildForm;
+    private readonly Form _CurrentChildForm;
 
     /// <summary>
     /// Количество дочерних окон
     /// </summary>
     public int ChildFormCount { get { return _ChildFormCount; } }
-    private int _ChildFormCount;
+    private readonly int _ChildFormCount;
 
     #endregion
 

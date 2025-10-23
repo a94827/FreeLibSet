@@ -149,7 +149,7 @@ namespace FreeLibSet.Core
         _TypeName = typeName;
       }
 
-      private string _TypeName;
+      private readonly string _TypeName;
 
       public override string ToString()
       {

@@ -78,14 +78,14 @@ namespace FreeLibSet.Data
     /// Имя таблицы, в которой выполнялся поиск
     /// </summary>
     public string TableName { get { return _TableName; } }
-    private string _TableName;
+    private readonly string _TableName;
 
     /// <summary>
     /// Идентификатор не найденной записи.
     /// Свойство имеет тип string, а не Int32 на случай будущей поддержки первичных ключей, отличных от Int32
     /// </summary>
     public string Id { get { return _Id; } }
-    private string _Id;
+    private readonly string _Id;
 
     #endregion
 

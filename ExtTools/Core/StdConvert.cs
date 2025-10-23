@@ -531,7 +531,7 @@ namespace FreeLibSet.Core
     /// Реализация интерфейса <see cref="IFormatProvider"/>, который возвращает <see cref="NumberFormat"/> и <see cref="DateTimeFormat"/>.
     /// </summary>
     public static IFormatProvider FormatProvider { get { return _FormatProvider; } }
-    private static InternalFormatProvider _FormatProvider = new InternalFormatProvider();
+    private static readonly InternalFormatProvider _FormatProvider = new InternalFormatProvider();
 
 
     #endregion

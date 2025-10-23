@@ -149,7 +149,7 @@ namespace FreeLibSet.Win32
     /// </summary>
     /// <value>A file path.</value>
     public AbsPath Path { get { return _Path; } }
-    private AbsPath _Path;
+    private readonly AbsPath _Path;
 
     /// <summary>
     /// Выводит путь к INI-файлу (свойство Path)
@@ -706,7 +706,7 @@ namespace FreeLibSet.Win32
     /// Задается в конструкторе
     /// </summary>
     public bool IsReadOnly { get { return _IsReadOnly; } }
-    private bool _IsReadOnly;
+    private readonly bool _IsReadOnly;
 
     /// <summary>
     /// Генерирует исключение, если IsReadOnly=true.

@@ -903,7 +903,7 @@ namespace FreeLibSet.Remoting
 
 #if DEBUG
 
-    private Thread _TheThread;
+    private readonly Thread _TheThread;
 
     private void CheckThread()
     {

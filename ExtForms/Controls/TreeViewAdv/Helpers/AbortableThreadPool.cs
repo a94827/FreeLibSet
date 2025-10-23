@@ -27,9 +27,9 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
 
   internal sealed class WorkItem
   {
-    private WaitCallback _callback;
-    private object _state;
-    private ExecutionContext _ctx;
+    private readonly WaitCallback _callback;
+    private readonly object _state;
+    private readonly ExecutionContext _ctx;
 
     internal WorkItem(WaitCallback wc, object state, ExecutionContext ctx)
     {
@@ -65,8 +65,8 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
 
   internal class AbortableThreadPool
   {
-    private LinkedList<WorkItem> _callbacks = new LinkedList<WorkItem>();
-    private Dictionary<WorkItem, Thread> _threads = new Dictionary<WorkItem, Thread>();
+    private readonly LinkedList<WorkItem> _callbacks = new LinkedList<WorkItem>();
+    private readonly Dictionary<WorkItem, Thread> _threads = new Dictionary<WorkItem, Thread>();
 
     public WorkItem QueueUserWorkItem(WaitCallback callback)
     {

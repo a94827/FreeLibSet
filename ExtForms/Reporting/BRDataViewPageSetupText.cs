@@ -82,17 +82,17 @@ namespace FreeLibSet.Forms.Reporting
         return String.Compare(x.DisplayName, y.DisplayName, StringComparison.CurrentCultureIgnoreCase);
     }
 
-    private IEFPDataView _ControlProvider;
-    private BRDataViewSettingsDataItem _ViewData;
-    private bool _IsCsv;
+    private readonly IEFPDataView _ControlProvider;
+    private readonly BRDataViewSettingsDataItem _ViewData;
+    private readonly bool _IsCsv;
 
     #endregion
 
     #region Поля
 
-    private EFPListComboBox efpCodePage;
-    private EFPTextComboBox efpFieldDelimiter, efpQuote;
-    private EFPCheckBox efpSingleLineField, efpRemoveDoubleSpaces, efpExpColumnHeaders;
+    private readonly EFPListComboBox efpCodePage;
+    private readonly EFPTextComboBox efpFieldDelimiter, efpQuote;
+    private readonly EFPCheckBox efpSingleLineField, efpRemoveDoubleSpaces, efpExpColumnHeaders;
 
     private void EfpFieldDelimiter_Validating(object sender, UICore.UIValidatingEventArgs args)
     {

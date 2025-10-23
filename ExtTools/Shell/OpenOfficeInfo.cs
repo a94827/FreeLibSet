@@ -438,7 +438,7 @@ namespace FreeLibSet.Shell
 
       #region Свойства
 
-      private OpenOfficeInfo _Office;
+      private readonly OpenOfficeInfo _Office;
 
       /// <summary>
       /// Доступ к определенному компоненту.
@@ -565,7 +565,7 @@ namespace FreeLibSet.Shell
     /// </summary>
     public PartCollection Parts { get { return new PartCollection(this); } }
 
-    private OpenOfficePartInfo[] _Parts;
+    private readonly OpenOfficePartInfo[] _Parts;
 
 
     /// <summary>

@@ -163,7 +163,7 @@ namespace FreeLibSet.IO
     /// При первом вызове события для каталога <see cref="PathEnumerableBase.RootDirectory"/> имеет значение 0. Для подкаталогов первого уровня - 1, и т.д.
     /// </summary>
     public int Level { get { return _Level; } }
-    private int _Level;
+    private readonly int _Level;
 
     /// <summary>
     /// Для отладки
@@ -498,14 +498,14 @@ namespace FreeLibSet.IO
     /// Задается в конструкторе.
     /// </summary>
     public AbsPath RootDirectory { get { return _RootDirectory; } }
-    private AbsPath _RootDirectory;
+    private readonly AbsPath _RootDirectory;
 
     /// <summary>
     /// Что должно возвращаться при перечислении: файлы и/или каталоги.
     /// Задается в конструкторе.
     /// </summary>
     public PathEnumerateKind EnumerateKind { get { return _EnumerateKind; } }
-    private PathEnumerateKind _EnumerateKind;
+    private readonly PathEnumerateKind _EnumerateKind;
 
     /// <summary>
     /// Режим перебора. По умолчанию - <see cref="PathEnumerateMode.FilesAndDirectories"/> - сначала файлы, потом - подкаталоги.
@@ -891,7 +891,7 @@ namespace FreeLibSet.IO
     }
 
     // Количество символов в базовом каталоге, чтобы быстрее обрезать путь при переборе
-    private int _RootDirectoryLen;
+    private readonly int _RootDirectoryLen;
 
     #endregion
 

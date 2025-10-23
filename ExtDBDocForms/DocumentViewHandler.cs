@@ -144,7 +144,7 @@ namespace FreeLibSet.Forms.Docs
       _DocTypeUI = docTypeUI;
     }
 
-    private DocTypeUI _DocTypeUI;
+    private readonly DocTypeUI _DocTypeUI;
 
     #endregion
 

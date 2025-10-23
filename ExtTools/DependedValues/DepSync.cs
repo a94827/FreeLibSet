@@ -339,13 +339,13 @@ namespace FreeLibSet.DependedValues
     /// т.к. в списке пар "Имя-Объект" могут быть одноименные объекты, относящиеся
     /// к одной группе
     /// </summary>
-    private List<string> _Names;
+    private readonly List<string> _Names;
     /// <summary>
     /// Список имен объектов синхронизации (для отладки)
     /// </summary>
     public string[] Names { get { return _Names.ToArray(); } }
 
-    private List<IDepSyncObject> _Objects;
+    private readonly List<IDepSyncObject> _Objects;
 
     /// <summary>
     /// Список объектов синхронизации (для отладки)
@@ -644,7 +644,7 @@ namespace FreeLibSet.DependedValues
       get { return _ValueEx; }
       set { _ValueEx.Source = value; }
     }
-    private DepInput<T> _ValueEx;
+    private readonly DepInput<T> _ValueEx;
 
     #endregion
 

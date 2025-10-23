@@ -291,7 +291,7 @@ namespace FreeLibSet.Data
     /// Задается в конструкторе и имеет IsReadOnly=true.
     /// </summary>
     public UserPermissionCreators Creators { get { return _Creators; } }
-    private UserPermissionCreators _Creators;
+    private readonly UserPermissionCreators _Creators;
 
     /// <summary>
     /// Добавляет разрешение в список, используя генератор разрешения.
@@ -606,7 +606,7 @@ namespace FreeLibSet.Data
       cfg.CopyTo(_Cfg);
     }
 
-    private TempCfg _Cfg;
+    private readonly TempCfg _Cfg;
 
     /// <summary>
     /// Возвращает "Неизвестное разрешение"

@@ -180,7 +180,7 @@ namespace FreeLibSet.Data.Docs
     /// Кэш базы данных
     /// </summary>
     public DBxCache DBCache { get { return _DBCache; } }
-    private DBxCache _DBCache;
+    private readonly DBxCache _DBCache;
 
     /// <summary>
     /// Провайдер для извлечения произвольных значений
@@ -196,7 +196,7 @@ namespace FreeLibSet.Data.Docs
     /// использовать последовательные разрешения
     /// </summary>
     public Hashtable<string, string> ErrorMessages { get { return _ErrorMessages; } }
-    private Hashtable<string, string> _ErrorMessages;
+    private readonly Hashtable<string, string> _ErrorMessages;
 
     #endregion
 
@@ -329,13 +329,13 @@ namespace FreeLibSet.Data.Docs
     /// Провайдер документов, для документов которого будут проверяться документы
     /// </summary>
     public DBxDocProvider DocProvider { get { return _DocProvider; } }
-    private DBxDocProvider _DocProvider;
+    private readonly DBxDocProvider _DocProvider;
 
     #endregion
 
     #region Коллекция объектов UserPermission
 
-    private Dictionary<string, List<IDBxDocPermission>> _Items;
+    private readonly Dictionary<string, List<IDBxDocPermission>> _Items;
 
     #endregion
 
@@ -344,7 +344,7 @@ namespace FreeLibSet.Data.Docs
     /// <summary>
     /// Чтобы не создавать объект при каждом вызове
     /// </summary>
-    private DBxDocPermissionArgs _Args;
+    private readonly DBxDocPermissionArgs _Args;
 
     /// <summary>
     /// Выполняет проверку прав доступа к документу.

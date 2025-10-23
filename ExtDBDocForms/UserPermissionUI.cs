@@ -397,7 +397,7 @@ namespace FreeLibSet.Forms.Docs
     /// XML-значение разрешения (как текст), а значением - объекты <see cref="UserPermission"/>.
     /// </summary>
     public UserPermissionInfoCache InfoCache { get { return _InfoCache; } }
-    private UserPermissionInfoCache _InfoCache;
+    private readonly UserPermissionInfoCache _InfoCache;
 
     #endregion
 
@@ -597,8 +597,8 @@ namespace FreeLibSet.Forms.Docs
 
       #region Свойства
 
-      private UserPermissionEditor _Editor;
-      private IUserPermissionCreator _Creator;
+      private readonly UserPermissionEditor _Editor;
+      private readonly IUserPermissionCreator _Creator;
 
       #endregion
 
@@ -767,7 +767,7 @@ namespace FreeLibSet.Forms.Docs
     /// Разрешение, которое надо перенести в поля ввода или заполнить из редактора
     /// </summary>
     public UserPermission Permission { get { return _Permission; } }
-    private UserPermission _Permission;
+    private readonly UserPermission _Permission;
 
     #endregion
   }

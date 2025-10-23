@@ -185,13 +185,13 @@ namespace FreeLibSet.Forms.Docs
     #region Списки полей для запроса
 
     internal DBxColumns ColumnsId { get { return _ColumnsId; } }
-    private DBxColumns _ColumnsId;
+    private readonly DBxColumns _ColumnsId;
 
     internal DBxColumns ColumnsDoc { get { return _ColumnsDoc; } }
-    private DBxColumns _ColumnsDoc;
+    private readonly DBxColumns _ColumnsDoc;
 
     internal DBxColumns ColumnsSubDoc { get { return _ColumnsSubDoc; } }
-    private DBxColumns _ColumnsSubDoc;
+    private readonly DBxColumns _ColumnsSubDoc;
 
     #endregion
 
@@ -338,7 +338,7 @@ namespace FreeLibSet.Forms.Docs
     /// <summary>
     /// Используем единственный экземпляр объекта, т.к. при запросе выполняется блокировка
     /// </summary>
-    private DBxImageValueNeededEventArgs _Args;
+    private readonly DBxImageValueNeededEventArgs _Args;
 
     /// <summary>
     /// Получить имя изображения для документа или поддокумента в списке <see cref="EFPApp.MainImages"/>.
@@ -1187,7 +1187,7 @@ namespace FreeLibSet.Forms.Docs
       #endregion
     }
 
-    private Dictionary<string, TableHandler> _TableItems;
+    private readonly Dictionary<string, TableHandler> _TableItems;
 
     #endregion
 

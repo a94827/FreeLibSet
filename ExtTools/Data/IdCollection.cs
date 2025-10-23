@@ -125,7 +125,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Используем псевдоколлекцию, в которой в качестве значения используется null
     /// </summary>
-    private Dictionary<T, object> _Items;
+    private readonly Dictionary<T, object> _Items;
 
     #endregion
 

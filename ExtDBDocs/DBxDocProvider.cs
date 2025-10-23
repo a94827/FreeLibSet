@@ -88,7 +88,7 @@ namespace FreeLibSet.Data.Docs
     /// Это свойство не предназначено для использования в прикладном коде.
     /// Используйте обычные свойства DBxDocProvider, например, UserId.
     /// </summary>
-    private NamedValues _FixedInfo;
+    private readonly NamedValues _FixedInfo;
 
     /// <summary>
     /// Создает объект, который используется для создания цепочечного провайдера.
@@ -193,13 +193,13 @@ namespace FreeLibSet.Data.Docs
     /// Состоит из DBIdenitity и прав доступа путем вычисления MD5
     /// </summary>
     internal string FirstCacheKey { get { return _FirstCacheKey; } }
-    private string _FirstCacheKey;
+    private readonly string _FirstCacheKey;
 
     /// <summary>
     /// Объект, используемый для блокировки потоконебезопасных операций
     /// </summary>
     protected object SyncRoot { get { return _SyncRoot; } }
-    private object _SyncRoot;
+    private readonly object _SyncRoot;
 
     #endregion
 
@@ -594,7 +594,7 @@ namespace FreeLibSet.Data.Docs
       return table1;
     }
 
-    private static DBxColumns _AuxDocSysColumns = new DBxColumns("CreateTime,CreateUserId,ChangeTime,ChangeUserId");
+    private static readonly DBxColumns _AuxDocSysColumns = new DBxColumns("CreateTime,CreateUserId,ChangeTime,ChangeUserId");
 
     /// <summary>
     /// Получение структуры таблицы документа или поддокумента
@@ -3132,7 +3132,7 @@ namespace FreeLibSet.Data.Docs
     /// разрешена передача между потоками
     /// </summary>
     public Thread SingleThread { get { return _SingleThread; } }
-    private Thread _SingleThread;
+    private readonly Thread _SingleThread;
 
     /// <summary>
     /// Если в конструкторе был задан параметр CurrentThreadOnly, то проверяется совпадение текущего

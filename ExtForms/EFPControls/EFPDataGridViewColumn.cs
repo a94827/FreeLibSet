@@ -973,7 +973,7 @@ namespace FreeLibSet.Forms
     /// Если столбец не может быть экспортирован, свойство возвращает null.
     /// </summary>
     public DbfFieldTypePreliminaryInfo DbfPreliminaryInfo { get { return _DbfPreliminaryInfo; } }
-    private DbfFieldTypePreliminaryInfo _DbfPreliminaryInfo;
+    private readonly DbfFieldTypePreliminaryInfo _DbfPreliminaryInfo;
 
     /// <summary>
     /// Имя DBF-поля для этого столбца по умолчанию
@@ -1125,7 +1125,7 @@ namespace FreeLibSet.Forms
         _Column = column;
       }
 
-      private EFPDataGridViewColumn _Column;
+      private readonly EFPDataGridViewColumn _Column;
 
       #endregion
 
@@ -1149,7 +1149,7 @@ namespace FreeLibSet.Forms
         _CurrentRowIndex = -1;
       }
 
-      private EFPDataGridViewColumn _Column;
+      private readonly EFPDataGridViewColumn _Column;
       private int _CurrentRowIndex;
 
       #endregion
@@ -2038,7 +2038,7 @@ namespace FreeLibSet.Forms
 
       #region Поля
 
-      private EFPDataGridViewColumns _Columns;
+      private readonly EFPDataGridViewColumns _Columns;
       private int _Index;
 
       #endregion

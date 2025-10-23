@@ -40,7 +40,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
       set { _editorHeight = value; }
     }
 
-    private List<object> _dropDownItems;
+    private readonly List<object> _dropDownItems;
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
     [Editor(typeof(StringCollectionEditor), typeof(UITypeEditor)), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public List<object> DropDownItems

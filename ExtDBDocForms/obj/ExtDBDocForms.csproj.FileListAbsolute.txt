@@ -87,3 +87,4 @@ D:\a94827\FreeLibSet\ExtDBDocForms\obj\Debug\FreeLibSet.Forms.Docs.UserActionsRe
 D:\a94827\FreeLibSet\ExtDBDocForms\obj\Debug\ru\ExtDBDocForms.resources.dll
 D:\a94827\FreeLibSet\ExtDBDocForms\obj\Debug\ExtDBDocForms.dll
 D:\a94827\FreeLibSet\ExtDBDocForms\obj\Debug\ExtDBDocForms.pdb
+D:\a94827\FreeLibSet\ExtDBDocForms\bin\Debug\ExtDBDocForms.XML

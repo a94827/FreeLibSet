@@ -501,7 +501,7 @@ namespace FreeLibSet.Forms
       _TheStringFormat.LineAlignment = StringAlignment.Center;
     }
 
-    private static StringFormat _TheStringFormat;
+    private static readonly StringFormat _TheStringFormat;
 
     /// <summary>
     /// Статический метод рисования элемента списка.

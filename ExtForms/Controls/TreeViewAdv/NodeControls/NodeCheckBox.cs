@@ -28,9 +28,9 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
     /// </summary>
     public const int ImageSize = 13;
 
-    private Bitmap _check;
-    private Bitmap _uncheck;
-    private Bitmap _unknown;
+    private readonly Bitmap _check;
+    private readonly Bitmap _uncheck;
+    private readonly Bitmap _unknown;
 
     #region Properties
 

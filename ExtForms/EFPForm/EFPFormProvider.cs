@@ -333,7 +333,7 @@ namespace FreeLibSet.Forms
     {
       get { return _ReentranceLocker; }
     }
-    private EFPReentranceLocker _ReentranceLocker;
+    private readonly EFPReentranceLocker _ReentranceLocker;
 
     /// <summary>
     /// Используется в EFPAppInterface
@@ -948,8 +948,8 @@ namespace FreeLibSet.Forms
 
     private ToolTip _TheToolTip;
 
-    private Dictionary<Control, ToolTipIcon> _ToolTipIcons;
-    private Dictionary<Control, string> _ToolTipTitles;
+    private readonly Dictionary<Control, ToolTipIcon> _ToolTipIcons;
+    private readonly Dictionary<Control, string> _ToolTipTitles;
 
     /// <summary>
     /// Инициализация всплывающей подсказки для управляющего элемента
@@ -1058,7 +1058,7 @@ namespace FreeLibSet.Forms
     /// Значение - родительский элемент (задаваемый EFPControlBase.Control).
     /// Если курсор мыши находится в элементе, задаваемым ключом, то 
     /// </summary>
-    private Dictionary<Control, Control> _ToolTipNestedControls;
+    private readonly Dictionary<Control, Control> _ToolTipNestedControls;
 
     /// <summary>
     /// Добавляет вложенный элемент, для которого надо показывать всплывающую подсказку как для основного элемента.
@@ -1823,9 +1823,9 @@ namespace FreeLibSet.Forms
     /// Копия свойства EFPApp.DefaultScreen, действующая на момент создания EFPFormProvider.
     /// Нужна для вычисления положения блока диалога
     /// </summary>
-    private Screen _DefaultScreen;
+    private readonly Screen _DefaultScreen;
 
-    private Form _DialogOwnerForm;
+    private readonly Form _DialogOwnerForm;
 
     /// <summary>
     /// Возвращает экран, на котором должен быть показан блок диалога
@@ -1891,7 +1891,7 @@ namespace FreeLibSet.Forms
     /// Если нужно записать конфигурацию, то должен быть установлен флаг для категории вызовом <see cref="ConfigHandler"/>.Changed["Filters"]=true.
     /// </summary>
     public EFPConfigHandler ConfigHandler { get { return _ConfigHandler; } }
-    private EFPConfigHandler _ConfigHandler;
+    private readonly EFPConfigHandler _ConfigHandler;
 
     /// <summary>
     /// Вызывает <see cref="ConfigHandler"/>.ReadConfig() для чтения значений.
@@ -2918,7 +2918,7 @@ namespace FreeLibSet.Forms
 
     #region Поиск провайдера для формы
 
-    private static WeakReferenceCollection<EFPFormProvider> _ProviderList = new WeakReferenceCollection<EFPFormProvider>();
+    private static readonly WeakReferenceCollection<EFPFormProvider> _ProviderList = new WeakReferenceCollection<EFPFormProvider>();
 
     /// <summary>
     /// Поиск объекта EFPFormProvider, созданного для указанной формы.
@@ -2981,7 +2981,7 @@ namespace FreeLibSet.Forms
     /// Время создания объекта (для отладки)
     /// </summary>
     public DateTime DebugCreateTime { get { return _DebugCreateTime; } }
-    private DateTime _DebugCreateTime;
+    private readonly DateTime _DebugCreateTime;
 
     /// <summary>
     /// Отладочное свойство.

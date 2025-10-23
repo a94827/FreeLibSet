@@ -935,7 +935,7 @@ namespace FreeLibSet.Forms.Docs
     /// Параметры интерфейса пользователя для отдельных столбцов
     /// </summary>
     public ColumnUIList Columns { get { return _Columns; } }
-    private ColumnUIList _Columns;
+    private readonly ColumnUIList _Columns;
 
     #endregion
 

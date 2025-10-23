@@ -293,7 +293,7 @@ namespace FreeLibSet.Forms
 
     #region Копировать гиперссылку
 
-    EFPCommandItem ciCopyHyperlink;
+    private readonly EFPCommandItem ciCopyHyperlink;
 
     /// <summary>
     /// Использование команды "Копировать гиперссылку".
@@ -362,7 +362,7 @@ namespace FreeLibSet.Forms
 
     #region Команды сортировки строк
 
-    private EFPCommandItem _MenuSort;
+    private readonly EFPCommandItem _MenuSort;
 
     #region Сортировка путем выбора порядка сортировки
 

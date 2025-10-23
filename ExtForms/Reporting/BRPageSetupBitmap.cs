@@ -47,13 +47,13 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Поля
 
-    BRBitmapSettingsDataItem _BitmapSettings;
+    private readonly BRBitmapSettingsDataItem _BitmapSettings;
 
-    EFPInt32EditBox efpResolution;
+    private readonly EFPInt32EditBox efpResolution;
 
-    EFPListComboBox efpColorFormat;
+    private readonly EFPListComboBox efpColorFormat;
 
-    EFPCheckBox efpClipMargins;
+    private readonly EFPCheckBox efpClipMargins;
 
     #endregion
 

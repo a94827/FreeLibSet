@@ -78,10 +78,10 @@ namespace FreeLibSet.Forms.Reporting
       page.PageShow += Page_PageShow;
     }
 
-    private IEFPDataView _ControlProvider;
-    private BRPageSetup _PageSetup;
-    private BRDataViewSettingsDataItem _ViewData;
-    private BRFontSettingsDataItem _FontData;
+    private readonly IEFPDataView _ControlProvider;
+    private readonly BRPageSetup _PageSetup;
+    private readonly BRDataViewSettingsDataItem _ViewData;
+    private readonly BRFontSettingsDataItem _FontData;
 
     #endregion
 

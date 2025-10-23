@@ -135,7 +135,7 @@ namespace FreeLibSet.Forms
     /// Задается в конструкторе
     /// </summary>
     public Wizard TheWizard { get { return _TheWizard; } }
-    private Wizard _TheWizard;
+    private readonly Wizard _TheWizard;
 
     /// <summary>
     /// Номер теущего шага
@@ -1070,7 +1070,7 @@ namespace FreeLibSet.Forms
     /// Мастер, к которому относится шаг. 
     /// </summary>
     public Wizard Wizard { get { return _Wizard; } }
-    private Wizard _Wizard;
+    private readonly Wizard _Wizard;
 
     /// <summary>
     /// Сюда должен быть помещен следующий шаг
@@ -1115,13 +1115,13 @@ namespace FreeLibSet.Forms
     /// Мастер, к которому относится шаг. 
     /// </summary>
     public Wizard Wizard { get { return _Wizard; } }
-    private Wizard _Wizard;
+    private readonly Wizard _Wizard;
 
     /// <summary>
     /// Выполняемое действие (Next, Back или CircleNext)
     /// </summary>
     public WizardAction Action { get { return _Action; } }
-    private WizardAction _Action;
+    private readonly WizardAction _Action;
 
     /// <summary>
     /// Возвращает true, если выполняемое действие означает движение вперед
@@ -1166,13 +1166,13 @@ namespace FreeLibSet.Forms
     /// Мастер, к которому относится шаг. 
     /// </summary>
     public Wizard Wizard { get { return _Wizard; } }
-    private Wizard _Wizard;
+    private readonly Wizard _Wizard;
 
     /// <summary>
     /// Выполняемое действие (Next, Finish, Back или Cancel)
     /// </summary>
     public WizardAction Action { get { return _Action; } }
-    private WizardAction _Action;
+    private readonly WizardAction _Action;
 
     /// <summary>
     /// Возвращает true, если выполняемое действие означает движение вперед
@@ -1649,13 +1649,13 @@ namespace FreeLibSet.Forms
     /// Управляющий элемент, выводимый в форме
     /// </summary>
     public Control Control { get { return _Control; } }
-    private Control _Control;
+    private readonly Control _Control;
 
     /// <summary>
     /// Провайдер для присоединения управляющих элементов
     /// </summary>
     public EFPBaseProvider BaseProvider { get { return _BaseProvider; } }
-    private EFPBaseProvider _BaseProvider;
+    private readonly EFPBaseProvider _BaseProvider;
 
     /// <summary>
     /// Произвольные пользовательские данные
@@ -1764,7 +1764,7 @@ namespace FreeLibSet.Forms
 
       #region Свойства
 
-      private WizardSplashPage _Page;
+      private readonly WizardSplashPage _Page;
 
       #endregion
 
@@ -1792,7 +1792,7 @@ namespace FreeLibSet.Forms
     /// Интерфейс управления закладкой
     /// </summary>
     public ISplash Splash { get { return _Splash; } }
-    private Splash2 _Splash;
+    private readonly Splash2 _Splash;
 
     #endregion
 

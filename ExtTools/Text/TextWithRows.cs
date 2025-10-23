@@ -186,13 +186,13 @@ namespace FreeLibSet.Text
     /// Массив позиций начала каждой строки.
     /// Первый элемент массива содержит 0.
     /// </summary>
-    private List<int> _RowStarts;
+    private readonly List<int> _RowStarts;
 
     /// <summary>
     /// Массив, содержащий длину каждой строки.
     /// В длину строки не входят символы перхода на новую строку.
     /// </summary>
-    private List<int> _RowLengths;
+    private readonly List<int> _RowLengths;
 
     /// <summary>
     /// Возвращает число строк
@@ -324,7 +324,7 @@ namespace FreeLibSet.Text
 
       #region Поля
 
-      TextWithRows _Source;
+      private readonly TextWithRows _Source;
 
       int _RowIndex;
 

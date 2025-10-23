@@ -413,7 +413,7 @@ namespace FreeLibSet.UICore
     /// <summary>
     /// Позиция числового столбца, используемого для сортировки
     /// </summary>
-    private int _OrderColumnPos;
+    private readonly int _OrderColumnPos;
 
     /// <summary>
     /// Возвращает true, если просмотр Model.Table.DefaultView отсортирован по OrderColumnName

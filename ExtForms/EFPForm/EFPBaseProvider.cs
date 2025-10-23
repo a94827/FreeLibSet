@@ -174,7 +174,7 @@ namespace FreeLibSet.Forms
 
       #region Коллекция
 
-      private EFPBaseProvider _Owner;
+      private readonly EFPBaseProvider _Owner;
 
       /// <summary>
       /// Возвращает количество дочерних провайдеров <see cref="EFPBaseProvider"/>
@@ -316,7 +316,7 @@ namespace FreeLibSet.Forms
 
       #region Коллекция
 
-      private EFPBaseProvider _Owner;
+      private readonly EFPBaseProvider _Owner;
 
       /// <summary>
       /// Возвращает количество подключенных провайдеров управляющих элементов

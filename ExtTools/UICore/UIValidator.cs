@@ -163,7 +163,7 @@ namespace FreeLibSet.UICore
     /// Объект, запросивший проверку. Ему передаются сообщения об ошибке или предупреждении
     /// </summary>
     public IUIValidableObject ValidableObject { get { return _ValidableObject; } }
-    private IUIValidableObject _ValidableObject;
+    private readonly IUIValidableObject _ValidableObject;
 
     /// <summary>
     /// Установить сообщение об ошибке

@@ -1666,9 +1666,7 @@ namespace FreeLibSet.Forms
     //  }
     //}
 
-#pragma warning disable 0414 // временно
-    private int _SavedRowIndex = -1;
-#pragma warning restore 0414
+    //private int _SavedRowIndex = -1;
 
 #if XXX
     public void SelectRowIndex(int RowIndex)

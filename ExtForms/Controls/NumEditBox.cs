@@ -63,7 +63,7 @@ namespace FreeLibSet.Controls
         }
       }
 
-      private NumEditBoxBase<T> _Owner;
+      private readonly NumEditBoxBase<T> _Owner;
 
       #endregion
 

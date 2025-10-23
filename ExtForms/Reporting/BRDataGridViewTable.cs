@@ -484,7 +484,7 @@ namespace FreeLibSet.Forms.Reporting
       _List = list;
     }
 
-    private SettingsDataListBase _List;
+    private readonly SettingsDataListBase _List;
 
     /// <summary>
     /// Параметры страницы
@@ -680,10 +680,10 @@ namespace FreeLibSet.Forms.Reporting
       #region Свойства
 
       public EFPDataGridView ControlProvider { get { return _ControlProvider; } }
-      private EFPDataGridView _ControlProvider;
+      private readonly EFPDataGridView _ControlProvider;
 
       public BRDataViewSettingsDataItem ViewData { get { return _ViewData; } }
-      private BRDataViewSettingsDataItem _ViewData;
+      private readonly BRDataViewSettingsDataItem _ViewData;
 
       public int[] RowIndexes { get { return _RowIndexes; } }
       private int[] _RowIndexes;
@@ -693,7 +693,7 @@ namespace FreeLibSet.Forms.Reporting
       /// Индекс первой строки данных, с учетом заголовков
       /// </summary>
       public int FirstDataRow { get { return _FirstDataRow; } }
-      private int _FirstDataRow;
+      private readonly int _FirstDataRow;
 
       public ColumnInfo[] Columns { get { return _Columns; } }
       private ColumnInfo[] _Columns;
@@ -713,7 +713,7 @@ namespace FreeLibSet.Forms.Reporting
       /// Если нумерация не используется, то возвращает (-1).
       /// </summary>
       public int SubHeaderNumberRowIndex { get { return _SubHeaderNumberRowIndex; } }
-      private int _SubHeaderNumberRowIndex;
+      private readonly int _SubHeaderNumberRowIndex;
 
       #endregion
     }
@@ -734,9 +734,9 @@ namespace FreeLibSet.Forms.Reporting
       _SB = new StringBuilder();
     }
 
-    private InternalInfo _Info;
+    private readonly InternalInfo _Info;
 
-    private StringBuilder _SB;
+    private readonly StringBuilder _SB;
 
     #endregion
 

@@ -83,19 +83,19 @@ namespace FreeLibSet.Forms
 
     #region Поля
 
-    EFPTextComboBox efpText;
+    private readonly EFPTextComboBox efpText;
 
-    EFPCheckBox efpCaseSens;
-    EFPCheckBox efpSimilarCharsDiff;
-    EFPCheckBox efpWhole;
+    private readonly EFPCheckBox efpCaseSens;
+    private readonly EFPCheckBox efpSimilarCharsDiff;
+    private readonly EFPCheckBox efpWhole;
 
     /// <summary>
     /// Переключатели "Где искать"
     /// </summary>
     public EFPRadioButtons efpWhere;
 
-    EFPRadioButtons efpDirection;
-    EFPRadioButtons efpFrom;
+    private readonly EFPRadioButtons efpDirection;
+    private readonly EFPRadioButtons efpFrom;
 
     #endregion
 
@@ -581,7 +581,7 @@ namespace FreeLibSet.Forms
     /// Провайдер табличного просмотра
     /// </summary>
     public EFPDataGridView Owner { get { return _Owner; } }
-    private EFPDataGridView _Owner;
+    private readonly EFPDataGridView _Owner;
 
     #endregion
 

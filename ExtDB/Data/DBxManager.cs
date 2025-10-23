@@ -205,7 +205,7 @@ namespace FreeLibSet.Data
     }
     private static SyncNamedCollection<DBxManager> _Managers = null;
 
-    private static object _SyncRoot = new object();
+    private static readonly object _SyncRoot = new object();
 
     #endregion
 

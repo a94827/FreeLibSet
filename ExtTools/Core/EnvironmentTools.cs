@@ -761,7 +761,7 @@ namespace FreeLibSet.Core
         return _WineVersion ?? new Version();
       }
     }
-    private static Version _WineVersion; // хранит null, если не из wine
+    private static readonly Version _WineVersion; // хранит null, если не из wine
 
     private static Version GetWineVersion()
     {

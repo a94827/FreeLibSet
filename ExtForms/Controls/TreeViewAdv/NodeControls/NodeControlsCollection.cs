@@ -18,7 +18,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 {
   internal class NodeControlsCollection : Collection<NodeControl>
   {
-    private TreeViewAdv _tree;
+    private readonly TreeViewAdv _tree;
 
     public NodeControlsCollection(TreeViewAdv tree)
     {
@@ -84,7 +84,7 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
   internal class NodeControlCollectionEditor : CollectionEditor
   {
-    private Type[] _types;
+    private readonly Type[] _types;
 
     public NodeControlCollectionEditor(Type type)
       : base(type)

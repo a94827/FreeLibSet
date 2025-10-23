@@ -368,7 +368,7 @@ namespace FreeLibSet.Forms.Docs
         _Form = form;
       }
 
-      private DocTableViewForm _Form;
+      private readonly DocTableViewForm _Form;
 
       #endregion
 
@@ -1153,13 +1153,13 @@ namespace FreeLibSet.Forms.Docs
       }
 
       //public EFPDocTableView Owner { get { return _Owner; } }
-      private EFPDocTableView _Owner;
+      private readonly EFPDocTableView _Owner;
 
       #endregion
 
       #region Видимость элементов формы
 
-      private EFPCommandItem ciGroupTreeVisible, ciGroupCBVisible;
+      private readonly EFPCommandItem ciGroupTreeVisible, ciGroupCBVisible;
 
       void ciGroupTreeVisible_Click(object sender, EventArgs args)
       {
@@ -1177,7 +1177,7 @@ namespace FreeLibSet.Forms.Docs
 
       #region "Скрыть вложенные"
 
-      EFPCommandItem ciHideNested;
+      private readonly EFPCommandItem ciHideNested;
 
       void ciHideNested_Click(object sender, EventArgs args)
       {

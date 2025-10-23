@@ -1190,7 +1190,7 @@ namespace FreeLibSet.Forms
     private bool _UseEditView;
 
 
-    private EFPCommandItem MenuEdit, ciEdit, ciInsert, ciInsertCopy, ciDelete, ciView, ciOkButton;
+    private readonly EFPCommandItem MenuEdit, ciEdit, ciInsert, ciInsertCopy, ciDelete, ciView, ciOkButton;
 
     /// <summary>
     /// Доступ к командам редактирования записей
@@ -1217,7 +1217,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Панелька со значком для inline-редактирования
     /// </summary>
-    private EFPCommandItem ciInlineEditStatus;
+    private readonly EFPCommandItem ciInlineEditStatus;
 
     /// <summary>
     /// Если установить в true, то значок состояния редактирования ячейки "по месту" будет присутствовать в статусной строке,
@@ -1382,11 +1382,11 @@ namespace FreeLibSet.Forms
       set { _PasteHandler.UseToolBar = value; }
     }
 
-    private EFPCommandItem MenuClipboard;
+    private readonly EFPCommandItem MenuClipboard;
 
     #region Вырезать
 
-    private EFPCommandItem ciCut;
+    private readonly EFPCommandItem ciCut;
 
     /// <summary>
     /// Если обработчик установлен, то в локальное меню добавляется команда "Вырезать".
@@ -1482,7 +1482,7 @@ namespace FreeLibSet.Forms
 
     #region Копировать
 
-    private EFPCommandItem ciCopy, ciCopySettings;
+    private readonly EFPCommandItem ciCopy, ciCopySettings;
 
     private void DoCopy(object sender, EventArgs args)
     {
@@ -1620,7 +1620,7 @@ namespace FreeLibSet.Forms
 
     #region Копировать гиперссылку
 
-    EFPCommandItem ciCopyHyperlink;
+    private readonly EFPCommandItem ciCopyHyperlink;
 
     ///// <summary>
     ///// Использование команды "Копировать гиперссылку".
@@ -1779,7 +1779,7 @@ namespace FreeLibSet.Forms
     /// Обработчик для команд "Вставка" и "Специальная вставка"
     /// </summary>
     public EFPPasteHandler PasteHandler { get { return _PasteHandler; } }
-    private EFPPasteHandler _PasteHandler;
+    private readonly EFPPasteHandler _PasteHandler;
 
     void PasteHandler_PasteApplied(object sender, EventArgs args)
     {
@@ -1888,7 +1888,7 @@ namespace FreeLibSet.Forms
 
     #region Команды установки отмеченных строк
 
-    EFPCommandItem MenuCheck, ciCheckSel, ciUncheckSel, ciInvertSel, ciCheckAll, ciUncheckAll;
+    private readonly EFPCommandItem MenuCheck, ciCheckSel, ciUncheckSel, ciInvertSel, ciCheckAll, ciUncheckAll;
 
     private void ciCheckSel_Click(object sender, EventArgs args)
     {
@@ -1925,7 +1925,7 @@ namespace FreeLibSet.Forms
 
     #region Команды поиска
 
-    EFPCommandItem MenuSearch, ciIncSearch, ciFind, ciFindNext;
+    private readonly EFPCommandItem MenuSearch, ciIncSearch, ciFind, ciFindNext;
 
     /// <summary>
     /// Если установить в true, то в статусной строке будет присутствовать панель поиска по первым буквам,
@@ -2007,7 +2007,7 @@ namespace FreeLibSet.Forms
     }
     private bool _UseGotoRowWithDiffValue;
 
-    private EFPCommandItem ciGotoRowWithDiffValueUp, ciGotoRowWithDiffValueDown;
+    private readonly EFPCommandItem ciGotoRowWithDiffValueUp, ciGotoRowWithDiffValueDown;
 
     private void CiGotoRowWithDiffValueUp_Click(object sender, EventArgs args)
     {
@@ -2023,7 +2023,7 @@ namespace FreeLibSet.Forms
 
     #region Команды сортировки строк
 
-    private EFPCommandItem _MenuSort;
+    private readonly EFPCommandItem _MenuSort;
 
     #region Сортировка путем выбора порядка сортировки
 
@@ -2189,9 +2189,9 @@ namespace FreeLibSet.Forms
     }
     private bool _UseRowErrors;
 
-    private EFPCommandItem _MenuRowErrors;
-    private EFPCommandItem ciGotoPrevErrorWarning, ciGotoNextErrorWarning, ciGotoPrevErrorOnly, ciGotoNextErrorOnly;
-    private EFPCommandItem ciCopyRowErrorMessages;
+    private readonly EFPCommandItem _MenuRowErrors;
+    private readonly EFPCommandItem ciGotoPrevErrorWarning, ciGotoNextErrorWarning, ciGotoPrevErrorOnly, ciGotoNextErrorOnly;
+    private readonly EFPCommandItem ciCopyRowErrorMessages;
 
     void ciGotoNextErrorWarning_Click(object sender, EventArgs args)
     {
@@ -2325,7 +2325,7 @@ namespace FreeLibSet.Forms
     }
     private bool _UseRowErrorsListView;
 
-    private EFPCommandItem ciShowRowErrorMessages;
+    private readonly EFPCommandItem ciShowRowErrorMessages;
 
     private static int _ShowRowErrorMessagesRowMode = 0;
 
@@ -2414,7 +2414,7 @@ namespace FreeLibSet.Forms
 
     #region Окно суммы в статусной строке
 
-    private EFPCommandItem ciStatCount, ciStatSum/*, ciStatSummaCopy*/;
+    private readonly EFPCommandItem ciStatCount, ciStatSum/*, ciStatSummaCopy*/;
 
     private Timer _StatSummaTimer;
 
@@ -2714,7 +2714,7 @@ namespace FreeLibSet.Forms
 
     private bool _UseSelectAll;
 
-    EFPCommandItem ciSelectAll, ciRefresh;
+    private readonly EFPCommandItem ciSelectAll, ciRefresh;
 
     private void SelectAll(object sender, EventArgs args)
     {

@@ -77,7 +77,7 @@ namespace FreeLibSet.Text
     /// Вместо него можно использовать прямое копирование
     /// </summary>
     public bool IsDirect { get { return _IsDirect; } }
-    private bool _IsDirect;
+    private readonly bool _IsDirect;
 
     /// <summary>
     /// Текстовое представление для отладки
@@ -95,7 +95,7 @@ namespace FreeLibSet.Text
     /// <summary>
     /// Таблица перекодирования размером 256 байт, если IsDirect=false
     /// </summary>
-    private byte[] TranscodeTable;
+    private readonly byte[] TranscodeTable;
 
     /// <summary>
     /// Выполнить преобразование byte[]-byte[] для части массива.

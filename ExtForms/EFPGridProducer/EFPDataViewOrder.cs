@@ -662,7 +662,7 @@ namespace FreeLibSet.Forms.Data
         _Table = table;
       }
 
-      private DataTable _Table;
+      private readonly DataTable _Table;
 
       #endregion
 

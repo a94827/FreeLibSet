@@ -220,7 +220,7 @@ namespace FreeLibSet.Data.SQLite
     /// Возвращает true, если база данных располагается в памяти
     /// </summary>
     public bool InMemory { get { return _InMemory; } }
-    private bool _InMemory;
+    private readonly bool _InMemory;
 
     /// <summary>
     /// Если база данных располагается в памяти, требуется постоянно открытое соединение для нее.
@@ -536,10 +536,10 @@ namespace FreeLibSet.Data.SQLite
     // Свойство ConnectionString не стоит делать public. Там может быть пароль
 
     internal SQLiteConnectionStringBuilder ConnectionStringBuilder { get { return _ConnectionStringBuilder; } }
-    private SQLiteConnectionStringBuilder _ConnectionStringBuilder;
+    private readonly SQLiteConnectionStringBuilder _ConnectionStringBuilder;
 
     internal string ConnectionString { get { return _ConnectionString; } }
-    private string _ConnectionString;
+    private readonly string _ConnectionString;
 
     #endregion
 

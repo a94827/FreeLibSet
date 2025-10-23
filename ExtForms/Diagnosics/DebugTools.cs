@@ -650,7 +650,7 @@ namespace FreeLibSet.Forms.Diagnostics
         _CommandItems = commandItems;
       }
 
-      private EFPCommandItems _CommandItems;
+      private readonly EFPCommandItems _CommandItems;
 
       #endregion
 

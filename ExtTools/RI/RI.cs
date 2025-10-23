@@ -825,14 +825,14 @@ namespace FreeLibSet.RI
     /// Ссылка на процедуру, выполняющую вызов. 
     /// </summary>
     public IExecProc ExecProc { get { return _ExecProc; } }
-    private IExecProc _ExecProc;
+    private readonly IExecProc _ExecProc;
 
     /// <summary>
     /// Интерфейс, используемый для чтения / записи значений между вызовами.
     /// Задается в конструкторе. Может быть null
     /// </summary>
     public IRIValueSaver Saver { get { return _Saver; } }
-    private IRIValueSaver _Saver;
+    private readonly IRIValueSaver _Saver;
 
     #endregion
 
@@ -1065,7 +1065,7 @@ namespace FreeLibSet.RI
     /// Если true, то будут выбрасываться исключения, если false - будет отправляться результат "Отмена"
     /// </summary>
     public bool ThrowExceptions { get { return _ThrowExceptions; } }
-    private bool _ThrowExceptions;
+    private readonly bool _ThrowExceptions;
 
     /// <summary>
     /// Текст сообщения в исключении.

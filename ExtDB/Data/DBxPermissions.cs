@@ -93,7 +93,7 @@ namespace FreeLibSet.Data
         _Owner = Owner;
       }
 
-      private DBxPermissions _Owner;
+      private readonly DBxPermissions _Owner;
 
       /// <summary>
       /// Разрешение на доступ к таблице.
@@ -204,7 +204,7 @@ namespace FreeLibSet.Data
         _Owner = owner;
       }
 
-      private DBxPermissions _Owner;
+      private readonly DBxPermissions _Owner;
 
       /// <summary>
       /// Разрешение на доступ к полю таблицы.

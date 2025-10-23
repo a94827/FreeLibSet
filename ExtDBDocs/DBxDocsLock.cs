@@ -64,7 +64,7 @@ namespace FreeLibSet.Data.Docs
       }
     }
 
-    private Dictionary<string, DBxDocTableLockData> _Tables;
+    private readonly Dictionary<string, DBxDocTableLockData> _Tables;
 
     #endregion
 

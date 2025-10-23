@@ -697,7 +697,7 @@ namespace FreeLibSet.Forms.Data
       get { return _Int32ValueEx; }
       set { _Int32ValueEx.Source = value; }
     }
-    private DepInput<int> _Int32ValueEx;
+    private readonly DepInput<int> _Int32ValueEx;
 
     void Int32ValueEx_ValueChanged(object sender, EventArgs args)
     {
@@ -729,7 +729,7 @@ namespace FreeLibSet.Forms.Data
       get { return _CodeValueEx; }
       set { _CodeValueEx.Source = value; }
     }
-    private DepInput<string> _CodeValueEx;
+    private readonly DepInput<string> _CodeValueEx;
 
     void CodeValueEx_ValueChanged(object sender, EventArgs args)
     {
@@ -785,7 +785,7 @@ namespace FreeLibSet.Forms.Data
 
     #region IntEnumCodeProxy
 
-    private Int32EnumCodeProxy<T> _ValueProxy;
+    private readonly Int32EnumCodeProxy<T> _ValueProxy;
 
     #endregion
 

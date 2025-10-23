@@ -150,7 +150,7 @@ namespace FreeLibSet.Data.Docs
     /// Описание структуры столбца числового столбца, хранящего идентификаторы во внутренней таблице
     /// </summary>
     public DBxColumnStruct Column { get { return _Column; } }
-    private DBxColumnStruct _Column;
+    private readonly DBxColumnStruct _Column;
 
     /// <summary>
     /// Возвращает Column.ColumnName
@@ -191,7 +191,7 @@ namespace FreeLibSet.Data.Docs
 
     #region Свойства
 
-    private DBxTableStruct _TableStruct;
+    private readonly DBxTableStruct _TableStruct;
 
     /// <summary>
     /// Для отладки

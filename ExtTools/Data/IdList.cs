@@ -67,7 +67,7 @@ namespace FreeLibSet.Data
     /// <summary>
     /// Основной список
     /// </summary>
-    private List<T> _List;
+    private readonly List<T> _List;
 
     /// <summary>
     /// Коллекция для проверки наличия элементов.

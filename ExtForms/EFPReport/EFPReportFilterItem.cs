@@ -230,7 +230,7 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private List<EFPReportFilterItem> _Items;
+    private readonly List<EFPReportFilterItem> _Items;
 
     /// <summary>
     /// Количество добавленных строк фильтра

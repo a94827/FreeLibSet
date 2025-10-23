@@ -302,10 +302,10 @@ namespace FreeLibSet.Data.OracleClient
     // Свойство ConnectionString не стоит делать public. Там может быть пароль
 
     internal OracleConnectionStringBuilder ConnectionStringBuilder { get { return _ConnectionStringBuilder; } }
-    private OracleConnectionStringBuilder _ConnectionStringBuilder;
+    private readonly OracleConnectionStringBuilder _ConnectionStringBuilder;
 
     internal string ConnectionString { get { return _ConnectionString; } }
-    private string _ConnectionString;
+    private readonly string _ConnectionString;
 
     #endregion
 

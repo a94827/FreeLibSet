@@ -80,9 +80,9 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Параметры шрифта
 
-    EFPTextComboBox efpFontName;
-    EFPSingleEditBox efpFontHeight, efpLineHeight, efpFontWidth;
-    EFPRadioButtons efpFontWidthMode, efpLineHeightMode;
+    private readonly EFPTextComboBox efpFontName;
+    private readonly EFPSingleEditBox efpFontHeight, efpLineHeight, efpFontWidth;
+    private readonly EFPRadioButtons efpFontWidthMode, efpLineHeightMode;
 
     private new void FontChanged(object sender, EventArgs args)
     {

@@ -379,11 +379,11 @@ namespace FreeLibSet.RI
 
     #region Свойства
 
-    private IRIValueSaver _Saver;
+    private readonly IRIValueSaver _Saver;
 
-    private RIValueCfgType _CfgType;
+    private readonly RIValueCfgType _CfgType;
 
-    private bool _IsWrite;
+    private readonly bool _IsWrite;
 
     /// <summary>
     /// Основное свойство.
@@ -400,7 +400,7 @@ namespace FreeLibSet.RI
     /// Возвращает false, если используется заглушка TempCfg.
     /// </summary>
     public bool IsSupported { get { return _IsSupported; } }
-    private bool _IsSupported;
+    private readonly bool _IsSupported;
 
     #endregion
   }
@@ -493,7 +493,7 @@ namespace FreeLibSet.RI
     /// Секция конифгурации, которая будкт использоваться для чтения и записи.
     /// </summary>
     public CfgPart SinglePart { get { return _SinglePart; } }
-    private CfgPart _SinglePart;
+    private readonly CfgPart _SinglePart;
 
     #endregion
 

@@ -68,9 +68,9 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Размер бумаги
 
-    EFPListComboBox efpPageSize;
-    EFPDecimalEditBox efpPaperWidth;
-    EFPDecimalEditBox efpPaperHeight;
+    private readonly EFPListComboBox efpPageSize;
+    private readonly EFPDecimalEditBox efpPaperWidth;
+    private readonly EFPDecimalEditBox efpPaperHeight;
 
     /// <summary>
     /// Размеры бумаги
@@ -244,13 +244,13 @@ namespace FreeLibSet.Forms.Reporting
 
     #region Центрирование
 
-    EFPCheckBox efpCenterHorizontal, efpCenterVertical;
+    private readonly EFPCheckBox efpCenterHorizontal, efpCenterVertical;
 
     #endregion
 
     #region Ориентация бумаги
 
-    EFPRadioButtons efpOrientation;
+    private readonly EFPRadioButtons efpOrientation;
 
     private void InitOrientationImage()
     {

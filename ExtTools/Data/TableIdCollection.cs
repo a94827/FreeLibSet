@@ -73,7 +73,7 @@ namespace FreeLibSet.Data
       #endregion
     }
 
-    private TableDict _Tables;
+    private readonly TableDict _Tables;
 
     /// <summary>
     /// Доступ к списку идентификаторов для таблицы с заданным именем.
@@ -620,7 +620,7 @@ namespace FreeLibSet.Data
 
       #region Поля
 
-      private TableIdCollection<T> _Owner;
+      private readonly TableIdCollection<T> _Owner;
 
       private IEnumerator<KeyValuePair<string, IdCollection<T>>> _BaseEnumerator;
 

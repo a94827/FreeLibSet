@@ -144,7 +144,7 @@ namespace FreeLibSet.Reporting
       _Measurer = measurer;
     }
 
-    private IBRMeasurer _Measurer;
+    private readonly IBRMeasurer _Measurer;
 
     #endregion
 
@@ -542,12 +542,12 @@ namespace FreeLibSet.Reporting
       /// <summary>
       /// Документ styles.xml
       /// </summary>
-      private XmlDocument _XmlDoc;
+      private readonly XmlDocument _XmlDoc;
 
       /// <summary>
       /// "styleSheet" (корень документа)
       /// </summary>
-      private XmlElement _elRoot;
+      private readonly XmlElement _elRoot;
 
       /// <summary>
       /// "numFmts"
@@ -567,18 +567,18 @@ namespace FreeLibSet.Reporting
       /// <summary>
       /// "borders"
       /// </summary>
-      private XmlElement _elBorders;
+      private /*readonly*/ XmlElement _elBorders;
 
       /// <summary>
       /// "cellXfs"
       /// </summary>
-      private XmlElement _elCellXfs;
+      private /*readonly*/ XmlElement _elCellXfs;
 
-      Dictionary<string, int> _NumFmtDict;
-      Dictionary<string, int> _FontDict;
-      Dictionary<string, int> _FillDict;
-      Dictionary<string, int> _BordersDict;
-      Dictionary<string, int> _CellXfsDict;
+      private readonly Dictionary<string, int> _NumFmtDict;
+      private readonly Dictionary<string, int> _FontDict;
+      private readonly Dictionary<string, int> _FillDict;
+      private readonly Dictionary<string, int> _BordersDict;
+      private readonly Dictionary<string, int> _CellXfsDict;
 
       #endregion
 
@@ -1335,8 +1335,8 @@ namespace FreeLibSet.Reporting
   {
     #region Константы
 
-    private int MinFontWidthPercent = 1;
-    private int MaxFontWidthPercent = 600;
+    private const int MinFontWidthPercent = 1;
+    private const int MaxFontWidthPercent = 600;
 
     #endregion
 
@@ -1353,7 +1353,7 @@ namespace FreeLibSet.Reporting
       _Measurer = measurer;
     }
 
-    private IBRMeasurer _Measurer;
+    private readonly IBRMeasurer _Measurer;
 
     #endregion
 

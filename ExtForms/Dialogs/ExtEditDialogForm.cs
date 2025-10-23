@@ -187,7 +187,7 @@ namespace FreeLibSet.Forms
 
     #region Сохранение выбранной вкладки
 
-    private static Dictionary<string, string> _SelectedTabs = new Dictionary<string, string>();
+    private static readonly Dictionary<string, string> _SelectedTabs = new Dictionary<string, string>();
 
     void FormProvider_Shown(object sender, EventArgs args)
     {
@@ -1543,7 +1543,7 @@ namespace FreeLibSet.Forms
 
     #region Внутренняя реализация
 
-    private ExtEditDialog _Owner;
+    private readonly ExtEditDialog _Owner;
 
     /// <summary>
     /// Вызывается при активации закладки

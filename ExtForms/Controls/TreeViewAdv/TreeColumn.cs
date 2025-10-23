@@ -49,7 +49,7 @@ namespace FreeLibSet.Controls
     private const int SortOrderMarkMargin = 8;
 
     private TextFormatFlags _headerFlags;
-    private TextFormatFlags _baseHeaderFlags = TextFormatFlags.NoPadding |
+    private readonly TextFormatFlags _baseHeaderFlags = TextFormatFlags.NoPadding |
                                                TextFormatFlags.EndEllipsis |
                                                TextFormatFlags.VerticalCenter |
                                                TextFormatFlags.PreserveGraphicsTranslateTransform;

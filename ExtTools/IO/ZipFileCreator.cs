@@ -76,7 +76,7 @@ namespace FreeLibSet.IO
     /// Задается в конструкторе.
     /// </summary>
     public string ZipFilePath { get { return _ZipFilePath; } }
-    private string _ZipFilePath;
+    private readonly string _ZipFilePath;
 
     /// <summary>
     /// Внутренний объект библиотеки ZharpZipLib
@@ -133,7 +133,7 @@ namespace FreeLibSet.IO
       #region Поля
 
       public MemoryStream Stream { get { return _Stream; } }
-      private MemoryStream _Stream;
+      private readonly MemoryStream _Stream;
 
       #endregion
 

@@ -480,7 +480,7 @@ namespace FreeLibSet.Caching
       /// <summary>
       /// Коллекция страниц по типам
       /// </summary>
-      private TypeDict _TheTypeDict;
+      private readonly TypeDict _TheTypeDict;
 
       #endregion
 
@@ -2028,7 +2028,7 @@ namespace FreeLibSet.Caching
       /// Параметры для сбора статистики.
       /// При всех обращениях объект коллекции кратковременно блокируется
       /// </summary>
-      private Dictionary<Type, CacheStat> _TypeStats;
+      private readonly Dictionary<Type, CacheStat> _TypeStats;
 
       [MethodImpl(MethodImplOptions.NoInlining)] // для удобства отладки
       internal void IncStat(Type objType, CacheStatParam statParam)
@@ -2156,7 +2156,7 @@ namespace FreeLibSet.Caching
         _newValue = newValue;
       }
 
-      private T _newValue;
+      private readonly T _newValue;
 
       #endregion
 
@@ -2396,7 +2396,7 @@ namespace FreeLibSet.Caching
     /// и некоторых других
     /// </summary>
     public static CacheParams Params { get { return _StaticParams; } }
-    private static CacheParams _StaticParams = new CacheParams();
+    private static readonly CacheParams _StaticParams = new CacheParams();
 
 
     /// <summary>
@@ -2898,7 +2898,7 @@ namespace FreeLibSet.Caching
     /// Текущая статистика по CheckMemory()
     /// Объект также используется для блокирования в CheckMemory()
     /// </summary>
-    private static CacheCheckMemoryStat _CheckMemoryStat = new CacheCheckMemoryStat();
+    private static readonly CacheCheckMemoryStat _CheckMemoryStat = new CacheCheckMemoryStat();
 
     #endregion
 
@@ -3125,7 +3125,7 @@ namespace FreeLibSet.Caching
       }
     }
 
-    private long[] _Items;
+    private readonly long[] _Items;
 
     #endregion
 
@@ -3250,7 +3250,7 @@ namespace FreeLibSet.Caching
 
       #region Поля
 
-      private CacheStat _Owner;
+      private readonly CacheStat _Owner;
 
       private int _Index;
 
@@ -3399,7 +3399,7 @@ namespace FreeLibSet.Caching
       }
     }
 
-    private long[] _Items;
+    private readonly long[] _Items;
 
     #endregion
 

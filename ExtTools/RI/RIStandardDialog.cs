@@ -861,7 +861,7 @@ namespace FreeLibSet.RI
     /// Задается в конструкторе
     /// </summary>
     public string[] Items { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
     #endregion
 
@@ -4016,7 +4016,7 @@ namespace FreeLibSet.RI
     /// Строки могут содержать символ "амперсанд" для подчеркивания буквы.
     /// </summary>
     public string[] Items { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
     /// <summary>
     /// True, если разрешено выбирать несколько позиций. Задается в конструкторе.
@@ -4057,8 +4057,8 @@ namespace FreeLibSet.RI
         value.CopyTo(_Selections, 0);
       }
     }
-    private bool[] _Selections;
-    private bool[] _OldSelections;
+    private readonly bool[] _Selections;
+    private readonly bool[] _OldSelections;
 
 
     /// <summary>
@@ -4605,7 +4605,7 @@ namespace FreeLibSet.RI
     /// Строки могут содержать символ "амперсанд" для подчеркивания буквы
     /// </summary>
     public string[] Items { get { return _Items; } }
-    private string[] _Items;
+    private readonly string[] _Items;
 
 
     /// <summary>

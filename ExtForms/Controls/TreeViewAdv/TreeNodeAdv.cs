@@ -24,7 +24,7 @@ namespace FreeLibSet.Controls
 
     private class NodeCollection : Collection<TreeNodeAdv>
     {
-      private TreeNodeAdv _owner;
+      private readonly TreeNodeAdv _owner;
 
       public NodeCollection(TreeNodeAdv owner)
       {
@@ -381,16 +381,16 @@ namespace FreeLibSet.Controls
     /// Данные для узла (например, <see cref="System.Data.DataRow"/> для <see cref="FreeLibSet.Models.Tree.DataTableTreeModel"/>)
     /// </summary>
     public object Tag { get { return _tag; } }
-    private object _tag;
+    private readonly object _tag;
 
     internal Collection<TreeNodeAdv> Nodes { get { return _nodes; } }
-    private Collection<TreeNodeAdv> _nodes;
+    private readonly Collection<TreeNodeAdv> _nodes;
 
     /// <summary>
     /// Коллекция дочерних узлов, принадлежащих данному узлу (прямые потомки)
     /// </summary>
     public ReadOnlyCollection<TreeNodeAdv> Children { get { return _children; } }
-    private ReadOnlyCollection<TreeNodeAdv> _children;
+    private readonly ReadOnlyCollection<TreeNodeAdv> _children;
 
     internal int? RightBounds
     {

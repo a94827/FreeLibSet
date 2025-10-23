@@ -663,7 +663,7 @@ namespace FreeLibSet.Data.Docs
     /// Урезанные структуры.
     /// Ключ - имя таблицы, значение - структура
     /// </summary>
-    private Dictionary<string, DBxTableStruct> _StructDict;
+    private readonly Dictionary<string, DBxTableStruct> _StructDict;
 
     /// <summary>
     /// Возвращает структуру таблицы документа или поддокумента, а также таблиц

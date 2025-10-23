@@ -32,7 +32,7 @@ namespace FreeLibSet.Data.SqlClient
     /// <summary>
     /// Доступ к базе данных нужен, чтобы отличать версии MS SQL Server.
     /// </summary>
-    private SqlDBx _DB;
+    private readonly SqlDBx _DB;
 
     #endregion
 

@@ -579,7 +579,7 @@ namespace FreeLibSet.Forms
     /// Только для отладочных целей.
     /// </summary>
     public Thread DebugTheThread { get { return _DebugTheThread; } }
-    private Thread _DebugTheThread;
+    private readonly Thread _DebugTheThread;
 
     /// <summary>
     /// Возвращает true, если заставка была создана из основного потока <see cref="EFPApp.MainThread"/>.
@@ -737,7 +737,7 @@ namespace FreeLibSet.Forms
 
     #region ISplashStack Members
 
-    private Stack<Splash> _Stack;
+    private readonly Stack<Splash> _Stack;
 
     private int _StackVersion;
 
@@ -872,7 +872,7 @@ namespace FreeLibSet.Forms
     /// Не использовать в прикладном коде.
     /// </summary>
     public Thread TheThread { get { return _TheThread; } }
-    private Thread _TheThread;
+    private readonly Thread _TheThread;
 
     /// <summary>
     /// Генерирует исключение <see cref="DifferentThreadException"/> при вызове из потока,

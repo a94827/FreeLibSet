@@ -19,13 +19,13 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
   internal static class ResourceHelper
   {
     // VSpilt Cursor with Innerline (symbolisize hidden column)
-    private static Cursor _dVSplitCursor = GetCursor(TreeViewAdvRes.TreeViewAdvResources.DVSplit);
+    private static readonly Cursor _dVSplitCursor = GetCursor(TreeViewAdvRes.TreeViewAdvResources.DVSplit);
     public static Cursor DVSplitCursor
     {
       get { return _dVSplitCursor; }
     }
 
-    private static GifDecoder _loadingIcon = GetGifDecoder(TreeViewAdvRes.TreeViewAdvResources.loading_icon);
+    private static readonly GifDecoder _loadingIcon = GetGifDecoder(TreeViewAdvRes.TreeViewAdvResources.loading_icon);
     public static GifDecoder LoadingIcon
     {
       get { return _loadingIcon; }

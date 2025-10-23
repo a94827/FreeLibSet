@@ -1125,12 +1125,12 @@ namespace FreeLibSet.Calendar
       /// <summary>
       /// Первый день диапазона
       /// </summary>
-      private MonthDay _First;
+      private readonly MonthDay _First;
 
       /// <summary>
       /// Количество дней в диапазоне
       /// </summary>
-      int _Days;
+      private readonly int _Days;
 
       /// <summary>
       /// Счетчик

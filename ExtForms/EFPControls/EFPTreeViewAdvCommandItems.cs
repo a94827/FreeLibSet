@@ -453,7 +453,7 @@ namespace FreeLibSet.Forms
 
     #region Команды редактирования
 
-    private EFPCommandItem MenuEdit, ciEdit, ciInsert, ciInsertCopy, ciDelete, ciView, ciOkButton;
+    private readonly EFPCommandItem MenuEdit, ciEdit, ciInsert, ciInsertCopy, ciDelete, ciView, ciOkButton;
 
     /// <summary>
     /// Доступ к командам редактирования записей
@@ -480,7 +480,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Панелька со значком для inline-редактирования
     /// </summary>
-    private EFPCommandItem ciInlineEditStatus;
+    private readonly EFPCommandItem ciInlineEditStatus;
 
     /// <summary>
     /// Если установить в true, то значок состояния редактирования ячейки "по месту" будет присутствовать в статусной строке,
@@ -684,7 +684,7 @@ namespace FreeLibSet.Forms
 
     #region Обновление
 
-    EFPCommandItem ciRefresh;
+    private readonly EFPCommandItem ciRefresh;
 
     private void Refresh(object sender, EventArgs args)
     {
@@ -695,7 +695,7 @@ namespace FreeLibSet.Forms
 
     #region Выбрать все
 
-    EFPCommandItem ciSelectAll;
+    private readonly EFPCommandItem ciSelectAll;
 
     private void SelectAll(object sender, EventArgs args)
     {

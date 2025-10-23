@@ -196,7 +196,7 @@ namespace FreeLibSet.Forms
     #region Свойства
 
     public ToolStripStatusLabel StatusLabel { get { return _StatusLabel; } }
-    private ToolStripStatusLabel _StatusLabel;
+    private readonly ToolStripStatusLabel _StatusLabel;
 
     #endregion
 
@@ -385,7 +385,7 @@ namespace FreeLibSet.Forms
     /// Элементы в списке хранятся в порядке, обратном отображаемому, так как самые новые объекты добавляются
     /// в конец списка, но добавляются в начало статусной строки
     /// </summary>
-    private SingleScopeList<EFPStatusBarPanels> _Panels;
+    private readonly SingleScopeList<EFPStatusBarPanels> _Panels;
 
     /// <summary>
     /// Устанавливается в true при изменении списка _Panels, и сбрасывается в false при синхронизации по таймеру

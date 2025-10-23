@@ -1444,7 +1444,7 @@ namespace FreeLibSet.Forms
     /// создается в конструкторе.
     /// </summary>
     internal EFPReportRootProvider RootProvider { get { return _RootProvider; } }
-    private EFPReportRootProvider _RootProvider;
+    private readonly EFPReportRootProvider _RootProvider;
 
     /// <summary>
     /// Набор закладок в режиме нескольких страниц
@@ -1760,7 +1760,7 @@ namespace FreeLibSet.Forms
     public EFPReportParams()
     {
       _FilterInfo = new EFPReportFilterItems();
-      _FilterInfo.Changed += _FilterInfo_Changed;
+      _FilterInfo.Changed += FilterInfo_Changed;
     }
 
     #endregion
@@ -1789,7 +1789,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     internal bool FilterInfoModified;
 
-    private void _FilterInfo_Changed(object sender, EventArgs args)
+    private void FilterInfo_Changed(object sender, EventArgs args)
     {
       FilterInfoModified = true;
     }
@@ -1969,7 +1969,7 @@ namespace FreeLibSet.Forms
 
       #region Команды закрытия вкладок
 
-      private EFPCommandItem ciClose, ciCloseAllButThis;
+      private readonly EFPCommandItem ciClose, ciCloseAllButThis;
 
       void ciClose_Click(object sender, EventArgs args)
       {
@@ -2720,7 +2720,7 @@ namespace FreeLibSet.Forms
       /// <param name="index">Индекс страницы в диапазоне от 0 до <see cref="Count"/>-1</param>
       /// <returns>Дочерняя страница</returns>
       public EFPReportPage this[int index] { get { return _Items[index]; } }
-      private List<EFPReportPage> _Items;
+      private readonly List<EFPReportPage> _Items;
 
       /// <summary>
       /// Возвращает количество дочерних страниц
@@ -2870,7 +2870,7 @@ namespace FreeLibSet.Forms
 
       #region Прочее
 
-      private EFPReportTabControlPage _Owner;
+      private readonly EFPReportTabControlPage _Owner;
 
       #endregion
 
@@ -3224,7 +3224,7 @@ namespace FreeLibSet.Forms
 
     #region Команды закрытия вкладок
 
-    EFPCommandItem ciCloseAll;
+    private readonly EFPCommandItem ciCloseAll;
 
     void ciCloseAll_Click(object sender, EventArgs args)
     {
@@ -3242,7 +3242,7 @@ namespace FreeLibSet.Forms
 
     #region Команды обновления отчета
 
-    private EFPCommandItem ciRefresh;
+    private readonly EFPCommandItem ciRefresh;
 
     void ciRefresh_Click(object sender, EventArgs args)
     {

@@ -45,7 +45,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
 
   internal class FixedRowHeightLayout : ITreeViewAdvRowLayout
   {
-    private TreeViewAdv _treeView;
+    private readonly TreeViewAdv _treeView;
 
     public FixedRowHeightLayout(TreeViewAdv treeView, int rowHeight)
     {
@@ -103,8 +103,8 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
   internal class TreeViewAdvAutoRowHeightLayout : ITreeViewAdvRowLayout
   {
     private TreeViewAdvDrawContext _measureContext;
-    private TreeViewAdv _treeView;
-    private List<Rectangle> _rowCache;
+    private readonly TreeViewAdv _treeView;
+    private readonly List<Rectangle> _rowCache;
 
     public TreeViewAdvAutoRowHeightLayout(TreeViewAdv treeView, int rowHeight)
     {

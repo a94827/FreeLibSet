@@ -242,7 +242,7 @@ namespace FreeLibSet.Data.Docs
     /// При добавлении новой строки двоичных данных всегда используется последняя секция.
     /// На время работы списка требуется блокировка, так как новые точки могут добавляться динамически.
     /// </summary>
-    private List<DBxEntry> _SectionEntries;
+    private readonly List<DBxEntry> _SectionEntries;
 
     /// <summary>
     /// Возвращает количество добавленных секционных баз данных
@@ -318,7 +318,7 @@ namespace FreeLibSet.Data.Docs
     /// Содержит поля "Id", "MD5" и "Length".
     /// </summary>
     public DBxTableStruct BinDataCacheTableStruct { get { return _BinDataCacheTableStruct; } }
-    private DBxTableStruct _BinDataCacheTableStruct;
+    private readonly DBxTableStruct _BinDataCacheTableStruct;
 
     #endregion
 
@@ -428,7 +428,7 @@ namespace FreeLibSet.Data.Docs
     /// Объект, для которого выполняется блокирование на время добавления записи в таблицу "BinData" и "BinDataStorage".
     /// Не стоит использовать _SectionEntries, так как тогда будут блокироваться параллельные операции чтения данных.
     /// </summary>
-    private object _AppendBinDataLockObj = new object();
+    private readonly object _AppendBinDataLockObj = new object();
 
     /// <summary>
     /// Добавляет блок двоичных данных в таблицу "BinData".
@@ -721,7 +721,7 @@ namespace FreeLibSet.Data.Docs
     /// Объект, для которого выполняется блокирование на время добавления записи в таблицу FileNames
     /// Добавление содержимого файлв в таблицу BinData выполняется методом AppendBinData() вне этой блокировки.
     /// </summary>
-    private object _AppendDBFileLockObj = new object();
+    private readonly object _AppendDBFileLockObj = new object();
 
     /// <summary>
     /// Добавление файла в базу данных.
@@ -1640,25 +1640,25 @@ namespace FreeLibSet.Data.Docs
     /// Ссылки на таблицу BinData в основной базе данных
     /// </summary>
     public DBxTableColumnList MainBinDataRefs { get { return _MainBinDataRefs; } }
-    private DBxTableColumnList _MainBinDataRefs;
+    private readonly DBxTableColumnList _MainBinDataRefs;
 
     /// <summary>
     /// Псевдоссылки в БД истории на двоичные данные
     /// </summary>
     public DBxTableColumnList UndoBinDataRefs { get { return _UndoBinDataRefs; } }
-    private DBxTableColumnList _UndoBinDataRefs;
+    private readonly DBxTableColumnList _UndoBinDataRefs;
 
     /// <summary>
     /// Ссылки на таблицу BinData в основной базе данных
     /// </summary>
     public DBxTableColumnList MainFileNameRefs { get { return _MainFileNameRefs; } }
-    private DBxTableColumnList _MainFileNameRefs;
+    private readonly DBxTableColumnList _MainFileNameRefs;
 
     /// <summary>
     /// Ссылки на таблицу BinData в основной базе данных
     /// </summary>
     public DBxTableColumnList UndoFileNameRefs { get { return _UndoFileNameRefs; } }
-    private DBxTableColumnList _UndoFileNameRefs;
+    private readonly DBxTableColumnList _UndoFileNameRefs;
 
     /// <summary>
     /// Возвращает true, если все списки пустые

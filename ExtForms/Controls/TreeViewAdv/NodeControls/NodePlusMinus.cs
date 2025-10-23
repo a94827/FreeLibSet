@@ -19,8 +19,8 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
   {
     public const int ImageSize = 9;
     public const int Width = 16;
-    private Bitmap _plus;
-    private Bitmap _minus;
+    private readonly Bitmap _plus;
+    private readonly Bitmap _minus;
 
     private VisualStyleRenderer _openedRenderer;
     private VisualStyleRenderer OpenedRenderer

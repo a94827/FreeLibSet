@@ -97,19 +97,19 @@ namespace FreeLibSet.Forms.Reporting
       page.DataFromControls += Page_DataFromControls;
     }
 
-    private IEFPDataView _ControlProvider;
-    private BRDataViewSettingsDataItem _ViewData;
+    private readonly IEFPDataView _ControlProvider;
+    private readonly BRDataViewSettingsDataItem _ViewData;
 
     #endregion
 
     #region Поля
 
-    private List<IEFPDataViewColumn> lstColumns;
-    private EFPDataGridView ghColumns;
+    private readonly List<IEFPDataViewColumn> lstColumns;
+    private readonly EFPDataGridView ghColumns;
 
-    DataTable tblColumns;
+    private readonly DataTable tblColumns;
 
-    private EFPListComboBox efpDbfCodePage;
+    private readonly EFPListComboBox efpDbfCodePage;
 
     #endregion
 

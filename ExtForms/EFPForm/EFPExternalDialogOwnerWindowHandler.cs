@@ -77,7 +77,7 @@ namespace FreeLibSet.Forms
 
     #region Поля
 
-    private System.Windows.Forms.IWin32Window _OldDialogOwnerWindow;
+    private readonly System.Windows.Forms.IWin32Window _OldDialogOwnerWindow;
 
     private System.Windows.Forms.NativeWindow _NV;
 

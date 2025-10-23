@@ -221,7 +221,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// Ключ - кодированное описание шрифта
     /// Значение - объект для рисования
     /// </summary>
-    private Dictionary<string, PdfTextRenderer> _FontRenderers;
+    private readonly Dictionary<string, PdfTextRenderer> _FontRenderers;
 
     private PdfTextRenderer GetTextRenderer(BRSelector sel, XGraphics graphics)
     {
@@ -274,12 +274,12 @@ namespace FreeLibSet.Drawing.Reporting
     /// Ключ - описатель цвета фона
     /// Значение - объект кисти или null
     /// </summary>
-    private Dictionary<BRColor, XBrush> _BackBrushes;
+    private readonly Dictionary<BRColor, XBrush> _BackBrushes;
 
     /// <summary>
     /// Используется при создании ключей по описанию шрифта
     /// </summary>
-    private StringBuilder _SB;
+    private readonly StringBuilder _SB;
 
     #endregion
 
@@ -455,7 +455,7 @@ namespace FreeLibSet.Drawing.Reporting
         Paint(pageInfo.Blocks[i], graphics, pdfPage);
     }
 
-    float Scale;
+    private readonly float Scale;
 
     private void Paint(BRPaginatiorBlockInfo blockInfo, XGraphics graphics, PdfPage pdfPage)
     {
@@ -747,7 +747,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// Толщина линии фиксированная
     /// Цвет задается перед рисованием
     /// </summary>
-    private XPen TextFillerPen;
+    private readonly XPen TextFillerPen;
 
     /// <summary>
     /// Рисование заполнителя
@@ -862,7 +862,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// Перо для рисования рамок
     /// Толщина линии задается перед рисованием
     /// </summary>
-    private XPen BorderPen;
+    private readonly XPen BorderPen;
 
     //public void DrawBorders(BRSelector sel, XGraphics graphics, XRect rc)
     //{

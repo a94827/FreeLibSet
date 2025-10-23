@@ -38,7 +38,7 @@ namespace FreeLibSet.Models.Tree
     {
       _list = list;
     }
-    private IList _list;
+    private readonly IList _list;
 
     #endregion
 
@@ -155,7 +155,7 @@ namespace FreeLibSet.Models.Tree
       _List = list;
     }
 
-    private System.Collections.IEnumerable _List;
+    private readonly System.Collections.IEnumerable _List;
 
     #endregion
 

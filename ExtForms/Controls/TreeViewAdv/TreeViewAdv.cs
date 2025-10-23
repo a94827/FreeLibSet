@@ -50,13 +50,13 @@ namespace FreeLibSet.Controls
     private bool _suspendUpdate;
     private bool _needFullUpdate;
     private bool _fireSelectionEvent;
-    private NodePlusMinus _plusMinus;
-    private ToolTip _toolTip;
+    private readonly NodePlusMinus _plusMinus;
+    private readonly ToolTip _toolTip;
     private TreeViewAdvDrawContext _measureContext;
     private TreeColumn _hotColumn;
-    private TreeViewAdvIncrementalSearch _search;
-    private List<TreeNodeAdv> _expandingNodes = new List<TreeNodeAdv>();
-    private AbortableThreadPool _threadPool = new AbortableThreadPool();
+    private readonly TreeViewAdvIncrementalSearch _search;
+    private readonly List<TreeNodeAdv> _expandingNodes = new List<TreeNodeAdv>();
+    private readonly AbortableThreadPool _threadPool = new AbortableThreadPool();
 
     #region Конструктор
 
@@ -1092,24 +1092,24 @@ namespace FreeLibSet.Controls
       return res;
     }
 
-    private void _vScrollBar_ValueChanged(object sender, EventArgs e)
+    private void VScrollBar_ValueChanged(object sender, EventArgs args)
     {
       FirstVisibleRow = _vScrollBar.Value;
     }
 
-    private void _hScrollBar_ValueChanged(object sender, EventArgs e)
+    private void HScrollBar_ValueChanged(object sender, EventArgs args)
     {
       OffsetX = _hScrollBar.Value;
     }
 
-    private void _vScrollBar_Scroll(object sender, ScrollEventArgs e)
+    private void VScrollBar_Scroll(object sender, ScrollEventArgs args)
     {
-      OnScroll(e);
+      OnScroll(args);
     }
 
-    private void _hScrollBar_Scroll(object sender, ScrollEventArgs e)
+    private void HScrollBar_Scroll(object sender, ScrollEventArgs args)
     {
-      OnScroll(e);
+      OnScroll(args);
     }
 
     internal void SmartFullUpdate()

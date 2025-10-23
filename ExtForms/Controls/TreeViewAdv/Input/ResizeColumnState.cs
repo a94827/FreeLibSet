@@ -17,8 +17,8 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
 {
   internal class ResizeColumnState : ColumnState
   {
-    private Point _initLocation;
-    private int _initWidth;
+    private readonly Point _initLocation;
+    private readonly int _initWidth;
 
     public ResizeColumnState(TreeViewAdv tree, TreeColumn column, Point p)
       : base(tree, column)

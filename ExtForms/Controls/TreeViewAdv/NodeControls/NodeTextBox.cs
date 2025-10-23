@@ -144,19 +144,19 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
 
   public class LabelEventArgs : EventArgs
   {
-    private object _subject;
+    private readonly object _subject;
     public object Subject
     {
       get { return _subject; }
     }
 
-    private string _oldLabel;
+    private readonly string _oldLabel;
     public string OldLabel
     {
       get { return _oldLabel; }
     }
 
-    private string _newLabel;
+    private readonly string _newLabel;
     public string NewLabel
     {
       get { return _newLabel; }

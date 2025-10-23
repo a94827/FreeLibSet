@@ -118,7 +118,7 @@ namespace FreeLibSet.Win32
     /// Так как <see cref="RegistryKey2"/> является <see cref="DisposableObject"/>, лучше не доводить дела до вызова деструктора, 
     /// чтобы "не портить статистику" в отладочном режиме.
     /// </summary>
-    private static Dictionary<long, RegistryKey2> _BaseKeys = new Dictionary<long, RegistryKey2>(); // 22.05.2020
+    private static readonly Dictionary<long, RegistryKey2> _BaseKeys = new Dictionary<long, RegistryKey2>(); // 22.05.2020
 
     #endregion
 
@@ -186,17 +186,17 @@ namespace FreeLibSet.Win32
     /// Полный путь к узлу реестра, например "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows"
     /// </summary>
     public string Name { get { return _Name; } }
-    private string _Name;
+    private readonly string _Name;
 
     /// <summary>
     /// Режим доступа для Windows-32/64
     /// </summary>
     public RegistryView2 View { get { return _View; } }
-    private RegistryView2 _View;
+    private readonly RegistryView2 _View;
 
     private IntPtr _Handle;
 
-    private bool _OwnHandle;
+    private readonly bool _OwnHandle;
 
     #endregion
 

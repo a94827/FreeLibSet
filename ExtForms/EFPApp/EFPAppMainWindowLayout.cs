@@ -136,7 +136,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Список с поддержкой для Z-order
     /// </summary>
-    private ListWithMRU<Form> _ChildForms;
+    private readonly ListWithMRU<Form> _ChildForms;
 
     /// <summary>
     /// Возвращает список дочерних форм, обслуживаемых данным окном.

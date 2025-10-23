@@ -159,7 +159,7 @@ namespace FreeLibSet.Forms
     {
       get { return _ToolBarVisibleItems; }
     }
-    private Dictionary<string, EFPCommandItem> _ToolBarVisibleItems;
+    private readonly Dictionary<string, EFPCommandItem> _ToolBarVisibleItems;
 
     private static void ToolBarVisible_Click(object sender, EventArgs args)
     {
@@ -686,7 +686,7 @@ namespace FreeLibSet.Forms
           throw ExceptionFactory.ArgOutOfRange("value", value, 0, 100);
       }
     }
-    private int _WindowListCount;
+    private readonly int _WindowListCount;
 
     /// <summary>
     /// Команды для переключения между окнами для меню "Окно".

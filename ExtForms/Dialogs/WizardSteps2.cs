@@ -72,21 +72,21 @@ namespace FreeLibSet.Forms
     /// Управляющий элемент рамки. Используйте свойство Text для задания заголовка
     /// </summary>
     public GroupBox TheGroupBox { get { return _TheGroupBox; } }
-    private GroupBox _TheGroupBox;
+    private readonly GroupBox _TheGroupBox;
 
     /// <summary>
     /// Верхняя панель.
     /// Используйте свойство Text, при этом видимость панели будет установлена автоматически.
     /// </summary>
     public Label TopLabel { get { return _TopLabel; } }
-    private Label _TopLabel;
+    private readonly Label _TopLabel;
 
     /// <summary>
     /// Нижняя панель.
     /// Используйте свойство Text, при этом видимость панели будет установлена автоматически.
     /// </summary>
     public Label BottomLabel { get { return _BottomLabel; } }
-    private Label _BottomLabel;
+    private readonly Label _BottomLabel;
 
     #endregion
   }
@@ -303,7 +303,7 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private InfoLabel _MainControl;
+    private readonly InfoLabel _MainControl;
 
     /// <summary>
     /// Текст сообщения

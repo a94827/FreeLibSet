@@ -1095,7 +1095,7 @@ namespace FreeLibSet.Data.Docs
         base.SetContext(NamedValues.Empty);
       }
 
-      private DBxRealDocProvider _DocProvider;
+      private readonly DBxRealDocProvider _DocProvider;
 
       #endregion
 
@@ -1230,7 +1230,7 @@ namespace FreeLibSet.Data.Docs
       /// Количество элементов в массиве соответствует количеству таблиц в DataSet. Доступ к таблицам по индексу, а не по имени.
       /// Значения null в массиве используются, если набор свойств таблицы пустой
       /// </summary>
-      private Hashtable[] _TableProps;
+      private readonly Hashtable[] _TableProps;
 
       #endregion
 
@@ -2996,7 +2996,7 @@ namespace FreeLibSet.Data.Docs
       }
 
       public Dictionary<string, TableInfo> Dict { get { return _Dict; } }
-      private Dictionary<string, TableInfo> _Dict;
+      private readonly Dictionary<string, TableInfo> _Dict;
 
       #endregion
     }

@@ -506,8 +506,8 @@ namespace FreeLibSet.Forms.Data
 
       #region Свойства
 
-      EFPDBxGridFilters _Owner;
-      int _Index;
+      private readonly EFPDBxGridFilters _Owner;
+      private int _Index;
 
       #endregion
 

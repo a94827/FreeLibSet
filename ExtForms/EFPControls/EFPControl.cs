@@ -2242,7 +2242,7 @@ namespace FreeLibSet.Forms
 
     #region Прочие свойства, методы и события проверки ошибок
 
-    private Color _OrgControlForeColor;
+    private readonly Color _OrgControlForeColor;
 
     /// <summary>
     /// Установка цветов управляющего элемента после изменения состояния ошибки

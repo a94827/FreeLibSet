@@ -18,7 +18,7 @@ namespace FreeLibSet.Controls
   internal class TreeColumnCollection : Collection<TreeColumn>
   {
     public TreeViewAdv TreeView { get { return _treeView; } }
-    private TreeViewAdv _treeView;
+    private readonly TreeViewAdv _treeView;
 
     public TreeColumnCollection(TreeViewAdv treeView)
     {

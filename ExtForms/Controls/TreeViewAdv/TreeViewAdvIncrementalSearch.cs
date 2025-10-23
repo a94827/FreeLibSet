@@ -22,7 +22,7 @@ namespace FreeLibSet.Controls.TreeViewAdvInternal
   {
     private const int SearchTimeout = 300; //end of incremental search timeot in msec
 
-    private TreeViewAdv _tree;
+    private readonly TreeViewAdv _tree;
     private TreeNodeAdv _currentNode;
     private string _searchString = "";
     private DateTime _lastKeyPressed = DateTime.Now;

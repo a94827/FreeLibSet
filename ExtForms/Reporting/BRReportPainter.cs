@@ -322,7 +322,7 @@ namespace FreeLibSet.Drawing.Reporting
     /// <summary>
     /// Используется при создании ключей по описанию шрифта
     /// </summary>
-    private StringBuilder _SB;
+    private readonly StringBuilder _SB;
 
     #endregion
 

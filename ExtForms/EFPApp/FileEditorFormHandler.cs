@@ -36,7 +36,7 @@ namespace FreeLibSet.Forms
     #region Свойства и события
 
     public EFPFormProvider FormProvider { get { return _FormProvider; } }
-    private EFPFormProvider _FormProvider;
+    private readonly EFPFormProvider _FormProvider;
 
     /// <summary>
     /// Полный путь к файлу или пусто, если имя файла еще не было присвовено
@@ -222,13 +222,13 @@ namespace FreeLibSet.Forms
 
     #region Свойства
 
-    private FileEditorFormHandler _FormHandler;
+    private readonly FileEditorFormHandler _FormHandler;
 
     #endregion
 
     #region Команды сохранения
 
-    private EFPCommandItem ciSave, ciSaveAs;
+    private readonly EFPCommandItem ciSave, ciSaveAs;
 
     private void ciSave_Click(object sender, EventArgs args)
     {

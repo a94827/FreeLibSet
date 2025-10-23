@@ -519,7 +519,7 @@ namespace FreeLibSet.Forms
 
     #region Команды загрузки и сохранения
 
-    private EFPCommandItem ciOpen, ciClear, ciSave, ciSaveAs;
+    private readonly EFPCommandItem ciOpen, ciClear, ciSave, ciSaveAs;
 
     void ciOpen_Click(object sender, EventArgs args)
     {
@@ -602,7 +602,7 @@ namespace FreeLibSet.Forms
 
     #region Сканирование
 
-    private EFPCommandItem ciScan;
+    private readonly EFPCommandItem ciScan;
 
     private void ciScan_Click(object sender, EventArgs args)
     {
@@ -651,7 +651,7 @@ namespace FreeLibSet.Forms
 
     #region Команды буфера обмена
 
-    private EFPCommandItem ciCut, ciCopy, ciPaste;
+    private readonly EFPCommandItem ciCut, ciCopy, ciPaste;
 
     void ciCut_Click(object sender, EventArgs args)
     {
@@ -691,7 +691,7 @@ namespace FreeLibSet.Forms
 
     #region Просмотр
 
-    private EFPCommandItem ciView;
+    private readonly EFPCommandItem ciView;
 
     #endregion
 

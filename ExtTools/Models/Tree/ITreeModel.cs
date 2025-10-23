@@ -483,7 +483,7 @@ namespace FreeLibSet.Models.Tree
     /// дочерние узлы которого поменялись. Пустой путь означает изменение узлов верхнего уровня.
     /// </summary>
     public TreePath Path { get { return _Path; } }
-    private TreePath _Path;
+    private readonly TreePath _Path;
 
     /// <summary>
     /// Статический экземпляр объекта с пустым <see cref="TreePath"/>

@@ -541,7 +541,7 @@ namespace FreeLibSet.Forms
 
     #region Команды изменения масштаба
 
-    private EFPCommandItem ciScale, ciSetScale,
+    private readonly EFPCommandItem ciScale, ciSetScale,
       ciScale50, ciScale100, ciScale200, ciScale500,
       ciZoomIn, ciZoomOut, ciOnePage, ciTwoPages, ciAllPages;
 
@@ -644,8 +644,8 @@ namespace FreeLibSet.Forms
 
     #region Команды переключения страниц
 
-    private EFPCommandItem ciFirstPage, ciPrevPage, ciNextPage, ciLastPage;
-    private EFPCommandItem ciGotoPage;
+    private readonly EFPCommandItem ciFirstPage, ciPrevPage, ciNextPage, ciLastPage;
+    private readonly EFPCommandItem ciGotoPage;
 
     private void FirstPageClick(object sender, EventArgs args)
     {
@@ -732,15 +732,13 @@ namespace FreeLibSet.Forms
     /// true для полноэкранного режима, чтобы после выхода из него
     /// запустить печать
     /// </summary>
-    private bool DelayedPrint;
-
-
+    private readonly bool DelayedPrint;
 
     #endregion
 
     #region Команды буфера обмена
 
-    private EFPCommandItem ciCopy;
+    private readonly EFPCommandItem ciCopy;
 
     /// <summary>
     /// Если установлен обработчик, то доступна команда "Копировать"
@@ -756,12 +754,12 @@ namespace FreeLibSet.Forms
 
     #region Команда переключения полноэкранного режима
 
-    private EFPCommandItem ciFullScreen;
+    private readonly EFPCommandItem ciFullScreen;
 
     /// <summary>
     /// true, если текущий просмотр находится в полноэкранном режиме
     /// </summary>
-    private bool _IsFullScreen;
+    private readonly bool _IsFullScreen;
 
 
     void FullScreenClick(object sender, EventArgs args)
@@ -820,8 +818,7 @@ namespace FreeLibSet.Forms
 
     #region Команда масштабной сетки
 
-    private EFPCommandItem ciShowGrid;
-
+    private readonly EFPCommandItem ciShowGrid;
 
     void ShowGridClick(object sender, EventArgs e)
     {

@@ -25,10 +25,10 @@ namespace FreeLibSet.Controls.TreeViewAdvNodeControls
   /// </summary>
   public class ExpandingIcon : NodeControl
   {
-    private static GifDecoder _gif = ResourceHelper.LoadingIcon;
+    private static readonly GifDecoder _gif = ResourceHelper.LoadingIcon;
     private static int _index = 0;
     private static volatile Thread _animatingThread;
-    private static object _lock = new object();
+    private static readonly object _lock = new object();
 
     public override Size MeasureSize(TreeNodeAdv node, TreeViewAdvDrawContext context)
     {

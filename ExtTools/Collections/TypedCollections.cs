@@ -768,7 +768,7 @@ namespace FreeLibSet.Collections
           return _Comparer;
       }
     }
-    private IEqualityComparer<TKey> _Comparer;
+    private readonly IEqualityComparer<TKey> _Comparer;
 
     /// <summary>
     /// Доступ по ключу
@@ -4363,7 +4363,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Основной список
     /// </summary>
-    private List<T> _List;
+    private readonly List<T> _List;
 
     /// <summary>
     /// Коллекция для проверки наличия элементов.
@@ -4979,7 +4979,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Основной список
     /// </summary>
-    private SortedList<T, object> _List;
+    private readonly SortedList<T, object> _List;
 
     /// <summary>
     /// Возвращает количество элементов в списке
@@ -5586,7 +5586,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Основной объект
     /// </summary>
-    private Dictionary<TKey, TValue> _Items;
+    private readonly Dictionary<TKey, TValue> _Items;
 
     /// <summary>
     /// Доступ к значению
@@ -5974,7 +5974,7 @@ namespace FreeLibSet.Collections
     /// <summary>
     /// Основная коллекция
     /// </summary>
-    private Dictionary<TKey, TValue> _MainDict;
+    private readonly Dictionary<TKey, TValue> _MainDict;
 
     #region IDictionary<TKey,TValue> Members
 
@@ -6202,7 +6202,7 @@ namespace FreeLibSet.Collections
           return _ValueComparer;
       }
     }
-    private IEqualityComparer<TValue> _ValueComparer;
+    private readonly IEqualityComparer<TValue> _ValueComparer;
 
     private void PrepareReversed()
     {
@@ -7199,7 +7199,7 @@ namespace FreeLibSet.Collections
 
     #region Свойства
 
-    private Dictionary<T, int> _Dict;
+    private readonly Dictionary<T, int> _Dict;
 
     /// <summary>
     /// Количество элементов в массиве

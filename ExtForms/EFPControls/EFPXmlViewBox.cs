@@ -546,7 +546,7 @@ namespace FreeLibSet.Forms
 
     #region Печать
 
-    private EFPCommandItem ciPrint, ciPrintDefault, ciPreview, ciPageSetup;
+    private readonly EFPCommandItem ciPrint, ciPrintDefault, ciPreview, ciPageSetup;
 
     void ciPrint_Click(object sender, EventArgs args)
     {
@@ -576,7 +576,7 @@ namespace FreeLibSet.Forms
     /// Обработчик команд "Открыть" и "Открыть с помощью"
     /// </summary>
     protected EFPFileAssociationsCommandItemsHandler FileAssociationsHandler { get { return _FileAssociationsHandler; } }
-    private EFPFileAssociationsCommandItemsHandler _FileAssociationsHandler;
+    private readonly EFPFileAssociationsCommandItemsHandler _FileAssociationsHandler;
 
     /// <summary>
     /// Получение файла
@@ -607,7 +607,7 @@ namespace FreeLibSet.Forms
     /// </summary>
     protected EFPCommandItem MenuSendTo;
 
-    private EFPCommandItem ciSendToMicrosoftWord, ciSendToOpenOfficeWriter;
+    private readonly EFPCommandItem ciSendToMicrosoftWord, ciSendToOpenOfficeWriter;
 
     private string CreateTempFile()
     {
@@ -685,7 +685,7 @@ namespace FreeLibSet.Forms
 
     #region Правка
 
-    EFPCommandItem ciCopy, ciSelectAll;
+    private readonly EFPCommandItem ciCopy, ciSelectAll;
 
     void ciCopy_Click(object sender, EventArgs args)
     {
@@ -710,7 +710,7 @@ namespace FreeLibSet.Forms
       set { ciFullScreen.Checked = value; }
     }
 
-    private EFPCommandItem ciFullScreen;
+    private readonly EFPCommandItem ciFullScreen;
 
     void ciFullScreen_Click(object sender, EventArgs args)
     {

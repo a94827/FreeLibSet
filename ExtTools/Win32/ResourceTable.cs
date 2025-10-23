@@ -1558,7 +1558,7 @@ namespace FreeLibSet.Win32
     /// Доступ ко всем строковым значениям.
     /// </summary>
     public IDictionary<string, string> AllStrings { get { return _AllStrings; } }
-    private AllStringDictionary _AllStrings;
+    private readonly AllStringDictionary _AllStrings;
 
     /// <summary>
     /// Gets the comments associated with the file.

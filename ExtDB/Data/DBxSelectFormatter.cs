@@ -40,9 +40,9 @@ namespace FreeLibSet.Data
 
     #region Поля
 
-    private DBxSelectInfo _Info;
+    private readonly DBxSelectInfo _Info;
 
-    private DBxNameValidator _Validator;
+    private readonly DBxNameValidator _Validator;
 
     #endregion
 

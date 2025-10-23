@@ -690,7 +690,7 @@ namespace FreeLibSet.IO
 
     #region Список файлов
 
-    private List<FileContainer> _Items;
+    private readonly List<FileContainer> _Items;
 
     /// <summary>
     /// Возвращает количество элементов в списке

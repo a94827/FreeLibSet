@@ -2330,7 +2330,7 @@ namespace FreeLibSet.Forms
     /// Доступ к изображениям является потокобезопасным.
     /// </summary>
     public static EFPAppMainImages MainImages { get { return _MainImages; } }
-    private static EFPAppMainImages _MainImages = new EFPAppMainImages();
+    private static readonly EFPAppMainImages _MainImages = new EFPAppMainImages();
 
 
     #endregion

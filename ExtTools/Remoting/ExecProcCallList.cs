@@ -232,7 +232,7 @@ namespace FreeLibSet.Remoting
     /// <summary>
     /// Поток, в котором был создан объект ExecProcCallItem
     /// </summary>
-    private Thread _CallerThread;
+    private readonly Thread _CallerThread;
 
     internal void CheckCallerThread()
     {
@@ -590,7 +590,7 @@ namespace FreeLibSet.Remoting
     /// Процедура в стиле APM.
     /// </summary>
     public RemoteDistributedProc DistributedProc { get { return _DistributedProc; } }
-    private RemoteDistributedProc _DistributedProc;
+    private readonly RemoteDistributedProc _DistributedProc;
 
     internal override NamedValues EndExecute(IAsyncResult asyncResult)
     {
@@ -680,7 +680,7 @@ namespace FreeLibSet.Remoting
     /// <summary>
     /// Основной поток (приложения) в котором создан ExecProcCallList
     /// </summary>
-    private Thread _MainThread;
+    private readonly Thread _MainThread;
 
     internal void CheckMainThread()
     {

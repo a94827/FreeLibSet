@@ -206,7 +206,7 @@ namespace FreeLibSet.Models.Tree
     /// DataTable многократно.
     /// </summary>
     public DataTable Table { get { return _Table; } }
-    private DataTable _Table;
+    private readonly DataTable _Table;
 
     DataView IDataTableTreeModel.DataView { get { return null; } }
 
@@ -219,7 +219,7 @@ namespace FreeLibSet.Models.Tree
     /// Позиция ключевого столбца IdColumnName в таблице Table.
     /// </summary>
     public int IdColumnPosition { get { return _IdColumnPosition; } }
-    private int _IdColumnPosition;
+    private readonly int _IdColumnPosition;
 
     /// <summary>
     /// Имя поля в таблице, по которому строится дерево
@@ -230,7 +230,7 @@ namespace FreeLibSet.Models.Tree
     /// Позиция ссылочного столбца PatentColumnName в таблице Table.
     /// </summary>
     public int ParentColumnPosition { get { return _ParentColumnPosition; } }
-    private int _ParentColumnPosition;
+    private readonly int _ParentColumnPosition;
 
     /// <summary>
     /// Порядок сортировки строк (в формате аргумента sort метода DataTable.Select()).
@@ -730,7 +730,7 @@ namespace FreeLibSet.Models.Tree
     /// Возвращает true, если в таблице установлен первичный ключ по полю IdColumnName
     /// </summary>
     public bool UsePrimaryKey { get { return _UsePrimaryKey; } }
-    private bool _UsePrimaryKey;
+    private readonly bool _UsePrimaryKey;
 
     /// <summary>
     /// Возвращает массив строк, являющихся рекурсивно дочерними по отношению к заданному элементу.

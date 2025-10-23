@@ -645,12 +645,12 @@ namespace FreeLibSet.DependedValues
     /// Вызывается, когда требуется получить отложенное значение.
     /// Не может быть null.
     /// </summary>
-    private DepValueNeededEventHandler<T> _ValueNeeded;
+    private readonly DepValueNeededEventHandler<T> _ValueNeeded;
 
     /// <summary>
     /// Чтобы не создавать каждый раз объект аргументов
     /// </summary>
-    private DepValueNeededEventArgs<T> _ValueNeededArgs;
+    private /*readonly*/ DepValueNeededEventArgs<T> _ValueNeededArgs;
 
     /// <summary>
     /// Вызывает событие получения значения
@@ -845,7 +845,7 @@ namespace FreeLibSet.DependedValues
       base.BaseSetValue(value, forced);
     }
 
-    private EventHandler _ValueChangedMainHandler;
+    private readonly EventHandler _ValueChangedMainHandler;
 
     /// <summary>
     /// Вызывается при изменении текущего значения

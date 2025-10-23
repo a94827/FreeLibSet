@@ -927,7 +927,7 @@ namespace FreeLibSet.Parsing
 
     #region DATE, TIME, NOW, TODAY
 
-    private static FunctionDelegate _FDDateTime = new FunctionDelegate(CalcDateTime);
+    private static readonly FunctionDelegate _FDDateTime = new FunctionDelegate(CalcDateTime);
 
     private static object CalcDateTime(FunctionExpression expression, object[] args)
     {
@@ -958,7 +958,7 @@ namespace FreeLibSet.Parsing
 
     #region Компоненты даты (YEAR .. SECOND), WEEKDAY
 
-    private static FunctionDelegate _FDDateTimePart = new FunctionDelegate(CalcDateTimePart);
+    private static readonly FunctionDelegate _FDDateTimePart = new FunctionDelegate(CalcDateTimePart);
 
     private static object CalcDateTimePart(FunctionExpression expression, object[] args)
     {

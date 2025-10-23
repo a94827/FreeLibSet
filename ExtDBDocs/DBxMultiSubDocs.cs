@@ -540,7 +540,7 @@ namespace FreeLibSet.Data.Docs
 
       #region Свойства
 
-      private DBxMultiSubDocs _MultiSubDocs;
+      private readonly DBxMultiSubDocs _MultiSubDocs;
 
       #endregion
 
@@ -964,11 +964,11 @@ namespace FreeLibSet.Data.Docs
 
       #region Свойства
 
-      private int _RowIndex;
+      private readonly int _RowIndex;
 
-      private DBxMultiSubDocs _MultiSubDocs;
+      private readonly DBxMultiSubDocs _MultiSubDocs;
 
-      private DataRowVersion _RowVersion;
+      private readonly DataRowVersion _RowVersion;
 
       internal DataRow Row { get { return _MultiSubDocs.Table.Rows[_RowIndex]; } }
 
