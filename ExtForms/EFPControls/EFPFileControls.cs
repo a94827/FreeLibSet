@@ -1187,9 +1187,9 @@ namespace FreeLibSet.Forms
         return;
       }
 
-      bool IsSlashed = s[s.Length - 1] == System.IO.Path.DirectorySeparatorChar; // Папка или файл?
+      bool isSlashed = s[s.Length - 1] == System.IO.Path.DirectorySeparatorChar; // Папка или файл?
       AbsPath path = new AbsPath(s);
-      if (!IsSlashed)
+      if (!isSlashed)
       {
         if (IsFileName.HasValue)
         {

@@ -10,11 +10,48 @@ using System.Threading;
 namespace FreeLibSet.Core
 {
   /// <summary>
+  /// Базовый тип "тихого" исключения, для которого не выводится сообщение пользователю.
+  /// Обычно используется специализированный класс <see cref="UserCancelException"/>.
+  /// </summary>
+  [Serializable]
+  public class SilentException : ApplicationException
+  {
+    #region Конструктор
+
+    /// <summary>
+    /// Создает объект исключения с текстом сообщения по умолчанию
+    /// </summary>
+    public SilentException()
+      : base("SilentException")
+    {
+    }
+
+    /// <summary>
+    /// Создает объект исключения с заданным текстом сообщения
+    /// </summary>
+    public SilentException(string message)
+      : base(message)
+    {
+    }
+
+
+    /// <summary>
+    /// Эта версия конструктора нужна для правильной десериализации
+    /// </summary>
+    protected SilentException(SerializationInfo info, StreamingContext context)
+      : base(info, context)
+    {
+    }
+
+    #endregion
+  }
+
+  /// <summary>
   /// Специальный тип исключения, генерируемого, если пользователь прерывает
   /// длительный процесс.
   /// </summary>
   [Serializable]
-  public class UserCancelException : ApplicationException
+  public class UserCancelException : SilentException
   {
     #region Конструктор
 

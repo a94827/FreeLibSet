@@ -1568,7 +1568,7 @@ namespace FreeLibSet.Forms
           EndStep(this, args);
           return !args.Cancel;
         }
-        catch (UserCancelException)
+        catch (SilentException)
         {
           return false;
         }
@@ -1602,7 +1602,7 @@ namespace FreeLibSet.Forms
           GetNext(this, args);
           return args.NextStep;
         }
-        catch (UserCancelException)
+        catch (SilentException)
         {
           return null;
         }

@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Reflection;
 using FreeLibSet.Core;
+using FreeLibSet.IO;
 
 namespace FreeLibSet.Forms
 {
@@ -162,6 +163,19 @@ namespace FreeLibSet.Forms
       gh.CanView = false;
       gh.CommandItems.UseGotoRowWithDiffValue = false;
 
+      if (EFPApp.IsWindowsExplorerSupported)
+      {
+        EFPCommandItem ciOpenFolder = new EFPCommandItem("View", "OpenFolder");
+        ciOpenFolder.MenuText = Res.AboutDialog_Menu_View_OpenFolder;
+        ciOpenFolder.ImageKey = "WindowsExplorer";
+        ciOpenFolder.ShortCut = Keys.F4;
+        ciOpenFolder.GroupBegin = true;
+        ciOpenFolder.GroupEnd = true;
+        ciOpenFolder.Tag = gh;
+        ciOpenFolder.Click += CiModulesOpenFolder_Click;
+        gh.CommandItems.Add(ciOpenFolder);
+      }
+
       return gh;
     }
 
@@ -173,6 +187,20 @@ namespace FreeLibSet.Forms
           args.Value = args.RowIndex + 1;
           break;
       }
+    }
+
+    private static void CiModulesOpenFolder_Click(object sender, EventArgs args)
+    {
+      EFPCommandItem ci = (EFPCommandItem)sender;
+      EFPDataGridView gh = (EFPDataGridView)(ci.Tag);
+      if (!gh.CheckSingleRow())
+        return;
+
+      AbsPath path = new AbsPath(DataTools.GetString(gh.CurrentDataRow, "Location"));
+      if (path.IsEmpty)
+        return;
+
+      EFPApp.ShowWindowsExplorer(path);
     }
 
     #endregion

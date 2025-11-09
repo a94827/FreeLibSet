@@ -216,6 +216,11 @@ namespace FreeLibSet.Forms.Docs
     public DBxDocType DocType { get { return _DocTypeUI.DocType; } }
 
     /// <summary>
+    /// Возвращает <see cref="DBxDocType.PluralTitle"/>
+    /// </summary>
+    protected override string DefaultDisplayName { get { return DocType.PluralTitle; } }
+
+    /// <summary>
     /// Эти данные передаются обработчику инициализации просмотра.
     /// Свойство может устанавливаться только до вызова события <see cref="EFPControlBase.Created"/>, то есть сразу после вызова конструктора.
     /// </summary>

@@ -836,7 +836,7 @@ namespace FreeLibSet.Data
         {
           return _Source.LoadCachePages(request);
         }
-        catch (UserCancelException)
+        catch (SilentException)
         {
           // 07.02.2023.
           // Если пользователь прервал процесс, не надо пытаться ждать еще.

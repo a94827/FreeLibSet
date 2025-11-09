@@ -119,7 +119,7 @@ namespace FreeLibSet.Forms
 
       ToolFormsEnabled = true;
 
-      if (EFPApp.AppWasInit)
+      if (EFPApp.AppHasBeenInit)
         InitStdButtonTextAndImage(form);
 
 #if DEBUG
@@ -1738,6 +1738,19 @@ namespace FreeLibSet.Forms
         _TheToolTip.Dispose();
         _TheToolTip = null;
       }
+
+      //List<Form> frms = new List<Form>();
+      //foreach (Form frm in Application.OpenForms)
+      //  frms.Add(frm);
+
+      if ((!Modal) &&
+        Application.OpenForms.Count == 0 &&
+        Application.MessageLoop &&
+        (!(EFPApp.TrayIcon.Visible)))
+      {
+        // 29.10.2025. Предотвращаем зацикливание Application.Run(). 
+        EFPApp.ExitAsync();
+      }
     }
 
     #endregion
@@ -2092,9 +2105,13 @@ namespace FreeLibSet.Forms
         // Они все равно такие в момент показа формы, так как размещением окон занимается интерфейс
       }
 
-      if (Modal && (DialogPosition == null))
-        parts |= EFPFormBoundsPart.Location;
-
+      if (DialogPosition == null)
+      {
+        if (Modal)
+          parts |= EFPFormBoundsPart.Location;
+        if (Form.FormBorderStyle == FormBorderStyle.FixedToolWindow || Form.FormBorderStyle == FormBorderStyle.SizableToolWindow)
+          parts |= EFPFormBoundsPart.Location; // 29.10.2025
+      }
       return parts;
     }
 
@@ -2216,7 +2233,6 @@ namespace FreeLibSet.Forms
 
                 if ((wantedParts & EFPFormBoundsPart.Location) != 0) // только если размеры тоже прочитали
                 {
-
                   string prefix = EFPApp.MainWindow == null ? "ScreenCenter" : "MainWindowCenter";
                   Rectangle rect = EFPApp.MainWindow == null ? _DefaultScreen.WorkingArea : EFPApp.MainWindow.Bounds;
                   int cx0 = rect.Left + rect.Width / 2;
@@ -2504,7 +2520,7 @@ namespace FreeLibSet.Forms
 
     private bool DoGetDefaultOwnStatusBar()
     {
-      if (!EFPApp.AppWasInit)
+      if (!EFPApp.AppHasBeenInit)
         return false; // 13.12.2016
 
       if (!EFPApp.OwnStatusBarsIfNeeded)
@@ -2615,7 +2631,7 @@ namespace FreeLibSet.Forms
     {
       _StatusStripControl = new StatusStrip();
       _StatusStripControl.Dock = DockStyle.Bottom;
-      if (EFPApp.AppWasInit) // 24.11.2016
+      if (EFPApp.AppHasBeenInit) // 24.11.2016
         _StatusStripControl.ImageList = EFPApp.MainImages.ImageList;
       //FStatusStripControl.ShowItemToolTips = true;
       EFPApp.SetStatusStripHeight(_StatusStripControl, Form);

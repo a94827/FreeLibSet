@@ -246,6 +246,19 @@ namespace FreeLibSet.Forms.Docs
     public SubDocTypeUI SubDocTypeUI { get { return _SubDocTypeUI; } }
     private SubDocTypeUI _SubDocTypeUI;
 
+    /// <summary>
+    /// Возвращает <see cref="DBxSubDocType.PluralTitle"/>
+    /// </summary>
+    protected override string DefaultDisplayName
+    {
+      get
+      {
+        if (_SubDocTypeUI == null)
+          return String.Empty;
+        else
+          return _SubDocTypeUI.SubDocType.PluralTitle;
+      }
+    }
 
     /// <summary>
     /// Доступ к кэшированным данным таблицы (SubDocTypeUI.TableCache)

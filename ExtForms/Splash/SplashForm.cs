@@ -53,7 +53,7 @@ namespace FreeLibSet.Forms
 
       try
       {
-        if (EFPApp.AppWasInit && (!EFPApp.IsMainThread))
+        if (EFPApp.AppHasBeenInit && (!EFPApp.IsMainThread))
         {
           // 10.12.2019
           // Если заставка вызывается не из основного потока, то при вызове ExecProcCallList.ExecuteSync() с удаленной процедурой RemoteExecProc,

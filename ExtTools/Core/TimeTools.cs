@@ -815,6 +815,20 @@ namespace FreeLibSet.Core
         return ts2;
     }
 
+    /// <summary>
+    /// Возвращает значение по модулю от аргумента <see cref="TimeSpan"/>.
+    /// Используется, например, при проверки изменения даты модификации файла
+    /// </summary>
+    /// <param name="value">Исходное значение</param>
+    /// <returns>Модуль</returns>
+    public static TimeSpan Abs(TimeSpan value)
+    {
+      if (value.Ticks < 0L)
+        return -value;
+      else
+        return value;
+    }
+
     #endregion
   }
 }

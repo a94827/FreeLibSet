@@ -165,6 +165,20 @@ namespace FreeLibSet.Forms.Docs
     private SubDocTypeUI _SubDocTypeUI;
 
     /// <summary>
+    /// Возвращает <see cref="DBxSubDocType.PluralTitle"/>
+    /// </summary>
+    protected override string DefaultDisplayName
+    {
+      get
+      {
+        if (_SubDocTypeUI == null)
+          return String.Empty;
+        else
+          return _SubDocTypeUI.SubDocType.PluralTitle;
+      }
+    }
+
+    /// <summary>
     /// Кэшированные данные для таблицы поддокументов
     /// </summary>
     public DBxTableCache TableCache { get { return _TableCache; } }

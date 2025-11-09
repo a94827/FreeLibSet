@@ -119,6 +119,10 @@ namespace FreeLibSet.Forms.Docs
     /// </summary>
     public DBxDocType DocType { get { return _DocTypeUI.DocType; } }
 
+    /// <summary>
+    /// Возвращает <see cref="DBxSubDocType.PluralTitle"/>
+    /// </summary>
+    protected override string DefaultDisplayName { get { return DocType.PluralTitle; } }
 
     //public string TextColumnName { get { return FTextColumnName; } }
     //private string FTextColumnName;

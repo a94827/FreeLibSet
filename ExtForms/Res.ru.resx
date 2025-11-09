@@ -3160,4 +3160,7 @@
   <data name="Editor_Msg_TitleView" xml:space="preserve">
     <value>Просмотр</value>
   </data>
+  <data name="AboutDialog_Menu_View_OpenFolder" xml:space="preserve">
+    <value>Открыть папку с файлом</value>
+  </data>
 </root>

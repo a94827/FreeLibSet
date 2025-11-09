@@ -155,7 +155,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Этот метод должен вызываться до всех других методов работы.
-    /// Повторный вызов метода не допускается. Используйте свойство <see cref="AppWasInit"/> для проверки.
+    /// Повторный вызов метода не допускается. Используйте свойство <see cref="AppHasBeenInit"/> для проверки.
     /// </summary>
     public static void InitApp()
     {
@@ -187,7 +187,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Возвращает true, если инициализация приложения (<see cref="InitApp()"/>) была выполнена
     /// </summary>
-    public static bool AppWasInit { get { return /*_MainImages*/ _MainThread != null; /*31.07.2022 */ } }
+    public static bool AppHasBeenInit { get { return /*_MainImages*/ _MainThread != null; /*31.07.2022 */ } }
 
     /// <summary>
     /// Проверяет, что текущий поток является тем, в котором был вызван метод <see cref="EFPApp.InitApp()"/>.
@@ -243,7 +243,7 @@ namespace FreeLibSet.Forms
     {
       get
       {
-        if (AppWasInit)
+        if (AppHasBeenInit)
         {
           long delta = Stopwatch.GetTimestamp();
           return TimeSpan.FromSeconds((double)delta / (double)Stopwatch.Frequency);
@@ -3459,12 +3459,12 @@ namespace FreeLibSet.Forms
         case "Image":
           args.Value = EFPApp.GetFormIconImage(form);
           break;
-        //case "Order":
-        //  Args.Value = Args.RowIndex + 1;
-        //  break;
-        //case "Text":
-        //  Args.Value = Form.Text;
-        //  break;
+          //case "Order":
+          //  Args.Value = Args.RowIndex + 1;
+          //  break;
+          //case "Text":
+          //  Args.Value = Form.Text;
+          //  break;
       }
     }
 
@@ -3869,7 +3869,7 @@ namespace FreeLibSet.Forms
     /// Предназначено для централизованной обработки исключений на уровне приложения.
     /// Это событие вызывается, если перехвачено исключение, например, при выполнении команды меню.
     /// Обработчик может, например, вывести MessageBox для определенных классов исключений.
-    /// Если нет присоединенных обработчиков, то исключение <see cref="UserCancelException"/> игнорируется, а для остальных вызывается DebugTools.ShowException().
+    /// Если нет присоединенных обработчиков, то исключение <see cref="UserCancelException"/> (и любое <see cref="SilentException"/>) игнорируется, а для остальных вызывается DebugTools.ShowException().
     /// Как и метод <see cref="EFPApp.ShowException(Exception, string)"/>, событие может вызываться из любого потока.
     /// </summary>
     public static event EFPAppExceptionEventHandler ExceptionShowing;
@@ -3918,7 +3918,7 @@ namespace FreeLibSet.Forms
           ExceptionShowing(null, args);
           if (!args.Handled)
           {
-            if (LogoutTools.GetException<UserCancelException>(exception) != null)
+            if (LogoutTools.GetException<SilentException>(exception) != null)
               return;
 
             DebugTools.ShowException(exception, title);
@@ -5139,9 +5139,9 @@ namespace FreeLibSet.Forms
     /// Наличие установленной программы возвращается свойством <see cref="IsWindowsExplorerSupported"/>,
     /// а ее условное имя - <see cref="WindowsExplorerDisplayName"/>.
     /// </summary>
-    /// <param name="dir">Имя просматриваемой папки</param>
+    /// <param name="dirOrFile">Имя просматриваемой папки или имя файла, на который нужно позиционироваться</param>
     /// <returns>true, если Проводник Windows успешно запущен</returns>
-    public static bool ShowWindowsExplorer(AbsPath dir)
+    public static bool ShowWindowsExplorer(AbsPath dirOrFile)
     {
       if (_InsideShowWindowsExplorer)
       {
@@ -5153,7 +5153,7 @@ namespace FreeLibSet.Forms
       _InsideShowWindowsExplorer = true;
       try
       {
-        res = DoShowWindowsExplorer(dir);
+        res = DoShowWindowsExplorer(dirOrFile);
       }
       finally
       {
@@ -5165,18 +5165,29 @@ namespace FreeLibSet.Forms
 
     private static bool _InsideShowWindowsExplorer = false;
 
-    private static bool DoShowWindowsExplorer(AbsPath dir)
+    private static bool DoShowWindowsExplorer(AbsPath dirOrFile)
     {
       //const int ERROR_ACCESS_DENIED = 0x5;
 
-      if (dir.IsEmpty)
+      if (dirOrFile.IsEmpty)
       {
         EFPApp.ErrorMessageBox(Res.EFPApp_Err_DirIsEmpty);
         return false;
       }
 
+      AbsPath dir, file;
 
-      if (!DirectoryExists(dir))
+      if (DirectoryExists(dirOrFile))
+      {
+        dir = dirOrFile;
+        file = AbsPath.Empty;
+      }
+      else if (FileExists(dirOrFile))
+      {
+        dir = dirOrFile.ParentDir;
+        file = dirOrFile;
+      }
+      else
       {
         EFPApp.ErrorMessageBox(String.Format(Res.EFPApp_Err_DirNotFound, dir.Path));
         return false;
@@ -5235,7 +5246,34 @@ namespace FreeLibSet.Forms
           EFPApp.BeginWait(String.Format(Res.EFPApp_Phase_ShowWindowsExplorer, faItem.DisplayName), "WindowsExplorer");
           try
           {
-            faItem.Execute(dir);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT // не уверен, что в Windows-98 работает
+              &&
+              String.Equals(faItem.ProgramPath.FileName, "explorer.exe", StringComparison.OrdinalIgnoreCase))
+            {
+              if (file.IsEmpty)
+                faItem.Execute(dir);
+              else
+              {
+                // 01.11.2025 Запуск Windows Explorer в режиме позиционирования на файле
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.UseShellExecute = false;
+                psi.FileName = faItem.ProgramPath.Path;
+                psi.Arguments = String.Format("/select,\"{0}\"", file.Path);
+                try
+                {
+                  Process.Start(psi);
+                }
+                catch (Exception e)
+                {
+                  e.Data["ProcessStartInfo.FileName"] = psi.FileName;
+                  e.Data["ProcessStartInfo.Arguments"] = psi.Arguments;
+                  e.Data["ProcessStartInfo.UseShellExecute"] = psi.UseShellExecute;
+                  throw;
+                }
+              }
+            }
+            else
+              faItem.Execute(dir);
           }
           finally
           {

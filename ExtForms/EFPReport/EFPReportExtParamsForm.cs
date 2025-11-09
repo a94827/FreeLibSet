@@ -102,7 +102,7 @@ namespace FreeLibSet.Forms
       _InsideWriteFormValues = false;
       _InsideReadFormValues = false;
 
-      if (/*!DesignMode*/ EFPApp.AppWasInit /* 31.07.2022 */)
+      if (/*!DesignMode*/ EFPApp.AppHasBeenInit /* 31.07.2022 */)
       {
         _FormProvider = new EFPFormProvider(this);
 

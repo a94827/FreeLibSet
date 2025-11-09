@@ -481,7 +481,7 @@ namespace FreeLibSet.Forms.Docs
           spl.Close();
         }
       }
-      catch (UserCancelException)
+      catch (SilentException)
       {
       }
     }

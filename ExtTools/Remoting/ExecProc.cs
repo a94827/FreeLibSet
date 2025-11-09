@@ -687,7 +687,7 @@ namespace FreeLibSet.Remoting
     {
       if (!LogoutErrors)
         return;
-      if (LogoutTools.GetException<UserCancelException>(e) != null)
+      if (LogoutTools.GetException<SilentException>(e) != null)
         return; // 12.12.2019
       if (LogoutTools.GetException<ThreadAbortException>(e) != null)
         return; // 16.02.2021

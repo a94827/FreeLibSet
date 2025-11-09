@@ -5,7 +5,7 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20251006;170256062000000">
+	<META NAME="CHANGED" CONTENT="20251107;141504436000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2025-10-05T16:56:52.207000000">
 	<STYLE TYPE="text/css">
@@ -48,10 +48,91 @@
 	</TR>
 	<TR VALIGN=TOP>
 		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>369</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>29.10.2025-07.11.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Скрытая форма в
+			</SPAN><SPAN LANG="en-US">EFPAppTrayIcon </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v206p9"><SPAN LANG="en-US">v.206
+			</SPAN><SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="ru-RU">)
+			перехватывает событие </SPAN><SPAN LANG="en-US">FormClosing </SPAN><SPAN LANG="ru-RU">и
+			не разрешает закрывать приложение, даже если нет ни одной открытой
+			формы. Без этого свойство </SPAN><SPAN LANG="en-US">EFPAppTrayIcon.UseHiddenForm
+			</SPAN><SPAN LANG="ru-RU">было практически бесполезным</SPAN></P>
+			<P><SPAN LANG="en-US">2. EFPFormProvider </SPAN><SPAN LANG="ru-RU">запоминает
+			(</SPAN><A HREF="ExtForms_11.htm#v279p1"><SPAN LANG="en-US">v.279
+			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">)
+			положение (а не только размер) окон с
+			</SPAN><SPAN LANG="en-US">Form.BorderStyle=FixedToolWindow </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">SizeableToolWindow</SPAN></P>
+			<P><SPAN LANG="en-US">3. EFPFormProvider </SPAN><SPAN LANG="ru-RU">в
+			обработчике </SPAN><SPAN LANG="en-US">Form.FormDisposed </SPAN><SPAN LANG="ru-RU">вызывает
+			</SPAN><SPAN LANG="en-US">EFPApp.ExitAsync(), </SPAN><SPAN LANG="ru-RU">если
+			больше нет открытых форм и </SPAN><SPAN LANG="en-US">tray-</SPAN><SPAN LANG="ru-RU">значка,
+			</SPAN>
+			</P>
+			<P><SPAN LANG="en-US">4. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">EFPApp.AppWasInit </SPAN><SPAN LANG="ru-RU">переименовано
+			в </SPAN><SPAN LANG="en-US">AppHasBeenInit</SPAN></P>
+			<P><SPAN LANG="en-US">5. EFPApp.ShowWindowsExplorer() </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v039p1"><SPAN LANG="en-US">v.39
+			</SPAN><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="ru-RU">) может
+			принимать путь к файлу вместо каталога. Если используется
+			</SPAN><SPAN LANG="en-US">explorer.exe </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v210p7"><SPAN LANG="en-US">v.210
+			</SPAN><SPAN LANG="ru-RU">п.7</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">,
+			</SPAN><SPAN LANG="ru-RU">то он вызывается с аргументом
+			&laquo;/</SPAN><SPAN LANG="en-US">select,</SPAN><SPAN LANG="ru-RU">путь-к-файлу&raquo;
+			для позиционирования на файл</SPAN></P>
+			<P LANG="en-US">6. <SPAN LANG="ru-RU">В окне &laquo;Загруженные
+			программные модули&raquo; </SPAN>(<A HREF="ExtForms_11.htm#v067p3">v.67
+			<SPAN LANG="ru-RU">п.3</SPAN></A>) <SPAN LANG="ru-RU">- команда
+			локального меню &laquo;Открыть папку с файлом&raquo;</SPAN></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>368</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>09.10.2025-15.10.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Изменения в
+			</SPAN><SPAN LANG="en-US">ExtEditDialog </SPAN><SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_30.htm#v355p21"><SPAN LANG="en-US">v.355
+			</SPAN><SPAN LANG="ru-RU">п.21</SPAN></A><SPAN LANG="ru-RU">)</SPAN><SPAN LANG="en-US">:</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">при открытии и
+			сохранении формы вызываются методы </SPAN><SPAN LANG="en-US">UIExtEditList.ReadValues()
+			</SPAN><SPAN LANG="ru-RU">и </SPAN><SPAN LANG="en-US">WriteValues().
+			</SPAN><SPAN LANG="ru-RU">Ранее список редактируемых значений
+			никак не обрабатывался.</SPAN></P>
+			<P><SPAN LANG="ru-RU">- Метод </SPAN><SPAN LANG="en-US">ReadData()</SPAN></P>
+			<P><SPAN LANG="en-US">- </SPAN><SPAN LANG="ru-RU">События </SPAN><SPAN LANG="en-US">Load,
+			BeforeReadData, AfterReadData, BeforeWriteData, AfterWriteData.
+			</SPAN><SPAN LANG="ru-RU">Свойство </SPAN><SPAN LANG="en-US">UseDataWriting.
+			</SPAN><SPAN LANG="ru-RU">Событие </SPAN><SPAN LANG="en-US">Writing
+			</SPAN><SPAN LANG="ru-RU">переименовано в </SPAN><SPAN LANG="en-US">Applying</SPAN><SPAN LANG="ru-RU">.</SPAN></P>
+			<P><SPAN LANG="en-US">2. </SPAN><SPAN LANG="ru-RU">Свойство
+			</SPAN><SPAN LANG="en-US">DataEditDialog.DocumentTitle (<A HREF="ExtForms_30.htm#v355p22">v.355
+			</A></SPAN><A HREF="ExtForms_30.htm#v355p22"><SPAN LANG="ru-RU">п.22</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P LANG="en-US">3. <SPAN LANG="ru-RU">Класс DataTableEdit</SPAN>Dialog</P>
+			<P><SPAN LANG="en-US">4. </SPAN><SPAN LANG="ru-RU">Команда
+			&laquo;Перейти вниз/вверх к строке с другим значением&raquo;
+			(</SPAN><A HREF="#v367p8"><SPAN LANG="en-US">v.367 </SPAN><SPAN LANG="ru-RU">п.8</SPAN></A><SPAN LANG="ru-RU">)
+			работает для столбцов со значками </SPAN><SPAN LANG="en-US">DataGridViewImageColumn.
+			</SPAN><SPAN LANG="ru-RU">Сравниваются на равенство ссылки на
+			объекты </SPAN><SPAN LANG="en-US">Image. </SPAN>
+			</P>
+			<P><SPAN LANG="en-US">5</SPAN>. EFPIntEditBox переименован в
+			EFPInt32EditBox (<A HREF="#v366p1"><SPAN LANG="en-US">v.366 </SPAN>п.1</A>)</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>367</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US" ALIGN=CENTER>02.10.2025-06.10.2025</P>
+			<P LANG="en-US" ALIGN=CENTER>02.10.2025-08.10.2025</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Свойство
@@ -95,11 +176,15 @@
 			создает подменю &laquo;Файл&raquo;, в котором размещает команды
 			&laquo;Печать&raquo;, &laquo;Параметры страницы&raquo;,
 			&laquo;Предварительный просмотр&raquo; и &laquo;Экспорт в файл&raquo;</SPAN></P>
-			<P LANG="en-US"><SPAN LANG="ru-RU">8</SPAN>. <SPAN LANG="ru-RU">В
-			табличном просмотре </SPAN>EFPDataGridView &ndash; <SPAN LANG="ru-RU">команды
-			локального меню &laquo;Перейти вниз/вверх к строке с другим
-			значением&raquo; (комбинации клавиш </SPAN>Alt+PageUp <SPAN LANG="ru-RU">и
-			</SPAN>Alt+PageDown<SPAN LANG="ru-RU">)</SPAN></P>
+			<P><A NAME="v367p8"></A><SPAN LANG="ru-RU">8</SPAN><SPAN LANG="en-US">.
+			</SPAN><SPAN LANG="ru-RU">В табличном просмотре </SPAN><SPAN LANG="en-US">EFPDataGridView
+			(<A HREF="ExtForms_11.htm#v054p1">v.54 </A></SPAN><A HREF="ExtForms_11.htm#v054p1"><SPAN LANG="ru-RU">п.1</SPAN></A><SPAN LANG="en-US">)
+			&ndash; </SPAN><SPAN LANG="ru-RU">команды локального меню &laquo;Перейти
+			вниз/вверх к строке с другим значением&raquo; (комбинации клавиш
+			</SPAN><SPAN LANG="en-US">Alt+PageUp </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">Alt+PageDown</SPAN><SPAN LANG="ru-RU">).
+			Для </SPAN><SPAN LANG="en-US">EFPDataTreeView </SPAN><SPAN LANG="ru-RU">не
+			реализовано.</SPAN></P>
 			<P LANG="en-US">9. <SPAN LANG="ru-RU">Перечислимое свойство
 			</SPAN>IEFPDataView, EFPDataGridViewCommandItems,
 			EFPTreeViewAdvCommandItems.EnterKeyMode, <SPAN LANG="ru-RU">расширяющее
@@ -121,7 +206,8 @@
 			<P LANG="en-US" ALIGN=CENTER>11.06.2025-29<SPAN LANG="ru-RU">.</SPAN>09.2025</P>
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
-			<P LANG="en-US"><SPAN STYLE="text-decoration: none">1. </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Рефакторинг</SPAN></SPAN></P>
+			<P LANG="en-US"><A NAME="v366p1"></A><SPAN STYLE="text-decoration: none">1.
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Рефакторинг</SPAN></SPAN></P>
 			<P LANG="en-US"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">-
 			Методы </SPAN></SPAN><SPAN STYLE="text-decoration: none">XxxInt()
 			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">переименованы
@@ -143,15 +229,19 @@
 			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">EFPDataGridView,
 			EFPDataTreeView.GetRowInfo()/FreeRowInfo</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">()
 			в </SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">GetRowValues()/FreeRowValues()</SPAN></SPAN></P>
-			<P LANG="en-US"><SPAN STYLE="text-decoration: none">- События
-			EFPDataGridView.GetRowAttributes </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
-			RowInfoNeeded. GetCellAttributes </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
-			CellInfoNeeded, </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">методы
-			</SPAN></SPAN><SPAN STYLE="text-decoration: none">DoGetRowCellAttributes()
-			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
-			GetRowCellInfo(), </SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">перечисление
+			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">-
+			События EFPDataGridView.GetRowAttributes </SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">RowInfoNeeded.
+			GetCellAttributes </SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">CellInfoNeeded,
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">методы
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">DoGetRowCellAttributes()
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">GetRowCellInfo(),
+			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">перечисление
 			EFPDataGridViewAttributesReason в</SPAN></SPAN><SPAN STYLE="text-decoration: none">
-			EFPDataViewInfoReason</SPAN></P>
+			</SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">EFPDataViewInfoReason
+			(<A HREF="ExtForms_11.htm#v054p1">v.54 </A></SPAN></SPAN><A HREF="ExtForms_11.htm#v054p1"><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">п.1</SPAN></SPAN></A><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">)</SPAN></SPAN></P>
 			<P><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">-
 			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="ru-RU">Событие
 			</SPAN></SPAN><SPAN STYLE="text-decoration: none"><SPAN LANG="en-US">EFPGridProducerColumn.GetCellAttributes

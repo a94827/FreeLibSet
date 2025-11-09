@@ -118,7 +118,7 @@ namespace FreeLibSet.Forms.Diagnostics
     {
       if (e != null)
       {
-        if (e is UserCancelException)
+        if (e is SilentException)
           return; // 18.09.2009. Прерывание пользователем операции не должно выдавать окно
       }
 
@@ -191,8 +191,8 @@ namespace FreeLibSet.Forms.Diagnostics
 
     /// <summary>
     /// Получить информацию о всех загруженных сборках, кроме помещенных в
-    /// Global Assembly Cache. Возвращается объект DataTable, который можно 
-    /// использовать в окне "О программе"
+    /// Global Assembly Cache. Возвращается объект <see cref="DataTable"/>, который можно 
+    /// использовать в окне "О программе".
     /// </summary>
     /// <returns></returns>
     public static DataTable GetAssembliesInfo()
@@ -202,7 +202,7 @@ namespace FreeLibSet.Forms.Diagnostics
 
     /// <summary>
     /// Получить информацию о всех загруженных сборках
-    /// Возвращается объект DataTable, который можно использовать в окне "О программе"
+    /// Возвращается объект <see cref="DataTable"/>, который можно использовать в окне "О программе".
     /// </summary>
     /// <param name="includeGAC">true, если в список должны быть включены сборки из Глобального кэша сборок</param>
     /// <returns></returns>
@@ -276,8 +276,8 @@ namespace FreeLibSet.Forms.Diagnostics
       if (attrCopyright != null)
         row["Copyright"] = attrCopyright.Copyright;
 
-      DataTools.SetString(row, "Location", asm.Location);
-
+      try { DataTools.SetString(row, "Location", asm.Location); }
+      catch { } // 07.11.2025 - не поддерживается для динамических сборок
       row["GAC"] = asm.GlobalAssemblyCache;
 
       table.Rows.Add(row);
@@ -774,7 +774,7 @@ namespace FreeLibSet.Forms.Diagnostics
     #region Таблицы
 
     /// <summary>
-    /// Отладка объекта DataSet
+    /// Отладка объекта <see cref="DataSet"/>
     /// </summary>
     /// <param name="ds">Отображаемый объект</param>
     /// <param name="title">Заголовок окна</param>
@@ -821,7 +821,7 @@ namespace FreeLibSet.Forms.Diagnostics
     }
 
     /// <summary>
-    /// Отладка таблицы DataTable
+    /// Отладка таблицы <see cref="DataTable"/>
     /// </summary>
     /// <param name="table">Отображаемый объект</param>
     /// <param name="title">Заголовок окна</param>
@@ -957,7 +957,6 @@ namespace FreeLibSet.Forms.Diagnostics
         control.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
     }
 
-
     static void DebugTableGrid_CellValueNeeded(object sender, DataGridViewCellValueEventArgs args)
     {
       DataGridView grid = (DataGridView)sender;
@@ -975,7 +974,7 @@ namespace FreeLibSet.Forms.Diagnostics
         switch (args.ColumnIndex)
         {
           case 0:
-            if (!EFPApp.AppWasInit)
+            if (!EFPApp.AppHasBeenInit)
               return;
             if (!EFPApp.IsMainThread)
               return;
@@ -1122,7 +1121,7 @@ namespace FreeLibSet.Forms.Diagnostics
     }
 
     /// <summary>
-    /// Отладка объекта DataView
+    /// Отладка объекта <see cref="DataView"/>
     /// </summary>
     /// <param name="dv">Отображаемый объект</param>
     /// <param name="title">Заголовок окна</param>
@@ -1136,7 +1135,6 @@ namespace FreeLibSet.Forms.Diagnostics
 
       if (title == null)
         title = "DataView for " + dv.Table.TableName;
-
 
       using (Form frm = new Form())
       {
@@ -1182,7 +1180,7 @@ namespace FreeLibSet.Forms.Diagnostics
     #region ChangeInfo
 
     /// <summary>
-    /// Отладка объекта DepChangeInfo
+    /// Отладка объекта <see cref="DepChangeInfo"/>
     /// </summary>
     /// <param name="changeInfo">Отображаемый объект</param>
     /// <param name="title">Заголовок окна</param>
@@ -1275,9 +1273,9 @@ namespace FreeLibSet.Forms.Diagnostics
 
 #if !XXX
     /// <summary>
-    /// Отладка объекта IEFPCheckItem 
+    /// Отладка объекта <see cref="EFPBaseProvider"/> или <see cref="EFPFormProvider"/>
     /// </summary>
-    /// <param name="baseProvider">Отображаемый объект (EFPFormProvider или EFPBaseProvider)</param>
+    /// <param name="baseProvider">Отображаемый объект (<see cref="EFPFormProvider"/> или <see cref="EFPBaseProvider"/>)</param>
     /// <param name="title">Заголовок окна</param>
     public static void DebugBaseProvider(EFPBaseProvider baseProvider, string title)
     {
@@ -1604,9 +1602,9 @@ namespace FreeLibSet.Forms.Diagnostics
 
     /// <summary>
     /// Вывод текста в отладочных целях.
-    /// Показывает модальное окно с TextBox'ом с заданным текстом
+    /// Показывает модальное окно с TextBox'ом с заданным текстом.
     /// Метод может быть вызван из любого потока.
-    /// В форме не используется EFPFormProvider
+    /// В форме не используется <see cref="EFPFormProvider"/>.
     /// </summary>
     /// <param name="text">Выводимый текст</param>
     /// <param name="title">Заголовок окна</param>

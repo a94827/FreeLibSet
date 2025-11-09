@@ -1236,7 +1236,7 @@ namespace FreeLibSet.Forms.Docs
 
       if (args.Handled)
         return;
-      if (LogoutTools.GetException<UserCancelException>(args.Exception) != null)
+      if (LogoutTools.GetException<SilentException>(args.Exception) != null)
         return; // на всякий случай
 
       if (!Application.MessageLoop)

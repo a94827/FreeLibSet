@@ -465,7 +465,9 @@ namespace FreeLibSet.Forms
       if (EFPApp.Interface == this.Interface && (!EFPApp.InsideInterfaceAssignation))
       {
         // Закрываем последнее главное окно?
-        bool closeApp = (EFPApp.Interface.MainWindowCount == 1) && (!InsideCloseMainWindow);
+        bool closeApp = (EFPApp.Interface.MainWindowCount == 1) && 
+          (!InsideCloseMainWindow) &&
+          (!(EFPApp.TrayIcon.Visible && EFPApp.TrayIcon.UseHiddenForm)); // 29.10.2025
         if ((!closeApp) && (!Interface.IsSDI) && (!InsideCloseMainWindow))
         {
           RadioSelectDialog dlg = new RadioSelectDialog();
@@ -475,7 +477,9 @@ namespace FreeLibSet.Forms
           dlg.Items = new string[] {
             Res.EFPApp_Msg_CloseMainWindowCloseCurrent,
             Res.EFPApp_Msg_CloseMainWindowExit };
-          dlg.ImageKeys = new string[] { "CloseWindow", "Exit" };
+          dlg.ImageKeys = new string[] {
+            "CloseWindow",
+            "Exit" };
           if (dlg.ShowDialog() != DialogResult.OK)
           {
             args.Cancel = true;

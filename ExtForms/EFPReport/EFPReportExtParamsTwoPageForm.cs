@@ -32,7 +32,7 @@ namespace FreeLibSet.Forms
     {
       InitializeComponent();
 
-      if (EFPApp.AppWasInit)
+      if (EFPApp.AppHasBeenInit)
       {
         TheTabControl.ImageList = EFPApp.MainImages.ImageList;
         MainTabPage.ImageKey = "Properties";

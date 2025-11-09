@@ -717,7 +717,7 @@ namespace FreeLibSet.Forms
     /// <param name="args"></param>
     internal void Application_Idle(object sender, EventArgs args)
     {
-      if (!EFPApp.AppWasInit)
+      if (!EFPApp.AppHasBeenInit)
         return; // 18.06.2018
 
       if (EFPApp.IdleSuspended)

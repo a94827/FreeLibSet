@@ -13,7 +13,7 @@ namespace FreeLibSet.Forms
 {
   /// <summary>
   /// Значок в системном трее.
-  /// Реализует свойство EFPApp.TrayIcon      
+  /// Реализует свойство <see cref="EFPApp.TrayIcon"/>.
   /// </summary>
   public sealed class EFPAppTrayIcon : DisposableObject, IReadOnlyObject/*, IEFPAppTimeHandler*/
   {
@@ -37,26 +37,29 @@ namespace FreeLibSet.Forms
     /// <param name="disposing">true, если вызван метод Dispose(), а не деструктор</param>
     protected override void Dispose(bool disposing)
     {
-      Hide();
-      if (_TheHiddenForm != null)
+      if (disposing) // 29.10.2025
       {
-        _TheHiddenForm.Dispose();
-        _TheHiddenForm = null;
-      }
-      if (_NotifyIcons != null)
-      {
-        foreach (NotifyIcon ni in _NotifyIcons.Values)
+        Hide();
+        if (_TheHiddenForm != null)
         {
-          try
-          {
-            ni.Dispose();
-          }
-          catch (Exception e)
-          {
-            LogoutTools.LogoutException(e, Res.TrayIcon_ErrTitle_RemoveNotifyIcon);
-          }
+          _TheHiddenForm.Dispose();
+          _TheHiddenForm = null;
         }
-        _NotifyIcons = null;
+        if (_NotifyIcons != null)
+        {
+          foreach (NotifyIcon ni in _NotifyIcons.Values)
+          {
+            try
+            {
+              ni.Dispose();
+            }
+            catch (Exception e)
+            {
+              LogoutTools.LogoutException(e, Res.TrayIcon_ErrTitle_RemoveNotifyIcon);
+            }
+          }
+          _NotifyIcons = null;
+        }
       }
 
       //Microsoft.Win32.SystemEvents.SessionSwitch -= new Microsoft.Win32.SessionSwitchEventHandler(SystemEvents_SessionSwitch);
@@ -69,7 +72,7 @@ namespace FreeLibSet.Forms
     #region Значок
 
     /// <summary>
-    /// Изображение для значка.
+    /// Изображение для значка <see cref="NotifyIcon.Icon"/>.
     /// По умолчанию содержит значок приложения.
     /// Свойство может устанавливаться динамически.
     /// </summary>
@@ -92,7 +95,7 @@ namespace FreeLibSet.Forms
     #region Подсказка
 
     /// <summary>
-    /// Текст всплывающей подсказки для значка.
+    /// Текст всплывающей подсказки для значка <see cref="NotifyIcon.Text"/>.
     /// По умолчанию содержит имя приложения.
     /// Свойство может устанавливаться динамически.
     /// </summary>
@@ -121,9 +124,9 @@ namespace FreeLibSet.Forms
     private readonly EFPCommandItems _CommandItems;
 
     /// <summary>
-    /// Команда, вызываемая при двойном щелчке мыши на значке.
+    /// Команда из списка <see cref="CommandItems"/>, вызываемая при двойном щелчке мыши на значке.
     /// Если свойство не установлено в явном виде, то оно возвращает первую команду в списке 
-    /// CommandItems или null, если список пустой.
+    /// или null, если список пустой.
     /// Свойство должно устанавливаться до вывода значка на экран.
     /// </summary>
     public EFPCommandItem DefaultCommandItem
@@ -214,9 +217,10 @@ namespace FreeLibSet.Forms
     #region Скрытая форма для получения сообщений
 
     /// <summary>
-    /// Нужно ли создавать скрытую форму (true) или у приложения есть «нормальная» форма (false). 
-    /// Если у приложения не будет формы, то Application.Run() сразу завершится.
+    /// Нужно ли создавать скрытую форму (true) или у приложения есть "нормальная" форма (false). 
+    /// Если у приложения не будет формы, то <see cref="Application.Run()"/> сразу завершится.
     /// По умолчанию – true – класс поддерживает скрытую форму.
+    /// Свойство действует только при <see cref="Visible"/>=true, но может инициализироваться только до вывода значка на экран.
     /// </summary>
     public bool UseHiddenForm
     {
@@ -247,6 +251,17 @@ namespace FreeLibSet.Forms
       #endregion
 
       #region Обработчики формы
+
+      protected override void OnFormClosing(FormClosingEventArgs args)
+      {
+        if (!EFPApp.IsClosing)
+        {
+          args.Cancel = true; // 29.10.2025
+          return;
+        }
+
+        base.OnFormClosing(args);
+      }
 
       protected override void WndProc(ref Message m)
       {
@@ -299,7 +314,7 @@ namespace FreeLibSet.Forms
     /// Если true, то значок выведен на экран, если false, то скрыт. 
     /// Изначально равно false.
     /// Видимость значка можно менять динамически
-    /// Можно использовать методы Show() и Hide().
+    /// Можно использовать методы <see cref="Show()"/> и <see cref="Hide()"/>.
     /// </summary>
     public bool Visible
     {
@@ -318,7 +333,7 @@ namespace FreeLibSet.Forms
     private bool _Visible;
 
     /// <summary>
-    /// Показывает значок. Устанавливает Visible=true
+    /// Показывает значок. Устанавливает <see cref="Visible"/>=true.
     /// </summary>
     public void Show()
     {
@@ -326,7 +341,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Прячет значок. Устанавливает Visible=false
+    /// Прячет значок. Устанавливает <see cref="Visible"/>=false.
     /// </summary>
     public void Hide()
     {
@@ -371,6 +386,13 @@ namespace FreeLibSet.Forms
     {
       try
       {
+        if (_TheHiddenForm != null)
+        {
+          // 29.10.2025
+          _TheHiddenForm.Dispose();
+          _TheHiddenForm = null;
+        }
+
         foreach (NotifyIcon ni in _NotifyIcons.Values)
           ni.Visible = false;
       }
@@ -424,7 +446,7 @@ namespace FreeLibSet.Forms
     #region IReadOnlyObject Members
 
     /// <summary>
-    /// Возвращает true, если значок уже был выведен на экран, и добавление новых команд в меню не допускается
+    /// Возвращает true, если значок уже был выведен на экран, и добавление новых команд в меню не допускается.
     /// </summary>
     public bool IsReadOnly { get { return _CommandItems.IsReadOnly; } }
 

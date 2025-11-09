@@ -3178,4 +3178,7 @@ Select paper orientation before.</value>
   <data name="Editor_Msg_TitleView" xml:space="preserve">
     <value>View</value>
   </data>
+  <data name="AboutDialog_Menu_View_OpenFolder" xml:space="preserve">
+    <value>Open folder with file</value>
+  </data>
 </root>

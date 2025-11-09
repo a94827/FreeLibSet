@@ -169,6 +169,15 @@ namespace FreeLibSet {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open folder with file.
+        /// </summary>
+        internal static string AboutDialog_Menu_View_OpenFolder {
+            get {
+                return ResourceManager.GetString("AboutDialog_Menu_View_OpenFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version {0}.
         /// </summary>
         internal static string AboutDialog_Msg_Version {
