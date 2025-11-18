@@ -936,7 +936,7 @@ namespace FreeLibSet.Core
 
     /// <summary>
     /// Найти позицию заданного вхождения подстроки <paramref name="value"/> в строку <paramref name="str"/>.
-    /// Если <paramref name="occurence"/>=0, то вызов аналогичен <see cref="String.IndexOf(string)"/>.
+    /// Если <paramref name="occurence"/>=0, то вызов аналогичен <see cref="String.IndexOf(string, StringComparison)"/>.
     /// Если <paramref name="value"/> - пустая строка, то возвращается 0.
     /// Если строка не содержит нужного количества вхождений, возвращается (-1).
     ///    
@@ -977,9 +977,44 @@ namespace FreeLibSet.Core
 
 
     /// <summary>
+    /// Найти позицию заданного вхождения символа <paramref name="value"/> в строку <paramref name="str"/>.
+    /// Если <paramref name="occurence"/>=0, то вызов аналогичен <see cref="String.IndexOf(char)"/>.
+    /// Если строка не содержит нужного количества вхождений, возвращается (-1).
+    /// </summary>
+    /// <param name="str">Строка, в которой выполняется поиск</param>
+    /// <param name="value">Искомый символ</param>
+    /// <param name="occurence">Номер вхождения. Нумерация вхождений начинается с 0.</param>
+    /// <returns>Найденная позиция</returns>
+    public static int IndexOfOccurence(string str, char value, int occurence)
+    {
+      if (occurence < 0)
+        throw ExceptionFactory.ArgOutOfRange("occurence", occurence, 0, null);
+
+      if (String.IsNullOrEmpty(str))
+        return -1;
+
+      int currPos = 0;
+      int count = 0;
+      while (currPos < str.Length)
+      {
+        int p = str.IndexOf(value, currPos, str.Length - currPos);
+        if (p < 0)
+          return -1;
+        if (count == occurence)
+          return p;
+
+        count++;
+        currPos = p + 1;
+      }
+
+      return -1;
+    }
+
+
+    /// <summary>
     /// Найти позицию заданного вхождения подстроки <paramref name="value"/> в строку <paramref name="str"/>, начиная просмотр с конца строки.
     /// Если длина подстроки больше 1, то возвращается позиция первого символа найденного вхождения.
-    /// Если <paramref name="occurence"/>=0, то вызов аналогичен <see cref="String.LastIndexOf(string)"/>.
+    /// Если <paramref name="occurence"/>=0, то вызов аналогичен <see cref="String.LastIndexOf(string, StringComparison)"/>.
     /// Если <paramref name="value"/> - пустая строка, то возвращается 0.
     /// Если строка не содержит нужного количества вхождений, возвращается (-1).
     ///    
@@ -1013,6 +1048,41 @@ namespace FreeLibSet.Core
 
         count++;
         currPos = p - 1;// value.Length;
+      }
+
+      return -1;
+    }
+
+    /// <summary>
+    /// Найти позицию заданного вхождения символа <paramref name="value"/> в строку <paramref name="str"/>, начиная просмотр с конца строки.
+    /// Если <paramref name="occurence"/>=0, то вызов аналогичен <see cref="String.LastIndexOf(char)"/>.
+    /// Если строка не содержит нужного количества вхождений, возвращается (-1).
+    ///    
+    /// </summary>
+    /// <param name="str">Строка, в которой выполняется поиск</param>
+    /// <param name="value">Искомая подстрока</param>
+    /// <param name="occurence">Номер вхождения. Нумерация вхождений начинается с 0</param>
+    /// <returns>Найденная позиция</returns>
+    public static int LastIndexOfOccurence(string str, char value, int occurence)
+    {
+      if (occurence < 0)
+        throw ExceptionFactory.ArgOutOfRange("occurence", occurence, 0, null);
+
+      if (String.IsNullOrEmpty(str))
+        return -1;
+
+      int currPos = str.Length - 1;
+      int count = 0;
+      while (currPos >= 0)
+      {
+        int p = str.LastIndexOf(value, currPos, currPos + 1);
+        if (p < 0)
+          return -1;
+        if (count == occurence)
+          return p;
+
+        count++;
+        currPos = p - 1;
       }
 
       return -1;
@@ -2493,6 +2563,98 @@ namespace FreeLibSet.Core
       s = s.Replace('^', SoftHyphenChar);
       return s;
     }
+
+    #endregion
+
+    #region Разбиение на две части
+
+    /// <summary>
+    /// Разделение строки на две части по символу-разделителю.
+    /// Выполняется поиск символа-разделителя <paramref name="separator"/> в строке <paramref name="s"/> с заданным
+    /// номером вхождения <paramref name="occurence"/>. См. функцию <see cref="IndexOfOccurence(string, char, int)"/>.
+    /// Если символ найден, то в <paramref name="mainPart"/> записываются символы от начала строки до символа-разделителя.
+    /// Сам символ-разделитель не записывается. В <paramref name="auxPart"/> записываются оставшиеся символы строки после
+    /// разделителя.
+    /// Если символ <paramref name="separator"/> не найден или нет нужного количества вхождений, то строка <paramref name="s"/> копируется целиком в <paramref name="mainPart"/>,
+    /// а <paramref name="auxPart"/> становится равным <see cref="String.Empty"/>.
+    /// Если <paramref name="s"/> - пустая строка, то <paramref name="mainPart"/> и <paramref name="auxPart"/> получают пустую строку и возвращается false.
+    /// </summary>
+    /// <param name="s">Исходная строка</param>
+    /// <param name="separator">Символ-разделитель</param>
+    /// <param name="occurence">Номер вхождения символа-разделителя в строку. Нумерация начинается с 0.</param>
+    /// <param name="mainPart">Сюда записывается часть строки до сепаратора</param>
+    /// <param name="auxPart">Сюда записывается часть строки после сепаратора</param>
+    /// <returns>True, если символ-разделитель найден и разбиение выполнено.
+    /// False, если разделитель не найден.</returns>
+    public static bool SplitBySeparator(string s, char separator, int occurence, out string mainPart, out string auxPart)
+    {
+      if (String.IsNullOrEmpty(s))
+      {
+        mainPart = String.Empty;
+        auxPart = String.Empty;
+        return false;
+      }
+
+      int p = IndexOfOccurence(s, separator, occurence);
+      if (p >= 0)
+      {
+        mainPart = s.Substring(0, p);
+        auxPart = s.Substring(p + 1);
+        return true;
+      }
+      else
+      {
+        mainPart = s;
+        auxPart = String.Empty;
+        return false;
+      }
+    }
+
+#if XXX
+    // Не уверен, что нужно, а если нужно, то как делить
+
+    /// <summary>
+    /// Разделение строки на две части по символу-разделителю.
+    /// Выполняется поиск справа налево последнего символа-разделителя <paramref name="separator"/> в строке <paramref name="s"/>.
+    /// См. функцию <see cref="LastIndexOfOccurence(string, char, int)"/>.
+    /// Если символ найден, то в <paramref name="mainPart"/> записываются символы от начала строки до символа-разделителя.
+    /// Сам символ-разделитель не записывается. В <paramref name="auxPart"/> записываются оставшиеся символы строки после
+    /// разделителя. Если символ-разделитель встречается больше одного раза, то используется последний из них.
+    /// Остальные символы записываются в составе строки <paramref name="mainPart"/>.
+    /// Если символ <paramref name="separator"/> не найден, то строка <paramref name="s"/> копируется целиком в <paramref name="mainPart"/>,
+    /// а <paramref name="auxPart"/> становится равным <see cref="String.Empty"/>.
+    /// Если <paramref name="s"/> - пустая строка, то <paramref name="mainPart"/> и <paramref name="auxPart"/> получают пустую строку и возвращается false.
+    /// </summary>
+    /// <param name="s">Исходная строка</param>
+    /// <param name="separator">Символ-разделитель</param>
+    /// <param name="mainPart">Сюда записывается часть строки до сепаратора</param>
+    /// <param name="auxPart">Сюда записывается часть строки после сепаратора</param>
+    /// <returns>True, если символ-разделитель найден и разбиение выполнено.
+    /// False, если разделитель не найден.</returns>
+    public static bool SplitByLastSeparator(string s, char separator, out string mainPart, out string auxPart)
+    {
+      if (String.IsNullOrEmpty(s))
+      {
+        mainPart = String.Empty;
+        auxPart = String.Empty;
+        return false;
+      }
+
+      int p = s.LastIndexOf(separator);
+      if (p >= 0)
+      {
+        mainPart = s.Substring(0, p);
+        auxPart = s.Substring(p + 1);
+        return true;
+      }
+      else
+      {
+        mainPart = s;
+        auxPart = String.Empty;
+        return false;
+      }
+    }
+#endif
 
     #endregion
   }

@@ -5,7 +5,7 @@
 	<TITLE>Изменения в модуле ExtTools.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20251030;120213685000000">
+	<META NAME="CHANGED" CONTENT="20251118;162355694000000">
 	<META NAME="created" CONTENT="00:00:00">
 	<META NAME="changed" CONTENT="2025-10-04T22:55:21.472000000">
 	<META NAME="created" CONTENT="00:00:00">
@@ -61,6 +61,30 @@
 		</TD>
 		<TD WIDTH=77% STYLE="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
 			<P ALIGN=CENTER>Что сделано</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>370</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>17.11.2025-18.11.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Исправлены</SPAN>
+			<SPAN LANG="ru-RU">ошибки</SPAN> <SPAN LANG="ru-RU">в нескольких
+			методах класса </SPAN><SPAN LANG="en-US">IdTools (<A HREF="#v366p10">v.366
+			</A></SPAN><A HREF="#v366p10"><SPAN LANG="ru-RU">п.10</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			<P>2. <SPAN LANG="en-US">IdArray&lt;T&gt; </SPAN>(<A HREF="#v366p19"><SPAN LANG="en-US">v.366
+			</SPAN>п.19</A>) реализует интерфейсы IList&lt;T&gt; и
+			System.Collections.IList</P>
+			<P LANG="en-US">3. <SPAN LANG="ru-RU">Перегрузки методов
+			</SPAN>StringTools.IndexOfOccurence() <SPAN LANG="ru-RU">и
+			</SPAN>LastIndexOfOccurence() (<A HREF="ExtTools_20.htm#v348p1">v.348
+			<SPAN LANG="ru-RU">п.1</SPAN></A>), <SPAN LANG="ru-RU">принимающие
+			аргумент </SPAN>value <SPAN LANG="ru-RU">типа </SPAN>char, <SPAN LANG="ru-RU">а
+			не </SPAN>string.</P>
+			<P>4. Метод <SPAN LANG="en-US">StringTools.SplitBySeparator()</SPAN></P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>
@@ -210,8 +234,9 @@
 			<P LANG="en-US"><SPAN LANG="ru-RU">9</SPAN>. <SPAN LANG="ru-RU">Из
 			</SPAN>DataTools <SPAN LANG="ru-RU">и </SPAN>FileTools <SPAN LANG="ru-RU">выделен
 			класс </SPAN>XmlTools</P>
-			<P LANG="en-US"><SPAN LANG="ru-RU">10</SPAN>. <SPAN LANG="ru-RU">Из
-			</SPAN>DataTools <SPAN LANG="ru-RU">выделен класс </SPAN>IdTools. 
+			<P LANG="en-US"><A NAME="v366p10"></A><SPAN LANG="ru-RU">10</SPAN>.
+			<SPAN LANG="ru-RU">Из </SPAN>DataTools <SPAN LANG="ru-RU">выделен
+			класс </SPAN>IdTools. 
 			</P>
 			<P LANG="en-US">- <SPAN LANG="ru-RU">Методы </SPAN>GetIdsFromColumn<SPAN LANG="ru-RU">()</SPAN>
 			<SPAN LANG="ru-RU">используют </SPAN>DataTools.GetInt32() <SPAN LANG="ru-RU">вместо
@@ -250,10 +275,11 @@
 			<P LANG="en-US">- PrimaryKeyException <SPAN LANG="ru-RU">(был
 			DBxPrimaryKeyException)</SPAN></P>
 			<P>- DBxStructException</P>
-			<P LANG="en-US">19. <SPAN LANG="ru-RU">Вместо обычного класса
-			</SPAN>IdList<SPAN LANG="ru-RU">, который поддерживал только
-			неупорядоченные идентификаторы </SPAN>Int32, <SPAN LANG="ru-RU">сделана
-			поддержка идентификаторов произвольных типов:</SPAN></P>
+			<P LANG="en-US"><A NAME="v366p19"></A>19. <SPAN LANG="ru-RU">Вместо
+			обычного класса </SPAN>IdList<SPAN LANG="ru-RU">, который
+			поддерживал только неупорядоченные идентификаторы </SPAN>Int32,
+			<SPAN LANG="ru-RU">сделана поддержка идентификаторов произвольных
+			типов:</SPAN></P>
 			<P LANG="en-US"><SPAN LANG="ru-RU">- интерфейсы </SPAN>IIdSet <SPAN LANG="ru-RU">и
 			</SPAN>IIdSet&lt;T&gt;</P>
 			<P LANG="en-US">- <SPAN LANG="ru-RU">класс </SPAN>IdCollection&lt;T&gt;

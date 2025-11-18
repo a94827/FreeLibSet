@@ -296,6 +296,8 @@ namespace FreeLibSet.Data
     /// <returns>Пустой набор идентификаторов, который можно заполнять</returns>
     public static IIdSet CreateIdCollection(Type idType)
     {
+      CheckIsValidIdType(idType);
+
       Type tSet = typeof(IdCollection<>).MakeGenericType(new Type[1] { idType });
       return (IIdSet)(tSet.GetConstructor(EmptyArray<Type>.Empty).Invoke(EmptyArray<Object>.Empty));
     }
@@ -308,6 +310,8 @@ namespace FreeLibSet.Data
     /// <returns>Пустой список идентификаторов, который можно заполнять</returns>
     public static IIdSet CreateIdList(Type idType)
     {
+      CheckIsValidIdType(idType);
+
       Type tSet = typeof(IdList<>).MakeGenericType(new Type[1] { idType });
       return (IIdSet)(tSet.GetConstructor(EmptyArray<Type>.Empty).Invoke(EmptyArray<Object>.Empty));
     }
@@ -320,9 +324,17 @@ namespace FreeLibSet.Data
     /// <returns>Пустой массив идентификаторов</returns>
     public static IIdSet GetEmptyArray(Type idType)
     {
+      CheckIsValidIdType(idType);
+
       Type tSet = typeof(IdArray<>).MakeGenericType(new Type[1] { idType });
-      PropertyInfo pi = tSet.GetProperty("Empty", BindingFlags.Static);
-      return (IIdSet)(pi.GetValue(null, EmptyArray<object>.Empty));
+      //PropertyInfo pi = tSet.GetProperty("Empty", BindingFlags.Static | BindingFlags.Public);
+      FieldInfo pi = tSet.GetField("Empty", BindingFlags.Static | BindingFlags.Public);
+#if DEBUG
+      if (pi == null)
+        throw new BugException("pi=null");
+#endif
+      //return (IIdSet)(pi.GetValue(null, EmptyArray<object>.Empty));
+      return (IIdSet)(pi.GetValue(null));
     }
 
     private static IIdSet<T> CreateIdSet<T>(bool saveOrder)
@@ -637,7 +649,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Максимальная длина составного ключа.
-    /// В текущей реализаци доступны составные идентификаторы из двух <see cref="ComplexId{T1, T2}"/> и трех <see cref="ComplexId{T1, T2, T3}"/> полей.
+    /// В текущей реализации доступны составные идентификаторы из двух <see cref="ComplexId{T1, T2}"/> и трех <see cref="ComplexId{T1, T2, T3}"/> полей.
     /// </summary>
     public const int MaxKeyColumnCount = 3;
 
@@ -673,8 +685,30 @@ namespace FreeLibSet.Data
       if (idType == typeof(String))
         return false;
       if (typeof(IComplexId).IsAssignableFrom(idType))
+      {
+        // 18.11.2025
+        Type[] args = idType.GetGenericArguments();
+        if (args.Length < 2 || args.Length > MaxKeyColumnCount)
+          return false;
+        for (int i = 0; i < args.Length; i++)
+        {
+          if (typeof(IComplexId).IsAssignableFrom(args[i]))
+            return false; // Вложенные структуры ComplexId не допускаются
+
+          if (!IsValidIdType(args[i])) // рекурсивный вызов
+            return false; 
+        }
         return true;
+      }
       return Array.IndexOf<Type>(_ValidDataTypes, idType) >= 0;
+    }
+
+    private static void CheckIsValidIdType(Type idType)
+    {
+      if (idType == null)
+        throw new ArgumentNullException("idType");
+      if (!IsValidIdType(idType))
+        throw ExceptionFactory.ArgUnknownValue("idType", idType);
     }
 
     /// <summary>
@@ -860,6 +894,7 @@ namespace FreeLibSet.Data
 
     /// <summary>
     /// Определение типов идентификаторов ссылочного поля для <see cref="DbDataReader"/>.
+    /// Поддерживаются только простые идентификаторы из одного поля
     /// </summary>
     /// <param name="reader">Объект для считывания значений</param>
     /// <param name="columnName">Имя ссылочного поля</param>
@@ -879,7 +914,8 @@ namespace FreeLibSet.Data
     }
 
     /// <summary>
-    /// Возвращает типы данных (один или несколько для составных ключей) для заданного типа идентификаторов
+    /// Возвращает типы данных (один или несколько для составных ключей) для заданного типа идентификаторов.
+    /// Если передан недопустимый тип идентификатора, выбрасывается исключение.
     /// </summary>
     /// <param name="idType">Тип идентификатора.
     /// Список допустимых типов см. в <see cref="IIdSet{T}"/>.</param>
@@ -1389,7 +1425,7 @@ namespace FreeLibSet.Data
         return GetEmptyArray(idType);
 
       DataTableValues src = new DataTableValues(table);
-      IIdExtractor extractor = CreateExtractor(src, DBxColumns.FromColumns(table.PrimaryKey), idType);
+      IIdExtractor extractor = CreateExtractor(src, columnName, idType); // испр. 18.11.2025
 
       IIdSet idSet = CreateIdSet(idType, saveOrder);
       while (src.Read())
@@ -1434,7 +1470,7 @@ namespace FreeLibSet.Data
         return GetEmptyArray(idType);
 
       DataTableValues src = new DataTableValues(table);
-      IIdExtractor extractor = CreateExtractor(src, DBxColumns.FromColumns(table.PrimaryKey), idType);
+      IIdExtractor extractor = CreateExtractor(src, columnNames, idType); // испр.18.11.2025
 
       IIdSet idSet = CreateIdSet(idType, saveOrder);
       while (src.Read())
@@ -1453,6 +1489,7 @@ namespace FreeLibSet.Data
     /// Если таблица не имеет первичного ключа, используйте метод <see cref="GetIdsFromColumn(DataView, string)"/> или <see cref="GetIdsFromColumns(DataView, DBxColumns)"/>.
     /// Порядок идентификаторов будет соответствовать порядку строк <see cref="DataView"/>.
     /// Эту перегрузку следует использовать, когда тип идентификаторов неизвестен на этапе компиляции.
+    /// Порядок сортировки просмотра <see cref="DataView.Sort"/> не обязан совпадать с первичным ключом таблицы.
     /// </summary>
     /// <param name="dv">Просмотр для таблицы, откуда извлекаются идентификаторы</param>
     /// <returns>Набор идентификаторов</returns>
@@ -1485,7 +1522,8 @@ namespace FreeLibSet.Data
     /// Эту перегрузку следует использовать, когда тип идентификаторов неизвестен на этапе компиляции.
     /// </summary>
     /// <param name="dv">Просмотр для таблицы, откуда извлекаются идентификаторы</param>
-    /// <param name="columnName">Имя ссылочного столбца в таблице <see cref="DataTable"/></param>
+    /// <param name="columnName">Имя ссылочного столбца в таблице <see cref="DataTable"/>.
+    /// Не обязан совпадать с порядком сортировки <see cref="DataView.Sort"/>.</param>
     /// <returns>Набор идентификаторов</returns>
     public static IIdSet GetIdsFromColumn(DataView dv, string columnName)
     {
@@ -1515,7 +1553,8 @@ namespace FreeLibSet.Data
     /// Эту перегрузку следует использовать, когда тип идентификаторов неизвестен на этапе компиляции.
     /// </summary>
     /// <param name="dv">Просмотр для таблицы, откуда извлекаются идентификаторы</param>
-    /// <param name="columnNames">Имя столбцов в таблице <see cref="DataTable"/>, которые образуют ссылку</param>
+    /// <param name="columnNames">Имя столбцов в таблице <see cref="DataTable"/>, которые образуют ссылку.
+    /// Не обязаны совпадать с порядком сортировки <see cref="DataView.Sort"/>.</param>
     /// <returns>Набор идентификаторов</returns>
     public static IIdSet GetIdsFromColumns(DataView dv, DBxColumns columnNames)
     {
@@ -1788,6 +1827,7 @@ namespace FreeLibSet.Data
     /// Таблица должна иметь простой или составной первичный ключ.
     /// Если таблица не имеет первичного ключа, используйте метод <see cref="GetIdsFromColumn(DataView, string)"/> или <see cref="GetIdsFromColumns(DataView, DBxColumns)"/>.
     /// Порядок строк соответствует порядку строк в просмотре <see cref="DataView"/>.
+    /// Порядок сортировки просмотра <see cref="DataView.Sort"/> не обязан совпадать с первичным ключом таблицы.
     /// </summary>
     /// <typeparam name="T">Тип идентификатора. Список допустимых типов см. в <see cref="IIdSet{T}"/>.</typeparam>
     /// <param name="dv">Набор данных</param>
@@ -1824,7 +1864,8 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <typeparam name="T">Тип идентификатора. Список допустимых типов см. в <see cref="IIdSet{T}"/>.</typeparam>
     /// <param name="dv">Набор данных</param>
-    /// <param name="columnName">Имя столбца, содержащего идентификаторы</param>
+    /// <param name="columnName">Имя столбца, содержащего идентификаторы.
+    /// Не обязан совпадать с порядком сортировки <see cref="DataView.Sort"/>.</param>
     /// <returns>Набор идентификаторов</returns>
     public static IIndexedIdSet<T> GetIdsFromColumn<T>(DataView dv, string columnName)
       where T : struct, IEquatable<T>
@@ -1849,7 +1890,8 @@ namespace FreeLibSet.Data
     /// </summary>
     /// <typeparam name="T">Тип идентификатора. Список допустимых типов см. в <see cref="IIdSet{T}"/>.</typeparam>
     /// <param name="dv">Набор данных</param>
-    /// <param name="columnNames">Имена ссылочныъх полей</param>
+    /// <param name="columnNames">Имена ссылочныъх полей.
+    /// Не обязаны совпадать с порядком сортировки <see cref="DataView.Sort"/>.</param>
     /// <returns>Набор идентификаторов</returns>
     public static IIndexedIdSet<T> GetIdsFromColumns<T>(DataView dv, DBxColumns columnNames)
       where T : struct, IEquatable<T>
@@ -1941,6 +1983,7 @@ namespace FreeLibSet.Data
 
 
       DataRowValues src = new DataRowValues();
+      src.Table = table; // 18.11.2025
       IdExtractor<T> extractor = CreateExtractor<T>(src, DBxColumns.FromColumns(table.PrimaryKey));
 
       T[] a = new T[n];
@@ -2783,7 +2826,6 @@ namespace FreeLibSet.Data
     }
 
     #endregion
-
 
     #region Чтение и запись в секцию конфигурации
 

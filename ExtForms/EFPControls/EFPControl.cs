@@ -2466,8 +2466,10 @@ namespace FreeLibSet.Forms
 
       if (_CommandItems != null)
       {
+        EFPFormProvider formProvider = BaseProvider.FormProvider;
         if (_CommandItems.HasIdle &&
-          BaseProvider.FormProvider.Form.WindowState != FormWindowState.Minimized) // 27.02.2025
+          formProvider != null && // 18.11.2025
+          formProvider.Form.WindowState != FormWindowState.Minimized) // 27.02.2025
 
         _CommandItems.HandleIdle(); // 28.01.2021
       }

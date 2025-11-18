@@ -6,6 +6,7 @@ using FreeLibSet.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections;
 
 namespace FreeLibSet.Data
 {
@@ -14,7 +15,7 @@ namespace FreeLibSet.Data
   /// </summary>
   /// <typeparam name="T">Тип идентификатора. См. <see cref="IIdSet{T}"/> для списка доступных типов</typeparam>
   [Serializable]
-  public class IdArray<T> : IIndexedIdSet<T>
+  public class IdArray<T> : IIndexedIdSet<T>, IList<T>, System.Collections.IList
     where T : struct, IEquatable<T>
   {
     #region Конструкторы
@@ -33,7 +34,7 @@ namespace FreeLibSet.Data
       else if (source is IIdSet<T>)
         _Items = ((IIdSet<T>)source).ToArray(); // без проверок
       else
-      { 
+      {
         // Так как исходный набор - неизвестная коллекция, требуется проверять повторы и 0
         SingleScopeList<T> lst = new SingleScopeList<T>();
         foreach (T id in source)
@@ -69,6 +70,25 @@ namespace FreeLibSet.Data
     /// <returns>Идентификатор</returns>
     public T this[int index] { get { return _Items[index]; } }
 
+    T IList<T>.this[int index]
+    {
+      get { return this[index]; }
+      set
+      {
+        throw ExceptionFactory.ObjectReadOnly(this);
+      }
+    }
+
+    object IList.this[int index]
+    {
+      get { return this[index]; }
+
+      set
+      {
+        throw ExceptionFactory.ObjectReadOnly(this);
+      }
+    }
+
     Type IIdSet.IdType { get { return typeof(T); } }
 
     IdSetKind IIdSet.Kind { get { return IdSetKind.Array; } }
@@ -77,7 +97,7 @@ namespace FreeLibSet.Data
     /// Возвращает идентификатор, если массив содержит единственный элемент.
     /// Иначе возвращается пустое значение.
     /// </summary>
-    public T SingleId 
+    public T SingleId
     {
       get
       {
@@ -235,6 +255,16 @@ namespace FreeLibSet.Data
 
     #region Заглушки
 
+    void IList<T>.Insert(int index, T item)
+    {
+      throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
+    void IList<T>.RemoveAt(int index)
+    {
+      throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
     void IIdSet<T>.AddRange(IEnumerable<T> source)
     {
       throw ExceptionFactory.ObjectReadOnly(this);
@@ -267,6 +297,59 @@ namespace FreeLibSet.Data
 
     bool ICollection<T>.IsReadOnly { get { return true; } }
 
+
+    int IList.Add(object value)
+    {
+      throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
+    bool IList.Contains(object value)
+    {
+      if (value is T)
+        return Contains((T)value);
+      else
+        return false;
+    }
+
+    void IList.Clear()
+    {
+      throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
+    int IList.IndexOf(object value)
+    {
+      if (value is T)
+        return IndexOf((T)value);
+      else
+        return -1;
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
+    void IList.Remove(object value)
+    {
+      throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
+    void IList.RemoveAt(int index)
+    {
+      throw ExceptionFactory.ObjectReadOnly(this);
+    }
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      _Items.CopyTo(array, index);
+    }
+
+    bool IList.IsFixedSize { get { return true; } }
+
+    object ICollection.SyncRoot { get { return _Items; } }
+
+    bool ICollection.IsSynchronized { get { return false; } }
+
     #endregion
 
     #region Перечислитель
@@ -297,6 +380,8 @@ namespace FreeLibSet.Data
     #region ReadOnly
 
     bool IReadOnlyObject.IsReadOnly { get { return true; } }
+
+    bool IList.IsReadOnly { get { return true; } }
 
     void IReadOnlyObject.CheckNotReadOnly()
     {
@@ -346,7 +431,7 @@ namespace FreeLibSet.Data
       if (id.Equals(default(T)))
         return Empty;
       else
-        return FromArrayInternal(new T[1]{id});
+        return FromArrayInternal(new T[1] { id });
     }
 
     /// <summary>

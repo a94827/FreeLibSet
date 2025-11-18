@@ -232,10 +232,11 @@ namespace ExtTools_tests.Core
     [TestCase("ABABABA", "aba", 1, StringComparison.OrdinalIgnoreCase, 4)]
     [TestCase("ABABABA", "", 0, StringComparison.Ordinal, 0)]
     [TestCase("", "ABA", 0, StringComparison.Ordinal, -1)]
+    [TestCase(null, "ABA", 0, StringComparison.Ordinal, -1)]
     // Специальный случай просмотра конца строки
     [TestCase("AAA", "A", 2, StringComparison.Ordinal, 2)]
     [TestCase("AAA", "A", 3, StringComparison.Ordinal, -1)]
-    public void IndexOfOccurence(string str, string value, int occurence, StringComparison comparisonType, int wantedRes)
+    public void IndexOfOccurence_string(string str, string value, int occurence, StringComparison comparisonType, int wantedRes)
     {
       int res = StringTools.IndexOfOccurence(str, value, occurence, comparisonType);
       Assert.AreEqual(wantedRes, res);
@@ -248,12 +249,40 @@ namespace ExtTools_tests.Core
     [TestCase("ABABABA", "aba", 1, StringComparison.OrdinalIgnoreCase, 0)]
     [TestCase("ABABABA", "", 0, StringComparison.Ordinal, 0)]
     [TestCase("", "ABA", 0, StringComparison.Ordinal, -1)]
+    [TestCase(null, "ABA", 0, StringComparison.Ordinal, -1)]
     // Специальный случай просмотра конца строки
     [TestCase("AAA", "A", 2, StringComparison.Ordinal, 0)]
     [TestCase("AAA", "A", 3, StringComparison.Ordinal, -1)]
-    public void LastIndexOfOccurence(string str, string value, int occurence, StringComparison comparisonType, int wantedRes)
+    public void LastIndexOfOccurence_string(string str, string value, int occurence, StringComparison comparisonType, int wantedRes)
     {
       int res = StringTools.LastIndexOfOccurence(str, value, occurence, comparisonType);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+
+    [TestCase("ABABA", 'A', 0, 0)]
+    [TestCase("ABABA", 'A', 1, 2)]
+    [TestCase("ABABA", 'A', 2, 4)]
+    [TestCase("ABABA", 'A', 3, -1)]
+    [TestCase("ABABA", 'X', 0, -1)]
+    [TestCase("", 'A', 0, -1)]
+    [TestCase(null, 'A', 0, -1)]
+    public void IndexOfOccurence_char(string str, char value, int occurence, int wantedRes)
+    {
+      int res = StringTools.IndexOfOccurence(str, value, occurence);
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [TestCase("ABABA", 'A', 0, 4)]
+    [TestCase("ABABA", 'A', 1, 2)]
+    [TestCase("ABABA", 'A', 2, 0)]
+    [TestCase("ABABA", 'A', 3, -1)]
+    [TestCase("ABABA", 'X', 0, -1)]
+    [TestCase("", 'A', 0, -1)]
+    [TestCase(null, 'A', 0, -1)]
+    public void LastIndexOfOccurence_char(string str, char value, int occurence, int wantedRes)
+    {
+      int res = StringTools.LastIndexOfOccurence(str, value, occurence);
       Assert.AreEqual(wantedRes, res);
     }
 
@@ -863,5 +892,55 @@ namespace ExtTools_tests.Core
     }
 
     #endregion
+
+    #region Разбиение на две части
+
+    [TestCase("ABC-DEF", '-', 0, true, "ABC", "DEF")]
+    [TestCase("ABC-DEF", '-', 1, false, "ABC-DEF", "")]
+    [TestCase("ABC-DEF-", '-', 0, true, "ABC", "DEF-")]
+    [TestCase("ABC-DEF-", '-', 1, true, "ABC-DEF", "")]
+    [TestCase("ABC-DEF-", '-', 2, false, "ABC-DEF-", "")]
+    [TestCase("-ABC-DEF", '-', 0, true, "", "ABC-DEF")]
+    [TestCase("-ABC-DEF", '-', 1, true, "-ABC", "DEF")]
+    [TestCase("-ABC-DEF", '-', 2, false, "-ABC-DEF", "")]
+    [TestCase("-", '-', 0, true, "", "")]
+    [TestCase("-", '-', 1, false, "-", "")]
+    [TestCase("ABC-DEF", '*', 0, false, "ABC-DEF", "")]
+    [TestCase("**", '*', 0, true, "", "*")]
+    [TestCase("**", '*', 1, true, "*", "")]
+    [TestCase("**", '*', 2, false, "**", "")]
+    [TestCase("", '-', 0, false, "", "")]
+    [TestCase(null, '-', 0, false, "", "")]
+    public void SplitBySeparator(string s, char separator, int occurence, bool wantedRes, string wantedMainPart, string wantedAuxPart)
+    {
+      string mainPart, auxPart;
+      bool res = StringTools.SplitBySeparator(s, separator, occurence, out mainPart, out auxPart);
+
+      Assert.AreEqual(wantedRes, res, "Result");
+      Assert.AreEqual(wantedMainPart, mainPart, "mainPart");
+      Assert.AreEqual(wantedAuxPart, auxPart, "auxPart");
+    }
+
+#if XXX
+    [TestCase("ABC-DEF", '-', true, "ABC", "DEF")]
+    [TestCase("ABC-DEF-", '-', true, "ABC-DEF", "")]
+    [TestCase("-ABC-DEF", '-', true, "-ABC", "DEF")]
+    [TestCase("ABC-DEF-GHI", '-', true, "ABC-DEF", "GHI")]
+    [TestCase("-", '-', true, "", "")]
+    [TestCase("ABC-DEF", '*', false, "ABC-DEF", "")]
+    [TestCase("", '-', false, "", "")]
+    [TestCase(null, '-', false, "", "")]
+    public void SplitLastSeparator(string s, char separator, bool wantedRes, string wantedMainPart, string wantedAuxPart)
+    {
+      string mainPart, auxPart;
+      bool res = StringTools.SplitByLastSeparator(s, separator, out mainPart, out auxPart);
+
+      Assert.AreEqual(wantedRes, res, "Result");
+      Assert.AreEqual(wantedMainPart, mainPart, "mainPart");
+      Assert.AreEqual(wantedAuxPart, auxPart, "auxPart");
+    }
+#endif
+
+#endregion
   }
 }
