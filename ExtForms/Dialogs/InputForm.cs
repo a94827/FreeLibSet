@@ -2027,6 +2027,19 @@ namespace FreeLibSet.Forms
     }
     private bool _Maximized;
 
+    /// <summary>
+    /// Имя секции конфигурации.
+    /// Если задано, то будет сохраняться размер, положение (при пустом <see cref="BaseInputDialog.DialogPosition"/>) и состояние (обычный размер/на весь экран)
+    /// блока диалога между сеансами работы программы.
+    /// По умолчанию - пустая строка - расположение не сохраняется.
+    /// </summary>
+    public string ConfigSectionName
+    {
+      get { return _ConfigSectionName; }
+      set { _ConfigSectionName = value; }
+    }
+    private string _ConfigSectionName;
+
     #endregion
 
     #endregion
@@ -2052,6 +2065,7 @@ namespace FreeLibSet.Forms
       form.StartPosition = FormStartPosition.CenterScreen;
       if (Maximized)
         form.WindowState = FormWindowState.Maximized;
+      form.FormProvider.ConfigSectionName = ConfigSectionName;
 
       EFPTextBox efpText = new EFPTextBox(form.ControlWithToolBar);
       efpText.Control.Multiline = true;

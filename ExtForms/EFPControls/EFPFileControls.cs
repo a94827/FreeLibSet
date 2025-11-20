@@ -413,7 +413,9 @@ namespace FreeLibSet.Forms
         mainProvider.CommandItems.PasteHandler.Insert(0, fmtFileDrop); // должно быть до текста
       }
 
-      mainProvider.DefaultButton = control;
+      // 02.10.2025.
+      // Убрано 19.11.2025
+      // mainProvider.DefaultButton = control;
     }
 
     #endregion
@@ -558,6 +560,16 @@ namespace FreeLibSet.Forms
         try
         {
           AbsPath dir = new AbsPath(MainProvider.Text);
+          //dlg.SelectedPath = dir.Path;
+
+          // 19.11.2025: Если нет введенного в поле каталога, пытаемся выбрать ближайший родительский каталог
+          while (!dir.IsEmpty)
+          {
+            if (System.IO.Directory.Exists(dir.Path))
+              break;
+            else
+              dir = dir.ParentDir;
+          }
           dlg.SelectedPath = dir.Path;
         }
         catch { } // 26.06.2024
@@ -715,7 +727,9 @@ namespace FreeLibSet.Forms
         mainProvider.CommandItems.PasteHandler.Insert(0, fmtFileDrop); // должно быть до текста
       }
 
-      mainProvider.DefaultButton = control;
+      // 02.10.2025.
+      // Убрано 19.11.2025
+      // mainProvider.DefaultButton = control;
     }
 
     #endregion

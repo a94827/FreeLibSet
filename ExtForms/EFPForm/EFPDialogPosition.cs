@@ -79,6 +79,17 @@ namespace FreeLibSet.Forms
     }
     private Rectangle _PopupOwnerBounds;
 
+    /// <summary>
+    /// Возвращает true, если свойства <see cref="PopupOwnerControl"/> и <see cref="_PopupOwnerBounds"/> не установлены
+    /// </summary>
+    public bool IsEmpty
+    {
+      get
+      {
+        return _PopupOwnerControl == null && _PopupOwnerBounds == null;
+      }
+    }
+
     #endregion
 
     #region Текстовое представление
