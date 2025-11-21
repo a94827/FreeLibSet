@@ -130,7 +130,16 @@ namespace FreeLibSet.Forms.Diagnostics
           // Записываем исключение в logout
           AbsPath logFilePath = AbsPath.Empty;
           if (e != null && useLogout)
-            logFilePath = LogoutTools.LogoutExceptionToFile(e, title);
+          {
+            try
+            {
+              logFilePath = LogoutTools.LogoutExceptionToFile(e, title);
+            }
+            catch (Exception e2)
+            {
+              SimpleErrorMessageBox(e2, "DebugTools.ShowException(). Error creating log-file", logFilePath, true);
+            }
+          }
 
           // Показываем форму
           if (!_InsideShowException)
@@ -150,30 +159,7 @@ namespace FreeLibSet.Forms.Diagnostics
                   logFilePath2 = LogoutTools.LogoutExceptionToFile(e2, "Error when ShowExceptionForm shown");
                 }
                 catch { }
-                StringBuilder sb = new StringBuilder();
-                sb.Append("Error when ShowExceptionForm shown.");
-                sb.Append(Environment.NewLine);
-                sb.Append(Environment.NewLine);
-                if (e != null) // 27.12.2020
-                {
-                  sb.Append("Source error: ");
-                  sb.Append(e.Message);
-                }
-                sb.Append(Environment.NewLine);
-                sb.Append("Log file: ");
-                sb.Append(logFilePath.Path);
-                sb.Append(Environment.NewLine);
-                sb.Append(Environment.NewLine);
-                sb.Append("Form showing error: ");
-                sb.Append(e2.Message);
-                sb.Append(Environment.NewLine);
-                sb.Append("Log file: ");
-                if (logFilePath2.IsEmpty)
-                  sb.Append("Not created");
-                else
-                  sb.Append(logFilePath2.Path);
-
-                MessageBox.Show(sb.ToString(), "Cannot show the error window", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                SimpleErrorMessageBox(e2, "DebugTools.ShowException(). Error when ShowExceptionForm", logFilePath2, false);
               }
             }
             finally
@@ -183,6 +169,51 @@ namespace FreeLibSet.Forms.Diagnostics
           }
         }
       }
+    }
+
+    /// <summary>
+    /// Выводит простой MessageBox для исключения.
+    /// Выводится сообщение, класс исключения, стек вызовов.
+    /// Без log-файла и другой обработки.
+    /// </summary>
+    /// <param name="e">Объект исключения</param>
+    /// <param name="title">Заголовок</param>
+    /// <param name="logFilePath"></param>
+    /// <param name="showLogoutInfo"></param>
+    private static void SimpleErrorMessageBox(Exception e, string title, AbsPath logFilePath, bool showLogoutInfo)
+    {
+      StringBuilder sb = new StringBuilder();
+      if (e == null)
+        sb.Append("Exception = null");
+      else
+      {
+        sb.Append("Message: ");
+        sb.Append(e.Message);
+        sb.Append(Environment.NewLine);
+        sb.Append("Exception class: ");
+        sb.Append(e.GetType().ToString());
+        sb.Append(Environment.NewLine);
+        sb.Append("Stack trace:");
+        sb.Append(Environment.NewLine);
+        sb.Append(e.StackTrace);
+        if (!logFilePath.IsEmpty)
+        {
+          sb.Append(Environment.NewLine);
+          sb.Append("LogFile: ");
+          sb.Append(logFilePath.Path);
+        }
+        if (showLogoutInfo)
+        {
+          sb.Append(Environment.NewLine);
+          sb.Append("LogBaseDir=");
+          try
+          {
+            sb.Append(LogoutTools.LogBaseDirectory.Path);
+          }
+          catch { }
+        }
+      }
+      System.Windows.Forms.MessageBox.Show(sb.ToString(), title, MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 
     #endregion

@@ -7539,6 +7539,11 @@
             Тип просматриваемого документа
             </summary>
         </member>
+        <member name="P:FreeLibSet.Forms.Docs.EFPDocTreeView.DefaultDisplayName">
+            <summary>
+            Возвращает <see cref="!:DBxSubDocType.PluralTitle"/>
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Forms.Docs.EFPDocTreeView.UserInitData">
             <summary>
             Эти данные передаются обработчику инициализации просмотра.
@@ -7956,6 +7961,11 @@
         <member name="P:FreeLibSet.Forms.Docs.EFPDocGridView.DocType">
             <summary>
             Тип просматриваемого документа
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.Docs.EFPDocGridView.DefaultDisplayName">
+            <summary>
+            Возвращает <see cref="!:DBxDocType.PluralTitle"/>
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.Docs.EFPDocGridView.UserInitData">
@@ -12932,6 +12942,11 @@
             Интерфейс доступа к поддокументам
             </summary>
         </member>
+        <member name="P:FreeLibSet.Forms.Docs.EFPSubDocGridView.DefaultDisplayName">
+            <summary>
+            Возвращает <see cref="!:DBxSubDocType.PluralTitle"/>
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Forms.Docs.EFPSubDocGridView.TableCache">
             <summary>
             Доступ к кэшированным данным таблицы (SubDocTypeUI.TableCache)
@@ -13372,6 +13387,11 @@
         <member name="P:FreeLibSet.Forms.Docs.EFPSubDocTreeView.SubDocTypeUI">
             <summary>
             Интерфейс для доступа к поддокументам
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.Docs.EFPSubDocTreeView.DefaultDisplayName">
+            <summary>
+            Возвращает <see cref="!:DBxSubDocType.PluralTitle"/>
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.Docs.EFPSubDocTreeView.TableCache">

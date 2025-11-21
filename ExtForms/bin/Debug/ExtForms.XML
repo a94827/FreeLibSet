@@ -5831,6 +5831,11 @@
               Looks up a localized string similar to Cannot define entry assembly.
             </summary>
         </member>
+        <member name="P:FreeLibSet.Res.AboutDialog_Menu_View_OpenFolder">
+            <summary>
+              Looks up a localized string similar to Open folder with file.
+            </summary>
+        </member>
         <member name="P:FreeLibSet.Res.AboutDialog_Msg_Version">
             <summary>
               Looks up a localized string similar to Version {0}.
@@ -28482,7 +28487,7 @@
         <member name="T:FreeLibSet.Forms.EFPAppTrayIcon">
             <summary>
             Значок в системном трее.
-            Реализует свойство EFPApp.TrayIcon      
+            Реализует свойство <see cref="P:FreeLibSet.Forms.EFPApp.TrayIcon"/>.
             </summary>
         </member>
         <member name="M:FreeLibSet.Forms.EFPAppTrayIcon.Dispose(System.Boolean)">
@@ -28498,12 +28503,12 @@
         </member>
         <member name="M:FreeLibSet.Forms.EFPAppTrayIcon.Show">
             <summary>
-            Показывает значок. Устанавливает Visible=true
+            Показывает значок. Устанавливает <see cref="P:FreeLibSet.Forms.EFPAppTrayIcon.Visible"/>=true.
             </summary>
         </member>
         <member name="M:FreeLibSet.Forms.EFPAppTrayIcon.Hide">
             <summary>
-            Прячет значок. Устанавливает Visible=false
+            Прячет значок. Устанавливает <see cref="P:FreeLibSet.Forms.EFPAppTrayIcon.Visible"/>=false.
             </summary>
         </member>
         <member name="F:FreeLibSet.Forms.EFPAppTrayIcon._NotifyIcons">
@@ -28520,14 +28525,14 @@
         </member>
         <member name="P:FreeLibSet.Forms.EFPAppTrayIcon.Icon">
             <summary>
-            Изображение для значка.
+            Изображение для значка <see cref="P:System.Windows.Forms.NotifyIcon.Icon"/>.
             По умолчанию содержит значок приложения.
             Свойство может устанавливаться динамически.
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPAppTrayIcon.Text">
             <summary>
-            Текст всплывающей подсказки для значка.
+            Текст всплывающей подсказки для значка <see cref="P:System.Windows.Forms.NotifyIcon.Text"/>.
             По умолчанию содержит имя приложения.
             Свойство может устанавливаться динамически.
             </summary>
@@ -28541,17 +28546,18 @@
         </member>
         <member name="P:FreeLibSet.Forms.EFPAppTrayIcon.DefaultCommandItem">
             <summary>
-            Команда, вызываемая при двойном щелчке мыши на значке.
+            Команда из списка <see cref="P:FreeLibSet.Forms.EFPAppTrayIcon.CommandItems"/>, вызываемая при двойном щелчке мыши на значке.
             Если свойство не установлено в явном виде, то оно возвращает первую команду в списке 
-            CommandItems или null, если список пустой.
+            или null, если список пустой.
             Свойство должно устанавливаться до вывода значка на экран.
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPAppTrayIcon.UseHiddenForm">
             <summary>
-            Нужно ли создавать скрытую форму (true) или у приложения есть «нормальная» форма (false). 
-            Если у приложения не будет формы, то Application.Run() сразу завершится.
+            Нужно ли создавать скрытую форму (true) или у приложения есть "нормальная" форма (false). 
+            Если у приложения не будет формы, то <see cref="M:System.Windows.Forms.Application.Run"/> сразу завершится.
             По умолчанию – true – класс поддерживает скрытую форму.
+            Свойство действует только при <see cref="P:FreeLibSet.Forms.EFPAppTrayIcon.Visible"/>=true, но может инициализироваться только до вывода значка на экран.
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPAppTrayIcon.Visible">
@@ -28559,12 +28565,12 @@
             Если true, то значок выведен на экран, если false, то скрыт. 
             Изначально равно false.
             Видимость значка можно менять динамически
-            Можно использовать методы Show() и Hide().
+            Можно использовать методы <see cref="M:FreeLibSet.Forms.EFPAppTrayIcon.Show"/> и <see cref="M:FreeLibSet.Forms.EFPAppTrayIcon.Hide"/>.
             </summary>
         </member>
         <member name="P:FreeLibSet.Forms.EFPAppTrayIcon.IsReadOnly">
             <summary>
-            Возвращает true, если значок уже был выведен на экран, и добавление новых команд в меню не допускается
+            Возвращает true, если значок уже был выведен на экран, и добавление новых команд в меню не допускается.
             </summary>
         </member>
         <member name="M:FreeLibSet.Forms.WizardForm.InitStep(FreeLibSet.Forms.WizardAction,System.Boolean)">
@@ -29743,6 +29749,11 @@
             снизу или сверху от заданной области, в зависимости от наличия свободного места).
             Область должна задаваться в экранных координатах.
             Для позиционирования диалога будет использован метод <see cref="M:FreeLibSet.Forms.WinFormsTools.PlacePopupForm(System.Windows.Forms.Form,System.Drawing.Rectangle)"/>.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.EFPDialogPosition.IsEmpty">
+            <summary>
+            Возвращает true, если свойства <see cref="P:FreeLibSet.Forms.EFPDialogPosition.PopupOwnerControl"/> и <see cref="F:FreeLibSet.Forms.EFPDialogPosition._PopupOwnerBounds"/> не установлены
             </summary>
         </member>
         <member name="T:FreeLibSet.Forms.EFPConfigMode">
@@ -35531,7 +35542,7 @@
         </member>
         <member name="M:FreeLibSet.Forms.EFPFormBounds.GetParts(System.Windows.Forms.Form)">
             <summary>
-            Возвращает список применимых частей, исходя из возмоджости менять размер формы и кнопок максимизации/минимизации
+            Возвращает список применимых частей, исходя из возможности менять размер формы и кнопок максимизации/минимизации
             </summary>
             <param name="form">Форма</param>
             <returns>Доступные части</returns>
@@ -41502,6 +41513,14 @@
             <summary>
             Если true, то форма будет выведена на весь экран.
             По умолчанию - false - форма имеет размер по умолчанию.
+            </summary>
+        </member>
+        <member name="P:FreeLibSet.Forms.MultiLineTextInputDialog.ConfigSectionName">
+            <summary>
+            Имя секции конфигурации.
+            Если задано, то будет сохраняться размер, положение (при пустом <see cref="P:FreeLibSet.Forms.BaseInputDialog.DialogPosition"/>) и состояние (обычный размер/на весь экран)
+            блока диалога между сеансами работы программы.
+            По умолчанию - пустая строка - расположение не сохраняется.
             </summary>
         </member>
         <member name="T:FreeLibSet.Forms.EFPReportControlPage">
@@ -50051,7 +50070,7 @@
         <member name="M:FreeLibSet.Forms.EFPApp.InitApp">
             <summary>
             Этот метод должен вызываться до всех других методов работы.
-            Повторный вызов метода не допускается. Используйте свойство <see cref="P:FreeLibSet.Forms.EFPApp.AppWasInit"/> для проверки.
+            Повторный вызов метода не допускается. Используйте свойство <see cref="P:FreeLibSet.Forms.EFPApp.AppHasBeenInit"/> для проверки.
             </summary>
         </member>
         <member name="M:FreeLibSet.Forms.EFPApp.CheckMainThread">
@@ -51229,7 +51248,7 @@
             Наличие установленной программы возвращается свойством <see cref="P:FreeLibSet.Forms.EFPApp.IsWindowsExplorerSupported"/>,
             а ее условное имя - <see cref="P:FreeLibSet.Forms.EFPApp.WindowsExplorerDisplayName"/>.
             </summary>
-            <param name="dir">Имя просматриваемой папки</param>
+            <param name="dirOrFile">Имя просматриваемой папки или имя файла, на который нужно позиционироваться</param>
             <returns>true, если Проводник Windows успешно запущен</returns>
         </member>
         <member name="M:FreeLibSet.Forms.EFPApp.ShellExecute(FreeLibSet.IO.AbsPath)">
@@ -51298,7 +51317,7 @@
             Если false, то будут включены все окна</param>
             <returns>Уменьшенное изображение всех открытых окон</returns>
         </member>
-        <member name="P:FreeLibSet.Forms.EFPApp.AppWasInit">
+        <member name="P:FreeLibSet.Forms.EFPApp.AppHasBeenInit">
             <summary>
             Возвращает true, если инициализация приложения (<see cref="M:FreeLibSet.Forms.EFPApp.InitApp"/>) была выполнена
             </summary>
@@ -51745,7 +51764,7 @@
             Предназначено для централизованной обработки исключений на уровне приложения.
             Это событие вызывается, если перехвачено исключение, например, при выполнении команды меню.
             Обработчик может, например, вывести MessageBox для определенных классов исключений.
-            Если нет присоединенных обработчиков, то исключение <see cref="T:FreeLibSet.Core.UserCancelException"/> игнорируется, а для остальных вызывается DebugTools.ShowException().
+            Если нет присоединенных обработчиков, то исключение <see cref="T:FreeLibSet.Core.UserCancelException"/> (и любое <see cref="T:FreeLibSet.Core.SilentException"/>) игнорируется, а для остальных вызывается DebugTools.ShowException().
             Как и метод <see cref="M:FreeLibSet.Forms.EFPApp.ShowException(System.Exception,System.String)"/>, событие может вызываться из любого потока.
             </summary>
         </member>
@@ -52140,15 +52159,15 @@
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.GetAssembliesInfo">
             <summary>
             Получить информацию о всех загруженных сборках, кроме помещенных в
-            Global Assembly Cache. Возвращается объект DataTable, который можно 
-            использовать в окне "О программе"
+            Global Assembly Cache. Возвращается объект <see cref="T:System.Data.DataTable"/>, который можно 
+            использовать в окне "О программе".
             </summary>
             <returns></returns>
         </member>
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.GetAssembliesInfo(System.Boolean)">
             <summary>
             Получить информацию о всех загруженных сборках
-            Возвращается объект DataTable, который можно использовать в окне "О программе"
+            Возвращается объект <see cref="T:System.Data.DataTable"/>, который можно использовать в окне "О программе".
             </summary>
             <param name="includeGAC">true, если в список должны быть включены сборки из Глобального кэша сборок</param>
             <returns></returns>
@@ -52193,14 +52212,14 @@
         </member>
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.DebugDataSet(System.Data.DataSet,System.String)">
             <summary>
-            Отладка объекта DataSet
+            Отладка объекта <see cref="T:System.Data.DataSet"/>
             </summary>
             <param name="ds">Отображаемый объект</param>
             <param name="title">Заголовок окна</param>
         </member>
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.DebugDataTable(System.Data.DataTable,System.String)">
             <summary>
-            Отладка таблицы DataTable
+            Отладка таблицы <see cref="T:System.Data.DataTable"/>
             </summary>
             <param name="table">Отображаемый объект</param>
             <param name="title">Заголовок окна</param>
@@ -52214,23 +52233,23 @@
         </member>
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.DebugDataView(System.Data.DataView,System.String)">
             <summary>
-            Отладка объекта DataView
+            Отладка объекта <see cref="T:System.Data.DataView"/>
             </summary>
             <param name="dv">Отображаемый объект</param>
             <param name="title">Заголовок окна</param>
         </member>
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.DebugChangeInfo(FreeLibSet.DependedValues.DepChangeInfo,System.String)">
             <summary>
-            Отладка объекта DepChangeInfo
+            Отладка объекта <see cref="T:FreeLibSet.DependedValues.DepChangeInfo"/>
             </summary>
             <param name="changeInfo">Отображаемый объект</param>
             <param name="title">Заголовок окна</param>
         </member>
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.DebugBaseProvider(FreeLibSet.Forms.EFPBaseProvider,System.String)">
             <summary>
-            Отладка объекта IEFPCheckItem 
+            Отладка объекта <see cref="T:FreeLibSet.Forms.EFPBaseProvider"/> или <see cref="T:FreeLibSet.Forms.EFPFormProvider"/>
             </summary>
-            <param name="baseProvider">Отображаемый объект (EFPFormProvider или EFPBaseProvider)</param>
+            <param name="baseProvider">Отображаемый объект (<see cref="T:FreeLibSet.Forms.EFPFormProvider"/> или <see cref="T:FreeLibSet.Forms.EFPBaseProvider"/>)</param>
             <param name="title">Заголовок окна</param>
         </member>
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.CreateFormsTable">
@@ -52242,9 +52261,9 @@
         <member name="M:FreeLibSet.Forms.Diagnostics.DebugTools.ShowText(System.String,System.String)">
             <summary>
             Вывод текста в отладочных целях.
-            Показывает модальное окно с TextBox'ом с заданным текстом
+            Показывает модальное окно с TextBox'ом с заданным текстом.
             Метод может быть вызван из любого потока.
-            В форме не используется EFPFormProvider
+            В форме не используется <see cref="T:FreeLibSet.Forms.EFPFormProvider"/>.
             </summary>
             <param name="text">Выводимый текст</param>
             <param name="title">Заголовок окна</param>
