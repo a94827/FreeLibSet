@@ -4128,8 +4128,8 @@ namespace FreeLibSet.Forms
     /// Возвращает строку в таблице-повторителе <see cref="DataTableRepeater.SlaveTable"/>, которая соответствует строке в исходной таблице <see cref="DataTableRepeater.MasterTable"/>.
     /// Если повторитель <see cref="TableRepeater"/> не установлен, возврашает исходную строку без изменений.
     /// </summary>
-    /// <param name="masterRow">Строка таблицы MasterTable</param>
-    /// <returns>Строка таблицы SlaveTable</returns>
+    /// <param name="masterRow">Строка таблицы <see cref="DataTableRepeater.MasterTable"/></param>
+    /// <returns>Строка таблицы <see cref="DataTableRepeater.SlaveTable"/></returns>
     public DataRow GetSlaveRow(DataRow masterRow)
     {
       if (_TableRepeater == null)
@@ -4142,8 +4142,8 @@ namespace FreeLibSet.Forms
     /// Возвращает строки в таблице-повторителе <see cref="DataTableRepeater.SlaveTable"/>, которые соответствуют строкам в исходной таблице <see cref="DataTableRepeater.MasterTable"/>.
     /// Если повторитель <see cref="TableRepeater"/> не установлен, возврашает исходные данные без изменений.
     /// </summary>
-    /// <param name="masterRows">Массив строк таблицы MasterTable</param>
-    /// <returns>Строки таблицы SlaveTable</returns>
+    /// <param name="masterRows">Массив строк таблицы <see cref="DataTableRepeater.MasterTable"/></param>
+    /// <returns>Строки таблицы <see cref="DataTableRepeater.SlaveTable"/></returns>
     public DataRow[] GetSlaveRows(DataRow[] masterRows)
     {
       if (_TableRepeater == null)
@@ -4158,8 +4158,8 @@ namespace FreeLibSet.Forms
     /// таблицу, а не ту, которая отображается в просмотре.
     /// Если повторитель <see cref="TableRepeater"/> не установлен, возврашает исходные данные без изменений.
     /// </summary>
-    /// <param name="slaveRow">Строка таблицы SlaveTable</param>
-    /// <returns>Строка таблицы MasterTable</returns>
+    /// <param name="slaveRow">Строка таблицы <see cref="DataTableRepeater.SlaveTable"/></param>
+    /// <returns>Строка таблицы <see cref="DataTableRepeater.MasterTable"/></returns>
     public DataRow GetMasterRow(DataRow slaveRow)
     {
       if (_TableRepeater == null)
@@ -4174,8 +4174,8 @@ namespace FreeLibSet.Forms
     /// таблицу, а не ту, которая отображается в просмотре.
     /// Если повторитель <see cref="TableRepeater"/> не установлен, возврашает исходные данные без изменений.
     /// </summary>
-    /// <param name="slaveRows">Строки таблицы SlaveTable</param>
-    /// <returns>Строки таблицы MasterTable</returns>
+    /// <param name="slaveRows">Строки таблицы <see cref="DataTableRepeater.SlaveTable"/></param>
+    /// <returns>Строки таблицы <see cref="DataTableRepeater.MasterTable"/></returns>
     public DataRow[] GetMasterRows(DataRow[] slaveRows)
     {
       if (_TableRepeater == null)
@@ -4387,8 +4387,8 @@ namespace FreeLibSet.Forms
         try
         {
           CurrentColumnIndex = value.CurrentColumnIndex;
-          bool DataSouceExists = (Control.DataSource != null);
-          if (DataSouceExists == value.DataSourceExists)
+          bool dataSouceExists = (Control.DataSource != null);
+          if (dataSouceExists == value.DataSourceExists)
           {
             CurrentRowObject = value.CurrentRow;
             if (value.SelectAll)
@@ -9390,7 +9390,8 @@ namespace FreeLibSet.Forms
     {
       if (args.Handled)
         return; // уже обработано
-      if (Control.IsCurrentCellInEditMode)
+      if (Control.IsCurrentCellInEditMode &&
+        (!(Control.CurrentCell is DataGridViewCheckBoxCell))) // 05.12.2025
         return; // в режиме редактирования ячейки не обрабатывается
 
       if (CurrentIncSearchColumn != null)

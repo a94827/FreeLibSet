@@ -216,7 +216,7 @@ namespace FreeLibSet.Forms.Docs
     public DBxDocType DocType { get { return _DocTypeUI.DocType; } }
 
     /// <summary>
-    /// Возвращает <see cref="DBxDocType.PluralTitle"/>
+    /// Возвращает <see cref="DBxDocTypeBase.PluralTitle"/>
     /// </summary>
     protected override string DefaultDisplayName { get { return DocType.PluralTitle; } }
 

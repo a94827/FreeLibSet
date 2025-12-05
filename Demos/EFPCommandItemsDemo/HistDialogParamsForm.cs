@@ -33,7 +33,7 @@ namespace EFPCommandItemsDemo
       efpConfigSectionName = new EFPTextBox(efpForm, edCongfigSectionName);
       efpConfigSectionName.CanBeEmpty = true;
 
-      efpMaxHistLength = new EFPIntEditBox(efpForm, edMaxHistLength);
+      efpMaxHistLength = new EFPInt32EditBox(efpForm, edMaxHistLength);
       efpMaxHistLength.CanBeEmpty = false;
       efpMaxHistLength.Minimum = EFPHistComboBox.MinimumMaxHistLength;
       efpMaxHistLength.Maximum = EFPHistComboBox.MaximumMaxHistLength;
@@ -79,7 +79,7 @@ namespace EFPCommandItemsDemo
     EFPRadioButtons efpDialog;
     EFPTextBox efpHistList;
     EFPTextBox efpConfigSectionName;
-    EFPIntEditBox efpMaxHistLength;
+    EFPInt32EditBox efpMaxHistLength;
     EFPListComboBox efpPathValidateMode;
     EFPListComboBox efpMode;
     EFPTextBox efpDescription;

@@ -129,7 +129,7 @@ namespace FreeLibSet.Data.SQLite
           // 16.10.2023.
           // Выделено в отдельный метод, на случай, если в конструкторе не удалось загрузить сборку System.Data.SQLite.dll.
           // Было бы плохо пытаться загрузить ее в деструкторе и получить исключение
-          DisposeMainConnection();
+          DisposeInternal();
         }
         catch { }
       }
@@ -137,13 +137,15 @@ namespace FreeLibSet.Data.SQLite
       base.Dispose(disposing);
     }
 
-    private void DisposeMainConnection()
+    private void DisposeInternal()
     {
       if (MainConnection != null)
       {
         MainConnection.Dispose();
         MainConnection = null;
       }
+
+      // не помогает SQLiteConnection.ClearAllPools(); // 26.11.2025
     }
 
     #endregion
@@ -190,9 +192,9 @@ namespace FreeLibSet.Data.SQLite
         {
           if (_ServerVersionText == null)
           {
-            using (SQLiteDBxCon Con = MainEntry.CreateCon() as SQLiteDBxCon)
+            using (SQLiteDBxCon con = MainEntry.CreateCon() as SQLiteDBxCon)
             {
-              _ServerVersionText = "SQLite " + Con.Connection.ServerVersion;
+              _ServerVersionText = "SQLite " + con.Connection.ServerVersion;
             }
           }
           return _ServerVersionText;
@@ -967,11 +969,18 @@ namespace FreeLibSet.Data.SQLite
     internal protected override string[] GetAllTableNamesFromSchema()
     {
       DataTable table = Connection.GetSchema("Tables"); // исправлено 28.08.2020
-      string[] a = new string[table.Rows.Count];
+      List<string> lst = new List<String>(table.Rows.Count);
       for (int i = 0; i < table.Rows.Count; i++)
-        a[i] = DataTools.GetString(table.Rows[i], "table_name");
+      {
+        string name = DataTools.GetString(table.Rows[i], "table_name");
 
-      return a;
+        if (name.StartsWith("sqlite_", StringComparison.OrdinalIgnoreCase))
+          continue; // 25.11.2025
+
+        lst.Add(name);
+      }
+
+      return lst.ToArray();
     }
 
     /// <summary>

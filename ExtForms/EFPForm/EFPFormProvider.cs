@@ -51,7 +51,7 @@ namespace FreeLibSet.Forms
   #endregion
 
   /// <summary>
-  /// Расширение для работы с формой (класс Form) в EFPApp.
+  /// Расширение для работы с формой (класс <see cref="System.Windows.Forms.Form"/>).
   /// Этот объект должен создается в конструкторе форме.
   /// </summary>
   public class EFPFormProvider : EFPBaseProvider, IEFPAppTimeHandler, IEFPAppIdleHandler, IEFPStatusBarControl, IEFPConfigurable
@@ -196,9 +196,9 @@ namespace FreeLibSet.Forms
     private readonly Form _Form;
 
     /// <summary>
-    /// Провайдер синхронизации значений. К нему будет подключен объект Syncs
-    /// на время запуска формы
-    /// Значение по-умолчанию можно переопределить для использования чужого
+    /// Провайдер синхронизации значений. К нему будет подключен объект <see cref="Syncs"/>
+    /// на время запуска формы.
+    /// Значение по-умолчанию можно переопределить для использования чужого провайдера.
     /// </summary>
     [Browsable(true)]
     public DepSyncProvider SyncProvider
@@ -223,7 +223,7 @@ namespace FreeLibSet.Forms
 
     /// <summary>
     /// Список для добавления объектов синхронизации.
-    /// Объекты будут подключены к SyncProvider на время запуска формы
+    /// Объекты будут подключены к <see cref="SyncProvider"/> на время запуска формы.
     /// </summary>
     [Browsable(true)]
     public DepSyncCollection Syncs
@@ -238,8 +238,8 @@ namespace FreeLibSet.Forms
     private DepSyncCollection _Syncs;
 
     /// <summary>
-    /// Возвращает true, если список объектов синхронизации пустой.
-    /// Не требует создания дополнительго объекта
+    /// Возвращает true, если список объектов синхронизации <see cref="Syncs"/> пустой.
+    /// Не требует создания дополнительго объекта.
     /// </summary>
     public bool HasSyncs
     {
@@ -266,16 +266,16 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Показывать ли открытые панели инструментов при выводе блока диалога
     /// (по умолчанию - true). Действительно только при запуске формы в модальном
-    /// режиме (с помощью EFPApp.ShowDialog())
+    /// режиме (с помощью вызова <see cref="EFPApp.ShowDialog(Form, bool)"/>).
     /// Свойство может быть выключено в false для окон предварительного просмотра
-    /// и других, где загромождение экрана не желательно
+    /// и других, где загромождение экрана нежелательно.
     /// </summary>
     public bool ToolFormsEnabled { get { return _ToolFormsEnabled; } set { _ToolFormsEnabled = value; } }
     private bool _ToolFormsEnabled;
 
     /// <summary>
-    /// Сюда могут быть добавлены команды локального меню для формы в-целом
-    /// Если задано свойство HelpContext, то будет добавлена команда меню "Справка"
+    /// Сюда могут быть добавлены команды локального меню для формы в-целом.
+    /// Если задано свойство <see cref="HelpContext"/>, то будет добавлена команда меню "Справка" (<see cref="EFPAppStdCommandItems.ContextHelp"/>).
     /// </summary>
     public EFPFormCommandItems CommandItems
     {
@@ -295,7 +295,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Команды локального меню для формы в-целом
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Новый объект <see cref="EFPFormCommandItems"/></returns>
     protected virtual EFPFormCommandItems GetCommandItems()
     {
       return new EFPFormCommandItems(this);
@@ -326,8 +326,8 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Возвращает ссылку на объект EFPReentranceLocker, относящийся к данной форме.
-    /// Объект создается в конструкторе EFPFormProvider.
+    /// Возвращает ссылку на объект <see cref="EFPReentranceLocker"/>, относящийся к данной форме.
+    /// Объект создается в конструкторе <see cref="EFPFormProvider"/>.
     /// </summary>
     public override IEFPReentranceLocker ReentranceLocker
     {
@@ -364,15 +364,15 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// "Правильное" состояние видимости формы.
     /// Исходно имеет значение false.
-    /// Выполняется упреждающая установка из EFPApp.ShowDialog().
-    /// При закрытии формы методом Form.Close() также переводится в false.
+    /// Выполняется упреждающая установка из <see cref="EFPApp.ShowDialog(Form, bool)"/>.
+    /// При закрытии формы методом <see cref="System.Windows.Forms.Form.Close"/> также переводится в false.
     /// </summary>
     public bool Visible { get { return _Visible; } }
     private bool _Visible;
 
     /// <summary>
-    /// В отличие от Visible, свойство возвращает true только после полного окончания установки видимости
-    /// формы, когда отработается событие Applicaction.Idle
+    /// В отличие от <see cref="Visible"/>, свойство возвращает true только после полного окончания установки видимости
+    /// формы, когда отработается событие <see cref="Application.Idle"/>
     /// </summary>
     internal bool VisibleCompleted { get { return _VisibleCompleted; } }
     private bool _VisibleCompleted;
@@ -653,14 +653,13 @@ namespace FreeLibSet.Forms
       }
     }
 
-
     #endregion
 
     #region Событие Shown
 
     /// <summary>
     /// Свойство возвращает true, если форма был выведена на экран.
-    /// Свойство однократно переходит из false в true. Перед этим вызывается событие Shown
+    /// Свойство однократно переходит из false в true. Перед этим вызывается событие <see cref="Shown"/>.
     /// Свойство <see cref="System.Windows.Forms.Control.Visible"/> может многократно изменяться еще до вывода формы на экран.
     /// </summary>
     public bool HasBeenShown { get { return _HasBeenShown; } }
@@ -1055,7 +1054,7 @@ namespace FreeLibSet.Forms
     /// <summary>
     /// Вложенные управляющие элементы, подсказки в которых должны дублировать подсказку элемента.
     /// Ключ - вложенный элемент.
-    /// Значение - родительский элемент (задаваемый EFPControlBase.Control).
+    /// Значение - родительский элемент (задаваемый <see cref="EFPControlBase.Control"/>).
     /// Если курсор мыши находится в элементе, задаваемым ключом, то 
     /// </summary>
     private readonly Dictionary<Control, Control> _ToolTipNestedControls;
@@ -1280,11 +1279,11 @@ namespace FreeLibSet.Forms
         return null;
       while (control != null)
       {
-        string HelpContext;
-        if (_HelpContextItems.TryGetValue(control, out HelpContext))
+        string helpContext;
+        if (_HelpContextItems.TryGetValue(control, out helpContext))
         {
-          if (!String.IsNullOrEmpty(HelpContext)) // условие добавлено 09.10.2017
-            return HelpContext;
+          if (!String.IsNullOrEmpty(helpContext)) // условие добавлено 09.10.2017
+            return helpContext;
         }
         control = control.Parent;
       }
@@ -1368,7 +1367,6 @@ namespace FreeLibSet.Forms
         return; // Там бяка - есть вложенный текстбокс, который мне не нужен
 #endif
       // Рекурсивная функция
-
 
       //if (Control is TabPage)
       //  ((TabPage)Control).MouseClick += new MouseEventHandler(TabPage_MouseClick);
@@ -1510,7 +1508,6 @@ namespace FreeLibSet.Forms
       _ShortCutHandled = false;
     }
 
-
     //void Form_PreviewKeyDown(object sender, PreviewKeyDownEventArgs args)
     //{
     //  // 04.02.2021
@@ -1521,7 +1518,6 @@ namespace FreeLibSet.Forms
     //      args.IsInputKey = true;
     //  }
     //}
-
 
     #endregion
 
@@ -1872,7 +1868,6 @@ namespace FreeLibSet.Forms
       if (_Form.WindowState != FormWindowState.Minimized)
         _WindowStateBeforeMinimized = _Form.WindowState;
     }
-
 
     /// <summary>
     /// Возвращает состояние формы (<see cref="FormWindowState.Normal"/> или <see cref="FormWindowState.Maximized"/>), которое было до минимизации.
@@ -2424,7 +2419,6 @@ namespace FreeLibSet.Forms
     }
     private List<EFPUpdateByTimeHandler> _UpdateByTimeHandlers;
 
-
     /// <summary>
     /// Вызывает событие <see cref="EFPUpdateByTimeHandler.Tick"/> для всех присоединенных обработчиков в списке <see cref="UpdateByTimeHandlers"/>, независимо от того, вышло требуемое время или нет.
     /// Значения свойств <see cref="EFPUpdateByTimeHandler.Enabled"/> игнорируется.
@@ -2501,7 +2495,6 @@ namespace FreeLibSet.Forms
         throw new InvalidOperationException();
       _OwnStatusBar = null;
     }
-
 
     private bool GetDefaultOwnStatusBar()
     {
@@ -2714,17 +2707,31 @@ namespace FreeLibSet.Forms
       }
     }
 
+    //internal bool StatusBarPanelsShouldBeDetached()
+    //{
+    //  if (EFPApp.ActiveDialog != null && EFPApp.ActiveDialog != this.Form)
+    //    return true;
+
+    //  if (StatusBarHandler == null)
+    //    return true;
+    //  if (StatusBarHandler.IsFormOwned)
+    //    return false;
+    //  else
+    //    return !Active;
+    //}
+
+    // Изменение 26.11.2025
     internal bool StatusBarPanelsShouldBeDetached()
     {
+      if (StatusBarHandler == null)
+        return true;
+      if (StatusBarHandler.IsFormOwned /*&& OwnStatusBar*/)
+        return false;
+
       if (EFPApp.ActiveDialog != null && EFPApp.ActiveDialog != this.Form)
         return true;
 
-      if (StatusBarHandler == null)
-        return true;
-      if (StatusBarHandler.IsFormOwned)
-        return false;
-      else
-        return !Active;
+      return !Active;
     }
 
     #endregion
@@ -2937,7 +2944,7 @@ namespace FreeLibSet.Forms
     private static readonly WeakReferenceCollection<EFPFormProvider> _ProviderList = new WeakReferenceCollection<EFPFormProvider>();
 
     /// <summary>
-    /// Поиск объекта EFPFormProvider, созданного для указанной формы.
+    /// Поиск объекта <see cref="EFPFormProvider"/>, созданного для указанной формы.
     /// Если провайдер не найден, возвращает null.
     /// Этот метод является потокобезопасным
     /// </summary>
@@ -2960,7 +2967,7 @@ namespace FreeLibSet.Forms
     /// Если провайдер не найден, генерирует исключение.
     /// Этот метод является потокобезопасным.
     /// </summary>
-    /// <param name="form">Форма, для которой нужно найти провайдер. Не может быть null</param>
+    /// <param name="form">Форма, для которой нужно найти провайдер. Не может быть null.</param>
     /// <returns>Найденный провайдер</returns>
     public static EFPFormProvider FindFormProviderRequired(Form form)
     {
@@ -3222,7 +3229,7 @@ namespace FreeLibSet.Forms
     }
 
     /// <summary>
-    /// Период вызова события <see cref="Tick"/> в .
+    /// Период вызова события <see cref="Tick"/> в миллисекундах.
     /// В текущей реализация периодичность задается с точностью до одной секунды.
     /// Свойство может динамически меняться в процессе работы.
     /// </summary>

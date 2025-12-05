@@ -42,13 +42,18 @@ namespace LogWatcher
       efpGr1.SelectedRowsMode = EFPDataGridViewSelectedRowsMode.RowIndex; // список не меняется в процессе работы
 
       EFPCommandItem ciSetOk = new EFPCommandItem("Edit", "SetOK");
-      ciSetOk.MenuText = "Пометить как просмотренное";
+      ciSetOk.MenuText = "Mark as viewed";
       ciSetOk.ImageKey = "Ok";
       ciSetOk.ShortCut = Keys.F4;
       ciSetOk.Click += CiSetOk_Click;
       ciSetOk.GroupBegin = true;
-      ciSetOk.GroupEnd = true;
       efpGr1.CommandItems.Add(ciSetOk);
+
+      EFPCommandItem ciCreateFolders = new EFPCommandItem("Edit", "CreateFolders");
+      ciCreateFolders.MenuText = "Create folders";
+      ciCreateFolders.Click += CiCreateFolders_Click;
+      ciCreateFolders.GroupEnd = true;
+      efpGr1.CommandItems.Add(ciCreateFolders);
 
 
       EFPCommandItem ciAbout = EFPAppCommandItems.CreateStdCommand(EFPAppStdCommandItems.About);
@@ -100,12 +105,12 @@ namespace LogWatcher
         if (!args.DataRow.IsNull("IOError"))
         {
           args.Value = EFPApp.MainImages.Images["Error"];
-          args.ToolTipText = "Ошибка получения списка файлов." + Environment.NewLine + args.DataRow["IOError"].ToString();
+          args.ToolTipText = "Error occurred when file list taken." + Environment.NewLine + args.DataRow["IOError"].ToString();
         }
         else if (DataTools.GetBoolean(args.DataRow, "NoDir"))
         {
           args.Value = EFPApp.MainImages.Images["Warning"];
-          args.ToolTipText = "Каталог не найден";
+          args.ToolTipText = "Directory not found";
         }
         else
         {
@@ -141,6 +146,19 @@ namespace LogWatcher
 
       efpGr1.InvalidateSelectedRows();
       Program.TheWatcher.WriteRegDates(efpGr1.SourceAsDataTable);
+    }
+
+
+    private void CiCreateFolders_Click(object sender, EventArgs args)
+    {
+      foreach (DataRow row in efpGr1.SelectedDataRows)
+      {
+        AbsPath path = new AbsPath(DataTools.GetString(row, "Path"));
+        FileTools.ForceDirs(path);
+      }
+
+      efpGr1.InvalidateSelectedRows();
+      DirWatcher.UpdateTrayIcon(efpGr1.SourceAsDataTable);
     }
 
     #endregion

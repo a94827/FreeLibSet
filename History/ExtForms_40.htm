@@ -5,18 +5,18 @@
 	<TITLE>Изменения в доп. управляющих элементах ExtForms.dll</TITLE>
 	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.1.2 (Windows)">
 	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20251120;162935455000000">
+	<META NAME="CHANGED" CONTENT="20251205;165435347000000">
 	<META NAME="created" CONTENT="2017-12-15T19:02:08.448000000">
 	<META NAME="changed" CONTENT="2025-10-05T16:56:52.207000000">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 2cm }
+		P { margin-bottom: 0.25cm; background: transparent }
 		TD P { margin-bottom: 0.25cm; background: transparent; widows: 0; orphans: 0 }
 		H1 { margin-bottom: 0.21cm; background: transparent }
 		H1.western { font-family: "Liberation Serif", serif }
 		H1.cjk { font-family: "SimSun"; font-size: 24pt }
 		H1.ctl { font-family: "Mangal"; font-size: 24pt }
-		P { margin-bottom: 0.25cm; background: transparent }
 		A:link { so-language: zxx }
 		A:visited { color: #800080 }
 	-->
@@ -48,6 +48,46 @@
 	</TR>
 	<TR VALIGN=TOP>
 		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>371</P>
+		</TD>
+		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P LANG="en-US" ALIGN=CENTER>26.11.2025-05.12.2025</P>
+		</TD>
+		<TD WIDTH=77% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
+			<P><SPAN LANG="en-US">1. </SPAN><SPAN LANG="ru-RU">Изменена
+			реализация внутреннего метода
+			</SPAN><SPAN LANG="en-US">EFPFormProvider.StatusBarPanelsShouldBeDetached()
+			(<A HREF="ExtForms_30.htm#v364p7">v.364 </A></SPAN><A HREF="ExtForms_30.htm#v364p7"><SPAN LANG="ru-RU">п.7</SPAN></A><SPAN LANG="en-US">).
+			</SPAN><SPAN LANG="ru-RU">Если форма является владельцем статусной
+			строки, то показ блока диалога не отключает панели статусной
+			строки, связанные с формой.</SPAN></P>
+			<P><SPAN LANG="en-US">2. EFPFolderPathValidator </SPAN><SPAN LANG="ru-RU">и
+			</SPAN><SPAN LANG="en-US">EFPFolderPathValidator </SPAN><SPAN LANG="ru-RU">убирают
+			кавычки в начале и в конце пути, введенного пользователем, когда
+			управляющий элемент теряет фокус ввода. Путь в кавычках может быть
+			вставлен в поле ввода, если он был помещен в буфер обмена командой
+			&laquo;Копировать путь&raquo; проводника </SPAN><SPAN LANG="en-US">Windows-10.
+			</SPAN><SPAN LANG="ru-RU">Ранее </SPAN><SPAN LANG="en-US">EFPFolderPathValidator
+			</SPAN><SPAN LANG="ru-RU">только добавляла &laquo;\&raquo; к пути
+			каталога (</SPAN><A HREF="ExtForms_20.htm#v347p7"><SPAN LANG="en-US">v.347
+			</SPAN><SPAN LANG="ru-RU">п.7</SPAN></A><SPAN LANG="ru-RU">).</SPAN></P>
+			<P LANG="en-US">3. ListSelectDialog <SPAN LANG="ru-RU">(</SPAN><A HREF="ExtForms_11.htm#v017p9">v.17
+			<SPAN LANG="ru-RU">п.9</SPAN></A><SPAN LANG="ru-RU">) при
+			</SPAN>MultiSelect=true <SPAN LANG="ru-RU">не делает </SPAN>&lt;OK&gt;
+			<SPAN LANG="ru-RU">кнопкой по умолчанию</SPAN></P>
+			<P>4<SPAN LANG="ru-RU">. Обработчик события </SPAN><SPAN LANG="en-US">Control.KeyDown
+			</SPAN><SPAN LANG="ru-RU">в </SPAN><SPAN LANG="en-US">EFPDataGridView
+			</SPAN><SPAN LANG="ru-RU">обрабатывает клавишу </SPAN><SPAN LANG="en-US">&lt;Backspace&gt;
+			</SPAN><SPAN LANG="ru-RU">для поиска по первым буквам, если
+			текущей ячейкой является </SPAN><SPAN LANG="en-US">CheckBox. </SPAN><SPAN LANG="ru-RU">Важно
+			для просмотра, в котором выделена строка целиком и первым столбцом
+			является столбец флажков, как </SPAN><SPAN LANG="en-US">ListSelectDialog
+			</SPAN>при <SPAN LANG="en-US">MultiSelect=true </SPAN>(<A HREF="ExtForms_30.htm#v364p3"><SPAN LANG="en-US">v.364
+			</SPAN>п.3</A>)</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=10% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
 			<P LANG="en-US" ALIGN=CENTER>370</P>
 		</TD>
 		<TD WIDTH=14% STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0cm; padding-right: 0.05cm">
@@ -73,8 +113,7 @@
 			(<A HREF="ExtForms_11.htm#v222p3">v.222 </A></SPAN><A HREF="ExtForms_11.htm#v222p3"><SPAN LANG="ru-RU">п.3</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
 			<P><SPAN LANG="en-US">5. </SPAN><SPAN LANG="ru-RU">Свойство
 			MultiLineTextInputDialog.</SPAN><SPAN LANG="en-US">ConfigSectionName
-			</SPAN><SPAN LANG="en-US">(<A HREF="ExtForms_11.htm#v121p2">v.121
-			</A></SPAN><A HREF="ExtForms_11.htm#v121p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
+			(<A HREF="ExtForms_11.htm#v121p2">v.121 </A></SPAN><A HREF="ExtForms_11.htm#v121p2"><SPAN LANG="ru-RU">п.2</SPAN></A><SPAN LANG="en-US">)</SPAN></P>
 		</TD>
 	</TR>
 	<TR VALIGN=TOP>

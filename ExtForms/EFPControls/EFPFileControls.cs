@@ -40,6 +40,8 @@ namespace FreeLibSet.Forms
 
       _ControlProvider.ValidateWhenFocusChanged = true;
       _ControlProvider.Validating += ControlProvider_Validating;
+
+      controlProvider.Leave += ControlProvider_Leave;
     }
 
     #endregion
@@ -212,14 +214,16 @@ namespace FreeLibSet.Forms
         _ControlProvider.SetError(_LastValidateMessage);
     }
 
+    private void ControlProvider_Leave(object sender, EventArgs args)
+    {
+      PrepareText();
+    }
+
     /// <summary>
     /// Переопределяется для <see cref="EFPFolderPathValidator"/>
     /// </summary>
     /// <returns>true, если текст изменился</returns>
-    protected virtual bool PrepareText()
-    {
-      return false;
-    }
+    protected abstract bool PrepareText();
 
     /// <summary>
     /// Вызывает подходящий метод для проверки пути
@@ -273,6 +277,43 @@ namespace FreeLibSet.Forms
       return EFPFileTools.TestFilePath(text, mode, out errorText);
     }
 
+    /// <summary>
+    /// Если пользователь ввел или вставил из буфера обмена путь без слэша, то проверяем, не будет ли формат пути правильным, если добавить слэш.
+    /// Если добавление решает проблему, то меняем значение.
+    /// Также проверяется наличие кавычек вокруг имени.
+    /// </summary>
+    /// <returns>true, если текст изменился</returns>
+    protected override bool PrepareText()
+    {
+      bool res = false;
+      try
+      {
+        string s = ControlProvider.Text;
+        bool modified = false;
+        if (!String.IsNullOrEmpty(s))
+        {
+          if (s.Length > 2 && s[0] == '\"' && s[s.Length - 1] == '\"')
+          {
+            s = s.Substring(1, s.Length - 2);
+            modified = true;
+            // не может быть пустой строкой, так как длина была 3+ символов
+          }
+
+          if (modified)
+          {
+            string errorText;
+            if (EFPFileTools.TestFilePath(s, TestPathMode.FormatOnly, out errorText))
+            {
+              ControlProvider.Text = s;
+              res = true;
+            }
+          }
+        }
+      }
+      catch { }
+      return res;
+    }
+
     #endregion
   }
 
@@ -300,7 +341,6 @@ namespace FreeLibSet.Forms
     public EFPFolderPathValidator(IEFPSimpleTextBox controlProvider)
       : base(controlProvider)
     {
-      controlProvider.Leave += ControlProvider_Leave;
     }
 
     #endregion
@@ -319,14 +359,10 @@ namespace FreeLibSet.Forms
           TestPathMode.None, TestPathMode.FormatOnly, TestPathMode.RootExists, TestPathMode.DirectoryExists });
     }
 
-    private void ControlProvider_Leave(object sender, EventArgs args)
-    {
-      PrepareText();
-    }
-
     /// <summary>
     /// Если пользователь ввел или вставил из буфера обмена путь без слэша, то проверяем, не будет ли формат пути правильным, если добавить слэш.
     /// Если добавление решает проблему, то меняем значение.
+    /// Также проверяется наличие кавычек вокруг имени.
     /// </summary>
     /// <returns>true, если текст изменился</returns>
     protected override bool PrepareText()
@@ -335,11 +371,24 @@ namespace FreeLibSet.Forms
       try
       {
         string s = ControlProvider.Text;
+        bool modified = false;
         if (!String.IsNullOrEmpty(s))
         {
+          if (s.Length > 2 && s[0] == '\"' && s[s.Length - 1] == '\"')
+          {
+            s = s.Substring(1, s.Length - 2);
+            modified = true;
+            // не может быть пустой строкой, так как длина была 3+ символов
+          }
+
           if (s[s.Length - 1] != Path.DirectorySeparatorChar)
           {
             s += Path.DirectorySeparatorChar;
+            modified = true;
+          }
+
+          if (modified)
+          {
             string errorText;
             if (EFPFileTools.TestDirSlashedPath(s, TestPathMode.FormatOnly, out errorText))
             {

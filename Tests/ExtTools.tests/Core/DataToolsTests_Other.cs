@@ -232,7 +232,7 @@ namespace ExtTools_tests.Core
     public void GetNullableSingle_exceptions(object source)
     {
       float? dummy;
-      Assert.Catch<SystemException>(delegate () { dummy=DataTools.GetNullableSingle(source); });
+      Assert.Catch<SystemException>(delegate () { dummy = DataTools.GetNullableSingle(source); });
     }
 
     #endregion
@@ -522,7 +522,7 @@ namespace ExtTools_tests.Core
       new TestPair(TestGuid.ToString("D"), TestGuid),
       new TestPair(TestGuid.ToString("B"), TestGuid),
       new TestPair(TestGuid.ToString("P"), TestGuid),
-      new TestPair(TestGuid.ToByteArray(), TestGuid) 
+      new TestPair(TestGuid.ToByteArray(), TestGuid)
     };
     [TestCaseSource("GetGuidTests")]
     public void GetGuid(TestPair info)
@@ -794,7 +794,7 @@ namespace ExtTools_tests.Core
       DataTools.SetPrimaryKey(tbl, "");
       Assert.AreEqual(0, tbl.PrimaryKey.Length, "#3.Length");
 
-      Assert.Catch(delegate() { DataTools.SetPrimaryKey(tbl, "F4"); }, "Unknown column name");
+      Assert.Catch(delegate () { DataTools.SetPrimaryKey(tbl, "F4"); }, "Unknown column name");
     }
 
     [Test]
@@ -817,7 +817,7 @@ namespace ExtTools_tests.Core
       DataTools.SetPrimaryKey(tbl, EmptyArray<string>.Empty);
       Assert.AreEqual(0, tbl.PrimaryKey.Length, "#3.Length");
 
-      Assert.Catch(delegate() { DataTools.SetPrimaryKey(tbl, new string[] { "F4" }); }, "Unknown column name");
+      Assert.Catch(delegate () { DataTools.SetPrimaryKey(tbl, new string[] { "F4" }); }, "Unknown column name");
     }
 
     [Test]
@@ -1012,13 +1012,13 @@ namespace ExtTools_tests.Core
       DataTools.SetPrimaryKey(tbl, "F1");
 
       object[] keys = new object[] { 1, 2 };
-      Assert.Catch(delegate() { DataTools.FindOrAddPrimaryKeyRow(tbl, keys); }, "extra keys");
+      Assert.Catch(delegate () { DataTools.FindOrAddPrimaryKeyRow(tbl, keys); }, "extra keys");
 
       keys = new object[] { };
-      Assert.Catch(delegate() { DataTools.FindOrAddPrimaryKeyRow(tbl, keys); }, "less keys #1");
+      Assert.Catch(delegate () { DataTools.FindOrAddPrimaryKeyRow(tbl, keys); }, "less keys #1");
 
       DataTools.SetPrimaryKey(tbl, "F1,F2");
-      Assert.Catch(delegate() { DataTools.FindOrAddPrimaryKeyRow(tbl, 1); }, "less keys #2");
+      Assert.Catch(delegate () { DataTools.FindOrAddPrimaryKeyRow(tbl, 1); }, "less keys #2");
     }
 
     #endregion
@@ -1165,7 +1165,7 @@ namespace ExtTools_tests.Core
       tbl.AcceptChanges();
       tbl.Rows.Add(10, 11, 12); // в состоянии Added
       Assert.AreEqual(4, tbl.Rows.Count, "DataTable.RowCount");
-      
+
       tbl.DefaultView.Sort = "F1 DESC";
       tbl.DefaultView.RowFilter = "F3>3"; // первая строка отключена
       tbl.DefaultView.RowStateFilter = DataViewRowState.Unchanged; // последняя строка отключена
@@ -1181,7 +1181,6 @@ namespace ExtTools_tests.Core
     }
 
     #endregion
-
 
     #region GetDataTableRows()
 
@@ -2609,7 +2608,7 @@ namespace ExtTools_tests.Core
     [Test]
     public void GetDataViewSortSingleColumnName_exception()
     {
-      Assert.Catch(delegate() { DataTools.GetDataViewSortSingleColumnName("F1,F2"); });
+      Assert.Catch(delegate () { DataTools.GetDataViewSortSingleColumnName("F1,F2"); });
     }
 
     [Test]
@@ -2639,9 +2638,9 @@ namespace ExtTools_tests.Core
     [Test]
     public void GetDataViewSort_exceptions()
     {
-      Assert.Catch(delegate() { DataTools.GetDataViewSort(new string[] { "F1", "F2" }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "missed direction");
-      Assert.Catch(delegate() { DataTools.GetDataViewSort(new string[] { }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "extra direction");
-      Assert.Catch(delegate() { DataTools.GetDataViewSort(new string[] { "" }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "empty column name");
+      Assert.Catch(delegate () { DataTools.GetDataViewSort(new string[] { "F1", "F2" }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "missed direction");
+      Assert.Catch(delegate () { DataTools.GetDataViewSort(new string[] { }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "extra direction");
+      Assert.Catch(delegate () { DataTools.GetDataViewSort(new string[] { "" }, new ListSortDirection[] { ListSortDirection.Ascending }); }, "empty column name");
     }
 
     #endregion
@@ -3001,6 +3000,219 @@ namespace ExtTools_tests.Core
       // Вызываем еще раз
       DataTools.Dispose<DisposableObject>(ref refValue);
       Assert.IsNull(refValue, "RefValue #2");
+    }
+
+    #endregion
+
+    #region GetValueMatrix()
+
+    [Test]
+    public void GetValueMatrix_DataTable()
+    {
+      // Не будем использовать TestTable, так как там могут добавляться новые столбцы
+      DataTable table = new DataTable();
+      table.Columns.Add("FString", typeof(string));
+      table.Columns.Add("FInt32", typeof(Int32));
+      table.Columns.Add("FBoolean", typeof(Boolean));
+
+      table.Rows.Add("AAA", DBNull.Value, false);
+      table.Rows.Add("BBB", 123, DBNull.Value);
+      table.Rows.Add("CCC", 456, DBNull.Value);
+      table.Rows.Add(DBNull.Value, 789, true);
+      table.Rows.Add(DBNull.Value, DBNull.Value, DBNull.Value);
+
+      // Удаленные строки должны пропрускаться
+      table.Rows[2].Delete();
+
+      object[,] res = DataTools.GetValueMatrix(table);
+
+      object[,] wantedRes = ArrayTools.MatrixFromRows(
+        new object[3] { "AAA", null, false },
+        new object[3] { "BBB", 123, null },
+        new object[3] { null, 789, true },
+        new object[3] { null, null, null });
+
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [Test]
+    public void GetValueMatrix_DataTable_empty()
+    {
+      DataTable table = new DataTable();
+      object[,] res = DataTools.GetValueMatrix(table);
+
+      Assert.AreEqual(new object[0, 0], res);
+    }
+
+    [Test]
+    public void GetValueMatrix_DataTable_noRows()
+    {
+      DataTable table = TestTable.Create().Clone();
+      object[,] res = DataTools.GetValueMatrix(table);
+
+      object[,] wantedRes = new object[0, table.Columns.Count];
+      Assert.AreEqual(wantedRes, res);
+    }
+
+
+    [Test]
+    public void GetValueMatrix_DataView()
+    {
+      // Не будем использовать TestTable, так как там могут добавляться новые столбцы
+      DataTable table = new DataTable();
+      table.Columns.Add("FString", typeof(string));
+      table.Columns.Add("FInt32", typeof(Int32));
+      table.Columns.Add("FBoolean", typeof(Boolean));
+
+      table.Rows.Add("AAA", DBNull.Value, false);
+      table.Rows.Add("BBB", 123, DBNull.Value);
+      table.Rows.Add("CCC", 456, DBNull.Value);
+      table.Rows.Add(DBNull.Value, 789, true);
+      table.Rows.Add(DBNull.Value, DBNull.Value, DBNull.Value);
+      table.DefaultView.RowFilter = "FInt32>0";
+      table.DefaultView.Sort = "FString DESC";
+
+      object[,] res = DataTools.GetValueMatrix(table.DefaultView);
+
+      object[,] wantedRes = ArrayTools.MatrixFromRows(
+        new object[3] { "CCC", 456, null },
+        new object[3] { "BBB", 123, null },
+        new object[3] { null, 789, true});
+
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    [Test]
+    public void GetValueMatrix_DataView_empty()
+    {
+      DataTable table = new DataTable();
+      object[,] res = DataTools.GetValueMatrix(table.DefaultView);
+
+      Assert.AreEqual(new object[0, 0], res);
+    }
+
+    [Test]
+    public void GetValueMatrix_DataView_noRows()
+    {
+      DataTable table = TestTable.Create();
+      table.DefaultView.RowFilter = "FInt32=666";
+      object[,] res = DataTools.GetValueMatrix(table.DefaultView);
+
+      object[,] wantedRes = new object[0, table.Columns.Count];
+      Assert.AreEqual(wantedRes, res);
+    }
+
+    #endregion
+
+    #region MergeTables()
+
+    [Test]
+    public void MergeTables_0()
+    {
+      DataTable res = DataTools.MergeTables();
+
+      Assert.AreEqual(0, res.Columns.Count, "ColumnCount");
+      Assert.AreEqual(0, res.Rows.Count, "RowCount");
+      Assert.AreEqual("", res.TableName, "TableName");
+      Assert.IsNull(res.DataSet, "DataSet");
+    }
+
+    [Test]
+    public void MergeTables_1()
+    {
+      DataTable srcTable1 = TestTable.Create();
+      DataTools.SetPrimaryKey(srcTable1, "FInt32NN");
+      srcTable1.TableName = "Table1";
+      DataSet ds = new DataSet();
+      ds.Tables.Add(srcTable1);
+
+      DataTable res = DataTools.MergeTables(srcTable1);
+
+      Assert.AreNotSame(srcTable1, res, "Not same");
+      Assert.AreEqual(DataTools.GetColumnNames(srcTable1), DataTools.GetColumnNames(res), "Column names");
+      Assert.AreEqual(DataTools.GetValueMatrix(srcTable1), DataTools.GetValueMatrix(res), "Value matrix");
+
+      Assert.AreEqual("", res.TableName, "TableName");
+      Assert.IsNull(res.DataSet, "DataSet");
+      Assert.AreEqual("", DataTools.GetPrimaryKey(res), "PrimaryKey");
+    }
+
+    [Test]
+    public void MergeTables_2()
+    {
+      DataTable srcTable1 = new DataTable("Table1");
+      srcTable1.Columns.Add("F1", typeof(string));
+      srcTable1.Columns.Add("F2", typeof(Int32));
+      DataTools.SetPrimaryKey(srcTable1, "F1");
+      srcTable1.Rows.Add("AAA", 123);
+      srcTable1.Rows.Add("BBB", 456);
+      srcTable1.Rows.Add("CCC", DBNull.Value);
+      srcTable1.Rows.Add("DDD", 789);
+      srcTable1.Rows[3].Delete(); // Удаленные строки пропускаются
+
+      DataTable srcTable2 = new DataTable("Table2");
+      srcTable2.Columns.Add("F3", typeof(Int64));
+      srcTable2.Columns.Add("F2", typeof(Int32));
+      srcTable2.Rows.Add(3L, 666);
+      srcTable2.Rows.Add(1L, 123);
+      srcTable2.Rows.Add(2L, DBNull.Value);
+      srcTable2.Rows[0].Delete(); // Удаленные строки пропускаются
+
+      DataTable res = DataTools.MergeTables(srcTable1, srcTable2);
+
+      Assert.AreEqual(new string[3] { "F1", "F2", "F3" }, DataTools.GetColumnNames(res), "Column names");
+
+      object[,] wantedMatrix = ArrayTools.MatrixFromRows<object>(
+        new object[3] { "AAA", 123, null},
+        new object[3] { "BBB", 456, null },
+        new object[3] { "CCC", null, null },
+        new object[3] { null, 123, 1L },
+        new object[3] { null, null, 2L }
+        );
+      Assert.AreEqual(wantedMatrix, DataTools.GetValueMatrix(res), "Value matrix");
+      Assert.AreEqual("", res.TableName, "TableName");
+      Assert.IsNull(res.DataSet, "DataSet");
+      Assert.AreEqual("", DataTools.GetPrimaryKey(res), "PrimaryKey");
+    }
+
+
+    [Test]
+    public void MergeTables_3()
+    {
+      DataTable srcTable1 = new DataTable("Table1");
+      srcTable1.Columns.Add("F1", typeof(string));
+      srcTable1.Columns.Add("F2", typeof(Int32));
+      DataTools.SetPrimaryKey(srcTable1, "F1");
+      srcTable1.Rows.Add("AAA", 123);
+      srcTable1.Rows.Add("BBB", 456);
+
+      DataTable srcTable2 = new DataTable("Table2");
+      srcTable2.Columns.Add("F3", typeof(Int64));
+      srcTable2.Columns.Add("F2", typeof(Int32));
+      srcTable2.Rows.Add(1L, 123);
+      srcTable2.Rows.Add(2L, DBNull.Value);
+
+      DataTable srcTable3 = new DataTable("Table3");
+      srcTable3.Columns.Add("F2", typeof(Int32));
+      srcTable3.Columns.Add("F1", typeof(string));
+      srcTable3.Rows.Add(789, "CCC");
+
+
+      DataTable res = DataTools.MergeTables(srcTable1, srcTable2, srcTable3);
+
+      Assert.AreEqual(new string[3] { "F1", "F2", "F3" }, DataTools.GetColumnNames(res), "Column names");
+
+      object[,] wantedMatrix = ArrayTools.MatrixFromRows<object>(
+        new object[3] { "AAA", 123, null },
+        new object[3] { "BBB", 456, null },
+        new object[3] { null, 123, 1L },
+        new object[3] { null, null, 2L },
+        new object[3] { "CCC", 789, null }
+        );
+      Assert.AreEqual(wantedMatrix, DataTools.GetValueMatrix(res), "Value matrix");
+      Assert.AreEqual("", res.TableName, "TableName");
+      Assert.IsNull(res.DataSet, "DataSet");
+      Assert.AreEqual("", DataTools.GetPrimaryKey(res), "PrimaryKey");
     }
 
     #endregion

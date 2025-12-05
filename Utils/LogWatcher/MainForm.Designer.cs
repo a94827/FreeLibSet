@@ -60,7 +60,7 @@
       this.Controls.Add(this.panSpb1);
       this.MinimizeBox = false;
       this.Name = "MainForm";
-      this.Text = "Слежение за файлами";
+      this.Text = "Log watcher";
       ((System.ComponentModel.ISupportInitialize)(this.gr1)).EndInit();
       this.ResumeLayout(false);
 

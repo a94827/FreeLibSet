@@ -68,7 +68,7 @@ namespace LogWatcher
       }
     }
 
-    private static void UpdateTrayIcon(DataTable tbl)
+    public static void UpdateTrayIcon(DataTable tbl)
     {
       int cntError = 0;
       int cntWarning = 0;
@@ -98,6 +98,9 @@ namespace LogWatcher
         EFPApp.TrayIcon.Icon = EFPApp.MainImages.Icons["Info"];
       else
         EFPApp.TrayIcon.Icon = WinFormsTools.AppIcon;
+
+      EFPApp.TrayIcon.Text = "LogWatcher" + Environment.NewLine +
+        "New files: " + (cntError + cntWarning + cntInfo).ToString();
     }
 
     private static DataTable CreateTable()

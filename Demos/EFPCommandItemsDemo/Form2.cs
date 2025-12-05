@@ -23,7 +23,7 @@ namespace EFPCommandItemsDemo
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efp1 = new EFPTextBox(efpForm, ed1);
       efp1.CommandItems.UseStatusBarRC = true;
-      efp2 = new EFPIntEditBox(efpForm, ed2);
+      efp2 = new EFPInt32EditBox(efpForm, ed2);
       efp3 = new EFPDateTimeBox(efpForm, ed3);
 
       EFPButton efpShowDialogButton = new EFPButton(efpForm, btnShowDialog);
@@ -38,7 +38,7 @@ namespace EFPCommandItemsDemo
     int _FormNumber;
 
     EFPTextBox efp1;
-    EFPIntEditBox efp2;
+    EFPInt32EditBox efp2;
     EFPDateTimeBox efp3;
   }
 }

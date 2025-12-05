@@ -6201,6 +6201,156 @@ namespace FreeLibSet.Core
       }
     }
 
+    /// <summary>
+    /// Объединение таблиц.
+    /// Результирующая таблица содержит поля из всех таблиц <paramref name="tables"/>.
+    /// Одноименные поля объединяются, предполагается, что их типы совпадают.
+    /// Свойство <see cref="DataColumn.AllowDBNull"/> устанавливается равным true.
+    /// Свойство <see cref="DataColumn.Unique"/> сбрасывается в false.
+    /// Строки копируются из всех таблиц по очереди без объединения, 
+    /// то есть, результирующая таблица содержит сумарное количество строк.
+    /// Результирующая таблица не содержит имени <see cref="DataTable.TableName"/> и первичного ключа <see cref="DataTable.PrimaryKey"/>,
+    /// и не входит в <see cref="DataSet"/> (<see cref="DataTable.DataSet"/>=null).
+    /// Если исходные таблицы содержат пустые строки, то они пропускаются.
+    /// Если <paramref name="tables"/> не содержит ни одной таблицы, возвращается пустая таблица.
+    /// Если <paramref name="tables"/> содержит единственную таблицу, то возвращается копия таблицы с изменениями.
+    /// </summary>
+    /// <param name="tables">Таблицы. Аргументы не могут быть null.
+    /// Таблицы не могут содержать удаленных строк.</param>
+    /// <returns>Объединенная таблица</returns>
+    public static DataTable MergeTables(params DataTable[] tables)
+    {
+      // Не используем специальную обработку для случаев 0 и 1 таблицы, так как это что-то
+      // неправильное и нет смысла оптимизировать такую ситуацию
+
+      if (tables == null)
+        throw new ArgumentNullException("tables");
+
+      #region Заготовка таблицы
+
+      DataTable resTable = new DataTable();
+      TypedStringDictionary<int> resColIndexes = new TypedStringDictionary<int>(true);
+      foreach (DataTable srcTable in tables)
+      {
+        if (srcTable == null)
+          throw ExceptionFactory.ArgInvalidEnumerableItem("tables", tables, null);
+
+        foreach (DataColumn srcCol in srcTable.Columns)
+        {
+          if (resColIndexes.ContainsKey(srcCol.ColumnName))
+            continue;
+
+          DataColumn resCol = CloneDataColumn(srcCol);
+          resCol.AllowDBNull = true; // иначе нельзя будет добавить строки из других таблиц
+          resCol.Unique = false;
+          resTable.Columns.Add(resCol);
+          resColIndexes.Add(srcCol.ColumnName, resTable.Columns.Count - 1);
+        }
+      }
+
+      #endregion
+
+      #region Добавление строк
+
+      foreach (DataTable srcTable in tables)
+      {
+        if (srcTable.Rows.Count > 0)
+        {
+          int[] resColMap = new int[srcTable.Columns.Count];
+          for (int iSrcCol = 0; iSrcCol < resColMap.Length; iSrcCol++)
+            resColMap[iSrcCol] = resColIndexes[srcTable.Columns[iSrcCol].ColumnName];
+
+          foreach (DataRow srcRow in srcTable.Rows)
+          {
+            if (srcRow.RowState == DataRowState.Deleted)
+              continue;
+
+            DataRow resRow = resTable.NewRow();
+            for (int iSrcCol = 0; iSrcCol < resColMap.Length; iSrcCol++)
+              resRow[resColMap[iSrcCol]] = srcRow[iSrcCol];
+            resTable.Rows.Add(resRow);
+          }
+        }
+      }
+
+      resTable.AcceptChanges();
+
+      #endregion
+
+      return resTable;
+    }
+
+    #endregion
+
+    #region Таблица как матрица значений
+
+    /// <summary>
+    /// Возвращает прямоугольную матрицу значений из таблицы.
+    /// Порядок строк в матрице соответствует порядку строк в <see cref="DataTable.Rows"/>/
+    /// Значения <see cref="DBNull.Value"/> заменяются на null.
+    /// Если таблица содержит удаленные строки (<see cref="DataRow.RowState"/>==<see cref="DataRowState.Deleted"/>),
+    /// то такие строки не попадают в матрицу.
+    /// </summary>
+    /// <param name="table">Таблица данных</param>
+    /// <returns>Матрица значений</returns>
+    public static object[,] GetValueMatrix(DataTable table)
+    {
+      if (table == null)
+        return new object[0, 0];
+
+      int rowCount = 0;
+      foreach (DataRow row in table.Rows)
+      {
+        if (row.RowState != DataRowState.Deleted)
+          rowCount++;
+      }
+
+      object[,] a = new object[rowCount, table.Columns.Count];
+      int cntRow = 0;
+      for (int i = 0; i < table.Rows.Count; i++)
+      {
+        DataRow row = table.Rows[i];
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        for (int j = 0; j < table.Columns.Count; j++)
+        {
+          object v = row[j];
+          if (!(v is DBNull))
+            a[cntRow, j] = v;
+        }
+        cntRow++;
+      }
+      return a;
+    }
+
+    /// <summary>
+    /// Возвращает прямоугольную матрицу значений из таблицы.
+    /// Порядок строк в матрице соответствует порядку строк в <see cref="DataView"/>/
+    /// Значения <see cref="DBNull.Value"/> заменяются на null.
+    /// </summary>
+    /// <param name="dv">Просмотр для таблицы</param>
+    /// <returns>Матрица значений</returns>
+    public static object[,] GetValueMatrix(DataView dv)
+    {
+      if (dv == null)
+        return new object[0, 0];
+
+      object[,] a = new object[dv.Count, dv.Table.Columns.Count];
+      for (int i = 0; i < dv.Count; i++)
+      {
+        DataRow row = dv[i].Row;
+        if (row.RowState == DataRowState.Deleted)
+          continue;
+        for (int j = 0; j < dv.Table.Columns.Count; j++)
+        {
+          object v = row[j];
+          if (!(v is DBNull))
+            a[i, j] = v;
+        }
+      }
+      return a;
+    }
+
     #endregion
 
     #region Замена значений
@@ -7219,7 +7369,6 @@ namespace FreeLibSet.Core
     }
 
     #endregion
-
 
     #region Прочие функции
 

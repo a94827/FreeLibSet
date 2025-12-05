@@ -542,7 +542,7 @@ namespace FreeLibSet.IO
 
       if (fileName[fileName.Length - 1] == System.IO.Path.DirectorySeparatorChar)
       {
-        errorText = String.Format(Res.FileTools_Msg_FilePathEndsWithDirSep, +System.IO.Path.DirectorySeparatorChar);
+        errorText = String.Format(Res.FileTools_Msg_FilePathEndsWithDirSep, System.IO.Path.DirectorySeparatorChar);
         return false;
       }
 

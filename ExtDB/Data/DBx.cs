@@ -368,7 +368,14 @@ namespace FreeLibSet.Data
     protected override void Dispose(bool disposing)
     {
       if (disposing)
+      {
+#if DEBUG
+        if (Cons.Count > 0)
+          throw new InvalidProgramException("Connections presented");
+#endif
+
         AllDBList.Remove(this);
+      }
       base.Dispose(disposing);
     }
 

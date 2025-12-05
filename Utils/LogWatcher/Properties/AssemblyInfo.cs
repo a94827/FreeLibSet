@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LogWatcher")]
-[assembly: AssemblyDescription("Слежение за появлением файлов отчетов")]
+[assembly: AssemblyDescription("Log file monitor")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Агеев Александр Владимирович")]
+[assembly: AssemblyCompany("Alexander Ageyev")]
 [assembly: AssemblyProduct("Freeware Library Set")]
-[assembly: AssemblyCopyright("© Агеев А.В., г.Тюмень, 2024-2025 г. Является свободным программным обеспечением (Free Software)")]
+[assembly: AssemblyCopyright("© Alexander Ageyev, 2024-2025. Free Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.2")]
+[assembly: AssemblyVersion("1.0.0.3")]

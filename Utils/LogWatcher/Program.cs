@@ -23,7 +23,7 @@ namespace LogWatcher
         TheForm = new MainForm();
 
         EFPCommandItem ciShow = new EFPCommandItem("View", "Show");
-        ciShow.MenuText = "Открыть";
+        ciShow.MenuText = "Open";
         ciShow.ImageKey = "Table";
         ciShow.Click += CiShow_Click;
         EFPApp.TrayIcon.CommandItems.Add(ciShow);
@@ -48,7 +48,7 @@ namespace LogWatcher
       }
       catch (Exception e)
       {
-        EFPApp.ShowException(e, "Ошибка запуска программы");
+        EFPApp.ShowException(e);
       }
     }
 

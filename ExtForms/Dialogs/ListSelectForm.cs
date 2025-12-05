@@ -39,6 +39,8 @@ namespace FreeLibSet.Forms
       Init(efpForm, owner);
 
       btnOk.Enabled = _Owner.CanBeEmpty || _Owner.Items.Length > 0;
+      if (owner.MultiSelect)
+        AcceptButton = null; // 05.12.2025
     }
 
     /// <summary>
@@ -86,7 +88,11 @@ namespace FreeLibSet.Forms
       efpGrid.Control.VirtualMode = true;
 
       efpGrid.Control.RowCount = _Owner.Items.Length;
-      efpGrid.CommandItems.EnterAsOk = true;
+      //efpGrid.CommandItems.EnterAsOk = true;
+      if (_Owner.MultiSelect)
+        efpGrid.CommandItems.EnterKeyMode = EFPDataViewEnterKeyMode.None; // 05.12.2025
+      else
+        efpGrid.CommandItems.EnterKeyMode = EFPDataViewEnterKeyMode.DefaultButton;
       efpGrid.CommandItems.UseGotoRowWithDiffValue = false;
 
       efpGrid.ConfigSectionName = _Owner.ConfigSectionName;
@@ -137,8 +143,8 @@ namespace FreeLibSet.Forms
         btnPaste.Visible = false;
       }
 
-      if ((_Owner is WizardStepWithListSelection) && 
-        (!_Owner.MultiSelect) && 
+      if ((_Owner is WizardStepWithListSelection) &&
+        (!_Owner.MultiSelect) &&
         (_Owner.ClipboardMode == ListSelectDialogClipboardMode.None))
 
         ButtonPanel.Visible = false;
@@ -472,7 +478,7 @@ namespace FreeLibSet.Forms
   /// Диалог выбора одной или нескольких позиций из списка.
   /// Для добавления шага мастера с аналогичными возможностями, используйте <see cref="WizardStepWithListSelection"/>.
   /// </summary>
-  public class ListSelectDialog: IListSelectDialogInternal
+  public class ListSelectDialog : IListSelectDialogInternal
   {
     #region Конструктор
 
@@ -1729,7 +1735,7 @@ namespace FreeLibSet.Forms
       get { return _ImageKey ?? String.Empty; }
       set
       {
-//        CheckHasNotBeenInit();
+        //        CheckHasNotBeenInit();
         _Image = null;
         _ImageKey = value;
       }
@@ -1745,7 +1751,7 @@ namespace FreeLibSet.Forms
       get { return _Image; }
       set
       {
-//        CheckHasNotBeenInit();
+        //        CheckHasNotBeenInit();
         _ImageKey = null;
         _Image = value;
       }
