@@ -73,6 +73,7 @@ namespace LogWatcher
       int cntError = 0;
       int cntWarning = 0;
       int cntInfo = 0;
+      int cntNewFiles = 0;
       foreach (DataRow row in tbl.Rows)
       {
         if (!row.IsNull("IOError"))
@@ -88,6 +89,7 @@ namespace LogWatcher
             case ErrorMessageKind.Warning: cntWarning += n; break;
             case ErrorMessageKind.Info: cntInfo += n; break;
           }
+          cntNewFiles += n;
         }
       }
       if (cntError > 0)
@@ -100,7 +102,7 @@ namespace LogWatcher
         EFPApp.TrayIcon.Icon = WinFormsTools.AppIcon;
 
       EFPApp.TrayIcon.Text = "LogWatcher" + Environment.NewLine +
-        "New files: " + (cntError + cntWarning + cntInfo).ToString();
+        "New files: " + cntNewFiles.ToString();
     }
 
     private static DataTable CreateTable()
